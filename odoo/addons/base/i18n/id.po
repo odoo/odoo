@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-30 15:03+0000\n"
-"PO-Revision-Date: 2026-07-22 11:56+0000\n"
+"PO-Revision-Date: 2026-07-31 08:05+0000\n"
 "Last-Translator: \"Nurul Aini Akrima Sabila (nuaas)\" <nuaas@odoo.com>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-s19-4/"
 "base/id/>\n"
@@ -503,6 +503,11 @@ msgid ""
 "formats.\n"
 "\n"
 msgstr ""
+"\n"
+"\n"
+"Modul ini menyediakan alat bantu untuk mengekspor pesanan POS dalam berbagai "
+"format UBL 2.1.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_imin
@@ -524,6 +529,12 @@ msgid ""
 "        can't be used for endpoints requiring any other scope than 'A'.\n"
 "        "
 msgstr ""
+"\n"
+"        Token dengan cakupan 'A' hanya dapat digunakan untuk endpoint yang "
+"memerlukan bearer token dengan cakupan 'A' dan\n"
+"        tidak dapat digunakan untuk endpoint yang memerlukan cakupan selain "
+"'A'.\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ar_reports
@@ -655,6 +666,9 @@ msgid ""
 "- Support for the mandatory electronic invoicing in France\n"
 "- Send and receive documents via the Odoo approved platform\n"
 msgstr ""
+"\n"
+"- Dukungan untuk faktur elektronik wajib di Prancis\n"
+"- Kirim dan terima dokumen melalui platform yang disetujui Odoo\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_ai_mcp
@@ -676,6 +690,23 @@ msgid ""
 "    2. NEVER add your token in a text field on your MCP client. ALWAYS use "
 "fields of type Credential or Password as they are encrypted.\n"
 msgstr ""
+"\n"
+"- Untuk terhubung ke Server MCP Odoo:\n"
+"    1. Atur URL server MCP sebagai URL Odoo dengan akhiran /mcp. Misalnya, "
+"jika URL Odoo 'https://example.odoo.com', URL Server MCP-nya adalah 'https://"
+"example.odoo.com/mcp'.\n"
+"    2. Buat API Key untuk digunakan sebagai token autentikasi dengan klien "
+"MCP pilihan Anda:\n"
+"        a. Masuk ke Odoo.\n"
+"        b. Klik avatar user.\n"
+"        c. Buka tab keamanan.\n"
+"        d. Buat API Key. Atur cakupan (scope) menjadi MCP.\n"
+"- Penting:\n"
+"    1. JANGAN PERNAH membagikan token. Siapa pun yang mendapatkan akses ke "
+"token tersebut dapat menggunakan server MCP seolah-olah itu adalah Anda.\n"
+"    2. JANGAN PERNAH memasukkan token ke dalam field teks pada klien MCP. "
+"SELALU gunakan field bertipe Kredensial atau Password karena field tersebut "
+"dienkripsi.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_auth_totp_mail
@@ -788,6 +819,8 @@ msgid ""
 "\n"
 "A60 accounting reports for Hungary\n"
 msgstr ""
+"\n"
+"Laporan akuntansi A60 untuk Hungaria\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_au_aba
@@ -1146,6 +1179,9 @@ msgid ""
 "Accounting Data for Iraqi Payroll Rules\n"
 "============================================\n"
 msgstr ""
+"\n"
+"Data Akuntansi untuk Peraturan Payroll Irak\n"
+"============================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_jo_hr_payroll_account
@@ -1176,6 +1212,9 @@ msgid ""
 "Accounting Data for Kuwait Payroll Rules\n"
 "============================================\n"
 msgstr ""
+"\n"
+"Data Akuntansi untuk Aturan Payroll Kuwait\n"
+"============================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_lt_hr_payroll_account
@@ -1250,6 +1289,9 @@ msgid ""
 "Accounting Data for Oman Payroll Rules\n"
 "============================================\n"
 msgstr ""
+"\n"
+"Data Akuntansi untuk Aturan Payroll Oman\n"
+"============================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_pk_hr_payroll_account
@@ -1269,6 +1311,9 @@ msgid ""
 "Accounting Data for Philippines Payroll Rules\n"
 "=============================================\n"
 msgstr ""
+"\n"
+"Data Akuntansi untuk Aturan Payroll Filipina\n"
+"=============================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_pl_hr_payroll_account
@@ -1879,6 +1924,8 @@ msgid ""
 "\n"
 "Accounting reports for Indonesia\n"
 msgstr ""
+"\n"
+"Laporan akuntansi untuk Indonesia\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_il_reports
@@ -2086,6 +2133,11 @@ msgid ""
 "- Balance Sheet\n"
 "- Profit and Loss Statement\n"
 msgstr ""
+"\n"
+"Laporan akuntansi untuk Makedonia Utara\n"
+"============================================\n"
+"- Neraca Keuangan\n"
+"- Laporan Laba Rugi\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_no_reports
@@ -2235,6 +2287,17 @@ msgid ""
 "https://www.financnasprava.sk/sk/podnikatelia/dane/dan-z-pridanej-hodnoty/"
 "kontrolny-vykaz-dph\n"
 msgstr ""
+"\n"
+"Laporan akuntansi untuk Slowakia\n"
+"=====================================\n"
+"Modul ini mencakup laporan akuntansi untuk Slowakia, termasuk:\n"
+"- Neraca Keuangan + Laporan Laba Rugi (ekspor XML)\n"
+"- Laporan pajak (ekspor XML). Untuk informasi lebih lanjut, lihat https://"
+"www.financnasprava.sk/sk/podnikatelia/dane/dan-z-pridanej-hodnoty/danove-"
+"priznanie\n"
+"- Laporan Pengawasan PPN (pembuatan dan ekspor XML). Untuk informasi lebih "
+"lanjut, lihat https://www.financnasprava.sk/sk/podnikatelia/dane/dan-z-"
+"pridanej-hodnoty/kontrolny-vykaz-dph\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_za_reports
@@ -2442,6 +2505,11 @@ msgid ""
 "- Balance Sheet\n"
 "- Profit and Loss Statement\n"
 msgstr ""
+"\n"
+"Laporan akuntansi untuk Uzbekistan\n"
+"============================================\n"
+"- Neraca Keuangan\n"
+"- Laporan Laba Rugi\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_zm_reports
@@ -2474,6 +2542,9 @@ msgid ""
 "Accounting reports:\n"
 "- FTA VAT Audit\n"
 msgstr ""
+"\n"
+"Laporan akuntansi:\n"
+"- Audit PPN FTA\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_subcontracting_account_enterprise
@@ -2722,6 +2793,8 @@ msgid ""
 "\n"
 "Add intervention from a helpdesk ticket\n"
 msgstr ""
+"\n"
+"Tambahkan intervensi dari tiket pusat bantuan\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_mass_mailing_event
@@ -2732,6 +2805,11 @@ msgid ""
 "The snippet is linked to specified events and will load a snapshot of their "
 "data to be sent by email.\n"
 msgstr ""
+"\n"
+"Tambahkan snippet acara siap pakai untuk builder html mass_mailing, dengan "
+"tautan ke halaman acara website yang sesuai.\n"
+"Snippet tersebut terhubung ke acara yang ditentukan dan akan memuat cuplikan "
+"datanya untuk dikirim melalui email.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_purchase_stock
@@ -2946,6 +3024,20 @@ msgid ""
 "Mobile Money (Airtel Money / M-Pesa) at the payment terminal.\n"
 "* Supported cards: Visa, MasterCard, American Express etc.\n"
 msgstr ""
+"\n"
+"Izinkan pembayaran DPO POS\n"
+"==============================\n"
+"\n"
+"Fitur ini mendukung semua mata uang yang didukung oleh perangkat terminal, "
+"terutama untuk digunakan di **wilayah Afrika**.\n"
+"Dengan fitur ini, pelanggan dapat membayar pesanan menggunakan kartu debit/"
+"kredit dan Mobile Money melalui terminal DPO POS.\n"
+"Akun merchant DPO diperlukan untuk memproses transaksi.\n"
+"Fitur-fiturnya meliputi:\n"
+"\n"
+"* Pembayaran cepat dengan menggesek, memindai, atau menempelkan kartu kredit/"
+"debit atau Mobile Money (Airtel Money / M-Pesa) di terminal pembayaran.\n"
+"* Kartu yang didukung: Visa, MasterCard, American Express, dll.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_pine_labs
@@ -3174,6 +3266,11 @@ msgid ""
 "Additional information is displayed in the name of the SOL when it is used "
 "in services apps (project and planning).\n"
 msgstr ""
+"\n"
+"Izinkan untuk menampilkan informasi sale di aplikasi layanan SOL\n"
+"===========================================================\n"
+"Informasi tambahan ditampilkan atas nama SOL saat digunakan di aplikasi "
+"layanan (project dan planning).\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_purchase_edi_ubl_bis3
@@ -3556,6 +3653,13 @@ msgid ""
 "you\n"
 "to be directly authenticated into your SaaS client databases\n"
 msgstr ""
+"\n"
+"Koneksi otomatis ke database klien SaaS\n"
+"============================================\n"
+"\n"
+"Modul koneksi otomatis Database SaaS akan membantu Anda menghemat waktu "
+"dengan memungkinkan\n"
+"autentikasi langsung ke database klien SaaS\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_accountant
@@ -3700,6 +3804,10 @@ msgid ""
 "This module is required for IoT integrations in both Manufacturing\n"
 "and Quality Control apps.\n"
 msgstr ""
+"\n"
+"Modul dasar untuk pemeriksaan/titik kualitas menggunakan perangkat IoT.\n"
+"Modul ini diperlukan untuk integrasi IoT di aplikasi Manufaktur\n"
+"dan Quality Control.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_obox_quality
@@ -3709,6 +3817,11 @@ msgid ""
 "This module is required for Obox integrations in both Manufacturing\n"
 "and Quality Control apps.\n"
 msgstr ""
+"\n"
+"Modul dasar untuk pemeriksaan kualitas/titik pemeriksaan menggunakan "
+"perangkat Obox.\n"
+"Modul ini diperlukan untuk integrasi Obox di aplikasi Manufaktur\n"
+"dan Quality Control.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_recruitment_integration_base
@@ -4308,6 +4421,8 @@ msgid ""
 "\n"
 "Bridge between Helpdesk and Planning Field Service Sales\n"
 msgstr ""
+"\n"
+"Penghubung antara Helpdesk dan Sales, Field Service, Perencanaan\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_portal_rating
@@ -4395,6 +4510,14 @@ msgid ""
 "- Configuration of mobility expense categories on company\n"
 "- Budget tracking banner on mobility expenses\n"
 msgstr ""
+"\n"
+"Modul penghubung l10n_be_hr_payroll dan hr_payroll_expense untuk pengelolaan "
+"anggaran mobilitas.\n"
+"\n"
+"Fitur:\n"
+"- Pelacakan periode anggaran mobilitas pada hr.version\n"
+"- Konfigurasi kategori pengeluaran mobilitas pada perusahaan\n"
+"- Banner pelacakan anggaran pada pengeluaran mobilitas\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_purchase_intrastat
@@ -4475,6 +4598,12 @@ msgid ""
 "allowing for integrated attendance and timesheet tracking from a single "
 "interface.\n"
 msgstr ""
+"\n"
+"Modul penghubung untuk Grid Timesheet Grid dan Presensi HR\n"
+"====================================================\n"
+"Modul ini mengubah perilaku systray timesheet saat modul presensi "
+"terpasang,\n"
+"sehingga pelacakan presensi dan timesheet terintegrasi dari satu antarmuka.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mail_enterprise
@@ -4517,6 +4646,8 @@ msgid ""
 "\n"
 "Bridge module for project_enterprise_hr and project_todo\n"
 msgstr ""
+"\n"
+"Modul penghubung untuk project_enterprise_hr dan project_todo \n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_fleet_enterprise
@@ -4617,6 +4748,8 @@ msgid ""
 "\n"
 "Chart Of Account and Taxes for North Macedonia.\n"
 msgstr ""
+"\n"
+"Bagan Akun dan Pajak untuk Makedonia Utara.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_bg
@@ -5082,6 +5215,12 @@ msgid ""
 "Coupon & promotion programs can be edited in the Catalog menu of the Website "
 "app.\n"
 msgstr ""
+"\n"
+"Buat kupon, kode promosi, gift card, dan program loyalitas untuk mendorong "
+"sales Anda (produk gratis,\n"
+"diskon, dsb.). Pengunjung dapat menggunakannya saat checkout eCommerce.\n"
+"\n"
+"Program kupon & promosi dapat diedit di menu Katalog pada aplikasi Website.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_quality_mrp_workorder_worksheet
@@ -5280,6 +5419,8 @@ msgid ""
 "\n"
 "D300 VAT declaration export for Romania (ANAF).\n"
 msgstr ""
+"\n"
+"Ekspor deklarasi PPN D300 untuk Rumania (ANAF).\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mass_mailing_themes
@@ -5935,6 +6076,14 @@ msgid ""
 "\n"
 "DIOT Report\n"
 msgstr ""
+"\n"
+"Laporan akuntansi elektronik\n"
+"    - COA\n"
+"    - Neraca Saldo\n"
+"    - Neraca Saldo Bulan 13\n"
+"    - Ekspor Polizas XML\n"
+"\n"
+"Laporan DIOT\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_pe_reports
@@ -6055,6 +6204,10 @@ msgid ""
 "NAV Documentation: https://onlineszamla.nav.gov.hu/files/container/download/"
 "2025.10.09.%20EN_Online%20Invoice%20System%203.0%20Interface%20Specification%20.pdf\n"
 msgstr ""
+"\n"
+"Terima tagihan vendor secara elektronik dari NAV (Badan Pajak Hungaria).\n"
+"Dokumentasi NAV: https://onlineszamla.nav.gov.hu/files/container/download/"
+"2025.10.09.%20EN_Online%20Invoice%20System%203.0%20Interface%20Specification%20.pdf\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_l10n_be_hr_payroll
@@ -6084,6 +6237,8 @@ msgid ""
 "\n"
 "Employee declarations will be automatically integrated to the Document app.\n"
 msgstr ""
+"\n"
+"Pernyataan karyawan akan otomatis diintegrasikan ke aplikasi Dokumen.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_l10n_hk_hr_payroll
@@ -6202,6 +6357,8 @@ msgid ""
 "\n"
 "Example: %(example)s"
 msgstr ""
+"\n"
+"Contoh: %(example)s"
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_hr_expense
@@ -6218,6 +6375,8 @@ msgid ""
 "\n"
 "Export Hong Kong's AutoPay payments files.\n"
 msgstr ""
+"\n"
+"Ekspor file pembayaran AutoPay Hong Kong.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ca_payment_cpa005
@@ -6243,6 +6402,8 @@ msgid ""
 "\n"
 "Export payments file for AutoPay file upload in Hong Kong.\n"
 msgstr ""
+"\n"
+"Ekspor file pembayaran untuk pengunggahan file AutoPay di Hong Kong.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_address_extended
@@ -6276,6 +6437,13 @@ msgid ""
 "in the customer portal for the countries where cities are enforced.\n"
 "\n"
 msgstr ""
+"\n"
+"Perpanjangan Manajemen Alamat (Portal Pelanggan)\n"
+"===============================================\n"
+"\n"
+"Modul penghubung ini menambahkan dukungan untuk menu dropdown kota\n"
+"di portal pelanggan untuk negara-negara yang mewajibkan adanya kota.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_gt_edi_pos
@@ -6284,6 +6452,9 @@ msgid ""
 "Extends the Point of Sale module to comply with Guatemalan electronic "
 "invoicing regulations (FEL).\n"
 msgstr ""
+"\n"
+"Memperluas modul POS agar sesuai dengan peraturan penagihan elektronik "
+"Guatemala (FEL).\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_generator_blog
@@ -6292,6 +6463,9 @@ msgid ""
 "Extension of the Website Generator.\n"
 "Generate blogs in Odoo based on the products found on the external website.\n"
 msgstr ""
+"\n"
+"Ekstensi Pembuat Website.\n"
+"Buat blog di Odoo berdasarkan produk yang ditemukan di website eksternal.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_generator_sale
@@ -6339,6 +6513,9 @@ msgid ""
 "\n"
 "For handling subscription products on invoices in Nilvera E-Invoicing flow.\n"
 msgstr ""
+"\n"
+"Untuk penanganan produk langganan pada faktur dalam alur Nilvera E-"
+"Invoicing.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_tr_nilvera_einvoice
@@ -6371,6 +6548,8 @@ msgid ""
 "\n"
 "France specific features for managing loans.\n"
 msgstr ""
+"\n"
+"Fitur khusus Prancis untuk pengelolaan pinjaman.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_purchase_mrp_workorder_quality
@@ -7061,6 +7240,8 @@ msgid ""
 "Generates Intrastat CSV report for declaration based on invoices for "
 "Finland.\n"
 msgstr ""
+"\n"
+"Membuat laporan CSV Intrastat untuk deklarasi berdasarkan faktur Finlandia.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_gr_intrastat
@@ -7372,6 +7553,8 @@ msgid ""
 "\n"
 "Hungary - Intrastat report\n"
 msgstr ""
+"\n"
+"Hungaria - Laporan Intrastat\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_winbooks_import
@@ -7423,6 +7606,23 @@ msgid ""
 "picking (partial delivery\n"
 "      friendly).\n"
 msgstr ""
+"\n"
+"Impor order Amazon Anda di Odoo dan sinkronisasi pengirimannya\n"
+"============================================================\n"
+"\n"
+"Fitur Utama\n"
+"------------\n"
+"* Impor order dari beberapa akun dan marketplace.\n"
+"* Order akan dicocokkan dengan produk Odoo berdasarkan referensi internalnya "
+"(SKU di Amazon).\n"
+"* Pengiriman yang dikonfirmasi di Odoo akan disinkronisasi di Amazon.\n"
+"* Mendukung Fulfilment by Amazon (FBA) dan Fulfilment by Merchant (FBM):\n"
+"    * FBA: Lokasi dan perpindahan stok memungkinkan monitor stok Anda di "
+"Amazon Fulfilment\n"
+"      Centers.\n"
+"    * FBM: Notifikasi pengiriman akan dikirim ke Amazon untuk setiap picking "
+"yang dikonfirmasi (membantu untuk\n"
+"      pengiriman parsial).\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_lazada
@@ -7442,6 +7642,19 @@ msgid ""
 "* FBM: Delivery information is fetched from Lazada, track and synchronize "
 "the stock level to Lazada.\n"
 msgstr ""
+"\n"
+"Impor pesanan Lazada Anda ke Odoo dan sinkronkan pengiriman\n"
+"============================================================\n"
+"\n"
+"Fitur Utama\n"
+"------------\n"
+"* Impor pesanan dari beberapa toko sekaligus\n"
+"* Pesanan dicocokkan dengan produk di Odoo berdasarkan referensi internalnya "
+"(SKU di Lazada)\n"
+"* Mendukung Fulfillment by Lazada (FBL) dan Fulfillment by Merchant (FBM):\n"
+"* FBL: Mengimpor pesanan yang telah diselesaikan\n"
+"* FBM: Informasi pengiriman diambil dari Lazada, lacak dan sinkronkan level "
+"stok ke Lazada.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_shopee
@@ -7464,6 +7677,23 @@ msgid ""
 "synchronize the stock level to\n"
 "  Shopee\n"
 msgstr ""
+"\n"
+"Impor pesanan Shopee Anda di Odoo dan sinkronisasikan pengiriman\n"
+"============================================================\n"
+"\n"
+"Fitur Utama\n"
+"------------\n"
+"* Impor pesanan dari beberapa akun dan toko\n"
+"* Pesanan cocok dengan produk Odoo berdasarkan referensi internalnya "
+"(item_id atau model_id di\n"
+"  Shopee)\n"
+"* Mendukung penggunaan Fulfillment by Shopee (FBS), Fulfillment by Merchant "
+"(FBM), dan Fulfilled by Cross\n"
+"  Border Seller (Hybrid):\n"
+"* FBS: Mengimpor pesanan yang selesai\n"
+"* FBM/Hybrid: Informasi pengiriman diambil dari Shopee, lacak dan "
+"sinkronisasik level stok dengan\n"
+"  Shopee\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_debit_note
@@ -7759,6 +7989,10 @@ msgid ""
 "files\n"
 "can be attached on payslips emails.\n"
 msgstr ""
+"\n"
+"Mengintegrasikan Payroll Meksiko dengan aplikasi Dokumen sehingga file XML "
+"CFDI\n"
+"dapat dilampirkan pada email slip gaji.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_intrastat
@@ -7877,6 +8111,14 @@ msgid ""
 "- Leaves Setup.\n"
 "- Overtime Ruleset.\n"
 msgstr ""
+"\n"
+"Peraturan Payroll dan Pajak Irak\n"
+"========================================\n"
+"\n"
+"- Perhitungan Asuransi Sosial.\n"
+"- Manfaat dan Ketentuan Akhir Masa Kerja.\n"
+"- Pengaturan Cuti.\n"
+"- Aturan Lembur.\n"
 
 #. module: base
 #. odoo-python
@@ -7896,6 +8138,10 @@ msgid ""
 "=============================\n"
 "Provides electronic invoicing for Jordan in the POS.\n"
 msgstr ""
+"\n"
+"Akuntansi EDI untuk POS Yordania\n"
+"=============================\n"
+"Menyediakan faktur elektronik untuk Yordania di POS.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_jo_hr_payroll
@@ -7910,6 +8156,15 @@ msgid ""
 "- Income tax withholding and exemptions.\n"
 "- Sick leaves deductions.\n"
 msgstr ""
+"\n"
+"Aturan Payroll dan Pajak Yordania\n"
+"========================================\n"
+"\n"
+"- Perhitungan Lembur.\n"
+"- Aturan tunjangan akhir masa kerja dan kompensasi cuti yang tersisa.\n"
+"- Ketentuan untuk tunjangan akhir masa kerja dan cuti tahunan.\n"
+"- Pemotongan dan pembebasan pajak penghasilan.\n"
+"- Potongan cuti sakit.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_appointment_hr_recruitment
@@ -7960,6 +8215,17 @@ msgid ""
 "logic (Tiered deduction).\n"
 "- Includes \"Kuwait: Monthly Pay\" salary structure.\n"
 msgstr ""
+"\n"
+"Payroll & Fitur Lokal Kuwait\n"
+"=============================\n"
+"- Pengaturan dasar untuk Payroll Kuwait (Perusahaan, Karyawan, Jadwal).\n"
+"- **Asuransi Sosial:** Aturan pemotongan Jaminan Sosial Kuwait & kontribusi "
+"perusahaan.\n"
+"- **Akhir Masa Kerja:** Perhitungan Manfaat EOS (Ganti Rugi) dan Tunjangan "
+"Bulanan.\n"
+"- **Cuti & Tunjangan:** Tunjangan Cuti Tahunan dan logika Cuti Sakit Kuwait "
+"(potongan berjenjang).\n"
+"- Termasuk struktur gaji \"Kuwait: Gaji Bulanan\".\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_landed_costs
@@ -8384,6 +8650,37 @@ msgid ""
 "* My Quotations\n"
 "* Monthly Turnover (Graph)\n"
 msgstr ""
+"\n"
+"Kelola surat penawaran sales dan pesanan\n"
+"==================================\n"
+"\n"
+"Aplikasi ini memungkinkan pengelolaan target sales dengan cara yang efektif "
+"dan efisien \n"
+"dengan melacak semua sales order dan riwayatnya.\n"
+"\n"
+"Aplikasi ini menangani seluruh alur kerja sales:\n"
+"\n"
+"* **Penawaran** -> **Sales order** -> **Faktur**\n"
+"\n"
+"Preferensi (hanya bila Manajemen Gudang terinstal)\n"
+"------------------------------------------------------\n"
+"\n"
+"Bila Anda juga menginstal Manajemen Gudang, Anda dapat mengatur preferensi "
+"berikut:\n"
+"\n"
+"* Pengiriman: Pilihan pengiriman sekaligus atau sebagian\n"
+"* Penagihan: pilih cara pembayaran faktur\n"
+"* Incoterms: International Commercial terms\n"
+"\n"
+"\n"
+"Dengan modul ini, Anda dapat menyesuaikan sales order dan laporan faktur "
+"dengan\n"
+"kategori, subtotal, atau jeda halaman.\n"
+"\n"
+"Dashboard untuk Manajer Sales akan termasuk\n"
+"------------------------------------------------\n"
+"* Penawaran Saya\n"
+"* Omzet Bulanan (Grafik)\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_stock
@@ -8482,6 +8779,32 @@ msgid ""
 "also possible in order to automatically create a meeting when a time off "
 "request is accepted by setting up a type of meeting in time off Type.\n"
 msgstr ""
+"\n"
+"Kelola permintaan dan alokasi cuti\n"
+"========================================\n"
+"\n"
+"Aplikasi ini mengendalikan jadwal cuti perusahaan Anda. Aplikasi ini "
+"mengizinkan karyawan untuk meminta waktu cuti. Lalu, manajer dapat melihat "
+"permintaan waktu cuti dan menyetujui atau menolaknya. Dengan cara ini, Anda "
+"dapat mengendalikan perencanaan total waktu cuti untuk perusahaan atau "
+"departemen.\n"
+"\n"
+"Anda dapat mengonfigurasi beberapa jenis cuti (sakit, berbayar, ...) dan "
+"mengalokasikan cuti ke karyawan atau departemen dengan cepat menggunakan "
+"alokasi cuti. Karyawan juga dapat meminta lebih banyak waktu cuti dengan "
+"membuat alokasi cuti baru. Ini akan menambahkan total hari yang tersedia "
+"untuk tipe cuti tersebut (bila permintaan disetujui).\n"
+"\n"
+"Anda dapat melacak waktu cuti dengan beberapa cara melalui laporan-laporan "
+"berikut:\n"
+"\n"
+"* Ringkasan Cuti\n"
+"* Cuti berdasarkan Departemen\n"
+"* Analisis Cuti\n"
+"\n"
+"Sinkronisasi dengan agenda internal (Meetings untuk modul CRM) juga dapat "
+"dilakukan untuk secara otomatis membuat meeting saat permintaan cuti "
+"disetujui dengan menyiapkan tipe meeting di Tipe cuti.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mail_group
@@ -8595,6 +8918,11 @@ msgid ""
 "-Profit and Loss\n"
 "-Balance Sheet\n"
 msgstr ""
+"\n"
+"Laporan akuntansi Mauritania.\n"
+"====================================================\n"
+"- Laporan Laba Rugi\n"
+"- Neraca Keuangan\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mr
@@ -8603,6 +8931,8 @@ msgid ""
 "Mauritania basic package that contains the chart of accounts, the taxes, tax "
 "reports, etc.\n"
 msgstr ""
+"\n"
+"Paket dasar Mauritania yang berisi bagan akun, pajak, laporan pajak, dll. \n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx_hr_payroll
@@ -8993,6 +9323,30 @@ msgid ""
 "reminders\n"
 "        to multiple customers at once using the 'Send Reminders' action.\n"
 msgstr ""
+"\n"
+"Modul untuk mengotomatiskan faktur yang belum dibayar dengan pengingat "
+"berjenjang.\n"
+"=========================================================================\n"
+"\n"
+"Anda dapat menentukan berbagai tingkat pengingat melalui pengaturan "
+"penagihan:\n"
+"-----------------------------------------------------------------------------"
+"\n"
+"    Konfigurasi / Pengaturan / Faktur Pelanggan / Pengingat Faktur Otomatis\n"
+"\n"
+"Fitur:\n"
+"---------\n"
+"    - Pengingat otomatis berjenjang berdasarkan lama keterlambatan.\n"
+"    - Integrasi Kirim & Cetak:\n"
+"        Jika Kirim & Cetak dijalankan kembali pada faktur yang telah jatuh "
+"tempo, sistem\n"
+"        otomatis beralih ke template pengingat yang sesuai dan melampirkan\n"
+"        laporan follow-up.\n"
+"    - Pengingat massal:\n"
+"        User dapat memilih beberapa faktur dari tampilan daftar dan mengirim "
+"pengingat\n"
+"        ke beberapa pelanggan sekaligus menggunakan tindakan 'Kirim "
+"Pengingat'.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_bank_statement_import_camt
@@ -9565,6 +9919,17 @@ msgid ""
 "- Oman Employee Plan\n"
 "- Overtime Rulesets (Normal & Special)\n"
 msgstr ""
+"\n"
+"Aturan Payroll dan Akhir Masa Kerja di Oman.\n"
+"===========================================================\n"
+"- Struktur Gaji Bulanan\n"
+"- Perhitungan Jaminan Sosial\n"
+"- Ketentuan & Manfaat Akhir Masa Kerja\n"
+"- Kompensasi Cuti Tahunan yang Belum Digunakan\n"
+"- Jenis Cuti Berbayar\n"
+"- Perhitungan Cuti Sakit\n"
+"- Program Karyawan Oman\n"
+"- Aturan Lembur (Normal & Khusus)\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_event
@@ -9848,6 +10213,9 @@ msgid ""
 "Philippines Payroll Rules.\n"
 "==========================\n"
 msgstr ""
+"\n"
+"Aturan Payroll Filipina.\n"
+"==========================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_phone_validation
@@ -10280,6 +10648,8 @@ msgid ""
 "\n"
 "Save uploaded certificates to documents folder of employees.\n"
 msgstr ""
+"\n"
+"Simpan sertifikat yang diunggah ke folder dokumen karyawan.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_forecast
@@ -10384,6 +10754,15 @@ msgid ""
 "you can streamline every step of your fulfilment process,\n"
 "reduce handling time and improve customer experience.\n"
 msgstr ""
+"\n"
+"Kirim barang Anda melalui Starshipit dan lacak secara online\n"
+"============================================================\n"
+"\n"
+"Starshipit adalah provider terkemuka shipping terintegrasi dan solusi "
+"tracking untuk bisnis e-commerce yang berkembang.\n"
+"Secara mulus mengintegrasikan beragam kurir dan platform,\n"
+"Anda dapat merampingkan setiap langkah proses pemenuhan pesanan,\n"
+"mengurangi waktu penanganan dan meningkatkan pengalaman karyawan.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_bpost
@@ -10754,6 +11133,9 @@ msgid ""
 "\n"
 "Support Danish FIK number as payment references on customer invoices.\n"
 msgstr ""
+"\n"
+"Mendukung nomor FIK Denmark sebagai referensi pembayaran di faktur "
+"pelanggan.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_se
@@ -11262,6 +11644,14 @@ msgid ""
 "project powered by Weblate.\n"
 "In the settings, a custom Weblate project can be targeted."
 msgstr ""
+"\n"
+"Mode terjemahan tersedia jika ada beberapa bahasa terinstal. Pilih bahasa "
+"yang akan diterjemahkan,\n"
+"aktifkan mode terjemahan interaktif dari command palette, lalu telusuri "
+"layar yang akan diterjemahkan.\n"
+"Secara default, fitur terjemahan akan mengarahkan ke proyek terjemahan resmi "
+"Odoo yang didukung oleh Weblate.\n"
+"Di pengaturan, proyek Weblate khusus dapat ditargetkan."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fr_pos_cert
@@ -11362,6 +11752,9 @@ msgid ""
 "This bridge module allows the user to input ECPay information in Sales for "
 "sending their invoices to the ECPay system\n"
 msgstr ""
+"\n"
+"Modul penghubung ini memungkinkan user memasukkan informasi ECPay di modul "
+"Sales untuk mengirimkan faktur ke sistem ECPay\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_tw_edi_ecpay_website_sale
@@ -12595,6 +12988,18 @@ msgid ""
 "Defining if rewards can be applied at each renewal (if there are still "
 "enough points).\n"
 msgstr ""
+"\n"
+"Modul ini menambahkan fitur loyalitas ke sistem langganan, dengan:\n"
+"Menawarkan langganan dengan X sesi atau produk gratis setiap bulan.\n"
+"Otomatis menambahkan poin loyalitas ke kartu loyalitas pelanggan pada setiap "
+"perpanjangan.\n"
+"Menerapkan diskon pada X bulan pertama langganan.\n"
+"Otomatis menerapkan hadiah yang tersedia pada setiap perpanjangan (jika ada "
+"poin loyalitas).\n"
+"Menentukan apakah aturan loyalitas memberikan poin pada setiap perpanjangan "
+"langganan.\n"
+"Menentukan apakah hadiah dapat diterapkan pada setiap perpanjangan (jika "
+"poin masih cukup).\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_portal
@@ -12836,6 +13241,18 @@ msgid ""
 "the geolocalization. Partners get leads that are located around them.\n"
 "\n"
 msgstr ""
+"\n"
+"Modul ini memungkinkan Anda meneruskan prospek/peluang yang masuk ke "
+"reseller/mitra Anda.\n"
+"\n"
+"Penerusan prospek dapat dilakukan untuk satu atau beberapa prospek "
+"sekaligus. Tindakan ini tersedia di bagian *Mitra yang Ditugaskan* pada "
+"tampilan formulir prospek/peluang dan di menu *Tindakan* pada tampilan "
+"daftar.\n"
+"\n"
+"Penugasan otomatis ditentukan berdasarkan bobot tingkat mitra dan geolokasi. "
+"Mitra menerima prospek yang berlokasi di sekitarnya.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_automation
@@ -13006,6 +13423,12 @@ msgid ""
 "To publish a member, set a *Level* in their contact form and click the "
 "*Publish* button.\n"
 msgstr ""
+"\n"
+"Modul ini memungkinkan Anda untuk memublikasikan anggota/mitra di website "
+"Anda.\n"
+"\n"
+"Untuk memublikasikan anggota, atur *Level* di formulir kontaknya dan klik "
+"tombol *Publikasikan*.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_update_tax_tags
@@ -13183,6 +13606,21 @@ msgid ""
 "By comparing product lines you can also decide to order some products from\n"
 "one vendor and others from another vendor.\n"
 msgstr ""
+"\n"
+"Modul ini memungkinkan Anda mengelola Alternatif Pembelian Anda.\n"
+"===========================================================\n"
+"\n"
+"Modul ini membantu user membandingkan lini produk di seluruh RFQ dan "
+"memutuskan untuk memesan produk tertentu\n"
+"dari vendor yang berbeda sehingga keputusan pembelian dapat lebih fleksibel "
+"dan hemat biaya.\n"
+"Buat permintaan penawaran dengan menambahkan permintaan penawaran alternatif "
+"ke vendor yang berbeda.\n"
+"Tentukan pilihan Anda dengan memilih kombinasi terbaik antara waktu tunggu, "
+"OTD, dan/atau jumlah total.\n"
+"Dengan membandingkan lini produk, Anda juga dapat memutuskan untuk memesan "
+"beberapa produk dari\n"
+"satu vendor dan produk lainnya dari vendor lain.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_project_forecast
@@ -13481,6 +13919,12 @@ msgid ""
 "companies\n"
 "must submit monthly or quarterly, depending on their tax reporting period.\n"
 msgstr ""
+"\n"
+"Modul ini memungkinkan pembuatan deklarasi D.406 untuk persediaan stok dari "
+"Odoo.\n"
+"Deklarasi D.406 adalah file XML dalam format SAF-T yang harus diserahkan "
+"oleh perusahaan Rumania\n"
+"setiap bulan atau per tiga bulan, tergantung periode pelaporan pajaknya.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ro_saft
@@ -13594,6 +14038,11 @@ msgid ""
 "It integrates with the HR Sign module to facilitate the signing process of "
 "employee contracts and other HR-related documents.\n"
 msgstr ""
+"\n"
+"Modul ini memperluas aplikasi Dokumen untuk mengelola dokumen karyawan yang "
+"memerlukan tanda tangan.\n"
+"Modul ini terintegrasi dengan modul HR, Tanda Tangan, untuk memfasilitasi "
+"proses penandatanganan kontrak karyawan dan dokumen terkait HR lainnya.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ch_hr_payroll_elm_transmission_5_3
@@ -13626,6 +14075,18 @@ msgid ""
 "- Investigating technical issues\n"
 "- Supporting accounting or business process audits\n"
 msgstr ""
+"\n"
+"Modul ini merupakan ekstensi model mail.message untuk memungkinkan\n"
+"pelacakan teknis data yang berkaitan dengan diskusi.\n"
+"\n"
+"Modul ini menangkap dan menyimpan nilai yang dilacak dan dihasilkan oleh\n"
+"pesan dan operasi perubahan sistem.\n"
+"Informasi yang dilacak dapat digunakan untuk keperluan audit,\n"
+"debugging, dan analisis.\n"
+"\n"
+"Hal ini sangat berguna untuk:\n"
+"- Menyelidiki masalah teknis\n"
+"- Mendukung audit akuntansi atau proses bisnis\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sms
@@ -14147,6 +14608,10 @@ msgid ""
 "This module integrates WhatsApp with CRM leads, allowing users to easily\n"
 "continue ongoing WhatsApp conversations directly from the lead form.\n"
 msgstr ""
+"\n"
+"Modul ini mengintegrasikan WhatsApp dengan prospek CRM, sehingga user dapat "
+"dengan mudah\n"
+"melanjutkan percakapan WhatsApp langsung dari formulir prospek.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_platform_order
@@ -14155,6 +14620,9 @@ msgid ""
 "This module integrates the Odoo Point of Sale with various ordering "
 "platforms.\n"
 msgstr ""
+"\n"
+"Modul ini mengintegrasikan Point of Sale Odoo dengan berbagai platform "
+"pemesanan.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_platform_order_gofood
@@ -14162,6 +14630,8 @@ msgid ""
 "\n"
 "This module integrates with GoFood to receive and manage orders.\n"
 msgstr ""
+"\n"
+"Modul ini terintegrasi dengan GoFood untuk menerima dan mengelola pesanan.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_platform_order_grabfood
@@ -14169,6 +14639,9 @@ msgid ""
 "\n"
 "This module integrates with GrabFood to receive and manage orders.\n"
 msgstr ""
+"\n"
+"Modul ini terintegrasi dengan GrabFood untuk menerima dan mengelola "
+"pesanan.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in_pos_urban_piper
@@ -14276,6 +14749,12 @@ msgid ""
 "learn more about it here:\n"
 "https://odoo.github.io/paper-muncher/\n"
 msgstr ""
+"\n"
+"Modul ini merupakan implementasi dari\n"
+"mesin rendering internal Odoo yang disebut Paper Muncher.\n"
+"\n"
+"pelajari lebih lanjut di sini:\n"
+"https://odoo.github.io/paper-muncher/\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_report_wkhtmltox
@@ -14287,6 +14766,12 @@ msgid ""
 "learn more about it here:\n"
 "https://wkhtmltopdf.org/\n"
 msgstr ""
+"\n"
+"Modul ini merupakan implementasi mesin rendering wkhtmltopdf dan\n"
+"wlhtmltoimage untuk Odoo.\n"
+"\n"
+"pelajari lebih lanjut di sini:\n"
+"https://wkhtmltopdf.org/\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_partner_autocomplete
@@ -14297,6 +14782,11 @@ msgid ""
 "This module ensures that the Point of Sale remains independent of Partner "
 "Autocomplete.\n"
 msgstr ""
+"\n"
+"Modul ini menghubungkan Penyelesaian Otomatis Partner dengan POS sehingga "
+"data partner dapat diisi otomatis dari antarmuka POS.\n"
+"Modul ini memastikan POS tetap independen dari Penyelesaian Otomatis "
+"Partner.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_appraisal_skills
@@ -14462,6 +14952,14 @@ msgid ""
 "This module allows you to manage your Obox devices, their certificates,\n"
 "and their connections to your Odoo databases.\n"
 msgstr ""
+"\n"
+"Modul ini menyediakan pengelolaan Odoo IoT Box (Obox) di dalam Odoo.\n"
+"Obox adalah Odoo IoT Box, hardware yang dapat digunakan untuk menghubungkan\n"
+"perangkat eksternal (seperti printer, timbangan, terminal pembayaran, dll.) "
+"ke Odoo.\n"
+"\n"
+"Modul ini memungkinkan pengelolaan perangkat Obox, sertifikatnya,\n"
+"serta koneksinya ke database Odoo Anda.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_iap
@@ -14500,6 +14998,8 @@ msgid ""
 "\n"
 "This module provides the link between manufacturing and IoT devices.\n"
 msgstr ""
+"\n"
+"Modul ini menghubungkan manufaktur dan perangkat IoT.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_obox_mrp
@@ -14507,6 +15007,8 @@ msgid ""
 "\n"
 "This module provides the link between manufacturing and Obox devices.\n"
 msgstr ""
+"\n"
+"Modul ini menghubungkan produksi dan perangkat Obox.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_mobile
@@ -15005,6 +15507,8 @@ msgid ""
 "\n"
 "Use devices connected to an Obox to control the quality of your products.\n"
 msgstr ""
+"\n"
+"Gunakan perangkat yang terhubung ke Obox untuk mengontrol kualitas produk.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_recruitment_survey
@@ -15037,6 +15541,9 @@ msgid ""
 "User: %(user)s\n"
 "Groups: %(allowed_groups_msg)s"
 msgstr ""
+"\n"
+"User: %(user)s\n"
+"Grup: %(allowed_groups_msg)s"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sales_team
@@ -15059,6 +15566,11 @@ msgid ""
 "\n"
 "Uzbekistan accounting chart and localization.\n"
 msgstr ""
+"\n"
+"Akuntansi Uzbekistan: Bagan Akun.\n"
+"========================================\n"
+"\n"
+"Bagan akun dan pelokalan akuntansi Uzbekistan.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_vat
@@ -15200,6 +15712,10 @@ msgid ""
 "==============================\n"
 "Using SInvoice by Viettel\n"
 msgstr ""
+"\n"
+"Vietnam - Pengiriman Faktur Elektronik\n"
+"==============================\n"
+"Menggunakan SInvoice dari Viettel\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_vn_edi_viettel
@@ -15222,6 +15738,10 @@ msgid ""
 "=========================\n"
 "Using SInvoice by Viettel\n"
 msgstr ""
+"\n"
+"Vietnam - Faktur Elektronik POS\n"
+"=========================\n"
+"Menggunakan SInvoice dari Viettel\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_account
@@ -15374,6 +15894,8 @@ msgid ""
 "\n"
 "e-invoicing for Croatia\n"
 msgstr ""
+"\n"
+"e-faktur untuk Kroasia\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_rs_edi
@@ -15421,7 +15943,7 @@ msgstr "# Kelompok"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_uninstall
 msgid "# Records"
-msgstr ""
+msgstr "# Record"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups__all_users_count
@@ -15466,6 +15988,9 @@ msgid ""
 "\n"
 "Implicitly accessed through '%(document_kind)s' (%(document_model)s)."
 msgstr ""
+"%(previous_message)s\n"
+"\n"
+"Secara implisit diakses melalui '%(document_kind)s' (%(document_model)s)."
 
 #. module: base
 #. odoo-python
@@ -15610,7 +16135,7 @@ msgstr "'new' is reserved, and can not be used as path."
 #. odoo-python
 #: code:addons/fields.py:0 code:addons/fields_relational.py:0
 msgid "(Record: %(record)s, User: %(user)s)"
-msgstr ""
+msgstr "(Record: %(record)s, User: %(user)s)"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
@@ -15645,6 +16170,8 @@ msgid ""
 "- Only a root company can be set on “%(record)s”. Currently set to “%"
 "(company)s”"
 msgstr ""
+"- Hanya root company yang dapat ditetapkan pada “%(record)s”. Saat ini "
+"ditetapkan ke “%(company)s”"
 
 #. module: base
 #. odoo-python
@@ -15653,6 +16180,8 @@ msgid ""
 "- Record is company “%(company)s” while “%(field)s” (%(fname)s: %(values)s) "
 "belongs to another company."
 msgstr ""
+"- Record adalah perusahaan “%(company)s”, sedangkan “%(field)s” (%(fname)s: %"
+"(values)s) milik perusahaan lain."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -15714,11 +16243,13 @@ msgid ""
 "- “%(record)s” belongs to company “%(company)s” while “%(field)s” (%"
 "(fname)s: %(values)s) belongs to another company."
 msgstr ""
+"- “%(record)s” milik perusahaan “%(company)s”, sedangkan “%(field)s” (%"
+"(fname)s: %(values)s) milik perusahaan lain."
 
 #. module: base
 #: model:website,contact_us_link_url:base.default_website
 msgid "/contactus"
-msgstr ""
+msgstr "/contactus"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__base_enable_profiling_wizard__duration__days_1
@@ -15739,25 +16270,27 @@ msgstr "1 Bulan"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "1-01-85004-3 or 101850043"
-msgstr ""
+msgstr "1-01-85004-3 atau 101850043"
 
 #. module: base
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "10XXXXXXXXY or 20XXXXXXXXY or 15XXXXXXXXY or 16XXXXXXXXY or 17XXXXXXXXY"
 msgstr ""
+"10XXXXXXXXY atau 20XXXXXXXXY atau 15XXXXXXXXY atau 16XXXXXXXXY atau "
+"17XXXXXXXXY"
 
 #. module: base
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "11111111111 (NIN) or 2222222222 (VKN)"
-msgstr ""
+msgstr "11111111111 (NIN) atau 2222222222 (VKN)"
 
 #. module: base
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "123-45-67890 or 1234567890"
-msgstr ""
+msgstr "123-45-67890 atau 1234567890"
 
 #. module: base
 #. odoo-python
@@ -15765,12 +16298,14 @@ msgstr ""
 msgid ""
 "12345678 or UA12345678 (EDRPOU), 1234567890 (RNOPP) or 123456789012 (IPN)"
 msgstr ""
+"12345678 atau UA12345678 (EDRPOU), 1234567890 (RNOPP), atau 123456789012 "
+"(IPN)"
 
 #. module: base
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "1792060346001 or 1792060346"
-msgstr ""
+msgstr "1792060346001 atau 1792060346"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_auth_totp_mail
@@ -15781,13 +16316,14 @@ msgstr "2FA Invite mail"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "3002707692 [Tax identification number]"
-msgstr ""
+msgstr "3002707692 [Nomor identifikasi pajak]"
 
 #. module: base
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "310175397400003 [Fifteen digits, first and last digits should be \"3\"]"
 msgstr ""
+"310175397400003 [Lima belas digit, digit pertama dan terakhir harus \"3\"]"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_appraisal_survey
@@ -15813,7 +16349,7 @@ msgstr "Perhitungan Pajak Pihak Ke-3 untuk sale"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "49-098-576 or 49098576"
-msgstr ""
+msgstr "49-098-576 atau 49098576"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__base_enable_profiling_wizard__duration__minutes_5
@@ -15833,7 +16369,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "700 Number"
-msgstr ""
+msgstr "Nomor 700"
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_1
@@ -15843,6 +16379,8 @@ msgstr ""
 msgid ""
 "<a href=\"#\" class=\"btn btn-primary o_translate_inline\">Discover more</a>"
 msgstr ""
+"<a href=\"#\" class=\"btn btn-primary o_translate_inline\">Cari tahu "
+"lainnya</a>"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_ir_mail_server_list
@@ -15851,6 +16389,9 @@ msgid ""
 "                        No Outgoing Servers yet\n"
 "                    </b>"
 msgstr ""
+"<b class=\"o_view_nocontent_smiling_face\">\n"
+"                        Belum Ada Server Keluar\n"
+"                    </b>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -15971,7 +16512,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
 msgid "<i class=\"d-none d-md-block fa fa-envelope\" title=\"Email\"/>"
-msgstr ""
+msgstr "<i class=\"d-none d-md-block fa fa-envelope\" title=\"Email\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
@@ -15981,47 +16522,54 @@ msgid ""
 "                                    <i class=\"d-none d-md-block fa fa-key\" "
 "title=\"Login\" invisible=\"login == email\"/>"
 msgstr ""
+"<i class=\"d-none d-md-block fa fa-envelope\" title=\"Login / Email\" "
+"invisible=\"login != email\"/>\n"
+"                                    <i class=\"d-none d-md-block fa fa-key\" "
+"title=\"Login\" invisible=\"login == email\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
 msgid "<i class=\"d-none d-md-block fa fa-phone\" title=\"Phone\"/>"
-msgstr ""
+msgstr "<i class=\"d-none d-md-block fa fa-phone\" title=\"Telepon\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "<i class=\"d-none d-md-block fa fa-suitcase\" title=\"Position\"/>"
-msgstr ""
+msgstr "<i class=\"d-none d-md-block fa fa-suitcase\" title=\"Posisi\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 #: model_terms:ir.ui.view,arch_db:base.view_users_simple_form
 msgid "<i class=\"d-none d-md-inline-flex fa fa-building\" title=\"Company\"/>"
 msgstr ""
+"<i class=\"d-none d-md-inline-flex fa fa-building\" title=\"Perusahaan\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 #: model_terms:ir.ui.view,arch_db:base.view_users_simple_form
 msgid "<i class=\"d-none d-md-inline-flex fa fa-envelope\" title=\"Email\"/>"
-msgstr ""
+msgstr "<i class=\"d-none d-md-inline-flex fa fa-envelope\" title=\"Email\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
 msgid ""
 "<i class=\"d-none d-md-inline-flex fa fa-fw fa-envelope\" title=\"Email\"/>"
 msgstr ""
+"<i class=\"d-none d-md-inline-flex fa fa-fw fa-envelope\" title=\"Email\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
 msgid ""
 "<i class=\"d-none d-md-inline-flex fa fa-fw fa-phone\" title=\"Phone\"/>"
 msgstr ""
+"<i class=\"d-none d-md-inline-flex fa fa-fw fa-phone\" title=\"Telepon\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 #: model_terms:ir.ui.view,arch_db:base.view_users_simple_form
 msgid "<i class=\"d-none d-md-inline-flex fa fa-phone\" title=\"Phone\"/>"
-msgstr ""
+msgstr "<i class=\"d-none d-md-inline-flex fa fa-phone\" title=\"Telepon\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_users_kanban
@@ -16045,35 +16593,35 @@ msgstr "<i class=\"fa fa-envelope me-1\" role=\"img\" aria-label=\"Login\"/>"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_partner_kanban_view
 msgid "<i class=\"fa fa-fw me-1 fa-envelope text-muted\" title=\"Email\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-fw me-1 fa-envelope text-muted\" title=\"Email\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 #: model_terms:ir.ui.view,arch_db:base.view_res_company_kanban
 msgid "<i class=\"fa fa-fw me-1 fa-envelope\" title=\"Email\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-fw me-1 fa-envelope\" title=\"Email\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_partner_kanban_view
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "<i class=\"fa fa-fw me-1 fa-map-marker\" title=\"Location\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-fw me-1 fa-map-marker\" title=\"Lokasi\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_partner_kanban_view
 msgid "<i class=\"fa fa-fw me-1 fa-phone text-muted\" title=\"Phone\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-fw me-1 fa-phone text-muted\" title=\"Telepon\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 #: model_terms:ir.ui.view,arch_db:base.view_res_company_kanban
 msgid "<i class=\"fa fa-fw me-1 fa-phone\" title=\"Phone\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-fw me-1 fa-phone\" title=\"Telepon\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "<i class=\"fa fa-fw me-1 fa-suitcase\" title=\"Position\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-fw me-1 fa-suitcase\" title=\"Posisi\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -16086,6 +16634,8 @@ msgid ""
 "<i class=\"o_button_icon oi oi-fw oi oi-arrow-right\"/>\n"
 "                                Access rights documentation"
 msgstr ""
+"<i class=\"o_button_icon oi oi-fw oi oi-arrow-right\"/>\n"
+"                                Dokumentasi hak akses"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_currency_kanban
@@ -16095,7 +16645,7 @@ msgstr "<span class=\"badge rounded-pill bg-light border\">tidak aktif</span>"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_access_kanban_view
 msgid "<span class=\"me-1\">For</span>"
-msgstr ""
+msgstr "<span class=\"me-1\">Untuk</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_access_kanban_view
@@ -16122,6 +16672,12 @@ msgid ""
 "                                            Update if compromised.\n"
 "                                        </span>"
 msgstr ""
+"<span class=\"o_form_label\">\n"
+"                                            Ubah Password\n"
+"                                        </span>\n"
+"                                        <span class=\"text-muted\">\n"
+"                                            Ganti bila bocor.\n"
+"                                        </span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_upgrade_install
@@ -16184,6 +16740,10 @@ msgid ""
 "                                            Check if they are yours.\n"
 "                                        </span>"
 msgstr ""
+"<span class=\"text-muted\">\n"
+"                                            Periksa apakah ada yang milik "
+"Anda.\n"
+"                                        </span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
@@ -16193,6 +16753,9 @@ msgid ""
 "                                            Connect external services.\n"
 "                                        </span>"
 msgstr ""
+"<span class=\"text-muted\">\n"
+"                                            Hubungkan layanan eksternal.\n"
+"                                        </span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
@@ -16293,6 +16856,8 @@ msgid ""
 "<span invisible=\"impacted_application_count == 1\"> apps</span><span "
 "invisible=\"impacted_application_count &gt; 1\"> app</span>"
 msgstr ""
+"<span invisible=\"impacted_application_count == 1\"> aplikasi</span><span "
+"invisible=\"impacted_application_count &gt; 1\"> aplikasi</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_uninstall
@@ -16300,6 +16865,8 @@ msgid ""
 "<span invisible=\"impacted_module_count == 1\"> modules</span><span "
 "invisible=\"impacted_module_count &gt; 1\"> module</span>"
 msgstr ""
+"<span invisible=\"impacted_module_count == 1\"> modul</span><span "
+"invisible=\"impacted_module_count &gt; 1\"> modul</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_uninstall
@@ -16307,6 +16874,8 @@ msgid ""
 "<span invisible=\"model_count == 1\"> models</span><span "
 "invisible=\"model_count &gt; 1\"> model</span>"
 msgstr ""
+"<span invisible=\"model_count == 1\"> model</span><span "
+"invisible=\"model_count &gt; 1\"> model</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.reset_view_arch_wizard_view
@@ -16345,7 +16914,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_groups_form
 msgid "<span> days</span>"
-msgstr ""
+msgstr "<span> hari</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodulereference
@@ -16370,7 +16939,7 @@ msgstr "<span>Nama</span>"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.server_action_history_wizard_view
 msgid "<span>No diff available</span>"
-msgstr ""
+msgstr "<span>Tidak ada diff tersedia</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodulereference
@@ -16447,6 +17016,8 @@ msgstr "<strong>Label</strong>"
 msgid ""
 "<strong>Let's first confirm it's you. Enter your current password:</strong>"
 msgstr ""
+"<strong>Ayo konfirmasi terlebih dahulu bahwa ini Anda. Masukkan password "
+"Anda saat ini:</strong>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodulereference
@@ -16624,6 +17195,9 @@ msgid ""
 "and is used by domestic money transfer protocols (from/to bank accounts in "
 "the same country)."
 msgstr ""
+"Nomor kliring (atau nomor rute) merujuk pada bank, cabang, atau lokasi dan "
+"digunakan oleh protokol transfer uang domestik (dari/ke rekening bank di "
+"negara yang sama)."
 
 #. module: base
 #: model:ir.module.module,description:base.module_frontdesk
@@ -16717,6 +17291,11 @@ msgid ""
 "and\n"
 "                    turbomachinery and propulsion)."
 msgstr ""
+"Organisasi pendidikan dan ilmiah nirlaba\n"
+"                    internasional, dengan tiga departemen (aeronautics dan\n"
+"                    aerospace, environmental dan applied fluid dynamics, "
+"serta\n"
+"                    turbomachinery dan propulsion)."
 
 #. module: base
 #: model:res.partner,website_short_description:base.res_partner_3
@@ -16725,6 +17304,9 @@ msgid ""
 "three departments (aeronautics and aerospace, environmental and applied "
 "fluid dynamics, and turbomachinery and propulsion)."
 msgstr ""
+"Organisasi pendidikan dan ilmiah nirlaba internasional, dengan tiga "
+"departemen (aeronautics dan aerospace, environmental dan applied fluid "
+"dynamics, sertra turbomachinery dan propulsion)."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_razorpay
@@ -16749,7 +17331,7 @@ msgstr "Penyedia pembayaran mencakup beberapa negara di Amerika Latin."
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_toss_payments
 msgid "A payment provider covering the South Korea market"
-msgstr ""
+msgstr "Penyedia layanan pembayaran yang melayani market Korea Selatan"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_redsys
@@ -46686,7 +47268,7 @@ msgstr "Mulai konfigurasi"
 #: model_terms:ir.ui.view,arch_db:base.view_partner_bank_form
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "State"
-msgstr "Status"
+msgstr "Negara Bagian/Provinsi"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country_state__code
@@ -46711,7 +47293,7 @@ msgstr "Negara Bagian Palestina"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country__state_ids
 msgid "States"
-msgstr "Status"
+msgstr "Negara Bagian/Provinsi"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__application_statistics

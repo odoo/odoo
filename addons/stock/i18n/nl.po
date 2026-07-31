@@ -14,8 +14,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-03 17:36+0000\n"
-"PO-Revision-Date: 2026-07-21 03:24+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2026-07-30 13:12+0000\n"
+"Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s19-4/stock/"
 "nl/>\n"
 "Language: nl\n"
@@ -662,6 +662,10 @@ msgid ""
 "                                All products could not be reserved. Click on "
 "the \"Reserve\" button to try to reserve products."
 msgstr ""
+"<i class=\"fa fa-exclamation-triangle\"/>\n"
+"                                Niet alle producten konden worden "
+"gereserveerd. Klik op de knop 'Reserveren' om te proberen de producten te "
+"reserveren."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
@@ -819,7 +823,7 @@ msgstr "<span class=\"text-muted small\"> Op voorraad</span>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_kanban_stock_view
 msgid "<span class=\"text-muted\">On Hand</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">Aanwezig</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -1178,7 +1182,7 @@ msgstr "Product toevoegen"
 #. odoo-javascript
 #: code:addons/stock/static/src/views/picking_form/stock_move_product_label.xml:0
 msgid "Add a description"
-msgstr ""
+msgstr "Voeg een beschrijving toe"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_product_production_lot_form
@@ -1323,7 +1327,7 @@ msgstr "Alle onderliggende pakketten"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.ir_module_module_action_delivery_provider_modules
 msgid "All Delivery Providers"
-msgstr ""
+msgstr "Alle bezorgdiensten"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_putaway_list
@@ -1361,7 +1365,7 @@ msgstr "Alle retourverplaatsingen"
 #: code:addons/stock/static/src/allocation_report/allocation_report.xml:0
 #: model:ir.actions.client,name:stock.allocation_report_action
 msgid "Allocation Report"
-msgstr ""
+msgstr "Toewijzingsrapport"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -1386,6 +1390,8 @@ msgstr "Gemengde producten toestaan"
 #: model:ir.model.fields,help:stock.field_stock_picking_type__allocated_location_id
 msgid "Allow to define the location where allocated products should be sent."
 msgstr ""
+"Maak het mogelijk om de locatie te definiëren waar toegewezen producten "
+"naartoe moeten worden verzonden."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__allowed_location_ids
@@ -1859,7 +1865,7 @@ msgstr "Bruto gewicht"
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.ir_module_module_action_delivery_provider_modules
 msgid "Buy Odoo Enterprise now to get more providers."
-msgstr ""
+msgstr "Koop nu Odoo Enterprise om toegang te krijgen tot meer providers."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_template__tracking__lot
@@ -2201,7 +2207,7 @@ msgstr "Configuratie"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Configure Methods"
-msgstr ""
+msgstr "Methoden configureren"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_company__horizon_days
@@ -2638,7 +2644,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/stock/static/src/views/search/stock_report_search_panel.xml:0
 msgid "Current stock"
-msgstr ""
+msgstr "Huidige voorraad"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_label_layout__move_quantity__custom
@@ -3083,7 +3089,7 @@ msgstr "Gevraagd"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__product_qty
 msgid "Demand in Product UoM"
-msgstr ""
+msgstr "Vraag in product-maateenheid"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__route_ids
@@ -3673,7 +3679,7 @@ msgstr "Gefilterde locatie"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Find a Delivery Provider"
-msgstr ""
+msgstr "Bezorgdienst zoeken"
 
 #. module: stock
 #: model:product.removal,name:stock.removal_fifo
@@ -3701,7 +3707,7 @@ msgstr "Eerste serienummer"
 #. odoo-javascript
 #: code:addons/stock/static/src/client_actions/stock_traceability_report_backend.xml:0
 msgid "Fold"
-msgstr ""
+msgstr "Vouwen"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__message_follower_ids
@@ -3725,7 +3731,7 @@ msgstr "Font awesome icoon bijv. fa-tasks"
 #. odoo-javascript
 #: code:addons/stock/static/src/allocation_report/allocation_report.xml:0
 msgid "For"
-msgstr ""
+msgstr "Voor"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_category__removal_strategy_id
@@ -3806,7 +3812,7 @@ msgstr "Voorspelde voorraad"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__forecasted_location_id
 msgid "Forecasted Location"
-msgstr ""
+msgstr "Voorspelde locatie"
 
 #. module: stock
 #. odoo-python
@@ -3949,7 +3955,7 @@ msgstr "Partijnummers genereren"
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "Generate Lots"
-msgstr ""
+msgstr "Partijen genereren"
 
 #. module: stock
 #. odoo-javascript
@@ -3961,7 +3967,7 @@ msgstr "Serienummers genereren"
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "Generate Serials"
-msgstr ""
+msgstr "Serienummers genereren"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__print_label
@@ -4349,6 +4355,9 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically show the allocation "
 "report (if there are moves to allocate to) when validating."
 msgstr ""
+"Als dit selectievakje is aangevinkt, zal Odoo automatisch het "
+"toewijzingsrapport tonen (als er verplaatsingen zijn om aan toe te wijzen) "
+"bij het bevestigen."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__show_operations
@@ -5330,12 +5339,12 @@ msgstr "Locatiesoort"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__allocated_location_id
 msgid "Location for allocation"
-msgstr ""
+msgstr "Locatie voor toewijzing"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__forecasted_location_id
 msgid "Location used in the computation of the forecast."
-msgstr ""
+msgstr "Locatie gebruikt bij de berekening van de voorspelling."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_putaway_search
@@ -6003,6 +6012,7 @@ msgstr "Geen toewijzingsbehoefte gevonden."
 #: code:addons/stock/models/stock_picking.py:0
 msgid "No backorder has been planned for undelivered demanded quantities: %s"
 msgstr ""
+"Er is geen backorder gepland voor niet-geleverde gevraagde hoeveelheden: %s"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.help_message_template
@@ -6252,6 +6262,8 @@ msgid ""
 "Only %(nbr_done)s %(uom)s of %(product)s delivered in contrast to the "
 "expected %(nbr_demanded)s %(uom)s"
 msgstr ""
+"Slechts %(nbr_done)s %(uom)s van %(product)s geleverd in plaats van de "
+"verwachte %(nbr_demanded)s %(uom)s"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
@@ -6298,7 +6310,7 @@ msgstr "Bewerkingsoorten"
 #. odoo-python
 #: code:addons/stock/report/stock_allocation_report.py:0
 msgid "Operation not found"
-msgstr ""
+msgstr "Bewerking niet gevonden"
 
 #. module: stock
 #. odoo-python
@@ -6423,6 +6435,8 @@ msgid ""
 "Organize deliveries by dock, assign drivers and vehicles, and print "
 "consignment notes."
 msgstr ""
+"Organiseer leveringen per laadperron, wijs chauffeurs en voertuigen toe en "
+"druk vrachtbrieven af."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_form
@@ -7025,7 +7039,7 @@ msgstr "Maak een magazijn aan voor bedrijf %s."
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.return_label_header
 msgid "Please put this document inside your return parcel.<br/>"
-msgstr ""
+msgstr "Leg dit document in je retourzending.<br/>"
 
 #. module: stock
 #. odoo-javascript
@@ -8158,7 +8172,7 @@ msgstr "Deelverpakkingen reserveren"
 #: code:addons/stock/static/src/allocation_report/allocation_report.xml:0
 #: code:addons/stock/static/src/allocation_report/out_line/out_line.js:0
 msgid "Reserved"
-msgstr ""
+msgstr "Gereserveerd"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__reserved_quantity
@@ -8608,7 +8622,7 @@ msgstr "Selecteer een pakkettype"
 #. odoo-javascript
 #: code:addons/stock/static/src/views/search/stock_report_search_panel.xml:0
 msgid "Select a date..."
-msgstr ""
+msgstr "Selecteer een datum..."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view
@@ -9195,7 +9209,7 @@ msgstr "Voorraad"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_allocation_report
 msgid "Stock Allocation Report"
-msgstr ""
+msgstr "Rapport voorraadtoewijzing"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_stock_barcode_barcodelookup
@@ -9560,6 +9574,8 @@ msgid ""
 "Technical field used to compute whether the button \"Reserve\" should be "
 "displayed."
 msgstr ""
+"Technisch veld dat wordt gebruikt om te bepalen of de knop „Reserveren” moet "
+"worden weergegeven."
 
 #. module: stock
 #. odoo-python
@@ -9908,7 +9924,7 @@ msgstr "Er zijn geen voorraadaanpassingen om terug te draaien."
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 msgid "There is nothing to reserve."
-msgstr ""
+msgstr "Er is niets om te reserveren."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_move_line_action
@@ -10149,6 +10165,8 @@ msgid ""
 "This report cannot be used for done and not done %(doc_type)s at the same "
 "time"
 msgstr ""
+"Dit rapport kan niet tegelijkertijd worden gebruikt voor voltooide en niet-"
+"voltooide %(doc_type)s"
 
 #. module: stock
 #. odoo-python
@@ -10472,7 +10490,7 @@ msgstr "Verplaatsing"
 #. module: stock
 #: model:mail.message.subtype,name:stock.mt_picking_state
 msgid "Transfer Status"
-msgstr ""
+msgstr "Verplaatsingsstatus"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_tree
@@ -10544,7 +10562,7 @@ msgstr "Transitlocaties"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_stock_fleet
 msgid "Transport Management"
-msgstr ""
+msgstr "Transportmanagement"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__trigger
@@ -10586,7 +10604,7 @@ msgstr "Soort"
 #: model:ir.model.fields,field_description:stock.field_stock_picking__picking_type_code
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__code
 msgid "Type of Operation"
-msgstr ""
+msgstr "Bewerkingstype"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_lot__activity_exception_decoration
@@ -10819,7 +10837,7 @@ msgstr "Diagram bekijken"
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_product_template_tree
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_product_tree
 msgid "View Forecast"
-msgstr ""
+msgstr "Voorspelling bekijken"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__view_location_id
@@ -10830,7 +10848,7 @@ msgstr "Locatie bekijken"
 #. odoo-javascript
 #: code:addons/stock/static/src/allocation_report/product_line/product_line.xml:0
 msgid "View more"
-msgstr ""
+msgstr "Meer bekijken"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_location__usage__view
@@ -11674,7 +11692,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.return_label_header
 msgid "Your parcel must be sent to this address:"
-msgstr ""
+msgstr "Je pakket moet naar dit adres worden verzonden:"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree_editable
@@ -11940,7 +11958,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/report/stock_allocation_report.py:0
 msgid "transfers"
-msgstr ""
+msgstr "verplaatsingen"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document

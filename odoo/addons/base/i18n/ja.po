@@ -19,8 +19,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-30 15:03+0000\n"
-"PO-Revision-Date: 2026-07-21 18:50+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2026-07-31 08:07+0000\n"
+"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-4/base/"
 "ja/>\n"
 "Language: ja\n"
@@ -491,6 +491,11 @@ msgid ""
 "formats.\n"
 "\n"
 msgstr ""
+"\n"
+"\n"
+"このモジュールは、POS販売オーダをさまざまなUBL 2.1形式でエクスポートするため"
+"のヘルパー機能を提供します。\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_imin
@@ -512,6 +517,11 @@ msgid ""
 "        can't be used for endpoints requiring any other scope than 'A'.\n"
 "        "
 msgstr ""
+"\n"
+"        スコープが「A」のトークンは、スコープ「A」のベアラートークンを必要と"
+"するエンドポイントでのみ使用でき、\n"
+"        「A」以外のスコープを必要とするエンドポイントには使用できません。\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ar_reports
@@ -640,6 +650,9 @@ msgid ""
 "- Support for the mandatory electronic invoicing in France\n"
 "- Send and receive documents via the Odoo approved platform\n"
 msgstr ""
+"\n"
+"- フランスにおける電子請求書の義務化に対応\n"
+"- Odoo承認プラットフォームを介して、書類の送受信が可能\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_ai_mcp
@@ -661,6 +674,23 @@ msgid ""
 "    2. NEVER add your token in a text field on your MCP client. ALWAYS use "
 "fields of type Credential or Password as they are encrypted.\n"
 msgstr ""
+"\n"
+"- Odoo MCP サーバに接続するには：\n"
+"    1. MCPサーバの URL を、OdooのURL にサフィックス「/mcp」を付けたものに管理"
+"設定します。たとえば、OdooのURL が「https://example.odoo.com」の場合、MCP "
+"サーバの URL は「https://example.odoo.com/mcp」となります。\n"
+"    2. お好みの MCP クライアントで認証トークンとして使用する API キーを生成し"
+"ます：\n"
+"        a. Odoo にログインします。\n"
+"        b. ユーザアバターをクリックします。\n"
+"        c. セキュリティタブに移動します。\n"
+"        d. API キーを生成します。適用範囲をMCPに設定します。\n"
+"- 重要：\n"
+"    1. トークンを絶対に他人と共有しないでください。トークンにアクセスできた人"
+"は、あなたになりすましてMCPサーバーを利用できます。\n"
+"    2. MCPクライアントのテキストフィールドにトークンを絶対に追加しないでくだ"
+"さい。暗号化される「Credential（認証情報）」または「Password（パスワード）」"
+"タイプのフィールドを必ず使用してください。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_auth_totp_mail
@@ -769,6 +799,8 @@ msgid ""
 "\n"
 "A60 accounting reports for Hungary\n"
 msgstr ""
+"\n"
+"ハンガリー向けA60会計レポート\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_au_aba
@@ -1127,6 +1159,9 @@ msgid ""
 "Accounting Data for Iraqi Payroll Rules\n"
 "============================================\n"
 msgstr ""
+"\n"
+"イラクの給与計算ルールに関する会計データ\n"
+"============================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_jo_hr_payroll_account
@@ -7296,6 +7331,8 @@ msgid ""
 "\n"
 "Hungary - Intrastat report\n"
 msgstr ""
+"\n"
+"ハンガリー - Intrastatレポート\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_winbooks_import
@@ -7366,6 +7403,20 @@ msgid ""
 "* FBM: Delivery information is fetched from Lazada, track and synchronize "
 "the stock level to Lazada.\n"
 msgstr ""
+"\n"
+"LazadaオーダをOdooにインポートし、配送を同期します\n"
+"============================================================\n"
+"\n"
+"主な特徴\n"
+"------------\n"
+"* 複数のショップからオーダをインポートできます。\n"
+"* オーダは、内部参照(Lazada上のSKU)に基づいてOdooのプロダクトとマッチングされ"
+"ます。\n"
+"* Lazadaによるフルフィルメント(FBL)と出品者によるフルフィルメント(FBM)の両方"
+"に対応しています：\n"
+"* FBL: 完了したオーダをインポートします。\n"
+"* FBM: Lazadaから配送情報を取得し、Lazada側へ在庫レベルの追跡および同期を行い"
+"ます。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_shopee
@@ -11100,7 +11151,7 @@ msgstr ""
 "\n"
 "このモジュールの目的は、\"スパース\"フィールド、つまりほとんどがnullの"
 "フィールドを実装することです。\n"
-"この実装は、テーブルのカラム数に関するPostgreSQLの制限を回避します。\n"
+"この実装は、テーブルの列数に関するPostgreSQLの制限を回避します。\n"
 "全てのスパースフィールドの値は、JSONマッピングの形式で\"シリアル化され"
 "た\"フィールドに格納されます。\n"
 
@@ -16587,7 +16638,7 @@ msgstr "デモ用に偽の支払いフローを実行するための決済プロ
 msgid ""
 "A powerful suite of AI tools and agents integrated directly into your Odoo "
 "environment"
-msgstr ""
+msgstr "Odoo環境と直接連携した強力なAIツールとエージェントのスイート"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_groups_form
@@ -16598,6 +16649,10 @@ msgid ""
 "group                                             that is constrained by "
 "their domain and the restrictions"
 msgstr ""
+"制限とは、グループに紐付かないアクセス権で、全体に一律で適用され、"
+"                                             回避できないものです。権限とは、"
+"グループに紐付いたアクセス権で                                             "
+"グループのドメイン条件および制限によって制約されるものです。"
 
 #. module: base
 #: model:ir.module.module,description:base.module_theme_pawtastic
@@ -18809,7 +18864,7 @@ msgstr "会計小切手印刷で照合機能を使用できるようにします
 #: model:ir.module.module,summary:base.module_website_delivery_sendcloud
 #: model:ir.module.module,summary:base.module_website_sale_fedex
 msgid "Allows website customers to choose delivery pick-up points"
-msgstr "ウェブサイト顧客が配送ピックアップ地点を選択できるようにします。"
+msgstr "ウェブサイトの顧客が、配送の受取拠点を選択できるようにします。"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_amazon
@@ -23772,27 +23827,27 @@ msgstr "カラーインデクス"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_company__report_tables_id__column
 msgid "Column"
-msgstr "カラム"
+msgstr "列"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__column1
 msgid "Column 1"
-msgstr "カラム1"
+msgstr "列1"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__column2
 msgid "Column 2"
-msgstr "カラム2"
+msgstr "列2"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields__column2
 msgid "Column referring to the record in the comodel table"
-msgstr "colmodel テーブル内のレコードを参照するカラム"
+msgstr "colmodel テーブル内のレコードを参照する列"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields__column1
 msgid "Column referring to the record in the model table"
-msgstr "モデルテーブル内のレコードを参照するカラム"
+msgstr "モデルテーブル内のレコードを参照する列"
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_1
@@ -27533,9 +27588,11 @@ msgid ""
 "* Traceability report\n"
 "* Cost Structure report (mrp_account)"
 msgstr ""
-"MRPの企業版拡張*作業オーダ計画。製造指図/作業区ごとにグループ化された"
-"ガントビューによる計画の確認*トレーサビリティレポート*原価構造レポート"
-"(mrp_account)"
+"MRP用エンタープライズ拡張機能\n"
+"* 作業オーダの計画。製造オーダ/作業区ごとにグループ化された"
+"ガントチャートビューで計画を確認\n"
+"* トレーサビリティレポート\n"
+"* 原価構造レポート (mrp_account)"
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_lint_enterprise
@@ -31315,7 +31372,7 @@ msgid ""
 "few records (e.g. Stages, Job Positions, Event Types, etc.)."
 msgstr ""
 "チェックすると、グループ化された結果にターゲットモデルのすべてのレコードが含"
-"まれます（例：'Group By'フィルター、かんばんカラムなど）\n"
+"まれます（例：'Group By'フィルター、かんばん列など）\n"
 "フィールドに多くのレコードが含まれているターゲットモデルの場合、"
 "パフォーマンスが大幅に低下する可能性があることに注意してください。;\n"
 "通常、少ないレコードのモデルで使用されます（例：ステージ、職位、"
@@ -38601,7 +38658,7 @@ msgstr ""
 "\n"
 "ビルディングブロックは、反応が速くモバイルフレンドリーな流体グリッドシステム"
 "に基づいています。\n"
-"デバイスやビューポートのサイズが大きくなるにつれて、最大12カラムまで適切に"
+"デバイスやビューポートのサイズが大きくなるにつれて、最大12列まで適切に"
 "スケールアップされます。\n"
 "\n"
 "プロフェッショナルなテーマ\n"
@@ -48309,7 +48366,7 @@ msgstr "このウィンドウ"
 #. odoo-python
 #: code:addons/base/models/ir_model.py:0
 msgid "This column contains module data and cannot be removed!"
-msgstr "このカラムには、モジュールデータが含まれており、削除することはできません！"
+msgstr "この列には、モジュールデータが含まれており、削除することはできません！"
 
 #. module: base
 #. odoo-python
@@ -48560,8 +48617,8 @@ msgid ""
 "This module allows ecommerce users to choose to deliver to Pick-Up points "
 "for the FEDEX connector."
 msgstr ""
-"このモジュールにより、eコマースユーザはFEDEXコネクタのピックアップ地点への配"
-"送を選択することができます。"
+"このモジュールにより、eコマースユーザはFEDEXコネクタの受取拠点への配送を選択"
+"することができます。"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_delivery_sendcloud
@@ -48569,8 +48626,8 @@ msgid ""
 "This module allows ecommerce users to choose to deliver to Pick-Up points "
 "for the Sendcloud connector."
 msgstr ""
-"このモジュールにより、eコマースユーザはSendcloudコネクタのピックアップ地点へ"
-"の配送を選択できるようになります。"
+"このモジュールにより、eコマースユーザはSendcloudコネクタの受取拠点への配送を"
+"選択できるようになります。"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_hr_recruitment

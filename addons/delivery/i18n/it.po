@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-19 17:37+0000\n"
-"PO-Revision-Date: 2026-07-21 05:36+0000\n"
+"PO-Revision-Date: 2026-07-28 16:57+0000\n"
 "Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
 "Language-Team: Italian <https://translate.odoo.com/projects/odoo-s19-4/"
 "delivery/it/>\n"
@@ -33,6 +33,10 @@ msgid ""
 "object.name)\n"
 "        "
 msgstr ""
+"\n"
+"            \"Nota di consegna - %s - %s\" % (object.partner_id.name or "
+"\"\", object.name)\n"
+"        "
 
 #. module: delivery
 #. odoo-python
@@ -170,17 +174,17 @@ msgstr ""
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_note
 msgid "<span>Delivery Note</span>"
-msgstr ""
+msgstr "<span>Nota di consegna</span>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_note
 msgid "<strong>Customer</strong>"
-msgstr ""
+msgstr "<strong>Cliente</strong>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_note
 msgid "<strong>Delivery Address</strong>"
-msgstr ""
+msgstr "<strong>Indirizzo di consegna</strong>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_report_saleorder_document
@@ -190,27 +194,27 @@ msgstr "<strong>Descrizione consegna</strong>"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_note
 msgid "<strong>Delivery method</strong>"
-msgstr ""
+msgstr "<strong>Metodo di consegna</strong>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_note
 msgid "<strong>Order</strong>"
-msgstr ""
+msgstr "<strong>Ordine</strong>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_note
 msgid "<strong>Remaining quantities to ship:</strong>"
-msgstr ""
+msgstr "<strong>Quantità rimanenti da spedire:</strong>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_note
 msgid "<strong>Shipping Date</strong>"
-msgstr ""
+msgstr "<strong>Data di spedizione</strong>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_note
 msgid "<strong>Tracking Number</strong>"
-msgstr ""
+msgstr "<strong>Codice tracciabilità</strong>"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__carrier_description
@@ -333,6 +337,7 @@ msgstr "Pagamento alla consegna"
 #: code:addons/delivery/models/payment_provider.py:0
 msgid "Cash on delivery not allowed by selected delivery method"
 msgstr ""
+"Pagamento alla consegna non consentito dal metodo di consegna selezionato"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__company_id
@@ -359,7 +364,7 @@ msgstr "Configura metodi"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_note_form_view
 msgid "Confirm Shipment"
-msgstr ""
+msgstr "Conferma spedizione"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_res_partner
@@ -479,23 +484,23 @@ msgstr "Metodi di consegna"
 #: model:ir.actions.report,name:delivery.action_report_delivery_note
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_note_form_view
 msgid "Delivery Note"
-msgstr ""
+msgstr "Nota di consegna"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_note_wizard_line
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_note_list_view
 msgid "Delivery Note Line"
-msgstr ""
+msgstr "Riga nota di consegna"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_note_wizard_line__note_id
 msgid "Delivery Note Reference"
-msgstr ""
+msgstr "Riferimento nota di consegna"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_note_wizard
 msgid "Delivery Note Wizard"
-msgstr ""
+msgstr "Procedura guidata note di consegna"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__delivery_price
@@ -531,7 +536,7 @@ msgstr "Costi di spedizione da ricalcolare"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_note_wizard__dm_id
 msgid "Delivery method"
-msgstr ""
+msgstr "Metodo di consegna"
 
 #. module: delivery
 #. odoo-python
@@ -757,7 +762,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_note_wizard_line__product_image
 msgid "Image 128"
-msgstr ""
+msgstr "Immagine 128"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -890,12 +895,12 @@ msgstr "Non disponibile per l'ordine corrente"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_note_wizard__name
 msgid "Note Reference"
-msgstr ""
+msgstr "Riferimento nota"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_note_wizard__note_line_ids
 msgid "Operations"
-msgstr ""
+msgstr "Operazioni"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__operator
@@ -910,12 +915,12 @@ msgstr "Ordine"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_note_wizard__so_reference
 msgid "Order reference"
-msgstr ""
+msgstr "Riferimento ordine"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_payment_method
 msgid "Payment Method"
-msgstr ""
+msgstr "Metodo di pagamento"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_payment_provider
@@ -977,7 +982,7 @@ msgstr "Regole tariffarie"
 #: model:ir.model.fields,field_description:delivery.field_delivery_note_wizard_line__product_id
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_note
 msgid "Product"
-msgstr ""
+msgstr "Prodotto"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_product_category
@@ -1006,7 +1011,7 @@ msgstr "Quantità"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_note_wizard_line__remaining_qty_to_ship
 msgid "Remaining Qty To Ship"
-msgstr ""
+msgstr "Quantità rimanente da spedire"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__get_return_label_from_portal
@@ -1058,23 +1063,23 @@ msgstr "Impostare a vero se le credenziali sono certificate per la produzione."
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
 msgid "Ship"
-msgstr ""
+msgstr "Spedisci"
 
 #. module: delivery
 #. odoo-python
 #: code:addons/delivery/models/sale_order.py:0
 msgid "Ship Order %s"
-msgstr ""
+msgstr "Spedisci ordine %s"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_note
 msgid "Shipped"
-msgstr ""
+msgstr "Spedito"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_note_wizard__shipping_date
 msgid "Shipping Date"
-msgstr ""
+msgstr "Data di spedizione"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__shipping_weight
@@ -1098,7 +1103,7 @@ msgstr "Spedizione: invia tramite e-mail"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_note_wizard_line__sol_id
 msgid "Source Sale Order Line"
-msgstr ""
+msgstr "Riga ordine di vendita di origine"
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.free_delivery_carrier
@@ -1221,17 +1226,17 @@ msgstr "Link monitoraggio"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_note_wizard__tracking_ref
 msgid "Tracking Reference"
-msgstr ""
+msgstr "Riferimento tracciabilità"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_note_wizard__tracking_url
 msgid "Tracking URL"
-msgstr ""
+msgstr "URL tracciabilità"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_note_wizard_line__product_uom_id
 msgid "Unit"
-msgstr ""
+msgstr "Unità"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
@@ -1264,7 +1269,7 @@ msgstr "Fattore variabile"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__variable_unit
 msgid "Variable Unit"
-msgstr ""
+msgstr "Unità variabile"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -1346,7 +1351,7 @@ msgstr "Il pagamento è stato annullato."
 #. module: delivery
 #: model_terms:payment.provider,pending_msg:delivery.payment_provider_cod
 msgid "Your payment has been processed but is waiting for approval."
-msgstr ""
+msgstr "Il tuo pagamento è stato elaborato ma è in attesa di approvazione."
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_zip_prefix_list
