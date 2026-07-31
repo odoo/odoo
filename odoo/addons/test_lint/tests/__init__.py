@@ -5,6 +5,7 @@ from . import test_pylint
 from . import test_pofile
 from . import test_docstring
 from . import test_eslint
+from . import test_icons
 from . import test_index
 from . import test_jstranslate
 from . import test_l10n
