@@ -18,15 +18,6 @@ class GamificationBadgeUser(models.Model):
                 with_context(allowed_company_ids=self.env.user.company_ids.ids).employee_ids:
                 raise ValidationError(_('The selected employee does not correspond to the selected user.'))
 
-    def action_open_badge(self):
-        self.ensure_one()
-        return {
-            'type': 'ir.actions.act_window',
-            'res_model': 'gamification.badge',
-            'view_mode': 'form',
-            'res_id': self.badge_id.id,
-        }
-
 class GamificationBadge(models.Model):
     _inherit = 'gamification.badge'
 
