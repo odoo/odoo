@@ -20,14 +20,20 @@ class AccountMove(models.Model):
         return self.line_ids.filtered(lambda l: l.display_type != 'cogs')
 
     def copy_data(self, default=None):
-        # Don't keep anglo-saxon lines when copying a journal entry.
+        # Don't keep anglo-saxon lines linked to a real invoice/bill line when copying a journal
+        # entry: `_create_cogs_lines` regenerates them on post. A synthetic 'cogs' line with no
+        # `cogs_origin_id` (e.g. the accrual wizard's simulated COGS adjustment) has nothing to
+        # regenerate it, so it must be copied over as-is.
         vals_list = super().copy_data(default=default)
 
         if not self.env.context.get('move_reverse_cancel'):
             for vals in vals_list:
                 if 'line_ids' in vals:
                     vals['line_ids'] = [line_vals for line_vals in vals['line_ids']
-                                             if line_vals[0] != 0 or line_vals[2].get('display_type') != 'cogs']
+                                             if line_vals[0] != 0 or not (
+                                                 line_vals[2].get('display_type') == 'cogs'
+                                                 and line_vals[2].get('cogs_origin_id')
+                                             )]
         return vals_list
 
     def _post(self, soft=True):

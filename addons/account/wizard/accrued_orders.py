@@ -161,6 +161,58 @@ class AccountAccruedOrdersWizard(models.TransientModel):
             })
         return values
 
+    def _merge_aml_vals(self, vals_list):
+        """ Merge account.move.line vals (as built by `_get_aml_vals`) that share the same
+        account and currency into one line each, summing their balance and blending their
+        analytic distributions (weighted by each line's own balance). A merged line's
+        `amount_currency` is zeroed out, like the wizard's other consolidated lines: a
+        combined foreign-currency total across heterogeneous source lines isn't a
+        meaningful figure. Lines posted to a distinct account, or the only line on their
+        account, are left untouched.
+        """
+        groups = {}
+        for vals in vals_list:
+            groups.setdefault((vals['account_id'], vals.get('currency_id')), []).append(vals)
+
+        merged_list = []
+        for group in groups.values():
+            if len(group) == 1:
+                merged_list.append(group[0])
+                continue
+
+            balances = [vals['debit'] - vals['credit'] for vals in group]
+            total_balance = sum(balances)
+            total_weight = sum(abs(balance) for balance in balances)
+            analytic_distribution = {}
+            for vals, balance in zip(group, balances):
+                weight = abs(balance) / total_weight if total_weight else 0.0
+                for account_id, percentage in (vals.get('analytic_distribution') or {}).items():
+                    analytic_distribution[account_id] = analytic_distribution.get(account_id, 0.0) + percentage * weight
+
+            merged_vals = dict(group[0])
+            merged_vals['debit'] = total_balance if total_balance > 0 else 0.0
+            merged_vals['credit'] = -total_balance if total_balance < 0 else 0.0
+            if 'amount_currency' in merged_vals:
+                merged_vals['amount_currency'] = 0.0
+            if analytic_distribution:
+                merged_vals['analytic_distribution'] = analytic_distribution
+            else:
+                merged_vals.pop('analytic_distribution', None)
+            merged_list.append(merged_vals)
+        return merged_list
+
+    def _get_accrual_lines(self, order, lines, accrual_entry_date):
+        """ Of `lines` (candidates from a single order), the ones that still
+        need an accrual as of `accrual_entry_date`. The amount check can't be
+        a domain since it depends on the `accrual_entry_date` context.
+        """
+        candidate_lines = (lines & order.order_line).filtered_domain(lines._get_accrual_domain())
+        dated_lines = candidate_lines.with_context(accrual_entry_date=accrual_entry_date)
+        precision_digits = self.env['decimal.precision'].precision_get('Product Unit')
+        return dated_lines.filtered(
+            lambda l: fields.Float.compare(l.amount_to_invoice_at_date, 0, precision_digits=precision_digits) != 0
+        )
+
     def _compute_move_vals(self):
         self.ensure_one()
         move_lines = []
@@ -175,9 +227,11 @@ class AccountAccruedOrdersWizard(models.TransientModel):
 
         if orders.filtered(lambda o: o.company_id != self.company_id):
             raise UserError(_('Entries can only be created for a single company at a time.'))
-        if orders.currency_id and len(orders.currency_id) > 1:
+        mixed_currencies = len(orders.currency_id) > 1
+        if mixed_currencies and not self.env.context.get('accrual_allow_mixed_currencies'):
             raise UserError(_('Cannot create an accrual entry with orders in different currencies.'))
         orders_with_entries = []
+        order_lines_with_entries = lines.browse()
         total_balance = 0.0
 
         for order, product_lines in lines.grouped('order_id').items():
@@ -191,21 +245,12 @@ class AccountAccruedOrdersWizard(models.TransientModel):
             else:
                 accrual_entry_date = self.env.context.get('accrual_entry_date')
                 accrual_entry_date = fields.Date.from_string(accrual_entry_date) if accrual_entry_date else self.date
-                precision_digits = self.env['decimal.precision'].precision_get('Product Unit')
-                order_lines = lines.with_context(accrual_entry_date=accrual_entry_date).filtered(
-                    # We only want non-comment lines (no sections, notes, ...) and include all lines
-                    # for purchase orders but exclude downpayment lines for sales orders.
-                    lambda l: not l.display_type and not l.is_downpayment and
-                    l.id in order.order_line.ids and
-                    fields.Float.compare(
-                        l.amount_to_invoice_at_date,
-                        0,
-                        precision_digits=precision_digits,
-                    ) != 0
-                )
-                for order_line in order_lines:
-                    for vals in self._get_accrual_line_vals(order, order_line, is_purchase, accrual_entry_date):
-                        move_lines.append(Command.create(vals))
+                order_lines = self._get_accrual_lines(order, lines, accrual_entry_date)
+                order_lines_with_entries |= order_lines
+                main_vals_list, main_counterpart_vals_list = self._get_accrual_main_line_vals(order_lines, is_purchase, accrual_entry_date)
+                inventory_vals_list, counterpart_vals_list = self._get_accrual_cogs_line_vals(order_lines, is_purchase, accrual_entry_date)
+                for vals in main_vals_list + main_counterpart_vals_list + inventory_vals_list + counterpart_vals_list:
+                    move_lines.append(Command.create(vals))
 
         # Manual amount case: a single globalized counterpart on the manually chosen account.
         if not self.company_id.currency_id.is_zero(total_balance):
@@ -231,9 +276,9 @@ class AccountAccruedOrdersWizard(models.TransientModel):
             'journal_id': self.journal_id.id,
             'date': self.date,
             'line_ids': move_lines,
-            'currency_id': orders.currency_id.id or self.company_id.currency_id.id,
+            'currency_id': self.company_id.currency_id.id if mixed_currencies else (orders.currency_id.id or self.company_id.currency_id.id),
         }
-        return move_vals, orders_with_entries
+        return move_vals, orders_with_entries, order_lines_with_entries
 
     def _get_accrual_message_body(self, move, reverse_move):
         self.ensure_one()
@@ -245,7 +290,7 @@ class AccountAccruedOrdersWizard(models.TransientModel):
             reverse_entry=reverse_move._get_html_link(),
         )
 
-    def create_entries(self):
+    def create_entries(self, auto_post=True):
         self.ensure_one()
 
         if self.reversal_date <= self.date:
@@ -266,15 +311,20 @@ class AccountAccruedOrdersWizard(models.TransientModel):
                 for move in moves_to_delete
             ])
 
-        move_vals, orders_with_entries = self._compute_move_vals()
+        move_vals, orders_with_entries, order_lines_with_entries = self._compute_move_vals()
         move = self.env['account.move'].create(move_vals)
-        move._post()
+        order_lines_with_entries.accrual_move_ids = [Command.link(move.id)]
         reverse_move = move._reverse_moves(default_values_list=[{
             'ref': _('Reversal of: %s', move.ref),
             'name': '/',
             'date': self.reversal_date,
+            # Posted on its own date by the daily auto-post cron, not right away: it must stay
+            # draft until then, or its reversing effect (accounting and quantity alike) would
+            # apply immediately and cancel the accrual out before it's ever seen.
+            'auto_post': 'at_date',
         }])
-        reverse_move._post()
+        if auto_post:
+            move._post()
         for order in orders_with_entries:
             order.message_post(body=self._get_accrual_message_body(move, reverse_move))
         return {
@@ -297,12 +347,28 @@ class AccountAccruedOrdersWizard(models.TransientModel):
                 'target': 'current',
             }
 
-    @api.model
-    def _get_accrual_line_vals(self, order, order_line, is_purchase, accrual_entry_date):
-        """ Hook overridden by purchase/sale (expense/income accrual, and further
-        the perpetual-valuation reversal for storable, real-time products).
+    def _get_accrual_main_line_vals(self, order_lines, is_purchase, accrual_entry_date):
+        """ Hook overridden by purchase/sale: for each line in `order_lines`, its expense/
+        revenue line and its accrual counterpart (and, for purchase's standard-cost
+        products, its price-difference pair).
 
-        :return: a list of account.move.line vals (each built via
-            `_get_aml_vals`), ready for `Command.create`.
+        :return: (main_vals_list, counterpart_vals_list), each a list of account.move.line
+            vals (built via `_get_aml_vals`) ready for `Command.create` — respectively the
+            expense/revenue side (plus the price-difference pair, for purchase's
+            standard-cost products), and its accrual counterpart posted to the
+            bills_to_receive/billed_not_received/invoices_to_issue/invoiced_not_delivered
+            account.
         """
         raise NotImplementedError
+
+    def _get_accrual_cogs_line_vals(self, order_lines, is_purchase, accrual_entry_date):
+        """ Hook overridden by purchase/sale: the perpetual-valuation adjustment needed, for
+        real-time-valued storable products among `order_lines`, because perpetual valuation
+        already posts stock movements in real time instead of waiting for the bill/invoice.
+
+        :return: (inventory_vals_list, counterpart_vals_list), each a list of account.move.line
+            vals (built via `_get_aml_vals`) ready for `Command.create` — respectively the
+            stock-valuation side of the adjustment, and its offsetting entry on the product's
+            expense account.
+        """
+        return [], []

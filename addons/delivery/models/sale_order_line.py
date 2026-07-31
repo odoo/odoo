@@ -34,10 +34,10 @@ class SaleOrderLine(models.Model):
         self.ensure_one()
         return self.is_delivery
 
-    def _get_accrual_domain(self):
+    def _get_accrual_domain(self, date=False):
         """ Reused by account.accrued.orders.wizard and stock_account's
         Stock Valuation report. """
-        domain = super()._get_accrual_domain()
+        domain = super()._get_accrual_domain(date)
         domain = Domain.AND([domain, [('is_delivery', '=', False)]])
         return domain
 

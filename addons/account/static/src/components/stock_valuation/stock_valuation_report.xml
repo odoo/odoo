@@ -21,6 +21,7 @@
                     <table class="table table-borderless table-hover w-print-100 mx-auto">
                         <tbody>
                             <t t-call="account.StockValuationReport.InitialBalance"/>
+                            <t t-if="this.data.accrual" t-call="account.StockValuationReport.Accrual"/>
                             <t t-if="this.data.inventory_loss" t-call="account.StockValuationReport.InventoryLoss"/>
                             <t t-call="account.StockValuationReport.StockVariation"/>
                             <t t-call="account.StockValuationReport.EndingStock"/>
@@ -32,7 +33,7 @@
     </t>
 
     <t t-name="account.StockValuationReport.EmptyLine">
-        <tr class="empty"><td colspan="3"/></tr>
+        <tr class="empty"><td colspan="4"/></tr>
     </t>
 
     <t t-name="account.StockValuationReport.InitialBalance">
@@ -50,7 +51,6 @@
             label.translate="Stock Variation"
             level="0"
             sublines="this.data.stock_variation.lines"
-            displayDebitCredit="true"
             value="this.data.stock_variation.value"/>
         <t t-call="account.StockValuationReport.EmptyLine"/>
     </t>
@@ -72,6 +72,17 @@
             onClickMethod.bind="this.openInventoryLoss"
             sublines="this.data.inventory_loss.lines"
             value="this.data.inventory_loss.value"/>
+        <t t-call="account.StockValuationReport.EmptyLine"/>
+    </t>
+
+    <t t-name="account.StockValuationReport.Accrual">
+        <StockValuationReportLine
+            label.translate="Accruals"
+            level="0"
+            displayDebitCredit="true"
+            onClickMethod="this.data.accrual.lines.length ? this.openAccountMoves.bind(this) : undefined"
+            sublines="this.data.accrual.lines"
+            value="this.data.accrual.value"/>
         <t t-call="account.StockValuationReport.EmptyLine"/>
     </t>
 </templates>

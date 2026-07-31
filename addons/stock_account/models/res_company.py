@@ -29,6 +29,10 @@ class ResCompany(models.Model):
             products._correct_inventory_valuation(last_closing_date)
         return res
 
+    def use_stock_account(self):
+        # OVERRIDE: real/physical stock valuation is available.
+        return True
+
     def get_inventory_value(self, at_date=None):
         # OVERRIDE: use the real valuation computed from stock moves/quants instead of the
         # `qty_available * standard_price` approximation used when stock isn't installed.

@@ -6,7 +6,6 @@ export class StockValuationReportLine extends Component {
     static template = "account.StockValuationReport.InventoryValuationLine";
     props = useProps({
         class: t.string().optional(),
-        displayDebitCredit: t.boolean().optional(),
         label: t.string().optional(),
         level: t.number().optional(0),
         line: t.object().optional(),
@@ -23,7 +22,15 @@ export class StockValuationReportLine extends Component {
     // Getters -----------------------------------------------------------------
     get accounts() {
         if (! this.hasSublines) { return []; }
-        return this.props.sublines.map(line => parseInt(line.account_id));
+        return this.constructor.getLineAccounts(this.props.sublines);
+    }
+
+    // Account ids of `lines`, descending into nested sublines (e.g. the Accrual section's
+    // per-accrual-type lines, whose own account is their nested lines' accounts).
+    static getLineAccounts(lines) {
+        return lines.flatMap(line =>
+            line.lines?.length ? this.getLineAccounts(line.lines) : (line.account_id ? [parseInt(line.account_id)] : [])
+        );
     }
 
     get credit() {
