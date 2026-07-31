@@ -3,11 +3,10 @@ import { Plugin } from "@html_editor/plugin";
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { ProductsDesignPanel } from "./products_design_panel";
-import { EDITOR_MUTATION_TYPES } from "@html_editor/core/dom_observer_plugin";
 
 export class ProductsDesignPanelPlugin extends Plugin {
     static id = "productsDesignPanel";
-    static dependencies = ["builderActions", "builderComponents", "domReferenceMap"];
+    static dependencies = ["builderActions", "builderComponents"];
     static shared = ["registerPanel", "unregisterPanel"];
 
     resources = {
@@ -18,8 +17,12 @@ export class ProductsDesignPanelPlugin extends Plugin {
         builder_components: {
             ProductsDesignPanel,
         },
-        on_pending_mutations_staged_handlers: this.handleMutations.bind(this),
         on_ready_to_save_document_handlers: this.onSave.bind(this),
+        dirty_trackers: {
+            selector: "#o_wsale_products_grid",
+            dirtyClass: "o_dirty_product_design_list",
+            match: "self",
+        },
         product_design_list_to_save: {
             selector: "#o_wsale_products_grid",
             getData(el) {
@@ -42,7 +45,6 @@ export class ProductsDesignPanelPlugin extends Plugin {
     setup() {
         this.panels = new Set();
         this.productDesignListToSave = this.getResource("product_design_list_to_save");
-        this.savableSelector = this.productDesignListToSave.map((item) => item.selector).join(",");
     }
 
     registerPanel(panel) {
@@ -51,36 +53,6 @@ export class ProductsDesignPanelPlugin extends Plugin {
 
     unregisterPanel(panel) {
         this.panels.delete(panel);
-    }
-
-    /**
-     * Handles the flag of the closest product savable element
-     * @param {import("@html_editor/core/dom_observer_plugin").SerializedMutation[]} mutations - The observed mutations
-     */
-    handleMutations(mutations) {
-        for (const mutation of mutations) {
-            if (mutation.isAutomatic) {
-                continue;
-            }
-            if (mutation.type === EDITOR_MUTATION_TYPES.ATTRIBUTES && mutation.attributeName === "contenteditable") {
-                continue;
-            }
-            let targetEl = this.dependencies.domReferenceMap.getNodeById(mutation.nodeId);
-            if (!targetEl.isConnected) {
-                continue;
-            }
-            if (targetEl.nodeType !== Node.ELEMENT_NODE) {
-                targetEl = targetEl.parentElement;
-            }
-            if (!targetEl) {
-                continue;
-            }
-            const isSavable = targetEl.matches(this.savableSelector);
-            if (!isSavable || targetEl.classList.contains("o_dirty_product_design_list")) {
-                continue;
-            }
-            targetEl.classList.add("o_dirty_product_design_list");
-        }
     }
 
     async onSave() {
