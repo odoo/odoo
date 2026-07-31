@@ -91,6 +91,16 @@ class ResConfigSettings(models.TransientModel):
         if values:
             company.sudo().write(values)
 
+    def action_open_company_form(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'res_id': self.company_id.id,
+            'res_model': 'res.company',
+            'target': 'new',
+            'view_mode': 'form',
+        }
+
     def _l10n_cn_baiwang_get_route_url(self, action, callback_path):
         proxy_user = self.company_id._l10n_cn_baiwang_create_proxy_user()
         proxy_url = proxy_user._get_server_url().rstrip('/')
