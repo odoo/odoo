@@ -158,6 +158,13 @@ export class ChatHub extends Component {
             this.resetPosition();
         }
     }
+
+    get bubblesAttClass() {
+        return {
+            "o-liftUp": this.busMonitoring.hasConnectionIssues,
+            "o-mobile": this.isMobileOS,
+        };
+    }
 }
 
 export const chatHubService = {
