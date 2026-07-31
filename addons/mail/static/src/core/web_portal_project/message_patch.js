@@ -1,15 +1,11 @@
 import { patch } from "@web/core/utils/patch";
 import { Message } from "@mail/core/common/message";
-import { onWillUnmount } from "@odoo/owl";
 
 patch(Message.prototype, {
     setup() {
         super.setup(...arguments);
         this.state.lastReadMoreIndex = 0;
         this.state.isReadMoreByIndex = new Map();
-        onWillUnmount(() => {
-            this.messageBody.el?.querySelector(".o-mail-ellipsis")?.remove();
-        });
     },
 
     /**
