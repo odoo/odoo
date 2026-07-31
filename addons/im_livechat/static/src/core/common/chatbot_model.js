@@ -235,7 +235,7 @@ export class Chatbot extends Record {
      */
     async _processAnswerQuestionSelection(message) {
         const answer = this.currentStep.selectedAnswer;
-        if (!answer?.redirect_link) {
+        if (!answer.redirect_link) {
             return true;
         }
         let isRedirecting = false;
