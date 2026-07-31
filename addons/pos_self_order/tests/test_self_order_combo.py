@@ -1,5 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import json
+from uuid import uuid4
+
 import odoo.tests
 from odoo.addons.pos_self_order.tests.self_order_common_test import SelfOrderCommonTest
 from odoo.addons.point_of_sale.tests.common_setup_methods import setup_product_combo_items
@@ -455,3 +458,181 @@ class TestSelfOrderCombo(SelfOrderCommonTest):
         order.recompute_prices()
         self.assertAlmostEqual(order.amount_total, (combo.base_price + combo_product.lst_price) * order.lines[0].qty)
         self.assertEqual(child_lines[0].price_unit, child_lines[1].price_unit)
+
+    def _process_zeroed_combo_order(self, combo_product, combo_item):
+        """Send a combo order on the public self-order endpoint with every client-controlled
+        price zeroed, and return the resulting order."""
+        parent_uuid, child_uuid = str(uuid4()), str(uuid4())
+        response = self.url_open(
+            "/pos-self-order/process-order/kiosk",
+            headers={"Content-Type": "application/json"},
+            data=json.dumps({
+                "jsonrpc": "2.0",
+                "method": "call",
+                "id": str(uuid4()),
+                "params": {
+                    "access_token": self.pos_config.access_token,
+                    "table_identifier": None,
+                    "order": {
+                        "id": None,
+                        "session_id": self.pos_config.current_session_id.id,
+                        "state": "draft",
+                        "preset_id": False,
+                        "amount_total": 0,
+                        "amount_tax": 0,
+                        "amount_paid": 0,
+                        "amount_return": 0,
+                        "uuid": str(uuid4()),
+                        "lines": [
+                            [0, 0, {
+                                "uuid": parent_uuid,
+                                "product_id": combo_product.id,
+                                "qty": 1,
+                                "price_unit": 0,
+                                "price_subtotal": 0,
+                                "price_subtotal_incl": 0,
+                            }],
+                            [0, 0, {
+                                "uuid": child_uuid,
+                                "product_id": combo_item.product_id.id,
+                                "combo_item_id": combo_item.id,
+                                "qty": 1,
+                                "price_unit": 0,
+                                "price_subtotal": 0,
+                                "price_subtotal_incl": 0,
+                            }],
+                        ],
+                        "relations_uuid_mapping": {
+                            "pos.order.line": {
+                                child_uuid: {"combo_parent_id": parent_uuid},
+                            },
+                        },
+                    },
+                },
+            }),
+        )
+        order_id = response.json()['result']['pos.order'][0]['id']
+        return self.env['pos.order'].browse(order_id)
+
+    def test_combo_line_subtotals_are_not_trusted_from_the_frontend(self):
+        """
+        The self-order endpoint is public: the line subtotals it receives must never be used
+        to compute the order total, otherwise a combo order can be sent with zeroed subtotals
+        and get accepted as fully paid for free.
+        """
+        self.pos_config.write({
+            'self_ordering_mode': 'kiosk',
+            'available_preset_ids': [(5, 0)],
+            'use_presets': False,
+        })
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.pos_config.current_session_id.set_opening_control(0, "")
+
+        # setUp puts a 15% tax on every product, so the untaxed case needs the tax removed.
+        # The whole combo price is carried by the single free child line, hence an untaxed
+        # total equal to the combo list price.
+        for child_taxes, expected_untaxed, expected_tax in [
+            (self.env['account.tax'], 10.0, 0.0),
+            (self.default_tax15, 10.0, 1.5),
+        ]:
+            with self.subTest(taxes=child_taxes.name or 'no tax'):
+                child_product = self.env['product.product'].create({
+                    'available_in_pos': True,
+                    'list_price': 2.2,
+                    'name': 'Combo Child',
+                    'taxes_id': [Command.set(child_taxes.ids)],
+                })
+                combo = self.env['product.combo'].create({
+                    'name': 'Combo',
+                    'qty_free': 1,
+                    'qty_max': 1,
+                    'combo_item_ids': [
+                        Command.create({'product_id': child_product.id, 'extra_price': 0}),
+                    ],
+                })
+                combo_product = self.env['product.product'].create({
+                    'available_in_pos': True,
+                    'list_price': 10.0,
+                    'name': 'Combo Product',
+                    'type': 'combo',
+                    'combo_ids': [Command.set([combo.id])],
+                    'taxes_id': False,
+                })
+
+                order = self._process_zeroed_combo_order(combo_product, combo.combo_item_ids)
+                expected_total = expected_untaxed + expected_tax
+
+                child_line = order.lines.filtered(lambda line: line.combo_parent_id)
+                self.assertAlmostEqual(child_line.price_subtotal, expected_untaxed,
+                    msg="The combo child subtotal must be recomputed server-side, not taken from the payload")
+                self.assertAlmostEqual(child_line.price_subtotal_incl, expected_total,
+                    msg="The combo child tax-included subtotal must be recomputed server-side")
+                self.assertAlmostEqual(order.amount_total, expected_total,
+                    msg="The order total must be recomputed from server-side prices")
+                self.assertAlmostEqual(order.amount_tax, expected_tax,
+                    msg="The order tax must be recomputed from server-side prices")
+                self.assertNotEqual(order.state, 'paid',
+                    msg="An unpaid combo order must not be accepted as paid")
+                self.assertFalse(order.payment_ids)
+
+    def test_combo_extra_price_is_not_trusted_from_the_frontend(self):
+        """
+        The extra price of a combo item is part of the child line price. It must be added back
+        server-side, otherwise a zeroed payload lets the customer get the paid option for free.
+        """
+        self.pos_config.write({
+            'self_ordering_mode': 'kiosk',
+            'available_preset_ids': [(5, 0)],
+            'use_presets': False,
+        })
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.pos_config.current_session_id.set_opening_control(0, "")
+
+        extra_price = 3.0
+        # The child line carries the combo list price plus the extra price of the chosen item.
+        # extra_price is not part of combo.base_price (which only relates to the product's
+        # lst_price), so it is added on top of the prorated combo price.
+        for child_taxes, tax_rate in [
+            (self.env['account.tax'], 0.0),
+            (self.default_tax15, 0.15),
+        ]:
+            with self.subTest(taxes=child_taxes.name or 'no tax'):
+                child_product = self.env['product.product'].create({
+                    'available_in_pos': True,
+                    'list_price': 2.2,
+                    'name': 'Combo Child With Extra',
+                    'taxes_id': [Command.set(child_taxes.ids)],
+                })
+                combo = self.env['product.combo'].create({
+                    'name': 'Combo With Extra',
+                    'qty_free': 1,
+                    'qty_max': 1,
+                    'combo_item_ids': [
+                        Command.create({'product_id': child_product.id, 'extra_price': extra_price}),
+                    ],
+                })
+                combo_product = self.env['product.product'].create({
+                    'available_in_pos': True,
+                    'list_price': 10.0,
+                    'name': 'Combo Product With Extra',
+                    'type': 'combo',
+                    'combo_ids': [Command.set([combo.id])],
+                    'taxes_id': False,
+                })
+
+                order = self._process_zeroed_combo_order(combo_product, combo.combo_item_ids)
+                expected_untaxed = combo_product.lst_price + extra_price
+                expected_total = expected_untaxed * (1 + tax_rate)
+
+                child_line = order.lines.filtered(lambda line: line.combo_parent_id)
+                self.assertAlmostEqual(child_line.price_unit, expected_untaxed,
+                    msg="The combo item extra price must be included in the recomputed unit price")
+                self.assertAlmostEqual(child_line.price_subtotal, expected_untaxed,
+                    msg="The combo item extra price must be included in the recomputed subtotal")
+                self.assertAlmostEqual(child_line.price_subtotal_incl, expected_total,
+                    msg="The combo item extra price must be taxed like the rest of the line")
+                self.assertAlmostEqual(order.amount_total, expected_total,
+                    msg="The order total must include the combo item extra price")
+                self.assertNotEqual(order.state, 'paid',
+                    msg="An unpaid combo order must not be accepted as paid")
+                self.assertFalse(order.payment_ids)

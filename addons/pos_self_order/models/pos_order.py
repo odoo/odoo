@@ -148,8 +148,8 @@ class PosOrder(models.Model):
                 'attribute_value_ids': [id for id in line_data.get('attribute_value_ids', []) if isinstance(id, int)],
                 'price_unit': line_data.get('price_unit'),
                 'qty': line_data.get('qty'),
-                'price_subtotal': line_data.get('price_subtotal'),
-                'price_subtotal_incl': line_data.get('price_subtotal_incl'),
+                'price_subtotal': 0.0,  # always recomputed server-side by recompute_prices().
+                'price_subtotal_incl': 0.0,  # always recomputed server-side by recompute_prices().
                 'price_extra': line_data.get('price_extra'),
                 'price_type': line_data.get('price_type'),
                 'full_product_name': line_data.get('full_product_name'),
@@ -246,6 +246,9 @@ class PosOrder(models.Model):
             if len(line.combo_line_ids):
                 self._compute_combo_price(line)
             elif not line.combo_parent_id:
+                # Lines without a combo parent are priced on their own. A line whose combo
+                # parent doesn't belong to this order is never reached by _compute_combo_price,
+                # so it is priced the same way instead of keeping its frontend price.
                 self._compute_line_price(line)
 
         order_lines = self.lines
@@ -267,8 +270,23 @@ class PosOrder(models.Model):
         price = pricelist._get_product_price(product, 1.0, currency=self.currency_id)
         line.price_unit = price
         line.tax_ids = line.product_id.taxes_id._filter_taxes_by_company(self.company_id)
-        tax_ids_after_fiscal_position = self.fiscal_position_id.map_tax(line.tax_ids)
-        taxes = tax_ids_after_fiscal_position.compute_all(price, self.currency_id, line.qty, product=product, partner=self.partner_id)
+        self._compute_line_subtotals(line)
+
+    def _compute_line_subtotals(self, line):
+        """
+        Recompute the price_subtotal and price_subtotal_incl of a line based on its
+        price_unit, quantity, and taxes.
+        In self order the price_unit is always computed server-side, so this method
+        is called after the price_unit is set.
+        """
+        product = line.product_id.with_context(line.product_id._get_product_price_context(line.attribute_value_ids))
+        taxes = line.tax_ids_after_fiscal_position.compute_all(
+            line.price_unit,
+            self.currency_id,
+            line.qty,
+            product=product,
+            partner=self.partner_id,
+        )
         line.price_subtotal = taxes['total_excluded']
         line.price_subtotal_incl = taxes['total_included']
 
@@ -359,3 +377,11 @@ class PosOrder(models.Model):
             price_extra = sum(attr.price_extra for attr in selected_attributes)
             total_price = price_unit + price_extra + child.combo_item_id.extra_price
             child.price_unit = total_price
+
+        # The whole combo price is carried by the child lines, the parent line is always free.
+        parent_line.price_unit = 0.0
+        # Only the unit prices are computed above; the subtotals the order total is derived from
+        # must be recomputed too, on the parent line as well as on every child line.
+        combo_lines = parent_line | parent_line.combo_line_ids
+        for line in combo_lines:
+            self._compute_line_subtotals(line)
