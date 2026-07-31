@@ -83,6 +83,12 @@ class Website(models.Model):
             return {'cta_btn_text': cta_btn_text, 'cta_btn_href': '/event'}
         return cta_data
 
+    def _get_search_scopes(self):
+        return {
+            **super()._get_search_scopes(),
+            'events': {'label': self.env._("Events"), 'url': '/events'},
+        }
+
     def _search_get_details(self, search_type, order, options):
         result = super()._search_get_details(search_type, order, options)
         if search_type in ['events', 'event_event', 'all']:

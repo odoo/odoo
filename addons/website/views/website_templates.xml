@@ -3379,20 +3379,22 @@ Disallow: /*/my/*
 <template id="website_search_box_input" inherit_id="website.website_search_box" primary="True">
     <xpath expr="//input[@name='search']" position="attributes">
         <attribute name="t-att-data-search-type">search_type</attribute>
-        <attribute name="t-att-data-limit">limit or '6'</attribute>
-        <attribute name="t-att-data-order-by">order_by or 'name asc'</attribute>
+        <attribute name="t-att-data-limit">limit</attribute>
+        <attribute name="t-att-data-order-by">order_by</attribute>
     </xpath>
     <xpath expr="//div[@role='search']" position="attributes">
         <attribute name="t-attf-class" remove="s_searchbar_input" separator=" "/>
     </xpath>
     <xpath expr="//div[@role='search']" position="replace">
         <t t-if="not placeholder" t-set="placeholder">Search...</t>
+        <t t-set="limit" t-value="'6' if limit is None else str(limit)"/>
+        <t t-set="order_by" t-value="order_by or 'name asc'"/>
         <form t-attf-class="o_searchbar_form s_searchbar_input #{_form_classes}" t-att-action="action" method="get" t-attf-data-snippet="s_searchbar_input">
             <a t-if="_simple_button_layout" t-attf-class="o_search_btn {{_simple_button_classes or 'p-1 bg-o-color-3 lh-1'}} btn o_not_editable" role="button" title="Search" href="#">
                 <i class="oi-stack lh-lg oi" data-icon="search" role="img"/>
             </a>
             <t>$0</t>
-            <input name="order" type="hidden" class="o_search_order_by oe_unremovable" t-att-value="order_by if order_by else 'name asc'"/>
+            <input name="order" type="hidden" class="o_search_order_by oe_unremovable" t-att-value="order_by"/>
             <t t-out="0"/>
         </form>
     </xpath>
@@ -3485,10 +3487,15 @@ Disallow: /*/my/*
 <template id="website.header_search_box" inherit_id="website.placeholder_header_search_box" name="Header Search Bar" active="True">
     <xpath expr="." position="inside">
         <li t-attf-class="#{_item_class}">
-            <t t-call="website.website_search_box_input"
-                search_type.f="all"
-                action.f="/website/search"
-                limit="limit or '30'"/>
+            <t t-set="_search_scope" t-value="website._get_header_search_scope()"/>
+            <t
+                t-call="website.website_search_box_input"
+                _form_classes.f="o_header_searchbar o_no_save {{_form_classes}}"
+                search_type="_search_scope['search_type']"
+                action="_search_scope['url']"
+                order_by="website.header_search_order_by"
+                limit="website.header_search_limit"
+            />
         </li>
     </xpath>
 </template>
