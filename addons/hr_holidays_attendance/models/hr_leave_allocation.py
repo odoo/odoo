@@ -49,11 +49,11 @@ class HolidaysAllocation(models.Model):
                 continue
             employee = allocation.employee_id
             duration = allocation.number_of_hours_display
-            overtime_duration = allocation.overtime_id.sudo().duration
+            overtime_duration = allocation.sudo().overtime_id.duration
             if overtime_duration != -1 * duration:
                 if duration > employee.total_overtime - overtime_duration:
                     raise ValidationError(_('The employee does not have enough extra hours to extend this allocation.'))
-                allocation.overtime_id.sudo().duration = -1 * duration
+                allocation.sudo().overtime_id.duration = -1 * duration
         return res
 
     @api.ondelete(at_uninstall=False)
@@ -67,7 +67,7 @@ class HolidaysAllocation(models.Model):
 
     def action_refuse(self):
         res = super().action_refuse()
-        self.overtime_id.sudo().unlink()
+        self.sudo().overtime_id.unlink()
         return res
 
     def _validate_overtime_and_create_adjustment(self):
