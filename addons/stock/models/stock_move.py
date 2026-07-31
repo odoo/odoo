@@ -2469,9 +2469,6 @@ Please change the quantity done or the rounding precision in your settings.""",
         if restrict_partner_id:
             defaults['restrict_partner_id'] = restrict_partner_id
 
-        # TDE CLEANME: remove context key + add as parameter
-        if self.env.context.get('source_location_id'):
-            defaults['location_id'] = self.env.context['source_location_id']
         new_move_vals = self.copy_data(defaults)
 
         # Update the original `product_qty` of the move. Use the general product's decimal
