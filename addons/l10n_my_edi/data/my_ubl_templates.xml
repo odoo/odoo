@@ -33,7 +33,7 @@
         <xpath expr="//*[local-name()='PaymentTerms']" position="after">
             <t xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
             xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
-                <cac:PrepaidPayment>
+                <cac:PrepaidPayment t-if="vals.get('prepaid_payment_vals', {}).get('amount')">
                     <cbc:PaidAmount
                         t-att-currencyID="vals['prepaid_payment_vals']['currency'].name"
                         t-out="format_float(vals['prepaid_payment_vals']['amount'], vals['prepaid_payment_vals']['currency_dp'])"/>
