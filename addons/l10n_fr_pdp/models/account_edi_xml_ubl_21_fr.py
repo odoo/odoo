@@ -1,5 +1,5 @@
 from odoo import _, api, models
-from odoo.tools.misc import formatLang
+from odoo.tools.misc import formatLang, str2bool
 
 from odoo.addons.account_edi_ubl_cii.models.account_edi_common import FloatFmt
 
@@ -40,7 +40,12 @@ class AccountEdiXmlUbl21Fr(models.AbstractModel):
         return f"{invoice.name.replace('/', '_')}_ubl_21_fr.xml"
 
     def _export_invoice(self, invoice, convert_fixed_taxes=True):
-        # Use new helpers
+        if str2bool(
+            self.env['ir.config_parameter'].sudo().get_param('l10n_fr_pdp.use_cen16931_builder', True),
+            default=True,
+        ):
+            return self.env['account.edi.xml.ubl_21_fr_new']._export_invoice(invoice, convert_fixed_taxes)
+
         return self._export_invoice_new(invoice)
 
     def _export_invoice_constraints_new(self, invoice, vals):
@@ -57,7 +62,7 @@ class AccountEdiXmlUbl21Fr(models.AbstractModel):
                 constraints[f"ubl_21_fr_{partner_type}_identifier_required"] = self.env._("The following partner's SIREN or SIRET is missing: %s", commercial_partner.display_name)
 
         if vals['document_type'] == 'credit_note' and not (invoice.reversed_entry_id.name or invoice.reversed_entry_id.invoice_date):
-            constraints[f"ubl_21_fr_{partner_type}_refund_invoice_reference"] = self.env._("You cannot create a Credit Note without an original invoice: %s", vals['invoice'].name)
+            constraints["ubl_21_fr_refund_invoice_reference"] = self.env._("You cannot create a Credit Note without an original invoice: %s", vals['invoice'].name)
 
         customer = vals['customer'].commercial_partner_id
         if self._pdp_is_b2g(customer) and not self._pdp_can_invoice_b2g(customer):
@@ -241,6 +246,19 @@ class AccountEdiXmlUbl21Fr(models.AbstractModel):
                 },
             }
         }
+
+    # -------------------------------------------------------------------------
+    # IMPORT
+    # -------------------------------------------------------------------------
+
+    def _import_invoice_ubl_cii(self, invoice, file_data, new=False):
+        if str2bool(
+            self.env['ir.config_parameter'].sudo().get_param('l10n_fr_pdp.use_cen16931_builder', True),
+            default=True,
+        ):
+            return self.env['account.edi.xml.ubl_21_fr_new']._import_invoice_ubl_cii(invoice, file_data, new)
+
+        return self._import_invoice_ubl_cii(invoice, file_data, new)
 
     def _import_ubl_invoice_add_customer_values(self, collected_values):
         super()._import_ubl_invoice_add_customer_values(collected_values)
