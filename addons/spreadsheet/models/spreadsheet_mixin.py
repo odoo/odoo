@@ -6,6 +6,7 @@ import json
 import re
 
 from collections import defaultdict
+from urllib.parse import urlsplit, parse_qs
 
 from odoo import api, fields, models, _, tools
 from odoo.exceptions import ValidationError, MissingError
@@ -164,8 +165,10 @@ class SpreadsheetMixin(models.AbstractModel):
         if file_path.startswith('data:image/png;base64,'):
             return base64.b64decode(file_path.split(',')[1])
         match = re.match(r'/web/image/(\d+)', file_path)
+        query_args = parse_qs(urlsplit(file_path).query)
         file_record = self.env['ir.binary']._find_record(
             res_model='ir.attachment',
             res_id=int(match.group(1)),
+            access_token=query_args.get('access_token', [])[0],
         )
         return self.env['ir.binary']._get_stream_from(file_record).read()
