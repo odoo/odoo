@@ -1334,7 +1334,11 @@ class ProductTemplate(models.Model):
         ]
         if search_in_description:
             search_fields.append("description_ecommerce")
-        search_fields.extend(("attribute_line_ids.value_ids.name", "product_tag_ids.name"))
+        search_fields.extend((
+            "attribute_line_ids.value_ids.name",
+            "product_tag_ids.name",
+            "public_categ_ids.name",
+        ))
         if search_in_description:
             search_fields.append("description_sale")
         return search_fields
@@ -1386,13 +1390,7 @@ class ProductTemplate(models.Model):
                 "html": True,
                 "match": True,
             },
-            "tags": {"name": "product_tag_ids", "type": "tags", "match": True},
-            "attribute_value_ids": {
-                "name": "attribute_value_ids",
-                "type": "tags",
-                "match": True,
-                "force_show": True,
-            },
+            "tags": {"name": "badges", "type": "tags", "match": True},
             "description_sale": {
                 "name": "description_sale",
                 "type": "text",
@@ -1423,20 +1421,26 @@ class ProductTemplate(models.Model):
                 "any",
                 [("name", "ilike", search_term), ("visible_to_customers", "=", True)],
             )
+        if field == "public_categ_ids.name":
+            return Domain(
+                "public_categ_ids",
+                "any",
+                Domain("name", "ilike", search_term) & self.env.website.website_domain(),
+            )
         return super()._search_get_field_domain(field, search_term)
 
     def _search_render_results(self, fetch_fields, mapping, icon, limit):
         results_data = super()._search_render_results(fetch_fields, mapping, icon, limit)
         search_term = self.env.context.get("search_term", "")
         search_words = search_term.lower().split() if search_term else []
+        website_domain = self.env.website.website_domain()
 
         for product, data in zip(self, results_data):
             combination_info = product._get_combination_info(only_template=True)
             values = product.mapped("attribute_line_ids.value_ids")
-            data["attribute_value_ids"] = values.read(["id", "name"])
-            data["product_tag_ids"] = product.product_tag_ids.filtered(
-                "visible_to_customers"
-            ).read(["name"])
+            tags = product.product_tag_ids.filtered("visible_to_customers").read(["name"])
+            categories = product.public_categ_ids.filtered_domain(website_domain).read(["name"])
+            data["badges"] = tags + categories + values.read(["name"])
             price = self._search_render_results_prices(mapping, combination_info)
             if price:
                 data["price"] = price
