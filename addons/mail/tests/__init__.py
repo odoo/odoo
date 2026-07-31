@@ -23,5 +23,6 @@ from . import test_res_users
 from . import test_uninstall
 from . import test_update_notification
 from . import test_websocket_controller
+from . import test_file_viewer_download_warning
 
 from .discuss import *
