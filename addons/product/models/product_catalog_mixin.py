@@ -18,6 +18,8 @@ class ProductCatalogMixin(models.AbstractModel):
         kanban_view_id = self.env.ref('product.product_view_kanban_catalog').id
         search_view_id = self.env.ref('product.product_view_search_catalog').id
         additional_context = self._get_action_add_from_catalog_extra_context()
+        context = {**self.env.context, **additional_context}
+        context.pop('form_view_ref', None)
         return {
             'type': 'ir.actions.act_window',
             'name': _('Products'),
@@ -25,7 +27,7 @@ class ProductCatalogMixin(models.AbstractModel):
             'views': [(kanban_view_id, 'kanban'), (False, 'form')],
             'search_view_id': [search_view_id, 'search'],
             'domain': self._get_product_catalog_domain(),
-            'context': {**self.env.context, **additional_context},
+            'context': context,
         }
 
     def _default_order_line_values(self, child_field=False):
