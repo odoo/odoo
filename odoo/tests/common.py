@@ -980,19 +980,20 @@ class TransactionCase(BaseCase):
                 actual_setattr(model, key, value)
                 return
 
-            valid_paths = SETATTR_SOURCES.get(caller.f_code.co_name)
+            valid_paths = ()  # SETATTR_SOURCES.get(caller.f_code.co_name)
             if not (valid_paths and filename.endswith(valid_paths)):
-                _logger.runbot(
-                    "%s:%s:%s setting %s.%s to %s",
-                    filename,
-                    caller.f_lineno,
-                    caller.f_code.co_name,
-                    model.__name__,
-                    key,
-                    value,
-                    stack_info=True,
+                warnings.warn(
+                    f"{model.__name__}.{key} set to {value!r} while testing"
+                    " without using `patch` or whitelisted methods. This is"
+                    " generally a bad idea as it's harder to track and"
+                    " cleanup, and without cleanup can affect other tests"
+                    " (either through unstated dependencies or the opposite).",
+                    stacklevel=2,
                 )
-            cls.setattrs.setdefault(model._name, []).append((key, value, "".join(traceback.format_stack())))
+            stacks = cls.setattrs.setdefault(model._name, [])
+            k = (key, value, "".join(traceback.format_stack()))
+            if k not in stacks:
+                stacks.append(k)
             actual_setattr(model, key, value)
         cls.classPatch(odoo.models.MetaModel, '__setattr__', metamodel_setattr)
         cls.addClassCleanup(cls.setattrs.clear)
