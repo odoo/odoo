@@ -79,6 +79,10 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
         vals['document_type_code'] = document_type_code
         vals['original_document'] = original_document
 
+        # Genuine prepayments only; the base implementation would otherwise treat any reconciled payment,
+        # regardless of its date, as a deposit.
+        vals['prepaid_amount'] = 0 if document_type_code in ('02', '03', '04', '12', '13', '14') else self._l10n_my_edi_get_prepaid_amount(invoice)
+
     def _add_document_tax_grouping_function_vals(self, vals):
         # OVERRIDE 'account_edi_ubl_cii'
         def total_grouping_function(base_line, tax_data):
@@ -168,15 +172,14 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
     def _add_invoice_payment_terms_nodes(self, document_node, vals):
         # For Myinvois, prepaid amount is defined as a separate node.
         super()._add_invoice_payment_terms_nodes(document_node, vals)
-        invoice = vals['invoice']
-        # For credit, debit, refund notes, and their self-billed variants, the PrepaidPayment amount must be set to 0.
-        paid_amount = 0 if vals['document_type_code'] in ('02', '03', '04', '12', '13', '14') else invoice.amount_total - invoice.amount_residual
+        # Omit the node entirely rather than emitting it with a 0.00 amount when there is no genuine prepayment.
+        paid_amount = vals['prepaid_amount']
         document_node['cac:PrepaidPayment'] = {
             'cbc:PaidAmount': {
                 '_text': self.format_float(paid_amount, vals['currency_dp']),
                 'currencyID': vals['currency_name'],
             }
-        }
+        } if paid_amount else None
         return document_node
 
     def _add_invoice_monetary_total_nodes(self, document_node, vals):
@@ -186,13 +189,13 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
         if monetary_total_tag in document_node:
             document_node[monetary_total_tag].pop('cbc:PrepaidAmount', None)
 
-        # For credit, debit, refund notes, and their self-billed variants, the PayableAmount reflects the full
-        # refund/adjustment amount without being reduced by the prepayment, as per MyInvois specifications.
-        if vals['document_type_code'] in ('02', '03', '04', '12', '13', '14'):
-            document_node[monetary_total_tag]['cbc:PayableAmount'] = {
-                '_text': self.format_float(vals['invoice'].amount_total, vals['currency_dp']),
-                'currencyID': vals['currency_name'],
-            }
+        # The base implementation sets PayableAmount to invoice.amount_residual, which doesn't account for our
+        # date-based prepaid amount (nor the credit/debit/refund note override to the full amount). Override it
+        # so PayableAmount stays consistent with the PrepaidPayment node above.
+        document_node[monetary_total_tag]['cbc:PayableAmount'] = {
+            '_text': self.format_float(vals['invoice'].amount_total - vals['prepaid_amount'], vals['currency_dp']),
+            'currencyID': vals['currency_name'],
+        }
 
     def _add_invoice_payment_means_nodes(self, document_node, vals):
         # PaymentMeans is optional, and since we can't have the correct one at the time of generating, we don't add it.
@@ -529,6 +532,33 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
         else:
             code = '01' if invoice.move_type == 'out_invoice' else '11'
             return code, None
+
+    @api.model
+    def _l10n_my_edi_get_prepaid_amount(self, invoice):
+        """ Compute the amount of the invoice that was genuinely paid in advance.
+
+        LHDN only recognizes a reconciled payment as a deposit/prepayment if it was made strictly before the
+        invoice date; a payment made on or after the invoice date is a regular settlement, not a prepayment.
+        Additionally, LHDN never accepts a PayableAmount of 0, so a 100% advance payment must not be reported
+        as a prepayment either: in that case, the full invoice amount is reported as payable instead.
+        Credit/debit notes reconciled against the invoice are not prepayments.
+        """
+        if not invoice.invoice_date:
+            return 0.0
+
+        invoice_partials, exchange_diff_moves = invoice._get_reconciled_invoices_partials()
+        prepaid_amount = sum(
+            amount
+            for partial, amount, aml in invoice_partials
+            if (
+                aml.move_id.id not in exchange_diff_moves
+                and aml.move_id.move_type not in ('out_refund', 'in_refund')
+                and aml.date and aml.date < invoice.invoice_date
+            )
+        )
+        if invoice.currency_id.compare_amounts(prepaid_amount, invoice.amount_total) >= 0:
+            return 0.0
+        return prepaid_amount
 
     @api.model
     def _l10n_my_edi_get_tax_exchange_rate(self, invoice):
