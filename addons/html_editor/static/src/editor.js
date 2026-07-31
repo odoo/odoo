@@ -193,6 +193,7 @@ export class Editor {
         this.document = null;
         /** @ts-ignore  @type { SharedMethods } **/
         this.shared = {};
+        this.deferredReady = [];
     }
 
     attachTo(editable) {
@@ -237,8 +238,16 @@ export class Editor {
             );
         }
         this.startPlugins();
-        this.isReady = true;
-        this.config.onEditorReady?.();
+        Promise.all(this.deferredReady.map((deferred) => deferred.promise)).then(() => {
+            this.isReady = true;
+            this.config.onEditorReady?.();
+        });
+    }
+
+    deferReady() {
+        const deferred = Promise.withResolvers();
+        this.deferredReady.push(deferred);
+        return deferred;
     }
 
     preparePlugins() {
@@ -281,7 +290,7 @@ export class Editor {
             plugin.setup();
         }
         this.processThrough("normalize_processors", this.editable);
-        this.trigger("on_editor_started_handlers");
+        this.trigger("on_editor_started_handlers", this.deferReady.bind(this));
     }
 
     getDependencies(dependencies) {
