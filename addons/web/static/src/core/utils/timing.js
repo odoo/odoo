@@ -1,6 +1,6 @@
 import { useComponent } from "@web/owl2/utils";
 import { browser } from "@web/core/browser/browser";
-import { computed, onWillDestroy, onWillUnmount, signal } from "@odoo/owl";
+import { computed, onWillDestroy, signal } from "@odoo/owl";
 import { clamp } from "@web/core/utils/numbers";
 
 /**
@@ -194,7 +194,7 @@ export function useDebounced(
 ) {
     const component = useComponent();
     const debounced = debounce(callback.bind(component), delay, { leading: immediate, trailing });
-    onWillUnmount(() => debounced.cancel(execBeforeUnmount));
+    onWillDestroy(() => debounced.cancel(execBeforeUnmount));
     return debounced;
 }
 
@@ -209,7 +209,7 @@ export function useDebounced(
 export function useThrottleForAnimation(func) {
     const component = useComponent();
     const throttledForAnimation = throttleForAnimation(func.bind(component));
-    onWillUnmount(() => throttledForAnimation.cancel());
+    onWillDestroy(() => throttledForAnimation.cancel());
     return throttledForAnimation;
 }
 

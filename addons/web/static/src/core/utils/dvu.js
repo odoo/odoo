@@ -26,13 +26,31 @@
  * - https://developer.mozilla.org/en-US/docs/Web/API/VirtualKeyboard_API
  */
 
-import { throttleForAnimation } from "@web/core/utils/timing";
-import { onWillUnmount } from "@odoo/owl";
+import { onWillDestroy, Plugin, useListener, usePlugin } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { isVirtualKeyboardSupported } from "@web/core/browser/feature_detection";
+import { services } from "@web/core/services";
+import { throttleForAnimation } from "@web/core/utils/timing";
 
-const viewport = {
-    listeners: [],
+export class DvuPlugin extends Plugin {
+    listeners = [];
+
+    setup() {
+        const throttledUpdate = throttleForAnimation(() => this.notifyListeners());
+
+        if (browser.visualViewport) {
+            useListener(browser.visualViewport, "resize", throttledUpdate);
+        }
+
+        if (isVirtualKeyboardSupported()) {
+            useListener(browser.navigator.virtualKeyboard, "geometrychange", throttledUpdate);
+        }
+
+        // Fallback to window resize for browsers without VisualViewport or VirtualKeyboard
+        useListener(browser, "resize", throttledUpdate);
+
+        onWillDestroy(() => throttledUpdate.cancel());
+    }
 
     /**
      * Register a callback for viewport changes
@@ -48,31 +66,17 @@ const viewport = {
                 this.listeners.splice(index, 1);
             }
         };
-    },
+    }
 
     /**
      * Notify all listeners of viewport changes
      */
     notifyListeners() {
         this.listeners.forEach((listener) => listener());
-    },
-};
-
-// Initialize viewport tracking
-if (typeof window !== "undefined") {
-    const throttledUpdate = throttleForAnimation(() => viewport.notifyListeners());
-
-    if (browser.visualViewport) {
-        browser.visualViewport.addEventListener("resize", throttledUpdate);
     }
-
-    if (isVirtualKeyboardSupported()) {
-        browser.navigator.virtualKeyboard.addEventListener("geometrychange", throttledUpdate);
-    }
-
-    // Fallback to window resize for browsers without VisualViewport or VirtualKeyboard
-    browser.addEventListener("resize", throttledUpdate);
 }
+
+services.add(DvuPlugin);
 
 /**
  * Get current viewport dimensions
@@ -88,23 +92,12 @@ export function getViewportDimensions() {
 }
 
 /**
- * Register a callback for viewport dimension changes
- * This will trigger for regular viewport changes and virtual keyboard visibility changes
- *
- * @param {Function} callback - Function to call on viewport change
- * @returns {Function} - Function to remove the listener
- */
-export function onViewportChange(callback) {
-    return viewport.addListener(callback);
-}
-
-/**
  * OWL hook to use viewport change tracking in components
- * Automatically cleans up listener when component is unmounted
+ * Automatically cleans up listener when component is destroyed
  *
  * @param {Function} callback - Function to call when viewport changes
  */
 export function useViewportChange(callback) {
-    const removeListener = onViewportChange(callback);
-    onWillUnmount(() => removeListener());
+    const removeListener = usePlugin(DvuPlugin).addListener(callback);
+    onWillDestroy(() => removeListener());
 }
