@@ -47,6 +47,11 @@ class TestStockOrderpointActivity(TestStockCommon):
             }
         )
 
+        # Ensure procurement is guaranteed to fail by deactivating matching stock rules
+        self.env["stock.rule"].search(
+            [("location_dest_id", "=", warehouse_b.lot_stock_id.id)]
+        ).write({"active": False})
+
         orderpoint = self.env["stock.warehouse.orderpoint"].create(
             {
                 "name": "Failing Routing Rule",
