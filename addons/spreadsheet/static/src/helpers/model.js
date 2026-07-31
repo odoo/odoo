@@ -193,7 +193,7 @@ function exportGlobalFiltersToSheet(model, data) {
     model.getters.exportSheetWithActiveFilters(data);
     const locale = model.getters.getLocale();
     for (const filter of data.globalFilters) {
-        const content = model.getters.getFilterDisplayValue(filter.label);
+        const content = model.getters.getFilterDisplayValue(filter);
         filter["value"] = content
             .flat()
             .filter(isDefined)

@@ -1646,7 +1646,7 @@ test("filter display value of year filter is a range of dates", async function (
     const { model } = await createSpreadsheetWithPivotAndList();
     await addGlobalFilter(model, THIS_YEAR_GLOBAL_FILTER);
     const [filter] = model.getters.getGlobalFilters();
-    const values = model.getters.getFilterDisplayValue(filter.label);
+    const values = model.getters.getFilterDisplayValue(filter);
     expect(values[0][0].value).toBe(toNumber("2023-01-01", DEFAULT_LOCALE));
     expect(values[1][0].value).toBe(toNumber("2023-12-31", DEFAULT_LOCALE));
 });
@@ -1668,10 +1668,10 @@ test("Export global filters for excel", async function () {
     expect(filterSheet.cells["A2"]).toBe(filter.label);
     expect(filterSheet.cells["B1"]).toBe("Value");
     expect(filterSheet.cells["B2"]).toBe(
-        String(model.getters.getFilterDisplayValue(filter.label)[0][0].value)
+        String(model.getters.getFilterDisplayValue(filter)[0][0].value)
     );
     expect(filterSheet.cells["C2"]).toBe(
-        String(model.getters.getFilterDisplayValue(filter.label)[1][0].value)
+        String(model.getters.getFilterDisplayValue(filter)[1][0].value)
     );
     await model.exportXLSX(); // should not crash
 });
@@ -1870,7 +1870,8 @@ test("Relative date filter display value", async function () {
         label,
         defaultValue: "year_to_date",
     });
-    const values = model.getters.getFilterDisplayValue(label);
+    const filter = model.getters.getGlobalFilterByName(label);
+    const values = model.getters.getFilterDisplayValue(filter);
     expect(values[0][0].value).toBe(toNumber("2022-01-01", DEFAULT_LOCALE));
     expect(values[1][0].value).toBe(toNumber("2022-05-16", DEFAULT_LOCALE));
 });

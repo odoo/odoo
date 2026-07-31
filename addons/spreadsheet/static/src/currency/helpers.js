@@ -31,7 +31,7 @@ export function createDefaultCurrency(currency) {
 }
 
 /**
- * @param {Currency | undefined} currency
+ * @param {Currency | false | undefined} currency
  * @returns {string | undefined}
  */
 export function computeFormatFromCurrency(currency) {
