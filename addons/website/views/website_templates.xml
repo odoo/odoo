@@ -1082,45 +1082,47 @@
         <t t-call="website.navbar"
             _navbar_classes.f="o_header_force_no_radius d-none d-lg-block p-0">
             <div id="o_main_nav" class="o_main_nav">
-                <div aria-label="Top" t-attf-class="#{header_content_width} d-flex align-items-center justify-content-between py-3">
-                    <!-- Brand -->
-                    <t t-call="website.placeholder_header_brand"
-                        _link_class.f="me-4"/>
-                    <!-- Navbar -->
-                    <t t-call="website.navbar_nav"
-                        _nav_class.f="pe-2">
-                        <!-- Menu -->
-                        <t t-foreach="website.menu_id.child_id" t-as="submenu">
-                            <t t-call="website.submenu"
-                                item_class.f="nav-item"
-                                link_class.f="nav-link"/>
+                <div aria-label="Top" class="position-relative">
+                    <div t-attf-class="#{header_content_width} d-flex align-items-center justify-content-between py-3">
+                        <!-- Brand -->
+                        <t t-call="website.placeholder_header_brand"
+                            _link_class.f="me-4"/>
+                        <!-- Navbar -->
+                        <t t-call="website.navbar_nav"
+                            _nav_class.f="pe-2">
+                            <!-- Menu -->
+                            <t t-foreach="website.menu_id.child_id" t-as="submenu">
+                                <t t-call="website.submenu"
+                                    item_class.f="nav-item"
+                                    link_class.f="nav-link"/>
+                            </t>
                         </t>
-                    </t>
-                    <ul class="o_header_sales_one_right_col navbar-nav align-items-center gap-1 flex-grow-1 justify-content-end">
-                        <!-- Call To Action -->
-                        <t t-call="website.placeholder_header_call_to_action"
-                            _item_class.f="flex-grow-1"
-                            _div_class.f="d-flex align-items-center"/>
-                        <!-- Search bar -->
-                        <t t-call="website.placeholder_header_search_box"
-                            _simple_button_layout="True"
-                            _simple_button_classes.f="o_navlink_background rounded-circle p-1 lh-1 text-reset"/>
-                        <!-- Sign In -->
-                        <t t-call="portal.placeholder_user_sign_in"
-                            _link_class.f="btn rounded-circle text-reset fw-bold o_navlink_background"/>
-                        <!-- User Dropdown -->
-                        <t t-call="portal.user_dropdown"
-                            _icon="true"
-                            _item_class.f="dropdown"
-                            _icon_class.f="oi-stack"
-                            _link_class.f="btn d-flex align-items-center rounded-circle p-1 pe-3 text-reset o_navlink_background"
-                            _dropdown_menu_class.f="dropdown-menu-end"/>
-                        <!-- Language Selector -->
-                        <t t-call="website.placeholder_header_language_selector"
-                            _btn_class.f="btn rounded-circle text-reset o_navlink_background"
-                            _txt_class.f="small"
-                            _dropdown_menu_class.f="dropdown-menu-end"/>
-                    </ul>
+                        <ul class="o_header_sales_one_right_col navbar-nav align-items-center gap-1 flex-grow-1 justify-content-end">
+                            <!-- Call To Action -->
+                            <t t-call="website.placeholder_header_call_to_action"
+                                _item_class.f="flex-grow-1"
+                                _div_class.f="d-flex align-items-center"/>
+                            <!-- Search bar -->
+                            <t t-call="website.placeholder_header_search_box"
+                                _simple_button_layout="True"
+                                _simple_button_classes.f="o_navlink_background rounded-circle p-1 lh-1 text-reset"/>
+                            <!-- Sign In -->
+                            <t t-call="portal.placeholder_user_sign_in"
+                                _link_class.f="btn rounded-circle text-reset fw-bold o_navlink_background"/>
+                            <!-- User Dropdown -->
+                            <t t-call="portal.user_dropdown"
+                                _icon="true"
+                                _item_class.f="dropdown"
+                                _icon_class.f="oi-stack"
+                                _link_class.f="btn d-flex align-items-center rounded-circle p-1 pe-3 text-reset o_navlink_background"
+                                _dropdown_menu_class.f="dropdown-menu-end"/>
+                            <!-- Language Selector -->
+                            <t t-call="website.placeholder_header_language_selector"
+                                _btn_class.f="btn rounded-circle text-reset o_navlink_background"
+                                _txt_class.f="small"
+                                _dropdown_menu_class.f="dropdown-menu-end"/>
+                        </ul>
+                    </div>
                 </div>
                 <div aria-label="Bottom" t-if="is_view_active('website.header_text_element') or is_view_active('website.header_social_links')" class="o_header_sales_one_bot o_header_hide_on_scroll gap-3 py-2">
                     <ul t-attf-class="#{header_content_width} navbar-nav justify-content-between align-items-center">
@@ -1346,45 +1348,47 @@
         <t t-call="website.navbar"
             _navbar_classes.f="o_header_sales_four_top o_header_force_no_radius d-none d-lg-block p-0 z-1">
             <div id="o_main_nav" class="o_main_nav">
-                <div aria-label="Top" t-attf-class="#{header_content_width} d-flex">
-                    <!-- Navbar -->
-                    <t t-call="website.navbar_nav"
-                        _nav_class.f="align-items-center me-auto pe-3">
-                        <!-- Menu -->
-                        <t t-foreach="website.menu_id.child_id" t-as="submenu">
-                            <t t-call="website.submenu"
-                                item_class.f="nav-item small"
-                                link_class.f="nav-link"/>
+                <div aria-label="Top" class="position-relative">
+                    <div t-attf-class="#{header_content_width} d-flex">
+                        <!-- Navbar -->
+                        <t t-call="website.navbar_nav"
+                            _nav_class.f="align-items-center me-auto pe-3">
+                            <!-- Menu -->
+                            <t t-foreach="website.menu_id.child_id" t-as="submenu">
+                                <t t-call="website.submenu"
+                                    item_class.f="nav-item small"
+                                    link_class.f="nav-link"/>
+                            </t>
                         </t>
-                    </t>
-                    <ul class="o_header_separator navbar-nav align-items-center gap-3 flex-shrink-0">
-                        <!-- Text element -->
-                        <t t-call="website.placeholder_header_text_element"
-                            _txt_elt_content.f="mail"
-                            _div_class.f="d-flex align-items-center"
-                            _item_class.f="position-relative"/>
-                        <!-- Social -->
-                        <t t-call="website.placeholder_header_social_links"
-                            _div_class.f="d-flex align-items-center"
-                            _item_class.f="position-relative"/>
-                        <!-- Sign In -->
-                        <t t-call="portal.placeholder_user_sign_in"
-                            _item_class.f="position-relative small"
-                            _link_class.f="{{_additional_btn_color or 'nav-link'}} d-flex align-items-center h-100 border-0 px-2 text-decoration-none"/>
-                        <!-- User Dropdown -->
-                        <t t-call="portal.user_dropdown"
-                            _user_name="true"
-                            _item_class.f="dropdown position-relative d-flex align-items-center"
-                            _link_class.f="nav-link border-0"
-                            _user_name_class.f="small"
-                            _dropdown_menu_class.f="dropdown-menu-end"/>
-                        <!-- Language Selector -->
-                        <t t-call="website.placeholder_header_language_selector"
-                            _div_classes.f="position-relative"
-                            _btn_class.f="nav-link"
-                            _txt_class.f="small"
-                            _dropdown_menu_class.f="dropdown-menu-end"/>
-                    </ul>
+                        <ul class="o_header_separator navbar-nav align-items-center gap-3 flex-shrink-0">
+                            <!-- Text element -->
+                            <t t-call="website.placeholder_header_text_element"
+                                _txt_elt_content.f="mail"
+                                _div_class.f="d-flex align-items-center"
+                                _item_class.f="position-relative"/>
+                            <!-- Social -->
+                            <t t-call="website.placeholder_header_social_links"
+                                _div_class.f="d-flex align-items-center"
+                                _item_class.f="position-relative"/>
+                            <!-- Sign In -->
+                            <t t-call="portal.placeholder_user_sign_in"
+                                _item_class.f="position-relative small"
+                                _link_class.f="{{_additional_btn_color or 'nav-link'}} d-flex align-items-center h-100 border-0 px-2 text-decoration-none"/>
+                            <!-- User Dropdown -->
+                            <t t-call="portal.user_dropdown"
+                                _user_name="true"
+                                _item_class.f="dropdown position-relative d-flex align-items-center"
+                                _link_class.f="nav-link border-0"
+                                _user_name_class.f="small"
+                                _dropdown_menu_class.f="dropdown-menu-end"/>
+                            <!-- Language Selector -->
+                            <t t-call="website.placeholder_header_language_selector"
+                                _div_classes.f="position-relative"
+                                _btn_class.f="nav-link"
+                                _txt_class.f="small"
+                                _dropdown_menu_class.f="dropdown-menu-end"/>
+                        </ul>
+                    </div>
                 </div>
                 <div aria-label="Bottom" class="o_header_sales_four_bot o_header_hide_on_scroll z-0">
                     <div t-attf-class="#{header_content_width}">

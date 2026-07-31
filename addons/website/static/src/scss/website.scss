@@ -2241,6 +2241,21 @@ header {
     }
 }
 
+@if not index(('hamburger', 'sidebar'), o-website-value('header-template')) {
+    body:not(.editor_enable) {
+        header.o_hoverable_dropdown .navbar:not(.o_header_mobile) {
+            .o_mega_menu_toggle.show {
+                &::before {
+                    content: "";
+                    @include o-position-absolute($right: 0, $bottom: 0, $left: 0);
+                    z-index: 1000; // Same as --bs-dropdown-zindex.
+                    height: var(--o-mega-menu-bridge-height);
+                    cursor: auto;
+                }
+            }
+        }
+    }
+}
 
 // The design of some of the new mega menu templates required a column with
 // an overlay that would overflow until the end of the container. For
