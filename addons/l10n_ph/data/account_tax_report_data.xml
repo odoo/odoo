@@ -743,4 +743,340 @@
             </record>
         </field>
     </record>
+
+    <record id="percentage_tax" model="account.report">
+        <field name="name">2551Q</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.ph"/>
+        <field name="filter_multi_company">tax_units</field>
+        <field name="default_opening_date_filter">previous_return_period</field>
+        <field name="only_tax_exigible" eval="True"/>
+        <field name="active" eval="False"/>
+        <field name="column_ids">
+            <record id="l10n_ph_2551Q_tax_base" model="account.report.column">
+                <field name="name">Taxable Amount</field>
+                <field name="expression_label">tax_base</field>
+            </record>
+            <record id="l10n_ph_2551Q_tax" model="account.report.column">
+                <field name="name">Tax Due</field>
+                <field name="expression_label">tax</field>
+            </record>
+            <record id="l10n_ph_2551Q_balance" model="account.report.column">
+                <field name="name">Amount</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="l10n_ph_2551Q_2551q_ttp" model="account.report.line">
+                <field name="name">Part II - Total Tax Payable</field>
+                <field name="code">2551Q_TTP</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="l10n_ph_2551Q_2551q_14" model="account.report.line">
+                        <field name="name">14 Total Tax Due (From Schedule 1 Item 7)</field>
+                        <field name="code">2551Q_14</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_ph_2551Q_2551q_14_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">2551Q_PT010.tax + 2551Q_PT040.tax + 2551Q_PT105.tax + 2551Q_PT113.tax + 2551Q_PT115.tax + 2551Q_PT130.tax</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="l10n_ph_2551Q_2551q_l" model="account.report.line">
+                                <field name="name">Less: Tax Credit/Payment (attach proof)</field>
+                                <field name="code">2551Q_L</field>
+                                <field name="hierarchy_level">2</field>
+                                <field name="children_ids">
+                                    <record id="l10n_ph_2551Q_2551q_15" model="account.report.line">
+                                        <field name="name">15 Creditable Percentage Tax Withheld per BIR Form No. 2307</field>
+                                        <field name="code">2551Q_15</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_ph_2551Q_2551q_15_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=2</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_ph_2551Q_2551q_16" model="account.report.line">
+                                        <field name="name">16 Tax Paid in Return Previously filed, if this is an Amended Return</field>
+                                        <field name="code">2551Q_16</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_ph_2551Q_2551q_16_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=2</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_ph_2551Q_2551q_17" model="account.report.line">
+                                        <field name="name">17 Other Tax Credit/Payment (specify)</field>
+                                        <field name="code">2551Q_17</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_ph_2551Q_2551q_17_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=2</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_ph_2551Q_2551q_18" model="account.report.line">
+                        <field name="name">18 Total Tax Credits/Payments (Sum of Items 15 to 17)</field>
+                        <field name="code">2551Q_18</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_ph_2551Q_2551q_18_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">2551Q_15.balance + 2551Q_16.balance + 2551Q_17.balance</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_ph_2551Q_2551q_19" model="account.report.line">
+                        <field name="name">19 Tax Still Payable(Overpayment) (Item 14 Less Item 18)</field>
+                        <field name="code">2551Q_19</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_ph_2551Q_2551q_19_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">2551Q_14.balance - 2551Q_18.balance</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="l10n_ph_2551Q_2551q_a" model="account.report.line">
+                                <field name="name">Add: Penalties</field>
+                                <field name="code">2551Q_A</field>
+                                <field name="hierarchy_level">2</field>
+                                <field name="children_ids">
+                                    <record id="l10n_ph_2551Q_2551q_20" model="account.report.line">
+                                        <field name="name">20  Surcharge</field>
+                                        <field name="code">2551Q_20</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_ph_2551Q_2551q_20_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=2</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_ph_2551Q_2551q_21" model="account.report.line">
+                                        <field name="name">21 Interest</field>
+                                        <field name="code">2551Q_21</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_ph_2551Q_2551q_21_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=2</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_ph_2551Q_2551q_22" model="account.report.line">
+                                        <field name="name">22 Compromise</field>
+                                        <field name="code">2551Q_22</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_ph_2551Q_2551q_22_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=2</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_ph_2551Q_2551q_23" model="account.report.line">
+                        <field name="name">23 Total Penalties (Sum of Items 20 to 22)</field>
+                        <field name="code">2551Q_23</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_ph_2551Q_2551q_23_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">2551Q_20.balance + 2551Q_21.balance + 2551Q_22.balance</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_ph_2551Q_2551q_24" model="account.report.line">
+                        <field name="name">24 Total Amount Payable(Overpayment) (Sum of Items 19 and 23)</field>
+                        <field name="code">2551Q_24</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_ph_2551Q_2551q_24_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">2551Q_19.balance + 2551Q_23.balance</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_ph_2551Q_2551q_sched1" model="account.report.line">
+                <field name="name">Schedule 1 - Computation of Tax</field>
+                <field name="code">2551Q_Sched1</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="l10n_ph_2551Q_2551q_pto" model="account.report.line">
+                        <field name="name">Percentage Tax On</field>
+                        <field name="code">2551Q_PTO</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="hide_if_zero" eval="True"/>
+                        <field name="children_ids">
+                            <record id="l10n_ph_2551Q_2551q_pt010" model="account.report.line">
+                                <field name="name">PT010 - 3% Persons exempt from VAT under Sec. 109(BB) (Sec. 116) </field>
+                                <field name="code">2551Q_PT010</field>
+                                <field name="hierarchy_level">2</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="l10n_ph_2551Q_2551q_pt010_tax_base" model="account.report.expression">
+                                        <field name="label">tax_base</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-PT010A</field>
+                                    </record>
+                                    <record id="l10n_ph_2551Q_2551q_pt010_tax" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">2551Q_PT010.tax_base * 0.03</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_ph_2551Q_2551q_pt040" model="account.report.line">
+                                <field name="name">PT040 - 3% Domestic carriers and keepers of garages (Sec. 117) </field>
+                                <field name="code">2551Q_PT040</field>
+                                <field name="hierarchy_level">2</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="l10n_ph_2551Q_2551q_pt040_tax_base" model="account.report.expression">
+                                        <field name="label">tax_base</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-PT040A</field>
+                                    </record>
+                                    <record id="l10n_ph_2551Q_2551q_pt040_tax" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">2551Q_PT040.tax_base * 0.03</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_ph_2551Q_2551q_b" model="account.report.line">
+                        <field name="name">Tax on Banks &amp; Non-bank Financial Intermediaries Performing Quasi-Banking Functions (Sec.121)</field>
+                        <field name="code">2551Q_B</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="hide_if_zero" eval="True"/>
+                        <field name="children_ids">
+                            <record id="l10n_ph_2551Q_2551q_pt105" model="account.report.line">
+                                <field name="name">PT105 - 5% On interest, commissions and discounts from lending activities (5 years or less)</field>
+                                <field name="code">2551Q_PT105</field>
+                                <field name="hierarchy_level">2</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="l10n_ph_2551Q_2551q_pt105_tax_base" model="account.report.expression">
+                                        <field name="label">tax_base</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-PT105A</field>
+                                    </record>
+                                    <record id="l10n_ph_2551Q_2551q_pt105_tax" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">2551Q_PT105.tax_base * 0.05</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_ph_2551Q_2551q_nb" model="account.report.line">
+                        <field name="name">Tax on Other Non-Bank Financial Intermediaries Performing Quasi-Banking Functions (Sec.122)</field>
+                        <field name="code">2551Q_NB</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="hide_if_zero" eval="True"/>
+                        <field name="children_ids">
+                            <record id="l10n_ph_2551Q_2551q_pt113" model="account.report.line">
+                                <field name="name">PT113 - 5% On interest, commissions and discounts from lending activities (5 years or less)</field>
+                                <field name="code">2551Q_PT113</field>
+                                <field name="hierarchy_level">2</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="l10n_ph_2551Q_2551q_pt113_tax_base" model="account.report.expression">
+                                        <field name="label">tax_base</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-PT113A</field>
+                                    </record>
+                                    <record id="l10n_ph_2551Q_2551q_pt113_tax" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">2551Q_PT113.tax_base * 0.05</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_ph_2551Q_2551q_pt115" model="account.report.line">
+                                <field name="name">PT115 - 5% From all other items treated as gross income under the code</field>
+                                <field name="code">2551Q_PT115</field>
+                                <field name="hierarchy_level">2</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="l10n_ph_2551Q_2551q_pt115_tax_base" model="account.report.expression">
+                                        <field name="label">tax_base</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-PT115A</field>
+                                    </record>
+                                    <record id="l10n_ph_2551Q_2551q_pt115_tax" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">2551Q_PT115.tax_base * 0.05</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_ph_2551Q_2551q_f" model="account.report.line">
+                        <field name="name">Agents of Foreign Insurance Companies (Sec.124)</field>
+                        <field name="code">2551Q_F</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="hide_if_zero" eval="True"/>
+                        <field name="children_ids">
+                            <record id="l10n_ph_2551Q_2551q_pt130" model="account.report.line">
+                                <field name="name">PT130 - 4% Insurance Agents</field>
+                                <field name="code">2551Q_PT130</field>
+                                <field name="hierarchy_level">2</field>
+                                <field name="hide_if_zero" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="l10n_ph_2551Q_2551q_pt130_tax_base" model="account.report.expression">
+                                        <field name="label">tax_base</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-PT130A</field>
+                                    </record>
+                                    <record id="l10n_ph_2551Q_2551q_pt130_tax" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">2551Q_PT130.tax_base * 0.04</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
 </odoo>
