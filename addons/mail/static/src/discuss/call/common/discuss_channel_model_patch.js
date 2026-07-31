@@ -33,7 +33,7 @@ const DiscussChannelPatch = {
         /** @type {Set<number>} */
         this.lastSessionIds = new Set();
         /** @type {number|undefined} */
-        this.cancelRtcInvitationTimeout;
+        this.cancelRtcInvitationTimeout = undefined;
         this.rtc_session_ids = fields.Many("discuss.channel.rtc.session", {
             onDelete: (r) => r?.delete(),
             /** @this {import("models").Thread} */
