@@ -210,7 +210,8 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
 
         self.assertEqual(po1.order_line.qty_received, 5)
 
-        po1.order_line.product_qty = po1.order_line.qty_received - 0.01
+        with self.assertRaises(UserError, msg="Shouldn't allow ordered qty be lower than received"):
+            po1.order_line.product_qty = po1.order_line.qty_received - 0.01
 
         # Deliver 15 instead of 10.
         po1.write({

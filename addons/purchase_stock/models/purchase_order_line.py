@@ -98,6 +98,12 @@ class PurchaseOrderLine(models.Model):
         lines = self.filtered(lambda l: l.order_id.state == 'purchase'
                                         and not l.display_type)
 
+        if 'product_qty' in values:
+            for line in lines.filtered(lambda l: l.qty_received_method == 'stock_moves'):
+                if float_compare(values['product_qty'], line.qty_received, precision_rounding=line.product_uom_id.rounding) < 0:
+                    raise UserError(_('You cannot decrease the ordered quantity below the received quantity.\n'
+                                      'Create a return first.'))
+
         previous_product_uom_qty = {line.id: line.product_uom_qty for line in lines}
         previous_product_qty = {line.id: line.product_qty for line in lines}
         result = super(PurchaseOrderLine, self).write(values)
