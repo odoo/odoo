@@ -5044,6 +5044,30 @@ class AccountTax(models.Model):
             raise ValidationError(self.env._("You cannot delete taxes that are currently in use. Consider archiving them instead."))
 
     @api.model
+    def _import_retrieve_tax_from_account_default_tax(self, tax_values):
+        account = tax_values.get('account')
+        if not account or not account.tax_ids:
+            return
+
+        return {
+            'criteria': [{
+                'domain': [('id', 'in', account.tax_ids.ids)],
+            }],
+        }
+
+    @api.model
+    def _import_retrieve_tax_from_predicted_tax(self, tax_values):
+        predicted_tax_ids = tax_values.get('predicted_tax_ids')
+        if not predicted_tax_ids:
+            return
+
+        return {
+            'criteria': [{
+                'domain': [('id', 'in', predicted_tax_ids.ids)],
+            }],
+        }
+
+    @api.model
     def _import_retrieve_tax_from_price_include_exclude(self, tax_values):
         price_include = tax_values.get('price_include')
         fiscal_position = tax_values.get('fiscal_position')
