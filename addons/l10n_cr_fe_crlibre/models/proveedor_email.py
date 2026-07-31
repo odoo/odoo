@@ -29,17 +29,20 @@ class L10nCrFeProveedorEmail(models.Model):
 
     def _message_post_after_hook(self, new_message, message_values):
         res = super()._message_post_after_hook(new_message, message_values)
-        self._l10n_cr_fe_procesar_adjuntos(new_message)
+        if not self.state:
+            self._l10n_cr_fe_procesar_adjuntos(new_message)
         return res
 
     def _l10n_cr_fe_procesar_adjuntos(self, message):
         self.ensure_one()
+        ultimo_error = False
         for attachment in message.attachment_ids.filtered(
                 lambda a: a.name and a.name.lower().endswith('.xml')):
             try:
                 vals = self.env['account.move']._l10n_cr_fe_build_vals_from_proveedor_xml(
                     base64.b64decode(attachment.datas))
-            except UserError:
+            except UserError as exc:
+                ultimo_error = str(exc)
                 continue
             clave = vals['l10n_cr_fe_proveedor_clave']
             existing = self.env['account.move'].search(
@@ -47,11 +50,16 @@ class L10nCrFeProveedorEmail(models.Model):
             if existing:
                 self.write({'state': 'duplicado', 'move_id': existing.id})
             else:
-                move = self.env['account.move'].create(vals)
+                try:
+                    move = self.env['account.move'].create(vals)
+                except Exception as exc:  # noqa: BLE001 -- nunca debe escapar del gateway de correo
+                    self.write({'state': 'sin_xml_valido', 'error_message': str(exc)})
+                    return
                 self.write({'state': 'procesado', 'move_id': move.id})
             return
         self.write({
             'state': 'sin_xml_valido',
-            'error_message': _("El correo no traía ningún adjunto XML de factura "
-                                "electrónica válido."),
+            'error_message': ultimo_error or _(
+                "El correo no traía ningún adjunto XML de factura "
+                "electrónica válido."),
         })
