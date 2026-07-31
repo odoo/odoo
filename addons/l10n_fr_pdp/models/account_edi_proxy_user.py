@@ -1,4 +1,5 @@
 import logging
+import re
 import uuid
 from lxml import etree
 from markupsafe import Markup
@@ -80,6 +81,13 @@ DEMO_ENDPOINTS = {  # pdp reports specific endpoints not already mocked by l10n_
     },
     'pdp_state': lambda params: {},
 }
+
+REMOVE_EMBEDDED_DOCUMENT_BINARY_OBJECT_RE = re.compile(
+    rb'(<(?P<tag>(?:[A-Za-z_][A-Za-z0-9_.-]*:)?EmbeddedDocumentBinaryObject)\b[^<>]*>)'
+    rb'(?P<data>.*?)'
+    rb'(</(?P=tag)\s*>)',
+    re.DOTALL,
+)
 
 
 class AccountEdiProxyClientUser(models.Model):
@@ -222,6 +230,69 @@ class AccountEdiProxyClientUser(models.Model):
             company._force_update_l10n_fr_f10_moves()
         if 'pilot_phase' in proxy_user:
             self.sudo().company_id.l10n_fr_pdp_pilot_phase = proxy_user['pilot_phase']
+
+    def _peppol_import_invoice(self, attachment, peppol_state, uuid, journal=None):
+        """Override to support the hybrid Factur-X format."""
+        self.ensure_one()
+
+        if attachment.mimetype != "application/pdf":
+            return super()._peppol_import_invoice(attachment, peppol_state, uuid, journal)
+
+        files_data = self.env['account.move']._to_files_data(attachment)
+        files_data.extend(self.env['account.move']._unwrap_attachments(files_data))
+
+        for file_data in files_data:
+            if file_data['import_file_type'] == 'pdf':
+                continue
+
+            # Fallback to avoid issues with large EmbeddedDocumentBinaryObject
+            if file_data['xml_tree'] is None:
+                file_data['raw'] = REMOVE_EMBEDDED_DOCUMENT_BINARY_OBJECT_RE.sub(b'', file_data['raw'])
+                file_data['xml_tree'] = self.env['account.move']._get_xml_tree(file_data)
+
+            # Self-billed invoices are invoices which your customer creates on your behalf and sends you via Peppol.
+            # In this case, the invoice needs to be created as an out_invoice in a sale journal.
+            # 329/527: Self-billing invoice; 261: Self-billing credit note
+            is_self_billed = False
+            if file_data['xml_tree'].findtext('.//{*}TypeCode') in ['261', '389', '527']:
+                is_self_billed = True
+
+            if not is_self_billed:
+                journal = journal or self.company_id.peppol_purchase_journal_id
+                move_type = 'in_invoice'
+                if not journal:
+                    return {}
+            else:
+                journal = (
+                    journal
+                    or self.env['account.journal'].search(
+                        [
+                            *self.env['account.journal']._check_company_domain(self.company_id),
+                            ('type', '=', 'sale'),
+                        ],
+                        limit=1
+                    )
+                )
+                move_type = 'out_invoice'
+                if not journal:
+                    return {}
+
+        move = self.env['account.move'].create({
+            'journal_id': journal.id,
+            'move_type': move_type,
+            'peppol_move_state': peppol_state,
+            'peppol_message_uuid': uuid,
+        })
+        if 'is_in_extractable_state' in move._fields:
+            move.is_in_extractable_state = False
+
+        try:
+            move._extend_with_attachments(files_data, new=True)
+            move._autopost_bill()
+        except Exception:
+            _logger.exception("Unexpected error occurred during the import of bill with id %s", move.id)
+        attachment.write({'res_model': 'account.move', 'res_id': move.id})
+        return {'uuid': uuid, 'move': move}
 
     def _peppol_get_new_documents(self, skip_no_journal=False):
         if 'pdp_einvoicing_chatter_messages' not in self.env.context:
