@@ -2871,6 +2871,8 @@ class AccountEdiUBL(models.AbstractModel):
     def _import_ubl_retrieve_taxes_search_plan(self, collected_values):
         AccountTax = self.env['account.tax']
         return [
+            AccountTax._import_retrieve_tax_from_account_default_tax,
+            AccountTax._import_retrieve_tax_from_predicted_tax,
             AccountTax._import_retrieve_tax_from_price_include_exclude,
         ]
 
@@ -2880,13 +2882,16 @@ class AccountEdiUBL(models.AbstractModel):
         lines_collected_values = collected_values['lines_collected_values']
         tax_values_list = list(collected_values['taxes_values'])
         for line_collected_values in lines_collected_values:
+            if account := line_collected_values['account_values'].get('account'):
+                for tax_values in line_collected_values['taxes_values']:
+                    tax_values['account'] = account
             line_tax_values_list = line_collected_values['taxes_values']
             for charge in line_collected_values['charges']:
                 if tax_values := charge.get('attempt_tax_values'):
                     line_tax_values_list.append(tax_values)
-            if 'tax_ids' in line_collected_values.get('predicted_vals', {}):
+            if predicted_tax_ids := line_collected_values.get('predicted_vals', {}).get('tax_ids'):
                 for line_tax_values in line_tax_values_list:
-                    line_tax_values['tax'] = line_collected_values['predicted_vals']['tax_ids']
+                    line_tax_values['predicted_tax_ids'] = predicted_tax_ids
             tax_values_list.extend(line_tax_values_list)
 
         if customer := collected_values.get('customer_values', {}).get('customer'):
