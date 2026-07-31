@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="pos_owlybook.OwlybookView">
+        <MainComponentsContainer/>
+        <div class="d-sm-flex flex-row h-100 bg-white">
+            <Sidebar t-if="!hideSidebar" stories="stories.stories"/>
+            <div class="d-flex flex-column bg-white w-100 h-100 position-relative" style="width:100px">
+                <t t-if="stories.active.title">
+                    <Canvas/>
+                    <Notebook>
+                        <t t-set-slot="Page Name 1" title="'Props'" isVisible="true">
+                             <ComponentProperties/>
+                        </t>
+                        <t t-set-slot="Page Name 2" title="'Events'" isVisible="true">
+                            <Events/>
+                        </t>
+                    </Notebook>
+                </t>
+            </div>
+        </div>
+    </t>
+
+</templates>

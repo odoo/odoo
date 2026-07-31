@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<templates>
+    <t t-name="pos_owlybook.Sidebar">
+        <div class="o_owlybook_sidebar overflow-auto border-end">
+            <ul class="p-2" >
+                <li t-foreach="stories.stories" t-as="moduleName" t-key="moduleName">
+                    <t t-call="pos_owlybook.Sidebar.module"/>
+                </li>
+            </ul>
+        </div>
+    </t>
+
+    <t t-name="pos_owlybook.Sidebar.module">
+        <t t-if="filteredModule.includes(moduleName)">
+            <t t-set="moduleObject" t-value="stories.stories[moduleName]" />
+            <div t-on-click="() => this.toggleFold(moduleObject)" class="d-flex align-items-center o_owlybook_module o_owlybook_hover text-uppercase text-muted user-select-none">
+                <button class="btn btn-link p-0">
+                    <i t-att-class="(!moduleObject['folded'] ? 'fa-caret-down' : 'fa-caret-right') + ' fa o_owlybook_caret align-self-center' "/>
+                </button>
+                <t t-esc="moduleName"/>
+            </div>
+
+            <t t-if="!moduleObject['folded']">
+                <ul>
+                    <li t-foreach="moduleObject['folders']" t-as="folderName" t-key="folderName">
+                        <t t-call="pos_owlybook.Sidebar.folder"/>
+                    </li>
+                </ul>
+            </t>
+        </t>
+    </t>
+
+    <t t-name="pos_owlybook.Sidebar.folder">
+        <t t-if="filteredFolders.includes(folderName)">
+            <t t-set="folderObject" t-value="moduleObject['folders'][folderName]"/>
+            <div t-on-click="() => this.toggleFold(folderObject)" class="d-flex align-items-center o_owlybook_folder o_owlybook_hover user-select-none ps-4 pb-1">
+                <button class="btn btn-link p-0 o_owlybook_folder_button">
+                    <i t-att-class="(!folderObject['folded'] ? 'fa-folder-open-o' : 'fa-folder') + ' fa' " class="pe-1"/>
+                </button>
+                <t t-esc="folderName"/>
+            </div>
+            <t t-if="!folderObject['folded']">
+                <ul>
+                    <li t-foreach="folderObject['stories']" t-as="story" t-key="story_index">
+<!-- FIXME: i removed .id from stories by mistake -->
+                        <div t-if="filteredStories.includes(story.title)" t-on-click="() => this.onStoryClick(story)" t-att-class="story.id === stories.active.id ? 'o_owlybook_active' : ''" class="d-flex align-items-center o_owlybook_item o_owlybook_hover ps-5 pb-1">
+                            <button class="btn btn-link p-0 o_owlybook_item_button">
+                                <i class="fa fa-bookmark-o pe-2"></i>
+                            </button>
+                            <t t-esc="story.title"/>
+                        </div>
+                    </li>
+                </ul>
+            </t>
+        </t>
+    </t>
+</templates>

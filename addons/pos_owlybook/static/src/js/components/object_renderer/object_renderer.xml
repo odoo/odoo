@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+    <t t-name="pos_owlybook.ObjectRenderer">
+        <t t-set="name" t-value="props.name"/>
+        <t t-set="object" t-value="props.object"/>
+        <t t-set="uncollapsedObject" t-value="uncollapsed"/>
+        <t t-call="pos_owlybook.ObjectRenderer.object"/>
+    </t>
+
+    <t t-name="pos_owlybook.ObjectRenderer.object">
+        <t t-if="object and isObject(object)">
+            <span t-on-click="() => toggleCollapse(uncollapsedObject, name)" class="o_owlybook_hover">
+                <i t-if="uncollapsedObject[name]" class="fa fa-caret-down"></i>
+                <i t-else="" class="fa fa-caret-right"></i>
+                <span> <t t-esc="name"/>: </span>
+                <span class="text-muted" t-if="!uncollapsedObject[name]">
+                    <t t-esc="openingBracket(object)"/>...<t t-esc="closingBracket(object)"/> <t t-esc="Object.keys(object).length"/> items
+                </span>
+                <t t-if="uncollapsedObject[name]" t-esc="openingBracket(object)"/>
+            </span>
+            <t t-if="uncollapsedObject[name]">
+                <ul class="m-0">
+                    <t t-foreach="Object.keys(object)" t-as="subObject" t-key="subObject">
+                        <li class="ms-4">
+                            <t t-call="pos_owlybook.ObjectRenderer.object">
+                                <t t-set="uncollapsedObject" t-value="uncollapsedObject[name]"/>
+                                <t t-set="name" t-value="subObject"/>
+                                <t t-set="object" t-value="object[subObject]"/>
+                            </t>
+                        </li>
+                    </t>
+                </ul>
+                <t t-esc="closingBracket(object)"/>
+            </t>
+        </t>
+        <t t-else="">
+            <span> <t t-esc="name"/>: </span>
+            <t t-esc="object"/>
+        </t>
+    </t>
+</templates>
