@@ -107,6 +107,7 @@ export class Builder extends Component {
         this.activeTargetEl = null;
         const mobileBreakpoint = this.props.config.mobileBreakpoint ?? "lg";
 
+        this.editorReady = Promise.withResolvers();
         // TODO: maybe do a different config for the translate mode and the
         // "regular" mode.
         /** @type {Editor} */
@@ -224,6 +225,10 @@ export class Builder extends Component {
                 publicAttachments: true,
                 direction: "ltr",
                 maxFontSize: 400,
+                onEditorReady: () => {
+                    this.editorReady.resolve();
+                    this.props.config.onEditorReady?.();
+                },
             },
             this.env.services
         );
@@ -270,6 +275,7 @@ export class Builder extends Component {
             this.resizeObserver.observe(this.editableEl);
 
             this.editor.attachTo(this.editableEl);
+            await this.editorReady.promise;
         });
 
         useSubEnv({
