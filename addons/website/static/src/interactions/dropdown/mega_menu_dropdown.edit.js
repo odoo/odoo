@@ -41,6 +41,15 @@ const MegaMenuDropdownEdit = (I) =>
                 }
             });
         }
+
+        /**
+         * Skips setting the hover bridge height in edit mode since no hover
+         * bridge is needed as the dropdown does not close when the cursor
+         * leaves the toggle or mega menu.
+         *
+         * @override
+         */
+        setHoverBridgeHeight() {}
     };
 
 registry.category("public.interactions.edit").add("website.mega_menu_dropdown", {
