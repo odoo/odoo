@@ -15,7 +15,7 @@ export class MessageReactionList extends Component {
     static components = { Dropdown };
 
     reactionButtonRef = signal.ref();
-    reactionListRef = signal.ref();
+    reactionPreviewRef = signal.ref();
 
     setup() {
         super.setup(...arguments);
@@ -29,7 +29,7 @@ export class MessageReactionList extends Component {
         this.reaction = propComputed("reaction", t.instanceOf(this.store.MessageReactions));
         this.ui = useService("ui");
         this.preview = useDropdownState();
-        this.hover = useHover([this.reactionButtonRef, this.reactionListRef], {
+        this.hover = useHover([this.reactionButtonRef, this.reactionPreviewRef], {
             onHover: () => (this.preview.isOpen = true),
             onAway: () => (this.preview.isOpen = false),
             stateObserver: () => [this.preview?.isOpen],

@@ -1,17 +1,15 @@
 import {
-    Component,
     computed,
     onMounted,
     onPatched,
     onWillUnmount,
     proxy,
-    signal,
     t,
     useEffect,
+    useListener,
     useProps,
     usePlugin,
     useScope,
-    xml,
 } from "@odoo/owl";
 
 import { Reactive } from "@web/core/utils/reactive";
@@ -20,7 +18,6 @@ import { useLayoutEffect } from "@web/owl2/utils";
 import { CallPermissionDeniedDialog } from "@mail/discuss/call/common/call_permission_denied_dialog";
 import { monitorAudio } from "@mail/utils/common/media_monitoring";
 import { browser } from "@web/core/browser/browser";
-import { OVERLAY_SYMBOL } from "@web/core/overlay/overlay_container";
 import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder_owl";
 import { useService } from "@web/core/utils/hooks";
 import { resolveRefEl } from "@web/core/utils/ref_utils";
@@ -106,28 +103,21 @@ export function onExternalClick(ref, cb) {
 /**
  * Hook that allows to determine precisely when refs are (mouse-)hovered.
  * Should provide a list of refs, and can add callbacks when elements are
- * hovered-in (onHover), hovered-out (onAway), hovering for some time (onHovering).
+ * hovered-in (onHover), hovered-out (onAway).
  *
- * @param {Function | Function[]} refs signal refs that determine whether this is in state "hovering".
+ * @param {import("@odoo/owl").Signal<HTMLElement> | import("@odoo/owl").Signal<HTMLElement>[]} refs signal refs that determine whether this is in state "hovering".
  * @param {Object} param1
- * @param {() => void} [param1.onHover] callback when hovering the ref names.
- * @param {() => void} [param1.onAway] callback when stop hovering the ref names.
- * @param {number, () => void} [param1.onHovering] array where 1st param is duration until start hovering
- *   and function to be executed at this delay duration after hovering is kept true.
+ * @param {() => void} [param1.onHover] callback when hovering the refs.
+ * @param {() => void} [param1.onAway] callback when stop hovering the refs.
  * @param {() => Array} [param1.stateObserver] when provided, function that, when called, returns list of
  *   reactive state related to presence of targets' el. This is used to help the hook detect when the targets
  *   are removed from DOM, to properly mark the hovered target as non-hovered.
  */
-export function useHover(refs, { onHover, onAway, stateObserver, onHovering } = {}) {
+export function useHover(refs, { onHover, onAway, stateObserver } = {}) {
     refs = Array.isArray(refs) ? refs : [refs];
-    const targets = [];
     let wasHovering = false;
-    let hoveringTimeout;
     let awayTimeout;
-    let lastHoveredTarget;
-    for (const ref of refs) {
-        targets.push({ ref });
-    }
+    let lastHoveredRef;
     const state = proxy({
         set isHover(newIsHover) {
             if (this._isHover !== newIsHover) {
@@ -139,82 +129,53 @@ export function useHover(refs, { onHover, onAway, stateObserver, onHovering } = 
             void this._count;
             return this._isHover;
         },
-        _contains: [],
         _count: 0,
         _isHover: false,
-        _targets: targets,
-        addTarget(target) {
-            state._targets.push(target);
-            const handleMouseenter = (ev) => onmouseenter(ev);
-            const handleMouseleave = (ev) => onmouseleave(ev);
-            const el = resolveRefEl(target.ref);
-            el.addEventListener("mouseenter", handleMouseenter, true);
-            el.addEventListener("mouseleave", handleMouseleave, true);
-            return () => {
-                const el = resolveRefEl(target.ref);
-                el?.removeEventListener("mouseenter", handleMouseenter, true);
-                el?.removeEventListener("mouseleave", handleMouseleave, true);
-                const idx = state._targets.findIndex((t) => t === target);
-                if (idx !== -1) {
-                    state._targets.splice(idx, 1);
-                }
-            };
-        },
+        refs,
     });
+    /** @param {boolean} hovering */
     function setHover(hovering) {
         if (hovering && !wasHovering) {
             state.isHover = true;
             clearTimeout(awayTimeout);
-            clearTimeout(hoveringTimeout);
             if (typeof onHover === "function") {
                 onHover();
-            }
-            if (Array.isArray(onHovering)) {
-                const [delay, cb] = onHovering;
-                hoveringTimeout = setTimeout(() => {
-                    cb();
-                }, delay);
             }
         } else if (!hovering) {
             state.isHover = false;
             clearTimeout(awayTimeout);
             if (typeof onAway === "function") {
                 awayTimeout = setTimeout(() => {
-                    clearTimeout(hoveringTimeout);
                     onAway();
                 }, 100);
             }
         }
         wasHovering = hovering;
     }
+    /** @param {MouseEvent} ev */
     function onmouseenter(ev) {
         if (state.isHover) {
             return;
         }
-        for (const target of state._targets) {
-            const el = resolveRefEl(target.ref);
+        for (const ref of state.refs) {
+            const el = ref();
             if (!el) {
                 continue;
             }
             if (el.contains(ev.target)) {
                 setHover(true);
-                lastHoveredTarget = target;
-                return;
-            }
-        }
-        for (const contains of state._contains) {
-            if (contains(ev.target)) {
-                setHover(true);
+                lastHoveredRef = ref;
                 return;
             }
         }
     }
+    /** @param {MouseEvent} ev */
     function onmouseleave(ev) {
         if (!state.isHover) {
             return;
         }
-        for (const target of state._targets) {
-            const el = resolveRefEl(target.ref);
+        for (const ref of state.refs) {
+            const el = ref();
             if (!el) {
                 continue;
             }
@@ -222,73 +183,27 @@ export function useHover(refs, { onHover, onAway, stateObserver, onHovering } = 
                 return;
             }
         }
-        for (const contains of state._contains) {
-            if (contains(ev.relatedTarget)) {
-                return;
-            }
-        }
         setHover(false);
-        lastHoveredTarget = null;
+        lastHoveredRef = null;
     }
 
-    for (const target of targets) {
-        useLazyExternalListener(
-            () => resolveRefEl(target.ref),
-            "mouseenter",
-            (ev) => onmouseenter(ev),
-            true
-        );
-        useLazyExternalListener(
-            () => resolveRefEl(target.ref),
-            "mouseleave",
-            (ev) => onmouseleave(ev),
-            true
-        );
+    for (const ref of refs) {
+        useListener(ref, "mouseenter", (ev) => onmouseenter(ev), true);
+        useListener(ref, "mouseleave", (ev) => onmouseleave(ev), true);
     }
 
     if (stateObserver) {
         useLayoutEffect((open) => {
             // Note: stateObserver is essentially used with useDropdownState()?.isOpen.
-            // While isOpen can become false, the ref.el can still be there for a short period of time.
+            // While isOpen can become false, the ref() can still be there for a short period of time.
             // Relying on isOpen becoming false forces good syncing of isHover state on dropdown close.
-            if ((lastHoveredTarget && !resolveRefEl(lastHoveredTarget.ref)) || !open) {
+            if ((lastHoveredRef && !lastHoveredRef()) || !open) {
                 setHover(false);
-                lastHoveredTarget = null;
+                lastHoveredRef = null;
             }
         }, stateObserver);
     }
     return state;
-}
-
-export class UseHoverOverlay extends Component {
-    static template = xml`<div t-ref="this.root"><t t-call-slot="default"/></div>`;
-
-    root = signal.ref();
-
-    setup() {
-        super.setup();
-        this.props = useProps({
-            hover: t.object({
-                _contains: t.array(t.function([t.instanceOf(EventTarget)], t.boolean())),
-                addTarget: t.function([t.object({ ref: t.any() })], t.function([])),
-            }),
-        });
-        const overlayContains = this.env[OVERLAY_SYMBOL].contains;
-        let removeTarget;
-        onMounted(() => {
-            this.props.hover._contains.push(overlayContains);
-            removeTarget = this.props.hover.addTarget({
-                ref: { el: resolveRefEl(this.root).closest(".o-overlay-item") },
-            });
-        });
-        onWillUnmount(() => {
-            const idx = this.props.hover._contains.findIndex((c) => c === overlayContains);
-            if (idx !== -1) {
-                this.props.hover._contains.splice(idx, 1);
-            }
-            removeTarget?.();
-        });
-    }
 }
 
 /**

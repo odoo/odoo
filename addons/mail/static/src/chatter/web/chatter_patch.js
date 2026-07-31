@@ -10,10 +10,9 @@ import { SearchMessageInput } from "@mail/core/common/search_message_input";
 import { SearchMessageResult } from "@mail/core/common/search_message_result";
 import { Activity } from "@mail/core/web/activity";
 import { FollowerList } from "@mail/core/web/follower_list";
-import { useHover } from "@mail/utils/common/hooks";
 import { assignGetter, isDragSourceExternalFile } from "@mail/utils/common/misc";
 
-import { signal, status, t, untrack, useEffect, useOnChange, useProps } from "@odoo/owl";
+import { status, t, untrack, useEffect, useOnChange, useProps } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -100,8 +99,6 @@ const chatterPatch = {
         });
         this.messageSearch = useMessageSearch();
         this.attachmentUploader = useAttachmentUploader(this.thread);
-        this.unfollowRef = signal.ref();
-        this.unfollowHover = useHover(this.unfollowRef);
         this.followerListDropdown = useDropdownState();
         /** @type {number|null} */
         this.loadingAttachmentTimeout = null;
@@ -294,10 +291,6 @@ const chatterPatch = {
 
     get scheduledMessages() {
         return this.state.thread?.scheduledMessages ?? [];
-    },
-
-    get unfollowText() {
-        return _t("Unfollow");
     },
 
     changeThread(threadModel, threadId) {
