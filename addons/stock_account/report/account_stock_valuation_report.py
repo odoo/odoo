@@ -7,17 +7,13 @@ class StockValuationReport(models.AbstractModel):
     _inherit = 'account.stock.valuation.report'
 
     def _get_report_data(self, date=False, product_category=False, warehouse=False):
-        # OVERRIDE: add the "Inventory Loss" section (stock locations used to reclassify
-        # losses) and enable the "Generate Entry" (periodic closing) button, both only
-        # meaningful when the stock module is installed.
         report_data = super()._get_report_data(date=date, product_category=product_category, warehouse=warehouse)
 
         if not self._must_include_inventory_loss():
             return report_data
 
         date = self._normalize_report_date(date)
-
-        location_valuation_vals = self._get_extra_stock_valuation_aml_vals(date)
+        location_valuation_vals = self._get_inventory_loss_aml_vals(date)
         inventory_loss = {
             'label': _("Inventory Loss"),
             'value': 0,
@@ -29,9 +25,11 @@ class StockValuationReport(models.AbstractModel):
         account_ids = set()
         for vals in location_valuation_vals:
             account_ids.add(vals['account_id'])
-            inventory_loss['value'] -= vals['balance'] if vals['balance'] > 0 else 0
-            lines_by_account_id[vals['account_id']]['debit'] += vals['balance'] if vals['balance'] > 0 else 0
-            lines_by_account_id[vals['account_id']]['credit'] -= vals['balance'] if vals['balance'] < 0 else 0
+            debit = vals['balance'] if vals['balance'] > 0 else 0
+            credit = -vals['balance'] if vals['balance'] < 0 else 0
+            inventory_loss['value'] -= debit
+            lines_by_account_id[vals['account_id']]['debit'] += debit
+            lines_by_account_id[vals['account_id']]['credit'] += credit
         inventory_loss['lines'] = [{
             'account_id': account_id,
             'debit': vals['debit'],
@@ -55,7 +53,10 @@ class StockValuationReport(models.AbstractModel):
             ('valuation_account_id', '!=', False),
         ], limit=1))
 
-    def _get_extra_stock_valuation_aml_vals(self, date):
+    def _get_inventory_loss_aml_vals(self, date):
         return self.env.company._get_location_valuation_vals(
             date, location_domain=[('usage', '=', 'inventory')],
         )
+
+    def _get_extra_stock_valuation_aml_vals(self, date):
+        return super()._get_extra_stock_valuation_aml_vals(date) + self._get_inventory_loss_aml_vals(date)

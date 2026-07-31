@@ -1,8 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import datetime, time
 from dateutil.relativedelta import relativedelta
 
 from odoo import SUPERUSER_ID, api, Command, fields, models, _
+from odoo.fields import Domain
 from odoo.tools.float_utils import float_compare, float_is_zero, float_round
 from odoo.exceptions import UserError
 
@@ -463,3 +465,19 @@ class PurchaseOrderLine(models.Model):
     def _merge_po_line(self, rfq_line):
         super()._merge_po_line(rfq_line)
         self.move_dest_ids += rfq_line.move_dest_ids
+
+    def _get_accrual_domain(self, date=False):
+        """ Override of `purchase` to also match lines whose receipt (stock moves) settled
+        after `date`: nothing left to accrue today, but there was a receipt-side mismatch
+        back then.
+        """
+        domain = super()._get_accrual_domain(date)
+        if date:
+            # `self._get_accrual_domain()` (no date) gives the same eligibility restrictions
+            # `domain` was built with, without the OR'd candidate-matching; ANDing the stock
+            # move check onto it, then OR'ing that onto `domain`, extends the OR'd candidates
+            # with a receipt-side one without duplicating the eligibility restrictions here.
+            domain |= self._get_accrual_domain() & Domain([
+                ('move_ids.date', '>', datetime.combine(date, time.max)),
+            ])
+        return domain

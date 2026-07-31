@@ -1216,38 +1216,104 @@ class ResCompany(models.Model):
 
             company.company_vat_placeholder = self.env._(expected_vat or '')  # pylint: disable=E8502
 
-    def action_close_stock_valuation(self, at_date=None, auto_post=False, raise_error_if_closed=True):
+    def action_close_stock_valuation(self, at_date=None, auto_post=False, raise_error_if_closed=True, include_accruals=False):
         self.ensure_one()
         at_date = fields.Date.to_date(at_date) or fields.Date.context_today(self)
         last_closing_date = self._get_last_closing_date()
         if last_closing_date and at_date < fields.Date.to_date(last_closing_date):
             raise UserError(self.env._('It exists closing entries after the selected date. Cancel them before generate an entry prior to them'))
+
+        accrual_moves = self.env['account.move']
+        if include_accruals and self.use_stock_account():
+            # Real/physical stock valuation available: Ending Stock is independent of GL
+            # postings, so post the accrual *before* the closing entry is computed — the
+            # closing entry's Stock Variation then reflects its impact already, instead of
+            # double-correcting the same gap. Same rule as the report.
+            accrual_moves = self._create_accrual_moves(date=at_date)
+
         aml_vals_list = self.with_context(allowed_company_ids=self.ids)._action_close_stock_valuation(at_date=at_date)
 
-        if not aml_vals_list:
+        if include_accruals and not self.use_stock_account():
+            # No independent stock valuation: post the accrual *after* computing the closing
+            # entry instead, so its real GL impact isn't silently absorbed into Stock
+            # Variation — matching the report, which doesn't net the accrual against it either.
+            accrual_moves = self._create_accrual_moves(date=at_date)
+
+        if not aml_vals_list and not accrual_moves:
             # if we come from cron there might be no move to create for this company, but some for other companies
             if not raise_error_if_closed:
                 return
             raise UserError(_("Everything is correctly closed"))
-        if not self.account_stock_journal_id:
-            raise UserError(self.env._("Please set the Journal for Inventory Valuation in the settings."))
-        if not self.account_stock_valuation_id:
-            raise UserError(self.env._("Please set the Valuation Account for Inventory Valuation in the settings."))
 
-        moves_vals = {
-            'journal_id': self.account_stock_journal_id.id,
-            'date': at_date,
-            'ref': _('Stock Closing'),
-            'inventory_closing': True,
-            'line_ids': [Command.create(aml_vals) for aml_vals in aml_vals_list],
-            'company_id': self.id,
-            **self._get_closing_move_extra_vals(at_date),
+        closing_move = self.env['account.move']
+        if aml_vals_list:
+            if not self.account_stock_journal_id:
+                raise UserError(self.env._("Please set the Journal for Inventory Valuation in the settings."))
+            if not self.account_stock_valuation_id:
+                raise UserError(self.env._("Please set the Valuation Account for Inventory Valuation in the settings."))
+
+            moves_vals = {
+                'journal_id': self.account_stock_journal_id.id,
+                'date': at_date,
+                'ref': _('Stock Closing'),
+                'inventory_closing': True,
+                'line_ids': [Command.create(aml_vals) for aml_vals in aml_vals_list],
+                'company_id': self.id,
+                **self._get_closing_move_extra_vals(at_date),
+            }
+            closing_move = self.env['account.move'].create(moves_vals)
+            if auto_post:
+                closing_move._post()
+
+        if not include_accruals:
+            return closing_move._get_records_action(name=_("Journal Items"))
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _("Journal Items"),
+            'res_model': 'account.move',
+            'views': [(False, 'list'), (False, 'form')],
+            'domain': [('id', 'in', (closing_move | accrual_moves).ids)],
         }
-        account_move = self.env['account.move'].create(moves_vals)
-        if auto_post:
-            account_move._post()
 
-        return account_move._get_records_action(name=_("Journal Items"))
+    def _get_accrual_candidate_lines(self, date=False):
+        """ Hook overridden by purchase / sale.
+
+        :return: a dict mapping each accrual section ('bills_to_receive', 'billed_not_received',
+                 'invoices_to_issue', 'invoiced_not_delivered' — see `accrual_labels` in
+                 `account.stock.valuation.report._compute_accrual_data`) to its candidate order lines.
+        """
+        return {}
+
+    def _create_accrual_moves(self, date=False):
+        """ Create and post the accrual entries (and their automatic reversal) for every
+        accrual section with something to accrue as of `date` (see
+        `_get_accrual_candidate_lines`).
+        """
+        self.ensure_one()
+        accrual_entry_date = date or fields.Date.context_today(self)
+        moves = self.env['account.move']
+        for candidate_lines in self._get_accrual_candidate_lines(date=date).values():
+            if not candidate_lines:
+                continue
+            wizard = self.env['account.accrued.orders.wizard'].with_context(
+                active_model=candidate_lines._name,
+                active_ids=candidate_lines.ids,
+                accrual_entry_date=fields.Date.to_string(accrual_entry_date),
+                accrual_allow_mixed_currencies=True,
+            ).new({
+                'company_id': self.id,
+                'date': accrual_entry_date,
+            })
+            move_vals, __, __ = wizard._compute_move_vals()
+            # Skip empty moves, and lines whose accrual account isn't
+            # configured (no account to post them on).
+            if not move_vals['line_ids'] or any(
+                not vals.get('account_id') for _, __, vals in move_vals['line_ids']
+            ):
+                continue
+            action = wizard.create_entries(auto_post=True)
+            moves |= self.env['account.move'].search(action['domain'])
+        return moves
 
     def get_inventory_value(self, at_date=None):
         """ Current inventory value, i.e. what the products physically on hand are worth.
@@ -1457,6 +1523,12 @@ class ResCompany(models.Model):
             'balance': balance,
             'product_id': product_id,
         }]
+
+    def use_stock_account(self):
+        """ Whether real/physical stock valuation is available (independent of the accounting
+        data). Not applicable without the stock module. Overridden by `stock_account`.
+        """
+        return False
 
     def _get_extra_closing_aml_vals(self, at_date):
         """ Extra debit/credit vals already accounted for elsewhere, to pass along to the stock

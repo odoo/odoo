@@ -49,7 +49,7 @@ export class StockValuationReportController {
         for (let [accountId, data] of Object.entries(this.data.initial_balance.lines_by_account_id)) {
             const account = this.data.accounts_by_id[accountId];
             this.data.initial_balance.lines.push({
-                label: account.display_name,
+                label: account?.display_name,
                 value: data.value,
                 account_id: accountId,
             });
@@ -73,13 +73,15 @@ export class StockValuationReportController {
     }
 
     // Actions -----------------------------------------------------------------
-    async actionGenerateEntry() {
-        const args = [[this.companyId]];
+    async actionGenerateEntries() {
+        const kwargs = { include_accruals: true };
         const date = this.state.date.toISODate() || false;
-        if (date != DateTime.now().toISODate()) {
-            args.push(date);
+        if (date && date != DateTime.now().toISODate()) {
+            kwargs.at_date = date;
         }
-        const action = await this.orm.call("res.company", "action_close_stock_valuation", args);
+        const action = await this.orm.call(
+            "res.company", "action_close_stock_valuation", [[this.companyId]], kwargs
+        );
         if (action) {
             this.actionService.doAction(action);
         }

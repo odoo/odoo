@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import timedelta
+from datetime import datetime, time, timedelta
 from collections import defaultdict
 
 from odoo import api, fields, models, _
@@ -440,3 +440,18 @@ class SaleOrderLine(models.Model):
 
     def has_valued_move_ids(self):
         return any(move.state not in ('cancel', 'draft') for move in self.move_ids)
+
+    def _get_accrual_domain(self, date=False):
+        """ Override of `sale` to also match lines whose delivery (stock moves) settled after
+        `date`: nothing left to accrue today, but there was a delivery-side mismatch back then.
+        """
+        domain = super()._get_accrual_domain(date)
+        if date:
+            # `self._get_accrual_domain()` (no date) gives the same eligibility restrictions
+            # `domain` was built with, without the OR'd candidate-matching; ANDing the stock
+            # move check onto it, then OR'ing that onto `domain`, extends the OR'd candidates
+            # with a delivery-side one without duplicating the eligibility restrictions here.
+            domain |= self._get_accrual_domain() & Domain([
+                ("move_ids.date", ">", datetime.combine(date, time.max)),
+            ])
+        return domain
