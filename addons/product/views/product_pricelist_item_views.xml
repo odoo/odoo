@@ -118,7 +118,6 @@
                     name="uom_id"
                     widget="many2one_uom"
                     groups="uom.group_uom"
-                    invisible="display_applied_on != '1_product'"
                     options="{'product_field': 'product_tmpl_id'}"
                     optional="hide"
                 />
@@ -143,28 +142,10 @@
                     <group name="pricelist_rule_computation">
                         <group name="pricelist_rule_method">
                             <field name="applied_on" invisible="1"/>
-                            <field name="display_applied_on"
-                                string="Apply To"
-                                widget="radio"
-                                options="{'horizontal': true}"/>
-                            <field name="categ_id"
-                                options="{'no_create': 1}"
-                                invisible="display_applied_on != '2_product_category'"
-                                placeholder="All categories"/>
-                            <field name="product_tmpl_id"
-                                options="{'no_create': 1}"
-                                invisible="display_applied_on != '1_product'"
-                                placeholder="All products"/>
                             <field name="product_variant_count" invisible="1"/>
-                            <field name="product_id"
-                                options="{'no_create': 1}"
-                                invisible="product_variant_count &lt; 2"
-                                placeholder="All variants"/>
                             <field name="compute_price"
-                                string="Price Type"
+                                string="Apply"
                                 widget="radio"
-                                options="{'horizontal': true}"
-                                invisible="display_applied_on == '1_product' and compute_price == 'fixed_price'"
                                 groups="product.group_product_pricelist"
                             />
                             <label for="fixed_price" invisible="compute_price != 'fixed'"/>
@@ -186,8 +167,23 @@
                             </div>
                         </group>
                         <div name="pricelist_rule_limits">
+                            <group name="pricelist_rule_target">
+                                <field name="categ_id"
+                                    options="{'no_create': 1}"
+                                    readonly="product_tmpl_id or product_id"
+                                    placeholder="All categories"/>
+                                <field name="product_tmpl_id"
+                                    options="{'no_create': 1}"
+                                    readonly="categ_id"
+                                    placeholder="All products"/>
+                                <field name="product_id"
+                                    options="{'no_create': 1}"
+                                    invisible="product_variant_count &lt; 2"
+                                    readonly="categ_id"
+                                    placeholder="All variants"/>
+                            </group>
                             <group name="min_quantity">
-                                <label for="min_quantity" string="Min Qty"/>
+                                <label for="min_quantity" string="Minimum Quantity"/>
                                 <div class="o_row gap-3">
                                     <field name="min_quantity"/>
                                     <!-- apply allowed_uom_ids domain only if product template is selected -->
@@ -196,7 +192,6 @@
                                         placeholder="Units"
                                         domain="[('id', 'in', allowed_uom_ids)] if allowed_uom_ids else []"
                                         groups="uom.group_uom"
-                                        invisible="display_applied_on != '1_product'"
                                         widget="many2one_uom"
                                         options="{'no_create': 1, 'product_field': 'product_tmpl_id'}"
                                         nolabel="1"
@@ -214,28 +209,32 @@
                             </group>
                         </div>
                     </group>
-                    <group name="pricelist_rule_base" invisible="compute_price != 'formula'">
+                    <group name="pricelist_rule_base" invisible="compute_price not in ('formula', 'markup')">
                         <group>
-                            <field name="base" string="Based price"/>
+                            <label for="price_discount" string="Discount"
+                                invisible="compute_price == 'markup'"/>
+                            <label for="price_markup" string="Surcharge"
+                                invisible="compute_price != 'markup'"/>
+                            <div class="d-flex flex-wrap align-items-baseline gap-2">
+                                <field name="price_discount"
+                                    class="oe_inline w-auto o_input_8ch"
+                                    invisible="compute_price == 'markup'"/>
+                                <field name="price_markup"
+                                    class="oe_inline w-auto o_input_8ch"
+                                    invisible="compute_price != 'markup'"/>
+                                <span class="text-nowrap">% on</span>
+                                <field name="base"
+                                    nolabel="1"
+                                    class="oe_inline text-nowrap"/>
+                            </div>
                             <field name="base_pricelist_id"
                                 invisible="base != 'pricelist'"
                                 readonly="base != 'pricelist'"
-                                required="compute_price == 'formula' and base == 'pricelist'"
+                                required="compute_price in ('formula', 'markup') and base == 'pricelist'"
                                 string="Other Pricelist"/>
-                            <label for="price_discount" string="Discount"
-                                invisible="base == 'standard_price'"/>
-                            <div class="o_row" invisible="base == 'standard_price'" style="width: 40% !important;">
-                                <field name="price_discount"/>
-                                <span>%</span>
-                            </div>
-                            <label for="price_markup" string="Markup"
-                                invisible="base != 'standard_price'"/>
-                            <div class="o_row" invisible="base != 'standard_price'" style="width: 40% !important;">
-                                <field name="price_markup"/>
-                                <span>%</span>
-                            </div>
                             <field name="price_round" string="Round off to"/>
                             <field name="price_surcharge"
+                                string="Add"
                                 widget="monetary"
                                 options="{'currency_field': 'currency_id', 'field_digits': True}"/>
                             <label string="Margins" for="price_min_margin"
@@ -257,17 +256,6 @@
                                     options="{'field_digits': True}"/>
                             </div>
                         </group>
-                        <div>
-                            <div class="alert alert-info" role="alert" style="white-space: pre;">
-                                <field name="rule_tip"/>
-                            </div>
-                            <div class="alert alert-info"
-                                role="alert"
-                                style="white-space: pre;">
-                                <b>Tip: want to round at 9.99?</b>
-                                <div>round off to 10.00 and set an extra at -0.01</div>
-                            </div>
-                        </div>
                     </group>
 
                     <group string="Company Settings" groups="base.group_no_one">
@@ -278,6 +266,11 @@
                         </group>
                     </group>
                 </sheet>
+                <footer name="rule_tip_example" replace="0">
+                    <span class="text-muted align-self-center" invisible="not rule_tip">
+                        Example: <field name="rule_tip" nolabel="1"/>
+                    </span>
+                </footer>
             </form>
         </field>
     </record>
@@ -288,7 +281,7 @@
         <field name="inherit_id" ref="product.product_pricelist_item_form_view"/>
         <field name="mode">primary</field>
         <field name="arch" type="xml">
-            <field name="display_applied_on" position="attributes">
+            <field name="categ_id" position="attributes">
                 <attribute name="invisible">1</attribute>
             </field>
             <field name="product_tmpl_id" position="attributes">
@@ -323,6 +316,7 @@
         <field name="arch" type="xml">
             <group name="date_range" position="replace"/>
             <group name="min_quantity" position="replace"/>
+            <footer name="rule_tip_example" position="replace"/>
             <sheet position="attributes">
                 <!--
                     The view is rendered inside the calendar multi create popover,
@@ -332,6 +326,9 @@
                 <attribute name="class">o_pricelist_rule_multi_create</attribute>
             </sheet>
             <group name="pricelist_rule_computation" position="attributes">
+                <attribute name="col">1</attribute>
+            </group>
+            <group name="pricelist_rule_base" position="attributes">
                 <attribute name="col">1</attribute>
             </group>
             <group name="pricelist_rule_method" position="before">
@@ -357,8 +354,7 @@
                 show_date_picker="0"
                 multi_create_view="product.product_pricelist_item_form_multi_create"
             >
-                <field name="pricelist_id"/>
-                <field name="product_tmpl_id"/>
+                <field name="name" string="Applied on"/>
                 <field name="price"/>
             </calendar>
         </field>

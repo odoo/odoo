@@ -90,7 +90,7 @@
                                     <field name="min_quantity"/>
                                     <field
                                         name="uom_id"
-                                        invisible="display_applied_on != '1_product'"
+                                        invisible="categ_id"
                                         groups="uom.group_uom"
                                         colspan="4"
                                         optional="hide"
@@ -107,7 +107,7 @@
                                     <field name="price_discount" column_invisible="True"/>
                                     <field name="applied_on" column_invisible="True"/>
                                     <field name="compute_price" column_invisible="True"/>
-                                    <field name="display_applied_on" column_invisible="True"/>
+                                    <field name="categ_id" column_invisible="True"/>
                                 </list>
                             </field>
                         </page>
