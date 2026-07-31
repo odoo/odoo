@@ -488,8 +488,7 @@ export class SelfOrder extends Reactive {
     }
 
     initHardware() {
-        const orderingMode = this.config.self_ordering_mode;
-        if (!["kiosk", "mobile"].includes(orderingMode)) {
+        if (this.config.self_ordering_mode !== "kiosk") {
             return;
         }
 
@@ -502,10 +501,6 @@ export class SelfOrder extends Reactive {
             }
 
             useLna = useLna || printerConfig.use_lna;
-        }
-
-        if (orderingMode !== "kiosk") {
-            return;
         }
 
         for (const relPrinter of this.config.receipt_printer_ids) {

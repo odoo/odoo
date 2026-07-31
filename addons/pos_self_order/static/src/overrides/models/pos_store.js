@@ -27,4 +27,8 @@ patch(PosStore.prototype, {
             params: { data: user_data },
         });
     },
+    async getSelfOrderToPrint(orderId) {
+        const result = await this.data.callRelated("pos.order", "get_order_to_print", [orderId]);
+        return result["pos.order"][0];
+    }
 });

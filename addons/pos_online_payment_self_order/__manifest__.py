@@ -11,6 +11,9 @@
     ],
     'auto_install': True,
     'assets': {
+        'point_of_sale._assets_pos': [
+            'pos_online_payment_self_order/static/src/overrides/**/*',
+        ],
         'pos_self_order.assets': [
             'pos_online_payment_self_order/static/src/app/**/*',
             'point_of_sale/static/lib/qrcode.js',
