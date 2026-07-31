@@ -20,12 +20,22 @@
                             <div class="row">
                                 <label for="l10n_cn_baiwang_subscription_status" class="col-lg-4"/>
                                 <field name="l10n_cn_baiwang_subscription_status" readonly="1"/>
+                                <div class="text-muted">
+                                The TIN
+                                <a name="action_open_company_form" type="object" role="button" class="btn-link">
+                                    <span invisible="not l10n_cn_edi_company_vat">
+                                        <field name="l10n_cn_edi_company_vat" class="oe_inline" readonly="1"/>
+                                    </span>
+                                    <span invisible="l10n_cn_edi_company_vat">is not set</span>
+                                </a>
+                                will be used for Baiwang registration and API calls.
+                            </div>
                                 <button invisible="l10n_cn_baiwang_subscription_status != 'not_subscribed'"
                                     type="object"
                                     name="action_l10n_cn_baiwang_subscribe"
                                     string="Subscribe to Baiwang"
                                     class="btn-primary"
-                                    icon="fa-external-link"
+                                    icon="east"
                                     noSaveDialog="true"/>
                             </div>
                             <div class="mt16" invisible="l10n_cn_baiwang_subscription_status != 'subscribed'">
@@ -33,7 +43,7 @@
                                     type="object"
                                     string="Authorize Odoo to use Baiwang"
                                     class="btn-primary"
-                                    icon="fa-key"
+                                    icon="key"
                                     noSaveDialog="true"/>
                             </div>
                             <div class="mt16 text-success" invisible="l10n_cn_baiwang_subscription_status != 'authorized'">
@@ -43,7 +53,7 @@
                                     type="object"
                                     string="Sync Registration Status"
                                     class="btn-secondary"
-                                    icon="fa-refresh"
+                                    icon="refresh"
                                     noSaveDialog="true"/>
                             </div>
                         </div>
