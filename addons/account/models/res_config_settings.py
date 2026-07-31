@@ -146,7 +146,7 @@ class ResConfigSettings(models.TransientModel):
         compute="_compute_account_default_credit_limit", inverse="_inverse_account_default_credit_limit")
 
     # Technical field to hide country specific fields from accounting configuration
-    country_code = fields.Char(related='company_id.account_fiscal_country_id.code', readonly=True)
+    country_code = fields.Char(related='company_id.country_code', readonly=True)
 
     # Storno Accounting
     account_storno = fields.Boolean(string="Storno accounting", readonly=False, related='company_id.account_storno')
