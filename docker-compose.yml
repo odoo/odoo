@@ -17,12 +17,11 @@ services:
       POSTGRES_DB: ${POSTGRES_DB:-postgres}
       POSTGRES_USER: ${POSTGRES_USER:-odoo}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-odoo}
-    ports:
-      - "127.0.0.1:5432:5432"
+    # ports: # - "127.0.0.1:5432:5432"
     volumes:
       - odoo-db-data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-odoo} -d ${POSTGRES_DB:-postgres}"]
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-odoo} -d ${POSTGRES_DB:-postgres}" ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -52,9 +51,15 @@ services:
       PORT: ${ODOO_DB_PORT:-5432}
       USER: ${ODOO_DB_USER:-odoo}
       PASSWORD: ${ODOO_DB_PASSWORD:-odoo}
+      # Tell Odoo it's behind a reverse proxy so it trusts
+      # X-Forwarded-For and X-Forwarded-Proto headers.
+      # Equivalent to proxy_mode = True in odoo.conf
+      PROXY_MODE: "True"
     ports:
-      - "8069:8069"
-      - "8072:8072"
+      # Production: comment these out! Nginx is the only entry point.
+      # Ports 8069 and 8072 are exposed only for local dev / debugging.
+      - "127.0.0.1:8069:8069"
+      - "127.0.0.1:8072:8072"
     volumes:
       # Bind-mount custom_addons for live addon development.
       # Changes to .py / .xml files in custom_addons/ are reflected
@@ -79,8 +84,64 @@ services:
         reservations:
           memory: 512M
 
+  # ============================================================================
+  # nginx — Reverse proxy, TLS termination, websocket forwarding
+  #
+  # This is the ONLY service exposed to the internet. Ports 80 and 443
+  # must be open in the EC2 security group. Port 8069 on the Odoo service
+  # is bound ONLY to 127.0.0.1 for local debugging — the security group
+  # should NOT open 8069 to 0.0.0.0/0.
+  # ============================================================================
+  nginx:
+    image: nginx:alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./nginx/html:/var/www/certbot:ro
+      # Let's Encrypt certificates (certbot writes here)
+      - certbot-www:/var/www/certbot
+      - certbot-conf:/etc/letsencrypt
+    depends_on:
+      - odoo
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # ============================================================================
+  # certbot — Let's Encrypt TLS certificate issuance and renewal
+  #
+  # On first run, manually execute:
+  #   docker compose run --rm certbot certonly --webroot \
+  #       -w /var/www/certbot -d invoices.<domain>
+  #
+  # Auto-renewal happens every 12 hours via the sleep loop below.
+  # After renewal, nginx must be reloaded:
+  #   docker compose exec nginx nginx -s reload
+  # ============================================================================
+  certbot:
+    image: certbot/certbot:latest
+    restart: unless-stopped
+    volumes:
+      - certbot-www:/var/www/certbot
+      - certbot-conf:/etc/letsencrypt
+    entrypoint: >
+      sh -c "trap exit TERM; while :; do
+        certbot renew --quiet --webroot -w /var/www/certbot
+          && nginx -s reload 2>/dev/null || true;
+        sleep 12h & wait $${!};
+      done;"
+
 volumes:
   odoo-db-data:
     name: odoo-db-data
   odoo-web-data:
     name: odoo-web-data
+  certbot-www:
+    name: certbot-www
+  certbot-conf:
+    name: certbot-conf
