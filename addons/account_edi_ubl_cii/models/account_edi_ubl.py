@@ -1447,6 +1447,7 @@ class AccountEdiUBL(models.AbstractModel):
             return
 
         vat = commercial_partner.vat
+        country = commercial_partner.country_id
         if (
             self._is_document(vals, 'invoice', 'credit_note', 'self_invoice', 'self_credit_note')
             and commercial_partner == vals['company'].partner_id
@@ -1454,18 +1455,24 @@ class AccountEdiUBL(models.AbstractModel):
             fiscal_position = vals['invoice'].fiscal_position_id
             if fiscal_position.foreign_vat:
                 vat = fiscal_position.foreign_vat
-                country_code = fiscal_position.country_id.code
+                country = fiscal_position.country_id
+                country_code = country.code
 
         if vat and vat != '/':
             if country_code in GST_COUNTRY_CODES:
                 tax_scheme_id = 'GST'
-            else:
+            elif 'EU_PREFIX' in country.country_group_codes:
                 tax_scheme_id = 'VAT'
-
-            if country_code == 'HU' and not vat.upper().startswith('HU'):
-                vat = 'HU' + vat[:8]
-            elif country_code == 'DK' and not vat.upper().startswith('DK'):
-                vat = 'DK' + vat
+                # [BR-CO-09] a 'VAT' CompanyID must carry its country prefix; base_vat doesn't force it
+                if not vat[:2].isalpha():
+                    if country_code == 'HU':
+                        vat = 'HU' + vat[:8]
+                    else:
+                        vat = country_code + vat
+            else:
+                # Countries not in the EU_PREFIX group don't carry the country code in the vat
+                # therefore the tax scheme must be NOT_EU_VAT to avoid error [BR-CO-09]
+                tax_scheme_id = 'NOT_EU_VAT'
 
             nodes.append({
                 'cbc:CompanyID': {'_text': vat},
