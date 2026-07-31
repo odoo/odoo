@@ -2,6 +2,7 @@
 
 from odoo import _, models
 from odoo.exceptions import ValidationError
+from odoo.fields import Domain
 
 
 class StockMove(models.Model):
@@ -9,7 +10,8 @@ class StockMove(models.Model):
 
     def _create_analytic_move(self):
         moves = self.filtered(lambda move: move.picking_type_id.analytic_costs)
-        return super(StockMove, moves)._create_analytic_move()
+        domain = Domain.OR([[('picking_id', '=', False)], self._get_valid_moves_domain()])
+        return super(StockMove, moves.filtered_domain(domain))._create_analytic_move()
 
     def _get_analytic_distribution(self):
         distribution = self.picking_id.project_id._get_analytic_distribution()
@@ -21,6 +23,9 @@ class StockMove(models.Model):
             res['name'] = self.picking_id.name
             res['category'] = 'picking_entry'
         return res
+
+    def _get_valid_moves_domain(self):
+        return [('picking_id.project_id', '!=', False)]
 
     def _prepare_analytic_lines(self):
         res = super()._prepare_analytic_lines()
