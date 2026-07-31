@@ -101,6 +101,45 @@ class TestNotaDebitoFe(TransactionCase):
             ' '.join(debit_note.message_ids.mapped('body')),
         )
 
+    def test_action_post_blocks_debit_note_when_original_is_nota_credito(self):
+        nota_credito = self.env['account.move'].create({
+            'move_type': 'out_refund',
+            'company_id': self.company.id,
+            'partner_id': self.partner.id,
+            'l10n_cr_fe_clave': '6' * 50,
+            'l10n_cr_fe_fecha_emision': '2026-07-05T10:00:00-06:00',
+            'l10n_cr_fe_state': 'aceptado',
+            'invoice_line_ids': [(0, 0, {
+                'product_id': self.product.id, 'quantity': 1, 'price_unit': 1000.0,
+                'name': 'Producto demo', 'tax_ids': [(6, 0, [])],
+            })],
+        })
+        debit_note = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'company_id': self.company.id,
+            'partner_id': self.partner.id,
+            'debit_origin_id': nota_credito.id,
+            'l10n_cr_fe_motivo_nd': 'cargo_financiero',
+            'l10n_cr_fe_codigo_referencia': '10',
+            'l10n_cr_fe_razon': 'Interés por pago tardío',
+            'invoice_line_ids': [(0, 0, {
+                'product_id': self.product.id, 'quantity': 1, 'price_unit': 100.0,
+                'name': 'Interés por mora', 'tax_ids': [(6, 0, [])],
+            })],
+        })
+        with patch('odoo.addons.l10n_cr_fe_crlibre.models.crlibre_client.CrlibreFeClient.get_clave') as m_get_clave:
+            debit_note.action_post()
+        self.assertEqual(debit_note.state, 'posted')
+        self.assertEqual(debit_note.l10n_cr_fe_state, 'error')
+        # Proves the block happened in our validation (before any client/network call), not
+        # because of some unrelated failure that happens to also land in the same `except`
+        # and set the same error state.
+        m_get_clave.assert_not_called()
+        self.assertIn(
+            'Cancelar una nota de crédito con una nota de débito no está soportado',
+            ' '.join(debit_note.message_ids.mapped('body')),
+        )
+
     def test_action_post_blocks_debit_note_on_tiquete_original(self):
         self.original_invoice.l10n_cr_fe_es_tiquete = True
         debit_note = self._create_debit_note()

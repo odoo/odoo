@@ -311,7 +311,7 @@ class AccountMove(models.Model):
                 'codigo': self.l10n_cr_fe_codigo_referencia,
                 'razon': self.l10n_cr_fe_razon or '',
             }])
-        elif self.debit_origin_id:
+        elif self._l10n_cr_fe_get_tipo_documento_info() == L10N_CR_FE_TIPO_DOCUMENTO_ND:
             original = self.debit_origin_id
             params['informacion_referencia'] = json.dumps([{
                 'tipoDoc': '01',  # Factura electrónica (catálogo TipoDocReferenciaType)
@@ -506,6 +506,11 @@ class AccountMove(models.Model):
                     raise UserError(_(
                         "No se puede generar la nota de débito: la factura original "
                         "aún no ha sido aceptada por Hacienda."))
+                if original.move_type != 'out_invoice':
+                    raise UserError(_(
+                        "Solo se soportan notas de débito sobre facturas electrónicas de "
+                        "venta. Cancelar una nota de crédito con una nota de débito no "
+                        "está soportado todavía."))
                 if original.l10n_cr_fe_es_tiquete:
                     raise UserError(_(
                         "No se puede generar una nota de débito sobre un Tiquete "
