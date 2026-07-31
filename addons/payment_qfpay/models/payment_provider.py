@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import hashlib
-import json
 
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
@@ -76,27 +75,6 @@ class PaymentProvider(models.Model):
             "sdk_env": "qa",
             "sdk_region": "qa",
         }
-
-    def _qfpay_get_inline_form_values(self, pm_code):
-        """Return a serialized JSON of the required values to render the inline form.
-
-        Note: `self.ensure_one()`
-
-        :param str pm_code: The code of the payment method whose inline form to render.
-        :return: The JSON serial of the required values to render the inline form.
-        :rtype: str
-        """
-        self.ensure_one()
-
-        env_config = self._qfpay_get_env_config()
-        inline_form_values = {
-            "sdk_url": env_config["sdk_url"],
-            "sdk_env": env_config["sdk_env"],
-            "sdk_region": env_config["sdk_region"],
-            "payment_method_code": pm_code,
-            "picker_payment_type": const.PAYMENT_PICKER_TYPES.get(pm_code, ""),
-        }
-        return json.dumps(inline_form_values)
 
     def _qfpay_calculate_signature(self, data=None, signing_string=None):
         """Generate the QFPay signature from payload data or a prebuilt input.

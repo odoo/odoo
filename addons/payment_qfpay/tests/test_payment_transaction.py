@@ -37,7 +37,7 @@ class TestPaymentTransaction(QFPayCommon):
         )
 
     def test_get_specific_processing_values_returns_expected_values(self):
-        """Test that processing values include payment intent, amount, and the return URL."""
+        """Test that processing values include SDK config, payment intent, amount, and the return URL."""
         payment_transaction_model = self.env.registry["payment.transaction"]
         with patch.object(
             payment_transaction_model,
@@ -53,9 +53,16 @@ class TestPaymentTransaction(QFPayCommon):
             f"{const.PAYMENT_RETURN_ROUTE}?{urlencode({'out_trade_no': tx.reference})}",
         )
         expected_txamt = str(payment_utils.to_minor_currency_units(tx.amount, tx.currency_id))
+        env_config = tx.provider_id._qfpay_get_env_config()
         self.assertDictEqual(
             values,
             {
+                "sdk_url": env_config["sdk_url"],
+                "sdk_env": env_config["sdk_env"],
+                "sdk_region": env_config["sdk_region"],
+                "picker_payment_type": const.PAYMENT_PICKER_TYPES.get(
+                    tx.payment_method_id.code, ""
+                ),
                 "payment_intent": "mock-payment-intent-token",
                 "out_trade_no": tx.reference,
                 "txamt": expected_txamt,

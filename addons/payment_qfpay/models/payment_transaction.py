@@ -53,11 +53,18 @@ class PaymentTransaction(models.Model):
         if self.provider_code != "qfpay":
             return super()._get_specific_processing_values(processing_values)
 
+        env_config = self.provider_id._qfpay_get_env_config()
         txamt = str(payment_utils.to_minor_currency_units(self.amount, self.currency_id))
         base_return_url = urljoin(self.provider_id.get_base_url(), const.PAYMENT_RETURN_ROUTE)
         return_url = f"{base_return_url}?{urlencode({'out_trade_no': self.reference})}"
 
         return {
+            "sdk_url": env_config["sdk_url"],
+            "sdk_env": env_config["sdk_env"],
+            "sdk_region": env_config["sdk_region"],
+            "picker_payment_type": const.PAYMENT_PICKER_TYPES.get(
+                self.payment_method_id.code, ""
+            ),
             "payment_intent": self._qfpay_create_payment_intent(txamt, return_url),
             "out_trade_no": self.reference,
             "txamt": txamt,
@@ -96,8 +103,7 @@ class PaymentTransaction(models.Model):
         if result.get("respcd") != "0000":
             return None
 
-        records = result.get("data") or []
-        payment_data = records[0] if records else None
+        payment_data = next(iter(result.get("data") or []), None)
         if not payment_data:
             _logger.info("QFPay: No transaction data returned for %s", self.reference)
         return payment_data
@@ -146,16 +152,4 @@ class PaymentTransaction(models.Model):
         elif response_code in const.PAYMENT_STATUS_MAPPING["cancel"]:
             self._set_canceled()
         else:
-            response_message = (
-                payment_data.get("resperr")
-                or payment_data.get("respmsg")
-                or payment_data.get("errmsg")
-            )
-            self._set_error(
-                self.env._(
-                    "QFPay: An error occurred "
-                    "(response code %(response_code)s; response message %(response_message)s).",
-                    response_code=response_code,
-                    response_message=response_message,
-                )
-            )
+            self._set_error(payment_data.get("errmsg"))

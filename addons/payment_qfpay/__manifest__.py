@@ -15,7 +15,12 @@
     ],
     "post_init_hook": "post_init_hook",
     "uninstall_hook": "uninstall_hook",
-    "assets": {"web.assets_frontend": ["payment_qfpay/static/src/interactions/payment_form.js"]},
+    "assets": {
+        "web.assets_frontend": [
+            "payment_qfpay/static/src/qfpay_wallet_dialog/**/*",
+            "payment_qfpay/static/src/interactions/payment_form.js",
+        ],
+    },
     "author": "Odoo S.A.",
     "license": "LGPL-3",
 }
