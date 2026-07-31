@@ -99,6 +99,10 @@ export const BUILTINS = {
         return PyDateTime.now().strftime("%Y-%m-%d %H:%M:%S");
     },
 
+    get utc_now() {
+        return PyDateTime.now().to_utc().strftime("%Y-%m-%d %H:%M:%S");
+    },
+
     datetime: {
         time: PyTime,
         timedelta: PyTimeDelta,
