@@ -1,0 +1,37 @@
+<odoo>
+
+    <!-- Action: Vue Liste + Formulaire -->
+    <record id="action_estate_property_list" model="ir.actions.act_window">
+        <field name="name">Properties</field>
+        <field name="res_model">estate.property</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="view_id" ref="view_estate_property_list"/>
+        <field name="view_id" ref="view_estate_property_kanban" />
+        <field name="search_view_id" ref="view_estate_property_search" />
+        <field name="context">{'search_default_filter_available': 1}</field>
+        
+    </record>
+
+    <!-- Action: Vue Formulaire uniquement -->
+    <record id="action_estate_property_form" model="ir.actions.act_window">
+        <field name="name">Create Property</field>
+        <field name="res_model">estate.property</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_estate_property_form"/>
+        <field name="target">current</field> <!-- optionnel, selon si tu veux qu’il ouvre dans la même fenêtre -->
+    </record>
+
+    <!-- Menu racine -->
+    <menuitem id="estate_root_menu" name="Real Estate"/>
+
+    <!-- Sous-menu vers la liste -->
+    <menuitem id="estate_property_menu" name="Properties"
+              parent="estate_root_menu"
+              action="action_estate_property_list"/>
+
+    <!-- (optionnel) Sous-menu pour ouvrir directement le formulaire de création -->
+    <menuitem id="estate_property_create_menu" name="New Property"
+              parent="estate_property_menu"
+              action="action_estate_property_form"/>
+
+</odoo>
