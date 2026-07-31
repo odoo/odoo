@@ -72,10 +72,7 @@ export class ImageCrop extends Component {
         );
 
         onMounted(() => {
-            this.hasModifiedImageClass = this.media.classList.contains("o_modified_image_to_save");
-            if (this.hasModifiedImageClass) {
-                this.media.classList.remove("o_modified_image_to_save");
-            }
+            this.media.classList.remove("o_modified_image_to_save");
             this.show();
         });
         onWillDestroy(this.closeCropper);
@@ -87,11 +84,13 @@ export class ImageCrop extends Component {
         }
         this.cropper?.destroy?.();
         this.media.setAttribute("src", this.initialSrc);
-        if (
-            this.hasModifiedImageClass &&
-            !this.media.classList.contains("o_modified_image_to_save")
-        ) {
-            this.media.classList.add("o_modified_image_to_save");
+        if (this.media.src.startsWith("data:")) {
+            this.media.classList.add(
+                this.media.dataset.originalId ? "o_modified_image_to_save" : "o_b64_image_to_save"
+            );
+            this.media.classList.remove(
+                this.media.dataset.originalId ? "o_b64_image_to_save" : "o_modified_image_to_save"
+            );
         }
         this.props?.onClose?.();
         this.isCropperActive = false;
