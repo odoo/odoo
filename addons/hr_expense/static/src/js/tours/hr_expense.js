@@ -1,11 +1,20 @@
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+import { user } from "@web/core/user";
 import { stepUtils } from "@web_tour/tour_utils";
 
 import { markup } from "@odoo/owl";
 
 registry.category("web_tour.tours").add('hr_expense_tour' , {
     steps: () => [stepUtils.showAppsMenuItem(), {
+    isActive: ["mobile"],
+    trigger: ".o_menu_toggle",
+    run: "click",
+}, {
+    isActive: ["mobile"],
+    trigger: ".o_sidebar_topbar a.btn-primary",
+    run: "click",
+}, {
     isActive: ["community"],
     trigger: '.o_app[data-menu-xmlid="hr_expense.menu_hr_expense_root"]',
     content: markup(_t("<b>Wasting time recording your receipts?</b> Let’s try a better way.")),
@@ -44,9 +53,9 @@ registry.category("web_tour.tours").add('hr_expense_tour' , {
     run: "click",
 },
 {
-    trigger: '.o_hr_expense_form_view .o_field_widget[name="employee_id"] input',
+    trigger: '.o_form_view .o_field_widget[name="employee_id"] input',
     content: _t("Click here to create your employee profile."),
-    run: "click",
+    run: "edit My Employee",
 },
 {
     isActive: ["desktop"],
@@ -73,17 +82,17 @@ registry.category("web_tour.tours").add('hr_expense_tour' , {
 {
     trigger: '.o_dialog .o_field_widget[name="expense_manager_id"] input',
     content: _t("Set an expense approver for this employee."),
-    run: "edit Administrator",
+    run: `edit ${user.name}`,
 },
 {
     isActive: ["desktop"],
-    trigger: '.o_dialog .o_field_widget[name="expense_manager_id"] .dropdown-item:contains("Administrator")',
+    trigger: `.o_dialog .o_field_widget[name="expense_manager_id"] .dropdown-item:contains("${user.name}")`,
     content: _t("Select the expense approver."),
     run: "click",
 },
 {
     isActive: ["mobile"],
-    trigger: '.o_dialog .o_kanban_record:contains("Administrator")',
+    trigger: `.o_dialog:not(.o_inactive_modal) .o_kanban_record:contains("${user.name}")`,
     content: _t("Select the expense approver."),
     run: "click",
 },
@@ -93,7 +102,7 @@ registry.category("web_tour.tours").add('hr_expense_tour' , {
     run: "click",
 },
 {
-    trigger: '.o_hr_expense_form_view .o_field_widget[name="product_id"] input',
+    trigger: '.o_form_view .o_field_widget[name="product_id"] input',
     content: _t("Enter a name then choose a product and configure the amount of your expense."),
     run: "edit Meals",
 },
@@ -108,7 +117,7 @@ registry.category("web_tour.tours").add('hr_expense_tour' , {
     run: "click",
 },
 {
-    trigger: '.o_hr_expense_form_view .o_field_widget[name="total_amount_currency"] input',
+    trigger: '.o_form_view .o_field_widget[name="total_amount_currency"] input',
     content: _t("Enter the total amount of the expense."),
     run: "edit 50",
 },
@@ -120,7 +129,7 @@ registry.category("web_tour.tours").add('hr_expense_tour' , {
 ...stepUtils.statusbarButtonsSteps(_t("Submit"), markup(_t('Once your <b>Expense</b> is ready, you can submit it to your manager and wait for approval.'))),
 {
     isActive: ["mobile"],
-    trigger: ".o_hr_expense_form_view",
+    trigger: ".o_form_view",
 },
 {
     isActive: ["mobile"],
