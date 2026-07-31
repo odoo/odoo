@@ -106,7 +106,7 @@ export class GlobalFiltersUIPlugin extends OdooUIPlugin {
         let filterRowIndex = 1; // first row is the column titles
         for (const filter of this.getters.getGlobalFilters()) {
             cells[`A${filterRowIndex + 1}`] = filter.label;
-            const result = this.getters.getFilterDisplayValue(filter.label);
+            const result = this.getters.getFilterDisplayValue(filter);
             for (const colIndex in result) {
                 numberOfCols = Math.max(numberOfCols, Number(colIndex) + 2);
                 for (const rowIndex in result[colIndex]) {
