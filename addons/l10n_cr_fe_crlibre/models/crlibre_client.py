@@ -74,6 +74,12 @@ class CrlibreFeClient(models.AbstractModel):
             raise CrlibreApiError("Respuesta inesperada de 'gen_xml_nc': %s" % resp)
         return base64.b64decode(resp['xml']).decode('utf-8')
 
+    def gen_xml_nd(self, params):
+        resp = self._call('genXML', 'gen_xml_nd', params)
+        if not isinstance(resp, dict) or not resp.get('xml'):
+            raise CrlibreApiError("Respuesta inesperada de 'gen_xml_nd': %s" % resp)
+        return base64.b64decode(resp['xml']).decode('utf-8')
+
     def gen_xml_te(self, params):
         resp = self._call('genXML', 'gen_xml_te', params)
         if not isinstance(resp, dict) or not resp.get('xml'):
