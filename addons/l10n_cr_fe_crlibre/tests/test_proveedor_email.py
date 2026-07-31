@@ -92,6 +92,30 @@ class TestProveedorEmail(TransactionCase):
         record._l10n_cr_fe_procesar_adjuntos(message)
         self.assertEqual(record.state, 'sin_xml_valido')
         self.assertFalse(record.move_id)
+        # El motivo real del UserError debe conservarse, no el mensaje
+        # genérico de "no traía ningún adjunto XML válido" -- sí había un
+        # adjunto XML, solo que un campo no era numérico.
+        self.assertIn('no numérico', record.error_message)
+        self.assertNotIn('no traía ningún adjunto', record.error_message)
+
+    def test_message_post_no_reprocesa_registro_ya_resuelto(self):
+        """Un mensaje posterior sin XML (respuesta, nota) sobre un registro
+        que ya llegó a 'procesado' no debe volver a correr
+        _l10n_cr_fe_procesar_adjuntos ni tocar el move_id ya enlazado."""
+        record = self.env['l10n_cr.fe.proveedor.email'].create({'email_from': 'proveedor@x.cr'})
+        first_message = self._make_message_with_attachment(record, SAMPLE_XML, 'factura.xml')
+        record._l10n_cr_fe_procesar_adjuntos(first_message)
+        self.assertEqual(record.state, 'procesado')
+        move = record.move_id
+        self.assertTrue(move)
+
+        # Un mensaje nuevo sin adjunto XML, posteado a través de message_post
+        # (para ejercitar _message_post_after_hook de verdad, no solo el
+        # método interno).
+        record.message_post(body='Gracias, quedamos atentos.')
+
+        self.assertEqual(record.state, 'procesado')
+        self.assertEqual(record.move_id, move)
 
     def _build_raw_email(self, xml_string, sender='proveedor@x.cr', subject='Factura'):
         msg = EmailMessage()
