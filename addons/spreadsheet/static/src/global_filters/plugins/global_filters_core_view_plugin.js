@@ -9,11 +9,10 @@
  * @typedef {import("@spreadsheet").DateDefaultValue} DateDefaultValue
  */
 
-import { _t } from "@web/core/l10n/translation";
 import { Domain } from "@web/core/domain";
 import { user } from "@web/core/user";
 
-import { EvaluationError, helpers } from "@odoo/o-spreadsheet";
+import { helpers } from "@odoo/o-spreadsheet";
 import { CommandResult } from "@spreadsheet/o_spreadsheet/cancelled_reason";
 
 import {
@@ -157,12 +156,25 @@ export class GlobalFiltersCoreViewPlugin extends OdooEvaluationPlugin {
             .filter((filter) => this.isGlobalFilterActive(filter.id)).length;
     }
 
-    getFilterDisplayValue(filterName) {
-        const filter = this.getGlobalFilterByName(filterName);
-        if (!filter) {
-            throw new EvaluationError(
-                _t(`Filter "%(filter_name)s" not found`, { filter_name: filterName })
+    /**
+     * Get the global filter with the given name
+     *
+     * @param {string} label Label
+     * @returns {GlobalFilter|undefined}
+     */
+    getGlobalFilterByName(label) {
+        return this.getters
+            .getGlobalFilters()
+            .find(
+                (filter) =>
+                    this.getters.dynamicTranslate(filter.label) ===
+                    this.getters.dynamicTranslate(label)
             );
+    }
+
+    getFilterDisplayValue(filter) {
+        if (!filter) {
+            throw new Error("Filter not found");
         }
         switch (filter.type) {
             case "date":
@@ -271,22 +283,6 @@ export class GlobalFiltersCoreViewPlugin extends OdooEvaluationPlugin {
     // -------------------------------------------------------------------------
     // Private
     // -------------------------------------------------------------------------
-
-    /**
-     * Get the global filter with the given name
-     *
-     * @param {string} label Label
-     * @returns {GlobalFilter|undefined}
-     */
-    getGlobalFilterByName(label) {
-        return this.getters
-            .getGlobalFilters()
-            .find(
-                (filter) =>
-                    this.getters.dynamicTranslate(filter.label) ===
-                    this.getters.dynamicTranslate(label)
-            );
-    }
 
     _getDateFilterDisplayValue(filter) {
         const value = this.getGlobalFilterValue(filter.id);
