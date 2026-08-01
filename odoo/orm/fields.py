@@ -466,8 +466,8 @@ class Field[T]:
         if attrs.get('_shareable'):
             warnings.warn(f"_shareable attribute shouldn't be set to True on field {self}")
         if attrs.get('compute_sql'):
-            if not attrs.get('compute'):
-                warnings.warn(f"compute_sql attribute makes sense only if {self} is a computed field")
+            if attrs.get('store'):  # or not attrs.get('compute')
+                warnings.warn(f"compute_sql attribute makes sense only if {self} is not a stored field")
             if 'compute_sudo' not in attrs:
                 warnings.warn(f"compute_sql requires an explicit compute_sudo parameter on {self}")
         if attrs.get('related'):
@@ -479,7 +479,7 @@ class Field[T]:
             attrs['compute_sudo'] = attrs.get('compute_sudo', attrs.get('related_sudo', True))
             attrs['copy'] = attrs.get('copy', False)
             attrs['readonly'] = attrs.get('readonly', True)
-        elif attrs.get('compute'):
+        elif attrs.get('compute') or attrs.get('compute_sql'):
             # by default, computed fields are not stored, computed in superuser
             # mode if stored, not copied (unless stored and explicitly not
             # readonly), and readonly (unless inversible)
