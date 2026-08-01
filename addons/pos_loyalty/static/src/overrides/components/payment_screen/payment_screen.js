@@ -96,6 +96,11 @@ patch(PaymentScreen.prototype, {
             return agg;
         }, {});
         for (const line of rewardLines) {
+            if (!line.coupon_id) {
+                // Reward line of an order reloaded from the server (e.g. after
+                // an online payment) may have no local coupon to confirm.
+                continue;
+            }
             const reward = reward_by_id[line.reward_id];
             if (!couponData[line.coupon_id]) {
                 couponData[line.coupon_id] = {
