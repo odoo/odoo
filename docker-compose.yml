@@ -71,7 +71,7 @@ services:
     # hosts (EC2, WSL2, native Linux). On Docker Desktop for Windows the
     # bind-mount doesn't emit inotify events, so you must restart the
     # container after .py edits:  docker compose restart odoo
-    command: odoo --dev=reload,qweb,werkzeug,xml
+    command: odoo --addons-path=/opt/odoo/addons,/mnt/extra-addons --dev=reload,qweb,werkzeug,xml
     logging:
       driver: json-file
       options:
