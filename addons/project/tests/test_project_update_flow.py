@@ -16,9 +16,11 @@ class TestProjectUpdate(TestProjectCommon):
         cls.project_pigs.allow_milestones = True
 
     def test_project_update_form(self):
-        with Form(self.env['project.milestone'].with_context({'default_project_id': self.project_pigs.id})) as milestone_form:
-            milestone_form.name = "Test 1"
-            milestone_form.deadline = fields.Date.today()
+        self.env['project.milestone'].create({
+            'name': 'Test 1',
+            'deadline': fields.Date.today(),
+            'project_id': self.project_pigs.id,
+        })
 
         try:
             with Form(self.env['project.update'].with_context({'default_project_id': self.project_pigs.id})) as update_form:
@@ -39,15 +41,11 @@ class TestProjectUpdate(TestProjectCommon):
         self.assertEqual(update.progress, 65, "The default progress is the one from the previous update by default")
 
     def test_project_update_description(self):
-        with Form(self.env['project.milestone'].with_context({'default_project_id': self.project_pigs.id})) as milestone_form:
-            milestone_form.name = "Test 1"
-            milestone_form.deadline = fields.Date.today()
-        with Form(self.env['project.milestone'].with_context({'default_project_id': self.project_pigs.id})) as milestone_form:
-            milestone_form.name = "Test 2"
-            milestone_form.deadline = fields.Date.today()
-        with Form(self.env['project.milestone'].with_context({'default_project_id': self.project_pigs.id})) as milestone_form:
-            milestone_form.name = "Test 3"
-            milestone_form.deadline = fields.Date.today() + relativedelta(years=2)
+        self.env['project.milestone'].create([
+            {'name': 'Test 1', 'deadline': fields.Date.today(), 'project_id': self.project_pigs.id},
+            {'name': 'Test 2', 'deadline': fields.Date.today(), 'project_id': self.project_pigs.id},
+            {'name': 'Test 3', 'deadline': fields.Date.today() + relativedelta(years=2), 'project_id': self.project_pigs.id},
+        ])
 
         template_values = self.env['project.update']._get_template_values(self.project_pigs)
 
@@ -76,9 +74,10 @@ class TestProjectUpdate(TestProjectCommon):
             7) Repeat steps 1 and 2
         """
         def create_project_update_view():
-            update_form = Form(self.env['project.update'].with_context({'default_project_id': self.project_pigs.id}))
-            update_form.name = "Test"
-            project_update = update_form.save()
+            project_update = self.env['project.update'].create({
+                'name': 'Test',
+                'project_id': self.project_pigs.id,
+            })
             return [project_update.task_count, project_update.closed_task_count, project_update.closed_task_percentage]
 
         project_update_data_list = create_project_update_view()
