@@ -31,6 +31,11 @@ export const overlayService = {
             }
         };
 
+        const getDefaultSequence = () => {
+            const overlaysStack = Object.values(overlays);
+            return overlaysStack.length > 0 ? overlaysStack.at(-1).sequence + 0.001 : 50;
+        };
+
         /**
          * @param {typeof Component} component
          * @param {object} props
@@ -47,7 +52,7 @@ export const overlayService = {
                 env: options.env && markRaw(options.env),
                 props,
                 remove: removeCurrentOverlay,
-                sequence: options.sequence ?? 50,
+                sequence: options.sequence ?? getDefaultSequence(),
                 rootId: options.rootId,
             };
             return removeCurrentOverlay;
