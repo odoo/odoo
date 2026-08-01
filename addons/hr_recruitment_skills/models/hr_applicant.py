@@ -45,3 +45,10 @@ class HrApplicant(models.Model):
             } for skill in skills_to_create])
         self.env['hr.employee.skill'].create(vals_list)
         return super()._update_employee_from_applicant()
+
+    @api.model
+    def fields_get(self, allfields=None, attributes=None):
+        res = super().fields_get(allfields, attributes)
+        if res.get('applicant_skill_ids'):
+            res['applicant_skill_ids']['searchable'] = False
+        return res

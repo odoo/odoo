@@ -39,3 +39,10 @@ class Employee(models.Model):
         if 'department_id' in vals:
             self.employee_skill_ids._create_logs()
         return res
+
+    @api.model
+    def fields_get(self, allfields=None, attributes=None):
+        res = super().fields_get(allfields, attributes)
+        if res.get('employee_skill_ids'):
+            res['employee_skill_ids']['searchable'] = False
+        return res
