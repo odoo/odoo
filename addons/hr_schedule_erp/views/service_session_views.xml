@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_schedule_service_session_view_list" model="ir.ui.view">
+        <field name="name">hr.schedule.service.session.list</field>
+        <field name="model">hr.schedule.service.session</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="servicio_id"/>
+                <field name="auxiliar_id"/>
+                <field name="fecha"/>
+                <field name="check_in_time"/>
+                <field name="check_out_time"/>
+                <field name="horas_trabajadas"/>
+                <field name="estado_id"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="hr_schedule_service_session_view_form" model="ir.ui.view">
+        <field name="name">hr.schedule.service.session.form</field>
+        <field name="model">hr.schedule.service.session</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_check_in" type="object" string="Check-In"
+                            invisible="estado_id != 'no_iniciada'" class="btn-primary"/>
+                    <button name="action_check_out" type="object" string="Check-Out"
+                            invisible="estado_id != 'en_curso'" class="btn-primary"/>
+                    <field name="estado_id" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="servicio_id"/>
+                            <field name="auxiliar_id"/>
+                            <field name="cliente_id" readonly="1"/>
+                            <field name="fecha" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="hora_inicio_programada" readonly="1"/>
+                            <field name="hora_fin_programada" readonly="1"/>
+                            <field name="check_in_time" readonly="1"/>
+                            <field name="check_out_time" readonly="1"/>
+                            <field name="horas_trabajadas" readonly="1"/>
+                        </group>
+                    </group>
+                    <group string="Evidencia Cliente">
+                        <field name="confirmacion_cliente"/>
+                        <field name="firma_cliente" widget="image"/>
+                        <field name="horas_cliente_reportadas"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="hr_schedule_service_session_action" model="ir.actions.act_window">
+        <field name="name">Service Sessions</field>
+        <field name="res_model">hr.schedule.service.session</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="hr_schedule_service_session_menu"
+              name="Service Sessions"
+              parent="hr_schedule_time_tracking_menu"
+              action="hr_schedule_service_session_action"
+              sequence="5"/>
+</odoo>
