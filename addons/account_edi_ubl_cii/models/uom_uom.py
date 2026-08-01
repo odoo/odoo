@@ -1,6 +1,15 @@
 from odoo import fields, models, api
 
 
+UNECE_COUNTRIES = frozenset({
+    'AL', 'AD', 'AM', 'AT', 'AZ', 'BY', 'BE', 'BA', 'BG', 'CA', 'HR', 'CY', 'CZ',
+    'DK', 'EE', 'FI', 'FR', 'GE', 'DE', 'GR', 'HU', 'IS', 'IE', 'IL', 'IT', 'KZ',
+    'KG', 'LV', 'LI', 'LT', 'LU', 'MT', 'MD', 'MC', 'ME', 'NL', 'MK', 'NO', 'PL',
+    'PT', 'RO', 'RU', 'SM', 'RS', 'SK', 'SI', 'ES', 'SE', 'CH', 'TJ', 'TR', 'TM',
+    'UA', 'GB', 'US', 'UZ', 'JO', 'JP', 'AU', 'NZ', 'MY', 'SA', 'SG',
+})
+
+
 class UomUom(models.Model):
     _inherit = "uom.uom"
 
@@ -9,11 +18,11 @@ class UomUom(models.Model):
         copy=False,
         help="The code element for units of measurement (UoM) as specified by UN/ECE",
     )
-    is_unece_code_supported = fields.Boolean(compute="_compute_is_unece_code_supported")
+    is_unece_code_supported = fields.Boolean(compute='_compute_is_unece_code_supported')
 
     _unece_code_unique = models.Constraint(
         'unique (unece_code)',
-        'The UN/ECE code already exists!',
+        "The UN/ECE code already exists!",
     )
 
     def _sanitize_vals(self, vals):
@@ -28,15 +37,9 @@ class UomUom(models.Model):
     def write(self, vals):
         return super().write(self._sanitize_vals(vals))
 
+    @api.depends_context('company')
     def _compute_is_unece_code_supported(self):
-        for uom in self:
-            uom.is_unece_code_supported = uom.env.company.account_fiscal_country_id.code in [
-                "AL", "AD", "AM", "AT", "AZ", "BY", "BE", "BA", "BG", "CA", "HR", "CY", "CZ",
-                "DK", "EE", "FI", "FR", "GE", "DE", "GR", "HU", "IS", "IE", "IL", "IT", "KZ",
-                "KG", "LV", "LI", "LT", "LU", "MT", "MD", "MC", "ME", "NL", "MK", "NO", "PL",
-                "PT", "RO", "RU", "SM", "RS", "SK", "SI", "ES", "SE", "CH", "TJ", "TR", "TM",
-                "UA", "GB", "US", "UZ", "JO", "JP", "AU", "NZ", "MY", "SA", "SG",
-            ]
+        self.is_unece_code_supported = self.env.company.account_fiscal_country_id.code.upper() in UNECE_COUNTRIES
 
     def _get_unece_code(self):
         return self.unece_code or super()._get_unece_code()
