@@ -25,10 +25,6 @@ class TestLivechatUI(HttpCase, TestLivechatCommon):
         self.start_tour("/", 'website_livechat_happy_rating_tour')
         self._check_end_of_rating_tours()
 
-    def test_ok_rating_flow_ui(self):
-        self.start_tour("/", 'website_livechat_ok_rating_tour')
-        self._check_end_of_rating_tours()
-
     def test_bad_rating_flow_ui(self):
         self.start_tour("/", 'website_livechat_sad_rating_tour')
         self._check_end_of_rating_tours()

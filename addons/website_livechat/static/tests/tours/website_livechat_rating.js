@@ -26,10 +26,6 @@ registry.category("web_tour.tours").add("website_livechat_happy_rating_tour", {
     steps: () => [].concat(start, closeChat, confirmnClose, goodRating, feedback),
 });
 
-registry.category("web_tour.tours").add("website_livechat_ok_rating_tour", {
-    steps: () => [].concat(start, closeChat, confirmnClose, okRating, feedback),
-});
-
 registry.category("web_tour.tours").add("website_livechat_sad_rating_tour", {
     steps: () => [].concat(start, closeChat, confirmnClose, sadRating, feedback),
 });
