@@ -1,0 +1,16 @@
+France, 2026-03-27
+
+Scalizer SAS agrees to the terms of the Odoo Corporate Contributor License
+Agreement v1.0.
+
+I declare that I am authorized and able to make this agreement and sign this
+declaration.
+
+Signed,
+
+David Halgand david@scalizer.fr https://github.com/halgandd
+
+List of contributors:
+
+David Halgand david@scalizer.fr https://github.com/halgandd
+Julien Hémono julien@scalizer.fr https://github.com/jhemono
