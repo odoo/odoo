@@ -4,7 +4,6 @@ from lxml import etree, html
 from odoo import api, models
 from odoo.addons.base.models.ir_ui_view import MOVABLE_BRANDING
 from odoo.fields import Domain
-from odoo.tools.translate import StoredTranslations
 
 EDITING_ATTRIBUTES = MOVABLE_BRANDING + [
     'data-oe-type',
@@ -147,16 +146,16 @@ class IrUiView(models.Model):
         # Extract term translations from all source records:
         term_updates: dict[str, dict[str, str]] = {}  # {lang: {src_term: translated_term}}
         for record_from in records_from:
-            if (stored_from := field_from._get_stored_translations(record_from)):
-                for lang, src2term in StoredTranslations(stored_from).extract_term_translations(self.env, field_from, self.env.lang or 'en_US').items():
+            if (stored_from := record_from._get_stored_translations(name_field_from)):
+                for lang, src2term in stored_from.extract_term_translations(self.env, field_from, self.env.lang or 'en_US').items():
                     term_updates.setdefault(lang, {}).update(src2term)
 
         if not term_updates:
             return
 
         # Get existing term translations from record_to
-        stored_to_dict = field_to._get_stored_translations(record_to)
-        new_stored = StoredTranslations(stored_to_dict).translated(
+        stored_to = record_to._get_stored_translations(name_field_to)
+        new_stored = stored_to.translated(
             self.env, field_to, self.env.lang or 'en_US', term_updates, overwrite=False,
             delay_translations=bool(self.env.context.get('delay_translations')),
         )

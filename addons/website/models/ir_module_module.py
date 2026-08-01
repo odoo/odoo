@@ -210,7 +210,7 @@ class IrModuleModule(models.Model):
             if dst_mname != new_rec._name:
                 continue
             old_field = old_rec._fields[src_fname]
-            old_stored_translations = old_field._get_stored_translations(old_rec)
+            old_stored_translations = old_rec._get_stored_translations(src_fname)
             if not old_stored_translations:
                 continue
             if old_field.translate is True:
@@ -221,7 +221,7 @@ class IrModuleModule(models.Model):
                 })
             else:
                 # {lang: {old_term: new_term}}
-                translations = StoredTranslations(old_stored_translations).extract_term_translations(
+                translations = old_stored_translations.extract_term_translations(
                     self.env, old_field, 'en_US',
                 )
                 new_rec.with_context(install_filename='dummy').update_field_translations(

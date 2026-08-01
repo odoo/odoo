@@ -2912,7 +2912,7 @@ class BaseModel(metaclass=MetaModel):
             drop_langs = {lang for lang, value in translations.items() if not isinstance(value, str)}
             translations = {lang: value for lang, value in translations.items() if lang not in drop_langs}
             if drop_langs:
-                stored_translations = field._get_stored_translations(self)
+                stored_translations = self._get_stored_translations(field_name)
                 if field.type == 'html':
                     translations = {lang: field._validated_cache_value(value, self.env) for lang, value in translations.items()}
                 if stored_translations is None:
@@ -2932,10 +2932,9 @@ class BaseModel(metaclass=MetaModel):
             self[field_name] = write_value
             return True
         else:
-            stored_translations = field._get_stored_translations(self)
+            stored_translations = self._get_stored_translations(field_name)
             if not stored_translations:
                 return False
-            stored_translations = StoredTranslations(stored_translations)
             write_value = stored_translations.translated(
                 self.env, field, source_lang, translations, digest=digest,
                 delay_translations=bool(self.env.context.get('delay_translations')),
@@ -2982,6 +2981,22 @@ class BaseModel(metaclass=MetaModel):
         context['translation_show_source'] = callable(field.translate)
 
         return translations, context
+
+    def _get_stored_translations(self, field_name: str) -> StoredTranslations | None:
+        """Return the cached StoredTranslations for ``field_name``, or ``None`` if the column is NULL.
+
+        For non-stored related fields, follows the related path to the first stored
+        translated field.
+        """
+        self.ensure_one()
+        field = self._fields[field_name]
+        record = self
+        while field.related and not field.store:
+            record = record.mapped(field.related.rsplit('.', 1)[0])[:1]
+            if not record:
+                return None
+            field = field.related_field
+        return field._get_stored_translations(record)
 
     def _get_base_lang(self) -> str:
         """ Return the base language of the record. """
@@ -4938,6 +4953,7 @@ class BaseModel(metaclass=MetaModel):
         fields_to_copy = {name: field
                           for name, field in self._fields.items()
                           if field.copy and name not in default and name not in blacklist}
+        active_langs = self.env['res.lang']._get_active_by('code')
 
         for record in self:
             seen_map = self.env.context['__copy_data_seen']
@@ -4950,8 +4966,7 @@ class BaseModel(metaclass=MetaModel):
 
             for name, field in fields_to_copy.items():
                 if field.type == 'one2many':
-                    # duplicate following the order of the ids because we'll rely on
-                    # it later for copying translations in copy_translation()!
+                    # duplicate following the order of the ids for deterministic pairing
                     lines = record[name].sorted(key='id').copy_data()
                     # the lines are duplicated using the wrong (old) parent, but then are
                     # reassigned to the correct one thanks to the (Command.CREATE, 0, ...)
@@ -4959,61 +4974,22 @@ class BaseModel(metaclass=MetaModel):
                 elif field.type == 'many2many':
                     # copy only links that we can read, otherwise the write will fail
                     vals[name] = [Command.set(record[name]._filtered_access('read').ids)]
+                elif field.translate:
+                    translations = record._get_stored_translations(name)
+                    if not translations:
+                        vals[name] = False
+                    elif field.translate is True:
+                        vals[name] = translations.normalize(record.env, field)
+                    else:
+                        vals[name] = translations.translated(
+                            record.env, field, 'en_US', {lang: {} for lang in active_langs}
+                        )
                 else:
                     vals[name] = field.convert_to_write(record[name], record)
+
             vals_list.append(vals)
+
         return vals_list
-
-    def copy_translations(self, new: Self, excluded: Collection[str] = ()) -> None:
-        """ Recursively copy the translations from original to new record
-
-        :param self: the original record
-        :param new: the new record (copy of the original one)
-        :param excluded: a container of user-provided field names
-        """
-        old = self
-        # avoid recursion through already copied records in case of circular relationship
-        if '__copy_translations_seen' not in old.env.context:
-            old = old.with_context(__copy_translations_seen=defaultdict(set))
-        seen_map = old.env.context['__copy_translations_seen']
-        if old.id in seen_map[old._name]:
-            return
-        seen_map[old._name].add(old.id)
-        valid_langs = set(code for code, _ in self.env['res.lang'].get_installed()) | {'en_US'}
-
-        for name, field in old._fields.items():
-            if not field.copy:
-                continue
-
-            if field.inherited and field.related.split('.')[0] in excluded:
-                # inherited fields that come from a user-provided parent record
-                # must not copy translations, as the parent record is not a copy
-                # of the old parent record
-                continue
-
-            if field.type == 'one2many' and field.name not in excluded:
-                # we must recursively copy the translations for o2m; here we
-                # rely on the order of the ids to match the translations as
-                # foreseen in copy_data()
-                old_lines = old[name].sorted(key='id')
-                new_lines = new[name].sorted(key='id')
-                for (old_line, new_line) in zip(old_lines, new_lines):
-                    # don't pass excluded as it is not about those lines
-                    old_line.copy_translations(new_line)
-
-            elif field.translate and field.store and name not in excluded and old[name]:
-                # for translatable fields we copy their translations
-                old_stored_translations = field._get_stored_translations(old)
-                if not old_stored_translations:
-                    continue
-                lang = self.env.lang or 'en_US'
-                if field.translate is True:
-                    new.update_field_translations(name, {
-                        k: v for k, v in old_stored_translations.items() if k in valid_langs and k != lang
-                    })
-                else:
-                    translations = StoredTranslations(old_stored_translations).extract_term_translations(self.env, field, lang)
-                    new.update_field_translations(name, translations, source_lang=lang)
 
     def copy(self, default: ValuesType | None = None) -> Self:
         """ Duplicate record ``self`` updating it with default values.
@@ -5024,10 +5000,7 @@ class BaseModel(metaclass=MetaModel):
 
         """
         vals_list = self.with_context(active_test=False).copy_data(default)
-        new_records = self.create(vals_list)
-        for old_record, new_record in zip(self, new_records):
-            old_record.copy_translations(new_record, excluded=default or ())
-        return new_records
+        return self.create(vals_list)
 
     @api.private
     def exists(self) -> Self:

@@ -4,6 +4,7 @@ from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command, Domain
 from odoo.tools import SetDefinitions
+from odoo.tools.translate import adapt_translated_field_value
 
 
 class ResGroups(models.Model):
@@ -219,8 +220,13 @@ class ResGroups(models.Model):
     def copy_data(self, default=None):
         default = dict(default or {})
         vals_list = super().copy_data(default=default)
-        for group, vals in zip(self, vals_list):
-            vals['name'] = default.get('name') or self.env._('%s (copy)', group.name)
+        if 'name' not in (default or {}):
+            field = self._fields['name']
+            for vals in vals_list:
+                vals['name'] = adapt_translated_field_value(
+                    self.env, field, vals['name'],
+                    lambda lang, value: self.with_context(lang=lang).env._('%s (copy)', value),
+                )
         return vals_list
 
     def write(self, vals):

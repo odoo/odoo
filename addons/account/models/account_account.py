@@ -11,6 +11,7 @@ from odoo.fields import Domain
 from odoo.exceptions import UserError, ValidationError, RedirectWarning
 from odoo.models import Query, TableSQL
 from odoo.tools import SQL
+from odoo.tools.translate import StoredTranslations
 
 
 ACCOUNT_REGEX = re.compile(r'(?:(\S*\d+\S*))?(.*)')
@@ -927,6 +928,8 @@ class AccountAccount(models.Model):
         vals_list = super().copy_data(default)
         default = default or {}
         cache = defaultdict(set)
+        name_field = self._fields['name']
+        assert name_field.translate is True
 
         for account, vals in zip(self, vals_list):
             company_ids = self._fields['company_ids'].convert_to_cache(vals['company_ids'], self.browse())
@@ -942,20 +945,13 @@ class AccountAccount(models.Model):
                     vals['code_mapping_ids'].append(Command.create({'company_id': company.id, 'code': new_code}))
                     cache[company.id].add(new_code)
 
-            if 'name' not in default:
-                vals['name'] = self.env._("%s (copy)", account.name or '')
+            if 'name' not in default and isinstance((translations := vals.get('name')), StoredTranslations):
+                vals['name'] = StoredTranslations({
+                    lang: self.env._("%s (copy)", src)
+                    for lang, src in translations.items()
+                })
 
         return vals_list
-
-    def copy_translations(self, new, excluded=()):
-        super().copy_translations(new, excluded=tuple(excluded)+('name',))
-        if new.name == self.env._('%s (copy)', self.name):
-            name_field = self._fields['name']
-            assert name_field.translate
-            name_field._update_cache(new.with_context(prefetch_langs=True), {
-                lang: self.env._('%s (copy)', tr)
-                for lang, tr in name_field._get_stored_translations(self).items()
-            }, dirty=True)
 
     @api.model
     def _load_precommit_update_opening_move(self):

@@ -683,7 +683,7 @@ class TestRelatedTranslation(odoo.tests.TransactionCase):
             'html': expected_html,
         })
         expected_stored_name = {'en_US': 'New knife', 'fr_FR': 'Nouveau couteau'}
-        self.assertEqual(self.test1._fields['name']._get_stored_translations(self.test1), expected_stored_name)
+        self.assertEqual(self.test1._get_stored_translations('name'), expected_stored_name)
 
     def test_create_related_stored_translations(self):
         self.env['res.lang']._activate_lang('nl_NL')
@@ -715,7 +715,7 @@ class TestRelatedTranslation(odoo.tests.TransactionCase):
         self._check_translation_value(record, expected)
         self._check_translation_value(self.test1, expected)
         self.assertEqual(
-            self.test1._fields['name']._get_stored_translations(self.test1),
+            self.test1._get_stored_translations('name'),
             {'en_US': 'Fork', 'fr_FR': 'Fourchette'},
         )
 

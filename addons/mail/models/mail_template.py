@@ -278,7 +278,7 @@ class MailTemplate(models.Model):
     def copy_data(self, default=None):
         vals_list = super().copy_data(default=default)
         for vals, template in zip(vals_list, self):
-            if 'name' not in (default or {}) and vals.get('name') == template.name:
+            if 'name' not in (default or {}):
                 vals['name'] = self.env._("%s (copy)", template.name)
         return vals_list
 
