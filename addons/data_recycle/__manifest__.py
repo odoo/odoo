@@ -11,6 +11,8 @@
         'data/ir_cron_data.xml',
         'views/data_recycle_model_views.xml',
         'views/data_recycle_record_views.xml',
+        'views/data_recycle_trash_model_views.xml',
+        'views/data_recycle_trash_record_views.xml',
         'views/data_cleaning_menu.xml',
         'views/data_recycle_templates.xml',
         'security/ir.access.csv',

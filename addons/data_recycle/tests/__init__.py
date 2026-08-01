@@ -2,3 +2,4 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from . import test_data_recycle
+from . import test_data_recycle_trash
