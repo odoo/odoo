@@ -72,11 +72,14 @@ class StockLot(models.Model):
 
     def _compute_last_delivery_partner_id(self):
         super()._compute_last_delivery_partner_id()
-        for lot in self:
+        for lot in self.filtered(lambda l: l.product_id.tracking == 'serial'):
             if lot.delivery_count > 0:
                 last_delivery = max(lot.delivery_ids, key=lambda d: d.date_done)
                 if last_delivery.is_dropship:
-                    lot.last_delivery_partner_id = last_delivery.sale_id.partner_id
+                    if last_delivery.sale_id.partner_id:
+                        lot.last_delivery_partner_id = last_delivery.sale_id.partner_id
+                    elif last_delivery.purchase_id.dest_address_id:
+                        lot.last_delivery_partner_id = last_delivery.purchase_id.dest_address_id
 
     def _get_outgoing_domain(self):
         res = super()._get_outgoing_domain()
