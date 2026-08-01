@@ -41,12 +41,13 @@ export class TestTranslationExportModel {
         _t("JS Export 24 %s", _t("JS Export 25") + "NO - JS Export 04");
 
         _t(`JS Export 26`);
+        _t(`NO - JS Export 05 ${term}`);
 
-        _t(dummyFunction`NO - JS Export 05`);
-        _t(dummyFunction`NO - JS Export 06 ${term}`);
+        _t(dummyFunction`NO - JS Export 06`);
+        _t(dummyFunction`NO - JS Export 07 ${term}`);
 
-        _t(dummyFunction("NO - JS Export 07"));
+        _t(dummyFunction("NO - JS Export 08"));
 
-        dummyFunction(`NO - JS Export 08${_t("JS Export 27")}NO - JS Export 09`);
+        dummyFunction(`NO - JS Export 09${_t("JS Export 27")}NO - JS Export 10`);
     }
 }
