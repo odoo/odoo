@@ -97,7 +97,7 @@ class SaleOrderLine(models.Model):
         super()._compute_qty_delivered()
 
         def update_qty_delivered_from_pickings(sale_line, pos_lines):
-            if all(picking.state == 'done' for picking in pos_lines.order_id.picking_ids):
+            if pos_lines.order_id.picking_ids and all(picking.state == 'done' for picking in pos_lines.order_id.picking_ids):
                 sale_line.qty_delivered += sum((self._convert_qty(sale_line, pos_line.qty, 'p2s') for pos_line in pos_lines if sale_line.product_id.type != 'service'), 0)
 
         for sale_line in self:
