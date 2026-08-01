@@ -1405,11 +1405,15 @@ class Base(models.AbstractModel):
                     # special case weeks because babel is broken *and*
                     # ubuntu reverted a change so it's also inconsistent
                     if granularity == 'week':
+                        babel_locale = babel.Locale.parse(locale)
                         year, week = date_utils.weeknumber(
-                            babel.Locale.parse(locale),
+                            babel_locale,
                             value,  # provide date or datetime without UTC conversion
                         )
-                        label = f"W{week} {year:04}"
+                        week_start = date_utils.weekstart(babel_locale, value)
+                        week_end = date_utils.weekend(babel_locale, value)
+                        range_value = babel.dates.format_interval(week_start, week_end, "MMMd", locale=locale)
+                        label = f"W{week} {year:04} ({range_value})"
 
                     additional_domain = (
                         Domain(field_name, '>=', range_start.strftime(fmt))
@@ -1515,11 +1519,18 @@ class Base(models.AbstractModel):
                     start = date_utils.start_of(value, func)
                 end = start + interval
 
+                locale = get_lang(self.env).code
+                babel_locale = babel.Locale.parse(locale)
                 label = babel.dates.format_date(
                     value,
                     format=READ_GROUP_DISPLAY_FORMAT[func],
-                    locale=get_lang(self.env).code,
+                    locale=locale,
                 )
+                if func == 'week':
+                    week_start = date_utils.weekstart(babel_locale, value)
+                    week_end = date_utils.weekend(babel_locale, value)
+                    range_value = babel.dates.format_interval(week_start, week_end, "MMMd", locale=locale)
+                    label = f"{label} ({range_value})"
                 return (value.strftime(fmt), label), Domain(fullname, '>=', start.strftime(fmt)) & Domain(fullname, '<', end.strftime(fmt))
 
             return formatter_property_datetime
