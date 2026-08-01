@@ -48,7 +48,7 @@
 
                             <!-- Confidence badge -->
                             <div class="mt-1 text-end">
-                                <t t-if="record.ai_confidence.raw_value < 0.8">
+                                <t t-if="0.8 > record.ai_confidence.raw_value">
                                     <span class="badge text-bg-warning">Low Confidence</span>
                                 </t>
                                 <t t-if="record.ai_needs_review.raw_value">
@@ -101,13 +101,9 @@
         <field name="priority" eval="99"/>
         <field name="arch" type="xml">
             <search string="AI Agent Queue">
-                <!-- Text search across name, reference, partner -->
-                <field name="name" string="Invoice Number"
-                       filter_domain="['|', '|', ('name', 'ilike', self), ('ref', 'ilike', self), ('partner_id', 'child_of', self)]"/>
+                <!-- 1. Fields first -->
+                <field name="name" string="Invoice"/>
                 <field name="partner_id"/>
-                <field name="amount_total"/>
-                <field name="ai_confidence"/>
-                <field name="ai_source_sale_order_id"/>
                 <field name="journal_id"/>
 
                 <separator/>
@@ -120,22 +116,20 @@
                 <separator/>
                 <!-- Quality filters -->
                 <filter string="Low Confidence" name="low_confidence"
-                        domain="[('ai_confidence', '<', 0.8), ('ai_confidence', '!=', False)]"/>
+                        domain="['!', ('ai_confidence', '>=', 0.8)]"/>
                 <filter string="Needs Review" name="needs_review"
                         domain="[('ai_needs_review', '=', True)]"/>
 
                 <separator/>
                 <!-- Group-bys -->
-                <group expand="0" string="Group By">
-                    <filter string="Extraction Status" name="group_by_status"
-                            context="{'group_by': 'ai_extraction_status'}"/>
-                    <filter string="Partner" name="group_by_partner"
-                            context="{'group_by': 'partner_id'}"/>
-                    <filter string="Needs Review" name="group_by_needs_review"
-                            context="{'group_by': 'ai_needs_review'}"/>
-                    <filter string="Invoice Date" name="group_by_invoice_date"
-                            context="{'group_by': 'invoice_date'}"/>
-                </group>
+                <filter string="Extraction Status" name="group_by_status"
+                        context="{'group_by': 'ai_extraction_status'}"/>
+                <filter string="Partner" name="group_by_partner"
+                        context="{'group_by': 'partner_id'}"/>
+                <filter string="Needs Review" name="group_by_needs_review"
+                        context="{'group_by': 'ai_needs_review'}"/>
+                <filter string="Invoice Date" name="group_by_invoice_date"
+                        context="{'group_by': 'invoice_date'}"/>
             </search>
         </field>
     </record>
@@ -149,6 +143,8 @@
         <field name="res_model">account.move</field>
         <field name="view_mode">kanban,list,form</field>
         <field name="domain">[('ai_extraction_status', 'in', ('extracted', 'validated', 'failed'))]</field>
+        <!-- ✅ إسناد الـ Search View هنا مباشرة -->
+        <field name="search_view_id" ref="view_move_search_ai_queue"/>
         <field name="context">{'search_default_needs_review': 1}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
@@ -161,7 +157,7 @@
         </field>
     </record>
 
-    <!-- Explicit view references so the window uses our custom views -->
+    <!-- Explicit view references for Kanban and List -->
     <record id="action_ai_agent_queue_view_kanban" model="ir.actions.act_window.view">
         <field name="act_window_id" ref="action_ai_agent_queue"/>
         <field name="sequence" eval="1"/>
@@ -174,13 +170,6 @@
         <field name="sequence" eval="2"/>
         <field name="view_mode">list</field>
         <field name="view_id" ref="view_move_list_ai_queue"/>
-    </record>
-
-    <record id="action_ai_agent_queue_view_search" model="ir.actions.act_window.view">
-        <field name="act_window_id" ref="action_ai_agent_queue"/>
-        <field name="sequence" eval="99"/>
-        <field name="view_mode">search</field>
-        <field name="view_id" ref="view_move_search_ai_queue"/>
     </record>
 
     <!-- ============================================================
@@ -204,7 +193,7 @@
         <field name="target">new</field>
         <field name="binding_model_id" ref="account.model_account_move"/>
         <field name="binding_view_types">list,kanban</field>
-        <field name="groups" eval="[(4, ref('invoice_agent.group_invoice_agent_manager'))]"/>
+        <field name="group_ids" eval="[(4, ref('invoice_agent.group_invoice_agent_manager'))]"/>
         <field name="context">{'default_move_ids': active_ids}</field>
     </record>
 </odoo>

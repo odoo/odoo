@@ -1,0 +1,13 @@
+# Nested ruff config for the invoice_agent module.
+#
+# Extends the Odoo root ruff.toml (do-not-modify / runbot-generated) and only
+# adjusts rules that conflict with `ruff format`.
+#
+# COM812 (missing-trailing-comma) is known to conflict with the formatter:
+# `ruff check --fix` inserts trailing commas that `ruff format` then removes,
+# causing check/format to flip-flop. Since CI runs both `ruff check` and
+# `ruff format --check`, COM812 is disabled here.
+extend = "../../ruff.toml"
+
+[lint]
+extend-ignore = ["missing-trailing-comma"]

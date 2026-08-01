@@ -61,6 +61,25 @@ odoo-web-data/
 # Scripts (dev tools, not for the image)
 bashs/
 setup/
+scripts/
+
+# ============================================================================
+# Odoo core source tree — EXCLUDED from the build context.
+# The odoo:19 base image already ships the complete Odoo codebase at /opt/odoo,
+# and docker-compose mounts ./custom_addons at runtime. The Dockerfile only
+# COPYs custom_addons/invoice_agent/requirements.txt, so including any of the
+# directories below would send 1.5-3 GB of dead weight to the Docker daemon on
+# every build — stalling local builds and blowing up small disks on Windows.
+#
+# custom_addons/ is intentionally NOT listed here (requirements.txt is COPYed
+# from it; the addon itself arrives by bind-mount).
+# ============================================================================
+addons/
+odoo/
+-p/
+debian/
+docker/
+nginx/
 
 # CI
 .github/

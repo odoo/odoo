@@ -1,139 +1,186 @@
 name: Deploy — EC2 Production
 
 on:
-  push:
-    branches: [production]
+    push:
+        branches: [production]
 
 concurrency:
-  group: deploy-production
-  cancel-in-progress: false
+    group: deploy-production
+    cancel-in-progress: false
 
 permissions:
-  contents: read
-  id-token: write
+    contents: read
+    # NOTE: when ci.yml is called from here, it may only request scopes
+    # granted in this block. ci.yml asks only for contents: read, so the
+    # call is valid. If ci.yml ever asks for a scope not granted here
+    # (e.g. pull-requests, id-token), GitHub rejects the entire workflow
+    # with "The workflow is requesting X, but is only allowed Y."
 
 jobs:
-  ci:
-    # Re-run CI on the merge commit before deploying
-    uses: ./.github/workflows/ci.yml
-    secrets: inherit
+    ci:
+        # Re-run CI on the merge commit before deploying
+        uses: ./.github/workflows/ci.yml
+        secrets: inherit
 
-  deploy:
-    needs: [ci]
-    runs-on: ubuntu-latest
+    deploy:
+        needs: [ci]
+        runs-on: ubuntu-latest
 
-    steps:
-      - uses: actions/checkout@v4
+        steps:
+            - uses: actions/checkout@v4
 
-      - name: Deploy to EC2 via SSH
-        uses: appleboy/ssh-action@v1.0.3
-        env:
-          PREVIOUS_SHA: ${{ github.sha }}
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USERNAME }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          port: 22
-          script: |
-            set -e
+            - name: Deploy to EC2 via SSH
+              uses: appleboy/ssh-action@v1.0.3
+              with:
+                  host: ${{ secrets.EC2_HOST }}
+                  username: ${{ secrets.EC2_USERNAME }}
+                  key: ${{ secrets.SSH_PRIVATE_KEY }}
+                  port: 22
+                  script: |
+                      set -e
 
-            cd /opt/odoo
+                      cd /opt/odoo
 
-            # ------------------------------------------------------------------
-            # 1. Record the current state BEFORE pulling new code
-            #    If anything goes wrong, this SHA is our rollback target.
-            # ------------------------------------------------------------------
-            PREVIOUS_SHA=$(git rev-parse HEAD)
-            TIMESTAMP=$(date +%Y%m%d_%H%M%S)
-            echo "=== Deploy started at $TIMESTAMP ==="
-            echo "Current SHA: $PREVIOUS_SHA"
-            echo "Target SHA:  ${{ github.sha }}"
+                      # ==================================================================
+                      # 1. Record the current state BEFORE pulling new code
+                      #    If anything goes wrong, this SHA is our rollback target.
+                      # ==================================================================
+                      PREVIOUS_SHA=$(git rev-parse HEAD)
+                      TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+                      echo "=== Deploy started at $TIMESTAMP ==="
+                      echo "Current SHA: $PREVIOUS_SHA"
+                      echo "Target SHA:  ${{ github.sha }}"
 
-            # ------------------------------------------------------------------
-            # 2. Pre-upgrade database snapshot (safety net)
-            #    Module upgrades can corrupt data. This dump lets us recover
-            #    without restoring yesterday's backup.
-            # ------------------------------------------------------------------
-            echo "Taking pre-upgrade DB snapshot..."
-            docker compose exec -T db pg_dump -U odoo -Fc --no-owner \
-                -f /tmp/pre_deploy_${TIMESTAMP}.dump odoo \
-                || echo "WARNING: Pre-upgrade snapshot failed — continuing anyway"
+                      # ==================================================================
+                      # 2. Pre-upgrade database snapshot (safety net)
+                      #    Module upgrades can corrupt data. This dump lets us recover
+                      #    without restoring yesterday's backup.
+                      # ==================================================================
+                      echo "Taking pre-upgrade DB snapshot..."
+                      docker compose exec -T db pg_dump -U odoo -Fc --no-owner \
+                          -f /tmp/pre_deploy_${TIMESTAMP}.dump odoo \
+                          || echo "WARNING: Pre-upgrade snapshot failed — continuing anyway"
 
-            # ------------------------------------------------------------------
-            # 3. Pull latest code and rebuild
-            # ------------------------------------------------------------------
-            echo "Pulling latest code..."
-            git pull origin production
+                      # ==================================================================
+                      # 3. Pull latest code and rebuild
+                      # ==================================================================
+                      echo "Pulling latest code..."
+                      git pull origin production
 
-            echo "Rebuilding and restarting stack..."
-            docker compose up -d --build
+                      echo "Rebuilding and restarting stack..."
+                      docker compose up -d --build
 
-            # ------------------------------------------------------------------
-            # 4. Run module upgrade
-            # ------------------------------------------------------------------
-            echo "Upgrading invoice_agent module..."
-            docker compose exec -T odoo odoo \
-                -u invoice_agent \
-                --stop-after-init \
-                --log-level=warn
+                      # ==================================================================
+                      # 4. Run module upgrade
+                      # ==================================================================
+                      echo "Upgrading invoice_agent module..."
+                      docker compose exec -T odoo odoo \
+                          -u invoice_agent \
+                          --stop-after-init \
+                          --log-level=warn
 
-            # ------------------------------------------------------------------
-            # 5. Restart Odoo to boot in server mode
-            # ------------------------------------------------------------------
-            echo "Restarting Odoo..."
-            docker compose restart odoo
+                      # ==================================================================
+                      # 5. Restart Odoo to boot in server mode
+                      # ==================================================================
+                      echo "Restarting Odoo..."
+                      docker compose restart odoo
 
-            # ------------------------------------------------------------------
-            # 6. Health check — poll /web/login until it returns HTTP 200
-            # ------------------------------------------------------------------
-            echo "Running health check..."
-            HEALTHY=false
-            for i in $(seq 1 30); do
-                STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
-                    http://localhost:8069/web/login 2>/dev/null || echo "000")
-                if [ "$STATUS" = "200" ]; then
-                    HEALTHY=true
-                    echo "Health check passed (HTTP 200) after ${i}s"
-                    break
-                fi
-                echo "  Attempt $i/30 — HTTP $STATUS, waiting..."
-                sleep 2
-            done
+                      # ==================================================================
+                      # 6. HTTPS health check — poll through Nginx reverse proxy
+                      #
+                      # Previously this checked http://localhost:8069 (direct to Odoo).
+                      # Now we check via nginx on HTTPS to validate the full path:
+                      #   browser → nginx:443 → odoo:8069
+                      # This catches: nginx config errors, cert issues, proxy timeouts.
+                      # ==================================================================
+                      echo "Running HTTPS health check through nginx..."
+                      HEALTHY=false
+                      for i in $(seq 1 30); do
+                          # Check via HTTPS through nginx (the real user path)
+                          STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+                              --connect-timeout 5 \
+                              --max-time 10 \
+                              https://invoices.${DOMAIN:-invoices.example.com}/web/login \
+                              2>/dev/null || echo "000")
 
-            # ------------------------------------------------------------------
-            # 7. Rollback on failure
-            # ------------------------------------------------------------------
-            if [ "$HEALTHY" != "true" ]; then
-                echo ""
-                echo "!!! DEPLOY FAILED — Odoo is not responding !!!"
-                echo "Rolling back to $PREVIOUS_SHA..."
+                          # Fallback: if HTTPS check fails, check Odoo directly
+                          if [ "$STATUS" = "000" ] || [ "$STATUS" = "502" ] || [ "$STATUS" = "503" ]; then
+                              STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+                                  http://localhost:8069/web/login 2>/dev/null || echo "000")
+                              echo "  Attempt $i/30 — HTTPS failed, direct check: HTTP $STATUS"
+                          else
+                              echo "  Attempt $i/30 — HTTPS check: HTTP $STATUS"
+                          fi
 
-                git checkout "$PREVIOUS_SHA"
-                docker compose up -d --build
-                docker compose restart odoo
+                          if [ "$STATUS" = "200" ]; then
+                              HEALTHY=true
+                              echo "Health check passed (HTTP 200) after ${i}s"
+                              break
+                          fi
+                          echo "  Attempt $i/30 — HTTP $STATUS, waiting..."
+                          sleep 2
+                      done
 
-                # Verify rollback
-                for i in $(seq 1 30); do
-                    STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
-                        http://localhost:8069/web/login 2>/dev/null || echo "000")
-                    if [ "$STATUS" = "200" ]; then
-                        echo "Rollback successful — Odoo running at $PREVIOUS_SHA"
-                        exit 1  # still fail the workflow (rollback succeeded but deploy didn't)
-                    fi
-                    sleep 2
-                done
+                      # ==================================================================
+                      # 7. Verify websocket endpoint responds to upgrade request
+                      # ==================================================================
+                      if [ "$HEALTHY" = "true" ]; then
+                          echo "Checking websocket upgrade endpoint..."
+                          WS_STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+                              -H "Connection: Upgrade" \
+                              -H "Upgrade: websocket" \
+                              -H "Sec-WebSocket-Version: 13" \
+                              -H "Sec-WebSocket-Key: dGhlIHNhbXBsZSBub25jZQ==" \
+                              --max-time 5 \
+                              https://invoices.${DOMAIN:-invoices.example.com}/websocket \
+                              2>/dev/null || echo "000")
+                          if [ "$WS_STATUS" = "101" ]; then
+                              echo "Websocket endpoint: OK (HTTP 101 Switching Protocols)"
+                          else
+                              echo "WARNING: Websocket endpoint returned HTTP $WS_STATUS (expected 101)"
+                              echo "Check nginx /websocket location block for missing Upgrade/Connection headers"
+                          fi
+                      fi
 
-                echo "!!! CRITICAL: Rollback also failed — manual intervention required !!!"
-                exit 2
-            fi
+                      # ==================================================================
+                      # 8. Rollback on failure
+                      # ==================================================================
+                      if [ "$HEALTHY" != "true" ]; then
+                          echo ""
+                          echo "!!! DEPLOY FAILED — Odoo is not responding !!!"
+                          echo "Rolling back to $PREVIOUS_SHA..."
 
-            # ------------------------------------------------------------------
-            # 8. Clean up pre-upgrade dump (deploy succeeded)
-            # ------------------------------------------------------------------
-            docker compose exec -T db rm -f "/tmp/pre_deploy_${TIMESTAMP}.dump" \
-                || true
+                          git checkout "$PREVIOUS_SHA"
+                          docker compose up -d --build
+                          docker compose restart odoo
 
-            echo ""
-            echo "=== Deploy complete ==="
-            echo "SHA: ${{ github.sha }}"
-            echo "Time: $(date)"
+                          # Verify rollback via HTTPS
+                          for i in $(seq 1 30); do
+                              STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+                                  https://invoices.${DOMAIN:-invoices.example.com}/web/login \
+                                  2>/dev/null || echo "000")
+                              if [ "$STATUS" = "000" ] || [ "$STATUS" = "502" ]; then
+                                  STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+                                      http://localhost:8069/web/login 2>/dev/null || echo "000")
+                              fi
+                              if [ "$STATUS" = "200" ]; then
+                                  echo "Rollback successful — Odoo running at $PREVIOUS_SHA"
+                                  exit 1  # still fail the workflow (rollback succeeded but deploy didn't)
+                              fi
+                              sleep 2
+                          done
+
+                          echo "!!! CRITICAL: Rollback also failed — manual intervention required !!!"
+                          exit 2
+                      fi
+
+                      # ==================================================================
+                      # 9. Clean up pre-upgrade dump (deploy succeeded)
+                      # ==================================================================
+                      docker compose exec -T db rm -f "/tmp/pre_deploy_${TIMESTAMP}.dump" \
+                          || true
+
+                      echo ""
+                      echo "=== Deploy complete ==="
+                      echo "SHA: ${{ github.sha }}"
+                      echo "Time: $(date)"
