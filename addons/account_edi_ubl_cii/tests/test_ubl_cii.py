@@ -22,13 +22,14 @@ class TestAccountEdiUblCii(TestUblCiiCommon, HttpCase):
         cls.uom_units = cls.env.ref('uom.product_uom_unit')
         cls.uom_dozens = cls.env.ref('uom.product_uom_dozen')
 
-        cls.displace_prdct = cls.env['product.product'].create({
+        MAIL_OFF = {'tracking_disable': True, 'mail_create_nosubscribe': True, 'mail_create_nolog': True, 'mail_notrack': True}
+        cls.displace_prdct = cls.env['product.product'].with_context(**MAIL_OFF).create({
             'name': 'Displacement',
             'uom_id': cls.uom_units.id,
             'standard_price': 90.0,
         })
 
-        cls.place_prdct = cls.env['product.product'].create({
+        cls.place_prdct = cls.env['product.product'].with_context(**MAIL_OFF).create({
             'name': 'Placement',
             'uom_id': cls.uom_units.id,
             'standard_price': 80.0,

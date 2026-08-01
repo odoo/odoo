@@ -17,7 +17,6 @@ from odoo.addons.account_peppol.tests.common import (
 from odoo.addons.mail.tests.common import MailCommon
 
 
-@freeze_time('2023-01-01')
 @tagged('-at_install', 'post_install')
 class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
     _test_user_groups = None  # FIXME list needed groups
@@ -49,7 +48,8 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
             'refresh_token': 'deadbeef-0000-0000-0000-000000000000',
         })
 
-        cls.invalid_partner, cls.valid_partner, cls.incoming_invoice_partner = cls.env['res.partner'].create([{
+        MAIL_OFF = {'tracking_disable': True, 'mail_create_nosubscribe': True, 'mail_create_nolog': True, 'mail_notrack': True}
+        cls.invalid_partner, cls.valid_partner, cls.incoming_invoice_partner = cls.env['res.partner'].with_context(**MAIL_OFF).create([{
             'name': 'Wintermute',
             'city': 'Charleroi',
             'country_id': cls.env.ref('base.be').id,
@@ -71,6 +71,12 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
             'account_number': '0144748555',
             'partner_id': cls.env.company.partner_id.id,
             'allow_out_payment': True,
+        })
+        cls.self_billing_journal = cls.env['account.journal'].create({
+            'name': 'Self Billing',
+            'code': 'SB',
+            'type': 'purchase',
+            'is_self_billing': True,
         })
 
     def create_move(self, partner, company=None):
@@ -113,6 +119,7 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
             wizard.action_send_and_print()
         self.assertEqual(self._get_mail_message(move).preview, 'The invoice has been sent to the Peppol Access Point. The following attachments were sent with the XML:')
 
+    @freeze_time('2023-01-01')
     @mock_lookup_success('0208:0428759497')
     def test_attachment_placeholders(self):
         move = self.create_move(self.valid_partner)
@@ -628,17 +635,10 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
         """
         self.valid_partner.invoice_edi_format = 'ubl_bis3'
 
-        self_billing_journal = self.env['account.journal'].create({
-            'name': 'Self Billing',
-            'code': 'SB',
-            'type': 'purchase',
-            'is_self_billing': True,
-        })
-
         # Create a vendor bill (in_invoice) that can be sent as self-billed
         vendor_bill = self.env['account.move'].create({
             'move_type': 'in_invoice',
-            'journal_id': self_billing_journal.id,
+            'journal_id': self.self_billing_journal.id,
             'company_id': self.env.company.id,
             'partner_id': self.valid_partner.id,
             'date': '2023-01-01',
@@ -684,16 +684,9 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
         """Test that self-billing sending constraints are properly handled."""
         self.valid_partner.invoice_edi_format = 'ubl_bis3'
 
-        self_billing_journal = self.env['account.journal'].create({
-            'name': 'Self Billing',
-            'code': 'SB',
-            'type': 'purchase',
-            'is_self_billing': True,
-        })
-
         vendor_bill = self.env['account.move'].create({
             'move_type': 'in_invoice',
-            'journal_id': self_billing_journal.id,
+            'journal_id': self.self_billing_journal.id,
             'company_id': self.env.company.id,
             'partner_id': self.valid_partner.id,
             'date': '2023-01-01',
