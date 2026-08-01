@@ -94,7 +94,9 @@ services:
   # ============================================================================
   nginx:
     image: nginx:alpine
-    restart: unless-stopped
+    restart: always
+    environment:
+      - DOMAIN=${DOMAIN}
     ports:
       - "80:80"
       - "443:443"
