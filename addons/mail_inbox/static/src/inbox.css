@@ -1,0 +1,94 @@
+/* Part of Odoo. See LICENSE file for full copyright and licensing details. */
+
+.o-mail-InboxApp {
+    background-color: var(--bs-body-bg);
+}
+
+.o-mail-InboxSidebar {
+    background-color: var(--bs-light);
+}
+
+.o-mail-InboxMailItem {
+    cursor: default;
+    transition: background-color 0.1s ease;
+}
+
+.o-mail-InboxMailItem:hover {
+    background-color: var(--bs-light);
+}
+
+.o-mail-InboxMailItem.o-unread {
+    background-color: rgba(var(--bs-primary-rgb), 0.03);
+}
+
+.o-mail-InboxMailItem-actions {
+    position: fixed;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    padding: 4px;
+    min-width: 160px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.1s ease;
+    z-index: 1000;
+    white-space: nowrap;
+}
+
+.o-mail-InboxMailItem-actions.o-visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.o-mail-InboxMailItem-actions-separator {
+    height: 1px;
+    background: rgba(0, 0, 0, 0.08);
+    margin: 3px 4px;
+}
+
+.o-mail-InboxMailItem-action-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 6px 10px;
+    background: none;
+    border: none;
+    border-radius: 5px;
+    font-size: 0.83rem;
+    color: #333;
+    cursor: pointer;
+    text-align: left;
+}
+
+.o-mail-InboxMailItem-action-btn:hover {
+    background: #f5f5f5;
+}
+
+.o-mail-InboxMailItem-action-btn.o-danger {
+    color: #c0392b;
+}
+
+.o-mail-InboxMailItem-action-btn.o-danger:hover {
+    background: #fdf0ef;
+}
+
+.o-add-tag-row:hover {
+    background: #f5f5f5;
+    cursor: pointer;
+}
+
+.o-mail-InboxMailItem-sender {
+    font-size: 0.9em;
+}
+
+.o-mail-InboxList-header {
+    background-color: var(--bs-body-bg);
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
