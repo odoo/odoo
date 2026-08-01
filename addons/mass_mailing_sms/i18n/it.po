@@ -6,13 +6,13 @@
 # Wil Odoo, 2024
 # Marianna Ciofani, 2025
 # Sergio Zanchetta <primes2h@gmail.com>, 2025
-# "Marianna Ciofani (cima)" <cima@odoo.com>, 2025.
+# "Marianna Ciofani (cima)" <cima@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2025-12-16 13:08+0000\n"
+"PO-Revision-Date: 2026-07-31 10:54+0000\n"
 "Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
 "Language-Team: Italian <https://translate.odoo.com/projects/odoo-18/"
 "mass_mailing_sms/it/>\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
 "0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: mass_mailing_sms
 #. odoo-javascript
@@ -389,7 +389,7 @@ msgid ""
 "Field used to store sanitized phone number. Helps speeding up searches and "
 "comparisons."
 msgstr ""
-"Campo usato per memorizzare il numero di telefono pulito. Aiuta a "
+"Campo usato per memorizzare il numero di telefono normalizzato. Aiuta a "
 "velocizzare le ricerche e i confronti."
 
 #. module: mass_mailing_sms
@@ -457,8 +457,8 @@ msgid ""
 "If the sanitized phone number is on the blacklist, the contact won't receive "
 "mass mailing sms anymore, from any list"
 msgstr ""
-"Se il numero di telefono pulito è in lista nera, il contatto non sarà più "
-"soggetto all'invio massivo di SMS, da nessuna lista."
+"Se il numero di telefono normalizzato è in lista nera, il contatto non sarà "
+"più soggetto all'invio massivo di SMS, da nessuna lista."
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,help:mass_mailing_sms.field_mailing_mailing__sms_force_send
@@ -485,9 +485,9 @@ msgid ""
 "distinguish which number is blacklisted             when there is both a "
 "mobile and phone field in a model."
 msgstr ""
-"Indica se un numero di telefono pulito in lista nera è un cellulare. Aiuta a "
-"distinguere qual è il numero in lista nera             quando in un modello "
-"sono presenti sia il campo cellulare che telefono."
+"Indica se un numero di telefono normalizzato in lista nera è un cellulare. "
+"Aiuta a distinguere qual è il numero in lista nera             quando in un "
+"modello sono presenti sia il campo cellulare che telefono."
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,help:mass_mailing_sms.field_mailing_contact__phone_blacklisted
@@ -496,9 +496,9 @@ msgid ""
 "distinguish which number is blacklisted             when there is both a "
 "mobile and phone field in a model."
 msgstr ""
-"Indica se un numero di telefono pulito in lista nera è un fisso. Aiuta a "
-"distinguere qual è il numero in lista nera             quando in un modello "
-"sono presenti sia il campo cellulare che telefono."
+"Indica se un numero di telefono normalizzato in lista nera è un fisso. Aiuta "
+"a distinguere qual è il numero in lista nera             quando in un "
+"modello sono presenti sia il campo cellulare che telefono."
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__failure_type__sms_credit
@@ -902,7 +902,7 @@ msgstr "STOP SMS: %(unsubscribe_url)s"
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__phone_sanitized
 msgid "Sanitized Number"
-msgstr "Numero pulito"
+msgstr "Numero normalizzato"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
