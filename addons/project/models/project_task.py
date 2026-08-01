@@ -163,7 +163,7 @@ class ProjectTask(models.Model):
        store=True, readonly=False, ondelete='restrict', tracking=6, index=True,
        default=_get_default_stage_id, group_expand='_read_group_stage_ids',
        domain="[('project_ids', '=', project_id)]")
-    tag_ids = fields.Many2many('project.tags', string='Tags')
+    tag_ids = fields.Many2many('project.tags', string='Tags', tracking=True)
 
     state = fields.Selection([
         ('01_in_progress', 'In Progress'),

@@ -76,7 +76,28 @@
         <template id="mail_tracking_template">
 <div t-if="trackingValues">
     <t t-foreach="trackingValues" t-as="val">
-        <em t-if="val.get('company_name')" t-out="val['company_name'] + ': '"/><t t-out="val['old_value']" t-if="val['old_value']"/><b t-out="val['new_value']"/><i t-out="val['field_label']"/><br/>
+        <t t-if="val.get('added_values') or val.get('removed_values')">
+            <t t-if="val.get('added_values')">
+                <b>Added</b><em t-if="val.get('company_name')" t-out="val['company_name'] + ': '"/><i t-out="val['field_label']"/>
+                <ul>
+                    <li t-foreach="val['added_values']" t-as="item">
+                        <a href="#" t-att-data-oe-model="env['ir.model.fields'].browse(val['field_id']).relation" t-att-data-oe-id="item[0]" t-out="item[1]"/>
+                    </li>
+                </ul>
+            </t>
+            <t t-if="val.get('removed_values')">
+                <b>Removed</b><em t-if="val.get('company_name')" t-out="val['company_name'] + ': '"/><i t-out="val['field_label']"/>
+                <ul>
+                    <li t-foreach="val['removed_values']" t-as="item">
+                        <a href="#" t-att-data-oe-model="env['ir.model.fields'].browse(val['field_id']).relation" t-att-data-oe-id="item[0]" t-out="item[1]"/>
+                    </li>
+                </ul>
+            </t>
+        </t>
+
+        <t t-else="">
+            <em t-if="val.get('company_name')" t-out="val['company_name'] + ': '"/><t t-out="val['old_value']" t-if="val['old_value']"/><b t-out="val['new_value']"/><i t-out="val['field_label']"/><br/>
+        </t>
     </t>
 </div></template>
     </data>

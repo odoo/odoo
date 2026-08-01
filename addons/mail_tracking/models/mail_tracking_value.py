@@ -11,6 +11,8 @@ class MailTrackingValue(models.Model):
         'ir.model.fields', required=False, readonly=True,
         index=True, ondelete='set null')
     field_info = fields.Json('Removed field information')
+    added_values = fields.Json('Added Values', readonly=True)
+    removed_values = fields.Json('Removed Values', readonly=True)
 
     old_value_integer = fields.Integer('Old Value Integer', readonly=True)
     old_value_float = fields.Float('Old Value Float', readonly=True)
