@@ -341,6 +341,33 @@ def main(args):
     if args.filter:
         reqs = {r: o for r, o in reqs.items() if any(f in r for f in args.filter.split(','))}
 
+    if args.generate_reqs:
+        for checker, pyver in zip(checkers, pyvers):
+            py_tag = "py" + pyver.replace(".", "")
+            out_filename = f"requirements.{py_tag}.{checker._release}.txt"
+            out_path = (Path.cwd() / __file__).parent / out_filename
+            stderr.write(f"Generating {out_path} for {checker}...\n")
+            lines = [f"# Generated automatically for {checker} (Python {pyver})"]
+            for req, options in sorted(reqs.items()):
+                applicable_ver = None
+                applies = False
+                for version, markers in options:
+                    if not markers or markers.evaluate({'python_version': pyver, 'sys_platform': 'linux'}):
+                        applicable_ver = version
+                        applies = True
+                        break
+                if not applies and options:
+                    continue
+                distro_ver_tuple = checker.get_version(req.lower())
+                if distro_ver_tuple and distro_ver_tuple != 'failed':
+                    lines.append(f"{req}=={'.'.join(map(str, distro_ver_tuple))}")
+                else:
+                    lines.append(f"{req}{f'=={applicable_ver}' if applicable_ver else ''}  # Not found in distro repository, using fallback")
+            with open(out_path, 'w', encoding='utf-8') as f:
+                f.write('\n'.join(lines) + '\n')
+            stderr.write(ok(f"Successfully generated {out_path}\n"))
+        return
+
     for req, options in reqs.items():
         if args.check_pypi:
             pip_infos = PipPackage(req)
@@ -510,6 +537,10 @@ if __name__ == '__main__':
     parser.add_argument(
         '--filter',
         help="Comma sepaated list of package to check",
+    )
+    parser.add_argument(
+        '-g', '--generate-reqs', action="store_true",
+        help="Generate distro-specific requirements.<release>.py<ver>.txt files instead of printing the table",
     )
 
     args = parser.parse_args()
