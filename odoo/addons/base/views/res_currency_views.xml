@@ -83,7 +83,7 @@
             <field name="name">res.currency.list</field>
             <field name="model">res.currency</field>
             <field name="arch" type="xml">
-                <list string="Currencies" decoration-muted="(not active)">
+                <list string="Currencies" decoration-muted="(not active)" decoration-warning="show_company_rate_unbalanced_warning">
                     <field name="name"/>
                     <field name="symbol"/>
                     <field name="full_name" string="Name" optional="show"/>
@@ -101,6 +101,7 @@
             <field name="arch" type="xml">
                 <kanban class="o_kanban_mobile">
                     <field name="active"/>
+                    <field name="show_company_rate_unbalanced_warning"/>
                     <templates>
                         <t t-name="card">
                                 <div class="row mb4">
@@ -112,6 +113,11 @@
                                     </div>
                                     <div class="col-5 text-end">
                                         <t t-if="! record.active.raw_value"><span class="badge rounded-pill bg-light border">inactive</span></t>
+                                        <t t-if="record.show_company_rate_unbalanced_warning.raw_value">
+                                            <span class="text-warning" title="This currency deviates from a 1:1 parity on specific dates">
+                                                <i class="fa fa-warning fs-4"/>
+                                            </span>
+                                        </t>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -137,6 +143,9 @@
                     <div class="alert alert-info text-center" role="alert" invisible="not is_current_company_currency">
                         This is your company's currency.
                     </div>
+                    <div class="alert alert-warning text-center" role="alert" invisible="not show_company_rate_unbalanced_warning">
+                        This currency deviates from a 1:1 parity on specific dates
+                    </div>
                     <sheet>
                         <group>
                             <group>
@@ -161,7 +170,7 @@
                                 <field name="position"/>
                             </group>
                         </group>
-                        <notebook class="o_currency_rate_list" invisible="is_current_company_currency">
+                        <notebook class="o_currency_rate_list" invisible="is_current_company_currency and not show_company_rate_unbalanced_warning">
                             <page string="Rates" name="rates">
                                 <field name="rate_ids" widget="one2many">
                                     <list string="Rates"  editable="top" limit="25">
