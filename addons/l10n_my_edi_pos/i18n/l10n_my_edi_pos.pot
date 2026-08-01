@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.5a1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-24 18:38+0000\n"
-"PO-Revision-Date: 2026-07-24 18:38+0000\n"
+"POT-Creation-Date: 2026-07-31 18:30+0000\n"
+"PO-Revision-Date: 2026-07-31 18:30+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -18,13 +18,18 @@ msgstr ""
 #. module: l10n_my_edi_pos
 #: model_terms:ir.ui.view,arch_db:l10n_my_edi_pos.view_partner_form_pos_ui_inherit_l10n_my_edi_pos
 msgid ""
-"<span class=\"text-success fa fa-check\" title=\"Validation Successful\" invisible=\"not l10n_my_edi_display_tin_warning or l10n_my_tin_validation_state != 'valid'\"/>\n"
-"                        <span class=\"text-danger fa fa-close\" title=\"Validation Failed\" invisible=\"not l10n_my_edi_display_tin_warning or l10n_my_tin_validation_state != 'invalid'\"/>"
+"<span class=\"text-success oi\" data-icon=\"check\" title=\"Validation Successful\" invisible=\"not l10n_my_edi_display_tin_warning or l10n_my_tin_validation_state != 'valid'\"/>\n"
+"                        <span class=\"text-danger oi\" data-icon=\"close\" title=\"Validation Failed\" invisible=\"not l10n_my_edi_display_tin_warning or l10n_my_tin_validation_state != 'invalid'\"/>"
 msgstr ""
 
 #. module: l10n_my_edi_pos
 #: model_terms:ir.ui.view,arch_db:l10n_my_edi_pos.view_pos_pos_form
 msgid "<span>Consolidated<br/>Invoice</span>"
+msgstr ""
+
+#. module: l10n_my_edi_pos
+#: model:ir.model.fields.selection,name:l10n_my_edi_pos.selection__pos_order__l10n_my_edi_state__cancelled
+msgid "Cancelled"
 msgstr ""
 
 #. module: l10n_my_edi_pos
@@ -118,6 +123,11 @@ msgid "Individual"
 msgstr ""
 
 #. module: l10n_my_edi_pos
+#: model:ir.model.fields.selection,name:l10n_my_edi_pos.selection__pos_order__l10n_my_edi_state__invalid
+msgid "Invalid"
+msgstr ""
+
+#. module: l10n_my_edi_pos
 #. odoo-python
 #: code:addons/l10n_my_edi_pos/wizard/myinvois_consolidate_invoice_wizard.py:0
 msgid "Invalid Operation. No order to consolidate."
@@ -147,6 +157,22 @@ msgstr ""
 #. module: l10n_my_edi_pos
 #: model:ir.model,name:l10n_my_edi_pos.model_myinvois_document
 msgid "MyInvois Document"
+msgstr ""
+
+#. module: l10n_my_edi_pos
+#: model_terms:ir.ui.view,arch_db:l10n_my_edi_pos.view_pos_order_filter
+msgid "MyInvois In Progress"
+msgstr ""
+
+#. module: l10n_my_edi_pos
+#: model:ir.model.fields,field_description:l10n_my_edi_pos.field_pos_order__l10n_my_edi_state
+#: model_terms:ir.ui.view,arch_db:l10n_my_edi_pos.view_pos_order_filter
+msgid "MyInvois State"
+msgstr ""
+
+#. module: l10n_my_edi_pos
+#: model_terms:ir.ui.view,arch_db:l10n_my_edi_pos.view_pos_order_filter
+msgid "MyInvois Valid"
 msgstr ""
 
 #. module: l10n_my_edi_pos
@@ -203,9 +229,19 @@ msgid "Pos Order"
 msgstr ""
 
 #. module: l10n_my_edi_pos
+#: model:ir.model.fields.selection,name:l10n_my_edi_pos.selection__pos_order__l10n_my_edi_state__rejected
+msgid "Rejected"
+msgstr ""
+
+#. module: l10n_my_edi_pos
 #. odoo-python
 #: code:addons/l10n_my_edi_pos/controllers/portal.py:0
 msgid "Some fields are missing or have wrong values"
+msgstr ""
+
+#. module: l10n_my_edi_pos
+#: model:ir.model.fields,help:l10n_my_edi_pos.field_pos_order__l10n_my_edi_state
+msgid "State of this order on the MyInvois portal."
 msgstr ""
 
 #. module: l10n_my_edi_pos
@@ -224,8 +260,18 @@ msgid ""
 msgstr ""
 
 #. module: l10n_my_edi_pos
+#: model:ir.model.fields.selection,name:l10n_my_edi_pos.selection__pos_order__l10n_my_edi_state__valid
+msgid "Valid"
+msgstr ""
+
+#. module: l10n_my_edi_pos
 #: model_terms:ir.ui.view,arch_db:l10n_my_edi_pos.view_partner_form_pos_ui_inherit_l10n_my_edi_pos
 msgid "Validate"
+msgstr ""
+
+#. module: l10n_my_edi_pos
+#: model:ir.model.fields.selection,name:l10n_my_edi_pos.selection__pos_order__l10n_my_edi_state__in_progress
+msgid "Validation In Progress"
 msgstr ""
 
 #. module: l10n_my_edi_pos

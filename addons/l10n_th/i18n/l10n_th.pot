@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.5a1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-24 18:40+0000\n"
-"PO-Revision-Date: 2026-07-24 18:40+0000\n"
+"POT-Creation-Date: 2026-07-31 18:32+0000\n"
+"PO-Revision-Date: 2026-07-31 18:32+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -106,6 +106,12 @@ msgstr ""
 #. module: l10n_th
 #: model:ir.model,name:l10n_th.model_report_l10n_th_report_50_tawi
 msgid "50 Tawi Report"
+msgstr ""
+
+#. module: l10n_th
+#. odoo-python
+#: code:addons/l10n_th/controllers/download_tawi_reports.py:0
+msgid "50_Tawi_Reports"
 msgstr ""
 
 #. module: l10n_th
@@ -249,6 +255,13 @@ msgid "Can't generate a PayNow QR code with a currency other than THB."
 msgstr ""
 
 #. module: l10n_th
+#: model:ir.model.fields,help:l10n_th.field_res_company__l10n_th_is_vat_registered
+msgid ""
+"Check this to enable issuing Tax Invoices. Otherwise, only standard invoices"
+" or receipts can be issued."
+msgstr ""
+
+#. module: l10n_th
 #: model_terms:ir.ui.view,arch_db:l10n_th.th_partner_address_form
 msgid "City"
 msgstr ""
@@ -256,6 +269,11 @@ msgstr ""
 #. module: l10n_th
 #: model:ir.actions.report,name:l10n_th.action_report_commercial_invoice
 msgid "Commercial Invoice"
+msgstr ""
+
+#. module: l10n_th
+#: model:ir.model,name:l10n_th.model_res_company
+msgid "Company"
 msgstr ""
 
 #. module: l10n_th
@@ -292,6 +310,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_th.field_account_tax__display_name
 #: model:ir.model.fields,field_description:l10n_th.field_ir_actions_report__display_name
 #: model:ir.model.fields,field_description:l10n_th.field_report_l10n_th_report_50_tawi__display_name
+#: model:ir.model.fields,field_description:l10n_th.field_res_company__display_name
 #: model:ir.model.fields,field_description:l10n_th.field_res_partner__display_name
 #: model:ir.model.fields,field_description:l10n_th.field_res_partner_bank__display_name
 msgid "Display Name"
@@ -331,6 +350,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_th.field_account_tax__id
 #: model:ir.model.fields,field_description:l10n_th.field_ir_actions_report__id
 #: model:ir.model.fields,field_description:l10n_th.field_report_l10n_th_report_50_tawi__id
+#: model:ir.model.fields,field_description:l10n_th.field_res_company__id
 #: model:ir.model.fields,field_description:l10n_th.field_res_partner__id
 #: model:ir.model.fields,field_description:l10n_th.field_res_partner_bank__id
 msgid "ID"
@@ -349,6 +369,14 @@ msgstr ""
 #. module: l10n_th
 #: model:ir.model.fields,field_description:l10n_th.field_account_tax__l10n_th_income_tax_type
 msgid "Income Tax Type"
+msgstr ""
+
+#. module: l10n_th
+#. odoo-python
+#: code:addons/l10n_th/models/account_payment.py:0
+msgid ""
+"Invalid payments skipped: %s. The process will continue and print the valid "
+"payments."
 msgstr ""
 
 #. module: l10n_th
@@ -403,8 +431,20 @@ msgid "Ms."
 msgstr ""
 
 #. module: l10n_th
+#. odoo-python
+#: code:addons/l10n_th/models/account_payment.py:0
+msgid "No eligible payments found for 50 Tawi report."
+msgstr ""
+
+#. module: l10n_th
 #: model:ir.model.fields.selection,name:l10n_th.selection__account_tax__l10n_th_income_tax_type__na
 msgid "Not Applicable"
+msgstr ""
+
+#. module: l10n_th
+#. odoo-python
+#: code:addons/l10n_th/models/account_payment.py:0
+msgid "Notification"
 msgstr ""
 
 #. module: l10n_th
@@ -513,6 +553,16 @@ msgid "Tax Invoice"
 msgstr ""
 
 #. module: l10n_th
+#: model:ir.actions.server,name:l10n_th.action_download_50_tawi_zip
+msgid "Thailand: Print 50 tawi"
+msgstr ""
+
+#. module: l10n_th
+#: model:ir.model.fields,field_description:l10n_th.field_res_company__l10n_th_is_vat_registered
+msgid "Thailand: VAT Registered"
+msgstr ""
+
+#. module: l10n_th
 #. odoo-python
 #: code:addons/l10n_th/models/res_bank.py:0
 msgid ""
@@ -553,6 +603,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_th.field_res_partner__l10n_th_title
 #: model:ir.model.fields,field_description:l10n_th.field_res_users__l10n_th_title
 msgid "Title"
+msgstr ""
+
+#. module: l10n_th
+#: model_terms:ir.ui.view,arch_db:l10n_th.res_company_form_inherit_l10n_th
+msgid "VAT Registered"
 msgstr ""
 
 #. module: l10n_th
