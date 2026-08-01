@@ -48,7 +48,7 @@
 
                             <!-- Confidence badge -->
                             <div class="mt-1 text-end">
-                                <t t-if="record.ai_confidence.raw_value < 0.8">
+                                <t t-if="0.8 > record.ai_confidence.raw_value">
                                     <span class="badge text-bg-warning">Low Confidence</span>
                                 </t>
                                 <t t-if="record.ai_needs_review.raw_value">
@@ -120,7 +120,7 @@
                 <separator/>
                 <!-- Quality filters -->
                 <filter string="Low Confidence" name="low_confidence"
-                        domain="[('ai_confidence', '<', 0.8), ('ai_confidence', '!=', False)]"/>
+                        domain="['!', ('ai_confidence', '>=', 0.8)]"/>
                 <filter string="Needs Review" name="needs_review"
                         domain="[('ai_needs_review', '=', True)]"/>
 
