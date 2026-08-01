@@ -19,14 +19,24 @@ export function initElementForEdition(element, options = {}) {
     // During `convert_inline`, image elements may receive `width` and `height` attributes,
     // along with inline styles. These attributes force specific dimensions, which breaks
     // the fallback to default sizing. We remove them here to allow proper resizing behavior.
-    // The attributes will be re-applied on save.
-    for (const img of element.querySelectorAll("img[width], img[height]")) {
-        const width = img.getAttribute("width");
-        const height = img.getAttribute("height");
-        img.removeAttribute("height");
-        img.removeAttribute("width");
-        img.style.setProperty("width", isNaN(width) ? width : `${width}px`);
-        img.style.setProperty("height", isNaN(height) ? height : `${height}px`);
+    // The attributes are re-applied on save by `convert_inline` itself.
+    //
+    // Opt-in, because only that pipeline puts them back. Applied to every
+    // editable it also rewrites the INTRINSIC dimensions an author wrote, and
+    // nothing restores those: the image is left pinned to a fixed pixel size,
+    // permanently, since `img[width]` no longer matches on the next edit. Those
+    // attributes are how a browser reserves the box before the image loads, and
+    // an inline `width` beats the stylesheet rule that keeps the image
+    // responsive.
+    if (options.removeForcedImageDimensions) {
+        for (const img of element.querySelectorAll("img[width], img[height]")) {
+            const width = img.getAttribute("width");
+            const height = img.getAttribute("height");
+            img.removeAttribute("height");
+            img.removeAttribute("width");
+            img.style.setProperty("width", isNaN(width) ? width : `${width}px`);
+            img.style.setProperty("height", isNaN(height) ? height : `${height}px`);
+        }
     }
 }
 

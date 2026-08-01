@@ -32,6 +32,8 @@ export class HtmlMailField extends HtmlField {
     getConfig() {
         const config = super.getConfig();
         config.dropImageAsAttachment = false;
+        // `getEditorContent` runs `toInline`, which re-applies the attributes.
+        config.removeForcedImageDimensions = true;
         config.Plugins = config.Plugins.filter((plugin) => plugin !== ColumnPlugin);
         return config;
     }

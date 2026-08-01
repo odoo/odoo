@@ -23,6 +23,9 @@ import { fixInvalidHTML, initElementForEdition } from "./utils/sanitize";
  * @typedef { Object } EditorConfig
  * @property { string } [content]
  * @property { boolean } [allowInlineAtRoot]
+ * @property { boolean } [removeForcedImageDimensions] Strip `width`/`height`
+ *           attributes off images into an inline pixel style. Only for editables
+ *           whose save path re-applies them (`convert_inline`).
  * @property { string } [baseContainer]
  * @property { PluginConstructor[] } [Plugins]
  * @property { boolean } [disableFloatingToolbar]
@@ -106,7 +109,10 @@ export class Editor {
         this.preparePlugins();
         editable.setAttribute("contenteditable", true);
         editable.setAttribute("translate", "no");
-        initElementForEdition(editable, { allowInlineAtRoot: !!this.config.allowInlineAtRoot });
+        initElementForEdition(editable, {
+            allowInlineAtRoot: !!this.config.allowInlineAtRoot,
+            removeForcedImageDimensions: !!this.config.removeForcedImageDimensions,
+        });
         editable.classList.add("odoo-editor-editable");
         if (this.config.classList) {
             editable.classList.add(...this.config.classList);
