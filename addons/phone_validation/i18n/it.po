@@ -7,13 +7,14 @@
 # Martin Trigaux, 2022
 # Sebastiano Picchi, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025, 2026.
+# "Marianna Ciofani (cima)" <cima@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:37+0000\n"
-"PO-Revision-Date: 2026-06-29 09:57+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"PO-Revision-Date: 2026-07-31 11:01+0000\n"
+"Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
 "Language-Team: Italian <https://translate.odoo.com/projects/odoo-19/"
 "phone_validation/it/>\n"
 "Language: it\n"
@@ -158,7 +159,7 @@ msgid ""
 "Field used to store sanitized phone number. Helps speeding up searches and "
 "comparisons."
 msgstr ""
-"Campo usato per memorizzare il numero di telefono pulito. Aiuta a "
+"Campo usato per memorizzare il numero di telefono normalizzato. Aiuta a "
 "velocizzare le ricerche e i confronti."
 
 #. module: phone_validation
@@ -213,8 +214,8 @@ msgid ""
 "If the sanitized phone number is on the blacklist, the contact won't receive "
 "mass mailing sms anymore, from any list"
 msgstr ""
-"Se il numero di telefono pulito è in lista nera, il contatto non sarà più "
-"soggetto all'invio massivo di SMS, da nessuna lista."
+"Se il numero di telefono normalizzato è in lista nera, il contatto non sarà "
+"più soggetto all'invio massivo di SMS, da nessuna lista"
 
 #. module: phone_validation
 #. odoo-python
@@ -243,9 +244,9 @@ msgid ""
 "distinguish which number is blacklisted             when there is both a "
 "mobile and phone field in a model."
 msgstr ""
-"Indica se un numero di telefono pulito in lista nera è un fisso. Aiuta a "
-"distinguere qual è il numero in lista nera             quando in un modello "
-"sono presenti sia il campo cellulare che telefono."
+"Indica se un numero di telefono normalizzato in lista nera è un fisso. Aiuta "
+"a distinguere qual è il numero in lista nera             quando in un "
+"modello sono presenti sia il campo cellulare che telefono."
 
 #. module: phone_validation
 #. odoo-python
@@ -396,7 +397,7 @@ msgstr "Rimozione telefono da lista nera"
 #: model:ir.model.fields,field_description:phone_validation.field_res_partner__phone_sanitized
 #: model:ir.model.fields,field_description:phone_validation.field_res_users__phone_sanitized
 msgid "Sanitized Number"
-msgstr "Numero pulito"
+msgstr "Numero normalizzato"
 
 #. module: phone_validation
 #. odoo-python

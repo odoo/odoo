@@ -21,8 +21,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-17 17:37+0000\n"
-"PO-Revision-Date: 2026-07-02 00:19+0000\n"
-"Last-Translator: Shinnosuke Morita <morita@quartile.co>\n"
+"PO-Revision-Date: 2026-07-31 11:03+0000\n"
+"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/account/"
 "ja/>\n"
 "Language: ja\n"
@@ -7253,7 +7253,7 @@ msgstr "POS受領可能なデフォルトの勘定"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_purchase_receipt_fiscal_position_id
 msgid "Default Purchase Receipt Fiscal Position"
-msgstr "デフォルトの購入領収書における会計ポジション"
+msgstr "仕入先領収書のデフォルト会計ポジション"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_purchase_tax_id
@@ -8062,13 +8062,13 @@ msgstr "ドラフト仮請求書"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Draft Purchase Receipt"
-msgstr "ドラフト購買領収書"
+msgstr "仕入先領収書(ドラフト)"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Draft Sales Receipt"
-msgstr "ドラフト販売領収書"
+msgstr "売上領収書(ドラフト)"
 
 #. module: account
 #. odoo-python
@@ -14826,13 +14826,13 @@ msgstr "購買ロック日"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__move_type__in_receipt
 msgid "Purchase Receipt"
-msgstr "仕入伝票"
+msgstr "仕入先領収書"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Purchase Receipt Created"
-msgstr "仕入伝票が作成されました"
+msgstr "仕入先領収書が作成されました"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
@@ -21987,8 +21987,8 @@ msgid ""
 "{{ object.company_id.name }} Self-billing credit note (Ref {{ object.name or "
 "'n/a' }})"
 msgstr ""
-"{{ object.company_id.name }} Self-billingクレジットノート (参照番号 "
-"{{ object.name or 'n/a' }})"
+"{{ object.company_id.name }} セルフビリング・クレジットノート (参照番号 {{ "
+"object.name or 'n/a' }})"
 
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_self_billing_invoice
@@ -21996,8 +21996,8 @@ msgid ""
 "{{ object.company_id.name }} Self-billing invoice (Ref {{ object.name or 'n/"
 "a' }})"
 msgstr ""
-"{{ object.company_id.name }} Self-billing請求書 (参照番号 {{ object.name or "
-"'n/a' }})"
+"{{ object.company_id.name }}支払明細書 (セルフビリング) (参照番号 {{ "
+"object.name or 'n/a' }})"
 
 #~ msgid "PEPPOL Electronic Invoicing"
 #~ msgstr "PEPPOL電子請求"

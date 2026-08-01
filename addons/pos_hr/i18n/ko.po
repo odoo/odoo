@@ -9,11 +9,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"POT-Creation-Date: 2026-07-31 17:37+0000\n"
 "PO-Revision-Date: 2026-06-29 14:28+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Korean <https://translate.odoo.com/projects/odoo-19/pos_hr/"
-"ko/>\n"
+"Language-Team: Korean <https://translate.odoo.com/projects/odoo-19/pos_hr/ko/"
+">\n"
 "Language: ko\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -66,8 +66,8 @@ msgid ""
 "Cannot generate report per employee: only one employee logged in during this "
 "session."
 msgstr ""
-"직원별 보고서를 생성할 수 없습니다: 해당 세션에는 한 명만 직원 로그인이 "
-"가능합니다."
+"직원별 보고서를 생성할 수 없습니다: 해당 세션에는 한 명만 직원 로그인이 가능"
+"합니다."
 
 #. module: pos_hr
 #. odoo-javascript
@@ -106,10 +106,20 @@ msgid "Config Settings"
 msgstr "환경 설정"
 
 #. module: pos_hr
+#: model:ir.model,name:pos_hr.model_res_partner
+msgid "Contact"
+msgstr ""
+
+#. module: pos_hr
 #. odoo-javascript
 #: code:addons/pos_hr/static/src/app/components/popups/closing_popup/closing_popup.xml:0
 msgid "Counted"
 msgstr "계산됨"
+
+#. module: pos_hr
+#: model:ir.model,website_form_label:pos_hr.model_res_partner
+msgid "Create a Customer"
+msgstr ""
 
 #. module: pos_hr
 #. odoo-javascript
@@ -135,6 +145,7 @@ msgstr "취소"
 #: model:ir.model.fields,field_description:pos_hr.field_report_pos_hr_single_employee_sales_report__display_name
 #: model:ir.model.fields,field_description:pos_hr.field_report_pos_order__display_name
 #: model:ir.model.fields,field_description:pos_hr.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:pos_hr.field_res_partner__display_name
 msgid "Display Name"
 msgstr "표시명"
 
@@ -207,6 +218,7 @@ msgstr "PIN을 입력하세요"
 #: model:ir.model.fields,field_description:pos_hr.field_report_pos_hr_single_employee_sales_report__id
 #: model:ir.model.fields,field_description:pos_hr.field_report_pos_order__id
 #: model:ir.model.fields,field_description:pos_hr.field_res_config_settings__id
+#: model:ir.model.fields,field_description:pos_hr.field_res_partner__id
 msgid "ID"
 msgstr "ID"
 
@@ -386,8 +398,8 @@ msgid ""
 "You cannot delete an employee that may be used in an active PoS session, "
 "close the session(s) first: \n"
 msgstr ""
-"활성화 중인 PoS 세션을 사용하는 사원은 삭제할 수가 없으니, 먼저 세션(들)을 "
-"닫아주세요: \n"
+"활성화 중인 PoS 세션을 사용하는 사원은 삭제할 수가 없으니, 먼저 세션(들)을 닫"
+"아주세요: \n"
 
 #~ msgid "If left empty, only Odoo users have extended rights in PoS"
 #~ msgstr "비워두면 Odoo 사용자만 PoS에서 확장된 권한을 갖게 됩니다"

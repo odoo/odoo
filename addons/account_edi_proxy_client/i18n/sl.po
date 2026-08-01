@@ -3,13 +3,14 @@
 # * account_edi_proxy_client
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025, 2026.
+# NEDŽAD BEUS <nedzad.beus@implex.si>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:36+0000\n"
-"PO-Revision-Date: 2026-06-30 05:28+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2026-07-31 11:03+0000\n"
+"Last-Translator: NEDŽAD BEUS <nedzad.beus@implex.si>\n"
 "Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-19/"
 "account_edi_proxy_client/sl/>\n"
 "Language: sl\n"
@@ -110,6 +111,7 @@ msgstr "EDI Identifikacija"
 #. module: account_edi_proxy_client
 #. odoo-python
 #: code:addons/account_edi_proxy_client/models/account_edi_proxy_user.py:0
+#, fuzzy
 msgid ""
 "Failed to connect to Odoo Access Point server. This might be due to another "
 "connection to Odoo Access Point server. It can occur if you have duplicated "
@@ -117,6 +119,11 @@ msgid ""
 "\n"
 "If you are not sure how to fix this, please contact our support."
 msgstr ""
+"Neuspešna povezava s strežnikom Odoo Access Point. To je morda posledica "
+"druge povezave s strežnikom Odoo Access Point. Do tega lahko pride, če ste "
+"podvojili svojo bazo podatkov. \n"
+"\n"
+"Če niste prepričani, kako to odpraviti, se obrnite na našo podporo."
 
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__id
@@ -211,11 +218,15 @@ msgstr "To podjetje ima za to vrsto EDI že ustvarjenega aktivnega uporabnika."
 
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,help:account_edi_proxy_client.field_account_edi_proxy_client_user__is_token_out_of_sync
+#, fuzzy
 msgid ""
 "This field is used to indicate that the edi user token is out of sync with "
 "the proxy server. It is set to True when the token needs to be refreshed or "
 "updated."
 msgstr ""
+"To polje se uporablja za označevanje, da je uporabniški žeton EDI izven "
+"sinhronizacije s proxy strežnikom. Nastavi se na True, kadar je potrebno "
+"žeton osvežiti ali posodobiti."
 
 #. module: account_edi_proxy_client
 #: model:ir.model.constraint,message:account_edi_proxy_client.constraint_account_edi_proxy_client_user_unique_id_client
@@ -224,13 +235,15 @@ msgstr "Ta id_client se že uporablja pri drugem uporabniku."
 
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__is_token_out_of_sync
+#, fuzzy
 msgid "Token Out of Sync"
-msgstr ""
+msgstr "Žeton ni sinhroniziran"
 
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__token_sync_version
+#, fuzzy
 msgid "Token Sync Version"
-msgstr ""
+msgstr "Različica sinhronizacije žetona"
 
 #~ msgid ""
 #~ "Invalid signature for request. This might be due to another connection to "

@@ -13,13 +13,14 @@
 # Vida Potočnik <vida.potocnik@mentis.si>, 2022
 # Martin Trigaux, 2022
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025, 2026.
+# NEDŽAD BEUS <nedzad.beus@implex.si>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:36+0000\n"
-"PO-Revision-Date: 2026-07-01 22:42+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2026-07-31 11:03+0000\n"
+"Last-Translator: NEDŽAD BEUS <nedzad.beus@implex.si>\n"
 "Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-19/"
 "account_check_printing/sl/>\n"
 "Language: sl\n"
@@ -246,6 +247,7 @@ msgstr "Ročno oštevilčevanje"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_payment__payment_method_line_id
+#, fuzzy
 msgid ""
 "Manual: Pay or Get paid by any method outside of Odoo.\n"
 "Payment Providers: Each payment provider has its own Payment Method. Request "
@@ -262,6 +264,19 @@ msgid ""
 "U.S. ISO20022: Pay in the US by submitting an ISO20022 file to your bank. "
 "Module account_iso20022 is necessary.\n"
 msgstr ""
+"Ročno: Plačajte ali prejemajte plačila s katero koli metodo izven Odoo.\n"
+"Plačilni ponudniki: Vsak ponudnik plačil ima svoj plačilni način. Zahtevajte "
+"transakcijo na kartico s pomočjo plačilnega žetona, ki ga je partner ob "
+"nakupu ali naročilu prek spleta shranil.\n"
+"Ček: Plačujte račune s čekom in ga natisnite iz Odoo.\n"
+"Skupinski polog: Zberite več strankinih čekov hkrati ter ustvarite in "
+"pošljite skupinski polog v banko. Modul account_batch_payment je potreben.\n"
+"SEPA Credit Transfer: Plačajte v območju SEPA z oddajo datoteke SEPA Credit "
+"Transfer v banko. Modul account_iso20022 je potreben.\n"
+"SEPA Direct Debit: Plačujte v območju SEPA na podlagi mandata, ki vam ga je "
+"odobril partner. Modul account_iso20022 je potreben.\n"
+"ZDA ISO20022: Plačajte v ZDA z oddajo datoteke ISO20022 v banko. Modul "
+"account_iso20022 je potreben.\n"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_multi_stub
@@ -400,10 +415,13 @@ msgstr ""
 #. module: account_check_printing
 #. odoo-python
 #: code:addons/account_check_printing/models/account_journal.py:0
+#, fuzzy
 msgid ""
 "The check number you entered (%(num)s) exceeds the maximum allowed value of %"
 "(max)d. Please enter a smaller number."
 msgstr ""
+"Vnesena številka čeka (%(num)s) presega največjo dovoljeno vrednost %(max)d. "
+"Vnesite manjšo številko."
 
 #. module: account_check_printing
 #. odoo-python
