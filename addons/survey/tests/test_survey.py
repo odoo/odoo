@@ -65,9 +65,12 @@ class TestSurveyInternals(common.TestSurveyCommon, MailCase):
             'attempts_limit': 4,
         })
 
-        all_attempts = self.env['survey.user_input']
-        for _i in range(4):
-            all_attempts |= self._add_answer(test_survey, self.survey_user.partner_id, state='done')
+        all_attempts = self.env['survey.user_input'].create([{
+            'survey_id': test_survey.id,
+            'partner_id': self.survey_user.partner_id.id,
+            'email': False,
+            'state': 'done',
+        } for _ in range(4)])
 
         # read both fields at once to allow computing their values in batch
         attempts_results = all_attempts.read(['attempts_number', 'attempts_count'])

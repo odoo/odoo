@@ -16,6 +16,7 @@ class TestMailComposerMassMailing(TestMailComposer, common.TestMassMailCommon):
     @freeze_time('2025-08-06 15:02:00')
     def test_mail_composer_mailing_creation(self):
         """Check mailing configuration created through the mail composer."""
+        subjects = {}
         for use_exclusion_list in (True, False):
             mass_mailing_subject = f'Test Create Mass Mailing From Composer (use_exclusion_list: {use_exclusion_list})'
             composer = self.env['mail.compose.message'].with_context(
@@ -27,7 +28,11 @@ class TestMailComposerMassMailing(TestMailComposer, common.TestMassMailCommon):
                 'use_exclusion_list': use_exclusion_list,
             })
             composer._action_send_mail()
-            mailing = self.env['mailing.mailing'].search([('subject', '=', mass_mailing_subject)])
+            subjects[mass_mailing_subject] = use_exclusion_list
+        mailings = self.env['mailing.mailing'].search([('subject', 'in', list(subjects))])
+        mailings_by_subject = {m.subject: m for m in mailings}
+        for mass_mailing_subject, use_exclusion_list in subjects.items():
+            mailing = mailings_by_subject[mass_mailing_subject]
             self.assertTrue(mailing)
             self.assertEqual(mailing.body_html, '<p>Body</p>')
             self.assertEqual(mailing.mailing_domain, f"[('id', 'in', {self.test_records.ids})]")
