@@ -144,3 +144,20 @@ class TestViesIAP(HttpCase):
 
         self.env.ref('l10n_eu_account_vies.vies_iap_check_update').method_direct_trigger()
         self.assertTrue(self.partner.vies_valid)
+
+    def test_vies_valid_child_computed_before_parent_in_batch(self):
+        """
+        A child sharing its parent's VAT must end up with the parent's real
+        vies_valid even if the child happens to be processed before the
+        parent in a batch.
+        """
+        self.mock_return_status = "valid"
+        parent = self.env['res.partner'].create({'name': 'Parent Co'})
+        child = self.env['res.partner'].create({
+            'name': 'Child Address',
+            'parent_id': parent.id,
+        })
+        child.vat = self.RANDOM_VAT
+        parent.vat = self.RANDOM_VAT
+        self.assertTrue(child.vies_valid)
+        self.assertTrue(parent.vies_valid)
