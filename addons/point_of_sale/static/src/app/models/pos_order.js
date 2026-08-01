@@ -48,6 +48,10 @@ export class PosOrder extends PosOrderAccounting {
         if (!this.config_id) {
             this.config_id = this.config;
         }
+
+        if (this.uiState) {
+            this.uiState.displayed = this.state !== "cancel" && this.uiState.displayed;
+        }
     }
 
     initState() {
@@ -55,7 +59,7 @@ export class PosOrder extends PosOrderAccounting {
         // !!Keep all uiState in one object!!
         this.uiState = {
             lineToRefund: {},
-            displayed: this.state !== "cancel",
+            displayed: true,
             booked: false,
             screen_data: {},
             selected_orderline_uuid: undefined,

@@ -62,28 +62,46 @@ export default class DevicesSynchronisation {
      * @param {Object} data.static_records - Records data that need to be synchronized.
      */
     async collect(data) {
-        const { static_records, deleted_record_ids, session_id, device_identifier } = data;
-        const isSameDevice = isSamePosDevice(session_id, device_identifier, this.pos);
-
-        logPosMessage(
-            "Synchronisation",
-            "collect",
-            `Incoming synchronization from ${isSameDevice ? "this" : "another"} device`,
-            CONSOLE_COLOR
-        );
+        const {
+            static_records,
+            deleted_record_ids,
+            deleted_records,
+            session_id,
+            device_identifier,
+            login_number,
+        } = data;
+        const deviceId = device_identifier || login_number;
+        const isSameDevice = isSamePosDevice(session_id, deviceId, this.pos);
 
         if (isSameDevice) {
             return;
         }
 
-        if (Object.keys(static_records).length) {
-            this.processStaticRecords(static_records);
-        }
-        if (deleted_record_ids && Object.keys(deleted_record_ids).length) {
-            this.processDeletedRecords(deleted_record_ids);
+        // `static_records` contains fully read data objects — `records` only contains raw IDs.
+        const incomingRecords = static_records || {};
+        const incomingDeleted = { ...(deleted_record_ids || {}), ...(deleted_records || {}) };
+        const hasRecords = Object.keys(incomingRecords).length > 0;
+        const hasDeleted = Object.keys(incomingDeleted).length > 0;
+
+        if (!hasRecords && !hasDeleted) {
+            return await this.readDataFromServer();
         }
 
-        return await this.readDataFromServer();
+        if (hasRecords) {
+            const missing = await this.pos.data.missingRecursive(incomingRecords);
+            const { dynamicR, staticR } = this._sortRecordsByModelType(missing);
+
+            this._decorateOrderRecords(dynamicR["pos.order"]);
+
+            this.processStaticRecords(staticR);
+            await this.processDynamicRecords(dynamicR);
+        }
+
+        if (hasDeleted) {
+            this.processDeletedRecords(incomingDeleted);
+        }
+
+        await this._triggerUIRefresh();
     }
 
     /**
@@ -113,34 +131,18 @@ export default class DevicesSynchronisation {
 
         if (Object.keys(response.dynamic_records).length) {
             const missing = await this.pos.data.missingRecursive(response.dynamic_records);
-            const { dynamicR, staticR } = Object.entries(missing).reduce(
-                (acc, [model, records]) => {
-                    if (this.dynamicModels.has(model)) {
-                        acc.dynamicR[model] = records;
-                    } else if (this.staticModels.has(model)) {
-                        acc.staticR[model] = records;
-                    }
-                    return acc;
-                },
-                { dynamicR: {}, staticR: {} }
-            );
+            const { dynamicR, staticR } = this._sortRecordsByModelType(missing);
 
+            this._decorateOrderRecords(dynamicR["pos.order"]);
             this.processStaticRecords(staticR);
-            const res = await this.processDynamicRecords(dynamicR);
-            if (res && res["pos.order"].length > 0) {
-                const config = this.pos.config;
-                const session = this.pos.session;
-
-                for (const order of res["pos.order"]) {
-                    order.config_id = config;
-                    order.session_id = session;
-                }
-            }
+            await this.processDynamicRecords(dynamicR);
         }
 
         if (Object.keys(response.deleted_record_ids).length) {
             this.processDeletedRecords(response.deleted_record_ids);
         }
+
+        await this._triggerUIRefresh();
     }
 
     /**
@@ -169,7 +171,7 @@ export default class DevicesSynchronisation {
     processDeletedRecords(deletedRecords) {
         for (const [model, ids] of Object.entries(deletedRecords)) {
             const records = this.models[model].readMany(ids);
-            this.models[model].deleteMany(records.filter(Boolean), { silent: true });
+            this.models[model].deleteMany(records.filter(Boolean));
         }
     }
 
@@ -242,8 +244,54 @@ export default class DevicesSynchronisation {
 
         return { domain: domainByModel, recordIds: recordIdsByModel };
     }
+    /**
+     * Sort records into dynamic and static categories based on model type.
+     */
+    _sortRecordsByModelType(records) {
+        const dynamicR = {};
+        const staticR = {};
+
+        for (const [model, data] of Object.entries(records)) {
+            if (this.dynamicModels.has(model)) {
+                dynamicR[model] = data;
+            } else {
+                staticR[model] = data;
+            }
+        }
+
+        return { dynamicR, staticR };
+    }
+
+    /**
+     * Inject current session and config into order records so they
+     * are recognized by the Ticket Screen's filtering logic.
+     */
+    _decorateOrderRecords(orders) {
+        if (!orders?.length) {
+            return;
+        }
+        const { id: configId } = this.pos.config;
+        const { id: sessionId } = this.pos.session;
+        for (const order of orders) {
+            order.config_id = configId;
+            order.session_id = sessionId;
+        }
+    }
+
+    /**
+     * Toggle loading state to force Owl to re-render the UI.
+     */
+    async _triggerUIRefresh() {
+        this.pos.loadingOrderState = true;
+        await new Promise((resolve) => setTimeout(resolve, 0));
+        this.pos.loadingOrderState = false;
+    }
 }
 
 export function isSamePosDevice(session_id, device_identifier, posStore) {
-    return odoo.pos_session_id != session_id || device_identifier == posStore.device.identifier;
+    if (device_identifier === "0" || device_identifier === 0) {
+        return false;
+    }
+
+    return device_identifier === posStore.device.identifier;
 }

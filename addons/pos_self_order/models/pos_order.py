@@ -54,10 +54,26 @@ class PosOrder(models.Model):
         self._send_notification(self)
 
     def _send_notification(self, order_ids):
-        config_ids = order_ids.config_id
-        for config in config_ids:
-            config.notify_synchronisation(config.current_session_id.id, self.env.context.get('device_identifier', 0))
+        for config, orders in order_ids.grouped('config_id').items():
+            records = orders._get_sync_records()
+            # Remove empty lists from records to prevent backend crashes in `_load_pos_data_read`
+            records = {k: v for k, v in records.items() if v}
+
+            session_id = config.current_session_id.id
+            device_id = self.env.context.get('device_identifier', 0)
+
+            config.notify_synchronisation(session_id, device_id, records=records)
             config._notify('ORDER_STATE_CHANGED', {})
+
+            # Broadcast to all active restaurant POS in the same company for real-time Kiosk sync
+            restaurants = self.env['pos.config'].search([
+                ('company_id', '=', config.company_id.id),
+                ('module_pos_restaurant', '=', True),
+                ('id', '!=', config.id),
+                ('session_ids.state', '=', 'opened'),
+            ])
+            for resto in restaurants:
+                resto.notify_synchronisation(resto.current_session_id.id, 0, records)
 
     def _send_self_order_receipt(self):
         self.ensure_one()
