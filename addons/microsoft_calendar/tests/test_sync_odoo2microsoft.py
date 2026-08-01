@@ -70,7 +70,7 @@ class TestSyncOdoo2Microsoft(TransactionCase):
             'login': 'jean-luc@opoo.com',
             'partner_id': partner.id,
         })
-        user.stop_microsoft_synchronization()
+        user.with_user(user).stop_microsoft_synchronization()
         # In case of full sync, limit to a range of 1y in past and 1y in the future by default
         event = self.env['calendar.event'].with_user(user).create({
             'microsoft_id': microsoft_id,
