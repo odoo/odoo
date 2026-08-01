@@ -656,8 +656,10 @@ class AccountMove(models.Model):
             abs(self.amount_total / self.amount_total_signed), precision_digits=5,
         ) if convert_to_euros and self.invoice_line_ids and not self.currency_id.is_zero(self.amount_total_signed) else None
 
-        # Reduce downpayment views to a single recordset
-        downpayment_moves = self.invoice_line_ids._get_downpayment_lines().move_id
+        # a down payment invoice/credit note referencing its own down payment line must not
+        # list every other move ever created against that same sale order line, including itself.
+        downpayment_deduction_lines = self.invoice_line_ids.filtered(lambda line: line.price_subtotal < 0)
+        downpayment_moves = downpayment_deduction_lines._get_downpayment_lines().move_id - self
 
         return {
             'record': self,
