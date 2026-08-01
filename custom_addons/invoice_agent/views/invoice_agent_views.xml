@@ -102,9 +102,8 @@
         <field name="priority" eval="99"/>
         <field name="arch" type="xml">
             <search string="AI Agent Queue">
-                <!-- Text search across name, reference, partner -->
-                <field name="name" string="Invoice Number"
-                       filter_domain="['|', '|', ('name', 'ilike', self), ('ref', 'ilike', self), ('partner_id', 'child_of', self)]"/>
+                <!-- 1. Fields first -->
+                <field name="name" string="Invoice"/>
                 <field name="partner_id"/>
                 <field name="amount_total"/>
                 <field name="ai_confidence"/>
