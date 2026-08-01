@@ -131,13 +131,7 @@ services:
     volumes:
       - certbot-www:/var/www/certbot
       - certbot-conf:/etc/letsencrypt
-    entrypoint: >
-      sh -c "trap exit TERM; while :; do
-        certbot renew --quiet --webroot -w /var/www/certbot
-          && nginx -s reload 2>/dev/null || true;
-        sleep 12h & wait $${!};
-      done;"
-
+    entrypoint: "/bin/sh -c 'trap exit TERM; while true; do certbot renew --quiet --webroot -w /var/www/certbot; sleep 12h & wait $${!}; done;'"
 volumes:
   odoo-db-data:
     name: odoo-db-data
