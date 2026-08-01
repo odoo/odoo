@@ -205,8 +205,16 @@ class ResPartner(models.Model):
             self.vies_valid = False
             return
 
+<<<<<<< 9b26cc0cf68a44fa900a98cfadeb87bc78ea29ca
         for partner in self:
             if not partner.vat:
+||||||| 167e83374756c4c38bc46eb96763dfbd8cb8de6f
+        for partner in self:
+            if not partner.vies_vat_to_check:
+=======
+        for partner in self.sorted('parent_id'):
+            if not partner.vies_vat_to_check:
+>>>>>>> 2a551c0ade1662df674182f9d702550e6c8c3a58
                 partner.vies_valid = False
                 continue
             if partner.parent_id and partner.parent_id.vat == partner.vat:
