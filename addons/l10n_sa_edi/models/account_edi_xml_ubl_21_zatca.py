@@ -326,8 +326,13 @@ class AccountEdiXmlUbl_21Zatca(models.AbstractModel):
 
         document_node['cac:TaxTotal'] = [document_node['cac:TaxTotal']]
 
-        self._add_tax_total_node_in_company_currency(document_node, vals)
-        document_node['cac:TaxTotal'][1]['cac:TaxSubtotal'] = None
+        # BR-KSA-97/BT-111: the TaxTotal in accounting currency is only required (and only valid)
+        # when the invoice currency differs from the company's accounting currency (i.e. non-SAR
+        # invoices). Adding it unconditionally results in two TaxTotal nodes with the same currency
+        # and amount, which ZATCA rejects as a duplicate TaxTotal.
+        if vals['currency_id'] != vals['company_currency_id']:
+            self._add_tax_total_node_in_company_currency(document_node, vals)
+            document_node['cac:TaxTotal'][1]['cac:TaxSubtotal'] = None
 
     def _add_invoice_monetary_total_nodes(self, document_node, vals):
         super()._add_invoice_monetary_total_nodes(document_node, vals)
