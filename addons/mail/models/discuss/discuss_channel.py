@@ -1214,9 +1214,18 @@ class DiscussChannel(models.Model):
     def channel_pin(self, pinned=False):
         self.ensure_one()
         member = self.env['discuss.channel.member'].search(
-            [('partner_id', '=', self.env.user.partner_id.id), ('channel_id', '=', self.id), ('is_pinned', '!=', pinned)])
+            [('partner_id', '=', self.env.user.partner_id.id), ('channel_id', '=', self.id)])
         if member:
-            member.write({'unpin_dt': False if pinned else fields.Datetime.now()})
+            if not pinned:
+                last_message = self.env["mail.message"].search(
+                    [("model", "=", "discuss.channel"), ("res_id", "=", self.id)],
+                    order="id DESC",
+                    limit=1,
+                )
+                if last_message:
+                    member._mark_as_read(last_message.id)
+            if member.is_pinned != pinned:
+                member.write({'unpin_dt': False if pinned else fields.Datetime.now()})
         if not pinned:
             self.env.user._bus_send_store(self, {"close_chat_window": True, "is_pinned": False})
         else:
