@@ -870,8 +870,13 @@ class AccountMove(models.Model):
         # Aggregated linked invoices
         linked_moves = (self._get_reconciled_invoices() | self.reversed_entry_id).filtered(lambda move: move.date <= self.date)
 
-        # Reduce downpayment views to a single recordset
-        linked_moves |= self.invoice_line_ids._get_downpayment_lines().move_id
+        # Reduce downpayment views to a single recordset.
+        # Only lines actually deducting a down payment (negative subtotal, mirroring the
+        # 'downpayment_lines' detection above) should pull in the down payment invoice(s):
+        # a down payment invoice/credit note referencing its own down payment line must not
+        # list every other move ever created against that same sale order line, including itself.
+        downpayment_deduction_lines = self.invoice_line_ids.filtered(lambda line: line.price_subtotal < 0)
+        linked_moves |= downpayment_deduction_lines._get_downpayment_lines().move_id - self
 
         # Withholding tax amounts.
 
