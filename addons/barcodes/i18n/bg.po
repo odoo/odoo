@@ -11,13 +11,13 @@
 # Maria Boyadjieva <marabo2000@gmail.com>, 2023
 # Venelin Stoykov, 2024
 # Veselina Slavkova, 2025
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:37+0000\n"
-"PO-Revision-Date: 2025-12-30 17:21+0000\n"
+"PO-Revision-Date: 2026-08-01 14:22+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Bulgarian <https://translate.odoo.com/projects/odoo-17/"
 "barcodes/bg/>\n"
@@ -26,7 +26,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: barcodes
 #. odoo-python
@@ -68,7 +68,7 @@ msgstr ""
 #. module: barcodes
 #: model_terms:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
 msgid "Add a new barcode nomenclature"
-msgstr ""
+msgstr "Добави нова номенклатура за баркодове"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__alias
@@ -106,7 +106,7 @@ msgstr "Баркод"
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_barcodes_barcode_events_mixin
 msgid "Barcode Event Mixin"
-msgstr ""
+msgstr "Barcode Event Mixin"
 
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_barcode_nomenclature
@@ -207,6 +207,8 @@ msgid ""
 "In order to use barcodes.barcode_events_mixin, method on_barcode_scanned "
 "must be implemented"
 msgstr ""
+"За да използвате barcodes.barcode_events_mixin, методът on_barcode_scanned "
+"трябва да бъде имплементиран"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__write_uid
@@ -245,13 +247,24 @@ msgid ""
 "<i>must</i> show these digits as\n"
 "                                zeroes."
 msgstr ""
+"Шаблоните могат също да дефинират как числови стойности, като тегло или "
+"цена, могат да бъдат\n"
+"                                кодирани в баркода. Те се обозначават с "
+"<code>{NNN}</code>, където N-овете\n"
+"                                определят къде се кодират цифрите на "
+"числото. Поддържат се и десетични числа, като\n"
+"                                десетичните знаци се обозначават с D, "
+"например <code>{NNNDD}</code>. В тези случаи\n"
+"                                полето за баркод в свързаните записи <i>"
+"трябва</i> да показва тези цифри като\n"
+"                                нули."
 
 #. module: barcodes
 #. odoo-javascript
 #: code:addons/barcodes/static/src/components/barcode_scanner.js:0
 #, python-format
 msgid "Please, Scan again!"
-msgstr ""
+msgstr "Моля, сканирайте отново!"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__name
@@ -291,7 +304,7 @@ msgstr "Шаблонът за съчетаване на баркод"
 #, python-format
 msgid ""
 "The barcode pattern %(pattern)s does not lead to a valid regular expression."
-msgstr ""
+msgstr "Шаблонът на баркод %(pattern)s не води до валиден регулярен израз."
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_nomenclature__rule_ids
@@ -311,6 +324,8 @@ msgid ""
 "There is a syntax error in the barcode pattern %(pattern)s: a rule can only "
 "contain one pair of braces."
 msgstr ""
+"Има синтактична грешка в шаблона на баркод %(pattern)s: едно правило може да "
+"съдържа само една двойка скоби."
 
 #. module: barcodes
 #. odoo-python
@@ -320,6 +335,8 @@ msgid ""
 "There is a syntax error in the barcode pattern %(pattern)s: braces can only "
 "contain N's followed by D's."
 msgstr ""
+"Има синтактична грешка в шаблона на баркод %(pattern)s: скобите могат да "
+"съдържат само N, последвани от D."
 
 #. module: barcodes
 #. odoo-python
@@ -327,7 +344,7 @@ msgstr ""
 #, python-format
 msgid ""
 "There is a syntax error in the barcode pattern %(pattern)s: empty braces."
-msgstr ""
+msgstr "Има синтактична грешка в шаблона на баркод %(pattern)s: празни скоби."
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__encoding
@@ -380,7 +397,7 @@ msgstr "Единица продукт"
 #: code:addons/barcodes/static/src/barcode_handlers.js:0
 #, python-format
 msgid "Unknown barcode command"
-msgstr ""
+msgstr "Неизвестна баркод команда"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__sequence

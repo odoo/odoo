@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:37+0000\n"
-"PO-Revision-Date: 2026-07-04 09:38+0000\n"
+"PO-Revision-Date: 2026-08-01 14:11+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Hindi <https://translate.odoo.com/projects/odoo-17/barcodes/"
 "hi/>\n"
@@ -46,11 +46,13 @@ msgid ""
 "A barcode nomenclature defines how the point of sale identify and interprets "
 "barcodes"
 msgstr ""
+"एक बारकोड नोमेनक्लेचर यह तय करता है कि पॉइंट ऑफ सेल बारकोड को कैसे पहचानता है और उसकी "
+"व्याख्या कैसे करता है"
 
 #. module: barcodes
 #: model_terms:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
 msgid "Add a new barcode nomenclature"
-msgstr ""
+msgstr "एक नया बारकोड नोमेनक्लेचर जोड़ें"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__alias
@@ -66,12 +68,12 @@ msgstr "हमेशा"
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__name
 msgid "An internal identification for this barcode nomenclature rule"
-msgstr ""
+msgstr "इस बारकोड नोमेनक्लेचर नियम के लिए एक आंतरिक पहचान"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_nomenclature__name
 msgid "An internal identification of the barcode nomenclature"
-msgstr ""
+msgstr "बारकोड नोमेनक्लेचर की एक इंटरनल पहचान"
 
 #. module: barcodes
 #: model:ir.model.fields.selection,name:barcodes.selection__barcode_rule__encoding__any
@@ -88,7 +90,7 @@ msgstr "बारकोड"
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_barcodes_barcode_events_mixin
 msgid "Barcode Event Mixin"
-msgstr ""
+msgstr "बारकोड इवेंट मिक्सिन"
 
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_barcode_nomenclature
@@ -102,7 +104,7 @@ msgstr "बारकोड के नाम रखने के नियम"
 #: model:ir.actions.act_window,name:barcodes.action_barcode_nomenclature_form
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_tree
 msgid "Barcode Nomenclatures"
-msgstr ""
+msgstr "बारकोड नोमेनक्लेचर"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__pattern
@@ -189,6 +191,8 @@ msgid ""
 "In order to use barcodes.barcode_events_mixin, method on_barcode_scanned "
 "must be implemented"
 msgstr ""
+"barcodes.barcode_events_mixin का उपयोग करने के लिए, on_barcode_scanned मेथड को "
+"लागू किया जाना चाहिए."
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__write_uid
@@ -284,7 +288,7 @@ msgstr ""
 #, python-format
 msgid ""
 "The barcode pattern %(pattern)s does not lead to a valid regular expression."
-msgstr ""
+msgstr "बारकोड पैटर्न %(pattern)s एक मान्य रेगुलर लीड नहीं है।"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_nomenclature__rule_ids
@@ -294,7 +298,7 @@ msgstr ""
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__alias
 msgid "The matched pattern will alias to this barcode"
-msgstr ""
+msgstr "मैच किया गया पैटर्न इस बारकोड के लिए एक एलियास के रूप में काम करेगा"
 
 #. module: barcodes
 #. odoo-python
@@ -304,6 +308,8 @@ msgid ""
 "There is a syntax error in the barcode pattern %(pattern)s: a rule can only "
 "contain one pair of braces."
 msgstr ""
+"बार्कोड पैटर्न %(pattern)s में एक सिंटैक्स गड़बड़ी है: एक नियम में केवल एक जोड़ी कोष्ठक हो "
+"सकते हैं।"
 
 #. module: barcodes
 #. odoo-python
@@ -313,6 +319,7 @@ msgid ""
 "There is a syntax error in the barcode pattern %(pattern)s: braces can only "
 "contain N's followed by D's."
 msgstr ""
+"बार्कोड पैटर्न %(pattern)s में एक सिंटैक्स गड़बड़ी है: कोष्ठक में केवल N के बाद D आ सकते हैं।"
 
 #. module: barcodes
 #. odoo-python
@@ -320,7 +327,7 @@ msgstr ""
 #, python-format
 msgid ""
 "There is a syntax error in the barcode pattern %(pattern)s: empty braces."
-msgstr ""
+msgstr "बार्कोड पैटर्न %(pattern)s में एक गड़बड़ी है: खाली कोष्ठक।"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__encoding
@@ -328,6 +335,7 @@ msgid ""
 "This rule will apply only if the barcode is encoded with the specified "
 "encoding"
 msgstr ""
+"यह नियम सिर्फ़ तभी लागू होगा जब बारकोड तय किए गए एन्कोडिंग के साथ एन्कोड किया गया हो"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__type
@@ -341,6 +349,9 @@ msgid ""
 "setting determines if a UPC/EAN barcode should be automatically converted in "
 "one way or another when trying to match a rule with the other encoding."
 msgstr ""
+"UPC कोड को शून्य जोड़कर EAN में बदला जा सकता है। यह सेटिंग यह निर्धारित करती है कि जब "
+"किसी नियम को दूसरी एन्कोडिंग के साथ मिलाने का प्रयास किया जाता है, तो UPC/EAN "
+"बारकोड को स्वचालित रूप से एक दिशा या दूसरी में परिवर्तित किया जाना चाहिए या नहीं।"
 
 #. module: barcodes
 #: model:ir.model.fields.selection,name:barcodes.selection__barcode_rule__encoding__upca
@@ -355,7 +366,7 @@ msgstr ""
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__upc_ean_conv
 msgid "UPC/EAN Conversion"
-msgstr ""
+msgstr "UPC/EAN कन्वर्ज़न"
 
 #. module: barcodes
 #: model:ir.model.fields.selection,name:barcodes.selection__barcode_rule__type__product
@@ -373,6 +384,8 @@ msgstr ""
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__sequence
 msgid "Used to order rules such that rules with a smaller sequence match first"
 msgstr ""
+"नियमों को इस प्रकार ऑर्डर में करने के लिए उपयोग किया जाता है कि छोटे अनुक्रम वाले नियम "
+"पहले मिलान हों"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcodes_barcode_events_mixin___barcode_scanned

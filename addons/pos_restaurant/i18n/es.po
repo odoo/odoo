@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-03 18:38+0000\n"
-"PO-Revision-Date: 2026-06-14 21:05+0000\n"
+"PO-Revision-Date: 2026-07-30 14:24+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-17/"
 "pos_restaurant/es/>\n"
@@ -28,7 +28,7 @@ msgstr ""
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_kanban
 msgid "<strong>Floor Name: </strong>"
-msgstr "<strong>Nombre del piso: </strong>"
+msgstr "<strong>Nombre de la sala: </strong>"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_kanban
@@ -42,9 +42,9 @@ msgid ""
 "where you can\n"
 "                define and position the tables."
 msgstr ""
-"El piso de un restaurante representa el lugar donde se da servicio a los "
-"clientes. Ahí es donde\n"
-"puede indicar cómo están organizadas las mesas."
+"Una sala del restaurante representa el espacio donde se atiende a los "
+"clientes. Aquí puede\n"
+"                definir y colocar las mesas."
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__active
@@ -65,7 +65,7 @@ msgstr "Añadir"
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.xml:0
 #, python-format
 msgid "Add Floor"
-msgstr "Añadir un piso"
+msgstr "Añadir sala"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -77,7 +77,7 @@ msgstr "Para empezar, añada un nuevo piso."
 #. module: pos_restaurant
 #: model_terms:ir.actions.act_window,help:pos_restaurant.action_restaurant_floor_form
 msgid "Add a new restaurant floor"
-msgstr "Añadir un nuevo piso del restaurante"
+msgstr "Añadir una nueva sala en el restaurante"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -198,7 +198,7 @@ msgstr "Imagen de fondo"
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.pos_food_bacon_product_template
 msgid "Bacon Burger"
-msgstr "Hamburguesa con tocino "
+msgstr "Hamburguesa con bacon"
 
 #. module: pos_restaurant
 #: model:pos.payment.method,name:pos_restaurant.payment_method
@@ -217,7 +217,7 @@ msgstr "Barra"
 #: code:addons/pos_restaurant/static/src/app/control_buttons/print_bill_button/print_bill_button.xml:0
 #, python-format
 msgid "Bill"
-msgstr "Factura"
+msgstr "Cuenta"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -225,7 +225,7 @@ msgstr "Factura"
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__iface_printbill
 #, python-format
 msgid "Bill Printing"
-msgstr "Impresión de facturas"
+msgstr "Impresión de la cuenta"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -266,7 +266,7 @@ msgstr "Combinación del menú de hamburguesas"
 #: code:addons/pos_restaurant/models/pos_config.py:0
 #, python-format
 msgid "Cash Restaurant"
-msgstr "Restaurante con efectivo"
+msgstr "Efectivo - restaurante"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -283,7 +283,7 @@ msgstr "Hamburguesa con queso"
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.pos_food_chicken_product_template
 msgid "Chicken Curry Sandwich"
-msgstr "Bocadillo de pollo con curry"
+msgstr "Sándwich de pollo con curry"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -302,7 +302,7 @@ msgstr "Cerrar cuenta"
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.pos_food_club_product_template
 msgid "Club Sandwich"
-msgstr "Bocadillo Club"
+msgstr "Club sándwich"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.coke_product_template
@@ -355,7 +355,7 @@ msgstr "Eliminar error"
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Design floors and assign orders to tables"
-msgstr "Diseñe pisos y asigne pedidos a las mesas"
+msgstr "Diseñe planos de sala y asigne pedidos a las mesas"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -412,19 +412,19 @@ msgstr "Rellenar"
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__floor_id
 msgid "Floor"
-msgstr "Piso"
+msgstr "Sala"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__name
 msgid "Floor Name"
-msgstr "Nombre del piso"
+msgstr "Nombre de la sala"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.js:0
 #, python-format
 msgid "Floor Name ?"
-msgstr "¿Nombre del piso?"
+msgstr "¿Cuál es el nombre de la sala?"
 
 #. module: pos_restaurant
 #: model:ir.actions.act_window,name:pos_restaurant.action_restaurant_floor_form
@@ -437,7 +437,7 @@ msgstr "Plano de sala"
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.js:0
 #, python-format
 msgid "Floor name"
-msgstr "Nombre del piso"
+msgstr "Nombre de la sala"
 
 #. module: pos_restaurant
 #. odoo-python
@@ -449,12 +449,12 @@ msgstr "Piso: %s - Configuración de TPV: %s \n"
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Floors"
-msgstr "Pisos"
+msgstr "Salas"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Floors & Tables Map"
-msgstr "Mapa de pisos y mesas"
+msgstr "Plano de sala y mesas"
 
 #. module: pos_restaurant
 #: model:pos.category,name:pos_restaurant.food
@@ -466,9 +466,7 @@ msgstr "Alimentos"
 #: code:addons/pos_restaurant/static/src/overrides/components/receipt_screen/order_receipt/order_receipt.xml:0
 #, python-format
 msgid "For convenience, we are providing the following gratuity calculations:"
-msgstr ""
-"Por conveniencia, le proporcionamos los siguientes cálculos de "
-"gratificaciones:"
+msgstr "Para su comodidad, le ofrecemos los siguientes cálculos de propina:"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.pos_food_funghi_product_template
@@ -540,8 +538,7 @@ msgid ""
 "If false, the table is deactivated and will not be available in the point of "
 "sale"
 msgstr ""
-"Si es False, la mesa es desactivada y no va a estar disponible en el punto "
-"de venta"
+"Si es false, la mesa se desactiva y no estará disponible en el punto de venta"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -603,17 +600,17 @@ msgstr "Cargando"
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.pos_food_maki_product_template
 msgid "Lunch Maki 18pc"
-msgstr "Comida Maki 18 pzas."
+msgstr "Maki - 18 pzas."
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.pos_food_salmon_product_template
 msgid "Lunch Salmon 20pc"
-msgstr "Comida de salmón 20 pzas."
+msgstr "Salmón - 20 pzas."
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.pos_food_temaki_product_template
 msgid "Lunch Temaki mix 3pc"
-msgstr "Comida mezcla temaki 3 pzas."
+msgstr "Temaki variado - 3 pzas."
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.pos_food_margherita_product_template
@@ -633,14 +630,14 @@ msgstr "Minute Maid"
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.pos_food_mozza_product_template
 msgid "Mozzarella Sandwich"
-msgstr "Bocadillo de mozzarella"
+msgstr "Sándwich de mozzarella"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.js:0
 #, python-format
 msgid "New Floor"
-msgstr "Piso nuevo"
+msgstr "Nueva sala"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -654,7 +651,7 @@ msgstr "Sin propina"
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.js:0
 #, python-format
 msgid "Number of Seats?"
-msgstr "¿Número de asientos?"
+msgstr "¿Número de sillas?"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -771,12 +768,12 @@ msgstr "Terminal punto de venta (TPV)"
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_iface_printbill
 msgid "Pos Iface Printbill"
-msgstr "Cuenta impresa de Iface TPV"
+msgstr "Cuenta impresa en la interfaz del PdV"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_iface_splitbill
 msgid "Pos Iface Splitbill"
-msgstr "Cuenta dividida de Iface TPV"
+msgstr "Interfaz PdV - Dividir la cuenta"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_set_tip_after_payment
@@ -838,14 +835,14 @@ msgstr "Volver a imprimir recibos"
 #: model:ir.model,name:pos_restaurant.model_restaurant_floor
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_form
 msgid "Restaurant Floor"
-msgstr "Piso del restaurante"
+msgstr "Sala del restaurante"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__floor_ids
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_floor_ids
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_tree
 msgid "Restaurant Floors"
-msgstr "Pisos del restaurante"
+msgstr "Salas del restaurante"
 
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_restaurant_table
@@ -900,7 +897,7 @@ msgstr "Schweppes"
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__seats
 #, python-format
 msgid "Seats"
-msgstr "Asientos"
+msgstr "Sillas"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__sequence
@@ -976,7 +973,7 @@ msgstr "Subtotal"
 #: code:addons/pos_restaurant/static/src/overrides/components/navbar/navbar.xml:0
 #, python-format
 msgid "Switch Floor View"
-msgstr "Cambiar a vista de piso"
+msgstr "Cambiar a vista de sala"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1023,7 +1020,7 @@ msgstr "Mesas"
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_order__customer_count
 msgid "The amount of customers that have been served by this order."
-msgstr "La cantidad de clientes que han sido atendidos por este pedido."
+msgstr "El número de clientes a los que se ha atendido con este pedido."
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_floor__background_color
@@ -1039,7 +1036,7 @@ msgstr "El número por defecto de clientes atendidos en esta mesa."
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config__floor_ids
 #: model:ir.model.fields,help:pos_restaurant.field_res_config_settings__pos_floor_ids
 msgid "The restaurant floors served by this point of sale."
-msgstr "Los pisos del restaurante servidos por este punto de venta."
+msgstr "Las salas del restaurante asignadas a este punto de venta."
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1055,7 +1052,7 @@ msgstr ""
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_order__table_id
 msgid "The table where this order was served"
-msgstr "La mesa donde se sirvió este pedido"
+msgstr "La mesa en la que se sirvió este pedido"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__color
@@ -1220,7 +1217,7 @@ msgstr "Sí"
 msgid ""
 "You cannot delete a floor when orders are still in draft for this floor."
 msgstr ""
-"No puede eliminar un piso mientras haya pedidos en borrador para esta mesa."
+"No puede eliminar una sala mientras haya pedidos en borrador para esa sala."
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1228,7 +1225,8 @@ msgstr ""
 #, python-format
 msgid "You cannot delete a table with orders still in draft for this table."
 msgstr ""
-"No puede eliminar una mesa mientras haya pedidos en borrador para esta mesa."
+"No se puede eliminar una mesa mientras haya pedidos en borrador para esa "
+"misma mesa."
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1245,8 +1243,8 @@ msgid ""
 "You cannot remove a floor that is used in a PoS session, close the "
 "session(s) first: \n"
 msgstr ""
-"No puede eliminar un piso que se se está usando en una sesión de TPV, cierre "
-"primero la(s) sesión(es):\n"
+"No se puede eliminar una sala que se está utilizando en una sesión del punto "
+"de venta. Cierre primero la sesión o sesiones: \n"
 
 #. module: pos_restaurant
 #. odoo-python
@@ -1256,8 +1254,8 @@ msgid ""
 "You cannot remove a table that is used in a PoS session, close the "
 "session(s) first."
 msgstr ""
-"No se puede eliminar una mesa que se está usando en una sesión de TPV. "
-"Cierre la/s sesión/es primero."
+"No se puede eliminar una sala que se está utilizando en una sesión del punto "
+"de venta. Cierre primero la sesión o sesiones."
 
 #. module: pos_restaurant
 #. odoo-javascript
