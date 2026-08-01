@@ -59,10 +59,12 @@ class AccountMoveLine(models.Model):
     @api.depends('tax_ids')
     def _compute_l10n_in_withhold_tax_amount(self):
         # Compute the withhold tax amount for the withholding lines
-        withholding_lines = self.filtered('move_id.l10n_in_is_withholding')
+        withholding_lines = self.filtered('move_id.l10n_in_is_withholding').filtered('tax_ids')
         (self - withholding_lines).l10n_in_withhold_tax_amount = False
+
         for line in withholding_lines:
-            line.l10n_in_withhold_tax_amount = line.currency_id.round(abs(line.price_total - line.price_subtotal))
+            tax_line = line.move_id.line_ids.filtered(lambda l: l.tax_line_id == line.tax_ids[0])
+            line.l10n_in_withhold_tax_amount = line.currency_id.round(tax_line.balance)
 
     @api.depends('product_id', 'product_id.l10n_in_hsn_code')
     def _compute_l10n_in_hsn_code(self):
