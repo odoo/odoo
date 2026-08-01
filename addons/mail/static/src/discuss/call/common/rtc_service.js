@@ -782,6 +782,7 @@ export class Rtc extends Record {
             props,
             rootId: this.rootEl?.getRootNode()?.host?.id,
         });
+        await this.waitForMeetingViewOpened();
     }
 
     async exitFullscreen() {
@@ -931,6 +932,23 @@ export class Rtc extends Record {
         return audio
             ? this.microphonePermission === "granted"
             : this.cameraPermission === "granted";
+    }
+
+    async waitForMeetingViewOpened() {
+        if (this.store.meetingViewOpened) {
+            return;
+        }
+        await new Promise((resolve) => {
+            let remainingChecks = 20;
+            const check = () => {
+                if (this.store.meetingViewOpened || remainingChecks-- <= 0) {
+                    resolve();
+                    return;
+                }
+                browser.setTimeout(check, 50);
+            };
+            check();
+        });
     }
 
     async unmute() {
