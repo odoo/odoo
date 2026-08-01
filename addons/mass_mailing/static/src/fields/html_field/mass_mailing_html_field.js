@@ -17,7 +17,6 @@ import {
     usePlugin,
 } from "@odoo/owl";
 import { loadBundle } from "@web/core/assets";
-import { Domain } from "@web/core/domain";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { useEmailHtmlConverter } from "@mail/convert_inline/hooks";
@@ -417,21 +416,24 @@ export class MassMailingHtmlField extends HtmlField {
         let result;
         await operation.next(
             async () => {
-                result = await this.editor.shared.emailImageFormat.sanitizeImages(content);
-                const lastChangeIdSnapshot = this.lastChangeId;
-                if (
-                    this.editor.shared.history.commit() &&
-                    this.lastChangeId === lastChangeIdSnapshot + 1
-                ) {
-                    // All pending image changes were done in both the content
-                    // clone and the editable, so if an editor commit was made
-                    // during this operation, it is reasonable to assume that
-                    // the changes it contains were also done in content, which
-                    // will be sent to the server. Therefore this commit
-                    // onChange should not have increased lastChangeId and the
-                    // snapshotted value is restored, allowing the field to
-                    // not be dirty after updateValue.
-                    this.lastChangeId = lastChangeIdSnapshot;
+                try {
+                    result = await this.editor.shared.emailImageFormat.sanitizeImages(content);
+                } finally {
+                    const lastChangeIdSnapshot = this.lastChangeId;
+                    if (
+                        this.editor.shared.history.commit() &&
+                        this.lastChangeId === lastChangeIdSnapshot + 1
+                    ) {
+                        // All pending image changes were done in both the content
+                        // clone and the editable, so if an editor commit was made
+                        // during this operation, it is reasonable to assume that
+                        // the changes it contains were also done in content, which
+                        // will be sent to the server. Therefore this commit
+                        // onChange should not have increased lastChangeId and the
+                        // snapshotted value is restored, allowing the field to
+                        // not be dirty after updateValue.
+                        this.lastChangeId = lastChangeIdSnapshot;
+                    }
                 }
             },
             { canTimeout: false, shouldInterceptClick: true }

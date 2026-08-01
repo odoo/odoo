@@ -24,6 +24,8 @@ const FORBIDDEN_EMAIL_MIMETYPE = new Set([SVG_MIMETYPE, WEBP_MIMETYPE]);
 const SVG_EXCLUSIVE_ATTRIBUTES = new Set(["viewBox", "preserveAspectRatio", "x", "y"]);
 const PLACEHOLDER_IMAGE = "/html_editor/static/src/img/placeholder_thumbnail.png";
 
+export class EmailImageError extends Error {}
+
 export class EmailImageFormatPlugin extends Plugin {
     static id = "emailImageFormat";
     static dependencies = ["imagePostProcess", "imageSave"];
@@ -117,19 +119,29 @@ export class EmailImageFormatPlugin extends Plugin {
     async sanitizeImages(editable) {
         this.forEachSvg((svg) => this.sanitizeSvg(svg), editable);
         this.setupReferenceClone(editable);
-        this.savePendingImagesPromise = Promise.all(
-            this.trigger("on_save_pending_images_handlers", editable)
-        );
 
         const promises = [];
-        promises.push(...this.forEachImg((img) => this.sanitizeImage(img), editable));
-        promises.push(...this.forEachBackgroundImg((el) => this.sanitizeImage(el), editable));
+        const sanitizeImage = (el) => {
+            const noideidData = this.nodeidMap.get(el.dataset.oeNodeid);
+            const { sourceEl, measureEl } = noideidData;
+            return this.sanitizeImage(el, sourceEl, measureEl).catch((reason) => {
+                this.setEmailImage(PLACEHOLDER_IMAGE, undefined, el, sourceEl);
+                throw reason;
+            });
+        };
+        promises.push(...this.forEachImg(sanitizeImage, editable));
+        promises.push(...this.forEachBackgroundImg(sanitizeImage, editable));
 
         // Cleanup data-oe-nodeid from the editable and the clone to save
         this.cleanupImageIdentity(editable);
         this.cleanupImageIdentity(this.editable);
 
-        await Promise.all(promises);
+        const failures = (await Promise.allSettled(promises)).filter((result) => result.reason);
+        if (failures.length > 0) {
+            throw new EmailImageError(
+                "Some images could not be processed to the correct format for the email."
+            );
+        }
     }
 
     async prepare2DCanvasForImg(img, width, height) {
@@ -285,23 +297,16 @@ export class EmailImageFormatPlugin extends Plugin {
         const { originalId } = imageInfo;
         const { resModel, resId } = this.getRecordInfo(this.editable);
         imageData = imageData.substring(imageData.indexOf(",") + 1);
-        let newAttachmentUrls;
-        try {
-            newAttachmentUrls = await rpc(
-                `/html_editor/modify_image/${encodeURIComponent(originalId)}`,
-                {
-                    res_model: resModel,
-                    res_id: parseInt(resId),
-                    data: imageData,
-                    mimetype: this.config.defaultImageMimetype,
-                    name: `email_${originalId}.png`,
-                }
-            );
-        } catch {
-            newAttachmentUrls = {
-                original: PLACEHOLDER_IMAGE,
-            };
-        }
+        const newAttachmentUrls = await rpc(
+            `/html_editor/modify_image/${encodeURIComponent(originalId)}`,
+            {
+                res_model: resModel,
+                res_id: parseInt(resId),
+                data: imageData,
+                mimetype: this.config.defaultImageMimetype,
+                name: `email_${originalId}.png`,
+            }
+        );
         return newAttachmentUrls.original;
     }
 
@@ -391,13 +396,21 @@ export class EmailImageFormatPlugin extends Plugin {
         }
     }
 
-    async sanitizeImage(el) {
-        const noideidData = this.nodeidMap.get(el.dataset.oeNodeid);
+    async sanitizeImage(el, sourceEl, measureEl) {
         const unmodifiedSrc = getImageSrc(el)?.trimStart();
-        const { sourceEl, measureEl } = noideidData;
-        await this.savePendingImagesPromise;
+        try {
+            await Promise.all(this.trigger("on_save_pending_images_handlers", el, sourceEl));
+        } catch {
+            // ERROR CASE
+            this.setEmailImage(PLACEHOLDER_IMAGE, undefined, el, sourceEl);
+            return;
+        }
         let src = getImageSrc(el)?.trimStart();
-        if (!src) {
+        if (!src || src === PLACEHOLDER_IMAGE) {
+            // ERROR CASE
+            this.updateImageSource(el, unmodifiedSrc);
+            this.updateImageSource(sourceEl, unmodifiedSrc);
+            this.setEmailImage(PLACEHOLDER_IMAGE, undefined, el, sourceEl);
             return;
         }
         let data = { ...el.dataset, ...(await loadImageInfo(el)) };
@@ -412,37 +425,69 @@ export class EmailImageFormatPlugin extends Plugin {
                 isShape = true;
                 attachmentSrc = data.originalSrc;
             }
+            let attachment;
             try {
                 dataUrl = await this.urlToDataUrl(attachmentSrc);
+                if (dataUrl) {
+                    attachment = await this.convertImageDataToEditorAttachment(dataUrl);
+                }
             } catch {
-                // The image can't be converted to an attachment
+                // If it is not possible to create an attachment, the image will
+                // be displayed as a placeholder in the email.
             }
-            if (!dataUrl) {
-                return;
-            }
-            const attachment = await this.convertImageDataToEditorAttachment(dataUrl);
             if (!attachment) {
+                // ERROR CASE
+                this.setEmailImage(PLACEHOLDER_IMAGE, undefined, el, sourceEl);
                 return;
             }
             this.updateImageData(el, attachment);
             this.updateImageData(sourceEl, attachment);
             if (isShape) {
-                const updateAttributes = await this.dependencies.imagePostProcess.processImage({
-                    img: sourceEl,
-                    newDataset: { shape: data.shape },
-                });
+                const updatedSrc = getImageSrc(sourceEl)?.trimStart();
+                let updateAttributes;
+                try {
+                    updateAttributes = await this.dependencies.imagePostProcess.processImage({
+                        img: sourceEl,
+                        newDataset: { shape: data.shape },
+                    });
+                } catch {
+                    // ERROR CASE
+                    this.setEmailImage(PLACEHOLDER_IMAGE, undefined, el, sourceEl);
+                    return;
+                }
                 updateAttributes();
                 const processedSrc = getImageSrc(sourceEl)?.trimStart();
                 if (processedSrc && sourceEl.classList.contains("o_modified_image_to_save")) {
                     this.updateImageSource(el, processedSrc);
                     sourceEl.classList.add("o_modified_image_to_save");
-                    await Promise.all(
-                        this.trigger("on_save_pending_images_handlers", el, sourceEl)
-                    );
+                    try {
+                        await Promise.all(
+                            this.trigger("on_save_pending_images_handlers", el, sourceEl)
+                        );
+                    } catch {
+                        // ERROR CASE
+                        this.setEmailImage(PLACEHOLDER_IMAGE, undefined, el, sourceEl);
+                        return;
+                    }
+                    src = getImageSrc(el)?.trimStart();
+                    if (!src || src === PLACEHOLDER_IMAGE) {
+                        // ERROR CASE
+                        this.setEmailImage(PLACEHOLDER_IMAGE, undefined, el, sourceEl);
+                        return;
+                    }
+                } else if (updatedSrc !== processedSrc) {
+                    // ERROR CASE
+                    this.updateImageSource(sourceEl, updatedSrc);
+                    this.setEmailImage(PLACEHOLDER_IMAGE, undefined, el, sourceEl);
+                    return;
                 }
             }
             src = getImageSrc(el)?.trimStart();
             if (!src) {
+                // ERROR CASE
+                this.updateImageSource(el, unmodifiedSrc);
+                this.updateImageSource(sourceEl, unmodifiedSrc);
+                this.setEmailImage(PLACEHOLDER_IMAGE, undefined, el, sourceEl);
                 return;
             }
             data = { ...el.dataset, ...(await loadImageInfo(el)) };
@@ -569,7 +614,15 @@ export class EmailImageFormatPlugin extends Plugin {
             targetPosition,
             filterData
         );
-        const newSrc = await this.convertImageDataToEmailAttachmentSrc(imageData, imageInfo);
+        let newSrc;
+        try {
+            newSrc = await this.convertImageDataToEmailAttachmentSrc(imageData, imageInfo);
+        } catch {
+            // ERROR CASE
+            // If it is not possible to create an attachment, the image will
+            // be displayed as a placeholder in the email.
+            newSrc = PLACEHOLDER_IMAGE;
+        }
         this.setEmailImage(newSrc, checksum, el, sourceEl);
     }
 
@@ -641,7 +694,15 @@ export class EmailImageFormatPlugin extends Plugin {
             return;
         }
         const imageData = await this.convertImgToImageData(el, dimensions.width, dimensions.height);
-        const newSrc = await this.convertImageDataToEmailAttachmentSrc(imageData, imageInfo);
+        let newSrc;
+        try {
+            newSrc = await this.convertImageDataToEmailAttachmentSrc(imageData, imageInfo);
+        } catch {
+            // ERROR CASE
+            // If it is not possible to create an attachment, the image will
+            // be displayed as a placeholder in the email.
+            newSrc = PLACEHOLDER_IMAGE;
+        }
         this.setEmailImage(newSrc, checksum, el, sourceEl);
     }
 

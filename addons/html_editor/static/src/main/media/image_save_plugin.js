@@ -180,6 +180,13 @@ export class ImageSavePlugin extends Plugin {
      */
     async saveModifiedImage(el, resModel, resId) {
         const isBackground = !el.matches("img");
+        let attributesToRestore;
+        if (!isBackground) {
+            attributesToRestore = {};
+            for (const name of el.getAttributeNames()) {
+                attributesToRestore[name] = el.getAttribute(name);
+            }
+        }
         // Modifying an image always creates a copy of the original, even if
         // it was modified previously, as the other modified image may be used
         // elsewhere if the snippet was duplicated or was saved as a custom one.
@@ -284,7 +291,6 @@ export class ImageSavePlugin extends Plugin {
         }
 
         el.classList.remove("o_modified_image_to_save");
-        let targetEl = el;
         if (isBackground) {
             const parts = backgroundImageCssToParts(el.style["background-image"]);
             parts.url = `url('${newAttachmentUrls["original"]}')`;
@@ -292,17 +298,27 @@ export class ImageSavePlugin extends Plugin {
             el.style["background-image"] = combined;
         } else {
             if (attachmentNotFound) {
-                // Reset image to a clean state if a placeholder is returned.
-                targetEl = document.createElement("img");
-                el.insertAdjacentElement("afterend", targetEl);
-                el.remove();
+                // Reset image to a clean state if a placeholder is returned,
+                // without changing its reference and keeping its original
+                // style.
+                for (const name of el.getAttributeNames()) {
+                    if (name in attributesToRestore) {
+                        el.setAttribute(name, attributesToRestore[name]);
+                        delete attributesToRestore[name];
+                    } else {
+                        el.removeAttribute(name);
+                    }
+                }
+                for (const name of Object.keys(attributesToRestore)) {
+                    el.setAttribute(name, attributesToRestore[name]);
+                }
             }
-            targetEl.setAttribute("src", newAttachmentUrls["original"]);
+            el.setAttribute("src", newAttachmentUrls["original"]);
             if (srcset.length) {
-                targetEl.setAttribute("srcset", srcset.join(", "));
+                el.setAttribute("srcset", srcset.join(", "));
             }
         }
-        this.trigger("on_image_saved_handlers", { imageEl: targetEl });
+        this.trigger("on_image_saved_handlers", { imageEl: el });
     }
 
     getImageBase64Payload(el) {
