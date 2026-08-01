@@ -1,25 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* account_debit_note
+# * account_debit_note
 #
 # Translators:
 # Wil Odoo, 2024
 # Tony Ng, 2024
 #
+# "Tony Ng (ngto)" <ngto@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:37+0000\n"
-"PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Tony Ng, 2024\n"
-"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/"
-"zh_TW/)\n"
+"PO-Revision-Date: 2026-07-24 07:46+0000\n"
+"Last-Translator: \"Tony Ng (ngto)\" <ngto@odoo.com>\n"
+"Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
+"projects/odoo-18/account_debit_note/zh_Hant/>\n"
 "Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: account_debit_note
 #: model_terms:ir.ui.view,arch_db:account_debit_note.view_move_form_debit
@@ -46,7 +48,7 @@ msgstr "若不想根據此日記賬製作的發票及借記單共用相同的序
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__copy_lines
 msgid "Copy Lines"
-msgstr "複製明細"
+msgstr "複製資料行"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__country_code
@@ -67,7 +69,7 @@ msgstr "建立人員"
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__create_date
 msgid "Created on"
-msgstr "建立於"
+msgstr "建立日期"
 
 #. module: account_debit_note
 #: model:ir.actions.server,name:account_debit_note.action_move_debit_note
@@ -110,16 +112,14 @@ msgstr "識別號"
 #. module: account_debit_note
 #: model:ir.model.fields,help:account_debit_note.field_account_debit_note__journal_id
 msgid "If empty, uses the journal of the journal entry to be debited."
-msgstr "如果為空，則使用要藉記的日記帳分錄的日記帳。"
+msgstr "若留空，會使用日記賬記項借記的日記賬。"
 
 #. module: account_debit_note
 #: model:ir.model.fields,help:account_debit_note.field_account_debit_note__copy_lines
 msgid ""
 "In case you need to do corrections for every line, it can be in handy to "
 "copy them.  We won't copy them for debit notes from credit notes. "
-msgstr ""
-"如果您需要對每一行進行更正，複製它們會很方便。我們不會將它們複製到貸方票據中"
-"的借方票據。"
+msgstr "若要修正所有資料行，複製內容會比較方便。系統不會將貸記單的內容複製至借記單。"
 
 #. module: account_debit_note
 #: model:ir.model,name:account_debit_note.model_account_journal
@@ -134,7 +134,7 @@ msgstr "日記賬記項"
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__journal_type
 msgid "Journal Type"
-msgstr "日計帳類型"
+msgstr "日記賬類型"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__write_uid
@@ -144,7 +144,7 @@ msgstr "最後更新者"
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__write_date
 msgid "Last Updated on"
-msgstr "最後更新於"
+msgstr "最後更新日期"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__move_ids
@@ -166,7 +166,7 @@ msgstr "借記單數目"
 #: model:ir.model.fields,field_description:account_debit_note.field_account_bank_statement_line__debit_origin_id
 #: model:ir.model.fields,field_description:account_debit_note.field_account_move__debit_origin_id
 msgid "Original Invoice Debited"
-msgstr "原始發票借記"
+msgstr "已借記原始發票"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__reason
@@ -179,8 +179,8 @@ msgid ""
 "The ISO country code in two chars. \n"
 "You can use this field for quick search."
 msgstr ""
-"ISO 國家代碼使用兩個字元。\n"
-" 您可以使用此欄位進行快速搜尋。"
+"兩個字元的 ISO 國家代碼。\n"
+"可利用此欄位進行快速搜尋。"
 
 #. module: account_debit_note
 #: model:ir.model.fields,help:account_debit_note.field_account_bank_statement_line__debit_note_ids
@@ -197,7 +197,7 @@ msgstr "借記單建立自： %s"
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__journal_id
 msgid "Use Specific Journal"
-msgstr "使用特定的日記帳"
+msgstr "使用指定日記賬"
 
 #. module: account_debit_note
 #. odoo-python
@@ -211,7 +211,7 @@ msgstr "只可為客戶發票、客戶貸記單、供應商賬單或供應商貸
 #. odoo-python
 #: code:addons/account_debit_note/wizard/account_debit_note.py:0
 msgid "You can only debit posted moves."
-msgstr "您只能借記已發布的傳票。"
+msgstr "你只可借記已過賬的分錄。"
 
 #. module: account_debit_note
 #. odoo-python

@@ -43,7 +43,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:36+0000\n"
-"PO-Revision-Date: 2026-07-17 09:08+0000\n"
+"PO-Revision-Date: 2026-07-31 10:17+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-18/project/"
 "fi/>\n"
@@ -264,7 +264,7 @@ msgstr "%(name)s:n Burndown-kaavio"
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
 msgid "%(name)s's Milestones"
-msgstr "%(name)s:n virstanpylväät"
+msgstr "%(name)s:n välitavoitteet"
 
 #. module: project
 #. odoo-python
@@ -828,7 +828,7 @@ msgstr "<strong>Määräaika:</strong>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<strong>Milestone:</strong>"
-msgstr "<strong>Virstanpylväs:</strong>"
+msgstr "<strong>Välitavoite:</strong>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -838,7 +838,7 @@ msgstr "<strong>Projekti:</strong>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "<u>Milestones</u>"
-msgstr "<u>Virstanpylväät</u>"
+msgstr "<u>Välitavoitteet</u>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
@@ -2680,7 +2680,7 @@ msgstr "Ideat"
 #: model:ir.model.fields,help:project.field_project_task__message_needaction
 #: model:ir.model.fields,help:project.field_project_update__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "Jos valittu, uudet viestit vaativat huomiotasi."
+msgstr "Jos ruksittu, uudet viestit vaativat huomiotasi."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_milestone__message_has_error
@@ -2692,7 +2692,7 @@ msgstr "Jos valittu, uudet viestit vaativat huomiotasi."
 #: model:ir.model.fields,help:project.field_project_update__message_has_error
 #: model:ir.model.fields,help:project.field_project_update__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr "Jos valittu, joitakin viestejä ei ole toimitettu."
+msgstr "Jos ruksittu, joissain viesteissä on toimitusvirhe."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_stage__fold
@@ -2978,7 +2978,7 @@ msgstr "Myöhässä olevat toimenpiteet"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "Late Milestones"
-msgstr "Myöhässä olevat virstanpylväät"
+msgstr "Myöhässä olevat välitavoitteet"
 
 #. module: project
 #. odoo-python
@@ -3167,7 +3167,7 @@ msgstr "Viestit"
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Milestone"
-msgstr "Virstanpylväs"
+msgstr "Välitavoite"
 
 #. module: project
 #. odoo-javascript
@@ -3367,7 +3367,7 @@ msgstr "Ei asiakasta"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
 msgid "No Milestone"
-msgstr "Ei virstanpylvästä"
+msgstr "Ei välitavoite"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
@@ -3913,7 +3913,7 @@ msgstr "Projektipäällikkö"
 #. module: project
 #: model:ir.model,name:project.model_project_milestone
 msgid "Project Milestone"
-msgstr "Projektin virstanpylväs"
+msgstr "Projektin välitavoite"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_activity
@@ -4667,10 +4667,10 @@ msgid ""
 "move them all at once to the next sprint by editing the milestone, tag, or "
 "property."
 msgstr ""
-"Lajittele tehtävät sprinteittäin käyttämällä virstanpylväitä, tunnisteita "
-"tai omaa ominaisuutta. Kunkin sprintin lopussa voit vain poimia luettelosta "
+"Järjestä tehtäväsi sprinteittäin käyttämällä välitavoitteita, tunnisteita "
+"tai tiettyä ominaisuutta. Kunkin sprintin lopuksi voit poimia luettelosta "
 "jäljellä olevat tehtävät ja siirtää ne kaikki kerralla seuraavaan sprinttiin "
-"muokkaamalla virstanpylvästä, tagia tai ominaisuutta."
+"muokkaamalla välitavoitetta, tunnistetta tai ominaisuutta."
 
 #. module: project
 #. odoo-javascript
@@ -5102,12 +5102,12 @@ msgstr "Loppupäivämäärän on oltava tulevaisuudessa"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "The following milestone has been added:"
-msgstr "Seuraava virstanpylväs on lisätty:"
+msgstr "Seuraava välitavoite on lisätty:"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "The following milestones have been added:"
-msgstr "Seuraavat virstanpylväät on lisätty:"
+msgstr "Seuraavat välitavoitteet on lisätty:"
 
 #. module: project
 #. odoo-python
@@ -5791,12 +5791,12 @@ msgstr "Verkkosivuston uudistaminen"
 #: model:ir.model.fields,help:project.field_project_task__website_message_ids
 #: model:ir.model.fields,help:project.field_project_update__website_message_ids
 msgid "Website communication history"
-msgstr "Verkkosivun viestihistoria"
+msgstr "Verkkosivun viestintähistoria"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__weekly
 msgid "Weekly"
-msgstr "Viikottainen"
+msgstr "Viikoittain"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_unit__week
@@ -5876,7 +5876,7 @@ msgstr "Kirjoittaminen"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__yearly
 msgid "Yearly"
-msgstr "Vuosittainen"
+msgstr "Vuosittain"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_unit__year

@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* sale_project
+# * sale_project
 #
 # Translators:
 # Boris Stefanov <borkata@gmail.com>, 2024
@@ -19,20 +19,22 @@
 # Veselina Slavkova, 2025
 # Martin Dinovski, 2025
 # Petko Karamotchev, 2025
-#
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:37+0000\n"
-"PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Petko Karamotchev, 2025\n"
-"Language-Team: Bulgarian (https://app.transifex.com/odoo/teams/41243/bg/)\n"
+"PO-Revision-Date: 2026-07-25 17:29+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Bulgarian <https://translate.odoo.com/projects/odoo-18/"
+"sale_project/bg/>\n"
 "Language: bg\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: sale_project
 #. odoo-python
@@ -47,12 +49,20 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"\n"
+"                <p class=\"o_view_nocontent_smiling_face\">\n"
+"                    Няма намерени етапи. Нека създадем един!\n"
+"                </p><p>\n"
+"                    Проследявайте основните точки на напредък, които трябва "
+"да бъдат достигнати за постигане на успех.\n"
+"                </p>\n"
+"            "
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/project_project.py:0
 msgid "%(name)s's Sales Order Items"
-msgstr ""
+msgstr "Артикули от поръчка за продажба на %(name)s"
 
 #. module: sale_project
 #. odoo-python
@@ -69,6 +79,11 @@ msgid ""
 "the cancellation of the sales order.\" invisible=\"sale_order_state != "
 "'cancel'\"/>"
 msgstr ""
+"<span class=\"fa fa-exclamation-triangle text-warning\" title=\"Поръчката за "
+"продажба, свързана с този проект, е отменена. Препоръчваме или да "
+"актуализирате артикула от поръчката, или да отмените този проект в "
+"съответствие с отмяната на поръчката.\" invisible=\"sale_order_state != "
+"'cancel'\"/>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_sale_project_inherit_form
@@ -79,6 +94,11 @@ msgid ""
 "cancellation of the sales order.\" invisible=\"sale_order_state != "
 "'cancel'\"/>"
 msgstr ""
+"<span class=\"fa fa-exclamation-triangle text-warning\" title=\"Поръчката за "
+"продажба, свързана с тази задача, е отменена. Препоръчваме или да "
+"актуализирате артикула от поръчката, или да отмените тази задача в "
+"съответствие с отмяната на поръчката.\" invisible=\"sale_order_state != "
+"'cancel'\"/>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
@@ -91,6 +111,13 @@ msgid ""
 "                            Make Billable\n"
 "                        </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                            <span class=\"o_stat_value\">0</span> Поръчка за "
+"продажба\n"
+"                        </span>\n"
+"                        <span class=\"o_stat_text\">\n"
+"                            Направи фактурируемо\n"
+"                        </span>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
@@ -99,6 +126,9 @@ msgid ""
 "                            Sales Orders\n"
 "                        </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                            Поръчки за продажби\n"
+"                        </span>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
@@ -122,7 +152,7 @@ msgstr ""
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_form
 msgid "<span>)</span>"
-msgstr ""
+msgstr "<span>)</span>"
 
 #. module: sale_project
 #. odoo-python
@@ -133,6 +163,10 @@ msgid ""
 "The following product need a project in which to put its task: %"
 "(product_name)s"
 msgstr ""
+"Трябва да бъде дефиниран проект в офертата %(order)s или във формата на "
+"продуктите, създаващи задача при поръчка.\n"
+"Следният продукт се нуждае от проект, в който да постави задачата си: %"
+"(product_name)s"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order__project_id
@@ -141,6 +175,9 @@ msgid ""
 "analytic distribution of this project will also serve as a reference for "
 "newly created sales order items."
 msgstr ""
+"При потвърждаване на поръчката за продажба ще бъде създадена задача за "
+"проекта. Аналитичното разпределение на този проект ще служи и като "
+"референция за новосъздадените елементи на поръчката за продажба."
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order_line__qty_delivered_method
@@ -154,24 +191,31 @@ msgid ""
 "this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"Според конфигурацията на продукта доставеното количество може да бъде "
+"изчислено автоматично чрез механизъм:\n"
+"  - Ръчно: количеството се задава ръчно на реда\n"
+"  - Аналитично от разходи: количеството е сумата от осчетоводените разходи\n"
+"  - Работен график: количеството е сумата от часовете, записани по задачи, "
+"свързани с този ред за продажба\n"
+"  - Складови движения: количеството идва от потвърдените товарения\n"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/product_template.py:0
 msgid "Based on Delivered Quantity (Manual)"
-msgstr ""
+msgstr "Въз основа на доставено количество (ръчно)"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/product_template.py:0
 msgid "Based on Milestones"
-msgstr ""
+msgstr "Въз основа на етапи"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_project__allow_billable
 #: model:ir.model.fields,field_description:sale_project.field_project_task__allow_billable
 msgid "Billable"
-msgstr ""
+msgstr "Подлежи на фактуриране"
 
 #. module: sale_project
 #. odoo-python
@@ -194,12 +238,12 @@ msgstr "Стойност на продадените стоки"
 #. odoo-python
 #: code:addons/sale_project/models/project_project.py:0
 msgid "Cost of Goods Sold Items"
-msgstr ""
+msgstr "Артикули от себестойността на продадените стоки"
 
 #. module: sale_project
 #: model:ir.actions.server,name:sale_project.model_sale_order_action_create_project
 msgid "Create Project"
-msgstr ""
+msgstr "Създаване на проект"
 
 #. module: sale_project
 #. odoo-python
@@ -220,12 +264,16 @@ msgid ""
 "Create a project for the order with a task for each sales order line to "
 "track the time spent."
 msgstr ""
+"Създайте проект за поръчката със задача за всеки ред от поръчката за "
+"продажба, за да проследявате изразходваното време."
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/product_template.py:0
 msgid "Create a task in an existing project to track the time spent."
 msgstr ""
+"Създайте задача в съществуващ проект, за да проследявате изразходваното "
+"време."
 
 #. module: sale_project
 #. odoo-python
@@ -238,6 +286,7 @@ msgstr "Създаване на сметка на доставчик"
 #: code:addons/sale_project/models/product_template.py:0
 msgid "Create an empty project for the order to track the time spent."
 msgstr ""
+"Създайте празен проект за поръчката, за да проследявате изразходваното време."
 
 #. module: sale_project
 #. odoo-python
@@ -272,6 +321,8 @@ msgid ""
 "Create projects or tasks later, and link them to order to track the time "
 "spent."
 msgstr ""
+"Създайте проекти или задачи по-късно и ги свържете с поръчката, за да "
+"проследявате изразходваното време."
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_project__partner_id
@@ -288,7 +339,7 @@ msgstr "Фактури за продажби"
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.product_template_form_view_invoice_policy_inherit_sale_project
 msgid "Defined on quotation"
-msgstr ""
+msgstr "Зададено в офертата"
 
 #. module: sale_project
 #. odoo-javascript
@@ -299,12 +350,12 @@ msgstr "Доставен"
 #. module: sale_project
 #: model:product.template,name:sale_project.product_service_create_project_only_product_template
 msgid "Digital Marketing Campaign (project)"
-msgstr ""
+msgstr "Кампания за дигитален маркетинг (проект)"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__display_sale_order_button
 msgid "Display Sales Order"
-msgstr ""
+msgstr "Показване на поръчка за продажба"
 
 #. module: sale_project
 #. odoo-python
@@ -321,12 +372,12 @@ msgstr "Предплащания"
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.product_template_form_view_invoice_policy_inherit_sale_project
 msgid "Empty project"
-msgstr ""
+msgstr "Празен проект"
 
 #. module: sale_project
 #: model:product.template,name:sale_project.product_product_flooring_product_template
 msgid "Flooring Services"
-msgstr ""
+msgstr "Услуги по подови настилки"
 
 #. module: sale_project
 #. odoo-python
@@ -338,13 +389,13 @@ msgstr "В процес на изпълнение"
 #. odoo-python
 #: code:addons/sale_project/models/product_template.py:0
 msgid "Invoice your milestones when they are reached."
-msgstr ""
+msgstr "Фактурирайте своите етапи, когато бъдат достигнати."
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_project_view_form_simplified_inherit
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
 msgid "Invoice your time and material to customers"
-msgstr ""
+msgstr "Фактурирайте на клиентите вашето време и материали"
 
 #. module: sale_project
 #. odoo-javascript
@@ -392,6 +443,11 @@ msgid ""
 "Create a task and track hours: Create a task on the sales order validation "
 "and track the work hours."
 msgstr ""
+"Ръчно зададени количества по поръчка: Фактура въз основа на ръчно въведеното "
+"количество, без създаване на аналитична сметка. Работни часове по договор: "
+"Фактура въз основа на отчетените часове в съответния работен график. "
+"Създаване на задача и отчитане на часовете: Създаване на задача при "
+"потвърждаване на поръчката за продажба и отчитане на работните часове."
 
 #. module: sale_project
 #. odoo-python
@@ -402,7 +458,7 @@ msgstr "Материaли"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order_line__qty_delivered_method
 msgid "Method to update delivered qty"
-msgstr ""
+msgstr "Метод за актуализиране на доставеното количество"
 
 #. module: sale_project
 #. odoo-python
@@ -410,30 +466,30 @@ msgstr ""
 #: model:ir.model.fields.selection,name:sale_project.selection__sale_order_line__qty_delivered_method__milestones
 #: model_terms:ir.ui.view,arch_db:sale_project.view_order_form_inherit_sale_project
 msgid "Milestones"
-msgstr ""
+msgstr "Етапи"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/sale_order_line.py:0
 msgid "New Sales Order Item"
-msgstr ""
+msgstr "Нов ред от поръчка за продажба"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_form
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_tree
 #: model_terms:ir.ui.view,arch_db:sale_project.view_sale_project_inherit_form
 msgid "Non-billable"
-msgstr ""
+msgstr "Нефактурируемо"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.portal_tasks_list_inherit
 msgid "Not Billed"
-msgstr ""
+msgstr "Нефактурирано"
 
 #. module: sale_project
 #: model:product.template,name:sale_project.product_service_create_task_only_product_template
 msgid "Office Furniture Set (task)"
-msgstr ""
+msgstr "Комплект офис мебели (задача)"
 
 #. module: sale_project
 #. odoo-python
@@ -451,7 +507,7 @@ msgstr "Other Services"
 #. module: sale_project
 #: model:product.template,name:sale_project.product_product_painting_product_template
 msgid "Painting"
-msgstr ""
+msgstr "Боядисване"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_milestone__quantity_percentage
@@ -459,23 +515,25 @@ msgid ""
 "Percentage of the ordered quantity that will automatically be delivered once "
 "the milestone is reached."
 msgstr ""
+"Процент от поръчаното количество, което автоматично ще бъде доставено, щом "
+"етапът бъде достигнат."
 
 #. module: sale_project
 #: model:product.template,name:sale_project.product_product_plumbing_product_template
 msgid "Plumbing Services"
-msgstr ""
+msgstr "ВиК услуги"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/project_task.py:0
 msgid "Portal Sale Order"
-msgstr ""
+msgstr "Поръчка за продажба в портала"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/product_template.py:0
 msgid "Prepaid/Fixed Price"
-msgstr ""
+msgstr "Предплатена/фиксирана цена"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_product_template
@@ -494,6 +552,9 @@ msgid ""
 "generate analytic costs, will be re-invoiced in this sales order if they are "
 "set up for it."
 msgstr ""
+"Продуктите, добавени към складовите подбори, чийто тип операция е "
+"конфигуриран да генерира аналитични разходи, ще бъдат префактурирани в тази "
+"поръчка за продажба, ако са настроени за това."
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_project_project
@@ -508,7 +569,7 @@ msgstr "Проект"
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_tracking__task_in_project
 msgid "Project & Task"
-msgstr ""
+msgstr "Проект и задача"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__project_account_id
@@ -518,12 +579,12 @@ msgstr "Проектна сметка"
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_project_milestone
 msgid "Project Milestone"
-msgstr ""
+msgstr "Етап на проект"
 
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_type__milestones
 msgid "Project Milestones"
-msgstr ""
+msgstr "Етапи на проект"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_product_product__project_template_id
@@ -534,7 +595,7 @@ msgstr "Проектен шаблон"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__project_sale_order_id
 msgid "Project's sale order"
-msgstr ""
+msgstr "Поръчка за продажба на проекта"
 
 #. module: sale_project
 #. odoo-python
@@ -552,17 +613,17 @@ msgstr "Количество"
 #: model:ir.model.fields,field_description:sale_project.field_project_milestone__quantity_percentage
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_tree
 msgid "Quantity (%)"
-msgstr ""
+msgstr "Количество (%)"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_sale_order_template_line
 msgid "Quotation Template Line"
-msgstr ""
+msgstr "Ред в шаблон за оферта"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
 msgid "Sales & Invoicing"
-msgstr ""
+msgstr "Продажби и фактуриране"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_sale_report
@@ -591,12 +652,14 @@ msgstr "Поръчка"
 #: model_terms:ir.ui.view,arch_db:sale_project.project_sharing_inherit_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:sale_project.view_sale_project_inherit_form
 msgid "Sales Order Item"
-msgstr ""
+msgstr "Артикул от поръчка за продажба"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_milestone__sale_line_id
 msgid "Sales Order Item that will be updated once the milestone is reached."
 msgstr ""
+"Артикул от поръчка за продажба, който ще бъде обновен, когато етапът бъде "
+"достигнат."
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_task__sale_line_id
@@ -610,6 +673,14 @@ msgid ""
 "also change or remove the sales order item of each timesheet entry "
 "individually."
 msgstr ""
+"Артикул от поръчка за продажба, към който ще бъде добавено времето, "
+"изразходвано за тази задача, за да бъде фактурирано на вашия клиент.\n"
+"По подразбиране ще бъде избран артикулът от поръчката за продажба, зададен в "
+"проекта. При липса на такъв ще се използва последният предплатен артикул от "
+"поръчка за продажба, който има оставащо време.\n"
+"Премахнете артикула от поръчката за продажба, за да направите тази задача "
+"нефактурируема. Можете също така да промените или премахнете артикула от "
+"поръчката за продажба за всеки запис в работния график поотделно."
 
 #. module: sale_project
 #. odoo-javascript
@@ -617,7 +688,7 @@ msgstr ""
 #: code:addons/sale_project/models/project_project.py:0
 #: code:addons/sale_project/static/src/components/project_right_side_panel/components/project_profitability_section.xml:0
 msgid "Sales Order Items"
-msgstr ""
+msgstr "Артикули от поръчка за продажба"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_sale_order_line
@@ -641,22 +712,28 @@ msgid ""
 "It can be modified on each task and timesheet entry individually if "
 "necessary."
 msgstr ""
+"Артикул от продажбената поръчка, който ще бъде избран по подразбиране за "
+"задачите и графиците на този проект, освен ако служителят, зададен в "
+"графиците, не е изрично свързан с друг артикул от продажбената поръчка по "
+"проекта.\n"
+"При необходимост може да бъде променян поотделно за всяка задача и запис в "
+"графика."
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_task__sale_order_id
 msgid "Sales order to which the task is linked."
-msgstr ""
+msgstr "Поръчка за продажба, към която е свързана задачата."
 
 #. module: sale_project
 #: model:product.template,name:sale_project.product_product_screw_driver_product_template
 msgid "Screw Driver"
-msgstr ""
+msgstr "Отвертка"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/controllers/portal.py:0
 msgid "Search in Invoice"
-msgstr ""
+msgstr "Търсене във Фактура"
 
 #. module: sale_project
 #. odoo-python
@@ -667,13 +744,13 @@ msgstr ""
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_project_view_form_simplified_inherit
 msgid "Select who to bill..."
-msgstr ""
+msgstr "Изберете кого да фактурирате..."
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_product_product__service_policy
 #: model:ir.model.fields,field_description:sale_project.field_product_template__service_policy
 msgid "Service Invoicing Policy"
-msgstr ""
+msgstr "Политика за фактуриране на услуги"
 
 #. module: sale_project
 #. odoo-javascript
@@ -696,12 +773,12 @@ msgstr "Задача"
 #. odoo-python
 #: code:addons/sale_project/models/sale_order_line.py:0
 msgid "Task Created (%(name)s): %(link)s"
-msgstr ""
+msgstr "Задача, създадена (%(name)s): %(link)s"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_project_task_recurrence
 msgid "Task Recurrence"
-msgstr ""
+msgstr "Повторяемост на задачата"
 
 #. module: sale_project
 #: model:project.project,label_tasks:sale_project.so_template_project
@@ -726,6 +803,7 @@ msgid ""
 "The product %s should not have a global project since it will generate a "
 "project."
 msgstr ""
+"Продуктът %s не трябва да има глобален проект, тъй като ще генерира проект."
 
 #. module: sale_project
 #. odoo-python
@@ -734,6 +812,8 @@ msgid ""
 "The product %s should not have a project nor a project template since it "
 "will not generate project."
 msgstr ""
+"Продуктът %s не трябва да има проект, нито шаблон на проект, тъй като няма "
+"да генерира проект."
 
 #. module: sale_project
 #. odoo-python
@@ -742,6 +822,8 @@ msgid ""
 "The product %s should not have a project template since it will generate a "
 "task in a global project."
 msgstr ""
+"Продуктът %s не трябва да има шаблон на проект, тъй като ще генерира задача "
+"в глобален проект."
 
 #. module: sale_project
 #. odoo-python
@@ -762,7 +844,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale_project/models/sale_order_line.py:0
 msgid "This task has been created from: %(order_link)s (%(product_name)s)"
-msgstr ""
+msgstr "Тази задача е създадена от: %(order_link)s (%(product_name)s)"
 
 #. module: sale_project
 #. odoo-python
@@ -791,17 +873,17 @@ msgstr "Дневник на покупките"
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_tree
 msgid "View Sales Order"
-msgstr ""
+msgstr "Преглед на поръчката за продажба"
 
 #. module: sale_project
 #: model:product.template,name:sale_project.product_service_create_project_and_task_product_template
 msgid "Website Redesign Service (project & task)"
-msgstr ""
+msgstr "Услуга по редизайн на уебсайт (проект и задача)"
 
 #. module: sale_project
 #: model:product.template,name:sale_project.product_product_wiring_product_template
 msgid "Wiring Services"
-msgstr ""
+msgstr "Услуги по окабеляване"
 
 #. module: sale_project
 #. odoo-python
@@ -810,6 +892,8 @@ msgid ""
 "You cannot link the order item %(order_id)s - %(product_id)s to this task "
 "because it is a re-invoiced expense."
 msgstr ""
+"Не можете да свържете артикула от поръчката %(order_id)s - %(product_id)s с "
+"тази задача, защото е префактуриран разход."
 
 #. module: sale_project
 #. odoo-python
