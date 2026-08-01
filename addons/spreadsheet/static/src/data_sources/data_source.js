@@ -86,10 +86,15 @@ export class LoadableDataSource {
                         );
                         return;
                     }
-                    this._loadError = Object.assign(
-                        new EvaluationError(e instanceof RPCError ? e.data.message : e.message),
-                        { cause: e }
-                    );
+                    const errorMessage =
+                        e instanceof RPCError
+                            ? // data.message can be empty, in that case we fallback on the error
+                              // name (e.g. "builtins.MemoryError"). It's better than nothing.
+                              e.data.message || e.data.name
+                            : e.message;
+                    this._loadError = Object.assign(new EvaluationError(errorMessage), {
+                        cause: e,
+                    });
                 })
                 .finally(() => {
                     this._lastUpdate = Date.now();
