@@ -13,9 +13,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-13 18:38+0000\n"
-"PO-Revision-Date: 2026-06-28 00:25+0000\n"
-"Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
+"POT-Creation-Date: 2026-07-31 17:40+0000\n"
+"PO-Revision-Date: 2026-07-28 08:08+0000\n"
+"Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-s18-3/"
 "stock_dropshipping/fi/>\n"
 "Language: fi\n"
@@ -34,6 +34,7 @@ msgstr "Yritykset"
 #: model:ir.model.fields,field_description:stock_dropshipping.field_procurement_group__display_name
 #: model:ir.model.fields,field_description:stock_dropshipping.field_product_product__display_name
 #: model:ir.model.fields,field_description:stock_dropshipping.field_purchase_order__display_name
+#: model:ir.model.fields,field_description:stock_dropshipping.field_purchase_order_line__display_name
 #: model:ir.model.fields,field_description:stock_dropshipping.field_res_company__display_name
 #: model:ir.model.fields,field_description:stock_dropshipping.field_sale_order__display_name
 #: model:ir.model.fields,field_description:stock_dropshipping.field_sale_order_line__display_name
@@ -71,6 +72,7 @@ msgstr "Suoratoimitukset"
 #: model:ir.model.fields,field_description:stock_dropshipping.field_procurement_group__id
 #: model:ir.model.fields,field_description:stock_dropshipping.field_product_product__id
 #: model:ir.model.fields,field_description:stock_dropshipping.field_purchase_order__id
+#: model:ir.model.fields,field_description:stock_dropshipping.field_purchase_order_line__id
 #: model:ir.model.fields,field_description:stock_dropshipping.field_res_company__id
 #: model:ir.model.fields,field_description:stock_dropshipping.field_sale_order__id
 #: model:ir.model.fields,field_description:stock_dropshipping.field_sale_order_line__id
@@ -119,6 +121,11 @@ msgid "Purchase Order"
 msgstr "Ostotilaus"
 
 #. module: stock_dropshipping
+#: model:ir.model,name:stock_dropshipping.model_purchase_order_line
+msgid "Purchase Order Line"
+msgstr ""
+
+#. module: stock_dropshipping
 #: model:ir.model,name:stock_dropshipping.model_sale_order
 msgid "Sales Order"
 msgstr "Myyntitilaus"
@@ -136,7 +143,7 @@ msgstr "Varastosiirto"
 #. module: stock_dropshipping
 #: model:ir.model,name:stock_dropshipping.model_stock_rule
 msgid "Stock Rule"
-msgstr "Varaston sääntö"
+msgstr "Varastosääntö"
 
 #. module: stock_dropshipping
 #: model_terms:ir.ui.view,arch_db:stock_dropshipping.stock_picking_type_kanban

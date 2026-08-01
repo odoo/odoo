@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-03-10 12:01+0000\n"
-"PO-Revision-Date: 2026-07-17 09:44+0000\n"
+"PO-Revision-Date: 2026-07-29 12:16+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-s18-3/base/"
 "fi/>\n"
@@ -13172,6 +13172,10 @@ msgid ""
 "The user has to create an account on twilio.com and top\n"
 "up their account to start sending SMS messages.\n"
 msgstr ""
+"\n"
+"Tämä moduuli mahdollistaa Twilion käytön tekstiviestien palveluntarjoajana.\n"
+"Käyttäjän on luotava tili osoitteessa twilio.com ja ladattava\n"
+"tililleen saldoa lähettääkseen tekstiviestejä.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_barcode_barcodelookup
@@ -28752,7 +28756,7 @@ msgstr "Suodattimet"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_filters_view_search
 msgid "Filters shared with all users"
-msgstr "Suotimet, jotka on jaettu kaikkien käyttäjien kanssa"
+msgstr "Kaikkien käyttäjien kanssa jaetut suodattimet"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_filters_view_search
@@ -35013,6 +35017,11 @@ msgid ""
 "- delete: another model requires the record being deleted, you can archive "
 "it instead\n"
 msgstr ""
+"Kentän %(field_display)s pakollinen arvo puuttuu.\n"
+"Malli: %(model_display)s\n"
+"- luo/päivitä: pakollista kenttää ei ole määritetty\n"
+"- poista: toinen malli vaatii tietueen poistamista, voit sen sijaan "
+"arkistoida sen\n"
 
 #. module: base
 #. odoo-python
@@ -38379,8 +38388,8 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:base.action_partner_form
 msgid "Odoo helps you track all activities related to your contacts."
 msgstr ""
-"Odoo auttaa sinua seuraamaan helposti kaikkia yhteystietoosi liittyviä "
-"toimia."
+"Odoo auttaa sinua seuraamaan kaikkia yhteystietoihisi liittyviä "
+"toimenpiteitä."
 
 #. module: base
 #. odoo-python
@@ -43799,6 +43808,9 @@ msgid ""
 "the UPS connector is compatiblewith the newest version of the UPS REST APIs "
 "available at https://developer.ups.com/"
 msgstr ""
+"Lähetä lähetyksesi UPS:n kautta ja seuraa niitä verkossa. Tämä uusi UPS-"
+"versio on yhteensopiva uusimman UPS REST -ohjelmointirajapinnan kanssa, joka "
+"on saatavilla osoitteessa https://developer.ups.com/"
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_usps_rest
@@ -47114,6 +47126,9 @@ msgid ""
 "supported.         Please install the new \"DHL Express Shipping\" module "
 "and uninstall this one as soon as possible."
 msgstr ""
+"Tätä vanhaa DHL Express -integraatiota ei enää "
+"tueta.                         Ole hyvä ja asenna uusi \"DHL Express "
+"Shipping\" moduuli ja poista tämä niin pian kuin mahdollista."
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_fedex
@@ -47936,7 +47951,7 @@ msgstr "Tehtävälista"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_actions_todo_tree
 msgid "Todo"
-msgstr "Tehtävät"
+msgstr "Tehtävälista"
 
 #. module: base
 #: model:res.currency,currency_subunit_label:base.PGK
@@ -51062,7 +51077,7 @@ msgstr "binääri"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__boolean
 msgid "boolean"
-msgstr "boolean"
+msgstr "boolen"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_bpost

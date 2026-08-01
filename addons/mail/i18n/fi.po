@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-17 17:37+0000\n"
-"PO-Revision-Date: 2026-07-07 11:46+0000\n"
+"PO-Revision-Date: 2026-07-31 09:08+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-s18-3/mail/"
 "fi/>\n"
@@ -1070,10 +1070,10 @@ msgid ""
 "                    (e.g. \"Onboarding\", \"Prospect Follow-up\", \"Project "
 "Milestone Meeting\", ...)"
 msgstr ""
-"Toimintasuunnitelmien avulla voidaan määrittää luettelo toiminnoista vain "
-"muutamalla napsautuksella\n"
-"                    (esim. \"Perehdytys\", \"Prospektin seuranta\", "
-"\"Projektin virstanpylväspalaveri\", ...)"
+"Toimintasuunnitelmien avulla voi määrittää luettelon toimenpiteistä vain "
+"muutamalla klikkauksella\n"
+"                    (esim. \"Perehdytys\", \"Potentiaalisen asiakkaan "
+"seuranta\", \"Projektin välitavoitepalaveri\", ...)"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_activity_schedule
@@ -1146,6 +1146,9 @@ msgid ""
 "GIF API key (service shutdown on June 30, 2026), please replace it here with "
 "a Klipy GIF API key"
 msgstr ""
+"Lisää Klipy GIF API-avain ottaaksesi GIF-tuen käyttöön. Jos olet käyttänyt "
+"Tenor GIF API-avainta (palvelu lopetetaan 30. kesäkuuta 2026), korvaa se "
+"tässä Klipy GIF API-avaimella"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__tenor_api_key
@@ -1155,6 +1158,10 @@ msgid ""
 "If you were using a Tenor GIF API key (service shutdown on June 30, 2026), "
 "please replace it here with a Klipy GIF API key"
 msgstr ""
+"Lisää Klipy GIF API-avain ottaaksesi GIF-tuen käyttöön. https://"
+"docs.klipy.com/getting-started\n"
+"Jos olet käyttänyt Tenor GIF API-avainta (palvelu lopetetaan 30. kesäkuuta "
+"2026), korvaa se tässä Klipy GIF API-avaimella"
 
 #. module: mail
 #. odoo-javascript
@@ -4386,7 +4393,7 @@ msgstr "Pääsytunnisteen voimassaolon päättymispäivä"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
 msgid "Extended Filters..."
-msgstr "Edistyneet suotimet..."
+msgstr "Laajennetut suodattimet..."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_followers_edit_form
@@ -6389,7 +6396,7 @@ msgstr "Näytä lisää"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/recipients_input.js:0
 msgid "Loading..."
-msgstr "Lataa..."
+msgstr "Ladataan..."
 
 #. module: mail
 #. odoo-javascript
@@ -8559,7 +8566,7 @@ msgstr "Kiinnitetyt viestit"
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__plan_id
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_view_search
 msgid "Plan"
-msgstr "Suunnittele"
+msgstr "Suunnitelma"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__plan_available_ids
@@ -11486,7 +11493,7 @@ msgstr "Tänään:"
 #. odoo-python
 #: code:addons/mail/models/mail_activity.py:0
 msgid "Todo"
-msgstr "Tehtävät"
+msgstr "Tehtävälista"
 
 #. module: mail
 #. odoo-javascript
@@ -12086,10 +12093,10 @@ msgid ""
 msgstr ""
 "Käytetään viestigeneraattorin luokitteluun\n"
 "'email': syntyy saapuvan sähköpostin, esim. mailgatewayn, tuloksena\n"
-"'kommentti': syntyy käyttäjän syötteestä esim. discuss- tai composer-"
-"ohjelmassa\n"
-"'email_outgoing': syntyy postituksesta\n"
-"'notification': järjestelmän tuottama esim. seurantaviestit\n"
+"'kommentti': syntyy käyttäjän syöttämänä, esim. viestinnän tai "
+"kirjoitustoiminnon kautta\n"
+"'email_outgoing': postituksen luoma\n"
+"'notification': järjestelmän tuottama, esim. viestien seuranta\n"
 "'auto_comment': automaattisen ilmoitusmekanismin tuottama, esim. kuittaus\n"
 "'user_notification': luodaan tietylle vastaanottajalle"
 
@@ -12150,7 +12157,7 @@ msgstr "Käyttäjäkohtainen ilmoitus"
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_user_type
 #: model:ir.model.fields,field_description:mail.field_ir_cron__activity_user_type
 msgid "User Type"
-msgstr "Käyttäjäprofiili"
+msgstr "Käyttäjätyyppi"
 
 #. module: mail
 #. odoo-javascript
@@ -13401,12 +13408,12 @@ msgstr "näyttö"
 #. odoo-python
 #: code:addons/mail/models/mail_alias.py:0
 msgid "some specific addresses"
-msgstr "joitakin erityisiä osoitteita"
+msgstr "joitain tiettyjä osoitteita"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_ice_server__server_type__stun
 msgid "stun:"
-msgstr "tainnuttaa:"
+msgstr "stun:"
 
 #. module: mail
 #. odoo-python
@@ -13428,7 +13435,7 @@ msgstr "malli"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_ice_server__server_type__turn
 msgid "turn:"
-msgstr "käännä:"
+msgstr "turn:"
 
 #. module: mail
 #. odoo-python
@@ -13458,7 +13465,7 @@ msgstr "ylös ICE:"
 #. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
 msgid "view"
-msgstr "näytä"
+msgstr "katso"
 
 #. module: mail
 #: model:ir.model,name:mail.model_ir_websocket
@@ -13498,7 +13505,7 @@ msgstr "{{ object.partner_id.lang }}"
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel_member.py:0
 msgid "“%(member_name)s” in “%(channel_name)s”"
-msgstr "\"%(member_name)s\" kohdassa \"%(channel_name)s\""
+msgstr "\"%(member_name)s\" kanavalla \"%(channel_name)s\""
 
 #. module: mail
 #. odoo-javascript
