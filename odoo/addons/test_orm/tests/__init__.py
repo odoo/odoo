@@ -11,6 +11,7 @@ from . import (
     test_check_access,
     test_company_checks,
     test_config_settings,
+    test_copy,
     test_create,
     test_domain,
     test_domain_expression,

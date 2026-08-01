@@ -21,6 +21,7 @@ from odoo.tools.float_utils import float_compare
 from odoo.tools.misc import get_diff, unquote
 from odoo.tools.safe_eval import expr_eval, safe_eval, test_python_expr
 from odoo.tools.json import stringify_keys
+from odoo.tools.translate import adapt_translated_field_value
 
 _logger = logging.getLogger(__name__)
 _server_action_logger = _logger.getChild("server_action_safe_eval")
@@ -1366,8 +1367,12 @@ class IrActionsServer(models.Model):
         default = default or {}
         vals_list = super().copy_data(default=default)
         if not default.get('name'):
+            field = self._fields['name']
             for vals in vals_list:
-                vals['name'] = _('%s (copy)', vals.get('name', ''))
+                vals['name'] = adapt_translated_field_value(
+                    self.env, field, vals['name'],
+                    lambda lang, value: self.with_context(lang=lang).env._('%s (copy)', value),
+                )
         return vals_list
 
     def action_open_parent_action(self):

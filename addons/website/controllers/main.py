@@ -1665,7 +1665,8 @@ class Website(Home):
             field = record._fields.get(field_name)
             if not field.store:
                 return record[field_name] or ''
-            translations = field._get_stored_translations(record) or {}
+
+            translations = dict(record._get_stored_translations(field_name) or {})
             return translations.get(lang_code or request.lang.code, '')
 
         # Access checks

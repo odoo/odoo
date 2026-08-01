@@ -186,7 +186,7 @@ class BaseString(Field[str | typing.Literal[False]]):
             else:
                 get_base = lambda term: term
 
-            translations = self._get_stored_translations(record)
+            translations = dict(self._get_stored_translations(record))
 
             # use a wrapper to let the frontend js code identify each term and
             # its metadata in the 'edit_translations' context
@@ -218,11 +218,11 @@ class BaseString(Field[str | typing.Literal[False]]):
     def convert_to_write(self, value, record):
         return value
 
-    def _get_stored_translations(self, record):
+    def _get_stored_translations(self, record) -> StoredTranslations | None:
         """
         : return: {'en_US': 'value_en_US', 'fr_FR': 'French'}
         """
-        assert (self.translate and self.store and record)
+        assert self.translate and self.store, f"Field {self} should be a translated and stored to get the translations"
         if self.compute and self.store:
             self.recompute(record)
         field_cache = record.env.transaction.field_data[self]
@@ -230,7 +230,7 @@ class BaseString(Field[str | typing.Literal[False]]):
         if value is None:
             return None
         if isinstance(value, StoredTranslations):
-            return dict(value)
+            return value.copy()
         complete_translations_types = (type(None), StoredTranslations)
         records_to_fetch = record.browse(itertools.islice((
             id_ for id_ in expand_ids(record.id, record._prefetch_ids)
@@ -241,7 +241,7 @@ class BaseString(Field[str | typing.Literal[False]]):
         records_to_fetch.with_context(prefetch_langs=True).fetch([self.name])
         value = field_cache.get(record.id, SENTINEL)
         if isinstance(value, StoredTranslations):
-            return dict(value)
+            return value.copy()
         # column value is NULL or the record row doesn't exist in database
         return None
 
@@ -415,7 +415,7 @@ class BaseString(Field[str | typing.Literal[False]]):
                 self._update_cache(record, StoredTranslations({**cache_value_dict, 'en_US': cache_value_dict[base_lang]}), dirty=True)
                 continue
 
-            stored_translations = StoredTranslations(stored_translations_data).written(
+            stored_translations = stored_translations_data.written(
                 records.env, self, parsed_translation_dict,
                 adapt_close_terms=adapt_close_terms, delay_translations=delay_translations
             )

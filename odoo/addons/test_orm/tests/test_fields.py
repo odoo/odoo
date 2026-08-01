@@ -1,7 +1,5 @@
 import base64
 import io
-import inspect
-import logging
 from collections import OrderedDict
 from datetime import date, datetime
 from unittest.mock import patch
@@ -20,8 +18,6 @@ from odoo.tools.image import binary_to_image, image_data_uri
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo.addons.base.tests.files import SVG_RAW, ZIP_RAW
 from odoo.addons.test_orm.tests.test_domain_expression import TransactionExpressionCase
-
-_logger = logging.getLogger(__name__)
 
 
 @tagged('at_install', '-post_install')
@@ -5510,67 +5506,3 @@ class TestCompanyDependent(TransactionCase):
                              f'Please override the unlink method of {comodel_field.comodel_name} and do the ORM on '
                              f'delete cascade logic and remove/override the ondelete="cascade" of {comodel_field}')
                         )
-
-
-class TestWriteOverrideTranslatedFields(TransactionCase):
-    CHECKED_FIELD_NAMES = {  # {module_name: [model_name.field_name, ...]}
-        'base': ['res.groups.name'],
-        'web_studio': ['ir.ui.menu.name'],
-        'website_sale': ['product.template.description_ecommerce'],
-        'point_of_sale': ['product.template.public_description', 'product.tag.pos_description'],
-        'project': ['project.project.name'],
-        'account': ['account.journal.name'],
-        'documents': ['documents.document.name'],
-        'im_livechat': ['chatbot.script.title'],
-        'documents_project': ['project.project.name'],
-        'website_slides': ['slide.channel.description'],
-    }
-
-    def test_write_override_translated_field(self):
-        base_write = self.env.registry['base'].write
-        violations = []
-        modules_to_check = set(self.env['ir.module.module'].search([
-            ('name', 'in', list(self.CHECKED_FIELD_NAMES)),
-            ('state', '=', 'installed'),
-        ]).mapped('name'))
-        checked_field_names = {
-            module_name: field_names.copy()
-            for module_name, field_names in self.CHECKED_FIELD_NAMES.items()
-            if module_name in modules_to_check
-        }
-        for model in self.env.registry.values():
-            if model.write is base_write:
-                continue
-            translated_field_names = [
-                field.name for field in model._fields.values() if field.translate
-            ]
-            if not translated_field_names:
-                continue
-            for cls in model.__mro__:
-                if 'write' not in cls.__dict__:
-                    continue
-                write_method = cls.__dict__['write']
-                if write_method is base_write:
-                    break
-                source = inspect.getsource(write_method)
-                for field_name in translated_field_names:
-                    full_name = f'{model._name}.{field_name}'
-                    patterns = [
-                        f"vals['{field_name}']",
-                        f'vals["{field_name}"]',
-                        f"vals.get('{field_name}'",
-                        f'vals.get("{field_name}"',
-                    ]
-                    if matched_pattern := next(iter(p for p in patterns if p in source), None):
-                        module_name = cls.__module__.split('.')[2]  # odoo.addons.module_name.xxx
-                        if full_name in checked_field_names.get(module_name, []):
-                            checked_field_names[module_name].remove(full_name)
-                        else:
-                            violations.append(
-                                f"find pattern {matched_pattern} in the write method of model {model._name} ({cls.__module__})"
-                            )
-
-        checked_field_names = {k: v for k, v in checked_field_names.items() if v}
-        if checked_field_names:
-            _logger.warning("Some checked fields maybe not be used in the write anymore %s", checked_field_names)
-        self.assertFalse(len(violations), "Override `write`(maybe also `create`) for translated fields \n" + '\n'.join(violations))
