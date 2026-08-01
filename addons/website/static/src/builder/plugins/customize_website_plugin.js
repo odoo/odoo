@@ -1096,13 +1096,15 @@ export class CustomizeButtonStyleAction extends BuilderAction {
         const style = getHtmlStyle(this.document);
         const isOutline = getCSSVariableValue(`btn-${which}-outline`, style);
         const isFlat = getCSSVariableValue(`btn-${which}-flat`, style);
-        return isFlat === "true" ? "flat" : isOutline === "true" ? "outline" : "fill";
+        const isGradient = getCSSVariableValue(`btn-${which}-gradient`, style);
+        return isFlat === "true" ? "flat" : isOutline === "true" ? "outline" : isGradient === "true" ? "gradient" : "fill";
     }
     async apply({ params: { mainParam: which, nullValue }, value }) {
         await this.dependencies.customizeWebsite.customizeWebsiteVariables(
             {
                 [`btn-${which}-outline`]: value === "outline" ? "true" : "false",
                 [`btn-${which}-flat`]: value === "flat" ? "true" : "false",
+                [`btn-${which}-gradient`]: value === "gradient" ? "true" : "false",
             },
             nullValue
         );
