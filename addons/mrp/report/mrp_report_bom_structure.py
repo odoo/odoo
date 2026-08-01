@@ -732,7 +732,7 @@ class ReportBomStructure(models.AbstractModel):
     def _merge_components(self, component_1, component_2):
         qty = component_2['quantity']
         component_1["quantity"] = component_1["quantity"] + qty
-        component_1["base_bom_line_qty"] = component_1["quantity"] + qty
+        component_1["base_bom_line_qty"] = component_1["base_bom_line_qty"] + component_2["base_bom_line_qty"]
         component_1["prod_cost"] = component_1["prod_cost"] + component_2["prod_cost"]
         component_1["bom_cost"] = component_1["bom_cost"] + component_2["bom_cost"]
         if component_2.get('availability_delay') is False or component_2.get('availability_delay') >= component_1.get('availability_delay'):
