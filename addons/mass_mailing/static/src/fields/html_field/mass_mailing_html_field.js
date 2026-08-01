@@ -245,7 +245,7 @@ export class MassMailingHtmlField extends HtmlField {
         } else if (this.withBuilder) {
             return this.getBuilderConfig();
         } else {
-            return this.getSimpleEditorConfig();
+            return this.getBasicEditorConfig();
         }
     }
 
@@ -276,7 +276,7 @@ export class MassMailingHtmlField extends HtmlField {
         };
     }
 
-    getSimpleEditorConfig() {
+    getBasicEditorConfig() {
         const config = super.getConfig();
         const codeViewCommand = [config.resources?.user_commands]
             .filter(Boolean)
@@ -295,7 +295,7 @@ export class MassMailingHtmlField extends HtmlField {
                 ...registry.category("mail-core-plugins").getAll(),
             ]
                 .filter((P) => !["banner", "prompt", "link"].includes(P.id))
-                .concat(registry.category("basic-editor-plugins").getAll()),
+                .concat(registry.category("mass_mailing-basic-editor-plugins").getAll()),
         };
     }
 
@@ -516,23 +516,6 @@ export class MassMailingHtmlField extends HtmlField {
             () => {}
         );
         record.model.bus.trigger("FIELD_IS_DIRTY", this.isDirty);
-    }
-
-    /**
-     * TODO EGGMAIL: remove in dev branch
-     * @deprecated
-     */
-    preprocessFilterDomains(htmlEl) {
-        htmlEl.querySelectorAll("[data-filter-domain]").forEach((el) => {
-            let domain;
-            try {
-                domain = new Domain(JSON.parse(el.dataset.filterDomain));
-            } catch {
-                el.setAttribute("t-if", "false");
-                return;
-            }
-            el.setAttribute("t-if", `object.filtered_domain(${domain.toString()})`);
-        });
     }
 }
 
