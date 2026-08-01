@@ -223,7 +223,7 @@ class StockMove(models.Model):
                 continue
             company = move.company_id
             subcontracting_location = \
-                move.picking_id.partner_id.with_company(company).property_stock_subcontractor \
+                move._get_subcontract_partner().with_company(company).property_stock_subcontractor \
                 or company.subcontracting_location_id
             move.write({
                 'is_subcontract': True,
@@ -261,6 +261,14 @@ class StockMove(models.Model):
             'context': context,
         }
 
+    def _get_subcontract_partner(self):
+        """Return the partner to use as subcontractor for this move.
+
+        Override in modules with a more reliable source than picking.partner_id
+        (e.g. purchase_line_id.order_id.partner_id in mrp_subcontracting_purchase).
+        """
+        return self.picking_id.partner_id
+
     def _get_subcontract_bom(self):
         self.ensure_one()
         bom = self.env['mrp.bom'].sudo()._bom_subcontract_find(
@@ -268,7 +276,7 @@ class StockMove(models.Model):
             picking_type=self.picking_type_id,
             company_id=self.company_id.id,
             bom_type='subcontract',
-            subcontractor=self.picking_id.partner_id,
+            subcontractor=self._get_subcontract_partner(),
         )
         return bom
 
