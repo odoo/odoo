@@ -20,8 +20,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-29 17:35+0000\n"
-"PO-Revision-Date: 2026-06-12 15:34+0000\n"
+"POT-Creation-Date: 2026-07-24 17:37+0000\n"
+"PO-Revision-Date: 2026-07-28 16:48+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-s19-1/stock/"
 "es/>\n"
@@ -1090,8 +1090,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__is_storable
 msgid "A storable product is a product for which you manage stock."
-msgstr ""
-"Un producto almacenable es aquel para el que se controla el inventario."
+msgstr "Un producto almacenable es un producto cuyo stock se gestiona."
 
 #. module: stock
 #: model:res.groups,name:stock.group_warning_stock
@@ -1539,7 +1538,7 @@ msgid ""
 msgstr ""
 "Como ya se han utilizado otras unidades de medida (por ejemplo, %"
 "(problem_uom)s) distintas de %(uom)s para este producto, no se puede cambiar "
-"la unidad de medida. Si desea cambiarla, archive el producto y cree uno "
+"la unidad de medida. Si deseas cambiarla, archiva el producto y crea uno "
 "nuevo."
 
 #. module: stock
@@ -2115,7 +2114,7 @@ msgstr "Elija el diseño de la hoja para imprimir etiquetas de lotes"
 #. module: stock
 #: model:ir.model,name:stock.model_product_label_layout
 msgid "Choose the sheet layout to print the labels"
-msgstr "Elija el diseño de la hoja para imprimir etiquetas"
+msgstr "Elige el diseño de la hoja para imprimir etiquetas"
 
 #. module: stock
 #: model:ir.model,name:stock.model_picking_label_type
@@ -3201,8 +3200,8 @@ msgid ""
 "Delivery lead time, in days. It's the number of days, promised to the "
 "customer, between the confirmation of the sales order and the delivery."
 msgstr ""
-"Plazo de entrega, en días. Es el numero de días, prometidos al cliente, "
-"desde la confirmación del pedido de venta hasta la entrega"
+"Plazo de entrega, en días. Es el número de días que se promete al cliente "
+"entre la confirmación del pedido de venta y la entrega."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__delivery_count
@@ -4084,6 +4083,7 @@ msgid "Full Package Name"
 msgstr "Nombre completo del paquete"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Future Activities"
 msgstr "Actividades futuras"
@@ -5346,6 +5346,7 @@ msgid "Late"
 msgstr "Retrasado"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Late Activities"
 msgstr "Actividades retrasadas"
@@ -5986,6 +5987,7 @@ msgid "Multiple destinations"
 msgstr "Múltiples destinos"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "My Activities"
 msgstr "Mis actividades"
@@ -10565,6 +10567,7 @@ msgid "Today"
 msgstr "Hoy"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Today Activities"
 msgstr "Actividades de hoy"
