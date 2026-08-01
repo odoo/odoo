@@ -46,6 +46,16 @@ export class EmailImageFormatPlugin extends Plugin {
         this.initializeChecksumCache();
     }
 
+    /**
+     * TODO EGGMAIL: there seems to be an usage inconsistency between
+     * data-original-id and data-attachment-id in html_editor code.
+     * data-attachment-id seems to be the newer one, but some code is still
+     * using data-original-id.
+     */
+    getAttachmentId(info) {
+        return info.originalId === undefined ? info.attachmentId : info.originalId;
+    }
+
     initializeChecksumCache() {
         this.checksumCache = new Map();
         for (const el of selectElements(
@@ -77,7 +87,7 @@ export class EmailImageFormatPlugin extends Plugin {
                 src.split("base64,")[1] &&
                 !el.matches(".o_b64_image_to_save,.o_modified_image_to_save")
             ) {
-                if (el.dataset.originalId) {
+                if (this.getAttachmentId(el.dataset)) {
                     el.classList.add("o_modified_image_to_save");
                 } else {
                     el.classList.add("o_b64_image_to_save");
@@ -136,7 +146,9 @@ export class EmailImageFormatPlugin extends Plugin {
         this.cleanupImageIdentity(editable);
         this.cleanupImageIdentity(this.editable);
 
-        const failures = (await Promise.allSettled(promises)).filter((result) => result.reason);
+        const failures = (await Promise.allSettled(promises)).filter(
+            (result) => result.status === "rejected"
+        );
         if (failures.length > 0) {
             throw new EmailImageError(
                 "Some images could not be processed to the correct format for the email."
@@ -294,17 +306,17 @@ export class EmailImageFormatPlugin extends Plugin {
     }
 
     async convertImageDataToEmailAttachmentSrc(imageData, imageInfo) {
-        const { originalId } = imageInfo;
+        const attachmentId = this.getAttachmentId(imageInfo);
         const { resModel, resId } = this.getRecordInfo(this.editable);
         imageData = imageData.substring(imageData.indexOf(",") + 1);
         const newAttachmentUrls = await rpc(
-            `/html_editor/modify_image/${encodeURIComponent(originalId)}`,
+            `/html_editor/modify_image/${encodeURIComponent(attachmentId)}`,
             {
                 res_model: resModel,
                 res_id: parseInt(resId),
                 data: imageData,
                 mimetype: this.config.defaultImageMimetype,
-                name: `email_${originalId}.png`,
+                name: `email_${attachmentId}.png`,
             }
         );
         return newAttachmentUrls.original;
@@ -377,6 +389,7 @@ export class EmailImageFormatPlugin extends Plugin {
                 : ""
         }`;
         Object.assign(el.dataset, {
+            attachmentId: attachment.id,
             mimetype: attachment.mimetype,
             mimetypeBeforeConversion: attachment.mimetype,
             originalId: attachment.id,
@@ -398,23 +411,16 @@ export class EmailImageFormatPlugin extends Plugin {
 
     async sanitizeImage(el, sourceEl, measureEl) {
         const unmodifiedSrc = getImageSrc(el)?.trimStart();
-        try {
-            await Promise.all(this.trigger("on_save_pending_images_handlers", el, sourceEl));
-        } catch {
-            // ERROR CASE
-            this.setEmailImage(PLACEHOLDER_IMAGE, undefined, el, sourceEl);
-            return;
-        }
+        await Promise.all(this.trigger("on_save_pending_images_handlers", el, sourceEl));
         let src = getImageSrc(el)?.trimStart();
-        if (!src || src === PLACEHOLDER_IMAGE) {
-            // ERROR CASE
+        let data = { ...el.dataset, ...(await loadImageInfo(el)) };
+        const attachmentId = this.getAttachmentId(data);
+        if (!src || (src === PLACEHOLDER_IMAGE && attachmentId)) {
             this.updateImageSource(el, unmodifiedSrc);
             this.updateImageSource(sourceEl, unmodifiedSrc);
-            this.setEmailImage(PLACEHOLDER_IMAGE, undefined, el, sourceEl);
-            return;
+            throw new EmailImageError();
         }
-        let data = { ...el.dataset, ...(await loadImageInfo(el)) };
-        if (!data.originalId) {
+        if (!attachmentId) {
             // If there is no attachment, reset the image source and attempt
             // to create one.
             this.updateImageSource(el, unmodifiedSrc);
@@ -436,59 +442,38 @@ export class EmailImageFormatPlugin extends Plugin {
                 // be displayed as a placeholder in the email.
             }
             if (!attachment) {
-                // ERROR CASE
-                this.setEmailImage(PLACEHOLDER_IMAGE, undefined, el, sourceEl);
-                return;
+                throw new EmailImageError();
             }
             this.updateImageData(el, attachment);
             this.updateImageData(sourceEl, attachment);
             if (isShape) {
                 const updatedSrc = getImageSrc(sourceEl)?.trimStart();
-                let updateAttributes;
-                try {
-                    updateAttributes = await this.dependencies.imagePostProcess.processImage({
-                        img: sourceEl,
-                        newDataset: { shape: data.shape },
-                    });
-                } catch {
-                    // ERROR CASE
-                    this.setEmailImage(PLACEHOLDER_IMAGE, undefined, el, sourceEl);
-                    return;
-                }
+                const updateAttributes = await this.dependencies.imagePostProcess.processImage({
+                    img: sourceEl,
+                    newDataset: { shape: data.shape },
+                });
                 updateAttributes();
                 const processedSrc = getImageSrc(sourceEl)?.trimStart();
                 if (processedSrc && sourceEl.classList.contains("o_modified_image_to_save")) {
                     this.updateImageSource(el, processedSrc);
                     sourceEl.classList.add("o_modified_image_to_save");
-                    try {
-                        await Promise.all(
-                            this.trigger("on_save_pending_images_handlers", el, sourceEl)
-                        );
-                    } catch {
-                        // ERROR CASE
-                        this.setEmailImage(PLACEHOLDER_IMAGE, undefined, el, sourceEl);
-                        return;
-                    }
+                    await Promise.all(
+                        this.trigger("on_save_pending_images_handlers", el, sourceEl)
+                    );
                     src = getImageSrc(el)?.trimStart();
                     if (!src || src === PLACEHOLDER_IMAGE) {
-                        // ERROR CASE
-                        this.setEmailImage(PLACEHOLDER_IMAGE, undefined, el, sourceEl);
-                        return;
+                        throw new EmailImageError();
                     }
                 } else if (updatedSrc !== processedSrc) {
-                    // ERROR CASE
                     this.updateImageSource(sourceEl, updatedSrc);
-                    this.setEmailImage(PLACEHOLDER_IMAGE, undefined, el, sourceEl);
-                    return;
+                    throw new EmailImageError();
                 }
             }
             src = getImageSrc(el)?.trimStart();
             if (!src) {
-                // ERROR CASE
                 this.updateImageSource(el, unmodifiedSrc);
                 this.updateImageSource(sourceEl, unmodifiedSrc);
-                this.setEmailImage(PLACEHOLDER_IMAGE, undefined, el, sourceEl);
-                return;
+                throw new EmailImageError();
             }
             data = { ...el.dataset, ...(await loadImageInfo(el)) };
         }
@@ -496,7 +481,7 @@ export class EmailImageFormatPlugin extends Plugin {
         const mimetype = data.mimetype && data.mimetype !== "undefined" ? data.mimetype : undefined;
         const imageInfo = {
             mimetype,
-            originalId: data.originalId,
+            attachmentId,
         };
         if (el.nodeName === "IMG") {
             if (!mimetype || FORBIDDEN_EMAIL_MIMETYPE.has(mimetype)) {
@@ -614,15 +599,7 @@ export class EmailImageFormatPlugin extends Plugin {
             targetPosition,
             filterData
         );
-        let newSrc;
-        try {
-            newSrc = await this.convertImageDataToEmailAttachmentSrc(imageData, imageInfo);
-        } catch {
-            // ERROR CASE
-            // If it is not possible to create an attachment, the image will
-            // be displayed as a placeholder in the email.
-            newSrc = PLACEHOLDER_IMAGE;
-        }
+        const newSrc = await this.convertImageDataToEmailAttachmentSrc(imageData, imageInfo);
         this.setEmailImage(newSrc, checksum, el, sourceEl);
     }
 
@@ -694,15 +671,7 @@ export class EmailImageFormatPlugin extends Plugin {
             return;
         }
         const imageData = await this.convertImgToImageData(el, dimensions.width, dimensions.height);
-        let newSrc;
-        try {
-            newSrc = await this.convertImageDataToEmailAttachmentSrc(imageData, imageInfo);
-        } catch {
-            // ERROR CASE
-            // If it is not possible to create an attachment, the image will
-            // be displayed as a placeholder in the email.
-            newSrc = PLACEHOLDER_IMAGE;
-        }
+        const newSrc = await this.convertImageDataToEmailAttachmentSrc(imageData, imageInfo);
         this.setEmailImage(newSrc, checksum, el, sourceEl);
     }
 

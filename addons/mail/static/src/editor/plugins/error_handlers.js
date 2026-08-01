@@ -14,6 +14,7 @@ export function emailImageErrorHandler(env, error, originalError) {
     if (originalError instanceof EmailImageError) {
         notification.add(_t("Image processing error, try saving again or re-upload them."), {
             type: "danger",
+            sticky: true,
         });
         return true;
     }
