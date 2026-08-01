@@ -359,9 +359,13 @@ export class Many2XAutocomplete extends Component {
         });
     }
     mapRecordToOption(record, request) {
-        const label = record.__formatted_display_name || record.display_name;
+        const formattedDisplayName = record.__formatted_display_name;
+        const label = formattedDisplayName || record.display_name;
+        const title =
+            String(formattedDisplayName ?? "").match(/--(.*?)--/)?.[1] || record.display_name;
         return {
             value: record.id,
+            title,
             label: label
                 ? highlightText(request, odoomark(label), "text-primary fw-bold")
                 : _t("Unnamed"),
