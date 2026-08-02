@@ -24,7 +24,22 @@ const FORBIDDEN_EMAIL_MIMETYPE = new Set([SVG_MIMETYPE, WEBP_MIMETYPE]);
 const SVG_EXCLUSIVE_ATTRIBUTES = new Set(["viewBox", "preserveAspectRatio", "x", "y"]);
 const PLACEHOLDER_IMAGE = "/html_editor/static/src/img/placeholder_thumbnail.png";
 
-export class EmailImageError extends Error {}
+export class AggregateEmailImageError extends AggregateError {
+    name = this.constructor.name;
+}
+export class EmailImageError extends Error {
+    name = this.constructor.name;
+}
+class InvalidEmailImageSourceError extends EmailImageError {}
+class EmailImageAttachmentCreationError extends EmailImageError {}
+
+function getDisplayUrl(url) {
+    if (!url) {
+        url = "";
+    }
+    url = typeof url === "string" ? url : url.toString();
+    return `${url.substring(0, 50)}${url.length > 50 ? "..." : ""}`;
+}
 
 export class EmailImageFormatPlugin extends Plugin {
     static id = "emailImageFormat";
@@ -52,7 +67,7 @@ export class EmailImageFormatPlugin extends Plugin {
      * data-attachment-id seems to be the newer one, but some code is still
      * using data-original-id.
      */
-    getAttachmentId(info) {
+    getMainAttachmentId(info) {
         return info.originalId === undefined ? info.attachmentId : info.originalId;
     }
 
@@ -87,7 +102,7 @@ export class EmailImageFormatPlugin extends Plugin {
                 src.split("base64,")[1] &&
                 !el.matches(".o_b64_image_to_save,.o_modified_image_to_save")
             ) {
-                if (this.getAttachmentId(el.dataset)) {
+                if (this.getMainAttachmentId(el.dataset)) {
                     el.classList.add("o_modified_image_to_save");
                 } else {
                     el.classList.add("o_b64_image_to_save");
@@ -146,14 +161,31 @@ export class EmailImageFormatPlugin extends Plugin {
         this.cleanupImageIdentity(editable);
         this.cleanupImageIdentity(this.editable);
 
-        const failures = (await Promise.allSettled(promises)).filter(
-            (result) => result.status === "rejected"
-        );
-        if (failures.length > 0) {
-            throw new EmailImageError(
-                "Some images could not be processed to the correct format for the email."
+        const results = await Promise.allSettled(promises);
+        const errors = [];
+        let containsMiscErrors = false;
+        for (const result of results) {
+            if (result.status !== "rejected") {
+                continue;
+            }
+            errors.push(result.reason);
+            if (!(result.reason instanceof EmailImageError)) {
+                containsMiscErrors = true;
+            }
+        }
+        if (errors.length === 0) {
+            return;
+        }
+        if (errors.length === 1) {
+            throw errors[0];
+        }
+        if (!containsMiscErrors) {
+            throw new AggregateEmailImageError(
+                errors,
+                "Image conversion to a valid email format failed."
             );
         }
+        throw new AggregateError(errors, "Some images could not be processed.");
     }
 
     async prepare2DCanvasForImg(img, width, height) {
@@ -306,7 +338,7 @@ export class EmailImageFormatPlugin extends Plugin {
     }
 
     async convertImageDataToEmailAttachmentSrc(imageData, imageInfo) {
-        const attachmentId = this.getAttachmentId(imageInfo);
+        const attachmentId = this.getMainAttachmentId(imageInfo);
         const { resModel, resId } = this.getRecordInfo(this.editable);
         imageData = imageData.substring(imageData.indexOf(",") + 1);
         const newAttachmentUrls = await rpc(
@@ -337,7 +369,9 @@ export class EmailImageFormatPlugin extends Plugin {
 
     async urlToDataUrl(url) {
         const throwError = () => {
-            throw new Error(`Failed to fetch ${url}`);
+            throw new InvalidEmailImageSourceError(
+                `The image could not be fetched. ${getDisplayUrl(url)}`
+            );
         };
         const response = await fetch(url);
         if (!response.ok) {
@@ -414,35 +448,34 @@ export class EmailImageFormatPlugin extends Plugin {
         await Promise.all(this.trigger("on_save_pending_images_handlers", el, sourceEl));
         let src = getImageSrc(el)?.trimStart();
         let data = { ...el.dataset, ...(await loadImageInfo(el)) };
-        const attachmentId = this.getAttachmentId(data);
+        let attachmentId = this.getMainAttachmentId(data);
         if (!src || (src === PLACEHOLDER_IMAGE && attachmentId)) {
             this.updateImageSource(el, unmodifiedSrc);
             this.updateImageSource(sourceEl, unmodifiedSrc);
-            throw new EmailImageError();
+            throw new EmailImageAttachmentCreationError(
+                `The image could not be saved. ${getDisplayUrl(unmodifiedSrc)}`
+            );
         }
         if (!attachmentId) {
             // If there is no attachment, reset the image source and attempt
             // to create one.
             this.updateImageSource(el, unmodifiedSrc);
             this.updateImageSource(sourceEl, unmodifiedSrc);
-            let dataUrl, isShape;
+            let isShape;
             let attachmentSrc = unmodifiedSrc;
             if (data.shape && data.originalSrc) {
                 isShape = true;
                 attachmentSrc = data.originalSrc;
             }
+            const dataUrl = await this.urlToDataUrl(attachmentSrc);
             let attachment;
-            try {
-                dataUrl = await this.urlToDataUrl(attachmentSrc);
-                if (dataUrl) {
-                    attachment = await this.convertImageDataToEditorAttachment(dataUrl);
-                }
-            } catch {
-                // If it is not possible to create an attachment, the image will
-                // be displayed as a placeholder in the email.
+            if (dataUrl) {
+                attachment = await this.convertImageDataToEditorAttachment(dataUrl);
             }
-            if (!attachment) {
-                throw new EmailImageError();
+            if (!attachment || !attachment.image_src) {
+                throw new EmailImageAttachmentCreationError(
+                    `The image could not be saved. ${getDisplayUrl(unmodifiedSrc)}`
+                );
             }
             this.updateImageData(el, attachment);
             this.updateImageData(sourceEl, attachment);
@@ -462,20 +495,20 @@ export class EmailImageFormatPlugin extends Plugin {
                     );
                     src = getImageSrc(el)?.trimStart();
                     if (!src || src === PLACEHOLDER_IMAGE) {
-                        throw new EmailImageError();
+                        throw new EmailImageAttachmentCreationError(
+                            `The image could not be saved. ${getDisplayUrl(processedSrc)}`
+                        );
                     }
                 } else if (updatedSrc !== processedSrc) {
                     this.updateImageSource(sourceEl, updatedSrc);
-                    throw new EmailImageError();
+                    throw new InvalidEmailImageSourceError(
+                        `The image could not be processed. ${getDisplayUrl(updatedSrc)}`
+                    );
                 }
             }
             src = getImageSrc(el)?.trimStart();
-            if (!src) {
-                this.updateImageSource(el, unmodifiedSrc);
-                this.updateImageSource(sourceEl, unmodifiedSrc);
-                throw new EmailImageError();
-            }
             data = { ...el.dataset, ...(await loadImageInfo(el)) };
+            attachmentId = this.getMainAttachmentId(data);
         }
         this.measureUtils = await this.measureUtilsPromise;
         const mimetype = data.mimetype && data.mimetype !== "undefined" ? data.mimetype : undefined;
@@ -544,10 +577,14 @@ export class EmailImageFormatPlugin extends Plugin {
             : undefined;
         const targetDimensions = this.getMeasuredBackgroundDimensions(measureEl);
         const naturalDimensions = await this.getImageNaturalDimensions(src);
-        // For SVG background images, they don't necessarily have natural dimensions; take
-        // the target dimensions instead
-        naturalDimensions.width ||= targetDimensions.width;
-        naturalDimensions.height ||= targetDimensions.height;
+        if (mimetype === SVG_MIMETYPE || !naturalDimensions.width || !naturalDimensions.height) {
+            // For SVG background images, render at measured dimensions since
+            // their resolution is dynamic, and they don't necessarily have
+            // natural dimensions nor are they relevant.
+            // TODO EGGMAIL: scale SVGs higher than rendered dimensions for better quality?
+            naturalDimensions.width = targetDimensions.width;
+            naturalDimensions.height = targetDimensions.height;
+        }
         const { renderedDimensions, targetPosition } = this.computeCoverGeometry(
             measureEl,
             naturalDimensions,
@@ -655,9 +692,11 @@ export class EmailImageFormatPlugin extends Plugin {
     async sanitizeImgElement(src, imageInfo, el, sourceEl, measureEl) {
         const { mimetype } = imageInfo;
         const dimensions = await this.getImageNaturalDimensions(el.src);
-        if (!dimensions.width || !dimensions.height) {
-            // For SVG images, they don't necessarily have natural dimensions; take
-            // the measured dimensions instead
+        if (mimetype === SVG_MIMETYPE || !dimensions.width || !dimensions.height) {
+            // For SVG images, render at measured dimensions since their
+            // resolution is dynamic, and they don't necessarily have
+            // natural dimensions nor are they relevant.
+            // TODO EGGMAIL: scale SVGs higher than rendered dimensions for better quality?
             const { width, height } = this.getMeasuredImageDimensions(measureEl);
             dimensions.width = width;
             dimensions.height = height;
@@ -694,7 +733,10 @@ export class EmailImageFormatPlugin extends Plugin {
     forEachBackgroundImg(callback, editable) {
         const promises = [];
         for (const el of selectElements(editable, `[style*="background-image"]`)) {
-            promises.push(callback(el));
+            const parts = backgroundImageCssToParts(el.style.getPropertyValue("background-image"));
+            if ("url" in parts) {
+                promises.push(callback(el));
+            }
         }
         return promises;
     }
