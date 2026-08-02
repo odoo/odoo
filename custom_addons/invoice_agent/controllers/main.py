@@ -116,7 +116,6 @@ class InvoiceAgentController(http.Controller):
     # ------------------------------------------------------------------
     # POST /invoice_agent/upload  (multipart/form-data, machine route)
     # ------------------------------------------------------------------
-    @_require_bearer_auth
     @http.route(
         "/invoice_agent/upload",
         type="http",
@@ -141,6 +140,9 @@ class InvoiceAgentController(http.Controller):
         httprequest = request.httprequest
         remote_addr = httprequest.remote_addr
 
+        # ---- All validation checks (request shape, size, mimetype) must run
+        # *before* the authentication check, so unauthenticated callers get
+        # sane 400 Bad Request errors instead of 401s on malformed calls. ----
         upload = httprequest.files.get("file")
         if upload is None:
             _logger.warning("Upload without 'file' part from %s", remote_addr)
@@ -148,12 +150,10 @@ class InvoiceAgentController(http.Controller):
                 _("Missing 'file' part in multipart/form-data upload."),
             )
 
-
         raw = upload.read() if hasattr(upload, "read") else upload
         filename = upload.filename or "invoice.pdf"
         content_type = (upload.content_type or "").lower()
 
-        # ---- Reject oversized payloads *before* touching ir.attachment ----
         if len(raw) > MAX_UPLOAD_BYTES:
             _logger.warning(
                 "Rejected oversized upload (%d bytes > %d) from %s",
@@ -171,7 +171,6 @@ class InvoiceAgentController(http.Controller):
                 },
             )
 
-        # ---- Reject non-PDF mimetypes before touching ir.attachment ----
         if content_type not in ALLOWED_MIMETYPES:
             _logger.warning(
                 "Rejected non-PDF upload (mimetype=%r) from %s",
@@ -187,6 +186,32 @@ class InvoiceAgentController(http.Controller):
                     "allowed": ", ".join(ALLOWED_MIMETYPES),
                 },
             )
+
+        # ---- Manual bearer-token authentication (from _require_bearer_auth) ----
+        authorization = httprequest.headers.get("Authorization", "")
+        scheme, _separator, token = authorization.partition(" ")
+
+        if scheme.lower() != "bearer" or not token.strip():
+            _logger.warning(
+                "Unauthorized upload attempt (missing bearer token) from %s",
+                httprequest.remote_addr,
+            )
+            raise _unauthorized_json(
+                "Missing Bearer API key in Authorization header",
+            )
+
+        apikeys = request.env["res.users.apikeys"]
+        uid = apikeys._check_credentials(scope="rpc", key=token.strip())
+        if not uid:
+            _logger.warning(
+                "Unauthorized upload attempt (invalid API key) from %s",
+                httprequest.remote_addr,
+            )
+            raise _unauthorized_json(
+                "Invalid, revoked or wrong-scope API key",
+            )
+        request.update_env(user=uid)
+
 
         # ---- Store the source document ----
         attachment = request.env["ir.attachment"].create(
