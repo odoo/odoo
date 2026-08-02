@@ -37,13 +37,14 @@
 # DeepL <noreply-mt-deepl@weblate.org>, 2025.
 # Odoo Turkish Import <dyki+tr@odoo.com>, 2025.
 # "Deniz Guvener Unal (degu)" <degu@odoo.com>, 2026.
+# Burkay Yıldızhan <seyil@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-29 17:38+0000\n"
-"PO-Revision-Date: 2026-06-30 19:42+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"POT-Creation-Date: 2026-07-31 17:36+0000\n"
+"PO-Revision-Date: 2026-07-29 08:13+0000\n"
+"Last-Translator: Burkay Yıldızhan <seyil@odoo.com>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-s19-3/stock/"
 "tr/>\n"
 "Language: tr\n"
@@ -57,7 +58,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_location.py:0
 msgid "\t--Empty--"
-msgstr ""
+msgstr "\t--Boş--"
 
 #. module: stock
 #. odoo-python
@@ -449,8 +450,8 @@ msgstr ""
 "* Müşteri: Müşterilerinize gönderilen ürünler için hedef konumu temsil eden "
 "sanal konum\n"
 "* Envanter Kaybı: Stok seviyelerini düzeltmek için yapılan envanter "
-"işlemlerinin karşılığı olarak hizmet veren sanal konum (Fiziksel envanterler)"
-"\n"
+"işlemlerinin karşılığı olarak hizmet veren sanal konum (Fiziksel "
+"envanterler)\n"
 "* Üretim: Üretim operasyonları için sanal muadil konum. Yani bu konum "
 "bileşenleri tüketir ve bitmiş ürünler üretir\n"
 "* Transit: Şirketler arası veya depolar arası operasyonlar için kullanılması "
@@ -853,7 +854,7 @@ msgstr "<strong>Kişi</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 msgid "<strong>Customer</strong>"
-msgstr ""
+msgstr "<strong>Müşteri</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -893,7 +894,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>From:</strong>"
-msgstr ""
+msgstr "<strong>Başlangıç</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -2017,7 +2018,8 @@ msgstr "Uygunluk Kontrolü"
 #: model:ir.model.fields,help:stock.field_stock_picking_type__print_label
 msgid ""
 "Check this box if you want to generate shipping label in this operation."
-msgstr "Bu işlemde kargo etiketi oluşturmak istiyorsanız bu kutuyu işaretleyin."
+msgstr ""
+"Bu işlemde kargo etiketi oluşturmak istiyorsanız bu kutuyu işaretleyin."
 
 #. module: stock
 #. odoo-python
@@ -3374,7 +3376,6 @@ msgstr "Fark"
 
 #. module: stock
 #: model:ir.model,name:stock.model_digest_digest
-#, fuzzy
 msgid "Digest"
 msgstr "Özet"
 
@@ -3711,7 +3712,6 @@ msgstr "İstisna(lar):"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
-#, fuzzy
 msgid "Exchange"
 msgstr "Exchange"
 
@@ -4000,6 +4000,7 @@ msgid "Full Package Name"
 msgstr "Tam Paket Adı"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Future Activities"
 msgstr "Sonraki Aktiviteler"
@@ -5241,6 +5242,7 @@ msgid "Late"
 msgstr "Geciken"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Late Activities"
 msgstr "Geciken Aktiviteler"
@@ -5875,6 +5877,7 @@ msgid "Multiple destinations"
 msgstr "Çoklu varış noktaları"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "My Activities"
 msgstr "Aktivitelerim"
@@ -6153,7 +6156,6 @@ msgstr "Transfer bulunamadı. Bir tane oluşturalım!"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_stock
-#, fuzzy
 msgid "None"
 msgstr "Hiçbiri"
 
@@ -6265,6 +6267,13 @@ msgid ""
 "                                        barcode operator and configure the "
 "routing of the reports."
 msgstr ""
+"Odoo varsayılan olarak bir PDF önizlemesi açar. Eğer (yalnızca Kurumsal "
+"kullanıcıları) anında yazdırmak istiyorsanız,\n"
+"                                        IoT Uygulamasını, barkod operatörü "
+"ile aynı yerel ağda bulunan bir bilgisayara kurun ve\n"
+"                                        raporların yönlendirmesini "
+"yapılandırın.\n"
+"                                        <br/>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -8336,7 +8345,6 @@ msgstr ""
 
 #. module: stock
 #: model:ir.actions.server,name:stock.action_revert_move_line
-#, fuzzy
 msgid "Revert"
 msgstr "Geri Al"
 
@@ -8508,9 +8516,8 @@ msgstr "Örnek Veri"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
-#, fuzzy
 msgid "Save"
-msgstr "Kaydet"
+msgstr "Kaydet."
 
 #. module: stock
 #. odoo-python
@@ -8611,7 +8618,6 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
-#, fuzzy
 msgid "Scrapped"
 msgstr "Hurda"
 
@@ -9130,7 +9136,8 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.inventory_warning_set_view
 msgid "Some selected lines already have quantities set, they will be ignored."
-msgstr "Seçilen bazı satırlarda zaten miktar belirlenmiş, bunlar yok sayılacak."
+msgstr ""
+"Seçilen bazı satırlarda zaten miktar belirlenmiş, bunlar yok sayılacak."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__origin
@@ -9658,8 +9665,8 @@ msgid ""
 "With 'Automatic No Step Added', the location is replaced in the original "
 "move."
 msgstr ""
-"“Manuel İşlem” değeri, mevcut işlemden sonra bir stok hareketi oluşturur. “"
-"Otomatik Adım Eklenmedi” seçeneğinde, konum orijinal hareketle değiştirilir."
+"“Manuel İşlem” değeri, mevcut işlemden sonra bir stok hareketi oluşturur. "
+"“Otomatik Adım Eklenmedi” seçeneğinde, konum orijinal hareketle değiştirilir."
 
 #. module: stock
 #. odoo-python
@@ -9834,8 +9841,8 @@ msgid ""
 msgstr ""
 "İşlem türü sistemi, her stok işlemine, görünümlerini\n"
 "buna göre değiştirecek belirli bir tür atamanıza olanak tanır. \n"
-"İşlem türünde örneğin, paketlemenin varsayılan olarak gerekip gerekmediğini, "
-"\n"
+"İşlem türünde örneğin, paketlemenin varsayılan olarak gerekip "
+"gerekmediğini, \n"
 "müşteriyi göstermesi gerekip gerekmediğini belirtebilirsiniz."
 
 #. module: stock
@@ -10350,6 +10357,7 @@ msgid "Today"
 msgstr "Bugün"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Today Activities"
 msgstr "Bugünkü Aktiviteler"
@@ -11208,7 +11216,8 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
 msgid "When the stock level at the forecasted date is below the minimum ("
-msgstr "Öngörülen tarihteki stok seviyesi minimum seviyenin altında olduğunda ("
+msgstr ""
+"Öngörülen tarihteki stok seviyesi minimum seviyenin altında olduğunda ("
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__propagate_carrier
@@ -11684,6 +11693,12 @@ msgid ""
 "            some products, and automate these rules to create RFQs or "
 "Manufacturing Orders."
 msgstr ""
+"Burada, stok tahminlerine dayalı akıllı stok yenileme önerileri "
+"bulacaksınız.\n"
+"            Bazı ürünler için minimum stok seviyelerini korumak istiyorsanız "
+"yeni stok yenileme kuralları oluşturun\n"
+"            ve bu kuralları otomatikleştirerek Teklif Talep Formları (RFQ) "
+"veya Üretim Siparişleri oluşturun."
 
 #. module: stock
 #: model_terms:res.company,lunch_notify_message:stock.res_company_1
@@ -11968,7 +11983,7 @@ msgstr "Birimler"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
 msgid "x"
-msgstr ""
+msgstr "x"
 
 #. module: stock
 #: model:mail.template,subject:stock.mail_template_data_delivery_confirmation

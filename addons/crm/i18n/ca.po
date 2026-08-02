@@ -31,7 +31,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-19 17:36+0000\n"
+"POT-Creation-Date: 2026-07-31 17:36+0000\n"
 "PO-Revision-Date: 2026-07-01 00:11+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Catalan <https://translate.odoo.com/projects/odoo-s19-3/crm/"
@@ -228,7 +228,7 @@ msgstr ""
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
-msgid "<span class=\"ms-2 mb-1\"> at</span>"
+msgid "<span class=\"mx-3 mb-1\" invisible=\"type == 'lead'\"> at</span>"
 msgstr ""
 
 #. module: crm
@@ -239,8 +239,8 @@ msgid ""
 "                                    <span class=\"o_stat_text\" "
 "invisible=\"duplicate_lead_count &gt; 1\">Similar Lead</span>"
 msgstr ""
-"<span class=\"o_stat_text\" invisible=\"duplicate_lead_count &lt; 2\">"
-"Clients potencials similars</span>\n"
+"<span class=\"o_stat_text\" invisible=\"duplicate_lead_count &lt; "
+"2\">Clients potencials similars</span>\n"
 "                                    <span class=\"o_stat_text\" "
 "invisible=\"duplicate_lead_count &gt; 1\">Client potencial similar</span>"
 
@@ -253,8 +253,8 @@ msgid ""
 msgstr ""
 "<span class=\"o_stat_text\" invisible=\"not use_leads\">Clients potencials</"
 "span>\n"
-"                        <span class=\"o_stat_text\" invisible=\"use_leads\">"
-"Oportunitats</span>"
+"                        <span class=\"o_stat_text\" "
+"invisible=\"use_leads\">Oportunitats</span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lost_reason_view_form
@@ -531,8 +531,8 @@ msgid ""
 msgstr ""
 "Els plans d'activitats s'utilitzen per assignar una llista d'activitats amb "
 "només uns clics.\n"
-"                    (p. ex.: «Procés de preparació de la demo», «Qualificació"
-"»...)"
+"                    (p. ex.: «Procés de preparació de la demo», "
+"«Qualificació»...)"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -1095,7 +1095,8 @@ msgstr "País"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__module_website_crm_iap_reveal
 msgid "Create Leads/Opportunities from your website's traffic"
-msgstr "Creeu iniciatives/oportunitats a partir del trànsit del vostre lloc web"
+msgstr ""
+"Creeu iniciatives/oportunitats a partir del trànsit del vostre lloc web"
 
 #. module: crm
 #: model:ir.model,website_form_label:crm.model_res_partner
@@ -1770,7 +1771,8 @@ msgstr "Icona que indica una activitat d'excepció."
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "Si està marcat, hi ha nous missatges que requereixen la vostra atenció."
+msgstr ""
+"Si està marcat, hi ha nous missatges que requereixen la vostra atenció."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__message_has_error
@@ -4490,6 +4492,11 @@ msgstr "àlies"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_member_view_form
 msgid "assigned)"
+msgstr ""
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
+msgid "at"
 msgstr ""
 
 #. module: crm

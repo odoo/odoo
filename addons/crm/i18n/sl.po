@@ -20,7 +20,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-19 17:36+0000\n"
+"POT-Creation-Date: 2026-07-31 17:36+0000\n"
 "PO-Revision-Date: 2026-07-01 04:36+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-s19-3/crm/"
@@ -217,7 +217,7 @@ msgstr ""
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
-msgid "<span class=\"ms-2 mb-1\"> at</span>"
+msgid "<span class=\"mx-3 mb-1\" invisible=\"type == 'lead'\"> at</span>"
 msgstr ""
 
 #. module: crm
@@ -228,8 +228,8 @@ msgid ""
 "                                    <span class=\"o_stat_text\" "
 "invisible=\"duplicate_lead_count &gt; 1\">Similar Lead</span>"
 msgstr ""
-"<span class=\"o_stat_text\" invisible=\"duplicate_lead_count &lt; 2\">"
-"Podobne potencialne stranke</span>\n"
+"<span class=\"o_stat_text\" invisible=\"duplicate_lead_count &lt; "
+"2\">Podobne potencialne stranke</span>\n"
 "                                    <span class=\"o_stat_text\" "
 "invisible=\"duplicate_lead_count &gt; 1\">Podobna potencialna stranka</span>"
 
@@ -242,8 +242,8 @@ msgid ""
 msgstr ""
 "<span class=\"o_stat_text\" invisible=\"not use_leads\">Potencialne stranke</"
 "span>\n"
-"                        <span class=\"o_stat_text\" invisible=\"use_leads\">"
-"Priložnosti</span>"
+"                        <span class=\"o_stat_text\" "
+"invisible=\"use_leads\">Priložnosti</span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lost_reason_view_form
@@ -4476,6 +4476,11 @@ msgstr ""
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
+msgid "at"
+msgstr ""
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 #: model_terms:ir.ui.view,arch_db:crm.quick_create_opportunity_form
 msgid "e.g. \"Monthly\""
 msgstr "npr. \"Mesečno\""
@@ -4598,7 +4603,8 @@ msgstr "za testiranje e-poštnega prehoda."
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0
 msgid "to your CRM. This email address is configurable by sales team members."
-msgstr "v vaš CRM. Ta e-poštni naslov lahko konfigurirajo člani prodajne ekipe."
+msgstr ""
+"v vaš CRM. Ta e-poštni naslov lahko konfigurirajo člani prodajne ekipe."
 
 #. module: crm
 #. odoo-python

@@ -33,8 +33,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-19 17:36+0000\n"
-"PO-Revision-Date: 2026-07-24 08:37+0000\n"
+"POT-Creation-Date: 2026-07-31 17:36+0000\n"
+"PO-Revision-Date: 2026-07-27 06:58+0000\n"
 "Last-Translator: Burkay Yıldızhan <seyil@odoo.com>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-s19-3/crm/"
 "tr/>\n"
@@ -230,7 +230,7 @@ msgstr ""
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
-msgid "<span class=\"ms-2 mb-1\"> at</span>"
+msgid "<span class=\"mx-3 mb-1\" invisible=\"type == 'lead'\"> at</span>"
 msgstr ""
 
 #. module: crm
@@ -254,8 +254,8 @@ msgid ""
 "invisible=\"use_leads\">Opportunities</span>"
 msgstr ""
 "<span class=\"o_stat_text\" invisible=\"not use_leads\">Adaylar</span>\n"
-"                        <span class=\"o_stat_text\" invisible=\"use_leads\">"
-"Fırsatlar</span>"
+"                        <span class=\"o_stat_text\" "
+"invisible=\"use_leads\">Fırsatlar</span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lost_reason_view_form
@@ -279,6 +279,15 @@ msgid ""
 "merge all duplicates listed below.\n"
 "                    </span>"
 msgstr ""
+"<span invisible=\"name != 'convert'\">\n"
+"                        Olası yinelenen kayıtlar bulundu. Dönüştürmeden önce "
+"verilerinizi temizlemek için \" &amp; 'i Dönüştür ve yinelenenlerle "
+"birleştir\" seçeneğini kullanın.\n"
+"                   </span>\n"
+"                    <span invisible=\"name != 'convert_and_merge'\"> \n"
+"                        Seçilen Potansiyel Müşterileri Fırsatlara dönüştürün "
+"ve aşağıda listelenen tüm yinelenen kayıtları birleştirin.\n"
+"                   </span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -372,20 +381,20 @@ msgstr ""
 "out=\"object.company_id.name or ''\">My Company (San Francisco)</t> "
 "adresinin neler sunduğunu keşfedeceksiniz. Adım <t t-"
 "out=\"object.user_id.name or ''\">Marc Demo</t> ve Odoo'dan en iyi şekilde "
-"yararlanmanıza yardımcı olacağım. Yakında kısa bir demo planlayabilir "
-"miyiz?<br/>\n"
+"yararlanmanıza yardımcı olacağım. Yakında kısa bir demo planlayabilir miyiz?"
+"<br/>\n"
 "İstediğiniz zaman bana ulaşabilirsiniz!<br/><br/>\n"
 "Saygılarımla,<br/>\n"
 "<t t-if=\"object.user_id\">\n"
 "   <b><t t-out=\"object.user_id.name or ''\"> Marc Demo</t></b>\n"
-"   <br/> E-posta: <t t-out=\"object.user_id.email or ''\">"
-"mark.brown23@example.com</t>\n"
-"    <br/>Telefon: <t t-out=\"object.user_id.phone or ''\">+1 650-123-4567</t>"
-"\n"
+"   <br/> E-posta: <t t-out=\"object.user_id.email or "
+"''\">mark.brown23@example.com</t>\n"
+"    <br/>Telefon: <t t-out=\"object.user_id.phone or ''\">+1 650-123-4567</"
+"t>\n"
 "</t>\n"
 "<t t-else=\"\">\n"
-"    <t t-out=\"object.company_id.name or ''\">My Company (San Francisco)</t>"
-"\n"
+"    <t t-out=\"object.company_id.name or ''\">My Company (San Francisco)</"
+"t>\n"
 "</t>\n"
 "       </t>"
 
@@ -2159,7 +2168,8 @@ msgstr "Aday veya Fırsat"
 msgid ""
 "Lead/Opportunities automatic assignment is limited to managers or "
 "administrators"
-msgstr "Adat/Fırsatların otomatik atanması yöneticiler ve adminlerle sınırlıdır"
+msgstr ""
+"Adat/Fırsatların otomatik atanması yöneticiler ve adminlerle sınırlıdır"
 
 #. module: crm
 #: model:mail.message.subtype,description:crm.mt_lead_create
@@ -3931,7 +3941,8 @@ msgstr ""
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "This email is blacklisted for mass mailings. Click to unblacklist."
-msgstr "Toplu postalama için bu adres karalistededir. Çıkarmak için tıklayınız."
+msgstr ""
+"Toplu postalama için bu adres karalistededir. Çıkarmak için tıklayınız."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__email_normalized
@@ -4518,6 +4529,11 @@ msgstr "rumuz"
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_member_view_form
 msgid "assigned)"
 msgstr "(atandı)"
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
+msgid "at"
+msgstr ""
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form

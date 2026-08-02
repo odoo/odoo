@@ -20,7 +20,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-19 17:36+0000\n"
+"POT-Creation-Date: 2026-07-31 17:36+0000\n"
 "PO-Revision-Date: 2026-06-30 21:55+0000\n"
 "Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/odoo-"
@@ -220,7 +220,7 @@ msgstr "<span class=\"me-1\"> de </span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
-msgid "<span class=\"ms-2 mb-1\"> at</span>"
+msgid "<span class=\"mx-3 mb-1\" invisible=\"type == 'lead'\"> at</span>"
 msgstr ""
 
 #. module: crm
@@ -244,8 +244,8 @@ msgid ""
 "invisible=\"use_leads\">Opportunities</span>"
 msgstr ""
 "<span class=\"o_stat_text\" invisible=\"not use_leads\">Leads</span>\n"
-"                        <span class=\"o_stat_text\" invisible=\"use_leads\">"
-"Oportunidades</span>"
+"                        <span class=\"o_stat_text\" "
+"invisible=\"use_leads\">Oportunidades</span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lost_reason_view_form
@@ -319,9 +319,9 @@ msgid ""
 "default.\n"
 "                                </span>"
 msgstr ""
-"<span>Atribua leads periodicamente com base em prioridades e filtros.</span>"
-"<br/> <span invisible=\"not crm_use_auto_assignment\"> Todas as equipes de "
-"vendas usarão essa configuração por padrão.\n"
+"<span>Atribua leads periodicamente com base em prioridades e filtros.</"
+"span><br/> <span invisible=\"not crm_use_auto_assignment\"> Todas as equipes "
+"de vendas usarão essa configuração por padrão.\n"
 "                               </span>"
 
 #. module: crm
@@ -378,13 +378,13 @@ msgstr ""
 "demonstração em breve?<br/>Sinta-se à vontade para entrar em contato a "
 "qualquer momento!<br/><br/>Atenciosamente,<br/>\n"
 "<t t-if=\"object.user_id\"> <b><t t-out=\"object.user_id.name or ''\"> Marc "
-"Demo</t></b> <br/> E-mail: <t t-out=\"object.user_id.email or ''\">"
-"mark.brown23@example.com</t>\n"
+"Demo</t></b> <br/> E-mail: <t t-out=\"object.user_id.email or "
+"''\">mark.brown23@example.com</t>\n"
 "    <br/>Telefone: <t t-out=\"object.user_id.phone or ''\">+1 650-123-4567</"
 "t>\n"
 "</t><t t-else=\"\">\n"
-"    <t t-out=\"object.company_id.name or ''\"> Minha Empresa (São Francisco)"
-"</t>\n"
+"    <t t-out=\"object.company_id.name or ''\"> Minha Empresa (São "
+"Francisco)</t>\n"
 "</t>\n"
 "       </t>"
 
@@ -1607,7 +1607,8 @@ msgstr ""
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead_scoring_frequency_field
 msgid "Fields that can be used for predictive lead scoring computation"
-msgstr "Campos que podem ser usados para cálculo preditivo de pontuação de lead"
+msgstr ""
+"Campos que podem ser usados para cálculo preditivo de pontuação de lead"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_stage_form
@@ -2246,7 +2247,8 @@ msgstr "Geração de leads"
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lead_all_leads
 msgid "Leads are the qualification step before the creation of an opportunity."
-msgstr "Leads são a etapa de qualificação antes da criação de uma oportunidade."
+msgstr ""
+"Leads são a etapa de qualificação antes da criação de uma oportunidade."
 
 #. module: crm
 #. odoo-python
@@ -3547,7 +3549,8 @@ msgstr "Selecione um motivo de perda..."
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "Select at least two Leads/Opportunities from the list to merge them."
-msgstr "Selecione pelo menos dois leads/oportunidades da lista para mesclá-los."
+msgstr ""
+"Selecione pelo menos dois leads/oportunidades da lista para mesclá-los."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -4529,6 +4532,11 @@ msgstr "alias"
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_member_view_form
 msgid "assigned)"
 msgstr "atribuído)"
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
+msgid "at"
+msgstr ""
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form

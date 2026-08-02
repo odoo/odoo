@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-29 17:38+0000\n"
+"POT-Creation-Date: 2026-07-31 17:36+0000\n"
 "PO-Revision-Date: 2026-06-30 21:03+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Russian <https://translate.odoo.com/projects/odoo-s19-3/stock/"
@@ -430,8 +430,8 @@ msgstr ""
 "* Клиент: виртуальная локация, представляющая локацию назначения для "
 "товаров, отправляемых вашим клиентам\n"
 "* Потеря запасов: виртуальная локация, служащая в качестве аналога операций "
-"с запасами, выполняемых для корректировки уровня запасов (физические запасы)"
-"\n"
+"с запасами, выполняемых для корректировки уровня запасов (физические "
+"запасы)\n"
 "* Производство: виртуальная локация-аналог для производственных операций. То "
 "есть на этой локации потребляется компоненты и производится готовая "
 "продукция\n"
@@ -3013,8 +3013,8 @@ msgstr ""
 "Наименьшее количество упаковок: товары/партии, которые были размещены в "
 "упаковках с наименьшим количеством, будут перемещены в первую очередь.\n"
 "FEFO: товары/партии с ближайшей датой истечения срока годности будут "
-"перемещены в первую очередь (доступность этого метода зависит от настройки «"
-"Сроки годности»)."
+"перемещены в первую очередь (доступность этого метода зависит от настройки "
+"«Сроки годности»)."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__delay_alert_date
@@ -4003,6 +4003,7 @@ msgid "Full Package Name"
 msgstr ""
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Future Activities"
 msgstr "Планируемые действия"
@@ -4094,7 +4095,8 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/stock/static/src/client_actions/multi_print.js:0
 msgid "HTML reports cannot be auto-printed, skipping report: %s"
-msgstr "HTML-отчеты не могут быть автоматически напечатаны, пропуская отчет: %s"
+msgstr ""
+"HTML-отчеты не могут быть автоматически напечатаны, пропуская отчет: %s"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
@@ -5254,6 +5256,7 @@ msgid "Late"
 msgstr "Просрочено"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Late Activities"
 msgstr "Поздние Мероприятия"
@@ -5891,6 +5894,7 @@ msgid "Multiple destinations"
 msgstr ""
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "My Activities"
 msgstr "Мои активности"
@@ -8756,7 +8760,8 @@ msgstr "Коннектор Sendcloud"
 #: model:mail.template,description:stock.mail_template_data_delivery_confirmation
 msgid ""
 "Sent to the customers when orders are delivered, if the setting is enabled"
-msgstr "Отправляется клиентам при доставке заказов, если эта настройка включена"
+msgstr ""
+"Отправляется клиентам при доставке заказов, если эта настройка включена"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__barcode_separator
@@ -10035,8 +10040,8 @@ msgstr ""
 "позволяет создавать пополнение по запросу, привязанное к вашим заказам на "
 "продажу (например), как только они будут подтверждены. Заказы на закупку, "
 "производственные заказы и т. д. создаются автоматически в зависимости от "
-"установленного для товара способа пополнения (маршрут «Купить» или «"
-"Произвести»)."
+"установленного для товара способа пополнения (маршрут «Купить» или "
+"«Произвести»)."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -10158,8 +10163,8 @@ msgid ""
 "                to see all the past or future movements for the product."
 msgstr ""
 "Это меню показывает все операции с запасами \n"
-"                 для конкретного товара. Вы можете отфильтровать по товару, "
-"\n"
+"                 для конкретного товара. Вы можете отфильтровать по "
+"товару, \n"
 "                 чтобы увидеть все его перемещения."
 
 #. module: stock
@@ -10402,6 +10407,7 @@ msgid "Today"
 msgstr "Сегодня"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Today Activities"
 msgstr "Сегодняшние Дела"
