@@ -1,17 +1,13 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import Counter
 
-from odoo.modules import get_modules
-from odoo.tests.common import tagged, TransactionCase, no_retry
 from odoo.tools.translate import translation_file_reader
-from odoo.tools.misc import file_path
+
+from .common import LintCase
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
-@no_retry
-class PotLinter(TransactionCase):
+class PotLinter(LintCase):
     def test_pot_duplicate_entries(self):
         def format(entry):
             # translation_file_reader only returns those three types
@@ -23,11 +19,7 @@ class PotLinter(TransactionCase):
                 return ('code', entry['src'])
 
         # retrieve all modules, and their corresponding POT file
-        for module in get_modules():
-            try:
-                filename = file_path(f'{module}/i18n/{module}.pot')
-            except FileNotFoundError:
-                continue
+        for filename in self.iter_module_files('*/i18n/*.pot'):
             counts = Counter(map(format, translation_file_reader(filename)))
             duplicates = [key for key, count in counts.items() if count > 1]
             self.assertFalse(duplicates, "Duplicate entries found in %s" % filename)

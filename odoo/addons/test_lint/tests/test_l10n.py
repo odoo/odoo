@@ -1,16 +1,14 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import ast
-import itertools
-import os
 
-from . import lint_case
-from odoo.tests import tagged
+from .common import LintCase
 
-from odoo.tools.misc import file_open
 
-class L10nChecker(lint_case.NodeVisitor):
+class L10nChecker(ast.NodeVisitor):
+    def add_error(self, node):
+        pass
+
     def matches_tagged(self, node):
         if isinstance(node, ast.Call):
             if isinstance(node.func, ast.Attribute):
@@ -37,22 +35,17 @@ class L10nChecker(lint_case.NodeVisitor):
                 for stmt in node.body
                 if isinstance(stmt, ast.FunctionDef)
             ):
-                return [node]
-        return []
+                self.add_error(node)
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
-class L10nLinter(lint_case.LintCase):
+class L10nLinter(LintCase):
     def test_l10n_test_tags(self):
         checker = L10nChecker()
         rs = []
         for path in self.iter_module_files('**/l10n_*/tests/*.py'):
-            with file_open(path, 'rb') as f:
-                t = ast.parse(f.read(), path)
-            rs.extend(zip(itertools.repeat(os.path.relpath(path)), checker.visit(t)))
+            checker.add_error = lambda node: rs.append(f'{path}:{node.lineno}')
+            self.visit_python_file(path, checker)
 
-        rs.sort(key=lambda t: t[0])
-        assert not rs, "missing `post_install_l10n` tag at\n" + '\n'.join(
-            "- %s:%d" % (path, node.lineno)
-            for path, node in rs
-        )
+        if rs:
+            rs.insert(0, "missing `post_install_l10n` tag at:")
+            self.fail("\n- ".join(rs))

@@ -4,10 +4,9 @@ import pathlib
 import unittest.mock
 from collections import Counter
 
-from odoo.addons.test_lint.tests.lint_case import LintCase
-from odoo.tests import tagged
-
 from odoo.modules import Manifest
+
+from .common import LintCase
 
 
 class InitChecker(ast.NodeVisitor):
@@ -15,8 +14,10 @@ class InitChecker(ast.NodeVisitor):
         self.path = None
         self.names = Counter()
         self.prefix = ''
+
     def visit_Import(self, node):
         raise AssertionError(f"Init files should not have top-level imports, found {ast.dump(node)}")
+
     def visit_ImportFrom(self, node):
         assert node.level == 1, f"{ast.dump(node)} should be a `from . import ...`"
 
@@ -34,7 +35,6 @@ class InitChecker(ast.NodeVisitor):
                     self.names[f'{self.prefix}{alias.name}.py'] += 1
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestTestHoles(LintCase):
     """
     Tries to catch common test issues:
@@ -54,9 +54,10 @@ class TestTestHoles(LintCase):
                 continue
 
             init = p / '__init__.py'
-            assert init.exists(), f"Python test directories must have an init, none found in {p}"
-
-            checker.visit(ast.parse(init.read_bytes(), init))
+            if not init.exists():
+                errors.append(f"Test module {p} does not have an init file")
+                continue
+            self.visit_python_file(init, checker)
 
             for f in p.rglob('test_*.py'):
                 # special case of a test file which can't be tested normally
@@ -74,4 +75,5 @@ class TestTestHoles(LintCase):
                         errors.append(f"Test file {test_path} imported multiple times in {init}")
 
         if errors:
-            raise AssertionError("Found test errors:" + "".join(f"\n- {e}" for e in errors))
+            errors.insert(0, "Found test errors:")
+            self.fail("\n- ".join(errors))

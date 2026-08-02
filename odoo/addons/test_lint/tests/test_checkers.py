@@ -9,9 +9,9 @@ from textwrap import dedent
 import astroid
 
 from odoo.tools.which import which
-from odoo.tests.common import tagged, TransactionCase, no_retry
 
 from . import _odoo_checker_sql_injection
+from .common import LintCase
 
 try:
     import pylint
@@ -43,8 +43,7 @@ class UnittestLinter(PyLinter):
 HERE = os.path.dirname(os.path.realpath(__file__))
 
 
-@no_retry
-class TestPylintChecks(TransactionCase):
+class TestPylintChecks(LintCase):
     def check(self, test_content, plugins, rules):
         with tempfile.NamedTemporaryFile(mode="w", encoding="utf-8", delete=False) as f:
             self.addCleanup(os.remove, f.name)
@@ -72,7 +71,6 @@ class TestPylintChecks(TransactionCase):
 
 
 @unittest.skipUnless(pylint and pylint_bin, "testing lints requires pylint")
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestGetTextLint(TestPylintChecks):
     def check(self, testtext):
         return super().check(testtext, "_odoo_checker_gettext", "gettext-placeholders")
@@ -95,7 +93,6 @@ class TestGetTextLint(TestPylintChecks):
 
 
 @unittest.skipUnless(pylint and pylint_bin, "testing lints requires pylint")
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSqlLint(TestPylintChecks):
     def check(self, testtext):
         return super().check(testtext, "_odoo_checker_sql_injection", "sql-injection")
@@ -485,7 +482,6 @@ class TestSqlLint(TestPylintChecks):
 
 
 @unittest.skipUnless(pylint and pylint_bin, "testing lints requires pylint")
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestI18nChecks(TestPylintChecks):
     def check(self, test_content):
         return super().check(

@@ -5,8 +5,10 @@ from os.path import join as opj
 from pathlib import Path
 
 from odoo.modules.module import _DEFAULT_MANIFEST, Manifest
-from odoo.tests import BaseCase, HttpCase, tagged
+from odoo.tests import HttpCase, tagged
 from odoo.tools.misc import file_path
+
+from .common import LintCase
 
 _logger = logging.getLogger(__name__)
 
@@ -45,8 +47,7 @@ DATA_DIRS = {
 DATA_EXTS = ('.csv', '.xml')
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
-class ManifestLinter(BaseCase):
+class ManifestLinter(LintCase):
     def test_manifests(self):
         module_logger = logging.getLogger('odoo.modules.module')
         assert_no_logs = self.assertNoLogs(module_logger, logging.DEBUG)

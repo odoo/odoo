@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
@@ -10,7 +9,7 @@ from odoo.tests import tagged
 from odoo.tools.misc import file_path
 from odoo.modules import get_modules
 
-from . import lint_case
+from .common import LintCase
 
 _logger = logging.getLogger(__name__)
 
@@ -22,8 +21,7 @@ except IOError:
 
 @skipIf(eslint is None, "eslint tool not found on this system")
 @tagged("test_themes")
-@tagged('at_install', '-post_install')  # LEGACY at_install
-class TestESLint(lint_case.LintCase):
+class TestESLint(LintCase):
 
     longMessage = True
 
