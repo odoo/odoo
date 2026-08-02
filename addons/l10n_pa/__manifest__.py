@@ -23,6 +23,9 @@ Plan contable panameño e impuestos de acuerdo a disposiciones vigentes:
 - Registro Único de Contribuyentes (RUC) de la DGI con validación de formato
   para personas naturales (cédula) y jurídicas (inscripción en el Registro
   Público).
+- Ley 526 de 2026 (sustancia económica para rentas pasivas de fuente
+  extranjera de grupos multinacionales, vigente desde el ejercicio fiscal
+  2027; 15% único definitivo si no se cumple la sustancia).
 
 Con la Colaboración de
 - AHMNET CORP http://www.ahmnet.com
