@@ -36,8 +36,9 @@ import logging
 
 from werkzeug.exceptions import BadRequest, NotFound, Unauthorized
 
-from odoo import _, http
+from odoo import http
 from odoo.http import request
+from odoo.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
