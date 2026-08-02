@@ -35,10 +35,15 @@ class TestInvoiceAgentControllers(HttpCase):
         expiration = fields.Datetime.now() + timedelta(days=30)
 
         apikeys = cls.env["res.users.apikeys"].sudo()
-        cls.rpc_key = apikeys._generate("rpc", "test rpc key", expiration)
-        cls.global_key = apikeys._generate(None, "test global key", expiration)
-        cls.wrong_scope_key = apikeys._generate(
-            "website", "test website key", expiration,
+
+        # res.users.apikeys._generate() returns (key_id, raw_key_string)
+        # Unpack to store only the raw key string in test class attributes
+        _, cls.rpc_key = apikeys._generate("rpc", "test rpc key", expiration)
+        _, cls.global_key = apikeys._generate(None, "test global key", expiration)
+        _, cls.wrong_scope_key = apikeys._generate(
+            "website",
+            "test website key",
+            expiration,
         )
 
         cls.pdf_bytes = b"%PDF-1.4 fake vendor bill for controller tests"
@@ -60,7 +65,13 @@ class TestInvoiceAgentControllers(HttpCase):
     # ------------------------------------------------------------------
     # helpers
     # ------------------------------------------------------------------
-    def _upload(self, headers=None, filename="bill.pdf", content=None, mimetype="application/pdf"):
+    def _upload(
+        self,
+        headers=None,
+        filename="bill.pdf",
+        content=None,
+        mimetype="application/pdf",
+    ):
         return self.url_open(
             "/invoice_agent/upload",
             method="POST",
@@ -115,17 +126,16 @@ class TestInvoiceAgentControllers(HttpCase):
         self.assertIn("error", response.json())
 
     def test_upload_rejects_after_key_revocation(self):
-        # Prove that a deleted key is rejected: 'revoke' is the production
-        # path for removing a key from res.users.apikeys.
-        short_lived = (
+        # Unpack tuple: revoke expects key_id, request header expects raw_key
+        key_id, raw_key = (
             self.env["res.users.apikeys"]
             .sudo()
             ._generate("rpc", "to revoke", fields.Datetime.now() + timedelta(days=1))
         )
-        self.env["res.users.apikeys"].sudo().revoke(short_lived)
+        self.env["res.users.apikeys"].sudo().revoke(key_id)
 
         response = self._upload(
-            headers={"Authorization": f"Bearer {short_lived}"},
+            headers={"Authorization": f"Bearer {raw_key}"},
         )
         self.assertEqual(response.status_code, 401)
 
@@ -207,6 +217,7 @@ class TestInvoiceAgentControllers(HttpCase):
             headers=headers,
         )
         self.assertEqual(response.status_code, 400)
+
     # ------------------------------------------------------------------
     # status: jsonrpc endpoint
     # ------------------------------------------------------------------
