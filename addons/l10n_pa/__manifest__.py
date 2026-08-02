@@ -26,6 +26,9 @@ Plan contable panameño e impuestos de acuerdo a disposiciones vigentes:
 - Ley 526 de 2026 (sustancia económica para rentas pasivas de fuente
   extranjera de grupos multinacionales, vigente desde el ejercicio fiscal
   2027; 15% único definitivo si no se cumple la sustancia).
+- Código postal oficial geolocalizado (sistema implementado el 7 de mayo de
+  2026 por Correos Panamá/COTEL e INEC, plataforma codigospostalespanama.
+  gob.pa; formato alfanumérico tipo A6299 o AMAXG-FL434).
 
 Con la Colaboración de
 - AHMNET CORP http://www.ahmnet.com
