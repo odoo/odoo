@@ -81,7 +81,7 @@ def _require_bearer_auth(endpoint):
     def wrapper(self, *args, **kwargs):
         httprequest = request.httprequest
         authorization = httprequest.headers.get("Authorization", "")
-        scheme, _, token = authorization.partition(" ")
+        scheme, _separator, token = authorization.partition(" ")
 
         if scheme.lower() != "bearer" or not token.strip():
             _logger.warning(
@@ -148,7 +148,7 @@ class InvoiceAgentController(http.Controller):
             )
 
         authorization = httprequest.headers.get("Authorization", "")
-        scheme, _, token = authorization.partition(" ")
+        scheme, _separator, token = authorization.partition(" ")
         if scheme.lower() != "bearer" or not token.strip():
             _logger.warning(
                 "Unauthorized upload attempt (missing bearer token) from %s",
