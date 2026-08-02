@@ -1,6 +1,6 @@
 import { CTYPES } from "@html_editor/utils/content_types";
 import { enforceWhitespace, getState, restoreState } from "@html_editor/utils/dom_state";
-import { DIRECTIONS } from "@html_editor/utils/position";
+import { childNodeIndex, DIRECTIONS } from "@html_editor/utils/position";
 import { describe, expect, test } from "@odoo/hoot";
 import { setupEditor } from "../_helpers/editor";
 import { splitTextNode } from "@html_editor/utils/dom";
@@ -101,6 +101,51 @@ describe("getState", () => {
             // `<p>`: the opening tag from the inside.
             cType: CTYPES.BLOCK_INSIDE,
         });
+    });
+
+    test("should treat an inline with block flow inside as CONTENT", async () => {
+        // An inline-block (like .o_file_box) should not be traversed into.
+        const { el } = await setupEditor(
+            '<div>test<span contenteditable="false" style="display:inline-block"><span style="display:flex">file</span></span></div>'
+        );
+        const div = el.firstChild;
+        const box = div.querySelector("span");
+        const state = getState(div, childNodeIndex(box), DIRECTIONS.RIGHT);
+        expect(state.cType).toBe(CTYPES.CONTENT);
+    });
+
+    test("should treat a block inside a regular inline box as a block", async () => {
+        // A block inside an `inline` box does break the line.
+        const { el } = await setupEditor(
+            '<div>test<span contenteditable="false" style="display:inline"><div>file</div></span></div>'
+        );
+        const div = el.firstChild;
+        const box = div.querySelector("span");
+        const state = getState(div, childNodeIndex(box), DIRECTIONS.RIGHT);
+        expect(state.cType).toBe(CTYPES.BLOCK_OUTSIDE);
+    });
+
+    test("should read content inside a non-editable inline box", async () => {
+        const { el } = await setupEditor('<p>abc <span contenteditable="false">de</span></p>');
+        const p = el.firstChild;
+        const box = p.querySelector("span");
+        expect(getState(p, childNodeIndex(box), DIRECTIONS.RIGHT).cType).toBe(CTYPES.CONTENT);
+    });
+
+    test("should read a BR inside a non-editable inline box", async () => {
+        const { el } = await setupEditor('<p>abc <span contenteditable="false"><br>de</span></p>');
+        const p = el.firstChild;
+        const box = p.querySelector("span");
+        expect(getState(p, childNodeIndex(box), DIRECTIONS.RIGHT).cType).toBe(CTYPES.BR);
+    });
+
+    test("should read space inside a non-editable inline box", async () => {
+        const { el } = await setupEditor(
+            '<p>abc<span contenteditable="false"> </span>def</p>'
+        );
+        const p = el.firstChild;
+        const box = p.querySelector("span");
+        expect(getState(p, childNodeIndex(box) + 1, DIRECTIONS.LEFT).cType).toBe(CTYPES.SPACE);
     });
 });
 
