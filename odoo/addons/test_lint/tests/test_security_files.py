@@ -3,12 +3,12 @@ import re
 
 from odoo import tools
 
-from . import lint_case
+from .common import LintCase
 
 _logger = logging.getLogger(__name__)
 
 
-class TestSecurityFiles(lint_case.LintCase):
+class TestSecurityFiles(LintCase):
 
     def test_access_to_public_user(self):
         """

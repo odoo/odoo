@@ -1,9 +1,7 @@
 import collections
 import inspect
 
-from odoo.modules.registry import Registry
-from odoo.tests.common import get_db_name, tagged
-from .lint_case import LintCase
+from .common import RegistryLintCase
 
 POSITIONAL_ONLY = inspect.Parameter.POSITIONAL_ONLY
 POSITIONAL_OR_KEYWORD = inspect.Parameter.POSITIONAL_OR_KEYWORD
@@ -56,6 +54,7 @@ class HitMiss:
     @property
     def ratio(self):
         return self.hit / (self.hit + self.miss)
+
 
 counter = collections.defaultdict(HitMiss)
 
@@ -156,13 +155,11 @@ def get_decorators(method):
     return ""
 
 
-@tagged('-at_install', 'post_install')
-class TestLintOverrideSignatures(LintCase):
+class TestLintOverrideSignatures(RegistryLintCase):
     def test_lint_override_signature(self):
         self.failureException = TypeError
-        registry = Registry(get_db_name())
 
-        for model_name, model_cls in registry.items():
+        for model_name, model_cls in self.registry.items():
             for method_name, _ in inspect.getmembers(model_cls, inspect.isroutine):
                 if (
                     method_name.startswith('__')

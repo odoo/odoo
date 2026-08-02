@@ -1,26 +1,20 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import logging
-from pathlib import Path
-
-from odoo.modules import Manifest
-from odoo.tests import tagged
-
-from . import lint_case
 import re
-_logger = logging.getLogger(__name__)
+
+from odoo.tools import file_open
+
+from .common import LintCase
 
 import_orm_re = re.compile(r'^(from|import)\s+odoo\.orm', flags=re.MULTILINE)
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
-class TestDunderinit(lint_case.LintCase):
+class TestNoOrmImport(LintCase):
 
     def test_addons_orm_import(self):
         """ Test that odoo.orm is not imported in Odoo modules"""
 
-        for manifest in Manifest.all_addon_manifests():
-            module_path = Path(manifest.path)
-            for path in module_path.rglob("**/*.py"):
-                if import_orm_re.search(path.read_text()):
+        for path in self.iter_module_files('*.py'):
+            with file_open(path, 'r') as f:
+                if import_orm_re.search(f.read()):
                     self.fail(f"Do not import directly from odoo.orm, use odoo.(api,fields,models): {path}")

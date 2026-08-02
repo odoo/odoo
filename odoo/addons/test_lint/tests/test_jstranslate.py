@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 # pylint: disable=unbalanced-tuple-unpacking
 
@@ -8,9 +7,7 @@ import re
 from odoo import tools
 from odoo.modules import get_resource_from_path
 
-from odoo.tests import tagged
-
-from . import lint_case
+from .common import LintCase
 
 _logger = logging.getLogger(__name__)
 
@@ -19,11 +16,11 @@ EXPRESSION_RE = re.compile(r'\$\{.+?\}')
 UNDERSCORE_RE = re.compile(r'\b_\(\s*[\'"]')
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
-class TestJsTranslations(lint_case.LintCase):
+class TestJsTranslations(LintCase):
 
     def check_text(self, text):
         """ Search for translation errors in the text
+
 
         :param text: The js text to search
         :return: A list of tuple with line number and invalid template string,

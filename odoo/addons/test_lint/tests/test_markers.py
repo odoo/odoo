@@ -3,17 +3,14 @@
 import logging
 import os
 
-from odoo.tests import tagged
-
-from . import lint_case
+from .common import LintCase
 
 _logger = logging.getLogger(__name__)
 MARKERS = [b'<' * 7, b'>' * 7]
 EXTENSIONS = ('.py', '.js', '.xml', '.less', '.sass')
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
-class TestConflictMarkers(lint_case.LintCase):
+class TestConflictMarkers(LintCase):
 
     def check_file(self, fullpath_name):
 
