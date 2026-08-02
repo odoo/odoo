@@ -15,7 +15,9 @@ Plan contable panameño e impuestos de acuerdo a disposiciones vigentes:
   médicos y transporte).
 - ISR (Código Fiscal, Art. 733): 25% para personas jurídicas.
 - Retenciones: 12.5% sobre intereses y regalías al exterior (Código Fiscal,
-  Art. 733) y 10% definitivo sobre dividendos (Ley 52 de 2012).
+  Art. 733), 10% definitivo sobre dividendos (Ley 52 de 2012) y retención del
+  50% del ITBMS por parte de los agentes de retención o Grandes Compradores
+  (Decreto Ejecutivo 173 de 2021 y Decreto Ejecutivo 84 de 2005).
 - Registro Único de Contribuyentes (RUC) de la DGI con validación de formato
   para personas naturales (cédula) y jurídicas (inscripción en el Registro
   Público).
