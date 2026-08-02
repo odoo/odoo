@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import os
+
 RELEASE_LEVELS = [ALPHA, BETA, RELEASE_CANDIDATE, FINAL] = ['alpha', 'beta', 'candidate', 'final']
 RELEASE_LEVELS_DISPLAY = {ALPHA: 'a',
                           BETA: 'b',
@@ -29,7 +31,7 @@ License :: OSI Approved :: GNU Lesser General Public License v3
 
 Programming Language :: Python
 """
-url = 'https://www.odoo.com'
+url = os.environ.get('URL', 'https://www.odoo.com/')
 author = 'OpenERP S.A.'
 author_email = 'info@odoo.com'
 license = 'LGPL-3'

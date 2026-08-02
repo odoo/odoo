@@ -249,6 +249,30 @@ class AccountMove(models.Model):
         return res
 
     # -------------------------------------------------------------------------
+    # EXTRACTION STATE MACHINE: enqueue hook
+    # -------------------------------------------------------------------------
+    def _invoice_agent_schedule_extraction(self):
+        """Enqueue this move for background OCR + Claude extraction.
+
+        Called by the /invoice_agent/upload controller right after the draft
+        bill is created with ``ai_extraction_status='pending'``. In this
+        exercise the worker is a placeholder: keeping the status at
+        'pending' (or flipping it to 'processing') is enough for clients to
+        poll /invoice_agent/status/<id> while the real pipeline runs.
+
+        Override this method in a fully wired deployment to push a job to the
+        queue (e.g. an ir.cron tick, a bus.Bus message, or an external worker
+        consuming the attachment) and to set 'processing'.
+        """
+        self.ensure_one()
+        if self.ai_extraction_status != "pending":
+            return
+        # Placeholder: mark processing so the queue view and the status
+        # endpoint show something meaningful. A real implementation would
+        # hand the attachment to the OCR worker instead of blocking here.
+        self.write({"ai_extraction_status": "processing"})
+
+    # -------------------------------------------------------------------------
     # CRON: Retry stuck extractions
     # -------------------------------------------------------------------------
     @api.model

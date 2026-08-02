@@ -1,1 +1,1 @@
-from . import test_bulk_wizard
+from . import test_bulk_wizard, test_controllers

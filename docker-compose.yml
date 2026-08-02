@@ -55,6 +55,10 @@ services:
       # X-Forwarded-For and X-Forwarded-Proto headers.
       # Equivalent to proxy_mode = True in odoo.conf
       PROXY_MODE: "True"
+      # Public base URL. invoice_agent's post_init_hook seeds Odoo's
+      # web.base.url system parameter from this on every install/upgrade.
+      # Value comes exclusively from the environment (see .env / env_file).
+      URL: ${URL:-}
     ports:
       # Production: comment these out! Nginx is the only entry point.
       # Ports 8069 and 8072 are exposed only for local dev / debugging.
