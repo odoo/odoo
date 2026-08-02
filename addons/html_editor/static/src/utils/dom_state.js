@@ -1,4 +1,4 @@
-import { isBlock } from "./blocks";
+import { isBlock, isInlineWithBlockFlowInside } from "./blocks";
 import { CTGROUPS, CTYPES, ctypeToString } from "./content_types";
 import { isInPre, isVisible, isWhitespace, whitespace } from "./dom_info";
 import {
@@ -125,13 +125,13 @@ export function prepareUpdate(...args) {
 
 export const leftLeafOnlyNotBlockPath = createDOMPathGenerator(DIRECTIONS.LEFT, {
     leafOnly: true,
-    stopTraverseFunction: isBlock,
+    stopTraverseFunction: (node) => isBlock(node) || isInlineWithBlockFlowInside(node),
     stopFunction: isBlock,
 });
 
 const rightLeafOnlyNotBlockPath = createDOMPathGenerator(DIRECTIONS.RIGHT, {
     leafOnly: true,
-    stopTraverseFunction: isBlock,
+    stopTraverseFunction: (node) => isBlock(node) || isInlineWithBlockFlowInside(node),
     stopFunction: isBlock,
 });
 
