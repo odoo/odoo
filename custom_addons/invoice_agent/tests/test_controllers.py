@@ -36,15 +36,14 @@ class TestInvoiceAgentControllers(HttpCase):
 
         apikeys = cls.env["res.users.apikeys"].sudo()
 
-        # res.users.apikeys._generate() returns (key_id, raw_key_string)
-        # Unpack to store only the raw key string in test class attributes
-        _, cls.rpc_key = apikeys._generate("rpc", "test rpc key", expiration)
-        _, cls.global_key = apikeys._generate(None, "test global key", expiration)
-        _, cls.wrong_scope_key = apikeys._generate(
-            "website",
-            "test website key",
-            expiration,
-        )
+        def _generate_key(scope, name):
+            res = apikeys._generate(scope, name, expiration)
+            # res.users.apikeys._generate returns a tuple where the last item is the raw key string
+            return res[-1] if isinstance(res, (tuple, list)) else res
+
+        cls.rpc_key = _generate_key("rpc", "test rpc key")
+        cls.global_key = _generate_key(None, "test global key")
+        cls.wrong_scope_key = _generate_key("website", "test website key")
 
         cls.pdf_bytes = b"%PDF-1.4 fake vendor bill for controller tests"
 
@@ -126,12 +125,17 @@ class TestInvoiceAgentControllers(HttpCase):
         self.assertIn("error", response.json())
 
     def test_upload_rejects_after_key_revocation(self):
-        # Unpack tuple: revoke expects key_id, request header expects raw_key
-        key_id, raw_key = (
+        res = (
             self.env["res.users.apikeys"]
             .sudo()
             ._generate("rpc", "to revoke", fields.Datetime.now() + timedelta(days=1))
         )
+        if isinstance(res, (tuple, list)):
+            key_id = res[0]
+            raw_key = res[-1]
+        else:
+            key_id = raw_key = res
+
         self.env["res.users.apikeys"].sudo().revoke(key_id)
 
         response = self._upload(
