@@ -28,13 +28,14 @@ Plan contable panameño e impuestos de acuerdo a disposiciones vigentes:
   2027; 15% único definitivo si no se cumple la sustancia).
 - Código postal oficial geolocalizado (sistema implementado el 7 de mayo de
   2026 por Correos Panamá/COTEL e INEC, plataforma codigospostalespanama.
-  gob.pa; formato alfanumérico tipo A6299 o AMAXG-FL434).
+  gob.pa; formato alfanumérico tipo AMAXG-FL434), con validación de formato
+  en res.partner mediante el codec vendered de panama-postal (MIT).
 
 Con la Colaboración de
 - AHMNET CORP http://www.ahmnet.com
 
 Actualización y Mejoras
-- Alvaro Samudio
+- Alvaro Samudio https://github.com/alvarosamudio
     """,
     'author': 'Cubic ERP',
     'category': 'Accounting/Localizations/Account Charts',

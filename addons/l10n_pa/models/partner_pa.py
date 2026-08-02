@@ -4,6 +4,8 @@ import re
 from odoo import _, api, models
 from odoo.exceptions import ValidationError
 
+from ..lib.panama_postal import validate as validate_pa_postal_code
+
 _RUC_FORMATS = (
     # Persona jurídica: rollo/tomo-folio/imagen-asiento/ficha (Registro Público)
     re.compile(r'^\d{1,9}-\d{1,4}-\d{1,6}$'),
@@ -32,5 +34,19 @@ class ResPartner(models.Model):
                     "compone del número de inscripción en el Registro Público (rollo/tomo-folio/imagen-"
                     "asiento/ficha) para las personas jurídicas, o de la cédula de identidad personal "
                     "para las personas naturales (DGI). Ej.: 155066911-2-2019 o 8-741-2043.",
+                    name=partner.display_name,
+                ))
+
+    @api.constrains('zip', 'country_id')
+    def _check_pa_zip(self):
+        for partner in self:
+            zip_code = partner.zip or ''
+            if partner.country_id.code != 'pa' or not zip_code:
+                continue
+            if not validate_pa_postal_code(zip_code.strip().upper()):
+                raise ValidationError(_(
+                    "Código postal inválido para %(name)s: el código postal de Panamá usa el "
+                    "formato geolocalizado del sistema oficial de códigos postales (Correos Panamá/"
+                    "COTEL e INEC, 2026), p. ej. AMAXG-FL434. Consúltelo en codigospostalespanama.gob.pa.",
                     name=partner.display_name,
                 ))
