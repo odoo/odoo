@@ -232,6 +232,14 @@ class ResPartner(models.Model):
             self.vies_valid = False
             return
 
+        # Avoid querying VIES more than once for the same VAT number within
+        # a single transaction (e.g. create() followed by create_company(),
+        # which copies the already-validated VAT to the new parent company):
+        # the service may otherwise be called twice for one business
+        # operation, and can rate-limit us when the same number is checked
+        # several times in a short span.
+        vies_status_cache = self.env.cr.cache.setdefault('base_vat_vies_status', {})
+
         for partner in self.sorted('parent_id'):
             if not partner.vies_vat_to_check:
                 partner.vies_valid = False
@@ -239,7 +247,11 @@ class ResPartner(models.Model):
             if partner.parent_id and partner.parent_id.vies_vat_to_check == partner.vies_vat_to_check:
                 partner.vies_valid = partner.parent_id.vies_valid
                 continue
+            if partner.vies_vat_to_check in vies_status_cache:
+                partner.vies_valid = vies_status_cache[partner.vies_vat_to_check] == "valid"
+                continue
             status = partner._check_vies_iap()
+            vies_status_cache[partner.vies_vat_to_check] = status
             partner._update_vies_status(status)
 
     @api.model
@@ -954,7 +966,7 @@ class ResPartner(models.Model):
                 values['vat'] = self._fix_vat_number(values['vat'], country_id)
         res = super().create(vals_list)
         if self.env.context.get('import_file'):
-            self.env.remove_to_compute(self._fields['vies_valid'], self)
+            res.env.remove_to_compute(self._fields['vies_valid'], res)
         return res
 
     def write(self, values):
