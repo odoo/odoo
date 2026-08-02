@@ -9,7 +9,7 @@ class AccountChartTemplate(models.AbstractModel):
     @template('pa')
     def _get_pa_template_data(self):
         return {
-            'code_digits': '7',
+            'code_digits': '3',
             'property_account_receivable_id': '121',
             'property_account_payable_id': '211',
         }
@@ -19,7 +19,7 @@ class AccountChartTemplate(models.AbstractModel):
         return {
             self.env.company.id: {
                 'account_fiscal_country_id': 'base.pa',
-                'bank_account_code_prefix': '111.',
+                'bank_account_code_prefix': '114.',
                 'cash_account_code_prefix': '113.',
                 'transfer_account_code_prefix': '112.',
                 'account_default_pos_receivable_account_id': '121_01',
