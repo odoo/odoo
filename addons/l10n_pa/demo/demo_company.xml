@@ -2,12 +2,12 @@
 <odoo>
     <record id="base.partner_demo_company_pa" model="res.partner" forcecreate="1">
         <field name="name">PA Company</field>
-        <field name="vat">PA770023598</field>
+        <field name="vat">155066911-2-2019</field>
         <field name="street">Entrada Urbanización El Bosque</field>
         <field name="city">San Miguelito</field>
         <field name="country_id" ref="base.pa"/>
-        <field name="zip">84365</field>
-        <field name="phone">+507 655-5911-9</field>
+        <field name="zip">0801</field>
+        <field name="phone">+507 6555-9119</field>
         <field name="email">info@company.paexample.com</field>
         <field name="website">www.paexample.com</field>
         <field name="is_company" eval="True"/>
@@ -32,5 +32,10 @@
         <value>pa</value>
         <value model="res.company" eval="obj().env.ref('base.demo_company_pa')"/>
         <value name="install_demo" eval="True"/>
+    </function>
+
+    <function model="res.company" name="write">
+        <value eval="[ref('base.demo_company_pa')]"/>
+        <value eval="{'currency_id': ref('base.USD')}"/>
     </function>
 </odoo>
