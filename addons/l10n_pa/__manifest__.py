@@ -33,6 +33,8 @@ Plan contable panameño e impuestos de acuerdo a disposiciones vigentes:
 Con la Colaboración de
 - AHMNET CORP http://www.ahmnet.com
 
+Actualización y Mejoras
+- Alvaro Samudio
     """,
     'author': 'Cubic ERP',
     'category': 'Accounting/Localizations/Account Charts',
