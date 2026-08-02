@@ -208,7 +208,10 @@ class TestInvoiceAgentControllers(HttpCase):
         )
 
     def test_upload_without_file_part_returns_400(self):
-        headers = {"Authorization": f"Bearer {self.rpc_key}"}
+        headers = {
+            "Authorization": f"Bearer {self.rpc_key}",
+            "Content-Type": "multipart/form-data; boundary=boundary",
+        }
         response = self.url_open(
             "/invoice_agent/upload",
             method="POST",
