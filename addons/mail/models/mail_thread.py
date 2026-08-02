@@ -1673,91 +1673,209 @@ class MailThread(models.AbstractModel):
         return {'body': body, 'attachments': attachments}
 
     def _message_parse_extract_payload(self, message: EmailMessage, message_dict: dict, save_original: bool = False):
-        """Extract body as HTML and attachments from the mail message
+        """Extract body as HTML and attachments from the mail message.
+
+        Walk the message as a tree. Use each content part as body content or
+        an attachment. Keep an embedded message (``.eml``) whole instead of
+        merging it into the outer message.
         """
         attachments = []
-        body = ''
         if save_original:
             attachments.append(self._Attachment('original_email.eml', message.as_string(), {}))
+        body, extracted = self._message_extract_part(
+            message, is_bounce=bool(message_dict.get('is_bounce')), is_top_level=True)
+        return self._message_parse_extract_payload_postprocess(
+            message, {'body': body, 'attachments': attachments + extracted})
 
-        # Be careful, content-type may contain tricky content like in the
-        # following example so test the MIME type with startswith()
-        #
-        # Content-Type: multipart/related;
-        #   boundary="_004_3f1e4da175f349248b8d43cdeb9866f1AMSPR06MB343eurprd06pro_";
-        #   type="text/html"
-        if message.get_content_maintype() == 'text':
-            body = message.get_content()
-            if message.get_content_type() == 'text/plain':
-                # text/plain -> <pre/>
-                body = append_content_to_html('', body, preserve=True)
-            elif message.get_content_type() == 'text/html':
-                # we only strip_classes here everything else will be done in by html field of mail.message
-                body = html_sanitize(body, sanitize_tags=False, strip_classes=True)
+    def _message_extract_part(self, part, is_bounce=False, is_top_level=False):
+        """Extract ``(body, attachments)`` from one MIME ``part``.
+
+        Handle unknown ``multipart/*`` subtypes like ``multipart/mixed`` and
+        unknown leaf parts as attachments (RFC 2046 §5.1.7 and §4.5.3).
+        """
+        maintype, _sep, subtype = part.get_content_type().partition('/')
+
+        # RFC 2046 §5.2 defines message/* as encapsulated content. The email
+        # parser also applies this type to untyped multipart/digest children
+        # under RFC 2046 §5.1.5.
+        if maintype == 'message':
+            return Markup(), [self._message_as_attachment(part)]
+
+        if maintype == 'multipart':
+            children = list(part.iter_parts())
+            if subtype == 'alternative':
+                return self._message_extract_alternative(children, is_bounce)
+            if subtype == 'related':
+                return self._message_extract_related(children, part, is_bounce)
+            if subtype == 'encrypted':
+                return self._message_extract_encrypted(children, is_bounce)
+            return self._message_extract_mixed(children, is_bounce)
+
+        return self._message_extract_leaf(part, is_top_level=is_top_level)
+
+    def _message_extract_mixed(self, children, is_bounce):
+        body, attachments = Markup(), []
+        for child in children:
+            child_body, child_attachments = self._message_extract_part(child, is_bounce=is_bounce)
+            body = self._message_append_body(body, child_body)
+            attachments += child_attachments
+            # Some providers append the original message to a bounce. Keep only
+            # the first body in that case.
+            if is_bounce and body:
+                break
+        if body:
+            body = Markup(html_sanitize(body, sanitize_tags=False, strip_classes=True))
+        return body, attachments
+
+    def _message_extract_alternative(self, children, is_bounce):
+        """Keep the richest body and the attachments from every alternative.
+
+        RFC 2046 §5.1.4 orders alternatives from least to most rich. Use the
+        last HTML body, or the last non-empty body when none contains HTML.
+        """
+        last_html = last_any = None
+        attachments = []
+        for child in children:
+            child_body, child_attachments = self._message_extract_part(child, is_bounce=is_bounce)
+            attachments += child_attachments
+            if child_body and child_body.strip():
+                last_any = child_body
+                if self._message_body_is_html(child):
+                    last_html = child_body
+        return (last_html or last_any or Markup()), attachments
+
+    def _message_extract_related(self, children, part, is_bounce):
+        """Use the root of ``multipart/related`` as its body (RFC 2387).
+
+        Keep the other parts as inline attachments with their ``cid``. Payload
+        post-processing uses it to resolve ``<img src="cid:...">`` references.
+        """
+        if not children:
+            return Markup(), []
+        root = self._message_related_root(children, part)
+        body, attachments = self._message_extract_part(root, is_bounce=is_bounce)
+        for child in children:
+            if child is root:
+                continue
+            if child.get_content_maintype() == 'multipart':
+                _body, child_attachments = self._message_extract_part(child, is_bounce=is_bounce)
+                attachments += child_attachments
+            else:
+                attachments.append(self._message_as_attachment(child))
+        return body, attachments
+
+    def _message_extract_encrypted(self, children, is_bounce):
+        """Keep the encrypted payload and ignore its protocol control part.
+
+        RFC 3156 defines the first child as control data and the second as the
+        encrypted payload. Odoo cannot decrypt the payload, so there is no body
+        to extract. Handle an invalid structure like multipart/mixed.
+        """
+        if len(children) == 2 and children[1].get_content_maintype() not in ('message', 'multipart'):
+            return Markup(), [self._message_as_attachment(children[1])]
+        return self._message_extract_mixed(children, is_bounce)
+
+    def _message_extract_leaf(self, part, is_top_level=False):
+        self._message_normalize_content_type(part)
+        content_type = part.get_content_type()
+        # A single text part is the message body even when its disposition says
+        # attachment. Otherwise, such a message would have an empty body.
+        is_top_level_text = is_top_level and content_type in ('text/plain', 'text/html')
+        if not is_top_level_text and self._message_is_attachment(part):
+            return Markup(), [self._message_as_attachment(part)]
+        if content_type == 'text/plain':
+            return self._message_plain_to_html(part), []
+        if content_type == 'text/html':
+            return self._message_html_to_body(part), []
+        return Markup(), [self._message_as_attachment(part)]
+
+    def _message_related_root(self, children, part):
+        """Return the multipart/related root part (RFC 2387 §3.2)."""
+        start = (part.get_param('start') or '').strip().strip('<>')
+        if start:
+            for child in children:
+                content_id = (child.get('content-id') or '').strip().strip('<>')
+                if content_id == start:
+                    return child
+        return children[0]
+
+    def _message_body_is_html(self, part):
+        """Return whether ``part`` provides HTML body content."""
+        if part.get_content_maintype() != 'multipart':
+            return part.get_content_type() == 'text/html' and not self._message_is_attachment(part)
+        children = list(part.iter_parts())
+        if not children:
+            return False
+        if part.get_content_subtype() == 'related':
+            return self._message_body_is_html(self._message_related_root(children, part))
+        return any(self._message_body_is_html(child) for child in children)
+
+    def _message_is_attachment(self, part):
+        return part.get_content_disposition() == 'attachment' or bool(part.get_filename())
+
+    def _message_normalize_content_type(self, part):
+        """Rewrite a malformed Content-Type to application/octet-stream.
+
+        The email library decodes a type without ``/``, such as ``base64``, as
+        text. This can corrupt binary data. Change it and other known bad types
+        to octet-stream while keeping their parameters. ``ir.attachment`` can
+        detect the real type from the file name or content.
+        """
+        raw = part.get('Content-Type')
+        if raw is None:
+            return
+        mimetype, _sep, params = raw.partition(';')
+        mimetype = mimetype.strip().lower()
+        if all(mimetype.partition('/')) and mimetype not in BAD_CONTENT_TYPES:
+            return
+        _logger.warning("Message containing an unexpected Content-Type %r, assuming 'application/octet-stream'", mimetype)
+        part.replace_header('Content-Type', f'application/octet-stream;{params}' if params else 'application/octet-stream')
+
+    def _message_text_content(self, part):
+        """Decode a text leaf, assuming UTF-8 when the charset is omitted.
+
+        :rtype: tuple(str, str)
+        """
+        if not part.get_param('charset'):
+            part.set_charset('utf-8')
+        return part.get_content(), part.get_content_charset()
+
+    def _message_plain_to_html(self, part):
+        """text/plain body: wrap in <pre/>."""
+        text, _encoding = self._message_text_content(part)
+        return append_content_to_html('', text, preserve=True)
+
+    def _message_html_to_body(self, part):
+        """Decode HTML and strip classes before the HTML field sanitizes it."""
+        text, _encoding = self._message_text_content(part)
+        return Markup(html_sanitize(text, sanitize_tags=False, strip_classes=True))
+
+    def _message_append_body(self, body, fragment):
+        if not fragment:
+            return body
+        return append_content_to_html(body, fragment, plaintext=False)
+
+    def _message_as_attachment(self, part):
+        """Build an attachment from ``part`` and decode its file name."""
+        self._message_normalize_content_type(part)
+        filename = part.get_filename() or 'attachment'
+        info = {'encoding': part.get_content_charset()}
+        if content_id := part.get('content-id'):
+            info['cid'] = content_id.strip('<>').strip()
+        maintype = part.get_content_maintype()
+        if maintype == 'message':
+            # get_content() keeps the inner EmailMessage object. The attachment
+            # pipeline serializes it when creating ir.attachment.
+            content = part.get_content()
+        elif maintype == 'multipart':
+            # get_content() returns a child list for multipart content. Serialize
+            # it here so the attachment keeps its headers and MIME boundaries.
+            content = part.as_bytes()
+        elif maintype == 'text':
+            content, info['encoding'] = self._message_text_content(part)
         else:
-            alternative = False
-            mixed = False
-            html = False
-            for part in message.walk():
-                if message_dict.get('is_bounce') and body:
-                    # bounce email, keep only the first body and ignore
-                    # the parent email that might be added at the end
-                    # (e.g. for outlook / yahoo bounce email)
-                    break
-                if part.get_content_type() == 'multipart/alternative':
-                    alternative = True
-                if part.get_content_type() == 'multipart/mixed':
-                    mixed = True
-                if part.get_content_maintype() == 'multipart':
-                    continue  # skip container
-
-                filename = part.get_filename()  # I may not properly handle all charsets
-
-                mimetype, _, content_type_params = part.get('Content-Type').partition(';')
-                if not all(mimetype.partition('/')) or mimetype in BAD_CONTENT_TYPES:
-                    _logger.warning("Message containing an unexpected Content-Type %r, assuming 'application/octet-stream'", mimetype)
-                    part.replace_header('Content-Type', f'application/octet-stream;{content_type_params}')
-                elif mimetype.startswith('pdf'):
-                    _logger.warning("Message containing an unexpected Content-Type %r, assuming 'application/pdf'", mimetype)
-                    part.replace_header('Content-Type', f'application/pdf;{content_type_params}')
-
-                if part.get_content_type().startswith('text/') and not part.get_param('charset'):
-                    # for text/* with omitted charset, the charset is assumed to be ASCII by the `email` module
-                    # although the payload might be in UTF8
-                    part.set_charset('utf-8')
-                encoding = part.get_content_charset()  # None if attachment
-
-                content = part.get_content()
-                info = {'encoding': encoding}
-                # 0) Inline Attachments -> attachments, with a third part in the tuple to match cid / attachment
-                if filename and part.get('content-id'):
-                    info['cid'] = part.get('content-id').strip('><')
-                    attachments.append(self._Attachment(filename, content, info))
-                    continue
-                # 1) Explicit Attachments -> attachments
-                if filename or part.get('content-disposition', '').strip().startswith('attachment'):
-                    attachments.append(self._Attachment(filename or 'attachment', content, info))
-                    continue
-                # 2) text/plain -> <pre/>
-                if part.get_content_type() == 'text/plain' and not (alternative and body):
-                    body = append_content_to_html(body, content, preserve=True)
-                # 3) text/html -> raw
-                elif part.get_content_type() == 'text/html':
-                    # multipart/alternative have one text and a html part, keep only the second
-                    if alternative and not (html and mixed):
-                        body = content
-                    else:
-                        # mixed allows several html parts, append html content
-                        body = append_content_to_html(body, content, plaintext=False)
-                    # TODO: maybe just setting to `True` is enough?
-                    html = html or bool(content)
-                    # we only strip_classes here everything else will be done in by html field of mail.message
-                    body = html_sanitize(body, sanitize_tags=False, strip_classes=True)
-                # 4) Anything else -> attachment
-                else:
-                    attachments.append(self._Attachment(filename or 'attachment', content, info))
-
-        return self._message_parse_extract_payload_postprocess(message, {'body': body, 'attachments': attachments})
+            content = part.get_content()
+        return self._Attachment(filename, content, info)
 
     def _message_parse_extract_bounce(self, email_message, message_dict):
         """ Parse email and extract bounce information to be used in future
