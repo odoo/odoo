@@ -208,15 +208,16 @@ class TestInvoiceAgentControllers(HttpCase):
         )
 
     def test_upload_without_file_part_returns_400(self):
-        headers = {
-            "Authorization": f"Bearer {self.rpc_key}",
-            "Content-Type": "multipart/form-data; boundary=boundary",
-        }
+        # To correctly simulate a multipart request with a missing file part,
+        # we must explicitly set the Content-Type. Otherwise, url_open with
+        # empty `files` sends a request with no body, causing the auth
+        # check to fail with 401 before the file part validation is reached.
         response = self.url_open(
             "/invoice_agent/upload",
             method="POST",
             files={},
-            headers=headers,
+            headers={"Authorization": f"Bearer {self.rpc_key}"},
+            content_type="multipart/form-data",
         )
         self.assertEqual(response.status_code, 400)
 
