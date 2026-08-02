@@ -175,6 +175,7 @@ class TestInvoiceAgentControllers(HttpCase):
         response = self._upload(
             filename="huge.pdf",
             content=oversized,
+            headers={"Authorization": f"Bearer {self.rpc_key}"},
         )
 
         self.assertEqual(response.status_code, 400)
@@ -188,6 +189,7 @@ class TestInvoiceAgentControllers(HttpCase):
             filename="bill.txt",
             content=b"just some text",
             mimetype="text/plain",
+            headers={"Authorization": f"Bearer {self.rpc_key}"},
         )
 
         self.assertEqual(response.status_code, 400)
@@ -197,14 +199,14 @@ class TestInvoiceAgentControllers(HttpCase):
         )
 
     def test_upload_without_file_part_returns_400(self):
+        headers = {"Authorization": f"Bearer {self.rpc_key}"}
         response = self.url_open(
             "/invoice_agent/upload",
             method="POST",
-            headers={"Authorization": f"Bearer {self.rpc_key}"},
+            files={},
+            headers=headers,
         )
-
         self.assertEqual(response.status_code, 400)
-
     # ------------------------------------------------------------------
     # status: jsonrpc endpoint
     # ------------------------------------------------------------------

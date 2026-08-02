@@ -123,7 +123,6 @@ class InvoiceAgentController(http.Controller):
         csrf=False,
         save_session=False,
     )
-    @_require_bearer_auth
     def invoice_agent_upload(self, **kwargs):
         """Accept a PDF, store it as an ir.attachment, create a draft
         account.move (bill) with ``ai_extraction_status='pending'`` and return
@@ -146,6 +145,24 @@ class InvoiceAgentController(http.Controller):
             raise BadRequest(
                 _("Missing 'file' part in multipart/form-data upload."),
             )
+
+        authorization = httprequest.headers.get("Authorization", "")
+        scheme, _, token = authorization.partition(" ")
+        if scheme.lower() != "bearer" or not token.strip():
+            _logger.warning(
+                "Unauthorized upload attempt (missing bearer token) from %s",
+                remote_addr,
+            )
+            raise _unauthorized_json("Missing Bearer API key in Authorization header")
+        apikeys = request.env["res.users.apikeys"]
+        uid = apikeys._check_credentials(scope="rpc", key=token.strip())
+        if not uid:
+            _logger.warning(
+                "Unauthorized upload attempt (invalid API key) from %s",
+                remote_addr,
+            )
+            raise _unauthorized_json("Invalid, revoked or wrong-scope API key")
+        request.update_env(user=uid)
 
         raw = upload.read() if hasattr(upload, "read") else upload
         filename = upload.filename or "invoice.pdf"
