@@ -37,12 +37,11 @@ class TestInvoiceAgentControllers(HttpCase):
         apikeys = cls.env["res.users.apikeys"].sudo()
 
         def _generate_key(scope, name):
-            res = apikeys._generate(scope, name, expiration)
-            # res.users.apikeys._generate returns a tuple where the last item is the raw key string
-            return res[-1] if isinstance(res, (tuple, list)) else res
+            # _generate returns a tuple: (key_id, raw_key_string)
+            return apikeys._generate(scope, name, expiration)[1]
 
         cls.rpc_key = _generate_key("rpc", "test rpc key")
-        cls.global_key = _generate_key(None, "test global key")
+        cls.global_key = _generate_key("base.api_key_global", "test global key")
         cls.wrong_scope_key = _generate_key("website", "test website key")
 
         cls.pdf_bytes = b"%PDF-1.4 fake vendor bill for controller tests"
@@ -130,12 +129,8 @@ class TestInvoiceAgentControllers(HttpCase):
             .sudo()
             ._generate("rpc", "to revoke", fields.Datetime.now() + timedelta(days=1))
         )
-        if isinstance(res, (tuple, list)):
-            key_id = res[0]
-            raw_key = res[-1]
-        else:
-            key_id = raw_key = res
-
+        key_id, raw_key = res
+ 
         self.env["res.users.apikeys"].sudo().revoke(key_id)
 
         response = self._upload(
