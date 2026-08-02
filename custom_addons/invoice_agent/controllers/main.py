@@ -124,6 +124,7 @@ class InvoiceAgentController(http.Controller):
         csrf=False,
         save_session=False,
     )
+    @_require_bearer_auth
     def invoice_agent_upload(self, **kwargs):
         """Accept a PDF, store it as an ir.attachment, create a draft
         account.move (bill) with ``ai_extraction_status='pending'`` and return
@@ -140,9 +141,6 @@ class InvoiceAgentController(http.Controller):
         httprequest = request.httprequest
         remote_addr = httprequest.remote_addr
 
-        # ---- All validation checks (request shape, size, mimetype) must run
-        # *before* the authentication check, so unauthenticated callers get
-        # sane 400 Bad Request errors instead of 401s on malformed calls. ----
         upload = httprequest.files.get("file")
         if upload is None:
             _logger.warning("Upload without 'file' part from %s", remote_addr)
