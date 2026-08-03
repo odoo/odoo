@@ -12,6 +12,7 @@ export class Vimeo extends AbstractThirdPartyVideo {
         startFrom: { default: 0, type: Number },
         autoplay: { default: false, type: BooleanInt, params: ["autoplay"] },
         muted: { default: false, type: BooleanInt, params: ["muted"] },
+        loop: { default: false, type: BooleanInt, params: ["loop"] },
         hideControls: { default: false, type: BooleanInt, params: ["controls"], reversed: true },
         hideFullscreen: {
             default: false,
