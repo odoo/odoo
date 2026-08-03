@@ -15,17 +15,17 @@ from odoo.addons.portal.controllers.portal import pager as portal_pager
 
 class CustomerPortal(portal.CustomerPortal):
 
-    def _prepare_home_portal_values(self, counters):
-        values = super()._prepare_home_portal_values(counters)
+    def _prepare_home_portal_values(self, counters, limits):
+        values = super()._prepare_home_portal_values(counters, limits)
         PurchaseOrder = request.env['purchase.order']
         if 'rfq_count' in counters:
             values['rfq_count'] = PurchaseOrder.search_count([
                 ('state', 'in', ['sent'])
-            ]) if PurchaseOrder.has_access('read') else 0
+            ], limit=limits['rfq_count']) if PurchaseOrder.has_access('read') else 0
         if 'purchase_count' in counters:
             values['purchase_count'] = PurchaseOrder.search_count([
                 ('state', 'in', ['purchase', 'cancel'])
-            ]) if PurchaseOrder.has_access('read') else 0
+            ], limit=limits['purchase_count']) if PurchaseOrder.has_access('read') else 0
         return values
 
     def _get_purchase_searchbar_sortings(self):
