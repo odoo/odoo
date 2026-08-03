@@ -100,7 +100,7 @@ class PaymentTransaction(models.Model):
 
         In particular, for confirmed transactions we write a message in the chatter with the payment
         and transaction references, post relevant fiscal documents, and create missing payments. For
-        cancelled transactions, we cancel the payment.
+        draft, cancelled, or errored transactions, we cancel the payment.
         """
         super()._post_process()
         for tx in self.filtered(lambda t: t.state == 'done'):
@@ -118,7 +118,7 @@ class PaymentTransaction(models.Model):
                     link=tx.payment_id._get_html_link(),
                 )
                 tx._log_message_on_linked_documents(message)
-        for tx in self.filtered(lambda t: t.state == 'cancel'):
+        for tx in self.filtered(lambda t: t.state in ('draft', 'cancel', 'error')):
             tx.payment_id.action_cancel()
 
     def _should_create_payment(self):
