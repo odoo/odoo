@@ -70,6 +70,15 @@
     ],
     'application': True,
     'assets': {
+        "im_livechat.assets_embed_core": [
+            "crm/static/src/core/common/**/*",
+        ],
+        "mail.assets_public": [
+            "crm/static/src/core/common/**/*",
+        ],
+        "portal.assets_chatter_helpers": [
+            "crm/static/src/core/common/**/*",
+        ],
         'web.assets_backend': [
             'crm/static/src/**',
             ('remove', 'crm/static/src/views/forecast_graph/**'),

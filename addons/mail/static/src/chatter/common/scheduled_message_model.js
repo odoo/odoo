@@ -13,6 +13,8 @@ export class ScheduledMessage extends Record {
     /** @type {boolean} */
     is_note;
     scheduled_date = fields.Datetime();
+    /** @type {string} */
+    subject;
     thread = fields.One("mail.thread");
 }
 

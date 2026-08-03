@@ -457,6 +457,8 @@ export class DiscussChannel extends Record {
     }
     /** @type {Number|undefined} */
     member_count;
+    /** @type {number} number of messages in a sub-channel */
+    message_count;
     /** @type {string} */
     name;
     threadCreationMessages = fields.Many("mail.message", {

@@ -64,6 +64,8 @@ export class DataResponse extends Record {
     channels = fields.Many("discuss.channel");
     /** @type {number} */
     count;
+    /** @type {boolean} */
+    is_fully_loaded;
     message = fields.One("mail.message");
     messages = fields.Many("mail.message");
     partners = fields.Many("res.partner");

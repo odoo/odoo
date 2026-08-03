@@ -6,6 +6,6 @@ patch(Thread.prototype, {
     setup() {
         super.setup();
         /** @type {number|undefined} */
-        this.comments_count;
+        this.comments_count = undefined;
     },
 });

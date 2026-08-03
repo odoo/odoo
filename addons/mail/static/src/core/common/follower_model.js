@@ -6,10 +6,16 @@ export class Follower extends Record {
     static _name = "mail.followers";
 
     thread = fields.One("mail.thread");
+    /** @type {string} */
+    display_name;
+    /** @type {string} */
+    email;
     /** @type {number} */
     id;
     /** @type {boolean} */
     is_active;
+    /** @type {string} */
+    name;
     partner_id = fields.One("res.partner");
     subtype_ids = fields.Many("mail.message.subtype");
 

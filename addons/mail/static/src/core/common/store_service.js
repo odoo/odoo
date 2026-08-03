@@ -45,6 +45,9 @@ export class Store extends BaseStore {
     get self() {
         return this.self_user?.partner_id || this.self_guest;
     }
+    /** @type {boolean} */
+    hasCannedResponses;
+    hasGifPickerFeature = false;
     initialized = false;
     /**
      * Indicates whether the current user is using the application through the
@@ -57,6 +60,8 @@ export class Store extends BaseStore {
             return this.store.env.services.ui.isSmall || isMobileOS();
         },
     });
+    /** @type {number|undefined} id of the mail.action_discuss action */
+    action_discuss_id;
     /** @type {number} */
     internalUserGroupId;
     mt_comment = fields.One("mail.message.subtype");

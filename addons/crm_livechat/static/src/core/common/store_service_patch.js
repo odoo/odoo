@@ -3,10 +3,10 @@ import { Store } from "@mail/core/common/store_service";
 import { patch } from "@web/core/utils/patch";
 
 /** @type {import("models").Store} */
-const StorePatch = {
+const storePatch = {
     setup() {
         super.setup(...arguments);
-        this.hasGifPickerFeature = false;
+        this.has_access_create_lead = false;
     },
 };
-patch(Store.prototype, StorePatch);
+patch(Store.prototype, storePatch);

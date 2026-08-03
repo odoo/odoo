@@ -4,6 +4,14 @@ import { createDocumentFragmentFromContent } from "@web/core/utils/html";
 export class ChatbotStep extends Record {
     static id = AND("scriptStep", "message");
 
+    /**
+     * Pair identifying this step for the python store index.
+     *
+     * @type {[number, number]|undefined}
+     */
+    id;
+    completed = false;
+
     operatorFound = false;
     scriptStep = fields.One("chatbot.script.step");
     message = fields.One("mail.message", { inverse: "chatbotStep" });

@@ -17,7 +17,7 @@ export class MailPollOptionModel extends Record {
     /** @type {number} */
     id;
     /** @type {number} */
-    number_of_vote;
+    number_of_votes;
     /** @type {string} */
     option_emoji;
     /** @type {string} */

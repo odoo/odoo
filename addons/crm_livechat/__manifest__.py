@@ -27,6 +27,9 @@
         'mail.assets_public': [
             'crm_livechat/static/src/core/common/**/*',
         ],
+        "portal.assets_chatter_helpers": [
+            "crm_livechat/static/src/core/common/**/*",
+        ],
         'web.assets_unit_tests': [
             'crm_livechat/static/tests/**/*',
             ("remove", "crm_livechat/static/tests/tours/**/*"),

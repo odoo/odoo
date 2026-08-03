@@ -8,7 +8,11 @@ export class Country extends Record {
     /** @type {number} */
     id;
     /** @type {string} */
+    image_url;
+    /** @type {string} */
     name;
+    /** @type {number} */
+    phone_code;
 
     get flagUrl() {
         if (!this.code) {

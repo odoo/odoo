@@ -23,6 +23,7 @@ declare module "models" {
     import { MessageReactions as MessageReactionsClass } from "@mail/core/common/message_reactions_model";
     import { Notification as NotificationClass } from "@mail/core/common/notification_model";
     import { ResCompany as ResCompanyClass } from "@mail/core/common/res_company_model";
+    import { ResCurrency as ResCurrencyClass } from "@mail/core/common/res_currency_model";
     import { ResGroups as ResGroupsClass } from "@mail/core/common/res_groups_model";
     import { ResGroupsPrivilege as ResGroupsPrivilegeClass } from "@mail/core/common/res_groups_privilege_model";
     import { ResLang as ResLangClass } from "@mail/core/common/res_lang_model";
@@ -58,6 +59,7 @@ declare module "models" {
     export interface MessageReactions extends MessageReactionsClass {}
     export interface Notification extends NotificationClass {}
     export interface ResCompany extends ResCompanyClass {}
+    export interface ResCurrency extends ResCurrencyClass {}
     export interface ResGroups extends ResGroupsClass {}
     export interface ResGroupsPrivilege extends ResGroupsPrivilegeClass {}
     export interface ResLang extends ResLangClass {}
@@ -102,6 +104,7 @@ declare module "models" {
         MessageReactions: StaticMailRecord<MessageReactions, typeof MessageReactionsClass>;
         "res.company": StaticMailRecord<ResCompany, typeof ResCompanyClass>;
         "res.country": StaticMailRecord<Country, typeof CountryClass>;
+        "res.currency": StaticMailRecord<ResCurrency, typeof ResCurrencyClass>;
         "res.groups": StaticMailRecord<ResGroups, typeof ResGroupsClass>;
         "res.groups.privilege": StaticMailRecord<ResGroupsPrivilege, typeof ResGroupsPrivilegeClass>;
         "res.lang": StaticMailRecord<ResLang, typeof ResLangClass>;
@@ -139,6 +142,7 @@ declare module "models" {
         MessageReactions: MessageReactions;
         "res.company": ResCompany;
         "res.country": Country;
+        "res.currency": ResCurrency;
         "res.groups": ResGroups;
         "res.groups.privilege": ResGroupsPrivilege;
         "res.lang": ResLang;

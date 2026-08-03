@@ -7,5 +7,6 @@ patch(ResourceResource.prototype, {
         super.setup();
         /** ⚠️ This field is named like a One but it is actually a Many. */
         this.employee_id = fields.Many("hr.employee", { inverse: "resource_id" });
+        this.department_id = fields.One("hr.department");
     },
 });

@@ -11,8 +11,16 @@ const storeServicePatch = {
     /** @override */
     setup() {
         super.setup();
+        /** @type {string|undefined} */
+        this.companyName = undefined;
         /** @type {Map<number, Promise<DiscussChannel|void>>} */
         this.fetchChannelPromiseByChannelId = new Map();
+        /** @type {boolean|undefined} whether some channels are unpinned (hidden from the sidebar) */
+        this.has_hidden_channels = undefined;
+        /** @type {boolean|undefined} */
+        this.isChannelTokenSecret = undefined;
+        /** @type {boolean|undefined} */
+        this.is_welcome_page_displayed = undefined;
         /**
          * Defines channel types that have the message seen indicator/info feature.
          * @see `discuss.channel`._types_allowing_seen_infos()
