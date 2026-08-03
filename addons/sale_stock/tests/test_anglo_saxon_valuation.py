@@ -1626,6 +1626,22 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
         self.assertEqual(self.lot2.standard_price, 16)
         self.assertEqual(self.product_avco_auto.standard_price, 14)
 
+    def test_cogs_avco(self):
+        self._make_in_move(self.product_avco_auto, 2, 10)
+        so = self._so_deliver(self.product_avco_auto, 1, 1)
+        invoice = so._create_invoices()
+        invoice.action_post()
+        cogs_aml = invoice.line_ids.filtered(lambda l: l.display_type == 'cogs')
+        self.assertEqual(cogs_aml.filtered(lambda l: l.debit).debit, 10)
+
+        self._make_in_move(self.product_avco_auto, 2, 16)
+        self.assertEqual(self.product_avco_auto.standard_price, 14)
+
+        invoice.button_draft()
+        invoice.action_post()
+        cogs_aml = invoice.line_ids.filtered(lambda l: l.display_type == 'cogs')
+        self.assertEqual(cogs_aml.filtered(lambda l: l.debit).debit, 10)
+
     def test_credit_note_cogs_uom(self):
         """
         Check that when posting a credit note for a returned product, in a
