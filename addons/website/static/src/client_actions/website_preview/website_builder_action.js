@@ -179,6 +179,14 @@ export class WebsiteBuilderClientAction extends Component {
             (state) => {
                 this.websiteContext.edition = state.isEditing;
                 if (!state.isEditing) {
+                    // The systray item removal below is delayed by 200ms (see
+                    // the other effect). If we leave edit mode before that
+                    // delay elapsed, that pending removal must be cancelled
+                    // here and now: otherwise it can still fire later and
+                    // remove the item this call is about to re-add, since
+                    // Owl's useEffect cleanup that normally cancels it only
+                    // runs after the next render/patch cycle (too late).
+                    clearTimeout(this.navBarTimeout);
                     this.addSystrayItems();
                 }
             },
