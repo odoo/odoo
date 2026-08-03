@@ -672,8 +672,36 @@ class MassMailing(models.Model):
             ('state', '=', 'exception')
         ], limit=batch_size)
         while failed_emails:
-            failed_emails.mapped('mailing_trace_ids').unlink()
+            failed_traces = failed_emails.mapped('mailing_trace_ids')
+
+            # Extract safe lists of emails and co
+            failed_email_addresses = list(set(filter(None, failed_traces.mapped('email'))))
+            failed_res_ids = list(set(failed_traces.mapped('res_id')))
+            failed_models = list(set(filter(None, failed_traces.mapped('model'))))
+
+            failed_traces.unlink()
             failed_emails.unlink()
+
+            # Find and drop 'mail_dup' traces for these records
+            dup_domain = [
+                ('mass_mailing_id', 'in', self.ids),
+                ('failure_type', '=', 'mail_dup'),
+            ]
+
+            sub_domains = []
+            if failed_email_addresses:
+                sub_domains.append([('email', 'in', failed_email_addresses)])
+            if failed_res_ids and failed_models:
+                # Fallback coverage for non-email model tracking structures
+                sub_domains.append([('model', 'in', failed_models), ('res_id', 'in', failed_res_ids)])
+
+            if sub_domains:
+                dup_traces = self.env['mailing.trace'].sudo().search(
+                    expression.AND([dup_domain, expression.OR(sub_domains)])
+                )
+                if dup_traces:
+                    dup_traces.unlink()
+
             failed_emails = failed_emails.search([
                 ('mailing_id', 'in', self.ids),
                 ('state', '=', 'exception')
