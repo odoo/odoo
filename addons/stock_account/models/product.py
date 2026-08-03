@@ -357,7 +357,7 @@ class ProductProduct(models.Model):
         return {pv.product_id: pv for pv in product_values}
 
     def _get_last_in(self, date=None):
-        last_in_domain = Domain([('is_in', '=', True), ('product_id', '=', self.id)])
+        last_in_domain = Domain([('is_in', '=', True), ('product_id', '=', self.id), ('company_id', '=', self.env.company.id)])
         if date:
             last_in_domain &= Domain([('date', '<=', date)])
         last_in = self.env['stock.move'].search(last_in_domain, order='date desc, id desc', limit=1)
