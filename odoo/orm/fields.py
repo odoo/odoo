@@ -1012,6 +1012,7 @@ class Field[T]:
     _description_change_default = property(attrgetter('change_default'))
     _description_default_export_compatible = property(attrgetter('default_export_compatible'))
     _description_exportable = property(attrgetter('exportable'))
+    _description_sql_computed = property(lambda env: bool(attrgetter('compute_sql')(env)))
 
     def _description_depends(self, env: Environment):
         return env.registry.field_depends[self]
