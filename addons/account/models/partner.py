@@ -200,7 +200,7 @@ class AccountFiscalPosition(models.Model):
 
     def _get_vat_valid(self, delivery, company=None):
         """ Hook for determining VAT validity with more complex VAT requirements """
-        return bool(delivery.vat)
+        return bool(delivery.vat and delivery.vat != '/')
 
     def _get_fpos_ranking_functions(self, partner):
         """Get comparison functions to rank fiscal positions.
