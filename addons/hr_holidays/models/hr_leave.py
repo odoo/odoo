@@ -2202,6 +2202,11 @@ class HrLeave(models.Model):
         return days
 
     def _create_leaves_from_split(self, leave_split, use_worked_days=False):
+        # leave_split: List of tuple (work_entry_type_id, number_of_days) of the time off to create
+        # use_worked_days: Take into account the working days instead of the calendar days
+        #                  If True, we will deduct the time off date to value according to the
+        #                  employee working schedule and public time off according to time off type
+        #                  configuration
         self.ensure_one()
         if len(leave_split) == 1:
             # If the split results on one work entry type, change it if it differs from the original one
