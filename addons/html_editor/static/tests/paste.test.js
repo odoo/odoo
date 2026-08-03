@@ -4529,6 +4529,34 @@ describe("onDrop", () => {
             `<p>ab<img class="img-fluid" data-file-name="image.png" src="${base64Image}">[]c</p>`
         );
     });
+    test("should use a live range for the drop position from caretPositionFromPoint", async () => {
+        const base64Image =
+            "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII=";
+
+        const { el } = await setupEditor(
+            `<p>a[<img class="img-fluid" data-file-name="image.png" src="${base64Image}">]</p>`
+        );
+        const pElement = el.firstChild;
+        const imgElement = pElement.lastChild;
+
+        patchWithCleanup(document, {
+            caretPositionFromPoint: () => ({ offsetNode: pElement, offset: 2 }),
+        });
+
+        const dragdata = new DataTransfer();
+        await dispatch(imgElement, "dragstart", { dataTransfer: dragdata });
+        await animationFrame();
+        const imageHTML = dragdata.getData("application/vnd.odoo.odoo-editor-node");
+
+        const dropData = new DataTransfer();
+        dropData.setData("application/vnd.odoo.odoo-editor-node", imageHTML);
+        await dispatch(pElement, "drop", { dataTransfer: dropData });
+        await animationFrame();
+
+        expect(getContent(el)).toBe(
+            `<p>a<img class="img-fluid" data-file-name="image.png" src="${base64Image}">[]</p>`
+        );
+    });
     test("should be able to drag and drop icon", async () => {
         const { el } = await setupEditor(`<p>a<span class="fa fa-heart">[]</span>bc</p><p>def</p>`);
         const pElement = el.lastElementChild;
