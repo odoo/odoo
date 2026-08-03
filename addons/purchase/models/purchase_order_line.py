@@ -355,7 +355,7 @@ class PurchaseOrderLine(models.Model):
                 line.product_id.sudo().with_company(line.company_id).with_context(
                     skip_qty_available_update=True
                 ).qty_available += qty_received
-            if line.product_id and line.order_id.state == 'purchase':
+            if line.product_id and line.order_id.state == 'purchase' and not self.env.context.get('skip_intercompany_sync'):
                 msg = _("Extra line with %s ", line.product_id.display_name)
                 line.order_id.message_post(body=msg)
         return lines
@@ -365,7 +365,7 @@ class PurchaseOrderLine(models.Model):
         if 'display_type' in values and self.filtered(lambda line: line.display_type != values.get('display_type')):
             raise UserError(_("You cannot change the type of a purchase order line. Instead you should delete the current line and create a new line of the proper type."))
 
-        if any(field in values for field in ('product_qty', 'price_unit')):
+        if any(field in values for field in ('product_qty', 'price_unit')) and not self.env.context.get('skip_intercompany_sync'):
             precision = self.env['decimal.precision'].precision_get('Product Unit')
             for line in self:
                 if line.order_id.state != 'purchase':
