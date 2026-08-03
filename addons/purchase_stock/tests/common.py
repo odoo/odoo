@@ -55,6 +55,7 @@ class PurchaseTestCommon(TestStockValuationCommon):
         return po
 
     def _use_route_buy(self, product, create_seller=True):
+        self.route_buy.product_selectable = True
         product.route_ids = [(4, self.route_buy.id)]
         if not product.seller_ids and create_seller:
             self.env['product.supplierinfo'].create({
@@ -91,4 +92,3 @@ class PurchaseTestCommon(TestStockValuationCommon):
             cls._test_user.sudo().company_ids = [(4, cls.company.id)]
         cls.purchase_user = cls._create_new_internal_user(name='Purchase User', login='purchase_user', groups='purchase.group_purchase_user')
         cls.route_buy = cls.warehouse.buy_pull_id.route_id
-

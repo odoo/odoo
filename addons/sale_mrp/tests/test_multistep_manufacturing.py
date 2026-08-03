@@ -38,7 +38,6 @@ class TestMultistepManufacturing(TestMrpCommon):
         product_form.name = 'Stick'
         product_form.uom_id = cls.uom_unit
         product_form.route_ids.clear()
-        product_form.route_ids.add(cls.warehouse.manufacture_pull_id.route_id)
         product_form.route_ids.add(cls.warehouse.mto_pull_id.route_id)
         cls.product_manu = product_form.save()
 
@@ -116,7 +115,6 @@ class TestMultistepManufacturing(TestMrpCommon):
         # Add routes for manufacturing and make to order to the raw material product
         with Form(self.product_raw) as p1:
             p1.route_ids.clear()
-            p1.route_ids.add(self.warehouse_1.manufacture_pull_id.route_id)
             p1.route_ids.add(self.warehouse_1.mto_pull_id.route_id)
 
         # New BoM for raw material product, it will generate another Production order i.e. child Production order
@@ -159,24 +157,15 @@ class TestMultistepManufacturing(TestMrpCommon):
         self.assertEqual(mo.action_view_sale_orders()['res_id'], self.sale_order.id)
 
     def test_sales_order_with_mto_manufacturing(self):
-        self.route_mto.active = True
         warehouse = self.warehouse_1
         warehouse.manufacture_steps = 'pbm_sam'
         prod1 = self.env['product.product'].create({
             'name': 'elct1',
             'type': 'consu',
-            'route_ids': [(6, 0, [
-                warehouse.manufacture_pull_id.route_id.id,
-                warehouse.mto_pull_id.route_id.id
-            ])],
         })
         prod2 = self.env['product.product'].create({
             'name': 'elct2',
             'type': 'consu',
-            'route_ids': [(6, 0, [
-                warehouse.manufacture_pull_id.route_id.id,
-                warehouse.mto_pull_id.route_id.id
-            ])],
         })
         partner = self.env['res.partner'].create({'name': 'Steve Buscemi'})
         so = self.env['sale.order'].create({

@@ -76,15 +76,12 @@ class TestSaleMrpInvoices(TestSaleCommon):
         """
         Check that mto moves are not reported as taking from stock in the forecast report
         """
-        mto_route = self.env.ref('stock.route_warehouse0_mto')
+        mto_route = self.warehouse.mto_pull_id.route_id
         mto_route.active = True
-        manufacturing_route = self.env.ref('mrp.route_warehouse0_manufacture')
-        routes = mto_route + manufacturing_route
-        routes.product_selectable = True
         product = self.env['product.product'].create({
             'name': 'SuperProduct',
             'is_storable': True,
-            'route_ids': routes,
+            'route_ids': [Command.set([mto_route.id])],
         })
 
         product.bom_ids = [Command.create({

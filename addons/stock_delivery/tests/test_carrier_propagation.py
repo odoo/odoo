@@ -45,9 +45,8 @@ class TestCarrierPropagation(TransactionCase):
             'name': 'Super Product',
             'invoice_policy': 'delivery',
         })
-        mto_route = cls.env.ref('stock.route_warehouse0_mto')
+        mto_route = cls.warehouse.mto_pull_id.route_id
         mto_route.active = True
-        mto_route.product_selectable = True
         cls.warehouse.mto_pull_id.procure_method = "make_to_stock"
         cls.mto_product = cls.ProductProduct.create({
             'name': 'MTO Product',
@@ -339,16 +338,14 @@ class TestCarrierPropagationPostInstall(TestCarrierPropagation):
         push_rule = self.warehouse.reception_route_id.rule_ids.filtered(lambda r: r.action == 'push')
         push_rule.propagate_carrier = True
 
-        buy_route = self.env.ref('purchase_stock.route_warehouse0_buy')
-        mto_route = self.env.ref('stock.route_warehouse0_mto')
-        (mto_route + buy_route).product_selectable = True
+        mto_route = self.warehouse.mto_pull_id.route_id
         mto_route.rule_ids.procure_method = 'make_to_order'
 
         express_delivery = self.normal_delivery.copy({'name': 'Express Delivery'})
         vendor = self.env['res.partner'].create({'name': 'Grouping Vendor', 'group_rfq': 'all'})
         self.super_product.write({
             'is_storable': True,
-            'route_ids': [Command.set((mto_route + buy_route).ids)],
+            'route_ids': [Command.link(mto_route.id)],
             'seller_ids': [Command.create({'partner_id': vendor.id})],
         })
 

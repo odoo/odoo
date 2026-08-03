@@ -27,12 +27,10 @@ class TestProcurement(TestMrpCommon):
         self.bom_3.bom_line_ids.filtered(lambda x: x.product_id == self.product_5).unlink()
         self.bom_1.bom_line_ids.filtered(lambda x: x.product_id == self.product_1).unlink()
         # Update route
-        self.warehouse_1.mto_pull_id.route_id.active = True
         self.warehouse_1.mto_pull_id.procure_method = "make_to_order"
         self.warehouse_1.manufacture_mto_pull_id.procure_method = "make_to_order"
-        route_manufacture = self.warehouse_1.manufacture_pull_id.route_id.id
-        route_mto = self.warehouse_1.mto_pull_id.route_id.id
-        self.product_4.write({'route_ids': [(6, 0, [route_manufacture, route_mto])]})
+        self.route_mto.active = True
+        self.product_4.route_ids = [Command.link(self.route_mto.id)]
         # Create production order
         # -------------------------
         # Product6 Unit 24
@@ -214,11 +212,11 @@ class TestProcurement(TestMrpCommon):
 
     def test_link_date_mo_moves(self):
         """ Check link of shedule date for manufaturing with date stock move."""
-
+        self.route_manufacture.product_selectable = True
         # create a product with manufacture route
         product_1 = self.env['product.product'].create({
             'name': 'AAA',
-            'route_ids': [Command.link(self.warehouse_1.manufacture_pull_id.route_id.id)],
+            'route_ids': [Command.set([self.route_manufacture.id])],
         })
 
         component_1 = self.env['product.product'].create({
@@ -302,9 +300,10 @@ class TestProcurement(TestMrpCommon):
 
     def test_finished_move_cancellation(self):
         """Check state of finished move on cancellation of raw moves. """
+        self.route_manufacture.product_selectable = True
         product_bottle = self.env['product.product'].create({
             'name': 'Plastic Bottle',
-            'route_ids': [Command.link(self.warehouse_1.manufacture_pull_id.route_id.id)],
+            'route_ids': [Command.set([self.route_manufacture.id])],
         })
 
         component_mold = self.env['product.product'].create({
@@ -344,11 +343,10 @@ class TestProcurement(TestMrpCommon):
         """Ensure that a procurement request using a product with an empty BoM
         will create an empty MO in draft state that can be completed afterwards.
         """
-        route_manufacture = self.warehouse_1.manufacture_pull_id.route_id.id
-        route_mto = self.warehouse_1.mto_pull_id.route_id.id
+        self.route_manufacture.product_selectable = True
         product = self.env['product.product'].create({
             'name': 'Clafoutis',
-            'route_ids': [(6, 0, [route_manufacture, route_mto])]
+            'route_ids': [Command.set([self.route_manufacture.id])],
         })
         self.env['mrp.bom'].create({
             'product_id': product.id,
@@ -530,15 +528,10 @@ class TestProcurement(TestMrpCommon):
         """Test to ensure that a Manufacturing Order is created in 'draft' state
         via MTSO route when BoM has no components or operations.
         """
-        route_manufacture = self.warehouse_1.manufacture_pull_id.route_id
-        # Set up MTSO route.
-        route_mto = self.warehouse_1.mto_pull_id.route_id
-        route_mto.rule_ids.procure_method = "mts_else_mto"
 
         # Create a product with a BoM that has no components or operations.
         product = self.env['product.product'].create({
             'name': 'Product',
-            'route_ids': [Command.link(route_manufacture.id), Command.link(route_mto.id)],
         })
         self.env['mrp.bom'].create({
             'product_id': product.id,
@@ -579,17 +572,14 @@ class TestProcurement(TestMrpCommon):
         7. Check daily demand fluctuations for products entering or leaving production."""
 
         self.picking_type_out.reservation_method = 'at_confirm'
-        route_manufacture = self.warehouse_1.manufacture_pull_id.route_id
 
         product_1 = self.env['product.product'].create({
             'name': 'Cake',
             'is_storable': True,
-            'route_ids': [(6, 0, [route_manufacture.id])]
         })
         product_2 = self.env['product.product'].create({
             'name': 'Cake Mix',
             'is_storable': True,
-            'route_ids': [(6, 0, [route_manufacture.id])]
         })
         product_3 = self.env['product.product'].create({
             'name': 'Flour',
@@ -620,7 +610,6 @@ class TestProcurement(TestMrpCommon):
         product_4 = self.env['product.product'].create({
             'name': 'Flavor Enchancer',
             'is_storable': True,
-            'route_ids': [(6, 0, [route_manufacture.id])]
         })
         product_5 = self.env['product.product'].create({
             'name': 'MSG',
@@ -778,10 +767,7 @@ class TestProcurement(TestMrpCommon):
         product = self.env['product.product'].create({
             'name': 'product',
             'is_storable': True,
-            'route_ids': [
-                Command.link(self.warehouse_1.mto_pull_id.route_id.id),
-                Command.link(self.warehouse_1.manufacture_pull_id.route_id.id),
-            ],
+            'route_ids': [Command.set([mto_route.id])],
         })
         component = self.env['product.product'].create({
             'name': 'component',
@@ -834,23 +820,17 @@ class TestProcurement(TestMrpCommon):
         self.assertEqual(self.env['stock.route'].search_count([]), routes_count)
 
     def test_rr_with_dependance_between_bom(self):
-        route_mto = self.warehouse_1.mto_pull_id.route_id
-        route_mto.active = True
-        route_manufacture = self.warehouse_1.manufacture_pull_id.route_id
         product_1 = self.env['product.product'].create({
             'name': 'Product A',
             'is_storable': True,
-            'route_ids': [(6, 0, [route_manufacture.id])]
         })
         product_2 = self.env['product.product'].create({
             'name': 'Product B',
             'is_storable': True,
-            'route_ids': [(6, 0, [route_manufacture.id, route_mto.id])]
         })
         product_3 = self.env['product.product'].create({
             'name': 'Product C',
             'is_storable': True,
-            'route_ids': [(6, 0, [route_manufacture.id])]
         })
         product_4 = self.env['product.product'].create({
             'name': 'Product D',
@@ -945,7 +925,6 @@ class TestProcurement(TestMrpCommon):
         }, {
             'name': 'finished',
             'is_storable': True,
-            'route_ids': [(6, 0, manu_route.ids)],
         }])
 
         bom01_form = Form(self.env['mrp.bom'])
@@ -1151,12 +1130,9 @@ class TestProcurement(TestMrpCommon):
         """ Test that when we generate several procurements for a product in a raw
             we do not create demand for the same quantities several times """
 
-        route_manufacture = self.warehouse_1.manufacture_pull_id.route_id
-
         # Create a product with manufacture route
         product_1 = self.env['product.product'].create({
             'name': 'AAA',
-            'route_ids': [(6, 0, [route_manufacture.id])],
         })
 
         component_1 = self.env['product.product'].create({
@@ -1182,7 +1158,6 @@ class TestProcurement(TestMrpCommon):
             'product_id': product_1.id,
             'product_min_qty': 0.0,
             'product_max_qty': 0.0,
-            'route_id': route_manufacture.id,
         })
 
         # Create 3 pickings and confirm them one by one
@@ -1217,11 +1192,8 @@ class TestProcurement(TestMrpCommon):
     def test_mo_split_with_batch_size_mto(self):
         """ Check the MO is split with the correct product_qty when we apply a batch size in BoM
             and run the procurement using a MTO, MTSO, or replenishment."""
-        self.route_mto.write({'active': True})
-        self.product_4.route_ids = [
-            Command.link(self.route_mto.id),
-            Command.link(self.route_manufacture.id),
-        ]
+        self.route_mto.active = True
+        self.product_4.route_ids = [Command.link(self.route_mto.id)]
         self.bom_1.write({
             'enable_batch_size': True,
             'batch_size': 200.0,
@@ -1303,10 +1275,7 @@ class TestProcurement(TestMrpCommon):
         self.product_1.is_storable = True
         self.route_mto.active = True
         self.route_mto.rule_ids.procure_method = 'mts_else_mto'
-        self.product_1.route_ids = [
-            Command.link(self.route_mto.id),
-            Command.link(self.route_manufacture.id),
-        ]
+        self.product_1.route_ids = [Command.link(self.route_mto.id)]
         self.env['stock.quant']._update_available_quantity(self.product_1, self.warehouse_1.lot_stock_id, 10)
         self.env['mrp.bom'].create({
             'product_tmpl_id': self.product_1.product_tmpl_id.id,
@@ -1342,11 +1311,8 @@ class TestProcurement(TestMrpCommon):
         """
         self.productA.write({'uom_id': self.uom_dozen})
 
-        self.route_mto.write({'active': True})
-        self.productA.route_ids = [
-            Command.link(self.route_mto.id),
-            Command.link(self.route_manufacture.id),
-        ]
+        self.route_mto.active = True
+        self.productA.route_ids = [Command.link(self.route_mto.id)]
 
         self.env['mrp.bom'].create({
             'product_tmpl_id': self.productA.product_tmpl_id.id,

@@ -17,7 +17,6 @@ class TestSalePurchaseStockFlow(TransactionCase):
         cls.mto_route = cls.env.ref('stock.route_warehouse0_mto')
         cls.buy_route = cls.env.ref('purchase_stock.route_warehouse0_buy')
         cls.buy_route.product_selectable = True
-        cls.mto_route.product_selectable = True
         cls.mto_route.active = True
 
         cls.customer_location = cls.env.ref('stock.stock_location_customers')
@@ -28,7 +27,7 @@ class TestSalePurchaseStockFlow(TransactionCase):
         cls.mto_product = cls.env['product.product'].create({
             'name': 'SuperProduct',
             'is_storable': True,
-            'route_ids': [(6, 0, (cls.mto_route + cls.buy_route).ids)],
+            'route_ids': [Command.set([cls.mto_route.id])],
             'seller_ids': [(0, 0, {
                 'partner_id': cls.vendor.id,
             })],
@@ -36,7 +35,7 @@ class TestSalePurchaseStockFlow(TransactionCase):
         cls.mto_product_without_seller = cls.env['product.product'].create({
             'name': 'SuperProduct',
             'is_storable': True,
-            'route_ids': [Command.set((cls.mto_route + cls.buy_route).ids)],
+            'route_ids': [Command.set([cls.buy_route.id])],
         })
         cls.warehouse = cls.env['stock.warehouse'].create({
             'name': 'Other Warehouse',

@@ -217,13 +217,10 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         resupply_sub_on_order_route.product_selectable = True
         (self.comp1 + self.comp2).write({'route_ids': [(6, None, [resupply_sub_on_order_route.id])]})
 
-        # Tick "manufacture" and MTO on self.comp2
-        mto_route = self.env.ref('stock.route_warehouse0_mto')
+        # Tick MTO on self.comp2
+        mto_route = self.warehouse.mto_pull_id.route_id
         mto_route.active = True
-        manufacture_route = self.env['stock.route'].search([('name', '=', 'Manufacture')])
-        (mto_route + manufacture_route).product_selectable = True
-        self.comp2.write({'route_ids': [(4, manufacture_route.id, None)]})
-        self.comp2.write({'route_ids': [(4, mto_route.id, None)]})
+        self.comp2.route_ids = [Command.link(mto_route.id)]
 
         # Create a receipt picking from the subcontractor
         picking_form = Form(self.env['stock.picking'])
@@ -279,12 +276,10 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         """
         # Required for `location_id` to be visible in the view
         self.env.user.group_ids += self.env.ref('stock.group_stock_multi_locations')
-        # Tick "manufacture" and MTO on self.comp2
-        mto_route = self.env.ref('stock.route_warehouse0_mto')
+        # Tick MTO on self.comp2
+        mto_route = self.warehouse.mto_pull_id.route_id
         mto_route.active = True
-        manufacture_route = self.env['stock.route'].search([('name', '=', 'Manufacture')])
-        (mto_route + manufacture_route).product_selectable = True
-        self.comp2.write({'route_ids': [(6, None, [manufacture_route.id, mto_route.id])]})
+        self.comp2.route_ids = [Command.link(mto_route.id)]
         picking_type_in = self.env.ref('stock.picking_type_in')
         self.env.ref('mrp_subcontracting.route_resupply_subcontractor_mto').active = False
 
@@ -979,7 +974,6 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
     def test_replenish_with_subcontracting_bom(self):
         """ Checks that a subcontracting bom cannot trigger a 'Manufacture' replenish.
         """
-        self.warehouse.route_ids.filtered(lambda r: r.get_external_id()).product_selectable = False
         self.assertEqual(self.finished.bom_ids.type, 'subcontract')
         self.finished.seller_ids.unlink()
         replenish_wizard = self.env['product.replenish'].create({

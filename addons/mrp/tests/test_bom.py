@@ -839,12 +839,9 @@ class TestBoM(TestMrpCommon):
         """
         # Workcenter is working 24/7
         self.full_availability()
-        routes = self.env.ref('mrp.route_warehouse0_manufacture')
-        routes.product_selectable = True
         pickaxe = self.env['product.product'].create({
             'name': 'Iron Pickaxe',
             'is_storable': True,
-            'route_ids': routes,
         })
         stick = self.env['product.product'].create({
             'name': 'Stick',
@@ -1419,7 +1416,6 @@ class TestBoM(TestMrpCommon):
             'name': 'Product sold in grams',
             'is_storable': True,
             'uom_id': self.uom_gm.id,
-            'route_ids': [Command.link(self.route_manufacture.id)],
         })
         # We create a BoM that manufactures 2kg of product
         self.env['mrp.bom'].create({
@@ -2424,7 +2420,6 @@ class TestBoM(TestMrpCommon):
         """Test to ensure that the popover shows the correct information when at least one component can not be resupplied.
         """
         bom = self.bom_1
-        bom.product_id.route_ids = [Command.set([self.route_manufacture.id])]
         popover_data = json.loads(bom.json_popover)
         # The popover displays "Not Available: Missing route info for components." because the delay is not set on the BoM.
         self.assertNotIn('delay', popover_data)

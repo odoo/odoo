@@ -652,10 +652,8 @@ class TestSaleMrpKitBom(BaseCommon):
         """
         partner = self.env['res.partner'].create({'name': 'Test Partner'})
         warehouse = self.env.ref('stock.warehouse0')
-        mto_route = self.env.ref('stock.route_warehouse0_mto')
+        mto_route = warehouse.mto_pull_id.route_id
         mto_route.action_unarchive()
-        routes = mto_route | self.env.ref('mrp.route_warehouse0_manufacture')
-        routes.product_selectable = True
         kit_product, comp, mto_comp, subcomp = self.env['product.product'].create([
             {
                 'name': 'kit_product',
@@ -670,7 +668,7 @@ class TestSaleMrpKitBom(BaseCommon):
             {
                 'name': 'mto_component',
                 'is_storable': True,
-                'route_ids': routes,
+                'route_ids': [Command.set([mto_route.id])],
             },
             {
                 'name': 'subcomponent',
