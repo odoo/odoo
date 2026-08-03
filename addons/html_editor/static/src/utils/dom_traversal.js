@@ -78,12 +78,12 @@ export function closestElement(node, predicate = "*") {
     const editable = element?.closest(".odoo-editor-editable");
     if (typeof predicate === "function") {
         while (element && !predicate(element)) {
-            element = element.parentElement;
+            element = element === editable ? null : element.parentElement;
         }
     } else {
         element = element?.closest(predicate);
     }
-    if ((editable && editable.contains(element)) || !node.isConnected) {
+    if (element && ((editable && editable.contains(element)) || !node.isConnected)) {
         return element;
     }
     return null;
