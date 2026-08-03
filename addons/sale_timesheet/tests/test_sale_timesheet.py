@@ -1951,3 +1951,46 @@ class TestSaleTimesheetAnalyticPlan(TestCommonSaleTimesheet):
         ])._compute_so_line()
         self.assertEqual(first_sol.qty_delivered, 3.0)
         self.assertEqual(second_sol.qty_delivered, 5.0)
+
+    def test_invoice_line_deferred_dates_from_timesheet_period(self):
+        """ Test that the deferred_start_date and deferred_end_date
+        selected while creating an invoice are registered."""
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'partner_invoice_id': self.partner_a.id,
+            'partner_shipping_id': self.partner_a.id,
+        })
+        so_line = self.env['sale.order.line'].create({
+            'product_id': self.product_delivery_timesheet2.id,
+            'product_uom_qty': 50,
+            'order_id': sale_order.id,
+        })
+        sale_order.action_confirm()
+        task = so_line.task_id
+
+        self.env['account.analytic.line'].create({
+            'name': 'Test Line',
+            'project_id': task.project_id.id,
+            'task_id': task.id,
+            'unit_amount': 10,
+            'employee_id': self.employee_user.id,
+            'date': '2026-07-15',
+        })
+
+        context = {
+            'active_model': 'sale.order',
+            'active_ids': [sale_order.id],
+            'active_id': sale_order.id,
+            'default_journal_id': self.company_data['default_journal_sale'].id,
+        }
+        wizard = self.env['sale.advance.payment.inv'].with_context(context).create({
+            'advance_payment_method': 'delivered',
+            'date_start_invoice_timesheet': '2026-07-01',
+            'date_end_invoice_timesheet': '2026-07-31',
+        })
+        invoice_dict = wizard.create_invoices()
+        invoice = self.env['account.move'].browse(invoice_dict['res_id'])
+
+        invoice_line = invoice.invoice_line_ids.filtered(lambda l: l.sale_line_ids == so_line)
+        self.assertEqual(str(invoice_line.deferred_start_date), '2026-07-01')
+        self.assertEqual(str(invoice_line.deferred_end_date), '2026-07-31')

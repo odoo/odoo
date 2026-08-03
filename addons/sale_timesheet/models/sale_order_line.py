@@ -211,3 +211,12 @@ class SaleOrderLine(models.Model):
             if sol.is_service and len(timesheet_ids) > 0:
                 action_per_sol[sol.id] = timesheet_action, timesheet_ids[0] if len(timesheet_ids) == 1 else False
         return action_per_sol
+
+    def _prepare_invoice_line(self, **optional_values):
+        res = super()._prepare_invoice_line(**optional_values)
+        if self.product_id and self.product_id._is_delivered_timesheet():
+            if timesheet_start_date := self.env.context.get('timesheet_start_date'):
+                res['deferred_start_date'] = timesheet_start_date
+            if timesheet_end_date := self.env.context.get('timesheet_end_date'):
+                res['deferred_end_date'] = timesheet_end_date
+        return res
