@@ -1118,26 +1118,50 @@ class TestChannelInternals(MailCommon, HttpCase):
         """Ensures the command '/help' works in a channel"""
         channel = self.env["discuss.channel"].browse(self.test_channel.ids)
         channel.name = "<strong>R&D</strong>"
-        with self.assertBus(
-            [
+
+        def notifications():
+            self.env.cr.execute("SELECT currval('mail_message_id_seq')")
+            message_id = self.env.cr.fetchone()[0]
+            return [
                 BusResult(
                     self.env.user,
-                    "discuss.channel/transient_message",
+                    "mail.record/insert",
                     {
-                        "body":
-                            "<span class='o_mail_notification'>"
-                            "You are in <b>#&lt;strong&gt;R&amp;D&lt;/strong&gt;</b>."
-                            "<br><br><b>@username</b> to mention someone"
-                            "<br><b>@role</b> to notify multiple people"
-                            "<br><b>/command</b> to run a command"
-                            "<br><b>::shortcut</b> to insert a canned response"
-                            "<br><b>:emoji:</b> to insert an emoji"
-                            "</span>",
-                        "channel_id": channel.id,
+                        "mail.message": [
+                            {
+                                "author_id": self.partner_root.id,
+                                "body": [
+                                    "markup",
+                                    (
+                                        "<span class='o_mail_notification'>"
+                                        "You are in <b>#&lt;strong&gt;R&amp;D&lt;/strong&gt;</b>."
+                                        "<br><br><b>@username</b> to mention someone"
+                                        "<br><b>@role</b> to notify multiple people"
+                                        "<br><b>/command</b> to run a command"
+                                        "<br><b>::shortcut</b> to insert a canned response"
+                                        "<br><b>:emoji:</b> to insert an emoji"
+                                        "</span>"
+                                    ),
+                                ],
+                                "id": message_id,
+                                "is_transient": True,
+                                "subtype_id": self.env.ref("mail.mt_note").id,
+                                "thread": {"id": channel.id, "model": "discuss.channel"},
+                            },
+                        ],
+                        "mail.thread": [
+                            {
+                                "id": channel.id,
+                                "messages": [["ADD", [message_id]]],
+                                "model": "discuss.channel",
+                                "transientMessages": [["ADD", [message_id]]],
+                            },
+                        ],
                     },
                 ),
-            ],
-        ):
+            ]
+
+        with self.assertBus(notifications):
             channel.execute_command_help()
 
     def test_channel_command_help_in_group(self):
@@ -1154,28 +1178,52 @@ class TestChannelInternals(MailCommon, HttpCase):
             'channel_partner_ids': [(6, 0, test_user.partner_id.id)]
         })
         test_group._add_members(users=self.user_employee_nomail)
-        with self.assertBus(
-            [
+
+        def notifications():
+            self.env.cr.execute("SELECT currval('mail_message_id_seq')")
+            message_id = self.env.cr.fetchone()[0]
+            return [
                 BusResult(
                     self.env.user,
-                    "discuss.channel/transient_message",
+                    "mail.record/insert",
                     {
-                        "body":
-                            "<span class='o_mail_notification'>"
-                            "You are in a private conversation with "
-                            f"<a href=# data-oe-model='res.partner' data-oe-id='{test_user.partner_id.id}' class=o_mail_redirect>@Mario</a> "
-                            f"and <a href=# data-oe-model='res.partner' data-oe-id='{self.partner_employee_nomail.id}' class=o_mail_redirect>@&lt;strong&gt;Evita Employee NoEmail&lt;/strong&gt;</a>."
-                            "<br><br><b>@username</b> to mention someone"
-                            "<br><b>@role</b> to notify multiple people"
-                            "<br><b>/command</b> to run a command"
-                            "<br><b>::shortcut</b> to insert a canned response"
-                            "<br><b>:emoji:</b> to insert an emoji"
-                            "</span>",
-                        "channel_id": test_group.id,
+                        "mail.message": [
+                            {
+                                "author_id": self.partner_root.id,
+                                "body": [
+                                    "markup",
+                                    (
+                                        "<span class='o_mail_notification'>"
+                                        "You are in a private conversation with "
+                                        f"<a href=# data-oe-model='res.partner' data-oe-id='{test_user.partner_id.id}' class=o_mail_redirect>@Mario</a> "
+                                        f"and <a href=# data-oe-model='res.partner' data-oe-id='{self.partner_employee_nomail.id}' class=o_mail_redirect>@&lt;strong&gt;Evita Employee NoEmail&lt;/strong&gt;</a>."
+                                        "<br><br><b>@username</b> to mention someone"
+                                        "<br><b>@role</b> to notify multiple people"
+                                        "<br><b>/command</b> to run a command"
+                                        "<br><b>::shortcut</b> to insert a canned response"
+                                        "<br><b>:emoji:</b> to insert an emoji"
+                                        "</span>"
+                                    ),
+                                ],
+                                "id": message_id,
+                                "is_transient": True,
+                                "subtype_id": self.env.ref("mail.mt_note").id,
+                                "thread": {"id": test_group.id, "model": "discuss.channel"},
+                            },
+                        ],
+                        "mail.thread": [
+                            {
+                                "id": test_group.id,
+                                "messages": [["ADD", [message_id]]],
+                                "model": "discuss.channel",
+                                "transientMessages": [["ADD", [message_id]]],
+                            },
+                        ],
                     },
                 ),
-            ],
-        ):
+            ]
+
+        with self.assertBus(notifications):
             test_group.execute_command_help()
 
     @users('employee')
