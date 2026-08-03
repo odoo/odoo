@@ -40,21 +40,24 @@ class TestInvoiceAgentSecurity(InvoiceAgentTestCommon):
             name="Reviewer A",
             login="reviewer_a",
             group_ids=[cls.env.ref(REVIEWER_GROUP).id],
-            company_ids=[cls.company_a.id],
+            company_id=cls.company_a.id,
+            company_ids=[(6, 0, [cls.company_a.id])],
         )
         cls.reviewer_b = new_test_user(
             cls.env,
             name="Reviewer B",
             login="reviewer_b",
             group_ids=[cls.env.ref(REVIEWER_GROUP).id],
-            company_ids=[cls.company_b.id],
+            company_id=cls.company_b.id,
+            company_ids=[(6, 0, [cls.company_b.id])],
         )
         cls.manager = new_test_user(
             cls.env,
             name="Manager",
             login="agent_manager",
             group_ids=[cls.env.ref(MANAGER_GROUP).id],
-            company_ids=[cls.company_a.id],
+            company_id=cls.company_a.id,
+            company_ids=[(6, 0, [cls.company_a.id])],
         )
 
         cls.bill_a = cls.env["account.move"].create(
@@ -93,7 +96,8 @@ class TestInvoiceAgentSecurity(InvoiceAgentTestCommon):
         return self.env["invoice.agent.extraction.line"].with_user(user)
 
     def test_reviewer_can_read_and_write_but_not_create_lines(self):
-        line = self._line_env(self.reviewer_a).create(
+        # Line must be created by Manager because Reviewer lacks create ACL
+        line_as_manager = self._line_env(self.manager).create(
             {
                 "move_id": self.bill_a.id,
                 "field_name": "Total",
@@ -101,11 +105,16 @@ class TestInvoiceAgentSecurity(InvoiceAgentTestCommon):
                 "field_confidence": 0.9,
             },
         )
+        
+        # Switch context to Reviewer
+        line = line_as_manager.with_user(self.reviewer_a)
+
         # Reviewer can read and write...
         line.check_access("read")
         line.check_access("write")
         line.field_confidence = 0.95
         self.assertAlmostEqual(line.field_confidence, 0.95, places=2)
+        
         # ...but cannot create or delete (ir.model.access.csv: 0,0).
         with self.assertRaises(AccessError):
             line.check_access("create")
