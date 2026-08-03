@@ -392,3 +392,12 @@ class ProductProduct(models.Model):
         """
         self.ensure_one()
         return self.active and self.sale_ok and self.website_published
+
+    def _can_return_content(self, field_name=None, access_token=None):
+        """Override of `BaseModel` to allow showing donation product image to public users."""
+        if (
+            field_name in ["image_%s" % size for size in [1920, 1024, 512, 256, 128]] and
+            self._is_donation()
+        ):
+            return True
+        return super()._can_return_content(field_name, access_token)
