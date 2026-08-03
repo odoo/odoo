@@ -13,7 +13,7 @@ from odoo.addons.base.models.avatar_mixin import get_random_ui_color_from_seed
 from odoo.addons.bus.models.bus import channel_with_db, json_dump
 from odoo.addons.bus.tests.common import BusResult
 from odoo.addons.mail.models.discuss.discuss_channel import group_avatar
-from odoo.addons.mail.tests.common import MailCommon, mail_new_test_user
+from odoo.addons.mail.tests.common import MailCommon, mail_new_test_user, transient_message_bus_result
 from odoo.addons.mail.tools.discuss import Store
 from odoo.exceptions import AccessError, ValidationError
 from odoo.tests import HttpCase, users
@@ -1097,22 +1097,18 @@ class TestChannelInternals(MailCommon, HttpCase):
         channel = self.env["discuss.channel"].browse(self.test_channel.ids)
         channel.name = "<strong>R&D</strong>"
         with self.assertBus(
-            [
-                BusResult(
+            lambda: [
+                transient_message_bus_result(
                     self.env.user,
-                    "discuss.channel/transient_message",
-                    {
-                        "body":
-                            "<span class='o_mail_notification'>"
-                            "You are in <b>#&lt;strong&gt;R&amp;D&lt;/strong&gt;</b>."
-                            "<br><br><b>@username</b> to mention someone"
-                            "<br><b>@role</b> to notify multiple people"
-                            "<br><b>/command</b> to run a command"
-                            "<br><b>::shortcut</b> to insert a canned response"
-                            "<br><b>:emoji:</b> to insert an emoji"
-                            "</span>",
-                        "channel_id": channel.id,
-                    },
+                    channel,
+                    "<span class='o_mail_notification'>"
+                    "You are in <b>#&lt;strong&gt;R&amp;D&lt;/strong&gt;</b>."
+                    "<br><br><b>@username</b> to mention someone"
+                    "<br><b>@role</b> to notify multiple people"
+                    "<br><b>/command</b> to run a command"
+                    "<br><b>::shortcut</b> to insert a canned response"
+                    "<br><b>:emoji:</b> to insert an emoji"
+                    "</span>",
                 ),
             ],
         ):
@@ -1133,24 +1129,20 @@ class TestChannelInternals(MailCommon, HttpCase):
         })
         test_group._add_members(users=self.user_employee_nomail)
         with self.assertBus(
-            [
-                BusResult(
+            lambda: [
+                transient_message_bus_result(
                     self.env.user,
-                    "discuss.channel/transient_message",
-                    {
-                        "body":
-                            "<span class='o_mail_notification'>"
-                            "You are in a private conversation with "
-                            f"<a href=# data-oe-model='res.partner' data-oe-id='{test_user.partner_id.id}' class=o_mail_redirect>@Mario</a> "
-                            f"and <a href=# data-oe-model='res.partner' data-oe-id='{self.partner_employee_nomail.id}' class=o_mail_redirect>@&lt;strong&gt;Evita Employee NoEmail&lt;/strong&gt;</a>."
-                            "<br><br><b>@username</b> to mention someone"
-                            "<br><b>@role</b> to notify multiple people"
-                            "<br><b>/command</b> to run a command"
-                            "<br><b>::shortcut</b> to insert a canned response"
-                            "<br><b>:emoji:</b> to insert an emoji"
-                            "</span>",
-                        "channel_id": test_group.id,
-                    },
+                    test_group,
+                    "<span class='o_mail_notification'>"
+                    "You are in a private conversation with "
+                    f"<a href=# data-oe-model='res.partner' data-oe-id='{test_user.partner_id.id}' class=o_mail_redirect>@Mario</a> "
+                    f"and <a href=# data-oe-model='res.partner' data-oe-id='{self.partner_employee_nomail.id}' class=o_mail_redirect>@&lt;strong&gt;Evita Employee NoEmail&lt;/strong&gt;</a>."
+                    "<br><br><b>@username</b> to mention someone"
+                    "<br><b>@role</b> to notify multiple people"
+                    "<br><b>/command</b> to run a command"
+                    "<br><b>::shortcut</b> to insert a canned response"
+                    "<br><b>:emoji:</b> to insert an emoji"
+                    "</span>",
                 ),
             ],
         ):

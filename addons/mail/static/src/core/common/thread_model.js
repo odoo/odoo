@@ -383,14 +383,12 @@ export class Thread extends Record {
     });
 
     get newestPersistentMessage() {
-        return this.messages.findLast((msg) => Number.isInteger(msg.id));
+        return this.messages.findLast((msg) => msg.persistent);
     }
 
     newestPersistentAllMessages = fields.Many("mail.message", {
         compute() {
-            const allPersistentMessages = this.allMessages.filter((message) =>
-                Number.isInteger(message.id)
-            );
+            const allPersistentMessages = this.allMessages.filter((message) => message.persistent);
             allPersistentMessages.sort((m1, m2) => m2.id - m1.id);
             return allPersistentMessages;
         },
@@ -403,7 +401,7 @@ export class Thread extends Record {
     });
 
     get oldestPersistentMessage() {
-        return this.messages.find((msg) => Number.isInteger(msg.id));
+        return this.messages.find((msg) => msg.persistent);
     }
 
     computeComposerDisabled() {}
@@ -415,9 +413,7 @@ export class Thread extends Record {
     }
 
     nonEmptyMessages = this.computed(() => this.messages.filter((message) => !message.isEmpty));
-    persistentMessages = this.computed(() =>
-        this.messages.filter((message) => !message.is_transient && !message.isPending)
-    );
+    persistentMessages = this.computed(() => this.messages.filter((message) => message.persistent));
 
     get prefix() {
         return this.channel?.isChatChannel ? "@" : "#";

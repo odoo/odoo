@@ -321,7 +321,8 @@ export class DiscussChannel extends Record {
         if (!this.self_member_id) {
             return null;
         }
-        const messages = this.messages.filter((m) => !m.isNotification);
+        // a transient message is local to the session, so it is never the first unread one
+        const messages = this.messages.filter((m) => !m.isNotification && !m.is_transient);
         const separator = from_message_id;
         if (separator === 0 && !this.loadOlder) {
             return messages[0];
@@ -331,7 +332,7 @@ export class DiscussChannel extends Record {
         }
         // try to find a perfect match according to the member's separator
         let message = this.store["mail.message"].get({ id: separator });
-        if (!message || this.notEq(message.channel_id)) {
+        if (!message || message.is_transient || this.notEq(message.channel_id)) {
             message = nearestGreaterThanOrEqual(messages, separator, (msg) => msg.id);
         }
         return message;
