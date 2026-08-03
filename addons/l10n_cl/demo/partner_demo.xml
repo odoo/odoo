@@ -2,8 +2,8 @@
 <odoo>
 
     <record id="res_partner_bmya" model="res.partner">
-        <field name="name">Blanco Martin &amp; Asociados EIRL</field>
-        <field name="email">info@bmya.cl</field>
+        <field name="name">Blanco Martin &amp; Asociados SpA</field>
+        <field name="email">info@bmya1.cl</field>
         <field name="is_company">1</field>
         <field name="city">Las Condes</field>
         <field name="country_id" ref="base.cl"/>
@@ -22,7 +22,6 @@
         <field name="type">contact</field>
         <field name='l10n_latam_identification_type_id' ref="it_RUT"/>
         <field name="parent_id" ref="res_partner_bmya"/>
-        <field name="image_1920" type="base64" file="l10n_cl/demo/foto_dab.png"/>
     </record>
 
     <record id="res_partner_teksa" model="res.partner">
@@ -62,5 +61,71 @@
 
     <record id="base.res_partner_12" model="res.partner">
         <field name="l10n_cl_sii_taxpayer_type">4</field>
+    </record>
+
+    <record id="demo_partner_cl_1" model="res.partner">
+        <field name="name">Moher Solutions S.A.</field>
+        <field name="l10n_latam_identification_type_id" ref="l10n_cl.it_RUT"/>
+        <field name="l10n_cl_sii_taxpayer_type">1</field>
+        <field name="vat">77594500-1</field>
+        <field name="street">Paseo La Ventana 8888</field>
+        <field name="city">Pedro Aguirre Cerda</field>
+        <field name="state_id" ref="base.state_cl_13"/>
+        <field name="country_id" ref="base.cl"/>
+        <field name="email">info@mohersolutions.com</field>
+        <field name="is_company">1</field>
+    </record>
+
+    <record id="demo_partner_cl_2" model="res.partner">
+        <field name="name">Modulus SpA</field>
+        <field name="l10n_latam_identification_type_id" ref="l10n_cl.it_RUT"/>
+        <field name="l10n_cl_sii_taxpayer_type">1</field>
+        <field name="vat">76202517-5</field>
+        <field name="street">Carpe Diem 3333</field>
+        <field name="city">Vitacura</field>
+        <field name="state_id" ref="base.state_cl_13"/>
+        <field name="country_id" ref="base.cl"/>
+        <field name="email">modulus@modulusspa.com</field>
+        <field name="is_company">1</field>
+    </record>
+
+    <record id="demo_partner_cl_3" model="res.partner">
+        <field name="name">La Misión S.A.</field>
+        <field name="l10n_latam_identification_type_id" ref="l10n_cl.it_RUT"/>
+        <field name="l10n_cl_sii_taxpayer_type">1</field>
+        <field name="vat">76204900-7</field>
+        <field name="street">El Arauco 1111</field>
+        <field name="city">Providencia</field>
+        <field name="state_id" ref="base.state_cl_13"/>
+        <field name="country_id" ref="base.cl"/>
+        <field name="email">mision@example.com</field>
+        <field name="is_company">1</field>
+    </record>
+
+    <record id="demo_partner_supermarket" model="res.partner">
+        <field name="name">Cencosud Retail S.A.</field>
+        <field name="l10n_latam_identification_type_id" ref="l10n_cl.it_RUT"/>
+        <field name="l10n_cl_sii_taxpayer_type">1</field>
+        <field name="vat">81201000-K</field>
+        <field name="street">Av Kennedy 9001 Local 100</field>
+        <field name="city">Las Condes</field>
+        <field name="state_id" ref="base.state_cl_13"/>
+        <field name="country_id" ref="base.cl"/>
+        <field name="email">cenco@example.com</field>
+        <field name="is_company">1</field>
+    </record>
+
+    <record id="demo_partner_cl_fee_receipts" model="res.partner">
+        <field name="name">Roberto Norambuena González</field>
+        <field name="l10n_latam_identification_type_id" ref="l10n_cl.it_RUT"/>
+        <field name="l10n_cl_sii_taxpayer_type">2</field>
+        <field name="vat">13009922-K</field>
+        <field name="zip">7658389</field>
+        <field name="street">La Calle Yanquihue 2020</field>
+        <field name="city">Santiago</field>
+        <field name="state_id" ref="base.state_cl_13"/>
+        <field name="country_id" ref="base.cl"/>
+        <field name="email">RNG@example.com</field>
+        <field name="is_company">0</field>
     </record>
 </odoo>
