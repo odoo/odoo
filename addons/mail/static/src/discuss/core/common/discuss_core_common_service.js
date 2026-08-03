@@ -1,4 +1,4 @@
-import { markup, proxy } from "@odoo/owl";
+import { proxy } from "@odoo/owl";
 
 import { registry } from "@web/core/registry";
 
@@ -24,20 +24,6 @@ export class DiscussCoreCommon {
         this.busService.subscribe("discuss.channel/new_message", (payload, metadata) => {
             this.store.insert(payload.store_data);
             this._handleNotificationNewMessage(payload, metadata);
-        });
-        this.busService.subscribe("discuss.channel/transient_message", (payload) => {
-            const { body, channel_id } = payload;
-            const lastMessageId = this.store.getLastMessageId();
-            const message = this.store["mail.message"].insert({
-                author_id: this.store.odoobot,
-                body: markup(body),
-                id: lastMessageId + 0.01,
-                subtype_id: this.store.mt_note,
-                is_transient: true,
-                thread: { id: channel_id, model: "discuss.channel" },
-            });
-            message.thread.messages.push(message);
-            message.thread.transientMessages.push(message);
         });
         this.env.bus.addEventListener("mail.message/delete", ({ detail: { message, notifId } }) => {
             const self_member_id = message.channel_id?.self_member_id;

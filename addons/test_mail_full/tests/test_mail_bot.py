@@ -131,7 +131,7 @@ class TestOdoobot(MailCommon, TestRecipients):
         )
 
     def assertNextMessage(self, message, answer=None, sender=None):
-        last_message = self.env['mail.message'].search([('id', '=', message.id + 1)])
+        last_message = self.env['mail.message'].search([('id', '>', message.id)], order='id', limit=1)
         if last_message:
             body = last_message.body.replace('<p>', '').replace('</p>', '')
         else:
