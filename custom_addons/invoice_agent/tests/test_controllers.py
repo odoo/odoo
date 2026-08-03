@@ -165,17 +165,19 @@ class TestInvoiceAgentControllers(HttpCase):
         move = self.env["account.move"].browse(result_data["move_id"])
         self.assertTrue(move.exists())
         self.assertEqual(move.move_type, "in_invoice")
-
         self.assertEqual(move.ai_extraction_status, "processing")
-
         self.assertTrue(move.ai_source_attachment_id)
         self.assertEqual(move.ai_source_attachment_id.name, "bill.pdf")
         self.assertEqual(move.ai_source_attachment_id.res_id, move.id)
 
-        self.assertEqual(
-            base64.b64decode(move.ai_source_attachment_id.raw),
-            self.pdf_bytes,
+        # ✅ المقارنة المباشرة: raw ترجع bytes مباشرة في أودو
+        # أو استخدم base64.b64decode(move.ai_source_attachment_id.datas) إذا استخدمت حقل datas
+        attachment_bytes = (
+            move.ai_source_attachment_id.raw
+            if move.ai_source_attachment_id.raw
+            else base64.b64decode(move.ai_source_attachment_id.datas or b"")
         )
+        self.assertEqual(attachment_bytes, self.pdf_bytes)
 
     def test_upload_with_global_key_creates_draft_move(self):
         response = self._upload(
