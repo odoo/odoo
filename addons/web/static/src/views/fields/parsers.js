@@ -141,7 +141,7 @@ export function parseFloatTime(value, unit = "hours") {
  * @param {UnitOfTime} [unit="hours"]
  * @return {Duration}
  */
-function parseDuration(value, unit = "hours") {
+ export function parseDuration(value, unit = "hours") {
     let isNegative;
     const regexTimes = durationUnitsRegex();
     const duration = {

@@ -1,7 +1,10 @@
 import { describe, expect, test } from "@odoo/hoot";
 import { mockDate } from "@odoo/hoot-mock";
-import { defineModels, fields, getService, models, mountWebClient, onRpc } from "@web/../tests/web_test_helpers";
+import { user } from "@web/core/user";
+import { contains, defineModels, defineParams, fields, getService, models, mountView, mountWebClient, onRpc } from "@web/../tests/web_test_helpers";
+import { clickDate } from "@web/../tests/views/calendar/calendar_test_helpers";
 import { defineHrHolidaysModels } from "./hr_holidays_test_helpers";
+
 
 describe.current.tags("desktop");
 
@@ -29,6 +32,7 @@ class HrLeave extends models.Model {
 
     color = fields.Integer({ related: "work_entry_type_id.color" });
     date_from = fields.Datetime();
+    hour_from = fields.Float();
     date_to = fields.Datetime();
     department_id = fields.Many2one({ relation: "hr.department" });
     employee_id =  fields.Many2one({ relation: "hr.employee" });
@@ -106,3 +110,26 @@ test(`test basic rendering`, async () => {
     expect(`.o_calendar_filter:contains("Mar 17, 2025 : Test Mandatory Day")`).toHaveCount(1);
     expect(`.fc-day.hr_mandatory_day_5[data-date="2025-03-17"]`).toHaveCount(1);
 });
+
+test(`test time rendering in foreign languages`, async () => {
+    mockDate("2025-03-18 08:00:00");
+    defineParams({
+        lang: "nl",
+    });
+    HrLeave._views["form,hr_leave_view_form_dashboard_new_time_off"] = `
+        <form>
+            <field name="hour_from" widget="float_time_selection"/>
+        </form>
+    `;
+    await mountView({
+        type: "calendar",
+        resModel: "hr.leave",
+        context: user.context,
+    });
+    await clickDate("2025-03-18");
+    await contains(".o_field_widget[name='hour_from'] input").click();
+    await contains(".o_popover select:nth-of-type(1)").select("14");
+    await contains(".o_popover select:nth-of-type(2)").select("30");
+    await contains(".modal-content").click();  // Confirm selection
+    await expect("div[name='hour_from'] input").toHaveValue("2:30 p.m.");
+})
