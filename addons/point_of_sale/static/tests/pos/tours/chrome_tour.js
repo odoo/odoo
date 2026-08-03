@@ -126,6 +126,7 @@ registry.category("web_tour.tours").add("OrderModificationAfterValidationError",
             PaymentScreen.clickValidate(),
 
             // Dialog showing the error
+            Dialog.bodyIs("The order was not validated"),
             Dialog.confirm(),
 
             PaymentScreen.isShown(),
