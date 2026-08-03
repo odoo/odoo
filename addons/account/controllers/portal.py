@@ -16,28 +16,18 @@ from odoo.addons.portal.controllers.portal import pager as portal_pager
 
 class PortalAccount(CustomerPortal):
 
-    def _prepare_home_portal_values(self, counters):
-        values = super()._prepare_home_portal_values(counters)
-        if 'overdue_invoice_count' in counters:
-            values['overdue_invoice_count'] = self._get_overdue_invoice_count()
-        if 'invoice_count' in counters:
-            invoice_count = request.env['account.move'].search_count(self._get_invoices_domain('out'), limit=1) \
-                if request.env['account.move'].has_access('read') else 0
-            values['invoice_count'] = invoice_count
-        if 'bill_count' in counters:
-            bill_count = request.env['account.move'].search_count(self._get_invoices_domain('in'), limit=1) \
-                if request.env['account.move'].has_access('read') else 0
-            values['bill_count'] = bill_count
-        return values
+    def _prepare_portal_counter_values(self, counter):
+        if counter == 'overdue_invoice_count':
+            return 'account.move', self._get_overdue_invoices_domain(), 'read'
+        if counter == 'invoice_count':
+            return 'account.move', self._get_invoices_domain('out'), 'read'
+        if counter == 'bill_count':
+            return 'account.move', self._get_invoices_domain('in'), 'read'
+        return super()._prepare_portal_counter_values(counter)
 
     # ------------------------------------------------------------
     # My Invoices
     # ------------------------------------------------------------
-
-    def _get_overdue_invoice_count(self):
-        overdue_invoice_count = request.env['account.move'].search_count(self._get_overdue_invoices_domain()) \
-            if request.env['account.move'].has_access('read') else 0
-        return overdue_invoice_count
 
     def _invoice_get_page_view_values(self, invoice, access_token, **kwargs):
         custom_amount = None
@@ -146,7 +136,8 @@ class PortalAccount(CustomerPortal):
             'sortby': sortby,
             'searchbar_filters': OrderedDict(sorted(searchbar_filters.items())),
             'filterby': filterby,
-            'overdue_invoice_count': self._get_overdue_invoice_count(),
+            'overdue_invoice_count': request.env['account.move'].search_count(self._get_overdue_invoices_domain())
+                if request.env['account.move'].has_access('read') else 0,
         })
         return values
 

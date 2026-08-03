@@ -8,8 +8,10 @@ from odoo.addons.portal.controllers.portal import pager as portal_pager
 
 
 class CustomerPortalLoyalty(CustomerPortal):
-    def _prepare_home_portal_values(self, counters):
-        values = super()._prepare_home_portal_values(counters)
+
+    @route()
+    def counters(self, counters, **kw):
+        values = super().counters(counters, **kw)
         if not counters:
             # we want those data to be added to the /my/home page only, and always computed
             values["cards_per_programs"] = dict(
@@ -29,7 +31,6 @@ class CustomerPortalLoyalty(CustomerPortal):
                     aggregates=["id:recordset"],
                 )
             )
-
         return values
 
     def _get_loyalty_searchbar_sortings(self):
