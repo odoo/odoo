@@ -126,6 +126,7 @@ class InvoiceAgentController(http.Controller):
         methods=["POST"],
         csrf=False,
         save_session=False,
+        readonly=False,  
     )
     @_require_bearer_auth
     def invoice_agent_upload(self, **kwargs):
