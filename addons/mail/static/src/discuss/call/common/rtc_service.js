@@ -1176,50 +1176,43 @@ export class Rtc extends Record {
                 break;
             }
         }
-        if (this.selfSession) {
-            switch (type) {
-                case "camera": {
-                    this.removeVideoFromSession(this.selfSession, {
-                        type: "camera",
-                        cleanup: false,
-                    });
-                    if (this.state.cameraTrack) {
-                        this.updateStream(this.selfSession, this.state.cameraTrack);
-                    }
-                    break;
-                }
-                case "screen": {
-                    if (!this.state.screenTrack) {
-                        this.removeVideoFromSession(this.selfSession, {
-                            type: "screen",
-                            cleanup: false,
-                        });
-                    } else {
-                        this.updateStream(this.selfSession, this.state.screenTrack);
-                    }
-                    break;
-                }
-            }
-        }
-        const updatedTrack = type === "camera" ? this.state.cameraTrack : this.state.screenTrack;
-        await this.network?.updateUpload(type, updatedTrack);
         if (!this.selfSession) {
             return;
         }
         switch (type) {
             case "camera": {
+                this.removeVideoFromSession(this.selfSession, {
+                    type: "camera",
+                    cleanup: false,
+                });
+                if (this.state.cameraTrack) {
+                    this.updateStream(this.selfSession, this.state.cameraTrack);
+                }
+                // broadcast the new state right away: updating the upload waits
+                // on the peer connections, and a peer that never completes its
+                // handshake must not block the flag for everyone else
                 this.updateAndBroadcast({
                     isCameraOn: !!this.state.sendCamera,
                 });
                 break;
             }
             case "screen": {
+                if (!this.state.screenTrack) {
+                    this.removeVideoFromSession(this.selfSession, {
+                        type: "screen",
+                        cleanup: false,
+                    });
+                } else {
+                    this.updateStream(this.selfSession, this.state.screenTrack);
+                }
                 this.updateAndBroadcast({
                     isScreenSharingOn: !!this.state.sendScreen,
                 });
                 break;
             }
         }
+        const updatedTrack = type === "camera" ? this.state.cameraTrack : this.state.screenTrack;
+        await this.network?.updateUpload(type, updatedTrack);
     }
 
     updateAndBroadcast(data) {
