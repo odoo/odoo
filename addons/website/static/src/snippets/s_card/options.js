@@ -37,6 +37,16 @@ options.registry.CardWidth = options.Class.extend({
 });
 
 options.registry.CardImageOptions = options.Class.extend({
+    /**
+     * @override
+     */
+    start() {
+        this.$target[0]
+            .querySelector(":scope > .o_card_img_wrapper > .o_card_img")
+            ?.classList.add("oe_unremovable");
+        return this._super(...arguments);
+    },
+
     //--------------------------------------------------------------------------
     // Options
     //--------------------------------------------------------------------------
@@ -48,6 +58,11 @@ options.registry.CardImageOptions = options.Class.extend({
         const imageWrapperEl = renderToElement("website.s_card.imageWrapper");
         this.$target[0].insertAdjacentElement("afterbegin", imageWrapperEl);
         this.$target[0].classList.add("o_card_img_top");
+        // Wait until the image is added before making it unremovable.
+        // Otherwise the editor cancels the insertion.
+        requestAnimationFrame(() => {
+            imageWrapperEl.querySelector(":scope > .o_card_img")?.classList.add("oe_unremovable");
+        });
     },
     /**
      * Changes the cover image position.
