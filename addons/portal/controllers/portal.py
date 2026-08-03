@@ -189,19 +189,37 @@ class CustomerPortal(Controller):
             'portal_hidden_cards': portal_hidden_cards,
         }
 
-    def _prepare_home_portal_values(self, counters):
-        """Values for /my & /my/home routes template rendering.
+    def _prepare_portal_counter_values(self, counter):
+        """ Return the values needed to compute the record count of the given badge counter in portal.
 
-        Includes the record count for the displayed badges.
-        where 'counters' is the list of the displayed badges
-        and so the list to compute.
+        Override to return a tuple with:
+        - the model name on which to execute the search_count,
+        - the record domain,
+        - the access level required as a string, or 'sudo'
         """
-        return {}
+        return False, False, False
 
     @route(['/my/counters'], type='jsonrpc', auth="user", website=True, readonly=True)
     def counters(self, counters, **kw):
+        """Compute each badges record count for /my & /my/home routes template rendering.
+
+        :param dict counters: Dictionary mapping the displayed badges to their entry category.
+        :return dict: Dictionary mapping the displayed badges to their record count.
+        """
+        res = {}
+        for counter, category in counters.items():
+            model_name, domain, access = self._prepare_portal_counter_values(counter)
+            count = 0
+            if model_name:
+                Model = request.env[model_name].sudo(request.env.su or access == 'sudo')
+                if access == 'sudo' or not isinstance(access, str) or Model.has_access(access):
+                    # Need precise count for alerts and discuss unread messages, else
+                    # only need to know if there's one matching record or not to display the card.
+                    precise_count = counter == 'discuss_count' or category == "alert"
+                    count = Model.search_count(domain, limit=None if precise_count else 1)
+            res[counter] = count
+        # For performance, cache counters as boolean to prevent recomputing the card visibility on each refresh.
         cache = request.session.get('portal_counters', {}).copy()
-        res = self._prepare_home_portal_values(counters)
         cache.update({k: bool(v) for k, v in res.items() if k.endswith('_count')})
         if cache != request.session.get('portal_counters'):
             request.session['portal_counters'] = cache
@@ -210,7 +228,7 @@ class CustomerPortal(Controller):
     @route(['/my', '/my/home'], type='http', auth="user", website=True, list_as_website_content=_lt("User Dashboard"))
     def home(self, **kw):
         values = self._prepare_portal_layout_values()
-        values.update(self._prepare_home_portal_values([]))
+        values.update(self.counters({}))
         return request.render("portal.portal_my_home", values)
 
     @route(['/my/account'], type='http', auth='user', website=True)
