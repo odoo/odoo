@@ -494,6 +494,24 @@ class AccountChartTemplate(models.AbstractModel):
                 ('module', '=', 'account'),
             ]).unlink()
 
+        if not force_update:
+            # Keep the en_US value of translatable fields of existing records,
+            # so that user changes survive a reload of the chart.
+            translatable_model_fields_map = self._get_translatable_template_model_fields()
+            for model_name, records in data.items():
+                translatable_model_fields = set(translatable_model_fields_map.get(model_name, []))
+                for xmlid, values in records.items():
+                    translatable_fields = translatable_model_fields & set(values)
+                    if translatable_fields:
+                        if isinstance(xmlid, int):
+                            rec = self.env[model_name].browse(xmlid).exists()
+                        else:
+                            rec = self.ref(xmlid, raise_if_not_found=False)
+                        if rec:
+                            for fname in translatable_fields:
+                                if rec[fname]:
+                                    values.pop(fname)
+
         for model_name, records in data.items():
             _fields = self.env[model_name]._fields
             for xmlid, values in records.items():
