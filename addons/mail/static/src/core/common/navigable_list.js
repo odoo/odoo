@@ -9,6 +9,25 @@ import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { usePosition } from "@web/core/position/position_hook";
 import { useService } from "@web/core/utils/hooks";
 
+/**
+ * Returns a string representation of the options, to tell a new set of options
+ * apart from the same set rebuilt at the next render. Every field is taken into
+ * account because `label` is optional (an option can be rendered by an
+ * arbitrary `optionTemplate`), and records are identified by their local id.
+ *
+ * @param {Object[]} options
+ * @returns {string}
+ */
+function optionsToString(options) {
+    return options
+        .map((option) =>
+            Object.entries(option)
+                .map(([name, value]) => `${name}:${value?.localId ?? value}`)
+                .join(",")
+        )
+        .join("\n");
+}
+
 export class NavigableList extends Component {
     static components = { DiscussAvatar };
     static template = "mail.NavigableList";
@@ -52,7 +71,10 @@ export class NavigableList extends Component {
             rememberPosition: this.props.rememberPosition,
         });
         useOnChange(
-            () => [this.props.options],
+            // Open on mount and when a new set of options arrives. In particular,
+            // do not re-open on unrelated re-renders after the user closed the
+            // list (Escape, click away): the options are then the same.
+            () => [optionsToString(this.props.options)],
             () => this.open()
         );
         useOnChange(
