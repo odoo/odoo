@@ -3669,3 +3669,29 @@ class TestStockValuation(TestStockValuationCommon):
 
         # Ensure that we didn't do 109 / 9 to compute the price
         self.assertEqual(product.standard_price, 1.0)
+
+    def test_multi_company_fifo_costing_isolation(self):
+        """
+        Test that an outgoing move in Company B does not use the incoming
+        move cost (get_last_in) from Company A for a FIFO product.
+        """
+        self.product_fifo.company_id = False
+        self.product_fifo.categ_id.with_company(self.other_company).property_cost_method = 'fifo'
+
+        self.product_fifo.with_company(self.other_company).standard_price = 0.0
+
+        move_in_a = self._make_in_move(
+            product=self.product_fifo,
+            quantity=10.0,
+            unit_cost=50.0,
+            company=self.company
+        )
+        self.assertEqual(move_in_a.price_unit, 50.0)
+
+        # Make sure only one company is in the allowed_company_ids
+        product = self.product_fifo.with_company(self.other_company).with_context(allowed_company_ids=[self.other_company.id])
+
+        product._update_standard_price()
+
+        # Company B should not have the cost from Company A, so the standard_price should remain 0.0
+        self.assertEqual(product.standard_price, 0.0)
