@@ -683,7 +683,7 @@ pivotRegistry.add("ODOO", {
         ((MEASURES_TYPES.includes(field.type) && field.aggregator) || field.type === "many2one") &&
         field.name !== "id" &&
         !field.name.includes(".") && // relational field path are not supported as measures (e.g. 'company_id.partner_id')
-        field.store,
+        (field.store || field.sql_computed),
     canHaveCustomGroup: (field) =>
         field.groupable &&
         !field.isCustomField &&
