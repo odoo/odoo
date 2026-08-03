@@ -18,7 +18,7 @@ class PortalAccount(CustomerPortal):
         if request.env.company.peppol_can_send:
             rendering_values['invoice_sending_methods'].update({'peppol': _("by Peppol")})
             rendering_values.update({
-                'peppol_eas_list': dict(request.env['res.partner']._fields['peppol_eas'].selection),
+                'peppol_eas_list': dict(request.env['res.partner']._fields['peppol_eas']._description_selection(request.env)),
             })
         return rendering_values
 
