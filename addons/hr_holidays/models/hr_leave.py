@@ -7,7 +7,7 @@ from zoneinfo import ZoneInfo
 
 from dateutil import rrule
 from dateutil.relativedelta import relativedelta
-from math import ceil
+from math import ceil, floor
 from markupsafe import Markup
 
 from odoo import api, fields, models
@@ -2200,3 +2200,125 @@ class HrLeave(models.Model):
             ):
                 return days - 1
         return days
+
+    def _create_leaves_from_split(self, leave_split, use_worked_days=False):
+        self.ensure_one()
+        if len(leave_split) == 1:
+            # If the split results on one work entry type, change it if it differs from the original one
+            work_entry_type = leave_split[0][0]
+            if work_entry_type != self.work_entry_type_id:
+                self.work_entry_type_id = work_entry_type
+            return self
+
+        res = self.env['hr.leave']
+        current_leave = self
+        remaining_days = self.number_of_days if use_worked_days else self._get_calendar_days()
+        if use_worked_days:
+            domain = [('count_as', '=', 'absence'),
+                      ('company_id', 'in', self.env.companies.ids + self.env.context.get('allowed_company_ids', [])),
+                      '|', ('holiday_id', '=', False), ('holiday_id', '!=', self.id)]
+            work_intervals = self.resource_calendar_id._work_intervals_batch(
+                self.date_from.astimezone(UTC), self.date_to.astimezone(UTC), resources_per_tz=self.employee_id.resource_id._get_resources_per_tz(),
+                domain=domain, compute_leaves=not self.work_entry_type_id.include_public_holidays_in_duration,
+            )[self.employee_id.resource_id.id]
+            compined_intervals = {}
+            for start, stop, _ in work_intervals:
+                compined_intervals[start.date()] = 1
+            days_data = sorted(compined_intervals.items())
+
+        for work_entry_type, nbr_days in leave_split:
+            full_days = floor(nbr_days)
+            half_days = nbr_days - full_days
+
+            remaining_days -= nbr_days
+
+            if use_worked_days:
+                if half_days:
+                    new_request_date_to, new_request_date_to_period = current_leave._get_request_date_to_with_period(nbr_days, work_intervals)
+                else:
+                    new_request_date_to = current_leave._get_request_date_to(nbr_days, days_data)
+                    new_request_date_to_period = 'pm'
+            else:
+                new_request_date_to = current_leave.request_date_from + relativedelta(days=full_days - 1)
+                if half_days:
+                    new_request_date_to_period = current_leave.request_date_from_period
+                else:
+                    new_request_date_to_period = 'am' if current_leave.request_date_from_period == 'pm' else 'pm'
+
+                if half_days or current_leave.request_date_from_period == 'pm':
+                    new_request_date_to += relativedelta(days=1)
+
+            old_request_date_to = current_leave.request_date_to
+            old_request_date_to_period = current_leave.request_date_to_period
+
+            current_leave.request_date_to = new_request_date_to
+            current_leave.request_date_to_period = new_request_date_to_period
+            current_leave.work_entry_type_id = work_entry_type
+
+            new_leave_request_date_from = new_request_date_to + relativedelta(days=1)
+            new_leave_request_date_from_period = 'am'
+            if new_request_date_to_period == 'am':
+                new_leave_request_date_from_period = 'pm'
+                new_leave_request_date_from -= relativedelta(days=1)
+
+            if remaining_days:
+                new_leave = current_leave.with_context({'skip_copy_check': True, 'leave_fast_create': True}).copy(
+                    default={
+                        'request_date_from': new_leave_request_date_from,
+                        'request_date_from_period': new_leave_request_date_from_period,
+                        'request_date_to': old_request_date_to,  # Will be recomputed at next iteration
+                        'request_date_to_period': old_request_date_to_period,  # Will be recomputed at next iteration
+                        'request_duration': False,
+                        **current_leave._get_extra_default_leave_values_for_split(),
+                    }
+                )
+                res += current_leave
+                current_leave = new_leave
+            else:
+                res += current_leave
+        return res
+
+    def _get_extra_default_leave_values_for_split(self):
+        return {}
+
+    def _get_request_date_to(self, number_of_days, days_data):
+        self.ensure_one()
+        for day, duration in days_data:
+            if day < self.request_date_from:
+                continue
+            number_of_days -= 1
+            if number_of_days == 0:
+                return day
+        return False
+
+    def _get_request_date_to_with_period(self, number_of_days, work_intervals):
+        self.ensure_one()
+        for interval in work_intervals:
+            if interval[1].date() < self.request_date_from:
+                continue
+            interval_days = self.resource_calendar_id._get_attendance_intervals_days_data([interval])['days']
+            if number_of_days < interval_days:
+                return (interval[1].date(), 'am')
+            if number_of_days == interval_days:
+                if float_compare(number_of_days, 0.5, precision_digits=2) == 0:
+                    last_day_morning_hours = self.employee_id._get_hours_for_date(interval[0].date(), day_period='morning')
+                    last_day_morning = last_day_morning_hours[1] - last_day_morning_hours[0]
+                    return (interval[1].date(), 'am') if interval[2].day_period != 'afternoon' and last_day_morning else (interval[1].date(), 'pm')
+                return (interval[1].date(), 'pm')
+            number_of_days -= interval_days
+        return False
+
+    def _get_work_entry_type_change_warning(self, leave_split):
+        self.ensure_one()
+        if len(leave_split) > 1:
+            lines = []
+            for work_entry_type, nbr_days in leave_split:
+                days_display = nbr_days if nbr_days != int(nbr_days) else int(nbr_days)
+                lines.append(self.env._("- %(code)s - %(name)s: %(nbr_days)s days", code=work_entry_type.code, name=work_entry_type.name, nbr_days=days_display))
+            return self.env._("This time off will be split into:\n") + "\n".join(lines)
+        if len(leave_split) == 1 and leave_split[0][0] != self.work_entry_type_id:
+            work_entry_type = leave_split[0][0]
+            return self.env._(
+                "This time off will be entirely replaced with %(code)s - %(name)s", code=work_entry_type.code, name=work_entry_type.name
+            )
+        return ""
