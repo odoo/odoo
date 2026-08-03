@@ -47,8 +47,8 @@
             <field name="active">False</field>
         </record>
 
-        <record id="project.group_project_manager" model="res.groups">
-            <field name="implied_ids" eval="[(4, ref('hr_timesheet.group_hr_timesheet_approver'))]"/>
+        <record id="analytic.analytic_line_analytic" model="ir.access">
+            <field name="active" eval="False"/>
         </record>
 
         </data>
