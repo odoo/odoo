@@ -35,13 +35,16 @@ const discussChannelPatch = {
         this.livechat_customer_history_ids = fields.Many("im_livechat.channel.member.history", {
             inverse: "channelAsCustomerHistory",
         });
+        this.livechat_customer_partner_ids = fields.Many("res.partner");
         this.livechat_expertise_ids = fields.Many("im_livechat.expertise");
         this.livechat_lang_id = fields.One("res.lang");
         this.livechat_looking_for_help_since_dt = fields.Datetime();
         /** @type {"in_progress"|"need_help"|undefined} */
-        this.livechat_status;
+        this.livechat_status = undefined;
         this.livechat_end_dt = fields.Datetime();
         this.livechat_operator_id = fields.One("res.partner");
+        /** @type {string|undefined} */
+        this.livechat_outcome = undefined;
         this.livechat_note = fields.Html();
         /** @type {string|undefined} */
         this.livechatNoteText = fields.Attr(undefined, {
@@ -63,7 +66,7 @@ const discussChannelPatch = {
             },
         });
         /** @type {import("@web/core/network/rpc").RPCError|import("@web/core/network/rpc").ConnectionLostError|import("@web/core/network/rpc").ConnectionAbortedError|undefined} */
-        this.chatbotTriggerFailedError;
+        this.chatbotTriggerFailedError = undefined;
     },
     get allowDescriptionTypes() {
         return [...super.allowDescriptionTypes, "livechat"];

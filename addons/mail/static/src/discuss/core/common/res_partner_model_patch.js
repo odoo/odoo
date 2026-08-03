@@ -8,6 +8,8 @@ const resPartnerPatch = {
     setup() {
         super.setup();
         this.channelMembers = fields.Many("discuss.channel.member");
+        /** @type {boolean|undefined} */
+        this.is_in_call = undefined;
     },
 };
 patch(ResPartner.prototype, resPartnerPatch);

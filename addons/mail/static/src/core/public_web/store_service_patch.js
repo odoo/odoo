@@ -8,8 +8,6 @@ patch(Store.prototype, {
         super.setup(...arguments);
         this.discuss = fields.One("DiscussApp");
         this.messagingMenu = fields.One("MessagingMenu", { compute: () => ({}) });
-        /** @type {number|undefined} */
-        this.action_discuss_id;
     },
     onStarted() {
         super.onStarted(...arguments);

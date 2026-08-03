@@ -102,6 +102,8 @@ export class MessagingMenuTab extends Record {
     important = true;
     /** @type {string} */
     icon;
+    /** @type {string|undefined} extra classes for the icon */
+    icon_class;
     /** @type {string} */
     id;
     /** Record IDs that were unread at init time, used to compute the `counter` field. */

@@ -64,6 +64,8 @@ export class Message extends Record {
     date = fields.Datetime();
     /** @type {string} */
     default_subject;
+    /** @type {string} */
+    email_from;
     /** @type {boolean} */
     edited = fields.Attr(false, {
         compute() {
@@ -201,6 +203,8 @@ export class Message extends Record {
     translationErrors;
     /** @type {string} */
     message_type;
+    /** @type {string} model of the record the message is posted on */
+    model;
     /** @type {string|undefined} */
     notificationType;
     channelAsThreadCreationNotification = fields.One("discuss.channel", {
@@ -216,6 +220,10 @@ export class Message extends Record {
         },
         inverse: "threadCreationMessages",
     });
+    /** @type {string} display name of the record the message is posted on */
+    record_name;
+    /** @type {number} id of the record the message is posted on */
+    res_id;
     create_date = fields.Datetime();
     write_date = fields.Datetime();
     /** @type {undefined|Boolean} */

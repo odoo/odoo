@@ -7,10 +7,14 @@ const { DateTime } = luxon;
 export class ResPartner extends Record {
     static _name = "res.partner";
 
+    /** @type {boolean} */
+    active;
     /** @type {string} */
     avatar_128_access_token;
     /** @type {string} */
     commercial_company_name;
+    /** @type {string} */
+    complete_name;
     country_id = fields.One("res.country");
     /** @type {string} */
     email;
@@ -43,14 +47,20 @@ export class ResPartner extends Record {
     /** @type {boolean} */
     is_public;
     main_user_id = fields.One("res.users");
+    /** @type {string} token proving the mention right on this partner */
+    mention_token;
     /** @type {string} */
     name;
     /** @type {string} */
     display_name;
+    /** @type {string} */
+    parent_name;
     /** @type {boolean | undefined} */
     partner_share;
     /** @type {string} */
     phone;
+    /** @type {string} */
+    tz;
     /** @type {luxon.DateTime} */
     offline_since = fields.Datetime(undefined, {
         compute: () => DateTime.max(this.user_ids.map((u) => u.offline_since)),

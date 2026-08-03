@@ -5,6 +5,8 @@ export class ResourceResource extends Record {
 
     /** @type {number} */
     id;
+    /** @type {string|undefined} */
+    name;
     /** @type {'user'|'material'} */
     resource_type = "user";
     user_id = fields.One("res.users");

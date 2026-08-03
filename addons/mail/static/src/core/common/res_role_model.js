@@ -7,6 +7,8 @@ export class ResRole extends Record {
     id;
     /** @type {string} */
     name;
+    /** @type {number} */
+    user_ids_count;
 }
 
 ResRole.register();

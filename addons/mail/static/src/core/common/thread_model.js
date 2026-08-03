@@ -245,6 +245,8 @@ export class Thread extends Record {
     hasLoadingFailedError;
     /** @type {boolean|undefined} */
     hasReadAccess;
+    /** @type {boolean|undefined} */
+    hasWriteAccess;
     canPostOnReadonly;
     /** @type {Boolean} */
     is_editable;

@@ -12,6 +12,12 @@ export class Chatbot extends Record {
     // completed.
     static MULTILINE_STEP_DEBOUNCE_DELAY = 10000;
 
+    /**
+     * Pair identifying this chatbot for the python store index.
+     *
+     * @type {[number, number]|undefined}
+     */
+    id;
     isTyping = false;
     isProcessingAnswer = false;
     script = fields.One("chatbot.script");

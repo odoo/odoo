@@ -18,6 +18,8 @@ const unread_store = (() => {
 const StorePatch = {
     setup() {
         super.setup(...arguments);
+        /** @type {BroadcastChannel|null} synchronizes activity data between tabs */
+        this.activityBroadcastChannel = null;
         this.activityCounter = 0;
         this.activity_counter_bus_id = 0;
         this.activities_to_assign_count = undefined;

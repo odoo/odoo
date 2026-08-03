@@ -7,7 +7,6 @@ declare module "models" {
     }
     export interface Store {
         goToOldestUnreadLivechatThread: () => boolean;
-        has_access_livechat: boolean;
         livechatChannels: ReturnType<Store['makeCachedFetchData']>;
         livechatSelfExpertises: ReturnType<Store['makeCachedFetchData']>;
         livechatStatusButtons: Readonly<object[]>;

@@ -22,9 +22,13 @@ export class Attachment extends FileModelMixin(Record) {
 
     composer = fields.One("Composer", { inverse: "attachments" });
     thread = fields.One("mail.thread", { inverse: "attachments" });
+    /** @type {number} */
+    file_size;
     /** @type {string} */
     raw_access_token;
     res_name;
+    /** @type {string} */
+    res_model;
     /** @type {string} */
     thumbnail_access_token;
     message = fields.One("mail.message", { inverse: "attachment_ids" });

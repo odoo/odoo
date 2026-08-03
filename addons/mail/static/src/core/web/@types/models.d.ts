@@ -17,9 +17,10 @@ declare module "models" {
         _onActivityBroadcastChannelMessage: (param0: { data: { type: "INSERT"|"DELETE"|"RELOAD_CHATTER", payload: Partial<Activity> } }) => void;
         activities_to_assign_count: undefined;
         activity_counter_bus_id: number;
-        activityCounter: number;
         activity_groups: Object[];
-        activityGroups: Readonly<Object[]>;
+        activityBroadcastChannel: BroadcastChannel|null;
+        activityCounter: number;
+        activityGroups: Readonly<unknown[]>;
         markNeedactionMessagesAsRead: () => Promise<void>;
         messagingMenuSystrayState: MessagingMenuUIState;
         onLinkFollowed: (fromThread: Thread) => void;

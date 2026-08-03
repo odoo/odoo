@@ -3,7 +3,6 @@ declare module "models" {
         messagingMenuTabsAsMessages: MessagingMenuTab[];
     }
     export interface Store {
-        action_discuss_id: number|undefined;
         discuss: DiscussApp;
         messagingMenu: MessagingMenu;
     }

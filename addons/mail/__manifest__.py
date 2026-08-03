@@ -140,6 +140,42 @@ For more specific needs, you may also assign custom-defined actions
     ],
     'application': True,
     'post_init_hook': '_mail_post_init',
+    # Each of the following folders corresponds to exactly one bundle:
+    #
+    # | folder | asset bundle                  | purpose                         |
+    # |--------|-------------------------------|---------------------------------|
+    # | common | every bundle below            | what runs everywhere, and only  |
+    # |        |                               | there: not the frontend bundle  |
+    # | public | mail.assets_public            | the public discuss page         |
+    # | web    | web.assets_backend            | the webclient                   |
+    # | portal | portal.assets_chatter_helpers | the chatter on portal pages     |
+    # | embed  | im_livechat.assets_embed_core | the livechat widget on any site |
+    #
+    # Models and fields go in `common`, always: the server sends the same store
+    # payload to every bundle (bus is cross-tab) and receiving values for
+    # undeclared model or field is not supported.
+    #
+    # Overrides for a specific folder must be declared in all the corresponding
+    # bundles. In particular, overrides of common need to be in all 4 bundles.
+    #
+    # Other folders exist, for bundles that get the models from one of the above:
+    #
+    # | folder  | asset bundle      | purpose                       |
+    # |---------|-------------------|-------------------------------|
+    # | project | project.webclient | the project sharing webclient |
+    #
+    # A folder name joining several with "_" means OR, for what only those bundles
+    # need. Names are joined in alphabetical order:
+    #
+    # | folder     | bundles     | purpose         |
+    # |------------|-------------|-----------------|
+    # | public_web | public, web | the discuss app |
+    #
+    # Files go from the most generic folder to the most specific, `core` before
+    # the `**/` globs, so a file always comes after the one it patches. `discuss`
+    # comes last, after a `remove`, because it depends on the rest of mail. That
+    # order is what decides which template and which css rule wins, and it matters
+    # for js too, even though an import dependency can still change it.
     'assets': {
         'web._assets_primary_variables': [
             'mail/static/src/**/primary_variables.scss',
@@ -262,11 +298,8 @@ For more specific needs, you may also assign custom-defined actions
         'im_livechat.assets_embed_core': [
             ("include", "html_editor.assets_editor"),
             'mail/static/src/model/**/*',
-            'mail/static/src/core/common/**/*',
-            'mail/static/src/discuss/core/common/*',
-            'mail/static/src/discuss/call/common/**',
-            'mail/static/src/discuss/typing/**/*',
-            'mail/static/src/utils/common/**/*',
+            "mail/static/src/core/common/**/*",
+            "mail/static/src/**/common/**/*",
             ('remove', 'mail/static/src/**/*.dark.scss'),
         ],
         'im_livechat.assets_embed_external': [

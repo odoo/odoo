@@ -1,5 +1,5 @@
 declare module "models" {
     export interface Store {
-        hasGifPickerFeature: boolean;
+        has_access_create_lead: boolean;
     }
 }

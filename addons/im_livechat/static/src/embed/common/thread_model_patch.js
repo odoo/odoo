@@ -71,7 +71,7 @@ patch(Thread.prototype, {
         if (this.channel?.channel_type !== "livechat") {
             return super.computeComposerDisabled(...arguments);
         }
-        if (this.channel?.livechat_agent_history_ids.length && !this.livechat_end_dt) {
+        if (this.channel?.livechat_agent_history_ids.length && !this.channel.livechat_end_dt) {
             return false;
         }
         const step = this.channel?.chatbot?.currentStep;

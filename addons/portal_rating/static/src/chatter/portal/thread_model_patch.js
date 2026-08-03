@@ -11,7 +11,6 @@ patch(Thread.prototype, {
         this.selectedRating = false;
         this.ratingChatter = false;
         this.reviewChatter = false;
-        this.rating_stats = undefined;
     },
 
     get initialFetchLimit() {
