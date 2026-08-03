@@ -173,6 +173,7 @@ export class WebsiteBuilderClientAction extends Component {
             websiteSystrayRegistry.trigger("EDIT-WEBSITE");
         });
 
+<<<<<<< e837a93479ee29ba46f85477108e5fc7b36f126b
         useEffect(() => {
             this.websiteContext.edition = this.state.isEditing;
             if (!this.state.isEditing) {
@@ -180,6 +181,37 @@ export class WebsiteBuilderClientAction extends Component {
             }
         });
         useLayoutEffect(
+||||||| c50ac8a8d021969c02f3f65f4e2fb29f76b289d7
+        effect(
+            (state) => {
+                this.websiteContext.edition = state.isEditing;
+                if (!state.isEditing) {
+                    this.addSystrayItems();
+                }
+            },
+            [this.state]
+        );
+        useEffect(
+=======
+        effect(
+            (state) => {
+                this.websiteContext.edition = state.isEditing;
+                if (!state.isEditing) {
+                    // The systray item removal below is delayed by 200ms (see
+                    // the other effect). If we leave edit mode before that
+                    // delay elapsed, that pending removal must be cancelled
+                    // here and now: otherwise it can still fire later and
+                    // remove the item this call is about to re-add, since
+                    // Owl's useEffect cleanup that normally cancels it only
+                    // runs after the next render/patch cycle (too late).
+                    clearTimeout(this.navBarTimeout);
+                    this.addSystrayItems();
+                }
+            },
+            [this.state]
+        );
+        useEffect(
+>>>>>>> a821a6afc6d52c54a52c2188101a93ae04a1c08e
             (isEditing) => {
                 document.querySelector("body").classList.toggle("o_builder_open", isEditing);
                 if (isEditing) {
