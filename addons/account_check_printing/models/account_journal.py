@@ -42,7 +42,7 @@ class AccountJournal(models.Model):
 
     def _get_check_printing_layouts(self):
         """ Returns available check printing layouts for the company, excluding disabled options """
-        selection = self.company_id._fields['account_check_printing_layout'].selection
+        selection = self.company_id._fields['account_check_printing_layout']._description_selection(self.env)
         return [(value, label) for value, label in selection if value != 'disabled']
 
     @api.depends('check_manual_sequencing')
