@@ -1509,7 +1509,11 @@ class PosOrder(models.Model):
         """Search for 'paid' orders that satisfy the given domain, limit and offset."""
         pos_config = self.env['pos.config'].browse(config_id)
         paid_order_domain = Domain(domain) & Domain([
+            '|',
             ('state', 'not in', ['cancel', 'draft']),
+            '&',
+            ('state', '!=', 'draft'),
+            ('is_refund', '=', True),
             ('config_id', 'in', [config_id] + pos_config.trusted_config_ids.ids),
             ('config_id.currency_id', '=', pos_config.currency_id.id)
         ])
