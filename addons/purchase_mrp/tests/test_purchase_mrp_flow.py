@@ -1337,7 +1337,7 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
         purchase = production._get_purchase_orders()
         self.assertEqual(len(purchase), 1)
         purchase.button_confirm()
-        receipt = purchase.picking_ids
+        receipt = purchase.picking_ids.filtered(lambda p: p.picking_type_id.code == 'incoming' )
         receipt.move_ids.lot_ids = sn_lot
         receipt.button_validate()
         self.assertEqual(receipt.state, 'done')
