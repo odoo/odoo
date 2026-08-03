@@ -280,6 +280,8 @@ class InvoiceAgentController(http.Controller):
         type="jsonrpc",
         auth="bearer",
         methods=["POST"],
+        csrf=False,
+        readonly=False,
     )
     def invoice_agent_status(self, move_id, **kwargs):
         """Return the extraction state and confidence for a bill, so clients
