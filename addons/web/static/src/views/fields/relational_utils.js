@@ -787,6 +787,10 @@ export class X2ManyFieldDialog extends Component {
                 this.ui.size <= SIZES.XS ? " o_xxs_form_view" : ""
             }`,
         };
+        const dialogSize = this.archInfo.xmlDoc.getAttribute("dialog_size");
+        if (dialogSize) {
+            props.size = dialogSize;
+        }
         if (!this.record.isNew) {
             props.onExpand = async (_ev, newWindow) => {
                 await this.save({ saveAndNew: false });

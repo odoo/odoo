@@ -521,6 +521,27 @@ describe("new", () => {
         expect(".o_dialog .modal-dialog").toHaveClass("modal-xl");
     });
 
+    test("action in target='new' with 'dialog_size' attribute on the view's arch", async () => {
+        Partner._views["form,2"] = `
+            <form dialog_size="sm">
+                <group>
+                    <field name="display_name"/>
+                </group>
+            </form>`;
+        const action = {
+            name: "Some Action",
+            res_model: "partner",
+            type: "ir.actions.act_window",
+            target: "new",
+            views: [[2, "form"]],
+        };
+        await mountWithCleanup(WebClient);
+
+        // the arch attribute takes precedence over the 'dialog_size' context key
+        await getService("action").doAction({ ...action, context: { dialog_size: "large" } });
+        expect(".o_dialog .modal-dialog").toHaveClass("modal-sm");
+    });
+
     test('click on record in list view action in target="new"', async () => {
         await mountWithCleanup(WebClient);
         await getService("action").doAction({

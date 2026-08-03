@@ -3427,6 +3427,47 @@ test("search more in many2one: text in input", async () => {
     ]);
 });
 
+test("search more in many2one: dialog uses the 'dialog_size' attribute of the list view arch", async () => {
+    Partner._views = {
+        list: `
+            <list dialog_size="sm">
+                <field name="name" />
+            </list>`,
+    };
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: '<form><field name="trululu" /></form>',
+    });
+
+    await contains(`.o_field_widget[name="trululu"] input`).click();
+    await contains(`.o_field_widget[name="trululu"] .o_m2o_dropdown_option_search_more`).click();
+
+    expect(".modal-dialog").toHaveClass("modal-sm");
+});
+
+test("many2one 'create and edit' dialog uses the 'dialog_size' attribute of the form view arch", async () => {
+    Partner._views = {
+        form: `
+            <form dialog_size="sm">
+                <field name="name" />
+            </form>`,
+    };
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: '<form><field name="trululu" /></form>',
+    });
+
+    await contains(".o_field_widget[name=trululu] input").edit("ABC", { confirm: false });
+    await runAllTimers();
+    await clickFieldDropdownItem("trululu", "Create and edit...");
+
+    expect(".modal-dialog").toHaveClass("modal-sm");
+});
+
 test("search more in many2one: dropdown click", async () => {
     for (let i = 0; i < 8; i++) {
         Partner._records.push({ id: 100 + i, name: `test_${i}` });
