@@ -164,7 +164,7 @@ class IrMailServer(models.Model):
                     'Authenticate by using SSL certificates, belonging to your domain name. \n'
                     'SSL certificates allow you to authenticate your mail server for the entire domain name.')
             else:
-                server.smtp_authentication = False
+                server.smtp_authentication_info = False
 
     @api.constrains('smtp_authentication', 'smtp_ssl_certificate', 'smtp_ssl_private_key')
     def _check_smtp_ssl_files(self):
