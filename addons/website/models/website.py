@@ -1010,7 +1010,7 @@ class Website(models.CachedModel):
 
         if not skip_ai:
             translated_ratio = html_text_processor._calculate_translation_ratio(generated_content, translated_content)
-            if translated_ratio > 0.8:
+            if translated_ratio > 0.7:
                 try:
                     database_id = self.env['ir.config_parameter'].sudo().get_str('database.uuid')
                     response = self._OLG_api_rpc('/api/olg/1/generate_placeholder', {
@@ -1018,7 +1018,7 @@ class Website(models.CachedModel):
                         'lang': website.default_lang_id.name,
                         'industry': industry,
                         'database_id': database_id,
-                    })
+                    }, timeout=30)
                     name_replace_parser = re.compile(r"XXXX", re.MULTILINE)
                     website_name = re.escape(website.name)
                     for key in generated_content:
