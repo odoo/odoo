@@ -162,9 +162,9 @@ class TestInvoiceAgentControllers(HttpCase):
 
         move_id = result_data["move_id"]
 
-        # 1. إجبار الـ Cache على التحديث
-        self.env["account.move"].invalidate_model()
-        self.env["ir.attachment"].invalidate_model()
+        # 1. تفريغ التغيرات وقراءة الفاتورة بـ Cursor جديد ونظيف
+        self.env.cr.flush()
+        self.env.invalidate_all()
 
         move = self.env["account.move"].browse(move_id)
         self.assertTrue(move.exists())
@@ -176,15 +176,22 @@ class TestInvoiceAgentControllers(HttpCase):
         self.assertEqual(attachment.name, "bill.pdf")
         self.assertEqual(attachment.res_id, move.id)
 
-        # 2. الحل المعياري: قراءة البيانات المباشرة عبر _file_read أو عبر طلب HTTP download المباشر
-        # إذا كان الملف مخزناً في filestore الـ HttpCase، يُقرأ عبر _file_read باستخدام store_fname
-        if attachment.store_fname:
-            attachment_bytes = attachment._file_read(attachment.store_fname)
-        else:
-            attachment_bytes = attachment.raw or base64.b64decode(attachment.datas or b"")
+        # 2. جلب المرفق بسجل منفصل تماماً ومزامنة الكاش مع القرص والقاعدة
+        attachment_record = self.env["ir.attachment"].browse(attachment.id)
+        attachment_record.invalidate_recordset()
+
+        # 3. قراءة البيانات المباشرة
+        attachment_bytes = (
+            attachment_record.raw
+            or (base64.b64decode(attachment_record.datas) if attachment_record.datas else b"")
+        )
+
+        # في حال استمرار اختلاف البيئة بين Thread السيرفر و Test Runner (BackUp Plan)
+        if not attachment_bytes and attachment_record.store_fname:
+            attachment_bytes = attachment_record._file_read(attachment_record.store_fname)
 
         self.assertEqual(attachment_bytes, self.pdf_bytes)
-        
+    
     def test_upload_with_global_key_creates_draft_move(self):
         response = self._upload(
             headers={"Authorization": f"Bearer {self.global_key}"},
