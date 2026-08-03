@@ -749,7 +749,7 @@ class HrAttendanceOvertimeRule(models.Model):
         }
 
     def _compute_information_display(self):
-        timing_types = dict(self._fields['timing_type'].selection)
+        timing_types = dict(self._fields['timing_type']._description_selection(self.env))
         for rule in self:
             if rule.base_off == 'quantity':
                 if rule.expected_hours_from_contract:
