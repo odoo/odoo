@@ -60,10 +60,7 @@ registerWebsitePreviewTour(
         ),
         ...goToTheme(),
         clickOnElement("color option", "[data-label='Colors'] button"),
-        clickOnElement(
-            "Click color palette",
-            "div[data-container-title='Colors'] .o-hb-select-wrapper svg"
-        ),
+        clickOnElement("Click color palette", ".o_theme_tab .hb-sliding-panel .o-dropdown-caret"),
         clickOnElement(
             "Change color palette",
             `.o-color-palette-dropdown [data-action-value="'default-light-1'"]`
@@ -84,6 +81,7 @@ registerWebsitePreviewTour(
         ),
         clickOnElement("X to close the 'Insert snippet' dialog", ".modal .btn-close"),
         ...goToTheme(),
+        clickOnElement("color option", "[data-label='Colors'] button"),
         clickOnElement(
             "color picker of theme preset 1",
             ".hb-sliding-panel-content .o_we_color_preview"
