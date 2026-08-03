@@ -24,7 +24,7 @@ export const ProjectTaskModelMixin = (T) =>
                     "has_template_ancestor",
                     "has_project_template",
                 ]);
-                domain = Domain.and([domain, [["has_template_ancestor", "=", true]]]).toList({});
+                domain = Domain.and([domain, [["has_template_ancestor", "=", true]]]);
                 // Allow to filter on task templates having no project
                 const projectId = this.env.searchModel.context?.default_project_id || false;
                 if (projectId) {
