@@ -4,8 +4,11 @@ This file is the *teaching core* of the module: it exercises every piece of
 the Odoo 19 HTTP stack documented in ``docs/tutorial_http_controllers.md``:
 
 * ``@http.route(type='http', auth='none', methods=['POST'], csrf=False)``
-* ``@http.route(type='jsonrpc', auth='user')`` -- Odoo 19: ``type='json'`` is
-  a deprecated alias, see the ``route()`` decorator in ``odoo/http.py``.
+* ``@http.route(type='jsonrpc', auth='bearer')`` -- Odoo 19: ``type='json'``
+  is a deprecated alias, see the ``route()`` decorator in ``odoo/http.py``.
+  ``auth='bearer'`` accepts a session (interactive browser, which sends the
+  Sec-Fetch headers) or, for machine clients, an ``Authorization: Bearer``
+  API key — the status poll route is a machine endpoint, same as upload.
 * Reading ``request.httprequest.files`` from a ``multipart/form-data`` POST
 * Storing an ``ir.attachment`` with the ``raw`` field (binary, not ``datas``)
 * Auth via ``Authorization: Bearer <key>`` resolved against
@@ -275,7 +278,7 @@ class InvoiceAgentController(http.Controller):
     @http.route(
         "/invoice_agent/status/<int:move_id>",
         type="jsonrpc",
-        auth="user",
+        auth="bearer",
         methods=["POST"],
     )
     def invoice_agent_status(self, move_id, **kwargs):
@@ -285,6 +288,12 @@ class InvoiceAgentController(http.Controller):
         Odoo 19 detail: ``type='jsonrpc'`` is the current spelling;
         ``type='json'`` is a deprecated alias that emits a DeprecationWarning
         (see the ``route()`` decorator in ``odoo/http.py``).
+
+        Auth mode: ``auth='bearer'`` accepts a session (interactive browser,
+        which sends the Sec-Fetch browser headers) or — for machine clients —
+        an ``Authorization: Bearer <api-key>`` header. A poller with no
+        session and no key gets a JSON-RPC error envelope instead of an HTML
+        redirect, like the upload route's JSON 401.
 
         The JSON-RPC 2.0 envelope is produced by ``JsonRPCDispatcher``: the
         route returns a plain dict and the dispatcher wraps it into

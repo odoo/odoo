@@ -11,9 +11,12 @@ Covered here:
   - 400 for non-PDF mimetypes (nothing persisted)
   - 400 when the ``file`` part is missing
 
-* /invoice_agent/status/<int:move_id> (``type='jsonrpc'``, ``auth='user'``)
-  - anonymous call -> JSON-RPC error envelope code 100 (SessionExpired)
-  - authenticated call -> extraction state + confidence
+* /invoice_agent/status/<int:move_id> (``type='jsonrpc'``, ``auth='bearer'``)
+  - call without session or key -> JSON-RPC error envelope carrying a
+    werkzeug Unauthorized (code 0; the data payload names Unauthorized)
+  - polling with a Bearer API key -> extraction state + confidence
+  - a browser session with the Sec-Fetch navigation headers falls back to
+    the session user (interactive usage)
 """
 
 import base64
@@ -83,7 +86,7 @@ class TestInvoiceAgentControllers(HttpCase):
             headers=headers or {},
         )
 
-    def _jsonrpc(self, route, authenticated=False, params=None):
+    def _jsonrpc(self, route, headers=None, params=None, **kwargs):
         payload = {
             "jsonrpc": "2.0",
             "method": "call",
@@ -94,7 +97,8 @@ class TestInvoiceAgentControllers(HttpCase):
             route,
             method="POST",
             json=payload,
-            headers={"Content-Type": "application/json"},
+            headers={"Content-Type": "application/json", **(headers or {})},
+            **kwargs,
         )
 
     # ------------------------------------------------------------------
@@ -224,18 +228,20 @@ class TestInvoiceAgentControllers(HttpCase):
     # ------------------------------------------------------------------
     # status: jsonrpc endpoint
     # ------------------------------------------------------------------
-    def test_status_anonymous_returns_jsonrpc_session_expired(self):
+    def test_status_anonymous_returns_jsonrpc_unauthorized(self):
         response = self._jsonrpc("/invoice_agent/status/1")
 
         # JSON-RPC 2.0: transport errors are reported as 200 with an
-        # error envelope. SessionExpiredException maps to code 100.
+        # error envelope. auth='bearer' with no session and no key raises
+        # werkzeug Unauthorized, which JsonRPCDispatcher.handle_error packs
+        # with the default code 0 (no SessionExpired -> no code 100) and the
+        # serialized exception naming "Unauthorized".
         self.assertEqual(response.status_code, 200)
         error = response.json()["error"]
-        self.assertEqual(error["code"], 100)
+        self.assertEqual(error["code"], 0)
+        self.assertIn("Unauthorized", error["data"]["debug"])
 
-    def test_status_authenticated_returns_state_and_confidence(self):
-        self.authenticate("admin", "admin")
-
+    def test_status_with_bearer_key_returns_state_and_confidence(self):
         move = self.env["account.move"].create(
             {
                 "move_type": "in_invoice",
@@ -247,10 +253,46 @@ class TestInvoiceAgentControllers(HttpCase):
             },
         )
 
-        response = self._jsonrpc(f"/invoice_agent/status/{move.id}")
+        response = self._jsonrpc(
+            f"/invoice_agent/status/{move.id}",
+            headers={"Authorization": f"Bearer {self.rpc_key}"},
+        )
 
         self.assertEqual(response.status_code, 200)
         result = response.json()["result"]
         self.assertEqual(result["move_id"], move.id)
         self.assertEqual(result["ai_extraction_status"], "extracted")
         self.assertEqual(result["ai_confidence"], 0.87)
+
+    def test_status_with_browser_session_and_sec_headers_works(self):
+        """auth='bearer' falls back to the session for interactive usage:
+        present session + Sec-Fetch navigation headers (what browsers send).
+        """
+        self.authenticate("admin", "admin")
+
+        move = self.env["account.move"].create(
+            {
+                "move_type": "in_invoice",
+                "partner_id": self.env.ref("base.main_partner").id,
+                "journal_id": self.purchase_journal.id,
+                "invoice_date": fields.Date.today(),
+                "ai_extraction_status": "validated",
+                "ai_confidence": 0.9,
+            },
+        )
+
+        response = self._jsonrpc(
+            f"/invoice_agent/status/{move.id}",
+            headers={
+                "Sec-Fetch-Dest": "document",
+                "Sec-Fetch-Mode": "navigate",
+                "Sec-Fetch-Site": "same-origin",
+                "Sec-Fetch-User": "?1",
+            },
+        )
+
+        self.assertEqual(response.status_code, 200)
+        result = response.json()["result"]
+        self.assertEqual(result["move_id"], move.id)
+        self.assertEqual(result["ai_extraction_status"], "validated")
+        self.assertEqual(result["ai_confidence"], 0.9)

@@ -1,0 +1,18 @@
+{
+    "id": "msg_01FrozenFixtureInvoiceAgent",
+    "type": "message",
+    "role": "assistant",
+    "model": "claude-sonnet-4-5",
+    "content": [
+        {
+            "type": "text",
+            "text": "{\"company_name\": \"ACME Supplies LLC\", \"vat\": \"US123456789\", \"amount_total\": 1350.0, \"overall_confidence\": 0.93, \"invoice_date\": \"2026-07-01\", \"invoice_date_due\": \"2026-07-31\", \"ref\": \"INV-2026-00777\", \"lines\": [{\"name\": \"Server hosting\", \"quantity\": 1, \"price_unit\": 850.0, \"confidence\": 0.95}, {\"name\": \"Setup fee\", \"quantity\": 1, \"price_unit\": 500.0, \"confidence\": 0.88}], \"notes\": \"INVOICE #777\\nACME Supplies LLC\\nServer hosting 850.00\\nSetup fee 500.00\\nTotal 1350.00\", \"review_required\": false}"
+        }
+    ],
+    "stop_reason": "end_turn",
+    "stop_sequence": null,
+    "usage": {
+        "input_tokens": 210,
+        "output_tokens": 142
+    }
+}

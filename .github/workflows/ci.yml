@@ -102,18 +102,42 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           pip install -r custom_addons/invoice_agent/requirements.txt
+          pip install coverage
 
       - name: Make odoo-bin executable
         run: chmod +x ./odoo-bin
 
-      - name: Run Odoo tests for invoice_agent
+      - name: Run Odoo tests for invoice_agent under coverage
         run: |
-          python3 ./odoo-bin -d ci -i invoice_agent --addons-path=addons,custom_addons --test-enable --test-tags /invoice_agent --stop-after-init --log-level=test --db_host=localhost --db_port=5432 --db_user=odoo --db_password=odoo 2>&1 | tee odoo-test.log
+          # --concurrency=thread is required so coverage tracks the HttpCase
+          # threaded WSGI server; without it the controllers would report ~0%.
+          coverage run --concurrency=thread --source=custom_addons/invoice_agent \
+            python3 ./odoo-bin -d ci -i invoice_agent --addons-path=addons,custom_addons --test-enable --test-tags /invoice_agent --stop-after-init --log-level=test --db_host=localhost --db_port=5432 --db_user=odoo --db_password=odoo 2>&1 | tee odoo-test.log
           # Odoo renders Python docstrings via docutils on a fresh DB install,
           # which emits benign diagnostic lines like "(ERROR/3) Undefined
           # substitution referenced". Those must NOT fail the build, so filter
           # out the "(LEVEL/N)" diagnostics before looking for real failures.
           grep -E 'FAIL|ERROR|CRITICAL' odoo-test.log | grep -vE '\([A-Z]+/[0-9]+\)' | grep -q . && exit 1 || exit 0
+
+      - name: Coverage report and gate
+        env:
+          COVERAGE_MIN: "60"
+        run: |
+          coverage report -m
+          coverage xml -o coverage.xml
+          TOTAL=$(coverage report | awk '/^TOTAL/{print $NF}' | tr -d '%')
+          echo "invoice_agent total coverage: ${TOTAL}%"
+          if [ "${TOTAL%%.*}" -lt "${COVERAGE_MIN}" ]; then
+            echo "Coverage gate failed: ${TOTAL}% is below the required ${COVERAGE_MIN}%"
+            exit 1
+          fi
+
+      - name: Publish coverage report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: invoice-agent-coverage
+          path: coverage.xml
 
       - name: Upload test log on failure
         if: failure()
