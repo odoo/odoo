@@ -149,8 +149,8 @@ registerWebsitePreviewTour(
             trigger: ":iframe #wrap",
             run() {
                 this.anchor.querySelector("p").innerHTML =
-                    '<p>Write one or <font style="background-color: yellow;">two paragraphs <b>describing</b></font> your product or\
-            <font style="color: rgb(255, 0, 0);">services</font>. To be successful your content needs to be\
+                    '<p>Write one or <span style="background-color: yellow;">two paragraphs <b>describing</b></span> your product or\
+            <span style="color: rgb(255, 0, 0);">services</span>. To be successful your content needs to be\
             useful to your <a href="/999">readers</a>.</p> <input value="test translate default value" placeholder="test translate placeholder"/>\
             <p>&lt;b&gt;&lt;/b&gt; is an HTML&nbsp;tag &amp; is empty</p>';
                 this.anchor.querySelector(".oe_img_bg").title = "test translate image title";
@@ -188,7 +188,7 @@ registerWebsitePreviewTour(
             run: "click",
         },
         {
-            trigger: ":iframe html:not(:has(#wrap p span))",
+            trigger: ":iframe html:not(:has(#wrap p span[data-oe-translation-source-sha]))",
         },
         {
             content: "translate",
@@ -216,7 +216,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "translate text",
-            trigger: ":iframe #wrap p font:first",
+            trigger: `:iframe #wrap p span[style*="background-color"]:first`,
             async run(actionHelper) {
                 await actionHelper.editor("translated Parseltongue text");
                 setSelection({ anchorNode: this.anchor.childNodes[0], anchorOffset: 22 });
@@ -226,7 +226,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "translate text with special char",
-            trigger: ":iframe #wrap input + p span:first",
+            trigger: ":iframe #wrap input + p span[data-oe-translation-source-sha]:first",
             async run(actionHelper) {
                 await actionHelper.click();
                 this.anchor.textContent = "<{translated}>" + this.anchor.textContent;
@@ -238,7 +238,7 @@ registerWebsitePreviewTour(
             },
         },
         {
-            trigger: ":iframe #wrap .o_dirty font:first:contains(translated Parseltongue text)",
+            trigger: `:iframe #wrap .o_dirty span[style*="background-color"]:first:contains(translated Parseltongue text)`,
         },
         {
             content: "click on input",
@@ -262,7 +262,7 @@ registerWebsitePreviewTour(
         ...clickOnSave(),
         {
             content: "check: content is translated",
-            trigger: ":iframe #wrap p font:first:contains(translated Parseltongue text)",
+            trigger: `:iframe #wrap p span[style*="background-color"]:first:contains(translated Parseltongue text)`,
         },
         {
             content: "check: content with special char is translated",
@@ -277,7 +277,8 @@ registerWebsitePreviewTour(
             trigger: ':iframe input[value="test Parseltongue default value"]',
         },
         {
-            trigger: ':iframe html[lang*="pa-GB"]:not(:has(#wrap p span))',
+            trigger:
+                ':iframe html[lang*="pa-GB"]:not(:has(#wrap p span[data-oe-translation-source-sha]))',
         },
         {
             content: "open language selector",
@@ -298,8 +299,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "Check body",
-            trigger:
-                ":iframe body:not(:has(#wrap p font:first:text(paragraphs <b>describing</b>)))",
+            trigger: `:iframe body:not(:has(#wrap p span[style*="background-color"]:first:text(paragraphs <b>describing</b>)))`,
         },
         {
             content: "return to Parseltongue version",
@@ -391,7 +391,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "check bis: content is translated",
-            trigger: ":iframe #wrap p font:first:contains(translated Parseltongue text)",
+            trigger: `:iframe #wrap p span[style*="background-color"]:first:contains(translated Parseltongue text)`,
             run: "click",
         },
         {

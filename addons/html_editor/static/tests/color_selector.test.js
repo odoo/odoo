@@ -666,7 +666,7 @@ test("colorpicker should stay open when hovering colors in an empty unbreakable 
     expect(".o-we-toolbar").toHaveCount(1);
     expect(".o_font_color_selector").toHaveCount(1);
     expect(getContent(el)).toBe(
-        `<p>a</p><div class="oe_unbreakable"><font class="text-o-color-1">[<br></font></div><p>]b</p>`
+        `<p>a</p><div class="oe_unbreakable"><span class="text-o-color-1">[<br></span></div><p>]b</p>`
     );
 });
 
