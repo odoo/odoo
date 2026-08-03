@@ -472,6 +472,8 @@ const LABEL_EXPECTED = "Expected:";
 const LABEL_RECEIVED = "Received:";
 /** @type {CaseEventType[]} */
 const CASE_EVENT_LOG_COLORS = ["assertion", "query", "step", "time"];
+// Time waitForSteps and waitForErrors give the steps and errors to arrive.
+const DEFAULT_WAIT_TIMEOUT = 10000;
 const MAX_STACK_LENGTH = 10;
 
 /** @type {WeakMap<any, any>} */
@@ -906,7 +908,7 @@ export function makeExpect(params) {
 
     /**
      * Same as {@link verifyErrors}, but will not immediatly fail if errors are
-     * not caught yet, and will instead wait for a certain timeout (default: 2000ms)
+     * not caught yet, and will instead wait for a certain timeout (default: 10000ms)
      * to allow errors to be caught later.
      *
      * Checks are performed initially, at the end of the timeout, and each time
@@ -946,7 +948,7 @@ export function makeExpect(params) {
             {
                 timeout: setTimeout(
                     () => checkErrors(currentResult.errorResolver, true),
-                    options?.timeout ?? 2000
+                    options?.timeout ?? DEFAULT_WAIT_TIMEOUT
                 ),
             },
             Promise.withResolvers()
@@ -957,7 +959,7 @@ export function makeExpect(params) {
     /**
      * Same as {@link verifySteps}, but will not immediatly fail if steps have not
      * been registered yet, and will instead wait for a certain timeout (default:
-     * 2000ms) to allow steps to be registered later.
+     * 10000ms) to allow steps to be registered later.
      *
      * Checks are performed initially, at the end of the timeout, and each time
      * a step is registered.
@@ -996,7 +998,7 @@ export function makeExpect(params) {
             {
                 timeout: setTimeout(
                     () => checkSteps(currentResult.stepResolver, true),
-                    options?.timeout ?? 2000
+                    options?.timeout ?? DEFAULT_WAIT_TIMEOUT
                 ),
             },
             Promise.withResolvers()
