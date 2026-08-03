@@ -1783,7 +1783,7 @@ class SaleOrderLine(models.Model):
             return lines
 
         for line in lines:
-            if not line.display_type and line.state == "sale":
+            if not line.display_type and line.state == "sale" and not self.env.context.get('skip_intercompany_sync'):
                 msg = self.env._("Extra line with %s", line.product_id.display_name or line.name)
                 line.order_id.message_post(body=msg)
 
@@ -1818,7 +1818,7 @@ class SaleOrderLine(models.Model):
         ):
             raise UserError(self.env._("You cannot modify the product of this order line."))
 
-        if "product_uom_qty" in values:
+        if "product_uom_qty" in values and not self.env.context.get('skip_intercompany_sync'):
             precision = self.env["decimal.precision"].precision_get("Product Unit")
             self.filtered(
                 lambda r: (
