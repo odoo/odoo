@@ -3,7 +3,7 @@
     <t t-name="mail.MessagingMenuCallParticipants">
         <div class="o-mail-MessagingMenuCallParticipants rounded-bottom d-flex bg-inherit px-3 p-1">
             <button class="o-mail-MessagingMenuCallParticipants-expandBtn btn btn-link p-1 my-n1 ms-n1 me-0 align-self-start d-flex rounded-circle" t-on-click.stop="this.toggleFn(this.expanded)">
-                <i class="oi o-xxsmaller text-muted text-dark" t-att-data-icon="{'chevron_forward': !this.expanded(), 'keyboard_arrow_down': this.expanded()}" t-att-title="this.title"/>
+                <i class="oi o-xsmaller text-muted text-dark" t-att-data-icon="this.expanded() ? 'keyboard_arrow_down' : 'chevron_forward'" t-att-title="this.title"/>
             </button>
             <AvatarStack
                 t-if="!this.expanded()"

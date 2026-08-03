@@ -817,7 +817,7 @@ test("Sort call participants by name", async () => {
     ]);
     await start();
     await openDiscuss(channelId);
-    await click("[title='Expand participants']");
+    await click("[title='Expand participants'][data-icon='chevron_forward']");
     await contains(".o-mail-MessagingMenuCallParticipants", {
         contains: [
             ".o-mail-MessagingMenuCallParticipants-participant:nth-child(1):contains('AAA')",
