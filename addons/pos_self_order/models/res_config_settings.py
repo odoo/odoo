@@ -113,7 +113,7 @@ class ResConfigSettings(models.TransientModel):
             if not table_ids:
                 raise ValidationError(_("In Self-Order mode, you must have at least one table to generate QR codes"))
 
-            for row_num, table in enumerate(table_ids, start=1):
+            for table in table_ids:
                 table_number = table.table_number
                 floor_name = table.floor_id.name
                 url = url_unquote(self.pos_config_id._get_self_order_url(table.id))
@@ -138,10 +138,10 @@ class ResConfigSettings(models.TransientModel):
         zip_buffer = BytesIO()
         with zipfile.ZipFile(zip_buffer, "w", 0) as zip_file:
             zip_file.writestr("Table_url.xlsx", xlsx_content)
-            for index, qr_image in enumerate(qr_images):
-                with zip_file.open(f"{qr_image['name']} ({index + 1}).png", "w") as buf:
+            for qr_image in qr_images:
+                with zip_file.open(f"{qr_image['name']}.png", "w") as buf:
                     qr_image['images']['png'].save(buf, format="PNG")
-                with zip_file.open(f"{qr_image['name']} ({index + 1}).svg", "w") as buf:
+                with zip_file.open(f"{qr_image['name']}.svg", "w") as buf:
                     buf.write(qr_image['images']['svg'].to_string())
         zip_buffer.seek(0)
 
