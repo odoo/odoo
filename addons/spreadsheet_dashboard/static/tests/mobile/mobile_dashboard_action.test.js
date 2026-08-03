@@ -23,7 +23,7 @@ const TEST_LINE_CHART_DATA = {
 const TEST_SCORECARD_CHART_DATA = {
     type: "scorecard",
     title: { text: "test" },
-    keyValue: "A1",
+    keyValue: "=A1",
     background: "#fff",
     baselineMode: "absolute",
 };

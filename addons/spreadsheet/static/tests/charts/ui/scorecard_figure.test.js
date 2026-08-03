@@ -32,7 +32,7 @@ function createScorecardChart(model, definition = {}) {
         sheetId: model.getters.getActiveSheetId(),
         definition: {
             title: { text: "Title" },
-            keyValue: "A1",
+            keyValue: "=A1",
             type: "scorecard",
             background: "#fff",
             baselineColorDown: "#DC6965",
@@ -136,7 +136,7 @@ test("clicking key area opens seeRecord when key cell has a list record", async 
     });
     const { model } = await createSpreadsheetWithList();
     const fixture = await mountSpreadsheet(model);
-    createScorecardChart(model, { keyValue: "A2" });
+    createScorecardChart(model, { keyValue: "=A2" });
     model.updateMode("dashboard");
     await animationFrame();
     await clickCanvas(fixture, "key");
@@ -153,7 +153,7 @@ test("clicking baseline area opens seeRecord when baseline cell has a list recor
     });
     const { model } = await createSpreadsheetWithList();
     const fixture = await mountSpreadsheet(model);
-    createScorecardChart(model, { keyValue: "A2", baseline: "A2" });
+    createScorecardChart(model, { keyValue: "=A2", baseline: "=A2" });
     model.updateMode("dashboard");
     await animationFrame();
     await clickCanvas(fixture, "baseline");
