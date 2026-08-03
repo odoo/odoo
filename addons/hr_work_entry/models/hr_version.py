@@ -9,7 +9,7 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _, SUPERUSER_ID
 from odoo.exceptions import UserError
-from odoo.fields import Command, Domain
+from odoo.fields import Domain
 from odoo.tools import ormcache, float_is_zero
 from odoo.tools.intervals import Intervals
 
@@ -684,12 +684,7 @@ class HrVersion(models.Model):
     def _recompute_work_entries(self, date_from, date_to):
         self.ensure_one()
         if self.employee_id:
-            wizard = self.env['hr.work.entry.regeneration.wizard'].create({
-                'employee_ids': [Command.set(self.employee_id.ids)],
-                'date_from': date_from,
-                'date_to': date_to,
-            })
-            wizard.with_context(work_entry_skip_validation=True, active_test=False).regenerate_work_entries()
+            self.with_context(active_test=False).generate_work_entries(date_from, date_to, force=True)
 
     def _get_fields_that_recompute_we(self):
         # Returns the fields that should recompute the work entries
