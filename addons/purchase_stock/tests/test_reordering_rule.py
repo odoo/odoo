@@ -22,6 +22,7 @@ class TestReorderingRule(TransactionCase):
     def setUpClass(cls):
         super(TestReorderingRule, cls).setUpClass()
         cls.env.user.group_ids += cls.env.ref('uom.group_uom')
+        cls.env.user.group_ids += cls.env.ref('stock.group_production_lot')
         cls.partner = cls.env['res.partner'].create({
             'name': 'Smith'
         })
@@ -126,11 +127,11 @@ class TestReorderingRule(TransactionCase):
 
         # Increase the quantity on the PO
         purchase_order.order_line.product_qty = 15
-        receipt1, receipt2 = purchase_order.picking_ids
+        _, receipt1, receipt2 = purchase_order.picking_ids
         self.assertEqual(receipt1.move_ids.product_qty, 12)
         self.assertEqual(receipt2.move_ids.product_qty, 3)
-        purchase_order.picking_ids[1].button_validate()
-        self.assertEqual(next_picking.move_ids.product_qty, 15)
+        receipt2.button_validate()
+        self.assertEqual(sum(next_picking.move_ids.mapped('product_qty')), 15)
 
     def test_reordering_rule_2(self):
         """ - Receive products in 1 steps
