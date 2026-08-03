@@ -3,12 +3,7 @@ import { DateSection } from "@mail/core/common/date_section";
 import { Message } from "@mail/core/common/message";
 import { NotificationMessage } from "./notification_message";
 import { Record } from "@mail/model/export";
-import {
-    useChildRefs,
-    useMessageSelection,
-    useOnChange,
-    useVisible,
-} from "@mail/utils/common/hooks";
+import { useChildRefs, useMessageSelection, useVisible } from "@mail/utils/common/hooks";
 import { incrementFn } from "@mail/utils/common/signal";
 
 import {
@@ -22,6 +17,7 @@ import {
     signal,
     t,
     untrack,
+    useOnChange,
     useProps,
 } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";

@@ -6,6 +6,7 @@ import {
     t,
     useEffect,
     useListener,
+    useOnChange,
     useProps,
 } from "@odoo/owl";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
@@ -16,8 +17,6 @@ import { useService } from "@web/core/utils/hooks";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
-
-import { useOnChange } from "@mail/utils/common/hooks";
 
 export class CallDebrief extends Component {
     static template = "mail.CallDebrief";

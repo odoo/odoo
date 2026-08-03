@@ -7,7 +7,6 @@ import {
     proxy,
     signal,
     t,
-    untrack,
     useEffect,
     useProps,
     usePlugin,
@@ -1009,25 +1008,6 @@ export class UseForwardRefsToParent {
  */
 export function useForwardRefsToParent(propName, getRefIdFn, ref) {
     new UseForwardRefsToParent(propName, getRefIdFn, ref);
-}
-
-/**
- * @template {readonly any[]} [T=any[]]
- * @param {(...deps: T) => void} callback
- * @param {Object} [options]
- * @param {boolean} [options.initialRun=true] determine if the hook should skip the first run
- */
-export function useOnChange(dependencies, callback, { initialRun } = { initialRun: true }) {
-    let firstRun = true;
-    useEffect(() => {
-        let cleanup;
-        const dep = dependencies();
-        if (initialRun || !firstRun) {
-            untrack(() => (cleanup = callback(...dep)));
-        }
-        firstRun = false;
-        return cleanup;
-    });
 }
 
 /**

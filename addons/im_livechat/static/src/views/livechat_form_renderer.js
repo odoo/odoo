@@ -1,8 +1,7 @@
 import { Discuss } from "@mail/core/public_web/discuss_app/discuss_app";
 
-import { asyncComputed, proxy } from "@odoo/owl";
+import { asyncComputed, proxy, useOnChange } from "@odoo/owl";
 
-import { useOnChange } from "@mail/utils/common/hooks";
 import { useService } from "@web/core/utils/hooks";
 import { FormRenderer } from "@web/views/form/form_renderer";
 

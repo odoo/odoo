@@ -1,4 +1,4 @@
-import { useMessageScrolling, useOnChange } from "@mail/utils/common/hooks";
+import { useMessageScrolling } from "@mail/utils/common/hooks";
 import { useSubEnv } from "@web/owl2/utils";
 
 import {
@@ -9,6 +9,7 @@ import {
     signal,
     t,
     useListener,
+    useOnChange,
     useProps,
 } from "@odoo/owl";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";

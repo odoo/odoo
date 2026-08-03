@@ -1,10 +1,9 @@
 import { Gif } from "@mail/core/common/gif";
 import { LinkPreviewConfirmDelete } from "@mail/core/common/link_preview_confirm_delete";
 
-import { Component, proxy, signal, types, useProps } from "@odoo/owl";
+import { Component, proxy, signal, types, useOnChange, useProps } from "@odoo/owl";
 
 import { useService } from "@web/core/utils/hooks";
-import { useOnChange } from "@mail/utils/common/hooks";
 
 export class LinkPreview extends Component {
     static components = { Gif };

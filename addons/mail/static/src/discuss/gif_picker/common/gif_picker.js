@@ -1,7 +1,7 @@
 import { Gif } from "@mail/core/common/gif";
-import { useOnBottomScrolled, useOnChange, useSequential } from "@mail/utils/common/hooks";
+import { useOnBottomScrolled, useSequential } from "@mail/utils/common/hooks";
 
-import { Component, onWillStart, proxy, signal, t, useProps } from "@odoo/owl";
+import { Component, onWillStart, proxy, signal, t, useOnChange, useProps } from "@odoo/owl";
 import { user } from "@web/core/user";
 import { useService, useAutofocus } from "@web/core/utils/hooks";
 import { useDebounced } from "@web/core/utils/timing";
