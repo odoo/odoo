@@ -610,6 +610,17 @@ class TestSaleOrder(SaleManagementCommon):
         line = self._get_optional_product_lines(self.sale_order)
         self.assertEqual(line.price_unit, 100.0)
 
+        # Manually update the price unit
+        line.price_unit = 150.0
+        self.assertNotEqual(line.price_unit, line.technical_price_unit)
+
+        with MockRequest(self.env):
+            CustomerPortal().portal_quote_option_update(
+                self.sale_order.id, line.id, input_quantity=2
+            )
+        self.assertEqual(line.price_unit, 150.0)
+        line.price_unit = 100.0
+
         with MockRequest(self.env):
             CustomerPortal().portal_quote_option_update(
                 self.sale_order.id, line.id, input_quantity=10
