@@ -92,7 +92,7 @@ test("should not wrap br in font tag in non-empty block", async () => {
         contentBefore: "<p>[abc<br>def]</p>",
         stepFunction: setColor("rgb(255, 0, 0)", "color"),
         contentAfter:
-            '<p><font style="color: rgb(255, 0, 0);">[abc</font><br><font style="color: rgb(255, 0, 0);">def]</font></p>',
+            '<p><span style="color: rgb(255, 0, 0);">[abc</span><br><span style="color: rgb(255, 0, 0);">def]</span></p>',
     });
 });
 
