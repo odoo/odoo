@@ -248,8 +248,8 @@ class AccountMove(models.Model):
     def _l10n_fr_pdp_get_default_notes(self):
         self.ensure_one()
         # Mandatory / default notes for French e-invoicing [BR-FR-05]
-        # Only add them when using PDP
-        if self.company_id._get_peppol_proxy_type() != 'pdp':
+        # Only add them for French companies
+        if not self.company_id._peppol_is_french_company():
             return {}
         payment_term = self.invoice_payment_term_id
         return {
