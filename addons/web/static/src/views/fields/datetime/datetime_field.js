@@ -43,6 +43,7 @@ export const dateTimeFieldProps = {
     maxDate: t.string().optional(),
     minDate: t.string().optional(),
     alwaysRange: t.boolean().optional(),
+    hideEndWhenEqual: t.boolean().optional(),
     placeholder: t.string().optional(),
     required: t.boolean().optional(),
     rounding: t.number().optional(),
@@ -324,6 +325,20 @@ export class DateTimeField extends Component {
     }
 
     /**
+     * @returns {boolean}
+     */
+    areDatesEqualValues() {
+        if (!this.props.hideEndWhenEqual) {
+            return false;
+        }
+        if (this.isPickerOpen()) {
+            return false;
+        }
+        const [startDate, endDate] = this.values;
+        return startDate && endDate && areDatesEqual(startDate, endDate);
+    }
+
+    /**
      * @param {DateTimePickerProps["value"]} value
      * @returns {boolean}
      */
@@ -481,6 +496,7 @@ export const dateField = {
         maxDate: options.max_date,
         minDate: options.min_date,
         alwaysRange: Boolean(options.always_range),
+        hideEndWhenEqual: Boolean(options.hide_end_when_equal),
         placeholder,
         required: dynamicInfo.required,
         rounding: options.rounding && parseInt(options.rounding, 10),
