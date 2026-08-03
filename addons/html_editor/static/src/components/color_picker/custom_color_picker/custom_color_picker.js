@@ -120,7 +120,7 @@ export class CustomColorPicker extends Component {
                 : this.props.defaultColor;
             if (
                 normalizeCSSColor(newSelectedColor) !== this.colorComponents.cssColor &&
-                this.colorPickerAreaRef.el
+                this.colorPickerAreaRef()
             ) {
                 this.setSelectedColor(newSelectedColor);
             }
