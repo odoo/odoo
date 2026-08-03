@@ -27,8 +27,6 @@ export class StoreInternal extends RecordInternal {
     FD_QUEUE = new Map(); // field-ondeletes
     /** @type {Map<import("./record").Record, Map<string, true>>} */
     FU_QUEUE = new Map(); // field-onupdates
-    /** @type {Map<Function, true>} */
-    RO_QUEUE = new Map(); // record-onchanges
     /** @type {Map<Record, true>} */
     RD_QUEUE = new Map(); // record-deletes
     /** @type {Map<Record, true>} */

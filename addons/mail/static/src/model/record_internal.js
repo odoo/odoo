@@ -10,12 +10,54 @@ import {
     makeRecordFieldLocalId,
 } from "./misc";
 import { RecordList } from "./record_list";
-import { immediateEffect, markRaw, toRaw, untrack } from "@odoo/owl";
+import { immediateEffect, markRaw, proxy, signal, toRaw, untrack } from "@odoo/owl";
 import { RecordUses } from "./record_uses";
 import { LocalStorageEntry } from "@mail/utils/common/local_storage";
 
+/**
+ * Observe one field of a record, without running the callback on the initial
+ * read. Only the lazy compute and sort flags need this: they watch a single
+ * field name resolved at runtime, while `Record.onChange` takes the reads to
+ * observe as a function.
+ *
+ * @param {Record} recordProxy
+ * @param {string} fieldName
+ * @param {Function} callback
+ * @returns {Function} dispose function
+ */
+function observeField(recordProxy, fieldName, callback) {
+    let running = false;
+    const targetProxy = proxy(recordProxy);
+    const disposeFn = untrack(() =>
+        immediateEffect(() => {
+            // read once: a reactive get() per read would be observed as many times
+            const val = targetProxy[fieldName];
+            if (typeof val === "object" && val !== null) {
+                void Object.keys(val);
+            }
+            if (Array.isArray(val)) {
+                void val.length;
+                void val.forEach((i) => i);
+            }
+            if (running) {
+                untrack(() => callback());
+            }
+        })
+    );
+    running = true;
+    return disposeFn;
+}
+
 export class RecordInternal {
     [IS_RECORD_SYM] = true;
+    /**
+     * Whether the record is being created: set until Record.new assigned the
+     * ids and registered the record. A signal, so that clearing it re-runs the
+     * onChange registrations held during setup().
+     *
+     * @type {import("@odoo/owl").Signal<boolean>}
+     */
+    isConstructing = signal(true);
     /**
      * All dispose functions for this record.
      * For the store, this stores the dispose functions of all records.
@@ -151,17 +193,19 @@ export class RecordInternal {
         }
         if (Model._.fieldsCompute.get(fieldName)) {
             if (!Model._.fieldsEager.get(fieldName)) {
-                record.registerOnChange(recordProxy, fieldName, () => {
-                    if (this.fieldsComputing.get(fieldName)) {
-                        /**
-                         * Use a reactive to reset the computeInNeed flag when there is
-                         * a change. This assumes when other reactive are still
-                         * observing the value, its own callback will reset the flag to
-                         * true through the proxy getters.
-                         */
-                        this.fieldsComputeInNeed.delete(fieldName);
-                    }
-                });
+                record._registerDisposeFn(
+                    observeField(recordProxy, fieldName, () => {
+                        if (this.fieldsComputing.get(fieldName)) {
+                            /**
+                             * Use a reactive to reset the computeInNeed flag when there is
+                             * a change. This assumes when other reactive are still
+                             * observing the value, its own callback will reset the flag to
+                             * true through the proxy getters.
+                             */
+                            this.fieldsComputeInNeed.delete(fieldName);
+                        }
+                    })
+                );
                 // reset flags triggered by registering onChange
                 this.fieldsComputeInNeed.delete(fieldName);
                 this.fieldsSortInNeed.delete(fieldName);
@@ -169,17 +213,19 @@ export class RecordInternal {
         }
         if (Model._.fieldsSort.get(fieldName)) {
             if (!Model._.fieldsEager.get(fieldName)) {
-                record.registerOnChange(recordProxy, fieldName, () => {
-                    if (this.fieldsSorting.get(fieldName)) {
-                        /**
-                         * Use a reactive to reset the inNeed flag when there is a
-                         * change. This assumes if another reactive is still observing
-                         * the value, its own callback will reset the flag to true
-                         * through the proxy getters.
-                         */
-                        this.fieldsSortInNeed.delete(fieldName);
-                    }
-                });
+                record._registerDisposeFn(
+                    observeField(recordProxy, fieldName, () => {
+                        if (this.fieldsSorting.get(fieldName)) {
+                            /**
+                             * Use a reactive to reset the inNeed flag when there is a
+                             * change. This assumes if another reactive is still observing
+                             * the value, its own callback will reset the flag to true
+                             * through the proxy getters.
+                             */
+                            this.fieldsSortInNeed.delete(fieldName);
+                        }
+                    })
+                );
                 // reset flags triggered by registering onChange
                 this.fieldsComputeInNeed.delete(fieldName);
                 this.fieldsSortInNeed.delete(fieldName);
