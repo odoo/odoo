@@ -146,13 +146,9 @@ class TestCreatePicking(ProductVariantsCommon):
             'name': 'Roger'
         })
 
-        routes = self.env.ref('stock.route_warehouse0_mto') + self.env.ref('purchase_stock.route_warehouse0_buy')
-        routes.product_selectable = True
-
         product = self.env['product.product'].create({
             'name': 'product',
             'is_storable': True,
-            'route_ids': routes,
             'supplier_taxes_id': [(6, 0, [])],
         })
 
@@ -282,15 +278,13 @@ class TestCreatePicking(ProductVariantsCommon):
         partner_demo_customer = self.partner_id
         final_location = partner_demo_customer.property_stock_customer
         warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
-        mto_route = self.env.ref('stock.route_warehouse0_mto')
+        mto_route = warehouse.mto_pull_id.route_id
         mto_route.active = True
         mto_route.rule_ids.procure_method = 'mts_else_mto'
-        routes = mto_route + self.env.ref('purchase_stock.route_warehouse0_buy')
-        routes.product_selectable = True
         self.product_id_1 = self.env['product.product'].create({
             'name': 'ProductA',
             'is_storable': True,
-            'route_ids': routes,
+            'route_ids': [Command.set([mto_route.id])],
             'seller_ids': [Command.create({
                 'partner_id': self.partner_id.id,
                 'min_qty': 5,
@@ -367,7 +361,6 @@ class TestCreatePicking(ProductVariantsCommon):
         product = self.env['product.product'].create({
             'name': 'product',
             'is_storable': True,
-            'route_ids': [(4, self.ref('stock.route_warehouse0_mto')), (4, self.ref('purchase_stock.route_warehouse0_buy'))],
         })
 
         seller = self.env['product.supplierinfo'].create({
@@ -508,15 +501,10 @@ class TestCreatePicking(ProductVariantsCommon):
         picking_type_out = self.env.ref('stock.picking_type_out')
         partner = self.env['res.partner'].create({'name': 'AAA', 'email': 'from.test@example.com'})
 
-        warehouse1 = self.env.ref('stock.warehouse0')
-        route_buy = warehouse1.buy_pull_id.route_id
-        route_mto = warehouse1.mto_pull_id.route_id
-
         product = self.env['product.product'].create({
             'name': 'Usb Keyboard',
             'is_storable': True,
             'uom_id': unit,
-            'route_ids': [(6, 0, [route_buy.id, route_mto.id])]
         })
         self.env['product.supplierinfo'].create({
             'product_id': product.id,
@@ -651,13 +639,12 @@ class TestCreatePicking(ProductVariantsCommon):
         vendor = self.env['res.partner'].create({
             'name': 'Roger'
         })
-        # This needs to be tried with MTO route activated
-        self.env['stock.route'].browse(self.ref('stock.route_warehouse0_mto')).action_unarchive()
-        self.env['stock.route'].browse(self.ref('stock.route_warehouse0_mto')).rule_ids.procure_method = "make_to_order"
+        route_mto = picking_type_out.warehouse_id.mto_pull_id.route_id
+        route_mto.active = True
         product = self.env['product.product'].create({
             'name': 'product',
             'is_storable': True,
-            'route_ids': [(4, self.ref('stock.route_warehouse0_mto')), (4, self.ref('purchase_stock.route_warehouse0_buy'))],
+            'route_ids': [Command.set([route_mto.id])],
             'supplier_taxes_id': [(6, 0, [])],
         })
         self.env['product.supplierinfo'].create({

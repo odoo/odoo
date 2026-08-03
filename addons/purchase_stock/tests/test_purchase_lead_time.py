@@ -187,9 +187,9 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         # create a product with manufacture route
         product_1 = self.env['product.product'].create({
             'name': 'AAA',
-            'route_ids': [Command.link(self.route_buy.id)],
             'seller_ids': [Command.create({'partner_id': self.partner.id, 'delay': 5})]
         })
+        self._use_route_buy(product_1, create_seller=False)
 
         # create a move for product_1 from stock to output and reserve to trigger the
         # rule

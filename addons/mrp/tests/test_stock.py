@@ -172,7 +172,6 @@ class TestWarehouseMrp(common.TestMrpCommon):
 
         self.warehouse_1.manufacture_steps = "pbm"
         self.warehouse_1.resupply_wh_ids = [Command.set([warehouse_2.id])]
-        self.product_6.route_ids = [Command.set([self.route_manufacture.id, self.route_mto.id])]
         self.product_4.route_ids = [Command.set([
             self.warehouse_1.resupply_route_ids.id,
             self.route_mto.id,

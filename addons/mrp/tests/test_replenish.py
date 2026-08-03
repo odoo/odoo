@@ -34,9 +34,8 @@ class TestMrpReplenish(TestMrpCommon):
         """Open the replenish view and check if delay is taken into account
             in the base date computation
         """
-        route = self.warehouse_1.manufacture_pull_id.route_id
+        route = self.route_manufacture
         product = self.product_4
-        product.route_ids = route
 
         with freeze_time("2023-01-01"):
             wizard = self._create_wizard(product, self.warehouse_1)
@@ -47,14 +46,13 @@ class TestMrpReplenish(TestMrpCommon):
 
     def test_mrp_orderpoint_leadtime(self):
         self.env.company.sudo().horizon_days = 0
-        route_manufacture = self.warehouse_1.manufacture_pull_id.route_id
+        route_manufacture = self.route_manufacture
         route_manufacture.supplied_wh_id = self.warehouse_1
         route_manufacture.supplier_wh_id = self.warehouse_1
         route_manufacture.rule_ids.delay = 2
         product_1 = self.env['product.product'].create({
             'name': 'Cake',
             'is_storable': True,
-            'route_ids': [(6, 0, [route_manufacture.id])]
         })
 
         self.env['mrp.bom'].create({
@@ -81,7 +79,6 @@ class TestMrpReplenish(TestMrpCommon):
         """Check manufacturing order take bom according to picking type of the rule triggered by an
         orderpoint."""
 
-        self.product_4.route_ids = self.warehouse_1.manufacture_pull_id.route_id
         # setup: copying a picking type writes ir.sequence via the sequence_code related inverse
         picking_type_2 = self.picking_type_manu.sudo().copy({'sequence': 100})
         self.product_4.bom_ids.picking_type_id = picking_type_2
@@ -101,10 +98,8 @@ class TestMrpReplenish(TestMrpCommon):
         self.assertTrue(mo)
 
     def test_mrp_delay_bom(self):
-        route = self.warehouse_1.manufacture_pull_id.route_id
         product = self.product_4
         bom = product.bom_ids
-        product.route_ids = route
         with freeze_time("2023-01-01"):
             wizard = self._create_wizard(product, self.warehouse_1)
             self.assertEqual(fields.Datetime.from_string('2023-01-01 00:00:00'), wizard.date_planned)
@@ -195,7 +190,6 @@ class TestMrpReplenish(TestMrpCommon):
         """
         self.warehouse_1.manufacture_steps = 'pbm'
         finished_product = self.product_4
-        finished_product.route_ids = [Command.set(self.warehouse_1.manufacture_pull_id.route_id.ids)]
 
         orderpoint = self.env['stock.warehouse.orderpoint'].create({
             'product_id': finished_product.id,
@@ -224,9 +218,6 @@ class TestMrpReplenish(TestMrpCommon):
             linked to a confirmed MO, which is started but not finished by the
             end of the stock forecast.
         """
-        route_manufacture = self.warehouse_1.manufacture_pull_id.route_id
-
-        self.product_4.route_ids = [Command.set([route_manufacture.id])]
         self.product_4.bom_ids.produce_delay = 2
 
         orderpoint = self.env['stock.warehouse.orderpoint'].create({
@@ -264,7 +255,8 @@ class TestMrpReplenish(TestMrpCommon):
         6.) trigger replenishment for product_4
         """
         self.warehouse_1.write({'manufacture_steps': 'pbm_sam'})
-        self.warehouse_1.mto_pull_id.route_id.active = True
+        self.route_mto.active = True
+        self.route_manufacture.product_selectable = True
 
         self.product_1.write({
             'route_ids': [Command.set([self.route_mto.id, self.route_manufacture.id])]
@@ -313,8 +305,6 @@ class TestMrpReplenish(TestMrpCommon):
         orderpoint.invalidate_recordset(fnames=['rule_ids', 'show_supply_warning'])
         self.assertFalse(orderpoint.show_supply_warning)
 
-        # Add a manufacture route to the product
-        self.product_4.route_ids |= self.route_manufacture
         orderpoint.invalidate_recordset(fnames=['show_supply_warning'])
         self.assertFalse(orderpoint.show_supply_warning)
 
@@ -373,11 +363,11 @@ class TestMrpReplenish(TestMrpCommon):
         """Test that lead time is incremented by 365 days (1 year) when there
         is no BoM defined.
         """
-        route_manufacture = self.warehouse_1.manufacture_pull_id.route_id
+        self.route_manufacture.product_selectable = True
         product = self.env['product.product'].create({
             'name': 'test',
             'is_storable': True,
-            'route_ids': route_manufacture.ids,
+            'route_ids': [Command.set([self.route_manufacture.id])],
         })
         orderpoint = self.env['stock.warehouse.orderpoint'].create({
             'name': 'test',

@@ -39,7 +39,7 @@ class TestPurchaseOldRules(PurchaseTestCommon):
         cls.product = cls.env['product.product'].create({
             'name': 'Geyser',
             'is_storable': True,
-            'route_ids': [Command.set([cls.route_mto.id, cls.route_buy.id])],
+            'route_ids': [Command.set([cls.route_mto.id])],
             'seller_ids': [Command.create({
                 'partner_id': cls.customer.id,
                 'price': 100.0,

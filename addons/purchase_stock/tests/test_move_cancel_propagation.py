@@ -17,7 +17,6 @@ class TestMoveCancelPropagation(PurchaseTestCommon):
         product = cls.env['product.product'].create({
             'name': 'Geyser',
             'is_storable': True,
-            'route_ids': [Command.set([cls.route_mto.id, cls.route_buy.id])],
             'seller_ids': [Command.create({
                 'partner_id': cls.customer.id,
                 'price': 100.0,
@@ -241,10 +240,6 @@ class TestMoveCancelPropagation(PurchaseTestCommon):
         product_car = self.env['product.product'].create({
             'name': 'Car',
             'is_storable': True,
-            'route_ids': [
-                Command.link(self.route_mto.id),
-                Command.link(self.route_buy.id),
-            ],
             'seller_ids': [Command.create({
                 'uom_id': self.env.ref('uom.product_uom_unit').id,
                 'partner_id': partner.id,

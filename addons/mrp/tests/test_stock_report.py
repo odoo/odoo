@@ -765,13 +765,10 @@ class TestMrpStockReports(TestReportsCommon):
         warehouse = self.wh_2
         route_mto = warehouse.mto_pull_id.route_id
         route_mto.active = True
-        route_manufacture = warehouse.manufacture_pull_id.route_id
 
         component, sub_component, part1, part2 = self.env['product.product'].create([
             {'name': 'Component'},
-            {'name': 'Sub Component', 'route_ids': [
-                Command.set([route_manufacture.id, route_mto.id]),
-            ]},
+            {'name': 'Sub Component', 'route_ids': [Command.set([route_mto.id])]},
             {'name': 'Part 1'},
             {'name': 'Part 2'}
         ])
