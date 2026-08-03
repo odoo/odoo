@@ -56,6 +56,11 @@ class IrActionsServer(models.Model):
         readonly=False, store=True
     )
     partner_ids = fields.Many2many('res.partner', compute='_compute_followers_info', readonly=False, store=True)
+    subtype_ids = fields.Many2many(
+        'mail.message.subtype',
+        string="Subscriptions",
+        default=lambda self: self.env.ref('mail.mt_comment').ids,
+        readonly=False, store=True)
 
     # Message Post / Email
     template_id = fields.Many2one(
@@ -336,7 +341,16 @@ class IrActionsServer(models.Model):
             else:
                 followers_field = self.followers_partner_field_name
                 partner_ids = records.mapped(followers_field)
-            records.message_subscribe(partner_ids=partner_ids.ids)
+            kwargs_message_subscribe = {"partner_ids": partner_ids.ids}
+            if self.subtype_ids:
+                kwargs_message_subscribe["subtype_ids"] = self.subtype_ids.ids
+            # If the user empties the field, we subscribe to All subtypes
+            else:
+                all_subtypes = self.env["mail.message.subtype"].search([
+                    '|', ('res_model', '=', False), ('res_model', '=', self.model_name)
+                ])
+                kwargs_message_subscribe["subtype_ids"] = all_subtypes.ids
+            records.message_subscribe(**kwargs_message_subscribe)
         return False
 
     def _run_action_remove_followers_multi(self, eval_context=None):

@@ -72,18 +72,24 @@
                         <group>
                             <field name="followers_type"
                                 required="state in ['followers', 'remove_followers']"/>
-                            <field name="partner_ids" string="Followers to add" widget="many2many_tags"
-                                placeholder="Choose a contact..."
+                            <field name="partner_ids" string="Followers" widget="many2many_tags"
+                                placeholder="Choose followers..."
                                 invisible="state != 'followers' or followers_type != 'specific'"
                                 required="state == 'followers' and followers_type == 'specific'"/>
-                            <field name="partner_ids" string="Followers to remove" widget="many2many_tags"
-                                placeholder="Choose a contact..."
+                            <field name="partner_ids" string="Followers" widget="many2many_tags"
+                                placeholder="Choose followers..."
                                 invisible="state != 'remove_followers' or followers_type != 'specific'"
                                 required="state == 'remove_followers' and followers_type == 'specific'"/>
                             <field name="followers_partner_field_name"
                                 widget="field_selector" options="{'model': 'model_name'}"
                                 invisible="followers_type != 'generic'"
                                 required="state in ['followers', 'remove_followers'] and followers_type == 'generic'"/>
+                            <field name="subtype_ids"
+                                string="Subscriptions"
+                                widget="many2many_tags"
+                                placeholder="All"
+                                invisible="state != 'followers' or followers_type != 'specific'"
+                                domain="['&amp;', ('hidden', '=', False), '|', ('res_model', '=', False), ('res_model', '=', model_name)]"/>
                         </group>
                     </group>
                     <!-- Send Email -->
