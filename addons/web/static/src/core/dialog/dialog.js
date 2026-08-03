@@ -91,7 +91,14 @@ export class Dialog extends Component {
             { bypassEditableProtection: true }
         );
         this.id = `dialog_${this.data.id}`;
-        useSubEnv({ inDialog: true, dialogId: this.id });
+        this.dialogSize = signal(undefined);
+        useSubEnv({
+            inDialog: true,
+            dialogId: this.id,
+            // Allows content rendered inside the dialog (e.g. a View reading a `dialog_size` arch
+            // attribute) to override the size it was given through props.
+            setDialogSize: (size) => this.dialogSize.set(size),
+        });
         this.isMovable = this.props.header;
         if (this.isMovable) {
             this.position = proxy({ left: 0, top: 0 });
@@ -120,7 +127,7 @@ export class Dialog extends Component {
     }
 
     get size() {
-        return this.props.size;
+        return this.dialogSize() ?? this.props.size;
     }
 
     get isFullscreen() {
