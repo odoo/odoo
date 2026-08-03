@@ -1,16 +1,14 @@
+import ast
 import json
 import os
 import tempfile
 import unittest
-from contextlib import contextmanager
 from subprocess import run, PIPE
 from textwrap import dedent
 
-import astroid
-
 from odoo.tools.which import which
 
-from . import _odoo_checker_sql_injection
+from .test_sql_injection import SQLInjectionLinter
 from .common import LintCase
 
 try:
@@ -21,8 +19,9 @@ except ImportError:
     PyLinter = object
 try:
     pylint_bin = which('pylint')
-except IOError:
+except OSError:
     pylint_bin = None
+
 
 class UnittestLinter(PyLinter):
     current_file = 'not_test_checkers.py'
@@ -92,114 +91,94 @@ class TestGetTextLint(TestPylintChecks):
         self.assertEqual(errs[0]['line'], 2, errs)
 
 
-@unittest.skipUnless(pylint and pylint_bin, "testing lints requires pylint")
-class TestSqlLint(TestPylintChecks):
-    def check(self, testtext):
-        return super().check(testtext, "_odoo_checker_sql_injection", "sql-injection")
+class TestSqlLint(LintCase):
+    def setUp(self):
+        super().setUp()
+        self.errors = []
+        self.linter = SQLInjectionLinter()
+        self.linter.add_error = self.errors.append
+
+    def check_error(self, text, *, message=None):
+        tree = ast.parse(dedent(text))
+        self.errors.clear()
+        self.linter.visit(tree)
+        self.assertEqual(len(self.errors), 1, message or "expecting error")
+
+    def check_no_error(self, text, *, message=None):
+        tree = ast.parse(dedent(text))
+        self.errors.clear()
+        self.linter.visit(tree)
+        if self.errors:
+            self.fail(message or ';'.join(ast.unparse(e) for e in self.errors))
 
     def test_printf(self):
-        r, [err] = self.check("""
+        self.check_error("""
         def do_the_thing(cr, name):
             cr.execute('select %s from thing' % name)
         """)
-        self.assertTrue(r, "should have noticed the injection")
-        self.assertEqual(err['line'], 2, err)
 
-        r, errs = self.check("""
+        self.check_no_error("""
         def do_the_thing(self):
             self.env.cr.execute("select thing from %s" % self._table)
-        """)
-        self.assertFalse(r, f"underscore-attributes are allowed\n{errs}")
+        """, message="underscore-attributes are allowed")
 
-        r, errs = self.check("""
+        self.check_no_error("""
         def do_the_thing(self):
             query = "select thing from %s"
             self.env.cr.execute(query % self._table)
-        """)
-        self.assertFalse(r, f"underscore-attributes are allowed\n{errs}")
+        """, message="underscore-attributes are allowed")
 
     def test_fstring(self):
-        r, [err] = self.check("""
+        self.check_error("""
         def do_the_thing(cr, name):
             cr.execute(f'select {name} from thing')
         """)
-        self.assertTrue(r, "should have noticed the injection")
-        self.assertEqual(err['line'], 2, err)
 
-        r, errs = self.check("""
+        self.check_no_error("""
         def do_the_thing(cr, name):
             cr.execute(f'select name from thing')
-        """)
-        self.assertFalse(r, f"unnecessary fstring should be innocuous\n{errs}")
+        """, message="unnecessary fstring should be innocuous")
 
-        #r, errs = self.check("""
-        #def do_the_thing(cr, name, value):
-        #    cr.execute(f'select {name} from thing where field = %s', [value])
-        #""")
-        #self.assertFalse(r, f"probably has a good reason for the extra arg\n{errs}")
+        self.check_error("""
+        def do_the_thing(cr, name, value):
+            cr.execute(f'select {name} from thing where field = %s', [value])
+        """, message="probably has a good reason for the extra arg")
 
-        r, errs = self.check("""
+        self.check_no_error("""
         def do_the_thing(self):
             self.env.cr.execute(f'select name from {self._table}')
-        """)
-        self.assertFalse(r, f'underscore-attributes are allowable\n{errs}')
-
-
-    @contextmanager
-    def assertMessages(self, *messages):
-        self.linter._messages = []
-        yield
-        self.assertEqual(self.linter._messages, list(messages))
-
-    @contextmanager
-    def assertNoMessages(self):
-        self.linter._messages = []
-        yield
-        self.assertEqual(self.linter._messages, [])
+        """, message='underscore-attributes are allowable')
 
     def test_sql_injection_detection(self):
-        self.linter = UnittestLinter()
-        self.linter.current_file = 'dummy.py' # should not be prefixed by test
-        checker = _odoo_checker_sql_injection.OdooBaseChecker(self.linter)
 
-        node = astroid.extract_node("""
-        def test(): 
+        self.check_error("""
+        def test():
             arg = "test"
-            arg = arg + arg
+            arg = arg + arg  # lazy
             self.env.cr.execute(arg) #@
         """)
 
-        with self.assertNoMessages():
-            checker.visit_call(node)
-
-        node = astroid.extract_node("""
+        self.check_error("""
         def test_function9(self,arg):
             my_injection_variable= "aaa" % arg #Uninferable
             self.env.cr.execute('select * from hello where id = %s' % my_injection_variable) #@
         """)
 
-        with self.assertMessages("sql-injection"):
-            checker.visit_call(node)
-
-        node = astroid.extract_node("""
+        self.check_error("""
         def test_function10(self):
-            my_injection_variable= "aaa" + "aaa" #Const
+            my_injection_variable= "aaa" + "aaa" #Const - lazy
             self.env.cr.execute('select * from hello where id = %s' % my_injection_variable) #@
         """)
-        with self.assertNoMessages():
-            checker.visit_call(node)
 
-        node = astroid.extract_node("""
+        self.check_error("""
         def test_function11(self, arg):
             my_injection_variable= "aaaaaaaa" + arg #Uninferable
             self.env.cr.execute('select * from hello where id = %s' % my_injection_variable) #@
         """)
 
-        with self.assertMessages("sql-injection"):
-            checker.visit_call(node)
-
-        node = astroid.extract_node("""
+        self.check_error("""
         def test_function12(self):
+            # don't concat unknown stuff
             arg1 = "a"
             arg2 = "b" + arg1
             arg3 = arg2 + arg1 + arg2
@@ -208,98 +187,90 @@ class TestSqlLint(TestPylintChecks):
             self.env.cr.execute('select * from hello where id = %s' % my_injection_variable) #@
         """)
 
-        with self.assertNoMessages():
-            checker.visit_call(node)
-
-        node = astroid.extract_node("""
+        self.check_error("""
         def test_function1(self, arg):
             my_injection_variable= f"aaaaa{arg}aaa" #Uninferable
             self.env.cr.execute('select * from hello where id = %s' % my_injection_variable) #@
         """)
-        with self.assertMessages("sql-injection"):
-            checker.visit_call(node)
 
-        node = astroid.extract_node("""
+        self.check_no_error("""
         def test_function2(self):
             arg = 'bbb'
             my_injection_variable= f"aaaaa{arg}aaa" #Uninferable
             self.env.cr.execute('select * from hello where id = %s' % my_injection_variable) #@
         """)
-        with self.assertNoMessages():
-            checker.visit_call(node)
 
-        node = astroid.extract_node("""
+        # .format() is not supported
+
+        self.check_error("""
         def test_function3(self, arg):
             my_injection_variable= "aaaaaaaa".format() # Const
             self.env.cr.execute('select * from hello where id = %s' % my_injection_variable) #@
         """)
-        with self.assertNoMessages():
-            checker.visit_call(node)
 
-        node = astroid.extract_node("""
+        self.check_error("""
         def test_function4(self, arg):
-            my_injection_variable= "aaaaaaaa {test}".format(test="aaa") 
+            my_injection_variable= "aaaaaaaa {test}".format(test="aaa")
             self.env.cr.execute('select * from hello where id = %s' % my_injection_variable) #@
         """)
-        with self.assertNoMessages():
-            checker.visit_call(node)
 
-        node = astroid.extract_node("""
+        self.check_error("""
         def test_function5(self):
             arg = 'aaa'
             my_injection_variable= "aaaaaaaa {test}".format(test=arg) #Uninferable
             self.env.cr.execute('select * from hello where id = %s' % my_injection_variable) #@
         """)
-        with self.assertNoMessages():
-            checker.visit_call(node)
 
-        node = astroid.extract_node("""
+        self.check_error("""
         def test_function6(self,arg):
             my_injection_variable= "aaaaaaaa {test}".format(test="aaa" + arg) #Uninferable
             self.env.cr.execute('select * from hello where id = %s' % my_injection_variable) #@
         """)
-        with self.assertMessages("sql-injection"):
-            checker.visit_call(node)
 
-        node = astroid.extract_node("""
+        self.check_error("""
         def test_function7(self):
             arg = "aaa"
             my_injection_variable= "aaaaaaaa {test}".format(test="aaa" + arg) #Const
             self.env.cr.execute('select * from hello where id = %s' % my_injection_variable)#@
         """)
-        with self.assertNoMessages():
-            checker.visit_call(node)
 
-        node = astroid.extract_node("""
+        self.check_error("""
         def test_function8(self):
             global arg
             my_injection_variable= "aaaaaaaa {test}".format(test="aaa" + arg) #Uninferable
             self.env.cr.execute('select * from hello where id = %s' % my_injection_variable) #@
         """)
-        with self.assertMessages("sql-injection"):
-            checker.visit_call(node)
 
-        node = astroid.extract_node("""
+        self.check_error("""
         def test_function9(self,arg):
             my_injection_variable= "aaa" % arg
             self.env.cr.execute('select * from hello where id = %s' % my_injection_variable) #@
         """)
 
-        with self.assertMessages("sql-injection"):
-            checker.visit_call(node)
-
-        node = astroid.extract_node("""
+        self.check_no_error("""
         def test_function10(self,arg):
             if_else_variable = "aaa" if arg else "bbb" # the two choice of a condition are constant, this is not injectable
             self.env.cr.execute('select * from hello where id = %s' % if_else_variable) #@
         """)
 
-        with self.assertMessages():
-            checker.visit_call(node)
+        self.check_no_error("""
+        def test_function11(self, arg):
+            self.env.cr.execute(SQL('SELECT %d', arg))
+        """)
 
-        node = astroid.extract_node("""
+        self.check_no_error("""
+        def test_function12(self, arg):
+            self.env.cr.execute(SQL('VACUUM FULL %s', SQL.identifier(arg)))
+        """)
+
+        self.check_no_error("""
+        def test_function13(self, args):
+            self.env.cr.execute(SQL('SELECT %s', SQL(',').join(args)))
+            self.env.cr.execute(SQL('SELECT %s', SQL(',').join(SQL("%s AS a%s", d, d) for d in range(3))))
+        """)
+
+        self.check_no_error("""
         def _search_phone_mobile_search(self, operator, value):
-  
             condition = 'IS NULL' if operator == '=' else 'IS NOT NULL'
             query = '''
                 SELECT model.id
@@ -308,53 +279,41 @@ class TestSqlLint(TestPylintChecks):
                 AND model.mobile %s
             ''' % (self._table, condition, condition)
             self.env.cr.execute(query) #@
-        """) #Real false positive example from the code
-        with self.assertMessages():
-            checker.visit_call(node)
+        """)
 
-        node = astroid.extract_node("""
+        self.check_error("""
         def test1(self):
-            operator = 'aaa' 
+            operator = 'aaa'
             value = 'bbb'
             op1 , val1 = (operator,value)
             self.env.cr.execute('query' + op1) #@
-        """) #Test tuple assignement
-        with self.assertMessages():
-            checker.visit_call(node)
+        """)  # Test tuple assignement
 
-        node = astroid.extract_node("""
+        self.check_error("""
         def test2(self):
-            operator = 'aaa' 
+            operator = 'aaa'
             operator += 'bbb'
             self.env.cr.execute('query' + operator) #@
         """)
-        with self.assertMessages():
-            checker.visit_call(node)
 
-        node = astroid.extract_node("""
+        self.check_no_error("""
         def test3(self):
             self.env.cr.execute(f'{self._table}') #@
         """)
-        with self.assertMessages():
-            checker.visit_call(node)
 
-        node = astroid.extract_node("""
+        self.check_error("""
         def _init_column(self, column_name):
             query = f'UPDATE "{self._table}" SET "{column_name}" = %s WHERE "{column_name}" IS NULL'
             self.env.cr.execute(query, (value,)) #@
-        """) #Test private function arg should not flag
-        with self.assertMessages():
-            checker.visit_call(node)
+        """)
 
-        node = astroid.extract_node("""
+        self.check_error("""
         def _init_column1(self, column_name):
             query = 'SELECT %(var1)s FROM %(var2)s WHERE %(var3)s' % {'var1': 'field_name','var2': 'table_name','var3': 'where_clause'}
             self.env.cr.execute(query) #@
         """)
-        with self.assertMessages():
-            checker.visit_call(node)
 
-        node = astroid.extract_node("""
+        self.check_error("""
         def _graph_data(self, start_date, end_date):
 
             query = '''SELECT %(x_query)s as x_value, %(y_query)s as y_value
@@ -389,96 +348,64 @@ class TestSqlLint(TestPylintChecks):
             self.env.cr.execute(query, [self.id, start_date, end_date] + where_clause_params) #@
             return self.env.cr.dictfetchall()
         """)
-        with self.assertMessages():
-            checker.visit_call(node)
 
-        node = astroid.extract_node("""
+        self.check_error("""
         def first_fun():
-            anycall() #@
+            anycall()
             return 'a'
+        def injectable():
+            cr.execute(first_fun())  #@
         """)
-        with self.assertMessages():
-            checker.visit_call(node)
-        node = astroid.extract_node("""
+        self.check_error("""
         def second_fun(value):
             anycall() #@
             return value
-        """)
-        with self.assertMessages():
-            checker.visit_call(node)
-        node = astroid.extract_node("""
-        def injectable():
-            cr.execute(first_fun())#@
-        """)
-        with self.assertMessages():
-            checker.visit_call(node)
-        node = astroid.extract_node("""
         def injectable1():
             cr.execute(second_fun('aaaaa'))#@
         """)
-        with self.assertMessages():
-            checker.visit_call(node)
 
-        node = astroid.extract_node("""
+        self.check_error("""
         def injectable2(var):
             a = ['a','b']
             cr.execute('a'.join(a))#@
         """)
-        with self.assertMessages():
-            checker.visit_call(node)
 
-        node = astroid.extract_node("""
+        self.check_error("""
         def return_tuple(var):
             return 'a',var
-        """)
-        with self.assertMessages():
-            checker.visit_functiondef(node)
-
-        node = astroid.extract_node("""
         def injectable4(var):
             a, _ =  return_tuple(var)
             cr.execute(a) #@
-        """)
-        with self.assertMessages():
-            checker.visit_call(node)
-        node = astroid.extract_node("""
+        """)  # not implemented
+
+        self.check_error("""
         def not_injectable5(var):
             star = ('defined','constant','string')
             cr.execute(*star)#@
-        """)
-        with self.assertMessages():
-            checker.visit_call(node)
+        """)  # not implemented
 
-        node = astroid.extract_node("""
+        self.check_error("""
         def injectable6(var):
             star = ('defined','variable','string',var)
             cr.execute(*star)#@
-        """)
-        with self.assertMessages("sql-injection"):
-            checker.visit_call(node)
+        """)  # not implemented
 
-        node = astroid.extract_node("""
+        self.check_error("""
         def formatNumber(var):
             cr.execute('LIMIT %d'  % var)#@
-        """)
-        with self.assertMessages():
-            checker.visit_call(node)
+        """)  # formatter not implemented
 
-        node = astroid.extract_node("""
+        self.check_error("""
         def wrapper1(var):
             query = SQL(var) #@
             return query
         """)
-        with self.assertMessages("sql-injection"):
-            checker.visit_call(list(node.get_children())[1])
 
-        node = astroid.extract_node("""
+        self.check_error("""
         def wrapper2(var):
             query = tools.SQL(var) #@
             return query
         """)
-        with self.assertMessages("sql-injection"):
-            checker.visit_call(list(node.get_children())[1])
 
 
 @unittest.skipUnless(pylint and pylint_bin, "testing lints requires pylint")

@@ -1,4 +1,5 @@
 from . import test_dunderinit
+from . import test_sql_injection
 from . import test_checkers
 from . import test_python_lint
 from . import test_pylint
