@@ -231,8 +231,12 @@ class StockMove(models.Model):
         """
             Enforce the relationship between subcontracting receipt moves and their respective subcontracting productions.
             * For untracked moves:
-                * There will always be only 1 production.
-                * Updating the move quantity will update the production quantity.
+                * There may be several productions, e.g. if they were split or if the product is no
+                  longer tracked.
+                * Updating the move quantity will spread it over the open productions, keeping at
+                  least 1 of them linked to the subcontracting receipt.
+                * What the done productions already produced is not up for grabs anymore, it is
+                  deducted from the quantity to spread over the open ones.
             * For tracked moves:
                 * There will be 1 production for every lot on this move.
                 * This method will enforce the synchronisation between the total quantity per lot on the move and the linked productions.
@@ -245,18 +249,42 @@ class StockMove(models.Model):
             if not productions:
                 continue
             if move.has_tracking == 'none':
-                if productions.product_uom_id.compare(productions.product_qty, move.quantity) != 0:
+                open_productions = productions.filtered(lambda p: p.state not in ('done', 'cancel')).sorted('id')
+                if not open_productions:
+                    continue
+
+                qty_produced = sum(productions.filtered(lambda p: p.state == 'done').mapped('qty_produced'))
+                qty_to_produce = (move.quantity or move.product_uom_qty) - qty_produced
+                if move.product_uom.compare(sum(open_productions.mapped('product_qty')), qty_to_produce) == 0:
+                    continue
+
+                # Fill the open productions one after the other, those left over do not fit anymore.
+                qty_to_cover = qty_to_produce
+                productions_to_keep = self.env['mrp.production']
+                for production in open_productions:
+                    # Always keep 1 production, it absorbs a later increase of the move quantity.
+                    if productions_to_keep and move.product_uom.compare(qty_to_cover, 0) <= 0:
+                        break
+                    productions_to_keep |= production
+                    qty_to_cover -= production.product_qty
+                (open_productions - productions_to_keep).sudo().with_context(skip_activity=True).unlink()
+
+                # The last kept production absorbs the quantity the other ones do not cover.
+                last_production = productions_to_keep[-1]
+                qty_of_last_production = last_production.product_qty + qty_to_cover
+                # A production quantity must stay positive, leave it be if the move is fully produced.
+                if move.product_uom.compare(qty_of_last_production, 0) > 0:
                     self.sudo().env['change.production.qty'].with_context(skip_activity=True).create([{
-                        'mo_id': productions.id,
-                        'product_qty': move.quantity or move.product_uom_qty,
+                        'mo_id': last_production.id,
+                        'product_qty': qty_of_last_production,
                     }]).change_prod_qty()
-                    productions.action_assign()
+                productions_to_keep.action_assign()
             else:
                 qty_by_lot = dict(move.move_line_ids._read_group([('move_id', '=', move.id)], ['lot_id'], ['quantity_product_uom:sum']))
                 mos_to_assign = self.env['mrp.production']
 
                 # 1. Ensure quantities of linked MOs still match the quantities on the move
-                mos_to_create = {}  # lot -> qty
+                mos_to_create = {}
                 for lot_id, ml_qty in qty_by_lot.items():
                     lot_mo = productions.filtered(lambda p: (p.lot_producing_ids and p.lot_producing_ids[0] == lot_id) or (not lot_id and not p.lot_producing_ids))
                     if not lot_mo:

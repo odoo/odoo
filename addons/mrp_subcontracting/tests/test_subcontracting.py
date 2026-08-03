@@ -803,6 +803,98 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         self.assertEqual(len(subcontracted_mo.filtered(lambda p: p.lot_producing_ids == new_lot)), 1)
         self.assertEqual(len(subcontracted_mo.filtered(lambda p: p.lot_producing_ids != new_lot)), 2)
 
+    def test_alter_move_with_multiple_productions(self):
+        """ A subcontracted move may be linked to several productions, e.g. when its subcontracting
+        MO is split. Updating the quantity of such a move should spread it over the productions.
+        """
+        supplier_location = self.env.ref('stock.stock_location_suppliers')
+        picking_receipt = self.env['stock.picking'].create({
+            'partner_id': self.subcontractor_partner1.id,
+            'location_id': supplier_location.id,
+            'location_dest_id': self.warehouse.lot_stock_id.id,
+            'picking_type_id': self.warehouse.in_type_id.id,
+            'move_ids': [(0, 0, {
+                'product_id': self.finished.id,
+                'product_uom_qty': 2.0,
+                'location_id': supplier_location.id,
+                'location_dest_id': self.warehouse.lot_stock_id.id,
+            })],
+        })
+        picking_receipt.action_confirm()
+        move = picking_receipt.move_ids
+
+        # Splitting the subcontracting MO links the (untracked) move to 2 productions
+        production = move._get_subcontract_production()
+        self.assertEqual(len(production), 1)
+        production._split_productions({production: [1, 1]})
+        self.assertEqual(len(move._get_subcontract_production()), 2)
+
+        move.quantity = 3
+
+        subcontracted = move._get_subcontract_production().filtered(lambda p: p.state != 'cancel')
+        self.assertEqual(len(subcontracted), 2)
+        self.assertEqual(sum(subcontracted.mapped('product_qty')), 3)
+        self.assertEqual(move.product_uom_qty, 2)
+
+        # Decreasing below what the productions can absorb drops the extra ones
+        move.quantity = 1
+
+        subcontracted = move._get_subcontract_production().filtered(lambda p: p.state != 'cancel')
+        self.assertEqual(len(subcontracted), 1)
+        self.assertEqual(sum(subcontracted.mapped('product_qty')), 1)
+        self.assertEqual(move.product_uom_qty, 2)
+
+    def test_alter_move_with_partially_produced_productions(self):
+        """ Once part of the subcontracting MOs of a move are done, only the open ones should absorb
+        an update of the move quantity, the done ones keep what they produced.
+        """
+        supplier_location = self.env.ref('stock.stock_location_suppliers')
+        picking_receipt = self.env['stock.picking'].create({
+            'partner_id': self.subcontractor_partner1.id,
+            'location_id': supplier_location.id,
+            'location_dest_id': self.warehouse.lot_stock_id.id,
+            'picking_type_id': self.warehouse.in_type_id.id,
+            'move_ids': [(0, 0, {
+                'product_id': self.finished.id,
+                'product_uom_qty': 20.0,
+                'location_id': supplier_location.id,
+                'location_dest_id': self.warehouse.lot_stock_id.id,
+            })],
+        })
+        picking_receipt.action_confirm()
+        move = picking_receipt.move_ids
+
+        production = move._get_subcontract_production()
+        productions = production._split_productions({production: [5, 5, 5, 5]})
+        self.assertEqual(len(productions), 4)
+
+        # Producing 2 of them should leave the 2 others alone
+        for mo in productions[:2]:
+            mo.qty_producing = 5
+            mo.button_mark_done()
+        self.assertRecordValues(productions, [
+            {'state': 'done', 'product_qty': 5},
+            {'state': 'done', 'product_qty': 5},
+            {'state': 'confirmed', 'product_qty': 5},
+            {'state': 'confirmed', 'product_qty': 5},
+        ])
+
+        # 10 are already produced, so only 5 are left for the open productions: 1 of them is dropped
+        move.quantity = 15
+
+        subcontracted = move._get_subcontract_production().filtered(lambda p: p.state != 'cancel')
+        self.assertEqual(len(subcontracted), 3)
+        self.assertEqual(sum(subcontracted.mapped('product_qty')), 15)
+        self.assertEqual(len(subcontracted.filtered(lambda p: p.state == 'done')), 2)
+        self.assertEqual(move.product_uom_qty, 20)
+
+        # The done productions now cover the whole move, the last open one is kept as is
+        move.quantity = 10
+
+        subcontracted = move._get_subcontract_production().filtered(lambda p: p.state != 'cancel')
+        self.assertEqual(len(subcontracted), 3)
+        self.assertEqual(len(subcontracted.filtered(lambda p: p.state == 'done')), 2)
+
     def test_decrease_quantity_done(self):
         self.bom.consumption = 'flexible'
         supplier_location = self.env.ref('stock.stock_location_suppliers')
