@@ -500,7 +500,7 @@ class AccountEdiProxyClientUser(models.Model):
 
         if company.l10n_dk_nemhandel_proxy_state != 'in_verification':
             # a participant can only try registering as a receiver if they are not registered
-            nemhandel_state_translated = dict(company._fields['l10n_dk_nemhandel_proxy_state'].selection)[company.l10n_dk_nemhandel_proxy_state]
+            nemhandel_state_translated = dict(company._fields['l10n_dk_nemhandel_proxy_state']._description_selection(self.env))[company.l10n_dk_nemhandel_proxy_state]
             raise UserError(_('Cannot register a user with a %s application', nemhandel_state_translated))
 
         company_vat = split_vat(company.vat)[1]
