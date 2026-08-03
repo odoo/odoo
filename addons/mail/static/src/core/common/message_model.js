@@ -28,6 +28,7 @@ import { discussComponentRegistry } from "./discuss_component_registry";
 
 const { DateTime } = luxon;
 export class Message extends Record {
+    /** @type {"mail.message"} */
     static _name = "mail.message";
 
     /** @param {Object} data */
