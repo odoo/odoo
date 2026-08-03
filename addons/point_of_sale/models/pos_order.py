@@ -1532,7 +1532,13 @@ class PosOrder(models.Model):
         if state_filter == 'cancelled':
             state_domain = Domain('state', '=', 'cancel')
         else:
-            state_domain = Domain('state', 'not in', ['cancel', 'draft'])
+            state_domain = Domain([
+                '|',
+                ('state', 'not in', ['cancel', 'draft']),
+                '&',
+                ('state', '!=', 'draft'),
+                ('is_refund', '=', True),
+            ])
         order_domain = state_domain & Domain(domain) & Domain([
             ('config_id', 'in', [config_id] + pos_config.trusted_config_ids.ids),
             ('config_id.currency_id', '=', pos_config.currency_id.id)
