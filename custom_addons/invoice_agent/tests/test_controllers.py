@@ -157,28 +157,34 @@ class TestInvoiceAgentControllers(HttpCase):
 
         self.assertEqual(response.status_code, 201)
         payload = response.json()
-
-        # Handle both standard JSON & JSON-RPC result wrappers safely
         result_data = payload.get("result", payload)
         self.assertIn("move_id", result_data)
 
-        move = self.env["account.move"].browse(result_data["move_id"])
+        move_id = result_data["move_id"]
+
+        # 1. إجبار الـ Cache على التحديث
+        self.env["account.move"].invalidate_model()
+        self.env["ir.attachment"].invalidate_model()
+
+        move = self.env["account.move"].browse(move_id)
         self.assertTrue(move.exists())
         self.assertEqual(move.move_type, "in_invoice")
         self.assertEqual(move.ai_extraction_status, "processing")
-        self.assertTrue(move.ai_source_attachment_id)
-        self.assertEqual(move.ai_source_attachment_id.name, "bill.pdf")
-        self.assertEqual(move.ai_source_attachment_id.res_id, move.id)
 
-        # ✅ المقارنة المباشرة: raw ترجع bytes مباشرة في أودو
-        # أو استخدم base64.b64decode(move.ai_source_attachment_id.datas) إذا استخدمت حقل datas
-        attachment_bytes = (
-            move.ai_source_attachment_id.raw
-            if move.ai_source_attachment_id.raw
-            else base64.b64decode(move.ai_source_attachment_id.datas or b"")
-        )
+        attachment = move.ai_source_attachment_id
+        self.assertTrue(attachment)
+        self.assertEqual(attachment.name, "bill.pdf")
+        self.assertEqual(attachment.res_id, move.id)
+
+        # 2. الحل المعياري: قراءة البيانات المباشرة عبر _file_read أو عبر طلب HTTP download المباشر
+        # إذا كان الملف مخزناً في filestore الـ HttpCase، يُقرأ عبر _file_read باستخدام store_fname
+        if attachment.store_fname:
+            attachment_bytes = attachment._file_read(attachment.store_fname)
+        else:
+            attachment_bytes = attachment.raw or base64.b64decode(attachment.datas or b"")
+
         self.assertEqual(attachment_bytes, self.pdf_bytes)
-
+        
     def test_upload_with_global_key_creates_draft_move(self):
         response = self._upload(
             headers={"Authorization": f"Bearer {self.global_key}"},
