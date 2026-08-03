@@ -123,3 +123,13 @@ export class PaymentInterface {
      */
     sendPaymentAdjust(uuid) {}
 }
+
+/**
+ * Error thrown when a failure occurs during a payment terminal transaction.
+ *
+ * This error is used to represent issues such as communication failures,
+ * declined transactions, or unexpected terminal behavior while processing
+ * payments.
+ * @extends Error
+ */
+export class TerminalError extends Error {}

@@ -1,5 +1,8 @@
 import { _t } from "@web/core/l10n/translation";
-import { PaymentInterface } from "@point_of_sale/app/utils/payment/payment_interface";
+import {
+    PaymentInterface,
+    TerminalError,
+} from "@point_of_sale/app/utils/payment/payment_interface";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { serializeDateTime } from "@web/core/l10n/dates";
 import { offlineErrorHandler, handleRPCError } from "@point_of_sale/app/utils/error_handlers";
@@ -16,10 +19,12 @@ export class PaymentPineLabs extends PaymentInterface {
         this.pollingTimeout = null;
         this.inactivityTimeout = null;
         this.payment_stopped = false;
+        this.isPaymentScreenActive = false;
     }
 
     async sendPaymentRequest(line) {
         await super.sendPaymentRequest(...arguments);
+        this.isPaymentScreenActive = this.pos?.router?.state?.current === "PaymentScreen";
         return this._processPineLabs();
     }
 
@@ -29,14 +34,17 @@ export class PaymentPineLabs extends PaymentInterface {
 
     async sendPaymentCancel(line) {
         await super.sendPaymentCancel(...arguments);
+        this.isPaymentScreenActive = this.pos?.router?.state?.current === "PaymentScreen";
         return this._pineLabsCancel();
     }
 
     _callPineLabs(data, action) {
-        return this.pos.data
-            .call("pos.payment.method", action, [[this.payment_method_id.id], data])
-            .catch((error) => {
+        return this.callPaymentMethod(action, [[this.payment_method_id.id], data]).catch(
+            (error) => {
                 const line = this.pendingPineLabsPaymentLine();
+                if (!this.isPaymentScreenActive) {
+                    throw new TerminalError(error.message);
+                }
                 if (line) {
                     line.setPaymentStatus("force_done");
                 }
@@ -47,7 +55,8 @@ export class PaymentPineLabs extends PaymentInterface {
                 } else {
                     throw error;
                 }
-            });
+            }
+        );
     }
 
     /**
@@ -59,7 +68,11 @@ export class PaymentPineLabs extends PaymentInterface {
         const line = this.pendingPineLabsPaymentLine();
         if (!response || response?.error) {
             line.setPaymentStatus("retry");
-            this._showError(response?.error || _t("Pine Labs make payment request failed"));
+            const errorMessage = response?.error || _t("Pine Labs make payment request failed");
+            if (!this.isPaymentScreenActive) {
+                throw new TerminalError(errorMessage);
+            }
+            this._showError(errorMessage);
             return false;
         }
 
@@ -81,7 +94,12 @@ export class PaymentPineLabs extends PaymentInterface {
         if (!response || response?.error) {
             const status = response ? "retry" : "force_done";
             line.setPaymentStatus(status);
-            this._showError(response?.error || _t("Pine Labs get payment status request failed"));
+            const errorMessage =
+                response?.error || _t("Pine Labs get payment status request failed");
+            if (!this.isPaymentScreenActive) {
+                throw new TerminalError(errorMessage);
+            }
+            this._showError(errorMessage);
             if (response) {
                 return resolve(false);
             }
@@ -123,7 +141,12 @@ export class PaymentPineLabs extends PaymentInterface {
     _paymentCancelRequestHandler(response) {
         const line = this.pendingPineLabsPaymentLine();
         if (!response || response?.error) {
-            this._showError(response?.error || _t("Pine Labs payment cancellation request failed"));
+            const errorMessage =
+                response?.error || _t("Pine Labs payment cancellation request failed");
+            if (!this.isPaymentScreenActive) {
+                throw new TerminalError(errorMessage);
+            }
+            this._showError(errorMessage);
             return false;
         } else if (response.notification) {
             if (!line) {
@@ -132,19 +155,26 @@ export class PaymentPineLabs extends PaymentInterface {
                 this._removePaymentHandler();
                 return false;
             }
+            const errorMessage = this.payment_stopped
+                ? _t("Transaction failed due to inactivity")
+                : response.notification;
+            if (!this.isPaymentScreenActive) {
+                this._removePaymentHandler();
+                throw new TerminalError(errorMessage);
+            }
             line.setPaymentStatus("retry");
             if (this.payment_stopped) {
-                this._showError(_t("Transaction failed due to inactivity"));
+                this._showError(errorMessage);
             } else {
-                this.pos.notification.add(response.notification, {
+                this.pos.notification.add(errorMessage, {
                     type: "warning",
                     sticky: false,
                 });
             }
             this._removePaymentHandler();
-            return true;
+            return Promise.resolve(true);
         } else {
-            return false;
+            return Promise.resolve(false);
         }
     }
 
@@ -156,8 +186,7 @@ export class PaymentPineLabs extends PaymentInterface {
         };
 
         const response = await this._callPineLabs(data, "pine_labs_cancel_payment_request");
-
-        return this._paymentCancelRequestHandler(response);
+        return Promise.resolve(this._paymentCancelRequestHandler(response));
     }
 
     /**
@@ -170,7 +199,11 @@ export class PaymentPineLabs extends PaymentInterface {
             (pi) => pi.payment_method_id.payment_provider === "pine_labs"
         ).length;
         if (paymentLine.amount < 0) {
-            this._showError(_t("Cannot process transactions with negative amount."));
+            const errorMessage = _t("Cannot process transactions with negative amount.");
+            if (!this.isPaymentScreenActive) {
+                throw new TerminalError(errorMessage);
+            }
+            this._showError(errorMessage);
             return false;
         }
 
@@ -197,6 +230,7 @@ export class PaymentPineLabs extends PaymentInterface {
      * Also, this method uses polling to check the payment status..
      */
     async _waitForPaymentToConfirm() {
+        this.isPaymentScreenActive = this.pos?.router?.state?.current === "PaymentScreen"; // When returning on payment screen from other screen
         const paymentLine = this.pos.getOrder().getSelectedPaymentline();
         if (
             !paymentLine ||
@@ -210,33 +244,40 @@ export class PaymentPineLabs extends PaymentInterface {
         };
         this._stopPendingPayment().then(() => (this.payment_stopped = true));
         const pineLabsFetchPaymentStatus = async (resolve, reject) => {
-            //Clear the previous timeout before setting a new one
-            clearTimeout(this.pollingTimeout);
+            try {
+                //Clear the previous timeout before setting a new one
+                clearTimeout(this.pollingTimeout);
 
-            // If the user navigates to another screen, stop the polling
-            if (this.pos.router.state.current !== "PaymentScreen") {
-                this._removePaymentHandler();
-                return;
-            }
+                // If the user navigates to another screen, stop the polling
+                const currentScreen = this.pos?.router?.state?.current;
+                if (currentScreen && currentScreen !== "PaymentScreen") {
+                    this._removePaymentHandler();
+                    return resolve(false);
+                }
 
-            if (this.payment_stopped) {
-                this._pineLabsCancel().then(() => {
+                if (this.payment_stopped) {
+                    const response = await this._pineLabsCancel();
                     paymentLine.setPaymentStatus("retry");
                     this.payment_stopped = false;
-                });
-                return resolve(false);
-            }
+                    if (!this.isPaymentScreenActive) {
+                        return resolve(response);
+                    }
+                    return resolve(false);
+                }
 
-            if (paymentLine.payment_status == "retry") {
-                return resolve(false);
+                if (paymentLine.payment_status == "retry") {
+                    return resolve(false);
+                }
+                const response = await this._callPineLabs(data, "pine_labs_fetch_payment_status");
+                return this._paymentStatusRequestHandler(
+                    response,
+                    pineLabsFetchPaymentStatus,
+                    resolve,
+                    reject
+                );
+            } catch (error) {
+                return reject(error);
             }
-            const response = await this._callPineLabs(data, "pine_labs_fetch_payment_status");
-            return this._paymentStatusRequestHandler(
-                response,
-                pineLabsFetchPaymentStatus,
-                resolve,
-                reject
-            );
         };
         return new Promise(pineLabsFetchPaymentStatus);
     }

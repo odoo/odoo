@@ -121,3 +121,7 @@ class PosPaymentMethod(models.Model):
     def _check_razorpay_terminal(self):
         if any(record.payment_provider == 'razorpay' and record.company_id.currency_id.name != 'INR' for record in self):
             raise UserError(_('This Payment Terminal is only valid for INR Currency'))
+
+    @api.model
+    def _allowed_actions_in_self_order(self):
+        return super()._allowed_actions_in_self_order() + ['razorpay_make_payment_request', 'razorpay_fetch_payment_status', 'razorpay_cancel_payment_request']
