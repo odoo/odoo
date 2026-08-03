@@ -568,6 +568,18 @@ class TestChartTemplate(AccountTestInvoicingCommon):
         # Check that tags have been updated
         self.assertEqual(updated_tax.invoice_repartition_line_ids.tag_ids.name, 'tax_tag_name_1 [DUP]')
 
+    def test_reload_keeps_user_translatable_values(self):
+        """ Reloading the chart template must not reset the en_US value of translatable fields
+        changed by the user, the same way the translations in other languages are kept.
+        """
+        tax_group = self.env['account.chart.template'].ref('tax_group_taxes')
+        tax_group.with_context(lang='en_US').name = 'My Taxes'
+
+        with patch.object(AccountChartTemplate, '_get_chart_template_data', side_effect=test_get_data, autospec=True):
+            self.env['account.chart.template'].try_loading('test', company=self.company, install_demo=False)
+
+        self.assertEqual(tax_group.with_context(lang='en_US').name, 'My Taxes')
+
     def test_update_taxes_recreation(self):
         """ When a tax is too different from an existing tax we want to recreate a new tax with new values. """
         def local_get_data(self, template_code, demo=False):
