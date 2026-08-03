@@ -149,7 +149,10 @@ def create(method_name: str):
 
             super().__init__(**{k: v for k, v in kwargs.items() if k in allowed_params})
 
-            faker_method = getattr(Faker(locale), method_name)
+            faker = Faker(locale)
+            faker.random = self.random
+
+            faker_method = getattr(faker, method_name)
             self.method = functools.partial(faker_method, **faker_kwargs)
 
         def _next(self, known_vals):
