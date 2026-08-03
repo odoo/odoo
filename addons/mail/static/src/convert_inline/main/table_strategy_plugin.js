@@ -64,7 +64,7 @@ export class TableStrategyPlugin extends Plugin {
             if (!emailNode.analysis.facts.isTableContainer) {
                 return emailNode;
             }
-            const rowMeasures = this.extractRowsFromBands(emailNode);
+            const rowMeasures = this.extractRowsFromBands(emailNode.lastReferenceNode);
             return this.fillTableContainer(emailNode, rowMeasures);
         },
         refine_layout_processors: [
@@ -655,7 +655,7 @@ export class TableStrategyPlugin extends Plugin {
         return isTableCandidate;
     }
 
-    fillTableContainer(emailNode, rowMeasures, { builders = this.builders } = {}) {
+    fillTableContainer(containerEmailNode, rowMeasures, { builders = this.builders } = {}) {
         const rows = [];
         for (const rowMeasure of rowMeasures) {
             const width = rowMeasure.width;
@@ -665,7 +665,7 @@ export class TableStrategyPlugin extends Plugin {
                 });
             };
             let ratio = 100;
-            const rowEmailNode = builders["row"](rowMeasure);
+            const rowEmailNode = builders["row"](rowMeasure, containerEmailNode);
             rows.push(rowEmailNode);
             for (const cellMeasure of rowMeasure.children) {
                 const widthRatio = this.ratioPercentage(cellMeasure.width, {
@@ -680,16 +680,19 @@ export class TableStrategyPlugin extends Plugin {
                         percentageLeft: ratio,
                     });
                     ratio -= cellMeasure.offsetWidthRatio;
-                    for (const cell of builders["cellWithOffset"](cellMeasure)) {
+                    for (const cell of builders["cellWithOffset"](
+                        cellMeasure,
+                        containerEmailNode
+                    )) {
                         assignRowInfo(cell);
                         rowEmailNode.appendChild(cell);
                     }
                 } else if (cellMeasure.type === "emptyCell") {
-                    const cell = builders["emptyCell"](cellMeasure);
+                    const cell = builders["emptyCell"](cellMeasure, containerEmailNode);
                     assignRowInfo(cell);
                     rowEmailNode.appendChild(cell);
                 } else if (cellMeasure.type === "cell") {
-                    const cell = builders["cell"](cellMeasure);
+                    const cell = builders["cell"](cellMeasure, containerEmailNode);
                     assignRowInfo(cell);
                     rowEmailNode.appendChild(cell);
                 }
@@ -698,12 +701,11 @@ export class TableStrategyPlugin extends Plugin {
         // TODO EGGMAIL: do we need to keep the emailNode if it's a div?
         // At least when it is neutral and has no margin/padding we could
         // replace it by the rows directly
-        emailNode.spliceChildren(0, emailNode.children.length, ...rows);
-        return emailNode;
+        containerEmailNode.spliceChildren(0, containerEmailNode.children.length, ...rows);
+        return containerEmailNode;
     }
 
-    extractRowsFromBands(emailNode) {
-        const referenceNode = emailNode.lastReferenceNode;
+    extractRowsFromBands(referenceNode) {
         const desktopBlock = this.getLayoutBlock(referenceNode, DESKTOP);
         // TODO EGGMAIL: export this computation somewhere, it is used multiple times
         const computedStyle = this.getComputedStyle(desktopBlock.element);
@@ -751,7 +753,6 @@ export class TableStrategyPlugin extends Plugin {
                     needsZoomCorrection,
                     isLast,
                     cluster: prevCluster,
-                    emailNode,
                     width: prevCluster.rect.width,
                     verticalAlign,
                 };
@@ -774,7 +775,6 @@ export class TableStrategyPlugin extends Plugin {
                     needsZoomCorrection,
                     isLast,
                     cluster,
-                    emailNode,
                     width: cluster.rect.width,
                     verticalAlign,
                 };
@@ -836,9 +836,10 @@ export class TableStrategyPlugin extends Plugin {
 
     buildCell(
         { cell, strategy },
-        { contextStyleInfo, cluster, emailNode, widthRatio, verticalAlign, isLast }
+        { contextStyleInfo, cluster, widthRatio, verticalAlign, isLast },
+        containerEmailNode
     ) {
-        const clusterEmailNodes = this.getClusterEmailNodes(emailNode, cluster);
+        const clusterEmailNodes = this.getClusterEmailNodes(containerEmailNode, cluster);
         const refs = { root: {} };
         const style = { width: `${widthRatio}%` };
         const attributes = { width: `${widthRatio}%` };
@@ -899,22 +900,28 @@ export class TableStrategyPlugin extends Plugin {
         return emailNode;
     }
 
-    buildCellWithOffset(context, cellMeasure) {
+    buildCellWithOffset(context, cellMeasure, containerEmailNode) {
         const cells = [];
-        const offsetEmailNode = context.builders["emptyCell"]({
-            ...cellMeasure,
-            width: cellMeasure.offsetWidth,
-            widthRatio: cellMeasure.offsetWidthRatio,
-            isLast: false,
-            offsetWidth: undefined,
-            offsetWidthRatio: undefined,
-        });
-        const cellEmailNode = context.builders["cell"]({
-            ...cellMeasure,
-            needsZoomCorrection: false,
-            offsetWidth: undefined,
-            offsetWidthRatio: undefined,
-        });
+        const offsetEmailNode = context.builders["emptyCell"](
+            {
+                ...cellMeasure,
+                width: cellMeasure.offsetWidth,
+                widthRatio: cellMeasure.offsetWidthRatio,
+                isLast: false,
+                offsetWidth: undefined,
+                offsetWidthRatio: undefined,
+            },
+            containerEmailNode
+        );
+        const cellEmailNode = context.builders["cell"](
+            {
+                ...cellMeasure,
+                needsZoomCorrection: false,
+                offsetWidth: undefined,
+                offsetWidthRatio: undefined,
+            },
+            containerEmailNode
+        );
         cells.push(offsetEmailNode, cellEmailNode);
         return cells;
     }

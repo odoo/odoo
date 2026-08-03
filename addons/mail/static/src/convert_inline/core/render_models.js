@@ -350,6 +350,11 @@ export class EmailNode {
         return this.referenceNodes.push(...referenceNodes);
     }
 
+    setParent(parentEmailNode) {
+        parentEmailNode.appendChild(this);
+        return true;
+    }
+
     appendChild(emailNode) {
         if (emailNode.parent && emailNode.parent !== this) {
             emailNode.parent.removeChild(emailNode);

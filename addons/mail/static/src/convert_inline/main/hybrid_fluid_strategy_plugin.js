@@ -190,7 +190,7 @@ export class HybridFluidStrategyPlugin extends Plugin {
         if (!emailNode.analysis.facts.isHybridFluidContainer) {
             return emailNode;
         }
-        const rowMeasures = this.extractRowsFromBands(emailNode);
+        const rowMeasures = this.extractRowsFromBands(emailNode.lastReferenceNode);
         const firstRowMeasure = rowMeasures.at(0);
         let verticalAlign;
         if (firstRowMeasure) {
@@ -275,9 +275,10 @@ export class HybridFluidStrategyPlugin extends Plugin {
 
     buildHybridCell(
         { cell, strategy },
-        { needsZoomCorrection, cluster, emailNode, width, verticalAlign }
+        { needsZoomCorrection, cluster, width, verticalAlign },
+        containerEmailNode
     ) {
-        const clusterEmailNodes = this.getClusterEmailNodes(emailNode, cluster);
+        const clusterEmailNodes = this.getClusterEmailNodes(containerEmailNode, cluster);
         const refs = { root: {} };
         const cellWidth = width - (needsZoomCorrection ? ZOOM_WIDTH_CORRECTION : 0);
         Object.assign(refs.root, {
@@ -325,26 +326,32 @@ export class HybridFluidStrategyPlugin extends Plugin {
         return emailNode;
     }
 
-    buildHybridCellWithOffset(context, cellMeasure) {
+    buildHybridCellWithOffset(context, cellMeasure, containerEmailNode) {
         const { needsZoomCorrection, width, offsetWidth, offsetWidthRatio } = cellMeasure;
         const refs = { root: {} };
         const cells = [];
         const cellOffsetWidth = offsetWidth - (needsZoomCorrection ? ZOOM_WIDTH_CORRECTION : 0);
         const cellWidth = width + cellOffsetWidth;
-        const offsetEmailNode = context.builders["emptyCell"]({
-            ...cellMeasure,
-            width: cellOffsetWidth,
-            widthRatio: offsetWidthRatio,
-            isLast: false,
-            offsetWidth: undefined,
-            offsetWidthRatio: undefined,
-        });
-        const cellEmailNode = context.builders["cell"]({
-            ...cellMeasure,
-            needsZoomCorrection: false,
-            offsetWidth: undefined,
-            offsetWidthRatio: undefined,
-        });
+        const offsetEmailNode = context.builders["emptyCell"](
+            {
+                ...cellMeasure,
+                width: cellOffsetWidth,
+                widthRatio: offsetWidthRatio,
+                isLast: false,
+                offsetWidth: undefined,
+                offsetWidthRatio: undefined,
+            },
+            containerEmailNode
+        );
+        const cellEmailNode = context.builders["cell"](
+            {
+                ...cellMeasure,
+                needsZoomCorrection: false,
+                offsetWidth: undefined,
+                offsetWidthRatio: undefined,
+            },
+            containerEmailNode
+        );
         Object.assign(refs.root, { style: { "max-width": `${cellWidth}px` } });
         const cellWithOffsetEmailNode = new EmailNode({
             layout: new context.cell.Layout({ refs }),
