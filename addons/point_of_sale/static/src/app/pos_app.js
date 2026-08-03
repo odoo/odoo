@@ -57,7 +57,12 @@ export class Chrome extends Component {
         });
     }
 
-    sendOrderToCustomerDisplay({ selectedOrder }, routerState) {
+    /**
+     * `customerDisplayRefreshId` is only read to subscribe to it: a display that
+     * connects or was reloaded bumps it, which runs this again and pushes it the
+     * current order instead of leaving it blank until the next change.
+     */
+    sendOrderToCustomerDisplay({ selectedOrder, customerDisplayRefreshId }, routerState) {
         if (routerState.current === "SaverScreen" || routerState.current === "LoginScreen") {
             this.adapter.displayScreenSaver();
         } else if (selectedOrder) {
