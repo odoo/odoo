@@ -130,8 +130,9 @@ class AccountPayment(models.Model):
     #=== ACTION METHODS ===#
 
     def action_post(self):
-        # Post the payments "normally" if no transactions are needed.
-        # If not, let the provider update the state.
+        # Post the payments "normally" even if a transaction is needed; payments for failed
+        # transactions will be canceled during their post-processing.
+        res = super().action_post()
 
         payments_need_tx = self.filtered(
             lambda p: p.payment_token_id and not p.payment_transaction_id
@@ -139,22 +140,8 @@ class AccountPayment(models.Model):
         # creating the transaction require to access data on payment providers, not always accessible to users
         # able to create payments
         transactions = payments_need_tx.sudo()._create_payment_transaction()
-
-        res = super(AccountPayment, self - payments_need_tx).action_post()
-
         for tx in transactions:  # Process the transactions with a payment by token
             tx._charge_with_token()
-
-        # Post payments for issued transactions
-        transactions._post_process()
-        payments_tx_done = payments_need_tx.filtered(
-            lambda p: p.payment_transaction_id.state == 'done'
-        )
-        super(AccountPayment, payments_tx_done).action_post()
-        payments_tx_not_done = payments_need_tx.filtered(
-            lambda p: p.payment_transaction_id.state not in ('done', 'pending', 'authorized')
-        )
-        payments_tx_not_done.action_cancel()
 
         return res
 
