@@ -8,7 +8,7 @@ import {
     queryRect,
     resize,
 } from "@odoo/hoot-dom";
-import { animationFrame, mockTimeZone } from "@odoo/hoot-mock";
+import { animationFrame, mockDate, mockTimeZone } from "@odoo/hoot-mock";
 import {
     editTime,
     getPickerCell,
@@ -560,6 +560,27 @@ test("edit a datetime field in form view with show_seconds option", async () => 
     expect(".o_input:eq(1)").toHaveValue("02/08/2017 11:00:30", {
         message: "seconds should be visible for showSeconds true",
     });
+});
+
+test("datetime field can set a value relative to the current time when opened", async () => {
+    mockDate("2026-01-01T12:45:01");
+    Partner._onChanges.datetime = () => {};
+    onRpc("onchange", () => expect.step("onchange"));
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 2,
+        arch: /* xml */ `
+            <form>
+                <field name="datetime" options="{'set_delta_minutes_on_open': 11}"/>
+            </form>`,
+    });
+
+    await click(".o_field_datetime input");
+    await animationFrame();
+    expect(queryFirst(".o_time_picker_input").value).toMatch(/:56$/);
+    expect.verifySteps(["onchange"]);
 });
 
 test("datetime field (with widget) in kanban with show_time option", async () => {

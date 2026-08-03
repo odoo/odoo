@@ -31,6 +31,7 @@ const { DateTime } = luxon;
  *  numeric?: boolean;
  *  minPrecision?: string;
  *  maxPrecision?: string;
+ *  setDeltaMinutesOnOpen?: number;
  * }} DateTimeFieldProps
  *
  * @typedef {import("@web/core/datetime/datetime_picker").DateTimePickerProps} DateTimePickerProps
@@ -52,6 +53,7 @@ export const dateTimeFieldProps = {
     showTime: t.boolean().optional(true),
     minPrecision: t.selection(["days", "months", "years", "decades"]).optional(),
     maxPrecision: t.selection(["days", "months", "years", "decades"]).optional(),
+    setDeltaMinutesOnOpen: t.number().optional(),
 };
 
 /** @extends {Component<DateTimeFieldProps>} */
@@ -394,6 +396,16 @@ export class DateTimeField extends Component {
         this.triggerIsDirty(true);
     }
 
+    onInputClick(fieldName) {
+        if (this.props.setDeltaMinutesOnOpen !== undefined && this.isEmpty(fieldName)) {
+            this.props.record.update({
+                [fieldName]: DateTime.local().plus({
+                    minutes: this.props.setDeltaMinutesOnOpen,
+                }),
+            });
+        }
+    }
+
     onInputBlured() {
         this.triggerIsDirty();
         if (!this.isPickerOpen()) {
@@ -489,6 +501,7 @@ export const dateField = {
         warnFuture: Boolean(options.warn_future),
         minPrecision: options.min_precision,
         maxPrecision: options.max_precision,
+        setDeltaMinutesOnOpen: options.set_delta_minutes_on_open,
     }),
     listViewWidth: ({ options }) =>
         options.numeric ? FIELD_WIDTHS.numeric_date : FIELD_WIDTHS.date,
@@ -528,6 +541,14 @@ export const dateTimeField = {
             default: 5,
             help: _t(
                 `Control the number of minutes in the time selection. E.g. set it to 15 to work in quarters.`
+            ),
+        },
+        {
+            label: _t("Set on open"),
+            name: "set_delta_minutes_on_open",
+            type: "number",
+            help: _t(
+                `When the field is empty, set it to the current time plus this number of minutes when opened.`
             ),
         },
         {
