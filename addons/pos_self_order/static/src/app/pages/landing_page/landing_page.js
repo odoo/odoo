@@ -107,11 +107,18 @@ export class LandingPage extends Component {
         ) {
             return;
         }
-        if (this.selfOrder.hasPresets() && !this.selfOrder.currentOrder.preset_id) {
-            this.router.navigate("location");
-        } else {
-            this.router.navigate("product_list");
+
+        if (this.selfOrder.config.use_presets && !this.selfOrder.currentOrder.preset_id) {
+            const availablePresets = this.selfOrder.availablePresets;
+            if (availablePresets.length === 1) {
+                this.selfOrder.currentOrder.setPreset(availablePresets[0]);
+            } else {
+                this.router.navigate("location");
+                return;
+            }
         }
+
+        this.router.navigate("product_list");
     }
 
     openLanguages() {
