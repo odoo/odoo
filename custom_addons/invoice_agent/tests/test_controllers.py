@@ -37,11 +37,13 @@ class TestInvoiceAgentControllers(HttpCase):
         super().setUpClass()
         expiration = fields.Datetime.now() + timedelta(days=30)
 
-        apikeys = cls.env["res.users.apikeys"].sudo()
+        # Ensure keys are associated with a valid active user (e.g., admin)
+        cls.user_admin = cls.env.ref("base.user_admin")
+        apikeys = cls.env["res.users.apikeys"].sudo().with_user(cls.user_admin)
 
         def _generate_key(scope, name):
-            # Safe extraction: handle single string return or tuple return
             res = apikeys._generate(scope, name, expiration)
+            # Unpack key safely if returned as (id, raw_key)
             return res[1] if isinstance(res, (tuple, list)) else res
 
         cls.rpc_key = _generate_key("rpc", "test rpc key")
@@ -132,28 +134,13 @@ class TestInvoiceAgentControllers(HttpCase):
         self.assertIn("error", response.json())
 
     def test_upload_rejects_after_key_revocation(self):
-        res = (
-            self.env["res.users.apikeys"]
-            .sudo()
-            .env.user._generate_apikey(
-                scope="rpc",
-                name="to revoke",
-                expiration=fields.Datetime.now() + timedelta(days=1),
-            )
-            if hasattr(self.env.user, "_generate_apikey")
-            else self.env["res.users.apikeys"]
-            .sudo()
-            ._generate("rpc", "to revoke", fields.Datetime.now() + timedelta(days=1))
-        )
+        apikeys = self.env["res.users.apikeys"].sudo().with_user(self.user_admin)
+        res = apikeys._generate("rpc", "to revoke", fields.Datetime.now() + timedelta(days=1))
+        
+        raw_key = res[1] if isinstance(res, (tuple, list)) else res
 
-        if isinstance(res, (tuple, list)):
-            key_id, raw_key = res[0], res[1]
-        else:
-            raw_key = res
-            key_record = self.env["res.users.apikeys"].sudo().search([], order="id desc", limit=1)
-            key_id = key_record.id
-
-        self.env["res.users.apikeys"].sudo().revoke(key_id)
+        # Revoke expects the raw_key string in Odoo API key implementation
+        apikeys.revoke(raw_key)
 
         response = self._upload(
             headers={"Authorization": f"Bearer {raw_key}"},
