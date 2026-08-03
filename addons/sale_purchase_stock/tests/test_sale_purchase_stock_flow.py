@@ -490,8 +490,8 @@ class TestSalePurchaseStockFlow(TransactionCase):
         self.assertListEqual(sale_orders.picking_ids.move_ids.mapped('procure_method'), ['make_to_order', 'make_to_order'])
         purchase_orders = sale_orders._get_purchase_orders()
         purchase_orders.button_confirm()
-        self.assertListEqual(sale_orders.picking_ids.move_ids.move_orig_ids.ids, purchase_orders.picking_ids.move_ids.ids)
-        purchase_orders.picking_ids.action_cancel()
+        self.assertListEqual(sale_orders.picking_ids.move_ids.move_orig_ids.ids, purchase_orders.order_line.move_ids.picking_id.move_ids.ids)
+        purchase_orders.order_line.move_ids.picking_id.action_cancel()
         self.assertListEqual(sale_orders.picking_ids.mapped('state'), ['confirmed', 'confirmed'])
         self.assertFalse(sale_orders.picking_ids.move_ids.move_orig_ids)
         sale_orders.picking_ids.action_assign()
@@ -655,6 +655,6 @@ class TestSalePurchaseStockFlow(TransactionCase):
         po = so._get_purchase_orders()
         po.button_confirm()
         po.order_line.product_qty = 10.0
-        self.assertEqual(po.picking_ids.move_ids.quantity, 10.0)
+        self.assertEqual(po.order_line.move_ids.picking_id.move_ids.quantity, 10.0)
         po.order_line.product_qty = 5.0
-        self.assertEqual(po.picking_ids.move_ids.quantity, 5.0)
+        self.assertEqual(po.order_line.move_ids.picking_id.move_ids.quantity, 5.0)

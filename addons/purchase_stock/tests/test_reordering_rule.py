@@ -22,6 +22,7 @@ class TestReorderingRule(TransactionCase):
     def setUpClass(cls):
         super(TestReorderingRule, cls).setUpClass()
         cls.env.user.group_ids += cls.env.ref('uom.group_uom')
+        cls.env.user.group_ids += cls.env.ref('stock.group_production_lot')
         cls.partner = cls.env['res.partner'].create({
             'name': 'Smith'
         })
@@ -120,18 +121,18 @@ class TestReorderingRule(TransactionCase):
         purchase_order.order_line.product_qty = 12
         purchase_order.button_confirm()
 
-        self.assertEqual(purchase_order.picking_ids.move_ids.filtered(lambda m: m.product_id == self.product_01).product_qty, 12)
-        purchase_order.picking_ids.button_validate()
-        next_picking = purchase_order.picking_ids.move_ids.move_dest_ids.picking_id
+        self.assertEqual(purchase_order.order_line.move_ids.picking_id.move_ids.filtered(lambda m: m.product_id == self.product_01).product_qty, 12)
+        purchase_order.order_line.move_ids.picking_id.button_validate()
+        next_picking = purchase_order.order_line.move_ids.picking_id.move_ids.move_dest_ids.picking_id
         self.assertEqual(len(next_picking), 1)
         self.assertEqual(next_picking.move_ids.filtered(lambda m: m.product_id == self.product_01).product_qty, 12)
 
         # Increase the quantity on the PO
         purchase_order.order_line.product_qty = 15
-        receipt1, receipt2 = purchase_order.picking_ids
+        receipt1, receipt2 = purchase_order.order_line.move_ids.picking_id
         self.assertEqual(receipt1.move_ids.product_qty, 12)
         self.assertEqual(receipt2.move_ids.product_qty, 3)
-        purchase_order.picking_ids[1].button_validate()
+        receipt2.button_validate()
         self.assertEqual(next_picking.move_ids.product_qty, 15)
 
     def test_reordering_rule_2(self):
