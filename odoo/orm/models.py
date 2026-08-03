@@ -4642,7 +4642,7 @@ class BaseModel(metaclass=MetaModel):
             if r_id:
                 data['record'] = record
                 imd_data_list.append(data)
-                if not (update and d_noupdate):
+                if update and not d_noupdate:
                     to_update.append(data)
             else:
                 imd.browse(d_id).unlink()
