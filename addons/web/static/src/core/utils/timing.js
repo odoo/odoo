@@ -213,7 +213,6 @@ export function useThrottleForAnimation(func) {
     return throttledForAnimation;
 }
 
-
 /**
  * Hook that animates a progress value from 0 to 1 over a given duration.
  * The animation starts immediately and is automatically stopped when the
@@ -238,21 +237,21 @@ export function useTimer(duration) {
                 animate();
             }
         });
-    }
+    };
 
     const stop = () => cancelAnimationFrame(rId);
 
     const reset = () => {
-        stop()
+        stop();
         start = Date.now();
         animate();
-    }
+    };
 
     const resume = () => {
         stop();
-        start = Date.now() - (progress() * duration);
+        start = Date.now() - progress() * duration;
         animate();
-    }
+    };
 
     animate();
 
