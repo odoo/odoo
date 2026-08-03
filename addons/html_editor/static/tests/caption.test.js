@@ -1710,3 +1710,47 @@ test("pressing Enter inside o_caption_editable should do nothing", async () => {
         ),
     });
 });
+
+test("should ignore figure without image", async () => {
+    const caption = "Quote";
+    await testEditor({
+        config: configWithEmbeddedCaption,
+        contentBefore: unformat(
+            `<figure>
+                <blockquote>
+                    Random Quote
+                </blockquote>
+                <figcaption>${caption}</figcaption>
+            </figure>`
+        ),
+        contentAfter: unformat(
+            `<figure>
+                <blockquote>
+                    Random Quote
+                </blockquote>
+                <figcaption>${caption}</figcaption>
+            </figure>`
+        ),
+    });
+});
+
+test("should ignore figure with multiple images", async () => {
+    const caption = "Two Images";
+    await testEditor({
+        config: configWithEmbeddedCaption,
+        contentBefore: unformat(
+            `<figure>
+                <img src="${base64Img}" alt="First image">
+                <img src="${base64Img}" alt="Second image">
+                <figcaption>${caption}</figcaption>
+            </figure>`
+        ),
+        contentAfter: unformat(
+            `<figure>
+                <img src="${base64Img}" alt="First image">
+                <img src="${base64Img}" alt="Second image">
+                <figcaption>${caption}</figcaption>
+            </figure>`
+        ),
+    });
+});
