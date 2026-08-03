@@ -89,38 +89,38 @@ test("should remove bold format (7)", async () => {
 });
 test("should remove bold format (8)", async () => {
     await testEditor({
-        contentBefore: '<div>ab<font style="font-weight: bold">[cd]</font>ef</div>',
+        contentBefore: '<div>ab<span style="font-weight: bold">[cd]</span>ef</div>',
         stepFunction: (editor) => execCommand(editor, "removeFormat"),
         contentAfter: "<div>ab[cd]ef</div>",
     });
 });
 test("should remove bold format (9)", async () => {
     await testEditor({
-        contentBefore: '<div>ab<font style="font-weight: bolder">[cd]</font>ef</div>',
+        contentBefore: '<div>ab<span style="font-weight: bolder">[cd]</span>ef</div>',
         stepFunction: (editor) => execCommand(editor, "removeFormat"),
         contentAfter: "<div>ab[cd]ef</div>",
     });
 });
 test("should remove bold format (10)", async () => {
     await testEditor({
-        contentBefore: '<div>ab<font style="font-weight: 500">[cd]</font>ef</div>',
+        contentBefore: '<div>ab<span style="font-weight: 500">[cd]</span>ef</div>',
         stepFunction: (editor) => execCommand(editor, "removeFormat"),
         contentAfter: "<div>ab[cd]ef</div>",
     });
 });
 test("should remove bold format (11)", async () => {
     await testEditor({
-        contentBefore: '<div>ab<font style="font-weight: 600">[cd]</font>ef</div>',
+        contentBefore: '<div>ab<span style="font-weight: 600">[cd]</span>ef</div>',
         stepFunction: (editor) => execCommand(editor, "removeFormat"),
         contentAfter: "<div>ab[cd]ef</div>",
     });
 });
 test("should remove bold format (12)", async () => {
     await testEditor({
-        contentBefore: '<div>a<font style="font-weight: 600">b[cd]e</font>f</div>',
+        contentBefore: '<div>a<span style="font-weight: 600">b[cd]e</span>f</div>',
         stepFunction: (editor) => execCommand(editor, "removeFormat"),
         contentAfter:
-            '<div>a<font style="font-weight: 600">b</font>[cd]<font style="font-weight: 600">e</font>f</div>',
+            '<div>a<span style="font-weight: 600">b</span>[cd]<span style="font-weight: 600">e</span>f</div>',
     });
 });
 test("should remove bold format (13)", async () => {
@@ -195,17 +195,17 @@ test("should remove italic format (7)", async () => {
 });
 test("should remove italic format (8)", async () => {
     await testEditor({
-        contentBefore: '<div>ab<font style="font-style: italic">[cd]</font>ef</div>',
+        contentBefore: '<div>ab<span style="font-style: italic">[cd]</span>ef</div>',
         stepFunction: (editor) => execCommand(editor, "removeFormat"),
         contentAfter: "<div>ab[cd]ef</div>",
     });
 });
 test("should remove italic format (9)", async () => {
     await testEditor({
-        contentBefore: '<div>a<font style="font-style: italic">b[cd]e</font>f</div>',
+        contentBefore: '<div>a<span style="font-style: italic">b[cd]e</span>f</div>',
         stepFunction: (editor) => execCommand(editor, "removeFormat"),
         contentAfter:
-            '<div>a<font style="font-style: italic">b</font>[cd]<font style="font-style: italic">e</font>f</div>',
+            '<div>a<span style="font-style: italic">b</span>[cd]<span style="font-style: italic">e</span>f</div>',
     });
 });
 test("should remove italic format with shortcut", async () => {
@@ -266,25 +266,25 @@ test("should remove underline format (7)", async () => {
 });
 test("should remove underline format (8)", async () => {
     await testEditor({
-        contentBefore: '<div>ab<font style="text-decoration: underline">[cd]</font>ef</div>',
+        contentBefore: '<div>ab<span style="text-decoration: underline">[cd]</span>ef</div>',
         stepFunction: (editor) => execCommand(editor, "removeFormat"),
         contentAfter: "<div>ab[cd]ef</div>",
     });
 });
 test("should remove underline format (9)", async () => {
     await testEditor({
-        contentBefore: '<div>a<font style="text-decoration: underline">b[cd]e</font>f</div>',
+        contentBefore: '<div>a<span style="text-decoration: underline">b[cd]e</span>f</div>',
         stepFunction: (editor) => execCommand(editor, "removeFormat"),
         contentAfter:
-            '<div>a<font style="text-decoration: underline">b</font>[cd]<font style="text-decoration: underline">e</font>f</div>',
+            '<div>a<span style="text-decoration: underline">b</span>[cd]<span style="text-decoration: underline">e</span>f</div>',
     });
 });
 test("should remove underline format (10)", async () => {
     await testEditor({
-        contentBefore: '<div>a<font style="text-decoration-line: underline">b[cd]e</font>f</div>',
+        contentBefore: '<div>a<span style="text-decoration-line: underline">b[cd]e</span>f</div>',
         stepFunction: (editor) => execCommand(editor, "removeFormat"),
         contentAfter:
-            '<div>a<font style="text-decoration-line: underline">b</font>[cd]<font style="text-decoration-line: underline">e</font>f</div>',
+            '<div>a<span style="text-decoration-line: underline">b</span>[cd]<span style="text-decoration-line: underline">e</span>f</div>',
     });
 });
 test("should remove underline format with shortcut", async () => {
@@ -345,26 +345,26 @@ test("should remove striketrough format (7)", async () => {
 });
 test("should remove striketrough format (8)", async () => {
     await testEditor({
-        contentBefore: '<div>ab<font style="text-decoration: line-through">[cd]</font>ef</div>',
+        contentBefore: '<div>ab<span style="text-decoration: line-through">[cd]</span>ef</div>',
         stepFunction: (editor) => execCommand(editor, "removeFormat"),
         contentAfter: "<div>ab[cd]ef</div>",
     });
 });
 test("should remove striketrough format (9)", async () => {
     await testEditor({
-        contentBefore: '<div>a<font style="text-decoration: line-through">b[cd]e</font>f</div>',
+        contentBefore: '<div>a<span style="text-decoration: line-through">b[cd]e</span>f</div>',
         stepFunction: (editor) => execCommand(editor, "removeFormat"),
         contentAfter:
-            '<div>a<font style="text-decoration: line-through">b</font>[cd]<font style="text-decoration: line-through">e</font>f</div>',
+            '<div>a<span style="text-decoration: line-through">b</span>[cd]<span style="text-decoration: line-through">e</span>f</div>',
     });
 });
 test("should remove striketrough format (10)", async () => {
     await testEditor({
         contentBefore:
-            '<div>a<font style="text-decoration-line: line-through">b[cd]e</font>f</div>',
+            '<div>a<span style="text-decoration-line: line-through">b[cd]e</span>f</div>',
         stepFunction: (editor) => execCommand(editor, "removeFormat"),
         contentAfter:
-            '<div>a<font style="text-decoration-line: line-through">b</font>[cd]<font style="text-decoration-line: line-through">e</font>f</div>',
+            '<div>a<span style="text-decoration-line: line-through">b</span>[cd]<span style="text-decoration-line: line-through">e</span>f</div>',
     });
 });
 test("should remove text color (1)", async () => {
