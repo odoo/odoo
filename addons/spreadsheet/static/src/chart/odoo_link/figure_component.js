@@ -5,7 +5,7 @@ import { navigateToOdoolinkFromChart } from "../odoo_chart/odoo_chart_helpers";
 import { SEE_RECORD_LIST, SEE_RECORD_LIST_VISIBLE } from "../../list/list_actions";
 import { SEE_RECORDS_PIVOT, SEE_RECORDS_PIVOT_VISIBLE } from "../../pivot/pivot_actions";
 
-const { computeCachedTextDimension } = spreadsheet.helpers;
+const { computeCachedTextDimension, isFormula } = spreadsheet.helpers;
 
 function inSection(ctx, mouseY, sectionY, sectionFont) {
     const sectionHeight = computeCachedTextDimension(ctx, "text", sectionFont).height;
@@ -48,9 +48,12 @@ patch(spreadsheet.components.ScorecardChart.prototype, {
         if (section === "KEY" || section === "BASELINE") {
             const def = this.env.model.getters.getChartDefinition(this.props.chartId);
             const positionString = section === "KEY" ? def.keyValue : def.baseline;
+            if (positionString && !isFormula(positionString)) {
+                return;
+            }
             const range = this.env.model.getters.getRangeFromSheetXC(
                 this.env.model.getters.getActiveSheetId(),
-                positionString
+                positionString.slice(1)
             );
             let position = undefined;
             if (!range.invalidSheetName && range.sheetId) {
@@ -82,9 +85,12 @@ patch(spreadsheet.components.ScorecardChart.prototype, {
         if (section === "KEY" || section === "BASELINE") {
             const def = this.env.model.getters.getChartDefinition(this.props.chartId);
             const positionString = section === "KEY" ? def.keyValue : def.baseline;
+            if (positionString && !isFormula(positionString)) {
+                return;
+            }
             const range = this.env.model.getters.getRangeFromSheetXC(
                 this.env.model.getters.getActiveSheetId(),
-                positionString
+                positionString.slice(1)
             );
             let position = undefined;
             if (!range.invalidSheetName && range.sheetId) {
