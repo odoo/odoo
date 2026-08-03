@@ -41,12 +41,12 @@
             </t>
 
             <!-- Separator -->
-            <t t-if="showSeparator">
+            <t t-if="showSeparator and !this.areDatesEqualValues()">
                 <i class="oi" data-icon="east" aria-label="Arrow icon" title="Arrow" />
             </t>
 
             <!-- End date -->
-            <t t-if="this.endDateField">
+            <t t-if="this.endDateField and !this.areDatesEqualValues()">
                 <t t-if="this.props.readonly">
                     <span class="text-truncate" t-out="this.getFormattedValue(1)" t-att-data-tooltip="this.getFormattedValue(1, true)"/>
                 </t>
