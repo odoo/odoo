@@ -91,4 +91,4 @@ class PurchaseTestCommon(TestStockValuationCommon):
             cls._test_user.sudo().company_ids = [(4, cls.company.id)]
         cls.purchase_user = cls._create_new_internal_user(name='Purchase User', login='purchase_user', groups='purchase.group_purchase_user')
         cls.route_buy = cls.warehouse.buy_pull_id.route_id
-
+        cls.route_buy.product_selectable = True

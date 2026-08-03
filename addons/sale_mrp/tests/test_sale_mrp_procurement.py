@@ -21,8 +21,9 @@ class TestSaleMrpProcurement(TransactionCase):
         self.env.user.group_ids += self.env.ref('uom.group_uom')
         # Required for `tracking` to be visible in the view
         self.env.user.group_ids += self.env.ref('stock.group_production_lot')
-        self.env.ref('stock.route_warehouse0_mto').active = True
         warehouse0 = self.env.ref('stock.warehouse0')
+        route_mto = warehouse0.mto_pull_id.route_id
+        route_mto.active = True
         # In order to test the sale_mrp module in OpenERP, I start by creating a new product 'Slider Mobile'
         # I define product category Mobile Products Sellable.
 
@@ -46,8 +47,7 @@ class TestSaleMrpProcurement(TransactionCase):
         product.tracking = 'none'
         product.uom_id = uom_unit
         product.route_ids.clear()
-        product.route_ids.add(warehouse0.manufacture_pull_id.route_id)
-        product.route_ids.add(warehouse0.mto_pull_id.route_id)
+        product.route_ids.add(route_mto)
         product_template_slidermobile0 = product.save()
 
         product_template_slidermobile0.standard_price = 189
@@ -93,13 +93,14 @@ class TestSaleMrpProcurement(TransactionCase):
         self.env.user.group_ids += self.env.ref('stock.group_adv_location')
         # Required for `tracking` to be visible in the view
         self.env.user.group_ids += self.env.ref('stock.group_production_lot')
-        self.env.ref('stock.route_warehouse0_mto').active = True
         # Create warehouse
         self.customer_location = self.env['ir.model.data']._xmlid_to_res_id('stock.stock_location_customers')
         self.warehouse = self.env['stock.warehouse'].sudo().create({
             'name': 'Test Warehouse',
             'code': 'TWH'
         })
+        route_mto = self.warehouse.mto_pull_id.route_id
+        route_mto.active = True
 
         self.uom_unit = self.env.ref('uom.product_uom_unit')
 
@@ -116,8 +117,7 @@ class TestSaleMrpProcurement(TransactionCase):
         product_form.uom_id = self.uom_unit
         product_form.tracking = 'none'
         product_form.route_ids.clear()
-        product_form.route_ids.add(self.warehouse.manufacture_pull_id.route_id)
-        product_form.route_ids.add(self.warehouse.mto_pull_id.route_id)
+        product_form.route_ids.add(route_mto)
         self.finished_product = product_form.save()
 
         # Create manifactured product which uses another manifactured
@@ -125,8 +125,7 @@ class TestSaleMrpProcurement(TransactionCase):
         product_form.name = 'Arrow'
         product_form.tracking = 'none'
         product_form.route_ids.clear()
-        product_form.route_ids.add(self.warehouse.manufacture_pull_id.route_id)
-        product_form.route_ids.add(self.warehouse.mto_pull_id.route_id)
+        product_form.route_ids.add(route_mto)
         self.complex_product = product_form.save()
 
         ## Create raw product for manufactured product
@@ -201,7 +200,6 @@ class TestSaleMrpProcurement(TransactionCase):
         RR min=max=0. Confirm a SO with that product -> It should generate a MO
         """
         warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
-        manufacture_route = warehouse.manufacture_pull_id.route_id
 
         warehouse.manufacture_steps = 'pbm_sam'
         warehouse.sam_loc_id.location_id = warehouse.lot_stock_id
@@ -209,7 +207,6 @@ class TestSaleMrpProcurement(TransactionCase):
         product, component = self.env['product.product'].create([{
             'name': 'Finished',
             'is_storable': True,
-            'route_ids': [(6, 0, manufacture_route.ids)],
         }, {
             'name': 'Component',
             'type': 'consu',
@@ -291,7 +288,6 @@ class TestSaleMrpProcurement(TransactionCase):
         Create a second SO with 510g -> It should update the MO to 1020g.
         """
         warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
-        manufacture_route = warehouse.manufacture_pull_id.route_id
         mto_route = warehouse.mto_pull_id.route_id
         mto_route.active = True
 
@@ -302,10 +298,7 @@ class TestSaleMrpProcurement(TransactionCase):
             'name': 'Finished',
             'is_storable': True,
             'uom_id': uom_kg.id,
-            'route_ids': [
-                Command.link(manufacture_route.id),
-                Command.link(mto_route.id),
-            ],
+            'route_ids': [Command.set([mto_route.id])],
         }, {
             'name': 'Component',
             'type': 'consu',

@@ -27,10 +27,7 @@ class BaseTestUi(AccountTestMockOnlineSyncCommon):
             'product_selectable': True,
         })
         # Enable Make to Order
-        self.env.ref('stock.route_warehouse0_mto').write({
-            'active': True,
-            'product_selectable': True,
-        })
+        self.env.ref('stock.route_warehouse0_mto').active = True
 
         # Define minimal accounting data to run without CoA
         a_suspense = self.env['account.account'].create({

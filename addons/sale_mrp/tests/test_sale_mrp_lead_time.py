@@ -25,8 +25,7 @@ class TestSaleMrpLeadTime(TestStockCommon):
             p1.tracking = 'none'
             p1.sale_delay = 5.0
             p1.route_ids.clear()
-            p1.route_ids.add(cls.warehouse_1.manufacture_pull_id.route_id)
-            p1.route_ids.add(cls.warehouse_1.mto_pull_id.route_id)
+            p1.route_ids.add(cls.route_mto)
 
         # Update the product_2 with type
         with Form(cls.product_2) as p2:
