@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="product_pricelist_item_form_view_inherit_pos" model="ir.ui.view">
+        <field name="name">product.pricelist.item.view.form.inherit.pos</field>
+        <field name="model">product.pricelist.item</field>
+        <field name="inherit_id" ref="product.product_pricelist_item_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='categ_id']" position="after">
+                <field name="pos_categ_id"
+                    options="{'no_create': 1}"
+                    invisible="display_applied_on != '4_pos_category'"
+                    placeholder="All PoS Categories"/>
+            </xpath>
+            <xpath expr="//group[@name='pricelist_rule_computation']" position="before">
+                <div invisible="display_applied_on != '4_pos_category'"
+                    class="bg-opacity-25 bg-warning text-center py-2 rounded mb-3">
+                    ⚠️ POS category-based rules are applicable only within the Point of Sale. ⚠️
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>
