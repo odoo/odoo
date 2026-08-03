@@ -77,6 +77,20 @@ class OnchangeChecker(ast.NodeVisitor):
                 break
 
 
+class ImportOrmChecker(ast.NodeVisitor):
+    def add_error(self, node):
+        pass
+
+    def visit_Import(self, node):
+        for name in node.names:
+            if name.name.startswith('odoo.orm'):
+                self.add_error(node)
+
+    def visit_ImportFrom(self, node):
+        if (node.module and node.module.startswith('odoo.orm')) or (node.module == 'odoo' and any(name.name == 'orm' for name in node.names)):
+            self.add_error(node)
+
+
 class TestOrmCacheDecoratorWarnings(LintCase):
     def test_missing_method_params_in_cache_key_warns(self):
         checker = OrmcacheParamsChecker()
@@ -108,3 +122,15 @@ class TestOrmCacheDecoratorWarnings(LintCase):
         if rs:
             rs.insert(0, "probable domains in onchanges at:")
             self.fail("\n- ".join(rs))
+
+    def test_addons_orm_import(self):
+        """ Test that odoo.orm is not imported in Odoo modules"""
+        checker = ImportOrmChecker()
+        errors = []
+        for path in self.iter_module_files('*.py'):
+            checker.add_error = lambda node: node.lineno not in self.noqa_lines(path) and errors.append(path)
+            self.visit_python_file(path, checker, should_parse=lambda source: b'odoo.orm' in source)
+
+        if errors:
+            errors.insert(0, "odoo.orm imported in modules, use odoo.(api,fields,models)")
+            self.fail("\n- ".join(errors))

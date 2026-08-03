@@ -43,6 +43,12 @@ class LintCase(BaseCase):
         tree = ast.parse(content, path)
         node_visitor.visit(tree)
 
+    @functools.lru_cache(5)
+    def noqa_lines(self, path: str, noqa: str = '# noqa') -> set[int]:
+        with file_open(path, 'r') as f:
+            lines = f.readlines()
+        return frozenset(lineno for lineno, line in enumerate(lines, start=1) if noqa in line)
+
 
 @tagged('-at_install', 'post_install')
 class RegistryLintCase(LintCase):

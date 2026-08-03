@@ -916,7 +916,7 @@ class IrModelFields(models.Model):
         return dict(cr.fetchall())
 
     def _drop_column(self):
-        from odoo.orm.model_classes import pop_field
+        from odoo.orm.model_classes import pop_field  # noqa: PLC0415
 
         tables_to_drop = set()
 
@@ -955,7 +955,7 @@ class IrModelFields(models.Model):
             This method prevents the modification/deletion of many2one fields
             that have an inverse one2many, for instance.
         """
-        from odoo.orm.model_classes import pop_field
+        from odoo.orm.model_classes import pop_field  # noqa: PLC0415
 
         force_delete = self.env.context.get('force_delete')
         if not force_delete and any(record.state != 'manual' for record in self):
@@ -2403,7 +2403,7 @@ class IrModelData(models.Model):
         the chance of gracefully deleting all records.
         This step is performed as part of the full uninstallation of a module.
         """
-        from odoo.orm.model_classes import add_field
+        from odoo.orm.model_classes import add_field  # noqa: PLC0415
 
         if not self.env.is_system():
             raise AccessError(_('Administrator access is required to uninstall a module'))
