@@ -938,7 +938,7 @@ class ResPartner(models.Model):
     def _get_vat_required_valid(self, company=None):
         """ Hook for determining VAT validity with more complex VAT requirements. (like VIES)"""
         self.ensure_one()
-        return bool(self.vat)
+        return bool(self.vat and self.vat != '/')
 
     @api.model
     def get_available_additional_identifiers_metadata(self, country_code, seq_min=0, seq_max=199):
