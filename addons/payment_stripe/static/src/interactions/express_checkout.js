@@ -100,6 +100,12 @@ patch(ExpressCheckout.prototype, {
         }
 
         paymentRequest.on('paymentmethod', async (ev) => {
+            // Keep track of the real payment method type so that it can be sent along with the
+            // transaction creation request and resolved server-side.
+            this.paymentContext['paymentMethodType'] = ev.paymentMethod.type === 'card'
+                ? ev.paymentMethod.card.brand
+                : ev.paymentMethod.type;
+
             const addresses = {
                 'billing_address': {
                     name: ev.payerName,
@@ -213,6 +219,22 @@ patch(ExpressCheckout.prototype, {
                 });
             });
         }
+    },
+
+    /**
+     * Add the real Stripe payment method type to the transaction route params, if known.
+     *
+     * @override method from payment.express_form
+     * @private
+     * @returns {object} - The transaction route params.
+     */
+    _prepareTransactionRouteParams() {
+        const transactionRouteParams = super._prepareTransactionRouteParams(...arguments);
+        if (this.paymentContext['paymentMethodType']) {
+            transactionRouteParams['payment_method_type'] =
+                this.paymentContext['paymentMethodType'];
+        }
+        return transactionRouteParams;
     },
 
     /**

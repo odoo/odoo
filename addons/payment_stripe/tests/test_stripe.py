@@ -38,6 +38,18 @@ class StripeTest(StripeCommon, PaymentHttpCommon):
         )
         self.assertEqual(processing_values["return_url"], return_url)
 
+    def test_express_checkout_resolves_real_payment_method(self):
+        """Test that the real payment method is set on the transaction created in express
+        checkout based on its Stripe-specific type, without ever relying on a generic
+        placeholder."""
+        visa_pm = self.env.ref("payment_stripe.payment_method_visa")
+        reference = "test_express_checkout_resolves_real_payment_method"
+        route_values = self._prepare_transaction_values(None, None, "direct")
+        route_values = {"reference_prefix": reference, "payment_method_type": "visa"}
+        self._portal_transaction(**route_values)
+        tx = self.env["payment.transaction"].search([("reference", "=", reference)])
+        self.assertEqual(tx.payment_method_id, visa_pm)
+
     @mute_logger("odoo.addons.payment_stripe.models.payment_transaction")
     def test_tx_state_after_send_capture_request(self):
         self.provider.payment_method_ids.active = False  # TODO VCHU: remove in master

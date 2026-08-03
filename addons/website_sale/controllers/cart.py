@@ -292,9 +292,6 @@ class Cart(PaymentPortal):
         provider_sudo = payment_form_values["providers_sudo"][:1]
         if provider_sudo:
             payment_form_values["express_checkout_provider_sudo"] = provider_sudo
-            payment_form_values["payment_method_unknown_id"] = provider_sudo._get_pm_from_code(
-                "unknown"
-            ).id
         if self.env.website.is_public_user():
             payment_form_values["partner_id"] = -1
         return payment_form_values

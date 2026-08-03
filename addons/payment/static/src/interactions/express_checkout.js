@@ -118,7 +118,7 @@ export class ExpressCheckout extends Interaction {
     _prepareTransactionRouteParams() {
         return {
             'provider_id': parseInt(this.paymentContext['providerId']),
-            'payment_method_id': parseInt(this.paymentContext['paymentMethodUnknownId']),
+            'payment_method_id': null,
             'token_id': null,
             'flow': 'direct',
             'tokenization_requested': false,

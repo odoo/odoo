@@ -11,6 +11,18 @@ from odoo.addons.payment_demo.tests.common import PaymentDemoCommon
 
 @tagged("-at_install", "post_install")
 class TestPaymentTransaction(PaymentDemoCommon, PaymentHttpCommon):
+    def test_express_checkout_resolves_real_payment_method(self):
+        """Test that the transaction created in express checkout is directly assigned the real
+        'demo' payment method, without ever relying on a generic placeholder."""
+        self.provider.is_published = True  # Required for the provider to be deemed available.
+        demo_pm = self.env.ref("payment_demo.payment_method_demo")
+        reference = "test_express_checkout_resolves_real_payment_method"
+        route_values = self._prepare_transaction_values(None, None, "direct")
+        route_values["reference_prefix"] = reference
+        self._portal_transaction(**route_values)
+        tx = self.env["payment.transaction"].search([("reference", "=", reference)])
+        self.assertEqual(tx.payment_method_id, demo_pm)
+
     def test_apply_updates_sets_transaction_pending(self):
         """Test that the transaction state is set to 'pending' when the payment data indicate
         a pending payment."""
