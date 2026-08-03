@@ -1,6 +1,6 @@
 import { PosOrder } from "@point_of_sale/app/models/pos_order";
 import { patch } from "@web/core/utils/patch";
-import { computeSAQRCode } from "@l10n_sa_pos/app/utils/qr";
+import { computeSAQRCode, renderQRCodeDataURL } from "@l10n_sa_pos/app/utils/qr";
 
 patch(PosOrder.prototype, {
     export_for_printing(baseUrl, headerData) {
@@ -9,7 +9,6 @@ patch(PosOrder.prototype, {
             result.is_settlement = this.is_settlement();
             if (!result.is_settlement) {
                 const company = this.company;
-                const codeWriter = new window.ZXing.BrowserQRCodeSvgWriter();
                 const qr_values = this.compute_sa_qr_code(
                     company.name,
                     company.vat,
@@ -17,10 +16,7 @@ patch(PosOrder.prototype, {
                     this.get_total_with_tax(),
                     this.get_total_tax()
                 );
-                const qr_code_svg = new XMLSerializer().serializeToString(
-                    codeWriter.write(qr_values, 200, 200)
-                );
-                result.qr_code = "data:image/svg+xml;base64," + window.btoa(qr_code_svg);
+                result.qr_code = renderQRCodeDataURL(qr_values, 200);
             }
         }
         return result;
