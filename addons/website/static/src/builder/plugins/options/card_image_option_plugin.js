@@ -1,6 +1,7 @@
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { ClassAction } from "@html_builder/core/core_builder_action_plugin";
 import { Plugin } from "@html_editor/plugin";
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { renderToElement } from "@web/core/utils/render";
 import { ImagePositionOverlay } from "@html_builder/plugins/image/image_position_overlay";
@@ -30,6 +31,7 @@ const imageRelatedStyles = [
     "--card-img-size-h",
     "--card-img-ratio-align", // kept for compatibility
 ];
+const cardImageSelector = ".o_card_img_wrapper > .o_card_img";
 
 class CardImageOptionPlugin extends Plugin {
     static id = "cardImageOption";
@@ -37,6 +39,12 @@ class CardImageOptionPlugin extends Plugin {
     static shared = ["adaptRatio", "getDelta"];
     /** @type {import("plugins").WebsiteResources} */
     resources = {
+        clone_disabled_reason_providers: ({ el, reasons }) => {
+            if (el.matches(cardImageSelector)) {
+                reasons.push(_t("You cannot duplicate this image."));
+            }
+        },
+        unremovable_node_predicates: (node) => node.matches?.(cardImageSelector),
         builder_actions: {
             SetCoverImagePositionAction,
             RemoveCoverImageAction,
