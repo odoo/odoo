@@ -1379,10 +1379,16 @@ class SaleOrder(models.Model):
                 # Only update the combo item lines if the line's combo choices haven't changed.
                 and combo_item_lines.combo_item_id.combo_id == line.product_template_id.combo_ids
             ):
-                combo_item_lines.update({
-                    "product_uom_qty": line.product_uom_qty,
-                    "discount": line.discount,
-                })
+                lines_to_sync = combo_item_lines.filtered(
+                    lambda cil: (
+                        cil.product_uom_qty != line.product_uom_qty or cil.discount != line.discount
+                    )
+                )
+                if lines_to_sync:
+                    lines_to_sync.update({
+                        "product_uom_qty": line.product_uom_qty,
+                        "discount": line.discount,
+                    })
 
     # === CRUD METHODS ===#
 

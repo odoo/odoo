@@ -748,7 +748,7 @@ class SaleOrderLine(models.Model):
         )
         price_unit = line.product_id._adapt_price_unit_to_document_tax_mode(
             price_unit,
-            line.product_id.supplier_taxes_id,
+            product_taxes,
             line.product_uom_id,
             line.document_tax_mode,
         )
