@@ -974,8 +974,16 @@ export class SelfOrder extends Reactive {
         link.click();
     }
 
+    get availablePresets() {
+        const presets = this.models["pos.preset"].getAll();
+
+        return this.router.getTableIdentifier() != null || this.kioskMode
+            ? presets
+            : presets.filter((preset) => preset.service_at !== "table");
+    }
+
     hasPresets() {
-        return this.config.use_presets && this.models["pos.preset"].length > 1;
+        return this.config.use_presets && this.availablePresets.length > 1;
     }
 
     get orderLineNotSend() {

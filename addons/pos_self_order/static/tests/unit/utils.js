@@ -114,3 +114,9 @@ export const addComboProduct = async (store) => {
     store.addToCart(productCombo, 2, "", {}, {}, comboValues);
     return store.currentOrder.lines.find((ol) => ol.combo_line_ids.length); // Parent Combo line
 };
+
+export function mockNavigate(router) {
+    const navigate = [];
+    router.navigate = (route) => navigate.push(route);
+    return navigate;
+}
