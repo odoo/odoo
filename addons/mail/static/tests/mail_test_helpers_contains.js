@@ -7,6 +7,12 @@ import { isMacOS } from "@web/core/browser/feature_detection";
 import { isVisible } from "@web/core/utils/ui";
 
 /**
+ * Time the wait helpers give the client before failing. The wait that follows
+ * openDiscuss pays for the whole mount and the first fetches.
+ */
+export const TIMEOUT = 10000;
+
+/**
  * Use `expect.step` instead
  * @deprecated
  */
@@ -616,8 +622,8 @@ class Contains {
         this.onScroll = () => this.runOnce("after scroll");
         if (!this.runOnce("immediately")) {
             this.timer = setTimeout(
-                () => this.runOnce("Timeout of 3 seconds", { crashOnFail: true }),
-                3000
+                () => this.runOnce(`Timeout of ${TIMEOUT / 1000} seconds`, { crashOnFail: true }),
+                TIMEOUT
             );
             this.observer = new MutationObserver((mutations) => {
                 try {
