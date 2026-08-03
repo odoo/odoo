@@ -1,5 +1,9 @@
 import { url } from "@web/core/utils/urls";
 
+/**
+ * @template {new (...args: any[]) => any} T
+ * @param {T} T
+ */
 export const FileModelMixin = (T) =>
     class extends T {
         access_token;
