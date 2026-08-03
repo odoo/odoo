@@ -2,15 +2,33 @@ import { EDITABLE_MEDIA_CLASS } from "@html_editor/utils/dom_info";
 import { describe, expect, test } from "@odoo/hoot";
 import { click, dblclick, press, waitFor, waitForNone } from "@odoo/hoot-dom";
 import { animationFrame, tick } from "@odoo/hoot-mock";
-import { makeMockEnv, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import {
+    defineModels,
+    fields,
+    makeMockEnv,
+    models,
+    mountView,
+    onRpc,
+    patchWithCleanup,
+} from "@web/../tests/web_test_helpers";
 import { cleanHints } from "../_helpers/dispatch";
 import { base64Img, setupEditor, testEditor } from "../_helpers/editor";
 import { getContent } from "../_helpers/selection";
 import { expectElementCount } from "../_helpers/ui_expectations";
 import { deleteBackward, deleteForward, insertText } from "../_helpers/user_actions";
 import { delay } from "@web/core/utils/concurrency";
+import {
+    ImageFieldWithMediaDialog,
+} from "@html_editor/fields/image_field_with_media_dialog/image_field_with_media_dialog";
 import { ImageCrop } from "@html_editor/main/media/image_crop";
 import { ImageSelector } from "@html_editor/main/media/media_dialog/image_selector";
+
+class Product extends models.Model {
+    _name = "product.template";
+    image_1920 = fields.Binary();
+    _records = [{ id: 1, image_1920: false }];
+}
+defineModels([Product]);
 
 test("Can replace an image", async () => {
     onRpc("ir.attachment", "search_read", () => [
@@ -417,4 +435,32 @@ test("double-click on image in Media Dialog executes onClickAttachment only once
     await animationFrame();
     await dblclick(".o_existing_attachment_cell .o_button_area");
     expect(executionCount).toBe(1);
+});
+
+test("selecting an image in the media dialog saves without error", async () => {
+    onRpc("ir.attachment", "search_read", () => [
+        {
+            id: 1,
+            name: "logo",
+            mimetype: "image/png",
+            image_src: "/web/static/img/logo2.png",
+            access_token: false,
+            public: true,
+        },
+    ]);
+    patchWithCleanup(ImageFieldWithMediaDialog.prototype, {
+        async onImageSave() {
+            expect.step("imageSave");
+        },
+    });
+    await mountView({
+        type: "form",
+        resModel: "product.template",
+        resId: 1,
+        arch: `<form><field name="image_1920" widget="image_with_media_dialog"/></form>`,
+    });
+    await click(".o_select_file_button");
+    await animationFrame();
+    await click(".o_existing_attachment_cell .o_button_area");
+    expect.verifySteps(["imageSave"]);
 });
