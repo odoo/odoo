@@ -1,10 +1,9 @@
-import { proxy, signal, t, useEffect, useProps } from "@odoo/owl";
+import { proxy, signal, t, useEffect, useOnChange, useProps } from "@odoo/owl";
 
 import { patch } from "@web/core/utils/patch";
 
 import { Composer } from "@mail/core/common/composer";
 import { RecipientsInput } from "@mail/core/web/recipients_input";
-import { useOnChange } from "@mail/utils/common/hooks";
 
 Object.assign(Composer.components, {
     RecipientsInput,

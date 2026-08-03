@@ -1,7 +1,7 @@
 import { Discuss } from "@mail/core/public_web/discuss_app/discuss_app";
-import { propComputed, useOnChange } from "@mail/utils/common/hooks";
+import { propComputed } from "@mail/utils/common/hooks";
 
-import { Component, onMounted, onWillUnmount, t } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, t, useOnChange } from "@odoo/owl";
 
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";

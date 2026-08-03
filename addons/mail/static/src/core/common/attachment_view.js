@@ -1,6 +1,6 @@
-import { propSignal, useOnChange } from "@mail/utils/common/hooks";
+import { propSignal } from "@mail/utils/common/hooks";
 
-import { Component, onWillUnmount, signal, t } from "@odoo/owl";
+import { Component, onWillUnmount, signal, t, useOnChange } from "@odoo/owl";
 
 import { useService } from "@web/core/utils/hooks";
 import { hidePDFJSButtons } from "@web/core/utils/pdfjs";

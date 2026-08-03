@@ -1,8 +1,7 @@
 import { ActivityListPopoverItem } from "@mail/core/web/activity_list_popover_item";
-import { useOnChange } from "@mail/utils/common/hooks";
 import { compareDatetime } from "@mail/utils/common/misc";
 
-import { Component, signal, types, useProps } from "@odoo/owl";
+import { Component, signal, types, useOnChange, useProps } from "@odoo/owl";
 
 import { useService } from "@web/core/utils/hooks";
 

@@ -6,12 +6,12 @@ import {
     signal,
     status,
     types,
+    useOnChange,
     useProps,
 } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { useService } from "@web/core/utils/hooks";
 import { url } from "@web/core/utils/urls";
-import { useOnChange } from "@mail/utils/common/hooks";
 
 const WAVE_COLOR = "#7775";
 

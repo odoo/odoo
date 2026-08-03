@@ -1,8 +1,7 @@
 import { MessageCardList } from "@mail/core/common/message_card_list";
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
-import { useOnChange } from "@mail/utils/common/hooks";
 
-import { Component, t, useProps } from "@odoo/owl";
+import { Component, t, useOnChange, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 

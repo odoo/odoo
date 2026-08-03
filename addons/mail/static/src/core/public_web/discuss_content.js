@@ -1,4 +1,4 @@
-import { Component, computed, proxy, signal, types, useProps } from "@odoo/owl";
+import { Component, computed, proxy, signal, types, useOnChange, useProps } from "@odoo/owl";
 
 import { useThreadActions } from "@mail/core/common/thread_actions";
 import { AutoresizeInput } from "@mail/core/common/autoresize_input";
@@ -10,7 +10,6 @@ import { Composer } from "@mail/core/common/composer";
 import { useDynamicInterval } from "@mail/utils/common/misc";
 import { formatLocalDateTime } from "@mail/utils/common/dates";
 import { attClassObjectToString } from "@mail/utils/common/format";
-import { useOnChange } from "@mail/utils/common/hooks";
 
 import { FileUploader } from "@web/views/fields/file_handler";
 import { useService } from "@web/core/utils/hooks";

@@ -10,10 +10,10 @@ import { SearchMessageInput } from "@mail/core/common/search_message_input";
 import { SearchMessageResult } from "@mail/core/common/search_message_result";
 import { Activity } from "@mail/core/web/activity";
 import { FollowerList } from "@mail/core/web/follower_list";
-import { useHover, useOnChange } from "@mail/utils/common/hooks";
+import { useHover } from "@mail/utils/common/hooks";
 import { assignGetter, isDragSourceExternalFile } from "@mail/utils/common/misc";
 
-import { signal, status, t, useProps } from "@odoo/owl";
+import { signal, status, t, untrack, useEffect, useOnChange, useProps } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -79,17 +79,14 @@ const chatterPatch = {
         this.highlightMessage ??= this.webChatterProps.record?.context?.highlight_message_id;
         this.orm = useService("orm");
         this.keepLastSuggestedRecipientsUpdate = new KeepLast();
-        useOnChange(
-            () => {
-                const record = this.webChatterProps.record;
-                // Track the record identity + all of its field changes.
-                if (record?.data) {
-                    Object.keys(record.data).forEach((field) => record.data[field]);
-                }
-                return [record];
-            },
-            (record) => this.updateRecipients(record)
-        );
+        useEffect(() => {
+            const record = this.webChatterProps.record;
+            // Track the record identity + all of its field changes.
+            if (record?.data) {
+                Object.keys(record.data).forEach((field) => record.data[field]);
+            }
+            untrack(() => this.updateRecipients(record));
+        });
         this.attachmentPopout = usePopoutAttachment({ thread: this.thread });
         this.CHATTER_PANEL = CHATTER_PANEL;
         Object.assign(this.state, {
