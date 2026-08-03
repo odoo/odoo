@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
-    <div t-name="hr_holidays.TimeOffCard" class="o_timeoff_card text-primary">
+    <div t-name="hr_holidays.TimeOffCard" class="o_timeoff_card d-flex justify-content-center">
         <t t-set="data" t-value="this.props.data"/>
         <t t-set="duration" t-value="this.props.requires_allocation ? data.virtual_remaining_leaves : data.virtual_leaves_taken"/>
         <t t-set="parsed_duration" t-value="this.formatDuration(duration)"/>
-        <div class="d-flex align-items-center justify-content-center gap-2 cursor-pointer o_timeoff_card_inner"
+        <div class="d-inline-flex flex-row align-items-center justify-content-center bg-gradient-lg rounded px-4 py-2 gap-2 cursor-pointer o_timeoff_card_inner"
+             t-attf-class="bg-color-{{this.getColor()}}-light"
+            role="button"
             t-on-click.stop="(ev) => this.onClickInfo(ev)">
-            <span class="o_timeoff_duration">
+            <span class="o_timeoff_duration font-monospace">
                 <span t-att-style="data.holds_changes ? 'color: #B6D369;' : ''">
                     <t t-out="parsed_duration"/>
                 </span>
