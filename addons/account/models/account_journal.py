@@ -1030,8 +1030,11 @@ class AccountJournal(models.Model):
         # === Fill missing alias name for sale / purchase, to force alias creation ===
         if journal_type in {'sale', 'purchase'}:
             if 'alias_name' not in vals:
+                val_name = vals.get('name', self.name)
+                if isinstance(val_name, dict):
+                    val_name = val_name.get(self.env.lang or 'en_US', self.name)
                 vals['alias_name'] = self._alias_prepare_alias_name(
-                False, vals.get('name'), vals.get('code'), journal_type, company
+                False, val_name, vals.get('code'), journal_type, company
             )
             vals['alias_name'] = self._ensure_unique_alias(vals, company)
 
