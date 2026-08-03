@@ -9,7 +9,8 @@ registry.category("web_tour.tours").add("discuss_go_back_to_thread_from_breadcru
             run: "click",
         },
         { trigger: ".o-dropdown-item:text('Advanced Settings')", run: "click" },
-        { trigger: ".breadcrumb-item:contains('Channel A')", run: "click" },
+        { trigger: ".o_last_breadcrumb_item:text('Channel B')" },
+        { trigger: ".breadcrumb-item:text('Channel A')", run: "click" },
         { trigger: ".o-mail-DiscussContent-threadName[title='Channel A']" },
     ],
 });
