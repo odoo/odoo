@@ -57,11 +57,13 @@ class PaymentData(models.Model):
             IrCron._commit_progress(remaining=len(pending_payment_data))
 
             for payment_data in pending_payment_data:
-                # Lock the current records to prevent concurrent processing and restrict prefetching
-                tx = payment_data.transaction_id.try_lock_for_update()
+                # Lock relevant records to prevent concurrent handling and to restrict prefetching
+                tx = payment_data.transaction_id
+                txs_to_lock = tx | tx.source_transaction_id  # Processing might update the source tx
+                locked_txs = txs_to_lock.try_lock_for_update()
                 payment_data = payment_data.try_lock_for_update()
-                if not tx or not payment_data:  # The lock could not be acquired
-                    IrCron._rollback_progress()  # Release the lock on whichever record was locked
+                if locked_txs != txs_to_lock or not payment_data:  # Not all locks were acquired
+                    IrCron._rollback_progress()  # Release whichever locks were acquired
                     continue  # Skip for now; will be retried on the next run
 
                 try:
