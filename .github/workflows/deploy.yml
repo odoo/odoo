@@ -42,10 +42,12 @@ jobs:
                       TIMESTAMP=$(date +%Y%m%d_%H%M%S)
 
                       # استخراج قيمة DOMAIN بأمان وبشكل مباشر من ملف .env
+                      # يجب أن يكون DOMAIN معرّفاً في .env — لا يوجد أي قيمة احتياطية مضمّنة
                       if [ -f .env ] && grep -q "^DOMAIN=" .env; then
                           DOMAIN_NAME=$(grep "^DOMAIN=" .env | head -n 1 | cut -d '=' -f2 | tr -d '"' | tr -d "'" | tr -d '\r')
                       else
-                          DOMAIN_NAME="cloud-ai-erp.duckdns.org" # قيمة احتياطية
+                          echo "ERROR: DOMAIN is not set in .env — refusing to deploy without a target domain."
+                          exit 1
                       fi
 
                       echo "=== Deploy started at $TIMESTAMP ==="

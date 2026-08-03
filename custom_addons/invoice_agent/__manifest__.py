@@ -4,6 +4,7 @@
     "category": "Accounting/Accounting",
     "summary": "AI Extraction for account.move — queue, wizard, security, automations, cron",
     "depends": ["account", "sale", "base_automation"],
+    "post_init_hook": "post_init_hook",
     "data": [
         "security/invoice_agent_groups.xml",
         "security/ir.model.access.csv",
