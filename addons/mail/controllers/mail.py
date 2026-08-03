@@ -4,7 +4,6 @@ from math import floor
 from urllib.parse import parse_qsl, urlencode, urlparse
 
 from PIL import Image, ImageDraw, ImageFont
-from werkzeug.exceptions import NotFound
 from werkzeug.urls import url_encode
 
 from odoo import _, http
@@ -242,13 +241,13 @@ class MailController(http.Controller):
     @http.route('/mail/message/<int:message_id>', type='http', auth='public')
     @add_guest_to_context
     def mail_thread_message_redirect(self, message_id, **kwargs):
-        message = request.env['mail.message'].search([('id', '=', message_id)])
-        if not message:
+        message_su = request.env['mail.message'].sudo().search([('id', '=', message_id)])
+        if not message_su:
             if request.env.user._is_public():
                 return request.redirect(f'/web/login?redirect=/mail/message/{message_id}')
-            raise NotFound()
-
-        return self._redirect_to_record(message.model, message.res_id, highlight_message_id=message_id)
+            return self._redirect_to_messaging()
+        # '_redirect_to_record' checks for ACL anyway
+        return self._redirect_to_record(message_su.model, message_su.res_id, highlight_message_id=message_id)
 
     # web_editor routes need to be kept otherwise mail already sent won't be able to load icons anymore
     @http.route([
