@@ -42,11 +42,11 @@ export function makeStore(env, { localRegistry } = {}) {
             [OgClass.getName()]: class extends OgClass {
                 constructor() {
                     super();
-                    this.setup();
                     const record = this;
                     record._raw = record;
                     record.Model = Model;
                     record._ = record[STORE_SYM] ? new StoreInternal() : new RecordInternal();
+                    this.setup();
                     record._proxyInternal = new Proxy(record, {
                         get: (...args) => record._.proxyGet(...args),
                         deleteProperty: (...args) => record._.proxyDeleteProperty(...args),

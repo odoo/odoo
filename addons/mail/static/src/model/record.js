@@ -1,4 +1,4 @@
-import { markup, toRaw } from "@odoo/owl";
+import { computed, effect, immediateEffect, markup, shallowEqual, toRaw, untrack } from "@odoo/owl";
 import {
     IS_DELETED_SYM,
     OR_SYM,
@@ -12,7 +12,6 @@ import {
     technicalKeysOnRecords,
 } from "./misc";
 import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
-import { onChange } from "@mail/utils/common/misc";
 
 /** @typedef {import("./misc").FieldDefinition} FieldDefinition */
 /** @typedef {import("./record_list").RecordList} RecordList */
@@ -45,9 +44,6 @@ export class Record {
     /** @param {() => any} fn */
     static MAKE_UPDATE(fn) {
         return this.store.MAKE_UPDATE(...arguments);
-    }
-    static onChange(record, name, cb) {
-        return this.store.onChange(...arguments);
     }
     static get(data) {
         const Model = toRaw(this);
@@ -205,6 +201,7 @@ export class Record {
                 record._.requestCompute?.(record, fieldName);
                 record._.requestSort?.(record, fieldName);
             }
+            record._.isConstructing.set(false);
             return recordProxy;
         });
     }
@@ -367,25 +364,64 @@ export class Record {
     }
 
     /**
-     * Register an `onChange()`. Equivalent to `onChange` but auto-saves the disposeFn in the record and store,
-     * so that this is automatically disposed on record deletion or in-between tests.
+     * Run `callback` with the values returned by `dependencies`, again each
+     * time one of those values changes, until the record is deleted.
      *
-     * @param  {...any} args
-     */
-    registerOnChange(...args) {
-        const disposeFn = onChange(...args);
-        this._registerDisposeFn(disposeFn);
-    }
-
-    /**
-     * Register a `Record.onChange()`. Equivalent to `Record.onChange` but auto-saves the disposeFn in the record and store,
-     * so that this is automatically disposed on record deletion or in-between tests.
+     * The values are compared with `shallowEqual`, so a derived value that
+     * stays equal runs nothing. Both functions are bound to the record proxy.
      *
-     * @param  {...any} args
+     * @template {any[]} T
+     * @param {(this: this) => T} dependencies tracking is exactly what it reads
+     *  while it runs: read `.length` or iterate in it if the content of a list
+     *  matters
+     * @param {(this: this, ...deps: T) => (() => void)|void} callback may return
+     *  a cleanup function, invoked before the next callback and on dispose
+     * @param {Object} [options]
+     * @param {boolean} [options.immediate=false] use owl's synchronous
+     *  `immediateEffect` instead of the default batched `effect`
+     * @param {boolean} [options.initialRun=true] pass false to skip the first run
      */
-    registerRecordOnChange(...args) {
-        const disposeFn = Record.onChange(...args);
-        this._registerDisposeFn(disposeFn);
+    onChange(dependencies, callback, { immediate = false, initialRun = true } = {}) {
+        const record = this;
+        if (!record._) {
+            // the dummy record collecting the field declarations has no internals
+            return;
+        }
+        const deps = computed(dependencies.bind(record), { equals: shallowEqual });
+        const boundCallback = callback.bind(record);
+        let firstRun = true;
+        let cleanup;
+        record._registerDisposeFn(
+            immediateEffect(function onChangeAfterConstructing() {
+                if (untrack(() => record._.isConstructing())) {
+                    // deps and initial run wait for a complete record
+                    void record._.isConstructing();
+                    return;
+                }
+                const effectFn = immediate ? immediateEffect : effect;
+                const disposeFn = untrack(() =>
+                    effectFn(function runOnChange() {
+                        const values = deps() ?? [];
+                        if (firstRun) {
+                            firstRun = false;
+                            if (!initialRun) {
+                                return;
+                            }
+                        }
+                        untrack(() => {
+                            cleanup?.();
+                            const result = boundCallback(...values);
+                            cleanup = typeof result === "function" ? result : undefined;
+                        });
+                    })
+                );
+                record._registerDisposeFn(() => {
+                    disposeFn();
+                    untrack(() => cleanup?.());
+                    cleanup = undefined;
+                });
+            })
+        );
     }
 
     /**

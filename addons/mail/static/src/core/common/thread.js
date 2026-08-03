@@ -2,7 +2,6 @@ import { useChildSubEnv, useLayoutEffect } from "@web/owl2/utils";
 import { DateSection } from "@mail/core/common/date_section";
 import { Message } from "@mail/core/common/message";
 import { NotificationMessage } from "./notification_message";
-import { Record } from "@mail/model/export";
 import { useChildRefs, useMessageSelection, useVisible } from "@mail/utils/common/hooks";
 import { incrementFn } from "@mail/utils/common/signal";
 
@@ -10,7 +9,6 @@ import {
     Component,
     computed,
     onMounted,
-    onWillDestroy,
     onWillPatch,
     onWillUnmount,
     proxy,
@@ -355,24 +353,15 @@ export class Thread extends Component {
          * that the value quickly changes and then back again before there is
          * any mounting/patching, and the change would therefore be undetected.
          */
-        let stopOnChange = Record.onChange(this.props.thread, "isLoaded", () => {
-            if (!this.props.thread.isLoaded || !this.state.mountedAndLoaded) {
-                this.reset();
-            }
-        });
         useOnChange(
-            () => [this.props.thread],
-            (thread) => {
-                stopOnChange();
-                stopOnChange = Record.onChange(thread, "isLoaded", () => {
-                    if (!thread.isLoaded || !this.state.mountedAndLoaded) {
-                        this.reset();
-                    }
-                });
+            () => [this.props.thread.isLoaded],
+            (isLoaded) => {
+                if (!isLoaded || !this.state.mountedAndLoaded) {
+                    this.reset();
+                }
             },
             { initialRun: false }
         );
-        onWillDestroy(() => stopOnChange());
         onWillPatch(() => {
             if (!this.loadedAndPatched) {
                 return;

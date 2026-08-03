@@ -10,9 +10,18 @@ import {
 import { CallPermissionDialog } from "@mail/discuss/call/common/call_permission_dialog";
 import { CallSettingsDialog } from "@mail/discuss/call/common/call_settings";
 import { DeviceSelect } from "@mail/discuss/call/common/device_select";
-import { closeStream, onChange } from "@mail/utils/common/misc";
+import { closeStream } from "@mail/utils/common/misc";
 
-import { Component, onWillDestroy, proxy, signal, status, types, useProps } from "@odoo/owl";
+import {
+    Component,
+    onWillDestroy,
+    proxy,
+    signal,
+    status,
+    types,
+    useOnChange,
+    useProps,
+} from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
@@ -62,64 +71,78 @@ export class CallPreview extends Component {
             ]
         );
         if (this.hasRtcSupport) {
-            const disposeFns = [];
-            disposeFns.push(
-                onChange(this.rtc, "microphonePermission", () => {
-                    if (this.rtc.microphonePermission !== "granted") {
+            useOnChange(
+                () => [this.rtc.microphonePermission],
+                (microphonePermission) => {
+                    if (microphonePermission !== "granted") {
                         this.disableMicrophone();
                     }
-                })
+                },
+                { initialRun: false }
             );
-            disposeFns.push(
-                onChange(this.rtc, "cameraPermission", () => {
-                    if (this.rtc.cameraPermission !== "granted") {
+            useOnChange(
+                () => [this.rtc.cameraPermission],
+                (cameraPermission) => {
+                    if (cameraPermission !== "granted") {
                         this.disableCamera();
                     }
-                })
+                },
+                { initialRun: false }
             );
-            disposeFns.push(
-                onChange(this.store.settings, "audioInputDeviceId", () => {
+            useOnChange(
+                () => [this.store.settings.audioInputDeviceId],
+                () => {
                     if (this.state.audioStream) {
                         closeStream(this.state.audioStream);
                         this.enableMicrophone();
                     }
-                })
+                },
+                { initialRun: false }
             );
-            disposeFns.push(
-                onChange(this.store.settings, "cameraInputDeviceId", () => {
+            useOnChange(
+                () => [this.store.settings.cameraInputDeviceId],
+                () => {
                     if (this.state.videoStream) {
                         closeStream(this.state.videoStream);
                         this.enableCamera();
                     }
-                })
+                },
+                { initialRun: false }
             );
-            disposeFns.push(
-                onChange(this.store.settings, "audioOutputDeviceId", (deviceId) => {
+            useOnChange(
+                () => [this.store.settings.audioOutputDeviceId],
+                (deviceId) => {
                     this.audioRef()
                         ?.setSinkId?.(deviceId)
                         .catch(() => {});
-                })
+                },
+                { initialRun: false }
             );
-            disposeFns.push(
-                onChange(this.store.settings, "useBlur", () => {
-                    if (this.store.settings.useBlur) {
+            useOnChange(
+                () => [this.store.settings.useBlur],
+                (useBlur) => {
+                    if (useBlur) {
                         this.enableBlur();
                     } else {
                         this.disableBlur();
                     }
-                })
+                },
+                { initialRun: false }
             );
-            disposeFns.push(
-                onChange(this.store.settings, ["edgeBlurAmount", "backgroundBlurAmount"], () => {
+            useOnChange(
+                () => [
+                    this.store.settings.edgeBlurAmount,
+                    this.store.settings.backgroundBlurAmount,
+                ],
+                (edgeBlurAmount, backgroundBlurAmount) => {
                     if (this.state.blurManager) {
-                        this.state.blurManager.edgeBlur = this.store.settings.edgeBlurAmount;
-                        this.state.blurManager.backgroundBlur =
-                            this.store.settings.backgroundBlurAmount;
+                        this.state.blurManager.edgeBlur = edgeBlurAmount;
+                        this.state.blurManager.backgroundBlur = backgroundBlurAmount;
                     }
-                })
+                },
+                { initialRun: false }
             );
             onWillDestroy(() => {
-                disposeFns.forEach((f) => f());
                 closeStream(this.state.audioStream);
                 closeStream(this.state.videoStream);
             });

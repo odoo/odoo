@@ -532,11 +532,16 @@ test("Set on attr should invoke onChange", async () => {
     }).register(localRegistry);
     const store = await start();
     const message = store.Message.insert(1);
-    store.registerRecordOnChange(message, "body", () => expect.step("BODY_CHANGED"));
+    message.onChange(
+        () => [message.body],
+        () => expect.step("BODY_CHANGED"),
+        { immediate: true, initialRun: false }
+    );
     expect.verifySteps([]);
     message.update({ body: "test1" });
+    expect.verifySteps(["BODY_CHANGED"]);
     message.body = "test2";
-    expect.verifySteps(["BODY_CHANGED", "BODY_CHANGED"]);
+    expect.verifySteps(["BODY_CHANGED"]);
 });
 
 test("record list sort should be manually observable", async () => {
@@ -1037,10 +1042,7 @@ test("record.toData() is JSON stringified and can be reinserted as record", asyn
                 names: ["John", "Marc"],
                 messages: [{ body: "1" }, { body: "2" }],
                 team: { name: "Discuss" },
-                signature: [
-                    "markup",
-                    "<p>-- John</p>",
-                ],
+                signature: ["markup", "<p>-- John</p>"],
             },
         ],
     });

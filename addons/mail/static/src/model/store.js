@@ -48,7 +48,6 @@ export class Store extends Record {
                 this._.FA_QUEUE.size > 0 ||
                 this._.FD_QUEUE.size > 0 ||
                 this._.FU_QUEUE.size > 0 ||
-                this._.RO_QUEUE.size > 0 ||
                 this._.RD_QUEUE.size > 0 ||
                 this._.RHD_QUEUE.size > 0
             ) {
@@ -57,7 +56,6 @@ export class Store extends Record {
                 const FA_QUEUE = new Map(this._.FA_QUEUE);
                 const FD_QUEUE = new Map(this._.FD_QUEUE);
                 const FU_QUEUE = new Map(this._.FU_QUEUE);
-                const RO_QUEUE = new Map(this._.RO_QUEUE);
                 const RD_QUEUE = new Map(this._.RD_QUEUE);
                 const RHD_QUEUE = new Map(this._.RHD_QUEUE);
                 this._.FC_QUEUE.clear();
@@ -65,7 +63,6 @@ export class Store extends Record {
                 this._.FA_QUEUE.clear();
                 this._.FD_QUEUE.clear();
                 this._.FU_QUEUE.clear();
-                this._.RO_QUEUE.clear();
                 this._.RD_QUEUE.clear();
                 this._.RHD_QUEUE.clear();
                 while (FC_QUEUE.size > 0) {
@@ -129,16 +126,6 @@ export class Store extends Record {
                     FU_QUEUE.delete(record);
                     for (const fieldName of map.keys()) {
                         record._.onUpdate(record, fieldName);
-                    }
-                }
-                while (RO_QUEUE.size > 0) {
-                    /** @type {Map<Function, true>} */
-                    const cb = RO_QUEUE.keys().next().value;
-                    RO_QUEUE.delete(cb);
-                    try {
-                        cb();
-                    } catch (err) {
-                        this.handleError(err);
                     }
                 }
                 while (RD_QUEUE.size > 0) {
@@ -251,27 +238,6 @@ export class Store extends Record {
                 this._.currentInsertVersion = null;
             }
         }
-    }
-    onChange(record, name, cb) {
-        return this._onChange(record, name, (observe) => {
-            const fn = () => {
-                observe();
-                untrack(() => {
-                    try {
-                        cb();
-                    } catch (err) {
-                        this.handleError(err);
-                    }
-                });
-            };
-            if (this._.UPDATE !== 0) {
-                if (!this._.RO_QUEUE.has(fn)) {
-                    this._.RO_QUEUE.set(fn, true);
-                }
-            } else {
-                fn();
-            }
-        });
     }
     /**
      * Version of onChange where the callback receives observe function as param.

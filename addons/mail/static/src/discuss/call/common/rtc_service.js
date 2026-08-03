@@ -575,43 +575,59 @@ export class Rtc extends Record {
             this._postToTabs({ type: CROSS_TAB_CLIENT_MESSAGE.INIT });
         }
         this.p2pService = services["discuss.p2p"];
-        this.registerOnChange(this.store.settings, "useBlur", () => {
-            if (this.isSendingCamera) {
-                this.toggleVideo("camera", { force: true });
-            }
-        });
-        this.registerOnChange(
-            this.store.settings,
-            ["edgeBlurAmount", "backgroundBlurAmount"],
-            () => {
-                if (this.blurManager) {
-                    this.blurManager.edgeBlur = this.store.settings.edgeBlurAmount;
-                    this.blurManager.backgroundBlur = this.store.settings.backgroundBlurAmount;
+        this.onChange(
+            () => [this.store.settings.useBlur],
+            function onChangeUseBlur(useBlur) {
+                if (this.isSendingCamera) {
+                    this.toggleVideo("camera", { force: true });
                 }
-            }
+            },
+            { initialRun: false }
         );
-        this.registerOnChange(
-            this.store.settings,
-            ["voiceActivationThreshold", "usePushToTalk"],
-            () => {
+        this.onChange(
+            () => [this.store.settings.edgeBlurAmount, this.store.settings.backgroundBlurAmount],
+            function onChangeBlurAmounts(edgeBlurAmount, backgroundBlurAmount) {
+                if (this.blurManager) {
+                    this.blurManager.edgeBlur = edgeBlurAmount;
+                    this.blurManager.backgroundBlur = backgroundBlurAmount;
+                }
+            },
+            { immediate: true, initialRun: false }
+        );
+        this.onChange(
+            () => [this.store.settings.voiceActivationThreshold, this.store.settings.usePushToTalk],
+            function onChangeVoiceActivation(voiceActivationThreshold, usePushToTalk) {
                 this.linkVoiceActivationDebounce();
-            }
+            },
+            { initialRun: false }
         );
-        this.registerOnChange(this.store.settings, "audioInputDeviceId", async () => {
-            if (this.localSession) {
-                await this.resetMicAudioTrack({ force: true });
-            }
-        });
-        this.registerOnChange(this.store.settings, "audioOutputDeviceId", async () => {
-            if (this.localSession) {
-                await this.setOutputDevice(this.store.settings.audioOutputDeviceId);
-            }
-        });
-        this.registerOnChange(this.store.settings, "cameraInputDeviceId", async () => {
-            if (this.localSession && this.cameraTrack) {
-                await this.toggleVideo("camera", { force: true, refreshStream: true });
-            }
-        });
+        this.onChange(
+            () => [this.store.settings.audioInputDeviceId],
+            function onChangeAudioInputDeviceId(audioInputDeviceId) {
+                if (this.localSession) {
+                    this.resetMicAudioTrack({ force: true });
+                }
+            },
+            { initialRun: false }
+        );
+        this.onChange(
+            () => [this.store.settings.audioOutputDeviceId],
+            function onChangeAudioOutputDeviceId(audioOutputDeviceId) {
+                if (this.localSession) {
+                    this.setOutputDevice(audioOutputDeviceId);
+                }
+            },
+            { initialRun: false }
+        );
+        this.onChange(
+            () => [this.store.settings.cameraInputDeviceId],
+            function onChangeCameraInputDeviceId(cameraInputDeviceId) {
+                if (this.localSession && this.cameraTrack) {
+                    this.toggleVideo("camera", { force: true, refreshStream: true });
+                }
+            },
+            { initialRun: false }
+        );
         this.store.env.bus.addEventListener("RTC-SERVICE:PLAY_MEDIA", () => {
             const channel = this.localChannel;
             if (!channel) {
@@ -2686,37 +2702,44 @@ export const rtcService = {
         const store = services["mail.store"];
         const rtc = store.rtc;
         rtc.pipService = services["discuss.pip_service"];
-        rtc.registerOnChange(rtc.pipService.state, "active", () => {
-            const isPipMode = rtc.pipService.state.active;
-            if (!isPipMode) {
-                if (rtc.viewToRestore !== VIEW_TO_RESTORE.NONE && rtc.channel) {
-                    rtc.enterFullscreen();
+        rtc.onChange(
+            () => [rtc.pipService.state.active],
+            function onChangePipMode(isPipMode) {
+                if (!isPipMode) {
+                    if (rtc.viewToRestore !== VIEW_TO_RESTORE.NONE && rtc.channel) {
+                        rtc.enterFullscreen();
+                    }
+                    rtc.viewToRestore = VIEW_TO_RESTORE.NONE;
+                    rtc.channel?.openChatWindow();
                 }
-                rtc.viewToRestore = VIEW_TO_RESTORE.NONE;
-                rtc.channel?.openChatWindow();
-            }
-            rtc.isPipMode = isPipMode;
-            rtc._postToTabs({
-                type: CROSS_TAB_HOST_MESSAGE.PIP_CHANGE,
-                changes: { isPipMode },
-            });
-        });
+                rtc.isPipMode = isPipMode;
+                rtc._postToTabs({
+                    type: CROSS_TAB_HOST_MESSAGE.PIP_CHANGE,
+                    changes: { isPipMode },
+                });
+            },
+            { immediate: true, initialRun: false }
+        );
         rtc.fullscreen = services["mail.fullscreen"];
-        rtc.registerOnChange(rtc.fullscreen, "id", () => {
-            const wasFullscreen = rtc.isFullscreen;
-            rtc.isFullscreen = rtc.fullscreen.id === CALL_FULLSCREEN_ID;
-            if (
-                rtc.screenTrack &&
-                rtc.displaySurface !== "browser" &&
-                rtc.fullscreen.id === CALL_FULLSCREEN_ID
-            ) {
-                rtc.screenTrack.enabled = false;
-            } else if (!rtc.isFullscreen) {
-                if (wasFullscreen && rtc.screenTrack) {
-                    rtc.screenTrack.enabled = true;
+        rtc.onChange(
+            () => [rtc.fullscreen.id],
+            function onChangeFullscreen(fullscreenId) {
+                const wasFullscreen = rtc.isFullscreen;
+                rtc.isFullscreen = fullscreenId === CALL_FULLSCREEN_ID;
+                if (
+                    rtc.screenTrack &&
+                    rtc.displaySurface !== "browser" &&
+                    fullscreenId === CALL_FULLSCREEN_ID
+                ) {
+                    rtc.screenTrack.enabled = false;
+                } else if (!rtc.isFullscreen) {
+                    if (wasFullscreen && rtc.screenTrack) {
+                        rtc.screenTrack.enabled = true;
+                    }
                 }
-            }
-        });
+            },
+            { immediate: true, initialRun: false }
+        );
         browser.navigator.permissions?.query({ name: "microphone" }).then((status) => {
             rtc.microphonePermission = status.state;
             status.onchange = () => (rtc.microphonePermission = status.state);

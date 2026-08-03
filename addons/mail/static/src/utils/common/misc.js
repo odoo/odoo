@@ -1,4 +1,4 @@
-import { effect, immediateEffect, proxy, untrack, useEffect } from "@odoo/owl";
+import { effect, untrack, useEffect } from "@odoo/owl";
 
 import { AssetsLoadingError, getBundle } from "@web/core/assets";
 import { memoize } from "@web/core/utils/functions";
@@ -74,50 +74,6 @@ export function isDragSourceExternalFile(dataTransfer) {
         return dragDataType.includes("Files");
     }
     return false;
-}
-
-/**
- * @param {Object} target
- * @param {string|string[]} key
- * @param {Function} callback
- * @returns {Function} dispose function
- */
-export function onChange(target, key, callback) {
-    let targetProxy;
-    function _observe() {
-        // access targetProxy[key] only once to avoid triggering reactive get() many times
-        const val = targetProxy[key];
-        if (typeof val === "object" && val !== null) {
-            void Object.keys(val);
-        }
-        if (Array.isArray(val)) {
-            void val.length;
-            void val.forEach((i) => i);
-        }
-    }
-    if (Array.isArray(key)) {
-        /** @type {Function[]} */
-        const arrayDisposeFns = [];
-        for (const k of key) {
-            arrayDisposeFns.push(onChange(target, k, callback));
-        }
-        return () => {
-            arrayDisposeFns.forEach((f) => f());
-            arrayDisposeFns.length = 0;
-        };
-    }
-    let running = false;
-    targetProxy = proxy(target);
-    const disposeFn = untrack(() =>
-        immediateEffect(() => {
-            _observe();
-            if (running) {
-                untrack(() => callback());
-            }
-        })
-    );
-    running = true;
-    return disposeFn;
 }
 
 /**
