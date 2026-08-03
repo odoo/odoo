@@ -168,11 +168,20 @@ export class ColorUIPlugin extends Plugin {
         this.selectedColors.color = this.dependencies.color.getElementColors(el).color;
     }
 
+    /**
+     * @returns { HTMLElement | null } the active tab button of the open color
+     * selector, if any.
+     */
+    getActiveColorTabEl() {
+        return document.querySelector(".o_font_color_selector .btn-tab.active");
+    }
+
     getBackgroundColorProcessor(backgroundColor) {
-        const activeTab = document
-            .querySelector(".o_font_color_selector button.active")
-            ?.innerHTML.trim();
-        if (backgroundColor.startsWith("rgba") && (!activeTab || activeTab === "Solid")) {
+        const activeTab = this.getActiveColorTabEl();
+        if (
+            backgroundColor.startsWith("rgba") &&
+            (!activeTab || activeTab.classList.contains("solid-tab"))
+        ) {
             // Buttons in the solid tab of color selector have no
             // opacity, hence to match selected color correctly,
             // we need to remove applied 0.6 opacity.
@@ -186,10 +195,8 @@ export class ColorUIPlugin extends Plugin {
     }
 
     applyBackgroundColorProcessor(brackgroundColor) {
-        const activeTab = document
-            .querySelector(".o_font_color_selector button.active")
-            ?.innerHTML.trim();
-        if (activeTab === "Solid" && brackgroundColor.startsWith("#")) {
+        const activeTab = this.getActiveColorTabEl();
+        if (activeTab?.classList.contains("solid-tab") && brackgroundColor.startsWith("#")) {
             // Apply default transparency to selected solid tab colors in background
             // mode to make text highlighting more usable between light and dark modes.
             brackgroundColor += HEX_OPACITY;
