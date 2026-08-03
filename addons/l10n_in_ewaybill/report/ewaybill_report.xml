@@ -52,7 +52,7 @@
                                         <td><t t-if="doc.name != False"></t>
                                             Valid Upto: <t t-if="doc.ewaybill_expiry_date" t-out="doc.ewaybill_expiry_date.strftime('%d/%m/%Y')"/>
                                             <t t-if="doc.mode == '1'">
-                                                (Vehicle Type is <t t-out="dict(doc._fields['vehicle_type'].selection).get(doc.vehicle_type)"/>)
+                                                (Vehicle Type is <t t-out="dict(doc._fields['vehicle_type']._description_selection(doc.env)).get(doc.vehicle_type)"/>)
                                             </t>
                                         </td>
                                     </tr>
