@@ -98,7 +98,7 @@ class SmsApi(SmsApiBase):  # TODO RIGR in master: rename SmsApi to SmsApiIAP, an
                   uuid: UUID of the request,
                   state: ONE of: {
                       'success', 'processing', 'server_error', 'unregistered', 'insufficient_credit',
-                      'wrong_number_format', 'duplicate_message', 'country_not_supported', 'registration_needed', 'not_active_db',
+                      'wrong_number_format', 'duplicate_message', 'country_not_supported', 'not_active_db',
                   },
                   credit: Optional: Credits spent to send SMS (provided if the actual price is known)
               }, ...
@@ -118,12 +118,6 @@ class SmsApi(SmsApiBase):  # TODO RIGR in master: rename SmsApi to SmsApiIAP, an
         buy_credits_url = self.env['iap.account'].sudo().get_credits_url(service_name='sms')
         buy_credits = '<a href="{}" target="_blank">{}</a>'.format(buy_credits_url, _("Buy credits."))
 
-        sms_endpoint = self.env['ir.config_parameter'].sudo().get_str('sms.endpoint') or self.DEFAULT_ENDPOINT
-        sms_account_token = self.env['iap.account'].sudo().get('sms').sudo().account_token
-        register_now = f'<a href="{sms_endpoint}/1/account?account_token={sms_account_token}" target="_blank">%s</a>' % (
-            _('Register now.')
-        )
-
         error_dict = super()._get_sms_api_error_messages()
         error_dict.update({
             'unregistered': _("You don't have an eligible IAP account."),
@@ -132,7 +126,6 @@ class SmsApi(SmsApiBase):  # TODO RIGR in master: rename SmsApi to SmsApiIAP, an
             'duplicate_message': _("This SMS has been removed as the number was already used."),
             'country_not_supported': _("The destination country is not supported."),
             'incompatible_content': _("The content of the message violates rules applied by our providers."),
-            'registration_needed': ' '.join([_("Country-specific registration required."), register_now]),
         })
         return error_dict
 
