@@ -1285,7 +1285,7 @@ class MailMessage(models.Model):
             lambda res: (
                 # sudo: mail.thread - if mentionned in a non accessible thread, name is allowed
                 res.attr("display_name", sudo=True),
-                res.attr("has_mail_thread", lambda t: isinstance(t, self.env.registry["mail.thread"])),
+                res.attr("has_mail_thread", lambda t: hasattr(t, "_get_allowed_access_params")),
                 res.attr(
                     "module_icon",
                     lambda t: modules.module.get_module_icon(t._original_module),
@@ -1516,8 +1516,11 @@ class MailMessage(models.Model):
         for record in self:
             model = model or record.model
             res_id = res_id or record.res_id
-            if model in self.pool and issubclass(self.pool[model], self.pool['mail.thread']):
-                self.env[model].browse(res_id).invalidate_recordset(fnames)
+            if model not in self.pool:
+                continue
+            # a model can hold those fields without inheriting mail.thread
+            if to_invalidate := [f for f in fnames if f in self.env[model]._fields]:
+                self.env[model].browse(res_id).invalidate_recordset(to_invalidate)
 
     def _records_by_model_name(self):
         ids_by_model = defaultdict(OrderedSet)
