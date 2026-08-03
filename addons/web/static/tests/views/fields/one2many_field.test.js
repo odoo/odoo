@@ -12707,6 +12707,30 @@ test("one2many, form view dialog with custom footer", async () => {
     expect(".modal-footer .my_span").toHaveCount(1);
 });
 
+test("one2many, form view dialog with a custom 'dialog_size' attribute", async () => {
+    Partner._records[0].p = [1];
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="p">
+                    <list>
+                        <field name="name"/>
+                    </list>
+                    <form dialog_size="sm">
+                        <field name="name"/>
+                    </form>
+                </field>
+            </form>`,
+        resId: 1,
+    });
+
+    await contains(".o_data_row td[name=name]").click();
+    expect(".modal-dialog").toHaveClass("modal-sm");
+});
+
 test.tags("desktop");
 test("one2many, form view dialog with added custom footer (replace='0')", async () => {
     Partner._records[0].p = [1];
