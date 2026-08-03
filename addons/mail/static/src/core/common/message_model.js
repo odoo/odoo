@@ -641,7 +641,7 @@ export class Message extends Record {
                 !this.isPending &&
                 this.thread?.can_react &&
                 !this.thread.isTransient &&
-                this.thread.has_mail_thread
+                (this.thread.has_mail_thread || this.thread.channel)
         );
     }
 

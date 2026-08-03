@@ -2212,7 +2212,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
 
     def _expected_result_for_thread(self, channel):
         common_data = {
-            "has_mail_thread": True,
+            "has_mail_thread": False,
             "id": channel.id,
             "model": "discuss.channel",
             "rating_avg": 0.0,

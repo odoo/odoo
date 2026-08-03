@@ -165,8 +165,11 @@ export class MailMessage extends models.ServerModel {
                 const threadModel = r.records?._name;
                 // sudo: mail.thread - if mentionned in a non accessible thread, name is allowed
                 r.attr("display_name", (t) => t.name ?? t.display_name, { sudo: true });
-                r.attr("has_mail_thread", () =>
-                    Boolean(this.env[threadModel]?._inherit?.includes("mail.thread"))
+                r.attr(
+                    "has_mail_thread",
+                    () =>
+                        threadModel !== "discuss.channel" &&
+                        Boolean(this.env[threadModel]?._inherit?.includes("mail.thread"))
                 );
                 r.attr("module_icon", () => "/base/static/description/icon.png", {
                     predicate: () => inbox_fields,
