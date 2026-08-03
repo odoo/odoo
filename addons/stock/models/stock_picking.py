@@ -498,6 +498,7 @@ class StockPicking(models.Model):
 
     @api.depends('picking_type_id', 'partner_id')
     def _compute_location_id(self):
+        default_supplier_location_id = self.env['ir.default'].sudo()._get('res.partner', 'property_stock_supplier')
         for picking in self:
             if picking.state in ('cancel', 'done') or picking.return_id:
                 continue
@@ -505,11 +506,14 @@ class StockPicking(models.Model):
             if picking.picking_type_id:
                 location_src = picking.picking_type_id.default_location_src_id
                 if location_src.usage == 'supplier' and picking.partner_id:
-                    location_src = picking.partner_id.property_stock_supplier
+                    supplier_location = picking.partner_id.property_stock_supplier
+                    if supplier_location and supplier_location.id != default_supplier_location_id:
+                        location_src = supplier_location
                 picking.location_id = location_src.id
 
     @api.depends('picking_type_id', 'partner_id')
     def _compute_location_dest_id(self):
+        default_customer_location_id = self.env['ir.default'].sudo()._get('res.partner', 'property_stock_customer')
         for picking in self:
             if picking.state in ('cancel', 'done') or picking.return_id:
                 continue
@@ -517,7 +521,9 @@ class StockPicking(models.Model):
             if picking.picking_type_id:
                 location_dest = picking.picking_type_id.default_location_dest_id
                 if location_dest.usage == 'customer' and picking.partner_id:
-                    location_dest = picking.partner_id.property_stock_customer
+                    customer_location = picking.partner_id.property_stock_customer
+                    if customer_location and customer_location.id != default_customer_location_id:
+                        location_dest = customer_location
                 picking.location_dest_id = location_dest.id
 
     @api.depends('return_ids')
