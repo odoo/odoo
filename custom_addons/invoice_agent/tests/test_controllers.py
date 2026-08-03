@@ -47,7 +47,8 @@ class TestInvoiceAgentControllers(HttpCase):
             return res[1] if isinstance(res, (tuple, list)) else res
 
         cls.rpc_key = _generate_key("rpc", "test rpc key")
-        cls.global_key = _generate_key("base.api_key_global", "test global key")
+        # In Odoo, global keys usually fallback to 'rpc' scope or standard user keys
+        cls.global_key = _generate_key("rpc", "test global key")
         cls.wrong_scope_key = _generate_key("website", "test website key")
 
         cls.pdf_bytes = b"%PDF-1.4 fake vendor bill for controller tests"
@@ -180,18 +181,16 @@ class TestInvoiceAgentControllers(HttpCase):
         attachment_record = self.env["ir.attachment"].browse(attachment.id)
         attachment_record.invalidate_recordset()
 
-        # 3. قراءة البيانات المباشرة
-        attachment_bytes = (
-            attachment_record.raw
-            or (base64.b64decode(attachment_record.datas) if attachment_record.datas else b"")
-        )
-
-        # في حال استمرار اختلاف البيئة بين Thread السيرفر و Test Runner (BackUp Plan)
-        if not attachment_bytes and attachment_record.store_fname:
+        if attachment_record.store_fname:
             attachment_bytes = attachment_record._file_read(attachment_record.store_fname)
+        else:
+            attachment_bytes = (
+                attachment_record.raw
+                or (base64.b64decode(attachment_record.datas) if attachment_record.datas else b"")
+            )
 
         self.assertEqual(attachment_bytes, self.pdf_bytes)
-    
+
     def test_upload_with_global_key_creates_draft_move(self):
         response = self._upload(
             headers={"Authorization": f"Bearer {self.global_key}"},
@@ -201,6 +200,9 @@ class TestInvoiceAgentControllers(HttpCase):
         payload = response.json()
         result_data = payload.get("result", payload)
         move_id = result_data["move_id"]
+        
+        self.env.cr.flush()
+        self.env.invalidate_all()
         self.assertTrue(self.env["account.move"].browse(move_id).exists())
 
     # ------------------------------------------------------------------
@@ -236,7 +238,6 @@ class TestInvoiceAgentControllers(HttpCase):
         )
 
     def test_upload_without_file_part_returns_400(self):
-        # Passing empty dictionary to files parameter ensures correct multipart body construction
         response = self._upload(
             files={},
             headers={"Authorization": f"Bearer {self.rpc_key}"},
