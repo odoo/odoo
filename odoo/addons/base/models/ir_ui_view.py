@@ -1756,6 +1756,12 @@ actual arch.
             self._postprocess_view(searchpanel[0], name_manager.model._name, editable=False, node_info=node_info)
             node_info['children'] = [child for child in node if child.tag != 'searchpanel']
 
+    def _postprocess_tag_kanban(self, node, name_manager, node_info):
+        # Inline the card view if the kanban node references one via the 'card_id' attribute.
+        if card_id := node.get('card_id'):
+            card_arch, _card_view = self._get_view(view_id=int(card_id), view_type='card')
+            node.append(card_arch)
+
     def _postprocess_tag_list(self, node, name_manager, node_info):
         # reuse form view post-processing
         self._postprocess_tag_form(node, name_manager, node_info)
@@ -3130,14 +3136,6 @@ class Base(models.AbstractModel):
         """
         # Get the view arch and all other attributes describing the composition of the view
         arch, view = self._get_view(view_id, view_type, **options)
-
-        # Inline the card view if the root element references one via the 'card_id' attribute.
-        # The card arch is appended as a <card> child so that _postprocess_tag_card can
-        # process it as a nested sub-view, ensuring that fields auto-added for expression
-        # evaluation land inside <card> rather than at the parent view root.
-        if card_id := arch.get('card_id'):
-            card_arch, _card_view = self._get_view(view_id=int(card_id), view_type='card')
-            arch.append(card_arch)
 
         # Apply post processing, groups and modifiers etc...
         arch, models = self._get_view_postprocessed(view, arch, **options)
