@@ -296,6 +296,12 @@ class PaymentProvider(models.Model):
         ):
             return self.mercado_pago_access_token
 
+        if not self.mercado_pago_account_country_id:
+            raise ValidationError(self.env._(
+                "Set the account country for payment provider '%s' before connecting the account.",
+                self.name,
+            ))
+
         proxy_payload = {
             "refresh_token": self.mercado_pago_refresh_token,
             "account_country_code": self.mercado_pago_account_country_id.code.lower(),
