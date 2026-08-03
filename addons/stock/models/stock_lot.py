@@ -305,37 +305,35 @@ class StockLot(models.Model):
 
     def action_lot_open_transfers(self):
         self.ensure_one()
-
-        action = {
-            'res_model': 'stock.picking',
-            'type': 'ir.actions.act_window'
+        delivered_lot_move_lines = self._get_delivery_move_lines_by_lot().get(self.id, [])
+        list_view = self.env.ref('stock.stock_move_line_view_list')
+        return {
+            'name': self.env._("Delivery move lines of %s", self.display_name),
+            'res_model': 'stock.move.line',
+            'type': 'ir.actions.act_window',
+            'views': [(list_view.id, 'list'), (False, 'form')],
+            'view_mode': 'list,form',
+            'domain': [
+                ('id', 'in', delivered_lot_move_lines),
+                ('location_dest_usage', 'in', ('customer', 'transit')),
+            ],
         }
-        if len(self.delivery_ids) == 1:
-            action.update({
-                'view_mode': 'form',
-                'res_id': self.delivery_ids[0].id
-            })
-        else:
-            action.update({
-                'name': _("Delivery orders of %s", self.display_name),
-                'domain': [('id', 'in', self.delivery_ids.ids)],
-                'view_mode': 'list,form'
-            })
-        return action
 
     @api.model
     def _get_outgoing_domain(self):
         return [
             '|',
+            '|',
             '|', ('picking_code', '=', 'outgoing'), ('move_id.picking_code', '=', 'outgoing'),
             ('produce_line_ids', '!=', False),
+            ('location_dest_usage', 'in', ('customer', 'transit')),
         ]
 
-    def _find_delivery_ids_by_lot(self):
-        """ Retrieve all delivery IDs (outgoing picking) linked to the lots
-            in self and all the lots found when parcouring the produce lines.
+    def _get_delivery_move_lines_by_lot(self):
+        """ Retrieve all delivery move lines (outgoing) linked to the lots
+            in self and all the lots found when tracing the produce lines.
             :return: A dictionary where keys are the IDs of the original 'stock.lot'
-                      records (self) and values are lists of associated 'stock.picking' IDs.
+                     records (self) and values are lists of associated 'stock.move.line' IDs.
             :rtype: dict
         """
 
@@ -346,7 +344,8 @@ class StockLot(models.Model):
         # Prefetch the lines linked to lots and split them between producing lines
         # and barren lines (lines that have `produce_line_ids` and lines that don't
         # have them respectively) and build the map of the parents of each lot (so we
-        # can browse the tree from the leaves to the root and propagate the pickings)
+        # can browse the tree from the leaves to the root and propagate the move lines)
+
         queue = list(self.ids)
         while queue:
             domain = Domain([
@@ -364,36 +363,47 @@ class StockLot(models.Model):
                     for child_lot_id in produce_line_lot_ids:
                         parent_map[child_lot_id].add(lot_id)
                 else:
-                    barren_lines[lot_id].add(line.id)
+                    barren_lines[lot_id].add(line.id)  # Leaf node (no more children)
 
                 next_lots = set(produce_line_lot_ids) - all_lot_ids
                 all_lot_ids.update(next_lots)
                 queue.extend(next_lots)
 
-        # Initialize delivery_by_lot with barren lines (i.e. the leaves of the lot tree)
+        # Initialize move_lines_by_lot with barren lines (the leaves of the tree)
         lots_to_propagate = set()
-        delivery_by_lot = {lot_id: set() for lot_id in all_lot_ids}
-        for lot_id in barren_lines:
-            barren_line_ids = barren_lines[lot_id]
+        move_lines_by_lot = {lot_id: set() for lot_id in all_lot_ids}
+
+        for lot_id, barren_line_ids in barren_lines.items():
             if barren_line_ids:
-                barren_move_lines = self.env['stock.move.line'].browse(barren_line_ids)
-                delivery_by_lot[lot_id].update(barren_move_lines.picking_id.ids)
+                move_lines_by_lot[lot_id].update(barren_line_ids)
                 lots_to_propagate.add(lot_id)
 
-        # Propagate the deliveries from the children to their parent lots.
-        # This loop processes lots whose delivery sets have just been updated,
+        # Propagate the move lines from the children to their parent lots.
+        # This loop processes lots whose move line sets have just been updated,
         # ensuring the new results are merged upward through the parent graph until
-        # all deliveries are propagated
+        # all move lines are propagated
         while lots_to_propagate:
             lot_id = lots_to_propagate.pop()
 
             for parent_id in parent_map.get(lot_id, []):
-                new_deliveries = delivery_by_lot[lot_id] - delivery_by_lot[parent_id]
-                if new_deliveries:
-                    delivery_by_lot[parent_id].update(new_deliveries)
+                new_move_lines = move_lines_by_lot[lot_id] - move_lines_by_lot[parent_id]
+                if new_move_lines:
+                    move_lines_by_lot[parent_id].update(new_move_lines)
                     lots_to_propagate.add(parent_id)
 
-        return {lot_id: list(delivery_by_lot[lot_id]) for lot_id in delivery_by_lot}
+        return {lot_id: list(line_ids) for lot_id, line_ids in move_lines_by_lot.items()}
+
+    def _find_delivery_ids_by_lot(self):
+        """ Retrieve all delivery IDs (outgoing picking) linked to the lots
+            in self and all the lots found when tracing the produce lines.
+            :return: A dictionary where keys are the IDs of the original 'stock.lot'
+                      records (self) and values are lists of associated 'stock.picking' IDs.
+            :rtype: dict
+        """
+        return {
+            lot_id: self.env['stock.move.line'].browse(move_line_ids).picking_id.ids
+            for lot_id, move_line_ids in self._get_delivery_move_lines_by_lot().items()
+        }
 
     def action_open_scrap_moves(self):
         self.ensure_one()

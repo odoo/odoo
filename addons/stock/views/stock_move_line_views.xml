@@ -248,6 +248,18 @@
         </field>
     </record>
 
+    <record id="stock_move_line_view_list" model="ir.ui.view">
+        <field name="name">stock.move.line.view.list</field>
+        <field name="model">stock.move.line</field>
+        <field name="inherit_id" ref="stock.view_move_line_tree"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='picking_partner_id']" position="attributes">
+                <attribute name="optional">show</attribute>
+            </xpath>
+        </field>
+    </record>
+
     <record id="view_stock_move_line_pivot" model="ir.ui.view">
         <field name="name">stock.move.line.pivot</field>
         <field name="model">stock.move.line</field>
@@ -259,10 +271,23 @@
         </field>
     </record>
 
+    <record id="action_send_email_move_line" model="ir.actions.server">
+        <field name="name">Send email</field>
+        <field name="model_id" ref="stock.model_stock_move_line"/>
+        <field name="binding_model_id" ref="stock.model_stock_move_line"/>
+        <field name="binding_view_types">list</field>
+        <field name="sequence">10</field>
+        <field name="state">code</field>
+        <field name="code">
+            action = records.action_send_recall_email()
+        </field>
+    </record>
+
     <record id="action_revert_move_line" model="ir.actions.server">
         <field name="name">Revert</field>
         <field name="model_id" ref="stock.model_stock_move_line"/>
         <field name="binding_model_id" ref="stock.model_stock_move_line"/>
+        <field name="sequence">20</field>
         <field name="state">code</field>
         <field name="code">
             action = records.action_revert()
