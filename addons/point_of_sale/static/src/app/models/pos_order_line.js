@@ -418,7 +418,7 @@ export class PosOrderline extends PosOrderlineAccounting {
     get refundedQty() {
         return (
             this.refund_orderline_ids?.reduce(
-                (acc, line) => (line.order_id.state !== "cancel" ? acc - line.qty : acc),
+                (acc, line) => (line.order_id?.state !== "cancel" ? acc - line.qty : acc),
                 0
             ) || 0
         );
