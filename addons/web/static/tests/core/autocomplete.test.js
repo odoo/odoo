@@ -1007,3 +1007,21 @@ test("browser autocomplete attribute can be overridden via prop", async () => {
     await mountWithCleanup(Parent);
     expect(".o-autocomplete--input").toHaveAttribute("autocomplete", "name");
 });
+
+test("dropdown minWidth should match input width", async () => {
+    class Parent extends Component {
+        static components = { AutoComplete };
+        static template = xml`<AutoComplete value="'Hello'" sources="this.sources"/>`;
+        static props = [];
+
+        sources = buildSources(() => [item("World"), item("Hello")]);
+    }
+
+    await mountWithCleanup(Parent);
+    expect(".o-autocomplete").toHaveCount(1);
+    expect(".o-autocomplete .dropdown-menu").toHaveCount(0);
+    await contains(".o-autocomplete input").click();
+    expect(".o-autocomplete--dropdown-menu").toHaveStyle({
+        "min-width": queryRect(".o-autocomplete--input").width,
+    });
+});
