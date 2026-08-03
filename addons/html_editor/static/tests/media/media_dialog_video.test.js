@@ -534,7 +534,7 @@ describe("media dialod video", () => {
             // QWeb templates rendered during unit test store src in data-src
             // @see: addons/web/static/tests/_framework/mock_templates.hoot.js :: replaceAttributes()
             expect(iframe.dataset.src).toBe(
-                "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&enablejsapi=1&fs=0&loop=1&mute=1&rel=0&start=83"
+                "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&enablejsapi=1&fs=0&loop=1&mute=1&playlist=dQw4w9WgXcQ&rel=0&start=83"
             );
             // In order to test the media dialog edition, we need to provide a real src for the iframe;
             // otherwise the media dialog won't recognize the existing video as valid.
@@ -561,6 +561,54 @@ describe("media dialod video", () => {
             }
             // ensure all the options that should be active have been verified
             expect(`${activeOptions.toSorted()}`).toBe(`${verifiedOptions.toSorted()}`);
+        });
+
+        test("YouTube: toggles loop off without stale playlist parameter", async () => {
+            // Playlist is a linkedParam, not a param, so it is not parsed as independent state.
+            const { editor } = await setupEditor("<p>ab[]cd</p>", {
+                config: NO_EMBEDDED_COMPONENTS_CONFIG,
+            });
+            mockFetch(() => '{"data": "mockFetch api result data"}');
+
+            await insertText(editor, "/video");
+            await animationFrame();
+            await expectElementCount(".o-we-powerbox", 1);
+            await press("Enter");
+
+            const videoId = "dQw4w9WgXcQ";
+            const mediaModal = await waitFor(`div.modal`);
+            await waitFor(`div.modal #o_video_text`);
+            await click(`#o_video_text`);
+            await edit(`https://www.youtube.com/embed/${videoId}?loop=1&playlist=${videoId}`);
+            await advanceTime(100);
+            await animationFrame();
+
+            const iframe = await waitFor(`div.modal .o_video_preview iframe`);
+            expect(iframe.dataset.src || iframe.src).toInclude(`playlist=${videoId}`);
+
+            let loopToggle = null;
+            for (const switchEl of mediaModal.querySelectorAll(
+                ".o_video_dialog_options .o_switch"
+            )) {
+                const label = switchEl.querySelector("span.ms-2")?.textContent.trim();
+                if (label === "Loop") {
+                    loopToggle = switchEl.querySelector("input");
+                    break;
+                }
+            }
+            expect(loopToggle).not.toBe(null);
+            expect(loopToggle).toBeChecked();
+
+            await click(loopToggle.closest("label"));
+            await advanceTime(100);
+            await animationFrame();
+
+            expect(loopToggle).not.toBeChecked();
+
+            const iframeAfter = await waitFor(`div.modal .o_video_preview iframe`);
+            const regeneratedUrl = iframeAfter.dataset.src || iframeAfter.src;
+            expect(regeneratedUrl).not.toInclude("playlist=");
+            expect(regeneratedUrl).not.toInclude("loop=");
         });
     });
 });

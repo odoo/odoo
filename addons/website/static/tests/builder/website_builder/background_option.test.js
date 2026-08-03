@@ -769,3 +769,38 @@ for (const [platform, platformClass] of Object.entries(PLATFORMS)) {
         });
     }
 }
+
+for (const [platform, platformClass] of Object.entries(PLATFORMS)) {
+    if ("loop" in platformClass.optionsConfig) {
+        test(`background video applies the loop option to video selector ${platform}`, async () => {
+            await setupWebsiteBuilderWithSnippet("s_cover");
+            const videoUrl = platformClass.exampleUrls.base;
+
+            mockFetch(() => '{"data": "mockFetch api result data"}');
+
+            await contains(":iframe .s_cover").click();
+            await contains('[data-container-title="Cover"]').click();
+            await contains('[data-action-id="toggleBgVideo"]').click();
+
+            await click("#o_video_text");
+            await edit(videoUrl);
+
+            await advanceTime(100);
+
+            await contains("div.modal .modal-footer button.btn-primary").click();
+            await waitForNone(`div.modal`);
+
+            const videoSrc = queryAttribute(":iframe .o_background_video", "data-bg-video-src");
+            const loopConfig = platformClass.optionsConfig.loop;
+            const enabledValue = loopConfig.type === Boolean ? "true" : "1";
+            for (const paramName of loopConfig.params) {
+                expect(videoSrc).toMatch(`${paramName}=${enabledValue}`);
+            }
+
+            if (platform === "youtube") {
+                const videoId = platformClass.isValidVideoUrl(videoUrl).groups.id;
+                expect(videoSrc).toMatch(`playlist=${videoId}`);
+            }
+        });
+    }
+}
