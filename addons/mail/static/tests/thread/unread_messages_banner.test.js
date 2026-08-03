@@ -263,7 +263,7 @@ test("show banner for new message after thread was read from another device", as
     for (let i = 0; i < 20; ++i) {
         lastMessageId = pyEnv["mail.message"].create({
             author_id: serverState.partnerId,
-            body: `message ${i}`,
+            body: `message ${i}`.repeat(100),
             model: "discuss.channel",
             res_id: channelId,
         });
