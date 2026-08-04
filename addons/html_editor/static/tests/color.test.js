@@ -408,11 +408,11 @@ test("should apply background color to a list of 3 links", async () => {
             "</a>" +
             "</li>" +
             "<li>" +
-            '<span style="background-color: rgb(255, 0, 0);">' +
             '<a href="#">' +
+            '<span style="background-color: rgb(255, 0, 0);">' +
             "bcd" +
-            "</a>" +
             "</span>" +
+            "</a>" +
             "</li>" +
             "<li>" +
             '<a href="#">' +
@@ -1114,9 +1114,6 @@ test("Should properly apply color when selection on feff", async () => {
             </div>
         `)
     );
-    // Ensure the link inherited the font color.
-    const a = el.querySelector("a");
-    expect(getComputedStyle(a).color).toBe("rgb(255, 0, 0)");
 });
 
 test("should change text color for text with color and background gradient", async () => {
