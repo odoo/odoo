@@ -1,4 +1,4 @@
-import { DiscussChannel } from "@mail/../tests/mock_server/mock_models/discuss_channel";
+import { DiscussChannel } from "@im_livechat/../tests/mock_server/mock_models/discuss_channel";
 
 import { getKwArgs, makeKwArgs } from "@web/../tests/web_test_helpers";
 import { patch } from "@web/core/utils/patch";
@@ -19,6 +19,17 @@ const discussChannelPatch = {
             })
         );
         return true;
+    },
+
+    _store_livechat_extra_fields(res) {
+        /** @type {import("mock_models").ResPartner} */
+        const ResPartner = this.env["res.partner"];
+
+        super._store_livechat_extra_fields(...arguments);
+        res.many("livechat_customer_partner_ids", (res) => res.many("opportunity_ids", ["name"]), {
+            only_data: true,
+            value: (channel) => ResPartner.browse(this._livechat_customer_partner_ids(channel)),
+        });
     },
 };
 
