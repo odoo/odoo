@@ -10,7 +10,7 @@ import useTours from "./hooks/use_tours";
 import { init as initDebugFormatters } from "./utils/debug-formatter";
 import { debounce } from "@web/core/utils/timing";
 import { getColorScheme } from "@point_of_sale/utils";
-import { PosRouter } from "./plugins/pos_router_plugin";
+import { PosRouterPlugin } from "./plugins/pos_router_plugin";
 
 /**
  * Chrome is the root component of the PoS App.
@@ -19,7 +19,7 @@ export class Chrome extends Component {
     static template = "point_of_sale.Chrome";
     static components = { Transition, MainComponentsContainer, Navbar };
     props = props({ disableLoader: t.function() });
-    router = usePlugin(PosRouter);
+    router = usePlugin(PosRouterPlugin);
 
     setup() {
         this.pos = usePos();
