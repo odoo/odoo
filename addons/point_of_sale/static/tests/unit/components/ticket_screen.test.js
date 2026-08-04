@@ -1,8 +1,9 @@
-import { test, expect } from "@odoo/hoot";
+import { test, expect, waitFor } from "@odoo/hoot";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { setupPosEnv } from "../utils";
 import { TicketScreen } from "@point_of_sale/app/screens/ticket_screen/ticket_screen";
 import { definePosModels } from "@point_of_sale/../tests/unit/data/generate_model_definitions";
+import * as Utils from "../ui_utils";
 
 definePosModels();
 
@@ -45,6 +46,8 @@ test("_onUpdateSelectedOrderline: refund moves to next", async () => {
     refundedOrder.state = "paid";
 
     const ticketScreen = await mountWithCleanup(TicketScreen);
+    await Utils.selectTicketFilter("Paid");
+    await waitFor(".info-column");
     ticketScreen.onClickOrder(order);
     expect(ticketScreen.getSelectedOrderlineId()).toBe(comboLine.id);
     ticketScreen._onUpdateSelectedOrderline({ key: "Enter", buffer: "1" });
