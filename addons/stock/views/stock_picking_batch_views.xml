@@ -70,15 +70,23 @@
                         </page>
                         <page string="Transfers" name="page_transfers">
                             <field name="allowed_picking_ids" invisible="1"/>
-                            <field name="picking_ids" widget="stock_picking_many2many" mode="list,kanban" invisible="not is_wave"
+                            <field name="picking_type_id" invisible="1"/>
+                            <field name="picking_type_code" invisible="1"/>
+                            <field name="picking_ids" widget="many2many" mode="list,kanban" invisible="not is_wave"
                                 context="{
                                     'form_view_ref': 'stock.stock_picking_view_form_from_batch',
-                                    'list_view_ref': 'stock.stock_picking_view_batch_tree_ref'}"
+                                    'list_view_ref': 'stock.stock_picking_view_batch_tree_ref',
+                                    'picking_type_id': picking_type_id,
+                                    'picking_type_code': picking_type_code,
+                                    'active_wave_id': id}"
                                 readonly="state not in ['draft', 'in_progress']"/>
                             <field name="picking_ids" widget="many2many" mode="list,kanban" invisible="is_wave"
                                 context="{
                                     'form_view_ref': 'stock.stock_picking_view_form_from_batch',
-                                    'list_view_ref': 'stock.stock_picking_view_batch_tree_ref'}"
+                                    'list_view_ref': 'stock.stock_picking_view_batch_tree_ref',
+                                    'picking_type_id': picking_type_id,
+                                    'picking_type_code': picking_type_code,
+                                    'active_wave_id': id}"
                                 readonly="state not in ['draft', 'in_progress']"/>
                         </page>
                     </notebook>
@@ -195,6 +203,7 @@
                 <group>
                     <filter string="Responsible" name="user" domain="[]" context="{'group_by': 'user_id'}"/>
                     <filter string="State" name="state" domain="[]" context="{'group_by': 'state'}"/>
+                    <filter name="group_by_picking_type_id" string="Operation Type" context="{'group_by':'picking_type_id'}"/>
                 </group>
            </search>
         </field>
@@ -205,15 +214,19 @@
         <field name="res_model">stock.picking.batch</field>
         <field name="path">batch-transfers</field>
         <field name="view_mode">list,kanban,form</field>
-        <field name="domain">[('is_wave', '=', False)]</field>
-        <field name="context">{'search_default_draft': True, 'search_default_in_progress': True, 'skip_acquisition_date': True}</field>
+        <field name="context">{
+            'search_default_draft': True,
+            'search_default_in_progress': True,
+            'skip_acquisition_date': True,
+            'search_default_group_by_picking_type_id': True,
+        }</field>
         <field name="search_view_id" ref="stock_picking_batch_filter"/>
         <field name="help" type="html">
             <div class="container mt-5">
                 <div class="row g-5">
                     <div class="col-lg-4" style="opacity: 0.5;">
                         <img src="/stock/static/img/shapes/wave-picking.svg" class="shadow rounded-3 w-100 mb-4"/>
-                        <h5>Wave transfers</h5>
+                        <h5>Batch transfers lines</h5>
                         <p class="small">Launch picking orders by aisle or area and regroup at packing zone. Ideal for large warehouses.</p>
                     </div>
                     <div class="col-lg-4">

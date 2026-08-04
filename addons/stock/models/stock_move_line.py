@@ -7,7 +7,7 @@ from odoo import _, api, fields, models
 from odoo.addons.web.controllers.utils import clean_action
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command, Domain
-from odoo.tools import OrderedSet, groupby
+from odoo.tools import OrderedSet, format_date, groupby
 from odoo.tools.float_utils import float_compare, float_is_zero, float_round
 
 
@@ -1315,16 +1315,7 @@ class StockMoveLine(models.Model):
         if 'active_wave_id' in self.env.context:
             wave = self.env['stock.picking.batch'].browse(self.env.context.get('active_wave_id'))
             return self._add_to_wave(wave)
-        view = self.env.ref('stock.stock_add_to_wave_form')
-        return {
-            'name': _('Add to Wave'),
-            'type': 'ir.actions.act_window',
-            'view_mode': 'form',
-            'res_model': 'stock.add.to.wave',
-            'views': [(view.id, 'form')],
-            'view_id': view.id,
-            'target': 'new',
-        }
+        return self.env['ir.actions.act_window']._for_xml_id('stock.stock_add_to_wave_action_stock_picking')
 
     def _add_to_wave(self, wave=False, description=False):
         """ Detach lines (and corresponding stock move) from a picking to another.
@@ -1340,9 +1331,9 @@ class StockMoveLine(models.Model):
                 'user_id': self.env.context.get('active_owner_id'),
                 'description': description,
             })
-            notification_title = _('The following wave transfer has been created')
+            notification_title = _('The following batch transfer has been created')
         else:
-            notification_title = _('The following wave transfer has been updated')
+            notification_title = _('The following batch transfer has been updated')
         line_by_picking = defaultdict(lambda: self.env['stock.move.line'])
         for line in self:
             line_by_picking[line.picking_id] |= line
@@ -1406,7 +1397,7 @@ class StockMoveLine(models.Model):
                 'message': '%s',
                 'links': [{
                     'label': wave.name,
-                    'url': f'/odoo/wave-transfers/{wave.id}',
+                    'url': f'/odoo/batch-transfers/{wave.id}',
                 }],
                 'sticky': False,
                 'next': {'type': 'ir.actions.act_window_close'},
@@ -1539,6 +1530,7 @@ class StockMoveLine(models.Model):
                         or (picking_type.wave_group_by_product and line.product_id != wave.move_line_ids.product_id) \
                         or (picking_type.wave_group_by_category and line.product_id.categ_id != wave.move_line_ids.product_id.categ_id) \
                         or (picking_type.wave_group_by_location and waves_nearest_parent_locations[wave] != nearest_parent_locations[line].id) \
+                        or (picking_type.wave_group_by_date and not picking_type._validate_line_date_for_wave(line, wave)) \
                         or not line._is_potential_existing_wave_extra(wave):
                             continue
 
@@ -1628,6 +1620,7 @@ class StockMoveLine(models.Model):
                     or (picking_type.wave_group_by_product and line.product_id != potential_line.product_id) \
                     or (picking_type.wave_group_by_category and line.product_id.categ_id != potential_line.product_id.categ_id) \
                     or (picking_type.wave_group_by_location and lines_nearest_parent_locations[potential_line] != nearest_parent_locations[line].id)  \
+                    or (picking_type.wave_group_by_date and not picking_type._validate_line_date_for_wave(line, potential_line)) \
                     or not line._is_new_potential_line_extra(potential_line):
                         continue
 
@@ -1699,6 +1692,11 @@ class StockMoveLine(models.Model):
             description_items.append(self.product_id.categ_id.complete_name)
         if self.picking_type_id.wave_group_by_location:
             description_items.append(nearest_parent_location.complete_name)
+        if self.picking_type_id.wave_group_by_date:
+            if self.picking_type_id.wave_date_granularity == 'day':
+                description_items.append(format_date(self.env, self.date))
+            elif self.picking_type_id.wave_date_granularity == 'week':
+                description_items.append(_('Week %d', self.date.date().isocalendar().week))
 
         description = ', '.join(description_items)
         return description

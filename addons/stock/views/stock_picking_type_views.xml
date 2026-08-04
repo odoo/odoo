@@ -132,52 +132,62 @@
                                 </group>
                             </group>
                             <group name="batch" invisible="code not in ('incoming', 'outgoing', 'internal')" groups="stock.group_stock_picking_batch">
-                                <group string="Batch &amp; Wave Transfers" colspan="12">
+                                <group string="Batch Transfers" colspan="12">
                                     <group>
-                                        <field name="auto_batch"/>
-                                        <field name="batch_max_lines" invisible="not auto_batch"/>
-                                        <field name="batch_max_pickings" invisible="not auto_batch"/>
-                                        <field name="batch_auto_confirm" invisible="not auto_batch"/>
+                                        <field name="batch_creation_type"/>
+                                        <span class="o_form_label fw-bold" invisible="batch_creation_type == 'manual'">Maximum</span>
+                                        <div>
+                                            <div name="batch_transfers" class="o_row" invisible="batch_creation_type == 'manual'">
+                                                <field name="batch_max_pickings" style="max-width:4em" widget="external_placeholder_integer_field" placeholder="All"/>
+                                                <label for="batch_max_pickings" string="Transfers"/>
+                                            </div>
+                                            <div name="batch_lines" class="o_row" invisible="batch_creation_type == 'manual'">
+                                                <field name="batch_max_lines" style="max-width:4em" widget="external_placeholder_integer_field" placeholder="All"/>
+                                                <label for="batch_max_lines" string="Lines"/>
+                                            </div>
+                                        </div>
+                                        <field name="batch_auto_confirm" invisible="batch_creation_type == 'manual'"/>
                                     </group>
                                     <group>
-                                        <span class="o_form_label fw-bold" invisible="not auto_batch">Batch Grouping</span>
-                                        <div name="batch_contact" class="o_row" invisible="not auto_batch">
-                                            <field name="batch_group_by_partner"/>
-                                            <label for="batch_group_by_partner" string="Contact"/>
-                                        </div>
-                                        <span invisible="not auto_batch"/>
-                                        <div name="batch_destination" class="o_row" invisible="not auto_batch">
-                                            <field name="batch_group_by_destination"/>
-                                            <label for="batch_group_by_destination"/>
-                                        </div>
-                                        <span invisible="not auto_batch or not default_location_src_id" groups="stock.group_stock_multi_locations"/>
-                                        <div name="batch_source_location" class="o_row" invisible="not auto_batch or not default_location_src_id" groups="stock.group_stock_multi_locations">
-                                            <field name="batch_group_by_src_loc"/>
-                                            <label for="batch_group_by_src_loc" string="Source Location"/>
-                                        </div>
-                                        <span invisible="not auto_batch or not default_location_dest_id" groups="stock.group_stock_multi_locations"/>
-                                        <div name="batch_dest_subloc" class="o_row" invisible="not auto_batch or not default_location_dest_id" groups="stock.group_stock_multi_locations">
-                                            <field name="batch_group_by_dest_loc"/>
-                                            <label for="batch_group_by_dest_loc" string="Destination Location"/>
-                                        </div>
-                                        <span class="o_form_label fw-bold" invisible="not auto_batch" style="white-space: nowrap;">Wave Grouping</span>
-                                        <div name="wave_product" class="o_row" invisible="not auto_batch">
-                                            <field name="wave_group_by_product"/>
-                                            <label for="wave_group_by_product"/>
-                                        </div>
-                                        <span invisible="not auto_batch"/>
-                                        <div name="wave_category" class="o_row" invisible="not auto_batch">
-                                            <field name="wave_group_by_category"/>
-                                            <label for="wave_group_by_category"/>
-                                            <field name="wave_category_ids" widget="many2many_tags" placeholder="Select product categories you want to group"
-                                                invisible="not wave_group_by_category" required="wave_group_by_category"/>
-                                        </div>
-                                        <span invisible="not auto_batch" groups="stock.group_stock_multi_locations"/>
-                                        <div name="wave_location" class="o_row" invisible="not auto_batch" groups="stock.group_stock_multi_locations">
-                                            <field name="wave_group_by_location"/>
-                                            <label for="wave_group_by_location"/>
-                                            <field name="wave_location_ids" widget="many2many_tags" placeholder="Select locations you want to group"
-                                                invisible="not wave_group_by_location" required="wave_group_by_location"/>
+                                        <span class="o_form_label fw-bold" invisible="batch_creation_type == 'manual'">Grouping by</span>
+                                        <div>
+                                            <div name="batch_contact" class="o_row" invisible="batch_creation_type == 'manual'">
+                                                <field name="batch_group_by_partner"/>
+                                                <label for="batch_group_by_partner" string="Contact"/>
+                                            </div>
+                                            <div name="wave_product" class="o_row" invisible="batch_creation_type == 'manual'">
+                                                <field name="wave_group_by_product"/>
+                                                <label for="wave_group_by_product"/>
+                                            </div>
+                                            <div name="wave_category" class="o_row" invisible="batch_creation_type == 'manual'">
+                                                <field name="wave_group_by_category"/>
+                                                <label for="wave_group_by_category"/>
+                                                <field name="wave_category_ids" widget="many2many_tags" placeholder="Select product categories you want to group"
+                                                    invisible="not wave_group_by_category" required="wave_group_by_category"/>
+                                            </div>
+                                            <div name="batch_destination" class="o_row" invisible="batch_creation_type == 'manual'">
+                                                <field name="batch_group_by_destination"/>
+                                                <label for="batch_group_by_destination"/>
+                                            </div>
+                                            <div name="batch_source_location" class="o_row" invisible="batch_creation_type == 'manual' or not default_location_src_id" groups="stock.group_stock_multi_locations">
+                                                <field name="batch_group_by_src_loc"/>
+                                                <label for="batch_group_by_src_loc" string="General Source Location"/>
+                                            </div>
+                                            <div name="batch_dest_subloc" class="o_row" invisible="batch_creation_type == 'manual' or not default_location_dest_id" groups="stock.group_stock_multi_locations">
+                                                <field name="batch_group_by_dest_loc"/>
+                                                <label for="batch_group_by_dest_loc" string="Destination Location"/>
+                                            </div>
+                                            <div name="wave_location" class="o_row" invisible="batch_creation_type == 'manual'" groups="stock.group_stock_multi_locations">
+                                                <field name="wave_group_by_location"/>
+                                                <label for="wave_group_by_location" string="Product Source Location"/>
+                                                <field name="wave_location_ids" widget="many2many_tags" placeholder="Select locations you want to group"
+                                                    invisible="not wave_group_by_location" required="wave_group_by_location"/>
+                                            </div>
+                                            <div name="wave_date" class="o_row" invisible="batch_creation_type == 'manual'">
+                                                <field name="wave_group_by_date"/>
+                                                <label for="wave_group_by_date" string="Date if same"/>
+                                                <field name="wave_date_granularity" class="oe_inline" required="wave_group_by_date"/>
+                                            </div>
                                         </div>
                                     </group>
                                 </group>
@@ -238,37 +248,15 @@
                     <t t-name="menu" t-if="!selection_mode">
                         <div class="container" t-if="record.show_picking_type.raw_value">
                             <div class="row">
-                                <div class="col-6">
-                                    <h5 role="menuitem" class="o_kanban_card_manage_title">
-                                        <span t-if="record.code.raw_value == 'internal'">Transfers</span>
-                                        <span t-else="">View</span>
-                                    </h5>
-                                    <div role="menuitem">
-                                        <a name="get_stock_picking_action_picking_type" type="object">All</a>
-                                    </div>
-                                    <div role="menuitem">
-                                        <a name="get_action_picking_tree_ready" type="object">Ready</a>
-                                    </div>
-                                    <div role="menuitem">
-                                        <a name="get_action_picking_tree_waiting" type="object">Waiting</a>
-                                    </div>
-                                </div>
                                 <div name="kanban_menu_section" class="col-6">
                                     <h5 role="menuitem" class="o_kanban_card_manage_title">
-                                        <a name="%(action_picking_form)d" type="action">New</a>
+                                        <span>View</span>
                                     </h5>
                                     <div role="menuitem">
                                         <a name="get_action_picking_type_moves_analysis" type="object">Reporting</a>
                                     </div>
-                                    <div role="menuitem" groups="stock.group_stock_picking_batch">
-                                        <a name="action_batch" type="object" context="{'view_mode':'form'}">
-                                            Prepare Batch
-                                        </a>
-                                    </div>
-                                    <div role="menuitem" groups="stock.group_stock_picking_batch">
-                                        <a name="stock.action_prepare_wave_for_picking_type" type="action">
-                                            Prepare Wave
-                                        </a>
+                                    <div role="menuitem">
+                                        <a name="action_detailed_moves" type="object" context="{'picking_type_id': id}">Detailed Moves</a>
                                     </div>
                                 </div>
                             </div>
@@ -338,14 +326,6 @@
                                             <div class="row">
                                                 <span class="col-6">Back Orders</span>
                                                 <field class="col-2 text-end" name="count_picking_backorders"/>
-                                            </div>
-                                        </a>
-                                    </div>
-                                    <div class="row" groups="stock.group_stock_picking_batch">
-                                        <a class="col-8 offset-4 text-truncate" name="action_wave" type="object">
-                                            <div t-if="record.count_picking_wave.raw_value > 0"  class="row">
-                                                <span class="col-6">Waves</span>
-                                                <field name="count_picking_wave" class="col-2 text-end"/>
                                             </div>
                                         </a>
                                     </div>

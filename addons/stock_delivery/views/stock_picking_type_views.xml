@@ -27,20 +27,21 @@
                 <field name="auto_print_carrier_labels" string="Carrier Labels" invisible="code == 'incoming'"/>
                 <field name="auto_print_export_documents" string="Export Documents" invisible="code == 'incoming'"/>
             </field>
-            <div name="batch_contact" position="after">
-                <span invisible="not auto_batch"/>
-                <div name="batch_carrier" class="o_row" invisible="not auto_batch">
+            <div name="wave_category" position="after">
+                <div name="batch_carrier" class="o_row" invisible="batch_creation_type == 'manual'">
                     <field name="batch_group_by_carrier"/>
                     <label for="batch_group_by_carrier"/>
                 </div>
             </div>
-            <field name="batch_auto_confirm" position="before">
-                <span invisible="not auto_batch"/>
-                <div class="o_row" name="batch_max_weight" invisible="not auto_batch">
-                    <field name="batch_max_weight" class="oe_inline"/>
-                    <span><field name="weight_uom_name"/></span>
+            <div name="batch_lines" position="after">
+                <div class="o_row" name="batch_max_weight" invisible="batch_creation_type == 'manual'">
+                    <field name="batch_max_weight" style="max-width:4em" widget="external_placeholder_integer_field" placeholder="All"/>
+                    <div>
+                        <field name="weight_uom_name" class="oe_inline"/>
+                        <label for="batch_max_weight" string=""/>
+                    </div>
                 </div>
-            </field>
+            </div>
         </field>
     </record>
 

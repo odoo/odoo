@@ -189,8 +189,7 @@ class StockPickingBatch(models.Model):
                 company_id = vals.get('company_id', self.env.company.id)
                 picking_type = self.env['stock.picking.type'].browse(vals.get('picking_type_id'))
                 if picking_type:
-                    sequence_code = 'picking.wave' if vals.get('is_wave') else 'picking.batch'
-                    vals['name'] = self._prepare_name(picking_type, sequence_code, company_id)
+                    vals['name'] = self._prepare_name(picking_type, company_id)
         return super().create(vals_list)
 
     def write(self, vals):
@@ -204,8 +203,7 @@ class StockPickingBatch(models.Model):
         if vals.get('picking_type_id'):
             self._sanity_check()
             for batch in batches_to_rename:
-                sequence_code = 'picking.wave' if batch.is_wave else 'picking.batch'
-                batch.name = self._prepare_name(picking_type, sequence_code, batch.company_id)
+                batch.name = self._prepare_name(picking_type, batch.company_id)
         if vals.get('picking_ids'):
             batch_without_picking_type = self.filtered(lambda batch: not batch.picking_type_id)
             if batch_without_picking_type:
@@ -340,11 +338,11 @@ class StockPickingBatch(models.Model):
             'type': 'ir.actions.client',
             'tag': 'display_notification',
             'params': {
-                'title': _('Batch/Wave transfers have been merged into the following transfer'),
+                'title': _('Batch transfers have been merged into the following transfer'),
                 'message': '%s',
                 'links': [{
                     'label': target_batch.name,
-                    'url': f"/odoo/action-stock.{'action_picking_tree_wave' if target_batch.is_wave else 'stock_picking_batch_action'}/{target_batch.id}",
+                    'url': f"/odoo/action-stock.stock_picking_batch_action/{target_batch.id}",
                 }],
                 'sticky': False,
                 'next': {'type': 'ir.actions.act_window_close'},
@@ -405,21 +403,27 @@ class StockPickingBatch(models.Model):
     # Miscellaneous
     # -------------------------------------------------------------------------
     @api.model
-    def _prepare_name(self, picking_type, sequence_code, company_id):
-        sequence = self.env['ir.sequence'].with_company(company_id).next_by_code(sequence_code) or '/'
+    def _prepare_name(self, picking_type, company_id):
+        sequence = self.env['ir.sequence'].with_company(company_id).next_by_code("picking.batch") or '/'
         split = sequence.rsplit('/', 1)
         if len(split) != 2:
             if self:
                 self.message_post(
                     body=_(
-                        "The sequence '%(sequence)s' is misconfigured. "
+                        "The sequence 'picking.batch' is misconfigured. "
                         "Its prefix should end with a '/' separator.",
-                        sequence=sequence_code,
                     ),
                 )
             return f"{picking_type.sequence_code}{sequence}"
         sequence_prefix, sequence_number = split
         return f"{sequence_prefix}/{picking_type.sequence_code}{sequence_number}"
+
+    @api.model
+    def fields_get(self, allfields=None, attributes=None):
+        res = super().fields_get(allfields, attributes)
+        if "is_wave" in res:
+            res["is_wave"]["searchable"] = False
+        return res
 
     def _sanity_check(self):
         for batch in self:
