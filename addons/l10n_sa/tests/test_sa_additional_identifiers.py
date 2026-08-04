@@ -31,6 +31,16 @@ class TestL10nSaAdditionalIdentifiers(AccountTestInvoicingCommon):
         self.assertIn('SA_PAS', keys)
         self.assertIn('SA_OTH', keys)
 
+    def test_sa_oth_available_for_non_sa_partner(self):
+        """'SA_OTH' should be available for non-Saudi partners."""
+
+        self.company.country_id = self.saudi_arabia
+        partner = self.env['res.partner'].create({
+            'name': 'Foreign Partner',
+            'country_id': self.env.ref('base.us').id,
+        })
+        self.assertIn('SA_OTH', partner.available_additional_identifiers_metadata)
+
     def test_sa_mutual_exclusivity(self):
         """Only one 'SA' identifier should be active at a time."""
         self.partner_sa._set_additional_identifier('SA_CRN', '2525252525252')
