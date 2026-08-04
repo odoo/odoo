@@ -34,6 +34,7 @@ class Event extends models.Model {
     datetime_start = fields.Datetime();
     datetime_end = fields.Datetime();
     type = fields.Many2one({ relation: "event.type" });
+    allowed_type_ids = fields.Many2many({ relation: "event.type" });
     user_id = fields.Many2one({ relation: "calendar.user" });
     user_ids = fields.Many2many({ relation: "calendar.user" });
 
@@ -155,6 +156,16 @@ class Event extends models.Model {
                     <field name="name" required="1"/>
                     <field name="type"/>
                     <field name="user_ids" widget="many2many_tags"/>
+                </group>
+            </form>
+        `,
+        // "allowed_type_ids" is only there to restrict "type": it has no display
+        // field, so the model only loads the first record of the relation.
+        "form,multi_create_form_allowed_types": `
+            <form>
+                <group>
+                    <field name="allowed_type_ids" invisible="1"/>
+                    <field name="type" domain="[('id', 'in', allowed_type_ids)]"/>
                 </group>
             </form>
         `,
@@ -614,6 +625,58 @@ test("multi_create: use state to keep values of inputs", async () => {
     expect(".o_form_view [name='name'] input").toHaveValue("Test state");
     expect(".o_form_view [name='type'] input").toHaveValue("Event Type 3");
     expect(queryAllTexts(".o_form_view [name='user_ids'] .o_tag")).toEqual(["user 1", "user 3"]);
+});
+
+test.tags("desktop");
+test("multi_create: state keeps the whole x2many restricting another field", async () => {
+    onRpc("event", "create", ({ args: [records] }) => {
+        for (const record of records) {
+            expect.step(`${record.date_start}_${record.type}`);
+        }
+    });
+
+    await mountView({
+        resModel: "event",
+        type: "calendar",
+        context: { default_allowed_type_ids: [1, 2, 3] },
+        arch: `
+            <calendar date_start="date_start" scales="month" multi_create_view="multi_create_form_allowed_types">
+                <field name="name"/>
+                <field name="date_start" invisible="1"/>
+            </calendar>
+        `,
+    });
+
+    await selectDateRange("2019-03-04", "2019-03-05");
+    await multiCreateClickAddButton();
+
+    await contains(".o_multi_create_popover .o_form_view [name='type'] input").click();
+    expect(queryAllTexts(".o-autocomplete--dropdown-item:not(.o_m2o_dropdown_option)")).toEqual([
+        "Event Type 1",
+        "Event Type 2",
+        "Event Type 3",
+    ]);
+    await contains(".o-autocomplete--dropdown-item:contains('Event Type 2')").click();
+    await multiCreatePopoverClickAddButton();
+
+    expect.verifySteps(["2019-03-04_2", "2019-03-05_2"]);
+
+    // Delete the entry created on the first day of the selection.
+    await contains(".fc-day[data-date='2019-03-04']").click();
+    await contains(".o_multi_selection_buttons .btn .fa-trash").click();
+    await contains(".o_dialog footer button:contains(Ok)").click();
+
+    // Reopening the popover reuses the values kept from the previous creation:
+    // they must still contain every allowed type.
+    await contains(".fc-day[data-date='2019-03-04']").click();
+    await multiCreateClickAddButton();
+
+    await contains(".o_multi_create_popover .o_form_view [name='type'] input").click();
+    expect(queryAllTexts(".o-autocomplete--dropdown-item:not(.o_m2o_dropdown_option)")).toEqual([
+        "Event Type 1",
+        "Event Type 2",
+        "Event Type 3",
+    ]);
 });
 
 test.tags("desktop");
