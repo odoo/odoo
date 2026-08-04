@@ -246,3 +246,51 @@ class TestSubcontractingDropshippingValuation(ValuationReconciliationTestCommon)
                 line.price_unit = 90
         bill.action_post()
         self.assertEqual(component.standard_price, 75)
+
+    def test_dropship_kit_bom_component_value(self):
+        """ Check that selling a kit through dropshipping leaves the unit cost of its
+        components untouched, as the goods never enter the company's own stock.
+        """
+        kit_final_prod = self.product_a
+        avco_products = avco_product, avco_product_2 = self.env['product.product'].create([{
+            'name': f'avco product{i}',
+            'is_storable': True,
+            'categ_id': self.categ_avco_auto.id,
+        } for i in range(2)])
+        kit_bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': kit_final_prod.product_tmpl_id.id,
+            'uom_id': kit_final_prod.uom_id.id,
+            'product_qty': 1.0,
+            'type': 'phantom',
+        })
+        kit_bom.bom_line_ids = [
+            Command.create({
+                'product_id': product.id,
+                'product_qty': 2,
+            }) for product in avco_products
+        ]
+        self.env['product.supplierinfo'].create([{
+            'product_id': product.id,
+            'partner_id': self.partner_a.id,
+            'price': 100,
+        } for product in avco_products])
+
+        sale_order = self.env['sale.order'].sudo().create({
+            'partner_id': self.partner_b.id,
+            'order_line': [Command.create({
+                'price_unit': 900,
+                'product_id': kit_final_prod.id,
+                'route_ids': [Command.link(self.dropship_route.id)],
+                'product_uom_qty': 2.0,
+            })],
+        })
+        sale_order.action_confirm()
+        purchase_order = sale_order._get_purchase_orders()[0]
+        purchase_order.button_confirm()
+        dropship_transfer = purchase_order.picking_ids[0]
+        dropship_transfer.button_validate()
+
+        self.assertEqual(avco_product.standard_price, 0)
+        self.assertEqual(avco_product_2.standard_price, 0)
+        for move in dropship_transfer.move_ids:
+            self.assertEqual(move._get_value(), 400)
