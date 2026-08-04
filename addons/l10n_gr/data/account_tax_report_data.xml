@@ -94,6 +94,29 @@
                                     </record>
                                 </field>
                             </record>
+                            <record id="l10n_gr_tr_308" model="account.report.line">
+                                <field name="name">308 - Sales 4% (Article 31)</field>
+                                <field name="name@el_GR">308 - Πωλήσεις 4% (άρθρο 31)</field>
+                                <field name="code">l10n_gr_308</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_gr_tr_308_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">l10n_gr_308.sale + l10n_gr_308.purchase</field>
+                                    </record>
+                                    <record id="l10n_gr_tr_308_tag_sale" model="account.report.expression">
+                                        <field name="label">sale</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-308</field>
+                                    </record>
+                                    <record id="l10n_gr_tr_308_tag_purchase" model="account.report.expression">
+                                        <field name="label">purchase</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">308rc</field>
+                                    </record>
+                                </field>
+                            </record>
                             <record id="l10n_gr_tr_304" model="account.report.line">
                                 <field name="name">304 - Sales 9%</field>
                                 <field name="name@el_GR">304 - Πωλήσεις 9%</field>
@@ -163,6 +186,29 @@
                                     </record>
                                 </field>
                             </record>
+                            <record id="l10n_gr_tr_309" model="account.report.line">
+                                <field name="name">309 - Sales 3% (Article 31)</field>
+                                <field name="name@el_GR">309 - Πωλήσεις 3% (άρθρο 31)</field>
+                                <field name="code">l10n_gr_309</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_gr_tr_309_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">l10n_gr_309.sale + l10n_gr_309.purchase</field>
+                                    </record>
+                                    <record id="l10n_gr_tr_309_tag_sale" model="account.report.expression">
+                                        <field name="label">sale</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-309</field>
+                                    </record>
+                                    <record id="l10n_gr_tr_309_tag_purchase" model="account.report.expression">
+                                        <field name="label">purchase</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">309rc</field>
+                                    </record>
+                                </field>
+                            </record>
                             <record id="l10n_gr_tr_307" model="account.report.line">
                                 <field name="name">307 - Taxable outputs</field>
                                 <field name="name@el_GR">307 - Φορολογητέες εκροές</field>
@@ -172,9 +218,11 @@
                                     l10n_gr_301.balance +
                                     l10n_gr_302.balance +
                                     l10n_gr_303.balance +
+                                    l10n_gr_308.balance +
                                     l10n_gr_304.balance +
                                     l10n_gr_305.balance +
-                                    l10n_gr_306.balance
+                                    l10n_gr_306.balance +
+                                    l10n_gr_309.balance
                                 </field>
                             </record>
                             <record id="l10n_gr_tr_331" model="account.report.line">
@@ -213,6 +261,19 @@
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-333</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_gr_tr_338" model="account.report.line">
+                                <field name="name">338 - VAT sales 4% (Article 31)</field>
+                                <field name="name@el_GR">338 - Πωλήσεις ΦΠΑ 4% (άρθρο 31)</field>
+                                <field name="code">l10n_gr_338</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_gr_tr_338_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-338</field>
                                     </record>
                                 </field>
                             </record>
@@ -255,6 +316,19 @@
                                     </record>
                                 </field>
                             </record>
+                            <record id="l10n_gr_tr_339" model="account.report.line">
+                                <field name="name">339 - VAT sales 3% (Article 31)</field>
+                                <field name="name@el_GR">339 - Πωλήσεις ΦΠΑ 3% (άρθρο 31)</field>
+                                <field name="code">l10n_gr_339</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_gr_tr_339_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-339</field>
+                                    </record>
+                                </field>
+                            </record>
                             <record id="l10n_gr_tr_337" model="account.report.line">
                                 <field name="name">337 - VAT taxable outputs</field>
                                 <field name="name@el_GR">337 - Φορολογητέες εκροές ΦΠΑ</field>
@@ -264,9 +338,11 @@
                                     l10n_gr_331.balance +
                                     l10n_gr_332.balance +
                                     l10n_gr_333.balance +
+                                    l10n_gr_338.balance +
                                     l10n_gr_334.balance +
                                     l10n_gr_335.balance +
-                                    l10n_gr_336.balance
+                                    l10n_gr_336.balance +
+                                    l10n_gr_339.balance
                                 </field>
                             </record>
                             <record id="l10n_gr_tr_342" model="account.report.line">
