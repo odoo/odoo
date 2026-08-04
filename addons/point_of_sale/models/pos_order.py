@@ -128,7 +128,10 @@ class PosOrder(models.Model):
                     order[field] = []
 
             del order['uuid']
-            del order['access_token']
+            if "access_token" in order:
+                # From self access_token is no longer present in the data
+                del order['access_token']
+
             if order.get('state') == 'paid':
                 # The "paid" state will be assigned later by `_process_saved_order`
                 order['state'] = pos_order.state
