@@ -591,3 +591,16 @@ class TestPricelist(ProductVariantsCommon):
             packaging_rule_2.id,
             "Packaging rule with uom_dozen should be applied",
         )
+
+    def test_pricelist_item_creation_from_product_variant_form(self):
+        """Creating a pricelist rule from a product variant's own form should
+        keep the variant it was created from, instead of dropping it because
+        `applied_on` was wrongly left on `1_product`."""
+        sofa_1 = self.product_template_sofa.product_variant_ids[0]
+        with Form(sofa_1) as product_form:
+            with product_form.fixed_pricelist_rule_ids.new() as item_form:
+                item_form.fixed_price = 50
+        item = sofa_1.pricelist_rule_ids
+        self.assertEqual(item.applied_on, "0_product_variant")
+        self.assertEqual(item.product_id, sofa_1)
+        self.assertEqual(item.product_tmpl_id, self.product_template_sofa)
