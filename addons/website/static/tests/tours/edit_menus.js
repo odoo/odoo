@@ -491,6 +491,10 @@ registry.category("web_tour.tours").add("edit_menus", {
             run: "click",
         })),
         {
+            content: "Wait for the deleted menus to be removed from the editor",
+            trigger: `${triggerModalEditMenu} .oe_menu_editor:not(:has(.js_menu_label:contains(brol)))`,
+        },
+        {
             content: "Nest 'new_nested_menu' under 'new_menu'",
             trigger: '.oe_menu_editor li:contains("new_nested_menu") [data-icon="drag_indicator"]',
             async run({ drag_and_drop }) {
