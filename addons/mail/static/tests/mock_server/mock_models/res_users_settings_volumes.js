@@ -3,6 +3,13 @@ import { models } from "@web/../tests/web_test_helpers";
 export class ResUsersSettingsVolumes extends models.ServerModel {
     _name = "res.users.settings.volumes";
 
+    _store_volume_fields(res) {
+        res.extend(["volume"]);
+        res.one("partner_id", "_store_avatar_fields");
+        res.one("guest_id", "_store_avatar_fields");
+        res.one("user_setting_id", []);
+    }
+
     /** @param {number[]} ids */
     discuss_users_settings_volume_format(ids) {
         /** @type {import("mock_models").MailGuest} */

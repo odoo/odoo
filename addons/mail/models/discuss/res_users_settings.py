@@ -2,9 +2,12 @@
 
 from odoo import api, fields, models
 
+from odoo.addons.mail.tools.discuss import Store
+
 
 class ResUsersSettings(models.Model):
-    _inherit = 'res.users.settings'
+    _name = "res.users.settings"
+    _inherit = ["res.users.settings", "bus.sync.mixin"]
 
     volume_settings_ids = fields.One2many('res.users.settings.volumes', 'user_setting_id', string="Volumes of other partners")
 
@@ -15,6 +18,15 @@ class ResUsersSettings(models.Model):
         help="This setting will only be applied to channels. Mentions only if not specified.",
     )
 
+    def _store_settings_fields(self, res: Store.FieldList):
+        """Fields to send to the store settings singleton. Modules override to add theirs."""
+        res.extend(["channel_notifications"])
+        res.many("volume_settings_ids", "_store_volume_fields")
+
+    def _sync_field_names(self, res):
+        super()._sync_field_names(res)
+        self._store_settings_fields(res[None])
+
     @api.model
     def _format_settings(self, fields_to_format):
         res = super()._format_settings(fields_to_format)
@@ -24,11 +36,6 @@ class ResUsersSettings(models.Model):
             if volume_settings:
                 res["volumes"] = [("ADD", volume_settings)]
         return res
-
-    def set_res_users_settings(self, new_settings):
-        formatted = super().set_res_users_settings(new_settings)
-        self._bus_send("res.users.settings", formatted)
-        return formatted
 
     def set_volume_setting(self, partner_id, volume, guest_id=None):
         """
@@ -51,6 +58,7 @@ class ResUsersSettings(models.Model):
                 'partner_id': partner_id,
                 'guest_id': guest_id,
             })
-        self._bus_send(
-            "res.users.settings.volumes", volume_setting._discuss_users_settings_volume_format()
-        )
+            volume_setting._bus_send(
+                "mail.record/insert",
+                Store().add(volume_setting, "_store_volume_fields"),
+            )

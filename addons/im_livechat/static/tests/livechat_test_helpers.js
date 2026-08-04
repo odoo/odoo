@@ -21,6 +21,7 @@ import { Im_LivechatExpertise } from "./mock_server/mock_models/im_livechat_expe
 import { ResGroupsPrivilege } from "./mock_server/mock_models/res_groups_privilege";
 import { ResGroups } from "./mock_server/mock_models/res_groups";
 import { ResUsers } from "./mock_server/mock_models/res_users";
+import { ResUsersSettings } from "./mock_server/mock_models/res_users_settings";
 import { session } from "@web/session";
 
 export function defineLivechatModels() {
@@ -52,6 +53,7 @@ export const livechatModels = {
     Im_LivechatExpertise,
     IrWebSocket,
     ResUsers,
+    ResUsersSettings,
     ResGroupsPrivilege,
     ResGroups,
 };

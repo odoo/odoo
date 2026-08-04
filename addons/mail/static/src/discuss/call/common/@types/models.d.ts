@@ -39,9 +39,6 @@ declare module "models" {
     export interface ResPartner {
         currentRtcSession: RtcSession;
     }
-    export interface Settings {
-        getVolume: (rtcSession: RtcSession) => number;
-    }
     export interface Store {
         _hasFullscreenUrl: boolean;
         _hasFullscreenUrlOnUpdate: () => void;

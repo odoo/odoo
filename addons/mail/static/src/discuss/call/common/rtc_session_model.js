@@ -253,6 +253,33 @@ export class RtcSession extends Record {
         this.localVolume = value;
     }
 
+    /** @returns {number} the volume to play this session at */
+    getEffectiveVolume() {
+        return (
+            this.volume ??
+            this.store.self_user?.res_users_settings_id?.volume_settings_ids.find(
+                (volume) =>
+                    volume.partner_id?.eq(this.partner_id) || volume.guest_id?.eq(this.guest_id)
+            )?.volume ??
+            0.5
+        );
+    }
+
+    /**
+     * Apply the volume to this session and persist it, so that it also applies
+     * to the next sessions of its persona.
+     *
+     * @param {number} volume
+     */
+    saveEffectiveVolume(volume) {
+        this.volume = volume;
+        this.store.self_user?.res_users_settings_id?.saveVolumeSetting({
+            guestId: this.guest_id?.id,
+            partnerId: this.partner_id?.id,
+            volume,
+        });
+    }
+
     async playAudio() {
         if (!this.audioElement) {
             return;

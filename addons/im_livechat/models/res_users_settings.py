@@ -2,6 +2,8 @@
 
 from odoo import fields, models
 
+from odoo.addons.mail.tools.discuss import Store
+
 
 class ResUsersSettings(models.Model):
     _inherit = 'res.users.settings'
@@ -14,3 +16,7 @@ class ResUsersSettings(models.Model):
         string="Live Chat Expertise",
         help="When forwarding live chat conversations, the chatbot will prioritize users with matching expertise.",
     )
+
+    def _store_settings_fields(self, res: Store.FieldList):
+        super()._store_settings_fields(res)
+        res.extend(["livechat_username", "livechat_lang_ids", "livechat_expertise_ids"])

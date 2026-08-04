@@ -1,13 +1,10 @@
 import { hasHardwareAcceleration } from "@mail/utils/common/misc";
 import { _t } from "@web/core/l10n/translation";
-import { browser } from "@web/core/browser/browser";
 import { fields, Record } from "@mail/model/export";
 import { rpc } from "@web/core/network/rpc";
 
 export class Settings extends Record {
     static singleton = true;
-
-    id;
 
     setup() {
         super.setup();
@@ -15,15 +12,6 @@ export class Settings extends Record {
             typeof document.createElement("canvas").getContext("2d").filter !== "undefined";
     }
 
-    // Notification settings
-    /**
-     * @type {"mentions"|"all"|"no_notif"}
-     */
-    channel_notifications = fields.Attr("mentions", {
-        compute() {
-            return this.channel_notifications === false ? "mentions" : this.channel_notifications;
-        },
-    });
     messageSound = fields.Attr(true, { localStorage: true });
     useCallAutoFocus = fields.Attr(true, { localStorage: true });
 
@@ -39,8 +27,6 @@ export class Settings extends Record {
     });
     usePushToTalk = fields.Attr(false, { localStorage: true });
     voiceActiveDuration = fields.Attr(200, { localStorage: true });
-    volumes = fields.Many("Volume");
-    volumeSettingsTimeouts = new Map();
     // Normalized [0, 1] volume at which the voice activation system must consider the user as "talking".
     voiceActivationThreshold = fields.Attr(0.05, { localStorage: true });
     // true if listening to keyboard input to register the push to talk key.
@@ -215,28 +201,6 @@ export class Settings extends Record {
         }
         this.pushToTalkKey = pushToTalkKey;
     }
-    /**
-     * @param {Object} param0
-     * @param {number} [param0.partnerId]
-     * @param {number} [param0.guestId]
-     * @param {number} param0.volume
-     */
-    async saveVolumeSetting({ partnerId, guestId, volume }) {
-        if (!this.store.self_user) {
-            return;
-        }
-        const key = `${partnerId}_${guestId}`;
-        if (this.volumeSettingsTimeouts.get(key)) {
-            browser.clearTimeout(this.volumeSettingsTimeouts.get(key));
-        }
-        this.volumeSettingsTimeouts.set(
-            key,
-            browser.setTimeout(
-                this._onSaveVolumeSettingTimeout.bind(this, { key, partnerId, guestId, volume }),
-                5000
-            )
-        );
-    }
 
     // methods
 
@@ -277,21 +241,6 @@ export class Settings extends Record {
             return [...settingsKeySet].every((key) => eventKeySet.has(key));
         }
         return settingsKeySet.has(ev.key === "Meta" ? "Alt" : ev.key);
-    }
-    /**
-     * @param {Object} param0
-     * @param {String} param0.key
-     * @param {number} [param0.partnerId]
-     * @param {number} param0.volume
-     */
-    async _onSaveVolumeSettingTimeout({ key, partnerId, guestId, volume }) {
-        this.volumeSettingsTimeouts.delete(key);
-        await this.store.env.services.orm.call(
-            "res.users.settings",
-            "set_volume_setting",
-            [[this.id], partnerId, volume],
-            { guest_id: guestId }
-        );
     }
 }
 

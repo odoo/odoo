@@ -72,6 +72,11 @@ declare module "models" {
         is_livechat_manager: boolean;
         livechat_expertise_ids: LivechatExpertise[];
     }
+    export interface ResUsersSettings {
+        livechat_expertise_ids: number[];
+        livechat_lang_ids: number[];
+        livechat_username: string|undefined;
+    }
     export interface Store {
         can_download_transcript: boolean|undefined;
         Chatbot: StaticMailRecord<Chatbot, typeof ChatbotClass>;

@@ -29,7 +29,7 @@ export class CallContextMenu extends Component {
             uploadStats: {},
             producerStats: {},
             peerStats: {},
-            rangeVolume: this.volume,
+            rangeVolume: this.props.rtcSession.getEffectiveVolume(),
         });
         onMounted(() => {
             if (!this.env.debug) {
@@ -110,10 +110,6 @@ export class CallContextMenu extends Component {
                 ? this.state.uploadStats.localCandidateType
                 : this.state.peerStats.localCandidateType;
         return this.formatProtocol(candidateType);
-    }
-
-    get volume() {
-        return this.store.settings.getVolume(this.props.rtcSession);
     }
 
     /**

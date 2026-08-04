@@ -32,8 +32,6 @@ export class ResUsers extends webModels.ResUsers {
         const ResPartner = this.env["res.partner"];
         /** @type {import("mock_models").ResUsers} */
         const ResUsers = this.env["res.users"];
-        /** @type {import("mock_models").ResUsersSettings} */
-        const ResUsersSettings = this.env["res.users.settings"];
         /** @type {import("mock_models").MailMessageSubtype} */
         const MailMessageSubtype = this.env["mail.message.subtype"];
         store.add_global_values((res) => {
@@ -54,11 +52,9 @@ export class ResUsers extends webModels.ResUsers {
                 value: ResPartner.browse(serverState.odoobotId),
             });
             if (!this._is_public(this.env.uid)) {
-                const userSettings = ResUsersSettings._find_or_create_for_user(this.env.uid);
                 res.one("self_user", "_store_init_fields", {
                     value: ResUsers.browse(this.env.user.id),
                 });
-                res.attr("settings", ResUsersSettings.res_users_settings_format(userSettings.id));
             } else if (this.env.cookie.get("dgid")) {
                 res.one(
                     "self_guest",
@@ -199,6 +195,14 @@ export class ResUsers extends webModels.ResUsers {
         });
         res.attr("is_admin", () => this._is_admin());
         res.extend(["notification_type", "share", "signature"]);
+        /** @type {import("mock_models").ResUsersSettings} */
+        const ResUsersSettings = this.env["res.users.settings"];
+        // mock simplification: res_users_settings_id is computed on the server
+        res.one("res_users_settings_id", "_store_settings_fields", {
+            value: ResUsersSettings.browse(
+                ResUsersSettings._find_or_create_for_user(this.env.uid).id
+            ),
+        });
         res.from_method("_store_im_status_fields");
     }
 

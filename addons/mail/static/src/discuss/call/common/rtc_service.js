@@ -873,12 +873,7 @@ export class Rtc extends Record {
      * @param {number} volume
      */
     setVolume(session, volume) {
-        session.volume = volume;
-        this.store.settings.saveVolumeSetting({
-            guestId: session?.guest_id?.id,
-            partnerId: session?.partner_id?.id,
-            volume,
-        });
+        session.saveEffectiveVolume(volume);
         this._postToTabs({
             type: CROSS_TAB_CLIENT_MESSAGE.UPDATE_VOLUME,
             changes: { sessionId: session.id, volume },
@@ -896,7 +891,7 @@ export class Rtc extends Record {
 
     /**
      * Open the meeting view. By default it opens as a full-window overlay that keeps the browser
-     * header (address bar, tabs, …) visible — this is what switching layouts/modes uses. Pass
+     * header (address bar, tabs, ...) visible, which is what switching layouts/modes uses. Pass
      * `browserFullscreen: true` (only the fullscreen button does) to request true browser
      * fullscreen instead, hiding the browser UI.
      *
@@ -2516,7 +2511,7 @@ export class Rtc extends Record {
             audioElement.srcObject = stream;
             audioElement.load();
             audioElement.muted = mute || session.isLocallyMuted;
-            audioElement.volume = this.store.settings.getVolume(session);
+            audioElement.volume = session.getEffectiveVolume();
             // Using both autoplay and play() as safari may prevent play() outside of user interactions
             // while some browsers may not support or block autoplay.
             audioElement.autoplay = true;
@@ -2778,11 +2773,6 @@ export const rtcService = {
             if (rtc.localSession?.id === sessionId) {
                 rtc.notifyServerDisconnect();
                 rtc.endCall();
-            }
-        });
-        services["bus_service"].subscribe("res.users.settings.volumes", (payload) => {
-            if (payload) {
-                rtc.store.Volume.insert(payload);
             }
         });
         services["bus_service"].subscribe(
