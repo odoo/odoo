@@ -143,6 +143,11 @@ class PrefetchRelational(Reversible):  # noqa: PLW1641
         return hash(self._field) ^ freehash(self._records._prefetch_ids)
 
     def __iter__(self):
+        try:  # noqa: SIM105
+            # make sure source records are in cache
+            self._records.fetch([self._field.name])
+        except Exception:  # noqa: BLE001
+            pass
         field_cache = self._field._get_cache(self._records.env)
         if self._field.type == 'many2one':
             for id_ in self._records._prefetch_ids:
@@ -154,6 +159,11 @@ class PrefetchRelational(Reversible):  # noqa: PLW1641
                     yield from coids
 
     def __reversed__(self):
+        try:  # noqa: SIM105
+            # make sure source records are in cache
+            self._records.fetch([self._field.name])
+        except Exception:  # noqa: BLE001
+            pass
         field_cache = self._field._get_cache(self._records.env)
         if self._field.type == 'many2one':
             for id_ in reversed(self._records._prefetch_ids):

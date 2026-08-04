@@ -674,6 +674,27 @@ class TestPerformance(SavepointCaseWithUserDemo):
             # prefetch field 'value' on all lines at once.
             lines.mapped('related_base_id')
 
+    def test_relational_prefetch_broken_invalidation(self):
+        n_children = 20
+        Model = self.env['test_performance.simple.minded']
+        root = Model.create({'name': 'root'})
+        children = Model.create([
+            {'name': f'child {i}', 'parent_id': root.id}
+            for i in range(n_children)
+        ])
+        Model.create([
+            {'name': f'grandchild {i}', 'parent_id': child.id}
+            for i, child in enumerate(children)
+        ])
+        children = root.child_ids
+
+        # Invalidation after resolving children should not break its prefetch.
+        self.env.invalidate_all()
+        with self.assertQueryCount(3):
+            # The prefetch is rebuild, then resolve child_ids and then name.
+            for child in children:
+                child.child_ids.name
+
 
 @tagged('bacon_and_eggs')
 @tagged('at_install', '-post_install')  # LEGACY at_install
