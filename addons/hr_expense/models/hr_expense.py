@@ -1872,8 +1872,122 @@ class HrExpense(models.Model):
         bill_payable_lines = self.existing_bill_id.line_ids.filtered(lambda l: l.account_id.account_type == 'liability_payable')
         expense_payable_lines = self.account_move_id.line_ids.filtered(lambda l: l.account_id.account_type == 'liability_payable')
 
+<<<<<<< 5afb461b2ad75e03693d960ddb2d79f7af236d42
         if bill_payable_lines and expense_payable_lines:
             (bill_payable_lines + expense_payable_lines).reconcile()
+||||||| 1ad38d396eb60858231ad667d9e71e8bee5b5ab2
+    def _post_without_wizard(self):
+        """ Post an employee expense without any direct call for the wizard, should never be called unless in very specific flows """
+        # When a move has been deleted
+        self._check_can_create_move()
+        today = fields.Date.context_today(self)
+        employee_expenses = self.filtered(lambda expense: expense.payment_mode == 'own_account')
+
+        for company, expenses in employee_expenses.grouped('company_id').items():
+            expenses = expenses.with_company(company)
+            company_domain = self.env['account.journal']._check_company_domain(company)
+            journal = (
+                    company.expense_journal_id
+                    or expenses.env['account.journal'].search([*company_domain, ('type', '=', 'purchase')], limit=1))
+            expense_receipt_vals_list = [
+                {
+                    **new_receipt_vals,
+                    'journal_id': journal.id,
+                    'invoice_date': today,
+                }
+                for new_receipt_vals in expenses._prepare_receipts_vals()
+            ]
+            moves = self.env['account.move'].sudo().create(expense_receipt_vals_list)
+            for move in moves:
+                move._message_set_main_attachment_id(move.attachment_ids, force=True, filter_xml=False)
+            moves.action_post()
+
+    def _create_company_paid_moves(self):
+        """
+        Creation of the account moves for the company paid expenses.
+        -> Create an account payment (we only "log" the already paid expense so it can be reconciled)
+        """
+        self = self.with_context(clean_context(self.env.context))  # remove default_*
+        company_account_expenses = self.filtered(lambda expense: expense.payment_mode == 'company_account')
+        moves_sudo = self.env['account.move'].sudo()
+
+        if company_account_expenses:
+            move_vals_list, payment_vals_list = zip(*[expense._prepare_payments_vals() for expense in company_account_expenses])
+
+            payment_moves_sudo = self.env['account.move'].sudo().create(move_vals_list)
+            for payment_vals, move in zip(payment_vals_list, payment_moves_sudo):
+                payment_vals['move_id'] = move.id
+
+            payments_sudo = self.env['account.payment'].sudo().create(payment_vals_list)
+            for payment_sudo, move_sudo in zip(payments_sudo, payment_moves_sudo):
+                move_sudo.update({
+                    'origin_payment_id': payment_sudo.id,
+                    # We need to put the journal_id because editing origin_payment_id triggers a re-computation chain
+                    # that voids the company_currency_id of the lines
+                    'journal_id': move_sudo.journal_id.id,
+                })
+
+            moves_sudo |= payment_moves_sudo
+
+        # returning the move with the superuser flag set back as it was at the origin of the call
+        return moves_sudo.sudo(self.env.su)
+=======
+    def _post_without_wizard(self):
+        """ Post an employee expense without any direct call for the wizard, should never be called unless in very specific flows """
+        # When a move has been deleted
+        self._check_can_create_move()
+        today = fields.Date.context_today(self)
+        employee_expenses = self.filtered(lambda expense: expense.payment_mode == 'own_account')
+
+        for company, expenses in employee_expenses.grouped('company_id').items():
+            expenses = expenses.with_company(company)
+            company_domain = self.env['account.journal']._check_company_domain(company)
+            journal = (
+                    company.expense_journal_id
+                    or expenses.env['account.journal'].search([*company_domain, ('type', '=', 'purchase')], limit=1))
+            expense_receipt_vals_list = [
+                {
+                    **new_receipt_vals,
+                    'journal_id': journal.id,
+                    'invoice_date': today,
+                }
+                for new_receipt_vals in expenses._prepare_receipts_vals()
+            ]
+            moves = self.env['account.move'].sudo().create(expense_receipt_vals_list)
+            for move in moves:
+                move._message_set_main_attachment_id(move.attachment_ids, force=True, filter_xml=False)
+            moves.action_post()
+
+    def _create_company_paid_moves(self):
+        """
+        Creation of the account moves for the company paid expenses.
+        -> Create an account payment (we only "log" the already paid expense so it can be reconciled)
+        """
+        self = self.with_context(clean_context(self.env.context), project_id=False)  # noqa: PLW0642  # remove default_* and project_id
+        company_account_expenses = self.filtered(lambda expense: expense.payment_mode == 'company_account')
+        moves_sudo = self.env['account.move'].sudo()
+
+        if company_account_expenses:
+            move_vals_list, payment_vals_list = zip(*[expense._prepare_payments_vals() for expense in company_account_expenses])
+
+            payment_moves_sudo = self.env['account.move'].sudo().create(move_vals_list)
+            for payment_vals, move in zip(payment_vals_list, payment_moves_sudo):
+                payment_vals['move_id'] = move.id
+
+            payments_sudo = self.env['account.payment'].sudo().create(payment_vals_list)
+            for payment_sudo, move_sudo in zip(payments_sudo, payment_moves_sudo):
+                move_sudo.update({
+                    'origin_payment_id': payment_sudo.id,
+                    # We need to put the journal_id because editing origin_payment_id triggers a re-computation chain
+                    # that voids the company_currency_id of the lines
+                    'journal_id': move_sudo.journal_id.id,
+                })
+
+            moves_sudo |= payment_moves_sudo
+
+        # returning the move with the superuser flag set back as it was at the origin of the call
+        return moves_sudo.sudo(self.env.su)
+>>>>>>> 6ff6432273b715b1718afd8118a9c90c91c1e137
 
     def _prepare_receipts_vals(self):
         return_vals = []
