@@ -1,5 +1,6 @@
-import { addLink, htmlToHtmlInline, parseAndTransform } from "@mail/utils/common/format";
+import { addLink, inlineElement, parseAndTransform } from "@mail/utils/common/format";
 import { useSequential } from "@mail/utils/common/hooks";
+import { createElementFromContent, getInnerHtml } from "@mail/utils/common/html";
 import {
     contains,
     defineMailModels,
@@ -241,19 +242,21 @@ test("isSequential doesn't execute intermediate call.", async () => {
     expect.verifySteps(["1", "5"]);
 });
 
-test("htmlToHtmlInline replaces br with spaces", () => {
-    expect(htmlToHtmlInline(markup`a<br/>b`).toString()).toBe("a\u00a0b");
+function inlineHtml(content) {
+    return getInnerHtml(inlineElement(createElementFromContent(content)));
+}
+
+test("inlineElement replaces br with spaces", () => {
+    expect(inlineHtml(markup`a<br/>b`).toString()).toBe("a\u00a0b");
 });
 
-test("htmlToHtmlInline inserts spaces between adjacent block elements", () => {
-    expect(htmlToHtmlInline(markup`<div>Before</div><p>After</p>`).toString()).toBe(
-        "Before\u00a0After"
-    );
+test("inlineElement inserts spaces between adjacent block elements", () => {
+    expect(inlineHtml(markup`<div>Before</div><p>After</p>`).toString()).toBe("Before\u00a0After");
 });
 
-test("htmlToHtmlInline copies rel and target attributes from links", () => {
+test("inlineElement copies rel and target attributes from links", () => {
     expect(
-        htmlToHtmlInline(
+        inlineHtml(
             markup`<a href="https://odoo.com" target="_blank" rel="noreferrer noopener" id="link-id">Odoo</a>`
         ).toString()
     ).toBe(

@@ -7,18 +7,22 @@ import {
     EMOJI_REGEX,
     generateEmojisOnHtml,
     generateMentionElement,
+    inlineElement,
     prepareBodyForEditing,
     htmlToTextContentInline,
-    htmlToHtmlInline,
 } from "@mail/utils/common/format";
-import { getOuterHtml } from "@mail/utils/common/html";
+import { createElementFromContent, getInnerHtml, getOuterHtml } from "@mail/utils/common/html";
 
 import { browser } from "@web/core/browser/browser";
 import { router } from "@web/core/browser/router";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { user } from "@web/core/user";
-import { createDocumentFragmentFromContent, createElementWithContent } from "@web/core/utils/html";
+import {
+    createDocumentFragmentFromContent,
+    createElementWithContent,
+    htmlTrim,
+} from "@web/core/utils/html";
 import { renderToElement } from "@web/core/utils/render";
 import { url } from "@web/core/utils/urls";
 
@@ -50,13 +54,19 @@ export class Message extends Record {
     richBody = fields.Html("", {
         compute() {
             emojiLoader.load();
-            return decorateEmojis(this.body) ?? "";
+            if (!this.body) {
+                return "";
+            }
+            return getInnerHtml(decorateEmojis(createElementFromContent(this.body)));
         },
     });
     richTranslationValue = fields.Html("", {
         compute() {
             emojiLoader.load();
-            return decorateEmojis(this.translationValue) ?? "";
+            if (!this.translationValue) {
+                return "";
+            }
+            return getInnerHtml(decorateEmojis(createElementFromContent(this.translationValue)));
         },
     });
     composer = fields.One("Composer", { inverse: "message", onDelete: (r) => r?.delete() });
@@ -469,9 +479,10 @@ export class Message extends Record {
                 return _t("%(caller)s started a call", { caller: this.authorName });
             }
             if (this.notificationType === "thread_deletion") {
+                const nameEl = createElementFromContent(htmlToTextContentInline(this.body));
                 return _t('%(user)s deleted the thread "%(thread_name)s"', {
                     user: this.authorName,
-                    thread_name: decorateEmojis(htmlToTextContentInline(this.body)),
+                    thread_name: getInnerHtml(decorateEmojis(nameEl)),
                 });
             }
             if (this.notificationType === "channel_rename") {
@@ -504,7 +515,8 @@ export class Message extends Record {
             if (!this.body) {
                 return "";
             }
-            return decorateEmojis(htmlToHtmlInline(this.body));
+            const bodyEl = createElementFromContent(this.body);
+            return htmlTrim(getInnerHtml(decorateEmojis(inlineElement(bodyEl))));
         },
     });
 
