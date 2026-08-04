@@ -26,7 +26,7 @@
                                 zeroes.
                             </p>
                         </div>
-                        <field name="rule_ids">
+                        <field name="rule_ids" mode="list,kanban">
                             <list string='Tables'>
                                 <field name="sequence" widget="handle"/>
                                 <field name="name" />
@@ -34,6 +34,23 @@
                                 <field name="encoding" />
                                 <field name="pattern" />
                             </list>
+                            <kanban class="o_kanban_mobile" default_order="sequence, id">
+                                <field name="sequence"/>
+                                <field name="name"/>
+                                <field name="type"/>
+                                <field name="encoding"/>
+                                <field name="pattern"/>
+                                <templates>
+                                    <t t-name="card">
+                                        <div class="d-flex align-items-center gap-2">
+                                            <field name="name" class="fw-bold"/>
+                                            <field name="type" widget="badge" class="ms-auto flex-shrink-0"/>
+                                        </div>
+                                        <div class="text-muted">Pattern: <field name="pattern"/></div>
+                                        <div class="text-muted" invisible="type == 'alias'">Encoding: <field name="encoding"/></div>
+                                    </t>
+                                </templates>
+                            </kanban>
                         </field>
                     </sheet>
                 </form>
