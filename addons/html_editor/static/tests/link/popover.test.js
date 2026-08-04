@@ -1469,3 +1469,12 @@ test("Should properly show the preview if fetching metadata fails", async () => 
     await waitFor(".o-we-linkpopover");
     expect(cleanLinkArtifacts(getContent(el))).toBe('<p><a href="/contactus">a[]b</a></p>');
 });
+
+test("Should open link popover in read only mode when link is not editable", async () => {
+    await setupEditor('<p><a contenteditable="false" href="/link">link</a></p>');
+    await click(queryOne(`a[contenteditable="false"]`));
+    await waitFor(".o-we-linkpopover");
+    expect(".o_we_edit_link").toHaveCount(0);
+    expect(".o_we_remove_link").toHaveCount(0);
+    expect(".o_we_copy_link").toHaveCount(1);
+});
