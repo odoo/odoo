@@ -7,7 +7,7 @@ except ImportError:
     phonenumbers = None
 
 from odoo import _, api, fields, models, tools
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import UserError, ValidationError, RedirectWarning
 from odoo.tools.urls import urljoin
 
 from odoo.addons.account_peppol.tools.demo_utils import handle_demo
@@ -105,7 +105,6 @@ class PeppolRegistration(models.TransientModel):
     # -------------------------------------------------------------------------
     # COMPUTE / INVERSE
     # -------------------------------------------------------------------------
-
     @api.depends('selected_company_id.partner_id.routing_identifier')
     def _compute_peppol_eas_endpoint(self):
         for wizard in self:
@@ -116,6 +115,9 @@ class PeppolRegistration(models.TransientModel):
                 preferred_identifier = wizard.selected_company_id.partner_id._get_preferred_routing_identifier_vals()
                 wizard.peppol_eas = preferred_identifier.get('scheme')
                 wizard.peppol_endpoint = preferred_identifier.get('value')
+
+            if wizard.selected_company_id._peppol_is_french_company():
+                wizard.peppol_eas = '0225'
 
     @api.depends('peppol_eas', 'peppol_endpoint')
     def _compute_peppol_identifier(self):
@@ -288,6 +290,31 @@ class PeppolRegistration(models.TransientModel):
         if self.company_id.account_peppol_proxy_state != 'not_registered':
             raise ValidationError(_("Cannot register a user with a %s application", self.account_peppol_proxy_state))
 
+    def _ensure_pdp_not_sent_through_peppol(self):
+        self.ensure_one()
+        if self.peppol_eas != '0225':
+            return
+        pdp_module = self.env['ir.module.module']._get('l10n_fr_pdp')
+
+        if pdp_module:
+            redirect_action = pdp_module._get_records_action()
+            redirect_button_text = self.env._("Install module")
+            message = self.env._(
+                "If you want to register for the French e-invoicing, first install the PDP module: France - E-Invoicing (Approved Platform).",
+            )
+        else:
+            redirect_action = self.env.ref('base.action_view_base_module_update').id
+            message = self.env._(
+                "If you want to register for the French e-invoicing, first install the PDP module: France - E-Invoicing (Approved Platform).\n"
+                "The module was not found. Please update the available apps first.",
+            )
+            redirect_button_text = self.env._("Update Apps List")
+        raise RedirectWarning(
+                message=message,
+                action=redirect_action,
+                button_text=redirect_button_text,
+            )
+
     def _action_open_peppol_form(self, reopen=True):
         action_dict = {
             'name': _("Activate Electronic Invoicing (via Peppol)"),
@@ -455,6 +482,7 @@ class PeppolRegistration(models.TransientModel):
     def button_register_peppol_participant(self, selected_auth=None):
         self.ensure_one()
         self._ensure_mandatory_fields()
+        self._ensure_pdp_not_sent_through_peppol()
 
         # Make sure we archive possible existing proxy user when (re-)registering
         old_proxy_users = self.env['account_edi_proxy_client.user'].search([
