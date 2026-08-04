@@ -218,7 +218,7 @@ class AccountMoveSend(models.AbstractModel):
             invoice_edi_format = move_data.get('invoice_edi_format') or partner._get_peppol_edi_format()
             if partner.peppol_verification_state == 'not_verified':
                 partner.button_account_peppol_check_partner_endpoint(company=move.company_id)
-            if partner.peppol_verification_state != 'valid' and partner.peppol_eas in ('0208', '9925'):
+            if partner.peppol_verification_state != 'valid' and partner.peppol_endpoint and partner.peppol_eas in ('0208', '9925'):
                 # only for BE participants
                 inverse_eas = '9925' if partner.peppol_eas == '0208' else '0208'
                 inverse_endpoint = f'BE{partner.peppol_endpoint}' if partner.peppol_eas == '0208' else partner.peppol_endpoint[2:]
