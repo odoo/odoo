@@ -705,7 +705,7 @@ class StockMove(models.Model):
         dropship_moves = self.filtered(lambda m: m._is_dropshipped() or m._is_dropshipped_returned())
         dropship_quantity = sum(m._get_valued_qty() for m in dropship_moves)
         dropship_price_unit = dropship_moves._get_price_unit_dropshipped()
-        regular_moves = self - dropship_moves
+        regular_moves = (self - dropship_moves).filtered(lambda m: m.is_out)
         regular_quantity = sum(m._get_valued_qty() for m in regular_moves)
         regular_price_unit = regular_moves._get_price_unit()
         total_quantity = dropship_quantity + regular_quantity
