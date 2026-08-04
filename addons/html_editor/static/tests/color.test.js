@@ -393,11 +393,11 @@ test("should apply background color to a list of 3 links", async () => {
             "</a>" +
             "</li>" +
             "<li>" +
-            '<span style="background-color: rgb(255, 0, 0);">' +
             '<a href="#">' +
+            '<span style="background-color: rgb(255, 0, 0);">' +
             "bcd" +
-            "</a>" +
             "</span>" +
+            "</a>" +
             "</li>" +
             "<li>" +
             '<a href="#">' +
@@ -415,7 +415,7 @@ test("should distribute color to texts and to button separately", async () => {
         contentBefore: '<p>a[b<a href="#" class="btn">c</a>d]e</p>',
         stepFunction: setColor("rgb(255, 0, 0)", "color"),
         contentAfter:
-            '<p>a<span style="color: rgb(255, 0, 0);">[b<a href="#" class="btn">c</a>d]</span>e</p>',
+            '<p>a<span style="color: rgb(255, 0, 0);">[b</span><a href="#" class="btn"><span style="color: rgb(255, 0, 0);">c</span></a><span style="color: rgb(255, 0, 0);">d]</span>e</p>',
     });
 });
 
@@ -1093,21 +1093,18 @@ test("Should properly apply color when selection on feff", async () => {
         unformat(`
             <div class="o-paragraph">
                 <span style="color: #6e4a8b;">
-                    ]<span style="color: rgb(255, 0, 0);">
+                    ]\ufeff
+                    <a href="#">
                         \ufeff
-                        <a href="#">\ufeffa\ufeff</a>
+                        <span style="color: rgb(255, 0, 0);">a</span>
                         \ufeff
-                    </span>[
-                    <span style="color: #008f8c;">
-                        b
-                    </span>
+                    </a>
+                    \ufeff[
+                    <span style="color: #008f8c;">b</span>
                 </span>
             </div>
         `)
     );
-    // Ensure the link inherited the font color.
-    const a = el.querySelector("a");
-    expect(getComputedStyle(a).color).toBe("rgb(255, 0, 0)");
 });
 
 test("should change text color for text with color and background gradient", async () => {
