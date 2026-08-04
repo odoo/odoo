@@ -18,14 +18,8 @@ class AccountPaymentRegister(models.TransientModel):
         inbound_wizards = self.filtered(lambda w: w.journal_id and w.payment_type == 'inbound' and w.country_code == 'PT')
         for journal, wizards in inbound_wizards.grouped('journal_id').items():
             wizards.available_l10n_pt_at_series_ids = self.env['l10n_pt.at.series'].search([
+                *self.env['l10n_pt.at.series']._l10n_pt_company_domain(wizards.company_id),
                 ('document_type', '=', 'payment_receipt'),
-                '|',
-                '&',
-                ('company_id', '=', wizards.company_id.id),
-                ('company_exclusive_series', '=', True),
-                '&',
-                ('company_id', 'in', wizards.company_id.parent_ids.ids),
-                ('company_exclusive_series', '=', False),
                 ('active', '=', True),
                 ('journal_id', '=', journal.id),
             ]).ids

@@ -1,5 +1,4 @@
 from datetime import timedelta
-from unittest.mock import patch
 
 from odoo import Command, fields
 from odoo.exceptions import UserError
@@ -31,7 +30,7 @@ class TestL10nPtMiscRequirements(TestL10nPtCommon):
             ('in_refund', '2024-01-02', False),
         ]:
             move = self.create_invoice(move_type, date)
-            self.assertEqual(move._get_l10n_pt_document_number(), expected)
+            self.assertEqual(move._l10n_pt_get_document_number(), expected)
 
     def test_l10n_pt_document_types(self):
         """

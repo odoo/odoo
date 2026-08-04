@@ -30,6 +30,7 @@ The module adds the following features:
         'views/account_move_views.xml',
         'views/account_payment_views.xml',
         'views/account_tax_views.xml',
+        'views/certificate_certificate_views.xml',
         'views/l10n_pt_at_series_views.xml',
         'views/report_invoice.xml',
         'views/report_payment_receipt_templates.xml',

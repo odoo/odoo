@@ -1,5 +1,5 @@
 from contextlib import contextmanager
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 from freezegun import freeze_time
 
@@ -83,6 +83,24 @@ class TestL10nPtCommon(AccountTestInvoicingCommon):
                 with freeze_time(l10n_pt_hashed_on):
                     move.button_hash()
         return move
+
+    @classmethod
+    @contextmanager
+    def _mock_ws(cls, return_code=None, side_effect=None):
+        mock_client = MagicMock()
+        mock_service = MagicMock()
+        mock_client.bind.return_value = mock_service
+
+        kwargs = {'return_value': return_code} if side_effect is None else {'side_effect': side_effect}
+
+        with patch(
+            'odoo.addons.base.models.res_company.ResCompany._get_zeep_client__',
+            return_value=mock_client,
+        ), patch(
+            'odoo.addons.l10n_pt_certification.models.l10n_pt_at_series.L10nPtATSeries._registar_serie',
+            **kwargs,
+        ) as mock_reg:
+            yield mock_reg
 
     @classmethod
     @contextmanager

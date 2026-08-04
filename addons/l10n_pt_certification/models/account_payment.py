@@ -8,30 +8,14 @@ class AccountPayment(models.Model):
     _name = 'account.payment'
     _inherit = ['account.payment', 'l10n.pt.document.mixin']
 
-    l10n_pt_document_number = fields.Char(
-        compute='_compute_l10n_pt_document_number', store=True,
-        help="Unique identifier for Portuguese documents, made up of the internal document type code, the series name, "
-             "and the number of the document within the series.",
-    )
-    l10n_pt_show_future_date_warning = fields.Boolean(compute='_compute_l10n_pt_show_future_date_warning')
+    _l10n_pt_document_type_depends = ('country_code', 'payment_type')
+
     l10n_pt_at_series_id = fields.Many2one(
         compute='_compute_l10n_pt_at_series_id',
         readonly=False, store=True,
         domain="[('journal_id', '=', journal_id)]",
     )
-    # Document type used in invoice template (when printed, documents have to present the document type on each page)
-    l10n_pt_document_type = fields.Selection(
-        selection=AT_SERIES_ACCOUNTING_DOCUMENT_TYPES,
-        string="Portuguese Document Type",
-        compute='_compute_l10n_pt_document_type',
-        store=True,
-    )
-    l10n_pt_cancel_reason = fields.Char(
-        string="Reason for Cancellation",
-        copy=False,
-        help="Reason given by the user for cancelling this payment",
-        readonly=True,
-    )
+    l10n_pt_document_type = fields.Selection(selection_add=AT_SERIES_ACCOUNTING_DOCUMENT_TYPES)
 
     def is_pt_inbound(self):
         return self.country_code == 'PT' and self.payment_type == 'inbound'
@@ -44,14 +28,18 @@ class AccountPayment(models.Model):
         self.ensure_one()
         return self.date
 
+    def _l10n_pt_get_document_type(self):
+        self.ensure_one()
+        return 'payment_receipt'
+
     ####################################
     # OVERRIDES
     ####################################
 
     def action_post(self):
-        for payment in self.filtered(lambda p: p.is_pt_inbound()).sorted('date'):
-            payment._check_l10n_pt_document_number()
-            payment._check_l10n_pt_dates()
+        pt_payments = self.filtered(lambda p: p.is_pt_inbound()).sorted('date')
+        pt_payments._check_l10n_pt_dates()
+        pt_payments._set_l10n_pt_document_number()
         return super().action_post()
 
     def write(self, vals):
@@ -72,43 +60,6 @@ class AccountPayment(models.Model):
     # MISC REQUIREMENTS
     ####################################
 
-    @api.depends('state', 'date', 'country_code')
-    def _compute_l10n_pt_show_future_date_warning(self):
-        """
-        No other documents may be issued with the current or previous date within the same series as
-        a document issued in the future. If user enters an invoice date ahead of current date,
-        a warning will be displayed.
-        """
-        for payment in self:
-            payment.l10n_pt_show_future_date_warning = (
-                payment.is_pt_inbound()
-                and payment.state == 'draft'
-                and payment.date
-                and payment.date > fields.Date.today()
-            )
-
-    def _check_l10n_pt_dates(self):
-        """
-        According to the Portuguese tax authority:
-        "When the document issuing date is later than the current date, or superior than the date on the system,
-        no other document may be issued with the current or previous date within the same series"
-        """
-        self.ensure_one()
-        if self.l10n_pt_at_series_id:
-            max_payment_date = self.env['account.payment'].search([
-                ('state', 'in', ['in_process', 'paid', 'cancel']),
-                ('l10n_pt_at_series_id', '=', self.l10n_pt_at_series_id.id),
-                ('payment_type', '=', 'inbound'),
-            ], order='date desc', limit=1).date
-
-            if (
-                max_payment_date
-                and max_payment_date > fields.Date.today()
-                and (self.date or fields.Date.context_today(self)) < max_payment_date
-            ):
-                raise UserError(_("You cannot create a payment with a date earlier than the date of the last "
-                                  "payment issued in this AT series."))
-
     ####################################
     # PT FIELDS - ATCUD, AT SERIES
     ####################################
@@ -127,14 +78,8 @@ class AccountPayment(models.Model):
                 ('l10n_pt_document_type', '=', 'payment_receipt')
             ], order='id desc', limit=1)
             at_series = last_payment.l10n_pt_at_series_id or self.env['l10n_pt.at.series'].search([
+                *self.env['l10n_pt.at.series']._l10n_pt_company_domain(company),
                 ('document_type', '=', 'payment_receipt'),
-                '|',
-                '&',
-                ('company_id', '=', company.id),
-                ('company_exclusive_series', '=', True),
-                '&',
-                ('company_id', 'in', company.parent_ids.ids),
-                ('company_exclusive_series', '=', False),
                 ('active', '=', True),
                 ('journal_id', '=', journal.id),
             ], limit=1)
@@ -142,25 +87,4 @@ class AccountPayment(models.Model):
 
     @api.constrains('l10n_pt_at_series_id')
     def _check_l10n_pt_at_series_id(self):
-        for payment in self.filtered(lambda p: p.is_pt_inbound()):
-            if not payment.l10n_pt_at_series_id:
-                raise UserError(_("Please select a series for this payment."))
-            if not payment.l10n_pt_at_series_id.active:
-                raise UserError(_("An inactive series cannot be used."))
-
-    @api.depends('l10n_pt_at_series_id', 'payment_type', 'country_code', 'state')
-    def _compute_l10n_pt_document_number(self):
-        for payment in self:
-            if payment.is_pt_inbound() and payment.l10n_pt_at_series_id:
-                if payment.state in ('in_process', 'paid') and not payment.l10n_pt_document_number:
-                    payment.l10n_pt_document_number = payment.l10n_pt_at_series_id._l10n_pt_get_document_number_sequence().next_by_id()
-            else:
-                payment.l10n_pt_document_number = False
-
-    @api.depends('country_code', 'payment_type')
-    def _compute_l10n_pt_document_type(self):
-        for payment in self:
-            if payment.is_pt_inbound():
-                payment.l10n_pt_document_type = 'payment_receipt'
-            else:
-                payment.l10n_pt_document_type = False
+        super()._check_l10n_pt_at_series_id()

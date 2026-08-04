@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_l10n_pt_at_series_search_inherit_sales" model="ir.ui.view">
+            <field name="name">at.series.search.inherit.sales</field>
+            <field name="model">l10n_pt.at.series</field>
+            <field name="inherit_id" ref="l10n_pt_certification.view_l10n_pt_at_series_search"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group" position="inside">
+                    <filter name="sales_document_types"
+                            string="Sales Documents"
+                            domain="[('document_type', 'in', ('quotation', 'sales_order'))]"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_l10n_pt_at_series_tree_inherit_sales" model="ir.ui.view">
+            <field name="name">at.series.tree.inherit.sales</field>
+            <field name="model">l10n_pt.at.series</field>
+            <field name="inherit_id" ref="l10n_pt_certification.view_l10n_pt_at_series_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='journal_id']" position="attributes">
+                    <attribute name="optional">hide</attribute>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

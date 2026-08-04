@@ -1,5 +1,4 @@
 import base64
-from unittest.mock import MagicMock, patch
 
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric import rsa
@@ -24,6 +23,7 @@ class TestL10nPtAtSeriesWS(TestL10nPtCommon):
             'company_id': cls.company_pt.id,
         })
         cls.company_pt.write({
+            'l10n_pt_at_ws_env': 'test',
             'l10n_pt_at_ws_username': '599999999',
             'l10n_pt_at_ws_password': 'testpassword',
             'l10n_pt_at_ws_public_cert_id': cls.at_public_cert.id,
@@ -37,14 +37,6 @@ class TestL10nPtAtSeriesWS(TestL10nPtCommon):
             format=serialization.PublicFormat.SubjectPublicKeyInfo,
         )
         return base64.b64encode(pem)
-
-    def _mock_ws(self, return_code='ABC12345'):
-        mock_ws = MagicMock()
-        mock_ws.registar_serie.return_value = return_code
-        return patch(
-            'odoo.addons.l10n_pt_certification.utils.series_ws.L10nPtAtSeriesWS.registar_serie',
-            return_value=return_code,
-        )
 
     def test_action_register_at_series_sets_at_code(self):
         at_series = self.env['l10n_pt.at.series'].create({
@@ -77,10 +69,7 @@ class TestL10nPtAtSeriesWS(TestL10nPtCommon):
         def raise_fault(*args, **kwargs):
             raise UserError("AT Series registration failed.")
 
-        with patch(
-            'odoo.addons.l10n_pt_certification.utils.series_ws.L10nPtAtSeriesWS.registar_serie',
-            side_effect=raise_fault,
-        ):
+        with self._mock_ws(side_effect=raise_fault):
             with self.assertRaises(UserError):
                 at_series.action_register_at_series()
 
@@ -104,10 +93,7 @@ class TestL10nPtAtSeriesWS(TestL10nPtCommon):
         def raise_fault(*args, **kwargs):
             raise UserError("Service unavailable")
 
-        with patch(
-            'odoo.addons.l10n_pt_certification.utils.series_ws.L10nPtAtSeriesWS.registar_serie',
-            side_effect=raise_fault,
-        ):
+        with self._mock_ws(side_effect=raise_fault):
             series = self.env['l10n_pt.at.series'].create({
                 'name': '2025',
                 'company_id': self.company_pt.id,
@@ -156,8 +142,6 @@ class TestL10nPtAtSeriesWS(TestL10nPtCommon):
         self.assertEqual(series.at_code, 'MANUAL01')
 
     def test_document_type_mapping(self):
-        from odoo.addons.l10n_pt_certification.const import PT_AT_DOCUMENT_TYPE_MAPPING
-
         at_series = self.env['l10n_pt.at.series'].create({
             'name': '2025',
             'company_id': self.company_pt.id,
@@ -182,6 +166,7 @@ class TestL10nPtAtSeriesWS(TestL10nPtCommon):
     def test_action_register_requires_credentials(self):
         company_no_creds = self.env['res.company'].create({
             'name': 'No Creds Co',
+            'l10n_pt_at_ws_env': 'test',
         })
         at_series = self.env['l10n_pt.at.series'].create({
             'name': '2025',

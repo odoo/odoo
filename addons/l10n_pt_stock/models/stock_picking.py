@@ -1,6 +1,8 @@
 from odoo import _, api, models, fields
 from odoo.exceptions import RedirectWarning, UserError
 
+from odoo.addons.l10n_pt_stock.models.l10n_pt_at_series import AT_SERIES_MOVEMENT_DOCUMENT_TYPES
+
 
 SAFT_PT_MOVEMENT_TYPE_MAP = {
     'outgoing': 'GT',
@@ -50,27 +52,13 @@ class StockPicking(models.Model):
     _name = "stock.picking"
     _inherit = ["stock.picking", "l10n.pt.hashed.document.mixin"]
 
-    l10n_pt_document_number = fields.Char(
-        compute='_compute_l10n_pt_document_number', store=True,
-        help="Unique identifier made up of the internal document type code, the series name, "
-             "and the number of the document within the series.",
-    )
-    # Document type is used in the template (when printed, documents have to present the document type on each page)
-    l10n_pt_document_type = fields.Selection(
-        string="Portuguese Document Type",
-        related='picking_type_id.code',
-    )
+    _l10n_pt_date_field = "date_done"
+    _l10n_pt_document_type_depends = ('picking_type_id', 'company_id')
+
+    l10n_pt_document_type = fields.Selection(selection_add=AT_SERIES_MOVEMENT_DOCUMENT_TYPES)
     l10n_pt_at_series_id = fields.Many2one(
         related='picking_type_id.l10n_pt_stock_at_series_id',
         string="AT Series",
-    )
-    l10n_pt_print_version = fields.Selection(
-        selection=[
-            ('original', 'Original'),
-            ('reprint', 'Reprint'),
-        ],
-        string="Version of Printed Document",
-        copy=False,
     )
     l10n_pt_start_transport_date = fields.Datetime(
         'Start of Transport Date',
@@ -85,10 +73,17 @@ class StockPicking(models.Model):
     # OVERRIDES
     ####################################
 
+    def action_confirm(self):
+        res = super().action_confirm()
+        # A transport document must legally carry its number before the goods move, so it is
+        # allocated as soon as the picking leaves draft. `button_validate` funnels draft pickings
+        # through here too, so this covers every path out of draft.
+        self.filtered(lambda p: p.country_code == 'PT')._set_l10n_pt_document_number()
+        return res
+
     def button_validate(self):
         picking = super().button_validate()
-        for picking in self.filtered(lambda p: p.country_code == 'PT' and p.state == 'done'):
-            picking._l10n_pt_check_date()
+        self.filtered(lambda p: p.country_code == 'PT' and p.state == 'done')._check_l10n_pt_dates()
         return picking
 
     ####################################
@@ -112,62 +107,30 @@ class StockPicking(models.Model):
             }
         return self.env.ref('stock.action_report_delivery').report_action(self)
 
-    def _l10n_pt_check_date(self):
-        """
-        According to the Portuguese tax authority:
-        "When the document issuing date is later than the current date, or superior than the date on the system,
-        no other document may be issued with the current or previous date within the same series"
-        """
-        self.ensure_one()
-        max_hashed_on_date = self.env['stock.picking'].search([
-            ('l10n_pt_hashed_on', '!=', False),
-            ('l10n_pt_at_series_id', '=', self.l10n_pt_at_series_id.id),
-        ],
-            order='l10n_pt_hashed_on desc',
-            limit=1
-        ).l10n_pt_hashed_on
-
-        if max_hashed_on_date and max_hashed_on_date > fields.Datetime.now():
-            raise UserError(_("There exists secured stock pickings with a lock date ahead of the present time."))
-
-    ####################################
-    # PT FIELDS - ATCUD, AT SERIES
-    ####################################
-
-    @api.depends('picking_type_id.l10n_pt_stock_at_series_id', 'company_id', 'state')
-    def _compute_l10n_pt_document_number(self):
-        for picking in self:
-            if (
-                picking.country_code == 'PT'
-                and picking.picking_type_id.l10n_pt_stock_at_series_id
-                and picking.state != 'draft'
-                and not picking.l10n_pt_document_number
-            ):
-                picking.l10n_pt_document_number = picking.picking_type_id.l10n_pt_stock_at_series_id._l10n_pt_get_document_number_sequence().next_by_id()
-
     ####################################
     # HASH AND QR CODE
     ####################################
 
     def _l10n_pt_get_document_date(self):
         self.ensure_one()
-        return self.date_done
-
-    def _l10n_pt_get_document_number(self):
-        """ Allows patching in tests """
-        self.ensure_one()
-        return self.l10n_pt_document_number
+        # A transfer cancelled before validation never gets a `date_done`, yet it was issued and
+        # numbered at confirmation, so it still has to be signed. Fall back to the transport date,
+        # which always has a value. Transfers that were validated keep signing `date_done`, so no
+        # existing signature changes.
+        return self.date_done or self.l10n_pt_start_transport_date
 
     def _l10n_pt_get_gross_total(self):
         """ Returns 0 (transfers have no monetary total). Split out to allow patching in tests. """
         return 0
 
+    def _l10n_pt_get_document_type(self):
+        self.ensure_one()
+        code = self.picking_type_id.code
+        return code if code in SAFT_PT_MOVEMENT_TYPE_MAP else False
+
     def _l10n_pt_get_saft_doc_type(self):
         self.ensure_one()
-        return SAFT_PT_MOVEMENT_TYPE_MAP[self.picking_type_id.code]
-
-    def _l10n_pt_series_document_types(self):
-        return ('outgoing', 'internal', 'incoming')
+        return SAFT_PT_MOVEMENT_TYPE_MAP[self.l10n_pt_document_type]
 
     def _get_integrity_hash_fields(self):
         if self.company_id.account_fiscal_country_id.code != 'PT':
@@ -187,15 +150,17 @@ class StockPicking(models.Model):
             ('l10n_pt_at_series_id', '=', at_series.id),
             ('picking_type_code', '=', at_series.document_type),
             ('l10n_pt_inalterable_hash', '!=', False),
-        ], order='date_done desc', limit=1)
+        ], order='l10n_pt_document_number desc', limit=1)
 
     def _l10n_pt_get_unhashed_records(self, at_series):
         return self.sudo().search([
             ('l10n_pt_at_series_id', '=', at_series.id),
             ('picking_type_code', '=', at_series.document_type),
-            ('state', '=', 'done'),
+            # A cancelled transfer keeps the number it consumed at confirmation, so it stays part of
+            # the chain and is reported as cancelled -- same treatment as a cancelled invoice.
+            ('state', 'in', ('done', 'cancel')),
             ('l10n_pt_inalterable_hash', '=', False),
-        ], order='date_done')
+        ], order='l10n_pt_document_number')
 
     def _l10n_pt_validate_before_hash(self):
         for picking in self:
@@ -212,4 +177,3 @@ class StockPicking(models.Model):
             ('account_fiscal_country_id.code', '=', 'PT'),
         ]):
             self._l10n_pt_compute_missing_hashes(company)
-

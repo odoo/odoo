@@ -45,7 +45,10 @@ class PosOrder(models.Model):
 
     def post_reprint_reason(self, reason):
         self.ensure_one()
-        msg = Markup(_("Reason for reprinting document %(name)s:<br/>%(reason)s", name=self.name, reason=reason))
+        msg = Markup(_("Reason for reprinting document %(name)s:<br/>%(reason)s")) % {
+            'name': self.name,
+            'reason': reason,
+        }
         self.message_post(body=msg)
         return True
 
@@ -54,7 +57,7 @@ class PosOrder(models.Model):
         invoice = self.account_move
         if not invoice:
             return {}
-        doc_type_selection = dict(invoice._fields['l10n_pt_document_type'].selection)
+        doc_type_selection = dict(invoice._fields['l10n_pt_document_type']._description_selection(self.env))
         return {
             'name': self.name,
             'hash_short': invoice.l10n_pt_inalterable_hash_short,

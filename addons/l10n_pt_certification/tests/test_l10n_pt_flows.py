@@ -126,11 +126,11 @@ class TestL10nPtFlows(TestL10nPtCommon):
         invoice = self.create_invoice('out_invoice', post=False)
         original_series = invoice.l10n_pt_at_series_id
         invoice.l10n_pt_at_series_id = False
-        with patch('odoo.addons.l10n_pt_certification.models.account_move.AccountMove._l10n_pt_create_at_series_from_sequence', return_value=None), self.assertRaisesRegex(UserError, "Please select a series for this invoice"):
+        with patch('odoo.addons.l10n_pt_certification.models.account_move.AccountMove._l10n_pt_create_at_series_from_sequence', return_value=None), self.assertRaisesRegex(UserError, "Please select a series for this document"):
             invoice.action_post()
 
         invoice.l10n_pt_at_series_id = self.series_2024.filtered(lambda s: s.document_type != invoice.l10n_pt_document_type)[0]
-        with self.assertRaisesRegex(UserError, "The series does not match the document type of the invoice"):
+        with self.assertRaisesRegex(UserError, "The series does not match the document type"):
             invoice.action_post()
 
         early_series = self.env['l10n_pt.at.series'].create({
@@ -220,9 +220,10 @@ class TestL10nPtFlows(TestL10nPtCommon):
             ],
         })
         # For WS communication, there needs to be a username set on the company
+        self.company_pt.l10n_pt_at_ws_env = 'test'
         self.company_pt.l10n_pt_at_ws_username = 'test'
         self.company_pt.l10n_pt_at_ws_password = 'test'
-        with patch('odoo.addons.l10n_pt_certification.utils.series_ws.L10nPtAtSeriesWS.registar_serie', return_value='WS-CODE-123'):
+        with self._mock_ws(return_code='WS-CODE-123'):
             invoice.action_post()
         self.assertEqual(invoice.l10n_pt_at_series_id.at_code, 'WS-CODE-123')
 
@@ -255,11 +256,11 @@ class TestL10nPtFlows(TestL10nPtCommon):
         })
 
         # For WS communication, there needs to be a username set on the company
+        self.company_pt.l10n_pt_at_ws_env = 'test'
         self.company_pt.l10n_pt_at_ws_username = 'test'
         self.company_pt.l10n_pt_at_ws_password = 'test'
         with mute_logger('odoo.addons.l10n_pt_certification.models.l10n_pt_at_series'), \
-            patch('odoo.addons.l10n_pt_certification.utils.series_ws.L10nPtAtSeriesWS.registar_serie', side_effect=UserError("WS down")
-        ):
+             self._mock_ws(side_effect=UserError("WS down")):
             invoice.action_post()
         self.assertTrue(invoice.l10n_pt_at_series_id)
         self.assertFalse(invoice.l10n_pt_at_series_id.at_code)

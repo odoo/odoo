@@ -17,3 +17,11 @@ class ResConfigSettings(models.TransientModel):
         comodel_name='certificate.certificate',
         readonly=False,
     )
+    l10n_pt_at_ws_ssl_certificate_ids = fields.One2many(
+        related='company_id.l10n_pt_at_ws_ssl_certificate_ids',
+        readonly=False,
+    )
+    l10n_pt_at_ws_env = fields.Selection(
+        related='company_id.l10n_pt_at_ws_env',
+        readonly=False,
+    )

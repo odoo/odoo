@@ -20,3 +20,13 @@ PT_AT_DOCUMENT_TYPE_MAPPING = {
 
 # AT webservice meioProcessamento codes
 PT_AT_MEIO_PROCESSAMENTO = 'PI'  # Programa Informático de Faturação
+
+# AT webservice WSDL URL
+PT_AT_WS_WSDL_URL = (
+    'https://info.portaldasfinancas.gov.pt/pt/apoio_ao_contribuinte/Outras_entidades/'
+    'Suporte_tecnologico/Webservice/Comunicacao_de_series_ATCUD/Documents/Comunicacao_Series.wsdl'
+)
+
+# AT webservice SOAP endpoints
+PT_AT_WS_ENDPOINT_TEST = 'https://servicos.portaldasfinancas.gov.pt:722/SeriesWSService'
+PT_AT_WS_ENDPOINT_PROD = 'https://servicos.portaldasfinancas.gov.pt:422/SeriesWSService'

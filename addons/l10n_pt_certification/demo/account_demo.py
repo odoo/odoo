@@ -12,21 +12,31 @@ class AccountChartTemplate(models.AbstractModel):
     def _post_load_demo_data(self, company=False):
         if company and company.account_fiscal_country_id.code == 'PT':
             self._create_l10n_at_series_demo(company)
-            xmlids = self.env['ir.model.data'].search([
-                ('model', '=', 'account.move'),
-                ('module', '=', 'account'),
-                '|',
-                ('name', 'like', '%demo_invoice%'),
-                ('name', 'like', '%demo_move_auto_reconcile%'),
-            ])
             invoices = self.env['account.move'].search([
-                ('id', 'in', xmlids.mapped('res_id')),
                 ('company_id', '=', company.id),
-            ])
+                ('state', '=', 'draft'),
+            ]).sorted('date')
+
+            # ensuring that credit notes reference original invoices
+            out_invoices = invoices.filtered(lambda m: m.move_type == 'out_invoice')
+            out_refunds = invoices.filtered(lambda m: m.move_type == 'out_refund')
+            for refund in out_refunds:
+                if not refund.reversed_entry_id:
+                    orig_inv = out_invoices.filtered(
+                        lambda inv: inv.partner_id == refund.partner_id and not inv.reversal_move_ids
+                    )[:1]
+                    if orig_inv:
+                        refund.write({
+                            'reversed_entry_id': orig_inv.id,
+                            'ref': 'Reversal demo',
+                        })
+
             # we need to ensure AT Series created after the moves are added to the demo moves
             invoices._compute_l10n_pt_at_series_id()
             for move in invoices:
                 try:
+                    if move.move_type == 'out_refund' and not move.reversed_entry_id:
+                        continue
                     move.action_post()
                 except (UserError, ValidationError):
                     _logger.exception('Error while posting demo data')

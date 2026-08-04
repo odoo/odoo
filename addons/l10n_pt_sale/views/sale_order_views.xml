@@ -82,8 +82,7 @@
                 <xpath expr="//group[@name='sale_reporting']" position="after">
                     <group string="Portugal" name="portuguese_info_group" invisible="country_code != 'PT'">
                         <field name="l10n_pt_at_series_id"
-                               readonly="l10n_pt_document_number"
-                               required="country_code == 'PT'"/>
+                               readonly="l10n_pt_document_number"/>
                         <field name="l10n_pt_atcud"/>
                         <field name="l10n_pt_inalterable_hash" groups="base.group_no_one"/>
                         <field name="l10n_pt_cancel_reason"

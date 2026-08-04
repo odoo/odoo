@@ -8,7 +8,7 @@ class AccountMove(models.Model):
         return (
             super()._l10n_pt_is_invoice_receipt()
             or (
-                self._is_pt_move()
+                self._l10n_pt_country_ok()
                 and self.move_type == 'out_invoice'
                 and self.line_ids.sale_line_ids.order_id.transaction_ids.filtered(lambda tx: tx.state == 'done')
             )

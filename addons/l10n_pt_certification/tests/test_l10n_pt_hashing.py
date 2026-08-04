@@ -22,10 +22,10 @@ class TestL10nPtHashing(TestL10nPtCommon):
         # move types (out_invoice, out_refund, ...) are different from the ones used in the link (FT, NC, ...)
         l10n_pt_document_number = ""
 
-        def _get_l10n_pt_document_number_patched(self_patched):
+        def _l10n_pt_get_document_number_patched(self_patched):
             return l10n_pt_document_number
 
-        with patch('odoo.addons.l10n_pt_certification.models.account_move.AccountMove._get_l10n_pt_document_number', _get_l10n_pt_document_number_patched):
+        with patch('odoo.addons.l10n_pt_certification.models.account_move.AccountMove._l10n_pt_get_document_number', _l10n_pt_get_document_number_patched):
             for (l10n_pt_document_number, invoice_date, l10n_pt_hashed_on, amount, expected_hash) in [
                 ('1T 1/1', '2017-03-10', '2017-03-10T15:58:01', 28.07, "vfinNfF+rToGp3dWF1LV6mEctQ76hAeZm+PlhBnV4wokN//N79L7fTNvi71ONnMHzfIzVR/Iz2zOOo9MUrYfYYZhqtpcEgFNHMdET6ZqbVVke7HbfqSACzaKXNdgWZt7lm7AFOfhcizQgC4a66SNvJvPJUqF7bCTUMIJFR9Zfro="),
                 ('1T 1/2', '2017-09-16', '2017-09-16T15:58:10', 235.15, "jABYv0ThJHWoocmbzuLPOJXknl2WHBpLRBPqhIBSYP6GRzo3WiMxh6ryFiaa8rQD2BM9tdLxjhPHOZo1XPeGR5hFGK5BI/NzTXBu9+ponV4wvASOhjy2iomBlOxISN3MYGBcG1XWLfi+aDBw0TLrVwpbsENk0MtypYGU78OPPjg="),

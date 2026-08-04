@@ -1,7 +1,7 @@
 import re
 import urllib.parse
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import float_repr
 
@@ -16,14 +16,34 @@ class L10nPtDocumentMixin(models.AbstractModel):
 
     Groups the mechanisms that are common to every AT-regulated document
     (``account.move``, ``account.payment``, ``sale.order``, ``stock.picking``):
-    the AT series, the unique document number, the ATCUD and the print version.
+    the document type, the AT series, the unique document number, the ATCUD and the print version.
 
     Models mixing this in must implement the hooks:
       - ``_l10n_pt_get_document_date``: the document's issuing date/datetime.
+      - ``_l10n_pt_get_document_type``: the AT type the document is issued as.
+    They must also extend ``l10n_pt_document_type`` with the types they own, via ``selection_add``,
+    and list in ``_l10n_pt_document_type_depends`` the fields that determine that type.
     """
     _name = 'l10n.pt.document.mixin'
     _description = "Portuguese AT Document (numbering & identity)"
 
+    # Field holding the document's issuing date, for series-wide aggregates and the date warning.
+    # Overridden per model, as `sequence.mixin` does with `_sequence_date_field`.
+    _l10n_pt_date_field = "date"
+
+    # Fields whose change may still alter the document type, before the document is issued.
+    # Overridden per model, and fed to `_compute_l10n_pt_document_type`'s dynamic `depends`.
+    _l10n_pt_document_type_depends = ()
+
+    l10n_pt_document_type = fields.Selection(
+        # To be extended by each model with the document types it owns, via `selection_add`.
+        selection=[],
+        string="Portuguese Document Type",
+        compute='_compute_l10n_pt_document_type',
+        store=True,
+        help="Type of Portuguese document, as recognized by the AT. It selects the AT series, is "
+             "encoded in the document number and in the QR code, and is printed on every page.",
+    )
     l10n_pt_at_series_id = fields.Many2one(
         comodel_name="l10n_pt.at.series",
         string="AT Series",
@@ -32,6 +52,8 @@ class L10nPtDocumentMixin(models.AbstractModel):
     l10n_pt_document_number = fields.Char(
         string="Unique Document Number",
         copy=False,
+        # Allocated by `_set_l10n_pt_document_number`; never editable by hand, on any model.
+        readonly=True,
         help="Internal identifier for Portuguese documents, made up of the document type code, "
              "the series name, and the number of the document within the series.",
     )
@@ -49,6 +71,18 @@ class L10nPtDocumentMixin(models.AbstractModel):
         string="Version of Printed Document",
         copy=False,
     )
+    l10n_pt_cancel_reason = fields.Char(
+        string="Reason for Cancellation",
+        copy=False,
+        readonly=True,
+        help="Reason given by the user for cancelling this document.",
+    )
+    l10n_pt_show_future_date_warning = fields.Boolean(compute='_compute_l10n_pt_show_future_date_warning')
+    l10n_pt_at_series_missing_at_code = fields.Boolean(
+        string='AT Series missing validation code',
+        compute='_compute_l10n_pt_at_series_missing_at_code',
+        help="The AT Series used does not have a validation code. It must be registered with the AT before sending/printing.",
+    )
 
     ####################################
     # HOOKS (to be implemented by models)
@@ -63,6 +97,19 @@ class L10nPtDocumentMixin(models.AbstractModel):
         """The document's issuing date/datetime (move.date, sale.date_order, picking.date_done, ...)."""
         raise NotImplementedError
 
+    def _l10n_pt_get_document_type(self):
+        """
+        The AT document type this record is issued as, taken from the model's own selection.
+
+        Only called for records that pass ``_l10n_pt_country_ok`` and are not issued yet.
+        """
+        raise NotImplementedError
+
+    def _l10n_pt_document_is_open(self):
+        """Whether the document can still be edited, i.e. a date warning is still actionable."""
+        self.ensure_one()
+        return self.state == 'draft'
+
     def _l10n_pt_get_document_number(self):
         """The document number to be signed. Split out to allow patching in tests."""
         self.ensure_one()
@@ -72,29 +119,80 @@ class L10nPtDocumentMixin(models.AbstractModel):
     # SHARED LOGIC
     ####################################
 
+    @api.depends(lambda self: self._l10n_pt_document_type_depends)
+    def _compute_l10n_pt_document_type(self):
+        for record in self:
+            current_type = record.l10n_pt_document_type
+            if record.l10n_pt_document_number and current_type:
+                record.l10n_pt_document_type = current_type
+            elif record._l10n_pt_country_ok():
+                record.l10n_pt_document_type = record._l10n_pt_get_document_type()
+            else:
+                record.l10n_pt_document_type = False
+
+    def _l10n_pt_series_document_types(self):
+        """
+        AT series document types owned by this model.
+
+        Defaults to the model's own ``l10n_pt_document_type`` selection, which each module extends
+        in lockstep with ``l10n_pt.at.series.document_type``.
+        """
+        return self._fields['l10n_pt_document_type'].get_values(self.env)
+
     @api.depends('l10n_pt_document_number')
     def _compute_l10n_pt_atcud(self):
         for record in self:
             if record._l10n_pt_country_ok() and not record.l10n_pt_atcud and record.l10n_pt_document_number:
-                current_seq_number = int(record.l10n_pt_document_number.split('/')[-1])
-                record.l10n_pt_atcud = f"{record.l10n_pt_at_series_id._get_at_code()}-{current_seq_number}"
+                record.l10n_pt_atcud = f"{record.l10n_pt_at_series_id._get_at_code()}-{record._l10n_pt_get_sequence_number()}"
             else:
                 record.l10n_pt_atcud = record.l10n_pt_atcud or False
 
+    @api.depends('l10n_pt_at_series_id.at_code')
+    def _compute_l10n_pt_at_series_missing_at_code(self):
+        for record in self:
+            record.l10n_pt_at_series_missing_at_code = (
+                record._l10n_pt_country_ok()
+                and record.l10n_pt_at_series_id
+                and not record.l10n_pt_at_series_id.at_code
+            )
+
+    def _l10n_pt_assign_document_number(self, number):
+        """Store a freshly allocated number. Overridden where the number also lives elsewhere."""
+        self.ensure_one()
+        self.l10n_pt_document_number = number
+
     def _set_l10n_pt_document_number(self):
-        """Assign the next document number of the AT series, in chronological order."""
+        """
+        Allocate the next document number of the AT series, in chronological order.
+
+        Allocating consumes a ``no_gap`` sequence, so it is deliberately an explicit action rather
+        than a compute: it must happen once, at the exact point the document is issued.
+        """
         records = self.filtered(
             lambda r: r._l10n_pt_country_ok() and r.l10n_pt_at_series_id and not r.l10n_pt_document_number
         )
-        for record in records.sorted(key=lambda r: r._l10n_pt_get_document_date() or fields.Datetime.now()):
-            record.l10n_pt_document_number = record.l10n_pt_at_series_id._l10n_pt_get_document_number_sequence().next_by_id()
+        # `sorted` is stable, so pre-sorting on `id` deterministically breaks ties between documents
+        # sharing a date. Documents with no date yet (a transport document is numbered before it
+        # moves) keep that `id` order.
+        records = records.sorted('id')
+        undated = records.filtered(lambda r: not r._l10n_pt_get_document_date())
+        ordered = list((records - undated).sorted(key=lambda r: r._l10n_pt_get_document_date())) + list(undated)
+        for record in ordered:
+            record._l10n_pt_assign_document_number(
+                record.l10n_pt_at_series_id._l10n_pt_get_document_number_sequence().next_by_id()
+            )
         self._check_l10n_pt_document_number()
+
+    def _l10n_pt_get_sequence_number(self):
+        """The document's position within its series -- the order the signature chain must follow."""
+        self.ensure_one()
+        return int(self.l10n_pt_document_number.split('/')[-1])
 
     def _check_l10n_pt_document_number(self):
         for record in self.filtered(lambda r: r._l10n_pt_country_ok() and r.l10n_pt_at_series_id):
             number = record.l10n_pt_document_number
             if number and not re.match(L10N_PT_DOCUMENT_NUMBER_RE, number):
-                raise ValidationError(_(
+                raise ValidationError(self.env._(
                     "The document number (%s) is invalid. It must start with the internal code "
                     "of the document type, a space, the name of the series followed by a slash and the number of the "
                     "document within the series (e.g. NE 2025A/1). Please check if the series selected fulfill these "
@@ -104,6 +202,72 @@ class L10nPtDocumentMixin(models.AbstractModel):
     def update_l10n_pt_print_version(self):
         for record in self.filtered(lambda r: r._l10n_pt_country_ok()):
             record.l10n_pt_print_version = 'reprint' if record.l10n_pt_print_version else 'original'
+
+    @api.depends(lambda self: ('state', self._l10n_pt_date_field))
+    def _compute_l10n_pt_show_future_date_warning(self):
+        """
+        No other document may be issued with the current or previous date within the same series as
+        a document issued in the future, so warn as soon as a future date is entered.
+        """
+        today = fields.Date.today()
+        for record in self:
+            document_date = record._l10n_pt_country_ok() and record._l10n_pt_get_document_date()
+            record.l10n_pt_show_future_date_warning = bool(
+                document_date
+                and record._l10n_pt_document_is_open()
+                and fields.Date.to_date(document_date) > today
+            )
+
+    def _check_l10n_pt_dates(self):
+        """
+        According to the Portuguese tax authority:
+        "When the document issuing date is later than the current date, or superior than the date on the system,
+        no other document may be issued with the current or previous date within the same series"
+
+        Documents therefore have to be issued in chronological order within their series: a document may
+        never be dated before the latest document already issued in the same series.
+        """
+        records = self.filtered(lambda r: r._l10n_pt_country_ok() and r.l10n_pt_at_series_id)
+        series = records.l10n_pt_at_series_id
+        if not series:
+            return
+
+        # A document occupies a position in its series as soon as it is numbered; cancelled documents
+        # keep the number they consumed, so they still count towards the series' latest date.
+        # sudo: the series' chronology must be evaluated over every document it contains, regardless
+        # of which companies the current user has selected.
+        max_date_per_series = dict(self.env[self._name].sudo()._read_group(
+            domain=[
+                ('l10n_pt_at_series_id', 'in', series.ids),
+                ('l10n_pt_document_number', '!=', False),
+                # Exclude the documents being checked, so the rule holds whether they are numbered
+                # before or after the check.
+                ('id', 'not in', records.ids),
+            ],
+            groupby=['l10n_pt_at_series_id'],
+            aggregates=[f'{self._l10n_pt_date_field}:max'],
+        ))
+
+        for record in records:
+            max_document_date = max_date_per_series.get(record.l10n_pt_at_series_id)
+            document_date = record._l10n_pt_get_document_date()
+            if max_document_date and document_date and document_date < max_document_date:
+                raise UserError(self.env._(
+                    "You cannot issue a document dated earlier than the last document issued in this "
+                    "AT series (%(series)s).",
+                    series=record.l10n_pt_at_series_id.display_name,
+                ))
+
+    def _check_l10n_pt_at_series_id(self):
+        for record in self.filtered(lambda r: r._l10n_pt_country_ok()):
+            if not record.l10n_pt_at_series_id:
+                raise UserError(self.env._("Please select a series for this document."))
+            series = record.l10n_pt_at_series_id
+            if record.l10n_pt_document_type and record.l10n_pt_document_type != series.document_type:
+                raise UserError(self.env._("The series does not match the document type."))
+            record_date = fields.Date.to_date(record._l10n_pt_get_document_date())
+            if not series.active or not series._l10n_pt_is_valid_on(record_date):
+                raise UserError(self.env._("An inactive series cannot be used."))
 
 
 class L10nPtHashedDocumentMixin(models.AbstractModel):
@@ -118,7 +282,6 @@ class L10nPtHashedDocumentMixin(models.AbstractModel):
 
     Models mixing this in must implement, in addition to ``_l10n_pt_get_document_date``:
       - ``_l10n_pt_get_saft_doc_type``: the SAF-T document type code used in the QR code (``D:``).
-      - ``_l10n_pt_series_document_types``: AT series document types owned by the model.
       - ``_l10n_pt_get_unhashed_records`` / ``_l10n_pt_find_last_hashed``: chain boundaries.
     They may override the hooks ``_l10n_pt_get_gross_total``, ``_l10n_pt_post_hash_hook``,
     ``_l10n_pt_qr_add_tax_details`` and ``_l10n_pt_qr_get_totals``.
@@ -153,10 +316,6 @@ class L10nPtHashedDocumentMixin(models.AbstractModel):
 
     def _l10n_pt_get_saft_doc_type(self):
         """SAF-T (PT) document type code used in the QR code ``D:`` field."""
-        raise NotImplementedError
-
-    def _l10n_pt_series_document_types(self):
-        """AT series document types handled by this model."""
         raise NotImplementedError
 
     def _l10n_pt_get_unhashed_records(self, at_series):
@@ -195,7 +354,7 @@ class L10nPtHashedDocumentMixin(models.AbstractModel):
         for record in self.filtered(lambda r: r._l10n_pt_country_ok() and r.l10n_pt_inalterable_hash):
             violated_fields = set(vals).intersection(record._l10n_pt_protected_fields())
             if violated_fields:
-                raise UserError(_(
+                raise UserError(self.env._(
                     "This document is protected by a hash. "
                     "Therefore, you cannot edit the following fields: %s.",
                     ', '.join(f['string'] for f in self.fields_get(violated_fields).values())
@@ -217,7 +376,9 @@ class L10nPtHashedDocumentMixin(models.AbstractModel):
         self.l10n_pt_hashed_on = fields.Datetime.now()
         docs_to_sign = [{
             'id': record.id,
-            'sorting_key': record._l10n_pt_get_document_date().isoformat(),
+            # The chain follows the series' numbering, not the document date: dates tie routinely
+            # (a batch of transfers validated together shares one `date_done`).
+            'sorting_key': record._l10n_pt_get_sequence_number(),
             'date': record._l10n_pt_get_document_date().strftime('%Y-%m-%d'),
             'system_entry_date': record.l10n_pt_hashed_on.isoformat(timespec='seconds'),
             'name': record._l10n_pt_get_document_number(),
@@ -245,14 +406,12 @@ class L10nPtHashedDocumentMixin(models.AbstractModel):
         company = company or self.env.company
 
         # Get all AT series that apply to this model to find unhashed records per series
-        at_series_records = self.env['l10n_pt.at.series'].search([
-            '|',
-            '&',
-            ('company_id', '=', company.id),
-            ('company_exclusive_series', '=', True),
-            '&',
-            ('company_id', 'in', company.parent_ids.ids),
-            ('company_exclusive_series', '=', False),
+        # `active` on l10n_pt.at.series is a validity window (date_end >= today), not an archive
+        # flag, but the ORM still injects it into every search. Expired series must stay visible
+        # here: documents issued before a series ended still have to be signed and verified.
+        at_series_model = self.env['l10n_pt.at.series']
+        at_series_records = at_series_model.with_context(active_test=False).search([
+            *at_series_model._l10n_pt_company_domain(company),
             ('document_type', 'in', self._l10n_pt_series_document_types()),
         ])
         for at_series in at_series_records:

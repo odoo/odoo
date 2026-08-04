@@ -23,15 +23,13 @@ class ResCompany(models.Model):
 
         results = []
 
-        at_series_records = self.env['l10n_pt.at.series'].search([
-            '|',
-            '&',
-            ('company_id', '=', self.id),
-            ('company_exclusive_series', '=', True),
-            '&',
-            ('company_id', 'in', self.parent_ids.ids),
-            ('company_exclusive_series', '=', False),
-            ('document_type', 'in', ('sales_order', 'quotation')),
+        # `active` on l10n_pt.at.series is a validity window (date_end >= today), not an archive
+        # flag, but the ORM still injects it into every search. Expired series must stay visible
+        # here: documents issued before a series ended still have to be signed and verified.
+        at_series_model = self.env['l10n_pt.at.series']
+        at_series_records = at_series_model.with_context(active_test=False).search([
+            *at_series_model._l10n_pt_company_domain(self),
+            ('document_type', 'in', self.env['sale.order']._l10n_pt_series_document_types()),
         ])
 
         for at_series in at_series_records:
@@ -40,7 +38,7 @@ class ResCompany(models.Model):
                     ('l10n_pt_at_series_id', '=', at_series.id),
                     ('l10n_pt_inalterable_hash', '!=', False),
                 ],
-                order="name",
+                order="l10n_pt_document_number",
             )
 
             first_order = self.env['sale.order']

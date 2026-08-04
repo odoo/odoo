@@ -17,7 +17,6 @@ patch(PosOrder.prototype, {
         return "data:image/svg+xml;base64," + window.btoa(qdCodeSvg);
     },
 
-
     get taxExemptionReasons() {
         // Select unique tax exemption reason codes in order
         const reasons = new Set(

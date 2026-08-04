@@ -20,28 +20,56 @@
                             </div>
                         </div>
                     </setting>
-                    <separator title="AT Series Webservice Configuration" groups="base.group_system"/>
+                    <separator/>
                     <setting
-                        string="AT Webservice Username"
+                        string="AT Series Webservice Configuration"
                         company_dependent="1"
-                        help="Username (NIF/sub-user ID) for the AT Series webservice."
+                        help="Production: connect to the live AT webservice. Test: connect to the AT test server. Offline: no connection, AT codes must be entered manually."
                     >
-                        <field name="l10n_pt_at_ws_username"/>
-                    </setting>
-                    <setting
-                        string="AT Webservice Password"
-                        company_dependent="1"
-                        help="Password for the AT Series webservice."
-                    >
-                        <field name="l10n_pt_at_ws_password" password="True"/>
-                    </setting>
-                    <setting
-                        string="AT Public Key Certificate"
-                        company_dependent="1"
-                        help="The AT public key certificate used to encrypt the webservice password."
-                        groups="base.group_system"
-                    >
-                        <field name="l10n_pt_at_ws_public_cert_id"/>
+                        <field name="l10n_pt_at_ws_env" widget="radio"/>
+                        <div class="text-muted" invisible="l10n_pt_at_ws_env != 'offline'">
+                            No connection to AT. Series AT codes must be entered manually.
+                        </div>
+                        <div class="text-muted" invisible="l10n_pt_at_ws_env != 'test'">
+                            Connected to AT test servers. Series registration is not official.
+                            <strong>Switch to Production</strong> when ready to communicate live series.
+                        </div>
+                        <div class="text-muted" invisible="l10n_pt_at_ws_env != 'prod'">
+                            Connected to live AT production servers. All series registrations are official.
+                        </div>
+                        <br/>
+                        <div invisible="l10n_pt_at_ws_env == 'offline'">
+                            <div class="content-group">
+                                <div class="mt16">
+                                    <div class="o_row">
+                                        <label for="l10n_pt_at_ws_username" class="o_light_label"/>
+                                        <field name="l10n_pt_at_ws_username"/>
+                                    </div>
+                                    <div class="o_row mt16">
+                                        <label for="l10n_pt_at_ws_password" class="o_light_label"/>
+                                        <field name="l10n_pt_at_ws_password" password="True"/>
+                                    </div>
+                                    <div class="o_row mt16">
+                                        <label for="l10n_pt_at_ws_public_cert_id" class="o_light_label"
+                                               string="AT Public Key Certificate"/>
+                                        <field name="l10n_pt_at_ws_public_cert_id"/>
+                                    </div>
+                                    <div class="text-muted">
+                                        The AT public key certificate used to encrypt the webservice password.
+                                    </div>
+                                    <br/>
+                                    <field name="l10n_pt_at_ws_ssl_certificate_ids" invisible="1"/>
+                                    <button
+                                        name="%(l10n_pt_certification.l10n_pt_at_ws_certificate_action)d"
+                                        icon="oi-arrow-right" type="action"
+                                        string="Manage certificates (AT Series)" class="btn-link p-1"
+                                    />
+                                    <div class="text-muted">
+                                        The SSL client certificate used to authenticate with the AT webservice.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </setting>
                 </block>
             </xpath>

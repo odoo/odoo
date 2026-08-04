@@ -10,6 +10,7 @@
     ],
     'data': [
         'views/sale_order_views.xml',
+        'views/l10n_pt_at_series_views.xml',
         'views/res_config_settings_views.xml',
         'report/ir_actions_report_templates.xml',
         'report/l10n_pt_sale_hash_integrity_templates.xml',

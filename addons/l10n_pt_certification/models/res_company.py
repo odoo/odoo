@@ -1,6 +1,7 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import AccessError, UserError
 
+from odoo.addons.l10n_pt_certification.const import PT_AT_WS_ENDPOINT_TEST, PT_AT_WS_ENDPOINT_PROD
 from odoo.addons.l10n_pt_certification.utils import hashing as pt_hash_utils
 
 
@@ -8,6 +9,15 @@ class ResCompany(models.Model):
     _inherit = "res.company"
 
     l10n_pt_region_code = fields.Char('Region Code', compute='_compute_l10n_pt_region_code', store=True, readonly=False)
+    l10n_pt_at_ws_env = fields.Selection(
+        selection=[
+            ('prod', 'Production'),
+            ('test', 'Test'),
+            ('offline', 'Offline (no connection)'),
+        ],
+        string="AT Webservice Environment",
+        default='offline',
+    )
     l10n_pt_at_ws_username = fields.Char(
         string='AT Webservice Username',
         groups='base.group_system',
@@ -25,6 +35,36 @@ class ResCompany(models.Model):
         help="The AT public key certificate used to encrypt the password sent to the Series webservice.",
         check_company=True,
     )
+    l10n_pt_at_ws_ssl_certificate_ids = fields.One2many(
+        comodel_name='certificate.certificate',
+        inverse_name='company_id',
+        domain=[('scope', '=', 'at_series')],
+    )
+    l10n_pt_at_ws_ssl_certificate_id = fields.Many2one(
+        string="SSL Certificate (AT Series)",
+        comodel_name='certificate.certificate',
+        compute='_compute_l10n_pt_at_ws_ssl_certificate',
+        store=True,
+        readonly=False,
+    )
+
+    @api.depends('country_id', 'l10n_pt_at_ws_ssl_certificate_ids')
+    def _compute_l10n_pt_at_ws_ssl_certificate(self):
+        for company in self:
+            if company.country_code == 'PT':
+                company.l10n_pt_at_ws_ssl_certificate_id = self.env['certificate.certificate'].search(
+                    [('company_id', '=', company.id), ('is_valid', '=', True), ('scope', '=', 'at_series')],
+                    order='date_end desc',
+                    limit=1,
+                )
+            else:
+                company.l10n_pt_at_ws_ssl_certificate_id = False
+
+    def _l10n_pt_at_ws_get_soap_endpoint(self):
+        self.ensure_one()
+        if self.l10n_pt_at_ws_env == 'prod':
+            return PT_AT_WS_ENDPOINT_PROD
+        return PT_AT_WS_ENDPOINT_TEST
 
     @api.depends('country_id', 'state_id')
     def _compute_l10n_pt_region_code(self):
@@ -66,7 +106,7 @@ class ResCompany(models.Model):
             return super()._verify_hashed_move(move, previous_hash, versioning_list, current_versioning_index)
         previous_hash = previous_hash.split("$")[2] if previous_hash else ""
         message = pt_hash_utils.get_message_to_hash(
-            move.date, move.l10n_pt_hashed_on, move._get_l10n_pt_document_number(), abs(move.amount_total_signed), previous_hash,
+            move.date, move.l10n_pt_hashed_on, move._l10n_pt_get_document_number(), abs(move.amount_total_signed), previous_hash,
         )
         return pt_hash_utils.verify_integrity(
             message, move.inalterable_hash, versioning_list[current_versioning_index],
