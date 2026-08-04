@@ -79,7 +79,7 @@ class PosOrder(models.Model):
         pos_orders = self.browse([o['id'] for o in data["pos.order"]])
         for pos_order in pos_orders:
             # TODO: the way to retrieve the sale order in not consistent... is it a bad code or intended?
-            used_pos_lines = pos_order.lines.sale_order_origin_id.order_line.pos_order_line_ids
+            used_pos_lines = pos_order.lines.sale_order_origin_id.order_line.pos_order_line_ids | pos_order.lines.refunded_orderline_id.sale_order_origin_id.order_line.pos_order_line_ids
             downpayment_pos_order_lines = pos_order.lines.filtered(lambda line: (
                 line not in used_pos_lines
                 and line.product_id == pos_order.config_id.down_payment_product_id

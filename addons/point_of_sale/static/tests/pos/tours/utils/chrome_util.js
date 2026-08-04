@@ -394,3 +394,14 @@ export function reloadData({ full = false } = {}) {
         clickBtn(full ? "Full" : "Limited", { expectUnloadPage: true }),
     ];
 }
+
+export function fakePrintChange() {
+    return {
+        trigger: "body",
+        run: () => {
+            posmodel.printOrderChanges = async function (data, printer) {
+                return { successful: true, warningCode: false };
+            };
+        },
+    };
+}
