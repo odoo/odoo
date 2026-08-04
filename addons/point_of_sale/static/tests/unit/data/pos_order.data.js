@@ -142,4 +142,8 @@ export class PosOrder extends models.ServerModel {
             "product.attribute.custom.value": posCustomAttributeValue,
         };
     }
+
+    search_paid_order_ids(config_id, domain, limit, offset) {
+        return { ordersInfo: [], totalCount: 0 };
+    }
 }
