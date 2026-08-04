@@ -802,7 +802,11 @@ def convert_xml_import(
     except Exception:
         _logger.exception("The XML file '%s' does not fit the required schema!", xmlfile.name)
         if jingtrang:
-            p = subprocess.run(['pyjing', schema, xmlfile.name], stdout=subprocess.PIPE)
+            environ = os.environ.copy()
+            environ['JAVA_TOOL_OPTIONS'] = '-Xmx64m -XX:-UseCompressedClassPointers'
+            p = subprocess.run(
+                ["pyjing", schema, xmlfile.name], stdout=subprocess.PIPE, env=environ,
+            )
             _logger.warning(p.stdout.decode())
         else:
             for e in relaxng.error_log:
