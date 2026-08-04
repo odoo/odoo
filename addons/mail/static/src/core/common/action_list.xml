@@ -92,7 +92,7 @@
         'o-px-0_5':      this.props.inline   and  !this.env.inMeetingView and !this.hasBtnBg and !this.action.icon,
         'p-1':           this.props.inline   and  this.hasBtnBg and isInlineCircleButton and this.env.inChatWindow,
         'o-p-0_5':       this.props.inline   and  !this.env.inMeetingView and !this.hasBtnBg and !this.env.inComposer,
-        'o-px-0_5 py-0': this.props.inline   and  this.env.inMessage,
+        'o-px-0_5 py-0': this.props.inline   and  this.ancestors.has('Message'),
         'px-3 py-2':     this.props.dropdown and   this.ui.isSmall,
         'px-2 py-1':     this.props.dropdown and  !this.ui.isSmall,
     })"/>

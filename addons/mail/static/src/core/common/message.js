@@ -139,7 +139,6 @@ export class Message extends Component {
         this.isActive = computed(() => Boolean(this._isActive));
         this.ancestors = useAncestors();
         useSubEnv({
-            inMessage: true,
             message: this.props.message,
             alignedRight: this.isAlignedRight,
         });

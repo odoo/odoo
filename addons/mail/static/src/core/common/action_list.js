@@ -1,3 +1,4 @@
+import { useAncestors } from "@mail/core/common/ancestors_hook";
 import { attClassObjectToString } from "@mail/utils/common/format";
 import { propSignal } from "@mail/utils/common/hooks";
 import { Component, computed, onWillUnmount, t, useProps } from "@odoo/owl";
@@ -45,6 +46,7 @@ class Action extends Component {
         });
         this.store = useService("mail.store");
         this.ui = useService("ui");
+        this.ancestors = useAncestors();
         this.attClassObjectToString = attClassObjectToString;
         if (this.props.action.definition?.isMoreAction) {
             onWillUnmount(() => {
@@ -69,7 +71,7 @@ class Action extends Component {
         if (!this.props.inline || !this.action.icon) {
             return false;
         }
-        if (this.env.inComposer || this.env.inMessage) {
+        if (this.env.inComposer || this.ancestors.has("Message")) {
             return true;
         }
         return (

@@ -15,7 +15,7 @@
                      class="o-mail-AttachmentContainer d-flex border position-relative rounded-3"
                      t-att-title="attachment.name ? attachment.name : undefined"
                      t-att-class="{
-                        'o-inMessage': this.env.inMessage,
+                        'o-inMessage': this.ancestors.has('Message'),
                         'o-inChatter': this.ancestors.has('Chatter'),
                         'o-isImage': attachment.isImage,
                         'o-isUploading opacity-25': attachment.uploading,
@@ -34,10 +34,10 @@
                         alt="attachment.name"
                         class="this.attClassObjectToString({
                             'o-mail-AttachmentImage img img-fluid w-100 rounded-3': true,
-                            'o-inMessage': this.env.inMessage,
+                            'o-inMessage': this.ancestors.has('Message'),
                             'o-inChatter object-fit-scale': this.ancestors.has('Chatter'),
-                            'object-fit-contain': !this.ancestors.has('Chatter') and this.env.inMessage,
-                            'object-fit-cover': !this.ancestors.has('Chatter') and !this.env.inMessage,
+                            'object-fit-contain': !this.ancestors.has('Chatter') and this.ancestors.has('Message'),
+                            'object-fit-cover': !this.ancestors.has('Chatter') and !this.ancestors.has('Message'),
                         })"
                     />
                     <img
@@ -45,10 +45,10 @@
                         class="o-mail-AttachmentImage img img-fluid w-100 rounded-3"
                         t-att-class="{
                             'o-inComposer': this.env.inComposer,
-                            'o-inMessage': this.env.inMessage,
+                            'o-inMessage': this.ancestors.has('Message'),
                             'o-inChatter object-fit-scale': this.ancestors.has('Chatter'),
-                            'object-fit-contain': !this.ancestors.has('Chatter') and this.env.inMessage,
-                            'object-fit-cover': !this.ancestors.has('Chatter') and !this.env.inMessage,
+                            'object-fit-contain': !this.ancestors.has('Chatter') and this.ancestors.has('Message'),
+                            'object-fit-cover': !this.ancestors.has('Chatter') and !this.ancestors.has('Message'),
                         }"
                         t-att-src="this.getImageUrl(attachment)"
                         t-att-alt="attachment.name"
