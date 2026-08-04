@@ -123,16 +123,9 @@ export class MediaWebsitePlugin extends Plugin {
     openImageTooltip(mediaEl) {
         // Remove the displayed tooltip if any first.
         this.removeCurrentTooltip();
-        this.removeCurrentTooltip = this.popover.add(
-            mediaEl,
-            Tooltip,
-            {
-                tooltip: _t("Double-click to edit"),
-            },
-            {
-                sequence: 0,
-            }
-        );
+        this.removeCurrentTooltip = this.popover.add(mediaEl, Tooltip, {
+            tooltip: _t("Double-click to edit"),
+        });
         setTimeout(this.removeCurrentTooltip, 3000);
     }
 

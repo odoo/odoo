@@ -1,13 +1,5 @@
 import { describe, expect, test } from "@odoo/hoot";
-import {
-    click,
-    fill,
-    press,
-    queryFirst,
-    queryOne,
-    waitFor,
-    waitForNone,
-} from "@odoo/hoot-dom";
+import { click, fill, press, queryFirst, queryOne, waitFor, waitForNone } from "@odoo/hoot-dom";
 import { animationFrame, tick } from "@odoo/hoot-mock";
 import { markup } from "@odoo/owl";
 import { contains, dataURItoBlob, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
@@ -111,17 +103,17 @@ describe("should open a popover", () => {
         await click(".o_we_edit_link");
         await expectElementCount(".o_link_popover_container", 1);
     });
-    test("link popover should close when clicking on a contenteditable false element", async () => {
+    test("link popover should update when clicking on a different link", async () => {
         await setupEditor(
-            '<p><a href="http://test.test/">li[]nk</a> <a contenteditable="false">uneditable link</a></p>'
+            '<p><a href="http://a.com/">li[]nk</a> <a contenteditable="false" href="http://b.com/">uneditable link</a></p>'
         );
         await waitFor(".o-we-linkpopover");
-        expect(".o-we-linkpopover").toHaveCount(1);
-        // click on an uneditable element
-        const nodeEl = queryOne("a[contenteditable='false']");
+        expect(`.o-we-linkpopover a[href="http://a.com/"]`).toHaveCount(1);
+        // click on the second link, the popover should update, not disappear
+        const nodeEl = queryOne(`a[href="http://b.com/"]`);
         setSelection({ anchorNode: nodeEl, anchorOffset: 0 });
-        await waitForNone(".o-we-linkpopover", { timeout: 1500 });
-        expect(".o-we-linkpopover").toHaveCount(0);
+        await waitFor(`.o-we-linkpopover a[href="http://b.com/"]`);
+        expect(`.o-we-linkpopover a[href="http://b.com/"]`).toHaveCount(1);
     });
     test("clicking input prefix icon should focus associated input", async () => {
         const { editor } = await setupEditor("<p>[]<br></p>");
@@ -1115,4 +1107,13 @@ test("Should should show link popover without edit", async () => {
     // Should open the link popover without edit button
     expectElementCount(".o-we-linkpopover", 1);
     expectElementCount(".o_we_edit_link", 0);
+});
+
+test("Should open link popover in read only mode when link is not editable", async () => {
+    onRpc("/html_editor/link_preview_internal", () => ({}));
+    onRpc("/link", () => ({}));
+    await setupEditor('<p><a contenteditable="false" href="/link">link</a></p>');
+    await click(queryOne(`a[contenteditable="false"]`));
+    await waitFor(".o-we-linkpopover");
+    expect(".o_we_edit_link").toHaveCount(0);
 });

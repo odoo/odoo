@@ -130,7 +130,6 @@ export class IconPlugin extends Plugin {
                 icon: "image",
             },
         ],
-        click_overrides: this.onClickIcon.bind(this),
         would_feff_be_legit_predicates: (node) => {
             if (
                 (node.previousSibling && isIconElement(closestElement(node.previousSibling))) ||
@@ -145,19 +144,6 @@ export class IconPlugin extends Plugin {
             this.computeBackgroundColorForIcon.bind(this)
         ),
     };
-
-    onClickIcon(ev) {
-        const node = ev.target;
-        if (
-            isIconElement(closestElement(node)) &&
-            !this.dependencies.selection.isNodeEditable(node)
-        ) {
-            // We select around an icon inside non editable.
-            // This might, in case icon inside link, show the link
-            // popover to be able to open link.
-            this.dependencies.selection.selectElement(node);
-        }
-    }
 
     getTargetedIcon() {
         const targetedNodes = this.dependencies.selection.getTargetedNodes();
