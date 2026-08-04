@@ -18,11 +18,7 @@ import { router } from "@web/core/browser/router";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { user } from "@web/core/user";
-import {
-    createDocumentFragmentFromContent,
-    createElementWithContent,
-    htmlTrim,
-} from "@web/core/utils/html";
+import { createElementWithContent, htmlTrim } from "@web/core/utils/html";
 import { renderToElement } from "@web/core/utils/render";
 import { url } from "@web/core/utils/urls";
 
@@ -34,15 +30,6 @@ const { DateTime } = luxon;
 export class Message extends Record {
     static _name = "mail.message";
 
-    /** @param {Object} data */
-    update(data) {
-        super.update(data);
-        if (this.isNotification && !this.notificationType) {
-            const htmlBody = createDocumentFragmentFromContent(this.body);
-            this.notificationType = htmlBody.querySelector(".o_mail_notification")?.dataset.oeType;
-        }
-    }
-
     attachment_ids = fields.Many("ir.attachment", { inverse: "message" });
     author_id = fields.One("res.partner");
     author_guest_id = fields.One("mail.guest");
@@ -50,14 +37,20 @@ export class Message extends Record {
         return this.author_id || this.author_guest_id;
     }
     body = fields.Html("");
+    /** Shared by every compute reading the body: clone it before modifying it. */
+    bodyEl = fields.Attr(null, {
+        compute() {
+            return this.body ? createElementFromContent(this.body) : null;
+        },
+    });
     call_history_ids = fields.Many("discuss.call.history");
     richBody = fields.Html("", {
         compute() {
             emojiLoader.load();
-            if (!this.body) {
+            if (!this.bodyEl) {
                 return "";
             }
-            return getInnerHtml(decorateEmojis(createElementFromContent(this.body)));
+            return getInnerHtml(decorateEmojis(this.bodyEl.cloneNode(true)));
         },
     });
     richTranslationValue = fields.Html("", {
@@ -82,23 +75,20 @@ export class Message extends Record {
             return Boolean(
                 // ".o-mail-Message-edited" is the class added by the mail.thread in _message_update_content
                 // when the message is edited
-                createDocumentFragmentFromContent(this.body).querySelector(".o-mail-Message-edited")
+                this.bodyEl?.querySelector(".o-mail-Message-edited")
             );
         },
     });
     editedDate = fields.Datetime({
         compute() {
-            return createDocumentFragmentFromContent(this.body).querySelector(
-                ".o-mail-Message-edited"
-            )?.dataset.oDatetime;
+            return this.bodyEl?.querySelector(".o-mail-Message-edited")?.dataset.oDatetime;
         },
     });
     /** attachments not already clearly visible in the body, unlike inlined images */
     extra_body_attachment_ids = fields.Attr("ir.attachment", {
         compute() {
-            const parsedBody = createDocumentFragmentFromContent(this.body);
             const inlinedImageAttachmentIds = [
-                ...parsedBody.querySelectorAll("img[data-attachment-id]"),
+                ...(this.bodyEl?.querySelectorAll("img[data-attachment-id]") ?? []),
             ].map((img) => parseInt(img.dataset.attachmentId));
 
             return this.attachment_ids.filter((a) => !inlinedImageAttachmentIds.includes(a.id));
@@ -109,17 +99,12 @@ export class Message extends Record {
             if (this.isBodyEmpty) {
                 return false;
             }
-            const div = createElementWithContent("div", this.body);
-            return Boolean(div.querySelector("a:not([data-oe-model])"));
+            return Boolean(this.bodyEl?.querySelector("a:not([data-oe-model])"));
         },
     });
     hasMailNotificationSummary = fields.Attr(false, {
         compute() {
-            return Boolean(
-                createDocumentFragmentFromContent(this.body).querySelector(
-                    '[summary="o_mail_notification"]'
-                )
-            );
+            return Boolean(this.bodyEl?.querySelector('[summary="o_mail_notification"]'));
         },
     });
     /** @type {number|string} */
@@ -193,7 +178,7 @@ export class Message extends Record {
     scheduledDatetime = fields.Datetime();
     onlyEmojis = fields.Attr(false, {
         compute() {
-            const bodyWithoutTags = createElementWithContent("div", this.body).textContent;
+            const bodyWithoutTags = this.bodyEl?.textContent ?? "";
             const withoutEmojis = bodyWithoutTags.replace(EMOJI_REGEX, "");
             return (
                 bodyWithoutTags.length > 0 &&
@@ -216,16 +201,21 @@ export class Message extends Record {
     /** @type {string} model of the record the message is posted on */
     model;
     /** @type {string|undefined} */
-    notificationType;
+    notificationType = fields.Attr(undefined, {
+        compute() {
+            if (!this.isNotification) {
+                return undefined;
+            }
+            return this.bodyEl?.querySelector(".o_mail_notification")?.dataset.oeType;
+        },
+    });
     channelAsThreadCreationNotification = fields.One("discuss.channel", {
         /** @this {import("models").Message} */
         compute() {
             if (this.notificationType !== "thread_creation") {
                 return;
             }
-            const channelId = createDocumentFragmentFromContent(this.body).querySelector(
-                ".o_mail_notification"
-            )?.dataset.oeId;
+            const channelId = this.bodyEl?.querySelector(".o_mail_notification")?.dataset.oeId;
             return channelId ? Number(channelId) : undefined;
         },
         inverse: "threadCreationMessages",
@@ -514,10 +504,10 @@ export class Message extends Record {
             if (this.isEmpty) {
                 return _t("This message has been removed");
             }
-            if (!this.body) {
+            if (!this.bodyEl) {
                 return "";
             }
-            const bodyEl = createElementFromContent(this.body);
+            const bodyEl = this.bodyEl.cloneNode(true);
             return htmlTrim(getInnerHtml(decorateEmojis(inlineElement(bodyEl))));
         },
     });
@@ -746,9 +736,7 @@ export class Message extends Record {
 
     enterEditMode() {
         const validRoles = Array.from(
-            createDocumentFragmentFromContent(this.body).querySelectorAll(
-                ".o-discuss-mention[data-oe-model='res.role']"
-            )
+            this.bodyEl?.querySelectorAll(".o-discuss-mention[data-oe-model='res.role']") ?? []
         ).map((el) => this.store["res.role"].get(el.dataset.oeId));
         const text = convertBrToLineBreak(this.body);
         if (this.thread?.messageInEdition) {
