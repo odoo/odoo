@@ -5,9 +5,9 @@ import {
     generatePartnerMentionElement,
     prettifyMessageText,
 } from "@mail/utils/common/format";
-import { getInnerHtml } from "@mail/utils/common/html";
+import { createElementFromContent, getInnerHtml } from "@mail/utils/common/html";
 import { markup } from "@odoo/owl";
-import { createDocumentFragmentFromContent, isHtmlEmpty } from "@web/core/utils/html";
+import { isHtmlEmpty } from "@web/core/utils/html";
 import { nbsp } from "@web/core/utils/strings";
 
 export class Composer extends Record {
@@ -148,7 +148,7 @@ export class Composer extends Record {
             }
             return;
         }
-        const composerBody = createDocumentFragmentFromContent(this.composerHtml).body;
+        const composerBody = createElementFromContent(this.composerHtml);
         if (
             composerBody.querySelector(
                 `a.o_mail_redirect[data-oe-model="res.partner"][data-oe-id="${message.author.id}"]`

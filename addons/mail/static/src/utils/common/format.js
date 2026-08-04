@@ -6,7 +6,7 @@
  * added by livechat so it only happens when frontend modules are installed and
  * tested while livechat is not installed.
  */
-import { getInnerHtml, getOuterHtml } from "@mail/utils/common/html";
+import { createElementFromContent, getInnerHtml, getOuterHtml } from "@mail/utils/common/html";
 
 import { htmlEscape, markup } from "@odoo/owl";
 
@@ -14,7 +14,6 @@ import { router } from "@web/core/browser/router";
 import { emojiLoader } from "@web/core/emoji_picker/emoji_loader";
 import { formatList } from "@web/core/l10n/utils";
 import {
-    createDocumentFragmentFromContent,
     createElementWithContent,
     htmlJoin,
     htmlReplace,
@@ -344,25 +343,25 @@ function _generateEmojisOnHtml(htmlString) {
  * @returns {ReturnType<markup>}
  */
 export function prepareBodyForEditing(body) {
-    const doc = createDocumentFragmentFromContent(body);
-    for (const block of doc.body.querySelectorAll(".o_mail_reply_hide")) {
+    const bodyEl = createElementFromContent(body);
+    for (const block of bodyEl.querySelectorAll(".o_mail_reply_hide")) {
         block.classList.remove("o_mail_reply_hide");
     }
     // for mentioned partner
-    for (const mention of doc.body.querySelectorAll(".o_mail_redirect")) {
+    for (const mention of bodyEl.querySelectorAll(".o_mail_redirect")) {
         mention.setAttribute("contenteditable", false);
     }
     // for special mentions
-    for (const mention of doc.body.querySelectorAll(".o-discuss-mention")) {
+    for (const mention of bodyEl.querySelectorAll(".o-discuss-mention")) {
         mention.setAttribute("contenteditable", false);
     }
     // The "(edited)" label is added by the server and must never be editable.
     // Remove it so that CTRL+A does not select it and it is always re-added at
     // the end by the server upon saving.
-    for (const edited of doc.body.querySelectorAll(".o-mail-Message-edited")) {
+    for (const edited of bodyEl.querySelectorAll(".o-mail-Message-edited")) {
         edited.remove();
     }
-    return getInnerHtml(doc.body);
+    return getInnerHtml(bodyEl);
 }
 
 /**
@@ -389,7 +388,7 @@ export function convertBrToLineBreak(str, { trim = true } = {}) {
     if (!trim) {
         str = htmlReplace(str, / /g, () => markup`&nbsp;`);
     }
-    return createDocumentFragmentFromContent(str).body.textContent.replaceAll(nbsp, " ");
+    return createElementFromContent(str).textContent.replaceAll(nbsp, " ");
 }
 
 export function convertLineBreakToBr(str) {
@@ -401,7 +400,7 @@ export function convertLineBreakToBr(str) {
  * @returns {ReturnType<markup>}
  */
 function convertWhitespaceToNbsp(content) {
-    const body = createDocumentFragmentFromContent(content).body;
+    const body = createElementFromContent(content);
 
     /** @param {Node | null} node */
     const replaceWhitespaceInNodes = (node) => {
@@ -429,7 +428,7 @@ export function trimEmptyBlocksAround(content) {
     if (isHtmlEmpty(content)) {
         return content;
     }
-    const body = createDocumentFragmentFromContent(content).body;
+    const body = createElementFromContent(content);
     let changed = false;
 
     /** @param {ChildNode} node */
