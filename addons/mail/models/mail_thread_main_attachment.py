@@ -36,10 +36,12 @@ class MailThreadMainAttachment(models.AbstractModel):
           of records;
         """
         if attachments and (force or not self.message_main_attachment_id):
-            # we filter out attachment with 'xml' and 'octet' types
+            # We filter out attachment with 'xml', 'octet' and 'rfc822' (raw email) types
             if filter_xml:
                 attachments = attachments.filtered(
-                    lambda r: not r.mimetype.endswith('xml') and not r.mimetype.endswith('application/octet-stream')
+                    lambda r: not r.mimetype.endswith('xml')
+                    and not r.mimetype.endswith('application/octet-stream')
+                    and r.mimetype != 'message/rfc822'
                 )
 
             # Assign one of the attachments as the main according to the following priority: pdf, image, other types.
