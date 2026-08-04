@@ -89,17 +89,20 @@ def query_insert(cr, table, rows):
     if isinstance(rows, Mapping):
         rows = [rows]
     cols = list(rows[0])
-    query = SQL(
-        "INSERT INTO %s (%s)",
-        SQL.identifier(table),
-        SQL(",").join(map(SQL.identifier, cols)),
-    )
-    str_query, params, _to_flush = query._sql_tuple
-    assert not params
-    str_query += " VALUES %s RETURNING id"
-    params = [tuple(row[col] for col in cols) for row in rows]
-    cr.execute_values(str_query, params)
-    return [row[0] for row in cr.fetchall()]
+    ids = []
+    for srows in split_every(cr.IN_MAX, rows, list):
+        query = SQL(
+            "INSERT INTO %s (%s) VALUES %s RETURNING id",
+            SQL.identifier(table),
+            SQL(",").join(map(SQL.identifier, cols)),
+            SQL(",").join(
+                tuple(row.get(col) for col in cols)
+                for row in srows
+            ),
+        )
+        cr.execute(query)
+        ids.extend(row[0] for row in cr.fetchall())
+    return ids
 
 
 def query_update(cr, table, values, selectors):
@@ -1789,8 +1792,14 @@ class IrModelFieldsSelection(models.Model):
                     fname = selection.field_id.name
                     model.invalidate_model([fname])
                     # replace the value by the new one in the field's corresponding column
-                    query = f'UPDATE "{model._table}" SET "{fname}"=%s WHERE "{fname}"=%s'
-                    self.env.cr.execute(query, [vals['value'], selection.value])
+                    self.env.cr.execute(SQL(
+                        "UPDATE %s SET %s=%s WHERE %s=%s",
+                        SQL.identifier(model._table),
+                        SQL.identifier(fname),
+                        vals['value'],
+                        SQL.identifier(fname),
+                        selection.value,
+                    ))
 
         result = super().write(vals)
 
@@ -2289,16 +2298,14 @@ class IrModelData(models.Model):
 
         # query xml_ids by prefix
         result = []
-        cr = self.env.cr
         for prefix, suffixes in bymodule.items():
-            query = """
+            query = SQL("""
                 SELECT d.id, d.module, d.name, d.model, d.res_id, d.noupdate, r.id
-                FROM ir_model_data d LEFT JOIN "{}" r on d.res_id=r.id
-                WHERE d.module=%s AND d.name IN %s
-            """.format(model._table)
-            for subsuffixes in split_every(cr.IN_MAX, suffixes):
-                cr.execute(query, (prefix, subsuffixes))
-                result.extend(cr.fetchall())
+                FROM ir_model_data d LEFT JOIN %s r on d.res_id=r.id
+                WHERE d.module=%s
+            """, SQL.identifier(model._table), prefix)
+            for subsuffixes in split_every(self.env.cr.IN_MAX, suffixes):
+                result.extend(self.env.execute_query(SQL("%s AND d.name IN %s", query, subsuffixes)))
 
         return result
 
@@ -2325,8 +2332,7 @@ class IrModelData(models.Model):
             # insert rows or update them
             query = self._build_update_xmlids_query(sub_rows, update)
             try:
-                self.env.cr.execute(query, [arg for row in sub_rows for arg in row])
-                result = self.env.cr.dictfetchall()
+                result = self.env.execute_query_dict(query)
                 for row in result:
                     # small optimisation: during install a lot of xmlid are created/updated.
                     # Instead of clearing the cache, set the correct value in the cache to avoid a bunch of query
@@ -2364,22 +2370,24 @@ class IrModelData(models.Model):
         }
 
     def _build_update_xmlids_query(self, sub_rows, update):
-        rows = self._build_insert_xmlids_values()
-        row_names = f"({','.join(rows.keys())})"
-        row_placeholders = f"({','.join(rows.values())})"
-        row_placeholders = ", ".join([row_placeholders] * len(sub_rows))
-        return """
-            INSERT INTO ir_model_data {row_names}
-            VALUES {row_placeholder}
+        cols = self._build_insert_xmlids_values()
+        row_names = SQL(',').join(map(SQL.identifier, cols.keys()))
+        row_values = SQL(',').join(
+            [r[i] for r in sub_rows] if placeholder == '%s' else [placeholder] * len(sub_rows)
+            for i, placeholder in enumerate(cols.values())
+        )
+        return SQL("""
+            INSERT INTO ir_model_data(%s)
+            SELECT * FROM UNNEST(%s)
             ON CONFLICT (module, name)
             DO UPDATE SET (model, res_id, write_date) =
                 (EXCLUDED.model, EXCLUDED.res_id, now() at time zone 'UTC')
-                WHERE (ir_model_data.res_id != EXCLUDED.res_id OR ir_model_data.model != EXCLUDED.model) {and_where}
+                WHERE (ir_model_data.res_id != EXCLUDED.res_id OR ir_model_data.model != EXCLUDED.model) %s
             RETURNING id, module, name, model, res_id, create_date, write_date
-        """.format(
-            row_names=row_names,
-            row_placeholder=row_placeholders,
-            and_where="AND NOT ir_model_data.noupdate" if update else "",
+            """,
+            row_names,
+            row_values,
+            SQL("AND NOT ir_model_data.noupdate") if update else SQL(),
         )
 
     @api.model

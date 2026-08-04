@@ -116,13 +116,13 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
         return bool(self.env.cr.rowcount)
 
     @api.model
-    def _update_foreign_keys_generic(self, model, src_records, dst_record):
+    def _update_foreign_keys_generic(self, model: str, src_records, dst_record):
         """ Update all foreign key from the src_records to dst_record for any model.
             :param model: model name as a string
             :param src_records: merge source recordset (does not include destination one)
             :param dst_record: record of destination
         """
-        _logger.debug('_update_foreign_keys_generic for dst_record: %s for src_records: %s', dst_record.id, str(src_records.ids))
+        _logger.debug('_update_foreign_keys_generic for dst_record: %s for src_records: %s', dst_record.id, src_records.ids)
 
         relations = self._get_fk_on(self.env[model]._table)
 
@@ -137,47 +137,62 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
             columns = [fld for fld in table_columns(self.env.cr, table) if fld != column]
 
             # do the update for the current table/column in SQL
-            query_dic = {
-                'table': table,
-                'column': column,
-                'value': columns[0],
-            }
+            table_sql = SQL.identifier(table)
+            column_sql = SQL.identifier(column)
 
-            self.env.cr.execute('SELECT FROM "%(table)s" WHERE "%(column)s" IN %%s LIMIT 1' % query_dic,
-                                (tuple(src_records.ids),))
-            if self.env.cr.fetchone() is None:
+            if not self.env.execute_query(SQL(
+                "SELECT FROM %s WHERE %s IN %s LIMIT 1", table_sql, column_sql, tuple(src_records.ids)
+            )):
                 continue  # no record
 
             if len(columns) <= 1:
                 # unique key treated
-                query = """
-                    UPDATE "%(table)s" as ___tu
-                    SET "%(column)s" = %%s
+                self.env.execute_query(SQL("""
+                    UPDATE %(table)s as ___tu
+                    SET %(column)s = %(dst_record_id)s
                     WHERE
-                        "%(column)s" = %%s AND
+                        %(column)s = ANY(%(src_record_ids)s) AND
                         NOT EXISTS (
                             SELECT 1
-                            FROM "%(table)s" as ___tw
+                            FROM %(table)s as ___tw
                             WHERE
-                                "%(column)s" = %%s AND
+                                %(column)s = %(dst_record_id)s AND
                                 ___tu.%(value)s = ___tw.%(value)s
-                        )""" % query_dic
-                for record in src_records:
-                    self.env.cr.execute(query, (dst_record.id, record.id, dst_record.id))
+                        )""",
+                        table=table_sql,
+                        column=column_sql,
+                        value=SQL.identifier(columns[0]),
+                        dst_record_id=dst_record.id,
+                        src_record_ids=src_records.ids,
+                    ))
             elif not self._has_check_or_unique_constraint(table, column):
                 # if there is no CHECK or UNIQUE constraint, we do it without a savepoint
-                query = 'UPDATE "%(table)s" SET "%(column)s" = %%s WHERE "%(column)s" IN %%s' % query_dic
-                self.env.cr.execute(query, (dst_record.id, tuple(src_records.ids)))
+                self.env.execute_query(SQL(
+                    "UPDATE %(table)s SET %(column)s = %(dst_record_id)s WHERE %(column)s = ANY(%(src_record_ids)s)",
+                    table=table_sql,
+                    column=column_sql,
+                    dst_record_id=dst_record.id,
+                    src_record_ids=src_records.ids,
+                ))
             else:
                 try:
                     with mute_logger('odoo.sql_db'), self.env.cr.savepoint():
-                        query = 'UPDATE "%(table)s" SET "%(column)s" = %%s WHERE "%(column)s" IN %%s' % query_dic
-                        self.env.cr.execute(query, (dst_record.id, tuple(src_records.ids)))
+                        self.env.execute_query(SQL(
+                            "UPDATE %(table)s SET %(column)s = %(dst_record_id)s WHERE %(column)s = ANY(%(src_record_ids)s)",
+                            table=table_sql,
+                            column=column_sql,
+                            dst_record_id=dst_record.id,
+                            src_record_ids=src_records.ids,
+                        ))
                 except psycopg2.Error:
                     # updating fails, most likely due to a violated unique constraint
                     # keeping record with nonexistent partner_id is useless, better delete it
-                    query = 'DELETE FROM "%(table)s" WHERE "%(column)s" IN %%s' % query_dic
-                    self.env.cr.execute(query, (tuple(src_records.ids),))
+                    self.env.execute_query(SQL(
+                        "DELETE FROM %(table)s WHERE %(column)s = ANY(%(src_record_ids)s)",
+                        table=table_sql,
+                        column=column_sql,
+                        src_record_ids=src_records.ids,
+                    ))
 
     @api.model
     def _update_reference_fields_generic(self, referenced_model, src_records, dst_record, additional_update_records=None):
@@ -495,7 +510,7 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
     # ----------------------------------------
 
     @api.model
-    def _generate_query(self, fields, maximum_group=100):
+    def _generate_query(self, fields, maximum_group=100) -> SQL:
         """ Build the SQL query on res.partner table to group them according to given criteria
             :param fields : list of column names to group by the partners
             :param maximum_group : limit of the query
@@ -503,40 +518,36 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
         # make the list of column to group by in sql query
         sql_fields = []
         for field in fields:
+            field = SQL.identifier(field)
             if field in ['email', 'name']:
-                sql_fields.append('lower(%s)' % field)
+                sql_fields.append(SQL('lower(%s)', field))
             elif field in ['vat']:
-                sql_fields.append("replace(%s, ' ', '')" % field)
+                sql_fields.append(SQL("replace(%s, ' ', '')", field))
             else:
                 sql_fields.append(field)
-        group_fields = ', '.join(sql_fields)
+        group_fields = SQL(', ').join(sql_fields)
 
         # where clause : for given group by columns, only keep the 'not null' record
-        filters = []
-        for field in fields:
-            if field in ['email', 'name', 'vat']:
-                filters.append((field, 'IS NOT', 'NULL'))
-        criteria = ' AND '.join('%s %s %s' % (field, operator, value) for field, operator, value in filters)
+        criteria = SQL(' AND ').join(
+            SQL("%s IS NOT NULL", SQL.identifier(field))
+            for field in fields
+            if field in ['email', 'name', 'vat']
+        )
 
         # build the query
-        text = [
-            "SELECT min(id), array_agg(id)",
-            "FROM res_partner",
-        ]
-
-        if criteria:
-            text.append('WHERE %s' % criteria)
-
-        text.extend([
-            "GROUP BY %s" % group_fields,
-            "HAVING COUNT(*) >= 2",
-            "ORDER BY min(id)",
-        ])
-
-        if maximum_group:
-            text.append("LIMIT %s" % maximum_group,)
-
-        return ' '.join(text)
+        return SQL(
+            """SELECT min(id), array_agg(id)
+            FROM res_partner
+            WHERE %s
+            GROUP BY %s
+            HAVING COUNT(*) >= 2
+            ORDER BY min(id)
+            %s
+            """,
+            criteria,
+            group_fields,
+            SQL("LIMIT %s", maximum_group) if maximum_group else SQL(),
+        )
 
     @api.model
     def _compute_selected_groupby(self):
@@ -631,7 +642,7 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
             'target': 'new',
         }
 
-    def _process_query(self, query):
+    def _process_query(self, query: SQL):
         """ Execute the select request and write the result in this wizard
             :param query : the SQL query used to fill the wizard line
         """
@@ -639,10 +650,10 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
         model_mapping = self._compute_models()
 
         # group partner query
-        self.env.cr.execute(query)
+        rows = self.env.execute_query(query)
 
         counter = 0
-        for min_id, aggr_ids in self.env.cr.fetchall():
+        for min_id, aggr_ids in rows:
             # To ensure that the used partners are accessible by the user
             partners = self.env['res.partner'].search([('id', 'in', aggr_ids)])
             if len(partners) < 2:
@@ -707,7 +718,7 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
     def parent_migration_process_cb(self):
         self.ensure_one()
 
-        query = """
+        query = SQL("""
             SELECT
                 min(p1.id),
                 array_agg(DISTINCT p1.id)
@@ -730,7 +741,7 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
             HAVING COUNT(*) >= 2
             ORDER BY
                 min(p1.id)
-        """
+        """)
 
         self._process_query(query)
 

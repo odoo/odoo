@@ -212,7 +212,7 @@ class ResDevice(models.Model):
         #   recent log.
         # - `id` is not aggregated, this allows the ORM to use relational fields
         #   with this model and use the index of `id`.
-        return """
+        return SQL("""
             SELECT
                 L1.id,
                 L1.session_identifier,
@@ -239,11 +239,11 @@ class ResDevice(models.Model):
                         AND L2.id > L1.id
                         AND L2.revoked IS NOT TRUE
                 ))
-        """
+        """)
 
     def init(self):
         tools.drop_view_if_exists(self.env.cr, self._table)
-        self.env.cr.execute('CREATE OR REPLACE VIEW %s AS (%s)' % (self._table, self._query))
+        self.env.cr.execute(SQL('CREATE OR REPLACE VIEW %s AS (%s)', SQL.identifier(self._table), self._query))
 
 
 class ResSession(models.Model):
@@ -320,7 +320,7 @@ class ResSession(models.Model):
         # - The aggregated fields will be computed (this is because the most
         #   recent log may not correspond to the current device, the latter to
         #   be used for a good user experience).
-        return """
+        return SQL("""
             SELECT
                 D1.id,
                 D1.session_identifier,
@@ -338,7 +338,7 @@ class ResSession(models.Model):
                         AND D2.session_identifier = D1.session_identifier
                         AND D2.id > D1.id
                 ))
-        """
+        """)
 
     @check_identity
     def revoke(self):

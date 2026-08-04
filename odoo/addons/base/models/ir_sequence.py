@@ -9,12 +9,12 @@ from odoo.tools import SQL
 _logger = logging.getLogger(__name__)
 
 
-def _create_sequence(cr, seq_name, number_increment, number_next):
+def _create_sequence(cr, seq_name: str, number_increment: int, number_next: int):
     """ Create a PostreSQL sequence. """
     if number_increment == 0:
         raise UserError(_('Step must not be zero.'))
-    sql = "CREATE SEQUENCE %s INCREMENT BY %%s START WITH %%s" % seq_name
-    cr.execute(sql, (number_increment, number_next))
+    sql = SQL("CREATE SEQUENCE %s INCREMENT BY %s START WITH %s", SQL.identifier(seq_name), number_increment, number_next)
+    cr.execute(sql)
 
 
 def _drop_sequences(cr, seq_names):

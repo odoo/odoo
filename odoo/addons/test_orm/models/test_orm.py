@@ -189,10 +189,13 @@ class TestOrmMessage(models.Model):
             return []
         # retrieve all the messages that match with a specific SQL query
         self.flush_model(['body'])
-        query = """SELECT id FROM "%s" WHERE char_length("body") %s %%s""" % \
-                (self._table, operator)
-        self.env.cr.execute(query, (value,))
-        ids = [t[0] for t in self.env.cr.fetchall()]
+        rows = self.env.execute_query(SQL(
+            'SELECT id FROM %s WHERE char_length("body") %s %s',
+            SQL.identifier(self._table),
+            SQL(operator),  # pylint: disable=sql-injection
+            value,
+        ))
+        ids = [t[0] for t in rows]
         # return domain with an implicit AND
         return [('id', 'in', ids), (1, '=', 1)]
 

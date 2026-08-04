@@ -465,8 +465,7 @@ actual arch.
                     # During an upgrade, we can only use the views that have been
                     # fully upgraded already.
                     if not self.pool.ready and sibling_primary_views and self.pool._init_modules:
-                        query = sibling_primary_views._get_filter_xmlid_query()
-                        sql = SQL(query, res_ids=tuple(sibling_primary_views.ids), modules=tuple(self.pool._init_modules))
+                        sql = sibling_primary_views._get_filter_xmlid_query(modules=tuple(self.pool._init_modules))
                         loaded_view_ids = {id_ for id_, in self.env.execute_query(sql)}
                         loaded_view_ids.update({
                             id
@@ -716,12 +715,12 @@ actual arch.
         return domain
 
     @api.model
-    def _get_filter_xmlid_query(self):
+    def _get_filter_xmlid_query(self, *, modules):
         """This method is meant to be overridden by other modules.
         """
-        return """SELECT res_id FROM ir_model_data
+        return SQL("""SELECT res_id FROM ir_model_data
                   WHERE res_id IN %(res_ids)s AND model = 'ir.ui.view' AND module IN %(modules)s
-               """
+               """, res_ids=self._ids, modules=tuple(modules))
 
     def _get_inheriting_views(self):
         """
@@ -798,8 +797,7 @@ actual arch.
         if not ids_to_check:
             return self
         loaded_modules = tuple(self.pool._init_modules) + (self.env.context.get('install_module'),)
-        query = self._get_filter_xmlid_query()
-        sql = SQL(query, res_ids=tuple(ids_to_check), modules=loaded_modules)
+        sql = self.browse(ids_to_check)._get_filter_xmlid_query(modules=loaded_modules)
         valid_view_ids = {id_ for id_, in self.env.execute_query(sql)} | check_view_ids
         return self.browse(vid for vid in self.ids if vid in valid_view_ids)
 
