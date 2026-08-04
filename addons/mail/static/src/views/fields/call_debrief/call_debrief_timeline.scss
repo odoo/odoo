@@ -1,3 +1,4 @@
+/*rtl:begin:ignore*/
 .o-CallDebriefTimeline-container {
     .o-CallDebriefTimeline {
         height: var(--CallDebriefTimeline-height, #{map-get($spacers, 3) * 2});
@@ -17,6 +18,9 @@
     }
 
     .o-CallDebriefTimeline-track {
+        // Timeline track should always be in LTR direction, even in RTL context.
+        /*rtl:ignore*/
+        direction: ltr;
         gap: 1px;
         height: var(--CallDebriefTimeline__track-height, #{map-get($spacers, 2)});
     }
@@ -27,10 +31,15 @@
         &.o-CallDebriefTimeline-silence-segment {
             --CallDebriefTimeline__track-height: #{map-get($spacers, 1) / 2};
         }
+
+        .o-CallDebriefTimeline-media-progress {
+            left: 0;
+        }
     }
 
     .o-CallDebriefTimeline-playhead {
         left: 0;
+        transform: translate(-50%, -50%);
         height: var(--CallDebriefTimeline__playhead-size, #{map-get($spacers, 3)});
         width: var(--CallDebriefTimeline__playhead-size, #{map-get($spacers, 3)});
 
@@ -47,6 +56,7 @@
 
     .o-CallDebriefTimeline-timestamp {
         left: 0;
+        transform: translate(-50%, -50%);
         opacity: 0;
         transition: opacity .2s ease-in-out, transform .2s ease-in-out;
         user-select: none;
@@ -60,3 +70,4 @@
         touch-action: none;
     }
 }
+/*rtl:end:ignore*/
