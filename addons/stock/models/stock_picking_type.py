@@ -154,9 +154,13 @@ class StockPickingType(models.Model):
     # Batch related fields
     # ==========================================================================
     count_picking_batch = fields.Integer(compute='_compute_picking_count')
-    count_picking_wave = fields.Integer(compute='_compute_picking_count')
     auto_batch = fields.Boolean('Automatic Batches',
         help="Automatically put pickings into batches as they are confirmed when possible.")
+    batch_creation_type = fields.Selection([('manual', 'Manual Only'), ('auto', 'Automatic')],
+        string='Batch Creation',
+        compute='_compute_batch_creation_type',
+        inverse='_inverse_batch_creation_type',
+        help=auto_batch._args__['help'])
     batch_group_by_partner = fields.Boolean('Contact', help="Automatically group batches by contacts.")
     batch_group_by_destination = fields.Boolean('Destination Country', help="Automatically group batches by destination country.")
     batch_group_by_src_loc = fields.Boolean('Group by Source Location',
@@ -175,6 +179,12 @@ class StockPickingType(models.Model):
         string='Wave Locations',
         help="Locations to consider when grouping waves.",
         domain="[('usage', '=', 'internal')]")
+    wave_group_by_date = fields.Boolean('Group by Date',
+        help="Split transfers by their date.")
+    wave_date_granularity = fields.Selection([('day', 'Day'), ('week', 'Week')],
+        string='Date Precision',
+        default='day',
+        help="Precision to consider when grouping waves.")
     batch_max_lines = fields.Integer("Maximum lines",
         help="A transfer will not be automatically added to batches that will exceed this number of lines if the transfer is added to it.\n"
              "Leave this value as '0' if no line limit.")
@@ -191,7 +201,7 @@ class StockPickingType(models.Model):
             if not picking_type.auto_batch:
                 continue
             if not any(picking_type[key] for key in group_by_keys):
-                raise ValidationError(_("If the Automatic Batches feature is enabled, at least one 'Group by' option must be selected."))
+                raise ValidationError(_("If the Automatic Batches feature is enabled, at least one 'Grouping by' option must be selected."))
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -292,7 +302,7 @@ class StockPickingType(models.Model):
         base_domain = Domain([('state', 'not in', ('done', 'cancel')), ('picking_type_id', 'in', self.ids)])
         # TODO (to check if it's not overkill): to avoid some `_read_group`:
         #   - `count_picking` could be the sum of `count_picking_waiting` and `count_picking_ready`;
-        #   - We could compute some fields like we did for `count_picking_wave` and `count_picking_batch`
+        #   - We could compute some fields like we did for `count_picking_batch`
         #     by checking a field value (would be easy for `state` and `backorder_id`.)
         active_picking_states = ('assigned', 'waiting', 'confirmed')
         domains = {
@@ -320,13 +330,21 @@ class StockPickingType(models.Model):
 
         if self.env.user.has_group('stock.group_stock_picking_batch'):
             data = self.env['stock.picking.batch']._read_group(
-                base_domain, ['picking_type_id', 'is_wave'], ['__count'])
-            count = {(picking_type.id, is_wave): count for picking_type, is_wave, count in data}
+                base_domain, ['picking_type_id'], ['__count'])
+            count = {picking_type.id: count for picking_type, count in data}
             for record in self:
-                record.count_picking_wave = count.get((record.id, True), 0)
-                record.count_picking_batch = count.get((record.id, False), 0)
+                record.count_picking_batch = count.get(record.id, 0)
         else:
-            self.count_picking_batch, self.count_picking_wave = 0, 0
+            self.count_picking_batch = 0
+
+    @api.depends('auto_batch')
+    def _compute_batch_creation_type(self):
+        for picking_type in self:
+            picking_type.batch_creation_type = 'auto' if picking_type.auto_batch else 'manual'
+
+    def _inverse_batch_creation_type(self):
+        for picking_type in self:
+            picking_type.auto_batch = picking_type.batch_creation_type == 'auto'
 
     @api.depends('warehouse_id')
     def _compute_display_name(self):
@@ -472,10 +490,14 @@ class StockPickingType(models.Model):
             del action["mobile_view_mode"]
             del action["views"]
             action["view_mode"] = self.env.context["view_mode"]
+        if action["view_mode"] == "gantt":
+            action["context"].pop("group_by", None)
         return action
 
-    def action_wave(self):
-        action = self._get_action('stock.action_picking_tree_wave')
+    def action_detailed_moves(self):
+        self.ensure_one()
+        action = self.env["ir.actions.actions"]._for_xml_id("stock.action_picking_detailed_moves")
+        action["display_name"] = _("%(picking_type)s : Detailed Moves", picking_type=self.name)
         return action
 
     def _get_action(self, action_xmlid):
@@ -614,8 +636,23 @@ class StockPickingType(models.Model):
 
     @api.model
     def _get_wave_group_by_keys(self):
-        return ['wave_group_by_category', 'wave_group_by_location', 'wave_group_by_product']
+        return ['wave_group_by_category', 'wave_group_by_location', 'wave_group_by_product', 'wave_group_by_date']
 
     @api.model
     def _get_batch_and_wave_group_by_keys(self):
         return self._get_batch_group_by_keys() + self._get_wave_group_by_keys()
+
+    def _validate_line_date_for_wave(self, line, wave):
+        line_date = line.date.date()
+        if wave._name == "stock.picking.batch":
+            wave_date = wave.scheduled_date.date()
+        elif wave._name == "stock.move.line":
+            wave_date = wave.date.date()
+        else:
+            return False
+
+        if self.wave_date_granularity == 'day':
+            return line_date == wave_date
+        if self.wave_date_granularity == 'week':
+            return line_date.year == wave_date.year and line_date.isocalendar().week == wave_date.isocalendar().week
+        return False

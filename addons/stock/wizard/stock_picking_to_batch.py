@@ -8,7 +8,7 @@ class StockPickingToBatch(models.TransientModel):
     _name = 'stock.picking.to.batch'
     _description = 'Batch Transfer Line'
 
-    batch_id = fields.Many2one('stock.picking.batch', string='Batch Transfer', domain="[('is_wave', '=', False), ('state', 'in', ('draft', 'in_progress'))]")
+    batch_id = fields.Many2one('stock.picking.batch', string='Batch Transfer', domain="[('state', 'in', ('draft', 'in_progress'))]")
     mode = fields.Selection([('existing', 'an existing batch transfer'), ('new', 'a new batch transfer')], default='new')
     user_id = fields.Many2one('res.users', string='Responsible')
     is_create_draft = fields.Boolean(string="Draft", help='When checked, create the batch in draft status')

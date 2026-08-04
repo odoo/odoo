@@ -170,15 +170,17 @@ class TestBatchPicking(TransactionCase):
         self.assertEqual(wave.user_id, self.user_demo)
 
     def test_creation_from_pickings(self):
-        """ Select all the picking_ids and create a wave from them """
-        action = self.env['ir.actions.actions']._for_xml_id('stock.stock_add_to_wave_action_stock_picking')
+        """ Select all the picking_ids and create a batch from them """
+        action = self.env['ir.actions.actions']._for_xml_id('stock.stock_picking_to_batch_action_stock_picking')
         action['context'] = {'active_model': 'stock.picking', 'active_ids': self.all_pickings.ids}
-        self.assertEqual(action.get('res_model'), 'stock.add.to.wave')
+        self.assertEqual(action.get('res_model'), 'stock.picking.to.batch')
         wizard_form = Form.from_action(self.env, action)
         wizard_form.mode = 'new'
         wizard = wizard_form.save()
         res = wizard.attach_pickings()
-        self.assertEqual(set(res['context']['picking_to_wave']), set(self.all_pickings.ids))
+        batch_id = int(res['params']['links'][0]['url'].split('/')[-1])
+        batch = self.env['stock.picking.batch'].browse(batch_id)
+        self.assertEqual(set(batch.picking_ids.ids), set(self.all_pickings.ids))
 
     def test_add_to_existing_wave_from_lines(self):
         res_dict = self.picking_client_1.move_line_ids.action_open_add_to_wave()
@@ -215,16 +217,16 @@ class TestBatchPicking(TransactionCase):
             ('is_wave', '=', True)
         ])
 
-        action = self.env['ir.actions.actions']._for_xml_id('stock.stock_add_to_wave_action_stock_picking')
+        action = self.env['ir.actions.actions']._for_xml_id('stock.stock_picking_to_batch_action_stock_picking')
         action['context'] = {'active_model': 'stock.picking', 'active_ids': self.all_pickings.ids}
-        self.assertEqual(action.get('res_model'), 'stock.add.to.wave')
+        self.assertEqual(action.get('res_model'), 'stock.picking.to.batch')
         wizard_form = Form.from_action(self.env, action)
         wizard_form.mode = 'existing'
-        wizard_form.wave_id = wave
+        wizard_form.batch_id = wave
         wizard = wizard_form.save()
         res = wizard.attach_pickings()
-        self.assertEqual(set(res['context']['picking_to_wave']), set(self.all_pickings.ids))
-        self.assertEqual(res['context']['active_wave_id'], wave.id)
+        self.assertEqual('The following batch transfer has been updated', res['params']['title'])
+        self.assertEqual(set(wave.picking_ids.ids), set(self.all_pickings.ids))
 
     def test_wave_split_picking(self):
         lines = self.picking_client_1.move_ids.filtered(lambda m: m.product_id == self.productB).move_line_ids

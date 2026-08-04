@@ -85,7 +85,7 @@
             <list string="Move Lines" create="0" default_order="date" action="action_open_reference" type="object">
                 <header>
                     <button name="action_open_add_to_wave"
-                            type="object" string="Add to Wave"
+                            type="object" string="Add to Batch"
                             groups="stock.group_stock_picking_batch"/>
                 </header>
                 <field name="date" string="Scheduled Date"/>
@@ -94,8 +94,10 @@
                 <field name="picking_partner_id"/>
                 <field name="product_id"/>
                 <field name="lot_id" groups="stock.group_production_lot" optional="hide"/>
-                <field name="location_id" groups="stock.group_stock_multi_locations" />
-                <field name="location_dest_id" groups="stock.group_stock_multi_locations" />
+                <field name="location_id" groups="stock.group_stock_multi_locations" column_invisible="context.get('picking_type_code') == 'incoming'"/>
+                <field name="location_id" groups="stock.group_stock_multi_locations" column_invisible="context.get('picking_type_code') != 'incoming'" optional="hide"/>
+                <field name="location_dest_id" groups="stock.group_stock_multi_locations" column_invisible="context.get('picking_type_code') == 'outgoing'"/>
+                <field name="location_dest_id" groups="stock.group_stock_multi_locations" column_invisible="context.get('picking_type_code') != 'outgoing'" optional="hide"/>
                 <field name="package_id" groups="stock.group_tracking_lot"/>
                 <field name="quantity" string="Quantity" optional="show"/>
                 <field name="uom_id" options="{'no_open': True, 'no_create': True}" widget="many2one_uom" optional="show" groups="uom.group_uom"/>
@@ -293,6 +295,29 @@
             action = records.action_revert()
         </field>
     </record>
+
+    <record id="action_add_move_lines" model="ir.actions.act_window">
+        <field name="name">Add: Move Lines</field>
+        <field name="res_model">stock.move.line</field>
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="view_move_line_tree_detailed"/>
+        <field name="target">new</field>
+        <field name="domain">[('state', '!=', 'done'),  ('picking_type_id', '=', context.get('picking_type_id'))]</field>
+        <field name="context">{
+            'active_batch_id': context.get('active_batch_id'),
+            'picking_type_code': context.get('picking_type_code'),
+            'dialog_size': 'extra-large',
+        }</field>
+    </record>
+
+    <record id="action_picking_detailed_moves" model="ir.actions.act_window">
+        <field name="name">Detailed Moves</field>
+        <field name="res_model">stock.move.line</field>
+        <field name="view_mode">list</field>
+        <field name="domain">[('picking_type_id', '=', context.get('picking_type_id'))]</field>
+        <field name="view_id" ref="view_move_line_tree_detailed"/>
+    </record>
+
 
     <record id="stock_move_line_action" model="ir.actions.act_window">
             <field name="name">Moves History</field>

@@ -5,7 +5,7 @@
         <field name="name">stock.add.to.wave.form</field>
         <field name="model">stock.add.to.wave</field>
         <field name="arch" type="xml">
-            <form string="Add to Wave">
+            <form string="Add to Batch">
                 <group>
                     <group>
                         <label for="mode" string="Add to"/>
@@ -23,12 +23,10 @@
         </field>
     </record>
     <record id="stock_add_to_wave_action_stock_picking" model="ir.actions.act_window">
-        <field name="name">Add to wave</field>
+        <field name="name">Add to batch</field>
         <field name="res_model">stock.add.to.wave</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>
-        <field name="binding_model_id" ref="stock.model_stock_picking"/>
-        <field name="binding_view_types">list,kanban</field>
         <field name="group_ids" eval="[(6, 0, [ref('stock.group_stock_picking_batch')])]"/>
     </record>
 </odoo>

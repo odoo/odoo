@@ -117,13 +117,23 @@
         </record>
 
         <record id="stock_picking_view_batch_tree_ref" model="ir.ui.view">
-            <field name="name">stock.picking.view.list.inherit.stock.picking.batch</field>
+            <field name="name">stock.picking.list.inherit.stock.picking.batch</field>
             <field name="model">stock.picking</field>
             <field name="inherit_id" ref="stock.vpicktree"/>
             <field name="mode">primary</field>
             <field name="arch" type="xml">
                 <xpath expr="//list" position="attributes">
                     <attribute name="default_order">batch_sequence</attribute>
+                    <attribute name="create">False</attribute>
+                </xpath>
+                <xpath expr="//list" position="inside">
+                    <control>
+                        <create string="Add a transfer" context="{'list_view_ref': 'stock.stock_picking_view_list_create_from_batch'}"/>
+                        <button name="stock.action_add_move_lines"
+                            type="action"
+                            string="Add a move line"
+                            class="px-4 btn-link"/>
+                    </control>
                 </xpath>
                 <field name="company_id" position="before">
                     <field name="batch_sequence" widget="handle"/>
@@ -135,6 +145,23 @@
                 </field>
                 <field name="priority" position="attributes">
                     <attribute name="optional">hide</attribute>
+                </field>
+            </field>
+        </record>
+
+        <record id="stock_picking_view_list_create_from_batch" model="ir.ui.view">
+            <field name="name">stock.picking.view.list.create.from.batch</field>
+            <field name="model">stock.picking</field>
+            <field name="mode">primary</field>
+            <field name="inherit_id" ref="stock.stock_picking_view_batch_tree_ref"/>
+            <field name="arch" type="xml">
+                <field name="location_id" position="replace">
+                    <field name="location_id" string="From" groups="stock.group_stock_multi_locations" column_invisible="context.get('picking_type_code') == 'incoming'"/>
+                    <field name="location_id" string="From" groups="stock.group_stock_multi_locations" column_invisible="context.get('picking_type_code') != 'incoming'" optional="hide"/>
+                </field>
+                <field name="location_dest_id" position="replace">
+                    <field name="location_dest_id" string="To" groups="stock.group_stock_multi_locations" column_invisible="context.get('picking_type_code') == 'outgoing'"/>
+                    <field name="location_dest_id" string="To" groups="stock.group_stock_multi_locations" column_invisible="context.get('picking_type_code') != 'outgoing'" optional="hide"/>
                 </field>
             </field>
         </record>
