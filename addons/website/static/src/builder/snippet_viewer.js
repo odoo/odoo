@@ -15,12 +15,12 @@ patch(SnippetViewer.prototype, {
 
             const updatePreview = () => {
                 if (this.innerWebsiteEditService) {
-                    this.innerWebsiteEditService.update(this.content.el, "preview");
+                    this.innerWebsiteEditService.update(this.content(), "preview");
                 }
             };
             const stopPreview = () => {
                 if (this.innerWebsiteEditService) {
-                    this.innerWebsiteEditService.stop(this.content.el);
+                    this.innerWebsiteEditService.stop(this.content());
                 }
             };
             onMounted(updatePreview);
