@@ -1,6 +1,7 @@
 import { Component, computed, proxy, t, untrack, useEffect, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+import { useBus } from "@web/core/utils/hooks";
 import { useRecordObserver } from "@web/model/relational_model/utils";
 import { SelectMenu } from "@web/core/select_menu/select_menu";
 import { computeM2OProps, Many2One } from "../many2one/many2one";
@@ -60,6 +61,11 @@ export class ReferenceField extends Component {
             modelName: undefined, // Name get of the value of the model field
             currentRelation: undefined,
         });
+        const { model } = this.props.record;
+        useBus(model.bus, "WILL_SAVE_URGENTLY", () => this.validate());
+        useBus(model.bus, "NEED_LOCAL_CHANGES", ({ detail }) =>
+            detail.proms.push(this.validate())
+        );
         if (this.isCharField()) {
             /** Fetch the display name of the record referenced by the field */
             let currentValue = undefined;
@@ -144,6 +150,14 @@ export class ReferenceField extends Component {
      */
     getModelName() {
         return this.hideModelSelector && this.state.modelName;
+    }
+
+    validate() {
+        const resModel = this.state.currentRelation || this.getRelation();
+        const recordData = this.props.record.data[this.props.name];
+        if (resModel && !recordData) {
+            this.props.record.setInvalidField(this.props.name);
+        }
     }
 
     updateModel(value) {
