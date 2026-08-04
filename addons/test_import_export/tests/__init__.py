@@ -5,3 +5,4 @@ from . import test_import
 from . import test_import_files
 from . import test_load
 from . import test_properties
+from . import test_security
