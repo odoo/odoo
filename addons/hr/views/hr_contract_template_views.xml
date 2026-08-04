@@ -41,9 +41,8 @@
                                         <div name="wage_period_label">/ month</div>
                                     </div>
                                     <field name="structure_type_id" string="Pay Category" placeholder="Employee will be excluded from Pay Runs"
-                                            domain="['|', ('country_id', '=', False), ('country_id', '=', company_country_id)]"/>
-
-                                    
+                                           invisible="not has_multiple_possible_structure_types"
+                                           domain="[('country_id', '=', company_country_id)]"/>
                                 </group>
                                 <group name="schedule" string="Schedule">
                                     <field name="resource_calendar_id" help="The default working hours are set in configuration."/>
@@ -68,7 +67,7 @@
                 <field name="currency_id" column_invisible="1"/>
                 <field name="wage" widget="monetary" optional="show"/>
                 <field name="employee_type_id" optional="show"/>
-                <field name="structure_type_id" optional="show"/>
+                <field name="structure_type_id" optional="hide"/>
                 <field name="resource_calendar_id" optional="show"/>
                 <field name="company_id" groups="base.group_multi_company" readonly="1" optional="hidden"/>
                 <field name="create_uid" optional="hidden"/>
