@@ -428,7 +428,7 @@ class ProductPricelistItem(models.Model):
                 item.update({'applied_on': '3_global'})
             elif item.display_applied_on == '1_product':
                 item.update({
-                    'applied_on': '1_product',
+                    'applied_on': '0_product_variant' if self.env.context.get('default_product_id') else '1_product',
                     'categ_id': None,
                 })
             elif item.display_applied_on == '2_product_category':
