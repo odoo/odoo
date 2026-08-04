@@ -1997,12 +1997,94 @@ export class PosStore extends WithLazyGetterTrap {
     // Now the printer should work in PoS without restaurant
     async sendOrderInPreparation(order, opts = {}) {
         let isPrinted = false;
+<<<<<<< 3353cc8668b18e2903aed033269a982f1723706d
 
+||||||| 5096955c06305941c5963447434193f84409231d
+=======
+        let hasChanges = false;
+>>>>>>> d07370b4c04f28f71bfc245209440db708c53f9f
         try {
             this.syncingOrders.add(order.uuid);
             if (this.config.printerCategories.size && !opts.byPassPrint) {
                 try {
+<<<<<<< 3353cc8668b18e2903aed033269a982f1723706d
                     isPrinted = await this.ticketPrinter.printOrderChanges({ order, opts });
+||||||| 5096955c06305941c5963447434193f84409231d
+                    let reprint = false;
+                    let orderChange = changesToOrder(
+                        order,
+                        this.config.printerCategories,
+                        opts.cancelled
+                    );
+
+                    const hasChanges =
+                        orderChange.new.length ||
+                        orderChange.cancelled.length ||
+                        orderChange.noteUpdate.length ||
+                        orderChange.internal_note ||
+                        orderChange.general_customer_note;
+
+                    let shouldPrint = true;
+                    if (!hasChanges) {
+                        if (opts.explicitReprint && order.lastPrints.length) {
+                            orderChange = [order.lastPrints.at(-1)];
+                            reprint = true;
+                        } else {
+                            shouldPrint = false;
+                        }
+                    } else {
+                        order.pushLastPrints(orderChange);
+                        orderChange = [orderChange];
+                    }
+
+                    if (reprint && opts.orderDone) {
+                        shouldPrint = false;
+                    }
+
+                    if (shouldPrint) {
+                        isPrinted = await this.printChanges(order, orderChange, reprint);
+                    }
+=======
+                    let reprint = false;
+                    let orderChange = changesToOrder(
+                        order,
+                        this.config.printerCategories,
+                        opts.cancelled
+                    );
+
+                    hasChanges =
+                        orderChange.new.length ||
+                        orderChange.cancelled.length ||
+                        orderChange.noteUpdate.length ||
+                        orderChange.internal_note ||
+                        orderChange.general_customer_note;
+
+                    let shouldPrint = true;
+                    if (!hasChanges) {
+                        if (opts.explicitReprint && order.lastPrints.length) {
+                            orderChange = [order.lastPrints.at(-1)];
+                            reprint = true;
+                        } else {
+                            shouldPrint = false;
+                        }
+                    } else {
+                        orderChange = [orderChange];
+                    }
+
+                    if (reprint && opts.orderDone) {
+                        shouldPrint = false;
+                    }
+
+                    if (shouldPrint) {
+                        isPrinted = await this.printChanges(order, orderChange, reprint);
+                        if (isPrinted) {
+                            if (hasChanges && !reprint) {
+                                order.pushLastPrints(orderChange[0]);
+                            }
+                            order.updateLastOrderChange();
+                        }
+                    }
+>>>>>>> d07370b4c04f28f71bfc245209440db708c53f9f
                 } catch (e) {
                     logPosMessage(
                         "Store",
@@ -2013,15 +2095,24 @@ export class PosStore extends WithLazyGetterTrap {
                     );
                 }
             }
-            order.updateLastOrderChange();
+            this.updateLastOrderChangeIfNoDevice(order, opts);
         } finally {
             this.syncingOrders.delete(order.uuid);
         }
         // Ensure that other devices are aware of the changes
         // Otherwise several devices can print the same changes
         // We need to check if a preparation display is configured to avoid unnecessary sync
-        if (isPrinted && !this.models["pos.prep.display"]?.length) {
+        if (!this.models["pos.prep.display"]?.length) {
             await this.syncAllOrders({ orders: [order] });
+        }
+        return isPrinted;
+    }
+    hasDevice(opts = {}) {
+        return this.config.printerCategories.size || opts.byPassPrint;
+    }
+    updateLastOrderChangeIfNoDevice(order, opts = {}) {
+        if (!this.hasDevice(opts)) {
+            order.updateLastOrderChange();
         }
     }
     async sendOrderInPreparationUpdateLastChange(o, opts) {
