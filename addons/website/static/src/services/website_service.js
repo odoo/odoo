@@ -46,6 +46,7 @@ export const websiteService = {
         const modelNames = {};
         let invalidateSnippetCache = false;
         let lastWebsiteId = null;
+        let isNavigatingToAnotherPage = null;
 
         const context = reactive({
             showResourceEditor: false,
@@ -263,6 +264,12 @@ export const websiteService = {
             },
             set invalidateSnippetCache(value) {
                 invalidateSnippetCache = value;
+            },
+            set isNavigatingToAnotherPage(promise) {
+                isNavigatingToAnotherPage = promise;
+            },
+            get isNavigatingToAnotherPage() {
+                return isNavigatingToAnotherPage;
             },
 
             async goToWebsite({ websiteId, path, edition, translation, lang } = {}) {
