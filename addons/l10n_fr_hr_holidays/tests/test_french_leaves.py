@@ -348,6 +348,32 @@ class TestFrenchLeaves(TransactionCase):
 
         self.assertEqual(work_hours_data[leave_1.employee_id.id][0][1], 7.50)
 
+    def test_leave_flexible_employee(self):
+        self.company.resource_calendar_id = self.base_calendar
+        self.employee.write({
+            'resource_calendar_id': False,
+            'hours_per_week': 40,
+            'hours_per_day': 8,
+        })
+        self.time_off_type.requires_allocation = True
+        self.env['hr.leave.allocation'].with_company(self.company).create({
+            'name': 'Paid Time Off for flexible employee',
+            'work_entry_type_id': self.time_off_type.id,
+            'employee_id': self.employee.id,
+            'number_of_days': 5,
+            'date_from': '2026-09-01',
+        }).action_approve()
+
+        leave = self.env['hr.leave'].with_company(self.company).create({
+            'name': 'Paid Time Off',
+            'work_entry_type_id': self.time_off_type.id,
+            'employee_id': self.employee.id,
+            'request_date_from': '2026-09-07',
+            'request_date_to': '2026-09-07',
+        })
+
+        self.assertEqual(leave.number_of_days, 1)
+
     def test_holiday_in_week(self):
         """
         Test Case:

@@ -18,10 +18,12 @@ class HrLeave(models.Model):
         # The french l10n is meant to be computed only in very specific cases:
         # - there is only one employee affected by the leave
         # - the company is french
+        # - the employee has a working schedule different from the company's
         # - the work_entry_type is the reference work_entry_type of that company
         self.ensure_one()
         return self.employee_id and \
                self.company_id.country_id.code == 'FR' and \
+               self.resource_calendar_id and \
                self.resource_calendar_id != self.company_id.resource_calendar_id and \
                self.work_entry_type_id == self.company_id._get_fr_reference_work_entry_type()
 
