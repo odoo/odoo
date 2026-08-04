@@ -1215,7 +1215,11 @@ class MrpProduction(models.Model):
     def action_update_bom(self):
         for production in self:
             if production.bom_id:
+                was_planned = production.is_planned
                 production._link_bom(production.bom_id)
+                # the workorders are recreated unplanned, plan them back
+                if was_planned:
+                    production._plan_workorders(replan=True)
         self.is_outdated_bom = False
 
     def _get_bom_values(self, ratio=1):
@@ -2662,9 +2666,11 @@ class MrpProduction(models.Model):
         for workorder in self.workorder_ids:
             if workorder.state in ['progress', 'done', 'cancel']:
                 # Do not recreate the associate operation
-                operations_by_id.pop(workorder.operation_id.id)
+                operations_by_id.pop(workorder.operation_id.id, False)
             else:
                 workorders_to_unlink_ids.add(workorder.id)
+        # Unlink first since linking the new workorders to the MO might replan them based on the still planned obsolete ones.
+        self.env['mrp.workorder'].browse(workorders_to_unlink_ids).unlink()
         # Creates a workorder for each remaining operation.
         workorders_values = []
         for operation in operations_by_id.values():
@@ -2678,7 +2684,6 @@ class MrpProduction(models.Model):
             }
             workorders_values.append(workorder_vals)
         self.workorder_ids += self.env['mrp.workorder'].create(workorders_values)
-        self.env['mrp.workorder'].browse(workorders_to_unlink_ids).unlink()
 
         # Compares the BoM's lines to the MO's components.
         for move_raw in self.move_raw_ids:
