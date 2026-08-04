@@ -79,9 +79,11 @@ export const saleProductMixin = () => ({
         const saleOrder = this.props.record.model.root.data;
         const saleOrderLine = this.props.record.data;
         const ptavIds = [...this._getVariantPtavIds(saleOrderLine)];
+        let productUOMId;
         if (edit) {
             // no_variant attributes don't need to be given to the configurator for new products.
             ptavIds.push(...this._getNoVariantPtavIds(saleOrderLine));
+            productUOMId = saleOrderLine.product_uom_id.id;
         }
         return rpc('/sale/product_configurator/get_values',
             {
@@ -89,7 +91,7 @@ export const saleProductMixin = () => ({
                 quantity: saleOrderLine.product_uom_qty,
                 currency_id: saleOrderLine.currency_id.id,
                 so_date: serializeDateTime(saleOrder.date_order),
-                product_uom_id: saleOrderLine.product_uom_id.id,
+                product_uom_id: productUOMId,
                 company_id: saleOrder.company_id.id,
                 pricelist_id: saleOrder.pricelist_id.id,
                 ptav_ids: ptavIds,
