@@ -290,6 +290,15 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
         self.assertFalse(tx.invoice_ids)
         self.assertFalse(self.sale_order.invoice_ids)
 
+    def test_payment_does_not_confirm_order_pending_signature(self):
+        self.sale_order.require_payment = False
+        self.sale_order.require_signature = True
+        tx = self._create_transaction(
+            flow='redirect', sale_order_ids=[self.sale_order.id], state='done'
+        )
+        confirmed_orders = tx._check_amount_and_confirm_order()
+        self.assertFalse(confirmed_orders)
+
     def test_already_confirmed_so_payment(self):
         # Set automatic invoice
         self.env['ir.config_parameter'].sudo().set_param('sale.automatic_invoice', 'True')
@@ -533,6 +542,7 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
         sale_order = self.env['sale.order'].with_user(portal_user).sudo().create({
             'partner_id': portal_user.partner_id.id,
             'user_id': self.sale_user.id,
+            'require_signature': False,
             'order_line': [(0, 0, {
                 'product_id': self.product_a.id,
                 'product_uom_qty': 1,
