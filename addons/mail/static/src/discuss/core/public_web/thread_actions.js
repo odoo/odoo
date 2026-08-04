@@ -17,7 +17,7 @@ registerThreadAction("show-threads", {
     actionPanelOuterClass: ({ owner, store }) =>
         attClassObjectToString({
             "o-mail-SubChannelList-panel": true,
-            [store.discussDropdownMenuClass(owner)]: !owner.env.inMeetingView,
+            [store.discussDropdownMenuClass(owner)]: !owner.ancestors?.has("Meeting"),
         }),
     btnAttrs: { "data-available-offline": true },
     condition: ({ channel, owner }) =>

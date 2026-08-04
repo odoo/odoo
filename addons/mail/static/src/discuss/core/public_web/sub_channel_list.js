@@ -1,3 +1,4 @@
+import { useAncestors } from "@mail/core/common/ancestors_hook";
 import { NotificationItem } from "@mail/core/public_web/notification_item";
 import { SearchInput } from "@mail/core/common/search_input";
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
@@ -16,6 +17,7 @@ export class SubChannelList extends Component {
     setup() {
         this.store = useService("mail.store");
         this.offlineService = useService("offline");
+        this.ancestors = useAncestors();
         // bound once so `onClickSubChannel` is a stable (useProps.static) handler
         this.onClickSubChannel = this.onClickSubChannel.bind(this);
         this.props = useProps({

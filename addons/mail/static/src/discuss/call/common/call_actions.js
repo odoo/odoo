@@ -88,7 +88,7 @@ export const quickActionSettings = {
     dropdown: true,
     dropdownComponent: QuickVoiceSettings,
     dropdownMenuClass: ({ owner }) =>
-        owner.env.inMeetingView
+        owner.ancestors?.has("Meeting")
             ? "o-discuss-CallActionList-menu overflow-x-hidden"
             : "p-1 overflow-x-hidden",
     dropdownPosition: "top-end",
@@ -155,7 +155,7 @@ export const quickVideoSettings = {
     dropdown: true,
     dropdownComponent: QuickVideoSettings,
     dropdownMenuClass: ({ owner }) =>
-        owner.env.inMeetingView
+        owner.ancestors?.has("Meeting")
             ? "o-discuss-CallActionList-menu overflow-x-hidden"
             : "p-1 overflow-x-hidden",
     dropdownPosition: "top-end",

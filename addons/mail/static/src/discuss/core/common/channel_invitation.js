@@ -1,3 +1,4 @@
+import { useAncestors } from "@mail/core/common/ancestors_hook";
 import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 import { ChannelActionDialog } from "@mail/discuss/core/common/channel_action_dialog";
@@ -39,6 +40,7 @@ export class ChannelInvitation extends Component {
         super.setup();
         this.orm = useService("orm");
         this.store = useService("mail.store");
+        this.ancestors = useAncestors();
         this.props = useProps({
             channel: t.instanceOf(this.store["discuss.channel"]).optional(),
             className: t.string().optional(),

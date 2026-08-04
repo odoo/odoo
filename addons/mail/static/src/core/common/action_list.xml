@@ -83,15 +83,15 @@
         'o-mx-0_5': this.props.inline and !this.hasBtnBg and !this.action.icon,
     })"/>
     <!-- padding -->
-    <t t-set="inMeetingViewCallButtonsFullscreen" t-value="this.props.inline and this.env.inMeetingView and !this.ancestors.has('Composer') and !this.env.inDiscussActionPanel and this.store.rtc.isFullscreen"/>
+    <t t-set="inMeetingViewCallButtonsFullscreen" t-value="this.props.inline and this.ancestors.has('Meeting') and !this.ancestors.has('Composer') and !this.env.inDiscussActionPanel and this.store.rtc.isFullscreen"/>
     <t t-set="btnClass" t-value="this.attClassObjectToString({
         [btnClass]: true,
         'px-1 py-2': inMeetingViewCallButtonsFullscreen,
-        'o-px-1_5 py-1': this.props.inline   and  ((this.hasBtnBg and !isInlineCircleButton and !this.env.inMeetingView) or (!this.hasBtnBg and this.ancestors.has('Composer'))),
-        'o-p-1_5':       this.props.inline   and  !this.env.inMeetingView and this.hasBtnBg and isInlineCircleButton and !this.env.inChatWindow,
-        'o-px-0_5':      this.props.inline   and  !this.env.inMeetingView and !this.hasBtnBg and !this.action.icon,
+        'o-px-1_5 py-1': this.props.inline   and  ((this.hasBtnBg and !isInlineCircleButton and !this.ancestors.has('Meeting')) or (!this.hasBtnBg and this.ancestors.has('Composer'))),
+        'o-p-1_5':       this.props.inline   and  !this.ancestors.has('Meeting') and this.hasBtnBg and isInlineCircleButton and !this.env.inChatWindow,
+        'o-px-0_5':      this.props.inline   and  !this.ancestors.has('Meeting') and !this.hasBtnBg and !this.action.icon,
         'p-1':           this.props.inline   and  this.hasBtnBg and isInlineCircleButton and this.env.inChatWindow,
-        'o-p-0_5':       this.props.inline   and  !this.env.inMeetingView and !this.hasBtnBg and !this.ancestors.has('Composer'),
+        'o-p-0_5':       this.props.inline   and  !this.ancestors.has('Meeting') and !this.hasBtnBg and !this.ancestors.has('Composer'),
         'o-px-0_5 py-0': this.props.inline   and  this.ancestors.has('Message'),
         'px-3 py-2':     this.props.dropdown and   this.ui.isSmall,
         'px-2 py-1':     this.props.dropdown and  !this.ui.isSmall,

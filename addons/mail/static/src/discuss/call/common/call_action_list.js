@@ -5,6 +5,7 @@ import { useService } from "@web/core/utils/hooks";
 import { useCallActions } from "@mail/discuss/call/common/call_actions";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { Tooltip } from "@web/core/tooltip/tooltip";
+import { useAncestors } from "@mail/core/common/ancestors_hook";
 import { ActionList } from "@mail/core/common/action_list";
 import { ACTION_TAGS } from "@mail/core/common/action";
 import { attClassObjectToString } from "@mail/utils/common/format";
@@ -28,6 +29,7 @@ export class CallActionList extends Component {
         });
         this.rtc = useService("discuss.rtc");
         this.pipService = useService("discuss.pip_service");
+        this.ancestors = useAncestors();
         this.callActions = useCallActions(this.callActionsParams);
         this.popover = usePopover(Tooltip, {
             position: "top-middle",
@@ -56,9 +58,8 @@ export class CallActionList extends Component {
                                   actions: moreActions,
                                   dropdownMenuClass: attClassObjectToString({
                                       "m-0 mb-1 overflow-x-hidden": true,
-                                      "o-discuss-CallActionList-menu": Boolean(
-                                          this.env.inMeetingView
-                                      ),
+                                      "o-discuss-CallActionList-menu":
+                                          this.ancestors.has("Meeting"),
                                   }),
                                   dropdownPosition: "top-end",
                                   name: this.MORE,
@@ -94,9 +95,8 @@ export class CallActionList extends Component {
                                 }),
                             dropdownMenuClass: attClassObjectToString({
                                 "o-discuss-CallActionList-callLayout m-0 mb-1 overflow-x-hidden": true,
-                                "o-discuss-CallActionList-menu o-inMeetingView": Boolean(
-                                    this.env.inMeetingView
-                                ),
+                                "o-discuss-CallActionList-menu o-inMeetingView":
+                                    this.ancestors.has("Meeting"),
                             }),
                             dropdownPosition: "top-end",
                             id: "call-layout",

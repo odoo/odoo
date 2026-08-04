@@ -166,7 +166,7 @@ registerThreadAction("invite-people", {
                     close: () => store.env.services.dialog.closeAll(),
                 },
             });
-        } else if (!owner.env.inMeetingView) {
+        } else if (!owner.ancestors?.has("Meeting")) {
             this.popover?.open(
                 rootRef().querySelector(`[name="${this.id}"]`),
                 this.actionPanelComponentProps
@@ -177,7 +177,7 @@ registerThreadAction("invite-people", {
         `o-discuss-ChannelInvitation ${
             owner.props.chatWindow ? "bg-inherit" : ""
         } border border-secondary ${
-            owner.env.inMeetingView ? "" : store.discussDropdownMenuClass(owner)
+            owner.ancestors?.has("Meeting") ? "" : store.discussDropdownMenuClass(owner)
         }`,
     condition: ({ channel, owner }) =>
         channel &&
@@ -189,7 +189,7 @@ registerThreadAction("invite-people", {
     sequence: 20,
     sequenceGroup: ({ owner }) => (owner.isDiscussContent ? 10 : 20),
     setup({ owner }) {
-        if (!owner.props.chatWindow && !owner.env.inMeetingView) {
+        if (!owner.props.chatWindow && !owner.ancestors?.has("Meeting")) {
             this.popover = usePopover(ChannelInvitation, {
                 onClose: () => this.actionPanelClose(),
                 popoverClass: this.actionPanelOuterClass,

@@ -1,5 +1,6 @@
 import { Component } from "@odoo/owl";
 
+import { useAncestors } from "@mail/core/common/ancestors_hook";
 import { CallSettingsDialog } from "@mail/discuss/call/common/call_settings";
 import { DeviceSelect } from "@mail/discuss/call/common/device_select";
 
@@ -16,6 +17,7 @@ export class QuickVoiceSettings extends Component {
         this.store = useService("mail.store");
         this.dialogService = useService("dialog");
         this.isMobile = isMobileOS;
+        this.ancestors = useAncestors();
     }
 
     onClickVoiceSettings() {

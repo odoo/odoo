@@ -1,4 +1,3 @@
-import { useSubEnv } from "@web/owl2/utils";
 import { Composer } from "@mail/core/common/composer";
 import { Thread } from "@mail/core/common/thread";
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
@@ -26,7 +25,6 @@ export class MeetingChat extends Component {
         this.state = proxy({ jumpPresent: 0 });
         this.panelContentRef = signal.ref();
         this.isMobileOS = isMobileOS();
-        useSubEnv({ inMeetingChat: true });
     }
 
     get channel() {

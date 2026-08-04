@@ -233,7 +233,7 @@ export class Composer extends Component {
                 },
                 () =>
                     this.props.allowUpload &&
-                    (!this.store.rtc.isFullscreen || this.env.inMeetingView) &&
+                    (!this.store.rtc.isFullscreen || this.ancestors.has("Meeting")) &&
                     (this.composer().message
                         ? this.composer().isEditComposerVisible
                         : !this.thread?.messageInEdition?.composer?.isEditComposerVisible)
