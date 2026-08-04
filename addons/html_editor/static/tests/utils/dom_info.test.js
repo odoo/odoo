@@ -293,6 +293,15 @@ describe("isVisible", () => {
 
             expect(result).toBe(true);
         });
+
+        test("should identify a space between feff and text as visible", () => {
+            const [p] = insertTestHtml("<p>\ufeff</p>");
+            const space = document.createTextNode(" ");
+            p.appendChild(space);
+            p.appendChild(document.createTextNode("a"));
+            const result = isVisibleTextNode(space);
+            expect(result).toBe(true);
+        });
     });
     describe("elements", () => {
         test("should identify a table containing only zero-width spaces as visible", () => {
