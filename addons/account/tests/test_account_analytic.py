@@ -25,6 +25,12 @@ class TestAccountAnalyticAccount(AccountTestInvoicingCommon, AnalyticCommon):
             'company_id': False,
         })
 
+        # Used to test the account_prefix criterion on account.analytic.applicability
+        cls.account_705, cls.account_706 = cls.env['account.account'].create([
+            {'code': '705100', 'name': 'Matching Account'},
+            {'code': '706100', 'name': 'Other Account'},
+        ])
+
     def get_analytic_lines(self, invoice):
         return self.env['account.analytic.line'].search([
             ('move_line_id', 'in', invoice.line_ids.ids),
@@ -393,33 +399,133 @@ class TestAccountAnalyticAccount(AccountTestInvoicingCommon, AnalyticCommon):
         self.analytic_account_3._compute_vendor_bill_count()
         self.assertEqual(self.analytic_account_3.vendor_bill_count, 1)
 
-    def test_applicability_score(self):
-        """ Tests which applicability is chosen if several ones are valid """
-        applicability_without_company, applicability_with_company = self.env['account.analytic.applicability'].create([
+    def _create_analytic_applicability(self, business_domain, analytic_plan, applicability=None, company_id=False, **kwargs):
+        return self.env['account.analytic.applicability'].create(
             {
-                'business_domain': 'invoice',
-                'product_categ_id': self.product_a.categ_id.id,
-                'applicability': 'mandatory',
-                'analytic_plan_id': self.analytic_plan_2.id,
-                'company_id': False,
+                'business_domain': business_domain,
+                'applicability': applicability or analytic_plan.default_applicability,
+                'analytic_plan_id': analytic_plan.id,
+                'company_id': company_id,
+                **kwargs
             },
-            {
-                'business_domain': 'invoice',
-                'applicability': 'unavailable',
-                'analytic_plan_id': self.analytic_plan_2.id,
-                'company_id': self.env.company.id,
-            },
-        ])
+        )
 
-        applicability = self.analytic_plan_2._get_applicability(business_domain='invoice', company_id=self.env.company.id, product=self.product_a.id)
-        self.assertEqual(applicability, 'mandatory', "product takes precedence over company")
+    def test_applicability_high_criteria_with_business_domain(self):
+        """ Tests that a high-priority criterion (business_domain, optionally narrowed by
+        product_categ_id/account_prefix) is enough on its own to override the default applicability """
+        self.analytic_plan_2.default_applicability = default_applicability = 'optional'
 
-        # If the model that asks for a validation does not have a company_id,
-        # the score shouldn't take into account the company of the applicability
-        score = applicability_without_company._get_score(business_domain='invoice', product=self.product_a.id)
-        self.assertEqual(score, 2)
-        score = applicability_with_company._get_score(business_domain='invoice', product=self.product_a.id)
-        self.assertEqual(score, 1)
+        # Match business_domain only
+        business_domain_analytic_plan = self.analytic_plan_2.copy({'name': 'Business Domain Only'})
+        self._create_analytic_applicability('invoice', business_domain_analytic_plan, 'mandatory')
+
+        invoice_applicability = business_domain_analytic_plan._get_applicability(business_domain='invoice')
+        self.assertEqual(invoice_applicability, 'mandatory', "A rule matching business_domain='invoice' should apply on an invoice")
+        bill_applicability = business_domain_analytic_plan._get_applicability(business_domain='bill')
+        self.assertEqual(bill_applicability, default_applicability, "The rule shouldn't apply on a bill (business_domain mismatch), so the default applicability is kept")
+
+        # Narrowing the rule with another high-priority criterion (product_categ_id) restricts it
+        # to matching products only, instead of applying to the whole business_domain
+        product_categ_analytic_plan = self.analytic_plan_2.copy({'name': 'Product Category with Business Domain'})
+        self._create_analytic_applicability('invoice', product_categ_analytic_plan, 'mandatory', product_categ_id=self.product_a.categ_id.id)
+        product_a_applicability = product_categ_analytic_plan._get_applicability(business_domain='invoice', product=self.product_a.id)
+        self.assertEqual(product_a_applicability, 'mandatory', "The rule should apply once the product's category matches product_categ_id")
+        no_product_applicability = product_categ_analytic_plan._get_applicability(business_domain='invoice')
+        self.assertEqual(no_product_applicability, default_applicability, "Without a matching product, the rule shouldn't apply, so the default applicability is kept")
+
+        # Combining two high-priority criteria (product_categ_id + account_prefix) on the same rule
+        # requires both to match (AND): a mismatch on either one disqualifies the rule entirely,
+        # even if the other one matches
+        combined_analytic_plan = self.analytic_plan_2.copy({'name': 'Product Category and Account Prefix with Business Domain'})
+        self._create_analytic_applicability(
+            'invoice', combined_analytic_plan, 'mandatory',
+            product_categ_id=self.product_a.categ_id.id, account_prefix='705',
+        )
+        both_match_applicability = combined_analytic_plan._get_applicability(
+            business_domain='invoice', product=self.product_a.id, account=self.account_705.id)
+        self.assertEqual(both_match_applicability, 'mandatory', 'The rule should apply once both product category and account prefix match')
+        mismatched_account_applicability = combined_analytic_plan._get_applicability(
+            business_domain='invoice', product=self.product_a.id, account=self.account_706.id)
+        self.assertEqual(
+            mismatched_account_applicability, default_applicability,
+            'A mismatching account_prefix should disqualify the rule (AND, not OR) even though the product category matches'
+        )
+
+    def test_applicability_low_criteria_with_business_domain(self):
+        """ Tests that a company-specific rule takes precedence over a generic one for its own company,
+        is ignored when no company is given, and is fully excluded for another company """
+        self.analytic_plan_2.default_applicability = 'optional'
+
+        # A company-specific rule takes precedence over a generic one, for its own company
+        company_analytic_plan = self.analytic_plan_2.copy({'name': 'Company with Business Domain'})
+        self._create_analytic_applicability('invoice', company_analytic_plan, 'mandatory')
+        self._create_analytic_applicability('invoice', company_analytic_plan, 'unavailable', company_id=self.env.company.id)
+        company_applicability = company_analytic_plan._get_applicability(business_domain='invoice', company_id=self.env.company.id)
+        self.assertEqual(company_applicability, 'unavailable', 'The company-specific rule should take precedence over the generic one for its matching company')
+        no_company_applicability = company_analytic_plan._get_applicability(business_domain='invoice')
+        self.assertEqual(no_company_applicability, 'mandatory', "Without a company in kwargs, the company-specific rule shouldn't apply, so the generic rule is used")
+
+        # A rule scoped to another company should be fully excluded (not just deprioritized),
+        # so the generic rule is used instead of falling back to the default applicability
+        other_company = self.company_data_2['company']
+        other_company_applicability = company_analytic_plan._get_applicability(business_domain='invoice', company_id=other_company.id)
+        self.assertEqual(other_company_applicability, 'mandatory', 'A rule scoped to a different company should be excluded entirely, falling back to the generic rule')
+
+    def test_applicability_high_criteria_without_business_domain(self):
+        """ Tests that a high-priority criterion (product_categ_id, optionally combined with
+        account_prefix) is enough on its own to override the default applicability, without a business_domain """
+        self.analytic_plan_2.default_applicability = default_applicability = 'optional'
+
+        # product_categ_id alone is enough to override the default applicability, business_domain or not
+        # (business_domain is required by the model but unused below, since _get_applicability isn't given one)
+        no_bd_product_categ_analytic_plan = self.analytic_plan_2.copy({'name': 'No Business Domain / Product Category Only'})
+        self._create_analytic_applicability('invoice', no_bd_product_categ_analytic_plan, 'mandatory', product_categ_id=self.product_a.categ_id.id)
+        no_bd_product_a_applicability = no_bd_product_categ_analytic_plan._get_applicability(product=self.product_a.id)
+        self.assertEqual(no_bd_product_a_applicability, 'mandatory', "product_categ_id alone should override the default applicability, even without business_domain")
+        no_bd_no_product_applicability = no_bd_product_categ_analytic_plan._get_applicability()
+        self.assertEqual(no_bd_no_product_applicability, default_applicability, "Without a matching product, the rule shouldn't apply, so the default applicability is kept")
+
+        # Combining two high-priority criteria (product_categ_id + account_prefix) still requires
+        # both to match (AND), confirming they're evaluated independently of business_domain
+        combined_no_bd_analytic_plan = self.analytic_plan_2.copy({'name': 'No Business Domain / Product Category and Account Prefix'})
+        self._create_analytic_applicability(
+            'invoice', combined_no_bd_analytic_plan, 'mandatory',
+            product_categ_id=self.product_a.categ_id.id, account_prefix='705',
+        )
+        both_match_applicability = combined_no_bd_analytic_plan._get_applicability(product=self.product_a.id, account=self.account_705.id)
+        self.assertEqual(both_match_applicability, 'mandatory', 'The rule should apply once both product category and account prefix match')
+        mismatched_account_applicability = combined_no_bd_analytic_plan._get_applicability(product=self.product_a.id, account=self.account_706.id)
+        self.assertEqual(
+            mismatched_account_applicability, default_applicability,
+            'A mismatching account_prefix should disqualify the rule (AND, not OR) even though the product category matches'
+        )
+
+    def test_applicability_low_criteria_without_business_domain(self):
+        """ Without a business_domain, a low-priority criterion alone (like company_id) can't override
+        the default applicability, but stays decisive when combined with a high-priority one """
+        self.analytic_plan_2.default_applicability = default_applicability = 'optional'
+
+        # company_id alone shouldn't match with a low-priority condition only, without business_domain
+        # (business_domain is required by the model but unused below, since _get_applicability isn't given one)
+        no_bd_company_analytic_plan = self.analytic_plan_2.copy({'name': 'No Business Domain / Company Only'})
+        self._create_analytic_applicability('invoice', no_bd_company_analytic_plan, 'mandatory')
+        self._create_analytic_applicability('invoice', no_bd_company_analytic_plan, 'unavailable', company_id=self.env.company.id)
+        no_bd_company_applicability = no_bd_company_analytic_plan._get_applicability(company_id=self.env.company.id)
+        self.assertEqual(
+            no_bd_company_applicability, default_applicability,
+            "company_id alone isn't enough to beat the default applicability's baseline score"
+        )
+        no_bd_no_company_applicability = no_bd_company_analytic_plan._get_applicability()
+        self.assertEqual(no_bd_no_company_applicability, default_applicability, "Without any kwargs, the default applicability is kept")
+
+        # Company priority is still conserved without business_domain when combined with another criteria
+        no_bd_company_product_analytic_plan = self.analytic_plan_2.copy({'name': 'No Business Domain / Company with Product Category'})
+        self._create_analytic_applicability('invoice', no_bd_company_product_analytic_plan, 'mandatory', product_categ_id=self.product_a.categ_id.id)
+        self._create_analytic_applicability('invoice', no_bd_company_product_analytic_plan, 'unavailable', company_id=self.env.company.id, product_categ_id=self.product_a.categ_id.id)
+        no_bd_company_product_applicability = no_bd_company_product_analytic_plan._get_applicability(product=self.product_a.id, company_id=self.env.company.id)
+        self.assertEqual(no_bd_company_product_applicability, 'unavailable', 'Combined with a matching product_categ_id, the company-specific rule still wins for its matching company')
+        no_bd_no_company_product_applicability = no_bd_company_product_analytic_plan._get_applicability(product=self.product_a.id)
+        self.assertEqual(no_bd_no_company_product_applicability, 'mandatory', "Without a company in kwargs, only product_categ_id counts, so the generic rule wins")
 
     def test_model_sequence(self):
         plan_A, plan_B, plan_C = self.env['account.analytic.plan'].create([
