@@ -27,9 +27,10 @@ class SaleCommon(
         cls._enable_pricelists()
         cls.empty_order, cls.sale_order = cls.env['sale.order'].create([
             {
-                'partner_id': cls.partner.id,
+                'partner_id': cls.partner.id, 'require_signature': False
             }, {
                 'partner_id': cls.partner.id,
+                'require_signature': False,
                 'order_line': [
                     Command.create({
                         'product_id': cls.product.id,
@@ -55,6 +56,7 @@ class SaleCommon(
                     'product_id': self.product.id,
                 }),
             ],
+            'require_signature': False,
             **values
         }
         return self.env['sale.order'].create(default_values)
