@@ -6,12 +6,13 @@ from odoo.tests import HttpCase, tagged
 @tagged('post_install', '-at_install')
 class TestOnboardingTours(HttpCase):
 
-    tour_names = ['hr_expense_tour', 'event_tour']
+    tour_names = ['hr_expense_tour', 'event_tour', 'sale_tour', 'purchase_tour', 'mass_mailing_tour']
 
     def setUp(self):
         super().setUp()
-        # Email company is always set on a configured instance
-        self.env.ref('base.main_company').email = 'admin@yourcompany.example.com'
+        # Company and admin emails are always set on a configured instance
+        self.env.ref('base.main_company').email = 'company@example.com'
+        self.env.ref('base.user_admin').email = 'admin@example.com'
 
     def _get_tours(self):
         tours = self.env['web_tour.tour'].search([('name', 'in', self.tour_names)])

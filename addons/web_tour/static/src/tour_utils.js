@@ -111,6 +111,97 @@ export const stepUtils = {
         return steps;
     },
 
+    /**
+     * Steps to search a many2one field, then either select the matching
+     * existing record or create the typed value on the fly - both on desktop
+     * (dropdown suggestion, or inline "Create and edit" option) and mobile
+     * (the "Search: <label>" dialog, listing matching records and needing an
+     * explicit tap on "Create" before the creation form opens).
+     *
+     * @param {string} trigger - CSS selector of the many2one input
+     * @param {string} label - human-readable name of the record (e.g.
+     *      "customer", "product"), used to match the mobile dialog titles
+     *      and in the steps' tooltip content
+     * @param {string} searchText - text to type in the many2one input
+     * @param {Object<string, string>} fields - values to fill in the
+     *      creation dialog, keyed by field name, in fill order (e.g.
+     *      { name: "Agrolait", email: "agrolait@example.com" }); ignored
+     *      when selectExisting is true
+     * @param {boolean} [selectExisting=false] - select the matching existing
+     *      record instead of creating a new one
+     */
+    searchOrCreateMany2X(trigger, label, searchText, fields, selectExisting = false) {
+        const dialogSearch = `.o_dialog:has(.modal-title:contains('search: ${label}'))`;
+        const steps = [
+            {
+                isActive: ["desktop"],
+                trigger,
+                content: _t("Search or create %s.", label),
+                tooltipPosition: "right",
+                run: `edit ${searchText}`,
+            },
+            {
+                isActive: ["mobile"],
+                trigger,
+                content: _t("Search or create %s.", label),
+                run: `click`,
+            },
+        ];
+        if (selectExisting) {
+            steps.push(
+                {
+                    isActive: ["desktop"],
+                    trigger: `.o-autocomplete--dropdown-item:contains('${searchText}')`,
+                    content: _t("Select this %s.", label),
+                    run: "click",
+                },
+                {
+                    isActive: ["mobile"],
+                    trigger: `${dialogSearch} .o_kanban_record:contains('${searchText}')`,
+                    content: _t("Select this %s.", label),
+                    run: "click",
+                }
+            );
+            return steps;
+        }
+        const dialogCreate = `.o_dialog:has(.modal-title:contains('create ${label}'))`;
+        steps.push(
+            {
+                isActive: ["desktop"],
+                trigger: ".o_m2o_dropdown_option_create_edit",
+                content: _t("Create and edit the %s.", label),
+                tooltipPosition: "right",
+                run: "click",
+            },
+            {
+                isActive: ["mobile"],
+                trigger: `${dialogSearch} .o_create_button`,
+                content: _t("Create the %s.", label),
+                run: "click",
+            }
+        );
+        for (const [fieldName, value] of Object.entries(fields)) {
+            const step = {
+                trigger: `${dialogCreate} .o_field_widget[name='${fieldName}'] input, ${dialogCreate} .o_field_widget[name='${fieldName}'] textarea`,
+                content: _t("Enter the %s.", fieldName),
+                run: `edit ${value}`,
+            };
+            if (value === searchText) {
+                // On desktop, "Create and edit" already pre-fills this field
+                // with the search text typed in the many2one. Only mobile's
+                // "Search: <label>" dialog opens the creation form empty.
+                step.isActive = ["mobile"];
+            }
+            steps.push(step);
+        }
+        steps.push({
+            trigger: `${dialogCreate} .o_form_button_save`,
+            content: _t("Save the %s.", label),
+            run: "click",
+        });
+        return steps;
+    },
+
     mobileKanbanSearchMany2X(modalTitle, valueSearched) {
         return [
             {
