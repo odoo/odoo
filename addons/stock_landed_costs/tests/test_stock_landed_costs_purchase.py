@@ -689,8 +689,9 @@ class TestLandedCostsWithPurchaseAndInv(TestStockValuationLCCommon):
         self.assertAlmostEqual(self.product1.total_value, 20995)
 
     def test_landed_cost_partial_cogs(self):
-        """ Check that when billing a landed cost product and then creating the associate
-        landed cost, the default accounts are correct
+        """ Check that when billing a landed cost product in a foreign currency and then
+        creating the associate landed cost, the default accounts are correct and the amounts
+        are converted with the rate set on the bill rather than the rate of the day
         """
         self.landed_cost.landed_cost_ok = True
         self.landed_cost.categ_id.property_cost_method = 'average'
@@ -699,10 +700,12 @@ class TestLandedCostsWithPurchaseAndInv(TestStockValuationLCCommon):
         self.product_a.is_storable = True
         lc_stock_valuation_account = self.landed_cost.categ_id.property_stock_valuation_account_id
         lc_expense_account = self.landed_cost.categ_id.property_account_expense_categ_id
+        # The rate of the day differs from the one that will be set on the bill
+        foreign_currency = self.setup_other_currency('EUR', rates=[('1900-01-01', 0.25)])
 
         po = self.env['purchase.order'].create({
             'partner_id': self.partner_a.id,
-            'currency_id': self.company_data['currency'].id,
+            'currency_id': foreign_currency.id,
             'order_line': [
                 Command.create({
                     'name': self.product_a.name,
@@ -743,6 +746,7 @@ class TestLandedCostsWithPurchaseAndInv(TestStockValuationLCCommon):
         po.action_create_invoice()
         bill = po.invoice_ids
         bill.invoice_date = fields.Date.today()
+        bill.invoice_currency_rate = 0.5
         bill.action_post()
 
         # create and validate the landed cost
@@ -755,10 +759,11 @@ class TestLandedCostsWithPurchaseAndInv(TestStockValuationLCCommon):
         # check the amls
         bill_landed_cost_amls = bill.line_ids.filtered(lambda l: l.product_id == self.landed_cost)
         self.assertRecordValues(bill_landed_cost_amls, [
-            {'account_id': lc_expense_account.id, 'debit': 100.0, 'credit': 0.0},
+            {'account_id': lc_expense_account.id, 'debit': 200.0, 'credit': 0.0},
         ])
         landed_cost_amls = landed_cost.account_move_id.line_ids.sorted('credit')
         self.assertRecordValues(landed_cost_amls, [
-            {'account_id': lc_stock_valuation_account.id, 'debit':  70.0,   'credit':  0.0},
-            {'account_id': lc_expense_account.id,         'debit':   0.0,   'credit': 70.0},
+            {'account_id': lc_stock_valuation_account.id, 'debit':  140.0,   'credit':  0.0},
+            {'account_id': lc_expense_account.id,         'debit':   0.0,   'credit': 140.0},
         ])
+        self.assertEqual(bill.landed_costs_ids.cost_lines.price_unit, 200)
