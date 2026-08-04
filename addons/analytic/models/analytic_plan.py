@@ -246,7 +246,10 @@ class AccountAnalyticPlan(models.Model):
             # For models for example, we want all plans to be visible, so we force the applicability
             return kwargs['applicability']
         else:
-            score = 0
+            # Baseline: the sum of all low-priority criteria (e.g. company) must not exceed this alone,
+            # and must stay below 1 (a single high-priority criterion's weight) or it would effectively
+            # become a high-priority match. Adapt each criterion's weight if new ones are added.
+            score = 0.5
             applicability = self.default_applicability
             for applicability_rule in self.applicability_ids.filtered(
                     lambda rule:
