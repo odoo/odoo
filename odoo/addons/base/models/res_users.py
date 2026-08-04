@@ -1572,12 +1572,14 @@ class ResUsersApikeys(models.Model):
         self._check_expiration_date(expiration_date)
         # no need to clear the LRU when *adding* a key, only when removing
         k = binascii.hexlify(os.urandom(API_KEY_SIZE)).decode()
-        self.env.cr.execute("""
-        INSERT INTO {table} (name, user_id, scope, expiration_date, key, index)
-        VALUES (%s, %s, %s, %s, %s, %s)
-        RETURNING id
-        """.format(table=self._table),
-        [name, self.env.user.id, scope, expiration_date or None, KEY_CRYPT_CONTEXT.hash(k), k[:INDEX_SIZE]])
+        self.env.cr.execute(SQL("""
+            INSERT INTO %s (name, user_id, scope, expiration_date, key, index)
+            VALUES (%s, %s, %s, %s, %s, %s)
+            RETURNING id
+            """,
+            SQL.identifier(self._table),
+            name, self.env.user.id, scope, expiration_date or None, KEY_CRYPT_CONTEXT.hash(k), k[:INDEX_SIZE]
+        ))
 
         ip = request.httprequest.environ['REMOTE_ADDR'] if request else 'n/a'
         _logger.info("%s generated: scope: <%s> for '%s' (#%s) from %s",

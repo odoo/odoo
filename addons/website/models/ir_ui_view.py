@@ -11,6 +11,7 @@ from odoo import api, fields, models, _
 from odoo.exceptions import AccessError, MissingError, ValidationError
 from odoo.fields import Domain
 from odoo.http import request
+from odoo.tools import SQL
 
 _logger = logging.getLogger(__name__)
 
@@ -346,13 +347,12 @@ class IrUiView(models.Model):
         return views.filter_duplicate().filtered('active')
 
     @api.model
-    def _get_filter_xmlid_query(self):
+    def _get_filter_xmlid_query(self, *, modules):
         """This method add some specific view that do not have XML ID
         """
         if not self.env.context.get('website_id'):
-            return super()._get_filter_xmlid_query()
-        else:
-            return """SELECT res_id
+            return super()._get_filter_xmlid_query(modules=modules)
+        return SQL("""SELECT res_id
                     FROM   ir_model_data
                     WHERE  res_id IN %(res_ids)s
                         AND model = 'ir.ui.view'
@@ -368,7 +368,10 @@ class IrUiView(models.Model):
                     WHERE  sview.id IN %(res_ids)s
                         AND sview.website_id IS NOT NULL
                         AND oview.website_id IS NULL;
-                    """
+                    """,
+                    res_ids=self._ids,
+                    modules=tuple(modules),
+        )
 
     @api.model
     def _get_cached_template_prefetched_keys(self):
