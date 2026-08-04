@@ -341,6 +341,15 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
         self.assertFalse(tx.invoice_ids)
         self.assertFalse(self.sale_order.invoice_ids)
 
+    def test_payment_does_not_confirm_order_pending_signature(self):
+        self.sale_order.require_payment = False
+        self.sale_order.require_signature = True
+        tx = self._create_transaction(
+            flow='redirect', sale_order_ids=[self.sale_order.id], state='done'
+        )
+        confirmed_orders = tx._check_amount_and_confirm_order()
+        self.assertFalse(confirmed_orders)
+
     def test_already_confirmed_so_payment(self):
         # Set automatic invoice
         self.env.company.sale_automatic_invoice = True
@@ -611,6 +620,7 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
                         },
                     )
                 ],
+                "require_signature": False,
             })
         )
 
