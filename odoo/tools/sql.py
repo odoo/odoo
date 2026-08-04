@@ -608,7 +608,7 @@ def add_index(cr: Cursor, indexname: str, tablename: str, definition: str, *, un
     query_comment = SQL(
         "COMMENT ON INDEX %s IS %s",
         SQL.identifier(indexname), comment,
-    ) if comment else None
+    ) if comment else SQL()
     cr.execute(query, log_exceptions=False)
     if query_comment:
         cr.execute(query_comment, log_exceptions=False)

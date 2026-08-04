@@ -25,9 +25,9 @@ import psycopg2.errorcodes  # noqa: F401
 import psycopg2.errors
 import psycopg2.extensions
 import psycopg2.extras
+from psycopg2 import sql as psql
 from psycopg2.extensions import ISOLATION_LEVEL_REPEATABLE_READ
 from psycopg2.pool import PoolError
-from psycopg2.sql import Composable
 from werkzeug import urls
 
 import odoo
@@ -132,7 +132,7 @@ class Savepoint:
         self.name = str(uuid.uuid1())
         self._cr = cr
         self.closed: bool = False
-        cr.execute('SAVEPOINT "%s"' % self.name)
+        cr.execute(psql.SQL('SAVEPOINT {}').format(psql.Identifier(self.name)))
 
     def __enter__(self):
         return self
@@ -145,12 +145,12 @@ class Savepoint:
             self._close(rollback)
 
     def rollback(self):
-        self._cr.execute('ROLLBACK TO SAVEPOINT "%s"' % self.name)
+        self._cr.execute(psql.SQL('ROLLBACK TO SAVEPOINT {}').format(psql.Identifier(self.name)))
 
     def _close(self, rollback: bool):
         if rollback:
             self.rollback()
-        self._cr.execute('RELEASE SAVEPOINT "%s"' % self.name)
+        self._cr.execute(psql.SQL('RELEASE SAVEPOINT {}').format(psql.Identifier(self.name)))
         self.closed = True
 
 
@@ -388,13 +388,13 @@ class Cursor(_CursorProtocol):
             return highlight_sql(formatted)
         return formatted
 
-    def mogrify(self, query: SQL | typing.LiteralString | Composable, params=None) -> bytes:
+    def mogrify(self, query: SQL | typing.LiteralString | psql.Composable, params=None) -> bytes:
         if isinstance(query, SQL):
             assert params is None, "Unexpected parameters for SQL query object"
             query, params, _fields = query._sql_tuple
         return self._obj.mogrify(query, params)
 
-    def execute(self, query: SQL | typing.LiteralString | Composable, params=None, log_exceptions: bool = True) -> None:
+    def execute(self, query: SQL | typing.LiteralString | psql.Composable, params=None, log_exceptions: bool = True) -> None:
         """ Execute a query inside the current transaction. """
         global sql_counter
 
@@ -450,19 +450,19 @@ class Cursor(_CursorProtocol):
                 stat_count, stat_time = log_target.get(table or '', (0, 0))
                 log_target[table or ''] = (stat_count + 1, stat_time + delay * 1E6)
 
-    def executemany(self, query: typing.LiteralString | Composable, vars_list) -> None:
+    def executemany(self, query: typing.LiteralString | psql.Composable, vars_list) -> None:
         """Execute the query for each row in the vars_list."""
         for params in vars_list:
             self.execute(query, params)
 
-    def execute_values(self, query: typing.LiteralString | Composable, argslist, template=None, page_size=100, fetch=False):
+    def execute_values(self, query: typing.LiteralString | psql.Composable, argslist, template=None, page_size=100, fetch=False):
         """
         A proxy for psycopg2.extras.execute_values which can log all queries like execute.
         But this method cannot set log_exceptions=False like execute
         """
         # Odoo Cursor only proxies all methods of psycopg2 Cursor. This is a patch for problems caused by passing
         # self instead of self._obj to the first parameter of psycopg2.extras.execute_values.
-        if isinstance(query, Composable):
+        if isinstance(query, psql.Composable):
             query = query.as_string(self._obj)
         return psycopg2.extras.execute_values(self, query, argslist, template=template, page_size=page_size, fetch=fetch)
 

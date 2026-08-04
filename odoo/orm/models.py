@@ -2228,8 +2228,16 @@ class BaseModel(metaclass=MetaModel):
             direction = (order_match['direction'] or 'ASC').upper()
             nulls = (order_match['nulls'] or '').upper()
 
-            sql_direction = SQL(direction) if direction in ('ASC', 'DESC') else SQL()
-            sql_nulls = SQL(nulls) if nulls in ('NULLS FIRST', 'NULLS LAST') else SQL()
+            sql_direction = (
+                SQL('ASC') if direction == 'ASC'
+                else SQL('DESC') if direction == 'DESC'
+                else SQL()
+            )
+            sql_nulls = (
+                SQL('NULLS FIRST') if nulls == 'NULLS FIRST'
+                else SQL('NULLS LAST') if nulls == 'NULLS LAST'
+                else SQL()
+            )
 
             if term not in groupby_terms:
                 try:
@@ -4726,8 +4734,16 @@ class BaseModel(metaclass=MetaModel):
                 if nulls:
                     nulls = 'NULLS LAST' if nulls == 'NULLS FIRST' else 'NULLS FIRST'
 
-            sql_direction = SQL(direction) if direction in ('ASC', 'DESC') else SQL()
-            sql_nulls = SQL(nulls) if nulls in ('NULLS FIRST', 'NULLS LAST') else SQL()
+            sql_direction = (
+                SQL('ASC') if direction == 'ASC'
+                else SQL('DESC') if direction == 'DESC'
+                else SQL()
+            )
+            sql_nulls = (
+                SQL('NULLS FIRST') if nulls == 'NULLS FIRST'
+                else SQL('NULLS LAST') if nulls == 'NULLS LAST'
+                else SQL()
+            )
 
             if property_name := order_match['property']:
                 # field_name is an expression

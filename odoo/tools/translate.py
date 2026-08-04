@@ -2306,27 +2306,29 @@ def _get_translation_upgrade_queries(cr, field):
     if callable(field.translate):
         cr.execute("SELECT code FROM res_lang WHERE active IS TRUE")
         languages = {l[0] for l in cr.fetchall()}
-        query = f"""
-            SELECT t.res_id, m."{field.name}", t.value, t.noupdate
+        field_name_sql = SQL.identifier('m', field.name)
+        table_sql = SQL.identifier(Model._table)
+        query = SQL("""
+            SELECT t.res_id, %s, t.value, t.noupdate
               FROM t
-              JOIN "{Model._table}" m ON t.res_id = m.id
-        """
+              JOIN %s m ON t.res_id = m.id
+        """, field_name_sql, table_sql)
         if translation_name == 'ir.ui.view,arch_db':
             cr.execute("SELECT id from ir_module_module WHERE name = 'website' AND state='installed'")
             if cr.fetchone():
-                query = f"""
-                    SELECT t.res_id, m."{field.name}", t.value, t.noupdate, l.code
+                query = SQL("""
+                    SELECT t.res_id, %(field_name)s, t.value, t.noupdate, l.code
                       FROM t
-                      JOIN "{Model._table}" m ON t.res_id = m.id
+                      JOIN %(table)s m ON t.res_id = m.id
                       JOIN website w ON m.website_id = w.id
                       JOIN res_lang l ON w.default_lang_id = l.id
                     UNION
-                    SELECT t.res_id, m."{field.name}", t.value, t.noupdate, 'en_US'
+                    SELECT t.res_id, %(field_name)s, t.value, t.noupdate, 'en_US'
                       FROM t
-                      JOIN "{Model._table}" m ON t.res_id = m.id
+                      JOIN %(table)s m ON t.res_id = m.id
                      WHERE m.website_id IS NULL
-                """
-        cr.execute(f"""
+                """, field_name=field_name_sql, table=table_sql)
+        cr.execute(SQL("""
             WITH t0 AS (
                 -- aggregate translations by source term --
                 SELECT res_id, lang, jsonb_object_agg(src, value) AS value
@@ -2341,7 +2343,7 @@ def _get_translation_upgrade_queries(cr, field):
              LEFT JOIN ir_model_data imd
                     ON imd.model = %s AND imd.res_id = t0.res_id
               GROUP BY t0.res_id
-            )""" + query, [translation_name, Model._name])
+            ) %s""", translation_name, Model._name, query))
         for id_, new_translations, translations, noupdate, *extra in cr.fetchall():
             if not new_translations:
                 continue

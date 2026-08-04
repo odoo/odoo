@@ -135,7 +135,8 @@ class DuplicateContext:
             yield
             _logger.info('Adding indexes back on table %s...', model._table)
             for index in indexes:
-                model.env.cr.execute(index['definition'])
+                # definition comes from the database
+                model.env.cr.execute(index['definition'])  # pylint: disable=sql-injection
         else:
             yield
 
