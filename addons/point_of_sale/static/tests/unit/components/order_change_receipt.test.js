@@ -168,6 +168,9 @@ test("test_printer_restricts_to_allowed_categories_for_combo: only combo items i
     if (comboProduct5) {
         comboProduct5.pos_categ_ids = [store.models["pos.category"].get(2)];
     }
+    store.config.preparation_printer_ids = store.models["pos.printer"].filter(
+        (printer) => printer.use_type === "preparation"
+    );
     await animationFrame();
 
     await Utils.clickDisplayedProduct("Office Combo");
