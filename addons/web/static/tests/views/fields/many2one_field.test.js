@@ -851,7 +851,7 @@ test("empty a many2one field in list view", async () => {
     });
 
     await contains(".o_data_row .o_data_cell").click();
-    await contains(".o_field_widget[name=trululu] input").edit("");
+    await contains(".o_field_widget[name=trululu] input").clear({ confirm: false });
     expect(".o_data_row .o_field_widget[name=trululu] input").toHaveText("");
 
     await contains(".o_list_view").click();
