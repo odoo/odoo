@@ -834,6 +834,19 @@ TYPES_WITH_VAT_CATEGORY_8 = ('3.1', '3.2', '8.1', '8.2', '17.3', '17.4')
 
 COMBINATIONS_WITH_POSSIBLE_EMPTY_TYPE = (('1.1', 'category1_95'), ('3.2', 'category1_95'), ('5.1', 'category1_95'))
 
+VAT_CATEGORY_TO_RATE = {
+    1: 24.0,
+    2: 13.0,
+    3: 6.0,
+    4: 17.0,
+    5: 9.0,
+    6: 4.0,
+    7: 0.0,
+    8: 0.0,
+    9: 3.0,
+    10: 4.0,
+}
+
 VALID_TAX_CATEGORY_MAP = {
     24: 1,
     13: 2,
@@ -841,6 +854,7 @@ VALID_TAX_CATEGORY_MAP = {
     17: 4,
     9: 5,
     4: 6,
+    3: 9,
     0: 7,
 }
 

@@ -22,7 +22,6 @@ from odoo.addons.l10n_gr_edi.models.preferred_classification import (
     TYPES_WITH_VAT_CATEGORY_8,
     TYPES_WITH_VAT_EXEMPT,
     VALID_TAX_AMOUNTS,
-    VALID_TAX_CATEGORY_MAP,
 )
 
 
@@ -520,7 +519,7 @@ class AccountMove(models.Model):
                 vat_exemption_category = ''
                 if line.tax_ids and move.l10n_gr_edi_inv_type not in TYPES_WITH_VAT_EXEMPT:
                     tax = base_line['tax_details']['taxes_data'][0]['tax']  # here, `tax` is guaranteed to be a single `account.tax` record
-                    vat_category = VALID_TAX_CATEGORY_MAP[int(tax.amount)]
+                    vat_category = tax._l10n_gr_edi_get_vat_category()
                 if vat_category == 7 and move.l10n_gr_edi_inv_type in TYPES_WITH_VAT_CATEGORY_8:
                     vat_category = 8
                 if vat_category == 7:  # Need vat exemption category

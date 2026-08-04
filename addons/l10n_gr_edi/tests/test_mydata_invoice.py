@@ -35,6 +35,9 @@ class TestMyDATAInvoice(AccountTestInvoicingCommon):
         cls.tax_24 = cls.env.ref("account.%s_l10n_gr_tax_s24_G" % cls.env.company.id)
         cls.tax_13 = cls.env.ref("account.%s_l10n_gr_tax_s13_G" % cls.env.company.id)
         cls.tax_0 = cls.env.ref("account.%s_l10n_gr_tax_s0_exempt" % cls.env.company.id)
+        cls.tax_4 = cls.env.ref("account.%s_l10n_gr_tax_s4_S" % cls.env.company.id)
+        cls.tax_4_article_31 = cls.env.ref("account.%s_l10n_gr_tax_s4_S_art31" % cls.env.company.id)
+        cls.tax_3_article_31 = cls.env.ref("account.%s_l10n_gr_tax_s3_S_art31" % cls.env.company.id)
 
     def _create_mydata_invoice(
             self,
@@ -184,6 +187,34 @@ class TestMyDATAInvoice(AccountTestInvoicingCommon):
         ])
         self.assert_mydata_xml_tree(invoice, expected_file_path='from_odoo/mydata_invoice.xml')
 
+    def test_mydata_article_31_vat_categories(self):
+        invoice = self._create_mydata_invoice(
+            paid=False,
+            invoice_line_ids=[
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'tax_ids': [Command.set(self.tax_4.ids)],
+                    'l10n_gr_edi_cls_category': 'category1_1',
+                    'l10n_gr_edi_cls_type': 'E3_561_001',
+                }),
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'tax_ids': [Command.set(self.tax_4_article_31.ids)],
+                    'l10n_gr_edi_cls_category': 'category1_1',
+                    'l10n_gr_edi_cls_type': 'E3_561_001',
+                }),
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'tax_ids': [Command.set(self.tax_3_article_31.ids)],
+                    'l10n_gr_edi_cls_category': 'category1_1',
+                    'l10n_gr_edi_cls_type': 'E3_561_001',
+                }),
+            ],
+        )
+
+        details = invoice._l10n_gr_edi_get_invoices_xml_vals()['invoice_values_list'][0]['details']
+        self.assertEqual([detail['vat_category'] for detail in details], [6, 10, 9])
+
     def test_mydata_send_multi_invoices(self):
         invoice_1 = self._create_mydata_invoice(inv_type='2.1', cls_category='category1_3', cls_type='E3_561_002')
         invoice_2 = self._create_mydata_invoice(inv_type='11.1', cls_category='category1_95', cls_type=False)
@@ -240,7 +271,7 @@ class TestMyDATAInvoice(AccountTestInvoicingCommon):
         }])
         invoice = self._create_mydata_invoice(tax_ids=[Command.set(invalid_tax.ids)])
         invoice.l10n_gr_edi_try_send_invoices()
-        self.assert_mydata_error(invoice, 'Invalid tax amount for line 1. The valid values are 24, 13, 6, 17, 9, 4, 0.')
+        self.assert_mydata_error(invoice, 'Invalid tax amount for line 1. The valid values are 24, 13, 6, 17, 9, 4, 3, 0.')
 
     def test_l10n_gr_edi_try_send_invoices_invalid_tax_multi(self):
         """ Multiple tax should raises error. """

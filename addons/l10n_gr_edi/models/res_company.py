@@ -6,7 +6,7 @@ from lxml import etree
 from requests import RequestException
 
 from odoo import api, fields, models, Command
-from odoo.addons.l10n_gr_edi.models.preferred_classification import INVOICE_TYPES_HAVE_EXPENSE
+from odoo.addons.l10n_gr_edi.models.preferred_classification import INVOICE_TYPES_HAVE_EXPENSE, VAT_CATEGORY_TO_RATE
 
 NS_MYDATA = {"ns": "http://www.aade.gr/myDATA/invoice/v1.0"}
 
@@ -55,6 +55,13 @@ class ResCompany(models.Model):
                 _logger.error("Something when wrong when fetching myDATA bill: %s", err)
                 continue
 
+            chart_template = self.env['account.chart.template'].with_company(gr_company)
+            article_31_purchase_taxes = {
+                9: chart_template.ref('l10n_gr_tax_p3_S_art31'),
+                10: chart_template.ref('l10n_gr_tax_p4_S_art31'),
+            }
+            article_31_purchase_tax_ids = [tax.id for tax in article_31_purchase_taxes.values()]
+
             for invoice_element in root.xpath('//*[local-name()="invoice"]'):
                 def find_value(element_name):
                     return invoice_element.findtext(f".//ns:{element_name}", namespaces=NS_MYDATA)
@@ -72,17 +79,24 @@ class ResCompany(models.Model):
                 # Get invoice lines data
                 invoice_line_ids = []
                 for detail_element in invoice_element.xpath('.//*[local-name()="invoiceDetails"]'):
-                    tax_amount = {'1': 24.0, '2': 13.0, '3': 6.0, '4': 17.0, '5': 9.0, '6': 4.0, '7': 0.0, '8': 0.0}[
-                        detail_element.findtext('.//ns:vatCategory', namespaces=NS_MYDATA)]
+                    vat_category = int(detail_element.findtext('.//ns:vatCategory', namespaces=NS_MYDATA))
+                    tax = article_31_purchase_taxes.get(vat_category)
+                    if not tax:
+                        tax = self.env['account.tax'].search(
+                            domain=[
+                                ('amount', '=', VAT_CATEGORY_TO_RATE[vat_category]),
+                                ('company_id', '=', gr_company.id),
+                                ('type_tax_use', '=', 'purchase'),
+                                ('id', 'not in', article_31_purchase_tax_ids),
+                            ],
+                            limit=1,
+                        )
                     quantity = max(1.0, float(detail_element.findtext('.//ns:quantity', namespaces=NS_MYDATA) or 1))
                     price_unit = float(detail_element.findtext('.//ns:netValue', namespaces=NS_MYDATA)) / quantity
                     invoice_line_ids.append(Command.create({
                         'price_unit': price_unit,
                         'quantity': quantity,
-                        'tax_ids': self.env['account.tax'].search(
-                            domain=[('amount', '=', tax_amount), ('company_id', '=', gr_company.id)],
-                            limit=1,
-                        ),
+                        'tax_ids': tax,
                     }))
 
                 # Collect the bill & document creation data values
