@@ -2785,3 +2785,16 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         })
 
         self.assertFalse(wizard.valid_work_entry_type_ids)
+
+    def test_single_day_leave_shows_date_range(self):
+        """Test that a single-day leave exposes both request_date_from and request_date_to.
+        """
+        with Form(self.env['hr.leave'].with_user(self.user_hrmanager_id)) as leave_form:
+            leave_form.employee_id = self.employee_emp
+            leave_form.work_entry_type_id = self.holidays_type_1
+            leave_form.request_date_from = date(2026, 8, 27)
+            leave_form.request_date_to = date(2026, 8, 27)
+            leave = leave_form.save()
+
+        self.assertEqual(leave.request_date_from, date(2026, 8, 27))
+        self.assertEqual(leave.request_date_to, date(2026, 8, 27))
