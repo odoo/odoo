@@ -163,6 +163,35 @@ class TestProjectRecurrence(TransactionCase):
         self.assertFalse(any((task_a + task_b + task_c).mapped('recurring_task')),
                          "All tasks in the recurrence should have their recurrence disabled")
 
+    def test_deleting_last_recurring_task(self):
+        """
+        Deleting the last task of a recurrence suite should disable the recurrence
+        option on the tasks remaining in that suite
+        """
+        with freeze_time(self.date_01_01):
+            form = Form(self.env['project.task'])
+            form.name = 'test recurring task'
+            form.project_id = self.project_recurring
+            form.recurring_task = True
+            form.repeat_interval = 5
+            form.repeat_unit = 'day'
+            form.repeat_type = 'forever'
+            task = form.save()
+
+        with freeze_time(self.date_01_01 + relativedelta(day=1)):
+            task.state = '1_done'
+            other_task = self.project_recurring.task_ids - task
+
+        with freeze_time(self.date_01_01 + relativedelta(day=2)):
+            other_task.state = '1_done'
+
+        task_c, task_b, task_a = self.env['project.task'].search([('project_id', '=', self.project_recurring.id)])
+
+        task_c.unlink()
+
+        self.assertFalse(any((task_a + task_b).mapped('recurring_task')),
+                         "The tasks left in the recurrence should have their recurrence disabled")
+
     @users('armandel')
     def test_closed_recurring_task(self):
         """
