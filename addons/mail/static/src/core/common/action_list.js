@@ -71,7 +71,7 @@ class Action extends Component {
         if (!this.props.inline || !this.action.icon) {
             return false;
         }
-        if (this.env.inComposer || this.ancestors.has("Message")) {
+        if (this.ancestors.has("Composer") || this.ancestors.has("Message")) {
             return true;
         }
         return (

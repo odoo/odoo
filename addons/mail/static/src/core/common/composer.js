@@ -1,4 +1,4 @@
-import { useLayoutEffect, useSubEnv } from "@web/owl2/utils";
+import { useLayoutEffect } from "@web/owl2/utils";
 import { useAncestors } from "@mail/core/common/ancestors_hook";
 import { AttachmentList } from "@mail/core/common/attachment_list";
 import { useAttachmentUploader } from "@mail/core/common/attachment_uploader_hook";
@@ -239,7 +239,6 @@ export class Composer extends Component {
                         : !this.thread?.messageInEdition?.composer?.isEditComposerVisible)
             );
         }
-        useSubEnv({ inComposer: true });
         useLayoutEffect(
             () => {
                 const focus = this.props.autofocus + this.props.composer.autofocus;
