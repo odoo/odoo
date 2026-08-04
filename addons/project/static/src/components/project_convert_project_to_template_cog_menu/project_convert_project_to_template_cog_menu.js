@@ -29,13 +29,12 @@ export const ConvertProjectToTemplateMenuItem = {
     Component: ConvertProjectToTemplateCogMenu,
     groupNumber: 0,
     isDisplayed: async ({ config, searchModel }) => {
-        const isManager = await user.hasGroup("project.group_project_manager");
         return (
-            isManager &&
             searchModel.resModel === "project.task" &&
             ["kanban", "list"].includes(config.viewType) &&
             config.actionType === "ir.actions.act_window" &&
-            searchModel.context.active_id
+            searchModel.context.active_id &&
+            await user.hasGroup("project.group_project_manager")
         );
     },
 };
