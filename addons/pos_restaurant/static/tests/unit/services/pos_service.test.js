@@ -605,6 +605,22 @@ describe("restaurant pos_store.js", () => {
 
     test("order has no pending line changes after sending", async () => {
         const store = await setupPosEnv();
+        // Link preparation printer and fake the successful print of preparation printer
+        store.config.preparation_printer_ids = store.models["pos.printer"].filter(
+            (printer) => printer.use_type === "preparation"
+        );
+        store.ticketPrinter.print = (_args) => ({
+            successful: true,
+            message: "Printed successfully",
+        });
+        await store.ticketPrinter.initPrinters();
+        store.ticketPrinter.generateIframe = async () => ({
+            contentWindow: {},
+            contentDocument: { body: { innerHTML: "" } },
+            style: {},
+        });
+        store.ticketPrinter.setIframeSizeFromPrinter = () => {};
+        store.ticketPrinter.generateImage = async () => "mock-image";
         const order = store.addNewOrder();
         const cola = store.models["product.template"].get(5);
         await store.addLineToOrder({ product_tmpl_id: cola, qty: 1 }, order);
