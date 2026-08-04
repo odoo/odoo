@@ -61,8 +61,19 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
             ),
             Chrome.closePrintingWarning(),
             FloorScreen.clickTable("5"),
+            ProductScreen.orderlineIsToOrder("Water"),
+            ProductScreen.orderlineIsToOrder("Coca-Cola"),
+            checkPreparationTicketData([
+                { name: "Coca-Cola", qty: 1 },
+                { name: "Water", qty: 1 },
+            ]),
+            ProductScreen.clickOrderButton(true),
+            FloorScreen.table({ name: "5", run: "click", waitForSync: false }),
+            Notification.has(
+                "This order is currently syncing, please wait a moment before loading it."
+            ),
+            FloorScreen.clickTable("5"),
             ProductScreen.orderlinesHaveNoChange(),
-            checkPreparationTicketData([]),
             ProductScreen.totalAmountIs("4.40"),
 
             // Create 2nd order (paid)
@@ -78,7 +89,6 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
             ProductScreen.clickPayButton(false),
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.clickValidate(),
-            Chrome.closePrintingWarning(),
             FeedbackScreen.clickNextOrder(),
 
             // order on another table with a product variant
@@ -94,7 +104,6 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
                 { name: "Desk Organizer", qty: 1, attributes: ["S", "Leather"] },
             ]),
             ProductScreen.clickOrderButton(),
-            Chrome.closePrintingWarning(),
             FloorScreen.clickTable("4"),
             ProductScreen.orderlinesHaveNoChange(),
             checkPreparationTicketData([]),
@@ -127,7 +136,6 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
             // The first order made in the session is a floating order.
             TicketScreen.deleteOrder("002"),
             Dialog.confirm(),
-            Chrome.closePrintingWarning(),
             Chrome.isSyncStatusConnected(),
             TicketScreen.selectOrder("005"),
             TicketScreen.loadSelectedOrder(),
@@ -223,8 +231,7 @@ registry.category("web_tour.tours").add("SaveLastPreparationChangesTour", {
             FloorScreen.clickTable("5"),
             ProductScreen.clickDisplayedProduct("Coca-Cola", true, "1"),
             ProductScreen.orderlineIsToOrder("Coca-Cola"),
-            ProductScreen.clickOrderButton(),
-            Chrome.closePrintingWarning(),
+            ProductScreen.clickOrderButton(true),
             FloorScreen.clickTable("5"),
             Chrome.waitRequest(),
             ProductScreen.orderlinesHaveNoChange(),
@@ -251,8 +258,7 @@ registry.category("web_tour.tours").add("test_pos_restaurant_course", {
             ProductScreen.clickCourseButton(),
             ProductScreen.clickDisplayedProduct("Minute Maid"),
             ProductScreen.clickCourseButton(),
-            ProductScreen.clickOrderButton(),
-            Chrome.closePrintingWarning(),
+            ProductScreen.clickOrderButton(true),
             FloorScreen.clickTable("5"),
             // Check only 2 courses are there and empty course gets removed on clicking Order button
             negateStep(ProductScreen.checkCourseAtIndex(2, "Course 3")),
@@ -273,7 +279,6 @@ registry.category("web_tour.tours").add("test_pos_restaurant_course", {
                 run: async () => await delay(1000),
             },
             ProductScreen.fireCourseButton(),
-            Chrome.closePrintingWarning(),
             FloorScreen.clickTable("5"),
             negateStep(ProductScreen.checkCourseAtIndex(2, "Course 3")),
             // Check all courses are removed when all orderlines are deleted
@@ -357,8 +362,7 @@ registry.category("web_tour.tours").add("OrderChangeTour", {
             Dialog.confirm("Open Register"),
             FloorScreen.clickTable("5"),
             ProductScreen.clickDisplayedProduct("Coca-Cola", true, "1"),
-            ProductScreen.clickOrderButton(),
-            Chrome.closePrintingWarning(),
+            ProductScreen.clickOrderButton(true),
             FloorScreen.clickTable("5"),
             ProductScreen.isShown(),
             ProductScreen.orderlinesHaveNoChange(),
@@ -489,8 +493,7 @@ registry.category("web_tour.tours").add("PreparationPrinterContent", {
                 ],
                 invisibleInDom: ["DUPLICATA!"],
             }),
-            ProductScreen.clickOrderButton(),
-            Chrome.closePrintingWarning(),
+            ProductScreen.clickOrderButton(true),
             FloorScreen.clickTable("5"),
             ProductScreen.clickLine("Product Test"),
             ProductScreen.addCustomerNote("Updated customer note - orderline"),
@@ -542,10 +545,8 @@ registry.category("web_tour.tours").add("test_course_restaurant_preparation_tour
                     visibleInDom: ["Course 1", "Course 2", "Course 3"],
                 }
             ),
-            ProductScreen.clickOrderButton(),
+            ProductScreen.clickOrderButton(true),
             Chrome.waitRequest(),
-            Dialog.bodyIs("Preparation Printer: The printer is not reachable."),
-            Dialog.confirm(),
             FloorScreen.isShown(),
             Chrome.waitForOrdersSync(),
             FloorScreen.clickTable("5"),
@@ -560,8 +561,6 @@ registry.category("web_tour.tours").add("test_course_restaurant_preparation_tour
             Chrome.isSynced(),
             ProductScreen.fireCourseButton(),
             Chrome.waitRequest(),
-            Dialog.bodyIs("Printer: The printer is not reachable."),
-            Dialog.confirm(),
             FloorScreen.isShown(),
             Chrome.waitForOrdersSync(),
             FloorScreen.clickTable("5"),
@@ -691,9 +690,10 @@ registry.category("web_tour.tours").add("test_multiple_preparation_printer_diffe
             Dialog.bodyIs("Printer 1: The printer is not reachable."),
             Dialog.bodyIs("Printer 2: The printer is not reachable."),
             Dialog.confirm(),
-            // OrderWarningDialog should not be shown as order already send for preparation
+            // OrderWarningDialog should be shown as order was not successfully sent for preparation
             FloorScreen.clickTable("5"),
-            ProductScreen.clickPayButton(),
+            ProductScreen.clickPayButton(false),
+            PaymentScreen.isShown(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
             FeedbackScreen.isShown(),

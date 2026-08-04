@@ -3579,7 +3579,7 @@ class TestUi(TestPointOfSaleHttpCommon):
     def test_confirm_coupon_programs_one_by_one(self):
         """
         Sync from UI is now syncing orders one by one.
-        confirm_coupon_programs should be called 6 times in this tour (6 orders created).
+        confirm_coupon_programs should be called 7 times in this tour (6 orders created + one sent to preparation).
         """
         self.create_programs([('arbitrary_name', 'gift_card')])['arbitrary_name']
         pos_order = self.env.registry.models['pos.order']
