@@ -316,8 +316,10 @@ export class ColorPlugin extends Plugin {
                     return !closestElement(node, "table.o_selected_table");
                 }
                 // `o_default_color` only resets the text color: the background
-                // color of such a node must still be removable.
+                // color of such a node must still be removable, and a color
+                // must still be applicable on it.
                 if (
+                    !color &&
                     mode === "color" &&
                     closestElement(node).classList.contains("o_default_color")
                 ) {
@@ -590,6 +592,10 @@ export class ColorPlugin extends Plugin {
             (mode === "color" ? TEXT_CLASSES_REGEX : BG_CLASSES_REGEX).test(className)
         );
         classNamesToRemove.push("text-gradient");
+        if (color && mode === "color") {
+            // The element does not have the default color anymore.
+            classNamesToRemove.push("o_default_color");
+        }
         removeClass(element, ...classNamesToRemove);
 
         if (isColorGradient(color)) {
