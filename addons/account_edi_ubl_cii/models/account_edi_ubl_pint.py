@@ -6,7 +6,7 @@ from odoo.addons.account_edi_ubl_cii.models.account_edi_common import FloatFmt
 
 class AccountEdiUBLPint(models.AbstractModel):
     _name = "account.edi.ubl_pint"
-    _inherit = 'account.edi.ubl_cen_en16931'
+    _inherit = 'account.edi.ubl'
     _description = "UBL PINT"
 
     # -------------------------------------------------------------------------
