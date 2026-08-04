@@ -1406,7 +1406,9 @@ class ProjectTask(models.Model):
         last_task_id_per_recurrence_id = self.recurrence_id._get_last_task_id_per_recurrence_id()
         for task in self:
             if task.id == last_task_id_per_recurrence_id.get(task.recurrence_id.id):
+                remaining_tasks = task.recurrence_id.task_ids - self
                 task.recurrence_id.unlink()
+                remaining_tasks.recurring_task = False
         return super().unlink()
 
     def update_date_end(self, stage_id):
