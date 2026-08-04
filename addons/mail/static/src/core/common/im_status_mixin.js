@@ -29,7 +29,7 @@ export class ImStatusMixin extends Record {
         record.cancelSetImStatusDebounced = setImStatusDebounced.cancel;
         effect(
             (record, store, presenceService, statusService) => {
-                if (record.notEq(store.self)) {
+                if (record.notEq(store.self_user) && record.notEq(store.self_guest)) {
                     return;
                 }
                 const isOnline = presenceService.getInactivityPeriod() < AWAY_DELAY;
