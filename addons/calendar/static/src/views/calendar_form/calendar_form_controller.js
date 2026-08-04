@@ -41,7 +41,6 @@ export class CalendarFormController extends FormController {
         } else {
             await this.orm.call("calendar.event", "action_unlink_event", [
                 this.model.root.resId,
-                this.model.root.data.partner_ids.resIds,
                 this.model.root.data.recurrence_update,
             ])
             .then((action) => {
