@@ -40,6 +40,8 @@ async function testSocialSnippetOptions(snippetName, containerTitle, iconName) {
             },
         ];
     });
+    onRpc("/website/social/facebook", () => ({}));
+    onRpc("/html_editor/link_preview_internal", () => ({}));
 
     const core = await setupWebsiteBuilderWithSnippet(snippetName, {
         styleContent: `.${snippetName}.no_icon_color a {
