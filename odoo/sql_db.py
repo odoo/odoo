@@ -388,13 +388,13 @@ class Cursor(_CursorProtocol):
             return highlight_sql(formatted)
         return formatted
 
-    def mogrify(self, query, params=None) -> bytes:
+    def mogrify(self, query: SQL | typing.LiteralString | Composable, params=None) -> bytes:
         if isinstance(query, SQL):
             assert params is None, "Unexpected parameters for SQL query object"
             query, params, _fields = query._sql_tuple
         return self._obj.mogrify(query, params)
 
-    def execute(self, query, params=None, log_exceptions: bool = True) -> None:
+    def execute(self, query: SQL | typing.LiteralString | Composable, params=None, log_exceptions: bool = True) -> None:
         """ Execute a query inside the current transaction. """
         global sql_counter
 
@@ -449,9 +449,13 @@ class Cursor(_CursorProtocol):
             if log_target:
                 stat_count, stat_time = log_target.get(table or '', (0, 0))
                 log_target[table or ''] = (stat_count + 1, stat_time + delay * 1E6)
-        return None
 
-    def execute_values(self, query, argslist, template=None, page_size=100, fetch=False):
+    def executemany(self, query: typing.LiteralString | Composable, vars_list) -> None:
+        """Execute the query for each row in the vars_list."""
+        for params in vars_list:
+            self.execute(query, params)
+
+    def execute_values(self, query: typing.LiteralString | Composable, argslist, template=None, page_size=100, fetch=False):
         """
         A proxy for psycopg2.extras.execute_values which can log all queries like execute.
         But this method cannot set log_exceptions=False like execute
