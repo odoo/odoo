@@ -364,6 +364,11 @@ export class LinkPlugin extends Plugin {
             if (linkEl) {
                 if (ev.ctrlKey || ev.metaKey) {
                     window.open(linkEl.href, "_blank");
+                } else if (!linkEl.isContentEditable) {
+                    this.dependencies.selection.setSelection({
+                        anchorNode: linkEl,
+                        anchorOffset: 0,
+                    });
                 }
                 ev.preventDefault();
             }
@@ -530,15 +535,17 @@ export class LinkPlugin extends Plugin {
     openLinkTools(linkElement, type) {
         this.currentOverlay.close();
         this.LinkPopoverState.editing = false;
-        if (!this.isLinkAllowedOnSelection()) {
+        let selection = this.dependencies.selection.getEditableSelection();
+        const commonAncestor = closestElement(selection.commonAncestorContainer);
+        const isNonEditableLink =
+            commonAncestor.nodeName === "A" && !commonAncestor.isContentEditable;
+        if (!this.isLinkAllowedOnSelection() && !isNonEditableLink) {
             return this.services.notification.add(
                 _t("Unable to create a link on the current selection."),
                 { type: "danger" }
             );
         }
-        let selection = this.dependencies.selection.getEditableSelection();
         let cursorsToRestore = this.dependencies.selection.preserveSelection();
-        const commonAncestor = closestElement(selection.commonAncestorContainer);
         linkElement = linkElement || findInSelection(selection, "a");
         this.type = type;
         if (
@@ -687,7 +694,10 @@ export class LinkPlugin extends Plugin {
         const popover = this.getActivePopover(linkElement);
         if (popover) {
             this.currentOverlay = popover.overlay;
-            if (!linkElement.href) {
+            if (
+                !linkElement.href &&
+                (!this.linkInDocument || this.linkInDocument?.isContentEditable)
+            ) {
                 this.LinkPopoverState.editing = true;
             }
             this.currentOverlay.open({ props: popover.getProps(props) });
@@ -863,7 +873,7 @@ export class LinkPlugin extends Plugin {
             const closestLinkElement = closestElement(selection.anchorNode, "A");
             const isLinkEditable =
                 this.checkPredicates("is_link_editable_predicates", closestLinkElement) ?? false;
-            if (closestLinkElement && closestLinkElement.isContentEditable) {
+            if (closestLinkElement) {
                 if (closestLinkElement !== this.linkInDocument || !this.currentOverlay.isOpen) {
                     this.openLinkTools(closestLinkElement);
                 }
@@ -1233,7 +1243,9 @@ export class LinkPlugin extends Plugin {
             const textNodeSplitted = textSliced.split(/\s/);
             const potentialUrl = textNodeSplitted.pop();
             // In case of multiple matches, only the last one will be converted.
-            const match = [...potentialUrl.matchAll(new RegExp(URL_REGEX.source, URL_REGEX.flags + "g"))].pop();
+            const match = [
+                ...potentialUrl.matchAll(new RegExp(URL_REGEX.source, URL_REGEX.flags + "g")),
+            ].pop();
 
             if (match) {
                 const nodeForSelectionRestore = selection.anchorNode.splitText(
