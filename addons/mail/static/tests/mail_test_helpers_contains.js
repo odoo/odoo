@@ -7,6 +7,12 @@ import { isMacOS } from "@web/core/browser/feature_detection";
 import { isVisible } from "@web/core/utils/ui";
 
 /**
+ * Time the wait helpers give the client before failing. The wait that follows
+ * openDiscuss pays for the whole mount and the first fetches.
+ */
+export const TIMEOUT = 10000;
+
+/**
  * Use `expect.step` instead
  * @deprecated
  */
@@ -616,7 +622,7 @@ class Contains {
             this.timeoutCount++;
             const res = this.runOnce(
                 `Timeout of ${(this.timeoutCount * this.tickTimeoutDelay) / 1000} seconds`,
-                { crashOnFail: this.timeoutCount >= 3000 / this.tickTimeoutDelay }
+                { crashOnFail: this.timeoutCount >= TIMEOUT / this.tickTimeoutDelay }
             );
             if (!res) {
                 this.setTickTimeout();
@@ -645,7 +651,7 @@ class Contains {
             const hasValue =
                 this.options.value !== undefined ||
                 (typeof this.selector === "string" && this.selector.includes(":value"));
-            this.tickTimeoutDelay = hasValue ? 500 : 3000;
+            this.tickTimeoutDelay = hasValue ? 500 : TIMEOUT;
             this.setTickTimeout();
             this.observer = new MutationObserver((mutations) => {
                 try {
