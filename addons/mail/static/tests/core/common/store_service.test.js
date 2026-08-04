@@ -64,10 +64,10 @@ test("store.insert different PY model having same JS model", async () => {
         ],
         "mail.thread": [
             { id: 1, model: "discuss.channel" },
-            { id: 3, name: "R&D", model: "discuss.channel" },
-            { id: 4, name: "John", model: "res.partner" },
-            { id: 5, name: "Alice", model: "res.partner" },
-            { id: 6, name: "Jane", model: "res.partner" },
+            { id: 3, model: "discuss.channel" },
+            { id: 4, model: "res.partner" },
+            { id: 5, model: "res.partner" },
+            { id: 6, model: "res.partner" },
         ],
     };
 
