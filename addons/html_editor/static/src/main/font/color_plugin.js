@@ -222,7 +222,14 @@ export class ColorPlugin extends Plugin {
                 if (mode === "backgroundColor" && color) {
                     return !closestElement(node, "table.o_selected_table");
                 }
-                if (closestElement(node).classList.contains("o_default_color")) {
+                // `o_default_color` only resets the text color: the background
+                // color of such a node must still be removable, and a color
+                // must still be applicable on it.
+                if (
+                    !color &&
+                    mode === "color" &&
+                    closestElement(node).classList.contains("o_default_color")
+                ) {
                     return false;
                 }
                 const li = closestElement(node, "li");
@@ -463,10 +470,14 @@ export class ColorPlugin extends Plugin {
             element.style["background-color"] = "";
         }
 
-        const newClassName = oldClassName
+        let newClassName = oldClassName
             .replace(mode === "color" ? TEXT_CLASSES_REGEX : BG_CLASSES_REGEX, "")
             .replace(/\btext-gradient\b/g, "") // cannot be combined with setting a background
             .replace(/\s+/, " ");
+        if (color && mode === "color") {
+            // The element does not have the default color anymore.
+            newClassName = newClassName.replace(/\bo_default_color\b/g, "");
+        }
         if (oldClassName !== newClassName) {
             element.setAttribute("class", newClassName);
         }
