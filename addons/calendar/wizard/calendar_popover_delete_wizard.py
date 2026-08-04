@@ -20,7 +20,7 @@ class CalendarPopoverDeleteWizard(models.TransientModel):
     def close(self):
         # Return if there are multiple attendees or if the organizer's partner_id differs
         if self.calendar_event_id.attendees_count != 1 or self.calendar_event_id.user_id.partner_id != self.calendar_event_id.partner_ids:
-            return self.calendar_event_id.action_unlink_event(self.calendar_event_id.partner_id.id, self.delete)
+            return self.calendar_event_id.action_unlink_event(self.delete)
         if not self.calendar_event_id or not self.delete:
             pass
         elif self.delete == 'one':
