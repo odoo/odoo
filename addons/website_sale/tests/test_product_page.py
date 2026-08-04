@@ -112,3 +112,11 @@ class TestWebsiteSaleProductPage(HttpCase, ProductVariantsCommon, WebsiteSaleCom
         )
         self.assertTrue(product)
         self.assertTrue(product.website_published)
+
+    def test_open_shop_on_product_with_no_variants(self):
+        self.env['res.config.settings'].create({
+            "group_show_uom_price": True,
+        }).execute()
+        self.product_template_sofa.product_variant_ids.unlink()
+        response = self.url_open("/shop")
+        self.assertEqual(response.status_code, 200)
