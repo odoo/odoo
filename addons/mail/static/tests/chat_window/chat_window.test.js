@@ -892,8 +892,12 @@ test("mark as read when opening chat window", async () => {
     await start();
     await openMessagingMenu();
     await click(".o-mail-NotificationItem-name:text('bob')");
-    await waitStoreFetch("/discuss/channel/messages"); // ensure messages are loaded before doing message post
+    await waitStoreFetch("/discuss/channel/messages");
     await contains(".o-mail-ChatWindow .o-mail-ChatWindow-header:text('bob')");
+    // message list fully loaded
+    await contains(
+        ".o-mail-ChatWindow .o-mail-Thread-empty:has(:text('This is the start of your direct chat with bob'))"
+    );
     // composer is focused by default, we remove that focus
     await contains(".o-mail-Composer-input:focus");
     document.querySelector(".o-mail-Composer-input").blur();
