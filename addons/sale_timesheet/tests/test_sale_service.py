@@ -996,3 +996,27 @@ class TestSaleService(TestCommonSaleTimesheet):
         product_form.service_policy = 'delivered_timesheet'
         product = product_form.save()
         self.assertEqual(product.uom_id, uom_day, "time UoM default was not respected")
+
+    def test_compute_last_sol_of_customer_with_list_domain(self):
+        """Domain has a list leaf; used to raise TypeError: unhashable type: 'list' as a dict key.
+        """
+        self.product_delivery_timesheet1.service_policy = 'ordered_prepaid'
+        order = self.sale_order
+
+        sol = self.env['sale.order.line'].create({
+            'order_id': order.id,
+            'product_id': self.product_delivery_timesheet1.id,
+        })
+        order.action_confirm()
+
+        task = self.env['project.task'].create({
+            'name': 'Task 1',
+            'project_id': self.project_task_rate.id,
+            'partner_id': self.partner_a.id,
+            'sale_line_id': sol.id,
+        })
+        self.assertEqual(
+            task.last_sol_of_customer,
+            sol,
+            "last_sol_of_customer should match the expected sale order line.",
+        )
