@@ -1071,3 +1071,97 @@ class TestSaleOrderDownPayment(TestSaleCommon):
         reversal_move.action_post()
         self.assertEqual(reversal_move.move_type, 'out_refund')
         self.assertIn('ref', so_dp_line.name)
+
+    def test_downpayment_discount_not_propagated_to_so_line(self):
+        """Test the discount and taxes applied in a downpayment are propagated to SO lines."""
+
+        (self.sale_order.order_line - self.sale_order.order_line[0]).unlink()
+        self.sale_order.order_line.write({
+            'price_unit': 1000,
+            'product_uom_qty': 1,
+            'tax_id': [Command.set(self.tax_15.ids)],
+        })
+        self.sale_order.action_confirm()
+
+        so_context = {
+            'active_model': 'sale.order',
+            'active_ids': [self.sale_order.id],
+            'active_id': self.sale_order.id,
+            'default_journal_id': self.company_data['default_journal_sale'].id,
+        }
+
+        # Create first downpayment of fixed amount of 200
+        dp1_wizard = self.env['sale.advance.payment.inv'].with_context(so_context).create({
+            'advance_payment_method': 'fixed',
+            'fixed_amount': 200.0,
+            'deposit_account_id': self.revenue_account.id,
+        })
+        action_1 = dp1_wizard.create_invoices()
+        dp1_invoice = self.env['account.move'].browse(action_1['res_id'])
+
+        dp1_invoice.invoice_line_ids.write({
+            'price_unit': 200,
+            'tax_ids': [Command.set(self.tax_15.ids)],
+            'discount': 2.5,
+        })
+        dp1_invoice.action_post()
+
+        so_dp_line_1 = self.sale_order.order_line.filtered(lambda l: l.is_downpayment and not l.display_type)
+        self.assertEqual(so_dp_line_1.discount, dp1_invoice.invoice_line_ids.discount)
+        self.assertEqual(so_dp_line_1.tax_id, dp1_invoice.invoice_line_ids.tax_ids)
+        self.assertEqual(so_dp_line_1.untaxed_amount_invoiced, dp1_invoice.invoice_line_ids.price_subtotal)
+
+        # Create second downpayment of fixed amount of 300
+        dp2_wizard = self.env['sale.advance.payment.inv'].with_context(so_context).create({
+            'advance_payment_method': 'fixed',
+            'fixed_amount': 300.0,
+            'deposit_account_id': self.revenue_account.id,
+        })
+        action_2 = dp2_wizard.create_invoices()
+        dp2_invoice = self.env['account.move'].browse(action_2['res_id'])
+
+        dp2_invoice.invoice_line_ids.write({
+            'price_unit': 300,
+            'tax_ids': [Command.set(self.tax_15.ids)],
+            'discount': 4,
+        })
+        dp2_invoice.action_post()
+
+        so_dp_line_2 = self.sale_order.order_line.filtered(lambda l: l.is_downpayment and not l.display_type)[1]
+        self.assertEqual(so_dp_line_2.discount, dp2_invoice.invoice_line_ids.discount)
+        self.assertEqual(so_dp_line_2.tax_id, dp2_invoice.invoice_line_ids.tax_ids)
+        self.assertEqual(so_dp_line_2.untaxed_amount_invoiced, dp2_invoice.invoice_line_ids.price_subtotal)
+
+        # Create a credit note for the second downpayment
+        move_reversal = self.env['account.move.reversal'].with_context(
+            active_model="account.move",
+            active_ids=dp2_invoice.ids
+        ).create({'journal_id': dp2_invoice.journal_id.id})
+
+        reversal_action = move_reversal.reverse_moves(is_modify=True)
+        dp2_new_invoice = self.env['account.move'].browse(reversal_action['res_id'])
+
+        dp2_new_invoice.invoice_line_ids.write({
+            'price_unit': 350,
+            'tax_ids': [Command.set(self.tax_10.ids)],
+            'discount': 5,
+        })
+        dp2_new_invoice.action_post()
+
+        so_dp_line_2_credit_note = self.sale_order.order_line.filtered(lambda l: l.is_downpayment and not l.display_type)[1]
+        self.assertEqual(so_dp_line_2_credit_note.discount, dp2_new_invoice.invoice_line_ids.discount)
+        self.assertEqual(so_dp_line_2_credit_note.tax_id, dp2_new_invoice.invoice_line_ids.tax_ids)
+        self.assertEqual(so_dp_line_2_credit_note.untaxed_amount_invoiced, dp2_new_invoice.invoice_line_ids.price_subtotal)
+
+        # Complete the payment with a regular invoice
+        final_wizard = self.env['sale.advance.payment.inv'].with_context(so_context).create({
+            'advance_payment_method': 'delivered',
+        })
+        action = final_wizard.create_invoices()
+        final_invoice = self.env['account.move'].browse(action['res_id'])
+        final_invoice.action_post()
+
+        total_invoiced = dp1_invoice.amount_total + dp2_new_invoice.amount_total + final_invoice.amount_total
+        total_taxes = dp1_invoice.amount_tax + dp2_new_invoice.amount_tax + final_invoice.amount_tax
+        self.assertEqual(self.sale_order.amount_tax, total_taxes)
+        self.assertEqual(total_invoiced, self.sale_order.amount_total)
