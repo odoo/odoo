@@ -88,8 +88,6 @@ export class WebsiteBuilderClientAction extends Component {
         this.cleanups = [];
 
         this.snippetsTemplate = "website.snippets";
-        // Track iframe navigation state
-        this.isNavigatingToAnotherPage = null;
 
         this.containerRef = signal.ref();
         this.state = proxy({ isEditing: false, showSidebar: true, key: 1, is404: false });
@@ -303,8 +301,8 @@ export class WebsiteBuilderClientAction extends Component {
         this.blockIframe();
 
         // Wait for navigation to complete if currently navigating
-        if (this.isNavigatingToAnotherPage) {
-            await this.isNavigatingToAnotherPage.promise;
+        if (this.websiteService.isNavigatingToAnotherPage) {
+            await this.websiteService.isNavigatingToAnotherPage.promise;
         }
 
         await this.loadIframeAndBundles(true);
@@ -435,9 +433,9 @@ export class WebsiteBuilderClientAction extends Component {
         this.websiteService.hideLoader();
         this.lastPageURL = iframe.contentWindow.location.href;
 
-        if (this.isNavigatingToAnotherPage) {
-            this.isNavigatingToAnotherPage.resolve();
-            this.isNavigatingToAnotherPage = null;
+        if (this.websiteService.isNavigatingToAnotherPage) {
+            this.websiteService.isNavigatingToAnotherPage.resolve();
+            this.websiteService.isNavigatingToAnotherPage = null;
         }
     }
 
@@ -493,7 +491,10 @@ export class WebsiteBuilderClientAction extends Component {
                     ) {
                         // This scenario triggers a navigation inside the iframe.
                         this.websiteService.websiteRootInstance = undefined;
-                        this.isNavigatingToAnotherPage = Promise.withResolvers();
+                        if (this.websiteService.isNavigatingToAnotherPage) {
+                            this.websiteService.isNavigatingToAnotherPage.resolve();
+                        }
+                        this.websiteService.isNavigatingToAnotherPage = Promise.withResolvers();
                     }
                 }
             }
