@@ -814,6 +814,12 @@ class StockMove(models.Model):
         dropship_moves, regular_moves = self.partitioned(lambda m: m._is_dropshipped() or m._is_dropshipped_returned())
         dropship_quantity = sum(m._get_valued_qty() for m in dropship_moves)
         dropship_price_unit = dropship_moves._get_price_unit_dropshipped()
+<<<<<<< 38ff7ea3c7784693ebfcbb79fcce66defd580a49
+||||||| 3864bdc3b82c796d13af79177459e38330139490
+        regular_moves = self - dropship_moves
+=======
+        regular_moves = (self - dropship_moves).filtered(lambda m: m.is_out)
+>>>>>>> 6c02443843cf8c8630d3e2bc7311dc351468a0d4
         regular_quantity = sum(m._get_valued_qty() for m in regular_moves)
         regular_price_unit = regular_moves._get_price_unit(product=product)
         total_quantity = dropship_quantity + regular_quantity
