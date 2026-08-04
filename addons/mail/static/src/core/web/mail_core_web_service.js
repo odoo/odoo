@@ -29,11 +29,8 @@ export class MailCoreWeb {
             this.store.activityCounter = Math.max(this.store.activityCounter + countDiff, 0);
         });
         this.env.bus.addEventListener("mail.message/delete", ({ detail: { message } }) => {
-            if (this.store.messagingMenu.notificationTab && message.needaction) {
-                this.store.messagingMenu.notificationTab.init_counter_ids =
-                    this.store.messagingMenu.notificationTab.init_counter_ids.filter(
-                        (id) => id !== message.id
-                    );
+            if (message.needaction) {
+                this._dropFromNotificationCounter([message.id]);
             }
         });
         this.busService.subscribe("mail.message/notification", (payload, { id: notifId }) => {
@@ -86,13 +83,25 @@ export class MailCoreWeb {
                 message.needaction_done = true;
             }
             if (unloadedMessageIds.length) {
-                const unloadedSet = new Set(unloadedMessageIds);
-                this.store.messagingMenu.notificationTab.init_counter_ids =
-                    this.store.messagingMenu.notificationTab.init_counter_ids.filter(
-                        (id) => !unloadedSet.has(id)
-                    );
+                this._dropFromNotificationCounter(unloadedMessageIds);
             }
         });
+    }
+
+    /**
+     * Drops the given messages from `init_counter_ids`, the ids the notification tab
+     * counts as long as they are not loaded client-side.
+     *
+     * @param {number[]} messageIds
+     */
+    _dropFromNotificationCounter(messageIds) {
+        const tab = this.store.messagingMenu.notificationTab;
+        // Notifications handled by email have no tab, hence no counter to update.
+        if (!tab) {
+            return;
+        }
+        const droppedIds = new Set(messageIds);
+        tab.init_counter_ids = tab.init_counter_ids.filter((id) => !droppedIds.has(id));
     }
 }
 

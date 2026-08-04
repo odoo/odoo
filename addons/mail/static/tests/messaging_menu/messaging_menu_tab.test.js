@@ -1,3 +1,5 @@
+import { waitNotifications } from "@bus/../tests/bus_test_helpers";
+
 import {
     click,
     contains,
@@ -539,6 +541,82 @@ test("message tab counter: initial unread count decrements after marking loaded 
     await contains(
         ".o-mail-MessagingMenu-tab:has(:text('Notifications')) .o-mail-MessagingMenu-tabCounter:text(1)"
     );
+});
+
+test("message tab counter: initial unread count decrements after marking unloaded message as read", async () => {
+    const pyEnv = await startServer();
+    pyEnv["res.users"].write(serverState.userId, { notification_type: "inbox" });
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    const [messageId1, messageId2] = pyEnv["mail.message"].create([
+        {
+            author_id: partnerId,
+            body: "msg 1",
+            model: "res.partner",
+            needaction: true,
+            res_id: partnerId,
+        },
+        {
+            author_id: partnerId,
+            body: "msg 2",
+            model: "res.partner",
+            needaction: true,
+            res_id: partnerId,
+        },
+    ]);
+    pyEnv["mail.notification"].create([
+        {
+            mail_message_id: messageId1,
+            notification_status: "sent",
+            notification_type: "inbox",
+            res_partner_id: serverState.partnerId,
+        },
+        {
+            mail_message_id: messageId2,
+            notification_status: "sent",
+            notification_type: "inbox",
+            res_partner_id: serverState.partnerId,
+        },
+    ]);
+    await start();
+    await openMessagingMenu();
+    // From init_counter_ids before messages are loaded.
+    await contains(
+        ".o-mail-MessagingMenu-tab:has(:text('Notifications')) .o-mail-MessagingMenu-tabCounter:text(2)"
+    );
+    // Simulate mark as read from another device.
+    await getService("orm").call("mail.message", "set_message_done", [[messageId1]]);
+    await contains(
+        ".o-mail-MessagingMenu-tab:has(:text('Notifications')) .o-mail-MessagingMenu-tabCounter:text(1)"
+    );
+});
+
+test("marking unloaded message as read when notifications are handled by email", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    const messageId = pyEnv["mail.message"].create({
+        author_id: partnerId,
+        body: "msg",
+        model: "res.partner",
+        needaction: true,
+        res_id: partnerId,
+    });
+    pyEnv["mail.notification"].create({
+        mail_message_id: messageId,
+        notification_status: "sent",
+        notification_type: "inbox",
+        res_partner_id: serverState.partnerId,
+    });
+    await start();
+    await openMessagingMenu();
+    await contains(".o-mail-MessagingMenu-tab", { count: 3 });
+    await contains(".o-mail-MessagingMenu-tab:has(:text('Chats'))");
+    await contains(".o-mail-MessagingMenu-tab:has(:text('Channels'))");
+    await contains(".o-mail-MessagingMenu-tab:has(:text('Meetings'))");
+    // Notifications are handled by email: no tab counts them.
+    await contains(".o-mail-MessagingMenu-tab:has(:text('Notifications'))", { count: 0 });
+    // Simulate mark as read from another device.
+    await getService("orm").call("mail.message", "set_message_done", [[messageId]]);
+    await waitNotifications(["mail.message/mark_as_read"]);
 });
 
 test("inbox tab displays message when empty", async () => {
