@@ -127,6 +127,7 @@ export const saleProductMixin = () => ({
         const saleOrderLine = this.props.record.data;
         const ptavIds = [...this._getVariantPtavIds(saleOrderLine)];
         let customPtavs = [];
+        let productUOMId;
 
         if (edit) {
             /**
@@ -135,6 +136,7 @@ export const saleProductMixin = () => ({
              */
             ptavIds.push(...this._getNoVariantPtavIds(saleOrderLine));
             customPtavs = await this._getCustomPtavs(saleOrderLine);
+            productUOMId = saleOrderLine.product_uom_id.id;
         }
 
         this.dialog.add(ProductConfiguratorDialog, {
@@ -142,7 +144,7 @@ export const saleProductMixin = () => ({
             ptavIds: ptavIds,
             customPtavs: customPtavs,
             quantity: saleOrderLine.product_uom_qty,
-            productUOMId: saleOrderLine.product_uom_id.id,
+            productUOMId: productUOMId,
             companyId: saleOrderRecord.data.company_id.id,
             pricelistId: saleOrderRecord.data.pricelist_id.id,
             currencyId: saleOrderLine.currency_id.id,
