@@ -50,7 +50,9 @@ class SaleOrderLine(models.Model):
             if so_line.service_tracking != 'event':
                 continue
 
-            for _count in range(int(so_line.product_uom_qty) - len(so_line.registration_ids)):
+            for _count in range(
+                int(so_line.product_uom_qty) - len(so_line.registration_ids.filtered(lambda reg: reg.state != 'cancel')),
+            ):
                 values = {
                     'sale_order_line_id': so_line.id,
                     'sale_order_id': so_line.order_id.id,
