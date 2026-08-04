@@ -483,9 +483,12 @@ test("subscribe message is sent first", async () => {
     await expect.waitForSteps(["some_event"]);
     MockServer.env["bus.bus"]._simulateDisconnection(WEBSOCKET_CLOSE_CODES.CLEAN);
     await expect.waitForSteps(["BUS:DISCONNECT"]);
-    getService("bus_service").send("some_event");
-    getService("bus_service").send("some_other_event");
-    getService("bus_service").addChannel("channel_1");
+    // `send` resolves once the message is posted, not handled), which is enough for the
+    // mocked port to deliver it: `runAllTimers` would otherwise fire the outgoing batch
+    // delay before the worker has queued anything.
+    await getService("bus_service").send("some_event");
+    await getService("bus_service").send("some_other_event");
+    await getService("bus_service").forceUpdateChannels();
     await runAllTimers();
     await expect.waitForSteps([]);
     startBusService();
