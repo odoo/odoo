@@ -6,10 +6,8 @@
         <field name="inherit_id" ref="account.view_move_form"/>
         <field name="arch" type="xml">
             <xpath expr="//sheet" position="before">
-                <div class="alert alert-warning mt-1 mb-1" role="alert" invisible="not l10n_in_warning">
-                    <div>
-                        <field name="l10n_in_warning" widget="actionable_errors"/>
-                    </div>
+                <div invisible="not l10n_in_warning">
+                    <field name="l10n_in_warning" class="o_field_html" widget="actionable_errors"/>
                 </div>
             </xpath>
             <xpath expr="//field[@name='ref']" position="after">
