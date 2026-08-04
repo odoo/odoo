@@ -2170,6 +2170,18 @@ class Base(models.AbstractModel):
 
         assert False, "unreachable"
 
+    @api.model
+    def onchange_batch(self, values_list: list[dict], field_names: list[str], fields_spec: dict) -> list[dict]:
+        """
+        Apply onchange to a batch of new records.
+        This method only supports new records, so ``self`` must be empty.
+        """
+        assert not self, "self must be empty"
+
+        return [
+            self.onchange(values, field_names, fields_spec)
+            for values in values_list
+        ]
 
     def onchange(self, values: dict, field_names: list[str], fields_spec: dict):
         """
