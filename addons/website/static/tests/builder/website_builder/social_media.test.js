@@ -44,6 +44,8 @@ async function testSocialSnippetOptions(snippetName, containerTitle, iconName) {
     onRpc("res.company", "read", () => [
         { id: 1, [`social_${iconName}`]: `https://${iconName}.com/odoo` },
     ]);
+    onRpc("/website/social/facebook", () => ({}));
+    onRpc("/html_editor/link_preview_internal", () => ({}));
 
     onRpc(`${location.origin}/website/social/facebook`, () => ({
         title: "title",

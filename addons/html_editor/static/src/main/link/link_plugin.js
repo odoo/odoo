@@ -377,6 +377,11 @@ export class LinkPlugin extends Plugin {
             if (linkEl) {
                 if (ev.ctrlKey || ev.metaKey) {
                     window.open(linkEl.href, "_blank");
+                } else if (!linkEl.isContentEditable) {
+                    this.dependencies.selection.setSelection({
+                        anchorNode: linkEl,
+                        anchorOffset: 0,
+                    });
                 }
                 ev.preventDefault();
             }
@@ -730,7 +735,11 @@ export class LinkPlugin extends Plugin {
     openLinkPopover(linkElement, type) {
         this.currentOverlay.close();
         this.LinkPopoverState.editing = false;
-        if (!this.isLinkAllowedOnSelection()) {
+        const selection = this.dependencies.selection.getEditableSelection();
+        const commonAncestor = closestElement(selection.commonAncestorContainer);
+        const isNonEditableLink =
+            commonAncestor.nodeName === "A" && !commonAncestor.isContentEditable;
+        if (!this.isLinkAllowedOnSelection() && !isNonEditableLink) {
             return this.services.notification.add(
                 _t("Unable to create a link on the current selection."),
                 { type: "danger" }
@@ -745,7 +754,10 @@ export class LinkPlugin extends Plugin {
         const popover = this.getActivePopover(context.linkElement);
         if (popover) {
             this.currentOverlay = popover.overlay;
-            if (!context.linkElement.href) {
+            if (
+                !context.linkElement.href &&
+                (!this.linkInDocument || this.linkInDocument?.isContentEditable)
+            ) {
                 this.LinkPopoverState.editing = true;
             }
             this.currentOverlay.open({ props: popover.getProps(props) });
@@ -925,7 +937,7 @@ export class LinkPlugin extends Plugin {
             const closestLinkElement = closestElement(selection.anchorNode, "A");
             const isLinkEditable =
                 this.checkPredicates("is_link_editable_predicates", closestLinkElement) ?? false;
-            if (closestLinkElement && closestLinkElement.isContentEditable) {
+            if (closestLinkElement) {
                 if (closestLinkElement !== this.linkInDocument || !this.currentOverlay.isOpen) {
                     this.openLinkPopover(closestLinkElement);
                 }
