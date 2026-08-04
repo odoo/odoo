@@ -32,11 +32,6 @@ export class MailCoreCommon {
                 message.delete();
             }
         });
-        this.busService.subscribe("res.users.settings", (payload) => {
-            if (payload) {
-                this.store.settings.update(payload);
-            }
-        });
         this.busService.subscribe("mail.record/insert", (payload) => {
             this.store.insert(payload);
         });

@@ -1,12 +1,14 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+
+from odoo.addons.mail.tools.discuss import Store
 
 
 class ResUsersSettingsVolumes(models.Model):
     """ Represents the volume of the sound that the user of user_setting_id will receive from partner_id. """
     _name = 'res.users.settings.volumes'
+    _inherit = ["bus.listener.mixin", "bus.sync.mixin"]
     _description = 'User Settings Volumes'
 
     user_setting_id = fields.Many2one('res.users.settings', required=True, ondelete='cascade', index=True)
@@ -42,3 +44,16 @@ class ResUsersSettingsVolumes(models.Model):
                 'id': volume_setting.user_setting_id.id,
             },
         } for volume_setting in self]
+
+    def _bus_channels(self):
+        return self.user_setting_id._bus_channels()
+
+    def _store_volume_fields(self, res: Store.FieldList):
+        res.attr("volume")
+        res.one("partner_id", "_store_avatar_fields")
+        res.one("guest_id", "_store_avatar_fields")
+        res.one("user_setting_id", [])
+
+    def _sync_field_names(self, res):
+        super()._sync_field_names(res)
+        self._store_volume_fields(res[None])

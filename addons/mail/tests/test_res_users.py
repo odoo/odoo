@@ -1,16 +1,18 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime, timedelta
-from freezegun import freeze_time
-from psycopg2 import IntegrityError
 from unittest import skip
 from unittest.mock import patch
+
+from freezegun import freeze_time
+from psycopg2 import IntegrityError
+
+from odoo.tests import HttpCase, RecordCapturer, tagged, users
+from odoo.tools import mute_logger
 
 from odoo.addons.base.models.res_users import ResUsersPatchedInTest
 from odoo.addons.bus.tests.common import BusResult
 from odoo.addons.mail.tests.common import MailCommon, mail_new_test_user
-from odoo.tests import HttpCase, RecordCapturer, tagged, users
-from odoo.tools import mute_logger
 
 
 @tagged('mail_tools', 'res_users')
@@ -252,14 +254,14 @@ class TestUserSettings(MailCommon):
     def test_set_res_users_settings_should_send_notification_on_bus(self):
         settings = self.user_employee.res_users_settings_id
         settings.channel_notifications = False
-
         with self.assertBus(
             BusResult(
                 self.user_employee,
-                "res.users.settings",
+                "mail.record/insert",
                 {
-                    "id": settings.id,
-                    "channel_notifications": "no_notif",
+                    "res.users.settings": [
+                        {"channel_notifications": "no_notif", "id": settings.id}
+                    ],
                 },
             ),
         ):

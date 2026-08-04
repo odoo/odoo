@@ -17,13 +17,12 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     # Queries for _query_count_init_store (in order):
     #   1: search res_partner (odooot ref exists)
     #   1: search res_groups (internalUserGroupId ref exists)
-    #   6: settings:
+    #   4: settings:
     #       - search res_users_settings (_find_or_create_for_user)
-    #       - search res_users_settings_embedded_action (_format_settings)
-    #       - fetch res_users_settings (_format_settings)
-    #       - search res_users_settings_volumes (_format_settings)
-    #       - search res_lang_res_users_settings_rel (_format_settings)
-    #       - search im_livechat_expertise_res_users_settings_rel (_format_settings)
+    #       - fetch res_users_settings (_store_settings_fields)
+    #       - search res_lang_res_users_settings_rel (livechat_lang_ids)
+    #       - search im_livechat_expertise_res_users_settings_rel (livechat_expertise_ids)
+    #       - search res_users_settings_volumes (volume_settings_ids)
     #   2: hasCannedResponses
     #       - fetch res_groups_users_rel
     #       - search_count mail_canned_response
@@ -42,7 +41,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - search hr_employee_location (_store_im_status_fields hr_homeworking override)
     #       - fetch hr_employee (_compute_work_location_type)
     #       - search hr_leave (_compute_leave_status)
-    _query_count_init_store = 21
+    _query_count_init_store = 19
     # Queries for _query_count_init_messaging (in order):
     #   2: _search_is_member (for current user, first occurence _search_is_member for chathub given channel ids)
     #       - fetch res_users
@@ -465,10 +464,21 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                     "is_livechat_manager": False,
                     "notification_type": "inbox",
                     "partner_id": partner_0.id,
+                    "res_users_settings_id": user_0.res_users_settings_id.id,
                     "share": False,
                     "signature": ["markup", str(user_0.signature)],
                 },
             ),
+            "res.users.settings": [
+                {
+                    "channel_notifications": False,
+                    "id": user_0.res_users_settings_id.id,
+                    "livechat_expertise_ids": [],
+                    "livechat_lang_ids": [],
+                    "livechat_username": False,
+                    "volume_settings_ids": [],
+                },
+            ],
             "Store": {
                 "channel_types_with_seen_infos": sorted(["chat", "group", "livechat"]),
                 "action_discuss_id": xmlid_to_res_id("mail.action_discuss"),
@@ -483,17 +493,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "mt_note": self.env.ref("mail.mt_note").id,
                 "odoobot": self.user_root.partner_id.id,
                 "self_user": self.users[0].id,
-                "settings": {
-                    "calendar_show_activities": True,
-                    "channel_notifications": False,
-                    "id": self.env["res.users.settings"]._find_or_create_for_user(self.users[0]).id,
-                    "livechat_expertise_ids": [],
-                    "livechat_lang_ids": [],
-                    "livechat_username": False,
-                    "microsoft_account_email": False,
-                    "user_id": {"id": self.users[0].id},
-                    "embedded_actions_config_ids": {},
-                },
             },
         }
 

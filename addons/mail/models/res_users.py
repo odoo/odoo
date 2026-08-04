@@ -433,9 +433,7 @@ class ResUsers(models.Model):
         res.attr("mt_note", xmlid_to_res_id("mail.mt_note"))
         res.one("odoobot", "_store_partner_fields", value=odoobot)
         if not self._is_public():
-            settings = self.env["res.users.settings"]._find_or_create_for_user(self)
             res.one("self_user", "_store_init_fields", value=self)
-            res.attr("settings", settings._res_users_settings_format())
         if guest := self.env["mail.guest"]._get_guest_from_context():
             res.one(
                 "self_guest",

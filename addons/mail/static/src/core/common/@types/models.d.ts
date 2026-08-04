@@ -30,6 +30,7 @@ declare module "models" {
     import { ResPartner as ResPartnerClass } from "@mail/core/common/res_partner_model";
     import { ResRole as ResRoleClass } from "@mail/core/common/res_role_model";
     import { ResUsers as ResUsersClass } from "@mail/core/common/res_users_model";
+    import { ResUsersSettings as ResUsersSettingsClass } from "@mail/core/common/res_users_settings_model";
     import { Settings as SettingsClass } from "@mail/core/common/settings_model";
     import { Store as StoreClass } from "@mail/core/common/store_service";
     import { Thread as ThreadClass } from "@mail/core/common/thread_model";
@@ -66,6 +67,7 @@ declare module "models" {
     export interface ResPartner extends ResPartnerClass {}
     export interface ResRole extends ResRoleClass {}
     export interface ResUsers extends ResUsersClass, ResPartner {}
+    export interface ResUsersSettings extends ResUsersSettingsClass {}
     export interface Settings extends SettingsClass {}
     export interface Store extends StoreClass {}
     export interface Thread extends ThreadClass {}
@@ -111,9 +113,10 @@ declare module "models" {
         "res.partner": StaticMailRecord<ResPartner, typeof ResPartnerClass>;
         "res.role": StaticMailRecord<ResRole, typeof ResRoleClass>;
         "res.users": StaticMailRecord<ResUsers, typeof ResUsersClass>;
+        "res.users.settings": StaticMailRecord<ResUsersSettings, typeof ResUsersSettingsClass>;
+        "res.users.settings.volumes": StaticMailRecord<Volume, typeof VolumeClass>;
         Settings: StaticMailRecord<Settings, typeof SettingsClass>;
         Store: StaticMailRecord<Store, typeof StoreClass>;
-        Volume: StaticMailRecord<Volume, typeof VolumeClass>;
     }
 
     export interface Models {
@@ -149,8 +152,9 @@ declare module "models" {
         "res.partner": ResPartner;
         "res.role": ResRole;
         "res.users": ResUsers;
+        "res.users.settings": ResUsersSettings;
+        "res.users.settings.volumes": Volume;
         Settings: Settings;
         Store: Store;
-        Volume: Volume;
     }
 }

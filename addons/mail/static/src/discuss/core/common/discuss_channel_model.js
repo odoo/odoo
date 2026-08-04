@@ -190,7 +190,8 @@ export class DiscussChannel extends Record {
     });
     get channelNotifications() {
         return (
-            this.self_member_id?.custom_notifications || this.store.settings.channel_notifications
+            this.self_member_id?.custom_notifications ||
+            this.store.self_user?.res_users_settings_id?.channelNotifications
         );
     }
     get chatChannelTypes() {

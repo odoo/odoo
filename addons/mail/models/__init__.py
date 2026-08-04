@@ -49,8 +49,6 @@ from . import mail_template
 # discuss
 from . import mail_ice_server
 from . import mail_canned_response
-from . import res_users_settings
-from . import res_users_settings_volumes
 
 # odoo models
 from . import ir_access
