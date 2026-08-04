@@ -153,6 +153,7 @@
             'marathon_ventures/static/src/js/related_tab/mv_related_tab.xml',
             'marathon_ventures/static/src/js/toast_on_save/mv_toast_on_save.js',
             'marathon_ventures/static/src/js/duplicate_new_tab/mv_duplicate_new_tab.js',
+            'marathon_ventures/static/src/js/additional_details_toggle/mv_additional_details_toggle.js',
         ],
     },
     'installable': True,

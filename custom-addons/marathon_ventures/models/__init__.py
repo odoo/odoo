@@ -136,3 +136,4 @@ from . import phase17_dataloader
 from . import phase18_chatter_tracking
 from . import phase19_related_tab
 from . import phase22_partner_display_flip
+from . import phase24_schedule_daypart

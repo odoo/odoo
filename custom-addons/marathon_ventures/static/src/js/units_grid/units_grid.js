@@ -600,14 +600,31 @@ export class MvUnitsGrid extends Component {
         const upd = this._findOrPushRowUpdate(row);
         upd[which === "start" ? "start_time" : "end_time"] = v;
 
-        // Auto-detect daypart from the new (start, end) pair.
-        const match = DAYPART_OPTIONS.find(
-            (d) => d.value !== "custom"
-                && d.start === row.start_time
-                && d.end   === row.end_time,
+        // Auto-detect daypart from the new (start, end) pair using the
+        // containment rules (mirrors phase10._guess_daypart_with_program):
+        //   1. Exact match wins outright.
+        //   2. Otherwise, the smallest-span daypart whose interval
+        //      fully contains the schedule's [start, end] wins.
+        //   3. If nothing contains, fall back to "custom".
+        // Searches this.dayparts (program dayparts + hardcoded 'custom')
+        // when the program has custom dayparts; otherwise falls back to
+        // DAYPART_OPTIONS' hardcoded list.
+        const candidates = (this.dayparts && this.dayparts.length)
+            ? this.dayparts : DAYPART_OPTIONS;
+        const newDp = this._resolveDaypartByContainment(
+            candidates, row.start_time, row.end_time,
         );
-        const newDp = match || DAYPART_OPTIONS.find((d) => d.value === "custom");
-        if (row.daypart !== newDp.value) {
+        // Diagnostic - open DevTools > Console. If you don't see this
+        // log line when editing a time, the browser is running the
+        // OLD bundle - hard-refresh (Ctrl+Shift+R).
+        // eslint-disable-next-line no-console
+        console.log(
+            "[UnitsGrid] onTimeChange containment:",
+            row.start_time, "->", row.end_time,
+            "picked:", newDp && newDp.value, newDp && newDp.label,
+            "candidates:", candidates.map((d) => d.value),
+        );
+        if (newDp && row.daypart !== newDp.value) {
             row.daypart = newDp.value;
             row.daypart_label = newDp.label;
             row.time_range = newDp.range;
@@ -615,6 +632,85 @@ export class MvUnitsGrid extends Component {
             upd.time_range = newDp.range;
         }
         this._markDirty();
+    }
+
+    // ---- Daypart containment helpers (mirror the backend logic) ------
+    // Turn 'v_HH_MMa' / 'v_HH_MMp' into minutes since midnight (0..1439).
+    // Odoo convention: 12A = midnight, 12P = noon.
+    _timeToMinutes(t) {
+        if (!t || typeof t !== "string" || !t.startsWith("v_")) return null;
+        const body = t.slice(2);           // "HH_MMa" or "HH_MMp"
+        if (body.length < 6) return null;
+        const hh = parseInt(body.slice(0, 2), 10);
+        const mm = parseInt(body.slice(3, 5), 10);
+        const suf = body[5];
+        if (!Number.isFinite(hh) || !Number.isFinite(mm)) return null;
+        if (suf === "a") return hh === 12 ? mm : hh * 60 + mm;
+        if (suf === "p") return hh === 12 ? 12 * 60 + mm : (hh + 12) * 60 + mm;
+        return null;
+    }
+
+    // Total minutes an interval spans on a 24h clock. start == end -> 1440
+    // (ROS 6a-6a). end < start -> wraparound (Prime 6p-12a).
+    _dpSpan(startMin, endMin) {
+        if (startMin === null || endMin === null) return null;
+        if (endMin === startMin) return 1440;
+        if (endMin > startMin) return endMin - startMin;
+        return (1440 - startMin) + endMin;
+    }
+
+    _offsetFrom(startMin, atMin) {
+        if (startMin === null || atMin === null) return null;
+        if (atMin >= startMin) return atMin - startMin;
+        return (1440 - startMin) + atMin;
+    }
+
+    // True when the schedule interval fits fully inside the daypart interval.
+    _daypartContainsSchedule(dpStart, dpEnd, schStart, schEnd) {
+        const ds = this._timeToMinutes(dpStart);
+        const de = this._timeToMinutes(dpEnd);
+        const ss = this._timeToMinutes(schStart);
+        const se = this._timeToMinutes(schEnd);
+        if ([ds, de, ss, se].some((x) => x === null)) return false;
+        const dpSpan  = this._dpSpan(ds, de);
+        const schSpan = this._dpSpan(ss, se);
+        const off     = this._offsetFrom(ds, ss);
+        if (dpSpan === null || schSpan === null || off === null) return false;
+        return off + schSpan <= dpSpan;
+    }
+
+    // Pick the best daypart for a given (start, end) from the candidates:
+    //   1. Exact match wins.
+    //   2. Smallest containing daypart wins.
+    //   3. Otherwise the "custom" entry (from candidates or DAYPART_OPTIONS).
+    _resolveDaypartByContainment(candidates, schStart, schEnd) {
+        if (!schStart || !schEnd) {
+            return candidates.find((d) => d.value === "custom")
+                || DAYPART_OPTIONS.find((d) => d.value === "custom");
+        }
+        let exact = null;
+        const contained = [];   // {span, dp}
+        for (const dp of candidates) {
+            if (!dp || dp.value === "custom") continue;
+            if (!dp.start || !dp.end) continue;
+            if (dp.start === schStart && dp.end === schEnd) {
+                exact = dp;
+                break;
+            }
+            if (this._daypartContainsSchedule(dp.start, dp.end, schStart, schEnd)) {
+                const ds = this._timeToMinutes(dp.start);
+                const de = this._timeToMinutes(dp.end);
+                const span = this._dpSpan(ds, de) || 1440;
+                contained.push({ span, dp });
+            }
+        }
+        if (exact) return exact;
+        if (contained.length) {
+            contained.sort((a, b) => a.span - b.span);
+            return contained[0].dp;
+        }
+        return candidates.find((d) => d.value === "custom")
+            || DAYPART_OPTIONS.find((d) => d.value === "custom");
     }
 
     onMaxPerDayChange(row, ev) {
@@ -1422,11 +1518,18 @@ export class MvUnitsGrid extends Component {
 
     // Returns a URL that opens the schedule record's form view in a
     // new browser tab. Used by the eye icon under each Units cell.
-    // Modern Odoo (17+) supports the /odoo/<model>/<id> route; the
-    // /web#... hash format is the fallback for older builds.
+    //
+    // We use the ACTION URL (/odoo/action-<xmlid>/<id>) rather than
+    // the raw record URL (/odoo/<model>/<id>). The raw record URL
+    // hides the top Odoo app menu bar because it has no action
+    // context; the action URL puts the record inside the standard
+    // Schedules list action so the top nav (Marathon Ventures /
+    // Master Data / Sales Operations / ...) stays visible - matching
+    // what the planner sees when opening a schedule through the
+    // Sales Operations -> Schedules menu.
     scheduleOpenUrl(cell) {
         if (!cell || !cell.sched_id) return "#";
-        return `/odoo/mv.schedules/${cell.sched_id}`;
+        return `/odoo/action-marathon_ventures.action_mv_schedules/${cell.sched_id}`;
     }
 }
 

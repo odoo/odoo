@@ -56,18 +56,31 @@ function getEnv() {
 
 patch(Record.prototype, {
     async save(...args) {
-        // Capture "is this a new record?" BEFORE saving - after a
-        // successful create the record's resId is populated and
-        // isNew flips to false, so we'd otherwise show "Updated"
-        // for every create.
+        // Capture "is this a new record?" AND "did the user actually
+        // edit anything?" BEFORE saving. After a successful save the
+        // record's isNew flips to false and dirty flips to false, so
+        // we have to snapshot them first.
+        //
+        // The dirty guard is critical: Odoo silently calls Record.save()
+        // on tab-visibility changes, breadcrumb navigation, and various
+        // other lifecycle events - even when the user hasn't touched
+        // anything. Without the guard, switching browser tabs on a
+        // Deal detail page would fire an "Updated" toast on return.
         const wasNew = !!this.isNew;
+        const wasDirty = !!this.dirty;
         const resModel = this.resModel;
 
         const result = await super.save(...args);
 
         try {
+            // Only toast for real user-driven saves:
+            //   * a brand-new record being persisted, OR
+            //   * an existing record with pending edits.
+            // No-op save() calls (tab switch, breadcrumb nav,
+            // implicit refresh) get neither and stay silent.
+            const shouldToast = result && (wasNew || wasDirty);
             if (
-                result
+                shouldToast
                 && resModel
                 && typeof resModel === "string"
                 && resModel.startsWith("mv.")

@@ -107,10 +107,35 @@ def _parse_sig(sig):
 
 
 def _guess_daypart(start, end):
-    """Reverse-lookup a Selection daypart from a (start, end) pair."""
-    for k, v in DAYPART_DEFAULT_TIMES.items():
-        if v == (start, end):
-            return k
+    """Reverse-lookup a hardcoded daypart from a (start, end) pair.
+
+    Runs the same containment rules as _guess_daypart_with_program so
+    the no-program-dayparts fallback stays consistent after Save:
+
+      1. Exact interval match wins.
+      2. Otherwise the smallest hardcoded daypart whose window fully
+         contains the schedule wins.
+      3. Nothing contains -> 'custom'.
+    """
+    if not start or not end:
+        return 'custom'
+    exact = None
+    contain = []   # list of (span_minutes, key)
+    for k, (dp_start, dp_end) in DAYPART_DEFAULT_TIMES.items():
+        if not _daypart_contains_schedule(dp_start, dp_end, start, end):
+            continue
+        if dp_start == start and dp_end == end:
+            exact = k
+            break
+        ds = _time_to_minutes(dp_start)
+        de = _time_to_minutes(dp_end)
+        span = _dp_span_minutes(ds, de) or 1440
+        contain.append((span, k))
+    if exact:
+        return exact
+    if contain:
+        contain.sort(key=lambda t: t[0])
+        return contain[0][1]
     return 'custom'
 
 
@@ -149,16 +174,121 @@ def _program_daypart_payload(program):
     return out
 
 
+def _time_to_minutes(t):
+    """Convert a Selection code like 'v_HH_MMa' / 'v_HH_MMp' to
+    minutes since midnight (0..1439). Returns None if the code
+    can't be parsed. Uses Odoo's 12A = midnight, 12P = noon
+    convention.
+    """
+    if not t or not isinstance(t, str) or not t.startswith('v_'):
+        return None
+    body = t[2:]           # "HH_MMa" or "HH_MMp"
+    if len(body) < 6:
+        return None
+    try:
+        hh = int(body[0:2])
+        mm = int(body[3:5])
+    except ValueError:
+        return None
+    suf = body[5]
+    if suf == 'a':
+        return mm if hh == 12 else hh * 60 + mm
+    if suf == 'p':
+        return 12 * 60 + mm if hh == 12 else (hh + 12) * 60 + mm
+    return None
+
+
+def _dp_span_minutes(start_min, end_min):
+    """Total minutes an interval [start, end] spans on a 24h clock.
+    start == end means "24 hours" (ROS 6a-6a). end > start = simple.
+    end < start = wraparound (e.g. Prime 6p-12a).
+    """
+    if start_min is None or end_min is None:
+        return None
+    if end_min == start_min:
+        return 1440
+    if end_min > start_min:
+        return end_min - start_min
+    return (1440 - start_min) + end_min
+
+
+def _offset_from(start_min, at_min):
+    """Minutes from `start` to `at` on a 24h clock (wraps forward)."""
+    if start_min is None or at_min is None:
+        return None
+    if at_min >= start_min:
+        return at_min - start_min
+    return (1440 - start_min) + at_min
+
+
+def _daypart_contains_schedule(dp_start, dp_end, sch_start, sch_end):
+    """True when the schedule interval [sch_start, sch_end] fits
+    fully inside the daypart interval [dp_start, dp_end]. Both are
+    'v_HH_MMx' Selection codes. Handles wraparound + 24h dayparts.
+    """
+    ds = _time_to_minutes(dp_start)
+    de = _time_to_minutes(dp_end)
+    ss = _time_to_minutes(sch_start)
+    se = _time_to_minutes(sch_end)
+    if None in (ds, de, ss, se):
+        return False
+    dp_span = _dp_span_minutes(ds, de)
+    sch_span = _dp_span_minutes(ss, se)
+    if dp_span is None or sch_span is None:
+        return False
+    sch_offset = _offset_from(ds, ss)
+    if sch_offset is None:
+        return False
+    # Schedule fits if it starts inside the daypart and ends before
+    # the daypart's far edge (measured from the daypart's start).
+    return sch_offset + sch_span <= dp_span
+
+
 def _guess_daypart_with_program(start, end, program_dayparts):
-    """Program dayparts win when the (start, end) matches one; else
-    fall back to _guess_daypart's hardcoded lookup. Keeps the two
-    grids in exact sync on precedence."""
-    if program_dayparts:
-        for dp in program_dayparts:
-            if dp.get('start') == start and dp.get('end') == end:
-                return dp['value']
-        return 'custom'
-    return _guess_daypart(start, end)
+    """Pick the best-fitting program daypart for a schedule's
+    (start, end) window using containment rules:
+
+      1. Program daypart whose interval EXACTLY matches the schedule
+         wins immediately - Ex: ROS 6a-6a + Day 9a-6p, schedule 9a-6p
+         -> Day (exact).
+      2. Otherwise pick the daypart whose interval fully CONTAINS the
+         schedule and has the smallest span (most constrained).
+         Ex: ROS 6a-6a + Day 9a-6p, schedule 9a-4p -> Day (narrower
+         than ROS but still contains 9a-4p).
+      3. No containing daypart at all -> 'custom'. When ROS 6a-6a
+         is defined for the program, every valid schedule is
+         contained, so 'custom' should never happen.
+
+    Falls back to the hardcoded _guess_daypart() when the program
+    has no dayparts configured (backward compatible).
+    """
+    if not program_dayparts:
+        return _guess_daypart(start, end)
+
+    exact_matches = []
+    contain_matches = []      # list of (span_minutes, dp_dict)
+    for dp in program_dayparts:
+        dp_start = dp.get('start')
+        dp_end = dp.get('end')
+        if not dp_start or not dp_end:
+            continue
+        if _daypart_contains_schedule(dp_start, dp_end, start, end):
+            ds = _time_to_minutes(dp_start)
+            de = _time_to_minutes(dp_end)
+            dp_span = _dp_span_minutes(ds, de) or 1440
+            if dp_start == start and dp_end == end:
+                exact_matches.append(dp)
+            else:
+                contain_matches.append((dp_span, dp))
+
+    if exact_matches:
+        # If more than one exact match somehow exists, first-declared wins.
+        return exact_matches[0]['value']
+    if contain_matches:
+        # Most constrained (smallest span) wins.
+        contain_matches.sort(key=lambda m: m[0])
+        return contain_matches[0][1]['value']
+    return 'custom' 
 
 
 def _daypart_label_with_program(daypart, program_dayparts):
@@ -170,6 +300,29 @@ def _daypart_label_with_program(daypart, program_dayparts):
                 return dp['label']
     return DAYPART_LABELS.get(daypart, daypart or '')
 
+
+
+def _translate_daypart_to_id(daypart_key):
+    """Turn a frontend daypart value into a mv.program.daypart id.
+
+    The Units Report identifies each daypart with a string key:
+      * 'prog_<id>' - a program-defined daypart (id = mv.program.daypart record)
+      * 'early_morning' / 'weekday' / 'weekend' / 'prime' / 'late_night' /
+        'overnight' / 'ros' / 'custom' - hardcoded from DAYPART_OPTIONS
+
+    Only the prog_ keys map to real records. Hardcoded keys aren't in
+    mv.program.daypart, so we return False - the schedule keeps its
+    program_daypart_id empty. Callers use the returned value as the
+    write value for the m2o field (False -> clear).
+    """
+    if not daypart_key or not isinstance(daypart_key, str):
+        return False
+    if not daypart_key.startswith('prog_'):
+        return False
+    try:
+        return int(daypart_key[len('prog_'):])
+    except (TypeError, ValueError):
+        return False
 
 def _time_range_label(start, end, time_options_map):
     if not start and not end:
@@ -187,6 +340,40 @@ def _time_range_label(start, end, time_options_map):
 class MvDealUnitsGridRpc(models.Model):
     _name = 'mv.deal'
     _inherit = 'mv.deal'
+
+    def _find_program_daypart_for_schedule(self, start, end):
+        """Return the id of the smallest program daypart on this
+        deal's program whose interval contains the given (start,
+        end) schedule times. Returns False when nothing matches
+        or the program has no dayparts. Same precedence rules as
+        _guess_daypart_with_program: exact > smallest-containing.
+        """
+        self.ensure_one()
+        program = self.program
+        if not program or not program.daypart_ids or not start or not end:
+            return False
+        exact = None
+        contain = []
+        for dp in program.daypart_ids:
+            if not dp.start_time or not dp.end_time:
+                continue
+            if not _daypart_contains_schedule(
+                dp.start_time, dp.end_time, start, end,
+            ):
+                continue
+            if dp.start_time == start and dp.end_time == end:
+                exact = dp.id
+                break
+            ds = _time_to_minutes(dp.start_time)
+            de = _time_to_minutes(dp.end_time)
+            span = _dp_span_minutes(ds, de) or 1440
+            contain.append((span, dp.id))
+        if exact:
+            return exact
+        if contain:
+            contain.sort(key=lambda t: t[0])
+            return contain[0][1]
+        return False
 
     def load_units_grid(self):
         """Return the Units Grid payload."""
@@ -387,6 +574,8 @@ class MvDealUnitsGridRpc(models.Model):
                 'start_time': cre.get('start_time') or False,
                 'end_time': cre.get('end_time') or False,
                 'max_per_day': int(cre.get('max_per_day') or 0),
+                # Phase 24: carry the picked daypart into schedule creation.
+                'daypart': cre.get('daypart') or '',
             }
 
         # cell_updates: create/update/delete schedules per (sig, week)
@@ -428,6 +617,15 @@ class MvDealUnitsGridRpc(models.Model):
                 'max_per_day': sig_vals['max_per_day'],
                 'days_allowed': [(6, 0, tag_ids)],
             }
+            # Phase 24: attach the program-daypart link when the row
+            # was created from a program-defined daypart. sig_vals only
+            # carries 'daypart' for new tmp rows; for existing rows the
+            # link was already set on the schedule and is preserved
+            # unless the planner explicitly changes it via row_updates.
+            dp_key = sig_vals.get('daypart') if isinstance(sig_vals, dict) else None
+            dp_id = _translate_daypart_to_id(dp_key)
+            if dp_id:
+                common_vals['program_daypart_id'] = dp_id
             if active:
                 active.write({
                     'units_available': units,
@@ -579,6 +777,14 @@ class MvDealUnitsGridRpc(models.Model):
         for k in ('rate', 'start_time', 'end_time', 'max_per_day'):
             if k in upd:
                 write_vals[k] = upd[k]
+        # Phase 24: persist the daypart the planner picked. 'prog_<id>'
+        # strings map to a mv.program.daypart record; hardcoded ones
+        # (early_morning, weekday, ...) leave the m2o empty since
+        # they aren't records in that model.
+        if 'daypart' in upd:
+            write_vals['program_daypart_id'] = _translate_daypart_to_id(
+                upd.get('daypart')
+            )
         if not write_vals:
             return old_sig
         scheds.write(write_vals)
