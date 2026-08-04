@@ -24,6 +24,26 @@ import { PowerButtonsPlugin } from "@html_editor/main/power_buttons_plugin";
 import { useEmailHtmlConverter } from "@mail/convert_inline/hooks";
 import { fixInvalidHTML } from "@html_editor/utils/sanitize";
 
+function validateUrl(url) {
+    return new Promise((resolve) => {
+        const image = new Image();
+        image.onload = () => {
+            try {
+                const canvas = document.createElement("canvas");
+                canvas.width = image.naturalWidth || 1;
+                canvas.height = image.naturalHeight || 1;
+                canvas.getContext("2d").drawImage(image, 0, 0);
+                canvas.toDataURL(); // throws SecurityError if tainted
+                resolve(true);
+            } catch {
+                resolve(false);
+            }
+        };
+        image.onerror = () => resolve(false);
+        image.src = url;
+    });
+}
+
 export class MassMailingHtmlField extends HtmlField {
     static template = "mass_mailing.HtmlField";
     static components = {
@@ -262,6 +282,7 @@ export class MassMailingHtmlField extends HtmlField {
             mobileBreakpoint: "md",
             defaultImageMimetype: "image/png",
             onEditorReady: () => this.commitChanges(),
+            mediaModalParams: { ...config.mediaModalParams, validateUrl },
         };
     }
 
@@ -277,6 +298,7 @@ export class MassMailingHtmlField extends HtmlField {
         return {
             ...config,
             onEditorReady: () => this.commitChanges(),
+            mediaModalParams: { ...config.mediaModalParams, validateUrl },
             Plugins: [
                 ...MAIN_EDITOR_PLUGINS,
                 ...DYNAMIC_PLACEHOLDER_PLUGINS,
