@@ -110,7 +110,7 @@ patch(PosStore.prototype, {
         }
         const result = await super.sendOrderInPreparation(order, opts);
 
-        if (this.config.module_pos_restaurant && categoryCount.length) {
+        if (result && this.config.module_pos_restaurant && categoryCount.length) {
             const categorySummary = formatList(
                 categoryCount.map((cat) => `${cat.count} ${cat.name}`)
             );
@@ -619,16 +619,8 @@ patch(PosStore.prototype, {
     async submitOrder() {
         const order = this.getOrder();
         await this.ensureGuestCustomerCount(order);
+        this.sendOrderInPreparationUpdateLastChange(order);
         this.showDefault();
-        await this.sendOrderInPreparationUpdateLastChange(order);
-        this.addPendingOrder([order.id]);
-        if (order.isDirty()) {
-            // showDefault() triggers unsetTable() which calls syncAllOrders(),
-            // but sendOrderInPreparationUpdateLastChange holds the order in syncingOrders,
-            // preventing that sync from picking it up. Sync only if still dirty after the lock
-            // is released.
-            await this.syncAllOrders({ orders: [order] });
-        }
     },
     async reprintOrder() {
         const order = this.getOrder();
