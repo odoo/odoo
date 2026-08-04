@@ -226,7 +226,7 @@ export function isVisibleTextNode(testedNode) {
         return false;
     }
     // Preceding is whitespace or following is whitespace: invisible
-    return visibleCharRegex.test(preceding.textContent);
+    return !isWhitespace(preceding);
 }
 
 /**
