@@ -9,6 +9,7 @@ registry.category("web_tour.tours").add("discuss.invite_by_email", {
             trigger: "button[title='Add People']",
             run: "click",
         },
+        { trigger: ".modal:has(.o-discuss-ChannelInvitation)" },
         {
             trigger: ".o-discuss-ChannelInvitation-search[placeholder='Enter name or email']",
             run: "edit john@test.com",
@@ -43,5 +44,9 @@ registry.category("web_tour.tours").add("discuss.invite_by_email", {
             trigger: "button:contains(Invite to Group Chat)",
             run: "click",
         },
+        // Wait for the invited member and for the dialog to close, as the member and
+        // the invitation emails are stored by then, and the test asserts them after the tour.
+        { trigger: ".o-discuss-ChannelMember:has(:text('john (base.group_user)'))" },
+        { trigger: "body:not(:has(.modal))" },
     ],
 });
