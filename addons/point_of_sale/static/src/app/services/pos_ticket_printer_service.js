@@ -245,6 +245,7 @@ export class PosTicketPrinterService {
             const generator = this.getGenerator({ models: this.data.models, order });
             const categoryIds = new Set(printer.product_categories_ids.map((c) => c.id));
             const changes = generator.generatePreparationData(categoryIds, opts);
+            const orderChanges = changes.length ? changes[0]._rawChange : null;
 
             for (const ticket of changes) {
                 rawChangeForRetry = rawChangeForRetry || ticket._rawChange;
@@ -270,6 +271,10 @@ export class PosTicketPrinterService {
                 } else if (result.warningCode) {
                     this.displayPrinterWarning(result, printer.name);
                 }
+            }
+
+            if (isPrinted && orderChanges) {
+                order.pushLastPrints(orderChanges);
             }
         }
 
