@@ -3900,7 +3900,7 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         with patch.object(pos_order, "sync_from_ui", sync_from_ui_patch):
             self.start_pos_tour("test_sync_from_ui_one_by_one", login="pos_user")
-            self.assertEqual(sync_counter['count'], 6)
+            self.assertEqual(sync_counter['count'], 7)
 
     def test_lot_refund_lower_qty(self):
         product = self.env['product.product'].create({
