@@ -4210,6 +4210,7 @@ class TestMrpOrder(TestMrpCommon, MailCase):
         be shown in planning gantt view
         """
         self.env.company.tz = 'Europe/Brussels'
+        (self.workcenter_1 | self.workcenter_2).tz = 'Europe/Brussels'
         mo = self.env['mrp.production'].create({
             'product_id': self.product.id,
             'uom_id': self.bom_1.uom_id.id,
