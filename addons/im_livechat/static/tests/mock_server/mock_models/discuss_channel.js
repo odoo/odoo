@@ -170,6 +170,14 @@ export class DiscussChannel extends mailModels.DiscussChannel {
         );
     }
 
+    _livechat_customer_partner_ids(channel) {
+        return this.env["im_livechat.channel.member.history"]
+            .browse(channel.livechat_channel_member_history_ids)
+            .filter((history) => history.livechat_member_type === "visitor")
+            .map((history) => history.partner_id)
+            .filter(Boolean);
+    }
+
     /**
      * @override
      * @type {typeof mailModels.DiscussChannel["prototype"]["_types_allowing_seen_infos"]}
