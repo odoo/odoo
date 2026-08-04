@@ -1,4 +1,6 @@
-import { DiscussChannel } from "@mail/../tests/mock_server/mock_models/discuss_channel";
+import { DiscussChannel } from "@im_livechat/../tests/mock_server/mock_models/discuss_channel";
+
+import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
 
 import { getKwArgs, makeKwArgs } from "@web/../tests/web_test_helpers";
 import { patch } from "@web/core/utils/patch";
@@ -19,6 +21,25 @@ const discussChannelPatch = {
             })
         );
         return true;
+    },
+
+    _store_livechat_extra_fields(store) {
+        /** @type {import("mock_models").CrmLead} */
+        const CrmLead = this.env["crm.lead"];
+        /** @type {import("mock_models").ResPartner} */
+        const ResPartner = this.env["res.partner"];
+
+        super._store_livechat_extra_fields(...arguments);
+        for (const channel of this) {
+            for (const partner of ResPartner.browse(this._livechat_customer_partner_ids(channel))) {
+                store._add_record_fields(ResPartner.browse(partner.id), {
+                    opportunity_ids: mailDataHelpers.Store.many(
+                        CrmLead.browse(partner.opportunity_ids),
+                        makeKwArgs({ fields: ["name"] })
+                    ),
+                });
+            }
+        }
     },
 };
 

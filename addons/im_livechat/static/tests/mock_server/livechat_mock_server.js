@@ -264,6 +264,14 @@ patch(mailDataHelpers, {
                 )
             );
         }
+        if (name === "/im_livechat/session/data") {
+            const DiscussChannel = this.env["discuss.channel"];
+            const [channel] = DiscussChannel.search_read([["id", "=", params.channel_id]]);
+            if (!channel) {
+                return;
+            }
+            DiscussChannel.browse(channel.id)._store_livechat_extra_fields(store);
+        }
         if (name === "/im_livechat/fetch_self_expertise") {
             const ResUsers = this.env["res.users"];
             store.add(ResUsers.browse(serverState.userId), ["livechat_expertise_ids"]);
