@@ -96,6 +96,14 @@ const LINE_COLLAPSE_ARCH = `
 
 onRpc("has_group", () => true);
 
+onRpc("onchange_batch", ({ args }) => {
+    const [changesList] = args;
+
+    return changesList.map((changes) => ({
+        value: changes,
+    }));
+});
+
 test("can add a line in a section", async () => {
     await mountView({
         type: "form",
