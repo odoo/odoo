@@ -3,7 +3,6 @@ import { loadBundle } from "@web/core/assets";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { useLayoutEffect } from "@web/owl2/utils";
 import { formatFloat } from "@web/views/fields/formatters";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 
@@ -36,14 +35,14 @@ export class GaugeChartWidget extends Component {
             await loadBundle("web.chartjs_lib");
         });
 
-        useLayoutEffect(() => {
-            this.renderChart();
-            return () => {
-                if (this.chart) {
-                    this.chart.destroy();
-                }
-            };
-        });
+        // useLayoutEffect(() => {
+        //     this.renderChart();
+        //     return () => {
+        //         if (this.chart) {
+        //             this.chart.destroy();
+        //         }
+        //     };
+        // });
     }
 
     get chartTitle() {
