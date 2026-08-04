@@ -1376,6 +1376,7 @@ class TestPoSSalePayment(PoSSaleSyncCommon, TestPointOfSaleHttpCommon, PaymentCo
                 'product_uom_qty': 1,
                 'price_unit': self.product_a.lst_price,
             })],
+            'require_signature': False,
             'prepayment_percent': 0.3,
         })
         # Manual downpayment invoice
