@@ -185,6 +185,50 @@ class MrpSubcontractingPurchaseTest(TestAccountSubcontractingFlows):
         self.assertEqual(receipt.state, 'done')
         self.assertEqual(sub_mos.state, 'done')
 
+    def test_multilevel_subcontracting_manufacturing_chain(self):
+        """ Test a procurement chain alternating subcontracting from different vendors.
+        Final (Subcontracting - Vendor 1)
+            --> Comp 1 (Subcontracting - Vendor 2)
+                    -> Comp 2
+        Verify that the resupply picking for the different vendors didn't merge.
+        """
+        self.warehouse.route_ids = [Command.link(self.env.ref('mrp_subcontracting.route_resupply_subcontractor_mto').id)]
+        self.comp2_bom.write({
+            'type': "subcontract",
+            'subcontractor_ids': [Command.set(self.vendor.ids)],
+        })
+        mto_route = self.env.ref('stock.route_warehouse0_mto')
+        mto_route.active = True
+        self.comp2.write({
+            'route_ids': [Command.link(mto_route.id)],
+            'seller_ids': [Command.create({'partner_id': self.vendor.id})],
+        })
+        po = self.env['purchase.order'].create({
+            'partner_id': self.subcontractor_partner1.id,
+            'order_line': [Command.create({
+                'name': 'finished',
+                'product_id': self.finished.id,
+                'product_qty': 1.0,
+                'product_uom_id': self.finished.uom_id.id,
+                'price_unit': 50.0,
+                },
+            )],
+        })
+        po.button_confirm()
+        ressupply_comps = po._get_subcontracting_resupplies()
+
+        self.assertEqual(ressupply_comps.partner_id, self.subcontractor_partner1.commercial_partner_id)
+        self.assertRecordValues(ressupply_comps.move_ids,
+            [{'product_id': self.comp1.id, 'product_uom_qty': 1},
+            {'product_id': self.comp2.id, 'product_uom_qty': 1}])
+
+        comp2_po = self.env['purchase.order'].search([('partner_id', '=', self.vendor.id)])
+        self.assertEqual(comp2_po.order_line.product_id, self.comp2)
+
+        comp2_po.button_confirm()
+        ressupply_comp2comp = comp2_po._get_subcontracting_resupplies()
+        self.assertRecordValues(ressupply_comp2comp, [{'product_id': self.comp2comp.id, 'partner_id': self.vendor.id}])
+
     def test_purchase_and_return01(self):
         """
         The user buys 10 x a subcontracted product P. He receives the 10
