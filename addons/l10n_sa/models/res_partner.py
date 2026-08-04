@@ -7,10 +7,11 @@ from odoo.addons.l10n_sa.tools.partner_identifiers import COMPANY_SCHEMES, SA_AD
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
-    @api.depends('additional_identifiers')
+    @api.depends('country_id', 'additional_identifiers')
     def _compute_available_additional_identifiers_metadata(self):
         super()._compute_available_additional_identifiers_metadata()
-
+        all_metadata = self._get_all_additional_identifiers_metadata()
+        is_sa_company = self.env.company.country_id.code == 'SA'
         for partner in self:
             metadata = partner.available_additional_identifiers_metadata
             if partner.country_code == 'SA' and metadata:
@@ -20,6 +21,13 @@ class ResPartner(models.Model):
                 partner.available_additional_identifiers_metadata = {
                     k: v for k, v in partner.available_additional_identifiers_metadata.items()
                     if 'SA' not in (v.get('countries') or []) or k in sa_identifier_in_use
+                }
+            elif is_sa_company and partner.country_code != 'SA':
+                sa_oth_metadata = all_metadata.get('SA_OTH')
+                sa_oth = self._lazy_translate_additional_identifiers_metadata(sa_oth_metadata)
+                partner.available_additional_identifiers_metadata = {
+                    **partner.available_additional_identifiers_metadata,
+                    'SA_OTH': sa_oth,
                 }
 
     @api.depends('additional_identifiers')
