@@ -31,7 +31,7 @@ import {
 } from "@web/../tests/web_test_helpers";
 
 import { CHAT_HUB_KEY } from "@mail/core/common/chat_hub_model";
-import { contains } from "./mail_test_helpers_contains";
+import { contains, TIMEOUT } from "./mail_test_helpers_contains";
 
 import { mailGlobal } from "@mail/utils/common/misc";
 import { Component, onMounted, onPatched, onWillDestroy, status } from "@odoo/owl";
@@ -637,7 +637,7 @@ export async function isInViewportOf(childSelector, parentSelector) {
     await contains(parentSelector);
     await contains(childSelector);
     const inViewportDeferred = new Deferred();
-    const failTimeout = setTimeout(() => check({ crashOnFail: true }), 3000);
+    const failTimeout = setTimeout(() => check({ crashOnFail: true }), TIMEOUT);
     const check = ({ crashOnFail = false } = {}) => {
         const parent = queryFirst(parentSelector);
         const child = queryFirst(childSelector);
