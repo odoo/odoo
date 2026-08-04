@@ -343,6 +343,7 @@ export class PosTicketPrinterPlugin extends Plugin {
             const tickets = printer.is_split_per_product
                 ? this._splitTicketsPerProduct(changes, generator)
                 : changes;
+            const orderChanges = changes.length ? changes[0]._rawChange : null;
 
             for (const ticket of tickets) {
                 if (ticket.extra_data.reprint && !opts.explicitReprint) {
@@ -377,6 +378,10 @@ export class PosTicketPrinterPlugin extends Plugin {
                 } else if (result.warningCode) {
                     this.displayPrinterWarning(result, printer.name);
                 }
+            }
+
+            if (isPrinted && orderChanges) {
+                order.pushLastPrints(orderChanges);
             }
         }
 
