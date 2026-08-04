@@ -223,8 +223,9 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
                 # the CountrySubentityCode to be fixed as '17' regardless of the actual state.
                 subentity_code = '17'
             elif country.code != 'MY':
-                # For non-Malaysian partners return the state name instead of state code
-                subentity_code = partner.state_id.name
+                # For non-Malaysian partners, MyInvois requires the CountrySubentityCode to be fixed as '17'
+                # ("not applicable") since Malaysian state codes don't apply to them.
+                subentity_code = '17'
             else:
                 # Get the subentity code for the partner, based on its state.
                 subentity_code = partner.state_id.code
