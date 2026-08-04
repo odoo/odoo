@@ -205,6 +205,15 @@ export class ImageSelector extends FileSelector {
     validateUrl(...args) {
         const { isValidUrl, path } = super.validateUrl(...args);
         const isValidFileFormat = IMAGE_EXTENSIONS.some(format => path.endsWith(format));
+        return { isValidFileFormat, isValidUrl, path };
+    }
+
+    async validateUrlAsync(...args) {
+        let { isValidUrl, isValidFileFormat } = this.validateUrl(...args);
+        const [url] = args;
+        if (isValidFileFormat && url.split('?')[0].endsWith(".webp") && this.props.validateUrl) {
+            isValidUrl = await this.props.validateUrl(url);
+        }
         return { isValidFileFormat, isValidUrl };
     }
 

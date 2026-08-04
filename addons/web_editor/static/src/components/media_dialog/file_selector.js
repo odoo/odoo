@@ -111,8 +111,8 @@ export class FileSelectorControlPanel extends Component {
         }
     }
 
-    onUrlInput(ev) {
-        const { isValidUrl, isValidFileFormat } = this.props.validateUrl(ev.target.value);
+    async onUrlInput(ev) {
+        const { isValidUrl, isValidFileFormat } = await this.props.validateUrlAsync(ev.target.value);
         this.state.isValidFileFormat = isValidFileFormat;
         this.state.isValidUrl = isValidUrl;
     }
@@ -224,6 +224,10 @@ export class FileSelector extends Component {
         const isValidUrl = /^.+\..+$/.test(path); // TODO improve
         const isValidFileFormat = true;
         return { isValidUrl, isValidFileFormat, path };
+    }
+
+    async validateUrlAsync(url) {
+        return this.validateUrl(url);
     }
 
     async fetchAttachments(limit, offset) {
