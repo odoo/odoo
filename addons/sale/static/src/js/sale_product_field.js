@@ -242,6 +242,7 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
         const saleOrderLine = this.props.record.data;
         const ptavIds = [...this._getVariantPtavIds(saleOrderLine)];
         let customPtavs = [];
+        let productUOMId;
 
         if (edit) {
             /**
@@ -250,6 +251,7 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
              */
             ptavIds.push(...this._getNoVariantPtavIds(saleOrderLine));
             customPtavs = await this._getCustomPtavs(saleOrderLine);
+            productUOMId = saleOrderLine.product_uom_id.id;
         }
 
         this.dialog.add(ProductConfiguratorDialog, {
@@ -257,7 +259,7 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
             ptavIds: ptavIds,
             customPtavs: customPtavs,
             quantity: saleOrderLine.product_uom_qty,
-            productUOMId: saleOrderLine.product_uom_id.id,
+            productUOMId: productUOMId,
             companyId: saleOrderRecord.data.company_id.id,
             pricelistId: saleOrderRecord.data.pricelist_id.id,
             currencyId: saleOrderLine.currency_id.id,
