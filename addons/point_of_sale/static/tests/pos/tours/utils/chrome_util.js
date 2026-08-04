@@ -442,3 +442,14 @@ export function reloadData({ full = false } = {}) {
         clickBtn(full ? "Full" : "Limited", { expectUnloadPage: true }),
     ];
 }
+
+export function fakePrintChange() {
+    return {
+        trigger: "body",
+        run: () => {
+            posmodel.ticketPrinter.printOrderChanges = async function (args) {
+                return true;
+            };
+        },
+    };
+}
