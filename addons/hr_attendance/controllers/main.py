@@ -226,7 +226,7 @@ class HrAttendance(http.Controller):
             return {'records': employees_data, 'length': request.env['hr.employee'].sudo().search_count(domain)}
         return []
 
-    @http.route('/hr_attendance/systray_check_in_out', type="jsonrpc", auth="user")
+    @http.route('/hr_attendance/systray_check_in_out', type="jsonrpc", auth="bearer")
     def systray_attendance(self, latitude=False, longitude=False):
         employee = request.env.user.employee_id
         geo_ip_response = self._get_geoip_response(mode='systray',
