@@ -370,6 +370,28 @@ def toggle_custom_handlers(enable: bool):
         odoo_restart()
 
 
+def _sentry_before_send(event, _hint):
+    """Discard events raised from custom IoT handlers.
+
+    Covers both raised exceptions and log records with no
+    exception (e.g. `_logger.error(...)`).
+    """
+    default_handlers = system.get_default_handlers()
+    if default_handlers is None:
+        return event
+
+    stacked = (
+        event.get("exception", {}).get("values", []) +
+        event.get("threads", {}).get("values", [])
+    )
+    for entry in stacked:
+        for frame in (entry.get("stacktrace") or {}).get("frames", []):
+            path = frame.get("abs_path") or frame.get("filename") or ""
+            if "iot_handlers" in path and path not in default_handlers:
+                return None
+    return event
+
+
 @require_db
 def init_sentry(server_url: str = ""):
     """Setup Sentry using DSN fetched from database.
@@ -386,13 +408,15 @@ def init_sentry(server_url: str = ""):
         if host and (
             ip_address(host).is_private
             or ("runbot" in host and host.endswith(".odoo.com"))
+            or host.endswith(".dev.odoo.com")  # staging dbs
         ):
-            _logger.info("Local database, not initializing Sentry")
+            _logger.info("Local/dev database, not initializing Sentry")
             return
 
     sentry_sdk.init(
         dsn="https://7e68ee5a4977e68047d56d64d19e2585@o11005.ingest.us.sentry.io/4511624592162816",
         server_name=system.format_hostname(),
+        before_send=_sentry_before_send,
     )
     global_scope = sentry_sdk.get_global_scope()
     global_scope.set_tags({
