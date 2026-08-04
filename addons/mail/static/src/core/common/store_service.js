@@ -118,7 +118,8 @@ export class Store extends BaseStore {
 
     shouldSimulateDarkTheme(ctx) {
         return (
-            (ctx?.env?.inDiscussCallView ||
+            (ctx?.ancestors?.has("Call") ||
+                ctx?.ancestors?.has("Meeting") ||
                 ctx?.env?.inCallInvitation ||
                 ctx?.env.isDiscussPipBanner ||
                 ctx?.env?.inWelcomePage) &&

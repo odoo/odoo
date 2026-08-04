@@ -101,7 +101,7 @@
        [btnClass]: true,
         'o-text-white o-simulateDarkTheme': this.store.shouldSimulateDarkTheme(this),
         'bg-transparent': this.store.shouldSimulateDarkTheme(this) and !this.hasBtnBg,
-        'o-inDiscussCall': this.env?.inDiscussCallView or this.env?.inCallInvitation or this.env.isDiscussPipBanner or this.env?.inWelcomePage,
+        'o-inDiscussCall': this.ancestors.has('Call') or this.ancestors.has('Meeting') or this.env?.inCallInvitation or this.env.isDiscussPipBanner or this.env?.inWelcomePage,
     })"/>
     <!-- dynamic classes-->
     <t t-set="btnClass" t-value="this.attClassObjectToString({

@@ -57,7 +57,6 @@ export class Meeting extends Component {
             this.datetimeNow.set(DateTime.now());
             return 60_000 - (Date.now() % 60_000);
         });
-        useSubEnv({ inDiscussCallView: true });
         this.ancestors = useAncestors();
         this.threadActions = useThreadActions({ thread: () => this.channel.thread });
         providePlugins([MeetingPlugin], {
