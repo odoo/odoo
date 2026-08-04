@@ -1,5 +1,5 @@
 import { AND, fields, Record } from "@mail/model/export";
-import { createDocumentFragmentFromContent } from "@web/core/utils/html";
+import { createElementFromContent } from "@mail/utils/common/html";
 
 export class ChatbotStep extends Record {
     static id = AND("scriptStep", "message");
@@ -45,7 +45,7 @@ export class ChatbotStep extends Record {
             case "free_input_single":
             case "question_email":
             case "question_phone":
-                return createDocumentFragmentFromContent(this.rawAnswer).body.textContent;
+                return createElementFromContent(this.rawAnswer).textContent;
             case "question_selection":
                 return this.selectedAnswer?.name;
             default:
