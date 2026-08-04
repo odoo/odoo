@@ -36,11 +36,12 @@
             <div>
                 <t t-set="is_din_paperformat"
                     t-value="company.paperformat_id in [env.ref('l10n_din5008.paperformat_euro_din_a', raise_if_not_found=False), env.ref('l10n_din5008.paperformat_euro_din', raise_if_not_found=False)]" />
+                <t t-set="snailmail" t-value="env.context.get('snailmail_layout')" />
                 <div t-attf-class="header din_page o_company_#{company.id}_layout #{'din_page_pdf' if report_type == 'pdf' and is_din_paperformat else ''}">
                     <table class="company_header table-borderless" t-att-style="'height: %dmm;' % (din_header_spacing or 27)">
                         <tr>
                             <td><div class="h3 mt0" t-field="company.report_header"/></td>
-                            <td><img t-if="company.logo" t-att-src="image_data_uri(company.logo)" t-att-style="'max-height: %dmm;' % (din_header_spacing or 27)"/></td>
+                            <td><img t-if="company.logo" t-att-src="image_data_uri(company.logo)" t-att-style="'max-height: %dmm;' % (din_header_spacing or 27)" t-attf-class="#{'snailmail' if snailmail else ''}"/></td>
                         </tr>
                     </table>
                 </div>
@@ -77,8 +78,13 @@
                                         </t>
                                     </div>
                                     <hr class="company_invoice_line" />
-                                    <span t-if="address">
+                                    <span t-if="address and not snailmail">
                                         <t t-out="address"/>
+                                    </span>
+                                    <span t-if="din5008_document_information and snailmail">
+                                        <span>
+                                            <t t-out="din5008_document_information" />
+                                        </span>
                                     </span>
                                     <span t-else="fallback_address">
                                         <t t-out="fallback_address"
@@ -86,8 +92,14 @@
                                     </span>
                                 </div>
                             </td>
-                            <td t-if="din5008_document_information">
+                            <td t-if="din5008_document_information and not snailmail">
                                 <t t-out="din5008_document_information"/>
+                            </td>
+                            <td t-if="snailmail">
+                                <div class="snailmail_recipient_address_area">
+                                    <t t-set="recipient_partner" t-value="o.partner_shipping_id or o.partner_id" />
+                                    <address t-out="recipient_partner" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}' />
+                                </div>
                             </td>
                         </tr>
                         <t t-if="din5008_address_block">
@@ -190,7 +202,7 @@
         <template id="report_invoice_document" inherit_id="account.report_invoice_document">
             <xpath expr="//t[@t-set='forced_vat']" position="after">
                 <t t-set="din5008_document_information">
-                    <div class="information_block" t-if="o and o._name=='account.move'">
+                    <div class="information_block" t-if="o and o._name=='account.move'" t-attf-class="information_block #{'snailmail' if env.context.get('snailmail_layout') else ''}">
                         <table>
                             <tr t-if="o.name">
                                 <td>Invoice No.</td>
