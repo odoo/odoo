@@ -145,6 +145,7 @@ export class MediaDialog extends Component {
                 useMediaLibrary: this.props.useMediaLibrary,
                 multiSelect: this.props.multiImages,
                 addFieldImage: this.props.addFieldImage,
+                validateUrl: this.props.validateUrl,
             });
         }
         if (onlyImages) {
