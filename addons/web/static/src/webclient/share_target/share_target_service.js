@@ -38,6 +38,8 @@ export const shareTargetService = {
     },
 
     start(env, services) {
+        /** @type {Record<string, () => void>} */
+        const hooks = {};
         const shareTargetItems = registry.category("share_target_items").getAll();
         const hasShareTargetItems = shareTargetItems.length;
         if (hasShareTargetItems) {
@@ -53,6 +55,18 @@ export const shareTargetService = {
         return {
             hasShareTargetItems,
             display: (files) => shareTargetService._displayShareTarget(files, services),
+            setHook(name, fn) {
+                hooks[name] = fn;
+                return () => {
+                    if (hooks[name] !== fn) {
+                        return;
+                    }
+                    delete hooks[name];
+                };
+            },
+            callHook(name) {
+                return hooks[name]?.();
+            },
         };
     },
 };
