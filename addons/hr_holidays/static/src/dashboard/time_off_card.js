@@ -111,11 +111,13 @@ export class TimeOffCard extends Component {
 
     // e.g.: Input: 9.5 Output: 9:30
     formatHour(hoursFloat) {
-        const hours = Math.floor(hoursFloat);
-        const minutes = Math.round((hoursFloat - hours) * 60);
+        const sign = hoursFloat < 0 ? "-" : "";
+        const absValue = Math.abs(hoursFloat);
+        const hours = Math.floor(absValue);
+        const minutes = Math.round((absValue - hours) * 60);
         // Pad minutes with leading zero if needed
         const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
-        return `${hours}:${formattedMinutes}`;
+        return `${sign}${hours}:${formattedMinutes}`;
     }
 
     formatDuration(duration) {
