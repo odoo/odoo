@@ -58,6 +58,54 @@
         </field>
     </record>
 
+    <record id="view_repair_stock_move_kanban" model="ir.ui.view">
+        <field name="name">repair.stock.move.kanban</field>
+        <field name="model">stock.move</field>
+        <field name="inherit_id" ref="stock.view_move_kandan"/>
+        <field name="mode">primary</field>
+        <field name="priority">1000</field>
+        <field name="arch" type="xml">
+            <xpath expr="//kanban/field[1]" position="before">
+                <field name="repair_line_type"/>
+                <field name="show_details_visible"/>
+                <field name="location_dest_id"/>
+            </xpath>
+            <xpath expr="//kanban/templates" position="before">
+                <control>
+                    <create string="Add a line"/>
+                    <button name="action_add_from_catalog_repair" string="Catalog" type="object"
+                        class="btn-secondary" context="{'order_id': parent.id}"/>
+                </control>
+            </xpath>
+            <xpath expr="//t[@t-name='card']//field[@name='forecast_availability']" position="attributes">
+                <attribute name="invisible">parent.state == 'done'</attribute>
+            </xpath>
+            <xpath expr="//t[@t-name='card']//field[@name='product_id']/.." position="after">
+                <div class="text-muted">Type: <field name="repair_line_type"/></div>
+            </xpath>
+            <xpath expr="//t[@t-name='card']" position="inside">
+                <footer class="justify-content-center" invisible="not show_details_visible">
+                    <button name="action_show_details" type="object" icon="format_list_bulleted"
+                        class="btn btn-secondary" string="Details"
+                        context="{'default_location_dest_id': location_dest_id}"/>
+                </footer>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_repair_stock_move_form_from_kanban" model="ir.ui.view">
+        <field name="name">repair.stock.move.form.from.kanban</field>
+        <field name="model">stock.move</field>
+        <field name="inherit_id" ref="stock.view_move_form_from_kanban"/>
+        <field name="mode">primary</field>
+        <field name="priority" eval="1000"/>
+        <field name="arch" type="xml">
+            <field name="product_id" position="after">
+                <field name="repair_line_type" required="1"/>
+            </field>
+        </field>
+    </record>
+
     <record id="view_repair_order_form" model="ir.ui.view">
         <field name="name">repair.form</field>
         <field name="model">repair.order</field>
@@ -146,7 +194,7 @@
                 <notebook>
                     <page string="Parts" name="parts">
                         <field name="move_ids" mode="list,kanban" readonly="state == 'cancel' or state == 'done'"
-                        context="{'default_repair_id': id, 'default_product_uom_qty': 1, 'default_company_id': company_id, 'default_date': schedule_date, 'default_repair_line_type': 'add', 'active_repair_id': id}">
+                        context="{'default_repair_id': id, 'default_product_uom_qty': 1, 'default_company_id': company_id, 'default_date': schedule_date, 'default_repair_line_type': 'add', 'active_repair_id': id, 'form_view_ref': 'repair.view_repair_stock_move_form_from_kanban', 'kanban_view_ref': 'repair.view_repair_stock_move_kanban'}">
                             <list string="Operations" editable="bottom">
                                 <control>
                                     <create string="Add a line"/>
@@ -194,7 +242,7 @@
                         <div class="clearfix"/>
                     </page>
                      <page string="Services" name="services">
-                        <field name="repair_service_line_ids" readonly="state in ['done', 'cancel']">
+                        <field name="repair_service_line_ids" mode="list,kanban" readonly="state in ['done', 'cancel']">
                             <list string="text" editable="bottom">
                                 <control>
                                     <create string="Add a line"/>
@@ -220,6 +268,34 @@
                                     options="{'no_open': True, 'no_create': True}"
                                     widget="many2one_uom"/>
                             </list>
+                            <form string="Repair Service Line">
+                                <group>
+                                    <field name="product_id" required="1" context="{'default_type': 'service'}"/>
+                                    <field name="description"/>
+                                    <field name="quantity"/>
+                                    <field name="uom_id" groups="uom.group_uom" readonly="0"
+                                        options="{'no_open': True, 'no_create': True}" widget="many2one_uom"/>
+                                </group>
+                            </form>
+                            <kanban class="o_kanban_mobile">
+                                <field name="sequence"/>
+                                <field name="product_id"/>
+                                <field name="description"/>
+                                <field name="quantity"/>
+                                <field name="uom_id"/>
+                                <control>
+                                    <create string="Add a line"/>
+                                    <button name="action_add_service_from_repair_catalog" string="Catalog" type="object"
+                                        class="btn-secondary" context="{'order_id': parent.id}"/>
+                                </control>
+                                <templates>
+                                    <t t-name="card">
+                                        <field name="product_id" class="fw-bold"/>
+                                        <div class="text-muted">Quantity: <field name="quantity"/> <field name="uom_id" groups="uom.group_uom"/></div>
+                                        <field name="description" class="text-muted" invisible="not description"/>
+                                    </t>
+                                </templates>
+                            </kanban>
                         </field>
                     </page>
                     <page string="Repair Notes" name="repair_notes">
