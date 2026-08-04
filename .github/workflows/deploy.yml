@@ -59,11 +59,10 @@ jobs:
                       git reset --hard HEAD
 
                       # ==================================================================
-                      # 2. Pre-upgrade database snapshot
+                      # 2. Pre-upgrade database cluster snapshot (All Databases)
                       # ==================================================================
                       echo "Taking pre-upgrade DB snapshot..."
-                      docker compose exec -T db pg_dump -U odoo -Fc --no-owner \
-                          -f "/tmp/pre_deploy_${TIMESTAMP}.dump" odoo \
+                      docker compose exec -T db pg_dumpall -U odoo -f "/tmp/pre_deploy_${TIMESTAMP}.sql" \
                           || echo "WARNING: Pre-upgrade snapshot failed — continuing anyway"
 
                       # ==================================================================
@@ -76,12 +75,28 @@ jobs:
                       docker compose up -d --build
 
                       # ==================================================================
-                      # 4. Run module upgrade with Error Trap
+                      # 4. Run module upgrade for ALL databases on the server
                       # ==================================================================
-                      echo "Upgrading invoice_agent module..."
+                      echo "Fetching all databases and upgrading invoice_agent..."
                       set +e
-                      docker compose exec -T odoo odoo -u invoice_agent --stop-after-init --log-level=warn
-                      UPGRADE_STATUS=$?
+
+                      DATABASES=$(docker compose exec -T db psql -U odoo -d postgres -t -c "SELECT datname FROM pg_database WHERE datistemplate = false AND datname NOT IN ('postgres', 'template1');" | tr -d '\r')
+
+                      UPGRADE_STATUS=0
+
+                      for DB in $DATABASES; do
+                          DB_CLEAN=$(echo "$DB" | xargs)
+                          [ -z "$DB_CLEAN" ] && continue
+
+                          echo "---> Upgrading module 'invoice_agent' on database: $DB_CLEAN"
+                          docker compose exec -T odoo odoo -d "$DB_CLEAN" -u invoice_agent --db_host=db --db_user=odoo --db_password=odoo --stop-after-init --log-level=warn
+                          
+                          if [ $? -ne 0 ]; then
+                              echo "ERROR: Upgrade failed on database: $DB_CLEAN"
+                              UPGRADE_STATUS=1
+                          fi
+                      done
+
                       set -e
 
                       if [ $UPGRADE_STATUS -ne 0 ]; then
@@ -157,13 +172,10 @@ jobs:
                           git reset --hard "$PREVIOUS_SHA"
                           docker compose up -d --build
 
-                          # استرجاع قاعدة البيانات تلقائياً في حال تضررها
-                          if docker compose exec -T db test -f "/tmp/pre_deploy_${TIMESTAMP}.dump"; then
-                              echo "Restoring database from pre-upgrade snapshot..."
+                          if docker compose exec -T db test -f "/tmp/pre_deploy_${TIMESTAMP}.sql"; then
+                              echo "Restoring databases from pre-upgrade snapshot..."
                               docker compose stop odoo
-                              docker compose exec -T db dropdb -U odoo --if-exists odoo
-                              docker compose exec -T db createdb -U odoo odoo
-                              docker compose exec -T db pg_restore -U odoo -d odoo "/tmp/pre_deploy_${TIMESTAMP}.dump" || true
+                              docker compose exec -T db psql -U odoo -d postgres -f "/tmp/pre_deploy_${TIMESTAMP}.sql" || true
                           fi
 
                           docker compose restart odoo
@@ -185,7 +197,7 @@ jobs:
                       # ==================================================================
                       # 9. Clean up DB dump on success
                       # ==================================================================
-                      docker compose exec -T db rm -f "/tmp/pre_deploy_${TIMESTAMP}.dump" || true
+                      docker compose exec -T db rm -f "/tmp/pre_deploy_${TIMESTAMP}.sql" || true
 
                       echo ""
                       echo "=== Deploy completed successfully ==="
