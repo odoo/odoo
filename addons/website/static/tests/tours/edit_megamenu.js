@@ -438,6 +438,10 @@ registerWebsitePreviewTour(
         selectHeader(),
         changeOption("WebsiteLevelColor", 'we-select[data-variable="header-template"] we-toggler'),
         changeOption("WebsiteLevelColor", 'we-button[data-name="header_hamburger_opt"]'),
+        {
+            trigger: ":iframe span.navbar-toggler-icon",
+            timeout: 30000,
+        },
         openMenu(),
         // Mega Menu 1: Desktop Only
         {
