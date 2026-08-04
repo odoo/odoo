@@ -32,18 +32,19 @@
     justify-content: center;
 }
 
+.o-discuss-CallMenu-warningBadge {
+    aspect-ratio: 1 !important;
+    font-size: 0.6rem !important;
+    transform: none !important;
+}
+
 .o-discuss-CallMenu-actionsButton {
     &:hover, &.o-dropdown-open {
         .o-discuss-CallMenu-actionsChevron {
             opacity: 1;
         }
-        .o-discuss-CallMenu-actionsAudioBars {
+        .o-discuss-CallMenu-actionsAudioBars, .o-discuss-CallMenu-warningBadge {
             opacity: 0;
         }
     }
-}
-
-.o-discuss-CallMenu-warningBadge {
-    top: -2px;
-    right: -4px;
 }
