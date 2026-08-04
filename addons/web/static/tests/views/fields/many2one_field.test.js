@@ -754,7 +754,7 @@ test("onchanges on many2ones trigger when editing record in form view", async ()
 test("edit many2one before onchange is finished should not reset the value", async () => {
     Partner._onChanges = {
         name: function (obj) {
-            obj.user_id = 19;
+            obj.user_id = 2;
         },
     };
     onRpc("onchange", () => {
@@ -775,8 +775,9 @@ test("edit many2one before onchange is finished should not reset the value", asy
     });
 
     await contains("[name='name'] input").edit("new name");
-    await contains("[name='user_id'] input").edit("Plop");
-    expect("[name='user_id'] input").toHaveValue("Plop");
+    await contains("[name='user_id'] input").edit("Plop", { confirm: false });
+    await runAllTimers();
+    await clickFieldDropdownItem("user_id", 'Create "Plop"');
 
     def.resolve();
     await animationFrame();
