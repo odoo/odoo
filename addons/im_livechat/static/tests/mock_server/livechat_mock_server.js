@@ -272,6 +272,13 @@ patch(mailDataHelpers, {
                 "_store_channel_fields"
             );
         }
+        if (name === "/im_livechat/session/data") {
+            const DiscussChannel = this.env["discuss.channel"];
+            store.add(
+                DiscussChannel.browse(DiscussChannel.search([["id", "=", params.channel_id]])),
+                "_store_livechat_extra_fields"
+            );
+        }
         if (name === "/im_livechat/fetch_self_expertise") {
             const ResUsers = this.env["res.users"];
             store.add(ResUsers.browse(serverState.userId), ["livechat_expertise_ids"]);
