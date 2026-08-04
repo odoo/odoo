@@ -395,6 +395,23 @@ test("reference in form view", async () => {
     });
 });
 
+test("selecting a model without choosing a record marks field invalid on save", async () => {
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: /* xml */ `<form><field name="reference" /></form>`,
+    });
+    await editSelectMenu(".o_field_widget[name='reference'] .o_select_menu input", {
+        value: "Partner Type",
+    });
+    await animationFrame();
+    expect(".o_field_widget[name=reference]").not.toHaveClass("o_field_invalid");
+    await clickSave();
+    await animationFrame();
+    expect(".o_field_widget[name=reference]").toHaveClass("o_field_invalid");
+});
+
 test("Many2One 'Search more...' updates on resModel change", async () => {
     onRpc("has_group", () => true);
 
