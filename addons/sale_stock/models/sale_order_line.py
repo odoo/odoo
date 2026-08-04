@@ -335,9 +335,12 @@ class SaleOrderLine(models.Model):
         outgoing_moves_ids = set()
         incoming_moves_ids = set()
 
-        moves = self.move_ids.filtered(lambda r: r.state != 'cancel' and r.location_dest_usage != 'inventory' and self.product_id == r.product_id and r.company_id == self.company_id)
+        moves = self.move_ids.filtered(lambda m: m.location_dest_usage != 'inventory' and self.product_id == m.product_id and m.company_id == self.company_id)
         if moves and not strict:
             # The first move created was the one created from the intial rule that started it all.
+            # Look at every move ever created for this line, including cancelled ones: if the
+            # triggering move gets cancelled later on (e.g. SO cancellation), the rule that started
+            # the chain must stay the same, otherwise remaining done moves get wrongly re-classified.
             sorted_moves = moves.sorted('id')
             triggering_rule_ids = []
             seen_wh_ids = set()
@@ -345,6 +348,7 @@ class SaleOrderLine(models.Model):
                 if move.warehouse_id.id not in seen_wh_ids and move.rule_id:
                     triggering_rule_ids.append(move.rule_id.id)
                     seen_wh_ids.add(move.warehouse_id.id)
+        moves = moves.filtered(lambda m: m.state != 'cancel')
         if self.env.context.get('accrual_entry_date'):
             accrual_date = fields.Date.from_string(self.env.context['accrual_entry_date'])
             moves = moves.filtered(lambda r: fields.Date.context_today(r, r.date) <= accrual_date)
