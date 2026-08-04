@@ -88,7 +88,9 @@ export class FileSelectorControlPanel extends Component {
             showUrlInput: false,
             urlInput: '',
             isValidUrl: false,
-            isValidFileFormat: false
+            isValidFileFormat: false,
+            isValidUrlAsync: false,
+            isValidFileFormatAsync: false,
         });
 
         this.fileInput = useRef('file-input');
@@ -99,7 +101,7 @@ export class FileSelectorControlPanel extends Component {
     }
 
     get enableUrlUploadClick() {
-        return !this.state.showUrlInput || (this.state.urlInput && this.state.isValidUrl && this.state.isValidFileFormat);
+        return !this.state.showUrlInput || (this.state.urlInput && this.state.isValidUrlAsync && this.state.isValidFileFormatAsync);
     }
 
     async onUrlUploadClick() {
@@ -112,9 +114,25 @@ export class FileSelectorControlPanel extends Component {
     }
 
     onUrlInput(ev) {
-        const { isValidUrl, isValidFileFormat } = this.props.validateUrl(ev.target.value);
+        const url = ev.target.value;
+        const { isValidUrl, isValidFileFormat } = this.props.validateUrl(url);
+        // Those two values are deprecated and have been kept for backward
+        // compatibility. See their async versions below.
         this.state.isValidFileFormat = isValidFileFormat;
         this.state.isValidUrl = isValidUrl;
+        if (isValidUrl && isValidFileFormat && this.props.validateUrlAsync) {
+            this.state.isValidFileFormatAsync = false;
+            this.state.isValidUrlAsync = false;
+            return this.props.validateUrlAsync(url).then(
+                ({ isValidUrl: isValidUrlAsync, isValidFileFormat: isValidFileFormatAsync }) => {
+                    this.state.isValidFileFormatAsync = isValidFileFormatAsync;
+                    this.state.isValidUrlAsync = isValidUrlAsync;
+                }
+            );
+        } else {
+            this.state.isValidFileFormatAsync = isValidFileFormat;
+            this.state.isValidUrlAsync = isValidUrl;
+        }
     }
 
     onClickUpload() {
@@ -224,6 +242,10 @@ export class FileSelector extends Component {
         const isValidUrl = /^.+\..+$/.test(path); // TODO improve
         const isValidFileFormat = true;
         return { isValidUrl, isValidFileFormat, path };
+    }
+
+    async validateUrlAsync(url) {
+        return this.validateUrl(url);
     }
 
     async fetchAttachments(limit, offset) {

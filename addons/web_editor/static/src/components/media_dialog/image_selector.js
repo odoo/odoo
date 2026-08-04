@@ -208,6 +208,14 @@ export class ImageSelector extends FileSelector {
         return { isValidFileFormat, isValidUrl };
     }
 
+    async validateUrlAsync(url) {
+        let { isValidUrl, isValidFileFormat } = this.validateUrl(url);
+        if (isValidUrl && isValidFileFormat && url.split('?')[0].endsWith(".webp") && this.props.validateUrl) {
+            isValidUrl = await this.props.validateUrl(url);
+        }
+        return { isValidFileFormat, isValidUrl };
+    }
+
     isInitialMedia(attachment) {
         if (this.props.media.dataset.originalSrc) {
             return this.props.media.dataset.originalSrc === attachment.image_src;
