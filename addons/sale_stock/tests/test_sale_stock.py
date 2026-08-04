@@ -2967,6 +2967,7 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         customer_location = self.env.ref('stock.stock_location_customers')
         sale_orders = self._get_new_sale_order(product=self.new_product) | self._get_new_sale_order(product=self.new_product)
         delivery = self.env['stock.picking'].create({
+            'partner_id': self.partner_a.id,
             'picking_type_id': warehouse.out_type_id.id,
             'location_id': warehouse.lot_stock_id.id,
             'location_dest_id': customer_location.id,
