@@ -7,12 +7,12 @@ import {
     Component,
     markup,
     onMounted,
+    onPatched,
     onWillStart,
     onWillUnmount,
     proxy,
     signal,
     t,
-    untrack,
     useApp,
     useEffect,
     useProps,
@@ -21,7 +21,6 @@ import {
 import { getBundle } from "@web/core/assets";
 import { location } from "@web/core/browser/browser";
 import { memoize } from "@web/core/utils/functions";
-import { useLayoutEffect } from "@web/owl2/utils";
 
 export class HtmlViewer extends Component {
     static template = "html_editor.HtmlViewer";
@@ -73,12 +72,10 @@ export class HtmlViewer extends Component {
                 iframe.after(iframe);
             });
         } else {
-            useLayoutEffect(
-                () => {
-                    this.processReadonlyContent(this.readonlyElementRef());
-                },
-                () => [this.props.config.value.toString(), untrack(this.readonlyElementRef)]
-            );
+            // onPatched re-applies only the idempotent attributes; the copy listener is
+            // attached once (onMounted) so it does not pile up on every patch.
+            onMounted(() => this.processReadonlyContent(this.readonlyElementRef()));
+            onPatched(() => this.applyReadonlyAttributes(this.readonlyElementRef()));
         }
 
         if (this.props.config.cssAssetId) {
@@ -96,14 +93,17 @@ export class HtmlViewer extends Component {
                 }
                 return result;
             });
-            useLayoutEffect(
-                () => {
-                    if (this.readonlyElementRef()) {
-                        this.mountComponents();
-                    }
-                },
-                () => [this.props.config.value.toString(), untrack(this.readonlyElementRef)]
-            );
+            let mountedValue;
+            const mountEmbedded = () => {
+                const value = this.state.value.toString();
+                if (!this.readonlyElementRef() || value === mountedValue) {
+                    return;
+                }
+                mountedValue = value;
+                this.mountComponents();
+            };
+            onMounted(mountEmbedded);
+            onPatched(mountEmbedded);
             this.tocManager = new TableOfContentManager(this.readonlyElementRef);
         }
     }
@@ -143,9 +143,13 @@ export class HtmlViewer extends Component {
         return newVal;
     }
 
-    processReadonlyContent(container) {
+    applyReadonlyAttributes(container) {
         this.retargetLinks(container);
         this.applyAccessibilityAttributes(container);
+    }
+
+    processReadonlyContent(container) {
+        this.applyReadonlyAttributes(container);
         this.addDomListener(container, "copy", this.onCopy);
     }
 
