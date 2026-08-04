@@ -60,3 +60,23 @@ registry.category("web_tour.tours").add("PoSApplyDownpaymentWithExtraLine", {
             PaymentScreen.clickValidate(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_variant_popup_qty_free", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Color Product"),
+            {
+                content: "Click on Inventory",
+                trigger: 'button.accordion-header:contains("Inventory")',
+                run: "click",
+            },
+            {
+                content: "Check the variant's qty",
+                trigger:
+                    'div:not(:has(div)):contains("available,"):has(span.fw-bolder:contains("0"):not(:contains("50")))',
+            },
+            Dialog.confirm("Add"),
+        ].flat(),
+});
