@@ -11,6 +11,10 @@
 }
 
 .o-CallDebriefMediaControls {
+    // Media controls should always be in LTR direction, even in RTL context.
+    /*rtl:ignore*/
+    direction: ltr;
+
     @container callDebrief-mediaPlayer (max-width: 475px) {
         --CallDebriefMediaControls__timeLabel-order: -1;
         --CallDebriefMediaControls__timeLabel-width: 100%;
@@ -70,10 +74,14 @@
     }
 
     .o-CallDebriefMediaControls-volumeRange {
-        display: var(--CallDebriefMediaControls__volumeRange-display, none);
-        width: map-get($spacers, 5) * 2;
+        /*rtl:begin:ignore*/
+        left: 100%;
         transform: rotate(-90deg);
         transform-origin: calc((1em + #{map-get($spacers, 1)} + #{$border-width}) * -1) center;
+        direction: ltr;
+        /*rtl:end:ignore*/
+        display: var(--CallDebriefMediaControls__volumeRange-display, none);
+        width: map-get($spacers, 5) * 2;
     }
 
     .o-CallDebrief-playbackRateLabel {
