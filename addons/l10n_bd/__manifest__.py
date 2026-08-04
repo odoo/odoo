@@ -15,15 +15,14 @@ Activates:
 
 - Chart of accounts
 - Taxes
-- Tax report
 """,
     'depends': [
         'account',
+        'l10n_account_withholding_tax',
     ],
     'auto_install': ['account'],
     'data': [
         'data/account.account.tag.csv',
-        'data/account_tax_report_data.xml',
         'views/menu_items.xml',
     ],
     'demo': [
