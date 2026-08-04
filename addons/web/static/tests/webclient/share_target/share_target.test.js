@@ -384,3 +384,28 @@ test("res.company many2one should update the select value and use it on save", a
         "open_record",
     ]);
 });
+
+test("Creating after switching app should call the newly selected item", async () => {
+    patchWithCleanup(shareTargetService, { _getShareTargetFiles: async () => [pngFile] });
+    class Item1 extends ShareTargetItem {
+        static name = "one";
+        static template = xml`<p class="share_target_1"/>`;
+        process() {
+            expect.step("process_1");
+        }
+    }
+    class Item2 extends ShareTargetItem {
+        static name = "two";
+        static template = xml`<p class="share_target_2"/>`;
+        process() {
+            expect.step("process_2");
+        }
+    }
+    shareTargetRegistry.add("fake_1", Item1);
+    shareTargetRegistry.add("fake_2", Item2);
+    await mountWithCleanup(WebClient);
+    await animationFrame();
+    await contains(".modal-body button:eq(1)").click();
+    await contains("footer .btn-primary").click();
+    expect.verifySteps(["process_2"]); // currently records nothing
+});
