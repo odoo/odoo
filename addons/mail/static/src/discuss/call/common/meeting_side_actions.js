@@ -5,7 +5,6 @@ import { attClassObjectToString } from "@mail/utils/common/format";
 import { Component, types, useProps } from "@odoo/owl";
 
 import { useService } from "@web/core/utils/hooks";
-import { useSubEnv } from "@web/owl2/utils";
 
 /** @typedef {"chat"|"invite"} MeetingPanel */
 
@@ -19,7 +18,6 @@ export class MeetingSideActions extends Component {
             threadActions: types.instanceOf(UseThreadActions),
         });
         this.ui = useService("ui");
-        useSubEnv({ inMeetingSideActions: true });
     }
 
     get callActionsParams() {
