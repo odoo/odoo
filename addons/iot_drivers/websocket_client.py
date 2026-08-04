@@ -91,8 +91,8 @@ class WebsocketClient(Thread):
                 allow_redirects=False,
                 timeout=10,
             )
-            if session_response.status_code in [200, 302]:
-                self.session_id = session_response.cookies['session_id']
+            if session_id := session_response.cookies.get("session_id"):
+                self.session_id = session_id
             else:
                 _logger.error("Failed to get session ID, status %s", session_response.status_code)
         except requests.RequestException:

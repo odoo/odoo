@@ -2,17 +2,17 @@
 
 import configparser
 import logging
-import netifaces
 import re
 import secrets
 import socket
 import subprocess
 import sys
 import time
-
 from functools import cache
 from pathlib import Path
-from platform import system, release
+from platform import release, system
+
+import netifaces
 
 from odoo import release as odoo_release
 
@@ -301,6 +301,24 @@ def get_gateway():
     if gw:
         return gw[0]
     return None
+
+
+@cache
+def get_default_handlers() -> frozenset[str] | None:
+    """Return the absolute paths of the drivers/interfaces
+    tracked by git.
+    """
+    tracked = git(
+        "ls-files",
+        "addons/iot_drivers/iot_handlers/drivers",
+        "addons/iot_drivers/iot_handlers/interfaces",
+    )
+    if tracked is None:
+        return None
+    return frozenset(
+        str(path_file("odoo", handler))
+        for handler in tracked.splitlines()
+    )
 
 
 IOT_IDENTIFIER = _get_identifier()
