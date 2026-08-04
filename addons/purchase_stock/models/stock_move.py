@@ -230,7 +230,17 @@ class StockMove(models.Model):
 
     def _get_value_from_bill(self, aml):
         self.ensure_one()
-        return aml.company_id.currency_id.round(aml.price_subtotal / aml.currency_rate)
+        value = aml.price_subtotal
+        if aml.tax_ids:
+            value = aml.tax_ids.compute_all(
+                aml.price_unit * (1 - (aml.discount or 0.0) / 100.0),
+                currency=aml.currency_id,
+                quantity=aml.quantity,
+                product=aml.product_id,
+                partner=aml.partner_id,
+                rounding_method="round_globally",
+            )['total_void']
+        return aml.company_id.currency_id.round(value / aml.currency_rate)
 
     def _get_quantity_from_bill(self, aml, quantity):
         self.ensure_one()
