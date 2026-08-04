@@ -1,0 +1,83 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="game_view_form_quick_create" model="ir.ui.view">
+        <field name="name">eva.game.form.quick.create</field>
+        <field name="model">eva.game</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="name"/>
+                    <field name="datetime" widget="datetime"/>
+                    <field name="player_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="game_view_form" model="ir.ui.view">
+        <field name="name">eva.game.form</field>
+        <field name="model">eva.game</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_confirm" string="Confirm" type="object" class="btn-primary" invisible="state != 'draft'"/>
+                    <field name="state" widget="statusbar" readonly="True"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name" options="{'line_breaks': False}" widget="text"
+                                   placeholder="e.g. Scrim TS vs STL"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <field name="datetime" widget="datetime"/>
+                        <field name="player_ids" widget="many2many_tags" options="{'no_create': True}"
+                               readonly="state != 'draft'"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="game_view_list" model="ir.ui.view">
+        <field name="name">eva.game.list</field>
+        <field name="model">eva.game</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="datetime"/>
+                <field name="player_ids" widget="many2many_tags" options="{'no_create': True}"
+                       readonly="state != 'draft'"/>
+                <field name="state"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="game_view_calendar" model="ir.ui.view">
+        <field name="name">eva.game.calendar</field>
+        <field name="model">eva.game</field>
+        <field name="arch" type="xml">
+            <calendar
+                    date_start="datetime"
+                    mode="month"
+                    create="1"
+                    edit="1"
+                    delete="1"
+                    quick_create_view_id="%(eva.game_view_form_quick_create)d"
+                    event_open_popup="1"
+                    form_view_id="%(eva.game_view_form)d">
+                <field name="name"/>
+                <field name="player_ids" widget="many2many_tags" options="{'no_create': True}"
+                       readonly="state != 'draft'"/>
+            </calendar>
+        </field>
+    </record>
+
+    <record id="action_game" model="ir.actions.act_window">
+        <field name="name">Games</field>
+        <field name="res_model">eva.game</field>
+        <field name="view_mode">calendar,list,form</field>
+    </record>
+</odoo>

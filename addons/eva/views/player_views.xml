@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="player_view_list" model="ir.ui.view">
+        <field name="name">eva.player.list</field>
+        <field name="model">eva.player</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name" width="35"/>
+                <field name="player_name" width="35"/>
+                <field name="token_balance" width="10"/>
+                <field name="tokens_reserved" width="10"/>
+                <field name="tokens_available" width="10"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="player_view_form" model="ir.ui.view">
+        <field name="name">eva.player.form</field>
+        <field name="model">eva.player</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_open_games"
+                            class="oe_stat_button"
+                            icon="event_upcoming" icon_class="oi-filled"
+                            type="object">
+                            <div class="o_stat_info">
+                                Games
+                                <span class="o_stat_value">
+                                    <field name="game_count"/>
+                                </span>
+                            </div>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name" options="{'line_breaks': False}" widget="text"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="user_id"/>
+                            <separator string="Subscription"/>
+                            <field name="tokens_per_month"/>
+                            <field name="tokens_grant_day" invisible="not tokens_per_month"/>
+                        </group>
+                        <group string="Tokens">
+                            <label for="token_balance" string="Balance"/>
+                            <div class="d-flex">
+                                <field name="token_balance" class="w-25"/>
+                                <span>tokens</span>
+                            </div>
+                            <label for="tokens_reserved" string="Reserved"/>
+                            <div class="d-flex">
+                                <field name="tokens_reserved" class="w-25"/>
+                                <span>tokens</span>
+                            </div>
+                            <label for="tokens_available" string="Available"/>
+                            <div class="d-flex">
+                                <field name="tokens_available" class="w-25"/>
+                                <span>tokens</span>
+                            </div>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_player" model="ir.actions.act_window">
+        <field name="name">Players</field>
+        <field name="res_model">eva.player</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>
