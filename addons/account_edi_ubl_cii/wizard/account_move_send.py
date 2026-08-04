@@ -4,6 +4,7 @@ import logging
 import io
 
 from lxml import etree
+from markupsafe import Markup
 from xml.sax.saxutils import escape, quoteattr
 
 from odoo import _, api, fields, models, tools, SUPERUSER_ID
@@ -176,6 +177,23 @@ class AccountMoveSend(models.TransientModel):
     # -------------------------------------------------------------------------
 
     @api.model
+    def _prepare_invoice_pdf_report(self, invoice, invoice_data):
+        # EXTENDS 'account'
+        if invoice_data.get('ubl_cii_xml') and invoice._need_ubl_cii_xml():
+            ubl_cii_format = invoice_data.get('ubl_cii_xml_options', {}).get('ubl_cii_format')
+            limit = int(self.env['ir.config_parameter'].sudo().get_param('account_edi_ubl_cii.render_qweb_pdf_limit_lines', -1))
+            if ubl_cii_format not in ('facturx', 'zugferd') and limit > 0 and len(invoice.invoice_line_ids) > limit:
+                # Too many lines for wkhtmltopdf to render: skip the PDF entirely for this invoice.
+                invoice_data['ubl_cii_pdf_report_skipped_warning'] = Markup(_(
+                    "The PDF report was not generated because this document has more than <strong>%(limit)s</strong> invoice lines. "
+                    "If you are sure that wkhtmltopdf can render it despite the memory requirements, go to "
+                    "<strong>Settings / Technical / Parameters / System Parameters</strong>, search for "
+                    "<code>account_edi_ubl_cii.render_qweb_pdf_limit_lines</code>, increase the value or delete it.",
+                )) % {'limit': limit}
+                return
+        super()._prepare_invoice_pdf_report(invoice, invoice_data)
+
+    @api.model
     def _hook_invoice_document_before_pdf_report_render(self, invoice, invoice_data):
         # EXTENDS 'account'
         super()._hook_invoice_document_before_pdf_report_render(invoice, invoice_data)
@@ -233,6 +251,9 @@ class AccountMoveSend(models.TransientModel):
 
         # Read pdf content.
         pdf_values = invoice_data.get('pdf_attachment_values') or invoice_data.get('proforma_pdf_attachment_values') or invoice.invoice_pdf_report_id
+        if not pdf_values:
+            # No PDF was generated for this invoice (e.g. the line limit was reached): nothing to embed the Factur-X into.
+            return
         reader_buffer = io.BytesIO(pdf_values['raw'])
         reader = OdooPdfFileReader(reader_buffer, strict=False)
 
@@ -281,7 +302,7 @@ class AccountMoveSend(models.TransientModel):
 
         xmlns_move_type = 'Invoice' if invoice.move_type == 'out_invoice' else 'CreditNote'
         anchor_index = tree.index(anchor_elements[0])
-        pdf_values = invoice.invoice_pdf_report_id or invoice_data.get('pdf_attachment_values') or invoice_data['proforma_pdf_attachment_values']
+        pdf_values = invoice.invoice_pdf_report_id or invoice_data.get('pdf_attachment_values') or invoice_data.get('proforma_pdf_attachment_values')
 
         doc_type_node = ""
         edi_model = invoice_data["ubl_cii_xml_options"]["builder"]
@@ -301,13 +322,16 @@ class AccountMoveSend(models.TransientModel):
                 invoice.partner_id.commercial_partner_id.ubl_cii_format,
             )[0]
         ] if invoice_data.get('mail_attachments_widget') else []
-        attachments_to_embed.append({
-            'filename': pdf_values['name'],
-            'raw': pdf_values['raw'],
-            'mimetype': pdf_values['mimetype'],
-            'xmlns': f'xmlns="urn:oasis:names:specification:ubl:schema:xsd:{xmlns_move_type}-2"',
-            'document_type_node': doc_type_node,
-        })
+        if pdf_values:
+            attachments_to_embed.append({
+                'filename': pdf_values['name'],
+                'raw': pdf_values['raw'],
+                'mimetype': pdf_values['mimetype'],
+                'xmlns': f'xmlns="urn:oasis:names:specification:ubl:schema:xsd:{xmlns_move_type}-2"',
+                'document_type_node': doc_type_node,
+            })
+        elif invoice_data.get('ubl_cii_pdf_report_skipped_warning'):
+            invoice.message_post(body=invoice_data.pop('ubl_cii_pdf_report_skipped_warning'))
 
         for attachment_values in attachments_to_embed:
             to_inject = f'''
