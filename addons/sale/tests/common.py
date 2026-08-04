@@ -27,6 +27,7 @@ class SaleCommon(
                     Command.create({"product_id": cls.product.id, "product_uom_qty": 5.0}),
                     Command.create({"product_id": cls.service_product.id, "product_uom_qty": 12.5}),
                 ],
+                "require_signature": False,
             }
         ])
 
@@ -45,6 +46,7 @@ class SaleCommon(
         default_values = {
             "partner_id": cls.partner.id,
             "order_line": [Command.create({"product_id": cls.product.id})],
+            "require_signature": False,
             **values,
         }
         return cls.env["sale.order"].create(default_values)
