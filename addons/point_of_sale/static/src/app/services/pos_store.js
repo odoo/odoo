@@ -226,7 +226,7 @@ export class PosStore extends WithLazyGetterTrap {
                 }
             }
         });
-        await this.checkAccessRight();
+        this.checkAccessRight();
     }
 
     handleQRPaymentLines() {
@@ -2115,21 +2115,13 @@ export class PosStore extends WithLazyGetterTrap {
     }
 
     async checkAccessRight() {
-        try {
-            this.canUserCreateProduct = await user.checkAccessRight("product.product", "create");
-        } catch {
-            this.canUserCreateProduct = false;
-        }
+        this.canUserCreateProduct = await user.checkAccessRight("product.product", "create");
     }
 
     get hasProductCreationAccess() {
         return this.canUserCreateProduct;
     }
 
-    // TODO: Remove in master. Use `hasProductCreationAccess` instead.
-    async allowProductCreation() {
-        return this.hasProductCreationAccess;
-    }
     editPayment(order) {
         this.setOrder(order);
         this.navigate("PaymentScreen", {
