@@ -339,7 +339,7 @@
                             <div class="o_row g-0 d-flex" name="qty">
                                 <div invisible="state == 'draft'" class="o_row flex-grow-1">
                                     <label for="qty_producing" string="Quantity" class="d-none d-touch-block"/>
-                                    <field name="qty_producing" widget="external_placeholder_float_field" placeholder="product_qty" class="text-start text-truncate"
+                                    <field name="qty_producing" options="{'placeholder_field': 'product_qty'}" class="text-start text-truncate"
                                            readonly="state == 'cancel' or (state == 'done' and is_locked) or product_tracking=='serial'" force_save="1"/>
                                     /
                                 </div>

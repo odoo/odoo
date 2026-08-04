@@ -10,6 +10,7 @@ import { Component, proxy, signal, t, useProps } from "@odoo/owl";
 
 export const floatFieldProps = {
     ...standardFieldProps,
+    placeholder: t.string().optional(),
     formatNumber: t.boolean().optional(true),
     inputType: t.string().optional("text"),
     step: t.number().optional(),
@@ -53,27 +54,24 @@ export class FloatField extends Component {
     }
 
     get formattedValue() {
+        if (!this.value && this.props.placeholder) {
+            return "";
+        }
         if (
             !this.props.formatNumber ||
             (this.props.inputType === "number" && !this.props.readonly && this.value)
         ) {
             return this.value;
         }
-        const options = {
+        const humanReadable = this.props.humanReadable && !this.state.hasFocus;
+        return formatFloat(this.value, {
             digits: this.props.digits,
             minDigits: this.props.minDigits,
             field: this.props.record.fields[this.props.name],
             trailingZeros: this.props.trailingZeros,
-        };
-        if (this.props.humanReadable && !this.state.hasFocus) {
-            return formatFloat(this.value, {
-                ...options,
-                humanReadable: true,
-                decimals: this.props.decimals,
-            });
-        } else {
-            return formatFloat(this.value, { ...options, humanReadable: false });
-        }
+            humanReadable,
+            decimals: humanReadable ? this.props.decimals : undefined,
+        });
     }
 
     get value() {
@@ -133,10 +131,19 @@ export const floatField = {
             default: 0,
             help: _t("Use it with the 'User-friendly format' option to customize the formatting."),
         },
+        {
+            label: _t("Placeholder field"),
+            name: "placeholder_field",
+            type: "field",
+            availableTypes: ["integer", "float", "monetary", "char"],
+            help: _t(
+                "Displays the value of the selected field as a hint. If the selected field is empty, the static placeholder attribute is displayed instead."
+            ),
+        },
     ],
     supportedTypes: ["float", "monetary"],
     isEmpty: (record, fieldName) => record.data[fieldName] === false,
-    extractProps: ({ attrs, options }) => {
+    extractProps: ({ attrs, options, placeholder }) => {
         // Sadly, digits param was available as an option and an attr.
         // The option version could be removed with some xml refactoring.
         let digits;
@@ -158,6 +165,7 @@ export const floatField = {
             minDigits: options.min_display_digits,
             decimals: options.decimals || 0,
             trailingZeros: !options.hide_trailing_zeros,
+            placeholder,
         };
     },
 };
