@@ -121,16 +121,16 @@
             ])]
            }),
             (0, 0, {'product_id': ref('product.product_product_25'), 'price_unit': 1740.0, 'quantity': 1,
-            'tax_ids': [(6, 0, [
+            'tax_ids': [(6, 0, [tax_id for tax_id in [
                 ref('account.%s_ri_tax_vat_0_compras' % ref('base.company_ri')),
-                ref('account.%s_base_tax_impuestos_internos' % ref('base.company_ri'))
-            ])]
+                ref('account.%s_base_tax_impuestos_internos' % ref('base.company_ri'), False)
+            ] if tax_id])]
            }),
             (0, 0, {'product_id': ref('product.product_product_25'), 'price_unit': 10000.0, 'quantity': 1,
-            'tax_ids': [(6, 0, [
+            'tax_ids': [(6, 0, [tax_id for tax_id in [
                 ref('account.%s_ri_tax_vat_0_compras' % ref('base.company_ri')),
-                ref('account.%s_base_tax_otros_tributos' % ref('base.company_ri'))
-            ])]
+                ref('account.%s_base_tax_otros_tributos' % ref('base.company_ri'), False)
+            ] if tax_id])]
            }),
         ]"/>
     </record>
@@ -166,10 +166,10 @@
         <field name="invoice_date" eval="time.strftime('%Y-%m')+'-01'"/>
         <field name="invoice_line_ids" eval="[
             (0, 0, {'product_id': ref('product.product_product_2'), 'price_unit': 124.3, 'quantity': 3, 'name': 'Support Services 8',
-            'tax_ids': [(6, 0, [
+            'tax_ids': [(6, 0, [tax_id for tax_id in [
                 ref('account.%s_ri_tax_vat_0_compras' % ref('base.company_ri')),
-                ref('account.%s_base_tax_otros_tributos' % ref('base.company_ri'))
-            ])]
+                ref('account.%s_base_tax_otros_tributos' % ref('base.company_ri'), False)
+            ] if tax_id])]
            }),
             (0, 0, {'product_id': ref('product.product_product_25'), 'price_unit': 1740.0, 'quantity': 1,
             'tax_ids': [(6, 0, [
@@ -189,10 +189,10 @@
         <field name="invoice_date" eval="time.strftime('%Y-%m')+'-01'"/>
         <field name="invoice_line_ids" eval="[
             (0, 0, {'product_id': ref('product.product_product_2'), 'price_unit': 124.3, 'quantity': 3, 'name': 'Support Services 8',
-            'tax_ids': [(6, 0, [
+            'tax_ids': [(6, 0, [tax_id for tax_id in [
                 ref('account.%s_ri_tax_vat_0_compras' % ref('base.company_ri')),
-                ref('account.%s_base_tax_impuestos_internos' % ref('base.company_ri'))
-            ])]
+                ref('account.%s_base_tax_impuestos_internos' % ref('base.company_ri'), False)
+            ] if tax_id])]
            }),
             (0, 0, {'product_id': ref('product.product_product_25'), 'price_unit': 1740.0, 'quantity': 1,
             'tax_ids': [(6, 0, [
