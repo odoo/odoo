@@ -1,19 +1,21 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from cups import Connection as CupsConnection, IPPError
+import logging
+import re
+import subprocess
+import time
 from itertools import groupby
-from urllib.parse import urlsplit, parse_qs, unquote
+from urllib.parse import parse_qs, unquote, urlsplit
+
+import pyudev
+from cups import Connection as CupsConnection
+from cups import IPPError
 from zeroconf import (
     IPVersion,
     ServiceBrowser,
     ServiceStateChange,
     Zeroconf,
 )
-import logging
-import pyudev
-import re
-import subprocess
-import time
 
 from odoo.addons.iot_drivers.interface import Interface
 from odoo.addons.iot_drivers.main import iot_devices
@@ -253,8 +255,10 @@ class PrinterInterface(Interface):
             self.conn.addPrinterOptionDefault(device['identifier'], "usb-no-reattach", "true")
             self.conn.addPrinterOptionDefault(device['identifier'], "usb-unidir", "true")
             return True
-        except IPPError:
-            _logger.exception("Failed to add printer '%s'", device['identifier'])
+        except IPPError as e:
+            _, description = e.args if len(e.args) == 2 else (None, str(e))
+            if description != "Success":  # hide (1280, "Success")
+                _logger.exception("Failed to add printer '%s'", device['identifier'])
             return False
 
     def start(self):
