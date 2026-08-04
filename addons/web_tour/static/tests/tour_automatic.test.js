@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { afterEach, beforeEach, describe, expect, test } from "@odoo/hoot";
-import { advanceTime, animationFrame, queryFirst } from "@odoo/hoot-dom";
+import { animationFrame, queryFirst, waitUntil } from "@odoo/hoot-dom";
 import { Component, xml } from "@odoo/owl";
 import {
     getService,
@@ -20,16 +20,11 @@ describe.current.tags("desktop");
 const tourRegistry = registry.category("web_tour.tours");
 let macro;
 async function waitForMacro() {
-    for (let i = 0; i < 50; i++) {
-        await animationFrame();
-        await advanceTime(265);
-        if (macro.isComplete) {
-            return;
-        }
-    }
-    if (!macro.isComplete) {
-        throw new Error(`Macro is not complete`);
-    }
+    await waitUntil(() => macro.isComplete, {
+        timeout: 5_000,
+        message: "waitForMacro: macro did not complete in time",
+    });
+    await animationFrame();
 }
 
 beforeEach(() => {
