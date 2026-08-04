@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="portal_entry_newsletters" model="portal.entry">
+        <field name="name">Subscribed Newsletters</field>
+        <field name="description">Manage your subscribed newsletters</field>
+        <field name="url">/mailing/my</field>
+        <field name="image" type="bytes" file="mass_mailing/static/description/icon.svg"/>
+        <field name="is_config_card" eval="True"/>
+    </record>
+</odoo>
