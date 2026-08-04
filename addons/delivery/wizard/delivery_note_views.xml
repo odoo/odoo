@@ -7,7 +7,8 @@
         <field name="arch" type="xml">
             <form string="Delivery Note">
                 <sheet>
-                    <field name="note_line_ids"/>
+                    <field name="note_line_ids" mode="list,kanban"
+                        context="{'kanban_view_ref': 'delivery.delivery_note_line_kanban_view', 'form_view_ref': 'delivery.delivery_note_line_form_view'}"/>
                     <group>
                         <group>
                             <field name="dm_id" options="{'no_open': True, 'no_create': True}"/>
