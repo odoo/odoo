@@ -56,8 +56,8 @@
                         </button>
                         <t t-set-slot="content">
                             <div class="d-flex gap-2 p-2 border-bottom">
-                                <span t-on-click="this.openLnaPopup" role="button" t-attf-class="d-flex align-items-center justify-content-center py-1 btn btn-{{this.pos.lnaState.type}} w-100 text-center {{this.pos.config.use_iot_box ? 'flex-column' : '' }}" title="Local Network Access">
-                                    <i class="oi oi-fw" data-icon="wifi"/> LNA
+                                <span t-on-click="this.openLnaPopup" role="button" t-attf-class="d-flex align-items-center justify-content-center gap-1 py-1 btn btn-{{this.pos.lnaState.type}} w-100 text-center {{this.pos.config.use_iot_box ? 'flex-column' : '' }}" title="Local Network Access">
+                                    <i class="oi oi-fw" data-icon="wifi"/><span class="lna-label">LNA</span>
                                 </span>
                             </div>
                             <div class="p-2 pos-burger-menu-items">

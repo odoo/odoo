@@ -44,12 +44,20 @@
 }
 
 .pos .pos-burger-menu-items .o-dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: map-get($spacers, 2);
     padding: map-get($spacers, 2);
     border-radius: $border-radius;
 
     &:hover {
         background-color: $o-gray-200;
     }
+}
+
+.pos .lna-label {
+    position: relative;
+    top: 1px;
 }
 
 .pos .o-dropdown--menu .dropdown-item.focus {
