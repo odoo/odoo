@@ -63,7 +63,9 @@ test("Barcode scanner crop overlay", async () => {
     patchWithCleanup(BarcodeVideoScanner.prototype, {
         async isVideoReady() {
             const result = await super.isVideoReady(...arguments);
-            videoReady.resolve();
+            if (result) {
+                videoReady.resolve();
+            }
             return result;
         },
         onResize(overlayInfo) {
