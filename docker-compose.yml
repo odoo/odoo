@@ -17,7 +17,33 @@ services:
       POSTGRES_DB: ${POSTGRES_DB:-postgres}
       POSTGRES_USER: ${POSTGRES_USER:-odoo}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-odoo}
-    # ports: # - "127.0.0.1:5432:5432"
+    # Observability + slow-query diagnostics (v0.5 "Tuned" work):
+    #   - pg_stat_statements: per-query execution stats (total_exec_time, calls,
+    #     shared hit/read buffers) — rank real offenders instead of guessing.
+    #   - log_min_duration_statement=200: log every statement >= 200ms to the
+    #     container log for EXPLAIN follow-up outside the app.
+    #   - track_io_timing=on: buffers + actual I/O timings in EXPLAIN (ANALYZE).
+    # Phase 5 (EC2 tuning) appends the shared_buffers/effective_cache_size/
+    # work_mem family of flags to this same list.
+    #
+    # Loopback-only port 5432: lets a host-side client (local venv Odoo,
+    # psql, pg_stat_statements queries) reach the db without exposing it to
+    # the LAN. Production: keep this commented out — nginx/odoo reach the db
+    # over the compose network.
+    ports:
+      - "127.0.0.1:5432:5432"
+    command:
+      - postgres
+      - -c
+      - shared_preload_libraries=pg_stat_statements
+      - -c
+      - pg_stat_statements.max=10000
+      - -c
+      - pg_stat_statements.track=all
+      - -c
+      - track_io_timing=on
+      - -c
+      - log_min_duration_statement=200
     volumes:
       - odoo-db-data:/var/lib/postgresql/data
     healthcheck:
