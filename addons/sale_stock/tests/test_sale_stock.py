@@ -1822,6 +1822,51 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
 
         self.assertEqual(so.picking_ids.move_ids.mapped('state'), ['cancel', 'cancel'])
 
+    def test_3_steps_pull_cancel_and_reconfirm_qty(self):
+        """
+        Test that, with a 3-step pull delivery route:
+        - A SO is confirmed for a quantity of 1.
+        - The Pick transfer is validated.
+        - The Pick transfer is returned.
+        - The SO is cancelled, reset to quotation, and confirmed again.
+        - The newly generated delivery move should require a quantity of 1.
+        """
+        warehouse = self.warehouse_3_steps_pull
+        so = self.env['sale.order'].create({
+            'warehouse_id': warehouse.id,
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'product_id': self.product_a.id,
+                'product_uom_qty': 1,
+            })],
+        })
+        so.action_confirm()
+
+        pick_picking = so.picking_ids.filtered(lambda p: p.picking_type_id == warehouse.pick_type_id)
+        pick_picking.move_ids.quantity = 1
+        pick_picking.move_ids.picked = True
+        pick_picking._action_done()
+
+        return_picking_form = Form(self.env['stock.return.picking']
+            .with_context(active_ids=pick_picking.ids, active_id=pick_picking.id,
+            active_model='stock.picking'))
+        return_wizard = return_picking_form.save()
+        return_wizard.product_return_moves.quantity = 1
+        res = return_wizard.action_create_returns()
+        return_picking = self.env['stock.picking'].browse(res['res_id'])
+        return_picking.move_ids.quantity = 1
+        return_picking.move_ids.picked = True
+        return_picking._action_done()
+
+        so.action_cancel()
+        so.action_draft()
+        so.action_confirm()
+        new_ship_move = so.picking_ids.filtered(
+            lambda p: p.picking_type_id == warehouse.out_type_id and p.state != 'cancel'
+        ).move_ids
+        self.assertEqual(new_ship_move.product_uom_qty, so.order_line.product_uom_qty,
+            "The re-confirmed sale order should only require the ordered quantity.")
+
     def test_delivery_on_negative_delivered_qty(self):
         """
             Tests that returns created from SO lines with negative quantities update the delivered
