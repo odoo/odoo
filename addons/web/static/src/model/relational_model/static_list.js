@@ -828,6 +828,7 @@ export class StaticList extends DataPoint {
             virtualId: getId("virtual"),
             activeFields: params.activeFields,
             manuallyAdded: params.manuallyAdded,
+            context: Object.assign({}, this.context, params.context),
         });
     }
 
@@ -838,7 +839,7 @@ export class StaticList extends DataPoint {
         }
         const id = resId || params.virtualId;
         const config = {
-            context: this.context,
+            context: params.context || this.context,
             activeFields: Object.assign({}, params.activeFields || this.activeFields),
             resModel: this.resModel,
             fields: params.fields || this.fields,
