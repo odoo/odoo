@@ -11,7 +11,6 @@ import {
     hasSameStyleAttributes,
     isBold,
     isContentEditable,
-    isContentEditableAncestor,
     isElement,
     isEmpty,
     isEmptyBlock,
@@ -730,16 +729,6 @@ export class FormatPlugin extends Plugin {
                     currentNode = newLastAncestorInlineFormat;
                 }
                 parentNode = currentNode.parentElement;
-            } else if (
-                this.dependencies.split.isUnsplittable(parentNode) &&
-                this.dependencies.selection.areNodeContentsFullySelected(parentNode) &&
-                !isContentEditableAncestor(parentNode)
-            ) {
-                // Special case: if the parent node is unsplittable and
-                // fully selected, we should make sure the span is applied
-                // outside of it.
-                inlineAncestor = parentNode;
-                break;
             } else {
                 break;
             }
