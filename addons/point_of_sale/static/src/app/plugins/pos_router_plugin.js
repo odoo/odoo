@@ -19,7 +19,7 @@ const parseParams = (matches, paramSpecs) =>
         })
     );
 
-export class PosRouter extends Plugin {
+export class PosRouterPlugin extends Plugin {
     registeredScreens = signal.Map(new Map());
     currentScreen = signal(null);
     currentScreenParams = signal({});

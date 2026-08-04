@@ -1,13 +1,13 @@
 import { registry } from "@web/core/registry";
 import { usePos } from "./pos_hook";
-import { PosRouter } from "../plugins/pos_router_plugin";
+import { PosRouterPlugin } from "../plugins/pos_router_plugin";
 import { usePlugin } from "@odoo/owl";
 
 /**
  * @param {string} pageName
  */
 export function useRouterParamsChecker(pageName) {
-    const router = usePlugin(PosRouter);
+    const router = usePlugin(PosRouterPlugin);
     const pos = usePos();
     const routeParams = registry.category("pos_pages").get(pageName);
     const params = routeParams.params;

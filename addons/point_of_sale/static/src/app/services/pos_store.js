@@ -46,7 +46,7 @@ import { Domain } from "@web/core/domain";
 import { PosOrderAccounting } from "@point_of_sale/app/models/accounting/pos_order_accounting";
 import { PosOrderlineAccounting } from "@point_of_sale/app/models/accounting/pos_order_line_accounting";
 import { ComboSuggestion } from "../models/utils/combo_suggestion";
-import { PosRouter } from "@point_of_sale/app/plugins/pos_router_plugin";
+import { PosRouterPlugin } from "@point_of_sale/app/plugins/pos_router_plugin";
 import { SIZES } from "@web/core/ui/ui_service";
 import { SnoozeDialog } from "@point_of_sale/app/components/popups/product_info_popup/snooze_dialog/snooze_dialog";
 
@@ -57,7 +57,7 @@ export class PosStore extends WithLazyGetterTrap {
     loadingSkipButtonIsShown = false;
     mainScreen = { name: null, component: null };
     feedbackScreenAutoSkipDelay = 1000;
-    router = usePlugin(PosRouter);
+    router = usePlugin(PosRouterPlugin);
 
     static excludedLazyGetters = [
         "defaultPage",
