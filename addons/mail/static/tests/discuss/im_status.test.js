@@ -27,7 +27,7 @@ test("update presence if IM status changes to offline while this device is onlin
     const pyEnv = await startServer();
     pyEnv["res.users"].write(serverState.userId, { im_status: "online" });
     await start();
-    await expect.waitForSteps([]);
+    await expect.waitForSteps(["update_presence"]);
     sendPresenceUpdate("res.users", serverState.userId, "offline");
     await expect.waitForSteps(["update_presence"]);
 });
@@ -38,7 +38,7 @@ test("update presence if IM status changes to away while this device is online",
     const pyEnv = await startServer();
     pyEnv["res.users"].write(serverState.userId, { im_status: "online" });
     await start();
-    await expect.waitForSteps([]);
+    await expect.waitForSteps(["update_presence"]);
     sendPresenceUpdate("res.users", serverState.userId, "away");
     await expect.waitForSteps(["update_presence"]);
 });
