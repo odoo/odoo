@@ -34,7 +34,7 @@ import {
 
 import { CHAT_HUB_KEY } from "@mail/core/common/chat_hub_model";
 import { MENU_TABS } from "@mail/core/public_web/messaging_menu/messaging_menu_model";
-import { click, contains } from "./mail_test_helpers_contains";
+import { click, contains, TIMEOUT } from "./mail_test_helpers_contains";
 
 import { closeStream, mailGlobal } from "@mail/utils/common/misc";
 import { Component, onMounted, onPatched } from "@odoo/owl";
@@ -870,7 +870,7 @@ export async function isInViewportOf(childSelector, parentSelector) {
         reject: rejectInViewport,
         resolve: resolveInViewport,
     } = Promise.withResolvers();
-    const failTimeout = setTimeout(() => check({ crashOnFail: true }), 3000);
+    const failTimeout = setTimeout(() => check({ crashOnFail: true }), TIMEOUT);
     const check = ({ crashOnFail = false } = {}) => {
         const parent = queryFirst(parentSelector);
         const child = queryFirst(childSelector);
