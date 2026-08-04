@@ -1,5 +1,6 @@
 import { defineMailModels } from "@mail/../tests/mail_test_helpers";
 import { decorateEmojis } from "@mail/utils/common/format";
+import { createElementFromContent, getInnerHtml } from "@mail/utils/common/html";
 
 import { beforeEach, expect, test } from "@odoo/hoot";
 import { markup } from "@odoo/owl";
@@ -17,8 +18,12 @@ beforeEach(async () => {
     await emojiLoader.load();
 });
 
+function decoratedHtml(content) {
+    return getInnerHtml(decorateEmojis(createElementFromContent(content)));
+}
+
 test("emojis in text content are wrapped with title and marked up", async () => {
-    const result = decorateEmojis("😇");
+    const result = decoratedHtml("😇");
     expect(result).toBeInstanceOf(Markup);
     expect(result.toString()).toEqual(
         '<span class="o-mail-emoji" title=":innocent: :halo:">😇</span>'
@@ -26,12 +31,12 @@ test("emojis in text content are wrapped with title and marked up", async () => 
 });
 
 test("emojis in attributes are not wrapped with title", async () => {
-    const result = decorateEmojis(markup`<span title='😇'>test</span>`);
+    const result = decoratedHtml(markup`<span title='😇'>test</span>`);
     expect(result.toString()).toEqual('<span title="😇">test</span>');
 });
 
 test("unsafe content is escaped when wrapping emojis with title", async () => {
-    const result = decorateEmojis("<img src='javascript:alert(\"xss\")'/>😇");
+    const result = decoratedHtml("<img src='javascript:alert(\"xss\")'/>😇");
     expect(result.toString()).toEqual(
         '&lt;img src=&#x27;javascript:alert(&quot;xss&quot;)&#x27;/&gt;<span class="o-mail-emoji" title=":innocent: :halo:">😇</span>'
     );

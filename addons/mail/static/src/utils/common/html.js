@@ -5,7 +5,7 @@
 
 import { markup } from "@odoo/owl";
 
-import { htmlJoin } from "@web/core/utils/html";
+import { createDocumentFragmentFromContent, htmlJoin } from "@web/core/utils/html";
 
 /**
  * Returns whether the given tag is a void HTML element.
@@ -51,6 +51,16 @@ function escapeNode(node, { innerOnly = false } = {}) {
         return markup`<${tag} ${attributes}>`;
     }
     return markup`<${tag} ${attributes}>${children}</${tag}>`;
+}
+
+/**
+ * Safely parses content into the body element of a detached document.
+ *
+ * @param {string|ReturnType<markup>} content
+ * @returns {HTMLElement}
+ */
+export function createElementFromContent(content) {
+    return createDocumentFragmentFromContent(content).body;
 }
 
 /**

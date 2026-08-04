@@ -490,17 +490,15 @@ export function trimEmptyBlocksAround(content) {
 }
 
 /**
- * Converts an html string to inline representation.
+ * Converts the content of an element to its inline representation.
  * - Links and mentions are preserved
  * - For the rest: text content of nodes
  *
- * @param {string|ReturnType<markup>} htmlString
- * @returns {ReturnType<markup>}
+ * @param {Element} element modified in place
+ * @returns {Element} the same element
  */
-export function htmlToHtmlInline(htmlString) {
-    const doc = createDocumentFragmentFromContent(htmlString || "");
-    const body = doc.body;
-    const previewBody = body.ownerDocument.createElement("body");
+export function inlineElement(element) {
+    const previewBody = element.ownerDocument.createElement("body");
 
     /** @param {HTMLElement} [node] */
     const isBlock = (node) =>
@@ -512,7 +510,7 @@ export function htmlToHtmlInline(htmlString) {
      */
     const appendText = (parent, text) => {
         if (text) {
-            parent.append(body.ownerDocument.createTextNode(text));
+            parent.append(element.ownerDocument.createTextNode(text));
         }
     };
 
@@ -551,14 +549,14 @@ export function htmlToHtmlInline(htmlString) {
             if ([...node.classList].some((cls) => MENTION_CLASSNAMES.has(cls))) {
                 parent.append(node);
             } else if (href) {
-                const link = body.ownerDocument.createElement("a");
+                const link = element.ownerDocument.createElement("a");
                 link.setAttribute("href", href);
                 for (const attr of ["target", "rel"]) {
                     if (node.hasAttribute(attr)) {
                         link.setAttribute(attr, node.getAttribute(attr));
                     }
                 }
-                link.append(body.ownerDocument.createTextNode(href));
+                link.append(element.ownerDocument.createTextNode(href));
                 parent.append(link);
             }
             return;
@@ -566,9 +564,9 @@ export function htmlToHtmlInline(htmlString) {
         appendInlinePreviewChildren(parent, [...node.childNodes]);
     };
 
-    appendInlinePreviewChildren(previewBody, [...body.childNodes]);
-
-    return htmlTrim(getInnerHtml(previewBody)) ?? "";
+    appendInlinePreviewChildren(previewBody, [...element.childNodes]);
+    element.replaceChildren(...previewBody.childNodes);
+    return element;
 }
 
 /**
@@ -627,20 +625,18 @@ export const EMOJI_REGEX = new RegExp(
 );
 
 /**
- * Wrap emojis present in the given text with a title and return a safe HTML
- * string.
+ * Wrap emojis present in `element` with a title.
  *
- * @param {string|ReturnType<markup>} content
- * @returns {ReturnType<markup>}
+ * @param {Element} element modified in place
+ * @returns {Element} the same element
  */
-export function decorateEmojis(content) {
-    if (!emojiLoader.loaded || !content) {
-        return content;
+export function decorateEmojis(element) {
+    if (!emojiLoader.loaded) {
+        return element;
     }
-    const doc = createDocumentFragmentFromContent(content);
-    const nodes = doc.evaluate(
+    const nodes = element.ownerDocument.evaluate(
         ".//text()",
-        doc.body,
+        element,
         null,
         XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE,
         null
@@ -662,7 +658,7 @@ export function decorateEmojis(content) {
         );
         node.replaceWith(...span.childNodes);
     }
-    return getInnerHtml(doc.body);
+    return element;
 }
 
 /**
