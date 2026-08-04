@@ -9,7 +9,7 @@
                              t-att-class="this.segmentCustomClasses(segment, segment_first, segment_last)"
                              t-att-style="this._styleSegment(segment)">
                             <t t-if="!segment.isSilence">
-                                <div class="o-CallDebriefTimeline-media-progress position-absolute left-0 top-0 h-100 bg-primary"
+                                <div class="o-CallDebriefTimeline-media-progress position-absolute top-0 h-100 bg-primary"
                                     t-att-style="this._stylePositionMediaProgress(segment)"
                                 />
                             </t>
@@ -20,11 +20,11 @@
                 <!-- Playhead (rendered on top of everything) -->
                 <div
                     t-if="this.props.currentTime !== undefined"
-                    class="o-CallDebriefTimeline-playhead position-absolute top-50 translate-middle rounded-pill overflow-hidden"
+                    class="o-CallDebriefTimeline-playhead position-absolute top-50 rounded-pill overflow-hidden"
                     t-att-style="this._stylePositionPlayhead()"
                 >
                 </div>
-                <div class="o-CallDebriefTimeline-timestamp o-tooltip tooltip-inner position-absolute top-100 translate-middle d-none d-md-block mt-2 pe-none" t-ref="this.timestamp" t-att-style="this._stylePositionTimestamp()" t-out="this.formatDuration(this.displayedTimestamp)"/>
+                <div class="o-CallDebriefTimeline-timestamp o-tooltip tooltip-inner position-absolute top-100 d-none d-md-block mt-2 pe-none" t-ref="this.timestamp" t-att-style="this._stylePositionTimestamp()" t-out="this.formatDuration(this.displayedTimestamp)"/>
             </div>
         </div>
     </t>
