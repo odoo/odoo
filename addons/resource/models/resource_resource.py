@@ -443,6 +443,7 @@ class ResourceResource(models.Model):
         :param domain: optional domain to filter attendances
         """
         intervals_per_resource = {}
+        self.resource_calendar_id
         for resource in self:
             intervals_per_resource[resource] = Intervals([])  # TODO BEDO
         return intervals_per_resource

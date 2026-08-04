@@ -2186,6 +2186,19 @@ class HrEmployee(models.Model):
 
         return result
 
+    def _get_calendar_tz_periods(self, start, stop, check_contract=True):
+        """
+        :param date start: the start of the period
+        :param date stop: the stop of the period
+        :param boolean check_contract: true means that we restrict valid versions only to contract periods
+        """
+        version_periods = self.sudo()._get_version_periods(start, stop, check_contract=check_contract)
+        return {
+            emp: (start, stop, version.resource_calendar_id, version.tz)
+            for emp, (start, stop, version) in version_periods
+        }
+
+
     @api.model
     def _get_all_versions_with_contract_overlap_with_period(self, date_from, date_to):
         """
@@ -2558,3 +2571,39 @@ class HrEmployee(models.Model):
             display_field_name = '(' + tracking_values['field_label'] + ')'
             version_changes_to_display[display_field_name] = (tracking_values['old_value'], tracking_values['new_value'])
         return version_changes_to_display
+
+    # --------------------------------------------------
+    # New API
+    # --------------------------------------------------
+
+    def _attendance_intervals(self, dt_from, dt_to, domain=None, availability=False):
+        """
+        Get the attendances between dt_from and dt_to, as intervals linked to records of resource.calendar.attendance.
+            - For variable schedule, only attendances with a date are considered. If an attendance has a recurrency rule, it will be repeated on the corresponding days.
+            - For fixed schedule, only attendances without a date are considered. They will be grouped by their dayofweek and returned on the corresponding days.
+        The method uses the calendar method of the same name and shifts the intervals to be fitting the resource's timezone.
+
+        :param dt_from: start date of the period (included).
+        :param dt_to: end date of the period (included)
+        :param domain: optional domain to filter attendances
+        """
+        intervals_per_resource = defaultdict(lambda: Intervals([], keep_distinct=True))
+        calendar_periods = self._get_calendar_periods(dt_from.date(), dt_to.date())
+        shift_calendar_intervals = defaultdict(dict)
+        all_calendars = self.env['resource.calendar']
+        for _, _, cal in functools.reduce(operator.iadd, calendar_periods.values(), []):
+            all_calendars |= cal
+        cal_att_intervals = all_calendars._attendance_intervals(dt_from, dt_to, domain, availability)
+        for resource in self:
+            tz = resource.tz
+            for start, stop, calendar in calendar_periods.get(resource, []):
+                if not shift_calendar_intervals[calendar].get(tz):
+                    shift_calendar_intervals[calendar][tz] = localize_intervals(cal_att_intervals[calendar], tz)
+                shifted_perdiod_interval = Intervals([(
+                    datetime.combine(start, time.min, tzinfo=ZoneInfo(tz)),
+                    datetime.combine(stop, time.max, tzinfo=ZoneInfo(tz)),
+                    self.env['resource.calendar.attendance'],
+                )])
+                intervals_per_resource[resource] |= (shift_calendar_intervals[calendar][tz] & shifted_perdiod_interval)
+        return intervals_per_resource
+>>>>>>> ce047dd02031 (wip)

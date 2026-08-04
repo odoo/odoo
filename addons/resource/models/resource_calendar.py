@@ -929,7 +929,7 @@ class ResourceCalendar(models.Model):
     # New API
     # --------------------------------------------------
 
-    def _attendance_intervals(self, dt_from, dt_to, domain=None, availability=False):
+    def _attendance_intervals(self, dt_from, dt_to, domain=None, tz_list=[], availability=False):
         """
         Get the attendances between dt_from and dt_to, as intervals linked to records of resource.calendar.attendance.
             - For variable schedule, only attendances with a date are considered. If an attendance has a recurrency rule, it will be repeated on the corresponding days.
@@ -947,7 +947,7 @@ class ResourceCalendar(models.Model):
         """
         dt_from = dt_from.replace(tzinfo=None)
         dt_to = dt_to.replace(tzinfo=None)
-        intervals_per_calendar = {}
+        intervals_per_calendar = defaultdict(dict)
         attendances_per_calendar = self._get_attendances_by_date_batch(dt_from.date(), dt_to.date(), domain)
         for calendar, att_per_date in attendances_per_calendar.items():
             interval_tuple_list = []

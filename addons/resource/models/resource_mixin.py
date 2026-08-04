@@ -227,7 +227,7 @@ class ResourceMixin(models.AbstractModel):
     # New API
     # --------------------------------------------------
 
-    def _get_calendar_periods(self, start, stop):
+    def _get_calendar_tz_periods(self, start, stop):
         """
         Meant to be overriden in HR for calendar versionning
 
@@ -235,7 +235,7 @@ class ResourceMixin(models.AbstractModel):
         :param date stop: the stop of the period
         :param boolean check_contract: true means that we restrict valid versions only to contract periods
         """
-        return {record: (start, stop, record.resource_calendar_id) for record in self}
+        return {record: (start, stop, record.resource_calendar_id, record.tz) for record in self}
 
     def _attendance_intervals(self, dt_from, dt_to, domain=None, availability=False):
         """
@@ -244,57 +244,66 @@ class ResourceMixin(models.AbstractModel):
             - For fixed schedule, only attendances without a date are considered. They will be grouped by their dayofweek and returned on the corresponding days.
         The method uses the calendar method of the same name and shifts the intervals to be fitting the resource's timezone.
 
-        :param dt_from: start date of the period (included).
-        :param dt_to: end date of the period (included)
+        :param dt_from: start datetime of the period (included).
+        :param dt_to: end datetime of the period (included)
         :param domain: optional domain to filter attendances
         """
-        intervals_per_resource = defaultdict(lambda: Intervals([], keep_distinct=True))
-        calendar_periods = self._get_calendar_periods(dt_from.date(), dt_to.date())
-        shift_calendar_intervals = defaultdict(dict)
-        all_calendars = self.env['resource.calendar']
-        for _, _, cal in functools.reduce(operator.iadd, calendar_periods.values(), []):
-            all_calendars |= cal
-        cal_att_intervals = all_calendars._attendance_intervals(dt_from, dt_to, domain, availability)
+        intervals_per_resource = {}
+        calendar_tz_periods = self._get_calendar_tz_periods(dt_from.date(), dt_to.date())
+        calendar_ids_per_tz = defaultdict(set)
         for resource in self:
-            tz = resource.tz
-            for start, stop, calendar in calendar_periods.get(resource, []):
-                if not shift_calendar_intervals[calendar].get(tz):
-                    shift_calendar_intervals[calendar][tz] = localize_intervals(cal_att_intervals[calendar], tz)
-                shifted_perdiod_interval = Intervals([(
-                    datetime.combine(start, time.min, tzinfo=ZoneInfo(tz)),
-                    datetime.combine(stop, time.max, tzinfo=ZoneInfo(tz)),
-                    self.env['resource.calendar.attendance'],
-                )])
-                intervals_per_resource[resource] |= (shift_calendar_intervals[calendar][tz] & shifted_perdiod_interval)
+            _, _, calendar, tz = calendar_tz_periods[resource]
+            if calendar:
+                calendar_ids_per_tz[tz].add(calendar.id)
+
+        cal_att_intervals_per_tz = {}
+        for tz, calendar_ids in calendar_ids_per_tz.items():
+            naive_from = dt_from.astimezone(ZoneInfo(tz)).replace(tzinfo=None)
+            naive_to = dt_to.astimezone(ZoneInfo(tz)).replace(tzinfo=None)
+            cal_att_intervals_per_tz[tz] = self.env['resource.calendar'].browse(calendar_ids)\
+                ._attendance_intervals(naive_from, naive_to, domain, availability)
+
+        for resource in self:
+            _, _, cal, tz = calendar_tz_periods[resource]
+
+            period_interval = Intervals([(dt_from, dt_to, self.env['resource.calendar.attendance'])])
+            if cal:
+                cal_intervals = cal_att_intervals_per_tz[tz].get(cal, Intervals())
+                period_interval = localize_intervals(cal_intervals, tz) & period_interval
+            intervals_per_resource[resource] = period_interval
+
         return intervals_per_resource
 
     def _leave_intervals(self, dt_from, dt_to, domain=None):
         intervals_per_resource = defaultdict(list)
+        if domain is None:
+            domain = [('count_as', '=', 'absence')]
         domain = domain + [
-            ('resource_id', 'in', [False] + [r.id for r in self.resource_id.ids]),
+            ('resource_id', 'in', [False] + self.resource_id.ids),
             ('date_from', '<=', dt_to.astimezone(UTC).replace(tzinfo=None)),
             ('date_to', '>=', dt_from.astimezone(UTC).replace(tzinfo=None)),
         ]
         leaves_per_resource = dict(self.env['resource.calendar.leaves']._read_group(
-            domain, groupby=['resource_id'], aggregate=['id:recordset']))
+            domain, groupby=['resource_id'], aggregates=['id:recordset']))
+        empty_leaves = self.env['resource.calendar.leaves']
         for resource in self:
-            for leave in leaves_per_resource.get(resource.resource_id):
+            for leave in leaves_per_resource.get(resource.resource_id, empty_leaves):
                 intervals_per_resource[resource].append([
-                    leave.date_from,
-                    leave.date_to,
+                    leave.date_from.replace(tzinfo=UTC),
+                    leave.date_to.replace(tzinfo=UTC),
                     leave,
                 ])
-            for leave in leaves_per_resource.get(False):
+            for leave in leaves_per_resource.get(False, empty_leaves):
                 if leave.company_id in [resource.company_id, False] and leave.calendar_id in [resource.resource_calendar_id, False]:
                     intervals_per_resource[resource].append([
-                        leave.date_from,
-                        leave.date_to,
+                        leave.date_from.replace(tzinfo=UTC),
+                        leave.date_to.replace(tzinfo=UTC),
                         leave,
                     ])
         return {r: Intervals(intervals_per_resource[r], keep_distinct=True) for r in self}
 
-    def _work_intervals(self, dt_from, dt_to, domain=None):
-        attendances = self._attendance_intervals(dt_from, dt_to, domain)
+    def _work_intervals(self, dt_from, dt_to, domain=None, availability=False):
+        attendances = self._attendance_intervals(dt_from, dt_to, domain, availability)
         leaves = self._leave_intervals(dt_from, dt_to, domain)
         return {
             record: attendances.get(record, Intervals([])) - leaves.get(record, Intervals([]))
