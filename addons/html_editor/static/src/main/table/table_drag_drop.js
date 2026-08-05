@@ -5,7 +5,7 @@ import {
 } from "@html_editor/utils/dom_info";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { getColumnIndex, getRowIndex } from "@html_editor/utils/table";
-import { Component, onMounted, onWillUnmount, signal } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, signal, useScope } from "@odoo/owl";
 
 const OVERLAY_CLAMP_OFFSET = 5;
 
@@ -46,10 +46,20 @@ export class TableDragDrop extends Component {
                 ? [...this.tableElement.rows].map((r) => getIframeAdjustedBoundingRect(r))
                 : [...this.props.tableGrid[0]].map((c) => getIframeAdjustedBoundingRect(c));
 
-        useCrossDocumentListener(this.props.document, "pointermove", this.onPointerMove.bind(this));
-        useCrossDocumentListener(this.props.document, "pointerup", this.onPointerUp.bind(this));
-
+        const scope = useScope();
         onMounted(() => {
+            scope.run(() => {
+                useCrossDocumentListener(
+                    this.props.document,
+                    "pointermove",
+                    this.onPointerMove.bind(this)
+                );
+                useCrossDocumentListener(
+                    this.props.document,
+                    "pointerup",
+                    this.onPointerUp.bind(this)
+                );
+            });
             this.props.editable.classList.add("o-we-table-dragging");
             if (this.overlayRef()) {
                 Object.assign(this.overlayRef().style, {
