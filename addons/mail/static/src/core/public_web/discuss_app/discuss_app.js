@@ -44,7 +44,6 @@ export class Discuss extends Component {
         this.effect = usePlugin(EffectPlugin);
         this.ui = useService("ui");
         useSubEnv({
-            inDiscussApp: true,
             messageHighlight: this.messageHighlight,
         });
         useListener(

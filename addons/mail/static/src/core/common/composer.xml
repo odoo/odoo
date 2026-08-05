@@ -11,14 +11,14 @@
                     'pb-2': this.extended and !this.props.composer.message,
                     'o-extended': this.extended,
                     'o-isUiSmall': this.ui.isSmall,
-                    'ps-2 pe-4 pb-2': this.normal and !this.env.inDiscussApp and !this.ancestors.has('Meeting'),
+                    'ps-2 pe-4 pb-2': this.normal and !this.ancestors.has('Discuss') and !this.ancestors.has('Meeting'),
                     'ps-0 pe-3 pb-2': this.normal and this.ancestors.has('Meeting'),
                     'o-hasSelfAvatar': this.showComposerAvatar,
                     'o-focused': this.props.composer.isFocused,
                     'o-editing': this.props.composer.message,
                     'o-chatWindow mx-2 my-1': this.env.inChatWindow,
                     'mb-2': this.env.inChatWindow and !this.props.composer.message,
-                    'o-discussApp pt-1 ps-2 pe-4 o-pb-2_5': this.env.inDiscussApp,
+                    'o-discussApp pt-1 ps-2 pe-4 o-pb-2_5': this.ancestors.has('Discuss'),
                     'o-disabled': this.props.disabled,
                 }" t-attf-class="{{ this.props.className }}">
             <FileUploader t-if="this.allowUpload" multiUpload="this.isMultiUpload" onUploaded.bind="(data) => { this.attachmentUploader.uploadData(data) }">
@@ -136,8 +136,8 @@
         t-att-class="{
             'btn-primary btn-sm': this.extended,
             'btn-link rounded-circle p-0': !this.extended,
-            'me-2': this.env.inDiscussApp,
-            'border-start-0': this.env.inDiscussApp and !this.props.composer.message,
+            'me-2': this.ancestors.has('Discuss'),
+            'border-start-0': this.ancestors.has('Discuss') and !this.props.composer.message,
             'border-0': this.props.composer.message,
         }"
         t-on-click="this.sendMessage"

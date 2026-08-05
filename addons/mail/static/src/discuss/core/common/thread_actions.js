@@ -62,7 +62,7 @@ registerThreadAction("add-to-favorites", {
             { channel_id: channel.id, is_favorite: true },
             { silent: false }
         );
-        if (owner.env.inDiscussApp && !owner.env.services.ui.isSmall) {
+        if (owner.ancestors?.has("Discuss") && !owner.env.services.ui.isSmall) {
             return;
         }
         store.env.services.notification.add(
@@ -93,7 +93,7 @@ registerThreadAction("remove-from-favorites", {
             { channel_id: channel.id, is_favorite: false },
             { silent: false }
         );
-        if (owner.env.inDiscussApp && !owner.env.services.ui.isSmall) {
+        if (owner.ancestors?.has("Discuss") && !owner.env.services.ui.isSmall) {
             return;
         }
         store.env.services.notification.add(
@@ -212,7 +212,7 @@ registerThreadAction("member-list", {
     actionPanelClose: ({ action, owner, store, nextActiveAction }) => {
         if (
             action.condition &&
-            owner.env.inDiscussApp &&
+            owner.ancestors?.has("Discuss") &&
             store.discuss?.shouldDisableMemberPanelAutoOpenFromClose(nextActiveAction)
         ) {
             store.discuss.isMemberPanelOpenByDefault = false;
@@ -221,7 +221,7 @@ registerThreadAction("member-list", {
     actionPanelComponent: ChannelMemberList,
     actionPanelComponentProps: ({ channel }) => ({ channel }),
     actionPanelOpen: ({ owner, store }) => {
-        if (owner.env.inDiscussApp) {
+        if (owner.ancestors?.has("Discuss")) {
             store.discuss.isMemberPanelOpenByDefault = true;
         }
     },

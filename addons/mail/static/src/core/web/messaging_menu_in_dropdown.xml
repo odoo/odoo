@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.MessagingMenuInDropdown">
-    <t t-if="this.env.inDiscussApp" t-call="mail.MessagingMenuInDropdown.content"/>
+    <t t-if="this.ancestors.has('Discuss')" t-call="mail.MessagingMenuInDropdown.content"/>
     <Dropdown t-else="" state="this.dropdown" position="'bottom-end'" menuClass="this.discussSystray.menuClass" bottomSheet="false">
         <button t-att-class="this.discussSystray.class" data-available-offline="">
             <i class="oi oi-filled" data-icon="forum" role="img" aria-label="Messages"/>

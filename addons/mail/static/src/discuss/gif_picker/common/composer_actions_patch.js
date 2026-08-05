@@ -41,6 +41,6 @@ registerComposerAction("add-gif", {
             onClose: () => this.actionPanelClose(),
         });
     },
-    sequence: ({ owner }) => (!owner.env.inDiscussApp ? 40 : undefined),
-    sequenceQuick: ({ owner }) => (owner.env.inDiscussApp ? 15 : undefined),
+    sequence: ({ owner }) => (!owner.ancestors?.has("Discuss") ? 40 : undefined),
+    sequenceQuick: ({ owner }) => (owner.ancestors?.has("Discuss") ? 15 : undefined),
 });

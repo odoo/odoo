@@ -1,5 +1,6 @@
 import { Component, computed, proxy, signal, types, useOnChange, useProps } from "@odoo/owl";
 
+import { useAncestors } from "@mail/core/common/ancestors_hook";
 import { useThreadActions } from "@mail/core/common/thread_actions";
 import { AutoresizeInput } from "@mail/core/common/autoresize_input";
 import { ActionList } from "@mail/core/common/action_list";
@@ -29,6 +30,7 @@ export class DiscussContent extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
+        this.ancestors = useAncestors();
         this.props = useProps({
             thread: types.instanceOf(this.store["mail.thread"]).optional(),
         });
