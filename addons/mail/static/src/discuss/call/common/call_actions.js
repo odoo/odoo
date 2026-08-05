@@ -298,13 +298,13 @@ registerCallAction("join-back", {
     btnClass: ({ owner }) =>
         attClassObjectToString({
             "text-nowrap pe-2 rounded-pill": true,
-            "mx-1": !owner.env.inCallInvitation,
+            "mx-1": !owner.ancestors?.has("CallInvitation"),
         }),
     condition: ({ channel }) =>
         !channel?.isSelfInCall && typeof channel?.useCameraByDefault === "boolean",
     disabledCondition: ({ store }) => store.rtc?.hasPendingRequest,
     icon: ({ channel }) => (channel.useCameraByDefault ? "videocam" : "phone"),
-    inlineName: ({ owner }) => (owner.env.inCallInvitation ? undefined : _t("Join")),
+    inlineName: ({ owner }) => (owner.ancestors?.has("CallInvitation") ? undefined : _t("Join")),
     name: ({ channel }) => (channel?.useCameraByDefault ? _t("Join Video Call") : _t("Join Call")),
     onSelected: ({ channel, store }) =>
         store.rtc.requestToggleCall(channel, { camera: channel.useCameraByDefault }),
@@ -351,13 +351,15 @@ export const rejectAction = {
     btnClass: ({ owner, channel }) =>
         attClassObjectToString({
             "pe-2 rounded-pill": typeof channel?.useCameraByDefault === "boolean",
-            "mx-1": !owner.env.inCallInvitation && typeof channel?.useCameraByDefault === "boolean",
+            "mx-1":
+                !owner.ancestors?.has("CallInvitation") &&
+                typeof channel?.useCameraByDefault === "boolean",
         }),
     condition: ({ channel }) => channel?.self_member_id?.rtc_inviting_session_id,
     disabledCondition: ({ store }) => store.rtc?.hasPendingRequest,
     icon: "close_small",
     inlineName: ({ owner, channel }) =>
-        !owner.env.inCallInvitation && typeof channel?.useCameraByDefault === "boolean"
+        !owner.ancestors?.has("CallInvitation") && typeof channel?.useCameraByDefault === "boolean"
             ? _t("Reject")
             : undefined,
     name: _t("Reject"),
