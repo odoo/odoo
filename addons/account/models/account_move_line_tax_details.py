@@ -10,9 +10,8 @@ class AccountMoveLine(models.Model):
     def _get_query_tax_details_simplified(self, table_references, search_condition):
         return SQL('''
             WITH filtered_aml AS MATERIALIZED (
-                SELECT account_move_line.*, move.move_type AS move_type
+                SELECT account_move_line.*
                 FROM %(table_references)s
-                JOIN account_move move ON move.id = account_move_line.move_id
                 WHERE %(search_condition)s
             ),
             base_lines AS (
@@ -90,7 +89,7 @@ class AccountMoveLine(models.Model):
                 JOIN res_currency curr ON curr.id = lt.currency_id
                 JOIN res_currency comp_curr ON comp_curr.id = lt.company_currency_id
                 WHERE (
-                    aml.move_type != 'entry'
+                        move.move_type != 'entry'
                     OR (t.tax_exigibility = 'on_payment' AND t.cash_basis_transition_account_id IS NOT NULL)
                     OR sign(aml.balance) = sign(lt.balance * t.amount * lt.factor_percent)
                 ) AND (
