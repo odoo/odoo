@@ -1068,7 +1068,7 @@ patch(PosOrder.prototype, {
             if (!line.getQuantity()) {
                 continue;
             }
-            if (!isPaymentReward && line.isServiceFeeLine()) {
+            if (!isPaymentReward && (line.isServiceFeeLine() || !line.isDiscountable())) {
                 continue;
             }
             const taxKey = isPaymentReward
@@ -1090,6 +1090,7 @@ patch(PosOrder.prototype, {
         const applicableProductIds = new Set(reward.all_discount_product_ids.map((p) => p.id));
         const filtered_lines = this.getOrderlines().filter(
             (line) =>
+                line.isDiscountable() &&
                 !line.combo_parent_id &&
                 !line.reward_id &&
                 line.getQuantity() &&
@@ -1123,7 +1124,7 @@ patch(PosOrder.prototype, {
         const discountableLines = [];
         const applicableProductIds = new Set(reward.all_discount_product_ids.map((p) => p.id));
         for (const line of this.getOrderlines()) {
-            if (!line.getQuantity()) {
+            if (!line.getQuantity() || !line.isDiscountable()) {
                 continue;
             }
             if (
@@ -1149,7 +1150,7 @@ patch(PosOrder.prototype, {
         const orderProducts = orderLines.map((line) => line.product_id.id);
         const remainingAmountPerLine = {};
         for (const line of orderLines) {
-            if (!line.getQuantity() || !line.price_unit) {
+            if (!line.getQuantity() || !line.price_unit || !line.isDiscountable()) {
                 continue;
             }
             remainingAmountPerLine[line.uuid] = line.prices.total_included;
