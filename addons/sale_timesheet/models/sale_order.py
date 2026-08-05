@@ -326,7 +326,12 @@ class SaleOrderLine(models.Model):
         mapping = lines_by_timesheet.sudo()._get_delivered_quantity_by_analytic(domain)
 
         for line in lines_by_timesheet:
-            qty_to_invoice = mapping.get(line.id, 0.0)
+            # A period only selects which delivered hours are candidates; qty_delivered
+            # - qty_invoiced remains the authoritative quantity still due.
+            qty_to_invoice = max(0.0, min(
+                mapping.get(line.id, 0.0),
+                line.qty_delivered - line.qty_invoiced,
+            ))
             if qty_to_invoice:
                 line.qty_to_invoice = qty_to_invoice
             else:
