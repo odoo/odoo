@@ -14,7 +14,6 @@ from odoo.addons.test_mail.models.test_mail_corner_case_models import MailTestMu
 from odoo.addons.test_mail.tests.common import TestRecipients
 from odoo.exceptions import AccessError
 from odoo.tests import tagged, users, HttpCase
-from odoo.tests.common import JsonRpcException
 from odoo.tools import mute_logger
 
 
@@ -282,7 +281,6 @@ class TestMultiCompanySetup(TestMailMCCommon, HttpCase):
 @tagged('-at_install', 'post_install', 'multi_company', 'mail_controller')
 class TestMultiCompanyControllers(TestMailMCCommon, HttpCase):
 
-    @mute_logger('odoo.http')
     def test_mail_thread_data(self):
         """ Test returned thread data, in MC environment, to test notably MC
         access issues on partner, ACL support, ... """
@@ -328,26 +326,27 @@ class TestMultiCompanyControllers(TestMailMCCommon, HttpCase):
         ):
             with self.subTest(user_name=test_user.name):
                 self.authenticate(test_user.login, test_user.login)
-                # crash if calling using portal users -> dedicated portal routes currently
+                result = self.make_jsonrpc_request(
+                    "/mail/thread/data",
+                    {
+                        "thread_id": record.id,
+                        "thread_model": record._name,
+                        "request_list": ["followers"],
+                    },
+                )
                 if test_user in self.user_portal + self.user_portal_c2:
-                    with self.assertRaises(JsonRpcException):
-                        result = self.make_jsonrpc_request(
-                            "/mail/thread/data",
-                            {
-                                "thread_id": record.id,
-                                "thread_model": record._name,
-                                "request_list": ["followers"],
-                            },
-                        )
-                else:
-                    result = self.make_jsonrpc_request(
-                        "/mail/thread/data",
+                    self.assertEqual(list(result), ["mail.thread"])
+                    self.assertEqual(
+                        result["mail.thread"][0],
                         {
-                            "thread_id": record.id,
-                            "thread_model": record._name,
-                            "request_list": ["followers"],
+                            "id": record.id,
+                            "model": record._name,
+                            "canPostOnReadonly": can_post,
+                            "hasReadAccess": has_r,
+                            "hasWriteAccess": has_w,
                         },
                     )
+                else:
                     self.assertEqual(result["mail.thread"][0]["followersCount"], 2)
                     self.assertEqual(result["mail.thread"][0]["hasWriteAccess"], has_w)
                     self.assertEqual(result["mail.thread"][0]["hasReadAccess"], has_r)
