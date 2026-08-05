@@ -39,7 +39,7 @@ export class AttachmentPanel extends Component {
      */
     get attachmentsByDate() {
         const attachmentsByDate = {};
-        for (const attachment of this.props.channel.attachments) {
+        for (const attachment of this.props.channel.sortedAttachments) {
             const attachments = attachmentsByDate[attachment.monthYear] ?? [];
             attachments.push(attachment);
             attachmentsByDate[attachment.monthYear] = attachments;

@@ -170,7 +170,11 @@ export class DiscussChannel extends Record {
     channel_member_ids = fields.Many("discuss.channel.member", {
         inverse: "channel_id",
         onDelete: (r) => r?.delete(),
-        sort: (m1, m2) => m1.id - m2.id,
+    });
+    sortedChannelMembers = fields.Many("discuss.channel.member", {
+        compute() {
+            return [...this.channel_member_ids].sort((m1, m2) => m1.id - m2.id);
+        },
     });
     channel_name_member_ids = fields.Many("discuss.channel.member");
     /** @type {"chat"|"channel"|"group"|"livechat"|"whatsapp"|"ai_chat"|"ai_composer"} */
@@ -454,7 +458,7 @@ export class DiscussChannel extends Record {
      * @returns {import("models").ChannelMember[]}
      */
     get membersThatCanSeen() {
-        return this.channel_member_ids;
+        return this.sortedChannelMembers;
     }
     /** @type {Number|undefined} */
     member_count;
@@ -542,9 +546,13 @@ export class DiscussChannel extends Record {
     get showUnreadBanner() {
         return this.self_member_id?.message_unread_counter_ui > 0;
     }
-    sub_channel_ids = fields.Many("discuss.channel", {
-        inverse: "parent_channel_id",
-        sort: (a, b) => compareDatetime(b.lastInterestDt, a.lastInterestDt) || b.id - a.id,
+    sub_channel_ids = fields.Many("discuss.channel", { inverse: "parent_channel_id" });
+    sortedSubChannels = fields.Many("discuss.channel", {
+        compute() {
+            return [...this.sub_channel_ids].sort(
+                (a, b) => compareDatetime(b.lastInterestDt, a.lastInterestDt) || b.id - a.id
+            );
+        },
     });
     self_member_id = fields.One("discuss.channel.member", {
         inverse: "channelAsSelf",

@@ -79,7 +79,7 @@
 <t t-name="mail.MessagingMenu-navigation">
     <nav class="o-mail-MessagingMenu-navbar d-flex flex-column flex-shrink-0 p-1 gap-2 overflow-auto h-100 border-end border-dark o-border-opacity-7_5 o-scrollbar-thin">
         <button
-            t-foreach="this.store.messagingMenu.visibleTabs" t-key="tab.localId" t-as="tab"
+            t-foreach="this.store.messagingMenu.sortedVisibleTabs" t-key="tab.localId" t-as="tab"
             class="o-mail-MessagingMenu-tab btn d-flex flex-column align-items-center w-100 flex-shrink-0 p-1 bg-transparent position-relative border-0"
             t-att-class="{
                 'active': this.activeTab().eq(tab),

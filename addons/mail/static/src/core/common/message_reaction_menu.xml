@@ -5,13 +5,13 @@
         <Dialog size="'md'" header="false" footer="false" contentClass="this.contentClass">
             <Tabs ref="this.tabsRef" initialTabId="this.props.initialReaction?.content"  direction="this.store.useMobileView ? 'h' : 'v'">
                 <t t-set-slot="headers">
-                    <TabHeader t-foreach="this.props.message.reactions" t-as="reaction" t-key="reaction.content" id="reaction.content" title="this.getEmojiShortcode(reaction)">
+                    <TabHeader t-foreach="this.props.message.sortedReactions" t-as="reaction" t-key="reaction.content" id="reaction.content" title="this.getEmojiShortcode(reaction)">
                         <span class="mx-1 fs-2" t-out="reaction.content"/>
                         <span class="mx-1" t-out="reaction.count"/>
                     </TabHeader>
                 </t>
                 <t t-set-slot="panels">
-                    <TabPanel t-foreach="this.props.message.reactions" t-as="reaction" t-key="reaction.content" id="reaction.content">
+                    <TabPanel t-foreach="this.props.message.sortedReactions" t-as="reaction" t-key="reaction.content" id="reaction.content">
                         <div t-foreach="reaction.personas" t-as="persona" t-key="persona.id" class="o-mail-MessageReactionMenu-persona d-flex p-1 align-items-center" t-att-class="{'o-isDeviceSmall': this.ui.isSmall}">
                             <img class="rounded object-fit-cover o-mail-MessageReactionMenu-avatar" t-att-src="persona.avatarUrl"/>
                             <span class="d-flex flex-grow-1 align-items-center">

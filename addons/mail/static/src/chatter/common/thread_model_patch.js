@@ -8,9 +8,13 @@ import { patch } from "@web/core/utils/patch";
 const threadPatch = {
     setup() {
         super.setup();
-        this.scheduledMessages = fields.Many("mail.scheduled.message", {
-            sort: (a, b) => compareDatetime(a.scheduled_date, b.scheduled_date) || a.id - b.id,
-            inverse: "thread",
+        this.scheduledMessages = fields.Many("mail.scheduled.message", { inverse: "thread" });
+        this.sortedScheduledMessages = fields.Many("mail.scheduled.message", {
+            compute() {
+                return [...this.scheduledMessages].sort(
+                    (a, b) => compareDatetime(a.scheduled_date, b.scheduled_date) || a.id - b.id
+                );
+            },
         });
     },
 };

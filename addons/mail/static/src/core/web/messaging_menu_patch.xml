@@ -5,7 +5,7 @@
     <xpath expr="//*[@name='messagingMenuExtraItems']" position="after">
         <NotificationItem
             t-if="this.showFailures"
-            t-foreach="this.store.failures" t-as="failure" t-key="failure.localId"
+            t-foreach="this.store.sortedFailures" t-as="failure" t-key="failure.localId"
             important="1"
             counter="failure.notifications.length"
             datetime="failure.datetime"

@@ -8,16 +8,18 @@ import { patch } from "@web/core/utils/patch";
 const messagingMenuTabPatch = {
     setup() {
         super.setup(...arguments);
-        this.channels = fields.Many("discuss.channel", {
-            inverse: "messagingMenuTabs",
-            sort(c1, c2) {
-                for (const fn of threadCompareRegistry.getAll()) {
-                    const result = fn(c1.thread, c2.thread);
-                    if (result !== undefined) {
-                        return result;
+        this.channels = fields.Many("discuss.channel", { inverse: "messagingMenuTabs" });
+        this.sortedChannels = fields.Many("discuss.channel", {
+            compute() {
+                return [...this.channels].sort((c1, c2) => {
+                    for (const fn of threadCompareRegistry.getAll()) {
+                        const result = fn(c1.thread, c2.thread);
+                        if (result !== undefined) {
+                            return result;
+                        }
                     }
-                }
-                return c2.id - c1.id;
+                    return c2.id - c1.id;
+                });
             },
         });
         this.channelsWithCounter = fields.Many("discuss.channel", {

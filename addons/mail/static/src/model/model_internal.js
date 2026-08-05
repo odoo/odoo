@@ -26,8 +26,6 @@ export class ModelInternal {
     fieldsOnDelete = new Map();
     /** @type {Map<string, Array<() => void>>} */
     fieldsOnUpdate = new Map();
-    /** @type {Map<string, () => number>} */
-    fieldsSort = new Map();
     /** @type {Map<string, string>} */
     fieldsType = new Map();
     /** @type {Set<string>} */
@@ -130,10 +128,6 @@ export class ModelInternal {
                         break;
                     }
                     this.fieldsEager.set(fieldName, value);
-                    break;
-                }
-                case "sort": {
-                    this.fieldsSort.set(fieldName, value);
                     break;
                 }
                 case "inverse": {

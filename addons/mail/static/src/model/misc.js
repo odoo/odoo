@@ -137,8 +137,6 @@ export const fields = {
      *   from the relation.
      * @param {(this: Record) => void} [param1.onUpdate] function that is called when the field value is updated.
      *   This is called at least once at record creation.
-     * @param {(this: Record, r1: import("models").Models[M], r2: import("models").Models[M]) => number} [param1.sort] if defined, this field
-     *   is automatically sorted by this function.
      * @returns {import("models").Models[M][]}
      */
     Many(targetModel, param1) {
@@ -158,8 +156,6 @@ export const fields = {
      *   behaviour of OWL reactive.
      * @param {(this: Record) => void} [param1.onUpdate] function that is called when the field value is updated.
      *   This is called at least once at record creation.
-     * @param {(this: Record, Object, Object) => number} [param1.sort] if defined, this field is automatically sorted
-     *   by this function.
      * @param {'datetime'|'date'} [param1.type] if defined, automatically transform to a
      * specific type.
      * @returns {T}

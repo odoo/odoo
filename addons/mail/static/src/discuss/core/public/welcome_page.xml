@@ -102,7 +102,7 @@
                 <i class="oi fs-2" t-att-data-icon="this.showCallPreview ? 'calendar_today' : 'forum'"/>
             </div>
             <span class="fw-medium fs-5 text-truncate min-w-0 flex-grow-1" t-att-title="this.channel.displayName" t-out="this.channel.displayName"/>
-            <AvatarStack personas="this.channel.channel_member_ids.map(m => m.persona).filter(p => p?.name)" total="this.channel.member_count"/>
+            <AvatarStack personas="this.channel.sortedChannelMembers.map(m => m.persona).filter(p => p?.name)" total="this.channel.member_count"/>
         </div>
         <div t-if="this.channel.description" class="o-mail-WelcomePage-description mt-1">
             <div t-if="!this.state.isDescriptionUnfolded" class="d-flex align-items-center gap-1 overflow-hidden">

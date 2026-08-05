@@ -230,7 +230,7 @@ const chatterPatch = {
      * @returns {import("models").Activity[]}
      */
     get activities() {
-        return this.state.thread?.activities ?? [];
+        return this.state.thread?.sortedActivities ?? [];
     },
 
     get afterPostRequestList() {
@@ -244,7 +244,7 @@ const chatterPatch = {
     },
 
     get attachments() {
-        return this.state.thread?.attachments ?? [];
+        return this.state.thread?.sortedAttachments ?? [];
     },
 
     get childSubEnv() {
@@ -290,7 +290,7 @@ const chatterPatch = {
     },
 
     get scheduledMessages() {
-        return this.state.thread?.scheduledMessages ?? [];
+        return this.state.thread?.sortedScheduledMessages ?? [];
     },
 
     changeThread(threadModel, threadId) {
