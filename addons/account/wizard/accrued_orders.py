@@ -181,14 +181,14 @@ class AccountAccruedOrdersWizard(models.TransientModel):
                     if is_purchase:
                         # Compute the price unit from the amount to invoice if there is one,
                         # otherwise use the PO line price unit.
-                        price_unit = order_line._get_gross_price_unit()
+                        price_unit = order_line.price_unit_discounted
                         quantity_to_invoice = order_line.qty_invoiced_at_date - order_line.qty_received_at_date
                         if quantity_to_invoice >= 1:
                             posted_invoice_lines = order_line.invoice_lines.filtered(lambda ivl:
                                 ivl.move_id.state == 'posted' and ivl.date <= accrual_entry_date
                             )
                             invoiced_values = sum(ivl.price_subtotal for ivl in posted_invoice_lines)
-                            received_values = order_line.qty_received_at_date * order_line.price_unit
+                            received_values = order_line.qty_received_at_date * price_unit
                             value_to_invoice = invoiced_values - received_values
                             price_unit = value_to_invoice / quantity_to_invoice
 
@@ -198,7 +198,7 @@ class AccountAccruedOrdersWizard(models.TransientModel):
                             # As included taxes are not taken into account in the price_unit, we need to compute the price_subtotal
                             qty_to_invoice = order_line.qty_received_at_date - order_line.qty_invoiced_at_date
                             price_subtotal = order_line.tax_ids.compute_all(
-                                order_line._get_gross_price_unit(),
+                                price_unit,
                                 currency=order_line.order_id.currency_id,
                                 quantity=qty_to_invoice,
                                 product=order_line.product_id,
@@ -213,7 +213,7 @@ class AccountAccruedOrdersWizard(models.TransientModel):
                             order_line=_ellipsis(order_line.name, 20),
                             quantity_billed=order_line.qty_invoiced_at_date,
                             quantity_received=order_line.qty_received_at_date,
-                            unit_price=formatLang(self.env, order_line._get_gross_price_unit(), currency_obj=order.currency_id),
+                            unit_price=formatLang(self.env, price_unit, currency_obj=order.currency_id),
                         )
 
                         # Generate price diff account move lines if needed.
