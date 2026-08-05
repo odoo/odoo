@@ -57,6 +57,67 @@ class TestPosEdi(TestEsEdiTbaiCommonGipuzkoa, CommonPosEsEdiTest):
         # The edi is handled by the invoice
         self.assertFalse(order.l10n_es_tbai_state)
 
+    def test_tbai_pos_order_number_unique_across_devices(self):
+        """Every device keeps its own receipt counter in its browser local storage, so
+        two devices of the same PoS both start at 000001 and end up with the same order
+        name. The number sent to TicketBAI must stay unique (otherwise error 5040)."""
+        self.pos_config_usd.open_ui()
+        product = self.ten_dollars_with_10_incl.product_variant_id
+        product.lst_price = 100
+
+        def sync_device_order(device_identifier, uuid):
+            order = {
+                "amount_tax": 0.0,
+                "amount_total": 100.0,
+                "amount_paid": 100.0,
+                "amount_return": 0.0,
+                "session_id": self.pos_config_usd.current_session_id.id,
+                "pos_reference": f"26{device_identifier}-{self.pos_config_usd.id}-000001",
+                "lines": [
+                    Command.create({
+                        "product_id": product.id,
+                        "price_unit": 100.0,
+                        "qty": 1,
+                        "tax_ids": self._get_tax_by_xml_id("s_iva21b").ids,
+                        "price_subtotal": 100.0,
+                        "price_subtotal_incl": 121.0,
+                    }),
+                ],
+                "payment_ids": [
+                    Command.create({
+                        "amount": 100.0,
+                        "name": fields.Datetime.now(),
+                        "payment_method_id": self.pos_config_usd.payment_method_ids[0].id,
+                    }),
+                ],
+                "uuid": uuid,
+            }
+            results = self.env['pos.order'].sync_from_ui([order])
+            return self.env['pos.order'].browse(results['pos.order'][0]['id'])
+
+        order_1 = sync_device_order('1', '11111111-1111-1111-1111-111111111111')
+        order_2 = sync_device_order('2', '22222222-2222-2222-2222-222222222222')
+
+        self.assertEqual(order_1.name, order_2.name)
+
+        doc_1 = order_1._l10n_es_tbai_create_edi_document()
+        doc_2 = order_2._l10n_es_tbai_create_edi_document()
+        self.assertNotEqual(
+            doc_1._get_tbai_sequence_and_number(),
+            doc_2._get_tbai_sequence_and_number(),
+        )
+
+        # SerieFactura and NumFactura are limited to 20 characters, the number is numeric
+        for order, doc in ((order_1, doc_1), (order_2, doc_2)):
+            doc._generate_xml(order._l10n_es_tbai_get_values())
+            header = doc._get_xml().find("Factura/CabeceraFactura")
+            serie, number = header.find("SerieFactura").text, header.find("NumFactura").text
+            self.assertEqual(serie, f"{order.pos_reference.rsplit('-', 1)[0]}-TEST")
+            self.assertEqual(number, '000001')
+            self.assertLessEqual(len(serie), 20)
+            self.assertLessEqual(len(number), 20)
+            self.assertTrue(number.isdigit())
+
     def test_tbai_refund_pos_order(self):
         self.ten_dollars_with_10_incl.product_variant_id.lst_price = 100
         order, _ = self.create_backend_pos_order({
