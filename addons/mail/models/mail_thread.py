@@ -12,6 +12,7 @@ import hmac
 import json
 import lxml
 import logging
+import re
 import textwrap
 import time
 import typing
@@ -3899,6 +3900,26 @@ class MailThread(models.AbstractModel):
             render_values['subtitles'] = [str(sub) for sub in render_values['subtitles']]
 
         render_values = {**render_values, **recipients_group}
+        if message.message_type == 'tracking':
+            body = re.sub(
+                r'(<div class="o_track">)(.*?)(</div>)',
+                lambda m: (
+                    m.group(1)
+                    + re.sub(
+                        r'([^>])<b>(.*?)</b><i>(.*?)</i>',
+                        lambda x: str(
+                            Markup("%s \u2192 <b>%s</b> <i>(%s)</i>")
+                            % (x.group(1), x.group(2), x.group(3))
+                        ),
+                        m.group(2),
+                    )
+                    + m.group(3)
+                ),
+                message.body,
+                flags=re.DOTALL,
+            )
+            render_values["message_body"] = Markup(body)
+
         mail_body = self.env['ir.qweb']._render(
             template_xmlid,
             render_values,

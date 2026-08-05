@@ -14,7 +14,7 @@
     email_notification_allow_footer and show_header and author_user and author_user._is_internal())"/>
 <t t-set="subtitles_highlight_index" t-value="subtitles_highlight_index or 0"/>
 <!-- HEADER -->
-<t t-call="mail.notification_preview"/>
+<t t-call="mail.notification_preview" t-if="message.message_type != 'tracking'"/>
 <div style="max-width: 900px; width: 100%;">
 <div t-if="show_header and has_button_access" itemscope="itemscope" itemtype="http://schema.org/EmailMessage">
     <div itemprop="potentialAction" itemscope="itemscope" itemtype="http://schema.org/ViewAction">
@@ -64,7 +64,8 @@
     </table>
 </div>
 <!-- CONTENT -->
-<div t-out="message.body" style="font-size: 13px;"/>
+<div t-out="message_body" style="font-size: 13px;" t-if="message_body"/>
+<div t-out="message.body" style="font-size: 13px;" t-else=""/>
 <t name="o_signature">
     <div t-if="email_add_signature and not is_html_empty(signature)" t-out="signature" class="o_signature" style="font-size: 13px;"/>
 </t>
@@ -98,7 +99,7 @@
 </head>
 <body>
 <t t-set="subtype_internal" t-value="False"/>
-<t t-call="mail.notification_preview"/>
+<t t-call="mail.notification_preview" t-if="message.message_type != 'tracking'"/>
 <table role="presentation" border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;"><tr><td align="center">
 <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="590" style="padding: 24px; background-color: white; color: #454748; border-collapse:separate;">
 <tbody>
@@ -133,7 +134,8 @@
     <!-- CONTENT -->
     <tr>
         <td style="min-width: 590px;">
-            <t t-out="message.body"/>
+            <t t-out="message_body" t-if="message_body"/>
+            <t t-out="message.body" t-else=""/>
         </td>
     </tr>
     <!-- FOOTER -->
