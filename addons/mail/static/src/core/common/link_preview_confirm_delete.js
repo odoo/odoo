@@ -1,4 +1,3 @@
-import { useSubEnv } from "@web/owl2/utils";
 import { Component, types, useProps } from "@odoo/owl";
 
 import { Dialog } from "@web/core/dialog/dialog";
@@ -16,7 +15,6 @@ export class LinkPreviewConfirmDelete extends Component {
             LinkPreview: types.component(), // cannot import LinkPreview due to circular dependency
             messageLinkPreview: types.instanceOf(this.store["mail.message.link.preview"]),
         });
-        useSubEnv({ inLinkPreviewConfirmDelete: true });
     }
 
     onClickOk() {
