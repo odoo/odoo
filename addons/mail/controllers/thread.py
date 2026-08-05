@@ -22,6 +22,10 @@ class ThreadController(http.Controller):
                 {"hasReadAccess": False, "hasWriteAccess": False},
                 as_thread=True,
             ).get_result()
+        if not request.env.user._is_internal() or not thread.sudo(False).with_context(
+            allowed_company_ids=[]
+        ).has_access("read"):
+            request_list = []
         return Store(thread, as_thread=True, request_list=request_list).get_result()
 
     @http.route("/mail/thread/messages", methods=["POST"], type="json", auth="user")

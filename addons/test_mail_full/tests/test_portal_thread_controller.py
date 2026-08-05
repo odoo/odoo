@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from itertools import product
+
 import odoo
 from odoo.addons.mail.tests.test_thread_controller import (
     MessagePostSubTestData,
@@ -175,3 +177,40 @@ class TestPortalThreadController(TestThreadControllerCommon):
                 test_partners(self.user_admin, True, all_partners, route_kw=sign),
             ),
         )
+
+    def test_mail_thread_data_portal(self):
+        """Test getting thread data through a portal record with no access."""
+        record = self.env["mail.test.portal.no.access"].create({"name": "Test"})
+        partner = self.env["res.partner"].create({"name": "Sign Partner"})
+        for user, route_kw in product(
+            (self.user_public, self.user_portal, self.user_employee),
+            (
+                {"token": record._portal_ensure_token()},
+                {"hash": record._sign_token(partner.id), "pid": partner.id},
+            ),
+        ):
+            with self.subTest(user=user.name, kw=route_kw):
+                self._authenticate_user(user=user)
+                result = self.make_jsonrpc_request(
+                    route="/mail/thread/data",
+                    params={
+                        "thread_model": record._name,
+                        "thread_id": record.id,
+                        "request_list": ["followers"],
+                        **route_kw,
+                    },
+                )
+                self.assertEqual(
+                    result,
+                    {
+                        "mail.thread": [
+                            {
+                                "id": record.id,
+                                "model": record._name,
+                                "canPostOnReadonly": False,
+                                "hasReadAccess": False,
+                                "hasWriteAccess": False,
+                            },
+                        ],
+                    },
+                )
