@@ -9,6 +9,7 @@ class PosPaymentMethod(models.Model):
     _inherit = 'pos.payment.method'
 
     def _payment_request_from_kiosk(self, order):
+        self.ensure_one()
         if self.payment_provider != 'pine_labs':
             return super()._payment_request_from_kiosk(order)
         reference_prefix = order.config_id.name.replace(' ', '')

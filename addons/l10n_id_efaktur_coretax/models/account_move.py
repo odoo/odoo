@@ -157,7 +157,7 @@ class AccountMove(models.Model):
     )
 
     l10n_id_coretax_efaktur_available = fields.Boolean(compute="_compute_l10n_id_coretax_efaktur_available")
-    l10n_id_coretax_document = fields.Many2one('l10n_id_efaktur_coretax.document', readonly=True, copy=False, string="e-Faktur Document (Coretax)")
+    l10n_id_coretax_document = fields.Many2one('l10n_id_efaktur_coretax.document', readonly=True, copy=False, string="e-Faktur Document (Coretax)", index='btree_not_null')
     l10n_id_coretax_custom_doc = fields.Char(help="Additional documentation when choosing kode 07 or 08")
     l10n_id_coretax_custom_doc_month_year = fields.Date(string="Custom Document Month and Year")
     l10n_id_kode_transaksi = fields.Selection(
