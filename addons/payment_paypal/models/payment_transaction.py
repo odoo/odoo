@@ -92,6 +92,14 @@ class PaymentTransaction(models.Model):
         :return: The requested payload to create a Paypal order.
         :rtype: dict
         """
+        if self.payment_method_code == "google_pay":
+            return {
+                "intent": "CAPTURE",
+                "purchase_units": [{
+                    "reference_id": self.reference,
+                    "amount": {"currency_code": self.currency_id.name, "value": str(self.amount)}
+                }],
+            }
         if self.partner_id.is_public:
             invoice_address_vals = {"address": {"country_code": self.company_id.country_code}}
             shipping_address_vals = {}

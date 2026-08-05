@@ -105,6 +105,79 @@
         />
     </record>
 
+    <record id="payment_method_google_pay" model="payment.method">
+        <field name="name">Google Pay</field>
+        <field name="code">google_pay</field>
+        <field name="provider_id" ref="payment.payment_provider_paypal"/>
+        <field name="image" type="bytes" file="payment/static/img/google_pay.png"/>
+        <field
+            name="supported_country_ids"
+            eval="[Command.set([
+                        ref('base.au'),
+                        ref('base.at'),
+                        ref('base.be'),
+                        ref('base.bg'),
+                        ref('base.ca'),
+                        ref('base.cn'),
+                        ref('base.cy'),
+                        ref('base.cz'),
+                        ref('base.dk'),
+                        ref('base.ee'),
+                        ref('base.fi'),
+                        ref('base.fr'),
+                        ref('base.de'),
+                        ref('base.gr'),
+                        ref('base.hk'),
+                        ref('base.hu'),
+                        ref('base.ie'),
+                        ref('base.it'),
+                        ref('base.lv'),
+                        ref('base.li'),
+                        ref('base.lt'),
+                        ref('base.lu'),
+                        ref('base.mt'),
+                        ref('base.nl'),
+                        ref('base.no'),
+                        ref('base.pl'),
+                        ref('base.pt'),
+                        ref('base.ro'),
+                        ref('base.sg'),
+                        ref('base.sk'),
+                        ref('base.si'),
+                        ref('base.es'),
+                        ref('base.se'),
+                        ref('base.us'),
+                        ref('base.uk'),
+                    ])]"
+        />
+        <field
+            name="supported_currency_ids"
+            eval="[Command.set([
+                        ref('base.AUD'),
+                        ref('base.BRL'),
+                        ref('base.CAD'),
+                        ref('base.CHF'),
+                        ref('base.CZK'),
+                        ref('base.DKK'),
+                        ref('base.EUR'),
+                        ref('base.GBP'),
+                        ref('base.HKD'),
+                        ref('base.HUF'),
+                        ref('base.ILS'),
+                        ref('base.MXN'),
+                        ref('base.NOK'),
+                        ref('base.NZD'),
+                        ref('base.PHP'),
+                        ref('base.PLN'),
+                        ref('base.SEK'),
+                        ref('base.SGD'),
+                        ref('base.THB'),
+                        ref('base.TWD'),
+                        ref('base.USD'),
+                    ])]"
+        />
+    </record>
+
     <record id="payment_method_eps" model="payment.method">
         <field name="name">EPS</field>
         <field name="code">eps</field>
