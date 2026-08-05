@@ -71,10 +71,15 @@ class WebclientController(ThreadController):
                 thread = request.env[params["thread_model"]].browse(params["thread_id"])
                 store.add(thread, {"hasReadAccess": False, "hasWriteAccess": False}, as_thread=True)
             else:
+                request_list = params["request_list"]
+                if not request.env.user._is_internal() or not thread.sudo(False).with_context(
+                    allowed_company_ids=[]
+                ).has_access("read"):
+                    request_list = []
                 store.add(
                     thread,
                     "_store_thread_fields",
-                    fields_params={"request_list": params["request_list"]},
+                    fields_params={"request_list": request_list},
                     as_thread=True,
                 )
 
