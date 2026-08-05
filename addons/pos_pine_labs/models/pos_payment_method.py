@@ -10,7 +10,7 @@ class PosPaymentMethod(models.Model):
     pine_labs_merchant = fields.Char(string='Pine Labs Merchant ID', help='A merchant id issued directly to the merchant by Pine Labs.', copy=False)
     pine_labs_store = fields.Char(string='Pine Labs Store ID', help='A store id issued directly to the merchant by Pine Labs.', copy=False)
     pine_labs_client = fields.Char(string='Pine Labs Client ID', help='A client id issued directly to the merchant by Pine Labs.', copy=False)
-    pine_labs_security_token = fields.Char(string='Pine Labs Security Token', help='A security token issued directly to the merchant by Pine Labs.')
+    pine_labs_security_token = fields.Char(string='Pine Labs Security Token', help='A security token issued directly to the merchant by Pine Labs.', groups="point_of_sale.group_pos_manager")
     pine_labs_allowed_payment_mode = fields.Selection(
         selection=[('all', "All"), ('card', "Card"), ('upi', "Upi")],
         string='Pine Labs Allowed Payment Modes',

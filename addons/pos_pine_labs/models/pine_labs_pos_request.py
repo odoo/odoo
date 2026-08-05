@@ -55,7 +55,7 @@ def pine_labs_request_body(payment_mode: bool, payment_method: object) -> dict:
         'MerchantID': payment_method.pine_labs_merchant,
         'StoreID': payment_method.pine_labs_store,
         'ClientID': payment_method.pine_labs_client,
-        'SecurityToken': payment_method.pine_labs_security_token
+        'SecurityToken': payment_method.sudo().pine_labs_security_token
     }
     if payment_mode:
         # Added AutoCancelDurationInMinutes set to 10 minutes for automatically cancelling transactions on the Pine Labs side in case of lost transaction request data from the PoS system.

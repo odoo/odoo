@@ -16,11 +16,11 @@ class PosPaymentMethod(models.Model):
 
     # Credentials from Mpesa
     consumer_key = fields.Char(string="Consumer Key")
-    consumer_secret = fields.Char(string="Consumer Secret")
+    consumer_secret = fields.Char(string="Consumer Secret", groups="point_of_sale.group_pos_manager")
     business_short_code = fields.Char(string="Business Short Code")
     safaricom_till_number = fields.Char(string="Till number")
     safaricom_paybill_number = fields.Char(string="Paybill number")
-    passkey = fields.Char(string="Passkey", help="The passkey is used to generate the password for the STK Push")
+    passkey = fields.Char(string="Passkey", help="The passkey is used to generate the password for the STK Push", groups="point_of_sale.group_pos_manager")
     safaricom_test_mode = fields.Boolean(string="Test Mode", default=True, help="Use sandbox environment")
     safaricom_payment_type = fields.Selection(
         selection=[('mpesa_express', 'M-PESA Express'), ('lipa_na_mpesa', 'Lipa na M-PESA')],
@@ -92,7 +92,7 @@ class PosPaymentMethod(models.Model):
 
         try:
             consumer_key = self.consumer_key.strip()
-            consumer_secret = self.consumer_secret.strip()
+            consumer_secret = self.sudo().consumer_secret.strip()
 
             auth = requests.auth.HTTPBasicAuth(consumer_key, consumer_secret)
             response = requests.get(self._get_oauth_endpoint(), auth=auth, timeout=TIMEOUT)
@@ -112,7 +112,7 @@ class PosPaymentMethod(models.Model):
 
     def _get_password(self, timestamp):
         """Generate password for STK Push"""
-        return base64.b64encode(f"{self._get_business_shortcode()}{self.passkey}{timestamp}".encode()).decode()
+        return base64.b64encode(f"{self._get_business_shortcode()}{self.sudo().passkey}{timestamp}".encode()).decode()
 
     def _format_phone_number(self, phone):
         """Format phone number to Safaricom format (254XXXXXXXXX)"""
