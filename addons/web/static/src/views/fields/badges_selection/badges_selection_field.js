@@ -23,7 +23,7 @@ export class BadgesSelectionField extends Component {
         let options = record.fields[name].selection;
 
         if (allowedSelectionField) {
-            const allowedOptions = record.data[allowedSelectionField];
+            const allowedOptions = record.data[allowedSelectionField] || [];
             options = options.filter(([value]) => allowedOptions.includes(value));
         }
 
