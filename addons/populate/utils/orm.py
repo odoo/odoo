@@ -5,6 +5,7 @@ from typing import TYPE_CHECKING
 
 from odoo.fields import Domain
 from odoo.tools.safe_eval import expr_eval
+from odoo.tools import SQL
 
 from .expression import check_eval_kwargs, get_undefined_names
 
@@ -195,6 +196,6 @@ def get_ref_domain(
                 ('ref', '=', ref),
                 ('res_model', '=', model_name),
             ]),
-        ).select('res_id')
+        ).select(SQL('res_id'))
         domain = Domain('id', 'in', populated_records_ids)
     return domain

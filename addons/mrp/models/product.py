@@ -52,7 +52,7 @@ class ProductTemplate(models.Model):
         bom_tmpl_query = self.env['mrp.bom'].sudo()._search(
             [('company_id', 'in', [False] + self.env.companies.ids),
              ('type', '=', 'phantom'), ('active', '=', True)])
-        return [('id', 'in', bom_tmpl_query.subselect('product_tmpl_id'))]
+        return [('id', 'in', bom_tmpl_query.subselect(bom_tmpl_query.table.product_tmpl_id))]
 
     def _compute_show_qty_status_button(self):
         super()._compute_show_qty_status_button()
@@ -179,8 +179,8 @@ class ProductProduct(models.Model):
             [('company_id', 'in', [False] + self.env.companies.ids),
              ('type', '=', 'phantom'), ('product_id', '!=', False)])
         return [
-            '|', ('product_tmpl_id', 'in', bom_tmpl_query.subselect('product_tmpl_id')),
-            ('id', 'in', bom_product_query.subselect('product_id'))
+            '|', ('product_tmpl_id', 'in', bom_tmpl_query.subselect(bom_tmpl_query.table.product_tmpl_id)),
+            ('id', 'in', bom_product_query.subselect(bom_tmpl_query.table.product_id)),
         ]
 
     def _compute_show_qty_status_button(self):

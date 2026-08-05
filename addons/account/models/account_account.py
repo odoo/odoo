@@ -489,7 +489,7 @@ class AccountAccount(models.Model):
     def _compute_sql_used(self, table):
         query = Query(table._model.sudo().env['account.move.line'])
         query.add_where(SQL("%s = %s", query.table.account_id, table.id))
-        return SQL("EXISTS %s", query.subselect(''))
+        return SQL("EXISTS %s", query.subselect(SQL()))
 
     @api.model
     def _search_new_account_code(self, start_code, cache=None):

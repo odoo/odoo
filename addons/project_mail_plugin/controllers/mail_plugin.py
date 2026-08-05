@@ -61,7 +61,7 @@ class MailPluginController(mail_plugin.MailPluginController):
             """,
             user_id=request.env.user.id,
             # search with access rules, active domain, etc
-            query=request.env['project.project']._search(project_domain).select('id'),
+            query=request.env['project.project']._search(project_domain).select(),
             limit=limit,
         ))
 

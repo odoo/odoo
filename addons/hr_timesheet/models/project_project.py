@@ -65,7 +65,7 @@ class ProjectProject(models.Model):
         sql = Company._search(
             [('internal_project_id', '!=', False)],
             active_test=False, bypass_access=True,
-        ).subselect("internal_project_id")
+        ).subselect(SQL("internal_project_id"))
         return [('id', operator, sql)]
 
     @api.depends('allow_timesheets', 'timesheet_ids.unit_amount', 'allocated_hours')

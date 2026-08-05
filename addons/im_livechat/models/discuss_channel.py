@@ -337,7 +337,7 @@ class DiscussChannel(models.Model):
                 ("id", "in", value),
             ],
         )
-        return [("id", "in", bot_history_query.subselect("channel_id"))]
+        return [("id", "in", bot_history_query.subselect(bot_history_query.table.channel_id))]
 
     @api.depends("livechat_channel_member_history_ids.livechat_member_type")
     def _compute_livechat_customer_history_ids(self):
@@ -357,7 +357,7 @@ class DiscussChannel(models.Model):
                 ("id", "in", value),
             ],
         )
-        return [("id", "in", customer_history_query.subselect("channel_id"))]
+        return [("id", "in", customer_history_query.subselect(customer_history_query.table.channel_id))]
 
     @api.depends("livechat_agent_history_ids.partner_id")
     def _compute_livechat_agent_partner_ids(self):
@@ -376,7 +376,7 @@ class DiscussChannel(models.Model):
                     "not in",
                     self.env["im_livechat.channel.member.history"]
                     ._search([("livechat_member_type", "=", "agent")])
-                    .subselect("channel_id"),
+                    .subselect(SQL("channel_id")),
                 ),
             ]
         query = (
@@ -390,7 +390,7 @@ class DiscussChannel(models.Model):
                 ("id", "in", query),
             ],
         )
-        return [("id", "in", agent_history_query.subselect("channel_id"))]
+        return [("id", "in", agent_history_query.subselect(agent_history_query.table.channel_id))]
 
     @api.depends("livechat_bot_history_ids.partner_id")
     def _compute_livechat_bot_partner_ids(self):

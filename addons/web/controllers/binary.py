@@ -12,7 +12,7 @@ from odoo import _, api
 from odoo.exceptions import AccessError, UserError
 from odoo.http import Controller, request, route
 from odoo.http.stream import STATIC_CACHE_LONG, Stream
-from odoo.tools import file_open, file_path, replace_exceptions, str2bool
+from odoo.tools import SQL, file_open, file_path, replace_exceptions, str2bool
 from odoo.tools.image import image_guess_size_from_field_name
 
 from odoo.addons.base.models.assetsbundle import ANY_UNIQUE
@@ -271,7 +271,7 @@ class Binary(Controller):
                     company_ids = [int(company_id)]
                 else:
                     # keeping a single query
-                    company_ids = attachment.env.user._as_query(ordered=False).subselect('company_id')
+                    company_ids = attachment.env.user._as_query(ordered=False).subselect(SQL('company_id'))
                 attachment = attachment.search_fetch([
                     ('res_model', '=', 'res.company'),
                     ('res_field', '=', 'logo_web'),

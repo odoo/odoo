@@ -32,7 +32,7 @@ class WebsiteVisitor(models.Model):
         histories_by_visitor = dict(
             self.env["im_livechat.channel.member.history"]._read_group(
                 [
-                    ("channel_id", "in", visitors_channel_query.subselect("id")),
+                    ("channel_id", "in", visitors_channel_query.subselect()),
                     ("livechat_member_type", "!=", "visitor"),
                     ("member_id", "!=", False),
                 ],

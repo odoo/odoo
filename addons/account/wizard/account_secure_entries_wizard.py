@@ -3,6 +3,7 @@ from datetime import timedelta
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.fields import Command, Domain
+from odoo.tools import SQL
 
 
 class AccountSecureEntriesWizard(models.TransientModel):
@@ -75,7 +76,7 @@ class AccountSecureEntriesWizard(models.TransientModel):
                 min_date = self.env.execute_query(
                     self.env['account.move']
                     ._search([('id', 'in', moves.ids)])
-                    .select('MIN(date)')
+                    .select(SQL('MIN(date)'))
                 )[0][0]
                 wizard.max_hash_date = min_date - timedelta(days=1)
             else:

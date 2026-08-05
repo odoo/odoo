@@ -752,7 +752,7 @@ class HrEmployee(models.Model):
         if operator in ('any', 'any!'):
             return Domain('current_version_id', operator, value)
         domain = Domain('id', operator, value)
-        return Domain('id', 'in', self.env['hr.version']._search(domain).select('employee_id'))
+        return Domain('id', 'in', self.env['hr.version']._search(domain).select(SQL('employee_id')))
 
     def _compute_sql_version_id(self, table):
         # HACK required to make inherits work on a computed field

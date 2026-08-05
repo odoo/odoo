@@ -84,7 +84,7 @@ class SaleOrder(models.Model):
             ('sale_order_id', '!=', False),
         ]
         query = self.env['project.task']._search(task_domain)
-        return [('id', 'in', query.subselect('sale_order_id'))]
+        return [('id', 'in', query.subselect(query.table.sale_order_id))]
 
     @api.depends('order_line.product_id.project_id')
     def _compute_tasks_ids(self):

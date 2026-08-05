@@ -7504,7 +7504,7 @@ class AccountMove(models.Model):
 
     @api.model
     def _first_date(self):
-        first_line = self.env.execute_query(self.sudo()._search([], order="date ASC", limit=1).select('date'))
+        first_line = self.env.execute_query(self.sudo()._search([], order="date ASC", limit=1).select(SQL('date')))
         return first_line[0][0] if first_line else fields.Date.context_today(self)
 
     @api.model

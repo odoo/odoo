@@ -471,7 +471,7 @@ class ProjectTask(models.Model):
         field_name = 'display_name' if any(isinstance(v, str) for v in value) or value == '' else 'id'  # noqa: PLC1901
         domain = Domain(field_name, operator, value) & Domain('user_id', '=', self.env.uid)
         personal_stages = self.env['project.task.stage.personal']._search(domain)
-        return Domain('id', 'in', personal_stages.subselect('task_id'))
+        return Domain('id', 'in', personal_stages.subselect(personal_stages.table.task_id))
 
     @api.model
     def _get_default_personal_stage_create_vals(self, user_id):
