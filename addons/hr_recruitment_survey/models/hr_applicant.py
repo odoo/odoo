@@ -17,7 +17,7 @@ class HrApplicant(models.Model):
         self.env['survey.user_input'].search([
             Domain('partner_id', 'in', self.partner_id.ids),
             Domain('state', 'in', ['new', 'in_progress']),
-        ]).write({'deadline': datetime.now()})
+        ]).sudo().write({'deadline': datetime.now()})
 
     def write(self, vals):
         stage = self.env['hr.recruitment.stage'].browse(vals.get('stage_id'))
