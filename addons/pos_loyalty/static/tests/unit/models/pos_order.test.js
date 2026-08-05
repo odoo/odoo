@@ -96,7 +96,213 @@ describe("pos.order - loyalty", () => {
         deactivateAllProgramsExcept(store, [8]);
         order.setPricelist(models["product.pricelist"].get(1));
 
+<<<<<<< b122223d1d7d3394dc7c25cbc6c7377d5fdecf64
         // Tax #1 becomes a fixed tax, tax #2 stays as percent.
+||||||| 305984400a096915982ee2754596db3b623fcb6b
+        expect(order._programIsApplicable(program)).toBe(true);
+
+        program.partner_id = false;
+        program.is_nominative = true;
+
+        expect(order._programIsApplicable(program)).toBe(false);
+    });
+
+    test("_getRealCouponPoints", async () => {
+        const store = await setupPosEnv();
+        const models = store.models;
+        const order = store.addNewOrder();
+
+        // Get loyalty card #1 which program_id = 1 (loyalty)
+        const card = models["loyalty.card"].get(1);
+
+        order.uiState.couponPointChanges = {
+            1: {
+                coupon_id: 1,
+                program_id: 1,
+                points: 25,
+            },
+        };
+
+        await addProductLineToOrder(store, order, {
+            is_reward_line: true,
+            coupon_id: card,
+            points_cost: 5,
+        });
+
+        expect(order._getRealCouponPoints(card.id)).toBe(30);
+    });
+
+    test("processGiftCard", async () => {
+        const store = await setupPosEnv();
+        const models = store.models;
+        const order = store.addNewOrder();
+
+        // Get loyalty program #3 - type = "gift_card"
+        const giftProgram = models["loyalty.program"].get(3);
+
+        const line = await addProductLineToOrder(store, order, {
+            price_unit: 10,
+            eWalletGiftCardProgram: giftProgram,
+        });
+
+        order.selected_orderline = line;
+
+        const expirationDate = DateTime.now().plus({ days: 1 }).toISODate();
+        order.processGiftCard("GIFT9999", 100, expirationDate);
+
+        const couponChanges = Object.values(order.uiState.couponPointChanges);
+        expect(couponChanges.length).toBe(1);
+        expect(couponChanges[0].code).toBe("GIFT9999");
+        expect(couponChanges[0].points).toBe(100);
+        expect(couponChanges[0].expiration_date).toBe(expirationDate);
+        expect(couponChanges[0].manual).toBe(true);
+    });
+
+    test("_getDiscountableOnOrder", async () => {
+        const store = await setupPosEnv();
+        const models = store.models;
+        const order = store.addNewOrder();
+
+        await addProductLineToOrder(store, order, {
+            qty: 2,
+        });
+
+        await addProductLineToOrder(store, order, {
+            price_unit: 5,
+        });
+
+        // Get loyalty reward #1 - type = "discount"
+        const reward = models["loyalty.reward"].get(1);
+
+        const result = order._getDiscountableOnOrder(reward);
+        expect(result.discountable).toBe(25);
+    });
+
+    test("_getDiscountableOnCheapest excludes fixed tax for non-ewallet program", async () => {
+        const store = await setupPosEnv();
+        const models = store.models;
+        const order = store.addNewOrder();
+
+        // Tax #1 (15%) becomes a fixed tax, tax #2 (25%) stays as percent
+=======
+        expect(order._programIsApplicable(program)).toBe(true);
+
+        program.partner_id = false;
+        program.is_nominative = true;
+
+        expect(order._programIsApplicable(program)).toBe(false);
+    });
+
+    test("_getRealCouponPoints", async () => {
+        const store = await setupPosEnv();
+        const models = store.models;
+        const order = store.addNewOrder();
+
+        // Get loyalty card #1 which program_id = 1 (loyalty)
+        const card = models["loyalty.card"].get(1);
+
+        order.uiState.couponPointChanges = {
+            1: {
+                coupon_id: 1,
+                program_id: 1,
+                points: 25,
+            },
+        };
+
+        await addProductLineToOrder(store, order, {
+            is_reward_line: true,
+            coupon_id: card,
+            points_cost: 5,
+        });
+
+        expect(order._getRealCouponPoints(card.id)).toBe(30);
+    });
+
+    test("processGiftCard", async () => {
+        const store = await setupPosEnv();
+        const models = store.models;
+        const order = store.addNewOrder();
+
+        // Get loyalty program #3 - type = "gift_card"
+        const giftProgram = models["loyalty.program"].get(3);
+
+        const line = await addProductLineToOrder(store, order, {
+            price_unit: 10,
+            eWalletGiftCardProgram: giftProgram,
+        });
+
+        order.selected_orderline = line;
+
+        const expirationDate = DateTime.now().plus({ days: 1 }).toISODate();
+        order.processGiftCard("GIFT9999", 100, expirationDate);
+
+        const couponChanges = Object.values(order.uiState.couponPointChanges);
+        expect(couponChanges.length).toBe(1);
+        expect(couponChanges[0].code).toBe("GIFT9999");
+        expect(couponChanges[0].points).toBe(100);
+        expect(couponChanges[0].expiration_date).toBe(expirationDate);
+        expect(couponChanges[0].manual).toBe(true);
+    });
+
+    test("_getDiscountableOnOrder", async () => {
+        const store = await setupPosEnv();
+        const models = store.models;
+        const order = store.addNewOrder();
+
+        await addProductLineToOrder(store, order, {
+            templateId: 5,
+            productId: 5,
+            qty: 2,
+            tax_ids: [],
+        });
+
+        await addProductLineToOrder(store, order, {
+            templateId: 5,
+            productId: 5,
+            price_unit: 5,
+            tax_ids: [],
+        });
+
+        // Get loyalty reward #1 - type = "discount"
+        const reward = models["loyalty.reward"].get(1);
+
+        const result = order._getDiscountableOnOrder(reward);
+        expect(result.discountable).toBe(25);
+    });
+
+    test("discount does not apply on tips", async () => {
+        const store = await setupPosEnv();
+        const models = store.models;
+        const order = store.addNewOrder();
+
+        await addProductLineToOrder(store, order, {
+            templateId: 5,
+            productId: 5,
+            price_unit: 100,
+        });
+
+        await addProductLineToOrder(store, order, {
+            templateId: 1,
+            productId: 1,
+            price_unit: 10,
+        });
+
+        // Tip not discountable
+        const discountReward = models["loyalty.reward"].get(1);
+        expect(order._getDiscountableOnOrder(discountReward).discountable).toBe(115);
+
+        // Tip payable with ewallet/giftcards
+        const paymentReward = models["loyalty.reward"].get(2);
+        expect(order._getDiscountableOnOrder(paymentReward).discountable).toBe(125);
+    });
+
+    test("_getDiscountableOnCheapest excludes fixed tax for non-ewallet program", async () => {
+        const store = await setupPosEnv();
+        const models = store.models;
+        const order = store.addNewOrder();
+
+        // Tax #1 (15%) becomes a fixed tax, tax #2 (25%) stays as percent
+>>>>>>> 88f4817a81510cf6c0f9c03d3a0126a8de6ad2e5
         const fixedTax = models["account.tax"].get(1);
         const percentTax = models["account.tax"].get(2);
         fixedTax.amount_type = "fixed";
@@ -275,8 +481,16 @@ describe("pos.order - loyalty", () => {
         deactivateAllProgramsExcept(store, [8]);
         order.setPricelist(models["product.pricelist"].get(1));
 
+<<<<<<< b122223d1d7d3394dc7c25cbc6c7377d5fdecf64
         // 2 units grant 2 points, the reward costs 1: it auto-applies once.
         await addProductLineToOrder(store, order, { qty: 2 });
+||||||| 305984400a096915982ee2754596db3b623fcb6b
+        // 2 units grant 2 points, the reward costs 1
+        await addProductLineToOrder(store, order, { qty: 2 });
+=======
+        // 2 units grant 2 points, the reward costs 1
+        await addProductLineToOrder(store, order, { templateId: 5, productId: 5, qty: 2 });
+>>>>>>> 88f4817a81510cf6c0f9c03d3a0126a8de6ad2e5
         await store.updateRewards();
         await tick();
         expect(order.getOrderlines().filter((line) => line.is_reward_line)).toHaveLength(1);
@@ -338,9 +552,368 @@ describe("pos.order - loyalty", () => {
         await tick();
 
         expect(order.getOrderlines().length).toBe(3);
+<<<<<<< b122223d1d7d3394dc7c25cbc6c7377d5fdecf64
         // Product 8 is 25%-taxed: the with_code 10% reward is -37.5 (10% of 375 incl), and
         // program 1's specific reward is capped at its discount_max_amount of 100.
         expect(order.lines[1].prices.total_included).toBe(-37.5);
         expect(order.lines[2].prices.total_included).toBe(-100);
+||||||| 305984400a096915982ee2754596db3b623fcb6b
+        expect(order.lines[1].prices.total_included).toBe(-100);
+        expect(order.lines[2].prices.total_included).toBe(-27.5);
+    });
+
+    test("_getRewardLineValuesDiscount - gift card payment uses full amount tax-free", async () => {
+        const store = await setupPosEnv();
+        const models = store.models;
+        const order = store.addNewOrder();
+
+        const product = models["product.product"].get(1);
+        await addProductLineToOrder(store, order, { productId: product.id, price_unit: 50 });
+
+        const reward = models["loyalty.reward"].get(4);
+        const discountProduct = models["product.product"].get(200);
+        discountProduct.taxes_id = [];
+        reward.discount_line_product_id = discountProduct;
+
+        const lines = order._getRewardLineValuesDiscount({ reward, coupon_id: 1 });
+
+        expect(lines).toHaveLength(1);
+        const [line] = lines;
+        expect(line.price_unit).toBe(-50);
+        expect(line.tax_ids).toHaveLength(0);
+    });
+
+    test("_getRewardLineValuesDiscount - gift card reward keeps full amount when tax is forced exclusive", async () => {
+        const store = await setupPosEnv();
+        const models = store.models;
+        const order = store.addNewOrder();
+
+        const tax18Excl = models["account.tax"].create({
+            name: "18% (forced excl.)",
+            amount_type: "percent",
+            amount: 18,
+            price_include: false,
+            price_include_override: "tax_excluded",
+        });
+
+        await addProductLineToOrder(store, order, { productId: 1, price_unit: 10 });
+
+        const reward = models["loyalty.reward"].get(5);
+        expect(reward.program_id.program_type).toBe("gift_card");
+        const giftCard = models["loyalty.card"].get(3);
+
+        const discountProduct = models["product.product"].get(200);
+        discountProduct.taxes_id = [tax18Excl];
+        reward.discount_line_product_id = discountProduct;
+
+        const lines = order._getRewardLineValuesDiscount({ reward, coupon_id: giftCard.id });
+
+        expect(lines).toHaveLength(1);
+        const [line] = lines;
+        expect(line.price_unit).toBe(-10);
+        expect(line.tax_ids).toHaveLength(1);
+
+        const applied = order._applyReward(reward, giftCard.id);
+        expect(applied).toBe(true);
+
+        const rewardLine = order._get_reward_lines()[0];
+        expect(rewardLine.prices.total_included).toBe(-10);
+    });
+});
+
+describe("pos.order - rebuilt client state", () => {
+    const activateGiftCard = async (store, order) => {
+        onRpc("loyalty.card", "get_loyalty_card_partner_by_code", () => false);
+        onRpc("pos.config", "use_coupon_code", () => ({
+            successful: true,
+            payload: {
+                coupon_id: 18,
+                program_id: 3,
+                partner_id: false,
+                points: 92,
+                points_display: "92",
+                has_source_order: true,
+            },
+        }));
+        const models = store.models;
+        deactivateAllProgramsExcept(store, [3]);
+        const reward = models["loyalty.reward"].get(5);
+        reward.discount_mode = "per_point";
+        reward.discount = 1;
+        reward.discount_line_product_id = models["product.product"].get(200);
+        await addProductLineToOrder(store, order, { productId: 1, price_unit: 92 });
+        await store.activateCode("0449-3984-4efe");
+        expect(order._get_reward_lines()).toHaveLength(1);
+        expect(order._get_reward_lines()[0].coupon_id.id).toBe(18);
+        expect(order.priceIncl).toBe(0);
+    };
+
+    test("code activated gift card reward survives a page reload", async () => {
+        const store = await setupPosEnv();
+        const order = store.addNewOrder();
+        await activateGiftCard(store, order);
+
+        // `_code_activated_coupon_ids` is a local field, it is not restored with the order,
+        // and setup() flags the rebuilt order with invalidCoupons
+        order._code_activated_coupon_ids = [["clear"]];
+        order.invalidCoupons = true;
+        await store.orderUpdateLoyaltyPrograms();
+        order._updateRewardLines();
+
+        expect(order._get_reward_lines()).toHaveLength(1);
+        expect(order._get_reward_lines()[0].coupon_id.id).toBe(18);
+        expect(order.priceIncl).toBe(0);
+        expect(order._code_activated_coupon_ids.map((c) => c.id)).toEqual([18]);
+    });
+
+    test("code activated gift card reward survives a reload from the server", async () => {
+        const store = await setupPosEnv();
+        const order = store.addNewOrder();
+        await activateGiftCard(store, order);
+
+        // neither the local field nor the uiState exist when the order comes from read_pos_orders
+        order._code_activated_coupon_ids = [["clear"]];
+        order.uiState.couponPointChanges = {};
+        order.invalidCoupons = true;
+        await store.orderUpdateLoyaltyPrograms();
+        order._updateRewardLines();
+
+        expect(order._get_reward_lines()).toHaveLength(1);
+        expect(order.priceIncl).toBe(0);
+    });
+
+    test("order stored in IndexedDB before pos_loyalty was installed", async () => {
+        const store = await setupPosEnv();
+        const order = await getFilledOrder(store);
+        const serialized = order.serializeForIndexedDB();
+        const serializedLines = order.lines.map((line) => line.serializeForIndexedDB());
+        // point_of_sale alone does not store the loyalty keys of the ui state
+        const uiState = JSON.parse(serialized[SERIALIZED_UI_STATE_PROP]);
+        delete uiState.couponPointChanges;
+        delete uiState.codeActivatedProgramRules;
+        delete uiState.disabledRewards;
+        serialized[SERIALIZED_UI_STATE_PROP] = JSON.stringify(uiState);
+        store.data.localDeleteCascade(order);
+
+        const restored = store.models.loadConnectedData({
+            "pos.order": [serialized],
+            "pos.order.line": serializedLines,
+        })["pos.order"][0];
+        expect(restored.uiState.couponPointChanges).toEqual({});
+        expect(restored.uiState.codeActivatedProgramRules).toEqual([]);
+        expect(restored.uiState.disabledRewards.size).toBe(0);
+
+        store.setOrder(restored);
+        await store.updatePrograms();
+        expect(restored.getOrderlines()).toHaveLength(2);
+    });
+
+    test("reward line of a nominative card is still dropped when the partner is removed", async () => {
+        const store = await setupPosEnv();
+        const models = store.models;
+        const order = store.addNewOrder();
+        deactivateAllProgramsExcept(store, [7]);
+        const partner = models["res.partner"].get(1);
+        const program = models["loyalty.program"].get(7);
+        const reward = models["loyalty.reward"].get(1);
+        const card = models["loyalty.card"].get(4);
+        program.reward_ids = [1];
+        reward.program_id = program;
+        reward.required_points = 1;
+        reward.discount_line_product_id = models["product.product"].get(5);
+        order.setPartner(partner);
+        await store.orderUpdateLoyaltyPrograms();
+        await addProductLineToOrder(store, order, { productId: 1, price_unit: 10 });
+        expect(order._applyReward(reward, card.id)).toBe(true);
+        expect(order._get_reward_lines()).toHaveLength(1);
+
+        order.setPartner(false);
+        order.invalidCoupons = true;
+        await store.orderUpdateLoyaltyPrograms();
+        order._updateRewardLines();
+
+        expect(order._get_reward_lines()).toHaveLength(0);
+=======
+        expect(order.lines[1].prices.total_included).toBe(-100);
+        expect(order.lines[2].prices.total_included).toBe(-27.5);
+    });
+
+    test("_getRewardLineValuesDiscount - gift card payment uses full amount tax-free", async () => {
+        const store = await setupPosEnv();
+        const models = store.models;
+        const order = store.addNewOrder();
+
+        const product = models["product.product"].get(5);
+        await addProductLineToOrder(store, order, {
+            templateId: 5,
+            productId: product.id,
+            price_unit: 50,
+            tax_ids: [],
+        });
+
+        const reward = models["loyalty.reward"].get(4);
+        const discountProduct = models["product.product"].get(200);
+        discountProduct.taxes_id = [];
+        reward.discount_line_product_id = discountProduct;
+
+        const lines = order._getRewardLineValuesDiscount({ reward, coupon_id: 1 });
+
+        expect(lines).toHaveLength(1);
+        const [line] = lines;
+        expect(line.price_unit).toBe(-50);
+        expect(line.tax_ids).toHaveLength(0);
+    });
+
+    test("_getRewardLineValuesDiscount - gift card reward keeps full amount when tax is forced exclusive", async () => {
+        const store = await setupPosEnv();
+        const models = store.models;
+        const order = store.addNewOrder();
+
+        const tax18Excl = models["account.tax"].create({
+            name: "18% (forced excl.)",
+            amount_type: "percent",
+            amount: 18,
+            price_include: false,
+            price_include_override: "tax_excluded",
+        });
+
+        await addProductLineToOrder(store, order, { productId: 1, price_unit: 10 });
+
+        const reward = models["loyalty.reward"].get(5);
+        expect(reward.program_id.program_type).toBe("gift_card");
+        const giftCard = models["loyalty.card"].get(3);
+
+        const discountProduct = models["product.product"].get(200);
+        discountProduct.taxes_id = [tax18Excl];
+        reward.discount_line_product_id = discountProduct;
+
+        const lines = order._getRewardLineValuesDiscount({ reward, coupon_id: giftCard.id });
+
+        expect(lines).toHaveLength(1);
+        const [line] = lines;
+        expect(line.price_unit).toBe(-10);
+        expect(line.tax_ids).toHaveLength(1);
+
+        const applied = order._applyReward(reward, giftCard.id);
+        expect(applied).toBe(true);
+
+        const rewardLine = order._get_reward_lines()[0];
+        expect(rewardLine.prices.total_included).toBe(-10);
+    });
+});
+
+describe("pos.order - rebuilt client state", () => {
+    const activateGiftCard = async (store, order) => {
+        onRpc("loyalty.card", "get_loyalty_card_partner_by_code", () => false);
+        onRpc("pos.config", "use_coupon_code", () => ({
+            successful: true,
+            payload: {
+                coupon_id: 18,
+                program_id: 3,
+                partner_id: false,
+                points: 92,
+                points_display: "92",
+                has_source_order: true,
+            },
+        }));
+        const models = store.models;
+        deactivateAllProgramsExcept(store, [3]);
+        const reward = models["loyalty.reward"].get(5);
+        reward.discount_mode = "per_point";
+        reward.discount = 1;
+        reward.discount_line_product_id = models["product.product"].get(200);
+        await addProductLineToOrder(store, order, { productId: 1, price_unit: 92 });
+        await store.activateCode("0449-3984-4efe");
+        expect(order._get_reward_lines()).toHaveLength(1);
+        expect(order._get_reward_lines()[0].coupon_id.id).toBe(18);
+        expect(order.priceIncl).toBe(0);
+    };
+
+    test("code activated gift card reward survives a page reload", async () => {
+        const store = await setupPosEnv();
+        const order = store.addNewOrder();
+        await activateGiftCard(store, order);
+
+        // `_code_activated_coupon_ids` is a local field, it is not restored with the order,
+        // and setup() flags the rebuilt order with invalidCoupons
+        order._code_activated_coupon_ids = [["clear"]];
+        order.invalidCoupons = true;
+        await store.orderUpdateLoyaltyPrograms();
+        order._updateRewardLines();
+
+        expect(order._get_reward_lines()).toHaveLength(1);
+        expect(order._get_reward_lines()[0].coupon_id.id).toBe(18);
+        expect(order.priceIncl).toBe(0);
+        expect(order._code_activated_coupon_ids.map((c) => c.id)).toEqual([18]);
+    });
+
+    test("code activated gift card reward survives a reload from the server", async () => {
+        const store = await setupPosEnv();
+        const order = store.addNewOrder();
+        await activateGiftCard(store, order);
+
+        // neither the local field nor the uiState exist when the order comes from read_pos_orders
+        order._code_activated_coupon_ids = [["clear"]];
+        order.uiState.couponPointChanges = {};
+        order.invalidCoupons = true;
+        await store.orderUpdateLoyaltyPrograms();
+        order._updateRewardLines();
+
+        expect(order._get_reward_lines()).toHaveLength(1);
+        expect(order.priceIncl).toBe(0);
+    });
+
+    test("order stored in IndexedDB before pos_loyalty was installed", async () => {
+        const store = await setupPosEnv();
+        const order = await getFilledOrder(store);
+        const serialized = order.serializeForIndexedDB();
+        const serializedLines = order.lines.map((line) => line.serializeForIndexedDB());
+        // point_of_sale alone does not store the loyalty keys of the ui state
+        const uiState = JSON.parse(serialized[SERIALIZED_UI_STATE_PROP]);
+        delete uiState.couponPointChanges;
+        delete uiState.codeActivatedProgramRules;
+        delete uiState.disabledRewards;
+        serialized[SERIALIZED_UI_STATE_PROP] = JSON.stringify(uiState);
+        store.data.localDeleteCascade(order);
+
+        const restored = store.models.loadConnectedData({
+            "pos.order": [serialized],
+            "pos.order.line": serializedLines,
+        })["pos.order"][0];
+        expect(restored.uiState.couponPointChanges).toEqual({});
+        expect(restored.uiState.codeActivatedProgramRules).toEqual([]);
+        expect(restored.uiState.disabledRewards.size).toBe(0);
+
+        store.setOrder(restored);
+        await store.updatePrograms();
+        expect(restored.getOrderlines()).toHaveLength(2);
+    });
+
+    test("reward line of a nominative card is still dropped when the partner is removed", async () => {
+        const store = await setupPosEnv();
+        const models = store.models;
+        const order = store.addNewOrder();
+        deactivateAllProgramsExcept(store, [7]);
+        const partner = models["res.partner"].get(1);
+        const program = models["loyalty.program"].get(7);
+        const reward = models["loyalty.reward"].get(1);
+        const card = models["loyalty.card"].get(4);
+        program.reward_ids = [1];
+        reward.program_id = program;
+        reward.required_points = 1;
+        reward.discount_line_product_id = models["product.product"].get(5);
+        order.setPartner(partner);
+        await store.orderUpdateLoyaltyPrograms();
+        await addProductLineToOrder(store, order, { templateId: 5, productId: 5, price_unit: 10 });
+        expect(order._applyReward(reward, card.id)).toBe(true);
+        expect(order._get_reward_lines()).toHaveLength(1);
+
+        order.setPartner(false);
+        order.invalidCoupons = true;
+        await store.orderUpdateLoyaltyPrograms();
+        order._updateRewardLines();
+
+        expect(order._get_reward_lines()).toHaveLength(0);
+>>>>>>> 88f4817a81510cf6c0f9c03d3a0126a8de6ad2e5
     });
 });

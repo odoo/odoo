@@ -225,10 +225,575 @@ patch(PosOrder.prototype, {
             this.partner_id = card.partner_id;
         }
 
+<<<<<<< b122223d1d7d3394dc7c25cbc6c7377d5fdecf64
         if (card?.program_id?.is_payment_program) {
             this.active_payment_programs = [
                 ...this.active_payment_programs,
                 { reward_id: card.program_id.reward_ids[0].id, card_id: card.id },
+||||||| 305984400a096915982ee2754596db3b623fcb6b
+        this.uiState.couponPointChanges[couponId] = couponData;
+    },
+    /**
+     * @param {loyalty.reward} reward
+     * @returns the discountable and discountable per tax for this discount on order reward.
+     */
+    _getDiscountableOnOrder(reward) {
+        let discountable = 0;
+        const discountablePerTax = {};
+        // A gift card or an eWallet settles the whole bill, service fee included.
+        // Every other discount on order discounts what was ordered, and the fee is
+        // a charge on top of it: it stays out of the base.
+        const isPaymentReward = ["ewallet", "gift_card"].includes(reward.program_id.program_type);
+        for (const line of this.getOrderlines()) {
+            if (!line.getQuantity()) {
+                continue;
+            }
+            if (!isPaymentReward && line.isServiceFeeLine()) {
+                continue;
+            }
+            const taxKey = isPaymentReward
+                ? line.tax_ids.map((t) => t.id)
+                : line.tax_ids.filter((t) => t.amount_type !== "fixed").map((t) => t.id);
+            discountable += line.prices.total_included;
+            if (!discountablePerTax[taxKey]) {
+                discountablePerTax[taxKey] = 0;
+            }
+            discountablePerTax[taxKey] += line.basePrice;
+        }
+        return { discountable, discountablePerTax };
+    },
+    /**
+     * @param {loyalty.reward} reward
+     * @returns the cheapest line from all the lines where the program is applicable
+     */
+    _getCheapestLine(reward) {
+        const applicableProductIds = new Set(reward.all_discount_product_ids.map((p) => p.id));
+        const filtered_lines = this.getOrderlines().filter(
+            (line) =>
+                !line.combo_parent_id &&
+                !line.reward_id &&
+                line.getQuantity() &&
+                applicableProductIds.has(line.getProduct().id)
+        );
+        return filtered_lines.toSorted(
+            (lineA, lineB) => lineA.comboTotalPrice / lineA.qty - lineB.comboTotalPrice / lineB.qty
+        )[0];
+    },
+    /**
+     * @returns the discountable and discountable per tax for this discount on cheapest reward.
+     */
+    _getDiscountableOnCheapest(reward) {
+        const cheapestLine = this._getCheapestLine(reward);
+        if (!cheapestLine) {
+            return { discountable: 0, discountablePerTax: {} };
+        }
+        const taxKey = ["ewallet", "gift_card"].includes(reward.program_id.program_type)
+            ? cheapestLine.tax_ids.map((t) => t.id)
+            : cheapestLine.tax_ids.filter((t) => t.amount_type !== "fixed").map((t) => t.id);
+        return {
+            discountable: cheapestLine.comboTotalBasePrice,
+            discountablePerTax: Object.fromEntries([[taxKey, cheapestLine.comboTotalBasePrice]]),
+        };
+    },
+    /**
+     * @param {loyalty.reward} reward
+     * @returns all lines to which the reward applies.
+     */
+    _getSpecificDiscountableLines(reward) {
+        const discountableLines = [];
+        const applicableProductIds = new Set(reward.all_discount_product_ids.map((p) => p.id));
+        for (const line of this.getOrderlines()) {
+            if (!line.getQuantity()) {
+                continue;
+            }
+            if (
+                applicableProductIds.has(line.getProduct().id) ||
+                applicableProductIds.has(line._reward_product_id?.id)
+            ) {
+                discountableLines.push(line);
+            }
+        }
+        return discountableLines;
+    },
+    /**
+     * For a 'specific' type of discount it is more complicated as we have to make sure that we never
+     *  discount more than what is available on a per line basis.
+     * @param {loyalty.reward} reward
+     * @returns the discountable and discountable per tax for this discount on specific reward.
+     */
+    _getDiscountableOnSpecific(reward) {
+        const applicableProductIds = new Set(reward.all_discount_product_ids.map((p) => p.id));
+        const linesToDiscount = [];
+        const discountLinesPerReward = {};
+        const orderLines = this.getOrderlines();
+        const orderProducts = orderLines.map((line) => line.product_id.id);
+        const remainingAmountPerLine = {};
+        for (const line of orderLines) {
+            if (!line.getQuantity() || !line.price_unit) {
+                continue;
+            }
+            remainingAmountPerLine[line.uuid] = line.prices.total_included;
+            const product_id = line.combo_parent_id?.product_id.id || line.getProduct().id;
+            if (
+                applicableProductIds.has(product_id) ||
+                (line._reward_product_id && applicableProductIds.has(line._reward_product_id.id))
+            ) {
+                linesToDiscount.push(line);
+            } else if (line.reward_id) {
+                const lineReward = line.reward_id;
+                const lineRewardApplicableProductsIds = new Set(
+                    lineReward.all_discount_product_ids.map((p) => p.id)
+                );
+                if (
+                    lineReward.id === reward.id ||
+                    (orderProducts.some(
+                        (product) =>
+                            lineRewardApplicableProductsIds.has(product) &&
+                            applicableProductIds.has(product)
+                    ) &&
+                        lineReward.reward_type === "discount" &&
+                        lineReward.discount_mode != "percent")
+                ) {
+                    linesToDiscount.push(line);
+                }
+                if (!discountLinesPerReward[line.reward_identifier_code]) {
+                    discountLinesPerReward[line.reward_identifier_code] = [];
+                }
+                discountLinesPerReward[line.reward_identifier_code].push(line);
+            }
+        }
+
+        let cheapestLine = false;
+        for (const lines of Object.values(discountLinesPerReward)) {
+            const lineReward = lines[0].reward_id;
+            if (lineReward.reward_type !== "discount") {
+                continue;
+            }
+            let discountedLines = orderLines;
+            if (lineReward.discount_applicability === "cheapest") {
+                cheapestLine = cheapestLine || this._getCheapestLine(lineReward);
+                discountedLines = [cheapestLine];
+            } else if (lineReward.discount_applicability === "specific") {
+                discountedLines = this._getSpecificDiscountableLines(lineReward);
+            }
+            if (!discountedLines.length) {
+                continue;
+            }
+            if (lineReward.discount_mode === "percent") {
+                const discount = lineReward.discount / 100;
+                for (const line of discountedLines) {
+                    if (line.reward_id) {
+                        continue;
+                    }
+                    let discountedAmount = 0;
+                    if (lineReward.discount_applicability === "cheapest") {
+                        discountedAmount =
+                            (-remainingAmountPerLine[line.uuid] * discount) / line.getQuantity();
+                    } else {
+                        discountedAmount = -remainingAmountPerLine[line.uuid] * discount;
+                    }
+                    if (lineReward.discount_max_amount && lineReward.discount_max_amount > 0) {
+                        discountedAmount = Math.max(
+                            discountedAmount,
+                            -lineReward.discount_max_amount
+                        );
+                    }
+                    remainingAmountPerLine[line.uuid] += discountedAmount;
+                }
+            }
+        }
+
+        let discountable = 0;
+        const discountablePerTax = {};
+        for (const line of linesToDiscount) {
+            discountable += remainingAmountPerLine[line.uuid];
+            const taxKey = ["ewallet", "gift_card"].includes(reward.program_id.program_type)
+                ? line.tax_ids.map((t) => t.id)
+                : line.tax_ids.filter((t) => t.amount_type !== "fixed").map((t) => t.id);
+            if (!discountablePerTax[taxKey]) {
+                discountablePerTax[taxKey] = 0;
+            }
+            discountablePerTax[taxKey] +=
+                line.basePrice * (remainingAmountPerLine[line.uuid] / line.prices.total_included);
+        }
+        return { discountable, discountablePerTax };
+    },
+    /**
+     * @param {Object} args See `_applyReward`
+     * @returns {Array} List of values to create the reward lines
+     */
+    _getRewardLineValues(args) {
+        const reward = args["reward"];
+        if (reward.reward_type === "discount") {
+            return this._getRewardLineValuesDiscount(args);
+        } else if (reward.reward_type === "product") {
+            return this._getRewardLineValuesProduct(args);
+        }
+        // NOTE: we may reach this step if for some reason there is a free shipping reward
+        return [];
+    },
+    /**
+     * @param {Object} args See `_applyReward`
+     * @returns {Array} List of values to create the discount lines
+     */
+    _getRewardLineValuesDiscount(args) {
+        //LINK
+        const reward = args["reward"];
+        const coupon_id = args["coupon_id"];
+        const rewardAppliesTo = reward.discount_applicability;
+        let getDiscountable;
+        if (rewardAppliesTo === "order") {
+            getDiscountable = this._getDiscountableOnOrder.bind(this);
+        } else if (rewardAppliesTo === "cheapest") {
+            getDiscountable = this._getDiscountableOnCheapest.bind(this);
+        } else if (rewardAppliesTo === "specific") {
+            getDiscountable = this._getDiscountableOnSpecific.bind(this);
+        }
+        if (!getDiscountable) {
+            return _t("Unknown discount type");
+        }
+        let { discountable, discountablePerTax } = getDiscountable(reward);
+        // Other discounts may already cover part of the discountable lines
+        const totalFactor = discountable > 0 ? Math.min(1, this.priceIncl / discountable) : 1;
+        discountable = Math.min(this.priceIncl, discountable);
+        if (floatIsZero(discountable)) {
+            return [];
+        }
+        let maxDiscount = reward.discount_max_amount || Infinity;
+        if (reward.discount_mode === "per_point") {
+            // Rewards cannot be partially offered to customers
+            const points = ["ewallet", "gift_card"].includes(reward.program_id.program_type)
+                ? this._getRealCouponPoints(coupon_id)
+                : Math.floor(this._getRealCouponPoints(coupon_id) / reward.required_points) *
+                  reward.required_points;
+            maxDiscount = Math.min(maxDiscount, reward.discount * points);
+        } else if (reward.discount_mode === "per_order") {
+            maxDiscount = Math.min(maxDiscount, reward.discount);
+        } else if (reward.discount_mode === "percent") {
+            maxDiscount = Math.min(maxDiscount, discountable * (reward.discount / 100));
+        }
+        const rewardCode = _newRandomRewardCode();
+        let pointCost = reward.clear_wallet
+            ? this._getRealCouponPoints(coupon_id)
+            : reward.required_points;
+        if (reward.discount_mode === "per_point" && !reward.clear_wallet) {
+            pointCost = Math.min(maxDiscount, discountable) / reward.discount;
+        }
+        // These are considered payments and do not require to be either taxed or split by tax
+        const discountProduct = reward.discount_line_product_id;
+        if (["ewallet", "gift_card"].includes(reward.program_id.program_type)) {
+            const baseLine = discountProduct.getBaseLine({
+                overridedValues: {
+                    tax_ids: discountProduct.taxes_id,
+                    price_unit: -Math.min(maxDiscount, discountable),
+                    quantity: 1,
+                    special_mode: "total_included",
+                },
+            });
+            accountTaxHelpers.add_tax_details_in_base_line(baseLine, this.company);
+            accountTaxHelpers.round_base_lines_tax_details([baseLine], this.company);
+            accountTaxHelpers.fix_base_lines_tax_details_on_manual_tax_amounts(
+                [baseLine],
+                this.company
+            );
+            const extraTaxData = accountTaxHelpers.export_base_line_extra_tax_data(baseLine);
+
+            return [
+                {
+                    product_id: discountProduct,
+                    price_unit: baseLine.price_unit,
+                    qty: 1,
+                    reward_id: reward,
+                    is_reward_line: true,
+                    coupon_id: coupon_id,
+                    points_cost: pointCost,
+                    reward_identifier_code: rewardCode,
+                    tax_ids: discountProduct.taxes_id,
+                    extra_tax_data: extraTaxData,
+                },
+=======
+        this.uiState.couponPointChanges[couponId] = couponData;
+    },
+    /**
+     * @param {loyalty.reward} reward
+     * @returns the discountable and discountable per tax for this discount on order reward.
+     */
+    _getDiscountableOnOrder(reward) {
+        let discountable = 0;
+        const discountablePerTax = {};
+        // A gift card or an eWallet settles the whole bill, service fee included.
+        // Every other discount on order discounts what was ordered, and the fee is
+        // a charge on top of it: it stays out of the base.
+        const isPaymentReward = ["ewallet", "gift_card"].includes(reward.program_id.program_type);
+        for (const line of this.getOrderlines()) {
+            if (!line.getQuantity()) {
+                continue;
+            }
+            if (!isPaymentReward && (line.isServiceFeeLine() || !line.isDiscountable())) {
+                continue;
+            }
+            const taxKey = isPaymentReward
+                ? line.tax_ids.map((t) => t.id)
+                : line.tax_ids.filter((t) => t.amount_type !== "fixed").map((t) => t.id);
+            discountable += line.prices.total_included;
+            if (!discountablePerTax[taxKey]) {
+                discountablePerTax[taxKey] = 0;
+            }
+            discountablePerTax[taxKey] += line.basePrice;
+        }
+        return { discountable, discountablePerTax };
+    },
+    /**
+     * @param {loyalty.reward} reward
+     * @returns the cheapest line from all the lines where the program is applicable
+     */
+    _getCheapestLine(reward) {
+        const applicableProductIds = new Set(reward.all_discount_product_ids.map((p) => p.id));
+        const filtered_lines = this.getOrderlines().filter(
+            (line) =>
+                line.isDiscountable() &&
+                !line.combo_parent_id &&
+                !line.reward_id &&
+                line.getQuantity() &&
+                applicableProductIds.has(line.getProduct().id)
+        );
+        return filtered_lines.toSorted(
+            (lineA, lineB) => lineA.comboTotalPrice / lineA.qty - lineB.comboTotalPrice / lineB.qty
+        )[0];
+    },
+    /**
+     * @returns the discountable and discountable per tax for this discount on cheapest reward.
+     */
+    _getDiscountableOnCheapest(reward) {
+        const cheapestLine = this._getCheapestLine(reward);
+        if (!cheapestLine) {
+            return { discountable: 0, discountablePerTax: {} };
+        }
+        const taxKey = ["ewallet", "gift_card"].includes(reward.program_id.program_type)
+            ? cheapestLine.tax_ids.map((t) => t.id)
+            : cheapestLine.tax_ids.filter((t) => t.amount_type !== "fixed").map((t) => t.id);
+        return {
+            discountable: cheapestLine.comboTotalBasePrice,
+            discountablePerTax: Object.fromEntries([[taxKey, cheapestLine.comboTotalBasePrice]]),
+        };
+    },
+    /**
+     * @param {loyalty.reward} reward
+     * @returns all lines to which the reward applies.
+     */
+    _getSpecificDiscountableLines(reward) {
+        const discountableLines = [];
+        const applicableProductIds = new Set(reward.all_discount_product_ids.map((p) => p.id));
+        for (const line of this.getOrderlines()) {
+            if (!line.getQuantity() || !line.isDiscountable()) {
+                continue;
+            }
+            if (
+                applicableProductIds.has(line.getProduct().id) ||
+                applicableProductIds.has(line._reward_product_id?.id)
+            ) {
+                discountableLines.push(line);
+            }
+        }
+        return discountableLines;
+    },
+    /**
+     * For a 'specific' type of discount it is more complicated as we have to make sure that we never
+     *  discount more than what is available on a per line basis.
+     * @param {loyalty.reward} reward
+     * @returns the discountable and discountable per tax for this discount on specific reward.
+     */
+    _getDiscountableOnSpecific(reward) {
+        const applicableProductIds = new Set(reward.all_discount_product_ids.map((p) => p.id));
+        const linesToDiscount = [];
+        const discountLinesPerReward = {};
+        const orderLines = this.getOrderlines();
+        const orderProducts = orderLines.map((line) => line.product_id.id);
+        const remainingAmountPerLine = {};
+        for (const line of orderLines) {
+            if (!line.getQuantity() || !line.price_unit || !line.isDiscountable()) {
+                continue;
+            }
+            remainingAmountPerLine[line.uuid] = line.prices.total_included;
+            const product_id = line.combo_parent_id?.product_id.id || line.getProduct().id;
+            if (
+                applicableProductIds.has(product_id) ||
+                (line._reward_product_id && applicableProductIds.has(line._reward_product_id.id))
+            ) {
+                linesToDiscount.push(line);
+            } else if (line.reward_id) {
+                const lineReward = line.reward_id;
+                const lineRewardApplicableProductsIds = new Set(
+                    lineReward.all_discount_product_ids.map((p) => p.id)
+                );
+                if (
+                    lineReward.id === reward.id ||
+                    (orderProducts.some(
+                        (product) =>
+                            lineRewardApplicableProductsIds.has(product) &&
+                            applicableProductIds.has(product)
+                    ) &&
+                        lineReward.reward_type === "discount" &&
+                        lineReward.discount_mode != "percent")
+                ) {
+                    linesToDiscount.push(line);
+                }
+                if (!discountLinesPerReward[line.reward_identifier_code]) {
+                    discountLinesPerReward[line.reward_identifier_code] = [];
+                }
+                discountLinesPerReward[line.reward_identifier_code].push(line);
+            }
+        }
+
+        let cheapestLine = false;
+        for (const lines of Object.values(discountLinesPerReward)) {
+            const lineReward = lines[0].reward_id;
+            if (lineReward.reward_type !== "discount") {
+                continue;
+            }
+            let discountedLines = orderLines;
+            if (lineReward.discount_applicability === "cheapest") {
+                cheapestLine = cheapestLine || this._getCheapestLine(lineReward);
+                discountedLines = [cheapestLine];
+            } else if (lineReward.discount_applicability === "specific") {
+                discountedLines = this._getSpecificDiscountableLines(lineReward);
+            }
+            if (!discountedLines.length) {
+                continue;
+            }
+            if (lineReward.discount_mode === "percent") {
+                const discount = lineReward.discount / 100;
+                for (const line of discountedLines) {
+                    if (line.reward_id) {
+                        continue;
+                    }
+                    let discountedAmount = 0;
+                    if (lineReward.discount_applicability === "cheapest") {
+                        discountedAmount =
+                            (-remainingAmountPerLine[line.uuid] * discount) / line.getQuantity();
+                    } else {
+                        discountedAmount = -remainingAmountPerLine[line.uuid] * discount;
+                    }
+                    if (lineReward.discount_max_amount && lineReward.discount_max_amount > 0) {
+                        discountedAmount = Math.max(
+                            discountedAmount,
+                            -lineReward.discount_max_amount
+                        );
+                    }
+                    remainingAmountPerLine[line.uuid] += discountedAmount;
+                }
+            }
+        }
+
+        let discountable = 0;
+        const discountablePerTax = {};
+        for (const line of linesToDiscount) {
+            discountable += remainingAmountPerLine[line.uuid];
+            const taxKey = ["ewallet", "gift_card"].includes(reward.program_id.program_type)
+                ? line.tax_ids.map((t) => t.id)
+                : line.tax_ids.filter((t) => t.amount_type !== "fixed").map((t) => t.id);
+            if (!discountablePerTax[taxKey]) {
+                discountablePerTax[taxKey] = 0;
+            }
+            discountablePerTax[taxKey] +=
+                line.basePrice * (remainingAmountPerLine[line.uuid] / line.prices.total_included);
+        }
+        return { discountable, discountablePerTax };
+    },
+    /**
+     * @param {Object} args See `_applyReward`
+     * @returns {Array} List of values to create the reward lines
+     */
+    _getRewardLineValues(args) {
+        const reward = args["reward"];
+        if (reward.reward_type === "discount") {
+            return this._getRewardLineValuesDiscount(args);
+        } else if (reward.reward_type === "product") {
+            return this._getRewardLineValuesProduct(args);
+        }
+        // NOTE: we may reach this step if for some reason there is a free shipping reward
+        return [];
+    },
+    /**
+     * @param {Object} args See `_applyReward`
+     * @returns {Array} List of values to create the discount lines
+     */
+    _getRewardLineValuesDiscount(args) {
+        //LINK
+        const reward = args["reward"];
+        const coupon_id = args["coupon_id"];
+        const rewardAppliesTo = reward.discount_applicability;
+        let getDiscountable;
+        if (rewardAppliesTo === "order") {
+            getDiscountable = this._getDiscountableOnOrder.bind(this);
+        } else if (rewardAppliesTo === "cheapest") {
+            getDiscountable = this._getDiscountableOnCheapest.bind(this);
+        } else if (rewardAppliesTo === "specific") {
+            getDiscountable = this._getDiscountableOnSpecific.bind(this);
+        }
+        if (!getDiscountable) {
+            return _t("Unknown discount type");
+        }
+        let { discountable, discountablePerTax } = getDiscountable(reward);
+        // Other discounts may already cover part of the discountable lines
+        const totalFactor = discountable > 0 ? Math.min(1, this.priceIncl / discountable) : 1;
+        discountable = Math.min(this.priceIncl, discountable);
+        if (floatIsZero(discountable)) {
+            return [];
+        }
+        let maxDiscount = reward.discount_max_amount || Infinity;
+        if (reward.discount_mode === "per_point") {
+            // Rewards cannot be partially offered to customers
+            const points = ["ewallet", "gift_card"].includes(reward.program_id.program_type)
+                ? this._getRealCouponPoints(coupon_id)
+                : Math.floor(this._getRealCouponPoints(coupon_id) / reward.required_points) *
+                  reward.required_points;
+            maxDiscount = Math.min(maxDiscount, reward.discount * points);
+        } else if (reward.discount_mode === "per_order") {
+            maxDiscount = Math.min(maxDiscount, reward.discount);
+        } else if (reward.discount_mode === "percent") {
+            maxDiscount = Math.min(maxDiscount, discountable * (reward.discount / 100));
+        }
+        const rewardCode = _newRandomRewardCode();
+        let pointCost = reward.clear_wallet
+            ? this._getRealCouponPoints(coupon_id)
+            : reward.required_points;
+        if (reward.discount_mode === "per_point" && !reward.clear_wallet) {
+            pointCost = Math.min(maxDiscount, discountable) / reward.discount;
+        }
+        // These are considered payments and do not require to be either taxed or split by tax
+        const discountProduct = reward.discount_line_product_id;
+        if (["ewallet", "gift_card"].includes(reward.program_id.program_type)) {
+            const baseLine = discountProduct.getBaseLine({
+                overridedValues: {
+                    tax_ids: discountProduct.taxes_id,
+                    price_unit: -Math.min(maxDiscount, discountable),
+                    quantity: 1,
+                    special_mode: "total_included",
+                },
+            });
+            accountTaxHelpers.add_tax_details_in_base_line(baseLine, this.company);
+            accountTaxHelpers.round_base_lines_tax_details([baseLine], this.company);
+            accountTaxHelpers.fix_base_lines_tax_details_on_manual_tax_amounts(
+                [baseLine],
+                this.company
+            );
+            const extraTaxData = accountTaxHelpers.export_base_line_extra_tax_data(baseLine);
+
+            return [
+                {
+                    product_id: discountProduct,
+                    price_unit: baseLine.price_unit,
+                    qty: 1,
+                    reward_id: reward,
+                    is_reward_line: true,
+                    coupon_id: coupon_id,
+                    points_cost: pointCost,
+                    reward_identifier_code: rewardCode,
+                    tax_ids: discountProduct.taxes_id,
+                    extra_tax_data: extraTaxData,
+                },
+>>>>>>> 88f4817a81510cf6c0f9c03d3a0126a8de6ad2e5
             ];
         }
         this.applied_codes = [...this.applied_codes, appliedCode];
