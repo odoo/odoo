@@ -168,7 +168,7 @@ class TestPeppolParticipant(PeppolConnectorCommon):
 
         # You must not use the same EAS/ENDPOINT than the parent company!
         wizard.write({
-            'contact_email': "turlututu@tsointsoin",
+            'contact_email': "turlututu@tsointsoin.com",
             'phone_number': "+3236656565",
             'peppol_eas': '0208',
             'peppol_endpoint': '0477472701',
@@ -184,7 +184,7 @@ class TestPeppolParticipant(PeppolConnectorCommon):
             'peppol_parent_company_id': False,
             'peppol_eas': '0208',
             'peppol_endpoint': '0477472701',
-            'account_peppol_contact_email': "turlututu@tsointsoin",
+            'account_peppol_contact_email': "turlututu@tsointsoin.com",
             'account_peppol_phone_number': "+3236656565",
         }])
 
