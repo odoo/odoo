@@ -41,8 +41,8 @@ class PurchaseBillUnion(models.Model):
                 doc.display_name = name
 
     @property
-    def _table_query(self):
-        return SQL("""
+    def _table_sql(self):
+        return SQL("""(
                 SELECT id,
                        name,
                        ref as reference,
@@ -70,4 +70,4 @@ class PurchaseBillUnion(models.Model):
                   FROM purchase_order
                  WHERE state = 'purchase'
                    AND invoice_status in ('to invoice', 'no')
-        """)
+        )""")

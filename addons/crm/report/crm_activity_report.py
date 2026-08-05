@@ -1,7 +1,7 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models, tools
+from odoo.tools import SQL
 
 
 class CrmActivityReport(models.Model):
@@ -41,7 +41,7 @@ class CrmActivityReport(models.Model):
     ], string='Is Won', readonly=True)
 
     def _select(self):
-        return """
+        return SQL("""
             SELECT
                 m.id,
                 l.create_date AS lead_create_date,
@@ -63,34 +63,34 @@ class CrmActivityReport(models.Model):
                 l.type as lead_type,
                 l.active,
                 l.won_status
-        """
+        """)
 
     def _from(self):
-        return """
+        return SQL("""
             FROM mail_message AS m
-        """
+        """)
 
     def _join(self):
-        return """
+        return SQL("""
             JOIN crm_lead AS l ON m.res_id = l.id
-        """
+        """)
 
     def _where(self):
-        return """
+        return SQL("""
             WHERE
                 m.model = 'crm.lead' AND (m.mail_activity_type_id IS NOT NULL)
-        """
+        """)
 
     def init(self):
         tools.drop_view_if_exists(self.env.cr, self._table)
-        self.env.cr.execute("""
+        self.env.cr.execute(SQL("""
             CREATE OR REPLACE VIEW %s AS (
                 %s
                 %s
                 %s
                 %s
             )
-        """ % (self._table, self._select(), self._from(), self._join(), self._where())
+        """, SQL.identifier(self._table), self._select(), self._from(), self._join(), self._where())
         )
 
     def action_open_lead(self):

@@ -34,11 +34,11 @@ class HrLeaveEmployeeReport(models.Model):
     color = fields.Integer(string="Color", related='work_entry_type_id.color')
 
     @property
-    def _table_query(self):
+    def _table_sql(self):
         fetched_leave_field_names, leave_records = self._fetch_leave_data()
         report_records = self._create_report_records_from_leave_records(leave_records, fetched_leave_field_names)
         self._compute_leave_duration(report_records)
-        return self._generate_report_query(report_records)
+        return SQL("(%s)", self._generate_report_query(report_records))
 
     def _fetch_leave_data(self):
         self.env.cr.execute(SQL(

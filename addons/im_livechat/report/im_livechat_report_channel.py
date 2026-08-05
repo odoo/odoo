@@ -95,8 +95,8 @@ class Im_LivechatReportChannel(models.Model):
         return self.env._("Unknown")
 
     @property
-    def _table_query(self):
-        return SQL("%s %s %s", self._select(), self._from(), self._where())
+    def _table_sql(self):
+        return SQL("(%s %s %s)", self._select(), self._from(), self._where())
 
     def _select(self) -> SQL:
         return SQL(

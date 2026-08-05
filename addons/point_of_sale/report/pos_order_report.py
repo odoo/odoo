@@ -1,7 +1,7 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models, tools
+from odoo.tools import SQL
 
 
 class ReportPosOrder(models.Model):
@@ -41,7 +41,7 @@ class ReportPosOrder(models.Model):
     preset_id = fields.Many2one('pos.preset', string='Preset', readonly=True)
 
     def _select(self):
-        return """
+        return SQL("""
             -- The purpose of this CTE is to map each "pos_order_line" to the "payment_method_id" corresponding to its "pos_order"
             -- considering we always show the first "payment_method_id"
             WITH payment_method_by_order_line AS (
@@ -95,10 +95,10 @@ class ReportPosOrder(models.Model):
                 pm.payment_method_id AS payment_method_id,
                 fpc.id AS pos_categ_id
 
-        """
+        """)
 
     def _from(self):
-        return """
+        return SQL("""
             FROM pos_order_line AS l
                 INNER JOIN pos_order s ON (s.id=l.order_id)
                 LEFT JOIN product_product p ON (l.product_id=p.id)
@@ -110,17 +110,17 @@ class ReportPosOrder(models.Model):
                 LEFT JOIN payment_method_by_order_line pm ON (pm.pos_order_line_id=l.id)
                 LEFT JOIN pos_payment_method ppm ON (pm.payment_method_id=ppm.id)
                 LEFT JOIN first_pos_category fpc ON (pt.id = fpc.product_template_id)
-        """
+        """)
 
     def _group_by(self):
-        return ""
+        return SQL()
 
     def init(self):
         tools.drop_view_if_exists(self.env.cr, self._table)
-        self.env.cr.execute("""
+        self.env.cr.execute(SQL("""
             CREATE OR REPLACE VIEW %s AS (
                 %s
                 %s
             )
-        """ % (self._table, self._select(), self._from())
+        """, SQL.identifier(self._table), self._select(), self._from())
         )

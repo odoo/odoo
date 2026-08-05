@@ -46,16 +46,16 @@ class WebsiteTechnicalPage(models.Model):
         return routes
 
     @property
-    def _table_query(self):
+    def _table_sql(self):
         routes = self._get_static_routes()
         values = SQL(", ").join(
             SQL('(%s, %s)', route_title, route_path)
             for route_title, route_path in routes
         )
 
-        return SQL("""
+        return SQL("""(
             SELECT row_number() OVER (ORDER BY UPPER(column1) ASC) AS id,
                 column1 AS name,
                 column2 AS website_url
             FROM (VALUES %s) AS t(column1, column2)
-        """, values)
+        )""", values)

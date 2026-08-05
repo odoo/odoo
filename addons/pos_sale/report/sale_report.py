@@ -26,14 +26,14 @@ class SaleReport(models.Model):
     order_reference = fields.Reference(selection_add=[('pos.order', 'POS Order')])
 
     @property
-    def _table_query(self) -> SQL:
+    def _table_sql(self) -> SQL:
         today = fields.Date.context_today(self)
         query = self.env['pos.order.line'].sudo().with_context(date_to=today)._search(self._pos_order_line_domain())
         query.groupby = SQL(", ").join(self._groupby_pos_list(query.table))
         return SQL(
-            "%s UNION ALL %s",
+            "(%s UNION ALL %s)",
             query.subselect(*self._select_dict_to_list(self._select_pos_dict(query.table))),
-            super()._table_query,
+            super()._table_sql,
         )
 
     def _pos_order_line_domain(self):

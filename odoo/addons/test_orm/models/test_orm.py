@@ -2246,29 +2246,6 @@ class TestOrmCustomView(models.Model):
         self.env.cr.execute(query)
 
 
-class TestOrmCustomTable_Query(models.Model):
-    _name = 'test_orm.custom.table_query'
-    _description = "test_orm.custom.table_query"
-    _auto = False
-    _depends = {
-        'test_orm.any.tag': ['name'],
-        'test_orm.any.child': ['quantity'],
-    }
-
-    sum_quantity = fields.Integer()
-    tag_id = fields.Many2one('test_orm.any.tag')
-
-    @property
-    def _table_query(self):
-        return """
-            SELECT tag.id AS id, SUM(child.quantity) AS sum_quantity, tag.id AS tag_id
-            FROM test_orm_any_child AS child
-            JOIN test_orm_any_child_test_orm_any_tag_rel AS rel ON rel.test_orm_any_child_id = child.id
-            JOIN test_orm_any_tag AS tag ON tag.id = rel.test_orm_any_tag_id
-            GROUP BY tag.id
-        """
-
-
 class TestOrmCustomTable_Query_Sql(models.Model):
     _name = 'test_orm.custom.table_query_sql'
     _description = "test_orm.custom.table_query_sql"
@@ -2282,15 +2259,16 @@ class TestOrmCustomTable_Query_Sql(models.Model):
     tag_id = fields.Many2one('test_orm.any.tag')
 
     @property
-    def _table_query(self):
+    def _table_sql(self):
         return SQL(
-            """
+            """(
             SELECT tag.id AS id, SUM(child.quantity) AS sum_quantity, tag.id AS tag_id
             FROM test_orm_any_child AS child
             JOIN test_orm_any_child_test_orm_any_tag_rel AS rel ON rel.test_orm_any_child_id = child.id
             JOIN test_orm_any_tag AS tag ON tag.id = rel.test_orm_any_tag_id
             GROUP BY tag.id
-            """,
+            )""",
+            to_flush=super()._table_sql._sql_tuple[2],
         )
 
 
@@ -2340,7 +2318,7 @@ class Test_New_ViewStrId(models.Model):
     _name = 'test_orm.view.str.id'
     _description = 'test_orm.view.str.id'
     _auto = False
-    _table_query = "SELECT 'hello' AS id, 'test' AS name"
+    _table_sql = SQL("(SELECT 'hello' AS id, 'test' AS name)")
 
     name = fields.Char()
 

@@ -463,7 +463,6 @@ class BaseModel(metaclass=MetaModel):
     """
     _check_inherits_access: bool = True           #: check access for _inherits models
     _table: str = ''                 #: SQL table name used by model if :attr:`_auto`
-    _table_query: SQL | str | None = None  #: SQL expression of the table's content (optional)
     _table_objects: dict[str, TableObject] = frozendict()  #: SQL/Table objects
     _inherit_children: OrderedSet[str]
 
@@ -534,13 +533,7 @@ class BaseModel(metaclass=MetaModel):
         """ Return an :class:`SQL` object that represents SQL table identifier
         or table query.
         """
-        table_query = self._table_query
-        if table_query and isinstance(table_query, SQL):
-            table_sql = SQL("(%s)", table_query)
-        elif table_query:
-            table_sql = SQL(f"({table_query})")
-        else:
-            table_sql = SQL.identifier(self._table)
+        table_sql = SQL.identifier(self._table)
         if not self._depends:
             return table_sql
 

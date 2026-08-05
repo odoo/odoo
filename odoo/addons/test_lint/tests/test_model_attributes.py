@@ -5,7 +5,8 @@ from .common import RegistryLintCase
 DEPRECATED_MODEL_ATTRIBUTES = [
     ('view_init', ''),
     ('_needaction', ''),
-    ('_sql', "use _table or _table_query"),
+    ('_sql', "check _table or _table_sql"),
+    ('_table_query', "overwrite _table_sql"),
     ('_execute_sql', "use self.env.execute_query"),
     ('name_get', "overwrite `_compute_display_name`")
 ]

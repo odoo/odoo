@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models, api
+from odoo.tools import SQL
 
 from odoo.addons.sale_project.models.account_analytic_line import BILLABLE_TYPES
 from odoo.addons.sale_timesheet.models.account_analytic_line import TIMESHEET_BILLABLE_TYPES
@@ -20,19 +21,19 @@ class TimesheetsAnalysisReport(models.Model):
     non_billable_time = fields.Float("Non-billable Time", readonly=True, help="Number of hours/days not linked to a SOL.")
 
     @property
-    def _table_query(self):
-        return """
+    def _table_sql(self):
+        return SQL("""(
             SELECT A.*,
                 (timesheet_revenues + A.amount) AS margin,
                 (A.unit_amount - billable_time) AS non_billable_time
             FROM (
                 %s %s %s
             ) A
-        """ % (self._select(), self._from(), self._where())
+        )""", self._select(), self._from(), self._where())
 
     @api.model
     def _select(self):
-        return super()._select() + """,
+        return SQL("""%s,
             A.order_id AS order_id,
             A.so_line AS so_line,
             A.billable_type AS billable_type,
@@ -45,14 +46,14 @@ class TimesheetsAnalysisReport(models.Model):
                 ELSE A.unit_amount * SOL.price_unit / sol_product_uom.factor * a_product_uom.factor
             END AS timesheet_revenues,
             CASE WHEN A.order_id IS NULL THEN 0 ELSE A.unit_amount END AS billable_time
-        """
+        """, super()._select())
 
     @api.model
     def _from(self):
-        return super()._from() + """
+        return SQL("""%s
             LEFT JOIN sale_order_line SOL ON A.so_line = SOL.id
             LEFT JOIN uom_uom sol_product_uom ON sol_product_uom.id = SOL.product_uom_id
             INNER JOIN uom_uom a_product_uom ON a_product_uom.id = A.product_uom_id
             LEFT JOIN product_product P ON P.id = SOL.product_id
             LEFT JOIN product_template T ON T.id = P.product_tmpl_id
-        """
+        """, super()._from())
