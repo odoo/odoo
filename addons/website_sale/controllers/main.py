@@ -151,16 +151,15 @@ class WebsiteSale(payment_portal.PaymentPortal):
     ):
         domains = [self.env.website.sale_product_domain()]
         if search:
+            product_template = request.env["product.template"]
+            search_fields = product_template._get_website_sale_search_fields(
+                search_in_description
+            )
             for srch in search.split(" "):
                 subdomains = [
-                    Domain("name", "ilike", srch),
-                    Domain("variants_default_code", "ilike", srch),
+                    product_template._search_get_field_domain(field, srch)
+                    for field in search_fields
                 ]
-                if search_in_description:
-                    subdomains.extend((
-                        Domain("website_description", "ilike", srch),
-                        Domain("description_sale", "ilike", srch),
-                    ))
                 extra_subdomain = self._add_search_subdomains_hook(srch)
                 if extra_subdomain:
                     subdomains.append(extra_subdomain)
