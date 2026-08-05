@@ -11,6 +11,7 @@ import time
 import typing
 import unicodedata
 
+from urllib3.exceptions import LocationParseError
 from urllib3.util import parse_url
 import werkzeug.exceptions
 import werkzeug.routing
@@ -278,8 +279,12 @@ class IrHttp(models.AbstractModel):
         def _filter_domain(website, domain_name, ignore_port=False):
             """Ignore ``scheme`` from the ``domain``, just match the ``netloc``
             which is host:port in the version of ``parse_url`` we use."""
-            url1 = parse_url(website.domain if '://' in str(website.domain) else f'//{website.domain}')
-            url2 = parse_url(domain_name if '://' in str(domain_name) else f'//{domain_name}')
+            try:
+                url1 = parse_url(website.domain if '://' in str(website.domain) else f'//{website.domain}')
+                url2 = parse_url(domain_name if '://' in str(domain_name) else f'//{domain_name}')
+            except LocationParseError:
+                # If a domain name is invalid, don't match with anything
+                return False
             if ignore_port:
                 return url1.host == url2.host
             return url1.netloc == url2.netloc
