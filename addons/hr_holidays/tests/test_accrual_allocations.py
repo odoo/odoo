@@ -5408,3 +5408,29 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             with freeze_time(test_date):
                 allocation._update_accrual()
                 self.assert_remaining_leaves_equal(self.work_entry_type_day, expected_days, self.employee_emp, test_date, 2)
+
+    def test_hr_leave_after_adding_accrual_plan_levels(self):
+        accrual_plan = self.env['hr.leave.accrual.plan'].create({
+            'name': 'Accrual Plan 1 start',
+            'is_based_on_worked_time': False,
+            'accrued_gain_time': 'start',
+            'carryover_date': 'allocation',
+        })
+        accrual_allocation = self.env['hr.leave.allocation'].create({
+            'name': 'Accrual allocation for employee',
+            'accrual_plan_id': accrual_plan.id,
+            'employee_id': self.employee_emp.id,
+            'work_entry_type_id': self.work_entry_type.id,
+            'number_of_days': 10,
+            'allocation_type': 'accrual',
+            'date_from': '2026-08-01',
+        })
+        accrual_allocation.action_approve()
+        accrual_plan.level_ids = [Command.link(self.accrual_plan_start1.level_ids[0].id)]
+        leave = self.env['hr.leave'].create({
+            'employee_id': self.employee_emp.id,
+            'work_entry_type_id': self.work_entry_type.id,
+            'request_date_from': '2026-08-10',
+            'request_date_to': '2026-08-15',
+        })
+        self.assertTrue(leave.action_approve())
