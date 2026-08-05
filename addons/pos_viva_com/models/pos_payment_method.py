@@ -18,17 +18,19 @@ class PosPaymentMethod(models.Model):
         string="Merchant ID", help="Log into Viva.com then navigate to Settings > API Access > Access credentials"
     )
     viva_com_api_key = fields.Char(
-        string="API Key", help="Log into Viva.com then navigate to Settings > API Access > Access credentials"
+        string="API Key", help="Log into Viva.com then navigate to Settings > API Access > Access credentials",
+        groups="point_of_sale.group_pos_manager"
     )
     viva_com_client_id = fields.Char(
         string="Client ID", help="Log into Viva.com then navigate to Settings > API Access > POS APIs Credentials"
     )
     viva_com_client_secret = fields.Char(
-        string="Client secret", help="Log into Viva.com then navigate to Settings > API Access > POS APIs Credentials"
+        string="Client secret", help="Log into Viva.com then navigate to Settings > API Access > POS APIs Credentials",
+        groups="point_of_sale.group_pos_manager"
     )
     viva_com_terminal_id = fields.Char(string="Terminal ID", help='[ID of the Viva.com terminal], e.g. 16002169')
-    viva_com_bearer_token = fields.Char(default='Bearer Token')
-    viva_com_webhook_verification_key = fields.Char()
+    viva_com_bearer_token = fields.Char(default='Bearer Token', groups="point_of_sale.group_pos_manager")
+    viva_com_webhook_verification_key = fields.Char(groups="point_of_sale.group_pos_manager")
     viva_com_test_mode = fields.Boolean(string="Test mode", help="Run transactions in the test environment.")
     viva_com_webhook_endpoint = fields.Char(compute='_compute_viva_com_webhook_endpoint', readonly=True)
 
@@ -72,7 +74,7 @@ class PosPaymentMethod(models.Model):
         self.ensure_one()
 
         data = {'grant_type': 'client_credentials'}
-        auth = requests.auth.HTTPBasicAuth(self.viva_com_client_id, self.viva_com_client_secret)
+        auth = requests.auth.HTTPBasicAuth(self.viva_com_client_id, self.sudo().viva_com_client_secret)
         try:
             resp = session.post(f"{self._viva_com_account_get_endpoint()}/connect/token", auth=auth, data=data, timeout=TIMEOUT)
         except requests.exceptions.RequestException:
@@ -90,7 +92,7 @@ class PosPaymentMethod(models.Model):
 
     def _call_viva_com(self, endpoint, action, data=None, should_retry=True):
         session = get_viva_com_session(should_retry)
-        session.headers.update({'Authorization': f"Bearer {self.viva_com_bearer_token}"})
+        session.headers.update({'Authorization': f"Bearer {self.sudo().viva_com_bearer_token}"})
         endpoint = f"{self._viva_com_api_get_endpoint()}/ecr/v1/{endpoint}"
         try:
             resp = session.request(action, endpoint, json=data, timeout=TIMEOUT)

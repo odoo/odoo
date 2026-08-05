@@ -17,7 +17,7 @@ class PosPaymentMethod(models.Model):
     _inherit = 'pos.payment.method'
 
     dpopay_client_id = fields.Char(string='DPO Pay Client ID', help="The Client ID provided by DPO Pay for authenticating requests.")
-    dpopay_client_secret = fields.Char(string='DPO Pay Client Secret', help="The Client Secret provided by DPO Pay for secure access. Keep it confidential.")
+    dpopay_client_secret = fields.Char(string='DPO Pay Client Secret', help="The Client Secret provided by DPO Pay for secure access. Keep it confidential.", groups="point_of_sale.group_pos_manager")
     dpopay_mid = fields.Char(string='DPO Pay Merchant ID', help="Enter the Merchant ID assigned by DPO Pay (e.g., 123456789012).")
     dpopay_tid = fields.Char(string='DPO Pay Terminal ID', help="Enter the unique Terminal ID (TID) of your DPO Pay POS terminal (e.g., XXXXXXXX).")
     dpopay_payment_mode = fields.Selection(
@@ -27,7 +27,7 @@ class PosPaymentMethod(models.Model):
     )
     dpopay_chain_id = fields.Char(string='DPO Pay Chain-ID', help="Enter the Chain-ID header value(e.g., DPO-DTM-Testing)")
     dpopay_test_mode = fields.Boolean(string='Enable Test Mode', help="Check this to use DPO Pay's sandbox environment for testing purposes.")
-    dpopay_bearer_token = fields.Char(default='Token', help="Bearer token used for authenticating requests. Automatically refreshed when expired.")
+    dpopay_bearer_token = fields.Char(default='Token', help="Bearer token used for authenticating requests. Automatically refreshed when expired.", groups="point_of_sale.group_pos_manager")
 
     def _get_terminal_provider_selection(self):
         return super()._get_terminal_provider_selection() + [('dpopay', 'DPO Pay')]
@@ -58,7 +58,7 @@ class PosPaymentMethod(models.Model):
 
     def _dpopay_headers(self, token_expired=False):
         self.ensure_one()
-        token = self._generate_dpopay_token() if token_expired else self.dpopay_bearer_token
+        token = self._generate_dpopay_token() if token_expired else self.sudo().dpopay_bearer_token
         return {
             'Authorization': f'Bearer {token}',
             'Chain-ID': self.dpopay_chain_id,
@@ -66,7 +66,7 @@ class PosPaymentMethod(models.Model):
 
     def _generate_dpopay_token(self):
         self.ensure_one()
-        auth = requests.auth.HTTPBasicAuth(self.dpopay_client_id, self.dpopay_client_secret)
+        auth = requests.auth.HTTPBasicAuth(self.dpopay_client_id, self.sudo().dpopay_client_secret)
         url = f'{self._get_dpopay_base_url(is_token=True)}/tokenkc/generate'
 
         _logger.info('Sending request to %s to generate new token', url)
