@@ -734,6 +734,7 @@ class Website(models.CachedModel):
         domain = Module.get_themes_domain()
         domain = Domain.AND([[('name', '!=', 'theme_default')], domain])
         client_themes = Module.search(domain).mapped('name')
+<<<<<<< d8f76f13912d2f24070dbfd5b7cf64f7798b6ff8
         manifests = {
             theme_name: manifest
             for theme_name in client_themes
@@ -813,6 +814,37 @@ class Website(models.CachedModel):
         except (AccessError, iap_tools.InsufficientCreditError, json.JSONDecodeError, RequestException):
             pass
         return []
+||||||| d1cc9316cd290d9ed32f403ca7f35fe44191258d
+        client_themes_img = {t: get_manifest(t).get('images_preview_theme', {}) for t in client_themes if get_manifest(t)}
+        themes_suggested = self._website_api_rpc(
+            '/api/website/2/configurator/recommended_themes/%s' % (industry_id if industry_id > 0 else ''),
+            {
+                'client_themes': client_themes_img,
+                'result_nbr_max': result_nbr_max,
+            }
+        )
+        process_svg = self.env['website.configurator.feature']._process_svg
+        for theme in themes_suggested:
+            theme['svg'] = process_svg(theme['name'], palette, theme.pop('image_urls'))
+        return themes_suggested
+=======
+        client_themes_img = {t: get_manifest(t).get('images_preview_theme', {}) for t in client_themes if get_manifest(t)}
+        try:
+            themes_suggested = self._website_api_rpc(
+                '/api/website/2/configurator/recommended_themes/%s' % (industry_id if industry_id > 0 else ''),
+                {
+                    'client_themes': client_themes_img,
+                    'result_nbr_max': result_nbr_max,
+                },
+            )
+        except AccessError as e:
+            logger.warning(e.args[0])
+            return []
+        process_svg = self.env['website.configurator.feature']._process_svg
+        for theme in themes_suggested:
+            theme['svg'] = process_svg(theme['name'], palette, theme.pop('image_urls'))
+        return themes_suggested
+>>>>>>> 2dd7cca1c4231c9adc2a37cac97cc19a2fb541e1
 
     @api.model
     def configurator_skip(self):
@@ -824,13 +856,16 @@ class Website(models.CachedModel):
 
     @api.model
     def configurator_missing_industry(self, unknown_industry):
-        self._website_api_rpc(
-            '/api/website/unknown_industry',
-            {
-                'unknown_industry': unknown_industry,
-                'lang': self.env.context.get('lang'),
-            }
-        )
+        try:
+            self._website_api_rpc(
+                '/api/website/unknown_industry',
+                {
+                    'unknown_industry': unknown_industry,
+                    'lang': self.env.context.get('lang'),
+                },
+            )
+        except AccessError as e:
+            logger.warning(e.args[0])
 
     @api.model
     def configurator_get_images(self, industry_id, theme=''):
@@ -972,10 +1007,26 @@ class Website(models.CachedModel):
 
         # Load suggestions from IAP.
         industry_id = kwargs['industry_id']
+<<<<<<< d8f76f13912d2f24070dbfd5b7cf64f7798b6ff8
         images = {}
         # Keep the theme visuals untouched for unknown industries.
         if not skip_ai and industry_id > 0:
             images = self.configurator_get_images(industry_id, theme_name)
+||||||| d1cc9316cd290d9ed32f403ca7f35fe44191258d
+        custom_resources = self._website_api_rpc(
+            '/api/website/2/configurator/custom_resources/%s' % (industry_id if industry_id > 0 else ''),
+            {'theme': theme_name}
+        )
+=======
+        try:
+            custom_resources = self._website_api_rpc(
+                '/api/website/2/configurator/custom_resources/%s' % (industry_id if industry_id > 0 else ''),
+                {'theme': theme_name},
+            )
+        except AccessError as e:
+            logger.warning(e.args[0])
+            custom_resources = {}
+>>>>>>> 2dd7cca1c4231c9adc2a37cac97cc19a2fb541e1
 
         # Generate text for the homepage.
         configurator_snippets = website.get_theme_configurator_snippets(theme_name)
