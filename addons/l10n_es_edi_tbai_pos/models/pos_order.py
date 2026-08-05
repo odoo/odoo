@@ -156,9 +156,7 @@ class PosOrder(models.Model):
 
     def _l10n_es_tbai_get_document_name(self):
         self.ensure_one()
-        if not self.refunded_order_id:
-            return self.name
-        return self._get_order_name_from_pos_reference()
+        return self.pos_reference
 
     def _l10n_es_tbai_create_edi_document(self, cancel=False):
         return self.sudo().env['l10n_es_edi_tbai.document'].create({
@@ -214,5 +212,5 @@ class PosOrder(models.Model):
             'refund_reason': 'R5',
             'refunded_doc': self.refunded_order_id.l10n_es_tbai_post_document_id,
             'refunded_doc_invoice_date': self.refunded_order_id.date_order if self.refunded_order_id else False,
-            'refunded_name': self.refunded_order_id.name,
+            'refunded_name': self.refunded_order_id._l10n_es_tbai_get_document_name() if self.refunded_order_id else False,
         }
