@@ -105,7 +105,7 @@ class WebsiteSnippetFilter(models.Model):
                     "cover_image": BinaryBytes(
                         b"/website_sale/static/src/img/categories/furnitures.jpg"
                     ),
-                    "name": self.env._("Furnitures"),
+                    "name": self.env._("Furniture"),
                 },
                 {
                     "id": 3,
