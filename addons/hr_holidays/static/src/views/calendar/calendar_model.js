@@ -20,6 +20,11 @@ export class TimeOffCalendarModel extends CalendarModel {
             (data) => this.fetchMandatoryDays(data),
             (data) => `${serializeDateTime(data.range.start)},${serializeDateTime(data.range.end)}`
         );
+
+        this._expectedHoursCache = new Cache(
+            (data) => this.fetchExpectedHours(data),
+            (data) => `${serializeDateTime(data.range.start)},${serializeDateTime(data.range.end)}`
+        );
     }
 
     /**
@@ -80,6 +85,7 @@ export class TimeOffCalendarModel extends CalendarModel {
     async updateData(data) {
         const prom = super.updateData(data);
         data.mandatoryDays = await this._mandatoryDaysCache.read(data);
+        data.expectedHours = await this._expectedHoursCache.read(data);
         return prom;
     }
 
@@ -107,8 +113,20 @@ export class TimeOffCalendarModel extends CalendarModel {
         ]);
     }
 
+    async fetchExpectedHours(data) {
+        return this.orm.call("hr.employee", "get_expected_hours", [
+            this.employeeId,
+            serializeDate(data.range.start, "datetime"),
+            serializeDate(data.range.end, "datetime"),
+        ]);
+    }
+
     get mandatoryDays() {
         return this.data.mandatoryDays;
+    }
+
+    get expectedHours() {
+        return this.data.expectedHours;
     }
 
     get employeeId() {

@@ -383,6 +383,18 @@ class HrEmployee(models.Model):
 
         return all_days
 
+    def get_expected_hours(self, date_from, date_to):
+        employee = self or self.env.user.employee_id
+        if not employee or not employee.resource_calendar_id:
+            return {}
+
+        start_dt = fields.Datetime.from_string(date_from).replace(tzinfo=UTC)
+        end_dt = fields.Datetime.from_string(date_to).replace(tzinfo=UTC)
+
+        return employee.resource_calendar_id._get_expected_hours_per_day(
+            start_dt, end_dt, resource=employee.resource_id
+        )
+
     @api.model
     def get_special_days_data(self, date_start, date_end):
         return {
