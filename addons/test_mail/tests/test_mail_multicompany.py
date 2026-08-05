@@ -12,7 +12,6 @@ from odoo.addons.mail.tests.common import MailCommon, mail_new_test_user
 from odoo.addons.test_mail.tests.common import TestRecipients
 from odoo.exceptions import AccessError
 from odoo.tests import tagged, users, HttpCase
-from odoo.tests.common import JsonRpcException
 from odoo.tools import mute_logger
 
 
@@ -267,7 +266,6 @@ class TestMultiCompanySetup(TestMailMCCommon, HttpCase):
 @tagged('-at_install', 'post_install', 'multi_company', 'mail_controller')
 class TestMultiCompanyControllers(TestMailMCCommon, HttpCase):
 
-    @mute_logger('odoo.http')
     def test_mail_thread_data(self):
         """ Test returned thread data, in MC environment, to test notably MC
         access issues on partner, ACL support, ... """
@@ -312,28 +310,30 @@ class TestMultiCompanyControllers(TestMailMCCommon, HttpCase):
         ):
             with self.subTest(user_name=test_user.name):
                 self.authenticate(test_user.login, test_user.login)
-                # crash if calling using portal users -> dedicated portal routes currently
+                result = self.make_jsonrpc_request(
+                    "/mail/data",
+                    {
+                        "fetch_params": [
+                            [
+                                "mail.thread",
+                                {
+                                    "thread_id": record.id,
+                                    "thread_model": record._name,
+                                    "request_list": ["followers"],
+                                },
+                            ]
+                        ]
+                    },
+                )
+                thread_data = result["mail.thread"][0]
+                self.assertEqual(thread_data["hasWriteAccess"], has_w)
+                self.assertEqual(thread_data["hasReadAccess"], has_r)
+                self.assertEqual(thread_data["canPostOnReadonly"], can_post)
                 if test_user in self.user_portal + self.user_portal_c2:
-                    with self.assertRaises(JsonRpcException):
-                        result = self.make_jsonrpc_request(
-                            "/mail/data", {"fetch_params": [["mail.thread", {
-                                "thread_id": record.id,
-                                "thread_model": record._name,
-                                "request_list": ["followers"],
-                            }]]},
-                        )
+                    self.assertNotIn("mail.followers", result)
+                    self.assertNotIn("followersCount", thread_data)
                 else:
-                    result = self.make_jsonrpc_request(
-                        "/mail/data", {"fetch_params": [["mail.thread", {
-                            "thread_id": record.id,
-                            "thread_model": record._name,
-                            "request_list": ["followers"],
-                        }]]},
-                    )
-                    self.assertEqual(result["mail.thread"][0]["followersCount"], 2)
-                    self.assertEqual(result["mail.thread"][0]["hasWriteAccess"], has_w)
-                    self.assertEqual(result["mail.thread"][0]["hasReadAccess"], has_r)
-                    self.assertEqual(result["mail.thread"][0]["canPostOnReadonly"], can_post)
+                    self.assertEqual(thread_data["followersCount"], 2)
 
         record.with_user(self.user_admin).message_post(
             body='Hello!',
