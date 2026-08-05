@@ -337,6 +337,69 @@ class TestRecruitment(MailCase, TransactionCase):
             app_2
         )
 
+    def test_applicant_refuse_single_editable_body(self):
+        officer = self.env['res.users'].create({
+            'name': 'Refuse Officer',
+            'login': 'refuse_officer',
+            'email': 'refuse.officer@example.com',
+            'group_ids': [Command.set([self.env.ref('hr_recruitment.group_hr_recruitment_user').id])],
+        })
+        self.assertFalse(officer.has_group('mail.group_mail_template_editor'))
+
+        template = self.env['mail.template'].create({
+            'name': 'Refuse template',
+            'model_id': self.env['ir.model']._get('hr.applicant').id,
+            'subject': 'About your application',
+            'body_html': '<p>Dear <t t-out="object.partner_name">name</t></p>',
+        })
+        refuse_reason = self.env['hr.applicant.refuse.reason'].create({
+            'name': 'Not a fit',
+            'template_id': template.id,
+        })
+        applicant = self.env['hr.applicant'].create({
+            'partner_name': 'Laurie Poiret',
+            'email_from': 'laurie.poiret@aol.ru',
+        })
+
+        form = Form(self.env['applicant.refuse.single'].with_user(officer).with_context(
+            default_applicant_ids=applicant.ids, active_test=False,
+        ))
+        form.refuse_reason_id = refuse_reason
+
+        self.assertEqual(form.applicant_id, applicant)
+        self.assertIn('Laurie Poiret', form.body)
+        self.assertTrue(form.send_mail)
+
+        form.subject = 'Custom subject'
+        form.body = '<p>Thanks. Literal token object.partner_name kept as-is.</p>'
+        wizard = form.save()
+
+        self.assertTrue(wizard.can_edit_body)
+        self.assertEqual(wizard.applicant_ids, applicant)
+
+        with self.mock_mail_gateway():
+            wizard.action_refuse_reason_apply()
+
+        self.assertFalse(applicant.active)
+        self.assertEqual(applicant.refuse_reason_id, refuse_reason)
+        message = applicant.message_ids[0]
+        self.assertIn('object.partner_name kept as-is', message.body)
+        self.assertNotIn('Dear Laurie Poiret', message.body)
+
+    def test_archive_applicant_routing(self):
+        app_1, app_2 = self.env['hr.applicant'].create([
+            {'partner_name': 'A One', 'email_from': 'a.one@example.com'},
+            {'partner_name': 'A Two', 'email_from': 'a.two@example.com'},
+        ])
+
+        single_action = app_1.archive_applicant()
+        self.assertEqual(single_action['res_model'], 'applicant.refuse.single')
+        self.assertEqual(single_action['context']['default_applicant_ids'], app_1.ids)
+
+        multi_action = (app_1 | app_2).archive_applicant()
+        self.assertEqual(multi_action['res_model'], 'applicant.get.refuse.reason')
+        self.assertEqual(set(multi_action['context']['default_applicant_ids']), {app_1.id, app_2.id})
+
     def test_applicant_refuse_mail_from_template(self):
         mail_template = self.env['mail.template'].create({
             'name': 'Test template',

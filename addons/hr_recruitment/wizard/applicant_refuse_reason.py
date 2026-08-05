@@ -184,3 +184,75 @@ class ApplicantGetRefuseReason(models.TransientModel):
             'attachment_ids': [(4, att.id) for att in self.attachment_ids],
             'partner_ids': applicant.partner_id.ids
         }
+
+
+class ApplicantRefuseSingle(models.TransientModel):
+    _name = 'applicant.refuse.single'
+    _inherit = ['applicant.get.refuse.reason']
+    _description = 'Refuse a single applicant'
+
+    applicant_id = fields.Many2one('hr.applicant', string='Applicant', compute='_compute_applicant_id', readonly=True)
+    applicant_ids = fields.Many2many('hr.applicant', string='Applicants')
+    duplicate_applicant_ids = fields.Many2many(
+        'hr.applicant',
+        relation='applicant_refuse_single_duplicate_applicants_rel',
+        string='Duplicate Applications',
+        compute="_compute_duplicate_applicant_ids",
+        store=True, readonly=False,
+    )
+
+    @api.depends('applicant_ids')
+    def _compute_applicant_id(self):
+        """ Set the applicant to the only record this wizard refuses. """
+        for wizard in self:
+            wizard.applicant_id = wizard.applicant_ids[:1]
+
+    @api.depends('applicant_ids')
+    def _compute_can_edit_body(self):
+        """ Always allow editing the body since it is already rendered. """
+        self.can_edit_body = True
+
+    def _render_single(self, field):
+        """ Render the given template field for the applicant, in their own language. """
+        self.ensure_one()
+        applicant = self.applicant_id._origin
+        lang = self._render_lang(applicant.ids)[applicant.id]
+        return self._render_field(field, applicant.ids, set_lang=lang)[applicant.id]
+
+    @api.depends('template_id', 'applicant_ids')
+    def _compute_body(self):
+        """ Render the template body up-front so the user can edit it. """
+        super()._compute_body()
+        for wizard in self:
+            if wizard.template_id and wizard.applicant_ids:
+                wizard.body = wizard._render_single('body')
+
+    @api.depends('template_id', 'applicant_ids')
+    def _compute_subject(self):
+        """ Render the template subject up-front so the user can edit it. """
+        super()._compute_subject()
+        for wizard in self:
+            if wizard.template_id and wizard.applicant_ids:
+                wizard.subject = wizard._render_single('subject')
+
+    @api.depends('template_id')
+    def _compute_from_template_id(self):
+        """ Copy the attachments and the scheduled date from the template. """
+        for wizard in self:
+            template = wizard.template_id
+            wizard.attachment_ids = template.attachment_ids if template else False
+            wizard.scheduled_date = template.scheduled_date if template else False
+
+    def _prepare_send_refusal_mails(self):
+        """ Post the edited subject and body as is, without rendering them again. """
+        self.ensure_one()
+        email_from = self.template_id.email_from or self.env.user.email_formatted
+        self.applicant_id.message_post(
+            body=self.body or '',
+            subject=self.subject,
+            email_from=email_from,
+            author_id=self.env.user.partner_id.id,
+            scheduled_date=self.scheduled_date,
+            attachment_ids=[(4, att.id) for att in self.attachment_ids],
+            partner_ids=self.applicant_id.partner_id.ids,
+        )

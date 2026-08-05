@@ -1068,6 +1068,20 @@ class HrApplicant(models.Model):
             raise UserError(_('You are not allowed to perform this action.'))
 
     def archive_applicant(self):
+        if len(self) == 1:
+            return {
+                'type': 'ir.actions.act_window',
+                'name': _('Refuse Reason'),
+                'res_model': 'applicant.refuse.single',
+                'view_mode': 'form',
+                'target': 'new',
+                'context': {
+                    'default_applicant_ids': self.ids,
+                    'active_test': False,
+                    'hide_mail_template_management_options': True,
+                },
+                'views': [[False, 'form']],
+            }
         return {
             'type': 'ir.actions.act_window',
             'name': _('Refuse Reason'),
