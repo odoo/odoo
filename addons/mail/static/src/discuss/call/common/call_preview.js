@@ -1,4 +1,5 @@
 import { useLayoutEffect } from "@web/owl2/utils";
+import { useAncestors } from "@mail/core/common/ancestors_hook";
 import { Action, ACTION_TAGS } from "@mail/core/common/action";
 import { ActionList } from "@mail/core/common/action_list";
 import {
@@ -53,6 +54,7 @@ export class CallPreview extends Component {
         this.rtc = useService("discuss.rtc");
         this.store = useService("mail.store");
         this.ui = useService("ui");
+        this.ancestors = useAncestors();
         this.state = proxy({ audioStream: null, blurManager: null, videoStream: null });
         useLayoutEffect(
             (videoEl, audioEl, audioStream, videoStream, blurStream) => {
@@ -173,7 +175,7 @@ export class CallPreview extends Component {
     }
 
     get inWelcomePageMobile() {
-        return this.env.inWelcomePage && this.ui.isSmall;
+        return this.ancestors.has("WelcomePage") && this.ui.isSmall;
     }
 
     actions = computed(() => {

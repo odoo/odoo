@@ -122,7 +122,7 @@ export class Store extends BaseStore {
                 ctx?.ancestors?.has("Meeting") ||
                 ctx?.env?.inCallInvitation ||
                 ctx?.env.isDiscussPipBanner ||
-                ctx?.env?.inWelcomePage) &&
+                ctx?.ancestors?.has("WelcomePage")) &&
             this.isOdooWhiteTheme &&
             !ctx?.ancestors?.has("ActionPanel")
         );
