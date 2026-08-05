@@ -76,12 +76,18 @@ class SaleOrder(models.Model):
     @api.depends('picking_ids', 'picking_ids.state')
     def _compute_delivery_status(self):
         for order in self:
-            if not order.picking_ids or all(p.state == 'cancel' for p in order.picking_ids):
+            if not order.picking_ids or \
+                (
+                    all(p.state in ['done', 'cancel'] for p in order.picking_ids) and
+                    all(line.qty_delivered_method != 'stock_move' or line.product_uom_id.is_zero(line.qty_delivered)
+                    for line in order.order_line)
+                ):
                 order.delivery_status = False
             elif all(p.state in ['done', 'cancel'] for p in order.picking_ids):
                 order.delivery_status = 'full'
             elif any(p.state == 'done' for p in order.picking_ids) and any(
-                    l.qty_delivered for l in order.order_line):
+                    line.qty_delivered_method == 'stock_move' and not line.product_uom_id.is_zero(line.qty_delivered)
+                    for line in order.order_line):
                 order.delivery_status = 'partial'
             elif any(p.state == 'done' for p in order.picking_ids):
                 order.delivery_status = 'started'
