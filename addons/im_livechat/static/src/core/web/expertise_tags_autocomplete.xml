@@ -7,7 +7,7 @@
             t-custom-ref="root"
         >
             <div class="d-flex flex-wrap gap-1">
-                <BadgeTag t-foreach="this.props.channel.livechat_expertise_ids" t-as="expertise" t-key="expertise.id" text="expertise.name" color="expertise.color" onDelete="this.props.disabled ? null : () => this.unlinkExpertise(expertise)"/>
+                <BadgeTag t-foreach="this.props.channel.livechat_expertise_ids" t-as="expertise" t-key="expertise.id" text="expertise.name" color="expertise.color" onDelete="this.props.disabled ? undefined : () => this.unlinkExpertise(expertise)"/>
             </div>
             <div t-if="!this.props.disabled" class="flex-grow-1 d-inline-flex w-100" style="flex-basis: 0;">
                 <Many2XAutocomplete
