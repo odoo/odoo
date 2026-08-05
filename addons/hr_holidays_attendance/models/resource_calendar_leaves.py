@@ -1,5 +1,7 @@
 from odoo import api, models
 from odoo.fields import Domain
+from dateutil.relativedelta import relativedelta
+import pytz
 
 
 class ResourceCalendarLeaves(models.Model):
@@ -11,11 +13,18 @@ class ResourceCalendarLeaves(models.Model):
         leaves_time_type_leave = self.filtered(lambda leave: leave.time_type == 'leave')
 
         resource_leaves = leaves_time_type_leave.filtered(lambda leave: leave.resource_id.employee_id)
-        domain.extend([[
-            ('check_in', '<=', max(leaves.mapped('date_to'))),
-            ('check_out', '>=', min(leaves.mapped('date_from'))),
-            ('employee_id', 'in', resource.employee_id.ids),
-        ] for resource, leaves in resource_leaves.grouped('resource_id').items()])
+        for resource, leaves in resource_leaves.grouped('resource_id').items():
+            date_to = max(leaves.mapped('date_to')).replace(hour=0, minute=0) + relativedelta(days=1)
+            local_date_to = pytz.timezone(resource.employee_id._get_tz()).localize(date_to)
+            date_to_utc = local_date_to.astimezone(pytz.utc)
+            date_from = min(leaves.mapped('date_from')).replace(hour=0, minute=0)
+            local_date_from = pytz.timezone(resource.employee_id._get_tz()).localize(date_from)
+            date_from_utc = local_date_from.astimezone(pytz.utc)
+            domain.extend([[
+                ('check_in', '<=', date_to_utc.replace(tzinfo=None)),
+                ('check_out', '>=', date_from_utc.replace(tzinfo=None)),
+                ('employee_id', 'in', resource.employee_id.ids),
+            ]])
 
         for leave in (leaves_time_type_leave - resource_leaves):
             leave_domain = [

@@ -530,3 +530,36 @@ class TestHolidaysOvertime(TransactionCase):
             ('employee_id', '=', self.employee.id),
             ('check_in', '=', '2026-01-14'),
         ]), 1)
+
+    def test_set_absence_to_zero_on_timeoff(self):
+        self.company.write({
+            'absence_management': True,
+        })
+        self.employee.contract_date_start = datetime(2026, 8, 1)
+        with freeze_time('2026-08-04'):
+            self.env['hr.attendance']._cron_absence_detection()
+        with freeze_time('2026-08-05'):
+            self.env['hr.attendance']._cron_absence_detection()
+        with freeze_time('2026-08-06'):
+            self.env['hr.attendance']._cron_absence_detection()
+        with freeze_time('2026-08-07'):
+            self.env['hr.attendance']._cron_absence_detection()
+
+        attendances = self.env['hr.attendance'].search([
+            ('employee_id', '=', self.employee.id),
+        ])
+
+        for attendance in attendances:
+            self.assertAlmostEqual(attendance.validated_overtime_hours, -8.0, 2)
+
+        leave = self.env['hr.leave'].create({
+            'name': 'Vacation',
+            'employee_id': self.employee.id,
+            'holiday_status_id': self.regular_leave_type.id,
+            'request_date_from': datetime(2026, 8, 3),
+            'request_date_to': datetime(2026, 8, 6),
+        })
+        leave.action_approve()
+
+        for attendance in attendances:
+            self.assertAlmostEqual(attendance.validated_overtime_hours, 0.0, 2)
