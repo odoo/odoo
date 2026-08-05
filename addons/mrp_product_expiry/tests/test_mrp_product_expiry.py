@@ -106,6 +106,11 @@ class TestStockLot(TestStockCommon):
             ml.quantity = 3
             ml.lot_id = self.lot_expired_apple
         details_operation_form.save()
+        self.assertEqual(mo.move_raw_ids[0].move_line_ids[0].expiration_date, self.lot_expired_apple.expiration_date)
+        with details_operation_form.move_line_ids.edit(0) as ml:
+            ml.product_uom_id = self.uom_dozen
+        details_operation_form.save()
+        self.assertEqual(mo.move_raw_ids[0].move_line_ids[0].expiration_date, self.lot_expired_apple.expiration_date)
         res = mo.button_mark_done()
         # Producing must return a confirmation wizard.
         self.assertNotEqual(res, None)
