@@ -256,15 +256,16 @@ class IrHttp(models.AbstractModel):
         ignoring a potential scheme) is equal to the given
         ``domain_name``. If a match is found, return it immediately.
 
-        If there is no website found for the given ``domain_name``, either
-        fallback to the first found website (no matter its ``domain``).
+        If there is no website found for the given ``domain_name``, fallback
+        to the first website without a configured domain.
 
         :param str domain_name: An URL (e.g. ``http://example.com:80/``)
             from which the domain is extracted, or a domain name (e.g.
             ``example.com``, possibly with a port) directly.
 
-        :returns: The ID of the first website that matched the domain,
-            falling back on the website with lowest ``(sequence, id)``.
+        :returns: The ID of the first website that matched the domain, falling
+            back on the website without a domain with lowest ``(sequence,
+            id)``, if any.
         """
         #    http://example.com:8042/over/there?name=ferret#nose
         #     \_/   \_________/ \__/\_________/ \_________/ \__/
@@ -300,8 +301,8 @@ class IrHttp(models.AbstractModel):
             existings.filtered(lambda w: _filter_domain(w, domain_name))
             # If there is no domain matching for the given port, ignore the port.
             or existings.filtered(lambda w: _filter_domain(w, domain_name, ignore_port=True))
-            # default to any
-            or existings
+            # A website without a domain acts as a catch-all.
+            or existings.filtered(lambda w: not w.domain)
         )[:1].id
 
     @classmethod

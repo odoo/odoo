@@ -16,7 +16,6 @@ from . import ir_qweb
 from . import ir_qweb_fields
 from . import mixins
 from . import models
-from . import portal_mixin
 from . import website
 from . import website_menu
 from . import website_page_properties

@@ -246,7 +246,9 @@ class IrHttp(models.AbstractModel):
             with contextlib.suppress(ZoneInfoNotFoundError):
                 request.update_context(tz=ZoneInfo(tz).key)
 
-        website = request.env['website'].browse(request.env.context['website_id'])
+        website = request.env['website'].browse(request.env.context.get('website_id'))
+        if not website:
+            return
         user = request.env.user
 
         # This is mainly to avoid access errors in website controllers
@@ -337,6 +339,8 @@ class IrHttp(models.AbstractModel):
         # minimal setup to serve frontend pages
         if not request.env.context.get('website_id'):
             request.update_context(website_id=request.env.context.get('host_id'))
+        if not request.env.website:
+            return None
         cls._frontend_pre_dispatch()
         cls._handle_debug()
 
@@ -399,8 +403,10 @@ class IrHttp(models.AbstractModel):
     def _get_error_html(self, code, values):
         irHttp = self
         if code in ('page_404', 'protected_403'):
-            website = self.env.website or self.env.website.browse(self.env.context.get('host_id')) or self.env.ref('base.default_website')
-            return code.split('_')[1], website._render_template('website.%s' % code, values)
+            website = self.env.website or self.env['website'].browse(self.env.context.get('host_id'))
+            if website:
+                return code.split('_')[1], website._render_template('website.%s' % code, values)
+            code = code.split('_')[1]
         return super(IrHttp, irHttp)._get_error_html(code, values)
 
     @api.model
