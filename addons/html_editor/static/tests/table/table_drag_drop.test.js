@@ -97,6 +97,71 @@ test("should move first column after second column on drag and drop", async () =
     );
 });
 
+test("should be able to drag overlay immediately after activating drag overlay", async () => {
+    const { el } = await setupEditor(
+        unformat(`
+            <p><br></p>
+            <table class="table table-bordered o_table">
+                <tbody>
+                    <tr>
+                        <td class="a">[]1</td>
+                        <td class="b">2</td>
+                        <td class="c">3</td>
+                    </tr>
+                    <tr>
+                        <td class="d">4</td>
+                        <td class="e">5</td>
+                        <td class="f">6</td>
+                    </tr>
+                </tbody>
+            </table>
+        `)
+    );
+    await expectElementCount(".o-we-table-menu", 0);
+    // Hover over first cell to trigger column menu
+    const targetCell = el.querySelector("td.a");
+    await hover(targetCell);
+    await waitFor("[data-type='column'].o-we-table-menu");
+    const colMenu = document.querySelector("[data-type='column'].o-we-table-menu");
+    const colMenuRect = colMenu.getBoundingClientRect();
+    // Start long press on column menu
+    await manuallyDispatchProgrammaticEvent(colMenu, "pointerdown", {
+        clientX: colMenuRect.x + colMenuRect.width / 2,
+        clientY: colMenuRect.y,
+    });
+    // Table drag-drop overlay activates after a 200ms long press.
+    await delay(200);
+    // Trigger pointermove immediately before overlay mounts.
+    await manuallyDispatchProgrammaticEvent(targetCell, "pointermove");
+    await expectElementCount(".o-we-table-drag-drop", 1);
+    const targetCellRect = targetCell.getBoundingClientRect();
+    // Drag overlay to the right of second column
+    await manuallyDispatchProgrammaticEvent(targetCell, "pointermove", {
+        clientX: targetCellRect.x + targetCellRect.width * 0.75,
+        clientY: targetCellRect.y,
+    });
+    expect(getContent(el)).toBe(
+        unformat(`
+            <p><br></p>
+            <table class="table table-bordered o_table">
+                <tbody>
+                    <tr>
+                        <td class="a td-highlight-right">[]1</td>
+                        <td class="b">2</td>
+                        <td class="c">3</td>
+                    </tr>
+                    <tr>
+                        <td class="d td-highlight-right">4</td>
+                        <td class="e">5</td>
+                        <td class="f">6</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
+        `)
+    );
+});
+
 test("should move third column before first column on drag and drop", async () => {
     const { el } = await setupEditor(
         unformat(`
