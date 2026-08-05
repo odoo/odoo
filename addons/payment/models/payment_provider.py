@@ -650,8 +650,7 @@ class PaymentProvider(models.Model):
             "name": self.env._("Payment History"),
             "res_model": "payment.transaction",
             "view_mode": "list,form",
-            "domain": [("id", "in", self.payment_transaction_ids.ids)],
-            "context": {"create": False},
+            "context": {"create": False, "search_default_provider_id": self.id},
         }
 
     def action_view_payment_tokens(self):
