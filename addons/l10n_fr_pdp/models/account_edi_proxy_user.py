@@ -209,6 +209,56 @@ class AccountEdiProxyClientUser(models.Model):
             company.l10n_fr_pdp_annuaire_start_date = fields.Date.to_date(annuaire_start_date)
             company._force_update_l10n_fr_f10_moves()
 
+    def _peppol_import_invoice(self, attachment, peppol_state, uuid, journal=None):
+        """ Override to unwrap the XML from the PDF with Factur-X."""
+        if (attachment.mimetype != 'application/pdf'):
+            return super()._peppol_import_invoice(attachment, peppol_state, uuid, journal)
+
+        self.ensure_one()
+
+        journal = journal or self.company_id.peppol_purchase_journal_id
+        move_type = 'in_invoice'
+        error_msg = "The Peppol XML file is invalid or empty for attachment ID %s"
+        try:
+            files_data = self.env['account.move']._to_files_data(attachment)
+            files_data.extend(self.env['account.move']._unwrap_attachments(files_data, recurse=False))
+            xml_tree = next(filter(lambda file: file['import_file_type'] == 'account.edi.xml.cii', files_data))['xml_tree']
+            type_code = xml_tree.findtext('.//{*}ExchangedDocument/{*}TypeCode')
+            if type_code in ['389', '527', '261']:
+                # 389/527: Self-billing invoice; 261: Self-billing credit note
+                journal = self._peppol_get_import_sale_journal(self.company_id)
+                move_type = 'out_invoice' if type_code in ['389', '527'] else 'out_refund'
+        except Exception:
+            _logger.exception(error_msg, attachment.id)
+
+        if not journal:
+            return {}
+
+        move = self.env['account.move'].create({
+            'journal_id': journal.id,
+            'move_type': move_type,
+            'peppol_move_state': peppol_state,
+            'peppol_message_uuid': uuid,
+        })
+        if 'is_in_extractable_state' in move._fields:
+            move.is_in_extractable_state = False
+        try:
+            move._extend_with_attachments(files_data, new=True)
+            move._message_log(
+                body=self.env._(
+                    "%(proxy_type)s document (UUID: %(uuid)s) has been received successfully",
+                    proxy_type=dict(self._fields['proxy_type']._description_selection(self.env))[self.proxy_type],
+                    uuid=uuid,
+                ),
+                attachment_ids=attachment.ids,
+            )
+            move._autopost_bill()
+        except Exception:
+            _logger.exception("Unexpected error occurred during the import of bill with id %s", move.id)
+
+        attachment.write({'res_model': 'account.move', 'res_id': move.id})
+        return {'uuid': uuid, 'move': move}
+
     def _peppol_get_new_documents(self, skip_no_journal=False):
         if 'pdp_einvoicing_chatter_messages' not in self.env.context:
             return self.with_context(pdp_einvoicing_chatter_messages={})._peppol_get_new_documents(skip_no_journal=skip_no_journal)
