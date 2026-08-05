@@ -2835,3 +2835,21 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         self.assertRecordValues(sale_order.order_line, [
             {'product_id': self.new_product.id, 'product_uom_qty': 0, 'qty_delivered': 3}
         ])
+
+    def test_multistep_cancel_delivery_status(self):
+        """Test that canceling a multi-step delivery after having validated one of the steps results
+        in the sale order status being 'Not Available'."""
+        warehouse = self.company_data['default_warehouse']
+        warehouse.delivery_steps = 'pick_ship'
+        sale_order = self._get_new_sale_order()
+        sale_order.action_confirm()
+        self.assertEqual(sale_order.delivery_status, 'pending')
+        delivery = sale_order.picking_ids
+        delivery.button_validate()
+        self.assertEqual(delivery.state, 'done')
+        self.assertEqual(sale_order.delivery_status, 'started')
+        shipping = sale_order.picking_ids.filtered(lambda p: p.picking_type_code == 'outgoing')
+        shipping.action_cancel()
+        self.assertEqual(shipping.state, 'cancel')
+        # Ensure that the sale order status is set to 'Not Available'.
+        self.assertEqual(sale_order.delivery_status, False)

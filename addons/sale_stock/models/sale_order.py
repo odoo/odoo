@@ -6,7 +6,7 @@ import logging
 from odoo import api, fields, models, _
 from odoo.fields import Command
 from odoo.exceptions import UserError
-from odoo.tools import float_compare
+from odoo.tools import float_compare, float_is_zero
 
 _logger = logging.getLogger(__name__)
 
@@ -90,7 +90,12 @@ class SaleOrder(models.Model):
     @api.depends('picking_ids', 'picking_ids.state')
     def _compute_delivery_status(self):
         for order in self:
-            if not order.picking_ids or all(p.state == 'cancel' for p in order.picking_ids):
+            if not order.picking_ids or \
+                (
+                    all(p.state in ['done', 'cancel'] for p in order.picking_ids) and
+                    all(float_is_zero(line.qty_delivered, precision_rounding=line.product_uom_id.rounding)
+                    for line in order.order_line)
+                ):
                 order.delivery_status = False
             elif all(p.state in ['done', 'cancel'] for p in order.picking_ids):
                 order.delivery_status = 'full'
