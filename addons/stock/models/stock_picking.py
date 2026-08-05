@@ -1277,11 +1277,10 @@ class Picking(models.Model):
             if not picking.partner_id:
                 continue
             destination_company = self.env['res.company'].sudo().search([('partner_id', 'parent_of', picking.partner_id.id)], limit=1)
-            if (
-                    picking.location_dest_id.usage == 'transit'
-                    and destination_company != picking.company_id
-            ):
-                picking.move_line_ids.result_package_id.unpack()
+            if destination_company == picking.company_id:
+                continue
+            moves = picking.move_ids.filtered(lambda m: m.location_dest_id.usage == 'transit')
+            moves.move_line_ids.result_package_id.unpack()
 
     def _send_confirmation_email(self):
         subtype_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
