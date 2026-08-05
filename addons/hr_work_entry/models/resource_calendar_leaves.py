@@ -9,9 +9,24 @@ class ResourceCalendarLeaves(models.Model):
     work_entry_type_id = fields.Many2one(
         'hr.work.entry.type', 'Time Type',
         domain="[('id', 'in', allowed_work_entry_type_ids)]",
+        compute="_compute_work_entry_type_id",
+        store=True, readonly=False,
         groups="hr.group_hr_user")
     allowed_work_entry_type_ids = fields.Many2many(
         'hr.work.entry.type', compute='_compute_allowed_work_entry_type_ids')
+
+    @api.depends('calendar_id.company_id', 'company_id')
+    def _compute_work_entry_type_id(self):
+        country_ids = [(leave.calendar_id.company_id.country_id or leave.company_id.country_id or self.env.company.country_id).id for leave in self]
+        public_holiday_types = self.env['hr.work.entry.type'].search([
+            ('code', '=', 'LEAVE500'),
+            ('country_id', 'in', country_ids),
+        ]).grouped('country_id')
+        for leave in self:
+            if leave.resource_id:
+                continue
+            country = leave.calendar_id.company_id.country_id or leave.company_id.country_id or self.env.company.country_id
+            leave.work_entry_type_id = public_holiday_types.get(country, self.env.ref('hr_work_entry.generic_work_entry_type_public_holiday', raise_if_not_found=False))
 
     @api.depends('calendar_id.company_id', 'company_id')
     def _compute_allowed_work_entry_type_ids(self):
