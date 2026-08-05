@@ -242,7 +242,7 @@ export class Many2XAutocomplete extends Component {
                 resModel,
                 activeActions,
                 isToMany,
-                onRecordSaved: (record) => update([{ ...record.data, id: record.resId }]),
+                onRecordSaved: (record) => update([{ id: record.resId }]),
                 onRecordDiscarded: () => {
                     if (!isToMany) {
                         this.props.update(false);

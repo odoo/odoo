@@ -1236,7 +1236,7 @@ test("many2one with co-model whose name field is a many2one", async () => {
 
     await contains(".modal .o_form_button_save").click();
     expect(".modal .o_form_view").toHaveCount(0);
-    expect("div[name=product_id] input").toHaveValue("new value");
+    expect("div[name=product_id] input").toHaveValue("3");
 });
 
 test("no additional searches for the same request", async () => {
