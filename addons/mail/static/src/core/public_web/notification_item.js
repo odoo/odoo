@@ -3,7 +3,6 @@ import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
 import { MessageSeenIndicator } from "@mail/discuss/core/common/message_seen_indicator";
 import { isToday } from "@mail/utils/common/dates";
 import { useHover } from "@mail/utils/common/hooks";
-import { useSubEnv } from "@web/owl2/utils";
 
 import { Component, signal, t, useProps } from "@odoo/owl";
 
@@ -53,7 +52,6 @@ export class NotificationItem extends Component {
             thread: t.instanceOf(this.store["mail.thread"]).optional(),
         });
         this.rootHover = useHover(this.rootRef);
-        useSubEnv({ inNotificationItem: true });
     }
 
     get dateText() {
