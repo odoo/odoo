@@ -2,12 +2,6 @@
 
 from odoo import api, fields, models
 
-WORK_ENTRY_TYPE_BY_COUNTRY = {
-    'BE': 'hr_work_entry.l10n_be_work_entry_type_bank_holiday',
-    'CH': 'hr_work_entry.l10n_ch_work_entry_type_bank_holiday',
-    'HK': 'hr_work_entry.l10n_hk_work_entry_type_public_holiday',
-}
-
 
 class ResourceCalendarPublicHolidayWizardLine(models.TransientModel):
     _name = 'load.public.holiday.wizard.line'
@@ -25,18 +19,17 @@ class ResourceCalendarPublicHolidayWizardLine(models.TransientModel):
 
     @api.depends('company_id')
     def _compute_work_entry_type(self):
+        allowed_work_entry_types = self.env['hr.work.entry.type'].search([
+            '|',
+            ('country_id', 'in', self.company_id.country_id.ids),
+            ('country_id', '=', False),
+        ])
+        public_holiday_work_entry_types = allowed_work_entry_types.filtered_domain([('code', '=', 'LEAVE500')])
         for line in self:
-            allowed_work_entry_type = self.env['hr.work.entry.type'].search([
-                ('country_id', '=', line.company_id.country_id.id)
-            ])
-            line.allowed_work_entry_type_ids = allowed_work_entry_type
-
-            default_work_entry_type = False
-            if xmlid := WORK_ENTRY_TYPE_BY_COUNTRY.get(line.company_id.country_id.code):
-                default_work_entry_type = self.env.ref(xmlid, raise_if_not_found=False)
-
-            line.work_entry_type_id = (
-                default_work_entry_type
-                if default_work_entry_type and default_work_entry_type in allowed_work_entry_type
-                else False
-            )
+            country = line.company_id.country_id
+            if not country or not allowed_work_entry_types.filtered_domain([('country_id', '=', country.id)]):
+                domain = [('country_id', '=', False)]
+            else:
+                domain = [('country_id', '=', country.id)]
+            line.allowed_work_entry_type_ids = allowed_work_entry_types.filtered_domain(domain)
+            line.work_entry_type_id = public_holiday_work_entry_types.filtered_domain(domain)

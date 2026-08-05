@@ -36,6 +36,7 @@ class TestWorkEntryTypeData(TransactionCase):
             'LEAVE90',  # Unpaid
             'LEAVE110',  # Sick Time Off
             'LEAVE120',  # Paid Time Off
+            'LEAVE500',  # Public Holiday
         }
         excluded_codes_per_country = {
             'us': {'OVERTIME', 'OUT', 'LEAVE100', 'LEAVE105'},
