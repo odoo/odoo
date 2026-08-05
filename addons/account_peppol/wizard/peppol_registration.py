@@ -499,11 +499,12 @@ class PeppolRegistration(models.TransientModel):
             blocking_proxy_type = dict(blocking_user._fields['proxy_type']._description_selection(self.env))[blocking_user[:1].proxy_type]
             raise UserError(self.env._("A connection to '%s' already exists.", blocking_proxy_type))
 
-        if self.use_parent_connection:
-            self.company_id.write({
-                'account_peppol_contact_email': self.contact_email,
-                'account_peppol_phone_number': self.phone_number,
-            })
+        self.company_id.write({
+            'routing_scheme': self.peppol_eas,
+            'routing_endpoint': self.peppol_endpoint,
+            'account_peppol_contact_email': self.contact_email,
+            'account_peppol_phone_number': self.phone_number,
+        })
         self._ensure_can_connect(self.peppol_can_connect_data, selected_auth=selected_auth)
         if self.peppol_can_connect_data.get('auth_required'):
             return {
