@@ -228,6 +228,14 @@ class AccountEdiProxyClientUser(models.Model):
         if 'pilot_phase' in proxy_user:
             self.sudo().company_id.l10n_fr_pdp_pilot_phase = proxy_user['pilot_phase']
 
+    def _get_type_code(self, files_data):
+        """ Override to unwrap the XML from the PDF with Factur-X."""
+        if (files_data[0]['import_file_type'] != 'pdf'):
+            return super()._get_type_code(files_data)
+        files_data.extend(self.env['account.move']._unwrap_attachments(files_data, recurse=False))
+        xml_tree = next(filter(lambda file: file['import_file_type'] == 'account.edi.xml.cii', files_data))['xml_tree']
+        return xml_tree.findtext('.//{*}ExchangedDocument/{*}TypeCode')
+
     def _peppol_get_new_documents(self, skip_no_journal=False):
         if 'pdp_einvoicing_chatter_messages' not in self.env.context:
             return self.with_context(pdp_einvoicing_chatter_messages={})._peppol_get_new_documents(skip_no_journal=skip_no_journal)
