@@ -9,7 +9,7 @@ patch(Chatter.prototype, {
             ".o_wslides_lesson_nav a[href='#discuss'] span"
         );
         if (commentsCounterEl) {
-            commentsCounterEl.textContent = this.state.thread.comments_count;
+            commentsCounterEl.textContent = this.state.thread().comments_count;
         }
     },
 });

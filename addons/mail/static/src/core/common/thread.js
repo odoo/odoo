@@ -1,8 +1,14 @@
 import { useLayoutEffect, useSubEnv } from "@web/owl2/utils";
+import { ChatterStatePlugin } from "@mail/core/common/chatter_state_plugin";
 import { DateSection } from "@mail/core/common/date_section";
 import { Message } from "@mail/core/common/message";
 import { NotificationMessage } from "./notification_message";
-import { useChildRefs, useMessageSelection, useVisible } from "@mail/utils/common/hooks";
+import {
+    useChildRefs,
+    useMaybePlugin,
+    useMessageSelection,
+    useVisible,
+} from "@mail/utils/common/hooks";
 import { incrementFn } from "@mail/utils/common/signal";
 
 import {
@@ -49,6 +55,7 @@ export class Thread extends Component {
 
     setup() {
         super.setup();
+        this.chatterStatePlugin = useMaybePlugin(ChatterStatePlugin);
         this.escape = escape;
         this.applyScroll = this.applyScroll.bind(this);
         this.saveScroll = this.saveScroll.bind(this);
@@ -280,9 +287,9 @@ export class Thread extends Component {
         this.jumpPresentRef().style.transform = `translate(${
             this.env.inChatter ? 22 : width - ps - pe - 22
         }px, ${
-            this.env.inChatter && !this.env.inChatter.aside
+            this.env.inChatter && !this.chatterStatePlugin?.aside
                 ? -22
-                : height - pt - pb - (this.env.inChatter?.aside ? 75 : 0)
+                : height - pt - pb - (this.chatterStatePlugin?.aside ? 75 : 0)
         }px)`;
     }
 

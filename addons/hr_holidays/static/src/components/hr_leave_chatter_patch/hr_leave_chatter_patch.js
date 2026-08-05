@@ -10,7 +10,7 @@ patch(Chatter.prototype, {
         super.setup();
         this.orm = useService("orm");
         useOnChange(
-            () => [this.thread()],
+            () => [this.state.thread()],
             (thread) => {
                 this.applyConditionalAttachmentVisibility(thread);
             }

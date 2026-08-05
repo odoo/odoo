@@ -1,9 +1,10 @@
 import { useSubEnv } from "@web/owl2/utils";
+import { ChatterStatePlugin } from "@mail/core/common/chatter_state_plugin";
 import { Composer } from "@mail/core/common/composer";
 import { Thread } from "@mail/core/common/thread";
 import { propComputed, useMessageScrolling } from "@mail/utils/common/hooks";
 
-import { Component, onMounted, proxy, signal, t, useOnChange } from "@odoo/owl";
+import { Component, onMounted, providePlugins, signal, t, useOnChange, usePlugin } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { router } from "@web/core/browser/router";
@@ -23,19 +24,10 @@ export class Chatter extends Component {
         );
         this.threadModel = propComputed("threadModel", t.string());
         this.twoColumns = propComputed("twoColumns", t.boolean().optional(false));
-        this.thread = signal(null, {
-            type: t.instanceOf(this.store["mail.thread"]),
-        });
-        this.state = proxy({
-            jumpThreadPresent: 0,
-            /**
-             * @deprecated use the `this.thread` signal instead
-             * @type {import("models").Thread}
-             */
-            thread: undefined,
-        });
+        providePlugins([ChatterStatePlugin]);
+        this.state = usePlugin(ChatterStatePlugin);
         this.messageHighlight = useMessageScrolling({
-            thread: () => this.state.thread,
+            thread: () => this.state.thread(),
             messageFetchRouteParams: () => this.messageFetchRouteParams,
         });
         this.highlightMessage = router.current.highlight_message_id;
@@ -52,7 +44,7 @@ export class Chatter extends Component {
             { initialRun: false }
         );
         useOnChange(
-            () => [this.state.thread],
+            () => [this.state.thread()],
             (thread) => {
                 if (!this.env.chatter || this.env.chatter?.fetchThreadData) {
                     if (this.env.chatter) {
@@ -69,7 +61,7 @@ export class Chatter extends Component {
         // (e.g. an attachment created server-side). Mirrors the message refetch
         // in Thread.
         useBus(this.env.bus, "MAIL:RELOAD-THREAD", ({ detail }) => {
-            const thread = this.state.thread;
+            const thread = this.state.thread();
             if (thread?.model === detail.model && thread?.id === detail.id) {
                 this.load(thread, this.requestList);
             }
@@ -89,7 +81,7 @@ export class Chatter extends Component {
     }
 
     get onCloseFullComposerRequestList() {
-        return this.state.thread.fullComposerCloseRequestList;
+        return this.state.thread().fullComposerCloseRequestList;
     }
 
     get initialRequestList() {
@@ -102,7 +94,7 @@ export class Chatter extends Component {
 
     get subEnv() {
         return {
-            inChatter: this.state,
+            inChatter: true,
             messageFetchRouteParams: this.extraMessageFetchRouteParams,
             messageHighlight: this.messageHighlight,
         };
@@ -116,22 +108,21 @@ export class Chatter extends Component {
         if (this.highlightMessage) {
             data.highlightMessage = this.highlightMessage;
         }
-        this.thread.set(this.store["mail.thread"].insert(data));
-        this.state.thread = this.thread();
+        this.state.thread.set(this.store["mail.thread"].insert(data));
         if (threadId === false) {
-            this.thread().isLoaded = true;
-            this.thread().status = "ready";
-            if (this.thread().messages.length === 0) {
-                const { effectiveSelf } = this.thread();
+            this.state.thread().isLoaded = true;
+            this.state.thread().status = "ready";
+            if (this.state.thread().messages.length === 0) {
+                const { effectiveSelf } = this.state.thread();
                 const authorModelName = effectiveSelf.Model.getName();
-                this.thread().messages.push({
+                this.state.thread().messages.push({
                     id: this.store.getNextTemporaryId(),
                     is_transient: true,
                     author_id: authorModelName === "res.partner" ? effectiveSelf : undefined,
                     author_guest_id: authorModelName === "mail.guest" ? effectiveSelf : undefined,
                     body: _t("Creating a new record..."),
                     message_type: "notification",
-                    thread: this.thread(),
+                    thread: this.state.thread(),
                     res_id: threadId,
                     model: threadModel,
                 });
@@ -145,7 +136,7 @@ export class Chatter extends Component {
      * @param {string[]} requestList
      */
     async load(thread, requestList) {
-        if (!thread?.id || !this.state.thread?.eq(thread)) {
+        if (!thread?.id || !this.state.thread()?.eq(thread)) {
             return;
         }
         await thread.fetchThreadData(requestList, {
@@ -154,7 +145,7 @@ export class Chatter extends Component {
     }
 
     onCloseFullComposerCallback() {
-        this.load(this.state.thread, this.onCloseFullComposerRequestList);
+        this.load(this.state.thread(), this.onCloseFullComposerRequestList);
     }
 
     _onMounted() {
@@ -163,17 +154,17 @@ export class Chatter extends Component {
             if (this.env.chatter) {
                 this.env.chatter.fetchThreadData = false;
             }
-            this.load(this.state.thread, this.initialRequestList);
+            this.load(this.state.thread(), this.initialRequestList);
         }
     }
 
     onPostCallback() {
-        this.state.jumpThreadPresent++;
+        this.state.incrementJumpThreadPresent();
         // Load new messages to fetch potential new messages from other users (useful due to lack of auto-sync in chatter).
-        this.load(this.state.thread, this.afterPostRequestList);
+        this.load(this.state.thread(), this.afterPostRequestList);
     }
 
     onScroll() {
-        this.state.isTopStickyPinned = this.rootRef().scrollTop !== 0;
+        this.state.isTopStickyPinned.set(this.rootRef().scrollTop !== 0);
     }
 }

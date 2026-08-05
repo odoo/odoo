@@ -5,7 +5,7 @@
             <div t-if="this.displayRating" class="mt-0 mb-3">
                 <t t-call="portal_rating.rating_card"
                     rating_stats="this.ratingStats"
-                    selected_rating="this.state.thread?.selectedRating"/>
+                    selected_rating="this.state.thread()?.selectedRating"/>
             </div>
             <div t-if="this.reviewChatter" class="mb-4 mb-lg-0">
                 <t t-call="portal_rating.actions"/>
@@ -13,9 +13,9 @@
         </xpath>
         <xpath expr="//div[hasclass('o-mail-Chatter')]" position="inside">
             <div
-                t-if="this.state.showReviewComposer"
+                t-if="this.showReviewComposer()"
                 class="o_review_composer_modal"
-                t-on-click="() => this.state.showReviewComposer = false"
+                t-on-click="() => this.showReviewComposer.set(false)"
             >
                 <div class="modal-backdrop show"/>
                 <div class="modal d-block" tabindex="-1">
@@ -27,14 +27,14 @@
                                     type="button"
                                     class="btn-close"
                                     aria-label="Close"
-                                    t-on-click="() => this.state.showReviewComposer = false"
+                                    t-on-click="() => this.showReviewComposer.set(false)"
                                 />
                             </div>
                             <div class="modal-body">
                                 <Composer
-                                    t-if="this.state.thread"
+                                    t-if="this.state.thread()"
                                     autofocus="true"
-                                    composer="this.state.thread.composer"
+                                    composer="this.state.thread().composer"
                                     mode="'extended'"
                                     onPostCallback.bind="this.onReviewPostCallback"
                                     type="'message'"
@@ -47,7 +47,7 @@
         </xpath>
         <xpath expr="//div[hasclass('o-mail-Chatter-content')]" position="inside">
             <p
-                t-if="this.displayRating and this.state.thread?.isLoaded and !this.ratingStats?.total"
+                t-if="this.displayRating and this.state.thread()?.isLoaded and !this.ratingStats?.total"
                 class="fs-4 text-muted text-center align-content-center h-100"
             >
                 <span class="fs-1" style="filter: grayscale(1);">😶</span><br/>No reviews yet.
