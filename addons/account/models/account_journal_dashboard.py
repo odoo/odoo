@@ -563,13 +563,13 @@ class AccountJournal(models.Model):
         if not sale_purchase_journals:
             return
         bills_field_list = [
-            "account_move.journal_id",
-            "(CASE WHEN account_move.move_type IN ('out_refund', 'in_refund') THEN -1 ELSE 1 END) * account_move.amount_total AS amount_total",
-            "(CASE WHEN account_move.move_type IN ('in_invoice', 'in_refund', 'in_receipt') THEN -1 ELSE 1 END) * account_move.amount_total_signed AS amount_total_company",
-            "account_move.currency_id AS currency",
-            "account_move.move_type",
-            "account_move.invoice_date",
-            "account_move.company_id",
+            SQL("account_move.journal_id"),
+            SQL("(CASE WHEN account_move.move_type IN ('out_refund', 'in_refund') THEN -1 ELSE 1 END) * account_move.amount_total AS amount_total"),
+            SQL("(CASE WHEN account_move.move_type IN ('in_invoice', 'in_refund', 'in_receipt') THEN -1 ELSE 1 END) * account_move.amount_total_signed AS amount_total_company"),
+            SQL("account_move.currency_id AS currency"),
+            SQL("account_move.move_type"),
+            SQL("account_move.invoice_date"),
+            SQL("account_move.company_id"),
         ]
         # DRAFTS
         sql = sale_purchase_journals._get_draft_sales_purchases_query().select(*bills_field_list)

@@ -90,7 +90,7 @@ class MailingContact(models.Model):
                 ('list_id', '=', active_list_id),
                 ('opt_out', '=', True),
             ])
-            return [('id', 'in', subscriptions.subselect('contact_id'))]
+            return [('id', 'in', subscriptions.subselect(subscriptions.table.contact_id))]
         return Domain.FALSE
 
     @api.depends('first_name', 'last_name')

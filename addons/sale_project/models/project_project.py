@@ -364,7 +364,7 @@ class ProjectProject(models.Model):
             return {}
         if len(self) == 1:
             return {self.id: self._fetch_sale_order_items(domain_per_model)}
-        sql = self._get_sale_order_items_query(domain_per_model).select('id', 'ARRAY_AGG(DISTINCT sale_line_id) AS sale_line_ids')
+        sql = self._get_sale_order_items_query(domain_per_model).select(SQL('id'), SQL('ARRAY_AGG(DISTINCT sale_line_id) AS sale_line_ids'))
         sql = SQL("%s GROUP BY id", sql)
         return {
             id_: self.env['sale.order.line'].browse(sale_line_ids)
@@ -380,7 +380,7 @@ class ProjectProject(models.Model):
         query = self._get_sale_order_items_query(domain_per_model)
         query.limit = limit
         query.offset = offset
-        return [id_ for id_, in self.env.execute_query(query.select('DISTINCT sale_line_id'))]
+        return [id_ for id_, in self.env.execute_query(query.select(SQL('DISTINCT sale_line_id')))]
 
     def _get_sale_orders(self):
         return self._get_sale_order_items().order_id
@@ -400,7 +400,7 @@ class ProjectProject(models.Model):
                 billable_project_domain,
             ])
         project_query = self.env['project.project']._search(project_domain)
-        project_sql = project_query.select(f'{self._table}.id ', f'{self._table}.sale_line_id')
+        project_sql = project_query.select(project_query.table.id, project_query.table.sale_line_id)
 
         Task = self.env['project.task']
         task_domain = [('project_id', 'in', self.ids), ('sale_line_id', '!=', False)]
@@ -410,7 +410,7 @@ class ProjectProject(models.Model):
                 task_domain,
             ])
         task_query = Task._search(task_domain)
-        task_sql = task_query.select(f'{Task._table}.project_id AS id', f'{Task._table}.sale_line_id')
+        task_sql = task_query.select(SQL("%s AS id", task_query.table.project_id), task_query.table.sale_line_id)
 
         ProjectMilestone = self.env['project.milestone']
         milestone_domain = [('project_id', 'in', self.ids), ('allow_billable', '=', True), ('sale_line_id', '!=', False)]
@@ -422,8 +422,8 @@ class ProjectProject(models.Model):
             ])
         milestone_query = ProjectMilestone._search(milestone_domain)
         milestone_sql = milestone_query.select(
-            f'{ProjectMilestone._table}.project_id AS id',
-            f'{ProjectMilestone._table}.sale_line_id',
+            SQL("%s AS id", milestone_query.table.project_id),
+            milestone_query.table.sale_line_id,
         )
 
         SaleOrderLine = self.env['sale.order.line']
@@ -437,8 +437,8 @@ class ProjectProject(models.Model):
         ]
         sale_order_line_query = SaleOrderLine._search(sale_order_line_domain, bypass_access=True)
         sale_order_line_sql = sale_order_line_query.select(
-            f'{SaleOrderLine._table}.project_id AS id',
-            f'{SaleOrderLine._table}.id AS sale_line_id',
+            SQL("%s AS id", sale_order_line_query.table.project_id),
+            SQL("%s AS sale_line_id", sale_order_line_query.table.id),
         )
 
         return Query(None, 'project_sale_order_item', SQL('(%s)', SQL(' UNION ').join([

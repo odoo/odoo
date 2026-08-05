@@ -1366,7 +1366,7 @@ class Field[T]:
                     ('user_id', 'in', (False, SUPERUSER_ID)),
                     Domain.custom(to_sql=lambda table: SQL("(%s IS NULL OR %s = %s)", table.company_id, table.company_id, company_id)),
                     ('condition', '=', False),
-                ], order="user_id.id, company_id.id, id", limit=1).subselect('json_value')
+                ], order="user_id.id, company_id.id, id", limit=1).subselect(SQL('json_value'))
             else:
                 company_id = str(model.env.company.id)
                 fallback = self.get_company_dependent_fallback(model)

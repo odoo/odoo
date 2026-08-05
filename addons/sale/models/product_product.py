@@ -126,7 +126,7 @@ class ProductProduct(models.Model):
             ("order_partner_id", "=", customer_id),
             ("state", "=", "sale"),
         ])
-        return [("id", operator, subquery.subselect("product_id"))]
+        return [("id", operator, subquery.subselect(subquery.table.product_id))]
 
     @api.readonly
     def action_view_sales(self):

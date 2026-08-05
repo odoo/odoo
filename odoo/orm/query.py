@@ -116,6 +116,8 @@ class Query:
 
     def add_where(self, where_clause: LiteralString | SQL, where_params=()):
         """ Add a condition to the where clause. """
+        if isinstance(where_clause, str) or where_params:
+            warnings.warn("Since 20.0, use only SQL in the where clause", DeprecationWarning, stacklevel=2)
         self._where_clauses.append(SQL(where_clause, *where_params))  # pylint: disable = sql-injection
         self._ids = self._ids and None
 
@@ -139,7 +141,7 @@ class Query:
         self.add_join('JOIN', rhs_alias, rhs_table, condition)
         return rhs_alias
 
-    def left_join(self, lhs_alias: str, lhs_column: str, rhs_table: str, rhs_column: str, link: str) -> str:
+    def left_join(self, lhs_alias: str, lhs_column: str, rhs_table: str | SQL, rhs_column: str, link: str) -> str:
         """ Add a LEFT JOIN to the current table (if necessary), and return the
         alias corresponding to ``rhs_table``.
 
@@ -159,6 +161,8 @@ class Query:
 
     @order.setter
     def order(self, value: SQL | LiteralString | None):
+        if isinstance(value, str):
+            warnings.warn("Since 20.0, use SQL values only", DeprecationWarning, stacklevel=2)
         self._order = SQL(value) if value is not None else None  # pylint: disable = sql-injection
 
     @property
@@ -187,6 +191,8 @@ class Query:
 
     def select(self, *args: SQL | LiteralString) -> SQL:
         """ Return the SELECT query as an ``SQL`` object. """
+        if not all(isinstance(a, SQL) for a in args):
+            warnings.warn("Since 20.0. select takes only SQL arguments")
         select_clause = SQL(", ").join(map(SQL, args)) if args else self.table.id
         return SQL(
             "%s%s%s%s%s%s%s%s",
@@ -205,6 +211,8 @@ class Query:
             This one avoids the ORDER BY clause when possible,
             and includes parentheses around the subquery.
         """
+        if not all(isinstance(a, SQL) for a in args):
+            warnings.warn("Since 20.0. select takes only SQL arguments")
         if self._ids is not None and not args:
             # inject the known result instead of the subquery
             if not self._ids:
@@ -245,7 +253,7 @@ class Query:
             "Method set_result_ids() can only be called on a virgin Query"
         ids = tuple(ids)
         if not ids:
-            self.add_where("FALSE")
+            self.add_where(SQL("FALSE"))
         elif ordered:
             # This guarantees that self.select() returns the results in the
             # expected order of ids:
@@ -279,9 +287,9 @@ class Query:
         if self._ids is None:
             if self.limit or self.offset:
                 # optimization: generate a SELECT FROM, and then count the rows
-                sql = SQL("SELECT COUNT(*) FROM (%s) t", self.select(""))
+                sql = SQL("SELECT COUNT(*) FROM (%s) t", self.select(SQL("")))
             else:
-                sql = self.select('COUNT(*)')
+                sql = self.select(SQL('COUNT(*)'))
             return self._model.env.execute_query(sql)[0][0]
         return len(self.get_result_ids())
 

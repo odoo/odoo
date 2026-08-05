@@ -1046,7 +1046,7 @@ class ProductProduct(models.Model):
                     (
                         'product_tmpl_id',
                         'in',
-                        self_no_active_test.env['product.supplierinfo']._search(supplier_domain).subselect('product_tmpl_id'),
+                        self_no_active_test.env['product.supplierinfo']._search(supplier_domain).subselect(SQL('product_tmpl_id')),
                     )
                 ])
             )

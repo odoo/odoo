@@ -151,7 +151,7 @@ class AccountMove(models.Model):
             ('invoice_status', 'in', ('to invoice', 'no'))
         ], limit=1)
 
-        purchase_orders.add_where('purchase_order.partner_id = res_partner.id')
+        purchase_orders.add_where(SQL('purchase_order.partner_id = res_partner.id'))
         partners = self.env['res.partner']._search([
             ('id', 'in', partner_ids),
         ])

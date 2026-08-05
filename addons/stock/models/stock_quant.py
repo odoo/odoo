@@ -667,7 +667,7 @@ class StockQuant(models.Model):
         query.having = SQL("SUM(quantity - reserved_quantity) > 0")
         query.order = SQL("available_qty DESC")
         qty_by_package = self.env.execute_query(
-            query.select('package_id', 'SUM(quantity - reserved_quantity) AS available_qty'))
+            query.select(SQL('package_id'), SQL('SUM(quantity - reserved_quantity) AS available_qty')))
 
         # Items that do not belong to a package are added individually to the list, any empty packages get removed.
         pkg_found = False

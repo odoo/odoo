@@ -253,8 +253,8 @@ class ProjectProject(models.Model):
             ])
         timesheet_query = Timesheet._search(timesheet_domain)
         timesheet_sql = timesheet_query.select(
-            f'{Timesheet._table}.project_id AS id',
-            f'{Timesheet._table}.so_line AS sale_line_id',
+            SQL("%s AS id", timesheet_query.table.project_id),
+            SQL("%s AS sale_line_id", timesheet_query.table.so_line),
         )
 
         EmployeeMapping = self.env['project.sale.line.employee.map']
@@ -266,8 +266,8 @@ class ProjectProject(models.Model):
             ])
         employee_mapping_query = EmployeeMapping._search(employee_mapping_domain)
         employee_mapping_sql = employee_mapping_query.select(
-            f'{EmployeeMapping._table}.project_id AS id',
-            f'{EmployeeMapping._table}.sale_line_id',
+            SQL("%s AS id", employee_mapping_query.table.project_id),
+            employee_mapping_query.table.sale_line_id,
         )
 
         join, sql, condition = query._joins['project_sale_order_item']

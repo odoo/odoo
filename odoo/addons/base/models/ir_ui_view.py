@@ -313,7 +313,7 @@ actual arch.
         name = 'name' if isinstance(value, str) else 'id'
         domain = [('model', '=', 'ir.ui.view'), (name, operator, value)]
         query = self.env['ir.model.data'].sudo()._search(domain)
-        return [('id', 'in', query.subselect('res_id'))]
+        return [('id', 'in', query.subselect(query.table.res_id))]
 
     @api.depends('model')
     def _compute_model_id(self):

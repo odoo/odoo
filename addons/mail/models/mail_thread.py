@@ -232,7 +232,7 @@ class MailThread(models.AbstractModel):
             ('partner_id', operator, operand),
         ])
         # use `in` query to avoid reading thousands of potentially followed objects
-        return [('id', 'in', followers.subselect('res_id'))]
+        return [('id', 'in', followers.subselect(SQL('res_id')))]
 
     @api.depends('message_follower_ids')
     def _compute_message_is_follower(self):
@@ -253,7 +253,7 @@ class MailThread(models.AbstractModel):
             ('partner_id', operator, self.env.user.partner_id.ids),
         ])
         # use `in` query to avoid reading thousands of potentially followed objects
-        return [('id', 'in', followers.subselect('res_id'))]
+        return [('id', 'in', followers.subselect(SQL('res_id')))]
 
     def _compute_has_message(self):
         self.env['mail.message'].flush_model()

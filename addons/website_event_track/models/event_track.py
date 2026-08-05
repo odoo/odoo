@@ -388,7 +388,7 @@ class EventTrack(models.Model):
             ('visitor_id', operator, operand),
             ('is_wishlisted', '=', True)
         ])
-        return [('id', 'in', subquery.subselect('track_id'))]
+        return [('id', 'in', subquery.subselect(subquery.table.track_id))]
 
     # TIME
 

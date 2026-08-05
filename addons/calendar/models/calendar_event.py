@@ -30,7 +30,7 @@ from odoo.addons.mail.tools.discuss import Store
 from odoo.tools.intervals import intervals_overlap
 from odoo.tools.translate import _
 from odoo.tools.misc import get_lang, babel_locale_parse
-from odoo.tools import html2plaintext, html_sanitize, is_html_empty, single_email_re
+from odoo.tools import SQL, html2plaintext, html_sanitize, is_html_empty, single_email_re
 from odoo.exceptions import UserError, ValidationError
 
 _logger = logging.getLogger(__name__)
@@ -1215,7 +1215,7 @@ class CalendarEvent(models.Model):
 
     def _get_default_privacy_domain(self):
         # Sub query user settings from calendars that are not private ('public' and 'confidential').
-        public_calendars_settings = self.env['res.users.settings'].sudo()._search([('calendar_default_privacy', '!=', 'private')]).select('user_id')
+        public_calendars_settings = self.env['res.users.settings'].sudo()._search([('calendar_default_privacy', '!=', 'private')]).select(SQL('user_id'))
         # display public, confidential events and events with default privacy when owner's default privacy is not private
         return ['|', '|',
             ('privacy', 'in', ['public', 'confidential']),

@@ -6,7 +6,7 @@ from ast import literal_eval
 from odoo import _, api, fields, models, tools
 from odoo.exceptions import ValidationError, UserError
 from odoo.fields import Domain
-from odoo.tools import BinaryBytes, email_normalize, unique
+from odoo.tools import BinaryBytes, SQL, email_normalize, unique
 from odoo.tools.safe_eval import safe_eval, time
 
 _logger = logging.getLogger(__name__)
@@ -175,7 +175,7 @@ class MailTemplate(models.Model):
         templates_with_xmlid = self.env['ir.model.data'].sudo()._search([
             ('model', '=', 'mail.template'),
             ('module', '!=', '__export__'),
-        ]).subselect('res_id')
+        ]).subselect(SQL('res_id'))
 
         domain = Domain.FALSE
 

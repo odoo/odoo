@@ -2,7 +2,7 @@
 
 from odoo import fields, models
 from odoo.fields import Domain
-from odoo.tools import OrderedSet
+from odoo.tools import SQL
 
 
 class ProjectTask(models.Model):
@@ -33,7 +33,7 @@ class ProjectTask(models.Model):
         timeoff_tasks_ids = {row[0] for row in self.env.execute_query(
             self.env['account.analytic.line']._search(
                 [('task_id', '!=', False), '|', ('holiday_id', '!=', False), ('global_leave_id', '!=', False)],
-            ).select('DISTINCT task_id')
+            ).select(SQL('DISTINCT task_id'))
         )}
 
         if self.env.company.leave_timesheet_task_id:
