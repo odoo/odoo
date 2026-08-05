@@ -1,38 +1,30 @@
-
-from io import StringIO
-
+"""Redirect any unhandled python exception to the logger
+to keep track of them in the log file.
+"""
 import logging
 import sys
+import threading
 
 from odoo.addons.iot_drivers.tools.system import IS_TEST
 
 _logger = logging.getLogger(__name__)
 
 
-class ExceptionLogger:
-    """
-    Redirect any unhandled python exception to the logger to keep track of them in the log file.
-    """
-    def __init__(self):
-        self._buffer = StringIO()
+def _log_exception(args):
+    _logger.error(
+        "Unhandled exception",
+        exc_info=(args.exc_type, args.exc_value, args.exc_traceback),
+    )
 
-    def write(self, message):
-        self._buffer.write(message)
-        if message.endswith('\n'):
-            self._flush_buffer()
 
-    def _flush_buffer(self):
-        self._buffer.seek(0)
-        _logger.error(self._buffer.getvalue().rstrip('\n'))
-        self._buffer = StringIO()  # Reset the buffer
-
-    def flush(self):
-        if self._buffer.tell() > 0:
-            self._flush_buffer()
-
-    def close(self):
-        self.flush()
+def _log_thread_exception(args):
+    _logger.error(
+        "Unhandled exception in thread %s",
+        args.thread.name,
+        exc_info=(args.exc_type, args.exc_value, args.exc_traceback),
+    )
 
 
 if not IS_TEST:
-    sys.stderr = ExceptionLogger()
+    sys.excepthook = _log_exception
+    threading.excepthook = _log_thread_exception
