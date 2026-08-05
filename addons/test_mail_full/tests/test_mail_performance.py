@@ -250,7 +250,6 @@ class TestPortalFormatPerformance(FullBaseMailPerformance):
                 [
                     {
                         'checksum': message.attachment_ids[0].checksum,
-                        'filename': 'Test file 1',
                         'has_thumbnail': False,
                         'id': message.attachment_ids[0].id,
                         'mimetype': 'text/plain',
@@ -261,7 +260,6 @@ class TestPortalFormatPerformance(FullBaseMailPerformance):
                         'thumbnail_access_token': message.attachment_ids[0]._get_thumbnail_token(),
                     }, {
                         'checksum': message.attachment_ids[1].checksum,
-                        'filename': 'Test file 0',
                         'has_thumbnail': False,
                         'id': message.attachment_ids[1].id,
                         'mimetype': 'text/plain',

@@ -35,10 +35,11 @@ class MailMessage(models.Model):
             [('message_id', 'in', self.ids)],
             ["id", "publisher_comment", "publisher_id", "publisher_datetime", "message_id"]
         )
-        message_to_rating = {
-            rating['message_id'][0]: self._portal_message_format_rating(rating)
-            for rating in related_rating
-        }
+        message_to_rating = {}
+        for rating in related_rating:
+            # only the id is needed, and the store holds no such field
+            message_id = rating.pop('message_id')[0]
+            message_to_rating[message_id] = self._portal_message_format_rating(rating)
 
         for message, values in zip(self, vals_list):
             values["rating_id"] = message_to_rating.get(message.id, {})
