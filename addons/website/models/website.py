@@ -912,7 +912,7 @@ class Website(models.Model):
                 translated_content.update(snippet_translated_content)
 
         translated_ratio = html_text_processor._calculate_translation_ratio(generated_content, translated_content)
-        if translated_ratio > 0.8:
+        if translated_ratio > 0.7:
             try:
                 database_id = self.env['ir.config_parameter'].sudo().get_param('database.uuid')
                 response = self._OLG_api_rpc('/api/olg/1/generate_placeholder', {
@@ -920,7 +920,7 @@ class Website(models.Model):
                     'lang': website.default_lang_id.name,
                     'industry': industry,
                     'database_id': database_id,
-                })
+                }, timeout=30)
                 name_replace_parser = re.compile(r"XXXX", re.MULTILINE)
                 website_name = re.escape(website.name)
                 for key in generated_content:
