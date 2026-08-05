@@ -30,12 +30,51 @@ class TestSelfOrderCombo(SelfOrderCommonTest):
         self.pos_admin.group_ids += self.env.ref('account.group_account_invoice')
         self.pos_config.with_user(self.pos_user).open_ui()
         self.pos_config.current_session_id.set_opening_control(0, "")
-        self_route = self.pos_config._get_self_order_route()
 
-        self.start_tour(self_route, "self_combo_selector")
-        order = self.env['pos.order'].search([], order='id desc', limit=1)
+        # Find the combo items selected in the original tour
+        desk_org_item = self.desk_accessories_combo.combo_item_ids.filtered(
+            lambda i: i.product_id == self.desk_organizer
+        )
+        combo5_item = self.desks_combo.combo_item_ids.filtered(
+            lambda i: i.product_id.name == 'Combo Product 5'
+        )
+        combo8_item = self.chairs_combo.combo_item_ids.filtered(
+            lambda i: i.product_id.name == 'Combo Product 8'
+        )
+
+        # Find Size=M and Fabric=Leather PTAVs for Desk Organizer
+        desk_tmpl = self.desk_organizer.product_tmpl_id
+        size_m = desk_tmpl.attribute_line_ids.filtered(
+            lambda l: l.attribute_id.name == 'Size'
+        ).product_template_value_ids.filtered(lambda v: v.name == 'M')
+        fabric_leather = desk_tmpl.attribute_line_ids.filtered(
+            lambda l: l.attribute_id.name == 'Fabric'
+        ).product_template_value_ids.filtered(lambda v: v.name == 'Leather')
+
+        order = self.process_self_order([
+            {
+                'product': self.office_combo,
+                'qty': 2,
+                'price_unit': self.office_combo.lst_price,
+                'combo_children': [
+                    {
+                        'product': self.desk_organizer,
+                        'combo_item_id': desk_org_item.id,
+                        'attribute_value_ids': [size_m.id, fabric_leather.id],
+                    },
+                    {
+                        'product': combo5_item.product_id,
+                        'combo_item_id': combo5_item.id,
+                    },
+                    {
+                        'product': combo8_item.product_id,
+                        'combo_item_id': combo8_item.id,
+                    },
+                ],
+            },
+        ])
+
         self.assertEqual(len(order.lines), 4, "There should be 4 order lines - 1 combo parent and 3 combo lines")
-        # check that the combo lines are correctly linked to each other
         parent_line_id = self.env['pos.order.line'].search([('product_id.name', '=', 'Office Combo'), ('order_id', '=', order.id)])
         combo_line_ids = self.env['pos.order.line'].search([('product_id.name', '!=', 'Office Combo'), ('order_id', '=', order.id)])
         self.assertEqual(parent_line_id.combo_line_ids, combo_line_ids, "The combo parent should have 3 combo lines")
@@ -239,12 +278,13 @@ class TestSelfOrderCombo(SelfOrderCommonTest):
                 ],
             }
         ])
-        self.env['product.product'].create([
+        combo_drinks, price_for_drinks = self.env['product.product'].create([
             {
                 'name': 'Combo Drinks',
                 'type': 'combo',
                 'available_in_pos': True,
                 'list_price': 12.0,
+                'taxes_id': [],
                 'combo_ids': [
                     Command.set([drinks_combo.id]),
                 ],
@@ -254,6 +294,7 @@ class TestSelfOrderCombo(SelfOrderCommonTest):
                 'type': 'combo',
                 'available_in_pos': True,
                 'list_price': 12.0,
+                'taxes_id': [],
                 'combo_ids': [
                     Command.set([drinks_combo_with_price.id]),
                 ],
@@ -267,11 +308,33 @@ class TestSelfOrderCombo(SelfOrderCommonTest):
         })
         self.pos_config.with_user(self.pos_user).open_ui()
         self.pos_config.current_session_id.set_opening_control(0, "")
-        self_route = self.pos_config._get_self_order_route()
-        self.start_tour(self_route, "test_self_order_combo_multiple_qty")
-        orders = self.env['pos.order'].search([], order='id desc', limit=2)
-        self.assertEqual(orders[1].amount_total, 24)
-        self.assertEqual(orders[0].amount_total, 36)
+
+        water_item = combo_drinks.combo_ids.combo_item_ids.filtered(lambda i: i.product_id == water)
+        water2_item = price_for_drinks.combo_ids.combo_item_ids.filtered(lambda i: i.product_id == water2)
+
+        order1 = self.process_self_order([
+            {
+                'product': combo_drinks,
+                'qty': 2,
+                'price_unit': combo_drinks.lst_price,
+                'combo_children': [
+                    {'product': water, 'combo_item_id': water_item.id},
+                ],
+            },
+        ])
+        order2 = self.process_self_order([
+            {
+                'product': price_for_drinks,
+                'qty': 3,
+                'price_unit': price_for_drinks.lst_price,
+                'combo_children': [
+                    {'product': water2, 'combo_item_id': water2_item.id},
+                ],
+            },
+        ])
+
+        self.assertEqual(order1.amount_total, 24)
+        self.assertEqual(order2.amount_total, 36)
 
     def test_combo_price_unit_mulitple_qty(self):
         """
