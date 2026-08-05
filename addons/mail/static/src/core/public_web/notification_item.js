@@ -1,3 +1,4 @@
+import { useAncestors } from "@mail/core/common/ancestors_hook";
 import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
 import { MessageSeenIndicator } from "@mail/discuss/core/common/message_seen_indicator";
 import { isToday } from "@mail/utils/common/dates";
@@ -27,6 +28,7 @@ export class NotificationItem extends Component {
         this.DateTime = DateTime;
         this.ui = useService("ui");
         this.store = useService("mail.store");
+        this.ancestors = useAncestors();
         this.props = useProps({
             className: t.string().optional(""),
             counter: t.number().optional(0),
