@@ -15,7 +15,7 @@ patch(components.ChartJsComponent.prototype, {
         super.updateChartJs(chartData);
     },
     addOdooDataSourcePluginToChartData(chartData) {
-        chartData.chartJsConfig.options.plugins.chartOdooLinkPlugin = {
+        chartData.chartJsConfig.options.plugins.chartJsOdooLinkPlugin = {
             env: this.env,
             chartId: this.props.chartId,
         };
