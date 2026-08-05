@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import base64
 from io import BytesIO
 from lxml import etree
 from zipfile import ZipFile
@@ -178,6 +179,86 @@ class TestAccountEdiUblCii(TestUblCiiCommon, HttpCase):
         attachment.raw = etree.tostring(xml_tree)
         new_invoice = invoice.journal_id._create_document_from_attachment(attachment.ids)
         self.assertRecordValues(new_invoice.invoice_line_ids, line_vals)
+
+    def _configure_seller_for_cii_export(self):
+        """ Factur-X/ZUGFeRD/CII exports require a fully configured seller (VAT, phone, email,
+        bank account with a sanitized account number) or the export raises validation errors. """
+        company = self.env.company
+        company.write({
+            'vat': 'FR23334175221',
+            'phone': '+33499999999',
+            'email': 'company@test.example',
+        })
+        company.partner_id.bank_ids = [Command.create({
+            'account_number': '999999',
+            'partner_id': company.partner_id.id,
+            'allow_out_payment': True,
+        })]
+        return company
+
+    def test_facturx_zugferd_no_duplicate_xml_attachment(self):
+        """ Factur-X/ZUGFeRD embed the XML inside the PDF (hybrid invoice). The XML must not
+        also be attached as a separate file, or some recipient systems detect two invoices. """
+        company = self._configure_seller_for_cii_export()
+        for edi_format in ('facturx', 'zugferd'):
+            with self.subTest(edi_format=edi_format):
+                self.partner_be.invoice_edi_format = edi_format
+                invoice = self._create_invoice_one_line(
+                    partner_id=self.partner_be,
+                    price_unit=100.0,
+                    tax_ids=self.company_data['default_tax_sale'],
+                    partner_bank_id=company.partner_id.bank_ids[:1].id,
+                    post=True,
+                )
+
+                wizard = self._create_account_move_send_wizard_single(invoice, sending_methods=['manual'])
+                self.assertEqual(wizard.invoice_edi_format, edi_format)
+                wizard.action_send_and_print()
+
+                # the XML was generated and embedded in the PDF...
+                self.assertTrue(invoice.ubl_cii_xml_id)
+                # ...but must not be listed as an extra attachment (it would duplicate the email attachment)
+                extra_attachments = self.env['account.move.send']._get_invoice_extra_attachments(invoice)
+                self.assertEqual(extra_attachments, invoice.invoice_pdf_report_id)
+                self.assertNotIn(invoice.ubl_cii_xml_id, extra_attachments)
+
+    def test_ubl_bis3_keeps_xml_attachment(self):
+        """ Unlike Factur-X/ZUGFeRD, Peppol UBL formats don't embed an identical XML in the PDF,
+        so the standalone XML attachment must still be sent alongside the PDF. """
+        company = self._configure_seller_for_cii_export()
+        self.partner_be.invoice_edi_format = 'ubl_bis3'
+        invoice = self._create_invoice_one_line(
+            partner_id=self.partner_be,
+            price_unit=100.0,
+            name='test line',
+            tax_ids=self.company_data['default_tax_sale'],
+            partner_bank_id=company.partner_id.bank_ids[:1].id,
+            post=True,
+        )
+
+        wizard = self._create_account_move_send_wizard_single(invoice, sending_methods=['manual'])
+        wizard.action_send_and_print()
+
+        extra_attachments = self.env['account.move.send']._get_invoice_extra_attachments(invoice)
+        self.assertIn(invoice.ubl_cii_xml_id, extra_attachments)
+        self.assertIn(invoice.invoice_pdf_report_id, extra_attachments)
+
+    def test_get_invoice_extra_attachments_no_partner(self):
+        """ `_get_invoice_extra_attachments` is called for any account.move opened in the chatter
+        (see `_get_mail_thread_data_attachments`), not just from the Send & Print wizard, so it
+        must not crash on a move without a `partner_id` (lik a plain journal entry). """
+        move = self.env['account.move'].create({
+            'move_type': 'entry',
+            'journal_id': self.company_data['default_journal_misc'].id,
+        })
+        self.assertFalse(move.partner_id)
+        extra_attachments = self.env['account.move.send']._get_invoice_extra_attachments(move)
+        self.assertFalse(extra_attachments)
+
+        # even if a ubl_cii_xml_file ends up set on a partner-less move, it must not crash either
+        move.ubl_cii_xml_file = base64.b64encode(b"<test/>")
+        extra_attachments = self.env['account.move.send']._get_invoice_extra_attachments(move)
+        self.assertIn(move.ubl_cii_xml_id, extra_attachments)
 
     def test_peppol_eas_endpoint_compute(self):
         partner = self.partner_a
