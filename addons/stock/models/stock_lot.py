@@ -407,21 +407,24 @@ class StockLot(models.Model):
 
     def action_scrap(self):
         self.ensure_one()
+        context = {
+            'default_is_scrap': True,
+            'default_product_id': self.product_id.id,
+            'default_quantity': self.product_qty,
+            'default_lot_ids': self.ids,
+            'default_location_dest_id': self.env.company.scrap_location_id.id,
+            'default_state': 'draft',
+            'default_company_id': self.company_id.id or self.env.company.id,
+            'product_ids': self.product_id.ids,
+            'lot_ids': self.ids,
+        }
+        if self.location_id:
+            # an empty default would shadow the scrap fallback of the move's source location
+            context['default_location_id'] = self.location_id.id
         return {
             'type': 'ir.actions.act_window',
             'name': _('Scrap %(lot_name)s', lot_name=self.name),
             'res_model': 'stock.move',
             'views': [(self.env.ref('stock.view_scrap_move_form').id, 'form')],
-            'context': {
-                'default_is_scrap': True,
-                'default_product_id': self.product_id.id,
-                'default_quantity': self.product_qty,
-                'default_lot_ids': self.ids,
-                'default_location_id': self.location_id.id,
-                'default_location_dest_id': self.env.company.scrap_location_id.id,
-                'default_state': 'draft',
-                'default_company_id': self.company_id.id or self.env.company.id,
-                'product_ids': self.product_id.ids,
-                'lot_ids': self.ids,
-            }
+            'context': context,
         }
