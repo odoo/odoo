@@ -51,7 +51,7 @@ class PurchaseReport(models.Model):
     qty_to_be_billed = fields.Float('Qty to be Billed', readonly=True)
 
     @property
-    def _table_query(self) -> SQL:
+    def _table_sql(self) -> SQL:
         today = fields.Date.today()
         query = self.env['purchase.order.line'].sudo().with_context(date_to=today)._search([('display_type', '=', False)])
         query.groupby = SQL(", ").join(self._groupby_list(query.table))

@@ -1825,7 +1825,7 @@ class ResUsersApikeysShow(models.Model):
     _name = 'res.users.apikeys.show'
     _description = 'Show API Key'
     _auto = False  # no table
-    _table_query = '0'
+    _table_sql = SQL('(0)')
 
     # the field 'id' is necessary for the onchange that returns the value of 'key'
     id = fields.Id()

@@ -154,8 +154,8 @@ class PurchaseBillLineMatch(models.Model):
         """)
 
     @property
-    def _table_query(self):
-        return SQL("%s UNION ALL %s", self._select_po_line(), self._select_am_line())
+    def _table_sql(self):
+        return SQL("(%s UNION ALL %s)", self._select_po_line(), self._select_am_line())
 
     def action_open_line(self):
         self.ensure_one()

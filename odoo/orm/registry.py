@@ -1030,11 +1030,12 @@ class Registry(Mapping[str, type["BaseModel"]]):
         Verify that all tables are present and try to initialize those that are missing.
         """
         from .environments import Environment  # noqa: PLC0415
+        from .models import BaseModel  # noqa: PLC0415
         env = Environment(cr, SUPERUSER_ID, {})
         table2model = {
             model._table: name
             for name, model in env.registry.items()
-            if not model._abstract and not model._table_query
+            if not model._abstract and model._table_sql is BaseModel._table_sql
         }
         missing_tables = set(table2model).difference(sql.existing_tables(cr, table2model))
 

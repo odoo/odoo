@@ -78,7 +78,7 @@ class AccountInvoiceReport(models.Model):
     currency_id = fields.Many2one('res.currency', string='Currency', readonly=True)
 
     @property
-    def _table_query(self) -> SQL:
+    def _table_sql(self) -> SQL:
         today = fields.Date.context_today(self)
         self.env['account.move.line'].check_access('read')
         query = self.env['account.move.line'].sudo().with_context(date_to=today)._search([

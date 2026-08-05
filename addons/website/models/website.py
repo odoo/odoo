@@ -2007,7 +2007,7 @@ class Website(models.CachedModel):
             try:
                 model = self.env[model_name]
                 field = model._fields[field_name]
-                if model._abstract or model._table_query or not field.store:
+                if model._abstract or not field.store or self.env.registry[model_name]._table_sql is not models.BaseModel._table_sql:
                     continue
             except KeyError:
                 continue

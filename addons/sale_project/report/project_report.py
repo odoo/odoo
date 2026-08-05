@@ -1,7 +1,7 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
+from odoo.tools import SQL
 
 
 class ReportProjectTaskUser(models.Model):
@@ -11,7 +11,7 @@ class ReportProjectTaskUser(models.Model):
     sale_order_id = fields.Many2one('sale.order', string='Sales Order', readonly=True)
 
     def _select(self):
-        return super()._select() + ", t.sale_line_id as sale_line_id, t.sale_order_id"
+        return SQL("%s, t.sale_line_id as sale_line_id, t.sale_order_id", super()._select())
 
     def _group_by(self):
-        return super()._group_by() + ", t.sale_line_id, t.sale_order_id"
+        return SQL("%s, t.sale_line_id, t.sale_order_id", super()._group_by())
