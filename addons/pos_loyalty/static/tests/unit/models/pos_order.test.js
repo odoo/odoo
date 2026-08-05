@@ -167,11 +167,17 @@ describe("pos.order - loyalty", () => {
         const order = store.addNewOrder();
 
         await addProductLineToOrder(store, order, {
+            templateId: 5,
+            productId: 5,
             qty: 2,
+            tax_ids: [],
         });
 
         await addProductLineToOrder(store, order, {
+            templateId: 5,
+            productId: 5,
             price_unit: 5,
+            tax_ids: [],
         });
 
         // Get loyalty reward #1 - type = "discount"
@@ -181,6 +187,7 @@ describe("pos.order - loyalty", () => {
         expect(result.discountable).toBe(25);
     });
 
+<<<<<<< 157874aad3aebef5bc9268de6e17530641107e31
     test("_getDiscountableOnCheapest excludes fixed tax for non-ewallet program", async () => {
         const store = await setupPosEnv();
         const models = store.models;
@@ -240,6 +247,35 @@ describe("pos.order - loyalty", () => {
         expect(taxIds).not.toInclude(fixedTax.id);
     });
 
+||||||| 14709d6b8b5a21b9bb75732ab9e12b6c8d32e08b
+=======
+    test("discount does not apply on tips", async () => {
+        const store = await setupPosEnv();
+        const models = store.models;
+        const order = store.addNewOrder();
+
+        await addProductLineToOrder(store, order, {
+            templateId: 5,
+            productId: 5,
+            price_unit: 100,
+        });
+
+        await addProductLineToOrder(store, order, {
+            templateId: 1,
+            productId: 1,
+            price_unit: 10,
+        });
+
+        // Tip not discountable
+        const discountReward = models["loyalty.reward"].get(1);
+        expect(order._getDiscountableOnOrder(discountReward).discountable).toBe(115);
+
+        // Tip payable with ewallet/giftcards
+        const paymentReward = models["loyalty.reward"].get(2);
+        expect(order._getDiscountableOnOrder(paymentReward).discountable).toBe(125);
+    });
+
+>>>>>>> 4f541fb02f6cd92ae31df241728e3adcc79145b0
     test("_computeNItems", async () => {
         const store = await setupPosEnv();
         const models = store.models;
