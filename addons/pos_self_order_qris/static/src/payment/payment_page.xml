@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="pos_self_order_qris.PaymentPage" t-inherit="pos_self_order.PaymentPage" t-inherit-mode="extension">
+        <xpath expr="//t[@name='external_qr']/div[hasclass('qr-code')]" position="after">
+            <p t-if="this.state.qrCountdown !== null and !this.selfOrder.paymentError"
+               class="o_qris_countdown text-center fs-4 fw-bold mt-3">
+                <t t-if="this.state.qrCountdown > 0">
+                    Time remaining: <t t-out="this.formattedQrCountdown"/>
+                </t>
+                <t t-else="">
+                    Payment expired
+                </t>
+            </p>
+        </xpath>
+    </t>
+
+</templates>

@@ -6,6 +6,7 @@ class PosPaymentMethod(models.Model):
 
     # can be overridden for other payment methods
     def _payment_request_from_kiosk(self, order):
+        self.ensure_one()
         if order.payment_ids and self.payment_provider and any(payment.payment_method_id == self for payment in order.payment_ids):
             order.action_pos_order_paid()
             order._send_payment_result("Success")

@@ -232,7 +232,7 @@ class PosSelfOrderController(http.Controller):
         if args and isinstance(args[0], list):
             if len(args[0]) != 1:
                 raise BadRequest("Only one payment method ID should be provided")
-            if not payment_method_env.search_count([("id", "=", args[0]), ("config_ids", "in", pos_config.id)]):
+            if not payment_method_env.search_count([("id", "in", args[0]), ("config_ids", "in", pos_config.id)]):
                 raise NotFound("Payment method not found in config")
         if action not in payment_method_env._allowed_actions_in_self_order():
             raise Forbidden(f"Method '{action}' is forbidden in the self order kiosk")
