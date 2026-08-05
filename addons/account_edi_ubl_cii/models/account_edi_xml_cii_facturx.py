@@ -405,9 +405,9 @@ class AccountEdiXmlCii(models.AbstractModel):
         move_type_code = tree.find('.//{*}ExchangedDocument/{*}TypeCode')
         if move_type_code is None:
             return None, None
-        if move_type_code.text == '381':
+        if move_type_code.text in ['381', '261']:
             return 'refund', 1
-        if move_type_code.text == '380':
+        if move_type_code.text in ['380', '389', '527']:
             amount_node = tree.find('.//{*}SpecifiedTradeSettlementHeaderMonetarySummation/{*}GrandTotalAmount')
             if amount_node is not None and float(amount_node.text) < 0:
                 return 'refund', -1
