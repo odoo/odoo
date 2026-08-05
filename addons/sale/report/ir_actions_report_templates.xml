@@ -95,14 +95,27 @@
             <table class="o_has_total_table table o_main_table table-borderless">
                 <!-- In case we want to repeat the header, remove "display: table-row-group" -->
                 <thead style="display: table-row-group">
+                    <!-- Initialize the dynamic column counter -->
+                    <t t-set="colspan_count" t-value="0"/>
                     <tr>
-                        <th name="th_description" class="text-start">Description</th>
-                        <th name="th_quantity" class="text-end text-nowrap">Quantity</th>
-                        <th name="th_priceunit" class="text-end text-nowrap">Unit Price</th>
+                        <th name="th_description" class="text-start">
+                            <t t-set="colspan_count" t-value="colspan_count + 1"/>
+                            Description
+                        </th>
+                        <th name="th_quantity" class="text-end text-nowrap">
+                            <t t-set="colspan_count" t-value="colspan_count + 1"/>
+                            Quantity
+                        </th>
+                        <th name="th_priceunit" class="text-end text-nowrap">
+                            <t t-set="colspan_count" t-value="colspan_count + 1"/>
+                            Unit Price
+                        </th>
                         <th name="th_discount" t-if="display_discount" class="text-end">
+                            <t t-set="colspan_count" t-value="colspan_count + 1"/>
                             <span>Disc.%</span>
                         </th>
                         <th name="th_taxes" t-if="display_taxes" class="text-end">
+                            <t t-set="colspan_count" t-value="colspan_count + 1"/>
                             <span>Taxes</span>
                         </th>
                         <th name="th_subtotal" class="text-end">
@@ -167,7 +180,7 @@
                                 />
                                 <t
                                     t-set="section_name_colspan"
-                                    t-value="3 + (1 if display_discount else 0) + (1 if display_taxes else 0)"
+                                    t-value="colspan_count"
                                 />
                                 <t t-if="not show_section_total">
                                     <t t-set="section_name_colspan" t-value="99"/>
@@ -202,7 +215,7 @@
                             <tr t-elif="is_combo" name="tr_combo" class="fw-bold o_line_subsection">
                                 <td
                                     name="td_combo_name"
-                                    t-att-colspan="3 + (1 if display_discount else 0) + (1 if display_taxes else 0)"
+                                    t-att-colspan="colspan_count"
                                     t-att-class="padding_class"
                                 >
                                     <span t-field="line.name">Combo Product</span>
