@@ -1204,6 +1204,191 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
             "Portal user should not see the timesheet of another SO line (line 2)."
         )
 
+    def _create_timesheet(self, so_line, timesheet_date, unit_amount):
+        return self.env['account.analytic.line'].create({
+            'name': 'timesheet %s' % timesheet_date,
+            'date': timesheet_date,
+            'unit_amount': unit_amount,
+            'project_id': so_line.task_id.project_id.id,
+            'task_id': so_line.task_id.id,
+            'employee_id': self.employee_user.id,
+        })
+
+    def _get_valid_invoiced_lines(self, move):
+        return move.invoice_line_ids.filtered(lambda line: line.display_type == 'product')
+
+    def _post_credit_note(self, invoice, quantities, invoice_date):
+        wizard = self.env['account.move.reversal'].with_context(
+            active_model='account.move', active_ids=invoice.ids,
+        ).create({'reason': 'partial refund', 'journal_id': invoice.journal_id.id})
+        credit_note = self.env['account.move'].browse(wizard.refund_moves()['res_id'])
+        for move_line in self._get_valid_invoiced_lines(credit_note):
+            for so_line, quantity in quantities.items():
+                if so_line in move_line.sale_line_ids:
+                    move_line.quantity = quantity
+        credit_note.invoice_date = invoice_date
+        credit_note.action_post()
+        return credit_note
+
+    def _create_invoice_timesheet_over_period(self, sale_order, start=False, end=False):
+        wizard = self.env['sale.advance.payment.inv'].with_context(
+            active_model='sale.order', active_ids=sale_order.ids, active_id=sale_order.id,
+        ).create({
+            'advance_payment_method': 'delivered',
+            'date_start_invoice_timesheet': start,
+            'date_end_invoice_timesheet': end,
+        })
+        return wizard._create_invoices(sale_order)
+
+    def _create_order_with_timesheet_lines(self, count=1):
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.product_delivery_timesheet2.id,
+                    'product_uom_qty': 1.0,
+                }) for _ in range(count)
+            ],
+        })
+        sale_order.action_confirm()
+        return sale_order
+
+    def test_period_invoice_does_not_rebill_refunded_invoice_hours(self):
+        """A period covering already invoiced hours bills only the remainder.
+
+        Posting a partial credit note releases every timesheet the reversed
+        invoice had linked, so all of them look "not yet invoiced" again. A
+        window covering them must still bill only qty_delivered - qty_invoiced.
+        """
+        sale_order = self._create_order_with_timesheet_lines()
+        so_line = sale_order.order_line
+        self._create_timesheet(so_line, '2026-06-15', 4.5)
+        self._create_timesheet(so_line, '2026-07-23', 3.5)
+
+        invoice = sale_order._create_invoices()
+        invoice.invoice_date = '2026-08-04'
+        invoice.action_post()
+        self.assertEqual(so_line.qty_invoiced, 8.0)
+
+        self._post_credit_note(invoice, {so_line: 3.5}, '2026-08-04')
+        self.assertEqual(so_line.qty_invoiced, 4.5)
+
+        self._create_timesheet(so_line, '2026-07-31', 1.0)
+        self.assertEqual(so_line.qty_delivered, 9.0)
+
+        move = self._create_invoice_timesheet_over_period(sale_order, '2026-06-01', '2026-07-31')
+
+        self.assertEqual(move.move_type, 'out_invoice')
+        self.assertEqual(self._get_valid_invoiced_lines(move).quantity, 4.5,
+                         "the hours of the reversed invoice must not be billed twice")
+
+    def test_period_invoice_after_refund_ignores_the_invoice_date(self):
+        """Only the timesheet dates delimit a period, not the invoice's own date.
+
+        With 4.5h of June already billed and 3.5h logged on 23/07, invoicing
+        01-30/07 bills 3.5h whether the reversed invoice is dated inside or
+        outside that window.
+        """
+        for invoice_date in ('2026-08-04', '2026-07-20'):
+            sale_order = self._create_order_with_timesheet_lines()
+            so_line = sale_order.order_line
+            self._create_timesheet(so_line, '2026-06-15', 4.5)
+            self._create_timesheet(so_line, '2026-07-23', 3.5)
+
+            invoice = sale_order._create_invoices()
+            invoice.invoice_date = invoice_date
+            invoice.action_post()
+            self._post_credit_note(invoice, {so_line: 3.5}, '2026-08-04')
+            self._create_timesheet(so_line, '2026-07-31', 1.0)
+
+            move = self._create_invoice_timesheet_over_period(sale_order, '2026-07-01', '2026-07-30')
+
+            self.assertEqual(move.move_type, 'out_invoice',
+                             "invoice dated %s produced a credit note" % invoice_date)
+            self.assertEqual(self._get_valid_invoiced_lines(move).quantity, 3.5,
+                             "invoice dated %s billed the wrong quantity" % invoice_date)
+
+    def test_period_invoice_after_refund_is_computed_per_line(self):
+        """One credit note must not disturb the other lines of the order.
+
+        A: 4h billed, 1.5h credited -> 1.5h left to bill
+        B: 5h billed, credited for 0h -> nothing left to bill
+        C: 5h delivered, never billed -> 5h to bill
+        """
+        sale_order = self._create_order_with_timesheet_lines(count=3)
+        line_a, line_b, line_c = sale_order.order_line
+        self._create_timesheet(line_a, '2026-06-05', 4.0)
+        self._create_timesheet(line_b, '2026-06-06', 5.0)
+
+        invoice = sale_order._create_invoices()
+        invoice.invoice_date = '2026-06-30'
+        invoice.action_post()
+
+        self._post_credit_note(invoice, {line_a: 1.5, line_b: 0.0}, '2026-07-01')
+        self.assertEqual((line_a.qty_invoiced, line_b.qty_invoiced), (2.5, 5.0))
+
+        self._create_timesheet(line_c, '2026-07-10', 5.0)
+
+        move = self._create_invoice_timesheet_over_period(sale_order, '2026-06-01', '2026-07-31')
+
+        billed = {}
+        for move_line in self._get_valid_invoiced_lines(move):
+            for so_line in move_line.sale_line_ids:
+                billed[so_line] = move_line.quantity
+        self.assertEqual(billed.get(line_a), 1.5)
+        self.assertEqual(billed.get(line_c), 5.0)
+        self.assertNotIn(line_b, billed, "a fully billed line must not be billed again")
+
+    def test_period_invoice_of_an_over_invoiced_line(self):
+        """An over-invoiced line is left out instead of being credited.
+
+        8h delivered billed as 10h: invoicing a period must report nothing to
+        invoice rather than emit a credit note for the 2h difference, and must
+        not prevent the other lines of the order from being invoiced.
+        """
+        sale_order = self._create_order_with_timesheet_lines(count=2)
+        line_a, line_b = sale_order.order_line
+        self._create_timesheet(line_a, '2026-06-15', 8.0)
+
+        invoice = sale_order._create_invoices()
+        self._get_valid_invoiced_lines(invoice).write({'quantity': 10.0})
+        invoice.invoice_date = '2026-06-30'
+        invoice.action_post()
+        self.assertEqual(line_a.qty_delivered - line_a.qty_invoiced, -2.0)
+
+        with self.assertRaises(UserError):
+            self._create_invoice_timesheet_over_period(sale_order, '2026-07-01', '2026-07-31')
+
+        self._create_timesheet(line_b, '2026-07-10', 5.0)
+        move = self._create_invoice_timesheet_over_period(sale_order, '2026-06-01', '2026-07-31')
+
+        self.assertEqual(self._get_valid_invoiced_lines(move).sale_line_ids, line_b)
+        self.assertEqual(self._get_valid_invoiced_lines(move).quantity, 5.0)
+
+    def test_period_invoice_after_refund_of_an_over_invoiced_line(self):
+        """Crediting an over-invoiced line reopens only the resulting difference.
+
+        8h delivered billed as 10h, then 3h credited: net invoiced is 7h, so a
+        single hour becomes billable again even though the credit note released
+        all 8h of timesheet links.
+        """
+        sale_order = self._create_order_with_timesheet_lines()
+        so_line = sale_order.order_line
+        self._create_timesheet(so_line, '2026-06-15', 8.0)
+
+        invoice = sale_order._create_invoices()
+        self._get_valid_invoiced_lines(invoice).write({'quantity': 10.0})
+        invoice.invoice_date = '2026-06-30'
+        invoice.action_post()
+
+        self._post_credit_note(invoice, {so_line: 3.0}, '2026-07-01')
+        self.assertEqual(so_line.qty_invoiced, 7.0)
+
+        move = self._create_invoice_timesheet_over_period(sale_order, '2026-06-01', '2026-07-31')
+
+        self.assertEqual(move.move_type, 'out_invoice')
+        self.assertEqual(self._get_valid_invoiced_lines(move).quantity, 1.0)
+
 
 class TestSaleTimesheetView(TestCommonTimesheet):
     def test_get_view_timesheet_encode_uom(self):
