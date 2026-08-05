@@ -24,17 +24,6 @@ function _send_bookmark_update(store, messageIds) {
                     Boolean(m.bookmarked_partner_ids?.includes(this.env.user?.partner_id))
                 )
             );
-            const bus_last_id = BusBus.lastBusNotificationId;
-            cur_store.add_global_values({
-                bookmarkBox: {
-                    counter: MailMessage._filter([
-                        ["bookmarked_partner_ids", "in", [this.env.user.partner_id]],
-                    ]).length,
-                    counter_bus_id: bus_last_id,
-                    id: "bookmark",
-                    model: "mail.box",
-                },
-            });
         }
     }
     const [partner] = ResPartner.read(this.env.user.partner_id);
