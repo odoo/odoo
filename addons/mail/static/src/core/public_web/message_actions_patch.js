@@ -3,7 +3,7 @@ import { _t } from "@web/core/l10n/translation";
 
 registerMessageAction("pin", {
     condition: ({ message, owner, store }) =>
-        !owner.env.inMessagingMenu &&
+        !owner.ancestors?.has("MessagingMenuItem") &&
         !message.pinned_at &&
         store.self_user &&
         message.thread &&
@@ -17,7 +17,7 @@ registerMessageAction("pin", {
 
 registerMessageAction("unpin", {
     condition: ({ message, owner, store }) =>
-        !owner.env.inMessagingMenu &&
+        !owner.ancestors?.has("MessagingMenuItem") &&
         message.pinned_at &&
         store.self_user &&
         message.thread &&

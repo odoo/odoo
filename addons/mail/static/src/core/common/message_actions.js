@@ -65,7 +65,7 @@ registerMessageAction("reaction", {
 });
 registerMessageAction("reply-to", {
     condition: ({ channel, message, owner }) => {
-        if (owner.env.inMessagingMenu) {
+        if (owner.ancestors?.has("MessagingMenuItem")) {
             return false;
         }
         if (message.canReplyTo) {
@@ -108,7 +108,7 @@ registerMessageAction("remove-bookmark", {
     condition: ({ message }) => message.canToggleBookmark && message.is_bookmarked,
     icon: "bookmark",
     name: _t("Remove from Bookmarks"),
-    onSelected: ({ message, owner }) => message.removeBookmark(owner.env),
+    onSelected: ({ message, owner }) => message.removeBookmark(owner.ancestors),
     sequence: 80,
 });
 registerMessageAction("mark-as-read", {
@@ -135,14 +135,16 @@ registerMessageAction("reactions", {
     sequence: 60,
 });
 registerMessageAction("unfollow", {
-    condition: ({ message, owner }) => owner.env.inMessagingMenu && message.thread?.selfFollower,
+    condition: ({ message, owner }) =>
+        owner.ancestors?.has("MessagingMenuItem") && message.thread?.selfFollower,
     icon: "person_remove",
     name: _t("Unfollow"),
     onSelected: ({ message }) => message.unfollow(),
     sequence: 110,
 });
 registerMessageAction("edit", {
-    condition: ({ owner, message }) => !owner.env.inMessagingMenu && message.editable,
+    condition: ({ owner, message }) =>
+        !owner.ancestors?.has("MessagingMenuItem") && message.editable,
     icon: "edit",
     name: _t("Edit"),
     onSelected: ({ message, owner }) => {
