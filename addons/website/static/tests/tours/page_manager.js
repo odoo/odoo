@@ -254,6 +254,10 @@ registry.category("web_tour.tours").add("website_page_manager", {
             trigger: `.o_list_renderer ${homePage} td.o_list_record_selector input[type="checkbox"]`,
             run: "check",
         },
+        {
+            content: "Make sure the record has been selected",
+            trigger: `.o_list_renderer ${homePage} td.o_list_record_selector input[type="checkbox"]:checked`,
+        },
         ...deleteSelectedPage,
         {
             content: "Check that the page has been removed",
