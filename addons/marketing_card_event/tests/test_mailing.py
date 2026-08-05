@@ -42,14 +42,12 @@ class TestMarketingCardEventMailing(MarketingCardCommon):
         )
         mailing_form.mailing_domain = [('event_id', 'in', [self.ziggurat_event.id]), ('create_date', '>', '2020-01-01')]
 
-        # FIXME? ideally picking a different campaign on the same model should not reset the domain, just update it
-        # compute dependencies and the lack of knowledge of previous values make this impossible "cleanly" currently
         mailing_form.card_campaign_id = self.moon_campaign
         self.assertEqual(
             mailing_form.mailing_domain,
-            repr(['&', ('event_id', 'in', [self.moon_event.id]), ('state', 'not in', ['cancel', 'draft'])]),
-            'The event should correspond to the picked campaign.\n'
-            'Domain will be reset to model default due to framework limitations.'
+            repr(['&', ('event_id', 'in', [self.ziggurat_event.id]), ('state', 'not in', ['cancel', 'draft'])]),
+            'The event should be the one the cards are sent from, not the one of the campaign preview record.\n'
+            'Only the event is kept, the rest of the domain is reset to the model default.'
         )
 
     @users('marketing_card_user')
@@ -73,3 +71,15 @@ class TestMarketingCardEventMailing(MarketingCardCommon):
         image_element = body_arch.xpath("//img[@alt='Card Preview']")
         self.assertEqual(len(image_element), 1)
         self.assertEqual(image_element[0].attrib['src'], f'/web/image/card.campaign/{self.campaign.id}/image_preview')
+
+    @users('marketing_card_user')
+    def test_sharing_campaign_updates_domain(self):
+        """Ensure the domain matches the event of the campaign preview record when sharing from the campaign."""
+        form_ctx = self.moon_campaign.action_share()['context']
+        mailing_form = Form(self.env['mailing.mailing'].with_context(form_ctx), 'marketing_card_event.mailing_mailing_view_form_event_send_card')
+
+        self.assertEqual(
+            mailing_form.mailing_domain,
+            repr(['&', ('event_id', '=', self.moon_event.id), ('state', 'not in', ['cancel', 'draft'])]),
+            'The preview record event should be used as no event was given.',
+        )
