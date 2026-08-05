@@ -145,7 +145,7 @@ class MassSMSCase(SMSCase, MockLinkTracker):
             )
             self.assertTrue(
                 len(trace) == 1,
-                'SMS: found %s notification for number %s (res_id: %s) (status: %s) (1 expected)\n--MOCKED DATA\n%s' % (
+                'SMS: found %s trace for number %s (res_id: %s) (status: %s) (1 expected)\n--MOCKED DATA\n%s' % (
                     len(trace), number, record.id,
                     status, debug_info
                 )
@@ -236,6 +236,19 @@ class MassSMSCase(SMSCase, MockLinkTracker):
         self.assertTrue(bool(sms_sms))
         with self.with_user(self.user_admin.login):
             return self.gateway_sms_sms_click(sms_sms)
+
+    def gateway_sms_click_simple(self, mailing, records):
+        """ Click SMS through quick method call, to use when mock is not available """
+        traces = self.env['mailing.trace']
+        for record in records:
+            trace = mailing.mailing_trace_ids.filtered(
+                lambda t: t.model == record._name and t.res_id == record.id
+            )
+            self.assertTrue(trace)
+            trace.set_clicked()
+            traces += trace
+        self.assertEqual(len(traces), len(records))
+        return traces
 
     def gateway_sms_sent_click(self, sms_sent):
         return self._gateway_sms_click(sms_sent['body'])
