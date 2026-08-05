@@ -4,6 +4,31 @@
     min-width: 0;
 
     .o_calendar_renderer .o_calendar_widget {
+        .fc-daygrid-day {
+            position: relative;
+
+            &:hover .o_expected_hours_hover {
+                display: flex;
+            }
+        }
+
+        .o_expected_hours_hover {
+            display: none;
+            position: absolute;
+            top: 25%;
+            bottom: 25%;
+            left: 10%;
+            right: 10%;
+            background-color: #61d36e;
+            color: #000000;
+            font-size: 1.6rem;
+            font-weight: 500;
+            align-items: center;
+            justify-content: center;
+            z-index: 5;
+            pointer-events: none;
+        }
+
         .hr_mandatory_day {
             .fc-daygrid-day-number {
                 font-weight: 600;
