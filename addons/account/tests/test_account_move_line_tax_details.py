@@ -646,6 +646,134 @@ class TestAccountTaxDetailsReport(AccountTestInvoicingCommon):
         tax_details = self._get_tax_details()
         self.assertFalse(tax_details)
 
+    def test_affect_base_amount_with_different_affected_taxes(self):
+        ecotax, vat_17, vat_8 = self.env['account.tax'].create([
+            {
+                'name': 'Ecotax',
+                'amount': 2,
+                'amount_type': 'percent',
+                'type_tax_use': 'sale',
+                'include_base_amount': True,
+                'sequence': 0,
+            },
+            {
+                'name': 'VAT 17',
+                'amount': 17,
+                'amount_type': 'percent',
+                'type_tax_use': 'sale',
+                'sequence': 1,
+            },
+            {
+                'name': 'VAT 8',
+                'amount': 8,
+                'amount_type': 'percent',
+                'type_tax_use': 'sale',
+                'sequence': 1,
+            },
+        ])
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2021-08-01',
+            'invoice_line_ids': [
+                Command.create({
+                    'name': f'ecotax + {vat.name}',
+                    'account_id': self.company_data['default_account_revenue'].id,
+                    'price_unit': 1000.0,
+                    'tax_ids': (ecotax + vat).ids,
+                })
+                for vat in (vat_17, vat_8)
+            ],
+        })
+
+        base_lines, tax_lines = self._dispatch_move_lines(invoice)
+        ecotax_17_line = tax_lines.filtered(lambda line: line.tax_line_id == ecotax and line.tax_ids == vat_17)
+        ecotax_8_line = tax_lines.filtered(lambda line: line.tax_line_id == ecotax and line.tax_ids == vat_8)
+        vat_17_line = tax_lines.filtered(lambda line: line.tax_line_id == vat_17)
+        vat_8_line = tax_lines.filtered(lambda line: line.tax_line_id == vat_8)
+
+        tax_details = self._get_tax_details()
+        expected_values = [
+            (base_lines[0], ecotax_17_line, -1000.0, -20.0),
+            (base_lines[0], vat_17_line, -1000.0, -170.0),
+            (base_lines[1], ecotax_8_line, -1000.0, -20.0),
+            (base_lines[1], vat_8_line, -1000.0, -80.0),
+            (ecotax_17_line, vat_17_line, -20.0, -3.4),
+            (ecotax_8_line, vat_8_line, -20.0, -1.6),
+        ]
+        self.assertTaxDetailsValues(tax_details, [{
+            'base_line_id': base_line.id,
+            'tax_line_id': tax_line.id,
+            'base_amount': base_amount,
+            'tax_amount': tax_amount,
+        } for base_line, tax_line, base_amount, tax_amount in expected_values])
+        self.assertTotalAmounts(invoice, tax_details)
+
+    def test_affect_base_amount_inside_group_tax(self):
+        ecotax = self.env['account.tax'].create({
+            'name': 'Ecotax',
+            'amount': 2,
+            'amount_type': 'percent',
+            'type_tax_use': 'none',
+            'include_base_amount': True,
+            'sequence': 0,
+        })
+        vat_17 = self.env['account.tax'].create({
+            'name': 'VAT 17',
+            'amount': 17,
+            'amount_type': 'percent',
+            'type_tax_use': 'none',
+            'sequence': 1,
+        })
+        tax_group = self.env['account.tax'].create({
+            'name': 'Ecotax + VAT 17',
+            'amount_type': 'group',
+            'type_tax_use': 'sale',
+            'children_tax_ids': [Command.set((ecotax + vat_17).ids)],
+        })
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2021-08-01',
+            'invoice_line_ids': [
+                Command.create({
+                    'name': 'ecotax + vat 17',
+                    'account_id': self.company_data['default_account_revenue'].id,
+                    'price_unit': 1000.0,
+                    'tax_ids': tax_group.ids,
+                }),
+            ],
+        })
+
+        base_lines, tax_lines = self._dispatch_move_lines(invoice)
+        ecotax_line = tax_lines.filtered(lambda line: line.tax_line_id == ecotax)
+        vat_17_line = tax_lines.filtered(lambda line: line.tax_line_id == vat_17)
+
+        tax_details = self._get_tax_details()
+        self.assertTaxDetailsValues(tax_details, [
+            {
+                'base_line_id': base_lines.id,
+                'tax_line_id': ecotax_line.id,
+                'base_amount': -1000.0,
+                'tax_amount': -20.0,
+            },
+            {
+                'base_line_id': base_lines.id,
+                'tax_line_id': vat_17_line.id,
+                'base_amount': -1000.0,
+                'tax_amount': -170.0,
+            },
+            {
+                'base_line_id': ecotax_line.id,
+                'tax_line_id': vat_17_line.id,
+                'base_amount': -20.0,
+                'tax_amount': -3.4,
+            },
+        ])
+        self.assertTotalAmounts(invoice, tax_details)
+
     def test_round_globally_rounding(self):
         self.env.company.tax_calculation_rounding_method = 'round_globally'
 

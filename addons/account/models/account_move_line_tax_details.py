@@ -16,7 +16,18 @@ class AccountMoveLine(models.Model):
                 WHERE %(search_condition)s
             ),
             base_lines AS (
-                SELECT f.*, rel.account_tax_id AS applied_tax_id
+                SELECT
+                    f.*,
+                    rel.account_tax_id AS applied_tax_id,
+                    ARRAY(
+                        SELECT COALESCE(child_tax.id, tax.id)
+                        FROM account_move_line_account_tax_rel rel2
+                        JOIN account_tax tax ON tax.id = rel2.account_tax_id
+                        LEFT JOIN account_tax_filiation_rel tax_filiation ON tax_filiation.parent_tax = tax.id
+                        LEFT JOIN account_tax child_tax ON child_tax.id = tax_filiation.child_tax
+                        WHERE rel2.account_move_line_id = f.id
+                        ORDER BY tax.sequence, tax.id, child_tax.sequence, child_tax.id
+                    ) AS applied_tax_ids
                 FROM filtered_aml f
                 JOIN account_move_line_account_tax_rel rel ON f.id = rel.account_move_line_id
             ),
@@ -26,7 +37,14 @@ class AccountMoveLine(models.Model):
                     tax_rep.account_id AS rep_account_id,
                     tax_rep.factor_percent,
                     tax_rep.use_in_tax_closing,
-                    COALESCE(f.group_tax_id, f.tax_line_id) AS applied_tax_id
+                    COALESCE(f.group_tax_id, f.tax_line_id) AS applied_tax_id,
+                    ARRAY(
+                        SELECT rel.account_tax_id
+                        FROM account_move_line_account_tax_rel rel
+                        JOIN account_tax tax ON tax.id = rel.account_tax_id
+                        WHERE rel.account_move_line_id = f.id
+                        ORDER BY tax.sequence, tax.id
+                    ) AS applied_tax_ids
                 FROM filtered_aml f
                 JOIN account_tax_repartition_line tax_rep ON tax_rep.id = f.tax_repartition_line_id
             ),
@@ -74,6 +92,11 @@ class AccountMoveLine(models.Model):
                     aml.move_type != 'entry'
                     OR (t.tax_exigibility = 'on_payment' AND t.cash_basis_transition_account_id IS NOT NULL)
                     OR sign(aml.balance) = sign(lt.balance * t.amount * lt.factor_percent)
+                ) AND (
+                    NOT t.include_base_amount
+                    OR aml.applied_tax_ids[
+                        ARRAY_LENGTH(aml.applied_tax_ids, 1) - COALESCE(ARRAY_LENGTH(lt.applied_tax_ids, 1), 0):ARRAY_LENGTH(aml.applied_tax_ids, 1)
+                    ] = ARRAY[lt.tax_line_id] || lt.applied_tax_ids
                 ) AND (
                     (t.analytic IS NOT TRUE AND lt.use_in_tax_closing IS TRUE)
                     OR (aml.analytic_distribution IS NULL AND lt.analytic_distribution IS NULL)
