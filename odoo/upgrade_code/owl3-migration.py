@@ -1272,8 +1272,8 @@ def upgrade_useservice(file_manager, name, log_info, log_error):
                 if not JSTooling.has_active_raw_usage(file.content, pattern):
                     continue
 
-                file.content = JSTooling.replace_usage(file.content, pattern, f'plugin({plugin_class})', match_words=False)
-                file.content = JSTooling.add_import(file.content, 'plugin', '@odoo/owl')
+                file.content = JSTooling.replace_usage(file.content, pattern, f'usePlugin({plugin_class})', match_words=False)
+                file.content = JSTooling.add_import(file.content, 'usePlugin', '@odoo/owl')
                 file.content = JSTooling.add_import(file.content, plugin_class, import_path)
 
             if not JSTooling.has_active_usage(file.content, 'useService'):
