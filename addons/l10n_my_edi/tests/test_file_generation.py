@@ -334,6 +334,12 @@ class L10nMyEDITestFileGeneration(AccountTestInvoicingCommon):
             'cac:PartyIdentification/cbc:ID[@schemeID="BRN"]',
             self.partner_b.commercial_partner_id.l10n_my_identification_number,
         )
+        # The customer is not Malaysian, so the CountrySubentityCode should be fixed as '17'.
+        self._assert_node_values(
+            customer_root,
+            'cac:PostalAddress/cbc:CountrySubentityCode',
+            '17',
+        )
 
     def test_07_bill_imports_form(self):
         """
