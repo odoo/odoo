@@ -13,6 +13,7 @@ from . import test_ir_embedded_actions
 from . import test_ir_filters
 from . import test_ir_http
 from . import test_ir_mail_server
+from . import test_ir_mail_server_aws
 from . import test_ir_mail_server_smtpd
 from . import test_ir_model
 from . import test_ir_module
