@@ -379,9 +379,8 @@ export class TicketScreen extends Component {
             return;
         }
 
-        if (order.fiscal_position_id) {
-            destinationOrder.fiscal_position_id = order.fiscal_position_id;
-        }
+        // A refund is taxed like the order it refunds, even when that order has no fiscal position.
+        destinationOrder.fiscal_position_id = order.fiscal_position_id || false;
         // Set the partner to the destinationOrder.
         this.setPartnerToRefundOrder(partner, destinationOrder);
         destinationOrder.refunded_order_id = order;
