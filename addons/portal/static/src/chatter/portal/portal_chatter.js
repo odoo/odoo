@@ -1,5 +1,4 @@
 import { OverlayPlugin } from "@web/core/overlay/overlay_plugin";
-import { useSubEnv } from "@web/owl2/utils";
 import { PortalChatterPlugin } from "@portal/chatter/portal/portal_chatter_plugin";
 import { Chatter } from "@mail/chatter/web_portal_project/chatter";
 
@@ -25,7 +24,6 @@ export class PortalChatter extends Component {
         providePlugins([PortalChatterPlugin]);
         const portalChatterPlugin = usePlugin(PortalChatterPlugin);
         portalChatterPlugin.displayRating.set(this.props.displayRating);
-        useSubEnv({ inFrontendPortalChatter: true });
         this.overlayService = usePlugin(OverlayPlugin);
         useListener(this.env.bus, "reload_chatter_content", () =>
             this.env.bus.trigger("MAIL:RELOAD-THREAD", {

@@ -1,4 +1,5 @@
 import { useSubEnv } from "@web/owl2/utils";
+import { useAncestors } from "@mail/core/common/ancestors_hook";
 import { Composer } from "@mail/core/common/composer";
 import { Thread } from "@mail/core/common/thread";
 import { propComputed, useMessageScrolling } from "@mail/utils/common/hooks";
@@ -16,6 +17,7 @@ export class Chatter extends Component {
 
     setup() {
         this.store = useService("mail.store");
+        this.ancestors = useAncestors();
         this.composer = propComputed("composer", t.boolean().optional(true));
         this.threadId = propComputed(
             "threadId",

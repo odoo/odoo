@@ -5,7 +5,7 @@ import { patch } from "@web/core/utils/patch";
 
 patch(Composer.prototype, {
     get placeholder() {
-        if (this.env.inFrontendPortalChatter) {
+        if (this.ancestors.has("PortalChatter")) {
             return _t("Write a message…");
         }
         return super.placeholder;

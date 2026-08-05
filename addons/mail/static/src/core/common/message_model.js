@@ -780,10 +780,12 @@ export class Message extends Record {
 
     /**
      * @param {Object} owner
-     * @param {import("@web/env").OdooEnv} owner.env
+     * @param {ReturnType<import("@mail/core/common/ancestors_hook").useAncestors>} owner.ancestors
      */
     onShowDeleteConfirm(owner) {
-        this.remove({ removeFromThread: this.shouldHideFromMessageListOnDelete(owner.env) });
+        this.remove({
+            removeFromThread: this.shouldHideFromMessageListOnDelete(owner.ancestors),
+        });
     }
 
     /**
@@ -894,7 +896,7 @@ export class Message extends Record {
         ]);
     }
 
-    shouldHideFromMessageListOnDelete(env) {
+    shouldHideFromMessageListOnDelete(ancestors) {
         return false;
     }
 

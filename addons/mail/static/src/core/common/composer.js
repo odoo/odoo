@@ -191,7 +191,7 @@ export class Composer extends Component {
             },
         });
         this.suggestion = useSuggestion(
-            this.env,
+            this.ancestors,
             computed(() => this.editor)
         );
         this.markEventHandled = markEventHandled;

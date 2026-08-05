@@ -110,7 +110,7 @@ registerComposerAction("open-full-composer", {
         owner.props.showFullComposer &&
         composer.targetThread &&
         composer.targetThread.model !== "discuss.channel" &&
-        !owner.env.inFrontendPortalChatter,
+        !owner.ancestors?.has("PortalChatter"),
     hasBtnBg: ({ composer, owner }) =>
         (composer.restoredFromFullComposer && !owner.state.isFullComposerOpen) || undefined,
     hotkey: "shift+c",
