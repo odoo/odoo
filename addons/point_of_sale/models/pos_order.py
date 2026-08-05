@@ -100,11 +100,25 @@ class PosOrder(models.Model):
             # when vals change the state to 'paid'
             for field in ['lines', 'payment_ids']:
                 if order.get(field):
+<<<<<<< 9924bb182a072b78eb49b35ee77c7d8abcf2a7c7
                     existing_ids = set(pos_order[field].ids)
                     pos_order.write({field: order[field]})
                     added_ids = set(pos_order[field].ids) - existing_ids
                     if added_ids:
                         _logger.info("Added %s %s to pos.order #%s", field, list(added_ids), pos_order.id)
+||||||| d73e865876c0c1d1124b32e9dea2ef7b73b667dc
+                    existing_record_ids = self.env[pos_order[field]._name].browse([r[1] for r in order[field] if r[1] != 0]).exists().ids
+                    existing_records_vals = [r for r in order[field] if r[0] not in [1, 2, 3, 4] or r[1] in existing_record_ids]
+                    pos_order.write({field: existing_records_vals})
+=======
+                    existing_record_ids = self.env[pos_order[field]._name].browse([r[1] for r in order[field] if r[1] != 0]).exists().ids
+                    existing_records_vals = [r for r in order[field] if r[0] not in [1, 2, 3, 4] or r[1] in existing_record_ids]
+                    existing_ids = set(pos_order[field].ids)
+                    pos_order.write({field: existing_records_vals})
+                    added_ids = set(pos_order[field].ids) - existing_ids
+                    if added_ids:
+                        _logger.info("Added %s %s to pos.order #%s", field, list(added_ids), pos_order.id)
+>>>>>>> fd595928edfde5cca7a77d39d9ecb5b02ef31ee6
                     order[field] = []
 
             del order['uuid']
@@ -1158,6 +1172,9 @@ class PosOrder(models.Model):
     def _get_order_log_representation(order):
         return dict((k, order.get(k)) for k in ("name", "uuid"))
 
+    def _should_log_order_data(self):
+        return self.env['ir.config_parameter'].sudo().get_param('point_of_sale.log_order_data', default='False') == 'True'
+
     @api.model
     def sync_from_ui(self, orders):
         """ Create and update Orders from the frontend PoS application.
@@ -1178,7 +1195,8 @@ class PosOrder(models.Model):
 
         for order in orders:
             order_log_name = self._get_order_log_representation(order)
-            _logger.debug("PoS synchronisation #%d processing order %s order full data: %s", sync_token, order_log_name, pformat(order))
+            if self._should_log_order_data():
+                _logger.info("PoS synchronisation #%d processing order %s order full data:\n%s", sync_token, order_log_name, pformat(order))
 
             refunded_orders = self._get_refunded_orders(order)
             if len(refunded_orders) > 1:
