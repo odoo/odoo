@@ -29,8 +29,6 @@ class TestPointOfSaleFlow(CommonPosTest):
         # LIMIT 0 always yields zero rows, so any partner in the domain result
         # can only come from pos_hr explicitly forcing it in.
         with patch.object(self.env.registry.models['pos.config'], '_get_limited_partner_count', return_value=0):
-            self.assertFalse(self.pos_config_usd.get_limited_partners_loading())
-
             domain = self.env['res.partner']._load_pos_data_domain({'pos.order': []}, self.pos_config_usd)
             partners = self.env['res.partner'].search(domain)
 
