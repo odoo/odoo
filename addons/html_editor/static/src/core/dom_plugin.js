@@ -62,6 +62,14 @@ function getConnectedParents(nodes) {
     return parents;
 }
 
+// These elements should only have inline content (even if they have a `block`
+// display style, for example if they are in a flex)
+// NOTE: h1, h2, ..., p, pre already prevents wrapping their children into block
+const ONLY_ALLOW_INLINE_TAGS = new Set([
+    ...["a", "em", "strong", "small", "s", "cite", "q", "abbr", "data", "time", "code"],
+    ...["samp", "sub", "sup", "i", "b", "u", "mark", "bdi", "span", "label", "button"],
+]);
+
 /**
  * @typedef {Object} DomShared
  * @property { DomPlugin['normalize'] } normalize
@@ -601,6 +609,9 @@ export class DomPlugin extends Plugin {
     }
 
     areInlinesAllowedAtRoot(node) {
+        if (ONLY_ALLOW_INLINE_TAGS.has(node.nodeName.toLowerCase())) {
+            return true;
+        }
         const results = this.getResource("are_inlines_allowed_at_root_predicates")
             .map((p) => p(node))
             .filter((r) => r !== undefined);

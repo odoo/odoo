@@ -112,7 +112,6 @@ export class CaptionPlugin extends Plugin {
             }
         },
         powerbox_blacklist_selectors: CAPTION_SPAN_SELECTOR,
-        are_inlines_allowed_at_root_predicates: (node) => node.matches(CAPTION_SPAN_SELECTOR),
         // Consider a <figure> element as empty if it only contains a
         // <figcaption> element (e.g. when its image has just been
         // removed).
