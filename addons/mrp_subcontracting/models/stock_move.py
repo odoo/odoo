@@ -339,7 +339,7 @@ class StockMove(models.Model):
 
     def _check_access_if_subcontractor(self, vals):
         if self.env.user.has_group('base.group_portal') and not self.env.su:
-            if vals.get('state') == 'done':
+            if vals.get('state') == 'done' or self.env.context.get('default_state') == 'done':
                 raise AccessError(_("Portal users cannot create a stock move with a state 'Done' or change the current state to 'Done'."))
 
     def _is_subcontract_return(self):
