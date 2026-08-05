@@ -848,9 +848,8 @@ registry
                     ProductScreen.clickFastPaymentButton("Bank"),
                     Dialog.discard(),
                     FeedbackScreen.isShown(),
-                    Dialog.confirm(),
-                    FeedbackScreen.clickScreen(),
                     FloorScreen.isShown(),
+                    Dialog.confirm(),
                     FloorScreen.clickTable("2"),
                     ProductScreen.clickDisplayedProduct("Coca-Cola"),
                     {
@@ -871,9 +870,8 @@ registry
                     PaymentScreen.clickPaymentMethod("Bank"),
                     PaymentScreen.clickValidate(),
                     FeedbackScreen.isShown(),
-                    Dialog.confirm(),
-                    FeedbackScreen.clickScreen(),
                     FloorScreen.isShown(),
+                    Dialog.confirm(),
                 ].flat(),
         }
     );
