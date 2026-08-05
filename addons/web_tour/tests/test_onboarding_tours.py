@@ -6,7 +6,10 @@ from odoo.tests import HttpCase, tagged
 @tagged('post_install', '-at_install')
 class TestOnboardingTours(HttpCase):
 
-    tour_names = ['hr_expense_tour', 'event_tour', 'sale_tour', 'purchase_tour', 'mass_mailing_tour']
+    tour_names = ['hr_expense_tour', 'event_tour', 'sale_tour', 'purchase_tour', 'mass_mailing_tour', 'crm_tour', 'discuss_channel_tour', 'point_of_sale_tour', 'project_tour', 'web_studio_new_app_tour']
+    # Studio's own edition UI (component sidebar + view canvas) doesn't adapt
+    # to a narrow viewport, so this tour can't be driven on mobile.
+    desktop_only_tours = {'web_studio_new_app_tour'}
 
     def setUp(self):
         super().setUp()
@@ -31,5 +34,7 @@ class TestOnboardingTours(HttpCase):
         self.browser_size = '375x667'
         self.touch_enabled = True
         for tour in self._get_tours():
+            if tour.name in self.desktop_only_tours:
+                continue
             with self.subTest(tour_name=tour.name):
                 self.start_tour(tour.url or '/odoo', tour.name, login="admin")

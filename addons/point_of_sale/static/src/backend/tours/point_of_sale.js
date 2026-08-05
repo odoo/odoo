@@ -17,7 +17,6 @@ registry.category("web_tour.tours").add("point_of_sale_tour", {
             isActive: ["enterprise"],
             trigger: '.o_app[data-menu-xmlid="point_of_sale.menu_point_root"]',
             content: markup(_t("Ready to launch your <b>point of sale</b>?")),
-            tooltipPosition: "bottom",
             run: "click",
         },
     ],

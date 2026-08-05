@@ -18,6 +18,15 @@ patch(registry.category("web_tour.tours").get("crm_tour"), {
                 run: "click .o_control_panel_main_buttons .o-dropdown",
             },
             {
+                // On mobile, the control panel buttons collapse into a single
+                // action sheet: the "Generate" button is listed there and
+                // needs its own click to reveal the lead mining elements.
+                isActive: ["mobile"],
+                trigger: ".o-dropdown-item:contains('Generate')",
+                content: _t("Click here to generate some leads."),
+                run: "click",
+            },
+            {
                 trigger: '.o_lead_mining_element[data-module-xml-id="base.module_crm_iap_mine"]',
                 content: _t("Click here to generate some leads."),
                 run: "click",

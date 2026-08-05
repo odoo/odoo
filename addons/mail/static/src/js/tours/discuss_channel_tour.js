@@ -10,7 +10,6 @@ registry.category("web_tour.tours").add("discuss_channel_tour", {
             isActive: ["enterprise"],
             trigger: "a[data-menu-xmlid='mail.menu_root_discuss']",
             content: _t("Open Discuss App"),
-            tooltipPosition: "bottom",
             run: "click",
         },
         {
@@ -20,14 +19,12 @@ registry.category("web_tour.tours").add("discuss_channel_tour", {
                     "<p>Channels make it easy to organize information across different topics and groups.</p>"
                 )
             ),
-            tooltipPosition: "bottom",
             run: "click",
         },
         {
             trigger:
                 ".o-mail-Discuss:has(.o-mail-MessagingMenu-tab:has(:text('Channels')).active) .o-mail-NotificationItem:eq(0)",
             content: markup(_t("<p>Click a channel to open the discussion.</p>")),
-            tooltipPosition: "bottom",
             run: "click",
         },
         {
@@ -67,7 +64,6 @@ registry.category("web_tour.tours").add("discuss_channel_tour", {
             content: _t(
                 "Once a message has been bookmarked, you can come back and review it at any time here."
             ),
-            tooltipPosition: "bottom",
             run: "click",
         },
         {
@@ -77,7 +73,6 @@ registry.category("web_tour.tours").add("discuss_channel_tour", {
                     "<p><b>Chat with coworkers</b> in real-time using direct messages.</p><p><i>You might need to invite users from the Settings app first.</i></p>"
                 )
             ),
-            tooltipPosition: "bottom",
             run: "click",
         },
     ],
