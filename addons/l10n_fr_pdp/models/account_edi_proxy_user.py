@@ -847,6 +847,14 @@ class AccountEdiProxyClientUser(models.Model):
             return "pdf", "application/pdf"
         return super()._peppol_get_filetype(content)
 
+    def _get_type_code(self, attachment, content):
+        # Factur-X format embeds the XML in a PDF file.
+        if content['document_type'] == 'Factur-X':
+            embedded_files = attachment._unwrap_edi_attachments()
+            xml_tree = next(filter(lambda file: file['type'] == 'xml', embedded_files))['xml_tree']
+            return xml_tree.findtext('.//{*}ExchangedDocument/{*}TypeCode')
+        return super()._get_type_code(attachment, content)
+
     def _pdp_send_lifecycles(self, batch_size=None):
         job_count = batch_size or BATCH_SIZE
         need_retrigger = False

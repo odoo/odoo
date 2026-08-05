@@ -272,6 +272,10 @@ class AccountEdiProxyClientUser(models.Model):
             limit=1,
         )
 
+    def _get_type_code(self, attachment, content):
+        xml_tree = etree.fromstring(attachment.raw)
+        return xml_tree.findtext('.//{*}InvoiceTypeCode') or xml_tree.findtext('.//{*}CreditNoteTypeCode')
+
     def _peppol_process_new_messages(self, messages):
         self.ensure_one()
         company = self.company_id
@@ -289,14 +293,11 @@ class AccountEdiProxyClientUser(models.Model):
 
             try:
                 attachment = self.env['ir.attachment'].create(attachment_vals)
-                xml_tree = etree.fromstring(attachment.raw)
-                invoice_type_code = xml_tree.findtext('.//{*}InvoiceTypeCode')
-                credit_note_type_code = xml_tree.findtext('.//{*}CreditNoteTypeCode')
-
-                if invoice_type_code in ['389', '527'] or credit_note_type_code == '261':
+                type_code = self._get_type_code(attachment, content)
+                if type_code in ['389', '527', '261']:
                     # 389/527: Self-billing invoice; 261: Self-billing credit note
                     journal = self._peppol_get_import_sale_journal(company)
-                    move_type = 'out_invoice' if invoice_type_code else 'out_refund'
+                    move_type = 'out_invoice' if type_code in ['389', '527'] else 'out_refund'
                 else:
                     # use the first purchase journal if the Peppol journal is not set up
                     # to create the move anyway
