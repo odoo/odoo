@@ -338,7 +338,7 @@ export class FontPlugin extends Plugin {
     normalize(root) {
         for (const el of selectElements(
             root,
-            "strong, b, span[style*='font-weight: bolder'], small"
+            "strong, b, span[style*='font-weight: bolder'], small, span[class$='-fs'], span[style*='font-size']"
         )) {
             if (isRedundantElement(el)) {
                 unwrapContents(el);
