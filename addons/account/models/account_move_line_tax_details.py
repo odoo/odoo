@@ -67,6 +67,7 @@ class AccountMoveLine(models.Model):
                     aml.amount_currency AS base_amount_currency,
                     curr.decimal_places AS curr_prec,
                     comp_curr.decimal_places AS comp_curr_prec,
+                    COALESCE(lt.rep_account_id, aml.account_id) = lt.account_id AS account_match,
                     (
                         t.tax_exigibility != 'on_payment'
                         OR move.tax_cash_basis_rec_id IS NOT NULL
@@ -103,6 +104,16 @@ class AccountMoveLine(models.Model):
                     OR aml.analytic_distribution = lt.analytic_distribution
                 )
             ),
+            account_matched_tax_data AS (
+                SELECT *
+                FROM (
+                    SELECT
+                        *,
+                        BOOL_OR(account_match) OVER (PARTITION BY tax_line_id) AS tax_line_has_account_match
+                    FROM tax_data
+                ) tax_data_with_account_match
+                WHERE account_match OR NOT tax_line_has_account_match
+            ),
             aggregated AS (
                 SELECT
                     *,
@@ -116,7 +127,7 @@ class AccountMoveLine(models.Model):
                         ORDER BY sequence, base_line_id
                     ) AS base_cumul_currency,
                     SUM(base_value_currency) OVER (PARTITION BY tax_line_id, tax_id) AS base_currency
-                FROM tax_data
+                FROM account_matched_tax_data
             )
             SELECT
                 tax_line_id || '-' || base_line_id AS id,
