@@ -1,7 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import json
-import uuid
 from unittest.mock import patch
 from datetime import timedelta, datetime
 
@@ -13,15 +11,6 @@ from odoo.addons.pos_self_order.tests.self_order_common_test import SelfOrderCom
 
 @odoo.tests.tagged('post_install', '-at_install')
 class TestSelfOrderController(SelfOrderCommonTest):
-    def make_request_to_controller(self, url, params):
-        response = self.url_open(url, json.dumps({'jsonrpc': '2.0', 'params': params}),
-            method='POST',
-            headers={
-                'Content-Type': 'application/json',
-            }
-        )
-        return response.json().get('result')
-
     def test_get_orders_by_access_token(self):
         self.cola.taxes_id = False
         self.pos_config.self_ordering_mode = 'mobile'
@@ -344,34 +333,6 @@ class TestSelfOrderController(SelfOrderCommonTest):
         preset_data = self.delivery_preset._load_pos_self_data_fields(self.pos_config)
         self.assertIn('free_delivery_min_amount', preset_data)
 
-    def _create_order_data(self, state, product, qty, price_unit, price_subtotal_incl=None, payments=[]):
-        return {
-            'access_token': self.pos_config.access_token,
-            'table_identifier': self.pos_table_1.identifier,
-            'order': {
-                'table_id': self.pos_table_1.id,
-                'company_id': self.env.company.id,
-                'state': state,
-                'preset_id': self.in_preset.id,
-                'session_id': self.pos_config.current_session_id.id,
-                'amount_total': price_subtotal_incl,
-                'amount_paid': 0,
-                'amount_tax': 0,
-                'amount_return': 0,
-                'uuid': uuid.uuid4().hex,
-                'lines': [[0, 0, {
-                    'uuid': uuid.uuid4().hex,
-                    'product_id': product.id,
-                    'qty': qty,
-                    'price_unit': price_unit,
-                    'price_subtotal': product.lst_price,
-                    'tax_ids': [(6, 0, product.taxes_id.ids)],
-                    'price_subtotal_incl': price_subtotal_incl or 0,
-                }]],
-                'payment_ids': payments or [],
-            }
-        }
-
     def test_delivery_fee_is_applied(self):
         """Test that the delivery fee line is added server-side when the preset is delivery
         and the order total is below the free delivery threshold."""
@@ -391,32 +352,11 @@ class TestSelfOrderController(SelfOrderCommonTest):
             'free_delivery_min_amount': 50.0,
         })
 
-        # Submit a delivery order without a delivery fee line (cola total ~2.2, below 50.0 threshold)
-        order_data = {
-            'access_token': self.pos_config.access_token,
-            'table_identifier': self.pos_table_1.identifier,
-            'order': {
-                'table_id': self.pos_table_1.id,
-                'company_id': self.env.company.id,
-                'state': 'draft',
-                'preset_id': self.delivery_preset.id,
-                'session_id': self.pos_config.current_session_id.id,
-                'amount_total': 0,
-                'amount_paid': 0,
-                'amount_tax': 0,
-                'amount_return': 0,
-                'uuid': uuid.uuid4().hex,
-                'lines': [[0, 0, {
-                    'uuid': uuid.uuid4().hex,
-                    'product_id': self.cola.id,
-                    'qty': 1,
-                    'price_unit': self.cola.lst_price,
-                    'price_subtotal': self.cola.lst_price,
-                    'tax_ids': [(6, 0, self.cola.taxes_id.ids)],
-                    'price_subtotal_incl': self.cola.lst_price,
-                }]],
-            },
-        }
+        # Submit a delivery order without a delivery fee line (cola total ~2.2, below 50.0 threshold).
+        order_data = self._create_order_data(
+            [{'product': self.cola, 'qty': 1, 'price_unit': self.cola.lst_price}],
+            preset=self.delivery_preset,
+        )
 
         data = self.make_request_to_controller('/pos-self-order/process-order/mobile', order_data)
         order = self.env['pos.order'].browse(data['pos.order'][0]['id'])

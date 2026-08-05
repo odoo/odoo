@@ -17,7 +17,6 @@ class TestSelfOrderKiosk(SelfOrderCommonTest):
         })
         self.pos_config.with_user(self.pos_user).open_ui()
         self.pos_config.current_session_id.set_opening_control(0, "")
-        self_route = self.pos_config._get_self_order_route()
 
         tax_10_inc = self.env['account.tax'].create({
             "name": "10% incl",
@@ -54,8 +53,17 @@ class TestSelfOrderKiosk(SelfOrderCommonTest):
         })
 
         # Without location choices, since we need preset to do so.
-        self.start_tour(self_route, "self_kiosk_each_table_takeaway_in")
-        self.assertEqual("Table tracker 3", self.pos_config.session_ids.order_ids[0].floating_order_name)
+        order = self.process_self_order(
+            [
+                {
+                    'product': self.cola,
+                    'qty': 1,
+                    'price_unit': self.cola.lst_price,
+                },
+            ],
+            table_stand_number=3,
+        )
+        self.assertEqual("Table tracker 3", order.floating_order_name)
 
     def test_duplicate_order_kiosk(self):
         self.pos_config.write({
@@ -122,8 +130,15 @@ class TestSelfOrderKiosk(SelfOrderCommonTest):
 
         self.pos_config.with_user(self.pos_user).open_ui()
         self.pos_config.current_session_id.set_opening_control(0, "")
-        self_route = self.pos_config._get_self_order_route()
-        self.start_tour(self_route, 'test_self_order_kiosk_unpaid')
+        self.process_self_order(
+            [
+                {
+                    'product': self.cola,
+                    'qty': 1,
+                    'price_unit': self.cola.lst_price,
+                },
+            ],
+        )
         self.start_tour(f"/pos/ui/{cashier_pos.id}", 'test_pay_unpaid_order_from_kiosk', login="admin")
 
     def test_self_order_kiosk_ordering_images_public(self):

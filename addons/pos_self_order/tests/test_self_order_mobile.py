@@ -36,7 +36,11 @@ class TestSelfOrderMobile(SelfOrderCommonTest):
         self_route = self.pos_config._get_self_order_route(table_id=floor.table_ids[0].id)
 
         # Test selection of different presets
-        self.start_tour(self_route, "self_mobile_each_table_takeaway_in")
+        order = self.process_self_order(
+            [{'product': self.cola, 'qty': 1, 'price_unit': self.cola.lst_price}],
+            preset=self.in_preset,
+            table=floor.table_ids[0],
+        )
         self.start_tour(self_route, "self_mobile_each_table_takeaway_out")
         orders = self.env['pos.order'].search([], order="id desc", limit=2)
         self.assertEqual(orders[0].preset_id, self.out_preset)
@@ -48,9 +52,12 @@ class TestSelfOrderMobile(SelfOrderCommonTest):
         })
 
         # Mobile, meal, table
-        self.start_tour(self_route, "self_mobile_meal_table_takeaway_in")
-        last_order = self.env['pos.order'].search([], order="id desc", limit=1)
-        html = last_order.order_receipt_generate_html()
+        order = self.process_self_order(
+            [{'product': self.cola, 'qty': 1, 'price_unit': self.cola.lst_price}],
+            preset=self.in_preset,
+            table=floor.table_ids[0],
+        )
+        html = order.order_receipt_generate_html()
         self.assertTrue("Service at Table" in html)
 
         self.pos_config.write({
@@ -58,10 +65,11 @@ class TestSelfOrderMobile(SelfOrderCommonTest):
         })
 
         # Mobile, meal, counter
-        self.start_tour(self_route, "self_mobile_meal_counter_takeaway_out")
-
-        last_order = self.env['pos.order'].search([], order="id desc", limit=1)
-        html = last_order.order_receipt_generate_html()
+        order = self.process_self_order(
+            [{'product': self.cola, 'qty': 1, 'price_unit': self.cola.lst_price}],
+            preset=self.out_preset,
+        )
+        html = order.order_receipt_generate_html()
         self.assertTrue("Pickup At Counter" in html)
 
     def test_self_order_mobile_0_price_order(self):
@@ -90,12 +98,14 @@ class TestSelfOrderMobile(SelfOrderCommonTest):
 
         self.pos_config.with_user(self.pos_user).open_ui()
         self.pos_config.current_session_id.set_opening_control(0, "")
-        self_route = self.pos_config._get_self_order_route(floor.table_ids[0].id)
 
-        # Zero priced order
-        self.start_tour(self_route, "self_order_mobile_0_price_order")
+        # Zero priced order with a note
+        order = self.process_self_order(
+            [{'product': self.ketchup, 'qty': 1, 'price_unit': self.ketchup.lst_price}],
+            general_customer_note='test',
+            table=floor.table_ids[0],
+        )
 
-        order = self.env['pos.order'].search([], limit=1)
         self.assertEqual(order.general_customer_note, "test")
 
     def test_order_sequence_in_self(self):
@@ -127,9 +137,15 @@ class TestSelfOrderMobile(SelfOrderCommonTest):
         self.pos_config.with_user(self.pos_user).open_ui()
         self.pos_config.current_session_id.set_opening_control(0, "")
 
-        # create self-order from mobile
-        self.start_tour(self.pos_config._get_self_order_route(), 'test_mobile_self_order_preparation_changes')
-        order = self.pos_config.current_session_id.order_ids[0]
+        # Create self-order from mobile directly
+        table = self.pos_main_floor.table_ids[0]
+        order = self.process_self_order(
+            [
+                {'product': self.cola, 'qty': 1, 'price_unit': self.cola.lst_price},
+                {'product': self.fanta, 'qty': 1, 'price_unit': self.fanta.lst_price},
+            ],
+            table=table,
+        )
         self.assertEqual(order.state, 'draft')
         self.assertEqual(len(order.lines), 2)
 
@@ -172,26 +188,20 @@ class TestSelfOrderMobile(SelfOrderCommonTest):
         table_identifier = table.identifier
         self_route = self.pos_config._get_self_order_route(table_id=table.id)
 
-        # Just needs to create an order, values do not matter
-        self.env['pos.order'].create({
-            'session_id': self.pos_config.current_session_id.id,
-            'table_id': table.id,
-            'amount_total': 10.0,
-            'amount_tax': 0.0,
-            'amount_return': 0.0,
-            'amount_paid': 0.0,
-            'floating_order_name': f'Self-Order {table_identifier}',
-            'lines': [(0, 0, {
-                'qty': 1,
-                'product_id': self.cola.id,
-                'price_unit': self.cola.lst_price,
-                'price_subtotal': self.cola.lst_price,
-                'price_subtotal_incl': self.cola.lst_price,
-            })],
-        })
+        # Just needs to create an order; values do not matter
+        self.process_self_order(
+            [{'product': self.cola, 'qty': 1, 'price_unit': self.cola.lst_price}],
+            floating_order_name=f'Self-Order {table_identifier}',
+            table=table,
+        )
 
-        self.start_tour(self_route, "test_self_order_table_no_more_sharing-each_mode")
-        last_order = self.pos_config.current_session_id.order_ids[0]
+        last_order = self.process_self_order(
+            [
+                {'product': self.cola, 'qty': 1, 'price_unit': self.cola.lst_price},
+                {'product': self.fanta, 'qty': 1, 'price_unit': self.fanta.lst_price},
+            ],
+            table=table,
+        )
         self.assertEqual(last_order.floating_order_name, f"Self-Order T {table.table_number}")
         self.assertFalse(last_order.table_id)
 

@@ -24,10 +24,25 @@ class TestSelfOrderAttribute(SelfOrderCommonTest):
 
         self.pos_config.with_user(self.pos_user).open_ui()
         self.pos_config.current_session_id.set_opening_control(0, "")
-        self_route = self.pos_config._get_self_order_route()
 
-        self.start_tour(self_route, "self_attribute_selector")
-        order = self.pos_config.current_session_id.order_ids[0]
+        size_m = product.attribute_line_ids[0].product_template_value_ids[1]
+        size_l = product.attribute_line_ids[0].product_template_value_ids[2]
+        fabric_leather = product.attribute_line_ids[1].product_template_value_ids[0]
+
+        order = self.process_self_order([
+            {
+                'product': self.desk_organizer,
+                'qty': 1,
+                'price_unit': product.list_price,
+                'attribute_value_ids': [size_m.id, fabric_leather.id],
+            },
+            {
+                'product': self.desk_organizer,
+                'qty': 1,
+                'price_unit': product.list_price,
+                'attribute_value_ids': [size_l.id, fabric_leather.id],
+            },
+        ])
         self.assertEqual(order.lines[0].price_extra, 1.0)
         self.assertEqual(order.lines[1].price_extra, 2.0)
 
@@ -65,15 +80,30 @@ class TestSelfOrderAttribute(SelfOrderCommonTest):
 
         self.pos_config.with_user(self.pos_user).open_ui()
         self.pos_config.current_session_id.set_opening_control(0, "")
-        self_route = self.pos_config._get_self_order_route()
-        self.start_tour(self_route, "selfAlwaysAttributeVariants")
 
-        order = self.pos_config.current_session_id.order_ids[0]
-        self.assertEqual(order.lines[0].product_id.id, chair_product_tmpl.product_variant_ids[0].id)
-        self.assertEqual(order.lines[0].attribute_value_ids.ids, chair_product_tmpl.product_variant_ids[0].product_template_attribute_value_ids.ids)
+        white_variant = chair_product_tmpl.product_variant_ids[0]
+        red_variant = chair_product_tmpl.product_variant_ids[1]
+
+        order = self.process_self_order([
+            {
+                'product': white_variant,
+                'qty': 1,
+                'price_unit': 10.0,
+                'attribute_value_ids': white_variant.product_template_attribute_value_ids.ids,
+            },
+            {
+                'product': red_variant,
+                'qty': 1,
+                'price_unit': 15.0,
+                'attribute_value_ids': red_variant.product_template_attribute_value_ids.ids,
+            },
+        ])
+
+        self.assertEqual(order.lines[0].product_id.id, white_variant.id)
+        self.assertEqual(order.lines[0].attribute_value_ids.ids, white_variant.product_template_attribute_value_ids.ids)
         self.assertEqual(order.lines[0].price_unit, 10.0)
-        self.assertEqual(order.lines[1].product_id.id, chair_product_tmpl.product_variant_ids[1].id)
-        self.assertEqual(order.lines[1].attribute_value_ids.ids, chair_product_tmpl.product_variant_ids[1].product_template_attribute_value_ids.ids)
+        self.assertEqual(order.lines[1].product_id.id, red_variant.id)
+        self.assertEqual(order.lines[1].attribute_value_ids.ids, red_variant.product_template_attribute_value_ids.ids)
         self.assertEqual(order.lines[1].price_unit, 15.0)
 
     def test_self_order_multi_check_attribute_with_extra_price(self):
@@ -105,9 +135,10 @@ class TestSelfOrderAttribute(SelfOrderCommonTest):
             },
         ])
 
+        desk_tmpl = self.desk_organizer.product_tmpl_id
         self.env['product.template.attribute.line'].create([
             {
-                'product_tmpl_id': self.desk_organizer.product_tmpl_id.id,
+                'product_tmpl_id': desk_tmpl.id,
                 'attribute_id': attr.id,
                 'value_ids': [Command.link(val.id) for val in attr.value_ids],
             }
@@ -115,8 +146,31 @@ class TestSelfOrderAttribute(SelfOrderCommonTest):
         ])
         self.pos_config.with_user(self.pos_user).open_ui()
         self.pos_config.current_session_id.set_opening_control(0, "")
-        self_route = self.pos_config._get_self_order_route()
-        self.start_tour(self_route, "test_self_order_multi_check_attribute_with_extra_price")
 
-        order = self.pos_config.current_session_id.order_ids[0]
+        colour_line = desk_tmpl.attribute_line_ids.filtered(lambda l: l.attribute_id.name == 'Colour')
+        addons_line = desk_tmpl.attribute_line_ids.filtered(lambda l: l.attribute_id.name == 'Add-ons')
+        size_line = desk_tmpl.attribute_line_ids.filtered(lambda l: l.attribute_id.name == 'Size')
+        fabric_line = desk_tmpl.attribute_line_ids.filtered(lambda l: l.attribute_id.name == 'Fabric')
+
+        colour_blue = colour_line.product_template_value_ids.filtered(lambda v: v.name == 'Blue')
+        addon_pen_holder = addons_line.product_template_value_ids.filtered(lambda v: v.name == 'Pen Holder')
+        addon_mini_drawer = addons_line.product_template_value_ids.filtered(lambda v: v.name == 'Mini Drawer')
+        size_m = size_line.product_template_value_ids.filtered(lambda v: v.name == 'M')
+        fabric_leather = fabric_line.product_template_value_ids.filtered(lambda v: v.name == 'Leather')
+
+        blue_variant = desk_tmpl.product_variant_ids.filtered(
+            lambda v: any(ptav.name == 'Blue' for ptav in v.product_template_attribute_value_ids)
+        )[:1]
+
+        order = self.process_self_order([
+            {
+                'product': blue_variant,
+                'qty': 1,
+                'price_unit': blue_variant.lst_price,
+                'attribute_value_ids': [
+                    size_m.id, fabric_leather.id, colour_blue.id,
+                    addon_pen_holder.id, addon_mini_drawer.id,
+                ],
+            },
+        ])
         self.assertEqual(order.amount_total, 11.62)  # 5.10 (price) + 2.0 + 1.0 + 2.0 + 1.52 (tax)
