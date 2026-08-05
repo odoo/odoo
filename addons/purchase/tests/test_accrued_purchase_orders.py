@@ -236,6 +236,50 @@ class TestAccruedPurchaseOrders(AccountTestInvoicingCommon):
             {'debit': 0.0, 'credit': 90.0},
         ])
 
+    def test_accrued_entries_with_purchase_uom(self):
+        def accrued_entries_lines(taxes):
+            purchase_order = self.env['purchase.order'].create({
+                'partner_id': self.partner_a.id,
+                'order_line': [
+                    Command.create({
+                        'name': self.product_a.name,
+                        'product_id': self.product_a.id,
+                        'product_qty': 10.0,
+                        'product_uom_id': self.env.ref('uom.product_uom_dozen').id,
+                        'price_unit': 25.0,
+                        'tax_ids': taxes,
+                    }),
+                ],
+            })
+            purchase_order.button_confirm()
+            purchase_order.order_line.qty_received = 10
+            accrued_wizard = self.env['account.accrued.orders.wizard'].with_context(
+                active_model='purchase.order',
+                active_ids=purchase_order.ids,
+            ).create({
+                'account_id': self.account_revenue.id,
+            })
+            return self.env['account.move'].search(accrued_wizard.create_entries()['domain']).line_ids
+
+        tax_25_included = self.env['account.tax'].create({
+            'name': 'Tax 25% included',
+            'amount': 25.0,
+            'type_tax_use': 'purchase',
+            'price_include_override': 'tax_included',
+        })
+        self.assertRecordValues(accrued_entries_lines(False), [
+            {'debit': 0.0, 'credit': 250.0},
+            {'debit': 250.0, 'credit': 0.0},
+            {'debit': 250.0, 'credit': 0.0},
+            {'debit': 0.0, 'credit': 250.0},
+        ])
+        self.assertRecordValues(accrued_entries_lines(tax_25_included.ids), [
+            {'debit': 0.0, 'credit': 200.0},
+            {'debit': 200.0, 'credit': 0.0},
+            {'debit': 200.0, 'credit': 0.0},
+            {'debit': 0.0, 'credit': 200.0},
+        ])
+
     def test_accrual_entry_date_as_string_from_context(self):
         """
         Test that passing `accrual_entry_date` as a string in the context
