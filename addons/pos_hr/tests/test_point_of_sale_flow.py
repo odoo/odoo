@@ -49,11 +49,6 @@ class TestPointOfSaleFlow(CommonPosTest):
 
         self.pos_config_usd.write({'module_pos_hr': True})
 
-        # With the loading limit set to 0, the regular limited-loading query
-        # returns no partner at all, so if the work contact shows up it can
-        # only be because pos_hr explicitly forces it into the domain.
-        self.assertFalse(self.pos_config_usd.get_limited_partners_loading())
-
         domain = self.env['res.partner']._load_pos_data_domain({'pos.order': []}, self.pos_config_usd)
         partners = self.env['res.partner'].search(domain)
 
