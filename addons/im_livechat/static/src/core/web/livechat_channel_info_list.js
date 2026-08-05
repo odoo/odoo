@@ -1,4 +1,3 @@
-import { useSubEnv } from "@web/owl2/utils";
 import { TranscriptSender } from "@im_livechat/core/common/transcript_sender";
 import { ExpertiseTagsAutocomplete } from "@im_livechat/core/web/expertise_tags_autocomplete";
 
@@ -22,7 +21,6 @@ export class LivechatChannelInfoList extends Component {
         this.actionService = useService("action");
         this.store = useService("mail.store");
         this.ui = useService("ui");
-        useSubEnv({ inLivechatInfoPanel: true });
         useEffect(() => {
             if (this.props.thread.hasFetchedLivechatSessionData) {
                 return;
