@@ -369,6 +369,10 @@ export class PosOrderline extends PosOrderlineAccounting {
         return this.discount || 0;
     }
 
+    isDiscountable() {
+        return !this.isTipLine();
+    }
+
     get isValidForRefund() {
         return this.qty - this.refundedQty > 0 && !this.combo_parent_id;
     }
