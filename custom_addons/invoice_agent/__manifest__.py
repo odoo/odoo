@@ -13,9 +13,16 @@
         "views/res_partner_views.xml",
         "views/account_journal_views.xml",
         "views/invoice_agent_views.xml",
+        "views/res_config_settings_views.xml",
         "wizard/bulk_process_wizard_views.xml",
         "data/automation_data.xml",
     ],
+    "assets": {
+        "web.assets_backend": [
+            "invoice_agent/static/src/js/suggestion_panel.js",
+            "invoice_agent/static/src/js/suggestion_panel.xml",
+        ],
+    },
     "installable": True,
     "application": False,
     "license": "LGPL-3",

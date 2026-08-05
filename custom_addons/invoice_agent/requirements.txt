@@ -6,7 +6,13 @@
 # extraction pipeline is wired in — no rebuild needed.
 
 # Anthropic Claude API client — used for structured-output extraction from OCR text
+# client.messages.parse(output_format=...) requires a Pydantic v2 model.
 anthropic>=0.70.0
+
+# Pydantic v2 — the InvoiceExtraction schema, and the typed output of
+# client.messages.parse(output_format=...). Transitive dep of anthropic but
+# pinned explicitly so the schema module imports standalone.
+pydantic>=2.0.0
 
 # Tesseract OCR Python wrapper — runs the local tesseract binary
 pytesseract>=0.3.10

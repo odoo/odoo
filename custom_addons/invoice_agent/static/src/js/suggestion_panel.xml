@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="invoice_agent.suggestion_panel">
+        <div class="o_invoice_suggestion_panel">
+            <div class="o_invoice_suggestion_title fw-bold mb-2">
+                AI Field Suggestions
+            </div>
+            <t t-if="busy">
+                <div class="text-muted mb-2">
+                    <i class="fa fa-spinner fa-spin me-1"/>
+                    Applying…
+                </div>
+            </t>
+            <t t-if="!suggestions.length">
+                <div class="text-muted">
+                    No pending suggestions. Click <b>Suggest with AI</b> in the
+                    header to extract this bill.
+                </div>
+            </t>
+            <t t-else="">
+                <div class="o_invoice_suggestion_chips d-flex flex-wrap gap-1">
+                    <span t-foreach="suggestions" t-as="suggestion" t-key="suggestion.id"
+                          class="o_invoice_suggestion_chip d-inline-flex align-items-center
+                                 border rounded-pill px-2 py-1">
+                        <span class="fw-semibold me-2"
+                              t-out="suggestion.data.field_name.replace('_', ' ')"/>
+                        <span class="text-truncate me-2" style="max-width: 14rem;"
+                              t-out="suggestion.data.extracted_value || '—'"/>
+                        <button class="btn btn-sm btn-success p-0 px-1 me-1"
+                                t-attf-title="Apply {{ suggestion.data.extracted_value }}"
+                                t-on-click="() => acceptSuggestion(suggestion)"
+                                t-att-disabled="disabled">
+                            <i class="fa fa-check"/>
+                            <t t-if="state.applying.has(suggestion.data.field_name)">
+                                <i class="fa fa-spinner fa-spin"/>
+                            </t>
+                        </button>
+                        <button class="btn btn-sm btn-danger p-0 px-1"
+                                t-attf-title="Reject {{ suggestion.data.field_name }}"
+                                t-on-click="() => rejectSuggestion(suggestion)"
+                                t-att-disabled="disabled">
+                            <i class="fa fa-times"/>
+                        </button>
+                    </span>
+                </div>
+            </t>
+        </div>
+    </t>
+</templates>

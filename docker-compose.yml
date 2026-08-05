@@ -77,6 +77,8 @@ services:
       PORT: ${ODOO_DB_PORT:-5432}
       USER: ${ODOO_DB_USER:-odoo}
       PASSWORD: ${ODOO_DB_PASSWORD:-odoo}
+      # Pass Anthropic API key securely from environment
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
       # Tell Odoo it's behind a reverse proxy so it trusts
       # X-Forwarded-For and X-Forwarded-Proto headers.
       # Equivalent to proxy_mode = True in odoo.conf

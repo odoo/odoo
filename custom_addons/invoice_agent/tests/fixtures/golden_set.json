@@ -1,0 +1,280 @@
+{
+    "description": "Golden set for the week-seven extraction baseline. Ten vendor invoice texts (realistic OCR line-art) with hand-labelled ground truth matching the InvoiceExtraction schema. vendor_vat / due_date / subtotal / tax_total are genuinely omitted by some vendors, exercising the Optional fields.",
+    "invoices": [
+        {
+            "id": "acme_hosting",
+            "text": "ACME SUPPLIES LLC\n115 Van Buren St, Davenport IA\nVAT: US123456789\n\nINVOICE 2026-00777\nDate: 2026-07-01\nDue: 2026-07-31\n\nItem                          Qty   Unit Price\nServer hosting                1     850.00\nSetup fee                     1     500.00\n\nSubtotal           1,350.00\nVAT (0%)                0.00\nTOTAL             USD 1,350.00",
+            "expected": {
+                "vendor_name": "ACME SUPPLIES LLC",
+                "vendor_vat": "US123456789",
+                "invoice_date": "2026-07-01",
+                "due_date": "2026-07-31",
+                "currency": "USD",
+                "subtotal": 1350.0,
+                "tax_total": 0.0,
+                "amount_total": 1350.0,
+                "lines": [
+                    {
+                        "name": "Server hosting",
+                        "quantity": 1.0,
+                        "price_unit": 850.0
+                    },
+                    {
+                        "name": "Setup fee",
+                        "quantity": 1.0,
+                        "price_unit": 500.0
+                    }
+                ]
+            }
+        },
+        {
+            "id": "nordic_it_eur",
+            "text": "NORDIC IT OY\nHelsinki\nY-tunnus FI12345678\n\nLASKU / INVOICE 45821\nPäiväys/Date 2026-02-14\nEräpäivä/Due 2026-03-14\n\n1 x Azure VM Hosting        EUR 420.00\n1 x Managed Backup          EUR 80.00\n\nVero 24%                    121.60\nYhteensä / Total            621.60",
+            "expected": {
+                "vendor_name": "NORDIC IT OY",
+                "vendor_vat": "FI12345678",
+                "invoice_date": "2026-02-14",
+                "due_date": "2026-03-14",
+                "currency": "EUR",
+                "subtotal": 500.0,
+                "tax_total": 121.6,
+                "amount_total": 621.6,
+                "lines": [
+                    {
+                        "name": "Azure VM Hosting",
+                        "quantity": 1.0,
+                        "price_unit": 420.0
+                    },
+                    {
+                        "name": "Managed Backup",
+                        "quantity": 1.0,
+                        "price_unit": 80.0
+                    }
+                ]
+            }
+        },
+        {
+            "id": "berlin_logistik_no_vat",
+            "text": "Berlin Logistik GmbH\nRechnungsnummer 88412-PE\nRechnungsdatum 2026-05-20\n\nPos.  Beschreibung            Menge  EP\n1     Palettenmiete 120x80      40    2.50\n2     Handling fee               1   75.00\n\nZwischensumme   175.00\nGesamt          175.00\nZahlbar in 14 Tagen",
+            "expected": {
+                "vendor_name": "Berlin Logistik GmbH",
+                "vendor_vat": null,
+                "invoice_date": "2026-05-20",
+                "due_date": null,
+                "currency": "EUR",
+                "subtotal": 175.0,
+                "tax_total": null,
+                "amount_total": 175.0,
+                "lines": [
+                    {
+                        "name": "Palettenmiete 120x80",
+                        "quantity": 40.0,
+                        "price_unit": 2.5
+                    },
+                    {
+                        "name": "Handling fee",
+                        "quantity": 1.0,
+                        "price_unit": 75.0
+                    }
+                ]
+            }
+        },
+        {
+            "id": "cloudbridge_gbp",
+            "text": "CloudBridge Limited\nUnit 4, Manchester\nVAT GB123456789\n\nINVOICE CF-90812\nIssue date: 2026-03-02\nDue date: 2026-04-01\n\nCDN bandwidth (50 TB)         GBP 310.00\nDDoS protection                GBP  90.00\n\nNet       400.00\nVAT 20%    80.00\nTOTAL GBP 480.00",
+            "expected": {
+                "vendor_name": "CloudBridge Limited",
+                "vendor_vat": "GB123456789",
+                "invoice_date": "2026-03-02",
+                "due_date": "2026-04-01",
+                "currency": "GBP",
+                "subtotal": 400.0,
+                "tax_total": 80.0,
+                "amount_total": 480.0,
+                "lines": [
+                    {
+                        "name": "CDN bandwidth (50 TB)",
+                        "quantity": 1.0,
+                        "price_unit": 310.0
+                    },
+                    {
+                        "name": "DDoS protection",
+                        "quantity": 1.0,
+                        "price_unit": 90.0
+                    }
+                ]
+            }
+        },
+        {
+            "id": "zurich_ops_chf",
+            "text": "Zuerich Office Services AG\nCH-8000 Zuerich\nUID CHE-123.456.789\n\nRechnung 9911 / 2026\nDatum 2026-06-11\n\nBueromiete Juni            CHF 2,000.00\nReinigung Y/N               CHF  250.00\n\nTotal CHF 2,250.00\nMwSt. nicht ausgewiesen",
+            "expected": {
+                "vendor_name": "Zuerich Office Services AG",
+                "vendor_vat": "CHE-123.456.789",
+                "invoice_date": "2026-06-11",
+                "due_date": null,
+                "currency": "CHF",
+                "subtotal": null,
+                "tax_total": null,
+                "amount_total": 2250.0,
+                "lines": [
+                    {
+                        "name": "Bueromiete Juni",
+                        "quantity": 1.0,
+                        "price_unit": 2000.0
+                    },
+                    {
+                        "name": "Reinigung Y/N",
+                        "quantity": 1.0,
+                        "price_unit": 250.0
+                    }
+                ]
+            }
+        },
+        {
+            "id": "tokyo_net_jpy",
+            "text": "Tokyo Network KK\nInvoice No. TN-2047\n発行日 2026-04-25\n\nDedicated Server Plan B    x1   JPY 12,000\nIPv4 block (/29)           x1   JPY 1,000\n\n消費税 10%                    1,300\n合計 / TOTAL                JPY 14,300",
+            "expected": {
+                "vendor_name": "Tokyo Network KK",
+                "vendor_vat": null,
+                "invoice_date": "2026-04-25",
+                "due_date": null,
+                "currency": "JPY",
+                "subtotal": 13000.0,
+                "tax_total": 1300.0,
+                "amount_total": 14300.0,
+                "lines": [
+                    {
+                        "name": "Dedicated Server Plan B",
+                        "quantity": 1.0,
+                        "price_unit": 12000.0
+                    },
+                    {
+                        "name": "IPv4 block (/29)",
+                        "quantity": 1.0,
+                        "price_unit": 1000.0
+                    }
+                ]
+            }
+        },
+        {
+            "id": "lisbon_saas_eur",
+            "text": "LisbonSaaS Unipessoal Lda\nNIF PT512345670\n\nRecibo/Fatura FA-77210\nData 2026-01-09\nVencimento 2026-02-08\n\nPlano Pro (annual)   1x    480.00 EUR\nAdd-on: API calls    1x     60.00 EUR\n\nIva 23%                     124.20\nTotal                       664.20 EUR",
+            "expected": {
+                "vendor_name": "LisbonSaaS Unipessoal Lda",
+                "vendor_vat": "PT512345670",
+                "invoice_date": "2026-01-09",
+                "due_date": "2026-02-08",
+                "currency": "EUR",
+                "subtotal": 540.0,
+                "tax_total": 124.2,
+                "amount_total": 664.2,
+                "lines": [
+                    {
+                        "name": "Plano Pro (annual)",
+                        "quantity": 1.0,
+                        "price_unit": 480.0
+                    },
+                    {
+                        "name": "Add-on: API calls",
+                        "quantity": 1.0,
+                        "price_unit": 60.0
+                    }
+                ]
+            }
+        },
+        {
+            "id": "amsterdam_courier",
+            "text": "Amsterdam Courier Services BV\nKvK 60012345\nBTW NL001234567B01\n\nFACTUUR 30112\nFactuurdatum 2026-08-03\nVervaldatum 2026-08-17\n\nPickup & delivery Amsterdam    EUR 45.00\nOvernight zone B                EUR 38.00\nSaturday surcharge              EUR 12.00\n\nSubtotaal  95.00\nBTW 21%    19.95\nTotaal     114.95",
+            "expected": {
+                "vendor_name": "Amsterdam Courier Services BV",
+                "vendor_vat": "NL001234567B01",
+                "invoice_date": "2026-08-03",
+                "due_date": "2026-08-17",
+                "currency": "EUR",
+                "subtotal": 95.0,
+                "tax_total": 19.95,
+                "amount_total": 114.95,
+                "lines": [
+                    {
+                        "name": "Pickup & delivery Amsterdam",
+                        "quantity": 1.0,
+                        "price_unit": 45.0
+                    },
+                    {
+                        "name": "Overnight zone B",
+                        "quantity": 1.0,
+                        "price_unit": 38.0
+                    },
+                    {
+                        "name": "Saturday surcharge",
+                        "quantity": 1.0,
+                        "price_unit": 12.0
+                    }
+                ]
+            }
+        },
+        {
+            "id": "sydney_machinery_aud",
+            "text": "Sydney Machinery Repairs Pty Ltd\nABN 12 345 678 901\n\nTax Invoice 66519\nDate 2026-09-18\n\nLabour (3.5h x $90)         AUD  315.00\nParts - bearing kit          AUD  120.00\nWaste disposal fee           AUD   25.00\n\nGST 10%                       46.00\nTotal                        AUD 506.00",
+            "expected": {
+                "vendor_name": "Sydney Machinery Repairs Pty Ltd",
+                "vendor_vat": "ABN 12 345 678 901",
+                "invoice_date": "2026-09-18",
+                "due_date": null,
+                "currency": "AUD",
+                "subtotal": 460.0,
+                "tax_total": 46.0,
+                "amount_total": 506.0,
+                "lines": [
+                    {
+                        "name": "Labour (3.5h x $90)",
+                        "quantity": 1.0,
+                        "price_unit": 315.0
+                    },
+                    {
+                        "name": "Parts - bearing kit",
+                        "quantity": 1.0,
+                        "price_unit": 120.0
+                    },
+                    {
+                        "name": "Waste disposal fee",
+                        "quantity": 1.0,
+                        "price_unit": 25.0
+                    }
+                ]
+            }
+        },
+        {
+            "id": "toronto_freight_cad",
+            "text": "Toronto Freight Forwarding Inc.\nGST/HST RN 123456789RT0001\n\nINVOICE TFF-8812\nDATE 2026-10-06\nDUE 2026-11-05\n\nOcean freight - LCL             CAD 640.00\nCustoms brokerage               CAD 180.00\nFuel adjustment (BAF)           CAD  40.00\n\nSubtotal   860.00\nHST 13%     111.80\nTOTAL     CAD 971.80",
+            "expected": {
+                "vendor_name": "Toronto Freight Forwarding Inc.",
+                "vendor_vat": "RN 123456789RT0001",
+                "invoice_date": "2026-10-06",
+                "due_date": "2026-11-05",
+                "currency": "CAD",
+                "subtotal": 860.0,
+                "tax_total": 111.8,
+                "amount_total": 971.8,
+                "lines": [
+                    {
+                        "name": "Ocean freight - LCL",
+                        "quantity": 1.0,
+                        "price_unit": 640.0
+                    },
+                    {
+                        "name": "Customs brokerage",
+                        "quantity": 1.0,
+                        "price_unit": 180.0
+                    },
+                    {
+                        "name": "Fuel adjustment (BAF)",
+                        "quantity": 1.0,
+                        "price_unit": 40.0
+                    }
+                ]
+            }
+        }
+    ]
+}
