@@ -756,6 +756,10 @@ const MS_ICONS = {
         has_fill: true,
         tags: "align align left alignment article content doc document edit editing editor embed fill format formatting image inline insert justification justify left landscape layout left media options paragraph photo picture publishing settings style text text wrap type visual word processor writing",
     },
+    format_image_left: {
+        has_fill: true,
+        tags: "align alignment arrangement article blog column composition content doc document edit editing editor embed fill format format image left frame graphic grid image layout left media page paragraph photo picture publishing section structure style template text type visual website writing",
+    },
     format_indent_decrease: {
         has_fill: false,
         tags: "align alignment alignment control decrease decrease indent decrease indentation doc document control document editor document formatting edit editing editing tools editor format format text formatting options indent indent decrease indentation layout control left alignment lines paragraph paragraph style sheet spreadsheet style text text alignment text block text control text editor text format text formatting text layout text lines type typography word processor writing writing assistant writing tools",
