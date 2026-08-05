@@ -213,7 +213,7 @@ export default class OrderPaymentValidation {
         });
 
         if (this.canPrintReceipt) {
-            await this.pos.ticketPrinter.printOrderReceipt({ order: this.order });
+            this.pos.ticketPrinter.printOrderReceipt({ order: this.order });
         }
     }
 
