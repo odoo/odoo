@@ -270,14 +270,11 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
             if (
                 partner._l10n_my_edi_get_tin_for_myinvois() == 'EI00000000010'
                 and partner.l10n_my_identification_number == 'NA'
-            ):
-                # Special case for consolidated entities (e.g., general public).
-                # When TIN is 'EI00000000010' and Identification Number is 'NA', MyInvois requires
-                # the CountrySubentityCode to be fixed as '17' regardless of the actual state.
+            ) or partner.country_id.code != 'MY':
+                # Special case for consolidated entities (e.g., general public) and non-Malaysian partners:
+                # MyInvois requires the CountrySubentityCode to be fixed as '17' ("not applicable") since
+                # Malaysian state codes don't apply to them.
                 subentity_code = '17'
-            elif partner.country_id.code != 'MY':
-                # For non-Malaysian partners return the state name instead of state code
-                subentity_code = partner.state_id.name
             else:
                 # Get the subentity code for the partner, based on its state.
                 subentity_code = partner.state_id.code
