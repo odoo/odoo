@@ -9,7 +9,6 @@
         isActive: ["enterprise"],
         trigger: '.o_app[data-menu-xmlid="mass_mailing.mass_mailing_menu_root"]',
         content: _t("Let's try the Email Marketing app."),
-        tooltipPosition: 'bottom',
         run: "click",
     }, {
         isActive: ["community"],
@@ -18,64 +17,73 @@
         run: "click",
     },
     {
+        isActive: ["desktop"],
         trigger: ".o_mass_mailing_mailing_tree",
     },
     {
+        isActive: ["mobile"],
+        trigger: ".o_kanban_view",
+    },
+    {
+        isActive: ["desktop"],
         trigger: '.o_list_button_add',
         content: markup(_t("Start by creating your first <b>Mailing</b>.")),
-        tooltipPosition: 'bottom',
         run: "click",
     }, {
-        trigger: 'div[name="subject"]',
+        isActive: ["mobile"],
+        trigger: 'button.o-kanban-button-new',
+        content: _t("Start by creating your first Mailing."),
+        run: "click",
+    }, {
+        trigger: 'div[name="subject"] input',
         content: markup(_t('Pick the <b>email subject</b>.')),
-        tooltipPosition: 'bottom',
-        run: "edit",
+        run: "edit Newsletter",
     }, {
-        isActive: ["auto"],
-        trigger: 'div[name="contact_list_ids"] > .o_input_dropdown > input[type="text"]',
+        trigger: 'div[name="contact_list_ids"] input',
+        content: _t("Pick a mailing list."),
+        run: 'edit Newsletter',
+    }, {
+        isActive: ["desktop"],
+        trigger: '.o-autocomplete--dropdown-item:contains("Newsletter")',
+        content: _t("Select this mailing list."),
         run: 'click',
     }, {
-        isActive: ["auto"],
-        trigger: 'li.ui-menu-item',
+        isActive: ["mobile"],
+        trigger: '.modal .o_kanban_record:contains("Newsletter")',
+        content: _t("Select this mailing list."),
         run: 'click',
     }, {
-        isActive: ["enterprise"],
-        trigger: 'div[name="body_arch"] :iframe .o_mail_templates_grid',
+        trigger: 'div[name="body_arch"] :iframe .o_mail_templates_grid .dropdown-item:contains("Welcome Message")',
         content: markup(_t('Choose a <b>template</b>.')),
         tooltipPosition: 'top',
         run: 'click',
     }, {
-        isActive: ["community"],
-        trigger: 'div[name="body_arch"] :iframe .o_mail_templates_grid',
-        content: markup(_t('Choose a <b>template</b>.')),
-        tooltipPosition: 'top',
-        run: 'click',
-    }, {
-        isActive: ["enterprise"],
         trigger: 'div[name="body_arch"] :iframe section:has(p)',
         content: _t('Click on this block to edit it.'),
         tooltipPosition: 'top',
         run: 'click',
     }, {
-        isActive: ["community"],
-        trigger: 'div[name="body_arch"] :iframe section:has(p)',
-        content: _t('Click on this block to edit it.'),
-        tooltipPosition: 'top',
+        isActive: ["desktop"],
+        trigger: 'button[title="Save & Quit"]',
+        content: _t("Save your changes."),
         run: 'click',
     }, {
-        trigger: 'div.o_favorite',
+        isActive: ["mobile"],
+        trigger: '.o_form_button_save',
+        content: _t("Save your changes."),
+        run: 'click',
+    }, {
+        trigger: '.o_favorite',
         content: _t('Click on the star to add this mailing to your templates.'),
-        tooltipPosition: 'bottom',
         run: 'click',
-    }, {
-        trigger: 'button[name="action_preview"]',
-        content: _t("Test this mailing by sending a copy to yourself."),
-        tooltipPosition: 'bottom',
-        run: "click",
-    }, {
+    },
+    ...stepUtils.statusbarButtonsSteps(
+        "Test",
+        _t("Test this mailing by sending a copy to yourself."),
+    ),
+    {
         trigger: 'button[name="send_mail_test"]',
         content: _t("Check the email address and click send."),
-        tooltipPosition: 'bottom',
         run: "click",
     }, {
         trigger: "button.btn-close",
@@ -84,17 +92,14 @@
     }, {
         trigger: 'button[name="action_launch"]',
         content: _t("Ready for take-off!"),
-        tooltipPosition: 'bottom',
         run: "click",
     }, {
         trigger: '.btn-primary:contains("Send to all")',
         content: _t("Don't worry, the mailing contact we created is an internal user."),
-        tooltipPosition: 'bottom',
         run: "click",
     }, {
         trigger: '.o_back_button',
         content: markup(_t("By using the <b>Breadcrumb</b>, you can navigate back to the overview.")),
-        tooltipPosition: 'bottom',
         run: 'click',
     }]
 });
