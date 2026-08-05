@@ -4,9 +4,9 @@ import { ActivityMailTemplate } from "@mail/core/web/activity_mail_template";
 import { ActivityMarkAsDone } from "@mail/core/web/activity_markasdone_popover";
 import { computeDelay, getMsToTomorrow } from "@mail/utils/common/dates";
 import { AvatarCard } from "@mail/core/web/avatar_card/avatar_card";
-import { propComputed } from "@mail/utils/common/hooks";
+import { propComputed, propStatic, usePropsPlus } from "@mail/utils/common/hooks";
 
-import { Component, computed, onMounted, onWillUnmount, t, useProps } from "@odoo/owl";
+import { Component, computed, onMounted, onWillUnmount, t } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
 import { usePopover } from "@web/core/popover/popover_hook";
@@ -22,9 +22,11 @@ export class Activity extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
-        this.activity = propComputed("activity", t.instanceOf(this.store["mail.activity"]));
-        this.onActivityChanged = useProps.static("onActivityChanged", t.function([]));
-        this.reloadParentView = useProps.static("reloadParentView", t.function([]));
+        this.props = usePropsPlus({
+            activity: propComputed(t.instanceOf(this.store["mail.activity"])),
+            onActivityChanged: propStatic(t.function([])),
+            reloadParentView: propStatic(t.function([])),
+        });
         this.assignPopover = usePopover(ActivityAssignPopover, { position: "bottom" });
         this.markDonePopover = usePopover(ActivityMarkAsDone, { position: "right" });
         this.avatarCard = usePopover(AvatarCard);
@@ -34,19 +36,19 @@ export class Activity extends Component {
         onWillUnmount(() => browser.clearTimeout(this.updateDelayMidnightTimeout));
         this.thread = computed(() =>
             this.store["mail.thread"].insert({
-                model: this.activity().res_model,
-                id: this.activity().res_id,
+                model: this.props.activity().res_model,
+                id: this.props.activity().res_id,
             })
         );
         this.attachmentUploader = useAttachmentUploader(this.thread);
     }
 
     get displayName() {
-        return this.activity().summary || this.activity().display_name;
+        return this.props.activity().summary || this.props.activity().display_name;
     }
 
     get tooltipInfo() {
-        const activity = this.activity();
+        const activity = this.props.activity();
         return JSON.stringify({
             activity: {
                 activity_type_id: pick(activity.activity_type_id || {}, "name"),
@@ -68,7 +70,7 @@ export class Activity extends Component {
     }
 
     get delay() {
-        return computeDelay(this.activity().date_deadline);
+        return computeDelay(this.props.activity().date_deadline);
     }
 
     onClickAssign(ev) {
@@ -77,8 +79,8 @@ export class Activity extends Component {
             return;
         }
         this.assignPopover.open(ev.currentTarget, {
-            activity: this.activity,
-            onActivityChanged: this.onActivityChanged,
+            activity: this.props.activity,
+            onActivityChanged: this.props.onActivityChanged,
         });
     }
 
@@ -88,31 +90,31 @@ export class Activity extends Component {
             return;
         }
         this.markDonePopover.open(ev.currentTarget, {
-            activity: this.activity,
+            activity: this.props.activity,
             hasHeader: true,
-            onActivityChanged: this.onActivityChanged,
+            onActivityChanged: this.props.onActivityChanged,
         });
     }
 
     async onFileUploaded(data) {
-        const activity = this.activity();
+        const activity = this.props.activity();
         const thread = this.thread();
         const { id: attachmentId } = await this.attachmentUploader.uploadData(data, {
             activity,
         });
         await activity.markAsDone([attachmentId]);
-        this.onActivityChanged(thread);
+        this.props.onActivityChanged(thread);
         await thread.fetchNewMessages();
     }
 
     onClickAvatar(ev) {
-        if (!this.activity().user_id) {
+        if (!this.props.activity().user_id) {
             return;
         }
         const target = ev.currentTarget;
         if (!this.avatarCard.isOpen) {
             this.avatarCard.open(target, {
-                id: this.activity().user_id.id,
+                id: this.props.activity().user_id.id,
                 model: "res.users",
             });
         }
@@ -120,8 +122,8 @@ export class Activity extends Component {
 
     async edit() {
         const thread = this.thread();
-        await this.activity().edit();
-        this.onActivityChanged(thread);
+        await this.props.activity().edit();
+        this.props.onActivityChanged(thread);
     }
 
     /**

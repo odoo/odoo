@@ -6,15 +6,15 @@
         <i t-if="this.prependNameWithStar" class="oi oi-filled o-mail-favorite me-1" data-icon="star" t-att-title="this.starTitle" role="img"/>
     </xpath>
     <xpath expr="//t[@name='itemName']" position="replace">
-        <div t-if="this.channel?.parent_channel_id" class="d-flex align-items-center">
-            <span class="flex-shrink-0 opacity-75" t-att-title="this.channel.parent_channel_id.displayName" t-out="this.parentChannelShortName"/>
+        <div t-if="this.props.channel?.parent_channel_id" class="d-flex align-items-center">
+            <span class="flex-shrink-0 opacity-75" t-att-title="this.props.channel.parent_channel_id.displayName" t-out="this.parentChannelShortName"/>
             <i class="oi o-xsmaller mx-1 flex-shrink-0 opacity-75" data-icon="chevron_forward"/>
-            <span class="text-truncate" t-out="this.channel.thread.displayName"/>
+            <span class="text-truncate" t-out="this.props.channel.thread.displayName"/>
         </div>
         <t t-else="">$0</t>
     </xpath>
     <xpath expr="//t[@t-set-slot='icon']" position="inside">
-        <CountryFlag t-if="this.channel?.showCorrespondentCountry" country="this.channel.correspondentCountry" class="'o-mail-NotificationItem-country position-absolute border shadow-sm'"/>
+        <CountryFlag t-if="this.props.channel?.showCorrespondentCountry" country="this.props.channel.correspondentCountry" class="'o-mail-NotificationItem-country position-absolute border shadow-sm'"/>
     </xpath>
 </t>
 </templates>

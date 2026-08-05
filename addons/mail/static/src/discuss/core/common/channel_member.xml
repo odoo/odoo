@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="discuss.ChannelMember">
-        <t t-set="memberAtRender" t-value="this.member()"/>
+        <t t-set="memberAtRender" t-value="this.props.member()"/>
         <div class="o-discuss-ChannelMember d-flex align-items-center p-1 bg-inherit rounded-3" t-att-class="this.attClass" t-on-click.stop="(ev) => this.onClickAvatar(ev, { memberAtRender })">
-            <DiscussAvatar record="this.member()"/>
+            <DiscussAvatar record="this.props.member()"/>
             <div t-ref="this.displayNameRef" class="d-flex overflow-hidden flex-column lh-sm">
-                <span class="ms-2 text-truncate text-muted fw-bold" t-out="this.member().name" t-att-title="this.member().name"/>
+                <span class="ms-2 text-truncate text-muted fw-bold" t-out="this.props.member().name" t-att-title="this.props.member().name"/>
             </div>
-            <i t-if="this.member().channel_role === 'owner'" class="oi oi-filled ms-1 text-warning lh-sm" data-icon="star" role="img" title="Channel Owner" aria-label="Channel Owner"/>
-            <i t-if="this.member().channel_role === 'admin'" class="oi oi-filled ms-1 text-primary lh-sm" data-icon="star" role="img" title="Channel Admin" aria-label="Channel Admin"/>
+            <i t-if="this.props.member().channel_role === 'owner'" class="oi oi-filled ms-1 text-warning lh-sm" data-icon="star" role="img" title="Channel Owner" aria-label="Channel Owner"/>
+            <i t-if="this.props.member().channel_role === 'admin'" class="oi oi-filled ms-1 text-primary lh-sm" data-icon="star" role="img" title="Channel Admin" aria-label="Channel Admin"/>
             <span class="o-discuss-ChannelMember-callIndicators ms-auto d-flex align-items-center o-gap-0_5 ps-2">
-                <span t-if="this.member().in(this.member().channel_id.invited_member_ids)" class="oi p-1 opacity-75" data-icon="person_add"/>
-                <span t-if="this.member().rtcSession?.is_muted and !this.member().rtcSession?.is_deaf" class="oi p-1 opacity-75" data-icon="mic_off"/>
-                <span t-elif="this.member().rtcSession?.is_deaf" class="oi p-1 opacity-75" data-icon="hearing_disabled"/>
-                <span t-if="this.member().rtcSession?.raisingHand" class="oi p-1" data-icon="back_hand"/>
+                <span t-if="this.props.member().in(this.props.member().channel_id.invited_member_ids)" class="oi p-1 opacity-75" data-icon="person_add"/>
+                <span t-if="this.props.member().rtcSession?.is_muted and !this.props.member().rtcSession?.is_deaf" class="oi p-1 opacity-75" data-icon="mic_off"/>
+                <span t-elif="this.props.member().rtcSession?.is_deaf" class="oi p-1 opacity-75" data-icon="hearing_disabled"/>
+                <span t-if="this.props.member().rtcSession?.raisingHand" class="oi p-1" data-icon="back_hand"/>
             </span>
             <div t-if="this.actions.actions.length" class="o-discuss-ChannelMember-actions" t-att-class="{
                 'd-none': !this.showingActions.isOpen and !this.store.useMobileView,

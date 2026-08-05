@@ -1,5 +1,5 @@
 import { attClassObjectToString } from "@mail/utils/common/format";
-import { propSignal } from "@mail/utils/common/hooks";
+import { propSignal, usePropsPlus } from "@mail/utils/common/hooks";
 import { Component, computed, onWillUnmount, t, useProps } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -109,11 +109,10 @@ export class ActionList extends Component {
 
     setup() {
         super.setup();
-        this.actions = propSignal(
-            "actions",
-            t.array(t.or([t.instanceOf(ActionModel), t.array(t.instanceOf(ActionModel))]))
-        );
-        this.props = useProps({
+        this.props = usePropsPlus({
+            actions: propSignal(
+                t.array(t.or([t.instanceOf(ActionModel), t.array(t.instanceOf(ActionModel))]))
+            ),
             groupClass: t.string().optional(),
             ...actionListPropsSchema,
         });
@@ -123,7 +122,7 @@ export class ActionList extends Component {
     }
 
     groups = computed(() => {
-        const actions = this.actions();
+        const actions = this.props.actions();
         let groups;
         if (actions.find((i) => Array.isArray(i))) {
             groups = actions;

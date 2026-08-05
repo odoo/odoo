@@ -6,7 +6,7 @@ import { MailAttachmentDropzone } from "@mail/core/common/mail_attachment_dropzo
 import { NavigableList } from "@mail/core/common/navigable_list";
 import { MAIL_PLUGINS, MAIL_SMALL_UI_PLUGINS } from "@mail/core/common/plugin/plugin_sets";
 import { mapSuggestionsToOptions, useSuggestion } from "@mail/core/common/suggestion_hook";
-import { propComputed, useSelection, useVisible } from "@mail/utils/common/hooks";
+import { propComputed, usePropsPlus, useSelection, useVisible } from "@mail/utils/common/hooks";
 import { generatePartnerMentionElement, trimEmptyBlocksAround } from "@mail/utils/common/format";
 import { getInnerHtml } from "@mail/utils/common/html";
 import { isDragSourceExternalFile } from "@mail/utils/common/misc";
@@ -123,12 +123,11 @@ export class Composer extends Component {
         this.isMobileOS = isMobileOS();
         this.isIosPwa = isIOS() && isDisplayStandalone();
         this.store = useService("mail.store");
-        this.props = useProps({
+        this.props = usePropsPlus({
             allowUpload: t.boolean().optional(true),
             autofocus: t.or([t.number(), t.boolean()]).optional(0),
             className: t.string().optional(""),
-            /** @deprecated use the `this.composer` signal instead */
-            composer: t.instanceOf(this.store["Composer"]),
+            composer: propComputed(t.instanceOf(this.store["Composer"])),
             disabled: t.boolean().optional(),
             dropzoneRef: t.signal(t.instanceOf(HTMLElement)).optional(),
             mode: t.selection(["compact", "normal", "extended"]).optional("normal"),
@@ -140,7 +139,6 @@ export class Composer extends Component {
             showFullComposer: t.boolean().optional(true),
             type: t.or([t.selection(["message", "note"]), t.literal(false)]).optional(),
         });
-        this.composer = propComputed("composer", t.instanceOf(this.store["Composer"]));
         this.composerActions = useComposerActions(this.composerActionsParams);
         this.EDIT_CLICK_TYPE = EDIT_CLICK_TYPE;
         this.OR_PRESS_SEND_KEYBIND = _t("or press %(send_keybind)s", {
@@ -150,8 +148,8 @@ export class Composer extends Component {
             ),
         });
         this.attachmentUploader = useAttachmentUploader(
-            computed(() => this.thread ?? this.composer().message.thread),
-            { composer: this.composer }
+            computed(() => this.thread ?? this.props.composer().message.thread),
+            { composer: this.props.composer }
         );
         this.ui = useService("ui");
         this.composerService = useService("mail.composer");
@@ -173,7 +171,7 @@ export class Composer extends Component {
         this.fullComposerBus = new EventBus();
         this.selection = useSelection({
             ref: this.ref,
-            model: this.props.composer.selection,
+            model: this.props.composer().selection,
             preserveOnClickAwayPredicate: async (ev) => {
                 // Let event be handled by bubbling handlers first.
                 await new Promise(setTimeout);
@@ -217,9 +215,9 @@ export class Composer extends Component {
             { capture: true }
         );
         if (this.props.dropzoneRef) {
-            if (this.composer().message) {
+            if (this.props.composer().message) {
                 useVisible(this.props.dropzoneRef, (isVisible) => {
-                    this.composer().isEditComposerVisible = Boolean(isVisible);
+                    this.props.composer().isEditComposerVisible = Boolean(isVisible);
                 });
             }
             useCustomDropzone(
@@ -232,15 +230,15 @@ export class Composer extends Component {
                 () =>
                     this.props.allowUpload &&
                     (!this.store.rtc.isFullscreen || this.env.inMeetingView) &&
-                    (this.composer().message
-                        ? this.composer().isEditComposerVisible
+                    (this.props.composer().message
+                        ? this.props.composer().isEditComposerVisible
                         : !this.thread?.messageInEdition?.composer?.isEditComposerVisible)
             );
         }
         useChildSubEnv({ inComposer: true });
         useLayoutEffect(
             () => {
-                const focus = this.props.autofocus + this.props.composer.autofocus;
+                const focus = this.props.autofocus + this.props.composer().autofocus;
                 if (focus && this.ref()) {
                     this.selection.restore();
                     this.ref().focus();
@@ -251,18 +249,18 @@ export class Composer extends Component {
                 }
             },
             () => [
-                this.props.autofocus + this.props.composer.autofocus,
+                this.props.autofocus + this.props.composer().autofocus,
                 this.props.placeholder,
                 untrack(this.ref),
             ]
         );
         useLayoutEffect(
             () => {
-                if (this.props.composer.replyToMessage) {
-                    this.props.composer.autofocus++;
+                if (this.props.composer().replyToMessage) {
+                    this.props.composer().autofocus++;
                 }
             },
-            () => [this.props.composer.replyToMessage]
+            () => [this.props.composer().replyToMessage]
         );
         useLayoutEffect(
             () => {
@@ -280,25 +278,25 @@ export class Composer extends Component {
                 }
                 this.saveContentDebounced();
             },
-            () => [this.props.composer.composerText, untrack(this.ref)]
+            () => [this.props.composer().composerText, untrack(this.ref)]
         );
         useLayoutEffect(
             () => {
-                if (!this.props.composer.forceCursorMove) {
+                if (!this.props.composer().forceCursorMove) {
                     return;
                 }
                 this.selection.restore();
-                this.props.composer.forceCursorMove = false;
+                this.props.composer().forceCursorMove = false;
             },
-            () => [this.props.composer.forceCursorMove]
+            () => [this.props.composer().forceCursorMove]
         );
         useLayoutEffect(
             () => {
-                if (!this.env.inChatter || !this.props.composer.mentionedPartners.length) {
+                if (!this.env.inChatter || !this.props.composer().mentionedPartners.length) {
                     return;
                 }
                 const fragment = createDocumentFragmentFromContent(
-                    this.props.composer.composerHtml
+                    this.props.composer().composerHtml
                 );
                 const elements = fragment.querySelectorAll(
                     `.o_mail_redirect, .o-discuss-readonly-mention`
@@ -306,9 +304,9 @@ export class Composer extends Component {
                 let hasChanged = false;
                 for (const el of elements) {
                     const partnerId = Number(el.dataset.oeId);
-                    const partner = this.props.composer.mentionedPartners.find(
-                        (p) => p.id === partnerId
-                    );
+                    const partner = this.props
+                        .composer()
+                        .mentionedPartners.find((p) => p.id === partnerId);
                     if (
                         partner.partner_share &&
                         this.props.type === COMPOSER_TYPES.NOTE &&
@@ -324,7 +322,7 @@ export class Composer extends Component {
                     }
                 }
                 if (hasChanged) {
-                    this.props.composer.composerHtml = getInnerHtml(fragment);
+                    this.props.composer().composerHtml = getInnerHtml(fragment);
                 }
             },
             () => [this.props.type]
@@ -339,37 +337,37 @@ export class Composer extends Component {
                     return;
                 }
                 this.fullComposerRecoveryPopover.open(fullComposerButtonEl, {
-                    composer: this.props.composer,
+                    composer: this.props.composer(),
                     onClickFullRecover: () => {
                         this.onClickFullComposer();
-                        this.props.composer.restoredFromFullComposer = false;
+                        this.props.composer().restoredFromFullComposer = false;
                     },
                     onClickTextRecover: () => {
-                        this.props.composer.restoredFromFullComposer = false;
+                        this.props.composer().restoredFromFullComposer = false;
                     },
                 });
             },
             () => [
                 this.state.isFullComposerOpen,
-                this.props.composer.restoredFromFullComposer,
+                this.props.composer().restoredFromFullComposer,
                 untrack(this.rootRef)?.querySelector("button[name='open-full-composer']"),
             ]
         );
         onMounted(() => {
             this.ref()?.scrollTo({ top: 0, behavior: "instant" });
-            if (!this.props.composer.composerText) {
+            if (!this.props.composer().composerText) {
                 this.restoreContent();
             }
         });
         onWillUnmount(() => {
-            this.props.composer.isFocused = false;
+            this.props.composer().isFocused = false;
         });
         onWillDestroy(
             immediateEffect(() => {
                 if (this.status === 2 /* DESTROYED */) {
                     return;
                 }
-                const composerHtml = this.props.composer.composerHtml;
+                const composerHtml = this.props.composer().composerHtml;
                 if (this.updateFromEditor) {
                     return;
                 }
@@ -403,7 +401,7 @@ export class Composer extends Component {
     }
 
     get composerActionsParams() {
-        return { composer: () => this.props.composer };
+        return { composer: () => this.props.composer() };
     }
 
     quickActionsList = computed(() => this.composerActions.partition.quick);
@@ -452,7 +450,7 @@ export class Composer extends Component {
 
     get wysiwygConfig() {
         return {
-            content: this.props.composer.composerHtml,
+            content: this.props.composer().composerHtml,
             placeholder: this.placeholder,
             baseContainers: ["DIV", "P"],
             Plugins: this.ui.isSmall ? MAIL_SMALL_UI_PLUGINS : MAIL_PLUGINS,
@@ -477,10 +475,10 @@ export class Composer extends Component {
     }
 
     onClickCancelOrSaveEditText(ev) {
-        if (this.props.composer.message && ev.target.dataset?.type === EDIT_CLICK_TYPE.CANCEL) {
+        if (this.props.composer().message && ev.target.dataset?.type === EDIT_CLICK_TYPE.CANCEL) {
             this.props.onDiscardCallback(ev);
         }
-        if (this.props.composer.message && ev.target.dataset?.type === EDIT_CLICK_TYPE.SAVE) {
+        if (this.props.composer().message && ev.target.dataset?.type === EDIT_CLICK_TYPE.SAVE) {
             this.editMessage(ev);
         }
     }
@@ -520,7 +518,7 @@ export class Composer extends Component {
     }
 
     get SEND_TEXT() {
-        if (this.props.composer.message) {
+        if (this.props.composer().message) {
             return _t("Save editing");
         }
         return this.props.type === "note" ? _t("Log") : _t("Send");
@@ -536,7 +534,7 @@ export class Composer extends Component {
     }
 
     get thread() {
-        return this.props.composer.targetThread;
+        return this.props.composer().targetThread;
     }
 
     get allowUpload() {
@@ -544,7 +542,7 @@ export class Composer extends Component {
     }
 
     get message() {
-        return this.props.composer.message ?? null;
+        return this.props.composer().message ?? null;
     }
 
     get extraData() {
@@ -552,10 +550,10 @@ export class Composer extends Component {
     }
 
     get isSendButtonDisabled() {
-        const attachments = this.props.composer.attachments;
+        const attachments = this.props.composer().attachments;
         return (
             !this.state.active ||
-            (isHtmlEmpty(this.props.composer.composerHtml) && attachments.length === 0) ||
+            (isHtmlEmpty(this.props.composer().composerHtml) && attachments.length === 0) ||
             attachments.some(({ uploading }) => Boolean(uploading))
         );
     }
@@ -563,7 +561,7 @@ export class Composer extends Component {
     /** @param {import("models").Attachment} attachment */
     async unlinkAttachment(attachment) {
         if (this.message && attachment.in(this.message.attachment_ids)) {
-            this.composer().attachments.delete(attachment);
+            this.props.composer().attachments.delete(attachment);
             return;
         }
         await this.attachmentUploader.unlink(attachment);
@@ -614,8 +612,8 @@ export class Composer extends Component {
     }
 
     onInput(ev) {
-        if (!this.props.composer.isDirty) {
-            this.props.composer.isDirty = true;
+        if (!this.props.composer().isDirty) {
+            this.props.composer().isDirty = true;
         }
     }
 
@@ -643,10 +641,10 @@ export class Composer extends Component {
             case "ArrowUp":
                 if (
                     !this.env.inChatter &&
-                    this.props.composer.composerText === "" &&
-                    this.props.composer.thread
+                    this.props.composer().composerText === "" &&
+                    this.props.composer().thread
                 ) {
-                    const messageToEdit = this.props.composer.thread.lastEditableMessageOfSelf;
+                    const messageToEdit = this.props.composer().thread.lastEditableMessageOfSelf;
                     if (messageToEdit) {
                         messageToEdit.enterEditMode();
                     }
@@ -670,7 +668,7 @@ export class Composer extends Component {
                     return;
                 }
                 ev.preventDefault(); // to prevent useless return
-                if (this.props.composer.message) {
+                if (this.props.composer().message) {
                     this.editMessage();
                 } else {
                     this.sendMessage();
@@ -695,7 +693,7 @@ export class Composer extends Component {
     }
 
     async onClickFullComposerGetAction() {
-        this.props.composer.restoredFromFullComposer = false;
+        this.props.composer().restoredFromFullComposer = false;
         const allRecipients = [...this.thread.suggestedRecipients];
         if (this.props.type !== "note") {
             allRecipients.push(...this.thread.additionalRecipients);
@@ -720,16 +718,16 @@ export class Composer extends Component {
                 }
             }
         }
-        const attachmentIds = this.props.composer.attachments.map((attachment) => attachment.id);
-        let default_body = this.props.composer.composerHtml;
+        const attachmentIds = this.props.composer().attachments.map((attachment) => attachment.id);
+        let default_body = this.props.composer().composerHtml;
         if (isHtmlEmpty(default_body)) {
             // Reset signature when recovering an empty body.
-            this.props.composer.emailAddSignature = true;
+            this.props.composer().emailAddSignature = true;
         }
         const signature = this.thread.effectiveSelf.main_user_id?.getSignatureBlock();
         default_body = this.formatDefaultBodyForFullComposer(
             default_body,
-            this.props.composer.emailAddSignature ? signature : ""
+            this.props.composer().emailAddSignature ? signature : ""
         );
         const context = {
             default_attachment_ids: attachmentIds,
@@ -752,8 +750,8 @@ export class Composer extends Component {
             default_subtype_xmlid: this.props.type === "note" ? "mail.mt_note" : "mail.mt_comment",
             clicked_on_full_composer: true,
             body_contains_signature_only:
-                !this.props.composer.composerText ||
-                this.props.composer.composerText.trim().length === 0,
+                !this.props.composer().composerText ||
+                this.props.composer().composerText.trim().length === 0,
             // Changed in 18.2+: finally get rid of autofollow, following should be done manually
             is_thread_composer: true,
             ...this.fullComposerAdditionalContext,
@@ -787,7 +785,7 @@ export class Composer extends Component {
                 } else {
                     this.clear();
                 }
-                this.props.composer.replyToMessage = undefined;
+                this.props.composer().replyToMessage = undefined;
                 this.onCloseFullComposerCallback(isDiscard);
                 this.state.isFullComposerOpen = false;
                 // Use another event bus so that no message is sent to the
@@ -820,7 +818,7 @@ export class Composer extends Component {
     }
 
     clear() {
-        this.props.composer.clear();
+        this.props.composer().clear();
         this.deleteSavedContent();
     }
 
@@ -830,7 +828,7 @@ export class Composer extends Component {
     }
 
     async processMessage(cb) {
-        if (this.props.composer.attachments.some(({ uploading }) => uploading)) {
+        if (this.props.composer().attachments.some(({ uploading }) => uploading)) {
             this.env.services.notification.add(_t("Please wait while the file is uploading."), {
                 type: "warning",
             });
@@ -839,7 +837,7 @@ export class Composer extends Component {
                 return;
             }
             this.state.active = false;
-            await cb(trimEmptyBlocksAround(this.props.composer.composerHtml));
+            await cb(trimEmptyBlocksAround(this.props.composer().composerHtml));
             if (this.props.onPostCallback) {
                 this.props.onPostCallback();
             }
@@ -851,36 +849,36 @@ export class Composer extends Component {
 
     get canProcessMessage() {
         return (
-            !isHtmlEmpty(this.props.composer.composerHtml) ||
-            this.props.composer.attachments.length > 0 ||
+            !isHtmlEmpty(this.props.composer().composerHtml) ||
+            this.props.composer().attachments.length > 0 ||
             (this.message && this.message.attachment_ids.length > 0)
         );
     }
 
     async sendMessage() {
         this.composerActions.activeAction?.actionPanelClose?.();
-        if (this.props.composer.message) {
+        if (this.props.composer().message) {
             this.editMessage();
             return;
         }
         if (this.props.type !== "note") {
             const allRecipients = [
-                ...this.props.composer.thread.suggestedRecipients,
-                ...this.props.composer.thread.additionalRecipients,
+                ...this.props.composer().thread.suggestedRecipients,
+                ...this.props.composer().thread.additionalRecipients,
             ];
             if (allRecipients.some((recipient) => !recipient.email || !isEmail(recipient.email))) {
                 return;
             }
         }
         const { specialMentions, roles } = this.store.getMentionsFromText(
-            this.props.composer.composerHtml,
+            this.props.composer().composerHtml,
             {
-                mentionedRoles: this.props.composer.mentionedRoles,
+                mentionedRoles: this.props.composer().mentionedRoles,
             }
         );
         const hasEveryoneBigMention =
             specialMentions.includes("everyone") &&
-            this.props.composer.thread.channel?.member_count > MENTION_AMOUNT_WARNING;
+            this.props.composer().thread.channel?.member_count > MENTION_AMOUNT_WARNING;
         const rolesMentionAmount = roles.reduce((sum, role) => sum + (role.user_ids_count || 0), 0);
         if (hasEveryoneBigMention || rolesMentionAmount > MENTION_AMOUNT_WARNING) {
             const confirmDef = Promise.withResolvers();
@@ -889,7 +887,7 @@ export class Composer extends Component {
                     "You're about to notify %(amount)s people with %(mention)s. Do you want to continue?",
                     {
                         amount: hasEveryoneBigMention
-                            ? this.props.composer.thread.channel.member_count
+                            ? this.props.composer().thread.channel.member_count
                             : rolesMentionAmount,
                         mention: hasEveryoneBigMention
                             ? markup`<a class="o-discuss-mention pe-none">@everyone</a>`
@@ -916,13 +914,13 @@ export class Composer extends Component {
 
     get postData() {
         return {
-            attachments: [...(this.props.composer.attachments || [])],
-            emailAddSignature: this.props.composer.emailAddSignature,
+            attachments: [...(this.props.composer().attachments || [])],
+            emailAddSignature: this.props.composer().emailAddSignature,
             isNote: this.props.type === "note",
-            mentionedPartners: [...(this.props.composer.mentionedPartners || [])],
-            mentionedRoles: [...(this.props.composer.mentionedRoles || [])],
-            cannedResponseIds: this.props.composer.cannedResponses.map((c) => c.id),
-            parentId: this.props.composer.replyToMessage?.id,
+            mentionedPartners: [...(this.props.composer().mentionedPartners || [])],
+            mentionedRoles: [...(this.props.composer().mentionedRoles || [])],
+            cannedResponseIds: this.props.composer().cannedResponses.map((c) => c.id),
+            parentId: this.props.composer().replyToMessage?.id,
         };
     }
 
@@ -951,60 +949,62 @@ export class Composer extends Component {
         }
         this.suggestion?.clearRawMentions();
         this.suggestion?.clearCannedResponses();
-        this.props.composer.replyToMessage = undefined;
-        this.props.composer.emailAddSignature = true;
-        this.props.composer.thread.additionalRecipients = [];
+        this.props.composer().replyToMessage = undefined;
+        this.props.composer().emailAddSignature = true;
+        this.props.composer().thread.additionalRecipients = [];
         return message;
     }
 
     async editMessage() {
         if (!this.askDeleteFromEdit) {
             await this.processMessage(async (value) =>
-                this.props.composer.message.edit(value, this.props.composer.attachments, {
-                    mentionedPartners: this.props.composer.mentionedPartners,
-                    mentionedRoles: this.props.composer.mentionedRoles,
+                this.props.composer().message.edit(value, this.props.composer().attachments, {
+                    mentionedPartners: this.props.composer().mentionedPartners,
+                    mentionedRoles: this.props.composer().mentionedRoles,
                 })
             );
         } else {
-            this.props.composer.message.showDeleteConfirm(this, this.rootRef);
+            this.props.composer().message.showDeleteConfirm(this, this.rootRef);
         }
         this.suggestion?.clearRawMentions();
     }
 
     get askDeleteFromEdit() {
-        return !this.composer().composerText && this.composer().attachments.length === 0;
+        return (
+            !this.props.composer().composerText && this.props.composer().attachments.length === 0
+        );
     }
 
     onClickInsertCannedResponse(ev) {
         markEventHandled(ev, "composer.clickInsertCannedResponse");
         if (this.editor) {
-            if (!isHtmlEmpty(this.props.composer.composerHtml)) {
+            if (!isHtmlEmpty(this.props.composer().composerHtml)) {
                 this.editor.shared.dom.insert(" ");
             }
             this.editor.shared.dom.insert("::");
             this.editor.shared.history.commit();
         } else {
-            const composerText = this.props.composer.composerText;
-            const firstPart = composerText.slice(0, this.props.composer.selection.start);
+            const composerText = this.props.composer().composerText;
+            const firstPart = composerText.slice(0, this.props.composer().selection.start);
             const secondPart = composerText.slice(
-                this.props.composer.selection.end,
+                this.props.composer().selection.end,
                 composerText.length
             );
             const toInsertPart = firstPart.length === 0 || firstPart.at(-1) === " " ? "::" : " ::";
-            this.props.composer.composerText = firstPart + toInsertPart + secondPart;
+            this.props.composer().composerText = firstPart + toInsertPart + secondPart;
             this.selection.moveCursor((firstPart + toInsertPart).length);
         }
         if (!this.ui.isSmall || !this.env.inChatter) {
-            this.props.composer.autofocus++;
+            this.props.composer().autofocus++;
         }
     }
 
     onChangeWysiwygContent() {
         this.updateFromEditor = true;
         // markup: editor content is trusted
-        this.props.composer.composerHtml = markup(this.editor.getContent());
-        if (!this.props.composer.isDirty) {
-            this.props.composer.isDirty = true;
+        this.props.composer().composerHtml = markup(this.editor.getContent());
+        if (!this.props.composer().isDirty) {
+            this.props.composer().isDirty = true;
         }
         this.updateFromEditor = false;
     }
@@ -1018,27 +1018,27 @@ export class Composer extends Component {
             this.editor.shared.dom.insert(str);
             this.editor.shared.history.commit();
         } else {
-            const composerText = this.props.composer.composerText;
-            const firstPart = composerText.slice(0, this.props.composer.selection.start);
+            const composerText = this.props.composer().composerText;
+            const firstPart = composerText.slice(0, this.props.composer().selection.start);
             const secondPart = composerText.slice(
-                this.props.composer.selection.end,
+                this.props.composer().selection.end,
                 composerText.length
             );
-            this.props.composer.composerText = firstPart + str + secondPart;
+            this.props.composer().composerText = firstPart + str + secondPart;
             this.selection.moveCursor((firstPart + str).length);
         }
         if (this.ui.isSmall && !this.env.inChatter) {
             return false;
         } else {
-            this.props.composer.autofocus++;
+            this.props.composer().autofocus++;
         }
     }
 
     onFocusin(ev) {
         ev.stopPropagation();
-        this.props.composer.isFocused = true;
-        if (this.props.composer.thread?.shouldMarkAsReadOnFocus) {
-            this.props.composer.thread.markAsRead();
+        this.props.composer().isFocused = true;
+        if (this.props.composer().thread?.shouldMarkAsReadOnFocus) {
+            this.props.composer().thread.markAsRead();
         }
     }
 
@@ -1049,13 +1049,13 @@ export class Composer extends Component {
             // Edit or Save most likely clicked: early return as to not re-render (which prevents click)
             return;
         }
-        this.props.composer.isFocused = false;
+        this.props.composer().isFocused = false;
     }
 
     saveContent() {
         if (
             !this.state.active ||
-            (this.props.composer.restoredFromFullComposer && !this.state.isFullComposerOpen)
+            (this.props.composer().restoredFromFullComposer && !this.state.isFullComposerOpen)
         ) {
             return;
         }
@@ -1063,13 +1063,13 @@ export class Composer extends Component {
             composerHtml,
             emailAddSignature,
             replyToMessageId,
-            fromFullComposer = this.props.composer.restoredFromFullComposer,
+            fromFullComposer = this.props.composer().restoredFromFullComposer,
         }) => {
             if (isHtmlEmpty(composerHtml)) {
                 await this.deleteSavedContent();
             } else {
                 const db = new IndexedDB("mail");
-                await db.write("composer", this.props.composer.localId, {
+                await db.write("composer", this.props.composer().localId, {
                     emailAddSignature,
                     replyToMessageId,
                     composerHtml: isMarkup(composerHtml) ? ["markup", composerHtml] : composerHtml,
@@ -1084,9 +1084,9 @@ export class Composer extends Component {
             });
         } else {
             saveContentToLocalStorage({
-                composerHtml: this.props.composer.composerHtml,
+                composerHtml: this.props.composer().composerHtml,
                 emailAddSignature: true,
-                replyToMessageId: this.props.composer.replyToMessage?.id,
+                replyToMessageId: this.props.composer().replyToMessage?.id,
                 fromFullComposer: false,
             });
         }
@@ -1094,25 +1094,25 @@ export class Composer extends Component {
 
     async deleteSavedContent() {
         const db = new IndexedDB("mail");
-        await db.delete("composer", this.props.composer.localId);
+        await db.delete("composer", this.props.composer().localId);
     }
 
     async restoreContent() {
         const db = new IndexedDB("mail");
-        const config = await db.read("composer", this.props.composer.localId);
+        const config = await db.read("composer", this.props.composer().localId);
         if (!config) {
             await this.deleteSavedContent();
             return;
         }
         if (!isHtmlEmpty(config.composerHtml)) {
-            if (this.props.composer.thread && !this.props.composer.thread.channel) {
-                this.props.composer.restoredFromFullComposer = config.fromFullComposer;
+            if (this.props.composer().thread && !this.props.composer().thread.channel) {
+                this.props.composer().restoredFromFullComposer = config.fromFullComposer;
             }
-            this.props.composer.emailAddSignature = config.emailAddSignature;
-            this.props.composer.composerHtml = config.composerHtml;
+            this.props.composer().emailAddSignature = config.emailAddSignature;
+            this.props.composer().composerHtml = config.composerHtml;
         }
         if (Number.isInteger(config.replyToMessageId)) {
-            this.props.composer.replyToMessage = this.store["mail.message"].insert(
+            this.props.composer().replyToMessage = this.store["mail.message"].insert(
                 config.replyToMessageId
             );
         }

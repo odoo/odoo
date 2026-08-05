@@ -1,5 +1,5 @@
 import { Discuss } from "@mail/core/public_web/discuss_app/discuss_app";
-import { propComputed } from "@mail/utils/common/hooks";
+import { propComputed, usePropsPlus } from "@mail/utils/common/hooks";
 
 import { Component, onMounted, onWillUnmount, t, useOnChange } from "@odoo/owl";
 
@@ -13,28 +13,29 @@ export class DiscussClientAction extends Component {
 
     setup() {
         super.setup();
-        this.action = propComputed(
-            "action",
-            t
-                .object({
-                    context: t.object({
-                        active_id: t.or([t.string(), t.number()]).optional(),
-                    }),
-                    params: t
-                        .object({
+        this.props = usePropsPlus({
+            action: propComputed(
+                t
+                    .object({
+                        context: t.object({
                             active_id: t.or([t.string(), t.number()]).optional(),
-                            default_active_id: t.or([t.string(), t.number()]).optional(),
-                            highlight_message_id: t.number().optional(),
-                        })
-                        .optional(),
-                })
-                // The public page doesn't use the action service, but overrides
-                // `getActiveId` to provide the id from the URL instead of the action.
-                .optional()
-        );
+                        }),
+                        params: t
+                            .object({
+                                active_id: t.or([t.string(), t.number()]).optional(),
+                                default_active_id: t.or([t.string(), t.number()]).optional(),
+                                highlight_message_id: t.number().optional(),
+                            })
+                            .optional(),
+                    })
+                    // The public page doesn't use the action service, but overrides
+                    // `getActiveId` to provide the id from the URL instead of the action.
+                    .optional()
+            ),
+        });
         this.store = useService("mail.store");
         useOnChange(
-            () => [this.action()],
+            () => [this.props.action()],
             (action) => this.restoreDiscussThread(action)
         );
         onMounted(() => (this.store.discuss.isActive = true));

@@ -1,4 +1,4 @@
-import { propComputed } from "@mail/utils/common/hooks";
+import { propComputed, usePropsPlus } from "@mail/utils/common/hooks";
 
 import { Component, computed, onWillDestroy, signal, types, xml } from "@odoo/owl";
 
@@ -14,20 +14,26 @@ export class RelativeTime extends Component {
     setup() {
         super.setup();
         this.recomputeSignal = signal(0);
-        this.datetime = propComputed("datetime", types.instanceOf(luxon.DateTime));
+        this.props = usePropsPlus(this.getPropsDefinition());
         this.timeout = null;
         onWillDestroy(() => clearTimeout(this.timeout));
         this.relativeTime = computed(() => {
             void this.recomputeSignal();
             clearTimeout(this.timeout);
-            const delta = Date.now() - this.datetime().ts;
+            const delta = Date.now() - this.props.datetime().ts;
             const absDelta = Math.abs(delta);
             const updateDelay = absDelta < MINUTE ? absDelta : absDelta < HOUR ? MINUTE : HOUR;
             this.timeout = setTimeout(incrementFn(this.recomputeSignal), updateDelay);
             if (absDelta < 45 * 1000) {
                 return delta < 0 ? _t("in a few seconds") : _t("now");
             }
-            return this.datetime().toRelative();
+            return this.props.datetime().toRelative();
         });
+    }
+
+    getPropsDefinition() {
+        return {
+            datetime: propComputed(types.instanceOf(luxon.DateTime)),
+        };
     }
 }
