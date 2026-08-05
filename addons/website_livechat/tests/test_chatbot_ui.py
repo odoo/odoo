@@ -452,6 +452,10 @@ class TestLivechatChatbotUI(TestLivechatChatbotUICommon):
             "chatbot_trigger_step",
             wraps(step_trigger)(_patched_step_trigger),
         ):
+            # The routing map is cached (the "routing" ormcache) with the controller endpoints
+            # baked in. When it was already built with the original method, the monkeypatch above
+            # is ignored and the retry button never appears.
+            self.env.transaction.invalidate_ormcache("routing")
             self.start_tour("/", "website_livechat.chatbot_stop_when_agent_joins_tour")
 
         channel = self.env["discuss.channel"].search([("id", "=", new_channel_id)])
