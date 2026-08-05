@@ -861,6 +861,13 @@ class ProductTemplate(models.Model):
         ]
 
     @api.model
+    def _get_website_sale_search_fields(self, search_in_description=True):
+        search_fields = ['name', 'variants_default_code']
+        if search_in_description:
+            search_fields += ['description_sale', 'description_ecommerce']
+        return search_fields
+
+    @api.model
     def _search_get_detail(self, website, order, options):
         with_image = options['displayImage']
         with_description = options['displayDescription']
@@ -888,7 +895,7 @@ class ProductTemplate(models.Model):
             domains.append([('list_price', '<=', max_price)])
         if attribute_value_dict:
             domains.extend(self._get_attribute_value_domain(attribute_value_dict))
-        search_fields = ['name', 'default_code', 'variants_default_code']
+        search_fields = self._get_website_sale_search_fields(with_description)
         fetch_fields = ['id', 'name', 'website_url']
         mapping = {
             'name': {'name': 'name', 'type': 'text', 'match': True},
@@ -899,11 +906,8 @@ class ProductTemplate(models.Model):
         if with_image:
             mapping['image_url'] = {'name': 'image_url', 'type': 'html'}
         if with_description:
-            # Internal note is not part of the rendering.
-            search_fields.append('description')
-            fetch_fields.append('description')
-            search_fields.append('description_sale')
             fetch_fields.append('description_sale')
+            fetch_fields.append('description_ecommerce')
             mapping['description'] = {'name': 'description_sale', 'type': 'text', 'match': True}
         if with_price:
             mapping['detail'] = {'name': 'price', 'type': 'html', 'display_currency': options['display_currency']}
