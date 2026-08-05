@@ -311,9 +311,9 @@ def _translate_daypart_to_id(daypart_key):
         'overnight' / 'ros' / 'custom' - hardcoded from DAYPART_OPTIONS
 
     Only the prog_ keys map to real records. Hardcoded keys aren't in
-    mv.program.daypart, so we return False - the schedule keeps its
-    program_daypart_id empty. Callers use the returned value as the
-    write value for the m2o field (False -> clear).
+    mv.program.daypart, so we return False. Callers use the returned
+    id to look up the record's `name` when resolving a schedule's
+    program_daypart label.
     """
     if not daypart_key or not isinstance(daypart_key, str):
         return False
@@ -340,6 +340,44 @@ def _time_range_label(start, end, time_options_map):
 class MvDealUnitsGridRpc(models.Model):
     _name = 'mv.deal'
     _inherit = 'mv.deal'
+
+    def _resolve_daypart_label(self, daypart_key, start, end):
+        """Return the human-readable daypart LABEL to store on a
+        schedule. Precedence:
+          1. `daypart_key` is 'prog_<id>' and the record exists ->
+             the program daypart's `name`.
+          2. Deal's program has any daypart whose interval contains
+             (start, end) -> that record's `name` (containment).
+          3. `daypart_key` is a hardcoded key ('day', 'prime', ...)
+             -> DAYPART_LABELS[key].
+          4. Guess from (start, end) via _guess_daypart -> label.
+          5. Fallback -> 'Custom'.
+        Called from save_units_grid create + update paths.
+        """
+        self.ensure_one()
+        # 1. Explicit program-daypart id in the frontend payload.
+        dp_id = _translate_daypart_to_id(daypart_key)
+        if dp_id:
+            rec = self.env['mv.program.daypart'].browse(dp_id).exists()
+            if rec and rec.name:
+                return rec.name
+        # 2. Containment fallback against the deal's program.
+        dp_id = self._find_program_daypart_for_schedule(start, end)
+        if dp_id:
+            rec = self.env['mv.program.daypart'].browse(dp_id).exists()
+            if rec and rec.name:
+                return rec.name
+        # 3. Hardcoded key sent by the frontend.
+        if daypart_key and daypart_key in DAYPART_LABELS:
+            return DAYPART_LABELS[daypart_key]
+        # 4. No key sent - infer from (start, end) via containment
+        #    against DAYPART_DEFAULT_TIMES.
+        if start and end:
+            key = _guess_daypart(start, end)
+            if key and key in DAYPART_LABELS:
+                return DAYPART_LABELS[key]
+        # 5. Final fallback.
+        return 'Custom'
 
     def _find_program_daypart_for_schedule(self, start, end):
         """Return the id of the smallest program daypart on this
@@ -617,15 +655,21 @@ class MvDealUnitsGridRpc(models.Model):
                 'max_per_day': sig_vals['max_per_day'],
                 'days_allowed': [(6, 0, tag_ids)],
             }
-            # Phase 24: attach the program-daypart link when the row
-            # was created from a program-defined daypart. sig_vals only
-            # carries 'daypart' for new tmp rows; for existing rows the
-            # link was already set on the schedule and is preserved
-            # unless the planner explicitly changes it via row_updates.
+            # Phase 24: store the daypart LABEL as a string on the
+            # schedule. Resolves in this order:
+            #   1) 'prog_<id>' -> the program daypart record's name
+            #   2) program has any daypart containing (start, end)
+            #      -> that record's name (containment lookup)
+            #   3) hardcoded key ('day', ...) -> DAYPART_LABELS[key]
+            #   4) unknown -> 'Custom'
             dp_key = sig_vals.get('daypart') if isinstance(sig_vals, dict) else None
-            dp_id = _translate_daypart_to_id(dp_key)
-            if dp_id:
-                common_vals['program_daypart_id'] = dp_id
+            dp_label = self._resolve_daypart_label(
+                dp_key,
+                sig_vals.get('start_time'),
+                sig_vals.get('end_time'),
+            )
+            if dp_label:
+                common_vals['program_daypart'] = dp_label
             if active:
                 active.write({
                     'units_available': units,
@@ -777,13 +821,13 @@ class MvDealUnitsGridRpc(models.Model):
         for k in ('rate', 'start_time', 'end_time', 'max_per_day'):
             if k in upd:
                 write_vals[k] = upd[k]
-        # Phase 24: persist the daypart the planner picked. 'prog_<id>'
-        # strings map to a mv.program.daypart record; hardcoded ones
-        # (early_morning, weekday, ...) leave the m2o empty since
-        # they aren't records in that model.
+        # Phase 24: persist the daypart LABEL string on the schedules.
+        # Uses the same resolver as the create path.
         if 'daypart' in upd:
-            write_vals['program_daypart_id'] = _translate_daypart_to_id(
-                upd.get('daypart')
+            new_start = upd.get('start_time', scheds[0].start_time)
+            new_end   = upd.get('end_time',   scheds[0].end_time)
+            write_vals['program_daypart'] = self._resolve_daypart_label(
+                upd.get('daypart'), new_start, new_end,
             )
         if not write_vals:
             return old_sig
