@@ -125,7 +125,19 @@ class AccountMove(models.Model):
         # EXTEND 'account_peppol' to hide the reset to draft button for sent PDP invoices
         # account_peppol already prevents resetting those sent via Peppol
         super()._compute_show_reset_to_draft_button()
+<<<<<<< e10dd632ab28c435da36499008d69a93ac61fdb4
         self.filtered(lambda move: move.l10n_fr_pdp_sent_in_flow_ids).show_reset_to_draft_button = False
+||||||| 8d97d080adf63a443be464276d1e7e8b22af3038
+        relevant_moves = self.filtered(
+            lambda move: move.l10n_fr_pdp_sent_in_flow_ids or move.pdp_is_sent and move.is_sale_document(include_receipts=True)
+        )
+        relevant_moves.show_reset_to_draft_button = False
+=======
+        relevant_moves = self.filtered(
+            lambda move: move.sudo().l10n_fr_pdp_sent_in_flow_ids or move.pdp_is_sent and move.is_sale_document(include_receipts=True)
+        )
+        relevant_moves.show_reset_to_draft_button = False
+>>>>>>> 4d5a00442a308c1afff1a0eabf861665b5fac82a
 
     @api.depends(
         'line_ids.matched_debit_ids.debit_move_id',
