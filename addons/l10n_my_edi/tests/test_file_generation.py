@@ -400,6 +400,17 @@ class L10nMyEDITestFileGeneration(AccountTestInvoicingCommon):
             'cac:PartyIdentification/cbc:ID[@schemeID="BRN"]',
             self.partner_b.commercial_partner_id.l10n_my_identification_number,
         )
+        # The customer is not Malaysian, so the CountrySubentityCode should be fixed as '17'.
+        self._assert_node_values(
+            customer_root,
+            'cac:PostalAddress/cbc:CountrySubentityCode',
+            '17',
+        )
+        self._assert_node_values(
+            root,
+            'cac:Delivery/cac:DeliveryParty/cac:PostalAddress/cbc:CountrySubentityCode',
+            '17',
+        )
 
         with file_open('l10n_my_edi/tests/expected_xmls/invoice_foreigner.xml', 'rb') as f:
             expected_xml = etree.fromstring(f.read())
@@ -449,6 +460,16 @@ class L10nMyEDITestFileGeneration(AccountTestInvoicingCommon):
             tax_subtotal_root,
             'cac:TaxCategory/cbc:TaxExemptionReason',
             invoice.l10n_my_edi_exemption_reason,
+        )
+        self._assert_node_values(
+            root,
+            'cac:AccountingCustomerParty/cac:Party/cac:PostalAddress/cbc:CountrySubentityCode',
+            '17',
+        )
+        self._assert_node_values(
+            root,
+            'cac:Delivery/cac:DeliveryParty/cac:PostalAddress/cbc:CountrySubentityCode',
+            '17',
         )
 
         with file_open('l10n_my_edi/tests/expected_xmls/invoice_tax_exempt.xml', 'rb') as f:
