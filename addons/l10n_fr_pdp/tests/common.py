@@ -119,9 +119,9 @@ def mock_pdp_send_response():
 
 
 @contextmanager
-def mock_pdp_documents_retrieval(error=False):
+def mock_pdp_documents_retrieval(error=False, documents=False):
     state = 'error' if error else 'done'
-    documents = {
+    documents = documents or {
         FAKE_UUID[0]: {
             'accounting_supplier_party': False, 'filename': 'test_outgoing.xml', 'enc_key': '', 'document': '',
             'state': state, 'direction': 'outgoing', 'document_type': 'Invoice', 'origin_message_uuid': FAKE_UUID[0],

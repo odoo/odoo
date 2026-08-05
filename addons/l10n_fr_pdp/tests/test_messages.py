@@ -1,15 +1,19 @@
 import json
+
+from base64 import b64encode
 from contextlib import contextmanager
 from unittest.mock import patch
 
 from odoo import Command
 from odoo.exceptions import UserError
 from odoo.tests.common import tagged
+from odoo.tools.misc import file_open
 
 from odoo.addons.account.tests.test_account_move_send import TestAccountMoveSendCommon
 
 from .common import (
     FAKE_UUID,
+    FILE_PATH,
     TestL10nFrPdpCommon,
     mock_pdp_annuaire_lookup,
     mock_pdp_documents_retrieval,
@@ -422,6 +426,31 @@ class TestPdpMessage(TestL10nFrPdpCommon, TestAccountMoveSendCommon):
 
         move = self.env['account.move'].search([('peppol_message_uuid', '=', FAKE_UUID[1])])
         self.assertRecordValues(move, [{'peppol_move_state': 'done', 'move_type': 'in_invoice'}])
+
+    def test_receive_success_pdp_factur_x_self_billed(self):
+        # An outgoing invoice should be created from the Factur-X format when it is self-billed.
+        documents = {
+            FAKE_UUID[1]: {
+                'accounting_supplier_party': '0184:16356706', 'filename': 'test_incoming',
+                'enc_key': file_open(f'{FILE_PATH}/enc_key', mode='r').read(),
+                'document': b64encode(file_open(f'{FILE_PATH}/document_factur_x_self_bill', mode='rb').read()).decode(),
+                'state': 'done', 'direction': 'incoming', 'document_type': 'Factur-X', 'origin_message_uuid': FAKE_UUID[1],
+            },
+        }
+        with mock_pdp_documents_retrieval(documents=documents):
+            self.env['account_edi_proxy_client.user']._cron_peppol_get_new_documents()
+
+        move = self.env['account.move'].search([('peppol_message_uuid', '=', FAKE_UUID[1])])
+        self.assertRecordValues(move, [{
+            'peppol_move_state': 'done',
+            'move_type': 'out_invoice',
+            'amount_total': 24,
+        }])
+        self.assertNotEqual(move.partner_id.id, move.company_id.id)
+        self.assertRecordValues(move.partner_id, [{
+            'name': 'SUPER FRENCH PARTNER',
+            'vat': 'FR23334175221',
+        }])
 
     def test_silent_error_while_creating_xml(self):
         """When in multi/async mode, the generation of XML can fail silently (without raising).
