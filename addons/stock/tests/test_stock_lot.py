@@ -202,6 +202,32 @@ class TestLotSerial(TestStockCommon):
         self.assertRecordValues(delivery_picking.move_ids, [{'state': 'done', 'quantity': 5.0, 'picked': True}, {'state': 'done', 'quantity': 3.0, 'picked': True}])
         self.assertRecordValues(quant, [{'quantity': 7.0, 'reserved_quantity': 0.0}])
 
+    def test_scrap_lot_without_quantity_on_hand(self):
+        """Check that a lot without any quantity on hand can be scrapped from its form view."""
+        lot = self.LotObj.create({
+            'name': 'lot_product_a_no_qty',
+            'product_id': self.productA.id,
+        })
+        self.assertFalse(lot.location_id)
+        scrap_move = Form.from_action(self.env, lot.action_scrap()).save()
+        self.assertRecordValues(scrap_move, [{
+            'product_id': self.productA.id,
+            'lot_ids': lot.ids,
+            'quantity': 1.0,
+            'location_id': self.env.company.default_stock_location_id.id,
+            'location_dest_id': self.env.company.scrap_location_id.id,
+            'is_scrap': True,
+            'state': 'assigned',
+        }])
+        # nothing on hand to scrap, the user has to confirm through the insufficient quantity warning
+        Form.from_action(self.env, scrap_move.action_scrap()).save().action_done()
+        self.assertRecordValues(scrap_move, [{'state': 'done', 'quantity': 1.0, 'picked': True}])
+        self.assertRecordValues(lot.quant_ids, [
+            {'location_id': self.env.company.default_stock_location_id.id, 'quantity': -1.0},
+            {'location_id': self.env.company.scrap_location_id.id, 'quantity': 1.0},
+        ])
+        self.assertTrue(lot.is_scrap)
+
     def test_location_lot_id_update_quant_qty(self):
         """
         Test that the location of a lot is updated when its linked quants change
