@@ -162,6 +162,53 @@ class TestUblImportBis3InvoiceBE(TestUblBis3Common, TestUblCiiBECommon):
                     ],
                 )
 
+    @freeze_time('2020-01-01')
+    def test_price_subtotal_consistent_with_amount_currency(self):
+        """ On round_globally (this test class's default company setting), a line's
+        displayed Subtotal (price_subtotal) must always match the amount actually posted
+        to the ledger for that same line, in the document's own currency (amount_currency),
+        even when the whole-invoice redistribution nudges some lines away from their
+        naturally-rounded amount.
+        """
+        self.percent_tax(21.0)
+
+        invoice = self._import_invoice_as_attachment_on(
+            test_name='test_price_subtotal_balance_mismatch',
+            journal=self.company_data['default_journal_sale'],
+        )
+
+        self.assertRecordValues(
+            invoice.invoice_line_ids,
+            [
+                {'price_subtotal': 214.29, 'price_total': 259.29, 'amount_currency': -214.29},
+                {'price_subtotal': 542.31, 'price_total': 656.19, 'amount_currency': -542.31},
+                {'price_subtotal': 242.86, 'price_total': 293.86, 'amount_currency': -242.86},
+                {'price_subtotal': 37.78, 'price_total': 45.71, 'amount_currency': -37.78},
+                {'price_subtotal': 54.55, 'price_total': 66.0, 'amount_currency': -54.55},
+                {'price_subtotal': 522.73, 'price_total': 632.5, 'amount_currency': -522.73},
+                {'price_subtotal': 141.67, 'price_total': 171.42, 'amount_currency': -141.67},
+                {'price_subtotal': 3549.98, 'price_total': 4295.49, 'amount_currency': -3549.98},
+                {'price_subtotal': 3066.66, 'price_total': 3710.66, 'amount_currency': -3066.66},
+                {'price_subtotal': 84.62, 'price_total': 102.39, 'amount_currency': -84.62},
+                {'price_subtotal': 178.85, 'price_total': 216.41, 'amount_currency': -178.85},
+                {'price_subtotal': 722.22, 'price_total': 873.89, 'amount_currency': -722.22},
+                {'price_subtotal': 1011.11, 'price_total': 1223.44, 'amount_currency': -1011.11},
+                {'price_subtotal': 314.29, 'price_total': 380.29, 'amount_currency': -314.29},
+                {'price_subtotal': 3066.66, 'price_total': 3710.66, 'amount_currency': -3066.66},
+                {'price_subtotal': 0.04, 'price_total': 0.04, 'amount_currency': -0.04},
+            ],
+        )
+        self.assertRecordValues(
+            invoice,
+            [
+                {
+                    'amount_untaxed': 13750.62,
+                    'amount_tax': 2887.63,
+                    'amount_total': 16638.25,
+                },
+            ],
+        )
+
     def test_import_embedded_pdf(self):
         """
         Importing an xml with embedded pdf should correctly import the
