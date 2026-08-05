@@ -715,6 +715,10 @@ export class PosOrderline extends Base {
         return this.discount || 0;
     }
 
+    isDiscountable() {
+        return !this.isTipLine();
+    }
+
     // FIXME all below should be removed
     getValidLots() {
         return this.pack_lot_ids.filter((item) => item.lot_name);
