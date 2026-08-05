@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_account_payment_form_inherit_ebupot" model="ir.ui.view">
+        <field name="name">account.payment.form.inherit.ebupot</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="l10n_account_withholding_tax.view_account_payment_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header/button[@name='action_post']" position="before">
+                <button name="download_ebupot" string="Download E-Bupot" type="object"
+                        class="oe_highlight"
+                        groups="account.group_account_invoice"
+                        invisible="country_code != 'ID' or payment_type != 'outbound' or withhold == 'payment' or not withholding_line_ids or state not in ('paid', 'reconciled')"/>
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_open_coretax_document" type="object"
+                        class="oe_stat_button" icon="menu"
+                        groups="account.group_account_invoice"
+                        invisible="not l10n_id_coretax_document">
+                    <div class="o_form_field o_stat_info">
+                        <span class="o_stat_text">E-Bupot</span>
+                    </div>
+                </button>
+            </xpath>
+            <xpath expr="//field[@name='withholding_line_ids']/list/field[@name='tax_id']" position="before">
+                <field name="source_tax_id" string="Origin Tax"
+                       column_invisible="parent.country_code != 'ID'"
+                       domain="[('l10n_id_ebupot_code', '!=', False)]"
+                       options="{'no_create': True}"
+                       optional="hide"/>
+            </xpath>
+
+            <xpath expr="//notebook[@name='payment_notebook']" position="inside">
+                <page string="Electronic Tax (E-Bupot)" name="ebupot_page"
+                      invisible="country_code != 'ID' or payment_type != 'outbound' or withhold == 'payment'">
+                    <group>
+                        <group>
+                            <field name="l10n_id_ebupot_document_type" readonly="l10n_id_coretax_document != False"/>
+                            <field name="l10n_id_ebupot_document_number" readonly="l10n_id_coretax_document != False"/>
+                            <field name="l10n_id_ebupot_document_date" readonly="l10n_id_coretax_document != False"/>
+                        </group>
+                        <group>
+                            <field name="l10n_id_ebupot_gov_treasurer_opt" readonly="l10n_id_coretax_document != False"/>
+                            <field name="l10n_id_ebupot_sp2d_number"
+                                   invisible="l10n_id_ebupot_gov_treasurer_opt in (False, 'N/A')"
+                                   readonly="l10n_id_coretax_document != False"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="download_ebupot_action" model="ir.actions.server">
+        <field name="name">Download E-Bupot</field>
+        <field name="model_id" ref="account.model_account_payment"/>
+        <field name="binding_model_id" ref="account.model_account_payment"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">action = records.download_ebupot()</field>
+    </record>
+
+</odoo>

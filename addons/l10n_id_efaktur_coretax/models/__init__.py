@@ -7,4 +7,7 @@ from . import uom_uom
 from . import res_partner
 from . import account_move
 from . import account_move_line
+from . import ebupot_xml_builder
 from . import coretax_document
+from . import account_payment_register
+from . import account_payment

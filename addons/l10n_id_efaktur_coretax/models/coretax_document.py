@@ -18,6 +18,7 @@ class CoretaxDocument(models.Model):
     document_type = fields.Selection(
         selection=[
             ('efaktur', "E-Faktur"),
+            ('ebupot', "E-Bupot"),
         ],
         string="Document Type",
         required=True,
@@ -37,12 +38,17 @@ class CoretaxDocument(models.Model):
         inverse_name="l10n_id_coretax_document",
         domain="[('move_type', 'in', ['out_invoice', 'out_refund']), ('company_id', '=', company_id), ('l10n_id_coretax_document', '=', False), ('state', '=', 'posted')]",
     )
+    payment_ids = fields.One2many(
+        comodel_name="account.payment",
+        inverse_name="l10n_id_coretax_document",
+        domain="[('company_id', '=', company_id), ('payment_type', '=', 'outbound'), ('l10n_id_coretax_document', '=', False)]",
+    )
 
     # --------------------------------
     # Compute, inverse, search methods
     # --------------------------------
 
-    @api.depends('document_type', 'invoice_ids')
+    @api.depends('document_type', 'invoice_ids', 'payment_ids')
     def _compute_name(self):
         for doc in self:
             source_records = doc._get_source_records()
@@ -71,6 +77,7 @@ class CoretaxDocument(models.Model):
         self.ensure_one()
         return {
             'efaktur': self.invoice_ids,
+            'ebupot': self.payment_ids,
         }.get(self.document_type)
 
     def _get_xml_files(self):
@@ -83,6 +90,7 @@ class CoretaxDocument(models.Model):
             raise UserError(_("No records found to generate %s.", self._get_document_type_label()))
         return {
             'efaktur': self._get_xml_files_efaktur,
+            'ebupot': self._get_xml_files_ebupot,
         }.get(self.document_type)()
 
     def _generate_xml(self, regenerate=False):
@@ -154,3 +162,15 @@ class CoretaxDocument(models.Model):
             xml_declaration=True,
             encoding='UTF-8',
         )
+
+    # -------
+    # E-Bupot
+    # -------
+
+    def _get_xml_files_ebupot(self):
+        """ E-Bupot is reported per period, hence one file per month the payments belong to. """
+        builder = self.env['l10n_id_efaktur_coretax.ebupot.xml.builder']
+        return [{
+            'name': f"ebupot_{group['payment_month']}",
+            'xml': builder._build_ebupot_xml(self.company_id.vat, group['data']),
+        } for group in self.payment_ids._l10n_id_ebupot_prepare_vals()]

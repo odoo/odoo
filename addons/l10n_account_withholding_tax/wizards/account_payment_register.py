@@ -166,7 +166,7 @@ class AccountPaymentRegister(models.TransientModel):
             if not wizard.withholding_line_ids:
                 batch = wizard._get_batches()[0]
                 base_lines = []
-                for move in batch['lines'].move_id.filtered(lambda m: m.withholding_residual_amount_currency):
+                for move in wizard._get_withholding_moves(batch):
                     move_base_lines, _move_tax_lines = move._get_rounded_base_and_tax_lines()
                     base_lines += move_base_lines
 
@@ -291,6 +291,14 @@ class AccountPaymentRegister(models.TransientModel):
     # ----------------
     # Business methods
     # ----------------
+
+    def _get_withholding_moves(self, batch):
+        """ Return the batch moves to consider when building the default withholding lines.
+
+        By default only moves that actually withhold an amount are considered.
+        """
+        self.ensure_one()
+        return batch['lines'].move_id.filtered(lambda m: m.withholding_residual_amount_currency)
 
     def _get_total_amount_in_wizard_currency(self):
         """

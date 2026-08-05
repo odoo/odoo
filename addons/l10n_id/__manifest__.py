@@ -15,13 +15,16 @@ This is the latest Indonesian Odoo localisation necessary to run Odoo accounting
     'depends': [
         'account',
         'base_vat',
+        'l10n_account_withholding_tax',
     ],
     'auto_install': ['account'],
     'data': [
+        'security/ir.access.csv',
         'data/ir_cron.xml',
+        'data/l10n_id.ebupot.code.csv',
+        'views/account_tax_views.xml',
         'views/account_move_views.xml',
         'views/res_bank.xml',
-        'security/ir.access.csv',
     ],
     'demo': [
         'demo/demo_company.xml',
