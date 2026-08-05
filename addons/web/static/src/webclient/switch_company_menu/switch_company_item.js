@@ -1,8 +1,9 @@
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { Component, proxy, t, useProps } from "@odoo/owl";
-import { user } from "@web/core/user";
+import { Component, t, useProps } from "@odoo/owl";
 import { CheckBox } from "@web/core/checkbox/checkbox";
+import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
+import { user } from "@web/core/user";
+import { CompanySelector } from "@web/webclient/switch_company_menu/company_selector";
 
 export class SwitchCompanyItem extends Component {
     static template = "web.SwitchCompanyItem";
@@ -12,9 +13,7 @@ export class SwitchCompanyItem extends Component {
         level: t.number(),
     });
 
-    setup() {
-        this.companySelector = proxy(this.env.companySelector);
-    }
+    companySelector = useProps.static("selector", t.instanceOf(CompanySelector));
 
     get isCompanySelected() {
         return this.companySelector.isCompanySelected(this.props.company.id);

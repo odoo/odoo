@@ -55,7 +55,7 @@
 
     <div class="o_switch_company_menu_items">
         <t t-foreach="this.visibleCompanies" t-as="entry" t-key="entry.company.id">
-            <SwitchCompanyItem company="entry.company" level="entry.level"/>
+            <SwitchCompanyItem company="entry.company" level="entry.level" selector="this.companySelector"/>
         </t>
     </div>
     <div t-if="this.companySelector.hasSelectionChanged" class="o_switch_company_menu_buttons d-flex gap-2 px-2 pt-2">
