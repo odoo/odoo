@@ -72,6 +72,7 @@ class PortalShare(models.TransientModel):
                         'share_link': share_link,
                         'model_description': self.env['ir.model']._get(self.resource_ref._name).display_name.lower()},
                 subject=_("Invitation to access %s", self.resource_ref.display_name),
+                message_type='comment',
                 subtype_xmlid='mail.mt_note',
                 email_layout_xmlid='mail.mail_notification_light',
                 partner_ids=partner.ids)
@@ -92,6 +93,7 @@ class PortalShare(models.TransientModel):
                         'share_link': share_link,
                         'model_description': self.env['ir.model']._get(self.resource_ref._name).display_name.lower()},
                 subject=_("Invitation to access %s", self.resource_ref.display_name),
+                message_type='comment',
                 subtype_xmlid='mail.mt_note',
                 email_layout_xmlid='mail.mail_notification_light',
                 partner_ids=partner.ids)
