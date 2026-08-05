@@ -64,9 +64,13 @@ export class Thread extends Record {
     }
 
     autofocus = 0;
-    activities = fields.Many("mail.activity", {
-        sort: (a, b) => compareDatetime(a.date_deadline, b.date_deadline) || a.id - b.id,
-        onDelete: (r) => r?.remove(),
+    activities = fields.Many("mail.activity", { onDelete: (r) => r?.remove() });
+    sortedActivities = fields.Many("mail.activity", {
+        compute() {
+            return [...this.activities].sort(
+                (a, b) => compareDatetime(a.date_deadline, b.date_deadline) || a.id - b.id
+            );
+        },
     });
     create_uid = fields.One("res.users");
     /**
@@ -86,12 +90,11 @@ export class Thread extends Record {
     });
     areAttachmentsLoaded = false;
     group_public_id = fields.One("res.groups");
-    attachments = fields.Many("ir.attachment", {
-        /**
-         * @param {import("models").Attachment} a1
-         * @param {import("models").Attachment} a2
-         */
-        sort: (a1, a2) => a2.id - a1.id,
+    attachments = fields.Many("ir.attachment");
+    sortedAttachments = fields.Many("ir.attachment", {
+        compute() {
+            return [...this.attachments].sort((a1, a2) => a2.id - a1.id);
+        },
     });
     can_react = true;
     close_chat_window = fields.Attr(undefined, {
@@ -205,9 +208,11 @@ export class Thread extends Record {
     priority;
     /** @type {Array<[string,string]>} */
     priority_definition;
-    needactionMessages = fields.Many("mail.message", {
-        inverse: "threadAsNeedaction",
-        sort: (message1, message2) => message1.id - message2.id,
+    needactionMessages = fields.Many("mail.message", { inverse: "threadAsNeedaction" });
+    sortedNeedactionMessages = fields.Many("mail.message", {
+        compute() {
+            return [...this.needactionMessages].sort((m1, m2) => m1.id - m2.id);
+        },
     });
     // FIXME: should be in the portal/frontend bundle but live chat can be loaded
     // before portal resulting in the field not being properly initialized.
@@ -269,13 +274,15 @@ export class Thread extends Record {
             this.composerDisabledonUpdate();
         },
     });
-    pinnedMessages = fields.Many("mail.message", {
-        inverse: "threadAsPinned",
-        sort: (m1, m2) => {
-            if (m1.pinned_at === m2.pinned_at) {
-                return m2.id - m1.id;
-            }
-            return m1.pinned_at < m2.pinned_at ? 1 : -1;
+    pinnedMessages = fields.Many("mail.message", { inverse: "threadAsPinned" });
+    sortedPinnedMessages = fields.Many("mail.message", {
+        compute() {
+            return [...this.pinnedMessages].sort((m1, m2) => {
+                if (m1.pinned_at === m2.pinned_at) {
+                    return m2.id - m1.id;
+                }
+                return m1.pinned_at < m2.pinned_at ? 1 : -1;
+            });
         },
     });
 

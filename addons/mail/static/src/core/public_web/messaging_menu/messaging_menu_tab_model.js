@@ -139,10 +139,12 @@ export class MessagingMenuTab extends Record {
         },
         eager: true,
     });
-    messages = fields.Many("mail.message", {
-        inverse: "messagingMenuTabsAsMessages",
-        sort(m1, m2) {
-            return compareDatetime(m2.create_date, m1.create_date) || m2.id - m1.id;
+    messages = fields.Many("mail.message", { inverse: "messagingMenuTabsAsMessages" });
+    sortedMessages = fields.Many("mail.message", {
+        compute() {
+            return [...this.messages].sort(
+                (m1, m2) => compareDatetime(m2.create_date, m1.create_date) || m2.id - m1.id
+            );
         },
     });
     /** @type {"mail.message"|"discuss.channel"} */

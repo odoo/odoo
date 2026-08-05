@@ -20,11 +20,6 @@ function isComputeField(reclist) {
 }
 
 /** @param {RecordList} reclist */
-function isSortField(reclist) {
-    return reclist._.owner.Model._.fieldsSort.get(reclist._.name);
-}
-
-/** @param {RecordList} reclist */
 function isEager(reclist) {
     return reclist._.owner.Model._.fieldsEager.get(reclist._.name);
 }
@@ -35,28 +30,13 @@ function setComputeInNeed(reclist) {
 }
 
 /** @param {RecordList} reclist */
-function setSortInNeed(reclist) {
-    reclist._.owner._.fieldsSortInNeed.set(reclist._.name, true);
-}
-
-/** @param {RecordList} reclist */
 function isComputeOnNeed(reclist) {
     return reclist._.owner._.fieldsComputeOnNeed.get(reclist._.name);
 }
 
 /** @param {RecordList} reclist */
-function isSortOnNeed(reclist) {
-    return reclist._.owner._.fieldsSortOnNeed.get(reclist._.name);
-}
-
-/** @param {RecordList} reclist */
 function computeField(reclist) {
     reclist._.owner._.compute(reclist._.owner, reclist._.name, { fromInNeed: true });
-}
-
-/** @param {RecordList} reclist */
-function sortField(reclist) {
-    reclist._.owner._.sort(reclist._.owner, reclist._.name, { fromInNeed: true });
 }
 
 /** @param {RecordList} reclist */
@@ -301,12 +281,6 @@ export class RecordList extends Array {
                 }
                 if (name === "length") {
                     return recordListFullProxy.data.length;
-                }
-                if (isSortField(recordList) && !isEager(recordList)) {
-                    setSortInNeed(recordList);
-                    if (isSortOnNeed(recordList)) {
-                        sortField(recordList);
-                    }
                 }
                 if (typeof name !== "symbol" && !window.isNaN(parseInt(name))) {
                     // support for "array[index]" syntax

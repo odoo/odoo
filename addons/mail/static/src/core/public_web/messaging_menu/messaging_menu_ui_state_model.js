@@ -9,7 +9,7 @@ export class MessagingMenuUIState extends Record {
             if (this.activeTab?.isShown) {
                 return this.activeTab;
             }
-            return this.store.messagingMenu?.visibleTabs[0];
+            return this.store.messagingMenu?.sortedVisibleTabs[0];
         },
         eager: true,
         onUpdate() {

@@ -19,8 +19,6 @@ const Markup = markup().constructor;
 export class StoreInternal extends RecordInternal {
     /** @type {Map<import("./record").Record, Map<string, true>>} */
     FC_QUEUE = new Map(); // field-computes
-    /** @type {Map<import("./record").Record, Map<string, true>>} */
-    FS_QUEUE = new Map(); // field-sorts
     /** @type {Map<import("./record").Record, Map<string, Map<import("./record").Record, true>>>} */
     FA_QUEUE = new Map(); // field-onadds
     /** @type {Map<import("./record").Record, Map<string, Map<import("./record").Record, true>>>} */
@@ -88,7 +86,7 @@ export class StoreInternal extends RecordInternal {
     }
 
     /**
-     * @param {"compute"|"sort"|"onAdd"|"onDelete"|"onUpdate"|"hard_delete"} type
+     * @param {"compute"|"onAdd"|"onDelete"|"onUpdate"|"hard_delete"} type
      * @param {...any} params
      */
     ADD_QUEUE(type, ...params) {
@@ -112,24 +110,10 @@ export class StoreInternal extends RecordInternal {
                 recMap.set(fieldName, true);
                 break;
             }
-            case "sort": {
-                /** @type {[import("./record").Record, string]} */
-                const [record, fieldName] = params;
-                let recMap = this.FS_QUEUE.get(record);
-                if (!recMap) {
-                    recMap = new Map();
-                    this.FS_QUEUE.set(record, recMap);
-                }
-                recMap.set(fieldName, true);
-                break;
-            }
             case "onAdd": {
                 /** @type {[import("./record").Record, string, import("./record").Record]} */
                 const [record, fieldName, addedRec] = params;
                 const Model = record.Model;
-                if (Model._.fieldsSort.get(fieldName)) {
-                    this.ADD_QUEUE("sort", record, fieldName);
-                }
                 if (!Model._.fieldsOnAdd.get(fieldName)) {
                     return;
                 }

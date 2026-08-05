@@ -72,19 +72,18 @@ export class Store extends BaseStore {
     // messaging menu
     menu = { counter: 0 };
     chatHub = fields.One("ChatHub", { compute: () => ({}) });
-    failures = fields.Many("Failure", {
-        /**
-         * @param {import("models").Failure} f1
-         * @param {import("models").Failure} f2
-         */
-        sort: (f1, f2) => {
-            if (f1.lastMessage?.id && !f2.lastMessage?.id) {
-                return -1;
-            }
-            if (!f1.lastMessage?.id && f2.lastMessage?.id) {
-                return 1;
-            }
-            return f2.lastMessage?.id - f1.lastMessage?.id || f2.id - f1.id;
+    failures = fields.Many("Failure");
+    sortedFailures = fields.Many("Failure", {
+        compute() {
+            return [...this.failures].sort((f1, f2) => {
+                if (f1.lastMessage?.id && !f2.lastMessage?.id) {
+                    return -1;
+                }
+                if (!f1.lastMessage?.id && f2.lastMessage?.id) {
+                    return 1;
+                }
+                return f2.lastMessage?.id - f1.lastMessage?.id || f2.id - f1.id;
+            });
         },
     });
     /** local settings of the current device (not stored server side) */

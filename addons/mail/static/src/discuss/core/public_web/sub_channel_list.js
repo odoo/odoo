@@ -23,10 +23,10 @@ export class SubChannelList extends Component {
             close: types.function([types.instanceOf(MouseEvent)]).optional(),
         });
         this.search = useSearch({
-            initialResults: this.props.channel.sub_channel_ids,
+            initialResults: this.props.channel.sortedSubChannels,
             fetch: (term) => this.props.channel.loadMoreSubChannels({ searchTerm: term }),
             filter: (term) =>
-                fuzzyLookup(term, this.props.channel.sub_channel_ids, ({ name }) => name),
+                fuzzyLookup(term, this.props.channel.sortedSubChannels, ({ name }) => name),
         });
         this.loadMoreState = useVisible(this.loadMoreRef, (isVisible) => {
             if (isVisible) {
@@ -45,7 +45,7 @@ export class SubChannelList extends Component {
      * filtered list, triggering a spurious extra page load.
      */
     get subChannels() {
-        return this.search.searchTerm ? this.search.results : this.props.channel.sub_channel_ids;
+        return this.search.searchTerm ? this.search.results : this.props.channel.sortedSubChannels;
     }
 
     /**

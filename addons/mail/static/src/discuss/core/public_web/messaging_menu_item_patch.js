@@ -75,7 +75,7 @@ const messagingMenuItemPatch = {
             (this.channel.channel_type === "channel" &&
                 this.channel.needactionMessages.length === 0)
                 ? this.channel.newestPersistentOfAllMessage
-                : this.channel.needactionMessages.at(-1);
+                : this.channel.sortedNeedactionMessages.at(-1);
         const swipeRight = this.channel.isUnread
             ? {
                   action: () => this.channel.thread.markAsRead(),

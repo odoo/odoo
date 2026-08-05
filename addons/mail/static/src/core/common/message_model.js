@@ -137,13 +137,11 @@ export class Message extends Record {
      * @type {() => {} | undefined}
      */
     postFailRedo = undefined;
-    reactions = fields.Many("MessageReactions", {
-        inverse: "message",
-        /**
-         * @param {import("models").MessageReactions} r1
-         * @param {import("models").MessageReactions} r2
-         */
-        sort: (r1, r2) => r1.sequence - r2.sequence,
+    reactions = fields.Many("MessageReactions", { inverse: "message" });
+    sortedReactions = fields.Many("MessageReactions", {
+        compute() {
+            return [...this.reactions].sort((r1, r2) => r1.sequence - r2.sequence);
+        },
     });
     notification_ids = fields.Many("mail.notification", { inverse: "mail_message_id" });
     self_notification = fields.One("mail.notification", {

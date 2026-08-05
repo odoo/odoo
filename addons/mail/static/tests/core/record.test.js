@@ -599,65 +599,11 @@ test("record list sort should be manually observable", async () => {
     expect.verifySteps(["sortMessages"]);
 });
 
-test("relation field sort should be automatically observed", async () => {
-    (class Thread extends Record {
-        static id = "id";
-        id;
-        messages = fields.Many("Message", {
-            inverse: "thread",
-            sort: (m1, m2) => {
-                if (m1.body < m2.body) {
-                    return -1;
-                }
-                if (m1.body > m2.body) {
-                    return 1;
-                }
-                return m1.id - m2.id;
-            },
-        });
-    }).register(localRegistry);
-    (class Message extends Record {
-        static id = "id";
-        id;
-        body;
-        author;
-        thread = fields.One("Thread", { inverse: "messages" });
-    }).register(localRegistry);
-    const store = await start();
-    const thread = store.Thread.insert(1);
-    const messages = store.Message.insert([
-        { id: 1, body: "a", thread },
-        { id: 2, body: "b", thread },
-    ]);
-    expect(`${thread.messages.map((m) => m.id)}`).toBe("1,2");
-    messages[0].body = "c";
-    expect(`${thread.messages.map((m) => m.id)}`).toBe("2,1");
-    messages[0].body = "d";
-    expect(`${thread.messages.map((m) => m.id)}`).toBe("2,1");
-    messages[0].author = "Jane";
-    expect(`${thread.messages.map((m) => m.id)}`).toBe("2,1");
-    store.Message.insert({ id: 3, body: "c", thread });
-    expect(`${thread.messages.map((m) => m.id)}`).toBe("2,3,1");
-    messages[0].delete();
-    expect(`${thread.messages.map((m) => m.id)}`).toBe("2,3");
-});
-
 test("reading of lazy compute relation field should recompute", async () => {
     (class Thread extends Record {
         static id = "id";
         id;
-        messages = fields.Many("Message", {
-            inverse: "thread",
-            sort: (m1, m2) => {
-                if (m1.body < m2.body) {
-                    return -1;
-                }
-                if (m1.body > m2.body) {
-                    return 1;
-                }
-                return m1.id - m2.id;
-            },
-        });
+        messages = fields.Many("Message", { inverse: "thread" });
         messages2 = fields.Many("Message", {
             compute() {
                 return this.messages.map((m) => m.id);
@@ -734,113 +680,6 @@ test("lazy compute should re-compute while they are observed", async () => {
     expect.verifySteps(["render few"]);
     channel.count = 7;
     expect.verifySteps(["computing", "render many"]);
-});
-
-test("lazy sort should re-sort while they are observed", async () => {
-    (class Thread extends Record {
-        static id = "id";
-        id;
-        messages = fields.Many("Message", {
-            sort: (m1, m2) => m1.sequence - m2.sequence,
-        });
-    }).register(localRegistry);
-    (class Message extends Record {
-        static id = "id";
-        id;
-        sequence;
-    }).register(localRegistry);
-    const store = await start();
-    const thread = store.Thread.insert(1);
-    thread.messages.push({ id: 1, sequence: 1 }, { id: 2, sequence: 2 });
-    expect(`${thread.messages.map((m) => m.id)}`).toBe("1,2");
-    function render() {
-        expect.step(`render ${thread.messages.map((m) => m.id)}`);
-    }
-    const disposeFn1 = immediateEffect(() => {
-        render();
-    });
-    after(() => disposeFn1?.());
-    const message = thread.messages[0];
-    expect.verifySteps(["render 1,2"]);
-    message.sequence = 3;
-    expect.verifySteps(["render 2,1"]);
-    message.sequence = 4;
-    expect.verifySteps([]);
-    message.sequence = 5;
-    expect.verifySteps([]);
-    message.sequence = 1;
-    expect.verifySteps(["render 1,2"]);
-    disposeFn1();
-    message.sequence = 10;
-    expect(
-        `${toRaw(thread)._raw.messages.data.map(
-            (localId) => toRaw(thread)._raw.store.get(localId).id
-        )}`
-    ).toBe("2,1", { message: "observed one last time when it changes" });
-    expect.verifySteps([]);
-    message.sequence = 1;
-    expect(
-        `${toRaw(thread)._raw.messages.data.map(
-            (localId) => toRaw(thread)._raw.store.get(localId).id
-        )}`
-    ).toBe("2,1", { message: "no longer observed" });
-    expect(`${thread.messages.map((m) => m.id)}`).toBe("1,2");
-    const disposeFn2 = immediateEffect(() => {
-        render();
-    });
-    after(() => disposeFn2());
-    expect.verifySteps(["render 1,2"]);
-    message.sequence = 10;
-    expect.verifySteps(["render 2,1"]);
-});
-
-test("sort works on fields.Attr()", async () => {
-    (class Thread extends Record {
-        static id = "id";
-        id;
-        messages = fields.Attr([], {
-            sort: (m1, m2) => m1.sequence - m2.sequence,
-        });
-    }).register(localRegistry);
-    const store = await start();
-    const thread = store.Thread.insert(1);
-    thread.messages.push({ id: 1, sequence: 1 }, { id: 2, sequence: 2 });
-    expect(`${thread.messages.map((m) => m.id)}`).toBe("1,2");
-    function render() {
-        expect.step(`render ${thread.messages.map((m) => m.id)}`);
-    }
-    const disposeFn1 = immediateEffect(() => {
-        render();
-    });
-    after(() => disposeFn1?.());
-    const message = thread.messages[0];
-    expect.verifySteps(["render 1,2"]);
-    message.sequence = 3;
-    expect.verifySteps(["render 2,1"]);
-    message.sequence = 4;
-    expect.verifySteps([]);
-    message.sequence = 5;
-    expect.verifySteps([]);
-    message.sequence = 1;
-    expect.verifySteps(["render 1,2"]);
-    disposeFn1();
-    message.sequence = 10;
-    expect(`${toRaw(thread)._raw.messages.map((msg) => toRaw(msg).id)}`).toBe("2,1", {
-        message: "observed one last time when it changes",
-    });
-    expect.verifySteps([]);
-    message.sequence = 1;
-    expect(`${toRaw(thread)._raw.messages.map((msg) => toRaw(msg).id)}`).toBe("2,1", {
-        message: "no longer observed",
-    });
-    expect(`${thread.messages.map((m) => m.id)}`).toBe("1,2");
-    const disposeFn2 = immediateEffect(() => {
-        render();
-    });
-    after(() => disposeFn2());
-    expect.verifySteps(["render 1,2"]);
-    message.sequence = 10;
-    expect.verifySteps(["render 2,1"]);
 });
 
 test("store updates can be observed", async () => {
@@ -1671,55 +1510,4 @@ test("Normalize many commands", () => {
     expect(() => normalizeManyCommands(mixed)).toThrow(
         "Many commands cannot mix raw values and commands"
     );
-});
-
-test("record.delete() while used in a 'on-sort' sorted field should properly delete this record from relation", async () => {
-    // 'on-sort' flag marks the lazy relational field to sort-on-the-fly when 'in-need', i.e. when next accessed.
-    // When a record is deleted, internal code also deletes the records from relational fields.
-    // Internal code should make sure to avoid re-triggering a sort-on-the-fly while deleting the record from relation.
-    // For example, finding index of record and splice / internal slice should mistakenly delete the wrong records!
-    // Let's say relational fields is [1, 2, 3], 'sort-on-need' to become [3, 1, 2]
-    // We wouldn't want 2 step deletion of 3 as:
-    // - index: 2
-    // - internal array.slice() => sort-on-the-fly to [3, 1, 2]
-    // - delete record at index 2 => resulting list is [3, 1] instead of [1, 2]!
-    (class Message extends Record {
-        static id = "id";
-        id;
-        sequence;
-        thread_name;
-    }).register(localRegistry);
-    (class Thread extends Record {
-        static id = "name";
-        name;
-        description;
-        messages = fields.Many("Message", {
-            // intentional combine of `compute` and `sort` so that the `compute` sets the `on-sort` flag
-            compute() {
-                return Object.values(this.store.Message.records).filter(
-                    (msg) => msg.thread_name === this.name
-                );
-            },
-            sort: (m1, m2) => (m1.sequence ?? 0) - (m2.sequence ?? 0),
-        });
-    }).register(localRegistry);
-    const store = await start();
-    const thread = store.Thread.insert("General");
-    store.Message.insert([
-        { id: 1, sequence: 10, thread_name: "General" },
-        { id: 2, sequence: 20, thread_name: "General" },
-    ]);
-    void thread.messages; // intentional read to have computed and sorted list
-    expect(toRaw(thread)._raw.messages.data).toEqual(["Message,1", "Message,2"]);
-    store.insert({
-        Thread: { name: "General", description: "This is the general channel" },
-        Message: { id: 3, sequence: 30, thread_name: "General" },
-    });
-    expect(toRaw(thread)._raw.messages.data).toEqual(["Message,1", "Message,2", "Message,3"]);
-    store.Message.get(3).sequence = 5; // intentional sequence change to trigger sort again, as the 'in-need' flag persists at least once
-    expect(toRaw(thread)._raw.messages.data).toEqual(["Message,3", "Message,1", "Message,2"]);
-    store.Message.get(3).sequence = 15;
-    expect(toRaw(thread)._raw.messages.data).toEqual(["Message,3", "Message,1", "Message,2"]); // still hasn't re-sorted yet
-    store.Message.get(3).delete();
-    expect(toRaw(thread)._raw.messages.data).toEqual(["Message,1", "Message,2"]);
 });
