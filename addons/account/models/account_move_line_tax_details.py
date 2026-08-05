@@ -94,7 +94,8 @@ class AccountMoveLine(models.Model):
                     OR (t.tax_exigibility = 'on_payment' AND t.cash_basis_transition_account_id IS NOT NULL)
                     OR sign(aml.balance) = sign(lt.balance * t.amount * lt.factor_percent)
                 ) AND (
-                    NOT t.include_base_amount
+                    NOT t.is_base_affected
+                    OR NOT t.include_base_amount
                     OR aml.applied_tax_ids[
                         ARRAY_LENGTH(aml.applied_tax_ids, 1) - COALESCE(ARRAY_LENGTH(lt.applied_tax_ids, 1), 0):ARRAY_LENGTH(aml.applied_tax_ids, 1)
                     ] = ARRAY[lt.tax_line_id] || lt.applied_tax_ids
