@@ -818,3 +818,60 @@ class TestPdpMessage(TestL10nFrPdpCommon, TestAccountMoveSendCommon):
             ],
             'move_id': move.id,
         }])
+
+
+@tagged('post_install_l10n', 'post_install', '-at_install')
+class TestPdpMessageFacturX(TestPdpMessage):
+
+    @classmethod
+    def _get_mock_data(cls, error=False, nr_invoices=1):
+        proxy_documents = {
+            FAKE_UUID[0]: {
+                'accounting_supplier_party': '0184:16356706',
+                'filename': 'test_incoming',
+                'enc_key': file_open(f'{FILE_PATH}/enc_key', mode='rb').read(),
+                'document': b64encode(file_open(f'{FILE_PATH}/document_factur_x_self_bill', mode='rb').read()),
+                'state': 'done' if not error else 'error',
+                'direction': 'incoming',
+                'document_type': 'Factur-X',
+                'origin_message_uuid': FAKE_UUID[0],
+            }
+        }
+
+        responses = {
+            '/api/pdp/1/ack': {'result': {}},
+            '/api/pdp/1/get_all_documents': {'result': {
+                'messages': [
+                    {
+                        'accounting_supplier_party': None,
+                        'filename': 'test_incoming.pdf',
+                        'uuid': FAKE_UUID[0],
+                        'origin_message_uuid': FAKE_UUID[0],
+                        'state': 'done',
+                        'direction': 'incoming',
+                        'document_type': 'Factur-X',
+                        'sender': '0184:16356706',
+                        'receiver': '0088:5798009811512',
+                        'timestamp': '2022-12-30',
+                        'error': False if not error else 'Test error',
+                    }
+                ],
+            }},
+        }
+        return proxy_documents, responses
+
+    def test_receive_success_pdp_factur_x_self_billed(self):
+        # An outgoing invoice should be created from the Factur-X format when it is self-billed.
+        self.env['account_edi_proxy_client.user']._cron_peppol_get_new_documents()
+
+        move = self.env['account.move'].search([('peppol_message_uuid', '=', FAKE_UUID[0])])
+        self.assertRecordValues(move, [{
+            'peppol_move_state': 'done',
+            'move_type': 'out_invoice',
+            'amount_total': 24,
+        }])
+        self.assertNotEqual(move.partner_id.id, move.company_id.id)
+        self.assertRecordValues(move.partner_id, [{
+            'name': 'SUPER FRENCH PARTNER',
+            'vat': 'FR23334175221',
+        }])
