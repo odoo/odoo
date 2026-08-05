@@ -28,7 +28,7 @@ class Partner extends models.Model {
         default: 20,
     });
     _records = [
-        { id: 1 },
+        { id: 1, allowed_colors: false },
         { id: 2, allowed_colors: "['red']", product_id: 37, product_color_id: 6 },
         { id: 3, color: false },
     ];
@@ -190,6 +190,23 @@ test("BadgesSelectionField: verify options are filtered via the allowed_selectio
     expect("span.o_selection_badge:contains(Red)").toHaveCount(1);
     // Verify that the total number of badges is ONLY 1
     expect("span.o_selection_badge").toHaveCount(1);
+});
+
+test("BadgesSelectionField: verify handle falsy allowed selectionfield", async () => {
+    await mountView({
+        resModel: "res.partner",
+        resId: 1,
+        type: "form",
+        arch: `
+            <form>
+                <field name="allowed_colors" invisible="1"/>
+                <field name="color" widget="badges_selection"
+                    options="{'allowed_selection_field': 'allowed_colors'}"
+                />
+            </form>`,
+    });
+    // Verify that the total number of badges is 0
+    expect("span.o_selection_badge").toHaveCount(0);
 });
 
 test("BadgesSelectionField: placeholder attribute is used when provided", async () => {
