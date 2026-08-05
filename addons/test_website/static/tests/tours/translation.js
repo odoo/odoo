@@ -226,7 +226,7 @@ function switchLanguage(lang, timeout = 50000) {
     return [
         {
             content: "Ensure was in other language",
-            trigger: `:iframe .o_header_language_selector:contains(${lang !== "fr" ? "Français" : "English"})`,
+            trigger: `:iframe body:visible .o_header_language_selector:contains(${lang !== "fr" ? "Français" : "English"})`,
             timeout,
         }, {
             content: "Open language dropdown",
