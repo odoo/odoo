@@ -1239,7 +1239,7 @@ class TestAccountTaxDetailsReport(AccountTestInvoicingCommon):
         )
         self.assertTotalAmounts(invoice, tax_details)
 
-    def test_broken_configuration(self):
+    def test_different_accounts(self):
         percent_tax = self.env['account.tax'].create({
             'name': "percent_tax",
             'amount_type': 'percent',
@@ -1261,11 +1261,18 @@ class TestAccountTaxDetailsReport(AccountTestInvoicingCommon):
         })
         base_lines, tax_lines = self._dispatch_move_lines(invoice)
 
-        # Break the configuration
+        # The tax line must still match the base line even if it uses another account.
         tax_lines.account_id = self.company_data['default_account_assets']
 
         tax_details = self._get_tax_details(fallback=True)
-        self.assertFalse(tax_details)
+        self.assertTaxDetailsValues(tax_details, [
+            {
+                'base_line_id': base_lines[0].id,
+                'tax_line_id': tax_lines[0].id,
+                'base_amount': -1000.0,
+                'tax_amount': -100.0,
+            },
+        ])
 
     def test_tax_on_payment(self):
         self.company_data['default_account_assets'].reconcile = True

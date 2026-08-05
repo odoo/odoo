@@ -75,9 +75,6 @@ class AccountMoveLine(models.Model):
                     OR (t.tax_exigibility = 'on_payment' AND t.cash_basis_transition_account_id IS NOT NULL)
                     OR sign(aml.balance) = sign(lt.balance * t.amount * lt.factor_percent)
                 ) AND (
-                    COALESCE(lt.rep_account_id, aml.account_id) = lt.account_id
-                    OR (t.tax_exigibility = 'on_payment' AND t.cash_basis_transition_account_id IS NOT NULL)
-                ) AND (
                     (t.analytic IS NOT TRUE AND lt.use_in_tax_closing IS TRUE)
                     OR (aml.analytic_distribution IS NULL AND lt.analytic_distribution IS NULL)
                     OR aml.analytic_distribution = lt.analytic_distribution
@@ -99,11 +96,10 @@ class AccountMoveLine(models.Model):
                 FROM tax_data
             )
             SELECT
-                tax_line_id || '-' || base_line_id || '-' || base_line_id AS id,
+                tax_line_id || '-' || base_line_id AS id,
                 base_line_id,
                 tax_line_id,
                 display_type,
-                base_line_id AS src_line_id,
                 tax_id,
                 group_tax_id,
                 tax_exigible,
