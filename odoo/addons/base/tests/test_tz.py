@@ -12,7 +12,7 @@ _logger = logging.getLogger(__name__)
 class TestTZ(TransactionCase):
 
     def test_tz_legacy(self):
-        d = datetime.datetime(1969, 7, 16)
+        d = datetime.datetime(2014, 7, 21)
         # See https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
         def assertTZEqual(tz1, tz2):
             self.assertEqual(tz1.localize(d).strftime('%z'), tz2.localize(d).strftime('%z'))
