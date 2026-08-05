@@ -1,4 +1,3 @@
-import { useSubEnv } from "@web/owl2/utils";
 import { useAncestors } from "@mail/core/common/ancestors_hook";
 import { attClassObjectToString } from "@mail/utils/common/format";
 import { Component, signal, t, useProps } from "@odoo/owl";
@@ -29,7 +28,6 @@ export class ActionPanel extends Component {
         );
         this.store = useService("mail.store");
         this.ui = useService("ui");
-        useSubEnv({ inDiscussActionPanel: true });
         useBackButton(
             () => this.props.close(),
             () => this.props.close

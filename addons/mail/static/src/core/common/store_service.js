@@ -124,7 +124,7 @@ export class Store extends BaseStore {
                 ctx?.env.isDiscussPipBanner ||
                 ctx?.env?.inWelcomePage) &&
             this.isOdooWhiteTheme &&
-            !ctx?.env.inDiscussActionPanel
+            !ctx?.ancestors?.has("ActionPanel")
         );
     }
 
