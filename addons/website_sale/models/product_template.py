@@ -1303,6 +1303,19 @@ class ProductTemplate(models.Model):
         ]
 
     @api.model
+    def _get_website_sale_search_fields(self, search_in_description=True):
+        search_fields = [
+            "name",
+            "variants_default_code",
+        ]
+        if search_in_description:
+            search_fields.append("description_ecommerce")
+        search_fields.extend(("attribute_line_ids.value_ids.name", "product_tag_ids.name"))
+        if search_in_description:
+            search_fields.append("description_sale")
+        return search_fields
+
+    @api.model
     def _search_get_detail(self, website, order, options):  # noqa: ARG002
         domains = [website.sale_product_domain()]
         category = options.get("category")
@@ -1332,15 +1345,7 @@ class ProductTemplate(models.Model):
             domains.append([("list_price", "<=", max_price)])
         if attribute_value_dict:
             domains.extend(self._get_attribute_value_domain(attribute_value_dict))
-        search_fields = [
-            "name",
-            "default_code",
-            "variants_default_code",
-            "description_ecommerce",
-            "attribute_line_ids.value_ids.name",
-            "product_tag_ids.name",
-            "description_sale",
-        ]
+        search_fields = self._get_website_sale_search_fields(options.get("displayDescription", True))
         fetch_fields = ["id", "name", "website_url", "description_ecommerce", "description_sale"]
         mapping = {
             "name": {"name": "name", "type": "text", "match": True},
