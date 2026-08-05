@@ -273,7 +273,18 @@ class JSTooling:
                 return content[:match.start()] + new_import + content[match.end():]
             return content
 
-        return f'import {{ {name} }} from "{source}";\n{content}'
+        new_line = f'import {{ {name} }} from "{source}";'
+        other_imports = list(re.finditer(r'import\s*\{[^}]*\}\s*from\s*(["\'])([^"\']+)\1;?', content, re.DOTALL))
+
+        if not other_imports:
+            return f'{new_line}\n{content}'
+
+        next_import = next((imp for imp in other_imports if imp.group(2) > source), None)
+        if next_import:
+            return content[:next_import.start()] + new_line + '\n' + content[next_import.start():]
+
+        last_import = other_imports[-1]
+        return content[:last_import.end()] + '\n' + new_line + content[last_import.end():]
 
     @staticmethod
     def remove_import(content: str, name: str, source: str) -> str:
@@ -1276,8 +1287,8 @@ def upgrade_useservice(file_manager, name, log_info, log_error):
                 if not JSTooling.has_active_raw_usage(file.content, pattern):
                     continue
 
-                file.content = JSTooling.replace_usage(file.content, pattern, f'plugin({plugin_class})', match_words=False)
-                file.content = JSTooling.add_import(file.content, 'plugin', '@odoo/owl')
+                file.content = JSTooling.replace_usage(file.content, pattern, f'usePlugin({plugin_class})', match_words=False)
+                file.content = JSTooling.add_import(file.content, 'usePlugin', '@odoo/owl')
                 file.content = JSTooling.add_import(file.content, plugin_class, import_path)
 
             if not JSTooling.has_active_usage(file.content, 'useService'):
