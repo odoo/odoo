@@ -16,13 +16,20 @@ class ThreadController(http.Controller):
     @http.route("/mail/thread/data", methods=["POST"], type="json", auth="public", readonly=True)
     def mail_thread_data(self, thread_model, thread_id, request_list, **kwargs):
         thread = request.env[thread_model]._get_thread_with_access(thread_id, **kwargs)
+        if not request.env.user._is_internal() or not thread.sudo(False).has_access("read"):
+            request_list = []
         if not thread:
             return Store(
                 request.env[thread_model].browse(thread_id),
                 {"hasReadAccess": False, "hasWriteAccess": False},
                 as_thread=True,
             ).get_result()
-        return Store(thread, as_thread=True, request_list=request_list).get_result()
+        return Store(
+            thread,
+            as_thread=True,
+            fields=["display_name", "modelName"],
+            request_list=request_list,
+        ).get_result()
 
     @http.route("/mail/thread/messages", methods=["POST"], type="json", auth="user")
     def mail_thread_messages(self, thread_model, thread_id, search_term=None, before=None, after=None, around=None, limit=30):
