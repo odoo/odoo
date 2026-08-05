@@ -261,6 +261,159 @@ class TestLeaveAttendanceReport(TestHrHolidaysCommon):
         # though version A (still active, on calendar_a) would have worked it.
         self.assertFalse(row(day(1, 3)), "Thursday isn't worked on calendar_b -> no row")
 
+    def test_expected_hours_follow_weekday_schedule(self):
+        """ `expected_hours` must reflect the hours actually scheduled for
+            that specific weekday, not the calendar's average hours/day: a
+            calendar working Monday 8h and Tuesday 4h averages to 6h/day, but
+            the report must still show 8.0 on Monday and 4.0 on Tuesday."""
+        emp = self.employee_emp
+        today = fields.Date.today()
+        monday = today - timedelta(days=today.weekday() + 7 * 8)
+        tuesday = monday + timedelta(days=1)
+        Report = self.env['hr.leave.attendance.report']
+
+        calendar = self.env['resource.calendar'].create({
+            'name': 'Monday 8h / Tuesday 4h',
+            'company_id': self.company.id,
+            'attendance_ids': [
+                (0, 0, {'dayofweek': '0', 'hour_from': 8, 'hour_to': 16}),
+                (0, 0, {'dayofweek': '1', 'hour_from': 8, 'hour_to': 12}),
+            ],
+        })
+        emp.contract_date_start = monday - timedelta(days=7)
+        emp.resource_calendar_id = calendar.id
+        self.env.flush_all()
+
+        # hours per day is 6, not 8 or 4 because it is an average of the week
+        self.assertEqual(calendar.hours_per_day, 6.0)
+
+        def row(d):
+            return Report.search([('employee_id', '=', emp.id), ('date', '=', d)])
+
+        self.assertRecordValues(row(monday), [{'expected_hours': 8.0, 'difference_hours': -8.0}])
+        self.assertRecordValues(row(tuesday), [{'expected_hours': 4.0, 'difference_hours': -4.0}])
+
+    def test_expected_hours_follow_variable_schedule(self):
+        """ On a variable calendar the hours belong to real dates, not to
+            weekdays: each day must show what that date is scheduled for, and a
+            date with nothing scheduled must not produce a row at all. """
+        emp = self.employee_emp
+        today = fields.Date.today()
+        monday = today - timedelta(days=today.weekday() + 7 * 8)
+        tuesday = monday + timedelta(days=1)
+        wednesday = monday + timedelta(days=2)
+        next_monday = monday + timedelta(days=7)
+        Report = self.env['hr.leave.attendance.report']
+
+        calendar = self.env['resource.calendar'].create({
+            'name': 'Monday 8h / Tuesday 4h, once',
+            'company_id': self.company.id,
+            'calendar_type': 'variable',
+            'attendance_ids': [
+                (0, 0, {'date': monday, 'hour_from': 8, 'hour_to': 16}),
+                (0, 0, {'date': tuesday, 'hour_from': 8, 'hour_to': 12}),
+            ],
+        })
+        emp.contract_date_start = monday - timedelta(days=7)
+        emp.resource_calendar_id = calendar.id
+        self.env.flush_all()
+
+        def row(d):
+            return Report.search([('employee_id', '=', emp.id), ('date', '=', d)])
+
+        self.assertRecordValues(row(monday), [{'expected_hours': 8.0, 'difference_hours': -8.0}])
+        self.assertRecordValues(row(tuesday), [{'expected_hours': 4.0, 'difference_hours': -4.0}])
+        self.assertFalse(row(wednesday), "Nothing scheduled on Wednesday -> no row")
+        self.assertFalse(row(next_monday), "A dated attendance holds for its own date only -> no row")
+
+    def test_expected_hours_follow_variable_recurrency(self):
+        """ A recurring attendance of a variable calendar must be expanded on
+            the dates it really falls on: every other Friday here, minus the
+            occurrence removed from the series. """
+        emp = self.employee_emp
+        today = fields.Date.today()
+        monday = today - timedelta(days=today.weekday() + 7 * 8)
+        first_friday = monday + timedelta(days=4)
+        skipped_friday = first_friday + timedelta(days=7)     # off week -> no occurrence
+        second_friday = first_friday + timedelta(days=14)
+        excluded_friday = first_friday + timedelta(days=28)   # occurrence, excluded by hand
+        Report = self.env['hr.leave.attendance.report']
+
+        calendar = self.env['resource.calendar'].create({
+            'name': 'Every other Friday, 6h',
+            'company_id': self.company.id,
+            'calendar_type': 'variable',
+            'attendance_ids': [(0, 0, {
+                'date': first_friday,
+                'hour_from': 8,
+                'hour_to': 14,
+                'recurrency': True,
+                'recurrency_type': 'weeks',
+                'recurrency_interval': 2,
+                'recurrency_end_type': 'forever',
+                'recurrency_excluded_occurences': [fields.Date.to_string(excluded_friday)],
+            })],
+        })
+        emp.contract_date_start = monday - timedelta(days=7)
+        emp.resource_calendar_id = calendar.id
+        self.env.flush_all()
+
+        def row(d):
+            return Report.search([('employee_id', '=', emp.id), ('date', '=', d)])
+
+        self.assertRecordValues(row(first_friday), [{'expected_hours': 6.0, 'difference_hours': -6.0}])
+        self.assertRecordValues(row(second_friday), [{'expected_hours': 6.0, 'difference_hours': -6.0}])
+        self.assertFalse(row(skipped_friday), "Off week of the recurrency -> no row")
+        self.assertFalse(row(excluded_friday), "Occurrence excluded from the series -> no row")
+
+    def test_leave_proration_on_variable_schedule(self):
+        """ A leave spanning a whole week on a variable calendar is charged on
+            the dates that calendar actually schedules, and on those only. """
+        emp = self.employee_emp
+        today = fields.Date.today()
+        monday = today - timedelta(days=today.weekday() + 7 * 8)
+        wednesday = monday + timedelta(days=2)
+        friday = monday + timedelta(days=4)
+        Report = self.env['hr.leave.attendance.report']
+
+        calendar = self.env['resource.calendar'].create({
+            'name': 'Monday 8h / Wednesday 4h, once',
+            'company_id': self.company.id,
+            'calendar_type': 'variable',
+            'attendance_ids': [
+                (0, 0, {'date': monday, 'hour_from': 8, 'hour_to': 16}),
+                (0, 0, {'date': wednesday, 'hour_from': 8, 'hour_to': 12}),
+            ],
+        })
+        emp.contract_date_start = monday - timedelta(days=7)
+        emp.resource_calendar_id = calendar.id
+        work_entry_type = self.env['hr.work.entry.type'].create({
+            'name': 'Leave on a variable schedule',
+            'code': 'LEAVE_VARIABLE',
+            'count_as': 'absence',
+            'requires_allocation': False,
+            'include_public_holidays_in_duration': False,
+        })
+        leave = self.env['hr.leave'].create({
+            'name': 'Leave',
+            'employee_id': emp.id,
+            'work_entry_type_id': work_entry_type.id,
+            'request_date_from': monday,
+            'request_date_to': friday,
+        })
+        leave.action_approve()
+        self.env.flush_all()
+
+        rows = Report.search([
+            ('employee_id', '=', emp.id),
+            ('date', '>=', monday),
+            ('date', '<=', friday),
+        ])
+        self.assertEqual(set(rows.mapped('date')), {monday, wednesday},
+                         "only the scheduled dates are reported")
+        self.assertAlmostEqual(sum(rows.mapped('leave_hours')), leave.number_of_hours,
+                               msg="the whole leave is charged on the scheduled dates")
+
     def test_holiday_timezone_midnight_rollover(self):
         """ A closure covering one Brussels-local day must exclude that day
             only, not the previous UTC day its start timestamp falls on. """
