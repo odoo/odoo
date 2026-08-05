@@ -12,9 +12,11 @@ import { CSS_SHORTHANDS } from "@html_builder/utils/utils_css";
 
 const NEW_STYLES = ["--box-border-width", "--box-border-radius"];
 const OLD_STYLES = ["border-width", "border-radius"];
+const EXTRA_CLASSES = { "border-width": "border", "border-radius": "rounded" };
 
 export class CompatibilityInlineBorderRemovalPlugin extends Plugin {
     static id = "compatibilityInlineBorderRemoval";
+    static dependencies = ["builderActions"];
     /** @type {import("plugins").BuilderResources} */
     resources = {
         apply_custom_css_style_overrides: withSequence(
@@ -31,11 +33,25 @@ export class CompatibilityInlineBorderRemovalPlugin extends Plugin {
         const newStyleBeingEdited = NEW_STYLES.find(
             (style) => styleName === style || CSS_SHORTHANDS[style].includes(styleName)
         );
+        const relatedOldStyle = newStyleBeingEdited?.replace("--box-", "");
         if (newStyleBeingEdited && OLD_STYLES.some((style) => editingElement.style[style])) {
-            // Remove all old inline styles related to border-width/radius as
+            // Replace all old inline styles related to border-width/radius as
             // the new CSS rules + variables rely on both being right, i.e. not
             // messed up by any inline style...
+            const styleAction = this.dependencies.builderActions.getAction("styleAction");
             for (const oldStyle of OLD_STYLES) {
+                // Convert non-edited legacy style to new CSS variable.
+                const inlineValue = editingElement.style.getPropertyValue(oldStyle);
+                if (inlineValue && oldStyle !== relatedOldStyle) {
+                    styleAction.apply({
+                        editingElement,
+                        params: {
+                            mainParam: `--box-${oldStyle}`,
+                            extraClass: EXTRA_CLASSES[oldStyle],
+                        },
+                        value: inlineValue,
+                    });
+                }
                 // TODO even though the part about inner layers below is pure
                 // compatibility, this here should actually be done as the
                 // main feature: editing a CSS variable which controls an unique
