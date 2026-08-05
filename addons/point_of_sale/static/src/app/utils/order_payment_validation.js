@@ -227,7 +227,7 @@ export default class OrderPaymentValidation {
         }
 
         if (this.canPrintReceipt) {
-            await this.pos.printReceipt({ order: this.order });
+            this.pos.printReceipt({ order: this.order });
         }
     }
 
