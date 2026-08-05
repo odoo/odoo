@@ -953,11 +953,32 @@ patch(PosOrder.prototype, {
     _getDiscountableOnOrder(reward) {
         let discountable = 0;
         const discountablePerTax = {};
+<<<<<<< 14709d6b8b5a21b9bb75732ab9e12b6c8d32e08b:addons/pos_loyalty/static/src/app/models/pos_order.js
         for (const line of this.getOrderlines()) {
             if (!line.getQuantity()) {
+||||||| 605140f44358f65ad98748ef84e6c3c074c628ab:addons/pos_loyalty/static/src/overrides/models/pos_order.js
+        for (const line of this.get_orderlines()) {
+            if (!line.get_quantity()) {
+=======
+        const isPaymentReward = ["ewallet", "gift_card"].includes(reward.program_id.program_type);
+        for (const line of this.get_orderlines()) {
+            if (!line.get_quantity()) {
+>>>>>>> ee089b01dcace0e5129645afe94ce7b71a822695:addons/pos_loyalty/static/src/overrides/models/pos_order.js
                 continue;
             }
+<<<<<<< 14709d6b8b5a21b9bb75732ab9e12b6c8d32e08b:addons/pos_loyalty/static/src/app/models/pos_order.js
             const taxKey = ["ewallet", "gift_card"].includes(reward.program_id.program_type)
+||||||| 605140f44358f65ad98748ef84e6c3c074c628ab:addons/pos_loyalty/static/src/overrides/models/pos_order.js
+
+            const taxKey = ["ewallet", "gift_card"].includes(reward.program_id.program_type)
+=======
+
+            if (!isPaymentReward && !line.isDiscountable()) {
+                continue;
+            }
+
+            const taxKey = isPaymentReward
+>>>>>>> ee089b01dcace0e5129645afe94ce7b71a822695:addons/pos_loyalty/static/src/overrides/models/pos_order.js
                 ? line.tax_ids.map((t) => t.id)
                 : line.tax_ids.filter((t) => t.amount_type !== "fixed").map((t) => t.id);
             discountable += line.getPriceWithTax();
@@ -972,6 +993,7 @@ patch(PosOrder.prototype, {
      * @param {loyalty.reward} reward
      * @returns the cheapest line from all the lines where the program is applicable
      */
+<<<<<<< 14709d6b8b5a21b9bb75732ab9e12b6c8d32e08b:addons/pos_loyalty/static/src/app/models/pos_order.js
     _getCheapestLine(reward) {
         const applicableProductIds = new Set(reward.all_discount_product_ids.map((p) => p.id));
         const filtered_lines = this.getOrderlines().filter(
@@ -980,6 +1002,16 @@ patch(PosOrder.prototype, {
                 !line.reward_id &&
                 line.getQuantity() &&
                 applicableProductIds.has(line.getProduct().id)
+||||||| 605140f44358f65ad98748ef84e6c3c074c628ab:addons/pos_loyalty/static/src/overrides/models/pos_order.js
+    _getCheapestLine() {
+        const filtered_lines = this.get_orderlines().filter(
+            (line) => !line.comboParent && !line.reward_id && line.get_quantity
+=======
+    _getCheapestLine() {
+        const filtered_lines = this.get_orderlines().filter(
+            (line) =>
+                line.isDiscountable() && !line.comboParent && !line.reward_id && line.get_quantity
+>>>>>>> ee089b01dcace0e5129645afe94ce7b71a822695:addons/pos_loyalty/static/src/overrides/models/pos_order.js
         );
         return filtered_lines.toSorted(
             (lineA, lineB) => lineA.getComboTotalPrice() - lineB.getComboTotalPrice()
@@ -1008,8 +1040,16 @@ patch(PosOrder.prototype, {
     _getSpecificDiscountableLines(reward) {
         const discountableLines = [];
         const applicableProductIds = new Set(reward.all_discount_product_ids.map((p) => p.id));
+<<<<<<< 14709d6b8b5a21b9bb75732ab9e12b6c8d32e08b:addons/pos_loyalty/static/src/app/models/pos_order.js
         for (const line of this.getOrderlines()) {
             if (!line.getQuantity()) {
+||||||| 605140f44358f65ad98748ef84e6c3c074c628ab:addons/pos_loyalty/static/src/overrides/models/pos_order.js
+        for (const line of this.get_orderlines()) {
+            if (!line.get_quantity()) {
+=======
+        for (const line of this.get_orderlines()) {
+            if (!line.get_quantity() || !line.isDiscountable()) {
+>>>>>>> ee089b01dcace0e5129645afe94ce7b71a822695:addons/pos_loyalty/static/src/overrides/models/pos_order.js
                 continue;
             }
             if (
@@ -1035,7 +1075,13 @@ patch(PosOrder.prototype, {
         const orderProducts = orderLines.map((line) => line.product_id.id);
         const remainingAmountPerLine = {};
         for (const line of orderLines) {
+<<<<<<< 14709d6b8b5a21b9bb75732ab9e12b6c8d32e08b:addons/pos_loyalty/static/src/app/models/pos_order.js
             if (!line.getQuantity() || !line.price_unit) {
+||||||| 605140f44358f65ad98748ef84e6c3c074c628ab:addons/pos_loyalty/static/src/overrides/models/pos_order.js
+            if (!line.get_quantity() || !line.price_unit) {
+=======
+            if (!line.get_quantity() || !line.price_unit || !line.isDiscountable()) {
+>>>>>>> ee089b01dcace0e5129645afe94ce7b71a822695:addons/pos_loyalty/static/src/overrides/models/pos_order.js
                 continue;
             }
             remainingAmountPerLine[line.uuid] = line.getPriceWithTax();

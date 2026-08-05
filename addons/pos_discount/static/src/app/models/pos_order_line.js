@@ -7,8 +7,6 @@ patch(PosOrderline.prototype, {
      * @returns Boolean
      */
     isGlobalDiscountApplicable() {
-        return !(
-            this.config.tip_product_id && this.product_id.id === this.config.tip_product_id?.id
-        );
+        return this.isDiscountable();
     },
 });
