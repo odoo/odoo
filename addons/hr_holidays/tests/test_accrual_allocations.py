@@ -4793,3 +4793,28 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             with freeze_time(test_date):
                 allocation._update_accrual()
                 self.assert_virtual_leaves_equal(self.leave_type_day, expected_days, self.employee_emp, test_date, 2)
+
+    def test_hr_leave_after_adding_accrual_plan_levels(self):
+        accrual_plan = self.env['hr.leave.accrual.plan'].create({
+            'name': 'Accrual Plan 1 start',
+            'is_based_on_worked_time': False,
+            'accrued_gain_time': 'start',
+            'carryover_date': 'allocation',
+        })
+        accrual_allocation = self.env['hr.leave.allocation'].create({
+            'name': 'Accrual allocation for employee',
+            'accrual_plan_id': accrual_plan.id,
+            'employee_id': self.employee_emp.id,
+            'holiday_status_id': self.leave_type.id,
+            'number_of_days': 10,
+            'allocation_type': 'accrual',
+        })
+        accrual_allocation.action_validate()
+        accrual_plan.level_ids = self.accrual_plan1_levels
+        leave = self.env['hr.leave'].create({
+            'employee_id': self.employee_emp.id,
+            'holiday_status_id': self.leave_type.id,
+            'request_date_from': datetime.date.today() + relativedelta(days=2),
+            'request_date_to': datetime.date.today() + relativedelta(days=3),
+        })
+        self.assertTrue(leave.action_validate())
