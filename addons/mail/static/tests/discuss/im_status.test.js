@@ -23,7 +23,7 @@ test("update presence if IM status changes to offline while this device is onlin
     pyEnv["res.users"].write(serverState.userId, { im_status: "online" });
     const subscribed = waitUntilSubscribe();
     await start({ waitUntilSubscribe: false });
-    await expect.waitForSteps([]);
+    await expect.waitForSteps(["update_presence"]);
     sendPresenceUpdate("res.users", serverState.userId, "offline");
     await expect.waitForSteps(["update_presence"]);
     await advanceTime(WebsocketWorker.OUTGOING_BATCH_DELAY);
@@ -37,7 +37,7 @@ test("update presence if IM status changes to away while this device is online",
     pyEnv["res.users"].write(serverState.userId, { im_status: "online" });
     const subscribed = waitUntilSubscribe();
     await start({ waitUntilSubscribe: false });
-    await expect.waitForSteps([]);
+    await expect.waitForSteps(["update_presence"]);
     sendPresenceUpdate("res.users", serverState.userId, "away");
     await expect.waitForSteps(["update_presence"]);
     await advanceTime(WebsocketWorker.OUTGOING_BATCH_DELAY);
