@@ -46,6 +46,7 @@
             'html_builder/static/src/**/*.edit.*',
             'html_editor/static/src/main/translate/translate_plugin.scss',
             'html_editor/static/src/main/link/link.scss',
+            'html_editor/static/src/main/font/color_plugin.scss',
         ],
         'html_builder.iframe_add_dialog': [
             ('include', 'web._assets_helpers'),
