@@ -28,6 +28,7 @@ import { backgroundImageCssToParts, backgroundImagePartsToCss } from "@html_edit
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { closestBlock, isBlock } from "@html_editor/utils/blocks";
 import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
+import { getCSSVariableValue, getHtmlStyle } from "@html_editor/utils/formatting";
 
 const COLOR_COMBINATION_CLASSES = [1, 2, 3, 4, 5].map((i) => `o_cc${i}`);
 const COLOR_COMBINATION_SELECTOR = COLOR_COMBINATION_CLASSES.map((c) => `.${c}`).join(", ");
@@ -144,10 +145,12 @@ export class ColorPlugin extends Plugin {
             this.skipNextColorClear = false;
             return;
         }
+        this.clearCaretColorReset();
         this.activeColorInfo = {};
     }
 
     applyPendingColors() {
+        this.clearCaretColorReset();
         for (const [mode, color] of Object.entries(this.activeColorInfo)) {
             this.applyColor(color, mode);
         }
@@ -179,6 +182,7 @@ export class ColorPlugin extends Plugin {
         this.activeColorInfo = {};
         const sel = this.dependencies.selection.getEditableSelection();
         if (sel.isCollapsed) {
+            this.setCaretColorReset();
             const el = closestElement(sel.anchorNode);
             const block = closestBlock(sel.anchorNode);
             for (const mode of ["color", "backgroundColor"]) {
@@ -466,6 +470,22 @@ export class ColorPlugin extends Plugin {
         cursors.restore();
     }
 
+    setCaretColorReset(color) {
+        if (!color) {
+            const htmlStyle = getHtmlStyle(document);
+            this.editable.style.setProperty(
+                "--oe-caret-color",
+                getCSSVariableValue("body-color", htmlStyle)
+            );
+        } else {
+            this.editable.style.setProperty("--oe-caret-color", color);
+        }
+    }
+
+    clearCaretColorReset() {
+        this.editable.style.removeProperty("--oe-caret-color");
+    }
+
     convertEmptyColorToPendingIntent() {
         const selection = this.dependencies.selection.getEditableSelection();
         const anchorNode = selection.anchorNode;
@@ -485,6 +505,7 @@ export class ColorPlugin extends Plugin {
             if (color) {
                 this.activeColorInfo.color = color.value;
                 this.colorElement(element, "", "color");
+                this.setCaretColorReset(color.value);
             }
             if (bgColor) {
                 this.activeColorInfo.backgroundColor = bgColor.value;
