@@ -4,6 +4,7 @@ CURRENCY_MAPPING = {
     'ARS': '032',
     'AUD': '036',
     'BHD': '048',
+    'MMK': '104',
     'KHR': '116',
     'CAD': '124',
     'LKR': '144',
