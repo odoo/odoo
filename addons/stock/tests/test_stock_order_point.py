@@ -27,6 +27,9 @@ class TestStockOrderpointActivity(TestStockCommon):
                     "company_id": company_b.id,
                 }
             )
+        # Make sure no rule can resupply warehouse b's stock. With only stock installed, a Vendor -> Stock rule exist.
+        resupply_rules = self.env['stock.rule'].search([('location_dest_id', '=', warehouse_b.lot_stock_id.id)])
+        resupply_rules.unlink()
 
         shared_product = self.env["product.product"].create(
             {
