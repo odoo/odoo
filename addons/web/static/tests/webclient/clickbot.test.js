@@ -669,6 +669,7 @@ test("clickbot test waiting render after clicking filter", async () => {
                     expect.step("response");
                 }
             });
+            // owl3 remove after the onWillUpdateProps is removed from code
             onWillUpdateProps(async () => {
                 if (clickBotStarted) {
                     expect.step("onWillUpdateProps called");

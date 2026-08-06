@@ -79,6 +79,7 @@ import {
     validateSearch,
     webModels,
 } from "@web/../tests/web_test_helpers";
+
 import { browser } from "@web/core/browser/browser";
 import { FileInput } from "@web/core/file_input/file_input";
 import { OfflinePlugin } from "@web/core/offline/offline_plugin";
@@ -86,7 +87,6 @@ import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
 import { RelationalModel } from "@web/model/relational_model/relational_model";
 import { SampleServer } from "@web/model/sample_server";
-import { onWillRender } from "@web/owl2/utils";
 import { KanbanController } from "@web/views/kanban/kanban_controller";
 import { KanbanRecord } from "@web/views/kanban/kanban_record";
 import { KanbanRenderer } from "@web/views/kanban/kanban_renderer";
@@ -6454,11 +6454,13 @@ test("rerenders only once after resequencing records", async () => {
     patchWithCleanup(KanbanRecord.prototype, {
         setup() {
             super.setup();
-            onWillRender(() => {
+            const trackRender = () => {
                 const id = this.props.record.resId;
                 renderCounts[id] = renderCounts[id] || 0;
                 renderCounts[id]++;
-            });
+            };
+            onMounted(trackRender);
+            onPatched(trackRender);
         },
     });
 
