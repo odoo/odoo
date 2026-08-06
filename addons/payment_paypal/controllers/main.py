@@ -65,7 +65,7 @@ class PaypalController(http.Controller):
         if event_type := data.get("event_type"):
             if event_type in const.CHECKOUT_WEBHOOK_EVENTS:
                 self._handle_checkout_notification(data)
-            elif event_type in const.MERCHANT_WEBHOOK_EVENTS:
+            elif event_type == const.SELLER_EMAIL_CONFIRMED_WEBHOOK:
                 self._handle_merchant_notification(data)
         return request.make_json_response("")
 
@@ -111,10 +111,9 @@ class PaypalController(http.Controller):
         if not provider_sudo:
             return
 
-        self._verify_notification_origin(data, provider=provider_sudo)
+        self._verify_notification_origin(data, provider_sudo=provider_sudo)
 
-        if data["event_type"] == const.SELLER_EMAIL_CONFIRMED:
-            provider_sudo.paypal_email_confirmed = True
+        provider_sudo.paypal_email_confirmed = True
 
     def _normalize_paypal_data(self, data, from_webhook=False):
         """Normalize the payment data received from PayPal.
@@ -145,29 +144,33 @@ class PaypalController(http.Controller):
             _logger.warning(self.env._("Invalid response format, can't normalize."))
         return result
 
-    def _verify_notification_origin(self, payment_data, tx_sudo=None, provider=None):
+    def _verify_notification_origin(self, payment_data, tx_sudo=None, provider_sudo=None):
         """Check that the notification was sent by PayPal.
 
         See https://developer.paypal.com/docs/api/webhooks/v1/#verify-webhook-signature_post.
 
         :param dict payment_data: The payment data.
         :param payment.transaction tx_sudo: The sudoed transaction referenced in the payment data.
-        :param payment.provider provider: The sudoed provider handling the notification.
+        :param payment.provider provider_sudo: The sudoed provider handling the notification.
         :return: None
         :raise Forbidden: If the notification origin can't be verified.
         """
-        provider = provider or tx_sudo.provider_id
         headers = request.httprequest.headers
+        webhook_record = tx_sudo or provider_sudo
+        if not webhook_record:
+            _logger.warning("Received payment data with no transaction or provider.")
+            raise Forbidden
+        provider_sudo = provider_sudo or tx_sudo.provider_id
         data = {
             "transmission_id": headers.get("PAYPAL-TRANSMISSION-ID"),
             "transmission_time": headers.get("PAYPAL-TRANSMISSION-TIME"),
             "cert_url": headers.get("PAYPAL-CERT-URL"),
             "auth_algo": headers.get("PAYPAL-AUTH-ALGO"),
             "transmission_sig": headers.get("PAYPAL-TRANSMISSION-SIG"),
-            "webhook_id": provider.paypal_webhook_id,
+            "webhook_id": provider_sudo.paypal_webhook_id,
             "webhook_event": payment_data,
         }
-        verification = provider._send_api_request(
+        verification = webhook_record._send_api_request(
             "POST", "/v1/notifications/verify-webhook-signature", json=data
         )
         if verification.get("verification_status") != "SUCCESS":

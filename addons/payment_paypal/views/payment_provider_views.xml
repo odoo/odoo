@@ -9,7 +9,7 @@
             <header position="inside">
                 <div invisible="code != 'paypal'">
                     <button
-                    string="Connect/Create a PayPal account"
+                    string="Connect"
                     type="object"
                     name="action_start_onboarding"
                     invisible="paypal_client_id and paypal_client_secret"
@@ -28,7 +28,6 @@
                     <a
                         id="partner-js"
                         class="d-none"
-                        target="_blank"
                         data-paypal-button="true"
                         data-paypal-onboard-complete="onboardedCallback"
                     />
@@ -93,7 +92,6 @@
                 <div invisible="code != 'paypal'" class="o_row" col="2">
                     <field
                         name="paypal_webhook_id"
-                        readonly="paypal_is_oauth_onboarded"
                         groups="base.group_no_one"
                     />
                     <button

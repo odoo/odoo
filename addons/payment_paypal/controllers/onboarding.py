@@ -37,6 +37,7 @@ class PaypalOnboardingController(Controller):
             "partnerClientId": const.ONBOARDING_REFERENCE["partner_client_id"],
             "partnerLogoUrl": f"{base_url}{'/web/static/img/odoo_logo.svg'}",
             "returnToPartnerUrl": f"{base_url}{redirect_url}",
+            "displayMode": "minibrowser",
             "sellerNonce": provider.paypal_seller_nonce,
         }
 
@@ -86,9 +87,9 @@ class PaypalOnboardingController(Controller):
             return {"error_url": f"{self._oauth_error_url}?{error_params}"}
 
         provider.write({
-            "paypal_client_id": response_content["client_id"],
-            "paypal_client_secret": response_content["client_secret"],
-            "paypal_account_id": response_content["payer_id"],
+            "paypal_client_id": response_content.get("client_id"),
+            "paypal_client_secret": response_content.get("client_secret"),
+            "paypal_account_id": response_content.get("payer_id"),
             "paypal_is_oauth_onboarded": True,
             "is_published": True,
         })

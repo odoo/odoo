@@ -1,4 +1,5 @@
 import { registry } from "@web/core/registry";
+import { redirect } from "@web/core/utils/urls";
 import { loadJS } from "@web/core/assets";
 import { rpc } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
@@ -26,7 +27,7 @@ async function paypalOnboardingAction(env, action) {
             result = { error: _t("Something went wrong during PayPal onboarding. Please try again.") };
         }
         if (result.error_url) {
-            window.location.assign(result.error_url);
+            redirect(result.error_url);
             return;
         }
         if (result.error) {
@@ -37,9 +38,11 @@ async function paypalOnboardingAction(env, action) {
     };
 
     const onboardBtn = document.getElementById("partner-js");
-    onboardBtn.href = `${paypalUrl}&displayMode=minibrowser`;
+    onboardBtn.href = paypalUrl;
 
     await loadJS(partnerSdkUrl);
+    // loadJS is done before PayPal is fully hooked on the page, before clicking the button make
+    // sure window.PAYPAL exists on the page.
     await new Promise((resolve) => {
         let attempts = 0;
         const checkInterval = setInterval(() => {

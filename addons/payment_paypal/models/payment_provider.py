@@ -104,12 +104,10 @@ class PaymentProvider(models.Model):
         :raise UserError: If the base URL is not in HTTPS.
         """
         base_url = self._paypal_get_base_url()
+        webhook_events = const.CHECKOUT_WEBHOOK_EVENTS + [const.SELLER_EMAIL_CONFIRMED_WEBHOOK]
         data = {
             "url": urls.urljoin(base_url, PaypalController._webhook_url),
-            "event_types": [
-                {"name": event_type}
-                for event_type in const.CHECKOUT_WEBHOOK_EVENTS + const.MERCHANT_WEBHOOK_EVENTS
-            ],
+            "event_types": [{"name": event_type} for event_type in webhook_events],
         }
         webhook_data = self._send_api_request("POST", "/v1/notifications/webhooks", json=data)
         self.paypal_webhook_id = webhook_data.get("id")
@@ -140,6 +138,13 @@ class PaymentProvider(models.Model):
         for provider in self:
             provider._paypal_check_onboarding_status()
         return True
+
+    def action_reset_credentials(self):
+        """Override to trigger a hard reload on the page when credentials are reset."""
+        res = super().action_reset_credentials()
+        if self.code != "paypal":
+            return res
+        return {"type": "ir.actions.client", "tag": "reload"}
 
     # === BUSINESS METHODS === #
 
