@@ -674,14 +674,7 @@ class ProductTemplate(models.Model):
             'taxes': taxes,  # taxes after fpos mapping
         })
 
-        if self.env['res.groups']._is_feature_enabled('website_sale.group_show_uom_price'):
-            price_per_product_uom = uom._compute_price(
-                price=combination_info['price'], to_unit=self.uom_id
-            )
-            combination_info.update({
-                'base_unit_name': product_or_template.base_unit_name,
-                'base_unit_price': product_or_template._get_base_unit_price(price_per_product_uom),
-            })
+        self._apply_uom_price_to_combination_info(combination_info, product_or_template, uom)
 
         if combination_info['prevent_zero_price_sale']:
             # If price is zero and prevent_zero_price_sale is enabled we don't want to send any
@@ -689,6 +682,18 @@ class ProductTemplate(models.Model):
             combination_info['compare_list_price'] = 0
 
         return combination_info
+
+    def _apply_uom_price_to_combination_info(
+        self, combination_info, product_or_template, uom, price_field="price"
+    ):
+        if self.env["res.groups"]._is_feature_enabled("website_sale.group_show_uom_price"):
+            price_per_product_uom = uom._compute_price(
+                price=combination_info[price_field], to_unit=self.uom_id
+            )
+            combination_info.update({
+                "base_unit_name": product_or_template.base_unit_name,
+                "base_unit_price": product_or_template._get_base_unit_price(price_per_product_uom),
+            })
 
     @api.model
     def _apply_taxes_to_price(
