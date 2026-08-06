@@ -233,9 +233,10 @@ class TestProjectRecurrence(TransactionCase):
         self.assertNotEqual(parent_task.id, parent_task_copy.id, 'The generated recurring task should be different than the original one')
 
         # Newly created nodes from recurrence
-        parent_copy_node1 = parent_task_copy.child_ids[0]
-        parent_copy_node2 = parent_task_copy.child_ids[1].child_ids
-        parent_copy_node3 = parent_task_copy.child_ids[2]
+        copied_children = parent_task_copy.child_ids.sorted('id')
+        parent_copy_node1 = copied_children[0]
+        parent_copy_node2 = copied_children[1].child_ids
+        parent_copy_node3 = copied_children[2]
 
         # The nodes and dependencies ids of the orginal and newly created nodes should be different
         self.assertNotEqual(node1.id, parent_copy_node1.id, 'The original and copied node1 should be different')
