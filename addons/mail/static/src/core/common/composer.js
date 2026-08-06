@@ -1,4 +1,4 @@
-import { useChildSubEnv, useLayoutEffect } from "@web/owl2/utils";
+import { useLayoutEffect, useSubEnv } from "@web/owl2/utils";
 import { AttachmentList } from "@mail/core/common/attachment_list";
 import { useAttachmentUploader } from "@mail/core/common/attachment_uploader_hook";
 import { useCustomDropzone } from "@web/core/dropzone/dropzone_hook";
@@ -237,7 +237,7 @@ export class Composer extends Component {
                         : !this.thread?.messageInEdition?.composer?.isEditComposerVisible)
             );
         }
-        useChildSubEnv({ inComposer: true });
+        useSubEnv({ inComposer: true });
         useLayoutEffect(
             () => {
                 const focus = this.props.autofocus + this.props.composer.autofocus;

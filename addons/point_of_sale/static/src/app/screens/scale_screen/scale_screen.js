@@ -1,4 +1,4 @@
-import { useChildSubEnv } from "@web/owl2/utils";
+import { useSubEnv } from "@web/owl2/utils";
 import { Component, props, t } from "@odoo/owl";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { Dialog } from "@web/core/dialog/dialog";
@@ -20,7 +20,7 @@ export class ScaleScreen extends Component {
         this.pos = usePos();
         this.scale = this.pos.scale;
         this.scale.setErrorCallback(this.onError.bind(this));
-        useChildSubEnv({ dialogData: { ...this.env.dialogData, close: this.close.bind(this) } });
+        useSubEnv({ dialogData: { ...this.env.dialogData, close: this.close.bind(this) } });
     }
 
     confirm() {

@@ -38,7 +38,7 @@ import { ActionList } from "@mail/core/common/action_list";
 import { loadCssFromBundle } from "@mail/utils/common/misc";
 import { MessageContextMenu } from "@mail/core/common/message_context_menu";
 import { Priority } from "@mail/core/common/priority";
-import { useChildSubEnv, useLayoutEffect, useSubEnv } from "@web/owl2/utils";
+import { useLayoutEffect, useSubEnv } from "@web/owl2/utils";
 import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
 import { renderToElement } from "@web/core/utils/render";
 
@@ -135,8 +135,8 @@ export class Message extends Component {
         this.openReactionMenu = this.openReactionMenu.bind(this);
         this.optionsDropdown = useDropdownState();
         this.isActive = computed(() => Boolean(this._isActive));
-        useSubEnv({ inMessage: true });
-        useChildSubEnv({
+        useSubEnv({
+            inMessage: true,
             message: this.props.message,
             alignedRight: this.isAlignedRight,
         });

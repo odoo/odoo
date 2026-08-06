@@ -1,4 +1,4 @@
-import { useChildSubEnv } from "@web/owl2/utils";
+import { useSubEnv } from "@web/owl2/utils";
 import { AccordionItem, ACCORDION } from "@web/core/dropdown/accordion_item";
 import { CheckboxItem } from "@web/core/dropdown/checkbox_item";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -14,7 +14,7 @@ export class PropertiesGroupByItem extends Component {
 
     setup() {
         this.state = proxy({ groupByItems: [] });
-        useChildSubEnv({
+        useSubEnv({
             [ACCORDION]: {
                 accordionStateChanged: this.beforeOpen.bind(this),
             },

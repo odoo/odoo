@@ -1,4 +1,4 @@
-import { render, useChildSubEnv } from "@web/owl2/utils";
+import { render, useSubEnv } from "@web/owl2/utils";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { DropdownGroup } from "@web/core/dropdown/dropdown_group";
@@ -75,7 +75,7 @@ export class NavBar extends Component {
         });
 
         // allow systray items to trigger an adapt when their layout changes
-        useChildSubEnv({ redrawNavbar: renderAndAdapt });
+        useSubEnv({ redrawNavbar: renderAndAdapt });
 
         this.state = proxy({
             isAllAppsMenuOpened: false,

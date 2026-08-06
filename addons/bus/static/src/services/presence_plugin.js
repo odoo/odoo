@@ -2,7 +2,7 @@ import { EventBus, Plugin, signal, useListener, usePlugin } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import { services } from "@web/core/services";
-import { useChildEnv } from "@web/owl2/utils";
+import { useEnv } from "@web/owl2/utils";
 
 const LOCAL_STORAGE_PREFIX = "presence";
 
@@ -14,7 +14,7 @@ export class PresencePlugin extends Plugin {
             luxon.DateTime.now().ts
     );
     /** @private */
-    env = useChildEnv();
+    env = useEnv();
     bus = new EventBus();
 
     setup() {

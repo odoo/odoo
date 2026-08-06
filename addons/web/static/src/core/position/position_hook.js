@@ -2,7 +2,7 @@ import { EventBus, onWillDestroy } from "@odoo/owl";
 import { reposition } from "@web/core/position/utils";
 import { omit } from "@web/core/utils/objects";
 import { useThrottleForAnimation } from "@web/core/utils/timing";
-import { useChildSubEnv, useEnv, useLayoutEffect } from "@web/owl2/utils";
+import { useEnv, useLayoutEffect, useSubEnv } from "@web/owl2/utils";
 
 /**
  * @typedef {import("@web/core/position/utils").ComputePositionOptions} ComputePositionOptions
@@ -81,7 +81,7 @@ export function usePosition(popperRef, getTarget, options = {}) {
 
     const isTopmost = !(POSITION_BUS in env);
     if (isTopmost) {
-        useChildSubEnv({ [POSITION_BUS]: bus });
+        useSubEnv({ [POSITION_BUS]: bus });
     }
 
     const throttledUpdate = useThrottleForAnimation(() => bus.trigger("update"));

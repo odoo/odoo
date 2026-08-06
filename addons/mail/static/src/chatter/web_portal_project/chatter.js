@@ -1,4 +1,4 @@
-import { useChildSubEnv, useSubEnv } from "@web/owl2/utils";
+import { useSubEnv } from "@web/owl2/utils";
 import { Composer } from "@mail/core/common/composer";
 import { Thread } from "@mail/core/common/thread";
 import { propComputed, useMessageScrolling } from "@mail/utils/common/hooks";
@@ -42,7 +42,6 @@ export class Chatter extends Component {
         this.rootRef = signal.ref(HTMLDivElement);
         this.topRef = signal.ref(HTMLDivElement);
         this.onScrollDebounced = useThrottleForAnimation(this.onScroll.bind(this));
-        useChildSubEnv(this.childSubEnv);
         useSubEnv(this.subEnv);
 
         onMounted(this._onMounted);
@@ -81,13 +80,6 @@ export class Chatter extends Component {
         return ["messages"];
     }
 
-    get childSubEnv() {
-        return {
-            inChatter: this.state,
-            messageHighlight: this.messageHighlight,
-        };
-    }
-
     get extraMessageFetchRouteParams() {
         return {};
     }
@@ -109,7 +101,11 @@ export class Chatter extends Component {
     }
 
     get subEnv() {
-        return { messageFetchRouteParams: this.extraMessageFetchRouteParams };
+        return {
+            inChatter: this.state,
+            messageFetchRouteParams: this.extraMessageFetchRouteParams,
+            messageHighlight: this.messageHighlight,
+        };
     }
 
     changeThread(threadModel, threadId) {

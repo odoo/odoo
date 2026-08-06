@@ -1,4 +1,4 @@
-import { useChildSubEnv, useLayoutEffect } from "@web/owl2/utils";
+import { useLayoutEffect, useSubEnv } from "@web/owl2/utils";
 import { HighlightText } from "../highlight_text/highlight_text";
 
 import { Component, computed, proxy, signal, t, useProps } from "@odoo/owl";
@@ -22,7 +22,7 @@ export class SettingsBlock extends Component {
         this.state = proxy({
             search: this.env.searchState,
         });
-        useChildSubEnv({
+        useSubEnv({
             showAllContainer: this.showAllContainer,
         });
         useLayoutEffect(

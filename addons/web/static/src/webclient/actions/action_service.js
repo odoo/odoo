@@ -1,4 +1,4 @@
-import { useChildSubEnv } from "@web/owl2/utils";
+import { useSubEnv } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { browser } from "@web/core/browser/browser";
 import { makeContext } from "@web/core/context";
@@ -49,7 +49,7 @@ class BlankComponent extends Component {
 
     setup() {
         this.uiService = useService("ui");
-        useChildSubEnv({ config: { breadcrumbs: [], noBreadcrumbs: true } });
+        useSubEnv({ config: { breadcrumbs: [], noBreadcrumbs: true } });
         onMounted(() => this.props.onMounted());
     }
 }
@@ -950,7 +950,7 @@ export function makeActionManager(env, router = _router) {
                 this.Component = controller.Component;
                 this.titleService = useService("title");
                 useDebugCategory("action", { action });
-                useChildSubEnv({
+                useSubEnv({
                     config: controller.config,
                     pushStateBeforeReload: () => {
                         if (controller.isMounted) {
@@ -969,7 +969,7 @@ export function makeActionManager(env, router = _router) {
                         callbacks.push(...beforeLeaveFns);
                     });
                     if (this.constructor.Component !== View) {
-                        useChildSubEnv({
+                        useSubEnv({
                             __beforeLeave__: this.__beforeLeave__,
                             __getGlobalState__: this.__getGlobalState__,
                             __getLocalState__: this.__getLocalState__,

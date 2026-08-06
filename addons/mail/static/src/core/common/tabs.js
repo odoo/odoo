@@ -1,4 +1,4 @@
-import { useChildSubEnv, useLayoutEffect } from "@web/owl2/utils";
+import { useLayoutEffect, useSubEnv } from "@web/owl2/utils";
 import { useChildRefs, useForwardRefsToParent, useScrollState } from "@mail/utils/common/hooks";
 import { Component, signal, t, useEffect, useProps, xml } from "@odoo/owl";
 
@@ -19,7 +19,7 @@ export class Tabs extends Component {
         this.headerRefs = useChildRefs();
         this.navRef = signal();
         this.scrollState = useScrollState(this.navRef);
-        useChildSubEnv({
+        useSubEnv({
             tabsContext: {
                 headerRefs: this.headerRefs,
                 isActive: (id) => this.activeHeaderId() === id,

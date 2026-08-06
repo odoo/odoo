@@ -1,4 +1,4 @@
-import { useChildSubEnv, useEnv } from "@web/owl2/utils";
+import { useEnv, useSubEnv } from "@web/owl2/utils";
 import { EventBus, onMounted, onWillDestroy, useEffect } from "@odoo/owl";
 import { localization } from "@web/core/l10n/localization";
 import { useBus, useService } from "@web/core/utils/hooks";
@@ -88,7 +88,7 @@ export function useDropdownNesting(state) {
         });
     });
 
-    useChildSubEnv({ [DROPDOWN_NESTING]: current });
+    useSubEnv({ [DROPDOWN_NESTING]: current });
     useBus(BUS, "dropdown-opened", ({ detail: other }) => current.handleChange(other));
 
     useEffect(() => {

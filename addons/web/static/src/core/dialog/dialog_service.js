@@ -1,4 +1,4 @@
-import { useChildSubEnv } from "@web/owl2/utils";
+import { useSubEnv } from "@web/owl2/utils";
 import { Component, markRaw, proxy, t, useProps, xml } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 
@@ -10,7 +10,7 @@ class DialogWrapper extends Component {
         subEnv: t.any(),
     });
     setup() {
-        useChildSubEnv({ dialogData: this.props.subEnv });
+        useSubEnv({ dialogData: this.props.subEnv });
     }
 }
 

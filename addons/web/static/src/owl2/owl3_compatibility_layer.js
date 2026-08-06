@@ -52,7 +52,7 @@ class Component extends owl.Component {
             );
         }
         this.props = owl.props(null);
-        this.env = useChildEnv();
+        this.env = useEnv();
         this.__owl__ = node;
     }
 
@@ -138,48 +138,25 @@ class EnvPlugin extends owl.Plugin {
     env = owl.config("env");
 }
 
-owl.useEnv = function useEnv() {
-    return owl.useScope().component.env;
-};
-
-function useChildEnv() {
+function useEnv() {
     return owl.plugin(EnvPlugin).env;
 }
-owl.useChildEnv = useChildEnv;
-
-/**
- * @param {object} env
- */
-function provideEnv(env) {
-    owl.providePlugins([EnvPlugin], { env });
-    return env;
-}
-owl.provideEnv = provideEnv;
+owl.useEnv = useEnv;
 
 /**
  * @param {object} extension
  */
-function extendEnv(extension) {
-    const env = Object.create(useChildEnv());
+function useSubEnv(extension) {
+    const env = Object.create(useEnv());
     const descrs = Object.getOwnPropertyDescriptors(extension);
     const subEnv = Object.freeze(Object.defineProperties(env, descrs));
-    return provideEnv(subEnv);
-}
+    owl.providePlugins([EnvPlugin], { env: subEnv });
 
-/**
- * @param {object} extension
- */
-owl.useSubEnv = function useSubEnv(extension) {
     const component = owl.useScope().component;
-    component.env = extendEnv(extension);
-};
-
-/**
- * @param {object} extension
- */
-owl.useChildSubEnv = function useChildSubEnv(extension) {
-    extendEnv(extension);
-};
+    component.env = subEnv;
+}
+owl.useSubEnv = useSubEnv;
+owl.useChildSubEnv = useSubEnv; // kept for spreadsheet
 
 class VPortal extends owl.blockDom.text("").constructor {
     /**
@@ -334,7 +311,7 @@ class App extends owl.App {
             component = {
                 [component.name]: class extends component {
                     constructor(node) {
-                        provideEnv(config.env);
+                        owl.providePlugins([EnvPlugin], { env: config.env });
                         super(node);
                     }
                 },
