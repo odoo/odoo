@@ -69,6 +69,7 @@ const FIELD_OPERATORS = {
         { symbol: "between", description: _lt("is between") },
         { symbol: "!=", description: _lt("is set"), value: false },
         { symbol: "=", description: _lt("is not set"), value: false },
+        { symbol: "today", description: _lt("is today"), value: false },
     ],
     datetime: [
         { symbol: "between", description: _lt("is between") },
@@ -80,6 +81,7 @@ const FIELD_OPERATORS = {
         { symbol: "<=", description: _lt("is before or equal to") },
         { symbol: "!=", description: _lt("is set"), value: false },
         { symbol: "=", description: _lt("is not set"), value: false },
+        { symbol: "today", description: _lt("is today"), value: false },
     ],
     id: [{ symbol: "=", description: _lt("is") }],
     number: [
@@ -257,15 +259,31 @@ export class CustomFilterItem extends Component {
                     [field.name, ">=", domainValue[0]],
                     [field.name, "<=", domainValue[1]]
                 );
+            } else if (operator.symbol === "today") {
+                const queryFrom = "datetime.datetime.combine(context_today(), datetime.time(0,0,0))";
+                const queryTo = "datetime.datetime.combine(context_today(), datetime.time(23,59,59))";
+                domainArray.push(
+                    [field.name, ">=", queryFrom],
+                    [field.name, "<=", queryTo]
+                );
             } else {
                 domainArray.push([field.name, operator.symbol, domainValue[0]]);
             }
-            const preFilter = {
+            let domain = new Domain(domainArray).toString();
+
+            if (operator.symbol === "today") {
+                const regexFrom = /"datetime\.datetime\.combine\(context_today\(\), datetime\.time\(0,0,0\)\)"/;
+                const regexTo = /"datetime\.datetime\.combine\(context_today\(\), datetime\.time\(23,59,59\)\)"/;
+                domain = domain
+                    .replace(regexFrom, 'datetime.datetime.combine(context_today(), datetime.time(0,0,0))')
+                    .replace(regexTo, 'datetime.datetime.combine(context_today(), datetime.time(23,59,59))');
+            }
+
+            return {
                 description: descriptionArray.join(" "),
-                domain: new Domain(domainArray).toString(),
+                domain: domain,
                 type: "filter",
             };
-            return preFilter;
         });
 
         this.env.searchModel.createNewFilters(preFilters);
