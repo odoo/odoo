@@ -76,6 +76,7 @@ export class MessageSearchState extends SearchState {
     loadMoreBeforeMessageId;
     /** @type {import("models").Store} */
     store;
+    searchId = 0;
 
     /** @param {import('models').Thread} [initialThread] */
     constructor(initialThread) {
@@ -97,14 +98,15 @@ export class MessageSearchState extends SearchState {
     async fetchMessages(term) {
         const before = this.loadMoreBeforeMessageId;
         this.loadMoreBeforeMessageId = undefined;
+        const currentSearchId = ++this.searchId;
         const data = await this.store.searchMessagesInThread(
             term,
             this.thread,
             before ?? false,
             this.is_notification
         );
-        if (!data) {
-            return;
+        if (!data || currentSearchId !== this.searchId) {
+            return; // Search was cleared or superseded during request.
         }
         this.searched = true;
         this.count = data.count;
@@ -126,6 +128,7 @@ export class MessageSearchState extends SearchState {
     }
 
     reset() {
+        this.searchId++;
         super.reset();
         this.is_notification = undefined;
         this.messages = [];
