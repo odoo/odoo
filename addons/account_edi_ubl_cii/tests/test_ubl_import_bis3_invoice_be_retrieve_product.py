@@ -68,9 +68,8 @@ class TestUblImportBis3InvoiceBERetrieveProduct(TestUblImportBis3InvoiceBE):
 
     @freeze_time('2020-01-01')
     def test_partial_import_product_invoice_predictive(self):
-        company = self.company_data['company']
-        if "predict_bill_product" in company._fields:
-            company.predict_bill_product = True
+        self.ensure_installed('account_accountant')
+        self.env.company.predict_bill_product = True
 
         # First invoice to train the prediction.
         product = self._create_product(name='XYZ')
