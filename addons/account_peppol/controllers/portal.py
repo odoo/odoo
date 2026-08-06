@@ -16,9 +16,14 @@ class PortalAccount(CustomerPortal):
     def _prepare_my_account_rendering_values(self, *args, **kwargs):
         rendering_values = super()._prepare_my_account_rendering_values(*args, **kwargs)
         if request.env.company.peppol_can_send:
+            partner = request.env.user.partner_id
             rendering_values['invoice_sending_methods'].update({'peppol': _("by Peppol")})
+            peppol_eas_list = {
+                code: label for code, label in partner._fields['peppol_eas']._description_selection(request.env)
+                if code in (partner.available_peppol_eas or [])
+            }
             rendering_values.update({
-                'peppol_eas_list': dict(request.env['res.partner']._fields['peppol_eas']._description_selection(request.env)),
+                'peppol_eas_list': peppol_eas_list,
             })
         return rendering_values
 
