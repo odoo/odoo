@@ -13,7 +13,6 @@ import {
     onMounted,
     onPatched,
     onWillDestroy,
-    onWillUnmount,
     plugin,
     proxy,
     signal,
@@ -59,13 +58,8 @@ export class NavBar extends Component {
             render(this);
         };
 
-        systrayRegistry.addEventListener("UPDATE", renderAndAdapt);
-        this.env.bus.addEventListener("MENUS:APP-CHANGED", renderAndAdapt);
-
-        onWillUnmount(() => {
-            systrayRegistry.removeEventListener("UPDATE", renderAndAdapt);
-            this.env.bus.removeEventListener("MENUS:APP-CHANGED", renderAndAdapt);
-        });
+        useListener(systrayRegistry, "UPDATE", renderAndAdapt);
+        useListener(this.env.bus, "MENUS:APP-CHANGED", renderAndAdapt);
 
         // We don't want to adapt every time we are patched
         // rather, we adapt only when menus or systrays have changed.

@@ -2,7 +2,7 @@ import { useSubEnv } from "@web/owl2/utils";
 import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
 import { MessageSeenIndicator } from "@mail/discuss/core/common/message_seen_indicator";
 
-import { Component, computed, signal, types, useEffect, useProps } from "@odoo/owl";
+import { Component, computed, signal, types, useEffect, useListener, useProps } from "@odoo/owl";
 
 import { useService } from "@web/core/utils/hooks";
 import { useHover } from "@mail/utils/common/hooks";
@@ -57,7 +57,7 @@ export class ChatBubble extends Component {
                 "dropdown-menu bg-view border-0 p-0 overflow-visible o-rounded-bubble mx-1",
             ref: popoverRef,
         });
-        this.env.bus.addEventListener("ChatBubble:preview-will-open", ({ detail }) => {
+        useListener(this.env.bus, "ChatBubble:preview-will-open", ({ detail }) => {
             if (detail === this) {
                 return;
             }
