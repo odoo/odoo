@@ -275,3 +275,26 @@ class WebsiteSaleCart(TransactionCaseWithUserPortal):
             self.assertRecordValues(order.order_line, [{
                 "display_type": "line_note",
             }])
+
+    def test_shop_payment_validate_does_not_confirm_empty_order(self):
+        """Test that an order with no order lines is not confirmed by shop_payment_validate."""
+        website = self.env.ref("website.default_website")
+        order = self.env["sale.order"].create(
+            {
+                "partner_id": self.env.ref("base.public_partner").id,
+                "website_id": website.id,
+            }
+        )
+        with MockRequest(self.env, website=website) as request:
+            request.session["sale_order_id"] = order.id
+            request.session["sale_last_order_id"] = order.id
+            try:
+                WebsiteSale().shop_payment_validate()
+            except ValidationError:
+                pass
+
+        self.assertNotEqual(
+            order.state,
+            "sale",
+            "An empty cart should never be confirmed as a sale order.",
+        )
