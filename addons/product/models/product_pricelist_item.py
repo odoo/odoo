@@ -50,10 +50,10 @@ class ProductPricelistItem(models.Model):
 
     applied_on = fields.Selection(
         selection=[
-            ('3_global', "All Products"),
-            ('2_product_category', "Product Category"),
-            ('1_product', "Product"),
             ('0_product_variant', "Product Variant"),
+            ('1_product', "Product"),
+            ('2_product_category', "Product Category"),
+            ('3_global', "All Products"),
         ],
         string="Apply On",
         default='3_global',

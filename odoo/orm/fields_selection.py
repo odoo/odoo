@@ -220,7 +220,7 @@ class Selection(Field[str | typing.Literal[False]]):
         selection = self.selection
         if isinstance(selection, str) or callable(selection):
             selection = determine(selection, env[self.model_name].with_context(lang=None))
-        return [value for value, _ in selection]
+        return [str(value) for value, _ in selection]
 
     def convert_to_column(self, value, record, values=None, validate=True):
         return self.convert_to_cache(value, record, validate=validate)
