@@ -908,7 +908,7 @@ class AccountMoveLine(models.Model):
         for line in self:
             line.sequence = seq_map.get(line.display_type, 100)
 
-    @api.depends('quantity', 'discount', 'price_unit', 'tax_ids', 'currency_id')
+    @api.depends('quantity', 'discount', 'price_unit', 'tax_ids', 'currency_id', 'amount_currency')
     def _compute_totals(self):
         """ Compute 'price_subtotal' / 'price_total' outside of `_sync_tax_lines` because those values must be visible for the
         user on the UI with draft moves and the dynamic lines are synchronized only when saving the record.
