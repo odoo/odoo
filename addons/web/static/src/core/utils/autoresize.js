@@ -1,4 +1,4 @@
-import { onMounted, onPatched, onWillUnmount, untrack } from "@odoo/owl";
+import { onMounted, onPatched, onWillUnmount } from "@odoo/owl";
 import { memoize } from "@web/core/utils/functions";
 
 // ── Batch infrastructure ─────────────────────────────────────────────────────
@@ -111,7 +111,7 @@ export function useAutoresize(ref, options = {}) {
     let resizeObserver = null;
     const onInput = () => resize?.(true);
     onMounted(() => {
-        const el = untrack(ref);
+        const el = ref();
         if (!el) {
             return;
         }
