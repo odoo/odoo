@@ -1,9 +1,9 @@
-import { Component, props, t } from "@odoo/owl";
+import { Component, useProps, t } from "@odoo/owl";
 import { SelectMany2X } from "./select_many2x";
 
 export class BasicMany2Many extends Component {
     static template = "html_builder.BasicMany2Many";
-    props = props({
+    props = useProps({
         // basicContainerBuilderComponentProps (converted inline)
         id: t.string().optional(),
         applyTo: t.string().optional(),

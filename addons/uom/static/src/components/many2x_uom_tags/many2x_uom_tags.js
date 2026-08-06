@@ -1,4 +1,4 @@
-import { props, t } from "@odoo/owl";
+import { useProps, t } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { Many2XAutocomplete, many2XAutocompleteProps } from "@web/views/fields/relational_utils";
@@ -20,7 +20,7 @@ export function getProductRelatedModel() {
 }
 
 export class Many2XUomTagsAutocomplete extends Many2XAutocomplete {
-    props = props({
+    props = useProps({
         ...many2XAutocompleteProps,
         productModel: t.string().optional(),
         productId: t.number().optional(),
@@ -93,7 +93,7 @@ export class Many2ManyUomTagsField extends Many2ManyTagsField {
         ...Many2ManyTagsField.components,
         Many2XAutocomplete: Many2XUomTagsAutocomplete,
     };
-    props = props({
+    props = useProps({
         ...many2ManyTagsFieldProps,
         productField: t.string().optional("product_id"),
         quantityField: t.string().optional("product_uom_qty"),

@@ -1,4 +1,4 @@
-import { props, proxy, t } from "@odoo/owl";
+import { useProps, proxy, t } from "@odoo/owl";
 import { useCommand } from "@web/core/commands/command_hook";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
@@ -13,7 +13,7 @@ import {
 export class ProjectTaskStateSelection extends StateSelectionField {
     static template = "project.ProjectTaskStateSelection";
 
-    props = props({
+    props = useProps({
         ...standardFieldProps,
         showLabel: t.boolean().optional(true),
         withCommand: t.boolean().optional(),

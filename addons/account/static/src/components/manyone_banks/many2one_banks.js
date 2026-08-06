@@ -1,5 +1,5 @@
 import { _t } from "@web/core/l10n/translation";
-import { markup, props, t } from "@odoo/owl";
+import { markup, useProps, t } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { extractData, Many2One, many2OneProps } from "@web/views/fields/many2one/many2one";
 import { buildM2OFieldDescription, Many2OneField } from "@web/views/fields/many2one/many2one_field";
@@ -37,7 +37,7 @@ function extractDataBank(record) {
 
 export class Many2OneBank extends Many2One {
     static template = "account.Many2OneBank";
-    props = props({
+    props = useProps({
         ...many2OneProps,
         bankAllowOutPayment: t.boolean().optional(),
     });

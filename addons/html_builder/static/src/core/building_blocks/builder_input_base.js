@@ -1,4 +1,4 @@
-import { Component, props, proxy, signal, t, useEffect } from "@odoo/owl";
+import { Component, useProps, proxy, signal, t, useEffect } from "@odoo/owl";
 import { useActionInfo } from "../utils";
 
 // Props given to the builder input components that are then passed to the
@@ -34,7 +34,7 @@ export class BuilderInputBase extends Component {
     };
 
     // Ref on the input element, either owned by the parent (`inputRef` prop) or local.
-    inputRef = props.static(
+    inputRef = useProps.static(
         "inputRef",
         t.signal(t.ref()).optional(() => signal.ref())
     );

@@ -11,7 +11,7 @@ import {
     signal,
     status,
     proxy,
-    props,
+    useProps,
     t,
 } from "@odoo/owl";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
@@ -41,7 +41,7 @@ const TAB_TRANSITION_FALLBACK_DELAY = 400;
 export class Builder extends Component {
     static template = "html_builder.Builder";
     static components = { BlockTab, CustomizeTab };
-    props = props({
+    props = useProps({
         closeEditor: t.function().optional(),
         reloadEditor: t.function().optional(() => () => {}),
         onEditorLoad: t.function().optional(),
@@ -65,7 +65,7 @@ export class Builder extends Component {
     });
 
     // Ref on the local overlay container element, owned by the parent.
-    overlayRef = props.static("overlayRef", t.signal(t.ref()));
+    overlayRef = useProps.static("overlayRef", t.signal(t.ref()));
 
     builderSidebarRef = signal.ref();
 

@@ -1,11 +1,10 @@
 /** @ts-check */
 
-import { useLayoutEffect } from "@web/owl2/utils";
-import { Component, onWillStart, onWillUpdateProps, props, signal, t, untrack } from "@odoo/owl";
-import { useService } from "@web/core/utils/hooks";
-
-import { BadgeTag } from "@web/core/tags_list/badge_tag";
+import { Component, onWillStart, onWillUpdateProps, signal, t, untrack, useProps } from "@odoo/owl";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
+import { BadgeTag } from "@web/core/tags_list/badge_tag";
+import { useService } from "@web/core/utils/hooks";
+import { useLayoutEffect } from "@web/owl2/utils";
 
 export class SelectionFilterValue extends Component {
     static template = "spreadsheet.SelectionFilterValue";
@@ -13,7 +12,7 @@ export class SelectionFilterValue extends Component {
         BadgeTag,
         AutoComplete,
     };
-    props = props({
+    props = useProps({
         resModel: t.string(),
         field: t.string(),
         value: t.array().optional([]),

@@ -18,7 +18,7 @@ import {
     Component,
     onWillUnmount,
     onWillStart,
-    props,
+    useProps,
     proxy,
     signal,
     t,
@@ -41,7 +41,7 @@ export class ResourceEditor extends Component {
         SelectMenu,
     };
     static template = "website.ResourceEditor";
-    props = props({
+    props = useProps({
         close: t.function().optional(() => () => {}),
     });
 

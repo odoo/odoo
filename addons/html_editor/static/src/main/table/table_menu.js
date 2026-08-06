@@ -2,7 +2,7 @@ import { getBaseContainerSelector } from "@html_editor/utils/base_container";
 import { getIframeAdjustedBoundingRect, isEmpty, isTableCell } from "@html_editor/utils/dom_info";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { getRowIndex, getSelectedCellsMergeInfo } from "@html_editor/utils/table";
-import { Component, onMounted, onWillUnmount, props, signal, t, useListener } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, useProps, signal, t, useListener } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
@@ -11,7 +11,7 @@ import { useCrossDocumentListener } from "../../utils/hooks";
 
 export class TableMenu extends Component {
     static template = "html_editor.TableMenu";
-    props = props({
+    props = useProps({
         type: t.string(), // column or row
         moveColumn: t.function(),
         addColumn: t.function(),

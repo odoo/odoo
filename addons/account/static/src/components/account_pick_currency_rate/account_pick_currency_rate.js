@@ -1,4 +1,4 @@
-import { Component, signal, proxy, props, types as t } from "@odoo/owl";
+import { Component, signal, proxy, useProps, types as t } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { useDateTimePicker } from "@web/core/datetime/datetime_picker_hook";
 import { useService } from "@web/core/utils/hooks";
@@ -39,7 +39,7 @@ export class AccountPickCurrencyDate extends Component {
 
 export class AccountCurrencyExchangeRate extends Component {
     static template = "account.AccountCurrencyExchangeRate";
-    props = props({
+    props = useProps({
         readonly: t.boolean(),
         record: t.object(),
         rateField: t.string(),

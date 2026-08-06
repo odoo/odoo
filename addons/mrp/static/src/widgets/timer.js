@@ -9,7 +9,7 @@ import {
     onWillUpdateProps,
     onWillStart,
     onWillDestroy,
-    props,
+    useProps,
     proxy,
     signal,
     t,
@@ -37,7 +37,7 @@ function formatMinutes(value) {
 
 export class MrpTimer extends Component {
     static template = "mrp.MrpTimer";
-    props = props({
+    props = useProps({
         value: t.number(),
         ongoing: t.boolean().optional(false),
     });
@@ -96,7 +96,7 @@ export class MrpTimer extends Component {
 class MrpTimerField extends Component {
     static template = "mrp.MrpTimerField";
     static components = { MrpTimer };
-    props = props(standardFieldProps);
+    props = useProps(standardFieldProps);
 
     numpadDecimalRef = signal.ref();
 

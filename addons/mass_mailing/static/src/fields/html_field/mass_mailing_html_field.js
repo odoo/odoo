@@ -8,7 +8,7 @@ import { MassMailingIframe } from "@mass_mailing/iframe/mass_mailing_iframe";
 import { ThemeSelectorIframe } from "@mass_mailing/themes/theme_selector/theme_selector_iframe";
 import {
     onWillUpdateProps,
-    props,
+    useProps,
     signal,
     status,
     t,
@@ -33,7 +33,7 @@ export class MassMailingHtmlField extends HtmlField {
         MassMailingIframe,
         ThemeSelectorIframe,
     };
-    props = props({
+    props = useProps({
         ...htmlFieldProps,
         inlineField: t.string(),
         filterTemplates: t.boolean().optional(),

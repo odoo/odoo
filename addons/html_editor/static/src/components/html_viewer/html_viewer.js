@@ -1,26 +1,26 @@
-import { useLayoutEffect } from "@web/owl2/utils";
+import { HtmlUpgradeManager } from "@html_editor/html_migrations/html_upgrade_manager";
+import { mountComponent } from "@html_editor/others/embedded_component_utils";
+import { TableOfContentManager } from "@html_editor/others/embedded_components/core/table_of_content/table_of_content_manager";
+import { fillHtmlTransferData } from "@html_editor/utils/clipboard";
+import { fixInvalidHTML, instanceofMarkup } from "@html_editor/utils/sanitize";
 import {
     Component,
     markup,
     onMounted,
     onWillStart,
     onWillUnmount,
-    props,
     proxy,
     signal,
     t,
     untrack,
     useApp,
     useEffect,
+    useProps
 } from "@odoo/owl";
 import { getBundle } from "@web/core/assets";
-import { memoize } from "@web/core/utils/functions";
-import { fillHtmlTransferData } from "@html_editor/utils/clipboard";
-import { fixInvalidHTML, instanceofMarkup } from "@html_editor/utils/sanitize";
-import { HtmlUpgradeManager } from "@html_editor/html_migrations/html_upgrade_manager";
-import { mountComponent } from "@html_editor/others/embedded_component_utils";
-import { TableOfContentManager } from "@html_editor/others/embedded_components/core/table_of_content/table_of_content_manager";
 import { browser } from "@web/core/browser/browser";
+import { memoize } from "@web/core/utils/functions";
+import { useLayoutEffect } from "@web/owl2/utils";
 
 export class HtmlViewer extends Component {
     static template = "html_editor.HtmlViewer";
@@ -28,7 +28,7 @@ export class HtmlViewer extends Component {
     app = useApp();
     iframeRef = signal.ref();
     readonlyElementRef = signal.ref();
-    props = props({
+    props = useProps({
         config: t.object(),
         migrateHTML: t.boolean().optional(true),
     });

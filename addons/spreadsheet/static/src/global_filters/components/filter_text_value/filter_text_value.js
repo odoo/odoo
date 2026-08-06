@@ -1,10 +1,9 @@
 /** @ts-check */
 
-import { useLayoutEffect } from "@web/owl2/utils";
-import { Component, props, signal, t, untrack } from "@odoo/owl";
-
-import { BadgeTag } from "@web/core/tags_list/badge_tag";
+import { Component, signal, t, untrack, useProps } from "@odoo/owl";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
+import { BadgeTag } from "@web/core/tags_list/badge_tag";
+import { useLayoutEffect } from "@web/owl2/utils";
 
 export class TextFilterValue extends Component {
     static template = "spreadsheet.TextFilterValue";
@@ -12,7 +11,7 @@ export class TextFilterValue extends Component {
         BadgeTag,
         AutoComplete,
     };
-    props = props({
+    props = useProps({
         onValueChanged: t.function(),
         value: t.array().optional([]),
         options: t.array(t.object({ value: t.string(), formattedValue: t.string() }).optional()),

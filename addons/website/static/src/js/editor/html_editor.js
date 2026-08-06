@@ -1,7 +1,7 @@
 import { LinkPopover } from "@html_editor/main/link/link_popover";
 import { _t } from "@web/core/l10n/translation";
 import { AutoComplete, autoCompleteProps } from "@web/core/autocomplete/autocomplete";
-import { props, signal, t, onMounted } from "@odoo/owl";
+import { useProps, signal, t, onMounted } from "@odoo/owl";
 import { patch } from "@web/core/utils/patch";
 import wUtils from "@website/js/utils";
 import { browser } from "@web/core/browser/browser";
@@ -22,7 +22,7 @@ import { session } from "@web/session";
  * - updateValue: to update the URL of the link element
  */
 export class AutoCompleteInLinkPopover extends AutoComplete {
-    props = props({
+    props = useProps({
         ...autoCompleteProps,
         inputClass: t.string().optional(),
         updateValue: t.function().optional(),

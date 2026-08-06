@@ -1,4 +1,4 @@
-import { Component, onMounted, onPatched, useProps, signal, t } from "@odoo/owl";
+import { Component, onMounted, onPatched, signal, t, useProps } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { omit } from "@web/core/utils/objects";
@@ -7,9 +7,9 @@ import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import {
     ListTextField,
-    textFieldProps,
-    textField,
     listTextField,
+    textField,
+    textFieldProps,
 } from "@web/views/fields/text/text_field";
 
 export class AccountLabelTextField extends ListTextField {

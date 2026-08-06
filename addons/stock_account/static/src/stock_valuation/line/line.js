@@ -1,10 +1,10 @@
-import { Component, props, proxy, t } from "@odoo/owl";
+import { Component, useProps, proxy, t } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 
 
 export class StockValuationReportLine extends Component {
     static template = "stock_account.StockValuationReport.InventoryValuationLine";
-    props = props({
+    props = useProps({
         class: t.string().optional(),
         displayDebitCredit: t.boolean().optional(),
         label: t.string().optional(),

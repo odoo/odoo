@@ -1,4 +1,4 @@
-import { computed, props, types, Component } from "@odoo/owl";
+import { computed, useProps, types, Component } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 
 import { OutLine } from "../out_line/out_line";
@@ -9,7 +9,7 @@ export class ProductLine extends Component {
         OutLine,
     }
 
-    props = props({
+    props = useProps({
         freeQty: types.signal(types.number()),
         id: types.number(),
         name: types.string,

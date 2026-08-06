@@ -51,7 +51,7 @@ class Component extends owl.Component {
                     `e.g. "props = useProps({ someProp: t.string().optional(defaultValue) })".`
             );
         }
-        this.props = owl.props(null);
+        this.props = owl.useProps();
         this.env = useEnv();
         this.__owl__ = node;
     }
