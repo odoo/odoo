@@ -191,9 +191,7 @@ export class PartnerList extends Component {
     async getNewPartners() {
         let domain = [];
         const offset = this.globalState.offsetBySearch[this.state.query] || 0;
-        if (offset > this.loadedPartnerIds.size) {
-            return [];
-        }
+        
         if (this.state.query) {
             const search_fields = this._getSearchFields(this.state.query);
             domain = [
@@ -201,26 +199,26 @@ export class PartnerList extends Component {
                 ...search_fields.map((field) => [field, "ilike", this.state.query]),
             ];
         }
-
+    
         try {
             this.state.loading = true;
-
+    
             const result = await this.pos.data.callRelated("res.partner", "get_new_partner", [
                 this.pos.config.id,
                 domain,
                 offset,
             ]);
-
+    
             this.globalState.offsetBySearch[this.state.query] =
                 offset + (result["res.partner"].length || 100);
-
+    
             for (const partner of result["res.partner"]) {
                 if (!this.loadedPartnerIds.has(partner.id)) {
                     this.loadedPartnerIds.add(partner.id);
                     this.state.loadedPartners.push(partner);
                 }
             }
-
+    
             return result["res.partner"];
         } catch {
             return [];
