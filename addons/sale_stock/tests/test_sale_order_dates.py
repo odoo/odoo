@@ -176,3 +176,32 @@ class TestSaleExpectedDate(ValuationReconciliationTestCommon):
                 invoice.delivery_date, custom_delivery_date,
                 "Custom invoice delivery shouldn't change resetting to draft invoice",
             )
+
+    def test_invoice_delivery_date_frozen_when_posted(self):
+        order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'picking_policy': 'one',
+            'order_line': [Command.create({
+                'product_id': self.test_product_order.id,
+                'product_uom_qty': 10.0,
+            })],
+        })
+        order.action_confirm()
+        picking_1 = order.picking_ids
+        picking_1.move_ids.write({'quantity': 10.0, 'picked': True})
+        picking_1._action_done()
+        invoice = order._create_invoices()
+        invoice.action_post()
+        delivery_date_before = invoice.delivery_date
+        order.write({'order_line': [Command.create({
+            'product_id': self.test_product_order.id,
+            'product_uom_qty': 5.0,
+        })]})
+        picking_2 = (order.picking_ids - picking_1).ensure_one()
+        picking_2.move_ids.write({'quantity': 5.0, 'picked': True})
+        with freeze_time(fields.Date.today() - timedelta(days=3)):
+            picking_2._action_done()
+        self.assertEqual(
+            invoice.delivery_date, delivery_date_before,
+            "Posted invoice's delivery_date must not change after later delivery activity",
+        )
