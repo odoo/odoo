@@ -116,9 +116,15 @@ class AccountEdiXmlCII(models.AbstractModel):
         return [invoice.invoice_date]
 
     def _get_exchanged_document_vals(self, invoice):
+        type_code = '380' if invoice.move_type == 'out_invoice' else '381'
+        if invoice.partner_bank_id and invoice.partner_bank_id.is_factoring:
+            if invoice.move_type == 'out_invoice':
+                type_code = '393'
+            elif invoice.move_type == 'out_refund':
+                type_code = '396'
         return {
             'id': invoice.name,
-            'type_code': '380' if invoice.move_type == 'out_invoice' else '381',
+            'type_code': type_code,
             'issue_date_time': invoice.invoice_date,
             'included_note': html2plaintext(invoice.narration) if invoice.narration else "",
             'included_note_list': [],
@@ -260,7 +266,30 @@ class AccountEdiXmlCII(models.AbstractModel):
         else:
             template_values['payment_means_code'] = PAYMENT_MEAN_CODES['Payment to bank account']
 
+        payee_partner = invoice.partner_bank_id._get_edi_payee_partner() if invoice.partner_bank_id else self.env['res.partner']
+        payee_vals = {
+            'payee_partner': payee_partner,
+            'payee_legal_organization_id': self._cii_get_payee_legal_organization_id(payee_partner),
+            'payee_role_code': invoice.partner_bank_id._get_edi_payee_role_code() if invoice.partner_bank_id else False,
+        }
+        siret = self._edi_get_partner_siret(payee_partner)
+        if siret:
+            payee_vals['payee_siret'] = siret
+        vat = payee_partner.commercial_partner_id.vat
+        if vat and vat != '/':
+            payee_vals['payee_vat'] = vat
+        template_values.update(payee_vals)
+
         return template_values
+
+    def _cii_get_payee_legal_organization_id(self, payee_partner):
+        if not payee_partner:
+            return False
+        siren = self._edi_get_partner_siren(payee_partner)
+        if siren:
+            return siren
+        commercial_partner = payee_partner.commercial_partner_id
+        return commercial_partner.vat or commercial_partner.company_registry or False
 
     def _export_invoice(self, invoice):
         vals = self._export_invoice_vals(invoice.with_context(lang=invoice.partner_id.lang))
@@ -303,6 +332,7 @@ class AccountEdiXmlCII(models.AbstractModel):
         ]
         if bank_details:
             self._import_partner_bank(invoice, bank_details=bank_details)
+        self._import_enrich_partner_bank_payee_cii(invoice, tree)
 
         # ==== ref, invoice_origin, narration, payment_reference ====
         invoice_values['ref'] = tree.findtext('./{*}ExchangedDocument/{*}ID')
@@ -340,6 +370,28 @@ class AccountEdiXmlCII(models.AbstractModel):
         invoice.write(invoice_values)
         logs += partner_logs + currency_logs + line_logs + allowance_charges_logs
         return logs
+
+    def _import_enrich_partner_bank_payee_cii(self, invoice, tree):
+        if not invoice.partner_bank_id:
+            return
+
+        type_code = tree.findtext('./{*}ExchangedDocument/{*}TypeCode')
+        payee_values, is_factoring = self._edi_parse_payee_party_from_cii_tree(tree)
+        if self._edi_is_factoring_document_type_code(type_code):
+            is_factoring = True
+
+        if not payee_values and not is_factoring:
+            return
+
+        if payee_values:
+            payee_values['acc_holder_partner'] = self._edi_retrieve_payee_partner_from_values(
+                invoice.company_id,
+                payee_values,
+            )
+
+        write_vals = self._edi_get_partner_bank_payee_write_vals(payee_values, is_factoring)
+        if write_vals:
+            invoice.partner_bank_id.write(write_vals)
 
     def _get_tax_nodes(self, tree):
         return tree.findall('.//{*}ApplicableTradeTax/{*}RateApplicablePercent')
