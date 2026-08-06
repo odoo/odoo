@@ -358,6 +358,28 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         }])
         self.assertTrue(payment_term_line.reconciled)
 
+    def test_invoice_draft_not_paid_with_stale_zero_residual(self):
+        """
+        A draft invoice with a non-zero `amount_total` must never compute
+        `payment_state` as 'paid', even when `amount_residual` transiently
+        reads as zero with no real reconciliation.
+        This transitional state can occur during `_sync_dynamic_lines` when
+        `amount_total` is already updated but the payment term line hasn't
+        been resynced yet.
+        """
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': fields.Date.from_string('2019-01-01'),
+            'invoice_line_ids': [Command.create({'name': 'Something', 'price_unit': 100})],
+        })
+        # Simulate the transitional state where `amount_residual` is stale (zero)
+        # but `amount_total` is non-zero and no reconciliation exists yet
+        invoice.amount_residual = 0
+        self.assertRecordValues(invoice, [
+            {'state': 'draft', 'amount_total': 100.0, 'amount_residual': 0.0, 'payment_state': 'not_paid'},
+        ])
+
     def test_reconcile_lines_corner_case_1_zero_balance_same_foreign_currency(self):
         """ Test the reconciliation of lines having a zero balance in different currencies. In that case, the reconciliation should not be full until
         an additional move is added with the right foreign currency amount. """
