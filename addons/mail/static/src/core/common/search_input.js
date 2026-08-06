@@ -26,7 +26,7 @@ export class SearchInput extends Component {
             accesskey: t.string().optional(),
             /** @type {boolean | Parameters<typeof useAutofocus>[0]} */
             autofocus: t.or([t.boolean(), autofocusParamsType]).optional(false),
-            classNames: t.string().optional(),
+            classNames: t.string().optional(""),
             loadingDelay: t.number().optional(200),
             onClear: t.function([t.instanceOf(MouseEvent)]).optional(),
             onKeydown: t.function([t.instanceOf(KeyboardEvent)]).optional(),

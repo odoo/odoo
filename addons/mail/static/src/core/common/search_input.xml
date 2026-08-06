@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.SearchInput">
-        <div class="o-mail-SearchInput position-relative flex-grow-1" t-att-class="this.props.classNames" role="search">
+        <div class="o-mail-SearchInput position-relative flex-grow-1" t-attf-class="{{ this.props.classNames }} {{ this.props.search.loading ? 'o-searching' : '' }}" role="search">
             <label
                 t-att-id="`${this.uniqueId}-icon`"
                 t-att-for="`${this.uniqueId}-input`"
