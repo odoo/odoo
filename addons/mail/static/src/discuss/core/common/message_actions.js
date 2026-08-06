@@ -19,10 +19,12 @@ registerMessageAction("set-new-message-separator", {
             selfMember.new_message_separator_ui = selfMember.new_message_separator;
         }
         message.channel_id.markedAsUnread = true;
-        rpc("/discuss/channel/set_new_message_separator", {
-            channel_id: message.thread.id,
-            message_id: message.id,
-        });
+        message.thread.markReadSequential(() =>
+            rpc("/discuss/channel/set_new_message_separator", {
+                channel_id: message.thread.id,
+                message_id: message.id,
+            })
+        );
     },
     sequence: 50,
 });
