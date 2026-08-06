@@ -2,7 +2,13 @@
 /** @typedef {import("./record_list").RecordList} RecordList */
 
 import { ManyFieldVersion, SingleFieldVersion, SKIP_REVISION } from "@mail/model/field_version";
-import { IS_DELETED_SYM, isCommandList, isMany, normalizeManyCommands } from "@mail/model/misc";
+import {
+    IS_DELETED_SYM,
+    isCommandList,
+    isMany,
+    normalizeManyCommands,
+    untrackFunctions,
+} from "@mail/model/misc";
 import { RecordInternal } from "@mail/model/record_internal";
 import { parseRawValue } from "@mail/utils/common/local_storage";
 
@@ -349,3 +355,11 @@ export class StoreInternal extends RecordInternal {
         }
     }
 }
+
+untrackFunctions(StoreInternal.prototype, [
+    "updateAttr",
+    "updateFields",
+    "updateRelation",
+    "updateRelationMany",
+    "updateRelationOne",
+]);

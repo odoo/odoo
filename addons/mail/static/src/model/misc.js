@@ -1,3 +1,5 @@
+import { untrack } from "@odoo/owl";
+
 import { registry } from "@web/core/registry";
 
 /** @typedef {import("./record").Record} Record */
@@ -241,3 +243,29 @@ export function makeRecordFieldLocalId(recordLocalId, fieldName) {
 }
 
 export const technicalKeysOnRecords = ["_", "_proxy", "_proxyInternal", "_raw", "env", "Model"];
+
+/**
+ * Wraps the given methods so they run untracked: reactive reads inside them
+ * never subscribe the caller's computation. Applied once at module load on a
+ * class prototype (or the class itself for statics); the wrapper runs on the
+ * call receiver. Defined non-enumerable, like the class methods it shadows.
+ *
+ * @param {Object} object
+ * @param {string[]} names
+ */
+export function untrackFunctions(object, names) {
+    for (const name of names) {
+        const originalFn = object[name];
+        Object.defineProperty(object, name, {
+            configurable: true,
+            enumerable: false,
+            value: function untrackFunctionsValue(...args) {
+                const self = this;
+                return untrack(function untrackFunctionsValueUntracked() {
+                    return originalFn.apply(self, args);
+                });
+            },
+            writable: true,
+        });
+    }
+}

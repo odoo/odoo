@@ -1,6 +1,6 @@
 import { PgSnapshot } from "@mail/model/field_version";
 import { Record } from "./record";
-import { STORE_SYM, modelRegistry } from "./misc";
+import { STORE_SYM, modelRegistry, untrackFunctions } from "./misc";
 
 import { immediateEffect, proxy, toRaw, untrack } from "@odoo/owl";
 
@@ -286,3 +286,5 @@ export class Store extends Record {
         }
     }
 }
+
+untrackFunctions(Store.prototype, ["handleError", "insert"]);
