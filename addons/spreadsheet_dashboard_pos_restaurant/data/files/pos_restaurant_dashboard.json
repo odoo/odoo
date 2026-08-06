@@ -1,5 +1,5 @@
 {
-  "version": "18.5.10",
+  "version": "19.3.10",
   "sheets": [
     {
       "id": "c960176a-048b-4f9a-a326-3cc55c5fd1f2",
@@ -61,62 +61,27 @@
       "cells": {
         "A50": "#",
         "A51": "1",
-        "A52": "2",
-        "A53": "3",
-        "A54": "4",
-        "A55": "5",
-        "A56": "6",
-        "A57": "7",
-        "A58": "8",
-        "A59": "9",
-        "A60": "10",
-        "A61": "11",
-        "A62": "12",
-        "A63": "13",
-        "A64": "14",
-        "A65": "15",
+        "A52:A65": { "N": "+1" },
         "A68": "#",
         "A69": "1",
-        "A70": "2",
-        "A71": "3",
-        "A72": "4",
-        "A73": "5",
-        "A74": "6",
-        "A75": "7",
-        "A76": "8",
-        "A77": "9",
-        "A78": "10",
-        "A79": "11",
-        "A80": "12",
-        "A81": "13",
-        "A82": "14",
-        "A83": "15",
+        "A70:A83": { "N": "+1" },
         "B12": "=_t(\"Hourly Total Revenue\")",
-        "B30": "=_t(\"Daily Total Revenue\")",
-        "B49": "=_t(\"Top 15 Products per Margin\") ",
-        "B50": "=PIVOT(6, 15, FALSE, FALSE)",
+        "B30": {
+          "S": ["Daily Total Revenue"]
+        },
+        "B49": {
+          "S": ["Top 15 Products per Margin"]
+        },
+        "B50": "=PIVOT(6,15,FALSE,FALSE)",
         "B67": "=_t(\"Top 15 Tables per Revenue\")",
-        "B68": "=PIVOT(7, 15, FALSE, FALSE)",
+        "B68": "=PIVOT(7,15,FALSE,FALSE)",
         "G50": "#",
         "G51": "1",
-        "G52": "2",
-        "G53": "3",
-        "G54": "4",
-        "G55": "5",
-        "G56": "6",
-        "G57": "7",
-        "G58": "8",
-        "G59": "9",
-        "G60": "10",
-        "G61": "11",
-        "G62": "12",
-        "G63": "13",
-        "G64": "14",
-        "G65": "15",
-        "H50": "=PIVOT(9, 15, FALSE, FALSE)",
+        "G52:G65": { "N": "+1" },
+        "H50": "=PIVOT(9,15,FALSE,FALSE)",
         "H67": "=_t(\"Top Responsibles\")",
-        "H68": "=CHOOSECOLS(PIVOT(10, 15, FALSE, FALSE), 1)",
-        "J68": "=CHOOSECOLS(PIVOT(10, 15, FALSE, FALSE), 2, 3)"
+        "H68": "=CHOOSECOLS(PIVOT(10,15,FALSE,FALSE),1)",
+        "J68": "=CHOOSECOLS(PIVOT(10,15,FALSE,FALSE),2,3)"
       },
       "styles": {
         "A50": 1,
@@ -201,24 +166,7 @@
           "tag": "chart",
           "data": {
             "type": "combo",
-            "dataSetsHaveTitle": true,
-            "dataSets": [
-              {
-                "dataRange": "Data!B13:B37",
-                "yAxisId": "y",
-                "label": "Revenue",
-                "type": "bar"
-              },
-              {
-                "dataRange": "Data!D13:D37",
-                "label": "Average per order",
-                "yAxisId": "y1",
-                "trend": { "type": "polynomial", "order": 2, "display": false },
-                "type": "line"
-              }
-            ],
             "legendPosition": "top",
-            "labelRange": "Data!A13:A37",
             "title": { "text": "" },
             "aggregated": false,
             "axesDesign": {
@@ -231,6 +179,24 @@
             },
             "showValues": false,
             "humanize": true,
+            "dataSource": {
+              "labelRange": "Data!A13:A37",
+              "type": "range",
+              "dataSets": [
+                { "dataSetId": "0", "dataRange": "Data!B13:B37" },
+                { "dataSetId": "1", "dataRange": "Data!D13:D37" }
+              ],
+              "dataSetsHaveTitle": true
+            },
+            "dataSetStyles": {
+              "0": { "yAxisId": "y", "label": "Revenue", "type": "bar" },
+              "1": {
+                "label": "Average per order",
+                "yAxisId": "y1",
+                "trend": { "type": "polynomial", "order": 2, "display": false },
+                "type": "line"
+              }
+            },
             "chartId": "fdceb3b9-643f-4d30-a572-2d9b0b684f17"
           },
           "offset": { "x": 0, "y": 289 },
@@ -244,18 +210,7 @@
           "tag": "chart",
           "data": {
             "type": "combo",
-            "dataSetsHaveTitle": true,
-            "dataSets": [
-              { "dataRange": "Data!H13:H20", "yAxisId": "y", "type": "bar" },
-              {
-                "dataRange": "Data!J13:J20",
-                "yAxisId": "y1",
-                "label": "Average per order",
-                "type": "line"
-              }
-            ],
             "legendPosition": "top",
-            "labelRange": "Data!G13:G20",
             "title": { "text": "" },
             "aggregated": false,
             "axesDesign": {
@@ -267,6 +222,19 @@
               }
             },
             "humanize": true,
+            "dataSource": {
+              "labelRange": "Data!G13:G20",
+              "type": "range",
+              "dataSets": [
+                { "dataSetId": "0", "dataRange": "Data!H13:H20" },
+                { "dataSetId": "1", "dataRange": "Data!J13:J20" }
+              ],
+              "dataSetsHaveTitle": true
+            },
+            "dataSetStyles": {
+              "0": { "yAxisId": "y", "type": "bar" },
+              "1": { "yAxisId": "y1", "label": "Average per order", "type": "line" }
+            },
             "chartId": "1ebdd3d0-8af0-4922-9223-2da0d6ec024c"
           },
           "offset": { "x": 0, "y": 721 },
@@ -466,49 +434,51 @@
               "bb13976b-be42": {
                 "title": {},
                 "legendPosition": "top",
-                "metaData": {
-                  "groupBy": ["product_categ_id"],
-                  "measure": "price_total",
-                  "order": null,
-                  "resModel": "report.pos.order",
-                  "mode": "bar"
-                },
-                "searchParams": {
-                  "context": {
-                    "group_by": []
+                "type": "treemap",
+                "humanize": true,
+                "dataSource": {
+                  "type": "odoo",
+                  "actionXmlId": "point_of_sale.action_report_pos_order_all",
+                  "metaData": {
+                    "groupBy": ["product_categ_id"],
+                    "measure": "price_total",
+                    "order": null,
+                    "resModel": "report.pos.order",
+                    "mode": "bar"
                   },
-                  "domain": [
-                    "&",
-                    ["state", "!=", "cancel"],
-                    ["config_id.module_pos_restaurant", "=", true]
-                  ],
-                  "groupBy": ["product_categ_id"],
-                  "orderBy": []
+                  "searchParams": {
+                    "context": {
+                      "group_by": []
+                    },
+                    "domain": [
+                      "&",
+                      ["state", "!=", "cancel"],
+                      ["config_id.module_pos_restaurant", "=", true]
+                    ],
+                    "groupBy": ["product_categ_id"],
+                    "orderBy": []
+                  }
                 },
-                "type": "odoo_treemap",
-                "actionXmlId": "point_of_sale.action_report_pos_order_all",
-                "dataSets": [
-                  {}
-                ]
+                "dataSetStyles": {}
               }
             },
-            "items": [
-              { "type": "chart", "chartId": "bb13976b-be42" },
-              { "type": "carouselDataView", "title": "Top 15" }
-            ],
             "title": {
               "text": "Top Categories",
               "bold": true,
               "fontSize": 21,
               "color": "#01666B"
             },
+            "items": [
+              { "type": "chart", "chartId": "bb13976b-be42" },
+              { "type": "carouselDataView", "title": "Top 15" }
+            ],
             "fieldMatching": {
               "bb13976b-be42": {
                 "4b44fd69-5c22-4402-be22-636d52226a76": { "chain": "date", "type": "datetime" },
                 "31b1d5d4-6549-4dbe-9c8e-57d6e6e0889d": { "chain": "pos_categ_id", "type": "many2one" },
                 "6cb73c89-2591-456e-a7bc-8eb76e321b9e": { "chain": "product_tmpl_id", "type": "many2one" },
                 "7674d2c1-e82b-4199-a991-6fae2268676b": { "chain": "employee_id", "type": "many2one" },
-                "cdfaa4f9-2517-2312-a597-7gfth345621g":	{ "chain": "config_id", "type": "many2one" },
+                "cdfaa4f9-2517-2312-a597-7gfth345621g": { "chain": "config_id", "type": "many2one" },
                 "706960e9-94d1-4927-bac5-52528cc4c1ed": { "chain": "preset_id", "type": "many2one" }
               }
             }
@@ -612,157 +582,93 @@
         "A9": "Average discount",
         "A10": "Total guests",
         "A12": "=_t(\"Revenue per hour\")",
-        "A13": "=_t(\"Time\")",
+        "A13": {
+          "S": ["Time"]
+        },
         "A14": "0",
-        "A15": "1",
-        "A16": "2",
-        "A17": "3",
-        "A18": "4",
-        "A19": "5",
-        "A20": "6",
-        "A21": "7",
-        "A22": "8",
-        "A23": "9",
-        "A24": "10",
-        "A25": "11",
-        "A26": "12",
-        "A27": "13",
-        "A28": "14",
-        "A29": "15",
-        "A30": "16",
-        "A31": "17",
-        "A32": "18",
-        "A33": "19",
-        "A34": "20",
-        "A35": "21",
-        "A36": "22",
-        "A37": "23",
+        "A15:A37": { "N": "+1" },
         "B1": "Always",
         "B2": "=PIVOT.VALUE(4,\"order_id:count_distinct\")",
-        "B3": "=PIVOT.VALUE(4,\"price_total:sum\")",
-        "B4": "=PIVOT.VALUE(4,\"price_subtotal_excl:sum\")",
-        "B5": "=PIVOT.VALUE(4,\"Average order w/o Tax:sum\")",
-        "B6": "=PIVOT.VALUE(4,\"Average total revenue per order:sum\")",
-        "B7": "=PIVOT.VALUE(5,\"Untaxed revenue per sitting:sum\")",
-        "B8": "=PIVOT.VALUE(5,\"Total revenue per sitting:sum\")",
+        "B3": {
+          "N": "=",
+          "S": ["price_total:sum"]
+        },
+        "B4": {
+          "N": "=",
+          "S": ["price_subtotal_excl:sum"]
+        },
+        "B5": {
+          "N": "=",
+          "S": ["Average order w/o Tax:sum"]
+        },
+        "B6": {
+          "N": "=",
+          "S": ["Average total revenue per order:sum"]
+        },
+        "B7": {
+          "N": "+1",
+          "S": ["Untaxed revenue per sitting:sum"]
+        },
+        "B8": {
+          "N": "=",
+          "S": ["Total revenue per sitting:sum"]
+        },
         "B9": "=iferror(PIVOT.VALUE(4,\"Discount / Order:sum\"))",
         "B10": "=PIVOT.VALUE(5,\"customer_count:sum\")",
         "B13": "=_t(\"Revenue\")",
         "B14": "=PIVOT.VALUE(1,\"amount_total:sum\",\"date_order:hour_number\",0)",
-        "B15": "=PIVOT.VALUE(1,\"amount_total:sum\",\"date_order:hour_number\",1)",
-        "B16": "=PIVOT.VALUE(1,\"amount_total:sum\",\"date_order:hour_number\",2)",
-        "B17": "=PIVOT.VALUE(1,\"amount_total:sum\",\"date_order:hour_number\",3)",
-        "B18": "=PIVOT.VALUE(1,\"amount_total:sum\",\"date_order:hour_number\",4)",
-        "B19": "=PIVOT.VALUE(1,\"amount_total:sum\",\"date_order:hour_number\",5)",
-        "B20": "=PIVOT.VALUE(1,\"amount_total:sum\",\"date_order:hour_number\",6)",
-        "B21": "=PIVOT.VALUE(1,\"amount_total:sum\",\"date_order:hour_number\",7)",
-        "B22": "=PIVOT.VALUE(1,\"amount_total:sum\",\"date_order:hour_number\",8)",
-        "B23": "=PIVOT.VALUE(1,\"amount_total:sum\",\"date_order:hour_number\",9)",
-        "B24": "=PIVOT.VALUE(1,\"amount_total:sum\",\"date_order:hour_number\",10)",
-        "B25": "=PIVOT.VALUE(1,\"amount_total:sum\",\"date_order:hour_number\",11)",
-        "B26": "=PIVOT.VALUE(1,\"amount_total:sum\",\"date_order:hour_number\",12)",
-        "B27": "=PIVOT.VALUE(1,\"amount_total:sum\",\"date_order:hour_number\",13)",
-        "B28": "=PIVOT.VALUE(1,\"amount_total:sum\",\"date_order:hour_number\",14)",
-        "B29": "=PIVOT.VALUE(1,\"amount_total:sum\",\"date_order:hour_number\",15)",
-        "B30": "=PIVOT.VALUE(1,\"amount_total:sum\",\"date_order:hour_number\",16)",
-        "B31": "=PIVOT.VALUE(1,\"amount_total:sum\",\"date_order:hour_number\",17)",
-        "B32": "=PIVOT.VALUE(1,\"amount_total:sum\",\"date_order:hour_number\",18)",
-        "B33": "=PIVOT.VALUE(1,\"amount_total:sum\",\"date_order:hour_number\",19)",
-        "B34": "=PIVOT.VALUE(1,\"amount_total:sum\",\"date_order:hour_number\",20)",
-        "B35": "=PIVOT.VALUE(1,\"amount_total:sum\",\"date_order:hour_number\",21)",
-        "B36": "=PIVOT.VALUE(1,\"amount_total:sum\",\"date_order:hour_number\",22)",
-        "B37": "=PIVOT.VALUE(1,\"amount_total:sum\",\"date_order:hour_number\",23)",
+        "B15:B37": {
+          "N": "=|+1",
+          "S": ["=", "="]
+        },
         "C13": "=_t(\"# Tables\")",
         "C14": "=PIVOT.VALUE(1,\"__count:sum\",\"date_order:hour_number\",A14)",
-        "C15": "=PIVOT.VALUE(1,\"__count:sum\",\"date_order:hour_number\",A15)",
-        "C16": "=PIVOT.VALUE(1,\"__count:sum\",\"date_order:hour_number\",A16)",
-        "C17": "=PIVOT.VALUE(1,\"__count:sum\",\"date_order:hour_number\",A17)",
-        "C18": "=PIVOT.VALUE(1,\"__count:sum\",\"date_order:hour_number\",A18)",
-        "C19": "=PIVOT.VALUE(1,\"__count:sum\",\"date_order:hour_number\",A19)",
-        "C20": "=PIVOT.VALUE(1,\"__count:sum\",\"date_order:hour_number\",A20)",
-        "C21": "=PIVOT.VALUE(1,\"__count:sum\",\"date_order:hour_number\",A21)",
-        "C22": "=PIVOT.VALUE(1,\"__count:sum\",\"date_order:hour_number\",A22)",
-        "C23": "=PIVOT.VALUE(1,\"__count:sum\",\"date_order:hour_number\",A23)",
-        "C24": "=PIVOT.VALUE(1,\"__count:sum\",\"date_order:hour_number\",A24)",
-        "C25": "=PIVOT.VALUE(1,\"__count:sum\",\"date_order:hour_number\",A25)",
-        "C26": "=PIVOT.VALUE(1,\"__count:sum\",\"date_order:hour_number\",A26)",
-        "C27": "=PIVOT.VALUE(1,\"__count:sum\",\"date_order:hour_number\",A27)",
-        "C28": "=PIVOT.VALUE(1,\"__count:sum\",\"date_order:hour_number\",A28)",
-        "C29": "=PIVOT.VALUE(1,\"__count:sum\",\"date_order:hour_number\",A29)",
-        "C30": "=PIVOT.VALUE(1,\"__count:sum\",\"date_order:hour_number\",A30)",
-        "C31": "=PIVOT.VALUE(1,\"__count:sum\",\"date_order:hour_number\",A31)",
-        "C32": "=PIVOT.VALUE(1,\"__count:sum\",\"date_order:hour_number\",A32)",
-        "C33": "=PIVOT.VALUE(1,\"__count:sum\",\"date_order:hour_number\",A33)",
-        "C34": "=PIVOT.VALUE(1,\"__count:sum\",\"date_order:hour_number\",A34)",
-        "C35": "=PIVOT.VALUE(1,\"__count:sum\",\"date_order:hour_number\",A35)",
-        "C36": "=PIVOT.VALUE(1,\"__count:sum\",\"date_order:hour_number\",A36)",
-        "C37": "=PIVOT.VALUE(1,\"__count:sum\",\"date_order:hour_number\",A37)",
+        "C15:C37": {
+          "N": "=",
+          "S": ["=", "="],
+          "R": "+R1"
+        },
         "D13": "=_t(\"Average per table\")",
         "D14": "=PIVOT.VALUE(1,\"Average amount per table:sum\",\"date_order:hour_number\",A14)",
-        "D15": "=PIVOT.VALUE(1,\"Average amount per table:sum\",\"date_order:hour_number\",A15)",
-        "D16": "=PIVOT.VALUE(1,\"Average amount per table:sum\",\"date_order:hour_number\",A16)",
-        "D17": "=PIVOT.VALUE(1,\"Average amount per table:sum\",\"date_order:hour_number\",A17)",
-        "D18": "=PIVOT.VALUE(1,\"Average amount per table:sum\",\"date_order:hour_number\",A18)",
-        "D19": "=PIVOT.VALUE(1,\"Average amount per table:sum\",\"date_order:hour_number\",A19)",
-        "D20": "=PIVOT.VALUE(1,\"Average amount per table:sum\",\"date_order:hour_number\",A20)",
-        "D21": "=PIVOT.VALUE(1,\"Average amount per table:sum\",\"date_order:hour_number\",A21)",
-        "D22": "=PIVOT.VALUE(1,\"Average amount per table:sum\",\"date_order:hour_number\",A22)",
-        "D23": "=PIVOT.VALUE(1,\"Average amount per table:sum\",\"date_order:hour_number\",A23)",
-        "D24": "=PIVOT.VALUE(1,\"Average amount per table:sum\",\"date_order:hour_number\",A24)",
-        "D25": "=PIVOT.VALUE(1,\"Average amount per table:sum\",\"date_order:hour_number\",A25)",
-        "D26": "=PIVOT.VALUE(1,\"Average amount per table:sum\",\"date_order:hour_number\",A26)",
-        "D27": "=PIVOT.VALUE(1,\"Average amount per table:sum\",\"date_order:hour_number\",A27)",
-        "D28": "=PIVOT.VALUE(1,\"Average amount per table:sum\",\"date_order:hour_number\",A28)",
-        "D29": "=PIVOT.VALUE(1,\"Average amount per table:sum\",\"date_order:hour_number\",A29)",
-        "D30": "=PIVOT.VALUE(1,\"Average amount per table:sum\",\"date_order:hour_number\",A30)",
-        "D31": "=PIVOT.VALUE(1,\"Average amount per table:sum\",\"date_order:hour_number\",A31)",
-        "D32": "=PIVOT.VALUE(1,\"Average amount per table:sum\",\"date_order:hour_number\",A32)",
-        "D33": "=PIVOT.VALUE(1,\"Average amount per table:sum\",\"date_order:hour_number\",A33)",
-        "D34": "=PIVOT.VALUE(1,\"Average amount per table:sum\",\"date_order:hour_number\",A34)",
-        "D35": "=PIVOT.VALUE(1,\"Average amount per table:sum\",\"date_order:hour_number\",A35)",
-        "D36": "=PIVOT.VALUE(1,\"Average amount per table:sum\",\"date_order:hour_number\",A36)",
-        "D37": "=PIVOT.VALUE(1,\"Average amount per table:sum\",\"date_order:hour_number\",A37)",
+        "D15:D37": {
+          "N": "=",
+          "S": ["=", "="],
+          "R": "+R1"
+        },
         "F12": "=_t(\"Revenue per day\")",
-        "F13": "=_t(\"Time\")",
+        "F13": {
+          "S": ["Time"]
+        },
         "F14": "1",
-        "F15": "2",
-        "F16": "3",
-        "F17": "4",
-        "F18": "5",
-        "F19": "6",
-        "F20": "7",
+        "F15:F20": { "N": "+1" },
         "G13": "=_t(\"Day of the week\")",
         "G14": "=PIVOT.HEADER(3,\"date_order:day_of_week\",F14)",
-        "G15": "=PIVOT.HEADER(3,\"date_order:day_of_week\",F15)",
-        "G16": "=PIVOT.HEADER(3,\"date_order:day_of_week\",F16)",
-        "G17": "=PIVOT.HEADER(3,\"date_order:day_of_week\",F17)",
-        "G18": "=PIVOT.HEADER(3,\"date_order:day_of_week\",F18)",
-        "G19": "=PIVOT.HEADER(3,\"date_order:day_of_week\",F19)",
-        "G20": "=PIVOT.HEADER(3,\"date_order:day_of_week\",F20)",
+        "G15:G20": {
+          "N": "=",
+          "S": ["="],
+          "R": "+R1"
+        },
         "H13": "=_t(\"Revenue\")",
         "H14": "=PIVOT.VALUE(3,\"amount_total:sum\",\"date_order:day_of_week\",F14)",
-        "H15": "=PIVOT.VALUE(3,\"amount_total:sum\",\"date_order:day_of_week\",F15)",
-        "H16": "=PIVOT.VALUE(3,\"amount_total:sum\",\"date_order:day_of_week\",F16)",
-        "H17": "=PIVOT.VALUE(3,\"amount_total:sum\",\"date_order:day_of_week\",F17)",
-        "H18": "=PIVOT.VALUE(3,\"amount_total:sum\",\"date_order:day_of_week\",F18)",
-        "H19": "=PIVOT.VALUE(3,\"amount_total:sum\",\"date_order:day_of_week\",F19)",
-        "H20": "=PIVOT.VALUE(3,\"amount_total:sum\",\"date_order:day_of_week\",F20)",
+        "H15:H20": {
+          "N": "=",
+          "S": ["=", "="],
+          "R": "+R1"
+        },
         "I13": "=_t(\"# Tables\")",
         "I14": "=PIVOT.VALUE(3,\"__count:sum\",\"date_order:day_of_week\",F14)",
-        "I15": "=PIVOT.VALUE(3,\"__count:sum\",\"date_order:day_of_week\",F15)",
-        "I16": "=PIVOT.VALUE(3,\"__count:sum\",\"date_order:day_of_week\",F16)",
-        "I17": "=PIVOT.VALUE(3,\"__count:sum\",\"date_order:day_of_week\",F17)",
-        "I18": "=PIVOT.VALUE(3,\"__count:sum\",\"date_order:day_of_week\",F18)",
-        "I19": "=PIVOT.VALUE(3,\"__count:sum\",\"date_order:day_of_week\",F19)",
-        "I20": "=PIVOT.VALUE(3,\"__count:sum\",\"date_order:day_of_week\",F20)",
+        "I15:I20": {
+          "N": "=",
+          "S": ["=", "="],
+          "R": "+R1"
+        },
         "J13": "=_t(\"Average per table\")",
         "J14": "=PIVOT.VALUE(3,\"Average amount per table:sum\",\"date_order:day_of_week\",F14)",
-        "J15": "=PIVOT.VALUE(3,\"Average amount per table:sum\",\"date_order:day_of_week\",F15)",
-        "J16": "=PIVOT.VALUE(3,\"Average amount per table:sum\",\"date_order:day_of_week\",F16)",
-        "J17": "=PIVOT.VALUE(3,\"Average amount per table:sum\",\"date_order:day_of_week\",F17)",
-        "J18": "=PIVOT.VALUE(3,\"Average amount per table:sum\",\"date_order:day_of_week\",F18)",
-        "J19": "=PIVOT.VALUE(3,\"Average amount per table:sum\",\"date_order:day_of_week\",F19)",
-        "J20": "=PIVOT.VALUE(3,\"Average amount per table:sum\",\"date_order:day_of_week\",F20)"
+        "J15:J20": {
+          "N": "=",
+          "S": ["=", "="],
+          "R": "+R1"
+        }
       },
       "styles": { "A1:B1": 7, "A12": 8, "F12": 8 },
       "formats": {},
@@ -902,9 +808,8 @@
         "31b1d5d4-6549-4dbe-9c8e-57d6e6e0889d": { "chain": "lines.product_id.pos_categ_ids", "type": "many2many" },
         "6cb73c89-2591-456e-a7bc-8eb76e321b9e": { "chain": "lines.product_id.product_tmpl_id", "type": "many2one" },
         "7674d2c1-e82b-4199-a991-6fae2268676b": { "chain": "employee_id", "type": "many2one" },
-        "cdfaa4f9-2517-2312-a597-7gfth345621g":	{ "chain": "config_id", "type": "many2one" },
+        "cdfaa4f9-2517-2312-a597-7gfth345621g": { "chain": "config_id", "type": "many2one" },
         "706960e9-94d1-4927-bac5-52528cc4c1ed": { "chain": "preset_id", "type": "many2one" }
-
       }
     },
     "e95e7842-672b-414d-9df8-d63fc9893cba": {
@@ -949,7 +854,7 @@
         "31b1d5d4-6549-4dbe-9c8e-57d6e6e0889d": { "chain": "lines.product_id.pos_categ_ids", "type": "many2many" },
         "6cb73c89-2591-456e-a7bc-8eb76e321b9e": { "chain": "lines.product_id.product_tmpl_id", "type": "many2one" },
         "7674d2c1-e82b-4199-a991-6fae2268676b": { "chain": "employee_id", "type": "many2one" },
-        "cdfaa4f9-2517-2312-a597-7gfth345621g":	{ "chain": "config_id", "type": "many2one" },
+        "cdfaa4f9-2517-2312-a597-7gfth345621g": { "chain": "config_id", "type": "many2one" },
         "706960e9-94d1-4927-bac5-52528cc4c1ed": { "chain": "preset_id", "type": "many2one" }
       }
     },
@@ -1036,7 +941,7 @@
         "31b1d5d4-6549-4dbe-9c8e-57d6e6e0889d": { "chain": "pos_categ_id", "type": "many2one" },
         "6cb73c89-2591-456e-a7bc-8eb76e321b9e": { "chain": "product_tmpl_id", "type": "many2one" },
         "7674d2c1-e82b-4199-a991-6fae2268676b": { "chain": "employee_id", "type": "many2one" },
-        "cdfaa4f9-2517-2312-a597-7gfth345621g":	{ "chain": "config_id", "type": "many2one" },
+        "cdfaa4f9-2517-2312-a597-7gfth345621g": { "chain": "config_id", "type": "many2one" },
         "706960e9-94d1-4927-bac5-52528cc4c1ed": { "chain": "preset_id", "type": "many2one" }
       }
     },
@@ -1106,7 +1011,7 @@
         "31b1d5d4-6549-4dbe-9c8e-57d6e6e0889d": { "chain": "lines.product_id.pos_categ_ids", "type": "many2many" },
         "6cb73c89-2591-456e-a7bc-8eb76e321b9e": { "chain": "lines.product_id.product_tmpl_id", "type": "many2one" },
         "7674d2c1-e82b-4199-a991-6fae2268676b": { "chain": "employee_id", "type": "many2one" },
-        "cdfaa4f9-2517-2312-a597-7gfth345621g":	{ "chain": "config_id", "type": "many2one" },
+        "cdfaa4f9-2517-2312-a597-7gfth345621g": { "chain": "config_id", "type": "many2one" },
         "706960e9-94d1-4927-bac5-52528cc4c1ed": { "chain": "preset_id", "type": "many2one" }
       }
     },
@@ -1131,11 +1036,7 @@
           "aggregator": "sum",
           "userDefinedName": "Revenue"
         },
-        {
-          "id": "margin:sum",
-          "fieldName": "margin",
-          "aggregator": "sum"
-        }
+        { "id": "margin:sum", "fieldName": "margin", "aggregator": "sum" }
       ],
       "model": "report.pos.order",
       "columns": [],
@@ -1150,7 +1051,7 @@
         "31b1d5d4-6549-4dbe-9c8e-57d6e6e0889d": { "chain": "pos_categ_id", "type": "many2one" },
         "6cb73c89-2591-456e-a7bc-8eb76e321b9e": { "chain": "product_tmpl_id", "type": "many2one" },
         "7674d2c1-e82b-4199-a991-6fae2268676b": { "chain": "employee_id", "type": "many2one" },
-        "cdfaa4f9-2517-2312-a597-7gfth345621g":	{ "chain": "config_id", "type": "many2one" },
+        "cdfaa4f9-2517-2312-a597-7gfth345621g": { "chain": "config_id", "type": "many2one" },
         "706960e9-94d1-4927-bac5-52528cc4c1ed": { "chain": "preset_id", "type": "many2one" }
       },
       "sortedColumn": {
@@ -1208,7 +1109,7 @@
         "31b1d5d4-6549-4dbe-9c8e-57d6e6e0889d": { "chain": "lines.product_id.pos_categ_ids", "type": "many2many" },
         "6cb73c89-2591-456e-a7bc-8eb76e321b9e": { "chain": "lines.product_id.product_tmpl_id", "type": "many2one" },
         "7674d2c1-e82b-4199-a991-6fae2268676b": { "chain": "employee_id", "type": "many2one" },
-        "cdfaa4f9-2517-2312-a597-7gfth345621g":	{ "chain": "config_id", "type": "many2one" },
+        "cdfaa4f9-2517-2312-a597-7gfth345621g": { "chain": "config_id", "type": "many2one" },
         "706960e9-94d1-4927-bac5-52528cc4c1ed": { "chain": "preset_id", "type": "many2one" }
       },
       "sortedColumn": {
@@ -1258,7 +1159,7 @@
         "31b1d5d4-6549-4dbe-9c8e-57d6e6e0889d": { "chain": "pos_categ_id", "type": "many2one" },
         "6cb73c89-2591-456e-a7bc-8eb76e321b9e": { "chain": "product_tmpl_id", "type": "many2one" },
         "7674d2c1-e82b-4199-a991-6fae2268676b": { "chain": "employee_id", "type": "many2one" },
-        "cdfaa4f9-2517-2312-a597-7gfth345621g":	{ "chain": "config_id", "type": "many2one" },
+        "cdfaa4f9-2517-2312-a597-7gfth345621g": { "chain": "config_id", "type": "many2one" },
         "706960e9-94d1-4927-bac5-52528cc4c1ed": { "chain": "preset_id", "type": "many2one" }
       },
       "sortedColumn": {
@@ -1310,7 +1211,7 @@
         "31b1d5d4-6549-4dbe-9c8e-57d6e6e0889d": { "chain": "pos_categ_id", "type": "many2one" },
         "6cb73c89-2591-456e-a7bc-8eb76e321b9e": { "chain": "product_tmpl_id", "type": "many2one" },
         "7674d2c1-e82b-4199-a991-6fae2268676b": { "chain": "employee_id", "type": "many2one" },
-        "cdfaa4f9-2517-2312-a597-7gfth345621g":	{ "chain": "config_id", "type": "many2one" },
+        "cdfaa4f9-2517-2312-a597-7gfth345621g": { "chain": "config_id", "type": "many2one" },
         "706960e9-94d1-4927-bac5-52528cc4c1ed": { "chain": "preset_id", "type": "many2one" }
       },
       "sortedColumn": {
@@ -1322,6 +1223,7 @@
   },
   "pivotNextId": 11,
   "customTableStyles": {},
+  "namedRanges": {},
   "globalFilters": [
     {
       "id": "4b44fd69-5c22-4402-be22-636d52226a76",
@@ -1371,5 +1273,5 @@
   ],
   "lists": {},
   "listNextId": 1,
-  "chartOdooMenusReferences": {}
+  "odooLinkReferences": {}
 }

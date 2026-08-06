@@ -1,5 +1,5 @@
 {
-  "version": "18.5.10",
+  "version": "19.3.10",
   "sheets": [
     {
       "id": "4aa5d524-86aa",
@@ -46,17 +46,21 @@
       "merges": ["A55:B55", "E75:F75"],
       "cells": {
         "A7": "=_t(\"Sessions by Minute\")",
-        "A24": "=_t(\"Sessions by Agent\")",
-        "A42": "=_t(\"Top Agents\")",
-        "A43": "=CHOOSECOLS(PIVOT(17, 10, FALSE, FALSE), 1, 2)",
-        "A56": "=PIVOT(22, 5, FALSE, FALSE)",
+        "A24": {
+          "S": ["Sessions by Agent"]
+        },
+        "A42": {
+          "S": ["Top Agents"]
+        },
+        "A43": "=CHOOSECOLS(PIVOT(17,10,FALSE,FALSE),1,2)",
+        "A56": "=PIVOT(22,5,FALSE,FALSE)",
         "A68": "=_t(\"Top Expertise\")",
-        "A69": "=PIVOT(28, 5, FALSE, FALSE)",
-        "E43": "=CHOOSECOLS(PIVOT(17, 10, FALSE, FALSE), 3, 4)",
+        "A69": "=PIVOT(28,5,FALSE,FALSE)",
+        "E43": "=CHOOSECOLS(PIVOT(17,10,FALSE,FALSE),3,4)",
         "E55": "=_t(\"Top Languages\")",
-        "E56": "=PIVOT(25, 5, FALSE, FALSE)",
+        "E56": "=PIVOT(25,5,FALSE,FALSE)",
         "E68": "=_t(\"Top Chatbot Answers\")",
-        "E69": "=PIVOT(24, 5, FALSE, FALSE)"
+        "E69": "=PIVOT(24,5,FALSE,FALSE)"
       },
       "styles": {
         "A55:B55": 1,
@@ -264,36 +268,7 @@
           "data": {
             "title": { "text": "" },
             "legendPosition": "none",
-            "metaData": {
-              "groupBy": ["start_date_minutes"],
-              "measure": "__count",
-              "order": null,
-              "resModel": "im_livechat.report.channel",
-              "mode": "bar"
-            },
-            "searchParams": {
-              "context": {
-                "params": {
-                  "action": 188,
-                  "actionStack": [
-                    { "action": 188 }
-                  ]
-                },
-                "pivot_measures": ["__count", "time_to_answer", "duration", "rating", "number_of_calls"],
-                "im_livechat.hide_partner_company": true
-              },
-              "domain": [
-                ["channel_id.livechat_end_dt", "=", false]
-              ],
-              "groupBy": ["start_date_minutes"],
-              "orderBy": []
-            },
-            "type": "odoo_bar",
-            "actionXmlId": "im_livechat.im_livechat_report_channel_action",
-            "dataSets": [
-              {}
-            ],
-            "verticalAxisPosition": "left",
+            "type": "bar",
             "stacked": false,
             "axesDesign": {
               "x": {
@@ -303,6 +278,36 @@
                 "title": { "text": "Sessions" }
               }
             },
+            "humanize": true,
+            "dataSource": {
+              "type": "odoo",
+              "actionXmlId": "im_livechat.im_livechat_report_channel_action",
+              "metaData": {
+                "groupBy": ["start_date_minutes"],
+                "measure": "__count",
+                "order": null,
+                "resModel": "im_livechat.report.channel",
+                "mode": "bar"
+              },
+              "searchParams": {
+                "context": {
+                  "params": {
+                    "action": 188,
+                    "actionStack": [
+                      { "action": 188 }
+                    ]
+                  },
+                  "pivot_measures": ["__count", "time_to_answer", "duration", "rating", "number_of_calls"],
+                  "im_livechat.hide_partner_company": true
+                },
+                "domain": [
+                  ["channel_id.livechat_end_dt", "=", false]
+                ],
+                "groupBy": ["start_date_minutes"],
+                "orderBy": []
+              }
+            },
+            "dataSetStyles": {},
             "chartId": "1a9cd09d-78cb",
             "fieldMatching": {
               "7bb2084a-2349": { "chain": "partner_id", "type": "many2one" },
@@ -324,37 +329,38 @@
           "data": {
             "title": { "text": "" },
             "legendPosition": "top",
-            "metaData": {
-              "groupBy": ["partner_id"],
-              "measure": "__count",
-              "order": null,
-              "resModel": "im_livechat.channel.member.history",
-              "mode": "bar"
-            },
-            "searchParams": {
-              "context": {
-                "pivot_measures": [
-                  "__count",
-                  "response_time_hour",
-                  "session_duration_hour",
-                  "rating",
-                  "call_count"
-                ],
-                "im_livechat.hide_partner_company": true
-              },
-              "domain": [
-                ["livechat_member_type", "=", "agent"]
-              ],
-              "groupBy": ["partner_id"],
-              "orderBy": []
-            },
-            "type": "odoo_bar",
-            "actionXmlId": "im_livechat.im_livechat_agent_history_action",
-            "dataSets": [
-              {}
-            ],
-            "verticalAxisPosition": "left",
+            "type": "bar",
             "stacked": true,
+            "humanize": true,
+            "dataSource": {
+              "type": "odoo",
+              "actionXmlId": "im_livechat.im_livechat_agent_history_action",
+              "metaData": {
+                "groupBy": ["partner_id"],
+                "measure": "__count",
+                "order": null,
+                "resModel": "im_livechat.channel.member.history",
+                "mode": "bar"
+              },
+              "searchParams": {
+                "context": {
+                  "pivot_measures": [
+                    "__count",
+                    "response_time_hour",
+                    "session_duration_hour",
+                    "rating",
+                    "call_count"
+                  ],
+                  "im_livechat.hide_partner_company": true
+                },
+                "domain": [
+                  ["livechat_member_type", "=", "agent"]
+                ],
+                "groupBy": ["partner_id"],
+                "orderBy": []
+              }
+            },
+            "dataSetStyles": {},
             "chartId": "5ddf8a27-a528",
             "fieldMatching": {
               "7bb2084a-2349": { "chain": "partner_id", "type": "many2one" },
@@ -377,28 +383,32 @@
             "chartDefinitions": {
               "1ef5697c-b724": {
                 "type": "geo",
-                "dataSetsHaveTitle": false,
-                "dataSets": [
-                  { "dataRange": "B57:B61" }
-                ],
                 "legendPosition": "left",
-                "labelRange": "A57:A61",
                 "title": {},
-                "colorScale": "blues",
-                "humanize": true
+                "colorScale": { "minColor": "#f7fbff", "midColor": "#6aaed6", "maxColor": "#08306b" },
+                "humanize": true,
+                "dataSource": {
+                  "labelRange": "A57:A61",
+                  "type": "range",
+                  "dataSets": [
+                    { "dataSetId": "0", "dataRange": "B57:B61" }
+                  ],
+                  "dataSetsHaveTitle": false
+                },
+                "dataSetStyles": {}
               }
             },
-            "items": [
-              { "type": "chart", "chartId": "1ef5697c-b724", "title": "Map" },
-              { "type": "carouselDataView", "title": "Top 5" }
-            ],
-            "fieldMatching": {},
             "title": {
               "text": "Top Countries",
               "fontSize": 21,
               "bold": true,
               "color": "#01666B"
-            }
+            },
+            "items": [
+              { "type": "chart", "chartId": "1ef5697c-b724", "title": "Map" },
+              { "type": "carouselDataView", "title": "Top 5" }
+            ],
+            "fieldMatching": {}
           }
         },
         {
@@ -413,30 +423,34 @@
             "chartDefinitions": {
               "39f8b370-f24f": {
                 "type": "treemap",
-                "dataSetsHaveTitle": false,
-                "dataSets": [
-                  { "dataRange": "E57:E61" }
-                ],
                 "legendPosition": "left",
-                "labelRange": "F57:F61",
                 "title": {},
                 "showValues": true,
                 "showHeaders": false,
                 "showLabels": true,
-                "humanize": true
+                "humanize": true,
+                "dataSource": {
+                  "labelRange": "F57:F61",
+                  "type": "range",
+                  "dataSets": [
+                    { "dataSetId": "0", "dataRange": "E57:E61" }
+                  ],
+                  "dataSetsHaveTitle": false
+                },
+                "dataSetStyles": {}
               }
             },
-            "items": [
-              { "type": "chart", "chartId": "39f8b370-f24f", "title": "Chart" },
-              { "type": "carouselDataView", "title": "Top 5" }
-            ],
-            "fieldMatching": {},
             "title": {
               "text": "Top Languages",
               "fontSize": 21,
               "bold": true,
               "color": "#01666B"
-            }
+            },
+            "items": [
+              { "type": "chart", "chartId": "39f8b370-f24f", "title": "Chart" },
+              { "type": "carouselDataView", "title": "Top 5" }
+            ],
+            "fieldMatching": {}
           }
         }
       ],
@@ -471,22 +485,29 @@
         "A5": "Sum. Escalated",
         "A6": "Sum. Calls",
         "A16": "Agents in call",
-        "A17": "=PIVOT.HEADER(4,\"#partner_id\", 1)",
-        "A18": "=PIVOT.HEADER(4,\"#partner_id\",2)",
-        "A19": "=PIVOT.HEADER(4,\"#partner_id\",3)",
-        "A20": "=PIVOT.HEADER(4,\"#partner_id\",4)",
-        "A21": "=PIVOT.HEADER(4,\"#partner_id\",5)",
-        "A22": "=PIVOT.HEADER(4,\"#partner_id\",6)",
-        "A23": "=PIVOT.HEADER(4,\"#partner_id\",7)",
-        "A24": "=PIVOT.HEADER(4,\"#partner_id\",8)",
-        "A25": "=PIVOT.HEADER(4,\"#partner_id\",9)",
-        "A26": "=PIVOT.HEADER(4,\"#partner_id\",10)",
+        "A17": "=PIVOT.HEADER(4,\"#partner_id\",1)",
+        "A18:A26": {
+          "N": "=|+1",
+          "S": ["="]
+        },
         "B1": "=_t(\"Current\")",
         "B2": "=PIVOT.VALUE(13,\"__count:sum\")",
-        "B3": "=PIVOT.VALUE(13,\"handled_by_bot:sum\")",
-        "B4": "=PIVOT.VALUE(13,\"handled_by_agent:sum\")",
-        "B5": "=PIVOT.VALUE(14,\"__count:count\")",
-        "B6": "=PIVOT.VALUE(26,\"__count:count_distinct\")"
+        "B3": {
+          "N": "=",
+          "S": ["handled_by_bot:sum"]
+        },
+        "B4": {
+          "N": "=",
+          "S": ["handled_by_agent:sum"]
+        },
+        "B5": {
+          "N": "+1",
+          "S": ["__count:count"]
+        },
+        "B6": {
+          "N": "+12",
+          "S": ["__count:count_distinct"]
+        }
       },
       "styles": { "F8": 9, "F12": 9 },
       "formats": { "B6": 2, "B8:C8": 3, "B9:C9": 4, "I15": 4, "C3": 5, "C4": 6 },
@@ -564,8 +585,8 @@
       "bottom": { "style": "thin", "color": "#CCCCCC" }
     },
     "2": {
-      "top": { "style": "medium", "color": "#FFFFFF" },
       "left": { "style": "medium", "color": "#FFFFFF" },
+      "top": { "style": "medium", "color": "#FFFFFF" },
       "bottom": { "style": "thick", "color": "#FFFFFF" }
     },
     "3": {
@@ -577,18 +598,18 @@
       "bottom": { "style": "medium", "color": "#FFFFFF" }
     },
     "5": {
-      "top": { "style": "medium", "color": "#FFFFFF" },
       "left": { "style": "thick", "color": "#FFFFFF" },
+      "top": { "style": "medium", "color": "#FFFFFF" },
       "bottom": { "style": "thick", "color": "#FFFFFF" }
     },
     "6": {
-      "top": { "style": "thick", "color": "#FFFFFF" },
       "left": { "style": "thick", "color": "#FFFFFF" },
+      "top": { "style": "thick", "color": "#FFFFFF" },
       "bottom": { "style": "thick", "color": "#FFFFFF" }
     },
     "7": {
-      "top": { "style": "thick", "color": "#FFFFFF" },
       "left": { "style": "thick", "color": "#FFFFFF" },
+      "top": { "style": "thick", "color": "#FFFFFF" },
       "bottom": { "style": "medium", "color": "#FFFFFF" }
     },
     "8": {
@@ -605,18 +626,18 @@
     },
     "10": {
       "top": { "style": "medium", "color": "#FFFFFF" },
-      "bottom": { "style": "thick", "color": "#FFFFFF" },
-      "right": { "style": "thick", "color": "#FFFFFF" }
+      "right": { "style": "thick", "color": "#FFFFFF" },
+      "bottom": { "style": "thick", "color": "#FFFFFF" }
     },
     "11": {
       "top": { "style": "thick", "color": "#FFFFFF" },
-      "bottom": { "style": "thick", "color": "#FFFFFF" },
-      "right": { "style": "thick", "color": "#FFFFFF" }
+      "right": { "style": "thick", "color": "#FFFFFF" },
+      "bottom": { "style": "thick", "color": "#FFFFFF" }
     },
     "12": {
       "top": { "style": "thick", "color": "#FFFFFF" },
-      "bottom": { "style": "medium", "color": "#FFFFFF" },
-      "right": { "style": "thick", "color": "#FFFFFF" }
+      "right": { "style": "thick", "color": "#FFFFFF" },
+      "bottom": { "style": "medium", "color": "#FFFFFF" }
     }
   },
   "revisionId": "START_REVISION",
@@ -981,6 +1002,7 @@
   },
   "pivotNextId": 29,
   "customTableStyles": {},
+  "namedRanges": {},
   "globalFilters": [
     {
       "id": "7bb2084a-2349",
@@ -1033,11 +1055,26 @@
   ],
   "lists": {},
   "listNextId": 1,
-  "chartOdooMenusReferences": {
-    "71458a01-fefb": "spreadsheet_dashboard_im_livechat.ongoing_session_all_menu",
-    "8e6d14e4-4d53": "spreadsheet_dashboard_im_livechat.ongoing_sessions_handle_by_bot_menu",
-    "4755f948-8867": "spreadsheet_dashboard_im_livechat.ongoing_sessions_handle_by_agent_menu",
-    "8ad7bbd1-793e": "spreadsheet_dashboard_im_livechat.ongoing_sessions_escalated_menu",
-    "c7940a9c-bda4": "spreadsheet_dashboard_im_livechat.ongoing_sessions_agents_in_call_menu"
+  "odooLinkReferences": {
+    "71458a01-fefb": {
+      "type": "odooMenu",
+      "odooMenuId": "spreadsheet_dashboard_im_livechat.ongoing_session_all_menu"
+    },
+    "8e6d14e4-4d53": {
+      "type": "odooMenu",
+      "odooMenuId": "spreadsheet_dashboard_im_livechat.ongoing_sessions_handle_by_bot_menu"
+    },
+    "4755f948-8867": {
+      "type": "odooMenu",
+      "odooMenuId": "spreadsheet_dashboard_im_livechat.ongoing_sessions_handle_by_agent_menu"
+    },
+    "8ad7bbd1-793e": {
+      "type": "odooMenu",
+      "odooMenuId": "spreadsheet_dashboard_im_livechat.ongoing_sessions_escalated_menu"
+    },
+    "c7940a9c-bda4": {
+      "type": "odooMenu",
+      "odooMenuId": "spreadsheet_dashboard_im_livechat.ongoing_sessions_agents_in_call_menu"
+    }
   }
 }
