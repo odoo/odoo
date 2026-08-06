@@ -781,6 +781,12 @@ class IrModuleModule(models.Model):
             'iap_paid_service': terp.get('iap_paid_service', False),
         }
 
+    def write(self, vals):
+        res = super().write(vals)
+        if any(self._ids) and ('name' in vals or 'state' in vals):
+            self.env.registry.clear_cache('stable')
+        return res
+
     @api.model_create_multi
     def create(self, vals_list):
         modules = super().create(vals_list)
@@ -792,6 +798,7 @@ class IrModuleModule(models.Model):
             'noupdate': True,
         } for module in modules]
         self.env['ir.model.data'].create(module_metadata_list)
+        self.env.registry.clear_cache('stable')
         return modules
 
     # update the list of available packages
