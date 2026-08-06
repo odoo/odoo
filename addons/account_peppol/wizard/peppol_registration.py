@@ -11,6 +11,7 @@ from odoo.exceptions import UserError, ValidationError, RedirectWarning
 from odoo.tools.urls import urljoin
 
 from odoo.addons.account_peppol.tools.demo_utils import handle_demo
+from odoo.addons.account_edi_ubl_cii.models.account_edi_common import DEPRECATED_PEPPOL_EAS
 from odoo.addons.account_peppol.tools.peppol_iap_connector import PeppolIAPConnector
 
 _logger = logging.getLogger(__name__)
@@ -254,7 +255,11 @@ class PeppolRegistration(models.TransientModel):
     # BUSINESS ACTIONS
     # -------------------------------------------------------------------------
     def _get_peppol_eas_selection(self):
-        return self.env['res.company']._fields['peppol_eas']._description_selection(self.env)
+        return [
+            (eas, label)
+            for eas, label in self.env['res.company']._fields['peppol_eas']._description_selection(self.env)
+            if eas not in DEPRECATED_PEPPOL_EAS or eas == self.env.company.peppol_eas
+        ]
 
     def _branch_with_same_address(self):
         self.ensure_one()
