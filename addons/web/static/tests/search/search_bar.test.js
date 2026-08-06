@@ -40,6 +40,7 @@ import {
     mountWithSearch,
     onRpc,
     removeFacet,
+    selectGroup,
     serverState,
     toggleMenuItem,
     toggleMenuItemOption,
@@ -2006,6 +2007,59 @@ test("dropdown menu last element is 'Custom Filter...'", async () => {
     await editSearch("a");
     await animationFrame();
     expect(".o_searchview_autocomplete .o-dropdown-item:last").toHaveText("Custom Filter...");
+});
+
+test("order by count resets when there is no group left", async () => {
+    const searchBar = await mountWithSearch(SearchBar, {
+        resModel: "partner",
+        searchMenuTypes: ["groupBy", "filter"],
+        searchViewId: false,
+        searchViewArch: `
+            <search>
+                <filter string="Foo" name="foo" domain="[('foo', '=', 'qsdf')]"/>
+            </search>
+        `,
+    });
+    searchBar.env.searchModel.canOrderByCount = true;
+    await toggleSearchBarMenu();
+    await selectGroup("bool");
+    await selectGroup("bar");
+    await toggleMenuItem("Foo");
+    expect(".oi[data-icon='swap_vert']").toHaveCount(1);
+    await contains(".oi[data-icon='swap_vert']", { visible: false }).click();
+    expect(".o_searchview_facet_label .oi[data-icon='arrow_downward']").toHaveCount(1);
+    await contains(".o_searchview_facet_label .oi[data-icon='arrow_downward']").click();
+    expect(".o_searchview_facet_label .oi[data-icon='arrow_upward']").toHaveCount(1);
+
+    await toggleSearchBarMenu();
+    await toggleMenuItem("Foo");
+    expect(".o_searchview_facet_label .oi[data-icon='arrow_upward']").toHaveCount(1);
+
+    await toggleMenuItem("Foo");
+    await toggleMenuItem("Bool");
+    expect(".o_searchview_facet_label .oi[data-icon='arrow_upward']").toHaveCount(1);
+    await toggleMenuItem("Bar");
+    expect(".o_searchview_facet_label .oi[data-icon='arrow_upward']").toHaveCount(0);
+
+    await toggleMenuItem("Bar");
+    expect(".o_searchview_facet_label .oi[data-icon='arrow_upward']").toHaveCount(0);
+    expect(".oi[data-icon='swap_vert']").toHaveCount(1);
+    await contains(".oi[data-icon='swap_vert']", { visible: false }).click();
+    await contains(".o_searchview_facet_label .oi[data-icon='arrow_downward']").click();
+    expect(".o_searchview_facet_label .oi[data-icon='arrow_upward']").toHaveCount(1);
+    await toggleSearchBarMenu();
+    await toggleMenuItem("Bool");
+    expect(".o_searchview_facet_label .oi[data-icon='arrow_upward']").toHaveCount(1);
+
+    await contains(".o_facet_remove").click();
+    expect(".o_searchview_facet_label .oi[data-icon='arrow_upward']").toHaveCount(1);
+    await contains(".o_facet_remove").click();
+    expect(".o_searchview_facet").toHaveCount(0);
+
+    await toggleSearchBarMenu();
+    await toggleMenuItem("Bar");
+    expect(".o_searchview_facet_label .oi[data-icon='arrow_upward']").toHaveCount(0);
+    expect(".oi[data-icon='swap_vert']").toHaveCount(1);
 });
 
 test("subitems have a load more item if there is more records available", async () => {

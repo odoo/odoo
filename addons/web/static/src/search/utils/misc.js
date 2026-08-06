@@ -3,6 +3,8 @@ export const FACET_ICONS = {
     relative: "filter_alt",
     groupBy: "stacks",
     favorite: "star",
+    groupByAsc: "arrow_upward",
+    groupByDesc: "arrow_downward",
 };
 
 export const FACET_COLORS = {
