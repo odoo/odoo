@@ -181,3 +181,40 @@ class TestVNEDIPOS(TestVNEDI, TestPointOfSaleHttpCommon):
         self.assertNotEqual(invoice.l10n_vn_edi_invoice_state, 'sent')
         with self.assertRaises(UserError):
             invoice.l10n_vn_edi_fetch_invoice_files()
+
+    @freeze_time('2024-01-01')
+    def test_pos_sinvoice_auto_send_deferred_pdf(self):
+        """When use_download_invoice is disabled (deferred PDF), the SInvoice
+        submission must still happen during order validation."""
+        self.main_pos_config.write({
+            'l10n_vn_auto_send_to_sinvoice': True,
+            'use_download_invoice': False,
+        })
+
+        order = self._create_simple_order()
+        cash_pm = self.main_pos_config._get_cash_payment_method()
+        order.write({
+            'to_invoice': True,
+            'state': 'paid',
+            'amount_paid': order.amount_total,
+            'payment_ids': [Command.create({
+                'amount': order.amount_total,
+                'payment_method_id': cash_pm.id,
+                'session_id': self.session.id,
+            })],
+        })
+
+        create_resp = {'invoiceNo': 'K24TUT01', 'reservationCode': '123456'}
+        token_resp = {'access_token': '123', 'expires_in': '60'}
+        pdf_resp = {'name': 'sinvoice.pdf', 'mimetype': 'application/pdf', 'raw': b'pdf', 'res_field': 'l10n_vn_edi_sinvoice_pdf_file'}
+        xml_resp = {'name': 'sinvoice.xml', 'mimetype': 'application/xml', 'raw': b'xml', 'res_field': 'l10n_vn_edi_sinvoice_xml_file'}
+
+        with patch('odoo.addons.l10n_vn_edi_viettel.models.sinvoice_service.SInvoiceService.create_invoice', return_value=(create_resp, None)), \
+             patch('odoo.addons.l10n_vn_edi_viettel.models.sinvoice_service.SInvoiceService.get_access_token', return_value=(token_resp, None)), \
+             patch('odoo.addons.l10n_vn_edi_viettel.models.account_move.AccountMove._l10n_vn_edi_fetch_invoice_pdf_file_data', return_value=(pdf_resp, '')), \
+             patch('odoo.addons.l10n_vn_edi_viettel.models.account_move.AccountMove._l10n_vn_edi_fetch_invoice_xml_file_data', return_value=(xml_resp, '')):
+            order._generate_order_invoice()
+
+        invoice = order.account_move
+        self.assertTrue(invoice, "Invoice should have been created")
+        self.assertEqual(invoice.l10n_vn_edi_invoice_state, 'sent', "SInvoice should be submitted during order validation even with deferred PDF")
