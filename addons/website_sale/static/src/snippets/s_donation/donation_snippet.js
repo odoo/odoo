@@ -183,12 +183,11 @@ export class DonationSnippet extends Interaction {
      * @param {number} amount
      */
     async _addDonationToCart(amount) {
-        const isOnCartPage = !!document.getElementById("shop_cart");
         await this.services.cart.add(
             this._getDonationCartParams(amount),
             {
                 isConfigured: true,
-                isBuyNow: isOnCartPage, // Force reload of the cart page
+                isBuyNow: true,
             },
         );
     }
