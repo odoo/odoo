@@ -17,7 +17,7 @@ from odoo.logging import COLOR_PATTERN, DEFAULT, GREEN, RED
 from odoo.tools import SQL, config, html_normalize, html_sanitize, html2plaintext, is_html_empty, plaintext2html, sql
 from odoo.tools.constants import PREFETCH_MAX
 from odoo.tools.misc import SENTINEL, Sentinel
-from odoo.tools.sql import pattern_to_translated_trigram_pattern, pg_varchar, value_to_translated_trigram_pattern
+from odoo.tools.sql import pattern_to_translated_trigram_pattern, value_to_translated_trigram_pattern
 from odoo.tools.translate import StoredTranslations, ParsedTranslation, html_translate
 
 from .fields import Field, _logger
@@ -528,7 +528,9 @@ class Char(BaseString):
 
     @property
     def _column_type(self):
-        return ('varchar', pg_varchar(self.size))
+        size = self.size
+        assert size is None or type(size) is int, "size must be an integer"
+        return ('varchar', f'varchar({size})' if size and size > 0 else 'varchar')
 
     def update_db_column(self, model, column):
         if (

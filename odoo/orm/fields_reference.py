@@ -3,7 +3,6 @@ from collections import defaultdict
 from operator import attrgetter
 
 from odoo.tools import OrderedSet, unique
-from odoo.tools.sql import pg_varchar
 
 from .fields import Field
 from .fields_numeric import Integer
@@ -19,7 +18,7 @@ class Reference(Selection):
     """
     type = 'reference'
 
-    _column_type = ('varchar', pg_varchar())
+    _column_type = ('varchar', 'varchar')
 
     def convert_to_column(self, value, record, values=None, validate=True):
         return Field.convert_to_column(self, value, record, values, validate)
