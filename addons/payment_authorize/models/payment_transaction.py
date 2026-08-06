@@ -196,6 +196,8 @@ class PaymentTransaction(models.Model):
                 self._set_done()
             elif status_type == 'auth_only':
                 self._set_authorized()
+                if self.tokenize:
+                    self._tokenize(payment_data)  # Tokenize before voiding
                 if self.operation == 'validation':
                     self._void()  # In last step because it processes the response.
             elif status_type == 'void':
