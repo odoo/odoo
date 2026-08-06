@@ -67,13 +67,14 @@ class ResPartner(models.Model):
             else:
                 partner.available_peppol_edi_formats = list(dict(self._fields['invoice_edi_format'].selection))
 
+    @api.depends('routing_scheme')
     def _compute_available_routing_schemes(self):
         # EXTENDS 'account_edi_ubl_cii'
         super()._compute_available_routing_schemes()
-        eas_codes = set(self[:1].available_routing_schemes)
-        if self.env.company._get_peppol_edi_mode() != 'demo' and 'odemo' in eas_codes:
-            eas_codes.remove('odemo')
-            self.available_routing_schemes = list(eas_codes)
+        is_demo = self.env.company._get_peppol_edi_mode() == 'demo'
+        for partner in self:
+            if not is_demo and partner.available_routing_schemes and 'odemo' in partner.available_routing_schemes:
+                partner.available_routing_schemes = [eas for eas in partner.available_routing_schemes if eas != 'odemo']
 
     @api.depends('peppol_supported_documents', 'peppol_verification_state')
     def _compute_response_support(self):

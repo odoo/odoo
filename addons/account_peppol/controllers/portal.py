@@ -17,9 +17,14 @@ class PortalAccount(CustomerPortal):
     def _prepare_my_account_rendering_values(self, *args, **kwargs):
         rendering_values = super()._prepare_my_account_rendering_values(*args, **kwargs)
         if request.env.company.peppol_can_send:
+            partner = request.env.user.partner_id
             rendering_values['invoice_sending_methods'].update({'peppol': _("by Peppol")})
+            routing_scheme_list = {
+                code: label for code, label in partner._fields['routing_scheme']._description_selection(request.env)
+                if code in (partner.available_routing_schemes or [])
+            }
             rendering_values.update({
-                'routing_scheme_list': dict(request.env['res.partner']._fields['routing_scheme']._description_selection(request.env)),
+                'routing_scheme_list': routing_scheme_list,
             })
         return rendering_values
 
