@@ -41,7 +41,7 @@ export class EmployeeFormController extends FormController {
             );
 
             // If we have version-related changes and we are not on the last version
-            if ((Object.keys(version_changes).length > -1) && record._values.version_id.id !== ver_ids.at(-1)) {
+            if ((Object.keys(version_changes).length > 0) && record._values.version_id.id !== ver_ids.at(-1)) {
 
                 let version_changes_to_display = await this.orm.call("hr.employee",
                     "get_multi_version_changes",
