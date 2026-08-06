@@ -10,9 +10,16 @@ For development/testing, this can be swapped with a direct client that
 talks to Baiwang without the proxy layer (see _legacy_direct_call comments).
 """
 
+import logging
+
 from odoo.exceptions import UserError
 
-from odoo.addons.l10n_cn_edi_baiwang.exceptions import get_baiwang_error_message
+from odoo.addons.l10n_cn_edi_baiwang.exceptions import (
+    RETRYABLE_CODES,
+    get_baiwang_error_message,
+)
+
+_logger = logging.getLogger(__name__)
 
 
 class BaiwangClient:
@@ -51,6 +58,8 @@ class BaiwangClient:
         reference_mapping = {
             'invalid_payload': self.company.env._('The Baiwang request payload is invalid.'),
             'proxy_contact_failed': self.company.env._('Failed to contact the Baiwang proxy service. Please try again later.'),
+            'baiwang_api_error_http_error': self.company.env._('Could not reach the Baiwang service. Please try again later.'),
+            'baiwang_oauth_failed_http_error': self.company.env._('Could not reach the Baiwang service. Please try again later.'),
         }
         if reference in reference_mapping:
             return reference_mapping[reference]
@@ -64,6 +73,15 @@ class BaiwangClient:
         result = method(self.company, *args)
         if not result.get('success') and not (allow_failed_with_response and 'response' in result):
             err_details = self._map_proxy_error(result.get('error'))
+            # Log the full proxy error so the debug team can correlate with IAP-side logs (keyed by db_uuid + timestamp).
+            error = result.get('error') or {}
+            code = str((error.get('data') or {}).get('code') or '') if isinstance(error, dict) else ''
+            db_uuid = self.company.env['ir.config_parameter'].get_str('database.uuid')
+            log = _logger.info if code in RETRYABLE_CODES else _logger.warning
+            log(
+                'Baiwang proxy error for company %s (db_uuid %s): %s',
+                self.company.vat, db_uuid, error,
+            )
             # Safely format with %s if present, otherwise append
             msg = error_prefix % err_details if '%s' in error_prefix else f"{error_prefix}: {err_details}"
             raise UserError(msg)
