@@ -8,6 +8,7 @@ import {
     models,
     mountView,
     onRpc,
+    contains,
 } from "@web/../tests/web_test_helpers";
 
 class Partner extends models.Model {
@@ -110,4 +111,42 @@ test("HandleField in a readonly one2many", async () => {
     expect(".o_row_handle.o_disabled").toHaveCount(3, {
         message: "there should be 3 handles but they should be disabled from readonly",
     });
+});
+
+test.tags("desktop");
+test("Sorting + discarding works when having more records than limit", async () => {
+    Partner._records.push({
+        id: 5,
+        display_name: "bbb",
+        sequence: 10,
+    });
+    Partner._records[1].sequence = 11;
+    Partner._records[0].p = [4, 5, 2];
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: /* xml */ `
+            <form>
+                <field name="p">
+                    <list limit="2">
+                        <field name="sequence" widget="handle" invisible="not display_name"/>
+                        <field name="display_name" />
+                    </list>
+                </field>
+            </form>`,
+    });
+    expect("span.o_row_handle").toHaveCount(2, { message: "should have 2 handles" });
+    expect(".o_x2m_control_panel .o_pager_value").toHaveText("1-2");
+    expect(".o_x2m_control_panel .o_pager_limit").toHaveText("3");
+    expect("tbody tr:eq(0) td:eq(1)").toHaveText("aaa");
+    expect("tbody tr:eq(1) td:eq(1)").toHaveText("bbb");
+    await contains(`tbody tr:eq(1) .o_row_handle`).dragAndDrop(`tbody tr:eq(0)`);
+    expect("tbody tr:eq(0) td:eq(1)").toHaveText("bbb");
+    expect("tbody tr:eq(1) td:eq(1)").toHaveText("aaa");
+    await animationFrame();
+    await click("button.o_form_button_cancel");
+    await animationFrame();
+    expect("tbody tr:eq(0) td:eq(1)").toHaveText("aaa");
+    expect("tbody tr:eq(1) td:eq(1)").toHaveText("bbb");
 });
