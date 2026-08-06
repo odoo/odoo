@@ -2,6 +2,7 @@ import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { range } from "@web/core/utils/numbers";
 import { Interaction } from "@web/public/interaction";
+import { pick } from "@web/core/utils/objects";
 
 export class PortalHomeCounters extends Interaction {
     static selector = ".o_portal_my_home";
@@ -20,16 +21,22 @@ export class PortalHomeCounters extends Interaction {
     }
 
     async updateCounters() {
-        const needed = Object.values(this.el.querySelectorAll("[data-placeholder_count]")).map(
-            (documentsCounterEl) => documentsCounterEl.dataset["placeholder_count"]
+        const needed = Object.fromEntries(
+            Array.from(this.el.querySelectorAll("[data-placeholder_count]")).map(
+                (documentsCounterEl) => [
+                    documentsCounterEl.dataset["placeholder_count"],
+                    documentsCounterEl.dataset["category"],
+                ]
+            )
         );
-        const numberRpc = Math.min(Math.ceil(needed.length / 5), 3); // max 3 rpc, up to 5 counters by rpc ideally
-        const counterByRpc = Math.ceil(needed.length / numberRpc);
+        const neededKeys = Object.keys(needed);
+        const numberRpc = Math.min(Math.ceil(neededKeys.length / 5), 3); // max 3 rpc, up to 5 counters by rpc ideally
+        const counterByRpc = Math.ceil(neededKeys.length / numberRpc);
         const countersAlwaysDisplayed = this.getCountersAlwaysDisplayed();
 
-        const proms = range(Math.min(numberRpc, needed.length)).map(async (i) => {
+        const proms = range(Math.min(numberRpc, neededKeys.length)).map(async (i) => {
             const documentsCountersData = await rpc("/my/counters", {
-                counters: needed.slice(i * counterByRpc, (i + 1) * counterByRpc),
+                counters: pick(needed, ...neededKeys.slice(i * counterByRpc, (i + 1) * counterByRpc)),
             });
             Object.keys(documentsCountersData).forEach((counterName) => {
                 const documentsCounterEl = this.el.querySelector(

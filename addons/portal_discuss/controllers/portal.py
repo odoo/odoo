@@ -7,12 +7,11 @@ from odoo.addons.portal.controllers.portal import CustomerPortal
 
 class DiscussCustomerPortal(CustomerPortal):
 
-    def _prepare_home_portal_values(self, counters):
-        values = super()._prepare_home_portal_values(counters)
-        if "discuss_count" in counters:
-            values["discuss_count"] = len(
-                request.env.user.partner_id.channel_member_ids.filtered(
-                    lambda m: m.message_unread_counter > 0,
-                ),
-            )
-        return values
+    def _prepare_portal_counter_values(self, counter):
+        if counter == 'discuss_count':
+            domain = [
+                ('partner_id', '=', request.env.user.partner_id.id),
+                ('is_unread', '=', True),
+            ]
+            return 'discuss.channel.member', domain, 'read'
+        return super()._prepare_portal_counter_values(counter)

@@ -12,25 +12,14 @@ from odoo.addons.portal.controllers.portal import pager as portal_pager
 
 
 class CustomerPortal(payment_portal.PaymentPortal):
-    def _prepare_home_portal_values(self, counters):
-        values = super()._prepare_home_portal_values(counters)
+
+    def _prepare_portal_counter_values(self, counter):
         partner = self.env.user.partner_id
-
-        SaleOrder = self.env["sale.order"]
-        if "quotation_count" in counters:
-            values["quotation_count"] = (
-                SaleOrder.search_count(self._prepare_quotations_domain(partner))
-                if SaleOrder.has_access("read")
-                else 0
-            )
-        if "order_count" in counters:
-            values["order_count"] = (
-                SaleOrder.search_count(self._prepare_orders_domain(partner), limit=1)
-                if SaleOrder.has_access("read")
-                else 0
-            )
-
-        return values
+        if counter == 'quotation_count':
+            return 'sale.order', self._prepare_quotations_domain(partner), 'read'
+        if counter == 'order_count':
+            return 'sale.order', self._prepare_orders_domain(partner), 'read'
+        return super()._prepare_portal_counter_values(counter)
 
     def _prepare_quotations_domain(self, partner):
         return [

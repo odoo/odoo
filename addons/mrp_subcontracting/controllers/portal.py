@@ -13,12 +13,15 @@ from odoo.addons.portal.controllers.portal import pager as portal_pager
 
 class CustomerPortal(portal.CustomerPortal):
 
-    def _prepare_home_portal_values(self, counters):
-        values = super()._prepare_home_portal_values(counters)
-        if 'production_count' in counters:
+    def _prepare_portal_counter_values(self, counter):
+        if counter == 'production_count':
             commercial_partner = request.env.user.partner_id.commercial_partner_id
-            values['production_count'] = request.env['stock.picking'].search_count([('partner_id.commercial_partner_id', '=', commercial_partner.id), ('move_ids.is_subcontract', '=', True)])
-        return values
+            domain = [
+                ('partner_id.commercial_partner_id', '=', commercial_partner.id),
+                ('move_ids.is_subcontract', '=', True),
+            ]
+            return 'stock.picking', domain, 'read'
+        return super()._prepare_portal_counter_values(counter)
 
     @http.route(['/my/productions', '/my/productions/page/<int:page>'], type='http', auth="user", website=True)
     def portal_my_productions(self, page=1, date_begin=None, date_end=None, sortby='date', filterby='all'):

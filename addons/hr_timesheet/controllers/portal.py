@@ -14,13 +14,12 @@ from odoo.addons.project.controllers.portal import ProjectCustomerPortal
 
 class TimesheetCustomerPortal(CustomerPortal):
 
-    def _prepare_home_portal_values(self, counters):
-        values = super()._prepare_home_portal_values(counters)
-        if 'timesheet_count' in counters:
-            Timesheet = request.env['account.analytic.line']
-            domain = Timesheet._timesheet_get_portal_domain()
-            values['timesheet_count'] = Timesheet.sudo().search_count(domain)
-        return values
+    def _prepare_portal_counter_values(self, counter):
+        if counter == 'timesheet_count':
+            model_name = 'account.analytic.line'
+            domain = request.env[model_name]._timesheet_get_portal_domain()
+            return model_name, domain, 'sudo'
+        return super()._prepare_portal_counter_values(counter)
 
     def _get_searchbar_inputs(self):
         return {
