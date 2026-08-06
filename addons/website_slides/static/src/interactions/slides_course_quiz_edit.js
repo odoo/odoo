@@ -58,7 +58,7 @@ export class WebsiteSlidesQuizEdit extends Interaction {
     bindSortable() {
         this.bindedSortable = this.sortable
             .create({
-                ref: { el: this.el },
+                ref: () => this.el,
                 handle: ".o_wslides_js_quiz_sequence_handler",
                 elements: ".o_wslides_js_lesson_quiz_question",
                 onDrop: this.reorderQuestions.bind(this),

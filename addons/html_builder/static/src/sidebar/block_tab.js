@@ -184,7 +184,7 @@ export class BlockTab extends Component {
         };
 
         const dragAndDropOptions = {
-            ref: { el: this.blockTabRef() },
+            ref: this.blockTabRef,
             iframeWindow,
             cursor: "move",
             el: this.blockTabRef(),

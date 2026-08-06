@@ -1,12 +1,11 @@
 import { useLayoutEffect } from "@web/owl2/utils";
-import { resolveRefEl } from "@web/core/utils/ref_utils";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { Dialog } from "@web/core/dialog/dialog";
 import { PartnerLine } from "@point_of_sale/app/screens/partner_list/partner_line/partner_line";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { Input } from "@point_of_sale/app/components/inputs/input/input";
-import { Component, proxy, props, signal, t } from "@odoo/owl";
+import { Component, props, proxy, signal, t, untrack } from "@odoo/owl";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { localeCompare, normalize } from "@web/core/l10n/utils";
 import { debounce } from "@web/core/utils/timing";
@@ -58,7 +57,7 @@ export class PartnerList extends Component {
                     this.modalContent.removeEventListener("scroll", scrollMethod);
                 };
             },
-            () => [resolveRefEl(this.modalRef)]
+            () => [untrack(this.modalRef)]
         );
     }
     get globalState() {

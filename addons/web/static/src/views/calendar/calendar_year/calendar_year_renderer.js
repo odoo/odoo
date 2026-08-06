@@ -1,6 +1,5 @@
 import { useLayoutEffect } from "@web/owl2/utils";
 import { getLocalYearAndWeek } from "@web/core/l10n/dates";
-import { resolveRefEl } from "@web/core/utils/ref_utils";
 import { localization } from "@web/core/l10n/localization";
 import { convertRecordToEvent, getColor } from "@web/views/calendar/utils";
 import { useCalendarPopover } from "@web/views/calendar/hooks/calendar_popover_hook";
@@ -167,7 +166,7 @@ export class CalendarYearRenderer extends Component {
         }
     }
     updateSize() {
-        const rootEl = resolveRefEl(this.rootRef);
+        const rootEl = this.rootRef();
         const height = window.innerHeight - rootEl.getBoundingClientRect().top;
         rootEl.style.height = `${height}px`;
     }

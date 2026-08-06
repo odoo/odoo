@@ -17,7 +17,7 @@ export class SectionRow extends Component {
         editing: t.boolean().optional(false),
     });
 
-    InputRef = signal(null);
+    InputRef = signal.ref();
 
     setup() {
         onMounted(() => {

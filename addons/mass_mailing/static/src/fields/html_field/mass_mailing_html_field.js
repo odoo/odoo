@@ -11,8 +11,9 @@ import {
     props,
     signal,
     status,
-    toRaw,
     t,
+    toRaw,
+    untrack,
     useEffect,
     useListener,
 } from "@odoo/owl";
@@ -20,7 +21,6 @@ import { loadBundle } from "@web/core/assets";
 import { Domain } from "@web/core/domain";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { resolveRefEl } from "@web/core/utils/ref_utils";
 import { useEmailHtmlConverter } from "@mail/convert_inline/hooks";
 import { fixInvalidHTML } from "@html_editor/utils/sanitize";
 import { useRecordObserver } from "@web/model/relational_model/utils";
@@ -126,14 +126,14 @@ export class MassMailingHtmlField extends HtmlField {
 
         useLayoutEffect(
             () => {
-                const codeViewEl = resolveRefEl(this.codeViewRef);
+                const codeViewEl = this.codeViewRef();
                 if (!codeViewEl) {
                     return;
                 }
                 // Set the initial textArea height.
                 codeViewEl.style.height = codeViewEl.scrollHeight + "px";
             },
-            () => [resolveRefEl(this.codeViewRef)]
+            () => [untrack(this.codeViewRef)]
         );
 
         useListener(window, "pointerdown", this.onPointerDown.bind(this));

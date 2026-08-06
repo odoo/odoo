@@ -8,11 +8,11 @@ import {
     proxy,
     status,
     toRaw,
+    untrack,
     useEffect,
 } from "@odoo/owl";
 import { localization } from "@web/core/l10n/localization";
 import { useBus, useService } from "@web/core/utils/hooks";
-import { resolveRefEl } from "@web/core/utils/ref_utils";
 import { useDebounced } from "@web/core/utils/timing";
 import { useComponent, useEnv, useLayoutEffect, useSubEnv } from "@web/owl2/utils";
 import { BuilderAction } from "./builder_action";
@@ -1112,16 +1112,15 @@ export function useVisibilityObserver(contentRef, callback) {
                 observer.disconnect();
             };
         },
-        () => [resolveRefEl(contentRef)]
+        () => [untrack(contentRef)]
     );
 }
 
 export function useInputDebouncedCommit(ref) {
     const comp = useComponent();
     return useDebounced(() => {
-        const el = resolveRefEl(ref);
-        const normalizedDisplayValue = comp.commit(el.value);
-        el.value = normalizedDisplayValue;
+        const normalizedDisplayValue = comp.commit(ref().value);
+        ref().value = normalizedDisplayValue;
     }, 550);
     // ↑ 500 is the delay when holding keydown between the 1st and 2nd event
     // fired. Some additional delay by the browser may add another ~5-10ms.

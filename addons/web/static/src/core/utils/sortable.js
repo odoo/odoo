@@ -12,7 +12,7 @@ import { pick } from "@web/core/utils/objects";
  *
  * MANDATORY
  *
- * @property {{ el: HTMLElement | null }} ref
+ * @property {import("@odoo/owl").Signal<HTMLElement> | (() => HTMLElement)} ref
  * @property {string} elements defines sortable elements
  *
  * OPTIONAL
@@ -257,14 +257,14 @@ const hookParams = {
         // Binds handlers on eligible groups, if the elements are not confined to
         // their parents and a 'groupSelector' has been provided.
         if (connectGroups && groupSelector) {
-            for (const siblingGroup of ref.el.querySelectorAll(groupSelector)) {
+            for (const siblingGroup of ref().querySelectorAll(groupSelector)) {
                 addListener(siblingGroup, "pointerenter", onGroupPointerEnter);
                 addListener(siblingGroup, "pointerleave", onGroupPointerLeave);
             }
         }
 
         // Binds handlers on eligible elements
-        for (const siblingEl of ref.el.querySelectorAll(elementSelector)) {
+        for (const siblingEl of ref().querySelectorAll(elementSelector)) {
             if (siblingEl !== current.element && siblingEl !== current.placeHolder) {
                 if (ctx.placeholderClone) {
                     addListener(siblingEl, "pointerenter", onElementPointerEnter);

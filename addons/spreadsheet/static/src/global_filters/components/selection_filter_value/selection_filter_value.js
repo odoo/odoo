@@ -1,8 +1,7 @@
 /** @ts-check */
 
 import { useLayoutEffect } from "@web/owl2/utils";
-import { resolveRefEl } from "@web/core/utils/ref_utils";
-import { Component, onWillStart, onWillUpdateProps, props, signal, t } from "@odoo/owl";
+import { Component, onWillStart, onWillUpdateProps, props, signal, t, untrack } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 
 import { BadgeTag } from "@web/core/tags_list/badge_tag";
@@ -31,7 +30,7 @@ export class SelectionFilterValue extends Component {
                     this.inputRef().setAttribute("maxlength", 0);
                 }
             },
-            () => [resolveRefEl(this.inputRef)]
+            () => [untrack(this.inputRef)]
         );
         this.tags = [];
         this.sources = [];

@@ -1,6 +1,5 @@
 import { useLayoutEffect } from "@web/owl2/utils";
-import { resolveRefEl } from "@web/core/utils/ref_utils";
-import { Component, proxy, signal } from "@odoo/owl";
+import { Component, proxy, signal, untrack } from "@odoo/owl";
 import { simplifyString } from "@api_doc/utils/doc_model_search";
 
 export class DocSidebar extends Component {
@@ -22,7 +21,7 @@ export class DocSidebar extends Component {
             () => {
                 this.containerRef()?.querySelector(":scope .o_active")?.scrollIntoView();
             },
-            () => [resolveRefEl(this.containerRef)]
+            () => [untrack(this.containerRef)]
         );
 
         for (const addon of this.filteredAddons) {

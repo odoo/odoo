@@ -1,3 +1,4 @@
+import { untrack } from "@odoo/owl";
 import { ancestors } from "@html_editor/utils/dom_traversal";
 import { couldBeScrollableX, couldBeScrollableY } from "@web/core/utils/scrolling";
 import { throttleForAnimation } from "@web/core/utils/timing";
@@ -19,16 +20,16 @@ export function usePositionHook(containerRef, document, callback) {
         cleanups.push(() => target.removeEventListener(eventName, onLayoutGeometryChange, capture));
     };
     useLayoutEffect(
-        () => {
-            if (containerRef.el) {
+        (containerEl) => {
+            if (containerEl) {
                 resizeObserver.observe(document.body);
-                resizeObserver.observe(containerRef.el);
+                resizeObserver.observe(containerEl);
                 addDomListener(window, "resize");
                 if (document.defaultView !== window) {
                     addDomListener(document.defaultView, "resize");
                 }
                 addDomListener(document, "scroll");
-                const scrollableElements = [containerRef.el, ...ancestors(containerRef.el)].filter(
+                const scrollableElements = [containerEl, ...ancestors(containerEl)].filter(
                     (node) => couldBeScrollableX(node) || couldBeScrollableY(node)
                 );
                 for (const scrollableElement of scrollableElements) {
@@ -44,6 +45,6 @@ export function usePositionHook(containerRef, document, callback) {
                 }
             };
         },
-        () => [containerRef.el]
+        () => [untrack(containerRef)]
     );
 }

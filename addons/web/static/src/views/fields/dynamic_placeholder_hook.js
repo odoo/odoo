@@ -2,7 +2,6 @@ import { useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
-import { resolveRefEl } from "@web/core/utils/ref_utils";
 import { DynamicPlaceholderPopover } from "./dynamic_placeholder_popover";
 
 export function useDynamicPlaceholder(elementRef) {
@@ -20,7 +19,7 @@ export function useDynamicPlaceholder(elementRef) {
     let modelField = null;
 
     const onDynamicPlaceholderValidate = function (path, defaultValue) {
-        const element = resolveRefEl(elementRef);
+        const element = elementRef();
         if (!element) {
             return;
         }
@@ -48,7 +47,7 @@ export function useDynamicPlaceholder(elementRef) {
         }
     };
     const onDynamicPlaceholderClose = function () {
-        resolveRefEl(elementRef)?.focus();
+        elementRef()?.focus();
     };
 
     /**
@@ -72,13 +71,13 @@ export function useDynamicPlaceholder(elementRef) {
         }
         closeCallback = opts.closeCallback;
         positionCallback = opts.positionCallback;
-        popover.open(resolveRefEl(elementRef), {
+        popover.open(elementRef(), {
             resModel: model,
             validate: opts.validateCallback,
         });
     }
     async function onKeydown(ev) {
-        const element = resolveRefEl(elementRef);
+        const element = elementRef();
         if (ev.target === element && ev.key === TRIGGER_KEY) {
             const currentRangeIndex = element.selectionStart;
             // +1 to take the trigger key char into account

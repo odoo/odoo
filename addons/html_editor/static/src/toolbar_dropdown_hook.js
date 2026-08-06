@@ -1,12 +1,11 @@
-import { proxy, useEffect, useListener } from "@odoo/owl";
-import { resolveRefEl } from "@web/core/utils/ref_utils";
+import { proxy, untrack, useEffect, useListener } from "@odoo/owl";
 
 export function useDropdownAutoVisibility(overlayState, popoverRef) {
     if (!overlayState) {
         return;
     }
     const state = proxy(overlayState);
-    const getEl = () => resolveRefEl(popoverRef);
+    const getEl = () => untrack(popoverRef);
     useEffect(() => {
         const isOverlayVisible = state.isOverlayVisible;
         const el = getEl();
@@ -26,7 +25,7 @@ export function useToolbarDropdownFocus(dropdown, buttonRef) {
         "keydown",
         (ev) => {
             if (ev.key === "Escape" && dropdown.isOpen) {
-                resolveRefEl(buttonRef)?.focus();
+                buttonRef()?.focus();
             }
         },
         { capture: true }

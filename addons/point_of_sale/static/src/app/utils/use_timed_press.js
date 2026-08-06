@@ -1,7 +1,5 @@
 import { onMounted, onWillUnmount } from "@odoo/owl";
 
-import { resolveRefEl } from "@web/core/utils/ref_utils";
-
 /**
  * `useTimedPress` — A hook to detect and respond to different press durations on a DOM element.
  *
@@ -11,8 +9,7 @@ import { resolveRefEl } from "@web/core/utils/ref_utils";
  *
  * This hook is compatible with mouse, touch, and stylus inputs via `pointer` events.
  *
- * @param {Ref|Function} ref - A reference to the target DOM element. Accepts a legacy
- *   OWL `useRef` (element read via `.el`) or an Owl 3 signal ref (element read by calling it).
+ * @param {import("@web/core/utils/hooks").Ref} ref - A reference to the target DOM element.
  * @param {Array<Object>} ranges - An array of press range objects defining when and how to trigger callbacks.
  *   Each object supports the following properties:
  *   @param {number} [ranges[].delay=0] - Minimum duration in milliseconds before the callback can be triggered.
@@ -93,21 +90,17 @@ export function useTimedPress(ref, ranges = []) {
         holdTimers = [];
     };
 
-    const getEl = () => resolveRefEl(ref);
-
     onMounted(() => {
-        const el = getEl();
-        el?.addEventListener("pointerdown", handlePointerDown);
-        el?.addEventListener("pointerup", handlePointerUp);
-        el?.addEventListener("pointerleave", cancel);
-        el?.addEventListener("pointercancel", cancel);
+        ref()?.addEventListener("pointerdown", handlePointerDown);
+        ref()?.addEventListener("pointerup", handlePointerUp);
+        ref()?.addEventListener("pointerleave", cancel);
+        ref()?.addEventListener("pointercancel", cancel);
     });
 
     onWillUnmount(() => {
-        const el = getEl();
-        el?.removeEventListener("pointerdown", handlePointerDown);
-        el?.removeEventListener("pointerup", handlePointerUp);
-        el?.removeEventListener("pointerleave", cancel);
-        el?.removeEventListener("pointercancel", cancel);
+        ref()?.removeEventListener("pointerdown", handlePointerDown);
+        ref()?.removeEventListener("pointerup", handlePointerUp);
+        ref()?.removeEventListener("pointerleave", cancel);
+        ref()?.removeEventListener("pointercancel", cancel);
     });
 }

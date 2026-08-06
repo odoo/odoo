@@ -1,6 +1,5 @@
-import { onMounted, onWillUnmount, onPatched, proxy } from "@odoo/owl";
+import { onMounted, onPatched, onWillUnmount, proxy } from "@odoo/owl";
 import { debounce } from "@web/core/utils/timing";
-import { resolveRefEl } from "@web/core/utils/ref_utils";
 
 export function useScrollShadow(scrollContainerRef, options = {}) {
     if (!scrollContainerRef) {
@@ -10,11 +9,9 @@ export function useScrollShadow(scrollContainerRef, options = {}) {
     const { threshold = 5 } = options;
     const shadows = proxy({ top: 0, bottom: 0 });
 
-    const getEl = () => resolveRefEl(scrollContainerRef);
-
     const updateShadows = () => {
         try {
-            const el = getEl();
+            const el = scrollContainerRef();
             if (!el) {
                 return;
             }
@@ -36,13 +33,10 @@ export function useHorizontalScrollShadow(scrollContainerRef, classContainerRef,
     }
     const { threshold = 5 } = options;
 
-    const getScrollEl = () => resolveRefEl(scrollContainerRef);
-    const getClassEl = () => resolveRefEl(classContainerRef);
-
     const updateShadows = () => {
         try {
-            const scrollEl = getScrollEl();
-            const classEl = getClassEl();
+            const scrollEl = scrollContainerRef();
+            const classEl = classContainerRef();
 
             if (!scrollEl || !classEl) {
                 return;
@@ -66,7 +60,6 @@ function initScrollShadow(scrollContainerRef, updateFn, options = {}) {
         return;
     }
     const { resizeDebounce = 100 } = options;
-    const getEl = () => resolveRefEl(scrollContainerRef);
     let scheduled = false;
 
     const handleScroll = () => {
@@ -83,7 +76,7 @@ function initScrollShadow(scrollContainerRef, updateFn, options = {}) {
 
     onMounted(() => {
         try {
-            const el = getEl();
+            const el = scrollContainerRef();
             if (!el) {
                 return;
             }
@@ -99,7 +92,7 @@ function initScrollShadow(scrollContainerRef, updateFn, options = {}) {
 
     onWillUnmount(() => {
         try {
-            getEl()?.removeEventListener("scroll", handleScroll);
+            scrollContainerRef()?.removeEventListener("scroll", handleScroll);
             window.removeEventListener("resize", debouncedResize);
         } catch {
             // Ignore error

@@ -1,5 +1,4 @@
 import { loadBundle } from "@web/core/assets";
-import { resolveRefEl } from "@web/core/utils/ref_utils";
 
 import {
     onMounted,
@@ -47,7 +46,7 @@ export function useFullCalendar(ref, params) {
             return instance();
         },
         get el() {
-            return resolveRefEl(ref);
+            return untrack(ref);
         },
     };
 }

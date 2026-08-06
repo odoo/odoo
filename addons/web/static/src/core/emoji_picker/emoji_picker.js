@@ -9,12 +9,12 @@ import {
     onWillStart,
     onWillUnmount,
     proxy,
-    useApp,
-    useListener,
     signal,
     types as t,
+    useApp,
     useEffect,
     usePlugin,
+    useListener,
     useProps,
     xml,
 } from "@odoo/owl";
@@ -22,7 +22,6 @@ import {
 import { isMobileOS } from "@web/core/browser/feature_detection";
 import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
-import { resolveRefEl } from "@web/core/utils/ref_utils";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { range } from "@web/core/utils/numbers";
 import { fuzzyLookup } from "@web/core/utils/search";
@@ -493,7 +492,7 @@ export function usePicker(PickerComponent, ref, props, options = {}) {
     function add(ref, onSelect, { show = false } = {}) {
         const toggler = () => toggle(isMobileOS() ? undefined : ref, onSelect);
         targets.push([ref, toggler]);
-        const el = resolveRefEl(ref);
+        const el = ref();
         if (!el) {
             return;
         }
@@ -506,7 +505,6 @@ export function usePicker(PickerComponent, ref, props, options = {}) {
 
     function open(ref, openProps) {
         state.isOpen = true;
-        const refEl = resolveRefEl(ref);
         if (ui.isSmall || isMobileOS()) {
             const { promise, resolve } = Promise.withResolvers();
             const pickerMobileProps = {
@@ -518,7 +516,7 @@ export function usePicker(PickerComponent, ref, props, options = {}) {
                     return res;
                 },
             };
-            if (refEl) {
+            if (ref?.()) {
                 pickerMobileProps.close = () => remove();
                 const root = app.createRoot(PickerMobile, {
                     props: pickerMobileProps,
@@ -528,7 +526,7 @@ export function usePicker(PickerComponent, ref, props, options = {}) {
                     props.onClose?.();
                     root.destroy();
                 };
-                root.mount(refEl);
+                root.mount(ref());
             } else {
                 remove = dialog.add(PickerMobileInDialog, pickerMobileProps, {
                     onClose: () => {
@@ -540,7 +538,7 @@ export function usePicker(PickerComponent, ref, props, options = {}) {
             }
             return promise;
         }
-        return popover.open(refEl, { ...props, ...openProps });
+        return popover.open(ref(), { ...props, ...openProps });
     }
 
     function close() {
@@ -561,7 +559,7 @@ export function usePicker(PickerComponent, ref, props, options = {}) {
     }
     onMounted(() => {
         for (const [ref, toggle] of targets) {
-            const el = resolveRefEl(ref);
+            const el = ref();
             if (!el) {
                 continue;
             }
@@ -571,7 +569,7 @@ export function usePicker(PickerComponent, ref, props, options = {}) {
     });
     onWillPatch(() => {
         for (const [ref, toggle] of targets) {
-            const el = resolveRefEl(ref);
+            const el = ref();
             if (!el) {
                 continue;
             }
@@ -581,7 +579,7 @@ export function usePicker(PickerComponent, ref, props, options = {}) {
     });
     onPatched(() => {
         for (const [ref, toggle] of targets) {
-            const el = resolveRefEl(ref);
+            const el = ref();
             if (!el) {
                 continue;
             }

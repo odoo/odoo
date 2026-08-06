@@ -23,7 +23,6 @@ import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
 import { Transition } from "@web/core/transition";
 import { useBus, useService } from "@web/core/utils/hooks";
-import { resolveRefEl } from "@web/core/utils/ref_utils";
 import { escape } from "@web/core/utils/strings";
 
 export const PRESENT_VIEWPORT_THRESHOLD = 1;
@@ -162,7 +161,7 @@ export class Thread extends Component {
             () => {
                 this.computeJumpPresentPosition();
             },
-            () => [resolveRefEl(this.jumpPresentRef), untrack(() => this.viewportEl)]
+            () => [untrack(this.jumpPresentRef), untrack(() => this.viewportEl)]
         );
         useLayoutEffect(
             () => this.updateShowJumpPresent(),

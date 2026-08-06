@@ -5,7 +5,7 @@ import { useService } from "@web/core/utils/hooks";
 import { useListener, usePlugin } from "@odoo/owl";
 
 /**
- * @param {Ref} targetRef - Element on which to place the dropzone.
+ * @param {import("@odoo/owl").Signal<HTMLElement>} targetRef - Element on which to place the dropzone.
  * @param {Class} dropzoneComponent - Class used to instantiate the dropzone component.
  * @param {Object} dropzoneComponentProps - Props given to the instantiated dropzone component.
  * @param {function} isDropzoneEnabled - Function that determines whether the dropzone should be enabled.
@@ -19,9 +19,7 @@ export function useCustomDropzone(
     const overlayService = usePlugin(OverlayPlugin);
     const uiService = useService("ui");
 
-    // Transitional shim: accept both an Owl 3 signal ref (call it to get the
-    // element) and a legacy `.el` ref object. Remove once all callers pass a signal.
-    const getTargetEl = () => (typeof targetRef === "function" ? targetRef() : targetRef.el);
+    const getTargetEl = () => targetRef();
 
     let dragCount = 0;
     let hasTarget = false;
@@ -91,7 +89,7 @@ export function useCustomDropzone(
 }
 
 /**
- * @param {Ref} targetRef - Element on which to place the dropzone.
+ * @param {import("@odoo/owl").Signal<HTMLElement>} targetRef - Element on which to place the dropzone.
  * @param {function} onDrop - Callback function called when the user drops a file on the dropzone.
  * @param {string} extraClass - Classes that will be added to the standard `Dropzone` component.
  * @param {function} isDropzoneEnabled - Function that determines whether the dropzone should be enabled.

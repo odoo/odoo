@@ -5,10 +5,11 @@ import {
     onWillUnmount,
     proxy,
     t,
+    untrack,
     useEffect,
     useListener,
-    useProps,
     usePlugin,
+    useProps,
     useScope,
 } from "@odoo/owl";
 
@@ -20,7 +21,6 @@ import { monitorAudio } from "@mail/utils/common/media_monitoring";
 import { browser } from "@web/core/browser/browser";
 import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder_owl";
 import { useService } from "@web/core/utils/hooks";
-import { resolveRefEl } from "@web/core/utils/ref_utils";
 
 /**
  * Version of usePlugin() where the plugin is allowed to not be provided by any parented component.
@@ -75,7 +75,7 @@ export function onExternalClick(ref, cb) {
     let downTarget, upTarget;
     let targetDocument = document;
     function onClick(ev) {
-        const el = resolveRefEl(ref);
+        const el = ref();
         if (el && !el.contains(ev.composedPath()[0])) {
             cb(ev, { downTarget, upTarget });
             upTarget = downTarget = null;
@@ -88,7 +88,7 @@ export function onExternalClick(ref, cb) {
         upTarget = ev.target;
     }
     onMounted(() => {
-        targetDocument = resolveRefEl(ref)?.ownerDocument || document;
+        targetDocument = ref()?.ownerDocument || document;
         targetDocument.body.addEventListener("mousedown", onMousedown, true);
         targetDocument.body.addEventListener("mouseup", onMouseup, true);
         targetDocument.body.addEventListener("click", onClick, true);
@@ -257,7 +257,7 @@ export function useScrollState(ref) {
                 resizeObserver.disconnect();
             };
         },
-        () => [resolveRefEl(ref)]
+        () => [untrack(ref)]
     );
     return state;
 }
@@ -272,16 +272,16 @@ export function useScrollState(ref) {
  */
 export function useOnBottomScrolled(ref, callback, threshold = 1) {
     function onScroll() {
-        const el = resolveRefEl(ref);
+        const el = ref();
         if (el && Math.abs(el.scrollTop + el.clientHeight - el.scrollHeight) < threshold) {
             callback();
         }
     }
     onMounted(() => {
-        resolveRefEl(ref)?.addEventListener("scroll", onScroll);
+        ref()?.addEventListener("scroll", onScroll);
     });
     onWillUnmount(() => {
-        resolveRefEl(ref)?.removeEventListener("scroll", onScroll);
+        ref()?.removeEventListener("scroll", onScroll);
     });
 }
 
@@ -290,7 +290,7 @@ export function useOnBottomScrolled(ref, callback, threshold = 1) {
  * @param {function} [cb]
  */
 export function useVisible(ref, cb, { ready = true } = {}) {
-    const getEl = () => resolveRefEl(ref);
+    const getEl = () => untrack(ref);
     const state = proxy({
         isVisible: undefined,
         ready,
@@ -513,7 +513,7 @@ export function useMicrophoneVolume() {
 export function useSelection({ ref, model, preserveOnClickAwayPredicate = () => false }) {
     const ui = useService("ui");
     const elRef = ref;
-    const getEl = () => resolveRefEl(elRef);
+    const getEl = () => untrack(elRef);
     function onSelectionChange() {
         const el = getEl();
         const activeElement = el?.getRootNode().activeElement;

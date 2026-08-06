@@ -47,7 +47,7 @@ registerMessageAction("reaction", {
         const anchorEl = reactionAnchorRef
             ? reactionAnchorRef()
             : rootRef?.()?.querySelector(`[name="${this.id}"]`);
-        return owner.reactionPicker.open({ el: anchorEl });
+        return owner.reactionPicker.open(() => anchorEl);
     },
     setup: ({ message, owner, thread }) =>
         (owner.reactionPicker = useEmojiPicker(undefined, {

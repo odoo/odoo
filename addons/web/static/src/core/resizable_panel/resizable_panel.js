@@ -5,11 +5,11 @@ import {
     onWillUpdateProps,
     signal,
     t,
+    untrack,
     useListener,
     useProps,
 } from "@odoo/owl";
 import { useLayoutEffect } from "@web/owl2/utils";
-import { resolveRefEl } from "@web/core/utils/ref_utils";
 
 function useResizable({
     containerRef,
@@ -42,11 +42,11 @@ function useResizable({
                 docDirection = getComputedStyle(container).direction;
             }
         },
-        () => [resolveRefEl(containerRef)]
+        () => [untrack(containerRef)]
     );
 
     onMounted(() => {
-        const handleEl = resolveRefEl(handleRef);
+        const handleEl = handleRef();
         if (handleEl) {
             resize(Math.max(initialWidth, getMinWidth(resizeableProps) || 0));
             handleEl.addEventListener("mousedown", onMouseDown);
@@ -59,10 +59,7 @@ function useResizable({
     });
 
     onWillUnmount(() => {
-        const handleEl = resolveRefEl(handleRef);
-        if (handleEl) {
-            handleEl.removeEventListener("mousedown", onMouseDown);
-        }
+        handleRef()?.removeEventListener("mousedown", onMouseDown);
     });
 
     function onMouseDown() {
@@ -76,7 +73,7 @@ function useResizable({
     }
 
     function onMouseMove(ev) {
-        if (!isChangingSize || !resolveRefEl(containerRef)) {
+        if (!isChangingSize || !containerRef()) {
             return;
         }
         const direction =
@@ -91,7 +88,7 @@ function useResizable({
     }
 
     function computeFinalWidth(targetContainerWidth) {
-        const handleEl = resolveRefEl(handleRef);
+        const handleEl = handleRef();
         const handlerSpacing = handleEl ? handleEl.offsetWidth / 2 : 10;
         const w = Math.max(minWidth, targetContainerWidth + handlerSpacing);
         const limit = getLimitWidth();
@@ -99,7 +96,7 @@ function useResizable({
     }
 
     function getContainerRect() {
-        const container = resolveRefEl(containerRef);
+        const container = containerRef();
         const offsetParent = container.offsetParent;
         let containerRect = {};
         if (!offsetParent) {
@@ -113,12 +110,12 @@ function useResizable({
     }
 
     function getLimitWidth() {
-        const offsetParent = resolveRefEl(containerRef).offsetParent;
+        const offsetParent = containerRef().offsetParent;
         return offsetParent ? offsetParent.offsetWidth : window.innerWidth;
     }
 
     function resize(width) {
-        resolveRefEl(containerRef).style.setProperty("width", `${width}px`);
+        containerRef().style.setProperty("width", `${width}px`);
         onResize(width);
     }
 }

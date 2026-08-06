@@ -1,4 +1,3 @@
-import { resolveRefEl } from "@web/core/utils/ref_utils";
 import { useNavigation } from "../navigation/navigation";
 
 /**
@@ -44,9 +43,8 @@ export function useTagNavigation(tagsContainerRef, options = {}) {
 
     useNavigation(tagsContainerRef, {
         getItems: () =>
-            resolveRefEl(tagsContainerRef)?.querySelectorAll(
-                ":scope .o_tag, :scope .o-autocomplete--input"
-            ) ?? [],
+            tagsContainerRef()?.querySelectorAll(":scope .o_tag, :scope .o-autocomplete--input") ??
+            [],
         isNavigationAvailable: ({ navigator, target }) =>
             isEnabled() && navigator.isFocused && navigator.contains(target),
         hotkeys: {

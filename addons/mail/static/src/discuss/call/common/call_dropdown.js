@@ -25,7 +25,7 @@ export class CallDropdown extends Component {
             position: t.string().optional("bottom"),
         });
         this.isOpen = signal(this.props.openByDefault);
-        usePosition(this.menuRef, () => this.triggerRef.el, {
+        usePosition(this.menuRef, () => this.triggerEl, {
             position: this.props.position,
             margin: 4,
             flip: true,
@@ -56,12 +56,13 @@ export class CallDropdown extends Component {
                     return () => triggerEl.removeEventListener("click", fn);
                 }
             },
-            () => [this.triggerRef.el, toggleFn(this.isOpen)]
+            () => [this.triggerEl, toggleFn(this.isOpen)]
         );
     }
 
-    get triggerRef() {
-        return { el: getFirstElementOfNode(this.__owl__.bdom) };
+    /** The dropdown toggle is the component's own first element. */
+    get triggerEl() {
+        return getFirstElementOfNode(this.__owl__.bdom);
     }
 
     get window() {
@@ -77,7 +78,7 @@ export class CallDropdown extends Component {
             return;
         }
         const isOutsideClick =
-            !this.triggerRef.el?.contains(ev.target) && !this.menuRef()?.contains(ev.target);
+            !this.triggerEl?.contains(ev.target) && !this.menuRef()?.contains(ev.target);
         if (isOutsideClick) {
             this.close();
         }

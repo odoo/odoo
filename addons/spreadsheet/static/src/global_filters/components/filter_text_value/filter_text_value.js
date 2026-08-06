@@ -1,8 +1,7 @@
 /** @ts-check */
 
 import { useLayoutEffect } from "@web/owl2/utils";
-import { resolveRefEl } from "@web/core/utils/ref_utils";
-import { Component, props, signal, t } from "@odoo/owl";
+import { Component, props, signal, t, untrack } from "@odoo/owl";
 
 import { BadgeTag } from "@web/core/tags_list/badge_tag";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
@@ -32,7 +31,7 @@ export class TextFilterValue extends Component {
                     this.inputRef().removeAttribute("maxlength");
                 }
             },
-            () => [this.props.options.length, resolveRefEl(this.inputRef)]
+            () => [this.props.options.length, untrack(this.inputRef)]
         );
     }
 

@@ -57,7 +57,7 @@ test("Parameters error handling", async () => {
     });
     await mountListAndAssert(() => {
         useSortable({
-            ref: {},
+            ref: () => null,
             elements: ".item",
             enable: false,
         });

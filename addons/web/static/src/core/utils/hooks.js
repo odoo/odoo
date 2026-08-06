@@ -1,7 +1,6 @@
-import { onMounted, onPatched, onWillUnmount, proxy, t, toRaw, useScope } from "@odoo/owl";
+import { onMounted, onPatched, onWillUnmount, proxy, t, toRaw, untrack, useScope } from "@odoo/owl";
 import { hasTouch, isMobileOS } from "@web/core/browser/feature_detection";
 import { router } from "@web/core/browser/router";
-import { resolveRefEl } from "@web/core/utils/ref_utils";
 import { useChildEnv, useLayoutEffect } from "@web/owl2/utils";
 
 /**
@@ -20,7 +19,7 @@ import { useChildEnv, useLayoutEffect } from "@web/owl2/utils";
  */
 
 /**
- * @typedef {{ readonly el: HTMLElement | null; }} Ref
+ * @typedef {import("@odoo/owl").Signal<HTMLElement> | (() => HTMLElement | null)} Ref
  */
 
 // -----------------------------------------------------------------------------
@@ -39,18 +38,18 @@ export const autofocusParamsType = t.object({
  * as soon as it appears in the DOM and if it was not displayed before.
  * If it is an input/textarea, set the selection at the end.
  * @param {Object} [params]
- * @param {Ref | import("@odoo/owl").Signal<HTMLElement>} params.ref the ref to
- *  focus. Accepts both a legacy `.el` ref and an Owl 3 signal ref.
+ * @param {import("@odoo/owl").Signal<HTMLElement>} [params.ref] the ref to focus
  * @param {boolean} [params.selectAll] if true, will select the entire text value.
  * @param {boolean} [params.mobile] if true, will force autofocus on touch devices.
- * @returns {Ref | import("@odoo/owl").Signal<HTMLElement>} the element reference
+ * @returns {import("@odoo/owl").Signal<HTMLElement> | undefined} the element reference
  */
 export function useAutofocus({ ref, selectAll, mobile } = {}) {
-    // Resolve through resolveRefEl so reading the ref in the layout-effect deps
-    // (run during the render phase) never subscribes the component to the signal.
-    // Otherwise setting the ref on mount schedules a spurious re-render that can
-    // reset an input bound with t-att-value (e.g. calendar quick-create title).
-    const getEl = () => resolveRefEl(ref);
+    // The read is untracked: getEl() is called in the layout-effect deps (run
+    // during the render phase), so a tracked read would subscribe the component
+    // to the ref signal, and setting the ref on mount would schedule a spurious
+    // re-render that can reset an input bound with t-att-value (e.g. calendar
+    // quick-create title).
+    const getEl = () => (ref ? untrack(ref) : undefined);
     const uiService = useService("ui");
 
     // Prevent autofocus on touch devices to avoid the virtual keyboard from popping up unexpectedly
@@ -189,7 +188,6 @@ useService.handleCallWhenDestroyed = function handleCallWhenDestroyed() {
  */
 export function useSpellCheck({ ref } = {}) {
     const elements = [];
-    const r = ref;
     function toggleSpellcheck(ev) {
         ev.target.spellcheck = document.activeElement === ev.target;
     }
@@ -215,7 +213,7 @@ export function useSpellCheck({ ref } = {}) {
                 });
             };
         },
-        () => [resolveRefEl(r)]
+        () => [untrack(ref)]
     );
 }
 
@@ -258,7 +256,7 @@ export function useRefListener(ref, ...listener) {
             el?.addEventListener(...listener);
             return () => el?.removeEventListener(...listener);
         },
-        () => [resolveRefEl(ref)]
+        () => [untrack(ref)]
     );
 }
 

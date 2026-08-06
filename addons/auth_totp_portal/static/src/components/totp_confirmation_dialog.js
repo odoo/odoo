@@ -1,5 +1,5 @@
+import { untrack } from "@odoo/owl";
 import { useLayoutEffect } from "@web/owl2/utils";
-import { resolveRefEl } from "@web/core/utils/ref_utils";
 import { InputConfirmationDialog } from "@portal/js/components/input_confirmation_dialog/input_confirmation_dialog";
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
@@ -33,7 +33,7 @@ export class TotpConfirmationDialog extends InputConfirmationDialog {
                 }
             },
             () => [
-                resolveRefEl(this.modalRef)?.querySelector(
+                untrack(this.modalRef)?.querySelector(
                     "#collapseTotpSecret .o_clipboard_button"
                 ),
             ]

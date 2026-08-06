@@ -1,6 +1,6 @@
+import { untrack } from "@odoo/owl";
 import { clamp } from "@web/core/utils/numbers";
 import { omit } from "@web/core/utils/objects";
-import { resolveRefEl } from "@web/core/utils/ref_utils";
 import { closestScrollableX, closestScrollableY } from "@web/core/utils/scrolling";
 import { setRecurringAnimationFrame } from "@web/core/utils/timing";
 import { browser } from "../browser/browser";
@@ -76,7 +76,7 @@ function pointerInsideElementOffset(pointer, elementRect) {
  * @property {(params: DraggableBuildHandlerParams) => any} onWillStartDrag
  *
  * @typedef DraggableHookContext
- * @property {{ el: HTMLElement | null }} ref
+ * @property {import("@web/core/utils/hooks").Ref} ref the container ref.
  * @property {string | null} [elementSelector=null]
  * @property {string | null} [ignoreSelector=null]
  * @property {string | null} [fullSelector=null]
@@ -139,10 +139,7 @@ const DEFAULT_ACCEPTED_PARAMS = {
     allowDisconnected: [Boolean], // do not use, introduced for stable versions, to challenge in master
     enable: [Boolean, Function],
     preventDrag: [Function],
-    // `ref` may be a legacy useRef (object exposing `.el`) or an Owl 3 native
-    // signal ref (zero-arg function). It is normalized by
-    // `makeRefAdapter`/`resolveRefEl` into a null-safe `.el` getter.
-    ref: [Object, Function],
+    ref: [Function],
     elements: [String],
     handle: [String, Function],
     ignore: [String, Function],
@@ -187,24 +184,6 @@ const elCache = {};
  */
 function camelToKebab(str) {
     return str.replace(/([a-z])([A-Z])/g, "$1-$2").toLowerCase();
-}
-
-/**
- * Wraps a `ref` of any supported kind (legacy useRef object, or an Owl 3
- * native signal) into an adapter exposing a null-safe `.el` getter, so all
- * downstream `.el` reads keep working unchanged.
- *
- * todo: remove when all refs are migrated to Owl 3 signals
- *
- * @param {{ el?: HTMLElement } | (() => HTMLElement) | null | undefined} ref
- * @returns {{ el: HTMLElement | null | undefined }}
- */
-function makeRefAdapter(ref) {
-    return {
-        get el() {
-            return resolveRefEl(ref);
-        },
-    };
 }
 
 /**
@@ -503,13 +482,11 @@ export function makeDraggableHook(hookParams) {
                 if (prop === "enable") {
                     computedParams[prop] = toFunction(params[prop]);
                 } else if (prop === "ref") {
-                    // `ref` may be a bare Owl 3 native signal (a zero-arg function);
-                    // resolve it through `resolveRefEl` (which untracks) so this
-                    // dependency never subscribes the host component's render to the
-                    // ref signal. Otherwise `getReturnValue` would call the signal in
-                    // a tracked context, causing a spurious re-render when the ref is
-                    // set on mount. Legacy object refs resolve to their `.el` here too.
-                    computedParams[prop] = resolveRefEl(params[prop]);
+                    // Resolve the ref with `untrack` so this dependency never subscribes
+                    // the host component's render to the ref signal. Otherwise
+                    // `getReturnValue` would call the signal in a tracked context,
+                    // causing an extra re-render when the ref is set on mount.
+                    computedParams[prop] = untrack(params[prop]);
                 } else if (
                     allAcceptedParams[prop].length === 1 &&
                     allAcceptedParams[prop][0] === Function
@@ -625,7 +602,7 @@ export function makeDraggableHook(hookParams) {
                 }
 
                 dom.addClass(document.body, "pe-none", "user-select-none");
-                for (const iframe of getIframes(ctx.ref.el)) {
+                for (const iframe of getIframes(ctx.ref())) {
                     dom.addClass(iframe, "pe-none", "user-select-none");
                 }
 
@@ -678,7 +655,7 @@ export function makeDraggableHook(hookParams) {
                 const iframes =
                     el && params.iframeSelector ? el.querySelectorAll(params.iframeSelector) : [];
                 yield* iframes;
-                if (params.iframeWindow && el === ctx.ref.el) {
+                if (params.iframeWindow && el === ctx.ref()) {
                     yield params.iframeWindow.frameElement;
                 }
             }
@@ -1024,7 +1001,7 @@ export function makeDraggableHook(hookParams) {
              */
             const willStartDrag = (target) => {
                 ctx.current.element = target.closest(ctx.elementSelector);
-                ctx.current.container = ctx.ref.el;
+                ctx.current.container = ctx.ref();
 
                 cleanup.add(() => (ctx.current = {}));
                 state.willDrag = true;
@@ -1037,7 +1014,7 @@ export function makeDraggableHook(hookParams) {
                         passive: false,
                         noAddedStyle: true,
                     });
-                    for (const iframe of getIframes(ctx.ref.el)) {
+                    for (const iframe of getIframes(ctx.ref())) {
                         dom.addListener(iframe.contentWindow, "touchmove", safePrevent, {
                             passive: false,
                             noAddedStyle: true,
@@ -1082,8 +1059,7 @@ export function makeDraggableHook(hookParams) {
             const ctx = {
                 enable: () => false,
                 preventDrag: () => false,
-                // todo: remove when all refs are migrated to Owl 3 signals
-                ref: makeRefAdapter(params.ref),
+                ref: params.ref,
                 ignoreSelector: null,
                 fullSelector: null,
                 followCursor: true,
@@ -1112,7 +1088,7 @@ export function makeDraggableHook(hookParams) {
                         };
                     }
 
-                    if (!ctx.ref.el) {
+                    if (!ctx.ref()) {
                         return;
                     }
 
@@ -1192,7 +1168,7 @@ export function makeDraggableHook(hookParams) {
                     });
                 }
             }
-            // Effect depending on the `ref.el` to add triggering pointer events listener.
+            // Effect depending on the container element to add triggering pointer events listener.
             setupHooks.setup(
                 (el) => {
                     if (el) {
@@ -1202,7 +1178,7 @@ export function makeDraggableHook(hookParams) {
                         return cleanup;
                     }
                 },
-                () => [ctx.ref.el]
+                () => [untrack(ctx.ref)]
             );
 
             setupHooks.setup(
@@ -1235,7 +1211,7 @@ export function makeDraggableHook(hookParams) {
                         }
                         return cleanup;
                     },
-                    () => [...getIframes(ctx.ref.el)]
+                    () => [...getIframes(untrack(ctx.ref))]
                 );
             }
 

@@ -1,8 +1,7 @@
 import { useLayoutEffect } from "@web/owl2/utils";
 import { useService } from "@web/core/utils/hooks";
-import { resolveRefEl } from "@web/core/utils/ref_utils";
 import { FormRenderer, formRendererProps } from "@web/views/form/form_renderer";
-import { props, t } from "@odoo/owl";
+import { props, t, untrack } from "@odoo/owl";
 
 export class FormRendererWithHtmlExpander extends FormRenderer {
     props = props({
@@ -43,7 +42,7 @@ export class FormRendererWithHtmlExpander extends FormRenderer {
                 this.props.notifyHtmlExpander();
             },
             () => [
-                resolveRefEl(this.rootRef),
+                untrack(this.rootRef),
                 this.uiService.size,
                 this.props.reloadHtmlFieldHeight,
             ]

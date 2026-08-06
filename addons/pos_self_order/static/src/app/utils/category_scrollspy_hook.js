@@ -1,5 +1,4 @@
 import { onMounted, onWillUnmount } from "@odoo/owl";
-import { resolveRefEl } from "@web/core/utils/ref_utils";
 
 /**
  * Detects when a category section becomes visible within a scrollable container.
@@ -35,7 +34,7 @@ export function useCategoryScrollSpy(
     function selectCategory(categoryId) {
         selectedCategoryId = categoryId;
         onCategoryVisible(selectedCategoryId);
-        const categoryScrollEl = resolveRefEl(categoryScrollContainerRef);
+        const categoryScrollEl = categoryScrollContainerRef();
         const tabEl = categoryScrollEl.querySelector(`[data-category-pill="${categoryId}"]`);
         if (tabEl) {
             const scrollLeft = tabEl.offsetLeft + categoryScrollOffsetLeft;
@@ -48,7 +47,7 @@ export function useCategoryScrollSpy(
 
     function scrollToCategory(categoryId) {
         const section = categorySections.find((el) => el.dataset.category === "" + categoryId);
-        const scrollEl = resolveRefEl(productScrollContainerRef);
+        const scrollEl = productScrollContainerRef();
 
         if (section) {
             const containerTop = scrollEl.getBoundingClientRect().top;
@@ -66,7 +65,7 @@ export function useCategoryScrollSpy(
         let topCategory = null;
         let minTop = Infinity;
         const containerTop =
-            resolveRefEl(productScrollContainerRef).getBoundingClientRect().top + visibleThreshold;
+            productScrollContainerRef().getBoundingClientRect().top + visibleThreshold;
 
         // Loop through each category section to determine which is closest to the top
         for (const section of categorySections) {
@@ -101,14 +100,14 @@ export function useCategoryScrollSpy(
     }
 
     onMounted(() => {
-        const scrollEl = resolveRefEl(productScrollContainerRef);
+        const scrollEl = productScrollContainerRef();
         categorySections = [...scrollEl.querySelectorAll("[data-category]")];
         scrollEl.addEventListener("scroll", deferScroll);
         onProductScroll();
     });
 
     onWillUnmount(() => {
-        resolveRefEl(productScrollContainerRef).removeEventListener("scroll", deferScroll);
+        productScrollContainerRef().removeEventListener("scroll", deferScroll);
     });
 
     return {

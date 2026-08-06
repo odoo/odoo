@@ -2,7 +2,6 @@
 
 import { onMounted, onWillUnmount } from "@odoo/owl";
 import { session } from "@web/session";
-import { resolveRefEl } from "@web/core/utils/ref_utils";
 
 /**
  * Hook to automatically cycle through carousel media (images and videos).
@@ -16,8 +15,6 @@ import { resolveRefEl } from "@web/core/utils/ref_utils";
 export function useCarousel(carouselRef, timeIntervalSec = 5) {
     let carousel;
     let timeoutId;
-
-    const getEl = () => resolveRefEl(carouselRef);
 
     const _clearTimeout = () => {
         if (timeoutId) {
@@ -52,7 +49,7 @@ export function useCarousel(carouselRef, timeIntervalSec = 5) {
     };
 
     onMounted(() => {
-        const el = getEl();
+        const el = carouselRef();
         carousel = new Carousel(el);
         el.addEventListener("slid.bs.carousel", scheduleNextSlide);
         setTimeout(scheduleNextSlide, 100);
@@ -60,6 +57,6 @@ export function useCarousel(carouselRef, timeIntervalSec = 5) {
 
     onWillUnmount(() => {
         _clearTimeout();
-        getEl()?.removeEventListener("slid.bs.carousel", scheduleNextSlide);
+        carouselRef()?.removeEventListener("slid.bs.carousel", scheduleNextSlide);
     });
 }

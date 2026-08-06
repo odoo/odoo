@@ -1,12 +1,11 @@
 import { useLayoutEffect } from "@web/owl2/utils";
 import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
-import { resolveRefEl } from "@web/core/utils/ref_utils";
 import { BlockUI } from "./block_ui";
 import { getTabableElements, isFocusable } from "@web/core/utils/ui";
 import { getActiveHotkey } from "../hotkeys/hotkey_service";
 
-import { EventBus, proxy } from "@odoo/owl";
+import { EventBus, proxy, untrack } from "@odoo/owl";
 
 export const SIZES = { XS: 0, SM: 1, MD: 2, LG: 3, XL: 4, XXL: 5 };
 
@@ -24,10 +23,7 @@ export function getFirstAndLastTabableElements(el) {
  * The caller component could pass a `t-ref` value of its template
  * to delegate the UI active element to another element than itself.
  *
- * Takes an Owl 3 native signal/ref (a callable or `.el` object). The element is
- * resolved via `resolveRefEl`.
- *
- * @param {(() => HTMLElement | null) | { el?: HTMLElement }} ref
+ * @param {import("@web/core/utils/hooks").Ref} ref
  */
 export function useActiveElement(ref) {
     if (!ref) {
@@ -112,7 +108,7 @@ export function useActiveElement(ref) {
                 };
             }
         },
-        () => [resolveRefEl(ref)]
+        () => [untrack(ref)]
     );
 }
 

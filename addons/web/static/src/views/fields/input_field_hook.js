@@ -1,7 +1,6 @@
-import { useProps } from "@odoo/owl";
+import { untrack, useProps } from "@odoo/owl";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { useBus } from "@web/core/utils/hooks";
-import { resolveRefEl } from "@web/core/utils/ref_utils";
 import { onWillRender, useLayoutEffect } from "@web/owl2/utils";
 
 /**
@@ -20,8 +19,8 @@ import { onWillRender, useLayoutEffect } from "@web/owl2/utils";
  * @param {() => boolean} [params.shouldSave] if true, save the record with the new value
  */
 export function useInputField(params) {
-    const inputRefOrSignal = params.ref;
-    const getEl = () => resolveRefEl(inputRefOrSignal) ?? null;
+    const inputRef = params.ref;
+    const getEl = () => (inputRef ? untrack(inputRef) : null);
     const props = useProps();
     const fieldName = params.fieldName || props.name;
     const shouldSave = params.shouldSave ?? (() => false);
@@ -193,5 +192,5 @@ export function useInputField(params) {
         }
     }
 
-    return inputRefOrSignal;
+    return inputRef;
 }

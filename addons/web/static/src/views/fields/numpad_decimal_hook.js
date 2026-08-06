@@ -1,7 +1,6 @@
 import { useLayoutEffect } from "@web/owl2/utils";
 import { localization } from "@web/core/l10n/localization";
 import { isIOS } from "@web/core/browser/feature_detection";
-import { resolveRefEl } from "@web/core/utils/ref_utils";
 
 function onKeydown(ev) {
     const decimalPoint = localization.decimalPoint;
@@ -36,11 +35,10 @@ function onFocus(ev) {
  * so we need to remove it.
  */
 export function useNumpadDecimal(ref) {
-    const refOrSignal = ref;
     const isIOSDevice = isIOS();
     useLayoutEffect(() => {
         let inputs = [];
-        const el = resolveRefEl(refOrSignal);
+        const el = ref();
         if (el) {
             inputs = el.nodeName === "INPUT" ? [el] : el.querySelectorAll("input");
             inputs.forEach((input) => input.addEventListener("keydown", onKeydown));
