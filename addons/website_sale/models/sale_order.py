@@ -910,7 +910,7 @@ class SaleOrder(models.Model):
 
         :rtype: bool
         """
-        return bool(self)
+        return bool(self.order_line)
 
     def _check_cart_is_ready_to_be_paid(self):
         """ Whether the cart is valid and the user can proceed to the payment
