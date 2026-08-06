@@ -4,7 +4,6 @@ import typing
 from collections import defaultdict
 
 from odoo.tools.misc import SENTINEL, Sentinel, merge_sequences
-from odoo.tools.sql import pg_varchar
 
 from .fields import Field, _logger, determine, resolve_mro
 
@@ -60,7 +59,7 @@ class Selection(Field[str | typing.Literal[False]]):
     ``related`` or extended fields.
     """
     type = 'selection'
-    _column_type = ('varchar', pg_varchar())
+    _column_type = ('varchar', 'varchar')
 
     selection: list[SelectValue] | str | Callable[[BaseModel], list[SelectValue]] | None = None  # [(value, string), ...], function or method name
     validate: bool = True       # whether validating upon write
