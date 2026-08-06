@@ -899,8 +899,9 @@ class ProjectTask(models.Model):
 
     def _create_task_mapping(self, copied_tasks):
         """
-        Thanks to the way create and command.create is handled, when a task with 2 children is copied, we have the guarantee that the children of the
-        copied task will have the same index in the child_ids recordset. We can use this behavior to create a mapping containing all the original tasks and their copy.
+        Thanks to the way create and command.create is handled, the children of a copied task are created in the order in which the original
+        child_ids were iterated, so sorting them by id gives back the index correspondence with the original children. We can use this behavior
+        to create a mapping containing all the original tasks and their copy.
         :return:
             task_mapping: a dict containing the mapping of the original task ids and their copied task (k: original_task.id, v: new_task)
             task_dependencies: a dict containing the ids of the dependencies of the original task when they have one.
@@ -913,7 +914,7 @@ class ProjectTask(models.Model):
                 task_dependencies[original_task.id] = [original_task.depend_on_ids.ids, original_task.dependent_ids.ids]
             if original_task.child_ids:
                 # If the task has children, we have to call the method create_task_mapping to get their ids and dependencies mapping too.
-                children_mapping, children_dependencies = original_task.child_ids._create_task_mapping(copied_task.child_ids)
+                children_mapping, children_dependencies = original_task.child_ids._create_task_mapping(copied_task.child_ids.sorted('id'))
                 task_mapping.update(children_mapping)
                 task_dependencies.update(children_dependencies)
         return task_mapping, task_dependencies
