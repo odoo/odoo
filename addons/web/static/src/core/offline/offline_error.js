@@ -1,4 +1,4 @@
-import { plugin } from "@odoo/owl";
+import { usePlugin } from "@odoo/owl";
 import { UncaughtPromiseError } from "../errors/error_service";
 import { ConnectionLostError } from "../network/rpc";
 import { registry } from "../registry";
@@ -24,7 +24,7 @@ const fetchErrorMessages = [
  */
 export function offlineFailToFetchErrorHandler(env, error, originalError) {
     if (originalError instanceof TypeError && fetchErrorMessages.includes(originalError.message)) {
-        const offlinePlugin = plugin(OfflinePlugin);
+        const offlinePlugin = usePlugin(OfflinePlugin);
         offlinePlugin.setOffline(true);
         return true;
     }
@@ -49,7 +49,7 @@ export function lostConnectionHandler(env, error, originalError) {
     }
     if (originalError instanceof ConnectionLostError) {
         error.event.preventDefault();
-        const offlinePlugin = plugin(OfflinePlugin);
+        const offlinePlugin = usePlugin(OfflinePlugin);
         offlinePlugin.setOffline(true);
         return true;
     }

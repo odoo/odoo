@@ -3,7 +3,7 @@ import {
     onMounted,
     onWillStart,
     onWillUnmount,
-    plugin,
+    usePlugin,
     proxy,
     t,
     useProps,
@@ -25,7 +25,7 @@ export class SearchBarToggler extends Component {
 export class OfflineSearchBarToggler extends SearchBarToggler {
     static template = "web.SearchBar.Toggler.Offline";
     setup() {
-        const offlinePlugin = plugin(OfflinePlugin);
+        const offlinePlugin = usePlugin(OfflinePlugin);
         onWillStart(async () => {
             const { actionId, viewType } = this.env.config;
             const availableSearches = await offlinePlugin.getAvailableSearches(actionId, viewType);

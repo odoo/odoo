@@ -4,7 +4,7 @@ import {
     onPatched,
     onWillStart,
     onWillUnmount,
-    plugin,
+    usePlugin,
     proxy,
     signal,
     useListener,
@@ -57,7 +57,7 @@ export class AnalyticDistribution extends Component {
     setup(){
         this.orm = useService("orm");
         this.batchedOrm = useService("batchedOrm");
-        this.offlinePlugin = plugin(OfflinePlugin);
+        this.offlinePlugin = usePlugin(OfflinePlugin);
 
         this.state = proxy({
             showDropdown: false,

@@ -9,7 +9,7 @@ import {
     EventBus,
     onMounted,
     onWillStart,
-    plugin,
+    usePlugin,
     proxy,
     signal,
     t,
@@ -88,7 +88,7 @@ export class KanbanQuickCreateController extends Component {
         super.setup();
 
         this.uiService = useService("ui");
-        this.offlinePlugin = plugin(OfflinePlugin);
+        this.offlinePlugin = usePlugin(OfflinePlugin);
         this.state = proxy({ disabled: false });
         this.addDialog = useOwnedDialogs();
         this.formInDialog = 0;

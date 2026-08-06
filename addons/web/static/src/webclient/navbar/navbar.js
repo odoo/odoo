@@ -1,24 +1,23 @@
-import { render, useSubEnv } from "@web/owl2/utils";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { DropdownGroup } from "@web/core/dropdown/dropdown_group";
-import { Transition } from "@web/core/transition";
-import { useService } from "@web/core/utils/hooks";
-import { registry } from "@web/core/registry";
-import { debounce } from "@web/core/utils/timing";
-import { ErrorHandler } from "@web/core/utils/components";
-
 import {
     Component,
     onMounted,
     onPatched,
     onWillDestroy,
-    plugin,
     proxy,
     signal,
     useListener,
+    usePlugin,
 } from "@odoo/owl";
+import { Dropdown } from "@web/core/dropdown/dropdown";
+import { DropdownGroup } from "@web/core/dropdown/dropdown_group";
+import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { OfflinePlugin } from "@web/core/offline/offline_plugin";
+import { registry } from "@web/core/registry";
+import { Transition } from "@web/core/transition";
+import { ErrorHandler } from "@web/core/utils/components";
+import { useService } from "@web/core/utils/hooks";
+import { debounce } from "@web/core/utils/timing";
+import { render, useSubEnv } from "@web/owl2/utils";
 
 const systrayRegistry = registry.category("systray");
 
@@ -46,7 +45,7 @@ export class NavBar extends Component {
         this.currentAppSectionsExtra = [];
         this.actionService = useService("action");
         this.menuService = useService("menu");
-        this.offlinePlugin = plugin(OfflinePlugin);
+        this.offlinePlugin = usePlugin(OfflinePlugin);
         this.pwa = useService("pwa");
         const debouncedAdapt = debounce(this.adapt.bind(this), 250);
         onWillDestroy(() => debouncedAdapt.cancel());

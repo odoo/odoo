@@ -43,7 +43,7 @@ import {
     onPatched,
     onWillDestroy,
     onWillUnmount,
-    plugin,
+    usePlugin,
     proxy,
     signal,
     t,
@@ -170,7 +170,7 @@ export class FormController extends Component {
         this.orm = useService("orm");
         this.viewService = useService("view");
         this.ui = useService("ui");
-        this.offlinePlugin = plugin(OfflinePlugin);
+        this.offlinePlugin = usePlugin(OfflinePlugin);
         useBus(this.ui.bus, "resize", this.render);
 
         this.archInfo = this.props.archInfo;
@@ -675,8 +675,8 @@ export class FormController extends Component {
         return "active" in this.model.root.activeFields
             ? !this.props.fields.active.readonly
             : "x_active" in this.model.root.activeFields
-              ? !this.props.fields.x_active.readonly
-              : false;
+            ? !this.props.fields.x_active.readonly
+            : false;
     }
 
     async shouldExecuteAction(item) {
