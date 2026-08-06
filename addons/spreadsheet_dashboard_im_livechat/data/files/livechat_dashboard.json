@@ -1,5 +1,5 @@
 {
-  "version": "18.4.14",
+  "version": "19.3.10",
   "sheets": [
     {
       "id": "cf4e83c3-9ba8",
@@ -226,171 +226,122 @@
         "A4": "[Sessions by Agent](odoo://view/{\"viewType\":\"graph\",\"action\":{\"xmlId\":\"im_livechat.im_livechat_report_channel_action\",\"domain\":[],\"context\":{\"group_by\":[\"partner_id\"],\"graph_measure\":\"__count\",\"graph_mode\":\"bar\",\"graph_groupbys\":[\"partner_id\"],\"graph_order\":null,\"graph_stacked\":true},\"modelName\":\"im_livechat.report.channel\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Sessions by Agent\"})",
         "A33": "[Top Agents](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"xmlId\":\"im_livechat.im_livechat_report_operator_action\",\"domain\":[],\"context\":{\"group_by\":[],\"pivot_measures\":[\"__count\",\"time_to_answer\",\"duration\",\"rating_percentage\",\"number_of_calls\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"partner_id\"]},\"modelName\":\"im_livechat.report.channel\",\"views\":[[false,\"pivot\"],[false,\"graph\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Top Agents\"})",
         "A34": "=_t(\"Agent\")",
-        "A35": "=PIVOT.HEADER(3,\"#partner_id\", 1)",
-        "A36": "=PIVOT.HEADER(3,\"#partner_id\",2)",
-        "A37": "=PIVOT.HEADER(3,\"#partner_id\",3)",
-        "A38": "=PIVOT.HEADER(3,\"#partner_id\",4)",
-        "A39": "=PIVOT.HEADER(3,\"#partner_id\",5)",
-        "A40": "=PIVOT.HEADER(3,\"#partner_id\",6)",
-        "A41": "=PIVOT.HEADER(3,\"#partner_id\",7)",
-        "A42": "=PIVOT.HEADER(3,\"#partner_id\",8)",
-        "A43": "=PIVOT.HEADER(3,\"#partner_id\",9)",
-        "A44": "=PIVOT.HEADER(3,\"#partner_id\",10)",
+        "A35": "=PIVOT.HEADER(3,\"#partner_id\",1)",
+        "A36:A44": {
+          "N": "=|+1",
+          "S": ["="]
+        },
         "A52": "[Calls by Agents](odoo://view/{\"viewType\":\"graph\",\"action\":{\"xmlId\":\"im_livechat.im_livechat_report_channel_action\",\"domain\":[],\"context\":{\"group_by\":[\"partner_id\"],\"graph_measure\":\"number_of_calls\",\"graph_mode\":\"bar\",\"graph_groupbys\":[\"partner_id\"],\"graph_order\":null,\"graph_stacked\":true},\"modelName\":\"im_livechat.report.channel\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Calls by Agent\"})",
         "A54": "=_t(\"Agent\")",
-        "A55": "=PIVOT.HEADER(6,\"#partner_id\", 1)",
-        "A56": "=PIVOT.HEADER(6,\"#partner_id\",2)",
-        "A57": "=PIVOT.HEADER(6,\"#partner_id\",3)",
-        "A58": "=PIVOT.HEADER(6,\"#partner_id\",4)",
-        "A59": "=PIVOT.HEADER(6,\"#partner_id\",5)",
-        "A60": "=PIVOT.HEADER(6,\"#partner_id\",6)",
-        "A61": "=PIVOT.HEADER(6,\"#partner_id\",7)",
-        "A62": "=PIVOT.HEADER(6,\"#partner_id\",8)",
-        "A63": "=PIVOT.HEADER(6,\"#partner_id\",9)",
-        "A64": "=PIVOT.HEADER(6,\"#partner_id\",10)",
+        "A55": "=PIVOT.HEADER(6,\"#partner_id\",1)",
+        "A56:A64": {
+          "N": "=|+1",
+          "S": ["="]
+        },
         "A73": "[Sessions by Day](odoo://view/{\"viewType\":\"graph\",\"action\":{\"xmlId\":\"im_livechat.im_livechat_report_channel_action\",\"domain\":[],\"context\":{\"group_by\":[\"start_date:day\"],\"graph_measure\":\"__count\",\"graph_mode\":\"bar\",\"graph_groupbys\":[\"start_date:day\"],\"graph_order\":null,\"graph_stacked\":true},\"modelName\":\"im_livechat.report.channel\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Sessions by Day\"})",
         "A107": "[Sessions by Day of Week](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"xmlId\":\"im_livechat.im_livechat_report_operator_action\",\"domain\":[],\"context\":{\"group_by\":[\"day_number\"],\"pivot_measures\":[\"__count\",\"time_to_answer\",\"duration\",\"rating_percentage\",\"number_of_calls\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"partner_id\"]},\"modelName\":\"im_livechat.report.channel\",\"views\":[[false,\"pivot\"],[false,\"graph\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Sessions by Day of Week\"})",
         "A126": "[Top Countries](odoo://view/{\"viewType\":\"graph\",\"action\":{\"xmlId\":\"im_livechat.im_livechat_report_channel_action\",\"domain\":[],\"context\":{\"group_by\":[\"country_id\"],\"graph_measure\":\"__count\",\"graph_mode\":\"bar\",\"graph_groupbys\":[\"country_id\"],\"graph_order\":null,\"graph_stacked\":true},\"modelName\":\"im_livechat.report.channel\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Top Countries\"})",
         "A128": "=_t(\"Country\")",
-        "A129": "=PIVOT.HEADER(9,\"#country_id\", 1)",
-        "A130": "=PIVOT.HEADER(9,\"#country_id\",2)",
-        "A131": "=PIVOT.HEADER(9,\"#country_id\",3)",
-        "A132": "=PIVOT.HEADER(9,\"#country_id\",4)",
-        "A133": "=PIVOT.HEADER(9,\"#country_id\",5)",
+        "A129": "=PIVOT.HEADER(9,\"#country_id\",1)",
+        "A130:A133": {
+          "N": "=|+1",
+          "S": ["="]
+        },
         "A135": "[Top Expertises](odoo://view/{\"viewType\":\"graph\",\"action\":{\"xmlId\":\"im_livechat.im_livechat_report_channel_action\",\"domain\":[],\"context\":{\"group_by\":[\"session_expertises\"],\"graph_measure\":\"__count\",\"graph_mode\":\"bar\",\"graph_groupbys\":[\"session_expertises\"],\"graph_order\":null,\"graph_stacked\":true},\"modelName\":\"im_livechat.report.channel\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Top Expertises\"})",
         "A137": "=_t(\"Expertise\")",
-        "A138": "=PIVOT.HEADER(11,\"#session_expertises\", 1)",
-        "A139": "=PIVOT.HEADER(11,\"#session_expertises\",2)",
-        "A140": "=PIVOT.HEADER(11,\"#session_expertises\",3)",
-        "A141": "=PIVOT.HEADER(11,\"#session_expertises\",4)",
-        "A142": "=PIVOT.HEADER(11,\"#session_expertises\",5)",
+        "A138": "=PIVOT.HEADER(11,\"#session_expertises\",1)",
+        "A139:A142": {
+          "N": "=|+1",
+          "S": ["="]
+        },
         "I34": "=_t(\"Sessions\")",
-        "I35": "=PIVOT.VALUE(3,  \"__count\", \"#partner_id\", 1)",
-        "I36": "=PIVOT.VALUE(3,\"__count\",\"#partner_id\",2)",
-        "I37": "=PIVOT.VALUE(3,\"__count\",\"#partner_id\",3)",
-        "I38": "=PIVOT.VALUE(3,\"__count\",\"#partner_id\",4)",
-        "I39": "=PIVOT.VALUE(3,\"__count\",\"#partner_id\",5)",
-        "I40": "=PIVOT.VALUE(3,\"__count\",\"#partner_id\",6)",
-        "I41": "=PIVOT.VALUE(3,\"__count\",\"#partner_id\",7)",
-        "I42": "=PIVOT.VALUE(3,\"__count\",\"#partner_id\",8)",
-        "I43": "=PIVOT.VALUE(3,\"__count\",\"#partner_id\",9)",
-        "I44": "=PIVOT.VALUE(3,\"__count\",\"#partner_id\",10)",
+        "I35": "=PIVOT.VALUE(3,\"__count\",\"#partner_id\",1)",
+        "I36:I44": {
+          "N": "=|+1",
+          "S": ["=", "="]
+        },
         "I54": "=_t(\"Sessions with Calls (#)\")",
-        "I55": "=PIVOT.VALUE(6,\"has_call:sum\",\"#partner_id\", 1)",
-        "I56": "=PIVOT.VALUE(6,\"has_call:sum\",\"#partner_id\",2)",
-        "I57": "=PIVOT.VALUE(6,\"has_call:sum\",\"#partner_id\",3)",
-        "I58": "=PIVOT.VALUE(6,\"has_call:sum\",\"#partner_id\",4)",
-        "I59": "=PIVOT.VALUE(6,\"has_call:sum\",\"#partner_id\",5)",
-        "I60": "=PIVOT.VALUE(6,\"has_call:sum\",\"#partner_id\",6)",
-        "I61": "=PIVOT.VALUE(6,\"has_call:sum\",\"#partner_id\",7)",
-        "I62": "=PIVOT.VALUE(6,\"has_call:sum\",\"#partner_id\",8)",
-        "I63": "=PIVOT.VALUE(6,\"has_call:sum\",\"#partner_id\",9)",
-        "I64": "=PIVOT.VALUE(6,\"has_call:sum\",\"#partner_id\",10)",
+        "I55": "=PIVOT.VALUE(6,\"has_call:sum\",\"#partner_id\",1)",
+        "I56:I64": {
+          "N": "=|+1",
+          "S": ["=", "="]
+        },
         "K128": "=_t(\"Sessions\")",
-        "K129": "=PIVOT.VALUE(9,\"__count\",\"#country_id\", 1)",
-        "K130": "=PIVOT.VALUE(9,\"__count\",\"#country_id\",2)",
-        "K131": "=PIVOT.VALUE(9,\"__count\",\"#country_id\",3)",
-        "K132": "=PIVOT.VALUE(9,\"__count\",\"#country_id\",4)",
-        "K133": "=PIVOT.VALUE(9,\"__count\",\"#country_id\",5)",
+        "K129": "=PIVOT.VALUE(9,\"__count\",\"#country_id\",1)",
+        "K130:K133": {
+          "N": "=|+1",
+          "S": ["=", "="]
+        },
         "K137": "=_t(\"Sessions\")",
-        "K138": "=PIVOT.VALUE(11,\"__count\",\"#session_expertises\", 1)",
-        "K139": "=PIVOT.VALUE(11,\"__count\",\"#session_expertises\",2)",
-        "K140": "=PIVOT.VALUE(11,\"__count\",\"#session_expertises\",3)",
-        "K141": "=PIVOT.VALUE(11,\"__count\",\"#session_expertises\",4)",
-        "K142": "=PIVOT.VALUE(11,\"__count\",\"#session_expertises\",5)",
+        "K138": "=PIVOT.VALUE(11,\"__count\",\"#session_expertises\",1)",
+        "K139:K142": {
+          "N": "=|+1",
+          "S": ["=", "="]
+        },
         "M34": "=_t(\"Session Duration (min)\")",
         "M35": "=PIVOT.VALUE(3,\"duration:avg\",\"#partner_id\",1)",
-        "M36": "=PIVOT.VALUE(3,\"duration:avg\",\"#partner_id\",2)",
-        "M37": "=PIVOT.VALUE(3,\"duration:avg\",\"#partner_id\",3)",
-        "M38": "=PIVOT.VALUE(3,\"duration:avg\",\"#partner_id\",4)",
-        "M39": "=PIVOT.VALUE(3,\"duration:avg\",\"#partner_id\",5)",
-        "M40": "=PIVOT.VALUE(3,\"duration:avg\",\"#partner_id\",6)",
-        "M41": "=PIVOT.VALUE(3,\"duration:avg\",\"#partner_id\",7)",
-        "M42": "=PIVOT.VALUE(3,\"duration:avg\",\"#partner_id\",8)",
-        "M43": "=PIVOT.VALUE(3,\"duration:avg\",\"#partner_id\",9)",
-        "M44": "=PIVOT.VALUE(3,\"duration:avg\",\"#partner_id\",10)",
+        "M36:M44": {
+          "N": "=|+1",
+          "S": ["=", "="]
+        },
         "M54": "=_t(\"Sessions with Calls (%)\")",
-        "M55": "=IF(I55, I55 / PIVOT.VALUE(6, \"__count\", \"#partner_id\", 1), \"\")",
-        "M56": "=IF(I56, I56 / PIVOT.VALUE(6, \"__count\", \"#partner_id\", 2), \"\")",
-        "M57": "=IF(I57, I57 / PIVOT.VALUE(6, \"__count\", \"#partner_id\", 3), \"\")",
-        "M58": "=IF(I58, I58 / PIVOT.VALUE(6, \"__count\", \"#partner_id\", 4), \"\")",
-        "M59": "=IF(I59, I59 / PIVOT.VALUE(6, \"__count\", \"#partner_id\", 5), \"\")",
-        "M60": "=IF(I60, I60 / PIVOT.VALUE(6, \"__count\", \"#partner_id\", 6), \"\")",
-        "M61": "=IF(I61, I61 / PIVOT.VALUE(6, \"__count\", \"#partner_id\", 7), \"\")",
-        "M62": "=IF(I62, I62 / PIVOT.VALUE(6, \"__count\", \"#partner_id\", 8), \"\")",
-        "M63": "=IF(I63, I63 / PIVOT.VALUE(6, \"__count\", \"#partner_id\", 9), \"\")",
-        "M64": "=IF(I64, I64 / PIVOT.VALUE(6, \"__count\", \"#partner_id\", 10), \"\")",
+        "M55": "=IF(I55,I55/PIVOT.VALUE(6,\"__count\",\"#partner_id\",1),\"\")",
+        "M56:M64": {
+          "N": "=|+1",
+          "S": ["=", "=", "="],
+          "R": "+R1|+R1"
+        },
         "P107": "[Sessions by Hour of Day](odoo://view/{\"viewType\":\"graph\",\"action\":{\"xmlId\":\"im_livechat.im_livechat_report_channel_action\",\"domain\":[],\"context\":{\"group_by\":[\"start_hour\"],\"graph_measure\":\"__count\",\"graph_mode\":\"bar\",\"graph_groupbys\":[\"start_hour\"],\"graph_order\":null,\"graph_stacked\":true},\"modelName\":\"im_livechat.report.channel\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Sessions by Hour of Day\"})",
         "P126": "[Top Languages](odoo://view/{\"viewType\":\"graph\",\"action\":{\"xmlId\":\"im_livechat.im_livechat_report_channel_action\",\"domain\":[],\"context\":{\"group_by\":[\"lang_id\"],\"graph_measure\":\"__count\",\"graph_mode\":\"bar\",\"graph_groupbys\":[\"lang_id\"],\"graph_order\":null,\"graph_stacked\":true},\"modelName\":\"im_livechat.report.channel\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Top Languages\"})",
         "P128": "=_t(\"Language\")",
-        "P129": "=PIVOT.HEADER(10,\"#lang_id\", 1)",
-        "P130": "=PIVOT.HEADER(10,\"#lang_id\",2)",
-        "P131": "=PIVOT.HEADER(10,\"#lang_id\",3)",
-        "P132": "=PIVOT.HEADER(10,\"#lang_id\",4)",
-        "P133": "=PIVOT.HEADER(10,\"#lang_id\",5)",
+        "P129": "=PIVOT.HEADER(10,\"#lang_id\",1)",
+        "P130:P133": {
+          "N": "=|+1",
+          "S": ["="]
+        },
         "P135": "[Top Chatbot Answers](odoo://view/{\"viewType\":\"graph\",\"action\":{\"xmlId\":\"im_livechat.im_livechat_report_channel_action\",\"domain\":[],\"context\":{\"group_by\":[\"chatbot_answers_path\"],\"graph_measure\":\"__count\",\"graph_mode\":\"bar\",\"graph_groupbys\":[\"chatbot_answers_path\"],\"graph_order\":null,\"graph_stacked\":true},\"modelName\":\"im_livechat.report.channel\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Top Chatbot Answers\"})",
         "P137": "=_t(\"Chatbot Answer\")",
-        "P138": "=PIVOT.HEADER(12,\"#chatbot_answers_path_str\", 1)",
-        "P139": "=PIVOT.HEADER(12,\"#chatbot_answers_path_str\",2)",
-        "P140": "=PIVOT.HEADER(12,\"#chatbot_answers_path_str\",3)",
-        "P141": "=PIVOT.HEADER(12,\"#chatbot_answers_path_str\",4)",
-        "P142": "=PIVOT.HEADER(12,\"#chatbot_answers_path_str\",5)",
+        "P138": "=PIVOT.HEADER(12,\"#chatbot_answers_path_str\",1)",
+        "P139:P142": {
+          "N": "=|+1",
+          "S": ["="]
+        },
         "Q34": "=_t(\"Time to Respond (sec)\")",
-        "Q35": "=PIVOT.VALUE(3,\"time_to_answer:avg\",\"#partner_id\", 1)",
-        "Q36": "=PIVOT.VALUE(3,\"time_to_answer:avg\",\"#partner_id\",2)",
-        "Q37": "=PIVOT.VALUE(3,\"time_to_answer:avg\",\"#partner_id\",3)",
-        "Q38": "=PIVOT.VALUE(3,\"time_to_answer:avg\",\"#partner_id\",4)",
-        "Q39": "=PIVOT.VALUE(3,\"time_to_answer:avg\",\"#partner_id\",5)",
-        "Q40": "=PIVOT.VALUE(3,\"time_to_answer:avg\",\"#partner_id\",6)",
-        "Q41": "=PIVOT.VALUE(3,\"time_to_answer:avg\",\"#partner_id\",7)",
-        "Q42": "=PIVOT.VALUE(3,\"time_to_answer:avg\",\"#partner_id\",8)",
-        "Q43": "=PIVOT.VALUE(3,\"time_to_answer:avg\",\"#partner_id\",9)",
-        "Q44": "=PIVOT.VALUE(3,\"time_to_answer:avg\",\"#partner_id\",10)",
+        "Q35": "=PIVOT.VALUE(3,\"time_to_answer:avg\",\"#partner_id\",1)",
+        "Q36:Q44": {
+          "N": "=|+1",
+          "S": ["=", "="]
+        },
         "Q54": "=_t(\"Call Duration\")",
-        "Q55": "=if(PIVOT.VALUE(6,\"call_duration_hour:avg\",\"#partner_id\", 1), PIVOT.VALUE(6,\"call_duration_hour:avg\",\"#partner_id\", 1)  / 24, \"\")",
-        "Q56": "=if(PIVOT.VALUE(6,\"call_duration_hour:avg\",\"#partner_id\", 2), PIVOT.VALUE(6,\"call_duration_hour:avg\",\"#partner_id\", 2)  / 24, \"\")",
-        "Q57": "=if(PIVOT.VALUE(6,\"call_duration_hour:avg\",\"#partner_id\", 3), PIVOT.VALUE(6,\"call_duration_hour:avg\",\"#partner_id\", 3)  / 24, \"\")",
-        "Q58": "=if(PIVOT.VALUE(6,\"call_duration_hour:avg\",\"#partner_id\", 4), PIVOT.VALUE(6,\"call_duration_hour:avg\",\"#partner_id\", 4)  / 24, \"\")",
-        "Q59": "=if(PIVOT.VALUE(6,\"call_duration_hour:avg\",\"#partner_id\", 5), PIVOT.VALUE(6,\"call_duration_hour:avg\",\"#partner_id\", 5)  / 24, \"\")",
-        "Q60": "=if(PIVOT.VALUE(6,\"call_duration_hour:avg\",\"#partner_id\", 6), PIVOT.VALUE(6,\"call_duration_hour:avg\",\"#partner_id\", 6)  / 24, \"\")",
-        "Q61": "=if(PIVOT.VALUE(6,\"call_duration_hour:avg\",\"#partner_id\", 7), PIVOT.VALUE(6,\"call_duration_hour:avg\",\"#partner_id\", 7)  / 24, \"\")",
-        "Q62": "=if(PIVOT.VALUE(6,\"call_duration_hour:avg\",\"#partner_id\", 8), PIVOT.VALUE(6,\"call_duration_hour:avg\",\"#partner_id\", 8)  / 24, \"\")",
-        "Q63": "=if(PIVOT.VALUE(6,\"call_duration_hour:avg\",\"#partner_id\", 9), PIVOT.VALUE(6,\"call_duration_hour:avg\",\"#partner_id\", 9)  / 24, \"\")",
-        "Q64": "=if(PIVOT.VALUE(6,\"call_duration_hour:avg\",\"#partner_id\", 10), PIVOT.VALUE(6,\"call_duration_hour:avg\",\"#partner_id\", 10)  / 24, \"\")",
+        "Q55": "=if(PIVOT.VALUE(6,\"call_duration_hour:avg\",\"#partner_id\",1),PIVOT.VALUE(6,\"call_duration_hour:avg\",\"#partner_id\",1)/24,\"\")",
+        "Q56:Q64": {
+          "N": "=|+1|=|+1|=",
+          "S": ["=", "=", "=", "=", "="]
+        },
         "U34": "=_t(\"Messages per Session\")",
-        "U35": "=PIVOT.VALUE(3,\"nbr_message:avg\", \"#partner_id\", 1)",
-        "U36": "=PIVOT.VALUE(3,\"nbr_message:avg\",\"#partner_id\",2)",
-        "U37": "=PIVOT.VALUE(3,\"nbr_message:avg\",\"#partner_id\",3)",
-        "U38": "=PIVOT.VALUE(3,\"nbr_message:avg\",\"#partner_id\",4)",
-        "U39": "=PIVOT.VALUE(3,\"nbr_message:avg\",\"#partner_id\",5)",
-        "U40": "=PIVOT.VALUE(3,\"nbr_message:avg\",\"#partner_id\",6)",
-        "U41": "=PIVOT.VALUE(3,\"nbr_message:avg\",\"#partner_id\",7)",
-        "U42": "=PIVOT.VALUE(3,\"nbr_message:avg\",\"#partner_id\",8)",
-        "U43": "=PIVOT.VALUE(3,\"nbr_message:avg\",\"#partner_id\",9)",
-        "U44": "=PIVOT.VALUE(3,\"nbr_message:avg\",\"#partner_id\",10)",
+        "U35": "=PIVOT.VALUE(3,\"nbr_message:avg\",\"#partner_id\",1)",
+        "U36:U44": {
+          "N": "=|+1",
+          "S": ["=", "="]
+        },
         "Y34": "=_t(\"Rating (%)\")",
-        "Y35": "=IF(ISNUMBER(PIVOT.VALUE(3,\"rating_percentage:avg\",\"#partner_id\",1)), PIVOT.VALUE(3,\"rating_percentage:avg\",\"#partner_id\",1) / 100, \"\")",
-        "Y36": "=IF(ISNUMBER(PIVOT.VALUE(3,\"rating_percentage:avg\",\"#partner_id\",2)), PIVOT.VALUE(3,\"rating_percentage:avg\",\"#partner_id\",2) / 100, \"\")",
-        "Y37": "=IF(ISNUMBER(PIVOT.VALUE(3,\"rating_percentage:avg\",\"#partner_id\",3)), PIVOT.VALUE(3,\"rating_percentage:avg\",\"#partner_id\",3) / 100, \"\")",
-        "Y38": "=IF(ISNUMBER(PIVOT.VALUE(3,\"rating_percentage:avg\",\"#partner_id\",4)), PIVOT.VALUE(3,\"rating_percentage:avg\",\"#partner_id\",4) / 100, \"\")",
-        "Y39": "=IF(ISNUMBER(PIVOT.VALUE(3,\"rating_percentage:avg\",\"#partner_id\",5)), PIVOT.VALUE(3,\"rating_percentage:avg\",\"#partner_id\",5) / 100, \"\")",
-        "Y40": "=IF(ISNUMBER(PIVOT.VALUE(3,\"rating_percentage:avg\",\"#partner_id\",6)), PIVOT.VALUE(3,\"rating_percentage:avg\",\"#partner_id\",6) / 100, \"\")",
-        "Y41": "=IF(ISNUMBER(PIVOT.VALUE(3,\"rating_percentage:avg\",\"#partner_id\",7)), PIVOT.VALUE(3,\"rating_percentage:avg\",\"#partner_id\",7) / 100, \"\")",
-        "Y42": "=IF(ISNUMBER(PIVOT.VALUE(3,\"rating_percentage:avg\",\"#partner_id\",8)), PIVOT.VALUE(3,\"rating_percentage:avg\",\"#partner_id\",8) / 100, \"\")",
-        "Y43": "=IF(ISNUMBER(PIVOT.VALUE(3,\"rating_percentage:avg\",\"#partner_id\",9)), PIVOT.VALUE(3,\"rating_percentage:avg\",\"#partner_id\",9) / 100, \"\")",
-        "Y44": "=IF(ISNUMBER(PIVOT.VALUE(3,\"rating_percentage:avg\",\"#partner_id\",10)), PIVOT.VALUE(3,\"rating_percentage:avg\",\"#partner_id\",10) / 100, \"\")",
+        "Y35": "=IF(ISNUMBER(PIVOT.VALUE(3,\"rating_percentage:avg\",\"#partner_id\",1)),PIVOT.VALUE(3,\"rating_percentage:avg\",\"#partner_id\",1)/100,\"\")",
+        "Y36:Y44": {
+          "N": "=|+1|=|+1|=",
+          "S": ["=", "=", "=", "=", "="]
+        },
         "Z128": "=_t(\"Sessions\")",
-        "Z129": "=PIVOT.VALUE(10,\"__count\",\"#lang_id\", 1)",
-        "Z130": "=PIVOT.VALUE(10,\"__count\",\"#lang_id\",2)",
-        "Z131": "=PIVOT.VALUE(10,\"__count\",\"#lang_id\",3)",
-        "Z132": "=PIVOT.VALUE(10,\"__count\",\"#lang_id\",4)",
-        "Z133": "=PIVOT.VALUE(10,\"__count\",\"#lang_id\",5)",
+        "Z129": "=PIVOT.VALUE(10,\"__count\",\"#lang_id\",1)",
+        "Z130:Z133": {
+          "N": "=|+1",
+          "S": ["=", "="]
+        },
         "Z137": "=_t(\"Sessions\")",
-        "Z138": "=PIVOT.VALUE(12,\"__count\",\"#chatbot_answers_path_str\", 1)",
-        "Z139": "=PIVOT.VALUE(12,\"__count\",\"#chatbot_answers_path_str\",2)",
-        "Z140": "=PIVOT.VALUE(12,\"__count\",\"#chatbot_answers_path_str\",3)",
-        "Z141": "=PIVOT.VALUE(12,\"__count\",\"#chatbot_answers_path_str\",4)",
-        "Z142": "=PIVOT.VALUE(12,\"__count\",\"#chatbot_answers_path_str\",5)"
+        "Z138": "=PIVOT.VALUE(12,\"__count\",\"#chatbot_answers_path_str\",1)",
+        "Z139:Z142": {
+          "N": "=|+1",
+          "S": ["=", "="]
+        }
       },
       "styles": {
         "A1": 1,
@@ -414,57 +365,30 @@
         "P107:U107": 2,
         "A34:H34": 3,
         "A54:H54": 3,
-        "B64:H64": 3,
         "A128:J128": 3,
         "A137:J137": 3,
-        "J56:L64": 3,
         "P128:Y128": 3,
         "P137:Y137": 3,
-        "A35": 4,
-        "A55": 4,
-        "B35:C44": 4,
-        "D35:H35": 4,
-        "B55:H63": 4,
+        "A35:H35": 4,
+        "A55:H55": 4,
         "A52:D52": 5,
-        "E36:G44": 6,
-        "J35:L35": 6,
-        "N35:P35": 6,
-        "R35:T35": 6,
-        "V35:X35": 6,
-        "J36:L44": 7,
-        "K128:M128": 7,
-        "K137:M137": 7,
-        "N36:P44": 7,
-        "R36:T44": 7,
-        "I54:T54": 7,
-        "V41:X44": 7,
-        "I34:AB34": 7,
-        "Z128:AB128": 7,
-        "Z137:AB137": 7,
-        "I55:L55": 8,
-        "M55:P64": 8
+        "K128:M128": 6,
+        "K137:M137": 6,
+        "I54:T54": 6,
+        "I34:AB34": 6,
+        "Z128:AB128": 6,
+        "Z137:AB137": 6,
+        "I55:L55": 7,
+        "M55:P64": 7
       },
       "formats": {
-        "B55:B56": 1,
-        "D55": 1,
-        "H35": 1,
-        "I55:I64": 1,
-        "L35:M35": 1,
-        "Q35": 1,
-        "C35:C44": 2,
-        "E35:G44": 2,
-        "J35:K44": 2,
-        "N35:N44": 2,
-        "D65": 3,
-        "L55:L64": 3,
-        "N56:O64": 3,
-        "Q55:Q64": 3,
-        "R55:T55": 3,
-        "H55:H64": 4,
-        "J55:K55": 4,
-        "M55:M64": 4,
-        "N55:P55": 4,
-        "Y35:AB44": 4
+        "D65": 1,
+        "Q55:Q64": 1,
+        "I55:I64": 2,
+        "M35": 2,
+        "Q35": 2,
+        "M55:M64": 3,
+        "Y35:Y44": 3
       },
       "borders": {
         "A107:M107": 1,
@@ -530,7 +454,8 @@
             "baseline": "Data!E2",
             "baselineDescr": { "text": "since last period" },
             "keyValue": "Data!D2",
-            "humanize": true
+            "humanize": true,
+            "chartId": "b47aaa91-819c"
           }
         },
         {
@@ -551,7 +476,8 @@
             "baseline": "Data!C4",
             "baselineDescr": { "text": "last period" },
             "keyValue": "Data!B4",
-            "humanize": true
+            "humanize": true,
+            "chartId": "669caec3-bf59"
           }
         },
         {
@@ -572,7 +498,8 @@
             "baseline": "Data!C3",
             "baselineDescr": { "text": "last period" },
             "keyValue": "Data!B3",
-            "humanize": true
+            "humanize": true,
+            "chartId": "c859e1b2-98e2"
           }
         },
         {
@@ -598,7 +525,8 @@
             "baseline": "Data!C6",
             "baselineDescr": { "text": "since last period" },
             "keyValue": "Data!B6",
-            "humanize": true
+            "humanize": true,
+            "chartId": "817ebe59-aa76"
           }
         },
         {
@@ -624,7 +552,9 @@
             },
             "title": { "text": "Rating (%)", "bold": true, "color": "#434343", "fontSize": 14 },
             "type": "gauge",
-            "dataRange": "Data!D5"
+            "dataRange": "Data!D5",
+            "humanize": true,
+            "chartId": "f8004001-f384"
           }
         },
         {
@@ -638,26 +568,30 @@
           "data": {
             "title": { "text": "" },
             "legendPosition": "none",
-            "metaData": {
-              "groupBy": ["partner_id"],
-              "measure": "__count",
-              "order": "DESC",
-              "resModel": "im_livechat.report.channel",
-              "mode": "bar"
-            },
-            "searchParams": {
-              "comparison": null,
-              "context": { "im_livechat.hide_partner_company": true },
-              "domain": [
-                ["partner_id.chatbot_script_ids", "=", false]
-              ],
-              "groupBy": ["partner_id"],
-              "orderBy": []
-            },
-            "type": "odoo_bar",
-            "dataSets": [],
-            "verticalAxisPosition": "left",
+            "type": "bar",
             "stacked": false,
+            "humanize": true,
+            "dataSource": {
+              "type": "odoo",
+              "metaData": {
+                "groupBy": ["partner_id"],
+                "measure": "__count",
+                "order": "DESC",
+                "resModel": "im_livechat.report.channel",
+                "mode": "bar"
+              },
+              "searchParams": {
+                "comparison": null,
+                "context": { "im_livechat.hide_partner_company": true },
+                "domain": [
+                  ["partner_id.chatbot_script_ids", "=", false]
+                ],
+                "groupBy": ["partner_id"],
+                "orderBy": []
+              }
+            },
+            "dataSetStyles": {},
+            "chartId": "1b00e2ec-de7f",
             "fieldMatching": {
               "4db3e2d2-5471-44a4-80ca-7c2fa4f1a5ac": { "chain": "start_date", "type": "datetime" },
               "5124b7b1-aa17-46cc-b574-2309708de75b": { "chain": "partner_id", "type": "many2one" },
@@ -686,7 +620,8 @@
             "baseline": "Data!C7",
             "baselineDescr": { "text": "since last period" },
             "keyValue": "Data!B7",
-            "humanize": true
+            "humanize": true,
+            "chartId": "a8cdffbf-c922"
           }
         },
         {
@@ -707,7 +642,8 @@
             "baseline": "Data!C8",
             "baselineDescr": { "text": "since last period" },
             "keyValue": "Data!B8",
-            "humanize": true
+            "humanize": true,
+            "chartId": "f9d08184-6089"
           }
         },
         {
@@ -728,7 +664,8 @@
             "baseline": "Data!C9",
             "baselineDescr": { "text": "since last period" },
             "keyValue": "Data!B9",
-            "humanize": false
+            "humanize": false,
+            "chartId": "ed6c9126-a259"
           }
         },
         {
@@ -749,7 +686,8 @@
             "baseline": "Data!C10",
             "baselineDescr": { "text": "since last period" },
             "keyValue": "Data!B10",
-            "humanize": true
+            "humanize": true,
+            "chartId": "ecab6849-00d6"
           }
         },
         {
@@ -770,7 +708,8 @@
             "baseline": "Data!C11",
             "baselineDescr": { "text": "since last period" },
             "keyValue": "Data!B11",
-            "humanize": true
+            "humanize": true,
+            "chartId": "e28f8bef-9ed4"
           }
         },
         {
@@ -791,7 +730,8 @@
             "baseline": "Data!C12",
             "baselineDescr": { "text": "since last period" },
             "keyValue": "Data!B12",
-            "humanize": true
+            "humanize": true,
+            "chartId": "849cc753-af26"
           }
         },
         {
@@ -812,7 +752,8 @@
             "baseline": "Data!C13",
             "baselineDescr": { "text": "since last period" },
             "keyValue": "Data!B13",
-            "humanize": true
+            "humanize": true,
+            "chartId": "8f96cf4c-942e"
           }
         },
         {
@@ -833,7 +774,8 @@
             "baseline": "Data!C14",
             "baselineDescr": { "text": "since last period" },
             "keyValue": "Data!B14",
-            "humanize": true
+            "humanize": true,
+            "chartId": "2aba95e3-9993"
           }
         },
         {
@@ -847,27 +789,31 @@
           "data": {
             "title": { "text": "" },
             "legendPosition": "none",
-            "metaData": {
-              "groupBy": ["start_date:day"],
-              "measure": "__count",
-              "order": null,
-              "resModel": "im_livechat.report.channel",
-              "mode": "bar"
-            },
-            "searchParams": {
-              "context": {
-                "pivot_measures": ["__count", "time_to_answer", "duration", "rating", "number_of_calls"],
-                "im_livechat.hide_partner_company": true
-              },
-              "domain": [],
-              "groupBy": ["start_date:day"],
-              "orderBy": []
-            },
-            "type": "odoo_bar",
-            "actionXmlId": "im_livechat.im_livechat_report_channel_action",
-            "dataSets": [],
-            "verticalAxisPosition": "left",
+            "type": "bar",
             "stacked": true,
+            "humanize": true,
+            "dataSource": {
+              "type": "odoo",
+              "actionXmlId": "im_livechat.im_livechat_report_channel_action",
+              "metaData": {
+                "groupBy": ["start_date:day"],
+                "measure": "__count",
+                "order": null,
+                "resModel": "im_livechat.report.channel",
+                "mode": "bar"
+              },
+              "searchParams": {
+                "context": {
+                  "pivot_measures": ["__count", "time_to_answer", "duration", "rating", "number_of_calls"],
+                  "im_livechat.hide_partner_company": true
+                },
+                "domain": [],
+                "groupBy": ["start_date:day"],
+                "orderBy": []
+              }
+            },
+            "dataSetStyles": {},
+            "chartId": "ead13406-6cc1",
             "fieldMatching": {
               "4db3e2d2-5471-44a4-80ca-7c2fa4f1a5ac": { "chain": "start_date", "type": "datetime" },
               "5124b7b1-aa17-46cc-b574-2309708de75b": { "chain": "partner_id", "type": "many2one" },
@@ -889,27 +835,31 @@
           "data": {
             "title": { "text": "" },
             "legendPosition": "none",
-            "metaData": {
-              "groupBy": ["day_number"],
-              "measure": "__count",
-              "order": null,
-              "resModel": "im_livechat.report.channel",
-              "mode": "bar"
-            },
-            "searchParams": {
-              "context": {
-                "pivot_measures": ["__count", "time_to_answer", "duration", "rating", "number_of_calls"],
-                "im_livechat.hide_partner_company": true
-              },
-              "domain": [],
-              "groupBy": ["day_number"],
-              "orderBy": []
-            },
-            "type": "odoo_bar",
-            "actionXmlId": "im_livechat.im_livechat_report_channel_action",
-            "dataSets": [],
-            "verticalAxisPosition": "left",
+            "type": "bar",
             "stacked": false,
+            "humanize": true,
+            "dataSource": {
+              "type": "odoo",
+              "actionXmlId": "im_livechat.im_livechat_report_channel_action",
+              "metaData": {
+                "groupBy": ["day_number"],
+                "measure": "__count",
+                "order": null,
+                "resModel": "im_livechat.report.channel",
+                "mode": "bar"
+              },
+              "searchParams": {
+                "context": {
+                  "pivot_measures": ["__count", "time_to_answer", "duration", "rating", "number_of_calls"],
+                  "im_livechat.hide_partner_company": true
+                },
+                "domain": [],
+                "groupBy": ["day_number"],
+                "orderBy": []
+              }
+            },
+            "dataSetStyles": {},
+            "chartId": "6433af83-2dbd",
             "fieldMatching": {
               "4db3e2d2-5471-44a4-80ca-7c2fa4f1a5ac": { "chain": "start_date", "type": "datetime" },
               "5124b7b1-aa17-46cc-b574-2309708de75b": { "chain": "partner_id", "type": "many2one" },
@@ -931,27 +881,31 @@
           "data": {
             "title": { "text": "" },
             "legendPosition": "none",
-            "metaData": {
-              "groupBy": ["start_hour"],
-              "measure": "__count",
-              "order": null,
-              "resModel": "im_livechat.report.channel",
-              "mode": "bar"
-            },
-            "searchParams": {
-              "context": {
-                "pivot_measures": ["__count", "time_to_answer", "duration", "rating", "number_of_calls"],
-                "im_livechat.hide_partner_company": true
-              },
-              "domain": [],
-              "groupBy": ["start_hour"],
-              "orderBy": []
-            },
-            "type": "odoo_bar",
-            "actionXmlId": "im_livechat.im_livechat_report_channel_action",
-            "dataSets": [],
-            "verticalAxisPosition": "left",
+            "type": "bar",
             "stacked": false,
+            "humanize": true,
+            "dataSource": {
+              "type": "odoo",
+              "actionXmlId": "im_livechat.im_livechat_report_channel_action",
+              "metaData": {
+                "groupBy": ["start_hour"],
+                "measure": "__count",
+                "order": null,
+                "resModel": "im_livechat.report.channel",
+                "mode": "bar"
+              },
+              "searchParams": {
+                "context": {
+                  "pivot_measures": ["__count", "time_to_answer", "duration", "rating", "number_of_calls"],
+                  "im_livechat.hide_partner_company": true
+                },
+                "domain": [],
+                "groupBy": ["start_hour"],
+                "orderBy": []
+              }
+            },
+            "dataSetStyles": {},
+            "chartId": "98a0cc2d-8c14",
             "fieldMatching": {
               "4db3e2d2-5471-44a4-80ca-7c2fa4f1a5ac": { "chain": "start_date", "type": "datetime" },
               "5124b7b1-aa17-46cc-b574-2309708de75b": { "chain": "partner_id", "type": "many2one" },
@@ -988,11 +942,21 @@
       "merges": [],
       "cells": {
         "A1": "=_t(\"KPI\")",
-        "A2": "=_t(\"Sessions\")",
-        "A3": "=_t(\"Avg. time to respond\")",
-        "A4": "=_t(\"Avg. session duration\")",
-        "A5": "=_t(\"Avg. Rating\")",
-        "A6": "=_t(\"Avg. number of messages\")",
+        "A2": {
+          "S": ["Sessions"]
+        },
+        "A3": {
+          "S": ["Avg. time to respond"]
+        },
+        "A4": {
+          "S": ["Avg. session duration"]
+        },
+        "A5": {
+          "S": ["Avg. Rating"]
+        },
+        "A6": {
+          "S": ["Avg. number of messages"]
+        },
         "A7": "# number of calls",
         "A8": "% number of calls",
         "A9": "Avg. call duration",
@@ -1003,31 +967,60 @@
         "A14": "Sum failure no_agent",
         "B1": "=_t(\"Current\")",
         "B2": "=PIVOT.VALUE(4,\"__count\")",
-        "B3": "=PIVOT.VALUE(1, \"time_to_answer:avg\")",
-        "B4": "=PIVOT.VALUE(1,\"duration:avg\")",
-        "B5": "=IF(ISNUMBER(PIVOT.VALUE(1,\"rating_percentage:avg\")), PIVOT.VALUE(1,\"rating_percentage:avg\"), \"\")",
+        "B3": {
+          "N": "+-3",
+          "S": ["time_to_answer:avg"]
+        },
+        "B4": {
+          "N": "=",
+          "S": ["duration:avg"]
+        },
+        "B5": "=IF(ISNUMBER(PIVOT.VALUE(1,\"rating_percentage:avg\")),PIVOT.VALUE(1,\"rating_percentage:avg\"),\"\")",
         "B6": "=PIVOT.VALUE(1,\"nbr_message:avg\")",
-        "B7": "=PIVOT.VALUE(1, \"has_call:sum\")",
-        "B8": "=IF(B2 > 0, B7/B2, 0)",
-        "B9": "=PIVOT.VALUE(1, \"call_duration_hour:avg\") / 24",
+        "B7": {
+          "N": "=",
+          "S": ["has_call:sum"]
+        },
+        "B8": "=IF(B2>0,B7/B2,0)",
+        "B9": "=PIVOT.VALUE(1,\"call_duration_hour:avg\")/24",
         "B10": "=PIVOT.VALUE(1,\"handled_by_bot:sum\")",
-        "B11": "=PIVOT.VALUE(1,\"handled_by_agent:sum\")",
+        "B11": {
+          "N": "=",
+          "S": ["handled_by_agent:sum"]
+        },
         "B12": "=PIVOT.VALUE(7,\"__count\",\"session_outcome\",\"escalated\")",
-        "B13": "=PIVOT.VALUE(7,\"__count\",\"session_outcome\",\"no_answer\")",
-        "B14": "=IF(PIVOT.VALUE(7,\"__count\",\"session_outcome\", \"no_agent\"), PIVOT.VALUE(7,\"__count\",\"session_outcome\", \"no_agent\"), 0)",
+        "B13": {
+          "N": "=",
+          "S": ["=", "=", "no_answer"]
+        },
+        "B14": "=IF(PIVOT.VALUE(7,\"__count\",\"session_outcome\",\"no_agent\"),PIVOT.VALUE(7,\"__count\",\"session_outcome\",\"no_agent\"),0)",
         "C1": "=_t(\"Previous\")",
         "C2": "=PIVOT.VALUE(5,\"__count\")",
-        "C3": "=PIVOT.VALUE(2,\"time_to_answer:avg\")",
-        "C4": "=PIVOT.VALUE(2,\"duration:avg\")",
-        "C6": "=PIVOT.VALUE(2,\"nbr_message:avg\")",
-        "C7": "=PIVOT.VALUE(2, \"has_call:sum\")",
-        "C8": "=IF(C2 > 0, C7/C2, 0)",
-        "C9": "=PIVOT.VALUE(2, \"call_duration_hour:avg\") / 24",
+        "C3": {
+          "N": "+-3",
+          "S": ["time_to_answer:avg"]
+        },
+        "C4": {
+          "N": "=",
+          "S": ["duration:avg"]
+        },
+        "C6": {
+          "N": "=",
+          "S": ["nbr_message:avg"]
+        },
+        "C7": {
+          "N": "=",
+          "S": ["has_call:sum"]
+        },
+        "C8": "=IF(C2>0,C7/C2,0)",
+        "C9": "=PIVOT.VALUE(2,\"call_duration_hour:avg\")/24",
         "C10": "=PIVOT.VALUE(2,\"handled_by_bot:sum\")",
-        "C11": "=PIVOT.VALUE(2,\"handled_by_agent:sum\")",
-        "C12": "=PIVOT.VALUE(8,\"__count\",\"session_outcome\",\"escalated\")",
-        "C13": "=PIVOT.VALUE(8,\"__count\",\"session_outcome\",\"escalated\")",
-        "C14": "=IF(PIVOT.VALUE(8,\"__count\",\"session_outcome\", \"no_agent\"), PIVOT.VALUE(8,\"__count\",\"session_outcome\", \"no_agent\"), 0)",
+        "C11": {
+          "N": "=",
+          "S": ["handled_by_agent:sum"]
+        },
+        "C12:C13": "=PIVOT.VALUE(8,\"__count\",\"session_outcome\",\"escalated\")",
+        "C14": "=IF(PIVOT.VALUE(8,\"__count\",\"session_outcome\",\"no_agent\"),PIVOT.VALUE(8,\"__count\",\"session_outcome\",\"no_agent\"),0)",
         "D1": "=_t(\"Current\")",
         "D2": "=FORMAT.LARGE.NUMBER(B2)",
         "D5": "=B5",
@@ -1035,7 +1028,7 @@
         "E2": "=FORMAT.LARGE.NUMBER(C2)"
       },
       "styles": { "F8": 1, "F12": 1 },
-      "formats": { "B9:C9": 3, "I15": 3, "B3:C3": 5, "B4:C4": 6, "B8:C8": 7 },
+      "formats": { "B9:C9": 1, "I15": 1, "B3:C3": 4, "B4:C4": 5, "B8:C8": 6 },
       "borders": {},
       "conditionalFormats": [],
       "dataValidationRules": [],
@@ -1061,23 +1054,21 @@
       "fontSize": 16,
       "textColor": "#01666B"
     },
-    "6": { "textColor": "#000000", "align": "right" },
-    "7": {
+    "6": {
       "bold": true,
       "fontSize": 11,
       "align": "center",
       "textColor": "#434343"
     },
-    "8": { "textColor": "#434343" }
+    "7": { "textColor": "#434343" }
   },
   "formats": {
-    "1": "#,##0",
-    "2": "0[$]",
-    "3": "hhhh:mm:ss",
-    "4": "0.00%",
-    "5": "0 \"sec\"",
-    "6": "0 \"min\"",
-    "7": "0%"
+    "1": "hhhh:mm:ss",
+    "2": "#,##0",
+    "3": "0.00%",
+    "4": "0 \"sec\"",
+    "5": "0 \"min\"",
+    "6": "0%"
   },
   "borders": {
     "1": {
@@ -1119,7 +1110,11 @@
           "fieldName": "time_to_answer",
           "aggregator": "avg"
         },
-        { "id": "rating_percentage:avg", "fieldName": "rating_percentage", "aggregator": "avg" },
+        {
+          "id": "rating_percentage:avg",
+          "fieldName": "rating_percentage",
+          "aggregator": "avg"
+        },
         {
           "id": "nbr_message:avg",
           "fieldName": "nbr_message",
@@ -1169,7 +1164,11 @@
           "fieldName": "time_to_answer",
           "aggregator": "avg"
         },
-        { "id": "rating_percentage:avg", "fieldName": "rating_percentage", "aggregator": "avg" },
+        {
+          "id": "rating_percentage:avg",
+          "fieldName": "rating_percentage",
+          "aggregator": "avg"
+        },
         {
           "id": "nbr_message:avg",
           "fieldName": "nbr_message",
@@ -1222,7 +1221,11 @@
           "aggregator": "avg"
         },
         { "id": "duration:avg", "fieldName": "duration", "aggregator": "avg" },
-        { "id": "rating_percentage:avg", "fieldName": "rating_percentage", "aggregator": "avg" },
+        {
+          "id": "rating_percentage:avg",
+          "fieldName": "rating_percentage",
+          "aggregator": "avg"
+        },
         {
           "id": "nbr_message:avg",
           "fieldName": "nbr_message",
@@ -1523,6 +1526,7 @@
   },
   "pivotNextId": 13,
   "customTableStyles": {},
+  "namedRanges": {},
   "globalFilters": [
     {
       "id": "4db3e2d2-5471-44a4-80ca-7c2fa4f1a5ac",
@@ -1579,11 +1583,20 @@
   ],
   "lists": {},
   "listNextId": 1,
-  "chartOdooMenusReferences": {
-    "b47aaa91-819c": "im_livechat.menu_reporting_livechat_channel",
-    "669caec3-bf59": "im_livechat.menu_reporting_livechat_channel",
-    "c859e1b2-98e2": "im_livechat.menu_reporting_livechat_channel",
-    "f8004001-f384": "im_livechat.menu_livechat_sessions",
-    "1b00e2ec-de7f": "im_livechat.menu_livechat_root"
+  "odooLinkReferences": {
+    "b47aaa91-819c": {
+      "type": "odooMenu",
+      "odooMenuId": "im_livechat.menu_reporting_livechat_channel"
+    },
+    "669caec3-bf59": {
+      "type": "odooMenu",
+      "odooMenuId": "im_livechat.menu_reporting_livechat_channel"
+    },
+    "c859e1b2-98e2": {
+      "type": "odooMenu",
+      "odooMenuId": "im_livechat.menu_reporting_livechat_channel"
+    },
+    "f8004001-f384": { "type": "odooMenu", "odooMenuId": "im_livechat.menu_livechat_sessions" },
+    "1b00e2ec-de7f": { "type": "odooMenu", "odooMenuId": "im_livechat.menu_livechat_root" }
   }
 }

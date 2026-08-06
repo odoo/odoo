@@ -219,22 +219,20 @@
         "B5": "4",
         "B6": "632.5",
         "C1": "Previous",
-        "C2": "/",
-        "C3": "/",
+        "C2:C3": "/",
         "C4": "0",
         "C6": "=\"\"",
         "D1": "Current",
         "D2": "=FORMAT.LARGE.NUMBER(B2)",
-        "D3": "=FORMAT.LARGE.NUMBER(B3)",
-        "D4": "=FORMAT.LARGE.NUMBER(B4)",
+        "D3:D4": { "R": "+R1" },
         "D5": "=CONCATENATE(B5,\"/5\")",
         "D6": "=FORMAT.LARGE.NUMBER(B6)",
         "E1": "Previous",
         "E4": "=FORMAT.LARGE.NUMBER(C4)",
-        "E6": "=FORMAT.LARGE.NUMBER(C6)"
+        "E6": { "R": "+R2" }
       },
       "styles": { "B1:E1": 2, "D2:D4": 3, "E4": 3, "D6:E6": 3, "D5": 4 },
-      "formats": { "B2": 1, "B3": 1, "B4": 1, "B5": 2, "B6": 2, "C4": 1, "C6": 2 },
+      "formats": { "B2:B4": 1, "C4": 1, "B5:B6": 2, "C6": 2 },
       "borders": {},
       "conditionalFormats": [],
       "dataValidationRules": [],
@@ -253,10 +251,9 @@
     "1": { "textColor": "#01666b", "bold": true, "fontSize": 16 },
     "2": { "bold": true },
     "3": { "fillColor": "#f2f2f2" },
-    "4": { "fillColor": "#f2f2f2", "align": "right" },
-    "5": { "bold": true }
+    "4": { "fillColor": "#f2f2f2", "align": "right" }
   },
-  "formats": { "1": "0", "2": "#,##0.00", "3": "mm/dd/yyyy" },
+  "formats": { "1": "0", "2": "#,##0.00" },
   "borders": {
     "1": {
       "bottom": { "style": "thin", "color": "#CCCCCC" }

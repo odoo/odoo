@@ -1,5 +1,5 @@
 {
-  "version": "18.5.10",
+  "version": "19.3.10",
   "sheets": [
     {
       "id": "sheet1",
@@ -70,79 +70,49 @@
       "cells": {
         "A7": "[Orders by Month](odoo://view/{\"viewType\":\"graph\",\"action\":{\"domain\":[],\"context\":{\"group_by\":[\"date:month\"],\"graph_measure\":\"__count\",\"graph_mode\":\"line\",\"graph_groupbys\":[\"date:month\"]},\"modelName\":\"report.pos.order\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Orders Analysis\"})",
         "A24": "[Top Orders](odoo://view/{\"viewType\":\"list\",\"action\":{\"domain\":[],\"context\":{\"group_by\":[]},\"modelName\":\"pos.order\",\"views\":[[false,\"list\"],[false,\"form\"],[false,\"kanban\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Orders\"})",
-        "A25": "=ODOO.LIST.HEADER(1, \"session_id\", _t(\"Sessions\"))",
-        "A26": "=ODOO.LIST(1,1,\"session_id\")",
-        "A27": "=ODOO.LIST(1,2,\"session_id\")",
-        "A28": "=ODOO.LIST(1,3,\"session_id\")",
-        "A29": "=ODOO.LIST(1,4,\"session_id\")",
-        "A30": "=ODOO.LIST(1,5,\"session_id\")",
-        "A31": "=ODOO.LIST(1,6,\"session_id\")",
-        "A32": "=ODOO.LIST(1,7,\"session_id\")",
-        "A33": "=ODOO.LIST(1,8,\"session_id\")",
-        "A34": "=ODOO.LIST(1,9,\"session_id\")",
-        "A35": "=ODOO.LIST(1,10,\"session_id\")",
+        "A25": "=ODOO.LIST.HEADER(1,\"session_id\",_t(\"Sessions\"))",
+        "A26": "=ODOO.LIST.VALUE(1,1,\"session_id\")",
+        "A27:A35": {
+          "N": "=|+1",
+          "S": ["="]
+        },
         "A37": "[Top Sessions](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[],\"context\":{\"group_by\":[\"session_id\"],\"pivot_measures\":[\"order_id\",\"price_total\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"session_id\"]},\"modelName\":\"report.pos.order\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Orders Analysis\"})",
+        "A38": "=PIVOT(1,10,FALSE,FALSE)",
         "A50": "[Top Responsibles](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"user_id\",\"!=\",false]],\"context\":{\"group_by\":[\"user_id\"],\"pivot_measures\":[\"order_id\",\"price_total\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"user_id\"]},\"modelName\":\"report.pos.order\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Orders Analysis\"})",
-        "C25": "=ODOO.LIST.HEADER(1, \"date_order\")",
-        "C26": "=ODOO.LIST(1,1,\"date_order\")",
-        "C27": "=ODOO.LIST(1,2,\"date_order\")",
-        "C28": "=ODOO.LIST(1,3,\"date_order\")",
-        "C29": "=ODOO.LIST(1,4,\"date_order\")",
-        "C30": "=ODOO.LIST(1,5,\"date_order\")",
-        "C31": "=ODOO.LIST(1,6,\"date_order\")",
-        "C32": "=ODOO.LIST(1,7,\"date_order\")",
-        "C33": "=ODOO.LIST(1,8,\"date_order\")",
-        "C34": "=ODOO.LIST(1,9,\"date_order\")",
-        "C35": "=ODOO.LIST(1,10,\"date_order\")",
-        "D25": "=ODOO.LIST.HEADER(1, \"config_id\")",
-        "D26": "=ODOO.LIST(1,1,\"config_id\")",
-        "D27": "=ODOO.LIST(1,2,\"config_id\")",
-        "D28": "=ODOO.LIST(1,3,\"config_id\")",
-        "D29": "=ODOO.LIST(1,4,\"config_id\")",
-        "D30": "=ODOO.LIST(1,5,\"config_id\")",
-        "D31": "=ODOO.LIST(1,6,\"config_id\")",
-        "D32": "=ODOO.LIST(1,7,\"config_id\")",
-        "D33": "=ODOO.LIST(1,8,\"config_id\")",
-        "D34": "=ODOO.LIST(1,9,\"config_id\")",
-        "D35": "=ODOO.LIST(1,10,\"config_id\")",
-        "E25": "=ODOO.LIST.HEADER(1, \"employee_id\", _t(\"Employee\"))",
-        "E26": "=ODOO.LIST(1,1,\"employee_id\")",
-        "E27": "=ODOO.LIST(1,2,\"employee_id\")",
-        "E28": "=ODOO.LIST(1,3,\"employee_id\")",
-        "E29": "=ODOO.LIST(1,4,\"employee_id\")",
-        "E30": "=ODOO.LIST(1,5,\"employee_id\")",
-        "E31": "=ODOO.LIST(1,6,\"employee_id\")",
-        "E32": "=ODOO.LIST(1,7,\"employee_id\")",
-        "E33": "=ODOO.LIST(1,8,\"employee_id\")",
-        "E34": "=ODOO.LIST(1,9,\"employee_id\")",
-        "E35": "=ODOO.LIST(1,10,\"employee_id\")",
+        "A51": "=PIVOT(3,10,FALSE,FALSE)",
+        "C25": "=ODOO.LIST.HEADER(1,\"date_order\")",
+        "C26": "=ODOO.LIST.VALUE(1,1,\"date_order\")",
+        "C27:C35": {
+          "N": "=|+1",
+          "S": ["="]
+        },
+        "D25": "=ODOO.LIST.HEADER(1,\"config_id\")",
+        "D26": "=ODOO.LIST.VALUE(1,1,\"config_id\")",
+        "D27:D35": {
+          "N": "=|+1",
+          "S": ["="]
+        },
+        "E25": "=ODOO.LIST.HEADER(1,\"employee_id\",_t(\"Employee\"))",
+        "E26": "=ODOO.LIST.VALUE(1,1,\"employee_id\")",
+        "E27:E35": {
+          "N": "=|+1",
+          "S": ["="]
+        },
+        "E38": "=PIVOT(2,10,FALSE,FALSE)",
         "E50": "[Top Products](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"product_id\",\"!=\",false]],\"context\":{\"group_by\":[\"product_id\"],\"pivot_measures\":[\"order_id\",\"price_total\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"product_id\"]},\"modelName\":\"report.pos.order\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Orders Analysis\"})",
-        "F25": "=ODOO.LIST.HEADER(1, \"partner_id\")",
-        "F26": "=ODOO.LIST(1,1,\"partner_id\")",
-        "F27": "=ODOO.LIST(1,2,\"partner_id\")",
-        "F28": "=ODOO.LIST(1,3,\"partner_id\")",
-        "F29": "=ODOO.LIST(1,4,\"partner_id\")",
-        "F30": "=ODOO.LIST(1,5,\"partner_id\")",
-        "F31": "=ODOO.LIST(1,6,\"partner_id\")",
-        "F32": "=ODOO.LIST(1,7,\"partner_id\")",
-        "F33": "=ODOO.LIST(1,8,\"partner_id\")",
-        "F34": "=ODOO.LIST(1,9,\"partner_id\")",
-        "F35": "=ODOO.LIST(1,10,\"partner_id\")",
-        "G25": "=ODOO.LIST.HEADER(1, \"amount_total\")",
-        "G26": "=ODOO.LIST(1,1,\"amount_total\")",
-        "G27": "=ODOO.LIST(1,2,\"amount_total\")",
-        "G28": "=ODOO.LIST(1,3,\"amount_total\")",
-        "G29": "=ODOO.LIST(1,4,\"amount_total\")",
-        "G30": "=ODOO.LIST(1,5,\"amount_total\")",
-        "G31": "=ODOO.LIST(1,6,\"amount_total\")",
-        "G32": "=ODOO.LIST(1,7,\"amount_total\")",
-        "G33": "=ODOO.LIST(1,8,\"amount_total\")",
-        "G34": "=ODOO.LIST(1,9,\"amount_total\")",
-        "G35": "=ODOO.LIST(1,10,\"amount_total\")",
-        "A38": "=PIVOT(1, 10, FALSE, FALSE)",
-        "A51": "=PIVOT(3, 10, FALSE, FALSE)",
-        "E38": "=PIVOT(2, 10, FALSE, FALSE)",
-        "E51": "=PIVOT(4, 10, FALSE, FALSE)"
+        "E51": "=PIVOT(4,10,FALSE,FALSE)",
+        "F25": "=ODOO.LIST.HEADER(1,\"partner_id\")",
+        "F26": "=ODOO.LIST.VALUE(1,1,\"partner_id\")",
+        "F27:F35": {
+          "N": "=|+1",
+          "S": ["="]
+        },
+        "G25": "=ODOO.LIST.HEADER(1,\"amount_total\")",
+        "G26": "=ODOO.LIST.VALUE(1,1,\"amount_total\")",
+        "G27:G35": {
+          "N": "=|+1",
+          "S": ["="]
+        }
       },
       "styles": {
         "A7": 1,
@@ -305,42 +275,43 @@
           "data": {
             "title": { "text": "" },
             "legendPosition": "none",
-            "metaData": {
-              "groupBy": ["date:month"],
-              "measure": "__count",
-              "order": null,
-              "resModel": "report.pos.order",
-              "mode": "line",
-              "cumulatedStart": false
-            },
-            "searchParams": {
-              "comparison": null,
-              "context": {
-                "group_by": []
-              },
-              "domain": [
-                [
-                  "state",
-                  "in",
-                  ["paid", "done", "invoiced"]
-                ]
-              ],
-              "groupBy": ["date:month"],
-              "orderBy": []
-            },
-            "type": "odoo_line",
-            "dataSets": [
-              {}
-            ],
-            "verticalAxisPosition": "left",
+            "type": "line",
             "stacked": false,
-            "cumulatedStart": false,
             "axesDesign": {
               "y": {
                 "title": { "text": "Orders" }
               }
             },
             "fillArea": true,
+            "humanize": true,
+            "dataSource": {
+              "type": "odoo",
+              "cumulatedStart": false,
+              "metaData": {
+                "groupBy": ["date:month"],
+                "measure": "__count",
+                "order": null,
+                "resModel": "report.pos.order",
+                "mode": "line",
+                "cumulatedStart": false
+              },
+              "searchParams": {
+                "comparison": null,
+                "context": {
+                  "group_by": []
+                },
+                "domain": [
+                  [
+                    "state",
+                    "in",
+                    ["paid", "done", "invoiced"]
+                  ]
+                ],
+                "groupBy": ["date:month"],
+                "orderBy": []
+              }
+            },
+            "dataSetStyles": {},
             "chartId": "e012bf45-55dc-4c46-b069-bc090a467d73",
             "fieldMatching": {
               "ff0e1a26-3d4c-48b6-85a6-2777b522bb52": { "chain": "date", "type": "datetime", "offset": 0 },
@@ -368,27 +339,37 @@
               "5b457a5e-a023": {
                 "title": {},
                 "legendPosition": "top",
-                "metaData": {
-                  "groupBy": ["config_id"],
-                  "measure": "price_total",
-                  "order": null,
-                  "resModel": "report.pos.order",
-                  "mode": "bar"
-                },
-                "searchParams": {
-                  "context": {
-                    "group_by": []
+                "type": "sunburst",
+                "humanize": true,
+                "dataSource": {
+                  "type": "odoo",
+                  "actionXmlId": "point_of_sale.action_report_pos_order_all",
+                  "metaData": {
+                    "groupBy": ["config_id"],
+                    "measure": "price_total",
+                    "order": null,
+                    "resModel": "report.pos.order",
+                    "mode": "bar"
                   },
-                  "domain": [
-                    ["state", "!=", "cancel"]
-                  ],
-                  "groupBy": ["config_id"],
-                  "orderBy": []
+                  "searchParams": {
+                    "context": {
+                      "group_by": []
+                    },
+                    "domain": [
+                      ["state", "!=", "cancel"]
+                    ],
+                    "groupBy": ["config_id"],
+                    "orderBy": []
+                  }
                 },
-                "type": "odoo_sunburst",
-                "actionXmlId": "point_of_sale.action_report_pos_order_all",
-                "dataSets": []
+                "dataSetStyles": {}
               }
+            },
+            "title": {
+              "text": "Top Points of Sale",
+              "fontSize": 21,
+              "color": "#01666B",
+              "bold": true
             },
             "items": [
               { "type": "chart", "chartId": "5b457a5e-a023", "title": "Sunburst" },
@@ -403,12 +384,6 @@
                 "9508017b-f441-4787-8339-40bdc1af3b46": { "chain": "product_tmpl_id", "type": "many2one" },
                 "8df9d0d0-43aa-4223-9825-b5270c0e6638": { "chain": "preset_id", "type": "many2one" }
               }
-            },
-            "title": {
-              "text": "Top Points of Sale",
-              "fontSize": 21,
-              "color": "#01666B",
-              "bold": true
             }
           }
         }
@@ -508,25 +483,37 @@
       "merges": [],
       "cells": {
         "A1": "=_t(\"KPI\")",
-        "A2": "=_t(\"Orders\")",
-        "A3": "=_t(\"Revenue\")",
-        "A4": "=_t(\"Average order\")",
-        "B1": "=_t(\"Current\")",
+        "A2": {
+          "S": ["Orders"]
+        },
+        "A3": {
+          "S": ["Revenue"]
+        },
+        "A4": {
+          "S": ["Average order"]
+        },
+        "B1": {
+          "S": ["Current"]
+        },
         "B2": "=PIVOT.VALUE(5,\"order_id\")",
-        "B3": "=PIVOT.VALUE(5,\"price_total\")",
+        "B3": {
+          "N": "=",
+          "S": ["price_total"]
+        },
         "B4": "=IFERROR(B3/B2)",
         "C1": "=_t(\"Previous\")",
         "C2": "=PIVOT.VALUE(6,\"order_id\")",
-        "C3": "=PIVOT.VALUE(6,\"price_total\")",
+        "C3": {
+          "N": "=",
+          "S": ["price_total"]
+        },
         "C4": "=IFERROR(C3/C2)",
         "D1": "=_t(\"Current\")",
         "D2": "=FORMAT.LARGE.NUMBER(B2)",
-        "D3": "=FORMAT.LARGE.NUMBER(B3)",
-        "D4": "=FORMAT.LARGE.NUMBER(B4)",
+        "D3:D4": { "R": "+R1" },
         "E1": "=_t(\"Previous\")",
         "E2": "=FORMAT.LARGE.NUMBER(C2)",
-        "E3": "=FORMAT.LARGE.NUMBER(C3)",
-        "E4": "=FORMAT.LARGE.NUMBER(C4)"
+        "E3:E4": { "R": "+R1" }
       },
       "styles": { "A1:E1": 8, "A2:E4": 9 },
       "formats": {},
@@ -833,6 +820,7 @@
   },
   "pivotNextId": 7,
   "customTableStyles": {},
+  "namedRanges": {},
   "globalFilters": [
     {
       "id": "ff0e1a26-3d4c-48b6-85a6-2777b522bb52",
@@ -879,14 +867,14 @@
   "lists": {
     "1": {
       "columns": [
-        "name",
-        "session_id",
-        "date_order",
-        "pos_reference",
-        "partner_id",
-        "employee_id",
-        "amount_total",
-        "state"
+        { "name": "name" },
+        { "name": "session_id" },
+        { "name": "date_order" },
+        { "name": "pos_reference" },
+        { "name": "partner_id" },
+        { "name": "employee_id" },
+        { "name": "amount_total" },
+        { "name": "state" }
       ],
       "domain": [
         [
@@ -908,10 +896,16 @@
     }
   },
   "listNextId": 2,
-  "chartOdooMenusReferences": {
-    "e012bf45-55dc-4c46-b069-bc090a467d73": "point_of_sale.menu_point_root",
-    "cfee1ef1-ac54-4e9f-bdde-0162652de2cf": "point_of_sale.menu_point_ofsale",
-    "d141cc35-0b60-4e91-b736-5c1453fea925": "point_of_sale.menu_report_pos_order_all",
-    "615fb94e-8098-456e-9f71-7799b82f04c4": "point_of_sale.menu_report_pos_order_all"
+  "odooLinkReferences": {
+    "e012bf45-55dc-4c46-b069-bc090a467d73": { "type": "odooMenu", "odooMenuId": "point_of_sale.menu_point_root" },
+    "cfee1ef1-ac54-4e9f-bdde-0162652de2cf": { "type": "odooMenu", "odooMenuId": "point_of_sale.menu_point_ofsale" },
+    "d141cc35-0b60-4e91-b736-5c1453fea925": {
+      "type": "odooMenu",
+      "odooMenuId": "point_of_sale.menu_report_pos_order_all"
+    },
+    "615fb94e-8098-456e-9f71-7799b82f04c4": {
+      "type": "odooMenu",
+      "odooMenuId": "point_of_sale.menu_report_pos_order_all"
+    }
   }
 }
