@@ -324,6 +324,67 @@
             <field name="gs1_decimal_usage">True</field>
         </record>
 
+        <!-- National Healthcare Reimbursement Number (NHRN) -->
+        <record id="barcode_rule_gs1_710" model="barcode.rule">
+            <field name="name">National Healthcare Reimbursement Number (NHRN) - Germany PZN</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">400</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(710)([!"%-/0-9:-?A-Z_a-z]{0,20})</field>
+            <field name="type">product</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
+        <record id="barcode_rule_gs1_711" model="barcode.rule">
+            <field name="name">National Healthcare Reimbursement Number (NHRN) - France CIP</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">401</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(711)([!"%-/0-9:-?A-Z_a-z]{0,20})</field>
+            <field name="type">product</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
+        <record id="barcode_rule_gs1_712" model="barcode.rule">
+            <field name="name">National Healthcare Reimbursement Number (NHRN) - Spain CN</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">402</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(712)([!"%-/0-9:-?A-Z_a-z]{0,20})</field>
+            <field name="type">product</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
+        <record id="barcode_rule_gs1_713" model="barcode.rule">
+            <field name="name">National Healthcare Reimbursement Number (NHRN) - Brazil DRN</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">403</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(713)([!"%-/0-9:-?A-Z_a-z]{0,20})</field>
+            <field name="type">product</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
+        <record id="barcode_rule_gs1_714" model="barcode.rule">
+            <field name="name">National Healthcare Reimbursement Number (NHRN) - Portugal AIM</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">404</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(714)([!"%-/0-9:-?A-Z_a-z]{0,20})</field>
+            <field name="type">product</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
+        <record id="barcode_rule_gs1_715" model="barcode.rule">
+            <field name="name">National Healthcare Reimbursement Number (NHRN) - United States of America NDC</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">405</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(715)([!"%-/0-9:-?A-Z_a-z]{0,20})</field>
+            <field name="type">product</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
         <!-- Company internal information (91 to 99): Custom rules  -->
         <record id="barcode_rule_gs1_91" model="barcode.rule">
             <field name="name">Package type</field>
