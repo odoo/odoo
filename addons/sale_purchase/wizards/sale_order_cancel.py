@@ -6,8 +6,7 @@ class SaleOrderCancel(models.TransientModel):
 
     display_purchase_orders_alert = fields.Boolean(
         string="Purchase Order Alert",
-        compute='_compute_display_purchase_orders_alert',
-        groups='purchase.group_purchase_user'
+        compute='_compute_display_purchase_orders_alert'
     )
 
     @api.depends('order_id')
