@@ -500,7 +500,6 @@ export class AnalyticDistribution extends Component {
     }
 
     onSaveNew() {
-        this.closeAnalyticEditor();
         const { record, product_field, account_field } = this.props;
         this.openTemplate({ resId: false, context: {
             'default_analytic_distribution': this.dataToJson(),
