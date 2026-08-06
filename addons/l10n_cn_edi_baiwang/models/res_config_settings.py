@@ -40,31 +40,6 @@ class ResConfigSettings(models.TransientModel):
             'target': 'new',
         }
 
-    def action_l10n_cn_baiwang_authorize(self):
-        self.ensure_one()
-        if self.company_id.l10n_cn_baiwang_subscription_status == 'not_subscribed':
-            raise UserError(self.env._("Please complete Baiwang subscription first."))
-
-        proxy_user = self.company_id._l10n_cn_baiwang_create_proxy_user()
-        response = proxy_user._l10n_cn_baiwang_contact_proxy(
-            endpoint='api/l10n_cn_edi_baiwang/1/trigger_auth_email',
-            params={'tax_no': self.company_id.vat, 'environment': self.company_id.l10n_cn_edi_mode},
-        )
-
-        if not response.get('success'):
-            raise UserError(self.env._("Failed to trigger authorization: %s", response.get('error', 'Unknown')))
-
-        return {
-            'type': 'ir.actions.client',
-            'tag': 'display_notification',
-            'params': {
-                'title': self.env._("Authorization Requested"),
-                'message': self.env._("Please check your email and approve the Baiwang authorization request."),
-                'type': 'success',
-                'sticky': False,
-            },
-        }
-
     def action_l10n_cn_baiwang_sync_registration_status(self):
         self.ensure_one()
         company = self.company_id
