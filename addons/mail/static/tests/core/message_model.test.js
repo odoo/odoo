@@ -18,7 +18,7 @@ test("Message model properties", async () => {
     store["mail.thread"].insert({
         id: serverState.partnerId,
         model: "res.partner",
-        name: "general",
+        display_name: "general",
     });
     store["ir.attachment"].insert({
         id: 750,
@@ -41,7 +41,7 @@ test("Message model properties", async () => {
     expect(message.id).toBe(4000);
     expect(message.attachment_ids[0].name).toBe("test.txt");
     expect(message.thread.id).toBe(serverState.partnerId);
-    expect(message.thread.name).toBe("general");
+    expect(message.thread.display_name).toBe("general");
     expect(message.author_id.id).toBe(5);
     expect(message.author_id.name).toBe("Demo");
 });
