@@ -1,14 +1,14 @@
-import { test, expect } from "@odoo/hoot";
-import { getFilledOrder, setupPosEnv, createPaymentLine } from "../utils";
+import { expect, freezeTime, mockDate, test } from "@odoo/hoot";
 import { definePosModels } from "../data/generate_model_definitions";
-const { DateTime, Settings } = luxon;
+import { createPaymentLine, getFilledOrder, setupPosEnv } from "../utils";
+
+const { DateTime } = luxon;
 
 definePosModels();
 
 test("uiState", async () => {
-    const fixedTs = new Date("2025-01-09T12:00:00").valueOf();
-    const memoNow = Settings.now;
-    Settings.now = () => fixedTs;
+    mockDate("2025-01-09 12:00:00");
+    freezeTime();
 
     const store = await setupPosEnv();
     const order = await getFilledOrder(store);
@@ -17,10 +17,8 @@ test("uiState", async () => {
 
     expect(paymentline.uiState).toEqual({
         qrCode: null,
-        initStateDate: DateTime.fromMillis(fixedTs),
+        initStateDate: DateTime.fromISO("2025-01-09T13:00:00"),
     });
-
-    Settings.now = memoNow;
 });
 
 test("updateCustomerDisplayQrCode", async () => {
