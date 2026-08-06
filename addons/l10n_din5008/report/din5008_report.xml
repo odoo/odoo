@@ -223,8 +223,7 @@
                             <div t-if="o.partner_id">
                                 <tr><td colspan="2" style="height:20px;"></td></tr>
                                 <tr t-if="o.partner_id.commercial_partner_id == o.partner_id and o.partner_id.commercial_partner_id.vat">
-                                    <td>VAT</td>
-                                    <td><t t-out="o.partner_id.commercial_partner_id.vat"/></td>
+                                    <td><t t-out="o._get_document_partner_ident_line()" id='inv_tax_id_label'/></td>
                                 </tr>
                             </div>
                         </table>
@@ -250,8 +249,7 @@
                                     <span class="fw-bold">Beneficiary:</span>
                                     <address class="mb-0" t-out="o.commercial_partner_id" t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True}'/>
                                     <div t-if="o.commercial_partner_id.vat">
-                                        <t t-if="o.commercial_partner_id.company_id.account_fiscal_country_id.vat_label" t-out="o.commercial_partner_id.company_id.account_fiscal_country_id.vat_label" id="inv_tax_id_label"/>
-                                        <t t-else="">Tax ID</t>: <span t-field="o.commercial_partner_id.vat"/>
+                                        <t t-out="o._get_document_partner_ident_line()" id='inv_tax_id_label'/>
                                     </div>
                                 </td>
                             </t>
