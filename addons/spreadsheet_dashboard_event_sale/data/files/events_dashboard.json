@@ -5,7 +5,7 @@
       "id": "sheet1",
       "name": "Dashboard",
       "colNumber": 5,
-      "rowNumber": 56,
+      "rowNumber": 65,
       "rows": {
         "6": { "size": 40 },
         "22": { "size": 40 },
@@ -41,219 +41,13 @@
         "4": { "size": 100 }
       },
       "merges": [],
-      "cells": {
-        "A7": "[Events Status](odoo://view/{\"viewType\":\"graph\",\"action\":{\"domain\":[],\"context\":{\"group_by\":[\"stage_id\"],\"graph_measure\":\"__count\",\"graph_mode\":\"bar\",\"graph_groupbys\":[\"stage_id\"]},\"modelName\":\"event.event\",\"views\":[[false,\"kanban\"],[false,\"calendar\"],[false,\"list\"],[false,\"form\"],[false,\"pivot\"],[false,\"graph\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Events\"})",
-        "A23": "[Top Venues](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"address_id\",\"!=\",false]],\"context\":{\"group_by\":[\"address_id\"],\"pivot_measures\":[\"__count\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"address_id\"]},\"modelName\":\"event.event\",\"views\":[[false,\"kanban\"],[false,\"calendar\"],[false,\"list\"],[false,\"form\"],[false,\"pivot\"],[false,\"graph\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Events\"})",
-        "A24": "=_t(\"Venue\")",
-        "A25": "=PIVOT.HEADER(1,\"#address_id\",1)",
-        "A26:A34": {
-          "N": "=|+1",
-          "S": ["="]
-        },
-        "A36": "[Top Tags](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"tag_ids\",\"!=\",false]],\"context\":{\"group_by\":[\"tag_ids\"],\"pivot_measures\":[\"__count\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"tag_ids\"]},\"modelName\":\"event.event\",\"views\":[[false,\"kanban\"],[false,\"calendar\"],[false,\"list\"],[false,\"form\"],[false,\"pivot\"],[false,\"graph\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Events\"})",
-        "A37": "=_t(\"Tag\")",
-        "A38": "=PIVOT.HEADER(3,\"#tag_ids\",1)",
-        "A39:A47": {
-          "N": "=|+1",
-          "S": ["="]
-        },
-        "B24": "=_t(\"Events\")",
-        "B25": "=PIVOT.VALUE(1,\"__count\",\"#address_id\",1)",
-        "B26:B34": {
-          "N": "=|+1",
-          "S": ["=", "="]
-        },
-        "B37": "=_t(\"Events\")",
-        "B38": "=PIVOT.VALUE(3,\"__count\",\"#tag_ids\",1)",
-        "B39:B47": {
-          "N": "=|+1",
-          "S": ["=", "="]
-        },
-        "D7": "[Registration Status](odoo://view/{\"viewType\":\"graph\",\"action\":{\"domain\":[],\"context\":{\"group_by\":[\"state\"],\"graph_measure\":\"__count\",\"graph_mode\":\"bar\",\"graph_groupbys\":[\"state\"]},\"modelName\":\"event.registration\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"kanban\"],[false,\"list\"],[false,\"form\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Attendees\"})",
-        "D23": "[Top Templates](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"event_type_id\",\"!=\",false]],\"context\":{\"group_by\":[\"event_type_id\"],\"pivot_measures\":[\"__count\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"event_type_id\"]},\"modelName\":\"event.event\",\"views\":[[false,\"kanban\"],[false,\"calendar\"],[false,\"list\"],[false,\"form\"],[false,\"pivot\"],[false,\"graph\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Events\"})",
-        "D24": "=_t(\"Template\")",
-        "D25": "=PIVOT.HEADER(2,\"#event_type_id\",1)",
-        "D26:D34": {
-          "N": "=|+1",
-          "S": ["="]
-        },
-        "D36": "[Top Organizers](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"organizer_id\",\"!=\",false]],\"context\":{\"group_by\":[\"organizer_id\"],\"pivot_measures\":[\"__count\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"organizer_id\"]},\"modelName\":\"event.event\",\"views\":[[false,\"kanban\"],[false,\"calendar\"],[false,\"list\"],[false,\"form\"],[false,\"pivot\"],[false,\"graph\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Events\"})",
-        "D37": "=_t(\"Organizer\")",
-        "D38": "=PIVOT.HEADER(4,\"#organizer_id\",1)",
-        "D39:D47": {
-          "N": "=|+1",
-          "S": ["="]
-        },
-        "E24": "=_t(\"Events\")",
-        "E25": "=PIVOT.VALUE(2,\"__count\",\"#event_type_id\",1)",
-        "E26:E34": {
-          "N": "=|+1",
-          "S": ["=", "="]
-        },
-        "E37": "=_t(\"Events\")",
-        "E38": "=PIVOT.VALUE(4,\"__count\",\"#organizer_id\",1)",
-        "E39:E47": {
-          "N": "=|+1",
-          "S": ["=", "="]
-        }
-      },
-      "styles": {
-        "A7": 1,
-        "A23": 1,
-        "A36": 1,
-        "D7": 1,
-        "D23": 1,
-        "D36": 1,
-        "A24": 2,
-        "A37": 2,
-        "D24": 2,
-        "D37": 2,
-        "A25:B34": 3,
-        "A38:B47": 3,
-        "D25:E34": 3,
-        "D38:E47": 3,
-        "B24": 4,
-        "B37": 4,
-        "E24": 4,
-        "E37": 4
-      },
+      "cells": {},
+      "styles": {},
       "formats": {},
-      "borders": {
-        "A7:B7": 1,
-        "A23:B23": 1,
-        "A36:B36": 1,
-        "D7:E7": 1,
-        "D23:E23": 1,
-        "D36:E36": 1,
-        "A8:B8": 2,
-        "A24:B24": 2,
-        "A37:B37": 2,
-        "D8:E8": 2,
-        "D24:E24": 2,
-        "D37:E37": 2,
-        "A25:B25": 3,
-        "A38:B38": 3,
-        "D25:E25": 3,
-        "D38:E38": 3,
-        "A26:B34": 4,
-        "A39:B47": 4,
-        "D26:E34": 4,
-        "D39:E47": 4,
-        "A35:B35": 5,
-        "A48:B48": 5,
-        "D35:E35": 5,
-        "D48:E48": 5
-      },
-      "conditionalFormats": [
-        {
-          "rule": { "type": "DataBarRule", "color": 15726335, "rangeValues": "B25:B34" },
-          "id": "813e8f10-5d2d-42bf-994d-84a21425573c",
-          "ranges": ["A25:A34"]
-        },
-        {
-          "rule": { "type": "DataBarRule", "color": 16775149, "rangeValues": "E25:E34" },
-          "id": "95cfb086-980c-418f-b6cf-65663c0fe449",
-          "ranges": ["D25:D34"]
-        },
-        {
-          "rule": { "type": "DataBarRule", "color": 15531509, "rangeValues": "B38:B47" },
-          "id": "3a61df0c-f147-4d90-a6a7-08e4b50e495a",
-          "ranges": ["A38:A47"]
-        },
-        {
-          "rule": { "type": "DataBarRule", "color": 16708338, "rangeValues": "E38:E47" },
-          "id": "0b11b334-4302-4e29-b4e7-e2d964d6c999",
-          "ranges": ["D38:D47"]
-        }
-      ],
+      "borders": {},
+      "conditionalFormats": [],
       "dataValidationRules": [],
       "figures": [
-        {
-          "id": "d9898682-9b91-4fe2-9900-a4b2583eb459",
-          "width": 475,
-          "height": 345,
-          "tag": "chart",
-          "data": {
-            "title": { "text": "" },
-            "legendPosition": "none",
-            "type": "bar",
-            "stacked": true,
-            "humanize": true,
-            "dataSource": {
-              "type": "odoo",
-              "metaData": {
-                "groupBy": ["state"],
-                "measure": "__count",
-                "order": null,
-                "resModel": "event.registration",
-                "mode": "bar",
-                "cumulatedStart": false
-              },
-              "searchParams": {
-                "comparison": null,
-                "context": { "registration_view_hide_group_by_create_date_week": 1 },
-                "domain": [],
-                "groupBy": ["state"],
-                "orderBy": []
-              }
-            },
-            "dataSetStyles": {},
-            "chartId": "d9898682-9b91-4fe2-9900-a4b2583eb459",
-            "fieldMatching": {
-              "f849aaa6-4c1a-43f6-9c0b-7a5ea9c83eae": { "chain": "event_begin_date", "type": "datetime", "offset": 0 },
-              "62e15eb2-9410-4803-b189-5fa789a7e94f": { "chain": "event_id.address_id", "type": "many2one" },
-              "d9cfb0b0-01a0-45be-996e-723f4283000b": { "chain": "event_id.event_type_id", "type": "many2one" },
-              "43c04fb0-d3b7-47c8-852b-b823c36df0ee": { "chain": "event_id.tag_ids", "type": "many2many" },
-              "4a35bef8-8a57-48ae-8dc6-5883d97cc9da": { "chain": "event_organizer_id", "type": "many2one" }
-            }
-          },
-          "offset": { "x": 525, "y": 178 },
-          "col": 0,
-          "row": 0
-        },
-        {
-          "id": "092dd971-dc10-41c5-96c4-d760820e9cf2",
-          "width": 475,
-          "height": 345,
-          "tag": "chart",
-          "data": {
-            "title": { "text": "" },
-            "legendPosition": "none",
-            "type": "bar",
-            "stacked": true,
-            "humanize": true,
-            "dataSource": {
-              "type": "odoo",
-              "metaData": {
-                "groupBy": ["stage_id"],
-                "measure": "__count",
-                "order": null,
-                "resModel": "event.event",
-                "mode": "bar",
-                "cumulatedStart": false
-              },
-              "searchParams": {
-                "comparison": null,
-                "context": {},
-                "domain": [],
-                "groupBy": ["stage_id"],
-                "orderBy": []
-              }
-            },
-            "dataSetStyles": {},
-            "chartId": "092dd971-dc10-41c5-96c4-d760820e9cf2",
-            "fieldMatching": {
-              "f849aaa6-4c1a-43f6-9c0b-7a5ea9c83eae": { "chain": "date_begin", "type": "datetime", "offset": 0 },
-              "62e15eb2-9410-4803-b189-5fa789a7e94f": { "chain": "address_id", "type": "many2one" },
-              "d9cfb0b0-01a0-45be-996e-723f4283000b": { "chain": "event_type_id", "type": "many2one" },
-              "43c04fb0-d3b7-47c8-852b-b823c36df0ee": { "chain": "tag_ids", "type": "many2many" },
-              "4a35bef8-8a57-48ae-8dc6-5883d97cc9da": { "chain": "organizer_id", "type": "many2one" }
-            }
-          },
-          "offset": { "x": 0, "y": 178 },
-          "col": 0,
-          "row": 0
-        },
         {
           "id": "18361546-49c2-4212-88eb-b2ee50127d41",
           "width": 200,
@@ -263,9 +57,9 @@
             "baselineColorDown": "#DC6965",
             "baselineColorUp": "#00A04A",
             "baselineMode": "percentage",
-            "title": { "text": "Events", "bold": true, "color": "#434343" },
+            "title": { "text": "Events", "bold": true, "color": "#01666B" },
             "type": "scorecard",
-            "background": "#EFF6FF",
+            "background": "",
             "baseline": "Data!E3",
             "baselineDescr": { "text": "since last period" },
             "keyValue": "Data!D3",
@@ -285,9 +79,9 @@
             "baselineColorDown": "#DC6965",
             "baselineColorUp": "#00A04A",
             "baselineMode": "percentage",
-            "title": { "text": "Revenue", "bold": true, "color": "#434343" },
+            "title": { "text": "Revenue", "bold": true, "color": "#01666B" },
             "type": "scorecard",
-            "background": "#FFF7ED",
+            "background": "",
             "baseline": "Data!E4",
             "baselineDescr": { "text": "since last period" },
             "keyValue": "Data!D4",
@@ -307,9 +101,9 @@
             "baselineColorDown": "#DC6965",
             "baselineColorUp": "#00A04A",
             "baselineMode": "percentage",
-            "title": { "text": "Attendees", "bold": true, "color": "#434343" },
+            "title": { "text": "Attendees", "bold": true, "color": "#01666B" },
             "type": "scorecard",
-            "background": "#EFF6FF",
+            "background": "",
             "baseline": "Data!E2",
             "baselineDescr": { "text": "since last period" },
             "keyValue": "Data!D2",
@@ -319,72 +113,228 @@
           "offset": { "x": 420, "y": 9 },
           "col": 0,
           "row": 0
+        },
+        {
+          "id": "4ffd4874-01fb",
+          "col": 0,
+          "row": 5,
+          "offset": { "x": 0, "y": 8 },
+          "width": 494,
+          "height": 407,
+          "tag": "carousel",
+          "data": {
+            "chartDefinitions": {
+              "092dd971-dc10-41c5-96c4-d760820e9cf2": {
+                "title": { "text": "" },
+                "legendPosition": "none",
+                "type": "bar",
+                "stacked": true,
+                "humanize": true,
+                "dataSource": {
+                  "type": "odoo",
+                  "metaData": {
+                    "groupBy": ["stage_id"],
+                    "measure": "__count",
+                    "order": null,
+                    "resModel": "event.event",
+                    "mode": "bar",
+                    "cumulatedStart": false
+                  },
+                  "searchParams": {
+                    "comparison": null,
+                    "context": {},
+                    "domain": [],
+                    "groupBy": ["stage_id"],
+                    "orderBy": []
+                  }
+                },
+                "dataSetStyles": {}
+              }
+            },
+            "title": {
+              "text": "Event Status",
+              "bold": true,
+              "fontSize": 21,
+              "color": "#01666B"
+            },
+            "items": [
+              { "type": "chart", "chartId": "092dd971-dc10-41c5-96c4-d760820e9cf2" }
+            ],
+            "fieldMatching": {
+              "092dd971-dc10-41c5-96c4-d760820e9cf2": {
+                "f849aaa6-4c1a-43f6-9c0b-7a5ea9c83eae": { "chain": "date_begin", "type": "datetime", "offset": 0 },
+                "62e15eb2-9410-4803-b189-5fa789a7e94f": { "chain": "address_id", "type": "many2one" },
+                "d9cfb0b0-01a0-45be-996e-723f4283000b": { "chain": "event_type_id", "type": "many2one" },
+                "43c04fb0-d3b7-47c8-852b-b823c36df0ee": { "chain": "tag_ids", "type": "many2many" },
+                "4a35bef8-8a57-48ae-8dc6-5883d97cc9da": { "chain": "organizer_id", "type": "many2one" }
+              }
+            }
+          }
+        },
+        {
+          "id": "3660a549-3386",
+          "col": 2,
+          "row": 5,
+          "offset": { "x": 31, "y": 8 },
+          "width": 494,
+          "height": 407,
+          "tag": "carousel",
+          "data": {
+            "chartDefinitions": {
+              "d9898682-9b91-4fe2-9900-a4b2583eb459": {
+                "title": { "text": "" },
+                "legendPosition": "none",
+                "type": "bar",
+                "stacked": true,
+                "humanize": true,
+                "dataSource": {
+                  "type": "odoo",
+                  "metaData": {
+                    "groupBy": ["state"],
+                    "measure": "__count",
+                    "order": null,
+                    "resModel": "event.registration",
+                    "mode": "bar",
+                    "cumulatedStart": false
+                  },
+                  "searchParams": {
+                    "comparison": null,
+                    "context": { "registration_view_hide_group_by_create_date_week": 1 },
+                    "domain": [],
+                    "groupBy": ["state"],
+                    "orderBy": []
+                  }
+                },
+                "dataSetStyles": {}
+              }
+            },
+            "title": {
+              "text": "Registration Status",
+              "bold": true,
+              "fontSize": 21,
+              "color": "#01666B"
+            },
+            "items": [
+              { "type": "chart", "chartId": "d9898682-9b91-4fe2-9900-a4b2583eb459" }
+            ],
+            "fieldMatching": {
+              "d9898682-9b91-4fe2-9900-a4b2583eb459": {
+                "f849aaa6-4c1a-43f6-9c0b-7a5ea9c83eae": { "chain": "event_begin_date", "type": "datetime", "offset": 0 },
+                "62e15eb2-9410-4803-b189-5fa789a7e94f": { "chain": "event_id.address_id", "type": "many2one" },
+                "d9cfb0b0-01a0-45be-996e-723f4283000b": { "chain": "event_id.event_type_id", "type": "many2one" },
+                "43c04fb0-d3b7-47c8-852b-b823c36df0ee": { "chain": "event_id.tag_ids", "type": "many2many" },
+                "4a35bef8-8a57-48ae-8dc6-5883d97cc9da": { "chain": "event_organizer_id", "type": "many2one" }
+              }
+            }
+          }
+        },
+        {
+          "id": "a1547a95-4bd9",
+          "col": 0,
+          "row": 22,
+          "offset": { "x": 0, "y": 17 },
+          "width": 494,
+          "height": 407,
+          "tag": "carousel",
+          "data": {
+            "chartDefinitions": {},
+            "title": { "text": "Top Venues", "bold": true, "fontSize": 21, "color": "#01666B" },
+            "items": [
+              {
+                "type": "carouselDataView",
+                "rangeData": {
+                  "_sheetId": "c1996c4c-ef23",
+                  "_zone": { "top": 0, "left": 0, "bottom": 50, "right": 1 }
+                }
+              }
+            ],
+            "fieldMatching": {}
+          }
+        },
+        {
+          "id": "b04928be-1b62",
+          "col": 2,
+          "row": 22,
+          "offset": { "x": 31, "y": 17 },
+          "width": 494,
+          "height": 407,
+          "tag": "carousel",
+          "data": {
+            "chartDefinitions": {},
+            "title": {
+              "text": "Top Templates",
+              "bold": true,
+              "fontSize": 21,
+              "color": "#01666B"
+            },
+            "items": [
+              {
+                "type": "carouselDataView",
+                "rangeData": {
+                  "_sheetId": "4686a041-458e",
+                  "_zone": { "top": 0, "left": 0, "bottom": 50, "right": 1 }
+                }
+              }
+            ],
+            "fieldMatching": {}
+          }
+        },
+        {
+          "id": "201888d5-5540",
+          "col": 0,
+          "row": 36,
+          "offset": { "x": 0, "y": 0 },
+          "width": 494,
+          "height": 407,
+          "tag": "carousel",
+          "data": {
+            "chartDefinitions": {},
+            "title": { "text": "Top Tags", "bold": true, "fontSize": 21, "color": "#01666B" },
+            "items": [
+              {
+                "type": "carouselDataView",
+                "rangeData": {
+                  "_sheetId": "eaaf98fd-8046",
+                  "_zone": { "top": 0, "left": 0, "bottom": 50, "right": 1 }
+                }
+              }
+            ],
+            "fieldMatching": {}
+          }
+        },
+        {
+          "id": "fb70c5e1-3226",
+          "col": 2,
+          "row": 36,
+          "offset": { "x": 31, "y": 0 },
+          "width": 494,
+          "height": 407,
+          "tag": "carousel",
+          "data": {
+            "chartDefinitions": {},
+            "title": {
+              "text": "Top Organizers",
+              "bold": true,
+              "fontSize": 21,
+              "color": "#01666B"
+            },
+            "items": [
+              {
+                "type": "carouselDataView",
+                "rangeData": {
+                  "_sheetId": "b41243d2-6611",
+                  "_zone": { "top": 0, "left": 0, "bottom": 50, "right": 1 }
+                }
+              }
+            ],
+            "fieldMatching": {}
+          }
         }
       ],
-      "tables": [
-        {
-          "range": "A24:B34",
-          "type": "static",
-          "config": {
-            "hasFilters": false,
-            "totalRow": false,
-            "firstColumn": false,
-            "lastColumn": false,
-            "numberOfHeaders": 1,
-            "bandedRows": true,
-            "bandedColumns": false,
-            "automaticAutofill": true,
-            "styleId": "None"
-          }
-        },
-        {
-          "range": "A37:B47",
-          "type": "static",
-          "config": {
-            "hasFilters": false,
-            "totalRow": false,
-            "firstColumn": false,
-            "lastColumn": false,
-            "numberOfHeaders": 1,
-            "bandedRows": true,
-            "bandedColumns": false,
-            "automaticAutofill": true,
-            "styleId": "None"
-          }
-        },
-        {
-          "range": "D24:E34",
-          "type": "static",
-          "config": {
-            "hasFilters": false,
-            "totalRow": false,
-            "firstColumn": false,
-            "lastColumn": false,
-            "numberOfHeaders": 1,
-            "bandedRows": true,
-            "bandedColumns": false,
-            "automaticAutofill": true,
-            "styleId": "None"
-          }
-        },
-        {
-          "range": "D37:E47",
-          "type": "static",
-          "config": {
-            "hasFilters": false,
-            "totalRow": false,
-            "firstColumn": false,
-            "lastColumn": false,
-            "numberOfHeaders": 1,
-            "bandedRows": true,
-            "bandedColumns": false,
-            "automaticAutofill": true,
-            "styleId": "None"
-          }
-        }
-      ],
+      "tables": [],
       "areGridLinesVisible": true,
       "isVisible": true,
+      "backgroundColor": "#F9FAFB",
       "headerGroups": {
         "ROW": [],
         "COL": []
@@ -444,10 +394,31 @@
         "E2": "=FORMAT.LARGE.NUMBER(C2)",
         "E3:E4": { "R": "+R1" }
       },
-      "styles": { "A1:C1": 5, "D1:E1": 6, "D2:E4": 7 },
+      "styles": { "A1:E1": 1 },
       "formats": {},
       "borders": {},
-      "conditionalFormats": [],
+      "conditionalFormats": [
+        {
+          "id": "18e97d70-017c",
+          "rule": {
+            "type": "CellIsRule",
+            "operator": "isGreaterThan",
+            "style": { "fillColor": "", "textColor": "#28A745" },
+            "values": ["0"]
+          },
+          "ranges": ["D4"]
+        },
+        {
+          "id": "3cd04841-7957",
+          "rule": {
+            "type": "CellIsRule",
+            "operator": "isLessThan",
+            "style": { "fillColor": "", "textColor": "#D44C59" },
+            "values": ["0"]
+          },
+          "ranges": ["D4"]
+        }
+      ],
       "dataValidationRules": [],
       "figures": [],
       "tables": [],
@@ -458,41 +429,389 @@
         "COL": []
       },
       "comments": {}
+    },
+    {
+      "id": "c1996c4c-ef23",
+      "name": "Top Venues",
+      "colNumber": 26,
+      "rowNumber": 100,
+      "rows": {
+        "0": { "size": 28 },
+        "1": { "size": 28 },
+        "2": { "size": 28 },
+        "3": { "size": 28 },
+        "4": { "size": 28 },
+        "5": { "size": 28 },
+        "6": { "size": 28 },
+        "7": { "size": 28 },
+        "8": { "size": 28 },
+        "9": { "size": 28 },
+        "10": { "size": 28 },
+        "11": { "size": 28 },
+        "12": { "size": 28 },
+        "13": { "size": 28 },
+        "14": { "size": 28 },
+        "15": { "size": 28 },
+        "16": { "size": 28 },
+        "17": { "size": 28 },
+        "18": { "size": 28 },
+        "19": { "size": 28 },
+        "20": { "size": 28 },
+        "21": { "size": 28 },
+        "22": { "size": 28 },
+        "23": { "size": 28 },
+        "24": { "size": 28 },
+        "25": { "size": 28 },
+        "26": { "size": 28 },
+        "27": { "size": 28 },
+        "28": { "size": 28 },
+        "29": { "size": 28 },
+        "30": { "size": 28 },
+        "31": { "size": 28 },
+        "32": { "size": 28 },
+        "33": { "size": 28 },
+        "34": { "size": 28 },
+        "35": { "size": 28 },
+        "36": { "size": 28 },
+        "37": { "size": 28 },
+        "38": { "size": 28 },
+        "39": { "size": 28 },
+        "40": { "size": 28 },
+        "41": { "size": 28 },
+        "42": { "size": 28 },
+        "43": { "size": 28 },
+        "44": { "size": 28 },
+        "45": { "size": 28 },
+        "46": { "size": 28 },
+        "47": { "size": 28 },
+        "48": { "size": 28 },
+        "49": { "size": 28 },
+        "50": { "size": 28 }
+      },
+      "cols": {
+        "0": { "size": 189 }
+      },
+      "merges": [],
+      "cells": { "A1": "=PIVOT(1,50,FALSE,FALSE)" },
+      "styles": { "A1": 2, "A2:A51": 3, "B4:C51": 3, "B1:C1": 4, "B2:C3": 5 },
+      "formats": { "A2:A13": 1, "C2:C51": 2 },
+      "borders": {},
+      "conditionalFormats": [
+        {
+          "id": "16ba7f00-dd40",
+          "rule": { "type": "DataBarRule", "color": 14609659, "rangeValues": "B2:B51" },
+          "ranges": ["A2:A51"]
+        }
+      ],
+      "dataValidationRules": [],
+      "figures": [],
+      "tables": [],
+      "areGridLinesVisible": true,
+      "isVisible": true,
+      "isLocked": false,
+      "panes": { "xSplit": 0, "ySplit": 1 },
+      "headerGroups": {
+        "ROW": [],
+        "COL": []
+      },
+      "defaultStyle": {
+        "colDefault": { "0": 7 },
+        "rowDefault": {},
+        "sheetDefault": 6
+      },
+      "comments": {}
+    },
+    {
+      "id": "4686a041-458e",
+      "name": "Top Templates",
+      "colNumber": 26,
+      "rowNumber": 100,
+      "rows": {
+        "0": { "size": 28 },
+        "1": { "size": 28 },
+        "2": { "size": 28 },
+        "3": { "size": 28 },
+        "4": { "size": 28 },
+        "5": { "size": 28 },
+        "6": { "size": 28 },
+        "7": { "size": 28 },
+        "8": { "size": 28 },
+        "9": { "size": 28 },
+        "10": { "size": 28 },
+        "11": { "size": 28 },
+        "12": { "size": 28 },
+        "13": { "size": 28 },
+        "14": { "size": 28 },
+        "15": { "size": 28 },
+        "16": { "size": 28 },
+        "17": { "size": 28 },
+        "18": { "size": 28 },
+        "19": { "size": 28 },
+        "20": { "size": 28 },
+        "21": { "size": 28 },
+        "22": { "size": 28 },
+        "23": { "size": 28 },
+        "24": { "size": 28 },
+        "25": { "size": 28 },
+        "26": { "size": 28 },
+        "27": { "size": 28 },
+        "28": { "size": 28 },
+        "29": { "size": 28 },
+        "30": { "size": 28 },
+        "31": { "size": 28 },
+        "32": { "size": 28 },
+        "33": { "size": 28 },
+        "34": { "size": 28 },
+        "35": { "size": 28 },
+        "36": { "size": 28 },
+        "37": { "size": 28 },
+        "38": { "size": 28 },
+        "39": { "size": 28 },
+        "40": { "size": 28 },
+        "41": { "size": 28 },
+        "42": { "size": 28 },
+        "43": { "size": 28 },
+        "44": { "size": 28 },
+        "45": { "size": 28 },
+        "46": { "size": 28 },
+        "47": { "size": 28 },
+        "48": { "size": 28 },
+        "49": { "size": 28 },
+        "50": { "size": 28 }
+      },
+      "cols": {
+        "0": { "size": 189 }
+      },
+      "merges": [],
+      "cells": { "A1": "=PIVOT(2,50,FALSE,FALSE)" },
+      "styles": { "A1": 2, "A2:A51": 3, "B4:C51": 3, "B1:C1": 4, "B2:C3": 5 },
+      "formats": { "A2:A13": 1, "C2:C51": 2 },
+      "borders": {},
+      "conditionalFormats": [
+        {
+          "id": "16ba7f00-dd40",
+          "rule": { "type": "DataBarRule", "color": 14609659, "rangeValues": "B2:B51" },
+          "ranges": ["A2:A51"]
+        }
+      ],
+      "dataValidationRules": [],
+      "figures": [],
+      "tables": [],
+      "areGridLinesVisible": true,
+      "isVisible": true,
+      "isLocked": false,
+      "panes": { "xSplit": 0, "ySplit": 2 },
+      "headerGroups": {
+        "ROW": [],
+        "COL": []
+      },
+      "defaultStyle": {
+        "colDefault": { "0": 7 },
+        "rowDefault": {},
+        "sheetDefault": 6
+      },
+      "comments": {}
+    },
+    {
+      "id": "eaaf98fd-8046",
+      "name": "Top Tags",
+      "colNumber": 26,
+      "rowNumber": 100,
+      "rows": {
+        "0": { "size": 28 },
+        "1": { "size": 28 },
+        "2": { "size": 28 },
+        "3": { "size": 28 },
+        "4": { "size": 28 },
+        "5": { "size": 28 },
+        "6": { "size": 28 },
+        "7": { "size": 28 },
+        "8": { "size": 28 },
+        "9": { "size": 28 },
+        "10": { "size": 28 },
+        "11": { "size": 28 },
+        "12": { "size": 28 },
+        "13": { "size": 28 },
+        "14": { "size": 28 },
+        "15": { "size": 28 },
+        "16": { "size": 28 },
+        "17": { "size": 28 },
+        "18": { "size": 28 },
+        "19": { "size": 28 },
+        "20": { "size": 28 },
+        "21": { "size": 28 },
+        "22": { "size": 28 },
+        "23": { "size": 28 },
+        "24": { "size": 28 },
+        "25": { "size": 28 },
+        "26": { "size": 28 },
+        "27": { "size": 28 },
+        "28": { "size": 28 },
+        "29": { "size": 28 },
+        "30": { "size": 28 },
+        "31": { "size": 28 },
+        "32": { "size": 28 },
+        "33": { "size": 28 },
+        "34": { "size": 28 },
+        "35": { "size": 28 },
+        "36": { "size": 28 },
+        "37": { "size": 28 },
+        "38": { "size": 28 },
+        "39": { "size": 28 },
+        "40": { "size": 28 },
+        "41": { "size": 28 },
+        "42": { "size": 28 },
+        "43": { "size": 28 },
+        "44": { "size": 28 },
+        "45": { "size": 28 },
+        "46": { "size": 28 },
+        "47": { "size": 28 },
+        "48": { "size": 28 },
+        "49": { "size": 28 },
+        "50": { "size": 28 }
+      },
+      "cols": {
+        "0": { "size": 189 }
+      },
+      "merges": [],
+      "cells": { "A1": "=PIVOT(3,50,FALSE,FALSE)" },
+      "styles": { "A1": 2, "A2:A51": 3, "B4:C51": 3, "B1:C1": 4, "B2:C3": 5 },
+      "formats": { "A2:A13": 1, "C2:C51": 2 },
+      "borders": {},
+      "conditionalFormats": [
+        {
+          "id": "16ba7f00-dd40",
+          "rule": { "type": "DataBarRule", "color": 14609659, "rangeValues": "B2:B51" },
+          "ranges": ["A2:A51"]
+        }
+      ],
+      "dataValidationRules": [],
+      "figures": [],
+      "tables": [],
+      "areGridLinesVisible": true,
+      "isVisible": true,
+      "isLocked": false,
+      "panes": { "xSplit": 0, "ySplit": 1 },
+      "headerGroups": {
+        "ROW": [],
+        "COL": []
+      },
+      "defaultStyle": {
+        "colDefault": { "0": 7 },
+        "rowDefault": {},
+        "sheetDefault": 6
+      },
+      "comments": {}
+    },
+    {
+      "id": "b41243d2-6611",
+      "name": "Top Organizers",
+      "colNumber": 26,
+      "rowNumber": 100,
+      "rows": {
+        "0": { "size": 28 },
+        "1": { "size": 28 },
+        "2": { "size": 28 },
+        "3": { "size": 28 },
+        "4": { "size": 28 },
+        "5": { "size": 28 },
+        "6": { "size": 28 },
+        "7": { "size": 28 },
+        "8": { "size": 28 },
+        "9": { "size": 28 },
+        "10": { "size": 28 },
+        "11": { "size": 28 },
+        "12": { "size": 28 },
+        "13": { "size": 28 },
+        "14": { "size": 28 },
+        "15": { "size": 28 },
+        "16": { "size": 28 },
+        "17": { "size": 28 },
+        "18": { "size": 28 },
+        "19": { "size": 28 },
+        "20": { "size": 28 },
+        "21": { "size": 28 },
+        "22": { "size": 28 },
+        "23": { "size": 28 },
+        "24": { "size": 28 },
+        "25": { "size": 28 },
+        "26": { "size": 28 },
+        "27": { "size": 28 },
+        "28": { "size": 28 },
+        "29": { "size": 28 },
+        "30": { "size": 28 },
+        "31": { "size": 28 },
+        "32": { "size": 28 },
+        "33": { "size": 28 },
+        "34": { "size": 28 },
+        "35": { "size": 28 },
+        "36": { "size": 28 },
+        "37": { "size": 28 },
+        "38": { "size": 28 },
+        "39": { "size": 28 },
+        "40": { "size": 28 },
+        "41": { "size": 28 },
+        "42": { "size": 28 },
+        "43": { "size": 28 },
+        "44": { "size": 28 },
+        "45": { "size": 28 },
+        "46": { "size": 28 },
+        "47": { "size": 28 },
+        "48": { "size": 28 },
+        "49": { "size": 28 },
+        "50": { "size": 28 }
+      },
+      "cols": {
+        "0": { "size": 189 }
+      },
+      "merges": [],
+      "cells": { "A1": "=PIVOT(4,50,FALSE,FALSE)" },
+      "styles": { "A1": 2, "A2:A51": 3, "B4:C51": 3, "B1:C1": 4, "B2:C3": 5 },
+      "formats": { "A2:A13": 1, "C2:C51": 2 },
+      "borders": {},
+      "conditionalFormats": [
+        {
+          "id": "16ba7f00-dd40",
+          "rule": { "type": "DataBarRule", "color": 14609659, "rangeValues": "B2:B51" },
+          "ranges": ["A2:A51"]
+        }
+      ],
+      "dataValidationRules": [],
+      "figures": [],
+      "tables": [],
+      "areGridLinesVisible": true,
+      "isVisible": true,
+      "isLocked": false,
+      "panes": { "xSplit": 0, "ySplit": 1 },
+      "headerGroups": {
+        "ROW": [],
+        "COL": []
+      },
+      "defaultStyle": {
+        "colDefault": { "0": 7 },
+        "rowDefault": {},
+        "sheetDefault": 6
+      },
+      "comments": {}
     }
   ],
   "styles": {
-    "1": { "textColor": "#01666b", "fontSize": 16, "bold": true },
-    "2": { "textColor": "#434343", "bold": true, "fontSize": 11 },
-    "3": { "textColor": "#434343", "verticalAlign": "middle" },
+    "1": { "bold": true },
+    "2": { "bold": true, "align": "left", "verticalAlign": "top", "fontSize": 11 },
+    "3": { "verticalAlign": "middle" },
     "4": {
-      "textColor": "#434343",
       "bold": true,
+      "align": "center",
+      "verticalAlign": "top",
       "fontSize": 11,
-      "align": "center"
+      "textColor": "#434343"
     },
-    "5": { "bold": true },
-    "6": { "bold": true, "fillColor": "#f2f2f2" },
-    "7": { "fillColor": "#f2f2f2" }
+    "5": { "verticalAlign": "middle", "textColor": "#434343" },
+    "6": {},
+    "7": { "textColor": "#434343" }
   },
-  "formats": {},
-  "borders": {
-    "1": {
-      "bottom": { "style": "thin", "color": "#CCCCCC" }
-    },
-    "2": {
-      "top": { "style": "thin", "color": "#CCCCCC" }
-    },
-    "3": {
-      "bottom": { "style": "thick", "color": "#FFFFFF" }
-    },
-    "4": {
-      "top": { "style": "thick", "color": "#FFFFFF" },
-      "bottom": { "style": "thick", "color": "#FFFFFF" }
-    },
-    "5": {
-      "top": { "style": "thick", "color": "#FFFFFF" }
-    }
-  },
+  "formats": { "1": "@", "2": "[$$]#,##0.00" },
+  "borders": {},
   "revisionId": "START_REVISION",
   "uniqueFigureIds": true,
   "settings": {
@@ -523,10 +842,10 @@
       ],
       "id": "1",
       "measures": [
-        { "id": "__count", "fieldName": "__count" }
+        { "id": "__count", "fieldName": "__count", "userDefinedName": "Events" }
       ],
       "model": "event.event",
-      "name": "Event by Venue",
+      "name": "Top Venues",
       "sortedColumn": {
         "measure": "__count",
         "order": "desc",
@@ -536,7 +855,8 @@
       "columns": [],
       "rows": [
         { "fieldName": "address_id" }
-      ]
+      ],
+      "filters": []
     },
     "2": {
       "type": "ODOO",
@@ -553,7 +873,7 @@
       ],
       "id": "2",
       "measures": [
-        { "id": "__count", "fieldName": "__count" }
+        { "id": "__count", "fieldName": "__count", "userDefinedName": "Events" }
       ],
       "model": "event.event",
       "name": "Event by Template",
@@ -566,7 +886,8 @@
       "columns": [],
       "rows": [
         { "fieldName": "event_type_id" }
-      ]
+      ],
+      "filters": []
     },
     "3": {
       "type": "ODOO",
@@ -583,10 +904,10 @@
       ],
       "id": "3",
       "measures": [
-        { "id": "__count", "fieldName": "__count" }
+        { "id": "__count", "fieldName": "__count", "userDefinedName": "Events" }
       ],
       "model": "event.event",
-      "name": "Event by Tags",
+      "name": "Tag",
       "sortedColumn": {
         "measure": "__count",
         "order": "desc",
@@ -596,7 +917,8 @@
       "columns": [],
       "rows": [
         { "fieldName": "tag_ids" }
-      ]
+      ],
+      "filters": []
     },
     "4": {
       "type": "ODOO",
@@ -613,10 +935,10 @@
       ],
       "id": "4",
       "measures": [
-        { "id": "__count", "fieldName": "__count" }
+        { "id": "__count", "fieldName": "__count", "userDefinedName": "Tickets" }
       ],
       "model": "event.event",
-      "name": "Event by Organizer",
+      "name": "Organizer",
       "sortedColumn": {
         "measure": "__count",
         "order": "desc",
@@ -626,7 +948,8 @@
       "columns": [],
       "rows": [
         { "fieldName": "organizer_id" }
-      ]
+      ],
+      "filters": []
     },
     "5": {
       "type": "ODOO",

@@ -2,10 +2,10 @@
   "version": "19.3.10",
   "sheets": [
     {
-      "id": "sheet1",
+      "id": "sheet1-no-target",
       "name": "Dashboard",
       "colNumber": 9,
-      "rowNumber": 78,
+      "rowNumber": 100,
       "rows": {
         "6": { "size": 40 },
         "22": { "size": 40 },
@@ -58,243 +58,10 @@
         "8": { "size": 100 }
       },
       "merges": [],
-      "cells": {
-        "A7": "[Time Billed by Week](odoo://view/{\"viewType\":\"graph\",\"action\":{\"domain\":[[\"project_id\",\"!=\",false]],\"context\":{\"group_by\":[\"date:week\"],\"graph_measure\":\"billable_time\",\"graph_mode\":\"line\",\"graph_groupbys\":[\"date:week\"]},\"modelName\":\"timesheets.analysis.report\",\"views\":[[false,\"pivot\"],[false,\"graph\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Timesheets by Billing Type\"})",
-        "A23": "[Billed by Month](odoo://view/{\"viewType\":\"graph\",\"action\":{\"domain\":[[\"project_id\",\"!=\",false]],\"context\":{\"group_by\":[\"date:month\"],\"graph_measure\":\"billable_time\",\"graph_mode\":\"bar\",\"graph_groupbys\":[\"date:month\"]},\"modelName\":\"timesheets.analysis.report\",\"views\":[[false,\"pivot\"],[false,\"graph\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Timesheets by Billing Type\"})",
-        "A40": "[Top Departments](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[\"&\",[\"project_id\",\"!=\",false],[\"department_id\",\"!=\",false]],\"context\":{\"group_by\":[\"department_id\"],\"pivot_measures\":[\"unit_amount\",\"billable_time\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"department_id\"]},\"modelName\":\"timesheets.analysis.report\",\"views\":[[false,\"pivot\"],[false,\"graph\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Top Departments\"})",
-        "A41": "=_t(\"Department\")",
-        "A42": "=TRIM(REGEXEXTRACT(PIVOT.HEADER(3,\"#department_id\",1),\"[^/]+$\"))",
-        "A43:A51": {
-          "N": "=|+1",
-          "S": ["=", "="]
-        },
-        "A53": "[Top Projects](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[\"&\",[\"project_id\",\"!=\",false],[\"project_id.allow_billable\",\"!=\",false]],\"context\":{\"group_by\":[\"project_id\"],\"pivot_measures\":[\"unit_amount\",\"billable_time\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"project_id\"]},\"modelName\":\"timesheets.analysis.report\",\"views\":[[false,\"pivot\"],[false,\"graph\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Top Projects\"})",
-        "A54": "=_t(\"Project\")",
-        "A55": "=PIVOT.HEADER(1,\"#project_id\",1)",
-        "A56:A64": {
-          "N": "=|+1",
-          "S": ["="]
-        },
-        "A66": "[Non-Billable Projects Costs](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[\"&\",[\"project_id\",\"!=\",false],[\"project_id.allow_billable\",\"=\",false]],\"context\":{\"group_by\":[\"project_id\"],\"pivot_measures\":[\"amount\",\"non_billable_time\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"project_id\"]},\"modelName\":\"timesheets.analysis.report\",\"views\":[[false,\"pivot\"],[false,\"graph\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Non-Billable Projects Costs\"})",
-        "A67": "=_t(\"Project\")",
-        "A68": "=PIVOT.HEADER(7,\"#project_id\",1)",
-        "A69:A77": {
-          "N": "=|+1",
-          "S": ["="]
-        },
-        "B41": "=IF(Data!B15=\"Hours\",_t(\"Hours spent\"),_t(\"Days spent\"))",
-        "B42": "=IF(PIVOT.VALUE(3,\"unit_amount\",\"#department_id\",1)=\"\",\"\",IF(Data!B15=\"Hours\",PIVOT.VALUE(3,\"unit_amount\",\"#department_id\",1),PIVOT.VALUE(3,\"Days Spent\",\"#department_id\",1)))",
-        "B43:B51": {
-          "N": "=|+1|=|+1|=|+1",
-          "S": ["=", "=", "=", "=", "=", "=", "=", "=", "="],
-          "R": "="
-        },
-        "B54": "=IF(Data!B15=\"Hours\",_t(\"Hours spent\"),_t(\"Days spent\"))",
-        "B55": "=IF(PIVOT.VALUE(1,\"unit_amount\",\"#project_id\",1)=\"\",\"\",IF(Data!B15=\"Hours\",PIVOT.VALUE(1,\"unit_amount\",\"#project_id\",1),PIVOT.VALUE(1,\"Days Spent\",\"#project_id\",1)))",
-        "B56:B64": {
-          "N": "=|+1|=|+1|=|+1",
-          "S": ["=", "=", "=", "=", "=", "=", "=", "=", "="],
-          "R": "="
-        },
-        "C41": "=IF(Data!B15=\"Hours\",_t(\"Hours billed\"),_t(\"Days billed\"))",
-        "C42": "=IF(PIVOT.VALUE(3,\"billable_time\",\"#department_id\",1)=\"\",\"\",IF(Data!B15=\"Hours\",PIVOT.VALUE(3,\"billable_time\",\"#department_id\",1),PIVOT.VALUE(3,\"Billable Days\",\"#department_id\",1)))",
-        "C43:C51": {
-          "N": "=|+1|=|+1|=|+1",
-          "S": ["=", "=", "=", "=", "=", "=", "=", "=", "="],
-          "R": "="
-        },
-        "C54": "=IF(Data!B15=\"Hours\",_t(\"Hours billed\"),_t(\"Days billed\"))",
-        "C55": "=IF(PIVOT.VALUE(1,\"billable_time\",\"#project_id\",1)=\"\",\"\",IF(Data!B15=\"Hours\",PIVOT.VALUE(1,\"billable_time\",\"#project_id\",1),PIVOT.VALUE(1,\"Billable Days\",\"#project_id\",1)))",
-        "C56:C64": {
-          "N": "=|+1|=|+1|=|+1",
-          "S": ["=", "=", "=", "=", "=", "=", "=", "=", "="],
-          "R": "="
-        },
-        "C67": "=IF(Data!B15=\"Hours\",_t(\"Hours spent\"),_t(\"Days spent\"))",
-        "C68": "=IF(PIVOT.VALUE(7,\"non_billable_time\",\"#project_id\",1)=\"\",\"\",IF(Data!B15=\"Hours\",PIVOT.VALUE(7,\"non_billable_time\",\"#project_id\",1),PIVOT.VALUE(7,\"NonBillable Days\",\"#project_id\",1)))",
-        "C69:C77": {
-          "N": "=|+1|=|+1|=|+1",
-          "S": ["=", "=", "=", "=", "=", "=", "=", "=", "="],
-          "R": "="
-        },
-        "D41": "=_t(\"Billable rate\")",
-        "D42": "=IFERROR(C42/B42,\"\")",
-        "D43:D51": {
-          "S": ["="],
-          "R": "+R1|+R1"
-        },
-        "D54": "=_t(\"Billable rate\")",
-        "D55": "=IFERROR(C55/B55,\"\")",
-        "D56:D64": {
-          "S": ["="],
-          "R": "+R1|+R1"
-        },
-        "D67": "=_t(\"Costs\")",
-        "D68": "=IF(C68=\"\",\"\",ABS(PIVOT.VALUE(7,\"amount\",\"#project_id\",1)))",
-        "D69:D77": {
-          "N": "=|+1",
-          "S": ["=", "=", "=", "="],
-          "R": "+R1"
-        },
-        "F40": "[Top Employees](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[\"&\",[\"project_id\",\"!=\",false],[\"employee_id\",\"!=\",false]],\"context\":{\"group_by\":[\"employee_id\"],\"pivot_measures\":[\"unit_amount\",\"billable_time\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"employee_id\"]},\"modelName\":\"timesheets.analysis.report\",\"views\":[[false,\"pivot\"],[false,\"graph\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Top Employees\"})",
-        "F41": "=_t(\"Employee\")",
-        "F42": "=PIVOT.HEADER(4,\"#employee_id\",1)",
-        "F43:F51": {
-          "N": "=|+1",
-          "S": ["="]
-        },
-        "F53": "[Top Tasks](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[\"&\",\"&\",\"&\",[\"project_id\",\"!=\",false],[\"task_id\",\"!=\",false],[\"project_id.allow_billable\",\"!=\",false],[\"project_id.sale_line_id\",\"!=\",false]],\"context\":{\"group_by\":[\"task_id\"],\"pivot_measures\":[\"unit_amount\",\"billable_time\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"task_id\"]},\"modelName\":\"timesheets.analysis.report\",\"views\":[[false,\"pivot\"],[false,\"graph\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Top Tasks\"})",
-        "F54": "=_t(\"Task\")",
-        "F55": "=PIVOT.HEADER(2,\"#task_id\",1)",
-        "F56:F64": {
-          "N": "=|+1",
-          "S": ["="]
-        },
-        "F66": "[Non-Billable Tasks Costs](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[\"&\",\"&\",[\"project_id\",\"!=\",false],[\"task_id\",\"!=\",false],\"|\",[\"project_id.allow_billable\",\"=\",false],[\"so_line\",\"=\",false]],\"context\":{\"group_by\":[\"task_id\"],\"pivot_measures\":[\"amount\",\"non_billable_time\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"task_id\"]},\"modelName\":\"timesheets.analysis.report\",\"views\":[[false,\"pivot\"],[false,\"graph\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Non-Billable Tasks Costs\"})",
-        "F67": "=_t(\"Task\")",
-        "F68": "=PIVOT.HEADER(8,\"#task_id\",1)",
-        "F69:F77": {
-          "N": "=|+1",
-          "S": ["="]
-        },
-        "G41": "=IF(Data!B15=\"Hours\",_t(\"Hours spent\"),_t(\"Days spent\"))",
-        "G42": "=IF(PIVOT.VALUE(4,\"unit_amount\",\"#employee_id\",1)=\"\",\"\",IF(Data!B15=\"Hours\",PIVOT.VALUE(4,\"unit_amount\",\"#employee_id\",1),PIVOT.VALUE(4,\"Days Spent\",\"#employee_id\",1)))",
-        "G43:G51": {
-          "N": "=|+1|=|+1|=|+1",
-          "S": ["=", "=", "=", "=", "=", "=", "=", "=", "="],
-          "R": "="
-        },
-        "G54": "=IF(Data!B15=\"Hours\",_t(\"Hours spent\"),_t(\"Days spent\"))",
-        "G55": "=IF(PIVOT.VALUE(2,\"unit_amount\",\"#task_id\",1)=\"\",\"\",IF(Data!B15=\"Hours\",PIVOT.VALUE(2,\"unit_amount\",\"#task_id\",1),PIVOT.VALUE(2,\"Days Spent\",\"#task_id\",1)))",
-        "G56:G64": {
-          "N": "=|+1|=|+1|=|+1",
-          "S": ["=", "=", "=", "=", "=", "=", "=", "=", "="],
-          "R": "="
-        },
-        "H41": "=IF(Data!B15=\"Hours\",_t(\"Hours billed\"),_t(\"Days billed\"))",
-        "H42": "=IF(PIVOT.VALUE(4,\"billable_time\",\"#employee_id\",1)=\"\",\"\",IF(Data!B15=\"Hours\",PIVOT.VALUE(4,\"billable_time\",\"#employee_id\",1),PIVOT.VALUE(4,\"Billable Days\",\"#employee_id\",1)))",
-        "H43:H51": {
-          "N": "=|+1|=|+1|=|+1",
-          "S": ["=", "=", "=", "=", "=", "=", "=", "=", "="],
-          "R": "="
-        },
-        "H54": "=IF(Data!B15=\"Hours\",_t(\"Hours billed\"),_t(\"Days billed\"))",
-        "H55": "=IF(PIVOT.VALUE(2,\"billable_time\",\"#task_id\",1)=\"\",\"\",IF(Data!B15=\"Hours\",PIVOT.VALUE(2,\"billable_time\",\"#task_id\",1),PIVOT.VALUE(2,\"Billable Days\",\"#task_id\",1)))",
-        "H56:H64": {
-          "N": "=|+1|=|+1|=|+1",
-          "S": ["=", "=", "=", "=", "=", "=", "=", "=", "="],
-          "R": "="
-        },
-        "H67": "=IF(Data!B15=\"Hours\",_t(\"Hours spent\"),_t(\"Days spent\"))",
-        "H68": "=IF(PIVOT.VALUE(8,\"non_billable_time\",\"#task_id\",1)=\"\",\"\",IF(Data!B15=\"Hours\",PIVOT.VALUE(8,\"non_billable_time\",\"#task_id\",1),PIVOT.VALUE(8,\"NonBillable Days\",\"#task_id\",1)))",
-        "H69:H77": {
-          "N": "=|+1|=|+1|=|+1",
-          "S": ["=", "=", "=", "=", "=", "=", "=", "=", "="],
-          "R": "="
-        },
-        "I41": "=_t(\"Billable rate\")",
-        "I42": "=IFERROR(H42/G42,\"\")",
-        "I43:I51": {
-          "S": ["="],
-          "R": "+R1|+R1"
-        },
-        "I54": "=_t(\"Billable rate\")",
-        "I55": "=IFERROR(H55/G55,\"\")",
-        "I56:I64": {
-          "S": ["="],
-          "R": "+R1|+R1"
-        },
-        "I67": "=_t(\"Costs\")",
-        "I68": "=IF(H68=\"\",\"\",ABS(PIVOT.VALUE(8,\"amount\",\"#task_id\",1)))",
-        "I69:I77": {
-          "N": "=|+1",
-          "S": ["=", "=", "=", "="],
-          "R": "+R1"
-        }
-      },
-      "styles": {
-        "A7": 1,
-        "A23": 1,
-        "A40": 1,
-        "A53": 1,
-        "A65:A66": 1,
-        "F40": 1,
-        "F53": 1,
-        "F65:F66": 1,
-        "A41": 2,
-        "A54": 2,
-        "A67": 2,
-        "F41": 2,
-        "F54": 2,
-        "F67": 2,
-        "A42:A51": 3,
-        "A55:A64": 3,
-        "A68:A78": 3,
-        "B78:C78": 3,
-        "D42:D51": 3,
-        "D55:D64": 3,
-        "D68:D78": 3,
-        "F42:F51": 3,
-        "F55:F64": 3,
-        "F68:G77": 3,
-        "I42:I51": 3,
-        "I55:I64": 3,
-        "I68:I78": 3,
-        "B41:D41": 4,
-        "B54:D54": 4,
-        "C67:D67": 4,
-        "G41:I41": 4,
-        "G54:I54": 4,
-        "H67:I67": 4,
-        "B42:C51": 5,
-        "B55:C64": 5,
-        "C68:C77": 5,
-        "G42:H51": 5,
-        "G55:H64": 5,
-        "H68:H77": 5,
-        "E55:E64": 6
-      },
-      "formats": {
-        "B42:C51": 1,
-        "B55:C64": 1,
-        "C68:C77": 1,
-        "G42:H51": 1,
-        "G55:H64": 1,
-        "H68:H77": 1,
-        "D42:D51": 2,
-        "D55:D64": 2,
-        "D78": 2,
-        "I42:I51": 2,
-        "I55:I64": 2,
-        "I78": 2,
-        "D68:D77": 3,
-        "I68:I77": 3,
-        "G68:G77": 4
-      },
-      "borders": {
-        "B54:C54": 1,
-        "C67": 1,
-        "A41:D41": 1,
-        "G54:H54": 1,
-        "H67": 1,
-        "A8:I8": 1,
-        "F41:I41": 1,
-        "A53": 2,
-        "A66:B66": 2,
-        "D53": 2,
-        "D66": 2,
-        "F53": 2,
-        "F66:G66": 2,
-        "A23:I23": 2,
-        "I53": 2,
-        "I66": 2,
-        "A43:A52": 3,
-        "B52:D52": 3,
-        "F43:F52": 3,
-        "G52:I52": 3,
-        "D55:D64": 4,
-        "I55:I64": 4
-      },
+      "cells": {},
+      "styles": {},
+      "formats": {},
+      "borders": {},
       "conditionalFormats": [
         {
           "rule": { "type": "DataBarRule", "color": 15531509, "rangeValues": "C55:C64" },
@@ -325,6 +92,11 @@
           "rule": { "type": "DataBarRule", "color": 16573901, "rangeValues": "I68:I77" },
           "id": "ee1cdfd6-4500",
           "ranges": ["F68:F77"]
+        },
+        {
+          "id": "0004d56e-4ea5",
+          "rule": { "type": "DataBarRule", "color": 15726335, "rangeValues": "D42:D51" },
+          "ranges": ["A42:A51"]
         }
       ],
       "dataValidationRules": [],
@@ -338,9 +110,9 @@
             "baselineColorDown": "#DC6965",
             "baselineColorUp": "#00A04A",
             "baselineMode": "text",
-            "title": { "text": "Billable Time", "bold": true, "color": "#434343" },
+            "title": { "text": "Billable Hours", "bold": true, "color": "#01666B" },
             "type": "scorecard",
-            "background": "#FEF2F2",
+            "background": "",
             "baseline": "Data!E6",
             "baselineDescr": { "text": "last period" },
             "keyValue": "Data!D6",
@@ -360,9 +132,9 @@
             "baselineColorDown": "#DC6965",
             "baselineColorUp": "#00A04A",
             "baselineMode": "text",
-            "title": { "text": "Billable Rate", "bold": true, "color": "#434343" },
+            "title": { "text": "Billing Rate", "bold": true, "color": "#01666B" },
             "type": "scorecard",
-            "background": "#ECFDF5",
+            "background": "",
             "baseline": "Data!E9",
             "baselineDescr": { "text": "last period" },
             "keyValue": "Data!D9",
@@ -370,53 +142,6 @@
             "chartId": "0b033641-2a0f-4db7-893d-f14fbb320b94"
           },
           "offset": { "x": 0, "y": 9 },
-          "col": 0,
-          "row": 0
-        },
-        {
-          "id": "39c6667b-b74a-478e-87e9-75c22de5ea1f",
-          "width": 1000,
-          "height": 344,
-          "tag": "chart",
-          "data": {
-            "title": { "text": "" },
-            "legendPosition": "none",
-            "type": "line",
-            "humanize": true,
-            "stacked": false,
-            "fillArea": true,
-            "dataSource": {
-              "type": "odoo",
-              "cumulatedStart": false,
-              "metaData": {
-                "groupBy": ["date:week"],
-                "measure": "billable_time",
-                "order": null,
-                "resModel": "timesheets.analysis.report",
-                "mode": "line",
-                "cumulatedStart": false
-              },
-              "searchParams": {
-                "comparison": null,
-                "context": {},
-                "domain": [
-                  ["project_id", "!=", false]
-                ],
-                "groupBy": ["date:week"],
-                "orderBy": []
-              }
-            },
-            "dataSetStyles": {},
-            "chartId": "39c6667b-b74a-478e-87e9-75c22de5ea1f",
-            "fieldMatching": {
-              "fb3700b0-4ee9-4086-86ac-6c62a7d33d37": { "chain": "date", "type": "date", "offset": 0 },
-              "65e4bccf-3035-47a0-a268-9a4e5b48037f": { "chain": "project_id", "type": "many2one" },
-              "22a76320-0363-4391-9121-65e1db51b671": { "chain": "task_id", "type": "many2one" },
-              "541de762-4a6c-435e-a5ff-e94d393cf6df": { "chain": "department_id", "type": "many2one" },
-              "4788ea63-ee8f-4082-a118-a26b4b6f1a71": { "chain": "employee_id", "type": "many2one" }
-            }
-          },
-          "offset": { "x": 0, "y": 178 },
           "col": 0,
           "row": 0
         },
@@ -432,9 +157,9 @@
             "baselineColorDown": "#DC6965",
             "baselineColorUp": "#00A04A",
             "baselineMode": "text",
-            "title": { "text": "Non-billable Time", "bold": true, "color": "#434343" },
+            "title": { "text": "Non-billable Hours", "bold": true, "color": "#01666B" },
             "type": "scorecard",
-            "background": "#FEF2F2",
+            "background": "",
             "baseline": "Data!E7",
             "baselineDescr": { "text": "last period" },
             "keyValue": "Data!D7",
@@ -454,9 +179,9 @@
             "baselineColorDown": "#DC6965",
             "baselineColorUp": "#00A04A",
             "baselineMode": "text",
-            "title": { "text": "Total Time", "bold": true, "color": "#434343" },
+            "title": { "text": "Total Hours", "bold": true, "color": "#01666B" },
             "type": "scorecard",
-            "background": "#FEF2F2",
+            "background": "",
             "baseline": "Data!E8",
             "baselineDescr": { "text": "expected" },
             "keyValue": "Data!D8",
@@ -465,115 +190,1727 @@
           }
         },
         {
-          "id": "87108d25-4071",
+          "id": "bb1247cd-beca",
           "col": 0,
-          "row": 23,
-          "offset": { "x": 0, "y": 0 },
+          "row": 5,
+          "offset": { "x": 0, "y": 10 },
           "width": 1000,
-          "height": 367,
-          "tag": "chart",
+          "height": 417,
+          "tag": "carousel",
           "data": {
-            "title": { "text": "" },
-            "legendPosition": "none",
-            "type": "bar",
-            "humanize": true,
-            "stacked": false,
-            "horizontal": false,
-            "dataSource": {
-              "type": "odoo",
-              "metaData": {
-                "groupBy": ["date:month"],
-                "measure": "billable_time",
-                "order": null,
-                "resModel": "timesheets.analysis.report",
-                "mode": "bar"
-              },
-              "searchParams": {
-                "comparison": null,
-                "context": {},
-                "domain": [
-                  ["project_id", "!=", false]
-                ],
-                "groupBy": ["date:month"],
-                "orderBy": []
+            "chartDefinitions": {
+              "39c6667b-b74a-478e-87e9-75c22de5ea1f": {
+                "title": { "text": "" },
+                "legendPosition": "none",
+                "type": "line",
+                "showValues": false,
+                "humanize": true,
+                "stacked": false,
+                "fillArea": true,
+                "hideDataMarkers": false,
+                "zoomable": false,
+                "dataSource": {
+                  "type": "odoo",
+                  "cumulatedStart": false,
+                  "metaData": {
+                    "groupBy": ["date:week"],
+                    "measure": "billable_time",
+                    "order": null,
+                    "resModel": "timesheets.analysis.report",
+                    "mode": "line",
+                    "cumulatedStart": false
+                  },
+                  "searchParams": {
+                    "comparison": null,
+                    "context": {},
+                    "domain": [
+                      ["project_id", "!=", false]
+                    ],
+                    "groupBy": ["date:week"],
+                    "orderBy": []
+                  }
+                },
+                "dataSetStyles": {}
               }
             },
-            "dataSetStyles": {},
-            "chartId": "26ef5620-3a5c",
+            "title": {
+              "text": "Time Billed by Week",
+              "bold": true,
+              "fontSize": 21,
+              "color": "#01666B"
+            },
+            "items": [
+              { "type": "chart", "chartId": "39c6667b-b74a-478e-87e9-75c22de5ea1f" }
+            ],
             "fieldMatching": {
-              "fb3700b0-4ee9-4086-86ac-6c62a7d33d37": { "chain": "date", "type": "date", "offset": 0 },
-              "65e4bccf-3035-47a0-a268-9a4e5b48037f": { "chain": "project_id", "type": "many2one" },
-              "22a76320-0363-4391-9121-65e1db51b671": { "chain": "task_id", "type": "many2one" },
-              "541de762-4a6c-435e-a5ff-e94d393cf6df": { "chain": "department_id", "type": "many2one" },
-              "4788ea63-ee8f-4082-a118-a26b4b6f1a71": { "chain": "employee_id", "type": "many2one" }
+              "39c6667b-b74a-478e-87e9-75c22de5ea1f": {
+                "fb3700b0-4ee9-4086-86ac-6c62a7d33d37": { "chain": "date", "type": "date", "offset": 0 },
+                "65e4bccf-3035-47a0-a268-9a4e5b48037f": { "chain": "project_id", "type": "many2one" },
+                "22a76320-0363-4391-9121-65e1db51b671": { "chain": "task_id", "type": "many2one" },
+                "541de762-4a6c-435e-a5ff-e94d393cf6df": { "chain": "department_id", "type": "many2one" },
+                "4788ea63-ee8f-4082-a118-a26b4b6f1a71": { "chain": "employee_id", "type": "many2one" }
+              }
             }
           }
+        },
+        {
+          "id": "2e0dba1b-41df",
+          "col": 0,
+          "row": 22,
+          "offset": { "x": 0, "y": 26 },
+          "width": 1000,
+          "height": 417,
+          "tag": "carousel",
+          "data": {
+            "chartDefinitions": {
+              "bf361c85-bcea": {
+                "title": { "text": "" },
+                "legendPosition": "none",
+                "type": "bar",
+                "showValues": false,
+                "humanize": true,
+                "stacked": false,
+                "horizontal": false,
+                "zoomable": false,
+                "dataSource": {
+                  "type": "odoo",
+                  "metaData": {
+                    "groupBy": ["date:month"],
+                    "measure": "billable_time",
+                    "order": null,
+                    "resModel": "timesheets.analysis.report",
+                    "mode": "bar"
+                  },
+                  "searchParams": {
+                    "comparison": null,
+                    "context": {},
+                    "domain": [
+                      ["project_id", "!=", false]
+                    ],
+                    "groupBy": ["date:month"],
+                    "orderBy": []
+                  }
+                },
+                "dataSetStyles": {}
+              }
+            },
+            "title": {
+              "text": "Billed by Month",
+              "bold": true,
+              "fontSize": 21,
+              "color": "#01666B"
+            },
+            "items": [
+              { "type": "chart", "chartId": "bf361c85-bcea" }
+            ],
+            "fieldMatching": {
+              "bf361c85-bcea": {
+                "fb3700b0-4ee9-4086-86ac-6c62a7d33d37": { "chain": "date", "type": "date", "offset": 0 },
+                "65e4bccf-3035-47a0-a268-9a4e5b48037f": { "chain": "project_id", "type": "many2one" },
+                "22a76320-0363-4391-9121-65e1db51b671": { "chain": "task_id", "type": "many2one" },
+                "541de762-4a6c-435e-a5ff-e94d393cf6df": { "chain": "department_id", "type": "many2one" },
+                "4788ea63-ee8f-4082-a118-a26b4b6f1a71": { "chain": "employee_id", "type": "many2one" }
+              }
+            }
+          }
+        },
+        {
+          "id": "f9fff724-1a4b",
+          "col": 0,
+          "row": 40,
+          "offset": { "x": 0, "y": 4 },
+          "width": 496,
+          "height": 417,
+          "tag": "carousel",
+          "data": {
+            "chartDefinitions": {},
+            "title": {
+              "text": "Top Departments",
+              "bold": true,
+              "fontSize": 21,
+              "color": "#01666B"
+            },
+            "items": [
+              {
+                "type": "carouselDataView",
+                "rangeData": {
+                  "_sheetId": "f1a97373-04fc",
+                  "_zone": { "top": 0, "left": 0, "bottom": 10, "right": 3 }
+                }
+              }
+            ],
+            "fieldMatching": {}
+          }
+        },
+        {
+          "id": "d35e90cd-c659",
+          "col": 4,
+          "row": 40,
+          "offset": { "x": 28, "y": 4 },
+          "width": 497,
+          "height": 417,
+          "tag": "carousel",
+          "data": {
+            "chartDefinitions": {},
+            "title": {
+              "text": "Top Employees",
+              "bold": true,
+              "fontSize": 21,
+              "color": "#01666B"
+            },
+            "items": [
+              {
+                "type": "carouselDataView",
+                "rangeData": {
+                  "_sheetId": "d6cb75fb-1378",
+                  "_zone": { "top": 0, "left": 0, "bottom": 10, "right": 3 }
+                }
+              }
+            ],
+            "fieldMatching": {}
+          }
+        },
+        {
+          "id": "5e06d849-abb0",
+          "col": 0,
+          "row": 53,
+          "offset": { "x": 0, "y": 16 },
+          "width": 496,
+          "height": 417,
+          "tag": "carousel",
+          "data": {
+            "chartDefinitions": {},
+            "title": {
+              "text": "Top Projects",
+              "bold": true,
+              "fontSize": 21,
+              "color": "#01666B"
+            },
+            "items": [
+              {
+                "type": "carouselDataView",
+                "rangeData": {
+                  "_sheetId": "c7982c9e-3bd9",
+                  "_zone": { "top": 0, "left": 0, "bottom": 10, "right": 3 }
+                },
+                "columnWeights": [352, 214, 214, 220]
+              }
+            ],
+            "fieldMatching": {}
+          }
+        },
+        {
+          "id": "3aef5563-ddf1",
+          "col": 4,
+          "row": 53,
+          "offset": { "x": 29, "y": 16 },
+          "width": 496,
+          "height": 417,
+          "tag": "carousel",
+          "data": {
+            "chartDefinitions": {},
+            "title": { "text": "Top Tasks", "bold": true, "fontSize": 21, "color": "#01666B" },
+            "items": [
+              {
+                "type": "carouselDataView",
+                "rangeData": {
+                  "_sheetId": "c98075a6-08c8",
+                  "_zone": { "top": 0, "left": 0, "bottom": 10, "right": 3 }
+                }
+              }
+            ],
+            "fieldMatching": {}
+          }
+        },
+        {
+          "id": "405e93d1-3848",
+          "col": 0,
+          "row": 66,
+          "offset": { "x": 0, "y": 30 },
+          "width": 496,
+          "height": 417,
+          "tag": "carousel",
+          "data": {
+            "chartDefinitions": {},
+            "title": {
+              "text": "Non-Billable Projects Costs",
+              "bold": true,
+              "fontSize": 21,
+              "color": "#01666B"
+            },
+            "items": [
+              {
+                "type": "carouselDataView",
+                "rangeData": {
+                  "_sheetId": "03f39311-a2d6",
+                  "_zone": { "top": 0, "left": 0, "bottom": 10, "right": 2 }
+                }
+              }
+            ],
+            "fieldMatching": {}
+          }
+        },
+        {
+          "id": "5f3948c7-af67",
+          "col": 4,
+          "row": 66,
+          "offset": { "x": 29, "y": 30 },
+          "width": 496,
+          "height": 417,
+          "tag": "carousel",
+          "data": {
+            "chartDefinitions": {},
+            "title": {
+              "text": "Non-Billable Tasks Costs",
+              "bold": true,
+              "fontSize": 21,
+              "color": "#01666B"
+            },
+            "items": [
+              {
+                "type": "carouselDataView",
+                "rangeData": {
+                  "_sheetId": "480d134d-d067",
+                  "_zone": { "top": 0, "left": 0, "bottom": 10, "right": 2 }
+                }
+              }
+            ],
+            "fieldMatching": {}
+          }
         }
       ],
-      "tables": [
-        {
-          "range": "A54:D77",
-          "type": "static",
-          "config": {
-            "hasFilters": false,
-            "totalRow": false,
-            "firstColumn": false,
-            "lastColumn": false,
-            "numberOfHeaders": 1,
-            "bandedRows": true,
-            "bandedColumns": false,
-            "automaticAutofill": true,
-            "styleId": "None"
-          }
-        },
-        {
-          "range": "A41:D51",
-          "type": "static",
-          "config": {
-            "hasFilters": false,
-            "totalRow": false,
-            "firstColumn": false,
-            "lastColumn": false,
-            "numberOfHeaders": 1,
-            "bandedRows": true,
-            "bandedColumns": false,
-            "automaticAutofill": true,
-            "styleId": "None"
-          }
-        },
-        {
-          "range": "F54:I77",
-          "type": "static",
-          "config": {
-            "hasFilters": false,
-            "totalRow": false,
-            "firstColumn": false,
-            "lastColumn": false,
-            "numberOfHeaders": 1,
-            "bandedRows": true,
-            "bandedColumns": false,
-            "automaticAutofill": true,
-            "styleId": "None"
-          }
-        },
-        {
-          "range": "F41:I51",
-          "type": "static",
-          "config": {
-            "hasFilters": false,
-            "totalRow": false,
-            "firstColumn": false,
-            "lastColumn": false,
-            "numberOfHeaders": 1,
-            "bandedRows": true,
-            "bandedColumns": false,
-            "automaticAutofill": true,
-            "styleId": "None"
-          }
-        }
-      ],
+      "tables": [],
       "areGridLinesVisible": true,
       "isVisible": true,
+      "backgroundColor": "#F9FAFB",
+      "headerGroups": {
+        "ROW": [],
+        "COL": []
+      },
+      "comments": {}
+    },
+    {
+      "id": "sheet2-no-target-days",
+      "name": "Dashboard Days",
+      "colNumber": 9,
+      "rowNumber": 100,
+      "rows": {
+        "6": { "size": 28 },
+        "22": { "size": 28 },
+        "39": { "size": 28 },
+        "40": { "size": 28 },
+        "41": { "size": 28 },
+        "42": { "size": 28 },
+        "43": { "size": 28 },
+        "44": { "size": 28 },
+        "45": { "size": 28 },
+        "46": { "size": 28 },
+        "47": { "size": 28 },
+        "48": { "size": 28 },
+        "49": { "size": 28 },
+        "50": { "size": 28 },
+        "52": { "size": 28 },
+        "53": { "size": 28 },
+        "54": { "size": 28 },
+        "55": { "size": 28 },
+        "56": { "size": 28 },
+        "57": { "size": 28 },
+        "58": { "size": 28 },
+        "59": { "size": 28 },
+        "60": { "size": 28 },
+        "61": { "size": 28 },
+        "62": { "size": 28 },
+        "63": { "size": 28 },
+        "65": { "size": 28 },
+        "66": { "size": 28 },
+        "67": { "size": 28 },
+        "68": { "size": 28 },
+        "69": { "size": 28 },
+        "70": { "size": 28 },
+        "71": { "size": 28 },
+        "72": { "size": 28 },
+        "73": { "size": 28 },
+        "74": { "size": 28 },
+        "75": { "size": 28 },
+        "76": { "size": 28 }
+      },
+      "cols": {
+        "0": { "size": 175 },
+        "1": { "size": 100 },
+        "2": { "size": 100 },
+        "3": { "size": 100 },
+        "4": { "size": 50 },
+        "5": { "size": 175 },
+        "6": { "size": 100 },
+        "7": { "size": 100 },
+        "8": { "size": 100 }
+      },
+      "merges": [],
+      "cells": {},
+      "styles": {},
+      "formats": {},
+      "borders": {},
+      "conditionalFormats": [
+        {
+          "rule": { "type": "DataBarRule", "color": 15531509, "rangeValues": "C55:C64" },
+          "id": "d7e93c71-7dd3-4aa2-99c9-2acee1759c1b",
+          "ranges": ["A55:A64"]
+        },
+        {
+          "rule": { "type": "DataBarRule", "color": 16708338, "rangeValues": "H55:H64" },
+          "id": "c5128bdf-0225-43b6-be2d-b391b50972b7",
+          "ranges": ["F55:F64"]
+        },
+        {
+          "rule": { "type": "DataBarRule", "color": 15726335, "rangeValues": "C42:C51" },
+          "id": "0235598f-93e2-41ad-a3a3-6005c0682bb2",
+          "ranges": ["A42:A51"]
+        },
+        {
+          "rule": { "type": "DataBarRule", "color": 16775149, "rangeValues": "H42:H51" },
+          "id": "0258b472-cd0b-435a-a756-53684989745a",
+          "ranges": ["F42:F51"]
+        },
+        {
+          "rule": { "type": "DataBarRule", "color": 14275305, "rangeValues": "D68:D77" },
+          "id": "dce4d42b-d5a4",
+          "ranges": ["A68:A77"]
+        },
+        {
+          "rule": { "type": "DataBarRule", "color": 16573901, "rangeValues": "I68:I77" },
+          "id": "ee1cdfd6-4500",
+          "ranges": ["F68:F77"]
+        },
+        {
+          "id": "0004d56e-4ea5",
+          "rule": { "type": "DataBarRule", "color": 15726335, "rangeValues": "D42:D51" },
+          "ranges": ["A42:A51"]
+        }
+      ],
+      "dataValidationRules": [],
+      "figures": [
+        {
+          "id": "b1896e38-bbe0??14907ee1-177b-4dda-97d7-223b1b00abe5",
+          "col": 1,
+          "row": 0,
+          "offset": { "x": 35, "y": 9 },
+          "width": 200,
+          "height": 109,
+          "tag": "chart",
+          "data": {
+            "baselineColorDown": "#DC6965",
+            "baselineColorUp": "#00A04A",
+            "baselineMode": "text",
+            "title": { "text": "Billable Days", "bold": true, "color": "#01666B" },
+            "type": "scorecard",
+            "background": "",
+            "baseline": "Data!I6",
+            "baselineDescr": { "text": "last period" },
+            "keyValue": "Data!H6",
+            "humanize": false,
+            "chartId": "b1896e38-bbe0??14907ee1-177b-4dda-97d7-223b1b00abe5"
+          }
+        },
+        {
+          "id": "b1896e38-bbe0??0b033641-2a0f-4db7-893d-f14fbb320b94",
+          "col": 0,
+          "row": 0,
+          "offset": { "x": 0, "y": 9 },
+          "width": 200,
+          "height": 109,
+          "tag": "chart",
+          "data": {
+            "baselineColorDown": "#DC6965",
+            "baselineColorUp": "#00A04A",
+            "baselineMode": "text",
+            "title": { "text": "Billing Rate", "bold": true, "color": "#01666B" },
+            "type": "scorecard",
+            "background": "",
+            "baseline": "Data!I9",
+            "baselineDescr": { "text": "last period" },
+            "keyValue": "Data!H9",
+            "humanize": false,
+            "chartId": "b1896e38-bbe0??0b033641-2a0f-4db7-893d-f14fbb320b94"
+          }
+        },
+        {
+          "id": "b1896e38-bbe0??a9474712-a843",
+          "col": 3,
+          "row": 0,
+          "offset": { "x": 45, "y": 9 },
+          "width": 200,
+          "height": 109,
+          "tag": "chart",
+          "data": {
+            "baselineColorDown": "#DC6965",
+            "baselineColorUp": "#00A04A",
+            "baselineMode": "text",
+            "title": { "text": "Non-billable Days", "bold": true, "color": "#01666B" },
+            "type": "scorecard",
+            "background": "",
+            "baseline": "Data!I7",
+            "baselineDescr": { "text": "last period" },
+            "keyValue": "Data!H7",
+            "humanize": false,
+            "chartId": "b1896e38-bbe0??741013eb-c06f"
+          }
+        },
+        {
+          "id": "b1896e38-bbe0??72245151-400f",
+          "col": 5,
+          "row": 0,
+          "offset": { "x": 104, "y": 9 },
+          "width": 200,
+          "height": 109,
+          "tag": "chart",
+          "data": {
+            "baselineColorDown": "#DC6965",
+            "baselineColorUp": "#00A04A",
+            "baselineMode": "text",
+            "title": { "text": "Total Days", "bold": true, "color": "#01666B" },
+            "type": "scorecard",
+            "background": "",
+            "baseline": "Data!I8",
+            "baselineDescr": { "text": "expected" },
+            "keyValue": "Data!H8",
+            "humanize": false,
+            "chartId": "b1896e38-bbe0??cd0cf706-f8bd"
+          }
+        },
+        {
+          "id": "43e2c16b-5f81",
+          "col": 0,
+          "row": 5,
+          "offset": { "x": 0, "y": 9 },
+          "width": 1000,
+          "height": 417,
+          "tag": "carousel",
+          "data": {
+            "chartDefinitions": {
+              "b1896e38-bbe0??39c6667b-b74a-478e-87e9-75c22de5ea1f": {
+                "title": { "text": "" },
+                "legendPosition": "none",
+                "type": "line",
+                "showValues": false,
+                "humanize": true,
+                "stacked": false,
+                "fillArea": true,
+                "hideDataMarkers": false,
+                "zoomable": false,
+                "dataSource": {
+                  "type": "odoo",
+                  "cumulatedStart": false,
+                  "metaData": {
+                    "groupBy": ["date:week"],
+                    "measure": "billable_time",
+                    "order": null,
+                    "resModel": "timesheets.analysis.report",
+                    "mode": "line",
+                    "cumulatedStart": false
+                  },
+                  "searchParams": {
+                    "comparison": null,
+                    "context": {},
+                    "domain": [
+                      ["project_id", "!=", false]
+                    ],
+                    "groupBy": ["date:week"],
+                    "orderBy": []
+                  }
+                },
+                "dataSetStyles": {}
+              }
+            },
+            "title": {
+              "text": "Time Billed by Week",
+              "bold": true,
+              "fontSize": 21,
+              "color": "#01666B"
+            },
+            "items": [
+              {
+                "type": "chart",
+                "chartId": "b1896e38-bbe0??39c6667b-b74a-478e-87e9-75c22de5ea1f"
+              }
+            ],
+            "fieldMatching": {
+              "b1896e38-bbe0??39c6667b-b74a-478e-87e9-75c22de5ea1f": {
+                "fb3700b0-4ee9-4086-86ac-6c62a7d33d37": { "chain": "date", "type": "date" },
+                "65e4bccf-3035-47a0-a268-9a4e5b48037f": { "chain": "project_id", "type": "many2one" },
+                "22a76320-0363-4391-9121-65e1db51b671": { "chain": "task_id", "type": "many2one" },
+                "541de762-4a6c-435e-a5ff-e94d393cf6df": { "chain": "department_id", "type": "many2one" },
+                "4788ea63-ee8f-4082-a118-a26b4b6f1a71": { "chain": "employee_id", "type": "many2one" }
+              }
+            }
+          }
+        },
+        {
+          "id": "7aa69a37-d6e4",
+          "col": 0,
+          "row": 22,
+          "offset": { "x": 0, "y": 26 },
+          "width": 1000,
+          "height": 417,
+          "tag": "carousel",
+          "data": {
+            "chartDefinitions": {
+              "b1896e38-bbe0??bf361c85-bcea": {
+                "title": { "text": "" },
+                "legendPosition": "none",
+                "type": "bar",
+                "showValues": false,
+                "humanize": true,
+                "stacked": false,
+                "horizontal": false,
+                "zoomable": false,
+                "dataSource": {
+                  "type": "odoo",
+                  "metaData": {
+                    "groupBy": ["date:month"],
+                    "measure": "billable_time",
+                    "order": null,
+                    "resModel": "timesheets.analysis.report",
+                    "mode": "bar"
+                  },
+                  "searchParams": {
+                    "comparison": null,
+                    "context": {},
+                    "domain": [
+                      ["project_id", "!=", false]
+                    ],
+                    "groupBy": ["date:month"],
+                    "orderBy": []
+                  }
+                },
+                "dataSetStyles": {}
+              }
+            },
+            "title": {
+              "text": "Billed by Month",
+              "bold": true,
+              "fontSize": 21,
+              "color": "#01666B"
+            },
+            "items": [
+              { "type": "chart", "chartId": "b1896e38-bbe0??bf361c85-bcea" }
+            ],
+            "fieldMatching": {
+              "b1896e38-bbe0??bf361c85-bcea": {
+                "fb3700b0-4ee9-4086-86ac-6c62a7d33d37": { "chain": "date", "type": "date" },
+                "65e4bccf-3035-47a0-a268-9a4e5b48037f": { "chain": "project_id", "type": "many2one" },
+                "22a76320-0363-4391-9121-65e1db51b671": { "chain": "task_id", "type": "many2one" },
+                "541de762-4a6c-435e-a5ff-e94d393cf6df": { "chain": "department_id", "type": "many2one" },
+                "4788ea63-ee8f-4082-a118-a26b4b6f1a71": { "chain": "employee_id", "type": "many2one" }
+              }
+            }
+          }
+        },
+        {
+          "id": "c4f8079c-18d8",
+          "col": 4,
+          "row": 66,
+          "offset": { "x": 29, "y": 26 },
+          "width": 496,
+          "height": 417,
+          "tag": "carousel",
+          "data": {
+            "chartDefinitions": {},
+            "title": {
+              "text": "Non-Billable Tasks Costs",
+              "bold": true,
+              "fontSize": 21,
+              "color": "#01666B"
+            },
+            "items": [
+              {
+                "type": "carouselDataView",
+                "rangeData": {
+                  "_sheetId": "480d134d-d067",
+                  "_zone": { "top": 0, "left": 4, "bottom": 10, "right": 6 }
+                }
+              }
+            ],
+            "fieldMatching": {}
+          }
+        },
+        {
+          "id": "7707b065-46f0",
+          "col": 0,
+          "row": 66,
+          "offset": { "x": 0, "y": 26 },
+          "width": 496,
+          "height": 417,
+          "tag": "carousel",
+          "data": {
+            "chartDefinitions": {},
+            "title": {
+              "text": "Non-Billable Projects Costs",
+              "bold": true,
+              "fontSize": 21,
+              "color": "#01666B"
+            },
+            "items": [
+              {
+                "type": "carouselDataView",
+                "rangeData": {
+                  "_sheetId": "03f39311-a2d6",
+                  "_zone": { "top": 0, "left": 4, "bottom": 10, "right": 6 }
+                }
+              }
+            ],
+            "fieldMatching": {}
+          }
+        },
+        {
+          "id": "34a3981d-57bc",
+          "col": 0,
+          "row": 53,
+          "offset": { "x": 0, "y": 16 },
+          "width": 496,
+          "height": 417,
+          "tag": "carousel",
+          "data": {
+            "chartDefinitions": {},
+            "title": {
+              "text": "Top Projects",
+              "bold": true,
+              "fontSize": 21,
+              "color": "#01666B"
+            },
+            "items": [
+              {
+                "type": "carouselDataView",
+                "rangeData": {
+                  "_sheetId": "c7982c9e-3bd9",
+                  "_zone": { "top": 0, "left": 5, "bottom": 10, "right": 8 }
+                },
+                "columnWeights": [410, 194, 194, 202]
+              }
+            ],
+            "fieldMatching": {}
+          }
+        },
+        {
+          "id": "15ec41b0-36b9",
+          "col": 4,
+          "row": 53,
+          "offset": { "x": 29, "y": 16 },
+          "width": 496,
+          "height": 417,
+          "tag": "carousel",
+          "data": {
+            "chartDefinitions": {},
+            "title": { "text": "Top Tasks", "bold": true, "fontSize": 21, "color": "#01666B" },
+            "items": [
+              {
+                "type": "carouselDataView",
+                "rangeData": {
+                  "_sheetId": "c98075a6-08c8",
+                  "_zone": { "top": 0, "left": 5, "bottom": 10, "right": 8 }
+                },
+                "columnWeights": [402, 198, 198, 202]
+              }
+            ],
+            "fieldMatching": {}
+          }
+        },
+        {
+          "id": "85cec824-f0df",
+          "col": 4,
+          "row": 40,
+          "offset": { "x": 28, "y": 4 },
+          "width": 497,
+          "height": 417,
+          "tag": "carousel",
+          "data": {
+            "chartDefinitions": {},
+            "title": {
+              "text": "Top Employees",
+              "bold": true,
+              "fontSize": 21,
+              "color": "#01666B"
+            },
+            "items": [
+              {
+                "type": "carouselDataView",
+                "rangeData": {
+                  "_sheetId": "d6cb75fb-1378",
+                  "_zone": { "top": 0, "left": 5, "bottom": 10, "right": 8 }
+                }
+              }
+            ],
+            "fieldMatching": {}
+          }
+        },
+        {
+          "id": "0583f64b-c0be",
+          "col": 0,
+          "row": 40,
+          "offset": { "x": 0, "y": 4 },
+          "width": 496,
+          "height": 417,
+          "tag": "carousel",
+          "data": {
+            "chartDefinitions": {},
+            "title": {
+              "text": "Top Departments",
+              "bold": true,
+              "fontSize": 21,
+              "color": "#01666B"
+            },
+            "items": [
+              {
+                "type": "carouselDataView",
+                "rangeData": {
+                  "_sheetId": "f1a97373-04fc",
+                  "_zone": { "top": 0, "left": 5, "bottom": 10, "right": 8 }
+                }
+              }
+            ],
+            "fieldMatching": {}
+          }
+        }
+      ],
+      "tables": [],
+      "areGridLinesVisible": true,
+      "isVisible": true,
+      "backgroundColor": "#F9FAFB",
+      "headerGroups": {
+        "ROW": [],
+        "COL": []
+      },
+      "comments": {}
+    },
+    {
+      "id": "sheet3-targets",
+      "name": "Dashboard Targets",
+      "colNumber": 9,
+      "rowNumber": 100,
+      "rows": {
+        "6": { "size": 28 },
+        "22": { "size": 28 },
+        "39": { "size": 28 },
+        "40": { "size": 28 },
+        "41": { "size": 28 },
+        "42": { "size": 28 },
+        "43": { "size": 28 },
+        "44": { "size": 28 },
+        "45": { "size": 28 },
+        "46": { "size": 28 },
+        "47": { "size": 28 },
+        "48": { "size": 28 },
+        "49": { "size": 28 },
+        "50": { "size": 28 },
+        "52": { "size": 28 },
+        "53": { "size": 28 },
+        "54": { "size": 28 },
+        "55": { "size": 28 },
+        "56": { "size": 28 },
+        "57": { "size": 28 },
+        "58": { "size": 28 },
+        "59": { "size": 28 },
+        "60": { "size": 28 },
+        "61": { "size": 28 },
+        "62": { "size": 28 },
+        "63": { "size": 28 },
+        "65": { "size": 28 },
+        "66": { "size": 28 },
+        "67": { "size": 28 },
+        "68": { "size": 28 },
+        "69": { "size": 28 },
+        "70": { "size": 28 },
+        "71": { "size": 28 },
+        "72": { "size": 28 },
+        "73": { "size": 28 },
+        "74": { "size": 28 },
+        "75": { "size": 28 },
+        "76": { "size": 28 }
+      },
+      "cols": {
+        "0": { "size": 175 },
+        "1": { "size": 100 },
+        "2": { "size": 100 },
+        "3": { "size": 100 },
+        "4": { "size": 50 },
+        "5": { "size": 175 },
+        "6": { "size": 100 },
+        "7": { "size": 100 },
+        "8": { "size": 100 }
+      },
+      "merges": [],
+      "cells": {},
+      "styles": {},
+      "formats": {},
+      "borders": {},
+      "conditionalFormats": [
+        {
+          "rule": { "type": "DataBarRule", "color": 15531509, "rangeValues": "C55:C64" },
+          "id": "d7e93c71-7dd3-4aa2-99c9-2acee1759c1b",
+          "ranges": ["A55:A64"]
+        },
+        {
+          "rule": { "type": "DataBarRule", "color": 16708338, "rangeValues": "H55:H64" },
+          "id": "c5128bdf-0225-43b6-be2d-b391b50972b7",
+          "ranges": ["F55:F64"]
+        },
+        {
+          "rule": { "type": "DataBarRule", "color": 15726335, "rangeValues": "D42:D51" },
+          "id": "0235598f-93e2-41ad-a3a3-6005c0682bb2",
+          "ranges": ["A42:A51"]
+        },
+        {
+          "rule": { "type": "DataBarRule", "color": 16775149, "rangeValues": "H42:H51" },
+          "id": "0258b472-cd0b-435a-a756-53684989745a",
+          "ranges": ["F42:F51"]
+        },
+        {
+          "rule": { "type": "DataBarRule", "color": 14275305, "rangeValues": "D68:D77" },
+          "id": "dce4d42b-d5a4",
+          "ranges": ["A68:A77"]
+        },
+        {
+          "rule": { "type": "DataBarRule", "color": 16573901, "rangeValues": "I68:I77" },
+          "id": "ee1cdfd6-4500",
+          "ranges": ["F68:F77"]
+        }
+      ],
+      "dataValidationRules": [],
+      "figures": [
+        {
+          "id": "36f77603-2cc6??14907ee1-177b-4dda-97d7-223b1b00abe5",
+          "col": 1,
+          "row": 0,
+          "offset": { "x": 35, "y": 9 },
+          "width": 200,
+          "height": 109,
+          "tag": "chart",
+          "data": {
+            "baselineColorDown": "#DC6965",
+            "baselineColorUp": "#00A04A",
+            "baselineMode": "text",
+            "title": { "text": "Billable Hours", "bold": true, "color": "#01666B" },
+            "type": "scorecard",
+            "background": "",
+            "baseline": "Data!F6",
+            "baselineDescr": { "text": "last period" },
+            "keyValue": "Data!D6",
+            "humanize": false,
+            "chartId": "36f77603-2cc6??14907ee1-177b-4dda-97d7-223b1b00abe5"
+          }
+        },
+        {
+          "id": "36f77603-2cc6??0b033641-2a0f-4db7-893d-f14fbb320b94",
+          "col": 0,
+          "row": 0,
+          "offset": { "x": 0, "y": 9 },
+          "width": 200,
+          "height": 109,
+          "tag": "chart",
+          "data": {
+            "baselineColorDown": "#DC6965",
+            "baselineColorUp": "#00A04A",
+            "baselineMode": "text",
+            "title": { "text": "Billing Rate", "bold": true, "color": "#01666B" },
+            "type": "scorecard",
+            "background": "",
+            "baseline": "Data!G9",
+            "baselineDescr": { "text": "last period" },
+            "keyValue": "Data!F9",
+            "humanize": false,
+            "chartId": "36f77603-2cc6??0b033641-2a0f-4db7-893d-f14fbb320b94"
+          }
+        },
+        {
+          "id": "36f77603-2cc6??a9474712-a843",
+          "col": 3,
+          "row": 0,
+          "offset": { "x": 45, "y": 9 },
+          "width": 200,
+          "height": 109,
+          "tag": "chart",
+          "data": {
+            "baselineColorDown": "#DC6965",
+            "baselineColorUp": "#00A04A",
+            "baselineMode": "text",
+            "title": { "text": "Non-billable Hours", "bold": true, "color": "#01666B" },
+            "type": "scorecard",
+            "background": "",
+            "baseline": "Data!E7",
+            "baselineDescr": { "text": "last period" },
+            "keyValue": "Data!D7",
+            "humanize": false,
+            "chartId": "36f77603-2cc6??741013eb-c06f"
+          }
+        },
+        {
+          "id": "36f77603-2cc6??72245151-400f",
+          "col": 5,
+          "row": 0,
+          "offset": { "x": 104, "y": 9 },
+          "width": 200,
+          "height": 109,
+          "tag": "chart",
+          "data": {
+            "baselineColorDown": "#DC6965",
+            "baselineColorUp": "#00A04A",
+            "baselineMode": "text",
+            "title": { "text": "Total Hours", "bold": true, "color": "#01666B" },
+            "type": "scorecard",
+            "background": "",
+            "baseline": "Data!F8",
+            "baselineDescr": { "text": "expected" },
+            "keyValue": "Data!D8",
+            "humanize": false,
+            "chartId": "36f77603-2cc6??cd0cf706-f8bd"
+          }
+        },
+        {
+          "id": "d10af422-50d3",
+          "col": 0,
+          "row": 5,
+          "offset": { "x": 0, "y": 10 },
+          "width": 1000,
+          "height": 417,
+          "tag": "carousel",
+          "data": {
+            "chartDefinitions": {
+              "36f77603-2cc6??39c6667b-b74a-478e-87e9-75c22de5ea1f": {
+                "title": { "text": "" },
+                "legendPosition": "none",
+                "type": "line",
+                "showValues": false,
+                "humanize": true,
+                "stacked": false,
+                "fillArea": true,
+                "hideDataMarkers": false,
+                "zoomable": false,
+                "dataSource": {
+                  "type": "odoo",
+                  "cumulatedStart": false,
+                  "metaData": {
+                    "groupBy": ["date:week"],
+                    "measure": "billable_time",
+                    "order": null,
+                    "resModel": "timesheets.analysis.report",
+                    "mode": "line",
+                    "cumulatedStart": false
+                  },
+                  "searchParams": {
+                    "comparison": null,
+                    "context": {},
+                    "domain": [
+                      ["project_id", "!=", false]
+                    ],
+                    "groupBy": ["date:week"],
+                    "orderBy": []
+                  }
+                },
+                "dataSetStyles": {}
+              }
+            },
+            "title": {
+              "text": "Time Billed by Week",
+              "bold": true,
+              "fontSize": 21,
+              "color": "#01666B"
+            },
+            "items": [
+              {
+                "type": "chart",
+                "chartId": "36f77603-2cc6??39c6667b-b74a-478e-87e9-75c22de5ea1f"
+              }
+            ],
+            "fieldMatching": {
+              "36f77603-2cc6??39c6667b-b74a-478e-87e9-75c22de5ea1f": {
+                "fb3700b0-4ee9-4086-86ac-6c62a7d33d37": { "chain": "date", "type": "date" },
+                "65e4bccf-3035-47a0-a268-9a4e5b48037f": { "chain": "project_id", "type": "many2one" },
+                "22a76320-0363-4391-9121-65e1db51b671": { "chain": "task_id", "type": "many2one" },
+                "541de762-4a6c-435e-a5ff-e94d393cf6df": { "chain": "department_id", "type": "many2one" },
+                "4788ea63-ee8f-4082-a118-a26b4b6f1a71": { "chain": "employee_id", "type": "many2one" }
+              }
+            }
+          }
+        },
+        {
+          "id": "6a33f5fa-a4c0",
+          "col": 0,
+          "row": 22,
+          "offset": { "x": 0, "y": 28 },
+          "width": 1000,
+          "height": 417,
+          "tag": "carousel",
+          "data": {
+            "chartDefinitions": {
+              "032177cb-669a": {
+                "type": "bar",
+                "legendPosition": "top",
+                "title": { "text": "" },
+                "humanize": true,
+                "dataSource": {
+                  "labelRange": "Data!A21:A32",
+                  "type": "range",
+                  "dataSets": [
+                    { "dataSetId": "0", "dataRange": "Data!B21:B32" },
+                    { "dataSetId": "1", "dataRange": "Data!C21:C32" }
+                  ],
+                  "dataSetsHaveTitle": false
+                },
+                "dataSetStyles": {
+                  "0": { "label": "Hours Billed" },
+                  "1": { "label": "Billing Target" }
+                }
+              }
+            },
+            "title": {
+              "text": "Billed by Month vs Billing Target",
+              "bold": true,
+              "fontSize": 21,
+              "color": "#01666B"
+            },
+            "items": [
+              { "type": "chart", "chartId": "032177cb-669a" }
+            ],
+            "fieldMatching": {}
+          }
+        },
+        {
+          "id": "54742a6e-0da9",
+          "col": 4,
+          "row": 66,
+          "offset": { "x": 29, "y": 28 },
+          "width": 496,
+          "height": 417,
+          "tag": "carousel",
+          "data": {
+            "chartDefinitions": {},
+            "title": {
+              "text": "Non-Billable Tasks Costs",
+              "bold": true,
+              "fontSize": 21,
+              "color": "#01666B"
+            },
+            "items": [
+              {
+                "type": "carouselDataView",
+                "rangeData": {
+                  "_sheetId": "480d134d-d067",
+                  "_zone": { "top": 0, "left": 8, "bottom": 10, "right": 10 }
+                }
+              }
+            ],
+            "fieldMatching": {}
+          }
+        },
+        {
+          "id": "b29abcf6-8b7c",
+          "col": 0,
+          "row": 66,
+          "offset": { "x": 0, "y": 28 },
+          "width": 496,
+          "height": 417,
+          "tag": "carousel",
+          "data": {
+            "chartDefinitions": {},
+            "title": {
+              "text": "Non-Billable Projects Costs",
+              "bold": true,
+              "fontSize": 21,
+              "color": "#01666B"
+            },
+            "items": [
+              {
+                "type": "carouselDataView",
+                "rangeData": {
+                  "_sheetId": "03f39311-a2d6",
+                  "_zone": { "top": 0, "left": 8, "bottom": 10, "right": 10 }
+                }
+              }
+            ],
+            "fieldMatching": {}
+          }
+        },
+        {
+          "id": "b55e6ddd-29f8",
+          "col": 4,
+          "row": 53,
+          "offset": { "x": 29, "y": 18 },
+          "width": 496,
+          "height": 417,
+          "tag": "carousel",
+          "data": {
+            "chartDefinitions": {},
+            "title": { "text": "Top Tasks", "bold": true, "fontSize": 21, "color": "#01666B" },
+            "items": [
+              {
+                "type": "carouselDataView",
+                "rangeData": {
+                  "_sheetId": "c98075a6-08c8",
+                  "_zone": { "top": 0, "left": 10, "bottom": 10, "right": 13 }
+                },
+                "columnWeights": [386, 204, 204, 204]
+              }
+            ],
+            "fieldMatching": {}
+          }
+        },
+        {
+          "id": "197a28fe-4c52",
+          "col": 0,
+          "row": 53,
+          "offset": { "x": 0, "y": 18 },
+          "width": 496,
+          "height": 417,
+          "tag": "carousel",
+          "data": {
+            "chartDefinitions": {},
+            "title": {
+              "text": "Top Projects",
+              "bold": true,
+              "fontSize": 21,
+              "color": "#01666B"
+            },
+            "items": [
+              {
+                "type": "carouselDataView",
+                "rangeData": {
+                  "_sheetId": "c7982c9e-3bd9",
+                  "_zone": { "top": 0, "left": 10, "bottom": 10, "right": 13 }
+                },
+                "columnWeights": [359, 212, 212, 216]
+              }
+            ],
+            "fieldMatching": {}
+          }
+        },
+        {
+          "id": "d8e5a8ed-0a66",
+          "col": 4,
+          "row": 40,
+          "offset": { "x": 28, "y": 6 },
+          "width": 497,
+          "height": 417,
+          "tag": "carousel",
+          "data": {
+            "chartDefinitions": {},
+            "title": {
+              "text": "Top Employees",
+              "bold": true,
+              "fontSize": 21,
+              "color": "#01666B"
+            },
+            "items": [
+              {
+                "type": "carouselDataView",
+                "rangeData": {
+                  "_sheetId": "d6cb75fb-1378",
+                  "_zone": { "top": 0, "left": 10, "bottom": 10, "right": 13 }
+                }
+              }
+            ],
+            "fieldMatching": {}
+          }
+        },
+        {
+          "id": "b8751df3-da54",
+          "col": 0,
+          "row": 40,
+          "offset": { "x": 0, "y": 6 },
+          "width": 496,
+          "height": 417,
+          "tag": "carousel",
+          "data": {
+            "chartDefinitions": {},
+            "title": {
+              "text": "Top Departments",
+              "bold": true,
+              "fontSize": 21,
+              "color": "#01666B"
+            },
+            "items": [
+              {
+                "type": "carouselDataView",
+                "rangeData": {
+                  "_sheetId": "f1a97373-04fc",
+                  "_zone": { "top": 0, "left": 10, "bottom": 10, "right": 13 }
+                }
+              }
+            ],
+            "fieldMatching": {}
+          }
+        }
+      ],
+      "tables": [],
+      "areGridLinesVisible": true,
+      "isVisible": true,
+      "backgroundColor": "#F9FAFB",
+      "headerGroups": {
+        "ROW": [],
+        "COL": []
+      },
+      "comments": {}
+    },
+    {
+      "id": "sheet4-targets-days",
+      "name": "Dashboard Targets Days",
+      "colNumber": 9,
+      "rowNumber": 100,
+      "rows": {
+        "6": { "size": 28 },
+        "22": { "size": 28 },
+        "39": { "size": 28 },
+        "40": { "size": 28 },
+        "41": { "size": 28 },
+        "42": { "size": 28 },
+        "43": { "size": 28 },
+        "44": { "size": 28 },
+        "45": { "size": 28 },
+        "46": { "size": 28 },
+        "47": { "size": 28 },
+        "48": { "size": 28 },
+        "49": { "size": 28 },
+        "50": { "size": 28 },
+        "52": { "size": 28 },
+        "53": { "size": 28 },
+        "54": { "size": 28 },
+        "55": { "size": 28 },
+        "56": { "size": 28 },
+        "57": { "size": 28 },
+        "58": { "size": 28 },
+        "59": { "size": 28 },
+        "60": { "size": 28 },
+        "61": { "size": 28 },
+        "62": { "size": 28 },
+        "63": { "size": 28 },
+        "65": { "size": 28 },
+        "66": { "size": 28 },
+        "67": { "size": 28 },
+        "68": { "size": 28 },
+        "69": { "size": 28 },
+        "70": { "size": 28 },
+        "71": { "size": 28 },
+        "72": { "size": 28 },
+        "73": { "size": 28 },
+        "74": { "size": 28 },
+        "75": { "size": 28 },
+        "76": { "size": 28 }
+      },
+      "cols": {
+        "0": { "size": 175 },
+        "1": { "size": 100 },
+        "2": { "size": 100 },
+        "3": { "size": 100 },
+        "4": { "size": 50 },
+        "5": { "size": 175 },
+        "6": { "size": 100 },
+        "7": { "size": 100 },
+        "8": { "size": 100 }
+      },
+      "merges": [],
+      "cells": {},
+      "styles": {},
+      "formats": {},
+      "borders": {},
+      "conditionalFormats": [
+        {
+          "rule": { "type": "DataBarRule", "color": 15531509, "rangeValues": "C55:C64" },
+          "id": "d7e93c71-7dd3-4aa2-99c9-2acee1759c1b",
+          "ranges": ["A55:A64"]
+        },
+        {
+          "rule": { "type": "DataBarRule", "color": 16708338, "rangeValues": "H55:H64" },
+          "id": "c5128bdf-0225-43b6-be2d-b391b50972b7",
+          "ranges": ["F55:F64"]
+        },
+        {
+          "rule": { "type": "DataBarRule", "color": 15726335, "rangeValues": "D42:D51" },
+          "id": "0235598f-93e2-41ad-a3a3-6005c0682bb2",
+          "ranges": ["A42:A51"]
+        },
+        {
+          "rule": { "type": "DataBarRule", "color": 16775149, "rangeValues": "H42:H51" },
+          "id": "0258b472-cd0b-435a-a756-53684989745a",
+          "ranges": ["F42:F51"]
+        },
+        {
+          "rule": { "type": "DataBarRule", "color": 14275305, "rangeValues": "D68:D77" },
+          "id": "dce4d42b-d5a4",
+          "ranges": ["A68:A77"]
+        },
+        {
+          "rule": { "type": "DataBarRule", "color": 16573901, "rangeValues": "I68:I77" },
+          "id": "ee1cdfd6-4500",
+          "ranges": ["F68:F77"]
+        }
+      ],
+      "dataValidationRules": [],
+      "figures": [
+        {
+          "id": "b8ba785b-1916??14907ee1-177b-4dda-97d7-223b1b00abe5",
+          "col": 1,
+          "row": 0,
+          "offset": { "x": 35, "y": 9 },
+          "width": 200,
+          "height": 109,
+          "tag": "chart",
+          "data": {
+            "baselineColorDown": "#DC6965",
+            "baselineColorUp": "#00A04A",
+            "baselineMode": "text",
+            "title": { "text": "Billable Days", "bold": true, "color": "#01666B" },
+            "type": "scorecard",
+            "background": "",
+            "baseline": "Data!J6",
+            "baselineDescr": { "text": "last period" },
+            "keyValue": "Data!H6",
+            "humanize": false,
+            "chartId": "b8ba785b-1916??14907ee1-177b-4dda-97d7-223b1b00abe5"
+          }
+        },
+        {
+          "id": "b8ba785b-1916??0b033641-2a0f-4db7-893d-f14fbb320b94",
+          "col": 0,
+          "row": 0,
+          "offset": { "x": 0, "y": 9 },
+          "width": 200,
+          "height": 109,
+          "tag": "chart",
+          "data": {
+            "baselineColorDown": "#DC6965",
+            "baselineColorUp": "#00A04A",
+            "baselineMode": "text",
+            "title": { "text": "Billing Rate", "bold": true, "color": "#01666B" },
+            "type": "scorecard",
+            "background": "",
+            "baseline": "Data!K9",
+            "baselineDescr": { "text": "last period" },
+            "keyValue": "Data!J9",
+            "humanize": false,
+            "chartId": "b8ba785b-1916??0b033641-2a0f-4db7-893d-f14fbb320b94"
+          }
+        },
+        {
+          "id": "b8ba785b-1916??a9474712-a843",
+          "col": 3,
+          "row": 0,
+          "offset": { "x": 45, "y": 9 },
+          "width": 200,
+          "height": 109,
+          "tag": "chart",
+          "data": {
+            "baselineColorDown": "#DC6965",
+            "baselineColorUp": "#00A04A",
+            "baselineMode": "text",
+            "title": { "text": "Non-billable Days", "bold": true, "color": "#01666B" },
+            "type": "scorecard",
+            "background": "",
+            "baseline": "Data!I7",
+            "baselineDescr": { "text": "last period" },
+            "keyValue": "Data!H7",
+            "humanize": false,
+            "chartId": "b8ba785b-1916??741013eb-c06f"
+          }
+        },
+        {
+          "id": "b8ba785b-1916??72245151-400f",
+          "col": 5,
+          "row": 0,
+          "offset": { "x": 104, "y": 9 },
+          "width": 200,
+          "height": 109,
+          "tag": "chart",
+          "data": {
+            "baselineColorDown": "#DC6965",
+            "baselineColorUp": "#00A04A",
+            "baselineMode": "text",
+            "title": { "text": "Total Days", "bold": true, "color": "#01666B" },
+            "type": "scorecard",
+            "background": "",
+            "baseline": "Data!J8",
+            "baselineDescr": { "text": "expected" },
+            "keyValue": "Data!H8",
+            "humanize": false,
+            "chartId": "b8ba785b-1916??cd0cf706-f8bd"
+          }
+        },
+        {
+          "id": "7cd3a44e-fd07",
+          "col": 0,
+          "row": 5,
+          "offset": { "x": 0, "y": 12 },
+          "width": 1000,
+          "height": 417,
+          "tag": "carousel",
+          "data": {
+            "chartDefinitions": {
+              "b8ba785b-1916??39c6667b-b74a-478e-87e9-75c22de5ea1f": {
+                "title": { "text": "" },
+                "legendPosition": "none",
+                "type": "line",
+                "showValues": false,
+                "humanize": true,
+                "stacked": false,
+                "fillArea": true,
+                "hideDataMarkers": false,
+                "zoomable": false,
+                "dataSource": {
+                  "type": "odoo",
+                  "cumulatedStart": false,
+                  "metaData": {
+                    "groupBy": ["date:week"],
+                    "measure": "billable_time",
+                    "order": null,
+                    "resModel": "timesheets.analysis.report",
+                    "mode": "line",
+                    "cumulatedStart": false
+                  },
+                  "searchParams": {
+                    "comparison": null,
+                    "context": {},
+                    "domain": [
+                      ["project_id", "!=", false]
+                    ],
+                    "groupBy": ["date:week"],
+                    "orderBy": []
+                  }
+                },
+                "dataSetStyles": {}
+              }
+            },
+            "title": {
+              "text": "Time Billed by Week",
+              "bold": true,
+              "fontSize": 21,
+              "color": "#01666B"
+            },
+            "items": [
+              {
+                "type": "chart",
+                "chartId": "b8ba785b-1916??39c6667b-b74a-478e-87e9-75c22de5ea1f"
+              }
+            ],
+            "fieldMatching": {
+              "b8ba785b-1916??39c6667b-b74a-478e-87e9-75c22de5ea1f": {
+                "fb3700b0-4ee9-4086-86ac-6c62a7d33d37": { "chain": "date", "type": "date" },
+                "65e4bccf-3035-47a0-a268-9a4e5b48037f": { "chain": "project_id", "type": "many2one" },
+                "22a76320-0363-4391-9121-65e1db51b671": { "chain": "task_id", "type": "many2one" },
+                "541de762-4a6c-435e-a5ff-e94d393cf6df": { "chain": "department_id", "type": "many2one" },
+                "4788ea63-ee8f-4082-a118-a26b4b6f1a71": { "chain": "employee_id", "type": "many2one" }
+              }
+            }
+          }
+        },
+        {
+          "id": "f0951510-6b5c",
+          "col": 0,
+          "row": 22,
+          "offset": { "x": 0, "y": 30 },
+          "width": 1000,
+          "height": 417,
+          "tag": "carousel",
+          "data": {
+            "chartDefinitions": {
+              "b8ba785b-1916??032177cb-669a": {
+                "type": "bar",
+                "legendPosition": "top",
+                "title": { "text": "" },
+                "humanize": true,
+                "dataSource": {
+                  "labelRange": "Data!A21:A32",
+                  "type": "range",
+                  "dataSets": [
+                    { "dataSetId": "0", "dataRange": "Data!D21:D32" },
+                    { "dataSetId": "1", "dataRange": "Data!E21:E32" }
+                  ],
+                  "dataSetsHaveTitle": false
+                },
+                "dataSetStyles": {
+                  "0": { "label": "Days Billed" },
+                  "1": { "label": "Billing Target" }
+                }
+              }
+            },
+            "title": {
+              "text": "Billed by Month vs Billing Target",
+              "bold": true,
+              "fontSize": 21,
+              "color": "#01666B"
+            },
+            "items": [
+              { "type": "chart", "chartId": "b8ba785b-1916??032177cb-669a" }
+            ],
+            "fieldMatching": {}
+          }
+        },
+        {
+          "id": "9a24e44a-41b1",
+          "col": 4,
+          "row": 40,
+          "offset": { "x": 29, "y": 855 },
+          "width": 496,
+          "height": 417,
+          "tag": "carousel",
+          "data": {
+            "chartDefinitions": {},
+            "title": {
+              "text": "Non-Billable Tasks Costs",
+              "bold": true,
+              "fontSize": 21,
+              "color": "#01666B"
+            },
+            "items": [
+              {
+                "type": "carouselDataView",
+                "rangeData": {
+                  "_sheetId": "480d134d-d067",
+                  "_zone": { "top": 0, "left": 12, "bottom": 10, "right": 14 }
+                }
+              }
+            ],
+            "fieldMatching": {}
+          }
+        },
+        {
+          "id": "68e3df0e-a978",
+          "col": 0,
+          "row": 40,
+          "offset": { "x": 0, "y": 855 },
+          "width": 496,
+          "height": 417,
+          "tag": "carousel",
+          "data": {
+            "chartDefinitions": {},
+            "title": {
+              "text": "Non-Billable Projects Costs",
+              "bold": true,
+              "fontSize": 21,
+              "color": "#01666B"
+            },
+            "items": [
+              {
+                "type": "carouselDataView",
+                "rangeData": {
+                  "_sheetId": "03f39311-a2d6",
+                  "_zone": { "top": 0, "left": 12, "bottom": 10, "right": 14 }
+                }
+              }
+            ],
+            "fieldMatching": {}
+          }
+        },
+        {
+          "id": "2b3c667f-a800",
+          "col": 4,
+          "row": 53,
+          "offset": { "x": 29, "y": 19 },
+          "width": 496,
+          "height": 417,
+          "tag": "carousel",
+          "data": {
+            "chartDefinitions": {},
+            "title": { "text": "Top Tasks", "bold": true, "fontSize": 21, "color": "#01666B" },
+            "items": [
+              {
+                "type": "carouselDataView",
+                "rangeData": {
+                  "_sheetId": "c98075a6-08c8",
+                  "_zone": { "top": 0, "left": 15, "bottom": 10, "right": 18 }
+                },
+                "columnWeights": [386, 204, 204, 204]
+              }
+            ],
+            "fieldMatching": {}
+          }
+        },
+        {
+          "id": "e58a7344-229f",
+          "col": 0,
+          "row": 53,
+          "offset": { "x": 0, "y": 19 },
+          "width": 496,
+          "height": 417,
+          "tag": "carousel",
+          "data": {
+            "chartDefinitions": {},
+            "title": {
+              "text": "Top Projects",
+              "bold": true,
+              "fontSize": 21,
+              "color": "#01666B"
+            },
+            "items": [
+              {
+                "type": "carouselDataView",
+                "rangeData": {
+                  "_sheetId": "c7982c9e-3bd9",
+                  "_zone": { "top": 0, "left": 15, "bottom": 10, "right": 18 }
+                },
+                "columnWeights": [359, 212, 212, 216]
+              }
+            ],
+            "fieldMatching": {}
+          }
+        },
+        {
+          "id": "71a091f6-ee07",
+          "col": 4,
+          "row": 40,
+          "offset": { "x": 28, "y": 7 },
+          "width": 497,
+          "height": 417,
+          "tag": "carousel",
+          "data": {
+            "chartDefinitions": {},
+            "title": {
+              "text": "Top Employees",
+              "bold": true,
+              "fontSize": 21,
+              "color": "#01666B"
+            },
+            "items": [
+              {
+                "type": "carouselDataView",
+                "rangeData": {
+                  "_sheetId": "d6cb75fb-1378",
+                  "_zone": { "top": 0, "left": 15, "bottom": 10, "right": 18 }
+                }
+              }
+            ],
+            "fieldMatching": {}
+          }
+        },
+        {
+          "id": "79fd78ac-b1a9",
+          "col": 0,
+          "row": 40,
+          "offset": { "x": 0, "y": 7 },
+          "width": 496,
+          "height": 417,
+          "tag": "carousel",
+          "data": {
+            "chartDefinitions": {},
+            "title": {
+              "text": "Top Departments",
+              "bold": true,
+              "fontSize": 21,
+              "color": "#01666B"
+            },
+            "items": [
+              {
+                "type": "carouselDataView",
+                "rangeData": {
+                  "_sheetId": "f1a97373-04fc",
+                  "_zone": { "top": 0, "left": 15, "bottom": 10, "right": 18 }
+                }
+              }
+            ],
+            "fieldMatching": {}
+          }
+        }
+      ],
+      "tables": [],
+      "areGridLinesVisible": true,
+      "isVisible": true,
+      "backgroundColor": "#F9FAFB",
       "headerGroups": {
         "ROW": [],
         "COL": []
@@ -584,7 +1921,7 @@
       "id": "7802fc6d-c96b-452f-86d8-1c69816bebdc",
       "name": "Data",
       "colNumber": 26,
-      "rowNumber": 101,
+      "rowNumber": 100,
       "rows": {},
       "cols": {
         "0": { "size": 159 },
@@ -620,12 +1957,15 @@
         "A9": {
           "S": ["Billable rate"]
         },
-        "A15": {
-          "S": ["Time Encoding:"]
+        "A20": {
+          "S": ["Month"]
         },
-        "B1": {
-          "S": ["Current"]
+        "A21": "=IFERROR(PIVOT.HEADER(12,\"#date:month\",1),\"\")",
+        "A22:A32": {
+          "N": "=|+1",
+          "S": ["=", "="]
         },
+        "B1": "=_t(\"Current\")",
         "B2": "=PIVOT.VALUE(5,\"unit_amount\",\"billable_type\",\"02_billable_fixed\")",
         "B3": {
           "N": "=",
@@ -643,7 +1983,12 @@
         "B7": "=PIVOT.VALUE(5,\"unit_amount\",\"billable_type\",\"09_non_billable\")",
         "B8": "=PIVOT.VALUE(5,\"unit_amount\")",
         "B9": "=IFERROR(B6/B8)",
-        "B15": "=PIVOT.HEADER(9,\"#company_id.timesheet_encode_uom_id\",1)",
+        "B20": "=_t(\"Billable Hours\")",
+        "B21": "=PIVOT.VALUE(12,\"billable_time\",\"#date:month\",1)",
+        "B22:B32": {
+          "N": "=|+1",
+          "S": ["=", "="]
+        },
         "C1": "=_t(\"Previous\")",
         "C2": "=PIVOT.VALUE(6,\"unit_amount\",\"billable_type\",\"02_billable_fixed\")",
         "C3": {
@@ -662,59 +2007,98 @@
         "C7": "=PIVOT.VALUE(6,\"unit_amount\",\"billable_type\",\"09_non_billable\")",
         "C8": "=PIVOT.VALUE(6,\"unit_amount\")",
         "C9": "=IFERROR(C6/C8)",
-        "D1": "=_t(\"Current Score\")",
-        "D2": "=FORMAT.LARGE.NUMBER(IF(B15=\"Hours\",B2,F2))",
-        "D3:D8": {
-          "S": ["="],
-          "R": "=|+R1|+R1"
+        "C20": "=_t(\"Target\")",
+        "C21": "=IF(B21=\"\",\"\",PIVOT.VALUE(12,\"Time Target Sum\",\"#date:month\",1))",
+        "C22:C32": {
+          "N": "=|+1",
+          "S": ["=", "=", "=", "="],
+          "R": "+R1"
         },
-        "D9": "=IF(B15=\"Hours\",B9,F9)",
-        "E1": "=_t(\"Previous Score\")",
-        "E2": "=FORMAT.LARGE.NUMBER(IF(B15=\"Hours\",C2,G2))",
-        "E3:E8": {
-          "S": ["="],
-          "R": "=|+R1|+R1"
+        "D1": "=_t(\"Current\")",
+        "D2": "=FORMAT.LARGE.NUMBER(B2)",
+        "D3:D8": { "R": "+R1" },
+        "D9": "=B9",
+        "D20": "=_t(\"Billable Days\")",
+        "D21": "=IF(PIVOT.VALUE(12,\"Billable Days\",\"#date:month\",1)=0,\"\",PIVOT.VALUE(12,\"Billable Days\",\"#date:month\",1))",
+        "D22:D32": {
+          "N": "=|+1|=|=|+1",
+          "S": ["=", "=", "=", "=", "="]
         },
-        "E9": "=IF(B15=\"Hours\",C9,G9)",
-        "F1": "=_t(\"Current Days\")",
-        "F2": "=PIVOT.VALUE(5,\"Days\",\"billable_type\",\"02_billable_fixed\")",
-        "F3": {
+        "E1": "=_t(\"Previous\")",
+        "E2": "=FORMAT.LARGE.NUMBER(C2)",
+        "E3:E8": { "R": "+R1" },
+        "E9": "=C9",
+        "E20": "=_t(\"Target Days\")",
+        "E21": "=IF(D21=\"\",\"\",PIVOT.VALUE(12,\"Billing Days Target\",\"#date:month\",1))",
+        "E22:E32": {
+          "N": "=|+1",
+          "S": ["=", "=", "=", "="],
+          "R": "+R1"
+        },
+        "F1": "=_t(\"Target\")",
+        "F6": "=PIVOT.VALUE(11,\"Time Target Sum\")",
+        "F8": "=PIVOT.VALUE(11,\"Time Target Sum\")",
+        "F9": "=IFERROR(B6/F8)",
+        "G1": "=_t(\"Prev Target\")",
+        "G6": "=PIVOT.VALUE(11,\"Time Target Sum\")",
+        "G8": "=PIVOT.VALUE(11,\"Time Target Sum\")",
+        "G9": "=IFERROR(C6/G8)",
+        "H1": "=_t(\"Current Days\")",
+        "H2": "=PIVOT.VALUE(5,\"Days\",\"billable_type\",\"02_billable_fixed\")",
+        "H3": {
           "N": "=",
           "S": ["=", "=", "08_billable_manual"]
         },
-        "F4": {
+        "H4": {
           "N": "=",
           "S": ["=", "=", "04_billable_time"]
         },
-        "F5": {
+        "H5": {
           "N": "=",
           "S": ["=", "=", "06_billable_milestones"]
         },
-        "F6": "=SUM(F2:F5)",
-        "F7": "=PIVOT.VALUE(5,\"Days\",\"billable_type\",\"09_non_billable\")",
-        "F8": "=PIVOT.VALUE(5,\"Days\")",
-        "F9": "=B9",
-        "G1": "=_t(\"Previous Days\")",
-        "G2": "=PIVOT.VALUE(6,\"Days\",\"billable_type\",\"02_billable_fixed\")",
-        "G3": {
+        "H6": "=SUM(H2:H5)",
+        "H7": "=PIVOT.VALUE(5,\"Days\",\"billable_type\",\"09_non_billable\")",
+        "H8": "=PIVOT.VALUE(5,\"Days\")",
+        "H9": "=D9",
+        "I1": "=_t(\"Previous Days\")",
+        "I2": "=PIVOT.VALUE(6,\"Days\",\"billable_type\",\"02_billable_fixed\")",
+        "I3": {
           "N": "=",
           "S": ["=", "=", "08_billable_manual"]
         },
-        "G4": {
+        "I4": {
           "N": "=",
           "S": ["=", "=", "04_billable_time"]
         },
-        "G5": {
+        "I5": {
           "N": "=",
           "S": ["=", "=", "06_billable_milestones"]
         },
-        "G6": "=SUM(G2:G4)",
-        "G7": "=PIVOT.VALUE(6,\"Days\",\"billable_type\",\"09_non_billable\")",
-        "G8": "=PIVOT.VALUE(6,\"Days\")",
-        "G9": "=C9"
+        "I6": "=SUM(I2:I4)",
+        "I7": "=PIVOT.VALUE(6,\"Days\",\"billable_type\",\"09_non_billable\")",
+        "I8": "=PIVOT.VALUE(6,\"Days\")",
+        "I9": "=E9",
+        "J1": "=_t(\"Target Days\")",
+        "J6": "=PIVOT.VALUE(11,\"Billing Days Target\")",
+        "J8": "=PIVOT.VALUE(11,\"Billing Days Target\")",
+        "J9": "=IFERROR(H6/J8)",
+        "K1": "=_t(\"Prev Target Days\")",
+        "K6": "=PIVOT.VALUE(11,\"Billing Days Target\")",
+        "K8": "=PIVOT.VALUE(11,\"Billing Days Target\")",
+        "K9": "=IFERROR(I6/K8)"
       },
-      "styles": { "A15": 7, "A1:G1": 7, "B15": 8, "A2:G9": 8 },
-      "formats": { "D9:G9": 2 },
+      "styles": { "A20:E20": 1, "A1:K1": 1, "A21:E32": 2 },
+      "formats": {
+        "B21:E32": 1,
+        "F6:G6": 1,
+        "F8:G8": 1,
+        "H6:I8": 1,
+        "J2:K8": 1,
+        "D9:G9": 2,
+        "J9:K9": 2,
+        "H2:I5": 3
+      },
       "borders": {},
       "conditionalFormats": [],
       "dataValidationRules": [],
@@ -727,39 +2111,1808 @@
         "COL": []
       },
       "comments": {}
+    },
+    {
+      "id": "f1a97373-04fc",
+      "name": "Top Departments",
+      "colNumber": 26,
+      "rowNumber": 100,
+      "rows": {
+        "0": { "size": 28 },
+        "1": { "size": 28 },
+        "2": { "size": 28 },
+        "3": { "size": 28 },
+        "4": { "size": 28 },
+        "5": { "size": 28 },
+        "6": { "size": 28 },
+        "7": { "size": 28 },
+        "8": { "size": 28 },
+        "9": { "size": 28 },
+        "10": { "size": 28 },
+        "11": { "size": 28 },
+        "12": { "size": 28 },
+        "13": { "size": 28 },
+        "14": { "size": 28 },
+        "15": { "size": 28 },
+        "16": { "size": 28 },
+        "17": { "size": 28 },
+        "18": { "size": 28 },
+        "19": { "size": 28 },
+        "20": { "size": 28 },
+        "21": { "size": 28 },
+        "22": { "size": 28 },
+        "23": { "size": 28 },
+        "24": { "size": 28 },
+        "25": { "size": 28 },
+        "26": { "size": 28 },
+        "27": { "size": 28 },
+        "28": { "size": 28 },
+        "29": { "size": 28 },
+        "30": { "size": 28 },
+        "31": { "size": 28 },
+        "32": { "size": 28 },
+        "33": { "size": 28 },
+        "34": { "size": 28 },
+        "35": { "size": 28 },
+        "36": { "size": 28 },
+        "37": { "size": 28 },
+        "38": { "size": 28 },
+        "39": { "size": 28 },
+        "40": { "size": 28 },
+        "41": { "size": 28 },
+        "42": { "size": 28 },
+        "43": { "size": 28 },
+        "44": { "size": 28 },
+        "45": { "size": 28 },
+        "46": { "size": 28 },
+        "47": { "size": 28 },
+        "48": { "size": 28 },
+        "49": { "size": 28 },
+        "50": { "size": 28 }
+      },
+      "cols": {
+        "5": { "size": 216 }
+      },
+      "merges": [],
+      "cells": {
+        "A1": "=_t(\"Department\")",
+        "A2": "=TRIM(REGEXEXTRACT(PIVOT.HEADER(3,\"#department_id\",1),\"[^/]+$\"))",
+        "A3:A11": {
+          "N": "=|+1",
+          "S": ["=", "="]
+        },
+        "B1": "=_t(\"Hours spent\")",
+        "B2": "=IF(PIVOT.VALUE(3,\"unit_amount\",\"#department_id\",1)=\"\",\"\",PIVOT.VALUE(3,\"unit_amount\",\"#department_id\",1))",
+        "B3:B11": {
+          "N": "=|+1|=|+1",
+          "S": ["=", "=", "=", "=", "=", "="]
+        },
+        "C1": "=_t(\"Hours billed\")",
+        "C2": "=IF(PIVOT.VALUE(3,\"billable_time\",\"#department_id\",1)=\"\",\"\",PIVOT.VALUE(3,\"billable_time\",\"#department_id\",1))",
+        "C3:C11": {
+          "N": "=|+1|=|+1",
+          "S": ["=", "=", "=", "=", "=", "="]
+        },
+        "D1": "=_t(\"Billable rate\")",
+        "D2": "=IFERROR(C2/B2,\"\")",
+        "D3:D11": {
+          "S": ["="],
+          "R": "+R1|+R1"
+        },
+        "F1": "=_t(\"Department\")",
+        "F2": "=TRIM(REGEXEXTRACT(PIVOT.HEADER(3,\"#department_id\",1),\"[^/]+$\"))",
+        "F3:F11": {
+          "N": "=|+1",
+          "S": ["=", "="]
+        },
+        "G1": "=_t(\"Days spent\")",
+        "G2": "=IFERROR(PIVOT.VALUE(3,\"Days Spent\",\"#department_id\",1),\"\")",
+        "G3:G11": {
+          "N": "=|+1",
+          "S": ["=", "=", "="]
+        },
+        "H1": "=_t(\"Days billed\")",
+        "H2": "=IFERROR(PIVOT.VALUE(3,\"Billable Days\",\"#department_id\",1),\"\")",
+        "H3:H11": {
+          "N": "=|+1",
+          "S": ["=", "=", "="]
+        },
+        "I1": "=_t(\"Billable rate\")",
+        "I2": "=IFERROR(H2/G2,\"\")",
+        "I3:I11": {
+          "S": ["="],
+          "R": "+R1|+R1"
+        },
+        "K1": "=_t(\"Department\")",
+        "K2": "=TRIM(REGEXEXTRACT(PIVOT.HEADER(10,\"#department_id\",1),\"[^/]+$\"))",
+        "K3:K11": {
+          "N": "=|+1",
+          "S": ["=", "="]
+        },
+        "L1": "=_t(\"Hours spent\")",
+        "L2": "=IF(PIVOT.VALUE(10,\"unit_amount\",\"#department_id\",1)=\"\",\"\",PIVOT.VALUE(10,\"unit_amount\",\"#department_id\",1))",
+        "L3:L11": {
+          "N": "=|+1|=|+1",
+          "S": ["=", "=", "=", "=", "=", "="]
+        },
+        "M1": "=_t(\"Hours billed\")",
+        "M2": "=IF(PIVOT.VALUE(10,\"billable_time\",\"#department_id\",1)=\"\",\"\",PIVOT.VALUE(10,\"billable_time\",\"#department_id\",1))",
+        "M3:M11": {
+          "N": "=|+1|=|+1",
+          "S": ["=", "=", "=", "=", "=", "="]
+        },
+        "N1": "=_t(\"Billing target\")",
+        "N2": "=IFERROR(PIVOT.VALUE(10,\"billing_target\",\"#department_id\",1),\"\")",
+        "N3:N11": {
+          "N": "=|+1",
+          "S": ["=", "=", "="]
+        },
+        "P1": "=_t(\"Department\")",
+        "P2": "=TRIM(REGEXEXTRACT(PIVOT.HEADER(10,\"#department_id\",1),\"[^/]+$\"))",
+        "P3:P11": {
+          "N": "=|+1",
+          "S": ["=", "="]
+        },
+        "Q1": "=_t(\"Days spent\")",
+        "Q2": "=IFERROR(PIVOT.VALUE(10,\"Days Spent\",\"#department_id\",1),\"\")",
+        "Q3:Q11": {
+          "N": "=|+1",
+          "S": ["=", "=", "="]
+        },
+        "R1": "=_t(\"Days billed\")",
+        "R2": "=IFERROR(PIVOT.VALUE(10,\"Billable Days\",\"#department_id\",1),\"\")",
+        "R3:R11": {
+          "N": "=|+1",
+          "S": ["=", "=", "="]
+        },
+        "S1": "=_t(\"Billing target\")",
+        "S2": "=IFERROR(PIVOT.VALUE(10,\"billing_target\",\"#department_id\",1),\"\")",
+        "S3:S11": {
+          "N": "=|+1",
+          "S": ["=", "=", "="]
+        }
+      },
+      "styles": {
+        "A1": 3,
+        "F1": 3,
+        "K1": 3,
+        "P1": 3,
+        "A2:A11": 4,
+        "B12:C51": 4,
+        "A12:A51": 5,
+        "B1:D1": 6,
+        "G1:I1": 6,
+        "L1:N1": 6,
+        "Q1:S1": 6,
+        "B2:C11": 7,
+        "G2:H11": 7,
+        "L2:M11": 7,
+        "Q2:R11": 7,
+        "D2:D11": 8,
+        "F2:F11": 8,
+        "I2:I11": 8,
+        "K2:K11": 8,
+        "N2:N11": 8,
+        "P2:P11": 8,
+        "S2:S11": 8
+      },
+      "formats": {
+        "B2:C11": 1,
+        "G2:H11": 1,
+        "L2:M11": 1,
+        "Q2:R11": 1,
+        "D2:D11": 2,
+        "I2:I11": 2,
+        "N2:N11": 2,
+        "S2:S11": 2,
+        "A12:A13": 4,
+        "C12:C51": 5
+      },
+      "borders": { "A1:D1": 1, "F1:I1": 1, "K1:N1": 1, "P1:S1": 1, "F3:F11": 2 },
+      "conditionalFormats": [
+        {
+          "id": "e7dfe92f-4458",
+          "rule": { "type": "DataBarRule", "color": 14609659, "rangeValues": "C2:C51" },
+          "ranges": ["A2:A51", "F2:F11", "K2:K11", "P2:P11"]
+        },
+        {
+          "id": "f4af5f0d-ece3",
+          "rule": { "type": "DataBarRule", "color": 15726335, "rangeValues": "C42:C51" },
+          "ranges": ["A2:A11", "F2:F11", "K2:K11", "P2:P11"]
+        },
+        {
+          "id": "1e911e7b-ea22",
+          "rule": { "type": "DataBarRule", "color": 15726335, "rangeValues": "D42:D51" },
+          "ranges": ["A2:A11", "F2:F11", "K2:K11", "P2:P11"]
+        }
+      ],
+      "dataValidationRules": [],
+      "figures": [],
+      "tables": [
+        {
+          "range": "A1:D11",
+          "type": "static",
+          "config": {
+            "hasFilters": false,
+            "totalRow": false,
+            "firstColumn": false,
+            "lastColumn": false,
+            "numberOfHeaders": 1,
+            "bandedRows": true,
+            "bandedColumns": false,
+            "automaticAutofill": true,
+            "styleId": "None"
+          }
+        },
+        {
+          "range": "F1:I11",
+          "type": "static",
+          "config": {
+            "hasFilters": false,
+            "totalRow": false,
+            "firstColumn": false,
+            "lastColumn": false,
+            "numberOfHeaders": 1,
+            "bandedRows": true,
+            "bandedColumns": false,
+            "automaticAutofill": true,
+            "styleId": "None"
+          }
+        },
+        {
+          "range": "K1:N11",
+          "type": "static",
+          "config": {
+            "hasFilters": false,
+            "totalRow": false,
+            "firstColumn": false,
+            "lastColumn": false,
+            "numberOfHeaders": 1,
+            "bandedRows": true,
+            "bandedColumns": false,
+            "automaticAutofill": true,
+            "styleId": "None"
+          }
+        },
+        {
+          "range": "P1:S11",
+          "type": "static",
+          "config": {
+            "hasFilters": false,
+            "totalRow": false,
+            "firstColumn": false,
+            "lastColumn": false,
+            "numberOfHeaders": 1,
+            "bandedRows": true,
+            "bandedColumns": false,
+            "automaticAutofill": true,
+            "styleId": "None"
+          }
+        }
+      ],
+      "areGridLinesVisible": true,
+      "isVisible": true,
+      "isLocked": false,
+      "panes": { "xSplit": 0, "ySplit": 1 },
+      "headerGroups": {
+        "ROW": [],
+        "COL": []
+      },
+      "comments": {}
+    },
+    {
+      "id": "d6cb75fb-1378",
+      "name": "Top Employees",
+      "colNumber": 26,
+      "rowNumber": 100,
+      "rows": {
+        "0": { "size": 28 },
+        "1": { "size": 28 },
+        "2": { "size": 28 },
+        "3": { "size": 28 },
+        "4": { "size": 28 },
+        "5": { "size": 28 },
+        "6": { "size": 28 },
+        "7": { "size": 28 },
+        "8": { "size": 28 },
+        "9": { "size": 28 },
+        "10": { "size": 28 },
+        "11": { "size": 28 },
+        "12": { "size": 28 },
+        "13": { "size": 28 },
+        "14": { "size": 28 },
+        "15": { "size": 28 },
+        "16": { "size": 28 },
+        "17": { "size": 28 },
+        "18": { "size": 28 },
+        "19": { "size": 28 },
+        "20": { "size": 28 },
+        "21": { "size": 28 },
+        "22": { "size": 28 },
+        "23": { "size": 28 },
+        "24": { "size": 28 },
+        "25": { "size": 28 },
+        "26": { "size": 28 },
+        "27": { "size": 28 },
+        "28": { "size": 28 },
+        "29": { "size": 28 },
+        "30": { "size": 28 },
+        "31": { "size": 28 },
+        "32": { "size": 28 },
+        "33": { "size": 28 },
+        "34": { "size": 28 },
+        "35": { "size": 28 },
+        "36": { "size": 28 },
+        "37": { "size": 28 },
+        "38": { "size": 28 },
+        "39": { "size": 28 },
+        "40": { "size": 28 },
+        "41": { "size": 28 },
+        "42": { "size": 28 },
+        "43": { "size": 28 },
+        "44": { "size": 28 },
+        "45": { "size": 28 },
+        "46": { "size": 28 },
+        "47": { "size": 28 },
+        "48": { "size": 28 },
+        "49": { "size": 28 }
+      },
+      "cols": {
+        "5": { "size": 216 }
+      },
+      "merges": [],
+      "cells": {
+        "A1": "=_t(\"Employee\")",
+        "A2": "=PIVOT.HEADER(4,\"#employee_id\",1)",
+        "A3:A11": {
+          "N": "=|+1",
+          "S": ["="]
+        },
+        "B1": "=_t(\"Hours spent\")",
+        "B2": "=IF(PIVOT.VALUE(4,\"unit_amount\",\"#employee_id\",1)=\"\",\"\",PIVOT.VALUE(4,\"unit_amount\",\"#employee_id\",1))",
+        "B3:B11": {
+          "N": "=|+1|=|+1",
+          "S": ["=", "=", "=", "=", "=", "="]
+        },
+        "C1": "=_t(\"Hours billed\")",
+        "C2": "=IF(PIVOT.VALUE(4,\"billable_time\",\"#employee_id\",1)=\"\",\"\",PIVOT.VALUE(4,\"billable_time\",\"#employee_id\",1))",
+        "C3:C11": {
+          "N": "=|+1|=|+1",
+          "S": ["=", "=", "=", "=", "=", "="]
+        },
+        "D1": "=_t(\"Billable rate\")",
+        "D2": "=IFERROR(C2/B2,\"\")",
+        "D3:D11": {
+          "S": ["="],
+          "R": "+R1|+R1"
+        },
+        "F1": "=_t(\"Employee\")",
+        "F2": "=PIVOT.HEADER(4,\"#employee_id\",1)",
+        "F3:F11": {
+          "N": "=|+1",
+          "S": ["="]
+        },
+        "G1": "=_t(\"Days spent\")",
+        "G2": "=IFERROR(PIVOT.VALUE(4,\"Days Spent\",\"#employee_id\",1),\"\")",
+        "G3:G11": {
+          "N": "=|+1",
+          "S": ["=", "=", "="]
+        },
+        "H1": "=_t(\"Days billed\")",
+        "H2": "=IFERROR(PIVOT.VALUE(4,\"Billable Days\",\"#employee_id\",1),\"\")",
+        "H3:H11": {
+          "N": "=|+1",
+          "S": ["=", "=", "="]
+        },
+        "I1": "=_t(\"Billable rate\")",
+        "I2": "=IFERROR(H2/G2,\"\")",
+        "I3:I11": {
+          "S": ["="],
+          "R": "+R1|+R1"
+        },
+        "K1": "=_t(\"Employee\")",
+        "K2": "=PIVOT.HEADER(9,\"#employee_id\",1)",
+        "K3:K11": {
+          "N": "=|+1",
+          "S": ["="]
+        },
+        "L1": "=_t(\"Hours spent\")",
+        "L2": "=IF(PIVOT.VALUE(9,\"unit_amount\",\"#employee_id\",1)=\"\",\"\",PIVOT.VALUE(9,\"unit_amount\",\"#employee_id\",1))",
+        "L3:L11": {
+          "N": "=|+1|=|+1",
+          "S": ["=", "=", "=", "=", "=", "="]
+        },
+        "M1": "=_t(\"Hours billed\")",
+        "M2": "=IF(PIVOT.VALUE(9,\"billable_time\",\"#employee_id\",1)=\"\",\"\",PIVOT.VALUE(9,\"billable_time\",\"#employee_id\",1))",
+        "M3:M11": {
+          "N": "=|+1|=|+1",
+          "S": ["=", "=", "=", "=", "=", "="]
+        },
+        "N1": "=_t(\"Billing target\")",
+        "N2": "=IF(PIVOT.VALUE(9,\"billing_time_target:max\",\"#employee_id\",1)=\"\",\"\",PIVOT.VALUE(9,\"billing_time_target:max\",\"#employee_id\",1)&\" (\"&ROUND(PIVOT.VALUE(9,\"billing_target\",\"#employee_id\",1)*100)&\"%)\")",
+        "N3:N11": {
+          "N": "=|+1|=|+1|=|+1|=",
+          "S": ["=", "=", "=", "=", "=", "=", "=", "=", "=", "="]
+        },
+        "P1": "=_t(\"Employee\")",
+        "P2": "=PIVOT.HEADER(9,\"#employee_id\",1)",
+        "P3:P11": {
+          "N": "=|+1",
+          "S": ["="]
+        },
+        "Q1": "=_t(\"Days spent\")",
+        "Q2": "=IFERROR(PIVOT.VALUE(9,\"Days Spent\",\"#employee_id\",1),\"\")",
+        "Q3:Q11": {
+          "N": "=|+1",
+          "S": ["=", "=", "="]
+        },
+        "R1": "=_t(\"Days billed\")",
+        "R2": "=IFERROR(PIVOT.VALUE(9,\"Billable Days\",\"#employee_id\",1),\"\")",
+        "R3:R11": {
+          "N": "=|+1",
+          "S": ["=", "=", "="]
+        },
+        "S1": "=_t(\"Billing target\")",
+        "S2": "=IF(PIVOT.VALUE(9,\"Billing Days Target\",\"#employee_id\",1)=\"\",\"\",PIVOT.VALUE(9,\"Billing Days Target\",\"#employee_id\",1)&\" (\"&ROUND(PIVOT.VALUE(9,\"billing_target\",\"#employee_id\",1)*100)&\"%)\")",
+        "S3:S11": {
+          "N": "=|+1|=|+1|=|+1|=",
+          "S": ["=", "=", "=", "=", "=", "=", "=", "=", "=", "="]
+        }
+      },
+      "styles": {
+        "A1": 3,
+        "F1": 3,
+        "K1": 3,
+        "P1": 3,
+        "B12:C50": 4,
+        "A12:A50": 5,
+        "B1:D1": 6,
+        "G1:I1": 6,
+        "L1:N1": 6,
+        "Q1:S1": 6,
+        "G2:H11": 7,
+        "L2:N11": 7,
+        "Q2:S11": 7,
+        "A2:D11": 8,
+        "F2:F11": 8,
+        "I2:I11": 8,
+        "K2:K11": 8,
+        "P2:P11": 8
+      },
+      "formats": {
+        "B2:C11": 1,
+        "G2:H11": 1,
+        "L2:M11": 1,
+        "Q2:R11": 1,
+        "D2:D11": 2,
+        "I2:I11": 2,
+        "N2:N11": 2,
+        "S2:S11": 2,
+        "A12": 4,
+        "C12:C50": 5
+      },
+      "borders": { "A1:D1": 1, "F1:I1": 1, "K1:N1": 1, "P1:S1": 1 },
+      "conditionalFormats": [
+        {
+          "id": "e7dfe92f-4458",
+          "rule": { "type": "DataBarRule", "color": 14609659, "rangeValues": "C2:C50" },
+          "ranges": ["A2:A50", "F2:F11", "K2:K11", "P2:P11"]
+        },
+        {
+          "id": "f4af5f0d-ece3",
+          "rule": { "type": "DataBarRule", "color": 15726335, "rangeValues": "C41:C50" },
+          "ranges": ["A2:A11", "F2:F11", "K2:K11", "P2:P11"]
+        },
+        {
+          "id": "1e911e7b-ea22",
+          "rule": { "type": "DataBarRule", "color": 15726335, "rangeValues": "D41:D50" },
+          "ranges": ["A2:A11", "F2:F11", "K2:K11", "P2:P11"]
+        },
+        {
+          "id": "2cc6befa-effb",
+          "rule": { "type": "DataBarRule", "color": 16775149, "rangeValues": "H41:H50" },
+          "ranges": ["A2:A11", "F2:F11", "K2:K11", "P2:P11"]
+        },
+        {
+          "id": "86825082-f022",
+          "rule": { "type": "DataBarRule", "color": 16775149, "rangeValues": "H42:H51" },
+          "ranges": ["P2:P11"]
+        }
+      ],
+      "dataValidationRules": [],
+      "figures": [],
+      "tables": [
+        {
+          "range": "A1:D11",
+          "type": "static",
+          "config": {
+            "hasFilters": false,
+            "totalRow": false,
+            "firstColumn": false,
+            "lastColumn": false,
+            "numberOfHeaders": 1,
+            "bandedRows": true,
+            "bandedColumns": false,
+            "automaticAutofill": true,
+            "styleId": "None"
+          }
+        },
+        {
+          "range": "F1:I11",
+          "type": "static",
+          "config": {
+            "hasFilters": false,
+            "totalRow": false,
+            "firstColumn": false,
+            "lastColumn": false,
+            "numberOfHeaders": 1,
+            "bandedRows": true,
+            "bandedColumns": false,
+            "automaticAutofill": true,
+            "styleId": "None"
+          }
+        },
+        {
+          "range": "K1:N11",
+          "type": "static",
+          "config": {
+            "hasFilters": false,
+            "totalRow": false,
+            "firstColumn": false,
+            "lastColumn": false,
+            "numberOfHeaders": 1,
+            "bandedRows": true,
+            "bandedColumns": false,
+            "automaticAutofill": true,
+            "styleId": "None"
+          }
+        },
+        {
+          "range": "P1:S11",
+          "type": "static",
+          "config": {
+            "hasFilters": false,
+            "totalRow": false,
+            "firstColumn": false,
+            "lastColumn": false,
+            "numberOfHeaders": 1,
+            "bandedRows": true,
+            "bandedColumns": false,
+            "automaticAutofill": true,
+            "styleId": "None"
+          }
+        }
+      ],
+      "areGridLinesVisible": true,
+      "isVisible": true,
+      "isLocked": false,
+      "panes": { "xSplit": 0, "ySplit": 1 },
+      "headerGroups": {
+        "ROW": [],
+        "COL": []
+      },
+      "comments": {}
+    },
+    {
+      "id": "c7982c9e-3bd9",
+      "name": "Top Projects",
+      "colNumber": 26,
+      "rowNumber": 100,
+      "rows": {
+        "0": { "size": 28 },
+        "1": { "size": 28 },
+        "2": { "size": 28 },
+        "3": { "size": 28 },
+        "4": { "size": 28 },
+        "5": { "size": 28 },
+        "6": { "size": 28 },
+        "7": { "size": 28 },
+        "8": { "size": 28 },
+        "9": { "size": 28 },
+        "10": { "size": 28 },
+        "11": { "size": 28 },
+        "12": { "size": 28 },
+        "13": { "size": 28 },
+        "14": { "size": 28 },
+        "15": { "size": 28 },
+        "16": { "size": 28 },
+        "17": { "size": 28 },
+        "18": { "size": 28 },
+        "19": { "size": 28 },
+        "20": { "size": 28 },
+        "21": { "size": 28 },
+        "22": { "size": 28 },
+        "23": { "size": 28 },
+        "24": { "size": 28 },
+        "25": { "size": 28 },
+        "26": { "size": 28 },
+        "27": { "size": 28 },
+        "28": { "size": 28 },
+        "29": { "size": 28 },
+        "30": { "size": 28 },
+        "31": { "size": 28 },
+        "32": { "size": 28 },
+        "33": { "size": 28 },
+        "34": { "size": 28 },
+        "35": { "size": 28 },
+        "36": { "size": 28 },
+        "37": { "size": 28 },
+        "38": { "size": 28 },
+        "39": { "size": 28 },
+        "40": { "size": 28 },
+        "41": { "size": 28 },
+        "42": { "size": 28 },
+        "43": { "size": 28 },
+        "44": { "size": 28 },
+        "45": { "size": 28 },
+        "46": { "size": 28 },
+        "47": { "size": 28 },
+        "48": { "size": 28 },
+        "49": { "size": 28 },
+        "50": { "size": 28 }
+      },
+      "cols": {
+        "5": { "size": 216 }
+      },
+      "merges": [],
+      "cells": {
+        "A1": "=_t(\"Project\")",
+        "A2": "=PIVOT.HEADER(1,\"#project_id\",1)",
+        "A3:A11": {
+          "N": "=|+1",
+          "S": ["="]
+        },
+        "B1": "=_t(\"Hours spent\")",
+        "B2": "=IF(PIVOT.VALUE(1,\"unit_amount\",\"#project_id\",1)=\"\",\"\",PIVOT.VALUE(1,\"unit_amount\",\"#project_id\",1))",
+        "B3:B11": {
+          "N": "=|+1|=|+1",
+          "S": ["=", "=", "=", "=", "=", "="]
+        },
+        "C1": "=_t(\"Hours billed\")",
+        "C2": "=IF(PIVOT.VALUE(1,\"billable_time\",\"#project_id\",1)=\"\",\"\",PIVOT.VALUE(1,\"billable_time\",\"#project_id\",1))",
+        "C3:C11": {
+          "N": "=|+1|=|+1",
+          "S": ["=", "=", "=", "=", "=", "="]
+        },
+        "D1": "=_t(\"Billable rate\")",
+        "D2": "=IFERROR(C2/B2,\"\")",
+        "D3:D11": {
+          "S": ["="],
+          "R": "+R1|+R1"
+        },
+        "F1": "=_t(\"Project\")",
+        "F2": "=PIVOT.HEADER(1,\"#project_id\",1)",
+        "F3:F11": {
+          "N": "=|+1",
+          "S": ["="]
+        },
+        "G1": "=_t(\"Days spent\")",
+        "G2": "=IFERROR(PIVOT.VALUE(1,\"Days Spent\",\"#project_id\",1),\"\")",
+        "G3:G11": {
+          "N": "=|+1",
+          "S": ["=", "=", "="]
+        },
+        "H1": "=_t(\"Days billed\")",
+        "H2": "=IFERROR(PIVOT.VALUE(1,\"Billable Days\",\"#project_id\",1),\"\")",
+        "H3:H11": {
+          "N": "=|+1",
+          "S": ["=", "=", "="]
+        },
+        "I1": "=_t(\"Billable rate\")",
+        "I2": "=IFERROR(H2/G2,\"\")",
+        "I3:I11": {
+          "S": ["="],
+          "R": "+R1|+R1"
+        },
+        "K1": "=_t(\"Project\")",
+        "K2": "=PIVOT.HEADER(1,\"#project_id\",1)",
+        "K3:K11": {
+          "N": "=|+1",
+          "S": ["="]
+        },
+        "L1": "=_t(\"Hours spent\")",
+        "L2": "=IF(PIVOT.VALUE(1,\"unit_amount\",\"#project_id\",1)=\"\",\"\",PIVOT.VALUE(1,\"unit_amount\",\"#project_id\",1))",
+        "L3:L11": {
+          "N": "=|+1|=|+1",
+          "S": ["=", "=", "=", "=", "=", "="]
+        },
+        "M1": "=_t(\"Hours billed\")",
+        "M2": "=IF(PIVOT.VALUE(1,\"billable_time\",\"#project_id\",1)=\"\",\"\",PIVOT.VALUE(1,\"billable_time\",\"#project_id\",1))",
+        "M3:M11": {
+          "N": "=|+1|=|+1",
+          "S": ["=", "=", "=", "=", "=", "="]
+        },
+        "N1": "=_t(\"Billable rate\")",
+        "N2": "=IFERROR(M2/L2,\"\")",
+        "N3:N11": {
+          "S": ["="],
+          "R": "+R1|+R1"
+        },
+        "P1": "=_t(\"Project\")",
+        "P2": "=PIVOT.HEADER(1,\"#project_id\",1)",
+        "P3:P11": {
+          "N": "=|+1",
+          "S": ["="]
+        },
+        "Q1": "=_t(\"Days spent\")",
+        "Q2": "=IFERROR(PIVOT.VALUE(1,\"Days Spent\",\"#project_id\",1),\"\")",
+        "Q3:Q11": {
+          "N": "=|+1",
+          "S": ["=", "=", "="]
+        },
+        "R1": "=_t(\"Days billed\")",
+        "R2": "=IFERROR(PIVOT.VALUE(1,\"Billable Days\",\"#project_id\",1),\"\")",
+        "R3:R11": {
+          "N": "=|+1",
+          "S": ["=", "=", "="]
+        },
+        "S1": "=_t(\"Billable rate\")",
+        "S2": "=IFERROR(R2/Q2,\"\")",
+        "S3:S11": {
+          "S": ["="],
+          "R": "+R1|+R1"
+        }
+      },
+      "styles": {
+        "A1": 3,
+        "F1": 3,
+        "K1": 3,
+        "P1": 3,
+        "B12:C51": 4,
+        "A12:A51": 5,
+        "B1:D1": 6,
+        "G1:I1": 6,
+        "L1:N1": 6,
+        "Q1:S1": 6,
+        "B2:C11": 7,
+        "G2:H11": 7,
+        "L2:M11": 7,
+        "Q2:R11": 7,
+        "A2:A11": 8,
+        "D2:D11": 8,
+        "F2:F11": 8,
+        "I2:I11": 8,
+        "K2:K11": 8,
+        "N2:N11": 8,
+        "P2:P11": 8,
+        "S2:S11": 8
+      },
+      "formats": {
+        "B2:C11": 1,
+        "G2:H11": 1,
+        "L2:M11": 1,
+        "Q2:R11": 1,
+        "D2:D11": 2,
+        "I2:I11": 2,
+        "N2:N11": 2,
+        "S2:S11": 2,
+        "A12:A13": 4,
+        "C12:C51": 5
+      },
+      "borders": {},
+      "conditionalFormats": [
+        {
+          "id": "e7dfe92f-4458",
+          "rule": { "type": "DataBarRule", "color": 14609659, "rangeValues": "C2:C51" },
+          "ranges": ["A2:A51", "F2:F11", "K2:K11", "P2:P11"]
+        },
+        {
+          "id": "f4af5f0d-ece3",
+          "rule": { "type": "DataBarRule", "color": 15726335, "rangeValues": "C42:C51" },
+          "ranges": ["A2:A11", "F2:F11", "K2:K11", "P2:P11"]
+        },
+        {
+          "id": "1e911e7b-ea22",
+          "rule": { "type": "DataBarRule", "color": 15726335, "rangeValues": "D42:D51" },
+          "ranges": ["A2:A11", "F2:F11", "K2:K11", "P2:P11"]
+        },
+        {
+          "id": "2cc6befa-effb",
+          "rule": { "type": "DataBarRule", "color": 16775149, "rangeValues": "H42:H51" },
+          "ranges": ["A2:A11", "F2:F11", "K2:K11", "P2:P11"]
+        },
+        {
+          "id": "d3b25f62-c709",
+          "rule": { "type": "DataBarRule", "color": 15531509, "rangeValues": "C55:C64" },
+          "ranges": ["A2:A11", "F2:F11", "K2:K11", "P2:P11"]
+        }
+      ],
+      "dataValidationRules": [],
+      "figures": [],
+      "tables": [
+        {
+          "range": "A1:D11",
+          "type": "static",
+          "config": {
+            "hasFilters": false,
+            "totalRow": false,
+            "firstColumn": false,
+            "lastColumn": false,
+            "numberOfHeaders": 1,
+            "bandedRows": true,
+            "bandedColumns": false,
+            "automaticAutofill": true,
+            "styleId": "None"
+          }
+        },
+        {
+          "range": "P1:S11",
+          "type": "static",
+          "config": {
+            "hasFilters": false,
+            "totalRow": false,
+            "firstColumn": false,
+            "lastColumn": false,
+            "numberOfHeaders": 1,
+            "bandedRows": true,
+            "bandedColumns": false,
+            "automaticAutofill": true,
+            "styleId": "None"
+          }
+        },
+        {
+          "range": "K1:N11",
+          "type": "static",
+          "config": {
+            "hasFilters": false,
+            "totalRow": false,
+            "firstColumn": false,
+            "lastColumn": false,
+            "numberOfHeaders": 1,
+            "bandedRows": true,
+            "bandedColumns": false,
+            "automaticAutofill": true,
+            "styleId": "None"
+          }
+        },
+        {
+          "range": "F1:I11",
+          "type": "static",
+          "config": {
+            "hasFilters": false,
+            "totalRow": false,
+            "firstColumn": false,
+            "lastColumn": false,
+            "numberOfHeaders": 1,
+            "bandedRows": true,
+            "bandedColumns": false,
+            "automaticAutofill": true,
+            "styleId": "None"
+          }
+        }
+      ],
+      "areGridLinesVisible": true,
+      "isVisible": true,
+      "isLocked": false,
+      "panes": { "xSplit": 0, "ySplit": 1 },
+      "headerGroups": {
+        "ROW": [],
+        "COL": []
+      },
+      "comments": {}
+    },
+    {
+      "id": "c98075a6-08c8",
+      "name": "Top Tasks",
+      "colNumber": 26,
+      "rowNumber": 100,
+      "rows": {
+        "0": { "size": 28 },
+        "1": { "size": 28 },
+        "2": { "size": 28 },
+        "3": { "size": 28 },
+        "4": { "size": 28 },
+        "5": { "size": 28 },
+        "6": { "size": 28 },
+        "7": { "size": 28 },
+        "8": { "size": 28 },
+        "9": { "size": 28 },
+        "10": { "size": 28 },
+        "11": { "size": 28 },
+        "12": { "size": 28 },
+        "13": { "size": 28 },
+        "14": { "size": 28 },
+        "15": { "size": 28 },
+        "16": { "size": 28 },
+        "17": { "size": 28 },
+        "18": { "size": 28 },
+        "19": { "size": 28 },
+        "20": { "size": 28 },
+        "21": { "size": 28 },
+        "22": { "size": 28 },
+        "23": { "size": 28 },
+        "24": { "size": 28 },
+        "25": { "size": 28 },
+        "26": { "size": 28 },
+        "27": { "size": 28 },
+        "28": { "size": 28 },
+        "29": { "size": 28 },
+        "30": { "size": 28 },
+        "31": { "size": 28 },
+        "32": { "size": 28 },
+        "33": { "size": 28 },
+        "34": { "size": 28 },
+        "35": { "size": 28 },
+        "36": { "size": 28 },
+        "37": { "size": 28 },
+        "38": { "size": 28 },
+        "39": { "size": 28 },
+        "40": { "size": 28 },
+        "41": { "size": 28 },
+        "42": { "size": 28 },
+        "43": { "size": 28 },
+        "44": { "size": 28 },
+        "45": { "size": 28 },
+        "46": { "size": 28 },
+        "47": { "size": 28 },
+        "48": { "size": 28 },
+        "49": { "size": 28 },
+        "50": { "size": 28 }
+      },
+      "cols": {
+        "5": { "size": 216 }
+      },
+      "merges": [],
+      "cells": {
+        "A1": "=_t(\"Task\")",
+        "A2": "=PIVOT.HEADER(2,\"#task_id\",1)",
+        "A3:A11": {
+          "N": "=|+1",
+          "S": ["="]
+        },
+        "B1": "=_t(\"Hours spent\")",
+        "B2": "=IF(PIVOT.VALUE(2,\"unit_amount\",\"#task_id\",1)=\"\",\"\",PIVOT.VALUE(2,\"unit_amount\",\"#task_id\",1))",
+        "B3:B11": {
+          "N": "=|+1|=|+1",
+          "S": ["=", "=", "=", "=", "=", "="]
+        },
+        "C1": "=_t(\"Hours billed\")",
+        "C2": "=IF(PIVOT.VALUE(2,\"billable_time\",\"#task_id\",1)=\"\",\"\",PIVOT.VALUE(2,\"billable_time\",\"#task_id\",1))",
+        "C3:C11": {
+          "N": "=|+1|=|+1",
+          "S": ["=", "=", "=", "=", "=", "="]
+        },
+        "D1": "=_t(\"Billable rate\")",
+        "D2": "=IFERROR(C2/B2,\"\")",
+        "D3:D11": {
+          "S": ["="],
+          "R": "+R1|+R1"
+        },
+        "F1": "=_t(\"Task\")",
+        "F2": "=PIVOT.HEADER(2,\"#task_id\",1)",
+        "F3:F11": {
+          "N": "=|+1",
+          "S": ["="]
+        },
+        "G1": "=_t(\"Days spent\")",
+        "G2": "=IFERROR(PIVOT.VALUE(2,\"Days Spent\",\"#task_id\",1),\"\")",
+        "G3:G11": {
+          "N": "=|+1",
+          "S": ["=", "=", "="]
+        },
+        "H1": "=_t(\"Days billed\")",
+        "H2": "=IFERROR(PIVOT.VALUE(2,\"Billable Days\",\"#task_id\",1),\"\")",
+        "H3:H11": {
+          "N": "=|+1",
+          "S": ["=", "=", "="]
+        },
+        "I1": "=_t(\"Billable rate\")",
+        "I2": "=IFERROR(H2/G2,\"\")",
+        "I3:I11": {
+          "S": ["="],
+          "R": "+R1|+R1"
+        },
+        "K1": "=_t(\"Task\")",
+        "K2": "=PIVOT.HEADER(2,\"#task_id\",1)",
+        "K3:K11": {
+          "N": "=|+1",
+          "S": ["="]
+        },
+        "L1": "=_t(\"Hours spent\")",
+        "L2": "=IF(PIVOT.VALUE(2,\"unit_amount\",\"#task_id\",1)=\"\",\"\",PIVOT.VALUE(2,\"unit_amount\",\"#task_id\",1))",
+        "L3:L11": {
+          "N": "=|+1|=|+1",
+          "S": ["=", "=", "=", "=", "=", "="]
+        },
+        "M1": "=_t(\"Hours billed\")",
+        "M2": "=IF(PIVOT.VALUE(2,\"billable_time\",\"#task_id\",1)=\"\",\"\",PIVOT.VALUE(2,\"billable_time\",\"#task_id\",1))",
+        "M3:M11": {
+          "N": "=|+1|=|+1",
+          "S": ["=", "=", "=", "=", "=", "="]
+        },
+        "N1": "=_t(\"Billable rate\")",
+        "N2": "=IFERROR(M2/L2,\"\")",
+        "N3:N11": {
+          "S": ["="],
+          "R": "+R1|+R1"
+        },
+        "P1": "=_t(\"Task\")",
+        "P2": "=PIVOT.HEADER(2,\"#task_id\",1)",
+        "P3:P11": {
+          "N": "=|+1",
+          "S": ["="]
+        },
+        "Q1": "=_t(\"Days spent\")",
+        "Q2": "=IFERROR(PIVOT.VALUE(2,\"Days Spent\",\"#task_id\",1),\"\")",
+        "Q3:Q11": {
+          "N": "=|+1",
+          "S": ["=", "=", "="]
+        },
+        "R1": "=_t(\"Days billed\")",
+        "R2": "=IFERROR(PIVOT.VALUE(2,\"Billable Days\",\"#task_id\",1),\"\")",
+        "R3:R11": {
+          "N": "=|+1",
+          "S": ["=", "=", "="]
+        },
+        "S1": "=_t(\"Billable rate\")",
+        "S2": "=IFERROR(R2/Q2,\"\")",
+        "S3:S11": {
+          "S": ["="],
+          "R": "+R1|+R1"
+        }
+      },
+      "styles": {
+        "A1": 3,
+        "F1": 3,
+        "K1": 3,
+        "P1": 3,
+        "B12:C51": 4,
+        "A12:A51": 5,
+        "B1:D1": 6,
+        "G1:I1": 6,
+        "L1:N1": 6,
+        "Q1:S1": 6,
+        "B2:C11": 7,
+        "G2:H11": 7,
+        "L2:M11": 7,
+        "Q2:R11": 7,
+        "A2:A11": 8,
+        "D2:D11": 8,
+        "F2:F11": 8,
+        "I2:I11": 8,
+        "K2:K11": 8,
+        "N2:N11": 8,
+        "P2:P11": 8,
+        "S2:S11": 8
+      },
+      "formats": {
+        "B2:C11": 1,
+        "G2:H11": 1,
+        "L2:M11": 1,
+        "Q2:R11": 1,
+        "D2:D11": 2,
+        "I2:I11": 2,
+        "N2:N11": 2,
+        "S2:S11": 2,
+        "A12:A13": 4,
+        "C12:C51": 5
+      },
+      "borders": {},
+      "conditionalFormats": [
+        {
+          "id": "e7dfe92f-4458",
+          "rule": { "type": "DataBarRule", "color": 14609659, "rangeValues": "C2:C51" },
+          "ranges": ["A2:A51", "F2:F11", "K2:K11", "P2:P11"]
+        },
+        {
+          "id": "f4af5f0d-ece3",
+          "rule": { "type": "DataBarRule", "color": 15726335, "rangeValues": "C42:C51" },
+          "ranges": ["A2:A11", "F2:F11", "K2:K11", "P2:P11"]
+        },
+        {
+          "id": "1e911e7b-ea22",
+          "rule": { "type": "DataBarRule", "color": 15726335, "rangeValues": "D42:D51" },
+          "ranges": ["A2:A11", "F2:F11", "K2:K11", "P2:P11"]
+        },
+        {
+          "id": "2cc6befa-effb",
+          "rule": { "type": "DataBarRule", "color": 16775149, "rangeValues": "H42:H51" },
+          "ranges": ["A2:A11", "F2:F11", "K2:K11", "P2:P11"]
+        },
+        {
+          "id": "d3b25f62-c709",
+          "rule": { "type": "DataBarRule", "color": 15531509, "rangeValues": "C55:C64" },
+          "ranges": ["A2:A11", "F2:F11", "K2:K11", "P2:P11"]
+        },
+        {
+          "id": "dd886046-0d21",
+          "rule": { "type": "DataBarRule", "color": 16708338, "rangeValues": "H55:H64" },
+          "ranges": ["A2:A11", "F2:F11", "K2:K11", "P2:P11"]
+        }
+      ],
+      "dataValidationRules": [],
+      "figures": [],
+      "tables": [
+        {
+          "range": "A1:D11",
+          "type": "static",
+          "config": {
+            "hasFilters": false,
+            "totalRow": false,
+            "firstColumn": false,
+            "lastColumn": false,
+            "numberOfHeaders": 1,
+            "bandedRows": true,
+            "bandedColumns": false,
+            "automaticAutofill": true,
+            "styleId": "None"
+          }
+        },
+        {
+          "range": "F1:I11",
+          "type": "static",
+          "config": {
+            "hasFilters": false,
+            "totalRow": false,
+            "firstColumn": false,
+            "lastColumn": false,
+            "numberOfHeaders": 1,
+            "bandedRows": true,
+            "bandedColumns": false,
+            "automaticAutofill": true,
+            "styleId": "None"
+          }
+        },
+        {
+          "range": "K1:N11",
+          "type": "static",
+          "config": {
+            "hasFilters": false,
+            "totalRow": false,
+            "firstColumn": false,
+            "lastColumn": false,
+            "numberOfHeaders": 1,
+            "bandedRows": true,
+            "bandedColumns": false,
+            "automaticAutofill": true,
+            "styleId": "None"
+          }
+        },
+        {
+          "range": "P1:S11",
+          "type": "static",
+          "config": {
+            "hasFilters": false,
+            "totalRow": false,
+            "firstColumn": false,
+            "lastColumn": false,
+            "numberOfHeaders": 1,
+            "bandedRows": true,
+            "bandedColumns": false,
+            "automaticAutofill": true,
+            "styleId": "None"
+          }
+        }
+      ],
+      "areGridLinesVisible": true,
+      "isVisible": true,
+      "isLocked": false,
+      "panes": { "xSplit": 0, "ySplit": 1 },
+      "headerGroups": {
+        "ROW": [],
+        "COL": []
+      },
+      "comments": {}
+    },
+    {
+      "id": "03f39311-a2d6",
+      "name": "Non-Billable Projects Costs",
+      "colNumber": 22,
+      "rowNumber": 100,
+      "rows": {
+        "0": { "size": 28 },
+        "1": { "size": 28 },
+        "2": { "size": 28 },
+        "3": { "size": 28 },
+        "4": { "size": 28 },
+        "5": { "size": 28 },
+        "6": { "size": 28 },
+        "7": { "size": 28 },
+        "8": { "size": 28 },
+        "9": { "size": 28 },
+        "10": { "size": 28 },
+        "11": { "size": 28 },
+        "12": { "size": 28 },
+        "13": { "size": 28 },
+        "14": { "size": 28 },
+        "15": { "size": 28 },
+        "16": { "size": 28 },
+        "17": { "size": 28 },
+        "18": { "size": 28 },
+        "19": { "size": 28 },
+        "20": { "size": 28 },
+        "21": { "size": 28 },
+        "22": { "size": 28 },
+        "23": { "size": 28 },
+        "24": { "size": 28 },
+        "25": { "size": 28 },
+        "26": { "size": 28 },
+        "27": { "size": 28 },
+        "28": { "size": 28 },
+        "29": { "size": 28 },
+        "30": { "size": 28 },
+        "31": { "size": 28 },
+        "32": { "size": 28 },
+        "33": { "size": 28 },
+        "34": { "size": 28 },
+        "35": { "size": 28 },
+        "36": { "size": 28 },
+        "37": { "size": 28 },
+        "38": { "size": 28 },
+        "39": { "size": 28 },
+        "40": { "size": 28 },
+        "41": { "size": 28 },
+        "42": { "size": 28 },
+        "43": { "size": 28 },
+        "44": { "size": 28 },
+        "45": { "size": 28 },
+        "46": { "size": 28 },
+        "47": { "size": 28 },
+        "48": { "size": 28 },
+        "49": { "size": 28 },
+        "50": { "size": 28 }
+      },
+      "cols": {
+        "4": { "size": 216 }
+      },
+      "merges": [],
+      "cells": {
+        "A1": "=_t(\"Project\")",
+        "A2": "=PIVOT.HEADER(7,\"#project_id\",1)",
+        "A3:A11": {
+          "N": "=|+1",
+          "S": ["="]
+        },
+        "B1": "=_t(\"Hours spent\")",
+        "B2": "=IF(PIVOT.VALUE(7,\"non_billable_time\",\"#project_id\",1)=\"\",\"\",PIVOT.VALUE(7,\"non_billable_time\",\"#project_id\",1))",
+        "B3:B11": {
+          "N": "=|+1|=|+1",
+          "S": ["=", "=", "=", "=", "=", "="]
+        },
+        "C1": "=_t(\"Costs\")",
+        "C2": "=IF(B2=\"\",\"\",ABS(PIVOT.VALUE(7,\"amount\",\"#project_id\",1)))",
+        "C3:C11": {
+          "N": "=|+1",
+          "S": ["=", "=", "=", "="],
+          "R": "+R1"
+        },
+        "E1": "=_t(\"Project\")",
+        "E2": "=PIVOT.HEADER(7,\"#project_id\",1)",
+        "E3:E11": {
+          "N": "=|+1",
+          "S": ["="]
+        },
+        "F1": "=_t(\"Days spent\")",
+        "F2": "=IFERROR(PIVOT.VALUE(7,\"NonBillable Days\",\"#project_id\",1),\"\")",
+        "F3:F11": {
+          "N": "=|+1",
+          "S": ["=", "=", "="]
+        },
+        "G1": "=_t(\"Costs\")",
+        "G2": "=IF(F2=\"\",\"\",ABS(PIVOT.VALUE(7,\"amount\",\"#project_id\",1)))",
+        "G3:G11": {
+          "N": "=|+1",
+          "S": ["=", "=", "=", "="],
+          "R": "+R1"
+        },
+        "I1": "=_t(\"Project\")",
+        "I2": "=PIVOT.HEADER(7,\"#project_id\",1)",
+        "I3:I11": {
+          "N": "=|+1",
+          "S": ["="]
+        },
+        "J1": "=_t(\"Hours spent\")",
+        "J2": "=IF(PIVOT.VALUE(7,\"non_billable_time\",\"#project_id\",1)=\"\",\"\",PIVOT.VALUE(7,\"non_billable_time\",\"#project_id\",1))",
+        "J3:J11": {
+          "N": "=|+1|=|+1",
+          "S": ["=", "=", "=", "=", "=", "="]
+        },
+        "K1": "=_t(\"Costs\")",
+        "K2": "=IF(J2=\"\",\"\",ABS(PIVOT.VALUE(7,\"amount\",\"#project_id\",1)))",
+        "K3:K11": {
+          "N": "=|+1",
+          "S": ["=", "=", "=", "="],
+          "R": "+R1"
+        },
+        "M1": "=_t(\"Project\")",
+        "M2": "=PIVOT.HEADER(7,\"#project_id\",1)",
+        "M3:M11": {
+          "N": "=|+1",
+          "S": ["="]
+        },
+        "N1": "=_t(\"Days spent\")",
+        "N2": "=IFERROR(PIVOT.VALUE(7,\"NonBillable Days\",\"#project_id\",1),\"\")",
+        "N3:N11": {
+          "N": "=|+1",
+          "S": ["=", "=", "="]
+        },
+        "O1": "=_t(\"Costs\")",
+        "O2": "=IF(N2=\"\",\"\",ABS(PIVOT.VALUE(7,\"amount\",\"#project_id\",1)))",
+        "O3:O11": {
+          "N": "=|+1",
+          "S": ["=", "=", "=", "="],
+          "R": "+R1"
+        }
+      },
+      "styles": {
+        "A1": 3,
+        "E1": 3,
+        "I1": 3,
+        "M1": 3,
+        "B12:B51": 4,
+        "A12:A51": 5,
+        "B1:C1": 6,
+        "F1:G1": 6,
+        "J1:K1": 6,
+        "N1:O1": 6,
+        "B2:B11": 7,
+        "F2:F11": 7,
+        "J2:J11": 7,
+        "N2:N11": 7,
+        "A2:A11": 8,
+        "C2:C11": 8,
+        "E2:E11": 8,
+        "G2:G11": 8,
+        "I2:I11": 8,
+        "K2:K11": 8,
+        "M2:M11": 8,
+        "O2:O11": 8
+      },
+      "formats": {
+        "B2:B11": 1,
+        "F2:F11": 1,
+        "J2:J11": 1,
+        "N2:N11": 1,
+        "A12:A13": 4,
+        "B12:B51": 5,
+        "C2:C11": 6,
+        "G2:G11": 6,
+        "K2:K11": 6,
+        "O2:O11": 6
+      },
+      "borders": {},
+      "conditionalFormats": [
+        {
+          "id": "e7dfe92f-4458",
+          "rule": { "type": "DataBarRule", "color": 14609659, "rangeValues": "B2:B51" },
+          "ranges": ["A2:A51", "E2:E11", "I2:I11", "M2:M11"]
+        },
+        {
+          "id": "f4af5f0d-ece3",
+          "rule": { "type": "DataBarRule", "color": 15726335, "rangeValues": "B42:B51" },
+          "ranges": ["A2:A11", "E2:E11", "I2:I11", "M2:M11"]
+        },
+        {
+          "id": "1e911e7b-ea22",
+          "rule": { "type": "DataBarRule", "color": 15726335, "rangeValues": "C42:C51" },
+          "ranges": ["A2:A11", "E2:E11", "I2:I11", "M2:M11"]
+        },
+        {
+          "id": "2cc6befa-effb",
+          "rule": { "type": "DataBarRule", "color": 16775149, "rangeValues": "F42:F51" },
+          "ranges": ["A2:A11", "E2:E11", "I2:I11", "M2:M11"]
+        },
+        {
+          "id": "d3b25f62-c709",
+          "rule": { "type": "DataBarRule", "color": 15531509, "rangeValues": "B55:B64" },
+          "ranges": ["A2:A11", "E2:E11", "I2:I11", "M2:M11"]
+        },
+        {
+          "id": "dd886046-0d21",
+          "rule": { "type": "DataBarRule", "color": 16708338, "rangeValues": "F55:F64" },
+          "ranges": ["A2:A11", "E2:E11", "I2:I11", "M2:M11"]
+        },
+        {
+          "id": "9393ccc8-cbb4",
+          "rule": { "type": "DataBarRule", "color": 14275305, "rangeValues": "C68:C77" },
+          "ranges": ["A2:A11", "E2:E11", "I2:I11", "M2:M11"]
+        }
+      ],
+      "dataValidationRules": [],
+      "figures": [],
+      "tables": [
+        {
+          "range": "A1:C11",
+          "type": "static",
+          "config": {
+            "hasFilters": false,
+            "totalRow": false,
+            "firstColumn": false,
+            "lastColumn": false,
+            "numberOfHeaders": 1,
+            "bandedRows": true,
+            "bandedColumns": false,
+            "automaticAutofill": true,
+            "styleId": "None"
+          }
+        },
+        {
+          "range": "E1:G11",
+          "type": "static",
+          "config": {
+            "hasFilters": false,
+            "totalRow": false,
+            "firstColumn": false,
+            "lastColumn": false,
+            "numberOfHeaders": 1,
+            "bandedRows": true,
+            "bandedColumns": false,
+            "automaticAutofill": true,
+            "styleId": "None"
+          }
+        },
+        {
+          "range": "I1:K11",
+          "type": "static",
+          "config": {
+            "hasFilters": false,
+            "totalRow": false,
+            "firstColumn": false,
+            "lastColumn": false,
+            "numberOfHeaders": 1,
+            "bandedRows": true,
+            "bandedColumns": false,
+            "automaticAutofill": true,
+            "styleId": "None"
+          }
+        },
+        {
+          "range": "M1:O11",
+          "type": "static",
+          "config": {
+            "hasFilters": false,
+            "totalRow": false,
+            "firstColumn": false,
+            "lastColumn": false,
+            "numberOfHeaders": 1,
+            "bandedRows": true,
+            "bandedColumns": false,
+            "automaticAutofill": true,
+            "styleId": "None"
+          }
+        }
+      ],
+      "areGridLinesVisible": true,
+      "isVisible": true,
+      "isLocked": false,
+      "panes": { "xSplit": 0, "ySplit": 1 },
+      "headerGroups": {
+        "ROW": [],
+        "COL": []
+      },
+      "comments": {}
+    },
+    {
+      "id": "480d134d-d067",
+      "name": "Non-Billable Tasks Costs",
+      "colNumber": 22,
+      "rowNumber": 100,
+      "rows": {
+        "0": { "size": 28 },
+        "1": { "size": 28 },
+        "2": { "size": 28 },
+        "3": { "size": 28 },
+        "4": { "size": 28 },
+        "5": { "size": 28 },
+        "6": { "size": 28 },
+        "7": { "size": 28 },
+        "8": { "size": 28 },
+        "9": { "size": 28 },
+        "10": { "size": 28 },
+        "11": { "size": 28 },
+        "12": { "size": 28 },
+        "13": { "size": 28 },
+        "14": { "size": 28 },
+        "15": { "size": 28 },
+        "16": { "size": 28 },
+        "17": { "size": 28 },
+        "18": { "size": 28 },
+        "19": { "size": 28 },
+        "20": { "size": 28 },
+        "21": { "size": 28 },
+        "22": { "size": 28 },
+        "23": { "size": 28 },
+        "24": { "size": 28 },
+        "25": { "size": 28 },
+        "26": { "size": 28 },
+        "27": { "size": 28 },
+        "28": { "size": 28 },
+        "29": { "size": 28 },
+        "30": { "size": 28 },
+        "31": { "size": 28 },
+        "32": { "size": 28 },
+        "33": { "size": 28 },
+        "34": { "size": 28 },
+        "35": { "size": 28 },
+        "36": { "size": 28 },
+        "37": { "size": 28 },
+        "38": { "size": 28 },
+        "39": { "size": 28 },
+        "40": { "size": 28 },
+        "41": { "size": 28 },
+        "42": { "size": 28 },
+        "43": { "size": 28 },
+        "44": { "size": 28 },
+        "45": { "size": 28 },
+        "46": { "size": 28 },
+        "47": { "size": 28 },
+        "48": { "size": 28 },
+        "49": { "size": 28 },
+        "50": { "size": 28 }
+      },
+      "cols": {
+        "4": { "size": 216 }
+      },
+      "merges": [],
+      "cells": {
+        "A1": "=_t(\"Task\")",
+        "A2": "=PIVOT.HEADER(8,\"#task_id\",1)",
+        "A3:A11": {
+          "N": "=|+1",
+          "S": ["="]
+        },
+        "B1": "=_t(\"Hours spent\")",
+        "B2": "=IF(PIVOT.VALUE(8,\"non_billable_time\",\"#task_id\",1)=\"\",\"\",PIVOT.VALUE(8,\"non_billable_time\",\"#task_id\",1))",
+        "B3:B11": {
+          "N": "=|+1|=|+1",
+          "S": ["=", "=", "=", "=", "=", "="]
+        },
+        "C1": "=_t(\"Costs\")",
+        "C2": "=IF(B2=\"\",\"\",ABS(PIVOT.VALUE(8,\"amount\",\"#task_id\",1)))",
+        "C3:C11": {
+          "N": "=|+1",
+          "S": ["=", "=", "=", "="],
+          "R": "+R1"
+        },
+        "E1": "=_t(\"Task\")",
+        "E2": "=PIVOT.HEADER(8,\"#task_id\",1)",
+        "E3:E11": {
+          "N": "=|+1",
+          "S": ["="]
+        },
+        "F1": "=_t(\"Days spent\")",
+        "F2": "=IFERROR(PIVOT.VALUE(8,\"NonBillable Days\",\"#task_id\",1),\"\")",
+        "F3:F11": {
+          "N": "=|+1",
+          "S": ["=", "=", "="]
+        },
+        "G1": "=_t(\"Costs\")",
+        "G2": "=IF(F2=\"\",\"\",ABS(PIVOT.VALUE(8,\"amount\",\"#task_id\",1)))",
+        "G3:G11": {
+          "N": "=|+1",
+          "S": ["=", "=", "=", "="],
+          "R": "+R1"
+        },
+        "I1": "=_t(\"Task\")",
+        "I2": "=PIVOT.HEADER(8,\"#task_id\",1)",
+        "I3:I11": {
+          "N": "=|+1",
+          "S": ["="]
+        },
+        "J1": "=_t(\"Hours spent\")",
+        "J2": "=IF(PIVOT.VALUE(8,\"non_billable_time\",\"#task_id\",1)=\"\",\"\",PIVOT.VALUE(8,\"non_billable_time\",\"#task_id\",1))",
+        "J3:J11": {
+          "N": "=|+1|=|+1",
+          "S": ["=", "=", "=", "=", "=", "="]
+        },
+        "K1": "=_t(\"Costs\")",
+        "K2": "=IF(J2=\"\",\"\",ABS(PIVOT.VALUE(8,\"amount\",\"#task_id\",1)))",
+        "K3:K11": {
+          "N": "=|+1",
+          "S": ["=", "=", "=", "="],
+          "R": "+R1"
+        },
+        "M1": "=_t(\"Task\")",
+        "M2": "=PIVOT.HEADER(8,\"#task_id\",1)",
+        "M3:M11": {
+          "N": "=|+1",
+          "S": ["="]
+        },
+        "N1": "=_t(\"Days spent\")",
+        "N2": "=IFERROR(PIVOT.VALUE(8,\"NonBillable Days\",\"#task_id\",1),\"\")",
+        "N3:N11": {
+          "N": "=|+1",
+          "S": ["=", "=", "="]
+        },
+        "O1": "=_t(\"Costs\")",
+        "O2": "=IF(N2=\"\",\"\",ABS(PIVOT.VALUE(8,\"amount\",\"#task_id\",1)))",
+        "O3:O11": {
+          "N": "=|+1",
+          "S": ["=", "=", "=", "="],
+          "R": "+R1"
+        }
+      },
+      "styles": {
+        "A1": 3,
+        "E1": 3,
+        "I1": 3,
+        "M1": 3,
+        "B12:B51": 4,
+        "A12:A51": 5,
+        "B1:C1": 6,
+        "F1:G1": 6,
+        "J1:K1": 6,
+        "N1:O1": 6,
+        "B2:B11": 7,
+        "F2:F11": 7,
+        "J2:J11": 7,
+        "N2:N11": 7,
+        "A2:A11": 8,
+        "C2:C11": 8,
+        "E2:E11": 8,
+        "G2:G11": 8,
+        "I2:I11": 8,
+        "K2:K11": 8,
+        "M2:M11": 8,
+        "O2:O11": 8
+      },
+      "formats": {
+        "B2:B11": 1,
+        "F2:F11": 1,
+        "J2:J11": 1,
+        "N2:N11": 1,
+        "A12:A13": 4,
+        "B12:B51": 5,
+        "C2:C11": 6,
+        "G2:G11": 6,
+        "K2:K11": 6,
+        "O2:O11": 6
+      },
+      "borders": {},
+      "conditionalFormats": [
+        {
+          "id": "e7dfe92f-4458",
+          "rule": { "type": "DataBarRule", "color": 14609659, "rangeValues": "B2:B51" },
+          "ranges": ["A2:A51", "E2:E11", "I2:I11", "M2:M11"]
+        },
+        {
+          "id": "f4af5f0d-ece3",
+          "rule": { "type": "DataBarRule", "color": 15726335, "rangeValues": "B42:B51" },
+          "ranges": ["A2:A11", "E2:E11", "I2:I11", "M2:M11"]
+        },
+        {
+          "id": "1e911e7b-ea22",
+          "rule": { "type": "DataBarRule", "color": 15726335, "rangeValues": "C42:C51" },
+          "ranges": ["A2:A11", "E2:E11", "I2:I11", "M2:M11"]
+        },
+        {
+          "id": "2cc6befa-effb",
+          "rule": { "type": "DataBarRule", "color": 16775149, "rangeValues": "F42:F51" },
+          "ranges": ["A2:A11", "E2:E11", "I2:I11", "M2:M11"]
+        },
+        {
+          "id": "d3b25f62-c709",
+          "rule": { "type": "DataBarRule", "color": 15531509, "rangeValues": "B55:B64" },
+          "ranges": ["A2:A11", "E2:E11", "I2:I11", "M2:M11"]
+        },
+        {
+          "id": "dd886046-0d21",
+          "rule": { "type": "DataBarRule", "color": 16708338, "rangeValues": "F55:F64" },
+          "ranges": ["A2:A11", "E2:E11", "I2:I11", "M2:M11"]
+        },
+        {
+          "id": "9393ccc8-cbb4",
+          "rule": { "type": "DataBarRule", "color": 14275305, "rangeValues": "C68:C77" },
+          "ranges": ["A2:A11", "E2:E11", "I2:I11", "M2:M11"]
+        },
+        {
+          "id": "6dc70c05-273d",
+          "rule": { "type": "DataBarRule", "color": 16573901, "rangeValues": "G68:G77" },
+          "ranges": ["A2:A11", "E2:E11", "I2:I11", "M2:M11"]
+        },
+        {
+          "id": "e4c4cf8e-500a",
+          "rule": { "type": "DataBarRule", "color": 16573901, "rangeValues": "H68:H77" },
+          "ranges": ["E2:E11", "I2:I11", "M2:M11"]
+        }
+      ],
+      "dataValidationRules": [],
+      "figures": [],
+      "tables": [
+        {
+          "range": "A1:C11",
+          "type": "static",
+          "config": {
+            "hasFilters": false,
+            "totalRow": false,
+            "firstColumn": false,
+            "lastColumn": false,
+            "numberOfHeaders": 1,
+            "bandedRows": true,
+            "bandedColumns": false,
+            "automaticAutofill": true,
+            "styleId": "None"
+          }
+        },
+        {
+          "range": "E1:G11",
+          "type": "static",
+          "config": {
+            "hasFilters": false,
+            "totalRow": false,
+            "firstColumn": false,
+            "lastColumn": false,
+            "numberOfHeaders": 1,
+            "bandedRows": true,
+            "bandedColumns": false,
+            "automaticAutofill": true,
+            "styleId": "None"
+          }
+        },
+        {
+          "range": "I1:K11",
+          "type": "static",
+          "config": {
+            "hasFilters": false,
+            "totalRow": false,
+            "firstColumn": false,
+            "lastColumn": false,
+            "numberOfHeaders": 1,
+            "bandedRows": true,
+            "bandedColumns": false,
+            "automaticAutofill": true,
+            "styleId": "None"
+          }
+        },
+        {
+          "range": "M1:O11",
+          "type": "static",
+          "config": {
+            "hasFilters": false,
+            "totalRow": false,
+            "firstColumn": false,
+            "lastColumn": false,
+            "numberOfHeaders": 1,
+            "bandedRows": true,
+            "bandedColumns": false,
+            "automaticAutofill": true,
+            "styleId": "None"
+          }
+        }
+      ],
+      "areGridLinesVisible": true,
+      "isVisible": true,
+      "isLocked": false,
+      "panes": { "xSplit": 0, "ySplit": 1 },
+      "headerGroups": {
+        "ROW": [],
+        "COL": []
+      },
+      "comments": {}
     }
   ],
   "styles": {
-    "1": { "textColor": "#01666b", "bold": true, "fontSize": 16 },
-    "2": { "textColor": "#434343", "fontSize": 11, "bold": true },
-    "3": { "textColor": "#434343", "verticalAlign": "middle" },
-    "4": {
+    "1": { "bold": true },
+    "2": { "fillColor": "#f2f2f2" },
+    "3": { "textColor": "#434343", "fontSize": 11, "bold": true },
+    "4": { "verticalAlign": "middle" },
+    "5": { "textColor": "#01666B", "verticalAlign": "middle" },
+    "6": {
       "textColor": "#434343",
       "fontSize": 11,
       "bold": true,
       "align": "center"
     },
-    "5": { "textColor": "#434343", "verticalAlign": "middle", "align": "right" },
-    "6": { "verticalAlign": "middle" },
-    "7": { "bold": true },
-    "8": { "fillColor": "#f2f2f2" }
+    "7": { "textColor": "#434343", "verticalAlign": "middle", "align": "right" },
+    "8": { "textColor": "#434343", "verticalAlign": "middle" }
   },
-  "formats": { "1": "#,##0", "2": "0%", "3": "[$$]#,##0", "4": "#,##0.00" },
+  "formats": {
+    "1": "#,##0",
+    "2": "0%",
+    "3": "#,##0.00",
+    "4": "@",
+    "5": "[$$]#,##0.00",
+    "6": "[$$]#,##0"
+  },
   "borders": {
     "1": {
-      "top": { "color": "#CCCCCC", "style": "thin" }
+      "top": { "style": "thin", "color": "#CCCCCC" }
     },
     "2": {
-      "bottom": { "color": "#CCCCCC", "style": "thin" }
-    },
-    "3": {
-      "top": { "style": "thick", "color": "#FFFFFF" }
-    },
-    "4": {
-      "bottom": { "style": "thick", "color": "#FFFFFF" }
+      "top": { "color": "#FFFFFF", "style": "thick" }
     }
   },
-  "revisionId": "1f9dd7d9-2a44-4371-bffd-e356a4e9cf4e",
+  "revisionId": "START_REVISION",
   "uniqueFigureIds": true,
   "settings": {
     "locale": {
@@ -1179,19 +4332,311 @@
         "4788ea63-ee8f-4082-a118-a26b4b6f1a71": { "chain": "employee_id", "type": "many2one" }
       },
       "context": {},
-      "domain": [],
-      "id": "1",
-      "measures": [],
+      "domain": [
+        "&",
+        "&",
+        "&",
+        ["project_id", "!=", false],
+        ["employee_id", "!=", false],
+        ["date", ">=", "today =1d -1m"],
+        ["date", "<", "today =1d"]
+      ],
+      "id": "4",
+      "measures": [
+        { "id": "billable_time", "fieldName": "billable_time" },
+        { "id": "unit_amount", "fieldName": "unit_amount" },
+        {
+          "id": "billing_time_target:max",
+          "fieldName": "billing_time_target",
+          "aggregator": "max"
+        },
+        { "id": "billing_target", "fieldName": "billing_target" },
+        {
+          "id": "Billable Days",
+          "fieldName": "Billable Days",
+          "aggregator": "sum",
+          "userDefinedName": "Billable Days",
+          "computedBy": {
+            "sheetId": "7802fc6d-c96b-452f-86d8-1c69816bebdc",
+            "formula": "=billable_time/'company_id.resource_calendar_id.hours_per_day'"
+          }
+        },
+        {
+          "id": "Days Spent",
+          "fieldName": "Days Spent",
+          "aggregator": "sum",
+          "userDefinedName": "Days Spent",
+          "computedBy": {
+            "sheetId": "7802fc6d-c96b-452f-86d8-1c69816bebdc",
+            "formula": "=unit_amount/'company_id.resource_calendar_id.hours_per_day'"
+          }
+        },
+        {
+          "id": "Billing Days Target",
+          "fieldName": "Billing Days Target",
+          "aggregator": "sum",
+          "userDefinedName": "Billing Days Target",
+          "computedBy": {
+            "sheetId": "7802fc6d-c96b-452f-86d8-1c69816bebdc",
+            "formula": "=ROUND('billing_time_target:max'/'company_id.resource_calendar_id.hours_per_day')"
+          }
+        }
+      ],
       "model": "timesheets.analysis.report",
-      "name": "Timesheet Encoding Unit",
+      "name": "Timesheets Analysis by Employee Targets",
+      "sortedColumn": {
+        "measure": "billing_target",
+        "order": "desc",
+        "domain": []
+      },
       "formulaId": "9",
       "columns": [],
       "rows": [
-        { "fieldName": "company_id.timesheet_encode_uom_id" }
+        { "fieldName": "employee_id" },
+        { "fieldName": "company_id.resource_calendar_id.hours_per_day" }
       ]
+    },
+    "10": {
+      "type": "ODOO",
+      "fieldMatching": {
+        "fb3700b0-4ee9-4086-86ac-6c62a7d33d37": { "chain": "date", "type": "date", "offset": 0 },
+        "65e4bccf-3035-47a0-a268-9a4e5b48037f": { "chain": "project_id", "type": "many2one" },
+        "22a76320-0363-4391-9121-65e1db51b671": { "chain": "task_id", "type": "many2one" },
+        "541de762-4a6c-435e-a5ff-e94d393cf6df": { "chain": "department_id", "type": "many2one" },
+        "4788ea63-ee8f-4082-a118-a26b4b6f1a71": { "chain": "employee_id", "type": "many2one" }
+      },
+      "context": {},
+      "domain": [
+        "&",
+        "&",
+        "&",
+        ["project_id", "!=", false],
+        ["department_id", "!=", false],
+        ["date", ">=", "today =1d -1m"],
+        ["date", "<", "today =1d"]
+      ],
+      "id": "3",
+      "measures": [
+        { "id": "unit_amount", "fieldName": "unit_amount" },
+        { "id": "billable_time", "fieldName": "billable_time" },
+        {
+          "id": "billing_target",
+          "fieldName": "billing_target",
+          "aggregator": "sum"
+        },
+        {
+          "id": "Days Spent",
+          "fieldName": "Days Spent",
+          "aggregator": "sum",
+          "userDefinedName": "Days Spent",
+          "computedBy": {
+            "sheetId": "7802fc6d-c96b-452f-86d8-1c69816bebdc",
+            "formula": "=unit_amount/'company_id.resource_calendar_id.hours_per_day'"
+          }
+        },
+        {
+          "id": "Billable Days",
+          "fieldName": "Billable Days",
+          "aggregator": "sum",
+          "userDefinedName": "Billable Days",
+          "computedBy": {
+            "sheetId": "7802fc6d-c96b-452f-86d8-1c69816bebdc",
+            "formula": "=billable_time/'company_id.resource_calendar_id.hours_per_day'"
+          }
+        }
+      ],
+      "model": "timesheets.analysis.report",
+      "name": "Timesheets Analysis by Department Targets",
+      "sortedColumn": {
+        "measure": "billing_target",
+        "order": "desc",
+        "domain": []
+      },
+      "formulaId": "10",
+      "columns": [],
+      "rows": [
+        { "fieldName": "department_id" },
+        { "fieldName": "company_id.resource_calendar_id.hours_per_day" }
+      ]
+    },
+    "11": {
+      "type": "ODOO",
+      "fieldMatching": {
+        "fb3700b0-4ee9-4086-86ac-6c62a7d33d37": { "chain": "date", "type": "date", "offset": 0 },
+        "65e4bccf-3035-47a0-a268-9a4e5b48037f": { "chain": "project_id", "type": "many2one" },
+        "22a76320-0363-4391-9121-65e1db51b671": { "chain": "task_id", "type": "many2one" },
+        "541de762-4a6c-435e-a5ff-e94d393cf6df": { "chain": "department_id", "type": "many2one" },
+        "4788ea63-ee8f-4082-a118-a26b4b6f1a71": { "chain": "employee_id", "type": "many2one" }
+      },
+      "context": { "grid_anchor": "2022-09-12", "group_expand": true },
+      "domain": [
+        ["project_id", "!=", false]
+      ],
+      "id": "5",
+      "measures": [
+        {
+          "id": "billing_time_target:max",
+          "fieldName": "billing_time_target",
+          "aggregator": "max"
+        },
+        {
+          "id": "Time Target Sum",
+          "fieldName": "Time Target Sum",
+          "aggregator": "sum",
+          "userDefinedName": "Time Target Sum",
+          "computedBy": {
+            "sheetId": "7802fc6d-c96b-452f-86d8-1c69816bebdc",
+            "formula": "='billing_time_target:max'"
+          }
+        },
+        {
+          "id": "Billing Days Target",
+          "fieldName": "Billing Days Target",
+          "aggregator": "sum",
+          "userDefinedName": "Billing Days Target",
+          "computedBy": {
+            "sheetId": "7802fc6d-c96b-452f-86d8-1c69816bebdc",
+            "formula": "='Time Target Sum'/'company_id.resource_calendar_id.hours_per_day'"
+          }
+        }
+      ],
+      "model": "timesheets.analysis.report",
+      "name": "stats - target",
+      "sortedColumn": null,
+      "formulaId": "11",
+      "columns": [],
+      "rows": [
+        { "fieldName": "employee_id", "order": "asc" },
+        { "fieldName": "company_id.resource_calendar_id.hours_per_day" }
+      ]
+    },
+    "12": {
+      "type": "ODOO",
+      "fieldMatching": {
+        "fb3700b0-4ee9-4086-86ac-6c62a7d33d37": { "chain": "date", "type": "date", "offset": 0 },
+        "65e4bccf-3035-47a0-a268-9a4e5b48037f": { "chain": "project_id", "type": "many2one" },
+        "22a76320-0363-4391-9121-65e1db51b671": { "chain": "task_id", "type": "many2one" },
+        "541de762-4a6c-435e-a5ff-e94d393cf6df": { "chain": "department_id", "type": "many2one" },
+        "4788ea63-ee8f-4082-a118-a26b4b6f1a71": { "chain": "employee_id", "type": "many2one" }
+      },
+      "context": {},
+      "domain": [
+        "&",
+        "&",
+        ["project_id", "!=", false],
+        ["date", ">=", "today =1m =1d"],
+        ["date", "<", "today +1d"]
+      ],
+      "id": "4",
+      "measures": [
+        {
+          "id": "billable_time",
+          "fieldName": "billable_time",
+          "aggregator": "sum"
+        },
+        {
+          "id": "billing_time_target:max",
+          "fieldName": "billing_time_target",
+          "aggregator": "max"
+        },
+        {
+          "id": "Time Target Sum",
+          "fieldName": "Time Target Sum",
+          "aggregator": "sum",
+          "userDefinedName": "Time Target Sum",
+          "computedBy": {
+            "sheetId": "7802fc6d-c96b-452f-86d8-1c69816bebdc",
+            "formula": "='billing_time_target:max'"
+          }
+        },
+        {
+          "id": "Billable Days",
+          "fieldName": "Billable Days",
+          "aggregator": "sum",
+          "userDefinedName": "Billable Days",
+          "computedBy": {
+            "sheetId": "7802fc6d-c96b-452f-86d8-1c69816bebdc",
+            "formula": "=billable_time/'company_id.resource_calendar_id.hours_per_day'"
+          }
+        },
+        {
+          "id": "Billing Days Target",
+          "fieldName": "Billing Days Target",
+          "aggregator": "sum",
+          "userDefinedName": "Billing Days Target",
+          "computedBy": {
+            "sheetId": "7802fc6d-c96b-452f-86d8-1c69816bebdc",
+            "formula": "='Time Target Sum'/'company_id.resource_calendar_id.hours_per_day'"
+          }
+        }
+      ],
+      "model": "timesheets.analysis.report",
+      "name": "billable vs target monthly",
+      "formulaId": "12",
+      "columns": [
+        { "fieldName": "date", "order": "asc", "granularity": "month" }
+      ],
+      "rows": [
+        { "fieldName": "employee_id" },
+        { "fieldName": "company_id.resource_calendar_id.hours_per_day" }
+      ]
+    },
+    "77e39cef-2a1d": {
+      "type": "ODOO",
+      "fieldMatching": {
+        "fb3700b0-4ee9-4086-86ac-6c62a7d33d37": { "chain": "date", "type": "date", "offset": 0 },
+        "65e4bccf-3035-47a0-a268-9a4e5b48037f": { "chain": "project_id", "type": "many2one" },
+        "22a76320-0363-4391-9121-65e1db51b671": { "chain": "task_id", "type": "many2one" },
+        "541de762-4a6c-435e-a5ff-e94d393cf6df": { "chain": "department_id", "type": "many2one" },
+        "4788ea63-ee8f-4082-a118-a26b4b6f1a71": { "chain": "employee_id", "type": "many2one" }
+      },
+      "context": {},
+      "domain": [
+        "&",
+        ["project_id", "!=", false],
+        ["department_id", "!=", false]
+      ],
+      "id": "3",
+      "measures": [
+        { "id": "unit_amount", "fieldName": "unit_amount" },
+        { "id": "billable_time", "fieldName": "billable_time" },
+        {
+          "id": "Days Spent",
+          "fieldName": "Days Spent",
+          "aggregator": "sum",
+          "userDefinedName": "Days Spent",
+          "computedBy": {
+            "sheetId": "7802fc6d-c96b-452f-86d8-1c69816bebdc",
+            "formula": "=unit_amount/'company_id.resource_calendar_id.hours_per_day'"
+          }
+        },
+        {
+          "id": "Billable Days",
+          "fieldName": "Billable Days",
+          "aggregator": "sum",
+          "userDefinedName": "Billable Days",
+          "computedBy": {
+            "sheetId": "7802fc6d-c96b-452f-86d8-1c69816bebdc",
+            "formula": "=billable_time/'company_id.resource_calendar_id.hours_per_day'"
+          }
+        }
+      ],
+      "model": "timesheets.analysis.report",
+      "name": "Timesheets Analysis by Department (copy)",
+      "sortedColumn": {
+        "measure": "billable_time",
+        "order": "desc",
+        "domain": []
+      },
+      "formulaId": "13",
+      "columns": [],
+      "rows": [
+        { "fieldName": "department_id" }
+      ],
+      "filters": []
     }
   },
-  "pivotNextId": 10,
+  "pivotNextId": 14,
   "customTableStyles": {},
   "namedRanges": {},
   "globalFilters": [
@@ -1252,6 +4697,58 @@
       "type": "odooMenu",
       "odooMenuId": "hr_timesheet.timesheet_menu_activity_all"
     },
-    "26ef5620-3a5c": { "type": "odooMenu", "odooMenuId": "hr_timesheet.timesheet_menu_root" }
+    "bf361c85-bcea": { "type": "odooMenu", "odooMenuId": "hr_timesheet.timesheet_menu_root" },
+    "36f77603-2cc6??14907ee1-177b-4dda-97d7-223b1b00abe5": {
+      "type": "odooMenu",
+      "odooMenuId": "hr_timesheet.timesheet_menu_activity_all"
+    },
+    "36f77603-2cc6??0b033641-2a0f-4db7-893d-f14fbb320b94": {
+      "type": "odooMenu",
+      "odooMenuId": "hr_timesheet.timesheet_menu_activity_all"
+    },
+    "36f77603-2cc6??39c6667b-b74a-478e-87e9-75c22de5ea1f": { "type": "odooMenu", "odooMenuId": "hr_timesheet.timesheet_menu_root" },
+    "36f77603-2cc6??741013eb-c06f": {
+      "type": "odooMenu",
+      "odooMenuId": "hr_timesheet.timesheet_menu_activity_all"
+    },
+    "36f77603-2cc6??cd0cf706-f8bd": {
+      "type": "odooMenu",
+      "odooMenuId": "hr_timesheet.timesheet_menu_activity_all"
+    },
+    "b1896e38-bbe0??14907ee1-177b-4dda-97d7-223b1b00abe5": {
+      "type": "odooMenu",
+      "odooMenuId": "hr_timesheet.timesheet_menu_activity_all"
+    },
+    "b1896e38-bbe0??0b033641-2a0f-4db7-893d-f14fbb320b94": {
+      "type": "odooMenu",
+      "odooMenuId": "hr_timesheet.timesheet_menu_activity_all"
+    },
+    "b1896e38-bbe0??39c6667b-b74a-478e-87e9-75c22de5ea1f": { "type": "odooMenu", "odooMenuId": "hr_timesheet.timesheet_menu_root" },
+    "b1896e38-bbe0??741013eb-c06f": {
+      "type": "odooMenu",
+      "odooMenuId": "hr_timesheet.timesheet_menu_activity_all"
+    },
+    "b1896e38-bbe0??cd0cf706-f8bd": {
+      "type": "odooMenu",
+      "odooMenuId": "hr_timesheet.timesheet_menu_activity_all"
+    },
+    "b1896e38-bbe0??bf361c85-bcea": { "type": "odooMenu", "odooMenuId": "hr_timesheet.timesheet_menu_root" },
+    "b8ba785b-1916??14907ee1-177b-4dda-97d7-223b1b00abe5": {
+      "type": "odooMenu",
+      "odooMenuId": "hr_timesheet.timesheet_menu_activity_all"
+    },
+    "b8ba785b-1916??0b033641-2a0f-4db7-893d-f14fbb320b94": {
+      "type": "odooMenu",
+      "odooMenuId": "hr_timesheet.timesheet_menu_activity_all"
+    },
+    "b8ba785b-1916??39c6667b-b74a-478e-87e9-75c22de5ea1f": { "type": "odooMenu", "odooMenuId": "hr_timesheet.timesheet_menu_root" },
+    "b8ba785b-1916??741013eb-c06f": {
+      "type": "odooMenu",
+      "odooMenuId": "hr_timesheet.timesheet_menu_activity_all"
+    },
+    "b8ba785b-1916??cd0cf706-f8bd": {
+      "type": "odooMenu",
+      "odooMenuId": "hr_timesheet.timesheet_menu_activity_all"
+    }
   }
 }
