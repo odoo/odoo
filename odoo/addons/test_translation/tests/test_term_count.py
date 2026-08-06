@@ -443,7 +443,11 @@ class TestTranslationFlow(common.TransactionCase):
             'Scorecard title',
             'Opportunities',
             'Odoo Chart horizontal axis title',
-            'Odoo Chart vertical axis title'
+            'Odoo Chart vertical axis title',
+            'My Carousel',
+            'My Chart',
+            'My Data View',
+            'My Chart 42',
         })
 
     def test_export_records(self):
