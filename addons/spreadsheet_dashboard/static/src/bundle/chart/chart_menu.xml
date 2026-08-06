@@ -6,7 +6,7 @@
             position="before">
             <t t-set="granularity"
                 t-value="this.env.model.getters.getChartGranularity(this.props.chartId)?.granularity" />
-            <t t-if="granularity and this.granularityOptions.length">
+            <t t-if="this.env.model.getters.isDashboard() and granularity and this.granularityOptions.length">
                 <select t-on-change="this.onGranularitySelected"
                     class="position-relative o-chart-dashboard-item w-auto form-select rounded py-0 px-1 text-muted"
                     name="chart-granularity">
