@@ -1096,10 +1096,38 @@ class SaleOrder(models.Model):
         if not self._has_deliverable_products():
             return bool(self.order_line)  # Empty cart => block the customer
 
+<<<<<<< a460aabc659af8ff6282dac77dbaf71fd3ff30f5
         # Uses list comprehension to ensure all products are checked and potential alerts are saved.
         if not all([sol._check_availability() for sol in self.order_line]):  # noqa: C419
             self._add_warning_alert(
                 self.env._("Unfortunately, there is no longer enough stock to fulfill your order.")
+||||||| c1bf73143b0f170001f6876683df39485328c924
+        :rtype: bool
+        """
+        return bool(self)
+
+    def _check_cart_is_ready_to_be_paid(self):
+        """Whether the cart is valid and the user can proceed to the payment.
+
+        :rtype: bool
+        """
+        if not self._is_cart_ready():
+            raise ValidationError(
+                _("Your cart is not ready to be paid, please verify previous steps.")
+=======
+        :rtype: bool
+        """
+        return bool(self.order_line)
+
+    def _check_cart_is_ready_to_be_paid(self):
+        """Whether the cart is valid and the user can proceed to the payment.
+
+        :rtype: bool
+        """
+        if not self._is_cart_ready():
+            raise ValidationError(
+                _("Your cart is not ready to be paid, please verify previous steps.")
+>>>>>>> 1061fd1221cfcff1b94aef70d6972b04c3bec69d
             )
             return False
 
