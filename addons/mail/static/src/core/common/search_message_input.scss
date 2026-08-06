@@ -1,0 +1,30 @@
+.o-mail-SearchMessageInput {
+    --mailSearchMessageInput-searchingShow: 0;
+
+    &.o-searching {
+        animation: o-mail-SearchMessageInput-searchingDelayAnimation 0s ease-in 0.25s forwards;
+    }
+}
+
+@keyframes o-mail-SearchMessageInput-searchingDelayAnimation {
+    0%   { --mailSearchMessageInput-searchingShow: 0; }
+    100% { --mailSearchMessageInput-searchingShow: 1; }
+}
+
+@container style(--mailSearchMessageInput-searchingShow: 0) {
+    .o-mail-SearchMessageInput-searchingIcon {
+        display: none;
+    }
+    .o-mail-SearchMessageInput-searchIcon {
+        display: inline-flex;
+    }
+}
+
+@container style(--mailSearchMessageInput-searchingShow: 1) {
+    .o-mail-SearchMessageInput-searchingIcon {
+        display: inline-flex;
+    }
+    .o-mail-SearchMessageInput-searchIcon {
+        display: none;
+    }
+}

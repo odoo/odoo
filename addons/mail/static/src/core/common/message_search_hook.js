@@ -68,11 +68,13 @@ export function searchHighlight(searchTerm, target) {
 export function useMessageSearch(thread) {
     const store = useService("mail.store");
     const sequential = useSequential();
+    let searchId = 0;
     const state = useState({
         thread,
         async search(before = false) {
             if (this.searchTerm || this.is_notification !== undefined) {
                 this.searching = true;
+                const currentSearchId = ++searchId;
                 const data = await sequential(() =>
                     store.searchMessagesInThread(
                         this.searchTerm,
@@ -81,8 +83,8 @@ export function useMessageSearch(thread) {
                         this.is_notification
                     )
                 );
-                if (!data) {
-                    return;
+                if (!data || currentSearchId !== searchId) {
+                    return; // Search was cleared or superseded during request.
                 }
                 const { count, loadMore, messages } = data;
                 this.searched = true;
@@ -100,6 +102,7 @@ export function useMessageSearch(thread) {
         },
         count: 0,
         clear() {
+            searchId++;
             this.is_notification = undefined;
             this.messages = [];
             this.searched = false;
