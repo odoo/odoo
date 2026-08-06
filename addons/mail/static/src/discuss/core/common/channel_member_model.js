@@ -36,7 +36,9 @@ export class ChannelMember extends Record {
         },
         /** @this {import("models").ChannelMember} */
         onUpdate() {
-            this.channel_id?.onPinStateUpdated();
+            // The channel pin state follows self member only: reacting to the other
+            // members makes Discuss leave a channel that is still displayed.
+            this.channelAsSelf?.onPinStateUpdated();
         },
     });
     last_interest_dt = fields.Datetime();
