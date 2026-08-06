@@ -191,6 +191,8 @@ class L10nEsEdiSiiDocument(models.Model):
                     'cancelled': self.env._("The document was cancelled by SII."),
                 }
                 doc.move_id.message_post(body=messages[state])
+                if state == 'cancelled' and doc.move_id.state == 'posted':
+                    doc.move_id.button_cancel()
 
                 if doc.state in ('accepted', 'accepted_with_errors'):
                     if not attachment:
