@@ -59,7 +59,7 @@ class TestUBLTRCommon(AccountTestInvoicingCommon):
             'l10n_tr_nilvera_customer_status': 'earchive',
         })
 
-        cls.tax_20 = cls.env['account.chart.template'].ref('tr_s_wh_20_2_10')
+        cls.tax_20 = cls.env['account.chart.template'].ref('tr_s_20')
 
         # The rate of 1 USD = 40 TRY is meant to simplify tests
         usd = cls.env.ref('base.USD')

@@ -22,7 +22,6 @@ Features include:
         'views/l10n_tr_nilvera_einvoice_invoice_sequence_views.xml',
         'views/res_partner_views.xml',
         'views/account_move_views.xml',
-        'views/account_tax_views.xml',
         'views/product_views.xml',
         'views/res_config_settings_views.xml',
         'wizards/l10n_tr_nilvera_einvoice_ticarifatura_response_wizard_views.xml',

@@ -4,3 +4,4 @@ from . import test_xml_ubl_tr
 from . import test_xml_ubl_tr_common
 from . import test_tr_nilvera_mocked_requests
 from . import test_import_refund
+from . import test_withholding_reason

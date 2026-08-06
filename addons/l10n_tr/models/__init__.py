@@ -1,6 +1,6 @@
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
 from . import account_journal
 from . import account_move_line
+from . import account_tax
 from . import ir_http
 from . import l10n_tr_tax_office
 from . import product

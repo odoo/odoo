@@ -38,3 +38,11 @@ GIB_INVOICE_TYPE_SELECTION = [
 GIB_RETURN_INVOICE_TYPES = ('IADE', 'TEVKIFATIADE')
 
 SUCCESSFUL_SEND_STATUSES = {'succeed', 'commercial_approved', 'commercial_answered_automatically'}
+
+# GİB invoice type -> the `code_type` values of the reasons it may use.
+EXEMPTION_CODE_TYPES = {
+    'ISTISNA': {'exception', 'export_exception'},
+    'IHRACKAYITLI': {'export_registration'},
+    'TEVKIFAT': {'withholding'},
+    'TEVKIFATIADE': {'withholding'},
+}
