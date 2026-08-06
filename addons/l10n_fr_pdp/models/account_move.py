@@ -294,12 +294,13 @@ class AccountMove(models.Model):
 
     def _track_execute(self, track_init_values, trackings, track_records=None):
         filtered_trackings = {}
-        for move in self:
-            changes, tracking_values = trackings[move.id]
+        for rec_id, (changes, tracking_values) in trackings.items():
             changes = set(changes)
             if changes & PDP_TRACKED_FIELDS:
-                move._l10n_fr_pdp_message_log_ereporting_status()
-            filtered_trackings[move.id] = (
+                move = self.browse(rec_id).exists()
+                if move:
+                    move._l10n_fr_pdp_message_log_ereporting_status()
+            filtered_trackings[rec_id] = (
                 changes - PDP_TRACKED_FIELDS,
                 [tv for tv in tracking_values if tv.get('field_name') not in PDP_TRACKED_FIELDS],
             )
