@@ -1714,7 +1714,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "scheduledDatetime": False,
                 "is_bookmarked": False,
                 "subject": False,
-                "subtype_id": self.env.ref("mail.mt_note").id,
+                "subtype_id": self.env.ref("mail.mt_comment").id,
                 "write_date": write_date,
             }
         return {}
