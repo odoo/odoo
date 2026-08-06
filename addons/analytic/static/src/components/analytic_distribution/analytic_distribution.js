@@ -505,7 +505,7 @@ export class AnalyticDistribution extends Component {
 
     async commitChanges() {
         if (this.isDropdownOpen) {
-            await this.save();
+            this.forceCloseEditor()
         }
     }
 
