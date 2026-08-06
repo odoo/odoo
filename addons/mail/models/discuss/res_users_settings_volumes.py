@@ -49,10 +49,7 @@ class ResUsersSettingsVolumes(models.Model):
         return self.user_setting_id._bus_channels()
 
     def _store_volume_fields(self, res: Store.FieldList):
-        res.attr("volume")
-        res.one("partner_id", "_store_avatar_fields")
-        res.one("guest_id", "_store_avatar_fields")
-        res.one("user_setting_id", [])
+        res.extend(["guest_id", "partner_id", "user_setting_id", "volume"])
 
     def _sync_field_names(self, res):
         super()._sync_field_names(res)
