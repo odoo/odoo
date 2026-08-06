@@ -2253,7 +2253,10 @@ class BaseModel(metaclass=MetaModel):
                         query._order_groupby.insert(0, groupby_terms[term])
                         groupby_terms[term] = SQL(", ").join(query._order_groupby)
                         query._order_groupby.clear()
-
+            elif field and field.type == 'selection':
+                sql_keys = list(field.get_values(self.env))
+                sql_expr = SQL("array_position(%s::text[], %s::text)", sql_keys, groupby_terms[term])
+                orderby_terms.append(SQL("%s %s %s", sql_expr, sql_direction, sql_nulls))
             elif granularity == 'day_of_week':
                 """
                 Day offset relative to the first day of week in the user lang
@@ -4807,10 +4810,14 @@ class BaseModel(metaclass=MetaModel):
             return SQL(", ").join(terms)
 
         sql_field = table[fname]
+
         if property_name:
             sql_field = sql_field[property_name]
         if field.type == 'boolean' and field not in self.env.registry.not_null_fields:
             sql_field = SQL("COALESCE(%s, FALSE)", sql_field)
+        elif field.type == 'selection':
+            sql_keys = list(field.get_values(self.env))
+            sql_field = SQL("array_position(%s::text[], %s::text)", sql_keys, sql_field)
 
         table._query._order_groupby.append(sql_field)
 

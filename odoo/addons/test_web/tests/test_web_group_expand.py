@@ -224,16 +224,16 @@ class TestGroupExpand(common.TransactionCase):
             groups,
             [
                 {
-                    'no_expand': 'a',
-                    '__count': 1,
-                    'value:sum': 1,
-                    '__extra_domain': [('no_expand', '=', 'a')],
-                },
-                {
                     'no_expand': 'c',
                     '__count': 1,
                     'value:sum': 2,
                     '__extra_domain': [('no_expand', '=', 'c')],
+                },
+                {
+                    'no_expand': 'a',
+                    '__count': 1,
+                    'value:sum': 1,
+                    '__extra_domain': [('no_expand', '=', 'a')],
                 },
                 {
                     'no_expand': False,

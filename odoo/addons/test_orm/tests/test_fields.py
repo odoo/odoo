@@ -3321,6 +3321,40 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         related_float_field = self.env['test_orm.related']._fields['foo_float_id']
         self.assertEqual(related_float_field.column_type[1], 'numeric')
 
+    def test_selection_ordering_simple_query(self):
+        """ Test that standard search query sorts by the module selection definition order. """
+        Model = self.env['test_read_group.on_selection']
+
+        # The model's SELECTION is defined in reverse lexical order:
+        # [('c', "C"), ('b', "B"), ('a', "A")]
+        records = Model.create([
+            {'no_expand': 'a', 'value': 1},
+            {'no_expand': 'b', 'value': 2},
+            {'no_expand': 'c', 'value': 3},
+        ])
+
+        # test ASC (Should follow definition order: c, b, a)
+        search_records = Model.search(
+            domain=[('id', 'in', records.ids)],
+            order='no_expand ASC',
+        )
+        self.assertEqual(
+            [rec.no_expand for rec in search_records],
+            ['c', 'b', 'a'],
+            "Search ASC should follow the selection definition sequence."
+        )
+
+        # test DESC (Should reverse the definition order: a, b, c)
+        search_records_desc = Model.search(
+            domain=[('id', 'in', records.ids)],
+            order='no_expand DESC',
+        )
+        self.assertEqual(
+            [rec.no_expand for rec in search_records_desc],
+            ['a', 'b', 'c'],
+            "Search DESC should reverse the selection definition sequence."
+        )
+
 
 class TestX2many(TransactionExpressionCase):
     def test_definition_many2many(self):

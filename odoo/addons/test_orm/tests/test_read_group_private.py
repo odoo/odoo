@@ -1574,3 +1574,28 @@ class TestPublicReadGroup(common.TransactionCase):
                 (False, [None], 'order 1'),
             ],
         )
+
+    def test_selection_ordering(self):
+        """ Test _read_group and _order_field_to_sql respect the module selection definition order. """
+        Model = self.env['test_read_group.on_selection']
+
+        # The model's SELECTION is defined in reverse lexical order:
+        # [('c', "C"), ('b', "B"), ('a', "A")]
+        records = Model.create([
+            {'no_expand': 'a', 'value': 1},
+            {'no_expand': 'b', 'value': 2},
+            {'no_expand': 'c', 'value': 3},
+        ])
+
+        groups = Model._read_group(
+            domain=[('id', 'in', records.ids)],
+            groupby=['no_expand'],
+        )
+        self.assertEqual([state for state, in groups], ['c', 'b', 'a'])
+
+        groups = Model._read_group(
+            domain=[('id', 'in', records.ids)],
+            groupby=['no_expand'],
+            order='no_expand ASC',
+        )
+        self.assertEqual([state for state, in groups], ['c', 'b', 'a'])
