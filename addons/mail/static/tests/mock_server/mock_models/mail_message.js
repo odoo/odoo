@@ -571,6 +571,7 @@ export class MailMessage extends models.ServerModel {
                 ["message_type", "!=", "user_notification"],
             ]);
         }
+<<<<<<< 5d79e6a1949878bb50784b9ddede621e015ac542
         // keep in sync with `MESSAGE_SEARCH_FILTERS` in `mail/models/mail_message.py`
         const isFiltered = ["messages", "notes", "activities", "changes"].includes(search_filter);
         if (search_filter === "messages") {
@@ -599,6 +600,17 @@ export class MailMessage extends models.ServerModel {
             ]);
         } else if (search_filter === "changes") {
             domain.push(["message_type", "=", "tracking"]);
+||||||| bdb62ef94c75c578bdd98ae770c4dd5fd56f9521
+        if (is_notification === true) {
+            domain.push(["message_type", "=", "notification"]);
+        } else if (is_notification === false) {
+            domain.push(["message_type", "!=", "notification"]);
+=======
+        if (is_notification === true) {
+            domain.push(["message_type", "in", ["notification", "tracking"]]);
+        } else if (is_notification === false) {
+            domain.push(["message_type", "not in", ["notification", "tracking"]]);
+>>>>>>> 5756de73b2748ada83a351c083c92f307f0b6e28
         }
         if (search_term) {
             domain = new Domain(domain || []);
@@ -645,43 +657,6 @@ export class MailMessage extends models.ServerModel {
         messages.length = Math.min(messages.length, limit);
         res.messages = messages;
         return res;
-    }
-
-    _get_tracking_values_domain(search_term) {
-        let numeric_term = false;
-        const epsilon = 1e-9;
-        numeric_term = parseFloat(search_term);
-        const field_names = [
-            "old_value_char",
-            "new_value_char",
-            "old_value_text",
-            "new_value_text",
-            "old_value_datetime",
-            "new_value_datetime",
-        ];
-        let domain = Domain.or(
-            field_names.map((field_name) => new Domain([[field_name, "ilike", search_term]]))
-        );
-        if (numeric_term) {
-            const float_domain = Domain.or(
-                ["old_value_float", "new_value_float"].map(
-                    (fieldName) =>
-                        new Domain([
-                            [fieldName, ">=", numeric_term - epsilon],
-                            [fieldName, "<=", numeric_term + epsilon],
-                        ])
-                )
-            );
-            domain = Domain.or([domain, float_domain]);
-        }
-        if (Number.isInteger(numeric_term)) {
-            domain = Domain.or([
-                domain,
-                new Domain([["old_value_integer", "=", numeric_term]]),
-                new Domain([["new_value_integer", "=", numeric_term]]),
-            ]);
-        }
-        return domain;
     }
 
     _linked_message_ids(message) {
