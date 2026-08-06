@@ -57,6 +57,8 @@ class TestEdiJson(L10nInTestInvoicingCommon):
         with freeze_time('2023-12-25'):
             cls.invoice_reverse = cls.invoice._reverse_moves()
             cls.invoice_reverse.action_post()
+            cls.price_adjustment_credit_note = cls.invoice._reverse_moves([{'l10n_in_adjustment_type': 'price_adjustment'}])
+            cls.price_adjustment_credit_note.action_post()
         cls.invoice_full_discount = cls.init_invoice("out_invoice", post=False, products=cls.product_a)
         cls.invoice_full_discount.write({
             "invoice_line_ids": [(1, l_id, {"discount": 100}) for l_id in cls.invoice_full_discount.invoice_line_ids.ids]})
@@ -210,6 +212,19 @@ class TestEdiJson(L10nInTestInvoicingCommon):
                 self.invoice_reverse._l10n_in_edi_generate_invoice_json(),
                 credit_note_expected,
                 "Indian E-invoice Credit note json value is not matched"
+            )
+
+        # ========================== Price Adjustment Credit Note ====================================
+        with self.subTest(scenario="Price Adjustment Credit Note"):
+            price_adjustment_credit_note_expected = expected.copy()
+            price_adjustment_credit_note_expected['DocDtls'] = {"Typ": "CRN", "No": "RINV/23-24/0002", "Dt": "25/12/2023"}
+            price_adjustment_credit_note_expected['ItemList'] = [
+                {**item, "Qty": 0.0, "UnitPrice": 0.0} for item in expected['ItemList']
+            ]
+            self.assertDictEqual(
+                self.price_adjustment_credit_note._l10n_in_edi_generate_invoice_json(),
+                price_adjustment_credit_note_expected,
+                "Indian E-invoice Price adjustment credit note sent json value is not matched"
             )
 
         # =================================== Full discount test =====================================
