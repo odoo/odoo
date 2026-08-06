@@ -683,3 +683,26 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon, HttpCase):
         # Monthly demand should be 20.0 as only the outgoing move is counted with two-step delivery.
         self.assertEqual(product.with_context(warehouse_id=warehouse.id).monthly_demand, 20.0)
         self.assertEqual(product.monthly_demand, 20.0)
+
+    def test_purchase_order_suggestion_respects_vendor_uom(self):
+        '''
+        Ensure action_purchase_order_suggest uses the uom specified on the supplier info.
+        '''
+        today = fields.Datetime.now()
+        # Update supplier info.
+        self.product_1.seller_ids.product_uom_id = self.uom_pack_of_6
+        self.env['stock.quant']._update_available_quantity(self.product_1, self.stock_location, 18)
+        self._create_and_process_delivery_at_date(
+            [(self.product_1, 18)], today - relativedelta(days=3)
+        )
+        self.assertEqual(self.product_1.monthly_demand, 18)
+        po = self.env['purchase.order'].create({'partner_id': self.vendor.id})
+        self.actionAddAll(po, based_on='30_days', days=30, factor=100)
+        self.assertRecordValues(po.order_line, [
+            {
+                'product_id': self.product_1.id,
+                'product_qty': 3,
+                'product_uom_qty': 18,
+                'product_uom_id': self.uom_pack_of_6.id,
+            },
+        ])
