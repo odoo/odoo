@@ -72,15 +72,18 @@ class TestProjectSharingCommon(TestProjectCommon):
         )
 
     def get_project_share_link(self):
+        return self.get_project_share_link_partner(self.user_portal.partner_id)
+
+    def get_project_share_link_partner(self, partner):
         self.env['project.share.wizard'].create({
             'res_model': 'project.project',
             'res_id': self.project_no_collabo.id,
             'collaborator_ids': [
-                Command.create({'partner_id': self.user_portal.partner_id.id, 'access_mode': 'edit'}),
+                Command.create({'partner_id': partner.id, 'access_mode': 'edit'}),
             ],
         }).action_send_mail()
         return self.env['mail.message'].search([
-            ('partner_ids', 'in', self.user_portal.partner_id.id),
+            ('partner_ids', 'in', partner.id),
         ])
 
 
