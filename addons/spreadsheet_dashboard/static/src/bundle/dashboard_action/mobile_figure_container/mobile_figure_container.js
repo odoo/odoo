@@ -1,6 +1,6 @@
 import { useSubEnv, render } from "@web/owl2/utils";
 import * as spreadsheet from "@odoo/o-spreadsheet";
-import { Component, onMounted, onWillUnmount } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, signal } from "@odoo/owl";
 const { registries, stores, constants, helpers } = spreadsheet;
 const { figureRegistry } = registries;
 const { ModelStore, useStoreProvider } = stores;
@@ -15,14 +15,22 @@ export class MobileFigureContainer extends Component {
         spreadsheetModel: Object,
     };
 
+    figureContainer = signal.ref();
+    containerWidth = signal(0);
+
     setup() {
         const stores = useStoreProvider();
         stores.inject(ModelStore, this.props.spreadsheetModel);
         const onUpdate = () => render(this, true);
+        const resizeObserver = new ResizeObserver(() => {
+            this.containerWidth.set(this.figureContainer()?.offsetWidth || 0);
+        });
         onMounted(() => {
+            resizeObserver.observe(this.figureContainer());
             stores.on("store-updated", this, onUpdate);
         });
         onWillUnmount(() => {
+            resizeObserver.disconnect();
             stores.off("store-updated", this, onUpdate);
         });
 
@@ -45,6 +53,10 @@ export class MobileFigureContainer extends Component {
             .getFigures(sheetId)
             .sort((f1, f2) => (this.isBefore(f1, f2) ? -1 : 1));
 
+        if (!this.containerWidth()) {
+            return [];
+        }
+
         const figureRows = [];
         for (let i = 0; i < sortedFigures.length; i++) {
             const figure = sortedFigures[i];
@@ -58,7 +70,20 @@ export class MobileFigureContainer extends Component {
                 figureRows.push([figure]);
             }
         }
-        return figureRows;
+
+        const updateFigureSizeInRow = (figureRow) => {
+            const ratio = figureRow.length === 2 ? 0.5 : 3 / 4;
+            const margins = figureRow.length * 8;
+            const figureWidth = (this.containerWidth() - margins) / figureRow.length;
+            const height = figureWidth * ratio;
+            return figureRow.map((figure) => ({ ...figure, height, width: figureWidth }));
+        };
+
+        return figureRows.map(updateFigureSizeInRow);
+    }
+
+    getFigureStyle(figure) {
+        return `width: ${figure.width}px; height: ${figure.height}px;`;
     }
 
     getFigureComponent(figure) {

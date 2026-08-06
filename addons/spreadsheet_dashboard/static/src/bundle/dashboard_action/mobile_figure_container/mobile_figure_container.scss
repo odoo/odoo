@@ -1,15 +1,9 @@
-.o_figure_row {
-    height: auto;
-    margin: 8px 0px;
-    aspect-ratio: 4 / 3;
-
-    &.scorecard_row {
-        aspect-ratio: 4 / 1; /* 2 scorecards in a row, each with an aspect ratio of 2 / 1 */
-    }
-}
-
 .o-mobile-figure.o-figure {
-    margin: 0px 8px;
+    margin: 4px;
+
+    &:not(.o_empty_figure){
+        direction: ltr;
+    }
 
     .o-chart-menu {
         visibility: visible !important;

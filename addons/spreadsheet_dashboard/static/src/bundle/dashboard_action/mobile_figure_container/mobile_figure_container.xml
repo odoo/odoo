@@ -1,19 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates>
     <t t-name="documents_spreadsheet.MobileFigureContainer">
-        <div class="o-spreadsheet" t-att-style="this.style"  t-att-class="{'dark': this.props.spreadsheetModel.getters.isDarkMode() }">
+        <div class="o-spreadsheet"
+            t-att-style="this.style"
+            t-att-class="{'dark': this.props.spreadsheetModel.getters.isDarkMode() }"
+            t-ref="this.figureContainer">
             <div t-if="!this.figureRows.length" class="m-3">
                 Only chart figures are displayed in small screens but this dashboard doesn't contain any
             </div>
             <t t-foreach="this.figureRows" t-as="figureRow" t-key="figureRow_index">
                 <div class="o_figure_row d-flex flex-row w-100" t-att-class="{'scorecard_row': figureRow.length === 2}">
                     <t t-foreach="figureRow" t-as="figure" t-key="figure_index">
-                        <div t-if="figure.tag === 'empty'" class="o_empty_figure o-mobile-figure o-figure position-relative"/>
+                        <div t-if="figure.tag === 'empty'"
+                            class="o_empty_figure o-mobile-figure o-figure position-relative"
+                            t-att-style="this.getFigureStyle(figure)" />
                         <t t-else="">
-                            <div t-att-style="' direction:ltr;'"
+                            <div t-att-style="this.getFigureStyle(figure)"
                                 class="o-mobile-figure os-theme-dependant o-figure position-relative overflow-hidden"
                                 t-att-class="this.getFigureClass(figure)">
-                                <t figureUI="figure" t-component="this.getFigureComponent(figure)"/>
+                                <t figureUI="figure" t-component="this.getFigureComponent(figure)" />
                             </div>
                         </t>
                     </t>
