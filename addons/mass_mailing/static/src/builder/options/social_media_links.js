@@ -117,10 +117,11 @@ export class SocialMediaLinks extends BaseOptionComponent {
                     platformAfter: nextPlatform,
                 });
             },
+            keyboardReorder: true,
             getFocusToken: ({ element }) =>
                 element.querySelector("[data-sortable-platform]").dataset.sortablePlatform,
             getFocusHandle: (platform) =>
-                this.rootRef.el?.querySelector(`[data-sortable-platform="${platform}"]`),
+                this.rootRef()?.querySelector(`[data-sortable-platform="${platform}"]`),
         });
     }
 
