@@ -481,12 +481,16 @@ export class ListCoreViewPlugin extends OdooCoreViewPlugin {
      * @param {string} path
      */
     getListHeaderValue(listId, path) {
-        const columnDef = this.lists[listId].definition.columns.find((col) => col.name === path);
+        const list = this.lists[listId];
+        const columnDef = list.definition.columns.find((col) => col.name === path);
 
         if (columnDef?.string) {
+            if (this.getters.getListDefinition(listId).translateHeaders) {
+                return { value: this.getters.dynamicTranslate(columnDef.string) };
+            }
             return { value: columnDef.string };
         }
-        return this.lists[listId].dataSource.getListHeaderValue(path);
+        return list.dataSource.getListHeaderValue(path);
     }
 
     /**
