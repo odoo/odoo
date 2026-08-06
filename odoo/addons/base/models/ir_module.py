@@ -791,6 +791,7 @@ class IrModuleModule(models.Model):
             'noupdate': True,
         } for module in modules]
         self.env['ir.model.data'].create(module_metadata_list)
+        self.env.transaction.invalidate_ormcache('stable')
         return modules
 
     # update the list of available packages
