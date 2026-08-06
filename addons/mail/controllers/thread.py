@@ -160,7 +160,23 @@ class ThreadController(StoreController):
             if key in thread._get_allowed_message_params()
         }
         if from_create:
-            res.setdefault("message_type", "comment")
+            thread_su = thread.sudo()
+            access_mode = None
+            for domain, mode in thread_su._mail_get_operation_for_mail_message_operation("create"):
+                if thread_su.filtered_domain(domain):
+                    access_mode = mode
+                    break
+            if (
+                not request.env.user._is_internal()
+                or not access_mode
+                or not thread.sudo(False)
+                .with_context(allowed_company_ids=[])
+                .has_access(access_mode)
+            ):
+                res["message_type"] = "comment"
+                res["subtype_xmlid"] = "mail.mt_comment"
+            else:
+                res.setdefault("message_type", "comment")
         if (attachment_ids := post_data.get("attachment_ids")) is not None:
             attachments = request.env["ir.attachment"].browse(map(int, attachment_ids))
             if not attachments._has_attachments_ownership(post_data.get("attachment_tokens")):
