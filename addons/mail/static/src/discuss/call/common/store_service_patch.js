@@ -49,7 +49,6 @@ const StorePatch = {
                 }
             },
         });
-        this.allActiveRtcSessions = fields.Many("discuss.channel.rtc.session");
         this.nextTalkingTime = 1;
         this.fullscreenChannel = fields.One("discuss.channel");
         this._hasFullscreenUrl = fields.Attr(false, {

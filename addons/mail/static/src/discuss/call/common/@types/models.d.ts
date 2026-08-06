@@ -43,7 +43,6 @@ declare module "models" {
         _hasFullscreenUrl: boolean;
         _hasFullscreenUrlOnUpdate: () => void;
         _shareUrl: undefined|unknown;
-        allActiveRtcSessions: RtcSession[];
         "discuss.channel.rtc.session": StaticMailRecord<RtcSession, typeof RtcSessionClass>;
         fullscreenChannel: DiscussChannel;
         meetingViewOpened: boolean;
