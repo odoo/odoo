@@ -99,7 +99,7 @@ test("Analytic dynamic multi-edit", async () => {
     await animationFrame();
     expect(".analytic_distribution_popup").toHaveCount(1);
     expect(".analytic_distribution_popup tbody tr:first .o_field_many2one").toHaveCount(0);
-    await contains(".analytic_distribution_popup .popupButtons .btn").click();  // close the widget
+    await contains(".o_list_renderer").click();  // close the widget
     await contains(".modal-footer .btn-secondary").click();  // cancel confirmation
 
     // select the first 2 lines to be able to edit again
@@ -116,7 +116,7 @@ test("Analytic dynamic multi-edit", async () => {
     await contains(".analytic_distribution_popup tbody tr:first .o_field_many2one input").edit("Brussels", {confirm: false});
     await runAllTimers();
     await contains(".analytic_distribution_popup tbody tr:first .o_field_many2one .o_input_dropdown a").click();
-    await contains(".analytic_distribution_popup .popupButtons .btn").click();  // close the widget
+    await contains(".o_list_renderer").click();  // close the widget
     await contains(".modal-footer .btn-primary").click();  // validate confirmation
     await runAllTimers();
     expect(".o_list_table tbody tr:nth-child(1) .o_field_analytic_distribution .o_tag_badge_text").toHaveText("Brussels");
@@ -137,7 +137,7 @@ test("Analytic dynamic multi-edit", async () => {
     await contains(".analytic_distribution_popup tbody tr:first .o_field_many2one input").edit("Belgium", { confirm: false });
     await runAllTimers();
     await contains(".analytic_distribution_popup tbody tr:first .o_field_many2one .o_input_dropdown a").click();
-    await contains(".analytic_distribution_popup .popupButtons .btn").click();  // close the widget
+    await contains(".o_list_renderer").click();  // close the widget
     await contains(".modal-footer .btn-primary").click();  // validate confirmation
     await runAllTimers();
     expect(".o_list_table tbody tr:nth-child(1) .o_field_analytic_distribution .o_tag:nth-child(1) .o_tag_badge_text").toHaveText("Brussels");
@@ -156,7 +156,7 @@ test("Analytic dynamic multi-edit", async () => {
     await animationFrame();
     expect(".analytic_distribution_popup").toHaveCount(1);
     expect(".analytic_distribution_popup tbody tr:first .o_field_many2one").toHaveCount(0);
-    await contains(".analytic_distribution_popup .popupButtons .btn").click();  // close the widget
+    await contains(".o_list_renderer").click();  // close the widget
     await contains(".modal-footer .btn-primary").click();  // validate confirmation
     await runAllTimers();
     expect(".o_list_table tbody tr:nth-child(1) .o_field_analytic_distribution .o_tag:nth-child(1) .o_tag_badge_text").toHaveText("Brussels");
