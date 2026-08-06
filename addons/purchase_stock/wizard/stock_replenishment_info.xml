@@ -36,6 +36,40 @@
         </field>
     </record>
 
+    <record id="product_supplierinfo_replenishment_kanban_view" model="ir.ui.view">
+        <field name="name">product.supplierinfo.replenishment.kanban.view</field>
+        <field name="model">product.supplierinfo</field>
+        <field name="mode">primary</field>
+        <field name="priority">100</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile" create="0" delete="0" default_order="sequence, id">
+                <field name="sequence"/>
+                <field name="partner_id"/>
+                <field name="price"/>
+                <field name="currency_id"/>
+                <field name="min_qty"/>
+                <field name="uom_id"/>
+                <field name="delay"/>
+                <field name="last_purchase_date"/>
+                <field name="show_set_supplier_button"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="d-flex align-items-center gap-2">
+                            <field name="partner_id" class="fw-bold"/>
+                            <div class="badge text-bg-primary ms-auto flex-shrink-0" invisible="parent.supplierinfo_id != id">Selected</div>
+                        </div>
+                        <div class="text-muted">Unit Price: <field name="price" widget="monetary" class="d-inline fw-bold"/></div>
+                        <div class="text-danger" invisible="min_qty &lt;= parent.qty_to_order">Minimum Quantity: <field name="min_qty"/> <field name="uom_id" groups="uom.group_uom"/></div>
+                        <div class="text-muted" invisible="min_qty &gt; parent.qty_to_order">Minimum Quantity: <field name="min_qty"/> <field name="uom_id" groups="uom.group_uom"/></div>
+                        <div class="text-muted">Delivery Time: <field name="delay"/> days</div>
+                        <div class="text-muted" invisible="not last_purchase_date">Last Purchase: <field name="last_purchase_date"/></div>
+                        <button name="action_set_supplier" type="object" string="Set as Supplier" class="btn btn-secondary btn-sm mt-2" invisible="not show_set_supplier_button"/>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
     <record id="view_stock_replenishment_info_stock_purchase_inherit" model="ir.ui.view">
         <field name="name">stock.replenishment.information.purchase.stock.inherit</field>
         <field name="model">stock.replenishment.info</field>
@@ -43,7 +77,7 @@
         <field name="arch" type="xml">
             <xpath expr="//page" position="before">
                 <page string="Vendors" name="page_vendors" invisible="not show_vendor_tab">
-                    <field name="supplierinfo_ids" readonly="1" context="{'list_view_ref': 'purchase_stock.product_supplierinfo_replenishment_tree_view', 'stock_replenishment_info_id': id, 'orderpoint_id': orderpoint_id}"/>
+                    <field name="supplierinfo_ids" readonly="1" mode="list,kanban" context="{'list_view_ref': 'purchase_stock.product_supplierinfo_replenishment_tree_view', 'kanban_view_ref': 'purchase_stock.product_supplierinfo_replenishment_kanban_view', 'stock_replenishment_info_id': id, 'orderpoint_id': orderpoint_id}"/>
                 </page>
             </xpath>
         </field>
