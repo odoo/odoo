@@ -458,7 +458,7 @@ test("hotkey sharing copies complex search to clipboard", async () => {
             "&groupBy=" +
             encodeURIComponent('["partner_id"]') +
             "&orderBy=" +
-            encodeURIComponent('[{"name":"__count","asc":true}]')
+            encodeURIComponent('[{"name":"__count","asc":false}]')
     );
 });
 
