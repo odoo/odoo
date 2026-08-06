@@ -5,7 +5,7 @@
       "id": "91067711-0fdf-451a-b1ec-9e8bdcff23f0",
       "name": "Dashboard",
       "colNumber": 7,
-      "rowNumber": 56,
+      "rowNumber": 64,
       "rows": {
         "6": { "size": 40 },
         "22": { "size": 40 },
@@ -43,144 +43,13 @@
         "6": { "size": 100 }
       },
       "merges": [],
-      "cells": {
-        "A7": "[Expenses Analysis](odoo://view/{\"viewType\":\"graph\",\"action\":{\"domain\":[],\"context\":{\"group_by\":[\"date:month\",\"product_id\"],\"graph_measure\":\"total_amount\",\"graph_mode\":\"bar\",\"graph_groupbys\":[\"date:month\",\"product_id\"]},\"modelName\":\"hr.expense\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"list\"],[false,\"kanban\"],[false,\"form\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Expenses Analysis\",\"positional\":true})",
-        "A23": "[Top Expenses](odoo://view/{\"viewType\":\"list\",\"action\":{\"domain\":\"[]\",\"context\":{\"group_by\":[]},\"modelName\":\"hr.expense\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"list\"],[false,\"kanban\"],[false,\"form\"]]},\"threshold\":0,\"name\":\"Expenses Analysis\"})",
-        "A24": "=ODOO.LIST.HEADER(1,\"name\",_t(\"Expense\"))",
-        "A25": "=ODOO.LIST.VALUE(1,1,\"name\")",
-        "A26:A34": {
-          "N": "=|+1",
-          "S": ["="]
-        },
-        "A36": "[Top Reinvoiced Orders](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"sale_order_id\",\"!=\",false]],\"context\":{\"group_by\":[\"sale_order_id\"],\"pivot_measures\":[\"__count\",\"total_amount\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"sale_order_id\"]},\"modelName\":\"hr.expense\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"list\"],[false,\"kanban\"],[false,\"form\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Expenses Analysis\"})",
-        "A37": "=PIVOT(9,10,FALSE,FALSE)",
-        "B24": "=ODOO.LIST.HEADER(1,\"employee_id\")",
-        "B25": "=ODOO.LIST.VALUE(1,1,\"employee_id\")",
-        "B26:B34": {
-          "N": "=|+1",
-          "S": ["="]
-        },
-        "C24": "=ODOO.LIST.HEADER(1,\"total_amount\")",
-        "C25": "=ODOO.LIST.VALUE(1,1,\"total_amount\")",
-        "C26:C34": {
-          "N": "=|+1",
-          "S": ["="]
-        },
-        "E23": "[Top Products](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"product_id\",\"!=\",false]],\"context\":{\"group_by\":[\"product_id\"],\"pivot_measures\":[\"__count\",\"total_amount\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"product_id\"]},\"modelName\":\"hr.expense\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"list\"],[false,\"kanban\"],[false,\"form\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Expenses Analysis\"})",
-        "E24": "=PIVOT(1,10,FALSE,FALSE)",
-        "E36": "[Top Employees](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"product_id\",\"!=\",false]],\"context\":{\"group_by\":[\"product_id\"],\"pivot_measures\":[\"__count\",\"total_amount\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"product_id\"]},\"modelName\":\"hr.expense\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"list\"],[false,\"kanban\"],[false,\"form\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Expenses Analysis\"})",
-        "E37": "=PIVOT(4,10,FALSE,FALSE)"
-      },
-      "styles": {
-        "A7": 1,
-        "A23": 1,
-        "A36": 1,
-        "E23": 1,
-        "E36": 1,
-        "A37": 2,
-        "A24:B24": 2,
-        "E24": 2,
-        "E37": 2,
-        "A25:A34": 3,
-        "B25:C34": 4,
-        "A38:C47": 4,
-        "E25:G34": 4,
-        "E38:G47": 4,
-        "C24": 5,
-        "B37:C37": 5,
-        "F24:G24": 5,
-        "F37:G37": 5
-      },
+      "cells": {},
+      "styles": {},
       "formats": {},
-      "borders": {
-        "A23:C23": 1,
-        "A36:C36": 1,
-        "A7:G7": 1,
-        "E23:G23": 1,
-        "E36:G36": 1,
-        "A24:C24": 2,
-        "A37:C37": 2,
-        "A8:G8": 2,
-        "E24:G24": 2,
-        "E37:G37": 2,
-        "A25:C25": 3,
-        "A38:C38": 3,
-        "E25:G25": 3,
-        "E38:G38": 3,
-        "A26:C33": 4,
-        "A39:C46": 4,
-        "E26:G33": 4,
-        "E39:G46": 4,
-        "A34:C34": 5,
-        "A47:C47": 5,
-        "E34:G34": 5,
-        "E47:G47": 5
-      },
-      "conditionalFormats": [
-        {
-          "rule": { "type": "DataBarRule", "color": 15531509, "rangeValues": "C25:C34" },
-          "id": "654f3347-970c-4863-93f4-5f554c14c8b0",
-          "ranges": ["A25:A34"]
-        },
-        {
-          "rule": { "type": "DataBarRule", "color": 16708338, "rangeValues": "G25:G34" },
-          "id": "8c6b3de6-87ef-4fbd-bd19-166ad83a3f63",
-          "ranges": ["E25:E34"]
-        },
-        {
-          "rule": { "type": "DataBarRule", "color": 15726335, "rangeValues": "C38:C46" },
-          "id": "1e2225c3-23cb-4ee2-953f-6b7c8e9b8356",
-          "ranges": ["A38:A46"]
-        },
-        {
-          "rule": { "type": "DataBarRule", "color": 16775149, "rangeValues": "G38:G46" },
-          "id": "9c227427-7a05-4464-b5ca-4c89c4123030",
-          "ranges": ["E38:E46"]
-        }
-      ],
+      "borders": {},
+      "conditionalFormats": [],
       "dataValidationRules": [],
       "figures": [
-        {
-          "id": "6ce637db-4068-457f-91a4-ce83736932ff",
-          "width": 1000,
-          "height": 344,
-          "tag": "chart",
-          "data": {
-            "title": { "text": "" },
-            "legendPosition": "top",
-            "type": "bar",
-            "stacked": true,
-            "humanize": true,
-            "dataSource": {
-              "type": "odoo",
-              "metaData": {
-                "groupBy": ["date:month", "product_id"],
-                "measure": "total_amount",
-                "order": null,
-                "resModel": "hr.expense",
-                "mode": "bar"
-              },
-              "searchParams": {
-                "comparison": null,
-                "context": {},
-                "domain": [],
-                "groupBy": ["date:month", "product_id"],
-                "orderBy": []
-              }
-            },
-            "dataSetStyles": {},
-            "chartId": "6ce637db-4068-457f-91a4-ce83736932ff",
-            "fieldMatching": {
-              "54e94f8d-739d-4a02-8205-c25be895720e": { "chain": "date", "type": "date", "offset": 0 },
-              "0e80d79f-8175-422a-bdda-f5e491a6a201": { "chain": "product_id", "type": "many2one" },
-              "e1b40389-7f46-44c0-acee-52033634fc5f": { "chain": "sale_order_id", "type": "many2one" },
-              "88fbcc54-dcb5-42ec-86e9-1676c4c73c6e": { "chain": "employee_id", "type": "many2one" }
-            }
-          },
-          "offset": { "x": 0, "y": 178 },
-          "col": 0,
-          "row": 0
-        },
         {
           "id": "34d7af0c-d66d-46f5-9b4f-91a8f26be506",
           "width": 200,
@@ -190,9 +59,9 @@
             "baselineColorDown": "#DC6965",
             "baselineColorUp": "#00A04A",
             "baselineMode": "difference",
-            "title": { "text": "Expenses", "bold": true, "color": "#434343" },
+            "title": { "text": "Expenses", "bold": true, "color": "#01666B" },
             "type": "scorecard",
-            "background": "#EFF6FF",
+            "background": "",
             "keyValue": "Data!C1",
             "humanize": false,
             "chartId": "34d7af0c-d66d-46f5-9b4f-91a8f26be506"
@@ -210,9 +79,9 @@
             "baselineColorDown": "#DC6965",
             "baselineColorUp": "#00A04A",
             "baselineMode": "difference",
-            "title": { "text": "To report", "bold": true, "color": "#434343" },
+            "title": { "text": "To report", "bold": true, "color": "#01666B" },
             "type": "scorecard",
-            "background": "#FFF7ED",
+            "background": "",
             "keyValue": "Data!C2",
             "humanize": false,
             "chartId": "64e233df-0643-4205-86c8-d051c45326a4"
@@ -230,9 +99,9 @@
             "baselineColorDown": "#DC6965",
             "baselineColorUp": "#00A04A",
             "baselineMode": "difference",
-            "title": { "text": "To validate", "bold": true, "color": "#434343" },
+            "title": { "text": "To validate", "bold": true, "color": "#01666B" },
             "type": "scorecard",
-            "background": "#FFF7ED",
+            "background": "",
             "keyValue": "Data!C3",
             "humanize": false,
             "chartId": "62c97109-f819-42a7-929d-e76a1204be62"
@@ -250,9 +119,9 @@
             "baselineColorDown": "#DC6965",
             "baselineColorUp": "#00A04A",
             "baselineMode": "difference",
-            "title": { "text": "To reimburse", "bold": true, "color": "#434343" },
+            "title": { "text": "To reimburse", "bold": true, "color": "#01666B" },
             "type": "scorecard",
-            "background": "#FFF7ED",
+            "background": "",
             "keyValue": "Data!C4",
             "humanize": false,
             "chartId": "a84056d3-f845-4555-9bd9-3281b8b1c872"
@@ -265,9 +134,9 @@
           "id": "a0aa4a67-4762",
           "col": 3,
           "row": 22,
-          "offset": { "x": 48, "y": 7 },
-          "width": 481,
-          "height": 393,
+          "offset": { "x": 32, "y": 7 },
+          "width": 497,
+          "height": 427,
           "tag": "carousel",
           "data": {
             "chartDefinitions": {
@@ -304,7 +173,14 @@
             },
             "items": [
               { "type": "chart", "chartId": "8b782675-b8ac" },
-              { "type": "carouselDataView", "title": "Top 10" }
+              {
+                "type": "carouselDataView",
+                "title": "Top 50",
+                "rangeData": {
+                  "_sheetId": "d9bd3047-e40c",
+                  "_zone": { "top": 0, "left": 0, "bottom": 50, "right": 2 }
+                }
+              }
             ],
             "fieldMatching": {
               "8b782675-b8ac": {
@@ -315,72 +191,145 @@
               }
             }
           }
+        },
+        {
+          "id": "0554ce8f-5f70",
+          "col": 0,
+          "row": 5,
+          "offset": { "x": 0, "y": 14 },
+          "width": 1000,
+          "height": 393,
+          "tag": "carousel",
+          "data": {
+            "chartDefinitions": {
+              "6ce637db-4068-457f-91a4-ce83736932ff": {
+                "title": { "text": "" },
+                "legendPosition": "top",
+                "type": "bar",
+                "stacked": true,
+                "humanize": true,
+                "dataSource": {
+                  "type": "odoo",
+                  "metaData": {
+                    "groupBy": ["date:month", "product_id"],
+                    "measure": "total_amount",
+                    "order": null,
+                    "resModel": "hr.expense",
+                    "mode": "bar"
+                  },
+                  "searchParams": {
+                    "comparison": null,
+                    "context": {},
+                    "domain": [],
+                    "groupBy": ["date:month", "product_id"],
+                    "orderBy": []
+                  }
+                },
+                "dataSetStyles": {}
+              }
+            },
+            "items": [
+              { "type": "chart", "chartId": "6ce637db-4068-457f-91a4-ce83736932ff" }
+            ],
+            "fieldMatching": {
+              "6ce637db-4068-457f-91a4-ce83736932ff": {
+                "54e94f8d-739d-4a02-8205-c25be895720e": { "chain": "date", "type": "date", "offset": 0 },
+                "0e80d79f-8175-422a-bdda-f5e491a6a201": { "chain": "product_id", "type": "many2one" },
+                "e1b40389-7f46-44c0-acee-52033634fc5f": { "chain": "sale_order_id", "type": "many2one" },
+                "88fbcc54-dcb5-42ec-86e9-1676c4c73c6e": { "chain": "employee_id", "type": "many2one" }
+              }
+            }
+          }
+        },
+        {
+          "id": "9d47c5db-9b16",
+          "col": 0,
+          "row": 22,
+          "offset": { "x": 0, "y": 7 },
+          "width": 497,
+          "height": 427,
+          "tag": "carousel",
+          "data": {
+            "chartDefinitions": {},
+            "title": {
+              "text": "Top Expenses",
+              "color": "#01666B",
+              "fontSize": 21,
+              "bold": true
+            },
+            "items": [
+              {
+                "type": "carouselDataView",
+                "rangeData": {
+                  "_sheetId": "e0d1c836-6299",
+                  "_zone": { "top": 0, "left": 0, "bottom": 50, "right": 2 }
+                }
+              }
+            ],
+            "fieldMatching": {}
+          }
+        },
+        {
+          "id": "c2b9b43b-2cee",
+          "col": 0,
+          "row": 35,
+          "offset": { "x": 0, "y": 37 },
+          "width": 497,
+          "height": 427,
+          "tag": "carousel",
+          "data": {
+            "chartDefinitions": {},
+            "title": {
+              "text": "Top Reinvoiced Orders",
+              "color": "#01666B",
+              "fontSize": 21,
+              "bold": true
+            },
+            "items": [
+              {
+                "type": "carouselDataView",
+                "rangeData": {
+                  "_sheetId": "f848c776-5469",
+                  "_zone": { "top": 0, "left": 0, "bottom": 50, "right": 2 }
+                }
+              }
+            ],
+            "fieldMatching": {}
+          }
+        },
+        {
+          "id": "dc8bfca2-2057",
+          "col": 3,
+          "row": 35,
+          "offset": { "x": 32, "y": 37 },
+          "width": 497,
+          "height": 427,
+          "tag": "carousel",
+          "data": {
+            "chartDefinitions": {},
+            "title": {
+              "text": "Top Employees",
+              "color": "#01666B",
+              "fontSize": 21,
+              "bold": true
+            },
+            "items": [
+              {
+                "type": "carouselDataView",
+                "rangeData": {
+                  "_sheetId": "ba8d9c2b-dd06",
+                  "_zone": { "top": 0, "left": 0, "bottom": 50, "right": 2 }
+                }
+              }
+            ],
+            "fieldMatching": {}
+          }
         }
       ],
-      "tables": [
-        {
-          "range": "A24:C34",
-          "type": "static",
-          "config": {
-            "hasFilters": false,
-            "totalRow": false,
-            "firstColumn": false,
-            "lastColumn": false,
-            "numberOfHeaders": 1,
-            "bandedRows": true,
-            "bandedColumns": false,
-            "automaticAutofill": true,
-            "styleId": "None"
-          }
-        },
-        {
-          "range": "A37:C47",
-          "type": "static",
-          "config": {
-            "hasFilters": false,
-            "totalRow": false,
-            "firstColumn": false,
-            "lastColumn": false,
-            "numberOfHeaders": 1,
-            "bandedRows": true,
-            "bandedColumns": false,
-            "automaticAutofill": true,
-            "styleId": "None"
-          }
-        },
-        {
-          "range": "E24:G34",
-          "type": "static",
-          "config": {
-            "hasFilters": false,
-            "totalRow": false,
-            "firstColumn": false,
-            "lastColumn": false,
-            "numberOfHeaders": 1,
-            "bandedRows": true,
-            "bandedColumns": false,
-            "automaticAutofill": true,
-            "styleId": "None"
-          }
-        },
-        {
-          "range": "E37:G47",
-          "type": "static",
-          "config": {
-            "hasFilters": false,
-            "totalRow": false,
-            "firstColumn": false,
-            "lastColumn": false,
-            "numberOfHeaders": 1,
-            "bandedRows": true,
-            "bandedColumns": false,
-            "automaticAutofill": true,
-            "styleId": "None"
-          }
-        }
-      ],
+      "tables": [],
       "areGridLinesVisible": true,
       "isVisible": true,
+      "backgroundColor": "#F9FAFB",
       "headerGroups": {
         "ROW": [],
         "COL": []
@@ -430,7 +379,7 @@
         "C1": "=FORMAT.LARGE.NUMBER(B1)",
         "C2:C4": { "R": "+R1" }
       },
-      "styles": { "C1:C4": 6 },
+      "styles": {},
       "formats": {},
       "borders": {},
       "conditionalFormats": [],
@@ -444,40 +393,395 @@
         "COL": []
       },
       "comments": {}
+    },
+    {
+      "id": "e0d1c836-6299",
+      "name": "Top Expenses",
+      "colNumber": 26,
+      "rowNumber": 100,
+      "rows": {
+        "0": { "size": 28 },
+        "1": { "size": 28 },
+        "2": { "size": 28 },
+        "3": { "size": 28 },
+        "4": { "size": 28 },
+        "5": { "size": 28 },
+        "6": { "size": 28 },
+        "7": { "size": 28 },
+        "8": { "size": 28 },
+        "9": { "size": 28 },
+        "10": { "size": 28 },
+        "11": { "size": 28 },
+        "12": { "size": 28 },
+        "13": { "size": 28 },
+        "14": { "size": 28 },
+        "15": { "size": 28 },
+        "16": { "size": 28 },
+        "17": { "size": 28 },
+        "18": { "size": 28 },
+        "19": { "size": 28 },
+        "20": { "size": 28 },
+        "21": { "size": 28 },
+        "22": { "size": 28 },
+        "23": { "size": 28 },
+        "24": { "size": 28 },
+        "25": { "size": 28 },
+        "26": { "size": 28 },
+        "27": { "size": 28 },
+        "28": { "size": 28 },
+        "29": { "size": 28 },
+        "30": { "size": 28 },
+        "31": { "size": 28 },
+        "32": { "size": 28 },
+        "33": { "size": 28 },
+        "34": { "size": 28 },
+        "35": { "size": 28 },
+        "36": { "size": 28 },
+        "37": { "size": 28 },
+        "38": { "size": 28 },
+        "39": { "size": 28 },
+        "40": { "size": 28 },
+        "41": { "size": 28 },
+        "42": { "size": 28 },
+        "43": { "size": 28 },
+        "44": { "size": 28 },
+        "45": { "size": 28 },
+        "46": { "size": 28 },
+        "47": { "size": 28 },
+        "48": { "size": 28 },
+        "49": { "size": 28 },
+        "50": { "size": 28 }
+      },
+      "cols": {
+        "0": { "size": 109 },
+        "1": { "size": 95 }
+      },
+      "merges": [],
+      "cells": { "A1": "=ODOO.LIST(1,50)" },
+      "styles": { "A1:B1": 1, "A2:A51": 2, "B2:C3": 3, "B4:C51": 4, "C1": 5 },
+      "formats": { "A2:A13": 1, "C2:C51": 2 },
+      "borders": {},
+      "conditionalFormats": [
+        {
+          "id": "473da5ac-9092",
+          "rule": { "type": "DataBarRule", "color": 14609659, "rangeValues": "C2:C51" },
+          "ranges": ["A2:A51"]
+        }
+      ],
+      "dataValidationRules": [],
+      "figures": [],
+      "tables": [],
+      "areGridLinesVisible": true,
+      "isVisible": true,
+      "isLocked": false,
+      "panes": { "xSplit": 0, "ySplit": 1 },
+      "headerGroups": {
+        "ROW": [],
+        "COL": []
+      },
+      "comments": {}
+    },
+    {
+      "id": "d9bd3047-e40c",
+      "name": "Top Products",
+      "colNumber": 26,
+      "rowNumber": 100,
+      "rows": {
+        "0": { "size": 28 },
+        "1": { "size": 28 },
+        "2": { "size": 28 },
+        "3": { "size": 28 },
+        "4": { "size": 28 },
+        "5": { "size": 28 },
+        "6": { "size": 28 },
+        "7": { "size": 28 },
+        "8": { "size": 28 },
+        "9": { "size": 28 },
+        "10": { "size": 28 },
+        "11": { "size": 28 },
+        "12": { "size": 28 },
+        "13": { "size": 28 },
+        "14": { "size": 28 },
+        "15": { "size": 28 },
+        "16": { "size": 28 },
+        "17": { "size": 28 },
+        "18": { "size": 28 },
+        "19": { "size": 28 },
+        "20": { "size": 28 },
+        "21": { "size": 28 },
+        "22": { "size": 28 },
+        "23": { "size": 28 },
+        "24": { "size": 28 },
+        "25": { "size": 28 },
+        "26": { "size": 28 },
+        "27": { "size": 28 },
+        "28": { "size": 28 },
+        "29": { "size": 28 },
+        "30": { "size": 28 },
+        "31": { "size": 28 },
+        "32": { "size": 28 },
+        "33": { "size": 28 },
+        "34": { "size": 28 },
+        "35": { "size": 28 },
+        "36": { "size": 28 },
+        "37": { "size": 28 },
+        "38": { "size": 28 },
+        "39": { "size": 28 },
+        "40": { "size": 28 },
+        "41": { "size": 28 },
+        "42": { "size": 28 },
+        "43": { "size": 28 },
+        "44": { "size": 28 },
+        "45": { "size": 28 },
+        "46": { "size": 28 },
+        "47": { "size": 28 },
+        "48": { "size": 28 },
+        "49": { "size": 28 },
+        "50": { "size": 28 }
+      },
+      "cols": {
+        "0": { "size": 109 },
+        "1": { "size": 95 }
+      },
+      "merges": [],
+      "cells": { "A1": "=PIVOT(1,50,false,false)" },
+      "styles": { "B1": 1, "B2:C3": 3, "A2:A51": 4, "B4:C51": 4, "C1": 5, "A1": 6 },
+      "formats": { "A2:A13": 1, "C2:C51": 2 },
+      "borders": {},
+      "conditionalFormats": [
+        {
+          "id": "473da5ac-9092",
+          "rule": { "type": "DataBarRule", "color": 14609659, "rangeValues": "C2:C51" },
+          "ranges": ["A2:A51"]
+        }
+      ],
+      "dataValidationRules": [],
+      "figures": [],
+      "tables": [],
+      "areGridLinesVisible": true,
+      "isVisible": true,
+      "isLocked": false,
+      "panes": { "xSplit": 0, "ySplit": 1 },
+      "headerGroups": {
+        "ROW": [],
+        "COL": []
+      },
+      "defaultStyle": {
+        "colDefault": { "0": 8 },
+        "rowDefault": {},
+        "sheetDefault": 7
+      },
+      "comments": {}
+    },
+    {
+      "id": "f848c776-5469",
+      "name": "Top Reinvoiced Orders",
+      "colNumber": 26,
+      "rowNumber": 100,
+      "rows": {
+        "0": { "size": 28 },
+        "1": { "size": 28 },
+        "2": { "size": 28 },
+        "3": { "size": 28 },
+        "4": { "size": 28 },
+        "5": { "size": 28 },
+        "6": { "size": 28 },
+        "7": { "size": 28 },
+        "8": { "size": 28 },
+        "9": { "size": 28 },
+        "10": { "size": 28 },
+        "11": { "size": 28 },
+        "12": { "size": 28 },
+        "13": { "size": 28 },
+        "14": { "size": 28 },
+        "15": { "size": 28 },
+        "16": { "size": 28 },
+        "17": { "size": 28 },
+        "18": { "size": 28 },
+        "19": { "size": 28 },
+        "20": { "size": 28 },
+        "21": { "size": 28 },
+        "22": { "size": 28 },
+        "23": { "size": 28 },
+        "24": { "size": 28 },
+        "25": { "size": 28 },
+        "26": { "size": 28 },
+        "27": { "size": 28 },
+        "28": { "size": 28 },
+        "29": { "size": 28 },
+        "30": { "size": 28 },
+        "31": { "size": 28 },
+        "32": { "size": 28 },
+        "33": { "size": 28 },
+        "34": { "size": 28 },
+        "35": { "size": 28 },
+        "36": { "size": 28 },
+        "37": { "size": 28 },
+        "38": { "size": 28 },
+        "39": { "size": 28 },
+        "40": { "size": 28 },
+        "41": { "size": 28 },
+        "42": { "size": 28 },
+        "43": { "size": 28 },
+        "44": { "size": 28 },
+        "45": { "size": 28 },
+        "46": { "size": 28 },
+        "47": { "size": 28 },
+        "48": { "size": 28 },
+        "49": { "size": 28 },
+        "50": { "size": 28 }
+      },
+      "cols": {
+        "0": { "size": 109 },
+        "1": { "size": 95 }
+      },
+      "merges": [],
+      "cells": { "A1": "=PIVOT(9,50,FALSE,FALSE)" },
+      "styles": { "B1": 1, "B2:C3": 3, "A2:A51": 4, "B4:C51": 4, "C1": 5, "A1": 6 },
+      "formats": { "A2:A13": 1, "C2:C51": 2 },
+      "borders": {},
+      "conditionalFormats": [
+        {
+          "id": "473da5ac-9092",
+          "rule": { "type": "DataBarRule", "color": 14609659, "rangeValues": "C2:C51" },
+          "ranges": ["A2:A51"]
+        }
+      ],
+      "dataValidationRules": [],
+      "figures": [],
+      "tables": [],
+      "areGridLinesVisible": true,
+      "isVisible": true,
+      "isLocked": false,
+      "panes": { "xSplit": 0, "ySplit": 1 },
+      "headerGroups": {
+        "ROW": [],
+        "COL": []
+      },
+      "defaultStyle": {
+        "colDefault": { "0": 8 },
+        "rowDefault": {},
+        "sheetDefault": 7
+      },
+      "comments": {}
+    },
+    {
+      "id": "ba8d9c2b-dd06",
+      "name": "Top Employees",
+      "colNumber": 26,
+      "rowNumber": 100,
+      "rows": {
+        "0": { "size": 28 },
+        "1": { "size": 28 },
+        "2": { "size": 28 },
+        "3": { "size": 28 },
+        "4": { "size": 28 },
+        "5": { "size": 28 },
+        "6": { "size": 28 },
+        "7": { "size": 28 },
+        "8": { "size": 28 },
+        "9": { "size": 28 },
+        "10": { "size": 28 },
+        "11": { "size": 28 },
+        "12": { "size": 28 },
+        "13": { "size": 28 },
+        "14": { "size": 28 },
+        "15": { "size": 28 },
+        "16": { "size": 28 },
+        "17": { "size": 28 },
+        "18": { "size": 28 },
+        "19": { "size": 28 },
+        "20": { "size": 28 },
+        "21": { "size": 28 },
+        "22": { "size": 28 },
+        "23": { "size": 28 },
+        "24": { "size": 28 },
+        "25": { "size": 28 },
+        "26": { "size": 28 },
+        "27": { "size": 28 },
+        "28": { "size": 28 },
+        "29": { "size": 28 },
+        "30": { "size": 28 },
+        "31": { "size": 28 },
+        "32": { "size": 28 },
+        "33": { "size": 28 },
+        "34": { "size": 28 },
+        "35": { "size": 28 },
+        "36": { "size": 28 },
+        "37": { "size": 28 },
+        "38": { "size": 28 },
+        "39": { "size": 28 },
+        "40": { "size": 28 },
+        "41": { "size": 28 },
+        "42": { "size": 28 },
+        "43": { "size": 28 },
+        "44": { "size": 28 },
+        "45": { "size": 28 },
+        "46": { "size": 28 },
+        "47": { "size": 28 },
+        "48": { "size": 28 },
+        "49": { "size": 28 },
+        "50": { "size": 28 }
+      },
+      "cols": {
+        "0": { "size": 109 },
+        "1": { "size": 95 }
+      },
+      "merges": [],
+      "cells": { "A1": "=PIVOT(4,50,FALSE,FALSE)" },
+      "styles": { "B1": 1, "B2:C3": 3, "A2:A51": 4, "B4:C51": 4, "C1": 5, "A1": 6 },
+      "formats": { "A2:A13": 1, "C2:C51": 2 },
+      "borders": {},
+      "conditionalFormats": [
+        {
+          "id": "473da5ac-9092",
+          "rule": { "type": "DataBarRule", "color": 14609659, "rangeValues": "C2:C51" },
+          "ranges": ["A2:A51"]
+        }
+      ],
+      "dataValidationRules": [],
+      "figures": [],
+      "tables": [],
+      "areGridLinesVisible": true,
+      "isVisible": true,
+      "isLocked": false,
+      "panes": { "xSplit": 0, "ySplit": 1 },
+      "headerGroups": {
+        "ROW": [],
+        "COL": []
+      },
+      "defaultStyle": {
+        "colDefault": { "0": 8 },
+        "rowDefault": {},
+        "sheetDefault": 7
+      },
+      "comments": {}
     }
   ],
   "styles": {
-    "1": { "textColor": "#01666b", "bold": true, "fontSize": 16 },
-    "2": { "textColor": "#434343", "fontSize": 11, "bold": true },
-    "3": { "textColor": "#01666B", "verticalAlign": "middle" },
-    "4": { "textColor": "#434343", "verticalAlign": "middle" },
-    "5": {
-      "textColor": "#434343",
-      "fontSize": 11,
-      "bold": true,
-      "align": "center"
-    },
-    "6": { "fillColor": "#f8f9fa" }
-  },
-  "formats": {},
-  "borders": {
     "1": {
-      "bottom": { "style": "thin", "color": "#B7B7B7" }
+      "bold": true,
+      "align": "left",
+      "verticalAlign": "top",
+      "fontSize": 11,
+      "textColor": "#434343"
     },
-    "2": {
-      "top": { "style": "thin", "color": "#B7B7B7" }
-    },
-    "3": {
-      "bottom": { "style": "thick", "color": "#FFFFFF" }
-    },
-    "4": {
-      "top": { "style": "thick", "color": "#FFFFFF" },
-      "bottom": { "style": "thick", "color": "#FFFFFF" }
-    },
+    "2": { "textColor": "#01666B", "verticalAlign": "middle" },
+    "3": { "verticalAlign": "middle", "textColor": "#434343" },
+    "4": { "verticalAlign": "middle" },
     "5": {
-      "top": { "style": "thick", "color": "#FFFFFF" }
-    }
+      "bold": true,
+      "align": "center",
+      "verticalAlign": "top",
+      "fontSize": 11,
+      "textColor": "#434343"
+    },
+    "6": { "bold": true, "align": "left", "verticalAlign": "top", "fontSize": 11 },
+    "7": {},
+    "8": { "textColor": "#434343" }
   },
+  "formats": { "1": "@", "2": "[$$]#,##0.00" },
+  "borders": {},
   "revisionId": "START_REVISION",
   "uniqueFigureIds": true,
   "settings": {
@@ -751,15 +1055,9 @@
   "lists": {
     "1": {
       "columns": [
-        { "name": "date" },
-        { "name": "name" },
+        { "name": "name", "string": "Expense", "hidden": false },
         { "name": "employee_id" },
-        { "name": "payment_mode" },
-        { "name": "activity_ids" },
-        { "name": "company_id" },
-        { "name": "nb_attachment" },
-        { "name": "total_amount" },
-        { "name": "state" }
+        { "name": "total_amount" }
       ],
       "domain": [],
       "model": "hr.expense",
@@ -774,7 +1072,8 @@
         "0e80d79f-8175-422a-bdda-f5e491a6a201": { "chain": "product_id", "type": "many2one" },
         "e1b40389-7f46-44c0-acee-52033634fc5f": { "chain": "sale_order_id", "type": "many2one" },
         "88fbcc54-dcb5-42ec-86e9-1676c4c73c6e": { "chain": "employee_id", "type": "many2one" }
-      }
+      },
+      "translateHeaders": true
     }
   },
   "listNextId": 2,

@@ -58,83 +58,10 @@
         "10": { "size": 84 }
       },
       "merges": [],
-      "cells": {
-        "A50": "#",
-        "A51": "1",
-        "A52:A65": { "N": "+1" },
-        "A68": "#",
-        "A69": "1",
-        "A70:A83": { "N": "+1" },
-        "B12": "=_t(\"Hourly Total Revenue\")",
-        "B30": {
-          "S": ["Daily Total Revenue"]
-        },
-        "B49": {
-          "S": ["Top 15 Products per Margin"]
-        },
-        "B50": "=PIVOT(6,15,FALSE,FALSE)",
-        "B67": "=_t(\"Top 15 Tables per Revenue\")",
-        "B68": "=PIVOT(7,15,FALSE,FALSE)",
-        "G50": "#",
-        "G51": "1",
-        "G52:G65": { "N": "+1" },
-        "H50": "=PIVOT(9,15,FALSE,FALSE)",
-        "H67": "=_t(\"Top Responsibles\")",
-        "H68": "=CHOOSECOLS(PIVOT(10,15,FALSE,FALSE),1)",
-        "J68": "=CHOOSECOLS(PIVOT(10,15,FALSE,FALSE),2,3)"
-      },
-      "styles": {
-        "A50": 1,
-        "A68": 1,
-        "G50": 1,
-        "H69:K78": 1,
-        "A51:E65": 2,
-        "A69:E83": 2,
-        "G51:K65": 2,
-        "B12": 3,
-        "B30": 3,
-        "B49": 3,
-        "B67": 3,
-        "H49": 3,
-        "B50": 4,
-        "B68": 4,
-        "H50": 4,
-        "H68:J68": 4,
-        "C50:E50": 5,
-        "C68:E68": 5,
-        "I50:K50": 5,
-        "K68": 5,
-        "H67": 6
-      },
+      "cells": {},
+      "styles": {},
       "formats": {},
-      "borders": {
-        "B67:D67": 1,
-        "B49:E49": 1,
-        "B12:K12": 1,
-        "B30:K30": 1,
-        "H49:K49": 1,
-        "H67:K67": 1,
-        "B50:E50": 2,
-        "B68:E68": 2,
-        "B13:K13": 2,
-        "B31:K31": 2,
-        "H50:K50": 2,
-        "H68:K68": 2,
-        "B51:E51": 3,
-        "B69:E69": 3,
-        "H51:K51": 3,
-        "H69:K69": 3,
-        "B70:D82": 4,
-        "B52:E64": 4,
-        "E70:E81": 4,
-        "H52:K64": 4,
-        "H70:K78": 4,
-        "B83:D83": 5,
-        "B65:E65": 5,
-        "E82:E83": 5,
-        "H65:K65": 5,
-        "H79:K83": 5
-      },
+      "borders": {},
       "conditionalFormats": [
         {
           "rule": { "type": "DataBarRule", "color": 15726335, "rangeValues": "E51:E65" },
@@ -160,88 +87,6 @@
       "dataValidationRules": [],
       "figures": [
         {
-          "id": "fdceb3b9-643f-4d30-a572-2d9b0b684f17",
-          "width": 1027,
-          "height": 391,
-          "tag": "chart",
-          "data": {
-            "type": "combo",
-            "legendPosition": "top",
-            "title": { "text": "" },
-            "aggregated": false,
-            "axesDesign": {
-              "y": {
-                "title": { "text": "Total revenue" }
-              },
-              "y1": {
-                "title": { "text": "Average revenue per order" }
-              }
-            },
-            "showValues": false,
-            "humanize": true,
-            "dataSource": {
-              "labelRange": "Data!A13:A37",
-              "type": "range",
-              "dataSets": [
-                { "dataSetId": "0", "dataRange": "Data!B13:B37" },
-                { "dataSetId": "1", "dataRange": "Data!D13:D37" }
-              ],
-              "dataSetsHaveTitle": true
-            },
-            "dataSetStyles": {
-              "0": { "yAxisId": "y", "label": "Revenue", "type": "bar" },
-              "1": {
-                "label": "Average per order",
-                "yAxisId": "y1",
-                "trend": { "type": "polynomial", "order": 2, "display": false },
-                "type": "line"
-              }
-            },
-            "chartId": "fdceb3b9-643f-4d30-a572-2d9b0b684f17"
-          },
-          "offset": { "x": 0, "y": 289 },
-          "col": 0,
-          "row": 0
-        },
-        {
-          "id": "1ebdd3d0-8af0-4922-9223-2da0d6ec024c",
-          "width": 1029,
-          "height": 416,
-          "tag": "chart",
-          "data": {
-            "type": "combo",
-            "legendPosition": "top",
-            "title": { "text": "" },
-            "aggregated": false,
-            "axesDesign": {
-              "y": {
-                "title": { "text": "Total revenue" }
-              },
-              "y1": {
-                "title": { "text": "Average revenue per order" }
-              }
-            },
-            "humanize": true,
-            "dataSource": {
-              "labelRange": "Data!G13:G20",
-              "type": "range",
-              "dataSets": [
-                { "dataSetId": "0", "dataRange": "Data!H13:H20" },
-                { "dataSetId": "1", "dataRange": "Data!J13:J20" }
-              ],
-              "dataSetsHaveTitle": true
-            },
-            "dataSetStyles": {
-              "0": { "yAxisId": "y", "type": "bar" },
-              "1": { "yAxisId": "y1", "label": "Average per order", "type": "line" }
-            },
-            "chartId": "1ebdd3d0-8af0-4922-9223-2da0d6ec024c"
-          },
-          "offset": { "x": 0, "y": 721 },
-          "col": 0,
-          "row": 0
-        },
-        {
           "id": "49b3e330-3a31-4d43-9930-c42f2805c0c3",
           "width": 200,
           "height": 108,
@@ -250,9 +95,9 @@
             "baselineColorDown": "#EA6175",
             "baselineColorUp": "#43C5B1",
             "baselineMode": "difference",
-            "title": { "text": "#Orders", "bold": true, "color": "#434343" },
+            "title": { "text": "#Orders", "bold": true, "color": "#01666B" },
             "type": "scorecard",
-            "background": "#EFF6FF",
+            "background": "",
             "keyValue": "Data!B2",
             "humanize": false,
             "chartId": "49b3e330-3a31-4d43-9930-c42f2805c0c3"
@@ -270,9 +115,9 @@
             "baselineColorDown": "#EA6175",
             "baselineColorUp": "#43C5B1",
             "baselineMode": "difference",
-            "title": { "text": "Total revenue", "bold": true, "color": "#434343" },
+            "title": { "text": "Total Revenue", "bold": true, "color": "#01666B" },
             "type": "scorecard",
-            "background": "#FFF7ED",
+            "background": "",
             "keyValue": "Data!B3",
             "humanize": false,
             "chartId": "d96a0fa5-e91b-455c-8004-9f39eeb09ee2"
@@ -290,9 +135,9 @@
             "baselineColorDown": "#EA6175",
             "baselineColorUp": "#43C5B1",
             "baselineMode": "difference",
-            "title": { "text": "Untaxed revenue", "bold": true, "color": "#434343" },
+            "title": { "text": "Untaxed Revenue", "bold": true, "color": "#01666B" },
             "type": "scorecard",
-            "background": "#FFF7ED",
+            "background": "",
             "keyValue": "Data!B4",
             "humanize": false,
             "chartId": "6b97f89c-8416-43db-a32e-d0ab5cf9051e"
@@ -310,9 +155,9 @@
             "baselineColorDown": "#EA6175",
             "baselineColorUp": "#43C5B1",
             "baselineMode": "difference",
-            "title": { "text": "Untaxed revenue per order", "bold": true, "color": "#434343" },
+            "title": { "text": "Untaxed Revenue per Order", "bold": true, "color": "#01666B" },
             "type": "scorecard",
-            "background": "#FFF7ED",
+            "background": "",
             "keyValue": "Data!B5",
             "humanize": false,
             "chartId": "cd102569-7656-4986-bf87-6e87b3ea493a"
@@ -330,9 +175,9 @@
             "baselineColorDown": "#EA6175",
             "baselineColorUp": "#43C5B1",
             "baselineMode": "difference",
-            "title": { "text": "Untaxed revenue per guest", "bold": true, "color": "#434343" },
+            "title": { "text": "Untaxed Revenue per Guest", "bold": true, "color": "#01666B" },
             "type": "scorecard",
-            "background": "#FFF7ED",
+            "background": "",
             "keyValue": "Data!B7",
             "humanize": false,
             "chartId": "7b541ea8-8f93-44f4-9626-67073e540f16"
@@ -350,9 +195,9 @@
             "baselineColorDown": "#EA6175",
             "baselineColorUp": "#43C5B1",
             "baselineMode": "difference",
-            "title": { "text": "Discount Rate", "bold": true, "color": "#434343" },
+            "title": { "text": "Discount Rate", "bold": true, "color": "#01666B" },
             "type": "scorecard",
-            "background": "#FEF2F2",
+            "background": "",
             "keyValue": "Data!B9",
             "humanize": false,
             "chartId": "150978db-0307-4a65-a70a-e3a634dcfd48"
@@ -370,9 +215,9 @@
             "baselineColorDown": "#EA6175",
             "baselineColorUp": "#43C5B1",
             "baselineMode": "difference",
-            "title": { "text": "Avg revenue per order", "bold": true, "color": "#434343" },
+            "title": { "text": "Avg Revenue per Order", "bold": true, "color": "#01666B" },
             "type": "scorecard",
-            "background": "#FFF7ED",
+            "background": "",
             "keyValue": "Data!B6",
             "humanize": false,
             "chartId": "77f395fa-f25d-4ba8-a99d-405a99ebeef7"
@@ -390,9 +235,9 @@
             "baselineColorDown": "#EA6175",
             "baselineColorUp": "#43C5B1",
             "baselineMode": "difference",
-            "title": { "text": "Total guests", "bold": true, "color": "#434343" },
+            "title": { "text": "Total Guests", "bold": true, "color": "#01666B" },
             "type": "scorecard",
-            "background": "#FFF7ED",
+            "background": "",
             "keyValue": "Data!B10",
             "humanize": false,
             "chartId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
@@ -410,9 +255,9 @@
             "baselineColorDown": "#EA6175",
             "baselineColorUp": "#43C5B1",
             "baselineMode": "difference",
-            "title": { "text": "Avg revenue per guest", "bold": true, "color": "#434343" },
+            "title": { "text": "Avg Revenue per Guest", "bold": true, "color": "#01666B" },
             "type": "scorecard",
-            "background": "#FFF7ED",
+            "background": "",
             "keyValue": "Data!B8",
             "humanize": false,
             "chartId": "87cda1aa-ba42-4865-8f56-912dd9e323a7"
@@ -423,11 +268,11 @@
         },
         {
           "id": "9b676d28-0a28",
-          "col": 5,
+          "col": 4,
           "row": 48,
-          "offset": { "x": 26, "y": 6 },
-          "width": 474,
-          "height": 465,
+          "offset": { "x": 54, "y": 1 },
+          "width": 510,
+          "height": 523,
           "tag": "carousel",
           "data": {
             "chartDefinitions": {
@@ -470,7 +315,14 @@
             },
             "items": [
               { "type": "chart", "chartId": "bb13976b-be42" },
-              { "type": "carouselDataView", "title": "Top 15" }
+              {
+                "type": "carouselDataView",
+                "title": "Top",
+                "rangeData": {
+                  "_sheetId": "43e3b762-c91d",
+                  "_zone": { "top": 0, "left": 0, "bottom": 50, "right": 3 }
+                }
+              }
             ],
             "fieldMatching": {
               "bb13976b-be42": {
@@ -483,72 +335,204 @@
               }
             }
           }
+        },
+        {
+          "id": "1dc1bb50-427f",
+          "col": 1,
+          "row": 10,
+          "offset": { "x": 0, "y": 16 },
+          "width": 1027,
+          "height": 433,
+          "tag": "carousel",
+          "data": {
+            "chartDefinitions": {
+              "fdceb3b9-643f-4d30-a572-2d9b0b684f17": {
+                "type": "combo",
+                "legendPosition": "top",
+                "title": { "text": "" },
+                "aggregated": false,
+                "axesDesign": {
+                  "y": {
+                    "title": { "text": "Total revenue" }
+                  },
+                  "y1": {
+                    "title": { "text": "Average revenue per order" }
+                  }
+                },
+                "showValues": false,
+                "humanize": true,
+                "dataSource": {
+                  "labelRange": "Data!A13:A37",
+                  "type": "range",
+                  "dataSets": [
+                    { "dataSetId": "0", "dataRange": "Data!B13:B37" },
+                    { "dataSetId": "1", "dataRange": "Data!D13:D37" }
+                  ],
+                  "dataSetsHaveTitle": true
+                },
+                "dataSetStyles": {
+                  "0": { "yAxisId": "y", "label": "Revenue", "type": "bar" },
+                  "1": {
+                    "label": "Average per order",
+                    "yAxisId": "y1",
+                    "trend": { "type": "polynomial", "order": 2, "display": false },
+                    "type": "line"
+                  }
+                }
+              }
+            },
+            "title": {
+              "text": "Hourly Total Revenue",
+              "bold": true,
+              "fontSize": 21,
+              "color": "#01666B"
+            },
+            "items": [
+              { "type": "chart", "chartId": "fdceb3b9-643f-4d30-a572-2d9b0b684f17" }
+            ],
+            "fieldMatching": {}
+          }
+        },
+        {
+          "id": "bd2bd943-2faf",
+          "col": 1,
+          "row": 29,
+          "offset": { "x": 0, "y": 8 },
+          "width": 1027,
+          "height": 433,
+          "tag": "carousel",
+          "data": {
+            "chartDefinitions": {
+              "1ebdd3d0-8af0-4922-9223-2da0d6ec024c": {
+                "type": "combo",
+                "legendPosition": "top",
+                "title": { "text": "" },
+                "aggregated": false,
+                "axesDesign": {
+                  "y": {
+                    "title": { "text": "Total revenue" }
+                  },
+                  "y1": {
+                    "title": { "text": "Average revenue per order" }
+                  }
+                },
+                "humanize": true,
+                "dataSource": {
+                  "labelRange": "Data!G13:G20",
+                  "type": "range",
+                  "dataSets": [
+                    { "dataSetId": "0", "dataRange": "Data!H13:H20" },
+                    { "dataSetId": "1", "dataRange": "Data!J13:J20" }
+                  ],
+                  "dataSetsHaveTitle": true
+                },
+                "dataSetStyles": {
+                  "0": { "yAxisId": "y", "type": "bar" },
+                  "1": { "yAxisId": "y1", "label": "Average per order", "type": "line" }
+                }
+              }
+            },
+            "title": {
+              "text": "Daily Total Revenue",
+              "bold": true,
+              "fontSize": 21,
+              "color": "#01666B"
+            },
+            "items": [
+              { "type": "chart", "chartId": "1ebdd3d0-8af0-4922-9223-2da0d6ec024c" }
+            ],
+            "fieldMatching": {}
+          }
+        },
+        {
+          "id": "3515c8f5-582f",
+          "col": 1,
+          "row": 48,
+          "offset": { "x": 0, "y": 1 },
+          "width": 510,
+          "height": 523,
+          "tag": "carousel",
+          "data": {
+            "chartDefinitions": {},
+            "title": {
+              "text": "Top Products per Margin",
+              "fontSize": 21,
+              "bold": true,
+              "color": "#01666B"
+            },
+            "items": [
+              {
+                "type": "carouselDataView",
+                "rangeData": {
+                  "_sheetId": "b0b16f26-ce7b",
+                  "_zone": { "top": 0, "left": 0, "bottom": 50, "right": 3 }
+                }
+              }
+            ],
+            "fieldMatching": {}
+          }
+        },
+        {
+          "id": "f97c6f77-e50a",
+          "col": 1,
+          "row": 67,
+          "offset": { "x": 0, "y": 8 },
+          "width": 510,
+          "height": 523,
+          "tag": "carousel",
+          "data": {
+            "chartDefinitions": {},
+            "title": {
+              "text": "Top Tables per Revenue",
+              "fontSize": 21,
+              "bold": true,
+              "color": "#01666B"
+            },
+            "items": [
+              {
+                "type": "carouselDataView",
+                "rangeData": {
+                  "_sheetId": "92d5f97c-ef5e",
+                  "_zone": { "top": 0, "left": 0, "bottom": 50, "right": 3 }
+                }
+              }
+            ],
+            "fieldMatching": {}
+          }
+        },
+        {
+          "id": "4bd68e92-9ba1",
+          "col": 4,
+          "row": 67,
+          "offset": { "x": 54, "y": 8 },
+          "width": 510,
+          "height": 523,
+          "tag": "carousel",
+          "data": {
+            "chartDefinitions": {},
+            "title": {
+              "text": "Top Responsibles",
+              "fontSize": 21,
+              "bold": true,
+              "color": "#01666B"
+            },
+            "items": [
+              {
+                "type": "carouselDataView",
+                "rangeData": {
+                  "_sheetId": "003fe161-4e17",
+                  "_zone": { "top": 0, "left": 0, "bottom": 50, "right": 2 }
+                }
+              }
+            ],
+            "fieldMatching": {}
+          }
         }
       ],
-      "tables": [
-        {
-          "range": "A50:E65",
-          "type": "static",
-          "config": {
-            "hasFilters": false,
-            "totalRow": false,
-            "firstColumn": false,
-            "lastColumn": false,
-            "numberOfHeaders": 1,
-            "bandedRows": true,
-            "bandedColumns": false,
-            "automaticAutofill": true,
-            "styleId": "None"
-          }
-        },
-        {
-          "range": "A68:E83",
-          "type": "static",
-          "config": {
-            "hasFilters": false,
-            "totalRow": false,
-            "firstColumn": false,
-            "lastColumn": false,
-            "numberOfHeaders": 1,
-            "bandedRows": true,
-            "bandedColumns": false,
-            "automaticAutofill": true,
-            "styleId": "None"
-          }
-        },
-        {
-          "range": "G50:K65",
-          "type": "static",
-          "config": {
-            "hasFilters": false,
-            "totalRow": false,
-            "firstColumn": false,
-            "lastColumn": false,
-            "numberOfHeaders": 1,
-            "bandedRows": true,
-            "bandedColumns": false,
-            "automaticAutofill": true,
-            "styleId": "None"
-          }
-        },
-        {
-          "range": "H68:K83",
-          "type": "static",
-          "config": {
-            "hasFilters": false,
-            "totalRow": false,
-            "firstColumn": false,
-            "lastColumn": false,
-            "numberOfHeaders": 1,
-            "bandedRows": true,
-            "bandedColumns": false,
-            "automaticAutofill": true,
-            "styleId": "None"
-          }
-        }
-      ],
+      "tables": [],
       "areGridLinesVisible": true,
       "isVisible": true,
+      "backgroundColor": "#F9FAFB",
       "headerGroups": {
         "ROW": [],
         "COL": []
@@ -670,10 +654,31 @@
           "R": "+R1"
         }
       },
-      "styles": { "A1:B1": 7, "A12": 8, "F12": 8 },
+      "styles": { "A1:B1": 1, "A12": 2, "F12": 2 },
       "formats": {},
       "borders": {},
-      "conditionalFormats": [],
+      "conditionalFormats": [
+        {
+          "id": "bf3dab1a-894d",
+          "rule": {
+            "type": "CellIsRule",
+            "operator": "isGreaterThan",
+            "style": { "fillColor": "", "textColor": "#28A745" },
+            "values": ["0"]
+          },
+          "ranges": ["B3", "B4", "B7", "B8"]
+        },
+        {
+          "id": "29a91756-4e8d",
+          "rule": {
+            "type": "CellIsRule",
+            "operator": "isLessThan",
+            "style": { "fillColor": "", "textColor": "#D44C59" },
+            "values": ["0"]
+          },
+          "ranges": ["B3", "B4", "B7", "B8"]
+        }
+      ],
       "dataValidationRules": [],
       "figures": [],
       "tables": [
@@ -715,42 +720,382 @@
         "COL": []
       },
       "comments": {}
+    },
+    {
+      "id": "b0b16f26-ce7b",
+      "name": "Top Products per Margin",
+      "colNumber": 26,
+      "rowNumber": 100,
+      "rows": {
+        "0": { "size": 28 },
+        "1": { "size": 28 },
+        "2": { "size": 28 },
+        "3": { "size": 28 },
+        "4": { "size": 28 },
+        "5": { "size": 28 },
+        "6": { "size": 28 },
+        "7": { "size": 28 },
+        "8": { "size": 28 },
+        "9": { "size": 28 },
+        "10": { "size": 28 },
+        "11": { "size": 28 },
+        "12": { "size": 28 },
+        "13": { "size": 28 },
+        "14": { "size": 28 },
+        "15": { "size": 28 },
+        "16": { "size": 28 },
+        "17": { "size": 28 },
+        "18": { "size": 28 },
+        "19": { "size": 28 },
+        "20": { "size": 28 },
+        "21": { "size": 28 },
+        "22": { "size": 28 },
+        "23": { "size": 28 },
+        "24": { "size": 28 },
+        "25": { "size": 28 },
+        "26": { "size": 28 },
+        "27": { "size": 28 },
+        "28": { "size": 28 },
+        "29": { "size": 28 },
+        "30": { "size": 28 },
+        "31": { "size": 28 },
+        "32": { "size": 28 },
+        "33": { "size": 28 },
+        "34": { "size": 28 },
+        "35": { "size": 28 },
+        "36": { "size": 28 },
+        "37": { "size": 28 },
+        "38": { "size": 28 },
+        "39": { "size": 28 },
+        "40": { "size": 28 },
+        "41": { "size": 28 },
+        "42": { "size": 28 },
+        "43": { "size": 28 },
+        "44": { "size": 28 },
+        "45": { "size": 28 },
+        "46": { "size": 28 },
+        "47": { "size": 28 },
+        "48": { "size": 28 },
+        "49": { "size": 28 },
+        "50": { "size": 28 }
+      },
+      "cols": {
+        "0": { "size": 147 }
+      },
+      "merges": [],
+      "cells": { "A1": "=PIVOT(6,50,false,false)" },
+      "styles": { "A2:D51": 3, "B1:D1": 4 },
+      "formats": {},
+      "borders": {},
+      "conditionalFormats": [
+        {
+          "id": "86ae9db9-52e5",
+          "rule": { "type": "DataBarRule", "color": 14543610, "rangeValues": "D2:D51" },
+          "ranges": ["A2:A51"]
+        }
+      ],
+      "dataValidationRules": [],
+      "figures": [],
+      "tables": [],
+      "areGridLinesVisible": true,
+      "isVisible": true,
+      "isLocked": false,
+      "panes": { "xSplit": 0, "ySplit": 1 },
+      "headerGroups": {
+        "ROW": [],
+        "COL": []
+      },
+      "defaultStyle": {
+        "colDefault": {},
+        "rowDefault": { "0": 6 },
+        "sheetDefault": 5
+      },
+      "comments": {}
+    },
+    {
+      "id": "43e3b762-c91d",
+      "name": "Top Categories",
+      "colNumber": 26,
+      "rowNumber": 100,
+      "rows": {
+        "0": { "size": 28 },
+        "1": { "size": 28 },
+        "2": { "size": 28 },
+        "3": { "size": 28 },
+        "4": { "size": 28 },
+        "5": { "size": 28 },
+        "6": { "size": 28 },
+        "7": { "size": 28 },
+        "8": { "size": 28 },
+        "9": { "size": 28 },
+        "10": { "size": 28 },
+        "11": { "size": 28 },
+        "12": { "size": 28 },
+        "13": { "size": 28 },
+        "14": { "size": 28 },
+        "15": { "size": 28 },
+        "16": { "size": 28 },
+        "17": { "size": 28 },
+        "18": { "size": 28 },
+        "19": { "size": 28 },
+        "20": { "size": 28 },
+        "21": { "size": 28 },
+        "22": { "size": 28 },
+        "23": { "size": 28 },
+        "24": { "size": 28 },
+        "25": { "size": 28 },
+        "26": { "size": 28 },
+        "27": { "size": 28 },
+        "28": { "size": 28 },
+        "29": { "size": 28 },
+        "30": { "size": 28 },
+        "31": { "size": 28 },
+        "32": { "size": 28 },
+        "33": { "size": 28 },
+        "34": { "size": 28 },
+        "35": { "size": 28 },
+        "36": { "size": 28 },
+        "37": { "size": 28 },
+        "38": { "size": 28 },
+        "39": { "size": 28 },
+        "40": { "size": 28 },
+        "41": { "size": 28 },
+        "42": { "size": 28 },
+        "43": { "size": 28 },
+        "44": { "size": 28 },
+        "45": { "size": 28 },
+        "46": { "size": 28 },
+        "47": { "size": 28 },
+        "48": { "size": 28 },
+        "49": { "size": 28 },
+        "50": { "size": 28 }
+      },
+      "cols": {
+        "0": { "size": 147 }
+      },
+      "merges": [],
+      "cells": { "A1": "=PIVOT(9,50,FALSE,FALSE)" },
+      "styles": { "A2:D51": 3, "B1:D1": 4 },
+      "formats": {},
+      "borders": {},
+      "conditionalFormats": [
+        {
+          "id": "86ae9db9-52e5",
+          "rule": { "type": "DataBarRule", "color": 14543610, "rangeValues": "C2:C51" },
+          "ranges": ["A2:A51"]
+        }
+      ],
+      "dataValidationRules": [],
+      "figures": [],
+      "tables": [],
+      "areGridLinesVisible": true,
+      "isVisible": true,
+      "isLocked": false,
+      "panes": { "xSplit": 0, "ySplit": 1 },
+      "headerGroups": {
+        "ROW": [],
+        "COL": []
+      },
+      "defaultStyle": {
+        "colDefault": {},
+        "rowDefault": { "0": 6 },
+        "sheetDefault": 5
+      },
+      "comments": {}
+    },
+    {
+      "id": "92d5f97c-ef5e",
+      "name": "Top Tables per Revenue",
+      "colNumber": 26,
+      "rowNumber": 100,
+      "rows": {
+        "0": { "size": 28 },
+        "1": { "size": 28 },
+        "2": { "size": 28 },
+        "3": { "size": 28 },
+        "4": { "size": 28 },
+        "5": { "size": 28 },
+        "6": { "size": 28 },
+        "7": { "size": 28 },
+        "8": { "size": 28 },
+        "9": { "size": 28 },
+        "10": { "size": 28 },
+        "11": { "size": 28 },
+        "12": { "size": 28 },
+        "13": { "size": 28 },
+        "14": { "size": 28 },
+        "15": { "size": 28 },
+        "16": { "size": 28 },
+        "17": { "size": 28 },
+        "18": { "size": 28 },
+        "19": { "size": 28 },
+        "20": { "size": 28 },
+        "21": { "size": 28 },
+        "22": { "size": 28 },
+        "23": { "size": 28 },
+        "24": { "size": 28 },
+        "25": { "size": 28 },
+        "26": { "size": 28 },
+        "27": { "size": 28 },
+        "28": { "size": 28 },
+        "29": { "size": 28 },
+        "30": { "size": 28 },
+        "31": { "size": 28 },
+        "32": { "size": 28 },
+        "33": { "size": 28 },
+        "34": { "size": 28 },
+        "35": { "size": 28 },
+        "36": { "size": 28 },
+        "37": { "size": 28 },
+        "38": { "size": 28 },
+        "39": { "size": 28 },
+        "40": { "size": 28 },
+        "41": { "size": 28 },
+        "42": { "size": 28 },
+        "43": { "size": 28 },
+        "44": { "size": 28 },
+        "45": { "size": 28 },
+        "46": { "size": 28 },
+        "47": { "size": 28 },
+        "48": { "size": 28 },
+        "49": { "size": 28 },
+        "50": { "size": 28 }
+      },
+      "cols": {
+        "0": { "size": 147 }
+      },
+      "merges": [],
+      "cells": { "A1": "=PIVOT(7,50,FALSE,FALSE)" },
+      "styles": { "A2:D51": 3, "B1:D1": 4 },
+      "formats": {},
+      "borders": {},
+      "conditionalFormats": [
+        {
+          "id": "86ae9db9-52e5",
+          "rule": { "type": "DataBarRule", "color": 14806780, "rangeValues": "C2:C51" },
+          "ranges": ["A2:A51"]
+        }
+      ],
+      "dataValidationRules": [],
+      "figures": [],
+      "tables": [],
+      "areGridLinesVisible": true,
+      "isVisible": true,
+      "isLocked": false,
+      "panes": { "xSplit": 0, "ySplit": 1 },
+      "headerGroups": {
+        "ROW": [],
+        "COL": []
+      },
+      "defaultStyle": {
+        "colDefault": {},
+        "rowDefault": { "0": 6 },
+        "sheetDefault": 5
+      },
+      "comments": {}
+    },
+    {
+      "id": "003fe161-4e17",
+      "name": "Top Responsibles",
+      "colNumber": 26,
+      "rowNumber": 100,
+      "rows": {
+        "0": { "size": 28 },
+        "1": { "size": 28 },
+        "2": { "size": 28 },
+        "3": { "size": 28 },
+        "4": { "size": 28 },
+        "5": { "size": 28 },
+        "6": { "size": 28 },
+        "7": { "size": 28 },
+        "8": { "size": 28 },
+        "9": { "size": 28 },
+        "10": { "size": 28 },
+        "11": { "size": 28 },
+        "12": { "size": 28 },
+        "13": { "size": 28 },
+        "14": { "size": 28 },
+        "15": { "size": 28 },
+        "16": { "size": 28 },
+        "17": { "size": 28 },
+        "18": { "size": 28 },
+        "19": { "size": 28 },
+        "20": { "size": 28 },
+        "21": { "size": 28 },
+        "22": { "size": 28 },
+        "23": { "size": 28 },
+        "24": { "size": 28 },
+        "25": { "size": 28 },
+        "26": { "size": 28 },
+        "27": { "size": 28 },
+        "28": { "size": 28 },
+        "29": { "size": 28 },
+        "30": { "size": 28 },
+        "31": { "size": 28 },
+        "32": { "size": 28 },
+        "33": { "size": 28 },
+        "34": { "size": 28 },
+        "35": { "size": 28 },
+        "36": { "size": 28 },
+        "37": { "size": 28 },
+        "38": { "size": 28 },
+        "39": { "size": 28 },
+        "40": { "size": 28 },
+        "41": { "size": 28 },
+        "42": { "size": 28 },
+        "43": { "size": 28 },
+        "44": { "size": 28 },
+        "45": { "size": 28 },
+        "46": { "size": 28 },
+        "47": { "size": 28 },
+        "48": { "size": 28 },
+        "49": { "size": 28 },
+        "50": { "size": 28 }
+      },
+      "cols": {
+        "0": { "size": 147 }
+      },
+      "merges": [],
+      "cells": { "A1": "=PIVOT(10,50,FALSE,FALSE)" },
+      "styles": { "A2:D51": 3, "B1:D1": 4 },
+      "formats": {},
+      "borders": {},
+      "conditionalFormats": [
+        {
+          "id": "86ae9db9-52e5",
+          "rule": { "type": "DataBarRule", "color": 14740730, "rangeValues": "D2:D51" },
+          "ranges": ["A2:A51"]
+        }
+      ],
+      "dataValidationRules": [],
+      "figures": [],
+      "tables": [],
+      "areGridLinesVisible": true,
+      "isVisible": true,
+      "isLocked": false,
+      "panes": { "xSplit": 0, "ySplit": 1 },
+      "headerGroups": {
+        "ROW": [],
+        "COL": []
+      },
+      "defaultStyle": {
+        "colDefault": {},
+        "rowDefault": { "0": 6 },
+        "sheetDefault": 5
+      },
+      "comments": {}
     }
   ],
   "styles": {
-    "1": { "textColor": "#434343" },
-    "2": { "textColor": "#434343", "verticalAlign": "middle" },
-    "3": { "fontSize": 16, "textColor": "#01666B", "bold": true },
-    "4": { "textColor": "#434343", "bold": true, "fontSize": 11 },
-    "5": {
-      "textColor": "#434343",
-      "bold": true,
-      "fontSize": 11,
-      "align": "center"
-    },
-    "6": { "textColor": "#01666b", "fontSize": 16, "bold": true },
-    "7": { "fillColor": "#01666B", "textColor": "#FFFFFF", "bold": true },
-    "8": { "bold": true, "textColor": "#01666B" }
+    "1": { "fillColor": "#01666B", "textColor": "#FFFFFF", "bold": true },
+    "2": { "bold": true, "textColor": "#01666B" },
+    "3": { "verticalAlign": "middle" },
+    "4": { "align": "center" },
+    "5": { "textColor": "#434343" },
+    "6": { "bold": true, "fontSize": 11, "verticalAlign": "top" }
   },
   "formats": {},
-  "borders": {
-    "1": {
-      "bottom": { "style": "thin", "color": "#CCCCCC" }
-    },
-    "2": {
-      "top": { "style": "thin", "color": "#CCCCCC" }
-    },
-    "3": {
-      "bottom": { "style": "thick", "color": "#FFFFFF" }
-    },
-    "4": {
-      "top": { "style": "thick", "color": "#FFFFFF" },
-      "bottom": { "style": "thick", "color": "#FFFFFF" }
-    },
-    "5": {
-      "top": { "style": "thick", "color": "#FFFFFF" }
-    }
-  },
+  "borders": {},
   "revisionId": "START_REVISION",
   "uniqueFigureIds": true,
   "settings": {
@@ -1136,7 +1481,8 @@
           "id": "product_qty:sum",
           "fieldName": "product_qty",
           "aggregator": "sum",
-          "userDefinedName": "Quantity"
+          "userDefinedName": "Quantity",
+          "format": ""
         },
         {
           "id": "price_total:sum",
@@ -1273,5 +1619,51 @@
   ],
   "lists": {},
   "listNextId": 1,
-  "odooLinkReferences": {}
+  "odooLinkReferences": {
+    "a1b2c3d4-e5f6-7890-abcd-ef1234567890": {
+      "type": "dataSource",
+      "dataSourceType": "pivot",
+      "dataSourceCoreId": "d360c54a-4c26-43af-9fb6-3814df165c9e"
+    },
+    "87cda1aa-ba42-4865-8f56-912dd9e323a7": {
+      "type": "dataSource",
+      "dataSourceType": "pivot",
+      "dataSourceCoreId": "d360c54a-4c26-43af-9fb6-3814df165c9e"
+    },
+    "7b541ea8-8f93-44f4-9626-67073e540f16": {
+      "type": "dataSource",
+      "dataSourceType": "pivot",
+      "dataSourceCoreId": "d360c54a-4c26-43af-9fb6-3814df165c9e"
+    },
+    "6b97f89c-8416-43db-a32e-d0ab5cf9051e": {
+      "type": "dataSource",
+      "dataSourceType": "pivot",
+      "dataSourceCoreId": "f9256105-4dad-47e4-bdbd-9dc1cdf54b96"
+    },
+    "cd102569-7656-4986-bf87-6e87b3ea493a": {
+      "type": "dataSource",
+      "dataSourceType": "pivot",
+      "dataSourceCoreId": "f9256105-4dad-47e4-bdbd-9dc1cdf54b96"
+    },
+    "49b3e330-3a31-4d43-9930-c42f2805c0c3": {
+      "type": "dataSource",
+      "dataSourceType": "pivot",
+      "dataSourceCoreId": "f9256105-4dad-47e4-bdbd-9dc1cdf54b96"
+    },
+    "150978db-0307-4a65-a70a-e3a634dcfd48": {
+      "type": "dataSource",
+      "dataSourceType": "pivot",
+      "dataSourceCoreId": "f9256105-4dad-47e4-bdbd-9dc1cdf54b96"
+    },
+    "d96a0fa5-e91b-455c-8004-9f39eeb09ee2": {
+      "type": "dataSource",
+      "dataSourceType": "pivot",
+      "dataSourceCoreId": "f9256105-4dad-47e4-bdbd-9dc1cdf54b96"
+    },
+    "77f395fa-f25d-4ba8-a99d-405a99ebeef7": {
+      "type": "dataSource",
+      "dataSourceType": "pivot",
+      "dataSourceCoreId": "f9256105-4dad-47e4-bdbd-9dc1cdf54b96"
+    }
+  }
 }

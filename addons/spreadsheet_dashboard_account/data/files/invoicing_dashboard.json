@@ -5,7 +5,7 @@
       "id": "a7cd7db1-9407-4895-82f2-7657102c7688",
       "name": "Dashboard",
       "colNumber": 7,
-      "rowNumber": 69,
+      "rowNumber": 85,
       "rows": {
         "6": { "size": 40 },
         "22": { "size": 40 },
@@ -65,194 +65,41 @@
         "D31:E31",
         "D32:E32",
         "D33:E33",
-        "D34:E34"
+        "D34:E34",
+        "E48:F48",
+        "E49:F49",
+        "E50:F50",
+        "E51:F51",
+        "E52:F52",
+        "E53:F53",
+        "E54:F54",
+        "E55:F55",
+        "E56:F56",
+        "E57:F57",
+        "E58:F58"
       ],
-      "cells": {
-        "A7": "[Invoiced by Month](odoo://view/{\"viewType\":\"graph\",\"action\":{\"domain\":[\"&\",[\"state\",\"not in\",[\"draft\",\"cancel\"]],\"|\",[\"move_type\",\"=\",\"out_invoice\"],[\"move_type\",\"=\",\"out_refund\"]],\"context\":{\"group_by\":[\"invoice_date\"],\"graph_measure\":\"price_subtotal\",\"graph_mode\":\"line\",\"graph_groupbys\":[\"invoice_date:month\"]},\"modelName\":\"account.invoice.report\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Invoices Analysis\",\"positional\":true})",
-        "A23": "[Top Invoices](odoo://view/{\"viewType\":\"list\",\"action\":{\"domain\":[\"&\",[\"state\",\"not in\",[\"draft\",\"cancel\"]],[\"move_type\",\"=\",\"out_invoice\"]],\"context\":{\"group_by\":[]},\"modelName\":\"account.move\",\"views\":[[false,\"list\"],[false,\"kanban\"],[false,\"form\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Invoices\"})",
-        "A24": "=ODOO.LIST.HEADER(1,\"name\",_t(\"Reference\"))",
-        "A25": "=ODOO.LIST.VALUE(1,1,\"name\")",
-        "A26:A34": {
-          "N": "=|+1",
-          "S": ["="]
-        },
-        "A37": "=PIVOT(2,10,FALSE,FALSE)",
-        "A49": "[Top Products](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[\"&\",[\"state\",\"not in\",[\"draft\",\"cancel\"]],\"&\",[\"product_id\",\"!=\",false],[\"move_type\",\"in\",[\"out_invoice\",\"out_refund\"]]],\"context\":{\"group_by\":[\"product_id\"],\"pivot_measures\":[\"price_subtotal\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"product_id\"]},\"modelName\":\"account.invoice.report\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"list\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Invoices Analysis\"})",
-        "A50": "=PIVOT(3,10,FALSE,FALSE)",
-        "B24": "=ODOO.LIST.HEADER(1,\"user_id\",_t(\"Salesperson\"))",
-        "B25": "=ODOO.LIST.VALUE(1,1,\"user_id\")",
-        "B26:B34": {
-          "N": "=|+1",
-          "S": ["="]
-        },
-        "C24": "=ODOO.LIST.HEADER(1,\"payment_state\",_t(\"Status\"))",
-        "C25": "=ODOO.LIST.VALUE(1,1,\"payment_state\")",
-        "C26:C34": {
-          "N": "=|+1",
-          "S": ["="]
-        },
-        "D24": "=ODOO.LIST.HEADER(1,\"partner_id\",_t(\"Customer\"))",
-        "D25": "=ODOO.LIST.VALUE(1,1,\"partner_id\")",
-        "D26:D34": {
-          "N": "=|+1",
-          "S": ["="]
-        },
-        "E37": "=PIVOT(1,10,FALSE,FALSE)",
-        "E49": "[Top Salespeople](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[\"&\",[\"state\",\"not in\",[\"draft\",\"cancel\"]],\"&\",[\"invoice_user_id\",\"!=\",false],[\"move_type\",\"in\",[\"out_invoice\",\"out_refund\"]]],\"context\":{\"group_by\":[\"invoice_user_id\"],\"pivot_measures\":[\"price_subtotal\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"invoice_user_id\"]},\"modelName\":\"account.invoice.report\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"list\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Invoices Analysis\"})",
-        "E50": "=PIVOT(4,10,FALSE,FALSE)",
-        "F24": "=ODOO.LIST.HEADER(1,\"invoice_date\",_t(\"Date\"))",
-        "F25": "=ODOO.LIST.VALUE(1,1,\"invoice_date\")",
-        "F26:F34": {
-          "N": "=|+1",
-          "S": ["="]
-        },
-        "G24": "=ODOO.LIST.HEADER(1,\"amount_untaxed_signed\",_t(\"Amount\"))",
-        "G25": "=ODOO.LIST.VALUE(1,1,\"amount_untaxed_signed\")",
-        "G26:G34": {
-          "N": "=|+1",
-          "S": ["="]
-        }
-      },
+      "cells": {},
       "styles": {
-        "A7": 1,
-        "A23": 1,
-        "A36": 1,
-        "A49": 1,
-        "E36": 1,
-        "E49": 1,
-        "A37": 2,
-        "A50": 2,
-        "A24:E24": 2,
-        "E37": 2,
-        "E50": 2,
-        "A25:A34": 3,
-        "A38:C46": 4,
-        "A51:C60": 4,
-        "B25:G34": 4,
-        "E38:G46": 4,
-        "E51:G60": 4,
-        "B37:C37": 5,
-        "B50:C50": 5,
-        "F24:G24": 5,
-        "F37:G37": 5,
-        "F50:G50": 5
+        "B31": 1,
+        "B47": 1,
+        "B60": 1,
+        "F60": 1,
+        "B61": 2,
+        "B48:F48": 2,
+        "F61": 2,
+        "B49:B58": 3,
+        "B62:D85": 4,
+        "C49:G58": 4,
+        "F62:G85": 4,
+        "C61:D61": 5,
+        "G48": 5,
+        "G61": 5
       },
       "formats": {},
-      "borders": {
-        "A36:C36": 1,
-        "A49:C49": 1,
-        "A7:G7": 1,
-        "A23:G23": 1,
-        "E36:G36": 1,
-        "E49:G49": 1,
-        "A37:C37": 2,
-        "A50:C50": 2,
-        "A8:G8": 2,
-        "A24:G24": 2,
-        "E37:G37": 2,
-        "E50:G50": 2,
-        "A38:C38": 3,
-        "A51:C51": 3,
-        "A25:G25": 3,
-        "E38:G38": 3,
-        "E51:G51": 3,
-        "A39:C47": 4,
-        "A52:C60": 4,
-        "A26:G34": 4,
-        "E39:G47": 4,
-        "E52:G60": 4,
-        "A48:C48": 5,
-        "A61:C61": 5,
-        "A35:G35": 5,
-        "E48:G48": 5,
-        "E61:G61": 5
-      },
-      "conditionalFormats": [
-        {
-          "rule": { "type": "DataBarRule", "color": 16708338, "rangeValues": "G25:G34" },
-          "id": "3913485d-dafc-481c-81cb-5de1007c2beb",
-          "ranges": ["A25:A34"]
-        },
-        {
-          "rule": { "type": "DataBarRule", "color": 16775149, "rangeValues": "C38:C47" },
-          "id": "4b1963a5-6d8a-48e7-baed-15a352bd88f2",
-          "ranges": ["A38:A47"]
-        },
-        {
-          "rule": { "type": "DataBarRule", "color": 15726335, "rangeValues": "G38:G47" },
-          "id": "8a8b5811-25a7-4334-8a9a-64549dfcd3b7",
-          "ranges": ["E38:E47"]
-        },
-        {
-          "rule": { "type": "DataBarRule", "color": 15531509, "rangeValues": "C51:C60" },
-          "id": "c8b9e9e0-18e0-45ed-8aae-86f555e4fc4d",
-          "ranges": ["A51:A60"]
-        },
-        {
-          "rule": { "type": "DataBarRule", "color": 16708338, "rangeValues": "G51:G60" },
-          "id": "4ebb2a3e-fd9b-4627-a543-d3523f719908",
-          "ranges": ["E51:E60"]
-        }
-      ],
+      "borders": {},
+      "conditionalFormats": [],
       "dataValidationRules": [],
       "figures": [
-        {
-          "id": "5ea5dd7f-9f83-4482-a2bb-2ec72ab35912",
-          "width": 1000,
-          "height": 345,
-          "tag": "chart",
-          "data": {
-            "title": { "text": "" },
-            "legendPosition": "none",
-            "type": "line",
-            "stacked": false,
-            "fillArea": true,
-            "humanize": true,
-            "dataSource": {
-              "type": "odoo",
-              "cumulatedStart": false,
-              "metaData": {
-                "groupBy": ["invoice_date:month"],
-                "measure": "price_subtotal",
-                "order": null,
-                "resModel": "account.invoice.report",
-                "mode": "line",
-                "cumulatedStart": false
-              },
-              "searchParams": {
-                "comparison": null,
-                "context": {
-                  "group_by": ["invoice_date"]
-                },
-                "domain": [
-                  "&",
-                  [
-                    "state",
-                    "not in",
-                    ["draft", "cancel"]
-                  ],
-                  "|",
-                  ["move_type", "=", "out_invoice"],
-                  ["move_type", "=", "out_refund"]
-                ],
-                "groupBy": ["invoice_date"],
-                "orderBy": []
-              }
-            },
-            "dataSetStyles": {},
-            "chartId": "5ea5dd7f-9f83-4482-a2bb-2ec72ab35912",
-            "fieldMatching": {
-              "757a1b4b-e339-4879-beb6-9851050387cf": { "chain": "invoice_date", "type": "date", "offset": 0 },
-              "8051befe-619f-4fe7-b788-d34584297bad": { "chain": "country_id", "type": "many2one" },
-              "17277380-12d8-4a83-b133-3532e5618c43": { "chain": "product_categ_id", "type": "many2one" },
-              "accd0cbe-12c9-4cab-93a1-afa5080dd635": { "chain": "product_id", "type": "many2one" },
-              "02acc7f7-b282-4ce9-bf38-6abfb72be6aa": { "chain": "invoice_user_id", "type": "many2one" }
-            }
-          },
-          "offset": { "x": 0, "y": 178 },
-          "col": 0,
-          "row": 0
-        },
         {
           "id": "1aeea7b2-900b-4067-b8ad-3e4772c54028",
           "width": 200,
@@ -262,9 +109,9 @@
             "baselineColorDown": "#DC6965",
             "baselineColorUp": "#00A04A",
             "baselineMode": "text",
-            "title": { "text": "Invoiced", "color": "#434343", "bold": true },
+            "title": { "text": "Invoiced", "color": "#01666B", "bold": true },
             "type": "scorecard",
-            "background": "#EFF6FF",
+            "background": "",
             "baseline": "Data!C11",
             "baselineDescr": { "text": "unpaid" },
             "keyValue": "Data!C1",
@@ -284,9 +131,9 @@
             "baselineColorDown": "#DC6965",
             "baselineColorUp": "#00A04A",
             "baselineMode": "text",
-            "title": { "text": "Average Invoice", "color": "#434343", "bold": true },
+            "title": { "text": "Average Invoice", "color": "#01666B", "bold": true },
             "type": "scorecard",
-            "background": "#EFF6FF",
+            "background": "",
             "baseline": "Data!C3",
             "baselineDescr": { "text": "Invoices" },
             "keyValue": "Data!C2",
@@ -306,9 +153,9 @@
             "baselineColorDown": "#DC6965",
             "baselineColorUp": "#00A04A",
             "baselineMode": "difference",
-            "title": { "text": "DSO", "color": "#434343", "bold": true },
+            "title": { "text": "DSO", "color": "#01666B", "bold": true },
             "type": "scorecard",
-            "background": "#FEF2F2",
+            "background": "",
             "baselineDescr": { "text": "in current year" },
             "keyValue": "Data!C10",
             "humanize": false,
@@ -321,10 +168,10 @@
         {
           "id": "3dcbe095-d696",
           "col": 0,
-          "row": 35,
-          "offset": { "x": 0, "y": 10 },
-          "width": 475,
-          "height": 361,
+          "row": 36,
+          "offset": { "x": 0, "y": 32 },
+          "width": 495,
+          "height": 425,
           "tag": "carousel",
           "data": {
             "chartDefinitions": {
@@ -378,7 +225,14 @@
             },
             "items": [
               { "type": "chart", "chartId": "df11f2ab-ef26", "title": "Map" },
-              { "type": "carouselDataView", "title": "Top 10" }
+              {
+                "type": "carouselDataView",
+                "title": "Top 50",
+                "rangeData": {
+                  "_sheetId": "ae15159b-1fbd",
+                  "_zone": { "top": 0, "left": 0, "bottom": 50, "right": 2 }
+                }
+              }
             ],
             "fieldMatching": {
               "df11f2ab-ef26": {
@@ -393,11 +247,11 @@
         },
         {
           "id": "2e7a07fe-04a0",
-          "col": 4,
-          "row": 35,
-          "offset": { "x": 0, "y": 10 },
-          "width": 475,
-          "height": 361,
+          "col": 3,
+          "row": 36,
+          "offset": { "x": 30, "y": 32 },
+          "width": 495,
+          "height": 425,
           "tag": "carousel",
           "data": {
             "chartDefinitions": {
@@ -450,7 +304,14 @@
             },
             "items": [
               { "type": "chart", "chartId": "fb077836-59ce" },
-              { "type": "carouselDataView", "title": "Top 10" }
+              {
+                "type": "carouselDataView",
+                "title": "Top 50",
+                "rangeData": {
+                  "_sheetId": "bf0543e7-a667",
+                  "_zone": { "top": 0, "left": 0, "bottom": 50, "right": 2 }
+                }
+              }
             ],
             "fieldMatching": {
               "fb077836-59ce": {
@@ -462,87 +323,167 @@
               }
             }
           }
+        },
+        {
+          "id": "8d3443ed-7b3b",
+          "col": 0,
+          "row": 5,
+          "offset": { "x": 0, "y": 13 },
+          "width": 1003,
+          "height": 395,
+          "tag": "carousel",
+          "data": {
+            "chartDefinitions": {
+              "5ea5dd7f-9f83-4482-a2bb-2ec72ab35912": {
+                "title": { "text": "" },
+                "legendPosition": "none",
+                "type": "line",
+                "stacked": false,
+                "fillArea": true,
+                "humanize": true,
+                "dataSource": {
+                  "type": "odoo",
+                  "cumulatedStart": false,
+                  "metaData": {
+                    "groupBy": ["invoice_date:month"],
+                    "measure": "price_subtotal",
+                    "order": null,
+                    "resModel": "account.invoice.report",
+                    "mode": "line",
+                    "cumulatedStart": false
+                  },
+                  "searchParams": {
+                    "comparison": null,
+                    "context": {
+                      "group_by": ["invoice_date"]
+                    },
+                    "domain": [
+                      "&",
+                      [
+                        "state",
+                        "not in",
+                        ["draft", "cancel"]
+                      ],
+                      "|",
+                      ["move_type", "=", "out_invoice"],
+                      ["move_type", "=", "out_refund"]
+                    ],
+                    "groupBy": ["invoice_date"],
+                    "orderBy": []
+                  }
+                },
+                "dataSetStyles": {}
+              }
+            },
+            "title": {
+              "text": "Invoiced by Month",
+              "bold": true,
+              "fontSize": 21,
+              "color": "#01666B"
+            },
+            "items": [
+              { "type": "chart", "chartId": "5ea5dd7f-9f83-4482-a2bb-2ec72ab35912" }
+            ],
+            "fieldMatching": {
+              "5ea5dd7f-9f83-4482-a2bb-2ec72ab35912": {
+                "757a1b4b-e339-4879-beb6-9851050387cf": { "chain": "invoice_date", "type": "date", "offset": 0 },
+                "8051befe-619f-4fe7-b788-d34584297bad": { "chain": "country_id", "type": "many2one" },
+                "17277380-12d8-4a83-b133-3532e5618c43": { "chain": "product_categ_id", "type": "many2one" },
+                "accd0cbe-12c9-4cab-93a1-afa5080dd635": { "chain": "product_id", "type": "many2one" },
+                "02acc7f7-b282-4ce9-bf38-6abfb72be6aa": { "chain": "invoice_user_id", "type": "many2one" }
+              }
+            }
+          }
+        },
+        {
+          "id": "a4a6b475-67d0",
+          "col": 0,
+          "row": 22,
+          "offset": { "x": 0, "y": 10 },
+          "width": 1000,
+          "height": 425,
+          "tag": "carousel",
+          "data": {
+            "chartDefinitions": {},
+            "title": {
+              "text": "Top Invoices",
+              "bold": true,
+              "fontSize": 21,
+              "color": "#01666B"
+            },
+            "items": [
+              {
+                "type": "carouselDataView",
+                "rangeData": {
+                  "_sheetId": "38c9849d-0eff",
+                  "_zone": { "top": 0, "left": 0, "bottom": 50, "right": 5 }
+                }
+              }
+            ],
+            "fieldMatching": {}
+          }
+        },
+        {
+          "id": "3facf13f-21b0",
+          "col": 0,
+          "row": 52,
+          "offset": { "x": 0, "y": 0 },
+          "width": 495,
+          "height": 425,
+          "tag": "carousel",
+          "data": {
+            "chartDefinitions": {},
+            "title": {
+              "text": "Top Products",
+              "fontSize": 21,
+              "bold": true,
+              "color": "#01666B"
+            },
+            "items": [
+              {
+                "type": "carouselDataView",
+                "rangeData": {
+                  "_sheetId": "a1007909-65fb",
+                  "_zone": { "top": 0, "left": 0, "bottom": 50, "right": 2 }
+                }
+              }
+            ],
+            "fieldMatching": {}
+          }
+        },
+        {
+          "id": "1ad12797-7ddf",
+          "col": 3,
+          "row": 52,
+          "offset": { "x": 30, "y": 0 },
+          "width": 495,
+          "height": 425,
+          "tag": "carousel",
+          "data": {
+            "chartDefinitions": {},
+            "title": {
+              "text": "Top Products",
+              "fontSize": 21,
+              "bold": true,
+              "color": "#01666B"
+            },
+            "items": [
+              {
+                "type": "carouselDataView",
+                "rangeData": {
+                  "_sheetId": "3130aadb-6420",
+                  "_zone": { "top": 0, "left": 0, "bottom": 50, "right": 2 }
+                }
+              }
+            ],
+            "fieldMatching": {}
+          }
         }
       ],
-      "tables": [
-        {
-          "range": "A24:G34",
-          "type": "static",
-          "config": {
-            "hasFilters": false,
-            "totalRow": false,
-            "firstColumn": false,
-            "lastColumn": false,
-            "numberOfHeaders": 1,
-            "bandedRows": true,
-            "bandedColumns": false,
-            "automaticAutofill": true,
-            "styleId": "None"
-          }
-        },
-        {
-          "range": "A37:C47",
-          "type": "static",
-          "config": {
-            "hasFilters": false,
-            "totalRow": false,
-            "firstColumn": false,
-            "lastColumn": false,
-            "numberOfHeaders": 1,
-            "bandedRows": true,
-            "bandedColumns": false,
-            "automaticAutofill": true,
-            "styleId": "None"
-          }
-        },
-        {
-          "range": "A50:C60",
-          "type": "static",
-          "config": {
-            "hasFilters": false,
-            "totalRow": false,
-            "firstColumn": false,
-            "lastColumn": false,
-            "numberOfHeaders": 1,
-            "bandedRows": true,
-            "bandedColumns": false,
-            "automaticAutofill": true,
-            "styleId": "None"
-          }
-        },
-        {
-          "range": "E37:G47",
-          "type": "static",
-          "config": {
-            "hasFilters": false,
-            "totalRow": false,
-            "firstColumn": false,
-            "lastColumn": false,
-            "numberOfHeaders": 1,
-            "bandedRows": true,
-            "bandedColumns": false,
-            "automaticAutofill": true,
-            "styleId": "None"
-          }
-        },
-        {
-          "range": "E50:G60",
-          "type": "static",
-          "config": {
-            "hasFilters": false,
-            "totalRow": false,
-            "firstColumn": false,
-            "lastColumn": false,
-            "numberOfHeaders": 1,
-            "bandedRows": true,
-            "bandedColumns": false,
-            "automaticAutofill": true,
-            "styleId": "None"
-          }
-        }
-      ],
+      "tables": [],
       "areGridLinesVisible": true,
       "isVisible": true,
+      "backgroundColor": "#F9FAFB",
       "headerGroups": {
         "ROW": [],
         "COL": []
@@ -555,7 +496,7 @@
       "colNumber": 26,
       "rowNumber": 107,
       "rows": {
-        "3": { "size": 23 }
+        "3": { "size": 28 }
       },
       "cols": {
         "0": { "size": 142 },
@@ -610,7 +551,7 @@
         "C10": "=CONCATENATE(FORMAT.LARGE.NUMBER(B10),_t(\" days\"))",
         "C11": "=FORMAT.LARGE.NUMBER(B11)"
       },
-      "styles": { "C1:C3": 6, "C10:C11": 6 },
+      "styles": {},
       "formats": { "B10": 1 },
       "borders": {},
       "conditionalFormats": [],
@@ -622,6 +563,486 @@
       "headerGroups": {
         "ROW": [],
         "COL": []
+      },
+      "comments": {}
+    },
+    {
+      "id": "38c9849d-0eff",
+      "name": "Top Invoices",
+      "colNumber": 26,
+      "rowNumber": 100,
+      "rows": {
+        "0": { "size": 28 },
+        "1": { "size": 28 },
+        "2": { "size": 28 },
+        "3": { "size": 28 },
+        "4": { "size": 28 },
+        "5": { "size": 28 },
+        "6": { "size": 28 },
+        "7": { "size": 28 },
+        "8": { "size": 28 },
+        "9": { "size": 28 },
+        "10": { "size": 28 },
+        "11": { "size": 28 },
+        "12": { "size": 28 },
+        "13": { "size": 28 },
+        "14": { "size": 28 },
+        "15": { "size": 28 },
+        "16": { "size": 28 },
+        "17": { "size": 28 },
+        "18": { "size": 28 },
+        "19": { "size": 28 },
+        "20": { "size": 28 },
+        "21": { "size": 28 },
+        "22": { "size": 28 },
+        "23": { "size": 28 },
+        "24": { "size": 28 },
+        "25": { "size": 28 },
+        "26": { "size": 28 },
+        "27": { "size": 28 },
+        "28": { "size": 28 },
+        "29": { "size": 28 },
+        "30": { "size": 28 },
+        "31": { "size": 28 },
+        "32": { "size": 28 },
+        "33": { "size": 28 },
+        "34": { "size": 28 },
+        "35": { "size": 28 },
+        "36": { "size": 28 },
+        "37": { "size": 28 },
+        "38": { "size": 28 },
+        "39": { "size": 28 },
+        "40": { "size": 28 },
+        "41": { "size": 28 },
+        "42": { "size": 28 },
+        "43": { "size": 28 },
+        "44": { "size": 28 },
+        "45": { "size": 28 },
+        "46": { "size": 28 },
+        "47": { "size": 28 },
+        "48": { "size": 28 },
+        "49": { "size": 28 },
+        "50": { "size": 28 }
+      },
+      "cols": {
+        "0": { "size": 117 },
+        "1": { "size": 95 },
+        "2": { "size": 113 },
+        "3": { "size": 84 },
+        "4": { "size": 77 },
+        "5": { "size": 72 }
+      },
+      "merges": [],
+      "cells": { "A1": "=ODOO.LIST(1,50)" },
+      "styles": { "A1:D1": 6, "A2:A51": 7, "A52:Z100": 8, "E1:F1": 9 },
+      "formats": {},
+      "borders": {},
+      "conditionalFormats": [
+        {
+          "id": "989efb92-5f5f",
+          "rule": { "type": "DataBarRule", "color": 14740987, "rangeValues": "F2:F51" },
+          "ranges": ["A2:A51"]
+        }
+      ],
+      "dataValidationRules": [],
+      "figures": [],
+      "tables": [],
+      "areGridLinesVisible": true,
+      "isVisible": true,
+      "isLocked": false,
+      "panes": { "xSplit": 0, "ySplit": 1 },
+      "headerGroups": {
+        "ROW": [],
+        "COL": []
+      },
+      "defaultStyle": {
+        "colDefault": { "0": 11, "1": 11, "2": 11, "3": 11, "4": 11, "5": 11 },
+        "rowDefault": {},
+        "sheetDefault": 10
+      },
+      "comments": {}
+    },
+    {
+      "id": "ae15159b-1fbd",
+      "name": "Top Countries",
+      "colNumber": 26,
+      "rowNumber": 100,
+      "rows": {
+        "0": { "size": 28 },
+        "1": { "size": 28 },
+        "2": { "size": 28 },
+        "3": { "size": 28 },
+        "4": { "size": 28 },
+        "5": { "size": 28 },
+        "6": { "size": 28 },
+        "7": { "size": 28 },
+        "8": { "size": 28 },
+        "9": { "size": 28 },
+        "10": { "size": 28 },
+        "11": { "size": 28 },
+        "12": { "size": 28 },
+        "13": { "size": 28 },
+        "14": { "size": 28 },
+        "15": { "size": 28 },
+        "16": { "size": 28 },
+        "17": { "size": 28 },
+        "18": { "size": 28 },
+        "19": { "size": 28 },
+        "20": { "size": 28 },
+        "21": { "size": 28 },
+        "22": { "size": 28 },
+        "23": { "size": 28 },
+        "24": { "size": 28 },
+        "25": { "size": 28 },
+        "26": { "size": 28 },
+        "27": { "size": 28 },
+        "28": { "size": 28 },
+        "29": { "size": 28 },
+        "30": { "size": 28 },
+        "31": { "size": 28 },
+        "32": { "size": 28 },
+        "33": { "size": 28 },
+        "34": { "size": 28 },
+        "35": { "size": 28 },
+        "36": { "size": 28 },
+        "37": { "size": 28 },
+        "38": { "size": 28 },
+        "39": { "size": 28 },
+        "40": { "size": 28 },
+        "41": { "size": 28 },
+        "42": { "size": 28 },
+        "43": { "size": 28 },
+        "44": { "size": 28 },
+        "45": { "size": 28 },
+        "46": { "size": 28 },
+        "47": { "size": 28 },
+        "48": { "size": 28 },
+        "49": { "size": 28 },
+        "50": { "size": 28 }
+      },
+      "cols": {
+        "0": { "size": 218 },
+        "1": { "size": 95 },
+        "2": { "size": 113 },
+        "3": { "size": 84 },
+        "4": { "size": 77 },
+        "5": { "size": 72 }
+      },
+      "merges": [],
+      "cells": { "A1": "=PIVOT(2,50,FALSE,FALSE)" },
+      "styles": { "A1": 6, "D1:F1": 6, "B1:C1": 9 },
+      "formats": {},
+      "borders": {},
+      "conditionalFormats": [
+        {
+          "id": "989efb92-5f5f",
+          "rule": { "type": "DataBarRule", "color": 14740987, "rangeValues": "C2:C51" },
+          "ranges": ["A2:A51"]
+        }
+      ],
+      "dataValidationRules": [],
+      "figures": [],
+      "tables": [],
+      "areGridLinesVisible": true,
+      "isVisible": true,
+      "isLocked": false,
+      "panes": { "xSplit": 0, "ySplit": 1 },
+      "headerGroups": {
+        "ROW": [],
+        "COL": []
+      },
+      "defaultStyle": {
+        "colDefault": { "0": 11, "1": 11, "2": 11, "3": 11, "4": 11, "5": 11 },
+        "rowDefault": {},
+        "sheetDefault": 10
+      },
+      "comments": {}
+    },
+    {
+      "id": "bf0543e7-a667",
+      "name": "Top Categories",
+      "colNumber": 26,
+      "rowNumber": 100,
+      "rows": {
+        "0": { "size": 28 },
+        "1": { "size": 28 },
+        "2": { "size": 28 },
+        "3": { "size": 28 },
+        "4": { "size": 28 },
+        "5": { "size": 28 },
+        "6": { "size": 28 },
+        "7": { "size": 28 },
+        "8": { "size": 28 },
+        "9": { "size": 28 },
+        "10": { "size": 28 },
+        "11": { "size": 28 },
+        "12": { "size": 28 },
+        "13": { "size": 28 },
+        "14": { "size": 28 },
+        "15": { "size": 28 },
+        "16": { "size": 28 },
+        "17": { "size": 28 },
+        "18": { "size": 28 },
+        "19": { "size": 28 },
+        "20": { "size": 28 },
+        "21": { "size": 28 },
+        "22": { "size": 28 },
+        "23": { "size": 28 },
+        "24": { "size": 28 },
+        "25": { "size": 28 },
+        "26": { "size": 28 },
+        "27": { "size": 28 },
+        "28": { "size": 28 },
+        "29": { "size": 28 },
+        "30": { "size": 28 },
+        "31": { "size": 28 },
+        "32": { "size": 28 },
+        "33": { "size": 28 },
+        "34": { "size": 28 },
+        "35": { "size": 28 },
+        "36": { "size": 28 },
+        "37": { "size": 28 },
+        "38": { "size": 28 },
+        "39": { "size": 28 },
+        "40": { "size": 28 },
+        "41": { "size": 28 },
+        "42": { "size": 28 },
+        "43": { "size": 28 },
+        "44": { "size": 28 },
+        "45": { "size": 28 },
+        "46": { "size": 28 },
+        "47": { "size": 28 },
+        "48": { "size": 28 },
+        "49": { "size": 28 },
+        "50": { "size": 28 }
+      },
+      "cols": {
+        "0": { "size": 218 },
+        "1": { "size": 95 },
+        "2": { "size": 113 },
+        "3": { "size": 84 },
+        "4": { "size": 77 },
+        "5": { "size": 72 }
+      },
+      "merges": [],
+      "cells": { "A1": "=PIVOT(1,50,FALSE,FALSE)" },
+      "styles": { "A1": 6, "D1:F1": 6, "B1:C1": 9 },
+      "formats": {},
+      "borders": {},
+      "conditionalFormats": [
+        {
+          "id": "989efb92-5f5f",
+          "rule": { "type": "DataBarRule", "color": 14740987, "rangeValues": "C2:C51" },
+          "ranges": ["A2:A51"]
+        }
+      ],
+      "dataValidationRules": [],
+      "figures": [],
+      "tables": [],
+      "areGridLinesVisible": true,
+      "isVisible": true,
+      "isLocked": false,
+      "panes": { "xSplit": 0, "ySplit": 1 },
+      "headerGroups": {
+        "ROW": [],
+        "COL": []
+      },
+      "defaultStyle": {
+        "colDefault": { "0": 11, "1": 11, "2": 11, "3": 11, "4": 11, "5": 11 },
+        "rowDefault": {},
+        "sheetDefault": 10
+      },
+      "comments": {}
+    },
+    {
+      "id": "a1007909-65fb",
+      "name": "Top Products",
+      "colNumber": 26,
+      "rowNumber": 100,
+      "rows": {
+        "0": { "size": 28 },
+        "1": { "size": 28 },
+        "2": { "size": 28 },
+        "3": { "size": 28 },
+        "4": { "size": 28 },
+        "5": { "size": 28 },
+        "6": { "size": 28 },
+        "7": { "size": 28 },
+        "8": { "size": 28 },
+        "9": { "size": 28 },
+        "10": { "size": 28 },
+        "11": { "size": 28 },
+        "12": { "size": 28 },
+        "13": { "size": 28 },
+        "14": { "size": 28 },
+        "15": { "size": 28 },
+        "16": { "size": 28 },
+        "17": { "size": 28 },
+        "18": { "size": 28 },
+        "19": { "size": 28 },
+        "20": { "size": 28 },
+        "21": { "size": 28 },
+        "22": { "size": 28 },
+        "23": { "size": 28 },
+        "24": { "size": 28 },
+        "25": { "size": 28 },
+        "26": { "size": 28 },
+        "27": { "size": 28 },
+        "28": { "size": 28 },
+        "29": { "size": 28 },
+        "30": { "size": 28 },
+        "31": { "size": 28 },
+        "32": { "size": 28 },
+        "33": { "size": 28 },
+        "34": { "size": 28 },
+        "35": { "size": 28 },
+        "36": { "size": 28 },
+        "37": { "size": 28 },
+        "38": { "size": 28 },
+        "39": { "size": 28 },
+        "40": { "size": 28 },
+        "41": { "size": 28 },
+        "42": { "size": 28 },
+        "43": { "size": 28 },
+        "44": { "size": 28 },
+        "45": { "size": 28 },
+        "46": { "size": 28 },
+        "47": { "size": 28 },
+        "48": { "size": 28 },
+        "49": { "size": 28 },
+        "50": { "size": 28 }
+      },
+      "cols": {
+        "0": { "size": 218 },
+        "1": { "size": 95 },
+        "2": { "size": 113 },
+        "3": { "size": 84 },
+        "4": { "size": 77 },
+        "5": { "size": 72 }
+      },
+      "merges": [],
+      "cells": { "A1": "=PIVOT(3,50,false,false)" },
+      "styles": { "A1": 6, "D1:F1": 6, "B1:C1": 9 },
+      "formats": {},
+      "borders": {},
+      "conditionalFormats": [
+        {
+          "id": "989efb92-5f5f",
+          "rule": { "type": "DataBarRule", "color": 14740987, "rangeValues": "C2:C51" },
+          "ranges": ["A2:A51"]
+        }
+      ],
+      "dataValidationRules": [],
+      "figures": [],
+      "tables": [],
+      "areGridLinesVisible": true,
+      "isVisible": true,
+      "isLocked": false,
+      "panes": { "xSplit": 0, "ySplit": 1 },
+      "headerGroups": {
+        "ROW": [],
+        "COL": []
+      },
+      "defaultStyle": {
+        "colDefault": { "0": 11, "1": 11, "2": 11, "3": 11, "4": 11, "5": 11 },
+        "rowDefault": {},
+        "sheetDefault": 10
+      },
+      "comments": {}
+    },
+    {
+      "id": "3130aadb-6420",
+      "name": "Top Salespeople",
+      "colNumber": 26,
+      "rowNumber": 100,
+      "rows": {
+        "0": { "size": 28 },
+        "1": { "size": 28 },
+        "2": { "size": 28 },
+        "3": { "size": 28 },
+        "4": { "size": 28 },
+        "5": { "size": 28 },
+        "6": { "size": 28 },
+        "7": { "size": 28 },
+        "8": { "size": 28 },
+        "9": { "size": 28 },
+        "10": { "size": 28 },
+        "11": { "size": 28 },
+        "12": { "size": 28 },
+        "13": { "size": 28 },
+        "14": { "size": 28 },
+        "15": { "size": 28 },
+        "16": { "size": 28 },
+        "17": { "size": 28 },
+        "18": { "size": 28 },
+        "19": { "size": 28 },
+        "20": { "size": 28 },
+        "21": { "size": 28 },
+        "22": { "size": 28 },
+        "23": { "size": 28 },
+        "24": { "size": 28 },
+        "25": { "size": 28 },
+        "26": { "size": 28 },
+        "27": { "size": 28 },
+        "28": { "size": 28 },
+        "29": { "size": 28 },
+        "30": { "size": 28 },
+        "31": { "size": 28 },
+        "32": { "size": 28 },
+        "33": { "size": 28 },
+        "34": { "size": 28 },
+        "35": { "size": 28 },
+        "36": { "size": 28 },
+        "37": { "size": 28 },
+        "38": { "size": 28 },
+        "39": { "size": 28 },
+        "40": { "size": 28 },
+        "41": { "size": 28 },
+        "42": { "size": 28 },
+        "43": { "size": 28 },
+        "44": { "size": 28 },
+        "45": { "size": 28 },
+        "46": { "size": 28 },
+        "47": { "size": 28 },
+        "48": { "size": 28 },
+        "49": { "size": 28 },
+        "50": { "size": 28 }
+      },
+      "cols": {
+        "0": { "size": 218 },
+        "1": { "size": 95 },
+        "2": { "size": 113 },
+        "3": { "size": 84 },
+        "4": { "size": 77 },
+        "5": { "size": 72 }
+      },
+      "merges": [],
+      "cells": { "A1": "=PIVOT(4,50,FALSE,FALSE)" },
+      "styles": { "A1": 6, "D1:F1": 6, "B1:C1": 9 },
+      "formats": {},
+      "borders": {},
+      "conditionalFormats": [
+        {
+          "id": "989efb92-5f5f",
+          "rule": { "type": "DataBarRule", "color": 14740987, "rangeValues": "C2:C51" },
+          "ranges": ["A2:A51"]
+        }
+      ],
+      "dataValidationRules": [],
+      "figures": [],
+      "tables": [],
+      "areGridLinesVisible": true,
+      "isVisible": true,
+      "isLocked": false,
+      "panes": { "xSplit": 0, "ySplit": 1 },
+      "headerGroups": {
+        "ROW": [],
+        "COL": []
+      },
+      "defaultStyle": {
+        "colDefault": { "0": 11, "1": 11, "2": 11, "3": 11, "4": 11, "5": 11 },
+        "rowDefault": {},
+        "sheetDefault": 10
       },
       "comments": {}
     }
@@ -637,27 +1058,20 @@
       "fontSize": 11,
       "align": "center"
     },
-    "6": { "fillColor": "#f8f9fa" }
+    "6": { "bold": true, "fontSize": 11, "verticalAlign": "top" },
+    "7": { "textColor": "#01666B" },
+    "8": { "verticalAlign": "bottom" },
+    "9": {
+      "bold": true,
+      "fontSize": 11,
+      "verticalAlign": "top",
+      "align": "center"
+    },
+    "10": { "verticalAlign": "middle" },
+    "11": { "textColor": "#434343" }
   },
   "formats": { "1": "#,##0.00" },
-  "borders": {
-    "1": {
-      "bottom": { "style": "thin", "color": "#CCCCCC" }
-    },
-    "2": {
-      "top": { "style": "thin", "color": "#CCCCCC" }
-    },
-    "3": {
-      "bottom": { "style": "thick", "color": "#FFFFFF" }
-    },
-    "4": {
-      "top": { "style": "thick", "color": "#FFFFFF" },
-      "bottom": { "style": "thick", "color": "#FFFFFF" }
-    },
-    "5": {
-      "top": { "style": "thick", "color": "#FFFFFF" }
-    }
-  },
+  "borders": {},
   "revisionId": "START_REVISION",
   "uniqueFigureIds": true,
   "settings": {
@@ -1053,16 +1467,12 @@
   "lists": {
     "1": {
       "columns": [
-        { "name": "name" },
-        { "name": "invoice_partner_display_name" },
-        { "name": "invoice_date" },
-        { "name": "invoice_date_due" },
-        { "name": "activity_ids" },
-        { "name": "amount_untaxed_signed" },
-        { "name": "amount_total_signed" },
-        { "name": "amount_total_in_currency_signed" },
-        { "name": "payment_state" },
-        { "name": "state" }
+        { "name": "name", "string": "Reference" },
+        { "name": "invoice_user_id", "string": "Salesperson", "hidden": false },
+        { "name": "invoice_partner_display_name", "string": "Customer" },
+        { "name": "payment_state", "string": "Status", "hidden": false },
+        { "name": "invoice_date", "string": "Date" },
+        { "name": "amount_untaxed_signed", "string": "Amount" }
       ],
       "domain": [
         "&",
@@ -1086,7 +1496,8 @@
         "17277380-12d8-4a83-b133-3532e5618c43": { "chain": "invoice_line_ids.product_id.categ_id", "type": "many2one" },
         "accd0cbe-12c9-4cab-93a1-afa5080dd635": { "chain": "invoice_line_ids.product_id", "type": "many2one" },
         "02acc7f7-b282-4ce9-bf38-6abfb72be6aa": { "chain": "invoice_user_id", "type": "many2one" }
-      }
+      },
+      "translateHeaders": true
     }
   },
   "listNextId": 2,

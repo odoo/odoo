@@ -5,7 +5,7 @@
       "id": "sheet1",
       "name": "Dashboard",
       "colNumber": 7,
-      "rowNumber": 41,
+      "rowNumber": 52,
       "rows": {
         "5": { "size": 48 },
         "21": { "size": 44 },
@@ -31,50 +31,11 @@
         "6": { "size": 112 }
       },
       "merges": [],
-      "cells": {
-        "A6": "[Monthly Sales](odoo://view/{\"viewType\":\"graph\",\"action\":{\"domain\":[[\"state\",\"not in\",[\"draft\",\"cancel\",\"sent\"]]],\"context\":{\"group_by\":[],\"graph_measure\":\"price_subtotal\",\"graph_mode\":\"line\",\"graph_groupbys\":[\"date:day\"],\"graph_order\":null,\"graph_stacked\":true,\"graph_cumulated\":false},\"modelName\":\"sale.report\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Sales Analysis\"})",
-        "A22": "[Top Products](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[\"&\",[\"website_id\",\"!=\",false],[\"state\",\"in\",[\"sale\",\"done\"]]],\"context\":{\"group_by\":[],\"pivot_measures\":[\"order_reference\",\"price_total\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"product_id\"]},\"modelName\":\"sale.report\",\"views\":[[false,\"pivot\"],[false,\"graph\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Online Sales Analysis\"})",
-        "A23": "=PIVOT(4,10,FALSE,FALSE)",
-        "E23": { "N": "+-3|=" }
-      },
-      "styles": {
-        "A6": 1,
-        "A22": 1,
-        "E22": 1,
-        "A23": 2,
-        "E23": 2,
-        "A24:C33": 3,
-        "E24:G33": 3,
-        "B23:C23": 4,
-        "F23:G23": 4
-      },
+      "cells": {},
+      "styles": {},
       "formats": {},
-      "borders": {
-        "A22:C22": 1,
-        "A6:G6": 1,
-        "E22:G22": 1,
-        "A23:C23": 2,
-        "A7:G7": 2,
-        "E23:G23": 2,
-        "A24:C24": 3,
-        "E24:G24": 3,
-        "A25:C32": 4,
-        "E25:G32": 4,
-        "A33:C33": 5,
-        "E33:G33": 5
-      },
-      "conditionalFormats": [
-        {
-          "rule": { "type": "DataBarRule", "color": 16775149, "rangeValues": "C24:C32" },
-          "id": "40c39498-425e-419a-ad9b-dbe59efea249",
-          "ranges": ["A24:A32"]
-        },
-        {
-          "rule": { "type": "DataBarRule", "color": 15726335, "rangeValues": "G24:G32" },
-          "id": "d8753f27-a5ac-4ffd-ae07-feb589fda423",
-          "ranges": ["E24:E32"]
-        }
-      ],
+      "borders": {},
+      "conditionalFormats": [],
       "dataValidationRules": [],
       "figures": [
         {
@@ -86,9 +47,9 @@
             "baselineColorDown": "#DC6965",
             "baselineColorUp": "#00A04A",
             "baselineMode": "percentage",
-            "title": { "text": "Carts", "bold": true, "color": "#434343" },
+            "title": { "text": "Carts", "bold": true, "color": "#017E84" },
             "type": "scorecard",
-            "background": "#EFF6FF",
+            "background": "",
             "baseline": "Data!E2",
             "baselineDescr": { "text": "since last period" },
             "keyValue": "Data!D2",
@@ -108,9 +69,9 @@
             "baselineColorDown": "#DC6965",
             "baselineColorUp": "#00A04A",
             "baselineMode": "percentage",
-            "title": { "text": "Orders", "bold": true, "color": "#434343" },
+            "title": { "text": "Orders", "bold": true, "color": "#017E84" },
             "type": "scorecard",
-            "background": "#EFF6FF",
+            "background": "",
             "baseline": "Data!E3",
             "baselineDescr": { "text": "since last period" },
             "keyValue": "Data!D3",
@@ -130,9 +91,9 @@
             "baselineColorDown": "#DC6965",
             "baselineColorUp": "#00A04A",
             "baselineMode": "percentage",
-            "title": { "text": "Abandoned Carts", "bold": true, "color": "#434343" },
+            "title": { "text": "Abandoned Carts", "bold": true, "color": "#017E84" },
             "type": "scorecard",
-            "background": "#EFF6FF",
+            "background": "",
             "baseline": "Data!E4",
             "baselineDescr": { "text": "since last period" },
             "keyValue": "Data!D4",
@@ -152,9 +113,9 @@
             "baselineColorDown": "#DC6965",
             "baselineColorUp": "#00A04A",
             "baselineMode": "percentage",
-            "title": { "text": "Total Revenue", "bold": true, "color": "#434343" },
+            "title": { "text": "Total Revenue", "bold": true, "color": "#017E84" },
             "type": "scorecard",
-            "background": "#FFF7ED",
+            "background": "",
             "baseline": "Data!E5",
             "baselineDescr": { "text": "since last period" },
             "keyValue": "Data!D5",
@@ -166,75 +127,12 @@
           "row": 0
         },
         {
-          "id": "0c5e3c79-3754-41a9-83df-b185003ce0b1",
-          "width": 1007,
-          "height": 344,
-          "tag": "chart",
-          "data": {
-            "title": { "text": "" },
-            "legendPosition": "none",
-            "type": "line",
-            "stacked": false,
-            "axesDesign": {
-              "y": {
-                "title": { "text": "Revenue" }
-              }
-            },
-            "fillArea": true,
-            "humanize": true,
-            "dataSource": {
-              "type": "odoo",
-              "cumulatedStart": false,
-              "metaData": {
-                "groupBy": ["date:month"],
-                "measure": "price_subtotal",
-                "order": null,
-                "resModel": "sale.report",
-                "mode": "line",
-                "cumulatedStart": false
-              },
-              "searchParams": {
-                "comparison": null,
-                "context": {
-                  "search_default_Sales": 1,
-                  "group_by": [],
-                  "search_default_filter_order_date": 1,
-                  "search_default_recurring": 0,
-                  "search_default_non_recurring": 1
-                },
-                "domain": [
-                  [
-                    "state",
-                    "not in",
-                    ["draft", "cancel", "sent"]
-                  ]
-                ],
-                "groupBy": ["date:month"],
-                "orderBy": []
-              }
-            },
-            "dataSetStyles": {},
-            "chartId": "0c5e3c79-3754-41a9-83df-b185003ce0b1",
-            "fieldMatching": {
-              "eefac62b-900a-4197-95e9-9a4cdbb832d6": { "chain": "date", "type": "datetime", "offset": 0 },
-              "70f31046-f26e-4847-b177-d09937e4b674": { "chain": "website_id", "type": "many2one" },
-              "cd428d80-466a-47b0-8af7-0393cd814d44": { "chain": "country_id", "type": "many2one" },
-              "d24e0ac3-8117-4d2e-a0e6-4f650672916e": { "chain": "product_tmpl_id", "type": "many2one" },
-              "2401236d-e945-48c2-b998-2533a8dcf1a0": { "chain": "partner_id", "type": "many2one" },
-              "289948d3-96db-4067-8fd6-51b5b75e677c": { "chain": "categ_id", "type": "many2one" }
-            }
-          },
-          "offset": { "x": 0, "y": 163 },
-          "col": 0,
-          "row": 0
-        },
-        {
           "id": "05f3bc5f-1628",
           "col": 3,
           "row": 21,
-          "offset": { "x": 44, "y": 10 },
-          "width": 480,
-          "height": 427,
+          "offset": { "x": 26, "y": 34 },
+          "width": 498,
+          "height": 407,
           "tag": "carousel",
           "data": {
             "chartDefinitions": {
@@ -244,10 +142,10 @@
                 "title": {},
                 "humanize": true,
                 "dataSource": {
-                  "labelRange": "G24:G33",
+                  "labelRange": "'Top Categories'!C1:C51",
                   "type": "range",
                   "dataSets": [
-                    { "dataSetId": "0", "dataRange": "E24:E33" }
+                    { "dataSetId": "0", "dataRange": "'Top Categories'!A1:A51" }
                   ],
                   "dataSetsHaveTitle": false
                 },
@@ -263,46 +161,122 @@
             },
             "items": [
               { "type": "chart", "chartId": "a4aa175e-211f" },
-              { "type": "carouselDataView", "title": "Top 10" }
+              {
+                "type": "carouselDataView",
+                "title": "Top 50",
+                "rangeData": {
+                  "_sheetId": "a254ea4a-b3ef",
+                  "_zone": { "top": 0, "left": 0, "bottom": 50, "right": 2 }
+                }
+              }
+            ],
+            "fieldMatching": {}
+          }
+        },
+        {
+          "id": "ca658c8c-3da6",
+          "col": 0,
+          "row": 5,
+          "offset": { "x": 0, "y": 11 },
+          "width": 1007,
+          "height": 407,
+          "tag": "carousel",
+          "data": {
+            "chartDefinitions": {
+              "0c5e3c79-3754-41a9-83df-b185003ce0b1": {
+                "title": { "text": "" },
+                "legendPosition": "none",
+                "type": "line",
+                "stacked": false,
+                "axesDesign": {
+                  "y": {
+                    "title": { "text": "Revenue" }
+                  }
+                },
+                "fillArea": true,
+                "humanize": true,
+                "dataSource": {
+                  "type": "odoo",
+                  "cumulatedStart": false,
+                  "metaData": {
+                    "groupBy": ["date:month"],
+                    "measure": "price_subtotal",
+                    "order": null,
+                    "resModel": "sale.report",
+                    "mode": "line",
+                    "cumulatedStart": false
+                  },
+                  "searchParams": {
+                    "comparison": null,
+                    "context": {
+                      "search_default_Sales": 1,
+                      "group_by": [],
+                      "search_default_filter_order_date": 1,
+                      "search_default_recurring": 0,
+                      "search_default_non_recurring": 1
+                    },
+                    "domain": [
+                      [
+                        "state",
+                        "not in",
+                        ["draft", "cancel", "sent"]
+                      ]
+                    ],
+                    "groupBy": ["date:month"],
+                    "orderBy": []
+                  }
+                },
+                "dataSetStyles": {}
+              }
+            },
+            "items": [
+              { "type": "chart", "chartId": "0c5e3c79-3754-41a9-83df-b185003ce0b1" }
+            ],
+            "fieldMatching": {
+              "0c5e3c79-3754-41a9-83df-b185003ce0b1": {
+                "eefac62b-900a-4197-95e9-9a4cdbb832d6": { "chain": "date", "type": "datetime", "offset": 0 },
+                "70f31046-f26e-4847-b177-d09937e4b674": { "chain": "website_id", "type": "many2one" },
+                "cd428d80-466a-47b0-8af7-0393cd814d44": { "chain": "country_id", "type": "many2one" },
+                "d24e0ac3-8117-4d2e-a0e6-4f650672916e": { "chain": "product_tmpl_id", "type": "many2one" },
+                "2401236d-e945-48c2-b998-2533a8dcf1a0": { "chain": "partner_id", "type": "many2one" },
+                "289948d3-96db-4067-8fd6-51b5b75e677c": { "chain": "categ_id", "type": "many2one" }
+              }
+            }
+          }
+        },
+        {
+          "id": "1bd1e01d-d845",
+          "col": 0,
+          "row": 21,
+          "offset": { "x": 0, "y": 34 },
+          "width": 498,
+          "height": 407,
+          "tag": "carousel",
+          "data": {
+            "chartDefinitions": {},
+            "title": {
+              "text": "Top Products",
+              "bold": true,
+              "fontSize": 21,
+              "color": "#01666B"
+            },
+            "items": [
+              {
+                "type": "carouselDataView",
+                "rangeData": {
+                  "_sheetId": "7aded3e1-c2dc",
+                  "_zone": { "top": 0, "left": 0, "bottom": 50, "right": 2 }
+                }
+              }
             ],
             "fieldMatching": {}
           }
         }
       ],
-      "tables": [
-        {
-          "range": "A23:C33",
-          "type": "static",
-          "config": {
-            "hasFilters": false,
-            "totalRow": false,
-            "firstColumn": false,
-            "lastColumn": false,
-            "numberOfHeaders": 1,
-            "bandedRows": true,
-            "bandedColumns": false,
-            "automaticAutofill": true,
-            "styleId": "None"
-          }
-        },
-        {
-          "range": "E23:G33",
-          "type": "static",
-          "config": {
-            "hasFilters": false,
-            "totalRow": false,
-            "firstColumn": false,
-            "lastColumn": false,
-            "numberOfHeaders": 1,
-            "bandedRows": true,
-            "bandedColumns": false,
-            "automaticAutofill": true,
-            "styleId": "None"
-          }
-        }
-      ],
+      "tables": [],
       "areGridLinesVisible": true,
       "isVisible": true,
+      "backgroundColor": "#F9FAFB",
       "headerGroups": {
         "ROW": [],
         "COL": []
@@ -352,7 +326,7 @@
         "E2": "=FORMAT.LARGE.NUMBER(C2)",
         "E3:E5": { "R": "+R1" }
       },
-      "styles": { "A1:E1": 5, "D2:E5": 6 },
+      "styles": { "A1:E1": 1 },
       "formats": {},
       "borders": {},
       "conditionalFormats": [],
@@ -366,40 +340,207 @@
         "COL": []
       },
       "comments": {}
+    },
+    {
+      "id": "7aded3e1-c2dc",
+      "name": "Top Products",
+      "colNumber": 26,
+      "rowNumber": 100,
+      "rows": {
+        "0": { "size": 28 },
+        "1": { "size": 28 },
+        "2": { "size": 28 },
+        "3": { "size": 28 },
+        "4": { "size": 28 },
+        "5": { "size": 28 },
+        "6": { "size": 28 },
+        "7": { "size": 28 },
+        "8": { "size": 28 },
+        "9": { "size": 28 },
+        "10": { "size": 28 },
+        "11": { "size": 28 },
+        "12": { "size": 28 },
+        "13": { "size": 28 },
+        "14": { "size": 28 },
+        "15": { "size": 28 },
+        "16": { "size": 28 },
+        "17": { "size": 28 },
+        "18": { "size": 28 },
+        "19": { "size": 28 },
+        "20": { "size": 28 },
+        "21": { "size": 28 },
+        "22": { "size": 28 },
+        "23": { "size": 28 },
+        "24": { "size": 28 },
+        "25": { "size": 28 },
+        "26": { "size": 28 },
+        "27": { "size": 28 },
+        "28": { "size": 28 },
+        "29": { "size": 28 },
+        "30": { "size": 28 },
+        "31": { "size": 28 },
+        "32": { "size": 28 },
+        "33": { "size": 28 },
+        "34": { "size": 28 },
+        "35": { "size": 28 },
+        "36": { "size": 28 },
+        "37": { "size": 28 },
+        "38": { "size": 28 },
+        "39": { "size": 28 },
+        "40": { "size": 28 },
+        "41": { "size": 28 },
+        "42": { "size": 28 },
+        "43": { "size": 28 },
+        "44": { "size": 28 },
+        "45": { "size": 28 },
+        "46": { "size": 28 },
+        "47": { "size": 28 },
+        "48": { "size": 28 },
+        "49": { "size": 28 },
+        "50": { "size": 28 }
+      },
+      "cols": {
+        "0": { "size": 287 }
+      },
+      "merges": [],
+      "cells": { "A1": "=PIVOT(4,50,FALSE,FALSE)" },
+      "styles": { "A1": 2, "A2:A51": 3, "B4:C51": 3, "B1:C1": 4, "B2:C3": 5 },
+      "formats": { "A2:A13": 1, "C2:C51": 2 },
+      "borders": {},
+      "conditionalFormats": [
+        {
+          "id": "3dc45821-c5d2",
+          "rule": { "type": "DataBarRule", "color": 14609659, "rangeValues": "C2:C51" },
+          "ranges": ["A2:A51"]
+        }
+      ],
+      "dataValidationRules": [],
+      "figures": [],
+      "tables": [],
+      "areGridLinesVisible": true,
+      "isVisible": true,
+      "isLocked": false,
+      "panes": { "xSplit": 0, "ySplit": 1 },
+      "headerGroups": {
+        "ROW": [],
+        "COL": []
+      },
+      "defaultStyle": {
+        "colDefault": { "0": 7 },
+        "rowDefault": {},
+        "sheetDefault": 6
+      },
+      "comments": {}
+    },
+    {
+      "id": "a254ea4a-b3ef",
+      "name": "Top Categories",
+      "colNumber": 26,
+      "rowNumber": 100,
+      "rows": {
+        "0": { "size": 28 },
+        "1": { "size": 28 },
+        "2": { "size": 28 },
+        "3": { "size": 28 },
+        "4": { "size": 28 },
+        "5": { "size": 28 },
+        "6": { "size": 28 },
+        "7": { "size": 28 },
+        "8": { "size": 28 },
+        "9": { "size": 28 },
+        "10": { "size": 28 },
+        "11": { "size": 28 },
+        "12": { "size": 28 },
+        "13": { "size": 28 },
+        "14": { "size": 28 },
+        "15": { "size": 28 },
+        "16": { "size": 28 },
+        "17": { "size": 28 },
+        "18": { "size": 28 },
+        "19": { "size": 28 },
+        "20": { "size": 28 },
+        "21": { "size": 28 },
+        "22": { "size": 28 },
+        "23": { "size": 28 },
+        "24": { "size": 28 },
+        "25": { "size": 28 },
+        "26": { "size": 28 },
+        "27": { "size": 28 },
+        "28": { "size": 28 },
+        "29": { "size": 28 },
+        "30": { "size": 28 },
+        "31": { "size": 28 },
+        "32": { "size": 28 },
+        "33": { "size": 28 },
+        "34": { "size": 28 },
+        "35": { "size": 28 },
+        "36": { "size": 28 },
+        "37": { "size": 28 },
+        "38": { "size": 28 },
+        "39": { "size": 28 },
+        "40": { "size": 28 },
+        "41": { "size": 28 },
+        "42": { "size": 28 },
+        "43": { "size": 28 },
+        "44": { "size": 28 },
+        "45": { "size": 28 },
+        "46": { "size": 28 },
+        "47": { "size": 28 },
+        "48": { "size": 28 },
+        "49": { "size": 28 },
+        "50": { "size": 28 }
+      },
+      "cols": {
+        "0": { "size": 287 }
+      },
+      "merges": [],
+      "cells": { "A1": "=PIVOT(1,50,FALSE,FALSE)" },
+      "styles": { "A1": 2, "A2:A51": 3, "B4:C51": 3, "B1:C1": 4, "B2:C3": 5 },
+      "formats": { "A2:A13": 1, "C2:C51": 2 },
+      "borders": {},
+      "conditionalFormats": [
+        {
+          "id": "3dc45821-c5d2",
+          "rule": { "type": "DataBarRule", "color": 14609659, "rangeValues": "C2:C51" },
+          "ranges": ["A2:A51"]
+        }
+      ],
+      "dataValidationRules": [],
+      "figures": [],
+      "tables": [],
+      "areGridLinesVisible": true,
+      "isVisible": true,
+      "isLocked": false,
+      "panes": { "xSplit": 0, "ySplit": 1 },
+      "headerGroups": {
+        "ROW": [],
+        "COL": []
+      },
+      "defaultStyle": {
+        "colDefault": { "0": 7 },
+        "rowDefault": {},
+        "sheetDefault": 6
+      },
+      "comments": {}
     }
   ],
   "styles": {
-    "1": { "fontSize": 16, "bold": true },
-    "2": { "textColor": "#434343", "bold": true, "fontSize": 11 },
-    "3": { "textColor": "#434343", "verticalAlign": "middle" },
+    "1": { "bold": true },
+    "2": { "bold": true, "align": "left", "verticalAlign": "top", "fontSize": 11 },
+    "3": { "verticalAlign": "middle" },
     "4": {
-      "textColor": "#434343",
       "bold": true,
+      "align": "center",
+      "verticalAlign": "top",
       "fontSize": 11,
-      "align": "center"
+      "textColor": "#434343"
     },
-    "5": { "bold": true },
-    "6": { "fillColor": "#EFEFEF" }
+    "5": { "verticalAlign": "middle", "textColor": "#434343" },
+    "6": {},
+    "7": { "textColor": "#434343" }
   },
-  "formats": {},
-  "borders": {
-    "1": {
-      "bottom": { "style": "thin", "color": "#CCCCCC" }
-    },
-    "2": {
-      "top": { "style": "thin", "color": "#CCCCCC" }
-    },
-    "3": {
-      "bottom": { "style": "thick", "color": "#FFFFFF" }
-    },
-    "4": {
-      "top": { "style": "thick", "color": "#FFFFFF" },
-      "bottom": { "style": "thick", "color": "#FFFFFF" }
-    },
-    "5": {
-      "top": { "style": "thick", "color": "#FFFFFF" }
-    }
-  },
+  "formats": { "1": "@", "2": "[$$]#,##0.00" },
+  "borders": {},
   "revisionId": "START_REVISION",
   "uniqueFigureIds": true,
   "settings": {
