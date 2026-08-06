@@ -1376,7 +1376,7 @@ class ProductTemplate(models.Model):
 
         for product, data in zip(self, results_data):
             combination_info = product._get_combination_info(only_template=True)
-            values = product.mapped("attribute_line_ids.value_ids")
+            values = product.attribute_line_ids.value_ids
             data["attribute_value_ids"] = values.read(["id", "name"])
             data["product_tag_ids"] = product.product_tag_ids.filtered(
                 "visible_to_customers"
@@ -1387,10 +1387,7 @@ class ProductTemplate(models.Model):
             data["image_url"] = "/web/image/product.template/%s/image_128" % data["id"]
 
             if search_term:
-                data["website_url"] = "%s?%s" % (
-                    product._get_product_url().split("?")[0],
-                    urlencode({"search": search_term}),
-                )
+                data["website_url"] = product._get_product_url(query_params={"search": search_term})
         return results_data
 
     def _get_attribute_values_from_search_term(self, search_term):
@@ -1415,7 +1412,7 @@ class ProductTemplate(models.Model):
 
         # Fall back to matching attribute values by name.
         search_words = search_term.lower().split()
-        values = self.mapped("attribute_line_ids.value_ids")
+        values = self.attribute_line_ids.value_ids
         return values.filtered(
             lambda attribute_value: any(
                 word in (attribute_value.name or "").lower() for word in search_words

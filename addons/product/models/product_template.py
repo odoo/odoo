@@ -8,6 +8,7 @@ from collections import defaultdict
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
+from odoo.tools import groupby
 from odoo.tools.image import is_image_size_above
 from odoo.tools.sql import SQL
 
@@ -318,10 +319,82 @@ class ProductTemplate(models.Model):
         for p in self:
             p.product_variant_id = p.product_variant_ids[:1].id
 
-    @api.constrains('company_id')
+    def _get_barcodes_by_company(self):
+        return [
+            (company_id, [t.barcode for t in templates if t.barcode])
+            for company_id, templates in groupby(self, lambda t: t.company_id.id)
+        ]
+
+    def _get_barcode_search_domain(self, barcodes_within_company, company_id):
+        domain = [('barcode', 'in', barcodes_within_company)]
+        if company_id:
+            domain.append(('company_id', 'in', (False, company_id)))
+        return domain
+
+    def _build_duplicate_barcode_error_string(self, barcode, duplicate_products):
+        """Returns a single line for one duplicated barcode. Override to customise the message."""
+        return _(
+            "- Barcode \"%(barcode)s\" already assigned to product(s): %(product_list)s",
+            barcode=barcode,
+            product_list=duplicate_products.mapped('display_name'),
+        )
+
+    def _build_duplicate_barcode_error_note(self):
+        """Returns a note appended once at the end of the error. Override to customise or remove it."""
+        return _("Note: Some products may be hidden due to access restrictions.")
+
+    def _check_duplicated_template_barcodes(self, barcodes_within_company, company_id):
+        """Check that no two *templates* share the same barcode."""
+        domain = self._get_barcode_search_domain(barcodes_within_company, company_id)
+        templates_by_barcode = self.sudo()._read_group(
+            domain, ['barcode'], ['id:recordset'], having=[('__count', '>', 1)],
+        )
+
+        duplicates_as_str = "\n".join(
+            self._build_duplicate_barcode_error_string(barcode, duplicate_templates._filtered_access('read'))
+            for barcode, duplicate_templates in templates_by_barcode
+        )
+
+        if duplicates_as_str:
+            duplicates_as_str += "\n\n" + self._build_duplicate_barcode_error_note()
+            raise ValidationError(_("Barcode(s) already assigned:\n\n%s", duplicates_as_str))
+
+    def _check_duplicated_variant_barcodes(self, barcodes_within_company, company_id):
+        """Check that no *variant* shares this template's barcode, unless it is the
+        template's own mirrored variant.
+
+        Only the mirrored variant of a *single-variant* template is excluded: that's the
+        one case where `barcode` is intentionally identical on both records, kept in sync
+        by `_compute_barcode`/`_set_barcode`. As soon as a template has several variants,
+        its `barcode` is independent, manually-set data, so one of its own variants sharing
+        that barcode is a genuine duplicate and must still be reported.
+        """
+        domain = Domain(self._get_barcode_search_domain(barcodes_within_company, company_id))
+        mirrored_variant_ids = self.filtered(
+            lambda template: len(template.product_variant_ids) == 1
+        ).product_variant_id.ids
+        domain &= Domain('id', 'not in', mirrored_variant_ids)
+
+        variants_by_barcode = self.env['product.product'].sudo()._read_group(
+            domain, ['barcode'], ['id:recordset'],
+        )
+
+        duplicates_as_str = "\n".join(
+            self._build_duplicate_barcode_error_string(barcode, duplicate_variants._filtered_access('read'))
+            for barcode, duplicate_variants in variants_by_barcode
+        )
+
+        if duplicates_as_str:
+            duplicates_as_str += "\n\n" + self._build_duplicate_barcode_error_note()
+            raise ValidationError(_("Barcode(s) already assigned:\n\n%s", duplicates_as_str))
+
+    @api.constrains('barcode', 'company_id')
     def _check_barcode_uniqueness(self):
-        for template in self:
-            template.product_variant_ids._check_barcode_uniqueness()
+        # Barcodes should only be unique within a company
+        self_ctx = self.with_context(skip_preprocess_gs1=True)
+        for company_id, barcodes_within_company in self_ctx._get_barcodes_by_company():
+            self_ctx._check_duplicated_template_barcodes(barcodes_within_company, company_id)
+            self_ctx._check_duplicated_variant_barcodes(barcodes_within_company, company_id)
 
     @api.depends('company_id')
     def _compute_currency_id(self):
@@ -470,7 +543,7 @@ class ProductTemplate(models.Model):
     def _compute_is_product_variant(self):
         self.is_product_variant = False
 
-    @api.depends('product_variant_ids.barcode')
+    @api.depends('product_variant_ids.barcode', 'product_variant_ids.active')
     def _compute_barcode(self):
         for template in self.filtered(lambda template: len(template.product_variant_ids) == 1):
             template.barcode = template.product_variant_ids.barcode

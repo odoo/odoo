@@ -342,12 +342,41 @@ class ProductProduct(models.Model):
             duplicates_as_str += "\n\n" + self._build_duplicate_barcode_error_note()
             raise ValidationError(_("Barcode(s) already assigned:\n\n%s", duplicates_as_str))
 
+    def _check_duplicated_template_barcodes(self, barcodes_within_company, company_id):
+        """Check that no *template* shares this variant's barcode, unless it is the
+        variant's own template mirroring it.
+
+        Only a template that has exactly this one variant is excluded: that's the one
+        case where `barcode` is intentionally identical on both records, kept in sync by
+        `product.template._compute_barcode`/`_set_barcode`. As soon as the template has
+        several variants, its `barcode` is independent, manually-set data, so this variant
+        sharing that barcode is a genuine duplicate and must still be reported.
+        """
+        domain = Domain(self._get_barcode_search_domain(barcodes_within_company, company_id))
+        mirrored_template_ids = self.filtered(
+            lambda product: len(product.product_tmpl_id.product_variant_ids) == 1
+        ).product_tmpl_id.ids
+        domain &= Domain('id', 'not in', mirrored_template_ids)
+
+        templates_by_barcode = self.env['product.template'].sudo()._read_group(
+            domain, ['barcode'], ['id:recordset'],
+        )
+
+        duplicates_as_str = "\n".join(
+            self._build_duplicate_barcode_error_string(barcode, duplicate_templates._filtered_access('read'))
+            for barcode, duplicate_templates in templates_by_barcode
+        )
+
+        if duplicates_as_str:
+            duplicates_as_str += "\n\n" + self._build_duplicate_barcode_error_note()
+            raise ValidationError(_("Barcode(s) already assigned:\n\n%s", duplicates_as_str))
+
     def _check_duplicated_packaging_barcodes(self, barcodes_within_company, company_id):
         packaging_domain = self._get_barcode_search_domain(barcodes_within_company, company_id)
         if self.env['product.uom'].sudo().search_count(packaging_domain, limit=1):
             raise ValidationError(_("A packaging already uses the barcode"))
 
-    @api.constrains('barcode')
+    @api.constrains('barcode', 'company_id')
     def _check_barcode_uniqueness(self):
         """ With GS1 nomenclature, products and packagings use the same pattern. Therefore, we need
         to ensure the uniqueness between products' barcodes and packagings' ones"""
@@ -355,6 +384,7 @@ class ProductProduct(models.Model):
         self_ctx = self.with_context(skip_preprocess_gs1=True)
         for company_id, barcodes_within_company in self_ctx._get_barcodes_by_company():
             self_ctx._check_duplicated_product_barcodes(barcodes_within_company, company_id)
+            self_ctx._check_duplicated_template_barcodes(barcodes_within_company, company_id)
             self_ctx._check_duplicated_packaging_barcodes(barcodes_within_company, company_id)
 
     @api.constrains('company_id')

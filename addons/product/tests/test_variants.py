@@ -486,19 +486,17 @@ class TestVariants(ProductVariantsCommon):
         variant_2 = template.product_variant_ids[1]
 
         variant_1.barcode = 'v1_barcode'
-        variant_2.barcode = 'v2_barcode'
+        variant_2.barcode = 'other_v2_barcode'
 
         variant_1.action_archive()
         template.invalidate_model(['barcode'])
         self.assertEqual(template.barcode, variant_2.barcode)  # 1 active variant --> barcode on template
 
         variant_1.action_unarchive()
+        variant_2.barcode = 'v2_barcode_updated'
         template.invalidate_model(['barcode'])
 
-        # After restoring the second variant, _compute_barcode is not triggered
-        # because there are multiple active variants, so the last computed value
-        # is preserved.
-        self.assertEqual(template.barcode, variant_2.barcode)
+        self.assertEqual(template.barcode, 'other_v2_barcode')
 
     @mute_logger('odoo.models.unlink')
     def test_archive_all_variants(self):
