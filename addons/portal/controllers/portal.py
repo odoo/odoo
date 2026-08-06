@@ -515,16 +515,17 @@ class CustomerPortal(Controller):
 
         parent_name_value = address_values.pop('parent_name', None)
 
+        partner_context = clean_context(request.env.context)
+        partner_context.update({
+            "no_vat_validation": True,  # Already verified in _validate_address_values
+        })
+
         if not partner_sudo:  # Creation of a new address.
             self._complete_address_values(
                 address_values, address_type, use_delivery_as_billing, **form_data
             )
-            create_context = clean_context(request.env.context)
-            create_context.update({
-                'no_vat_validation': True,  # Already verified in _validate_address_values
-            })
             partner_sudo = request.env['res.partner'].sudo().with_context(
-                create_context
+                partner_context
             ).create(address_values)
             if hasattr(partner_sudo, '_onchange_phone_validation'):
                 # The `phone_validation` module is installed.
@@ -533,7 +534,8 @@ class CustomerPortal(Controller):
             # If name is not changed then pop it from the address_values, as it affects the bank account holder name
             if address_values['name'].strip() == (partner_sudo.name or '').strip():
                 address_values.pop('name')
-            partner_sudo.write(address_values)  # Keep the same partner if nothing changed.
+            # Keep the same partner if nothing changed.
+            partner_sudo.with_context(partner_context).write(address_values)
             if 'phone' in address_values and hasattr(partner_sudo, '_onchange_phone_validation'):
                 # The `phone_validation` module is installed.
                 partner_sudo._onchange_phone_validation()
@@ -548,7 +550,11 @@ class CustomerPortal(Controller):
                 if partner_sudo.name != parent_name_value:
                     partner_sudo.name = parent_name_value
             else:  # Current partner is an individual with no parent
-                parent_company = partner_sudo._create_parent_from_name(parent_name_value)
+                # To check whether created parent company should have all the accounting related
+                # details same as partner as in backend
+                parent_company = partner_sudo.with_context(
+                    partner_context
+                )._create_parent_from_name(parent_name_value)
                 parent_company.is_company = True
 
         self._handle_extra_form_data(extra_form_data, address_values)
