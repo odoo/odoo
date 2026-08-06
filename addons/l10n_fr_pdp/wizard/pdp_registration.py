@@ -154,13 +154,13 @@ class PdpRegistration(models.TransientModel):
                 and participant_info.get('platform_id')
                 and not participant_info.get('receiver_on_odoo')
                ):
-                platform_name = participant_info.get("platform_name")
+                platform_name = f" '{name}'" if (name := participant_info.get("platform_name")) else ""
                 warnings["company_pdp_annuaire_warning"] = {
                     "level": "warning",
                     "message": self.env._(
                         "Another platform is already assigned to this identifier in the annuaire (Platform%(platform_name)s with ID %(platform_id)s). "
                         "By registering, you confirm that you want to migrate to Odoo.",
-                        platform_name=f" '{platform_name}'" if platform_name else "",
+                        platform_name=platform_name,
                         platform_id=participant_info.get("platform_id"),
                     ),
                 }
