@@ -636,6 +636,7 @@ class Contains {
         this.onChange = () => this.runOnce("after change");
         this.onFocus = () => this.runOnce("after focus");
         this.onScroll = () => this.runOnce("after scroll");
+        this.onTransitionOrAnimationEnd = () => this.runOnce("after transition/animation end");
         if (!this.runOnce("immediately")) {
             const hasValue =
                 this.options.value !== undefined ||
@@ -657,6 +658,17 @@ class Contains {
             document.body.addEventListener("blur", this.onBlur, { capture: true });
             document.body.addEventListener("change", this.onChange, { capture: true });
             document.body.addEventListener("focus", this.onFocus, { capture: true });
+            const usesVisibility =
+                this.options.visible !== undefined ||
+                (typeof this.selector === "string" && this.selector.includes(":visible"));
+            if (usesVisibility) {
+                document.body.addEventListener("transitionend", this.onTransitionOrAnimationEnd, {
+                    capture: true,
+                });
+                document.body.addEventListener("animationend", this.onTransitionOrAnimationEnd, {
+                    capture: true,
+                });
+            }
             after(() => {
                 if (!this.done) {
                     this.runOnce("Test ended", { crashOnFail: true });
@@ -690,6 +702,12 @@ class Contains {
             document.body.removeEventListener("blur", this.onBlur, { capture: true });
             document.body.removeEventListener("change", this.onChange, { capture: true });
             document.body.removeEventListener("focus", this.onFocus, { capture: true });
+            document.body.removeEventListener("transitionend", this.onTransitionOrAnimationEnd, {
+                capture: true,
+            });
+            document.body.removeEventListener("animationend", this.onTransitionOrAnimationEnd, {
+                capture: true,
+            });
             this.done = true;
         }
         if ((res?.length ?? 0) === this.options.count) {
