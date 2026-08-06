@@ -12,17 +12,18 @@ from odoo.addons.http_routing.tests.common import MockRequest
 class TestProjectPortalAccess(TestProjectSharingCommon, HttpCase):
     def test_post_chatter_as_portal_user(self):
         self.project_no_collabo.privacy_visibility = 'portal'
+
+        # With user collaborator
         message = self.get_project_share_link()
         share_link = str(message.body.split('href="')[1].split('">')[0])
-        match = search(r"token=([^&]+)&amp;redirect=([^&]+)", share_link)
-        token, redirect = match.groups()
+        match = search(r"redirect=([^&]+)", share_link)
+        redirect = match.groups()
 
         with self.with_user('chell'), MockRequest(self.env, path=share_link):
             ThreadController().mail_message_post(
                 thread_model='project.task',
                 thread_id=self.task_no_collabo.id,
                 post_data={'body': '(-b ±√[b²-4ac]) / 2a'},
-                token=token,
                 redirect=redirect
             )
 
@@ -31,6 +32,18 @@ class TestProjectPortalAccess(TestProjectSharingCommon, HttpCase):
                 ('author_id', '=', self.user_portal.partner_id.id),
             ])
         )
+
+        # With non-user collaborator
+        partner = self.env['res.partner'].create({
+            'name': 'Test',
+            'email': 'test@example.portal',
+            'company_id': False,
+        })
+        message = self.get_project_share_link_partner(partner)
+        share_link = str(message.body.split('href="')[1].split('">')[0])
+        match = search(r"token=([^&]+)&amp;redirect=([^&]+)", share_link)
+        token, redirect = match.groups()
+        self.assertTrue(token, 'Token must be present for the signup')
 
     def test_portal_task_submission(self):
         """ Public user should be able to submit a task"""
