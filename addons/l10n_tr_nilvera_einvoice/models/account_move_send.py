@@ -6,6 +6,8 @@ from collections import defaultdict
 from odoo import _, api, models
 from odoo.tools.float_utils import float_compare
 
+from odoo.addons.l10n_tr_nilvera_einvoice.const import GIB_RETURN_INVOICE_TYPES
+
 _logger = logging.getLogger(__name__)
 
 
@@ -208,8 +210,7 @@ class AccountMoveSend(models.AbstractModel):
             }
 
         if invalid_type_invoices := tr_nilvera_moves.filtered(
-            lambda r: (r.l10n_tr_gib_invoice_type in {"IADE", "TEVKIFATIADE"})
-            ^ (r.move_type == "out_refund")
+            lambda r: (r.l10n_tr_gib_invoice_type in GIB_RETURN_INVOICE_TYPES) != (r.move_type == "out_refund")
         ):
             alerts["tr_moves_with_invalid_type"] = {
                 "level": "danger",

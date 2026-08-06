@@ -14,32 +14,17 @@ from odoo.exceptions import UserError, ValidationError
 from odoo.tools import SQL
 
 from odoo.addons.l10n_tr_nilvera.lib.nilvera_client import _get_nilvera_client
+from odoo.addons.l10n_tr_nilvera_einvoice.const import (
+    CATEGORY_MOVE_TYPE_MAP,
+    GIB_INVOICE_SCENARIO_SELECTION,
+    GIB_INVOICE_TYPE_SELECTION,
+    GIB_RETURN_INVOICE_TYPES,
+    MOVE_TYPE_CATEGORY_MAP,
+    TICARIFATURA_ANSWER_TO_FIELD_VALUE_MAP,
+    SUCCESSFUL_SEND_STATUSES
+)
 
 _logger = logging.getLogger(__name__)
-
-MOVE_TYPE_CATEGORY_MAP = {
-    "out_invoice": {
-        "earchive": "invoices",
-        "einvoice": "sale",
-    },
-    "in_invoice": {
-        "einvoice": "purchase",
-    },
-}
-
-CATEGORY_MOVE_TYPE_MAP = {
-    "invoices": "out_invoice",
-    "sale": "out_invoice",
-    "purchase": "in_invoice",
-}
-
-TICARIFATURA_ANSWER_TO_FIELD_VALUE_MAP = {
-    "approved": "commercial_approved",
-    "rejected": "commercial_rejected",
-    "documentAnsweredAutomatically": "commercial_answered_automatically",
-}
-
-SUCCESSFUL_SEND_STATUSES = {'succeed', 'commercial_approved', 'commercial_answered_automatically'}
 
 UNSYNCED_COMMERCIAL_MOVE_DOMAIN = [
     ("move_type", "in", ["out_invoice", "in_invoice"]),
@@ -101,11 +86,7 @@ class AccountMove(models.Model):
              "It is approved and transmitted to GİB when the invoice is sent.",
     )
     l10n_tr_gib_invoice_scenario = fields.Selection(
-        selection=[
-            ('TEMELFATURA', "Basic"),
-            ('KAMU', "Public Sector"),
-            ('TICARIFATURA', "Commercial"),
-        ],
+        selection=GIB_INVOICE_SCENARIO_SELECTION,
         default='TEMELFATURA',
         string="Invoice Scenario",
         help="Defines the official GİB (Turkish Revenue Administration) e-invoice "
@@ -120,14 +101,7 @@ class AccountMove(models.Model):
         readonly=False,
         default='SATIS',
         string="GIB Invoice Type",
-        selection=[
-            ('SATIS', "Sales"),
-            ('TEVKIFAT', "Withholding"),
-            ('IHRACKAYITLI', "Registered for Export"),
-            ('ISTISNA', "Tax Exempt"),
-            ('IADE', "Return"),
-            ('TEVKIFATIADE', "Withholding Return"),
-        ],
+        selection=GIB_INVOICE_TYPE_SELECTION,
         help="Specifies the official GİB classification for the e-invoice/e-archive, which "
         "determines its tax treatment and validation rules. \n"
         "- Sales: A standard sales invoice. \n"
@@ -403,9 +377,54 @@ class AccountMove(models.Model):
     def _l10n_tr_nilvera_check_invalid_type(self):
         invalid_invoices = self.env["account.move"]
         for record in self:
-            if record.l10n_tr_gib_invoice_type in {"IADE", "TEVKIFATIADE"} ^ record.move_type == "out_refund":
+            if (record.l10n_tr_gib_invoice_type in GIB_RETURN_INVOICE_TYPES) != (record.move_type == "out_refund"):
                 invalid_invoices |= record
         return invalid_invoices
+
+    def _l10n_tr_get_partner_control_account(self):
+        self.ensure_one()
+        partner = self.partner_id.with_company(self.company_id)
+        if self.move_type in self.get_purchase_types():
+            return partner.property_account_payable_id
+        return partner.property_account_receivable_id
+
+    def _l10n_tr_get_einvoice_sequence(self):
+        """Get the e-Document sequence of the journal that applies to this document.
+
+        :return: the series to number this document with, empty if it falls back to the journal.
+        """
+        self.ensure_one()
+        if self.move_type not in self.get_invoice_types() or self.country_code != 'TR':
+            return None
+        candidates = self.journal_id.sudo().l10n_tr_einvoice_sequence_ids.filtered(
+            lambda s: s._l10n_tr_matches_move(self),
+        )
+        return candidates.sorted(lambda s: s._l10n_tr_specificity_key(), reverse=True)[:1]
+
+    def _get_last_sequence_domain(self, relaxed=False):
+        # EXTENDS account
+        condition = super()._get_last_sequence_domain(relaxed)
+        if not self.journal_id or self.country_code != 'TR':
+            return condition
+        if series := self._l10n_tr_get_einvoice_sequence():
+            return SQL(
+                "%(condition)s AND sequence_prefix LIKE %(series_prefix)s",
+                condition=condition,
+                series_prefix=f"{series.name}/%",
+            )
+        # No series applies, so this document falls back to the journal's own numbering.
+        return SQL(
+            """
+            %(condition)s
+            AND sequence_prefix NOT LIKE ALL (COALESCE((
+                SELECT array_agg(l10n_tr_series.name || '/%%')
+                  FROM l10n_tr_nilvera_einvoice_invoice_sequence l10n_tr_series
+                 WHERE l10n_tr_series.journal_id = %(journal_id)s
+            ), ARRAY[]::text[]))
+            """,
+            condition=condition,
+            journal_id=self.journal_id.id,
+        )
 
     def _post(self, soft=True):
         for move in self:
@@ -1099,8 +1118,16 @@ class AccountMove(models.Model):
         When creating a credit note, an R is added by standard, so
         we remove the first letter of the journal prefix to make sure it
         remains 3 characters (e.g., RINV → RNV).
+
+        When an e-Document sequence of the journal applies, its series code takes the place
+        of the journal code instead. The series code is already 3 characters, and credit notes
+        get their own series through the "Credit Note" condition, so no R is added to it.
         """
         starting_sequence = super()._get_starting_sequence()
+        if series := self._l10n_tr_get_einvoice_sequence():
+            _old_name, separator, rest = starting_sequence.partition('/')
+            if separator:
+                return f"{series.name}{separator}{rest}"
         if (
             self.company_id.country_id.code == "TR"
             and self.journal_id.refund_sequence
