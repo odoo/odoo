@@ -6,6 +6,7 @@ from odoo.tools.partner_identifiers import validation_error_message
 from odoo.addons.account.models.company import PEPPOL_DEFAULT_COUNTRIES
 from odoo.addons.account_edi_ubl_cii.tools.partner_identifiers import (
     CORNER_CASE_IDENTIFIERS_METADATA,
+    DEPRECATED_ELECTRONIC_ADDRESS_SCHEMES_CODELIST,
     ELECTRONIC_ADDRESS_SCHEMES_CODELIST,
     ELECTRONIC_ADDRESS_SCHEME_INVALID_CHARS_RE,
 )
@@ -173,10 +174,14 @@ class ResPartner(models.Model):
                 partner.write({'routing_scheme': False, 'routing_endpoint': False})
 
     @api.depends_context('company')
-    @api.depends('company_id')
+    @api.depends('company_id', 'routing_scheme')
     def _compute_available_routing_schemes(self):
         # TO OVERRIDE
-        self.available_routing_schemes = list(dict(self._fields['routing_scheme'].selection))
+        for partner in self:
+            partner.available_routing_schemes = [
+                eas for eas in dict(partner._fields['routing_scheme'].selection)
+                if eas not in DEPRECATED_ELECTRONIC_ADDRESS_SCHEMES_CODELIST or eas == partner.routing_scheme
+            ]
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -236,7 +241,11 @@ class ResPartner(models.Model):
         partner = self.commercial_partner_id or self  # if it's a new record, the commercial can be empty
         if not force_recompute and partner.routing_scheme and partner.routing_endpoint and partner.routing_scheme in self._get_all_identifiers_metadata_by_scheme():
             return {'scheme': partner.routing_scheme, 'value': partner.routing_endpoint}
-        registrable_schemes = dict(self.env['res.partner']._fields['routing_scheme'].selection)
+        registrable_schemes = {
+            code: label
+            for code, label in partner._fields['routing_scheme'].selection
+            if code not in DEPRECATED_ELECTRONIC_ADDRESS_SCHEMES_CODELIST
+        }
         identifier_vals = self._pick_preferred_identifier(
             partner._get_all_identifiers(enrich=True),
             filter_func=lambda k, v, m: m.get('scheme') in registrable_schemes and v,
