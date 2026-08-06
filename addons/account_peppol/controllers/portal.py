@@ -17,8 +17,12 @@ class PortalAccount(CustomerPortal):
         if request.env.company.account_peppol_proxy_state in can_send:
             partner = request.env.user.partner_id
             portal_layout_values['invoice_sending_methods'].update({'peppol': _('by Peppol')})
+            peppol_eas_list = {
+                code: label for code, label in partner._fields['peppol_eas']._description_selection(request.env)
+                if code in (partner.available_peppol_eas or [])
+            }
             portal_layout_values.update({
-                'peppol_eas_list': dict(partner._fields['peppol_eas'].selection),
+                'peppol_eas_list': peppol_eas_list,
             })
         return portal_layout_values
 

@@ -48,6 +48,7 @@ UOM_TO_UNECE_CODE = {
 # -------------------------------------------------------------------------
 # ELECTRONIC ADDRESS SCHEME (EAS), see https://docs.peppol.eu/poacc/billing/3.0/codelist/eas/
 # -------------------------------------------------------------------------
+DEPRECATED_PEPPOL_EAS = {'0037', '0213', '9955', '0193'}
 EAS_MAPPING = {
     'AD': {'9922': 'vat'},
     'AE': {'0235': 'vat'},
