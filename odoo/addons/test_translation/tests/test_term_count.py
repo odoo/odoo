@@ -448,6 +448,7 @@ class TestTranslationFlow(common.TransactionCase):
             'My Chart',
             'My Data View',
             'My Chart 42',
+            'My Column',
         })
 
     def test_export_records(self):

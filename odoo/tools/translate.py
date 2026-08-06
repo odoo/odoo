@@ -1545,6 +1545,13 @@ def extract_spreadsheet_terms(fileobj, keywords, comment_tags, options):
                         terms.add(chartDefinition['title']['text'])
 
     terms.update(global_filter['label'] for global_filter in data.get('globalFilters', []))
+    for odoo_list in data.get('lists', {}).values():
+        if not odoo_list.get('translateHeaders', False):
+            continue
+        columns = odoo_list.get('columns', [])
+        for column in columns:
+            if isinstance(column, dict) and 'string' in column:
+                terms.add(column['string'])
     return (
         (0, None, term, [])
         for term in terms
