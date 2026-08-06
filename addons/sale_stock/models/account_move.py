@@ -117,6 +117,8 @@ class AccountMove(models.Model):
         # EXTENDS 'account'
         super()._compute_delivery_date()
         for move in self:
+            if move.state != 'draft':
+                continue
             sale_order_effective_date = list(filter(None, move.line_ids.sale_line_ids.order_id.mapped('effective_date')))
             effective_date_res = max(sale_order_effective_date) if sale_order_effective_date else False
             # if multiple sale order we take the bigger effective_date
