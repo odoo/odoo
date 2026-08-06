@@ -215,6 +215,21 @@ test("activity with a summary layout", async () => {
     await contains(".o-mail-Activity .o-mail-Activity-info span:text('test summary')");
 });
 
+test("call activity displays a phone link", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({});
+    pyEnv["mail.activity"].create({
+        phone: "+1 202 555 0182",
+        res_id: partnerId,
+        res_model: "res.partner",
+    });
+    await start();
+    await openFormView("res.partner", partnerId);
+
+    await contains(".o-mail-Activity-phoneNumber", { text: "+1 202 555 0182" });
+    expect(".o-mail-Activity-phoneNumber > a").toHaveAttribute("href", "tel:+12025550182");
+});
+
 test("activity without summary layout", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});

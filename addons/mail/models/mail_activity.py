@@ -8,7 +8,7 @@ from datetime import datetime, timedelta
 from dateutil.relativedelta import MO, relativedelta
 
 from odoo import api, fields, models, _
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, MissingError
 from odoo.fields import Domain
 from odoo.tools import OrderedSet, is_html_empty
 from odoo.tools.constants import IN_MAX
@@ -99,6 +99,7 @@ class MailActivity(models.Model):
     activity_plan_id = fields.Many2one('mail.activity.plan', string='Plan', ondelete='set null', copy=False)
     activity_template_id = fields.Many2one('mail.activity.plan.template', string='Generated From',
                                            index='btree_not_null')
+    phone = fields.Char('Phone', compute='_compute_phone', readonly=False, store=True)
     summary = fields.Char('Summary', compute='_compute_summary', precompute=True, store=True, readonly=False)
     note = fields.Html('Note', sanitize_style=True, compute='_compute_note', precompute=True, store=True, readonly=False)
     date_deadline = fields.Date('Due Date', index=True, required=True,
@@ -177,6 +178,44 @@ class MailActivity(models.Model):
             tz = record.user_tz
             date_deadline = record.date_deadline
             record.state = 'done' if not record.active else self._compute_state_from_date(date_deadline, tz)
+
+    @api.depends('res_model', 'res_id', 'activity_type_id')
+    def _compute_phone(self):
+        call_activities = self.filtered(
+            lambda activity: activity.id
+            and activity.res_model
+            and activity.res_id
+            and activity.activity_category == 'phonecall',
+        )
+        (self - call_activities).phone = False
+        phone_numbers_by_activity = call_activities._get_phone_numbers_by_activity()
+        for activity in call_activities:
+            activity.phone = phone_numbers_by_activity.get(activity, False)
+
+    def _get_phone_numbers_by_activity(self):
+        """Batch compute the phone numbers associated with the activities.
+
+        :return: phone number for each activity (obtained from the related
+            record itself or from its related partner)
+        """
+        phone_numbers_by_activity = {}
+        data_by_model = self.filtered("res_model")._classify_by_model()
+        for model, data in data_by_model.items():
+            records = self.env[model].browse(data["record_ids"])
+            for record, activity in zip(records, data["activities"]):
+                try:
+                    phone = record.phone if "phone" in record else False
+                    if not phone:
+                        recipient = next(
+                            iter(record._mail_get_partners(introspect_fields=True)[record.id]),
+                            self.env["res.partner"],
+                        )
+                        phone = recipient.phone
+                # cascade-deleted records might make this crash, be defensive
+                except MissingError:
+                    phone = False
+                phone_numbers_by_activity[activity] = phone
+        return phone_numbers_by_activity
 
     @api.model
     def _compute_state_from_date(self, date_deadline, tz=False):
@@ -777,7 +816,7 @@ class MailActivity(models.Model):
         res.extend(["can_write", "create_date"])
         res.one("create_uid", lambda res: res.one("partner_id", ["name"]))
         res.extend(["date_deadline", "date_done", "display_name", "icon", "note"])
-        res.extend(["res_id", "res_model", "state", "summary"])
+        res.extend(["phone", "res_id", "res_model", "state", "summary"])
         res.one("role_id", ["name"])
         res.one("user_id", lambda res: res.one("partner_id", "_store_partner_fields"))
         res.many("attachment_ids", ["name"])
