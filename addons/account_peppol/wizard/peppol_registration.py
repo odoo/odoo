@@ -9,6 +9,7 @@ from odoo import _, api, fields, models, modules
 from odoo.exceptions import UserError, ValidationError, RedirectWarning
 
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
+from odoo.addons.account_edi_ubl_cii.models.account_edi_common import DEPRECATED_PEPPOL_EAS
 from odoo.addons.account_peppol.tools.demo_utils import handle_demo
 
 
@@ -243,7 +244,11 @@ class PeppolRegistration(models.TransientModel):
     # BUSINESS ACTIONS
     # -------------------------------------------------------------------------
     def _get_peppol_eas_selection(self):
-        return self.env['res.company']._fields['peppol_eas']._description_selection(self.env)
+        return [
+            (eas, label)
+            for eas, label in self.env['res.company']._fields['peppol_eas']._description_selection(self.env)
+            if eas not in DEPRECATED_PEPPOL_EAS or eas == self.env.company.peppol_eas
+        ]
 
     def _ensure_mandatory_fields(self):
         if self.use_parent_connection:
