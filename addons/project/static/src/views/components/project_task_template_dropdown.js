@@ -1,12 +1,11 @@
-import { Component, onWillStart, usePlugin, props, proxy, t } from "@odoo/owl";
-import { OfflinePlugin } from "@web/core/offline/offline_plugin";
-import { useService, useOwnedDialogs } from "@web/core/utils/hooks";
+import { Component, onWillStart, proxy, t, usePlugin, useProps } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
-import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
+import { OfflinePlugin } from "@web/core/offline/offline_plugin";
 import { user } from "@web/core/user";
-
+import { useOwnedDialogs, useService } from "@web/core/utils/hooks";
+import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
 import { ProjectTemplateButtons } from "./project_template_buttons";
 
 export class ProjectTaskTemplateDropdown extends Component {
@@ -17,7 +16,7 @@ export class ProjectTaskTemplateDropdown extends Component {
         ProjectTemplateButtons,
     };
 
-    props = props({
+    props = useProps({
         archInfo: t.object().optional(),
         hotkey: t.string().optional("c"),
         newButtonClasses: t.string(),

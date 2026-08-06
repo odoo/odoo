@@ -1,5 +1,14 @@
 import { IframeInput } from "@html_editor/components/iframe_input/iframe_input";
-import { Component, onMounted, props, proxy, signal, t, useEffect, useListener } from "@odoo/owl";
+import {
+    Component,
+    onMounted,
+    useProps,
+    proxy,
+    signal,
+    t,
+    useEffect,
+    useListener,
+} from "@odoo/owl";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { _t } from "@web/core/l10n/translation";
 import {
@@ -21,7 +30,7 @@ const DEFAULT_COLOR = "#FF0000";
 export class CustomColorPicker extends Component {
     static template = "html_editor.CustomColorPicker";
     static components = { IframeInput };
-    props = props({
+    props = useProps({
         document: t.any().optional(window.document),
         defaultColor: t.string().optional(DEFAULT_COLOR),
         selectedColor: t.string().optional(),

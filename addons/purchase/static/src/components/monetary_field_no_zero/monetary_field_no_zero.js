@@ -1,4 +1,4 @@
-import { props } from "@odoo/owl";
+import { useProps } from "@odoo/owl";
 import {
     monetaryField,
     MonetaryField,
@@ -8,7 +8,7 @@ import { registry } from "@web/core/registry";
 import { floatIsZero } from "@web/core/utils/numbers";
 
 export class MonetaryFieldNoZero extends MonetaryField {
-    props = props({
+    props = useProps({
         ...monetaryFieldProps,
     });
 

@@ -1,4 +1,4 @@
-import { Component, props, signal, t } from "@odoo/owl";
+import { Component, useProps, signal, t } from "@odoo/owl";
 import {
     useActionInfo,
     useBuilderComponent,
@@ -13,7 +13,7 @@ import { pick } from "@web/core/utils/objects";
 
 export class BuilderRange extends Component {
     static template = "html_builder.BuilderRange";
-    props = props({
+    props = useProps({
         // basicContainerBuilderComponentProps (converted inline)
         id: t.string().optional(),
         applyTo: t.string().optional(),
@@ -89,7 +89,8 @@ export class BuilderRange extends Component {
             }
             if (!this.convertorObject.ratioStep) {
                 this.convertorObject.ratioStep = Math.round(
-                    (this.props.step / (this.props.max - this.props.min)) * (this.maxRatio - this.minRatio)
+                    (this.props.step / (this.props.max - this.props.min)) *
+                        (this.maxRatio - this.minRatio)
                 );
             }
         }

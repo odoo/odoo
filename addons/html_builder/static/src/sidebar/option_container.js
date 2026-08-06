@@ -1,5 +1,5 @@
 import { getSnippetName, useOptionsSubEnv } from "@html_builder/utils/utils";
-import { asyncComputed, onMounted, onWillStart, props, signal, t, useListener } from "@odoo/owl";
+import { asyncComputed, onMounted, onWillStart, useProps, signal, t, useListener } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { user } from "@web/core/user";
 import { uniqueId } from "@web/core/utils/functions";
@@ -13,7 +13,7 @@ const HIGHLIGHT_DURATION = 2000;
 export class OptionsContainer extends BaseOptionComponent {
     static template = "html_builder.OptionsContainer";
     static dependencies = ["builderOptions", "remove", "clone"];
-    props = props({
+    props = useProps({
         toggleOverlayPreview: t.function().optional(() => () => {}),
         options: t.array(),
         editingElement: t.any(), // HTMLElement from iframe

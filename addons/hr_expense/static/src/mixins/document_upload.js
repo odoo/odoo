@@ -1,11 +1,11 @@
-import { props, proxy, signal, t, useListener } from "@odoo/owl";
-import { useLayoutEffect } from "@web/owl2/utils";
-import { _t } from "@web/core/l10n/translation";
+import { proxy, signal, t, useListener, useProps } from "@odoo/owl";
 import { Domain } from "@web/core/domain";
+import { _t } from "@web/core/l10n/translation";
 import { useBus, useService } from '@web/core/utils/hooks';
+import { useLayoutEffect } from "@web/owl2/utils";
 
 export const ExpenseDocumentDropZone = (T, parentProps) => class ExpenseDocumentDropZone extends T {
-    props = props({
+    props = useProps({
         ...parentProps,
         uploadDocument: t.function(),
     });

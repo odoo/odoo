@@ -14,7 +14,7 @@ import {
 } from "@html_editor/others/embedded_components/embedding_sets";
 import { normalizeHTML } from "@html_editor/utils/html";
 import { Wysiwyg } from "@html_editor/wysiwyg";
-import { Component, markup, props, signal, status, proxy, t, useApp } from "@odoo/owl";
+import { Component, markup, useProps, signal, status, proxy, t, useApp } from "@odoo/owl";
 import { localization } from "@web/core/l10n/localization";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
@@ -70,7 +70,7 @@ export class HtmlField extends Component {
     };
 
     app = useApp();
-    props = props(htmlFieldProps);
+    props = useProps(htmlFieldProps);
     codeViewRef = signal.ref();
 
     get classList() {

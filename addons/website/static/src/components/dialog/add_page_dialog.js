@@ -4,7 +4,7 @@ import {
     Component,
     onMounted,
     onWillStart,
-    props,
+    useProps,
     proxy,
     signal,
     status,
@@ -510,7 +510,7 @@ class AddPageTemplates extends Component {
 
 export class AddPageDialog extends Component {
     static template = "website.AddPageDialog";
-    props = props({
+    props = useProps({
         close: t.function(),
         onAddPage: t.function().optional(() => NO_OP),
         websiteId: t.number(),

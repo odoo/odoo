@@ -26,7 +26,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 import { usePositionHook } from "@html_editor/position_hook";
 import { removeStyle } from "@html_editor/utils/dom";
 import { closestElement } from "@html_editor/utils/dom_traversal";
-import { Component, onMounted, props, signal, t, useListener } from "@odoo/owl";
+import { Component, onMounted, useProps, signal, t, useListener } from "@odoo/owl";
 import { useCrossDocumentListener } from "../../utils/hooks";
 
 const rad = Math.PI / 180;
@@ -34,7 +34,7 @@ const MIN_IMAGE_SIZE = 20;
 
 export class ImageTransformation extends Component {
     static template = "html_editor.ImageTransformation";
-    props = props({
+    props = useProps({
         document: t.customValidator(t.any(), (p) => p.nodeType === Node.DOCUMENT_NODE),
         editable: t.customValidator(t.any(), (p) => p.nodeType === Node.ELEMENT_NODE),
         image: t.customValidator(t.any(), (p) => p.tagName === "IMG"),

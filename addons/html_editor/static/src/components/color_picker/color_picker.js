@@ -1,5 +1,5 @@
 import { CustomColorPicker } from "@html_editor/components/color_picker/custom_color_picker/custom_color_picker";
-import { Component, props, proxy, signal, t, untrack, useListener } from "@odoo/owl";
+import { Component, proxy, signal, t, untrack, useListener, useProps } from "@odoo/owl";
 import { cookie } from "@web/core/browser/cookie";
 import { isMobileOS } from "@web/core/browser/feature_detection";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -40,7 +40,7 @@ export const DEFAULT_THEME_COLOR_VARS = [
 export class ColorPicker extends Component {
     static template = "html_editor.ColorPicker";
     static components = { CustomColorPicker, Dropdown, DropdownItem };
-    props = props({
+    props = useProps({
         state: t.object({
             selectedColor: t.string(),
             selectedColorCombination: t.string().optional(),

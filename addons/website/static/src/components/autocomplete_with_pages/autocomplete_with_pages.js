@@ -1,8 +1,8 @@
-import { props, t, useEffect, useListener } from "@odoo/owl";
+import { t, useEffect, useListener, useProps } from "@odoo/owl";
 import { AutoComplete, autoCompleteProps } from "@web/core/autocomplete/autocomplete";
 
 export class AutoCompleteWithPages extends AutoComplete {
-    props = props({
+    props = useProps({
         ...autoCompleteProps,
         targetDropdown: t.instanceOf(HTMLElement),
     });

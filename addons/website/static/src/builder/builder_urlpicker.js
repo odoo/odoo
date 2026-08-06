@@ -1,13 +1,13 @@
 import { BuilderUrlPicker } from "@html_builder/core/building_blocks/builder_urlpicker";
 import { useActionInfo } from "@html_builder/core/utils";
-import { props, signal, t } from "@odoo/owl";
+import { useProps, signal, t } from "@odoo/owl";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
 import wUtils from "@website/js/utils";
 
 export class AutoCompleteBuilderUrlPicker extends AutoComplete {
-    builderProps = props({
+    builderProps = useProps({
         inputClass: t.string().optional(),
     });
     static template = "website.AutoCompleteBuilderUrlPicker";

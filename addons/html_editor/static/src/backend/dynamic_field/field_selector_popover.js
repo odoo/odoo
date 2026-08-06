@@ -1,4 +1,4 @@
-import { Component, props, proxy, signal, t } from "@odoo/owl";
+import { Component, proxy, signal, t, useProps } from "@odoo/owl";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { ModelFieldSelectorPopover } from "@web/core/model_field_selector/model_field_selector_popover";
 import { usePopover } from "@web/core/popover/popover_hook";
@@ -6,7 +6,7 @@ import { useAutofocus } from "@web/core/utils/hooks";
 
 export class FieldSelectorPopover extends Component {
     static template = "html_editor.FieldSelectorPopover";
-    props = props({
+    props = useProps({
         resModel: t.string(),
         validate: t.function(),
         close: t.function(),

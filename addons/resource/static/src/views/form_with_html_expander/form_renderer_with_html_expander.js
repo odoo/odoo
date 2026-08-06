@@ -1,10 +1,10 @@
-import { useLayoutEffect } from "@web/owl2/utils";
+import { t, untrack, useProps } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
+import { useLayoutEffect } from "@web/owl2/utils";
 import { FormRenderer, formRendererProps } from "@web/views/form/form_renderer";
-import { props, t, untrack } from "@odoo/owl";
 
 export class FormRendererWithHtmlExpander extends FormRenderer {
-    props = props({
+    props = useProps({
         ...formRendererProps,
         reloadHtmlFieldHeight: t.boolean().optional(true),
         notifyHtmlExpander: t.function().optional(() => () => {}),

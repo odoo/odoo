@@ -5,12 +5,12 @@ import {
 } from "@html_editor/components/color_picker/color_picker";
 import { useDropdownAutoVisibility } from "@html_editor/toolbar_dropdown_hook";
 import { getCSSVariableValue, getHtmlStyle } from "@html_editor/utils/formatting";
-import { Component, props, proxy, signal, t, useEffect } from "@odoo/owl";
+import { Component, useProps, proxy, signal, t, useEffect } from "@odoo/owl";
 import { isColorGradient } from "@web/core/utils/colors";
 
 export class ColorSelector extends Component {
     static template = "html_editor.ColorSelector";
-    props = props({
+    props = useProps({
         // from toolbarButtonProps
         title: t.or([t.string(), t.function()]),
         getSelection: t.function(),

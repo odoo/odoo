@@ -1,11 +1,11 @@
-import { Component, props, signal, t } from "@odoo/owl";
+import { Component, useProps, signal, t } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { useAutofocus } from "@web/core/utils/hooks";
 
 export class MultiVersionUpdateConfirmationDialog extends Component {
     static template = "hr.FormView.MultiVersionUpdateConfirmation";
     static components = { Dialog };
-    props = props({
+    props = useProps({
         close: t.function().optional(),
         title: t.string().optional(),
         change_current: t.function().optional(),

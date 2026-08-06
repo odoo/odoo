@@ -4,7 +4,7 @@ import {
     markup,
     onMounted,
     onWillStart,
-    props,
+    useProps,
     proxy,
     signal,
     t,
@@ -28,7 +28,7 @@ export class ProfileDialog extends Component {
         FileUploader,
         Wysiwyg,
     };
-    props = props({
+    props = useProps({
         close: t.function(),
         confirm: t.function().optional(() => () => {}),
         focusWebsiteDescription: t.boolean().optional(false),

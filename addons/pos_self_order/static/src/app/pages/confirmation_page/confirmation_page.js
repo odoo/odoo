@@ -1,9 +1,9 @@
-import { Component, onMounted, onWillUnmount, proxy, useProps, t, useEffect } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, proxy, t, useEffect, useProps } from "@odoo/owl";
+import { PrintingFailurePopup } from "@pos_self_order/app/components/printing_failure_popup/printing_failure_popup";
 import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { cookie } from "@web/core/browser/cookie";
-import { useService } from "@web/core/utils/hooks";
 import { rpc } from "@web/core/network/rpc";
-import { PrintingFailurePopup } from "@pos_self_order/app/components/printing_failure_popup/printing_failure_popup";
+import { useService } from "@web/core/utils/hooks";
 
 export class ConfirmationPage extends Component {
     static template = "pos_self_order.ConfirmationPage";

@@ -1,5 +1,5 @@
 import { useDateTimePicker } from "@web/core/datetime/datetime_picker_hook";
-import { Component, useEffect, proxy, props, signal, t } from "@odoo/owl";
+import { Component, useEffect, proxy, useProps, signal, t } from "@odoo/owl";
 import { ConversionError, formatDate, formatDateTime, parseDateTime } from "@web/core/l10n/dates";
 import { localization } from "@web/core/l10n/localization";
 import { _t } from "@web/core/l10n/translation";
@@ -13,7 +13,7 @@ const { DateTime } = luxon;
 
 export class BuilderDateTimePicker extends Component {
     static template = "html_builder.BuilderDateTimePicker";
-    props = props({
+    props = useProps({
         // basicContainerBuilderComponentProps (converted inline)
         id: t.string().optional(),
         applyTo: t.string().optional(),

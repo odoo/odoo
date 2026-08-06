@@ -1,13 +1,13 @@
 import { Dialog, dialogProps } from "@web/core/dialog/dialog";
 import { _t } from "@web/core/l10n/translation";
-import { Component, props, proxy, signal, t } from "@odoo/owl";
+import { Component, useProps, proxy, signal, t } from "@odoo/owl";
 
 const NO_OP = () => {};
 
 export class WebsiteDialog extends Component {
     static template = "website.WebsiteDialog";
     static components = { Dialog };
-    props = props({
+    props = useProps({
         ...dialogProps,
         title: t.string().optional(_t("Confirmation")),
         size: t.selection(["sm", "md", "lg", "xl", "fs", "fullscreen"]).optional("md"),
@@ -25,7 +25,7 @@ export class WebsiteDialog extends Component {
 
     // Ref on the modal element, either owned by the parent (`modalRef` prop) or
     // local, and forwarded to the inner Dialog.
-    modalRef = props.static(
+    modalRef = useProps.static(
         "modalRef",
         t.signal(t.ref()).optional(() => signal.ref())
     );

@@ -4,7 +4,7 @@ import {
     onPatched,
     onWillStart,
     useEffect,
-    props,
+    useProps,
     signal,
     t,
     xml,
@@ -32,7 +32,7 @@ const svgCache = new Cache(async (src) => {
 }, JSON.stringify);
 
 export class Image extends Component {
-    props = props({
+    props = useProps({
         src: t.string(),
         class: t.string().optional(),
         style: t.string().optional(),

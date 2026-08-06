@@ -1,15 +1,15 @@
-import { useLayoutEffect } from "@web/owl2/utils";
-import { _t } from "@web/core/l10n/translation";
-import { useService } from "@web/core/utils/hooks";
-import { Dialog } from "@web/core/dialog/dialog";
-import { PartnerLine } from "@point_of_sale/app/screens/partner_list/partner_line/partner_line";
-import { usePos } from "@point_of_sale/app/hooks/pos_hook";
+import { Component, proxy, signal, t, untrack, useProps } from "@odoo/owl";
 import { Input } from "@point_of_sale/app/components/inputs/input/input";
-import { Component, useProps, proxy, signal, t, untrack } from "@odoo/owl";
-import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
-import { localeCompare, normalize } from "@web/core/l10n/utils";
-import { debounce } from "@web/core/utils/timing";
+import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { ResPartner } from "@point_of_sale/app/models/res_partner";
+import { PartnerLine } from "@point_of_sale/app/screens/partner_list/partner_line/partner_line";
+import { Dialog } from "@web/core/dialog/dialog";
+import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
+import { _t } from "@web/core/l10n/translation";
+import { localeCompare, normalize } from "@web/core/l10n/utils";
+import { useService } from "@web/core/utils/hooks";
+import { debounce } from "@web/core/utils/timing";
+import { useLayoutEffect } from "@web/owl2/utils";
 
 export class PartnerList extends Component {
     static components = { PartnerLine, Dialog, Input };
