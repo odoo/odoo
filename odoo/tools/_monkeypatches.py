@@ -18,7 +18,12 @@ _logger = logging.getLogger(__name__)
 
 try:
     import num2words
-    from .num2words_patch import Num2Word_AR_Fixed
+    from .num2words_patch import (
+        Num2Word_AR_Fixed,
+        Num2Word_ES_Fixed,
+        Num2Word_ES_CO_Fixed,
+        Num2Word_ES_VE_Fixed,
+    )
 except ImportError:
     _logger.warning("num2words is not available, Arabic number to words conversion will not work")
     num2words = None
@@ -108,6 +113,9 @@ if num2words:
     if 'cz' in num2words.CONVERTER_CLASSES and not 'cs' in num2words.CONVERTER_CLASSES:
         # There is a mistake in the Czech language code in versions < 0.5.14. Map it to the correct code here.
         num2words.CONVERTER_CLASSES['cs'] = num2words.CONVERTER_CLASSES['cz']
+    num2words.CONVERTER_CLASSES["es"] = Num2Word_ES_Fixed()
+    num2words.CONVERTER_CLASSES["es_CO"] = Num2Word_ES_CO_Fixed()
+    num2words.CONVERTER_CLASSES["es_VE"] = Num2Word_ES_VE_Fixed()
 
 _soap_clients = {}
 
