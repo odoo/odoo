@@ -17,6 +17,7 @@ export class MailActivity extends models.ServerModel {
     can_write = fields.Boolean({ store: true }); // simplification, no ACL in mock server
     user_id = fields.Many2one({ relation: "res.users", default: () => serverState.userId });
     activity_category = fields.Generic({ related: false }); // removes related from server to ease creating activities
+    phone = fields.Char();
     res_model = fields.Char({ string: "Related Document Model", related: false }); // removes related from server to ease creating activities
 
     /** @param {number[]} ids */
@@ -59,7 +60,7 @@ export class MailActivity extends models.ServerModel {
             return type ? type.icon : a.icon;
         });
         res.attr("note", (a) => ["markup", a.note]);
-        res.extend(["res_id", "res_model", "state", "summary"]);
+        res.extend(["phone", "res_id", "res_model", "state", "summary"]);
         res.one("user_id", (r) => r.one("partner_id", "_store_partner_fields"));
         res.many("attachment_ids", ["name"]);
         res.many("mail_template_ids", ["name"], {

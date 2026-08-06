@@ -36,6 +36,11 @@
                 <i class="oi oi-filled p-0 text-muted" data-icon="info" role="img" title="Info" aria-label="Info"
                     data-tooltip-template="mail.ActivityTooltip" t-att-data-tooltip-info="this.tooltipInfo"/>
             </div>
+            <div t-if="this.activity().phone" class="o-mail-Activity-phoneNumber">
+                <a t-att-href="this.phoneHref" t-on-click="this.onClickPhoneNumber">
+                    <i class="oi oi-filled" data-icon="phone"/> <t t-out="this.activity().phone"/>
+                </a>
+            </div>
             <div t-if="!this.activity().isNoteEmpty" class="o-mail-Activity-note text-break" t-out="this.activity().note"/>
             <div t-if="this.activity().mail_template_ids?.length > 0" class="o-mail-Activity-mailTemplates">
                 <ActivityMailTemplate activity="this.activity" onActivityChanged="this.onActivityChanged"/>

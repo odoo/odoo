@@ -47,6 +47,8 @@ export class Activity extends Record {
     icon = "checklist";
     mail_template_ids = fields.Many("mail.template");
     note = fields.Html("");
+    /** @type {string|false} */
+    phone;
     /** @type {string} */
     res_model;
     /** @type {[number, string]} */

@@ -66,6 +66,14 @@ export class Activity extends Component {
         return this.store.daysUntil(this.activity().date_deadline);
     }
 
+    get phoneHref() {
+        return `tel:${this.activity().phone.replace(/\s+/g, "")}`;
+    }
+
+    onClickPhoneNumber() {
+        // Extension point for modules overriding how phone calls are initiated.
+    }
+
     onClickAssign(ev) {
         if (this.assignPopover.isOpen) {
             this.assignPopover.close();

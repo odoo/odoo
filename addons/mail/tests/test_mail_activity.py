@@ -199,3 +199,19 @@ class TestMailActivityIntegrity(ActivityScheduleCase):
         ):
             self.assertEqual(activities.search(domain, limit=100), accessible)
             self.assertGreaterEqual(search_func.call_count, 4)
+
+
+@tagged("mail_activity")
+class TestMailActivityInternals(ActivityScheduleCase):
+
+    def test_call_activity_phone(self):
+        partner = self.env['res.partner'].create({
+            'name': 'Partner with phone',
+            'phone': '+1 202 555 0182',
+        })
+
+        call_activity = partner.activity_schedule('mail.mail_activity_data_call')
+        todo_activity = partner.activity_schedule('mail.mail_activity_data_todo')
+
+        self.assertEqual(call_activity.phone, partner.phone)
+        self.assertFalse(todo_activity.phone)
