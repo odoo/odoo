@@ -807,11 +807,18 @@ Attempting to double-book your time off won't magically make your vacation 2x be
                 ignored_leave_ids=leaves.ids
             ).get_allocation_data(employees, date_from)
             for employee in employees:
-                previous_emp_data = previous_leave_data[employee] and previous_leave_data[employee][0][1]['virtual_excess_data']
-                emp_data = leave_data[employee] and leave_data[employee][0][1]['virtual_excess_data']
-                if not leave_data[employee]:
+                employee_leave_data = leave_data[employee]
+                if not employee_leave_data:
                     raise ValidationError(_("You do not have any allocation for this time off type.\n"
                                             "Please request an allocation before submitting your time off request."))
+
+                previous_emp_info = previous_leave_data[employee] and previous_leave_data[employee][0][1]
+                emp_info = employee_leave_data[0][1]
+                if emp_info.get('exceeding_duration', 0) < previous_emp_info.get('exceeding_duration', 0):
+                    raise ValidationError(_("%(name)s does not have a valid allocation for the leave type %(leave_type)s to cover that request.", name=employee.name, leave_type=leave_type.name))
+
+                previous_emp_data = previous_emp_info.get('virtual_excess_data', {})
+                emp_data = emp_info.get('virtual_excess_data', {})
                 if not previous_emp_data and not emp_data:
                     continue
                 if previous_emp_data != emp_data and len(emp_data) >= len(previous_emp_data):
