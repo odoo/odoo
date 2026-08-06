@@ -1,5 +1,6 @@
 import { registry } from '@web/core/registry';
 import { Interaction } from '@web/public/interaction';
+import { useListener } from "@odoo/owl";
 
 export class PaymentButton extends Interaction {
     static selector = '[name="o_payment_submit_button"]';
@@ -8,10 +9,10 @@ export class PaymentButton extends Interaction {
         this.paymentButton = this.el;
         this.iconClass = this.paymentButton.dataset.iconClass;
         this._enable();
-        this.env.bus.addEventListener('enablePaymentButton', this._enable.bind(this));
-        this.env.bus.addEventListener('disablePaymentButton', this._disable.bind(this));
-        this.env.bus.addEventListener('hidePaymentButton', this._hide.bind(this));
-        this.env.bus.addEventListener('showPaymentButton', this._show.bind(this));
+        useListener(this.env.bus, 'enablePaymentButton', this._enable.bind(this));
+        useListener(this.env.bus, 'disablePaymentButton', this._disable.bind(this));
+        useListener(this.env.bus, 'hidePaymentButton', this._hide.bind(this));
+        useListener(this.env.bus, 'showPaymentButton', this._show.bind(this));
     }
 
     /**

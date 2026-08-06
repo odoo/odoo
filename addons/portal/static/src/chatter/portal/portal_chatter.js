@@ -4,7 +4,7 @@ import { PortalChatterPlugin } from "@portal/chatter/portal/portal_chatter_plugi
 import { Chatter } from "@mail/chatter/web_portal_project/chatter";
 
 import { OverlayContainer } from "@web/core/overlay/overlay_container";
-import { Component, providePlugins, usePlugin, xml } from "@odoo/owl";
+import { Component, providePlugins, useListener, usePlugin, xml } from "@odoo/owl";
 
 export class PortalChatter extends Component {
     static template = xml`
@@ -27,7 +27,7 @@ export class PortalChatter extends Component {
         portalChatterPlugin.displayRating.set(this.props.displayRating);
         useSubEnv({ inFrontendPortalChatter: true });
         this.overlayService = usePlugin(OverlayPlugin);
-        this.env.bus.addEventListener("reload_chatter_content", () =>
+        useListener(this.env.bus, "reload_chatter_content", () =>
             this.env.bus.trigger("MAIL:RELOAD-THREAD", {
                 id: this.props.resId,
                 model: this.props.resModel,

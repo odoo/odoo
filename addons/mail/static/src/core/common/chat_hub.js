@@ -62,7 +62,7 @@ export class ChatHub extends Component {
             onDragEnd: () => (this.position.isDragging = false),
             onDrop: this.onDrop.bind(this),
         });
-        this.env.bus.addEventListener("ChatWindow:will-open", () => {
+        useListener(this.env.bus, "ChatWindow:will-open", () => {
             this.resetPosition();
         });
     }

@@ -1,5 +1,5 @@
 import { render } from "@web/owl2/utils";
-import { Component, xml, onWillDestroy } from "@odoo/owl";
+import { Component, xml, useListener } from "@odoo/owl";
 
 // -----------------------------------------------------------------------------
 // ActionContainer (Component)
@@ -20,9 +20,6 @@ export class ActionContainer extends Component {
             this.info = info;
             render(this);
         };
-        this.env.bus.addEventListener("ACTION_MANAGER:UPDATE", this.onActionManagerUpdate);
-        onWillDestroy(() => {
-            this.env.bus.removeEventListener("ACTION_MANAGER:UPDATE", this.onActionManagerUpdate);
-        });
+        useListener(this.env.bus, "ACTION_MANAGER:UPDATE", this.onActionManagerUpdate);
     }
 }

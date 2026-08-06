@@ -3,6 +3,7 @@ import { registry } from "@web/core/registry";
 import { PortalComposer } from "@portal/interactions/portal_composer";
 import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
+import { useListener } from "@odoo/owl";
 
 /**
  * RatingPopupComposer
@@ -28,7 +29,7 @@ export class RatingPopupComposer extends Interaction {
             "user_id": user.userId,
             "reloadRatingPopupComposer": this.onReloadRatingPopupComposer.bind(this),
         }, options, {});
-        this.env.bus.addEventListener("reload_rating_popup_composer", (ev) =>
+        useListener(this.env.bus, "reload_rating_popup_composer", (ev) =>
             this.onReloadRatingPopupComposer(ev.detail)
         );
     }

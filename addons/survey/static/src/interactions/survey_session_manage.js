@@ -6,6 +6,7 @@ import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
 import { fadeIn, fadeOut } from "@survey/utils";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
+import { useListener, onWillStart } from "@odoo/owl";
 
 const nextPageTooltips = {
     closingWords: _t("End of Survey"),
@@ -129,20 +130,19 @@ export class SurveySessionManage extends Interaction {
         // Show the page and start the timer
         this.el.classList.remove("invisible");
         this.setupIntervals();
-    }
-
-    async willStart() {
-        // If a chart is present, we wait for the chart interaction to be ready.
-        // The presence of the class `chart_is_ready` means that the chart was
-        // ready before us, so we don't need to wait (see survey_session_chart)
-        if (this.chartEl && !this.chartEl.classList.contains("chart_is_ready")) {
-            let resolveChartPromise;
-            const chartPromise = new Promise(function (resolve) {
-                resolveChartPromise = resolve;
-            });
-            this.env.bus.addEventListener("SURVEY:CHART_INTERACTION_STARTED", resolveChartPromise);
-            await chartPromise;
-        }
+        // Register listener for chart interaction
+        const { promise, resolve } = Promise.withResolvers();
+        useListener(this.env.bus, "SURVEY:CHART_INTERACTION_STARTED", () => {
+            resolve();
+        });
+        onWillStart(async () => {
+            // If a chart is present, we wait for the chart interaction to be ready.
+            // The presence of the class `chart_is_ready` means that the chart was
+            // ready before us, so we don't need to wait (see survey_session_chart)
+            if (this.chartEl && !this.chartEl.classList.contains("chart_is_ready")) {
+                await promise;
+            }
+        });
     }
 
     start() {
