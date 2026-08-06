@@ -338,6 +338,7 @@ class AccountMove(models.Model):
         # Or all invoices in self have a document, but it's the same one. Special use case but we allow downloading it.
         if not self.l10n_id_coretax_document:
             self.l10n_id_coretax_document = self.env['l10n_id_efaktur_coretax.document'].create({
+                'document_type': 'efaktur',
                 'invoice_ids': self.ids,
                 'company_id': self.company_id.id,
             })

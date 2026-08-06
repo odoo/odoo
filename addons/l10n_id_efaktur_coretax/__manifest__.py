@@ -29,7 +29,7 @@
         "views/uom_code.xml",
         "views/res_partner.xml",
         "views/account_move.xml",
-        "views/efaktur_document.xml",
+        "views/coretax_document.xml",
         "views/uom_uom.xml",
         'security/ir.access.csv',
     ],
