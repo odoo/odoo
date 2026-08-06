@@ -46,12 +46,12 @@ const hookParams = {
 
         const { ref, current, elementSelector, rowSelector } = ctx;
 
-        for (const rowEl of ref.el.querySelectorAll(rowSelector)) {
+        for (const rowEl of ref().querySelectorAll(rowSelector)) {
             addListener(rowEl, "pointerenter", onRowPointerEnter);
             addListener(rowEl, "pointerleave", onRowPointerLeave);
         }
 
-        for (const siblingEl of ref.el.querySelectorAll(elementSelector)) {
+        for (const siblingEl of ref().querySelectorAll(elementSelector)) {
             if (siblingEl !== current.element) {
                 addListener(siblingEl, "pointerenter", onElementPointerEnter);
                 addListener(siblingEl, "pointerleave", onElementPointerLeave);

@@ -333,7 +333,7 @@ export class MoveNodePlugin extends Plugin {
             // editable with each element handled.
             let movableElements = [movableElement];
             this.smoothScrollOnDrag = useNativeDraggable(simpleDraggableHook, {
-                ref: { el: this.widgetContainer },
+                ref: () => this.widgetContainer,
                 elements: ".oe-sidewidget-move",
                 onDragStart: () => this.startDropzones(movableElements, containerRect),
                 onDragEnd: () => this._stopDropzones(movableElements),

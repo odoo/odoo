@@ -1,6 +1,5 @@
-import { onMounted, onWillUnmount, onPatched, useListener } from "@odoo/owl";
+import { onMounted, onPatched, onWillUnmount, useListener } from "@odoo/owl";
 import { useDebounced } from "@web/core/utils/timing";
-import { resolveRefEl } from "@web/core/utils/ref_utils";
 import { normDeg } from "@pos_restaurant/app/services/floor_plan/utils/utils";
 
 const MARGIN = 26;
@@ -17,7 +16,7 @@ export function useActionMenu(actionMenuRef, containerRef, getTarget, onPosition
             return;
         }
         hidden = true;
-        const menuEl = resolveRefEl(actionMenuRef);
+        const menuEl = actionMenuRef();
         if (menuEl) {
             menuEl.style.display = "none";
         }
@@ -116,13 +115,13 @@ export function useActionMenu(actionMenuRef, containerRef, getTarget, onPosition
     }
 
     function positionMenu() {
-        const menuEl = resolveRefEl(actionMenuRef);
+        const menuEl = actionMenuRef();
         const { domElement: targetEl, floorElement } = getTarget();
         if (!menuEl || !targetEl || hidden || !floorElement) {
             return;
         }
 
-        const containerEl = resolveRefEl(containerRef);
+        const containerEl = containerRef();
         const containerRect = containerEl.getBoundingClientRect();
         const targetRect = targetEl.getBoundingClientRect();
         const menuRect = menuEl.getBoundingClientRect();
@@ -189,7 +188,7 @@ export function useActionMenu(actionMenuRef, containerRef, getTarget, onPosition
 
     const scrollDebounced = useDebounced(() => {
         positionMenu();
-        const menuEl = resolveRefEl(actionMenuRef);
+        const menuEl = actionMenuRef();
         if (menuEl) {
             menuEl.style.opacity = "1";
             menuEl.style.pointerEvents = "auto";
@@ -201,7 +200,7 @@ export function useActionMenu(actionMenuRef, containerRef, getTarget, onPosition
             return;
         }
 
-        const menuEl = resolveRefEl(actionMenuRef);
+        const menuEl = actionMenuRef();
         if (menuEl) {
             menuEl.style.opacity = "0";
             menuEl.style.pointerEvents = "none";
@@ -219,11 +218,11 @@ export function useActionMenu(actionMenuRef, containerRef, getTarget, onPosition
     useListener(window, "resize", useDebounced(handleResize, 150));
 
     onMounted(() => {
-        resolveRefEl(containerRef)?.addEventListener("scroll", handleScroll);
+        containerRef()?.addEventListener("scroll", handleScroll);
     });
 
     onWillUnmount(() => {
-        resolveRefEl(containerRef)?.removeEventListener("scroll", handleScroll);
+        containerRef()?.removeEventListener("scroll", handleScroll);
     });
 
     onPatched(() => {
@@ -237,7 +236,7 @@ export function useActionMenu(actionMenuRef, containerRef, getTarget, onPosition
                 return;
             }
             hidden = false;
-            const menuEl = resolveRefEl(actionMenuRef);
+            const menuEl = actionMenuRef();
             if (menuEl) {
                 menuEl.style.display = "";
             }

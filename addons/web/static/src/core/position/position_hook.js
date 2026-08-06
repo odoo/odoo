@@ -30,14 +30,9 @@ export const POSITION_BUS = Symbol("position-bus");
  * If all of fallback positions are also clipped off `container`,
  * the original position is used.
  *
- * Note: The popper element should be indicated in your template
- *       with a t-ref reference matching the refName argument, or bound
- *       to the provided signal via t-ref.
+ * Note: The popper element should be bound to the given ref with t-ref.
  *
- * @param {string | (() => HTMLElement)} popperRef
- *  Either the name of the reference to the popper element in the template
- *  (legacy Owl 2 ref-name string), or an Owl 3 signal returning the popper
- *  element. Both are supported during the Owl 2 -> 3 migration.
+ * @param {import("@web/core/utils/hooks").Ref} popperRef ref on the popper element
  * @param {() => HTMLElement} getTarget
  * @param {UsePositionOptions} [options={}] the options to be used for positioning
  * @returns {PositioningControl}
@@ -45,7 +40,6 @@ export const POSITION_BUS = Symbol("position-bus");
  */
 export function usePosition(popperRef, getTarget, options = {}) {
     const rememberPosition = options.rememberPosition ?? true;
-    // `popperRef` is an Owl 3 signal: calling it returns the current element.
     const getPopperEl = popperRef;
     let lock = false;
     const update = () => {

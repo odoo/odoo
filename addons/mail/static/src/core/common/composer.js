@@ -19,23 +19,23 @@ import { useDebounced } from "@web/core/utils/timing";
 import {
     Component,
     computed,
-    markup,
-    onMounted,
-    onWillUnmount,
     EventBus,
     immediateEffect,
+    markup,
+    onMounted,
     onWillDestroy,
+    onWillUnmount,
     proxy,
     signal,
     t,
-    useListener,
+    untrack,
     useApp,
+    useListener,
     useProps,
 } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
-import { resolveRefEl } from "@web/core/utils/ref_utils";
 import {
     createDocumentFragmentFromContent,
     htmlFormatList,
@@ -241,10 +241,9 @@ export class Composer extends Component {
         useLayoutEffect(
             () => {
                 const focus = this.props.autofocus + this.props.composer.autofocus;
-                const el = resolveRefEl(this.ref);
-                if (focus && el) {
+                if (focus && this.ref()) {
                     this.selection.restore();
-                    el.focus();
+                    this.ref().focus();
                 }
                 if (focus && this.editor?.editable) {
                     this.editor.shared.selection.focusEditable();
@@ -254,7 +253,7 @@ export class Composer extends Component {
             () => [
                 this.props.autofocus + this.props.composer.autofocus,
                 this.props.placeholder,
-                resolveRefEl(this.ref),
+                untrack(this.ref),
             ]
         );
         useLayoutEffect(
@@ -267,22 +266,21 @@ export class Composer extends Component {
         );
         useLayoutEffect(
             () => {
-                const fakeTextareaEl = resolveRefEl(this.fakeTextarea);
-                const textareaEl = resolveRefEl(this.ref);
-                if (fakeTextareaEl?.scrollHeight && textareaEl) {
+                const fakeTextareaEl = this.fakeTextarea();
+                if (fakeTextareaEl?.scrollHeight && this.ref()) {
                     let wasEmpty = false;
                     if (!fakeTextareaEl.value) {
                         wasEmpty = true;
                         fakeTextareaEl.value = "0";
                     }
-                    textareaEl.style.height = fakeTextareaEl.scrollHeight + "px";
+                    this.ref().style.height = fakeTextareaEl.scrollHeight + "px";
                     if (wasEmpty) {
                         fakeTextareaEl.value = "";
                     }
                 }
                 this.saveContentDebounced();
             },
-            () => [this.props.composer.composerText, resolveRefEl(this.ref)]
+            () => [this.props.composer.composerText, untrack(this.ref)]
         );
         useLayoutEffect(
             () => {
@@ -354,7 +352,7 @@ export class Composer extends Component {
             () => [
                 this.state.isFullComposerOpen,
                 this.props.composer.restoredFromFullComposer,
-                resolveRefEl(this.rootRef)?.querySelector("button[name='open-full-composer']"),
+                untrack(this.rootRef)?.querySelector("button[name='open-full-composer']"),
             ]
         );
         onMounted(() => {

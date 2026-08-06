@@ -1,6 +1,5 @@
 import { useLayoutEffect } from "@web/owl2/utils";
-import { resolveRefEl } from "@web/core/utils/ref_utils";
-import { Component, signal } from "@odoo/owl";
+import { Component, signal, untrack } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 
 export class FlagMarkAsOffensiveDialog extends Component {
@@ -29,7 +28,7 @@ export class FlagMarkAsOffensiveDialog extends Component {
                     };
                 }
             },
-            () => [resolveRefEl(this.modalRef)?.querySelector(".btn-link")]
+            () => [untrack(this.modalRef)?.querySelector(".btn-link")]
         );
     }
 }

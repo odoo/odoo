@@ -67,7 +67,7 @@ test("Parameters error handling", async () => {
     });
     await mountNestedSortableAndAssert(() => {
         useNestedSortable({
-            ref: {},
+            ref: () => null,
             elements: ".item",
             groups: ".list",
             enable: false,

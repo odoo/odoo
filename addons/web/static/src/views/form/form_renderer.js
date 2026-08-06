@@ -1,5 +1,4 @@
 import { render, useSubEnv } from "@web/owl2/utils";
-import { resolveRefEl } from "@web/core/utils/ref_utils";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { Notebook } from "@web/core/notebook/notebook";
 import { Setting } from "./setting/setting";
@@ -21,12 +20,12 @@ import {
     Component,
     onMounted,
     onWillUnmount,
-    useProps,
+    proxy,
     signal,
     t,
     useEffect,
+    useProps,
     xml,
-    proxy,
 } from "@odoo/owl";
 
 export const formRendererProps = {
@@ -84,7 +83,7 @@ export class FormRenderer extends Component {
                     return;
                 }
                 const record = this.props.record;
-                const rootEl = resolveRefEl(this.rootRef);
+                const rootEl = this.rootRef();
                 if (!rootEl) {
                     return;
                 }
@@ -122,7 +121,7 @@ export class FormRenderer extends Component {
             const fieldNodeIds = Object.keys(this.props.archInfo.fieldNodes);
             const elementsByNodeIds = {};
             onMounted(() => {
-                const rootEl = resolveRefEl(this.rootRef);
+                const rootEl = this.rootRef();
                 if (!rootEl) {
                     // t-ref is sometimes set on a <t> node, resulting in a null ref (e.g. footer case)
                     return;

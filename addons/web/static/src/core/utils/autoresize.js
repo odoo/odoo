@@ -1,6 +1,6 @@
+import { untrack } from "@odoo/owl";
 import { useLayoutEffect } from "@web/owl2/utils";
 import { memoize } from "@web/core/utils/functions";
-import { resolveRefEl } from "@web/core/utils/ref_utils";
 
 /**
  * This is used on text inputs or textareas to automatically resize it based on its
@@ -48,7 +48,7 @@ export function useAutoresize(ref, options = {}) {
                 };
             }
         },
-        () => [resolveRefEl(ref)]
+        () => [untrack(ref)]
     );
     useLayoutEffect(() => {
         if (resize) {

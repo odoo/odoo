@@ -1,6 +1,5 @@
 import { useLayoutEffect } from "@web/owl2/utils";
-import { resolveRefEl } from "@web/core/utils/ref_utils";
-import { props, t } from "@odoo/owl";
+import { props, t, untrack } from "@odoo/owl";
 import { AutoComplete, autoCompleteProps } from "@web/core/autocomplete/autocomplete";
 
 export class AutoCompleteWithPages extends AutoComplete {
@@ -39,7 +38,7 @@ export class AutoCompleteWithPages extends AutoComplete {
                     input.removeEventListener("focus", targetFocus);
                 };
             },
-            () => [this.targetDropdown, resolveRefEl(this.inputRef)]
+            () => [this.targetDropdown, untrack(this.inputRef)]
         );
     }
 

@@ -67,7 +67,7 @@ export function useNativeDraggable(hookParams, initialParams) {
         },
     };
     // Compatibility for tests
-    const el = initialParams.ref.el;
+    const el = initialParams.ref();
     // TODO this is probably to be removed in master: the received params
     // contain the selector that should be checked and it will be transferred
     // to the makeDraggableHook function. There should not be any need to add

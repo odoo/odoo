@@ -70,11 +70,15 @@ export class ImageTransformation extends Component {
                 this.destroy();
             }
         });
-        usePositionHook({ el: this.props.editable }, this.document, () => {
-            if (!this.isCurrentlyTransforming) {
-                this.resetHandlers();
+        usePositionHook(
+            () => this.props.editable,
+            this.document,
+            () => {
+                if (!this.isCurrentlyTransforming) {
+                    this.resetHandlers();
+                }
             }
-        });
+        );
     }
 
     destroy() {

@@ -122,9 +122,8 @@ export class LinkPopover extends Component {
         });
 
         this.updateDocumentState();
-        // The focused input is chosen once, mirroring the original dynamic
-        // `useRef("url" | "label")`: the URL field for images or when only a
-        // label is set, otherwise the label field.
+        // The focused input is chosen once: the URL field for images or when
+        // only a label is set, otherwise the label field.
         this.inputRef =
             this.state.isImage || (this.state.label && !this.state.url)
                 ? this.urlRef

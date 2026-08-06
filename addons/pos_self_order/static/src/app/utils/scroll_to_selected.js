@@ -1,8 +1,6 @@
-import { resolveRefEl } from "@web/core/utils/ref_utils";
-
 export const scrollToSelected = (containerRef, callback, padding = 8) => {
     const scrollToSelected = (itemEl) => {
-        const containerEl = resolveRefEl(containerRef);
+        const containerEl = containerRef();
         const itemRect = itemEl.getBoundingClientRect();
         const containerRect = containerEl.getBoundingClientRect();
         const leftOverflow = itemRect.left - containerRect.left;

@@ -2,7 +2,6 @@ import { useScope } from "@odoo/owl";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { evaluateExpr } from "@web/core/py_js/py";
 import { useService } from "@web/core/utils/hooks";
-import { resolveRefEl } from "@web/core/utils/ref_utils";
 import { useEnv, useSubEnv } from "@web/owl2/utils";
 
 export async function executeButtonCallback(el, fct) {
@@ -56,7 +55,7 @@ export function useViewButtons(ref, options = {}) {
     const env = useEnv();
 
     // Resolved lazily: the element only exists once the component is mounted.
-    const getRefEl = () => resolveRefEl(ref) ?? null;
+    const getRefEl = () => ref?.() ?? null;
     useSubEnv({
         async onClickViewButton({ clickParams, getResParams, beforeExecute, newWindow }) {
             async function execute() {

@@ -1,5 +1,5 @@
 import { CustomColorPicker } from "@html_editor/components/color_picker/custom_color_picker/custom_color_picker";
-import { Component, props, proxy, signal, t, useListener } from "@odoo/owl";
+import { Component, props, proxy, signal, t, untrack, useListener } from "@odoo/owl";
 import { cookie } from "@web/core/browser/cookie";
 import { isMobileOS } from "@web/core/browser/feature_detection";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -9,7 +9,6 @@ import { usePopover } from "@web/core/popover/popover_hook";
 import { POSITION_BUS } from "@web/core/position/position_hook";
 import { registry } from "@web/core/registry";
 import { isCSSColor, isColorGradient, normalizeCSSColor } from "@web/core/utils/colors";
-import { resolveRefEl } from "@web/core/utils/ref_utils";
 import { onWillRender, useLayoutEffect } from "@web/owl2/utils";
 
 // These colors are already normalized as per normalizeCSSColor in @web/legacy/js/widgets/colorpicker
@@ -384,7 +383,7 @@ export function useColorPicker(ref, props, options = {}) {
         if (colorPicker.isOpen) {
             colorPicker.close();
         } else {
-            colorPicker.open(resolveRefEl(ref), props);
+            colorPicker.open(ref(), props);
             options.onOpen?.();
         }
     }
@@ -399,7 +398,7 @@ export function useColorPicker(ref, props, options = {}) {
                 el.removeEventListener("click", onClick);
             };
         },
-        () => [resolveRefEl(ref)]
+        () => [untrack(ref)]
     );
 
     return colorPicker;

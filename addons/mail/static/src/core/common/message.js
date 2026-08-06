@@ -14,7 +14,7 @@ import { PollResult } from "@mail/core/common/poll_result";
 import { RelativeTime } from "@mail/core/common/relative_time";
 import { htmlToTextContentInline } from "@mail/utils/common/format";
 
-import { Component, computed, proxy, signal, t, useApp, useProps } from "@odoo/owl";
+import { Component, computed, proxy, signal, t, untrack, useApp, useProps } from "@odoo/owl";
 import { MessageSearchState } from "@mail/core/common/message_search_hook";
 
 import { isMobileOS } from "@web/core/browser/feature_detection";
@@ -23,7 +23,6 @@ import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
-import { resolveRefEl } from "@web/core/utils/ref_utils";
 import { createElementWithContent } from "@web/core/utils/html";
 import { nbsp } from "@web/core/utils/strings";
 import { getOrigin } from "@web/core/utils/urls";
@@ -143,7 +142,7 @@ export class Message extends Component {
         });
         useLayoutEffect(
             () => {
-                if (resolveRefEl(this.shadowBody)) {
+                if (this.shadowBody()) {
                     this.shadowRoot.set(this.shadowBody().attachShadow({ mode: "open" }));
                     const color = this.store.isOdooWhiteTheme ? "dark" : "white";
                     loadCssFromBundle(this.shadowRoot(), "mail.assets_message_email");
@@ -192,7 +191,7 @@ export class Message extends Component {
                     this.shadowRoot().appendChild(ellipsisStyle);
                 }
             },
-            () => [resolveRefEl(this.shadowBody)]
+            () => [untrack(this.shadowBody)]
         );
         useLayoutEffect(
             () => {
@@ -228,7 +227,7 @@ export class Message extends Component {
             () => {
                 const roots = this.isEditing
                     ? []
-                    : this.prepareMessageBody(resolveRefEl(this.messageBody)) ?? [];
+                    : this.prepareMessageBody(this.messageBody()) ?? [];
                 return () => {
                     for (const root of roots) {
                         root.destroy();
@@ -239,7 +238,7 @@ export class Message extends Component {
                 this.isEditing,
                 this.message.richBody,
                 this.props.messageSearch?.searchTerm,
-                resolveRefEl(this.messageBody),
+                untrack(this.messageBody),
             ]
         );
     }

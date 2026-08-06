@@ -192,7 +192,7 @@ export class DragAndDropPlugin extends Plugin {
         };
 
         const dragAndDropOptions = {
-            ref: { el: element },
+            ref: () => element,
             iframeWindow,
             cursor: "move",
             elements: elementsSelector,

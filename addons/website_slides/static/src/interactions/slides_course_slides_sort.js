@@ -10,7 +10,8 @@ export class WebsiteSlidesSort extends Interaction {
             "t-att-class": (el) => ({ "d-none": !this.isCategoryEmpty(el) }),
         },
         ".o_wslides_js_slides_list_slide_link": {
-            "t-att-href": (el) => `${el.href}${el.href.indexOf("?") !== -1 ? "&" : "?"}fullscreen=1`,
+            "t-att-href": (el) =>
+                `${el.href}${el.href.indexOf("?") !== -1 ? "&" : "?"}fullscreen=1`,
         },
     };
 
@@ -42,7 +43,7 @@ export class WebsiteSlidesSort extends Interaction {
             this.sortable
                 .create({
                     ...sortableBaseParam,
-                    ref: { el: containerEl },
+                    ref: () => containerEl,
                     elements: ".o_wslides_slide_list_category",
                     handle: ".o_wslides_slide_list_category_header .o_wslides_slides_list_drag",
                     sortableId: "category",
@@ -54,7 +55,7 @@ export class WebsiteSlidesSort extends Interaction {
             this.sortable
                 .create({
                     ...sortableBaseParam,
-                    ref: { el: containerEl },
+                    ref: () => containerEl,
                     elements:
                         ".o_wslides_slides_list_slide:not(.o_wslides_js_slides_list_empty):not(.o_not_editable)",
                     handle: ".o_wslides_slides_list_drag",
@@ -94,7 +95,6 @@ export class WebsiteSlidesSort extends Interaction {
     async reorderSlides() {
         await this.waitFor(this.orm.webResequence("slide.slide", this.getSlides()));
     }
-
 }
 
 registry.category("public.interactions").add("website_slides.WebsiteSlidesSort", WebsiteSlidesSort);

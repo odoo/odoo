@@ -4,7 +4,7 @@ import { Component, proxy, signal, t, useProps } from "@odoo/owl";
 export const dropzoneProps = {
     extraClass: t.string().optional(),
     onDrop: t.function().optional(),
-    ref: t.or([t.object(), t.function()]),
+    ref: t.signal(t.ref()),
     slots: t.object().optional(),
 };
 
@@ -20,9 +20,7 @@ export class Dropzone extends Component {
             isDraggingInside: false,
         });
         useLayoutEffect(() => {
-            const getEl =
-                typeof this.props.ref === "function" ? this.props.ref : () => this.props.ref.el;
-            const { top, left, width, height } = getEl().getBoundingClientRect();
+            const { top, left, width, height } = this.props.ref().getBoundingClientRect();
             this.root().style = `top:${top}px;left:${left}px;width:${width}px;height:${height}px;`;
         });
     }

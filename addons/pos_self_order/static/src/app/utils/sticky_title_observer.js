@@ -1,14 +1,10 @@
 import { onMounted, onWillUnmount } from "@odoo/owl";
 
-import { resolveRefEl } from "@web/core/utils/ref_utils";
-
 export const useStickyTitleObserver = (ref, callback) => {
     let observer;
 
-    const getEl = () => resolveRefEl(ref);
-
     onMounted(() => {
-        const el = getEl();
+        const el = ref();
         if (!el) {
             return;
         }
@@ -21,7 +17,7 @@ export const useStickyTitleObserver = (ref, callback) => {
     });
 
     onWillUnmount(() => {
-        const el = getEl();
+        const el = ref();
         if (observer && el) {
             observer.unobserve(el);
         }

@@ -55,7 +55,7 @@ test("Parameters error handling", async () => {
     });
     await mountList(() => {
         useDraggable({
-            ref: {},
+            ref: () => null,
             elements: ".item",
             enable: false,
         });

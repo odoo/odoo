@@ -15,7 +15,7 @@ export const getEmbeddingMap = memoize(
     (embeddings) => new Map(embeddings.map((embedding) => [embedding.name, embedding]))
 );
 
-const getTocManager = memoize((element) => new TableOfContentManager({ el: element }));
+const getTocManager = memoize((element) => new TableOfContentManager(() => element));
 
 /**
  * Mount EmbeddedComponent in the Knowledge public view.

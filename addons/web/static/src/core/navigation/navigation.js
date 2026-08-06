@@ -427,25 +427,15 @@ export class Navigator {
  * - Optional virtual focus
  * - Focus on mouse enter
  *
- * The container reference can be:
- * - an Owl 2 ref-like object exposing `.el`;
- * - an Owl 3 native ref, which is a signal: a function returning the element
- *   (or `null` when unmounted).
- *
- * @param {Object|Function} containerRef
+ * @param {import("@odoo/owl").Signal<HTMLElement>} containerRef ref on the
+ *  container element (`null` while unmounted)
  * @param {NavigationOptions} options
  * @returns {Navigator}
  */
 export function useNavigation(containerRef, options = {}) {
-    // TRANSITIONAL SHIM (Owl 3 migration): resolve "the current container
-    // element" in a single place so all accepted input forms work:
-    //   - object ref (Owl 2 refs, `useRef`) → read `.el`;
-    //   - function → an Owl 3 native ref (signal), called to get the element.
     // The optional chaining keeps this null-safe (a ref can be undefined before
     // mount), so it can never throw "Cannot read properties of undefined".
-    // Remove the `.el` branch once every caller passes a native signal ref.
-    const isSignal = typeof containerRef === "function";
-    const getContainerEl = () => (isSignal ? containerRef() : containerRef?.el);
+    const getContainerEl = () => containerRef?.();
 
     const newOptions = { ...options };
     if (!newOptions.getItems) {

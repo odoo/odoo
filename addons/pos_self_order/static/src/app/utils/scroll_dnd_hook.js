@@ -1,6 +1,5 @@
 import { onMounted, onWillUnmount } from "@odoo/owl";
 import { hasTouch } from "@web/core/browser/feature_detection";
-import { resolveRefEl } from "@web/core/utils/ref_utils";
 
 export function useDraggableScroll(scrollContainerRef, options = {}) {
     if (hasTouch() || !scrollContainerRef) {
@@ -8,15 +7,13 @@ export function useDraggableScroll(scrollContainerRef, options = {}) {
     }
     const threshold = options.threshold ?? 5;
 
-    const getScrollEl = () => resolveRefEl(scrollContainerRef);
-
     let isDragging = false;
     let dragMoved = false;
     let startX;
     let scrollLeft;
     let shouldSuppressClick = false;
     const onMouseDown = (e) => {
-        const scrollEl = getScrollEl();
+        const scrollEl = scrollContainerRef();
         if (!scrollEl) {
             return;
         }
@@ -27,7 +24,7 @@ export function useDraggableScroll(scrollContainerRef, options = {}) {
     };
 
     const onMouseMove = (e) => {
-        const scrollEl = getScrollEl();
+        const scrollEl = scrollContainerRef();
 
         if (!isDragging || !scrollEl) {
             return;
@@ -63,7 +60,7 @@ export function useDraggableScroll(scrollContainerRef, options = {}) {
     };
 
     onMounted(() => {
-        const scrollEl = getScrollEl();
+        const scrollEl = scrollContainerRef();
         scrollEl?.addEventListener("mousedown", onMouseDown);
         scrollEl?.addEventListener("click", onClick, true);
         window.addEventListener("mousemove", onMouseMove);
@@ -71,7 +68,7 @@ export function useDraggableScroll(scrollContainerRef, options = {}) {
     });
 
     onWillUnmount(() => {
-        const scrollEl = getScrollEl();
+        const scrollEl = scrollContainerRef();
         window.removeEventListener("mousemove", onMouseMove);
         window.removeEventListener("mouseup", onMouseUp);
         scrollEl?.removeEventListener("mousedown", onMouseDown);

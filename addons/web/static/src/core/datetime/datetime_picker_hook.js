@@ -1,16 +1,16 @@
+import { untrack } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
-import { resolveRefEl } from "@web/core/utils/ref_utils";
 
 /**
  * @param {import("./datetimepicker_service").DateTimePickerServiceParams} params
  */
 export function useDateTimePicker(params) {
     function getInputs() {
-        return inputRefs.map((ref) => resolveRefEl(ref));
+        return inputRefs.map((ref) => untrack(ref));
     }
 
-    // Callers provide Owl 3 signal refs (or legacy refs) through `inputRefs`.
-    // Callers driving the picker from a `target` only (no date inputs) omit it.
+    // Callers driving the picker from a `target` only (no date inputs) omit
+    // `inputRefs`.
     const inputRefs = params.inputRefs ?? [];
 
     return useService("datetime_picker").create(

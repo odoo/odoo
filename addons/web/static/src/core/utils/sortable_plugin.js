@@ -3,13 +3,12 @@ import { useSortable } from "@web/core/utils/sortable";
 import { throttleForAnimation } from "@web/core/utils/timing";
 import { Plugin, proxy, usePlugin } from "@odoo/owl";
 import { services } from "@web/core/services";
-import { resolveRefEl } from "@web/core/utils/ref_utils";
 
 /**
  * @typedef SortableServiceHookParams
  * @extends SortableParams
- * @property {{el: HTMLElement} | (() => HTMLElement) | ReturnType<typeof import("@odoo/owl").useRef>} [ref]
- *  container of sortable. Accepts a legacy `.el` ref or an Owl 3 signal ref.
+ * @property {import("@odoo/owl").Signal<HTMLElement> | (() => HTMLElement)} [ref]
+ *  container of sortable
  * @property {string | Symbol} [sortableId] identifier when multiple sortable on the same container
  */
 
@@ -26,7 +25,7 @@ export class SortablePlugin extends Plugin {
      * @param {SortableServiceHookParams} hookParams
      */
     create(hookParams) {
-        const element = resolveRefEl(hookParams.ref);
+        const element = hookParams.ref?.();
         const sortableId = hookParams.sortableId ?? DEFAULT_SORTABLE_ID;
         if (this.boundElements.has(element)) {
             const boundElement = this.boundElements.get(element);
@@ -83,9 +82,7 @@ export class SortablePlugin extends Plugin {
 
         return {
             enable() {
-                setupFunctions.forEach((dependenciesFn, setupFn) =>
-                    setupFn(...dependenciesFn())
-                );
+                setupFunctions.forEach((dependenciesFn, setupFn) => setupFn(...dependenciesFn()));
                 return {
                     cleanup,
                 };
@@ -105,7 +102,7 @@ services.add(SortablePlugin);
 export const sortableService = {
     start() {
         return usePlugin(SortablePlugin);
-    }
-}
+    },
+};
 
 registry.category("services").add("sortable", sortableService);

@@ -1,5 +1,4 @@
 import { useLayoutEffect } from "@web/owl2/utils";
-import { resolveRefEl } from "@web/core/utils/ref_utils";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { useService } from "@web/core/utils/hooks";
@@ -9,7 +8,7 @@ import { KeepLast } from "@web/core/utils/concurrency";
 import { user } from "@web/core/user";
 import { useDebounced } from "@web/core/utils/timing";
 import { SearchMedia } from "./search_media";
-import { Component, xml, onWillStart, proxy, signal } from "@odoo/owl";
+import { Component, onWillStart, proxy, signal, untrack, xml } from "@odoo/owl";
 
 export const IMAGE_MIMETYPES = [
     "image/jpg",
@@ -239,7 +238,7 @@ export class FileSelector extends Component {
                     };
                 }
             },
-            () => [resolveRefEl(this.props.modalRef)?.querySelector("main.modal-body")]
+            () => [untrack(this.props.modalRef)?.querySelector("main.modal-body")]
         );
 
         useLayoutEffect(

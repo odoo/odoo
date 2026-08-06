@@ -1,5 +1,4 @@
 import { useListener } from "@odoo/owl";
-import { resolveRefEl } from "@web/core/utils/ref_utils";
 
 /**
  * @param {(() => HTMLElement | null)} targetRef
@@ -12,14 +11,14 @@ export function useResizer(targetRef, minHeight = 100) {
     let startOffsetTop, startHeight;
     const onResizerMouseDown = (ev) => {
         isMouseDownOnResizer = true;
-        startHeight = resolveRefEl(targetRef).offsetHeight;
+        startHeight = targetRef().offsetHeight;
         startOffsetTop = ev.pageY;
     };
     useListener(document, "mousemove", (ev) => {
         if (isMouseDownOnResizer) {
             const offsetTop = ev.pageY - startOffsetTop;
             const newHeight = Math.max(startHeight + offsetTop, minHeight);
-            resolveRefEl(targetRef).style.height = `${newHeight}px`;
+            targetRef().style.height = `${newHeight}px`;
         }
     });
     useListener(document, "mouseup", () => (isMouseDownOnResizer = false));

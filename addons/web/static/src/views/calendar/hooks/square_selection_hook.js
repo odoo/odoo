@@ -1,4 +1,4 @@
-import { untrack, useListener, useProps } from "@odoo/owl";
+import { useListener, useProps } from "@odoo/owl";
 import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder_owl";
 import { shallowEqual } from "@web/core/utils/objects";
 import { closest } from "@web/core/utils/ui";
@@ -11,7 +11,7 @@ const IGNORE_SELECTOR = [".fc-event", ".fc-more-cell", ".fc-more-popover"].join(
 
 function getClosestCell(ctx) {
     const { pointer, ref } = ctx;
-    return closest(ref.el.querySelectorAll(CELL_SELECTOR), pointer);
+    return closest(ref().querySelectorAll(CELL_SELECTOR), pointer);
 }
 
 function getElementIndex(element) {
@@ -34,7 +34,7 @@ function getSelectedCellsInBlock(ctx) {
     const { current, ref } = ctx;
     const { startColIndex, endColIndex, startRowIndex, endRowIndex } = getBlockBounds(current);
     const selectedCells = [];
-    for (const cell of ref.el.querySelectorAll(`tbody ${ROW_SELECTOR} ${CELL_SELECTOR}`)) {
+    for (const cell of ref().querySelectorAll(`tbody ${ROW_SELECTOR} ${CELL_SELECTOR}`)) {
         const { colIndex, rowIndex } = getCoordinates(cell);
         if (
             startColIndex <= colIndex &&
@@ -50,7 +50,7 @@ function getSelectedCellsInBlock(ctx) {
 
 function getSelectedCellsBetween2Cells(ctx, prevCell, cellClicked) {
     const { ref } = ctx;
-    const cells = [...ref.el.querySelectorAll(`tbody ${ROW_SELECTOR} ${CELL_SELECTOR}`)];
+    const cells = [...ref().querySelectorAll(`tbody ${ROW_SELECTOR} ${CELL_SELECTOR}`)];
     const index1 = cells.indexOf(prevCell);
     if (index1 === -1) {
         return new Set([cellClicked]);
@@ -69,7 +69,7 @@ const useBlockSelection = makeDraggableHook({
     },
     onWillStartDrag({ addClass, ctx }) {
         const { current, ref } = ctx;
-        addClass(ref.el, "pe-auto");
+        addClass(ref(), "pe-auto");
         const cell = getClosestCell(ctx);
         addClass(cell, "pe-auto");
         const coord = getCoordinates(cell);
@@ -100,17 +100,12 @@ const useBlockSelection = makeDraggableHook({
 
 export function useSquareSelection(fullCalendarRef) {
     const props = useProps();
-    const ref = {
-        get el() {
-            return untrack(fullCalendarRef);
-        },
-    };
     const highlightClass = "o-highlight";
 
     const removeHighlight = () => {
-        ref.el.querySelectorAll(`.${highlightClass}`).forEach((node) => {
+        for (const node of fullCalendarRef().querySelectorAll(`.${highlightClass}`)) {
             node.classList.remove(highlightClass);
-        });
+        }
     };
 
     let allSelectedCells = new Set();
@@ -150,13 +145,13 @@ export function useSquareSelection(fullCalendarRef) {
         enable: () => props.model.hasMultiCreate,
         ignore: IGNORE_SELECTOR,
         elements: CELL_SELECTOR,
-        ref,
+        ref: fullCalendarRef,
         edgeScrolling: { speed: 40, threshold: 150 },
         onDragStart: ({ selectedCells }) => {
             prevSelectedCell = null;
             action = ctrlPressed ? "add" : "replace";
             update({ selectedCells });
-            ref.el.classList.add("o_interacting", "o_selecting");
+            fullCalendarRef().classList.add("o_interacting", "o_selecting");
         },
         onDrag: update,
         onDrop: ({ selectedCells }) => {
@@ -166,7 +161,7 @@ export function useSquareSelection(fullCalendarRef) {
             props.onSquareSelection([...allSelectedCells]);
         },
         onDragEnd() {
-            ref.el.classList.remove("o_interacting", "o_selecting");
+            fullCalendarRef().classList.remove("o_interacting", "o_selecting");
         },
     });
 
@@ -188,7 +183,7 @@ export function useSquareSelection(fullCalendarRef) {
         }
         const coord = getCoordinates(cell);
         const current = { initCoord: coord, coord };
-        const pseudoCtx = { current, ref };
+        const pseudoCtx = { current, ref: fullCalendarRef };
         const { selectedCells } = getSelectedCellsInBlock(pseudoCtx);
         const selectedCell = selectedCells[0];
         if (prevSelectedCell && shiftPressed) {

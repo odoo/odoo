@@ -1,6 +1,5 @@
-import { onMounted, onWillUnmount, useListener, useProps, useScope } from "@odoo/owl";
+import { onMounted, onWillUnmount, untrack, useListener, useProps, useScope } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
-import { resolveRefEl } from "@web/core/utils/ref_utils";
 import { useEnv } from "../owl2/utils";
 
 export const scrollSymbol = Symbol("scroll");
@@ -89,7 +88,7 @@ export function useSetupAction(params = {}) {
         });
     }
 
-    const getRootEl = () => resolveRefEl(rootRef);
+    const getRootEl = () => untrack(rootRef);
 
     function setScrollFromState() {
         const { state } = props;

@@ -8,7 +8,7 @@ import { pick } from "@web/core/utils/objects";
  *
  * MANDATORY
  *
- * @property {{ el: HTMLElement | null }} ref
+ * @property {import("@odoo/owl").Signal<HTMLElement> | (() => HTMLElement)} ref
  * @property {string} elements defines draggable elements
  *
  * OPTIONAL
