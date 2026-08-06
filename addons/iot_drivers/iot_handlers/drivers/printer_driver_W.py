@@ -41,7 +41,7 @@ class PrinterDriver(PrinterDriverBase):
         self.send_status('disconnected', 'Printer was disconnected')
         super().disconnect()
 
-    def print_raw(self, data, action_unique_id=None):
+    def print_raw(self, data: bytes, action_unique_id: str = "", session_id: str = ""):
         job_id = False
         page_started = False
         try:
@@ -53,6 +53,7 @@ class PrinterDriver(PrinterDriverBase):
                 win32print.EndPagePrinter(self.printer_handle)
                 win32print.EndDocPrinter(self.printer_handle)
                 self.job_ids.append(job_id)
+                self.job_session_ids[job_id] = session_id
                 if action_unique_id:
                     self.job_action_ids[job_id] = action_unique_id
         except pywintypes.error as error:
@@ -65,6 +66,7 @@ class PrinterDriver(PrinterDriverBase):
                         if job_id:
                             win32print.EndDocPrinter(self.printer_handle)
                             self.job_ids.append(job_id)
+                            self.job_session_ids[job_id] = session_id
                             if action_unique_id:
                                 self.job_action_ids[job_id] = action_unique_id
                 except pywintypes.error as err:
@@ -98,16 +100,19 @@ class PrinterDriver(PrinterDriverBase):
                 _logger.exception("Error while printing report, SumatraPDF args: %s, exit code: %s", args, error.returncode)
                 self.send_status(status='error', message='ERROR_FAILED')
 
-    def _action_default(self, data):
+    def _action_default(self, data: dict):
         _logger.debug("_action_default called for printer %s", self.device_name)
 
         document = b64decode(data['document'])
         mimetype = guess_mimetype(document)
-        action_unique_id = data.get('action_unique_id')
         if mimetype == 'application/pdf':
             self.print_report(document, data.get("duplex", True))
         else:
-            self.print_raw(document, action_unique_id=action_unique_id)
+            self.print_raw(
+                document,
+                action_unique_id=data.get("action_unique_id", ""),
+                session_id=data.get("session_id", ""),
+            )
         _logger.debug("_action_default finished with mimetype %s for printer %s", mimetype, self.device_name)
         return {'print_id': data['print_id']} if 'print_id' in data else {}
 
@@ -128,7 +133,9 @@ class PrinterDriver(PrinterDriverBase):
         self.job_ids.remove(job_id)
         win32print.SetJob(self.printer_handle, job_id, 0, None, win32print.JOB_CONTROL_DELETE)
         self.send_status(
-            status='error', message=error_message, action_unique_id=self.job_action_ids.pop(job_id, None)
+            status="error", message=error_message,
+            action_unique_id=self.job_action_ids.pop(job_id, None),
+            session_id=self.job_session_ids.pop(job_id, None),
         )
 
     def _check_job_status(self, job_id):
@@ -139,7 +146,7 @@ class PrinterDriver(PrinterDriverBase):
             if job['Status'] & win32print.JOB_STATUS_PRINTED:
                 self.job_ids.remove(job_id)
                 self.job_action_ids.pop(job_id, None)
-                self.send_status(status='success')
+                self.send_status(status="success", session_id=self.job_session_ids.pop(job_id, None))
             # Print timeout, e.g. network printer is disconnected
             if elapsed_time.seconds > self.job_timeout_seconds:
                 self._cancel_job_with_error(job_id, 'ERROR_TIMEOUT')
@@ -150,8 +157,9 @@ class PrinterDriver(PrinterDriverBase):
             # GetJob returns error 87 (incorrect parameter) if the print job doesn't exist.
             # Windows deletes print jobs on completion, so this actually means the print
             # was succcessful.
+            session_id = self.job_session_ids.pop(job_id, None)
             if error.winerror == 87:
-                self.send_status(status='success')
+                self.send_status(status="success", session_id=session_id)
             else:
                 _logger.exception('Win32 error occurred while querying print job')
             self.job_ids.remove(job_id)
