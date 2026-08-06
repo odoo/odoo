@@ -1,6 +1,6 @@
-import { test, expect } from "@odoo/hoot";
+import { test, expect, mockUserAgent } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-dom";
-import { mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { contains, mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { CartPage } from "@pos_self_order/app/pages/cart_page/cart_page";
 import { setupSelfPosEnv, getFilledSelfOrder, addComboProduct } from "../utils";
 import { definePosSelfModels } from "../data/generate_model_definitions";
@@ -58,23 +58,54 @@ test("canChangeQuantity", async () => {
 });
 
 test("isCheckout", async () => {
-    const store = await setupSelfPosEnv();
+    const store = await setupSelfPosEnv("mobile", "table", "meal");
     await getFilledSelfOrder(store);
-    const comp = await mountWithCleanup(CartPage, {});
+    let comp = await mountWithCleanup(CartPage, {});
 
     expect(comp.isCheckout).toBe(true);
 
     history.pushState({ fromLanding: true }, "");
+    comp = await mountWithCleanup(CartPage, {});
     expect(comp.isCheckout).toBe(false);
 
     history.pushState(null, "");
+    comp = await mountWithCleanup(CartPage, {});
     expect(comp.isCheckout).toBe(true);
+
+    store.config.self_ordering_pay_after = "each";
+    comp = await mountWithCleanup(CartPage, {});
+    expect(comp.isCheckout).toBe(true);
+
+    history.pushState({ fromLanding: true }, "");
+    comp = await mountWithCleanup(CartPage, {});
+    expect(comp.isCheckout).toBe(true);
+});
+
+test.tags("mobile");
+test("cart page is not affected by mobile dialog navigation", async () => {
+    const store = await setupSelfPosEnv("mobile", "table", "meal");
+    mockUserAgent("android");
+    await getFilledSelfOrder(store);
+    await store.sendDraftOrderToServer();
+
+    // Simulating navigated from Landing page
+    history.pushState({ fromLanding: true }, "");
+    await mountWithCleanup(CartPage, {});
+
+    expect(".product-cart-item").toBeDisplayed();
+    expect(".order-price").toHaveText("Total: $ 595.00");
+
+    await contains(".order-note button").click();
+    await contains("textarea").fill("Cart Page Never Dies!!");
+    await contains(".modal-footer button:contains(Apply)").click();
+    expect(".order-price").toHaveText("Total: $ 595.00");
+    expect(".product-cart-item").toBeDisplayed();
 });
 
 test("totalPriceAndTax", async () => {
     const store = await setupSelfPosEnv("mobile", "table", "meal");
     await getFilledSelfOrder(store);
-    const comp = await mountWithCleanup(CartPage, {});
+    let comp = await mountWithCleanup(CartPage, {});
     await animationFrame();
 
     expect(comp.totalPriceAndTax).toEqual({ priceWithTax: 595, tax: 95 });
@@ -84,6 +115,7 @@ test("totalPriceAndTax", async () => {
     expect(comp.totalPriceAndTax).toEqual({ priceWithTax: 250, tax: 50 });
 
     history.pushState({ fromLanding: true }, "");
+    comp = await mountWithCleanup(CartPage, {});
     expect(comp.totalPriceAndTax).toEqual({ priceWithTax: 595, tax: 95 });
 });
 
@@ -281,7 +313,7 @@ test("presetButton", async () => {
 test("payButton", async () => {
     const store = await setupSelfPosEnv();
     const order = await getFilledSelfOrder(store);
-    const comp = await mountWithCleanup(CartPage, {});
+    let comp = await mountWithCleanup(CartPage, {});
 
     // Meal, checkout flow, with unsent changes -> Order
     store.hasPaymentMethod = () => true;
@@ -292,6 +324,7 @@ test("payButton", async () => {
     // payment method configured -> Pay, but disabled: the customer must
     // go through the normal checkout flow to actually submit those changes.
     history.pushState({ fromLanding: true }, "");
+    comp = await mountWithCleanup(CartPage, {});
     expect(comp.payButton).toMatchObject({ label: "Pay", disabled: true });
 
     // Meal, via My Order, unsent changes, no payment method -> no button.
@@ -301,6 +334,7 @@ test("payButton", async () => {
     // Meal, once the pending changes are actually sent: "Pay" (enabled) if
     // a payment method is configured, otherwise no button.
     history.pushState(null, "");
+    comp = await mountWithCleanup(CartPage, {});
     store.hasPaymentMethod = () => true;
     await comp.pay();
     expect(comp.payButton).toMatchObject({ label: "Pay", disabled: false });
@@ -337,10 +371,10 @@ test("OrderWidget renders back and pay buttons in the DOM", async () => {
 });
 
 test("getLineDisplayQty", async () => {
-    const store = await setupSelfPosEnv();
+    const store = await setupSelfPosEnv("mobile", "table", "meal");
     const order = await getFilledSelfOrder(store);
     const line = order.lines[0];
-    const comp = await mountWithCleanup(CartPage, {});
+    let comp = await mountWithCleanup(CartPage, {});
 
     comp.getLineChangeQty = () => 10;
     expect(comp.getLineDisplayQty(line)).toBe(10);
@@ -349,6 +383,7 @@ test("getLineDisplayQty", async () => {
     expect(comp.getLineDisplayQty(line)).toBe(line.qty);
 
     history.pushState({ fromLanding: true }, "");
+    comp = await mountWithCleanup(CartPage, {});
     order.uiState.lineChanges[line.uuid] = { qty: 10 };
     expect(comp.getLineDisplayQty(line)).toBe(10);
 
@@ -357,9 +392,9 @@ test("getLineDisplayQty", async () => {
 });
 
 test("lines", async () => {
-    const store = await setupSelfPosEnv();
+    const store = await setupSelfPosEnv("mobile", "table", "meal");
     const order = await getFilledSelfOrder(store);
-    const comp = await mountWithCleanup(CartPage, {});
+    let comp = await mountWithCleanup(CartPage, {});
     const product12 = store.models["product.template"].get(12);
 
     store.config.self_ordering_pay_after = "meal";
@@ -370,6 +405,7 @@ test("lines", async () => {
     expect(comp.lines).toEqual(unsentLines);
 
     history.pushState({ fromLanding: true }, "");
+    comp = await mountWithCleanup(CartPage, {});
     const sentLines = order.lines.filter((line) => line.product_id.id !== 12);
     expect(comp.lines).toEqual(sentLines);
 });

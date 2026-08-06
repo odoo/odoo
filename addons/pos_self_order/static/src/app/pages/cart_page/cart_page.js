@@ -53,10 +53,8 @@ export class CartPage extends Component {
                 return [order.preset_id?.id, applicableTotal];
             }
         );
-    }
-
-    get isCheckout() {
-        return !history.state?.fromLanding;
+        this.isCheckout =
+            !history.state?.fromLanding || this.selfOrder.config.self_ordering_pay_after === "each";
     }
 
     onClickBack() {
@@ -123,9 +121,11 @@ export class CartPage extends Component {
 
     get lines() {
         const order = this.selfOrder.currentOrder;
+        const payAfter = this.selfOrder.config.self_ordering_pay_after;
         let lines = [];
         if (this.isCheckout) {
-            lines = order.unsentLines.filter((line) => !line.combo_parent_id);
+            const sourceLines = payAfter === "each" ? order.lines : order.unsentLines;
+            lines = sourceLines.filter((line) => !line.combo_parent_id);
         } else {
             lines = order.lines.filter(
                 (l) => order.uiState.lineChanges[l.uuid] && !l.combo_parent_id
