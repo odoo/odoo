@@ -11,6 +11,7 @@ from odoo.tools.date_utils import (
     add,
     date_range,
     end_of,
+    float_to_time,
     get_fiscal_year,
     localized,
     parse_date,
@@ -385,3 +386,25 @@ class TestDateRangeFunction(BaseCase):
             list(date_range(start, end, relativedelta()))
         with self.assertRaises(ValueError):
             list(date_range(start, end, relativedelta(hours=-1)))
+
+
+class TestFloatToTime(BaseCase):
+    def test_minutes_carry_over_when_rounding_up(self):
+        # 16.9959 h -> 59.754 min -> rounds to 60. This must carry into the hour
+        # rather than raising "ValueError: minute must be in 0..59, not 60".
+        self.assertEqual(float_to_time(16.9959), time(17, 0))
+        self.assertEqual(float_to_time(8.999), time(9, 0))
+
+    def test_carry_at_end_of_day_returns_time_max(self):
+        self.assertEqual(float_to_time(23.9959), time.max)
+
+    def test_regular_values(self):
+        self.assertEqual(float_to_time(0.0), time(0, 0))
+        self.assertEqual(float_to_time(10.5), time(10, 30))
+        self.assertEqual(float_to_time(24.0), time.max)
+
+    def test_hours_beyond_24_raise(self):
+        # Only an exact 24:00 maps to time.max; anything larger is out of range.
+        for invalid in (24.5, 25.0):
+            with self.assertRaises(ValueError):
+                float_to_time(invalid)
