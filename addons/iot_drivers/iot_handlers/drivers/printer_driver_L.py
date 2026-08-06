@@ -49,11 +49,12 @@ class PrinterDriver(PrinterDriverBase):
         self.send_status('disconnected', 'Printer was disconnected')
         super().disconnect()
 
-    def print_raw(self, data, action_unique_id=None, duplex=True):
+    def print_raw(self, data, action_unique_id=None, duplex=True, session_id=None):
         """Print raw data to the printer
 
         :param data: The data to print
         :param action_unique_id: The unique identifier of the action triggering the print
+        :param session_id: Identifier of the session, used to match callbacks front-end side
         :param duplex: Whether to print on both sides of the paper (if supported by the printer)
         """
         try:
@@ -66,6 +67,7 @@ class PrinterDriver(PrinterDriverBase):
                 self.conn.writeRequestData(data, len(data))
                 self.conn.finishDocument(self.device_identifier)
             self.job_ids.append(job_id)
+            self.job_session_ids[job_id] = session_id
             if action_unique_id:
                 self.job_action_ids[job_id] = action_unique_id
         except IPPError:
@@ -214,9 +216,10 @@ class PrinterDriver(PrinterDriverBase):
     def _action_default(self, data):
         _logger.debug("_action_default called for printer %s", self.device_name)
         self.print_raw(
-            b64decode(data['document']),
-            action_unique_id=data.get('action_unique_id'),
+            b64decode(data["document"]),
+            action_unique_id=data.get("action_unique_id"),
             duplex=data.get("duplex", True),
+            session_id=data.get("session_id"),
         )
         return {'print_id': data['print_id']} if 'print_id' in data else {}
 
@@ -224,7 +227,9 @@ class PrinterDriver(PrinterDriverBase):
         self.job_ids.remove(job_id)
         self.conn.cancelJob(job_id)
         self.send_status(
-            status='error', message=error_message, action_unique_id=self.job_action_ids.pop(job_id, None)
+            status='error', message=error_message,
+            action_unique_id=self.job_action_ids.pop(job_id, None),
+            session_id=self.job_session_ids.pop(job_id, None),
         )
 
     def _check_job_status(self, job_id):
@@ -236,7 +241,7 @@ class PrinterDriver(PrinterDriverBase):
                 if job_state == IPP_JOB_COMPLETED:
                     self.job_ids.remove(job_id)
                     self.job_action_ids.pop(job_id, None)
-                    self.send_status(status='success')
+                    self.send_status(status="success", session_id=self.job_session_ids.pop(job_id, None))
                 # Generic timeout, e.g. USB printer has been unplugged
                 elif job['time-at-creation'] + self.job_timeout_seconds < time.time():
                     self._cancel_job_with_error(job_id, 'ERROR_TIMEOUT')
@@ -249,4 +254,5 @@ class PrinterDriver(PrinterDriverBase):
         except IPPError:
             _logger.exception('IPP error occurred while fetching CUPS jobs')
             self.job_ids.remove(job_id)
+            self.job_session_ids.pop(job_id, None)
             self._recent_action_ids.pop(self.job_action_ids.pop(job_id, None), None)
