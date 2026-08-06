@@ -7,8 +7,9 @@ _lt = LazyTranslate(__name__)
 
 DO_ADDITIONAL_IDENTIFIERS_METADATA = {
     'DO_CEDULA': {
+        'sequence': 2,
         'label': _lt('Cédula'),
-        'help': _lt('Dominican Republic national identification number.'),
+        'help': _lt('Dominican Republic personal identification number.'),
         'placeholder': '00113918205',
         'category': 'CN',
         'validation_function': do_cedula.validate,
