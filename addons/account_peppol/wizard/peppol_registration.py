@@ -11,6 +11,7 @@ from odoo.exceptions import UserError, ValidationError, RedirectWarning
 from odoo.tools.urls import urljoin
 
 from odoo.addons.account_peppol.tools.demo_utils import handle_demo
+from odoo.addons.account_edi_ubl_cii.tools.partner_identifiers import DEPRECATED_ELECTRONIC_ADDRESS_SCHEMES_CODELIST
 from odoo.addons.account_peppol.tools.peppol_iap_connector import PeppolIAPConnector
 
 _logger = logging.getLogger(__name__)
@@ -79,7 +80,7 @@ class PeppolRegistration(models.TransientModel):
     )
     phone_number = fields.Char(related='selected_company_id.account_peppol_phone_number', readonly=False)
     peppol_eas = fields.Selection(
-        selection=lambda self: self.env['res.partner']._fields['routing_scheme'].selection,
+        selection='_get_peppol_eas_selection',
         compute='_compute_peppol_eas_endpoint',
         store=True,
         readonly=False,
@@ -268,6 +269,13 @@ class PeppolRegistration(models.TransientModel):
     # -------------------------------------------------------------------------
     # BUSINESS ACTIONS
     # -------------------------------------------------------------------------
+
+    def _get_peppol_eas_selection(self):
+        return [
+            (eas, label)
+            for eas, label in self.env['res.company']._fields['routing_scheme']._description_selection(self.env)
+            if eas not in DEPRECATED_ELECTRONIC_ADDRESS_SCHEMES_CODELIST or eas == self.env.company.routing_scheme
+        ]
 
     def _branch_with_same_address(self):
         self.ensure_one()
