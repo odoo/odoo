@@ -244,6 +244,32 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             work_entry_type.invalidate_model(['max_leaves'])
             self._check_holidays_status(work_entry_type, self.employee_emp, 2.0, 2.0, 0.0, 0.0)
 
+    def test_work_entry_type_selection_uses_company_country(self):
+        company_country = self.env.ref('base.be')
+        self.company.country_id = company_country
+        self.employee_emp.country_id = self.env.ref('base.us')
+        (self.holidays_type_2 | self.holidays_type_4).country_id = company_country
+        self.holidays_type_2.sequence = 0
+
+        allocation = self.env['hr.leave.allocation'].create({
+            'name': 'Company-country allocation',
+            'employee_id': self.employee_emp.id,
+            'work_entry_type_id': self.holidays_type_2.id,
+            'number_of_days': 2,
+            'date_from': date(2022, 1, 1),
+        })
+        allocation.action_approve()
+
+        leave = self.env['hr.leave'].with_context(employee_id=self.employee_emp.id).new({
+            'employee_id': self.employee_emp.id,
+            'work_entry_type_id': self.holidays_type_4.id,
+            'request_date_from': date(2022, 1, 3),
+            'request_date_to': date(2022, 1, 3),
+        })
+        leave._compute_work_entry_type_id()
+
+        self.assertEqual(leave.work_entry_type_id, self.holidays_type_2)
+
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
     def test_accrual_validity_time_valid(self):
         """  Employee ask leave during a valid validity time """
