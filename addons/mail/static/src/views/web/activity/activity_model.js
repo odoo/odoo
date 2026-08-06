@@ -11,7 +11,7 @@ export class ActivityModel extends RelationalModel {
         if (params && "groupBy" in params) {
             params.groupBy = [];
         }
-        // avoir mismatch between records count (initialLimit) and activity count (params.limit)
+        // avoid mismatch between records count (initialLimit) and activity count (params.limit)
         delete params.limit;
         await Promise.all([this.fetchActivityData(params), super.load(params)]);
     }
