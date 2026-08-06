@@ -1,7 +1,15 @@
 import { loadBundle } from "@web/core/assets";
 import { resolveRefEl } from "@web/core/utils/ref_utils";
 
-import { onMounted, onPatched, onWillStart, onWillUnmount, untrack, useProps } from "@odoo/owl";
+import {
+    onMounted,
+    onPatched,
+    onWillStart,
+    onWillUnmount,
+    signal,
+    untrack,
+    useProps,
+} from "@odoo/owl";
 
 /**
  * @param {import("@odoo/owl").Signal<HTMLElement>} ref
@@ -9,34 +17,34 @@ import { onMounted, onPatched, onWillStart, onWillUnmount, untrack, useProps } f
  */
 export function useFullCalendar(ref, params) {
     const props = useProps();
-    let instance = null;
+    const instance = signal(null);
 
     onWillStart(() => loadBundle("web.fullcalendar_lib"));
 
     onMounted(() => {
         try {
-            instance = new FullCalendar.Calendar(untrack(ref), params);
-            instance.render();
+            instance.set(new FullCalendar.Calendar(untrack(ref), params));
+            instance().render();
         } catch (e) {
             throw new Error(`Cannot instantiate FullCalendar\n${e.message}`);
         }
     });
 
     onPatched(() => {
-        instance.refetchEvents();
-        instance.setOption("weekends", props.isWeekendVisible);
+        instance().refetchEvents();
+        instance().setOption("weekends", props.isWeekendVisible);
         if (params.weekNumbers && props.model.scale === "year") {
-            instance.destroy();
-            instance.render();
+            instance().destroy();
+            instance().render();
         }
     });
     onWillUnmount(() => {
-        instance.destroy();
+        instance().destroy();
     });
 
     return {
         get api() {
-            return instance;
+            return instance();
         },
         get el() {
             return resolveRefEl(ref);
