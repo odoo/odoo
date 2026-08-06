@@ -20,8 +20,7 @@ class UtmMixin(models.AbstractModel):
         return [
             (model.model, model.name)
             for model
-            in self.env['ir.model'].sudo().search([])
-            if not model.is_transient()
+            in self.env['ir.model'].sudo().search_fetch([('transient', '=', False)])
         ]
 
     campaign_id = fields.Many2one('utm.campaign', 'Campaign', index='btree_not_null',
