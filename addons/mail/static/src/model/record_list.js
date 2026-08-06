@@ -1,4 +1,4 @@
-import { isRecord } from "./misc";
+import { isRecord, untrackFunctions } from "./misc";
 
 import { markRaw, proxy, toRaw } from "@odoo/owl";
 
@@ -606,3 +606,15 @@ export class RecordList extends Array {
         return recordListFullProxy._store.recordByLocalId.get(recordListFullProxy.data.at(index));
     }
 }
+
+untrackFunctions(RecordList.prototype, [
+    "add",
+    "clear",
+    "delete",
+    "pop",
+    "push",
+    "shift",
+    "splice",
+    "unshift",
+]);
+untrackFunctions(RecordListInternal.prototype, ["assign", "proxySet"]);

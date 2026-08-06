@@ -10,6 +10,7 @@ import {
     isRelation,
     modelRegistry,
     technicalKeysOnRecords,
+    untrackFunctions,
 } from "./misc";
 import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
 
@@ -546,3 +547,6 @@ export class Record {
     }
 }
 Record.register();
+
+untrackFunctions(Record, ["insert", "new"]);
+untrackFunctions(Record.prototype, ["delete", "update"]);

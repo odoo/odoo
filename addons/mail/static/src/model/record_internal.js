@@ -8,6 +8,7 @@ import {
     isMany,
     isRelation,
     makeRecordFieldLocalId,
+    untrackFunctions,
 } from "./misc";
 import { RecordList } from "./record_list";
 import { immediateEffect, markRaw, proxy, signal, toRaw, untrack } from "@odoo/owl";
@@ -397,3 +398,5 @@ export class RecordInternal {
         this.prepareFieldOnUpdate(record, fieldName, recordProxy);
     }
 }
+
+untrackFunctions(RecordInternal.prototype, ["proxyDeleteProperty", "proxySet"]);
