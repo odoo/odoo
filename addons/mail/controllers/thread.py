@@ -156,6 +156,11 @@ class ThreadController(http.Controller):
         if role_ids := post_data.pop("role_ids", []):
             # sudo - res.users: getting partners linked to the role is allowed.
             partners |= request.env["res.users"].sudo().search([("role_ids", "in", role_ids)]).partner_id
+        if not request.env.user._is_internal() or not thread.sudo(False).with_context(
+            allowed_company_ids=[]
+        ).has_access(thread._get_mail_message_access(thread.ids, "create")):
+            post_data["message_type"] = "comment"
+            post_data["subtype_xmlid"] = "mail.mt_comment"
         post_data["partner_ids"] = self._filter_message_post_partners(thread, partners).ids
         post_data.setdefault("message_type", "comment")
         return post_data
