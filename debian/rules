@@ -19,3 +19,7 @@ override_dh_auto_install:
 override_dh_auto_clean:
 	dh_auto_clean
 	for d in addons/* ; do rm -fr odoo/$$d ; done
+
+override_dh_gencontrol:
+	dh_gencontrol
+	sed -i 's/python3-pypdf2\?/python3-pypdf2 | python3-pypdf/g' debian/odoo/DEBIAN/control
