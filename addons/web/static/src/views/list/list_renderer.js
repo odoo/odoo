@@ -220,12 +220,6 @@ export class ListRenderer extends Component {
             altKeyMode: false,
         });
         this.currencyRates = null;
-        this.countColumn = {
-            type: "count",
-            hasLabel: true,
-            label: _t("Count"),
-            name: "__count",
-        };
         onWillStart(async () => {
             const needsCurrencyRates = this.props.archInfo.columns.some((column) => {
                 if (column.type !== "field") {
@@ -1013,9 +1007,6 @@ export class ListRenderer extends Component {
     }
 
     isNumericColumn(column) {
-        if (column.type === "count") {
-            return true;
-        }
         const { type } = this.fields[column.name];
         return ["float", "integer", "monetary"].includes(type);
     }
@@ -1029,10 +1020,7 @@ export class ListRenderer extends Component {
     }
 
     isSortable(column) {
-        const { hasLabel, name, options, type } = column;
-        if (type === "count") {
-            return true;
-        }
+        const { hasLabel, name, options } = column;
         const { sortable } = this.fields[name];
         return (sortable || options.allow_order) && hasLabel;
     }
@@ -1316,7 +1304,8 @@ export class ListRenderer extends Component {
         return colspan;
     }
 
-    getGroupCellColspan(group) {
+    // TODO: rename in master
+    getGroupPagerCellColspan(group) {
         // this colspan is the number of columns after the last column with aggregates
         const lastIndex = this.getLastAggregateIndex(group);
         return lastIndex > -1 ? this.columns.length - lastIndex - 1 : 0;
@@ -1400,12 +1389,8 @@ export class ListRenderer extends Component {
         if (this.editedRecord() || this.props.list.model.useSampleModel) {
             return;
         }
-        const list = this.props.list;
-        if (column.type === "count") {
-            this.env.searchModel.switchGroupBySort();
-            return;
-        }
         const fieldName = column.name;
+        const list = this.props.list;
         if (this.isSortable(column)) {
             list.sortBy(fieldName);
         }
@@ -2191,10 +2176,6 @@ export class ListRenderer extends Component {
     get showNoContentHelper() {
         const { model } = this.props.list;
         return this.props.noContentHelp && (model.useSampleModel || !model.hasData());
-    }
-
-    get showCountColumn() {
-        return this.props.list.isGrouped && !this.uiService.isSmall;
     }
 
     /**
