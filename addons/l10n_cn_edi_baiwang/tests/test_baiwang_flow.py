@@ -6,6 +6,12 @@ from odoo.exceptions import UserError
 from odoo.tests import tagged
 
 from odoo.addons.account.tests.test_account_move_send import TestAccountMoveSendCommon
+from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import (
+    AccountEdiProxyError,
+)
+from odoo.addons.l10n_cn_edi_baiwang.models.account_edi_proxy_user import (
+    AccountEdiProxyClientUser,
+)
 from odoo.addons.l10n_cn_edi_baiwang.models.baiwang_client import BaiwangClient
 
 
@@ -375,3 +381,32 @@ class TestL10nCnBaiwangFlow(TestAccountMoveSendCommon):
         self.assertEqual(payload_lines[3]['invoiceLineNature'], '1')
         self.assertAlmostEqual(payload_lines[1]['goodsTotalPrice'], -60.0)
         self.assertAlmostEqual(payload_lines[3]['goodsTotalPrice'], -180.0)
+
+    def _contact_proxy_with_error(self, code):
+        """Call the real _l10n_cn_baiwang_contact_proxy with _make_request raising the given proxy error code."""
+        proxy_user = self.env['account_edi_proxy_client.user'].search([
+            ('proxy_type', '=', 'l10n_cn_edi_baiwang'),
+        ], limit=1)
+        with patch.object(
+            self.env['account_edi_proxy_client.user'].__class__, '_make_request',
+            side_effect=AccountEdiProxyError(code, 'boom'),
+        ):
+            with self.assertRaises(UserError) as ctx:
+                AccountEdiProxyClientUser._l10n_cn_baiwang_contact_proxy(proxy_user, '/api/foo', {})
+        return ctx.exception.args[0]
+
+    def test_10_proxy_rate_limit_error_is_mapped(self):
+        self.assertIn('maximum number of requests', self._contact_proxy_with_error('proxy_rate_limit_exceeded'))
+
+    def test_10b_proxy_other_error_is_generic(self):
+        self.assertIn('Failed to contact the Baiwang proxy service', self._contact_proxy_with_error('connection_error'))
+
+    def test_10c_proxy_string_error_does_not_crash(self):
+        client = BaiwangClient(self.company_data['company'])
+        with self.assertRaises(UserError) as ctx:
+            client._call_proxy(
+                lambda company, *args: {'success': False, 'error': 'string error'},
+                {},
+                error_prefix='Baiwang proxy error: %s',
+            )
+        self.assertIn('string error', ctx.exception.args[0])

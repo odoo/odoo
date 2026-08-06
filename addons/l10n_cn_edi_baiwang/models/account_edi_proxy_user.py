@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import logging
 
 from odoo import fields, models
 from odoo.exceptions import UserError
@@ -7,6 +8,8 @@ from odoo.tools.urls import urljoin as url_join
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import (
     AccountEdiProxyError,
 )
+
+_logger = logging.getLogger(__name__)
 
 
 class AccountEdiProxyClientUser(models.Model):
@@ -50,7 +53,17 @@ class AccountEdiProxyClientUser(models.Model):
                 url=url_join(self._get_server_url(), endpoint),
                 params=params,
             )
-        except AccountEdiProxyError as _error:
+        except AccountEdiProxyError as error:
+            if error.code == 'proxy_rate_limit_exceeded':
+                db_uuid = self.env['ir.config_parameter'].get_str('database.uuid')
+                _logger.warning(
+                    'Baiwang proxy rate limit exceeded for company %s (db_uuid %s): %s',
+                    self.company_id.vat, db_uuid, error.message,
+                )
+                raise UserError(self.env._(
+                    "You have reached the maximum number of requests allowed in a short period of time. "
+                    "Please wait a few minutes before trying again.",
+                ))
             raise UserError(self.env._('Failed to contact the Baiwang proxy service. Please try again later.'))
 
     def _l10n_cn_baiwang_call_proxy_endpoint(self, company, endpoint, **params):
