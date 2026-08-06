@@ -763,6 +763,12 @@ class Module(models.Model):
             'to_buy': False
         }
 
+    def write(self, values):
+        res = super().write(values)
+        if any(self._ids) and ('name' in values or 'state' in values):
+            self.env.registry.clear_cache()
+        return res
+
     @api.model_create_multi
     def create(self, vals_list):
         modules = super().create(vals_list)
@@ -774,6 +780,7 @@ class Module(models.Model):
             'noupdate': True,
         } for module in modules]
         self.env['ir.model.data'].create(module_metadata_list)
+        self.env.registry.clear_cache()
         return modules
 
     # update the list of available packages
