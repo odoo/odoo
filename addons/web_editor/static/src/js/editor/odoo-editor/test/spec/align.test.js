@@ -27,6 +27,13 @@ describe('Align', () => {
                 contentAfter: '<p>ab</p><p>c[]d</p>',
             });
         });
+        it("should left align a node with a bootstrap text alignment class", async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p class="text-center">a[]b</p>',
+                stepFunction: justifyLeft,
+                contentAfter: '<p>a[]b</p>',
+            });
+        });
         it('should not align left a non-editable node', async () => {
             await testEditor(BasicEditor, {
                 contentBefore: '<p>ab</p><div contenteditable="false"><p>c[]d</p></div>',
@@ -121,6 +128,13 @@ describe('Align', () => {
                 contentAfter: '<p>ab</p><p style="text-align: center;">c[]d</p>',
             });
         });
+        it("should center align a node with a bootstrap text alignment class", async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p class="text-end">a[]b</p>',
+                stepFunction: justifyCenter,
+                contentAfter: '<p style="text-align: center;">a[]b</p>',
+            });
+        });
         it('should align several paragraphs center', async () => {
             await testEditor(BasicEditor, {
                 contentBefore: '<p>a[b</p><p>c]d</p>',
@@ -189,6 +203,13 @@ describe('Align', () => {
                 contentAfter: '<p>ab</p><p style="text-align: right;">c[]d</p>',
             });
         });
+        it("should right align a node with a bootstrap text alignment class", async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p class="text-center">a[]b</p>',
+                stepFunction: justifyRight,
+                contentAfter: '<p style="text-align: right;">a[]b</p>',
+            });
+        });
         it('should align several paragraphs right', async () => {
             await testEditor(BasicEditor, {
                 contentBefore: '<p>a[b</p><p>c]d</p>',
@@ -255,6 +276,13 @@ describe('Align', () => {
                 contentBefore: '<p>ab</p><p>c[]d</p>',
                 stepFunction: justifyFull,
                 contentAfter: '<p>ab</p><p style="text-align: justify;">c[]d</p>',
+            });
+        });
+        it("should justify align a node with a bootstrap text alignment class", async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p class="text-center">a[]b</p>',
+                stepFunction: justifyFull,
+                contentAfter: '<p style="text-align: justify;">a[]b</p>',
             });
         });
         it('should align several paragraphs justify', async () => {
