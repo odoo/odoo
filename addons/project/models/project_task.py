@@ -918,9 +918,11 @@ class ProjectTask(models.Model):
         """
         Create a mapping between original tasks and their copied counterparts.
 
-        When a task with children is copied, the children of the copied task
-        maintain the same index in the ``child_ids`` recordset. This method leverages
-        that behavior to generate a mapping containing all original tasks and their copies.
+        When a task with children is copied, the children of the copied task are
+        created in the order in which the original ``child_ids`` were iterated, so
+        sorting them by id gives back the index correspondence with the original
+        children. This method leverages that behavior to generate a mapping
+        containing all original tasks and their copies.
 
         :param copied_tasks: The tasks that have been copied.
         :type copied_tasks: recordset of project.task
@@ -938,7 +940,7 @@ class ProjectTask(models.Model):
                 task_dependencies[original_task.id] = (original_task.depend_on_ids.ids, original_task.dependent_ids.ids)
             if original_task.child_ids:
                 # If the task has children, we have to call the method create_task_mapping to get their ids and dependencies mapping too.
-                children_mapping, children_dependencies = original_task.child_ids._create_task_mapping(copied_task.child_ids)
+                children_mapping, children_dependencies = original_task.child_ids._create_task_mapping(copied_task.child_ids.sorted('id'))
                 task_mapping.update(children_mapping)
                 task_dependencies.update(children_dependencies)
         return task_mapping, task_dependencies
