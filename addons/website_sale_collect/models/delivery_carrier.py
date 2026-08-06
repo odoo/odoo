@@ -110,7 +110,15 @@ class DeliveryCarrier(models.Model):
         pickup_locations = []
         location_countries = set()
         order_sudo = (request and request.cart) or False
+        if 'pickup_company' in self.env.context:
+            company_id = self.env.context['pickup_company']
+        elif order_sudo:
+            company_id = order_sudo.company_id
+        else:
+            company_id = request and request.env.website.company_id
         for wh in self.warehouse_ids:
+            if company_id and wh.company_id != company_id:
+                continue
             pickup_location_values = wh._prepare_pickup_location_data()
             if not pickup_location_values:  # Ignore warehouses with badly configured addresses.
                 continue

@@ -5,6 +5,7 @@ from unittest.mock import patch
 from odoo.tests import tagged
 
 from odoo.addons.payment.tests.http_common import PaymentHttpCommon
+from odoo.addons.website_sale.tests.common import MockRequest
 from odoo.addons.website_sale_collect.controllers.delivery import InStoreDelivery
 from odoo.addons.website_sale_collect.tests.common import ClickAndCollectCommon
 from odoo.addons.website_sale_stock.models.delivery_carrier import DeliveryCarrier
@@ -68,3 +69,22 @@ class TestInStoreDeliveryController(PaymentHttpCommon, ClickAndCollectCommon):
                 self.sale_order
             )
             self.assertIsNone(redirect)
+
+    def test_in_store_get_close_locations_filters_by_order_company_with_cart(self):
+        other_company = self.env['res.company'].create({'name': 'Other Company'})
+        self.in_store_dm.warehouse_ids += self._create_warehouse(company_id=other_company.id)
+
+        so = self._create_in_store_delivery_order(company_id=self.warehouse.company_id.id)
+        with MockRequest(self.env, website=self.website, sale_order_id=so.id):
+            result = so.carrier_id._get_pickup_locations()['pickup_locations']['pickup_location_data']
+            warehouses = self.env['stock.warehouse'].browse([r['id'] for r in result])
+            self.assertEqual(warehouses.company_id, so.warehouse_id.company_id)
+
+    def test_in_store_get_close_locations_filters_by_website_company_without_cart(self):
+        other_company = self.env['res.company'].create({'name': 'Other Company'})
+        self.in_store_dm.warehouse_ids += self._create_warehouse(company_id=other_company.id)
+
+        with MockRequest(self.env, website=self.website):
+            result = self.in_store_dm._get_pickup_locations()['pickup_locations']['pickup_location_data']
+            warehouses = self.env['stock.warehouse'].browse([r['id'] for r in result])
+            self.assertEqual(warehouses.company_id, self.website.company_id)
