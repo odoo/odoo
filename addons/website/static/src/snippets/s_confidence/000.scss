@@ -1,0 +1,132 @@
+.s_confidence {
+    display: flex;
+    flex-direction: column;
+
+    > [class*="container"] {
+        flex: 1 1 auto;
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
+
+        > .row {
+            flex: 1 1 auto;
+            min-height: 0;
+        }
+    }
+
+    .s_confidence_collage_col {
+        align-self: stretch;
+    }
+
+    .s_confidence_source {
+        --confidence-duration: calc(50s - var(--confidence-scroll-speed, 5s) * 4);
+        --confidence-img-ratio: 3 / 4;
+        --confidence-gap: 1rem;
+
+        position: absolute;
+        inset: 0;
+        display: flex;
+        gap: var(--confidence-gap);
+        overflow: hidden;
+        padding: inherit;
+
+        .s_confidence_track {
+            display: flex;
+            flex: 1 1 0;
+            flex-direction: column;
+            gap: var(--confidence-gap);
+            height: max-content;
+            will-change: transform;
+            animation: o-confidence-scroll-down var(--confidence-duration) linear infinite;
+        }
+        .s_confidence_track.mobile-invisible {
+            animation-name: o-confidence-scroll-up;
+        }
+        .s_confidence_track > * {
+            width: 100%;
+            aspect-ratio: var(--confidence-img-ratio);
+        }
+        img {
+            width: 100%;
+            height: 100%;
+            display: block;
+            object-fit: cover;
+        }
+    }
+
+    .s_confidence_reverse .s_confidence_source .s_confidence_track {
+        animation-name: o-confidence-scroll-up;
+    }
+    .s_confidence_reverse .s_confidence_source .s_confidence_track.mobile-invisible {
+        animation-name: o-confidence-scroll-down;
+    }
+
+    @include media-breakpoint-down(lg) {
+        .s_confidence_source {
+            position: static;
+            display: block;
+            height: 16rem;
+            overflow: hidden;
+            padding: 0;
+        }
+        .s_confidence_source .mobile-invisible {
+            display: none;
+        }
+        .s_confidence_source .s_confidence_track {
+            flex-direction: row;
+            width: max-content;
+            height: 100%;
+            animation-name: o-confidence-scroll-left;
+        }
+        .s_confidence_source .s_confidence_track > * {
+            width: 11rem;
+            height: 100%;
+        }
+        .s_confidence_reverse .s_confidence_source .s_confidence_track {
+            animation-name: o-confidence-scroll-right;
+        }
+    }
+}
+
+.o_add_snippets_preview .s_confidence {
+    .s_confidence_source .s_confidence_track {
+        animation-play-state: paused;
+    }
+    &:hover .s_confidence_source .s_confidence_track {
+        animation-play-state: running;
+    }
+}
+
+.editor_enable .s_confidence .s_confidence_source {
+    .s_confidence_clone {
+        display: none;
+    }
+}
+
+.editor_enable .s_confidence .s_confidence_source .s_confidence_track {
+    animation: none;
+    transform: none;
+
+    @include media-breakpoint-up(lg) {
+        height: 100%;
+
+        div {
+            flex: 0 0 calc((100% - var(--confidence-gap) * 2) / 3);
+            min-height: 0;
+            aspect-ratio: auto;
+        }
+    }
+}
+
+@keyframes o-confidence-scroll-up {
+    to { transform: translateY(-50%); }
+}
+@keyframes o-confidence-scroll-down {
+    from { transform: translateY(-50%); }
+}
+@keyframes o-confidence-scroll-left {
+    to { transform: translateX(-50%); }
+}
+@keyframes o-confidence-scroll-right {
+    from { transform: translateX(-50%); }
+}

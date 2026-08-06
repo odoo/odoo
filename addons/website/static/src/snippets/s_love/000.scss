@@ -1,0 +1,76 @@
+.s_love {
+    .s_love_source {
+        --love-duration: calc(50s - var(--love-scroll-speed, 5s) * 4);
+
+        display: flex;
+        gap: 1rem;
+        height: 34rem;
+        overflow: hidden;
+        mask-image: linear-gradient(to bottom, transparent, #000 8%, #000 92%, transparent);
+
+        .s_love_track {
+            flex: 1 1 0;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            height: max-content;
+            will-change: transform;
+        }
+        .s_love_track_up {
+            animation: o-love-scroll-up var(--love-duration) linear infinite;
+        }
+        .s_love_track_down {
+            animation: o-love-scroll-down var(--love-duration) linear infinite;
+        }
+        .s_love_track > * {
+            width: 100%;
+        }
+    }
+
+    .s_love_reverse .s_love_source {
+        .s_love_track_up {
+            animation-name: o-love-scroll-down;
+        }
+        .s_love_track_down {
+            animation-name: o-love-scroll-up;
+        }
+    }
+
+    .s_love_avatar {
+        width: 2.5rem;
+        height: 2.5rem;
+        object-fit: cover;
+        flex-shrink: 0;
+    }
+
+    @include media-breakpoint-down(lg) {
+        .s_love_source {
+            height: 28rem;
+        }
+        .s_love_source .mobile-invisible {
+            display: none;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .s_love_source .s_love_track {
+            animation: none !important;
+        }
+    }
+}
+
+.o_add_snippets_preview .s_love {
+    .s_love_source .s_love_track {
+        animation-play-state: paused;
+    }
+    &:hover .s_love_source .s_love_track {
+        animation-play-state: running;
+    }
+}
+
+@keyframes o-love-scroll-up {
+    to { transform: translateY(-50%); }
+}
+@keyframes o-love-scroll-down {
+    from { transform: translateY(-50%); }
+}
