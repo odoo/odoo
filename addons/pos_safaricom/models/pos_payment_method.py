@@ -87,7 +87,7 @@ class PosPaymentMethod(models.Model):
         """Get OAuth access token"""
         self.ensure_one()
 
-        if not self.consumer_key or not self.consumer_secret:
+        if not self.consumer_key or not self.sudo().consumer_secret:
             raise UserError(_("Consumer Key and Consumer Secret are required for Safaricom M-Pesa"))
 
         try:
