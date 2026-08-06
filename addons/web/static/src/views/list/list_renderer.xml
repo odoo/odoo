@@ -233,10 +233,10 @@
                     <t t-else="">Click to collapse all groups</t>
                 </div>
                 <div class="d-flex align-items-center">
-                    <span class="o_group_caret oi oi-fw me-1" t-attf-data-icon="{{ group.isFolded ? 'arrow_right' : 'arrow_drop_down' }}"
+                    <span t-attf-class="o_group_caret oi me-1 {{group.isFolded ? 'arrow_right' : 'arrow_down' }}"
                         t-attf-style="--o-list-group-level: {{this.getGroupLevel(group)}}"/>
-                    <span class="fw-normal">
-                        <t t-out="this.odoomark(group.displayName)"/>
+                    <span>
+                        <t t-out="this.odoomark(group.displayName)"/> <span class="ms-1">(<t t-esc="group.count"/>)</span>
                     </span>
                     <div t-if="(this.groupByButtons[group.groupByField.name] and !group.isFolded and group.record.resId)" class="o_group_buttons">
                         <t t-foreach="this.groupByButtons[group.groupByField.name]" t-as="button" t-key="button.id">
@@ -261,13 +261,8 @@
                             </t>
                         </t>
                     </div>
-                    <div class="d-flex align-items-center ms-auto gap-2">
-                        <t t-if="!this.showGroupPager(group)" class="m-1">
-                            <span><t t-out="group.count"/></span>
-                        </t>
-                        <div t-att-class="this.showGroupPager(group) ? '' : 'o_pager_hidden'" t-on-click.stop="">
-                            <Pager t-props="this.getGroupPagerProps(group)"/>
-                        </div>
+                    <div t-if="this.showGroupPager(group)" t-on-click.stop="" class="ms-auto">
+                        <Pager t-props="this.getGroupPagerProps(group)"/>
                     </div>
                 </div>
             </th>
