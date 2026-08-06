@@ -69,7 +69,8 @@ class SaleOrder(models.Model):
     @api.depends('transaction_ids.state', 'transaction_ids.amount', 'order_line', 'amount_total', 'order_line.invoice_lines.parent_state', 'order_line.invoice_lines.price_total', 'order_line.pos_order_line_ids', 'order_line.pos_order_line_ids.refund_orderline_ids')
     def _compute_amount_unpaid(self):
         for sale_order in self:
-            online_payments_invoices = sale_order.transaction_ids.filtered(lambda tx_move: tx_move.state in ('authorized', 'done')).mapped('invoice_ids')
+            sale_order_transactions = sale_order.transaction_ids.filtered(lambda tx_move: tx_move.state in ('authorized', 'done'))
+            online_payments_invoices = sale_order_transactions.mapped('invoice_ids')
             invoice_lines = sale_order.order_line.invoice_lines.filtered(lambda l: l.parent_state in ('draft', 'posted') and l.move_id not in online_payments_invoices)
             total_invoices_paid = sum(invoice_lines.mapped(lambda l: math.copysign(l.price_total, -l.balance)))
             pos_order_lines = sale_order.order_line.filtered(lambda l: not l.display_type).mapped('pos_order_line_ids')
@@ -78,7 +79,8 @@ class SaleOrder(models.Model):
                 -pol.price_subtotal_incl if pol.order_id.is_refund else pol.price_subtotal_incl
                 for pol in pos_order_lines
             )
-            sale_order.amount_unpaid = max(sale_order.amount_total - total_invoices_paid - total_pos_paid - sale_order.amount_paid, 0.0)
+            total_amount_paid = sum(tx.amount for tx in sale_order_transactions if not tx.payment_method_id._is_postpaid())
+            sale_order.amount_unpaid = max(sale_order.amount_total - total_invoices_paid - total_pos_paid - total_amount_paid, 0.0)
 
     @api.depends('order_line.pos_order_line_ids')
     def _compute_amount_to_invoice(self):
