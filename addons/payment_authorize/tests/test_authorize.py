@@ -95,3 +95,41 @@ class AuthorizeTest(AuthorizeCommon):
             'provider_ref': '123456789',
             'authorize_profile': '987654321',
         })
+
+    def test_validation_tx_is_tokenized_before_being_voided(self):
+        """Test that the tokenization request is sent before the void request.
+        The customer profile can only be created from a transaction that has not been voided yet,
+        so the tokenization must happen before the validation transaction is voided.
+        """
+        tx = self._create_transaction("direct", operation="validation", tokenize=True)
+        call_order = []
+
+        def tokenize(*args, **kwargs):
+            call_order.append("tokenize")
+            tx.tokenize = False
+
+        def void(*args, **kwargs):
+            call_order.append("void")
+
+        with (
+            patch(
+                "odoo.addons.payment.models.payment_transaction.PaymentTransaction._tokenize",
+                side_effect=tokenize,
+            ),
+            patch(
+                "odoo.addons.payment.models.payment_transaction.PaymentTransaction._void",
+                side_effect=void,
+            ),
+        ):
+            tx._process(
+                "authorize",
+                {
+                    "response": {
+                        "x_response_code": "1",
+                        "x_type": "auth_only",
+                        "x_trans_id": "test_trans_id",
+                    }
+                },
+            )
+
+        self.assertEqual(call_order, ["tokenize", "void"])
