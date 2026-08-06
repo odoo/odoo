@@ -291,3 +291,39 @@ class TestMultistepManufacturing(TestMrpCommon):
         self.assertEqual(mo.sale_order_count, 1)
         duplicate_mo = mo.copy()
         self.assertEqual(duplicate_mo.sale_order_count, 0)
+
+    def test_forecast_with_interwarehouse_resupply(self):
+        """Test that there is no discrepancy between reordering rule and
+        product forecast report."""
+        self.warehouse_1.manufacture_steps = 'pbm_sam'
+        self.product_manu.bom_ids.bom_line_ids = [Command.clear()]
+        self.warehouse.resupply_wh_ids = [Command.link(self.warehouse_1.id)]
+        self.warehouse.resupply_route_ids.rule_ids[0].procure_method = 'mts_else_mto'
+        self.product_manu.route_ids = [
+            Command.set([
+                self.warehouse.resupply_route_ids.id,
+                self.warehouse.mto_pull_id.route_id.id,
+            ]),
+        ]
+        orderpoint = self.env['stock.warehouse.orderpoint'].create({
+            'product_id': self.product_manu.id,
+            'product_min_qty': 5,
+            'product_max_qty': 10,
+            'trigger': 'manual',
+            'location_id': self.warehouse_1.lot_stock_id.id,
+        })
+        self.sale_order.order_line.product_uom_qty = 1
+        self.sale_order.action_confirm()
+        mo = self.sale_order.mrp_production_ids
+        # Use Form to avoid passing final location field in write vals, as it's not in the view.
+        with Form(mo) as mo_form:
+            mo_form.product_qty = 5
+        self.assertEqual(mo.move_finished_ids.location_final_id, self.warehouse_1.lot_stock_id)
+        mo.action_confirm()
+        self.assertEqual(
+            orderpoint.qty_forecast,
+            self.product_manu.with_context(warehouse=self.warehouse_1).virtual_available,
+            'Orderpoint forecast should match product forecast for the resupply warehouse.',
+        )
+        mo.picking_type_id = self.warehouse.manu_type_id
+        self.assertEqual(mo.location_final_id, mo.location_dest_id)

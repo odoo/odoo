@@ -1062,6 +1062,8 @@ class MrpProduction(models.Model):
                 new_date_start = fields.Datetime.to_datetime(vals.get('date_start'))
                 if not production.date_finished or new_date_start >= production.date_finished:
                     production.date_finished = new_date_start + datetime.timedelta(hours=1)
+            if (vals.get('location_dest_id') or vals.get('picking_type_id')) and not vals.get('location_final_id') and production.location_final_id:
+                production.location_final_id = vals.get('location_dest_id') or production.location_dest_id
         if moves_to_reassign:
             moves_to_reassign._do_unreserve()
             moves_to_reassign = moves_to_reassign.filtered(
