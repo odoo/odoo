@@ -4,6 +4,7 @@ import { getService, mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { animationFrame } from "@odoo/hoot-mock";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { click, press } from "@odoo/hoot-dom";
+import { PopoverPlugin } from "@web/core/popover/popover_plugin";
 
 let target;
 
@@ -20,7 +21,7 @@ test("simple use", async () => {
 
     expect(".o_popover").toHaveCount(0);
 
-    const remove = getService("popover").add(target, Comp);
+    const remove = getService(PopoverPlugin).add(target, Comp);
     await animationFrame();
 
     expect(".o_popover").toHaveCount(1);
@@ -39,7 +40,7 @@ test("close on click away", async () => {
         props = useProps();
     }
 
-    getService("popover").add(target, Comp);
+    getService(PopoverPlugin).add(target, Comp);
     await animationFrame();
 
     expect(".o_popover").toHaveCount(1);
@@ -64,7 +65,7 @@ test("close on click away when loading", async () => {
         }
     }
 
-    getService("popover").add(target, Comp);
+    getService(PopoverPlugin).add(target, Comp);
     await animationFrame();
 
     expect(".o_popover").toHaveCount(0);
@@ -90,7 +91,7 @@ test("close on 'Escape' keydown", async () => {
         props = useProps();
     }
 
-    getService("popover").add(target, Comp);
+    getService(PopoverPlugin).add(target, Comp);
     await animationFrame();
 
     expect(".o_popover").toHaveCount(1);
@@ -109,7 +110,7 @@ test("do not close on click away", async () => {
         props = useProps();
     }
 
-    const remove = getService("popover").add(target, Comp, {}, { closeOnClickAway: false });
+    const remove = getService(PopoverPlugin).add(target, Comp, {}, { closeOnClickAway: false });
     await animationFrame();
 
     expect(".o_popover").toHaveCount(1);
@@ -138,7 +139,7 @@ test("close callback", async () => {
         expect.step("close");
     }
 
-    getService("popover").add(target, Comp, {}, { onClose });
+    getService(PopoverPlugin).add(target, Comp, {}, { onClose });
     await animationFrame();
 
     await click(document.body);
@@ -153,7 +154,7 @@ test("sub component triggers close", async () => {
         props = useProps();
     }
 
-    getService("popover").add(target, Comp);
+    getService(PopoverPlugin).add(target, Comp);
     await animationFrame();
 
     expect(".o_popover").toHaveCount(1);
@@ -174,7 +175,7 @@ test("close popover if target is removed", async () => {
 
     const popoverTarget = document.createElement("div");
     target.appendChild(popoverTarget);
-    getService("popover").add(popoverTarget, Comp);
+    getService(PopoverPlugin).add(popoverTarget, Comp);
     await animationFrame();
 
     expect(".o_popover").toHaveCount(1);
@@ -201,7 +202,7 @@ test("close and do not crash if target parent does not exist", async () => {
         expect.step("close");
     }
 
-    getService("popover").add(dissapearedTarget, Comp, {}, { onClose });
+    getService(PopoverPlugin).add(dissapearedTarget, Comp, {}, { onClose });
     await animationFrame();
 
     expect.verifySteps(["close"]);
@@ -220,7 +221,7 @@ test("keep popover if target sibling is removed", async () => {
 
     await mountWithCleanup(Sibling, { noMainContainer: true });
 
-    getService("popover").add(target, Comp);
+    getService(PopoverPlugin).add(target, Comp);
     await animationFrame();
 
     expect(".o_popover").toHaveCount(1);

@@ -23,7 +23,7 @@ import { DateTimePickerPopover } from "./datetime_picker_popover";
  *
  * @typedef {import("./datetime_picker").DateTimePickerProps} DateTimePickerProps
  * @typedef {import("../popover/popover_hook").PopoverHookReturnType} PopoverHookReturnType
- * @typedef {import("../popover/popover_service").PopoverServiceAddOptions} PopoverServiceAddOptions
+ * @typedef {import("../popover/popover_plugin").PopoverOptionSchema} PopoverServiceAddOptions
  * @typedef {import("@odoo/owl").Component} Component
  *
  * @typedef {{
@@ -85,7 +85,7 @@ export const datetimePickerService = {
     start(_env, { bottom_sheet: bottomSheetService, popover: popoverService, ui }) {
         function defaultCreatePopover(...args) {
             const service = useBottomSheet() ? bottomSheetService : popoverService;
-            return makePopover(service.add, ...args);
+            return makePopover(service.add.bind(service), ...args);
         }
 
         function useBottomSheet() {
