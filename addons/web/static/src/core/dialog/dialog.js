@@ -1,4 +1,4 @@
-import { useChildSubEnv } from "@web/owl2/utils";
+import { useSubEnv } from "@web/owl2/utils";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { useActiveElement } from "../ui/ui_service";
 import { useBackButton, useService } from "@web/core/utils/hooks";
@@ -91,7 +91,7 @@ export class Dialog extends Component {
             { bypassEditableProtection: true }
         );
         this.id = `dialog_${this.data.id}`;
-        useChildSubEnv({ inDialog: true, dialogId: this.id });
+        useSubEnv({ inDialog: true, dialogId: this.id });
         this.isMovable = this.props.header;
         if (this.isMovable) {
             this.position = proxy({ left: 0, top: 0 });

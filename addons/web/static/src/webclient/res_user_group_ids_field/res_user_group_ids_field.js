@@ -1,4 +1,4 @@
-import { useChildSubEnv } from "@web/owl2/utils";
+import { useSubEnv } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { x2ManyCommands } from "@web/core/orm_plugin";
 import { registry } from "@web/core/registry";
@@ -115,7 +115,7 @@ class ResUserGroupIdsField extends Component {
             groups: {},
             privileges,
         };
-        useChildSubEnv({
+        useSubEnv({
             resUserGroupsInfo: this.info,
         });
         this.values = signal({});

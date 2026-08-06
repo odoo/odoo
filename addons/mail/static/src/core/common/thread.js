@@ -1,4 +1,4 @@
-import { useChildSubEnv, useLayoutEffect } from "@web/owl2/utils";
+import { useLayoutEffect, useSubEnv } from "@web/owl2/utils";
 import { DateSection } from "@mail/core/common/date_section";
 import { Message } from "@mail/core/common/message";
 import { NotificationMessage } from "./notification_message";
@@ -371,7 +371,7 @@ export class Thread extends Component {
             };
         });
         useLayoutEffect(this.applyScroll);
-        useChildSubEnv({
+        useSubEnv({
             getCurrentThread: () => this.props.thread,
             onImageLoaded: this.applyScroll,
         });

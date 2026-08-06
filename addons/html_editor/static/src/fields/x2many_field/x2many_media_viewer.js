@@ -1,4 +1,4 @@
-import { useChildSubEnv } from "@web/owl2/utils";
+import { useSubEnv } from "@web/owl2/utils";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { X2ManyField, x2ManyField, x2ManyFieldProps } from "@web/views/fields/x2many/x2many_field";
@@ -23,7 +23,7 @@ export class X2ManyMediaViewer extends X2ManyField {
         this.orm = useService("orm");
         this.notification = useService("notification");
         this.supportedFields = ["image_1920", "image_1024", "image_512", "image_256", "image_128"];
-        useChildSubEnv({
+        useSubEnv({
             parentField: this.props.name,
         });
     }

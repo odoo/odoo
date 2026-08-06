@@ -4,7 +4,7 @@ import { toolbarButtonProps } from "@html_editor/main/toolbar/toolbar";
 import { Component, onMounted, onWillDestroy, proxy, signal } from "@odoo/owl";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { POSITION_BUS } from "@web/core/position/position_hook";
-import { useChildSubEnv } from "@web/owl2/utils";
+import { useSubEnv } from "@web/owl2/utils";
 import { AnimateOption } from "./animate_option";
 
 export class AnimateTextPopover extends BaseOptionComponent {
@@ -50,7 +50,7 @@ export class AnimateText extends Component {
         this.state = proxy({});
         this.updateState();
 
-        useChildSubEnv({
+        useSubEnv({
             dependencyManager: new DependencyManager(),
             getEditingElement: () => this.activeElement,
             getEditingElements: () => (this.activeElement ? [this.activeElement] : []),

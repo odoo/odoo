@@ -1,4 +1,4 @@
-import { useChildSubEnv } from "@web/owl2/utils";
+import { useSubEnv } from "@web/owl2/utils";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownGroup } from "@web/core/dropdown/dropdown_group";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -200,7 +200,7 @@ export class SwitchCompanyMenu extends Component {
         this.companySelector = proxy(
             new this.constructor.CompanySelector(actionService, this.dropdown)
         );
-        useChildSubEnv({ companySelector: this.companySelector });
+        useSubEnv({ companySelector: this.companySelector });
 
         this.state = proxy({});
         this.resetState();

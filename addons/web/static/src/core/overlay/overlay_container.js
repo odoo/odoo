@@ -8,7 +8,7 @@ import {
     useProps,
     useScope,
 } from "@odoo/owl";
-import { useChildSubEnv } from "@web/owl2/utils";
+import { useSubEnv } from "@web/owl2/utils";
 import { ErrorHandler } from "@web/core/utils/components";
 import { services } from "@web/core/services";
 import { registry } from "@web/core/registry";
@@ -38,7 +38,7 @@ class OverlayItem extends Component {
             currentScope.pluginManager = this.parentScope.pluginManager;
         }
 
-        useChildSubEnv({
+        useSubEnv({
             [OVERLAY_SYMBOL]: {
                 contains: (target) => this.contains(target),
             },

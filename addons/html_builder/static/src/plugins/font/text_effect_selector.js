@@ -1,4 +1,4 @@
-import { useChildSubEnv } from "@web/owl2/utils";
+import { useSubEnv } from "@web/owl2/utils";
 import { Component, proxy } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -272,7 +272,7 @@ export class TextEffectSelector extends Component {
         this.dropdown = useDropdownState({
             onClose: () => this.onCloseDropdown(),
         });
-        useChildSubEnv({
+        useSubEnv({
             dependencyManager: new DependencyManager(),
             getEditingElement: () => this.activeElement,
             getEditingElements: () => (this.activeElement ? [this.activeElement] : []),

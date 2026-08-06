@@ -7,7 +7,7 @@ import { onWillDestroy, onWillStart, Plugin, t, useScope } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { services } from "@web/core/services";
 import { SERVICES_METADATA } from "@web/core/utils/hooks";
-import { useChildEnv } from "@web/owl2/utils";
+import { useEnv } from "@web/owl2/utils";
 
 const serviceRegistry = registry.category("services");
 
@@ -139,7 +139,7 @@ export class LegacyServiceStarterPlugin extends Plugin {
     static sequence = 100; // start legacy services after all the other plugins.
 
     scope = useScope();
-    env = useChildEnv();
+    env = useEnv();
 
     setup() {
         const runScope = this.scope.run.bind(this.scope);

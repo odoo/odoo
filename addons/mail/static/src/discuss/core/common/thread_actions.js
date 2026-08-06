@@ -1,4 +1,4 @@
-import { useChildSubEnv } from "@web/owl2/utils";
+import { useSubEnv } from "@web/owl2/utils";
 import { ACTION_TAGS } from "@mail/core/common/action";
 import { registerThreadAction } from "@mail/core/common/thread_actions";
 import { AttachmentPanel } from "@mail/discuss/core/common/attachment_panel";
@@ -26,7 +26,7 @@ registerThreadAction("pinned-messages", {
     sequence: 20,
     sequenceGroup: 10,
     setup() {
-        useChildSubEnv({
+        useSubEnv({
             pinMenu: {
                 open: () => this.actionPanelOpen({ keepPrevious: true }),
                 close: () => {

@@ -1,4 +1,4 @@
-import { useChildSubEnv, useSubEnv } from "@web/owl2/utils";
+import { useSubEnv } from "@web/owl2/utils";
 import { Composer } from "@mail/core/common/composer";
 import { Thread } from "@mail/core/common/thread";
 import { Call } from "@mail/discuss/call/common/call";
@@ -47,8 +47,8 @@ export class Meeting extends Component {
             this.datetimeNow.set(DateTime.now());
             return 60_000 - (Date.now() % 60_000);
         });
-        useSubEnv({ inDiscussCallView: true });
         useSubEnv({
+            inDiscussCallView: true,
             inMeetingView: {
                 openChat: () =>
                     this.threadActions.actions
@@ -59,7 +59,7 @@ export class Meeting extends Component {
         this.threadActions = useThreadActions({ thread: () => this.channel.thread });
         this.messageHighlight = useMessageScrolling({ thread: () => this.channel.thread });
         this.messageSearch = useMessageSearch(this.channel.thread);
-        useChildSubEnv({
+        useSubEnv({
             hasPreviousActionPanel: () => this.threadActions.actionStack.length > 0,
             messageHighlight: this.messageHighlight,
             messageSearch: this.messageSearch,

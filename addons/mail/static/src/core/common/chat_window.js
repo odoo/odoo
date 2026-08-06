@@ -1,4 +1,4 @@
-import { useChildSubEnv, useSubEnv } from "@web/owl2/utils";
+import { useSubEnv } from "@web/owl2/utils";
 import { ActionList } from "@mail/core/common/action_list";
 import { Composer } from "@mail/core/common/composer";
 import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
@@ -79,7 +79,7 @@ export class ChatWindow extends Component {
         this.isMobileOS = isMobileOS();
         this.selfGuestName = computed(() => this.store.self_guest?.name);
         this.channelDisplayName = computed(() => this.props.chatWindow.channel?.displayName);
-        useChildSubEnv({ messageHighlight: this.messageHighlight });
+        useSubEnv({ messageHighlight: this.messageHighlight });
         useBackButton(() => this.close());
     }
 

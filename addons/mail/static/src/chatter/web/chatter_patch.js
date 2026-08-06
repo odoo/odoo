@@ -247,8 +247,8 @@ const chatterPatch = {
         return this.state.thread?.sortedAttachments ?? [];
     },
 
-    get childSubEnv() {
-        const res = super.childSubEnv;
+    get subEnv() {
+        const res = super.subEnv;
         assignGetter(res.inChatter, { aside: () => this.webChatterProps.isChatterAside });
         Object.assign(res.inChatter, { toggleComposer: this.toggleComposer.bind(this) });
         return res;
