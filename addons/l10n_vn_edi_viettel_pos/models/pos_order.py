@@ -15,6 +15,12 @@ class PosOrder(models.Model):
         for pos_order in self:
             pos_order.l10n_vn_has_sinvoice_pdf = bool(pos_order.account_move.l10n_vn_edi_sinvoice_pdf_file)
 
+    def _generate_pos_order_invoice(self):
+        # EXTENDS 'point_of_sale'
+        if self.company_id.country_id.code == 'VN' and self.config_id.l10n_vn_auto_send_to_sinvoice:
+            return super(PosOrder, self.with_context(generate_pdf=True))._generate_pos_order_invoice()
+        return super()._generate_pos_order_invoice()
+
     def _prepare_invoice_vals(self):
         vals = super()._prepare_invoice_vals()
 
