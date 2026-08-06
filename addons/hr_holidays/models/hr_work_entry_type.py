@@ -34,9 +34,7 @@ class HrWorkEntryType(models.Model):
 
     @api.model
     def _model_sorting_key(self, work_entry_type):
-        remaining = work_entry_type.virtual_remaining_leaves > 0
-        taken = work_entry_type.leaves_taken > 0
-        return -1 * work_entry_type.sequence, not work_entry_type.employee_requests and remaining, work_entry_type.employee_requests and remaining, taken
+        return work_entry_type.sequence
 
     create_calendar_meeting = fields.Boolean(string="Display Time Off in Calendar", default=True, tracking=True)
     color = fields.Integer(string='Color', help="The color selected here will be used in every screen with the time type.")
@@ -382,11 +380,17 @@ been taken for this time off type. Changing it now would affect existing employe
                     record.display_name = record.name
                 continue
             name = record.name
-            if record.requires_allocation and self.env.context.get('default_date_from'):
+            if record.requires_allocation:
                 remaining_time = float_round(record.virtual_remaining_leaves, precision_digits=2) or 0.0
                 maximum = float_round(record.max_leaves, precision_digits=2) or 0.0
 
-                if record.unit_of_measure == "hour":
+                is_popover = self.env.context.get("is_popover", False)
+                is_hour = record.unit_of_measure == "hour"
+                if is_popover and is_hour:
+                    name = self.env._("%(name)s (%(time)g/%(maximum)g hours)", name=record.name, time=remaining_time, maximum=maximum)
+                elif is_popover:
+                    name = self.env._("%(name)s (%(time)g/%(maximum)g days)", name=record.name, time=remaining_time, maximum=maximum)
+                elif is_hour:
                     name = self.env._("%(name)s (%(time)g remaining out of %(maximum)g hours)", name=record.name, time=remaining_time, maximum=maximum)
                 else:
                     name = self.env._("%(name)s (%(time)g remaining out of %(maximum)g days)", name=record.name, time=remaining_time, maximum=maximum)
@@ -418,7 +422,7 @@ been taken for this time off type. Changing it now would affect existing employe
         if order == self._order and employee:
             # retrieve all leaves, sort them, then apply offset and limit
             leaves = self.browse(super()._search(domain, **kwargs))
-            leaves = leaves.sorted(key=self._model_sorting_key, reverse=True)
+            leaves = leaves.sorted(key=self._model_sorting_key)
             leaves = leaves[offset:(offset + limit) if limit else None]
             return leaves._as_query()
         return super()._search(domain, offset, limit, order, **kwargs)
