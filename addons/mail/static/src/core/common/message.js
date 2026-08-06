@@ -336,6 +336,12 @@ export class Message extends Component {
         };
     }
 
+    get deliveryFailureText() {
+        return this.message.failureNotifications.length > 0
+            ? _t("Click to see delivery errors")
+            : "";
+    }
+
     get isEditing() {
         return !this.isReadOnly() && this.props.message.composer;
     }

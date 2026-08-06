@@ -14,6 +14,7 @@ import { isDragSourceExternalFile } from "@mail/utils/common/misc";
 import { Wysiwyg } from "@html_editor/wysiwyg";
 
 import { rpc } from "@web/core/network/rpc";
+import { NotificationPlugin } from "@web/core/notifications/notification_plugin";
 import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
 import { useDebounced } from "@web/core/utils/timing";
 
@@ -32,6 +33,7 @@ import {
     untrack,
     useApp,
     useListener,
+    usePlugin,
     useProps,
 } from "@odoo/owl";
 
@@ -165,6 +167,7 @@ export class Composer extends Component {
             isFullComposerOpen: false,
         });
         this.rootRef = signal.ref(HTMLDivElement);
+        this.notification = usePlugin(NotificationPlugin);
         this.fullComposerRecoveryPopover = usePopover(FullComposerRecoveryPopover, {
             closeOnClickAway: false,
             closeOnEscape: false,
@@ -842,7 +845,7 @@ export class Composer extends Component {
 
     async processMessage(cb) {
         if (this.props.composer.attachments.some(({ uploading }) => uploading)) {
-            this.env.services.notification.add(_t("Please wait while the file is uploading."), {
+            this.notification.add(_t("Please wait while the file is uploading."), {
                 type: "warning",
             });
         } else if (this.canProcessMessage) {
@@ -879,7 +882,12 @@ export class Composer extends Component {
                 ...this.props.composer.thread.suggestedRecipients,
                 ...this.props.composer.thread.additionalRecipients,
             ];
-            if (allRecipients.some((recipient) => !recipient.email || !isEmail(recipient.email))) {
+            const invalidRecipient = allRecipients.find((recipient) => !isEmail(recipient.email));
+            if (invalidRecipient) {
+                this.notification.add(
+                    _t("%s is not a valid email address", invalidRecipient.email),
+                    { type: "danger" }
+                );
                 return;
             }
         }
