@@ -1,4 +1,5 @@
 import { after, before, describe, expect, test } from "@odoo/hoot";
+import { defineStyle } from "@web/../tests/web_test_helpers";
 import { setupEditor, testEditor } from "./_helpers/editor";
 import { unformat } from "./_helpers/format";
 import {
@@ -12,6 +13,7 @@ import { getContent } from "./_helpers/selection";
 import { animationFrame, press, tick } from "@odoo/hoot-dom";
 import { QWebPlugin } from "@html_editor/others/qweb_plugin";
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
+import { closestElement } from "@html_editor/utils/dom_traversal";
 
 const redToBlueGradient = "linear-gradient(rgb(255, 0, 0), rgb(0, 0, 255))";
 const greenToBlueGradient = "linear-gradient(rgb(0, 255, 0), rgb(0, 0, 255))";
@@ -168,6 +170,59 @@ test("removeFormat should not remove color when typing after a cursor movement",
     await tick();
     await insertText(editor, "x");
     expect(getContent(el)).toBe('<p><font style="color: rgb(255, 0, 0);">abx[]</font></p>');
+});
+
+test("reset caret color to default when format is removed with a collapsed cursor", async () => {
+    defineStyle(`
+        :root {
+            --body-color: rgb(0, 0, 0);
+        }
+    `);
+    const { editor } = await setupEditor('<p><font style="color: rgb(255, 0, 0);">a[]b</font></p>');
+    execCommand(editor, "removeFormat");
+    let selection = editor.shared.selection.getEditableSelection();
+    expect(closestElement(selection.anchorNode)).toHaveStyle("caret-color: rgb(0, 0, 0)");
+    await simulateArrowKeyPress(editor, "ArrowRight");
+    await tick(); // Selection change
+
+    selection = editor.shared.selection.getEditableSelection();
+    expect(closestElement(selection.anchorNode)).toHaveStyle("caret-color: rgb(255, 0, 0)");
+});
+
+test("caret color should be preserved when deleting a colored text", async () => {
+    const { editor, el } = await setupEditor(
+        '<p><font style="color: rgb(255, 0, 0);">ab[]</font></p>'
+    );
+    deleteBackward(editor);
+    deleteBackward(editor);
+    expect(getContent(el)).toBe(
+        `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`
+    );
+    let selection = editor.shared.selection.getEditableSelection();
+    expect(closestElement(selection.anchorNode)).toHaveStyle("caret-color: rgb(255, 0, 0)");
+    await insertText(editor, "x");
+
+    selection = editor.shared.selection.getEditableSelection();
+    expect(getContent(el)).toBe('<p><font style="color: rgb(255, 0, 0);">x[]</font></p>');
+    expect(closestElement(selection.anchorNode)).toHaveStyle("caret-color: rgb(255, 0, 0)");
+});
+
+test("caret color should be preserved when deleting a colored text (2)", async () => {
+    const { editor, el } = await setupEditor(
+        '<p><font style="color: rgb(255, 0, 0);">ab</font><font style="color: rgb(255, 255, 0);">cd[]</font></p>'
+    );
+    deleteBackward(editor);
+    deleteBackward(editor);
+    expect(getContent(el)).toBe('<p><font style="color: rgb(255, 0, 0);">ab</font>[]</p>');
+    let selection = editor.shared.selection.getEditableSelection();
+    expect(closestElement(selection.anchorNode)).toHaveStyle("caret-color: rgb(255, 255, 0)");
+    await insertText(editor, "x");
+
+    selection = editor.shared.selection.getEditableSelection();
+    expect(getContent(el)).toBe(
+        '<p><font style="color: rgb(255, 0, 0);">ab</font><font style="color: rgb(255, 255, 0);">x[]</font></p>'
+    );
+    expect(closestElement(selection.anchorNode)).toHaveStyle("caret-color: rgb(255, 255, 0)");
 });
 
 test("collapsed remove-format defers color removal when the color is on an ancestor", async () => {
