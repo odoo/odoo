@@ -89,7 +89,7 @@ export class Notification extends Record {
     }
 
     get icon() {
-        return "mail";
+        return this.isFailure ? "cancel" : "mail";
     }
 
     get iconClass() {
@@ -120,7 +120,7 @@ export class Notification extends Record {
             case "bounce":
                 return "priority_high";
             case "exception":
-                return "close";
+                return "cancel";
             case "ready":
                 return "send";
             case "canceled":
@@ -133,7 +133,7 @@ export class Notification extends Record {
     }
 
     get statusClass() {
-        return this.notification_status === "exception" ? "text-danger" : "";
+        return this.notification_status === "exception" ? "text-danger oi-filled" : "";
     }
 
     get statusTitle() {

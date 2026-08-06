@@ -173,13 +173,13 @@
 
 <t t-name="mail.Message.notification">
     <div t-if="this.message.thread?.eq(this.props.thread) and this.message.notification_ids.length > 0" class="mx-1">
-        <span class="o-mail-Message-notification cursor-pointer opacity-100-hover" t-att-class="this.message.failureNotifications.length > 0 ? 'text-danger opacity-75' : 'opacity-50'" role="button" tabindex="0" t-on-click="this.onClickNotification">
+        <span class="o-mail-Message-notification cursor-pointer opacity-100-hover" t-att-class="this.message.failureNotifications.length > 0 ? 'text-danger opacity-75 align-middle' : 'opacity-50'" role="button" tabindex="0" t-att-title="this.deliveryFailureText" t-on-click="this.onClickNotification">
             <i class="oi oi-filled" t-att-data-icon="this.message.notification_ids[0].icon" role="img" aria-label="Delivery failure"/> <span class="fw-bold small" t-if="this.message.notification_ids[0].label" t-out="this.message.notification_ids[0].label"/>
         </span>
     </div>
     <div t-elif="this.message.thread?.eq(this.props.thread) and (this.message.incoming_email_to?.length or this.message.incoming_email_cc?.length)" class="mx-1">
-        <span class="o-mail-Message-notification cursor-pointer" t-att-class="this.message.failureNotifications.length > 0 ? 'text-danger' : this.text-600" role="button" tabindex="0" t-on-click="this.onClickNotification">
-            <i class="oi oi-filled" data-icon="mail" role="img"/>
+        <span class="o-mail-Message-notification cursor-pointer" t-att-class="this.message.failureNotifications.length > 0 ? 'text-danger align-middle' : this.text-600" role="button" tabindex="0" t-att-title="this.deliveryFailureText" t-on-click="this.onClickNotification">
+            <i class="oi oi-filled" t-att-data-icon="this.message.failureNotifications.length > 0 ? 'cancel' : 'mail'" role="img"/>
         </span>
     </div>
 </t>

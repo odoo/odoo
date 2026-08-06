@@ -1,19 +1,22 @@
 import { DYNAMIC_FIELD_PLUGINS } from "@html_editor/backend/dynamic_field/dynamic_field_plugin";
 import { isEmpty } from "@html_editor/utils/dom_info";
 import { registry } from "@web/core/registry";
-import { useBus } from "@web/core/utils/hooks";
+import { useBus, useService } from "@web/core/utils/hooks";
+import { isHtmlEmpty } from "@web/core/utils/html";
+import { renderToMarkup } from "@web/core/utils/render";
 import { HtmlMailField, htmlMailField } from "../html_mail_field/html_mail_field";
 import { MailFullComposerSuggestionPlugin } from "./mail_full_composer_suggestion_plugin";
 import { ContentExpandablePlugin } from "./content_expandable_plugin";
 import { DisableBannerCommandsPlugin } from "./disable_banner_commands_plugin";
 import { fillEmpty } from "@html_editor/utils/dom";
-import { markup, onWillUnmount } from "@odoo/owl";
+import { markup, onWillUnmount, useEffect } from "@odoo/owl";
 import { SIGNATURE_CLASS } from "@html_editor/main/user_signature_plugin";
 import { COMPOSER_TYPES } from "@mail/core/common/composer";
 
 export class HtmlComposerMessageField extends HtmlMailField {
     setup() {
         super.setup();
+        this.mailStore = useService("mail.store");
         if (this.env.fullComposerBus) {
             useBus(this.env.fullComposerBus, "ACCIDENTAL_DISCARD", (ev) => {
                 const elContent = this.getNoSignatureElContent();
@@ -40,6 +43,27 @@ export class HtmlComposerMessageField extends HtmlMailField {
         }
         this.lastAttachmentSet = new Set();
         this.attachmentObserver = null;
+
+        useEffect(() => {
+            // Mailing mode does not go through the notification layout, which is what
+            // fills the signature slot in comment mode: the signature has to be part
+            // of the body itself, visible and editable, as soon as the composer opens.
+
+            const record = this.props.record;
+            const body = record.data[this.props.name] || "";
+            const signature = this.mailStore.self_user?.getSignatureBlock();
+            if (record.data.composition_mode !== "mass_mail" || !isHtmlEmpty(body) || !signature) {
+                return;
+            }
+
+            record.update({
+                [this.props.name]: markup`<br><br>${renderToMarkup("html_editor.Signature", {
+                    signature,
+                    signatureClass: SIGNATURE_CLASS,
+                })}`,
+            });
+        });
+
         onWillUnmount(() => {
             if (this.attachmentObserver) {
                 this.attachmentObserver.disconnect();
