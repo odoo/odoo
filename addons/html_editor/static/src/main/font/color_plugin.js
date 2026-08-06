@@ -40,6 +40,7 @@ import { closestBlock, isBlock } from "@html_editor/utils/blocks";
 import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
 import { prepareUpdate } from "@html_editor/utils/dom_state";
 import { leftPos, rightPos } from "@html_editor/utils/position";
+import { getCSSVariableValue, getHtmlStyle } from "@html_editor/utils/formatting";
 
 const COLOR_COMBINATION_CLASSES = [1, 2, 3, 4, 5].map((i) => `o_cc${i}`);
 const COLOR_COMBINATION_SELECTOR = COLOR_COMBINATION_CLASSES.map((c) => `.${c}`).join(", ");
@@ -168,10 +169,12 @@ export class ColorPlugin extends Plugin {
             this.skipNextColorClear = false;
             return;
         }
+        this.clearCaretColor();
         this.activeColorInfo = {};
     }
 
     applyPendingColors() {
+        this.clearCaretColor();
         for (const [mode, color] of Object.entries(this.activeColorInfo)) {
             this.applyColor(color, mode);
         }
@@ -203,11 +206,16 @@ export class ColorPlugin extends Plugin {
         this.activeColorInfo = {};
         const sel = this.dependencies.selection.getEditableSelection();
         if (sel.isCollapsed) {
+            this.clearCaretColor();
             const el = closestElement(sel.anchorNode);
             const block = closestBlock(sel.anchorNode);
             for (const mode of ["color", "backgroundColor"]) {
-                if (findUpTo(el, block, (node) => getColorOrClass(node, mode))) {
+                const colorNode = findUpTo(el, block, (node) => getColorOrClass(node, mode));
+                if (colorNode) {
                     this.activeColorInfo[mode] = "";
+                    if (mode === "color") {
+                        this.setCaretColor(getComputedStyle(colorNode.parentElement).color);
+                    }
                 }
             }
             this.trigger("on_color_requested_handlers");
@@ -548,6 +556,14 @@ export class ColorPlugin extends Plugin {
         cursors.restore();
     }
 
+    setCaretColor(color) {
+        this.editable.style.setProperty("--oe-caret-color", color);
+    }
+
+    clearCaretColor() {
+        this.editable.style.removeProperty("--oe-caret-color");
+    }
+
     convertEmptyColorToPendingIntent() {
         const selection = this.dependencies.selection.getEditableSelection();
         const anchorNode = selection.anchorNode;
@@ -567,6 +583,16 @@ export class ColorPlugin extends Plugin {
             if (color) {
                 this.activeColorInfo.color = color.value;
                 this.colorElement(element, "", "color");
+                const caretColor =
+                    color.type === "class"
+                        ? getCSSVariableValue(
+                              color.value.replace(/^text-/, ""),
+                              getHtmlStyle(this.document)
+                          )
+                        : color.value;
+                if (caretColor) {
+                    this.setCaretColor(caretColor);
+                }
             }
             if (bgColor) {
                 this.activeColorInfo.backgroundColor = bgColor.value;
