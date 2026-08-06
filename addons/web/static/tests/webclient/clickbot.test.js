@@ -12,7 +12,7 @@ import {
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
 
-import { onWillStart, onWillUpdateProps } from "@odoo/owl";
+import { useEffect } from "@odoo/owl";
 
 import { ListRenderer } from "@web/views/list/list_renderer";
 import { ClickbotLauncher, FAILURE_SIGNAL, SUCCESS_SIGNAL } from "@web/webclient/clickbot/clickbot";
@@ -662,16 +662,10 @@ test("clickbot test waiting render after clicking filter", async () => {
     patchWithCleanup(ListRenderer.prototype, {
         setup() {
             super.setup(...arguments);
-            onWillStart(async () => {
+            useEffect(async () => {
+                this.props.list;
                 if (clickBotStarted) {
-                    expect.step("onWillStart called");
-                    await runAllTimers();
-                    expect.step("response");
-                }
-            });
-            onWillUpdateProps(async () => {
-                if (clickBotStarted) {
-                    expect.step("onWillUpdateProps called");
+                    expect.step("useEffect called");
                     await runAllTimers();
                     expect.step("response");
                 }
@@ -699,15 +693,15 @@ test("clickbot test waiting render after clicking filter", async () => {
     new ClickbotLauncher(webClient.env, { logger: true }).start();
     await promise;
     expect.verifySteps([
-        "onWillStart called", // click on APP
+        "useEffect called", // click on APP
         "response",
-        "onWillStart called", // open new recordForm View
+        "useEffect called", // open new recordForm View
         "response",
-        "onWillStart called", // open Form View
+        "useEffect called", // open Form View
         "response",
-        "onWillUpdateProps called", // click on filter
+        "useEffect called", // click on filter
         "response",
-        "onWillUpdateProps called", // click on second filter
+        "useEffect called", // click on second filter
         "response",
         SUCCESS_SIGNAL,
     ]);
