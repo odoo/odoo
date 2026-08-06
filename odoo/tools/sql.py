@@ -633,23 +633,6 @@ def escape_like_value(to_escape: str) -> str:
     return to_escape.replace('\\', r'\\').replace('%', r'\%').replace('_', r'\_')
 
 
-def pg_varchar(size: int = 0) -> str:
-    """ Returns the VARCHAR declaration for the provided size:
-
-    * If no size (or an empty or negative size is provided) return an
-      'infinite' VARCHAR
-    * Otherwise return a VARCHAR(n)
-
-    :param size: varchar size, optional
-    """
-    if size:
-        if not isinstance(size, int):
-            raise ValueError("VARCHAR parameter should be an int, got %s" % type(size))
-        if size > 0:
-            return 'VARCHAR(%d)' % size
-    return 'VARCHAR'
-
-
 @deprecated("Removed after 20.0")
 def reverse_order(order):
     """ Reverse an ORDER BY clause """

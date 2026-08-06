@@ -265,7 +265,7 @@ class Field[T]:
     # Used in _fields_update_order__ to order field updates and inverses.
     write_sequence: int = 0
     # Database column type (ident, spec) for non-company-dependent fields.
-    # Company-dependent fields are stored as jsonb (see column_type).
+    # Company-dependent fields are stored as jsonb (see column_type_ident).
     _column_type: tuple[str, str] | None = None
 
     _args__: dict[str, typing.Any] | None = None  # the parameters given to __init__()
