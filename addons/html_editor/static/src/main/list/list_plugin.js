@@ -20,6 +20,7 @@ import {
     isProtected,
     isProtecting,
     isShrunkBlock,
+    isVisible,
     isVisibleTextNode,
     listElementSelector,
 } from "@html_editor/utils/dom_info";
@@ -942,15 +943,24 @@ export class ListPlugin extends Plugin {
 
     handleSplitBlock(params) {
         const closestLI = closestElement(params.targetNode, "LI");
-        const isBlockUnsplittable =
+        // Do not split the LI if the cursor is inside an unsplittable element.
+        const isTargetInUnsplittable =
             closestLI &&
-            Array.from(closestLI.childNodes).some(
-                (node) => isBlock(node) && this.dependencies.split.isUnsplittable(node)
+            ancestors(params.targetNode, closestLI).find((node) =>
+                this.dependencies.split.isUnsplittable(node)
             );
-        if (!closestLI || isBlockUnsplittable) {
+        if (!closestLI || isTargetInUnsplittable) {
             return;
         }
-        if (isEmptyBlock(closestBlock(params.targetNode))) {
+        if (
+            childNodes(closestLI).every(
+                (child) =>
+                    isListElement(child) ||
+                    isEmptyBlock(child) ||
+                    child.nodeName === "BR" ||
+                    !isVisible(child)
+            )
+        ) {
             this.outdentLI(closestLI);
             return true;
         }
