@@ -176,10 +176,12 @@ class PurchaseOrder(models.Model):
             products.ids, child_field='order_line', section_id=ctx.get('section_id')
         )
         for product in products:
+            uom = product.seller_ids.filtered(lambda x: x.partner_id == self.partner_id)[:1].uom_id or product.uom_id
+            suggested_qty = product.uom_id._compute_quantity(product.suggested_qty, uom)
             suggest_line = self.env['purchase.order.line']._prepare_purchase_order_line(
                 product,
-                product.suggested_qty,
-                product.uom_id,
+                suggested_qty,
+                uom,
                 self.company_id,
                 self.partner_id,
                 self
