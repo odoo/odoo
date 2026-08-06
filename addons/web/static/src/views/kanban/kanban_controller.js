@@ -29,7 +29,7 @@ import {
     Component,
     onMounted,
     onWillStart,
-    plugin,
+    usePlugin,
     proxy,
     signal,
     t,
@@ -78,7 +78,7 @@ export class KanbanController extends Component {
         this.actionService = useService("action");
         this.dialog = useService("dialog");
         this.uiService = useService("ui");
-        this.offlinePlugin = plugin(OfflinePlugin);
+        this.offlinePlugin = usePlugin(OfflinePlugin);
         const { Model, archInfo } = this.props;
 
         class KanbanSampleModel extends Model {

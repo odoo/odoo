@@ -1,10 +1,10 @@
-import { Component, onWillStart, plugin, proxy } from "@odoo/owl";
+import { Component, onWillStart, usePlugin, proxy } from "@odoo/owl";
 import { ORM } from "@web/core/orm_plugin";
 
 export class PurchaseDashBoard extends Component {
     static template = "purchase.PurchaseDashboard";
 
-    orm = plugin(ORM);
+    orm = usePlugin(ORM);
 
     setup() {
         this.state = proxy({

@@ -1,4 +1,4 @@
-import { markRaw, onWillDestroy, plugin, Plugin, signal, useListener } from "@odoo/owl";
+import { markRaw, onWillDestroy, Plugin, signal, useListener, usePlugin } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { ConnectionLostError, rpc, rpcBus } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
@@ -38,7 +38,7 @@ export class OfflinePlugin extends Plugin {
 
     static SELECTORS_TO_DISABLE = ["button:not([data-available-offline]):not([disabled])"];
 
-    orm = plugin(ORM);
+    orm = usePlugin(ORM);
 
     _idb = window.isSecureContext
         ? markRaw(new IndexedDB("offline", session.registry_hash + CRYPTO_ALGO))
@@ -479,11 +479,11 @@ services.add(OfflinePlugin);
  * -----------------------------------------------------------------------------
  *
  * Bridges the legacy `useService("offline")` API to the OfflinePlugin. New code
- * should use `plugin(OfflinePlugin)` directly and read the `isOffline()` signal.
+ * should use `usePlugin(OfflinePlugin)` directly and read the `isOffline()` signal.
  */
 export const offlineService = {
     start() {
-        const offlinePlugin = plugin(OfflinePlugin);
+        const offlinePlugin = usePlugin(OfflinePlugin);
         const offlineService = Object.create(offlinePlugin);
         Object.defineProperty(offlineService, "offline", {
             get() {

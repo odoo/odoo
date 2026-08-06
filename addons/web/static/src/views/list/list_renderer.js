@@ -34,7 +34,7 @@ import {
     onWillPatch,
     onWillStart,
     onWillUnmount,
-    plugin,
+    usePlugin,
     proxy,
     signal,
     status,
@@ -152,7 +152,7 @@ export class ListRenderer extends Component {
 
     setup() {
         this.uiService = useService("ui");
-        this.offlinePlugin = plugin(OfflinePlugin);
+        this.offlinePlugin = usePlugin(OfflinePlugin);
         this.notificationService = useService("notification");
         this.orm = useService("orm");
         const key = this.createViewKey();

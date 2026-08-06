@@ -1,4 +1,4 @@
-import { plugin } from "@odoo/owl";
+import { usePlugin } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { useOwnedDialogs, useService } from "@web/core/utils/hooks";
 import { TimeOffPlugin } from "./time_off_plugin";
@@ -45,7 +45,7 @@ export function useLeaveCancelWizard() {
 
 export function useNewAllocationRequest() {
     const addDialog = useOwnedDialogs();
-    const timeOffPlugin = plugin(TimeOffPlugin);
+    const timeOffPlugin = usePlugin(TimeOffPlugin);
     return async ({ employeeId, holidayStatusId, forceLargeDialog }) => {
         let size = "md";
         const context = {

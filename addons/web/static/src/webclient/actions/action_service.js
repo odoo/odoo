@@ -24,7 +24,7 @@ import {
     onError,
     onMounted,
     onWillUnmount,
-    plugin,
+    usePlugin,
     proxy,
     status,
     t,
@@ -143,7 +143,7 @@ const ControllerComponentTemplate = xml`<t t-component="this.Component" t-props=
 
 export function makeActionManager(env, router = _router) {
     const scope = useScope();
-    const offlinePlugin = plugin(OfflinePlugin);
+    const offlinePlugin = usePlugin(OfflinePlugin);
     const { dialog: dialogService, effect: effectService, notification, title, ui } = env.services;
 
     const breadcrumbCache = {};

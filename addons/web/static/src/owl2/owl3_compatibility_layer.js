@@ -139,7 +139,7 @@ class EnvPlugin extends owl.Plugin {
 }
 
 function useEnv() {
-    return owl.plugin(EnvPlugin).env;
+    return owl.usePlugin(EnvPlugin).env;
 }
 owl.useEnv = useEnv;
 
