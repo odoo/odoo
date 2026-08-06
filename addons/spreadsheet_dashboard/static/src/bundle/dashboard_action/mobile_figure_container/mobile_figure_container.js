@@ -65,6 +65,21 @@ export class MobileFigureContainer extends Component {
         return figureRegistry.get(figure.tag).Component;
     }
 
+    getFigureClass(figure) {
+        const registryItem = figureRegistry.get(figure.tag);
+        const getters = this.props.spreadsheetModel.getters;
+
+        const classes = [];
+        if (registryItem.hasShadow(getters)) {
+            classes.push("o-figure-shadow");
+        }
+        if (registryItem.isRounded(getters)) {
+            classes.push("o-figure-rounded");
+        }
+
+        return classes.join(" ");
+    }
+
     isBefore(f1, f2) {
         const sheetId = this.props.spreadsheetModel.getters.getActiveSheetId();
         const fig1 = this.props.spreadsheetModel.getters.getFigureUI(sheetId, f1);
