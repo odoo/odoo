@@ -20,7 +20,11 @@ class TestUBLTR(TestUBLTRCommon):
 
         cls.tax_0 = cls.env['account.chart.template'].ref('tr_s_0_ex')
         cls.tax_20 = cls.env['account.chart.template'].ref('tr_s_20')
-        cls.tax_20_withholding = cls.env['account.chart.template'].ref('tr_s_vat_wh_20_OGH')
+        cls.tax_20_withholding = cls.env['account.chart.template'].ref('tr_s_wh_20_9_10')
+        cls.fiscal_position_withholding = cls.env['account.chart.template'].ref('tr_fp_wh_9_10')
+
+        # Withholding Reason (9/10 - Private Security Service)
+        cls.reason_607 = cls.env['account.chart.template'].ref('l10n_tr_nilvera_einvoice.account_tax_code_607')
         # Registered for Export Reason
         cls.reason_701 = cls.env['account.chart.template'].ref('l10n_tr_nilvera_einvoice.account_tax_code_701')
         cls.reason_702 = cls.env['account.chart.template'].ref('l10n_tr_nilvera_einvoice.account_tax_code_702')
@@ -107,7 +111,13 @@ class TestUBLTR(TestUBLTRCommon):
 
     def test_xml_invoice_basic_withholding_einvoice(self):
         with freeze_time('2025-03-05'):
-            generated_xml = self._generate_invoice_xml(self.einvoice_partner, self.tax_20_withholding, l10n_tr_gib_invoice_type="TEVKIFAT")
+            generated_xml = self._generate_invoice_xml(
+                self.einvoice_partner,
+                self.tax_20_withholding,
+                l10n_tr_gib_invoice_type="TEVKIFAT",
+                fiscal_position_id=self.fiscal_position_withholding.id,
+                l10n_tr_exemption_code_id=self.reason_607.id,
+            )
 
         with file_open('l10n_tr_nilvera_einvoice/tests/expected_xmls/invoice_basic_withholding_einvoice.xml', 'rb') as expected_xml_file:
             expected_xml = expected_xml_file.read()
@@ -116,7 +126,13 @@ class TestUBLTR(TestUBLTRCommon):
 
     def test_xml_invoice_basic_withholding_return_einvoice(self):
         with freeze_time('2025-03-05'):
-            generated_xml = self._generate_return_invoice_xml(self.einvoice_partner, self.tax_20_withholding, l10n_tr_gib_invoice_type="TEVKIFAT")
+            generated_xml = self._generate_return_invoice_xml(
+                self.einvoice_partner,
+                self.tax_20_withholding,
+                l10n_tr_gib_invoice_type="TEVKIFAT",
+                fiscal_position_id=self.fiscal_position_withholding.id,
+                l10n_tr_exemption_code_id=self.reason_607.id,
+            )
 
         with file_open('l10n_tr_nilvera_einvoice/tests/expected_xmls/invoice_return_basic_withholding_einvoice.xml', 'rb') as expected_xml_file:
             expected_xml = expected_xml_file.read()

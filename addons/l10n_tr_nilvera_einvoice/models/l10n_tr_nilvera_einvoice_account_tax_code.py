@@ -19,8 +19,8 @@ class L10nTrNilveraEinvoiceAccountTaxCode(models.Model):
         "reason. This is the value sent in the e-invoice XML.",
     )
     percentage = fields.Float(
-        help="Enter the applicable withholding tax rate for this code "
-        "as a whole number (e.g., 40 for 40%). \n"
+        help="The applicable withholding tax rate for this code, as a fraction "
+        "(e.g., 0.4 for 40%). \n"
         "This field is used specifically for withholding tax codes and "
         "defines the percentage to be withheld from the total amount.",
     )

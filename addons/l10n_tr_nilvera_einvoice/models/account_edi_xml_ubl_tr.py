@@ -478,21 +478,21 @@ class AccountEdiXmlUblTr(models.AbstractModel):
                 group_vals['tr_total_taxed_amount'] = group_vals.get('tr_total_taxed_amount', 0.0) + total_taxed_amount
                 group_vals['tr_total_taxed_residual_amount'] = group_vals.get('tr_total_taxed_residual_amount', 0.0) + total_residual_amount
 
-        aggregated_tax_details_by_l10n_tr_tax_withholding_code_id = {'tax': defaultdict(dict), 'withholding_tax': defaultdict(dict)}
+        aggregated_tax_details_by_withholding_reason = {'tax': defaultdict(dict), 'withholding_tax': defaultdict(dict)}
 
         for grouping_key, values in aggregated_tax_details.items():
             if grouping_key:
                 key = 'withholding_tax' if (l10n_tr_tax_withheld := grouping_key['l10n_tr_tax_withheld']) else 'tax'
-                aggregated_tax_details_by_l10n_tr_tax_withholding_code_id[key][l10n_tr_tax_withheld][grouping_key] = values
+                aggregated_tax_details_by_withholding_reason[key][l10n_tr_tax_withheld][grouping_key] = values
 
         line_node['cac:TaxTotal'] = [
             self._get_withholding_tax_total_node({**vals, 'aggregated_tax_details': tax_details, 'role': 'line'})
-            for tax_details in aggregated_tax_details_by_l10n_tr_tax_withholding_code_id['tax'].values()
+            for tax_details in aggregated_tax_details_by_withholding_reason['tax'].values()
         ]
         if vals['document_type'] == 'invoice':
             line_node['cac:WithholdingTaxTotal'] = [
                 self._get_withholding_tax_total_node({**vals, 'aggregated_tax_details': tax_details, 'role': 'line', 'withholding': True, 'sign': -1})
-                for tax_details in aggregated_tax_details_by_l10n_tr_tax_withholding_code_id['withholding_tax'].values()
+                for tax_details in aggregated_tax_details_by_withholding_reason['withholding_tax'].values()
             ]
 
     def _add_withholding_return_document_tax_total_nodes(self, document_node, vals):
@@ -599,21 +599,21 @@ class AccountEdiXmlUblTr(models.AbstractModel):
                 group_vals['tr_total_taxed_amount'] = group_vals.get('tr_total_taxed_amount', 0.0) + total_taxed_amount
                 group_vals['tr_total_taxed_residual_amount'] = group_vals.get('tr_total_taxed_residual_amount', 0.0) + total_residual_amount
 
-        aggregated_tax_details_by_l10n_tr_tax_withholding_code_id = {'tax': defaultdict(dict), 'withholding_tax': defaultdict(dict)}
+        aggregated_tax_details_by_withholding_reason = {'tax': defaultdict(dict), 'withholding_tax': defaultdict(dict)}
 
         for grouping_key, values in aggregated_tax_details.items():
             if grouping_key:
                 key = 'withholding_tax' if (l10n_tr_tax_withheld := grouping_key['l10n_tr_tax_withheld']) else 'tax'
-                aggregated_tax_details_by_l10n_tr_tax_withholding_code_id[key][l10n_tr_tax_withheld][grouping_key] = values
+                aggregated_tax_details_by_withholding_reason[key][l10n_tr_tax_withheld][grouping_key] = values
 
         line_node['cac:TaxTotal'] = [
             self._get_withholding_tax_total_node({**vals, 'aggregated_tax_details': tax_details, 'role': 'line'})
-            for tax_details in aggregated_tax_details_by_l10n_tr_tax_withholding_code_id['tax'].values()
+            for tax_details in aggregated_tax_details_by_withholding_reason['tax'].values()
         ]
         if vals['document_type'] == 'invoice':
             line_node['cac:WithholdingTaxTotal'] = [
                 self._get_withholding_tax_total_node({**vals, 'aggregated_tax_details': tax_details, 'role': 'line', 'withholding': True, 'sign': -1})
-                for tax_details in aggregated_tax_details_by_l10n_tr_tax_withholding_code_id['withholding_tax'].values()
+                for tax_details in aggregated_tax_details_by_withholding_reason['withholding_tax'].values()
             ]
 
     def _add_withholding_return_document_line_tax_total_nodes(self, line_node, vals):
@@ -865,6 +865,8 @@ class AccountEdiXmlUblTr(models.AbstractModel):
         invoice = vals["invoice"]
         if invoice.l10n_tr_gib_invoice_type == 'SATIS' and (exemption_reason := vals.get('grouping_key')['tax_exemption_reason']):
             return exemption_reason
+        if invoice.l10n_tr_gib_invoice_type in {'TEVKIFAT', 'TEVKIFATIADE'}:
+            return self.env['l10n_tr_nilvera_einvoice.account.tax.code']
         return invoice.l10n_tr_exemption_code_id
 
     def _get_tax_exemption_reason(self, customer, supplier, tax):
@@ -1036,12 +1038,14 @@ class AccountEdiXmlUblTr(models.AbstractModel):
         withholding details. It constructs a grouping key for each tax line and
         appends withholding-related fields when applicable.
 
-        Specifically, for invoices of type TEVKIFAT with a withholding tax code,
-        the following fields are added to the grouping key:
-            - l10n_tr_tax_withheld: The ID of the withholding tax code.
+        The withholding reason is taken from the invoice itself, and only applies to the
+        withheld portion of the VAT, i.e. the taxes reported under the 9015 category.
+        For invoices of type TEVKIFAT, the following fields are then added to the
+        grouping key:
+            - l10n_tr_tax_withheld: The ID of the withholding reason.
             - percent_withheld: The percentage of tax to be withheld (as an integer).
-            - name: The localized name of the withholding tax (in Turkish).
-            - tax_type_code: The code of the withholding tax.
+            - name: The localized name of the withholding reason (in Turkish).
+            - tax_type_code: The code of the withholding reason.
 
         :param dict base_line: The base invoice line containing the record and tax details.
         :param dict tax_data: The dictionary containing the tax and its computed values.
@@ -1057,18 +1061,17 @@ class AccountEdiXmlUblTr(models.AbstractModel):
             **self._get_tax_exemption_reason(customer.commercial_partner_id, supplier, tax),
             "amount": tax.amount if tax else 0.0,
             "amount_type": tax.amount_type if tax else "percent",
-            "l10n_tr_tax_withheld": tax.l10n_tr_tax_withholding_code_id.id,
+            "l10n_tr_tax_withheld": False,  # Needed to read back when splitting line into cac:TaxTotal + cac:WithholdingTaxTotal
         }
 
-        if invoice.l10n_tr_gib_invoice_type == "TEVKIFAT" and tax.l10n_tr_tax_withholding_code_id:
-            withholding_code = tax.l10n_tr_tax_withholding_code_id
-            grouping_key.update(
-                {
-                    "percent_withheld": int(withholding_code.percentage * 100),
-                    "name": withholding_code.with_context(lang="tr_TR").name,
-                    "tax_type_code": withholding_code.code,
-                },
-            )
+        withholding_code = invoice.l10n_tr_exemption_code_id
+        if invoice.l10n_tr_gib_invoice_type == "TEVKIFAT" and withholding_code and grouping_key["tax_category_code"] == "9015":
+            grouping_key.update({
+                "l10n_tr_tax_withheld": withholding_code.id,
+                "percent_withheld": int(withholding_code.percentage * 100),
+                "name": withholding_code.with_context(lang="tr_TR").name,
+                "tax_type_code": withholding_code.code,
+            })
 
         return grouping_key
 
