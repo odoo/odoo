@@ -1,4 +1,4 @@
-import { Component, onWillStart, signal } from "@odoo/owl";
+import { Component, onMounted, onPatched, onWillDestroy, onWillStart, signal } from "@odoo/owl";
 import { loadBundle } from "@web/core/assets";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
@@ -35,14 +35,13 @@ export class GaugeChartWidget extends Component {
             await loadBundle("web.chartjs_lib");
         });
 
-        // useLayoutEffect(() => {
-        //     this.renderChart();
-        //     return () => {
-        //         if (this.chart) {
-        //             this.chart.destroy();
-        //         }
-        //     };
-        // });
+        onMounted(() => this.renderChart());
+        onPatched(() => this.renderChart());
+        onWillDestroy(() => {
+            if (this.chart) {
+                this.chart.destroy();
+            }
+        });
     }
 
     get chartTitle() {
@@ -121,6 +120,9 @@ export class GaugeChartWidget extends Component {
     }
 
     renderChart() {
+        if (this.chart) {
+            this.chart.destroy();
+        }
         const segments = this.chartSegments;
         const values = segments.map((segment) => segment.value);
         const backgroundColor = segments.map((segment, index) => this.getSegmentColor(segment, index));
