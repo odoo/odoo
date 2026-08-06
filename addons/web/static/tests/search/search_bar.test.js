@@ -14,7 +14,7 @@ import {
     runAllTimers,
 } from "@odoo/hoot-dom";
 import { animationFrame, mockTimeZone, mockTouch } from "@odoo/hoot-mock";
-import { Component, onWillUpdateProps, useProps, xml } from "@odoo/owl";
+import { Component, useOnChange, useProps, xml } from "@odoo/owl";
 import {
     SELECTORS,
     addNewRule,
@@ -416,9 +416,11 @@ test("select an autocomplete field with `context` key", async () => {
         static components = { SearchBar };
         props = useProps();
         setup() {
-            onWillUpdateProps(() => {
-                updateCount++;
-            });
+            useOnChange(
+                () => [this.props.domain],
+                () => updateCount++,
+                { initialRun: false }
+            );
         }
     }
 
@@ -473,9 +475,11 @@ test("no search text triggers a reload", async () => {
         static components = { SearchBar };
         props = useProps();
         setup() {
-            onWillUpdateProps(() => {
-                updateCount++;
-            });
+            useOnChange(
+                () => [this.props.domain],
+                () => updateCount++,
+                { initialRun: false }
+            );
         }
     }
 
