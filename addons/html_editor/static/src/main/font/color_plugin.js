@@ -7,7 +7,7 @@ import {
     hasColor,
     TEXT_CLASSES_REGEX,
 } from "@html_editor/utils/color";
-import { fillEmpty, removeStyle, unwrapContents } from "@html_editor/utils/dom";
+import { fillEmpty, removeStyle, toggleClass, unwrapContents } from "@html_editor/utils/dom";
 import {
     isEmptyBlock,
     isPhrasingContent,
@@ -54,7 +54,7 @@ const COLOR_COMBINATION_SELECTOR = COLOR_COMBINATION_CLASSES.map((c) => `.${c}`)
 
 export class ColorPlugin extends Plugin {
     static id = "color";
-    static dependencies = ["selection", "split", "history", "format", "delete"];
+    static dependencies = ["selection", "split", "history", "format", "delete", "domObserver"];
     static shared = [
         "colorElement",
         "removeAllColor",
@@ -140,6 +140,7 @@ export class ColorPlugin extends Plugin {
      * Discard pending color intents when the selection changes.
      */
     clearPendingColors() {
+        this.clearCaretColorReset();
         if (this.skipNextColorClear) {
             this.skipNextColorClear = false;
             return;
@@ -148,6 +149,7 @@ export class ColorPlugin extends Plugin {
     }
 
     applyPendingColors() {
+        this.clearCaretColorReset();
         for (const [mode, color] of Object.entries(this.activeColorInfo)) {
             this.applyColor(color, mode);
         }
@@ -184,6 +186,9 @@ export class ColorPlugin extends Plugin {
             for (const mode of ["color", "backgroundColor"]) {
                 if (findUpTo(el, block, (node) => getColorOrClass(node, mode))) {
                     this.activeColorInfo[mode] = "";
+                    if (mode === "color") {
+                        this.setCaretColorReset(el);
+                    }
                 }
             }
             this.skipNextColorClear = true;
@@ -463,6 +468,20 @@ export class ColorPlugin extends Plugin {
             }
         }
         cursors.restore();
+    }
+
+    setCaretColorReset(el) {
+        this.dependencies.domObserver.ignore(() => toggleClass(el, "oe_default_caret_color", true));
+        this.caretColorResetElement = el;
+    }
+
+    clearCaretColorReset() {
+        if (this.caretColorResetElement) {
+            this.dependencies.domObserver.ignore(() =>
+                toggleClass(this.caretColorResetElement, "oe_default_caret_color", false)
+            );
+            delete this.caretColorResetElement;
+        }
     }
 
     convertEmptyColorToPendingIntent() {
