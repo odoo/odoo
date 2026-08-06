@@ -2745,9 +2745,9 @@ class Model(models.AbstractModel):
         :rtype: list
         """
         return [
-            'change_default', 'context', 'currency_field', 'definition_record', 'digits', 'domain', 'group_operator', 'groups',
-            'help', 'name', 'readonly', 'related', 'relation', 'relation_field', 'required', 'searchable', 'selection', 'size',
-            'sortable', 'store', 'string', 'translate', 'trim', 'type',
+            'change_default', 'context', 'currency_field', 'definition_record', 'digits', 'domain', 'exportable',
+            'group_operator', 'groups','help', 'name', 'readonly', 'related', 'relation', 'relation_field', 'required',
+            'searchable', 'selection', 'size', 'sortable', 'store', 'string', 'translate', 'trim', 'type',
         ]
 
     @api.model
