@@ -1,5 +1,10 @@
 import { test, describe, expect, beforeEach } from "@odoo/hoot";
-import { setupSelfPosEnv, getFilledSelfOrder, addComboProduct } from "../utils";
+import {
+    setupSelfPosEnv,
+    getFilledSelfOrder,
+    addComboProduct,
+    mockLNAPermissionCheck,
+} from "../utils";
 import { mockDate } from "@odoo/hoot-mock";
 import { registry } from "@web/core/registry";
 import { definePosSelfModels } from "../data/generate_model_definitions";
@@ -92,6 +97,20 @@ describe("initHardware", () => {
         store.initHardware();
 
         expect(mockTerminalMethod.payment_terminal).toBeInstanceOf(MockTerminal);
+    });
+
+    test("initLNA is only called in kiosk mode", async () => {
+        const store = await setupSelfPosEnv();
+        store.models["pos.printer"].get(1).use_lna = true;
+
+        const lna = mockLNAPermissionCheck();
+        store.initHardware();
+        expect(lna.wasCalled).toBe(true);
+
+        lna.reset();
+        store.config.self_ordering_mode = "mobile";
+        store.initHardware();
+        expect(lna.wasCalled).toBe(false);
     });
 });
 

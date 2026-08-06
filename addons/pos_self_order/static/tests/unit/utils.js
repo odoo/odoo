@@ -116,6 +116,25 @@ export const addComboProduct = async (store) => {
     return store.currentOrder.lines.find((ol) => ol.combo_line_ids.length); // Parent Combo line
 };
 
+export function mockLNAPermissionCheck() {
+    let called = false;
+    patchWithCleanup(navigator.permissions, {
+        async query() {
+            called = true;
+            return { state: "granted", onchange: null };
+        },
+    });
+
+    return {
+        get wasCalled() {
+            return called;
+        },
+        reset() {
+            called = false;
+        },
+    };
+}
+
 export async function checkKioskPreparationTicketData(store, expectedData) {
     const categoryIds = store.config.preparationCategories;
     const generator = store.ticketPrinter.getGenerator({
