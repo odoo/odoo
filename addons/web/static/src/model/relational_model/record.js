@@ -664,7 +664,7 @@ export class Record extends DataPoint {
         this._savePoint = undefined;
         this._setEvalContext();
         this._invalidFields.clear();
-        if (!this.isNew) {
+        if (!this.isNew && this.isInEdition) {
             this._checkValidity();
         }
         this._closeInvalidFieldsNotification();
