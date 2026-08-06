@@ -82,6 +82,18 @@ class AccountMove(models.Model):
     l10n_in_show_gstin_status = fields.Boolean(compute="_compute_l10n_in_show_gstin_status")
     l10n_in_gstin_verified_date = fields.Date(compute="_compute_l10n_in_partner_gstin_status_and_date")
 
+    l10n_in_adjustment_type = fields.Selection([
+        ('standard', 'Standard'),
+        ('price_adjustment', 'Price Adjustment'),
+    ],
+        string="Adjustment Type",
+        compute="_compute_l10n_in_adjustment_type",
+        store=True,
+        readonly=False,
+        copy=False,
+        help="""Select 'Standard' when quantity is affected.
+                Select 'Price Adjustment' when quantity is not affected.""")
+
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
@@ -316,6 +328,18 @@ class AccountMove(models.Model):
             else:
                 move.l10n_in_partner_gstin_status = False
                 move.l10n_in_gstin_verified_date = False
+
+    @api.depends('move_type')
+    def _compute_l10n_in_adjustment_type(self):
+        # For customer credit / debit notes, keep adjustment type as standard by default
+        standard_moves = self.filtered(lambda m:
+            m.country_code == 'IN'
+            and (
+                m.move_type == 'out_refund'
+                or (m.move_type == 'out_invoice' and m.debit_origin_id)
+        ))
+        standard_moves.l10n_in_adjustment_type = 'standard'
+        (self - standard_moves).l10n_in_adjustment_type = False
 
     def _l10n_in_get_invoice_totals_for_self_invoice(self):
         """

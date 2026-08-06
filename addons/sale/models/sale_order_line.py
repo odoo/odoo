@@ -1239,7 +1239,7 @@ class SaleOrderLine(models.Model):
                 if (
                     invoice_line.move_id.state != "cancel"
                     or invoice_line.move_id.payment_state == "invoicing_legacy"
-                ):
+                ) and line._affects_qty_invoiced(invoice_line):
                     invoice_qty = invoice_line.product_uom_id._compute_quantity(
                         invoice_line.quantity, line.product_uom_id, round=False
                     )
@@ -1264,7 +1264,7 @@ class SaleOrderLine(models.Model):
                 if (
                     invoice_line.move_id.state == "posted"
                     or invoice_line.move_id.payment_state == "invoicing_legacy"
-                ):
+                ) and line._affects_qty_invoiced(invoice_line):
                     qty_unsigned = invoice_line.product_uom_id._compute_quantity(
                         invoice_line.quantity, line.product_uom_id
                     )
@@ -2235,3 +2235,15 @@ class SaleOrderLine(models.Model):
             and self.product_id.invoice_policy == "delivery"
             and self.product_id.reinvoice_policy != "no"
         )
+
+    def _affects_qty_invoiced(self, invoice_line):
+        """Provide a hook method to exclude specific invoice lines from the invoiced
+        quantity computation. Return False to skip the given line.
+
+        :param invoice_line:    the invoice line being considered
+
+        :return: whether the line contributes to the invoiced quantity, True by default.
+        """
+        self.ensure_one()
+        invoice_line.ensure_one()
+        return True

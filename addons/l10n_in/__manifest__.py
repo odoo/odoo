@@ -56,6 +56,7 @@ Sheet, now only Vertical format has been permitted Which is Supported By Odoo.
         'views/uom_uom_views.xml',
         'views/base_document_layout_views.xml',
         'wizard/account_paymnet_register_views.xml',
+        'wizard/account_move_reversal.xml',
         'security/ir.access.csv',
     ],
     'demo': [

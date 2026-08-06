@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_account_move_reversal_form_inherit_l10n_in" model="ir.ui.view">
+        <field name="name">account.move.reversal.form.inherit.l10n_in</field>
+        <field name="model">account.move.reversal</field>
+        <field name="inherit_id" ref="account.view_account_move_reversal"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='reason']" position="after">
+                <field name="l10n_in_adjustment_type"
+                       invisible="not l10n_in_show_adjustment_type"
+                       required="1"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

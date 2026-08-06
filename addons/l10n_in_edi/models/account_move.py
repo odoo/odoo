@@ -493,7 +493,7 @@ class AccountMove(models.Model):
             })
         return partner_details
 
-    def _get_l10n_in_edi_line_details(self, index, line, line_tax_details):
+    def _get_l10n_in_edi_line_details(self, index, line, line_tax_details, is_price_adjustment):
         """
         Create the dictionary with line details
         """
@@ -522,14 +522,16 @@ class AccountMove(models.Model):
             'SlNo': str(index),
             'IsServc': self._l10n_in_is_service_hsn(line.l10n_in_hsn_code) and 'Y' or 'N',
             'HsnCd': self._l10n_in_extract_digits(line.l10n_in_hsn_code),
-            'Qty': in_round(quantity or 0.0, 3),
+            # Price adjustment credit / debit notes do not alter quantities; they only adjust total amounts.
+            # Therefore, the EDI reports both quantity and unit price as 0.
+            'Qty': 0.0 if is_price_adjustment else in_round(quantity, 3),
             'Unit': (
                 line.product_uom_id.l10n_in_code
                 and line.product_uom_id.l10n_in_code.split('-')[0]
                 or 'OTH'
             ),
             # Unit price in company currency and tax excluded so its different then price_unit
-            'UnitPrice': in_round(unit_price_in_inr, 3),
+            'UnitPrice': 0.0 if is_price_adjustment else in_round(unit_price_in_inr, 3),
             # total amount is before discount
             'TotAmt': in_round(unit_price_in_inr * quantity),
             'Discount': in_round((unit_price_in_inr * quantity) * (line.discount / 100)),
@@ -631,6 +633,7 @@ class AccountMove(models.Model):
         tax_details_by_code = self._get_l10n_in_tax_details_by_line_code(tax_details['tax_details'])
         is_intra_state = self.l10n_in_state_id == self.company_id.state_id
         is_overseas = self.l10n_in_gst_treatment == "overseas"
+        is_price_adjustment = self.l10n_in_adjustment_type == 'price_adjustment'
         line_ids = []
         global_discount_line_ids = []
         grouping_lines = self.invoice_line_ids.grouped(
@@ -674,7 +677,8 @@ class AccountMove(models.Model):
                 self._get_l10n_in_edi_line_details(
                     index,
                     line,
-                    tax_details_per_record.get(line, {})
+                    tax_details_per_record.get(line, {}),
+                    is_price_adjustment
                 )
                 for index, line in enumerate(lines, start=1)
             ],
