@@ -26,6 +26,8 @@ const threadPatch = {
             },
             inverse: "threadAsFirstUnread",
         });
+        // Send the mark as read and the mark as unread one at a time: the server
+        // applies them in the order it receives them, not the order they are sent.
         this.markReadSequential = useSequential();
         this.markingAsRead = false;
         this.scrollUnread = true;
@@ -45,17 +47,9 @@ const threadPatch = {
      *
      * @param {import("models").Message} newestPersistentMessage message to mark
      *  as read, captured when the mark as read was requested
-     * @param {boolean} wasMarkedAsUnread whether the channel was marked as
-     *  unread when the mark as read was requested
      */
-    async handleMarkAsRead(newestPersistentMessage, wasMarkedAsUnread) {
+    async handleMarkAsRead(newestPersistentMessage) {
         if (!this.channel?.self_member_id || this.isReadBySelf(newestPersistentMessage)) {
-            return;
-        }
-        if (!wasMarkedAsUnread && this.channel.markedAsUnread) {
-            // The user marked the channel as unread after this mark as read
-            // was requested: executing it now would revert that more recent
-            // explicit action.
             return;
         }
         this.markingAsRead = true;
@@ -86,10 +80,9 @@ const threadPatch = {
         if (this.isReadBySelf(newestPersistentMessage)) {
             return;
         }
-        const wasMarkedAsUnread = this.channel.markedAsUnread;
-        this.markReadSequential(() =>
-            this.handleMarkAsRead(newestPersistentMessage, wasMarkedAsUnread)
-        ).then(() => (this.markingAsRead = false));
+        this.markReadSequential(() => this.handleMarkAsRead(newestPersistentMessage)).then(
+            () => (this.markingAsRead = false)
+        );
     },
     /** @param {import("models").Message} newestPersistentMessage */
     markAsReadRpc(newestPersistentMessage) {
