@@ -17,7 +17,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     # Queries for _query_count_init_store (in order):
     #   1: search res_partner (odooot ref exists)
     #   1: search res_groups (internalUserGroupId ref exists)
-    #   4: settings:
+    #   5: settings:
     #       - search res_users_settings (_find_or_create_for_user)
     #       - fetch res_users_settings (_store_settings_fields)
     #       - search res_lang_res_users_settings_rel (livechat_lang_ids)
@@ -28,7 +28,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - search_count mail_canned_response
     #   [enterprise] search_fetch mail_activity_type (voip_config)
     #   [enterprise] search_count voip_call (_get_number_of_missed_calls)
-    #   11: store add odoobot:
+    #   10: store add odoobot:
     #       - fetch res_partner (_read_format)
     #         [enterprise] search ai_agent (_compute_im_status ai override)
     #       - search res_users (_compute_im_status)
@@ -36,7 +36,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - search presence (_compute_im_status)
     #       - fetch presence (_compute_im_status)
     #       - search employee (_store_im_status_fields)
-    #       - search employee (_store_im_status_fields company specific)
     #       - fetch res_users (_read_format)
     #       - search hr_employee_location (_store_im_status_fields hr_homeworking override)
     #       - fetch hr_employee (_compute_work_location_type)
