@@ -109,12 +109,19 @@ export class MoveNodePlugin extends Plugin {
         }
     }
     updateHooks() {
+        const isRTL = this.config.direction === "rtl";
         const editableStyles = getComputedStyle(this.editable);
         this.editableRect = this.editable.getBoundingClientRect();
-        const paddingLeft = parseInt(editableStyles.paddingLeft, 10) || 0;
-        this.editableRect.x = this.editableRect.x + paddingLeft - (WIDGET_CONTAINER_WIDTH + 5);
-        this.editableRect.width =
-            this.editableRect.width - paddingLeft + (WIDGET_CONTAINER_WIDTH + 5);
+        if (isRTL) {
+            const paddingRight = parseInt(editableStyles.paddingRight, 10) || 0;
+            this.editableRect.width =
+                this.editableRect.width - paddingRight + (WIDGET_CONTAINER_WIDTH + 5);
+        } else {
+            const paddingLeft = parseInt(editableStyles.paddingLeft, 10) || 0;
+            this.editableRect.x = this.editableRect.x + paddingLeft - (WIDGET_CONTAINER_WIDTH + 5);
+            this.editableRect.width =
+                this.editableRect.width - paddingLeft + (WIDGET_CONTAINER_WIDTH + 5);
+        }
         const containerRect = this.widgetHookContainer.getBoundingClientRect();
         const elements = this.getMovableElements();
 
@@ -162,14 +169,18 @@ export class MoveNodePlugin extends Plugin {
             let hookBox;
             if (element.tagName === "HR") {
                 hookBox = new DOMRect(
-                    elementRect.x - containerRect.left - WIDGET_CONTAINER_WIDTH,
+                    isRTL
+                        ? elementRect.x - containerRect.left
+                        : elementRect.x - containerRect.left - WIDGET_CONTAINER_WIDTH,
                     elementRect.y - containerRect.top - marginTop,
                     elementRect.width + WIDGET_CONTAINER_WIDTH,
                     elementRect.height + marginTop + marginBottom
                 );
             } else {
                 hookBox = new DOMRect(
-                    elementRect.x - containerRect.left - WIDGET_CONTAINER_WIDTH,
+                    isRTL
+                        ? elementRect.right - containerRect.left
+                        : elementRect.x - containerRect.left - WIDGET_CONTAINER_WIDTH,
                     elementRect.y - containerRect.top - marginTop,
                     WIDGET_CONTAINER_WIDTH,
                     elementRect.height + marginTop + marginBottom
@@ -224,10 +235,17 @@ export class MoveNodePlugin extends Plugin {
         this.currentMovableElement = movableElement;
         this.dispatchTo("set_movable_element_handlers", movableElement);
 
+        const isRTL = this.config.direction === "rtl";
         const containerRect = this.widgetContainer.getBoundingClientRect();
         const anchorBlockRect = this.currentMovableElement.getBoundingClientRect();
         const closestList = closestElement(this.currentMovableElement, "ul, ol"); // Prevent overlap bullets.
-        const anchorX = closestList ? closestList.getBoundingClientRect().x : anchorBlockRect.x;
+        const anchorX = isRTL
+            ? closestList
+                ? closestList.getBoundingClientRect().right
+                : anchorBlockRect.right
+            : closestList
+            ? closestList.getBoundingClientRect().x
+            : anchorBlockRect.x;
         let anchorY = anchorBlockRect.y;
         if (this.currentMovableElement.tagName.match(/H[1-6]/)) {
             anchorY += (anchorBlockRect.height - WIDGET_MOVE_SIZE) / 2;
@@ -246,7 +264,9 @@ export class MoveNodePlugin extends Plugin {
         this.moveWidget.style.width = `${WIDGET_MOVE_SIZE}px`;
         this.moveWidget.style.height = `${WIDGET_MOVE_SIZE}px`;
         this.moveWidget.style.top = `${anchorY - containerRect.y - moveWidgetOffsetTop}px`;
-        this.moveWidget.style.left = `${anchorX - containerRect.x - WIDGET_CONTAINER_WIDTH}px`;
+        this.moveWidget.style.left = isRTL
+            ? `${anchorX - containerRect.x + WIDGET_CONTAINER_WIDTH - WIDGET_MOVE_SIZE}px`
+            : `${anchorX - containerRect.x - WIDGET_CONTAINER_WIDTH}px`;
 
         if (this.scrollableElement) {
             this.smoothScrollOnDrag && this.smoothScrollOnDrag.destroy();
@@ -292,8 +312,11 @@ export class MoveNodePlugin extends Plugin {
             const marginLeft = parseInt(style.marginLeft, 10);
             const marginRight = parseInt(style.marginRight, 10);
 
+            const isRTL = this.config.direction === "rtl";
             const dropzoneRect = new DOMRect(
-                originalRect.left - marginLeft - WIDGET_CONTAINER_WIDTH,
+                isRTL
+                    ? originalRect.left - marginLeft
+                    : originalRect.left - marginLeft - WIDGET_CONTAINER_WIDTH,
                 originalRect.top - marginTop,
                 originalRect.width + marginLeft + marginRight + WIDGET_CONTAINER_WIDTH,
                 originalRect.height + marginTop + marginBottom
