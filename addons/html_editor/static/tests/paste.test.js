@@ -4103,7 +4103,7 @@ ${"            "}
             <tr>
                 <td>14pt MONO TEXT
                 </td>
-            </tr>
+            <td><p><br></p></td></tr>
         </tbody></table><p>[]<br></p>`,
         });
     });
@@ -4213,7 +4213,7 @@ ${"        "}
             </tr>
             <tr>
                 <td>14pt MONO TEXT</td>
-            </tr>
+            <td><p><br></p></td></tr>
         </tbody>
     </table><p>[]<br></p>`,
         });
@@ -4343,7 +4343,7 @@ ${"        "}
             <td>
                 14pt MONO TEXT
             </td>
-        </tr>
+        <td><p><br></p></td></tr>
     </tbody></table><p>[]<br></p>`,
         });
     });
