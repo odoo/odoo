@@ -584,7 +584,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
                     processed_message_uuids.append(uuid)
                 continue
 
-            if content['document_type'] == 'ApplicationResponse':
+            if record._name == 'account.peppol.response':
                 record.peppol_state = content['state']
             else:
                 # Invoice
