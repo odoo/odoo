@@ -30,11 +30,6 @@ class ResCompany(models.Model):
     )
     l10n_cn_baiwang_last_request_id = fields.Char(copy=False)
 
-    # Token management (auto-managed)
-    l10n_cn_baiwang_cached_token = fields.Char(string="Baiwang Cached Token", copy=False)
-    l10n_cn_baiwang_refresh_token = fields.Char(string="Baiwang Refresh Token", copy=False)
-    l10n_cn_baiwang_token_expiry = fields.Datetime(string="Baiwang Token Expiry", copy=False)
-
     # Mode
     l10n_cn_edi_mode = fields.Selection(
         selection=[

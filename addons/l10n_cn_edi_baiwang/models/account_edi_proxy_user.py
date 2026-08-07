@@ -57,8 +57,8 @@ class AccountEdiProxyClientUser(models.Model):
             if error.code == 'proxy_rate_limit_exceeded':
                 db_uuid = self.env['ir.config_parameter'].get_str('database.uuid')
                 _logger.warning(
-                    'Baiwang proxy rate limit exceeded for company %s (db_uuid %s): %s',
-                    self.company_id.vat, db_uuid, error.message,
+                    'Baiwang proxy rate limit exceeded for company %s (db_uuid %s) on %s: %s',
+                    self.company_id.vat, db_uuid, endpoint, error.message,
                 )
                 raise UserError(self.env._(
                     "You have reached the maximum number of requests allowed in a short period of time. "
