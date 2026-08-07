@@ -215,6 +215,7 @@ def _drop_conn(cr, db_name):
         cr.execute("""SELECT pg_terminate_backend(%(pid_col)s)
                       FROM pg_stat_activity
                       WHERE datname = %%s AND
+                            usename IN (SELECT rolname FROM pg_roles WHERE rolsuper = false) AND
                             %(pid_col)s != pg_backend_pid()""" % {'pid_col': pid_col},
                    (db_name,))
     except Exception:
