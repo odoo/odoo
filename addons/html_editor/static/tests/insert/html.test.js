@@ -386,6 +386,20 @@ describe("collapsed selection", () => {
         editor.shared.history.addStep();
         expect(getContent(el)).toBe(`<p>b</p><div class="oe_unbreakable">a</div><p>[]c</p>`);
     });
+
+    test("should normalize complex table with mixed rowspan/colspan", async () => {
+        const { el, editor } = await setupEditor(`<p>[]<br></p>`);
+        editor.shared.dom.insert(
+            parseHTML(
+                editor.document,
+                `<table><tbody><tr><td rowspan="2" colspan="2">A</td><td>B</td></tr><tr><td colspan="2">C</td></tr><tr><td>D</td><td rowspan="2">E</td><td>F</td></tr><tr><td colspan="2">G</td></tr></tbody></table>`
+            )
+        );
+        editor.shared.history.addStep();
+        expect(getContent(el)).toBe(
+            `<table><tbody><tr><td>A</td><td><p><br></p></td><td>B</td><td><p><br></p></td></tr><tr><td><p><br></p></td><td><p><br></p></td><td>C</td><td><p><br></p></td></tr><tr><td>D</td><td>E</td><td>F</td><td><p><br></p></td></tr><tr><td>G</td><td><p><br></p></td><td><p><br></p></td><td><p><br></p></td></tr></tbody></table><p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p>`
+        );
+    });
 });
 
 describe("not collapsed selection", () => {
