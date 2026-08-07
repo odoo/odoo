@@ -293,3 +293,23 @@ test("Changing inputs in Call Settings should pre-ask for browser permission", a
         '[{"audio":{"echoCancellation":true,"noiseSuppression":true,"deviceId":"mockAudioDeviceId2"},"video":false}]',
     ]);
 });
+
+test("Camera Preview feature in the video settings tab", async () => {
+    mockGetMedia();
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "test" });
+    patchUiSize({ size: SIZES.SM });
+    await start();
+    getService("discuss.rtc").cameraPermission = "granted";
+    await openDiscuss(channelId);
+    await contains("[title='Open Actions Menu']");
+    await click("[title='Open Actions Menu']");
+    await click(".o-dropdown-item:text('Voice & Video Settings')");
+    await click("button[title='Video']");
+    await click(".o-discuss-CallSettings-item[aria-label='Preview Camera']");
+    await contains(".o-discuss-CallSettings video");
+    await click(".o-discuss-CallSettings-item[aria-label='Preview Camera']");
+    await contains(".o-discuss-CallSettings video", { count: 0 });
+    getService("discuss.rtc").cameraPermission = "denied";
+    await contains(".o-discuss-CallSettings-item[aria-label='Preview Camera']", { count: 0 });
+});
