@@ -48,7 +48,7 @@ function findOEditable(containerEl) {
 
 export class TranslationPlugin extends Plugin {
     static id = "translation";
-    static dependencies = ["history"];
+    static dependencies = ["history", "valueHistory"];
     static shared = ["getElToTranslationInfoMap"];
 
     /** @type {import("plugins").WebsiteResources} */
@@ -315,6 +315,7 @@ export class TranslationPlugin extends Plugin {
                     elToTranslationInfoMap: elToTranslationInfoMap,
                     addStep: this.dependencies.history.addStep,
                     applyCustomMutation: this.dependencies.history.applyCustomMutation,
+                    setValueProperty: this.dependencies.valueHistory.setValue,
                 });
             });
         }
