@@ -2,7 +2,6 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
-from collections import defaultdict
 
 
 class PurchaseRequisition(models.Model):
@@ -229,25 +228,27 @@ class PurchaseRequisitionLine(models.Model):
                 elif line in purchase_requisition_lines:
                     line.parent_id = last_subsection or last_section
 
-    @api.depends('requisition_id.purchase_ids.state')
+    @api.depends(
+    'display_type',
+    'uom_id',
+    'requisition_id.purchase_ids.state',
+    'requisition_id.purchase_ids.order_line.product_qty',
+    'requisition_id.purchase_ids.order_line.uom_id',
+    'requisition_id.purchase_ids.order_line.requisition_line_id',
+    )
     def _compute_ordered_qty(self):
-        line_found = defaultdict(set)
         for line in self:
             if line.display_type:
                 line.qty_ordered = 0
                 continue
             total = 0.0
             for po in line.requisition_id.purchase_ids.filtered(lambda purchase_order: purchase_order.state == 'purchase'):
-                for po_line in po.order_line.filtered(lambda order_line: order_line.product_id == line.product_id):
+                for po_line in po.order_line.filtered(lambda order_line: order_line.requisition_line_id.id == line.id):
                     if po_line.uom_id != line.uom_id:
                         total += po_line.uom_id._compute_quantity(po_line.product_qty, line.uom_id)
                     else:
                         total += po_line.product_qty
-            if line.product_id not in line_found[line.requisition_id]:
-                line.qty_ordered = total
-                line_found[line.requisition_id].add(line.product_id)
-            else:
-                line.qty_ordered = 0
+            line.qty_ordered = total
 
     @api.depends('product_id')
     def _compute_uom_id(self):
@@ -355,17 +356,26 @@ class PurchaseRequisitionLine(models.Model):
         self.ensure_one()
         if self.display_type:
             return {
+                'requisition_line_id': self.id,
                 'display_type': self.display_type,
                 'name': self.name,
                 'sequence': self.sequence,
             }
+
+        # Initialized with empty string to act as a newline prefix during .join()
+        description = []
+        if self.name:
+            description += self.name.split('\n')[1:]
         if self.product_description_variants:
-            name += '\n' + self.product_description_variants
+            description.append(self.product_description_variants)
+        name += '\n' if name else '' + '\n'.join(description)
+
         date_planned = fields.Datetime.now()
         if self.requisition_id.date_start:
             date_planned = max(date_planned, fields.Datetime.to_datetime(self.requisition_id.date_start))
         return {
             'name': name,
+            'requisition_line_id': self.id,
             'product_id': self.product_id.id,
             'uom_id': self.uom_id.id,
             'product_qty': product_qty,

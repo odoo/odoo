@@ -13,6 +13,9 @@
                 <field name="requisition_id" domain="[('state', '=', 'confirmed'), ('vendor_id', 'in', (partner_id, False)), ('company_id', '=', company_id)]"
                 options="{'no_create': True}"/>
             </field>
+            <xpath expr="//list" position="inside">
+                <field name="requisition_line_id" invisible="1"/>
+            </xpath>
         </field>
     </record>
 
