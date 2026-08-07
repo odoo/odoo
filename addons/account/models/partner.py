@@ -383,7 +383,7 @@ class ResPartner(models.Model):
         )
         self.env['account.account'].flush_model(['account_type'])
         sql = SQL("""
-            SELECT account_move_line.partner_id, a.account_type, SUM(account_move_line.amount_residual)
+            SELECT account_move_line.partner_id, a.account_type, COALESCE(SUM(account_move_line.amount_residual), 0.0)
             FROM %s
             LEFT JOIN account_account a ON (account_move_line.account_id=a.id)
             WHERE a.account_type IN ('asset_receivable','liability_payable')
