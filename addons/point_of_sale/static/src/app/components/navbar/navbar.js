@@ -6,7 +6,7 @@ import { OrderTrackerDropdown } from "@point_of_sale/app/components/order_tracke
 import { CashierName } from "@point_of_sale/app/components/navbar/cashier_name/cashier_name";
 import { SyncPopup } from "@point_of_sale/app/components/popups/sync_popup/sync_popup";
 import { SaleDetailsButton } from "@point_of_sale/app/components/navbar/sale_details_button/sale_details_button";
-import { Component, proxy, useListener } from "@odoo/owl";
+import { Component, proxy, signal, useListener } from "@odoo/owl";
 import { Input } from "@point_of_sale/app/components/inputs/input/input";
 import { isBarcodeScannerSupported } from "@web/core/barcode/barcode_video_scanner";
 import { barcodeService } from "@barcodes/barcode_service";
@@ -32,6 +32,7 @@ export class Navbar extends Component {
         OrderTabs,
         OrderTrackerDropdown,
     };
+    inputRef = signal.ref();
     setup() {
         this.pos = usePos();
         this.ui = useService("ui");
@@ -100,14 +101,14 @@ export class Navbar extends Component {
             this.checkInput(event);
         } else if (event.key === "Enter") {
             this.checkInput(event);
-            if (event.target === this.inputRef?.el) {
+            if (event.target === this.inputRef()) {
                 this.pos.searchProductsFromDB();
             }
         } else {
             if (!isSpecialKey) {
                 this.bufferedInput += event.key;
             }
-            if (document.activeElement == this.inputRef?.el) {
+            if (document.activeElement == this.inputRef()) {
                 this.checkInput(event);
             } else {
                 this.timeout = setTimeout(() => {
@@ -120,15 +121,15 @@ export class Navbar extends Component {
     checkInput(event) {
         if (
             !this.ui.isSmall &&
-            this.inputRef?.el &&
-            document.activeElement !== this.inputRef.el &&
+            this.inputRef() &&
+            document.activeElement !== this.inputRef() &&
             !this.pos.getOrder()?.getSelectedOrderline() &&
             this.noOpenDialogs() &&
             event.key?.length == 1 &&
             this.bufferedInput.length < 3
         ) {
-            this.inputRef.el.focus();
-            this.inputRef.el.value = this.bufferedInput;
+            this.inputRef().focus();
+            this.inputRef().value = this.bufferedInput;
             event.preventDefault();
         }
         this.bufferedInput = "";

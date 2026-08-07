@@ -84,6 +84,6 @@ patch(Composer.prototype, {
     },
 
     get subject() {
-        return this.subjectInputRef.el?.value;
+        return this.subjectInputRef()?.value;
     },
 });

@@ -1,5 +1,5 @@
 import { useLayoutEffect } from "@web/owl2/utils";
-import { onWillStart, props, t } from "@odoo/owl";
+import { onWillStart, props, t, untrack } from "@odoo/owl";
 import { user } from "@web/core/user";
 import { formControllerProps } from "@web/views/form/form_controller";
 import { FormControllerWithHTMLExpander } from '@resource/views/form_with_html_expander/form_controller_with_html_expander'
@@ -30,13 +30,13 @@ export class ProjectProjectFormController extends FormControllerWithHTMLExpander
             useLayoutEffect(
                 (el) => {
                     if (el) {
-                        const title = this.rootRef.el.querySelector("#name_0");
+                        const title = el.querySelector("#name_0");
                         if (title) {
                             title.focus();
                         }
                     }
                 },
-                () => [this.rootRef.el]
+                () => [untrack(this.rootRef)]
             );
         }
     }
