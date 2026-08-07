@@ -21,7 +21,9 @@ class PosOrder(models.Model):
         if self.country_code != 'VN' or not self.config_id.l10n_vn_auto_send_to_sinvoice:
             return vals
 
-        sinvoice_symbol = self.config_id.l10n_vn_pos_symbol or self.config_id.company_id.l10n_vn_pos_default_symbol
+        # Get the symbol as sudo() as pos users are not allowed to access the field due to the groups setting
+        config_sudo = self.config_id.sudo()
+        sinvoice_symbol = config_sudo.l10n_vn_pos_symbol or config_sudo.company_id.l10n_vn_pos_default_symbol
         if sinvoice_symbol:
             vals['l10n_vn_edi_invoice_symbol'] = sinvoice_symbol.id
 
