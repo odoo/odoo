@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-12 17:36+0000\n"
-"PO-Revision-Date: 2026-07-21 06:51+0000\n"
+"PO-Revision-Date: 2026-08-07 06:10+0000\n"
 "Last-Translator: Nusara Boonma <nuboo@odoo.com>\n"
 "Language-Team: Thai <https://translate.odoo.com/projects/odoo-s19-3/purchase/"
 "th/>\n"
@@ -39,8 +39,8 @@ msgid ""
 "                'Purchase Order - %s' % (object.name))"
 msgstr ""
 "\n"
-"                (object.state in ('draft', 'sent') and 'ขอใบเสนอราคา - %s' % "
-"(object.name) or\n"
+"                (object.state ใน ('draft', 'sent') และ 'ขอใบเสนอราคา - %s' % "
+"(object.name) หรือ\n"
 "               'ใบสั่งซื้อสินค้า - %s' % (object.name))"
 
 #. module: purchase
@@ -2420,7 +2420,7 @@ msgstr "การวิเคราะห์การจัดซื้อ"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
 msgid "Purchase Bill Lines"
-msgstr "รายการบใบแจ้งหนี้"
+msgstr "รายการใบแจ้งหนี้"
 
 #. module: purchase
 #. odoo-python
@@ -2650,7 +2650,7 @@ msgstr "รายการที่ซื้อ"
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_bill_union
 msgid "Purchases & Bills Union"
-msgstr ""
+msgstr "จัดซื้อและรวมบิล"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__dest_address_id
@@ -2689,7 +2689,7 @@ msgstr "จำนวนที่จะเรียกเก็บเงิน"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__qty_to_invoice
 msgid "Qty to invoice"
-msgstr ""
+msgstr "จำนวนที่จะออกใบแจ้งหนี้"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_qty
@@ -2732,13 +2732,13 @@ msgstr "ส่ง RFQ แล้ว"
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 msgid "RFQ merged with %(oldest_rfq_name)s and %(cancelled_rfq)s"
-msgstr ""
+msgstr "คำขอเสนอราคาได้รวมกับ%(oldest_rfq_name)s และ %(cancelled_rfq)s"
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 msgid "RFQ merged with %s"
-msgstr ""
+msgstr "คำขอเสนอราคารวมเข้ากับ %s"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_purchase_order
@@ -2766,13 +2766,13 @@ msgstr "แจ้งเตือนการรับสินค้า"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__receipt_status
 msgid "Receipt Status"
-msgstr ""
+msgstr "สถานะการรับสินค้า"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_tree
 msgid "Receive"
-msgstr ""
+msgstr "รับ"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_received_at_date
@@ -2818,7 +2818,7 @@ msgstr "การอ้างอิง"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_bill_union_tree
 msgid "Reference Document"
-msgstr ""
+msgstr "เอกสารอ้างอิง"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__uom_id
@@ -2905,6 +2905,8 @@ msgid ""
 "time                                     and previous information from the "
 "RFQ."
 msgstr ""
+"ตั้งค่าใหม่เป็นวันนี้เพื่อคำนวณเวลาคาดการณ์การมาถึงใหม่อีกครั้ง โดยอิงจากเวลาเตรียมการที่มีอยู่"
+"                                     และข้อมูลก่อนหน้านี้จากคำขอเสนอราคา"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_user_id
@@ -2931,7 +2933,7 @@ msgstr "ค้นหารายการใบสั่งซื้อ"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_bill_union_filter
 msgid "Search Reference Document"
-msgstr ""
+msgstr "ค้นหาเอกสารอ้างอิง"
 
 #. module: purchase
 #. odoo-javascript
@@ -2969,12 +2971,12 @@ msgstr "เลือกสินค้าหรือสร้างสินค
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_move_form_inherit_purchase
 msgid "Select a purchase document"
-msgstr ""
+msgstr "เลือกเอกสารการจัดซื้อ"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__selected_seller_id
 msgid "Selected Seller"
-msgstr ""
+msgstr "ผู้ขายที่ได้รับการคัดเลือก"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -2984,12 +2986,12 @@ msgstr "ขายและซื้อสินค้าในหน่วยว
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Send PO"
-msgstr ""
+msgstr "ส่งใบสั่งซื้อ"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Send RFQ"
-msgstr ""
+msgstr "ส่งคำขอใบเสนอราคา"
 
 #. module: purchase
 #: model:ir.actions.server,name:purchase.action_purchase_send_reminder
@@ -3004,7 +3006,7 @@ msgstr "ส่งอีเมลแจ้งเตือนอัตโนมั
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_order_mass_mail
 msgid "Send by mail"
-msgstr ""
+msgstr "ส่งทางไปรษณีย์"
 
 #. module: purchase
 #. odoo-javascript
@@ -3057,12 +3059,12 @@ msgstr "แชร์"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__show_comparison
 msgid "Show Comparison"
-msgstr ""
+msgstr "แสดงการเปรียบเทียบ"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__show_receive_button
 msgid "Show Receive Button"
-msgstr ""
+msgstr "แสดงปุ่มรับ"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
@@ -3126,12 +3128,12 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order_line__display_type__line_subsection
 msgid "Subsection"
-msgstr ""
+msgstr "ส่วนย่อย"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Subsection Name"
-msgstr ""
+msgstr "ชื่อส่วนย่อย"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__price_subtotal
@@ -3215,7 +3217,7 @@ msgstr "ภาษี"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__technical_price_unit
 msgid "Technical Price Unit"
-msgstr ""
+msgstr "หน่วยราคาทางเทคนิค"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__display_type
@@ -3225,7 +3227,7 @@ msgstr "ฟิลด์เทคนิคสำหรับ UX เป้าห�
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__technical_price_unit
 msgid "Technical field for price computation"
-msgstr ""
+msgstr "ฟิลด์ทางเทคนิคสำหรับการคำนวณราคา"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__tax_country_id
@@ -3238,19 +3240,19 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__selected_seller_id
 msgid "Technical field to get the vendor pricelist used to generate this line"
-msgstr ""
+msgstr "ฟิลด์ทางเทคนิคเพื่อรับรายชื่อราคาของผู้จำหน่ายที่ใช้ในการสร้างรายการนี้"
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/product.py:0
 msgid "Template for Products"
-msgstr ""
+msgstr "เทมเพลตสำหรับสินค้า"
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 msgid "Template for Requests for Quotation"
-msgstr ""
+msgstr "เทมเพลตสำหรับคำขอใบเสนอราคา"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
@@ -3274,7 +3276,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__price_unit_product_uom
 msgid "The Price of one unit of the product's Unit of Measure"
-msgstr ""
+msgstr "ราคาต่อหนึ่งหน่วยของหน่วยวัดสินค้า"
 
 #. module: purchase
 #. odoo-python
@@ -3283,16 +3285,17 @@ msgid ""
 "The following purchase orders %(invalid_orders)s can't be received. "
 "Cancelled all receptions."
 msgstr ""
+"คำสั่งซื้อต่อไปนี้%(invalid_orders)s ไม่สามารถรับได้ ได้ยกเลิกการรับทั้งหมดแล้ว"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.track_po_line_template
 msgid "The ordered quantity and unit price have been updated."
-msgstr ""
+msgstr "ปริมาณที่สั่งซื้อและราคาต่อหน่วยได้ถูกอัปเดตแล้ว"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.track_po_line_template
 msgid "The ordered quantity has been updated."
-msgstr ""
+msgstr "จำนวนคำสั่งที่อัปเดตแล้ว"
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
@@ -3309,7 +3312,7 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.track_po_line_template
 msgid "The unit price has been updated."
-msgstr ""
+msgstr "ราคาต่อหน่วยได้อัปเดตแล้ว"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
@@ -3345,7 +3348,7 @@ msgstr ""
 #: model:ir.model.fields,help:purchase.field_res_partner__property_purchase_currency_id
 #: model:ir.model.fields,help:purchase.field_res_users__property_purchase_currency_id
 msgid "This currency will be used for purchases from the current partner"
-msgstr ""
+msgstr "สกุลเงินนี้จะถูกใช้สำหรับการซื้อสินค้าจากพาร์ทเนอร์ปัจจุบัน"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
@@ -3412,17 +3415,17 @@ msgstr "รวม"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
 msgid "Total Billed"
-msgstr ""
+msgstr "ยอดรวมที่เรียกเก็บ"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
 msgid "Total Purchased"
-msgstr ""
+msgstr "จำนวนที่ซื้อทั้งหมด"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_history_pivot
 msgid "Total Qty purchased"
-msgstr ""
+msgstr "ปริมาณรวมที่ซื้อไป"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_uom_qty
@@ -3451,23 +3454,23 @@ msgstr "จำนวนรวม"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__amount_total_cc
 msgid "Total in currency"
-msgstr ""
+msgstr "ยอดรวมเป็นสกุลเงิน"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_history_pivot
 msgid "Total purchased amount"
-msgstr ""
+msgstr "ยอดเงินที่ซื้อทั้งหมด"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__translated_product_name
 msgid "Translated Product Name"
-msgstr ""
+msgstr "ชื่อสินค้าที่แปลแล้ว"
 
 #. module: purchase
 #. odoo-javascript
 #: code:addons/purchase/static/src/product_catalog/kanban_renderer.xml:0
 msgid "Try removing the top filter to broaden your search"
-msgstr ""
+msgstr "ลองลบตัวกรองด้านบนเพื่อขยายขอบเขตการค้นหา"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__activity_exception_decoration
@@ -3487,7 +3490,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 msgid "Unable to cancel purchase order(s): %s. You must first unlock them."
-msgstr ""
+msgstr "ไม่สามารถยกเลิกคำสั่งซื้อได้: %s โปรดปลดล็อกคำสั่งซื้อเหล่านั้นก่อน"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__product_uom_id
@@ -3510,7 +3513,7 @@ msgstr "ราคาต่อหน่วย (ลดราคา)"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__price_unit_product_uom
 msgid "Unit Price Product UoM"
-msgstr ""
+msgstr "ราคาต่อหน่วย หน่วยวัดสินค้า"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -3533,7 +3536,7 @@ msgstr "ปลดล็อก"
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 msgid "Unsupported operator"
-msgstr ""
+msgstr "ตัวดำเนินการที่ไม่ได้รับการสนับสนุน"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_kpis_tree
@@ -3556,7 +3559,7 @@ msgstr "จำนวนรวมไม่รวมภาษี"
 #. odoo-javascript
 #: code:addons/purchase/static/src/components/purchase_file_uploader/purchase_file_uploader.xml:0
 msgid "Upload Bill"
-msgstr ""
+msgstr "อัปโหลดบิล"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__priority__1
@@ -3605,7 +3608,7 @@ msgstr "ผู้จำหน่าย"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__vendor_bill_id
 msgid "Vendor Bill"
-msgstr ""
+msgstr "ใบเรียกเก็บเงินของผู้ขาย"
 
 #. module: purchase
 #. odoo-python
@@ -3696,12 +3699,12 @@ msgstr "ต้องการนำเข้าเอกสารนี้ใน
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
 msgid "Warning on Purchase Orders"
-msgstr ""
+msgstr "คำเตือนเกี่ยวกับใบสั่งซื้อ"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_partner_view_purchase_buttons
 msgid "Warning on Purchase Orders and Bills"
-msgstr ""
+msgstr "คำเตือนเกี่ยวกับใบสั่งซื้อและใบแจ้งหนี้"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
@@ -3759,6 +3762,7 @@ msgstr "คุณสามารถค้นหาผู้ขายตามช
 #: code:addons/purchase/static/src/components/purchase_file_uploader/purchase_file_uploader.js:0
 msgid "You can only upload a bill for a single vendor at a time."
 msgstr ""
+"คุณสามารถอัปโหลดใบแจ้งหนี้ได้เพียงสำหรับผู้ขายหนึ่งรายเท่านั้นในแต่ละครั้ง"
 
 #. module: purchase
 #. odoo-python
@@ -3810,56 +3814,59 @@ msgid ""
 " Please change the company of your RFQ or remove the products from other "
 "companies (%(bad_products)s)."
 msgstr ""
+"ใบเสนอราคาของคุณมีสินค้าจากบริษัท %(product_company)s ในขณะที่ใบเสนอราคาของคุณเป็นของบริ"
+"ษัท %(quote_company)s \n"
+"กรุณาเปลี่ยนบริษัทที่เสนอราคาหรือนำสินค้าออกจากบริษัทอื่น(%(bad_products)s)"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "billing"
-msgstr ""
+msgstr "การเรียกเก็บเงิน"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
 msgid "e.g. There is a newer version of this product."
-msgstr ""
+msgstr "เช่น มีเวอร์ชันใหม่ของสินค้านี้แล้ว"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_partner_view_purchase_buttons
 msgid "e.g. This vendor is on vacation until the end of August."
-msgstr ""
+msgstr "ตัวอย่าง: ผู้ขายนี้กำลังพักร้อนจนถึงสิ้นเดือนสิงหาคม"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.bill_to_po_wizard_form
 msgid "or create new"
-msgstr ""
+msgstr "หรือสร้างใหม่"
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/account_invoice.py:0
 #: code:addons/purchase/models/purchase_order.py:0
 msgid "partner_id"
-msgstr ""
+msgstr "partner_id"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "purchase"
-msgstr ""
+msgstr "การจัดซื้อ"
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 msgid "res_id"
-msgstr ""
+msgstr "res_id"
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 msgid "res_model_id"
-msgstr ""
+msgstr "res_model_id"
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/controllers/portal.py:0
 msgid "state"
-msgstr ""
+msgstr "สถานะ"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -3875,7 +3882,7 @@ msgstr "เพื่อเรียนรู้วิธีต่างๆ ใ�
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "tracking"
-msgstr ""
+msgstr "การติดตาม"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document

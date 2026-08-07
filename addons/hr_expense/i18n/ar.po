@@ -11,13 +11,14 @@
 # Malaz Abuidris <msea@odoo.com>, 2023
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Malaz Siddig Elsayed Abuidris (msea)" <msea@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-03 17:39+0000\n"
-"PO-Revision-Date: 2026-06-30 20:45+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2026-08-03 15:31+0000\n"
+"Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-s19-3/"
 "hr_expense/ar/>\n"
 "Language: ar\n"
@@ -90,7 +91,7 @@ msgstr ""
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_submitted_expenses
 msgid "--<br/>"
-msgstr ""
+msgstr "--<br/>"
 
 #. module: hr_expense
 #. odoo-python
@@ -290,7 +291,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_split_form_view
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "Analytic"
-msgstr ""
+msgstr "تحليلي "
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_account_analytic_account
@@ -514,7 +515,7 @@ msgstr "سعر صرف العملة"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__date
 msgid "Date"
-msgstr ""
+msgstr "التاريخ"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
@@ -967,7 +968,7 @@ msgstr "يحتوي على رسالة"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_submitted_expenses
 msgid "Hi"
-msgstr ""
+msgstr "مرحبًا"
 
 #. module: hr_expense
 #: model_terms:product.template,description:hr_expense.expense_product_travel_accommodation_product_template
@@ -1501,12 +1502,12 @@ msgstr "الشريك"
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_account_payment_register
 msgid "Pay"
-msgstr ""
+msgstr "دفع"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_account_payment
 msgid "Payment"
-msgstr ""
+msgstr "الدفع "
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__payment_method_line_id
@@ -1551,7 +1552,7 @@ msgstr ""
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "Post"
-msgstr ""
+msgstr "ترحيل"
 
 #. module: hr_expense
 #. odoo-javascript
@@ -1628,7 +1629,7 @@ msgstr "متغيرات المنتج"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
 msgid "Product:"
-msgstr ""
+msgstr "المنتج:"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
@@ -1720,12 +1721,12 @@ msgstr "الاسترداد في إيصال الدفع"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__payment_mode
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "Reimbursement"
-msgstr ""
+msgstr "التعويض"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "Related"
-msgstr ""
+msgstr "ذو صلة "
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_ir_actions_report
@@ -1825,6 +1826,10 @@ msgid ""
 "will automatically be set. Type the expense amount in the mail subject to "
 "set it on the expense too."
 msgstr ""
+"أرسل بريداً إلكترونياً إلى لقب البريد الإلكتروني هذا مرفقاً الإيصال لإنشاء نفقة "
+"بضغطة زر. إذا كانت الكلمة الأولى من موضوع البريد الإلكتروني تحتوي على المرجع "
+"الداخلي للمنتج أو اسم المنتج، سوف يتم تعيين المنتج المقابل تلقائياً. اكتب "
+"مبلغ النفقة في موضوع البريد الإلكتروني لتعيينه في النفقة أيضاً."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__module_hr_expense_extract
@@ -1987,7 +1992,7 @@ msgstr "مانح موافقات الفريق"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_submitted_expenses
 msgid "Thanks,"
-msgstr ""
+msgstr "شكراً"
 
 #. module: hr_expense
 #. odoo-python
@@ -2280,6 +2285,10 @@ msgid ""
 "like allowances for mileage, per diem, "
 "accommodation                                             or meal."
 msgstr ""
+"عندما تكون تكلفة منتج النفقات مختلفة عن 0، فلن يتمكن المستخدم الذي يستخدم "
+"هذا المنتج من تغيير مبلغ النفقات، فقط الكمية. استخدم تكلفة مختلفة عن 0 "
+"لمنتجات النفقات التي تمولها الشركة بتكلفة ثابتة مثل بدلات الأميال أو البدل "
+"اليومي أو الإقامة أو الوجبة."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__product_has_tax
