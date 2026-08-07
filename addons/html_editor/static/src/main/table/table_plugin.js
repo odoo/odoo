@@ -1,11 +1,7 @@
 import { Plugin } from "@html_editor/plugin";
 import { baseContainerGlobalSelector } from "@html_editor/utils/base_container";
 import { isBlock } from "@html_editor/utils/blocks";
-import {
-    fillEmpty,
-    fillShrunkPhrasingParent,
-    removeClass,
-} from "@html_editor/utils/dom";
+import { fillEmpty, fillShrunkPhrasingParent, removeClass } from "@html_editor/utils/dom";
 import {
     getDeepestPosition,
     isProtected,
@@ -23,6 +19,7 @@ import {
     descendants,
     firstLeaf,
     lastLeaf,
+    selectElements,
 } from "@html_editor/utils/dom_traversal";
 import { parseHTML } from "@html_editor/utils/html";
 import { DIRECTIONS, leftPos, rightPos, nodeSize } from "@html_editor/utils/position";
@@ -120,7 +117,10 @@ export class TablePlugin extends Plugin {
         fully_selected_node_predicates: (node) => !!closestElement(node, ".o_selected_td"),
         traversed_nodes_processors: this.adjustTraversedNodes.bind(this),
         move_node_whitelist_selectors: "table",
-        normalize_handlers: this.distributeTableColorsToAllCells.bind(this),
+        normalize_handlers: [
+            this.distributeTableColorsToAllCells.bind(this),
+            this.populateTableSpans.bind(this),
+        ],
         overlay_selection_target_rect_providers: this.getTableSelectionRangeRect.bind(this),
         selected_background_color_providers: withSequence(
             5,
@@ -1350,5 +1350,61 @@ export class TablePlugin extends Plugin {
         }
         this.deselectTable(clonedContents);
         return clonedContents;
+    }
+
+    populateTableSpans(root) {
+        for (const table of selectElements(root, "table")) {
+            const matrix = [];
+            let width = 0;
+
+            // Build the logical matrix.
+            for (let r = 0; r < table.rows.length; r++) {
+                const row = table.rows[r];
+                matrix[r] ||= [];
+
+                let c = 0;
+                for (const cell of row.cells) {
+                    while (matrix[r][c] !== undefined) {
+                        c++;
+                    }
+
+                    const rowspan = cell.rowSpan;
+                    const colspan = cell.colSpan;
+                    for (let dr = 0; dr < rowspan; dr++) {
+                        matrix[r + dr] ||= [];
+
+                        for (let dc = 0; dc < colspan; dc++) {
+                            matrix[r + dr][c + dc] = dr === 0 && dc === 0 ? cell : null;
+                        }
+                    }
+
+                    cell.removeAttribute("rowspan");
+                    cell.removeAttribute("colspan");
+
+                    c += colspan;
+                    width = Math.max(width, c);
+                }
+            }
+
+            // Populate each row in place.
+            for (let r = 0; r < table.rows.length; r++) {
+                const row = table.rows[r];
+                matrix[r] ||= [];
+                let domIndex = 0;
+
+                for (let c = 0; c < width; c++) {
+                    const entry = matrix[r][c];
+                    if (!entry) {
+                        const cell = this.document.createElement("td");
+                        const baseContainer = this.dependencies.baseContainer.createBaseContainer();
+                        baseContainer.append(this.document.createElement("br"));
+                        cell.append(baseContainer);
+                        row.insertBefore(cell, row.children[domIndex] ?? null);
+                    }
+                    domIndex++;
+                }
+            }
+        }
+        return root;
     }
 }
