@@ -58,6 +58,7 @@ import { hasTouch } from "@web/core/browser/feature_detection";
 
 /**
  * @typedef {((root: HTMLElement = EditorContext["editable"]) => HTMLElement)[]} clean_for_save_processors
+ * @typedef {((root: HTMLElement) => HTMLElement)[]} html_compatibility_processors
  * @typedef {(() => void)[]} on_editor_started_handlers
  */
 
@@ -280,6 +281,7 @@ export class Editor {
                 plugin.setup();
             }
         });
+        this.processThrough("html_compatibility_processors", this.editable);
         this.trigger("on_editor_started_handlers");
     }
 

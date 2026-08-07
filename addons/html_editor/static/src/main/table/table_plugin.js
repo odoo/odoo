@@ -202,12 +202,11 @@ export class TablePlugin extends Plugin {
         on_will_split_block_handlers: this.resetTableSelection.bind(this),
 
         /** Processors */
-        before_insert_processors: this.normalizeTableStructure.bind(this),
         clean_for_save_processors: (root) => {
             this.deselectTable(root);
             return root;
         },
-        normalize_processors: this.normalizeTable.bind(this),
+        html_compatibility_processors: this.adaptTables.bind(this),
         clipboard_content_processors: this.processContentForClipboard.bind(this),
         resize_target_processors: this.processTableResizeTargets.bind(this),
         resize_width_reset_processors: this.processTableWidthReset.bind(this),
@@ -290,8 +289,6 @@ export class TablePlugin extends Plugin {
             }
         });
         this.onMousemove = this.onMousemove.bind(this);
-
-        this.normalizeTableStructure(this.editable);
     }
 
     processTableResizeTargets(item, neighbor, position, defaultMinSize) {
@@ -509,14 +506,44 @@ export class TablePlugin extends Plugin {
     }
 
     /**
-     * Inherits table-level colors to all child tds to make it
-     * easier to add/remove style on tables.
+     * Adapts the tables contained in `root` to the structure the table
+     * operations rely on:
+     * - every table has a `<tbody>`, `<thead>` elements being merged or
+     *   converted into it.
+     * - the inline widths of the first row's cells are moved to the `<col>`
+     *   elements of a `<colgroup>`.
+     * - table-level colors are inherited by all child tds, to make it easier
+     *   to add/remove style on tables.
      *
-     * @param {Element} root
+     * @param {HTMLElement | DocumentFragment} root
+     * @returns {HTMLElement | DocumentFragment}
      */
-    normalizeTable(root) {
-        const tables = root.querySelectorAll("table");
-        for (const table of tables) {
+    adaptTables(root) {
+        for (const table of root.querySelectorAll("table")) {
+            let tbody = table.tBodies[0];
+            const thead = table.tHead;
+
+            if (thead) {
+                const thChildren = thead.querySelectorAll("th");
+                thChildren.forEach((th) => th.classList.add("o_table_header"));
+
+                if (tbody) {
+                    // If a <tbody> already exists, move all rows from
+                    // <thead> into the start of <tbody>.
+                    tbody.prepend(...thead.rows);
+                    thead.remove();
+                } else {
+                    // Otherwise, replace the <thead> with <tbody>
+                    tbody = this.dependencies.dom.setTagName(thead, "TBODY");
+                }
+            }
+
+            if (!tbody) {
+                tbody = table.ownerDocument.createElement("tbody");
+                tbody.innerHTML = `<tr><td><div class="o-paragraph"><br></div></td></tr>`;
+                table.append(tbody);
+            }
+
             const firstRow = table.rows[0];
             let colgroup;
             for (const cell of firstRow?.children || []) {
@@ -538,7 +565,6 @@ export class TablePlugin extends Plugin {
                 table.prepend(colgroup);
             }
 
-            // --- Normalize table colors ---
             const tableColor = table.style.color;
             const tableBgColor = table.style.backgroundColor;
 
@@ -1982,45 +2008,6 @@ export class TablePlugin extends Plugin {
             focusNode: anchorTD.lastChild,
             focusOffset: nodeSize(anchorTD.lastChild),
         });
-    }
-
-    /**
-     * Normalize the structure of all tables contained in `container`.
-     *
-     * Ensures every table has a `<tbody>` and merges or converts `<thead>`
-     * elements when necessary. Table operations rely on the presence of a
-     * `<tbody>`, so every table must contain one.
-     *
-     * @param {HTMLElement | DocumentFragment} container
-     * @returns {HTMLElement | DocumentFragment}
-     */
-    normalizeTableStructure(container) {
-        container.querySelectorAll("table").forEach((table) => {
-            let tbody = table.tBodies[0];
-            const thead = table.tHead;
-
-            if (thead) {
-                const thChildren = thead.querySelectorAll("th");
-                thChildren.forEach((th) => th.classList.add("o_table_header"));
-
-                if (tbody) {
-                    // If a <tbody> already exists, move all rows from
-                    // <thead> into the start of <tbody>.
-                    tbody.prepend(...thead.rows);
-                    thead.remove();
-                } else {
-                    // Otherwise, replace the <thead> with <tbody>
-                    tbody = this.dependencies.dom.setTagName(thead, "TBODY");
-                }
-            }
-
-            if (!tbody) {
-                tbody = table.ownerDocument.createElement("tbody");
-                tbody.innerHTML = `<tr><td><div class="o-paragraph"><br></div></td></tr>`;
-                table.append(tbody);
-            }
-        });
-        return container;
     }
 
     /**
