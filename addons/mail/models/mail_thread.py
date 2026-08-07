@@ -5366,3 +5366,6 @@ class MailThread(models.AbstractModel):
         """Return a list of message types visible in a shared context.
         Override this method to customize visibility for specific models."""
         return ["auto_comment", "comment", "email", "email_outgoing"]
+
+    def _get_share_message_domain(self):
+        return self.env['mail.message']._get_share_domain()
