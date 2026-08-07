@@ -14,6 +14,7 @@ from odoo.http import request
 from odoo import models, fields, api, exceptions, _
 from odoo.addons.resource.models.utils import Intervals, sum_intervals
 from odoo.osv.expression import AND, OR
+from odoo.osv import expression
 from odoo.tools.float_utils import float_is_zero
 from odoo.exceptions import AccessError
 from odoo.tools import convert, format_duration, format_time, format_datetime
@@ -375,7 +376,7 @@ class HrAttendance(models.Model):
         for emp, attendance_dates in employee_attendance_dates.items():
             # get_attendances_dates returns the date translated from the local timezone without tzinfo,
             # and contains all the date which we need to check for overtime
-            attendance_domain = []
+            attendance_domain = expression.FALSE_DOMAIN
             for attendance_date in attendance_dates:
                 attendance_domain = OR([attendance_domain, [
                     ('check_in', '>=', attendance_date[0]), ('check_in', '<', attendance_date[0] + timedelta(hours=24)),
