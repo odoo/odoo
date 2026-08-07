@@ -227,11 +227,15 @@ class InvoiceAgentController(http.Controller):
         )
 
         # ---- Create the draft bill in the extraction state machine ----
+        # ``ocr_state`` defaults to 'pending' but is written explicitly so
+        # the OCR cron (data/cron.xml) claims the record on its next tick —
+        # the contract with the queue is visible in the create call itself.
         move = request.env["account.move"].create(
             {
                 "move_type": "in_invoice",  # vendor bill
                 "ai_source_attachment_id": attachment.id,
                 "ai_extraction_status": "pending",
+                "ocr_state": "pending",
                 "ai_confidence": 0.0,
             },
         )
@@ -311,4 +315,7 @@ class InvoiceAgentController(http.Controller):
             "ai_extraction_status": move.ai_extraction_status,
             "ai_confidence": move.ai_confidence,
             "ai_review_required": move.ai_review_required,
+            "ocr_state": move.ocr_state,
+            "ocr_confidence": move.ocr_confidence,
+            "ocr_error_message": move.ocr_error_message,
         }

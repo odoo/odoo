@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_invoice_agent_usage_list" model="ir.ui.view">
+        <field name="name">invoice.agent.usage.list</field>
+        <field name="model">invoice.agent.usage</field>
+        <field name="arch" type="xml">
+            <list string="AI Usage (group by Date for month-to-date spend)"
+                  default_group_by="create_date">
+                <field name="create_date" string="Date" widget="datetime"/>
+                <field name="move_id" string="Invoice" optional="show"/>
+                <field name="model" optional="show"/>
+                <field name="input_tokens" sum="Total Input" optional="show"/>
+                <field name="cache_creation_input_tokens" string="Cache Write Tokens" sum="Total Cache Write" optional="show"/>
+                <field name="cache_read_input_tokens" string="Cache Read Tokens" sum="Total Cache Read" optional="show"/>
+                <field name="output_tokens" sum="Total Output" optional="show"/>
+                <field name="cost" widget="monetary" sum="Total Cost"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_invoice_agent_usage" model="ir.actions.act_window">
+        <field name="name">AI Usage &amp; Spend</field>
+        <field name="res_model">invoice.agent.usage</field>
+        <field name="view_mode">list</field>
+        <field name="context">{'group_by': 'create_date'}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No AI usage recorded yet.</p>
+            <p>Every Claude extraction writes a token/cost row here. Group by
+            month to see month-to-date AI spend; the Cache Read Tokens column
+            is the proof that prompt caching is hitting on repeat calls.</p>
+        </field>
+    </record>
+
+    <menuitem id="menu_invoice_agent_usage"
+              name="AI Usage &amp; Spend"
+              parent="account.menu_finance_payables"
+              action="action_invoice_agent_usage"
+              sequence="16"
+              groups="account.group_account_invoice,account.group_account_readonly"/>
+</odoo>

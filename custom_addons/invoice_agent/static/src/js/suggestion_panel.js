@@ -24,7 +24,7 @@ export class InvoiceSuggestionPanel extends Component {
 
     static props = {
         record: Object,
-        fieldInfo: Object,
+        fieldInfo: { type: Object, optional: true },
         readonly: { type: Boolean, optional: true },
     };
 
@@ -40,9 +40,13 @@ export class InvoiceSuggestionPanel extends Component {
     // State
     // ------------------------------------------------------------------
     get suggestions() {
-        const data = this.props.record.data[this.props.fieldInfo.name] || {};
+        const fieldName = this.props.fieldInfo?.name;
+        if (!fieldName) {
+            return [];
+        }
+        const data = this.props.record?.data?.[fieldName] || {};
         return (data.records || []).filter(
-            (suggestion) => !this.state.spent.has(suggestion.data.field_name)
+            (suggestion) => !this.state.spent.has(suggestion.data?.field_name)
         );
     }
 
@@ -58,8 +62,8 @@ export class InvoiceSuggestionPanel extends Component {
     // Actions
     // ------------------------------------------------------------------
     async acceptSuggestion(suggestion) {
-        const fieldName = suggestion.data.field_name;
-        if (this.state.applying.has(fieldName)) {
+        const fieldName = suggestion.data?.field_name;
+        if (!fieldName || this.state.applying.has(fieldName)) {
             return; // double-click guard: one call per field
         }
         this.state.applying.add(fieldName);
@@ -83,8 +87,8 @@ export class InvoiceSuggestionPanel extends Component {
     }
 
     async rejectSuggestion(suggestion) {
-        const fieldName = suggestion.data.field_name;
-        if (this.state.applying.has(fieldName)) {
+        const fieldName = suggestion.data?.field_name;
+        if (!fieldName || this.state.applying.has(fieldName)) {
             return;
         }
         this.state.spent.add(fieldName);

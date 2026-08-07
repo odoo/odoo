@@ -6,24 +6,14 @@ Covers the three hard rules from the task brief:
 * explicit ``required`` — vendor_name, invoice_date, currency, amount_total
   and lines are required; the rest are Optional only where a real vendor
   invoice genuinely omits the field (VAT, due date, subtotal, tax total).
-* no numeric/length constraints — there is no ``Field(ge=...)`` or
-  ``min_length``/``max_length`` anywhere in the schema definition.
-
-Skipped when pydantic is absent (stale image), so the suite stays runnable
-before the image rebuild.
+* no recursion and no numeric/length constraints — there is no
+  ``Field(ge=...)`` or ``min_length``/``max_length`` anywhere in the schema.
+  Constraining the prompt is the model's job.
 """
 
 import json
 
-from odoo.tests import TransactionCase, skipIf, tagged
-
-try:
-    import pydantic
-
-    PYDANTIC_AVAILABLE = True
-except ImportError:
-    pydantic = None
-    PYDANTIC_AVAILABLE = False
+from odoo.tests import TransactionCase, tagged
 
 from odoo.addons.invoice_agent.models import invoice_extraction
 
@@ -31,7 +21,6 @@ from odoo.addons.invoice_agent.models import invoice_extraction
 @tagged("post_install", "-at_install")
 class TestInvoiceExtractionSchema(TransactionCase):
 
-    @skipIf(not PYDANTIC_AVAILABLE, "pydantic not installed on this image")
     def test_valid_payload_validates(self):
         extraction = invoice_extraction.InvoiceExtraction.model_validate(
             {
@@ -57,9 +46,7 @@ class TestInvoiceExtractionSchema(TransactionCase):
         self.assertEqual(float(extraction.amount_total), 1350.0)
         self.assertEqual(len(extraction.lines), 1)
 
-    @skipIf(not PYDANTIC_AVAILABLE, "pydantic not installed on this image")
     def test_optional_fields_accept_nulls(self):
-        # vendor_vat / due_date / subtotal / tax_total may be omitted.
         extraction = invoice_extraction.InvoiceExtraction.model_validate(
             {
                 "vendor_name": "Berlin Logistik GmbH",
@@ -74,8 +61,9 @@ class TestInvoiceExtractionSchema(TransactionCase):
         self.assertIsNone(extraction.subtotal)
         self.assertIsNone(extraction.tax_total)
 
-    @skipIf(not PYDANTIC_AVAILABLE, "pydantic not installed on this image")
     def test_extra_properties_forbidden(self):
+        import pydantic
+
         with self.assertRaises(pydantic.ValidationError):
             invoice_extraction.InvoiceExtraction.model_validate(
                 {
@@ -88,20 +76,19 @@ class TestInvoiceExtractionSchema(TransactionCase):
                 },
             )
 
-    @skipIf(not PYDANTIC_AVAILABLE, "pydantic not installed on this image")
     def test_missing_required_field_rejected(self):
+        import pydantic
+
         with self.assertRaises(pydantic.ValidationError):
             invoice_extraction.InvoiceExtraction.model_validate(
                 {
                     "vendor_name": "Acme",
                     "invoice_date": "2026-07-01",
                     "currency": "USD",
-                    # amount_total missing
                     "lines": [],
                 },
             )
 
-    @skipIf(not PYDANTIC_AVAILABLE, "pydantic not installed on this image")
     def test_json_schema_has_additional_properties_false_and_no_constraints(self):
         schema = invoice_extraction.InvoiceExtraction.model_json_schema()
         self.assertIs(schema["additionalProperties"], False)
@@ -109,9 +96,14 @@ class TestInvoiceExtractionSchema(TransactionCase):
         for required in ("vendor_name", "invoice_date", "currency", "amount_total", "lines"):
             self.assertIn(required, schema["required"])
 
-        # Nested line object honours additionalProperties: false too.
-        lines_schema = schema["properties"]["lines"]
-        self.assertEqual(lines_schema["items"]["additionalProperties"], False)
+        # Nested line object honours additionalProperties: false. pydantic 2.13
+        # emits nested models as $defs + $ref; follow the ref to the definition.
+        lines_ref = schema["properties"]["lines"]["items"]
+        if "$ref" in lines_ref:
+            ref_name = lines_ref["$ref"].split("/")[-1]
+            self.assertIs(schema["$defs"][ref_name]["additionalProperties"], False)
+        else:
+            self.assertIs(lines_ref["additionalProperties"], False)
 
         # No numeric or length constraints anywhere in the schema.
         dumped = json.dumps(schema)
@@ -120,9 +112,15 @@ class TestInvoiceExtractionSchema(TransactionCase):
         self.assertNotIn("minLength", dumped)
         self.assertNotIn("maxLength", dumped)
 
-    @skipIf(not PYDANTIC_AVAILABLE, "pydantic not installed on this image")
     def test_schema_has_no_recursive_reference(self):
         schema = invoice_extraction.InvoiceExtraction.model_json_schema()
-        dumped = json.dumps(schema)
-        self.assertNotIn("$ref", dumped)
-        self.assertNotIn("definitions", dumped)
+        # pydantic 2.13 uses $defs for nested models; the contract forbids
+        # *recursive* structures (a model referencing itself), so assert no
+        # definition contains a $ref back into the schema. InvoiceLine has no
+        # sub-models, so $defs holds no $ref at all.
+        defs_dumped = json.dumps(schema.get("$defs", {}))
+        self.assertNotIn("$ref", defs_dumped)
+        for prop in schema.get("properties", {}).values():
+            ref = prop.get("$ref")
+            if ref:
+                self.assertNotIn(schema["title"], ref)

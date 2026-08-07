@@ -152,6 +152,52 @@ class AccountMove(models.Model):
         help="The sale order that generated this invoice, when known from AI extraction.",
     )
 
+    # === OCR Pipeline Fields (see docs/adr-002-ocr-engine.md) ===
+    # ``ocr_state`` is the OCR half of the extraction state machine, separate
+    # from ``ai_extraction_status`` because the two run on different
+    # cadences: OCR runs once on the raw attachment (seconds, via ir.cron),
+    # while the Claude extraction can be re-run interactively on the stored
+    # text. State transitions: pending -> running -> done | failed.
+    ocr_state = fields.Selection(
+        selection=[
+            ("pending", "Pending"),
+            ("running", "Running"),
+            ("done", "Done"),
+            ("failed", "Failed"),
+        ],
+        string="OCR State",
+        default="pending",
+        index=True,
+        tracking=True,
+        help="State of the Tesseract OCR job for the source attachment. "
+        "pending: queued for the cron; running: claimed by a cron worker; "
+        "done: text + confidence stored; failed: nothing stored.",
+    )
+    ocr_text = fields.Text(
+        string="OCR Text",
+        readonly=True,
+        help="Raw text extracted from the source attachment by Tesseract. "
+        "Empty until ocr_state is 'done'.",
+    )
+    ocr_confidence = fields.Float(
+        string="OCR Confidence",
+        digits=(3, 2),
+        readonly=True,
+        help="Mean per-word confidence from Tesseract's image_to_data, 0..1.",
+    )
+    ocr_engine = fields.Char(
+        string="OCR Engine",
+        readonly=True,
+        default="tesseract",
+        help="OCR engine that produced ocr_text (always 'tesseract' today; "
+        "the Textract fallback is documented in ADR-002 but not wired).",
+    )
+    ocr_error_message = fields.Text(
+        string="OCR Error Message",
+        readonly=True,
+        help="Last OCR failure reason when ocr_state is 'failed'.",
+    )
+
     # -------------------------------------------------------------------------
     # COMPUTE: AI Variance
     # -------------------------------------------------------------------------
@@ -382,6 +428,16 @@ class AccountMove(models.Model):
             if line_vals:
                 write_vals["extraction_line_ids"] = line_vals
             self.write(write_vals)
+
+            # Persist the token/cost ledger row for this extraction. The AI
+            # spend view (invoice.agent.usage) is grouped by this data and
+            # shows month-to-date cost; the cache_read counter is the proof
+            # that prompt caching actually hit on repeat calls.
+            self.env["invoice.llm.service"].log_usage(
+                self.id,
+                result["usage"],
+                model=result["model"],
+            )
 
             _logger.info(
                 "invoice_agent suggest: move_id=%d model=%s usage=%s",
@@ -622,18 +678,25 @@ class AccountMove(models.Model):
     @api.model
     def _cron_retry_stuck_extractions(self):
         """Called by ir.cron every 30 minutes.
-        Finds bills stuck in 'processing' for more than 1 hour
-        and resets them to 'pending' so the extraction pipeline can retry.
+
+        Resets two kinds of stuck records back to a retryable state:
+
+        * ``ai_extraction_status='processing'`` for more than 1 hour
+          -> reset to 'pending' (Claude pipeline).
+        * ``ocr_state='running'`` for more than 1 hour -> reset to 'pending'
+          (OCR cron worker crashed mid-job, e.g. the container was restarted
+          between the 'running' write and the final commit).
         """
         threshold = fields.Datetime.now() - timedelta(hours=1)
-        stuck = self.search(
+        count = 0
+
+        stuck_extractions = self.search(
             [
                 ("ai_extraction_status", "=", "processing"),
                 ("write_date", "<", threshold),
             ],
         )
-        count = len(stuck)
-        for move in stuck:
+        for move in stuck_extractions:
             try:
                 move.write(
                     {
@@ -641,17 +704,136 @@ class AccountMove(models.Model):
                         "ai_confidence": 0.0,
                     },
                 )
+                count += 1
             except Exception:
                 _logger.exception(
                     "Cron failed to reset stuck extraction on %s",
                     move.display_name,
                 )
-        if count:
+
+        stuck_ocr = self.search(
+            [
+                ("ocr_state", "=", "running"),
+                ("write_date", "<", threshold),
+            ],
+        )
+        for move in stuck_ocr:
+            try:
+                move.write({"ocr_state": "pending"})
+                count += 1
+            except Exception:
+                _logger.exception(
+                    "Cron failed to reset stuck OCR on %s",
+                    move.display_name,
+                )
+
+        if stuck_extractions or stuck_ocr:
             _logger.info(
-                "_cron_retry_stuck_extractions: reset %d stuck moves from 'processing' to 'pending'",
+                "_cron_retry_stuck_extractions: reset %d stuck moves "
+                "(%d extraction, %d OCR) to pending",
                 count,
+                len(stuck_extractions),
+                len(stuck_ocr),
             )
         return count
+
+    # -------------------------------------------------------------------------
+    # OCR CRON WORKER: claim pending records in batches, commit per record
+    # -------------------------------------------------------------------------
+    # Called by the ``invoice_agent.cron_ocr_pending`` ir.cron (see
+    # data/cron.xml). A twenty-second OCR job must never run inside an HTTP
+    # worker — the cron keeps the work off the request path and bounds how
+    # many concurrent workers can hit Tesseract at once.
+    #
+    # Contract with the cron caller:
+    # * ``_cron_ocr_pending_bills(batch_size=10)`` is an ``@api.model``
+    #   method: cron invokes ``model._cron_ocr_pending_bills()`` with no
+    #   recordset and gets back a plain int (count of moves processed).
+    # * Batching: only ``batch_size`` moves are claimed per cron tick. With
+    #   ``max_cron_threads`` capped in odoo.conf and a modest batch size,
+    #   peak Tesseract concurrency stays bounded so the container never OOMs
+    #   under a pile of uploaded scans.
+    # * Per-record commit: each move is processed inside its own
+    #   ``self.env.cr.commit()`` window. One blank scan or corrupt PDF marks
+    #   only that move ``ocr_state='failed'`` and commits; the rest of the
+    #   batch continues. Without this, a single bad attachment would roll
+    #   back the entire batch on error.
+    # -------------------------------------------------------------------------
+    @api.model
+    def _cron_ocr_pending_bills(self, batch_size=10):
+        """Claim up to ``batch_size`` pending OCR moves and process each one.
+
+        Returns the number of moves processed. Never raises: per-move
+        failures degrade the move to ``ocr_state='failed'`` with
+        ``ocr_error_message`` set, so a bad scan cannot take down the cron
+        or poison the rest of the batch.
+        """
+        moves = self.search(
+            [("ocr_state", "=", "pending"), ("ai_source_attachment_id", "!=", False)],
+            order="write_date asc, id asc",
+            limit=batch_size,
+        )
+        processed = 0
+        for move in moves:
+            try:
+                self.env.cr.commit()  # fresh txn per record — see contract above
+                move._ocr_process_one(move.id)
+                processed += 1
+            except Exception:
+                _logger.exception(
+                    "OCR cron failed for move %s — marked failed and continuing",
+                    move.display_name,
+                )
+            finally:
+                self.env.cr.rollback()
+                self.env.cr.commit()
+        return processed
+
+    def _ocr_process_one(self, move_id):
+        """Run OCR for one move, storing text + confidence on success.
+
+        Claimed and committed by ``_cron_ocr_pending_bills``; this method
+        never calls commit itself. State flow: pending -> running -> done,
+        or pending -> running -> failed on any error (guard violations from
+        ``invoice.ocr.service`` included).
+        """
+        move = self.browse(move_id)
+        if not move.exists() or move.ocr_state != "pending":
+            return
+        attachment = move.ai_source_attachment_id
+        move.write({"ocr_state": "running", "ocr_error_message": False})
+        try:
+            result = self.env["invoice.ocr.service"]._extract_text(attachment)
+            move.write(
+                {
+                    "ocr_state": "done",
+                    "ocr_text": result["text"],
+                    "ocr_confidence": result["confidence"],
+                    "ocr_engine": "tesseract",
+                    # Mirror the extracted text back into the legacy AI
+                    # pipeline field so ``action_suggest_extraction`` reuses
+                    # the OCR result instead of re-running Tesseract.
+                    "ai_ocr_text": result["text"],
+                },
+            )
+            _logger.info(
+                "invoice_agent OCR done move_id=%d conf=%.2f len=%d",
+                move.id,
+                result["confidence"],
+                len(result["text"]),
+            )
+        except Exception as exc:
+            move.write(
+                {
+                    "ocr_state": "failed",
+                    "ocr_error_message": str(exc)[:2000],
+                },
+            )
+            _logger.warning(
+                "invoice_agent OCR failed move_id=%d: %s",
+                move.id,
+                exc,
+            )
 
     # -------------------------------------------------------------------------
     # EXTRACTION PIPELINE: OCR -> Claude -> normalize -> write

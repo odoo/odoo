@@ -31,7 +31,7 @@ services:
     # the LAN. Production: keep this commented out — nginx/odoo reach the db
     # over the compose network.
     ports:
-      - "127.0.0.1:5432:5432"
+      - "127.0.0.1:5434:5432"
     command:
       - postgres
       - -c
