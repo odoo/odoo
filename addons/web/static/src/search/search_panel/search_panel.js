@@ -1,4 +1,4 @@
-import { Component, onWillStart, onWillUpdateProps, proxy, signal, useEffect } from "@odoo/owl";
+import { Component, onWillStart, proxy, signal, useEffect } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useBus, useService } from "@web/core/utils/hooks";
@@ -93,11 +93,6 @@ export class SearchPanel extends Component {
             await this.env.searchModel.sectionsPromise;
             this.expandDefaultValue();
             this.expandValues();
-            this.updateActiveValues();
-        });
-
-        onWillUpdateProps(async () => {
-            await this.env.searchModel.sectionsPromise;
             this.updateActiveValues();
         });
     }
