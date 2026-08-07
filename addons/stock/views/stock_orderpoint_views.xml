@@ -57,7 +57,7 @@
                 <field name="company_id" optional="hide" readonly="1" groups="base.group_multi_company"/>
                 <button name="action_replenish" string="Order" type="object" class="o_replenish_buttons" icon="local_shipping"
                     invisible="qty_to_order &lt;= 0.0"/>
-                <button name="action_replenish_auto" string="Automate" type="object" class="o_replenish_buttons" icon="refresh"
+                <button name="action_replenish_auto" string="Automate" type="object" class="o_replenish_buttons" icon="cached"
                     invisible="qty_to_order &lt;= 0.0 or trigger == 'auto'"/>
                 <button name="%(action_orderpoint_snooze)d" string="Snooze" type="action" class="text-warning" icon="notifications_off" icon_class="oi-filled"
                     invisible="trigger != 'manual'" context="{'default_orderpoint_ids': [id]}"/>

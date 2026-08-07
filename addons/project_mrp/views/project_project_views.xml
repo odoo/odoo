@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="project.edit_project"/>
         <field name="arch" type="xml">
             <xpath expr="//div[@name='button_box']" position="inside">
-                <button class="oe_stat_button" type="object" name="action_view_mrp_bom" icon="science"
+                <button class="oe_stat_button" type="object" name="action_view_mrp_bom" icon="experiment"
                     groups="mrp.group_mrp_user" invisible="bom_count == 0">
                     <field string="Bills of Materials" name="bom_count" widget="statinfo"/>
                 </button>

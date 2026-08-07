@@ -84,7 +84,7 @@
                             type="action"
                             string="Product Moves"
                             class="oe_stat_button"
-                            icon="swap_horiz"
+                            icon="sync_alt"
                             invisible="not(move_ids or move_id) or state != 'done'"/>
                         <!-- No groups attribute on the next button as "stock.group_stock_user" is needed for Repair, and as this group is granted 'sale.order' read/write accesses in sale_stock module (forcefully loaded as transitive dependency) -->
                         <button name="action_view_sale_order" type="object" string="Sale Order" icon="attach_money" class="oe_stat_button" invisible="not sale_order_id">
