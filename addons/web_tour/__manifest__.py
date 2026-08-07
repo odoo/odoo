@@ -16,7 +16,6 @@ Odoo Web tours.
     'assets': {
         'web.assets_backend': [
             'web_tour/static/src/scss/**/*',
-            'web_tour/static/src/js/tour_pointer/**/*',
             'web_tour/static/src/js/utils/**/*',
             'web_tour/static/src/js/tour_state.js',
             'web_tour/static/src/js/tour_service.js',
@@ -28,7 +27,6 @@ Odoo Web tours.
         ],
         'web.assets_frontend': [
             'web_tour/static/src/scss/**/*',
-            'web_tour/static/src/js/tour_pointer/**/*',
             'web_tour/static/src/js/utils/**/*',
             'web_tour/static/src/js/tour_state.js',
             'web_tour/static/src/js/tour_service.js',
@@ -41,6 +39,7 @@ Odoo Web tours.
             ('include', 'web_tour.automatic'),
             ('include', 'web_tour.interactive'),
             'web_tour/static/tests/tour_models.js',
+            'web_tour/static/src/js/tour_player/*',
             'web_tour/static/tests/*.test.js',
         ],
         "web.assets_tests": [
@@ -58,6 +57,11 @@ Odoo Web tours.
         'web_tour.automatic': [
             ('include', 'web_tour.common'),
             'web_tour/static/src/js/tour_automatic/**/*',
+        ],
+        'web_tour.player': [
+            ('include', 'web_tour.automatic'),
+            ('include', 'web_tour.interactive'),
+            'web_tour/static/src/js/tour_player/*',
         ],
         'web_tour.recorder': [
             ('include', 'web_tour.common'),
