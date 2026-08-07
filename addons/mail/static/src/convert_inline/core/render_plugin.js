@@ -82,7 +82,6 @@ export class RenderPlugin extends Plugin {
 
     createEmailNodes() {
         const nodeToEmailNode = new Map();
-        const skippingContainers = new Map();
         const contexts = [];
         const createContext = (container, targetsProviders = []) => {
             const targets = new Set();
@@ -132,10 +131,6 @@ export class RenderPlugin extends Plugin {
                     }
                 }
             }
-            if (skippingContainers.has(node)) {
-                const providers = skippingContainers.get(node);
-                contexts.push(createContext(node, providers));
-            }
             return NodeFilter.FILTER_ACCEPT;
         };
         const treeWalker = this.createReferenceTreeWalker(filter);
@@ -144,13 +139,15 @@ export class RenderPlugin extends Plugin {
             let parentNode, parentEmailNode, isOnlyChild;
             if (node !== treeWalker.root) {
                 const parentPath = new Set();
-                parentNode = node.parentNode;
-                while (parentNode && !parentEmailNode) {
+                for (
+                    parentNode = node.parentNode;
+                    parentNode && !parentEmailNode;
+                    parentNode = parentNode.parentNode
+                ) {
                     parentEmailNode = nodeToEmailNode.get(parentNode);
                     if (!parentEmailNode) {
                         parentPath.add(parentNode);
                     }
-                    parentNode = parentNode.parentNode;
                 }
                 // set emailNode of the first non-skipped node for skipped nodes
                 for (const pathNode of parentPath) {
@@ -171,7 +168,7 @@ export class RenderPlugin extends Plugin {
             if (emailNode.analysis.parsingFacts.isSkippingContainer) {
                 const providers =
                     emailNode.analysis.parsingFacts.skippingContainerDescendantProviders;
-                skippingContainers.set(node, providers);
+                contexts.push(createContext(node, providers));
             }
         } while ((node = treeWalker.nextNode()));
         return nodeToEmailNode.get(this.config.reference);

@@ -5,13 +5,11 @@ export class ComparisonsStrategyPlugin extends Plugin {
     static id = "comparisonsStrategy";
     static dependencies = ["mosaicStrategy"];
     resources = {
-        element_layout_analysis_processors: this.analyzeElementLayout.bind(this),
         mosaic_cells_providers_processors: this.provideMosaicCells.bind(this),
     };
 
-    setup() {
-        
-    }
+    // TODO EGGMAIL: on_measure_reference_content_handlers
+    // call getBoundingClientRect to cache the mobile value
 
     getCells(referenceNode) {
         return [
@@ -19,10 +17,6 @@ export class ComparisonsStrategyPlugin extends Plugin {
                 ":scope > [data-name='Plan'] > .card > :is(.card-body, .card-footer)"
             ),
         ];
-    }
-
-    analyzeElementLayout(defaultEmailNodeArguments, { referenceNode, parentEmailNode }) {
-
     }
 
     provideMosaicCells(cellsProviders, defaultEmailNodeArguments, { referenceNode }) {
