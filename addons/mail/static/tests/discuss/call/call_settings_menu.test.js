@@ -13,7 +13,16 @@ import { CallSettings } from "@mail/discuss/call/common/call_settings";
 import { parseRawValue, toRawValue } from "@mail/utils/common/local_storage";
 import { Settings } from "@mail/core/common/settings_model";
 import { makeRecordFieldLocalId } from "@mail/model/misc";
-import { describe, expect, keyDown, mockDate, test, waitFor, waitForNone } from "@odoo/hoot";
+import {
+    describe,
+    expect,
+    keyDown,
+    mockDate,
+    test,
+    waitFor,
+    waitForNone,
+    waitUntil,
+} from "@odoo/hoot";
 import { contains, getService, mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { patch } from "@web/core/utils/patch";
 
@@ -299,4 +308,47 @@ test("Changing inputs in Call Settings should pre-ask for browser permission", a
         "getUserMedia:permission-asked",
         '[{"audio":{"echoCancellation":true,"noiseSuppression":true,"deviceId":"mockAudioDeviceId2"},"video":false}]',
     ]);
+});
+
+test("Can preview camera in the video settings tab", async () => {
+    mockGetMedia();
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "test" });
+    patchUiSize({ size: SIZES.SM });
+    await start();
+    getService("discuss.rtc").cameraPermission = "granted";
+    await openDiscuss(channelId);
+    await waitFor("[title='Open Actions Menu']:count(1)");
+    await contains("[title='Open Actions Menu']:count(1)").click();
+    await contains(".o-dropdown-item:text('Voice & Video Settings'):count(1)").click();
+    await contains("button[title='Video']:count(1)").click();
+    await contains(".o-discuss-CallSettings-item[aria-label='Preview Camera']:count(1)").click();
+    const video = await waitFor(".o-discuss-CallSettings video:count(1)");
+    await waitUntil(() => video.srcObject);
+    await contains(".o-discuss-CallSettings-item[aria-label='Preview Camera']:count(1)").click();
+    await waitForNone(".o-discuss-CallSettings video");
+    getService("discuss.rtc").cameraPermission = "denied";
+    await waitForNone(".o-discuss-CallSettings-item[aria-label='Preview Camera']");
+});
+
+test("Disables camera preview when camera capture fails", async () => {
+    patch(navigator.mediaDevices, {
+        getUserMedia: () => Promise.reject(new Error("Camera capture failed")),
+    });
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "test" });
+    patchUiSize({ size: SIZES.SM });
+    await start();
+    getService("discuss.rtc").cameraPermission = "granted";
+    await openDiscuss(channelId);
+    await waitFor("[title='Open Actions Menu']:count(1)");
+    await contains("[title='Open Actions Menu']:count(1)").click();
+    await contains(".o-dropdown-item:text('Voice & Video Settings'):count(1)").click();
+    await contains("button[title='Video']:count(1)").click();
+    await contains(".o-discuss-CallSettings-item[aria-label='Preview Camera']:count(1)").click();
+    await waitFor(
+        '.o_notification:text("Couldn\'t show the camera preview. Check that your camera is available."):count(1)'
+    );
+    await waitFor("input[title='Preview Camera']:not(:checked):count(1)");
+    await waitForNone(".o-discuss-CallSettings video");
 });

@@ -1,5 +1,5 @@
 import { defineMailModels, mockGetMedia, start } from "@mail/../tests/mail_test_helpers";
-import { describe, expect, test, waitFor } from "@odoo/hoot";
+import { describe, expect, test, waitFor, waitUntil } from "@odoo/hoot";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 
 import { CallPreview } from "@mail/discuss/call/common/call_preview";
@@ -17,9 +17,10 @@ test("enabling the camera preview reports the camera state even before the video
             onSettingsChanged: (s) => settings.push(s),
         },
     });
-    // The <video> element only renders once the stream is set, so the camera is enabled before the
-    // element exists. The parent must still be told the camera is on, otherwise a guest whose camera
-    // is on in the preview joins the call with the camera off.
-    await waitFor("video:count(1)");
+    // The camera is enabled before its stream is assigned to the <video> element. The parent must
+    // still be told the camera is on, otherwise a guest whose camera is on in the preview joins the
+    // call with the camera off.
+    const video = await waitFor("video:count(1)");
+    await waitUntil(() => video.srcObject);
     expect(settings).toEqual([{ camera: true }]);
 });
