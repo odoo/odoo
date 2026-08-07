@@ -900,10 +900,14 @@ test("SelectCreateDialog with open action", async () => {
     await runAllTimers();
     await contains(`.o_field_widget[name="instrument"] .o_m2o_dropdown_option_search_more`).click();
     expect.verifySteps(["name_search"]);
-    expect(searchLimit).toBe(1000, { message: "The name_search should have been called with a limit of 1000" });
+    expect(searchLimit).toBe(1000, {
+        message: "The name_search should have been called with a limit of 1000",
+    });
 
     expect(".modal .modal-lg").toHaveCount(1);
-    expect(".modal .modal-lg .o_data_row").toHaveCount(25, { message: "should contain 25 records" });
+    expect(".modal .modal-lg .o_data_row").toHaveCount(25, {
+        message: "should contain 25 records",
+    });
 });
 
 test.tags("mobile");
@@ -1086,4 +1090,37 @@ test("SelectCreateDialog list: control panel stays visible when list overflows",
     expect(renderer.scrollHeight).toBeGreaterThan(renderer.clientHeight, {
         message: "Scroll belongs to the renderer (doesn't include the control panel)",
     });
+});
+
+test.tags("mobile");
+test("dropdown menu is hidden in SelectCreateDialog", async () => {
+    Product._views["kanban"] = /* xml */ `
+        <kanban>
+            <templates>
+                <t t-name="menu">
+                    <a role="menuitem" type="open" class="dropdown-item">Open</a>
+                </t>
+                <t t-name="card">
+                    <field name="name"/>
+                </t>
+            </templates>
+        </kanban>
+    `;
+    Product._views["search"] = /* xml */ `<search/>`;
+
+    await mountView({
+        type: "form",
+        resModel: "sale_order_line",
+        arch: `
+            <form>
+                <field name="product_id"/>
+            </form>`,
+    });
+
+    await contains('.o_field_widget[name="product_id"] input').click();
+
+    expect(".o_dialog").toHaveCount(1);
+    expect(".o_dialog .o_kanban_view .o_kanban_record:not(.o_kanban_ghost)").toHaveCount(1);
+
+    expect(".o_kanban_record:eq(0) .o_dropdown_kanban .dropdown-toggle").toHaveCount(0);
 });
