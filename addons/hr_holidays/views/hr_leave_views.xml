@@ -391,6 +391,7 @@
                                 </div>
                                 <div>
                                     <field name="work_entry_type_id" force_save="1" default_focus="1"
+                                        widget="many2one_no_save"
                                         domain="[
                                             ('id', 'in', allowed_work_entry_type_ids),
                                             ('time_off_selectable', '=', True),
