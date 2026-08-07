@@ -321,15 +321,23 @@ class Websocket:
         cls.__event_callbacks[LifecycleEvent.CLOSE].add(func)
         return func
 
+    def send(self, payload, opcode=None):
+        if self.state is not ConnectionState.OPEN:
+            e = "Trying to send a frame on a closed socket"
+            raise InvalidStateException(e)
+        if opcode is None:
+            opcode = Opcode.BINARY
+            if not isinstance(payload, Buffer):
+                opcode = Opcode.TEXT
+        self._enqueue_control_command(ControlCommand.SEND, Frame(opcode, payload))
+
     def send_worker_internal_message(self, type_, payload=None):
         """Send a message to the browser worker linked to this WebSocket. The message
         is delivered only to the current socket instance and is not stored. Used for
         internal server to worker coordination.
         """
-        self._enqueue_control_command(
-            ControlCommand.SEND,
-            [{'type': type_, 'internal': True, 'payload': payload}],
-        )
+        with suppress(InvalidStateException):
+            self.send([{"type": type_, "internal": True, "payload": payload}])
 
     def subscribe(self, channels, last):
         self._min_id_by_channel = {
@@ -485,15 +493,6 @@ class Websocket:
                 raise PayloadTooLargeException()
             if frame.fin:
                 return bytes(message_fragments)
-
-    def _send(self, message):
-        if self.state is not ConnectionState.OPEN:
-            e = "Trying to send a frame on a closed socket"
-            raise InvalidStateException(e)
-        opcode = Opcode.BINARY
-        if not isinstance(message, Buffer):
-            opcode = Opcode.TEXT
-        self._send_frame(Frame(opcode, message))
 
     def _send_frame(self, frame):
         if frame.opcode in CTRL_OP and len(frame.payload) > 125:
@@ -716,7 +715,7 @@ class Websocket:
         """
         match command:
             case ControlCommand.SEND:
-                self._send(data)
+                self._send_frame(data)
             case ControlCommand.DISPATCH:
                 self._assert_session_validity()
                 self._dispatch_bus_notifications()
@@ -769,7 +768,7 @@ class Websocket:
                 if current_min < new_min_id:
                     self._min_id_by_channel[channel] = new_min_id
             self._notif_history = self._notif_history[last_index + 1 :]
-        self._send(notifications)
+        self.send(notifications)
 
 
 class TimeoutManager:
