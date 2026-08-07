@@ -55,6 +55,7 @@ class PosOrderLine(models.Model):
     product_uom_id = fields.Many2one('uom.uom', string='Product Unit', related='product_id.uom_id')
     currency_id = fields.Many2one('res.currency', related='order_id.currency_id')
     full_product_name = fields.Char('Full Product Name')
+    translated_product_name = fields.Text(compute='_compute_translated_product_name')
     customer_note = fields.Char('Customer Note')
     refund_orderline_ids = fields.One2many('pos.order.line', 'refunded_orderline_id', 'Refund Order Lines', help='Orderlines in this field are the lines that refunded this orderline.')
     refunded_orderline_id = fields.Many2one('pos.order.line', 'Refunded Order Line', index='btree_not_null', help='If this orderline is a refund, then the refunded orderline is specified in this field.')
@@ -88,6 +89,13 @@ class PosOrderLine(models.Model):
             'combo_parent_id', 'combo_line_ids', 'combo_item_id', 'refund_orderline_ids',
             'extra_tax_data', 'write_date', 'prep_line_ids',
         ]
+
+    @api.depends('product_id')
+    def _compute_translated_product_name(self):
+        for line in self:
+            line.translated_product_name = line.product_id.with_context(
+                lang=self.env.user.lang,
+            ).display_name
 
     @api.depends('refund_orderline_ids', 'refund_orderline_ids.order_id.state')
     def _compute_refund_qty(self):

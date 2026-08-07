@@ -50,15 +50,20 @@ export class ProductLabelSectionAndNoteField extends ProductNameAndDescriptionFi
         return this.isSection || this.isSubSection;
     }
 
+    get translatedProductName() {
+        return this.props.record.data.translated_product_name;
+    }
+
     isNote(record = null) {
         record = record || this.props.record;
         return record.data.display_type === "line_note";
     }
 
     parseLabel(value) {
-        return (this.productName && value && this.productName.concat("\n", value))
-            || (this.productName && !value && this.productName)
-            || (value || "");
+        if (this.translatedProductName == this.productName) {
+            return this.productName.concat("\n", value);
+        }
+        return super.parseLabel(value);
     }
 
     shouldShowWarning() {
@@ -83,6 +88,7 @@ export const productLabelSectionAndNoteField = {
             default: false
         },
     ],
+    fieldDependencies: [{ name: "translated_product_name", type: "char" }],
     extractProps({ options }) {
         const props = extractM2OFieldProps(...arguments);
         props.show_label_warning = options.show_label_warning;

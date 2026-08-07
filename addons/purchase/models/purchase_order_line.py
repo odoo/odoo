@@ -563,9 +563,11 @@ class PurchaseOrderLine(models.Model):
     @api.depends('product_id')
     def _compute_translated_product_name(self):
         for line in self:
-            line.translated_product_name = line.product_id.with_context(
-                lang=line.partner_id.lang,
-            ).display_name
+            product_ctx = {
+                'seller_id': line.selected_seller_id.id,
+                'lang': line.partner_id.lang,
+            }
+            line.translated_product_name = line.product_id.with_context(product_ctx).display_name
 
     @api.depends('uom_id', 'product_qty', 'product_id.uom_id')
     def _compute_product_uom_qty(self):
