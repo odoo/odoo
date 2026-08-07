@@ -92,7 +92,7 @@ class SaleOrder(models.Model):
         self.coupon_point_ids.coupon_id.sudo().filtered(
             lambda c: not c.program_id.is_nominative and c.order_id in self and not c.use_count)\
             .unlink()
-        self.coupon_point_ids.unlink()
+        self.coupon_point_ids.sudo().unlink()
         return res
 
     def action_open_reward_wizard(self):
