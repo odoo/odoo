@@ -348,7 +348,9 @@ test("ImageField preview is updated when an image is uploaded", async () => {
     await click(".o_select_file_button");
     await setInputFiles(imageFile);
     // It can take some time to encode the data as a base64 url
-    await waitFor(`div[name=document] img[data-src="data:image/png;base64,${MY_IMAGE}"]`);
+    await waitFor(`div[name=document] img[data-src="data:image/png;base64,${MY_IMAGE}"]`, {
+        timeout: 1000,
+    });
 });
 
 test("clicking save manually after uploading new image should change the unique of the image src", async () => {
