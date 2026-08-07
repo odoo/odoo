@@ -2352,5 +2352,28 @@ describe("Selection not collapsed", () => {
             await tick(); // Wait for the selection change to be handled
             expect(getContent(el)).toBe("<p>wonderful []</p>");
         });
+
+        test.tags("mobile");
+        test("should not break Gboard correction", async () => {
+            const dispatch = (type, eventInit) =>
+                manuallyDispatchProgrammaticEvent(editor.editable, type, eventInit);
+            const { editor, el } = await setupEditor("<p>Gxf[]</p>");
+            // Roughly as observed on Android Chrome with Gboard:
+            // - selection change
+            // - keydown event
+            // - input deleteContentBackward
+            // - keydown event
+            // - input insertText
+            const selection = editor.document.getSelection();
+            await dispatch("keydown", { key: "Unidentified" });
+            for (let i = 0; i < 2; i++) {
+                selection.modify("extend", "backward", "character");
+            }
+            await backspaceAndroid(editor);
+            await dispatch("keydown", { key: "Unidentified" });
+            await insertText(editor, "if ");
+            await tick(); // Wait for the selection change to be handled
+            expect(getContent(el)).toBe("<p>Gif []</p>");
+        });
     });
 });
