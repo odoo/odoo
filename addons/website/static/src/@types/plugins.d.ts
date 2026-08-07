@@ -30,6 +30,7 @@ declare module "plugins" {
     import { theme_options, ThemeTabShared } from "@website/builder/plugins/theme/theme_tab_plugin";
     import { force_background_translation_state_selectors } from "@website/builder/plugins/translation/repeat_translation_state_plugin";
     import { translate_options } from "@html_builder/core/builder_options_plugin_translate";
+    import { ValueHistoryShared } from "@website/builder/plugins/value_history_plugin";
     import { WebsiteSessionShared } from "@website/builder/plugins/website_session_plugin";
 
     interface SharedMethods {
@@ -53,6 +54,7 @@ declare module "plugins" {
         socialMediaOptionPlugin: SocialMediaOptionShared;
         switchableViews: SwitchableViewsShared;
         themeTab: ThemeTabShared;
+        valueHistory: ValueHistoryShared;
         websiteBackgroundVideoPlugin: WebsiteBackgroundVideoShared;
         websiteFont: WebsiteFontShared;
         websiteFormOption: FormOptionShared;
