@@ -5,13 +5,14 @@
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # "Manon Rondou (ronm)" <ronm@odoo.com>, 2025, 2026.
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Cécile Collart (cco)" <cco@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-17 17:38+0000\n"
-"PO-Revision-Date: 2026-07-21 00:48+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2026-08-04 21:30+0000\n"
+"Last-Translator: \"Cécile Collart (cco)\" <cco@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-s19-4/"
 "account_edi_ubl_cii/fr/>\n"
 "Language: fr\n"
@@ -31,7 +32,7 @@ msgstr "%(invoice_name)s - Généré par Odoo"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint_eu.py:0
 msgid "%s should have a KVK or OIN number set."
-msgstr ""
+msgstr "Un numéro KVK ou OIN doit être défini pour %s."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -39,6 +40,8 @@ msgstr ""
 msgid ""
 "%s should have a valid KBO/BCE number set as additional identifier (BE_EN)."
 msgstr ""
+"%s doit avoir un numéro KBO/BCE valide défini comme identifiant "
+"supplémentaire (BE_EN)."
 
 #. module: account_edi_ubl_cii
 #: model:ir.actions.server,name:account_edi_ubl_cii.action_group_ungroup_lines_by_tax
@@ -54,6 +57,11 @@ msgid ""
 "                        Preview\n"
 "                    </span>"
 msgstr ""
+"<span style=\"font-size: 16px; font-weight: bold; color: #ffffff; display: "
+"inline-block; vertical-align: middle; text-transform: uppercase; margin: 0px "
+"8px; letter-spacing: 0.5px;\">\n"
+"                        Aperçu\n"
+"                    </span>"
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
@@ -65,6 +73,7 @@ msgstr "A"
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint_eu.py:0
 msgid "A buyer reference or purchase order reference must be provided."
 msgstr ""
+"Une référence acheteur ou une référence de bon de commande doit être fournie."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -143,7 +152,7 @@ msgstr "VOKZ Autriche"
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_partner__available_routing_schemes
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_users__available_routing_schemes
 msgid "Available Routing Schemes"
-msgstr ""
+msgstr "Schémas de routage disponibles"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_category_code__b
@@ -226,7 +235,7 @@ msgstr ""
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_res_company
 msgid "Company"
-msgstr ""
+msgstr "Société"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -253,6 +262,8 @@ msgid ""
 "Could not retrieve a partner corresponding to '%s' with the same VAT. A new "
 "partner was created."
 msgstr ""
+"Impossible de récupérer un partenaire correspondant à '%s' avec la même TVA. "
+"Un nouveau partenaire a été créé."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -414,7 +425,7 @@ msgstr "Code de localisation EAN"
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_partner__routing_identifier
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_users__routing_identifier
 msgid "EDI Routing Address"
-msgstr ""
+msgstr "Adresse de routage EDI"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__invoice_edi_format__ubl_bis3
@@ -586,6 +597,7 @@ msgstr "Clés d’identification GS1"
 #: code:addons/account_edi_ubl_cii/tools/partner_identifiers.py:0
 msgid "GS1 identification keys for supply chain management."
 msgstr ""
+"Clés d’identification GS1 pour la gestion de la chaîne d’approvisionnement."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -644,7 +656,7 @@ msgstr "TVA Hongrie"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/tools/partner_identifiers.py:0
 msgid "IBAN"
-msgstr ""
+msgstr "IBAN"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_edi_common__id
@@ -692,7 +704,7 @@ msgstr "Installer Chorus Pro"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/tools/partner_identifiers.py:0
 msgid "International Bank Account Number, used as an EDI identifier."
-msgstr ""
+msgstr "Numéro de compte bancaire international, utilisé comme identifiant EDI."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -730,7 +742,7 @@ msgstr "Est au format UBL"
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_uom_uom__is_unece_code_supported
 msgid "Is Unece Code Supported"
-msgstr ""
+msgstr "Le code UNECE est-il pris en charge"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__routing_scheme__0097
@@ -935,7 +947,7 @@ msgstr "TVA Portugal"
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_uom_uom
 msgid "Product Unit of Measure"
-msgstr ""
+msgstr "Unité de mesure du produit"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_ir_actions_report
@@ -959,7 +971,7 @@ msgstr "Arrondi"
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_partner__routing_endpoint
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_users__routing_endpoint
 msgid "Routing Endpoint"
-msgstr ""
+msgstr "Point de terminaison de routage"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_company__routing_scheme
@@ -967,13 +979,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_users__routing_scheme
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.view_partner_property_form
 msgid "Routing ID"
-msgstr ""
+msgstr "ID de routage"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/res_partner.py:0
 msgid "Routing identifier should be in the format 'SCHEME:ENDPOINT'."
-msgstr ""
+msgstr "L’identifiant de routage doit être au format 'SCHEME:ENDPOINT'."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_category_code__s
@@ -1131,7 +1143,7 @@ msgstr ""
 #. module: account_edi_ubl_cii
 #: model:ir.model.constraint,message:account_edi_ubl_cii.constraint_uom_uom_unece_code_unique
 msgid "The UN/ECE code already exists!"
-msgstr ""
+msgstr "Le code UN/ECE existe déjà !"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1141,6 +1153,9 @@ msgid ""
 "line for product '%(product)s' because it is not compatible with the "
 "product's Unit of Measure '%(product_uom)s'. The UoM was left empty."
 msgstr ""
+"L’unité de mesure '%(uom)s' (du code d’unité '%(code)s') a été ignorée sur "
+"la ligne du produit '%(product)s', car elle n’est pas compatible avec "
+"l’unité de mesure du produit '%(product_uom)s'. L’UDM a été laissée vide."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,help:account_edi_ubl_cii.field_account_tax__ubl_cii_tax_category_code
@@ -1174,6 +1189,7 @@ msgstr "Le compte bancaire n'a pas pu être récupéré : %s"
 #: model:ir.model.fields,help:account_edi_ubl_cii.field_uom_uom__unece_code
 msgid "The code element for units of measurement (UoM) as specified by UN/ECE"
 msgstr ""
+"L’élément de code des unités de mesure (UDM) tel que spécifié par l’UN/ECE"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1239,6 +1255,9 @@ msgid ""
 "                    <strong style=\"color: #495057;\">It is not an official "
 "document.</strong>"
 msgstr ""
+"Ceci est une représentation visuelle du contenu XML.<br/>\n"
+"                    <strong style=\"color: #495057;\">Ce n’est pas un "
+"document officiel.</strong>"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__routing_scheme__9952
@@ -1268,17 +1287,17 @@ msgstr "UBL BIS Billing 3.0.12"
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_ubl_cen_en16931
 msgid "UBL CEN-EN16931"
-msgstr ""
+msgstr "UBL CEN-EN16931"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_ubl_pint
 msgid "UBL PINT"
-msgstr ""
+msgstr "UBL PINT"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_ubl_pint_eu
 msgid "UBL PINT-EU Layer"
-msgstr ""
+msgstr "Couche UBL PINT-EU"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__routing_scheme__0193
@@ -1300,7 +1319,7 @@ msgstr "Nom de fichier UBL/CII"
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_uom_uom__unece_code
 msgid "UN/ECE Code"
-msgstr ""
+msgstr "Code UN/ECE"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__routing_scheme__9959
@@ -1333,7 +1352,7 @@ msgstr "Partenaire inconnu"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/wizard/account_move_send_wizard.py:0
 msgid "Unsupported file type via %s"
-msgstr ""
+msgstr "Type de fichier non pris en charge via %s"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -2155,6 +2174,8 @@ msgid ""
 "[PEPPOL-EN16931-R010] An electronic address (EAS) must be provided on the "
 "customer '%s'."
 msgstr ""
+"[PEPPOL-EN16931-R010] Une adresse électronique (EAS) doit être fournie sur "
+"le client '%s'."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -2163,6 +2184,8 @@ msgid ""
 "[PEPPOL-EN16931-R020] An electronic address (EAS) must be provided on the "
 "company '%s'."
 msgstr ""
+"[PEPPOL-EN16931-R020] Une adresse électronique (EAS) doit être fournie sur "
+"la société '%s'."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_partner__invoice_edi_format

@@ -1,14 +1,15 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* populate
+# * populate
 #
+# "Chloe Wang (chwa)" <chwa@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~19.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-30 00:51+0000\n"
-"PO-Revision-Date: 2026-07-21 09:30+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2026-08-07 07:15+0000\n"
+"Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
 "projects/odoo-s19-4/populate/zh_Hans/>\n"
 "Language: zh_CN\n"
@@ -22,38 +23,38 @@ msgstr ""
 #. odoo-python
 #: code:addons/populate/models/session.py:0
 msgid "%(count)s parallel job(s) failed"
-msgstr ""
+msgstr "%(count)s 个并行任务执行失败"
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/generators/relation.py:0
 msgid "'%(comodel_name)s' isn't a valid model name."
-msgstr ""
+msgstr "%(comodel_name)s 不是有效的模型名称。"
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/generators/relation.py:0
 msgid "'%(groupby)s' isn't a valid field for model '%(comodel_name)s'."
-msgstr ""
+msgstr "%(groupby)s 不是模型 %(comodel_name)s 的有效字段。"
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/generators/relation.py:0
 msgid "'comodel_name' needs to be provided for virtual fields."
-msgstr ""
+msgstr "虚拟字段必须提供 'comodel_name'。"
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/session.py:0
 msgid "A created session should have jobs associated from a blueprint."
-msgstr ""
+msgstr "新建会话必须关联来自蓝图的任务。"
 
 #. module: populate
 #: model:ir.model.constraint,message:populate.constraint_populate_job_unique_ref_per_session
 msgid ""
 "A job with this reference already exists in this session. References must be"
 " unique for create-type jobs within a session."
-msgstr ""
+msgstr "该引用编号已存在于当前会话。同一个会话内，创建类任务的引用编号必须唯一。"
 
 #. module: populate
 #: model:ir.model.constraint,message:populate.constraint_populate_job_record_count_invariant
@@ -62,19 +63,21 @@ msgid ""
 "jobs are allowed to have no record_count, whose cardinality is unknown at "
 "creation time."
 msgstr ""
+"任务的 record_count 必须为非零正整数。仅写入类任务可以不设置 record_count，此"
+"类任务在创建时无法确定数据条数。"
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/session.py:0
 msgid "Adapt the generator parameter to generate values within the constraint"
-msgstr ""
+msgstr "调整生成器参数，使生成值符合约束条件"
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_job__blueprint_id
 #: model:ir.model.fields,field_description:populate.field_populate_model_data__blueprint_id
 #: model:ir.model.fields,field_description:populate.field_populate_session__blueprint_id
 msgid "Blueprint"
-msgstr ""
+msgstr "蓝图"
 
 #. module: populate
 #. odoo-python
@@ -84,6 +87,9 @@ msgid ""
 "Definition that failed:\n"
 "%(definition)s"
 msgstr ""
+"蓝图 '%(blueprint)s'：模型' %(model)s '不存在。\n"
+"失败定义内容：\n"
+"%(definition)s"
 
 #. module: populate
 #. odoo-python
@@ -93,29 +99,32 @@ msgid ""
 "Definition that failed:\n"
 "%(definition)s"
 msgstr ""
+"蓝图'%(blueprint)s'：模型 '%(model)s' 不存在字段：%(fields)s\n"
+"失败定义内容：\n"
+"%(definition)s"
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_blueprint__name
 msgid "Blueprint Name"
-msgstr ""
+msgstr "蓝图名称"
 
 #. module: populate
 #: model:ir.model.fields,help:populate.field_populate_blueprint__inherit_id
 msgid ""
 "Blueprint to inherit from. Use XPath expressions in definition_xml to modify"
 " the parent."
-msgstr ""
+msgstr "所要继承的蓝图。可在 definition_xml 中使用 XPath 表达式修改母蓝图。"
 
 #. module: populate
 #: model:ir.model.fields,help:populate.field_populate_job__parallel
 msgid "Can the job be executed in parallel?"
-msgstr ""
+msgstr "该任务是否可并行执行？"
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/session.py:0
 msgid "Cannot grab the advisory lock on the session %s."
-msgstr ""
+msgstr "无法获取会话%s的咨询锁。"
 
 #. module: populate
 #. odoo-python
@@ -124,12 +133,14 @@ msgid ""
 "Cannot have both a distribution and weighted values. Please provide either "
 "'distribution' or 'values' with weights, but not both."
 msgstr ""
+"不可同时设置分布规则与加权值。请选择提供 'distribution' 或者带权重"
+"的'values'，二者只能选其一。"
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/generators/generator.py:0
 msgid "Cannot have repeated entries in `values`."
-msgstr ""
+msgstr "`values` 中不允许存在重复条目。"
 
 #. module: populate
 #. odoo-python
@@ -137,13 +148,13 @@ msgstr ""
 msgid ""
 "Cannot infer valid fields for a virtual field. The 'valid_fields' parameter "
 "must be explicitly provided."
-msgstr ""
+msgstr "无法自动推断虚拟字段的有效字段，必须显式指定 'valid_fields' 参数。"
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/session.py:0
 msgid "Cannot run a parallel session during tests."
-msgstr ""
+msgstr "测试环境下不允许运行并行会话。"
 
 #. module: populate
 #. odoo-python
@@ -151,7 +162,7 @@ msgstr ""
 msgid ""
 "Cannot specify a null fraction for a required field. Field '%(field_name)s' "
 "is required and cannot have null values."
-msgstr ""
+msgstr "必填字段不可设置空值占比。字段 '%(field_name)s '为必填项，不允许为空。"
 
 #. module: populate
 #. odoo-python
@@ -159,12 +170,12 @@ msgstr ""
 msgid ""
 "Cannot specify a null fraction when using weighted values. The 'null_ratio' "
 "parameter is incompatible with custom weights."
-msgstr ""
+msgstr "使用加权取值时不可设置空值占比，'null_ratio' 参数与自定义权重互斥。"
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_job__child_ids
 msgid "Child"
-msgstr ""
+msgstr "子项"
 
 #. module: populate
 #. odoo-python
@@ -172,12 +183,12 @@ msgstr ""
 msgid ""
 "Consider using a generator (or combination of) that produces more varied "
 "values"
-msgstr ""
+msgstr "建议使用（或组合）能够生成更多样数据的生成器"
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_job__context
 msgid "Context"
-msgstr ""
+msgstr "上下文"
 
 #. module: populate
 #. odoo-python
@@ -186,51 +197,53 @@ msgid ""
 "Could not generate a value because required dependencies are missing: "
 "%(missing_deps)s. Expected dependencies: %(expected_deps)s."
 msgstr ""
+"因缺少必要依赖项，无法生成数值：%(missing_deps)s。所需依赖：%(expected_deps)s"
+"。"
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/generators/generator.py:0
 msgid "Couldn't find a unique value for field %(field)s."
-msgstr ""
+msgstr "无法为字段%(field)s获取唯一值。"
 
 #. module: populate
 #: model:ir.model.fields.selection,name:populate.selection__populate_job__type__create
 msgid "Create"
-msgstr ""
+msgstr "创建"
 
 #. module: populate
 #: model:ir.model.constraint,message:populate.constraint_populate_job_create_job_without_domain
 msgid "Create jobs cannot define a domain."
-msgstr ""
+msgstr "创建类任务不允许设置筛选域。"
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_blueprint__create_uid
 #: model:ir.model.fields,field_description:populate.field_populate_job__create_uid
 #: model:ir.model.fields,field_description:populate.field_populate_session__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "创建人"
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_blueprint__create_date
 #: model:ir.model.fields,field_description:populate.field_populate_job__create_date
 #: model:ir.model.fields,field_description:populate.field_populate_session__create_date
 msgid "Created on"
-msgstr ""
+msgstr "创建时间"
 
 #. module: populate
 #: model:ir.model,name:populate.model_populate_blueprint
 msgid "Data Population Blueprint"
-msgstr ""
+msgstr "数据填充蓝图"
 
 #. module: populate
 #: model:ir.model,name:populate.model_populate_job
 msgid "Data Population Job"
-msgstr ""
+msgstr "数据填充任务"
 
 #. module: populate
 #: model:ir.model,name:populate.model_populate_session
 msgid "Data Population Session"
-msgstr ""
+msgstr "数据填充会话"
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_blueprint__display_name
@@ -238,22 +251,22 @@ msgstr ""
 #: model:ir.model.fields,field_description:populate.field_populate_model_data__display_name
 #: model:ir.model.fields,field_description:populate.field_populate_session__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "显示名称"
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_job__domain
 msgid "Domain"
-msgstr ""
+msgstr "筛选域"
 
 #. module: populate
 #: model:ir.model.fields,help:populate.field_populate_job__domain
 msgid "Domain selecting target records for jobs that update existing records."
-msgstr ""
+msgstr "筛选域，用于为更新已有记录的任务选定目标记录。"
 
 #. module: populate
 #: model:ir.model.constraint,message:populate.constraint_populate_blueprint_has_definition
 msgid "Either XML or JSON definition must be provided"
-msgstr ""
+msgstr "必须提供 XML 或 JSON 格式的定义内容"
 
 #. module: populate
 #. odoo-python
@@ -261,7 +274,7 @@ msgstr ""
 msgid ""
 "Error applying blueprint inheritance from %(parent)s' to %(child)s: "
 "%(error)s"
-msgstr ""
+msgstr "继承蓝图失败，从%(parent)s 继承至%(child)s：%(error)s"
 
 #. module: populate
 #. odoo-python
@@ -269,19 +282,19 @@ msgstr ""
 msgid ""
 "Field path '%(path)s' from '%(ref)s' resulted in model '%(got)s', but "
 "expected '%(expected)s'"
-msgstr ""
+msgstr "来自 %(ref)s 的字段路径 %(path)s 解析得到模型 %(got)s，预期应为 %(expected)s"
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/job.py:0
 msgid "Field: '%s'"
-msgstr ""
+msgstr "字段：%s"
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/job.py:0
 msgid "Generator: '%s'"
-msgstr ""
+msgstr "生成器：%s"
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_blueprint__id
@@ -289,7 +302,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:populate.field_populate_model_data__id
 #: model:ir.model.fields,field_description:populate.field_populate_session__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: populate
 #. odoo-python
@@ -298,22 +311,24 @@ msgid ""
 "If `props` are provided, neither `count` or `allowed_types` or "
 "`possible_values` can be set."
 msgstr ""
+"若已提供 `props`，则不可再设置 `count`、`allowed_types` 或 "
+"`possible_values`。"
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/generators/binary.py:0
 msgid "Image dimensions must be positive integers, got %(width)sx%(height)s."
-msgstr ""
+msgstr "图片尺寸必须为正整数，当前取值%(width)sx%(height)s。"
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_blueprint__inherit_id
 msgid "Inherited Blueprint"
-msgstr ""
+msgstr "继承的蓝图"
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_job__instructions
 msgid "Instructions"
-msgstr ""
+msgstr "说明"
 
 #. module: populate
 #. odoo-python
@@ -321,7 +336,7 @@ msgstr ""
 msgid ""
 "Invalid field dependencies: %(invalid_fields)s. These fields do not exist in"
 " the model's blueprint."
-msgstr ""
+msgstr "无效字段依赖：%(invalid_fields)s。这些字段不存在于该模型的蓝图定义中。"
 
 #. module: populate
 #. odoo-python
@@ -330,6 +345,8 @@ msgid ""
 "Invalid parameters: %(invalid_params)s. Only these parameters are allowed "
 "(besides method's arguments): %(allowed_params)s"
 msgstr ""
+"无效参数：%(invalid_params)s。除方法入参外，仅允许使用以下参数：%"
+"(allowed_params)s"
 
 #. module: populate
 #. odoo-python
@@ -337,7 +354,7 @@ msgstr ""
 msgid ""
 "Invalid values %(invalid)s for selection field. Allowed values are: "
 "%(possible)s."
-msgstr ""
+msgstr "选择字段传入无效值%(invalid)s。允许取值：%(possible)s。"
 
 #. module: populate
 #. odoo-python
@@ -346,53 +363,55 @@ msgid ""
 "Invalid values %(invalid_values)s for %(field_type)s field. Allowed values "
 "are: %(possible_values)s."
 msgstr ""
+"%(field_type)s 字段存在无效值 %(invalid_values)s。允许取值：%"
+"(possible_values)s。"
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_job__is_done
 msgid "Is Done"
-msgstr ""
+msgstr "是否完成"
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_blueprint__definition
 msgid "JSON Definition"
-msgstr ""
+msgstr "JSON 定义"
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_model_data__job_id
 #: model:ir.model.fields,field_description:populate.field_populate_session__job_ids
 msgid "Job"
-msgstr ""
+msgstr "任务"
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/job.py:0
 msgid "Job hierarchy cannot be recursive."
-msgstr ""
+msgstr "任务层级不允许递归。"
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/job.py:0
 msgid "Jobs in the same hierarchy should share the same session."
-msgstr ""
+msgstr "同一层级下的任务必须归属同一个会话。"
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_blueprint__write_uid
 #: model:ir.model.fields,field_description:populate.field_populate_job__write_uid
 #: model:ir.model.fields,field_description:populate.field_populate_session__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "最后更新人"
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_blueprint__write_date
 #: model:ir.model.fields,field_description:populate.field_populate_job__write_date
 #: model:ir.model.fields,field_description:populate.field_populate_session__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "最后更新时间"
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_model_data__res_model
 msgid "Model"
-msgstr ""
+msgstr "模型"
 
 #. module: populate
 #. odoo-python
@@ -401,11 +420,13 @@ msgid ""
 "Model '%(model_name)s' is not in the allowed models for reference field "
 "'%(field_name)s': %(model_names)s."
 msgstr ""
+"'%(field_name)s': %(model_names)s.引用字段 %(field_name)s 不允许关联模型 %"
+"(model_name)s；允许的模型列表：'%(model_name)s'。"
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_job__model_name
 msgid "Model Name"
-msgstr ""
+msgstr "模型名称"
 
 #. module: populate
 #. odoo-python
@@ -414,65 +435,67 @@ msgid ""
 "No generator specified for field '%(field)s' of type '%(type)s', and no "
 "default generator is registered for that field type."
 msgstr ""
+"字段 '%(field)s'（类型：'%(type)s'）未指定生成器，该字段类型也没有注册默认生"
+"成器。"
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/generators/generator.py:0
 msgid ""
 "Null fraction must be strictly between 0 and 1, got %(null_ratio)s instead."
-msgstr ""
+msgstr "空值占比必须介于 0‑1 之间（不含边界），当前传入值为 %(null_ratio)s。"
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_session__worker_count
 msgid "Number of parallel workers that will run jobs at the same time"
-msgstr ""
+msgstr "同时运行任务的并行工作进程数量"
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_job__parallel
 msgid "Parallel"
-msgstr ""
+msgstr "并行"
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_job__parent_id
 msgid "Parent"
-msgstr ""
+msgstr "Parent"
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_job__parent_path
 msgid "Parent Path"
-msgstr ""
+msgstr "Parent Path"
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_blueprint__definition_json
 msgid "Raw JSON Definition"
-msgstr ""
+msgstr "原始 JSON 定义"
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_blueprint__definition_xml
 msgid "Raw XML Definition"
-msgstr ""
+msgstr "原始 XML 定义"
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_model_data__res_id
 msgid "Record"
-msgstr ""
+msgstr "记录"
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_job__record_count
 msgid "Record Count"
-msgstr ""
+msgstr "记录数"
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_job__ref
 #: model:ir.model.fields,field_description:populate.field_populate_model_data__ref
 msgid "Ref"
-msgstr ""
+msgstr "引用标识"
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/job.py:0
 msgid "Ref: '%s'"
-msgstr ""
+msgstr "引用标识：'%s'"
 
 #. module: populate
 #: model:ir.model.fields,help:populate.field_populate_job__ref
@@ -483,46 +506,50 @@ msgid ""
 "    If the job type is 'write' -> Refers to records with said reference.\n"
 "    "
 msgstr ""
+"引用该任务所使用的记录批次。\n"
+"    如果任务类型为“create”→ 对记录进行标注以便引用。\n"
+"    如果任务类型为“write”→ 引用具有该参考信息的记录。\n"
+"    "
 
 #. module: populate
 #: model:ir.model,name:populate.model_populate_model_data
 msgid "Reference to Populated Records."
-msgstr ""
+msgstr "指向已生成数据记录的引用标识。"
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_session__scaling_factor
 msgid "Scaling Factor"
-msgstr ""
+msgstr "缩放系数"
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_job__seed
 #: model:ir.model.fields,field_description:populate.field_populate_session__seed
 msgid "Seed"
-msgstr ""
+msgstr "随机种子"
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_job__session_id
 #: model:ir.model.fields,field_description:populate.field_populate_model_data__session_id
 msgid "Session"
-msgstr ""
+msgstr "会话"
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/session.py:0
 msgid "Session %(session_id)s is already running."
-msgstr ""
+msgstr "会话%(session_id)s正在运行中。"
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/generators/binary.py:0
 msgid "Size must be a positive integer, got %(size)s."
-msgstr ""
+msgstr "大小必须为正整数，当前取值：%(size)s。"
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "Some blueprint's definition(s) have inexistent models/fields used."
-msgstr ""
+msgstr "部分蓝图定义引用了不存在的模型或字段。"
 
 #. module: populate
 #. odoo-python
@@ -530,7 +557,7 @@ msgstr ""
 msgid ""
 "Step cannot be zero for the counter generator. Use `eval` with a static "
 "value instead."
-msgstr ""
+msgstr "计数器生成器的步长不能为 0，请改用携带静态值的`eval`。"
 
 #. module: populate
 #. odoo-python
@@ -538,7 +565,7 @@ msgstr ""
 msgid ""
 "Subjobs cannot have subjobs themselves. Only one level of hierarchy is "
 "allowed."
-msgstr ""
+msgstr "子任务不允许再嵌套子任务，仅支持一层层级结构。"
 
 #. module: populate
 #. odoo-python
@@ -546,7 +573,7 @@ msgstr ""
 msgid ""
 "The blueprint '%(parent)s' does not have an XML definition, but '%(child)s' "
 "inherit from it."
-msgstr ""
+msgstr "蓝图'%(parent)s'不存在 XML 定义，但'%(child)s'继承了该蓝图。"
 
 #. module: populate
 #. odoo-python
@@ -555,12 +582,14 @@ msgid ""
 "The eval generator takes an expression directly instead of a lambda. Use 'x "
 "+ y' instead of 'lambda x, y: x + y'."
 msgstr ""
+"eval 生成器直接接收表达式，不支持 lambda 函数。请使用'x + y'，而非'lambda x, "
+"y: x + y'。"
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/session.py:0
 msgid "The field is implicitly required, consider adding `null_ratio=0`"
-msgstr ""
+msgstr "该字段为隐式必填，建议配置`null_ratio=0`"
 
 #. module: populate
 #. odoo-python
@@ -568,85 +597,85 @@ msgstr ""
 msgid ""
 "The multiprocessing feature of the populate module has been disabled at the "
 "platform level."
-msgstr ""
+msgstr "平台层面已禁用 populate 模块的多进程功能。"
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/session.py:0
 msgid "The session %(session_id)s is already done. Create a new session."
-msgstr ""
+msgstr "会话%(session_id)s已执行完毕，请新建会话。"
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/generators/misc.py:0
 msgid "This Eval returns the same value, so it cannot be unique."
-msgstr ""
+msgstr "该 Eval 表达式返回固定值，无法满足唯一性要求。"
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_job__type
 msgid "Type"
-msgstr ""
+msgstr "类型"
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/generators/relation.py:0
 msgid "Unique cannot be used with the '%s' generator."
-msgstr ""
+msgstr "unique不可与'%s'生成器搭配使用。"
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/generators/scalar.py:0
 msgid "Unique cannot be used with the boolean generator."
-msgstr ""
+msgstr "unique不可与布尔值生成器搭配使用。"
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/generators/choice.py:0
 msgid "Unique cannot be used with the selection generator."
-msgstr ""
+msgstr "unique不可与选择项生成器搭配使用。"
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/generators/choice.py:0
 msgid "Values cannot be empty for the %s generator."
-msgstr ""
+msgstr "%s生成器的取值列表不能为空。"
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/generators/misc.py:0
 msgid "Values cannot be empty for the cycle generator."
-msgstr ""
+msgstr "循环生成器的取值列表不能为空。"
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/generators/misc.py:0
 msgid "Weights cannot be provided for the cycle generator."
-msgstr ""
+msgstr "循环生成器不支持配置权重。"
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/generators/misc.py:0
 msgid ""
 "When step is negative, end (%(end)s) must be less than start (%(start)s)."
-msgstr ""
+msgstr "当步长为负数时，结束值 %(end)s 必须小于起始值 %(start)s。"
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/generators/misc.py:0
 msgid ""
 "When step is positive, end (%(end)s) must be greater than start (%(start)s)."
-msgstr ""
+msgstr "当步长为正值时，结束值 (%(end)s ) 必须大于起始值（%(start)s ）。"
 
 #. module: populate
 #: model:ir.model.fields.selection,name:populate.selection__populate_job__type__write
 msgid "Write"
-msgstr ""
+msgstr "写入"
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "You cannot create recursive inherited blueprints."
-msgstr ""
+msgstr "您无法创建递归继承的蓝图。"
 
 #. module: populate
 #. odoo-python
@@ -655,6 +684,8 @@ msgid ""
 "`possible_values` must be provided for prop_type '%(prop_type)s' in "
 "generator %(generator_name)s of field %(field_name)s"
 msgstr ""
+"在字段的生成器 %(generator_name)s 中，'%(prop_type)s '必须提供 "
+"`possible_values`。"
 
 #. module: populate
 #. odoo-python
@@ -663,14 +694,19 @@ msgid ""
 "`possible_values` must be provided when `allowed_types` includes 'selection'"
 " or 'tags'. "
 msgstr ""
+"当 `allowed_types` 包含 'selection' 或 'tags' 时，必须提供 "
+"`possible_values`。 "
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/generators/properties.py:0
+#, fuzzy
 msgid ""
 "`prop_type` expected to be in fields.Properties.ALLOWED_TYPES '%(allowed)s'."
 " Got %(actual)s instead."
 msgstr ""
+"`prop_type` 预期应属于 fields.Properties.ALLOWED_TYPES 中的 '%(allowed)s'。但"
+"实际获得的是 '%(actual)s '。"
 
 #. module: populate
 #. odoo-python

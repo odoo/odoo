@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-05-03 17:37+0000\n"
-"PO-Revision-Date: 2026-07-21 19:50+0000\n"
+"PO-Revision-Date: 2026-08-07 13:36+0000\n"
 "Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-s19-4/"
 "base_setup/da/>\n"
@@ -43,11 +43,11 @@ msgid ""
 "                                    </span>"
 msgstr ""
 "<span class=\"o_form_label\" invisible=\"active_user_count &gt; 1\">\n"
-"                                        Aktiv Bruger\n"
+"                                        Aktiv bruger\n"
 "                                    </span>\n"
 "                                    <span class=\"o_form_label\" "
 "invisible=\"active_user_count &lt;= 1\">\n"
-"                                        Aktive Brugere\n"
+"                                        Aktive brugere\n"
 "                                    </span>"
 
 #. module: base_setup
@@ -62,6 +62,14 @@ msgid ""
 "                                    </span>\n"
 "                                    <br/>"
 msgstr ""
+"<span class=\"o_form_label\" invisible=\"company_count &gt; 1\">\n"
+"                                        Virksomhed\n"
+"                                    </span>\n"
+"                                    <span class=\"o_form_label\" "
+"invisible=\"company_count &lt;= 1\">\n"
+"                                        Virksomheder\n"
+"                                    </span>\n"
+"                                    <br/>"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -97,6 +105,8 @@ msgid ""
 "<strong>Save</strong> this page and come back here to set up Cloudflare "
 "turnstile."
 msgstr ""
+"<strong>Gem</strong> denne side, og vend tilbage hertil for at konfigurere "
+"Cloudflare Turnstile."
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -104,6 +114,8 @@ msgid ""
 "<strong>Save</strong> this page and come back here to set up Google Places "
 "API key"
 msgstr ""
+"<strong>Gem</strong> denne side, og vend tilbage hertil for at konfigurere "
+"Google Places API-nøgle"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -123,7 +135,7 @@ msgstr ""
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "API Keys"
-msgstr "API Nøgler"
+msgstr "API-nøgler"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -131,6 +143,8 @@ msgid ""
 "API Keys allow your users to access Odoo with external tools when multi-"
 "factor authentication is enabled."
 msgstr ""
+"API-nøgler giver dine brugere mulighed for at få adgang til Odoo via "
+"eksterne værktøjer, selv når multifaktorgodkendelse er aktiveret."
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -141,7 +155,7 @@ msgstr "Om"
 #. odoo-python
 #: code:addons/base_setup/controllers/main.py:0
 msgid "Access Denied"
-msgstr "Adgang nægtet"
+msgstr "Adgang afvist"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -151,33 +165,35 @@ msgstr "Tilføj sprog"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Add fun feedback and motivate your employees"
-msgstr "Tilføj sjov feedback og motiver dine medarbejdere"
+msgstr "Tilføj sjov feedback, og motivér dine medarbejdere"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_google_calendar
 msgid "Allow the users to synchronize their calendar  with Google Calendar"
-msgstr "Tillad brugerne at synkronisere deres kalender med Google Kalender"
+msgstr ""
+"Giv brugerne mulighed for at synkronisere deres kalender med Google Kalender"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_microsoft_calendar
 msgid "Allow the users to synchronize their calendar with Outlook Calendar"
-msgstr "Tillad at brugere synkronisere deres kalender med Outlook Kalender"
+msgstr ""
+"Giv brugerne mulighed for at synkronisere deres kalender med Outlook-kalender"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_base_import
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Allow users to import data from CSV/XLS/XLSX/ODS files"
-msgstr "Tillad brugere at importere data fra CSV/XLS/XLSX/ODS filer"
+msgstr "Tillad brugere at importere data fra CSV/XLS/XLSX/ODS-filer"
 
 #. module: base_setup
 #: model:ir.model.fields,help:base_setup.field_res_config_settings__group_multi_currency
 msgid "Allows to work in a multi currency environment"
-msgstr "Tillad at arbejde med multi valuta"
+msgstr "Tillad arbejde med flere valutaer"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Autocomplete partner addresses with Google Places"
-msgstr ""
+msgstr "Automatisk udfyldning af partneradresser med Google Places"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -202,7 +218,7 @@ msgstr "Vælg layout for dine dokumenter"
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_website_cf_turnstile
 msgid "Cloudflare Turnstile"
-msgstr ""
+msgstr "Cloudflare Turnstile"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -237,7 +253,7 @@ msgstr "Konfigurationsindstillinger"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Configure Document Layout"
-msgstr "Konfigurer dokument layout"
+msgstr "Konfigurér dokumentlayout"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -251,12 +267,12 @@ msgstr ""
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Contacts"
-msgstr "Adressebog"
+msgstr "Kontakter"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__company_country_group_codes
 msgid "Country Group Codes"
-msgstr ""
+msgstr "Koder for landegrupper"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -264,6 +280,8 @@ msgid ""
 "Create corresponding in/out orders and bills when you sell/buy between your "
 "companies"
 msgstr ""
+"Opret automatisk relevante indgangs- og udgangsordrer samt fakturaer ved "
+"interne salg og køb mellem dine virksomheder"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__report_footer
@@ -273,13 +291,13 @@ msgstr "Brugerdefineret rapport sidefod"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Default Access Rights"
-msgstr "Standard adgangsrettigheder"
+msgstr "Standardadgangsrettigheder"
 
 #. module: base_setup
 #. odoo-python
 #: code:addons/base_setup/models/res_config_settings.py:0
 msgid "Default access for new users"
-msgstr ""
+msgstr "Standardadgang for nye brugere"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_ir_http__display_name
@@ -292,12 +310,12 @@ msgstr "Visningsnavn"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Document Layout"
-msgstr ""
+msgstr "Dokumentlayout"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__external_report_layout_id
 msgid "Document Template"
-msgstr "Dokument skabelon"
+msgstr "Dokumentskabelon"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -308,19 +326,19 @@ msgstr "Redigér layout"
 #. odoo-python
 #: code:addons/base_setup/models/res_config_settings.py:0
 msgid "Edit new user default group"
-msgstr ""
+msgstr "Redigér ny standardbrugergruppe"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid ""
 "Enable the profiling tool. Profiling may impact performance while being "
 "active."
-msgstr ""
+msgstr "Aktivér profilværktøjet. Bemærk, at det kan påvirke ydeevnen."
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Find free high-resolution images from Unsplash"
-msgstr "Find gratis billeder i høj opløsning fra Unsplash"
+msgstr "Find gratis højopløsningsbilleder fra Unsplash"
 
 #. module: base_setup
 #: model:ir.model.fields,help:base_setup.field_res_config_settings__report_footer
@@ -341,22 +359,22 @@ msgstr "GeoLokalisér"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Geolocate your partners"
-msgstr ""
+msgstr "Geolokalisér dine partnere"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Geolocation"
-msgstr "Geolokation"
+msgstr "Geolokalisering"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_google_address_autocomplete
 msgid "Google Address Autocomplete"
-msgstr ""
+msgstr "Automatisk udfyldning af Google-adresse"
 
 #. module: base_setup
 #: model:ir.model,name:base_setup.model_ir_http
 msgid "HTTP Routing"
-msgstr "HTTP Routing"
+msgstr "HTTP-routing"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_ir_http__id
@@ -369,7 +387,7 @@ msgstr "ID"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Import & Export"
-msgstr "Import & Eksport"
+msgstr "Import og eksport"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -384,7 +402,7 @@ msgstr "Interne virksomheds transaktioner"
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__is_root_company
 msgid "Is Root Company"
-msgstr ""
+msgstr "Er rodvirksomhed"
 
 #. module: base_setup
 #: model:ir.model,name:base_setup.model_kpi_provider
@@ -395,7 +413,7 @@ msgstr "KPI-udbyder"
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_auth_ldap
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "LDAP Authentication"
-msgstr "LDAP godkendelse"
+msgstr "LDAP-godkendelse"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -410,7 +428,7 @@ msgstr "Layout"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Manage API Keys"
-msgstr "Administrer API Nøgler"
+msgstr "Administrér API-nøgler"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -420,22 +438,22 @@ msgstr "Administrer virksomheder"
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_account_inter_company_rules
 msgid "Manage Inter Company"
-msgstr "Håndter inter-company"
+msgstr "Håndtér virksomhed internt"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Manage Languages"
-msgstr "Administrer sprog"
+msgstr "Administrér sprog"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Manage Users"
-msgstr "Administrer brugere"
+msgstr "Administrér brugere"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__group_multi_currency
 msgid "Multi-Currencies"
-msgstr "Multi-valuta"
+msgstr "Flere valutaer"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__active_user_count
@@ -455,7 +473,7 @@ msgstr "Antal sprog"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "OAuth Authentication"
-msgstr "OAuth godkendelse"
+msgstr "OAuth-godkendelse"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -465,12 +483,12 @@ msgstr "Odoo"
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_partner_autocomplete
 msgid "Partner Autocomplete"
-msgstr "Partner autofuldfør"
+msgstr "Automatisk udfyldning af partner"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Performance"
-msgstr "Resultater"
+msgstr "Resultat"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -490,28 +508,28 @@ msgstr "Forhåndsvisning af dokument"
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__profiling_enabled_until
 msgid "Profiling enabled until"
-msgstr ""
+msgstr "Profilering aktiveret til"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Progressive Web App"
-msgstr ""
+msgstr "Progressive Web App"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Protect your forms from spam and abuse."
-msgstr "Beskyt dine formularer fra spam og misbrug."
+msgstr "Beskyt dine formularer mod spam og misbrug."
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Protect your forms with CF Turnstile."
-msgstr ""
+msgstr "Beskyt dine formularer med CF Turnstile."
 
 #. module: base_setup
 #. odoo-javascript
 #: code:addons/base_setup/static/src/views/module_views.xml:0
 msgid "Reset Updating States"
-msgstr ""
+msgstr "Nulstil opdateringsstatus"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_sms
@@ -526,7 +544,7 @@ msgstr "Send SMS"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Send texts to your contacts"
-msgstr "Send SMS beskeder til dine kontakter"
+msgstr "Send SMS-beskeder til dine kontakter"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -557,7 +575,7 @@ msgstr ""
 msgid ""
 "This name will be used for the application when Odoo is installed through "
 "the browser."
-msgstr ""
+msgstr "Navnet bruges til appen, når Odoo installeres via browseren."
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_web_unsplash
@@ -567,17 +585,17 @@ msgstr "Unsplash-billedebibliotek"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Update Info"
-msgstr "Opdatér info"
+msgstr "Opdatér oplysninger"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Use LDAP credentials to log in"
-msgstr "Brug LDAP oplysninger til at logge ind"
+msgstr "Brug LDAP-oplysninger til at logge ind"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Use external accounts to log in (Google, Facebook, etc.)"
-msgstr "Anvend eksterne konti til at logge ind (Google, Facebook etc.)"
+msgstr "Log ind via eksterne konti (Google, Facebook osv.)"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_auth_oauth
@@ -615,7 +633,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/base_setup/models/res_users.py:0
 msgid "You have to install the Discuss application to use this feature."
-msgstr ""
+msgstr "Du skal installere Dialog-appen for at bruge denne funktion."
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_google_recaptcha

@@ -20,8 +20,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-10 17:37+0000\n"
-"PO-Revision-Date: 2026-07-21 12:36+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2026-08-06 09:14+0000\n"
+"Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
 "projects/odoo-s19-4/project/zh_Hans/>\n"
 "Language: zh_CN\n"
@@ -618,21 +618,23 @@ msgid ""
 "<span class=\"o_field_widget\" invisible=\"closed_task_count == 0\"> ) </"
 "span>"
 msgstr ""
+"<span class=\"o_field_widget\" invisible=\"closed_task_count == 0\"> ) </"
+"span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "<span class=\"o_field_widget\"> / 5 </span>"
-msgstr ""
+msgstr "<span class=\"o_field_widget\"> / 5 </span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "<span class=\"o_field_widget\"> / </span>"
-msgstr ""
+msgstr "<span class=\"o_field_widget\"> / </span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "<span class=\"o_field_widget\">%)</span>"
-msgstr ""
+msgstr "<span class=\"o_field_widget\">%)</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
@@ -645,6 +647,8 @@ msgid ""
 "<span class=\"o_stat_text\">Burndown</span>\n"
 "                                <span class=\"o_stat_text\">Chart</span>"
 msgstr ""
+"<span class=\"o_stat_text\"></span>\n"
+"                                <span class=\"o_stat_text\">燃尽图</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -654,7 +658,7 @@ msgstr "<span class=\"o_stat_text\">最新评价</span>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "<span class=\"o_stat_text\">Milestones</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">里程碑</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
@@ -665,7 +669,7 @@ msgstr "<span class=\"o_stat_text\">上级任务</span>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "<span class=\"o_stat_text\">Rating</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">评分</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -1944,7 +1948,7 @@ msgstr "删除阶段"
 #. odoo-javascript
 #: code:addons/project/static/src/components/subtask_one2many_field/subtask_list_renderer.js:0
 msgid "Delete Subtask"
-msgstr ""
+msgstr "删除子任务"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__milestone_id
@@ -1998,7 +2002,7 @@ msgstr "设计"
 #. module: project
 #: model:project.role,name:project.project_role_2
 msgid "Design Architect"
-msgstr ""
+msgstr "设计架构师"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -2136,7 +2140,7 @@ msgstr "编辑中"
 #. module: project
 #: model:project.role,name:project.project_role_5
 msgid "Electrician"
-msgstr ""
+msgstr "电工"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_email
@@ -3339,7 +3343,7 @@ msgstr "正在进行中"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task_type__rating_status__periodic
 msgid "On a periodic basis"
-msgstr ""
+msgstr "定期"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task_type__rating_status_period__monthly
@@ -4482,7 +4486,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_control_panel/project_task_control_panel.xml:0
 msgid "Show Sub-Tasks"
-msgstr ""
+msgstr "显示子任务"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
@@ -4511,7 +4515,7 @@ msgstr "显示子任务及顶部菜单"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_stage_view_form
 msgid "Show to all companies"
-msgstr ""
+msgstr "向所有公司显示"
 
 #. module: project
 #: model:project.tags,name:project.project_tags_12
@@ -4558,6 +4562,9 @@ msgid ""
 "move them all at once to the next sprint by editing the milestone, tag, or "
 "property."
 msgstr ""
+"您可以利用里程碑、标签或专用属性，按冲刺对任务进行分类。在每个冲刺结束时，只"
+"需选中列表中剩余的任务，通过编辑里程碑、标签或属性，即可将它们一次性移至下一"
+"个冲刺。"
 
 #. module: project
 #. odoo-javascript
@@ -4606,7 +4613,7 @@ msgstr "阶段已改变"
 #: model:ir.model.fields,field_description:project.field_project_project_stage__name
 #: model:ir.model.fields,field_description:project.field_project_task_type__name
 msgid "Stage Name"
-msgstr ""
+msgstr "阶段名称"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__user_id
@@ -4903,7 +4910,7 @@ msgstr "任务已完成"
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "Task templates cannot be shared."
-msgstr ""
+msgstr "任务模板不可共享。"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_track_depending_tasks
@@ -4965,7 +4972,7 @@ msgstr "任务阶段"
 #. odoo-javascript
 #: code:addons/project/static/src/views/components/project_task_template_dropdown.js:0
 msgid "Tasks Templates"
-msgstr ""
+msgstr "任务模板"
 
 #. module: project
 #. odoo-python
@@ -4978,7 +4985,7 @@ msgstr "循环中的任务"
 #: model:ir.model.fields,field_description:project.field_project_role__user_ids
 #: model_terms:ir.ui.view,arch_db:project.project_role_view_search
 msgid "Team Members"
-msgstr ""
+msgstr "团队成员"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_template_create_wizard__template_id
@@ -5014,7 +5021,7 @@ msgstr "基于%s创建的模板。"
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "Template for Tasks"
-msgstr ""
+msgstr "任务模板"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
@@ -5133,7 +5140,7 @@ msgstr "当时的任务描述是空的。"
 #. odoo-python
 #: code:addons/project/report/project_task_burndown_chart_report.py:0
 msgid "The view must be grouped by date and by Stage - Burndown chart"
-msgstr ""
+msgstr "视图必须按日期和阶段分组——燃尽图"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_projects
@@ -5225,7 +5232,7 @@ msgstr "项目与客户共享后预览如下，客户有编辑权限。"
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "This new task has been created in the \"%(project_name)s\" project."
-msgstr ""
+msgstr "此新任务已在“%(project_name)s ”项目中创建。"
 
 #. module: project
 #. odoo-python
@@ -5291,7 +5298,7 @@ msgstr "当前为模板任务，是否转为普通任务？"
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/components/depend_on_ids_one2many/depend_on_ids_list_renderer.xml:0
 msgid "This task is currently blocked by"
-msgstr ""
+msgstr "这项任务目前受阻于"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_confirmation_wizard
@@ -5407,7 +5414,7 @@ msgstr "今日活动"
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_control_panel/project_task_control_panel.xml:0
 msgid "Top Menu"
-msgstr ""
+msgstr "顶部菜单"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -5483,7 +5490,7 @@ msgstr "取消"
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/chatter/portal_chatter_patch.xml:0
 msgid "Unfollow"
-msgstr ""
+msgstr "取消关注"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_card
@@ -5520,14 +5527,14 @@ msgstr "已创建的更新"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "Update Stage"
-msgstr ""
+msgstr "更新阶段"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_update_all_action
 #: model:ir.embedded.actions,name:project.project_embedded_action_project_updates
 #: model_terms:ir.ui.view,arch_db:project.project_view_card_inherit_project
 msgid "Updates"
-msgstr ""
+msgstr "更新"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__priority__3
@@ -5587,7 +5594,7 @@ msgstr "使用标签来对您的任务进行分类。"
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 msgid "Use the"
-msgstr ""
+msgstr "使用"
 
 #. module: project
 #. odoo-javascript
@@ -5641,7 +5648,7 @@ msgstr "用户设置"
 #. module: project
 #: model:res.groups,comment:project.group_project_user
 msgid "User: Can manage tasks in projects shared with them."
-msgstr ""
+msgstr "用户：可以管理与自己共享的项目中的任务。"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_card
@@ -5652,7 +5659,7 @@ msgstr "视图"
 #. odoo-javascript
 #: code:addons/project/static/src/views/components/project_task_template_dropdown.xml:0
 msgid "View More"
-msgstr ""
+msgstr "查看更多"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
@@ -5715,7 +5722,7 @@ msgstr "周"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task_type__rating_status__stage
 msgid "When reaching this stage"
-msgstr ""
+msgstr "当到达此阶段时"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__role_ids
@@ -5735,7 +5742,7 @@ msgstr "工作"
 #. module: project
 #: model:project.role,name:project.project_role_4
 msgid "Worker"
-msgstr ""
+msgstr "工人"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__working_days_open
@@ -5789,7 +5796,7 @@ msgstr "您是否也想取消归档这些阶段中包含的所有任务？"
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/chatter/composer_patch.js:0
 msgid "Write a message…"
-msgstr ""
+msgstr "撰写消息…"
 
 #. module: project
 #. odoo-javascript
@@ -5922,14 +5929,14 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 msgid "Your managers decide which feedback is accepted"
-msgstr ""
+msgstr "您的经理决定接受哪些反馈"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/analytic_account_form/analytic_account_form_controller.js:0
 #: code:addons/project/static/src/views/analytic_account_list/analytic_account_list_controller.js:0
 msgid "\\t- ${"
-msgstr ""
+msgstr "\\t- ${"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -5994,7 +6001,7 @@ msgstr "例如：产品发布"
 #: model_terms:ir.ui.view,arch_db:project.project_project_stage_view_form
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "e.g. Qualification"
-msgstr ""
+msgstr "例如：资格"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_quick_create_task_form
@@ -6036,7 +6043,7 @@ msgstr "例如：产品发布"
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 msgid "icon to organize your daily activities."
-msgstr ""
+msgstr "图标来组织你的日常活动。"
 
 #. module: project
 #. odoo-javascript
@@ -6045,12 +6052,14 @@ msgid ""
 "icon to see tasks waiting on other ones. Once a task is marked as complete "
 "or cancelled, all of its dependencies will be unblocked."
 msgstr ""
+"图标，以查看正在等待其他任务的任务。一旦任务被标记为已完成或已取消，其所有依"
+"赖任务都将解除阻塞。"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 msgid "icon."
-msgstr ""
+msgstr "图标。"
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_1

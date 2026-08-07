@@ -3,13 +3,14 @@
 # * populate
 #
 # Bren Driesen <brdri@odoo.com>, 2026.
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~19.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-30 00:51+0000\n"
-"PO-Revision-Date: 2026-07-22 11:57+0000\n"
-"Last-Translator: Bren Driesen <brdri@odoo.com>\n"
+"PO-Revision-Date: 2026-08-05 13:58+0000\n"
+"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s19-4/"
 "populate/nl/>\n"
 "Language: nl\n"
@@ -29,19 +30,19 @@ msgstr ""
 #. odoo-python
 #: code:addons/populate/generators/relation.py:0
 msgid "'%(comodel_name)s' isn't a valid model name."
-msgstr ""
+msgstr "'%(comodel_name)s' is geen geldige modelnaam."
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/generators/relation.py:0
 msgid "'%(groupby)s' isn't a valid field for model '%(comodel_name)s'."
-msgstr ""
+msgstr "'%(groupby)s' is geen geldig veld voor model '%(comodel_name)s'."
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/generators/relation.py:0
 msgid "'comodel_name' needs to be provided for virtual fields."
-msgstr ""
+msgstr "'comodel_name' moet worden opgegeven voor virtuele velden."
 
 #. module: populate
 #. odoo-python
@@ -80,32 +81,44 @@ msgstr ""
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
+#, fuzzy
 msgid ""
 "Blueprint '%(blueprint)s': Model '%(model)s' doesn't exist.\n"
 "Definition that failed:\n"
 "%(definition)s"
 msgstr ""
+"Blueprint '%(blueprint)s': Model '%(model)s' bestaat niet.\n"
+"Definitie die is mislukt:\n"
+"%(definition)s"
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
+#, fuzzy
 msgid ""
 "Blueprint '%(blueprint)s': Model '%(model)s' doesn't have field(s): %(fields)s.\n"
 "Definition that failed:\n"
 "%(definition)s"
 msgstr ""
+"Blueprint '%(blueprint)s': Model '%(model)s' heeft deze velden niet: %"
+"(fields)s.\n"
+"Definitie die is mislukt:\n"
+"%(definition)s"
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_blueprint__name
 msgid "Blueprint Name"
-msgstr ""
+msgstr "Naam Blueprint"
 
 #. module: populate
 #: model:ir.model.fields,help:populate.field_populate_blueprint__inherit_id
+#, fuzzy
 msgid ""
 "Blueprint to inherit from. Use XPath expressions in definition_xml to modify"
 " the parent."
 msgstr ""
+"Blueprint om over te erven. Gebruik XPath-expressies in definition_xml om "
+"het bovenliggende element aan te passen."
 
 #. module: populate
 #: model:ir.model.fields,help:populate.field_populate_job__parallel
@@ -130,7 +143,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/populate/generators/generator.py:0
 msgid "Cannot have repeated entries in `values`."
-msgstr ""
+msgstr "Er mogen geen herhaalde waarden in `values` voorkomen."
 
 #. module: populate
 #. odoo-python

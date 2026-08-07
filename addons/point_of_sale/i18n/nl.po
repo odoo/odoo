@@ -10,13 +10,14 @@
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # Bren Driesen <brdri@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-17 17:37+0000\n"
-"PO-Revision-Date: 2026-07-21 21:24+0000\n"
-"Last-Translator: Bren Driesen <brdri@odoo.com>\n"
+"PO-Revision-Date: 2026-08-05 14:09+0000\n"
+"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s19-4/"
 "point_of_sale/nl/>\n"
 "Language: nl\n"
@@ -581,7 +582,7 @@ msgstr "<strong>Notitie bij het openen van de sessie:</strong>"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_order_receipt
 msgid "<strong>Receipt</strong>"
-msgstr ""
+msgstr "<strong>Kassabon</strong>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_invoice_document
@@ -1021,7 +1022,7 @@ msgstr "Toegevoegd %(payment_method)s met %(amount)s"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_preset_form
 msgid "Additional Fee"
-msgstr ""
+msgstr "Extra kosten"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
@@ -4254,7 +4255,7 @@ msgstr "Volledige productnaam"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/print_popup/print_popup.js:0
 msgid "Full Receipt"
-msgstr ""
+msgstr "Volledige bon"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4294,7 +4295,7 @@ msgstr "Een code op de kassabon genereren"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/scale_screen/scale_screen.xml:0
 msgid "Get Weight"
-msgstr ""
+msgstr "Gewicht ophalen"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
@@ -4306,8 +4307,9 @@ msgstr "Mijn factuur ontvangen"
 #: code:addons/point_of_sale/static/src/app/components/popups/print_popup/print_popup.js:0
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__basic_receipt
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_basic_receipt
+#, fuzzy
 msgid "Gift Receipt"
-msgstr ""
+msgstr "Cadeaubon"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_category__sequence
@@ -5351,11 +5353,16 @@ msgstr "Laden..."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_printer__printer_ip
+#, fuzzy
 msgid ""
 "Local IP address of an Epson receipt printer, or its serial number if the "
 "'Automatic Certificate Update' option is enabled in the printer settings. It "
 "can also be the IP address of a Zebra network printer."
 msgstr ""
+"Lokaal IP-adres van een Epson-bonnenprinter, of het serienummer ervan als de "
+"optie 'Automatische certificaatupdate' is ingeschakeld in de "
+"printerinstellingen. Het kan ook het IP-adres zijn van een Zebra-"
+"netwerkprinter."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5465,6 +5472,8 @@ msgstr "Logo Naam"
 #: code:addons/point_of_sale/static/src/backend/test_epos/test_epos.js:0
 msgid "Low voltage unrecoverable error occurred, please check the printer"
 msgstr ""
+"Er is een onherstelbare fout door te lage spanning opgetreden. Controleer de "
+"printer"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.pos_category_lower
@@ -6087,7 +6096,7 @@ msgstr "Niet beschikbaar"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/printer/base_printer.js:0
 msgid "Not implemented"
-msgstr ""
+msgstr "Niet geïmplementeerd"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_preset__identification__none
@@ -6811,8 +6820,9 @@ msgstr "Kassaorderregel van configuratie #%s"
 
 #. module: point_of_sale
 #: model:ir.actions.server,name:point_of_sale.ir_cron_process_pos_orders_ir_actions_server
+#, fuzzy
 msgid "POS: Process Order Tasks"
-msgstr ""
+msgstr "Kassa: Ordertaken verwerken"
 
 #. module: point_of_sale
 #: model:ir.actions.server,name:point_of_sale.ir_cron_snooze_cleanup_ir_actions_server
@@ -7813,7 +7823,7 @@ msgstr "Bon met details printen"
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_basic_receipt
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Print gift ticket without prices. Can be used for gifts."
-msgstr ""
+msgstr "Cadeaubon afdrukken zonder prijzen. Kan worden gebruikt als cadeau."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_company__point_of_sale_use_ticket_qr_code
@@ -8782,7 +8792,7 @@ msgstr "De weegschaal is overbelast"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/scale/web_serial_scale.js:0
 msgid "Scale is under zero"
-msgstr ""
+msgstr "De weegschaal is minder dan nul"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9084,7 +9094,7 @@ msgstr "Sessiestatistieken"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Session already closed"
-msgstr ""
+msgstr "Sessie is al gesloten"
 
 #. module: point_of_sale
 #: model:mail.activity.type,name:point_of_sale.mail_activity_old_session
@@ -9366,6 +9376,9 @@ msgid ""
 "Some paid orders have not been synced to the server yet. Closing or "
 "reloading now may cause data loss."
 msgstr ""
+"Sommige betaalde orders zijn nog niet gesynchroniseerd met de server. Als je "
+"het venster nu sluit of de pagina opnieuw laadt, kan dit leiden tot "
+"gegevensverlies."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -11761,8 +11774,9 @@ msgstr ""
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/opening_control_popup/opening_control_popup.xml:0
+#, fuzzy
 msgid "You have"
-msgstr ""
+msgstr "Je hebt"
 
 #. module: point_of_sale
 #. odoo-python
@@ -11851,12 +11865,14 @@ msgid ""
 "Your browser does not support connecting a scale directly. Only Chrome-based "
 "desktop browsers are supported."
 msgstr ""
+"Je browser ondersteunt het rechtstreeks koppelen van een weegschaal niet. "
+"Alleen desktopbrowsers op basis van Chrome worden ondersteund."
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/connect_web_serial_scale/connect_web_serial_scale.js:0
 msgid "Your scale is not compatible with Odoo."
-msgstr ""
+msgstr "Je weegschaal is niet compatibel met Odoo."
 
 #. module: point_of_sale
 #: model:mail.template,subject:point_of_sale.email_template_pos_receipt
@@ -11871,7 +11887,7 @@ msgstr "Z"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_sale_details_receipt
 msgid "Z Report"
-msgstr ""
+msgstr "Z-rapport"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_form_pos_ui
@@ -11880,8 +11896,9 @@ msgstr "Postcode"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_printer__paper_size__label
+#, fuzzy
 msgid "Zebra (>=2.75in)"
-msgstr ""
+msgstr "Zebra (>=2.75in)"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -12111,7 +12128,7 @@ msgstr "is ingeschakeld"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/select_default_printer_popup/select_default_printer_popup.xml:0
 msgid "item"
-msgstr ""
+msgstr "item"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -12137,8 +12154,9 @@ msgstr "notitie"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_order_receipt
+#, fuzzy
 msgid "on"
-msgstr ""
+msgstr "op"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -12150,7 +12168,7 @@ msgstr "open bestellingen voor de komende dagen."
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/opening_control_popup/opening_control_popup.xml:0
 msgid "order(s) for the next few days:"
-msgstr ""
+msgstr "order(s) voor de komende dagen:"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_preset_form
