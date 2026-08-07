@@ -677,11 +677,11 @@ class AccountMove(models.Model):
     @api.model
     def _cron_l10n_pl_edi_download_bills(self):
         retrigger = False
-        delta_secs = 0
-        min_delta_secs = 60 * 10
+        max_delta_secs = 60 * 10
+        delta_secs = max_delta_secs
         for company in self.env['res.company'].search([('l10n_pl_edi_access_token', '!=', False)]):
             if company_error := self.with_company(company)._l10n_pl_edi_download_bills_from_ksef():
-                delta_secs = max(delta_secs, company_error.get('retry_after', min_delta_secs))
+                delta_secs = min(max_delta_secs, company_error.get('retry_after', max_delta_secs))
                 retrigger = True
 
         if retrigger:
@@ -705,6 +705,7 @@ class AccountMove(models.Model):
         )
 
     def _l10n_pl_edi_batch_number(self, value=None):
+        # TODO: Create an empty attachment, that will be populated by the zipfile once ready
         param_name = f'l10n_pl_edi_ksef.batch_number_{self.env.company_id}'
         ParamSudo = self.env['ir.config_parameter'].sudo()
         if value is None:
@@ -731,13 +732,12 @@ class AccountMove(models.Model):
             # TODO: download the batch
             _logger.info(batch_number)
             self._l10n_pl_edi_batch_number('')
-            return {}  # Batch downloaded, go download next month (if necessary)
+            return {'retry_after': 10}  # Batch downloaded, go download next month (if necessary)
 
-        last_date = self._get_last_processed_invoicing_date()
-        response = service.get_request_download_batch(
-            date_from=last_date,
-            date_to=last_date + relativedelta(months=1),
-        )
+        date_from = self._get_last_processed_invoicing_date()
+        date_to = min(date_from + relativedelta(months=1), fields.Datetime.today())
+
+        response = service.get_request_download_batch(date_from, date_to)
         if error := response.get('error'):
             return error
 
