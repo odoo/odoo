@@ -226,7 +226,7 @@ GST_COUNTRY_CODES = {
 EUROPEAN_ECONOMIC_AREA_COUNTRY_CODES = {
     # EU Member States
     'AT', 'BE', 'BG', 'HR', 'CY', 'CZ', 'DK', 'EE', 'FI', 'FR', 'DE', 'GR', 'HU', 'IE',
-    'IT', 'LV', 'LT', 'LU', 'MT', 'NL', 'PL', 'PT', 'RO', 'SK', 'SI', 'ES', 'SE', 'CH',
+    'IT', 'LV', 'LT', 'LU', 'MT', 'NL', 'PL', 'PT', 'RO', 'SK', 'SI', 'ES', 'SE',
 
     # EFTA Countries in the EEA
     'IS', 'LI', 'NO',
@@ -420,16 +420,18 @@ class AccountEdiCommon(models.AbstractModel):
             else:
                 return 'S'  # standard VAT
 
-        if supplier.country_id.code in EUROPEAN_ECONOMIC_AREA_COUNTRY_CODES and supplier.vat:
+        supplier_in_eea = supplier.country_id.code in EUROPEAN_ECONOMIC_AREA_COUNTRY_CODES
+        customer_in_eea = customer.country_id.code in EUROPEAN_ECONOMIC_AREA_COUNTRY_CODES
+
+        if (supplier_in_eea or customer_in_eea) and supplier.vat:
             if tax.amount != 0 and not tax.has_negative_factor:
                 # Special case: Purchase reverse-charge taxes for self-billed invoices.
                 # See explanation above.
                 # In the XML we put the zero-percent tax with code 'G' or 'K' that the buyer would have used.
                 return 'S'
-            if customer.country_id.code not in EUROPEAN_ECONOMIC_AREA_COUNTRY_CODES:
-                return 'G'
-            if customer.country_id.code in EUROPEAN_ECONOMIC_AREA_COUNTRY_CODES:
+            if supplier_in_eea and customer_in_eea:
                 return 'K'
+            return 'G'
 
         if tax.amount != 0:
             return 'S'
