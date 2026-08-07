@@ -30,7 +30,7 @@ NO_FLAG_COUNTRIES = [
 EUROPEAN_ECONOMIC_AREA_COUNTRY_CODES = {
     # EU Member States
     'AT', 'BE', 'BG', 'HR', 'CY', 'CZ', 'DK', 'EE', 'FI', 'FR', 'DE', 'GR', 'HU', 'IE',
-    'IT', 'LV', 'LT', 'LU', 'MT', 'NL', 'PL', 'PT', 'RO', 'SK', 'SI', 'ES', 'SE', 'CH',
+    'IT', 'LV', 'LT', 'LU', 'MT', 'NL', 'PL', 'PT', 'RO', 'SK', 'SI', 'ES', 'SE',
 
     # EFTA Countries in the EEA
     'IS', 'LI', 'NO',
