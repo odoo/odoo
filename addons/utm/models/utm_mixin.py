@@ -20,7 +20,7 @@ class UtmMixin(models.AbstractModel):
         return [
             (model.model, model.name)
             for model
-            in self.env['ir.model'].sudo().search([])
+            in self.env['ir.model'].sudo().search_fetch([])
             if not model.is_transient()
         ]
 
