@@ -68,6 +68,10 @@ const MS_ICONS = {
         has_fill: false,
         tags: "anchor attachment base boat chain connection fishing fixed foundation google harbor heavy hold hook link logo maritime metal mooring nautical navigation ocean port reference reliable sailing sea security ship solid stability",
     },
+    android_cell_5_bar: {
+        has_fill: false,
+        tags: "5 bars alt analytics antenna bar bars bars icon cell cell signal cellular cellular network chart communication connection connectivity data diagram five bars full reception full signal graph indicator indicator bar infographic internet measure metrics mobile mobile network network phone reception signal signal bar signal icon signal strength speed statistics status strong signal tracking wifi wireless wireless network",
+    },
     apps: {
         has_fill: false,
         tags: "3x3 grid access all all apps application applications apps circles collection components dashboard desktop display dots features functions general grid home icons interface launcher launchpad menu mobile navigation nine squares options programs quick access services settings shortcut software squares system tiles ui ux",
@@ -150,7 +154,7 @@ const MS_ICONS = {
     },
     article: {
         has_fill: true,
-        tags: "archive article cloud content contract create data doc document drive editor file folder form information journal library memo new note outline page paper record report save sheet storage text view writing",
+        tags: "article blog content description doc document documentation editorial feed file horizontal lines information layout lines news newsletter note page paper post publishing read report rounded square sheet square summary text writing",
     },
     assignment: {
         has_fill: true,
@@ -263,6 +267,10 @@ const MS_ICONS = {
     business: {
         has_fill: false,
         tags: "address apartment architecture building business circle communication company concept connection domain estate global globe home icon internet link navigation network online place real representation residence residential round shelter sphere symbol technology ui url web address website world",
+    },
+    cached: {
+        has_fill: false,
+        tags: "access around arrows cache cached circle cloud connection data database directory download files folder information inprogress load loading refresh loop memory network offline processing refresh reload renew retrieve rotate save server storage store sync synchronize system two arrows update",
     },
     cake: {
         has_fill: true,
@@ -490,7 +498,7 @@ const MS_ICONS = {
     },
     description: {
         has_fill: true,
-        tags: "article attributes content data description details doc document drive explore file find folder folders information inspect list lookup magnify magnifying glass metadata note notes open page paper readme search sheet slide text view writing zoom",
+        tags: "article content data description details doc document draft drive earmark file folded corner folder folders format info information lines list note notes office page paper read report sheet slide summary template text work write writing",
     },
     deselect: {
         has_fill: false,
@@ -631,6 +639,10 @@ const MS_ICONS = {
     expand_more: {
         has_fill: false,
         tags: "accordion arrow arrows caret caret-down chevron collapse control detail direction disclose down dropdown expand expandable expander filter indicator information less list menu more navigation open pointer reveal selection show sort toggle unfold v-shape",
+    },
+    experiment: {
+        has_fill: true,
+        tags: "analysis beaker biology bottle bulb chemical chemistry conical container curve discovery education experiment flask glass invention lab laboratory learning liquid medical neck pharmacy reaction research round science solution study test tube tube",
     },
     explore: {
         has_fill: true,
@@ -803,6 +815,10 @@ const MS_ICONS = {
     grain: {
         has_fill: false,
         tags: "adjust analog art detail digital art dots edit editing effect film filter grain graphic image images imperfection media multimedia noise overlay photo effect photography picture picture effect pictures pixels quality retro speckles square static texture video effect vintage visual",
+    },
+    graph_2: {
+        has_fill: false,
+        tags: "analysis analytics assessment bar chart bars business chart comparison connect data diagram economic evaluation figures finance financial graph growth hub infographic information measurement metrics model nodes numbers performance progress report representation results statistics summary trend visualization",
     },
     graphic_eq: {
         has_fill: false,
@@ -978,7 +994,7 @@ const MS_ICONS = {
     },
     list_alt: {
         has_fill: true,
-        tags: "agreement alt application apply archive archive file box checklist contained contract data entry document document archive file form format forms input lines list note notes order outline paper paper forms questionnaire record register registration reorder report sign up signup stacked survey text title",
+        tags: "agenda alt box bullet bullet-list catalog checklist contained database details document dots form format index items lines list list-alt log menu navigation options order organization playlist record reorder rounded-square square stacked structure tasks title to-do view",
     },
     local_bar: {
         has_fill: true,
@@ -1027,6 +1043,10 @@ const MS_ICONS = {
     male: {
         has_fill: false,
         tags: "account avatar avatar icon body body icon boy circle figure figure icon gender gender icon head head icon human human icon identity male man man icon person person icon profile profile icon shoulders shoulders icon silhouette silhouette icon social symbol user user icon",
+    },
+    manufacturing: {
+        has_fill: false,
+        tags: "adjustments assembly assembly line automation build clockwork cog cogs configuration construction creating engineering fabrication facility factory gear gears goods industrial industry machine machinery making manufacturing manufacturing process materials mechanical options plant process produce producing production production line refinery repair settings system",
     },
     map: {
         has_fill: true,
@@ -1082,7 +1102,7 @@ const MS_ICONS = {
     },
     movie: {
         has_fill: true,
-        tags: "capture cinema creation digital drive edit entertainment file film media movie movie file multimedia play play movie play video playback record recording reel slate storage video video camera video file videotape view watch",
+        tags: "action camera cinema clapper clapperboard clip creation diagonal director editor entertainment film filmmaking hollywood media movie multimedia production recording rectangle shoot show slate stripes studio take video",
     },
     music_note: {
         has_fill: false,
@@ -1243,6 +1263,10 @@ const MS_ICONS = {
     public: {
         has_fill: false,
         tags: "access accessibility circle community connection country earth everybody geography global globe international internet location map network open planet public round share social space sphere unlocked visible web world worldwide",
+    },
+    published_with_changes: {
+        has_fill: false,
+        tags: "approve approved arrow arrows article blog changes check commit complete content document done draft edit file finalize inprogress lines load loading mark modify ok page paper post publish published rectangle refresh renew replace revision rotate save select share sheet square text tick update upload validate verified version with writing yes",
     },
     push_pin: {
         has_fill: true,

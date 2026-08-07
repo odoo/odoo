@@ -77,7 +77,7 @@
                 <button name="action_open_documents" position="before">
                     <button class="oe_stat_button" name="%(template_open_bom)d" type="action"
                         groups="mrp.group_mrp_user"
-                        invisible="type != 'consu'" icon="science">
+                        invisible="type != 'consu'" icon="experiment">
                         <field string="Bill of Materials" name="bom_count" widget="statinfo" />
                     </button>
                 </button>
@@ -110,7 +110,7 @@
                 <xpath expr="//button[@name='action_open_product_lot']" position="after">
                     <button class="oe_stat_button" name="action_view_bom" type="object"
                         groups="mrp.group_mrp_user"
-                        invisible="type != 'consu'" icon="science">
+                        invisible="type != 'consu'" icon="experiment">
                         <field string="Bill of Materials" name="bom_count" widget="statinfo" />
                     </button>
                     <button class="oe_stat_button" name="action_used_in_bom" type="object"

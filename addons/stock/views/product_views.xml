@@ -381,7 +381,7 @@
                             <button type="object"
                                 name= "action_view_stock_move_lines"
                                 invisible="type != 'consu'"
-                                class="oe_stat_button" icon="swap_horiz"
+                                class="oe_stat_button" icon="sync_alt"
                                 groups="stock.group_stock_user">
                                 <div class="d-flex flex-column">
                                     <div class="o_field_widget o_stat_info align-items-baseline flex-row gap-1 me-1">
@@ -396,7 +396,7 @@
                             </button>
                             <button name="action_view_orderpoints" type="object"
                                 invisible="type != 'consu' or nbr_reordering_rules != 1"
-                                class="oe_stat_button" icon="refresh">
+                                class="oe_stat_button" icon="cached">
                                 <div class="d-flex flex-column">
                                     <div class="o_field_widget o_stat_info align-items-baseline flex-row gap-1 me-1">
                                         <span class="o_stat_text">Min:</span>
@@ -411,7 +411,7 @@
                             <button type="object"
                                 name="action_view_orderpoints"
                                 invisible="not is_storable or nbr_reordering_rules == 1"
-                                class="oe_stat_button" icon="refresh">
+                                class="oe_stat_button" icon="cached">
                                 <field name="nbr_reordering_rules" widget="statinfo"/>
                             </button>
                             <button type="object"
@@ -502,7 +502,7 @@
                             <button type="object"
                                 name="action_view_orderpoints"
                                 invisible="not is_storable or nbr_reordering_rules != 1"
-                                class="oe_stat_button" icon="refresh">
+                                class="oe_stat_button" icon="cached">
                                 <div class="d-flex flex-column">
                                     <div class="o_field_widget o_stat_info align-items-baseline flex-row gap-1 me-1">
                                         <span class="o_stat_text">Min:</span>
@@ -518,13 +518,13 @@
                                 name="action_view_orderpoints"
                                 invisible="not is_storable or nbr_reordering_rules == 1"
                                 class="oe_stat_button"
-                                icon="refresh">
+                                icon="cached">
                                 <field name="nbr_reordering_rules" widget="statinfo"/>
                             </button>
                             <button type="object"
                                 name= "action_view_stock_move_lines"
                                 invisible="type != 'consu'"
-                                class="oe_stat_button" icon="swap_horiz"
+                                class="oe_stat_button" icon="sync_alt"
                                 groups="stock.group_stock_user">
                                 <div class="d-flex flex-column">
                                     <div class="o_field_widget o_stat_info align-items-baseline flex-row gap-1 me-1">
