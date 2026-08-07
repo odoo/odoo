@@ -1,5 +1,13 @@
 /*! @license DOMPurify 2.3.1 | (c) Cure53 and other contributors | Released under the Apache license 2.0 and Mozilla Public License 2.0 | github.com/cure53/DOMPurify/blob/2.3.1/LICENSE */
 
+/* Odoo backports:
+ * - IN_PLACE root validation:
+ *   3207638b45859f2809f8641cafa35cab15649ec9 and
+ *   84f1d4528530ed6bf50c3fdcc26b26dda034f600
+ * - removed-subtree sanitization:
+ *   52102472d46035857c52df19e44285f8a1e102fc
+ */
+
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
   typeof define === 'function' && define.amd ? define(factory) :
@@ -287,6 +295,10 @@
     var getNextSibling = lookupGetter(ElementPrototype, 'nextSibling');
     var getChildNodes = lookupGetter(ElementPrototype, 'childNodes');
     var getParentNode = lookupGetter(ElementPrototype, 'parentNode');
+    /* Backported from DOMPurify revision
+       52102472d46035857c52df19e44285f8a1e102fc. */
+    var getAttributes = lookupGetter(ElementPrototype, 'attributes');
+    var getNodeType = Node && Node.prototype ? lookupGetter(Node.prototype, 'nodeType') : null;
 
     // As per issue #47, the web-components registry is inherited by a
     // new document created via createHTMLDocument. As per the spec
@@ -698,6 +710,72 @@
       }
     };
 
+    /* Backported from DOMPurify revision
+       52102472d46035857c52df19e44285f8a1e102fc. */
+    /**
+     * _stripDisallowedAttributes
+     *
+     * Removes every attribute the active configuration does not allow from a
+     * single element, using the same allowlist as the main attribute pass (so
+     * `on*` handlers go, but no `/^on/` blocklist is introduced). Used only to
+     * neutralise nodes that are being discarded from an in-place tree.
+     *
+     * @param element the element to strip
+     */
+    var _stripDisallowedAttributes = function _stripDisallowedAttributes(element) {
+      var attributes = getAttributes(element);
+      if (!attributes) {
+        return;
+      }
+      for (var i = attributes.length - 1; i >= 0; --i) {
+        var attribute = attributes[i];
+        var name = attribute && attribute.name;
+        if (typeof name !== 'string' || ALLOWED_ATTR[stringToLowerCase(name)]) {
+          continue;
+        }
+        try {
+          element.removeAttribute(name);
+        } catch (_) {
+          /* Clobbered removeAttribute on a doomed node — ignore */
+        }
+      }
+    };
+    /**
+     * _neutralizeSubtree
+     *
+     * Completes the audit-5 F1 fix across every removal path. During IN_PLACE
+     * sanitization, nodes dropped via `_forceRemove` are detached from the
+     * caller's LIVE tree but a
+     * handler-bearing original among them (an `<img onerror>`/`<video>` that was
+     * loading) keeps its queued resource event, which fires in page scope after
+     * sanitize returns. This walks a removed subtree and strips every attribute
+     * the active configuration does not allow — so `on*` handlers are cancelled
+     * through the SAME allowlist that governs kept nodes, not a separate `/^on/`
+     * blocklist. Run synchronously before sanitize returns, i.e. before any
+     * queued event can fire. Hook-free by design: these nodes leave the output,
+     * so firing attribute hooks for them would be surprising. Clobber-safe reads;
+     * a doomed clobbered node may shadow `removeAttribute` (its own attributes are
+     * irrelevant — it is discarded — while its non-clobbered descendants, e.g.
+     * the `<img>`, are reached and scrubbed).
+     *
+     * @param root the root of a removed subtree to neutralise
+     */
+    var _neutralizeSubtree = function _neutralizeSubtree(root) {
+      var stack = [root];
+      while (stack.length > 0) {
+        var node = stack.pop();
+        var nodeType = getNodeType ? getNodeType(node) : node.nodeType;
+        if (nodeType === 1) {
+          _stripDisallowedAttributes(node);
+        }
+        var childNodes = getChildNodes(node);
+        if (childNodes) {
+          for (var i = childNodes.length - 1; i >= 0; --i) {
+            stack.push(childNodes[i]);
+          }
+        }
+      }
+    };
     /**
      * _removeAttribute
      *
@@ -1167,7 +1245,18 @@
         IN_PLACE = false;
       }
 
-      if (IN_PLACE) ; else if (dirty instanceof Node) {
+      /* Backported from DOMPurify revisions
+         3207638b45859f2809f8641cafa35cab15649ec9 and
+         84f1d4528530ed6bf50c3fdcc26b26dda034f600. */
+      if (IN_PLACE) {
+        /* Do some early pre-sanitization to avoid unsafe root nodes */
+        if (dirty.nodeName) {
+          var tagName = stringToLowerCase(dirty.nodeName);
+          if (!ALLOWED_TAGS[tagName] || FORBID_TAGS[tagName]) {
+            throw typeErrorCreate('root node is forbidden and cannot be sanitized in-place');
+          }
+        }
+      } else if (dirty instanceof Node) {
         /* If dirty is a DOM element, append to an empty document to avoid
            elements being stripped by the parser */
         body = _initDocument('<!---->');
@@ -1233,6 +1322,19 @@
 
       /* If we sanitized `dirty` in-place, return it. */
       if (IN_PLACE) {
+        /* Backported from DOMPurify revision
+           52102472d46035857c52df19e44285f8a1e102fc. */
+        /* Fail-closed completion of the audit-5 F1 fix: every node removed from
+           the caller's live tree is detached but may still hold a queued
+           resource-event handler that fires in page scope after we return.
+           Strip the non-allow-listed attributes off every removed subtree so
+           those handlers are cancelled before any event can fire. Runs
+           synchronously, pre-return. */
+        arrayForEach(DOMPurify.removed, function (entry) {
+          if (entry.element) {
+            _neutralizeSubtree(entry.element);
+          }
+        });
         return dirty;
       }
 

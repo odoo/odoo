@@ -1194,7 +1194,11 @@ export class OdooEditor extends EventTarget {
                 if (this._collabClientId) {
                     const fakeNode = document.createElement('fake-el');
                     fakeNode.appendChild(node);
-                    DOMPurify.sanitize(fakeNode, { IN_PLACE: true });
+                    DOMPurify.sanitize(fakeNode, {
+                        IN_PLACE: true,
+                        ADD_TAGS: ["#document-fragment", "fake-el"],
+                        ADD_ATTR: ["contenteditable"],
+                    });
                     node = fakeNode.childNodes[0];
                     if (!node) {
                         continue;
@@ -1349,7 +1353,11 @@ export class OdooEditor extends EventTarget {
                         nodeToRemove = this.unserializeNode(mutation.node);
                         const fakeNode = document.createElement('fake-el');
                         fakeNode.appendChild(nodeToRemove);
-                        DOMPurify.sanitize(fakeNode, { IN_PLACE: true });
+                        DOMPurify.sanitize(fakeNode, {
+                            IN_PLACE: true,
+                            ADD_TAGS: ["#document-fragment", "fake-el"],
+                            ADD_ATTR: ["contenteditable"],
+                        });
                         nodeToRemove = fakeNode.childNodes[0];
                         if (!nodeToRemove) {
                             continue;
@@ -3452,20 +3460,18 @@ export class OdooEditor extends EventTarget {
         );
     }
     _safeSetAttribute(node, attributeName, attributeValue) {
-        const parent = node.parentNode;
-        const next = node.nextSibling;
-        this.observerFlush();
-        node.remove();
-        this.observer.takeRecords();
-        node.setAttribute(attributeName, attributeValue);
-        this.observerFlush();
-        DOMPurify.sanitize(node, { IN_PLACE: true });
-        if (next) {
-            next.before(node);
-        } else if (parent) {
-            parent.append(node);
+        const clone = document.createElement(node.tagName);
+        clone.setAttribute(attributeName, attributeValue);
+        DOMPurify.sanitize(clone, {
+            IN_PLACE: true,
+            ADD_TAGS: ["#document-fragment", "fake-el"],
+            ADD_ATTR: ["contenteditable"],
+        });
+        if (clone.hasAttribute(attributeName)) {
+            node.setAttribute(attributeName, clone.getAttribute(attributeName));
+        } else {
+            node.removeAttribute(attributeName);
         }
-        this.observer.takeRecords();
     }
 
     //--------------------------------------------------------------------------
@@ -4763,7 +4769,11 @@ export class OdooEditor extends EventTarget {
                     element.classList.remove(...this.options.renderingClasses);
                 }
             }
-            DOMPurify.sanitize(fragment, { IN_PLACE: true });
+            DOMPurify.sanitize(fragment, {
+                IN_PLACE: true,
+                ADD_TAGS: ["#document-fragment", "fake-el"],
+                ADD_ATTR: ["contenteditable"],
+            });
             if (fragment.hasChildNodes()) {
                 this._applyCommand('insert', fragment);
             }
