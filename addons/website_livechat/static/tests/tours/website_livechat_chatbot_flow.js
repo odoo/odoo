@@ -121,7 +121,8 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
                 run: "click",
             },
             {
-                trigger: ".o-livechat-root:shadow button:text(I want to speak with an operator)",
+                trigger:
+                    ".o-livechat-root:shadow button:enabled:text(I want to speak with an operator)",
                 run: "click",
             },
             waitForMessage("I will transfer you to a human."),

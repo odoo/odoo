@@ -78,7 +78,7 @@ patch(Thread.prototype, {
         return (
             this.channel?.chatbot?.isProcessingAnswer ||
             (step &&
-                !step.operatorFound &&
+                !step.operatorFoundEver &&
                 (step.completed || !step.expectAnswer || step.answer_ids.length > 0))
         );
     },

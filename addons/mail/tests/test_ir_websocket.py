@@ -15,6 +15,32 @@ from odoo.addons.mail.models.mail_presence import AWAY_TIMER
 
 
 class TestIrWebsocket(WebsocketCase):
+    def _assert_presence_notified(self, websocket, user, status):
+        """Assert both notifications of a presence change are received.
+
+        A presence change notifies two distinct channels: the presence channel
+        of the user (``im_status``) and its record channel (``presence_status``).
+        The dispatcher sends one frame per channel, in the iteration order of a
+        set of topics, which is not guaranteed: gather both notifications and
+        key them by their field rather than relying on arrival order. Consuming
+        both also matters, as any frame left behind would be picked up by a
+        later ``recv``.
+        """
+        notifications = []
+        while len(notifications) < 2:
+            notifications += json.loads(websocket.recv())
+        payload_by_field = {}
+        for notification in notifications:
+            message = notification["message"]
+            self.assertEqual(message["type"], "mail.record/insert")
+            payload = message["payload"]["res.users"][0]
+            field = "im_status" if "im_status" in payload else "presence_status"
+            payload_by_field[field] = payload
+        self.assertEqual(payload_by_field.keys(), {"im_status", "presence_status"})
+        for field, payload in payload_by_field.items():
+            self.assertEqual(payload["id"], user.id)
+            self.assertEqual(payload[field], status)
+
     def test_notify_on_status_change(self):
         bob = new_test_user(self.env, login="bob_user", groups="base.group_user")
         session = self.authenticate("bob_user", "bob_user")
@@ -27,28 +53,19 @@ class TestIrWebsocket(WebsocketCase):
         # offline => online
         self.env["mail.presence"]._update_presence(bob)
         self.trigger_notification_dispatching()
-        message = json.loads(websocket.recv())[0]["message"]
-        self.assertEqual(message["type"], "mail.record/insert")
-        self.assertEqual(message["payload"]["res.users"][0]["im_status"], "online")
-        self.assertEqual(message["payload"]["res.users"][0]["id"], bob.id)
+        self._assert_presence_notified(websocket, bob, "online")
         # online => away
         away_timer_later = datetime.now() + timedelta(seconds=AWAY_TIMER + 1)
         with freeze_time(away_timer_later):
             self.env["mail.presence"]._update_presence(bob, (AWAY_TIMER + 1) * 1000)
             self.trigger_notification_dispatching()
-            message = json.loads(websocket.recv())[0]["message"]
-            self.assertEqual(message["type"], "mail.record/insert")
-            self.assertEqual(message["payload"]["res.users"][0]["im_status"], "away")
-            self.assertEqual(message["payload"]["res.users"][0]["id"], bob.id)
+            self._assert_presence_notified(websocket, bob, "away")
         # away => online
         ten_minutes_later = datetime.now() + timedelta(minutes=10)
         with freeze_time(ten_minutes_later):
             self.env["mail.presence"]._update_presence(bob)
             self.trigger_notification_dispatching()
-            message = json.loads(websocket.recv())[0]["message"]
-            self.assertEqual(message["type"], "mail.record/insert")
-            self.assertEqual(message["payload"]["res.users"][0]["im_status"], "online")
-            self.assertEqual(message["payload"]["res.users"][0]["id"], bob.id)
+            self._assert_presence_notified(websocket, bob, "online")
         # online => online, nothing happens
         ten_minutes_later = datetime.now() + timedelta(minutes=10)
         with freeze_time(ten_minutes_later):

@@ -81,15 +81,16 @@ class LivechatChatbotScriptController(http.Controller):
                 if m.script_step_id == current_step
                 and m.mail_message_id.author_id == chatbot.operator_partner_id
             ), request.env['mail.message'])
-            store.add_model_values(
-                "ChatbotStep",
-                lambda res: (
-                    res.attr("id", (current_step.id, step_message.id)),
-                    res.attr("scriptStep", current_step.id),
-                    res.attr("message", step_message.id),
-                    res.attr("isLast", True),
-                ),
-            )
+            if current_step:
+                store.add_model_values(
+                    "ChatbotStep",
+                    lambda res: (
+                        res.attr("id", (current_step.id, step_message.id)),
+                        res.attr("scriptStep", current_step.id),
+                        res.attr("message", step_message.id),
+                        res.attr("isLast", True),
+                    ),
+                )
             store.resolve_data_request()
             return None
         # sudo: discuss.channel - updating current step on the channel is allowed

@@ -27,8 +27,9 @@ from odoo.tests.common import (
     release_test_lock,
 )
 
+from odoo.addons.bus.bus_dispatcher import BusDispatcher
 from odoo.addons.bus.models.bus import channel_with_db, json_dump
-from odoo.addons.bus.websocket import CloseCode, Websocket, WebsocketConnectionHandler
+from odoo.addons.bus.websocket import CloseCode, WebsocketConnectionHandler
 
 
 class BusResult:
@@ -287,7 +288,7 @@ class WebsocketCase(HttpCase, BusCase):
         # As the lock is always unlocked during WebsocketCases we have a whitelist of
         # methods which must match. We also default to super if we are coming from a cursor.
         allowed_methods = [  # function + filename
-            ('acquire_cursor', Like('.../bus/websocket.py')),
+            ('acquire_cursor', Like('.../bus/tools/misc.py')),
         ]
         if any(
             frame.function == function and frame.filename == filename
@@ -334,20 +335,30 @@ class WebsocketCase(HttpCase, BusCase):
         # subscribe to occur first before waiting for the subsequent dispatch.
         subscribed = Event()
         dispatch_bus_notification_done = Event()
-        original_subscribe = Websocket.subscribe
-        original_dispatch_bus_notifications = Websocket._dispatch_bus_notifications
+        original_subscribe = BusDispatcher.subscribe
+        original_dispatch = BusDispatcher._dispatch
+        # ``Websocket`` handling this subscription. Captured from the
+        # `subscribe`` call to be able to wait for the initial dispatch.
+        subscribing_websocket = None
 
-        def _mocked_subscribe(self, *args):
-            original_subscribe(self, *args)
+        def _mocked_subscribe(self, channels, last_fetched_id, websocket):
+            nonlocal subscribing_websocket
+            original_subscribe(self, channels, last_fetched_id, websocket)
+            subscribing_websocket = websocket
             subscribed.set()
 
-        def _mocked_dispatch_bus_notifications(self, *args):
-            original_dispatch_bus_notifications(self, *args)
-            if subscribed.is_set():
+        def _mocked_dispatch(self, topics, notifications):
+            original_dispatch(self, topics, notifications)
+            if subscribed.is_set() and any(
+                subscribing_websocket in topic._websockets
+                or subscribing_websocket in topic._waiting_room
+                or subscribing_websocket in topic._waiting_room_snapshot
+                for topic in topics
+            ):
                 dispatch_bus_notification_done.set()
 
-        with patch.object(Websocket, 'subscribe', _mocked_subscribe), \
-             patch.object(Websocket, '_dispatch_bus_notifications', _mocked_dispatch_bus_notifications):
+        with patch.object(BusDispatcher, 'subscribe', _mocked_subscribe), \
+             patch.object(BusDispatcher, '_dispatch', _mocked_dispatch):
             sub = {'event_name': 'subscribe', 'data': {
                 'channels': channels or [],
                 'check_outdated': check_outdated,

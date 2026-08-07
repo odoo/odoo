@@ -1,21 +1,17 @@
 import datetime
-import json
 import logging
 import math
 import os
-from collections import defaultdict
 
 import odoo
 from odoo import api, fields, models
-from odoo.tools import SQL, config, json_default
+from odoo.tools import SQL, config
 from odoo.tools.misc import OrderedSet
 
-from ..tools import orjson
+from ..tools.notifications import fetch_bus_notifications, json_dump
 
 _logger = logging.getLogger(__name__)
 
-# longpolling timeout connection
-TIMEOUT = 50
 DEFAULT_GC_RETENTION_SECONDS = 60 * 60 * 24  # 24 hours
 
 # custom function to call instead of default PostgreSQL's `pg_notify`
@@ -39,38 +35,9 @@ NOTIFY_PAYLOAD_MAX_LENGTH = get_notify_payload_max_length()
 SKIP_NOTIFICATION = object()
 
 
-def fetch_bus_notifications(cr, min_id_by_channel, ignore_ids=None):
-    """Fetch notifications from the bus table.
-
-    :param cr: Database cursor.
-    :param min_id_by_channel: Dictionary mapping channels to the ID of the last fully
-        processed id. See `Websocket._notif_history`.
-    :param ignore_ids: IDs to exclude.
-    :return: List of notifications.
-
-    """
-    threshold = fields.Datetime.now() - datetime.timedelta(seconds=TIMEOUT)
-    channels_by_id = defaultdict(list)
-    for channel, min_id in min_id_by_channel.items():
-        channels_by_id[min_id].append(json_dump(channel))
-    channel_conditions = []
-    for min_id, channels in channels_by_id.items():
-        since = SQL("create_date > %s", threshold) if min_id == 0 else SQL("id > %s", min_id)
-        channel_conditions.append(SQL("(channel IN %s AND %s)", tuple(channels), since))
-    where = SQL(" OR ").join(channel_conditions)
-    if ignore_ids:
-        where = SQL("(%s) AND id NOT IN %s", where, tuple(ignore_ids))
-    cr.execute(SQL("SELECT id, message FROM bus_bus WHERE %s ORDER BY id", where))
-    return [{"id": r[0], "message": orjson.loads(r[1])} for r in cr.fetchall()]
-
-
 # ---------------------------------------------------------
 # Bus
 # ---------------------------------------------------------
-def json_dump(v):
-    return json.dumps(v, separators=(',', ':'), default=json_default)
-
-
 def channel_with_db(dbname, channel):
     if isinstance(channel, models.Model):
         return (dbname, channel._name, channel.id)
@@ -204,7 +171,13 @@ class BusBus(models.Model):
 
     @api.model
     def _poll(self, channels, last=0, ignore_ids=None):
-        return fetch_bus_notifications(self.env.cr, {c: last for c in channels}, ignore_ids)
+        notifications_by_channel = fetch_bus_notifications(
+            self.env.cr, {last: list(channels)}, ignore_ids
+        )
+        return sorted(
+            (notif for notifs in notifications_by_channel.values() for notif in notifs),
+            key=lambda notif: notif["id"],
+        )
 
     def _bus_last_id(self):
         last = self.env['bus.bus'].search([], order='id desc', limit=1)

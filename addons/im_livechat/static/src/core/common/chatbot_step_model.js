@@ -4,6 +4,27 @@ import { createElementFromContent } from "@mail/utils/common/html";
 export class ChatbotStep extends Record {
     static id = AND("scriptStep", "message");
 
+    static new(...args) {
+        const step = super.new(...args);
+        step.onChange(
+            () => [step.operatorFound],
+            function onOperatorFoundChange() {
+                if (this.operatorFound) {
+                    this.operatorFoundEver = true;
+                }
+            }
+        );
+        step.onChange(
+            () => [step.selectedAnswer],
+            function onSelectedAnswerChange() {
+                if (this.selectedAnswer) {
+                    this.selectedAnswerEver = this.selectedAnswer;
+                }
+            }
+        );
+        return step;
+    }
+
     /**
      * Pair identifying this step for the python store index.
      *
@@ -12,7 +33,12 @@ export class ChatbotStep extends Record {
     id;
     completed = false;
 
-    operatorFound = false;
+    /**
+     * ChatbotStep isn't a real server model, so `__store_version__` can't order its writes:
+     * a stale `false` can be applied after the real `true`. This field can only move from
+     * `false` to `true`, never back, so it stays correct regardless of which one lands last.
+     */
+    operatorFoundEver = false;
     scriptStep = fields.One("chatbot.script.step");
     message = fields.One("mail.message", { inverse: "chatbotStep" });
     answer_ids = fields.Many("chatbot.script.answer", {
@@ -21,6 +47,8 @@ export class ChatbotStep extends Record {
         },
     });
     selectedAnswer = fields.One("chatbot.script.answer");
+    /** Same unversioned-model problem, and same one-way fix, as `operatorFoundEver`. */
+    selectedAnswerEver = fields.One("chatbot.script.answer");
     rawAnswer = fields.Html("");
     step_type = fields.Attr("", {
         compute() {
@@ -47,7 +75,7 @@ export class ChatbotStep extends Record {
             case "question_phone":
                 return createElementFromContent(this.rawAnswer).textContent;
             case "question_selection":
-                return this.selectedAnswer?.name;
+                return this.selectedAnswerEver?.name;
             default:
                 return "";
         }

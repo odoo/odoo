@@ -5,12 +5,17 @@ from freezegun import freeze_time
 from odoo.http.session import SESSION_ROTATION_INTERVAL
 from odoo.tests import HttpCase, tagged
 
+from odoo.addons.bus.tests.common import BusCase
 from odoo.addons.mail.tests.common import mail_new_test_user
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
-class TestWebsocketController(HttpCase):
+class TestWebsocketController(HttpCase, BusCase):
     def test_im_status_offline_on_websocket_closed(self):
+        self._reset_bus()
+        self.env["bus.bus"]._sendone("dummy", "dummy_notification", None)  # Subscribing with 0 would fallback to last id.
+        self.env.cr.precommit.run()  # Trigger bus record creation.
+        initial_last_id = self.env["bus.bus"]._bus_last_id()
         test_user = mail_new_test_user(self.env, login="test_user", password="test_user")
         self.authenticate(test_user.login, test_user.password)
         self.env["mail.presence"]._update_presence(test_user)
@@ -22,7 +27,7 @@ class TestWebsocketController(HttpCase):
             "/websocket/peek_notifications",
             {
                 "channels": [f"odoo-presence-res.users_{test_user.id}"],
-                "last": 0,
+                "last": initial_last_id,
                 "is_first_poll": True,
             },
         )["notifications"]
