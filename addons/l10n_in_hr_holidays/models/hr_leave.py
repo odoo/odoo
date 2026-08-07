@@ -272,10 +272,8 @@ class HrLeave(models.Model):
             date_from + timedelta(days=i) for i in range((date_to - date_from).days + 1)
         ):
             if current_date in exceptional_dates:
-                # Normally off (weekend/holiday), now working -> leave here costs a real day
                 leave_days += 1
             elif current_date in compensatory_dates and calendar._works_on_date(current_date):
-                # Normally working, now compensated off -> leave here costs nothing
                 leave_days -= 1
 
         return leave_days
@@ -293,9 +291,10 @@ class HrLeave(models.Model):
     def _get_durations(self, check_work_entry_type=True, resource_calendar=None, additional_domain=None):
         result = super()._get_durations(check_work_entry_type=check_work_entry_type, resource_calendar=resource_calendar, additional_domain=additional_domain)
 
-        indian_leaves_for_ex = self.filtered(lambda c: c.company_id.country_id.code == 'IN')
-        for leave in indian_leaves_for_ex:
-            if exceptional_holidays := self._get_exceptional_holidays(leave.request_date_from, leave.request_date_to):
+        indian_leaves = self.filtered(lambda l: l.company_id.country_id.code == "IN")
+        for leave in indian_leaves:
+            exceptional_holidays = self._get_exceptional_holidays(leave.request_date_from, leave.request_date_to)
+            if exceptional_holidays:
                 leave_days, hours = result[leave.id]
                 updated_days = leave._l10n_in_apply_exceptional_days(
                     leave_days, exceptional_holidays

@@ -1,51 +1,56 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import timedelta
-
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
 class ResourceCalendarLeaves(models.Model):
-    _inherit = 'resource.calendar.leaves'
+    _inherit = "resource.calendar.leaves"
 
     is_exceptional_days = fields.Boolean("Is Exceptional Day")
     working_start_date = fields.Datetime("Compensatory Off Start Date")
     working_end_date = fields.Datetime("Compensatory Off End Date")
 
-    @api.constrains('is_exceptional_days', 'working_start_date', 'working_end_date')
+    @api.constrains("is_exceptional_days", "date_from", "date_to", "working_start_date", "working_end_date")
     def _check_exceptional_day_compensation(self):
-        for rec in self:
-            if not rec.is_exceptional_days:
+        for record in self:
+            if not record.is_exceptional_days:
                 continue
 
-            # Step 1: both dates must be filled
-            if not rec.working_start_date or not rec.working_end_date:
+            if not record.working_start_date or not record.working_end_date:
                 raise ValidationError(self.env._("Please set the compensatory off start and end dates."))
 
-            if rec.working_end_date < rec.working_start_date:
+            if record.working_end_date < record.working_start_date:
                 raise ValidationError(self.env._("Compensatory end date cannot be before the start date."))
 
-            # Step 2: compensatory date can't be the same as the exceptional working date
-            if rec.date_from and rec.date_to:
-                if rec.working_start_date.date() <= rec.date_to.date() and rec.working_end_date.date() >= rec.date_from.date():
-                    raise ValidationError(self.env._("Compensatory off date cannot be the same as the exceptional working date."))
+            if record.date_from.date() != record.date_to.date():
+                raise ValidationError(self.env._("Exceptional working day must be exactly one day."))
 
-            # Step 3: compensatory date can't already be an exceptional day or a public holiday
-            other_records = self.env['resource.calendar.leaves'].search([
-                ('id', '!=', rec.id),
-                ('resource_id', '=', False),
-                ('date_from', '<=', rec.working_end_date),
-                ('date_to', '>=', rec.working_start_date),
-            ])
-            if other_records:
-                raise ValidationError(self.env._("Compensatory off date overlaps with an existing exceptional day or public holiday."))
+            if record.working_start_date.date() != record.working_end_date.date():
+                raise ValidationError(self.env._("Compensatory off must be exactly one day."))
 
-            # Step 4: compensatory date must be a normal working day
-            calendar = rec.calendar_id or self.env.company.resource_calendar_id
-            current_date = rec.working_start_date.date()
-            end_date = rec.working_end_date.date()
-            while current_date <= end_date:
-                if not calendar._works_on_date(current_date):
-                    raise ValidationError(self.env._("%s is not a working day, so it cannot be used as a compensatory off date.") % current_date)
-                current_date += timedelta(days=1)
+            exceptional_day = record.date_from.date()
+            compensatory_day = record.working_start_date.date()
+
+            if exceptional_day == compensatory_day:
+                raise ValidationError(
+                    self.env._("Compensatory off day cannot be the same as the exceptional working day.")
+                )
+
+            overlap = self.search([
+                ("id", "!=", record.id),
+                ("resource_id", "=", False),
+                ("date_from", "<=", record.working_end_date),
+                ("date_to", ">=", record.working_start_date),
+            ], limit=1)
+
+            if overlap:
+                raise ValidationError(
+                    self.env._("Compensatory off day overlaps with an existing exceptional day or public holiday.")
+                )
+
+            calendar = record.calendar_id or self.env.company.resource_calendar_id
+            if not calendar._works_on_date(compensatory_day):
+                raise ValidationError(
+                    self.env._("%s is not a working day, so it cannot be used as a compensatory off day.") % compensatory_day
+                )
