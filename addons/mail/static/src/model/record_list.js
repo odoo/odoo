@@ -257,9 +257,11 @@ export class RecordList extends Array {
             get(recordList, name, recordListFullProxy) {
                 if (name === "data" && !recordList._.gettingField) {
                     recordList._.gettingField = true;
-                    const res = recordList._proxy.data;
-                    recordList._.gettingField = false;
-                    return res;
+                    try {
+                        return recordList._proxy.data;
+                    } finally {
+                        recordList._.gettingField = false;
+                    }
                 }
                 if (
                     recordList._.gettingField ||

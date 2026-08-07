@@ -263,8 +263,12 @@ export class RecordInternal {
             }
         }
         record._.gettingField = true;
-        const val = recordFullProxy[name];
-        record._.gettingField = false;
+        let val;
+        try {
+            val = recordFullProxy[name];
+        } finally {
+            record._.gettingField = false;
+        }
         if (isRelation(Model, name)) {
             const recordListFullProxy = val._proxy;
             if (isMany(Model, name)) {
