@@ -29,6 +29,7 @@ from requests import Session
 from werkzeug import urls
 
 from odoo import _, api, Command, exceptions, fields, models, modules, tools
+from odoo.addons.mail.models.mail_message import SHARE_DOMAIN
 from odoo.addons.mail.tools.discuss import Store
 from odoo.addons.mail.tools.web_push import (
     push_to_end_point, DeviceUnreachableError,
@@ -5435,3 +5436,6 @@ class MailThread(models.AbstractModel):
         """Return a list of message types visible in a shared context.
         Override this method to customize visibility for specific models."""
         return ["auto_comment", "comment", "email", "email_outgoing"]
+
+    def _get_share_message_domain(self):
+        return SHARE_DOMAIN

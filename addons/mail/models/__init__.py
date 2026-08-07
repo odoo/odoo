@@ -4,6 +4,7 @@
 from . import mail_alias
 from . import mail_alias_domain
 from . import models
+from . import mail_notification  # keep before as decorated m2m
 
 # mixin
 from . import mail_activity_mixin
@@ -21,7 +22,6 @@ from . import template_reset_mixin
 
 # mail models
 from . import fetchmail
-from . import mail_notification  # keep before as decorated m2m
 from . import mail_activity_type
 from . import mail_activity
 from . import mail_activity_plan
