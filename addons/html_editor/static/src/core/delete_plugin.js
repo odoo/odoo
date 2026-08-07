@@ -42,7 +42,12 @@ import {
 import { CTYPES } from "../utils/content_types";
 import { withSequence } from "@html_editor/utils/resource";
 import { compareListTypes } from "@html_editor/main/list/utils";
-import { hasTouch, isBrowserChrome, isMacOS } from "@web/core/browser/feature_detection";
+import {
+    hasTouch,
+    isBrowserChrome,
+    isBrowserSafari,
+    isMacOS,
+} from "@web/core/browser/feature_detection";
 import { normalizeDeepCursorPosition, normalizeFakeBR } from "@html_editor/utils/selection";
 
 /**
@@ -1415,6 +1420,11 @@ export class DeletePlugin extends Plugin {
                 this.trigger("on_will_delete_handlers");
                 this.deleteSelection(selection);
                 this.trigger("on_deleted_handlers");
+                if (isBrowserSafari()) {
+                    // Safari requires the initial anchor node to remain inside the DOM.
+                    ev.preventDefault();
+                    this.document.execCommand(ev.inputType, false, ev.data);
+                }
             }
             // Default behavior: insert text and trigger input event
         }
