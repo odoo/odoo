@@ -1,12 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import api, fields, models
 
-RED_FORM_TYPES = [
-    ('01', '01 Invoice Error (开票有误)'),
-    ('02', '02 Sales Return (销货退回)'),
-    ('03', '03 Service Termination (服务中止)'),
-    ('04', '04 Sales Discount (销售折让)'),
-]
+from odoo.addons.l10n_cn_edi_baiwang.models.account_move import RED_FORM_TYPES
 
 
 class AccountMoveReversal(models.TransientModel):

@@ -75,7 +75,8 @@ class BaiwangClient:
             err_details = self._map_proxy_error(result.get('error'))
             # Log the full proxy error so the debug team can correlate with IAP-side logs (keyed by db_uuid + timestamp).
             error = result.get('error') or {}
-            code = str((error.get('data') or {}).get('code') or '') if isinstance(error, dict) else ''
+            error_data = error.get('data') if isinstance(error, dict) and isinstance(error.get('data'), dict) else {}
+            code = str(error_data.get('code') or '')
             db_uuid = self.company.env['ir.config_parameter'].get_str('database.uuid')
             log = _logger.info if code in RETRYABLE_CODES else _logger.warning
             log(
