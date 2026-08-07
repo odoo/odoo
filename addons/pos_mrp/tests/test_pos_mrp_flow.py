@@ -827,3 +827,128 @@ class TestPosMrp(TestPointOfSaleCommon):
 
         self.assertEqual(order.picking_ids.move_ids[0].quantity, 2)
         self.assertEqual(order.picking_ids.move_ids[1].quantity, 0.5)
+
+    def test_kit_with_lot_tracked_component_multiple_orders(self):
+        """
+        Tests that ordering the same kit product across multiple lines/orders in a
+        session does not raise a singleton error when closing the session, since
+        _get_lot_line_qty must sum quantities across all matching order lines
+        instead of accessing .qty on a single record.
+        """
+
+        product_a = self.env['product.template'].create({
+            'name': 'Product A - Lot Tracked',
+            'available_in_pos': True,
+            'list_price': 5.0,
+            'tracking': 'lot',
+            'type': 'consu',
+        })
+
+        kit_product = self.env['product.template'].create({
+            'name': 'Kit with Lot Tracked Component',
+            'available_in_pos': True,
+            'list_price': 10.0,
+            'type': 'consu',
+        })
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': kit_product.id,
+            'product_qty': 1.0,
+            'type': 'phantom',
+            'bom_line_ids': [Command.create({
+                'product_id': product_a.product_variant_id.id,
+                'product_qty': 2.0,
+            })],
+        })
+
+        self.pos_config.open_ui()
+        current_session = self.pos_config.current_session_id
+        current_session.update_stock_at_closing = True
+
+        order_1 = self.env['pos.order'].create({
+            'session_id': current_session.id,
+            'partner_id': self.partner1.id,
+            'lines': [
+                Command.create({
+                    'product_id': product_a.product_variant_id.id,
+                    'price_unit': 5.0,
+                    'qty': 1.0,
+                    'price_subtotal': 5.0,
+                    'price_subtotal_incl': 5.0,
+                    'pack_lot_ids': [Command.create({
+                        'lot_name': 'lot_a_1',
+                    })],
+                }),
+            ],
+            'amount_total': 5.0,
+            'amount_tax': 0.0,
+            'amount_paid': 5.0,
+            'amount_return': 0.0,
+        })
+        payment_context = {"active_ids": order_1.ids, "active_id": order_1.id}
+        order_payment_1 = self.env['pos.make.payment'].with_context(**payment_context).create({
+            'amount': order_1.amount_total,
+            'payment_method_id': self.cash_payment_method.id,
+        })
+        order_payment_1.with_context(**payment_context).check()
+
+        order_2 = self.env['pos.order'].create({
+            'session_id': current_session.id,
+            'partner_id': self.partner1.id,
+            'lines': [
+                Command.create({
+                    'product_id': kit_product.product_variant_id.id,
+                    'price_unit': 10.0,
+                    'qty': 1.0,
+                    'price_subtotal': 10.0,
+                    'price_subtotal_incl': 10.0,
+                }),
+            ],
+            'amount_total': 10.0,
+            'amount_tax': 0.0,
+            'amount_paid': 10.0,
+            'amount_return': 0.0,
+        })
+        payment_context = {"active_ids": order_2.ids, "active_id": order_2.id}
+        order_payment_2 = self.env['pos.make.payment'].with_context(**payment_context).create({
+            'amount': order_2.amount_total,
+            'payment_method_id': self.cash_payment_method.id,
+        })
+        order_payment_2.with_context(**payment_context).check()
+
+        order_3 = self.env['pos.order'].create({
+            'session_id': current_session.id,
+            'partner_id': self.partner1.id,
+            'lines': [
+                Command.create({
+                    'product_id': product_a.product_variant_id.id,
+                    'price_unit': 5.0,
+                    'qty': 2.0,
+                    'price_subtotal': 10.0,
+                    'price_subtotal_incl': 10.0,
+                    'pack_lot_ids': [Command.create({
+                        'lot_name': 'lot_a_2',
+                    })],
+                }),
+                Command.create({
+                    'product_id': kit_product.product_variant_id.id,
+                    'price_unit': 10.0,
+                    'qty': 1.0,
+                    'price_subtotal': 10.0,
+                    'price_subtotal_incl': 10.0,
+                }),
+            ],
+            'amount_total': 20.0,
+            'amount_tax': 0.0,
+            'amount_paid': 20.0,
+            'amount_return': 0.0,
+        })
+        payment_context = {"active_ids": order_3.ids, "active_id": order_3.id}
+        order_payment_3 = self.env['pos.make.payment'].with_context(**payment_context).create({
+            'amount': order_3.amount_total,
+            'payment_method_id': self.cash_payment_method.id,
+        })
+        order_payment_3.with_context(**payment_context).check()
+
+        # Close the PoS session - this should not raise a singleton error
+        current_session.action_pos_session_closing_control()
+        self.assertEqual(current_session.state, 'closed')
