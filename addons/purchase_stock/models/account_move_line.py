@@ -165,6 +165,23 @@ class AccountMoveLine(models.Model):
     def _replay_history(self, layers, history):
         history.append((False, self, False))  # time was only usefull for the sorting
 
+        # `_is_in`, `_is_out` and `_is_dropshipped` walk every move line of the stock move on each
+        # call. Many layers share the same stock move - typically one layer per lot when the product
+        # is `lot_valuated` - which makes the loops below quadratic in the number of move lines.
+        # Memoize the answer per stock move to keep them linear.
+        incoming_moves = {}
+        outgoing_moves = {}
+
+        def is_incoming(move):
+            if move.id not in incoming_moves:
+                incoming_moves[move.id] = move._is_in() or move._is_dropshipped()
+            return incoming_moves[move.id]
+
+        def is_outgoing(move):
+            if move.id not in outgoing_moves:
+                outgoing_moves[move.id] = move._is_out()
+            return outgoing_moves[move.id]
+
         # the next dict is a matrix [layer L, invoice I] where each cell gives two info:
         # [initial qty of L invoiced by I, remaining invoiced qty]
         # the second info is usefull in case of a refund
@@ -210,14 +227,14 @@ class AccountMoveLine(models.Model):
                         sign = 1
                         layers_to_consume = []
                         for layer in qty_to_invoice_per_layer:
-                            if layer.stock_move_id._is_out():
+                            if is_outgoing(layer.stock_move_id):
                                 layers_to_consume.append((layer, qty_to_invoice_per_layer[layer][1]))
                 else:
                     # classic case, we are billing a received quantity so let's use the incoming SVLs
                     sign = 1
                     layers_to_consume = []
                     for layer in qty_to_invoice_per_layer:
-                        if layer.stock_move_id._is_in() or layer.stock_move_id._is_dropshipped():
+                        if is_incoming(layer.stock_move_id):
                             layers_to_consume.append((layer, qty_to_invoice_per_layer[layer][1]))
                 while float_compare(aml_qty, 0, precision_rounding=self.product_id.uom_id.rounding) > 0 and layers_to_consume:
                     layer, total_layer_qty_to_invoice = layers_to_consume[0]
