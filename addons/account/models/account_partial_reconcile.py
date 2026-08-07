@@ -126,10 +126,17 @@ class AccountPartialReconcile(models.Model):
 
         # Reverse CABA entries.
         if moves_to_reverse:
-            default_values_list = [{
-                'date': move._get_accounting_date(move.date, move._affect_tax_report()),
-                'ref': move.env._('Reversal of: %s', move.name),
-            } for move in moves_to_reverse]
+            default_values_list = []
+            for move in moves_to_reverse:
+                has_tax = move._affect_tax_report()
+                # Keep the reversal in the origin's period
+                reversal_date = move.date
+                if lock_dates := move._get_violated_lock_dates(move.date, has_tax):
+                    reversal_date = lock_dates[-1][0] + timedelta(days=1)
+                default_values_list.append({
+                    'date': reversal_date,
+                    'ref': move.env._('Reversal of: %s', move.name),
+                })
             moves_to_reverse._reverse_moves(default_values_list, cancel=True)
 
         self._update_matching_number(all_reconciled)
