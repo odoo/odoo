@@ -510,6 +510,11 @@ export class ClipboardPlugin extends Plugin {
             }
         } else if (node.nodeType !== Node.TEXT_NODE) {
             if (["TD", "TH", "COL"].includes(node.nodeName)) {
+                // Convert table headers to cells when they are not
+                // in the first row.
+                if (node.nodeName === "TH" && getRowIndex(node) !== 0) {
+                    node = this.dependencies.dom.setTagName(node, "td");
+                }
                 // Insert base container into empty TD.
                 if (isEmptyBlock(node)) {
                     const baseContainer = this.dependencies.baseContainer.createBaseContainer();
