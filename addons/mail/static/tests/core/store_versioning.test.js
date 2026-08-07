@@ -424,6 +424,39 @@ for (const testCase of MANY_FIELD_CASES) {
     });
 }
 
+test("out-of-order delete does not pile up inverse echoes", async () => {
+    (class Message extends Record {
+        static id = "id";
+        thread = fields.One("Thread", { inverse: "messages" });
+    }).register(localRegistry);
+
+    (class Thread extends Record {
+        static id = "id";
+        messages = fields.Many("Message", { inverse: "thread" });
+    }).register(localRegistry);
+
+    const store = await start();
+    store.insert({
+        Thread: { id: 1, messages: [["REPLACE", [1, 2, 3, 4, 5]]] },
+        __store_version__: { snapshot: { xmin: 10, xmax: 10, xip_bitmap: "" } },
+    });
+    store.insert({
+        Thread: { id: 1, messages: [["ADD", [6]]] },
+        __store_version__: { snapshot: { xmin: 30, xmax: 30, xip_bitmap: "" } },
+    });
+    // Delete from an older snapshot than the ADD, received after it: resolving
+    // it derives a REPLACE, whose inverse updates re-enter the resolution.
+    store.insert({
+        Thread: { id: 1, messages: [["DELETE", [1]]] },
+        __store_version__: { snapshot: { xmin: 20, xmax: 20, xip_bitmap: "" } },
+    });
+    // The history holds the commands the resolution recorded, so an echo that
+    // re-enters it piles up here even when the resulting list survives.
+    expect(store.Thread.get(1)._.fieldsVersion.get("messages").history.length).toBe(6);
+    expect(store.Thread.get(1).messages.map((m) => m.id)).toEqual([2, 3, 4, 5, 6]);
+    expect(store.Message.get(1).thread).toBe(undefined);
+});
+
 test("Inverse of relations are properly versioned", async () => {
     (class Message extends Record {
         static id = "id";

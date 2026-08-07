@@ -164,15 +164,20 @@ export class SingleFieldVersion {
      * @template T
      * @param {T} value
      * @param {FieldRevision} incomingRevision
+     * @param {Object} [options={}]
+     * @param {boolean} [options.forceApply=false] Whether the value must be
+     * applied even when its revision is outdated. Client-generated updates
+     * (inverse echoes, computes, direct field writes) reflect state the client
+     * already changed elsewhere: skipping them would desynchronize that state.
      * @returns {typeof SKIP_REVISION|T} The skip symbol, or the value to update the
      * field.
      */
-    resolveApply(value, incomingRevision) {
+    resolveApply(value, incomingRevision, { forceApply = false } = {}) {
         if (shouldReplace(incomingRevision, this.lastRevision)) {
             this.lastRevision = incomingRevision;
             return value;
         }
-        return SKIP_REVISION;
+        return forceApply ? value : SKIP_REVISION;
     }
 }
 
@@ -208,12 +213,20 @@ export class ManyFieldVersion {
      *
      * @param {Array[]} commands
      * @param {FieldRevision} incomingRevision
+     * @param {Object} [options={}]
+     * @param {boolean} [options.forceApply=false] Whether the commands must be
+     * applied as-is even when their revision is out of order. Client-generated
+     * updates (inverse echoes, computes, direct field writes) reflect state the
+     * client already changed elsewhere: skipping them would desynchronize that
+     * state, and deriving a REPLACE from them would re-trigger inverse updates
+     * on the field they come from, which recurses. They are still recorded in
+     * the history so later resolutions order server commands against them.
      * @returns {Array[]|typeof SKIP_REVISION} The skip symbol, or the commands to apply
      * to update the field.
      */
-    resolveApply(commands, incomingRevision) {
+    resolveApply(commands, incomingRevision, { forceApply = false } = {}) {
         if (!shouldReplace(incomingRevision, this.history[0].revision)) {
-            return SKIP_REVISION;
+            return forceApply ? commands : SKIP_REVISION;
         }
         const insertionIndex = this._findInsertionIndex(incomingRevision);
         const insertAtTheEnd = insertionIndex === this.history.length;
@@ -226,7 +239,7 @@ export class ManyFieldVersion {
         if (lastReplaceIndex >= insertionIndex) {
             this.history = this.history.slice(lastReplaceIndex);
         }
-        if (insertAtTheEnd) {
+        if (insertAtTheEnd || forceApply) {
             return commands;
         }
         return this._generateReplaceFromHistory();

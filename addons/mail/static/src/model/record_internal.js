@@ -298,7 +298,7 @@ export class RecordInternal {
             if (reactiveSet) {
                 record._.proxyUsed.set(name, true);
             }
-            store._.updateFields(record, { [name]: val });
+            store._.updateFields(record, { [name]: val }, { forceApply: true });
             if (reactiveSet) {
                 record._.proxyUsed.delete(name);
             }
@@ -359,9 +359,11 @@ export class RecordInternal {
                     store.handleError(err);
                 }
                 untrack(() =>
-                    store._.updateFields(record, {
-                        [fieldName]: computedValue,
-                    })
+                    store._.updateFields(
+                        record,
+                        { [fieldName]: computedValue },
+                        { forceApply: true }
+                    )
                 );
                 this.fieldsComputing.delete(fieldName);
             })

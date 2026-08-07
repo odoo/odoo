@@ -139,9 +139,11 @@ export class RecordListInternal {
                     oldRecord._.uses.delete(recordList);
                     store._.ADD_QUEUE("onDelete", self.owner, self.name, oldRecord);
                     if (inverse) {
-                        store._.updateFields(oldRecord, {
-                            [inverse]: [["DELETE", self.owner]],
-                        });
+                        store._.updateFields(
+                            oldRecord,
+                            { [inverse]: [["DELETE", self.owner]] },
+                            { forceApply: true }
+                        );
                     }
                 }
             }
@@ -321,9 +323,11 @@ export class RecordList extends Array {
                                 );
                                 const inverse = getInverse(recordList);
                                 if (inverse) {
-                                    store._.updateFields(oldRecord, {
-                                        [inverse]: [["DELETE", recordList._.owner]],
-                                    });
+                                    store._.updateFields(
+                                        oldRecord,
+                                        { [inverse]: [["DELETE", recordList._.owner]] },
+                                        { forceApply: true }
+                                    );
                                 }
                                 if (newRecord) {
                                     newRecord._.uses.add(recordList);
@@ -334,9 +338,11 @@ export class RecordList extends Array {
                                         newRecord
                                     );
                                     if (inverse) {
-                                        store._.updateFields(newRecord, {
-                                            [inverse]: [["ADD", recordList._.owner]],
-                                        });
+                                        store._.updateFields(
+                                            newRecord,
+                                            { [inverse]: [["ADD", recordList._.owner]] },
+                                            { forceApply: true }
+                                        );
                                     }
                                 }
                             }
@@ -384,7 +390,11 @@ export class RecordList extends Array {
                 );
                 store._.ADD_QUEUE("onAdd", recordList._.owner, recordList._.name, record);
                 if (inverse) {
-                    store._.updateFields(record, { [inverse]: [["ADD", recordList._.owner]] });
+                    store._.updateFields(
+                        record,
+                        { [inverse]: [["ADD", recordList._.owner]] },
+                        { forceApply: true }
+                    );
                 }
             }
             return recordListFullProxy.data.length;
@@ -422,7 +432,11 @@ export class RecordList extends Array {
             store._.ADD_QUEUE("onDelete", recordList._.owner, recordList._.name, record);
             const inverse = getInverse(recordList);
             if (inverse) {
-                store._.updateFields(record, { [inverse]: [["DELETE", recordList._.owner]] });
+                store._.updateFields(
+                    record,
+                    { [inverse]: [["DELETE", recordList._.owner]] },
+                    { forceApply: true }
+                );
             }
             return recordProxy;
         });
@@ -442,7 +456,11 @@ export class RecordList extends Array {
                 });
                 store._.ADD_QUEUE("onAdd", recordList._.owner, recordList._.name, record);
                 if (inverse) {
-                    store._.updateFields(record, { [inverse]: [["ADD", recordList._.owner]] });
+                    store._.updateFields(
+                        record,
+                        { [inverse]: [["ADD", recordList._.owner]] },
+                        { forceApply: true }
+                    );
                 }
             }
             return recordListFullProxy.data.length;
@@ -489,9 +507,11 @@ export class RecordList extends Array {
                 oldRecord._.uses.delete(recordList);
                 store._.ADD_QUEUE("onDelete", recordList._.owner, recordList._.name, oldRecord);
                 if (inverse) {
-                    store._.updateFields(oldRecord, {
-                        [inverse]: [["DELETE", recordList._.owner]],
-                    });
+                    store._.updateFields(
+                        oldRecord,
+                        { [inverse]: [["DELETE", recordList._.owner]] },
+                        { forceApply: true }
+                    );
                 }
             }
             for (const newRecordProxy of newRecordsProxy) {
@@ -499,7 +519,11 @@ export class RecordList extends Array {
                 newRecord._.uses.add(recordList);
                 store._.ADD_QUEUE("onAdd", recordList._.owner, recordList._.name, newRecord);
                 if (inverse) {
-                    store._.updateFields(newRecord, { [inverse]: [["ADD", recordList._.owner]] });
+                    store._.updateFields(
+                        newRecord,
+                        { [inverse]: [["ADD", recordList._.owner]] },
+                        { forceApply: true }
+                    );
                 }
             }
         });

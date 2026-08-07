@@ -234,8 +234,14 @@ export class StoreInternal extends RecordInternal {
     /**
      * @param {Record} record
      * @param {Object} vals
+     * @param {Object} [options={}]
+     * @param {boolean} [options.forceApply=false] Whether the values must be
+     * applied even when the current insert version is out of order. Set on
+     * client-generated updates (inverse echoes, computes, direct field
+     * writes), which are not server data even when they run during a server
+     * data insert: they reflect state the client already changed elsewhere.
      */
-    updateFields(record, vals) {
+    updateFields(record, vals, { forceApply = false } = {}) {
         const fieldEntries = Object.entries(vals).concat(
             Object.getOwnPropertySymbols(vals).map((sym) => [sym, vals[sym]])
         );
@@ -258,10 +264,17 @@ export class StoreInternal extends RecordInternal {
                           ]?.[record.id]?.includes(fieldName),
                   }
                 : version.lastRevision;
-            const toApply = version.resolveApply(
-                isMany(record.Model, fieldName) ? normalizeManyCommands(value) : value,
-                revision
-            );
+            const normalized = isMany(record.Model, fieldName)
+                ? normalizeManyCommands(value)
+                : value;
+            // ".noinv" commands only come from inverse echoes: they are
+            // client-generated even when found inside server data to insert.
+            const toApply = version.resolveApply(normalized, revision, {
+                forceApply:
+                    forceApply ||
+                    (isCommandList(normalized) &&
+                        normalized.every(([mode]) => mode.endsWith(".noinv"))),
+            });
             if (toApply === SKIP_REVISION) {
                 continue;
             }
