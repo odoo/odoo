@@ -1194,7 +1194,10 @@ class PosConfig(models.Model):
         self.ensure_one()
         convert.convert_file(self._env_with_clean_context(), 'point_of_sale', 'data/scenarios/clothes_category_data.xml', idref=None, mode='init', noupdate=True)
         if with_demo_data:
-            self._load_product_demo_data([('data/product_attribute_demo.xml', 'product.pa_sides')])
+            self._load_product_demo_data([
+                ('data/product_attribute_data.xml', 'product.pa_sides'),
+                ('data/product_attribute_demo.xml', 'product.pav_brand_adidas'),
+            ])
             convert.convert_file(self._env_with_clean_context(), 'point_of_sale', 'data/scenarios/clothes_data.xml', idref=None, mode='init', noupdate=True)
         clothes_categories = self.get_record_by_ref([
             'point_of_sale.pos_category_upper',
@@ -1266,7 +1269,8 @@ class PosConfig(models.Model):
         if with_demo_data:
             self._load_product_demo_data([
                 ('data/product_category_demo.xml', 'product.product_category_furniture'),
-                ('data/product_attribute_demo.xml', 'product.pa_sides'),
+                ('data/product_attribute_data.xml', 'product.pa_sides'),
+                ('data/product_attribute_demo.xml', 'product.pav_brand_adidas'),
                 ('data/product_demo.xml', 'product.desk_organizer'),
             ])
             convert.convert_file(self._env_with_clean_context(), 'point_of_sale', 'data/scenarios/furniture_data.xml', idref=None, mode='init', noupdate=True)
