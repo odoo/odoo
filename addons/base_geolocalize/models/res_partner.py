@@ -1,13 +1,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, modules, _
-from odoo.tools import config
+from odoo import api, fields, models, modules
 
 
 class ResPartner(models.Model):
     _inherit = "res.partner"
 
     date_localization = fields.Date(string='Geolocation Updated On')
+    geo_localization_failed = fields.Boolean(default=False, copy=False)
 
     @api.model
     def _geo_localize(self, street='', zip='', city='', state='', country=''):
@@ -28,6 +28,7 @@ class ResPartner(models.Model):
             or self.env.context.get('install_demo')
         ):
             return False
+
         partners_not_geo_localized = self.env['res.partner']
         for partner in self.with_context(lang='en_US'):
             result = self._geo_localize(partner.street,
@@ -40,15 +41,20 @@ class ResPartner(models.Model):
                 partner.write({
                     'partner_latitude': result[0],
                     'partner_longitude': result[1],
-                    'date_localization': fields.Date.context_today(partner)
+                    'date_localization': fields.Date.context_today(partner),
+                    'geo_localization_failed': False,
                 })
             else:
                 partners_not_geo_localized |= partner
+
         if partners_not_geo_localized:
+            partners_not_geo_localized.write({'geo_localization_failed': True})
             self.env.user._bus_send("simple_notification", {
                 'type': 'danger',
-                'title': _("Warning"),
-                'message': _('No match found for %(partner_names)s address(es).',
-                             partner_names=', '.join(partners_not_geo_localized.mapped('display_name')))
+                'title': self.env._("Warning"),
+                'message': self.env._(
+                    'No match found for %(partner_names)s address(es).',
+                    partner_names=', '.join(partners_not_geo_localized.mapped('display_name'))
+                )
             })
         return True
