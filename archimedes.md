@@ -6,10 +6,9 @@ I declare that I am authorized and able to make this agreement and sign this dec
 
 Signed,
 
-Sławomir Płachetko  
-s.plachetko@archimedes.pl
+Sławomir Płachetko s.plachetko@archimedes.pl
 
 List of contributors:
 
-Andrzej Gerasimuk [a.gerasimuk@archimedes.pl](mailto:a.gerasimuk@archimedes.pl) [https://github.com/AndrzejGerasimukARCHIMEDES](https://github.com/AndrzejGerasimukARCHIMEDES)   
-Aleksander Kazecki [a.kazecki@archimedes.pl](mailto:a.kazecki@archimedes.pl) [https://github.com/akazecki](https://github.com/akazecki)  
+Andrzej Gerasimuk a.gerasimuk@archimedes.pl https://github.com/AndrzejGerasimukARCHIMEDES
+Aleksander Kazecki a.kazecki@archimedes.pl https://github.com/akazecki
