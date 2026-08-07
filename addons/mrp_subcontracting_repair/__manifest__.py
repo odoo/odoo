@@ -9,9 +9,6 @@ Bridge module between MRP subcontracting and Repair
     'depends': [
         'mrp_subcontracting', 'repair'
     ],
-    'data': [
-        'security/ir.access.csv',
-    ],
     'auto_install': True,
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
