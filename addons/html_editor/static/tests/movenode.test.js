@@ -238,4 +238,13 @@ describe("drag", () => {
             )
         );
     });
+    test("should show the hook on the right side in RTL mode", async () => {
+        const { el } = await setupEditor("<p>a[]</p><p>b</p>", {
+            styleContent: styles,
+            config: { direction: "rtl" },
+        });
+        await hover(el.querySelector("p"));
+        expect(".oe-sidewidget-move").toHaveCount(1);
+        expect(".oe-sidewidget-move").toHaveRect({ top: 0, left: 135 });
+    });
 });
