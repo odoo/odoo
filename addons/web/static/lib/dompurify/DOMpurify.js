@@ -1,5 +1,10 @@
 /*! @license DOMPurify 3.2.7 | (c) Cure53 and other contributors | Released under the Apache license 2.0 and Mozilla Public License 2.0 | github.com/cure53/DOMPurify/blob/3.2.7/LICENSE */
 
+/* Odoo backports:
+ * - removed-subtree sanitization:
+ *   52102472d46035857c52df19e44285f8a1e102fc
+ */
+
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
   typeof define === 'function' && define.amd ? define(factory) :
@@ -341,6 +346,10 @@
     const getNextSibling = lookupGetter(ElementPrototype, 'nextSibling');
     const getChildNodes = lookupGetter(ElementPrototype, 'childNodes');
     const getParentNode = lookupGetter(ElementPrototype, 'parentNode');
+    /* Backported from DOMPurify revision
+       52102472d46035857c52df19e44285f8a1e102fc. */
+    const getAttributes = lookupGetter(ElementPrototype, 'attributes');
+    const getNodeType = Node && Node.prototype ? lookupGetter(Node.prototype, 'nodeType') : null;
     // As per issue #47, the web-components registry is inherited by a
     // new document created via createHTMLDocument. As per the spec
     // (http://w3c.github.io/webcomponents/spec/custom/#creating-and-passing-registries)
@@ -774,6 +783,74 @@
         remove(node);
       }
     };
+    /* Backported from DOMPurify revision
+       52102472d46035857c52df19e44285f8a1e102fc. */
+    /**
+     * _stripDisallowedAttributes
+     *
+     * Removes every attribute the active configuration does not allow from a
+     * single element, using the same allowlist as the main attribute pass (so
+     * `on*` handlers go, but no `/^on/` blocklist is introduced). Used only to
+     * neutralise nodes that are being discarded from an in-place tree.
+     *
+     * @param element the element to strip
+     */
+    const _stripDisallowedAttributes = function _stripDisallowedAttributes(element) {
+      const attributes = getAttributes(element);
+      if (!attributes) {
+        return;
+      }
+      for (let i = attributes.length - 1; i >= 0; --i) {
+        const attribute = attributes[i];
+        const name = attribute && attribute.name;
+        if (typeof name !== 'string' || ALLOWED_ATTR[transformCaseFunc(name)]) {
+          continue;
+        }
+        try {
+          element.removeAttribute(name);
+        } catch (_) {
+          /* Clobbered removeAttribute on a doomed node — ignore */
+        }
+      }
+    };
+    /**
+     * _neutralizeSubtree
+     *
+     * Completes the audit-5 F1 fix across every removal path. The KEEP_CONTENT
+     * move-hoist neutralises only disallowed-tag removals; clobber, mXSS-canary,
+     * namespace, comment, processing-instruction and KEEP_CONTENT:false removals
+     * all drop their subtree wholesale via `_forceRemove`. On the IN_PLACE path
+     * those dropped nodes are detached from the caller's LIVE tree but a
+     * handler-bearing original among them (an `<img onerror>`/`<video>` that was
+     * loading) keeps its queued resource event, which fires in page scope after
+     * sanitize returns. This walks a removed subtree and strips every attribute
+     * the active configuration does not allow — so `on*` handlers are cancelled
+     * through the SAME allowlist that governs kept nodes, not a separate `/^on/`
+     * blocklist. Run synchronously before sanitize returns, i.e. before any
+     * queued event can fire. Hook-free by design: these nodes leave the output,
+     * so firing attribute hooks for them would be surprising. Clobber-safe reads;
+     * a doomed clobbered node may shadow `removeAttribute` (its own attributes are
+     * irrelevant — it is discarded — while its non-clobbered descendants, e.g.
+     * the `<img>`, are reached and scrubbed).
+     *
+     * @param root the root of a removed subtree to neutralise
+     */
+    const _neutralizeSubtree = function _neutralizeSubtree(root) {
+      const stack = [root];
+      while (stack.length > 0) {
+        const node = stack.pop();
+        const nodeType = getNodeType ? getNodeType(node) : node.nodeType;
+        if (nodeType === NODE_TYPE.element) {
+          _stripDisallowedAttributes(node);
+        }
+        const childNodes = getChildNodes(node);
+        if (childNodes) {
+          for (let i = childNodes.length - 1; i >= 0; --i) {
+            stack.push(childNodes[i]);
+          }
+        }
+      }
+    };
     /**
      * _removeAttribute
      *
@@ -947,10 +1024,33 @@
           const childNodes = getChildNodes(currentNode) || currentNode.childNodes;
           if (childNodes && parentNode) {
             const childCount = childNodes.length;
+            /* Backported from DOMPurify revision
+               52102472d46035857c52df19e44285f8a1e102fc. */
+            /* In-place: hoist the *original* children so the iterator visits
+               and sanitises them through the same allowlist pass as every other
+               node. The caller built the tree in the live document, so the
+               originals carry already-queued resource events (`<img onerror>`,
+               `<video>`/`<audio>` error, lazy/`onload`, …); cloning would leave
+               those originals detached but still armed, firing in page scope
+               while the returned tree looked clean. Moving is safe in-place: the
+               root is pre-validated as an allowed tag and so is never the node
+               being removed, which keeps `parentNode` inside the iterator root
+               and the relocated child inside the serialised tree.
+
+               Otherwise (string / DOM-copy paths): clone. The iterator is rooted
+               at — and the result serialised from — `body`, so a restrictive
+               ALLOWED_TAGS that removes `body` itself must leave its content in
+               place, which only cloning does; and those paths parse into an
+               inert document, so their discarded originals never had a queued
+               event to neutralise.
+
+               `childNodes` is live; a tail-to-head walk keeps `childNodes[i]`
+               valid whether we move (drops the trailing entry) or clone (leaves
+               the list intact). */
             for (let i = childCount - 1; i >= 0; --i) {
-              const childClone = cloneNode(childNodes[i], true);
-              childClone.__removalCount = (currentNode.__removalCount || 0) + 1;
-              parentNode.insertBefore(childClone, getNextSibling(currentNode));
+              const child = IN_PLACE ? childNodes[i] : cloneNode(childNodes[i], true);
+              child.__removalCount = (currentNode.__removalCount || 0) + 1;
+              parentNode.insertBefore(child, getNextSibling(currentNode));
             }
           }
         }
@@ -1280,6 +1380,20 @@
       }
       /* If we sanitized `dirty` in-place, return it. */
       if (IN_PLACE) {
+        /* Backported from DOMPurify revision
+           52102472d46035857c52df19e44285f8a1e102fc. */
+        /* Fail-closed completion of the audit-5 F1 fix: every node removed from
+           the caller's live tree is detached but may still hold a queued
+           resource-event handler that fires in page scope after we return. The
+           move-hoist covers only disallowed-tag KEEP_CONTENT removals; strip the
+           non-allow-listed attributes off every other removed subtree (clobber,
+           mXSS, namespace, comments, KEEP_CONTENT:false, …) so those handlers are
+           cancelled before any event can fire. Runs synchronously, pre-return. */
+        arrayForEach(DOMPurify.removed, entry => {
+          if (entry.element) {
+            _neutralizeSubtree(entry.element);
+          }
+        });
         return dirty;
       }
       /* Return sanitized string or DOM */
