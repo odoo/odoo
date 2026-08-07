@@ -103,28 +103,28 @@ class PurchaseOrder(models.Model):
 class PurchaseOrderLine(models.Model):
     _inherit = 'purchase.order.line'
 
+    requisition_line_ids = fields.Many2one('purchase.requisition.line', string='Blanket Order Line')
+
     def _compute_price_unit_and_date_planned_and_name(self):
         po_lines_without_requisition = self.env['purchase.order.line']
         for pol in self:
-            if pol.display_type or pol.product_id.id not in pol.order_id.requisition_id.line_ids.product_id.ids:
+            if pol.display_type or not pol.requisition_line_ids:
                 po_lines_without_requisition |= pol
                 continue
 
-            line = None
-            # Match the requisition line with exact UoM first, then product-only as fallback.
-            for req_line in pol.order_id.requisition_id.line_ids:
-                if req_line.product_id == pol.product_id:
-                    line = req_line
-                    if req_line.uom_id == pol.uom_id:
-                        break
-
+            line = pol.requisition_line_ids
             pol.price_unit = line.uom_id._compute_price(line.price_unit, pol.uom_id)
             partner = pol.order_id.partner_id or pol.order_id.requisition_id.vendor_id
             if pol.selected_seller_id or not pol.date_planned:
                 pol.date_planned = pol._get_date_planned(pol.selected_seller_id)
             product_ctx = {'seller_id': pol.selected_seller_id.id, 'lang': get_lang(pol.env, partner.lang).code}
-            name = pol._get_product_purchase_description(pol.product_id.with_context(product_ctx))
+
+            # Initialized with empty string to act as a newline prefix during .join()
+            descriptions = ['']
+            descriptions += pol._get_product_purchase_description(pol.product_id.with_context(product_ctx)).split('\n')[1:]
+            if line.name:
+                descriptions += [d for d in line.name.split('\n')[1:] if d]
             if line.product_description_variants:
-                name += '\n' + line.product_description_variants
-            pol.name = name
+                descriptions.append(line.product_description_variants)
+            pol.name = pol.product_id.with_context(product_ctx).display_name + '\n'.join(descriptions)
         super(PurchaseOrderLine, po_lines_without_requisition)._compute_price_unit_and_date_planned_and_name()
