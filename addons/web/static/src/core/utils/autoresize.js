@@ -1,4 +1,4 @@
-import { useLayoutEffect } from "@web/owl2/utils";
+import { onMounted, onPatched, onWillUnmount } from "@odoo/owl";
 import { memoize } from "@web/core/utils/functions";
 import { resolveRefEl } from "@web/core/utils/ref_utils";
 
@@ -14,46 +14,48 @@ import { resolveRefEl } from "@web/core/utils/ref_utils";
  */
 export function useAutoresize(ref, options = {}) {
     let wasProgrammaticallyResized = false;
-    let resize = null;
-    useLayoutEffect(
-        (el) => {
-            if (el) {
-                resize = (programmaticResize = false) => {
-                    wasProgrammaticallyResized = programmaticResize;
-                    if (options.ignoreIfEmpty && !el.value) {
-                        return;
-                    }
-                    if (el instanceof HTMLInputElement) {
-                        resizeInput(el);
-                    } else {
-                        resizeTextArea(el, options);
-                    }
-                    options.onResize?.(el, options);
-                };
-                el.addEventListener("input", () => resize(true));
-                const resizeObserver = new ResizeObserver(() => {
-                    // This ensures that the resize function is not called twice on input or page load
-                    if (wasProgrammaticallyResized) {
-                        wasProgrammaticallyResized = false;
-                        return;
-                    }
-                    resize();
-                });
-                resizeObserver.observe(el);
-                return () => {
-                    el.removeEventListener("input", resize);
-                    resizeObserver.unobserve(el);
-                    resizeObserver.disconnect();
-                    resize = null;
-                };
-            }
-        },
-        () => [resolveRefEl(ref)]
-    );
-    useLayoutEffect(() => {
-        if (resize) {
-            resize(true);
+    let resizeObserver = null;
+    let observedEl = null;
+    function resize(programmaticResize = false) {
+        const el = resolveRefEl(ref);
+        if (!el) {
+            return;
         }
+        wasProgrammaticallyResized = programmaticResize;
+        if (options.ignoreIfEmpty && !el.value) {
+            return;
+        }
+        if (el instanceof HTMLInputElement) {
+            resizeInput(el);
+        } else {
+            resizeTextArea(el, options);
+        }
+        options.onResize?.(el, options);
+    }
+    const onInput = () => resize(true);
+    onMounted(() => {
+        observedEl = resolveRefEl(ref);
+        if (!observedEl) {
+            return;
+        }
+        observedEl.addEventListener("input", onInput);
+        resizeObserver = new ResizeObserver(() => {
+            // This ensures that the resize function is not called twice on input or page load
+            if (wasProgrammaticallyResized) {
+                wasProgrammaticallyResized = false;
+                return;
+            }
+            resize();
+        });
+        resizeObserver.observe(observedEl);
+        resize(true);
+    });
+    onPatched(() => resize(true));
+    onWillUnmount(() => {
+        observedEl?.removeEventListener("input", onInput);
+        resizeObserver?.disconnect();
+        resizeObserver = null;
+        observedEl = null;
     });
 }
 
