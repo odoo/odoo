@@ -8,13 +8,12 @@ import {
     proxy,
     status,
     toRaw,
-    untrack,
     useEffect,
 } from "@odoo/owl";
 import { localization } from "@web/core/l10n/localization";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { useDebounced } from "@web/core/utils/timing";
-import { useComponent, useEnv, useLayoutEffect, useSubEnv } from "@web/owl2/utils";
+import { useComponent, useEnv, useSubEnv } from "@web/owl2/utils";
 import { BuilderAction } from "./builder_action";
 
 // Selectors for special cases where snippet options are bound to parent
@@ -1096,24 +1095,24 @@ export function useVisibilityObserver(contentRef, callback) {
     };
 
     const observer = new MutationObserver(applyVisibility);
-    useLayoutEffect(
-        (contentEl) => {
-            if (!contentEl) {
-                return;
-            }
-            applyVisibility();
-            observer.observe(contentEl, {
-                subtree: true,
-                attributes: true,
-                childList: true,
-                attributeFilter: ["class"],
-            });
-            return () => {
-                observer.disconnect();
-            };
-        },
-        () => [untrack(contentRef)]
-    );
+    useEffect(() => {
+        // Tracked read: re-observes (after the cleanup below disconnects) when
+        // the ref signal changes, including when it is populated on mount.
+        const contentEl = contentRef();
+        if (!contentEl) {
+            return;
+        }
+        applyVisibility();
+        observer.observe(contentEl, {
+            subtree: true,
+            attributes: true,
+            childList: true,
+            attributeFilter: ["class"],
+        });
+        return () => {
+            observer.disconnect();
+        };
+    });
 }
 
 export function useInputDebouncedCommit(ref) {
