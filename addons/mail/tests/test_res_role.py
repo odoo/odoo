@@ -9,8 +9,10 @@ class TestResRole(MailCommon, HttpCase):
     def test_post_mention_role(self):
         """Test mention with role"""
         contact = self.env["res.partner"].create({"name": "A contact"})
-        role_discuss = self.env["res.role"].create({"name": "rd-Discuss"})
-        role_js = self.env["res.role"].create({"name": "rd-JS"})
+        role_discuss, role_js = self.env["res.role"].create([
+            {"name": "rd-Discuss"},
+            {"name": "rd-JS"},
+        ])
         user_discuss = mail_new_test_user(
             self.env,
             login="user_d",

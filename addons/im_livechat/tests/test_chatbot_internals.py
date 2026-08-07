@@ -387,7 +387,7 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
         bob_user = new_test_user(
             self.env, login="bob_user", groups="im_livechat.im_livechat_group_user,base.group_user"
         )
-        chatbot_no_operator = self.env["chatbot.script"].create(
+        chatbot_no_operator, chatbot_operator = self.env["chatbot.script"].create([
             {
                 "title": "Chatbot operators not available",
                 "script_step_ids": [
@@ -398,9 +398,7 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
                         }
                     )
                 ],
-            }
-        )
-        chatbot_operator = self.env["chatbot.script"].create(
+            },
             {
                 "title": "Chatbot operators available",
                 "script_step_ids": [
@@ -411,8 +409,8 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
                         }
                     )
                 ],
-            }
-        )
+            },
+        ])
         self.livechat_channel.user_ids += bob_user
         self.livechat_channel.rule_ids = self.env["im_livechat.channel.rule"].create(
             [

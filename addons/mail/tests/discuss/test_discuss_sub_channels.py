@@ -104,8 +104,10 @@ class TestDiscussSubChannels(HttpCase):
             sub_channel.from_message_id = parent.message_ids[0]
 
     def test_06_initial_message_must_belong_to_parent_channel(self):
-        parent = self.env["discuss.channel"].create({"name": "General"})
-        random_channel = self.env["discuss.channel"].create({"name": "Random"})
+        parent, random_channel = self.env["discuss.channel"].create([
+            {"name": "General"},
+            {"name": "Random"},
+        ])
         random_channel.message_post(body="Hello world!")
         with self.assertRaises(
             ValidationError,

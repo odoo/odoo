@@ -21,14 +21,10 @@ class TestMailRenderCommon(common.MailCommon):
         cls.user_admin.write({'lang': 'en_US'})
 
         # test records
-        cls.render_object = cls.env['res.partner'].create({
-            'name': 'TestRecord',
-            'lang': 'en_US',
-        })
-        cls.render_object_fr = cls.env['res.partner'].create({
-            'name': 'Element de Test',
-            'lang': 'fr_FR',
-        })
+        cls.render_object, cls.render_object_fr = cls.env['res.partner'].create([
+            {'name': 'TestRecord', 'lang': 'en_US'},
+            {'name': 'Element de Test', 'lang': 'fr_FR'},
+        ])
 
         # some jinja templates
         cls.base_inline_template_bits = [

@@ -48,8 +48,10 @@ class TestStoreVersioning(HttpCase, MailCase):
 
     def test_store_versioning_tracks_updated_fields(self):
         self.authenticate("admin_user", "admin_user")
-        bob = self.env["res.partner"].create({"name": "bob"})
-        alice = self.env["res.partner"].create({"name": "alice"})
+        bob, alice = self.env["res.partner"].create([
+            {"name": "bob"},
+            {"name": "alice"},
+        ])
         general = self.env["discuss.channel"].create({"name": "general"})
         result = self.make_jsonrpc_request(
             "/store/version/write_fields",

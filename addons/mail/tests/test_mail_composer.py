@@ -350,8 +350,10 @@ class TestMailComposerUI(MailCommon, HttpCase):
             }
             for data in template_data
         ])
-        partner = self.env["res.partner"].create({"name": "Jane", "email": "jane@example.com"})
-        user_partner = self.env["res.partner"].create({"name": "Not A Demo User", "email":  "NotADemoUser@mail.com"})
+        partner, user_partner = self.env["res.partner"].create([
+            {"name": "Jane", "email": "jane@example.com"},
+            {"name": "Not A Demo User", "email": "NotADemoUser@mail.com"},
+        ])
         user = self.env["res.users"].create({
             "name": "Not A Demo User",
             "login": "nadu",

@@ -7,8 +7,10 @@ from odoo.addons.mail.tests.common import MailCommon, mail_new_test_user
 class TestDiscussAction(HttpCase, MailCommon):
     def test_go_back_to_thread_from_breadcrumbs(self):
         bob_user = mail_new_test_user(self.env, "bob_user")
-        channel_a = self.env["discuss.channel"].with_user(bob_user).create({"name": "Channel A"})
-        self.env["discuss.channel"].with_user(bob_user).create({"name": "Channel B"})
+        channel_a, _channel_b = self.env["discuss.channel"].with_user(bob_user).create([
+            {"name": "Channel A"},
+            {"name": "Channel B"},
+        ])
         self.start_tour(
             f"/odoo/discuss?active_id=discuss.channel_{channel_a.id}",
             "discuss_go_back_to_thread_from_breadcrumbs.js",
@@ -16,8 +18,10 @@ class TestDiscussAction(HttpCase, MailCommon):
         )
 
     def test_join_call_with_client_action(self):
-        inviting_user = self.env['res.users'].sudo().create({'name': "Inviting User", 'login': 'inviting'})
-        invited_user = self.env['res.users'].sudo().create({'name': "Invited User", 'login': 'invited'})
+        inviting_user, invited_user = self.env['res.users'].sudo().create([
+            {'name': "Inviting User", 'login': 'inviting'},
+            {'name': "Invited User", 'login': 'invited'},
+        ])
         channel = self.env['discuss.channel'].with_user(inviting_user)._get_or_create_chat(partners_to=invited_user.partner_id.ids)
         channel_member = channel.sudo().channel_member_ids.filtered(
             lambda channel_member: channel_member.partner_id == inviting_user.partner_id)

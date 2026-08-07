@@ -518,7 +518,6 @@ class TestChannelRTC(MailCommon, HttpCase):
 
     @users("employee")
     @mute_logger("odoo.models.unlink")
-    @freeze_time("2023-03-15 12:34:56")
     def test_20_join_call_should_cancel_pending_invitations(self):
         self.member_of_employee_in_group_a.sudo()._rtc_join_call()
 
@@ -688,7 +687,6 @@ class TestChannelRTC(MailCommon, HttpCase):
 
     @users("employee")
     @mute_logger("odoo.models.unlink")
-    @freeze_time("2023-03-15 12:34:56")
     def test_21_leave_call_should_cancel_pending_invitations(self):
         self.channel_group_a._add_members(guests=self.guest)
         self.member_of_employee_in_group_a.sudo()._rtc_join_call()

@@ -471,8 +471,10 @@ class TestDiscussTools(MailCase):
         )
 
     def test_480_many_fake_field_per_record(self):
-        general = self.env["discuss.channel"].create({"name": "General"})
-        holiday = self.env["discuss.channel"].create({"name": "Holiday"})
+        general, holiday = self.env["discuss.channel"].create([
+            {"name": "General"},
+            {"name": "Holiday"},
+        ])
         store = Store()
         store.add(
             general | holiday,
