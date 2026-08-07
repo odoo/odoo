@@ -179,7 +179,7 @@ class PurchaseRequisitionLine(models.Model):
         string='Unit Price', min_display_digits='Product Price', default=0.0,
         compute="_compute_price_unit", readonly=False, store=True)
     price_subtotal = fields.Monetary(compute='_compute_price_subtotal', string='Amount', store=True)
-    qty_ordered = fields.Float(compute='_compute_ordered_qty', string='Ordered')
+    qty_ordered = fields.Float(compute='_compute_qty_ordered', string='Ordered')
     requisition_id = fields.Many2one('purchase.requisition', required=True, string='Purchase Agreement', ondelete='cascade', index=True)
     currency_id = fields.Many2one('res.currency', related='requisition_id.currency_id')
     company_id = fields.Many2one('res.company', related='requisition_id.company_id', string='Company', store=True, readonly=True)
@@ -224,25 +224,21 @@ class PurchaseRequisitionLine(models.Model):
                 elif line in purchase_requisition_lines:
                     line.parent_id = last_subsection or last_section
 
-    @api.depends('requisition_id.purchase_ids.state')
-    def _compute_ordered_qty(self):
-        line_found = defaultdict(set)
-        for line in self:
-            if line.display_type:
-                line.qty_ordered = 0
-                continue
-            total = 0.0
-            for po in line.requisition_id.purchase_ids.filtered(lambda purchase_order: purchase_order.state == 'purchase'):
-                for po_line in po.order_line.filtered(lambda order_line: order_line.product_id == line.product_id):
-                    if po_line.uom_id != line.uom_id:
-                        total += po_line.uom_id._compute_quantity(po_line.product_qty, line.uom_id)
-                    else:
-                        total += po_line.product_qty
-            if line.product_id not in line_found[line.requisition_id]:
-                line.qty_ordered = total
-                line_found[line.requisition_id].add(line.product_id)
-            else:
-                line.qty_ordered = 0
+    @api.depends('display_type', 'uom_id', 'product_id', 'price_unit', 'requisition_id.purchase_ids.state',
+        'requisition_id.purchase_ids.order_line.product_qty', 'requisition_id.purchase_ids.order_line.requisition_line_id',
+    )
+    def _compute_qty_ordered(self):
+        qty_ordered_by_req_line = defaultdict(float)
+
+        for pol in self.requisition_id.purchase_ids.filtered(lambda po: po.state == 'purchase').order_line:
+            if req_line := pol._get_matching_requisition_line():
+                if pol.uom_id != req_line.uom_id:
+                    qty_ordered_by_req_line[req_line] += pol.uom_id._compute_quantity(pol.product_qty, req_line.uom_id)
+                else:
+                    qty_ordered_by_req_line[req_line] += pol.product_qty
+
+        for req_line in self:
+            req_line.qty_ordered = qty_ordered_by_req_line[req_line]
 
     @api.depends('product_id')
     def _compute_uom_id(self):
@@ -365,13 +361,20 @@ class PurchaseRequisitionLine(models.Model):
                 'name': self.name,
                 'sequence': self.sequence,
             }
+
+        description = []
+        if self.name:
+            description += self.name.split('\n')
         if self.product_description_variants:
-            name += '\n' + self.product_description_variants
+            description.append(self.product_description_variants)
+        name += ('\n' if name else '') + '\n'.join(description)
+
         date_planned = fields.Datetime.now()
         if self.requisition_id.date_start:
             date_planned = max(date_planned, fields.Datetime.to_datetime(self.requisition_id.date_start))
         return {
             'name': name,
+            'requisition_line_id': self.id,
             'product_id': self.product_id.id,
             'uom_id': self.uom_id.id,
             'product_qty': product_qty,

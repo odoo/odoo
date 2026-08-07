@@ -57,9 +57,7 @@ class PurchaseOrder(models.Model):
                 lang=partner.lang or self.env.user.lang,
                 partner_id=partner.id
             )
-            name = product_lang.display_name
-            if product_lang.description_purchase:
-                name += '\n' + product_lang.description_purchase
+            name = product_lang.description_purchase or ""
 
             # Compute taxes
             taxes_ids = fpos.map_tax(line.product_id.supplier_taxes_id.filtered(lambda tax: tax.company_id in requisition.company_id.parent_ids)).ids
@@ -103,28 +101,66 @@ class PurchaseOrder(models.Model):
 class PurchaseOrderLine(models.Model):
     _inherit = 'purchase.order.line'
 
+    requisition_line_id = fields.Many2one('purchase.requisition.line', compute="_compute_requisition_line_id",
+        string='Agreement Line', copy=False, readonly=False, store=True)
+
+    @api.depends('product_id')
+    def _compute_requisition_line_id(self):
+        for pol in self:
+            if pol.requisition_line_id and pol.requisition_line_id.product_id.id != pol.product_id.id:
+                req_line = pol._get_matching_requisition_line()
+                if req_line:
+                    pol.requisition_line_id = req_line.id
+                else:
+                    pol.requisition_line_id = False
+            else:
+                pol.requisition_line_id = pol.requisition_line_id
+
     def _compute_price_unit_and_date_planned_and_name(self):
         po_lines_without_requisition = self.env['purchase.order.line']
         for pol in self:
-            if pol.display_type or pol.product_id.id not in pol.order_id.requisition_id.line_ids.product_id.ids:
+            line = pol._get_matching_requisition_line()
+            if not line:
                 po_lines_without_requisition |= pol
                 continue
-
-            line = None
-            # Match the requisition line with exact UoM first, then product-only as fallback.
-            for req_line in pol.order_id.requisition_id.line_ids:
-                if req_line.product_id == pol.product_id:
-                    line = req_line
-                    if req_line.uom_id == pol.uom_id:
-                        break
 
             pol.price_unit = line.uom_id._compute_price(line.price_unit, pol.uom_id)
             partner = pol.order_id.partner_id or pol.order_id.requisition_id.vendor_id
             if pol.selected_seller_id or not pol.date_planned:
                 pol.date_planned = pol._get_date_planned(pol.selected_seller_id._get_seller_info())
             product_ctx = {'seller_id': pol.selected_seller_id.id, 'lang': get_lang(pol.env, partner.lang).code}
-            name = pol._get_product_purchase_description(pol.product_id.with_context(product_ctx))
+
+            descriptions = []
+            product_purchase_description = pol._get_product_purchase_description(pol.product_id.with_context(product_ctx))
+            if product_purchase_description:
+                descriptions += product_purchase_description.split('\n')
+            if line.name:
+                descriptions += line.name.split('\n')
             if line.product_description_variants:
-                name += '\n' + line.product_description_variants
-            pol.name = name
+                descriptions.append(line.product_description_variants)
+            pol.name = '\n'.join(descriptions)
         super(PurchaseOrderLine, po_lines_without_requisition)._compute_price_unit_and_date_planned_and_name()
+
+    def _get_matching_requisition_line(self):
+        self.ensure_one()
+        if self.display_type:
+            return False
+        if self.requisition_line_id:
+            return self.requisition_line_id
+        elif self.order_id.requisition_id:
+            price_match, product_match = False, False
+            for req_line in self.order_id.requisition_id.line_ids:
+                if req_line.product_id != self.product_id:
+                    continue
+                if req_line.uom_id == self.uom_id and req_line.price_unit == self.price_unit:
+                    self.requisition_line_id = req_line.id
+                    return req_line
+                elif not price_match and (req_price := req_line.uom_id._compute_price(req_line.price_unit, self.uom_id)) \
+                        and not self.currency_id.compare_amounts(req_price, self.price_unit):
+                    price_match = req_line
+                elif not product_match:
+                    product_match = req_line
+            if match := (price_match or product_match):
+                self.requisition_line_id = match.id
+            return match
+        return False
