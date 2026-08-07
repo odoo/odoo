@@ -82,7 +82,6 @@ export class KanbanRecord extends CardRenderer {
 
     setup() {
         super.setup();
-
         this.LONG_TOUCH_THRESHOLD = this.props.canResequence ? 600 : TOUCH_SELECTION_THRESHOLD;
         this.longTouchTimer = null;
         this.touchStartMs = 0;

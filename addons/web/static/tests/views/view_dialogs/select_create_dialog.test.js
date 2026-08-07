@@ -1091,3 +1091,36 @@ test("SelectCreateDialog list: control panel stays visible when list overflows",
         message: "Scroll belongs to the renderer (doesn't include the control panel)",
     });
 });
+
+test.tags("mobile");
+test("dropdown menu is hidden in SelectCreateDialog", async () => {
+    Product._views["kanban"] = /* xml */ `
+        <kanban>
+            <templates>
+                <t t-name="menu">
+                    <a role="menuitem" type="open" class="dropdown-item">Open</a>
+                </t>
+                <t t-name="card">
+                    <field name="name"/>
+                </t>
+            </templates>
+        </kanban>
+    `;
+    Product._views["search"] = /* xml */ `<search/>`;
+
+    await mountView({
+        type: "form",
+        resModel: "sale_order_line",
+        arch: `
+            <form>
+                <field name="product_id"/>
+            </form>`,
+    });
+
+    await contains('.o_field_widget[name="product_id"] input').click();
+
+    expect(".o_dialog").toHaveCount(1);
+    expect(".o_dialog .o_kanban_view .o_kanban_record:not(.o_kanban_ghost)").toHaveCount(1);
+
+    expect(".o_kanban_record:eq(0) .o_dropdown_kanban .dropdown-toggle").toHaveCount(0);
+});
