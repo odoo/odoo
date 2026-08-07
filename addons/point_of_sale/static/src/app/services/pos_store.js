@@ -2610,6 +2610,7 @@ export class PosStore extends WithLazyGetterTrap {
             !paymentLines.length ||
             (!order.is_refund &&
                 paymentLines.length === 1 &&
+                paymentLines[0].payment_method_id.type === "pay_later" &&
                 this.currency.isNegative(paymentLines[0].amount))
         ) {
             opts.fastPaymentMethod = this.config.payment_method_ids[0];
