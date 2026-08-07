@@ -4,6 +4,7 @@ import contextlib
 import inspect
 import io
 import logging
+import re
 import socket
 import threading
 import time
@@ -407,8 +408,11 @@ def init_sentry(server_url: str = ""):
         host = urlsplit(server_url).hostname
         if host and (
             ip_address(host).is_private
-            or ("runbot" in host and host.endswith(".odoo.com"))
             or host.endswith(".dev.odoo.com")  # staging dbs
+            or (
+                host.endswith(".odoo.com")
+                and re.search(r"\.runbot\d+\.|-support-\d{8}-", host)  # runbot or support dbs
+            )
         ):
             _logger.info("Local/dev database, not initializing Sentry")
             return
