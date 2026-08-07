@@ -685,17 +685,18 @@ class AccountMove(models.Model):
         """ Returns True if something goes wrong """
         service = KsefApiService(self.env.company)
 
-        if error := self._fetch_bills_metadata(service):
-            return self._handle_download_bills_from_ksef_error(error)
+        # Deprecated by the batch download (.zip)
+        # if error := self._fetch_bills_metadata(service):
+        #     return self._handle_download_bills_from_ksef_error(error)
 
-        moves_to_process = self.search([
-            *self._check_company_domain(self.env.company),
-            ('move_type', '=', 'in_invoice'),
-            ('l10n_pl_edi_number', '!=', False),
-            ('l10n_pl_edi_status', '=', 'fetch_ready'),
-        ])
-        if error := self._fetch_bills_data(service, moves_to_process):
-            return self._handle_download_bills_from_ksef_error(error)
+        # moves_to_process = self.search([
+        #     *self._check_company_domain(self.env.company),
+        #     ('move_type', '=', 'in_invoice'),
+        #     ('l10n_pl_edi_number', '!=', False),
+        #     ('l10n_pl_edi_status', '=', 'fetch_ready'),
+        # ])
+        # if error := self._fetch_bills_data(service, moves_to_process):
+        #     return self._handle_download_bills_from_ksef_error(error)
 
     def _handle_download_bills_from_ksef_error(self, error):
         if not (delay := error.get('retry_after')):
@@ -706,116 +707,119 @@ class AccountMove(models.Model):
         return True
 
     def _get_next_processing_date_interval(self, tomorrow, last_date_to=None):
-        if last_date_to:
-            date_from = last_date_to
-        else:
-            domain = [
-                *self._check_company_domain(self.env.company),
-                ('move_type', '=', 'in_invoice'),
-                ('invoice_date', '!=', False),
-                ('l10n_pl_edi_number', '!=', False),
-            ]
-            if last_processed_move := self.search_fetch(domain, field_names=['invoice_date'], order='invoice_date DESC', limit=1):
-                date_from = fields.Datetime.to_datetime(last_processed_move.invoice_date)
-            else:
-                mandatory_from = "2026-01-31 00:00:00"
-                date_from = fields.Datetime.from_string(mandatory_from)
+        """ Deprecated by the batch download (.zip) """
+        # if last_date_to:
+        #     date_from = last_date_to
+        # else:
+        #     domain = [
+        #         *self._check_company_domain(self.env.company),
+        #         ('move_type', '=', 'in_invoice'),
+        #         ('invoice_date', '!=', False),
+        #         ('l10n_pl_edi_number', '!=', False),
+        #     ]
+        #     if last_processed_move := self.search_fetch(domain, field_names=['invoice_date'], order='invoice_date DESC', limit=1):
+        #         date_from = fields.Datetime.to_datetime(last_processed_move.invoice_date)
+        #     else:
 
-        return date_from, min(date_from + relativedelta(months=2), tomorrow)
+        # return date_from, min(date_from + relativedelta(months=2), tomorrow)
 
     def _fetch_invoice_to_be_processed_numbers(self, service):
-        tomorrow = fields.Datetime.now() + relativedelta(days=1)
-        date_from, date_to = self._get_next_processing_date_interval(tomorrow)
-        page_offset = 0
-        page_size = 200
-        has_more = True
-        result = set()
-        while has_more:
-            payload = {
-                'subjectType': 'Subject2',
-                'dateRange': {
-                    'dateType': 'Invoicing',
-                    'from': date_from.isoformat(),
-                    'to': date_to.isoformat(),
-                }
-            }
-            response = service.query_invoice_metadata(payload, page_size, page_offset)
-            if error := response.get('error'):
-                return error, result
+        """ Deprecated by the batch download (.zip) """
+        # tomorrow = fields.Datetime.now() + relativedelta(days=1)
+        # date_from, date_to = self._get_next_processing_date_interval(tomorrow)
+        # page_offset = 0
+        # page_size = 200
+        # has_more = True
+        # result = set()
+        # while has_more:
+        #     payload = {
+        #         'subjectType': 'Subject2',
+        #         'dateRange': {
+        #             'dateType': 'Invoicing',
+        #             'from': date_from.isoformat(),
+        #             'to': date_to.isoformat(),
+        #         }
+        #     }
+        #     response = service.query_invoice_metadata(payload, page_size, page_offset)
+        #     if error := response.get('error'):
+        #         return error, result
 
-            result |= {invoice['ksefNumber'] for invoice in response.get('invoices', [])}
-            if date_to < tomorrow:
-                date_from, date_to = self._get_next_processing_date_interval(tomorrow, last_date_to=date_to)
-                has_more = response['hasMore']
-                page_offset += 1
-        return False, result
+        #     result |= {invoice['ksefNumber'] for invoice in response.get('invoices', [])}
+        #     if date_to < tomorrow:
+        #         date_from, date_to = self._get_next_processing_date_interval(tomorrow, last_date_to=date_to)
+        #         has_more = response['hasMore']
+        #         page_offset += 1
+        # return False, result
 
     def _create_moves_for_download(self, numbers):
-        moves = self.create([
-            {
-                'move_type': 'in_invoice',
-                'l10n_pl_edi_number': number,
-                'l10n_pl_edi_status': 'fetch_ready',
-            }
-            for number in numbers
-        ])
-        moves._message_log_batch(bodies={
-            move_id: self.env._("Fetching Bill from KSeF ...")
-            for move_id in moves.ids
-        })
-        return moves
+        """ Deprecated by the batch download (.zip) """
+        # moves = self.create([
+        #     {
+        #         'move_type': 'in_invoice',
+        #         'l10n_pl_edi_number': number,
+        #         'l10n_pl_edi_status': 'fetch_ready',
+        #     }
+        #     for number in numbers
+        # ])
+        # moves._message_log_batch(bodies={
+        #     move_id: self.env._("Fetching Bill from KSeF ...")
+        #     for move_id in moves.ids
+        # })
+        # return moves
 
     def _fetch_bills_metadata(self, service):
-        error, to_download_numbers = self._fetch_invoice_to_be_processed_numbers(service)
-        if error:
-            return error
+        """ Deprecated by the batch download (.zip) """
+        # error, to_download_numbers = self._fetch_invoice_to_be_processed_numbers(service)
+        # if error:
+        #     return error
 
-        already_downloaded_moves = self.env['account.move'].search_fetch([
-            *self._check_company_domain(self.env.company),
-            ('move_type', '=', 'in_invoice'),
-            ('l10n_pl_edi_number', 'in', to_download_numbers),
-        ], field_names=['l10n_pl_edi_number'])
-        to_download_numbers -= already_downloaded_moves.mapped('l10n_pl_edi_number')
+        # already_downloaded_moves = self.env['account.move'].search_fetch([
+        #     *self._check_company_domain(self.env.company),
+        #     ('move_type', '=', 'in_invoice'),
+        #     ('l10n_pl_edi_number', 'in', to_download_numbers),
+        # ], field_names=['l10n_pl_edi_number'])
+        # to_download_numbers -= already_downloaded_moves.mapped('l10n_pl_edi_number')
 
-        self._create_moves_for_download(to_download_numbers)
+        # self._create_moves_for_download(to_download_numbers)
 
-        return False
+        # return False
 
     def _fetch_bill_data(self, service, bill):
         """ Deprecated by the batch download (.zip) """
-        invoice_nr = bill.l10n_pl_edi_number
-        response = service.get_invoice_by_ksef_number(invoice_nr)
-        try:
-            if error := response.get('error'):
-                return error
+        # invoice_nr = bill.l10n_pl_edi_number
+        # response = service.get_invoice_by_ksef_number(invoice_nr)
+        # try:
+        #     if error := response.get('error'):
+        #         return error
 
-            bill_data = self.l10n_pl_edi_get_ksef_bill_vals_from_xml(response['xml_content'])
-            with mute_logger('odoo.sql_db'), self.env.cr.savepoint():
-                bill.write({
-                    'l10n_pl_edi_status': 'fetched',
-                    'l10n_pl_edi_header': 'Fetched From KSeF',
-                    **bill_data
-                })
-                bill.message_post(body=self.env._("Bill Fetched Successfully from KSeF"))
-        except UserError as e:
-            bill.l10n_pl_edi_status = 'fetch_failed'
-            bill.message_post(body=self.env._("KSeF XML failed. Reason: %s", str(e)))
-        except Exception:  # noqa: BLE001
-            bill.l10n_pl_edi_status = 'fetch_failed'
-            bill.message_post(body=self.env._("KSeF XML failed. Something went wrong"))
-        finally:
-            if response.get('xml_content'):
-                self.env['ir.attachment'].sudo().create({
-                    'description': self.env._('KSeF Fetched Invoice XML'),
-                    'name': f"KSeF-{bill.l10n_pl_edi_number.replace('/', '_')}.xml",
-                    'type': 'binary',
-                    'mimetype': 'application/xml',
-                    'raw': response['xml_content'],
-                    'res_id': bill.id,
-                    'res_model': bill._name,
-                })
+        #     bill_data = self.l10n_pl_edi_get_ksef_bill_vals_from_xml(response['xml_content'])
+        #     with mute_logger('odoo.sql_db'), self.env.cr.savepoint():
+        #         bill.write({
+        #             'l10n_pl_edi_status': 'fetched',
+        #             'l10n_pl_edi_header': 'Fetched From KSeF',
+        #             **bill_data
+        #         })
+        #         bill.message_post(body=self.env._("Bill Fetched Successfully from KSeF"))
+        # except UserError as e:
+        #     bill.l10n_pl_edi_status = 'fetch_failed'
+        #     bill.message_post(body=self.env._("KSeF XML failed. Reason: %s", str(e)))
+        # except Exception:  # noqa: BLE001
+        #     bill.l10n_pl_edi_status = 'fetch_failed'
+        #     bill.message_post(body=self.env._("KSeF XML failed. Something went wrong"))
+        # finally:
+        #     if response.get('xml_content'):
+        #         self.env['ir.attachment'].sudo().create({
+        #             'description': self.env._('KSeF Fetched Invoice XML'),
+        #             'name': f"KSeF-{bill.l10n_pl_edi_number.replace('/', '_')}.xml",
+        #             'type': 'binary',
+        #             'mimetype': 'application/xml',
+        #             'raw': response['xml_content'],
+        #             'res_id': bill.id,
+        #             'res_model': bill._name,
+        #         })
 
     def _fetch_bills_data(self, service, bills_to_fetch):
+        """ Deprecated by the batch download (.zip) """
         # Old method
         # for bill in bills_to_fetch:
         #     if error := self._fetch_bill_data(service, bill):
