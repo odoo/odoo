@@ -14,3 +14,11 @@ class AccountMove(models.Model):
         if self._l10n_fr_pdp_reports_pos_is_transaction_entry():
             return None
         return super()._l10n_fr_pdp_get_matched_transactions()
+
+    def _need_ubl_cii_xml(self, ubl_cii_format):
+        needs_xml = super()._need_ubl_cii_xml(ubl_cii_format)
+        if needs_xml and self.sudo().pos_order_ids and ubl_cii_format == 'ubl_21_fr':
+            _, errors = self.env['res.partner']._get_edi_builder(ubl_cii_format)._export_invoice(self)
+            if errors:
+                return False
+        return needs_xml
