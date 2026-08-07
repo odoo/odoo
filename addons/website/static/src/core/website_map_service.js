@@ -10,6 +10,7 @@ export const websiteMapService = {
         const notification = deps["notification"];
         let gmapAPIKeyProm;
         let gmapAPILoading;
+        let bootstrapLoadedKey;
         return {
             /**
              * @param {boolean} [refetch=false]
@@ -77,16 +78,32 @@ export const websiteMapService = {
              * @param {boolean} [refetch=false]
              */
             async loadGMapAPI(editableMode, refetch) {
-                // Note: only need refetch to reload a configured key and load the
-                // library. If the library was loaded with a correct key and that the
-                // key changes meanwhile... it will not work but we can agree the user
-                // can bother to reload the page at that moment.
+                // Note: only need refetch to reload a configured key and load
+                // the library. If the library was loaded with a correct key and
+                // that the key changes meanwhile... it will not work but we can
+                // agree the user can bother to reload the page when they are
+                // notified.
                 if (refetch || !(await gmapAPILoading)) {
                     gmapAPILoading = (async () => {
                         const key = await this.getGMapAPIKey(refetch);
 
                         if (key) {
-                            this.initGoogleMapAPI(key);
+                            if (bootstrapLoadedKey && bootstrapLoadedKey !== key) {
+                                notification.add(
+                                    _t(
+                                        "Google Maps configuration has changed. Please reload the page for changes to take effect."
+                                    ),
+                                    {
+                                        type: "warning",
+                                        sticky: true,
+                                    }
+                                );
+                                return false;
+                            }
+                            if (!bootstrapLoadedKey) {
+                                this.initGoogleMapAPI(key);
+                                bootstrapLoadedKey = key;
+                            }
                             return key;
                         } else {
                             if (!editableMode && user.isAdmin) {

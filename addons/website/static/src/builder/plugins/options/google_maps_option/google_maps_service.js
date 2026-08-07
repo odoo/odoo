@@ -62,6 +62,7 @@ registry.category("services").add("google_maps", {
         const notification = deps["notification"];
         let gMapsAPIKeyProm;
         let gMapsAPILoading;
+        let bootstrapLoadedKey;
         return {
             /**
              * @param {boolean} [refetch=false]
@@ -83,13 +84,30 @@ registry.category("services").add("google_maps", {
                 // Note: only need refetch to reload a configured key and load
                 // the library. If the library was loaded with a correct key and
                 // that the key changes meanwhile... it will not work but we can
-                // agree the user can bother to reload the page at that moment.
+                // agree the user can bother to reload the page when they are
+                // notified.
                 if (refetch || !gMapsAPILoading) {
                     gMapsAPILoading = new Promise(async (resolve) => {
                         const key = await this.getGMapsAPIKey(refetch);
 
                         if (key) {
-                            initGoogleMapsAPI(key);
+                            if (bootstrapLoadedKey && bootstrapLoadedKey !== key) {
+                                notification.add(
+                                    _t(
+                                        "Google Maps configuration has changed. Please reload the page for changes to take effect."
+                                    ),
+                                    {
+                                        type: "warning",
+                                        sticky: true,
+                                    }
+                                );
+                                resolve(false);
+                                return;
+                            }
+                            if (!bootstrapLoadedKey) {
+                                initGoogleMapsAPI(key);
+                                bootstrapLoadedKey = key;
+                            }
                             resolve(key);
                         } else {
                             if (!editableMode && user.isAdmin) {
