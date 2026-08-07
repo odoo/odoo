@@ -4194,8 +4194,8 @@ ${"            "}
             </tr>
             <tr>
                 <td>14pt MONO TEXT
-                []</td>
-            </tr>
+                </td>
+            <td><p>[]<br></p></td></tr>
         </tbody></table>`,
         });
     });
@@ -4304,8 +4304,8 @@ ${"        "}
                     text on color background</td>
             </tr>
             <tr>
-                <td>14pt MONO TEXT[]</td>
-            </tr>
+                <td>14pt MONO TEXT</td>
+            <td><p>[]<br></p></td></tr>
         </tbody>
     </table>`,
         });
@@ -4433,9 +4433,9 @@ ${"        "}
         </tr>
         <tr>
             <td>
-                14pt MONO TEXT[]
+                14pt MONO TEXT
             </td>
-        </tr>
+        <td><p>[]<br></p></td></tr>
     </tbody></table>`,
         });
     });
