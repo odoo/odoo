@@ -242,3 +242,22 @@ class TestUblImportBis3InvoiceBERetrieveTax(TestUblImportBis3InvoiceBE):
                 },
             ],
         )
+
+    def test_partial_import_tax_from_predicted_account(self):
+        # Create two 21% purchase taxes to establish similarity
+        self.percent_tax(21.0, type_tax_use='purchase')
+        tax_21_2 = self.percent_tax(21.0, type_tax_use='purchase')
+
+        account = self.company_data['default_account_expense'].copy(default={'name': 'expense_predictive'})
+        account.tax_ids = [Command.set(tax_21_2.ids)]
+
+        def patch_retrieve_accounts(_self, collected_values):
+            for line in collected_values['lines_collected_values']:
+                line['account_values']['account'] = account
+        self.patch(self.env.registry['account.edi.xml.ubl_bis3'], '_import_ubl_invoice_retrieve_accounts', patch_retrieve_accounts)
+
+        invoice = self._import_invoice_as_attachment_on(
+            test_name='test_partial_import_tax_manual_tax_amounts',
+            journal=self.company_data['default_journal_purchase'],
+        )
+        self.assertEqual(invoice.invoice_line_ids.tax_ids, tax_21_2)

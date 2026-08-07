@@ -4452,6 +4452,21 @@ class AccountTax(models.Model):
         return html2plaintext(self.description)
 
     @api.model
+    def _import_retrieve_tax_from_account(self, tax_values):
+        account = tax_values.get('account')
+        if not account or not account.tax_ids:
+            return
+
+        fiscal_position = tax_values.get('fiscal_position')
+        taxes = fiscal_position.map_tax(account.tax_ids) if fiscal_position else account.tax_ids
+        if taxes:
+            return {
+                'criteria': [{
+                    'domain': [('id', 'in', taxes.ids)],
+                }],
+            }
+
+    @api.model
     def _import_retrieve_tax_from_invoice_predictive(self, tax_values):
         # Check if 'account_accountant' is installed.
         if 'payment_state_before_switch' not in self.env['account.move']._fields:
