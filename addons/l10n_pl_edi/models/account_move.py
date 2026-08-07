@@ -684,15 +684,17 @@ class AccountMove(models.Model):
     @api.model
     def _l10n_pl_edi_download_bills_from_ksef(self):
         service = KsefApiService(self.env.company)
-        blocking_error = self._fetch_bills_metadata(service)
-        to_process = self.search([
-            ('l10n_pl_edi_number', '!=', False),
-            ('move_type', '=', 'in_invoice'),
-            ('l10n_pl_edi_status', '=', 'fetch_ready'),
+
+        if blocking_error := self._fetch_bills_metadata(service):
+            return blocking_error
+
+        moves_to_process = self.search([
             *self._check_company_domain(self.env.company),
+            ('move_type', '=', 'in_invoice'),
+            ('l10n_pl_edi_number', '!=', False),
+            ('l10n_pl_edi_status', '=', 'fetch_ready'),
         ])
-        blocking_error = blocking_error or self._fetch_bills_data(service, to_process)
-        return blocking_error
+        return self._fetch_bills_data(service, moves_to_process)
 
     def _handle_download_bills_from_ksef_error(self, error):
         if not (delay := error.get('retry_after')):
@@ -702,74 +704,82 @@ class AccountMove(models.Model):
         cron._trigger(at=fields.Datetime.now() + relativedelta(seconds=delay))
         return True
 
-    def _fetch_bills_metadata(self, service):
-
-        last_processed_move = self.search([
-            ('l10n_pl_edi_number', '!=', False),
-            ('move_type', '=', 'in_invoice'),
-            ('invoice_date', '!=', False),
-            *self._check_company_domain(self.env.company),
-        ], order='invoice_date DESC', limit=1)
-
-        if last_processed_move:
-            date_from = fields.Datetime.to_datetime(last_processed_move.invoice_date)
+    def _get_next_processing_date_interval(self, tomorrow, last_date_to=None):
+        if last_date_to:
+            date_from = last_date_to
         else:
-            date_from = fields.Datetime.from_string("2026-01-31 00:00:00")  # The date it became mandatory
+            domain = [
+                *self._check_company_domain(self.env.company),
+                ('move_type', '=', 'in_invoice'),
+                ('invoice_date', '!=', False),
+                ('l10n_pl_edi_number', '!=', False),
+            ]
+            if last_processed_move := self.search_fetch(domain, field_names=['invoice_date'], order='invoice_date DESC', limit=1):
+                date_from = fields.Datetime.to_datetime(last_processed_move.invoice_date)
+            else:
+                mandatory_from = "2026-01-31 00:00:00"
+                date_from = fields.Datetime.from_string(mandatory_from)
 
+        return date_from, min(date_from + relativedelta(months=2), tomorrow)
+
+    def _fetch_invoice_to_be_processed_numbers(self, service):
         tomorrow = fields.Datetime.now() + relativedelta(days=1)
-        date_to = min(date_from + relativedelta(months=2), tomorrow)
-
-        query = {
-            'subjectType': 'Subject2',
-            'dateRange': {
-                'from': date_from.isoformat(),
-                'to': date_to.isoformat(),
-                'dateType': 'Invoicing',
-            },
-        }
-
-        blocking_error = False
+        date_from, date_to = self._get_next_processing_date_interval(tomorrow)
         page_offset = 0
         page_size = 200
         has_more = True
-        invoice_numbers = []
-
+        result = set()
         while has_more:
-            response = service.query_invoice_metadata(query, page_size, page_offset)
-            if response.get('error'):
-                blocking_error = self._handle_download_bills_from_ksef_error(response['error'])
-                break
+            payload = {
+                'subjectType': 'Subject2',
+                'dateRange': {
+                    'dateType': 'Invoicing',
+                    'from': date_from.isoformat(),
+                    'to': date_to.isoformat(),
+                }
+            }
+            response = service.query_invoice_metadata(payload, page_size, page_offset)
+            if error := response.get('error'):
+                return error, result
 
-            if not response['invoices'] and date_to < tomorrow:
-                # We must keep the time window moving until we find something
-                date_from = date_to
-                date_to = min(date_from + relativedelta(months=2), tomorrow)
-                query['dateRange']['from'] = date_from.isoformat()
-                query['dateRange']['to'] = date_to.isoformat()
-                continue
+            result |= {invoice['ksefNumber'] for invoice in response.get('invoices', [])}
+            if date_to < tomorrow:
+                date_from, date_to = self._get_next_processing_date_interval(tomorrow, last_date_to=date_to)
+                has_more = response['hasMore']
+                page_offset += 1
+        return False, result
 
-            invoice_numbers.extend(invoice['ksefNumber'] for invoice in response['invoices'])
-            has_more = response['hasMore']
-            page_offset += 1
+    def _create_moves_for_download(self, numbers):
+        moves = self.create([
+            {
+                'move_type': 'in_invoice',
+                'l10n_pl_edi_number': number,
+                'l10n_pl_edi_status': 'fetch_ready',
+            }
+            for number in numbers
+        ])
+        moves._message_log_batch(bodies={
+            move_id: self.env._("Fetching Bill from KSeF ...")
+            for move_id in moves.ids
+        })
+        return moves
 
-        already_processed = set(self.env['account.move'].search([
-            ('l10n_pl_edi_number', 'in', invoice_numbers),
-            ('move_type', '=', 'in_invoice'),
+    def _fetch_bills_metadata(self, service):
+        error, to_download_numbers = self._fetch_invoice_to_be_processed_numbers(service)
+        if error:
+            self._handle_download_bills_from_ksef_error(error)
+            return True
+
+        already_downloaded_moves = self.env['account.move'].search_fetch([
             *self._check_company_domain(self.env.company),
-        ]).mapped('l10n_pl_edi_number'))
+            ('move_type', '=', 'in_invoice'),
+            ('l10n_pl_edi_number', 'in', to_download_numbers),
+        ], field_names=['l10n_pl_edi_number'])
+        to_download_numbers -= already_downloaded_moves.mapped('l10n_pl_edi_number')
 
-        if to_process := [invoice_nr for invoice_nr in invoice_numbers if invoice_nr not in already_processed]:
+        self._create_moves_for_download(to_download_numbers)
 
-            for move in self.create([
-                {
-                    'move_type': 'in_invoice',
-                    'l10n_pl_edi_number': invoice_nr,
-                    'l10n_pl_edi_status': 'fetch_ready',
-                } for invoice_nr in to_process
-            ]):
-                move.message_post(body=self.env._("Fetching Bill from KSeF ..."))
-
-        return blocking_error
+        return False
 
     def _fetch_bills_data(self, service, bills_to_fetch):
         for bill in bills_to_fetch:
