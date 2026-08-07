@@ -13,6 +13,6 @@ export class BlurPerformanceWarning extends Component {
     }
 
     onClickClose() {
-        this.store.settings.blurPerformanceWarning = false;
+        this.store.settings.blurPerformanceWarningDismissed = true;
     }
 }

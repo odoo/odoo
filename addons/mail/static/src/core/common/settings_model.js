@@ -46,13 +46,18 @@ export class Settings extends Record {
     edgeBlurAmount = fields.Attr(10, { localStorage: true });
     showOnlyVideo = fields.Attr(false, { localStorage: true });
     useBlur = fields.Attr(false, { localStorage: true });
+    /**
+     * Manual dismissal of the blur performance warning, until the page
+     * reloads. Seeing the warning once is enough.
+     */
+    blurPerformanceWarningDismissed = false;
     blurPerformanceWarning = fields.Attr(false, {
         compute() {
             const rtc = this.store.rtc;
-            if (!rtc || !this.useBlur) {
+            if (!rtc || !this.useBlur || this.blurPerformanceWarningDismissed) {
                 return false;
             }
-            return this.useBlur && rtc.cameraTrack && !hasHardwareAcceleration();
+            return Boolean(rtc.cameraTrack && !hasHardwareAcceleration());
         },
     });
     cameraFacingMode = undefined;

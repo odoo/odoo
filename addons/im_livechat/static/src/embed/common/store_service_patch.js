@@ -13,10 +13,7 @@ const StorePatch = {
             inverse: "storeAsActiveVisitorLivechats",
         });
         expirableStorage.onChange(GUEST_TOKEN_STORAGE_KEY, (value) => (this.guest_token = value));
-        this.guest_token = fields.Attr(null, {
-            compute() {
-                return expirableStorage.getItem(GUEST_TOKEN_STORAGE_KEY);
-            },
+        this.guest_token = fields.Attr(expirableStorage.getItem(GUEST_TOKEN_STORAGE_KEY), {
             onUpdate() {
                 if (this.guest_token) {
                     expirableStorage.setItem(GUEST_TOKEN_STORAGE_KEY, this.guest_token);
