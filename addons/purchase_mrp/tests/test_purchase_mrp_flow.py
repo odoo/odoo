@@ -1311,6 +1311,73 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
 
         self.assertEqual(po.order_line.qty_received, 1)
 
+    def test_consumption_warning_mto_buy_serial_pbm_early_serial(self):
+        """ Test that a consumption warning is not triggered when:
+        - warehouse in 2-step manufacturing
+        - finished product tracked by serial number
+        - component tracked by serial number, routed MTO + Buy
+        - the finished product's serial number is generated on the MO
+          *before* the related purchase order is even confirmed
+        - purchase order is confirmed and the component is received
+        - the component is transferred to WH/Pre-Production
+        - Produce All is clicked on the MO
+        """
+        self.warehouse.manufacture_steps = 'pbm'
+        route_buy = self.warehouse.buy_pull_id.route_id
+        route_mto = self.warehouse.mto_pull_id.route_id
+        route_mto.active = True
+
+        component = self.env['product.product'].create({
+            'name': 'Serial Component',
+            'is_storable': True,
+            'tracking': 'serial',
+            'seller_ids': [Command.create({'partner_id': self.partner_a.id})],
+            'route_ids': [Command.link(route_buy.id), Command.link(route_mto.id)],
+        })
+        finished_product = self.env['product.product'].create({
+            'name': 'Serial Finished Product',
+            'is_storable': True,
+            'tracking': 'serial',
+        })
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': finished_product.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'bom_line_ids': [Command.create({
+                'product_id': component.id,
+                'product_qty': 1.0,
+            })],
+        })
+
+        production = self.env['mrp.production'].create({
+            'product_id': finished_product.id,
+            'product_qty': 1.0,
+        })
+        production.action_confirm()
+        production.action_generate_serial()
+        self.assertEqual(production.qty_producing, 1.0)
+
+        # Confirm the PO and receive the component.
+        sn_lot = self.env['stock.lot'].create({
+            'product_id': component.id,
+            'name': 'USN01',
+        })
+        purchase = production._get_purchase_orders()
+        self.assertEqual(len(purchase), 1)
+        purchase.button_confirm()
+        receipt = purchase.picking_ids
+        receipt.move_ids.lot_ids = sn_lot
+        receipt.button_validate()
+        self.assertEqual(receipt.state, 'done')
+
+        # Transfer the component to WH/Pre-Production.
+        pick_picking = production.picking_ids - receipt
+        self.assertEqual(len(pick_picking), 1)
+        pick_picking.button_validate()
+        self.assertEqual(pick_picking.state, 'done')
+
+        production.button_mark_done()
+        self.assertEqual(production.state, 'done')
+
     def test_purchase_kit_bill_before_reception_component_cost_exactly_aligns_with_kit_product_cost(self):
         """ When a kit product is invoiced prior to delivery, we want to make sure to reconcile all
         the AMLs from its explosion together, else we risk re-reconciliation attempts (which will
