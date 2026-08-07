@@ -2338,9 +2338,9 @@ export class Rtc extends Record {
      * Applies blur effect to a video stream using BlurManager.
      *
      * @param {MediaStream} videoStream - input video stream.
-     * @returns {Promise<BlurManager>} - BlurManager instance.
+     * @returns {BlurManager} - BlurManager instance.
      */
-    async applyBlurEffect(videoStream) {
+    applyBlurEffect(videoStream) {
         return new BlurManager(videoStream, {
             backgroundBlur: this.store.settings.backgroundBlurAmount,
             edgeBlur: this.store.settings.edgeBlurAmount,
@@ -2574,7 +2574,7 @@ export class Rtc extends Record {
             this.blurManager?.close();
             this.blurManager = undefined;
             try {
-                this.blurManager = await this.applyBlurEffect(sourceStream);
+                this.blurManager = this.applyBlurEffect(sourceStream);
                 const blurredStream = await this.blurManager.stream;
                 outputTrack = blurredStream.getVideoTracks()[0];
             } catch (_e) {
