@@ -10,7 +10,7 @@ from contextlib import ExitStack, nullcontext
 from datetime import datetime
 
 import psutil
-from psycopg2 import OperationalError
+from psycopg2 import OperationalError, extensions
 
 from odoo import tools
 from odoo.tools import SQL
@@ -175,9 +175,10 @@ class SQLCollector(Collector):
         self.profiler.init_thread.query_hooks.remove(self.hook)
 
     def hook(self, cr, query, params, query_start, query_time):
+        encoding = extensions.encodings[cr.connection.encoding]
         entry = {
             'query': str(query),
-            'full_query': str(cr._format(query, params)),
+            'full_query': str(cr.mogrify(query, params).decode(encoding, 'replace')),
             'start': query_start,
             'time': query_time,
         }
