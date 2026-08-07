@@ -2356,6 +2356,9 @@ class MrpProduction(models.Model):
         productions_auto = self.env['mrp.production'].browse(production_auto_ids)
         for production in productions_auto:
             production._set_quantities()
+        productions_auto.move_raw_ids.filtered(
+            lambda m: not m.manual_consumption and not m.picked and m.product_uom.compare(m.quantity, m.product_uom_qty) == 0
+        ).picked = True
 
         self.move_raw_ids.filtered(lambda m: m.manual_consumption and not m.picked).picked = True
 
