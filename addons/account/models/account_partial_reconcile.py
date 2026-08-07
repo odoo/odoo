@@ -134,10 +134,17 @@ class AccountPartialReconcile(models.Model):
         if moves_to_reverse:
             not_draft_moves = moves_to_reverse.filtered(lambda m: m.state != 'draft')
             draft_moves = moves_to_reverse - not_draft_moves
-            default_values_list = [{
-                'date': move._get_accounting_date(move.date, move._affect_tax_report()),
-                'ref': move.env._('Reversal of: %s', move.name),
-            } for move in not_draft_moves]
+            default_values_list = []
+            for move in not_draft_moves:
+                has_tax = move._affect_tax_report()
+                # Keep the reversal in the origin's period
+                reversal_date = move.date
+                if lock_dates := move._get_violated_lock_dates(move.date, has_tax):
+                    reversal_date = lock_dates[-1][0] + timedelta(days=1)
+                default_values_list.append({
+                    'date': reversal_date,
+                    'ref': move.env._('Reversal of: %s', move.name),
+                })
             not_draft_moves._reverse_moves(default_values_list, cancel=True)
             draft_moves.unlink()
 
