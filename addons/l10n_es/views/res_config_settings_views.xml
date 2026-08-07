@@ -15,6 +15,31 @@
                     </setting>
                 </block>
             </xpath>
+            <xpath expr="//block[@name='fiscal_localization_setting_container']" position="after">
+                <block title="Spanish Localization" invisible="chart_template != 'es_general'">
+                    <div class="row">
+                        <setting title="Spanish General Chart Type" name="l10n_es_general_chart_type" invisible="chart_template != 'es_general'">
+                            <field name="l10n_es_general_chart_type"/>
+                        </setting>
+                        <setting title="Real Estate" name="real_estate" invisible="chart_template != 'es_general'">
+                            <field name="real_estate"/>
+                        </setting>
+                    </div>
+                    <div class="row">
+                        <setting title="Spanish Tax plan" name="l10n_es_tax_plan" invisible="chart_template != 'es_general'">
+                            <field name="l10n_es_tax_plan"/>
+                        </setting>
+                            <setting title="Intracomunitary OSS" name="intracomunitary_oss" invisible="chart_template != 'es_general'">
+                                <field name="intracomunitary_oss"/>
+                            </setting>
+                    </div>
+                    <div class="row justify-content-end">
+                        <setting title="reagyp" name="REAGYP" invisible="chart_template != 'es_general'">
+                                <field name="reagyp"/>
+                            </setting>
+                    </div>
+                </block>
+            </xpath>
         </field>
     </record>
 </odoo>
