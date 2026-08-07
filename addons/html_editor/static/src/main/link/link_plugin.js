@@ -375,6 +375,7 @@ export class LinkPlugin extends Plugin {
 
         /** Processors */
         clean_for_save_processors: (root) => this.removeEmptyLinks(root),
+        html_compatibility_processors: this.moveLinkColorToFont.bind(this),
         normalize_processors: this.normalizeLink.bind(this),
         to_inline_code_processors: (node) => {
             this.removeEmptyLinks(node);
@@ -874,7 +875,13 @@ export class LinkPlugin extends Plugin {
         }
     }
 
-    normalizeLink(root) {
+    /**
+     * An inline color on an anchor only comes from an external style: the
+     * editor never colors an anchor itself. Remove it from the anchor, create
+     * a font tag inside it, and move the color to the font tag, so that the
+     * color is applied to the font element instead of the anchor element.
+     */
+    moveLinkColorToFont(root) {
         for (const anchorEl of selectElements(root, "a")) {
             if (/btn(-[a-z0-9_-]*)custom/.test(anchorEl.className)) {
                 // if the link is a customized button, we don't want to change the color
@@ -882,11 +889,6 @@ export class LinkPlugin extends Plugin {
             }
             const { color } = anchorEl.style;
             const childNodes = [...anchorEl.childNodes];
-            // For each anchor element, if it has an inline color style,
-            // (converted from an external style), remove it from the anchor,
-            // create a font tag inside it, and move the color to the font tag.
-            // This ensures the color is applied to the font element instead of
-            // the anchor element itself.
             if (color && childNodes.every(isPhrasingContent)) {
                 anchorEl.style.removeProperty("color");
                 const font =
@@ -899,7 +901,12 @@ export class LinkPlugin extends Plugin {
                 anchorEl.appendChild(newFont);
                 this.dependencies.color.colorElement(newFont, color, "color");
             }
+        }
+        return root;
+    }
 
+    normalizeLink(root) {
+        for (const anchorEl of selectElements(root, "a")) {
             // When a link contains unsupported element (like an iframe or a link),
             // we remove the link. Cases can happen when a image link is replaced
             // by a document or a video
