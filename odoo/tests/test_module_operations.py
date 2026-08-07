@@ -23,6 +23,9 @@ BLACKLIST = {
 IGNORE = ('hw_', 'theme_', 'l10n_', 'test_')
 
 INSTALL_BLACKLIST = {
+    'account_taxcloud', 'sale_account_taxcloud', 'sale_amazon_taxcloud',
+    'sale_loyalty_taxcloud', 'sale_loyalty_taxcloud_delivery', 'sale_subscription_taxcloud',
+    'website_sale_account_taxcloud',
     'payment_alipay', 'payment_ogone', 'payment_payulatam', 'payment_payumoney',
 }  # deprecated modules (cannot be installed manually through button_install anymore)
 
