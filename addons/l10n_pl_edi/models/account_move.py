@@ -781,39 +781,45 @@ class AccountMove(models.Model):
 
         return False
 
-    def _fetch_bills_data(self, service, bills_to_fetch):
-        for bill in bills_to_fetch:
-            invoice_nr = bill.l10n_pl_edi_number
-            response = service.get_invoice_by_ksef_number(invoice_nr)
-            try:
-                if error := response.get('error'):
-                    return error
+    def _fetch_bill_data(self, service, bill):
+        """ Deprecated by the batch download (.zip) """
+        invoice_nr = bill.l10n_pl_edi_number
+        response = service.get_invoice_by_ksef_number(invoice_nr)
+        try:
+            if error := response.get('error'):
+                return error
 
-                bill_data = self.l10n_pl_edi_get_ksef_bill_vals_from_xml(response['xml_content'])
-                with mute_logger('odoo.sql_db'), self.env.cr.savepoint():
-                    bill.write({
-                        'l10n_pl_edi_status': 'fetched',
-                        'l10n_pl_edi_header': 'Fetched From KSeF',
-                        **bill_data
-                    })
-                    bill.message_post(body=self.env._("Bill Fetched Successfully from KSeF"))
-            except UserError as e:
-                bill.l10n_pl_edi_status = 'fetch_failed'
-                bill.message_post(body=self.env._("KSeF XML failed. Reason: %s", str(e)))
-            except Exception:  # noqa: BLE001
-                bill.l10n_pl_edi_status = 'fetch_failed'
-                bill.message_post(body=self.env._("KSeF XML failed. Something went wrong"))
-            finally:
-                if response.get('xml_content'):
-                    self.env['ir.attachment'].sudo().create({
-                        'description': self.env._('KSeF Fetched Invoice XML'),
-                        'name': f"KSeF-{bill.l10n_pl_edi_number.replace('/', '_')}.xml",
-                        'type': 'binary',
-                        'mimetype': 'application/xml',
-                        'raw': response['xml_content'],
-                        'res_id': bill.id,
-                        'res_model': bill._name,
-                    })
+            bill_data = self.l10n_pl_edi_get_ksef_bill_vals_from_xml(response['xml_content'])
+            with mute_logger('odoo.sql_db'), self.env.cr.savepoint():
+                bill.write({
+                    'l10n_pl_edi_status': 'fetched',
+                    'l10n_pl_edi_header': 'Fetched From KSeF',
+                    **bill_data
+                })
+                bill.message_post(body=self.env._("Bill Fetched Successfully from KSeF"))
+        except UserError as e:
+            bill.l10n_pl_edi_status = 'fetch_failed'
+            bill.message_post(body=self.env._("KSeF XML failed. Reason: %s", str(e)))
+        except Exception:  # noqa: BLE001
+            bill.l10n_pl_edi_status = 'fetch_failed'
+            bill.message_post(body=self.env._("KSeF XML failed. Something went wrong"))
+        finally:
+            if response.get('xml_content'):
+                self.env['ir.attachment'].sudo().create({
+                    'description': self.env._('KSeF Fetched Invoice XML'),
+                    'name': f"KSeF-{bill.l10n_pl_edi_number.replace('/', '_')}.xml",
+                    'type': 'binary',
+                    'mimetype': 'application/xml',
+                    'raw': response['xml_content'],
+                    'res_id': bill.id,
+                    'res_model': bill._name,
+                })
+
+    def _fetch_bills_data(self, service, bills_to_fetch):
+        # Old method
+        # for bill in bills_to_fetch:
+        #     if error := self._fetch_bill_data(service, bill):
+        #         return error
 
     def _decode_fa3_ksef(self, invoice, file_data, new):
         xml_content = file_data.get('content')
