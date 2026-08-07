@@ -70,7 +70,7 @@ export class KeydownMoveHandler {
             tmpLeft,
             tmpTop,
             snappedBounds,
-            this.canvasRef.el
+            this.canvasRef()
         );
 
         this.setElementTransform(el, position.left, position.top);

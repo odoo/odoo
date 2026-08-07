@@ -25,7 +25,7 @@ export class DashboardKanbanRenderer extends KanbanRenderer {
 
     kanbanDragLeave(e) {
         const mouseX = e.clientX, mouseY = e.clientY;
-        const {x, y, width, height} = this.rootRef.el.getBoundingClientRect();
+        const {x, y, width, height} = this.rootRef().getBoundingClientRect();
         const mouseInsideKanbanRenderer = mouseX > x && mouseX <= x + width && mouseY > y && mouseY <= y + height;
         if (!mouseInsideKanbanRenderer || !e.dataTransfer.types.includes("Files")) {
             // if the mouse position is outside the kanban renderer, all cards should hide their dropzones.

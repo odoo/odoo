@@ -27,7 +27,7 @@ export class PartnerList extends Component {
         this.dialog = useService("dialog");
         this.modalRef = signal.ref();
         this.modalContent = null;
-        this.searchInputRef = null;
+        this.searchInputRef = signal.ref();
         this.state = proxy({
             initialPartners: this.pos.models["res.partner"].filter((p) => {
                 const par = p.property_account_receivable_id;
@@ -91,8 +91,8 @@ export class PartnerList extends Component {
     async onEnter() {
         // The search input uses a debounce, so state.query may lag behind what the user
         // typed. Read the live DOM value and sync it before triggering the server search.
-        if (this.searchInputRef?.el) {
-            this.state.query = this.searchInputRef.el.value;
+        if (this.searchInputRef()) {
+            this.state.query = this.searchInputRef().value;
         }
         if (!this.state.query) {
             return;

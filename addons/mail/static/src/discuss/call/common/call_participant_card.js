@@ -89,7 +89,7 @@ export class CallParticipantCard extends Component {
         // Drive the talking glow on rAF, reading volume in render would re-render too often.
         useEffect(() => {
             if (!this.isTalking) {
-                this.root.el?.style.setProperty("--discuss-CallParticipantCard-talkingVolume", 0);
+                this.root()?.style.setProperty("--discuss-CallParticipantCard-talkingVolume", 0);
                 return;
             }
             let frame;
