@@ -1,9 +1,8 @@
 import { calendarView } from '@web/views/calendar/calendar_view';
 
-import { TimeOffCalendarController, TimeOffReportCalendarController } from './calendar_controller';
+import { TimeOffCalendarController } from './calendar_controller';
 import { TimeOffCalendarModel } from './calendar_model';
 import { TimeOffCalendarRenderer, TimeOffDashboardCalendarRenderer } from './calendar_renderer';
-import { TimeOffReportCalendarSearchModel } from "./time_off_search_model";
 
 import { registry } from '@web/core/registry';
 import { user } from "@web/core/user";
@@ -24,28 +23,19 @@ class TimeOffCalendarControllerHrLeave extends TimeOffCalendarController {
     }
 }
 
-const TimeOffCalendarView = {
+export const timeOffCalendarHrLeaveView = {
     ...calendarView,
 
-    Controller: TimeOffCalendarController,
+    Controller: TimeOffCalendarControllerHrLeave,
     Renderer: TimeOffCalendarRenderer,
     Model: TimeOffCalendarModel,
-}
-
-const TimeOffCalendarHrLeaveView = {
-    ...TimeOffCalendarView,
-    Controller: TimeOffCalendarControllerHrLeave,
     buttonTemplate: "hr_holidays.CalendarView.Buttons",
 }
+registry.category('views').add('time_off_calendar', timeOffCalendarHrLeaveView);
 
-registry.category('views').add('time_off_calendar', TimeOffCalendarView);
-registry.category('views').add('time_off_calendar_hr_leave', TimeOffCalendarHrLeaveView);
-registry.category('views').add('time_off_calendar_dashboard', {
-    ...TimeOffCalendarView,
+registry.category("views").add("time_off_calendar_hr_leave", timeOffCalendarHrLeaveView);
+
+registry.category("views").add("time_off_calendar_dashboard", {
+    ...timeOffCalendarHrLeaveView,
     Renderer: TimeOffDashboardCalendarRenderer,
 });
-registry.category('views').add('time_off_report_calendar', {
-    ...TimeOffCalendarView,
-    Controller: TimeOffReportCalendarController,
-    SearchModel: TimeOffReportCalendarSearchModel,
-})
