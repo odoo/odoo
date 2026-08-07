@@ -1,7 +1,6 @@
 import {
     isTextNode,
     isParagraphRelatedElement,
-    isEmptyBlock,
     isContentEditable,
     iconClasses,
     getTableColgroup,
@@ -515,12 +514,6 @@ export class ClipboardPlugin extends Plugin {
                 if (node.nodeName === "TH" && getRowIndex(node) !== 0) {
                     node = this.dependencies.dom.setTagName(node, "td");
                 }
-                // Insert base container into empty TD.
-                if (isEmptyBlock(node)) {
-                    const baseContainer = this.dependencies.baseContainer.createBaseContainer();
-                    node.replaceChildren(baseContainer);
-                }
-
                 if (node.hasAttribute("bgcolor") && !node.style["background-color"]) {
                     node.style["background-color"] = node.getAttribute("bgcolor");
                 }
