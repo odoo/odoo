@@ -1,3 +1,4 @@
+import { registry } from "@web/core/registry";
 import { Plugin } from "../plugin";
 
 export class MosaicStrategyPlugin extends Plugin {
@@ -8,7 +9,7 @@ export class MosaicStrategyPlugin extends Plugin {
         synthetic_email_node_processors: this.fillMosaicContainer.bind(this),
     };
 
-    analyzeElementLayout(defaultEmailNodeArguments, { referenceNode }) {
+    analyzeElementLayout(defaultEmailNodeArguments, { referenceNode, parentEmailNode }) {
         const { layout, analysis } = defaultEmailNodeArguments;
         if (
             !analysis.facts.isTableContainer &&
@@ -16,6 +17,29 @@ export class MosaicStrategyPlugin extends Plugin {
         ) {
             return defaultEmailNodeArguments;
         }
+        const cellsProviders = this.processThrough(
+            "mosaic_cells_providers_processors",
+            [],
+            defaultEmailNodeArguments,
+            { referenceNode, parentEmailNode }
+        );
+        if (cellsProviders.length === 0) {
+            return defaultEmailNodeArguments;
+        }
+        delete analysis.facts.isHybridFluidContainer;
+        delete analysis.facts.isTableContainer;
+        Object.assign(analysis.parsingFacts, {
+            canMerge: false,
+            needSyntheticEmailNode: true,
+            isSkippingContainer: true,
+            skippingContainerDescendantProviders: cellsProviders,
+        });
+        analysis.facts.isMosaicContainer;
+        analysis.facts.cellsProviders = cellsProviders;
+        layout.pluginIds.add(MosaicStrategyPlugin.id);
+        return defaultEmailNodeArguments;
+
+
         // request for mosaic cells providers => check ancestor snippet class
         // s_comparisons -> card (columns) -> card-body | card-footer = cells
         // approximation: align card-bodies and card-footers in a table of 2 rows
@@ -27,8 +51,10 @@ export class MosaicStrategyPlugin extends Plugin {
         // neutralize isTableContainer and isHybridFluidContainer if a provider
         // exists. Compute final table dimensions using desktop geometry
         // compute final mobile dimensions using mobile geometry?
-
-        return defaultEmailNodeArguments;
     }
     fillMosaicContainer() {}
 }
+
+registry
+    .category("mail-html-conversion-core-plugins")
+    .add(MosaicStrategyPlugin.id, MosaicStrategyPlugin);

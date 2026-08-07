@@ -48,7 +48,7 @@ export class RenderPlugin extends Plugin {
         if (!this.isAllowedReferenceNode(reference) || this.isDiscarded(reference)) {
             return;
         }
-        this.renderTree = this.createEmailNode(reference);
+        this.renderTree = this.createEmailNodes();
         this.addSyntheticEmailNodes();
         this.addBottomUpConstraints(this.renderTree);
         this.addTopDownConstraints(this.renderTree);
@@ -60,7 +60,7 @@ export class RenderPlugin extends Plugin {
      * be irrelevant, but this function does not handle that currently.
      */
     discardIrrelevantNodes() {
-        const rejectedChildren = new WeakSet();
+        const rejectedChildren = new Set();
         const treeWalker = this.createReferenceTreeWalker((node) => {
             if (rejectedChildren.has(node)) {
                 return NodeFilter.FILTER_REJECT;
@@ -80,12 +80,109 @@ export class RenderPlugin extends Plugin {
         } while ((node = treeWalker.nextNode()));
     }
 
+    createEmailNodes() {
+        const nodeToEmailNode = new Map();
+        const skippingContainers = new Map();
+        const contexts = [];
+        const createContext = (container, targetsProviders = []) => {
+            const targets = new Set();
+            for (const provider of targetsProviders) {
+                for (const target of provider() || []) {
+                    if (container.contains(target)) {
+                        targets.add(target);
+                    }
+                }
+            }
+            const paths = new Set();
+            for (const target of targets) {
+                for (
+                    let node = target.parentNode;
+                    node && node !== container;
+                    node = node.parentNode
+                ) {
+                    paths.add(node);
+                }
+            }
+            return {
+                container,
+                targets,
+                paths,
+                activeTarget: null,
+            };
+        };
+        const filter = (node) => {
+            while (contexts.length && !contexts.at(-1).container.contains(node)) {
+                contexts.pop();
+            }
+            if (this.discardedNodes.has(node)) {
+                return NodeFilter.FILTER_REJECT;
+            }
+            const context = contexts.at(-1);
+            if (context) {
+                if (context.activeTarget && !context.activeTarget.contains(node)) {
+                    context.activeTarget = null;
+                }
+                if (!context.activeTarget) {
+                    if (context.targets.has(node)) {
+                        context.activeTarget = node;
+                    } else if (context.paths.has(node)) {
+                        return NodeFilter.FILTER_SKIP;
+                    } else {
+                        return NodeFilter.FILTER_REJECT;
+                    }
+                }
+            }
+            if (skippingContainers.has(node)) {
+                const providers = skippingContainers.get(node);
+                contexts.push(createContext(node, providers));
+            }
+            return NodeFilter.FILTER_ACCEPT;
+        };
+        const treeWalker = this.createReferenceTreeWalker(filter);
+        let node = treeWalker.root;
+        do {
+            let parentNode, parentEmailNode, isOnlyChild;
+            if (node !== treeWalker.root) {
+                const parentPath = new Set();
+                parentNode = node.parentNode;
+                while (parentNode && !parentEmailNode) {
+                    parentEmailNode = nodeToEmailNode.get(parentNode);
+                    if (!parentEmailNode) {
+                        parentPath.add(parentNode);
+                    }
+                    parentNode = parentNode.parentNode;
+                }
+                // set emailNode of the first non-skipped node for skipped nodes
+                for (const pathNode of parentPath) {
+                    nodeToEmailNode.set(pathNode, parentEmailNode);
+                }
+            }
+            if (
+                parentNode &&
+                parentEmailNode &&
+                !parentEmailNode.analysis.parsingFacts.isSkippingContainer
+            ) {
+                isOnlyChild =
+                    this.processChildNodes(parentNode, (node) => !this.discardedNodes.has(node))
+                        .length === 1;
+            }
+            const emailNode = this.createEmailNode(node, parentEmailNode, isOnlyChild);
+            nodeToEmailNode.set(node, emailNode);
+            if (emailNode.analysis.parsingFacts.isSkippingContainer) {
+                const providers =
+                    emailNode.analysis.parsingFacts.skippingContainerDescendantProviders;
+                skippingContainers.set(node, providers);
+            }
+        } while ((node = treeWalker.nextNode()));
+        return nodeToEmailNode.get(this.config.reference);
+    }
+
     // -- multiple objectives:
     // -- -- deny absorption by parent (if parent allows it)
     // -- -- deny future children absorption (without considering children identities)
     // -- -- provide useful layout info (styleInfo selection, attributes, etc)
     createEmailNode(referenceNode, parentEmailNode, isOnlyChild) {
-        let childNodes, emailNode;
+        let emailNode;
         if (referenceNode.nodeType === Node.TEXT_NODE) {
             const layout = new TextNodeLayout({ content: referenceNode.nodeValue });
             emailNode = new EmailNode({
@@ -104,17 +201,9 @@ export class RenderPlugin extends Plugin {
             if (parentEmailNode && isOnlyChild && this.attemptMerge(parentEmailNode, emailNode)) {
                 emailNode = parentEmailNode;
             }
-            childNodes = this.processChildNodes(
-                referenceNode,
-                (node) => !this.discardedNodes.has(node)
-            );
         }
         if (emailNode.analysis.parsingFacts.needSyntheticEmailNode) {
             this.syntheticEmailNodeContainers.add(emailNode);
-        }
-        childNodes ??= [];
-        for (const childNode of childNodes) {
-            this.createEmailNode(childNode, emailNode, childNodes.length === 1);
         }
         return emailNode;
     }
