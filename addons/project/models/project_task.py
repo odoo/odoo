@@ -1658,6 +1658,12 @@ class ProjectTask(models.Model):
                 res -= waiting_subtype
         return res
 
+    def _get_customer_portal_message_types(self):
+        message_types = super()._get_customer_portal_message_types()
+        if 'tracking' not in message_types:
+            message_types.append('tracking')
+        return message_types
+
     def _notify_get_recipients_groups(self, message, model_description):
         # Handle project users and managers recipients that can assign
         # tasks and create new one directly from notification emails. Also give
