@@ -2,6 +2,7 @@ import { session } from "@web/session";
 import { utils } from "@web/core/ui/ui_service";
 import * as hoot from "@odoo/hoot-dom";
 import { pick } from "@web/core/utils/objects";
+import { getTag } from "@web/core/utils/xml";
 
 /**
  * @typedef TourStep
@@ -15,6 +16,8 @@ import { pick } from "@web/core/utils/objects";
  * You can change this value to lengthen or shorten the time before the error occurs [ms].
  */
 export class TourStep {
+    skipped = false;
+
     constructor(data, tour) {
         Object.assign(this, data);
         this.tour = tour;
@@ -65,6 +68,120 @@ export class TourStep {
         if (!this.tour) {
             throw new Error(`TourStep instance must have a tour`);
         }
+    }
+
+    /**
+     * @param {string} [selector] Defaults to this.trigger.
+     * @returns {(HTMLElement|Boolean)}
+     */
+    findTrigger(selector = this.trigger) {
+        if (!this.active) {
+            this.skipped = true;
+            return true;
+        }
+        this.activeSelector = selector;
+        const visible = !/:(hidden|visible)\b/.test(selector);
+        this.element = hoot.queryFirst(selector, { visible });
+        if (this.element) {
+            return !this.isUIBlocked &&
+                this.elementIsEnabled &&
+                this.elementIsInModal &&
+                this.parentFrameIsReady &&
+                this.frontendBodyIsReady
+                ? this.element
+                : false;
+        }
+        return false;
+    }
+
+    /** Wait interactions are bound to elements */
+    get frontendBodyIsReady() {
+        if (document.documentElement.hasAttribute("data-website-id")) {
+            return document.body.getAttribute("is-ready") === "true";
+        } else {
+            return true;
+        }
+    }
+
+    get isUIBlocked() {
+        return (
+            document.body.classList.contains("o_ui_blocked") ||
+            document.querySelector(".o_blockUI") ||
+            document.querySelector(".o_is_blocked")
+        );
+    }
+
+    get parentFrameIsReady() {
+        if (this.activeSelector.match(/\[is-ready=(true|false)\]/)) {
+            return true;
+        }
+        const parentFrame = hoot.getParentFrame(this.element);
+        return parentFrame && parentFrame.contentDocument.body.hasAttribute("is-ready")
+            ? parentFrame.contentDocument.body.getAttribute("is-ready") === "true"
+            : true;
+    }
+
+    /**
+     * When a modal is in the overlay and that the current step has an action,
+     * this method checks if the trigger element is in the more front overlay.
+     */
+    get elementIsInModal() {
+        function isIn(element, parent) {
+            if (!parent) {
+                return false;
+            }
+            return parent.contains(hoot.getParentFrame(element)) || parent.contains(element);
+        }
+
+        if (!this.hasAction) {
+            return true;
+        }
+        const modal = hoot.queryFirst(".modal:visible:not(.o_inactive_modal):last");
+        if (!modal || this.activeSelector.startsWith("body")) {
+            return true;
+        }
+        // Case 1: the trigger element is in modal
+        if (isIn(this.element, modal)) {
+            return true;
+        }
+        // Case 2: the trigger element is in notification
+        const notificationContainer = hoot.queryFirst(".o_notification_manager");
+        if (isIn(this.element, notificationContainer)) {
+            return true;
+        }
+        // Case 3: the trigger element is in overlay
+        const overlayContainer = hoot.queryFirst(".o-overlay-container");
+        if (isIn(this.element, overlayContainer)) {
+            // And the modal also, then we check if the parent overlay is in front the modal.
+            if (isIn(modal, overlayContainer)) {
+                const modalOverlay = modal.closest(".o-overlay-item");
+                const overlays = Array.from(modalOverlay.parentElement.children).filter((el) =>
+                    el.classList.contains("o-overlay-item")
+                );
+                const overlaysInFrontModal = overlays.slice(overlays.indexOf(modalOverlay) + 1);
+                return overlaysInFrontModal.some((overlay) => isIn(this.element, overlay));
+            }
+            // For any other cases, it's not possible to check if the trigger element
+            // is in front of behind the modal
+            return true;
+        }
+        return false;
+    }
+
+    get elementIsEnabled() {
+        const isTag = (array) => array.includes(getTag(this.element, true));
+        if (this.hasAction) {
+            if (isTag(["input", "textarea"])) {
+                return hoot.isEditable(this.element);
+            } else if (isTag(["button", "select"])) {
+                return !this.element.disabled;
+            }
+        }
+        return true;
+    }
+
+    get hasAction() {
+        return ["string", "function"].includes(typeof this.run) && !this.skipped;
     }
 
     get describeMe() {

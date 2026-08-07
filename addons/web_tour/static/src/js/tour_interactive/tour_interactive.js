@@ -1,7 +1,7 @@
 import { tourState } from "@web_tour/js/tour_state";
 import * as hoot from "@odoo/hoot-dom";
 import { utils } from "@web/core/ui/ui_service";
-import { TourStep } from "@web_tour/js/tour_step";
+import { TourStepInteractive } from "@web_tour/js/tour_interactive/tour_step_interactive";
 import { TourInteractiveObserver } from "@web_tour/js/tour_interactive/tour_interactive_observer";
 import { pointerState } from "@web_tour/js/tour_pointer/tour_pointer";
 
@@ -17,7 +17,7 @@ export class TourInteractive {
     mode = "manual";
     currentAction;
     currentActionIndex;
-    anchorEls = [];
+    anchorEl;
     removeListeners = () => {};
 
     /**
@@ -25,8 +25,8 @@ export class TourInteractive {
      */
     constructor(data) {
         Object.assign(this, data);
-        this.steps = this.steps.map((step) => new TourStep(step, this));
-        this.actions = this.steps.flatMap((s) => this.getSubActions(s));
+        this.steps = this.steps.map((step) => new TourStepInteractive(step, this));
+        this.actions = this.steps.flatMap((step) => step.actions);
         this.isBusy = false;
     }
 
@@ -49,37 +49,20 @@ export class TourInteractive {
 
     backward() {
         let tempIndex = this.currentActionIndex;
-        let tempAction,
-            tempAnchors = [];
-        while (!tempAnchors.length && tempIndex >= 0) {
+        let tempAction, tempAnchor;
+        while (!tempAnchor && tempIndex >= 0) {
             tempIndex--;
             tempAction = this.actions.at(tempIndex);
             if (!tempAction.step.active || tempAction.event === "warn") {
                 continue;
             }
-            tempAnchors = tempAction && this.findTriggers(tempAction.anchor);
+            tempAnchor = tempAction.findTrigger();
         }
 
         if (tempIndex >= 0) {
             this.currentActionIndex = tempIndex;
             this.play();
         }
-    }
-
-    /**
-     * @returns {HTMLElement[]}
-     */
-    findTriggers(anchor) {
-        if (!anchor) {
-            anchor = this.currentAction.anchor;
-        }
-
-        return anchor
-            .split(/,\s*(?![^(]*\))/)
-            .map((part) => hoot.queryFirst(part, { visible: true }))
-            .filter((el) => !!el)
-            .map((el) => this.getAnchorEl(el, this.currentAction.event))
-            .filter((el) => !!el);
     }
 
     play() {
@@ -104,14 +87,14 @@ export class TourInteractive {
         console.log(this.currentAction.event, this.currentAction.anchor);
 
         tourState.setCurrentIndex(this.currentActionIndex);
-        this.anchorEls = this.findTriggers();
+        this.anchorEl = this.currentAction.findTrigger();
         this.setActionListeners();
         this.updatePointer();
     }
 
     updatePointer() {
-        if (this.anchorEls.length) {
-            pointerState.trigger = this.anchorEls[0];
+        if (this.anchorEl) {
+            pointerState.trigger = this.anchorEl;
             pointerState.content = this.currentAction.content;
             pointerState.position = this.currentAction.tooltipPosition;
             pointerState.isZone = this.currentAction.event === "drop";
@@ -121,24 +104,25 @@ export class TourInteractive {
     }
 
     setActionListeners() {
-        const cleanups = this.anchorEls.flatMap((anchorEl, index) =>
-            this.setupListeners({
-                anchorEl,
-                consumeEvents: this.getConsumeEventType(anchorEl, this.currentAction.event),
-                onConsume: () => {
-                    this.currentActionIndex++;
+        if (!this.anchorEl) {
+            this.removeListeners = () => {};
+            return;
+        }
+        const cleanups = this.setupListeners({
+            consumeEvents: this.getConsumeEventType(this.anchorEl, this.currentAction.event),
+            onConsume: () => {
+                this.currentActionIndex++;
+                this.play();
+            },
+            onError: () => {
+                if (this.currentAction.event === "drop") {
+                    this.currentActionIndex--;
                     this.play();
-                },
-                onError: () => {
-                    if (this.currentAction.event === "drop") {
-                        this.currentActionIndex--;
-                        this.play();
-                    }
-                },
-            })
-        );
+                }
+            },
+        });
         this.removeListeners = () => {
-            this.anchorEls = [];
+            this.anchorEl = undefined;
             while (cleanups.length) {
                 cleanups.pop()();
             }
@@ -146,7 +130,6 @@ export class TourInteractive {
     }
 
     /**
-     * @param {HTMLElement} params.anchorEl
      * @param {import("../../tour_utils").ConsumeEvent[]} params.consumeEvents
      * @param {(ev: Event) => any} params.onConsume
      * @param {() => any} params.onError
@@ -178,69 +161,16 @@ export class TourInteractive {
     }
 
     /**
-     *
-     * @param {import("../tour_service").TourStep} step
-     * @returns {{
-     *  event: string,
-     *  anchor: string,
-     *  pointerInfo: { tooltipPosition: string?, content: string? },
-     * }[]}
+     * When the next action is a click on an autocomplete dropdown item, the
+     * current "edit" action already consumed the selection (Tab/Enter or a
+     * direct click on the item), so that next step would never see its own
+     * trigger event fire.
      */
-    getSubActions(step) {
-        const actions = [];
-        if (!step.run || typeof step.run === "function") {
-            actions.push({
-                step,
-                event: "warn",
-                anchor: step.trigger,
-            });
-            return actions;
+    skipNextActionIfDropdownItem() {
+        const nextAction = this.actions.at(this.currentActionIndex + 1);
+        if (nextAction.findTrigger()?.closest(".o-autocomplete--dropdown-item")) {
+            this.currentActionIndex++;
         }
-
-        for (const todo of step.run.split("&&")) {
-            const m = String(todo)
-                .trim()
-                .match(/^(?<action>\w*) *\(? *(?<arguments>.*?)\)?$/);
-
-            let action = m.groups?.action;
-            const anchor = m.groups?.arguments || step.trigger;
-            const pointerInfo = {
-                content: step.content || this.getStepContent(action, anchor),
-                tooltipPosition: step.tooltipPosition,
-            };
-
-            if (action === "drag_and_drop") {
-                actions.push({
-                    step,
-                    event: "drag",
-                    anchor: step.trigger,
-                    ...pointerInfo,
-                });
-                action = "drop";
-            }
-
-            actions.push({
-                step,
-                event: action,
-                anchor: action === "edit" ? step.trigger : anchor,
-                ...pointerInfo,
-            });
-        }
-
-        return actions;
-    }
-
-    getStepContent(action, anchor) {
-        if (action === "click") {
-            return `Click on element`;
-        } else if (action === "edit") {
-            return `Edit element`;
-        } else if (action === "drag_and_drop") {
-            return `Drag element`;
-        } else if (action === "press") {
-            return `Press ${anchor}`;
-        }
-        return ``;
     }
 
     /**
@@ -326,15 +256,7 @@ export class TourInteractive {
                                     ".o-autocomplete--dropdown-item .ui-state-active"
                                 )
                             ) {
-                                const nextStep = this.actions.at(this.currentActionIndex + 1);
-                                if (
-                                    this.findTriggers(nextStep.anchor)
-                                        .at(0)
-                                        ?.closest(".o-autocomplete--dropdown-item")
-                                ) {
-                                    // Skip the next step if the next one is a click on a dropdown item
-                                    this.currentActionIndex++;
-                                }
+                                this.skipNextActionIfDropdownItem();
                                 return true;
                             }
                         },
@@ -344,15 +266,7 @@ export class TourInteractive {
                         target: element.ownerDocument,
                         conditional: (ev) => {
                             if (ev.target.closest(".o-autocomplete--dropdown-item")) {
-                                const nextStep = this.actions.at(this.currentActionIndex + 1);
-                                if (
-                                    this.findTriggers(nextStep.anchor)
-                                        .at(0)
-                                        ?.closest(".o-autocomplete--dropdown-item")
-                                ) {
-                                    // Skip the next step if the next one is a click on a dropdown item
-                                    this.currentActionIndex++;
-                                }
+                                this.skipNextActionIfDropdownItem();
                                 return true;
                             }
                         },
@@ -391,44 +305,14 @@ export class TourInteractive {
         return consumeEvents;
     }
 
-    /**
-     * Returns the element that will be used in listening to the `consumeEvent`.
-     * @param {HTMLElement} el
-     * @param {string} consumeEvent
-     */
-    getAnchorEl(el, consumeEvent) {
-        if (consumeEvent === "drag") {
-            // jQuery-ui draggable triggers 'drag' events on the .ui-draggable element,
-            // but the tip is attached to the .ui-draggable-handle element which may
-            // be one of its children (or the element itself
-            return el.closest(
-                ".ui-draggable, .o_draggable, .o_we_draggable, .o-draggable, [draggable='true']"
-            );
-        }
-
-        if (consumeEvent === "input" && !["textarea", "input"].includes(el.tagName.toLowerCase())) {
-            return el.closest("[contenteditable='true']");
-        }
-        if (consumeEvent === "sort") {
-            // when an element is dragged inside a sortable container (with classname
-            // 'ui-sortable'), jQuery triggers the 'sort' event on the container
-            return el.closest(".ui-sortable, .o_sortable");
-        }
-        return el;
-    }
-
     _onMutation() {
         if (this.currentAction) {
-            const tempAnchors = this.findTriggers();
-            if (
-                tempAnchors.length &&
-                (tempAnchors.some((a) => !this.anchorEls.includes(a)) ||
-                    this.anchorEls.some((a) => !tempAnchors.includes(a)))
-            ) {
+            const tempAnchor = this.currentAction.findTrigger();
+            if (tempAnchor && tempAnchor !== this.anchorEl) {
                 this.removeListeners();
-                this.anchorEls = tempAnchors;
+                this.anchorEl = tempAnchor;
                 this.setActionListeners();
-            } else if (!tempAnchors.length && this.anchorEls.length) {
+            } else if (!tempAnchor && this.anchorEl) {
                 if (
                     !hoot.queryFirst(".o_home_menu", { visible: true }) &&
                     !hoot.queryFirst(".dropdown-item.o_loading", { visible: true }) &&
