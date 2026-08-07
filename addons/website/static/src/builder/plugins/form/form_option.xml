@@ -176,16 +176,16 @@
         <BuilderCheckbox attributeAction="'checked'" attributeActionValue="'checked'"
             applyTo="`[data-type='boolean'] input[type='checkbox']`" preview="false"
         />
-        <BuilderTextInput attributeAction="'value'" action="'property'" actionParam="{ property: 'value' }"
+        <BuilderTextInput action="'propertyAndAttributeValue'"
             applyTo="`input[type='text']:not(.datetimepicker-input), input[type='email'], input[type='tel'], input[type='url']`"
         />
-        <BuilderNumberInput attributeAction="'value'" step="1" action="'property'" actionParam="{ property: 'value' }"
+        <BuilderNumberInput step="1" action="'propertyAndAttributeValue'"
             applyTo="`input[type='number']`"
         />
-        <BuilderDateTimePicker type="'datetime'" attributeAction="'value'" action="'property'" actionParam="{ property: 'value', format: format.datetime }"
+        <BuilderDateTimePicker type="'datetime'" action="'propertyAndAttributeValue'" actionParam="{ format: format.datetime }"
             applyTo="'.s_website_form_datetime input'"
         />
-        <BuilderDateTimePicker type="'date'" attributeAction="'value'" action="'property'" actionParam="{ property: 'value', format: format.date }"
+        <BuilderDateTimePicker type="'date'" action="'propertyAndAttributeValue'" actionParam="{ format: format.date }"
             applyTo="'.s_website_form_date input'"
         />
     </BuilderRow>
