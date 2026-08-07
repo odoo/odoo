@@ -16,7 +16,7 @@ import { uniqueId } from "@web/core/utils/functions";
  */
 export class TranslateToAction extends BuilderAction {
     static id = "translateWebpageAI";
-    static dependencies = ["translateWebpageOption", "translation", "history"];
+    static dependencies = ["translateWebpageOption", "translation", "history", "valueHistory"];
 
     setup() {
         this.canTimeout = false;
@@ -247,7 +247,6 @@ export class TranslateToAction extends BuilderAction {
      */
     applyTranslationsToDOM(translationMap, responses) {
         let numOfFailedTranslationNodes = translationMap.size;
-        const allMutations = [];
 
         for (const response of responses) {
             let translations;
@@ -273,46 +272,24 @@ export class TranslateToAction extends BuilderAction {
                     const { el, attribute } = node;
                     const attributeInfo =
                         this.dependencies.translation.getTranslationInfo(el)?.[attribute];
-                    if (attributeInfo) {
+                    if (attributeInfo && text != attributeInfo.translation) {
                         const oldValue = attributeInfo.translation;
-                        const oldTranslationState = el.dataset.oeTranslationState;
-                        const applyAttributeChange = (attr, value) => {
-                            attr.translation = value;
-                            el.dataset.oeTranslationState =
-                                value === oldValue ? oldTranslationState : "translated";
-                            if (attribute === "textContent" || attribute === "value") {
-                                el.value = value;
-                            } else {
-                                el.setAttribute(attribute, value);
-                            }
-                        };
-
-                        allMutations.push({
-                            apply: () => applyAttributeChange(attributeInfo, text),
-                            revert: () => applyAttributeChange(attributeInfo, oldValue),
+                        this.dependencies.history.applyCustomMutation({
+                            apply: () => (attributeInfo.translation = text),
+                            revert: () => (attributeInfo.translation = oldValue),
                         });
+                        el.dataset.oeTranslationState = "translated";
+                        if (attribute === "textContent" || attribute === "value") {
+                            this.dependencies.valueHistory.setValue(el, text);
+                        }
+                        if (attribute !== "textContent") {
+                            el.setAttribute(attribute, text);
+                        }
                     }
                 }
             }
         }
-
-        if (allMutations.length > 0) {
-            this.dependencies.history.applyCustomMutation({
-                apply: () => {
-                    for (const mutation of allMutations) {
-                        mutation.apply();
-                    }
-                },
-                revert: () => {
-                    for (let i = allMutations.length - 1; i >= 0; i--) {
-                        allMutations[i].revert();
-                    }
-                },
-            });
-            // Single addStep for all translations, so that undo/redo is easier
-            // to manage for the user.
-            this.dependencies.history.addStep();
-        }
+        this.dependencies.history.addStep();
 
         return numOfFailedTranslationNodes;
     }

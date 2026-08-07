@@ -46,7 +46,7 @@ registry
 
 export class TranslateAttributeAction extends BuilderAction {
     static id = "translateAttribute";
-    static dependencies = ["history", "translation"];
+    static dependencies = ["history", "translation", "valueHistory"];
 
     getValue({ editingElement, params: { mainParam: attr } }) {
         if (attr === "value" && editingElement.tagName === "TEXTAREA") {
@@ -62,21 +62,14 @@ export class TranslateAttributeAction extends BuilderAction {
         if (!isTextarea || attr !== "value") {
             editingElement.setAttribute(attr, value);
         }
+        if (attr === "value") {
+            this.dependencies.valueHistory.setValue(editingElement, value);
+        }
         editingElement.classList.add("oe_translated");
 
         const setCustomHistory = (value) => {
-            if (attr === "value") {
-                editingElement.value = value;
-                if (isTextarea) {
-                    this.dependencies.translation.updateTranslationMap(
-                        editingElement,
-                        value,
-                        "textContent"
-                    );
-                    return;
-                }
-            }
-            this.dependencies.translation.updateTranslationMap(editingElement, value, attr);
+            const attrKey = attr === "value" && isTextarea ? "textContent" : attr;
+            this.dependencies.translation.updateTranslationMap(editingElement, value, attrKey);
         };
 
         this.dependencies.history.applyCustomMutation({
