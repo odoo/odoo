@@ -108,6 +108,7 @@ class WebsiteSaleShopPriceListCompareListPriceDispayTests(AccountTestInvoicingHt
             "group_product_pricelist": True,
             "group_product_price_comparison": True,
         }).execute()
+        self.env.company.website_id.show_line_subtotals_tax_selection = "tax_excluded"
         self.start_tour(
             "/shop?search=test_product",
             "website_sale.compare_list_price_price_list_display",

@@ -69,6 +69,8 @@ class WebsiteSaleCommon(DeliveryCommon):
         if "enforce_cities" in cls.env["res.country"]._fields:
             cls.env.company.country_id.enforce_cities = False
 
+        cls.website.show_line_subtotals_tax_selection = "tax_excluded"
+
         # Publish tests products
         (cls.product + cls.service_product).website_published = True
 

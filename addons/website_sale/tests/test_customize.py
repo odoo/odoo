@@ -67,6 +67,7 @@ class TestCustomize(
         # This ensures that tours which triggers on the amounts will run properly, and that the
         # currency will be the company currency.
         cls.env["product.pricelist"].action_archive()
+        cls.company.website_id.show_line_subtotals_tax_selection = "tax_excluded"
 
     def test_01_admin_shop_custom_attribute_value_tour(self):
         self.group_user.sudo()._apply_group(self.quick_ref("product.group_product_pricelist"))

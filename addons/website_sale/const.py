@@ -141,7 +141,7 @@ SHOP_PAGE_STYLE_MAPPING = {
         "img_src": "/website_sale/static/src/img/configurator/shop/condensed_list.webp",
         "views": {
             "enable": [
-                "website_sale.filmstrip_categories_images",  # Category style
+                "website_sale.filmstrip_categories_images"  # Category style
             ],
             "disable": [],
         },
@@ -409,3 +409,5 @@ SHOP_PATH = "/shop"
 DIRECT_MAPPED_ATTRIBUTE_IDENTIFIERS = {"color", "size", "material", "brand", "pattern"}
 
 MAX_EXPANDED_FILTER_SECTIONS = 4
+
+TAX_EXCLUDED_COUNTRIES = {"CA", "US"}
