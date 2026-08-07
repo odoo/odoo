@@ -30,13 +30,13 @@ export class ProjectProjectFormController extends FormControllerWithHTMLExpander
             useLayoutEffect(
                 (el) => {
                     if (el) {
-                        const title = this.rootRef.el.querySelector("#name_0");
+                        const title = el.querySelector("#name_0");
                         if (title) {
                             title.focus();
                         }
                     }
                 },
-                () => [this.rootRef.el]
+                () => [this.rootRef()]
             );
         }
     }
