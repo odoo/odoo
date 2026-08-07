@@ -6,7 +6,6 @@ from collections import defaultdict
 from functools import wraps
 from inspect import getmembers
 from copy import deepcopy
-from hashlib import sha256
 
 import logging
 import re
@@ -234,12 +233,6 @@ class AccountChartTemplate(models.AbstractModel):
                     records.with_context(force_delete=True).unlink()
 
         data = self._get_chart_template_data(template_code)
-        clean_data = {model: dict(vals) for model, vals in data.items()}
-        coa_str = str(clean_data)
-        company.coa = coa_str
-        company.coa_hash = sha256(coa_str.encode('utf-8')).hexdigest()
-        company.coa_record_number = sum(len(records) for model, records in data.items() if model != 'template_data')
-        company.coa_ascii_int = sum(ord(c) for c in coa_str)
         template_data = data.pop('template_data')
         if company.parent_id:
             data = {
