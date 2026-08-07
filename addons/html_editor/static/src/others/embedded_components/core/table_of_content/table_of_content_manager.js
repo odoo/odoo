@@ -50,7 +50,14 @@ export class TableOfContentManager {
                     offset = Math.max(offset, parseInt(height));
                 }
             }
-            scrollTo(target, { behavior: "smooth", offset: -offset }).then(() => {
+
+            // calculate offset to scroll heading near 1/3 of the screen
+            const { top, bottom } = scrollable.getBoundingClientRect();
+            const scrollableOffset = (bottom - top) / 3;
+            // change offset based on scroll direction
+            const { top: targetTop } = target.getBoundingClientRect();
+            offset = top > targetTop ? -scrollableOffset - offset : scrollableOffset * 2;
+            scrollTo(target, { behavior: "smooth", offset: offset }).then(() => {
                 // Scroll again in case we actually went downwards.
                 scrollTo(target, { behavior: "smooth" });
             });
