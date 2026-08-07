@@ -305,3 +305,9 @@ export const extractAccentColor = memoize((src, brightnessThreshold = 0.45) => {
         img.src = src;
     });
 });
+
+export function hasRtcSupport() {
+    return Boolean(
+        navigator.mediaDevices && navigator.mediaDevices.getUserMedia && window.MediaStream
+    );
+}
