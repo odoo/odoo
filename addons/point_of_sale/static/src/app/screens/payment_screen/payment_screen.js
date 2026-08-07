@@ -88,6 +88,7 @@ export class PaymentScreen extends Component {
             !this.paymentLines.length ||
             (!this.currentOrder.is_refund &&
                 this.paymentLines.length === 1 &&
+                this.paymentLines[0].payment_method_id.type === "pay_later" &&
                 this.pos.currency.isNegative(this.paymentLines[0].amount))
         ) {
             opts.fastPaymentMethod = this.payment_methods_from_config[0];
