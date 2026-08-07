@@ -1,6 +1,7 @@
 import { session } from "@web/session";
 import { utils } from "@web/core/ui/ui_service";
 import * as hoot from "@odoo/hoot-dom";
+import { loadBundle } from "@web/core/assets";
 import { pick } from "@web/core/utils/objects";
 import { getTag } from "@web/core/utils/xml";
 
@@ -182,6 +183,77 @@ export class TourStep {
 
     get hasAction() {
         return ["string", "function"].includes(typeof this.run) && !this.skipped;
+    }
+
+    /**
+     * Describes why {@link findTrigger} hasn't resolved this step's trigger yet,
+     * for diagnostics when giving up on it (e.g. a timed-out wait).
+     * @returns {string[]}
+     */
+    get error() {
+        const errors = [];
+        if (this.element) {
+            errors.push(`Element has been found.`);
+            if (this.isUIBlocked) {
+                errors.push("BUT: DOM is blocked by UI.");
+            }
+            if (!this.elementIsInModal) {
+                errors.push(
+                    `BUT: It is not allowed to do action on an element that's below a modal.`
+                );
+            }
+            if (!this.elementIsEnabled) {
+                errors.push(
+                    `BUT: Element is not enabled. TIP: You can use :enable to wait the element is enabled before doing action on it.`
+                );
+            }
+            if (!this.parentFrameIsReady) {
+                errors.push(`BUT: parent frame is not ready ([is-ready='false']).`);
+            }
+        } else {
+            const checkElement = hoot.queryFirst(this.activeSelector);
+            if (checkElement) {
+                errors.push(`Element has been found.`);
+                errors.push(
+                    `BUT: Element is not visible. TIP: You can use :not(:visible) to force the search for an invisible element.`
+                );
+            } else {
+                errors.push(`Element (${this.activeSelector}) has not been found.`);
+            }
+        }
+        return errors;
+    }
+
+    /**
+     * Executes this step's `run` on the given element.
+     * When return null or false, macro continues.
+     *
+     * {@link TourHelpers} lives in the "web_tour.automatic" bundle: looked up
+     * dynamically (and lazily loaded if missing) instead of statically imported,
+     * so this stays safe to call from a manual tour that never loaded that bundle.
+     * @param {HTMLElement} element
+     */
+    async doAction(element) {
+        if (this.skipped) {
+            return false;
+        }
+        if (!odoo.loader.modules.get("@web_tour/js/tour_automatic/tour_helpers")) {
+            await loadBundle("web_tour.automatic", { css: false });
+        }
+        const { TourHelpers } = odoo.loader.modules.get("@web_tour/js/tour_automatic/tour_helpers");
+        const actionHelper = new TourHelpers(element);
+        if (typeof this.run === "function") {
+            return await this.run.call({ anchor: element }, actionHelper);
+        } else if (typeof this.run === "string") {
+            let lastResult = null;
+            for (const todo of this.run.split("&&")) {
+                const m = String(todo)
+                    .trim()
+                    .match(/^(?<action>\w*) *\(? *(?<arguments>.*?)\)?$/);
+                lastResult = await actionHelper[m.groups?.action](m.groups?.arguments);
+            }
+            return lastResult;
+        }
     }
 
     get describeMe() {
