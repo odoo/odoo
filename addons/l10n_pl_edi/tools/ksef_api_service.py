@@ -11,6 +11,7 @@ from cryptography.hazmat.primitives import padding as sym_padding
 from cryptography.hazmat.primitives.asymmetric import padding
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 
+from odoo import fields
 from odoo.exceptions import UserError
 
 from odoo.addons.l10n_pl_edi.exceptions import KSeFRateLimitError
@@ -347,6 +348,22 @@ class KsefApiService:
             return response.json()
         except requests.exceptions.RequestException as e:
             raise UserError(self.env._("Failed to redeem token: %s", e.response.text if e.response else e))
+
+    def get_request_download_batch(self, date_from, date_to):
+        endpoint = f"{self.api_url}/invoices/exports"
+        payload = {
+            'subjectType': 'Subject3',
+            'dateRange': {
+                'from': date_from.isoformat(),
+                'to': date_to.isoformat(),
+                'dateType': 'Invoicing',
+            },
+        }
+        try:
+            response = self._make_request('POST', endpoint, json=payload)
+            return response.json()
+        except KSeFRateLimitError as e:
+            return {'error': {'retry_after': e.retry_after, 'message': str(e)}}
 
     def query_invoice_metadata(self, query_criteria, page_size=100, page_offset=0):
         endpoint = f"{self.api_url}/invoices/query/metadata"

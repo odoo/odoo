@@ -676,35 +676,70 @@ class AccountMove(models.Model):
 
     @api.model
     def _cron_l10n_pl_edi_download_bills(self):
+        retrigger = False
+        delta_secs = 0
+        min_delta_secs = 60 * 10
         for company in self.env['res.company'].search([('l10n_pl_edi_access_token', '!=', False)]):
-            if self.with_company(company)._l10n_pl_edi_download_bills_from_ksef():
-                break
+            if company_error := self.with_company(company)._l10n_pl_edi_download_bills_from_ksef():
+                delta_secs = max(delta_secs, company_error.get('retry_after', min_delta_secs))
+                retrigger = True
+
+        if retrigger:
+            self.env.ref('l10n_pl_edi.cron_l10n_pl_edi_ksef_download_bills')._trigger(
+                at=fields.Datetime.now() + relativedelta(seconds=delta_secs)
+            )
+
+    def _get_last_processed_invoicing_date(self):
+        domain = [
+            *self._check_company_domain(self.env.company),
+            ('move_type', '=', 'in_invoice'),
+            ('invoice_date', '!=', False),
+            ('l10n_pl_edi_number', '!=', False),
+        ]
+        if last_processed_move := self.search_fetch(domain, field_names=['invoice_date'], order='invoice_date DESC', limit=1):
+            return fields.Datetime.to_datetime(last_processed_move.invoice_date)
+
+        return max(
+            fields.Datetime.from_string("2026-01-31 00:00:00"),
+            fields.Datetime.now() + relativedelta(years=-1),
+        )
 
     @api.model
     def _l10n_pl_edi_download_bills_from_ksef(self):
-        """ Returns True if something goes wrong """
+        """ Theoretical limits from official docs:
+            - bills: 10_000 per batch
+            - size: 1GB batch
+            - batches per access: 10
+            - batches per minute: 16
+            - batches per hour: 20
+            - date range: 3 months
+            I guess we don't want to download 1GB in a cron though.
+            Not sure we can ingest 500 invoices in a single cron trigger before it actually dies.
+            We will go month by `relativedelta(months=1)` for now
+        """
         service = KsefApiService(self.env.company)
+        if self.env.company.l10n_pl_edi_bill_batch_number:
+            # TODO: download the batch
+            self.env.company.l10n_pl_edi_bill_batch_number = False
+            # Batch downloaded, go download next month (if necessary)
+            return {}
 
-        # Deprecated by the batch download (.zip)
-        # if error := self._fetch_bills_metadata(service):
-        #     return self._handle_download_bills_from_ksef_error(error)
-
-        # moves_to_process = self.search([
-        #     *self._check_company_domain(self.env.company),
-        #     ('move_type', '=', 'in_invoice'),
-        #     ('l10n_pl_edi_number', '!=', False),
-        #     ('l10n_pl_edi_status', '=', 'fetch_ready'),
-        # ])
-        # if error := self._fetch_bills_data(service, moves_to_process):
-        #     return self._handle_download_bills_from_ksef_error(error)
+        last_date = self._get_last_processed_invoicing_date()
+        response = service.get_request_download_batch(
+            date_from=last_date,
+            date_to=last_date + relativedelta(months=1),
+        )
+        if error := response.get('error'):
+            return error
 
     def _handle_download_bills_from_ksef_error(self, error):
-        if not (delay := error.get('retry_after')):
-            raise UserError(error.get('message'))
+        """ Deprecated by the batch download (.zip) """
+        # if not (delay := error.get('retry_after')):
+        #     raise UserError(error.get('message'))
 
-        cron = self.env.ref('l10n_pl_edi.cron_l10n_pl_edi_ksef_download_bills')
-        cron._trigger(at=fields.Datetime.now() + relativedelta(seconds=delay))
-        return True
+        # cron = self.env.ref('l10n_pl_edi.cron_l10n_pl_edi_ksef_download_bills')
+        # cron._trigger(at=fields.Datetime.now() + relativedelta(seconds=delay))
+        # return True
 
     def _get_next_processing_date_interval(self, tomorrow, last_date_to=None):
         """ Deprecated by the batch download (.zip) """
