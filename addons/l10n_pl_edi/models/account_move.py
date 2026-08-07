@@ -704,6 +704,13 @@ class AccountMove(models.Model):
             fields.Datetime.now() + relativedelta(years=-1),
         )
 
+    def _l10n_pl_edi_batch_number(self, value=None):
+        param_name = f'l10n_pl_edi_ksef.batch_number_{self.env.company_id}'
+        ParamSudo = self.env['ir.config_parameter'].sudo()
+        if value is None:
+            return ParamSudo.get_param(param_name, '')
+        return ParamSudo.set_param(param_name, value or '')
+
     @api.model
     def _l10n_pl_edi_download_bills_from_ksef(self):
         """ Theoretical limits from official docs:
@@ -717,12 +724,14 @@ class AccountMove(models.Model):
             Not sure we can ingest 500 invoices in a single cron trigger before it actually dies.
             We will go month by `relativedelta(months=1)` for now
         """
-        service = KsefApiService(self.env.company)
-        if self.env.company.l10n_pl_edi_bill_batch_number:
+        company = self.env.company
+        service = KsefApiService(company)
+
+        if batch_number := self._l10n_pl_edi_batch_number():
             # TODO: download the batch
-            self.env.company.l10n_pl_edi_bill_batch_number = False
-            # Batch downloaded, go download next month (if necessary)
-            return {}
+            _logger.info(batch_number)
+            self._l10n_pl_edi_batch_number('')
+            return {}  # Batch downloaded, go download next month (if necessary)
 
         last_date = self._get_last_processed_invoicing_date()
         response = service.get_request_download_batch(
