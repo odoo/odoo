@@ -162,9 +162,3 @@ export class TimeOffCalendarController extends CalendarController {
         return this._editRecord(record, context);
     }
 }
-
-export class TimeOffReportCalendarController extends TimeOffCalendarController {
-    async editRecord(record, context = {}) {
-        return this._editRecord(record, context, { canExpand: false });
-    }
-}
