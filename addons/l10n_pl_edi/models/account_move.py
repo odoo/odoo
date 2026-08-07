@@ -1,22 +1,29 @@
 import base64
 import contextlib
+import json
 import logging
 import re
+import time
+from decimal import Decimal
+from hashlib import sha256
 from xml.dom.minidom import parseString
 
 from dateutil.relativedelta import relativedelta
-from hashlib import sha256
 from lxml import etree
 from stdnum.pl.nip import compact
-from decimal import Decimal
 
-from odoo import Command, api, fields, models
+from odoo import Command, api, fields, models, modules
 from odoo.exceptions import UserError
-from odoo.tools import float_compare, float_is_zero, float_repr, mute_logger, OrderedSet
+from odoo.tools import OrderedSet, float_compare, float_is_zero, float_repr
 
+from odoo.addons.l10n_pl_edi.exceptions import KSeFRateLimitError
 from odoo.addons.l10n_pl_edi.tools.ksef_api_service import KsefApiService
 
+KSEF_WINDOW = 30
+KSEF_FIRST_DAY = fields.Date.from_string('2026-01-31')
+
 _logger = logging.getLogger(__name__)
+KSEF_LOG_HEADER = "KSeF download:"
 
 
 class AccountMove(models.Model):
@@ -455,7 +462,9 @@ class AccountMove(models.Model):
         }
 
     def action_l10n_pl_edi_import_from_ksef(self):
-        self._l10n_pl_edi_download_bills_from_ksef()
+        self.env.ref('l10n_pl_edi.cron_l10n_pl_edi_ksef_download_bills')._trigger(
+            at=fields.Datetime.now() + relativedelta(seconds=1)
+        )
         return {
             'type': 'ir.actions.client',
             'tag': 'reload',
@@ -502,7 +511,6 @@ class AccountMove(models.Model):
 
     @api.model
     def l10n_pl_edi_get_ksef_bill_vals_from_xml(self, xml_content):
-
         p12_to_tax_xml_id_map = {
             "23": "vz_kraj_23",
             "8": "vz_kraj_8",
@@ -673,146 +681,11 @@ class AccountMove(models.Model):
 
         return get_ksef_bill_vals(parse_fa3_bill_xml(xml_content))
 
-    @api.model
-    def _cron_l10n_pl_edi_download_bills(self):
-        for company in self.env['res.company'].search([('l10n_pl_edi_access_token', '!=', False)]):
-            blocking_error = self.with_company(company)._l10n_pl_edi_download_bills_from_ksef()
-            if blocking_error:
-                break
-
-    @api.model
-    def _l10n_pl_edi_download_bills_from_ksef(self):
-        service = KsefApiService(self.env.company)
-        blocking_error = self._fetch_bills_metadata(service)
-        to_process = self.search([
-            ('l10n_pl_edi_number', '!=', False),
-            ('move_type', '=', 'in_invoice'),
-            ('l10n_pl_edi_status', '=', 'fetch_ready'),
-            *self._check_company_domain(self.env.company),
-        ])
-        blocking_error = blocking_error or self._fetch_bills_data(service, to_process)
-        return blocking_error
-
-    def _handle_download_bills_from_ksef_error(self, error):
-        if not (delay := error.get('retry_after')):
-            raise UserError(error.get('message'))
-
-        cron = self.env.ref('l10n_pl_edi.cron_l10n_pl_edi_ksef_download_bills')
-        cron._trigger(at=fields.Datetime.now() + relativedelta(seconds=delay))
-        return True
-
-    def _fetch_bills_metadata(self, service):
-
-        last_processed_move = self.search([
-            ('l10n_pl_edi_number', '!=', False),
-            ('move_type', '=', 'in_invoice'),
-            ('invoice_date', '!=', False),
-            *self._check_company_domain(self.env.company),
-        ], order='invoice_date DESC', limit=1)
-
-        if last_processed_move:
-            date_from = fields.Datetime.to_datetime(last_processed_move.invoice_date)
-        else:
-            date_from = fields.Datetime.from_string("2026-01-31 00:00:00")  # The date it became mandatory
-
-        tomorrow = fields.Datetime.now() + relativedelta(days=1)
-        date_to = min(date_from + relativedelta(months=2), tomorrow)
-
-        query = {
-            'subjectType': 'Subject2',
-            'dateRange': {
-                'from': date_from.isoformat(),
-                'to': date_to.isoformat(),
-                'dateType': 'Invoicing',
-            },
-        }
-
-        blocking_error = False
-        page_offset = 0
-        page_size = 200
-        has_more = True
-        invoice_numbers = []
-
-        while has_more:
-            response = service.query_invoice_metadata(query, page_size, page_offset)
-            if response.get('error'):
-                blocking_error = self._handle_download_bills_from_ksef_error(response['error'])
-                break
-
-            if not response['invoices'] and date_to < tomorrow:
-                # We must keep the time window moving until we find something
-                date_from = date_to
-                date_to = min(date_from + relativedelta(months=2), tomorrow)
-                query['dateRange']['from'] = date_from.isoformat()
-                query['dateRange']['to'] = date_to.isoformat()
-                continue
-
-            invoice_numbers.extend(invoice['ksefNumber'] for invoice in response['invoices'])
-            has_more = response['hasMore']
-            page_offset += 1
-
-        already_processed = set(self.env['account.move'].search([
-            ('l10n_pl_edi_number', 'in', invoice_numbers),
-            ('move_type', '=', 'in_invoice'),
-            *self._check_company_domain(self.env.company),
-        ]).mapped('l10n_pl_edi_number'))
-
-        if to_process := [invoice_nr for invoice_nr in invoice_numbers if invoice_nr not in already_processed]:
-
-            for move in self.create([
-                {
-                    'move_type': 'in_invoice',
-                    'l10n_pl_edi_number': invoice_nr,
-                    'l10n_pl_edi_status': 'fetch_ready',
-                } for invoice_nr in to_process
-            ]):
-                move.message_post(body=self.env._("Fetching Bill from KSeF ..."))
-
-        return blocking_error
-
-    def _fetch_bills_data(self, service, bills_to_fetch):
-        for bill in bills_to_fetch:
-            invoice_nr = bill.l10n_pl_edi_number
-            response = service.get_invoice_by_ksef_number(invoice_nr)
-            try:
-                if response.get('error'):
-                    return self._handle_download_bills_from_ksef_error(response['error'])
-
-                bill_data = self.l10n_pl_edi_get_ksef_bill_vals_from_xml(response['xml_content'])
-                with mute_logger('odoo.sql_db'), self.env.cr.savepoint():
-                    bill.write({
-                        'l10n_pl_edi_status': 'fetched',
-                        'l10n_pl_edi_header': 'Fetched From KSeF',
-                        **bill_data
-                    })
-                    bill.message_post(body=self.env._("Bill Fetched Successfully from KSeF"))
-            except UserError as e:
-                bill.l10n_pl_edi_status = 'fetch_failed'
-                bill.message_post(body=self.env._("KSeF XML failed. Reason: %s", str(e)))
-            except Exception:  # noqa: BLE001
-                bill.l10n_pl_edi_status = 'fetch_failed'
-                bill.message_post(body=self.env._("KSeF XML failed. Something went wrong"))
-            finally:
-                if response.get('xml_content'):
-                    self.env['ir.attachment'].sudo().create({
-                        'description': self.env._('KSeF Fetched Invoice XML'),
-                        'name': f"KSeF-{bill.l10n_pl_edi_number.replace('/', '_')}.xml",
-                        'type': 'binary',
-                        'mimetype': 'application/xml',
-                        'raw': response['xml_content'],
-                        'res_id': bill.id,
-                        'res_model': bill._name,
-                    })
-
     def _decode_fa3_ksef(self, invoice, file_data, new):
         xml_content = file_data.get('content')
-        move_vals = self.l10n_pl_edi_get_ksef_bill_vals_from_xml(xml_content)
-
-        if move_vals:
+        if move_vals := self.l10n_pl_edi_get_ksef_bill_vals_from_xml(xml_content):
             invoice.write(move_vals)
-            return True
-
-        return False
+        return bool(move_vals)
 
     def _get_edi_decoder(self, file_data, new=False):
         if file_data.get('type') == 'xml' and file_data.get('xml_tree') is not None:
@@ -822,3 +695,112 @@ class AccountMove(models.Model):
                 return self._decode_fa3_ksef
 
         return super()._get_edi_decoder(file_data, new=new)
+
+    def _l10n_pl_edi_trigger(self, cron_ref, seconds=5):
+        retry_at = fields.Datetime.now() + relativedelta(seconds=seconds)
+        _logger.info("%s Retriggering (%s)...", KSEF_LOG_HEADER, retry_at)
+        self.env.ref(cron_ref)._trigger(at=retry_at)
+
+    @api.model
+    def _cron_l10n_pl_edi_ksef_download_bills(self):
+        today = fields.Date.today()
+        try:
+            for company in self.env['res.company'].search([('l10n_pl_edi_access_token', '!=', False)]):
+                if self._l10n_pl_edi_request_bills(company, today, today + relativedelta(days=1)):
+                    self._l10n_pl_edi_trigger('l10n_pl_edi.cron_l10n_pl_edi_download_batches')
+        except KSeFRateLimitError as e:
+            self._l10n_pl_edi_trigger('l10n_pl_edi.cron_l10n_pl_edi_ksef_download_bills', e.retry_after)
+
+    @api.model
+    def _cron_l10n_pl_edi_ksef_download_historic_bills(self):
+        Attachment = self.env['ir.attachment']
+        today, now = fields.Date.today(), fields.Datetime.now()
+        batch_data = {batch: json.loads(batch.raw) for batch in Attachment._l10n_pl_edi_get_batches()}
+
+        # Clear expired batches
+        if expired_batches := Attachment.union(*[
+            batch for batch, batch_values in batch_data.items()
+            if fields.Datetime.from_string(batch_values.get('date_expiry')) < now
+        ]):
+            expired_batches.unlink()
+
+        # Query for historic invoices per company
+        try:  # ruff: ignore [too-many-statements-in-try-clause]
+            for company in self.env['res.company'].search([('l10n_pl_edi_access_token', '!=', False)]):
+                param_name = f'l10n_pl_edi.last_historic_date_{company.id}'
+                date_to = fields.Date.from_string(self.env['ir.config_parameter'].get_param(param_name, fields.Date.to_string(today)))
+                if date_to and date_to > KSEF_FIRST_DAY:
+                    date_from = max(KSEF_FIRST_DAY, date_to + relativedelta(days=-KSEF_WINDOW))
+                    if self._l10n_pl_edi_request_bills(company, date_from, date_to):
+                        self.env['ir.config_parameter'].set_param(param_name, fields.Date.to_string(date_from))
+                        self._l10n_pl_edi_trigger('l10n_pl_edi.cron_l10n_pl_edi_download_batches')
+        except KSeFRateLimitError as e:
+            self._l10n_pl_edi_trigger('l10n_pl_edi.cron_l10n_pl_edi_ksef_download_historic_bills', e.retry_after)
+
+    def _l10n_pl_edi_request_bills(self, company, date_from, date_to):
+        service = KsefApiService(company)
+        encryption_data = service._create_encryption_data()
+        if batch_ticket := service.download_batch_request(date_from, date_to, encryption_data):
+            for delay in (5, 7, 18, 30, None):
+                batch_number = batch_ticket['number']
+                status_data = service.download_batch_status(company, batch_number, date_from, date_to, encryption_data)
+                status = int(status_data['status'] or '')
+                if status == 100:
+                    if not delay:
+                        break
+                    time.sleep(delay)
+                    continue
+                if status == 200:
+                    self.env['ir.attachment']._l10n_pl_edi_create_batch(status_data['number'], status_data)
+                    return True
+                _logger.warning('%s Batch %s couldn\'t be downloaded (%s): %s', KSEF_LOG_HEADER, batch_number, status, status_data['error'])
+                break
+        return False
+
+    def _cron_l10n_pl_edi_download_batches(self):
+        Attachment = self.env['ir.attachment']
+        # Always download latest batches first
+        if batches := Attachment._l10n_pl_edi_get_batches():
+            # We cannot use SQL or the ORM to read inside the JSON content
+            (batch, batch_data) = max(
+                ((batch, json.loads(batch.raw)) for batch in batches),
+                key=lambda x: fields.Date.from_string(x[1]['date_to']),
+            )
+            if batch and batch_data:
+                batch_name = batch.name
+                _logger.info("%s Downloading batch: %s ...", KSEF_LOG_HEADER, batch.name)
+                Attachment._l10n_pl_edi_download_parts(batch_data)
+                batch.unlink()
+                _logger.info("%s Deleted batch: %s", KSEF_LOG_HEADER, batch_name)
+                # Retrigger to download the next batch
+                self._l10n_pl_edi_trigger('l10n_pl_edi.cron_l10n_pl_edi_ksef_download_bills')
+                return
+
+        for company in self.env['res.company'].search([('l10n_pl_edi_access_token', '!=', False)]):
+            # Only decompress sets of parts that have no batch file pending
+            batches = Attachment._l10n_pl_edi_get_batches()
+            batches_numbers = batches.mapped('description') if batches else []
+            part_groups = {
+                number: parts
+                for number, parts in Attachment._l10n_pl_edi_get_parts().items()
+                if number not in batches_numbers
+            }
+            for number, parts in part_groups.items():
+                attachments = parts._l10n_pl_edi_decompress()
+                for attachment in attachments:
+                    move = self.create([{
+                        'company_id': company.id,
+                        'move_type': 'in_invoice',
+                    }])
+                    move.message_post(body=self.env._("KSeF bill %s has been attached", attachment.name), attachment_ids=attachment.ids)
+                    attachment.write({
+                        'company_id': company.id,
+                        'description': self.env._('KSeF Received Bill XML'),
+                        'res_id': move.id,
+                        'res_model': move._name,
+                        'res_field': 'l10n_pl_edi_attachment_file',
+                    })
+                    move.l10n_pl_edi_attachment_id = attachment.id
+                    move.invalidate_recordset(fnames=['l10n_pl_edi_attachment_id', 'l10n_pl_edi_attachment_file'])
+                if not modules.module.current_test:
+                    self.env.cr.commit()
