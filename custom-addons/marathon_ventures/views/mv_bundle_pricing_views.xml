@@ -8,7 +8,7 @@
         <field name="name"/>
         <field name="active"/>
         <field name="call_letters"/>
-        <field name="days"/>
+        <field name="days" widget="many2many_tags"/>
         <field name="edited_days"/>
         <field name="end_time"/>
         <field name="group"/>
@@ -44,7 +44,7 @@
                 <field name="market"/>
                 <field name="start_end_time"/>
                 <field name="active"/>
-                <field name="days"/>
+                <field name="days" widget="many2many_tags"/>
                 <field name="total"/>
                 <field name="units"/>
               </group>
