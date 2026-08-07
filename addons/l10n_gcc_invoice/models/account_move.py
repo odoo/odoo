@@ -39,16 +39,6 @@ class AccountMove(models.Model):
         ], dirty=True)
         moves_to_fix.modified(['narration'])
 
-    # TODO: Remove in master
-    @api.model_create_multi
-    def create(self, vals_list):
-        moves = super().create(vals_list)
-        return moves
-
-    # TODO: Remove in master
-    def _compute_narration(self):
-        super()._compute_narration()
-
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
 
