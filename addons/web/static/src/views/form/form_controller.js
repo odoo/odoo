@@ -12,7 +12,7 @@ import { omit } from "@web/core/utils/objects";
 import { createElement, parseXML } from "@web/core/utils/xml";
 import { useModel } from "@web/model/model";
 import { addFieldDependencies, extractFieldsFromArchInfo } from "@web/model/relational_model/utils";
-import { useEnv, useLayoutEffect, useSubEnv } from "@web/owl2/utils";
+import { useEnv, useSubEnv } from "@web/owl2/utils";
 import { useSetupAction } from "@web/search/action_hook";
 import { STATIC_ACTIONS_GROUP_NUMBER } from "@web/search/action_menus/action_menus";
 import { Layout } from "@web/search/layout";
@@ -40,6 +40,7 @@ import {
     effect,
     onError,
     onMounted,
+    onPatched,
     onWillDestroy,
     onWillUnmount,
     plugin,
@@ -317,23 +318,34 @@ export class FormController extends Component {
 
         const { disableAutofocus } = this.archInfo;
         if (!disableAutofocus) {
-            useLayoutEffect(
-                (isInEdition) => {
-                    const rootEl = this.rootRef();
-                    if (
-                        !isInEdition &&
-                        !rootEl.querySelector(".o_content").contains(document.activeElement)
-                    ) {
-                        const elementToFocus = rootEl.querySelector(
-                            ".o_content button.btn-primary"
-                        );
-                        if (elementToFocus) {
-                            elementToFocus.focus();
-                        }
+            const focusPrimaryButton = () => {
+                const rootEl = this.rootRef();
+                if (
+                    !this.model.root.isInEdition &&
+                    !rootEl.querySelector(".o_content").contains(document.activeElement)
+                ) {
+                    const elementToFocus = rootEl.querySelector(".o_content button.btn-primary");
+                    if (elementToFocus) {
+                        elementToFocus.focus();
                     }
-                },
-                () => [this.model.root.isInEdition]
-            );
+                }
+            };
+            // Deliberately lifecycle-driven rather than a `useEffect`: the
+            // button to focus must be looked up in the *patched* DOM, and an
+            // effect fires when `isInEdition` changes, not after the patch it
+            // triggers.
+            let lastIsInEdition;
+            onMounted(() => {
+                lastIsInEdition = this.model.root.isInEdition;
+                focusPrimaryButton();
+            });
+            onPatched(() => {
+                const isInEdition = this.model.root.isInEdition;
+                if (isInEdition !== lastIsInEdition) {
+                    lastIsInEdition = isInEdition;
+                    focusPrimaryButton();
+                }
+            });
         }
 
         if (this.env.inDialog) {
