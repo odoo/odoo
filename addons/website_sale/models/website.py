@@ -371,7 +371,12 @@ class Website(models.Model):
 
     @api.depends("company_id.account_fiscal_country_id")
     def _compute_show_line_subtotals_tax_selection(self):
-        self.show_line_subtotals_tax_selection = "tax_excluded"
+        for country_code, websites in self.grouped(
+            lambda website: website.company_id.account_fiscal_country_id.code
+        ).items():
+            websites.show_line_subtotals_tax_selection = (
+                "tax_excluded" if country_code in const.TAX_EXCLUDED_COUNTRIES else "tax_included"
+            )
 
     @api.depends("pricelist_id", "show_line_subtotals_tax_selection")
     def _compute_tax_display(self):
