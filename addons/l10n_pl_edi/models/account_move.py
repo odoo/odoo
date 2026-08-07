@@ -677,16 +677,16 @@ class AccountMove(models.Model):
     @api.model
     def _cron_l10n_pl_edi_download_bills(self):
         for company in self.env['res.company'].search([('l10n_pl_edi_access_token', '!=', False)]):
-            blocking_error = self.with_company(company)._l10n_pl_edi_download_bills_from_ksef()
-            if blocking_error:
+            if self.with_company(company)._l10n_pl_edi_download_bills_from_ksef():
                 break
 
     @api.model
     def _l10n_pl_edi_download_bills_from_ksef(self):
+        """ Returns True if something goes wrong """
         service = KsefApiService(self.env.company)
 
-        if blocking_error := self._fetch_bills_metadata(service):
-            return blocking_error
+        if error := self._fetch_bills_metadata(service):
+            return self._handle_download_bills_from_ksef_error(error)
 
         moves_to_process = self.search([
             *self._check_company_domain(self.env.company),
@@ -694,7 +694,8 @@ class AccountMove(models.Model):
             ('l10n_pl_edi_number', '!=', False),
             ('l10n_pl_edi_status', '=', 'fetch_ready'),
         ])
-        return self._fetch_bills_data(service, moves_to_process)
+        if error := self._fetch_bills_data(service, moves_to_process):
+            return self._handle_download_bills_from_ksef_error(error)
 
     def _handle_download_bills_from_ksef_error(self, error):
         if not (delay := error.get('retry_after')):
@@ -767,8 +768,7 @@ class AccountMove(models.Model):
     def _fetch_bills_metadata(self, service):
         error, to_download_numbers = self._fetch_invoice_to_be_processed_numbers(service)
         if error:
-            self._handle_download_bills_from_ksef_error(error)
-            return True
+            return error
 
         already_downloaded_moves = self.env['account.move'].search_fetch([
             *self._check_company_domain(self.env.company),
@@ -786,8 +786,8 @@ class AccountMove(models.Model):
             invoice_nr = bill.l10n_pl_edi_number
             response = service.get_invoice_by_ksef_number(invoice_nr)
             try:
-                if response.get('error'):
-                    return self._handle_download_bills_from_ksef_error(response['error'])
+                if error := response.get('error'):
+                    return error
 
                 bill_data = self.l10n_pl_edi_get_ksef_bill_vals_from_xml(response['xml_content'])
                 with mute_logger('odoo.sql_db'), self.env.cr.savepoint():
