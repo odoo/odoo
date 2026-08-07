@@ -714,14 +714,19 @@ describe("pos_store.js", () => {
 
         const fastPM = store.config.payment_method_ids[0];
         const card = store.models["pos.payment.method"].get(2);
+        const payLaterMethod = store.models["pos.payment.method"].find(
+            (pm) => pm.type === "pay_later"
+        );
 
-        const getOpts = () => store.getValidationOrderOptions({ order });
+        const getOpts = () => {
+            const { pos, ...rest } = store.getValidationOrderOptions({ order });
+            expect(pos).toBe(store);
+            return rest;
+        };
         const expectedWithoutFastPM = {
-            pos: store,
             orderUuid: order.uuid,
         };
         const expectedWithFastPM = {
-            pos: store,
             orderUuid: order.uuid,
             fastPaymentMethod: fastPM,
         };
@@ -739,7 +744,14 @@ describe("pos_store.js", () => {
 
         // No refund + negative payment
         paymentline.amount = -10;
-        expect(getOpts()).toEqual(expectedWithFastPM);
+        expect(getOpts()).toEqual(expectedWithoutFastPM);
+
+        if (payLaterMethod) {
+            order.payment_ids = [];
+            const payLaterLine = createPaymentLine(store, order, payLaterMethod);
+            payLaterLine.amount = -10;
+            expect(getOpts()).toEqual(expectedWithFastPM);
+        }
 
         // No refund + multiple payments
         createPaymentLine(store, order, card, { amount: -5 });
