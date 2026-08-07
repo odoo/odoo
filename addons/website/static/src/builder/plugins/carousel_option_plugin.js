@@ -61,16 +61,16 @@ export class CarouselOptionPlugin extends Plugin {
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
         gallery_items_providers: this.getGalleryItems.bind(this),
         reorder_items_processors: this.reorderCarouselItems.bind(this),
-        on_will_save_handlers: this.restoreCarousels.bind(this),
+        clean_for_save_processors: this.restoreCarousels.bind(this),
         is_unremovable_selectors: carouselItemOptionSelector,
     };
 
     /**
      * Restores all the carousels so their first slide is the active one.
      */
-    restoreCarousels(rootEl = this.editable) {
+    restoreCarousels(root) {
         // Set the first slide as the active one.
-        for (const carouselEl of selectElements(rootEl, ".carousel")) {
+        for (const carouselEl of selectElements(root, ".carousel")) {
             carouselEl.querySelectorAll(".carousel-item").forEach((itemEl, i) => {
                 itemEl.classList.remove("next", "prev", "left", "right");
                 itemEl.classList.toggle("active", i === 0);

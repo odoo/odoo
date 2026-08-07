@@ -238,7 +238,8 @@ registerWebsitePreviewTour(
             },
         },
         {
-            trigger: ":iframe #wrap .o_dirty font:first:contains(translated Parseltongue text)",
+            trigger:
+                ":iframe #wrap [data-dirty-translation] font:first:contains(translated Parseltongue text)",
         },
         {
             content: "click on input",

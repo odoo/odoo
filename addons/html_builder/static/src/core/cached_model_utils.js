@@ -44,4 +44,7 @@ export class ModelEdit {
             }
         }
     }
+    updateSavedValue(field, value) {
+        this.values[field].initial = JSON.stringify(value);
+    }
 }

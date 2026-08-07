@@ -21,26 +21,11 @@ class BlogPost extends models.Model {
 }
 defineModels([BlogPost]);
 
-const websiteServiceWithUserModelName = {
-    async getUserModelName() {
-        return "Blog Post";
-    },
-    // Minimal context to avoid crashes.
-    context: {},
-    websites: [
-        {
-            id: 1,
-            metadata: {},
-        },
-    ],
-};
-
 test("Add image as cover", async () => {
     patchWithCleanup(Builder.prototype, {
         setup() {
             super.setup();
-            this.env.services.website = websiteServiceWithUserModelName;
-            this.websiteService = websiteServiceWithUserModelName;
+            this.env.services.website.getUserModelName = () => "Blog Post";
         },
     });
 

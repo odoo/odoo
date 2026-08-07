@@ -8,7 +8,6 @@ import { registry } from "@web/core/registry";
 
 export class MegaMenuOptionPlugin extends Plugin {
     static id = "megaMenuOptionPlugin";
-    static dependencies = [];
     static shared = ["getTemplatePrefix"];
 
     /** @type {import("plugins").WebsiteResources} */
@@ -18,7 +17,6 @@ export class MegaMenuOptionPlugin extends Plugin {
             dropIn: ".o_mega_menu nav",
             dropNear: ".o_mega_menu .nav-link",
         },
-        on_ready_to_save_document_handlers: this.saveMegaMenuClasses.bind(this),
         no_parent_containers: ".o_mega_menu",
         is_unremovable_selectors: ".o_mega_menu > section",
         is_node_splittable_predicates: (node) => {
@@ -30,32 +28,23 @@ export class MegaMenuOptionPlugin extends Plugin {
                 return false;
             }
         },
+        dirt_marks: {
+            id: "mega-menu-class",
+            setDirtyOnMutation: (mutation, targetNode) =>
+                mutation.type === "classList" && targetNode.dataset.oeField === "mega_menu_content"
+                    ? mutation.target
+                    : null,
+            save: (el) =>
+                this.services.orm.write("website.menu", [parseInt(el.dataset.oeId)], {
+                    mega_menu_classes: [...el.classList]
+                        .filter((c) => !["dropdown-menu", "o_mega_menu", "o_savable"].includes(c))
+                        .join(" "),
+                }),
+        },
     };
 
     getTemplatePrefix() {
         return "website.";
-    }
-
-    async saveMegaMenuClasses() {
-        const proms = [];
-        for (const megaMenuEl of this.editable.querySelectorAll(
-            "[data-oe-field='mega_menu_content']"
-        )) {
-            // On top of saving the mega menu content like any other field
-            // content, we must save the custom classes that were set on the
-            // menu itself.
-            const classes = [...megaMenuEl.classList].filter(
-                (megaMenuClass) =>
-                    !["dropdown-menu", "o_mega_menu", "o_savable"].includes(megaMenuClass)
-            );
-
-            proms.push(
-                this.services.orm.write("website.menu", [parseInt(megaMenuEl.dataset.oeId)], {
-                    mega_menu_classes: classes.join(" "),
-                })
-            );
-        }
-        await Promise.all(proms);
     }
 }
 
