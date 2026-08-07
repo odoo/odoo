@@ -416,7 +416,7 @@ test("Computed fields: lazy (default) vs. eager", async () => {
     expect(thread.typeLazy).toBe("empty chat");
     expect.verifySteps(["LAZY"]);
     members.add("John");
-    expect.verifySteps(["EAGER", "LAZY"]); // extra-lazy because "in-need" release observed only on lazy observers no longer observing.
+    expect.verifySteps(["EAGER"]);
     expect(thread.typeEager).toBe("self-chat");
     expect.verifySteps([]);
     members.add("Antony");

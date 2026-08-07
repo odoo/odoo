@@ -30,6 +30,7 @@ export class Store extends Record {
 
     /** @param {() => any} fn */
     MAKE_UPDATE(fn) {
+        this._.raiseUpdateDepth();
         this._.UPDATE++;
         let res;
         try {
@@ -38,6 +39,7 @@ export class Store extends Record {
             this.handleError(err);
         }
         this._.UPDATE--;
+        this._.lowerUpdateDepth();
         const deletingRecordsByLocalId = new Map();
         if (this._.UPDATE === 0) {
             // pretend an increased update cycle so that nothing in queue creates many small update cycles

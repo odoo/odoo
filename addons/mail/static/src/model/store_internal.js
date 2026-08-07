@@ -11,8 +11,9 @@ import {
 } from "@mail/model/misc";
 import { RecordInternal } from "@mail/model/record_internal";
 import { parseRawValue } from "@mail/utils/common/local_storage";
+import { incrementFn } from "@mail/utils/common/signal";
 
-import { htmlEscape, markup, toRaw } from "@odoo/owl";
+import { computed, htmlEscape, markup, signal, toRaw } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
 import { deserializeDate, deserializeDateTime } from "@web/core/l10n/dates";
@@ -38,6 +39,20 @@ export class StoreInternal extends RecordInternal {
     ERRORS = [];
     UPDATE = 0;
     /**
+     * Number of update functions currently running, nested included. An owl
+     * computed() field holds its last value while one runs, as the relations
+     * it reads are written one by one. onAdd, onDelete and onUpdate run
+     * outside of them, at depth 0, so they read fresh values.
+     */
+    updateDepth = signal(0);
+    raiseUpdateDepth = incrementFn(this.updateDepth);
+    lowerUpdateDepth = incrementFn(this.updateDepth, -1);
+    /**
+     * Whether an update function is being run. A computed of the depth, so a
+     * held field only recomputes when this flips, not on every nested raise.
+     */
+    isUpdateInProgress = computed(() => this.updateDepth() > 0);
+    /**
      * Current version context used in the current store insert operation.
      *
      * The version data is provided by the server. If no version is provided,
@@ -58,6 +73,7 @@ export class StoreInternal extends RecordInternal {
 
     constructor() {
         super(...arguments);
+        untrackFunctions(this, ["lowerUpdateDepth", "raiseUpdateDepth"]);
         this.onStorage = this.onStorage.bind(this);
         browser.addEventListener("storage", this.onStorage);
     }

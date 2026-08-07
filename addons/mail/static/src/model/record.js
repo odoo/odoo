@@ -199,6 +199,10 @@ export class Record {
             }
             Model._rawStore.recordByLocalId.set(record.localId, recordProxy);
             for (const fieldName of record.Model._.fields.keys()) {
+                if (record.Model._.fieldsComputable.get(fieldName)) {
+                    // the owl computed() runs on the first read, nothing to request
+                    continue;
+                }
                 record._.requestCompute?.(record, fieldName);
             }
             record._.isConstructing.set(false);

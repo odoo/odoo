@@ -11,7 +11,7 @@ import {
     untrackFunctions,
 } from "./misc";
 import { RecordList } from "./record_list";
-import { immediateEffect, markRaw, proxy, signal, toRaw, untrack } from "@odoo/owl";
+import { computed, immediateEffect, markRaw, proxy, signal, toRaw, untrack } from "@odoo/owl";
 import { RecordUses } from "./record_uses";
 import { LocalStorageEntry } from "@mail/utils/common/local_storage";
 
@@ -96,6 +96,14 @@ export class RecordInternal {
      */
     fieldsComputeStop = new Map();
     /**
+     * Value of a field kept in a per-record owl computed(): computed on the
+     * first read and cached until one of the values it reads changes, instead
+     * of being scheduled and stored by the model. Key is fieldName.
+     *
+     * @type {Map<string, () => any>}
+     */
+    fieldsComputed = new Map();
+    /**
      * Fields that have an `onUpdate` defined. Key is fieldName, Value is function of ongoing `onChange` that can be disposed.
      * Useful to prevent any ongoing onChange and restart if need be.
      *
@@ -166,7 +174,7 @@ export class RecordInternal {
             this.fieldsLocalStorage.set(lsFieldName, new LocalStorageEntry(localStorageKey));
         }
         if (Model._.fieldsCompute.get(fieldName)) {
-            if (!Model._.fieldsEager.get(fieldName)) {
+            if (!Model._.fieldsEager.get(fieldName) && !Model._.fieldsComputable.get(fieldName)) {
                 record._registerDisposeFn(
                     observeField(recordProxy, fieldName, () => {
                         if (this.fieldsComputing.get(fieldName)) {
@@ -255,6 +263,28 @@ export class RecordInternal {
                 res = res.bind(recordFullProxy);
             }
             return res;
+        }
+        if (Model._.fieldsComputable.get(name)) {
+            let computedField = record._.fieldsComputed.get(name);
+            if (!computedField) {
+                const compute = Model._.fieldsCompute.get(name);
+                const { isUpdateInProgress } = record._rawStore._;
+                let lastValue = record._.fieldsDefault.get(name);
+                computedField = computed(function computeFieldValue() {
+                    if (untrack(isUpdateInProgress)) {
+                        // Hold while a write is being applied: the relations this
+                        // reads are written one by one. onAdd, onDelete and onUpdate
+                        // run between writes, at depth 0, so they read fresh values.
+                        // Subscribe only while held, so the release computes once.
+                        void isUpdateInProgress();
+                        return lastValue;
+                    }
+                    lastValue = compute.call(record._proxy);
+                    return lastValue;
+                });
+                record._.fieldsComputed.set(name, computedField);
+            }
+            return computedField();
         }
         if (Model._.fieldsCompute.get(name) && !Model._.fieldsEager.get(name)) {
             record._.fieldsComputeInNeed.set(name, true);
