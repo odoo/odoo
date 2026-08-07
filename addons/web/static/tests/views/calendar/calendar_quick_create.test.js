@@ -20,7 +20,7 @@ const FAKE_PROPS = {
 /**
  * @param {{
  *   props?: object;
- *   dialogOptions?: import("@web/core/dialog/dialog_service").DialogServiceInterfaceAddOptions;
+ *   dialogOptions?: import("@web/core/dialog/dialog_plugin").DialogOptionSchema;
  * }} [params]
  */
 async function start(params = {}) {

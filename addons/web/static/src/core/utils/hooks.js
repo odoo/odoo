@@ -217,7 +217,7 @@ export function useSpellCheck({ ref } = {}) {
  * Use the dialog service while also automatically closing the dialogs opened
  * by the current component when it is unmounted.
  *
- * @returns {import("@web/core/dialog/dialog_service").DialogServiceInterface}
+ * @returns {import("@web/core/dialog/dialog_plugin").DialogPlugin["add"]}
  */
 export function useOwnedDialogs(options = {}) {
     const scope = useScope();
