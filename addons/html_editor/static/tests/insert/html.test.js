@@ -402,6 +402,20 @@ describe("collapsed selection", () => {
         addStep(editor);
         expect(getContent(el)).toBe(`<p class="first">?</p><p class="second">surprise[]!</p>`);
     });
+
+    test("should add the cells missing from a ragged table with mixed rowspan/colspan", async () => {
+        const { el, editor } = await setupEditor(`<p>[]<br></p>`);
+        editor.shared.dom.insert(
+            parseHTML(
+                editor.document,
+                `<table><tbody><tr><td rowspan="2" colspan="2">A</td><td>B</td></tr><tr><td>C</td></tr><tr><td>D</td></tr></tbody></table>`
+            )
+        );
+        editor.shared.history.addStep();
+        expect(getContent(el)).toBe(
+            `<p data-selection-placeholder=""><br></p><table><tbody><tr><td rowspan="2" colspan="2">A</td><td>B</td></tr><tr><td>C</td></tr><tr><td>D</td><td><p><br></p></td><td><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p></td></tr></tbody></table><p data-selection-placeholder=""><br></p>`
+        );
+    });
 });
 
 describe("not collapsed selection", () => {

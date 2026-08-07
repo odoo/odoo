@@ -4596,6 +4596,45 @@ describe("Paste HTML tables", () => {
                     `),
         });
     });
+    test("should add the header cells missing from a ragged table", async () => {
+        await testEditor({
+            contentBefore: "<p>[]<br></p>",
+            stepFunction: async (editor) => {
+                pasteHtml(
+                    editor,
+                    unformat(`
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Second Header</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Content Cell</td>
+                                    <td>Content Cell</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    `)
+                );
+            },
+            contentAfter: unformat(`
+                        <table class="table table-bordered o_table">
+                            <tbody>
+                                <tr>
+                                    <th class="o_table_header"><p><br></p></th>
+                                    <th class="o_table_header">Second Header</th>
+                                </tr>
+                                <tr>
+                                    <td>Content Cell</td>
+                                    <td>Content Cell[]</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    `),
+        });
+    });
 });
 
 describe("onDrop", () => {
