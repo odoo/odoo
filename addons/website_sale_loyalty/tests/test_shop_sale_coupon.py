@@ -140,6 +140,8 @@ class WebsiteSaleLoyaltyTestUi(TestSaleCommon, HttpCase):
             "points": 371.03,
         })
 
+        self.env.company.website_id.show_line_subtotals_tax_selection = "tax_excluded"
+
         self.env.ref("website_sale.reduction_code").write({"active": True})
         self.start_tour(large_cabinet.website_url, "website_sale_loyalty.promotions", login="admin")
 

@@ -12,6 +12,7 @@ class TestWebsiteSaleStockMultilang(HttpCase):
         website = self.env.ref("base.default_website")
         lang_fr = self.env["res.lang"]._activate_lang("fr_FR")
         website.language_ids = [Command.link(lang_fr.id)]
+        website.show_line_subtotals_tax_selection = "tax_excluded"
 
         # Configure product: out-of-stock message in EN and FR
         unavailable_product = self.env["product.product"].create({

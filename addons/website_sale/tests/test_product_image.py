@@ -205,6 +205,7 @@ class TestWebsiteSaleImage(HttpCaseWithWebsiteUser):
         # Ensure that no pricelist is available during the test.
         # This ensures that tours with triggers on the amounts will run properly.
         self.env["product.pricelist"].search([]).action_archive()
+        self.env.company.website_id.show_line_subtotals_tax_selection = "tax_excluded"
 
         self.start_tour(
             "/shop?debug=1&search=A Colorful Image",

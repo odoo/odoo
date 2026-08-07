@@ -1,7 +1,22 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from odoo.fields import Domain
 from odoo.tools.sql import SQL
 
 from . import controllers, models, report
+
+
+def setup_website_tax_display(env, tax_display, country_code):
+    """Ensure websites in the specified country use the given default tax display.
+
+    Used by localization modules who override the default behavior.
+    """
+    env["website"].search(
+        Domain([
+            ("show_line_subtotals_tax_selection", "!=", tax_display),
+            ("company_id.account_fiscal_country_id.code", "=", country_code),
+        ])
+    ).show_line_subtotals_tax_selection = tax_display
 
 
 def _post_init_hook(env):  # noqa: RUF067
@@ -42,10 +57,10 @@ def _post_init_hook(env):  # noqa: RUF067
 
 
 def uninstall_hook(env):
-    ''' Need to reenable the `product` pricelist multi-company rule that were
-        disabled to be 'overridden' for multi-website purpose
-    '''
-    if access := env.ref('product.product_pricelist_comp_rule', raise_if_not_found=False):
+    """Need to reenable the `product` pricelist multi-company rule that were
+    disabled to be 'overridden' for multi-website purpose.
+    """
+    if access := env.ref("product.product_pricelist_comp_rule", raise_if_not_found=False):
         access.active = True
-    if access := env.ref('product.product_pricelist_item_comp_rule', raise_if_not_found=False):
+    if access := env.ref("product.product_pricelist_item_comp_rule", raise_if_not_found=False):
         access.active = True
