@@ -187,7 +187,7 @@ describe("collapsed selection", () => {
         const { editor } = await setupEditor(`<p>cont[]ent</p>`, {});
         insertHTML("<table><tbody><tr><td/></tr></tbody></table>")(editor);
         expect(getContent(editor.editable)).toBe(
-            `<p>cont</p><table><tbody><tr><td><br></td></tr></tbody></table><p>[]ent</p>`
+            `<p>cont</p><table><tbody><tr><td><p><br></p></td></tr></tbody></table><p>[]ent</p>`
         );
     });
 
@@ -201,7 +201,7 @@ describe("collapsed selection", () => {
         insertHTML("<table><tbody><tr><td/></tr></tbody></table>")(editor);
         await tick();
         expect(getContent(editor.editable)).toBe(
-            `<p data-selection-placeholder=""><br></p><p class="oe_unbreakable">content</p><p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p><table><tbody><tr><td><br></td></tr></tbody></table><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`
+            `<p data-selection-placeholder=""><br></p><p class="oe_unbreakable">content</p><p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p><table><tbody><tr><td><p><br></p></td></tr></tbody></table><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`
         );
     });
 
@@ -218,7 +218,7 @@ describe("collapsed selection", () => {
         insertHTML("<table><tbody><tr><td/></tr></tbody></table>")(editor);
         expect(getContent(editor.editable)).toBe(
             '<p data-selection-placeholder=""><br></p>' +
-                `<div><p class="oe_unbreakable" contenteditable="true"><b class="oe_unbreakable">content</b><table><tbody><tr><td>[]<br></td></tr></tbody></table></p></div>` +
+                `<div><p class="oe_unbreakable" contenteditable="true"><b class="oe_unbreakable">content</b><table><tbody><tr><td><p>[]<br></p></td></tr></tbody></table></p></div>` +
                 '<p data-selection-placeholder=""><br></p>'
         );
     });
@@ -400,6 +400,20 @@ describe("collapsed selection", () => {
         editor.shared.dom.insert("notasurprise");
         commit(editor);
         expect(getContent(el)).toBe(`<p class="first">?</p><p class="second">surprise[]!</p>`);
+    });
+
+    test("should add the cells missing from a ragged table with mixed rowspan/colspan", async () => {
+        const { el, editor } = await setupEditor(`<p>[]<br></p>`);
+        editor.shared.dom.insert(
+            parseHTML(
+                editor.document,
+                `<table><tbody><tr><td rowspan="2" colspan="2">A</td><td>B</td></tr><tr><td>C</td></tr><tr><td>D</td></tr></tbody></table>`
+            )
+        );
+        editor.shared.history.commit();
+        expect(getContent(el)).toBe(
+            `<p data-selection-placeholder=""><br></p><table><tbody><tr><td rowspan="2" colspan="2">A</td><td>B</td></tr><tr><td>C</td></tr><tr><td>D</td><td><p><br></p></td><td><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p></td></tr></tbody></table><p data-selection-placeholder=""><br></p>`
+        );
     });
 });
 
