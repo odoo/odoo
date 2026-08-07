@@ -240,3 +240,46 @@ describe("range not collapsed", () => {
         expect(clipboardData.types).not.toInclude("application/vnd.odoo.odoo-editor");
     });
 });
+
+describe("list", () => {
+    test("should copy the selection inside a nested list item's paragraph without leaking the nested list (1)", async () => {
+        await setupEditor(
+            '<ul><li><div class="o-paragraph">a[bc]d</div><ul><li>test</li><li>adwwd</li></ul></li></ul>'
+        );
+        const clipboardData = new DataTransfer();
+        await press(["ctrl", "c"], { dataTransfer: clipboardData });
+        expect(clipboardData.getData("text/html")).toBe("<div>bc</div>");
+    });
+
+    test("should copy the selection inside a nested list item's paragraph without leaking the nested list (2)", async () => {
+        await setupEditor(
+            '<ul><li><div class="o-paragraph">[abcd]</div><ul><li>test</li><li>adwwd</li></ul></li></ul>'
+        );
+        const clipboardData = new DataTransfer();
+        await press(["ctrl", "c"], { dataTransfer: clipboardData });
+        expect(clipboardData.getData("text/html")).toBe("<ul><li><div>abcd</div></li></ul>");
+    });
+
+    test("should copy the whole list item, including its nested list, when the selection spans both", async () => {
+        await setupEditor(
+            unformat(`
+                <ul><li>
+                    <div class="o-paragraph">[abcd</div>
+                    <ul><li>test</li><li>adwwd]</li></ul>
+                </li></ul>
+            `)
+        );
+        const clipboardData = new DataTransfer();
+        await press(["ctrl", "c"], { dataTransfer: clipboardData });
+        expect(clipboardData.getData("text/html")).toBe(
+            unformat(`
+                <ul>
+                    <li>
+                        <div>abcd</div>
+                        <ul><li>test</li><li>adwwd</li></ul>
+                    </li>
+                </ul>
+            `)
+        );
+    });
+});
