@@ -5,18 +5,23 @@ from freezegun import freeze_time
 from odoo.http.session import SESSION_ROTATION_INTERVAL
 from odoo.tests import HttpCase, JsonRpcException, new_test_user, tagged
 
+from .common import BusCase
+
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
-class TestWebsocketController(HttpCase):
+class TestWebsocketController(HttpCase, BusCase):
     def test_websocket_peek(self):
+        self._reset_bus()
+        self.env["bus.bus"]._sendone("dummy", "dummy_notification", None)  # Subscribing with 0 would fallback to last id.
+        self.env.cr.precommit.run()  # Trigger bus record creation.
+        initial_last_id = self.env["bus.bus"]._bus_last_id()
         self.env['bus.bus']._sendone('channel_A', 'channel_a_notification', None)
         self.env.cr.precommit.run()  # Trigger bus record creation.
         result = self.make_jsonrpc_request('/websocket/peek_notifications', {
             'channels': ['channel_A'],
-            'last': 0,
+            'last': initial_last_id,
             'is_first_poll': True,
         })
-
         # Response containing channels/notifications is retrieved and is
         # conform to excpectations.
         self.assertIsNotNone(result)
@@ -27,7 +32,7 @@ class TestWebsocketController(HttpCase):
         self.assertEqual(notifications[0]['message']['type'], 'channel_a_notification')
         result = self.make_jsonrpc_request('/websocket/peek_notifications', {
             'channels': [],
-            'last': 0,
+            'last': initial_last_id,
             'is_first_poll': False,
         })
 

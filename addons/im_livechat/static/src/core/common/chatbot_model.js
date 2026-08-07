@@ -132,14 +132,14 @@ export class Chatbot extends Record {
     get completed() {
         return (
             this.currentStep?.isLast ||
-            this.currentStep?.operatorFound ||
+            this.currentStep?.operatorFoundEver ||
             this.channel_id.livechat_end_dt ||
             this.channel_id.livechat_agent_history_ids.length > 0
         );
     }
 
     get canRestart() {
-        return this.currentStep?.isLast && !this.currentStep.operatorFound;
+        return this.currentStep?.isLast && !this.currentStep.operatorFoundEver;
     }
 
     /**
@@ -158,7 +158,7 @@ export class Chatbot extends Record {
                     data_id: dataRequest.id,
                 });
                 await dataRequest._resultResolvers.promise;
-                if (this.currentStep.isLast) {
+                if (this.currentStep.isLast || !dataRequest.chatbot_step) {
                     return;
                 }
                 this.steps.push(dataRequest.chatbot_step);
@@ -250,7 +250,7 @@ export class Chatbot extends Record {
      * @returns {Promise<boolean>} Whether the script is ready to go to the next step.
      */
     async _processAnswerQuestionSelection(message) {
-        const answer = this.currentStep.selectedAnswer;
+        const answer = this.currentStep.selectedAnswerEver;
         if (!answer?.redirect_link) {
             return true;
         }

@@ -1099,11 +1099,11 @@ class BaseCase(case.TestCase):
             )
 
         try:
-            from odoo.addons.bus import websocket as bus_websocket  # noqa: PLC0415
+            from odoo.addons.bus.tools import misc as bus_misc  # noqa: PLC0415
         except ImportError:
             additional_patches = ()
         else:
-            og_db_connect = bus_websocket.db_connect
+            og_db_connect = bus_misc.db_connect
 
             def _patched_ws_db_connect(to, allow_uri=False, readonly=False):
                 # acquire_cursor() opens a cursor via db_connect(db_name) directly instead
@@ -1119,7 +1119,7 @@ class BaseCase(case.TestCase):
                 return og_db_connect(to, allow_uri=allow_uri, readonly=readonly)
 
             additional_patches = (
-                patch.object(bus_websocket, 'db_connect', _patched_ws_db_connect),
+                patch.object(bus_misc, 'db_connect', _patched_ws_db_connect),
             )
 
         def get_sequences(cr):

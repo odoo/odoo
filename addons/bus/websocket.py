@@ -1,5 +1,4 @@
 import base64
-import bisect
 import contextvars
 import functools
 import hashlib
@@ -13,7 +12,7 @@ import threading
 import time
 from collections import defaultdict, deque
 from collections.abc import Buffer
-from contextlib import ExitStack, contextmanager, suppress
+from contextlib import suppress
 from enum import IntEnum
 from itertools import count
 from queue import PriorityQueue
@@ -38,12 +37,12 @@ from odoo.http.session import (
 )
 from odoo.modules.registry import Registry
 from odoo.service.server import CommonServer
-from odoo.sql_db import db_connect
 from odoo.tools import config
 
-from .models.bus import dispatch, fetch_bus_notifications
-from .session_helpers import check_session, new_env
+from .bus_dispatcher import dispatch
+from .session_helpers import new_env
 from .tools import orjson
+from .tools.misc import acquire_cursor
 from .websocket_protocol import (
     CloseCode,
     ConnectionClosed,
@@ -62,35 +61,6 @@ from .websocket_protocol import (
 _logger = logging.getLogger(__name__)
 _stopping = threading.Event()
 
-
-MAX_TRY_ON_POOL_ERROR = 10
-DELAY_ON_POOL_ERROR = 0.15
-JITTER_ON_POOL_ERROR = 0.3
-
-
-@contextmanager
-def acquire_cursor(db):
-    """ Try to acquire a cursor up to `MAX_TRY_ON_POOL_ERROR` """
-    delay = DELAY_ON_POOL_ERROR
-    try:
-        for _ in range(MAX_TRY_ON_POOL_ERROR):
-            # Yield before trying to acquire the cursor to let other
-            # greenlets release their cursor.
-            time.sleep(0)
-            with ExitStack() as stack:
-                cr = None
-                with suppress(PoolError):
-                    cr = stack.enter_context(db_connect(db).cursor())
-                if cr is not None:
-                    yield cr
-                    return
-            time.sleep(delay + random.uniform(0, JITTER_ON_POOL_ERROR))
-            delay *= 1.5
-        raise PoolError('Failed to acquire cursor after %s retries' % MAX_TRY_ON_POOL_ERROR)
-    finally:
-        # Yield after releasing the cursor to let waiting greenlets
-        # immediately pick up the freed connection.
-        time.sleep(0)
 
 # ------------------------------------------------------
 # EXCEPTIONS
@@ -150,7 +120,6 @@ _command_uid = count(0)
 class ControlCommand(IntEnum):
     CLOSE = 0
     SEND = 1
-    DISPATCH = 2
 
 
 DATA_OP = {Opcode.TEXT, Opcode.BINARY}
@@ -203,32 +172,6 @@ class Websocket:
     # Maximum size for a message in bytes, whether it is sent as one
     # frame or many fragmented ones.
     MESSAGE_MAX_SIZE = 2 ** 20
-    # How much time (in second) the history of last dispatched notifications is
-    # kept in memory for each websocket.
-    # To avoid duplicate notifications, we fetch them based on their ids.
-    # However during parallel transactions, ids are assigned immediately (when
-    # they are requested), but the notifications are dispatched at the time of
-    # the commit. This means lower id notifications might be dispatched after
-    # higher id notifications.
-    # Simply incrementing the min id is sufficient to guarantee no duplicates,
-    # but it is not sufficient to guarantee all notifications are dispatched,
-    # and in particular not sufficient for those with a lower id coming after a
-    # higher id was dispatched.
-    # To solve the issue of missed notifications, the lowest id, stored in
-    # ``_min_id_by_channel``, is held back by a few seconds to give time for
-    # concurrent transactions to finish. To avoid dispatching duplicate
-    # notifications, the history of already dispatched notifications during this
-    # period is kept in memory in ``_notif_history`` and the corresponding
-    # notifications are discarded from subsequent dispatching even if their id
-    # is higher than the corresponding ``_min_id_by_channel``.
-    # In practice, what is important functionally is the time between the create
-    # of the notification and the commit of the transaction in business code.
-    # If this time exceeds this threshold, the notification will never be
-    # dispatched if the target user receive any other notification in the
-    # meantime.
-    # Transactions known to be long should therefore create their notifications
-    # at the end, as close as possible to their commit.
-    MAX_NOTIFICATION_HISTORY_SEC = 10
     # How many requests can be made in excess of the given rate.
     RL_BURST = int(config['websocket_rate_limit_burst'])
     # How many seconds between each request.
@@ -247,17 +190,9 @@ class Websocket:
         self._timeout_manager = TimeoutManager()
         # Used for rate limiting.
         self._incoming_frame_timestamps = deque(maxlen=self.RL_BURST)
-        # Command queue used to manage the websocket instance externally, such
-        # as triggering notification dispatching or terminating the connection.
+        # Command queue used to manage the websocket instance externally, such as sending
+        # messages or terminating the connection.
         self.__cmd_queue = PollablePriorityQueue()
-        self._waiting_for_dispatch = False
-        # For ``_min_id_by_channel and ``_notif_history``, see
-        # ``MAX_NOTIFICATION_HISTORY_SEC`` for more details.
-        # Id of the last sent notification that is no longer in ``_notif_history``, by channel.
-        self._min_id_by_channel = {}
-        # History of last sent notifications in the format (notif_id, send_time)
-        # always sorted by notif_id ASC
-        self._notif_history = []
         # Websocket start up
         self.__selector = (
             selectors.PollSelector()
@@ -338,26 +273,6 @@ class Websocket:
         """
         with suppress(InvalidStateException):
             self.send([{"type": type_, "internal": True, "payload": payload}])
-
-    def subscribe(self, channels, last):
-        self._min_id_by_channel = {
-            c: self._min_id_by_channel.get(c, last) for c in channels
-        }
-        # Dispatch past notifications if there are any.
-        self.trigger_notification_dispatching()
-
-    def trigger_notification_dispatching(self):
-        """
-        Warn the socket that notifications are available. Ignore if a
-        dispatch is already planned or if the socket is already in the
-        closing state.
-        """
-        if self.state is not ConnectionState.OPEN or self._waiting_for_dispatch:
-            return
-        self._waiting_for_dispatch = True
-        # Ignore if the socket was closed in the meantime.
-        with suppress(OSError):
-            self._enqueue_control_command(ControlCommand.DISPATCH)
 
     # ------------------------------------------------------
     # PRIVATE METHODS
@@ -500,10 +415,13 @@ class Websocket:
             raise ProtocolError(e)
         if isinstance(frame.payload, str):
             frame.payload = frame.payload.encode('utf-8')
-        elif isinstance(frame.payload, Buffer):
-            frame.payload = bytes(frame.payload)
-        else:
+        elif frame.opcode is Opcode.TEXT and not isinstance(frame.payload, Buffer):
+            # Only encode what's not been encoded by the caller already, this way, the
+            # dispatcher can encode the payload once, to avoid repeating the work accross
+            # all subscribed websockets.
             frame.payload = orjson.dumps(frame.payload)
+        else:
+            frame.payload = bytes(frame.payload)
 
         output = bytearray()
         first_byte = (
@@ -678,27 +596,6 @@ class Websocket:
                     # we continue to use it, we must rollback
                     cr.rollback()
 
-    def _assert_session_validity(self):
-        """Ensure the current session exists and validate it using
-        `check_session`.
-
-        :raises: SessionExpiredException if the session does not exist or fails
-          validation.
-
-        """
-        session = session_store().get(self._session.sid)
-        if not session:
-            e = "session non longer exists"
-            raise SessionExpiredException(e)
-        if 'next_sid' in session:
-            self._session = session_store().get(session['next_sid'])
-            self._assert_session_validity()
-            return
-        if session.uid is None:
-            return
-        with acquire_cursor(session.db) as cr:
-            check_session(cr, session)
-
     def _enqueue_control_command(self, command, data=None):
         """Enqueue a command to be processed by the websocket event loop.
 
@@ -716,59 +613,8 @@ class Websocket:
         match command:
             case ControlCommand.SEND:
                 self._send_frame(data)
-            case ControlCommand.DISPATCH:
-                self._assert_session_validity()
-                self._dispatch_bus_notifications()
             case ControlCommand.CLOSE:
                 self._disconnect(data['code'], data.get('reason'))
-
-    def _dispatch_bus_notifications(self):
-        self._waiting_for_dispatch = False
-        with acquire_cursor(self._session.db) as cr:
-            notifications = fetch_bus_notifications(
-                cr,
-                self._min_id_by_channel,
-                [n[0] for n in self._notif_history],
-            )
-        if not notifications:
-            return
-        for notif in notifications:
-            bisect.insort(self._notif_history, (notif['id'], time.time()), key=lambda x: x[0])
-        # Discard all the smallest notification ids that have expired and
-        # increment the min id accordingly. History can only be trimmed of ids
-        # that are below the new min id otherwise some notifications might be
-        # dispatched again.
-        # For example, if the theshold is 10s, and the state is:
-        # min id 2, history [(3, 8s), (6, 10s), (7, 7s)]
-        # If 6 is removed because it is above the threshold, the next query will
-        # be (id > 2 AND id NOT IN (3, 7)) which will fetch 6 again.
-        # 6 can only be removed after 3 reaches the threshold and is removed as
-        # well, and if 4 appears in the meantime, 3 can be removed but 6 will
-        # have to wait for 4 to reach the threshold as well.
-        last_index = -1
-        for i, notif in enumerate(self._notif_history):
-            if time.time() - notif[1] > self.MAX_NOTIFICATION_HISTORY_SEC:
-                last_index = i
-            else:
-                break
-        if last_index != -1:
-            new_min_id = self._notif_history[last_index][0]
-            for channel, current_min in self._min_id_by_channel.items():
-                # Ensure the min_id doesn't rollback, as lower notification ids can be
-                # fetched by other channels.
-                #
-                # For example, starting with the A channel, with 99 as its min id and the
-                # following history : [A(100, 0s)]. The client subscribes to B, with 80 as
-                # its min id. The resulting history looks like this:
-                # [B(90, 0s), B(91, 0s), A(100, 1s)].
-                #
-                # Then, the C channel is added: [B(90, 1s), B(91, 1s), C(95, 0s), A(100, 2s)].
-                # 9 seconds later, the new id considered as safe would be 91, since 10 seconds
-                # have passed. But A min_id shouldn't rollback.
-                if current_min < new_min_id:
-                    self._min_id_by_channel[channel] = new_min_id
-            self._notif_history = self._notif_history[last_index + 1 :]
-        self.send(notifications)
 
 
 class TimeoutManager:

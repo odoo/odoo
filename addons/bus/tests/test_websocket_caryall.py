@@ -17,14 +17,14 @@ from odoo.api import Environment
 from odoo.tests import new_test_user
 
 from odoo.addons.bus import websocket as websocket_module
-from odoo.addons.bus.models.bus import dispatch
+from odoo.addons.bus.bus_dispatcher import BusDispatcher, ChannelTopic, dispatch
 from odoo.addons.bus.models.ir_websocket import IrWebsocket
 from odoo.addons.bus.tests.common import WebsocketCase
 from odoo.addons.bus.websocket import (
-    acquire_cursor,
     CloseCode,
     Websocket,
     WebsocketConnectionHandler,
+    acquire_cursor,
 )
 
 
@@ -67,21 +67,31 @@ class TestWebsocketCaryall(WebsocketCase):
         websocket = self.websocket_connect()
         self.subscribe(websocket, ['my_channel'], self.env['bus.bus']._bus_last_id())
         # channel is added as expected to the channel to websocket map.
-        self.assertIn((self.env.registry.db_name, 'my_channel'), dispatch._channels_to_ws)
+        channel = (self.env.registry.db_name, "my_channel")
+        self.assertIn(channel, dispatch._topic_by_channel)
+        topic = dispatch._topic_by_channel[channel]
+        self.assertTrue(
+            any(topic in topics for topics in dispatch._topics_by_websocket.values()),
+        )
         websocket.close(CloseCode.CLEAN)
         self.wait_remaining_websocket_connections()
         # channel is removed as expected when removing the last
         # websocket that was listening to this channel.
-        self.assertNotIn((self.env.registry.db_name, 'my_channel'), dispatch._channels_to_ws)
+        self.assertNotIn((self.env.registry.db_name, "my_channel"), dispatch._topic_by_channel)
 
     def test_channel_subscription_update(self):
         websocket = self.websocket_connect()
         self.subscribe(websocket, ['my_channel'], self.env['bus.bus']._bus_last_id())
         # channel is added as expected to the channel to websocket map.
-        self.assertIn((self.env.registry.db_name, 'my_channel'), dispatch._channels_to_ws)
+        channel = (self.env.registry.db_name, "my_channel")
+        self.assertIn((self.env.registry.db_name, "my_channel"), dispatch._topic_by_channel)
+        topic = dispatch._topic_by_channel[channel]
+        self.assertTrue(
+            any(topic in topics for topics in dispatch._topics_by_websocket.values()),
+        )
         self.subscribe(websocket, ['my_channel_2'], self.env['bus.bus']._bus_last_id())
         # channel is removed as expected when updating the subscription.
-        self.assertNotIn((self.env.registry.db_name, 'my_channel'), dispatch._channels_to_ws)
+        self.assertNotIn((self.env.registry.db_name, "my_channel"), dispatch._topic_by_channel)
 
     def test_trigger_notification(self):
         websocket = self.websocket_connect()
@@ -120,10 +130,12 @@ class TestWebsocketCaryall(WebsocketCase):
         server_last_notification_id = self.env['bus.bus'].sudo().search([], limit=1, order='id desc').id or 0
         client_last_notification_id = server_last_notification_id + 1
 
-        with patch.object(Websocket, 'subscribe', side_effect=Websocket.subscribe, autospec=True) as mock:
+        with patch.object(
+            BusDispatcher, "subscribe", side_effect=BusDispatcher.subscribe, autospec=True
+        ) as mock:
             websocket = self.websocket_connect()
             self.subscribe(websocket, ['my_channel'], client_last_notification_id)
-            self.assertEqual(mock.call_args[0][2], 0)
+            self.assertEqual(mock.call_args[0][2], server_last_notification_id)
             message = json.loads(websocket.recv())[0]
             self.assertEqual(
                 message,
@@ -136,20 +148,20 @@ class TestWebsocketCaryall(WebsocketCase):
 
     def test_subscribe_non_integer_last(self):
         with patch.object(
-            Websocket,
+            BusDispatcher,
             "subscribe",
-            side_effect=Websocket.subscribe,
+            side_effect=BusDispatcher.subscribe,
             autospec=True,
         ) as mock:
             websocket = self.websocket_connect()
             dispatch_done = Event()
-            orig = Websocket._dispatch_bus_notifications
+            orig = ChannelTopic.dispatch_notifications
 
-            def patched(self_ws, *args):
-                orig(self_ws, *args)
+            def patched(self_topic, *args):
+                orig(self_topic, *args)
                 dispatch_done.set()
 
-            with patch.object(Websocket, "_dispatch_bus_notifications", patched):
+            with patch.object(ChannelTopic, "dispatch_notifications", patched):
                 websocket.send(
                     json.dumps(
                         {
@@ -159,13 +171,18 @@ class TestWebsocketCaryall(WebsocketCase):
                     ),
                 )
                 dispatch_done.wait(timeout=5)
-            self.assertEqual(mock.call_args[0][2], 0)
+            self.assertEqual(mock.call_args[0][2], self.env["bus.bus"]._bus_last_id())
 
     def test_subscribe_lower_last_notification_id(self):
-        server_last_notification_id = self.env['bus.bus'].sudo().search([], limit=1, order='id desc').id or 0
+        # Two notifications so that the lower id is still an actual one, and is
+        # therefore left as is rather than falling back to the last id.
+        self.env["bus.bus"]._sendone("my_channel", "some_notification", None)
+        self.env["bus.bus"]._sendone("my_channel", "some_notification", None)
+        self.trigger_notification_dispatching()
+        server_last_notification_id = self.env['bus.bus']._bus_last_id()
         client_last_notification_id = server_last_notification_id - 1
 
-        with patch.object(Websocket, 'subscribe', side_effect=Websocket.subscribe, autospec=True) as mock:
+        with patch.object(BusDispatcher, "subscribe", side_effect=BusDispatcher.subscribe, autospec=True) as mock:
             websocket = self.websocket_connect()
             self.subscribe(websocket, ['my_channel'], client_last_notification_id)
             self.assertEqual(mock.call_args[0][2], client_last_notification_id)
@@ -268,7 +285,7 @@ class TestWebsocketCaryall(WebsocketCase):
         with self.assertRaises(ws._exceptions.WebSocketTimeoutException):
             websocket.recv()
 
-    @patch('odoo.addons.bus.websocket.db_connect')
+    @patch('odoo.addons.bus.tools.misc.db_connect')
     def test_propagates_caller_pool_error(self, mock_db_connect):
         fake_cursor = MagicMock()
         cr_ctx_manager = mock_db_connect.return_value.cursor.return_value

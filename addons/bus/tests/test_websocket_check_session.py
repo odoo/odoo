@@ -6,10 +6,15 @@ from unittest.mock import patch
 
 from freezegun import freeze_time
 
-from odoo.http.session import SessionExpiredException
+from odoo.http.session import session_store
 from odoo.tests import HttpCase, mute_logger, new_test_user
+from odoo.tools import SQL
 
-from odoo.addons.bus.session_helpers import _get_session_token_query_params, check_session
+from odoo.addons.bus.session_helpers import (
+    _get_session_token_query_params,
+    _query_params_by_dbname,
+    check_sessions,
+)
 from odoo.addons.bus.tests.common import WebsocketCase
 from odoo.addons.bus.websocket import CloseCode, WebsocketConnectionHandler
 
@@ -20,36 +25,80 @@ class TestWebsocketCheckSession(WebsocketCase, HttpCase):
         self.authenticate(bob.login, bob.password)
         with freeze_time() as frozen_time:
             self.session["deletion_time"] = time.time() + 3600
-            check_session(self.env.cr, self.session)  # assert it doesn't raise
+            session_store().save(self.session)
+            self.assertIn(self.session.sid, check_sessions(self.env.cr, [self.session]))
             frozen_time.tick(delta=timedelta(hours=2))
-            with self.assertRaises(SessionExpiredException):
-                check_session(self.env.cr, self.session)
+            self.assertNotIn(self.session.sid, check_sessions(self.env.cr, [self.session]))
 
     def test_check_session_token_field_changes(self):
         bob = new_test_user(self.env, "bob", groups="base.group_user")
         self.authenticate(bob.login, bob.password)
-        check_session(self.env.cr, self.session)  # assert it doesn't raise
+        self.assertIn(self.session.sid, check_sessions(self.env.cr, [self.session]))
         bob.password = "bob_new_password"
-        with self.assertRaises(SessionExpiredException):
-            check_session(self.env.cr, self.session)
+        self.assertNotIn(self.session.sid, check_sessions(self.env.cr, [self.session]))
+
+    def test_check_session_multiple(self):
+        bob = new_test_user(self.env, "bob", groups="base.group_user")
+        jane = new_test_user(self.env, "jane", groups="base.group_user")
+        john = new_test_user(self.env, "john", groups="base.group_user")
+        bob_session = self.authenticate(bob.login, bob.password)
+        jane_session = self.authenticate(jane.login, jane.password)
+        john_session = self.authenticate(john.login, john.password)
+        sessions = [bob_session, jane_session, john_session]
+        store = session_store()
+        # `authenticate` drops the previous session from the store, put them all back.
+        for session in sessions:
+            store.save(session)
+        self.assertEqual(
+            set(check_sessions(self.env.cr, sessions)),
+            {bob_session.sid, jane_session.sid, john_session.sid},
+        )
+        # Invalidate bob (token field change) and john (past deletion time),
+        # jane is left untouched. Only jane is returned, unaffected by the
+        # invalid sessions surrounding her.
+        bob.password = "bob_new_password"
+        john_session["deletion_time"] = time.time() - 3600
+        store.save(john_session)
+        self.assertEqual(set(check_sessions(self.env.cr, sessions)), {jane_session.sid})
+
+    def test_query_shape_is_user_agnostic(self):
+        """The shape cached by `_get_session_token_query_params` must hold
+        nothing user specific, since a single entry serves every user."""
+        bob = new_test_user(self.env, "bob", groups="base.group_user")
+        jane = new_test_user(self.env, "jane", groups="base.group_user")
+        model_params = self.env["res.users"]._get_session_token_query_params()
+        self.assertEqual(model_params["where"], SQL("res_users.id = %s", False))
+        bob_params = _get_session_token_query_params(self.env.cr, [bob.id])
+        jane_params = _get_session_token_query_params(self.env.cr, [jane.id])
+        self.assertEqual(
+            {key: sql for key, sql in bob_params.items() if key != "where"},
+            {key: sql for key, sql in jane_params.items() if key != "where"},
+        )
+        self.assertEqual(bob_params["where"], SQL("res_users.id IN %s", (bob.id,)))
+        self.assertEqual(jane_params["where"], SQL("res_users.id IN %s", (jane.id,)))
 
     def test_update_cache_when_registry_changes(self):
         bob = new_test_user(self.env, "bob", groups="base.group_user")
         self.authenticate(bob.login, bob.password)
-        bob_query_params = _get_session_token_query_params(self.env.cr, self.session)
-        self.assertIs(
-            bob_query_params,
-            _get_session_token_query_params(self.env.cr, self.session),
-        )
+        _get_session_token_query_params(self.env.cr, [bob.id])
+        bob_params = _query_params_by_dbname[self.env.cr.dbname]["query_params"]
+        _get_session_token_query_params(self.env.cr, [bob.id])
+        # Cached once, and reused.
+        self.assertIs(bob_params, _query_params_by_dbname[self.env.cr.dbname]["query_params"])
         jane = new_test_user(self.env, "jane", groups="base.group_user")
         self.authenticate(jane.login, jane.password)
         current_registry_sequence = self.env.registry.registry_sequence
-        # Signaling is patched during test, simulate first entry coming from an old registry.
+        _query_params_by_dbname.pop(self.env.cr.dbname, None)
+        # Signaling is patched during test, simulate the entry being stored from an old registry.
         with patch.object(self.env.registry, "registry_sequence", current_registry_sequence - 1):
-            jane_query_params = _get_session_token_query_params(self.env.cr, self.session)
-        next_jane_query_params = _get_session_token_query_params(self.env.cr, self.session)
-        self.assertIsNot(jane_query_params, next_jane_query_params)
-        self.assertIs(next_jane_query_params, _get_session_token_query_params(self.env.cr, self.session))
+            _get_session_token_query_params(self.env.cr, [jane.id])
+        stale_params = _query_params_by_dbname[self.env.cr.dbname]["query_params"]
+        _get_session_token_query_params(self.env.cr, [jane.id])
+        next_params = _query_params_by_dbname[self.env.cr.dbname]["query_params"]
+        # Registry moved on since the stored entry: the shape is rebuilt.
+        self.assertIsNot(stale_params, next_params)
+        _get_session_token_query_params(self.env.cr, [jane.id])
+        self.assertIs(next_params, _query_params_by_dbname[self.env.cr.dbname]["query_params"])
 
     def test_user_login(self):
         websocket = self.websocket_connect()
