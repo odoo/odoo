@@ -230,7 +230,7 @@ test("manual tour with alternative trigger", async () => {
     TourStep._records = [
         {
             tour_id: 1,
-            trigger: ".button1, .button2",
+            trigger: ".button, .button2",
             run: "click",
         },
         {
@@ -245,7 +245,7 @@ test("manual tour with alternative trigger", async () => {
         },
         {
             tour_id: 1,
-            trigger: "button:contains(0, hello):enabled, button:contains(2, youpi)",
+            trigger: "button:contains(hellow):enabled, button:contains(youpi)",
             run: "click",
         },
     ];
@@ -274,7 +274,7 @@ test("manual tour with alternative trigger", async () => {
     await mountWithCleanup(Root);
     await getService("tour_service").startTour("tour_des_flandres_2", { mode: "manual" });
     await contains(".button2").click();
-    await contains(".button3").click();
+    await contains(".button4").click();
     await contains(".button5").click();
     await contains(".button2").click();
     expect.verifySteps(["click", "click", "click", "click", "tour succeeded"]);
@@ -465,7 +465,7 @@ test("check alternative trigger that appear after the initial trigger", async ()
     registry.category("web_tour.tours").add("rainbow_tour", {
         steps: () => [
             {
-                trigger: ".button0, .button1",
+                trigger: ".buttonnnnnn, .button1",
                 run: "click",
             },
         ],
@@ -485,12 +485,14 @@ test("check alternative trigger that appear after the initial trigger", async ()
     await mountWithCleanup(Root);
     getService("tour_service").startTour("rainbow_tour", { mode: "manual" });
     await animationFrame();
-    expect(".o_tour_pointer").toHaveCount(1);
+    expect(".o_tour_pointer").toHaveCount(0);
     const otherButton = document.createElement("button");
     otherButton.classList.add("button1");
     queryFirst(".add_button").appendChild(otherButton);
+    await waitFor(".o_tour_pointer");
+    expect(".o_tour_pointer").toHaveCount(1);
     await contains(".button1").click();
-    expect(".o_tour_pointer").toHaveCount(0);
+    await waitForNone(".o_tour_pointer");
 });
 
 test("validating edit step on autocomplete by selecting autocomplete item", async () => {
