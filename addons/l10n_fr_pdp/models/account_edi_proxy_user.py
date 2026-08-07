@@ -10,6 +10,7 @@ from odoo.tools.misc import format_date
 from odoo.tools.translate import LazyTranslate
 
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
+from odoo.addons.account.models.mail_message import bypass_token
 from odoo.addons.l10n_fr_pdp.models.account_peppol_response import PEPPOL_TO_PDP_STATUS, PDP_STATUSES
 from odoo.addons.l10n_fr_pdp.tools.demo_utils import handle_demo
 from odoo.addons.l10n_fr_pdp.utils.cdar import _parse_datetime_node as _parse_cdar_datetime_node
@@ -420,8 +421,11 @@ class AccountEdiProxyClientUser(models.Model):
             if not origin_move:
                 _logger.warning('The French e-invoicing response with UUID %s could not be imported: Original journal entry (UUID %s) not found.', uid, origin_uuid)
                 continue
-            if self._pdp_import_incoming_response(uid, content, origin_move[:1]):
-                processed_uuids.append(uid)
+            try:
+                self._pdp_import_incoming_response(uid, content, origin_move[:1])
+            except Exception:  # noqa: BLE001
+                _logger.exception('Error while processing the PDP Response with uid %s', uid)
+            processed_uuids.append(uid)
 
         return other_uuids + processed_uuids, moves
 
@@ -446,7 +450,11 @@ class AccountEdiProxyClientUser(models.Model):
                 if not origin_uuid or not origin_move:
                     _logger.warning('[Flow 1] The tax extract from the PPF with UUID %s could not be imported: Original journal entry (UUID %s) not found.', uid, origin_uuid)
                     continue
-                processed_messages[uid] = self._pdp_import_tax_extract(uid, content, origin_move[:1])
+
+                try:
+                    processed_messages[uid] = self._pdp_import_tax_extract(uid, content, origin_move[:1])
+                except Exception:  # noqa: BLE001
+                    _logger.exception('Error while processing the PPF message tax_extract with uid %s', uid)
             elif content['document_type'] == 'CrossDomainAcknowledgementAndResponse' and flow_number in ('1', '6'):
                 processed_messages[uid] = self.env['account.peppol.response']
                 origin_uuid = content['origin_peppol_message_uuid']
@@ -456,11 +464,20 @@ class AccountEdiProxyClientUser(models.Model):
                     _logger.warning('[Flow %s] The %s response from the PPF with UUID %s could not be imported: Original journal entry (UUID %s) not found.', flow_number, flow_description, uid, origin_uuid)
                     continue
                 if content['direction'] == 'outgoing':
-                    processed_messages[uid] = self._pdp_import_outgoing_response(uid, content, origin_move[:1])
+                    try:
+                        processed_messages[uid] = self._pdp_import_outgoing_response(uid, content, origin_move[:1])
+                    except Exception:  # noqa: BLE001
+                        _logger.exception('Error while processing the PPF message response with uid %s', uid)
                 else:
-                    processed_messages[uid] = self._pdp_import_incoming_response(uid, content, origin_move[:1])
+                    try:
+                        processed_messages[uid] = self._pdp_import_incoming_response(uid, content, origin_move[:1])
+                    except Exception:  # noqa: BLE001
+                        _logger.exception('Error while processing the PPF message response with uid %s', uid)
             elif content['document_type'] == 'CrossDomainAcknowledgementAndResponse' and flow_number == '10':
-                self._pdp_import_flow_10_response(uid, content)
+                try:
+                    self._pdp_import_flow_10_response(uid, content)
+                except Exception:  # noqa: BLE001
+                    _logger.exception('Error while processing the PPF message report response with uid %s', uid)
                 processed_messages[uid] = True
 
         return processed_messages
@@ -739,7 +756,8 @@ class AccountEdiProxyClientUser(models.Model):
             return
 
         if message:
-            message.body = body
+            # replace the message that was just created to avoid giving conflicting states
+            message.with_context(bypass_audit=bypass_token).body = body
         else:
             message = move._message_log(body=body)
         chatter_messages[move] = (message, logged_details)
