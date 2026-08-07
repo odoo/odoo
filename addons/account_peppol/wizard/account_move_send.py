@@ -74,7 +74,11 @@ class AccountMoveSend(models.TransientModel):
 
     def _get_invalid_peppol_partners(self):
         return self.move_ids.partner_id.commercial_partner_id.filtered(
-                lambda partner: not partner.account_peppol_is_endpoint_valid
+                lambda partner: (
+                    not partner.account_peppol_is_endpoint_valid
+                    or not partner.peppol_eas
+                    or not partner.peppol_endpoint
+                )
         )
 
     @api.depends('move_ids')
