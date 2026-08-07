@@ -34,6 +34,7 @@ declare module "plugins" {
     import { mark_translatable_nodes } from "@website/builder/plugins/translation/translation_plugin";
     import { WebsiteSaveShared } from "@website/builder/plugins/website_save_plugin";
     import { force_background_translation_state_selectors } from "@website/builder/plugins/translation/repeat_translation_state_plugin";
+    import { ValueHistoryShared } from "@website/builder/plugins/value_history_plugin";
     import { WebsiteSessionShared } from "@website/builder/plugins/website_session_plugin";
 
     interface SharedMethods {
@@ -60,6 +61,7 @@ declare module "plugins" {
         switchableViews: SwitchableViewsShared;
         themeTab: ThemeTabShared;
         translateWebpageOption: TranslateWebpageOptionShared;
+        valueHistory: ValueHistoryShared;
         websiteBackgroundVideoPlugin: WebsiteBackgroundVideoShared;
         websiteFont: WebsiteFontShared;
         websiteFormOption: FormOptionShared;

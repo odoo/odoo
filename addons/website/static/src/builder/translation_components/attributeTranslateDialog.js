@@ -9,6 +9,7 @@ export class AttributeTranslateDialog extends Component {
         elToTranslationInfoMap: Object,
         addStep: Function,
         applyCustomMutation: Function,
+        setValueProperty: Function,
         close: Function,
     };
 
@@ -32,10 +33,10 @@ export class AttributeTranslateDialog extends Component {
             if (attr !== "textContent") {
                 translateEl.setAttribute(attr, newValue);
                 if (attr === "value") {
-                    translateEl.value = newValue;
+                    this.props.setValueProperty(translateEl, newValue);
                 }
             } else {
-                translateEl.value = newValue;
+                this.props.setValueProperty(translateEl, newValue);
             }
             translateEl.classList.add("oe_translated");
         }
