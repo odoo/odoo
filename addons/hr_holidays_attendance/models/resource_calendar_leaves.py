@@ -1,3 +1,5 @@
+import pytz
+from datetime import datetime, time
 from odoo import api, models
 from odoo.fields import Domain
 
@@ -11,16 +13,34 @@ class ResourceCalendarLeaves(models.Model):
         leaves_time_type_leave = self.filtered(lambda leave: leave.time_type == 'leave')
 
         resource_leaves = leaves_time_type_leave.filtered(lambda leave: leave.resource_id.employee_id)
-        domain.extend([[
-            ('check_in', '<=', max(leaves.mapped('date_to'))),
-            ('check_out', '>=', min(leaves.mapped('date_from'))),
-            ('employee_id', 'in', resource.employee_id.ids),
-        ] for resource, leaves in resource_leaves.grouped('resource_id').items()])
+
+        for resource, leaves in resource_leaves.grouped('resource_id').items():
+            tz = pytz.timezone(resource.tz)
+
+            min_date = pytz.utc.localize(min(leaves.mapped('date_from'))).astimezone(tz).date()
+            utc_start = tz.localize(datetime.combine(min_date, time(0, 0, 0))).astimezone(pytz.utc).replace(tzinfo=None)
+
+            max_date = pytz.utc.localize(max(leaves.mapped('date_to'))).astimezone(tz).date()
+            utc_end = tz.localize(datetime.combine(max_date, time(23, 59, 59))).astimezone(pytz.utc).replace(tzinfo=None)
+
+            domain.append([
+                ('check_in', '<=', utc_end),
+                ('check_out', '>=', utc_start),
+                ('employee_id', 'in', resource.employee_id.ids),
+            ])
 
         for leave in (leaves_time_type_leave - resource_leaves):
+            tz = pytz.timezone(leave.calendar_id.tz or leave.company_id.resource_calendar_id.tz)
+
+            start_date = pytz.utc.localize(leave.date_from).astimezone(tz).date()
+            utc_start = tz.localize(datetime.combine(start_date, time(0, 0, 0))).astimezone(pytz.utc).replace(tzinfo=None)
+
+            end_date = pytz.utc.localize(leave.date_to).astimezone(tz).date()
+            utc_end = tz.localize(datetime.combine(end_date, time(23, 59, 59))).astimezone(pytz.utc).replace(tzinfo=None)
+
             leave_domain = [
-                ('check_in', '<=', leave.date_to),
-                ('check_out', '>=', leave.date_from),
+                ('check_in', '<=', utc_end),
+                ('check_out', '>=', utc_start),
             ]
             if leave.company_id:
                 leave_domain.append(('employee_id.company_id', '=', leave.company_id.id))
