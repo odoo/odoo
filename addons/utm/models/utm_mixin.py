@@ -18,10 +18,9 @@ class UtmMixin(models.AbstractModel):
     @api.model
     def _selection_target_model(self):
         return [
-            (model.model, model.name)
-            for model
-            in self.env['ir.model'].sudo().search([])
-            if not model.is_transient()
+            (model_cls._name, model_cls._description)
+            for model_cls in self.env.registry.values()
+            if not model_cls.is_transient()
         ]
 
     campaign_id = fields.Many2one('utm.campaign', 'Campaign', index='btree_not_null',
