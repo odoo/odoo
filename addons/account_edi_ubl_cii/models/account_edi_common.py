@@ -127,7 +127,7 @@ GST_COUNTRY_CODES = {
 EUROPEAN_ECONOMIC_AREA_COUNTRY_CODES = {
     # EU Member States
     'AT', 'BE', 'BG', 'HR', 'CY', 'CZ', 'DK', 'EE', 'FI', 'FR', 'DE', 'GR', 'HU', 'IE',
-    'IT', 'LV', 'LT', 'LU', 'MT', 'NL', 'PL', 'PT', 'RO', 'SK', 'SI', 'ES', 'SE', 'CH',
+    'IT', 'LV', 'LT', 'LU', 'MT', 'NL', 'PL', 'PT', 'RO', 'SK', 'SI', 'ES', 'SE',
 
     # EFTA Countries in the EEA
     'IS', 'LI', 'NO',
@@ -314,24 +314,26 @@ class AccountEdiCommon(models.AbstractModel):
             else:
                 return create_dict(tax_category_code='S')  # standard VAT
 
-        if supplier.country_id.code in EUROPEAN_ECONOMIC_AREA_COUNTRY_CODES and supplier.vat:
+        supplier_in_eea = supplier.country_id.code in EUROPEAN_ECONOMIC_AREA_COUNTRY_CODES
+        customer_in_eea = customer.country_id.code in EUROPEAN_ECONOMIC_AREA_COUNTRY_CODES
+
+        if (supplier_in_eea or customer_in_eea) and supplier.vat:
             if tax.amount != 0 and not tax.has_negative_factor:
                 # otherwise, the validator will complain because G and K code should be used with 0% tax
                 # For purchase reverse-charge taxes for self-billed invoices, we put the zero-percent tax
                 # with code 'G' or 'K' that the buyer would have used, see explanation above.
                 return create_dict(tax_category_code='S')
-            if customer.country_id.code not in EUROPEAN_ECONOMIC_AREA_COUNTRY_CODES:
-                return create_dict(
-                    tax_category_code='G',
-                    tax_exemption_reason_code='VATEX-EU-G',
-                    tax_exemption_reason=_('Export outside the EU'),
-                )
-            if customer.country_id.code in EUROPEAN_ECONOMIC_AREA_COUNTRY_CODES:
+            if supplier_in_eea and customer_in_eea:
                 return create_dict(
                     tax_category_code='K',
                     tax_exemption_reason_code='VATEX-EU-IC',
                     tax_exemption_reason=_('Intra-Community supply'),
                 )
+            return create_dict(
+                tax_category_code='G',
+                tax_exemption_reason_code='VATEX-EU-G',
+                tax_exemption_reason=_('Export outside the EU'),
+            )
 
         if tax.amount != 0:
             return create_dict(tax_category_code='S')
