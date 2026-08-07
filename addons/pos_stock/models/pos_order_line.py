@@ -164,7 +164,7 @@ class PosOrderLine(models.Model):
         moves = self._get_stock_moves_to_consider(stock_moves, product) if stock_moves else None
         if moves and self._is_product_storable_fifo_avco():
             product_cost = self._get_product_cost_with_moves(moves)
-            if cost_currency.is_zero(product_cost) and self.order_id.shipping_date:
+            if cost_currency.is_zero(product_cost) and not sum(m._get_valued_qty() for m in moves):
                 if self.refunded_orderline_id:
                     product_cost = self.refunded_orderline_id.total_cost / self.refunded_orderline_id.qty
                 else:
