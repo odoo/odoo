@@ -194,6 +194,27 @@ test("Set 'Message' as form success action and show/hide the message preview", a
     expect(":iframe .o_show_form_success_message").toHaveCount(0);
 });
 
+test("Undo change of default value of a text field", async () => {
+    onRpc("get_authorized_fields", () => ({}));
+    const builder = await setupWebsiteBuilderWithSnippet("s_website_form");
+
+    const questionInputSelector = ":iframe .s_website_form_field:contains(Your Question) textarea";
+    expect(questionInputSelector).toHaveProperty("value", "");
+    await contains(questionInputSelector).click();
+    await contains('[data-label="Default Value"] input').fill("hello");
+    expect(questionInputSelector).toHaveProperty("value", "hello");
+    undo(builder.getEditor());
+    expect(questionInputSelector).toHaveProperty("value", "");
+
+    const subjectInputSelector = ":iframe .s_website_form_field:contains(Subject) input";
+    expect(subjectInputSelector).toHaveProperty("value", "");
+    await contains(subjectInputSelector).click();
+    await contains('[data-label="Default Value"] input').fill("hello");
+    expect(subjectInputSelector).toHaveProperty("value", "hello");
+    undo(builder.getEditor());
+    expect(subjectInputSelector).toHaveProperty("value", "");
+});
+
 const formWithCondition = `
 <section class="s_website_form"><form data-model_name="mail.mail">
      <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom" data-type="char">
