@@ -4342,6 +4342,7 @@ class TestMrpOrder(TestMrpCommon):
                 in preparation but it will finish later than workcenter 1.
         """
 
+        self.env.company.tz = 'Europe/Brussels'
         self.product_1.uom_id = self.uom_unit.id
 
         workcenter_1 = self.env['mrp.workcenter'].create({
