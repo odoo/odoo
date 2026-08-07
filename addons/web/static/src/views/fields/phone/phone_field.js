@@ -2,10 +2,10 @@ import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
 import { useInputField } from "../input_field_hook";
 import { standardFieldProps } from "../standard_field_props";
-import { browser } from "@web/core/browser/browser";
 import { Component, signal, t, useProps } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { callPhoneNumber, getPhoneHref } from "@web/core/phone/phone_call";
 
 export const phoneFieldProps = {
     ...standardFieldProps,
@@ -39,7 +39,7 @@ export class PhoneField extends Component {
     }
 
     get phoneHref() {
-        return "tel:" + this.dialNumber.replace(/\s+/g, "");
+        return getPhoneHref(this.dialNumber);
     }
 
     get actionButtons() {
@@ -54,7 +54,12 @@ export class PhoneField extends Component {
     }
 
     onLinkClicked() {
-        browser.open(this.phoneHref);
+        const { record } = this.props;
+        return callPhoneNumber(this.env, {
+            phoneNumber: this.dialNumber,
+            resId: record.resId,
+            resModel: record.resModel,
+        });
     }
 }
 

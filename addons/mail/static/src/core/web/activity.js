@@ -12,6 +12,7 @@ import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
 import { pick } from "@web/core/utils/objects";
 import { FileUploader } from "@web/views/fields/file_handler";
+import { callPhoneNumber, getPhoneHref } from "@web/core/phone/phone_call";
 
 export class Activity extends Component {
     static components = { ActivityMailTemplate, FileUploader };
@@ -67,11 +68,21 @@ export class Activity extends Component {
     }
 
     get phoneHref() {
-        return `tel:${this.activity().phone.replace(/\s+/g, "")}`;
+        return getPhoneHref(this.activity().phone);
     }
 
-    onClickPhoneNumber() {
-        // Extension point for modules overriding how phone calls are initiated.
+    onClickPhoneNumber(ev) {
+        const activity = this.activity();
+        return callPhoneNumber(
+            this.env,
+            {
+                activity,
+                phoneNumber: activity.phone,
+                resId: activity.res_id,
+                resModel: activity.res_model,
+            },
+            ev
+        );
     }
 
     onClickAssign(ev) {

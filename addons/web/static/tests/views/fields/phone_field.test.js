@@ -8,11 +8,13 @@ import {
     onRpc,
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
-import { beforeEach, expect, test } from "@odoo/hoot";
+import { afterEach, beforeEach, expect, test } from "@odoo/hoot";
 import { click, edit, pointerDown, queryFirst, queryOne } from "@odoo/hoot-dom";
 import { getNextTabableElement } from "@web/core/utils/ui";
 import { animationFrame } from "@odoo/hoot-mock";
 import { browser } from "@web/core/browser/browser";
+import { callPhoneNumber, phoneCallHandlerRegistry } from "@web/core/phone/phone_call";
+import { user } from "@web/core/user";
 
 class Partner extends models.Model {
     foo = fields.Char({ default: "My little Foo Value", trim: true });
@@ -39,6 +41,53 @@ beforeEach(() => {
             expect.step(url);
         },
     });
+});
+
+afterEach(() => {
+    if (phoneCallHandlerRegistry.contains("test")) {
+        phoneCallHandlerRegistry.remove("test");
+    }
+});
+
+test("callPhoneNumber reports that it opened the native phone link", () => {
+    patchWithCleanup(user, { isSystem: false });
+    const callMade = callPhoneNumber({ services: {} }, { phoneNumber: "+12 345 67 89" });
+
+    expect(callMade).toBe(true);
+    expect.verifySteps(["tel:+123456789"]);
+});
+
+test("PhoneField delegates calls to an applicable phone call handler", async () => {
+    phoneCallHandlerRegistry.add(
+        "test",
+        {
+            isApplicable(_env, params) {
+                expect.step(`applicable ${params.phoneNumber}`);
+                return true;
+            },
+            execute(_env, params) {
+                expect(params).toEqual({
+                    phoneNumber: "yop",
+                    resId: 1,
+                    resModel: "partner",
+                });
+                expect.step("handled");
+                return true;
+            },
+        },
+        { sequence: 1 }
+    );
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        readonly: true,
+        arch: /* xml */ `<form><field name="foo" widget="phone"/></form>`,
+        resId: 1,
+    });
+
+    await click(".o_field_phone .o_phone_form_link");
+
+    expect.verifySteps(["applicable yop", "handled"]);
 });
 
 test("PhoneField in form view on normal screens (readonly)", async () => {
