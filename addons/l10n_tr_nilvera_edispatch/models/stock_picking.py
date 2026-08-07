@@ -222,6 +222,19 @@ class StockPicking(models.Model):
             partners_requiring_tax_office._l10n_tr_nilvera_validate_partner_details(tax_office_required=True)
         )
 
+        company_partner = self.company_id.partner_id
+        if (
+            company_partner.l10n_tr_nilvera_customer_status == 'einvoice'
+            and not company_partner._get_additional_identifier('TR_MERSIS')
+            and not company_partner._get_additional_identifier('TR_TICARET_SICIL')
+        ):
+            error_messages['tr_company_missing_mersis_trade_registry'] = {
+                'message': self.env._("Please ensure that your company contact has either the 'Mersis Number' or 'Trade Registry Number'."),
+                'action_text': self.env._("View %s", company_partner.display_name),
+                'action': company_partner._get_records_action(name=self.env._("View Partner")),
+                'level': 'danger',
+            }
+
         if self.l10n_tr_nilvera_dispatch_type == 'MATBUDAN':
             if not self.l10n_tr_nilvera_delivery_date:
                 error_messages['invalid_matbudan_date'] = {
