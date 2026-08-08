@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.5a1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-31 18:32+0000\n"
-"PO-Revision-Date: 2026-07-31 18:32+0000\n"
+"POT-Creation-Date: 2026-08-07 18:20+0000\n"
+"PO-Revision-Date: 2026-08-07 18:20+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -119,6 +119,11 @@ msgstr ""
 #. module: l10n_tr_nilvera_einvoice
 #: model_terms:ir.ui.view,arch_db:l10n_tr_nilvera_einvoice.account_nilvera_view_move_form
 msgid "<span>The commercial invoice has been automatically accepted</span>"
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
+#: model_terms:ir.ui.view,arch_db:l10n_tr_nilvera_einvoice.account_nilvera_view_move_form
+msgid "<span>This invoice is currently sent as draft.</span>"
 msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
@@ -564,6 +569,14 @@ msgid "ETA tax codes mixin"
 msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
+#. odoo-python
+#: code:addons/l10n_tr_nilvera_einvoice/models/account_move.py:0
+msgid ""
+"Each export invoice line must have a CTSP (GTİP) Number before it can be sent as a draft.\n"
+"Missing on: %s"
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
 #: model_terms:ir.ui.view,arch_db:l10n_tr_nilvera_einvoice.ticarifatura_response_wizard_form
 msgid "Enter reason for rejection..."
 msgstr ""
@@ -738,6 +751,14 @@ msgid "HIZMETNO"
 msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
+#: model:ir.model.fields,help:l10n_tr_nilvera_einvoice.field_account_bank_statement_line__l10n_tr_nilvera_draft_sync_hash
+#: model:ir.model.fields,help:l10n_tr_nilvera_einvoice.field_account_move__l10n_tr_nilvera_draft_sync_hash
+msgid ""
+"Hash of the UBL XML last uploaded to the Nilvera draft. Compared when "
+"sending to detect edits that still need to be pushed to the portal."
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
 #: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_account_chart_template__id
 #: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_account_edi_xml_ubl_tr__id
 #: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_account_journal__id
@@ -833,6 +854,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_account_bank_statement_line__l10n_tr_exemption_code_domain_list
 #: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_account_move__l10n_tr_exemption_code_domain_list
 msgid "L10N Tr Exemption Code Domain List"
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
+#: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_account_bank_statement_line__l10n_tr_nilvera_draft_sync_hash
+#: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_account_move__l10n_tr_nilvera_draft_sync_hash
+msgid "L10N Tr Nilvera Draft Sync Hash"
 msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
@@ -1249,8 +1276,26 @@ msgid "Seller Line Code"
 msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
+#: model_terms:ir.ui.view,arch_db:l10n_tr_nilvera_einvoice.account_nilvera_view_move_form
+msgid "Send as Draft"
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
+#. odoo-python
+#: code:addons/l10n_tr_nilvera_einvoice/models/account_move.py:0
+msgid ""
+"Sending as draft is only available for export invoices in Draft state whose "
+"customer's Nilvera status has been verified."
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
 #: model:ir.model.fields.selection,name:l10n_tr_nilvera_einvoice.selection__account_move__l10n_tr_nilvera_send_status__sent
 msgid "Sent and waiting response"
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
+#: model:ir.model.fields.selection,name:l10n_tr_nilvera_einvoice.selection__account_move__l10n_tr_nilvera_send_status__draft_sent
+msgid "Sent as Draft"
 msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
@@ -1465,6 +1510,12 @@ msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
 #. odoo-python
+#: code:addons/l10n_tr_nilvera_einvoice/models/account_move.py:0
+msgid "The draft has been approved and sent to Nilvera."
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
+#. odoo-python
 #: code:addons/l10n_tr_nilvera_einvoice/models/account_move_send.py:0
 msgid ""
 "The following company(s) either do not have their country set as Türkiye or "
@@ -1498,6 +1549,14 @@ msgstr ""
 #. module: l10n_tr_nilvera_einvoice
 #. odoo-python
 #: code:addons/l10n_tr_nilvera_einvoice/models/account_move.py:0
+msgid ""
+"The invoice could not be converted to the Nilvera format:\n"
+"%s"
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
+#. odoo-python
+#: code:addons/l10n_tr_nilvera_einvoice/models/account_move.py:0
 msgid "The invoice couldn't be sent to the recipient."
 msgstr ""
 
@@ -1505,6 +1564,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_tr_nilvera_einvoice/models/account_move.py:0
 msgid "The invoice has been successfully sent to Nilvera."
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
+#. odoo-python
+#: code:addons/l10n_tr_nilvera_einvoice/models/account_move.py:0
+msgid "The invoice has been uploaded to Nilvera as a draft."
 msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
@@ -1582,11 +1647,30 @@ msgid ""
 msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
+#. odoo-python
+#: code:addons/l10n_tr_nilvera_einvoice/models/account_move.py:0
+msgid "This invoice has already been sent to Nilvera."
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
+#. odoo-python
+#: code:addons/l10n_tr_nilvera_einvoice/models/account_move.py:0
+msgid "This invoice is already up to date on Nilvera."
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
 #: model:ir.model.fields,help:l10n_tr_nilvera_einvoice.field_account_bank_statement_line__l10n_tr_nilvera_uuid
 #: model:ir.model.fields,help:l10n_tr_nilvera_einvoice.field_account_move__l10n_tr_nilvera_uuid
 msgid ""
 "This is the unique identifier (UUID) used to link this Odoo document with the Nilvera system. \n"
 "This record ensures every new document has its own unique ID for tracking."
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
+#: model_terms:ir.ui.view,arch_db:l10n_tr_nilvera_einvoice.account_nilvera_view_move_form
+msgid ""
+"To finalize: Click <b>Confirm</b> and use <b>Send</b> to officially issue it"
+" via Nilvera."
 msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
@@ -1597,6 +1681,13 @@ msgid ""
 "To preserve accounting integrity and comply with legal requirements, "
 "invoices cannot be reused once an error occurs. Please create a new invoice "
 "to continue."
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
+#: model_terms:ir.ui.view,arch_db:l10n_tr_nilvera_einvoice.account_nilvera_view_move_form
+msgid ""
+"To update: Use <b>Send as Draft</b> to sync your latest changes with "
+"Nilvera."
 msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
@@ -1611,7 +1702,8 @@ msgid ""
 "- Error: The submission failed (check chatter for details). \n"
 "- Approved: Commercial Invoice is approved by recipient.\n"
 "- Approved Automatically: Commercial Invoice is automatically approved after 8 days without a response.\n"
-"- Rejected: Commercial Invoice is rejected by recipient."
+"- Rejected: Commercial Invoice is rejected by recipient.\n"
+"- Sent as Draft: Uploaded to Nilvera as a draft.It is approved and transmitted to GİB when the invoice is sent."
 msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
