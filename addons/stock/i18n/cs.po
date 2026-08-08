@@ -24,8 +24,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-03 18:38+0000\n"
-"PO-Revision-Date: 2026-05-02 08:08+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-08-07 23:20+0000\n"
+"Last-Translator: Ondřej Klein <ondrej.klein@origamis.cz>\n"
 "Language-Team: Czech <https://translate.odoo.com/projects/odoo-17/stock/cs/>"
 "\n"
 "Language: cs\n"
@@ -34,7 +34,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n "
 "<= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: stock
 #. odoo-python
@@ -487,8 +487,8 @@ msgstr ""
 "                <t t-set=\"multiple_carrier_tracking\" t-"
 "value=\"object.get_multiple_carrier_tracking()\"></t>\n"
 "                <t t-if=\"multiple_carrier_tracking\">\n"
-"                    <t t-foreach=\"multiple_carrier_tracking\" t-"
-"as=\"line\">\n"
+"                    <t t-foreach=\"multiple_carrier_tracking\" t-as=\"line\">"
+"\n"
 "                        <br><a t-att-href=\"line[1]\" target=\"_blank\" t-"
 "out=\"line[0] or ''\"></a>\n"
 "                    </t>\n"
@@ -714,8 +714,8 @@ msgid ""
 "strong>"
 msgstr ""
 "<strong>Kvůli některým skladovým pohybům, které byly provedeny mezi vaší "
-"původní aktualizací množství a nyní, již rozdíl v množství není konzistentní."
-"</strong>"
+"původní aktualizací množství a nyní, již rozdíl v množství není "
+"konzistentní.</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -1202,8 +1202,7 @@ msgstr "Použít vše"
 msgid ""
 "Apply specific route for the replenishment instead of product's default "
 "routes."
-msgstr ""
-"Místo výchozí trasy produktu použijte specifické cesty(u) pro doplnění."
+msgstr "Místo výchozí trasy produktu použijte specifické cesty(u) pro doplnění."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_company__annual_inventory_month__4
@@ -2666,11 +2665,10 @@ msgid ""
 "(the availability of this method depends on the \"Expiration Dates\" "
 "setting)."
 msgstr ""
-"Definuje výchozí metodu používanou pro navrhování přesného umístění "
-"(police), odkud mají být produkty odebrány, ze které části atd. pro toto "
-"umístění. Tuto metodu lze vynutit na úrovni kategorie produktu a v "
-"nadřazených umístěních se provede nouzová situace, pokud zde není nastavena "
-"žádná.\n"
+"Definuje výchozí metodu používanou pro navrhování přesného umístění (police)"
+", odkud mají být produkty odebrány, ze které části atd. pro toto umístění. "
+"Tuto metodu lze vynutit na úrovni kategorie produktu a v nadřazených "
+"umístěních se provede nouzová situace, pokud zde není nastavena žádná.\n"
 "\n"
 "FIFO: produkty/šarže, které byly naskladněny jako první, budou přesunuty "
 "jako první.\n"
@@ -3454,8 +3452,8 @@ msgstr ""
 "tomto umístění nebo jakékoli jeho děti.\n"
 "V souvislosti s jediným skladem se jedná o zboží uložené na skladovém místě "
 "tohoto skladu nebo kterékoli z jeho podřazených skladů.\n"
-"V opačném případě to zahrnuje zboží uložené na jakémkoli místě skladu s "
-"„interním“ typem."
+"V opačném případě to zahrnuje zboží uložené na jakémkoli místě skladu s „"
+"interním“ typem."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__free_qty
@@ -6928,8 +6926,7 @@ msgstr "Stav dostupnosti produktu"
 msgid ""
 "Products will be reserved first for the transfers with the highest "
 "priorities."
-msgstr ""
-"Produkty budou rezervovány nejprve pro převody s nejvyššími prioritami."
+msgstr "Produkty budou rezervovány nejprve pro převody s nejvyššími prioritami."
 
 #. module: stock
 #. odoo-python
@@ -8499,8 +8496,7 @@ msgstr "Zobrazit přesuny"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Show all records which has next action date is before today"
-msgstr ""
-"Zobrazit všechny záznamy, které mají datum příští aktivity před dneškem"
+msgstr "Zobrazit všechny záznamy, které mají datum příští aktivity před dneškem"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__show_lots_m2o
@@ -9514,8 +9510,8 @@ msgid ""
 "would create duplicated operations)"
 msgstr ""
 "Zdá se, že tento výběr je zřetězený s jinou operací. Pokud později obdržíte "
-"zboží, které nyní vracíte, ujistěte se, že jste vrácenou vychystávku "
-"<b>obrátili</b>, abyste se vyhnuli opětovnému použití logistických pravidel "
+"zboží, které nyní vracíte, ujistěte se, že jste vrácenou vychystávku <b>"
+"obrátili</b>, abyste se vyhnuli opětovnému použití logistických pravidel "
 "(což by vytvořilo duplicitní operace)."
 
 #. module: stock
@@ -10907,8 +10903,7 @@ msgstr "Nemůžete měnit zrušený pohyb zásob, místo toho vytvořte nový ř
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "You cannot change the Scheduled Date on a done or cancelled transfer."
-msgstr ""
-"Naplánované datum nemůžete změnit u provedeného nebo zrušeného převodu."
+msgstr "Naplánované datum nemůžete změnit u provedeného nebo zrušeného převodu."
 
 #. module: stock
 #. odoo-python
@@ -11062,8 +11057,8 @@ msgid ""
 "You cannot take products from or deliver products to a location of type "
 "\"view\" (%s)."
 msgstr ""
-"Nemůžete odebírat produkty ani je doručovat do umístění typu „zobrazení“ "
-"(%s)."
+"Nemůžete odebírat produkty ani je doručovat do umístění typu „zobrazení“ (%s)"
+"."
 
 #. module: stock
 #. odoo-python
@@ -11248,8 +11243,8 @@ msgstr ""
 "Najdete zde návrhy chytrého doplňování založené na prognózách zásob.\n"
 "            Vyberte množství, které chcete koupit nebo vyrobit, a spusťte "
 "objednávky jediným kliknutím.\n"
-"            Chcete-li v budoucnu ušetřit čas, nastavte pravidla jako "
-"„automatizovaná“."
+"            Chcete-li v budoucnu ušetřit čas, nastavte pravidla jako „"
+"automatizovaná“."
 
 #. module: stock
 #: model_terms:res.company,lunch_notify_message:stock.res_company_1

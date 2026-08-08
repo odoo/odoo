@@ -6,14 +6,14 @@
 # Wil Odoo, 2023
 # Larissa Manderfeld, 2024
 # Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2025
-# "Larissa Manderfeld (lman)" <lman@odoo.com>, 2025.
+# "Larissa Manderfeld (lman)" <lman@odoo.com>, 2025, 2026.
 # "Noemi Pla Garcia (nopl)" <nopl@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:36+0000\n"
-"PO-Revision-Date: 2026-07-10 10:08+0000\n"
+"PO-Revision-Date: 2026-08-06 22:33+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-17/project/"
 "es/>\n"
@@ -41,10 +41,10 @@ msgid ""
 msgstr ""
 "\n"
 "                <p class=\"o_view_nocontent_smiling_face\">\n"
-"                    No se encontraron hitos. ¡Creemos uno!\n"
+"                    No se ha encontrado ningún hito. ¡Creemos uno!\n"
 "                </p><p>\n"
-"                    Lleve un seguimiento de los principales puntos de "
-"progreso a alcanzar para lograr el éxito.\n"
+"                    Lleve un seguimiento de los principales avances que "
+"deben alcanzarse para lograr el éxito.\n"
 "                </p>\n"
 "            "
 
@@ -92,8 +92,8 @@ msgid ""
 "#{record.milestone_count_reached.value} Milestones reached out of "
 "#{record.milestone_count.value}"
 msgstr ""
-"#{record.milestone_count_reached.value} Hitos alcanzados de "
-"#{record.milestone_count.value}"
+"#{record.milestone_count_reached.value} Hitos alcanzados de #"
+"{record.milestone_count.value}"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
@@ -126,7 +126,7 @@ msgstr "%(name)s"
 #: code:addons/project/models/project_project.py:0
 #, python-format
 msgid "%(name)s's Burndown Chart"
-msgstr "Diagrama de quemado de %(name)s"
+msgstr "Gráfico de trabajo pendiente de %(name)s"
 
 #. module: project
 #. odoo-python
@@ -140,7 +140,7 @@ msgstr "Hitos de %(name)s"
 #: code:addons/project/models/project_project.py:0
 #, python-format
 msgid "%(name)s's Rating"
-msgstr "Calificación de %(name)s"
+msgstr "Valoración de %(name)s"
 
 #. module: project
 #. odoo-python
@@ -210,9 +210,9 @@ msgid ""
 msgstr ""
 "<b>Registre notas</b> para comunicaciones internas <i>(las personas que "
 "sigan esta tarea no serán notificadas \n"
-"    de la nota que está registrando a menos que las etiquete "
-"específicamente)</i>. Utilice @ <b>menciones</b> para hacer ping a un colega "
-"o # <b>menciones</b> para llegar a todo un equipo."
+"    de la nota que está registrando a menos que las etiquete específicamente)"
+"</i>. Utilice @ <b>menciones</b> para hacer ping a un colega o # <b>"
+"menciones</b> para llegar a todo un equipo."
 
 #. module: project
 #: model:mail.template,body_html:project.rating_project_request_email_template
@@ -326,16 +326,16 @@ msgid ""
 "            "
 msgstr ""
 "<div>\n"
-"    <t t-set=\"access_token\" t-value=\"object._rating_get_access_token()"
-"\"></t>\n"
+"    <t t-set=\"access_token\" t-value=\"object._rating_get_access_token()\">"
+"</t>\n"
 "    <t t-set=\"partner\" t-value=\"object._rating_get_partner()\"></t>\n"
 "    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
 "style=\"width:100%; margin:0px auto;\">\n"
 "    <tbody>\n"
 "        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "            <t t-if=\"partner.name\">\n"
-"                Hola <t t-out=\"partner.name or ''\">Brandon Freeman</t>:"
-"<br><br>\n"
+"                Hola <t t-out=\"partner.name or ''\">Brandon Freeman</t>:<br>"
+"<br>\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
 "                Hola:<br><br>\n"
@@ -344,9 +344,8 @@ msgstr ""
 "a la tarea \"<strong t-out=\"object.name or ''\">Planificación y "
 "presupuesto</strong>\"\n"
 "            <t t-if=\"object._rating_get_operator().name\">\n"
-"                asignada a <strong t-"
-"out=\"object._rating_get_operator().name or ''\">Mitchell Admin</strong>."
-"<br>\n"
+"                asignada a <strong t-out=\"object._rating_get_operator()"
+".name or ''\">Mitchell Admin</strong>.<br>\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
 "                .<br>\n"
@@ -413,19 +412,19 @@ msgstr ""
 "t>\n"
 "        </td></tr>\n"
 "        <tr><td style=\"opacity: 0.5;\">\n"
-"            <t t-out=\"object.project_id.company_id.phone or ''\">1 "
-"650-123-4567</t>\n"
+"            <t t-out=\"object.project_id.company_id.phone or ''\">1 650-123-"
+"4567</t>\n"
 "            <t t-if=\"object.project_id.company_id.email\">\n"
-"                | <a t-attf-href=\"mailto:"
-"{{ object.project_id.company_id.email }}\" style=\"text-decoration:none; "
-"color: #454748;\" t-out=\"object.project_id.company_id.email or "
-"''\">info@sucompañía.com</a>\n"
+"                | <a t-attf-href=\"mailto:{{ "
+"object.project_id.company_id.email }}\" style=\"text-decoration:none; color: "
+"#454748;\" t-out=\"object.project_id.company_id.email or ''\">"
+"info@sucompañía.com</a>\n"
 "            </t>\n"
 "            <t t-if=\"object.project_id.company_id.website\">\n"
 "                | <a t-attf-href=\"{{ object.project_id.company_id.website }}"
 "\" style=\"text-decoration:none; color: #454748;\" t-"
-"out=\"object.project_id.company_id.website or ''\">http://www.ejemplo.com</"
-"a>\n"
+"out=\"object.project_id.company_id.website or ''\">http://www.ejemplo.com</a>"
+"\n"
 "            </t>\n"
 "        </td></tr>\n"
 "    </tbody>\n"
@@ -1008,8 +1007,8 @@ msgstr ""
 "sus partes de horas. \n"
 "Lleve el seguimiento de los costes e ingresos de su proyecto al establecer "
 "esta cuenta analítica en sus documentos relacionados (por ejemplo, pedidos "
-"de venta, facturas, pedidos de compra, facturas de proveedor, gastos, "
-"etc.).\n"
+"de venta, facturas, pedidos de compra, facturas de proveedor, gastos, etc.)"
+".\n"
 "Esta cuenta analítica se puede cambiar en cada tarea de forma individual si "
 "es necesario.\n"
 "Se necesita una cuenta analítica para usar partes de horas."
@@ -1028,8 +1027,8 @@ msgstr ""
 "sus partes de horas. \n"
 "Lleve el seguimiento de los costes e ingresos de su proyecto al establecer "
 "esta cuenta analítica en sus documentos relacionados (por ejemplo, pedidos "
-"de venta, facturas, pedidos de compra, facturas de proveedor, gastos, "
-"etc.).\n"
+"de venta, facturas, pedidos de compra, facturas de proveedor, gastos, etc.)"
+".\n"
 "Por defecto, se establece la cuenta analítica de este proyecto. Sin embargo, "
 "puede ser cambiada de manera individual en cada tarea si fuera necesario."
 
@@ -1052,8 +1051,7 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:project.action_project_task_user_tree
 msgid ""
 "Analyze the progress of your projects and the performance of your employees."
-msgstr ""
-"Analice el progreso de sus proyectos y el rendimiento de sus empleados."
+msgstr "Analice el progreso de sus proyectos y el rendimiento de sus empleados."
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__state__03_approved
@@ -3485,8 +3483,7 @@ msgstr "Una vez al mes"
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Only jpeg, png, bmp and tiff images are allowed as attachments."
-msgstr ""
-"Sólo se permiten imágenes jpeg, png, bmp y tiff como archivos adjuntos."
+msgstr "Sólo se permiten imágenes jpeg, png, bmp y tiff como archivos adjuntos."
 
 #. module: project
 #. odoo-javascript
@@ -3599,8 +3596,8 @@ msgstr ""
 #, python-format
 msgid "Partner company cannot be different from its assigned projects' company"
 msgstr ""
-"La empresa del contacto no puede ser diferente a la empresa de sus proyectos "
-"asignados."
+"La empresa del contacto no puede ser distinta a la empresa de los proyectos "
+"que tiene asignados"
 
 #. module: project
 #. odoo-python
@@ -3608,8 +3605,8 @@ msgstr ""
 #, python-format
 msgid "Partner company cannot be different from its assigned tasks' company"
 msgstr ""
-"La empresa del contacto no puede ser diferente a la empresa de sus tareas "
-"asignadas."
+"La empresa del contacto no puede ser distinta a la empresa de las tareas "
+"asignadas"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_confirm_form
@@ -5110,10 +5107,9 @@ msgid ""
 "email that does not reply to an existing record will cause the creation of a "
 "new record of this model (e.g. a Project Task)"
 msgstr ""
-"El modelo (Tipo de documento de Odoo) al que corresponde este alias. "
-"Cualquier correo entrante que no sea respuesta a un registro existente, "
-"causará la creación de un nuevo registro de este modelo (por ejemplo, una "
-"tarea de proyecto)."
+"El modelo (tipo de documento de Odoo) al que corresponde este alias. "
+"Cualquier correo entrante que no responda a un registro existente, creará un "
+"nuevo registro de este modelo (por ejemplo, una tarea de proyecto)"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_name
@@ -5213,7 +5209,7 @@ msgstr "No hay proyectos."
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.rating_rating_action_view_project_rating
 msgid "There are no ratings for this project at the moment"
-msgstr "No hay calificaciones para este proyecto en este momento."
+msgstr "Por ahora no hay valoraciones para este proyecto"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_project
@@ -5294,10 +5290,10 @@ msgid ""
 "project's company to align with the stage's company or remove the company "
 "designation from the stage"
 msgstr ""
-"Este proyecto no está asociado a ninguna empresa, aunque la etapa está "
-"asociada a %s. Hay un par de opciones que considerar: ya sea cambiar el "
-"proyecto de empresa para que funcionen en la misma empresa, o eliminar la "
-"designación de la empresa de la etapa."
+"Este proyecto no está asociado a ninguna empresa, mientras que la etapa sí "
+"lo está a %s. Hay un par de opciones a tener en cuenta: o bien cambiar la "
+"empresa del proyecto para que coincida con la de la etapa, o bien eliminar "
+"la designación de la empresa de la etapa"
 
 #. module: project
 #. odoo-javascript
@@ -5434,8 +5430,8 @@ msgstr "Siga la satisfacción de los clientes en tareas"
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Track major progress points that must be reached to achieve success"
 msgstr ""
-"Haga un seguimiento de los principales puntos de progreso que se deben "
-"alcanzar para lograr el éxito."
+"Lleve un seguimiento de los principales avances que deben alcanzarse para "
+"lograr el éxito"
 
 #. module: project
 #. odoo-javascript
@@ -5443,8 +5439,8 @@ msgstr ""
 #, python-format
 msgid "Track major progress points that must be reached to achieve success."
 msgstr ""
-"Haga un seguimiento de los principales puntos de progreso que se deben "
-"alcanzar para lograr el éxito."
+"Lleve un seguimiento de los principales avances que deben alcanzarse para "
+"lograr el éxito."
 
 #. module: project
 #. odoo-javascript
@@ -5486,7 +5482,7 @@ msgstr "Lleve el seguimiento del progreso de sus proyectos"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Track time spent on projects and tasks"
-msgstr "Lleve seguimiento del tiempo dedicado a proyectos y tareas."
+msgstr "Realice un seguimiento del tiempo dedicado a proyectos y tareas"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_tags__color
@@ -6228,8 +6224,8 @@ msgid ""
 "{{ record.closed_subtask_count.value }} sub-tasks closed out of "
 "{{ record.subtask_count.value }}"
 msgstr ""
-"{{ record.closed_subtask_count.value }} subtareas cerradas de "
-"{{ record.subtask_count.value }}"
+"{{ record.closed_subtask_count.value }} subtareas cerradas de {{ "
+"record.subtask_count.value }}"
 
 #. module: project
 #. odoo-javascript

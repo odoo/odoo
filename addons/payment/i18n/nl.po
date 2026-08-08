@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:37+0000\n"
-"PO-Revision-Date: 2026-07-30 14:24+0000\n"
+"PO-Revision-Date: 2026-08-05 21:48+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-17/payment/"
 "nl/>\n"
@@ -77,11 +77,10 @@ msgid ""
 "transactions you intend to capture can only be captured in full. Handle the "
 "transactions individually to capture a partial amount.\"/>"
 msgstr ""
-"<i class=\"fa fa-info-circle oe_inline\" "
-"invisible=\"support_partial_capture != 'full_only'\" title=\"Sommige "
-"transacties die je wilt vastleggen, kunnen alleen volledig worden "
-"vastgelegd. Behandel de transacties afzonderlijk om een gedeeltelijk bedrag "
-"vast te leggen.\"/>"
+"<i class=\"fa fa-info-circle oe_inline\" invisible=\"support_partial_capture "
+"!= 'full_only'\" title=\"Sommige transacties die je wilt vastleggen, kunnen "
+"alleen volledig worden vastgelegd. Behandel de transacties afzonderlijk om "
+"een gedeeltelijk bedrag vast te leggen.\"/>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.token_form
@@ -95,8 +94,7 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_method
 msgid "<i class=\"oi oi-arrow-right me-1\"></i> Configure a payment provider"
-msgstr ""
-"<i class=\"oi oi-arrow-right me-1\"></i> Configureer een betaalprovider"
+msgstr "<i class=\"oi oi-arrow-right me-1\"></i> Configureer een betaalprovider"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
@@ -245,8 +243,8 @@ msgid ""
 "soon. Refund transaction reference: %(ref)s (%(provider_name)s)."
 msgstr ""
 "Er is een terugbetalingsverzoek van %(amount)s verzonden. De betaling wordt "
-"binnenkort aangemaakt. Referentie transactie terugbetaling: %(ref)s "
-"(%(provider_name)s)."
+"binnenkort aangemaakt. Referentie transactie terugbetaling: %(ref)s (%"
+"(provider_name)s)."
 
 #. module: payment
 #. odoo-python
@@ -284,8 +282,8 @@ msgid ""
 "A transaction with reference %(ref)s has been initiated using the payment "
 "method %(token)s (%(provider_name)s)."
 msgstr ""
-"Een transactie met referentie %(ref)s is gestart met de betaalmethode "
-"%(token)s (%(provider_name)s)."
+"Een transactie met referentie %(ref)s is gestart met de betaalmethode %"
+"(token)s (%(provider_name)s)."
 
 #. module: payment
 #. odoo-python
@@ -1372,8 +1370,7 @@ msgstr "Telefoon"
 #: code:addons/payment/models/payment_method.py:0
 #, python-format
 msgid "Please make sure that %(payment_method)s is supported by %(provider)s."
-msgstr ""
-"Zorg ervoor dat %(payment_method)s ondersteunt wordt door %(provider)s."
+msgstr "Zorg ervoor dat %(payment_method)s ondersteunt wordt door %(provider)s."
 
 #. module: payment
 #. odoo-python
@@ -1854,8 +1851,7 @@ msgstr ""
 #, python-format
 msgid ""
 "The payment should either be direct, with redirection, or made by a token."
-msgstr ""
-"De betaling moet ofwel direct zijn, met omleiding, ofwel met een token."
+msgstr "De betaling moet ofwel direct zijn, met omleiding, ofwel met een token."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__primary_payment_method_id
@@ -1949,8 +1945,8 @@ msgid ""
 "The transaction with reference %(ref)s for %(amount)s encountered an error "
 "(%(provider_name)s)."
 msgstr ""
-"Er is een fout opgetreden bij de transactie met referentie %(ref)s voor "
-"%(amount)s (%(provider_name)s)."
+"Er is een fout opgetreden bij de transactie met referentie %(ref)s voor %"
+"(amount)s (%(provider_name)s)."
 
 #. module: payment
 #. odoo-python
@@ -1960,8 +1956,8 @@ msgid ""
 "The transaction with reference %(ref)s for %(amount)s has been authorized "
 "(%(provider_name)s)."
 msgstr ""
-"De transactie met referentie %(ref)s voor %(amount)s is geautoriseerd "
-"(%(provider_name)s)."
+"De transactie met referentie %(ref)s voor %(amount)s is geautoriseerd (%"
+"(provider_name)s)."
 
 #. module: payment
 #. odoo-python
@@ -1971,8 +1967,8 @@ msgid ""
 "The transaction with reference %(ref)s for %(amount)s has been confirmed "
 "(%(provider_name)s)."
 msgstr ""
-"De transactie met referentie %(ref)s voor %(amount)s is bevestigd "
-"(%(provider_name)s)."
+"De transactie met referentie %(ref)s voor %(amount)s is bevestigd (%"
+"(provider_name)s)."
 
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_transaction

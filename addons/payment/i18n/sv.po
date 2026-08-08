@@ -25,7 +25,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:37+0000\n"
-"PO-Revision-Date: 2026-07-27 11:20+0000\n"
+"PO-Revision-Date: 2026-08-07 04:59+0000\n"
 "Last-Translator: Hanna Kharraziha <hakha@odoo.com>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-17/payment/"
 "sv/>\n"
@@ -49,8 +49,8 @@ msgid ""
 "<h3>Please make a payment to: </h3><ul><li>Bank: %s</li><li>Account Number: "
 "%s</li><li>Account Holder: %s</li></ul>"
 msgstr ""
-"<h3>Vänligen gör en betalning till: </h3><ul><li>Bank: %s</"
-"li><li>Kontonummer: %s</li><li>Kontoinnehavarer: %s</li></ul>"
+"<h3>Vänligen gör en betalning till: </h3><ul><li>Bank: %s</li><li>"
+"Kontonummer: %s</li><li>Kontoinnehavarer: %s</li></ul>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_method_form
@@ -86,10 +86,10 @@ msgid ""
 "transactions you intend to capture can only be captured in full. Handle the "
 "transactions individually to capture a partial amount.\"/>"
 msgstr ""
-"<i class=\"fa fa-info-circle oe_inline\" "
-"invisible=\"support_partial_capture != 'full_only'\" title=\"Vissa av de "
-"transaktioner som du avser att fånga kan bara fångas i sin helhet. Hantera "
-"transaktionerna individuellt för att fånga en del av beloppet.\"/>"
+"<i class=\"fa fa-info-circle oe_inline\" invisible=\"support_partial_capture "
+"!= 'full_only'\" title=\"Vissa av de transaktioner som du avser att fånga "
+"kan bara fångas i sin helhet. Hantera transaktionerna individuellt för att "
+"fånga en del av beloppet.\"/>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.token_form
@@ -251,8 +251,8 @@ msgid ""
 "soon. Refund transaction reference: %(ref)s (%(provider_name)s)."
 msgstr ""
 "En begäran om återbetalning av %(amount)s har skickats. Betalningen kommer "
-"att skapas inom kort. Återbetalningstransaktionens referens: %(ref)s "
-"(%(provider_name)s)."
+"att skapas inom kort. Återbetalningstransaktionens referens: %(ref)s (%"
+"(provider_name)s)."
 
 #. module: payment
 #. odoo-python
@@ -602,7 +602,7 @@ msgstr "Bolag"
 #: model_terms:ir.ui.view,arch_db:payment.payment_token_search
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_search
 msgid "Company"
-msgstr "Bolag"
+msgstr "Företag"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_method_form
@@ -620,7 +620,7 @@ msgstr "Bekräfta radering"
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__state__done
 msgid "Confirmed"
-msgstr "Bekräftad"
+msgstr "Bekräftade"
 
 #. module: payment
 #: model:ir.model,name:payment.model_res_partner
@@ -673,7 +673,7 @@ msgstr "Skapad av"
 #: model:ir.model.fields,field_description:payment.field_payment_token__create_date
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__create_date
 msgid "Created on"
-msgstr "Skapad den"
+msgstr "Skapades den"
 
 #. module: payment
 #. odoo-python
@@ -1196,7 +1196,7 @@ msgstr "Delvis betald"
 #: model_terms:ir.ui.view,arch_db:payment.payment_token_search
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_search
 msgid "Partner"
-msgstr "Kontakt"
+msgstr "Partner"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_name
@@ -1315,7 +1315,7 @@ msgstr "Betalningstransaktion"
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_list
 msgid "Payment Transactions"
-msgstr "Betalningstransaktioner"
+msgstr "Transaktioner"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_payment_transaction_linked_to_token
@@ -1621,7 +1621,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__source_transaction_id
 msgid "Source Transaction"
-msgstr "Källtransaktion"
+msgstr "Ursprunglig transaktion"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__state
@@ -1703,8 +1703,7 @@ msgstr ""
 #: model:ir.model.fields,help:payment.field_payment_method__image
 #: model:ir.model.fields,help:payment.field_payment_method__image_payment_form
 msgid "The base image used for this payment method; in a 64x64 px format."
-msgstr ""
-"Den basbild som används för denna betalningsmetod; i formatet 64x64 px."
+msgstr "Den basbild som används för denna betalningsmetod; i formatet 64x64 px."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__brand_ids
@@ -1821,8 +1820,7 @@ msgstr "Det meddelande som visas om betalningen godkänns"
 #: model:ir.model.fields,help:payment.field_payment_provider__cancel_msg
 msgid ""
 "The message displayed if the order is canceled during the payment process"
-msgstr ""
-"Det meddelande som visas om ordern annulleras under betalningsprocessen"
+msgstr "Det meddelande som visas om ordern annulleras under betalningsprocessen"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__done_msg
@@ -1946,8 +1944,8 @@ msgid ""
 "The transaction with reference %(ref)s for %(amount)s encountered an error "
 "(%(provider_name)s)."
 msgstr ""
-"Transaktionen med referens %(ref)s för %(amount)s stötte på ett fel "
-"(%(provider_name)s)."
+"Transaktionen med referens %(ref)s för %(amount)s stötte på ett fel (%"
+"(provider_name)s)."
 
 #. module: payment
 #. odoo-python
@@ -1957,8 +1955,8 @@ msgid ""
 "The transaction with reference %(ref)s for %(amount)s has been authorized "
 "(%(provider_name)s)."
 msgstr ""
-"Transaktionen med referens %(ref)s för %(amount)s har auktoriserats "
-"(%(provider_name)s)."
+"Transaktionen med referens %(ref)s för %(amount)s har auktoriserats (%"
+"(provider_name)s)."
 
 #. module: payment
 #. odoo-python
@@ -1968,18 +1966,18 @@ msgid ""
 "The transaction with reference %(ref)s for %(amount)s has been confirmed "
 "(%(provider_name)s)."
 msgstr ""
-"Transaktionen med referens %(ref)s för %(amount)s har bekräftats "
-"(%(provider_name)s)."
+"Transaktionen med referens %(ref)s för %(amount)s har bekräftats (%"
+"(provider_name)s)."
 
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_transaction
 msgid "There are no transactions to show"
-msgstr "Det finns inga transaktioner att visa"
+msgstr "Inga transaktioner hittades."
 
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_token
 msgid "There is no token created yet."
-msgstr "Det finns ingen pollett skapad ännu."
+msgstr "Inga tokens hittades."
 
 #. module: payment
 #. odoo-python

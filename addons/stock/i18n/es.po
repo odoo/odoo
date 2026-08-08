@@ -8,7 +8,7 @@
 # Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2024
 # Wil Odoo, 2024
 # Larissa Manderfeld, 2025
-# "Larissa Manderfeld (lman)" <lman@odoo.com>, 2025.
+# "Larissa Manderfeld (lman)" <lman@odoo.com>, 2025, 2026.
 # "Noemi Pla Garcia (nopl)" <nopl@odoo.com>, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2026.
 # Alexandra Morel <alex.morel@tecnativa.com>, 2026.
@@ -17,8 +17,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-03 18:38+0000\n"
-"PO-Revision-Date: 2026-07-28 16:11+0000\n"
-"Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
+"PO-Revision-Date: 2026-08-04 03:38+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-17/stock/"
 "es/>\n"
 "Language: es\n"
@@ -485,8 +485,8 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Hola <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,"
-"<br><br>\n"
+"        Hola <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>"
+",<br><br>\n"
 "        Nos complace informarle que se ha enviado su orden.\n"
 "        <t t-if=\"hasattr(object, 'carrier_tracking_ref') and "
 "object.carrier_tracking_ref\">\n"
@@ -496,8 +496,8 @@ msgstr ""
 "                <t t-set=\"multiple_carrier_tracking\" t-"
 "value=\"object.get_multiple_carrier_tracking()\"></t>\n"
 "                <t t-if=\"multiple_carrier_tracking\">\n"
-"                    <t t-foreach=\"multiple_carrier_tracking\" t-"
-"as=\"line\">\n"
+"                    <t t-foreach=\"multiple_carrier_tracking\" t-as=\"line\">"
+"\n"
 "                        <br><a t-att-href=\"line[1]\" target=\"_blank\" t-"
 "out=\"line[0] or ''\"></a>\n"
 "                    </t>\n"
@@ -865,8 +865,7 @@ msgstr "Un código de barras solo se puede asignar a un tipo de paquete."
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_warehouse_orderpoint_product_location_check
 msgid "A replenishment rule already exists for this product on this location."
-msgstr ""
-"Ya existe una regla de reposición para este producto en esta ubicación."
+msgstr "Ya existe una regla de reposición para este producto en esta ubicación."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__detailed_type
@@ -993,8 +992,8 @@ msgid ""
 "bins, racks)."
 msgstr ""
 "Añada y personalice las operaciones de ruta para procesar movimientos de "
-"productos en su(s) almacén(es): por ejemplo, descargar > control de calidad "
-"> stock para productos entrantes, elegir > empaquetar > enviar para "
+"productos en su(s) almacén(es): por ejemplo, descargar > control de "
+"calidad > stock para productos entrantes, elegir > empaquetar > enviar para "
 "productos salientes.\n"
 " También puede establecer estrategias de almacenamiento en ubicaciones de "
 "almacenamiento para enviar productos entrantes a ubicaciones hijas "
@@ -1010,8 +1009,8 @@ msgid ""
 "specific child locations straight away (e.g. specific bins, racks)."
 msgstr ""
 "Añada y personalice las operaciones de ruta para procesar movimientos de "
-"productos en su(s) almacén(es): por ejemplo, descargar > control de calidad "
-"> stock para productos entrantes, elegir > empaquetar > enviar para "
+"productos en su(s) almacén(es): por ejemplo, descargar > control de "
+"calidad > stock para productos entrantes, elegir > empaquetar > enviar para "
 "productos salientes. También puede establecer estrategias de almacenamiento "
 "en ubicaciones de almacenamiento para enviar productos entrantes a "
 "ubicaciones hijas específicas de inmediato (por ejemplo, contenedores "
@@ -2494,8 +2493,7 @@ msgstr "Fecha en la que el traslado ha sido procesado o cancelado"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__next_inventory_date
 msgid "Date for next planned inventory based on cyclic schedule."
-msgstr ""
-"Fecha para el próximo inventario planificado según un programa cíclico."
+msgstr "Fecha para el próximo inventario planificado según un programa cíclico."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__date_done
@@ -2764,8 +2762,7 @@ msgstr "Entregas"
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_picking_tree_outgoing
 msgid "Deliveries allow you to send products from your stock to a partner."
-msgstr ""
-"Las entregas le permiten enviar productos desde su stock a un contacto."
+msgstr "Las entregas le permiten enviar productos desde su stock a un contacto."
 
 #. module: stock
 #. odoo-javascript
@@ -3267,8 +3264,7 @@ msgstr "Plantilla de correo electrónico para la confirmación del albarán"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_company__stock_mail_confirmation_template_id
 msgid "Email sent to the customer once the order is done."
-msgstr ""
-"Correo electrónico enviado al cliente una vez que se realiza el pedido."
+msgstr "Correo electrónico enviado al cliente una vez que se realiza el pedido."
 
 #. module: stock
 #: model_terms:digest.tip,tip_description:stock.digest_tip_stock_0
@@ -4573,8 +4569,7 @@ msgstr "Retrasado"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__has_deadline_issue
 msgid "Is late or will be late depending on the deadline and scheduled date"
-msgstr ""
-"Llega tarde o llegará tarde según la fecha límite y la fecha programada"
+msgstr "Llega tarde o llegará tarde según la fecha límite y la fecha programada"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__is_quantity_done_editable
@@ -6225,8 +6220,7 @@ msgstr "Tipo de empaquetado"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse__delivery_steps__pick_pack_ship
 msgid "Pack goods, send goods in output and then deliver (3 steps)"
-msgstr ""
-"Empaquetar, transferir bienes a ubicación de salida, y enviar (3 pasos)"
+msgstr "Empaquetar, transferir bienes a ubicación de salida, y enviar (3 pasos)"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_level__package_id
@@ -9756,8 +9750,8 @@ msgid ""
 "                    Apply anyway?"
 msgstr ""
 "Se lleva el seguimiento de los productos que añadió pero no se definieron "
-"números de lote o de serie. Una vez que se aplique, no se puede cambiar.<br/"
-">\n"
+"números de lote o de serie. Una vez que se aplique, no se puede cambiar.<br/>"
+"\n"
 "                    ¿Desea continuar?"
 
 #. module: stock
@@ -10686,8 +10680,8 @@ msgid ""
 "When products are needed in <b>%s</b>, <br/> <b>%s</b> are created from "
 "<b>%s</b> to fulfill the need."
 msgstr ""
-"Cuando se requieren productos en <b>%s</b>, <br/> <b>%s</b> se crea desde "
-"<b>%s</b> para cumplir la necesidad."
+"Cuando se requieren productos en <b>%s</b>, <br/> <b>%s</b> se crea desde <b>"
+"%s</b> para cumplir la necesidad."
 
 #. module: stock
 #. odoo-python
@@ -10989,8 +10983,7 @@ msgstr ""
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid "You can only process 1.0 %s of products with unique serial number."
-msgstr ""
-"Solo puede procesar 1,0 %s para productos con un número de serie único."
+msgstr "Solo puede procesar 1,0 %s para productos con un número de serie único."
 
 #. module: stock
 #. odoo-python
@@ -11037,9 +11030,8 @@ msgid ""
 "You cannot cancel a stock move that has been set to 'Done'. Create a return "
 "in order to reverse the moves which took place."
 msgstr ""
-"No puede cancelar un movimiento de acciones que se haya configurado como "
-"‘Hecho’. Cree una devolución para revertir los movimientos que tuvieron "
-"lugar."
+"No puede cancelar un movimiento de acciones que se haya configurado como ‘"
+"Hecho’. Cree una devolución para revertir los movimientos que tuvieron lugar."
 
 #. module: stock
 #. odoo-python

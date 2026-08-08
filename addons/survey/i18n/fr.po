@@ -9,24 +9,24 @@
 # Larissa Manderfeld, 2025
 # Wil Odoo, 2025
 #
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # "Manon Rondou (ronm)" <ronm@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-03 18:38+0000\n"
-"PO-Revision-Date: 2026-03-14 08:12+0000\n"
+"PO-Revision-Date: 2026-08-05 21:34+0000\n"
 "Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
-"Language-Team: French <https://translate.odoo.com/projects/odoo-17/survey/fr/"
-">\n"
+"Language-Team: French <https://translate.odoo.com/projects/odoo-17/survey/"
+"fr/>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
 "1000000 == 0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__question_count
@@ -307,8 +307,8 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Cher <t t-out=\"object.partner_id.name or "
-"'participant'\">participant</t><br><br>\n"
+"        Cher <t t-out=\"object.partner_id.name or 'participant'\">"
+"participant</t><br><br>\n"
 "        <t t-if=\"object.survey_id.certification\">\n"
 "            Vous avez été invité(e) à passer une nouvelle cetification.\n"
 "        </t>\n"
@@ -328,8 +328,8 @@ msgstr ""
 "            </a>\n"
 "        </div>\n"
 "        <t t-if=\"object.deadline\">\n"
-"            Veuillez répondre au sondage avant le <t t-"
-"out=\"format_date(object.deadline) or ''\">05/05/2021</t>.<br><br>\n"
+"            Veuillez répondre au sondage avant le <t t-out=\"format_date"
+"(object.deadline) or ''\">05/05/2021</t>.<br><br>\n"
 "        </t>\n"
 "        <t t-if=\"object.survey_id.certification\">\n"
 "            Bonne chance !\n"
@@ -537,8 +537,8 @@ msgid ""
 "                        <span class=\"o_stat_text\" "
 "invisible=\"certifications_count &gt; 1\">Certification</span>"
 msgstr ""
-"<span class=\"o_stat_text\" invisible=\"certifications_count &lt; "
-"2\">Certifications</span>\n"
+"<span class=\"o_stat_text\" invisible=\"certifications_count &lt; 2\">"
+"Certifications</span>\n"
 "                        <span class=\"o_stat_text\" "
 "invisible=\"certifications_count &gt; 1\">Certification</span>"
 
@@ -591,8 +591,8 @@ msgid ""
 "span>\n"
 "                        <i class=\"fw-bold oi oi-chevron-right\"/>"
 msgstr ""
-"<span class=\"o_survey_session_navigation_next_label me-2 fw-"
-"bold\">Démarrer</span>\n"
+"<span class=\"o_survey_session_navigation_next_label me-2 fw-bold\">"
+"Démarrer</span>\n"
 "                        <i class=\"fw-bold oi oi-chevron-right\"/>"
 
 #. module: survey
@@ -705,8 +705,8 @@ msgstr ""
 msgid ""
 "<span>If you don't like us, please try to be as objective as possible.</span>"
 msgstr ""
-"<span>Si vous ne nous aimez pas, essayez d'être aussi objectif que possible."
-"</span>"
+"<span>Si vous ne nous aimez pas, essayez d'être aussi objectif que "
+"possible.</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -982,8 +982,8 @@ msgid ""
 "All \"Is a scored question = True\" and \"Question Type: Date\" questions "
 "need an answer"
 msgstr ""
-"Toutes les questions \"Est une question notée = Vrai\" et \"Type de "
-"question : Date\" nécessitent une réponse"
+"Toutes les questions \"Est une question notée = Vrai\" et \"Type de question "
+": Date\" nécessitent une réponse"
 
 #. module: survey
 #: model:ir.model.constraint,message:survey.constraint_survey_question_scored_datetime_have_answers
@@ -991,8 +991,8 @@ msgid ""
 "All \"Is a scored question = True\" and \"Question Type: Datetime\" "
 "questions need an answer"
 msgstr ""
-"Toutes les questions \"Est une question notée = Vrai\" et \"Type de "
-"question : Datetime\" nécessitent une réponse"
+"Toutes les questions \"Est une question notée = Vrai\" et \"Type de question "
+": Datetime\" nécessitent une réponse"
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__questions_selection__all
@@ -1919,8 +1919,7 @@ msgstr "Avez-vous d'autres commentaires, questions ou préoccupations ?"
 #. module: survey
 #: model:survey.question,title:survey.vendor_certification_page_1_question_5
 msgid "Do you think we have missing products in our catalog? (not rated)"
-msgstr ""
-"Pensez-vous qu'il manque des produits dans notre catalogue ? (non noté)"
+msgstr "Pensez-vous qu'il manque des produits dans notre catalogue ? (non noté)"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_quiz_p3_q2_sug2
@@ -5014,8 +5013,8 @@ msgstr "Cette section se concentre sur l'expérience autour de notre eCommerce."
 msgid ""
 "This small quiz will test your knowledge about our Company. Be prepared!"
 msgstr ""
-"Ce petit quiz testera vos connaissances à propos de notre société. Soyez "
-"prêt(e) !"
+"Ce petit quiz testera vos connaissances à propos de notre société. Soyez prêt"
+"(e) !"
 
 #. module: survey
 #: model_terms:survey.survey,description:survey.survey_feedback

@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-20 18:36+0000\n"
-"PO-Revision-Date: 2026-02-21 17:01+0000\n"
+"PO-Revision-Date: 2026-08-08 07:54+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-17/"
 "hr_attendance/ko/>\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: hr_attendance
 #. odoo-python
@@ -52,8 +52,8 @@ msgid ""
 msgstr ""
 "<br/>\n"
 "                            <span>\n"
-"                                주소가 유출된 경우 새로 고침하여 새 주소를 생"
-"성할 수 있습니다.\n"
+"                                주소가 유출된 경우 새로 고침하여 새 주소를 "
+"생성할 수 있습니다.\n"
 "                            </span>\n"
 "                            <br/>"
 
@@ -90,8 +90,8 @@ msgid ""
 "<span id=\"oe_hr_attendance_status\" class=\"fa fa-circle text-success "
 "me-1\" role=\"img\" aria-label=\"Available\" title=\"Available\"/>"
 msgstr ""
-"<span id=\"oe_hr_attendance_status\" class=\"fa fa-circle text-success "
-"me-1\" role=\"img\" aria-label=\"사용 가능\" title=\"사용 가능\"/>"
+"<span id=\"oe_hr_attendance_status\" class=\"fa fa-circle text-success me-"
+"1\" role=\"img\" aria-label=\"사용 가능\" title=\"사용 가능\"/>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_employees_view_kanban
@@ -100,8 +100,8 @@ msgid ""
 "me-1\" role=\"img\" aria-label=\"Not available\" title=\"Not available\">\n"
 "                                    </span>"
 msgstr ""
-"<span id=\"oe_hr_attendance_status\" class=\"fa fa-circle text-warning "
-"me-1\" role=\"img\" aria-label=\"사용 불가\" title=\"사용 불가\">\n"
+"<span id=\"oe_hr_attendance_status\" class=\"fa fa-circle text-warning me-"
+"1\" role=\"img\" aria-label=\"사용 불가\" title=\"사용 불가\">\n"
 "                                    </span>"
 
 #. module: hr_attendance
@@ -178,8 +178,8 @@ msgid ""
 "Allow a period of time (around working hours) where extra time will not be "
 "counted, in benefit of the company"
 msgstr ""
-"회사의 이익을 위해 추가 근무가 계산되지 않는 기간(근무 시간 전후)을 허용합니"
-"다."
+"회사의 이익을 위해 추가 근무가 계산되지 않는 기간(근무 시간 전후)을 "
+"허용합니다."
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
@@ -187,8 +187,8 @@ msgid ""
 "Allow a period of time (around working hours) where extra time will not be "
 "deducted, in benefit of the employee"
 msgstr ""
-"직원의 이익을 위해 추가 근무가 공제되지 않는 기간(근무 시간 전후)을 허용합니"
-"다."
+"직원의 이익을 위해 추가 근무가 공제되지 않는 기간(근무 시간 전후)을 "
+"허용합니다."
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
@@ -347,8 +347,8 @@ msgid ""
 "Cannot create new attendance record for %(empl_name)s, the employee hasn't "
 "checked out since %(datetime)s"
 msgstr ""
-"%(empl_name)s에 대한 새 근태 기록을 작성할 수 없습니다. %(datetime)s 이후 직"
-"원이 퇴근하지 않았습니다."
+"%(empl_name)s에 대한 새 근태 기록을 작성할 수 없습니다. %(datetime)s 이후 "
+"직원이 퇴근하지 않았습니다."
 
 #. module: hr_attendance
 #. odoo-python
@@ -358,8 +358,8 @@ msgid ""
 "Cannot create new attendance record for %(empl_name)s, the employee was "
 "already checked in on %(datetime)s"
 msgstr ""
-"%(empl_name)s에 대한 새 근태 기록을 작성할 수 없습니다. 직원이 이미 "
-"%(datetime)s에 출근하였습니다."
+"%(empl_name)s에 대한 새 근태 기록을 작성할 수 없습니다. 직원이 이미 %"
+"(datetime)s에 출근하였습니다."
 
 #. module: hr_attendance
 #. odoo-python
@@ -370,8 +370,8 @@ msgid ""
 "check in. Your attendances have probably been modified manually by human "
 "resources."
 msgstr ""
-"%(empl_name)s의 퇴근을 수행할 수 없습니다. 해당 직원의 출근을 찾을 수 없습니"
-"다. 참석자는 인사부서에서 수동으로 수정했을 수 있습니다."
+"%(empl_name)s의 퇴근을 수행할 수 없습니다. 해당 직원의 출근을 찾을 수 "
+"없습니다. 참석자는 인사부서에서 수동으로 수정했을 수 있습니다."
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -1106,8 +1106,7 @@ msgstr "검색.."
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Set PIN codes in the employee detail form (in HR Settings tab)."
-msgstr ""
-"직원 서식에서 사원 번호를 설정합니다. (인사 관리 설정 탭에서 확인 가능)"
+msgstr "직원 서식에서 사원 번호를 설정합니다. (인사 관리 설정 탭에서 확인 가능)"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_settings
@@ -1165,8 +1164,7 @@ msgstr ""
 msgid ""
 "The user will have access to his own attendances on his user / employee "
 "profile"
-msgstr ""
-"사용자는 사용자/직원 프로필에서 자신의 출결 사항에 액세스할 수 있습니다."
+msgstr "사용자는 사용자/직원 프로필에서 자신의 출결 사항에 액세스할 수 있습니다."
 
 #. module: hr_attendance
 #: model:res.groups,comment:hr_attendance.group_hr_attendance_officer

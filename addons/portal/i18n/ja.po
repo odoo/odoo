@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:38+0000\n"
-"PO-Revision-Date: 2026-05-16 08:14+0000\n"
+"PO-Revision-Date: 2026-08-07 16:30+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-17/portal/"
 "ja/>\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -54,8 +54,7 @@ msgstr ""
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.my_account_link
 msgid "<i class=\"fa fa-fw fa-id-card-o me-1 small text-primary\"/> My Account"
-msgstr ""
-"<i class=\"fa fa-fw fa-id-card-o me-1 small text-primary\"/> マイアカウント"
+msgstr "<i class=\"fa fa-fw fa-id-card-o me-1 small text-primary\"/> マイアカウント"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.user_dropdown
@@ -122,8 +121,8 @@ msgid ""
 "            </small>"
 msgstr ""
 "<small class=\"form-text text-muted\">\n"
-"                会社名、VAT番号、国名は、アカウント用に一度発行されたドキュメ"
-"ントで変更することはできません。\n"
+"                会社名、VAT番号、国名は、アカウント用に一度発行された"
+"ドキュメントで変更することはできません。\n"
 "                <br/>この操作については直接お問合せ下さい。\n"
 "            </small>"
 
@@ -306,15 +305,14 @@ msgstr ""
 "out=\"object.user_id.name or ''\">Marc Demo</span>\n"
 "                </td><td valign=\"middle\" align=\"right\" t-if=\"not "
 "object.user_id.company_id.uses_default_logo\">\n"
-"                    <img t-attf-src=\"/logo.png?"
-"company={{ object.user_id.company_id.id }}\" style=\"padding: 0px; margin: "
-"0px; height: auto; width: 80px;\" t-att-"
-"alt=\"object.user_id.company_id.name\">\n"
+"                    <img t-attf-src=\"/logo.png?company={{ "
+"object.user_id.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: "
+"auto; width: 80px;\" t-att-alt=\"object.user_id.company_id.name\">\n"
 "                </td></tr>\n"
 "                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
-"                  <hr width=\"100%\" style=\"background-"
-"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
-"size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb"
+"(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-"
+"height:1px;line-height:0; margin:16px 0px 16px 0px;\">\n"
 "                </td></tr>\n"
 "            </table>\n"
 "        </td>\n"
@@ -329,13 +327,12 @@ msgstr ""
 "                    <div>\n"
 "                         <t t-out=\"object.user_id.name or ''\">Marc Demo</t>"
 "様、<br> <br>\n"
-"                        <t t-"
-"out=\"object.user_id.company_id.name\">YourCompany</t>のポータルへようこそ！"
-"<br><br>\n"
+"                        <t t-out=\"object.user_id.company_id.name\">"
+"YourCompany</t>のポータルへようこそ！<br><br>\n"
 "                        以下のログインでアカウントが作成されました: <t t-"
 "out=\"object.user_id.login\">デモ</t><br><br>\n"
-"                        下のボタンをクリックしてパスワードを入力し、アカウン"
-"トを有効にしてください。\n"
+"                        下のボタンをクリックしてパスワードを入力し、"
+"アカウントを有効にしてください。\n"
 "                        <div style=\"margin: 16px 0px 16px 0px; text-align: "
 "center;\">\n"
 "                            <a t-att-href=\"object.user_id.signup_url\" "
@@ -349,9 +346,9 @@ msgstr ""
 "                    </div>\n"
 "                </td></tr>\n"
 "                <tr><td style=\"text-align:center;\">\n"
-"                  <hr width=\"100%\" style=\"background-"
-"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
-"size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb"
+"(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-"
+"height:1px;line-height:0; margin: 16px 0px 16px 0px;\">\n"
 "                </td></tr>\n"
 "            </table>\n"
 "        </td>\n"
@@ -363,23 +360,23 @@ msgstr ""
 "width=\"590\" style=\"min-width: 590px; background-color: white; font-size: "
 "11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"middle\" align=\"left\">\n"
-"                    <t t-out=\"object.user_id.company_id.name or "
-"''\">YourCompany</t>\n"
+"                    <t t-out=\"object.user_id.company_id.name or ''\">"
+"YourCompany</t>\n"
 "                </td></tr>\n"
 "                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: "
 "0.7;\">\n"
 "                    <t t-out=\"object.user_id.company_id.phone or ''\">+1 "
 "650-123-4567</t>\n"
 "                    <t t-if=\"object.user_id.company_id.email\">\n"
-"                        | <a t-attf-href=\"'mailto:%s' % "
-"{{ object.user_id.company_id.email }}\" style=\"text-decoration:none; color: "
-"#454748;\" t-out=\"object.user_id.company_id.email or "
-"''\">info@yourcompany.com</a>\n"
+"                        | <a t-attf-href=\"'mailto:%s' % {{ "
+"object.user_id.company_id.email }}\" style=\"text-decoration:none; color: "
+"#454748;\" t-out=\"object.user_id.company_id.email or ''\">"
+"info@yourcompany.com</a>\n"
 "                    </t>\n"
 "                    <t t-if=\"object.user_id.company_id.website\">\n"
-"                        | <a t-attf-href=\"'%s' % "
-"{{ object.user_id.company_id.website }}\" style=\"text-decoration:none; "
-"color: #454748;\" t-out=\"object.user_id.company_id.website or ''\">http://"
+"                        | <a t-attf-href=\"'%s' % {{ "
+"object.user_id.company_id.website }}\" style=\"text-decoration:none; color: "
+"#454748;\" t-out=\"object.user_id.company_id.website or ''\">http://"
 "www.example.com</a>\n"
 "                    </t>\n"
 "                </td></tr>\n"
@@ -395,9 +392,9 @@ msgstr ""
 "style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; "
 "padding: 8px; border-collapse:separate;\">\n"
 "      <tr><td style=\"text-align: center; font-size: 13px;\">\n"
-"        Powered by <a target=\"_blank\" href=\"https://www.odoo.com?"
-"utm_source=db&amp;utm_medium=portalinvite\" style=\"color: #875A7B;\">Odoo</"
-"a>\n"
+"        Powered by <a target=\"_blank\" href=\"https://"
+"www.odoo.com?utm_source=db&amp;utm_medium=portalinvite\" style=\"color: "
+"#875A7B;\">Odoo</a>\n"
 "      </td></tr>\n"
 "    </table>\n"
 "</td></tr>\n"
@@ -637,8 +634,8 @@ msgid ""
 "Currently available to everyone viewing this document, click to restrict to "
 "internal employees."
 msgstr ""
-"現在、このドキュメントを閲覧しているすべての人が利用できます。クリックする"
-"と、社内の従業員に限定できます。"
+"現在、このドキュメントを閲覧しているすべての人が利用できます。クリックすると"
+"、社内の従業員に限定できます。"
 
 #. module: portal
 #. odoo-javascript
@@ -969,8 +966,8 @@ msgid ""
 "Model %(model_name)s does not support token signature, as it does not have "
 "%(field_name)s field."
 msgstr ""
-"モデル%(model_name)s は%(field_name)sフィールドが無いためトークン署名をサポー"
-"トしていません。"
+"モデル%(model_name)s は%(field_name)sフィールドが無いためトークン署名を"
+"サポートしていません。"
 
 #. module: portal
 #. odoo-python
@@ -1139,8 +1136,7 @@ msgstr "公開日:"
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid ""
 "Put my email and phone in a block list to make sure I'm never contacted again"
-msgstr ""
-"今後決して連絡を受けないようにブロックリストにEメールと電話番号を記載する"
+msgstr "今後決して連絡を受けないようにブロックリストにEメールと電話番号を記載する"
 
 #. module: portal
 #: model:ir.model,name:portal.model_ir_qweb
@@ -1310,8 +1306,7 @@ msgstr "添付の %s はペンディング状況に無いため削除できま�
 #, python-format
 msgid ""
 "The attachment does not exist or you do not have the rights to access it."
-msgstr ""
-"添付ファイルが存在しないか、添付ファイルにアクセスする権限がありません。"
+msgstr "添付ファイルが存在しないか、添付ファイルにアクセスする権限がありません。"
 
 #. module: portal
 #. odoo-python
@@ -1332,8 +1327,7 @@ msgstr "連絡先 \"%s\" は既存のユーザと同じEメールを持ってい
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid "The document does not exist or you do not have the rights to access it."
-msgstr ""
-"ドキュメントが存在しないか、ドキュメントにアクセスする権限がありません。"
+msgstr "ドキュメントが存在しないか、ドキュメントにアクセスする権限がありません。"
 
 #. module: portal
 #. odoo-javascript
@@ -1355,8 +1349,7 @@ msgstr "新しいパスワードとその確認は同一でなければなりま
 #, python-format
 msgid ""
 "The old password you provided is incorrect, your password was not changed."
-msgstr ""
-"入力した古いパスワードが間違っています。パスワードは変更されていません。"
+msgstr "入力した古いパスワードが間違っています。パスワードは変更されていません。"
 
 #. module: portal
 #. odoo-python
@@ -1380,8 +1373,8 @@ msgid ""
 "The template \"Portal: new user\" not found for sending email to the portal "
 "user."
 msgstr ""
-"ポータルユーザに電子メールを送信するためのテンプレート \"ポータル: 新規ユーザ"
-"\"が見つかりません。"
+"ポータルユーザに電子メールを送信するためのテンプレート \"ポータル: 新規"
+"ユーザ\"が見つかりません。"
 
 #. module: portal
 #. odoo-javascript
@@ -1419,8 +1412,7 @@ msgstr "この文は、新規ポータルユーザに送信されるEメール�
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_wizard__welcome_message
 msgid "This text is included in the email sent to new users of the portal."
-msgstr ""
-"このテキストは、ポータルの新しいユーザーに送信される電子メールに含まれます。"
+msgstr "このテキストは、ポータルの新しいユーザーに送信される電子メールに含まれます。"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
@@ -1696,5 +1688,5 @@ msgstr "コメントを投稿"
 #, python-format
 msgid "to your user account, it is very important to store it securely."
 msgstr ""
-"をユーザアカウントに追加する場合は、それを安全に保管することが非常に重要で"
-"す。"
+"をユーザアカウントに追加する場合は、それを安全に保管することが非常に重要です"
+"。"

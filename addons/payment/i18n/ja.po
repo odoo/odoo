@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:37+0000\n"
-"PO-Revision-Date: 2026-06-05 14:48+0000\n"
+"PO-Revision-Date: 2026-08-07 05:07+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-17/payment/"
 "ja/>\n"
@@ -52,8 +52,8 @@ msgid ""
 "first."
 msgstr ""
 "<i class=\"fa fa-exclamation-triangle\"/> これらのプロパティは\n"
-"                                この支払に関してプロバイダとOdooとの統一のビ"
-"ヘイビアと\n"
+"                                この支払に関してプロバイダとOdooとの統一の"
+"ビヘイビアと\n"
 "一致するよう定義されます。 変更によりエラーが発生する可能性があり、\n"
 "                                まずはテストデータベースでテストされる必要が"
 "あります。"
@@ -73,10 +73,10 @@ msgid ""
 "transactions you intend to capture can only be captured in full. Handle the "
 "transactions individually to capture a partial amount.\"/>"
 msgstr ""
-"<i class=\"fa fa-info-circle oe_inline\" "
-"invisible=\"support_partial_capture != 'full_only'\" title=\"Some of the "
-"transactions you intend to capture can only be captured in full. Handle the "
-"transactions individually to capture a partial amount.\"/>"
+"<i class=\"fa fa-info-circle oe_inline\" invisible=\"support_partial_capture "
+"!= 'full_only'\" title=\"Some of the transactions you intend to capture can "
+"only be captured in full. Handle the transactions individually to capture a "
+"partial amount.\"/>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.token_form
@@ -154,8 +154,7 @@ msgstr "<span><i class=\"fa fa-lock\"/> 次により保護:</span>"
 msgid ""
 "<span><i class=\"oi oi-arrow-right\"/> How to configure your PayPal account</"
 "span>"
-msgstr ""
-"<span><i class=\"oi oi-arrow-right\"/> PayPalアカウント設定方法 </span>"
+msgstr "<span><i class=\"oi oi-arrow-right\"/> PayPalアカウント設定方法 </span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -199,8 +198,8 @@ msgid ""
 "em> button is not supported.\n"
 "                        Please use the <em>Duplicate</em> action instead."
 msgstr ""
-"<strong>警告</strong> <em>作成</em> ボタンからの決済プロバイダの作成はサポー"
-"トされていません。\n"
+"<strong>警告</strong> <em>作成</em> ボタンからの決済プロバイダの作成は"
+"サポートされていません。\n"
 "                        代わりに <em>複製</em>アクションを使用して下さい。"
 
 #. module: payment
@@ -256,8 +255,7 @@ msgstr "参照%(ref)sの取引が開始されました (%(provider_name)s)"
 msgid ""
 "A transaction with reference %(ref)s has been initiated to save a new "
 "payment method (%(provider_name)s)"
-msgstr ""
-"参照 %(ref)sの取引が開始され、新規決済方法(%(provider_name)s)が保存されます。"
+msgstr "参照 %(ref)sの取引が開始され、新規決済方法(%(provider_name)s)が保存されます。"
 
 #. module: payment
 #. odoo-python
@@ -877,8 +875,8 @@ msgid ""
 "In test mode, a fake payment is processed through a test payment interface.\n"
 "This mode is advised when setting up the provider."
 msgstr ""
-"テストモードでは、偽の支払いがテスト支払インターフェイスを通じて処理されま"
-"す。\n"
+"テストモードでは、偽の支払いがテスト支払インターフェイスを通じて処理されます"
+"。\n"
 "このモードは、プロバイダを設定する際に推奨されます。"
 
 #. module: payment
@@ -1351,8 +1349,7 @@ msgstr "電話"
 #: code:addons/payment/models/payment_method.py:0
 #, python-format
 msgid "Please make sure that %(payment_method)s is supported by %(provider)s."
-msgstr ""
-" %(payment_method)sが%(provider)sにサポートされていることを確認して下さい。"
+msgstr " %(payment_method)sが%(provider)sにサポートされていることを確認して下さい。"
 
 #. module: payment
 #. odoo-python
@@ -1718,8 +1715,7 @@ msgstr ""
 msgid ""
 "The currencies available with this payment provider. Leave empty not to "
 "restrict any."
-msgstr ""
-"この決済プロバイダーで利用可能な通貨。制限しない場合は空のままにします。"
+msgstr "この決済プロバイダーで利用可能な通貨。制限しない場合は空のままにします。"
 
 #. module: payment
 #. odoo-python
@@ -1813,8 +1809,7 @@ msgstr "支払処理を説明しサポートするために表示されるメッ
 #, python-format
 msgid ""
 "The payment should either be direct, with redirection, or made by a token."
-msgstr ""
-"支払いは直接か、リダイレクトか、トークンによるものである必要があります。"
+msgstr "支払いは直接か、リダイレクトか、トークンによるものである必要があります。"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__primary_payment_method_id
@@ -1872,8 +1867,8 @@ msgid ""
 "The template rendering a form submitted to redirect the user when making a "
 "payment"
 msgstr ""
-"支払時にユーザをリダイレクトするために送信されたフォームをレンダリングするテ"
-"ンプレート"
+"支払時にユーザをリダイレクトするために送信されたフォームをレンダリングする"
+"テンプレート"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__express_checkout_form_view_id
@@ -1891,8 +1886,7 @@ msgstr "直接支払時にインライン決済フォームをレンダリング
 msgid ""
 "The template rendering the inline payment form when making a payment by "
 "token."
-msgstr ""
-"トークンによる決済時にインライン支払いフォームをレンダリングするテンプレート"
+msgstr "トークンによる決済時にインライン支払いフォームをレンダリングするテンプレート"
 
 #. module: payment
 #. odoo-python
@@ -1901,8 +1895,7 @@ msgstr ""
 msgid ""
 "The transaction with reference %(ref)s for %(amount)s encountered an error "
 "(%(provider_name)s)."
-msgstr ""
-"参照%(ref)sの取引( %(amount)s用)にエラー (%(provider_name)s)が発生しました。"
+msgstr "参照%(ref)sの取引( %(amount)s用)にエラー (%(provider_name)s)が発生しました。"
 
 #. module: payment
 #. odoo-python
@@ -1952,8 +1945,8 @@ msgid ""
 "This action will also archive %s tokens that are registered with this "
 "payment method. Archiving tokens is irreversible."
 msgstr ""
-"このアクションは、この支払方法で登録されたトークンもアーカイブ%sします。トー"
-"クンのアーカイブは不可逆です。"
+"このアクションは、この支払方法で登録されたトークンもアーカイブ%sします。"
+"トークンのアーカイブは不可逆です。"
 
 #. module: payment
 #. odoo-python
@@ -1963,8 +1956,8 @@ msgid ""
 "This action will also archive %s tokens that are registered with this "
 "provider. Archiving tokens is irreversible."
 msgstr ""
-"このアクションは、このプロバイダに登録されている%sトークンもアーカイブしま"
-"す。トークンのアーカイブは不可逆です。"
+"このアクションは、このプロバイダに登録されている%sトークンもアーカイブします"
+"。トークンのアーカイブは不可逆です。"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__allow_tokenization
@@ -1986,9 +1979,9 @@ msgid ""
 "checkout enables customers to pay with Google Pay and Apple Pay from which "
 "address information is collected at payment."
 msgstr ""
-"これは、顧客がエクスプレス支払方法を使用できるかどうかを制御します。エクスプ"
-"レスチェックアウトは、Google PayやApple Payでの支払を可能にし、支払時に住所情"
-"報が収集されます。"
+"これは、顧客がエクスプレス支払方法を使用できるかどうかを制御します。"
+"エクスプレスチェックアウトは、Google PayやApple Payでの支払を可能にし、支払時"
+"に住所情報が収集されます。"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
@@ -2154,8 +2147,8 @@ msgid ""
 "Whether the provider is visible on the website or not. Tokens remain "
 "functional but are only visible on manage forms."
 msgstr ""
-"プロバイダがウェブサイトに表示されるかどうか。トークンの機能は維持されます"
-"が、管理フォームでのみ表示されます。"
+"プロバイダがウェブサイトに表示されるかどうか。トークンの機能は維持されますが"
+"、管理フォームでのみ表示されます。"
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_transfer
@@ -2193,8 +2186,8 @@ msgid ""
 "You cannot delete the payment provider %s; disable it or uninstall it "
 "instead."
 msgstr ""
-"決済プロバイダを削除することはできません%s;代わりに無効にするか、アンインス"
-"トールして下さい。"
+"決済プロバイダを削除することはできません%s;代わりに無効にするか、"
+"アンインストールして下さい。"
 
 #. module: payment
 #. odoo-python

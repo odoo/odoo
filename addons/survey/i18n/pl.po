@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-03 18:38+0000\n"
-"PO-Revision-Date: 2026-07-04 09:42+0000\n"
+"PO-Revision-Date: 2026-08-08 10:14+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-17/survey/"
 "pl/>\n"
@@ -304,8 +304,8 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "<p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"Drogi <t t-out=\"object.partner_id.name or 'participant'\">uczestniku</"
-"t><br><br>\n"
+"Drogi <t t-out=\"object.partner_id.name or 'participant'\">uczestniku</t><br>"
+"<br>\n"
 "<t t-if=\"object.survey_id.certification\">\n"
 "Zostałeś zaproszony do wzięcia udziału w nowej certyfikacji.\n"
 "</t>\n"
@@ -325,8 +325,8 @@ msgstr ""
 "</a>\n"
 "</div>\n"
 "<t t-if=\"object.deadline\">\n"
-"Prosimy o odpowiedź na ankietę z dnia <t t-"
-"out=\"format_date(object.deadline) or ''\">05/05/2021</t>.<br><br>\n"
+"Prosimy o odpowiedź na ankietę z dnia <t t-out=\"format_date"
+"(object.deadline) or ''\">05/05/2021</t>.<br><br>\n"
 "</t>\n"
 "<t t-if=\"object.survey_id.certification\">\n"
 "Życzymy powodzenia!\n"
@@ -502,8 +502,8 @@ msgid ""
 "                </span>"
 msgstr ""
 "<span class=\"fw-bold text-muted ms-2 d-none d-md-inline\">\n"
-"                    <span id=\"enter-tooltip\">lub naciśnij CTRL+Enter</"
-"span>\n"
+"                    <span id=\"enter-tooltip\">lub naciśnij CTRL+Enter</span>"
+"\n"
 "                </span>"
 
 #. module: survey
@@ -532,8 +532,8 @@ msgid ""
 "                        <span class=\"o_stat_text\" "
 "invisible=\"certifications_count &gt; 1\">Certification</span>"
 msgstr ""
-"<span class=\"o_stat_text\" invisible=\"certifications_count &lt; "
-"2\">Certyfikacje</span>\n"
+"<span class=\"o_stat_text\" invisible=\"certifications_count &lt; 2\">"
+"Certyfikacje</span>\n"
 "                        <span class=\"o_stat_text\" "
 "invisible=\"certifications_count &gt; 1\">Certyfikacje</span>"
 
@@ -543,8 +543,8 @@ msgid ""
 "<span class=\"o_survey_enter fw-bold text-muted ms-2 d-none d-md-inline\">or "
 "press Enter</span>"
 msgstr ""
-"<span class=\"o_survey_enter fw-bold text-muted ms-2 d-none d-md-"
-"inline\">lub naciśnij Enter</span>"
+"<span class=\"o_survey_enter fw-bold text-muted ms-2 d-none d-md-inline\">"
+"lub naciśnij Enter</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_selection_key
@@ -644,8 +644,7 @@ msgstr "<span invisible=\"not is_time_limited\"> sekundy</span>"
 #: model_terms:survey.question,description:survey.survey_demo_quiz_p3_q1
 msgid ""
 "<span>\"Red\" is not a category, I know what you are trying to do ;)</span>"
-msgstr ""
-"<span>\"Czerwony\" to nie kategoria, wiem co próbujesz zrobić ;)</span>"
+msgstr "<span>\"Czerwony\" to nie kategoria, wiem co próbujesz zrobić ;)</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_form
@@ -688,8 +687,8 @@ msgid ""
 "role=\"img\" aria-label=\"Numeric\"/>"
 msgstr ""
 "<span>Ile ...?</span><br/>\n"
-"<i class=\"fa fa-2x\" role=\"img\" aria-label=\"Numeric\" "
-"title=\"Numeric\">123 </i>\n"
+"<i class=\"fa fa-2x\" role=\"img\" aria-label=\"Numeric\" title=\"Numeric\">"
+"123 </i>\n"
 "<i class=\"fa fa-2x fa-sort\" role=\"img\" aria-label=\"Numeric\"/>"
 
 #. module: survey
@@ -2277,8 +2276,7 @@ msgstr "Jak dobrym prezenterem jesteś? Przekonajmy się!"
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "How likely are you to recommend the following products to a friend?"
-msgstr ""
-"Jak bardzo prawdopodobne jest, że polecisz poniższe produkty znajomemu?"
+msgstr "Jak bardzo prawdopodobne jest, że polecisz poniższe produkty znajomemu?"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_burger_quiz_p2_q1
@@ -3729,8 +3727,8 @@ msgid ""
 "need at least one section if you chose the \"Page per section\" layout.<br/>"
 msgstr ""
 "Upewnij się, że masz w ankiecie przynajmniej jedno pytanie. Potrzebujesz "
-"także co najmniej jednej sekcji, jeśli wybierzesz układ \"Strona na sekcję\"."
-"<br/>"
+"także co najmniej jednej sekcji, jeśli wybierzesz układ \"Strona na "
+"sekcję\".<br/>"
 
 #. module: survey
 #: model:survey.question,title:survey.vendor_certification_page_3
@@ -4153,8 +4151,7 @@ msgstr "Do zobaczenia wkrótce!"
 #. module: survey
 #: model:survey.question,title:survey.vendor_certification_page_1_question_3
 msgid "Select all the available customizations for our Customizable Desk"
-msgstr ""
-"Wybierz wszystkie dostępne dostosowania naszego konfigurowalnego biurka"
+msgstr "Wybierz wszystkie dostępne dostosowania naszego konfigurowalnego biurka"
 
 #. module: survey
 #: model:survey.question,title:survey.vendor_certification_page_1_question_2
@@ -4974,8 +4971,7 @@ msgstr ""
 #: model_terms:survey.survey,description:survey.survey_demo_quiz
 msgid ""
 "This small quiz will test your knowledge about our Company. Be prepared!"
-msgstr ""
-"Ten mały quiz sprawdzi Twoją wiedzę o naszej firmie. Bądź przygotowany!"
+msgstr "Ten mały quiz sprawdzi Twoją wiedzę o naszej firmie. Bądź przygotowany!"
 
 #. module: survey
 #: model_terms:survey.survey,description:survey.survey_feedback

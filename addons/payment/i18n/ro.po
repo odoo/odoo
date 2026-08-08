@@ -21,15 +21,17 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:37+0000\n"
-"PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Larisa_nexterp, 2025\n"
-"Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
+"PO-Revision-Date: 2026-08-04 02:24+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-17/payment/"
+"ro/>\n"
 "Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?"
-"2:1));\n"
+"Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
+"20)) ? 1 : 2;\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard___data_fetched
@@ -44,8 +46,8 @@ msgid ""
 "<h3>Please make a payment to: </h3><ul><li>Bank: %s</li><li>Account Number: "
 "%s</li><li>Account Holder: %s</li></ul>"
 msgstr ""
-"<h3>Vă rugăm să efectuați o plată în: </h3> <ul><li>Banca: %s</"
-"li><li>Contul: %s</li><li>Titular cont: %s</li></ul>"
+"<h3>Vă rugăm să efectuați o plată în: </h3> <ul><li>Banca: %s</li><li>"
+"Contul: %s</li><li>Titular cont: %s</li></ul>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_method_form
@@ -82,10 +84,10 @@ msgid ""
 "transactions you intend to capture can only be captured in full. Handle the "
 "transactions individually to capture a partial amount.\"/>"
 msgstr ""
-"<i class=\"fa fa-info-circle oe_inline\" "
-"invisible=\"support_partial_capture != 'full_only'\" title=\"Unele dintre "
-"tranzacțiile pe care doriți să le capturați pot fi capturate doar integral. "
-"Gestionați tranzacțiile individual pentru a captura o sumă parțială.\"/>"
+"<i class=\"fa fa-info-circle oe_inline\" invisible=\"support_partial_capture "
+"!= 'full_only'\" title=\"Unele dintre tranzacțiile pe care doriți să le "
+"capturați pot fi capturate doar integral. Gestionați tranzacțiile individual "
+"pentru a captura o sumă parțială.\"/>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.token_form
@@ -211,8 +213,8 @@ msgid ""
 "em> button is not supported.\n"
 "                        Please use the <em>Duplicate</em> action instead."
 msgstr ""
-"<strong>Atenție</strong> Crearea unui furnizor de plată din butonul "
-"<em>CREEAZĂ</em> nu este suportată.\n"
+"<strong>Atenție</strong> Crearea unui furnizor de plată din butonul <em>"
+"CREEAZĂ</em> nu este suportată.\n"
 "                        Vă rugăm să folosiți acțiunea <em>Duplicare</em>."
 
 #. module: payment
@@ -281,8 +283,8 @@ msgid ""
 "A transaction with reference %(ref)s has been initiated using the payment "
 "method %(token)s (%(provider_name)s)."
 msgstr ""
-"O tranzacție cu referința %(ref)s a fost inițiată folosind metoda de plată "
-"%(token)s(%(provider_name)s)."
+"O tranzacție cu referința %(ref)s a fost inițiată folosind metoda de plată %"
+"(token)s(%(provider_name)s)."
 
 #. module: payment
 #. odoo-python
@@ -1369,8 +1371,8 @@ msgstr "Telefon"
 #, python-format
 msgid "Please make sure that %(payment_method)s is supported by %(provider)s."
 msgstr ""
-"Vă rugăm să vă asigurați că %(payment_method)s este suportată de "
-"%(provider)s."
+"Vă rugăm să vă asigurați că %(payment_method)s este suportată de %(provider)"
+"s."
 
 #. module: payment
 #. odoo-python
@@ -1933,8 +1935,8 @@ msgid ""
 "The transaction with reference %(ref)s for %(amount)s encountered an error "
 "(%(provider_name)s)."
 msgstr ""
-"Tranzacția cu referința %(ref)spentru %(amount)sa întâmpinat o eroare "
-"(%(provider_name)s)."
+"Tranzacția cu referința %(ref)spentru %(amount)sa întâmpinat o eroare (%"
+"(provider_name)s)."
 
 #. module: payment
 #. odoo-python
@@ -1944,8 +1946,8 @@ msgid ""
 "The transaction with reference %(ref)s for %(amount)s has been authorized "
 "(%(provider_name)s)."
 msgstr ""
-"Tranzacția cu referința %(ref)s pentru  %(amount)s a fost autorizată "
-"( %(provider_name)s )."
+"Tranzacția cu referința %(ref)s pentru  %(amount)s a fost autorizată ( %"
+"(provider_name)s )."
 
 #. module: payment
 #. odoo-python
@@ -1955,8 +1957,8 @@ msgid ""
 "The transaction with reference %(ref)s for %(amount)s has been confirmed "
 "(%(provider_name)s)."
 msgstr ""
-"Tranzacția cu referința %(ref)s pentru %(amount)s a fost confirmată "
-"%(provider_name)s()."
+"Tranzacția cu referința %(ref)s pentru %(amount)s a fost confirmată %"
+"(provider_name)s()."
 
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_transaction
@@ -2251,8 +2253,7 @@ msgstr "Nu aveți acces la acest token de plată."
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "You should receive an email confirming your payment in a few minutes."
-msgstr ""
-"Ar trebui să primiți un e-mail care vă confirmă plata în câteva minute."
+msgstr "Ar trebui să primiți un e-mail care vă confirmă plata în câteva minute."
 
 #. module: payment
 #. odoo-python

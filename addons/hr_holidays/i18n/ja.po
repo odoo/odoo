@@ -5,19 +5,19 @@
 # Translators:
 # Martin Trigaux, 2023
 # Noma Yuki, 2023
-# Ryoko Tsuda <ryoko@quartile.co>, 2024, 2025.
+# Ryoko Tsuda <ryoko@quartile.co>, 2024, 2025, 2026.
 # Tiffany Chang, 2025
 # Junko Augias, 2025
 # Wil Odoo, 2025
 # "Junko Augias (juau)" <juau@odoo.com>, 2025, 2026.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-19 17:36+0000\n"
-"PO-Revision-Date: 2026-07-07 03:13+0000\n"
-"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
+"PO-Revision-Date: 2026-08-03 23:29+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-17/"
 "hr_holidays/ja/>\n"
 "Language: ja\n"
@@ -688,16 +688,16 @@ msgid ""
 "                    ("
 msgstr ""
 "<span invisible=\"holiday_type != 'employee'\">\n"
-"従業員のタイムゾーンはあなたとは異なります。ここでは、日付と時刻が従業員のタ"
-"イムゾーンで表示されます。\n"
+"従業員のタイムゾーンはあなたとは異なります。ここでは、日付と時刻が従業員の"
+"タイムゾーンで表示されます。\n"
 "                    </span>\n"
 "                    <span invisible=\"holiday_type != 'department'\">\n"
 "部門の会社のタイムゾーンはあなたの会社とは異なります。ここでは、日付と時刻が"
 "会社のタイムゾーンで表示されます。\n"
 "                    </span>\n"
 "                    <span invisible=\"holiday_type != 'company'\">\n"
-"会社のタイムゾーンはあなたとは異なります。ここでは、日付と時刻が会社のタイム"
-"ゾーンで表示されます。\n"
+"会社のタイムゾーンはあなたとは異なります。ここでは、日付と時刻が会社の"
+"タイムゾーンで表示されます。\n"
 "                    </span>\n"
 "                    ("
 
@@ -2074,8 +2074,7 @@ msgstr "2月"
 msgid ""
 "Field allowing to see the allocation duration in days or hours depending on "
 "the type_request_unit"
-msgstr ""
-"type_request_unitに応じて、割り当て期間を日数または時間で表示できるフィールド"
+msgstr "type_request_unitに応じて、割り当て期間を日数または時間で表示できるフィールド"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__duration_display
@@ -2823,8 +2822,7 @@ msgstr "休暇割当申請"
 msgid ""
 "New Allocation Request created by %(user)s: %(count)s Days of "
 "%(allocation_type)s"
-msgstr ""
-"%(user)sによって作成された新しい割当申請：%(count)s%(allocation_type)sの日数"
+msgstr "%(user)sによって作成された新しい割当申請：%(count)s%(allocation_type)sの日数"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
@@ -2968,8 +2966,7 @@ msgstr "休暇の数"
 msgid ""
 "Number of days of the time off request according to your working schedule. "
 "Used for interface."
-msgstr ""
-"勤務スケジュールに応じた休暇申請の日数。インターフェイスに使用されます。"
+msgstr "勤務スケジュールに応じた休暇申請の日数。インターフェイスに使用されます。"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__number_of_days
@@ -2987,8 +2984,7 @@ msgstr "エラー数"
 msgid ""
 "Number of hours of the time off request according to your working schedule. "
 "Used for interface."
-msgstr ""
-"勤務スケジュールに応じた休暇申請の時間数。インターフェイスに使用されます。"
+msgstr "勤務スケジュールに応じた休暇申請の時間数。インターフェイスに使用されます。"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__number_of_hours
@@ -3734,8 +3730,8 @@ msgid ""
 "The distinction between working time (ex. Attendance) and absence (ex. "
 "Training) will be used in the computation of Accrual's plan rate."
 msgstr ""
-"勤務時間(例: 出勤)と欠勤(例: 研修)の区別は、累積プラン率の計算に使用されま"
-"す。"
+"勤務時間(例: 出勤)と欠勤(例: 研修)の区別は、累積プラン率の計算に使用されます"
+"。"
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_allocation_duration_check
@@ -3749,8 +3745,8 @@ msgid ""
 "The employee, department, company or employee category of this request is "
 "missing. Please make sure that your user login is linked to an employee."
 msgstr ""
-"この申請の従業員、部門、会社、または従業員のカテゴリがありません。ユーザーロ"
-"グインが従業員にリンクされていることを確認してください。"
+"この申請の従業員、部門、会社、または従業員のカテゴリがありません。"
+"ユーザーログインが従業員にリンクされていることを確認してください。"
 
 #. module: hr_holidays
 #. odoo-python
@@ -3812,8 +3808,8 @@ msgid ""
 msgstr ""
 "休暇申請が作成されると、ステータスは'送信予定'に設定されます。ユーザが休暇申"
 "請を確定すると、ステータスは'承認中'になります。マネージャーが休暇申請を否認"
-"した場合、ステータスは'否認'です。休暇申請がマネージャーによって承認される"
-"と、ステータスは'承認済'になります。"
+"した場合、ステータスは'否認'です。休暇申請がマネージャーによって承認されると"
+"、ステータスは'承認済'になります。"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__state
@@ -3911,16 +3907,14 @@ msgstr "この休暇は取消できません。"
 msgid ""
 "This value is given by the sum of all time off requests with a negative "
 "value."
-msgstr ""
-"この値は、負の値を持つすべてのタイムオフ要求の合計によって与えられます。"
+msgstr "この値は、負の値を持つすべてのタイムオフ要求の合計によって与えられます。"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__max_leaves
 msgid ""
 "This value is given by the sum of all time off requests with a positive "
 "value."
-msgstr ""
-"この値は、正の値を持つすべてのタイムオフ要求の合計によって与えられます。"
+msgstr "この値は、正の値を持つすべてのタイムオフ要求の合計によって与えられます。"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__week_day__thu
@@ -4154,8 +4148,7 @@ msgstr "あなたがマネージャーである人々の休暇"
 #, python-format
 msgid ""
 "Time off request must be confirmed (\"To Approve\") in order to approve it."
-msgstr ""
-"休暇申請を承認するには、休暇申請を確認する必要があります('承認するには')。"
+msgstr "休暇申請を承認するには、休暇申請を確認する必要があります('承認するには')。"
 
 #. module: hr_holidays
 #. odoo-python
@@ -4178,8 +4171,7 @@ msgstr "休暇申請を否認するには、休暇申請を確認または検証
 msgid ""
 "Time off request must be in Draft state (\"To Submit\") in order to confirm "
 "it."
-msgstr ""
-"休暇申請は、確認するためにドラフト状態('送信予定')である必要があります。"
+msgstr "休暇申請は、確認するためにドラフト状態('送信予定')である必要があります。"
 
 #. module: hr_holidays
 #. odoo-python
@@ -4546,8 +4538,8 @@ msgid ""
 msgstr ""
 "はい: 休暇は有効な割当が必要です。\n"
 "\n"
-"              制限なし: 休暇の申請は、事前の割当なしに取得することができま"
-"す。"
+"              制限なし: 休暇の申請は、事前の割当なしに取得することができます"
+"。"
 
 #. module: hr_holidays
 #. odoo-python
@@ -4711,8 +4703,7 @@ msgstr "累積プランのレベルでは、0より大きい率を与えて下�
 #, python-format
 msgid ""
 "You must have manager rights to modify/validate a time off that already begun"
-msgstr ""
-"すでに開始されている休暇を変更/検証するには、マネージャーの権限が必要です"
+msgstr "すでに開始されている休暇を変更/検証するには、マネージャーの権限が必要です"
 
 #. module: hr_holidays
 #. odoo-python

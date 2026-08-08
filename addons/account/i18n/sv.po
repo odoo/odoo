@@ -43,7 +43,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-17 18:36+0000\n"
-"PO-Revision-Date: 2026-07-15 19:03+0000\n"
+"PO-Revision-Date: 2026-08-08 06:45+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-17/account/"
 "sv/>\n"
@@ -508,8 +508,8 @@ msgstr ""
 "        Tveka inte att kontakta oss om du har några frågor.\n"
 "        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\">\n"
 "            <br><br>\n"
-"            <t t-out=\"object.invoice_user_id.signature or ''\">--"
-"<br>Mitchell Admin</t>\n"
+"            <t t-out=\"object.invoice_user_id.signature or ''\">--<br>"
+"Mitchell Admin</t>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -602,9 +602,8 @@ msgstr ""
 "            (med referens: <t t-out=\"object.invoice_origin or ''\">SUB003</"
 "t>)\n"
 "        </t>\n"
-"        belopp <span style=\"font-weight:bold;\" t-"
-"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
-"143,750.00</span>\n"
+"        belopp <span style=\"font-weight:bold;\" t-out=\"format_amount"
+"(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
 "        från <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
 "        <t t-if=\"object.payment_state in ('paid', 'in_payment')\">\n"
 "            Denna faktura är redan betald.\n"
@@ -633,8 +632,8 @@ msgstr ""
 "        Tveka inte att kontakta oss om du har några frågor.\n"
 "        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\">\n"
 "            <br><br>\n"
-"            <t t-out=\"object.invoice_user_id.signature or ''\">--"
-"<br>Mitchell Admin</t>\n"
+"            <t t-out=\"object.invoice_user_id.signature or ''\">--<br>"
+"Mitchell Admin</t>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -667,15 +666,15 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Kära <t t-out=\"object.partner_id.name or ''\">Azure Interior</"
-"t><br><br>\n"
+"        Kära <t t-out=\"object.partner_id.name or ''\">Azure Interior</t><br>"
+"<br>\n"
 "        Tack för din betalning.\n"
 "        Här är ditt betalningskvitto <span style=\"font-weight:bold;\" t-"
 "out=\"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</span> "
 "belöpande\n"
-"        till <span style=\"font-weight:bold;\" t-"
-"out=\"format_amount(object.amount, object.currency_id) or ''\">$ 10.00</"
-"span> från <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
+"        till <span style=\"font-weight:bold;\" t-out=\"format_amount"
+"(object.amount, object.currency_id) or ''\">$ 10.00</span> från <t t-"
+"out=\"object.company_id.name or ''\">YourCompany</t>.\n"
 "        <br><br>\n"
 "        Tveka inte att kontakta oss om du har några frågor.\n"
 "        <br><br>\n"
@@ -1704,7 +1703,7 @@ msgstr "Skicka transaktioner"
 #: model:ir.model.fields,field_description:account.field_account_account__name
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
 msgid "Account Name"
-msgstr "Kontonamn"
+msgstr "Namn"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__bank_acc_number
@@ -2173,7 +2172,7 @@ msgstr "Aktiviteter"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__activity_exception_decoration
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Undantagsaktiviteter dekoration"
+msgstr "Stilmarkeringar för undantagsaktiviteter"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_state
@@ -7704,8 +7703,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid ""
 "If you check this box, you will be able to register your payment using SEPA."
-msgstr ""
-"Om du kryssar i den här rutan kan du registrera din betalning med SEPA."
+msgstr "Om du kryssar i den här rutan kan du registrera din betalning med SEPA."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.open_account_journal_dashboard_kanban
@@ -8503,7 +8501,7 @@ msgstr "Perfekt matchning av fakturor/räkningar"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "Invoicing"
-msgstr "Faktura"
+msgstr "Fakturering"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__payment_state__invoicing_legacy
@@ -10005,7 +10003,7 @@ msgstr "Nästa aktivitetshändelse i kalendern"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__activity_date_deadline
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr "Nästa tidsgräns för en aktivitet"
+msgstr "Tidsgräns för nästa aktivitet"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_summary
@@ -10015,7 +10013,7 @@ msgstr "Nästa tidsgräns för en aktivitet"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__activity_summary
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__activity_summary
 msgid "Next Activity Summary"
-msgstr "Nästa aktivitetssammanfattning"
+msgstr "Sammanfattning av nästa aktivitet"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_type_id
@@ -13546,10 +13544,10 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
-"Status baserat på aktiviteter\n"
-"Försenade: Förfallodatum har redan passerat\n"
-"Idag: Aktivitetens förfallodatum är dagens datum\n"
-"Kommande: Framtida aktiviteter."
+"Status baserat på aktivitetsdatum:\n"
+"Försenade: Aktivitetsdatum har redan passerat.\n"
+"Idag: Aktivitetsdatum är dagens datum.\n"
+"Planerade: Kommande aktiviteter."
 
 #. module: account
 #: model:onboarding.onboarding.step,done_text:account.onboarding_onboarding_step_bank_account
@@ -14171,8 +14169,8 @@ msgid ""
 "In doing so, you might want to resequence your entries in order to maintain "
 "a continuous date-based sequence."
 msgstr ""
-"%(date_field)s (%(date)s) matchar inte sekvensnumret för den relaterade "
-"%(model)s (%(sequence)s)\n"
+"%(date_field)s (%(date)s) matchar inte sekvensnumret för den relaterade %"
+"(model)s (%(sequence)s)\n"
 "Du kommer att behöva rensa %(model)s’s %(sequence_field)s för att "
 "fortsätta.\n"
 "Genom att göra så, kanske du vill omorganisera dina poster för att "
@@ -14701,8 +14699,7 @@ msgstr ""
 #, python-format
 msgid ""
 "The invoice already contains lines, it was not updated from the attachment."
-msgstr ""
-"Fakturan innehåller redan rader, den har inte uppdaterats från bilagan."
+msgstr "Fakturan innehåller redan rader, den har inte uppdaterats från bilagan."
 
 #. module: account
 #. odoo-python
@@ -15103,8 +15100,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "The selected payment method requires a bank account but none is set on"
-msgstr ""
-"Den valda betalningsmetoden kräver ett bankkonto men inget är aktiverat"
+msgstr "Den valda betalningsmetoden kräver ett bankkonto men inget är aktiverat"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__sequence
@@ -15416,8 +15412,8 @@ msgid ""
 "%(journal_ids)s) as payment debit or credit account. This means that this "
 "account's type should be reconcilable."
 msgstr ""
-"Detta konto är konfigurerat i %(journal_names)s journal(er) (ids "
-"%(journal_ids)s) som betalningsdebet- eller kreditkonto. Detta innebär att "
+"Detta konto är konfigurerat i %(journal_names)s journal(er) (ids %"
+"(journal_ids)s) som betalningsdebet- eller kreditkonto. Detta innebär att "
 "kontotypen bör vara avstämningsbar."
 
 #. module: account
@@ -17729,8 +17725,8 @@ msgid ""
 "You cannot use this account (%s) in this journal, check the section 'Control-"
 "Access' under tab 'Advanced Settings' on the related journal."
 msgstr ""
-"Du kan inte använda detta konto (%s) i denna journal, kontrollera avsnittet "
-"’Kontroll-Åtkomst’ under fliken ’Avancerade inställningar’ på den relaterade "
+"Du kan inte använda detta konto (%s) i denna journal, kontrollera avsnittet ’"
+"Kontroll-Åtkomst’ under fliken ’Avancerade inställningar’ på den relaterade "
 "journalen."
 
 #. module: account
@@ -18326,8 +18322,8 @@ msgid ""
 "{amount} ({debit_credit}) from %s were transferred to "
 "<strong>{account_target_name}</strong> by {link}"
 msgstr ""
-"{amount} ({debit_credit}) från %s överfördes till "
-"<strong>{account_target_name}</strong> av {link}"
+"{amount} ({debit_credit}) från %s överfördes till <strong>"
+"{account_target_name}</strong> av {link}"
 
 #. module: account
 #. odoo-python

@@ -50,7 +50,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-17 18:36+0000\n"
-"PO-Revision-Date: 2026-06-26 12:53+0000\n"
+"PO-Revision-Date: 2026-08-06 08:22+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-17/account/"
 "tr/>\n"
@@ -307,8 +307,7 @@ msgstr "- %(name)s ve %(company)s"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "- A default Customer Invoice / Vendor Bill date will be suggested."
-msgstr ""
-"- Varsayılan bir Müşteri Faturası / Satıcı Fatura tarihi önerilecektir."
+msgstr "- Varsayılan bir Müşteri Faturası / Satıcı Fatura tarihi önerilecektir."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -495,8 +494,8 @@ msgstr ""
 "style=\"font-weight\\:bold;\" t-out=\"format_amount(object.amount_total, "
 "object.currency_id) or ''\">$ 143,750.00</span> <t t-"
 "out=\"object.company_id.name or ''\">Şirketiniz  adına</t>. <br><br>Bir "
-"sorunuz varsa çekinmeden ulaşabilirsiniz. <t t-if=\"not "
-"is_html_empty(object.invoice_user_id.signature)\"> <br><br> <t t-"
+"sorunuz varsa çekinmeden ulaşabilirsiniz. <t t-if=\"not is_html_empty"
+"(object.invoice_user_id.signature)\"> <br><br> <t t-"
 "out=\"object.invoice_user_id.signature or ''\">--<br>Mitchell Admin</t> </t> "
 "</p> </div>"
 
@@ -587,9 +586,8 @@ msgstr ""
 "            (referans no: <t t-out=\"object.invoice_origin or ''\">SUB003</"
 "t>)\n"
 "        </t>\n"
-"        tutarı: <span style=\"font-weight:bold;\" t-"
-"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
-"143,750.00</span>\n"
+"        tutarı: <span style=\"font-weight:bold;\" t-out=\"format_amount"
+"(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
 "        kesen <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
 "        <t t-if=\"object.payment_state in ('paid', 'in_payment')\">\n"
 "            Bu fatura zaten ödenmiştir.\n"
@@ -610,15 +608,16 @@ msgstr ""
 "        <t t-if=\"hasattr(object, 'timesheet_count') and "
 "object.timesheet_count\">\n"
 "            <br><br>\n"
-"            PS: Portaldan zaman çizelgenizi <a t-att-href=\"'my/timesheets?"
-"search_in=invoice&amp;search=%s' % object.name\">inceleyebilirsiniz.</a>\n"
+"            PS: Portaldan zaman çizelgenizi <a t-att-href=\"'my/"
+"timesheets?search_in=invoice&amp;search=%s' % object.name\">"
+"inceleyebilirsiniz.</a>\n"
 "        </t>\n"
 "        <br><br>\n"
 "        Herhangi bir sorunuz varsa bizimle iletişime geçmekten çekinmeyin.\n"
 "        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\">\n"
 "            <br><br>\n"
-"            <t t-out=\"object.invoice_user_id.signature or ''\">--"
-"<br>Mitchell Admin</t>\n"
+"            <t t-out=\"object.invoice_user_id.signature or ''\">--<br>"
+"Mitchell Admin</t>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -653,9 +652,9 @@ msgstr ""
 "<p style=\"margin\\: 0px; padding\\: 0px; font-size\\: 13px;\"> \n"
 "Sayın <t t-out=\"object.partner_id.name or ''\">Azure Interior</t><br><br> \n"
 "Ödemeniz için teşekkür ederiz. \n"
-"Size ait ödeme fişi  : <span style=\"font-weight\\:bold;\" t-"
-"out=\"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</span> "
-"<span style=\"font-weight\\:bold;\" t-out=\"format_amount(object.amount, "
+"Size ait ödeme fişi  : <span style=\"font-weight\\:bold;\" t-out=\""
+"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</span> <span "
+"style=\"font-weight\\:bold;\" t-out=\"format_amount(object.amount, "
 "object.currency_id) or ''\">$ 10.00 tutarında</span> <t t-"
 "out=\"object.company_id.name or ''\">Firmanız adına</t>. <br><br> Eğer bir "
 "sorunuz var ise iletişme geçmek için çekinmeyiniz.<br><br> \n"
@@ -836,8 +835,8 @@ msgid ""
 "<span class=\"o_form_label oe_inline\" invisible=\"amount_type == "
 "'fixed'\">%</span>"
 msgstr ""
-"<span class=\"o_form_label oe_inline\" invisible=\"amount_type == "
-"'fixed'\">%</span>"
+"<span class=\"o_form_label oe_inline\" invisible=\"amount_type == 'fixed'\">"
+"%</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -2044,8 +2043,8 @@ msgid ""
 "Accrual entry created on %(date)s: %(accrual_entry)s.                And its "
 "reverse entry: %(reverse_entry)s."
 msgstr ""
-"%(date)s tarihinde oluşturulan tahakkuk kaydı: "
-"%(accrual_entry)s.                Ve ters kaydı: %(reverse_entry)s."
+"%(date)s tarihinde oluşturulan tahakkuk kaydı: %(accrual_entry)"
+"s.                Ve ters kaydı: %(reverse_entry)s."
 
 #. module: account
 #. odoo-python
@@ -2311,8 +2310,8 @@ msgstr "Düzeltme Kaydı"
 #, python-format
 msgid "Adjusting Entry {link} {percent}%% of {amount} recognized from {date}"
 msgstr ""
-"Girişin Ayarlanması {link} {date}'ten itibaren muhasebeleştirilen "
-"{amount}'ın {percent}%%'si"
+"Girişin Ayarlanması {link} {date}'ten itibaren muhasebeleştirilen {amount}"
+"'ın {percent}%%'si"
 
 #. module: account
 #. odoo-python
@@ -6209,8 +6208,8 @@ msgstr "Şunun için erken ödeme indirimi"
 msgid ""
 "Early Payment Discount: <b>%(amount)s</b> if paid before <b>%(date)s</b>"
 msgstr ""
-"Erken Ödeme İndirimi: (<b>%(date)s</b> tarihinden önce ödediğinde "
-"<b>%(amount)s</b>)"
+"Erken Ödeme İndirimi: (<b>%(date)s</b> tarihinden önce ödediğinde <b>%"
+"(amount)s</b>)"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_payment_tree
@@ -8838,8 +8837,7 @@ msgstr "Yevmiye, ters kayıtla aynı tür olmalıdır."
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__automatic_entry_default_journal_id
 msgid "Journal used by default for moving the period of an entry"
-msgstr ""
-"Bir girdinin dönemini taşımak için varsayılan olarak kullanılan yevmiye"
+msgstr "Bir girdinin dönemini taşımak için varsayılan olarak kullanılan yevmiye"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_opening_journal_id
@@ -10006,8 +10004,8 @@ msgid ""
 "No journal could be found in company %(company_name)s for any of those "
 "types: %(journal_types)s"
 msgstr ""
-"%(company_name)s şirketinde şu türlerin hiçbiri için yevmiye bulunamadı: "
-"%(journal_types)s"
+"%(company_name)s şirketinde şu türlerin hiçbiri için yevmiye bulunamadı: %"
+"(journal_types)s"
 
 #. module: account
 #. odoo-python
@@ -14018,8 +14016,8 @@ msgstr ""
 "year, prefix2, month, prefix3, seq, suffix.\n"
 "The prefix* groups are the separators between the year, month and the actual "
 "increasing sequence number (seq).\n"
-"e.g: ^(?P<prefix1>.*?)(?P<year>\\d{4})(?P<prefix2>\\D*?)(?P<month>\\d{2})(?"
-"P<prefix3>\\D+?)(?P<seq>\\d+)(?P<suffix>\\D*?)$"
+"e.g: ^(?P<prefix1>.*?)(?P<year>\\d{4})(?P<prefix2>\\D*?)(?P<month>\\d{2})"
+"(?P<prefix3>\\D+?)(?P<seq>\\d+)(?P<suffix>\\D*?)$"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_fiscal_position__foreign_vat_header_mode__templates_found
@@ -14136,8 +14134,7 @@ msgstr "Bu belgeyi doğrulamak için Fatura/İade Tarihi gereklidir."
 #: code:addons/account/models/account_payment_term.py:0
 #, python-format
 msgid "The Early Payment Discount days must be strictly positive."
-msgstr ""
-"Erken Ödeme İndirimi gün sayısı kesinlikle pozitif bir değer olmalıdır."
+msgstr "Erken Ödeme İndirimi gün sayısı kesinlikle pozitif bir değer olmalıdır."
 
 #. module: account
 #. odoo-python
@@ -14888,8 +14885,8 @@ msgid ""
 "        * Match Regex: Define your own regular expression."
 msgstr ""
 "Denkleştirme modeli not yalnızca şu durumlarda uygulanır:\n"
-"* İçerik: Teklif etiketi bu dizeyi içermelidir (büyük / küçük harf "
-"duyarsız).\n"
+"* İçerik: Teklif etiketi bu dizeyi içermelidir (büyük / küçük harf duyarsız)"
+".\n"
 "* İçermez: \"İçerir\" in olumsuzlanması.\n"
 "* Eşleşme Regex: Kendi normal ifadenizi tanımlayın."
 
@@ -14903,8 +14900,8 @@ msgid ""
 "        * Match Regex: Define your own regular expression."
 msgstr ""
 "Denkleştirme modeli işlem yalnızca şu durumlarında uygulanır:\n"
-"* İçerik: Teklif etiketi bu dizeyi içermelidir (büyük / küçük harf "
-"duyarsız).\n"
+"* İçerik: Teklif etiketi bu dizeyi içermelidir (büyük / küçük harf duyarsız)"
+".\n"
 "* İçermez: \"İçerir\" in olumsuzlanması.\n"
 "* Eşleşme Regex: Kendi normal ifadenizi tanımlayın."
 
@@ -16810,8 +16807,7 @@ msgstr "Yıllık"
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "You are trying to reconcile some entries that are already reconciled."
-msgstr ""
-"Daha önce denkleştirilmiş bazı kayıtları denkleştirmeye çalışıyorsunuz."
+msgstr "Daha önce denkleştirilmiş bazı kayıtları denkleştirmeye çalışıyorsunuz."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__blocked
@@ -17199,8 +17195,7 @@ msgstr ""
 msgid ""
 "You cannot create a fiscal position with a country outside of the selected "
 "country group."
-msgstr ""
-"Seçili ülke grubunun dışındaki bir ülkeyle mali koşul oluşturamazsınız."
+msgstr "Seçili ülke grubunun dışındaki bir ülkeyle mali koşul oluşturamazsınız."
 
 #. module: account
 #. odoo-python
@@ -17355,8 +17350,7 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot edit the journal of an account move if it has been posted once."
-msgstr ""
-"Bir kez onaylannmış bir yevmiye kaydının yevmiyesini düzenleyemezsiniz."
+msgstr "Bir kez onaylannmış bir yevmiye kaydının yevmiyesini düzenleyemezsiniz."
 
 #. module: account
 #. odoo-python
@@ -17615,8 +17609,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You cannot validate a document with an inactive currency: %s"
-msgstr ""
-"Etkin olmayan bir para birimine sahip bir belgeyi doğrulayamazsınız: %s"
+msgstr "Etkin olmayan bir para birimine sahip bir belgeyi doğrulayamazsınız: %s"
 
 #. module: account
 #. odoo-python

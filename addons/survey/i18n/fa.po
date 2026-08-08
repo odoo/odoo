@@ -25,14 +25,16 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-03 18:38+0000\n"
-"PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Tiffany Chang, 2025\n"
-"Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
+"PO-Revision-Date: 2026-08-04 01:51+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Persian <https://translate.odoo.com/projects/odoo-17/survey/"
+"fa/>\n"
 "Language: fa\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__question_count
@@ -238,8 +240,8 @@ msgstr ""
 "<div style=\"background:#F0F0F0;color:#515166;padding:10px 0px;font-"
 "family:Arial,Helvetica,sans-serif;font-size:14px;\"> <table "
 "style=\"width:600px;margin:5px auto;\"> <tbody> <tr><td> <!-- ما از لوگوی "
-"شرکتی که نظرسنجی را ایجاد کرده استفاده می‌کنیم (برای مدیریت موارد چند شرکتی) "
-"--> <a href=\"/\"><img t-if=\"not "
+"شرکتی که نظرسنجی را ایجاد کرده استفاده می‌کنیم (برای مدیریت موارد چند "
+"شرکتی) --> <a href=\"/\"><img t-if=\"not "
 "object.survey_id.create_uid.company_id.uses_default_logo\" t-attf-src=\"/"
 "logo.png?company={{ object.survey_id.create_uid.company_id.id }}\" "
 "style=\"vertical-align:baseline;max-width:100px;\"></a> </td><td "
@@ -299,16 +301,15 @@ msgstr ""
 "out=\"object.partner_id.name or 'participant'\">شرکت‌کننده</t><br><br> <t t-"
 "if=\"object.survey_id.certification\"> شما به یک گواهی‌نامه جدید دعوت شده‌اید. "
 "</t> <t t-else=\"\"> ما در حال انجام یک نظرسنجی هستیم و از پاسخ شما "
-"سپاسگزاریم. </t> <div style=\"margin: 16px 0px 16px 0px;\"> <a t-att-"
-"href=\"(object.get_start_url())\" style=\"background-color: #875A7B; "
-"padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-"
-"radius: 5px; font-size:13px;\"> <t t-if=\"object.survey_id.certification\"> "
-"شروع گواهی‌نامه </t> <t t-else=\"\"> شروع نظرسنجی </t> </a> </div> <t t-"
-"if=\"object.deadline\"> لطفاً تا تاریخ <t t-"
-"out=\"format_date(object.deadline) or ''\">05/05/2021</t> به نظرسنجی پاسخ "
-"دهید.<br><br> </t> <t t-if=\"object.survey_id.certification\"> برای شما "
-"آرزوی موفقیت داریم! </t> <t t-else=\"\"> پیشاپیش از شرکت شما سپاسگزاریم. </"
-"t> </p> </div>"
+"سپاسگزاریم. </t> <div style=\"margin: 16px 0px 16px 0px;\"> <a t-att-href=\""
+"(object.get_start_url())\" style=\"background-color: #875A7B; padding: 8px "
+"16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-"
+"size:13px;\"> <t t-if=\"object.survey_id.certification\"> شروع گواهی‌نامه </"
+"t> <t t-else=\"\"> شروع نظرسنجی </t> </a> </div> <t t-"
+"if=\"object.deadline\"> لطفاً تا تاریخ <t t-out=\"format_date"
+"(object.deadline) or ''\">05/05/2021</t> به نظرسنجی پاسخ دهید.<br><br> </t> "
+"<t t-if=\"object.survey_id.certification\"> برای شما آرزوی موفقیت داریم! </"
+"t> <t t-else=\"\"> پیشاپیش از شرکت شما سپاسگزاریم. </t> </p> </div>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.question_result_matrix
@@ -500,8 +501,8 @@ msgid ""
 "                        <span class=\"o_stat_text\" "
 "invisible=\"certifications_count &gt; 1\">Certification</span>"
 msgstr ""
-"<span class=\"o_stat_text\" invisible=\"certifications_count &lt; "
-"2\">گواهینامه‌ها</span> <span class=\"o_stat_text\" "
+"<span class=\"o_stat_text\" invisible=\"certifications_count &lt; 2\">"
+"گواهینامه‌ها</span> <span class=\"o_stat_text\" "
 "invisible=\"certifications_count &gt; 1\">گواهینامه</span>"
 
 #. module: survey
@@ -607,8 +608,8 @@ msgstr "<span invisible=\"not is_time_limited\">ثانیه</span>"
 msgid ""
 "<span>\"Red\" is not a category, I know what you are trying to do ;)</span>"
 msgstr ""
-"<span> \"قرمز\" یک دسته نیست، من می‌دانم که شما در حال تلاش برای چه کاری "
-"هستید ;)</span>"
+"<span> \"قرمز\" یک دسته نیست، من می‌دانم که شما در حال تلاش برای چه کاری هستید "
+";)</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_form
@@ -1352,8 +1353,7 @@ msgstr "تقلب کردن به همسایگان شما کمکی نخواهد ک�
 #: model:ir.model.fields,help:survey.field_survey_user_input__is_attempts_limited
 msgid "Check this option if you want to limit the number of attempts per user"
 msgstr ""
-"اگر می خواهید تعداد تلاش برای هر کاربر را محدود کنید، این گزینه را علامت "
-"بزنید"
+"اگر می خواهید تعداد تلاش برای هر کاربر را محدود کنید، این گزینه را علامت بزنید"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_quiz_p4_q2_sug2
@@ -1516,7 +1516,8 @@ msgstr "صندلی کنفرانس"
 #: code:addons/survey/static/src/js/tours/survey_tour.js:0
 #, python-format
 msgid "Congratulations! You are now ready to collect feedback like a pro :-)"
-msgstr "تبریک! اکنون آماده‌اید تا بازخوردها را مانند یک حرفه‌ای جمع‌آوری کنید :-)"
+msgstr ""
+"تبریک! اکنون آماده‌اید تا بازخوردها را مانند یک حرفه‌ای جمع‌آوری کنید :-)"
 
 #. module: survey
 #: model_terms:gamification.badge,description:survey.vendor_certification_badge
@@ -1859,7 +1860,8 @@ msgstr "آیا نظر، سوال یا نگرانی دیگری دارید؟"
 #. module: survey
 #: model:survey.question,title:survey.vendor_certification_page_1_question_5
 msgid "Do you think we have missing products in our catalog? (not rated)"
-msgstr "آیا فکر می‌کنید محصولات مفقودی در کاتالوگ ما وجود دارد؟ (رتبه‌بندی نشده)"
+msgstr ""
+"آیا فکر می‌کنید محصولات مفقودی در کاتالوگ ما وجود دارد؟ (رتبه‌بندی نشده)"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_quiz_p3_q2_sug2
@@ -3656,8 +3658,8 @@ msgid ""
 "Please complete this very short survey to let us know how satisfied your are "
 "with our products."
 msgstr ""
-"لطفاً این نظرسنجی بسیار کوتاه را تکمیل کنید تا به ما بگویید چقدر از محصولات "
-"ما راضی هستید."
+"لطفاً این نظرسنجی بسیار کوتاه را تکمیل کنید تا به ما بگویید چقدر از محصولات ما "
+"راضی هستید."
 
 #. module: survey
 #. odoo-python
@@ -3677,8 +3679,8 @@ msgid ""
 "Please make sure you have at least one question in your survey. You also "
 "need at least one section if you chose the \"Page per section\" layout.<br/>"
 msgstr ""
-"لطفا مطمئن شوید که حداقل یک سوال در نظرسنجی خود دارید. همچنین اگر طرح‌بندی "
-"«صفحه در هر بخش» را انتخاب کنید، به حداقل یک بخش نیاز دارید.<br/>"
+"لطفا مطمئن شوید که حداقل یک سوال در نظرسنجی خود دارید. همچنین اگر طرح‌بندی «"
+"صفحه در هر بخش» را انتخاب کنید، به حداقل یک بخش نیاز دارید.<br/>"
 
 #. module: survey
 #: model:survey.question,title:survey.vendor_certification_page_3
@@ -3861,8 +3863,7 @@ msgstr "آماده‌اید که روش <b>جمع‌آوری داده‌ها</b>
 #. module: survey
 #: model_terms:ir.actions.act_window,help:survey.action_survey_form
 msgid "Ready to test? Pick a sample or create one from scratch..."
-msgstr ""
-"آماده آزمایش هستید؟ یک نمونه انتخاب کنید یا از ابتدا یک نمونه بسازید..."
+msgstr "آماده آزمایش هستید؟ یک نمونه انتخاب کنید یا از ابتدا یک نمونه بسازید..."
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__partner_ids
@@ -4274,8 +4275,8 @@ msgid ""
 "Some general information about you. It will be used internally for "
 "statistics only."
 msgstr ""
-"برخی اطلاعات کلی درباره شما. این اطلاعات تنها به صورت داخلی برای آمار "
-"استفاده خواهد شد."
+"برخی اطلاعات کلی درباره شما. این اطلاعات تنها به صورت داخلی برای آمار استفاده "
+"خواهد شد."
 
 #. module: survey
 #: model_terms:survey.question,description:survey.survey_demo_quiz_p2
@@ -4907,8 +4908,8 @@ msgid ""
 "This section is about general information about you. Answering them helps "
 "qualifying your answers."
 msgstr ""
-"این بخش درباره اطلاعات عمومی شما است. پاسخ به آن‌ها به ارزیابی پاسخ‌های شما "
-"کمک می‌کند."
+"این بخش درباره اطلاعات عمومی شما است. پاسخ به آن‌ها به ارزیابی پاسخ‌های شما کمک "
+"می‌کند."
 
 #. module: survey
 #: model_terms:survey.question,description:survey.survey_feedback_p2
@@ -4919,8 +4920,7 @@ msgstr "این بخش درباره تجربه تجارت الکترونیک ما
 #: model_terms:survey.survey,description:survey.survey_demo_quiz
 msgid ""
 "This small quiz will test your knowledge about our Company. Be prepared!"
-msgstr ""
-"این آزمون کوچک دانش شما درباره شرکت ما را آزمون خواهد کرد. آماده باشید!"
+msgstr "این آزمون کوچک دانش شما درباره شرکت ما را آزمون خواهد کرد. آماده باشید!"
 
 #. module: survey
 #: model_terms:survey.survey,description:survey.survey_feedback
@@ -5164,8 +5164,8 @@ msgid ""
 "Used on randomized sections to take X random questions from all the "
 "questions of that section."
 msgstr ""
-"در بخش های تصادفی برای گرفتن X سوالات تصادفی از تمام سوالات آن بخش استفاده "
-"می شود."
+"در بخش های تصادفی برای گرفتن X سوالات تصادفی از تمام سوالات آن بخش استفاده می "
+"شود."
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_feedback_p2_q1_sug2
@@ -5310,8 +5310,8 @@ msgid ""
 "What day and time do you think most customers are most likely to call "
 "customer service (not rated)?"
 msgstr ""
-"در چه روز و زمانی فکر می کنید اکثر مشتریان احتمالاً با خدمات مشتری تماس "
-"خواهند گرفت (امتیاز داده نشده است)؟"
+"در چه روز و زمانی فکر می کنید اکثر مشتریان احتمالاً با خدمات مشتری تماس خواهند "
+"گرفت (امتیاز داده نشده است)؟"
 
 #. module: survey
 #: model:survey.question,title:survey.vendor_certification_page_3_question_4
@@ -5646,8 +5646,8 @@ msgid ""
 "Your responses will help us improve our product range to serve you even "
 "better."
 msgstr ""
-"پاسخ‌های شما به ما کمک می‌کند تا مجموعه محصولات خود را بهبود دهیم و بهتر به "
-"شما خدمت کنیم."
+"پاسخ‌های شما به ما کمک می‌کند تا مجموعه محصولات خود را بهبود دهیم و بهتر به شما "
+"خدمت کنیم."
 
 #. module: survey
 #. odoo-javascript

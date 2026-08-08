@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-03 18:38+0000\n"
-"PO-Revision-Date: 2026-05-02 08:07+0000\n"
+"PO-Revision-Date: 2026-08-04 18:30+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
 "projects/odoo-17/stock/zh_Hans/>\n"
@@ -25,7 +25,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: stock
 #. odoo-python
@@ -118,8 +118,7 @@ msgstr " - 产品: %s, 序列号码: %s"
 msgid ""
 " When different than 0, inventory count date for products stored at this "
 "location will be automatically set at the defined frequency."
-msgstr ""
-"当与0不同时，储存在这个位置的产品的库存清点日期将按定义的频率自动设置。"
+msgstr "当与0不同时，储存在这个位置的产品的库存清点日期将按定义的频率自动设置。"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__return_count
@@ -141,8 +140,8 @@ msgid ""
 "%(warehouse)s can only provide %(free_qty)s %(uom)s, while the quantity to "
 "order is %(qty_to_order)s %(uom)s."
 msgstr ""
-"%(warehouse)s 只能提供 %(free_qty)s %(uom)s，而订购数量为 %(qty_to_order)s "
-"%(uom)s。"
+"%(warehouse)s 只能提供 %(free_qty)s %(uom)s，而订购数量为 %(qty_to_order)s %"
+"(uom)s。"
 
 #. module: stock
 #. odoo-python
@@ -449,8 +448,8 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>您好！"
-"<br><br>\n"
+"        <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>您好"
+"！<br><br>\n"
 "       我们很高兴地通知您，您的订单已经交货。\n"
 "        <t t-if=\"hasattr(object, 'carrier_tracking_ref') and "
 "object.carrier_tracking_ref\">\n"
@@ -460,8 +459,8 @@ msgstr ""
 "                <t t-set=\"multiple_carrier_tracking\" t-"
 "value=\"object.get_multiple_carrier_tracking()\"></t>\n"
 "                <t t-if=\"multiple_carrier_tracking\">\n"
-"                    <t t-foreach=\"multiple_carrier_tracking\" t-"
-"as=\"line\">\n"
+"                    <t t-foreach=\"multiple_carrier_tracking\" t-as=\"line\">"
+"\n"
 "                        <br><a t-att-href=\"line[1]\" target=\"_blank\" t-"
 "out=\"line[0] or ''\"></a>\n"
 "                    </t>\n"
@@ -949,8 +948,8 @@ msgid ""
 "incoming products into specific child locations straight away (e.g. specific "
 "bins, racks)."
 msgstr ""
-"添加并自定义路线作业以处理您库存中的产品调拨：例如：卸货>品控>进货，拣货>包装"
-">发运。\n"
+"添加并自定义路线作业以处理您库存中的产品调拨：例如：卸货>品控>进货，拣货>包"
+"装>发运。\n"
 "您也可以在仓位置置设置上架策略，以便直接将进货产品发送到特定的子位置（例如："
 "特定的货位、货架）。"
 
@@ -963,8 +962,8 @@ msgid ""
 "strategies on warehouse locations in order to send incoming products into "
 "specific child locations straight away (e.g. specific bins, racks)."
 msgstr ""
-"添加并自定义路线作业以处理您库存中的产品调拨：例如：卸货>品控>进货，拣货>包装"
-">发运。您也可以在仓位置置设置上架策略，以便直接将进货产品发送到特定的子位置"
+"添加并自定义路线作业以处理您库存中的产品调拨：例如：卸货>品控>进货，拣货>包"
+"装>发运。您也可以在仓位置置设置上架策略，以便直接将进货产品发送到特定的子位置"
 "（例如：特定的货位、货架）。"
 
 #. module: stock
@@ -2710,8 +2709,7 @@ msgstr "交货类型"
 msgid ""
 "Delivery lead time, in days. It's the number of days, promised to the "
 "customer, between the confirmation of the sales order and the delivery."
-msgstr ""
-"交货提前期， 依日计算。此为承诺给客户的交期， 即从下单到交货所需要的天数。"
+msgstr "交货提前期， 依日计算。此为承诺给客户的交期， 即从下单到交货所需要的天数。"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__delivery_count
@@ -2769,8 +2767,7 @@ msgid ""
 "Depending on the modules installed, this will allow you to define the route "
 "of the product: whether it will be bought, manufactured, replenished on "
 "order, etc."
-msgstr ""
-"根据所安装的模块，这将允许您定义路线产品:是否会购买，制造，补充订单，等。"
+msgstr "根据所安装的模块，这将允许您定义路线产品:是否会购买，制造，补充订单，等。"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__note
@@ -3940,8 +3937,7 @@ msgstr "如果勾选该复选框，ERP 将在验证拣货时自动打印退货�
 msgid ""
 "If this checkbox is ticked, Odoo will automatically show the reception "
 "report (if there are moves to allocate to) when validating."
-msgstr ""
-"如果勾选此复选框，ERP 将在验证时自动显示接收报表（如果有要分配的库存移动）。"
+msgstr "如果勾选此复选框，ERP 将在验证时自动显示接收报表（如果有要分配的库存移动）。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__print_label
@@ -4487,8 +4483,7 @@ msgstr "保持<strong>计算的计数</strong>（差额将被更新）。"
 msgid ""
 "Keep the <strong>Difference</strong> (the Counted Quantity will be updated "
 "to reflect the same difference as when you counted)"
-msgstr ""
-"保留<strong>差额</strong>（计算的计数将被更新，以反映与您计算时相同的差额）。"
+msgstr "保留<strong>差额</strong>（计算的计数将被更新，以反映与您计算时相同的差额）。"
 
 #. module: stock
 #. odoo-javascript
@@ -5264,8 +5259,8 @@ msgid ""
 "against the client by an end consumer."
 msgstr ""
 "我公司（芝加哥）承诺尽最大努力按照商定的时间框架在适当的时候提供有效的服务。"
-"然而，它的任何义务都不能被认为是取得成果的义务。在任何情况下，我公司（芝加"
-"哥）不能被客户要求作为第三方出现在最终消费者对客户提出的任何损害索赔中。"
+"然而，它的任何义务都不能被认为是取得成果的义务。在任何情况下，我公司（芝加哥"
+"）不能被客户要求作为第三方出现在最终消费者对客户提出的任何损害索赔中。"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
@@ -6174,8 +6169,8 @@ msgid ""
 "products can be unpacked and moved as single units again."
 msgstr ""
 "包裹通常是通过调拨（在包裹作业期间）创建的，可以包含不同的产品。 \n"
-" 创建完成后，整个包裹可以立即调拨，或者产品可以拆开包裹并再次作为单个单元调"
-"拨。"
+" 创建完成后，整个包裹可以立即调拨，或者产品可以拆开包裹并再次作为单个单元调拨"
+"。"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__product_packaging_id
@@ -6395,8 +6390,7 @@ msgstr "是否存在取决于作业类型。"
 msgid ""
 "Press the \"New\" button to define the quantity for a product in your stock "
 "or import quantities from a spreadsheet via the Actions menu"
-msgstr ""
-"点击【新增】按钮，为产品设定库存数量，或通过【操作】菜单从电子表格导入数量。"
+msgstr "点击【新增】按钮，为产品设定库存数量，或通过【操作】菜单从电子表格导入数量。"
 
 #. module: stock
 #. odoo-javascript
@@ -7867,8 +7861,8 @@ msgid ""
 "Scheduled time for the first part of the shipment to be processed. Setting "
 "manually a value here would set it as expected date for all the stock moves."
 msgstr ""
-"计划时间的第一部分运输即将进行。在此手动设定一个值表示所有库存调拨的期望时"
-"间。"
+"计划时间的第一部分运输即将进行。在此手动设定一个值表示所有库存调拨的期望时间"
+"。"
 
 #. module: stock
 #: model:ir.actions.server,name:stock.action_scrap
@@ -7957,8 +7951,8 @@ msgid ""
 "Selecting \"Blocking Message\" will throw an exception with the message and "
 "block the flow. The Message has to be written in the next field."
 msgstr ""
-"选择该“警告”选项，将通过消息通知用户，选择“阻塞消息”选项，将发送异常通知消"
-"息，并阻断流。须将该消息写入下一字段。"
+"选择该“警告”选项，将通过消息通知用户，选择“阻塞消息”选项，将发送异常通知消息"
+"，并阻断流。须将该消息写入下一字段。"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -9301,8 +9295,8 @@ msgid ""
 "advised to change the Product Type since it can lead to inconsistencies. A "
 "better solution could be to archive the product and create a new one instead."
 msgstr ""
-"该产品已至少在库存调拨中使用过一次。 不建议更改产品类型，因为它可能导致不一"
-"致。 更好的解决方案是将产品存档，然后创建一个新产品。"
+"该产品已至少在库存调拨中使用过一次。 不建议更改产品类型，因为它可能导致不一致"
+"。 更好的解决方案是将产品存档，然后创建一个新产品。"
 
 #. module: stock
 #. odoo-python
@@ -9393,8 +9387,8 @@ msgid ""
 "applied those can't be changed.<br/>\n"
 "                    Apply anyway?"
 msgstr ""
-"您添加的那些产品将被跟踪，但批次/序列号未定义。一旦应用，这些就无法更改。<br/"
-">\n"
+"您添加的那些产品将被跟踪，但批次/序列号未定义。一旦应用，这些就无法更改"
+"。<br/>\n"
 "                    确认操作吗?"
 
 #. module: stock
@@ -10307,8 +10301,7 @@ msgstr "当产品到达"
 msgid ""
 "When products are needed in <b>%s</b>, <br/> <b>%s</b> are created from "
 "<b>%s</b> to fulfill the need."
-msgstr ""
-"当 <b>%s</b>需要产品时, <br/> <b>%s</b> 将由 <b>%s</b>创建以用来满足此需求。"
+msgstr "当 <b>%s</b>需要产品时, <br/> <b>%s</b> 将由 <b>%s</b>创建以用来满足此需求。"
 
 #. module: stock
 #. odoo-python
@@ -10332,8 +10325,7 @@ msgid ""
 "When the virtual stock goes below the Min Quantity specified for this field, "
 "Odoo generates a procurement to bring the forecasted quantity to the Max "
 "Quantity."
-msgstr ""
-"当虚拟库存小于此字段指定的最小数量，系统生成补货以便令预测数量达至最大数量。"
+msgstr "当虚拟库存小于此字段指定的最小数量，系统生成补货以便令预测数量达至最大数量。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__product_max_qty
@@ -10454,8 +10446,8 @@ msgid ""
 "type. To change this, go on the operation type and tick the box \"Create New "
 "Lots/Serial Numbers\"."
 msgstr ""
-"在此作业类型下不能创建批次或者序列号。要更改此设置，请在相应的作业类型下勾选"
-"“创建新的批次 / 序列号” 选项。"
+"在此作业类型下不能创建批次或者序列号。要更改此设置，请在相应的作业类型下勾选“"
+"创建新的批次 / 序列号” 选项。"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_destination_form_view
@@ -10476,8 +10468,8 @@ msgid ""
 "(example: 0.00001)."
 msgstr ""
 "您使用的计量单位小于在储存产品时需要用到的计量单位。 这可能导致已预留数量上的"
-"舍入问题！您应该使用尽可能小的计量单位来管理库存或将其舍入精度更改为较小值"
-"（例如：0.00001）。"
+"舍入问题！您应该使用尽可能小的计量单位来管理库存或将其舍入精度更改为较小值（"
+"例如：0.00001）。"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_routes_form
@@ -10660,8 +10652,7 @@ msgstr ""
 msgid ""
 "You cannot change the ratio of this unit of measure as some products with "
 "this UoM have already been moved or are currently reserved."
-msgstr ""
-"您无法更改此度量单位的比率，因为具有此UoM的某些产品已被调拨或当前已预留。"
+msgstr "您无法更改此度量单位的比率，因为具有此UoM的某些产品已被调拨或当前已预留。"
 
 #. module: stock
 #. odoo-python

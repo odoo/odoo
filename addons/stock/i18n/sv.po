@@ -25,22 +25,23 @@
 # Lasse L, 2024
 # Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2024
 # Jakob Krabbe <jakob.krabbe@vertel.se>, 2025
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
+# Hanna Kharraziha <hakha@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-03 18:38+0000\n"
-"PO-Revision-Date: 2025-11-20 18:38+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
-"Language-Team: Swedish <https://translate.odoo.com/projects/odoo-17/stock/sv/"
-">\n"
+"PO-Revision-Date: 2026-08-08 15:15+0000\n"
+"Last-Translator: Hanna Kharraziha <hakha@odoo.com>\n"
+"Language-Team: Swedish <https://translate.odoo.com/projects/odoo-17/stock/"
+"sv/>\n"
 "Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: stock
 #. odoo-python
@@ -220,8 +221,7 @@ msgstr "'Räkningsblad'"
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_delivery
 msgid "'Delivery Slip - %s - %s' % (object.partner_id.name or '', object.name)"
-msgstr ""
-"'Leveranssedel - %s - %s' % (object.partner_id.name or '', object.name)"
+msgstr "'Leveranssedel - %s - %s' % (object.partner_id.name or '', object.name)"
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_location_barcode
@@ -490,8 +490,8 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Hej <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,"
-"<br><br>\n"
+"        Hej <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>"
+",<br><br>\n"
 "        Vi är glada att kunna informera dig om att din beställning har "
 "skickats.\n"
 "       <t t-if=\"hasattr(object, 'carrier_tracking_ref') and "
@@ -502,8 +502,8 @@ msgstr ""
 "               <t t-set=\"multiple_carrier_tracking\" t-"
 "value=\"object.get_multiple_carrier_tracking()\"></t>\n"
 "               <t t-if=\"multiple_carrier_tracking\">\n"
-"                    <t t-foreach=\"multiple_carrier_tracking\" t-"
-"as=\"line\">\n"
+"                    <t t-foreach=\"multiple_carrier_tracking\" t-as=\"line\">"
+"\n"
 "                        <br><a t-att-href=\"line[1]\" target=\"_blank\" t-"
 "out=\"line[0] or ''\"></a>\n"
 "                    </t>\n"
@@ -941,7 +941,7 @@ msgstr "Aktivitet undantaget dekoration"
 #: model:ir.model.fields,field_description:stock.field_stock_lot__activity_state
 #: model:ir.model.fields,field_description:stock.field_stock_picking__activity_state
 msgid "Activity State"
-msgstr "Aktivitetstillstånd"
+msgstr "Aktivitetsstatus"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__activity_type_icon
@@ -1505,8 +1505,7 @@ msgstr "Före planerat datum"
 msgid ""
 "Below text serves as a suggestion and doesn’t engage Odoo S.A. "
 "responsibility."
-msgstr ""
-"Nedanstående text är ett förslag och innebär inget ansvar för Odoo S.A."
+msgstr "Nedanstående text är ett förslag och innebär inget ansvar för Odoo S.A."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_partner__picking_warn__block
@@ -2750,8 +2749,7 @@ msgstr "Leveranser"
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_picking_tree_outgoing
 msgid "Deliveries allow you to send products from your stock to a partner."
-msgstr ""
-"Med Deliveries kan du skicka produkter från ditt lager till en partner."
+msgstr "Med Deliveries kan du skicka produkter från ditt lager till en partner."
 
 #. module: stock
 #. odoo-javascript
@@ -3755,8 +3753,7 @@ msgstr ""
 #: code:addons/stock/static/src/client_actions/multi_print.js:0
 #, python-format
 msgid "HTML reports cannot be auto-printed, skipping report: %s"
-msgstr ""
-"HTML-rapporter kan inte skrivas ut automatiskt, hoppar över rapport: %s"
+msgstr "HTML-rapporter kan inte skrivas ut automatiskt, hoppar över rapport: %s"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
@@ -4373,8 +4370,7 @@ msgstr "Ogiltig domänoperatör %s"
 #: code:addons/stock/models/stock_lot.py:0
 #, python-format
 msgid "Invalid domain right operand '%s'. It must be of type Integer/Float"
-msgstr ""
-"Ogiltigt domänhögeroperand ’%s’. Det måste vara av typen Heltal/Flyttal"
+msgstr "Ogiltigt domänhögeroperand ’%s’. Det måste vara av typen Heltal/Flyttal"
 
 #. module: stock
 #. odoo-python
@@ -6201,8 +6197,7 @@ msgstr "Typ av förpackning"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse__delivery_steps__pick_pack_ship
 msgid "Pack goods, send goods in output and then deliver (3 steps)"
-msgstr ""
-"Packa varor, skicka varor till produktionen och sedan leverera (3 steg)"
+msgstr "Packa varor, skicka varor till produktionen och sedan leverera (3 steg)"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_level__package_id
@@ -9142,8 +9137,7 @@ msgstr "Företaget ställs automatiskt in från dina användarpreferenser."
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid "The deadline has been automatically updated due to a delay on %s."
-msgstr ""
-"Tidsfristen har uppdaterats automatiskt på grund av en försening på %s."
+msgstr "Tidsfristen har uppdaterats automatiskt på grund av en försening på %s."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__delay
@@ -9517,8 +9511,8 @@ msgstr ""
 msgid ""
 "This lot %(lot_name)s is incompatible with this product %(product_name)s"
 msgstr ""
-"Det här partiet %(lot_name)s är inkompatibelt med den här produkten "
-"%(product_name)s"
+"Det här partiet %(lot_name)s är inkompatibelt med den här produkten %"
+"(product_name)s"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
@@ -10984,8 +10978,7 @@ msgstr ""
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid "You cannot change a cancelled stock move, create a new line instead."
-msgstr ""
-"Du kan inte ändra en annullerad lagerflytt, skapa istället en ny linje."
+msgstr "Du kan inte ändra en annullerad lagerflytt, skapa istället en ny linje."
 
 #. module: stock
 #. odoo-python
@@ -11142,8 +11135,8 @@ msgstr "Du kan inte dela en lagerrörelse i utkast. Den måste bekräftas först
 #, python-format
 msgid "You cannot split a stock move that has been set to 'Done' or 'Cancel'."
 msgstr ""
-"Du kan inte dela upp en lagerflyttning som har ställts in på ’Utförd’ eller "
-"’Avbruten’."
+"Du kan inte dela upp en lagerflyttning som har ställts in på ’Utförd’ eller ’"
+"Avbruten’."
 
 #. module: stock
 #. odoo-python
@@ -11300,8 +11293,7 @@ msgstr "Du behöver tillhandahålla ett Parti/serienummer %s."
 #. module: stock
 #: model_terms:res.company,invoice_terms_html:stock.res_company_1
 msgid "You should update this document to reflect your T&amp;C."
-msgstr ""
-"Du bör uppdatera det här dokumentet så att det återspeglar din T&amp;C."
+msgstr "Du bör uppdatera det här dokumentet så att det återspeglar din T&amp;C."
 
 #. module: stock
 #. odoo-python

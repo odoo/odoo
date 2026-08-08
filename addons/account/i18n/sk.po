@@ -22,8 +22,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-17 18:36+0000\n"
-"PO-Revision-Date: 2026-05-02 08:08+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-08-08 00:38+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Slovak <https://translate.odoo.com/projects/odoo-17/account/"
 "sk/>\n"
 "Language: sk\n"
@@ -32,7 +32,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && "
 "n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: account
 #. odoo-python
@@ -708,8 +708,8 @@ msgid ""
 "<span class=\"o_form_label oe_inline\" invisible=\"amount_type == "
 "'fixed'\">%</span>"
 msgstr ""
-"<span class=\"o_form_label oe_inline\" invisible=\"amount_type == "
-"'fixed'\">%</span>"
+"<span class=\"o_form_label oe_inline\" invisible=\"amount_type == 'fixed'\">"
+"%</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -1351,8 +1351,7 @@ msgstr "Výpis by mal obsahovať riadky len z toho istého denníka."
 #: model:ir.model.constraint,message:account.constraint_account_account_tag_name_uniq
 msgid ""
 "A tag with the same name and applicability already exists in this country."
-msgstr ""
-"Značka s rovnakým názvom a použiteľnosťou pre tuto krajinu už existuje."
+msgstr "Značka s rovnakým názvom a použiteľnosťou pre tuto krajinu už existuje."
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_fiscal_position_tax_tax_src_dest_uniq
@@ -2477,8 +2476,7 @@ msgstr "Na podsúvahovom účte nemôžu byť dane"
 #: model:ir.model.constraint,message:account.constraint_account_fiscal_position_account_account_src_dest_uniq
 msgid ""
 "An account fiscal position could be defined only one time on same accounts."
-msgstr ""
-"Fiškálnu pozíciu účtu bolo možné na rovnakých účtoch definovať iba raz."
+msgstr "Fiškálnu pozíciu účtu bolo možné na rovnakých účtoch definovať iba raz."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_form
@@ -6064,8 +6062,8 @@ msgstr "Zľava za včasnú platbu vo výške"
 msgid ""
 "Early Payment Discount: <b>%(amount)s</b> if paid before <b>%(date)s</b>"
 msgstr ""
-"Zľava za včasnú platbu: <b>%(amount)s</b> ak bude zaplatené pred "
-"<b>%(date)s</b>"
+"Zľava za včasnú platbu: <b>%(amount)s</b> ak bude zaplatené pred <b>%(date)"
+"s</b>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_payment_tree
@@ -7396,8 +7394,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_reversal__journal_id
 msgid "If empty, uses the journal of the journal entry to be reversed."
-msgstr ""
-"Ak prázdne, pouźíva túto účtovnú knihu účtovného vstupu na stornovanie."
+msgstr "Ak prázdne, pouźíva túto účtovnú knihu účtovného vstupu na stornovanie."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__include_base_amount
@@ -7511,8 +7508,7 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:account.open_account_journal_dashboard_kanban
 msgid ""
 "If you have not installed a chart of account, please install one first.<br>"
-msgstr ""
-"Ak ste ešte nenainštalovali účtovnú osnovu, najprv ju nainštalujte.<br>"
+msgstr "Ak ste ešte nenainštalovali účtovnú osnovu, najprv ju nainštalujte.<br>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -9707,8 +9703,7 @@ msgstr "Záporný zostatok dane"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__amount_signed
 msgid "Negative value of amount field if payment_type is outbound"
-msgstr ""
-"Záporná hodnota poľa sumy, ak je typ platby (payment_type) odchádzajúci"
+msgstr "Záporná hodnota poľa sumy, ak je typ platby (payment_type) odchádzajúci"
 
 #. module: account
 #. odoo-python
@@ -9848,8 +9843,8 @@ msgid ""
 "No journal could be found in company %(company_name)s for any of those "
 "types: %(journal_types)s"
 msgstr ""
-"V spoločnosti %(company_name)s sa nenašiel žiadny denník z týchto typov: "
-"%(journal_types)s"
+"V spoločnosti %(company_name)s sa nenašiel žiadny denník z týchto typov: %"
+"(journal_types)s"
 
 #. module: account
 #. odoo-python
@@ -10331,8 +10326,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Only posted/cancelled journal entries can be reset to draft."
-msgstr ""
-"Iba zaúčtované/zrušené účtovné zápisy môžu byť vrátené do stavu návrhu."
+msgstr "Iba zaúčtované/zrušené účtovné zápisy môžu byť vrátené do stavu návrhu."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__period_lock_date
@@ -10857,8 +10851,7 @@ msgstr "Partneri"
 #: code:addons/account/models/partner.py:0
 #, python-format
 msgid "Partners that are used in hashed entries cannot be merged."
-msgstr ""
-"Partneri, ktorí sú použití v hashovaných záznamoch, nemôžu byť zlúčení."
+msgstr "Partneri, ktorí sú použití v hashovaných záznamoch, nemôžu byť zlúčení."
 
 #. module: account
 #. odoo-python
@@ -13846,8 +13839,8 @@ msgstr ""
 "skupiny: prefix1, year, prefix2, month, prefix3, seq, suffix.\n"
 "Skupiny prefix* sú oddeľovače medzi rokom, mesiacom a skutočným vzostupným "
 "poradovým číslom (seq).\n"
-"Napr.: ^(?P<prefix1>.*?)(?P<year>\\d{4})(?P<prefix2>\\D*?)(?P<month>\\d{2})(?"
-"P<prefix3>\\D+?)(?P<seq>\\d+)(?P<suffix>\\D*?)$"
+"Napr.: ^(?P<prefix1>.*?)(?P<year>\\d{4})(?P<prefix2>\\D*?)(?P<month>\\d{2})"
+"(?P<prefix3>\\D+?)(?P<seq>\\d+)(?P<suffix>\\D*?)$"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_fiscal_position__foreign_vat_header_mode__templates_found
@@ -14662,8 +14655,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_partner
 msgid ""
 "The reconciliation model will only be applied when a customer/vendor is set."
-msgstr ""
-"Model párovania bude aplikovaný len ak je nastavený zákazník/dodávateľ."
+msgstr "Model párovania bude aplikovaný len ak je nastavený zákazník/dodávateľ."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_amount
@@ -14773,8 +14765,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_move_line__amount_residual
 msgid ""
 "The residual amount on a journal item expressed in the company currency."
-msgstr ""
-"Reziduálna suma na položke účtovnej knihy vyjadrená v mene spoločnosti."
+msgstr "Reziduálna suma na položke účtovnej knihy vyjadrená v mene spoločnosti."
 
 #. module: account
 #. odoo-python
@@ -14816,8 +14807,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "The selected payment method requires a bank account but none is set on"
-msgstr ""
-"Vybraný spôsob platby vyžaduje bankový účet, no žiadny nie je nastavený"
+msgstr "Vybraný spôsob platby vyžaduje bankový účet, no žiadny nie je nastavený"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__sequence
@@ -14984,8 +14974,8 @@ msgid ""
 "The type of the journal's default credit/debit account shouldn't be "
 "'receivable' or 'payable'."
 msgstr ""
-"Typ predvoleného kreditného / debetného účtu denníka by nemal byť "
-"„pohľadávka“ alebo „záväzok“."
+"Typ predvoleného kreditného / debetného účtu denníka by nemal byť „pohľadávka"
+"“ alebo „záväzok“."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_currency__display_rounding_warning
@@ -15123,8 +15113,8 @@ msgid ""
 "%(journal_ids)s) as payment debit or credit account. This means that this "
 "account's type should be reconcilable."
 msgstr ""
-"Tento účet je nakonfigurovaný v denníkoch %(journal_names)s (ids "
-"%(journal_ids)s) ako debetný alebo kreditný účet. To znamená, že typ tohto "
+"Tento účet je nakonfigurovaný v denníkoch %(journal_names)s (ids %"
+"(journal_ids)s) ako debetný alebo kreditný účet. To znamená, že typ tohto "
 "účtu by mal byť párovateľný."
 
 #. module: account
@@ -15592,8 +15582,8 @@ msgstr "Celkom podpísaný"
 msgid ""
 "Total amount due (including sales orders and this document): %(total_credit)s"
 msgstr ""
-"Celková splatná suma (vrátane predajných objednávok a tohto dokumentu):"
-"%(total_credit)s"
+"Celková splatná suma (vrátane predajných objednávok a tohto dokumentu):%"
+"(total_credit)s"
 
 #. module: account
 #. odoo-python
@@ -17373,8 +17363,8 @@ msgid ""
 "You cannot use this account (%s) in this journal, check the field 'Allowed "
 "Journals' on the related account."
 msgstr ""
-"Tento účet nemôžete použiť (%s) v tomto denníku začiarknite políčko "
-"„Povolené účtovné denníky“ na súvisiacom účte."
+"Tento účet nemôžete použiť (%s) v tomto denníku začiarknite políčko „"
+"Povolené účtovné denníky“ na súvisiacom účte."
 
 #. module: account
 #. odoo-python
@@ -18007,8 +17997,7 @@ msgstr ""
 #: model:mail.template,subject:account.email_template_edi_credit_note
 msgid ""
 "{{ object.company_id.name }} Credit Note (Ref {{ object.name or 'n/a' }})"
-msgstr ""
-"{{ object.company_id.name }} Dobropis (Ref. {{ object.name or 'n/a' }})"
+msgstr "{{ object.company_id.name }} Dobropis (Ref. {{ object.name or 'n/a' }})"
 
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_invoice

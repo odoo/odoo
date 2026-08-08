@@ -13,8 +13,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-31 17:38+0000\n"
-"PO-Revision-Date: 2026-04-25 17:00+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-08-08 06:57+0000\n"
+"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-17/"
 "account_peppol/ja/>\n"
 "Language: ja\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: account_peppol
 #. odoo-python
@@ -39,8 +39,8 @@ msgid ""
 "<u>mandatory as of January 2026</u> - don't wait to register."
 msgstr ""
 "<br/>\n"
-"                                ベルギーでは電子請求が <u>2026年1月より義務化"
-"</u>されます。 - 今すぐご登録ください。"
+"                                ベルギーでは電子請求が <u>2026年1月より義務"
+"化</u>されます。 - 今すぐご登録ください。"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_view_move_form
@@ -94,8 +94,8 @@ msgid ""
 "                                </span>"
 msgstr ""
 "<span>\n"
-"                                    Peppolの接続をOdooに移行する(オプショ"
-"ン):\n"
+"                                    Peppolの接続をOdooに移行する(オプション)"
+":\n"
 "                                </span>"
 
 #. module: account_peppol
@@ -112,7 +112,7 @@ msgstr ""
 #: code:addons/account_peppol/models/res_config_settings.py:0
 #, python-format
 msgid "A connection to '%s' already exists."
-msgstr ""
+msgstr "「%s 」への接続がすでに存在します。"
 
 #. module: account_peppol
 #. odoo-python
@@ -162,7 +162,7 @@ msgstr "会計Peppol Edi モード情報"
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__account_peppol_edi_user
 msgid "Account Peppol Edi User"
-msgstr ""
+msgstr "会計Peppol Ediユーザ"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_mode_constraint
@@ -196,8 +196,7 @@ msgstr "アプリケーションステータス："
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid ""
 "By clicking the button below I accept that Odoo may process my e-invoices."
-msgstr ""
-"下のボタンを押すことで、私はOdooが電子請求書を処理することに同意します。"
+msgstr "下のボタンを押すことで、私はOdooが電子請求書を処理することに同意します。"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_company__account_peppol_proxy_state__sender
@@ -266,8 +265,8 @@ msgid ""
 "             List available at https://docs.peppol.eu/poacc/billing/3.0/"
 "codelist/eas/"
 msgstr ""
-"BIS Billing 3.0およびその派生版のエンドポイントを識別するために使用されるコー"
-"ド。\n"
+"BIS Billing 3.0およびその派生版のエンドポイントを識別するために使用される"
+"コード。\n"
 "             List available at https://docs.peppol.eu/poacc/billing/3.0/"
 "codelist/eas/"
 
@@ -357,7 +356,7 @@ msgstr "EDIユーザ"
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 #, python-format
 msgid "EDI user should be of one of the following types: %s"
-msgstr ""
+msgstr "EDIユーザは、以下のいずれかのタイプである必要があります：%s"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_edi_identification
@@ -671,7 +670,7 @@ msgstr "Peppolはデモ Uuid"
 #: model:ir.model.fields,field_description:account_peppol.field_account_move__peppol_is_sent
 #: model:ir.model.fields,field_description:account_peppol.field_account_payment__peppol_is_sent
 msgid "Peppol Is Sent"
-msgstr ""
+msgstr "Peppolが送信されました"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_view_account_invoice_filter
@@ -912,8 +911,8 @@ msgid ""
 "                                        By clicking the button below I "
 "accept that Odoo may process my e-invoices."
 msgstr ""
-"テストモードでは、テスト用Peppolネットワークにユーザを登録することができま"
-"す。\n"
+"テストモードでは、テスト用Peppolネットワークにユーザを登録することができます"
+"。\n"
 "下のボタンをクリックすると、Odooが電子請求書を処理することに同意します。"
 
 #. module: account_peppol
@@ -977,8 +976,8 @@ msgid ""
 "documents. Please check and verify their Peppol endpoint and the Electronic "
 "Invoicing format: %s"
 msgstr ""
-"以下の取引先のPeppolドキュメントの受信が正しく設定されていません。Peppolエン"
-"ドポイントと電子請求書フォーマットをご確認下さい：%s"
+"以下の取引先のPeppolドキュメントの受信が正しく設定されていません。Peppol"
+"エンドポイントと電子請求書フォーマットをご確認下さい：%s"
 
 #. module: account_peppol
 #. odoo-python
@@ -1021,8 +1020,8 @@ msgid ""
 "The peppol status of the documents has been reset when switching from Demo "
 "to Live."
 msgstr ""
-"DemoからLiveに切り替えた際、ドキュメントのpeppolステータスが再設定されまし"
-"た。"
+"DemoからLiveに切り替えた際、ドキュメントのpeppolステータスが再設定されました"
+"。"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -1068,8 +1067,7 @@ msgstr "この請求書もすでに"
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 #, python-format
 msgid "This verification code has expired. Please request a new one."
-msgstr ""
-"この認証コードは有効期限が切れています。新しいコードをリクエストして下さい。"
+msgstr "この認証コードは有効期限が切れています。新しいコードをリクエストして下さい。"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -1083,7 +1081,7 @@ msgstr ""
 #: code:addons/account_peppol/static/src/components/res_config_settings_buttons/res_config_settings_buttons.js:0
 #, python-format
 msgid "This will delete your Peppol registration."
-msgstr ""
+msgstr "これにより、Peppolの登録が削除されます。"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
@@ -1131,8 +1129,7 @@ msgstr "PEPPOLを使用する"
 msgid ""
 "Using the config params, this field specifies which edi modes may be "
 "selected from the UI"
-msgstr ""
-"コンフィグパラメータを使って、UIからどのediモードを選択できるかを指定します。"
+msgstr "コンフィグパラメータを使って、UIからどのediモードを選択できるかを指定します。"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -1234,8 +1231,8 @@ msgid ""
 "You will not be able to send or receive Peppol documents in Odoo anymore. "
 "Are you sure you want to proceed?"
 msgstr ""
-"OdooでPeppolドキュメントの送受信ができなくなります。本当にこのまま続けます"
-"か？"
+"OdooでPeppolドキュメントの送受信ができなくなります。本当にこのまま続けますか"
+"？"
 
 #. module: account_peppol
 #. odoo-javascript

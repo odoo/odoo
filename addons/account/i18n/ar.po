@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-17 18:36+0000\n"
-"PO-Revision-Date: 2026-07-07 15:32+0000\n"
+"PO-Revision-Date: 2026-08-05 21:26+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-17/account/"
 "ar/>\n"
@@ -463,12 +463,11 @@ msgstr ""
 "            الإشعار الدائن\n"
 "        </t>\n"
 "        <t t-if=\"object.invoice_origin\">\n"
-"            (مع المرجع: <t t-out=\"object.invoice_origin or ''\">SUB003</"
-"t>)\n"
+"            (مع المرجع: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)"
+"\n"
 "        </t>\n"
-"        وتبلغ قيمته <span style=\"font-weight:bold;\" t-"
-"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
-"143,750.00</span>\n"
+"        وتبلغ قيمته <span style=\"font-weight:bold;\" t-out=\"format_amount"
+"(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
 "        من <t t-out=\"object.company_id.name or ''\">شركتك</t>.\n"
 "        <br/><br/>\n"
 "        لا تتردد في التواصل معنا إدا كانت لديك أي أسئلة أو استفسارات.\n"
@@ -567,9 +566,8 @@ msgstr ""
 "        <t t-if=\"object.invoice_origin\">\n"
 "            (بالمرجع: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
 "        </t>\n"
-"        وبمبلغ قدره <span style=\"font-weight:bold;\" t-"
-"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
-"143,750.00</span>\n"
+"        وبمبلغ قدره <span style=\"font-weight:bold;\" t-out=\"format_amount"
+"(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
 "        من <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
 "        <t t-if=\"object.payment_state in ('paid', 'in_payment')\">\n"
 "            هذه الفاتورة مسددة مسبقاً.\n"
@@ -632,15 +630,15 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        عزيزي <t t-out=\"object.partner_id.name or ''\">أزور إنتيريور</t><br/"
-"><br/>\n"
+"        عزيزي <t t-out=\"object.partner_id.name or ''\">أزور إنتيريور</t>"
+"<br/><br/>\n"
 "        شركراً لإتمامك لعملية الدفع.\n"
-"        إليك إيصال الدفع <span style=\"font-weight:bold;\" t-"
-"out=\"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</span> "
-"الذي تبلغ قيمته\n"
-"        <span style=\"font-weight:bold;\" t-"
-"out=\"format_amount(object.amount, object.currency_id) or ''\">$ 10.00</"
-"span> من <t t-out=\"object.company_id.name or ''\">شركتك</t>.\n"
+"        إليك إيصال الدفع <span style=\"font-weight:bold;\" t-out=\""
+"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</span> الذي "
+"تبلغ قيمته\n"
+"        <span style=\"font-weight:bold;\" t-out=\"format_amount"
+"(object.amount, object.currency_id) or ''\">$ 10.00</span> من <t t-"
+"out=\"object.company_id.name or ''\">شركتك</t>.\n"
 "        <br/><br/>\n"
 "        لا تتردد في التواصل معنا إذا كانت لديك أي أسئلة أو استفسارات.\n"
 "        <br/><br/>\n"
@@ -827,8 +825,8 @@ msgid ""
 "<span class=\"o_form_label oe_inline\" invisible=\"amount_type == "
 "'fixed'\">%</span>"
 msgstr ""
-"<span class=\"o_form_label oe_inline\" invisible=\"amount_type == "
-"'fixed'\">%</span>"
+"<span class=\"o_form_label oe_inline\" invisible=\"amount_type == 'fixed'\">"
+"%</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -1300,10 +1298,10 @@ msgid ""
 "rounding made on previous entries; possibly causing an inconsistency with "
 "the new ones."
 msgstr ""
-"<strong>لقد تم استخدام هذه العملة بالفعل في إنشاء قيود محاسبية.</strong> <br/"
-">\n"
-"                        تغيير مُعامِل التقريب الخاص بها الآن لن يغير التقريب "
-"في القيود السابقة؛ مما قد يؤدي إلى التفاوت مع القيود الجديدة. "
+"<strong>لقد تم استخدام هذه العملة بالفعل في إنشاء قيود محاسبية.</strong> "
+"<br/>\n"
+"                        تغيير مُعامِل التقريب الخاص بها الآن لن يغير التقريب في "
+"القيود السابقة؛ مما قد يؤدي إلى التفاوت مع القيود الجديدة. "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1359,8 +1357,8 @@ msgid ""
 "You\n"
 "                should receive this periodically from your bank."
 msgstr ""
-"المطابقة البنكية هي ملخص لكل المعاملات المالية التي تحدث خلال فترة زمنية "
-"محددة في حساب بنكي. يجب أن تحصل عليها من البنك بشكل دوري."
+"المطابقة البنكية هي ملخص لكل المعاملات المالية التي تحدث خلال فترة زمنية محددة "
+"في حساب بنكي. يجب أن تحصل عليها من البنك بشكل دوري."
 
 #. module: account
 #. odoo-python
@@ -1876,9 +1874,9 @@ msgid ""
 "reconciled ; at reconciliation, this amount cancelled on this account and "
 "put on the regular tax account."
 msgstr ""
-"الحساب المستخدم للانتقال بمبلغ الضريبة للضرائب المبنية على الأساس النقدي. "
-"سوف يحتوي على مبلغ الضريبة طالما لم يتم تسوية الفاتورة الأصلية؛ عند التسوية، "
-"يتم إلغاء هذا المبلغ من هذا الحساب ووضعه في حساب الضريبة العادي. "
+"الحساب المستخدم للانتقال بمبلغ الضريبة للضرائب المبنية على الأساس النقدي. سوف "
+"يحتوي على مبلغ الضريبة طالما لم يتم تسوية الفاتورة الأصلية؛ عند التسوية، يتم "
+"إلغاء هذا المبلغ من هذا الحساب ووضعه في حساب الضريبة العادي. "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
@@ -2467,8 +2465,8 @@ msgid ""
 "Always positive amount concerned by this matching expressed in the credit "
 "line foreign currency."
 msgstr ""
-"يكون المبلغ المتعلق بهذه المطابقة موجباً دائماً حتى يتم إظهاره بالعملة "
-"الأجنبية لبند الرصيد. "
+"يكون المبلغ المتعلق بهذه المطابقة موجباً دائماً حتى يتم إظهاره بالعملة الأجنبية "
+"لبند الرصيد. "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_partial_reconcile__debit_amount_currency
@@ -2476,8 +2474,8 @@ msgid ""
 "Always positive amount concerned by this matching expressed in the debit "
 "line foreign currency."
 msgstr ""
-"يكون المبلغ المتعلق بهذه المطابقة موجباً دائماً حتى يتم إظهاره بالعملة "
-"الأجنبية لبند الخصم. "
+"يكون المبلغ المتعلق بهذه المطابقة موجباً دائماً حتى يتم إظهاره بالعملة الأجنبية "
+"لبند الخصم. "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__amount
@@ -3218,8 +3216,8 @@ msgid ""
 "Their counterparty is the bank suspense account.\n"
 "Reconciliation replaces the latter by the definitive account(s)."
 msgstr ""
-"يتم ترحيل الحركات المصرفية تلقائياً بمجرد الاستيراد أو المزامنة. الطرف "
-"المقابل لهذه الحركات هو حساب المتعلقات المصرفية.\n"
+"يتم ترحيل الحركات المصرفية تلقائياً بمجرد الاستيراد أو المزامنة. الطرف المقابل "
+"لهذه الحركات هو حساب المتعلقات المصرفية.\n"
 "تستبدل عملية المطابقة حساب المتعلقات بالحساب النهائي."
 
 #. module: account
@@ -3347,8 +3345,8 @@ msgid ""
 "Below text serves as a suggestion and doesn’t engage Odoo S.A. "
 "responsibility."
 msgstr ""
-"النص المذكور أدناه هو مجرد اقتراح من شركة أودو ولا يترتب عليها منه أي "
-"مسؤولية تجاهه"
+"النص المذكور أدناه هو مجرد اقتراح من شركة أودو ولا يترتب عليها منه أي مسؤولية "
+"تجاهه"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__bank_bic
@@ -3954,8 +3952,8 @@ msgid ""
 "Check this box if you don't want to share the same sequence for invoices and "
 "credit notes made from this journal"
 msgstr ""
-"حدد هذا المربع إذا كنت لا تريد أن تتشارك الفواتير والإشعارات الدائنة "
-"المستخرجة من دفتر اليومية هذا نفس التسلسل"
+"حدد هذا المربع إذا كنت لا تريد أن تتشارك الفواتير والإشعارات الدائنة المستخرجة "
+"من دفتر اليومية هذا نفس التسلسل"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__payment_sequence
@@ -3972,8 +3970,8 @@ msgid ""
 "Check this box to negate the absolute value of the balance of the lines "
 "associated with this tag in tax report computation."
 msgstr ""
-"حدد هذا المربع لإلغاء القيمة القصوى لرصيد البنود ذات الصلة بعلامة التصنيف "
-"هذه في حوسبة التقرير الضريبي. "
+"حدد هذا المربع لإلغاء القيمة القصوى لرصيد البنود ذات الصلة بعلامة التصنيف هذه "
+"في حوسبة التقرير الضريبي. "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__price_include
@@ -5597,8 +5595,8 @@ msgid ""
 "used to perform tax adjustment."
 msgstr ""
 "يحدد أين يمكن اختيار الضريبة. ملحوظة: خيار 'لا شيء' يعني أن الضريبة لا يمكن "
-"استخدامها بمفردها، ومع ذلك لا يزال بالإمكان استخدامها ضمن مجموعة. خيار "
-"'تسوية' يُستخدم لإجراء تسويات ضريبية. "
+"استخدامها بمفردها، ومع ذلك لا يزال بالإمكان استخدامها ضمن مجموعة. خيار 'تسوية' "
+"يُستخدم لإجراء تسويات ضريبية. "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__writeoff_account_id
@@ -6370,8 +6368,7 @@ msgid ""
 "Error while loading the localization. You should probably update your "
 "localization app first."
 msgstr ""
-"حدث خطأ أثناء تحميل الأقلمة. ربما ينبغي عليك تحديث تطبيق الأقلمة الخاص بك "
-"أولاً. "
+"حدث خطأ أثناء تحميل الأقلمة. ربما ينبغي عليك تحديث تطبيق الأقلمة الخاص بك أولاً. "
 
 #. module: account
 #. odoo-python
@@ -6764,8 +6761,8 @@ msgid ""
 "customers or sales orders/invoices. The default value comes from the "
 "customer."
 msgstr ""
-"تُستخدم الأوضاع المالية لتكييف الضرائب والحسابات لتلائم العملاء أو أوامر "
-"البيع/الفواتير المحددة. تأتي القيمة الافتراضية من العميل. "
+"تُستخدم الأوضاع المالية لتكييف الضرائب والحسابات لتلائم العملاء أو أوامر البيع/"
+"الفواتير المحددة. تأتي القيمة الافتراضية من العميل. "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_year_op__fiscalyear_last_day
@@ -7038,9 +7035,9 @@ msgid ""
 "customers. The search tool can also be used to personalise your Invoices "
 "reports and so, match this analysis to your needs."
 msgstr ""
-"من خلال هذا التقرير، يمكنك تكوين فكرة عامة عن المبالغ المفوترة إلى عملائك. "
-"كما يمكنك استخدام أداة البحث لإضافة الطابع الشخصي على تقارير فواتيرك وبهذا "
-"سوف تتمكن من تشكيل التحليل حسب احتياجاتك. "
+"من خلال هذا التقرير، يمكنك تكوين فكرة عامة عن المبالغ المفوترة إلى عملائك. كما "
+"يمكنك استخدام أداة البحث لإضافة الطابع الشخصي على تقارير فواتيرك وبهذا سوف "
+"تتمكن من تشكيل التحليل حسب احتياجاتك. "
 
 #. module: account
 #: model:ir.model,name:account.model_account_full_reconcile
@@ -7815,8 +7812,8 @@ msgstr ""
 msgid ""
 "Incorrect fiscal year date: day is out of range for month. Month: %s; Day: %s"
 msgstr ""
-"تاريخ السنة المالية غير صحيح: اليوم المدخل غير موجود في هذا الشهر. الشهر:"
-"%s;اليوم:%s"
+"تاريخ السنة المالية غير صحيح: اليوم المدخل غير موجود في هذا الشهر. "
+"الشهر:%s;اليوم:%s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_incoterm_id
@@ -8218,8 +8215,8 @@ msgid ""
 "Invoice and credit note distribution should match (same percentages, in the "
 "same order)."
 msgstr ""
-"يجب أن يتطابق توزيع كل من الفاتورة والإشعار الدائن (نفس النسب المئوية وفي "
-"نفس الترتيب). "
+"يجب أن يتطابق توزيع كل من الفاتورة والإشعار الدائن (نفس النسب المئوية وفي نفس "
+"الترتيب). "
 
 #. module: account
 #. odoo-python
@@ -8867,8 +8864,8 @@ msgid ""
 "anglo-saxon accounting with automated valuation method is configured, the "
 "expense account on the product category will be used."
 msgstr ""
-"اترك هذا الحقل فارغًا لاستخدام القيمة الافتراضية من فئة المنتج. إذا طُبقت "
-"طريقة المحاسبة الأنجلو-ساكسونية بالتقييم الآلي، سيُستخدم حساب النفقات في فئة "
+"اترك هذا الحقل فارغًا لاستخدام القيمة الافتراضية من فئة المنتج. إذا طُبقت طريقة "
+"المحاسبة الأنجلو-ساكسونية بالتقييم الآلي، سيُستخدم حساب النفقات في فئة "
 "المنتجات. "
 
 #. module: account
@@ -9165,8 +9162,8 @@ msgid ""
 "Line \"%s\" defines line \"%s\" as its parent, but appears before it in the "
 "report. The parent must always come first."
 msgstr ""
-"البند \"%s\" يحدد البند \"%s\" كالأصل، ولكن يظهر قبله في التقرير. يجب أن "
-"يأتي الأصل أولاً دائماً. "
+"البند \"%s\" يحدد البند \"%s\" كالأصل، ولكن يظهر قبله في التقرير. يجب أن يأتي "
+"الأصل أولاً دائماً. "
 
 #. module: account
 #: model:account.reconcile.model,name:account.1_reconcile_from_label
@@ -9929,8 +9926,8 @@ msgid ""
 "No journal could be found in company %(company_name)s for any of those "
 "types: %(journal_types)s"
 msgstr ""
-"لم يتم العثور على دفتر يومية في الشركة %(company_name)s لأي من تلك الأنواع: "
-"%(journal_types)s"
+"لم يتم العثور على دفتر يومية في الشركة %(company_name)s لأي من تلك الأنواع: %"
+"(journal_types)s"
 
 #. module: account
 #. odoo-python
@@ -9971,8 +9968,8 @@ msgid ""
 "No users, including Advisers, can edit accounts prior to and inclusive of "
 "this date. Use it for fiscal year locking for example."
 msgstr ""
-"لا يمكن لأي من المستخدمين، بما في ذلك المرشدين، تحرير حسابات سابقة قبل "
-"وأثناء هذا التاريخ. استخدمه لإغلاق سنة مالية، على سبيل المثال. "
+"لا يمكن لأي من المستخدمين، بما في ذلك المرشدين، تحرير حسابات سابقة قبل وأثناء "
+"هذا التاريخ. استخدمه لإغلاق سنة مالية، على سبيل المثال. "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__non_trade
@@ -10066,8 +10063,7 @@ msgid ""
 "Note that the easiest way to create a vendor credit note is to do it "
 "directly from the vendor bill."
 msgstr ""
-"لاحظ أن أسهل طريقة لإنشاء إشعار دائن لمورد هي إنشاؤه مباشرة من فاتورة "
-"المورد. "
+"لاحظ أن أسهل طريقة لإنشاء إشعار دائن لمورد هي إنشاؤه مباشرة من فاتورة المورد. "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__note
@@ -10316,8 +10312,8 @@ msgid ""
 "Once everything is set, you are good to continue. You will be able to edit "
 "this later in the <b>Customers</b> menu."
 msgstr ""
-"بمجرد أن يصبح كل شيء جاهزاً، يمكنك الاستمرار. سوف يكون بمقدورك تحرير ذلك "
-"مجدداً في وقت لاحق في قائمة <b>العملاء</b>. "
+"بمجرد أن يصبح كل شيء جاهزاً، يمكنك الاستمرار. سوف يكون بمقدورك تحرير ذلك مجدداً "
+"في وقت لاحق في قائمة <b>العملاء</b>. "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -11988,8 +11984,8 @@ msgid ""
 "Reload accounting data (taxes, accounts, ...) if you notice inconsistencies. "
 "This action is irreversible."
 msgstr ""
-"أعد تحميل البيانات المحاسبية (الضرائب، الحسابات، ...) إذا لاحظت عدم الاتساق "
-"في البيانات. لا يمكن التراجع عن هذا الإجراء. "
+"أعد تحميل البيانات المحاسبية (الضرائب، الحسابات، ...) إذا لاحظت عدم الاتساق في "
+"البيانات. لا يمكن التراجع عن هذا الإجراء. "
 
 #. module: account
 #: model:ir.model,name:account.model_account_resequence_wizard
@@ -12864,8 +12860,8 @@ msgid ""
 "Sent manually to customer when clicking on 'Send receipt by email' in "
 "payment action"
 msgstr ""
-"الإعداد التلقائي للعميل عند الضغط على 'إرسال الإيصال عبر البريد الإلكتروني' "
-"في إجراء الدفع "
+"الإعداد التلقائي للعميل عند الضغط على 'إرسال الإيصال عبر البريد الإلكتروني' في "
+"إجراء الدفع "
 
 #. module: account
 #: model:mail.template,description:account.email_template_edi_credit_note
@@ -13489,8 +13485,8 @@ msgid ""
 "Tags assigned to this line by the tax creating it, if any. It determines its "
 "impact on financial reports."
 msgstr ""
-"علامات التصنيف المسنَدة لهذا البند من قِبَل الضريبة التي قامت بإنشائها، إن "
-"وُجدت. يحدد ذلك تأثيره على التقارير المالية. "
+"علامات التصنيف المسنَدة لهذا البند من قِبَل الضريبة التي قامت بإنشائها، إن وُجدت. "
+"يحدد ذلك تأثيره على التقارير المالية. "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_product__account_tag_ids
@@ -13498,8 +13494,8 @@ msgstr ""
 msgid ""
 "Tags to be set on the base and tax journal items created for this product."
 msgstr ""
-"العلامات التي يجب تعيينها على القاعدة وعناصر يومية الضريبة التي تم إنشاؤها "
-"من أجل هذا المنتج. "
+"العلامات التي يجب تعيينها على القاعدة وعناصر يومية الضريبة التي تم إنشاؤها من "
+"أجل هذا المنتج. "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_external_value__target_report_expression_id
@@ -13863,8 +13859,8 @@ msgid ""
 "related fields)."
 msgstr ""
 "حقل تقني يحتوي على الدول التي تستخدم هذه الشركة خصائص متعلقة بالضرائب من "
-"أجلها (وبالتالي، التي تحتاج تطبيقات l10n إظهار حقول متعلقة بالضرائب من "
-"أجلها). "
+"أجلها (وبالتالي، التي تحتاج تطبيقات l10n إظهار حقول متعلقة بالضرائب من أجلها)"
+". "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__bank_partner_id
@@ -13901,14 +13897,13 @@ msgid ""
 "e.g: ^(?P<prefix1>.*?)(?P<year>\\d{4})(?P<prefix2>\\D*?)(?P<month>\\d{2})(?"
 "P<prefix3>\\D+?)(?P<seq>\\d+)(?P<suffix>\\D*?)$"
 msgstr ""
-"حقل تقني مُستخدَم لدعم صياغة التسلسلات المعقدة التي قد يسيء النظام فهمها "
-"عادةً.\n"
+"حقل تقني مُستخدَم لدعم صياغة التسلسلات المعقدة التي قد يسيء النظام فهمها عادةً.\n"
 "هذا تعبير نمطي قد يحتوي على كافة الأنماط التالية: prefix1، year، prefix2، "
 "month، prefix3، seq، suffix.\n"
 "مجموعات prefix* هي التي تفصل بين السنة والشهر والرقم التسلسلي المتزايد "
 "الفعلي (seq).\n"
-"مثال: ^(?P<prefix1>.*?)(?P<year>\\d{4})(?P<prefix2>\\D*?)(?P<month>\\d{2})(?"
-"P<prefix3>\\D+?)(?P<seq>\\d+)(?P<suffix>\\D*?)$ "
+"مثال: ^(?P<prefix1>.*?)(?P<year>\\d{4})(?P<prefix2>\\D*?)(?P<month>\\d{2})"
+"(?P<prefix3>\\D+?)(?P<seq>\\d+)(?P<suffix>\\D*?)$ "
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_fiscal_position__foreign_vat_header_mode__templates_found
@@ -14512,8 +14507,7 @@ msgid ""
 "To be consistent, the journal entry must always have exactly one journal "
 "item involving the bank/cash account."
 msgstr ""
-"لقد وصل قيد اليومية %s إلى حالة لا تصلح فيما يتعلق ببند كشف الحساب ذي "
-"الصلة.\n"
+"لقد وصل قيد اليومية %s إلى حالة لا تصلح فيما يتعلق ببند كشف الحساب ذي الصلة.\n"
 "حتى تكون منتظماً، يجب أن يحتوي قيد اليومية على عنصر يومية واحد فقط دائماً "
 "متعلق بحساب البنك/حساب النقد. "
 
@@ -14571,8 +14565,8 @@ msgstr ""
 "يستخدم التعيين تعبيرات عادية.\n"
 "- لمطابقة النص في بداية السطر (في علامة التصنيف أو الملاحظات)، قم بملء النص "
 "بكل بساطة.\n"
-"- لمطابقة النص في أي مكان (في علامة التصنيف أو الملاحظات)، قم بوضع النص "
-"المراد بين علامتي *. \n"
+"- لمطابقة النص في أي مكان (في علامة التصنيف أو الملاحظات)، قم بوضع النص المراد "
+"بين علامتي *. \n"
 "  مثال: .*N°48748 abc123.*"
 
 #. module: account
@@ -14626,8 +14620,8 @@ msgid ""
 "to work properly, invoice distribution lines should be arranged in the same "
 "order as the credit note distribution lines they correspond to."
 msgstr ""
-"الترتيب الذي تُعرَض وتُطابَق به بنود التوزيع. حتى تعمل عمليات الاسترداد بشكل "
-"صحيح، يجب تنظيم بنود توزيع الفواتير بنفس ترتيب بنود توزيع إشعار الدائن التي "
+"الترتيب الذي تُعرَض وتُطابَق به بنود التوزيع. حتى تعمل عمليات الاسترداد بشكل صحيح"
+"، يجب تنظيم بنود توزيع الفواتير بنفس ترتيب بنود توزيع إشعار الدائن التي "
 "تقابلها. "
 
 #. module: account
@@ -14756,8 +14750,8 @@ msgid ""
 "        * Match Regex: Define your own regular expression."
 msgstr ""
 "سوف يتم تطبيق نموذج التسوية هذا فقط عندما تكون الملاحظة:\n"
-"        * محتوية : يجب أن تحتوي ملاحظة المقترَح على هذه السلسلة (لا يتأثر "
-"بحالة الأحرف).\n"
+"        * محتوية : يجب أن تحتوي ملاحظة المقترَح على هذه السلسلة (لا يتأثر بحالة "
+"الأحرف).\n"
 "        * غير محتوية: عكس \"محتوية\".\n"
 "        * مطابقة التعابير النمطية: قم بتحديد تعبيرك النمطي بنفسك. "
 
@@ -14771,8 +14765,8 @@ msgid ""
 "        * Match Regex: Define your own regular expression."
 msgstr ""
 "سوف يتم تطبيق نموذج التسوية هذا فقط عندما يكون نوع المعاملة:\n"
-"        * محتوية: يجب أن تحتوي معاملة المقترَح على هذه السلسلة (لا يتأثر "
-"بحالة الأحرف).\n"
+"        * محتوية: يجب أن تحتوي معاملة المقترَح على هذه السلسلة (لا يتأثر بحالة "
+"الأحرف).\n"
 "        * غير محتوية: عكس \"محتوية\".\n"
 "        * مطابقة التعابير النمطية: قم بتحديد تعبيرك النمطي بنفسك. "
 
@@ -14958,8 +14952,8 @@ msgid ""
 "The sequences of this journal are different for Invoices and Refunds but you "
 "selected some of both types."
 msgstr ""
-"تختلف تسلسلات هذه اليومية ما بين الفواتير وعمليات الاسترداد، ولكنك قمت "
-"باختيار البعض من كلا النوعين. "
+"تختلف تسلسلات هذه اليومية ما بين الفواتير وعمليات الاسترداد، ولكنك قمت باختيار "
+"البعض من كلا النوعين. "
 
 #. module: account
 #. odoo-python
@@ -14980,8 +14974,8 @@ msgid ""
 "The starting balance doesn't match the ending balance of the previous "
 "statement, or an earlier statement is missing."
 msgstr ""
-"لا يطابق الرصيد الابتدائي الرصيد النهائي في كشف الحساب السابق، أو قد يكون "
-"كشف حساب قديم مفقوداً. "
+"لا يطابق الرصيد الابتدائي الرصيد النهائي في كشف الحساب السابق، أو قد يكون كشف "
+"حساب قديم مفقوداً. "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__statement_line_id
@@ -15105,8 +15099,7 @@ msgstr ""
 msgid ""
 "There isn't any journal entry flagged for data inalterability yet for this "
 "journal."
-msgstr ""
-"لا يوجد أي قيد يومية بعلامة تحذير لعدم قابلية تعديله بعد لهذه اليومية. "
+msgstr "لا يوجد أي قيد يومية بعلامة تحذير لعدم قابلية تعديله بعد لهذه اليومية. "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_error
@@ -15170,9 +15163,9 @@ msgid ""
 "%(journal_ids)s) as payment debit or credit account. This means that this "
 "account's type should be reconcilable."
 msgstr ""
-"تمت تهيئة الحساب في يومية/يوميات %(journal_names)s (المُعرّفات "
-"%(journal_ids)s) كحساب دفع عن طريق الخصم أو حساب الرصيد. هذا يعني أن نوع "
-"الحساب هذا قابل للتسوية. "
+"تمت تهيئة الحساب في يومية/يوميات %(journal_names)s (المُعرّفات %(journal_ids)"
+"s) كحساب دفع عن طريق الخصم أو حساب الرصيد. هذا يعني أن نوع الحساب هذا قابل "
+"للتسوية. "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__property_account_payable_id
@@ -15329,8 +15322,8 @@ msgid ""
 "This is the default credit limit that will be used on partners that do not "
 "have a specific limit on them."
 msgstr ""
-"هذا هو الحد الائتماني الافتراضي الذي سيتم استخدامه للشركاء الذين لا يملكون "
-"حداً محدداً. "
+"هذا هو الحد الائتماني الافتراضي الذي سيتم استخدامه للشركاء الذين لا يملكون حداً "
+"محدداً. "
 
 #. module: account
 #. odoo-python
@@ -15395,8 +15388,7 @@ msgid ""
 "This payment term will be used instead of the default one for purchase "
 "orders and vendor bills"
 msgstr ""
-"سوف يُستخدم شرط السداد هذا عوضاً عن الشرط الافتراضي لأوامر الشراء وفواتير "
-"المورّد "
+"سوف يُستخدم شرط السداد هذا عوضاً عن الشرط الافتراضي لأوامر الشراء وفواتير المورّد "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__property_payment_term_id
@@ -16140,11 +16132,10 @@ msgid ""
 "printed in the right country, put in an envelop and sent by snail mail. Use "
 "this feature from the list view to post hundreds of invoices in bulk."
 msgstr ""
-"قم باستخدام خيار “<i>الإرسال عبر البريد</i>” لترحيل الفواتير تلقائياً. "
-"بالنسبة لتكلفة الطابع البريدي المحلي، فنحن نقوم بالعمل اليدوي بأكمله: سوف "
-"تتم طباعة فاتورتك في الدولة الصحيحة ووضعها في ظرف وإرسالها عبر البريد "
-"التقليدي. بإمكانك استخدام هذه الخاصية من عرض القائمة لترحيل مئات الفواتير "
-"دفعة واحدة. "
+"قم باستخدام خيار “<i>الإرسال عبر البريد</i>” لترحيل الفواتير تلقائياً. بالنسبة "
+"لتكلفة الطابع البريدي المحلي، فنحن نقوم بالعمل اليدوي بأكمله: سوف تتم طباعة "
+"فاتورتك في الدولة الصحيحة ووضعها في ظرف وإرسالها عبر البريد التقليدي. "
+"بإمكانك استخدام هذه الخاصية من عرض القائمة لترحيل مئات الفواتير دفعة واحدة. "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__quick_edit_total_amount
@@ -16871,8 +16862,8 @@ msgid ""
 "You can't delete a posted journal item. Don’t play games with your "
 "accounting records; reset the journal entry to draft before deleting it."
 msgstr ""
-"لا يمكنك حذف عنصر يومية تم ترحيله. لا تعبث بسجلاتك المحاسبية؛ قم بإعادة ضبط "
-"قيد اليومية إلى حالة المسودة قبل حذفه. "
+"لا يمكنك حذف عنصر يومية تم ترحيله. لا تعبث بسجلاتك المحاسبية؛ قم بإعادة ضبط قيد "
+"اليومية إلى حالة المسودة قبل حذفه. "
 
 #. module: account
 #. odoo-python
@@ -16910,8 +16901,8 @@ msgid ""
 "You can't have two payment method lines of the same payment type (%s) and "
 "with the same name (%s) on a single journal."
 msgstr ""
-"لا يمكن أن يكون لديك بندي طريقة دفع لنفس وسيلة الدفع (%s) وبنفس الاسم (%s) "
-"في اليومية الواحدة. "
+"لا يمكن أن يكون لديك بندي طريقة دفع لنفس وسيلة الدفع (%s) وبنفس الاسم (%s) في "
+"اليومية الواحدة. "
 
 #. module: account
 #. odoo-python
@@ -16966,8 +16957,8 @@ msgid ""
 "You can't reset to draft those journal entries. You need to request a "
 "cancellation instead."
 msgstr ""
-"لا يمكنك إعادة تعيين قيود دفتر اليومية تلك إلى حالة المسودة. عليك طلب "
-"الإلغاء عوضاً عن ذلك. "
+"لا يمكنك إعادة تعيين قيود دفتر اليومية تلك إلى حالة المسودة. عليك طلب الإلغاء "
+"عوضاً عن ذلك. "
 
 #. module: account
 #. odoo-python
@@ -17025,8 +17016,7 @@ msgid ""
 "You cannot create a fiscal position with a foreign VAT within your fiscal "
 "country without assigning it a state."
 msgstr ""
-"لا يمكنك إنشاء وضع مالي مع ضريبة أجنبية ضمن دولتك المالية دون تعيين حالة "
-"لها. "
+"لا يمكنك إنشاء وضع مالي مع ضريبة أجنبية ضمن دولتك المالية دون تعيين حالة لها. "
 
 #. module: account
 #. odoo-python
@@ -17109,8 +17099,8 @@ msgid ""
 "You cannot disable this setting because some of your taxes are cash basis. "
 "Modify your taxes first before disabling this setting."
 msgstr ""
-"لا يمكنك تعطيل هذا الإعداد لأن بعض ضرائبك تعتمد على أساس نقدي. قم بتعديل "
-"ضرائبك أولًا قبل تعطيل هذا الإعداد. "
+"لا يمكنك تعطيل هذا الإعداد لأن بعض ضرائبك تعتمد على أساس نقدي. قم بتعديل ضرائبك "
+"أولًا قبل تعطيل هذا الإعداد. "
 
 #. module: account
 #. odoo-python
@@ -17121,8 +17111,8 @@ msgid ""
 "change some non legal fields or you must unreconcile first.\n"
 "Journal Entry (id): %s (%s)"
 msgstr ""
-"لا يمكنك إجراء هذا التعديل على قيد يومية مسوى بالفعل . ما يمكنك فعله هو "
-"تغيير بعض الحقول غير القانونية وإلا فسوف تضطر إلى إلغاء التسوية أولاً.\n"
+"لا يمكنك إجراء هذا التعديل على قيد يومية مسوى بالفعل . ما يمكنك فعله هو تغيير "
+"بعض الحقول غير القانونية وإلا فسوف تضطر إلى إلغاء التسوية أولاً.\n"
 "قيد اليومية (المعرف) :%s (%s) "
 
 #. module: account
@@ -17182,8 +17172,8 @@ msgid ""
 "You cannot have more than one account with \"Current Year Earnings\" as "
 "type. (accounts: %s)"
 msgstr ""
-"لا يمكنك امتلاك أكثر من حساب واحد مع \"أرباح السنة الجارية\" كنوع. "
-"(الحسابات: %s)"
+"لا يمكنك امتلاك أكثر من حساب واحد مع \"أرباح السنة الجارية\" كنوع. (الحسابات: "
+"%s)"
 
 #. module: account
 #. odoo-python
@@ -17292,8 +17282,7 @@ msgstr ""
 msgid ""
 "You cannot remove/deactivate the accounts \"%s\" which are set on a tax "
 "repartition line."
-msgstr ""
-"لا يمكنك إزالة/إلغاء تفعيل الحسابات \"%s\" المعينة في بند توزيع ضريبي. "
+msgstr "لا يمكنك إزالة/إلغاء تفعيل الحسابات \"%s\" المعينة في بند توزيع ضريبي. "
 
 #. module: account
 #. odoo-python
@@ -17328,8 +17317,7 @@ msgid ""
 "You cannot set a currency on this account as it already has some journal "
 "entries having a different foreign currency."
 msgstr ""
-"لا يمكنك تعيين عملة لهذا الحساب لأنه يحتوي على قيود يومية بعملات أجنبية "
-"مختلفة. "
+"لا يمكنك تعيين عملة لهذا الحساب لأنه يحتوي على قيود يومية بعملات أجنبية مختلفة. "
 
 #. module: account
 #. odoo-python
@@ -17372,8 +17360,7 @@ msgid ""
 "You cannot use the field carryover_target in an expression that does not "
 "have the label starting with _carryover_"
 msgstr ""
-"لا يمكنك استخدام الحقل carryover_target في تعبير لا يبدأ عنوانه بـ "
-"_carryover_ "
+"لا يمكنك استخدام الحقل carryover_target في تعبير لا يبدأ عنوانه بـ _carryover_ "
 
 #. module: account
 #. odoo-python
@@ -17424,8 +17411,7 @@ msgid ""
 "credit note or refund."
 msgstr ""
 "لا يمكنك تصديق فاتورة عميل بها مبلغ كلي سلبي. عليك إنشاء إشعار دائن عوضاً عن "
-"ذلك. استخدم قائمة الإجراءات لتحويلها إلى إشعار دائن أو عملية استرداد "
-"الأموال. "
+"ذلك. استخدم قائمة الإجراءات لتحويلها إلى إشعار دائن أو عملية استرداد الأموال. "
 
 #. module: account
 #. odoo-python
@@ -17608,8 +17594,8 @@ msgid ""
 "third party in the context of any claim for damages filed against the client "
 "by an end consumer."
 msgstr ""
-"لا يمكن تحت أي ظرف من الظروف أن يطلبه العميل كطرف ثالث في سياق أي دعوى "
-"مرفوعة ضد العميل للأضرار من قِبَل زبون نهائي. "
+"لا يمكن تحت أي ظرف من الظروف أن يطلبه العميل كطرف ثالث في سياق أي دعوى مرفوعة "
+"ضد العميل للأضرار من قِبَل زبون نهائي. "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_error

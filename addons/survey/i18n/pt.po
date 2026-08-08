@@ -10,15 +10,15 @@
 # Rita Bastos, 2024
 # Peter Lawrence Romão <peterromao@yahoo.co.uk>, 2025
 # Daniel Reis, 2025
-# Humberto Sousa <humberto.sousa@smartimprove.pt>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Humberto Sousa <humberto.sousa@smartimprove.pt>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-03 18:38+0000\n"
-"PO-Revision-Date: 2025-11-09 19:46+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-08-06 05:32+0000\n"
+"Last-Translator: Humberto Sousa <humberto.sousa@smartimprove.pt>\n"
 "Language-Team: Portuguese <https://translate.odoo.com/projects/odoo-17/"
 "survey/pt/>\n"
 "Language: pt\n"
@@ -27,7 +27,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
 "1000000 == 0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__question_count
@@ -274,8 +274,8 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Caro(a) <t t-out=\"object.partner_id.name or "
-"'participant'\">participante</t><br/><br/>\n"
+"        Caro(a) <t t-out=\"object.partner_id.name or 'participant'\">"
+"participante</t><br/><br/>\n"
 "        <t t-if=\"object.survey_id.certification\">\n"
 "            Convidamo-lo a fazer uma nova certificação.\n"
 "        </t>\n"
@@ -296,8 +296,8 @@ msgstr ""
 "            </a>\n"
 "        </div>\n"
 "        <t t-if=\"object.deadline\">\n"
-"            Por favor, responda ao questionário até <t t-"
-"out=\"format_date(object.deadline) or ''\">05/05/2021</t>.<br/><br/>\n"
+"            Por favor, responda ao questionário até <t t-out=\"format_date"
+"(object.deadline) or ''\">05/05/2021</t>.<br/><br/>\n"
 "        </t>\n"
 "        <t t-if=\"object.survey_id.certification\">\n"
 "            Desejamos-lhe boa sorte!\n"
@@ -452,8 +452,8 @@ msgid ""
 "                        </span>"
 msgstr ""
 "<span class=\"fw-bold text-muted ms-2 d-none d-md-inline\">\n"
-"                            <span id=\"enter-tooltip\">ou prima Enter</"
-"span>\n"
+"                            <span id=\"enter-tooltip\">ou prima Enter</span>"
+"\n"
 "                        </span>"
 
 #. module: survey
@@ -588,8 +588,8 @@ msgstr ""
 msgid ""
 "<span>\"Red\" is not a category, I know what you are trying to do ;)</span>"
 msgstr ""
-"<span>\"Vermelho\" não é uma categoria, sabemos o que está a tentar "
-"fazer ;)</span>"
+"<span>\"Vermelho\" não é uma categoria, sabemos o que está a tentar fazer ;)"
+"</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_form
@@ -1271,8 +1271,8 @@ msgstr "Distintivo de Certificação "
 #, python-format
 msgid "Certification Badge is not configured for the survey %(survey_name)s"
 msgstr ""
-"O Distintivo de Certificação não está configurado para o inquérito "
-"%(survey_name)s"
+"O Distintivo de Certificação não está configurado para o inquérito %"
+"(survey_name)s"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view_general
@@ -3436,8 +3436,8 @@ msgid ""
 msgstr ""
 "Idioma de tradução (ISO code) opcional para selecionar no envio de um e-"
 "mail. Se não atribuído, a versão inglesa será utilizada. Deverá usualmente "
-"ser uma expressão substituta que providencie o idioma apropriado, ex. "
-"{{ object.partner_id.lang }}."
+"ser uma expressão substituta que providencie o idioma apropriado, ex. {{ "
+"object.partner_id.lang }}."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -4794,8 +4794,7 @@ msgstr ""
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_feedback_p2_q2_row3
 msgid "The tool to compare the products is useful to make a choice"
-msgstr ""
-"A ferramenta para comparar os produtos é útil para se fazer uma escolha"
+msgstr "A ferramenta para comparar os produtos é útil para se fazer uma escolha"
 
 #. module: survey
 #. odoo-python

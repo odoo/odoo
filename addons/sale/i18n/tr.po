@@ -32,22 +32,22 @@
 # Tugay Hatıl <tugayh@projetgrup.com>, 2025
 # Wil Odoo, 2025
 # Deniz Guvener_Odoo <degu@odoo.com>, 2025
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-03 18:40+0000\n"
-"PO-Revision-Date: 2025-11-20 16:14+0000\n"
+"PO-Revision-Date: 2026-08-03 02:03+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
-"Language-Team: Turkish <https://translate.odoo.com/projects/odoo-17/sale/tr/"
-">\n"
+"Language-Team: Turkish <https://translate.odoo.com/projects/odoo-17/sale/tr/>"
+"\n"
 "Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_provider_onboarding_wizard___data_fetched
@@ -232,14 +232,13 @@ msgstr ""
 "        <span style=\"font-weight:bold;\" t-out=\"transaction_sudo.reference "
 "or ''\">SOOO49</span>\n"
 "        ödeme tutarınız olan\n"
-"        <span style=\"font-weight:bold;\" t-"
-"out=\"format_amount(transaction_sudo.amount, object.currency_id) or ''\">$ "
-"10.00</span>\n"
+"        <span style=\"font-weight:bold;\" t-out=\"format_amount"
+"(transaction_sudo.amount, object.currency_id) or ''\">$ 10.00</span>\n"
 "        şu nolu siparişiniz\n"
-"        <span style=\"font-weight:bold;\" t-out=\"object.name or "
-"''\">S00049</span>\n"
-"        <t t-if=\"transaction_sudo and transaction_sudo.state == "
-"'pending'\">\n"
+"        <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">"
+"S00049</span>\n"
+"        <t t-if=\"transaction_sudo and transaction_sudo.state == 'pending'\">"
+"\n"
 "            için beklemektedir.\n"
 "            <br>\n"
 "            <t t-if=\"object.currency_id.compare_amounts(object.amount_paid "
@@ -249,9 +248,9 @@ msgstr ""
 "            </t>\n"
 "            <t t-else=\"\">\n"
 "                Aşağıdaki tutar olan,\n"
-"                <span style=\"font-weight:bold;\" t-"
-"out=\"format_amount(object.amount_total - object.amount_paid - "
-"transaction_sudo.amount, object.currency_id) or ''\">$ 10.00</span>\n"
+"                <span style=\"font-weight:bold;\" t-out=\"format_amount"
+"(object.amount_total - object.amount_paid - transaction_sudo.amount, "
+"object.currency_id) or ''\">$ 10.00</span>\n"
 "                onaylanırsa ödenecek olarak kalacaktır.\n"
 "            </t>\n"
 "        </t>\n"
@@ -260,9 +259,9 @@ msgstr ""
 "            <t t-if=\"object.currency_id.compare_amounts(object.amount_paid, "
 "object.amount_total) &lt; 0\">\n"
 "                <br>\n"
-"                <span style=\"font-weight:bold;\" t-"
-"out=\"format_amount(object.amount_total - object.amount_paid, "
-"object.currency_id) or ''\">$ 10.00</span>\n"
+"                <span style=\"font-weight:bold;\" t-out=\"format_amount"
+"(object.amount_total - object.amount_paid, object.currency_id) or ''\">$ "
+"10.00</span>\n"
 "                ödenecek olarak kalacaktır.\n"
 "            </t>\n"
 "        </t>\n"
@@ -1520,8 +1519,8 @@ msgid ""
 "install)</strong>"
 msgstr ""
 "FedEx ile gönderim maliyetlerini hesapla ve gönder<br/>\n"
-"                                    <strong>(yüklemek için Ana "
-"Sayfa>Uygulamalar'a gidin)</strong>"
+"                                    <strong>(yüklemek için Ana Sayfa>"
+"Uygulamalar'a gidin)</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1541,8 +1540,8 @@ msgid ""
 "install)</strong>"
 msgstr ""
 "UPS ile gönderim maliyetlerini hesapla ve gönder<br/>\n"
-"                                    <strong>(yüklemek için Ana "
-"Sayfa>Uygulamalar'a gidin)</strong>"
+"                                    <strong>(yüklemek için Ana Sayfa>"
+"Uygulamalar'a gidin)</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1552,8 +1551,8 @@ msgid ""
 "install)</strong>"
 msgstr ""
 "USPS ile gönderim maliyetlerini hesapla ve gönder<br/>\n"
-"                                    <strong>(yüklemek için Ana "
-"Sayfa>Uygulamalar'a gidin)</strong>"
+"                                    <strong>(yüklemek için Ana Sayfa>"
+"Uygulamalar'a gidin)</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3218,8 +3217,7 @@ msgstr "Yalnızca onaylanmış peşinatlar dikkate alınır."
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Only draft orders can be marked as sent directly."
-msgstr ""
-"Yalnızca taslak siparişler doğrudan gönderilmiş olarak işaretlenebilir."
+msgstr "Yalnızca taslak siparişler doğrudan gönderilmiş olarak işaretlenebilir."
 
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_product_attribute_custom_value_sol_custom_value_unique
@@ -4350,8 +4348,7 @@ msgstr "Ürünleri ambalajlayarak paket bazıda farklı ölçü birimleri ile sa
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Sell variants of a product using attributes (size, color, etc.)"
-msgstr ""
-"Nitelikleri (boyut, renk vb.) kullanarak bir ürünün varyantlarını satma"
+msgstr "Nitelikleri (boyut, renk vb.) kullanarak bir ürünün varyantlarını satma"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -5072,8 +5069,8 @@ msgid ""
 "This product is packaged by %(pack_size).2f %(pack_name)s. You should sell "
 "%(quantity).2f %(unit)s."
 msgstr ""
-"Bu ürün %(pack_size).2f %(pack_name)s tarafından paketlenmiştir. "
-"%(quantity).2f %(unit)s satmalısınız."
+"Bu ürün %(pack_size).2f %(pack_name)s tarafından paketlenmiştir. %(quantity)"
+".2f %(unit)s satmalısınız."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_order_report_all
@@ -5618,8 +5615,8 @@ msgid ""
 " Please change the company of your quotation or remove the products from "
 "other companies (%(bad_products)s)."
 msgstr ""
-"Teklifiniz %(product_company)s şirketindeki ürünleri içerirken, "
-"teklifiniz%(quote_company)s. \n"
+"Teklifiniz %(product_company)s şirketindeki ürünleri içerirken, teklifiniz%"
+"(quote_company)s. \n"
 "şirketine aittir. Lütfen teklifinizin şirketini değiştirin veya ürünleri "
 "diğer şirketlerden kaldırın (%(bad_products)s)."
 
@@ -5690,8 +5687,8 @@ msgid ""
 "{{ object.name or 'n/a' }})"
 msgstr ""
 "{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
-"(ctx.get('proforma') and 'Proforma' or 'Teklif') or 'Sipariş' }} (Ref "
-"{{ object.name or 'n/a' }})"
+"(ctx.get('proforma') and 'Proforma' or 'Teklif') or 'Sipariş' }} (Ref {{ "
+"object.name or 'n/a' }})"
 
 #. module: sale
 #: model:mail.template,subject:sale.mail_template_sale_cancellation
@@ -5699,8 +5696,8 @@ msgid ""
 "{{ object.company_id.name }} {{ object.type_name }} Cancelled (Ref "
 "{{ object.name or 'n/a' }})"
 msgstr ""
-"{{ object.company_id.name }} {{ object.type_name }} İptal Edildi (Ref "
-"{{ object.name or 'n/a' }})"
+"{{ object.company_id.name }} {{ object.type_name }} İptal Edildi (Ref {{ "
+"object.name or 'n/a' }})"
 
 #~ msgid "2023-12-31"
 #~ msgstr "2023-12-31"

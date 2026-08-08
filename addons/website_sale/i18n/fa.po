@@ -26,13 +26,13 @@
 # Hamed Mohammadi <hamed@dehongi.com>, 2025
 # Naser mars, 2025
 # Tiffany Chang, 2025
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-03 18:38+0000\n"
-"PO-Revision-Date: 2025-11-20 16:26+0000\n"
+"PO-Revision-Date: 2026-08-08 07:06+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Persian <https://translate.odoo.com/projects/odoo-17/"
 "website_sale/fa/>\n"
@@ -41,7 +41,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -318,8 +318,8 @@ msgid ""
 "aria-label=\"Remove this location\" title=\"Remove this location\"/>"
 msgstr ""
 "<span class=\"o_order_location\"> <b class=\"o_order_location_name\"/> <br/> "
-"<i class=\"o_order_location_address\"/> </span> <span class=\"fa fa-times "
-"ms-2 o_remove_order_location\" aria-label=\"حذف این مکان\" title=\"حذف این "
+"<i class=\"o_order_location_address\"/> </span> <span class=\"fa fa-times ms-"
+"2 o_remove_order_location\" aria-label=\"حذف این مکان\" title=\"حذف این "
 "مکان\"/>"
 
 #. module: website_sale
@@ -407,8 +407,8 @@ msgid ""
 "information.</span>"
 msgstr ""
 "<span>متأسفانه سفارش شما نمی‌تواند تأیید شود زیرا مبلغ پرداخت شما با مبلغ سبد "
-"خرید شما مطابقت ندارد. لطفاً برای اطلاعات بیشتر با مسئول فروشگاه تماس بگیرید."
-"</span>"
+"خرید شما مطابقت ندارد. لطفاً برای اطلاعات بیشتر با مسئول فروشگاه تماس بگیرید.</"
+"span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
@@ -517,24 +517,23 @@ msgstr ""
 "در سبد خرید شماست.</h1> آیا می‌خواهید خرید خود را تکمیل کنید؟<br><br> <t t-"
 "if=\"object.order_line\"> <t t-foreach=\"object.website_order_line\" t-"
 "as=\"line\"> <hr> <table width=\"100%\"> <tr> <td style=\"padding: 10px; "
-"width:150px;\"> <img t-attf-src=\"/web/image/product.product/"
-"{{ line.product_id.id }}/image_128\" style=\"width: 100px; height: 100px; "
+"width:150px;\"> <img t-attf-src=\"/web/image/product.product/{{ "
+"line.product_id.id }}/image_128\" style=\"width: 100px; height: 100px; "
 "object-fit: contain;\" alt=\"تصویر محصول\"> </td> <td> <strong t-"
-"out=\"line.product_id.display_name or ''\">[FURN_7800] ترکیب میز</"
-"strong><br><t t-out=\"line.name or ''\">[FURN_7800] ترکیب میز، ترکیب میز "
-"مشکی-قهوه‌ای: صندلی + میز + کشو.</t> </td> <td width=\"100px\" "
-"align=\"right\"> <t t-out=\"int(line.product_uom_qty) or ''\">10000</t> <t t-"
+"out=\"line.product_id.display_name or ''\">[FURN_7800] ترکیب میز</strong><br>"
+"<t t-out=\"line.name or ''\">[FURN_7800] ترکیب میز، ترکیب میز مشکی-قهوه‌ای: "
+"صندلی + میز + کشو.</t> </td> <td width=\"100px\" align=\"right\"> <t t-"
+"out=\"int(line.product_uom_qty) or ''\">10000</t> <t t-"
 "out=\"line.product_uom.name or ''\">واحد</t> </td> </tr> </table> </t> <hr> "
 "</t> <div style=\"text-align: center; padding: 16px 0px 16px 0px; font-size: "
-"14px;\"> <a t-attf-href=\"{{ object.get_base_url() }}/shop/cart?"
-"access_token={{ object.access_token }}\" target=\"_blank\" "
-"style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-"
-"decoration: none; color: #fff; border-radius: 5px; font-size:13px;\"> ادامه "
-"سفارش </a> </div> <t t-set=\"company\" t-value=\"object.company_id or "
-"object.user_id.company_id or user.company_id\"></t> <div style=\"text-align: "
-"center;\"><strong>با تشکر از خرید شما از <t t-out=\"company.name or "
-"''\">شرکت من (سان فرانسیسکو)</t>!</strong></div> </td></tr> </table> </td> </"
-"tr> </tbody> </table>"
+"14px;\"> <a t-attf-href=\"{{ object.get_base_url() }}/shop/cart?access_token="
+"{{ object.access_token }}\" target=\"_blank\" style=\"background-color: "
+"#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; "
+"border-radius: 5px; font-size:13px;\"> ادامه سفارش </a> </div> <t t-"
+"set=\"company\" t-value=\"object.company_id or object.user_id.company_id or "
+"user.company_id\"></t> <div style=\"text-align: center;\"><strong>با تشکر از "
+"خرید شما از <t t-out=\"company.name or ''\">شرکت من (سان فرانسیسکو)</t>!</"
+"strong></div> </td></tr> </table> </td> </tr> </tbody> </table>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_custom_text
@@ -774,8 +773,7 @@ msgstr "به مصرف کنندگان نهایی اجازه انتخاب این �
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Allow your customer to add products from previous order in their cart."
 msgstr ""
-"به مشتریان خود اجازه دهید تا محصولات سفارش قبلی را به سبد خرید خود اضافه "
-"کنند."
+"به مشتریان خود اجازه دهید تا محصولات سفارش قبلی را به سبد خرید خود اضافه کنند."
 
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.dynamic_snippet_alternative_products
@@ -944,8 +942,8 @@ msgid ""
 "products."
 msgstr ""
 "فروش خود را با انواع برنامه ها افزایش دهید: کوپن، تبلیغات، کارت هدیه، "
-"وفاداری. شرایط خاصی را می توان تنظیم کرد (محصولات، مشتریان، حداقل مقدار "
-"خرید، دوره). جوایز می توانند تخفیف (% یا مقدار) یا محصولات رایگان باشند."
+"وفاداری. شرایط خاصی را می توان تنظیم کرد (محصولات، مشتریان، حداقل مقدار خرید، "
+"دوره). جوایز می توانند تخفیف (% یا مقدار) یا محصولات رایگان باشند."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -1505,8 +1503,8 @@ msgid ""
 "visit the shipping page to add a shipping fee or the shipping fee is also "
 "free, then the email won't be sent."
 msgstr ""
-"برای ورود مشتری لازم است در سیستم وارد شده باشد وگرنه نشانی ایمیل او "
-"ناشناخته خواهد بود.\n"
+"برای ورود مشتری لازم است در سیستم وارد شده باشد وگرنه نشانی ایمیل او ناشناخته "
+"خواهد بود.\n"
 "\n"
 "- اگر مشتری احتمالی یک یا چند تسویه حساب ناتمام ایجاد کند و سپس قبل از ارسال "
 "ایمیل یادآوری خرید را کامل کند، آنگاه ایمیل ارسال نخواهد شد.\n"
@@ -1523,9 +1521,9 @@ msgstr ""
 "- اگر هیچ‌یک از محصولات در تسویه حساب برای خرید در دسترس نباشند (مثلاً موجودی "
 "خالی)، ایمیل ارسال نخواهد شد.\n"
 "\n"
-"- اگر تمام محصولات در تسویه حساب رایگان باشند، و مشتری به صفحه حمل و نقل "
-"برای افزودن هزینه حمل و نقل نرود یا در صورتی که هزینه حمل و نقل نیز رایگان "
-"باشد، ایمیل ارسال نخواهد شد."
+"- اگر تمام محصولات در تسویه حساب رایگان باشند، و مشتری به صفحه حمل و نقل برای "
+"افزودن هزینه حمل و نقل نرود یا در صورتی که هزینه حمل و نقل نیز رایگان باشد، "
+"ایمیل ارسال نخواهد شد."
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_orders_customers
@@ -2407,8 +2405,8 @@ msgid ""
 "Mail only sent to signed in customers with items available for sale in their "
 "cart."
 msgstr ""
-"فقط به مشتریانی که وارد سایت شده‌اند و در سبد خرید خود اقلامی برای فروش "
-"دارند، ایمیل ارسال می‌شود."
+"فقط به مشتریانی که وارد سایت شده‌اند و در سبد خرید خود اقلامی برای فروش دارند، "
+"ایمیل ارسال می‌شود."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options

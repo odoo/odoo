@@ -44,7 +44,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-03 18:38+0000\n"
-"PO-Revision-Date: 2026-07-29 07:55+0000\n"
+"PO-Revision-Date: 2026-08-08 15:25+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-17/stock/"
 "fi/>\n"
@@ -503,8 +503,8 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Hei <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,"
-"<br><br>\n"
+"        Hei <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>"
+",<br><br>\n"
 "        Olemme iloisia voidessamme ilmoittaa, että tilauksesi on lähetetty.\n"
 "       <t t-if=\"hasattr(object, 'carrier_tracking_ref') and "
 "object.carrier_tracking_ref\"> \n"
@@ -514,8 +514,8 @@ msgstr ""
 "               <t t-set=\"multiple_carrier_tracking\" t-"
 "value=\"object.get_multiple_carrier_tracking()\"></t>\n"
 "               <t t-if=\"multiple_carrier_tracking\">\n"
-"                    <t t-foreach=\"multiple_carrier_tracking\" t-"
-"as=\"line\">\n"
+"                    <t t-foreach=\"multiple_carrier_tracking\" t-as=\"line\">"
+"\n"
 "                        <br><a t-att-href=\"line[1]\" target=\"_blank\" t-"
 "out=\"line[0] or ''\"></a>\n"
 "                    </t>\n"
@@ -1719,8 +1719,7 @@ msgstr ""
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "Changing the operation type of this record is forbidden at this point."
-msgstr ""
-"Tämän tietueen toimintatyypin muuttaminen on tässä vaiheessa kielletty."
+msgstr "Tämän tietueen toimintatyypin muuttaminen on tässä vaiheessa kielletty."
 
 #. module: stock
 #. odoo-python
@@ -3764,8 +3763,7 @@ msgstr ""
 #: code:addons/stock/static/src/client_actions/multi_print.js:0
 #, python-format
 msgid "HTML reports cannot be auto-printed, skipping report: %s"
-msgstr ""
-"HTML-raportteja ei voi tulostaa automaattisesti. Raportti ohitetaan: %s"
+msgstr "HTML-raportteja ei voi tulostaa automaattisesti. Raportti ohitetaan: %s"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
@@ -3987,8 +3985,7 @@ msgstr ""
 msgid ""
 "If the active field is set to False, it will allow you to hide the route "
 "without removing it."
-msgstr ""
-"Jos aktiivinen kenttä on False, voit piilottaa reitin poistamatta sitä."
+msgstr "Jos aktiivinen kenttä on False, voit piilottaa reitin poistamatta sitä."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_storage_category__allow_new_product__empty
@@ -4255,8 +4252,7 @@ msgstr "Vastaanotot"
 #: code:addons/stock/static/src/client_actions/multi_print.js:0
 #, python-format
 msgid "Incorrect type of action submitted as a report, skipping action"
-msgstr ""
-"Vääränlainen toimintatyyppi on lähetetty raporttina, ohitetaan toiminta"
+msgstr "Vääränlainen toimintatyyppi on lähetetty raporttina, ohitetaan toiminta"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__inventory_diff_quantity
@@ -4406,14 +4402,14 @@ msgstr "Inventoitu määrä"
 #: model_terms:ir.ui.view,arch_db:stock.view_partner_stock_form
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_pivot
 msgid "Inventory"
-msgstr "Varasto"
+msgstr "Varastointi"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_inventory_adjustement_name
 #: model_terms:ir.ui.view,arch_db:stock.product_product_stock_tree
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_editable
 msgid "Inventory Adjustment"
-msgstr "Inventaario & saldomuutos"
+msgstr "Varaston oikaisu"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_inventory_adjustment_name
@@ -4457,7 +4453,7 @@ msgstr "Inventaariopaikka"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_location
 msgid "Inventory Locations"
-msgstr "Inventaariopaikat"
+msgstr "Varastoinnin sijainnit"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_location__usage__inventory
@@ -4484,12 +4480,12 @@ msgstr "Varaston määrän asetus"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_adjustment_name__inventory_adjustment_name
 msgid "Inventory Reason"
-msgstr "Inventoinnin syy"
+msgstr "Inventaarion syy"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_route
 msgid "Inventory Routes"
-msgstr "Varaston reititys"
+msgstr "Varastoinnin reitit"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_form_editable
@@ -5070,29 +5066,29 @@ msgstr "Erä / sarjanumero"
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_line_operation_tree
 msgid "Lot/Serial Number"
-msgstr "Erä/sarjanumero"
+msgstr "Erä-/sarjanumero"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_lot_label
 msgid "Lot/Serial Number (PDF)"
-msgstr "Erä / sarjanumero (PDF)"
+msgstr "Erä-/sarjanumero (PDF)"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.label_lot_template
 msgid "Lot/Serial Number (ZPL)"
-msgstr "Erä/Sarjanumero (ZPL)"
+msgstr "Erä-/Sarjanumero (ZPL)"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__lot_name
 msgid "Lot/Serial Number Name"
-msgstr "Erän / sarjanumeron nimi"
+msgstr "Erä-/sarjanumeron nimi"
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_lot.py:0
 #, python-format
 msgid "Lot/Serial Number Relocated"
-msgstr "Erä/sarjanumero siirretty"
+msgstr "Erä-/sarjanumero siirretty"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.message_body
@@ -6867,7 +6863,7 @@ msgstr "Tuotereititysten raportti"
 #: model:ir.model.fields,field_description:stock.field_stock_rules_report__product_tmpl_id
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__product_tmpl_id
 msgid "Product Template"
-msgstr "Tuotemalli"
+msgstr "Tuotepohja"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_report_stock_quantity__product_tmpl_id
@@ -8304,8 +8300,8 @@ msgid ""
 "\n"
 "Please correct this to prevent inconsistent data."
 msgstr ""
-"Sarjanumero (%s) ei sijaitse kohdassa %s, vaan sijaitsee kohdassa "
-"(kohdissa): %s.\n"
+"Sarjanumero (%s) ei sijaitse kohdassa %s, vaan sijaitsee kohdassa (kohdissa)"
+": %s.\n"
 "\n"
 "Korjaa tämä, jotta vältät ristiriitaiset tiedot."
 
@@ -8318,8 +8314,8 @@ msgid ""
 "\n"
 "Source location for this move will be changed to %s"
 msgstr ""
-"Sarjanumero (%s) ei sijaitse kohdassa %s, vaan sijaitsee kohdassa "
-"(kohdissa): %s.\n"
+"Sarjanumero (%s) ei sijaitse kohdassa %s, vaan sijaitsee kohdassa (kohdissa)"
+": %s.\n"
 "\n"
 "Tämän siirron lähdepaikka muutetaan muotoon %s"
 

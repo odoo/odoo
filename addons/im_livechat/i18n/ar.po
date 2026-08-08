@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-03 18:38+0000\n"
-"PO-Revision-Date: 2026-04-07 09:20+0000\n"
+"PO-Revision-Date: 2026-08-08 05:42+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-17/"
 "im_livechat/ar/>\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: im_livechat
 #. odoo-python
@@ -175,9 +175,9 @@ msgid ""
 "                    <span>Use Channel Rules if you want the Bot to interact "
 "with visitors only when no operator is available.</span>"
 msgstr ""
-"<span>نصيحة: يجب أن يكون هناك تفاعل واحد على الأقل (سؤال، بريد "
-"إلكتروني، ...) حتى يتمكن الـ Bot من تأدية الإجراءات الأكثر تعقيداً (التحويل "
-"إلى موظف، ...). </span>\n"
+"<span>نصيحة: يجب أن يكون هناك تفاعل واحد على الأقل (سؤال، بريد إلكتروني، ...) "
+"حتى يتمكن الـ Bot من تأدية الإجراءات الأكثر تعقيداً (التحويل إلى موظف، ...). </"
+"span>\n"
 "                    <span>استخدم قواعد القنوات إذا كنت ترغب في أن يتفاعل الـ "
 "Bot مع الزائرين فقط عندما لا يكون هناك موظف متاح.</span> "
 
@@ -188,9 +188,9 @@ msgid ""
 "the Bot can perform more complex actions (Forward to an Operator, ...).</"
 "span>"
 msgstr ""
-"<span>نصيحة: يجب أن يكون هناك تفاعل واحد على الأقل (سؤال، بريد "
-"إلكتروني، ...) حتى يتمكن الـ Bot من تأدية الإجراءات الأكثر تعقيداً (التحويل "
-"إلى موظف، ...).</span>"
+"<span>نصيحة: يجب أن يكون هناك تفاعل واحد على الأقل (سؤال، بريد إلكتروني، ...) "
+"حتى يتمكن الـ Bot من تأدية الإجراءات الأكثر تعقيداً (التحويل إلى موظف، ...).</"
+"span>"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_script_step_view_form
@@ -423,8 +423,8 @@ msgid ""
 "Chat is private and unique between 2 persons. Group is private among invited "
 "persons. Channel can be freely joined (depending on its configuration)."
 msgstr ""
-"تكون الدردشة خاصة وفريدة بين شخصين 2. الدردشات الجماعية خاصة للأشخاص "
-"المدعوين إليها. بوسك الانضمام إلى القناة متى شئت (بناءً على تهيئتها). "
+"تكون الدردشة خاصة وفريدة بين شخصين 2. الدردشات الجماعية خاصة للأشخاص المدعوين "
+"إليها. بوسك الانضمام إلى القناة متى شئت (بناءً على تهيئتها). "
 
 #. module: im_livechat
 #: model:ir.actions.act_window,name:im_livechat.chatbot_script_action
@@ -661,8 +661,8 @@ msgid ""
 "selected action must be 'Open automatically' otherwise this parameter will "
 "not be taken into account."
 msgstr ""
-"المهلة (بالثواني) قبل فتح نافذة المحادثة تلقائياً. ملاحظة: يجب أن يكون "
-"الإجراء المحدد هو 'الفتح تلقائياً'، وإلا فلن يؤخذ هذا المعيار في الاعتبار. "
+"المهلة (بالثواني) قبل فتح نافذة المحادثة تلقائياً. ملاحظة: يجب أن يكون الإجراء "
+"المحدد هو 'الفتح تلقائياً'، وإلا فلن يؤخذ هذا المعيار في الاعتبار. "
 
 #. module: im_livechat
 #. odoo-javascript
@@ -1512,8 +1512,7 @@ msgstr "رابط إعادة التوجيه "
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule__regex_url
 msgid ""
 "Regular expression specifying the web pages this rule will be applied on."
-msgstr ""
-"التعبير النمطي الذي يحدد صفحات الويب التي سيتم تطبيق هذه القاعدة عليها."
+msgstr "التعبير النمطي الذي يحدد صفحات الويب التي سيتم تطبيق هذه القاعدة عليها."
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_message__mail_message_id
@@ -1777,9 +1776,9 @@ msgid ""
 "these 2 countries. This feature requires GeoIP installed on your server."
 msgstr ""
 "سيتم تطبيق هذه القاعدة على هذه البلدان فقط. مثلًا: إذا اخترت 'بلجيكا' "
-"و'الولايات المتحدة' وقمت بتعيين الإجراء إلى 'إخفاء'، سيتم إخفاء زر الدردشة "
-"عن الزوار الموجودين في هذين البلدين في رابط URL المحدد. تتطلب هذه الخاصية "
-"تثبيت GeoIP على خادمك. "
+"و'الولايات المتحدة' وقمت بتعيين الإجراء إلى 'إخفاء'، سيتم إخفاء زر الدردشة عن "
+"الزوار الموجودين في هذين البلدين في رابط URL المحدد. تتطلب هذه الخاصية تثبيت "
+"GeoIP على خادمك. "
 
 #. module: im_livechat
 #: model:res.groups,comment:im_livechat.im_livechat_group_manager

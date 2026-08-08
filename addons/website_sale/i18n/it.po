@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-03 18:38+0000\n"
-"PO-Revision-Date: 2026-04-07 09:24+0000\n"
+"PO-Revision-Date: 2026-08-08 06:27+0000\n"
 "Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
 "Language-Team: Italian <https://translate.odoo.com/projects/odoo-17/"
 "website_sale/it/>\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
 "0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -362,8 +362,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info
 msgid "<span class=\"s_website_form_label_content\">Upload a document</span>"
-msgstr ""
-"<span class=\"s_website_form_label_content\">Carica un documento</span>"
+msgstr "<span class=\"s_website_form_label_content\">Carica un documento</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info
@@ -526,17 +525,17 @@ msgstr ""
 "                            <hr>\n"
 "                            <table width=\"100%\">\n"
 "                                <tr>\n"
-"                                    <td style=\"padding: 10px; width:150px;"
-"\">\n"
+"                                    <td style=\"padding: 10px; "
+"width:150px;\">\n"
 "                                        <img t-attf-src=\"/web/image/"
 "product.product/{{ line.product_id.id }}/image_128\" style=\"width: 100px; "
 "height: 100px; object-fit: contain;\" alt=\"Product image\">\n"
 "                                    </td>\n"
 "                                    <td>\n"
 "                                        <strong t-"
-"out=\"line.product_id.display_name or ''\">[FURN_7800] Kit scrivania</"
-"strong><br><t t-out=\"line.name or ''\">[FURN_7800] Kit scrivania Kit "
-"scrivania, nero-marrone: sedia + scrivania + cassetto.</t>\n"
+"out=\"line.product_id.display_name or ''\">[FURN_7800] Kit scrivania</strong>"
+"<br><t t-out=\"line.name or ''\">[FURN_7800] Kit scrivania Kit scrivania, "
+"nero-marrone: sedia + scrivania + cassetto.</t>\n"
 "                                    </td>\n"
 "                                    <td width=\"100px\" align=\"right\">\n"
 "                                        <t t-out=\"int(line.product_uom_qty) "
@@ -559,8 +558,8 @@ msgstr ""
 "                    <t t-set=\"company\" t-value=\"object.company_id or "
 "object.user_id.company_id or user.company_id\"></t>\n"
 "                    <div style=\"text-align: center;\"><strong>Grazie per "
-"aver acquistato da <t t-out=\"company.name or ''\">My Company (San "
-"Francisco)</t>!</strong></div>\n"
+"aver acquistato da <t t-out=\"company.name or ''\">My Company (San Francisco)"
+"</t>!</strong></div>\n"
 "                </td></tr>\n"
 "            </table>\n"
 "        </td>\n"
@@ -793,8 +792,7 @@ msgstr "Permetti ai clienti di pagare di persona nel tuo negozio"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Allow shoppers to compare products based on their attributes"
-msgstr ""
-"Consente ai clienti di confrontare i prodotti in base ai loro attributi"
+msgstr "Consente ai clienti di confrontare i prodotti in base ai loro attributi"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1325,8 +1323,8 @@ msgid ""
 "strong>"
 msgstr ""
 "Calcolo dei costi e spedizione con DHL<br/>\n"
-"                            <strong>(vai su Home&gt;App per "
-"l'installazione)</strong>"
+"                            <strong>(vai su Home&gt;App per l'installazione)"
+"</strong>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1336,8 +1334,8 @@ msgid ""
 "strong>"
 msgstr ""
 "Calcolo dei costi e spedizione con FedEx<br/>\n"
-"                            <strong>(vai su Home&gt;App per "
-"l'installazione)</strong>"
+"                            <strong>(vai su Home&gt;App per l'installazione)"
+"</strong>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1347,8 +1345,8 @@ msgid ""
 "strong>"
 msgstr ""
 "Calcolo dei costi e spedizione con UPS<br/>\n"
-"                            <strong>(vai su Home&gt;App per "
-"l'installazione)</strong>"
+"                            <strong>(vai su Home&gt;App per l'installazione)"
+"</strong>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1358,8 +1356,8 @@ msgid ""
 "strong>"
 msgstr ""
 "Calcolo dei costi e spedizione con USPS<br/>\n"
-"                            <strong>(vai su Home&gt;App per "
-"l'installazione)</strong>"
+"                            <strong>(vai su Home&gt;App per l'installazione)"
+"</strong>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -2057,8 +2055,7 @@ msgstr "Arredi"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Generate the invoice automatically when the online payment is confirmed"
-msgstr ""
-"Genera automaticamente la fattura dopo la conferma del pagamento online"
+msgstr "Genera automaticamente la fattura dopo la conferma del pagamento online"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_public_category__sequence
@@ -2418,8 +2415,7 @@ msgstr "Consente al cliente di inserire un indirizzo di spedizione"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Let the customer select a Mondial Relay shipping point"
-msgstr ""
-"Permetti ai clienti di selezionare un punto di spedizione Mondial Relay"
+msgstr "Permetti ai clienti di selezionare un punto di spedizione Mondial Relay"
 
 #. module: website_sale
 #. odoo-javascript
@@ -4096,8 +4092,7 @@ msgstr ""
 #: code:addons/website_sale/models/sale_order.py:0
 #, python-format
 msgid "The given product does not exist therefore it cannot be added to cart."
-msgstr ""
-"Questo prodotto non esiste, quindi non può essere aggiunto al carrello."
+msgstr "Questo prodotto non esiste, quindi non può essere aggiunto al carrello."
 
 #. module: website_sale
 #. odoo-python
@@ -4194,8 +4189,7 @@ msgstr ""
 #: code:addons/website_sale/static/src/snippets/s_add_to_cart/000.js:0
 #, python-format
 msgid "This product does not exist therefore it cannot be added to cart."
-msgstr ""
-"Questo prodotto non esiste, quindi non può essere aggiunto al carrello."
+msgstr "Questo prodotto non esiste, quindi non può essere aggiunto al carrello."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product

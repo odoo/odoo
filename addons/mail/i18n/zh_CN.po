@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-17 17:36+0000\n"
-"PO-Revision-Date: 2026-04-15 11:01+0000\n"
+"PO-Revision-Date: 2026-08-05 09:55+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
 "projects/odoo-17/mail/zh_Hans/>\n"
@@ -27,7 +27,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: mail
 #. odoo-python
@@ -153,9 +153,9 @@ msgid ""
 "%(open_cancel)scancel%(close_cancel)s%(close_em)s, %(open_samp)sCTRL-"
 "Enter%(close_samp)s %(open_em)sto %(open_save)ssave%(close_save)s%(close_em)s"
 msgstr ""
-"按 %(open_samp)sEsc%(close_samp)s %(open_em)s以%(open_cancel)s取"
-"消%(close_cancel)s%(close_em)s，%(open_samp)sCtrl+Enter%(close_samp)s "
-"%(open_em)s以%(open_save)s储存%(close_save)s%(close_em)s"
+"按 %(open_samp)sEsc%(close_samp)s %(open_em)s以%(open_cancel)s取消%"
+"(close_cancel)s%(close_em)s，%(open_samp)sCtrl+Enter%(close_samp)s %(open_em)"
+"s以%(open_save)s储存%(close_save)s%(close_em)s"
 
 #. module: mail
 #. odoo-javascript
@@ -167,9 +167,9 @@ msgid ""
 "%(open_samp)sEnter%(close_samp)s %(open_em)sto "
 "%(open_save)ssave%(close_save)s%(close_em)s"
 msgstr ""
-"按 %(open_samp)sEsc%(close_samp)s %(open_em)s以%(open_cancel)s取"
-"消%(close_cancel)s%(close_em)s，%(open_samp)sEnter%(close_samp)s %(open_em)s"
-"以%(open_save)s储存%(close_save)s%(close_em)s"
+"按 %(open_samp)sEsc%(close_samp)s %(open_em)s以%(open_cancel)s取消%"
+"(close_cancel)s%(close_em)s，%(open_samp)sEnter%(close_samp)s %(open_em)s以%"
+"(open_save)s储存%(close_save)s%(close_em)s"
 
 #. module: mail
 #. odoo-javascript
@@ -1047,8 +1047,8 @@ msgid ""
 "%(alias_model_name)s (%(matching_id)s) and used by the %(parent_name)s "
 "%(parent_model_name)s."
 msgstr ""
-"别名%(matching_name)s（%(current_id)s）已经与%(alias_model_name)s"
-"（%(matching_id)s）连接，并被%(parent_name)s%(parent_model_name)s使用。"
+"别名%(matching_name)s（%(current_id)s）已经与%(alias_model_name)s（%"
+"(matching_id)s）连接，并被%(parent_name)s%(parent_model_name)s使用。"
 
 #. module: mail
 #. odoo-python
@@ -1058,8 +1058,8 @@ msgid ""
 "Alias %(matching_name)s (%(current_id)s) is already linked with "
 "%(alias_model_name)s (%(matching_id)s)."
 msgstr ""
-"别名 %(matching_name)s （%(current_id)s）已与 %(alias_model_name)s "
-"（%(matching_id)s）相连。"
+"别名 %(matching_name)s （%(current_id)s）已与 %(alias_model_name)s （%"
+"(matching_id)s）相连。"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_contact
@@ -2010,8 +2010,8 @@ msgid ""
 "Chat is private and unique between 2 persons. Group is private among invited "
 "persons. Channel can be freely joined (depending on its configuration)."
 msgstr ""
-"在 2 个人之间的聊天是私密且唯一的。受邀者之间群聊是私密的。频道可以自由加入"
-"（取决于其配置）。"
+"在 2 个人之间的聊天是私密且唯一的。受邀者之间群聊是私密的。频道可以自由加入（"
+"取决于其配置）。"
 
 #. module: mail
 #. odoo-javascript
@@ -2360,8 +2360,7 @@ msgstr "内容"
 msgid ""
 "Content that will automatically replace the shortcut of your choosing. This "
 "content can still be adapted before sending your message."
-msgstr ""
-"将自动替换您选择的快捷方式的内容。 此内容仍然可以在发送您的消息之前进行调整。"
+msgstr "将自动替换您选择的快捷方式的内容。 此内容仍然可以在发送您的消息之前进行调整。"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__body
@@ -2888,8 +2887,7 @@ msgstr "将为该子模型的消息添加注解。如为空，则添加名称。
 msgid ""
 "Determines how the channel will be displayed by default when opening it from "
 "its invitation link. No value means display text (no voice/video)."
-msgstr ""
-"确定从邀请链接打开频道时默认显示频道的方式。无值表示显示文本（无语音/视频）"
+msgstr "确定从邀请链接打开频道时默认显示频道的方式。无值表示显示文本（无语音/视频）"
 
 #. module: mail
 #. odoo-javascript
@@ -3940,8 +3938,7 @@ msgstr "Font Awesome图标，例如：fa-tasks"
 msgid ""
 "For %(channels)s, channel_type should be 'channel' to have the group-based "
 "authorization or group auto-subscription."
-msgstr ""
-"对于 %(channels)s，channel_type应为“频道”，以获得基于组的授权或组自动订阅。"
+msgstr "对于 %(channels)s，channel_type应为“频道”，以获得基于组的授权或组自动订阅。"
 
 #. module: mail
 #. odoo-javascript
@@ -4538,8 +4535,8 @@ msgid ""
 "If set, the queue manager will send the email after the date. If not set, "
 "the email will be send as soon as possible. You can use dynamic expression."
 msgstr ""
-"如果设置，队列管理器将在日期之后发送电子邮件。如果未设置，电子邮件将尽快发"
-"送。您可以使用动态表达式。"
+"如果设置，队列管理器将在日期之后发送电子邮件。如果未设置，电子邮件将尽快发送"
+"。您可以使用动态表达式。"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_bounced_content
@@ -4555,9 +4552,9 @@ msgid ""
 "user.                                                   If not set, shared "
 "with all users."
 msgstr ""
-"如果设置，将限制该用户使用模"
-"板。                                                   如果未设置，则与所有用"
-"户共享。"
+"如果设置，将限制该用户使用模板。"
+"                                                   如果未设置，则与所有用户共"
+"享。"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_thread_blacklist__is_blacklisted
@@ -5648,8 +5645,8 @@ msgid ""
 "Mail composer in comment mode should run on at least one record. No records "
 "found (model %(model_name)s)."
 msgstr ""
-"注释模式下，邮件撰写器应至少在一条记录上运行。未找到记录（模"
-"型%(model_name)s）。"
+"注释模式下，邮件撰写器应至少在一条记录上运行。未找到记录（模型%(model_name)s"
+"）。"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__is_notification
@@ -6012,8 +6009,7 @@ msgstr "消息子类型跟随，意味着将被推到用户墙上的子类型。
 msgid ""
 "Message type: email for email message, notification for system message, "
 "comment for other messages such as user replies"
-msgstr ""
-"消息类型：电邮用于电邮消息，通知用于系统消息，评论用于其他消息，如用户回复"
+msgstr "消息类型：电邮用于电邮消息，通知用于系统消息，评论用于其他消息，如用户回复"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__message_id
@@ -7416,8 +7412,7 @@ msgstr "应在业务文档上发布消息。使用 message_notify 向用户发�
 msgid ""
 "Posting a message should receive attachments as a list of list or tuples "
 "(received %(aids)s)"
-msgstr ""
-"发布一则消息应收到串列（list）或元组（tuple）清单形式的附件（已收到%(aids)s）"
+msgstr "发布一则消息应收到串列（list）或元组（tuple）清单形式的附件（已收到%(aids)s）"
 
 #. module: mail
 #. odoo-python
@@ -8732,8 +8727,7 @@ msgstr "特定用户"
 msgid ""
 "Specify a model if the activity should be specific to a model and not "
 "available when managing activities for other models."
-msgstr ""
-"如果活动应特定于某个模型并且在管理其他模型的活动时不可用，则指定一个模型。"
+msgstr "如果活动应特定于某个模型并且在管理其他模型的活动时不可用，则指定一个模型。"
 
 #. module: mail
 #. odoo-javascript
@@ -9134,8 +9128,7 @@ msgid ""
 "The Tax Identification Number. Values here will be validated based on the "
 "country format. You can use '/' to indicate that the partner is not subject "
 "to tax."
-msgstr ""
-"税务识别号。此处的值将根据国家格式进行验证。可以使用“/”表示合作伙伴无需纳税。"
+msgstr "税务识别号。此处的值将根据国家格式进行验证。可以使用“/”表示合作伙伴无需纳税。"
 
 #. module: mail
 #. odoo-python
@@ -9655,8 +9648,7 @@ msgstr "跟踪收件人"
 msgid ""
 "Tracked values are stored in a separate model. This field allow to "
 "reconstruct the tracking and to generate statistics on the model."
-msgstr ""
-"在单独的模型中存储跟踪值。该字段允许重建跟踪，以便在模型中生成统计数据。"
+msgstr "在单独的模型中存储跟踪值。该字段允许重建跟踪，以便在模型中生成统计数据。"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_message_view_form
@@ -10410,8 +10402,8 @@ msgid ""
 "%(alias_domain_name)s belongs to company %(alias_company_names)s while the "
 "owner document belongs to company %(company_name)s."
 msgstr ""
-"我们无法创建别名 %(alias_name)s，因为域 %(alias_domain_name)s 属于公司 "
-"%(alias_company_names)s，而所有者文件属于公司 %(company_name)s。"
+"我们无法创建别名 %(alias_name)s，因为域 %(alias_domain_name)s 属于公司 %"
+"(alias_company_names)s，而所有者文件属于公司 %(company_name)s。"
 
 #. module: mail
 #. odoo-python
@@ -10422,8 +10414,8 @@ msgid ""
 "%(alias_domain_name)s belongs to company %(alias_company_names)s while the "
 "target document belongs to company %(company_name)s."
 msgstr ""
-"我们无法创建别名 %(alias_name)s，因为域 %(alias_domain_name)s 属于公司 "
-"%(alias_company_names)s，而目标文档属于公司 %(company_name)s。"
+"我们无法创建别名 %(alias_name)s，因为域 %(alias_domain_name)s 属于公司 %"
+"(alias_company_names)s，而目标文档属于公司 %(company_name)s。"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__activity_date_deadline_range_type__weeks
@@ -10547,8 +10539,8 @@ msgid ""
 "You are about to leave this group conversation and will no longer have "
 "access to it unless you are invited again. Are you sure you want to continue?"
 msgstr ""
-"您即将离开此群组对话，除非再次受到邀请，否则将无法再访问它。 您确定您要继续"
-"吗？"
+"您即将离开此群组对话，除非再次受到邀请，否则将无法再访问它。 您确定您要继续吗"
+"？"
 
 #. module: mail
 #. odoo-python
@@ -10672,8 +10664,7 @@ msgstr "您无法修改 %(activities_names)s 的目标模型，因为它们被�
 msgid ""
 "You cannot use anything else than unaccented latin characters in the alias "
 "address %(alias_name)s."
-msgstr ""
-"在别名地址%(alias_name)s中，除了不带尾音的拉丁字符外，不能使用任何其他字符。"
+msgstr "在别名地址%(alias_name)s中，除了不带尾音的拉丁字符外，不能使用任何其他字符。"
 
 #. module: mail
 #. odoo-python
@@ -10894,8 +10885,8 @@ msgid ""
 "                Please try again later."
 msgstr ""
 "因为你有\n"
-"                在过去的几分钟里联系了太多次。                <br/>请稍后重"
-"试。"
+"                在过去的几分钟里联系了太多次。                <br/>请稍后重试"
+"。"
 
 #. module: mail
 #. odoo-javascript

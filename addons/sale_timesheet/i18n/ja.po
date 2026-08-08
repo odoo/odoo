@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:38+0000\n"
-"PO-Revision-Date: 2026-07-08 03:14+0000\n"
+"PO-Revision-Date: 2026-08-06 04:09+0000\n"
 "Last-Translator: Ryoko Tsuda <ryoko@quartile.co>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-17/"
 "sale_timesheet/ja/>\n"
@@ -87,8 +87,8 @@ msgid ""
 "% of timesheets that are billable compared to the total number of timesheets "
 "linked to the AA of the project, rounded to the unit."
 msgstr ""
-"プロジェクトの AA にリンクされたタイムシートの総数に対する、請求可能なタイム"
-"シートの％(単位未満四捨五入)。"
+"プロジェクトの AA にリンクされたタイムシートの総数に対する、請求可能な"
+"タイムシートの％(単位未満四捨五入)。"
 
 #. module: sale_timesheet
 #. odoo-python
@@ -145,7 +145,7 @@ msgstr "<span class=\"o_stat_text\">販売オーダ</span>"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_task_inherit
 msgid "<strong>Amount Due:</strong>"
-msgstr "<strong>未払金額:</strong>"
+msgstr "<strong>お支払い残額:</strong>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_task_inherit
@@ -608,8 +608,8 @@ msgid ""
 "Invoice based on timesheets (delivered quantity), and create an empty "
 "project for the order to track the time spent."
 msgstr ""
-"タイムシート(納品数量)に基づいて請求書を発行し、費やした時間を追跡するため"
-"に、オーダに対して空のプロジェクトを作成します。"
+"タイムシート(納品数量)に基づいて請求書を発行し、費やした時間を追跡するために"
+"、オーダに対して空のプロジェクトを作成します。"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_account_analytic_line__timesheet_invoice_id
@@ -1061,16 +1061,16 @@ msgid ""
 "set on the employee."
 msgstr ""
 "該当する従業員のタイムシートでデフォルトで選択される販売オーダ項目。これは、"
-"プロジェクトとタスクで定義された販売オーダ項目をバイパスし、必要に応じて各タ"
-"イムシートエントリで変更することができます。言い換えると、例えば、従業員の専"
-"門知識、スキル、経験などに基づいて、従業員の時間を請求するレートを定義しま"
+"プロジェクトとタスクで定義された販売オーダ項目をバイパスし、必要に応じて各"
+"タイムシートエントリで変更することができます。言い換えると、例えば、従業員の"
+"専門知識、スキル、経験などに基づいて、従業員の時間を請求するレートを定義しま"
 "す。\n"
 "同じサービスを異なるレートで請求したい場合、各販売オーダ項目は一度に単一の単"
 "価しか持つことができないため、2つの別々の販売オーダ項目を作成する必要がありま"
 "す。\n"
 "また、このプロジェクトでは、従業員のタイムシートの会社原価を時間単位で定義す"
-"ることができます。これは、従業員に設定されたタイムシート原価をバイパスしま"
-"す。"
+"ることができます。これは、従業員に設定されたタイムシート原価をバイパスします"
+"。"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_account_analytic_line__so_line
@@ -1079,8 +1079,8 @@ msgid ""
 "invoiced to your customer. Remove the sales order item for the timesheet "
 "entry to be non-billable."
 msgstr ""
-"顧客に請求するために、使用した時間を追加する販売オーダ項目。タイムシートエン"
-"トリーを請求不可にするには、販売オーダ項目を削除して下さい。"
+"顧客に請求するために、使用した時間を追加する販売オーダ項目。"
+"タイムシートエントリーを請求不可にするには、販売オーダ項目を削除して下さい。"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_sale_line_employee_map__sale_order_id
@@ -1214,8 +1214,7 @@ msgstr "タスク分析"
 msgid ""
 "The %s product is required by the Timesheets app and cannot be archived nor "
 "deleted."
-msgstr ""
-"プロダクト %sはタイムシートアプリで必須であり、アーカイブや削除はできません。"
+msgstr "プロダクト %sはタイムシートアプリで必須であり、アーカイブや削除はできません。"
 
 #. module: sale_timesheet
 #. odoo-python
@@ -1238,9 +1237,9 @@ msgid ""
 "employees before creating the Sales Order.\n"
 "Missing employee(s): %s"
 msgstr ""
-"このプロジェクトでタイムシートを入力した従業員を入力していないため、販売オー"
-"ダを作成できません。販売オーダを作成する前に、該当する従業員を全てリストアッ"
-"プして下さい。\n"
+"このプロジェクトでタイムシートを入力した従業員を入力していないため、販売"
+"オーダを作成できません。販売オーダを作成する前に、該当する従業員を全て"
+"リストアップして下さい。\n"
 "不明な従業員: %s"
 
 #. module: sale_timesheet
@@ -1278,8 +1277,7 @@ msgstr ""
 #: code:addons/sale_timesheet/wizard/project_create_invoice.py:0
 #, python-format
 msgid "The selected Sales Order should contain something to invoice."
-msgstr ""
-"選択された販売オーダには請求書を発行するものが含まれていなければなりません。"
+msgstr "選択された販売オーダには請求書を発行するものが含まれていなければなりません。"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_project__pricing_type
@@ -1296,17 +1294,16 @@ msgstr ""
 "タスクレートは、異なる顧客に異なるレートで異なるサービスを請求したい場合に最"
 "適です。固定レートは、サービスを提供した従業員に関係なく、1時間または1日あた"
 "りの固定レートで請求する場合に最適です。従業員レートは、従業員が同じサービス"
-"を異なる料金で提供する場合に適しています。例えば、ジュニアコンサルタントとシ"
-"ニアコンサルタントは、同じサービス(＝コンサルタント業務)を提供しますが、職位"
-"レベルの違いにより、異なる料金で提供します。"
+"を異なる料金で提供する場合に適しています。例えば、ジュニアコンサルタントと"
+"シニアコンサルタントは、同じサービス(＝コンサルタント業務)を提供しますが、職"
+"位レベルの違いにより、異なる料金で提供します。"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_sale_line_employee_map__cost
 msgid ""
 "This cost overrides the employee's default employee hourly wage in "
 "employee's HR Settings"
-msgstr ""
-"この原価は、従業員の人事設定にある従業員のデフォルト時給を上書きします。"
+msgstr "この原価は、従業員の人事設定にある従業員のデフォルト時給を上書きします。"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_product__service_upsell_threshold
@@ -1532,8 +1529,7 @@ msgstr "サービス追跡"
 msgid ""
 "Track your working hours by projects every day and invoice this time to your "
 "customers."
-msgstr ""
-"プロジェクトごとに毎日、作業時間を記録し、その時間を顧客に請求しましょう。"
+msgstr "プロジェクトごとに毎日、作業時間を記録し、その時間を顧客に請求しましょう。"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order_line__price_unit

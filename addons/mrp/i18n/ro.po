@@ -21,15 +21,17 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-03 18:38+0000\n"
-"PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Larisa_nexterp, 2025\n"
-"Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
+"PO-Revision-Date: 2026-08-07 13:18+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-17/mrp/ro/>"
+"\n"
 "Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?"
-"2:1));\n"
+"Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
+"20)) ? 1 : 2;\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__state
@@ -531,8 +533,8 @@ msgid ""
 "                                Instead, it is used to decompose a BoM into "
 "its components when:"
 msgstr ""
-"O listă de materiale de tip Set nu este produsă cu o comandă de fabricație."
-"<br/>\n"
+"O listă de materiale de tip Set nu este produsă cu o comandă de "
+"fabricație.<br/>\n"
 "                                În schimb, este folosită pentru a descompune "
 "o listă de materiale în componentele sale când:"
 
@@ -4213,8 +4215,7 @@ msgstr ""
 #: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid "Please unblock the work center to validate the work order"
-msgstr ""
-"Vă rugăm să deblocați centrul de lucru pentru a valida comanda de lucru"
+msgstr "Vă rugăm să deblocați centrul de lucru pentru a valida comanda de lucru"
 
 #. module: mrp
 #: model:product.template,name:mrp.product_product_wood_ply_product_template
@@ -5548,8 +5549,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__show_produce
 msgid "Technical field to check if produce button can be shown"
-msgstr ""
-"Câmp tehnic pentru a verifica dacă butonul de producție poate fi afișat"
+msgstr "Câmp tehnic pentru a verifica dacă butonul de producție poate fi afișat"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__reserve_visible
@@ -5719,8 +5719,8 @@ msgid ""
 "The serial number %(number)s used for byproduct %(product_name)s has already "
 "been produced"
 msgstr ""
-"Numărul de serie%(number)s utilizat pentru produsul secundar "
-"%(product_name)s a fost deja produs"
+"Numărul de serie%(number)s utilizat pentru produsul secundar %(product_name)"
+"s a fost deja produs"
 
 #. module: mrp
 #. odoo-python
@@ -6468,8 +6468,8 @@ msgstr "Se așteaptă componente"
 #, python-format
 msgid "Waiting the previous work order, planned from %(start)s to %(end)s"
 msgstr ""
-"Se așteaptă comanda de lucru anterioară, planificat de la %(start)s până la "
-"%(end)s"
+"Se așteaptă comanda de lucru anterioară, planificat de la %(start)s până la %"
+"(end)s"
 
 #. module: mrp
 #. odoo-javascript
@@ -6970,8 +6970,7 @@ msgstr "Nu puteți crea o dependență ciclică."
 #: code:addons/mrp/models/mrp_unbuild.py:0
 #, python-format
 msgid "You cannot delete an unbuild order if the state is 'Done'."
-msgstr ""
-"Nu puteți șterge o comandă de dezmembrare dacă starea este „Efectuată”."
+msgstr "Nu puteți șterge o comandă de dezmembrare dacă starea este „Efectuată”."
 
 #. module: mrp
 #. odoo-python
@@ -6985,8 +6984,7 @@ msgstr "Nu puteți avea %s ca produs finit și în Produse secundare"
 #: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid "You cannot link this work order to another manufacturing order."
-msgstr ""
-"Nu puteți lega această comandă de lucru la o altă comandă de producție."
+msgstr "Nu puteți lega această comandă de lucru la o altă comandă de producție."
 
 #. module: mrp
 #. odoo-python
@@ -7054,10 +7052,10 @@ msgstr ""
 "                        <b invisible=\"consumption != 'strict'\">\n"
 "                            Vă rugăm să revizuiți consumul componentelor sau "
 "să cereți unui manager să valideze\n"
-"                            <span invisible=\"mrp_production_count != "
-"1\">această comandă de producție</span>\n"
-"                            <span invisible=\"mrp_production_count == "
-"1\">aceste comenzi de producție</span>.\n"
+"                            <span invisible=\"mrp_production_count != 1\">"
+"această comandă de producție</span>\n"
+"                            <span invisible=\"mrp_production_count == 1\">"
+"aceste comenzi de producție</span>.\n"
 "                        </b>"
 
 #. module: mrp
@@ -7091,8 +7089,8 @@ msgid ""
 "'Performance'. Create one from the Manufacturing app, menu: Configuration / "
 "Productivity Losses."
 msgstr ""
-"Trebuie să definiți cel puțin o pierdere de productivitate în categoria "
-"„Performanță”. Creați una din aplicația de fabricație, meniu: Configurare / "
+"Trebuie să definiți cel puțin o pierdere de productivitate în categoria „"
+"Performanță”. Creați una din aplicația de fabricație, meniu: Configurare / "
 "Pierderi de productivitate."
 
 #. module: mrp
@@ -7104,8 +7102,8 @@ msgid ""
 "'Productivity'. Create one from the Manufacturing app, menu: Configuration / "
 "Productivity Losses."
 msgstr ""
-"Trebuie să definiți cel puțin o pierdere de productivitate în categoria "
-"„Productivitate”. Creați una din aplicația de fabricație, meniu: "
+"Trebuie să definiți cel puțin o pierdere de productivitate în categoria „"
+"Productivitate”. Creați una din aplicația de fabricație, meniu: "
 "Configurare / Pierderi de productivitate."
 
 #. module: mrp
@@ -7134,8 +7132,8 @@ msgstr "Trebuie să furnizați un lot pentru produsul finit."
 #, python-format
 msgid "You need to supply Lot/Serial Number for products and 'consume' them:"
 msgstr ""
-"Trebuie să furnizați un număr de lot/serie pentru produse și să le "
-"„consumați”"
+"Trebuie să furnizați un număr de lot/serie pentru produse și să le „consumați"
+"”"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_production_backorder

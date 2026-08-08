@@ -32,15 +32,16 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-03 18:38+0000\n"
-"PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Mohammadamir Heshmatkhah <maheshmatkhah.soft@gmail.com>, "
-"2025\n"
-"Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
+"PO-Revision-Date: 2026-08-04 07:36+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Persian <https://translate.odoo.com/projects/odoo-17/stock/"
+"fa/>\n"
 "Language: fa\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: stock
 #. odoo-python
@@ -118,8 +119,8 @@ msgstr ""
 "توان رزرو کرد.\n"
 "  * آماده: انتقال آماده پردازش است.\n"
 "(الف) سیاست حمل و نقل \"در اسرع وقت\" است: حداقل یک محصول رزرو شده است.\n"
-"(ب) سیاست حمل و نقل \"وقتی همه محصولات آماده هستند\" است: همه محصولات رزرو "
-"شده اند.\n"
+"(ب) سیاست حمل و نقل \"وقتی همه محصولات آماده هستند\" است: همه محصولات رزرو شده "
+"اند.\n"
 "  * انجام شد: انتقال پردازش شده است.\n"
 "  * لغو شده: انتقال لغو شده است."
 
@@ -311,8 +312,8 @@ msgid ""
 "* Transit Location: Counterpart location that should be used in inter-"
 "company or inter-warehouses operations"
 msgstr ""
-"* مکان فروشنده: مکان مجازی نشان دهنده مکان منبع برای محصولاتی که از "
-"فروشندگان شما می آیند\n"
+"* مکان فروشنده: مکان مجازی نشان دهنده مکان منبع برای محصولاتی که از فروشندگان "
+"شما می آیند\n"
 "* نمایش: مکان مجازی مورد استفاده برای ایجاد ساختارهای سلسله مراتبی برای "
 "انبار شما، تجمیع مکان های فرزند آن. نمی تواند مستقیماً حاوی محصولات باشد\n"
 "* مکان داخلی: مکان های فیزیکی در داخل انبارهای خود،\n"
@@ -434,8 +435,8 @@ msgid ""
 "<br>If the products are not available in <b>%s</b>, a rule will be triggered "
 "to bring products in this location."
 msgstr ""
-"<br>اگر محصولات در <b>%s</b> در دسترس نباشند، قانونی برای آوردن محصولات به "
-"این مکان اعمال می‌شود."
+"<br>اگر محصولات در <b>%s</b> در دسترس نباشند، قانونی برای آوردن محصولات به این "
+"مکان اعمال می‌شود."
 
 #. module: stock
 #: model:mail.template,body_html:stock.mail_template_data_delivery_confirmation
@@ -481,21 +482,21 @@ msgid ""
 "        "
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\"> <p style=\"margin: 0px; padding: "
-"0px; font-size: 13px;\"> سلام <t t-out=\"object.partner_id.name or "
-"''\">براندون فریمن</t>,<br><br> خوشحالیم به اطلاع شما برسانیم که سفارش شما "
-"ارسال شده است. <t t-if=\"hasattr(object, 'carrier_tracking_ref') and "
+"0px; font-size: 13px;\"> سلام <t t-out=\"object.partner_id.name or ''\">"
+"براندون فریمن</t>,<br><br> خوشحالیم به اطلاع شما برسانیم که سفارش شما ارسال "
+"شده است. <t t-if=\"hasattr(object, 'carrier_tracking_ref') and "
 "object.carrier_tracking_ref\"> شماره پیگیری شما <strong> <t t-"
 "if=\"object.carrier_tracking_url\"> <t t-set=\"multiple_carrier_tracking\" t-"
 "value=\"object.get_multiple_carrier_tracking()\"></t> <t t-"
 "if=\"multiple_carrier_tracking\"> <t t-foreach=\"multiple_carrier_tracking\" "
 "t-as=\"line\"> <br><a t-att-href=\"line[1]\" target=\"_blank\" t-"
-"out=\"line[0] or ''\"></a> </t> </t> <t t-else=\"\"> <a t-attf-"
-"href=\"{{ object.carrier_tracking_url }}\" target=\"_blank\" t-"
+"out=\"line[0] or ''\"></a> </t> </t> <t t-else=\"\"> <a t-attf-href=\"{{ "
+"object.carrier_tracking_url }}\" target=\"_blank\" t-"
 "out=\"object.carrier_tracking_ref or ''\"></a>. </t> </t> <t t-else=\"\"> <t "
-"t-out=\"object.carrier_tracking_ref or ''\"></t>. </t> </strong> </t> "
-"<br><br> لطفاً برای اطلاعات بیشتر، سفارش تحویل خود را در پیوست بررسی کنید."
-"<br><br> با تشکر، <t t-if=\"user.signature\"> <br> <t t-out=\"user.signature "
-"or ''\">--<br>میتچل ادمین</t> </t> </p> </div>"
+"t-out=\"object.carrier_tracking_ref or ''\"></t>. </t> </strong> </t> <br>"
+"<br> لطفاً برای اطلاعات بیشتر، سفارش تحویل خود را در پیوست بررسی کنید.<br><br> "
+"با تشکر، <t t-if=\"user.signature\"> <br> <t t-out=\"user.signature or "
+"''\">--<br>میتچل ادمین</t> </t> </p> </div>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_scrap_view_kanban
@@ -964,8 +965,8 @@ msgid ""
 "bins, racks)."
 msgstr ""
 "عملیات مسیر را برای پردازش حرکت محصول در انبار(های) خود اضافه و سفارشی کنید: "
-"به عنوان مثال. تخلیه > کنترل کیفیت > انبار برای محصولات ورودی، انتخاب > بسته "
-"> ارسال برای محصولات خروجی.\n"
+"به عنوان مثال. تخلیه > کنترل کیفیت > انبار برای محصولات ورودی، انتخاب > "
+"بسته > ارسال برای محصولات خروجی.\n"
 "  همچنین می‌توانید استراتژی‌های قرار دادن را در مکان‌های انبار تنظیم کنید تا "
 "محصولات ورودی را فوراً به مکان‌های خاص کودک ارسال کنید (مانند سطل‌های خاص، "
 "قفسه‌ها)."
@@ -980,8 +981,8 @@ msgid ""
 "specific child locations straight away (e.g. specific bins, racks)."
 msgstr ""
 "عملیات مسیر را برای پردازش حرکت محصول در انبار(های) خود اضافه و سفارشی کنید: "
-"به عنوان مثال. تخلیه > کنترل کیفیت > انبار برای محصولات ورودی، انتخاب > بسته "
-"> ارسال برای محصولات خروجی. همچنین می‌توانید استراتژی‌های قرار دادن را در "
+"به عنوان مثال. تخلیه > کنترل کیفیت > انبار برای محصولات ورودی، انتخاب > "
+"بسته > ارسال برای محصولات خروجی. همچنین می‌توانید استراتژی‌های قرار دادن را در "
 "مکان‌های انبار تنظیم کنید تا محصولات ورودی را فوراً به مکان‌های خاص کودک ارسال "
 "کنید (مانند سطل‌های خاص، قفسه‌ها)."
 
@@ -1122,8 +1123,8 @@ msgid ""
 "Annual inventory month for products not in a location with a cyclic "
 "inventory date. Set to no month if no automatic annual inventory."
 msgstr ""
-"ماه موجودی سالانه برای محصولاتی که در مکانی با تاریخ موجودی چرخه‌ای نیستند. "
-"در صورت عدم موجودی خودکار سالانه، روی بدون ماه تنظیم کنید."
+"ماه موجودی سالانه برای محصولاتی که در مکانی با تاریخ موجودی چرخه‌ای نیستند. در "
+"صورت عدم موجودی خودکار سالانه، روی بدون ماه تنظیم کنید."
 
 #. module: stock
 #. odoo-python
@@ -1515,8 +1516,7 @@ msgstr ""
 #: model:ir.model.fields,help:stock.field_stock_location__active
 msgid ""
 "By unchecking the active field, you may hide a location without deleting it."
-msgstr ""
-"با برداشتن علامت فیلد فعال، ممکن است یک مکان را بدون حذف آن پنهان کنید."
+msgstr "با برداشتن علامت فیلد فعال، ممکن است یک مکان را بدون حذف آن پنهان کنید."
 
 #. module: stock
 #. odoo-python
@@ -1701,8 +1701,7 @@ msgstr "بررسی وجود عملیات بسته‌بندی در جابجایی
 #: model:ir.model.fields,help:stock.field_stock_location__return_location
 msgid "Check this box to allow using this location as a return location."
 msgstr ""
-"این کادر را علامت بزنید تا استفاده از این مکان به عنوان مکان بازگشت مجاز "
-"باشد."
+"این کادر را علامت بزنید تا استفاده از این مکان به عنوان مکان بازگشت مجاز باشد."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__scrap_location
@@ -2106,8 +2105,8 @@ msgid ""
 "will not\n"
 "                            process the remaining products."
 msgstr ""
-"ایجاد یک سفارش معوقه در صورتیکه انتظار دارید محصولات باقی‌مانده را بعداً "
-"پردازش کنید. \n"
+"ایجاد یک سفارش معوقه در صورتیکه انتظار دارید محصولات باقی‌مانده را بعداً پردازش "
+"کنید. \n"
 "                            سفارش معوقه ایجاد نکنید اگر محصولات باقی‌مانده را "
 "پردازش نخواهید کرد."
 
@@ -2138,8 +2137,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_product_stock_view
 msgid "Create some storable products to see their stock info in this view."
-msgstr ""
-"برای مشاهده اطلاعات موجودی در این نما، چند محصول قابل ذخیره ایجاد کنید."
+msgstr "برای مشاهده اطلاعات موجودی در این نما، چند محصول قابل ذخیره ایجاد کنید."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_lot_label_layout__create_uid
@@ -2303,8 +2301,8 @@ msgstr ""
 "در زمینه ای با یک انبار واحد، این شامل کالاهای ذخیره شده در محل انبار این "
 "انبار یا هر یک از فرزندان آن می شود.\n"
 "در محل انبار این فروشگاه یا هر یک از فرزندان آن ذخیره می شود.\n"
-"در غیر این صورت، این شامل کالاهای ذخیره شده در هر مکان انبار با نوع "
-"\"داخلی\" می شود."
+"در غیر این صورت، این شامل کالاهای ذخیره شده در هر مکان انبار با نوع \"داخلی\" "
+"می شود."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_label_layout__move_quantity__custom
@@ -2607,8 +2605,8 @@ msgid ""
 "            consumptions, inventories, etc."
 msgstr ""
 "مکان های خود را طوری تعریف کنید که ساختار و سازمان انبار شما را منعکس کند.\n"
-"            Odoo قادر به مدیریت مکان‌های فیزیکی (انبارها، قفسه‌ها، سطلو "
-"غیره)، \n"
+"            Odoo قادر به مدیریت مکان‌های فیزیکی (انبارها، قفسه‌ها، سطلو غیره)، "
+"\n"
 "            مکان‌های شریک (مشتریان، فروشندگان) و مکان‌های مجازی است که همتای\n"
 "            عملیات انبار هستند مانند مصرف سفارشات تولید، موجودی‌ها و غیره."
 
@@ -2629,13 +2627,12 @@ msgid ""
 "setting)."
 msgstr ""
 "تعریف روش پیش‌فرض استفاده شده برای پیشنهاد مکان دقیق (قفسه) برای برداشتن "
-"محصولات، که دسته و غیره برای این مکان از آن گرفته شود. این روش می‌تواند در "
-"سطح دسته‌بندی محصول اجباری شود و اگر هیچ تنظیمی اینجا صورت نگیرد، به مکان‌های "
-"والد بازگشت می‌شود.\n"
+"محصولات، که دسته و غیره برای این مکان از آن گرفته شود. این روش می‌تواند در سطح "
+"دسته‌بندی محصول اجباری شود و اگر هیچ تنظیمی اینجا صورت نگیرد، به مکان‌های والد "
+"بازگشت می‌شود.\n"
 "\n"
 "FIFO: محصولات/دسته‌هایی که ابتدا در انبار موجود بودند، ابتدا خارج می‌شوند.\n"
-"LIFO: محصولات/دسته‌هایی که آخرین بار در انبار موجود بودند، ابتدا خارج "
-"می‌شوند.\n"
+"LIFO: محصولات/دسته‌هایی که آخرین بار در انبار موجود بودند، ابتدا خارج می‌شوند.\n"
 "نزدیک‌ترین مکان: محصولات/دسته‌هایی که به مکان هدف نزدیک‌تر هستند، ابتدا خارج "
 "می‌شوند.\n"
 "FEFO: محصولات/دسته‌هایی با نزدیک‌ترین تاریخ حذف، ابتدا خارج می‌شوند (دسترسی به "
@@ -3414,8 +3411,8 @@ msgstr ""
 "هر یک از فرزندان آن می شود.\n"
 "در زمینه ای با یک انبار واحد، این شامل کالاهای ذخیره شده در محل انبار یا هر "
 "یک از فرزندان آن می شود.\n"
-"در غیر این صورت، این شامل کالاهای ذخیره شده در هر مکان انبار با نوع "
-"\"داخلی\" می شود."
+"در غیر این صورت، این شامل کالاهای ذخیره شده در هر مکان انبار با نوع \"داخلی\" "
+"می شود."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__free_qty
@@ -3433,8 +3430,8 @@ msgstr ""
 "هر یک از فرزندان آن می شود.\n"
 "در زمینه ای با یک انبار واحد، این شامل کالاهای ذخیره شده در محل انبار یا هر "
 "یک از فرزندان آن می شود.\n"
-"در غیر این صورت، این شامل کالاهای ذخیره شده در هر مکان انبار با نوع "
-"\"داخلی\" می شود."
+"در غیر این صورت، این شامل کالاهای ذخیره شده در هر مکان انبار با نوع \"داخلی\" "
+"می شود."
 
 #. module: stock
 #. odoo-javascript
@@ -3645,8 +3642,7 @@ msgstr "اخطارهای آگاهی دهنده یا مسدود کننده شرک
 msgid ""
 "Give to the more specialized category, a higher priority to have them in top "
 "of the list."
-msgstr ""
-"به دسته های تخصصی تر، اولویت بیشتری بدهید تا در بالای لیست قرار بگیرند."
+msgstr "به دسته های تخصصی تر، اولویت بیشتری بدهید تا در بالای لیست قرار بگیرند."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse__sequence
@@ -4049,8 +4045,8 @@ msgid ""
 "If this is checked only, it will suppose you want to create new Lots/Serial "
 "Numbers, so you can provide them in a text field. "
 msgstr ""
-"اگر فقط علامت زده شود، فرض می‌شود که می‌خواهید سری ساخت/شماره سریال جدیدی "
-"ایجاد کنید، بنابراین می‌توانید آنها را در یک فیلد متنی ارائه کنید. "
+"اگر فقط علامت زده شود، فرض می‌شود که می‌خواهید سری ساخت/شماره سریال جدیدی ایجاد "
+"کنید، بنابراین می‌توانید آنها را در یک فیلد متنی ارائه کنید. "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_line__picking_type_use_existing_lots
@@ -4182,8 +4178,7 @@ msgstr "محموله ی در حال آمدن"
 #: code:addons/stock/static/src/client_actions/multi_print.js:0
 #, python-format
 msgid "Incorrect type of action submitted as a report, skipping action"
-msgstr ""
-"اقدام با نوع نادرست به عنوان گزارش ارسال شده است، اقدام نادیده گرفته شد"
+msgstr "اقدام با نوع نادرست به عنوان گزارش ارسال شده است، اقدام نادیده گرفته شد"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__inventory_diff_quantity
@@ -4281,8 +4276,8 @@ msgstr "شماره مرجع داخلی در صورتی که با شماره سر
 msgid ""
 "Internal transfers allow you to move products from one location to another."
 msgstr ""
-"انتقالات داخلی به شما اجازه می‌دهد تا محصولات را از یک مکان به مکان دیگر "
-"منتقل کنید."
+"انتقالات داخلی به شما اجازه می‌دهد تا محصولات را از یک مکان به مکان دیگر منتقل "
+"کنید."
 
 #. module: stock
 #. odoo-python
@@ -4313,7 +4308,8 @@ msgstr "اپراتور صحیح حوزه نامعتبر '%s'. باید از نو
 #, python-format
 msgid ""
 "Invalid rule's configuration, the following rule causes an endless loop: %s"
-msgstr "پیکربندی قانون نامعتبر، قانون زیر باعث ایجاد یک حلقه بی‌پایان می‌شود: %s"
+msgstr ""
+"پیکربندی قانون نامعتبر، قانون زیر باعث ایجاد یک حلقه بی‌پایان می‌شود: %s"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__inventory_quantity_auto_apply
@@ -7165,8 +7161,8 @@ msgstr ""
 "مقدار محصولات ورودی برنامه ریزی شده\n"
 "در زمینه‌ای با یک مکان انبار واحد، این شامل کالاهایی است که به این مکان یا هر "
 "یک از فرزندان آن می‌رسند.\n"
-"در زمینه ای با یک انبار واحد، این شامل کالاهایی است که به محل این انبار یا "
-"هر یک از فرزندان آن می رسند.\n"
+"در زمینه ای با یک انبار واحد، این شامل کالاهایی است که به محل این انبار یا هر "
+"یک از فرزندان آن می رسند.\n"
 "در غیر این صورت، این شامل کالاهایی می شود که به هر مکان انبار با نوع "
 "\"داخلی\" می رسند."
 
@@ -7182,10 +7178,10 @@ msgid ""
 "type."
 msgstr ""
 "مقدار محصولات خروجی برنامه ریزی شده\n"
-"در زمینه ای با یک مکان انبار واحد، این شامل کالاهایی است که از این مکان یا "
-"هر یک از فرزندان آن خارج می شوند.\n"
-"در زمینه ای با یک انبار واحد، این شامل کالاهایی است که از محل این انبار یا "
-"هر یک از فرزندان آن خارج می شوند.\n"
+"در زمینه ای با یک مکان انبار واحد، این شامل کالاهایی است که از این مکان یا هر "
+"یک از فرزندان آن خارج می شوند.\n"
+"در زمینه ای با یک انبار واحد، این شامل کالاهایی است که از محل این انبار یا هر "
+"یک از فرزندان آن خارج می شوند.\n"
 "در غیر این صورت، این شامل کالاهایی می شود که از هر مکان انبار با نوع "
 "\"داخلی\" خارج می شوند."
 
@@ -7987,8 +7983,7 @@ msgid ""
 "manually a value here would set it as expected date for all the stock moves."
 msgstr ""
 "زمان برنامه ریزی شده برای پردازش قسمت اول محموله. تنظیم دستی یک مقدار در "
-"اینجا، آن را به عنوان تاریخ مورد انتظار برای همه انتقالات موجودی تعیین می "
-"کند."
+"اینجا، آن را به عنوان تاریخ مورد انتظار برای همه انتقالات موجودی تعیین می کند."
 
 #. module: stock
 #: model:ir.actions.server,name:stock.action_scrap
@@ -8868,8 +8863,8 @@ msgid ""
 "Store products in specific locations of your warehouse (e.g. bins, racks) "
 "and to track inventory accordingly."
 msgstr ""
-"محصولات را در مکان‌های خاصی از انبار خود ذخیره کنید (مانند سطل‌ها، قفسه‌ها) و "
-"بر این اساس موجودی را ردیابی کنید."
+"محصولات را در مکان‌های خاصی از انبار خود ذخیره کنید (مانند سطل‌ها، قفسه‌ها) و بر "
+"این اساس موجودی را ردیابی کنید."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_putaway_rule__location_out_id
@@ -9320,8 +9315,7 @@ msgid ""
 "This checkbox is just indicative, it doesn't validate or generate any "
 "product moves."
 msgstr ""
-"این چک‌باکس صرفاً اطلاع‌رسانی است و هیچ حرکتی در محصولات را تأیید یا ایجاد "
-"نمی‌کند."
+"این چک‌باکس صرفاً اطلاع‌رسانی است و هیچ حرکتی در محصولات را تأیید یا ایجاد نمی‌کند."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__name
@@ -9461,10 +9455,10 @@ msgid ""
 "returned picking in order to avoid logistic rules to be applied again (which "
 "would create duplicated operations)"
 msgstr ""
-"این حمل و نقل به نظر می‌رسد با یک عملیات دیگر زنجیره‌ای است. بعداً، اگر "
-"کالاهایی را که اکنون برمی‌گردانید دریافت کردید، مطمئن شوید که حمل و نقل "
-"برگشتی را <b>معکوس</b> کنید تا از اعمال شدن دوباره قوانین لجستیک جلوگیری شود "
-"(که باعث ایجاد عملیات تکراری می‌شود)."
+"این حمل و نقل به نظر می‌رسد با یک عملیات دیگر زنجیره‌ای است. بعداً، اگر کالاهایی "
+"را که اکنون برمی‌گردانید دریافت کردید، مطمئن شوید که حمل و نقل برگشتی را <b>"
+"معکوس</b> کنید تا از اعمال شدن دوباره قوانین لجستیک جلوگیری شود (که باعث "
+"ایجاد عملیات تکراری می‌شود)."
 
 #. module: stock
 #. odoo-python
@@ -10692,8 +10686,8 @@ msgstr ""
 "شما از واحد اندازه گیری کوچکتر از واحدی که استفاده می کنید برای انبار کردن "
 "محصول خود استفاده می کنید. این می تواند منجر به مشکل گرد کردن مقدار رزرو شده "
 "شود. شما باید از واحد اندازه گیری کوچکتر ممکن برای ارزش گذاری موجودی خود "
-"استفاده کنید یا دقت گرد کردن آن را به مقدار کوچکتر تغییر دهید (مثال: "
-"0.00001)."
+"استفاده کنید یا دقت گرد کردن آن را به مقدار کوچکتر تغییر دهید (مثال: 0.00001)"
+"."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_routes_form
@@ -10831,7 +10825,8 @@ msgstr ""
 #: code:addons/stock/models/stock_location.py:0
 #, python-format
 msgid "You can't disable locations %s because they still contain products."
-msgstr "شما نمی‌توانید مکان‌های %s را غیرفعال کنید زیرا هنوز حاوی محصولات هستند."
+msgstr ""
+"شما نمی‌توانید مکان‌های %s را غیرفعال کنید زیرا هنوز حاوی محصولات هستند."
 
 #. module: stock
 #. odoo-python
@@ -11024,8 +11019,8 @@ msgid ""
 "You cannot take products from or deliver products to a location of type "
 "\"view\" (%s)."
 msgstr ""
-"شما نمی توانید محصولات را از یک مکان از نوع \"view\" (%s) بگیرید یا محصولات "
-"را تحویل دهید."
+"شما نمی توانید محصولات را از یک مکان از نوع \"view\" (%s) بگیرید یا محصولات را "
+"تحویل دهید."
 
 #. module: stock
 #. odoo-python

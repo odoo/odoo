@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:38+0000\n"
-"PO-Revision-Date: 2026-01-10 08:05+0000\n"
+"PO-Revision-Date: 2026-08-08 00:21+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-17/"
 "sale_pdf_quote_builder/ja/>\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.actions.report,print_report_name:sale_pdf_quote_builder.action_report_saleorder_raw
@@ -29,8 +29,8 @@ msgid ""
 "(object.state in ('draft', 'sent') and 'Quotation - %s' % (object.name)) or "
 "'Order - %s' % (object.name)"
 msgstr ""
-"(object.state in ('draft', 'sent') and '見積 - %s' % (object.name)) or 'オー"
-"ダ - %s' % (object.name)"
+"(object.state in ('draft', 'sent') and '見積 - %s' % (object.name)) or "
+"'オーダ - %s' % (object.name)"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.res_config_settings_view_form
@@ -149,8 +149,8 @@ msgstr ""
 "　　　　　　 \"見積書内”として可視性を設定されたPDFドキュメントを追加して下さ"
 "い。\n"
 "各プロダクトについて\n"
-"　　　　　　見積書内では、もしプロダクトが\"見積書内\"ドキュメントを持つ場"
-"合、このドキュメントは\n"
+"　　　　　　見積書内では、もしプロダクトが\"見積書内\"ドキュメントを持つ場合"
+"、このドキュメントは\n"
 "　　　　　ヘッダページの後、見積書詳細の前に追加されます。"
 
 #. module: sale_pdf_quote_builder
@@ -172,8 +172,8 @@ msgstr ""
 "                           見積書のPDFは、ヘッダーページ、\n"
 "                            プロダクト説明、見積詳細、そしてフッターページで"
 "構成されます。\n"
-"                            空の場合は、会社設定で定義されたものを使用しま"
-"す。<br/>"
+"                            空の場合は、会社設定で定義されたものを使用します"
+"。<br/>"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.actions.report,name:sale_pdf_quote_builder.action_report_saleorder_raw
@@ -222,8 +222,8 @@ msgstr ""
 "見積書に特有の情報 (顧客名、見積書参照 ... )\n"
 "                            はPDFフォームを使用することでこれらのドキュメント"
 "に含めることができます。\n"
-"                            この機能についてさらに詳しく知るにはドキュメン"
-"テーションを参照して下さい。"
+"                            この機能についてさらに詳しく知るには"
+"ドキュメンテーションを参照して下さい。"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_product_document__attached_on
@@ -236,5 +236,5 @@ msgstr "以下で表示"
 #, python-format
 msgid "When attached inside a quote, the document must be a file, not a URL."
 msgstr ""
-"引用の中に添付する場合、ドキュメントはURLではなくファイルでなければなりませ"
-"ん。"
+"引用の中に添付する場合、ドキュメントはURLではなくファイルでなければなりません"
+"。"

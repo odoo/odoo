@@ -13,7 +13,7 @@
 # Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2025
 # Larissa Manderfeld, 2025
 # Wil Odoo, 2025
-# "Larissa Manderfeld (lman)" <lman@odoo.com>, 2025.
+# "Larissa Manderfeld (lman)" <lman@odoo.com>, 2025, 2026.
 # "Noemi Pla Garcia (nopl)" <nopl@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
@@ -21,7 +21,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-17 18:36+0000\n"
-"PO-Revision-Date: 2026-07-23 16:11+0000\n"
+"PO-Revision-Date: 2026-08-08 07:52+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-17/account/"
 "es/>\n"
@@ -482,20 +482,20 @@ msgstr ""
 "            factura rectificativa\n"
 "        </t>\n"
 "        <t t-if=\"object.invoice_origin\">\n"
-"            (con la referencia: <t t-out=\"object.invoice_origin or "
-"''\">SUB003</t>)\n"
+"            (con la referencia: <t t-out=\"object.invoice_origin or ''\">"
+"SUB003</t>)\n"
 "        </t>\n"
 "        por un importe total de <span style=\"font-weight:bold;\" t-"
-"out=\"format_amount(object.amount_total, object.currency_id) or "
-"''\">143.750,00 €</span>\n"
-"        de parte de <t t-out=\"object.company_id.name or ''\">SuCompañía</"
-"t>.\n"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\">"
+"143.750,00 €</span>\n"
+"        de parte de <t t-out=\"object.company_id.name or ''\">SuCompañía</t>"
+".\n"
 "        <br/><br/>\n"
 "        No dude en contactarnos si tiene alguna pregunta.\n"
 "        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\">\n"
 "            <br/><br/>\n"
-"            <t t-out=\"object.invoice_user_id.signature or ''\">--<br/"
-">Mitchell Admin</t>\n"
+"            <t t-out=\"object.invoice_user_id.signature or ''\">--<br/>"
+"Mitchell Admin</t>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -585,12 +585,12 @@ msgstr ""
 "            factura\n"
 "        </t>\n"
 "        <t t-if=\"object.invoice_origin\">\n"
-"            (con referencia: <t t-out=\"object.invoice_origin or "
-"''\">SUB003</t>)\n"
+"            (con referencia: <t t-out=\"object.invoice_origin or ''\">"
+"SUB003</t>)\n"
 "        </t>\n"
 "        con un importe total de <span style=\"font-weight:bold;\" t-"
-"out=\"format_amount(object.amount_total, object.currency_id) or "
-"''\">$143,750.00</span>\n"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\">"
+"$143,750.00</span>\n"
 "        de <t t-out=\"object.company_id.name or ''\">SuCompañía</t>.\n"
 "        <t t-if=\"object.payment_state in ('paid', 'in_payment')\">\n"
 "             Esta factura ya está pagada.\n"
@@ -619,8 +619,8 @@ msgstr ""
 "        No dude en contactarnos si tiene alguna pregunta.\n"
 "        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\">\n"
 "            <br><br>\n"
-"            <t t-out=\"object.invoice_user_id.signature or ''\">--"
-"<br>Mitchell Admin</t>\n"
+"            <t t-out=\"object.invoice_user_id.signature or ''\">--<br>"
+"Mitchell Admin</t>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -658,9 +658,9 @@ msgstr ""
 "        Gracias por su pago.\n"
 "        Aquí está su recibo de pago <span style=\"font-weight:bold;\" t-"
 "out=\"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</span> "
-"por un importe de <span style=\"font-weight:bold;\" t-"
-"out=\"format_amount(object.amount, object.currency_id) or ''\">10,00 €</"
-"span> de parte de <t t-out=\"object.company_id.name or ''\">SuCompañía</t>.\n"
+"por un importe de <span style=\"font-weight:bold;\" t-out=\"format_amount"
+"(object.amount, object.currency_id) or ''\">10,00 €</span> de parte de <t t-"
+"out=\"object.company_id.name or ''\">SuCompañía</t>.\n"
 "        <br><br>\n"
 "       No dude en ponerse en contacto con nosotros si tiene alguna "
 "pregunta.\n"
@@ -846,8 +846,8 @@ msgid ""
 "<span class=\"o_form_label oe_inline\" invisible=\"amount_type == "
 "'fixed'\">%</span>"
 msgstr ""
-"<span class=\"o_form_label oe_inline\" invisible=\"amount_type == "
-"'fixed'\">%</span>"
+"<span class=\"o_form_label oe_inline\" invisible=\"amount_type == 'fixed'\">"
+"%</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -5983,8 +5983,7 @@ msgstr "Distribución para facturas rectificativas"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__refund_repartition_line_ids
 msgid "Distribution when the tax is used on a refund"
-msgstr ""
-"Distribución cuando el impuesto se utiliza en una factura rectificativa"
+msgstr "Distribución cuando el impuesto se utiliza en una factura rectificativa"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__invoice_repartition_line_ids
@@ -6270,8 +6269,8 @@ msgstr "Descuento por pago anticipado de"
 msgid ""
 "Early Payment Discount: <b>%(amount)s</b> if paid before <b>%(date)s</b>"
 msgstr ""
-"Descuento por pago anticipado: <b>%(amount)s</b> si se paga antes del "
-"<b>%(date)s</b>"
+"Descuento por pago anticipado: <b>%(amount)s</b> si se paga antes del <b>%"
+"(date)s</b>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_payment_tree
@@ -7005,8 +7004,7 @@ msgstr "Forzar"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model_line__force_tax_included
 msgid "Force the tax to be managed as a price included tax."
-msgstr ""
-"Fuerce el impuesto a ser gestionado como precio con impuestos incluidos"
+msgstr "Fuerce el impuesto a ser gestionado como precio con impuestos incluidos"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__currency_id
@@ -8637,8 +8635,7 @@ msgstr "El movimiento se envía de forma asíncrona"
 msgid ""
 "It indicates that the invoice/payment has been sent or the PDF has been "
 "generated."
-msgstr ""
-"Indica que se ha enviado la factura o pago o que se ha generado el PDF."
+msgstr "Indica que se ha enviado la factura o pago o que se ha generado el PDF."
 
 #. module: account
 #. odoo-python
@@ -14125,8 +14122,8 @@ msgstr ""
 "de captura: prefijo1, año, prefijo2, mes, prefijo3, seq, sufijo.\n"
 "Los grupos de prefijo * son los separadores entre el año, el mes y el número "
 "de secuencia creciente real (seq).\n"
-"por ejemplo: ^(?P<prefix1>.*?)(?P<year>\\d{4})(?P<prefix2>\\D*?)(?"
-"P<month>\\d{2})(?P<prefix3>\\D+?)(?P<seq>\\d+)(?P<suffix>\\D*?)$"
+"por ejemplo: ^(?P<prefix1>.*?)(?P<year>\\d{4})(?P<prefix2>\\D*?)(?P<month>\\d"
+"{2})(?P<prefix3>\\D+?)(?P<seq>\\d+)(?P<suffix>\\D*?)$"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_fiscal_position__foreign_vat_header_mode__templates_found
@@ -14202,8 +14199,8 @@ msgid ""
 "In doing so, you might want to resequence your entries in order to maintain "
 "a continuous date-based sequence."
 msgstr ""
-"%(date_field)s (%(date)s) no coincide con el número de secuencia del "
-"%(model)s relacionado (%(sequence)s)\n"
+"%(date_field)s (%(date)s) no coincide con el número de secuencia del %(model)"
+"s relacionado (%(sequence)s)\n"
 "Debe eliminar los %(sequence_field)s de %(model)s para continuar.\n"
 "Al hacerlo, es posible que desee volver a secuenciar los asientos para "
 "mantener una secuencia continua basada en la fecha."
@@ -14580,9 +14577,8 @@ msgid ""
 "The date is being set prior to the %(lock_type)s lock date %(lock_date)s. "
 "The Journal Entry will be accounted on %(invoice_date)s upon posting."
 msgstr ""
-"La fecha se establece antes de la fecha de bloqueo %(lock_type)s "
-"%(lock_date)s. El asiento se contabilizará en %(invoice_date)s tras su "
-"publicación."
+"La fecha se establece antes de la fecha de bloqueo %(lock_type)s %(lock_date)"
+"s. El asiento se contabilizará en %(invoice_date)s tras su publicación."
 
 #. module: account
 #. odoo-python
@@ -14710,8 +14706,8 @@ msgid ""
 "The foreign currency set on the journal '%(journal)s' and the account "
 "'%(account)s' must be the same."
 msgstr ""
-"La moneda extranjera establecida en el diario '%(journal)s' y la cuenta "
-"'%(account)s' debe ser la misma."
+"La moneda extranjera establecida en el diario '%(journal)s' y la cuenta '%"
+"(account)s' debe ser la misma."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_external_value__foreign_vat_fiscal_position_id
@@ -14736,8 +14732,8 @@ msgstr ""
 #, python-format
 msgid "The holder of a journal's bank account must be the company (%s)."
 msgstr ""
-"El titular de una cuenta bancaria en un diario tiene que ser la compañía "
-"(%s)."
+"El titular de una cuenta bancaria en un diario tiene que ser la compañía (%s)"
+"."
 
 #. module: account
 #. odoo-python
@@ -14753,8 +14749,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "The invoice is not a draft, it was not updated from the attachment."
-msgstr ""
-"La factura no es un borrador, no se actualizó desde el archivo adjunto."
+msgstr "La factura no es un borrador, no se actualizó desde el archivo adjunto."
 
 #. module: account
 #. odoo-python
@@ -15113,8 +15108,7 @@ msgstr ""
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
 msgid "The running balance (%s) doesn't match the specified ending balance."
-msgstr ""
-"El saldo en ejecución (%s) no coincide con el saldo final especificado."
+msgstr "El saldo en ejecución (%s) no coincide con el saldo final especificado."
 
 #. module: account
 #. odoo-python
@@ -15464,8 +15458,8 @@ msgid ""
 "%(journal_ids)s) as payment debit or credit account. This means that this "
 "account's type should be reconcilable."
 msgstr ""
-"Esta cuenta está configurada en %(journal_names)s diario(s) (ids "
-"%(journal_ids)s) como cuenta de crédito o débito de pago. Esto significa que "
+"Esta cuenta está configurada en %(journal_names)s diario(s) (ids %"
+"(journal_ids)s) como cuenta de crédito o débito de pago. Esto significa que "
 "el tipo de esta cuenta debe poder conciliarse."
 
 #. module: account
@@ -15946,8 +15940,8 @@ msgstr "Total con signo"
 msgid ""
 "Total amount due (including sales orders and this document): %(total_credit)s"
 msgstr ""
-"Importe total adeudado (incluyendo los pedidos de venta y este documento): "
-"%(total_credit)s"
+"Importe total adeudado (incluyendo los pedidos de venta y este documento): %"
+"(total_credit)s"
 
 #. module: account
 #. odoo-python
@@ -18107,8 +18101,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "for this customer. You can allocate them to mark this invoice as paid."
-msgstr ""
-"para este cliente. Puede asignarlos para marcar la factura como pagada."
+msgstr "para este cliente. Puede asignarlos para marcar la factura como pagada."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form

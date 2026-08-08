@@ -6,14 +6,14 @@
 # Wil Odoo, 2023
 # Ryoko Tsuda <ryoko@quartile.co>, 2024
 # Junko Augias, 2025
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # "Junko Augias (juau)" <juau@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-03 18:39+0000\n"
-"PO-Revision-Date: 2026-05-21 11:44+0000\n"
+"PO-Revision-Date: 2026-08-04 23:47+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-17/loyalty/"
 "ja/>\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_program__trigger
@@ -59,8 +59,8 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"        Webポータル、POSレジ、eコマースチェックアウトに、報奨で利用可能なポイ"
-"ント数、使用可能なポイント数を表示します。"
+"        Webポータル、POSレジ、eコマースチェックアウトに、報奨で利用可能な"
+"ポイント数、使用可能なポイント数を表示します。"
 
 #. module: loyalty
 #. odoo-python
@@ -242,11 +242,11 @@ msgstr ""
 "                    <h3 style=\"margin:0px; line-height:17px; font-"
 "family:arial, 'helvetica neue', helvetica, sans-serif; font-size:14px; font-"
 "style:normal; font-weight:normal; color:#A9A9A9; text-align:center\">カード期"
-"限 <t t-out=\"format_date(object.expiration_date) or ''\">05/05/2021</t></"
-"h3>\n"
+"限 <t t-out=\"format_date(object.expiration_date) or ''\">05/05/2021</t></h3>"
+"\n"
 "                </div>\n"
-"                <div style=\"padding:20px; margin:0px; text-align:center;"
-"\">\n"
+"                <div style=\"padding:20px; margin:0px; text-align:center;\">"
+"\n"
 "                    <span style=\"background-color:#999999; display:inline-"
 "block; width:auto; border-radius:5px;\">\n"
 "                        <a t-attf-href=\"{{ object.get_base_url() }}/shop\" "
@@ -358,8 +358,8 @@ msgstr ""
 "                                <span class=\"o_stat_text\" "
 "invisible=\"program_type != 'loyalty'\">ロイヤリティカード</span>\n"
 "                                <span class=\"o_stat_text\" "
-"invisible=\"program_type not in ('promotion', 'buy_x_get_y')\">プロモーション"
-"</span>\n"
+"invisible=\"program_type not in ('promotion', 'buy_x_get_y')\">"
+"プロモーション</span>\n"
 "                                <span class=\"o_stat_text\" "
 "invisible=\"program_type != 'promo_code'\">値引</span>\n"
 "                                <span class=\"o_stat_text\" "
@@ -529,19 +529,19 @@ msgstr ""
 "    <td valign=\"top\" style=\"text-align: center; font-size: 14px;\">\n"
 "        以下のプロモコードをご使用下さい\n"
 "        <t t-if=\"object.expiration_date\">\n"
-"            利用期限 <t t-out=\"object.expiration_date or ''\">2021-06-16</"
-"t>\n"
+"            利用期限 <t t-out=\"object.expiration_date or ''\">2021-06-16</t>"
+"\n"
 "        </t>\n"
 "        <p style=\"margin-top: 16px;\">\n"
 "            <strong style=\"padding: 16px 8px 16px 8px; border-radius: 3px; "
-"background-color: #F1F1F1;\" t-out=\"object.code or "
-"''\">15637502648479132902</strong>\n"
+"background-color: #F1F1F1;\" t-out=\"object.code or ''\">"
+"15637502648479132902</strong>\n"
 "        </p>\n"
 "        <t t-foreach=\"object.program_id.rule_ids\" t-as=\"rule\">\n"
 "            <t t-if=\"rule.minimum_qty not in [0, 1]\">\n"
 "                <span style=\"font-size: 14px;\">\n"
-"                    最低購入数<t t-out=\"rule.minimum_qty or ''\">10</t>プロ"
-"ダクト\n"
+"                    最低購入数<t t-out=\"rule.minimum_qty or ''\">10</t>"
+"プロダクト\n"
 "                </span><br>\n"
 "            </t>\n"
 "            <t t-if=\"rule.minimum_amount != 0.00\">\n"
@@ -1094,8 +1094,8 @@ msgid ""
 "Drive repeat purchases by sending a unique, single-use coupon code for the "
 "next purchase when a customer buys something in your store."
 msgstr ""
-"ショップで商品を購入したお客様に、次回購入時に使えるユニークな1回限りのクーポ"
-"ンコードを送ることで、リピート購入を促進します。"
+"ショップで商品を購入したお客様に、次回購入時に使えるユニークな1回限りの"
+"クーポンコードを送ることで、リピート購入を促進します。"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
@@ -1308,8 +1308,8 @@ msgid ""
 "                                    Then, Gift Cards can be used to pay "
 "orders."
 msgstr ""
-"ギフトカードは、顧客がギフトカードプロダクトを注文すると、手動で作成される"
-"か、または電子メールで自動的に送信されます。\n"
+"ギフトカードは、顧客がギフトカードプロダクトを注文すると、手動で作成されるか"
+"、または電子メールで自動的に送信されます。\n"
 "                                    <br/>\n"
 "                                    その後、ギフトカードは注文の支払いに使用"
 "することができます。"
@@ -1887,8 +1887,7 @@ msgstr "シーケンス"
 msgid ""
 "Set up conditional rules on the order that will give access to rewards for "
 "customers"
-msgstr ""
-"オーダに条件ルールを設定することで、顧客に報奨を提供することができます。"
+msgstr "オーダに条件ルールを設定することで、顧客に報奨を提供することができます。"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
@@ -1911,8 +1910,8 @@ msgstr "単位ごとに分割"
 #, python-format
 msgid "Split per unit is not allowed for Loyalty and eWallet programs."
 msgstr ""
-"ロイヤリティおよびeウォレットプログラムでは単位ごとの分割は許可されていませ"
-"ん。"
+"ロイヤリティおよびeウォレットプログラムでは単位ごとの分割は許可されていません"
+"。"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__date_from
@@ -1984,8 +1983,7 @@ msgstr "開始日はこのプログラムの有効期間内です。"
 #, python-format
 msgid ""
 "The validity period's start date must be anterior or equal to its end date."
-msgstr ""
-"有効期間の開始日は、その終了日よりも前であるか、または等しい必要があります。"
+msgstr "有効期間の開始日は、その終了日よりも前であるか、または等しい必要があります。"
 
 #. module: loyalty
 #: model_terms:ir.actions.act_window,help:loyalty.loyalty_card_action
@@ -2022,8 +2020,8 @@ msgid ""
 "This product may not be archived. It is being used for an active promotion "
 "program."
 msgstr ""
-"このプロダクトはアーカイブされない場合があります。有効なプロモーションプログ"
-"ラムに使用されています。"
+"このプロダクトはアーカイブされない場合があります。有効な"
+"プロモーションプログラムに使用されています。"
 
 #. module: loyalty
 #: model:product.template,name:loyalty.ewallet_product_50_product_template

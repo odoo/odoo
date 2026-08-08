@@ -56,8 +56,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-17 18:36+0000\n"
-"PO-Revision-Date: 2026-07-23 11:40+0000\n"
-"Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
+"PO-Revision-Date: 2026-08-05 02:24+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-17/account/"
 "fi/>\n"
 "Language: fi\n"
@@ -518,8 +518,8 @@ msgstr ""
 "        Älä epäröi ottaa meihin yhteyttä, jos sinulla on kysyttävää.\n"
 "        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\">\n"
 "            <br><br>\n"
-"            <t t-out=\"object.invoice_user_id.signature or ''\">--"
-"<br>Mitchell Admin</t>\n"
+"            <t t-out=\"object.invoice_user_id.signature or ''\">--<br>"
+"Mitchell Admin</t>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -635,15 +635,15 @@ msgstr ""
 "object.timesheet_count\">\n"
 "           <br><br>\n"
 "            PS: voit tarkastella työkirjauksiasi <a t-att-href=\"'my/"
-"timesheets?search_in=invoice&amp;search=%s' % object.name\">portaalista</"
-"a>.\n"
+"timesheets?search_in=invoice&amp;search=%s' % object.name\">portaalista</a>"
+".\n"
 "       </t>\n"
 "       <br><br>\n"
 "        Älä epäröi ottaa meihin yhteyttä, jos sinulla on kysyttävää.\n"
 "        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\">\n"
 "            <br><br>\n"
-"            <t t-out=\"object.invoice_user_id.signature or ''\">--"
-"<br>Mitchell Admin</t>\n"
+"            <t t-out=\"object.invoice_user_id.signature or ''\">--<br>"
+"Mitchell Admin</t>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -676,16 +676,15 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Hyvä <t t-out=\"object.partner_id.name or ''\">Azure Interior</"
-"t><br><br>\n"
+"        Hyvä <t t-out=\"object.partner_id.name or ''\">Azure Interior</t><br>"
+"<br>\n"
 "        Kiitos maksusta.\n"
-"        Tässä on maksukuitti <span style=\"font-weight:bold;\" t-"
-"out=\"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</span>, "
-"jonka määrä on seuraava\n"
-"       <span style=\"font-weight:bold;\" t-"
-"out=\"format_amount(object.amount, object.currency_id) or ''\"> 10,00 "
-"dollaria</span> <t t-out=\"object.company_id.name or ''\">yritykseltänne</"
-"t>.\n"
+"        Tässä on maksukuitti <span style=\"font-weight:bold;\" t-out=\""
+"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</span>, jonka "
+"määrä on seuraava\n"
+"       <span style=\"font-weight:bold;\" t-out=\"format_amount"
+"(object.amount, object.currency_id) or ''\"> 10,00 dollaria</span> <t t-"
+"out=\"object.company_id.name or ''\">yritykseltänne</t>.\n"
 "       <br><br>\n"
 "        Älä epäröi ottaa meihin yhteyttä, jos sinulla on kysyttävää.\n"
 "       <br><br>\n"
@@ -871,8 +870,8 @@ msgid ""
 "<span class=\"o_form_label oe_inline\" invisible=\"amount_type == "
 "'fixed'\">%</span>"
 msgstr ""
-"<span class=\"o_form_label oe_inline\" invisible=\"amount_type == "
-"'fixed'\">%</span>"
+"<span class=\"o_form_label oe_inline\" invisible=\"amount_type == 'fixed'\">"
+"%</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -1445,8 +1444,7 @@ msgstr ""
 #: code:addons/account/models/account_report.py:0
 #, python-format
 msgid "A line cannot have both children and a groupby value (line '%s')."
-msgstr ""
-"Rivillä ei voi olla sekä alisteisia että ryhmittely-arvoja (rivi '%s')."
+msgstr "Rivillä ei voi olla sekä alisteisia että ryhmittely-arvoja (rivi '%s')."
 
 #. module: account
 #. odoo-python
@@ -1458,8 +1456,7 @@ msgstr "Tämän siirron rivi käyttää vanhentunutta tiliä, et voi kirjata sit
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "A note, whose content usually applies to the section or product above."
-msgstr ""
-"Huomautuksen sisältö koskee yleensä yllä mainittua osiota tai tuotetta."
+msgstr "Huomautuksen sisältö koskee yleensä yllä mainittua osiota tai tuotetta."
 
 #. module: account
 #. odoo-python
@@ -2804,8 +2801,7 @@ msgstr "Samanniminen kirjaus on jo olemassa."
 #, python-format
 msgid ""
 "Any journal item on a payable account must have a due date and vice versa."
-msgstr ""
-"Jokaisella velkatilin kirjausrivillä on oltava eräpäivä ja päinvastoin."
+msgstr "Jokaisella velkatilin kirjausrivillä on oltava eräpäivä ja päinvastoin."
 
 #. module: account
 #. odoo-python
@@ -4530,8 +4526,7 @@ msgstr "Maan nimi"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__country_id
 msgid "Country for which this tag is available, when applied on taxes."
-msgstr ""
-"Maa, jossa tämä tunniste on käytettävissä, kun sitä käytetään veroissa."
+msgstr "Maa, jossa tämä tunniste on käytettävissä, kun sitä käytetään veroissa."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
@@ -8030,8 +8025,8 @@ msgid ""
 "Internal field to shorten expression_ids creation for the account_codes "
 "engine"
 msgstr ""
-"Sisäinen kenttä expression_ids -luonnin nopeuttamiseksi account_codes "
-"-moottoria varten"
+"Sisäinen kenttä expression_ids -luonnin nopeuttamiseksi account_codes -"
+"moottoria varten"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__aggregation_formula
@@ -10216,8 +10211,7 @@ msgstr "Toimenpiteiden määrä"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term__discount_days
 msgid "Number of days before the early payment proposition expires"
-msgstr ""
-"Päivien lukumäärä ennen ennakkomaksuehdotuksen voimassaolon päättymistä"
+msgstr "Päivien lukumäärä ennen ennakkomaksuehdotuksen voimassaolon päättymistä"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__number_entries
@@ -10415,8 +10409,8 @@ msgid ""
 "Once everything is set, you are good to continue. You will be able to edit "
 "this later in the <b>Customers</b> menu."
 msgstr ""
-"Voit jatkaa, kun kaikki on määritetty. Muokkaaminen onnistuu myöhemmin "
-"<b>Asiakkaat</b>-valikosta."
+"Voit jatkaa, kun kaikki on määritetty. Muokkaaminen onnistuu myöhemmin <b>"
+"Asiakkaat</b>-valikosta."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -12982,8 +12976,8 @@ msgid ""
 "Sent manually to customer when clicking on 'Send receipt by email' in "
 "payment action"
 msgstr ""
-"Lähetetty manuaalisesti asiakkaalle 'Lähetä kuitti sähköpostitse' "
-"-maksutoimintoa klikattaessa"
+"Lähetetty manuaalisesti asiakkaalle 'Lähetä kuitti sähköpostitse' -"
+"maksutoimintoa klikattaessa"
 
 #. module: account
 #: model:mail.template,description:account.email_template_edi_credit_note
@@ -14030,9 +14024,9 @@ msgstr ""
 "etuliite1, vuosi, etuliite2, kuukausi, etuliite3, seq, loppuliite.\n"
 "Etuliite* -ryhmät ovat jakajia vuoden, kuukauden sekä todellisen kasvavan "
 "sekvenssinumeron (seq) välillä.\n"
-"esim: ^(? P<prefix1>.*?) (? P<year>\\d{4})(? P<prefix2>\\D*?) (? "
-"P<month>\\d{2})(? P<prefix3>\\D+?) (? P<seq>\\d+)(? P<suffix>\\D*?) $</"
-"suffix></seq></prefix3></month></prefix2></year></prefix1>"
+"esim: ^(? P<prefix1>.*?) (? P<year>\\d{4})(? P<prefix2>\\D*?) (? P<month>\\d"
+"{2})(? P<prefix3>\\D+?) (? P<seq>\\d+)(? P<suffix>\\D*?) $</suffix></seq></"
+"prefix3></month></prefix2></year></prefix1>"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_fiscal_position__foreign_vat_header_mode__templates_found
@@ -14108,8 +14102,8 @@ msgid ""
 "In doing so, you might want to resequence your entries in order to maintain "
 "a continuous date-based sequence."
 msgstr ""
-"%(date_field)s (%(date)s) ei vastaa siihen liittyvän %(model)s "
-"(%(sequence)s) järjestysnumeroa\n"
+"%(date_field)s (%(date)s) ei vastaa siihen liittyvän %(model)s (%(sequence)"
+"s) järjestysnumeroa\n"
 "Sinun on tyhjennettävä %(model)s:n %(sequence_field)s, jotta voit jatkaa.\n"
 "Näin tehdessäsi saatat haluta järjestellä merkinnät uudelleen, jotta "
 "päivämäärään perustuva järjestys säilyy jatkuvana."
@@ -14290,9 +14284,9 @@ msgid ""
 "balance."
 msgstr ""
 "Toissijaisena valuuttana ilmaistun summan on oltava positiivinen, kun "
-"tililtä veloitetaan (debet) ja negatiivinen, kun tilille hyvitetään "
-"(kredit). Jos valuutta on sama kuin yrityksen valuutta, tämän määrän on "
-"vastattava saldoa."
+"tililtä veloitetaan (debet) ja negatiivinen, kun tilille hyvitetään (kredit)"
+". Jos valuutta on sama kuin yrityksen valuutta, tämän määrän on vastattava "
+"saldoa."
 
 #. module: account
 #. odoo-python
@@ -14550,16 +14544,14 @@ msgstr "Asiakas-kenttä on pakollinen, täytä se vahvistaaksesi myyntilaskun."
 msgid ""
 "The field 'Vendor' is required, please complete it to validate the Vendor "
 "Bill."
-msgstr ""
-"Toimittaja-kenttä on pakollinen, täytä se vahvistaaksesi myyjän laskun."
+msgstr "Toimittaja-kenttä on pakollinen, täytä se vahvistaaksesi myyjän laskun."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__property_account_position_id
 #: model:ir.model.fields,help:account.field_res_users__property_account_position_id
 msgid ""
 "The fiscal position determines the taxes/accounts used for this contact."
-msgstr ""
-"Verokantasääntö määrittää tälle yhteystiedolle käytettävät verot/tilit."
+msgstr "Verokantasääntö määrittää tälle yhteystiedolle käytettävät verot/tilit."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -14714,8 +14706,8 @@ msgstr ""
 "Ohjauksessa käytetään säännöllisiä lausekkeita.\n"
 "- Jos haluat kohdistaa rivin alussa olevan tekstin (otsikoissa tai "
 "muistiinpanoissa), täytä vain teksti.\n"
-"- Jos haluat sovittaa tekstin mihin tahansa (otsikoihin tai "
-"muistiinpanoihin), aseta teksti väliin .*\n"
+"- Jos haluat sovittaa tekstin mihin tahansa (otsikoihin tai muistiinpanoihin)"
+", aseta teksti väliin .*\n"
 "  esimerkiksi: .*Nro 48748 abc123.*"
 
 #. module: account
@@ -14846,8 +14838,7 @@ msgstr ""
 msgid ""
 "The reconciliation model will only be applied to the selected customers/"
 "vendors."
-msgstr ""
-"Täsmäytysmallia sovelletaan vain valittuihin asiakkaisiin/toimittajiin."
+msgstr "Täsmäytysmallia sovelletaan vain valittuihin asiakkaisiin/toimittajiin."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_nature
@@ -15332,8 +15323,7 @@ msgstr ""
 msgid ""
 "This account will be used instead of the default one as the payable account "
 "for the current partner"
-msgstr ""
-"Tätä tiliä käytetään oletustilin sijasta ostovelkoina tälle kumppanille"
+msgstr "Tätä tiliä käytetään oletustilin sijasta ostovelkoina tälle kumppanille"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__property_account_receivable_id
@@ -15794,8 +15784,8 @@ msgstr "Allekirjoitettu kokonaissumma"
 msgid ""
 "Total amount due (including sales orders and this document): %(total_credit)s"
 msgstr ""
-"Maksettava kokonaissumma (mukaan lukien myyntitilaukset sekä tämä "
-"asiakirja): %(total_credit)s"
+"Maksettava kokonaissumma (mukaan lukien myyntitilaukset sekä tämä asiakirja)"
+": %(total_credit)s"
 
 #. module: account
 #. odoo-python
@@ -16788,8 +16778,7 @@ msgstr ""
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Write here <b>your own email address</b> to test the flow."
-msgstr ""
-"Kirjoita tähän <b>oma sähköpostiosoitteesi</b> työnkulun testaamiseksi."
+msgstr "Kirjoita tähän <b>oma sähköpostiosoitteesi</b> työnkulun testaamiseksi."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__writeoff_is_exchange_account
@@ -16906,8 +16895,7 @@ msgstr "Voit täsmäyttää vain kirjattuja tapahtumia."
 #: code:addons/account/wizard/account_payment_register.py:0
 #, python-format
 msgid "You can only register payment for posted journal entries."
-msgstr ""
-"Voit rekisteröidä maksun ainoastaan kirjatuille päiväkirjamerkinnöille."
+msgstr "Voit rekisteröidä maksun ainoastaan kirjatuille päiväkirjamerkinnöille."
 
 #. module: account
 #. odoo-python
@@ -18180,8 +18168,8 @@ msgid ""
 "{amount} ({debit_credit}) from %s were transferred to "
 "<strong>{account_target_name}</strong> by {link}"
 msgstr ""
-"{amount} ({debit_credit}) osoitteesta %s siirrettiin osoitteeseen "
-"<strong>{account_target_name}</strong> tekijänä {link}"
+"{amount} ({debit_credit}) osoitteesta %s siirrettiin osoitteeseen <strong>"
+"{account_target_name}</strong> tekijänä {link}"
 
 #. module: account
 #. odoo-python

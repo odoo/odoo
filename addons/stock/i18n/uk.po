@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-03 18:38+0000\n"
-"PO-Revision-Date: 2026-08-01 16:09+0000\n"
+"PO-Revision-Date: 2026-08-04 21:49+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Ukrainian <https://translate.odoo.com/projects/odoo-17/stock/"
 "uk/>\n"
@@ -209,8 +209,7 @@ msgstr "'Таблиця підрахунку'"
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_delivery
 msgid "'Delivery Slip - %s - %s' % (object.partner_id.name or '', object.name)"
-msgstr ""
-"'Лист доставки - %s - %s' % (object.partner_id.name or '', object.name)"
+msgstr "'Лист доставки - %s - %s' % (object.partner_id.name or '', object.name)"
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_location_barcode
@@ -481,8 +480,8 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Вітаємо <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</"
-"t>,<br><br>\n"
+"        Вітаємо <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>"
+",<br><br>\n"
 "        Ми раді повідомити вам, що ваше замовлення відправлено.\n"
 "        <t t-if=\"hasattr(object, 'carrier_tracking_ref') and "
 "object.carrier_tracking_ref\">\n"
@@ -492,8 +491,8 @@ msgstr ""
 "                <t t-set=\"multiple_carrier_tracking\" t-"
 "value=\"object.get_multiple_carrier_tracking()\"></t>\n"
 "                <t t-if=\"multiple_carrier_tracking\">\n"
-"                    <t t-foreach=\"multiple_carrier_tracking\" t-"
-"as=\"line\">\n"
+"                    <t t-foreach=\"multiple_carrier_tracking\" t-as=\"line\">"
+"\n"
 "                        <br><a t-att-href=\"line[1]\" target=\"_blank\" t-"
 "out=\"line[0] or ''\"></a>\n"
 "                    </t>\n"
@@ -3251,8 +3250,7 @@ msgstr "Шаблон електронного листа підтверджен�
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_company__stock_mail_confirmation_template_id
 msgid "Email sent to the customer once the order is done."
-msgstr ""
-"Електронний лист надсилається клієнту після того, як замовлення готове."
+msgstr "Електронний лист надсилається клієнту після того, як замовлення готове."
 
 #. module: stock
 #: model_terms:digest.tip,tip_description:stock.digest_tip_stock_0
@@ -3310,8 +3308,7 @@ msgstr "Винятки:"
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid "Existing Serial numbers. Please correct the serial numbers encoded:"
-msgstr ""
-"Існуючі серійні номери. Будь ласка, виправте закодовані серійні номери:"
+msgstr "Існуючі серійні номери. Будь ласка, виправте закодовані серійні номери:"
 
 #. module: stock
 #. odoo-javascript
@@ -4570,8 +4567,7 @@ msgstr "Неможливо відновити більше товарів %s н�
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__move_type
 msgid "It specifies goods to be deliver partially or all at once"
-msgstr ""
-"Це вказує товари, які можуть бути доставлені частково або все одночасно"
+msgstr "Це вказує товари, які можуть бути доставлені частково або все одночасно"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__json_popover
@@ -8618,8 +8614,7 @@ msgstr "Відкладено"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.inventory_warning_set_view
 msgid "Some selected lines already have quantities set, they will be ignored."
-msgstr ""
-"Деякі вибрані рядки вже мають задані кількості, вони будуть ігноровані."
+msgstr "Деякі вибрані рядки вже мають задані кількості, вони будуть ігноровані."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__origin
@@ -9110,8 +9105,7 @@ msgstr "Дозамовлення %s створене."
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_location_barcode_company_uniq
 msgid "The barcode for a location must be unique per company!"
-msgstr ""
-"Штрих-код для розташування повинен бути унікальним для кожної компанії!"
+msgstr "Штрих-код для розташування повинен бути унікальним для кожної компанії!"
 
 #. module: stock
 #: model_terms:res.company,invoice_terms_html:stock.res_company_1
@@ -9626,8 +9620,7 @@ msgstr ""
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity
 msgid ""
 "This quantity is expressed in the Default Unit of Measure of the product."
-msgstr ""
-"Ця кількість виражається в одиниці вимірювання за замовчуванням товару."
+msgstr "Ця кількість виражається в одиниці вимірювання за замовчуванням товару."
 
 #. module: stock
 #. odoo-javascript
@@ -11326,8 +11319,7 @@ msgstr ""
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "You still have ongoing operations for picking types %s in warehouse %s"
-msgstr ""
-"У вас усе ще є вихідні операції для типу комплектування %s на складі %s"
+msgstr "У вас усе ще є вихідні операції для типу комплектування %s на складі %s"
 
 #. module: stock
 #. odoo-python

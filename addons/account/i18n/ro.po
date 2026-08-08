@@ -32,7 +32,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-17 18:36+0000\n"
-"PO-Revision-Date: 2026-04-09 10:43+0000\n"
+"PO-Revision-Date: 2026-08-08 05:41+0000\n"
 "Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
 "Language-Team: Romanian <https://translate.odoo.com/projects/odoo-17/account/"
 "ro/>\n"
@@ -42,7 +42,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: account
 #. odoo-python
@@ -479,8 +479,8 @@ msgstr ""
 "        <br><br>\n"
 "        Aici este nota dvs. de credit\n"
 "        <t t-if=\"object.name\">\n"
-"            <span style=\"font-weight:bold;\" t-out=\"object.name or "
-"''\">RINV/2021/05/0001</span>\n"
+"            <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">"
+"RINV/2021/05/0001</span>\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
 "            nota de credit\n"
@@ -489,16 +489,15 @@ msgstr ""
 "            (cu referință: <t t-out=\"object.invoice_origin or ''\">SUB003</"
 "t>)\n"
 "        </t>\n"
-"        în valoare de <span style=\"font-weight:bold;\" t-"
-"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
-"143,750.00</span>\n"
+"        în valoare de <span style=\"font-weight:bold;\" t-out=\"format_amount"
+"(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
 "        de la <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
 "        <br><br>\n"
 "        Nu ezitați să ne contactați dacă aveți întrebări.\n"
 "        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\">\n"
 "            <br><br>\n"
-"            <t t-out=\"object.invoice_user_id.signature or ''\">--"
-"<br>Mitchell Admin</t>\n"
+"            <t t-out=\"object.invoice_user_id.signature or ''\">--<br>"
+"Mitchell Admin</t>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -581,8 +580,8 @@ msgstr ""
 "        <br><br>\n"
 "        Aici este factura dvs.\n"
 "        <t t-if=\"object.name\">\n"
-"            <span style=\"font-weight:bold;\" t-out=\"object.name or "
-"''\">INV/2021/05/0005</span>\n"
+"            <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">"
+"INV/2021/05/0005</span>\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
 "            factura\n"
@@ -591,9 +590,8 @@ msgstr ""
 "            (cu referință: <t t-out=\"object.invoice_origin or ''\">SUB003</"
 "t>)\n"
 "        </t>\n"
-"        în valoare de <span style=\"font-weight:bold;\" t-"
-"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
-"143,750.00</span>\n"
+"        în valoare de <span style=\"font-weight:bold;\" t-out=\"format_amount"
+"(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
 "        de la <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
 "        <t t-if=\"object.payment_state in ('paid', 'in_payment')\">\n"
 "            Această factură este deja plătită.\n"
@@ -622,8 +620,8 @@ msgstr ""
 "        Nu ezitați să ne contactați dacă aveți întrebări.\n"
 "        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\">\n"
 "            <br><br>\n"
-"            <t t-out=\"object.invoice_user_id.signature or ''\">--"
-"<br>Mitchell Admin</t>\n"
+"            <t t-out=\"object.invoice_user_id.signature or ''\">--<br>"
+"Mitchell Admin</t>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -656,15 +654,15 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Dragă <t t-out=\"object.partner_id.name or ''\">Azure Interior</"
-"t><br><br>\n"
+"        Dragă <t t-out=\"object.partner_id.name or ''\">Azure Interior</t>"
+"<br><br>\n"
 "        Vă mulțumim pentru plata efectuată.\n"
 "        Iată chitanța dvs. de plată <span style=\"font-weight:bold;\" t-"
-"out=\"(object.name sau '').replace('/','-') sau ''\">BNK1-2021-05-0002</"
-"span>\n"
-"        în valoare de <span style=\"font-weight:bold;\" t-"
-"out=\"format_amount(object.amount, object.currency_id) sau ''\">10,00 USD</"
-"span> de la <t t-out=\"object.company_id.name or ''\">Compania Dvs.</t>.\n"
+"out=\"(object.name sau '').replace('/','-') sau ''\">BNK1-2021-05-0002</span>"
+"\n"
+"        în valoare de <span style=\"font-weight:bold;\" t-out=\"format_amount"
+"(object.amount, object.currency_id) sau ''\">10,00 USD</span> de la <t t-"
+"out=\"object.company_id.name or ''\">Compania Dvs.</t>.\n"
 "        <br><br>\n"
 "        Nu ezitați să ne contactați dacă aveți întrebări.\n"
 "        <br><br>\n"
@@ -849,8 +847,8 @@ msgid ""
 "<span class=\"o_form_label oe_inline\" invisible=\"amount_type == "
 "'fixed'\">%</span>"
 msgstr ""
-"<span class=\"o_form_label oe_inline\" invisible=\"amount_type == "
-"'fixed'\">%</span>"
+"<span class=\"o_form_label oe_inline\" invisible=\"amount_type == 'fixed'\">"
+"%</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -1408,8 +1406,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_journal_group_uniq_name
 msgid "A journal group name must be unique per company."
-msgstr ""
-"Un nume de grup de jurnale trebuie să fie unic pentru fiecare companie."
+msgstr "Un nume de grup de jurnale trebuie să fie unic pentru fiecare companie."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_journal_form
@@ -2326,8 +2323,7 @@ msgstr "Adjustarea intrării"
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "Adjusting Entry {link} {percent}%% of {amount} recognized from {date}"
-msgstr ""
-"Ajustare intrare {link} {percent}%% din {amount} recunoscută din {date}"
+msgstr "Ajustare intrare {link} {percent}%% din {amount} recunoscută din {date}"
 
 #. module: account
 #. odoo-python
@@ -3275,8 +3271,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__acc_type
 msgid ""
 "Bank account type: Normal or IBAN. Inferred from the bank account number."
-msgstr ""
-"Tipul de cont bancar: Normal sau IBAN. Aflat la numărul de cont bancar."
+msgstr "Tipul de cont bancar: Normal sau IBAN. Aflat la numărul de cont bancar."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_moves_journal_bank_cash
@@ -3646,8 +3641,7 @@ msgstr "Factură anulată"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Cannot create a purchase document in a non purchase journal"
-msgstr ""
-"Nu se poate crea un document de achiziție într-un jurnal fără achiziții"
+msgstr "Nu se poate crea un document de achiziție într-un jurnal fără achiziții"
 
 #. module: account
 #. odoo-python
@@ -7060,8 +7054,8 @@ msgid ""
 "expression), in case it is different from the parent line."
 msgstr ""
 "Formulă de forma line_code.expression_label. Aceasta permite setarea țintei "
-"transferului pentru această expresie (pe o expresie etichetată "
-"_carryover_*), dacă este diferită de linia părinte."
+"transferului pentru această expresie (pe o expresie etichetată _carryover_*)"
+", dacă este diferită de linia părinte."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_group_form
@@ -11079,8 +11073,7 @@ msgstr "Parteneri"
 #: code:addons/account/models/partner.py:0
 #, python-format
 msgid "Partners that are used in hashed entries cannot be merged."
-msgstr ""
-"Partenerii care sunt utilizați în intrările hashing nu pot fi îmbinați."
+msgstr "Partenerii care sunt utilizați în intrările hashing nu pot fi îmbinați."
 
 #. module: account
 #. odoo-python
@@ -13036,8 +13029,8 @@ msgid ""
 "Sent manually to customer when clicking on 'Send receipt by email' in "
 "payment action"
 msgstr ""
-"Trimis manual clientului când faceți clic pe „Trimiteți chitanța prin e-"
-"mail” în acțiunea de plată"
+"Trimis manual clientului când faceți clic pe „Trimiteți chitanța prin e-mail"
+"” în acțiunea de plată"
 
 #. module: account
 #: model:mail.template,description:account.email_template_edi_credit_note
@@ -14086,8 +14079,8 @@ msgstr ""
 "captură: prefix1, an, prefix2, lună, prefix3, seq, sufix.\n"
 "Prefixul * grupele sunt separatoarele dintre an, lună și numărul de secvență "
 "în creștere reală (seq).\n"
-"e.g: ^(?P<prefix1>.*?)(?P<year>\\d{4})(?P<prefix2>\\D*?)(?P<month>\\d{2})(?"
-"P<prefix3>\\D+?)(?P<seq>\\d+)(?P<suffix>\\D*?)$"
+"e.g: ^(?P<prefix1>.*?)(?P<year>\\d{4})(?P<prefix2>\\D*?)(?P<month>\\d{2})"
+"(?P<prefix3>\\D+?)(?P<seq>\\d+)(?P<suffix>\\D*?)$"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_fiscal_position__foreign_vat_header_mode__templates_found
@@ -15401,9 +15394,9 @@ msgid ""
 "%(journal_ids)s) as payment debit or credit account. This means that this "
 "account's type should be reconcilable."
 msgstr ""
-"Acest cont este configurat în jurnal(e) %(journal_names)s (ids "
-"%(journal_ids)s) ca cont de debit sau credit. Acest lucru înseamnă că tipul "
-"contului ar trebui să fie reconciliabil."
+"Acest cont este configurat în jurnal(e) %(journal_names)s (ids %(journal_ids)"
+"s) ca cont de debit sau credit. Acest lucru înseamnă că tipul contului ar "
+"trebui să fie reconciliabil."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__property_account_payable_id
@@ -15483,11 +15476,11 @@ msgid ""
 "'filter_domain'.See '_search_name' and '_parse_name_search' for why this is "
 "not possible with 'filter_domain'."
 msgstr ""
-"Acest câmp inactiv ne permite să folosim o altă metodă de căutare în câmpul "
-"„nume”. Acest lucru oferă mai multă libertate cu privire la modul de căutare "
+"Acest câmp inactiv ne permite să folosim o altă metodă de căutare în câmpul „"
+"nume”. Acest lucru oferă mai multă libertate cu privire la modul de căutare "
 "a „nume” în comparație cu „filter_domain”. Consultați „_search_name” și "
-"„_parse_name_search” pentru a afla de ce acest lucru nu este posibil cu "
-"„ filter_domain'."
+"„_parse_name_search” pentru a afla de ce acest lucru nu este posibil cu „ "
+"filter_domain'."
 
 #. module: account
 #. odoo-python
@@ -15599,8 +15592,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "This move is configured to be auto-posted on %s"
-msgstr ""
-"Această înregistrare este configurată pentru a fi postată automat pe %s"
+msgstr "Această înregistrare este configurată pentru a fi postată automat pe %s"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -15884,8 +15876,8 @@ msgstr "Total cu semn"
 msgid ""
 "Total amount due (including sales orders and this document): %(total_credit)s"
 msgstr ""
-"Suma totală datorată (inclusiv comenzile de vânzare și acest document): "
-"%(total_credit)s"
+"Suma totală datorată (inclusiv comenzile de vânzare și acest document): %"
+"(total_credit)s"
 
 #. module: account
 #. odoo-python
@@ -15952,8 +15944,7 @@ msgstr "Total în valută cu semn"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Track costs & revenues by project, department, etc"
-msgstr ""
-"Urmăriți costurile și veniturile în funcție de proiect, departament etc"
+msgstr "Urmăriți costurile și veniturile în funcție de proiect, departament etc"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__transaction_details
@@ -16367,8 +16358,7 @@ msgstr "Utilizare plăți în lot"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Use budgets to compare actual with expected revenues and costs"
-msgstr ""
-"Utilizați bugetele pentru a compara veniturile și costurile preconizate"
+msgstr "Utilizați bugetele pentru a compara veniturile și costurile preconizate"
 
 #. module: account
 #. odoo-python
@@ -16987,8 +16977,7 @@ msgstr ""
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "You can only change the period/account for posted journal items."
-msgstr ""
-"Puteti schimba doar perioada/cont pentru elementele jurnalului postate."
+msgstr "Puteti schimba doar perioada/cont pentru elementele jurnalului postate."
 
 #. module: account
 #. odoo-python
@@ -18306,8 +18295,8 @@ msgid ""
 "{amount} ({debit_credit}) from %s were transferred to "
 "<strong>{account_target_name}</strong> by {link}"
 msgstr ""
-"{amount} ({debit_credit}) de la %s au fost transferate către "
-"<strong>{account_target_name}</strong> de către {link}"
+"{amount} ({debit_credit}) de la %s au fost transferate către <strong>"
+"{account_target_name}</strong> de către {link}"
 
 #. module: account
 #. odoo-python

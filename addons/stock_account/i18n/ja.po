@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-03 18:38+0000\n"
-"PO-Revision-Date: 2026-07-30 09:39+0000\n"
+"PO-Revision-Date: 2026-08-08 11:47+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-17/"
 "stock_account/ja/>\n"
@@ -43,8 +43,7 @@ msgstr " [ %sに会計処理済]"
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid "%(user)s changed cost from %(previous)s to %(new_price)s - %(product)s"
-msgstr ""
-"%(user)s が原価を%(previous)s から%(new_price)s - %(product)sに変更しました。"
+msgstr "%(user)s が原価を%(previous)s から%(new_price)s - %(product)sに変更しました。"
 
 #. module: stock_account
 #. odoo-python
@@ -71,8 +70,7 @@ msgstr ""
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
 msgid "<b>Set other input/output accounts on specific </b>"
-msgstr ""
-"<b>その他のロケーションごとの入庫/出庫勘定はロケーションで設定します。 </b>"
+msgstr "<b>その他のロケーションごとの入庫/出庫勘定はロケーションで設定します。 </b>"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_picking
@@ -153,8 +151,7 @@ msgstr "追加価値"
 msgid ""
 "Affect landed costs on reception operations and split them among products to "
 "update their cost price."
-msgstr ""
-"入荷オペレーション時の陸揚費に作用してプロダクトに分配し、原価を更新する。"
+msgstr "入荷オペレーション時の陸揚費に作用してプロダクトに分配し、原価を更新する。"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_analytic_account
@@ -353,8 +350,7 @@ msgstr "日付"
 msgid ""
 "Date at which the accounting entries will be created in case of automated "
 "inventory valuation. If empty, the inventory date will be used."
-msgstr ""
-"自動在庫評価の場合に会計仕訳に適用される日付。指定がない場合は在庫日を適用。"
+msgstr "自動在庫評価の場合に会計仕訳に適用される日付。指定がない場合は在庫日を適用。"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_valuation_layer__uom_id
@@ -390,8 +386,8 @@ msgid ""
 "Due to a change of product category (from %s to %s), the costing method has "
 "changed for product template %s: from %s to %s."
 msgstr ""
-"プロダクトカテゴリ変更 (%s から %sへ)につき、原価計算法がプロダクトテンプレー"
-"ト用 %s: %s から %sへ変更されました。"
+"プロダクトカテゴリ変更 (%s から %sへ)につき、原価計算法が"
+"プロダクトテンプレート用 %s: %s から %sへ変更されました。"
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_cost_method__fifo
@@ -804,8 +800,7 @@ msgstr ""
 msgid ""
 "The Stock Input and/or Output accounts cannot be the same as the Stock "
 "Valuation account."
-msgstr ""
-"在庫入力および/または出力勘定は、在庫評価勘定と同じにすることはできません。"
+msgstr "在庫入力および/または出力勘定は、在庫評価勘定と同じにすることはできません。"
 
 #. module: stock_account
 #. odoo-python
@@ -830,8 +825,7 @@ msgstr "その付加価値は在庫評価に影響しません。"
 msgid ""
 "The move lines are not in a consistent state: some are entering and other "
 "are leaving the company."
-msgstr ""
-"移動明細が一貫していません。会社に入荷するものと出荷するものがあります。"
+msgstr "移動明細が一貫していません。会社に入荷するものと出荷するものがあります。"
 
 #. module: stock_account
 #. odoo-python
@@ -842,8 +836,8 @@ msgid ""
 "intercompany in a single step while they should go through the intercompany "
 "transit location."
 msgstr ""
-"移動明細が一貫していません。グループ内積送ロケーションを経由すべきなのに、グ"
-"ループ内移動がワンステップで処理されています。"
+"移動明細が一貫していません。グループ内積送ロケーションを経由すべきなのに、"
+"グループ内移動がワンステップで処理されています。"
 
 #. module: stock_account
 #. odoo-python
@@ -852,8 +846,7 @@ msgstr ""
 msgid ""
 "The move lines are not in a consistent states: they do not share the same "
 "origin or destination company."
-msgstr ""
-"移動明細が一貫していません。同じ移動元または移動先会社を共有していません。"
+msgstr "移動明細が一貫していません。同じ移動元または移動先会社を共有していません。"
 
 #. module: stock_account
 #. odoo-python
@@ -1041,8 +1034,8 @@ msgid ""
 "                It can also directly be set on each product."
 msgstr ""
 "自動在庫評価を行う場合、すべての出庫仕訳はこの勘定科目に計上されますが、\n"
-"　　　　ただし、移動先に特定の評価勘定が設定されている場合を除きます。これ"
-"は、このカテゴリの全プロダクトのデフォルト値です。\n"
+"　　　　ただし、移動先に特定の評価勘定が設定されている場合を除きます。これは"
+"、このカテゴリの全プロダクトのデフォルト値です。\n"
 "　　　　各プロダクトに直接設定することもできます。"
 
 #. module: stock_account
@@ -1115,8 +1108,8 @@ msgid ""
 "You don't have any stock input account defined on your product category. You "
 "must define one before processing this operation."
 msgstr ""
-"プロダクトカテゴリに在庫入力アカウントが定義されていません。このオペレーショ"
-"ンを行う前に定義する必要があります。"
+"プロダクトカテゴリに在庫入力アカウントが定義されていません。この"
+"オペレーションを行う前に定義する必要があります。"
 
 #. module: stock_account
 #. odoo-python

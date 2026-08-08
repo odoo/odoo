@@ -17,8 +17,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-03 18:38+0000\n"
-"PO-Revision-Date: 2026-07-09 15:10+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-08-08 06:24+0000\n"
+"Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Czech <https://translate.odoo.com/projects/odoo-17/survey/cs/>"
 "\n"
 "Language: cs\n"
@@ -274,8 +274,8 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Vážený <t t-out=\"object.partner_id.name or "
-"'participant'\">účastníku</t><br><br>\n"
+"        Vážený <t t-out=\"object.partner_id.name or 'participant'\">"
+"účastníku</t><br><br>\n"
 "        <t t-if=\"object.survey_id.certification\">\n"
 "            Byli jste pozváni k nové certifikaci.\n"
 "        </t>\n"
@@ -295,8 +295,8 @@ msgstr ""
 "            </a>\n"
 "        </div>\n"
 "        <t t-if=\"object.deadline\">\n"
-"            Odpovězte prosím na průzkum pro <t t-"
-"out=\"format_date(object.deadline) or ''\">05.05.2021</t>.<br><br>\n"
+"            Odpovězte prosím na průzkum pro <t t-out=\"format_date"
+"(object.deadline) or ''\">05.05.2021</t>.<br><br>\n"
 "        </t>\n"
 "        <t t-if=\"object.survey_id.certification\">\n"
 "            Přejeme hodně štěstí!\n"
@@ -509,8 +509,8 @@ msgid ""
 "<span class=\"o_survey_enter fw-bold text-muted ms-2 d-none d-md-inline\">or "
 "press Enter</span>"
 msgstr ""
-"<span class=\"o_survey_enter fw-bold text-muted ms-2 d-none d-md-"
-"inline\">nebo stiskněte Enter</span>"
+"<span class=\"o_survey_enter fw-bold text-muted ms-2 d-none d-md-inline\">"
+"nebo stiskněte Enter</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_selection_key
@@ -1776,8 +1776,7 @@ msgstr "Odpověď datetime"
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_user_input__deadline
 msgid "Datetime until customer can open the survey and submit answers"
-msgstr ""
-"Datetime, dokud zákazník nebude moci otevřít průzkum a odeslat odpovědi"
+msgstr "Datetime, dokud zákazník nebude moci otevřít průzkum a odeslat odpovědi"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__deadline
@@ -3442,8 +3441,8 @@ msgid ""
 msgstr ""
 "Volitelný překladový jazyk (kód ISO), který lze vybrat při odesílání e-"
 "mailu. Pokud není nastavena, bude použita anglická verze. To by měl být "
-"obvykle zástupný výraz, který poskytuje vhodný jazyk, např. "
-"{{object.partner_id.lang}}."
+"obvykle zástupný výraz, který poskytuje vhodný jazyk, např. {"
+"{object.partner_id.lang}}."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -4232,8 +4231,7 @@ msgstr "Zobrazit žebříček relací"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_search
 msgid "Show all records which has next action date is before today"
-msgstr ""
-"Zobrazit všechny záznamy, které mají datum příští aktivity před dneškem"
+msgstr "Zobrazit všechny záznamy, které mají datum příští aktivity před dneškem"
 
 #. module: survey
 #. odoo-python
@@ -4815,8 +4813,7 @@ msgstr "Během ověřování průzkumu došlo k chybě."
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "They are a default answer, used if the participant skips the question"
-msgstr ""
-"Jsou výchozí odpovědí, která se používá, pokud účastník otázku přeskočí"
+msgstr "Jsou výchozí odpovědí, která se používá, pokud účastník otázku přeskočí"
 
 #. module: survey
 #. odoo-python
@@ -5264,8 +5261,7 @@ msgstr ""
 msgid ""
 "We like to say that the apple doesn't fall far from the tree, so here are "
 "trees."
-msgstr ""
-"Rádi říkáme, že jablko nepadá daleko od stromu, takže tady jsou stromy."
+msgstr "Rádi říkáme, že jablko nepadá daleko od stromu, takže tady jsou stromy."
 
 #. module: survey
 #: model_terms:survey.question,description:survey.survey_demo_quiz_p5
@@ -5586,8 +5582,8 @@ msgid ""
 "You cannot send an invitation for a \"One page per section\" survey if the "
 "survey has no sections."
 msgstr ""
-"Pokud průzkum neobsahuje žádné sekce, nemůžete odeslat pozvánku k průzkumu "
-"„Jedna stránka na sekci“."
+"Pokud průzkum neobsahuje žádné sekce, nemůžete odeslat pozvánku k průzkumu „"
+"Jedna stránka na sekci“."
 
 #. module: survey
 #. odoo-python

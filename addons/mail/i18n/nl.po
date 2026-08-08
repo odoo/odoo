@@ -8,7 +8,7 @@
 # Wil Odoo, 2024
 # Manon Rondou, 2025
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2025
-# "Manon Rondou (ronm)" <ronm@odoo.com>, 2025.
+# "Manon Rondou (ronm)" <ronm@odoo.com>, 2025, 2026.
 # Bren Driesen <brdri@odoo.com>, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
@@ -16,8 +16,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-17 17:36+0000\n"
-"PO-Revision-Date: 2026-07-23 11:41+0000\n"
-"Last-Translator: Bren Driesen <brdri@odoo.com>\n"
+"PO-Revision-Date: 2026-08-06 15:55+0000\n"
+"Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-17/mail/nl/>\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
@@ -51,8 +51,8 @@ msgstr ""
 "            </p><p>\n"
 "                Om je te beschermen tegen spam en antwoordlussen, blokkeert "
 "Odoo automatisch e-mails\n"
-"                die naar je gateway komen voorbij een drempel van "
-"<b>%(threshold)i</b> e-mails elke <b>%(minutes)i</b>\n"
+"                die naar je gateway komen voorbij een drempel van <b>%"
+"(threshold)i</b> e-mails elke <b>%(minutes)i</b>\n"
 "                minuten. Als er adressen zijn waarvan je heel vaak updates "
 "moet ontvangen,\n"
 "                kan je ze echter hieronder toevoegen en Odoo zal ze "
@@ -135,10 +135,9 @@ msgid ""
 "%(bold_start)s/command%(bold_end)s to execute a command."
 msgstr ""
 "%(new_line)s%(new_line)sTyp %(bold_start)s@gebruikersnaam %(bold_end)som "
-"iemand te vermelden en diens aandacht te trekken. %(new_line)sTyp "
-"%(bold_start)s#channel%(bold_end)s om een kanaal te vermelden. "
-"%(new_line)sTyp %(bold_start)s/command %(bold_end)som een opdracht uit te "
-"voeren."
+"iemand te vermelden en diens aandacht te trekken. %(new_line)sTyp %"
+"(bold_start)s#channel%(bold_end)s om een kanaal te vermelden. %(new_line)"
+"sTyp %(bold_start)s/command %(bold_end)som een opdracht uit te voeren."
 
 #. module: mail
 #. odoo-javascript
@@ -147,8 +146,8 @@ msgstr ""
 msgid ""
 "%(open_button)s%(icon)s%(open_em)sDiscard editing%(close_em)s%(close_button)s"
 msgstr ""
-"%(open_button)s%(icon)s%(open_em)sNegeer het bewerken "
-"van%(close_em)s%(close_button)s"
+"%(open_button)s%(icon)s%(open_em)sNegeer het bewerken van%(close_em)s%"
+"(close_button)s"
 
 #. module: mail
 #. odoo-javascript
@@ -159,10 +158,9 @@ msgid ""
 "%(open_cancel)scancel%(close_cancel)s%(close_em)s, %(open_samp)sCTRL-"
 "Enter%(close_samp)s %(open_em)sto %(open_save)ssave%(close_save)s%(close_em)s"
 msgstr ""
-"%(open_samp)sEscape%(close_samp)s %(open_em)som te "
-"%(open_cancel)sannuleren%(close_cancel)s%(close_em)s, %(open_samp)sCTRL-"
-"Enter%(close_samp)s %(open_em)som %(open_save)sop te "
-"slaan%(close_save)s%(close_em)s"
+"%(open_samp)sEscape%(close_samp)s %(open_em)som te %(open_cancel)sannuleren%"
+"(close_cancel)s%(close_em)s, %(open_samp)sCTRL-Enter%(close_samp)s %(open_em)"
+"som %(open_save)sop te slaan%(close_save)s%(close_em)s"
 
 #. module: mail
 #. odoo-javascript
@@ -174,10 +172,9 @@ msgid ""
 "%(open_samp)sEnter%(close_samp)s %(open_em)sto "
 "%(open_save)ssave%(close_save)s%(close_em)s"
 msgstr ""
-"%(open_samp)sEscape%(close_samp)s %(open_em)som te "
-"%(open_cancel)sannuleren%(close_cancel)s%(close_em)s, "
-"%(open_samp)sEnter%(close_samp)s %(open_em)som %(open_save)sop te "
-"slaan%(close_save)s%(close_em)s"
+"%(open_samp)sEscape%(close_samp)s %(open_em)som te %(open_cancel)sannuleren%"
+"(close_cancel)s%(close_em)s, %(open_samp)sEnter%(close_samp)s %(open_em)som %"
+"(open_save)sop te slaan%(close_save)s%(close_em)s"
 
 #. module: mail
 #. odoo-javascript
@@ -191,8 +188,7 @@ msgstr "%(user)s verbonden. Dit is hun eerste verbinding. Wens ze succes."
 #: code:addons/mail/wizard/mail_wizard_invite.py:0
 #, python-format
 msgid "%(user_name)s invited you to follow %(document)s document: %(title)s"
-msgstr ""
-"%(user_name)s heeft je uitgenodigd om %(document)s te volgen: %(title)s"
+msgstr "%(user_name)s heeft je uitgenodigd om %(document)s te volgen: %(title)s"
 
 #. module: mail
 #. odoo-python
@@ -484,9 +480,9 @@ msgid ""
 msgstr ""
 "<span invisible=\"mail_post_method != 'email'\">Het bericht wordt als e-mail "
 "verzonden naar de ontvangers van de sjabloon en verschijnt niet in de "
-"berichtengeschiedenis.</span> <span invisible=\"mail_post_method != "
-"'note'\">Het bericht wordt geplaatst als een interne notitie die zichtbaar "
-"is voor interne gebruikers in de berichtengeschiedenis.</span> <span "
+"berichtengeschiedenis.</span> <span invisible=\"mail_post_method != 'note'\">"
+"Het bericht wordt geplaatst als een interne notitie die zichtbaar is voor "
+"interne gebruikers in de berichtengeschiedenis.</span> <span "
 "invisible=\"mail_post_method != 'comment'\">Het bericht wordt als bericht op "
 "het record geplaatst waardoor alle volgers een notificatie krijgen. Het "
 "verschijnt in de berichtengeschiedenis..</span>"
@@ -899,8 +895,8 @@ msgid ""
 msgstr ""
 "Voeg een Klipy GIF API-sleutel toe om ondersteuning voor GIF’s in te "
 "schakelen. https://docs.klipy.com/getting-started\n"
-"Als je een Tenor GIF API-sleutel gebruikte (dienst stopgezet op 30 juni "
-"2026), vervang deze dan hier door een Klipy GIF API-sleutel"
+"Als je een Tenor GIF API-sleutel gebruikte (dienst stopgezet op 30 juni 2026)"
+", vervang deze dan hier door een Klipy GIF API-sleutel"
 
 #. module: mail
 #. odoo-javascript
@@ -1075,9 +1071,9 @@ msgid ""
 "%(alias_model_name)s (%(matching_id)s) and used by the %(parent_name)s "
 "%(parent_model_name)s."
 msgstr ""
-"Alias %(matching_name)s (%(current_id)s) is al gekoppeld aan "
-"%(alias_model_name)s (%(matching_id)s) en gebruikt door de %(parent_name)s "
-"%(parent_model_name)s."
+"Alias %(matching_name)s (%(current_id)s) is al gekoppeld aan %"
+"(alias_model_name)s (%(matching_id)s) en gebruikt door de %(parent_name)s %"
+"(parent_model_name)s."
 
 #. module: mail
 #. odoo-python
@@ -1087,8 +1083,8 @@ msgid ""
 "Alias %(matching_name)s (%(current_id)s) is already linked with "
 "%(alias_model_name)s (%(matching_id)s)."
 msgstr ""
-"Alias %(matching_name)s (%(current_id)s) is al gekoppeld aan "
-"%(alias_model_name)s (%(matching_id)s)."
+"Alias %(matching_name)s (%(current_id)s) is al gekoppeld aan %"
+"(alias_model_name)s (%(matching_id)s)."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_contact
@@ -1657,8 +1653,8 @@ msgid ""
 "Blocked by deletion of portal account %(portal_user_name)s by %(user_name)s "
 "(#%(user_id)s)"
 msgstr ""
-"Geblokkeerd door verwijdering van portaalaccount %(portal_user_name)s door "
-"%(user_name)s (#%(user_id)s)"
+"Geblokkeerd door verwijdering van portaalaccount %(portal_user_name)s door %"
+"(user_name)s (#%(user_id)s)"
 
 #. module: mail
 #. odoo-javascript
@@ -1735,8 +1731,8 @@ msgid ""
 "Bounce/Catchall '%(matching_alias_name)s' is already used by "
 "%(document_name)s. Choose another alias or change it on the other document."
 msgstr ""
-"Bounce/Catchall '%(matching_alias_name)s' wordt al gebruikt door "
-"%(document_name)s. Kies een andere alias of wijzig deze in het andere "
+"Bounce/Catchall '%(matching_alias_name)s' wordt al gebruikt door %"
+"(document_name)s. Kies een andere alias of wijzig deze in het andere "
 "document."
 
 #. module: mail
@@ -2060,8 +2056,8 @@ msgid ""
 "persons. Channel can be freely joined (depending on its configuration)."
 msgstr ""
 "Chat is privé en uniek tussen 2 personen. Groep is privé tussen uitgenodigde "
-"personen. Kanaal kan vrij toegankelijk zijn (afhankelijk van de "
-"configuratie)."
+"personen. Kanaal kan vrij toegankelijk zijn (afhankelijk van de configuratie)"
+"."
 
 #. module: mail
 #. odoo-javascript
@@ -3786,8 +3782,8 @@ msgid ""
 "Failed to render inline_template template: %(template_txt)s\n"
 "Error details: %(error)s"
 msgstr ""
-"Het is niet gelukt om de inline_template-sjabloon te renderen: "
-"%(template_txt)s\n"
+"Het is niet gelukt om de inline_template-sjabloon te renderen: %"
+"(template_txt)s\n"
 "Foutgegevens: %(error)s"
 
 #. module: mail
@@ -3895,8 +3891,8 @@ msgid ""
 msgstr ""
 "Veld dat wordt gebruikt om het bijbehorende model te koppelen aan het "
 "subtype, wanneer automatische aanmelding wordt gebruikt op het bijbehorende "
-"model. Dit veld wordt gebruikt om om "
-"getattr(related_document.relation_field) te berekenen."
+"model. Dit veld wordt gebruikt om om getattr"
+"(related_document.relation_field) te berekenen."
 
 #. module: mail
 #. odoo-python
@@ -4994,8 +4990,8 @@ msgstr ""
 msgid ""
 "Invalid template or view source reference %(svalue)s, is %(model)s instead"
 msgstr ""
-"Ongeldige bron sjabloon of weergave referentie %(svalue)s, is eerder "
-"%(model)s"
+"Ongeldige bron sjabloon of weergave referentie %(svalue)s, is eerder %(model)"
+"s"
 
 #. module: mail
 #. odoo-python
@@ -5854,8 +5850,8 @@ msgid ""
 "Mailing or posting with a source should not be called with an empty "
 "%(source_type)s"
 msgstr ""
-"Mailen of posten met een bron mag niet worden aangeroepen met een lege "
-"%(source_type)s"
+"Mailen of posten met een bron mag niet worden aangeroepen met een lege %"
+"(source_type)s"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__mail_ids
@@ -6600,8 +6596,8 @@ msgstr ""
 msgid ""
 "No responsible specified for %(activity_type_name)s: %(activity_summary)s."
 msgstr ""
-"Geen verantwoordelijke gespecificeerd voor %(activity_type_name)s: "
-"%(activity_summary)s."
+"Geen verantwoordelijke gespecificeerd voor %(activity_type_name)s: %"
+"(activity_summary)s."
 
 #. module: mail
 #. odoo-javascript
@@ -6971,8 +6967,7 @@ msgstr "Alleen interne gebruikers kunnen meldingen ontvangen in Odoo"
 #: code:addons/mail/models/mail_thread.py:0
 #, python-format
 msgid "Only messages type comment can have their content updated"
-msgstr ""
-"Alleen berichten van het type notitie kunnen hun inhoud laten bijwerken"
+msgstr "Alleen berichten van het type notitie kunnen hun inhoud laten bijwerken"
 
 #. module: mail
 #. odoo-python
@@ -7102,8 +7097,8 @@ msgid ""
 msgstr ""
 "Optionele vertaaltaal (ISO-code) om te selecteren bij het verzenden van een "
 "e-mail. Indien niet ingesteld, wordt de Engelse versie gebruikt. Dit moet "
-"meestal een placeholder zijn die de juiste taal biedt, bijv. "
-"{{ object.partner_id.lang }}."
+"meestal een placeholder zijn die de juiste taal biedt, bijv. {{ "
+"object.partner_id.lang }}."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__reply_to_mode
@@ -7617,8 +7612,8 @@ msgid ""
 "Posting a message should receive attachments as a list of list or tuples "
 "(received %(aids)s)"
 msgstr ""
-"Het posten van een bericht moet bijlagen ontvangen als een lijst of tuples "
-"(%(aids)s ontvangen)"
+"Het posten van een bericht moet bijlagen ontvangen als een lijst of tuples (%"
+"(aids)s ontvangen)"
 
 #. module: mail
 #. odoo-python
@@ -7639,8 +7634,8 @@ msgid ""
 "Posting a message should receive partners as a list of IDs (received "
 "%(pids)s)"
 msgstr ""
-"Het posten van een bericht moet relaties ontvangen als een lijst van ID's "
-"(%(pids)s ontvangen)"
+"Het posten van een bericht moet relaties ontvangen als een lijst van ID's (%"
+"(pids)s ontvangen)"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_layout
@@ -9302,8 +9297,8 @@ msgid ""
 "Template rendering should be called only using on a list of IDs; received "
 "%(res_ids)r instead."
 msgstr ""
-"Sjabloonweergave mag alleen woorden aangeroepen met een lijst van ID's; "
-"%(res_ids)r ontvangen in de plaats."
+"Sjabloonweergave mag alleen woorden aangeroepen met een lijst van ID's; %"
+"(res_ids)r ontvangen in de plaats."
 
 #. module: mail
 #. odoo-python
@@ -9387,8 +9382,8 @@ msgid ""
 "\"%(activity_type_model)s\"."
 msgstr ""
 "Het activiteitstype \"%(activity_type_name)s\" is niet compatibel met het "
-"plan \"%(plan_name)s\" omdat het beperkt is tot het model "
-"\"%(activity_type_model)s\"."
+"plan \"%(plan_name)s\" omdat het beperkt is tot het model \"%"
+"(activity_type_model)s\"."
 
 #. module: mail
 #. odoo-python
@@ -9396,8 +9391,7 @@ msgstr ""
 #, python-format
 msgid ""
 "The attachment %s does not exist or you do not have the rights to access it."
-msgstr ""
-"De bijlage %s bestaat niet of je hebt geen rechten om deze te bekijken."
+msgstr "De bijlage %s bestaat niet of je hebt geen rechten om deze te bekijken."
 
 #. module: mail
 #. odoo-python
@@ -9462,8 +9456,7 @@ msgstr "De interne gebruiker verantwoordelijk voor dit contact."
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_view_form
 msgid "The last message received on this alias has caused an error."
-msgstr ""
-"Het laatste ontvangen bericht op deze alias heeft een fout veroorzaakt."
+msgstr "Het laatste ontvangen bericht op deze alias heeft een fout veroorzaakt."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_notification_limit_email
@@ -9482,10 +9475,10 @@ msgid ""
 "                 Please make sure you are using the correct address or "
 "contact us at %(default_email)s instead."
 msgstr ""
-"Het onderstaande bericht kon niet worden aanvaard door het adres "
-"%(alias_display_name)s.\n"
-"                 Enkel %(contact_description)s mogen er contact mee opnemen."
-"<br /><br />\n"
+"Het onderstaande bericht kon niet worden aanvaard door het adres %"
+"(alias_display_name)s.\n"
+"                 Enkel %(contact_description)s mogen er contact mee "
+"opnemen.<br /><br />\n"
 "                 Zorg ervoor dat je het juiste adres gebruikt of neem "
 "contact met ons op via %(default_email)s."
 
@@ -9498,8 +9491,8 @@ msgid ""
 "%(alias_display_name)s.\n"
 "Please try again later or contact %(company_name)s instead."
 msgstr ""
-"Het onderstaande bericht kon niet worden aanvaard door het adres "
-"%(alias_display_name)s.\n"
+"Het onderstaande bericht kon niet worden aanvaard door het adres %"
+"(alias_display_name)s.\n"
 "Probeer het later opnieuw of neem contact op met %(company_name)s."
 
 #. module: mail
@@ -9723,8 +9716,8 @@ msgstr "Dit record heeft een activiteit met uitzondering."
 msgid ""
 "Those values are not supported as options when rendering: %(param_names)s"
 msgstr ""
-"Deze waarden worden niet ondersteund als opties bij het weergeven: "
-"%(param_names)s"
+"Deze waarden worden niet ondersteund als opties bij het weergeven: %"
+"(param_names)s"
 
 #. module: mail
 #. odoo-python
@@ -9733,8 +9726,8 @@ msgstr ""
 msgid ""
 "Those values are not supported when posting or notifying: %(param_names)s"
 msgstr ""
-"Deze waarden worden niet ondersteund bij het posten of melden: "
-"%(param_names)s"
+"Deze waarden worden niet ondersteund bij het posten of melden: %(param_names)"
+"s"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
@@ -10921,8 +10914,7 @@ msgstr "Je kunt alleen chatten met bestaande gebruikers."
 #: code:addons/mail/static/src/core/common/thread_service.js:0
 #, python-format
 msgid "You can only chat with partners that have a dedicated user."
-msgstr ""
-"Je kunt alleen chatten met relaties waaraan een gebruiker is gekoppeld."
+msgstr "Je kunt alleen chatten met relaties waaraan een gebruiker is gekoppeld."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_setting_update
@@ -11039,8 +11031,8 @@ msgstr "Je mag geen sjabloon bepalen op een abstract model: %s"
 #, python-format
 msgid "You sure want this message pinned to %(conversation)s forever and ever?"
 msgstr ""
-"Weet je zeker dat je dit bericht voor altijd wilt vastzetten op "
-"%(conversation)s?"
+"Weet je zeker dat je dit bericht voor altijd wilt vastzetten op %"
+"(conversation)s?"
 
 #. module: mail
 #. odoo-javascript
@@ -11343,8 +11335,8 @@ msgstr "bijv. \"Welkom e-mail\""
 msgid ""
 "e.g. \"Welcome to MyCompany\" or \"Nice to meet you, {{ object.name }}\""
 msgstr ""
-"bijv. \"Welkom bij MyCompany\" of \"Aangenaam kennis te maken, "
-"{{ object.name }}\""
+"bijv. \"Welkom bij MyCompany\" of \"Aangenaam kennis te maken, {{ "
+"object.name }}\""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form

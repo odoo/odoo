@@ -12,15 +12,16 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:37+0000\n"
-"PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Tony Ng, 2025\n"
-"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/"
-"zh_TW/)\n"
+"PO-Revision-Date: 2026-08-06 22:06+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
+"projects/odoo-17/payment/zh_Hant/>\n"
 "Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard___data_fetched
@@ -35,8 +36,8 @@ msgid ""
 "<h3>Please make a payment to: </h3><ul><li>Bank: %s</li><li>Account Number: "
 "%s</li><li>Account Holder: %s</li></ul>"
 msgstr ""
-"<h3>請依已下資訊付款：</h3><ul><li>銀行： %s</li><li>帳號： %s</li><li>戶"
-"名： %s</li></ul>"
+"<h3>請依已下資訊付款：</h3><ul><li>銀行： %s</li><li>帳號： %s</li><li>戶名"
+"： %s</li></ul>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_method_form
@@ -52,8 +53,8 @@ msgstr ""
 "<i class=\"fa fa-exclamation-triangle\"/> 設定這些屬性是為了\n"
 "                                配對服務提供者的行為，以及他們就此付款方式"
 "與\n"
-"                                Odoo 的整合功能的行為。任何變更都可能引致錯"
-"誤，\n"
+"                                Odoo 的整合功能的行為。任何變更都可能引致錯誤"
+"，\n"
 "                                應首先在測試資料庫上進行測試。"
 
 #. module: payment
@@ -71,9 +72,9 @@ msgid ""
 "transactions you intend to capture can only be captured in full. Handle the "
 "transactions individually to capture a partial amount.\"/>"
 msgstr ""
-"<i class=\"fa fa-info-circle oe_inline\" "
-"invisible=\"support_partial_capture != 'full_only'\" title=\"你想捕捉的某些交"
-"易，只能捕捉完整金額。若要捕捉非完整金額，請單獨處理各項交易。\"/>"
+"<i class=\"fa fa-info-circle oe_inline\" invisible=\"support_partial_capture "
+"!= 'full_only'\" title=\"你想捕捉的某些交易，只能捕捉完整金額。若要捕捉非完整"
+"金額，請單獨處理各項交易。\"/>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.token_form
@@ -193,8 +194,8 @@ msgid ""
 "em> button is not supported.\n"
 "                        Please use the <em>Duplicate</em> action instead."
 msgstr ""
-"<strong>警告</strong> 不支援透過「<strong>建立</strong>」按鈕新增付款服務"
-"商。\n"
+"<strong>警告</strong> 不支援透過「<strong>建立</strong>」按鈕新增付款服務商"
+"。\n"
 "                        請改用「<strong>複製</strong>」操作。"
 
 #. module: payment
@@ -250,8 +251,7 @@ msgstr "一項交易已啟始（參考：%(ref)s）(%(provider_name)s)。"
 msgid ""
 "A transaction with reference %(ref)s has been initiated to save a new "
 "payment method (%(provider_name)s)"
-msgstr ""
-"一項交易（參考：%(ref)s）已啟始，以儲存新的付款方式 (%(provider_name)s)。"
+msgstr "一項交易（參考：%(ref)s）已啟始，以儲存新的付款方式 (%(provider_name)s)。"
 
 #. module: payment
 #. odoo-python
@@ -261,8 +261,8 @@ msgid ""
 "A transaction with reference %(ref)s has been initiated using the payment "
 "method %(token)s (%(provider_name)s)."
 msgstr ""
-"一項交易（參考：%(ref)s）已使用此付款方式啟始：%(token)s "
-"(%(provider_name)s)。"
+"一項交易（參考：%(ref)s）已使用此付款方式啟始：%(token)s (%(provider_name)s)"
+"。"
 
 #. module: payment
 #. odoo-python
@@ -1930,8 +1930,7 @@ msgstr "沒有須付款項目。"
 msgid ""
 "This action will also archive %s tokens that are registered with this "
 "payment method. Archiving tokens is irreversible."
-msgstr ""
-"此操作亦將封存使用此付款方式登記的 %s 個代碼。封存代碼操作是不可逆轉的。"
+msgstr "此操作亦將封存使用此付款方式登記的 %s 個代碼。封存代碼操作是不可逆轉的。"
 
 #. module: payment
 #. odoo-python
@@ -1940,8 +1939,7 @@ msgstr ""
 msgid ""
 "This action will also archive %s tokens that are registered with this "
 "provider. Archiving tokens is irreversible."
-msgstr ""
-"此操作亦將封存使用此付款服務商登記的 %s 個代碼。封存代碼操作是不可逆轉的。"
+msgstr "此操作亦將封存使用此付款服務商登記的 %s 個代碼。封存代碼操作是不可逆轉的。"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__allow_tokenization
@@ -1983,8 +1981,7 @@ msgstr ""
 msgid ""
 "This payment method needs a partner in crime; you should enable a payment "
 "provider supporting this method first."
-msgstr ""
-"此付款方式需要有一個合作夥伴伴隨；你應先啟用一間支援此付款方式的付款服務商。"
+msgstr "此付款方式需要有一個合作夥伴伴隨；你應先啟用一間支援此付款方式的付款服務商。"
 
 #. module: payment
 #. odoo-python

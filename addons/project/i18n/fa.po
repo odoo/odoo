@@ -29,14 +29,16 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:36+0000\n"
-"PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2025\n"
-"Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
+"PO-Revision-Date: 2026-08-06 22:11+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Persian <https://translate.odoo.com/projects/odoo-17/project/"
+"fa/>\n"
 "Language: fa\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: project
 #. odoo-python
@@ -99,8 +101,8 @@ msgid ""
 "#{record.milestone_count_reached.value} Milestones reached out of "
 "#{record.milestone_count.value}"
 msgstr ""
-"#{record.milestone_count_reached.value} نقطه عطف از "
-"#{record.milestone_count.value} نقطه عطف به دست آمده است"
+"#{record.milestone_count_reached.value} نقطه عطف از #"
+"{record.milestone_count.value} نقطه عطف به دست آمده است"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
@@ -362,22 +364,20 @@ msgstr ""
 "out=\"object.stage_id.name or ''\">در حال انجام</b> ارسال شده است</span> </"
 "t> <t t-if=\"object.project_id.rating_status == 'periodic'\"> <br><span "
 "style=\"margin: 0; font-size: 12px; opacity: 0.5; color: #454748;\">این "
-"پرسشنامه رضایت <b t-out=\"object.project_id.rating_status_period or "
-"''\">هفتگی</b> ارسال می‌شود تا زمانی که وظیفه در مرحله <b t-"
+"پرسشنامه رضایت <b t-out=\"object.project_id.rating_status_period or ''\">"
+"هفتگی</b> ارسال می‌شود تا زمانی که وظیفه در مرحله <b t-"
 "out=\"object.stage_id.name or ''\">در حال انجام</b> باشد.</span> </t> </td></"
 "tr> <tr><td><br>با احترام,</td></tr> <tr><td> <t t-"
-"out=\"object.project_id.company_id.name or ''\">شرکت شما</t> </td></tr> "
-"<tr><td style=\"opacity: 0.5;\"> <t t-"
-"out=\"object.project_id.company_id.phone or ''\">1 650-123-4567</t> <t t-"
-"if=\"object.project_id.company_id.email\"> | <a t-attf-href=\"mailto:"
-"{{ object.project_id.company_id.email }}\" style=\"text-decoration:none; "
-"color: #454748;\" t-out=\"object.project_id.company_id.email or "
-"''\">info@yourcompany.com</a> </t> <t t-"
-"if=\"object.project_id.company_id.website\"> | <a t-attf-"
-"href=\"{{ object.project_id.company_id.website }}\" style=\"text-"
-"decoration:none; color: #454748;\" t-"
-"out=\"object.project_id.company_id.website or ''\">http://www.example.com</"
-"a> </t> </td></tr> </tbody> </table> </div>"
+"out=\"object.project_id.company_id.name or ''\">شرکت شما</t> </td></tr> <tr>"
+"<td style=\"opacity: 0.5;\"> <t t-out=\"object.project_id.company_id.phone "
+"or ''\">1 650-123-4567</t> <t t-if=\"object.project_id.company_id.email\"> | "
+"<a t-attf-href=\"mailto:{{ object.project_id.company_id.email }}\" "
+"style=\"text-decoration:none; color: #454748;\" t-"
+"out=\"object.project_id.company_id.email or ''\">info@yourcompany.com</a> </"
+"t> <t t-if=\"object.project_id.company_id.website\"> | <a t-attf-href=\"{{ "
+"object.project_id.company_id.website }}\" style=\"text-decoration:none; "
+"color: #454748;\" t-out=\"object.project_id.company_id.website or ''\">"
+"http://www.example.com</a> </t> </td></tr> </tbody> </table> </div>"
 
 #. module: project
 #: model:mail.template,body_html:project.project_done_email_template
@@ -401,9 +401,9 @@ msgstr ""
 "<div> <ت t-out=\"object.partner_id.name or 'customer'\">براندون فریمن</ت> "
 "عزیز،<br> با کمال مسرت به اطلاع شما می‌رسانم که ما پروژه \"<strong t-"
 "out=\"object.name or ''\">نوسازی</strong>\" را با موفقیت به اتمام رساندیم. "
-"<ت t-if=\"user.signature\"> <br> <ت t-out=\"user.signature or ''\">--"
-"<br>میتچل ادمین</ت> </ت> </div> <br><span style=\"margin: 0px 0px 0px 0px; "
-"font-size: 12px; opacity: 0.5; color: #454748;\" "
+"<ت t-if=\"user.signature\"> <br> <ت t-out=\"user.signature or ''\">--<br>"
+"میتچل ادمین</ت> </ت> </div> <br><span style=\"margin: 0px 0px 0px 0px; font-"
+"size: 12px; opacity: 0.5; color: #454748;\" "
 "groups=\"project.group_project_stages\">شما این ایمیل را دریافت می‌کنید زیرا "
 "پروژه شما به مرحله <b t-out=\"object.stage_id.name or ''\">انجام شده</b> "
 "منتقل شده است.</span>"
@@ -426,8 +426,8 @@ msgid ""
 "        "
 msgstr ""
 "<div> عزیز <t t-out=\"object.partner_id.name or 'customer'\">براندون فریمن</"
-"t>,<br> از بابت استعلام شما سپاسگزاریم.<br> اگر سوالی دارید، لطفاً به ما "
-"اطلاع دهید. <br><br> متشکرم, <t t-if=\"user.signature\"> <br> <t t-"
+"t>,<br> از بابت استعلام شما سپاسگزاریم.<br> اگر سوالی دارید، لطفاً به ما اطلاع "
+"دهید. <br><br> متشکرم, <t t-if=\"user.signature\"> <br> <t t-"
 "out=\"user.signature or ''\">--<br>میتچل ادمین</t> </t> </div>"
 
 #. module: project
@@ -944,8 +944,8 @@ msgid ""
 msgstr ""
 "حساب تجزیه و تحلیلی که این وظیفه و برگه‌های زمانی آن به آن متصل هستند.\n"
 "هزینه‌ها و درآمدهای وظیفه خود را با تنظیم حساب تجزیه و تحلیلی آن بر روی اسناد "
-"مرتبط خود (مانند سفارش‌های فروش، فاکتورها، سفارش‌های خرید، صورت‌حساب‌های "
-"فروشنده، هزینه‌ها و غیره) پیگیری کنید.\n"
+"مرتبط خود (مانند سفارش‌های فروش، فاکتورها، سفارش‌های خرید، صورت‌حساب‌های فروشنده"
+"، هزینه‌ها و غیره) پیگیری کنید.\n"
 "به طور پیش‌فرض، حساب تجزیه و تحلیلی پروژه تنظیم شده است. با این حال، می‌توان "
 "آن را بر روی هر وظیفه به صورت جداگانه در صورت نیاز تغییر داد."
 
@@ -1779,8 +1779,7 @@ msgid ""
 "you can get statistics on the time it usually takes to assign tasks."
 msgstr ""
 "تاریخی که این کار آخرین بار اختصاص داده شد (یا لغو اختصاص داده شد). بر اساس "
-"این، می‌توانید آمار زمانی را که معمولاً برای اختصاص کارها صرف می‌شود، بدست "
-"آورید."
+"این، می‌توانید آمار زمانی را که معمولاً برای اختصاص کارها صرف می‌شود، بدست آورید."
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_unit__day
@@ -2471,8 +2470,8 @@ msgid ""
 "To use this feature make sure that the 'Customer Ratings' option is enabled "
 "on your project."
 msgstr ""
-"اگر تنظیم شود، درخواست رتبه‌بندی به‌صورت خودکار زمانی که کار به این مرحله "
-"می‌رسد، از طریق ایمیل به مشتری ارسال خواهد شد.\n"
+"اگر تنظیم شود، درخواست رتبه‌بندی به‌صورت خودکار زمانی که کار به این مرحله می‌رسد"
+"، از طریق ایمیل به مشتری ارسال خواهد شد.\n"
 "به‌صورت جایگزین، به صورت منظم و تا زمانی که کار در این مرحله باقی بماند، بر "
 "حسب تنظیمات پروژه شما ارسال خواهد شد.\n"
 "برای استفاده از این ویژگی، اطمینان حاصل کنید که گزینه 'رتبه‌بندی مشتریان' بر "
@@ -2653,7 +2652,8 @@ msgstr "نسخه"
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__duration_tracking
 msgid "JSON that maps ids from a many2one field to seconds spent"
-msgstr "JSON که شناسه‌ها از یک فیلد many2one را به ثانیه‌های صرف شده نگاشت می‌کند"
+msgstr ""
+"JSON که شناسه‌ها از یک فیلد many2one را به ثانیه‌های صرف شده نگاشت می‌کند"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.act_project_project_2_project_task_all
@@ -3707,8 +3707,8 @@ msgid ""
 "Private tasks cannot be converted into sub-tasks. Please set a project for "
 "the task to gain access to this feature."
 msgstr ""
-"وظایف خصوصی نمی‌توانند به وظایف فرعی تبدیل شوند. لطفاً برای دسترسی به این "
-"ویژگی، یک پروژه برای وظیفه تعیین کنید."
+"وظایف خصوصی نمی‌توانند به وظایف فرعی تبدیل شوند. لطفاً برای دسترسی به این ویژگی"
+"، یک پروژه برای وظیفه تعیین کنید."
 
 #. module: project
 #. odoo-javascript
@@ -5154,8 +5154,8 @@ msgid ""
 msgstr ""
 "این پروژه با %s مرتبط است، در حالی که مرحله انتخابی به %s تعلق دارد. چند "
 "گزینه برای بررسی وجود دارد: یا نام شرکت را از پروژه یا از مرحله حذف کنید. در "
-"غیر این صورت، می‌توانید اطلاعات شرکت را برای این سوابق به‌روزرسانی کنید تا "
-"آن‌ها را تحت همان شرکت هم‌راستا کنید."
+"غیر این صورت، می‌توانید اطلاعات شرکت را برای این سوابق به‌روزرسانی کنید تا آن‌ها "
+"را تحت همان شرکت هم‌راستا کنید."
 
 #. module: project
 #. odoo-python
@@ -5306,8 +5306,7 @@ msgstr "رسیدن به نقاط پیشرفت عمده‌ای که باید بر
 #: code:addons/project/static/src/components/project_right_side_panel/project_right_side_panel.xml:0
 #, python-format
 msgid "Track major progress points that must be reached to achieve success."
-msgstr ""
-"ردیابی نقاط پیشرفت عمده ای که برای دستیابی به موفقیت باید به آنها رسید."
+msgstr "ردیابی نقاط پیشرفت عمده ای که برای دستیابی به موفقیت باید به آنها رسید."
 
 #. module: project
 #. odoo-javascript
@@ -5726,8 +5725,8 @@ msgid ""
 msgstr ""
 "شما نمی‌توانید شرکت این مرحله را به %(company_name)s تغییر دهید زیرا در حال "
 "حاضر شامل پروژه‌هایی است که با %(project_company_name)s مرتبط هستند. لطفاً "
-"اطمینان حاصل کنید که این مرحله به طور اختصاصی شامل پروژه‌های مرتبط با "
-"%(company_name)s باشد."
+"اطمینان حاصل کنید که این مرحله به طور اختصاصی شامل پروژه‌های مرتبط با %"
+"(company_name)s باشد."
 
 #. module: project
 #. odoo-python
@@ -6079,8 +6078,8 @@ msgid ""
 "{{ record.closed_subtask_count.value }} sub-tasks closed out of "
 "{{ record.subtask_count.value }}"
 msgstr ""
-"{{ record.closed_subtask_count.value }} زیرکار بسته شده از "
-"{{ record.subtask_count.value }}"
+"{{ record.closed_subtask_count.value }} زیرکار بسته شده از {{ "
+"record.subtask_count.value }}"
 
 #. module: project
 #. odoo-javascript

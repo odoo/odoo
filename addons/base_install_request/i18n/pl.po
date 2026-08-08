@@ -5,14 +5,14 @@
 # Translators:
 # Wil Odoo, 2023
 #
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # "Marta (wacm)" <wacm@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:37+0000\n"
-"PO-Revision-Date: 2026-02-07 08:02+0000\n"
+"PO-Revision-Date: 2026-08-07 00:16+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-17/"
 "base_install_request/pl/>\n"
@@ -21,9 +21,9 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
-"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || "
-"(n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
-"X-Generator: Weblate 5.14.3\n"
+"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
+"n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: base_install_request
 #: model:mail.template,body_html:base_install_request.mail_template_base_install_request
@@ -64,21 +64,21 @@ msgstr ""
 "        Dzień dobry,\n"
 "        <br><br>\n"
 "        <span style=\"font-weight: bold;\" t-out=\"object.user_id.name\"></"
-"span> poprosił/a o aktywowanie modułu <span style=\"font-weight: bold;"
-"\" t-out=\"object.module_id.shortdesc\"></span>. Ten moduł jest załączony do "
-"Twojej subskrypcji. Nie wiążą się z nim <span style="
-"\"color: #875A7B; font-weight: bold;\">żadne dodatkowe koszty</span>, ale "
-"jego aktywowanie wymaga ingerencji administratora.\n"
+"span> poprosił/a o aktywowanie modułu <span style=\"font-weight: bold;\" t-"
+"out=\"object.module_id.shortdesc\"></span>. Ten moduł jest załączony do "
+"Twojej subskrypcji. Nie wiążą się z nim <span style=\"color: #875A7B; font-"
+"weight: bold;\">żadne dodatkowe koszty</span>, ale jego aktywowanie wymaga "
+"ingerencji administratora.\n"
 "        <br><br>\n"
 "        <blockquote>\n"
 "            <t t-out=\"object.body_html\"></t>\n"
 "        </blockquote>\n"
 "        <br><br>\n"
 "        <a style=\"background-color:#875A7B; padding:8px 16px 8px 16px; text-"
-"decoration:none; color:#fff; border-radius:5px\" t-attf-href=\""
-"/web?#action=base_install_request.action_base_module_install_review&amp;active_id={{"
-" object.module_id.id }}&amp;menu_id={{ ctx['menu_id'] }}\">Zobacz prośbę</a>"
-"\n"
+"decoration:none; color:#fff; border-radius:5px\" t-attf-href=\"/"
+"web?#action=base_install_request.action_base_module_install_review&amp;active_id="
+"{{ object.module_id.id }}&amp;menu_id={{ ctx['menu_id'] }}\">Zobacz prośbę</"
+"a>\n"
 "        <br><br>\n"
 "        Dziękuję,\n"
 "        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
@@ -147,7 +147,7 @@ msgstr "Zainstaluj aplikację"
 #: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__write_uid
 #: model:ir.model.fields,field_description:base_install_request.field_base_module_install_review__write_uid
 msgid "Last Updated by"
-msgstr "Ostatnio aktualizowane przez"
+msgstr "Ostatnio zaktualizowane przez"
 
 #. module: base_install_request
 #: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__write_date
@@ -170,17 +170,17 @@ msgstr "Moduł"
 #. module: base_install_request
 #: model:ir.model,name:base_install_request.model_base_module_install_request
 msgid "Module Activation Request"
-msgstr "Wniosek o aktywację modułu"
+msgstr "Prośba o aktywację modułu"
 
 #. module: base_install_request
 #: model:mail.template,subject:base_install_request.mail_template_base_install_request
 msgid "Module Activation Request for \"{{ object.module_id.shortdesc }}\""
-msgstr "Żądanie aktywacji modułu dla \"{{ object.module_id.shortdesc }}\""
+msgstr "Prośba o aktywację modułu dla \"{{ object.module_id.shortdesc }}\""
 
 #. module: base_install_request
 #: model:ir.model,name:base_install_request.model_base_module_install_review
 msgid "Module Activation Review"
-msgstr "Recenzja aktywacji modułu"
+msgstr "Kontrola aktywacji modułu"
 
 #. module: base_install_request
 #: model:ir.model.fields,field_description:base_install_request.field_base_module_install_review__modules_description
@@ -202,12 +202,12 @@ msgstr "Nie wybrano żadnego modułu."
 #. module: base_install_request
 #: model_terms:ir.ui.view,arch_db:base_install_request.ir_module_module_view_kanban
 msgid "Request Access"
-msgstr "Żądanie dostępu"
+msgstr "Poproś o dostęp"
 
 #. module: base_install_request
 #: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_request_view_form
 msgid "Request Activation"
-msgstr "Żądanie aktywacji"
+msgstr "Poproś o aktywację"
 
 #. module: base_install_request
 #: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__user_ids
@@ -257,7 +257,7 @@ msgstr "Zamierzasz zainstalować dodatkową aplikację"
 #: code:addons/base_install_request/wizard/base_module_install_request.py:0
 #, python-format
 msgid "Your request has been successfully sent"
-msgstr "Twój wniosek został pomyślnie wysłany"
+msgstr "Twoja prośba została pomyślnie wysłana"
 
 #. module: base_install_request
 #: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_request_view_form
@@ -265,6 +265,6 @@ msgid ""
 "e.g. I'd like to use the SMS Marketing module to organize the promotion of "
 "our internal events, and exhibitions. I need access for 3 people of my team."
 msgstr ""
-"np. Chciałbym wykorzystać moduł SMS Marketing do organizacji promocji "
-"naszych wewnętrznych wydarzeń, oraz wystaw. Potrzebuję dostępu dla 3 osób z "
-"mojego zespołu."
+"np. Chcę wykorzystać moduł SMS Marketing do organizacji promocji naszych "
+"wewnętrznych wydarzeń, oraz wystaw. Potrzebuję dostępu dla 3 osób z mojego "
+"zespołu."
