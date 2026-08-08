@@ -15,8 +15,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-03 17:38+0000\n"
-"PO-Revision-Date: 2026-07-31 08:58+0000\n"
-"Last-Translator: \"Nurul Aini Akrima Sabila (nuaas)\" <nuaas@odoo.com>\n"
+"PO-Revision-Date: 2026-08-07 17:53+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-18/"
 "point_of_sale/id/>\n"
 "Language: id\n"
@@ -248,9 +248,8 @@ msgid ""
 "(is_invoiced)sfor             %(pos_name)s amounting in %(amount)s from %"
 "(company_name)s. </p>"
 msgstr ""
-"<p>Dear %(client_name)s,<br/>Here is your Receipt %"
-"(is_invoiced)sfor             %(pos_name)s amounting in %(amount)s from %"
-"(company_name)s. </p>"
+"<p>Halo, %(client_name)s.<br/>Berikut adalah Struk %(is_invoiced)suntuk"
+"             %(pos_name)s sejumlah %(amount)s dari %(company_name)s. </p>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -258,8 +257,8 @@ msgid ""
 "<span class=\"float-end\" invisible=\"is_total_cost_computed\">To be "
 "determined</span>"
 msgstr ""
-"<span class=\"float-end\" invisible=\"is_total_cost_computed\">To be "
-"determined</span>"
+"<span class=\"float-end\" invisible=\"is_total_cost_computed\">Akan "
+"ditentukan</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -637,8 +636,8 @@ msgid ""
 "Add a 5-digit code on the receipt to allow the user to request the invoice "
 "for an order on the portal."
 msgstr ""
-"Tambahkan kode 5-angka pada bon untuk mengizinkan user untuk meminta faktur "
-"untuk order pada portal."
+"Tambahkan kode 5 angka pada struk untuk mengizinkan user meminta faktur "
+"pesanan pada portal."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -725,7 +724,7 @@ msgstr "Administrator"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__cash_control
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_cash_control
 msgid "Advanced Cash Control"
-msgstr "Advanced Cash Control"
+msgstr "Kontrol Kas Lanjutan"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -800,7 +799,7 @@ msgstr "Izinkan untuk mengakses order aktif orang lain"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Allow to log and switch between selected Employees"
-msgstr "Izinkan untuk log & switch antara Karyawan yang dipilih"
+msgstr "Izinkan pencatatan dan peralihan antara Karyawan yang dipilih"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -844,7 +843,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_close_session_wizard__amount_to_balance
 msgid "Amount to balance"
-msgstr "Jumlah untuk di-balance"
+msgstr "Jumlah untuk diseimbangkan"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_tree
@@ -865,8 +864,8 @@ msgid ""
 "An error has occurred when trying to close the session.\n"
 "You will be redirected to the back-end to manually close the session."
 msgstr ""
-"Eror terjadi saat mencoba menutup sesi.\n"
-"Anda akan dialihkan ulang ke back-end untuk secara manual menutup sesi."
+"Terjadi kesalahan saat mencoba menutup sesi.\n"
+"Anda akan diarahkan ke back-end untuk menutup sesi secara manual."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1034,7 +1033,7 @@ msgstr "Otomatis"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_print_auto
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_iface_print_auto
 msgid "Automatic Receipt Printing"
-msgstr "Otomatis Cetak Resi"
+msgstr "Cetak Struk Otomatis"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_cashdrawer
@@ -1298,7 +1297,7 @@ msgstr "Langkahi cetak browser dan cetak melalui proxy perangkat keras."
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/navbar/cash_move_popup/cash_move_receipt/cash_move_receipt.xml:0
 msgid "CASH"
-msgstr "KAS"
+msgstr "TUNAI"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1409,7 +1408,7 @@ msgstr "Keranjang"
 #: model:pos.payment.method,name:point_of_sale.cash_payment_method_furniture
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "Cash"
-msgstr "Kas"
+msgstr "Tunai"
 
 #. module: point_of_sale
 #. odoo-python
@@ -2193,7 +2192,7 @@ msgstr "Jumlah"
 #: code:addons/point_of_sale/static/src/app/navbar/closing_popup/closing_popup.xml:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "Counted"
-msgstr "Dihitung"
+msgstr "Terhitung"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_res_country
@@ -3826,7 +3825,7 @@ msgstr "Total Value KPI POS"
 #. module: point_of_sale
 #: model:product.attribute.value,name:point_of_sale.product_attribute_value_l
 msgid "L"
-msgstr ""
+msgstr "L"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.led_lamp_product_template
@@ -4092,12 +4091,12 @@ msgstr "Nomor Seri/Lot"
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.pos_category_lower
 msgid "Lower body"
-msgstr "Bagian Bawah Tubuh"
+msgstr "Bawahan"
 
 #. module: point_of_sale
 #: model:product.attribute.value,name:point_of_sale.product_attribute_value_m
 msgid "M"
-msgstr ""
+msgstr "M"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.magnetic_board_product_template
@@ -5202,7 +5201,7 @@ msgstr "Metode Pembayaran"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_tree
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Payment Methods"
-msgstr "Metode-Metode Pembayaran"
+msgstr "Metode Pembayaran"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__payment_method_payment_mode
@@ -5539,7 +5538,7 @@ msgstr "Order POS"
 #: model:ir.ui.menu,name:point_of_sale.menu_products_pos_category
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "PoS Product Categories"
-msgstr "Kategori-Kategori Produk POS"
+msgstr "Kategori Produk POS"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_pos_category_tree_view
@@ -6718,7 +6717,7 @@ msgstr "Rye Bread"
 #. module: point_of_sale
 #: model:product.attribute.value,name:point_of_sale.product_attribute_value_s
 msgid "S"
-msgstr ""
+msgstr "S"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__message_has_sms_error
@@ -6961,7 +6960,7 @@ msgstr "Kirim tanda terima Teks Menggunakan sms"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt_screen.xml:0
 msgid "Sending"
-msgstr "Mengiri"
+msgstr "Mengirim"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__sequence
@@ -7035,7 +7034,7 @@ msgstr "Laporan Sesi"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Session already closed"
-msgstr ""
+msgstr "Sesi telah ditutup"
 
 #. module: point_of_sale
 #: model:mail.activity.type,name:point_of_sale.mail_activity_old_session
@@ -7611,12 +7610,12 @@ msgstr "Pajak"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "Taxes on refunds"
-msgstr "Pajak pada refund"
+msgstr "Pajak pengembalian"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "Taxes on sales"
-msgstr "Pajak pada sales"
+msgstr "Pajak penjualan"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__tax_ids_after_fiscal_position
@@ -8441,7 +8440,7 @@ msgstr "Tips:"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "To Close"
-msgstr "Untuk menutup"
+msgstr "Siap Ditutup"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8797,7 +8796,7 @@ msgstr "Update kuantitas di stok"
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.pos_category_upper
 msgid "Upper body"
-msgstr "Bagian Atas Tubuh"
+msgstr "Atasan"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__use_payment_terminal

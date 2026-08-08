@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:36+0000\n"
-"PO-Revision-Date: 2026-07-10 11:07+0000\n"
+"PO-Revision-Date: 2026-08-05 15:10+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-18/project/"
 "es/>\n"
@@ -40,10 +40,10 @@ msgid ""
 msgstr ""
 "\n"
 "                <p class=\"o_view_nocontent_smiling_face\">\n"
-"                    No se encontraron hitos. ¡Creemos uno!\n"
+"                    No se ha encontrado ningún hito. ¡Creemos uno!\n"
 "                </p><p>\n"
-"                    Lleve un seguimiento de los principales puntos de "
-"progreso a alcanzar para lograr el éxito.\n"
+"                    Lleve un seguimiento de los principales avances que "
+"deben alcanzarse para lograr el éxito.\n"
 "                </p>\n"
 "            "
 
@@ -229,7 +229,7 @@ msgstr "Tablero de %(name)s"
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
 msgid "%(name)s's Burndown Chart"
-msgstr "Diagrama de quemado de %(name)s"
+msgstr "Gráfico de trabajo pendiente de %(name)s"
 
 #. module: project
 #. odoo-python
@@ -241,7 +241,7 @@ msgstr "Hitos de %(name)s"
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
 msgid "%(name)s's Rating"
-msgstr "Calificación de %(name)s"
+msgstr "Valoración de %(name)s"
 
 #. module: project
 #. odoo-python
@@ -1343,8 +1343,8 @@ msgid ""
 "stage in a project by setting this template on that stage"
 msgstr ""
 "Envíe automáticamente un correo electrónico a los clientes cuando una tarea "
-"llegue a una etapa específica en un proyecto estableciendo esta plantilla en "
-"esa etapa."
+"alcance una etapa específica de un proyecto configurando esta plantilla en "
+"dicha etapa"
 
 #. module: project
 #. odoo-javascript
@@ -3640,16 +3640,16 @@ msgstr ""
 #: code:addons/project/models/res_partner.py:0
 msgid "Partner company cannot be different from its assigned projects' company"
 msgstr ""
-"La empresa del contacto no puede ser diferente a la empresa de sus proyectos "
-"asignados."
+"La empresa del contacto no puede ser distinta a la empresa de los proyectos "
+"que tiene asignados"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/res_partner.py:0
 msgid "Partner company cannot be different from its assigned tasks' company"
 msgstr ""
-"La empresa del contacto no puede ser diferente a la empresa de sus tareas "
-"asignadas."
+"La empresa del contacto no puede ser distinta a la empresa de las tareas "
+"asignadas"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_task_action_from_partner
@@ -4002,7 +4002,7 @@ msgstr "Descripción del proyecto..."
 #. odoo-python
 #: code:addons/project/wizard/project_share_wizard.py:0
 msgid "Project shared with your collaborators."
-msgstr "Proyecto compartido con sus colaboradores"
+msgstr "Proyecto compartido con sus colaboradores."
 
 #. module: project
 #: model:mail.template,subject:project.project_done_email_template
@@ -4707,7 +4707,7 @@ msgstr "Etapa"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
 msgid "Stage (Burndown Chart)"
-msgstr "Etapa (diagrama de quemado)"
+msgstr "Etapa (gráfico de trabajo pendiente)"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_task_stage
@@ -5069,7 +5069,7 @@ msgstr "Pruebas"
 #. odoo-javascript
 #: code:addons/project/static/src/views/burndown_chart/burndown_chart_search_model.js:0
 msgid "The Burndown Chart must be grouped by Date"
-msgstr "El Diagrama de quemado debe agruparse por fecha"
+msgstr "El gráfico de trabajo pendiente debe agruparse por fecha"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__personal_stage_id
@@ -5117,10 +5117,9 @@ msgid ""
 "email that does not reply to an existing record will cause the creation of a "
 "new record of this model (e.g. a Project Task)"
 msgstr ""
-"El modelo (Tipo de documento de Odoo) al que corresponde este alias. "
-"Cualquier correo entrante que no sea respuesta a un registro existente, "
-"causará la creación de un nuevo registro de este modelo (por ejemplo, una "
-"tarea de proyecto)."
+"El modelo (tipo de documento de Odoo) al que corresponde este alias. "
+"Cualquier correo entrante que no responda a un registro existente, creará un "
+"nuevo registro de este modelo (por ejemplo, una tarea de proyecto)"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_name
@@ -5163,10 +5162,10 @@ msgid ""
 "Chart or by \"Is Closed\" to represent a Burn-up chart. Without one of these "
 "groupings applied, the report will not provide relevant information."
 msgstr ""
-"El informe debería agruparse por \"Etapa\" para representar un diagrama de "
-"quemado hacia abajo o por \"Está cerrado\" para representar un diagrama de "
-"quemado hacia arriba. Si no se aplica ninguno de estos agrupamientos, el "
-"informe no mostrará la información relevante."
+"El informe debe agruparse por «Etapa» para representar un gráfico de trabajo "
+"pendiente o por «Está cerrado» para representar un gráfico de trabajo "
+"completado. Si no se aplica una de estas agrupaciones, el informe no "
+"proporcionará información relevante."
 
 #. module: project
 #. odoo-python
@@ -5209,8 +5208,8 @@ msgid ""
 "The view must be grouped by date and by Stage - Burndown chart or Is Closed "
 "- Burnup chart"
 msgstr ""
-"La vista debe agruparse por fecha y por Etapa - Diagrama de quemado hacia "
-"abajo o Está cerrado - Diagrama de quemado hacia arriba"
+"La vista debe estar agrupada por fecha y por etapa - Gráfico de trabajo "
+"pendiente o Está cerrado - Gráfico de trabajo completado"
 
 #. module: project
 #. odoo-javascript
@@ -5226,7 +5225,7 @@ msgstr "No hay proyectos."
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.rating_rating_action_view_project_rating
 msgid "There are no ratings for this project at the moment"
-msgstr "No hay calificaciones para este proyecto en este momento."
+msgstr "Por ahora no hay valoraciones para este proyecto"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_project
@@ -5346,10 +5345,10 @@ msgid ""
 "the project's company to align with the stage's company or remove the "
 "company designation from the stage"
 msgstr ""
-"Este proyecto no está asociado a ninguna empresa, aunque la etapa está "
-"asociada a %s. Hay un par de opciones que considerar: ya sea cambiar el "
-"proyecto de empresa para que funcionen en la misma empresa, o eliminar la "
-"designación de la empresa de la etapa."
+"Este proyecto no está asociado a ninguna empresa, mientras que la etapa sí "
+"lo está a %s. Hay un par de opciones a tener en cuenta: o bien cambiar la "
+"empresa del proyecto para que coincida con la de la etapa, o bien eliminar "
+"la designación de la empresa de la etapa"
 
 #. module: project
 #. odoo-python
@@ -5518,16 +5517,16 @@ msgstr "Siga la satisfacción de los clientes en tareas"
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Track major progress points that must be reached to achieve success"
 msgstr ""
-"Haga un seguimiento de los principales puntos de progreso que se deben "
-"alcanzar para lograr el éxito."
+"Lleve un seguimiento de los principales avances que deben alcanzarse para "
+"lograr el éxito"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_right_side_panel/project_right_side_panel.xml:0
 msgid "Track major progress points that must be reached to achieve success."
 msgstr ""
-"Haga un seguimiento de los principales puntos de progreso que se deben "
-"alcanzar para lograr el éxito."
+"Lleve un seguimiento de los principales avances que deben alcanzarse para "
+"lograr el éxito."
 
 #. module: project
 #. odoo-javascript
@@ -5548,7 +5547,7 @@ msgstr "Lleve el seguimiento del progreso de sus proyectos"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Track time spent on projects and tasks"
-msgstr "Lleve seguimiento del tiempo dedicado a proyectos y tareas."
+msgstr "Realice un seguimiento del tiempo dedicado a proyectos y tareas"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_tags__color

@@ -1,25 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* account_tax_python
+# * account_tax_python
 #
 # Translators:
 # KeyVillage, 2024
 # Rosen Vladimirov <vladimirov.rosen@gmail.com>, 2024
 # Albena Mincheva <albena_vicheva@abv.bg>, 2024
-#
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:37+0000\n"
-"PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Albena Mincheva <albena_vicheva@abv.bg>, 2024\n"
-"Language-Team: Bulgarian (https://app.transifex.com/odoo/teams/41243/bg/)\n"
+"PO-Revision-Date: 2026-08-06 17:54+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Bulgarian <https://translate.odoo.com/projects/odoo-18/"
+"account_tax_python/bg/>\n"
 "Language: bg\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax__amount_type
@@ -35,6 +37,16 @@ msgid ""
 "        e.g 200 * (1 - 10%) = 180 (price included)\n"
 "        "
 msgstr ""
+"\n"
+"    - Група на данъците: Данъкът е набор от подданъци.\n"
+"    - Фиксиран: Сумата на данъка остава една и съща независимо от цената.\n"
+"    - Процент: Сумата на данъка е % от цената:\n"
+"        напр. 100 * (1 + 10%) = 110 (без включен данък в цената)\n"
+"        напр. 110 / (1 + 10%) = 100 (с включен данък в цената)\n"
+"    - Процент с включен данък: Сумата на данъка е деление на цената:\n"
+"        напр. 180 / (1 - 10%) = 200 (без включен данък в цената)\n"
+"        напр. 200 * (1 - 10%) = 180 (с включен данък в цената)\n"
+"        "
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax__formula
@@ -46,11 +58,17 @@ msgid ""
 ":param quantity: float\n"
 ":param product: A object representing the product\n"
 msgstr ""
+"Изчислява сумата на данъка.\n"
+"\n"
+":param base: float, действителната сума, върху която се прилага данъкът\n"
+":param price_unit: float\n"
+":param quantity: float\n"
+":param product: Обект, представляващ продукта\n"
 
 #. module: account_tax_python
 #: model:ir.model.fields.selection,name:account_tax_python.selection__account_tax__amount_type__code
 msgid "Custom Formula"
-msgstr ""
+msgstr "Персонализирана формула"
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__formula
@@ -60,7 +78,7 @@ msgstr "Формула"
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__formula_decoded_info
 msgid "Formula Decoded Info"
-msgstr ""
+msgstr "Декодирана информация за формулата"
 
 #. module: account_tax_python
 #. odoo-python

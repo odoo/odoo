@@ -19,8 +19,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-10 17:39+0000\n"
-"PO-Revision-Date: 2026-07-11 18:31+0000\n"
+"POT-Creation-Date: 2026-08-07 17:38+0000\n"
+"PO-Revision-Date: 2026-08-08 12:15+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-18/"
 "account_edi_ubl_cii/tr/>\n"
@@ -385,11 +385,6 @@ msgstr "EAN Konum Kodu"
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__invoice_edi_format__ubl_bis3
 msgid "EU Standard (Peppol Bis 3.0)"
 msgstr "AB Standardı (Peppol Bis 3.0)"
-
-#. module: account_edi_ubl_cii
-#: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
-msgid "EXTENDED"
-msgstr "GENİŞLETİLMİŞ"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -841,6 +836,11 @@ msgid ""
 "met, the customer will be liable for the payment of the tax, interest, and "
 "penalties due in relation to this condition."
 msgstr ""
+"Tersine faturalandırma: Faturanın alınmasından itibaren bir ay içinde yazılı "
+"bir itirazda bulunulmaması halinde, müşterinin, periyodik beyanname verme "
+"yükümlülüğü bulunan bir vergi mükellefi olduğunu kabul ettiği varsayılır. Bu "
+"koşul yerine getirilmezse, müşteri bu koşulla ilgili olarak ödenmesi gereken "
+"vergi, faiz ve cezaların ödenmesinden sorumlu olacaktır."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9947
@@ -958,8 +958,8 @@ msgid ""
 "Tax with matching exigibility could not be retrieved: '%(exigibility)s' for "
 "line '%(line)s'."
 msgstr ""
-"Eşleşen vadeye sahip vergi bulunamadı: '%(exigibility)s satır için '%(line)"
-"s'."
+"Eşleşen vadeye sahip vergi bulunamadı: '%(exigibility)s satır için '%"
+"(line)s'."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1264,6 +1264,9 @@ msgstr "fx"
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
 msgid "urn:factur-x:pdfa:CrossIndustryDocument:invoice:1p0#"
 msgstr "urn:factur-x:pdfa:CrossIndustryDocument:invoice:1p0 #"
+
+#~ msgid "EXTENDED"
+#~ msgstr "GENİŞLETİLMİŞ"
 
 #~ msgid "Vendor Bill"
 #~ msgstr "Tedarikçi Faturası"
