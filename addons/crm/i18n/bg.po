@@ -30,7 +30,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-20 18:37+0000\n"
-"PO-Revision-Date: 2026-05-16 09:10+0000\n"
+"PO-Revision-Date: 2026-08-03 15:50+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Bulgarian <https://translate.odoo.com/projects/odoo-18/crm/"
 "bg/>\n"
@@ -39,7 +39,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__lead_all_assigned_month_count
@@ -1628,6 +1628,11 @@ msgid ""
 "targeted to your needs: company size, industry, etc. To help you test the "
 "feature, we offer you 20 credits for free."
 msgstr ""
+"За един търговски екип няма нищо по-лошо от това да остане без потенциални "
+"клиенти. За щастие само с няколко клика можете да генерирате потенциални "
+"клиенти, специално насочени към вашите нужди: размер на компанията, отрасъл "
+"и т.н. За да ви помогнем да изпробвате функцията, ви предлагаме 20 кредита "
+"безплатно."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner__force_assignment
@@ -1895,6 +1900,8 @@ msgstr "Автоматизирана ли е вероятността?"
 #: model:ir.model.fields,help:crm.field_crm_lead__duration_tracking
 msgid "JSON that maps ids from a many2one field to seconds spent"
 msgstr ""
+"JSON, който съпоставя идентификатори от поле many2one към изразходвани "
+"секунди"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__function
@@ -2098,6 +2105,8 @@ msgid ""
 "Lead/Opportunities automatic assignment is limited to managers or "
 "administrators"
 msgstr ""
+"Автоматичното разпределяне на потенциални клиенти/възможности е ограничено "
+"до мениджъри или администратори"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead
@@ -2163,7 +2172,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/crm/models/crm_team.py:0
 msgid "Leads Assigned"
-msgstr ""
+msgstr "Назначени потенциални клиенти"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lost_reason__leads_count
@@ -2231,7 +2240,7 @@ msgstr "Нека <b>планираме дейност.</b>"
 #: model_terms:ir.actions.act_window,help:crm.crm_activity_report_action
 #: model_terms:ir.actions.act_window,help:crm.crm_activity_report_action_team
 msgid "Let's get to work!"
-msgstr ""
+msgstr "Да се захващаме за работа!"
 
 #. module: crm
 #. odoo-javascript
@@ -2251,6 +2260,9 @@ msgid ""
 "Linked partner (optional). Usually created when converting the lead. You can "
 "find a partner by its Name, TIN, Email or Internal Reference."
 msgstr ""
+"Свързан партньор (по избор). Обикновено се създава при преобразуване на "
+"потенциалния клиент. Можете да намерите партньор по неговото име, ЕИК, имейл "
+"или вътрешна референция."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_incoming_local
@@ -2274,6 +2286,8 @@ msgid ""
 "Looks like nothing is planned. :(<br><br><i>Tip: Schedule activities to keep "
 "track of everything you have to do!</i>"
 msgstr ""
+"Изглежда, че нищо не е планирано. :(<br><br><i>Съвет: Планирайте дейности, "
+"за да следите всичко, което трябва да направите!</i>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -2336,6 +2350,9 @@ msgid ""
 "Make and receive calls from Odoo with Ringover's dialer. Track calls, SMS "
 "messages, and get AI-powered transcripts of your conversations."
 msgstr ""
+"Извършвайте и приемайте обаждания от Odoo с набирателя на Ringover. "
+"Проследявайте обаждания, SMS съобщения и получавайте транскрипции на "
+"разговорите си с помощта на изкуствен интелект."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -2349,6 +2366,9 @@ msgid ""
 "action button. Automatic configures a cron running repeatedly assignment in "
 "all teams."
 msgstr ""
+"Ръчното разпределяне позволява задействане на разпределението от формата на "
+"екипа чрез бутон за действие. Автоматичното конфигурира cron, който "
+"изпълнява разпределението многократно във всички екипи."
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__res_config_settings__crm_auto_assignment_action__manual
@@ -2410,18 +2430,18 @@ msgstr "Среден:"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__meeting_display_date
 msgid "Meeting Display Date"
-msgstr ""
+msgstr "Показвана дата на срещата"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__meeting_display_label
 msgid "Meeting Display Label"
-msgstr ""
+msgstr "Показван етикет на срещата"
 
 #. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "Meeting scheduled at %s"
-msgstr ""
+msgstr "Среща, насрочена за %s"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.act_crm_opportunity_calendar_event_new
@@ -2436,6 +2456,8 @@ msgid ""
 "Member assignment domain for user %(user)s and team %(team)s is incorrectly "
 "formatted"
 msgstr ""
+"Домейнът за разпределяне на членове за потребител %(user)s и екип %(team)s е "
+"форматиран неправилно"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_merge_opportunities
@@ -2501,6 +2523,7 @@ msgstr "Месечно"
 #: model:ir.model.fields,help:crm.field_crm_team__assignment_max
 msgid "Monthly average leads capacity for all salesmen belonging to the team"
 msgstr ""
+"Средномесечен капацитет за потенциални клиенти за всички продавачи в екипа"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__is_membership_multi
@@ -2618,6 +2641,9 @@ msgid ""
 "No allocated leads to %(team_name)s team and its salespersons because no "
 "unassigned lead matches its domain."
 msgstr ""
+"Няма разпределени потенциални клиенти за екипа %(team_name)s и неговите "
+"продавачи, защото няма неразпределен потенциален клиент, отговарящ на "
+"домейна му."
 
 #. module: crm
 #. odoo-python
@@ -2636,6 +2662,9 @@ msgid ""
 "No allocated leads to any team or salesperson. Check your Sales Teams and "
 "Salespersons configuration as well as unassigned leads."
 msgstr ""
+"Няма разпределени потенциални клиенти към никой екип или продавач. Проверете "
+"конфигурацията на вашите търговски екипи и продавачи, както и "
+"неразпределените потенциални клиенти."
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_opportunity_report_action
@@ -2650,6 +2679,8 @@ msgid ""
 "No lead assigned to salespersons because no unassigned lead matches their "
 "domains."
 msgstr ""
+"Няма потенциален клиент, назначен на търговци, защото няма неразпределен "
+"потенциален клиент, който да отговаря на техните домейни."
 
 #. module: crm
 #. odoo-python
@@ -2658,12 +2689,16 @@ msgid ""
 "No new lead allocated to %(team_name)s team because no unassigned lead "
 "matches its domain."
 msgstr ""
+"Няма нов потенциален клиент, разпределен към екип %(team_name)s, защото няма "
+"неразпределен потенциален клиент, който да отговаря на неговия домейн."
 
 #. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_team.py:0
 msgid "No new lead allocated to the teams because no lead match their domains."
 msgstr ""
+"Няма нов потенциален клиент, разпределен към екипите, защото няма "
+"потенциален клиент, който да отговаря на техните домейни."
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lead_action_forecast
@@ -2678,7 +2713,7 @@ msgstr "Няма продавач"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__email_normalized
 msgid "Normalized Email"
-msgstr ""
+msgstr "Нормализиран имейл"
 
 #. module: crm
 #: model:crm.lost.reason,name:crm.lost_reason_3
@@ -2718,6 +2753,8 @@ msgid ""
 "Number of interval type between each cron run (e.g. each 2 days or each 4 "
 "days)"
 msgstr ""
+"Брой от типа интервал между всяко изпълнение на cron (напр. на всеки 2 дни "
+"или на всеки 4 дни)"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__lead_all_assigned_month_count
@@ -2754,6 +2791,10 @@ msgid ""
 "manually, but if you let Odoo do the job the score is updated while the "
 "opportunity moves forward in your sales cycle."
 msgstr ""
+"Машината за изкуствен интелект на Odoo предвижда успеваемостта на всяка "
+"възможност въз основа на вашата история. Винаги можете да актуализирате "
+"успеваемостта ръчно, но ако оставите Odoo да свърши работата, оценката се "
+"актуализира, докато възможността напредва във вашия цикъл на продажби."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
@@ -2774,7 +2815,7 @@ msgstr "Отворени Възможности"
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lost_reason
 msgid "Opp. Lost Reason"
-msgstr ""
+msgstr "Причина за загуба на възможност"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_case_form_view_salesteams_opportunity
@@ -3031,12 +3072,12 @@ msgstr "Име на плана"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_pls_update__pls_fields
 msgid "Pls Fields"
-msgstr ""
+msgstr "PLS полета"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_pls_update__pls_start_date
 msgid "Pls Start Date"
-msgstr ""
+msgstr "Начална дата за PLS"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_contact
@@ -3056,27 +3097,29 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__duplicate_lead_ids
 msgid "Potential Duplicate Lead"
-msgstr ""
+msgstr "Възможен дублиран потенциален клиент"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__duplicate_lead_count
 msgid "Potential Duplicate Lead Count"
-msgstr ""
+msgstr "Брой възможни дублирани потенциални клиенти"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Predictive Lead Scoring"
-msgstr ""
+msgstr "Прогнозно оценяване на потенциални клиенти"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__predictive_lead_scoring_field_labels
 msgid "Predictive Lead Scoring Field Labels"
-msgstr ""
+msgstr "Етикети на полета за прогнозно оценяване на потенциални клиенти"
 
 #. module: crm
 #: model:ir.actions.server,name:crm.website_crm_score_cron_ir_actions_server
 msgid "Predictive Lead Scoring: Recompute Automated Probabilities"
 msgstr ""
+"Прогнозно оценяване на потенциални клиенти: Преизчисляване на "
+"автоматизираните вероятности"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__priority
@@ -3163,7 +3206,7 @@ msgstr "ID на запис на нишката"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__recurring_plan
 msgid "Recurring Plan"
-msgstr ""
+msgstr "Повтарящ се план"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_recurring_plan_action
@@ -3244,12 +3287,12 @@ msgstr "Възстанови"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Ringover VOIP Phone"
-msgstr ""
+msgstr "Ringover VOIP телефон"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__crm_use_auto_assignment
 msgid "Rule-Based Assignment"
-msgstr ""
+msgstr "Назначаване по правила"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -3323,7 +3366,7 @@ msgstr "Търговци"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__phone_sanitized
 msgid "Sanitized Number"
-msgstr ""
+msgstr "Нормализиран номер"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lead_action_my_activities
@@ -3347,6 +3390,8 @@ msgstr "Възможности за търсене"
 #: code:addons/crm/models/crm_lead.py:0
 msgid "Select at least two Leads/Opportunities from the list to merge them."
 msgstr ""
+"Изберете поне два Потенциалния клиент/Възможности от списъка, за да ги "
+"слеете."
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_lead_mail_compose
@@ -3388,7 +3433,7 @@ msgstr "Показване на главното меню"
 #. module: crm
 #: model:res.groups,name:crm.group_use_recurring_revenues
 msgid "Show Recurring Revenues Menu"
-msgstr ""
+msgstr "Показване на меню за повтарящи се приходи"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -3407,12 +3452,12 @@ msgstr "Покажете само лийд"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 msgid "Show only leads"
-msgstr ""
+msgstr "Покажи само потенциални клиенти"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 msgid "Show only opportunities"
-msgstr ""
+msgstr "Покажи само възможности"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_search
@@ -3423,7 +3468,7 @@ msgstr "Покажете само възможност"
 #: model:ir.model.fields,field_description:crm.field_crm_team__assignment_optout
 #: model:ir.model.fields,field_description:crm.field_crm_team_member__assignment_optout
 msgid "Skip auto assignment"
-msgstr ""
+msgstr "Пропускане на автоматичното назначаване"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_tree_view_oppor
@@ -3487,7 +3532,7 @@ msgstr "Промяна в статуса"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
 msgid "Stage:"
-msgstr ""
+msgstr "Етап:"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_stage_action
@@ -3528,7 +3573,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__duration_tracking
 msgid "Status time"
-msgstr ""
+msgstr "Време в статус"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__street
@@ -3601,6 +3646,10 @@ msgid ""
 "                        because they have been contacted less than 30 days "
 "ago on"
 msgstr ""
+"Контактите по-долу бяха добавени като последователи на тази потенциална "
+"сделка,\n"
+"                        защото с тях е осъществен контакт преди по-малко от "
+"30 дни на"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_id
@@ -3643,7 +3692,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.constraint,message:crm.constraint_crm_recurring_plan_check_number_of_months
 msgid "The number of month can't be negative."
-msgstr ""
+msgstr "Броят на месеците не може да е отрицателен."
 
 #. module: crm
 #: model:ir.model.constraint,message:crm.constraint_crm_lead_check_probability
@@ -3787,7 +3836,7 @@ msgstr "Съвет: Не губете време в записване на да
 #: model:digest.tip,name:crm.digest_tip_crm_6
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_6
 msgid "Tip: Identify Bottlenecks at a glance"
-msgstr ""
+msgstr "Съвет: Идентифицирайте тесните места с един поглед"
 
 #. module: crm
 #: model:digest.tip,name:crm.digest_tip_crm_3
@@ -3850,7 +3899,7 @@ msgstr "Проследяване"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_search
 msgid "Trailing 12 months"
-msgstr ""
+msgstr "Последните 12 месеца"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__lead_all_assigned_month_exceeded
@@ -3858,6 +3907,8 @@ msgid ""
 "True if the monthly lead assignment count is greater than the maximum "
 "assignment limit, false otherwise."
 msgstr ""
+"Вярно, ако месечният брой на възлагане на потенциални клиенти е по-голям от "
+"максималния лимит за възлагане, в противен случай невярно."
 
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0
@@ -3895,6 +3946,7 @@ msgstr "UTM кампания"
 #: model:ir.model.fields,help:crm.field_crm_lead__user_company_ids
 msgid "UX: Limit to lead company or all if no company"
 msgstr ""
+"UX: Ограничи до фирмата на потенциалния клиент или всички, ако няма фирма"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -3920,7 +3972,7 @@ msgstr "Непрочетени съобщения"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_search_forecast
 msgid "Upcoming Closings"
-msgstr ""
+msgstr "Предстоящи приключвания"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_pls_update_view_form
@@ -3984,11 +4036,17 @@ msgid ""
 "qualified, the lead can be converted into a business opportunity and/or a "
 "new customer in your address book."
 msgstr ""
+"Използвайте потенциални клиенти, ако се нуждаете от стъпка за квалификация, "
+"преди да създадете възможност или клиент. Това може да е визитна картичка, "
+"която сте получили, формуляр за контакт, попълнен на вашия уебсайт, или файл "
+"с неквалифицирани потенциални клиенти, който импортирате, и др. След като "
+"бъде квалифициран, потенциалният клиент може да бъде преобразуван в бизнес "
+"възможност и/или нов клиент във вашия адресник."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_action_helper
 msgid "Use the <i>New</i> button, or send an email to"
-msgstr ""
+msgstr "Използвайте бутона <i>Нов</i> или изпратете имейл до"
 
 #. module: crm
 #. odoo-python
@@ -3997,6 +4055,8 @@ msgid ""
 "Use the <i>New</i> button, or send an email to %(email_link)s to test the "
 "email gateway."
 msgstr ""
+"Използвайте бутона <i>Нов</i> или изпратете имейл до %(email_link)s, за да "
+"тествате имейл шлюза."
 
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_7
@@ -4004,12 +4064,16 @@ msgid ""
 "Use the CRM Forecast Kanban to easily define when Opportunities are expected "
 "to be won."
 msgstr ""
+"Използвайте CRM канбан за прогнози, за да определяте лесно кога се очаква "
+"възможностите да бъдат спечелени."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_action_helper
 msgid ""
 "Use the New button, or configure an email alias to test the email gateway."
 msgstr ""
+"Използвайте бутона Нов или конфигурирайте имейл псевдоним, за да тествате "
+"имейл шлюза."
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_opportunity_report_action
@@ -4049,7 +4113,7 @@ msgstr "Много високо"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Visits to Leads"
-msgstr ""
+msgstr "Посещения към потенциални клиенти"
 
 #. module: crm
 #: model:crm.lost.reason,name:crm.lost_reason_2
@@ -4089,7 +4153,7 @@ msgstr "Седмици"
 #. module: crm
 #: model:mail.template,name:crm.mail_template_demo_crm_lead
 msgid "Welcome Demo"
-msgstr ""
+msgstr "Демонстрация „Добре дошли“"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_lost_view_form
@@ -4145,7 +4209,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "You don't have the access needed to run this cron."
-msgstr ""
+msgstr "Нямате достъпа, необходим за стартиране на този cron."
 
 #. module: crm
 #. odoo-python
@@ -4258,7 +4322,7 @@ msgstr "брой_екипи "
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_action_helper
 msgid "to test the email gateway."
-msgstr ""
+msgstr "за тестване на имейл шлюза."
 
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0

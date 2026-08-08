@@ -43,7 +43,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-03 17:38+0000\n"
-"PO-Revision-Date: 2026-07-07 17:54+0000\n"
+"PO-Revision-Date: 2026-08-07 17:53+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Hebrew <https://translate.odoo.com/projects/odoo-18/"
 "point_of_sale/he/>\n"
@@ -121,7 +121,7 @@ msgstr "%(payment_method)s תשלום קופה של %(partner)s ב- %(session)s"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "%(product_name)s: Deleted line (quantity: %(qty)s)"
-msgstr ""
+msgstr "%(product_name)s: שורה נמחקה (כמות: %(qty)s)"
 
 #. module: point_of_sale
 #. odoo-python
@@ -192,7 +192,7 @@ msgstr "+ חנות חדשה"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "2-03-2000 9:00 AM"
-msgstr ""
+msgstr "2-03-2000 9:00 AM"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order__ticket_code
@@ -203,12 +203,12 @@ msgstr "קוד אלפאנומרי בן 5 תווים שישמש את משתמש �
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.blue_denim_jeans_template
 msgid "5-pocket jeans in cotton denim with a slight stretch for good comfort."
-msgstr ""
+msgstr "ג'ינס בעל 5 כיסים מדנים כותנה עם מעט אלסטיות לנוחות רבה."
 
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.blue_denim_jeans_slim_template
 msgid "5-pocket jeans in cotton denim.."
-msgstr ""
+msgstr "ג'ינס בעל 5 כיסים מדנים כותנה.."
 
 #. module: point_of_sale
 #: model:mail.template,body_html:point_of_sale.pos_email_marketing_template
@@ -256,6 +256,8 @@ msgid ""
 "(is_invoiced)sfor             %(pos_name)s amounting in %(amount)s from %"
 "(company_name)s. </p>"
 msgstr ""
+"<p>שלום %(client_name)s,<br/>הנה הקבלה שלך %(is_invoiced)sעבור             %"
+"(pos_name)s בסך %(amount)s מ-%(company_name)s. </p>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -399,7 +401,7 @@ msgstr "הערה עם השם הזה כבר קיימת"
 #. module: point_of_sale
 #: model:ir.model.constraint,message:point_of_sale.constraint_pos_payment_uuid_unique
 msgid "A payment with this uuid already exists"
-msgstr ""
+msgstr "תשלום עם uuid זה כבר קיים"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__login_number
@@ -459,7 +461,7 @@ msgstr "קבל טיפים של לקוחות או המר את העודף שלהם
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Accept payments with Mercado Pago on a terminal"
-msgstr ""
+msgstr "קבל תשלומים עם Mercado Pago במסוף"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -474,7 +476,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Accept payments with a Razorpay payment terminal"
-msgstr ""
+msgstr "קבל תשלומים עם מסוף תשלום Razorpay"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -532,7 +534,7 @@ msgstr "תשלומים חשבונאיים המייצגים תשלומי בנק �
 msgid ""
 "Account used as outstanding account when creating accounting payment records "
 "for bank payments."
-msgstr ""
+msgstr "חשבון המשמש כחשבון ממתין ביצירת רשומות תשלום חשבונאיות עבור תשלומי בנק."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -896,12 +898,12 @@ msgstr "מזהה פנימי של המדפסת"
 #. module: point_of_sale
 #: model:ir.model.constraint,message:point_of_sale.constraint_pos_order_line_uuid_unique
 msgid "An order line with this uuid already exists"
-msgstr ""
+msgstr "שורת הזמנה עם uuid זה כבר קיימת"
 
 #. module: point_of_sale
 #: model:ir.model.constraint,message:point_of_sale.constraint_pos_order_uuid_unique
 msgid "An order with this uuid already exists"
-msgstr ""
+msgstr "הזמנה עם uuid זה כבר קיימת"
 
 #. module: point_of_sale
 #. odoo-python
@@ -912,7 +914,7 @@ msgstr "משמרת נוספת כבר נפתחה לקופה זו."
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.product_apple_pie_product_template
 msgid "Apple Pie"
-msgstr ""
+msgstr "פאי תפוחים"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -937,12 +939,12 @@ msgstr "האם אתה בטוח שהלקוח מעוניין לשלם"
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.product_sourdough_loaf_product_template
 msgid "Artisan sourdough bread with a crisp crust and soft interior."
-msgstr ""
+msgstr "לחם מחמצת אומן עם קרום פריך ופנים רך."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "As of"
-msgstr ""
+msgstr "נכון ל-"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_config__picking_policy__direct
@@ -976,7 +978,7 @@ msgstr "בזמן אמת"
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.sport_shoes_product_template
 msgid "Athletic sport shoes, designed for comfort and performance."
-msgstr ""
+msgstr "נעלי ספורט אתלטיות, מעוצבות לנוחות וביצועים."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__message_attachment_count
@@ -1043,7 +1045,7 @@ msgstr "מאמת אוטומטית הזמנות ששולמו באמצעות מס�
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__module_pos_avatax
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_module_pos_avatax
 msgid "AvaTax PoS Integration"
-msgstr ""
+msgstr "שילוב AvaTax בנקודת המכירה"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -1217,17 +1219,17 @@ msgstr "שחור"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.t_shirt_black_embroidered_product_template
 msgid "Black embroidered t-shirt"
-msgstr ""
+msgstr "חולצת טי רקומה שחורה"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.blue_denim_jeans_template
 msgid "Blue Denim Jeans"
-msgstr ""
+msgstr "ג'ינס כחול"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.product_blueberry_muffin_product_template
 msgid "Blueberry Muffin"
-msgstr ""
+msgstr "מאפין אוכמניות"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -1250,7 +1252,7 @@ msgstr "חברת כרטיס אשראי"
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.pos_category_breads
 msgid "Breads"
-msgstr ""
+msgstr "לחמים"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1261,12 +1263,12 @@ msgstr "באפר:"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_bus_mixin
 msgid "Bus Mixin"
-msgstr ""
+msgstr "Bus Mixin"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.product_butter_croissant_product_template
 msgid "Butter Croissant"
-msgstr ""
+msgstr "קרואסון חמאה"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1412,7 +1414,7 @@ msgstr "מזומן מאפייה"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid "Cash Clothes Shop"
-msgstr ""
+msgstr "מזומן חנות בגדים"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1424,7 +1426,7 @@ msgstr "ספירת מזומנים"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid "Cash Furn. Shop"
-msgstr ""
+msgstr "מזומן חנות ריהוט"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1509,13 +1511,13 @@ msgstr "מסך פתיחת קופה"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Cash difference observed during the counting (Loss) - closing"
-msgstr ""
+msgstr "הפרש מזומן שנצפה בעת הספירה (הפסד) - סגירה"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Cash difference observed during the counting (Profit) - closing"
-msgstr ""
+msgstr "הפרש מזומן שנצפה בעת הספירה (רווח) - סגירה"
 
 #. module: point_of_sale
 #. odoo-python
@@ -1565,34 +1567,34 @@ msgstr "קופאי"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.casual_denim_short_product_template
 msgid "Casual Denim Short"
-msgstr ""
+msgstr "שורטס ג'ינס יומיומי"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.casual_t_shirt_product_template
 msgid "Casual T-shirt"
-msgstr ""
+msgstr "חולצת טי יומיומית"
 
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.casual_denim_short_product_template
 msgid "Casual denim shorts, comfortable and stylish for everyday wear."
-msgstr ""
+msgstr "שורטס ג'ינס יומיומיים, נוחים ואופנתיים ללבישה יומיומית."
 
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.t_shirt_black_embroidered_product_template
 msgid ""
 "Casual slim t-shirt 100% cotton with white embroidery. Various sizes "
 "available"
-msgstr ""
+msgstr "חולצת טי סלים יומיומית 100% כותנה עם רקמה לבנה. גדלים שונים זמינים"
 
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.t_shirt_slim_product_template
 msgid "Casual slim t-shirt 100% cotton. Various sizes available"
-msgstr ""
+msgstr "חולצת טי סלים יומיומית 100% כותנה. גדלים שונים זמינים"
 
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.casual_t_shirt_product_template
 msgid "Casual t-shirt 100% cotton. Various colors and sizes available."
-msgstr ""
+msgstr "חולצת טי יומיומית 100% כותנה. צבעים וגדלים שונים זמינים."
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.product_pos_category_action
@@ -1679,17 +1681,17 @@ msgstr ""
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.product_cheese_croissant_product_template
 msgid "Cheese Croissant"
-msgstr ""
+msgstr "קרואסון גבינה"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.product_cherry_pie_product_template
 msgid "Cherry Pie"
-msgstr ""
+msgstr "פאי דובדבנים"
 
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.product_bagel_product_template
 msgid "Chewy and dense bagel, perfect for sandwiches or with cream cheese."
-msgstr ""
+msgstr "בייגל דחוס וסמיך, מושלם לכריכים או עם גבינת שמנת."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__child_ids
@@ -1721,7 +1723,7 @@ msgstr "בחר כיצד כתובת ה-URL לפורטל תודפס על הקבל�
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/control_buttons.js:0
 msgid "Choose the tax you want to apply"
-msgstr ""
+msgstr "בחר את המס שברצונך להחיל"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1732,22 +1734,22 @@ msgstr "בחר את החנות שלך"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.product_cinnamon_roll_product_template
 msgid "Cinnamon Roll"
-msgstr ""
+msgstr "רולדת קינמון"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.product_classic_brown_jacket_product_template
 msgid "Classic Brown Jacket"
-msgstr ""
+msgstr "ז'קט חום קלאסי"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.classic_leather_belt_product_template
 msgid "Classic Leather Belt"
-msgstr ""
+msgstr "חגורת עור קלאסית"
 
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.classic_leather_belt_product_template
 msgid "Classic leather belt, a must-have accessory for any wardrobe."
-msgstr ""
+msgstr "חגורת עור קלאסית, אביזר חובה לכל ארון בגדים."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1960,7 +1962,7 @@ msgstr "שורות קומבו"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__combo_parent_id
 msgid "Combo Parent"
-msgstr ""
+msgstr "קומבו אב"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_res_company
@@ -2193,12 +2195,12 @@ msgstr "מדינה"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.cozy_sweater_product_template
 msgid "Cozy Sweater"
-msgstr ""
+msgstr "סוודר נעים"
 
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.cozy_sweater_product_template
 msgid "Cozy sweater, perfect for colder weather. Available in various colors."
-msgstr ""
+msgstr "סוודר נעים, מושלם למזג אוויר קר. זמין במגוון צבעים."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2282,7 +2284,7 @@ msgstr "נוצר ב-"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.product_crocheted_poncho_unisize_product_template
 msgid "Crocheted Poncho Unisize"
-msgstr ""
+msgstr "פונצ'ו סרוג מידה אחידה"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_res_currency
@@ -2399,7 +2401,7 @@ msgstr "נדרש לקוח עבור %s אמצעי התשלום."
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/order_summary/order_summary.js:0
 msgid "Customer tips, cannot be modified directly"
-msgstr ""
+msgstr "טיפים ללקוח, לא ניתן לשנות ישירות"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_point_of_sale_customer

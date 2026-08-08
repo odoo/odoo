@@ -13,9 +13,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-24 17:38+0000\n"
-"PO-Revision-Date: 2026-07-08 09:02+0000\n"
-"Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
+"POT-Creation-Date: 2026-08-07 17:38+0000\n"
+"PO-Revision-Date: 2026-08-08 14:10+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-18/"
 "account_peppol/pl/>\n"
 "Language: pl\n"
@@ -103,6 +103,17 @@ msgstr ""
 "                        Faktura zostanie przesłana automatycznie przez "
 "Peppol\n"
 "                    </span>"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/tools/peppol_errors.py:0
+msgid ""
+"A 0% tax cannot use Tax Category 'S' (Standard). Please update the Tax "
+"Category in the Advanced Options of the tax configuration."
+msgstr ""
+"Podatek o wartości 0% nie może korzystać z kategorii podatkowej „S” "
+"(Standard). Zaktualizuj kategorię podatkową w zaawansowanych opcjach "
+"konfiguracji podatków."
 
 #. module: account_peppol
 #. odoo-python
@@ -279,7 +290,6 @@ msgid "Check Partner(s)"
 msgstr "Sprawdź partnera//-ów"
 
 #. module: account_peppol
-#: model:ir.model.fields,help:account_peppol.field_peppol_registration__peppol_eas
 #: model:ir.model.fields,help:account_peppol.field_res_company__peppol_eas
 #: model:ir.model.fields,help:account_peppol.field_res_config_settings__account_peppol_eas
 #: model:ir.model.fields,help:account_peppol.field_res_partner__peppol_eas
@@ -502,6 +512,18 @@ msgstr "Pobierz z Peppol"
 
 #. module: account_peppol
 #. odoo-python
+#: code:addons/account_peppol/tools/peppol_errors.py:0
+msgid ""
+"For tax(es) %(taxes)s: Tax Category 'O' must be used when the exemption "
+"reason code is 'VATEX-EU-O'. You can change this in the Advanced Options of "
+"the tax configuration."
+msgstr ""
+"W przypadku podatków %(taxes)s: Należy użyć kategorii podatkowej „O”, gdy "
+"kod przyczyny zwolnienia to „VATEX-EU-O”. Można to zmienić w zaawansowanych "
+"opcjach konfiguracji podatków."
+
+#. module: account_peppol
+#. odoo-python
 #: code:addons/account_peppol/models/account_move_send.py:0
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid "France - E-Invoicing (Approved Platform)"
@@ -542,11 +564,38 @@ msgstr ""
 
 #. module: account_peppol
 #. odoo-python
+#: code:addons/account_peppol/tools/peppol_errors.py:0
+msgid ""
+"If you are not subject to VAT, you should not have a VAT number on your "
+"company/contacts and your clients should not have one either."
+msgstr ""
+"Jeśli nie podlegasz podatkowi VAT, nie powinieneś posiadać numeru VAT w "
+"danych firmy/kontaktach i Twoi klienci również nie powinni go posiadać."
+
+#. module: account_peppol
+#. odoo-python
 #: code:addons/account_peppol/controllers/portal.py:0
 msgid "If you want to be invoiced by Peppol, your configuration must be valid."
 msgstr ""
 "Jeśli chcesz otrzymywać faktury przez Peppol, Twoja konfiguracja musi być "
 "ważna."
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/wizard/peppol_registration.py:0
+msgid ""
+"If you want to register for the French e-invoicing, first install the PDP "
+"module: France - E-Invoicing (Approved Platform)."
+msgstr ""
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/wizard/peppol_registration.py:0
+msgid ""
+"If you want to register for the French e-invoicing, first install the PDP "
+"module: France - E-Invoicing (Approved Platform).\n"
+"The module was not found. Please update the available apps first."
+msgstr ""
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_company__account_peppol_proxy_state__in_verification
@@ -560,11 +609,49 @@ msgstr "Dziennik faktur przychodzących"
 
 #. module: account_peppol
 #. odoo-python
+#: code:addons/account_peppol/wizard/peppol_registration.py:0
+msgid "Install module"
+msgstr ""
+
+#. module: account_peppol
+#. odoo-python
 #: code:addons/account_peppol/models/account_move_send.py:0
 msgid "Invoice %s exceeds the size limit of 64 MB to be sent via Peppol."
 msgstr ""
 "Faktura %s przekracza limit wielkości 64MB, aby mogła zostać wysłana przez "
 "Peppol."
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/tools/peppol_errors.py:0
+msgid ""
+"Invoice lines using Tax Category 'O' cannot use a percentage-based tax. "
+"Please update the tax type in Advanced Options."
+msgstr ""
+"Pozycje faktury z kategorią podatkową „O” nie mogą korzystać z podatku "
+"procentowego. Zaktualizuj rodzaj podatku w zaawansowanych opcjach."
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/tools/peppol_errors.py:0
+msgid ""
+"Invoice lines with Tax Category 'Exempt from VAT' must have a tax rate of 0. "
+"You can change this in the Advanced Options of the tax configuration."
+msgstr ""
+"Pozycje faktury z kategorią podatkową „Zwolnione z VAT” muszą mieć stawkę "
+"podatkową równą 0. Można to zmienić w zaawansowanych opcjach konfiguracji "
+"podatków."
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/tools/peppol_errors.py:0
+msgid ""
+"Invoice lines with Tax Category 'Reverse charge' must have a tax rate of 0. "
+"You can change this in the Advanced Options of the tax configuration."
+msgstr ""
+"Pozycje faktury z kategorią podatku „Odwrotne obciążenie” muszą mieć stawkę "
+"podatku równą 0. Można to zmienić w zaawansowanych opcjach konfiguracji "
+"podatku."
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_partner__invoice_sending_method
@@ -614,6 +701,45 @@ msgstr "Na żywo"
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_migration_key
 msgid "Migration Key"
 msgstr "Klucz migracji"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/tools/peppol_errors.py:0
+msgid ""
+"Missing Buyer Country. Please add the Country Code to the client's contact "
+"information."
+msgstr ""
+"Brakuje kraju kupującego. Dodaj kod kraju do danych kontaktowych klienta."
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/tools/peppol_errors.py:0
+msgid ""
+"Missing Invoiced Item VAT category code. Action Required: Install the module "
+"account_edi_ubl_cii_tax_extension."
+msgstr ""
+"Brakuje kodu kategorii VAT dla pozycji na fakturze w procesie fakturowania. "
+"Wymagane działanie: Zainstaluj moduł account_edi_ubl_cii_tax_extension."
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/tools/peppol_errors.py:0
+msgid ""
+"Missing Reverse Charge details. Please set the Exemption Reason to 'Reverse "
+"charge' in the Advanced Options of the tax configuration."
+msgstr ""
+"Brakuje danych odwróconego obciążenia. Ustaw powód zwolnienia na „Odwrócone "
+"obciążenie” w zaawansowanych opcjach konfiguracji podatku."
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/tools/peppol_errors.py:0
+msgid ""
+"Missing VAT category code. Action Required: Install the module "
+"account_edi_ubl_cii_tax_extension."
+msgstr ""
+"Brak kodu kategorii VAT. Wymagane działanie: Zainstaluj moduł "
+"account_edi_ubl_cii_tax_extension."
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__phone_number
@@ -745,6 +871,11 @@ msgid "Peppol Can Send"
 msgstr "Peppol może wysyłać"
 
 #. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__peppol_eas
+msgid "Peppol Eas"
+msgstr "Peppol EAS"
+
+#. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__peppol_endpoint
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__peppol_endpoint
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_endpoint
@@ -782,7 +913,7 @@ msgstr "Nazwa nadrzędnej firmy Peppol"
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__peppol_purchase_journal_required
 msgid "Peppol Purchase Journal Required"
-msgstr ""
+msgstr "Wymagany dziennik zakupów Peppol"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_view_account_invoice_filter
@@ -821,7 +952,6 @@ msgid "Peppol e-Address (EAS)"
 msgstr "Adres elektroniczny Peppol (EAS)"
 
 #. module: account_peppol
-#: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__peppol_eas
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__peppol_eas
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_eas
 #: model:ir.model.fields,field_description:account_peppol.field_res_partner__peppol_eas
@@ -831,9 +961,9 @@ msgstr "Adres elektroniczny Peppol (EAS)"
 
 #. module: account_peppol
 #. odoo-python
-#: code:addons/account_peppol/models/account_edi_proxy_user.py:0
-msgid "Peppol error: %s"
-msgstr "Błąd Peppol: %s"
+#: code:addons/account_peppol/tools/peppol_errors.py:0
+msgid "Peppol error:"
+msgstr "Błąd Peppol:"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_journal_dashboard_kanban_view
@@ -1080,6 +1210,27 @@ msgid "The Peppol endpoint identification number is not correct."
 msgstr "Numer identyfikacyjny punktu końcowego Peppol jest nieprawidłowy."
 
 #. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/tools/peppol_errors.py:0
+msgid ""
+"The Peppol endpoint is missing in the XML file. Action Required: Update the "
+"account and account_edi_ubl_cii modules to resolve this."
+msgstr ""
+"W pliku XML brakuje punktu końcowego Peppol. Wymagane działanie: Zaktualizuj "
+"moduły account i account_edi_ubl_cii, aby rozwiązać ten problem."
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/tools/peppol_errors.py:0
+msgid ""
+"The Tax Category must be 'AE' when using Exemption Reason code 'VATEX-EU-"
+"AE'. You can change this in the Advanced Options of the tax configuration."
+msgstr ""
+"Kategoria podatku musi mieć wartość „AE” w przypadku stosowania kodu "
+"przyczyny zwolnienia „VATEX-EU-AE”. Można to zmienić w zaawansowanych "
+"opcjach konfiguracji podatku."
+
+#. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.xml:0
 msgid "The e-invoicing network"
@@ -1094,6 +1245,16 @@ msgid ""
 msgstr ""
 "Numer punktu końcowego może być nieprawidłowy. Sprawdź, czy wprowadziłeś "
 "prawidłowy numer identyfikacyjny."
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/tools/peppol_errors.py:0
+msgid ""
+"The exemption reason code is invalid. Action Required: Install the module "
+"account_edi_ubl_cii_tax_extension."
+msgstr ""
+"Kod przyczyny zwolnienia jest nieprawidłowy. Wymagane działanie: Zainstaluj "
+"moduł account_edi_ubl_cii_tax_extension."
 
 #. module: account_peppol
 #. odoo-python
@@ -1259,6 +1420,12 @@ msgstr ""
 #: code:addons/account_peppol/static/src/components/res_config_settings_buttons/res_config_settings_buttons.xml:0
 msgid "Update"
 msgstr "Aktualizacja"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/wizard/peppol_registration.py:0
+msgid "Update Apps List"
+msgstr "Aktualizuj listę aplikacji"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__use_parent_connection
@@ -1533,6 +1700,9 @@ msgstr "aby wysyłać faktury, ale ta"
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "uses"
 msgstr "używa"
+
+#~ msgid "Peppol error: %s"
+#~ msgstr "Błąd Peppol: %s"
 
 #~ msgid "Contact email and mobile number are required."
 #~ msgstr "Wymagany jest e-mail i numer telefonu w celach kontaktu."

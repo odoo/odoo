@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-03 17:38+0000\n"
-"PO-Revision-Date: 2026-06-08 07:44+0000\n"
+"PO-Revision-Date: 2026-08-07 19:20+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
 "projects/odoo-18/point_of_sale/zh_Hans/>\n"
@@ -874,7 +874,7 @@ msgstr "打印机的内部标识"
 #. module: point_of_sale
 #: model:ir.model.constraint,message:point_of_sale.constraint_pos_order_line_uuid_unique
 msgid "An order line with this uuid already exists"
-msgstr ""
+msgstr "已有此唯一标识码（UUID）的订单数据行"
 
 #. module: point_of_sale
 #: model:ir.model.constraint,message:point_of_sale.constraint_pos_order_uuid_unique
@@ -1462,7 +1462,7 @@ msgstr "现金舍入（PoS）"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "Cash Rounding:"
-msgstr ""
+msgstr "现金舍入："
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -1497,7 +1497,7 @@ msgstr "盘点期间观察到的现金差额（利润）- 结算"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Cash drawer opened (%(ACTION)s)"
-msgstr ""
+msgstr "收银抽屉已打开（%(ACTION)s ）"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8930,7 +8930,7 @@ msgstr "您无法在以下时间之前创建会话：%(lock_date_info)s"
 msgid ""
 "You cannot delete a customer that has point of sales orders. You can archive "
 "it instead."
-msgstr ""
+msgstr "该客户存在收银订单记录，不支持直接删除，可选择归档处理。"
 
 #. module: point_of_sale
 #. odoo-python
