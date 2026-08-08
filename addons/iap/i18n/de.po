@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~15.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:36+0000\n"
+"POT-Creation-Date: 2026-08-07 17:38+0000\n"
 "PO-Revision-Date: 2026-01-24 12:21+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-s19-1/iap/de/"
@@ -57,11 +57,6 @@ msgstr ""
 "Odoo-Support, wenn der Fehler weiterhin besteht."
 
 #. module: iap
-#: model_terms:ir.ui.view,arch_db:iap.iap_account_view_form
-msgid "Auto-Refill"
-msgstr "Automatisch aufladen"
-
-#. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__auto_refill_pack_id
 msgid "Auto-refill Pack"
 msgstr "Paket für automatische Aufladung"
@@ -85,11 +80,6 @@ msgstr "Saldo"
 #: model:ir.model.fields.selection,name:iap.selection__iap_account__state__banned
 msgid "Banned"
 msgstr "Gesperrt"
-
-#. module: iap
-#: model_terms:ir.ui.view,arch_db:iap.iap_account_view_form
-msgid "Buy"
-msgstr "Kaufen"
 
 #. module: iap
 #: model_terms:ir.ui.view,arch_db:iap.iap_account_view_form
@@ -252,11 +242,6 @@ msgid "Manage Service & Buy Credits"
 msgstr "Service verwalten & Guthaben kaufen"
 
 #. module: iap
-#: model_terms:ir.ui.view,arch_db:iap.iap_account_view_form
-msgid "Manage your auto-refill payment method"
-msgstr "Verwalten Sie Ihre Zahlungsmethode für die automatische Aufladung"
-
-#. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__name
 #: model:ir.model.fields,field_description:iap.field_iap_service__name
 #: model:ir.model.fields,field_description:iap.field_iap_service_pack__name
@@ -359,11 +344,6 @@ msgid "Service Packs"
 msgstr "Service-Pakete"
 
 #. module: iap
-#: model_terms:ir.ui.view,arch_db:iap.iap_account_view_tree
-msgid "Set Alerts & Auto-Refill"
-msgstr "Benachrichtigungen & automatische Aufladung einrichten"
-
-#. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__state
 msgid "State"
 msgstr "Status"
@@ -411,6 +391,12 @@ msgstr ""
 "der App. Die Url, die er zu kontaktieren versuchte, war %s."
 
 #. module: iap
+#. odoo-python
+#: code:addons/iap/models/iap_account.py:0
+msgid "This feature will be available in version 20.0"
+msgstr ""
+
+#. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_service__unit_name
 msgid "Unit Name"
 msgstr "Name der Einheit"
@@ -436,3 +422,15 @@ msgstr "Meine Services anzeigen"
 #: model_terms:ir.ui.view,arch_db:iap.res_config_settings_view_form
 msgid "View your IAP Services and recharge your credits"
 msgstr "Zeigen Sie Ihre IAP-Services an und laden Sie Guthaben auf."
+
+#~ msgid "Auto-Refill"
+#~ msgstr "Automatisch aufladen"
+
+#~ msgid "Buy"
+#~ msgstr "Kaufen"
+
+#~ msgid "Manage your auto-refill payment method"
+#~ msgstr "Verwalten Sie Ihre Zahlungsmethode für die automatische Aufladung"
+
+#~ msgid "Set Alerts & Auto-Refill"
+#~ msgstr "Benachrichtigungen & automatische Aufladung einrichten"
