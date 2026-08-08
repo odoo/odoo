@@ -32,7 +32,6 @@
             <field name="code">model._cron_ocr_pending_bills(batch_size=10)</field>
             <field name="interval_number">2</field>
             <field name="interval_type">minutes</field>
-            <field name="numbercall">-1</field>
             <field name="active" eval="True"/>
             <field name="priority">5</field>
             <field name="nextcall" eval="(DateTime.now() + timedelta(minutes=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
