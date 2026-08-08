@@ -2,6 +2,7 @@
 
 from typing import Self
 
+from odoo.fields import Domain
 from odoo.tools import frozendict, sql
 
 from .models import api, Model
@@ -36,7 +37,7 @@ class CachedModel(Model):
         fnames = self._cached_data_fields
         assert fnames, "missing fields to cache"
         self.invalidate_model([fname for fname in fnames if self._fields[fname].translate])
-        records = self.sudo().with_context({'active_test': False, 'prefetch_langs': True}).search_fetch(
+        records = self.sudo().with_context({'active_test': False, 'prefetch_langs': True, '_in_cached_data': self._name}).search_fetch(
             self._cached_data_domain, fnames)
 
         # each field is mapped to a tuple
@@ -68,6 +69,32 @@ class CachedModel(Model):
         records = self.get_all()
         fnames = self._cached_data_fields
         return records._read_format(fnames=fnames)
+
+    @api.model
+    @api.private
+    @api.readonly
+    def search_fetch(self, domain, field_names=None, offset=0, limit=None, order=None):
+        if field_names is not None and (order is None or order == self._order) and self.env.context.get('_in_cached_data') != self._name and self.env.registry.ready:
+            self.browse().check_access('read')
+            cached_fields = set(self._cached_data_fields)
+            needed_fields = set(self._determine_fields_to_fetch(field_names))
+            domain = Domain(domain)
+            if (
+                self._active_name
+                and self.env.context.get('active_test', True)
+                and not any(leaf.field_expr == self._active_name for leaf in domain.iter_conditions())
+            ):
+                domain = Domain(self._active_name, '=', True) & domain
+            domain = domain.optimize_full(self)
+            needed_fields.update(c.field_expr for c in domain.iter_conditions())
+            domain_with_cache = (Domain(self._cached_data_domain) & domain).optimize_full(self)
+            if cached_fields >= needed_fields and domain == domain_with_cache and all('any' not in c.operator for c in domain.iter_conditions()):
+                records = self.get_all().filtered_domain(domain)
+                # order is already applied
+                if limit is None:
+                    limit = len(records)
+                return records[offset:offset + limit].with_prefetch()
+        return super().search_fetch(domain, field_names, offset, limit, order)
 
 
 class ValueModel(CachedModel):
