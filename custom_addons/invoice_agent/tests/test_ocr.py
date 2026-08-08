@@ -17,6 +17,7 @@ What is mocked vs real:
 import base64
 import io
 import shutil
+import unittest
 from unittest.mock import patch
 
 from odoo.tests import TransactionCase, tagged
@@ -81,17 +82,28 @@ class TestOcrServiceGuards(TransactionCase):
     def test_corrupt_pdf_raises(self):
         # application/pdf mimetype but garbage bytes: pdf2image (poppler)
         # fails before any OCR pass — no real PDF tooling needed here.
+        # Patch _check_toolchain away: the point is the poppler guard, and the
+        # toolchain preflight would otherwise short-circuit on a machine
+        # without the tesseract binary (e.g. the CI runner or this Windows host).
         attachment = self._attachment(data=b"this is not a pdf at all")
-        with self.assertRaises(Exception) as ctx:
-            self.service._extract_text(attachment)
-        self.assertIn("scan.pdf", str(ctx.exception))
+        with patch.object(
+            self.service.__class__, "_check_toolchain", return_value=None,
+        ):
+            with self.assertRaises(Exception) as ctx:
+                self.service._extract_text(attachment)
+            self.assertIn("scan.pdf", str(ctx.exception))
 
     def test_empty_ocr_result_raises(self):
         """A blank page must surface as a failure, never empty 'success'."""
         attachment = self._attachment()
+        # The blank-text guard lives in the shared _ocr_images pass (after
+        # rasterization). Patch that seam — patching _extract_pdf would bypass
+        # the guard entirely and never raise.
         with patch.object(
+            self.service.__class__, "_check_toolchain", return_value=None,
+        ), patch.object(
             self.service.__class__,
-            "_extract_pdf",
+            "_ocr_images",
             return_value={"text": "   ", "confidence": 0.0},
         ):
             with self.assertRaises(Exception) as ctx:
@@ -113,6 +125,15 @@ class TestOcrPipeline(TransactionCase):
             limit=1,
         )
         cls.result = {"text": "INVOICE INV-1 total 100.00", "confidence": 0.92}
+
+        # _cron_ocr_pending_bills commits/rolls back per record — Odoo forbids
+        # that inside TransactionCase (its setUpClass patches commit/rollback
+        # to raise). The tests here exercise the state machine (which records
+        # are claimed, batch limits, poison isolation), not DB durability, so
+        # no-op commit/rollback. Our patchers replace Odoo's "forbidden" ones
+        # and are restored in reverse order at class cleanup.
+        cls.startClassPatcher(patch.object(cls.cr, "commit", lambda: None))
+        cls.startClassPatcher(patch.object(cls.cr, "rollback", lambda: None))
 
     def _attachment(self):
         return self.env["ir.attachment"].create(
@@ -244,7 +265,7 @@ class TestOcrEndToEnd(TransactionCase):
     def setUpClass(cls):
         super().setUpClass()
         if shutil.which("tesseract") is None:
-            raise cls.skipTest("tesseract binary not installed in this image")
+            raise unittest.SkipTest("tesseract binary not installed in this image")
 
     def test_real_pdf_end_to_end(self):
         try:
