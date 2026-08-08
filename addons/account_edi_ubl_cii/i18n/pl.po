@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-17 17:37+0000\n"
-"PO-Revision-Date: 2026-06-20 15:04+0000\n"
+"POT-Creation-Date: 2026-08-07 17:37+0000\n"
+"PO-Revision-Date: 2026-08-04 12:29+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-s19-2/"
 "account_edi_ubl_cii/pl/>\n"
@@ -48,6 +48,11 @@ msgid ""
 "                        Preview\n"
 "                    </span>"
 msgstr ""
+"<span style=\"font-size: 16px; font-weight: bold; color: #ffffff; display: "
+"inline-block; vertical-align: middle; text-transform: uppercase; margin: 0px "
+"8px; letter-spacing: 0.5px;\">\n"
+"                        Podgląd\n"
+"                    </span>"
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
@@ -255,6 +260,8 @@ msgid ""
 "Could not retrieve a partner corresponding to '%s' with the same VAT. A new "
 "partner was created."
 msgstr ""
+"Nie udało się znaleźć partnera odpowiadającego '%s' z tym samym numerem VAT. "
+"Utworzono nowego partnera."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -409,11 +416,6 @@ msgstr "Kod lokalizacji EAN"
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__invoice_edi_format__ubl_bis3
 msgid "EU Standard (Peppol Bis 3.0)"
 msgstr "EU Standard (Peppol Bis 3.0)"
-
-#. module: account_edi_ubl_cii
-#: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
-msgid "EXTENDED"
-msgstr "ROZSZERZONE"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -944,6 +946,11 @@ msgid ""
 "met, the customer will be liable for the payment of the tax, interest, and "
 "penalties due in relation to this condition."
 msgstr ""
+"Odwrotne obciążenie: W przypadku braku pisemnego sprzeciwu w ciągu miesiąca "
+"od otrzymania faktury uznaje się, że klient potwierdza, iż jest podatnikiem "
+"zobowiązanym do składania okresowych deklaracji podatkowych. Jeśli warunek "
+"ten nie zostanie spełniony, klient będzie zobowiązany do zapłaty podatku, "
+"odsetek i kar należnych w związku z tym warunkiem."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9947
@@ -1124,6 +1131,8 @@ msgstr ""
 #: code:addons/account_edi_ubl_cii/models/res_partner.py:0
 msgid "The Peppol endpoint is not valid. A valid email is required"
 msgstr ""
+"Punkt końcowy Peppol jest nieprawidłowy. Wymagany jest prawidłowy adres e-"
+"mail"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1158,6 +1167,10 @@ msgid ""
 "line for product '%(product)s' because it is not compatible with the "
 "product's Unit of Measure '%(product_uom)s'. The UoM was left empty."
 msgstr ""
+"Jednostka miary „%(uom)s” (z kodu jednostki „%(code)s”) została zignorowana "
+"w wierszu dotyczącym produktu „%(product)s”, ponieważ nie jest zgodna z "
+"jednostką miary produktu „%(product_uom)s”. Pole jednostki miary "
+"pozostawiono puste."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,help:account_edi_ubl_cii.field_account_tax__ubl_cii_tax_category_code
@@ -1251,6 +1264,9 @@ msgid ""
 "                    <strong style=\"color: #495057;\">It is not an official "
 "document.</strong>"
 msgstr ""
+"Jest to wizualna reprezentacja treści xml.<br/>\n"
+"                    <strong style=\"color: #495057;\">Nie jest to dokument "
+"oficjalny.</strong>"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9952
@@ -1350,7 +1366,7 @@ msgstr "Nieznany partner"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/wizard/account_move_send_wizard.py:0
 msgid "Unsupported file type via %s"
-msgstr ""
+msgstr "Nieobsługiwany typ pliku przez %s"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -2106,9 +2122,24 @@ msgstr ""
 "względu na utratę podatku VAT przez dostawcę w zamian za rabat"
 
 #. module: account_edi_ubl_cii
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-f
+msgid "VATEX-FR-F - Second-hand sales"
+msgstr ""
+
+#. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-franchise
 msgid "VATEX-FR-FRANCHISE - France domestic VAT franchise in base"
 msgstr "VATEX-FR-FRANCHISE - Francja; krajowa franczyza VAT w podstawie"
+
+#. module: account_edi_ubl_cii
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-i
+msgid "VATEX-FR-I - Sales of works of art"
+msgstr ""
+
+#. module: account_edi_ubl_cii
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-j
+msgid "VATEX-FR-J - Sales of antiques"
+msgstr ""
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9953
@@ -2205,6 +2236,9 @@ msgstr "fx"
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
 msgid "urn:factur-x:pdfa:CrossIndustryDocument:invoice:1p0#"
 msgstr "urn:factur-x:pdfa:CrossIndustryDocument:invoice:1p0#"
+
+#~ msgid "EXTENDED"
+#~ msgstr "ROZSZERZONE"
 
 #~ msgid "Unspported file type via %s"
 #~ msgstr "Nieobsługiwany typ pliku poprzez %s"
