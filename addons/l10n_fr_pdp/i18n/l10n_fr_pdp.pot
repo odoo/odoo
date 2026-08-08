@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-31 18:07+0000\n"
-"PO-Revision-Date: 2026-07-31 18:07+0000\n"
+"POT-Creation-Date: 2026-08-07 18:00+0000\n"
+"PO-Revision-Date: 2026-08-07 18:00+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -91,7 +91,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:l10n_fr_pdp.pdp_registration_form
 msgid ""
 "<span invisible=\"edi_mode != 'prod'\">\n"
-"                            Validate Registration (Production)\n"
+"                            Validate Registration\n"
 "                        </span>\n"
 "                        <span invisible=\"edi_mode != 'test'\">\n"
 "                            Validate Registration (Test)\n"
@@ -239,6 +239,16 @@ msgstr ""
 
 #. module: l10n_fr_pdp
 #. odoo-python
+#: code:addons/l10n_fr_pdp/wizard/pdp_registration.py:0
+#, python-format
+msgid ""
+"Another platform is already assigned to this identifier in the annuaire "
+"(Platform%(platform_name)s with ID %(platform_id)s). If you previously "
+"registered with an Approved Platform, please unregister."
+msgstr ""
+
+#. module: l10n_fr_pdp
+#. odoo-python
 #: code:addons/l10n_fr_pdp/models/account_peppol_response.py:0
 #: model:ir.model.fields.selection,name:l10n_fr_pdp.selection__account_peppol_response__pdp_ref_response_code__ap
 #: model:ir.model.fields.selection,name:l10n_fr_pdp.selection__pdp_response_wizard__status__ap
@@ -285,6 +295,20 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_fr_pdp.field_pdp_registration__pdp_authentication_uuid
 #: model:ir.model.fields,field_description:l10n_fr_pdp.field_res_company__pdp_authentication_uuid
 msgid "Authentication IAP UUID"
+msgstr ""
+
+#. module: l10n_fr_pdp
+#. odoo-python
+#: code:addons/l10n_fr_pdp/wizard/pdp_registration.py:0
+#, python-format
+msgid "Authentication cancelled"
+msgstr ""
+
+#. module: l10n_fr_pdp
+#. odoo-python
+#: code:addons/l10n_fr_pdp/wizard/pdp_registration.py:0
+#, python-format
+msgid "Authentication failed."
 msgstr ""
 
 #. module: l10n_fr_pdp
@@ -367,6 +391,13 @@ msgstr ""
 #: code:addons/l10n_fr_pdp/models/account_edi_proxy_user.py:0
 #, python-format
 msgid "Cannot register a user with a '%(proxy_state)s' application."
+msgstr ""
+
+#. module: l10n_fr_pdp
+#. odoo-python
+#: code:addons/l10n_fr_pdp/wizard/pdp_registration.py:0
+#, python-format
+msgid "Cannot register a user with a '%s' application"
 msgstr ""
 
 #. module: l10n_fr_pdp
@@ -883,8 +914,16 @@ msgstr ""
 #. module: l10n_fr_pdp
 #. odoo-python
 #: code:addons/l10n_fr_pdp/wizard/pdp_registration.py:0
+#: code:addons/l10n_fr_pdp/wizard/pdp_registration.py:0
 #, python-format
 msgid "Go to company"
+msgstr ""
+
+#. module: l10n_fr_pdp
+#. odoo-python
+#: code:addons/l10n_fr_pdp/wizard/pdp_registration.py:0
+#, python-format
+msgid "Go to the Preferences panel"
 msgstr ""
 
 #. module: l10n_fr_pdp
@@ -918,6 +957,13 @@ msgstr ""
 #. module: l10n_fr_pdp
 #: model_terms:ir.ui.view,arch_db:l10n_fr_pdp.pdp_registration_form
 msgid "Identifier"
+msgstr ""
+
+#. module: l10n_fr_pdp
+#. odoo-python
+#: code:addons/l10n_fr_pdp/wizard/pdp_registration.py:0
+#, python-format
+msgid "Identity verified."
 msgstr ""
 
 #. module: l10n_fr_pdp
@@ -1019,6 +1065,13 @@ msgstr ""
 #: code:addons/l10n_fr_pdp/models/pdp_flow.py:0
 #, python-format
 msgid "Invalid Invoices"
+msgstr ""
+
+#. module: l10n_fr_pdp
+#. odoo-python
+#: code:addons/l10n_fr_pdp/wizard/pdp_registration.py:0
+#, python-format
+msgid "Invalid email address '%s'"
 msgstr ""
 
 #. module: l10n_fr_pdp
@@ -1875,6 +1928,13 @@ msgid "Send to PPF"
 msgstr ""
 
 #. module: l10n_fr_pdp
+#. odoo-python
+#: code:addons/l10n_fr_pdp/wizard/pdp_registration.py:0
+#, python-format
+msgid "Send via French electronic invoicing"
+msgstr ""
+
+#. module: l10n_fr_pdp
 #: model:ir.model.fields.selection,name:l10n_fr_pdp.selection__account_move__l10n_fr_pdp_status__sent
 #: model:ir.model.fields.selection,name:l10n_fr_pdp.selection__account_move__pdp_ppf_lifecycle_state__sent
 #: model:ir.model.fields.selection,name:l10n_fr_pdp.selection__account_move__pdp_ppf_move_state__sent
@@ -1962,6 +2022,21 @@ msgid ""
 msgstr ""
 
 #. module: l10n_fr_pdp
+#. odoo-python
+#: code:addons/l10n_fr_pdp/wizard/pdp_registration.py:0
+#, python-format
+msgid "Something went wrong."
+msgstr ""
+
+#. module: l10n_fr_pdp
+#. odoo-python
+#: code:addons/l10n_fr_pdp/wizard/pdp_registration.py:0
+#: code:addons/l10n_fr_pdp/wizard/pdp_registration.py:0
+#, python-format
+msgid "Something wrong happened."
+msgstr ""
+
+#. module: l10n_fr_pdp
 #: model_terms:ir.ui.view,arch_db:l10n_fr_pdp.l10n_fr_pdp_reports_view_flow_form
 #: model_terms:ir.ui.view,arch_db:l10n_fr_pdp.l10n_fr_pdp_reports_view_flow_list
 msgid "Start date"
@@ -1988,6 +2063,13 @@ msgid ""
 "Overdue: Due date is already passed\n"
 "Today: Activity date is today\n"
 "Planned: Future activities."
+msgstr ""
+
+#. module: l10n_fr_pdp
+#. odoo-python
+#: code:addons/l10n_fr_pdp/wizard/pdp_registration.py:0
+#, python-format
+msgid "Status updated."
 msgstr ""
 
 #. module: l10n_fr_pdp
@@ -2050,6 +2132,15 @@ msgstr ""
 
 #. module: l10n_fr_pdp
 #. odoo-python
+#: code:addons/l10n_fr_pdp/wizard/pdp_registration.py:0
+#, python-format
+msgid ""
+"The Identifier is not valid. The expected format is: SIREN, SIREN_SIRET, "
+"SIREN_SIRET_CodeRoutage or SIREN_SuffixeAdressage"
+msgstr ""
+
+#. module: l10n_fr_pdp
+#. odoo-python
 #: code:addons/l10n_fr_pdp/models/pdp_flow.py:0
 #, python-format
 msgid "The PDP proxy did not return a flow tracking identifier."
@@ -2069,6 +2160,13 @@ msgstr ""
 #: code:addons/l10n_fr_pdp/wizard/pdp_registration.py:0
 #, python-format
 msgid "The SIREN of the company could not be determined."
+msgstr ""
+
+#. module: l10n_fr_pdp
+#. odoo-python
+#: code:addons/l10n_fr_pdp/wizard/pdp_registration.py:0
+#, python-format
+msgid "The contact email is required."
 msgstr ""
 
 #. module: l10n_fr_pdp
@@ -2165,6 +2263,13 @@ msgstr ""
 
 #. module: l10n_fr_pdp
 #. odoo-python
+#: code:addons/l10n_fr_pdp/wizard/pdp_registration.py:0
+#, python-format
+msgid "There is a connection to Peppol (non-PA) already"
+msgstr ""
+
+#. module: l10n_fr_pdp
+#. odoo-python
 #: code:addons/l10n_fr_pdp/models/pdp_flow.py:0
 #, python-format
 msgid "This flow is identical to the previous flow %(name)s."
@@ -2177,6 +2282,14 @@ msgstr ""
 msgid ""
 "This flow still contains invoices with validation errors. Fix them or use "
 "the 'Send without invalid invoices' button."
+msgstr ""
+
+#. module: l10n_fr_pdp
+#. odoo-python
+#: code:addons/l10n_fr_pdp/wizard/pdp_registration.py:0
+#, python-format
+msgid ""
+"To be able to register, you need to enable the two-factor authentication."
 msgstr ""
 
 #. module: l10n_fr_pdp
@@ -2328,6 +2441,13 @@ msgstr ""
 
 #. module: l10n_fr_pdp
 #. odoo-python
+#: code:addons/l10n_fr_pdp/wizard/pdp_registration.py:0
+#, python-format
+msgid "You can now send and receive electronic invoices."
+msgstr ""
+
+#. module: l10n_fr_pdp
+#. odoo-python
 #: code:addons/l10n_fr_pdp/models/ir_attachment.py:0
 #, python-format
 msgid "You can't delete an attachment linked to a sent Flow."
@@ -2350,6 +2470,13 @@ msgid ""
 msgstr ""
 
 #. module: l10n_fr_pdp
+#. odoo-python
+#: code:addons/l10n_fr_pdp/wizard/pdp_registration.py:0
+#, python-format
+msgid "You need to have a valid siren number to authenticate."
+msgstr ""
+
+#. module: l10n_fr_pdp
 #: model_terms:ir.ui.view,arch_db:l10n_fr_pdp.res_config_settings_view_form
 msgid ""
 "You registration has been rejected, the reason has been sent to you via email.\n"
@@ -2369,6 +2496,20 @@ msgstr ""
 #. module: l10n_fr_pdp
 #: model_terms:ir.ui.view,arch_db:l10n_fr_pdp.res_config_settings_view_form
 msgid "Your migration key is:"
+msgstr ""
+
+#. module: l10n_fr_pdp
+#. odoo-python
+#: code:addons/l10n_fr_pdp/wizard/pdp_registration.py:0
+#, python-format
+msgid "Your registration has been rejected."
+msgstr ""
+
+#. module: l10n_fr_pdp
+#. odoo-python
+#: code:addons/l10n_fr_pdp/wizard/pdp_registration.py:0
+#, python-format
+msgid "Your registration will be activated soon."
 msgstr ""
 
 #. module: l10n_fr_pdp
