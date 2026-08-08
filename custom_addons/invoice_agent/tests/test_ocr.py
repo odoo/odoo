@@ -96,11 +96,12 @@ class TestOcrServiceGuards(TransactionCase):
     def test_empty_ocr_result_raises(self):
         """A blank page must surface as a failure, never empty 'success'."""
         attachment = self._attachment()
-        # The blank-text guard lives in the shared _ocr_images pass (after
-        # rasterization). Patch that seam — patching _extract_pdf would bypass
-        # the guard entirely and never raise.
         with patch.object(
             self.service.__class__, "_check_toolchain", return_value=None,
+        ), patch.object(
+            self.service.__class__,
+            "_extract_pdf",  # Add this patch to bypass poppler
+            return_value=[b"blank"],
         ), patch.object(
             self.service.__class__,
             "_ocr_images",
