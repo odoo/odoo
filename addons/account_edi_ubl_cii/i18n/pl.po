@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-17 17:36+0000\n"
-"PO-Revision-Date: 2026-04-14 09:22+0000\n"
+"POT-Creation-Date: 2026-08-07 17:37+0000\n"
+"PO-Revision-Date: 2026-08-04 08:10+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-s18-4/"
 "account_edi_ubl_cii/pl/>\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
 "(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
 "n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -50,6 +50,11 @@ msgid ""
 "                        Preview\n"
 "                    </span>"
 msgstr ""
+"<span style=\"font-size: 16px; font-weight: bold; color: #ffffff; display: "
+"inline-block; vertical-align: middle; text-transform: uppercase; margin: 0px "
+"8px; letter-spacing: 0.5px;\">\n"
+"                        Podgląd\n"
+"                    </span>"
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
@@ -61,6 +66,7 @@ msgstr "A"
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint_eu.py:0
 msgid "A buyer reference or purchase order reference must be provided."
 msgstr ""
+"Musi zostać podana referencja kupującego lub referencja zamówienia zakupu."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -187,6 +193,7 @@ msgstr "Sieć rejestrów przedsiębiorstw"
 #: code:addons/account_edi_ubl_cii/models/account_move.py:0
 msgid "Cannot decode origin file, try by importing it again"
 msgstr ""
+"Nie można zdekodować pliku źródłowego, spróbuj zaimportować go ponownie"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -255,6 +262,8 @@ msgid ""
 "Could not retrieve a partner corresponding to '%s' with the same VAT. A new "
 "partner was created."
 msgstr ""
+"Nie udało się znaleźć partnera odpowiadającego '%s' z tym samym numerem VAT. "
+"Utworzono nowego partnera."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -403,11 +412,6 @@ msgstr "Kod lokalizacji EAN"
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__invoice_edi_format__ubl_bis3
 msgid "EU Standard (Peppol Bis 3.0)"
 msgstr "EU Standard (Peppol Bis 3.0)"
-
-#. module: account_edi_ubl_cii
-#: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
-msgid "EXTENDED"
-msgstr ""
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -561,13 +565,13 @@ msgstr "Klucze identyfikacyjne GS1"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
 msgid "General discount"
-msgstr ""
+msgstr "Ogólna zniżka"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
 msgid "General upsell"
-msgstr ""
+msgstr "Ogólna sprzedaż dodatkowa"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -889,6 +893,11 @@ msgid ""
 "met, the customer will be liable for the payment of the tax, interest, and "
 "penalties due in relation to this condition."
 msgstr ""
+"Odwrotne obciążenie: W przypadku braku pisemnego sprzeciwu w ciągu miesiąca "
+"od otrzymania faktury uznaje się, że klient potwierdza, iż jest podatnikiem "
+"zobowiązanym do składania okresowych deklaracji podatkowych. Jeśli warunek "
+"ten nie zostanie spełniony, klient będzie zobowiązany do zapłaty podatku, "
+"odsetek i kar należnych w związku z tym warunkiem."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9947
@@ -997,7 +1006,7 @@ msgstr "Podatek '%(tax_name)s' jest błędny: %(error_message)s"
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.layout_invoices_generated_by_odoo
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.report_invoice_document
 msgid "Tax ID"
-msgstr ""
+msgstr "NIP"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1016,6 +1025,8 @@ msgid ""
 "Taxes of category 'Service outside scope of tax' shall not be mixed with tax "
 "from other categories. You should split your invoice in two"
 msgstr ""
+"Podatki z kategorii „Usługi poza zakresem podatku” nie powinny być mieszane "
+"z podatkami z innych kategorii. Należy podzielić fakturę na dwie części"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1032,6 +1043,8 @@ msgstr ""
 #: code:addons/account_edi_ubl_cii/models/res_partner.py:0
 msgid "The Peppol endpoint is not valid. A valid email is required"
 msgstr ""
+"Punkt końcowy Peppol jest nieprawidłowy. Wymagany jest prawidłowy adres e-"
+"mail"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1066,6 +1079,10 @@ msgid ""
 "line for product '%(product)s' because it is not compatible with the "
 "product's Unit of Measure '%(product_uom)s'. The UoM was left empty."
 msgstr ""
+"Jednostka miary „%(uom)s” (z kodu jednostki „%(code)s”) została zignorowana "
+"w wierszu dotyczącym produktu „%(product)s”, ponieważ nie jest zgodna z "
+"jednostką miary produktu „%(product_uom)s”. Pole jednostki miary "
+"pozostawiono puste."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1145,6 +1162,9 @@ msgid ""
 "                    <strong style=\"color: #495057;\">It is not an official "
 "document.</strong>"
 msgstr ""
+"Jest to wizualna reprezentacja treści xml.<br/>\n"
+"                    <strong style=\"color: #495057;\">Nie jest to dokument "
+"oficjalny.</strong>"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9952
@@ -1174,17 +1194,17 @@ msgstr "UBL BIS Billing 3.0.12"
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_ubl_cen_en16931
 msgid "UBL CEN-EN16931"
-msgstr ""
+msgstr "UBL CEN-EN16931"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_ubl_pint
 msgid "UBL PINT"
-msgstr ""
+msgstr "UBL PINT"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_ubl_pint_eu
 msgid "UBL PINT-EU Layer"
-msgstr ""
+msgstr "Warstwa UBL PINT-EU"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0193
@@ -1233,7 +1253,7 @@ msgstr "Nieznany partner"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/wizard/account_move_send_wizard.py:0
 msgid "Unsupported file type via %s"
-msgstr ""
+msgstr "Nieobsługiwany typ pliku przez %s"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1311,6 +1331,9 @@ msgstr "fx"
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
 msgid "urn:factur-x:pdfa:CrossIndustryDocument:invoice:1p0#"
 msgstr "urn:factur-x:pdfa:CrossIndustryDocument:invoice:1p0#"
+
+#~ msgid "EXTENDED"
+#~ msgstr "ROZSZERZONE"
 
 #~ msgid "Unspported file type via %s"
 #~ msgstr "Nieobsługiwany typ pliku poprzez %s"

@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:38+0000\n"
-"PO-Revision-Date: 2026-07-23 18:10+0000\n"
+"PO-Revision-Date: 2026-08-05 14:12+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-s18-4/"
 "pos_self_order/es/>\n"
@@ -29,7 +29,7 @@ msgstr ""
 #. module: pos_self_order
 #: model:ir.actions.report,print_report_name:pos_self_order.report_self_order_qr_codes_page
 msgid "\"QR codes\""
-msgstr "\"Códigos QR\""
+msgstr "«Códigos QR»"
 
 #. module: pos_self_order
 #. odoo-python
@@ -237,7 +237,7 @@ msgstr "Todos"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/services/self_order_service.js:0
 msgid "An error has occurred"
-msgstr "Ocurrió un error"
+msgstr "Se ha producido un error"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -261,23 +261,23 @@ msgstr "Idiomas disponibles"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.product_template_search_view_pos
 msgid "Available in Self"
-msgstr "Disponible en auto"
+msgstr "Disponible en autoservicio"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_product_product__self_order_available
 #: model:ir.model.fields,field_description:pos_self_order.field_product_template__self_order_available
 msgid "Available in Self Order"
-msgstr "Disponible en autopedido"
+msgstr "Disponible en autoservicio"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_preset__available_in_self
 msgid "Available in self"
-msgstr "Disponible en auto"
+msgstr "Disponible en autoservicio"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
 msgid "Available interface languages"
-msgstr "Idiomas disponibles para la interfaz"
+msgstr "Idiomas disponibles en la interfaz"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -470,7 +470,7 @@ msgid ""
 "order screen"
 msgstr ""
 "Enlaces personalizados que el restaurante puede configurar para que se "
-"muestren en la pantalla de autopedido"
+"muestren en la pantalla de autoservicio"
 
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_self_order_custom_link__style__danger
@@ -491,20 +491,20 @@ msgstr "Por defecto"
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_default_language_id
 #: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_default_language_id
 msgid "Default Language"
-msgstr "Idioma por defecto"
+msgstr "Idioma predeterminado"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_default_user_id
 #: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_default_user_id
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
 msgid "Default User"
-msgstr "Usuario por defecto"
+msgstr "Usuario predeterminado"
 
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_default_language_id
 #: model:ir.model.fields,help:pos_self_order.field_res_config_settings__pos_self_ordering_default_language_id
 msgid "Default language for the kiosk mode"
-msgstr "Idioma por defecto para el modo quiosco"
+msgstr "Idioma predeterminado para el modo quiosco"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -516,7 +516,7 @@ msgstr "Entrega"
 #. module: pos_self_order
 #: model:mail.template,name:pos_self_order.delivery_email_template
 msgid "Delivery: Confirmation order for self"
-msgstr "Entrega: confirmación del pedido de autopedido"
+msgstr "Entrega: confirmación del pedido de autoservicio"
 
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_config__self_ordering_mode__nothing
@@ -580,10 +580,10 @@ msgid ""
 "                    both the point of sale and table names are encrypted in "
 "the generated URL, as shown in the example below:."
 msgstr ""
-"Se le asignará un código QR único a cada mesa de su piso según su "
-"configuración. Por motivos de seguridad,\n"
+"A cada mesa del plano de sala se le asigna un código QR único en función de "
+"su configuración. Por motivos de seguridad,\n"
 "                    tanto el punto de venta como los nombres de las mesas se "
-"codifican en la URL generada, tal y como se muestra en el siguiente ejemplo:"
+"cifran en la URL generada, como se muestra en el siguiente ejemplo:"
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_pos_preset
@@ -612,8 +612,8 @@ msgstr "Plantillas de correo electrónico"
 msgid ""
 "Enable QR menu in the Restaurant settings to get QR codes for free on tables."
 msgstr ""
-"Active el menú QR en los ajustes del restaurante para obtener códigos QR "
-"gratuitos en las mesas."
+"Active el menú de códigos QR en la configuración del restaurante para "
+"obtener códigos QR gratuitos para las mesas."
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -625,7 +625,7 @@ msgstr "Introduzca su valor personalizado"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/stand_number_page/stand_number_page.xml:0
 msgid "Enter your tracker number"
-msgstr "Ingrese su número de seguimiento"
+msgstr "Introduzca su número de seguimiento"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
@@ -644,7 +644,7 @@ msgstr "Posición fiscal"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/payment_page/payment_page.xml:0
 msgid "Follow instructions on the terminal"
-msgstr "Siga las instrucciones en la terminal"
+msgstr "Siga las instrucciones que aparecen en el terminal"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
@@ -687,8 +687,8 @@ msgid ""
 "Hey, looks like you forgot to create products or add them to pos_config. "
 "Please add them before using the Self Order"
 msgstr ""
-"Disculpe, parece que olvidó crear productos o añadirlos a pos_config. "
-"Agréguelos antes de utilizar autopedido."
+"Parece que se ha olvidado de crear productos o añadirlos a pos_config. "
+"Añádalos antes de utilizar el autoservicio"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
@@ -699,7 +699,7 @@ msgstr "Botones de inicio"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
 msgid "Hope you enjoyed your meal!"
-msgstr "Ojalá haya disfrutado su comida."
+msgstr "¡Esperamos que le haya gustado!"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
@@ -739,7 +739,7 @@ msgstr "ID"
 #: model:ir.model.fields,help:pos_self_order.field_product_product__self_order_available
 #: model:ir.model.fields,help:pos_self_order.field_product_template__self_order_available
 msgid "If this product is available in the Self Order screens"
-msgstr "Si este producto está disponible en las pantallas de autopedido"
+msgstr "Si este producto está disponible en las pantallas de autoservicio"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
@@ -758,7 +758,7 @@ msgstr ""
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_image_background_ids
 #: model:ir.model.fields,help:pos_self_order.field_res_config_settings__pos_self_ordering_image_background_ids
 msgid "Image to be displayed in the background"
-msgstr "Imagen que se mostrará como fondo"
+msgstr "Imagen que se mostrará en el fondo"
 
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_image_brand
@@ -766,7 +766,7 @@ msgstr "Imagen que se mostrará como fondo"
 #: model:ir.model.fields,help:pos_self_order.field_res_config_settings__pos_self_ordering_image_brand
 #: model:ir.model.fields,help:pos_self_order.field_res_config_settings__pos_self_ordering_image_home_ids
 msgid "Image to display on the self order screen"
-msgstr "Imagen para mostrar en la pantalla de autopedido"
+msgstr "Imagen que se mostrará en la pantalla de autoservicio"
 
 #. module: pos_self_order
 #. odoo-python
@@ -823,7 +823,7 @@ msgstr ""
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__name
 msgid "Label"
-msgstr "Descripción"
+msgstr "Etiqueta"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
@@ -938,7 +938,7 @@ msgstr "Nombre"
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_image_brand_name
 #: model:ir.model.fields,help:pos_self_order.field_res_config_settings__pos_self_ordering_image_brand_name
 msgid "Name of the image to display on the self order screen"
-msgstr "Nombre de la imagen para mostrar en la pantalla de autopedido"
+msgstr "Nombre de la imagen que se mostrará en la pantalla de autoservicio"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -961,7 +961,7 @@ msgstr "No hay más papel en la impresora, recuerde su número de pedido:"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/order_history_page/order_history_page.xml:0
 msgid "No order found"
-msgstr "No se encontraron pedidos"
+msgstr "No se ha encontrado ningún pedido"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -978,7 +978,7 @@ msgstr "No disponible"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.product_template_search_view_pos
 msgid "Not available in Self"
-msgstr "No disponible en auto"
+msgstr "No disponible en autoservicio"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1003,13 +1003,13 @@ msgstr "En curso"
 #. odoo-python
 #: code:addons/pos_self_order/models/res_config_settings.py:0
 msgid "Only pay after each is available with kiosk mode."
-msgstr "Solo se puede pagar después de cada uno con el modo quiosco."
+msgstr "El modo quiosco solo permite pagar después de hacer el pedido."
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/unavailable_product_dialog/unavailable_product_dialog.xml:0
 msgid "Oops..."
-msgstr "Uy..."
+msgstr "Vaya..."
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.pos_self_order_menu_item
@@ -1041,7 +1041,7 @@ msgstr "No se han encontrado pedidos en el servidor"
 #: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
 #: code:addons/pos_self_order/static/src/app/pages/product_list_page/product_list_page.xml:0
 msgid "Out of stock"
-msgstr "Fuera de stock"
+msgstr "Agotado"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1079,8 +1079,8 @@ msgid ""
 "Personalize your splash screen by adding one or multiple images to create a "
 "slideshow"
 msgstr ""
-"Personalice su pantalla de inicio con una o varias imágenes para crear una "
-"presentación"
+"Personalice la pantalla de inicio añadiendo una o varias imágenes para crear "
+"una presentación de diapositivas"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1103,7 +1103,7 @@ msgstr "Zona de recogida"
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_pos_load_mixin
 msgid "PoS data loading mixin"
-msgstr "Mixin para cargar datos del TPV"
+msgstr "Mixin para la carga de datos del punto de venta"
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_pos_category
@@ -1202,7 +1202,8 @@ msgstr "Códigos QR"
 #: code:addons/pos_self_order/models/res_config_settings.py:0
 msgid "QR codes can only be generated in mobile or consultation mode."
 msgstr ""
-"Los códigos QR solo se pueden generar por el móvil o en modo de consulta."
+"Los códigos QR solo se pueden generar en el móvil o mediante un dispositivo "
+"fijo (modo consulta)."
 
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_config__self_ordering_mode__consultation
@@ -1266,13 +1267,13 @@ msgstr "Seleccionar"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
 msgid "Select a country"
-msgstr "Seleccione un país"
+msgstr "Seleccionar un país"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/slots_popup/slots_popup.xml:0
 msgid "Select a hour"
-msgstr "Seleccione una hora"
+msgstr "Seleccionar una hora"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1284,7 +1285,7 @@ msgstr "Seleccione una provincia"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/popup_table/popup_table.xml:0
 msgid "Select a table"
-msgstr "Seleccione una mesa"
+msgstr "Seleccionar una mesa"
 
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_self_order_custom_link__pos_config_ids
@@ -1293,9 +1294,9 @@ msgid ""
 "to display it for all points of sale. You have to select among the points of "
 "sale that have the 'QR Code Menu' feature enabled."
 msgstr ""
-"Seleccione los puntos de venta donde desea mostrar este enlace, deje el "
-"campo vacío para mostrarlo en todos. Debe seleccionar entre los puntos de "
-"venta que tienen habilitado el menú en código QR."
+"Seleccione en qué puntos de venta quiere mostrar este enlace. Déjelo en "
+"blanco para mostrarlo en todos los puntos de venta. Debe seleccionar entre "
+"los puntos de venta que tengan habilitada la función «Menú con código QR»."
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1313,13 +1314,13 @@ msgstr "Autopedido"
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_image_brand
 #: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_image_brand
 msgid "Self Order Kiosk Image Brand"
-msgstr "Imagen de marca del quiosco de autopedidos"
+msgstr "Imagen de marca del quiosco de autoservicio"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_image_brand_name
 #: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_image_brand_name
 msgid "Self Order Kiosk Image Brand Name"
-msgstr "Nombre de la imagen del nombre de marca del quiosco de autopedidos"
+msgstr "Nombre de la imagen de marca del quiosco de autoservicio"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_product_product__self_order_visible
@@ -1353,7 +1354,7 @@ msgstr "Modo de autopedido"
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_service_mode
 #: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_service_mode
 msgid "Self Ordering Service Mode"
-msgstr "Modo de servicio de autopedido"
+msgstr "Modo de autoservicio"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_url
@@ -1393,13 +1394,13 @@ msgstr "Secuencia"
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_preset__service_at
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
 msgid "Service at"
-msgstr "Servicio a"
+msgstr "Servicio en"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/overrides/components/receipt_header/receipt_header.xml:0
 msgid "Service at Table"
-msgstr "Servicio a la mesa"
+msgstr "Servicio en mesa"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1432,7 +1433,7 @@ msgstr "Estado"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
 msgid "Street and Number"
-msgstr "Número y calle"
+msgstr "Calle y número"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__style
@@ -1453,13 +1454,13 @@ msgstr "Mesa"
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_order__table_stand_number
 msgid "Table Stand Number"
-msgstr "Número de mesa"
+msgstr "Número del soporte de mesa"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/overrides/components/receipt_header/receipt_header.xml:0
 msgid "Table Tracker:"
-msgstr "Rastreador de mesas:"
+msgstr "Localizador de mesa:"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1475,7 +1476,7 @@ msgstr "Mesa:"
 #. module: pos_self_order
 #: model:mail.template,name:pos_self_order.takeout_email_template
 msgid "Takeout: Confirmation order for self"
-msgstr "Para llevar: confirmación del pedido de autopedido"
+msgstr "Para llevar: confirmación del pedido de autoservicio"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1500,7 +1501,9 @@ msgstr "¡Muchas gracias!"
 #. odoo-python
 #: code:addons/pos_self_order/models/pos_config.py:0
 msgid "The Self-Order default user must be a POS user"
-msgstr "El usuario por defecto del autopedido debe ser un usuario del TPV"
+msgstr ""
+"El usuario predeterminado de autoservicio debe ser un usuario de punto de "
+"venta"
 
 #. module: pos_self_order
 #. odoo-python
@@ -1512,7 +1515,7 @@ msgstr "La plantilla de correo con xmlid %s ha sido eliminada."
 #. odoo-python
 #: code:addons/pos_self_order/models/res_config_settings.py:0
 msgid "The user must be a POS user"
-msgstr "El usuario debe ser un usuario del TPV"
+msgstr "El usuario debe ser un usuario del punto de venta"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1607,7 +1610,7 @@ msgstr "¿Cuándo le gustaría recibir sus pedidos?"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/eating_location_page/eating_location_page.xml:0
 msgid "Where do you want to eat?"
-msgstr "¿En dónde desea comer?"
+msgstr "¿Dónde quiere comer?"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1624,14 +1627,14 @@ msgstr "Sí"
 #. odoo-python
 #: code:addons/pos_self_order/controllers/orders.py:0
 msgid "You are not authorized to remove this order"
-msgstr "No está autorizado a eliminar este pedido"
+msgstr "No está autorizado para eliminar este pedido"
 
 #. module: pos_self_order
 #. odoo-python
 #: code:addons/pos_self_order/models/pos_config.py:0
 #: code:addons/pos_self_order/models/res_config_settings.py:0
 msgid "You cannot add cash payment methods in kiosk mode."
-msgstr "No puede añadir métodos de pago en efectivo al modo de quiosco."
+msgstr "No se pueden añadir métodos de pago en efectivo en el modo quiosco."
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1742,7 +1745,7 @@ msgstr "es"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/unavailable_product_dialog/unavailable_product_dialog.xml:0
 msgid "no longer available. Please go back and edit your order."
-msgstr "disponibles. Regrese y edite su pedido."
+msgstr "disponibles. Vuelva atrás y edite su pedido."
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.custom_link_tree
