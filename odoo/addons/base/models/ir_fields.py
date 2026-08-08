@@ -8,7 +8,7 @@ from typing import NamedTuple
 
 from odoo import api, Command, fields, models
 from odoo.tools import OrderedSet
-from odoo.tools.translate import _, code_translations, LazyTranslate
+from odoo.tools.translate import code_translations, LazyTranslate
 
 _lt = LazyTranslate(__name__)
 
@@ -544,11 +544,11 @@ class IrFieldsConverter(models.AbstractModel):
             ids = RelatedModel.name_search(name=value, operator='=')
             if ids:
                 if len(ids) > 1:
-                    warnings.append(ImportWarning(_(
-                        'Found multiple matches for value "%(value)s" in field "%%(field)s" (%(match_count)s matches)',
-                        value=str(value).replace('%', '%%'),
-                        match_count=len(ids),
-                    )))
+                    raise self._format_import_error(
+                        ValueError,
+                        self.env._('Found multiple matches for value "%(value)s" in field "%%(field)s" (%(match_count)s matches)'),
+                        {'value': value, 'match_count': len(ids)},
+                    )
                 id, _name = ids[0]
             else:
                 name_create_enabled_fields = self.env.context.get('name_create_enabled_fields') or {}
