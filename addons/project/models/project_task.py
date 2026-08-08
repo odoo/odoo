@@ -1148,7 +1148,7 @@ class ProjectTask(models.Model):
             if not vals.get('name') and vals.get('display_name'):
                 vals['name'] = vals['display_name']
 
-            if is_portal_user or not self.env.su:
+            if is_portal_user and not self.env.su:
                 self_with_restrict_context._ensure_fields_write(vals, defaults=True)
 
             if project_id and not "company_id" in vals:
