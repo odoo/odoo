@@ -264,11 +264,11 @@ SQL_ORDER_BY_TYPE = defaultdict(lambda: 16, {
 })
 
 
-def create_model_table(cr: Cursor, tablename: str, comment: str | None = None, columns: Iterable[tuple[str, str, str | None]] = ()):
+def create_model_table(cr: Cursor, tablename: str, comment: str | None = None, columns: Iterable[tuple[str, SQL, str | None]] = ()):
     """ Create the table for a model. """
     colspecs = [
         SQL('id SERIAL NOT NULL'),
-        *(SQL("%s %s", SQL.identifier(colname), SQL(coltype)) for colname, coltype, _ in columns),
+        *(SQL("%s %s", SQL.identifier(colname), coldef) for colname, coldef, _ in columns),
         SQL('PRIMARY KEY(id)'),
     ]
     queries = [
@@ -316,13 +316,13 @@ def column_exists(cr: Cursor, tablename: str, columnname: str) -> bool:
     return bool(cr.rowcount)
 
 
-def create_column(cr: Cursor, tablename: str, columnname: str, columntype: str, comment: str | None = None):
+def create_column(cr: Cursor, tablename: str, columnname: str, columntype: str | SQL, comment: str | None = None):
     """ Create a column with the given type. """
     sql = SQL(
         "ALTER TABLE %s ADD COLUMN %s %s",
         SQL.identifier(tablename),
         SQL.identifier(columnname),
-        SQL(columntype),
+        columntype if isinstance(columntype, SQL) else SQL.identifier(columntype),
     )
     if comment:
         sql = SQL("%s; %s", sql, SQL(
@@ -344,16 +344,18 @@ def rename_column(cr: Cursor, tablename: str, columnname1: str, columnname2: str
     _schema.debug("Table %r: renamed column %r to %r", tablename, columnname1, columnname2)
 
 
-def convert_column(cr: Cursor, tablename: str, columnname: str, columntype: str):
+def convert_column(cr: Cursor, tablename: str, columnname: str, columntype: str | SQL):
     """ Convert the column to the given type. """
-    using = SQL("%s::%s", SQL.identifier(columnname), SQL(columntype))
+    if not isinstance(columntype, SQL):
+        columntype = SQL.identifier(columntype)
+    using = SQL("%s::%s", SQL.identifier(columnname), columntype)
     _convert_column(cr, tablename, columnname, columntype, using)
 
 
-def convert_column_translatable(cr: Cursor, tablename: str, columnname: str, columntype: str):
+def convert_column_translatable(cr: Cursor, tablename: str, columnname: str, columntype: str | SQL):
     """ Convert the column from/to a 'jsonb' translated field column. """
     drop_index(cr, make_index_name(tablename, columnname), tablename)
-    if columntype == "jsonb":
+    if columntype == "jsonb" or columntype == SQL("jsonb"):
         using = SQL(
             "CASE WHEN %s IS NOT NULL THEN jsonb_build_object('en_US', %s::varchar) END",
             SQL.identifier(columnname), SQL.identifier(columnname),
@@ -363,11 +365,13 @@ def convert_column_translatable(cr: Cursor, tablename: str, columnname: str, col
     _convert_column(cr, tablename, columnname, columntype, using)
 
 
-def _convert_column(cr: Cursor, tablename: str, columnname: str, columntype: str, using: SQL):
+def _convert_column(cr: Cursor, tablename: str, columnname: str, columntype: str | SQL, using: SQL):
+    if not isinstance(columntype, SQL):
+        columntype = SQL.identifier(columntype)
     query = SQL(
         "ALTER TABLE %s ALTER COLUMN %s DROP DEFAULT, ALTER COLUMN %s TYPE %s USING %s",
         SQL.identifier(tablename), SQL.identifier(columnname),
-        SQL.identifier(columnname), SQL(columntype), using,
+        SQL.identifier(columnname), columntype, using,
     )
     try:
         with cr.savepoint(flush=False):
@@ -765,4 +769,4 @@ def quoted_identifier(cr, name: str) -> SQL:
     Use instead of `SQL.identifier` to accept all kinds of identifiers.
     """
     name = quote_ident(name, cr._cnx)
-    return SQL(name)
+    return SQL(name)  # pylint: disable=sql-injection

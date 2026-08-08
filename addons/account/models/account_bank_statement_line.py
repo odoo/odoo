@@ -273,7 +273,7 @@ class AccountBankStatementLine(models.Model):
         unless we use a sql view which is more complicated.
         """
         # ensure we are using correct value for reversing sequence in the index (2147483647)
-        # NOTE: assert self._fields['sequence'].column_type[1] == 'int4'
+        assert self._fields['sequence'].column_type[1] == 'int4'
         # if for any reason it changes (how unlikely), we need to update this code
 
         for st_line in self.filtered(lambda line: line._origin.id):

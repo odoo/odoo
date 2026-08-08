@@ -62,9 +62,9 @@ class BaseString(Field[str | typing.Literal[False]]):
     def _convert_db_column(self, model, column):
         # specialized implementation for converting from/to translated fields
         if self.translate or column['udt_name'] == 'jsonb':
-            sql.convert_column_translatable(model.env.cr, model._table, self.name, self.column_type[1])
+            sql.convert_column_translatable(model.env.cr, model._table, self.name, self.stored_sql_column_type)
         else:
-            sql.convert_column(model.env.cr, model._table, self.name, self.column_type[1])
+            sql.convert_column(model.env.cr, model._table, self.name, self.stored_sql_column_type)
 
     def get_trans_terms(self, value) -> list[str]:
         """ Return the sequence of terms to translate found in `value`"""
@@ -539,7 +539,7 @@ class Char(BaseString):
             (self.size is None or column['character_maximum_length'] < self.size)
         ):
             # the column's varchar size does not match self.size; convert it
-            sql.convert_column(model.env.cr, model._table, self.name, self.column_type[1])
+            sql.convert_column(model.env.cr, model._table, self.name, self.stored_sql_column_type)
         super().update_db_column(model, column)
 
     _related_size = property(attrgetter('size'))
