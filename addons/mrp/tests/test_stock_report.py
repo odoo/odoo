@@ -316,7 +316,7 @@ class TestMrpStockReports(TestReportsCommon):
         picking.action_confirm()
 
         picking.move_ids.write({'quantity': 1, 'picked': True})
-        move = picking.move_ids.filtered(lambda m: m.description_picking == "Super Kit" and m.product_id == compo03)
+        move = picking.move_ids.filtered(lambda m: "Super Kit" in m.description_picking and m.product_id == compo03)
         move.move_line_ids.result_package_id = self.env['stock.package'].create({'name': 'Package0001'})
         picking.button_validate()
 
