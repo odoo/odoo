@@ -1,0 +1,20 @@
+#!/bin/sh
+# pre-push - run the local CI mirror (bashs/ci-check.ps1) before every push.
+# Managed by bashs/install-pre-push.ps1. Bypass one push: git push --no-verify
+
+set -e
+cd "$(git rev-parse --show-toplevel)"
+
+echo "Running local CI check (bashs/ci-check.ps1) before push..."
+echo "Bypass this check on one push:  git push --no-verify"
+echo ""
+
+if ! powershell.exe -NoProfile -ExecutionPolicy Bypass -File ".\bashs\ci-check.ps1"; then
+    echo ""
+    echo "!!! Local CI check FAILED - push blocked. Fix the errors above, re-run," 1>&2
+    echo "    then push again." 1>&2
+    exit 1
+fi
+
+echo ""
+echo "Local CI check passed - pushing."

@@ -96,16 +96,20 @@ class TestOcrServiceGuards(TransactionCase):
     def test_empty_ocr_result_raises(self):
         """A blank page must surface as a failure, never empty 'success'."""
         attachment = self._attachment()
+        # The blank-text guard lives INSIDE _ocr_images, so patching
+        # _extract_pdf or _ocr_images bypasses it entirely. Run the real code
+        # path instead: mock the poppler rasterizer to return one fake page,
+        # and make tesseract return an empty page; the real guard must raise.
+        from PIL import Image
+
+        fake_page = Image.new("RGB", (10, 10), "white")
         with patch.object(
             self.service.__class__, "_check_toolchain", return_value=None,
-        ), patch.object(
-            self.service.__class__,
-            "_extract_pdf",  # Add this patch to bypass poppler
-            return_value=[b"blank"],
-        ), patch.object(
-            self.service.__class__,
-            "_ocr_images",
-            return_value={"text": "   ", "confidence": 0.0},
+        ), patch(
+            "pdf2image.convert_from_bytes", return_value=[fake_page],
+        ), patch(
+            "pytesseract.image_to_data",
+            return_value={"text": [" ", "", "  "], "conf": [-1, -1, -1]},
         ):
             with self.assertRaises(Exception) as ctx:
                 self.service._extract_text(attachment)
