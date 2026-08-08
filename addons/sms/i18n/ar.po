@@ -10,11 +10,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:39+0000\n"
+"POT-Creation-Date: 2026-08-07 17:39+0000\n"
 "PO-Revision-Date: 2026-06-28 01:06+0000\n"
 "Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
-"Language-Team: Arabic <https://translate.odoo.com/projects/odoo-s18-3/sms/"
-"ar/>\n"
+"Language-Team: Arabic <https://translate.odoo.com/projects/odoo-s18-3/sms/ar/"
+">\n"
 "Language: ar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -365,12 +365,6 @@ msgid "Country-specific Registration Required"
 msgstr "مطلوب التسجيل الخاص بكل بلد "
 
 #. module: sms
-#. odoo-python
-#: code:addons/sms/tools/sms_api.py:0
-msgid "Country-specific registration required."
-msgstr "يتطلب التسجيل الخاص بالدول. "
-
-#. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_account_code__create_uid
 #: model:ir.model.fields,field_description:sms.field_sms_account_phone__create_uid
 #: model:ir.model.fields,field_description:sms.field_sms_account_sender__create_uid
@@ -665,8 +659,8 @@ msgid ""
 "For example: +1 555-555-555"
 msgstr ""
 "رقم الهاتف غير صالح. يُرجى التأكد من اتباع التنسيق الدولي، أي علامة زائد (+)، "
-"ثم رمز البلد ورمز المدينة ورقم الهاتف المحلي. على سبيل المثال: +1 555-555-"
-"555 "
+"ثم رمز البلد ورمز المدينة ورقم الهاتف المحلي. على سبيل المثال: +1 "
+"555-555-555 "
 
 #. module: sms
 #. odoo-python
@@ -850,10 +844,10 @@ msgid ""
 "a placeholder expression that provides the appropriate language, e.g. "
 "{{ object.partner_id.lang }}."
 msgstr ""
-"لغة الترجمة الاختيارية (كود ISO) لاختيارها عند إرسال بريد إلكتروني. إذا لم يتم "
-"تعيينها، سوف تُستخدم النسخة باللغة الإنجليزية. عادة ما يكون ذلك تمثيلاً للعنصر "
-"النائب المسؤول عن التزويد باللغة المناسبة، مثال: {{ object.partner_id.lang }}"
-". "
+"لغة الترجمة الاختيارية (كود ISO) لاختيارها عند إرسال بريد إلكتروني. إذا لم "
+"يتم تعيينها، سوف تُستخدم النسخة باللغة الإنجليزية. عادة ما يكون ذلك تمثيلاً "
+"للعنصر النائب المسؤول عن التزويد باللغة المناسبة، مثال: "
+"{{ object.partner_id.lang }}. "
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_sms
@@ -956,12 +950,6 @@ msgstr "تسجيل"
 #: code:addons/sms/wizard/sms_account_phone.py:0
 msgid "Register Account"
 msgstr "تسجيل الحساب "
-
-#. module: sms
-#. odoo-python
-#: code:addons/sms/tools/sms_api.py:0
-msgid "Register now."
-msgstr "سجّل الآن "
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_code_view_form
@@ -1770,12 +1758,19 @@ msgstr "من "
 msgid ""
 "recipients have an invalid phone number and will not receive this text "
 "message."
-msgstr "مستلمين لديهم أرقام هواتف غير صحيحة ولن يتمكنوا من استلام هذه الرسالة. "
+msgstr ""
+"مستلمين لديهم أرقام هواتف غير صحيحة ولن يتمكنوا من استلام هذه الرسالة. "
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
 msgid "record:"
 msgstr "السجل: "
+
+#~ msgid "Country-specific registration required."
+#~ msgstr "يتطلب التسجيل الخاص بالدول. "
+
+#~ msgid "Register now."
+#~ msgstr "سجّل الآن "
 
 #~ msgid "+1 555-555-555"
 #~ msgstr "+1 555-555-555"

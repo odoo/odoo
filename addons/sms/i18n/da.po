@@ -11,11 +11,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:39+0000\n"
+"POT-Creation-Date: 2026-08-07 17:39+0000\n"
 "PO-Revision-Date: 2026-07-13 08:10+0000\n"
 "Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
-"Language-Team: Danish <https://translate.odoo.com/projects/odoo-s18-3/sms/"
-"da/>\n"
+"Language-Team: Danish <https://translate.odoo.com/projects/odoo-s18-3/sms/da/"
+">\n"
 "Language: da\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -97,8 +97,8 @@ msgid ""
 "span>"
 msgstr ""
 "<span class=\"o_stat_text\">Tilføj</span>\n"
-"                                <span class=\"o_stat_text\">"
-"konteksthandling</span>"
+"                                <span "
+"class=\"o_stat_text\">konteksthandling</span>"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
@@ -113,8 +113,8 @@ msgid ""
 "span>"
 msgstr ""
 "<span class=\"o_stat_text\">Fjern</span>\n"
-"                                <span class=\"o_stat_text\">"
-"Konteksthandling</span>"
+"                                <span "
+"class=\"o_stat_text\">Konteksthandling</span>"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
@@ -156,8 +156,8 @@ msgstr ""
 "en\n"
 "                                    intern note i beskedhistorikken.\n"
 "                               </span>\n"
-"                                <span invisible=\"sms_method != 'comment'\"> "
-"\n"
+"                                <span invisible=\"sms_method != "
+"'comment'\"> \n"
 "                                    SMS'en sendes som en SMS til modtagerne "
 "af\n"
 "                                    skabelonen og vil også blive lagt op som "
@@ -364,12 +364,6 @@ msgstr "Land understøttes ikke"
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_registration_needed
 msgid "Country-specific Registration Required"
 msgstr "Landespecifik registrering påkrævet"
-
-#. module: sms
-#. odoo-python
-#: code:addons/sms/tools/sms_api.py:0
-msgid "Country-specific registration required."
-msgstr "Landespecifik registrering påkrævet."
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_account_code__create_uid
@@ -854,8 +848,8 @@ msgid ""
 msgstr ""
 "Valgfrit oversættelsessprog (ISO-kode) ved afsendelse af e-mail. Hvis feltet "
 "ikke udfyldes, anvendes den engelske version. Værdien bør som udgangspunkt "
-"være et pladsholderudtryk, der angiver det relevante sprog, f.eks. {{ "
-"object.partner_id.lang }}."
+"være et pladsholderudtryk, der angiver det relevante sprog, f.eks. "
+"{{ object.partner_id.lang }}."
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_sms
@@ -958,12 +952,6 @@ msgstr "Tilmelde sig"
 #: code:addons/sms/wizard/sms_account_phone.py:0
 msgid "Register Account"
 msgstr "Tilmeld konto"
-
-#. module: sms
-#. odoo-python
-#: code:addons/sms/tools/sms_api.py:0
-msgid "Register now."
-msgstr "Tilmeld dig nu."
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_code_view_form
@@ -1769,9 +1757,16 @@ msgstr "ud af"
 msgid ""
 "recipients have an invalid phone number and will not receive this text "
 "message."
-msgstr "Modtagerne har et ugyldigt telefonnummer og vil ikke modtage denne SMS."
+msgstr ""
+"Modtagerne har et ugyldigt telefonnummer og vil ikke modtage denne SMS."
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
 msgid "record:"
 msgstr "post:"
+
+#~ msgid "Country-specific registration required."
+#~ msgstr "Landespecifik registrering påkrævet."
+
+#~ msgid "Register now."
+#~ msgstr "Tilmeld dig nu."
