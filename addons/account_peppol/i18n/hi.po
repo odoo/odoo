@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-24 17:38+0000\n"
-"PO-Revision-Date: 2026-06-30 11:45+0000\n"
+"PO-Revision-Date: 2026-08-07 10:34+0000\n"
 "Last-Translator: \"Ujjawal Pathak (pauj)\" <pauj@odoo.com>\n"
 "Language-Team: Hindi <https://translate.odoo.com/projects/odoo-19/"
 "account_peppol/hi/>\n"
@@ -209,8 +209,8 @@ msgstr ""
 "collapse:separate;\">\n"
 "                            <tr>\n"
 "                                <td valign=\"middle\">\n"
-"                                    <span style=\"font-size: 10px;"
-"\">नोटिफ़िकेशन</span>\n"
+"                                    <span style=\"font-size: 10px;\">"
+"नोटिफ़िकेशन</span>\n"
 "                                    <br/>\n"
 "                                    <span style=\"font-size: 20px; font-"
 "weight: bold;\">\n"
@@ -219,26 +219,26 @@ msgstr ""
 "                                    <div style=\"margin-bottom: 5px; margin-"
 "top: 18px;\">\n"
 "                                        <a t-attf-href=\"/odoo/accounting/\" "
-"target=\"_blank\" t-attf-style=\"padding: 8px 12px; font-size: 12px; color: "
-"{{ object.email_primary_color or '#FFFFFF' }}; text-decoration: none !"
-"important; font-weight: 400; background-color: "
-"{{ object.email_secondary_color or '#875A7B' }}; border-radius:3px\">\n"
+"target=\"_blank\" t-attf-style=\"padding: 8px 12px; font-size: 12px; color: {"
+"{ object.email_primary_color or '#FFFFFF' }}; text-decoration: none "
+"!important; font-weight: 400; background-color: {{ "
+"object.email_secondary_color or '#875A7B' }}; border-radius:3px\">\n"
 "                                            इनवॉइस भेजें\n"
 "                                        </a>\n"
 "                                    </div>\n"
 "                                </td>\n"
 "                                <td valign=\"middle\" align=\"right\">\n"
-"                                    <t t-if=\"not "
-"object.uses_default_logo\">\n"
-"                                        <img t-att-src=\"'/logo.png?"
-"company=%s' % object.id\" style=\"height: auto; width: 80px; margin-right: "
-"10px;\" t-att-alt=\"'%s' % object.name\"/>\n"
+"                                    <t t-if=\"not object.uses_default_logo\">"
+"\n"
+"                                        <img t-att-src=\"'/"
+"logo.png?company=%s' % object.id\" style=\"height: auto; width: 80px; margin-"
+"right: 10px;\" t-att-alt=\"'%s' % object.name\"/>\n"
 "                                    </t>\n"
 "                                </td>\n"
 "                            </tr>\n"
 "                            <tr>\n"
-"                                <td colspan=\"2\" style=\"text-align:center;"
-"\">\n"
+"                                <td colspan=\"2\" style=\"text-"
+"align:center;\">\n"
 "                                    <hr style=\"background-color:#CCCCCC; "
 "border:none; height:1px; margin:16px 0;\"/>\n"
 "                                </td>\n"
@@ -254,11 +254,11 @@ msgstr ""
 "collapse:separate;\">\n"
 "                            <tr>\n"
 "                                <td style=\"font-size: 14px;\">\n"
-"                                    <p>नमस्ते <t t-out=\"object.name or "
-"''\">YourCompany</t>,</p>\n"
+"                                    <p>नमस्ते <t t-out=\"object.name or ''\">"
+"YourCompany</t>,</p>\n"
 "\n"
-"                                    <p>हमने सफलतापूर्वक आपकी कंपनी "
-"को<strong>Peppol नेटवर्क</strong> से जोड़ दिया है.</p>\n"
+"                                    <p>हमने सफलतापूर्वक आपकी कंपनी को<strong>"
+"Peppol नेटवर्क</strong> से जोड़ दिया है.</p>\n"
 "\n"
 "                                    <p>अब आप Odoo की मदद से इलेक्ट्रॉनिक इनवॉइस "
 "<strong>भेज<t t-if=\"object.account_peppol_proxy_state == 'receiver'\"> और "
@@ -370,7 +370,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_peppol/models/res_company.py:0
 msgid "A purchase journal must be used to receive Peppol documents."
-msgstr "Peppol के दस्तावेज़ लेने के लिए 'परचेज़ जर्नल' का इस्तेमाल करना ज़रूरी है।"
+msgstr ""
+"Peppol के दस्तावेज़ लेने के लिए 'परचेज़ जर्नल' का इस्तेमाल करना ज़रूरी है।"
 
 #. module: account_peppol
 #. odoo-python
@@ -389,8 +390,8 @@ msgid ""
 "A value is set for FragmentCount, but a previously received fragment had a "
 "greature value."
 msgstr ""
-"FragmentCount के लिए एक संख्या तय की गई है, पर पहले मिले किसी टुकड़े में इससे बड़ी संख्या "
-"थी।"
+"FragmentCount के लिए एक संख्या तय की गई है, पर पहले मिले किसी टुकड़े में इससे बड़ी संख्या थी"
+"।"
 
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_account_edi_proxy_client_user
@@ -565,7 +566,8 @@ msgstr ""
 msgid ""
 "An MSH has determined that the message is expired and will not attempt to "
 "forward or deliver it."
-msgstr "एमएसएच सिस्टम ने पाया कि मैसेज पुराना हो गया है, अब वह इसे आगे नहीं भेजेगा।"
+msgstr ""
+"एमएसएच सिस्टम ने पाया कि मैसेज पुराना हो गया है, अब वह इसे आगे नहीं भेजेगा।"
 
 #. module: account_peppol
 #. odoo-python
@@ -583,7 +585,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "An error occurred during the decompression."
-msgstr "फ़ाइल को कंप्रेस्ड अवस्था से वापस सामान्य अवस्था में लाते समय कोई गड़बड़ हो गई।"
+msgstr ""
+"फ़ाइल को कंप्रेस्ड अवस्था से वापस सामान्य अवस्था में लाते समय कोई गड़बड़ हो गई।"
 
 #. module: account_peppol
 #. odoo-python
@@ -597,7 +600,8 @@ msgstr "जोड़ा हुआ मैसेज खोलते समय को�
 msgid ""
 "An incoming message fragment has a a value greater than the known "
 "FragmentCount."
-msgstr "आने वाले मैसेज के एक टुकड़े की संख्या, कुल टुकड़ों की संख्या से ज़्यादा है।"
+msgstr ""
+"आने वाले मैसेज के एक टुकड़े की संख्या, कुल टुकड़ों की संख्या से ज़्यादा है।"
 
 #. module: account_peppol
 #. odoo-python
@@ -738,7 +742,8 @@ msgstr ""
 #: model:ir.model,name:account_peppol.model_account_edi_common
 msgid ""
 "Common functions for EDI documents: generate the data, the constraints, etc"
-msgstr "EDI डॉक्यूमेंट के मुख्य काम: डेटा बनाना, नियम तय करना, और ऐसे ही दूसरे काम."
+msgstr ""
+"EDI डॉक्यूमेंट के मुख्य काम: डेटा बनाना, नियम तय करना, और ऐसे ही दूसरे काम."
 
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_res_company
@@ -825,7 +830,8 @@ msgstr "इस तारीख को बनाया गया"
 #. odoo-python
 #: code:addons/account_peppol/models/account_move_send.py:0
 msgid "Customer is on Peppol but did not enable receiving documents."
-msgstr "ग्राहक Peppol पर है, लेकिन उसने दस्तावेज़ पाने की सुविधा चालू नहीं की है।"
+msgstr ""
+"ग्राहक Peppol पर है, लेकिन उसने दस्तावेज़ पाने की सुविधा चालू नहीं की है।"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
@@ -957,7 +963,8 @@ msgstr "हो गया"
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.xml:0
 msgid "E-invoices will soon be mandatory in many countries"
-msgstr "बहुत से देशों में इलेक्ट्रॉनिक इनवॉइस का जल्द ही इस्तेमाल करना ज़रूरा हो जाएगा"
+msgstr ""
+"बहुत से देशों में इलेक्ट्रॉनिक इनवॉइस का जल्द ही इस्तेमाल करना ज़रूरा हो जाएगा"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__edi_mode
@@ -1171,7 +1178,8 @@ msgstr "लाइव"
 msgid ""
 "Message properties were present in the fragment SOAP header that were not "
 "specified in %s"
-msgstr "मैसेज के छोटे हिस्से के SOAP हेडर में कुछ ऐसी जानकारी थी, जो %s  में बताई नहीं गई थीं"
+msgstr ""
+"मैसेज के छोटे हिस्से के SOAP हेडर में कुछ ऐसी जानकारी थी, जो %s  में बताई नहीं गई थीं"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_config_wizard__account_peppol_migration_key
@@ -2016,7 +2024,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "The incoming message could not be decompressed."
-msgstr "जो मैसेज आया है उसे छोटा किए गए रूप से वापस सामान्य रूप में नहीं लाया जा सका।"
+msgstr ""
+"जो मैसेज आया है उसे छोटा किए गए रूप से वापस सामान्य रूप में नहीं लाया जा सका।"
 
 #. module: account_peppol
 #. odoo-python
@@ -2184,7 +2193,8 @@ msgstr "इससे आपका Peppol पर किया गया रजि
 msgid ""
 "To generate complete electronic invoices, also set a country for this "
 "partner."
-msgstr "इलेक्ट्रॉनिक बिल पूरी तरह से बनाने के लिए, इस पार्टनर का देश भी डालना ज़रूरी है।"
+msgstr ""
+"इलेक्ट्रॉनिक बिल पूरी तरह से बनाने के लिए, इस पार्टनर का देश भी डालना ज़रूरी है।"
 
 #. module: account_peppol
 #. odoo-python

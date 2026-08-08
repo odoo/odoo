@@ -11,8 +11,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-24 14:12+0000\n"
-"PO-Revision-Date: 2026-07-31 11:07+0000\n"
-"Last-Translator: NEDŽAD BEUS <nedzad.beus@implex.si>\n"
+"PO-Revision-Date: 2026-08-08 07:23+0000\n"
+"Last-Translator: Žiga Trček <ziga.trcek@implex.si>\n"
 "Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-19/base/"
 "sl/>\n"
 "Language: sl\n"
@@ -200,6 +200,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_dk
+#, fuzzy
 msgid ""
 "\n"
 "\n"
@@ -280,6 +281,84 @@ msgid ""
 "\n"
 "**Købskonto:**      4010 Restaurationsbesøg\n"
 msgstr ""
+"Lokalizacijski modul za Dansko\n"
+"===============================\n"
+"\n"
+"Ta modul je namenjen upravljanju **kontnega načrta za Dansko**. Zajema tako "
+"samostojne podjetnike kot tudi I/S, IVS, ApS in A/S\n"
+"\n"
+"**Modul nastavi:**\n"
+"\n"
+"- **Danski kontni načrt**\n"
+"\n"
+"- Danski DDV\n"
+"        - 25 % DDV\n"
+"        - Gostinski DDV 6,25 %\n"
+"        - Obrnjena davčna obveznost\n"
+"\n"
+"- Kontirne skupine\n"
+"        - EU (podjetje)\n"
+"        - EU (zasebnik)\n"
+"        - Tretje države\n"
+"\n"
+"- Finančna poročila\n"
+"        - Izkaz poslovnega izida\n"
+"        - Bilanca\n"
+"        - Obračun DDV\n"
+"            - Obračun\n"
+"            - Rubrike A, B in C\n"
+"\n"
+"- **Anglo-saška računovodska metoda**\n"
+"\n"
+".\n"
+"\n"
+"Nastavitev izdelkov:\n"
+"=================\n"
+"\n"
+"**Blago**\n"
+"\n"
+"**Prodajni DDV:**      Prodajni DDV 25 %\n"
+"\n"
+"**Prodajni konto:**     1.010 Prodaja blaga vključno z DDV\n"
+"\n"
+"**Nabavni DDV:**       Nabavni DDV 25 %\n"
+"\n"
+"**Nabavni konto:**      2.010 Neposredni stroški blaga vključno z DDV\n"
+"\n"
+".\n"
+"\n"
+"**Storitev**\n"
+"\n"
+"**Prodajni DDV:**       Prodajni DDV 25 %, storitve\n"
+"\n"
+"**Prodajni konto:**     1.011 Prodaja storitev vključno z DDV\n"
+"\n"
+"**Nabavni DDV:**       Nabavni DDV 25 %, storitve\n"
+"\n"
+"**Nabavni konto:**      2.011 Neposredni stroški storitev vključno z DDV\n"
+"\n"
+".\n"
+"\n"
+"**Blago z obrnjeno davčno obveznostjo**\n"
+"\n"
+"**Prodajni DDV:**      Prodaja z obrnjeno davčno obveznostjo\n"
+"\n"
+"**Prodajni konto:**     1.012 Prodaja blaga brez DDV\n"
+"\n"
+"**Nabavni DDV:**       Nabava z obrnjeno davčno obveznostjo\n"
+"\n"
+"**Nabavni konto:**      2.012 Neposredni stroški blaga brez DDV\n"
+"\n"
+"\n"
+".\n"
+"\n"
+"**Gostinstvo**\n"
+"\n"
+"**Nabavni DDV:**       Gostinski DDV 6,25 %, nabavni DDV\n"
+"\n"
+"**Nabavni konto:**      4010 Obiski restavracij\n"
+"\n"
+"Lokacija: model:ir.module.module,description:base.module_l10n_dk"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_do
@@ -546,6 +625,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_edi_ubl
+#, fuzzy
 msgid ""
 "\n"
 "\n"
@@ -553,6 +633,8 @@ msgid ""
 "formats.\n"
 "\n"
 msgstr ""
+"Ta modul zagotavlja pripomočke za izvoz naročil POS v različnih oblikah UBL "
+"2.1."
 
 #. module: base
 #. odoo-python
@@ -1275,6 +1357,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fr_hr_payroll_account
+#, fuzzy
 msgid ""
 "\n"
 "Accounting Data for French Payroll Rules.\n"
@@ -1283,6 +1366,15 @@ msgid ""
 "we won't support this module.\n"
 "--------------------------------------------------------------------------------------------------------\n"
 msgstr ""
+"Računovodski podatki za francoska pravila obračuna plač.\n"
+"\n"
+"Ta modul temelji na nepodprtem francoskem modulu. Upoštevajte, da tega "
+"modula ne bomo podpirali.\n"
+"--------------------------------------------------------------------------------------------------------"
+"\n"
+"\n"
+"Lokacija: "
+"model:ir.module.module,description:base.module_l10n_fr_hr_payroll_account"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_hk_hr_payroll_account
@@ -1504,12 +1596,19 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ae_hr_payroll_account
+#, fuzzy
 msgid ""
 "\n"
 "Accounting Data for UAE Payroll Rules.\n"
 "=======================================================\n"
 "\n"
 msgstr ""
+"Računovodski podatki za pravila obračuna plač v ZAE.\n"
+"=======================================================\n"
+"\n"
+"\n"
+"Lokacija: "
+"model:ir.module.module,description:base.module_l10n_ae_hr_payroll_account"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_us_hr_payroll_account
@@ -2437,6 +2536,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_sk_reports
+#, fuzzy
 msgid ""
 "\n"
 "Accounting reports for Slovakia\n"
@@ -2444,6 +2544,12 @@ msgid ""
 "This module includes accounting reports for Slovakia, including:\n"
 "-Balance Sheet + Profit and Loss (XML export)\n"
 msgstr ""
+"Računovodska poročila za Slovaško\n"
+"=====================================\n"
+"Ta modul vključuje računovodska poročila za Slovaško, vključno z:\n"
+"-Bilanca stanja + izkaz poslovnega izida (izvoz XML)\n"
+"\n"
+"Lokacija: model:ir.module.module,description:base.module_l10n_sk_reports"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_za_reports
@@ -2471,10 +2577,11 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_lk_reports
+#, fuzzy
 msgid ""
 "\n"
 "Accounting reports for Sri Lanka\n"
-msgstr ""
+msgstr "Računovodska poročila za Šrilanko"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_se_reports
@@ -2709,11 +2816,14 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ae_faf
+#, fuzzy
 msgid ""
 "\n"
 "Accounting reports:\n"
 "- FTA VAT Audit\n"
 msgstr ""
+"Računovodska poročila:\n"
+"- Revizija DDV FTA"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_se_returns
@@ -2749,6 +2859,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_latam_base
+#, fuzzy
 msgid ""
 "\n"
 "Add a new model named \"Identification Type\" that extend the vat field "
@@ -2818,14 +2929,84 @@ msgid ""
 "validate VAT numbers for each country that have or not have the possibility "
 "to manage multiple identification types.\n"
 msgstr ""
+"Dodajte nov model z imenom »Vrsta identifikacije«, ki razširja "
+"funkcionalnost polja VAT pri partnerju in uporabniku omogoča identifikacijo "
+"(morebitnega računa) kontaktov ne samo z njihovo davčno identifikacijsko "
+"številko (VAT), temveč tudi z drugimi vrstami identifikacij, kot so "
+"nacionalni dokument, potni list, tuji osebni dokument itd. Po namestitvi "
+"tega modula boste v obrazcu partnerja videli dve polji:\n"
+"\n"
+"* Vrsta identifikacije\n"
+"* Identifikacijska številka\n"
+"\n"
+"To vedenje je pogosta zahteva v nekaterih latinskoameriških državah, kot sta "
+"Argentina in Čile. Če vaša lokalizacija vsebuje takšne zahteve, morate biti "
+"odvisni od tega modula in v svojem lokalizacijskem modulu določiti vrste "
+"identifikacij, ki se uporabljajo v vaši državi. Na splošno te vrste "
+"identifikacij določijo državni organi, ki urejajo davčne postopke. Na "
+"primer:\n"
+"\n"
+"* ARCA v Argentini določa DNI, CUIT (VAT za pravne osebe), CUIL (VAT za "
+"fizične osebe) in še 80 drugih veljavnih vrst identifikacij.\n"
+"\n"
+"Vsaka identifikacija vsebuje naslednje podatke:\n"
+"\n"
+"* name: kratko ime identifikacije\n"
+"* description: lahko je enako kratkemu imenu ali pa daljše ime\n"
+"* country_id: država, ki ji pripada ta identifikacija\n"
+"* is_vat: določa ta zapis kot ustrezni VAT za določeno državo.\n"
+"* sequence: omogoča razvrščanje vrst identifikacij glede na to, katere se "
+"najpogosteje uporabljajo.\n"
+"* active: identifikacije lahko aktiviramo/deaktiviramo, da jih našim "
+"strankam olajšamo uporabljati\n"
+"\n"
+"Da bi bil ta modul združljiv z okolji z več podjetji, v katerih imamo "
+"podjetja, ki te zahteve ne potrebujejo/ne podpirajo, smo dodali splošne "
+"vrste identifikacij in splošna pravila za upravljanje podatkov o stikih, "
+"tako da je to za uporabnika pregledno, kadar uporablja samo VAT, kot smo ga "
+"poznali doslej.\n"
+"\n"
+"Splošne identifikacije:\n"
+"\n"
+"* VAT: davčna identifikacijska številka oziroma številka VAT; privzeto bo "
+"izbrana kot vrsta identifikacije, zato bo moral uporabnik vnesti le "
+"pripadajočo številko VAT.\n"
+"* Potni list\n"
+"* Tuji osebni dokument (tuji nacionalni dokument)\n"
+"\n"
+"Pravila pri ustvarjanju novega partnerja: prikazane bodo samo smiselne vrste "
+"identifikacij ob upoštevanju naslednjih pravil:\n"
+"\n"
+"* Če partner nima nastavljene države naslova: prikazane bodo splošne vrste "
+"identifikacij in vrste, določene za državo podjetja, povezanega s partnerjem "
+"(če partner nima določenega podjetja, bodo prikazane vrste identifikacij, "
+"povezane s podjetjem trenutnega uporabnika).\n"
+"\n"
+"* Če ima partner določeno državo naslova: prikazane bodo splošne vrste "
+"identifikacij in vrste, določene za državo partnerja.\n"
+"\n"
+"Pri ustvarjanju novega podjetja bo povezanemu partnerju vedno nastavljena "
+"ustrezna vrsta identifikacije is_vat za povezano državo.\n"
+"\n"
+"Vse določene vrste identifikacij si lahko ogledate ter aktivirate/"
+"deaktivirate v meniju »Kontakti / Konfiguracija / Vrsta identifikacije«.\n"
+"\n"
+"Ta modul je združljiv z modulom base_vat, da je mogoče preverjati številke "
+"VAT za vsako državo, ki ima ali nima možnosti upravljanja več vrst "
+"identifikacij.\n"
+"\n"
+"Lokacija: model:ir.module.module,description:base.module_l10n_latam_base"
 
 #. module: base
 #: model:ir.module.module,description:base.module_purchase_accountant
+#, fuzzy
 msgid ""
 "\n"
 "Add accrued menus and specific filters on purchase order lines for an easier "
 "closing process.\n"
 msgstr ""
+"Dodajte menije za časovne razmejitve in posebne filtre na vrsticah "
+"naročilnic za lažji postopek zaključevanja."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx_edi_website_sale
@@ -2926,11 +3107,14 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fr_facturx_chorus_pro
+#, fuzzy
 msgid ""
 "\n"
 "Add support to fill three fields used when using Chorus Pro, especially when "
 "invoicing public services.\n"
 msgstr ""
+"Dodajte podporo za izpolnjevanje treh polj, ki se uporabljajo pri uporabi "
+"Chorus Pro, zlasti pri izstavljanju računov javnim službam."
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_project
@@ -3101,6 +3285,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_dpopay
+#, fuzzy
 msgid ""
 "\n"
 "Allow DPO POS payments\n"
@@ -3117,6 +3302,22 @@ msgid ""
 "Mobile Money (Airtel Money / M-Pesa) at the payment terminal.\n"
 "* Supported cards: Visa, MasterCard, American Express etc.\n"
 msgstr ""
+"Omogoči plačila DPO POS\n"
+"==============================\n"
+"\n"
+"Podpira vse valute, ki jih podpira terminalska naprava — predvsem za uporabo "
+"v **afriški regiji**.\n"
+"Strankam omogoča plačevanje naročil z debetnimi/kreditnimi karticami in "
+"mobilnim denarjem prek terminalov DPO POS.\n"
+"Za obdelavo transakcij je potreben trgovski račun DPO.\n"
+"Funkcije vključujejo:\n"
+"\n"
+"* Hitra plačila s potegom, skeniranjem ali prislonitvijo kreditne/debetne "
+"kartice ali mobilnega denarja (Airtel Money / M-Pesa) na plačilnem "
+"terminalu.\n"
+"* Podprte kartice: Visa, MasterCard, American Express itd.\n"
+"\n"
+"Lokacija: model:ir.module.module,description:base.module_pos_dpopay"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_pine_labs
@@ -4028,10 +4229,12 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_es_reports_2025
+#, fuzzy
 msgid ""
 "\n"
 "Backports the tax return functionalities in the Spanish localization\n"
 msgstr ""
+"Povratno prenese funkcionalnosti davčnega obračuna iz španske lokalizacije"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_bd_hr_payroll
@@ -4928,6 +5131,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ve
+#, fuzzy
 msgid ""
 "\n"
 "Chart of Account for Venezuela.\n"
@@ -4960,9 +5164,42 @@ msgid ""
 "proposed,\n"
 "but you will need set manually account defaults for taxes.\n"
 msgstr ""
+"Kontni načrt za Venezuelo.\n"
+"===============================\n"
+"\n"
+"Venezuela po zakonu nima nobenega kontnega načrta, vendar bi moral privzeti\n"
+"kontni načrt, predlagan v Odoo, upoštevati nekatere sprejete najboljše "
+"prakse v Venezueli;\n"
+"ta načrt jih upošteva.\n"
+"\n"
+"Ta modul je bil preizkušen kot osnova za več kot 1000 podjetij, saj temelji\n"
+"na mešanici najpogostejše programske opreme na venezuelskem trgu, kar bo\n"
+"računovodjem zagotovo omogočilo bolj udobne prve korake z Odoo.\n"
+"\n"
+"Ta modul ne želi biti popolna lokalizacija za Venezuelo,\n"
+"vendar vam bo pomagal zelo hitro začeti uporabljati Odoo v tej državi.\n"
+"\n"
+"Ta modul vam omogoča.\n"
+"---------------------\n"
+"\n"
+"- Osnovne davke za Venezuelo.\n"
+"- Vsebuje osnovne podatke za izvajanje preizkusov s skupnostno "
+"lokalizacijo.\n"
+"- Začetek poslovanja podjetja iz nič, če so vaše potrebe z računovodskega "
+"vidika osnovne.\n"
+"\n"
+"Če želite zaloge vrednotiti tako, kot se to v Venezueli počne brez računov,\n"
+"priporočamo uporabo account_anglo_saxon.\n"
+"\n"
+"Če namestite ta modul in izberete Custom chart, bo predlagan osnovni kontni "
+"načrt,\n"
+"vendar boste morali privzete konte za davke nastaviti ročno.\n"
+"\n"
+"Lokacija: model:ir.module.module,description:base.module_l10n_ve"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_lv
+#, fuzzy
 msgid ""
 "\n"
 "Chart of Accounts (COA) Template for Latvia's Accounting.\n"
@@ -4976,9 +5213,21 @@ msgid ""
 "co-author is Chick.Farm (visit for more information https://"
 "www.myacc.cloud)\n"
 msgstr ""
+"Predloga kontnega načrta (COA) za latvijsko računovodstvo.\n"
+"Ta modul vključuje tudi:\n"
+"* Davčne skupine,\n"
+"* Najpogostejše latvijske davke,\n"
+"* Davčne položaje,\n"
+"* Seznam latvijskih bank.\n"
+"\n"
+"author je Allegro IT (za več informacij obiščite https://www.allegro.lv)\n"
+"soavtor je Chick.Farm (za več informacij obiščite https://www.myacc.cloud)\n"
+"\n"
+"Lokacija: model:ir.module.module,description:base.module_l10n_lv"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_lt
+#, fuzzy
 msgid ""
 "\n"
 "Chart of Accounts (COA) Template for Lithuania's Accounting.\n"
@@ -4991,6 +5240,17 @@ msgid ""
 "* Fiscal positions.\n"
 "* Account Tags.\n"
 msgstr ""
+"Predloga kontnega načrta (COA) za računovodstvo Litve.\n"
+"\n"
+"Ta modul vključuje tudi:\n"
+"\n"
+"* Seznam razpoložljivih bank v Litvi.\n"
+"* Davčne skupine.\n"
+"* Najpogostejši litovski davki.\n"
+"* Davčne pozicije.\n"
+"* Oznake kontov.\n"
+"\n"
+"Lokacija: model:ir.module.module,description:base.module_l10n_lt"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_th
@@ -5125,6 +5385,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_databases
+#, fuzzy
 msgid ""
 "\n"
 "Connect and manage all your client databases\n"
@@ -5138,6 +5399,16 @@ msgid ""
 "tasks\n"
 "and more.\n"
 msgstr ""
+"Povežite se z vsemi podatkovnimi bazami svojih strank in jih upravljajte\n"
+"============================================\n"
+"\n"
+"Aplikacija Podatkovne baze vam omogoča, da se povežete z vsemi podatkovnimi "
+"bazami svojih strank in jih\n"
+"upravljate iz enega samega delovnega prostora Odoo. Ne glede na to, ali ste "
+"računovodsko podjetje ali partner\n"
+"Odoo, lahko preprosto spremljate, kdo upravlja posamezno podatkovno bazo, "
+"sledite časovnim listom, opravilom\n"
+"in še več."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_uk_reports_cis
@@ -5793,6 +6064,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_id_efaktur_coretax
+#, fuzzy
 msgid ""
 "\n"
 "E-invoicing feature provided by DJP (Indonesian Tax Office). As of January "
@@ -5806,6 +6078,19 @@ msgid ""
 "tax of 12% which\n"
 "is resulting to 11%.\n"
 msgstr ""
+"Funkcionalnost e-izdajanja računov, ki jo zagotavlja DJP (indonezijski "
+"davčni urad). Od 1. januarja 2025\n"
+"Indonezija uporablja sistem CoreTax, ki spreminja obliko in vsebino E-"
+"Faktur.\n"
+"Datoteke CSV bomo zamenjali z datotekami XML.\n"
+"Hkrati je zaradi nenehnih sprememb davčnih predpisov pri splošnem E-Faktur "
+"zdaj treba\n"
+"TaxBase (DPP) pomnožiti s faktorjem 11/12, medtem ko se davek obračuna po 12-"
+"odstotni stopnji, kar\n"
+"pomeni 11 %.\n"
+"\n"
+"Lokacija: "
+"model:ir.module.module,description:base.module_l10n_id_efaktur_coretax"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_skills_slides
@@ -6046,6 +6331,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_eu_oss
+#, fuzzy
 msgid ""
 "\n"
 "EU One Stop Shop (OSS) VAT\n"
@@ -6072,6 +6358,31 @@ msgid ""
 "Council Implementing Regulation (EU) 2019/2026\n"
 "\n"
 msgstr ""
+"DDV EU sistema vse na enem mestu (OSS)\n"
+"==========================\n"
+"\n"
+"Od 1. julija 2021 morajo podjetja iz EU, ki prodajajo blago znotraj EU v "
+"vrednosti nad 10.000 EUR kupcem v drugi državi članici EU, registrirati in "
+"plačati DDV v državi članici kupca.\n"
+"Pod tem novim vseevropskim pragom lahko še naprej uporabljate domača pravila "
+"za DDV pri čezmejni prodaji. Da bi poenostavili uporabo te direktive EU, "
+"registracijska shema One Stop Shop (OSS) podjetjem omogoča oddajo enotne "
+"davčne napovedi.\n"
+"\n"
+"Ta modul to omogoča tako, da pomaga pri ustvarjanju zahtevanih fiskalnih "
+"pozicij in davkov EU, da se zahtevani davki samodejno uporabijo in "
+"evidentirajo.\n"
+"\n"
+"Vse, kar morate storiti, je preveriti, ali je predlagano preslikavanje "
+"primerno za izdelke in storitve, ki jih prodajate.\n"
+"\n"
+"Reference\n"
+"++++++++++\n"
+"Council Directive (EU) 2017/2455 Council Directive (EU) 2019/1995\n"
+"Council Implementing Regulation (EU) 2019/2026\n"
+"\n"
+"\n"
+"Location: model:ir.module.module,description:base.module_l10n_eu_oss"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_eu_oss_reports
@@ -6102,6 +6413,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_eg
+#, fuzzy
 msgid ""
 "\n"
 "Egypt Accounting Module\n"
@@ -6118,9 +6430,25 @@ msgid ""
 "- Other Taxes Report\n"
 "- Fiscal Positions\n"
 msgstr ""
+"Egiptovski računovodski modul\n"
+"==============================================================================\n"
+"Osnovni kontni načrti in lokalizacija za Egipt.\n"
+"\n"
+"Aktivira:\n"
+"\n"
+"- Kontni načrt\n"
+"- Davki\n"
+"- Obračun DDV\n"
+"- Poročilo o davku po odbitku\n"
+"- Poročilo o davčnem razporedu\n"
+"- Poročilo o drugih davkih\n"
+"- Davčni položaji\n"
+"\n"
+"Lokacija: model:ir.module.module,description:base.module_l10n_eg"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_eg_hr_payroll
+#, fuzzy
 msgid ""
 "\n"
 "Egypt Payroll and End of Service rules.\n"
@@ -6133,9 +6461,19 @@ msgid ""
 "- Tax break calculations and deductions\n"
 "- Master payroll export\n"
 msgstr ""
+"Egiptovski obračun plač in pravila odpravnin.\n"
+"=======================================\n"
+"- Osnovni izračun\n"
+"- Izračun odpravnine\n"
+"- Drugi vnosi (nadure, odtegljaji od plače itd.)\n"
+"- Izračun socialnega zavarovanja\n"
+"- Rezervacije za odpravnine\n"
+"- Izračuni davčnih olajšav in odbitkov\n"
+"- Izvoz glavnega obračuna plač"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_eg_edi_eta
+#, fuzzy
 msgid ""
 "\n"
 "Egypt Tax Authority Invoice Integration\n"
@@ -6143,9 +6481,16 @@ msgid ""
 "Integrates with the ETA portal to automatically send and sign the Invoices "
 "to the Tax Authority.\n"
 msgstr ""
+"Integracija računov z egiptovsko davčno upravo\n"
+"==============================================================================\n"
+"Integrira se s portalom ETA za samodejno pošiljanje in podpisovanje računov "
+"davčnemu organu.\n"
+"\n"
+"Lokacija: model:ir.module.module,description:base.module_l10n_eg_edi_eta"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_edi
+#, fuzzy
 msgid ""
 "\n"
 "Electronic Data Interchange\n"
@@ -6159,6 +6504,17 @@ msgid ""
 "exchange (other company,\n"
 "governements, etc.)\n"
 msgstr ""
+"Elektronska izmenjava podatkov\n"
+"=======================================\n"
+"EDI je elektronska izmenjava poslovnih informacij z uporabo "
+"standardiziranega formata.\n"
+"\n"
+"To je osnovni modul za uvoz in izvoz računov v različnih formatih EDI ter\n"
+"prenos teh dokumentov različnim udeležencem, vključenim v izmenjavo (drugo "
+"podjetje,\n"
+"državni organi itd.)\n"
+"\n"
+"Lokacija: model:ir.module.module,description:base.module_account_edi"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx_reports
@@ -6196,6 +6552,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_edi_ubl_cii
+#, fuzzy
 msgid ""
 "\n"
 "Electronic invoicing module\n"
@@ -6225,6 +6582,34 @@ msgid ""
 "validate the xml against the Factur-X and Chorus\n"
 "Pro rules and show the errors.\n"
 msgstr ""
+"Modul za elektronsko izdajanje računov\n"
+"============================================\n"
+"\n"
+"Omogoča izvoz in uvoz formatov: E-FFF, UBL Bis 3, EHF3, NLCIUS, Factur-X "
+"(CII), XRechnung (UBL).\n"
+"Pri ustvarjanju PDF-ja na računu bo PDF vdelan v xml za vse formate UBL. To "
+"omogoča,\n"
+"da prejemnik pridobi PDF samo z datoteko xml. Upoštevajte, da je **EHF3 v "
+"celoti implementiran v UBL Bis 3** (`reference\n"
+"<https://anskaffelser.dev/postaward/g3/spec/current/billing-3.0/norway/"
+"#_implementation>`_).\n"
+"\n"
+"Formate lahko izberete v dnevniku (Dnevnik > Napredne nastavitve), povezanem "
+"z računom.\n"
+"\n"
+"Upoštevajte, da so E-FFF, NLCIUS in XRechnung (UBL) na voljo samo za "
+"belgijska, nizozemska oziroma nemška podjetja.\n"
+"UBL Bis 3 je na voljo samo za podjetja, katerih država je navedena na "
+"`seznamu EAS\n"
+"<https://docs.peppol.eu/poacc/billing/3.0/codelist/eas/>`_.\n"
+"\n"
+"Upoštevajte tudi, da morate za samodejno zaznavanje formata »PDF/A-3 (Factur-"
+"X)« v Chorus Pro aktivirati\n"
+"možnost »Factur-X PDF/A-3« v dnevniku. Ta možnost bo tudi preverila xml "
+"glede na pravila Factur-X in Chorus\n"
+"Pro ter prikazala napake.\n"
+"\n"
+"Lokacija: model:ir.module.module,description:base.module_account_edi_ubl_cii"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_edi_ubl
@@ -6421,17 +6806,20 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ca_payment_cpa005
+#, fuzzy
 msgid ""
 "\n"
 "Export payments as CPA 005 files for use in Canada.\n"
-msgstr ""
+msgstr "Izvozite plačila kot datoteke CPA 005 za uporabo v Kanadi."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_us_payment_nacha
+#, fuzzy
 msgid ""
 "\n"
 "Export payments as NACHA files for use in the United States.\n"
 msgstr ""
+"Izvozite plačila kot datoteke NACHA za uporabo v Združenih državah Amerike."
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_address_extended
@@ -6455,18 +6843,28 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_gt_edi_pos
+#, fuzzy
 msgid ""
 "\n"
 "Extends the Point of Sale module to comply with Guatemalan electronic "
 "invoicing regulations (FEL).\n"
 msgstr ""
+"Razširi modul prodajnega mesta za skladnost z gvatemalskimi predpisi o "
+"elektronskem izdajanju računov (FEL).\n"
+"\n"
+"Lokacija: model:ir.module.module,description:base.module_l10n_gt_edi_pos"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_reports_client_nihil
+#, fuzzy
 msgid ""
 "\n"
 "Extension for accounting returns in Belgium\n"
 msgstr ""
+"Razširitev za računovodske obračune v Belgiji\n"
+"\n"
+"Lokacija: "
+"model:ir.module.module,description:base.module_l10n_be_reports_client_nihil"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_generator_sale
@@ -6553,6 +6951,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fr_hr_payroll
+#, fuzzy
 msgid ""
 "\n"
 "French Payroll Rules.\n"
@@ -6568,6 +6967,17 @@ msgid ""
 "============================================================================================================\n"
 "\n"
 msgstr ""
+"Pravila francoskih plač.\n"
+"=====================\n"
+"\n"
+"    - Konfiguracija hr_payroll za francosko lokalizacijo\n"
+"    - Vsa glavna pravila prispevkov za francosko plačilno listo, za 'cadre' "
+"in 'non-cadre'\n"
+"    - Novo poročilo o plačilni listi\n"
+"\n"
+"Tega modula ni razvila ekipa R&R za plače. Ne moremo jamčiti za točnost "
+"podatkov, ki jih vsebuje.\n"
+"============================================================================================================"
 
 #. module: base
 #: model:ir.module.module,description:base.module_purchase_mrp_workorder_quality
@@ -6582,6 +6992,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ar_edi
+#, fuzzy
 msgid ""
 "\n"
 "Functional\n"
@@ -6674,9 +7085,98 @@ msgid ""
 "WSBFEv1%20-%20Manual%20para%20el%20desarrollador.pdf\n"
 "\n"
 msgstr ""
+"Funkcionalnosti\n"
+"------------\n"
+"\n"
+"V Odoo lahko ustvarite dnevnike za izdelavo elektronskih izhodnih računov in "
+"njihovo poročanje ARCA (prek spletnih storitev).\n"
+"Na voljo so naslednje možnosti:\n"
+"\n"
+"    * Elektronski račun – spletna storitev\n"
+"    * Izvozno potrdilo – spletna storitev\n"
+"    * Elektronska davčna obveznica – spletna storitev\n"
+"\n"
+"V elektronskih dnevnikih bo račun ob potrditvi potrjen tako v Odoo kot v "
+"ARCA. Ta potrditev se izvede takoj, od ARCA pa prejmemo stanje »odobreno/"
+"odobreno z opombo/zavrnjeno«. Če ARCA račun zavrne, ta ne bo knjižen v "
+"sistemu, prikazano pa bo pojavno sporočilo z vsemi podrobnostmi napake "
+"(razlogi za zavrnitev), ki smo jih prejeli, ter NAMIGOM o tem, v čem bi "
+"lahko bila težava.\n"
+"\n"
+"Za namene revizije in odpravljanja težav smo dodali tudi meni »Poizvedba o "
+"računu v ARCA«, ki omogoča pregled računov, predhodno poslanih v ARCA, ter "
+"zadnje uporabljene številke kot podporo pri morebitnih težavah s "
+"sinhronizacijo zaporedij med Odoo in ARCA.\n"
+"\n"
+"    OPOMBA: V obrazcu dnevnika lahko vsilimo sinhronizacijo zaporedij Odoo "
+"za vsako vrsto dokumenta\n"
+"    z zadnjimi številkami, registriranimi v ARCA.\n"
+"\n"
+"Iz prejetih računov smo dodali funkcionalnost, ki jo je mogoče konfigurirati "
+"v računovodskih nastavitvah in omogoča preverjanje prejetih računov v ARCA, "
+"da se preveri, ali so prejeti računi resnični (za več informacij si oglejte "
+"opis nastavitve).\n"
+"\n"
+"Nastavitev:\n"
+"\n"
+"1. Pojdite v Računovodske nastavitve > razdelek Argentinska lokalizacija\n"
+"\n"
+"    1.1. Nastavite način spletnih storitev ARCA:\n"
+"\n"
+"    * Preskusno okolje za uporabo predstavitvenih potrdil, ki se uporabljajo "
+"za preskušanje primerka in za ustvarjanje računov, ki NISO\n"
+"      dejanski računi za ARCA. Namenjeno je samo preskušanju. Za "
+"predstavitvene primerke je že vnaprej določeno, zato ga ne bo treba\n"
+"      konfigurirati (v ARCA se običajno imenuje homologacijsko okolje).\n"
+"    * Produkcijsko okolje za ustvarjanje dejanskih potrdil in zakonsko "
+"veljavnih računov za ARCA,\n"
+"\n"
+"    1.2. Konfigurirajte svoje potrdilo ARCA: Če uporabljate predstavitveni "
+"primerek, bo to že privzeto nastavljeno. Če\n"
+"         uporabljate produkcijski primerek, morate le naložiti svoje "
+"potrdilo ARCA.\n"
+"\n"
+"    1.3. Po želji lahko določite, ali želite omogočiti preverjanje prejetih "
+"računov v ARCA.\n"
+"\n"
+"2. Ustvarite prodajne dnevnike, ki bodo predstavljali posamezne prodajne "
+"točke ARCA (na voljo na portalu ARCA), ki jih želite uporabljati v Odoo.\n"
+"\n"
+"    2.1. Polje Uporabi dokumente je privzeto nastavljeno, zato ga ne "
+"spreminjajte.\n"
+"    2.2. Nastavite sistem prodajne točke ARCA za eno od elektronskih "
+"možnosti.\n"
+"\n"
+"        * Elektronski račun – spletna storitev'\n"
+"        * Elektronska davčna obveznica – spletna storitev'\n"
+"        * Izvozno potrdilo – spletna storitev'\n"
+"\n"
+"    2.3. Nastavite številko prodajne točke ARCA in naslov prodajne točke "
+"ARCA ter pri tem upoštevajte nastavitve na svojem portalu ARCA.\n"
+"\n"
+"    OPOMBA: Z gumbom »Preveri razpoložljive prodajne točke ARCA« v obrazcu "
+"dnevnika lahko preverite, katere lahko uporabite za ustvarjanje dnevnikov.\n"
+"\n"
+"Za več informacij o argentinskem elektronskem izdajanju računov obiščite "
+"http://www.afip.gob.ar/fe/ayuda.asp\n"
+"\n"
+"Tehnične podrobnosti\n"
+"---------\n"
+"\n"
+"Implementirane so najpogostejše spletne storitve:\n"
+"\n"
+"* wsfev1 – »Factura Electrónica« (elektronski račun)\n"
+"* wsbfev1 – »Bono Fiscal Electrónico« (elektronska davčna obveznica)\n"
+"* wsfexv1 – »Factura de Exportación Electrónica« (elektronski izvozni račun "
+"– enako kot izvozno potrdilo)\n"
+"* wscdc – »Constatación de Comprobantes« (preverjanje računov)\n"
+"\n"
+"Za informacije o razvoju obiščite http://www.afip.gob.ar/fe/documentos/"
+"WSBFEv1%20-%20Manual%20para%20el%20desarrollador.pdf"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_latam_invoice_document
+#, fuzzy
 msgid ""
 "\n"
 "Functional\n"
@@ -6708,9 +7208,41 @@ msgid ""
 "country. The document type has a country field\n"
 "\n"
 msgstr ""
+"Funkcionalnosti\n"
+"----------------\n"
+"\n"
+"V nekaterih latinskoameriških državah, vključno z Argentino in Čilom, so "
+"nekatere računovodske transakcije, kot so računi in računi dobaviteljev, "
+"razvrščene glede na vrste dokumentov, ki jih opredelijo državni davčni "
+"organi (v Argentini ARCA, v Čilu SII).\n"
+"\n"
+"Ta modul je namenjen razširitvi z lokalizacijami za upravljanje teh vrst "
+"dokumentov in vsebuje bistvene informacije, ki jih je treba prikazati v "
+"natisnjenih poročilih ter jih je treba preprosto prepoznati tako v množici "
+"računov kot tudi v računovodskih premikih.\n"
+"\n"
+"Vsaka vrsta dokumenta ima lastna pravila in zaporedno številko; slednja je "
+"vključena v številko računa in zaporedje dnevnika, da je uporaba za "
+"uporabnika lokalizacije preprosta. Za podporo tem vrstam dokumentov ali "
+"njihovo nepodporo ima dnevnik novo možnost, ki omogoča njihovo uporabo ali "
+"ne.\n"
+"\n"
+"Tehnično\n"
+"--------\n"
+"\n"
+"Če vaša lokalizacija potrebuje to logiko, morate ta modul dodati kot "
+"odvisnost in v svojem lokalizacijskem modulu razširiti:\n"
+"\n"
+"* razširiti metodo _localization_use_documents() modela podjetja;\n"
+"* ustvariti podatke vrst dokumentov, ki obstajajo za določeno državo. Vrsta "
+"dokumenta ima polje države.\n"
+"\n"
+"Lokacija: "
+"model:ir.module.module,description:base.module_l10n_latam_invoice_document"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ar
+#, fuzzy
 msgid ""
 "\n"
 "Functional\n"
@@ -6792,9 +7324,89 @@ msgid ""
 "* Unit of measures ARCA codes\n"
 "* Partners: Consumidor Final and ARCA\n"
 msgstr ""
+"Funkcionalnosti\n"
+"----------\n"
+"\n"
+"Ta modul dodaja računovodske funkcionalnosti za argentinsko lokalizacijo, ki "
+"predstavljajo minimalno konfiguracijo, potrebno za delovanje podjetja v "
+"Argentini ter v skladu s predpisi in smernicami ARCA (Administración Federal "
+"de Ingresos Públicos).\n"
+"\n"
+"Za produkcijo sledite naslednjim korakom konfiguracije:\n"
+"\n"
+"1. Odprite svoje podjetje ter konfigurirajte svojo številko DDV in vrsto "
+"odgovornosti ARCA\n"
+"2. Odprite Računovodstvo / Nastavitve in nastavite kontni načrt, ki ga "
+"želite uporabljati.\n"
+"3. Ustvarite svoje prodajne dnevnike ob upoštevanju podatkov o prodajnem "
+"mestu ARCA.\n"
+"\n"
+"Predstavitveni podatki za testiranje:\n"
+"\n"
+"* Ustvarjena so bila 3 podjetja, po eno za vsako vrsto odgovornosti ARCA, z "
+"nameščenim ustreznim kontnim načrtom. Izberite podjetje, ki vam ustreza, da "
+"lahko izvedete teste:\n"
+"\n"
+"  * (AR) Registrirani zavezanec\n"
+"  * (AR) Oproščeni\n"
+"  * (AR) Monotributo\n"
+"\n"
+"* Prodajni dnevniki so v vseh podjetjih konfigurirani za prednatisnjene in "
+"izvozne račune\n"
+"* Primeri računov in drugih dokumentov so že potrjeni v podjetju “(AR) "
+"Registrirani zavezanec”\n"
+"* Primeri partnerjev za različne vrste odgovornosti:\n"
+"\n"
+"  * ADHOC (DDV – registrirani zavezanec)\n"
+"  * Servicios Globales (DDV – oproščeni subjekt)\n"
+"  * Gritti (Monotributo)\n"
+"  * Montana Sur. Oproščeni DDV v prosti coni\n"
+"  * Barcelona food (Tuja stranka)\n"
+"  * Odoo (Tuji dobavitelj)\n"
+"\n"
+"Poudarki:\n"
+"\n"
+"* Kontni načrt ne bo nameščen samodejno; vsaka predloga kontnega načrta je "
+"odvisna od odgovornosti ARCA podjetja, zato boste morali namestiti kontni "
+"načrt, ki ustreza vašim potrebam.\n"
+"* Pri namestitvi kontnega načrta ne bodo ustvarjeni nobeni prodajni "
+"dnevniki; svoje dnevnike boste morali konfigurirati ročno.\n"
+"* Vrsta dokumenta bo pri ustvarjanju računa vnaprej pravilno izbrana glede "
+"na davčno odgovornost izdajatelja in prejemnika dokumenta ter povezani "
+"dnevnik.\n"
+"* Dodana sta vrsta konta CBU in tudi preverjanje CBU\n"
+"\n"
+"\n"
+"Tehnično\n"
+"---------\n"
+"\n"
+"Ta modul dodaja modele in polja, ki bodo sčasoma uporabljeni za modul "
+"elektronskih računov. Tukaj je povzetek glavnih funkcionalnosti:\n"
+"\n"
+"Matični podatki:\n"
+"\n"
+"* Kontni načrt: po en za vsako odgovornost ARCA, povezano s pravno osebo:\n"
+"\n"
+"  * Registrirani zavezanec (RI)\n"
+"  * Oproščeni (EX)\n"
+"  * Monotributo (Mono)\n"
+"\n"
+"* Argentinski davki in skupine davkov kontov (davki DDV z obstoječimi "
+"stopnjami in druge vrste)\n"
+"* Vrste odgovornosti ARCA\n"
+"* Davčni položaji (za preslikavo davkov)\n"
+"* Vrste pravnih dokumentov v Argentini\n"
+"* Vrste identifikacije, veljavne v Argentini.\n"
+"* Kode ARCA držav in kode DDV držav za pravne osebe, fizične osebe in druge\n"
+"* Kode ARCA valut\n"
+"* Kode ARCA merskih enot\n"
+"* Partnerji: Končni potrošnik in ARCA\n"
+"\n"
+"Lokacija: model:ir.module.module,description:base.module_l10n_ar"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ec
+#, fuzzy
 msgid ""
 "\n"
 "Functional\n"
@@ -6831,6 +7443,39 @@ msgid ""
 "* Ecuador banks\n"
 "* Partners: Consumidor Final, SRI, IESS, and also basic VAT validation\n"
 msgstr ""
+"Funkcionalnosti\n"
+"------------\n"
+"\n"
+"Ta modul dodaja računovodske funkcionalnosti za ekvadorsko lokalizacijo, ki\n"
+"predstavljajo minimalne zahteve za poslovanje podjetja v Ekvadorju v skladu\n"
+"z lokalnimi regulativnimi organi, kot sta ekvadorski davčni organ -SRI- in\n"
+"Superintendencia de Compañías -Super Intendencia de Compañías-\n"
+"\n"
+"Sledite naslednjim korakom za konfiguracijo:\n"
+"1. Pojdite v svoje podjetje in nastavite državo na Ekvador\n"
+"2. Namestite modul za izdajanje računov ali računovodstvo, vse bo urejeno "
+"samodejno\n"
+"\n"
+"Poudarki:\n"
+"* Ekvadorski kontni načrt bo samodejno nameščen na podlagi primera, ki ga je "
+"zagotovila Super Intendencia de Compañías\n"
+"* Nameščen bo tudi seznam davkov (vključno z davčnimi odtegljaji); tiste, ki "
+"jih vaše podjetje ne uporablja, lahko izklopite\n"
+"* Nameščeni bodo tudi davčni položaj, vrste dokumentov, seznam lokalnih "
+"bank, seznam lokalnih zveznih držav itd.\n"
+"\n"
+"Tehnično\n"
+"---------\n"
+"Matični podatki:\n"
+"* Kontni načrt na podlagi priporočila Super Cías\n"
+"* Ekvadorski davki, davčne oznake in davčne skupine\n"
+"* Ekvadorski davčni položaji\n"
+"* Vrste dokumentov (v Ekvadorju je približno 41 vrst nabavnih dokumentov)\n"
+"* Vrste identifikacije\n"
+"* Ekvadorske banke\n"
+"* Partnerji: Končni potrošnik, SRI, IESS in tudi osnovno preverjanje DDV\n"
+"\n"
+"Lokacija: model:ir.module.module,description:base.module_l10n_ec"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in_reports_gstr_pos
@@ -6901,6 +7546,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_uy
+#, fuzzy
 msgid ""
 "\n"
 "General Chart of Accounts.\n"
@@ -6936,6 +7582,40 @@ msgid ""
 "   * Consumidor Final Anónimo Uruguayo.\n"
 "\n"
 msgstr ""
+"Splošni kontni načrt.\n"
+"==========================\n"
+"\n"
+"Ta modul dodaja računovodske funkcionalnosti za urugvajsko lokalizacijo in "
+"predstavlja minimalno zahtevano konfiguracijo, da podjetje lahko posluje v "
+"Urugvaju v skladu s predpisi in smernicami, ki jih zagotavlja DGI (Dirección "
+"General Impositiva).\n"
+"\n"
+"Funkcionalnosti vključujejo:\n"
+"\n"
+"* Urugvajski splošni kontni načrt\n"
+"* Vnaprej konfigurirani DDV-ji in davčne skupine.\n"
+"* Vrste pravnih dokumentov v Urugvaju.\n"
+"* Veljavne vrste identifikacije kontaktov v Urugvaju.\n"
+"* Konfiguracija in aktivacija urugvajskih valut (UYU, UYI - Unidad Indexada "
+"Uruguaya).\n"
+"* Pogosto uporabljeni privzeti kontakti, ki so že konfigurirani: DGI, "
+"Consumidor Final Uruguayo.\n"
+"\n"
+"Konfiguracija\n"
+"-------------\n"
+"\n"
+"Demo podatki za testiranje:\n"
+"\n"
+"* Urugvajsko podjetje z imenom »UY Company«, z že nameščenim urugvajskim "
+"kontnim načrtom, vnaprej konfiguriranimi davki, vrstami dokumentov in "
+"vrstami identifikacije.\n"
+"* Urugvajski kontakti za testiranje:\n"
+"\n"
+"   * IEB Internacional\n"
+"   * Anónimo urugvajski končni potrošnik.\n"
+"\n"
+"\n"
+"Lokacija: model:ir.module.module,description:base.module_l10n_uy"
 
 #. module: base
 #: model:ir.module.module,description:base.module_helpdesk_sale_loyalty
@@ -6989,11 +7669,13 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fi_intrastat
+#, fuzzy
 msgid ""
 "\n"
 "Generates Intrastat CSV report for declaration based on invoices for "
 "Finland.\n"
 msgstr ""
+"Ustvari poročilo Intrastat CSV za deklaracijo na podlagi računov za Finsko."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_at_intrastat
@@ -7074,11 +7756,14 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_nl_intrastat
+#, fuzzy
 msgid ""
 "\n"
 "Generates Netherlands Intrastat report for declaration based on invoices\n"
 "and submit your Intracommunity Services to the Dutch tax authorities.\n"
 msgstr ""
+"Ustvari poročilo Intrastat za Nizozemsko za deklaracijo na podlagi računov\n"
+"in predloži svoje intrakomunitarne storitve nizozemskim davčnim organom."
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_generator
@@ -7144,11 +7829,14 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_uk_hmrc
+#, fuzzy
 msgid ""
 "\n"
 "HMRC API for the United Kingdom\n"
 "================================================\n"
 msgstr ""
+"API HMRC za Združeno kraljestvo\n"
+"================================================"
 
 #. module: base
 #: model:ir.module.module,description:base.module_iot_drivers
@@ -7246,19 +7934,25 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_hk_hr_payroll
+#, fuzzy
 msgid ""
 "\n"
 "Hong Kong Payroll Rules.\n"
 "========================\n"
 msgstr ""
+"Hongkonška pravila plačnega seznama.\n"
+"========================"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_hk_hr_payroll_empf
+#, fuzzy
 msgid ""
 "\n"
 "Hong Kong Payroll eMPF.\n"
 "========================\n"
 msgstr ""
+"Hongkonški eMPF plačnega seznama.\n"
+"========================"
 
 #. module: base
 #: model:ir.module.module,description:base.module_html_editor
@@ -7340,6 +8034,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_lazada
+#, fuzzy
 msgid ""
 "\n"
 "Import your Lazada orders in Odoo and synchronize deliveries\n"
@@ -7356,6 +8051,20 @@ msgid ""
 "* FBM: Delivery information is fetched from Lazada, track and synchronize "
 "the stock level to Lazada.\n"
 msgstr ""
+"Uvozite naročila Lazada v Odoo in sinhronizirajte dostave\n"
+"===============================\n"
+"\n"
+"Ključne funkcije\n"
+"------------\n"
+"* Uvoz naročil iz več trgovin\n"
+"* Naročila se ujemajo z izdelki Odoo na podlagi njihove interne reference "
+"(SKU v Lazadi)\n"
+"* Podpora za Fulfillment by Lazada (FBL) in Fulfillment by Merchant (FBM):\n"
+"* FBL: Uvoz zaključenih naročil\n"
+"* FBM: Informacije o dostavi se pridobijo iz Lazade, sledenje in "
+"sinhronizacija ravni zaloge z Lazado.\n"
+"\n"
+"Lokacija: model:ir.module.module,description:base.module_sale_lazada"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_shopee
@@ -7411,6 +8120,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_cn
+#, fuzzy
 msgid ""
 "\n"
 "Includes the following data for the Chinese localization\n"
@@ -7438,9 +8148,36 @@ msgid ""
 "correctly when the cn2an library is installed. (e.g. with pip3 install "
 "cn2an)\n"
 msgstr ""
+"Vključuje naslednje podatke za kitajsko lokalizacijo\n"
+"========================================================\n"
+"\n"
+"Vrsta konta/vrsta konta\n"
+"\n"
+"Podatki o provincah/Podatki o provincah\n"
+"\n"
+"    Vrste kontov\\Predloga kontnega načrta\\DDV\\Kategorije pomožnega "
+"računovodstva\\Dnevnik poslovnih računovodskih listin\\Dnevnik finančnih "
+"računovodskih listin\n"
+"\n"
+"    Dodajanje podatkov o kitajskih provincah\n"
+"\n"
+"    Dodajanje kontnega načrta za mala podjetja\n"
+"\n"
+"    Spreminjanje kontnega načrta za mala podjetja\n"
+"\n"
+"    Spreminjanje računovodskih davčnih stopenj za mala podjetja\n"
+"\n"
+"    Dodajanje kontnega načrta za velika podjetja\n"
+"\n"
+"Dodali smo možnost tiskanja listine, pri čemer se bo znesek pravilno\n"
+"izpisal tudi z besedami (posebni kitajski znaki za števila), če je nameščena "
+"knjižnica cn2an. (npr. s pip3 install cn2an)\n"
+"\n"
+"Lokacija: model:ir.module.module,description:base.module_l10n_cn"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_cn_city
+#, fuzzy
 msgid ""
 "\n"
 "Includes the following data for the Chinese localization\n"
@@ -7449,9 +8186,17 @@ msgid ""
 "City Data/城市数据\n"
 "\n"
 msgstr ""
+"Vključuje naslednje podatke za kitajsko lokalizacijo\n"
+"========================================================\n"
+"\n"
+"Podatki o mestih/Podatki o mestih\n"
+"\n"
+"\n"
+"Lokacija: model:ir.module.module,description:base.module_l10n_cn_city"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in_edi
+#, fuzzy
 msgid ""
 "\n"
 "Indian - E-invoicing\n"
@@ -7470,9 +8215,27 @@ msgid ""
 "For the creation of API username and password please ref this document: "
 "<https://service.odoo.co.in/einvoice_create_api_user>\n"
 msgstr ""
+"Indija - e-izdajanje računov\n"
+"====================\n"
+"Za predložitev računov vladi prek API-ja.\n"
+"Kot GSP uporabljamo »Tera Software Limited«.\n"
+"1. korak: Najprej morate na portalu za e-račune ustvariti uporabniško ime in "
+"geslo API-ja.\n"
+"2. korak: Preklopite na podjetje, povezano s to številko GST.\n"
+"3. korak: Vnesite to uporabniško ime in geslo v Odoo (Pojdite na: Izdajanje "
+"računov/Računovodstvo -> Konfiguracija -> Nastavitve -> Izdani računi ali v "
+"iskalni vrstici poiščite »E-račun«).\n"
+"4. korak: Ponovite korake 1, 2 in 3 za vse GSTIN-je, ki jih imate v Odooju. "
+"Če imate večpodjetniško okolje z isto številko GST, izvedite 1. korak samo "
+"za prvo podjetje.\n"
+"Za ustvarjanje uporabniškega imena in gesla API-ja glejte ta dokument: "
+"<https://service.odoo.co.in/einvoice_create_api_user>\n"
+"\n"
+"Lokacija: model:ir.module.module,description:base.module_l10n_in_edi"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in_ewaybill
+#, fuzzy
 msgid ""
 "\n"
 "Indian - E-waybill\n"
@@ -7490,27 +8253,57 @@ msgid ""
 "multi-company with the same GST number then perform step 1 for the first "
 "company only.\n"
 msgstr ""
+"Indijski - E-waybill\n"
+"====================================\n"
+"Za predložitev E-waybilla prek API-ja vladi.\n"
+"Kot GSP uporabljamo \"Tera Software Limited\"\n"
+"\n"
+"1. korak: Najprej morate na portalu E-waybill ustvariti uporabniško ime in "
+"geslo za API.\n"
+"2. korak: Preklopite na podjetje, povezano s to številko GST.\n"
+"3. korak: To uporabniško ime in geslo nastavite v Odoo (Pojdite na: "
+"Fakturiranje/Računovodstvo -> Konfiguracija -> Nastavitve -> Indijski "
+"elektronski E-waybill ali v iskalni vrstici poiščite \"E-waybill\")\n"
+"4. korak: Ponovite korake 1, 2 in 3 za vse številke GSTIN, ki jih imate v "
+"Odoo. Če imate večpodjetniško okolje z isto številko GST, izvedite 1. korak "
+"samo za prvo podjetje.\n"
+"\n"
+"Mesto: model:ir.module.module,description:base.module_l10n_in_ewaybill"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in_ewaybill_irn
+#, fuzzy
 msgid ""
 "\n"
 "Indian - E-waybill thru IRN\n"
 "====================================\n"
 "This module enables to generate E-waybill through IRN.\n"
 msgstr ""
+"Indijski – E-waybill prek IRN\n"
+"====================================\n"
+"Ta modul omogoča ustvarjanje E-waybill prek IRN.\n"
+"\n"
+"Location: model:ir.module.module,description:base.module_l10n_in_ewaybill_irn"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in_edi_gstr
+#, fuzzy
 msgid ""
 "\n"
 "Indian - GSTR with E-invoice\n"
 "====================================\n"
 "This bridge module allows to manage Indian GSTR with E-invoice module.\n"
 msgstr ""
+"Indijski – GSTR z e-računom\n"
+"====================================\n"
+"Ta povezovalni modul omogoča upravljanje indijskega GSTR z modulom za e-"
+"račune.\n"
+"\n"
+"Lokacija: model:ir.module.module,description:base.module_l10n_in_edi_gstr"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in
+#, fuzzy
 msgid ""
 "\n"
 "Indian Accounting: Chart of Account.\n"
@@ -7529,9 +8322,25 @@ msgid ""
 "Sheet, now only Vertical format has been permitted Which is Supported By "
 "Odoo.\n"
 msgstr ""
+"Indijsko računovodstvo: kontni načrt.\n"
+"====================================\n"
+"\n"
+"Indijski kontni načrt in lokalizacija.\n"
+"\n"
+"Odoo omogoča upravljanje indijskega računovodstva z zagotavljanjem dveh "
+"oblik kontnega načrta, tj. indijski kontni načrt – standardni in indijski "
+"kontni načrt – razpored VI.\n"
+"\n"
+"Opomba: Razpored VI je MCA revidiral in velja za vse bilance stanja, "
+"pripravljene po\n"
+"31. marcu 2011. Oblika je odpravila prejšnji dve možnosti za obliko bilance\n"
+"stanja, zdaj je dovoljena samo navpična oblika, ki jo podpira Odoo.\n"
+"\n"
+"Lokacija: model:ir.module.module,description:base.module_l10n_in"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in_ewaybill_stock
+#, fuzzy
 msgid ""
 "\n"
 "Indian E-waybill for Stock\n"
@@ -7540,9 +8349,18 @@ msgid ""
 "This module enables users to create E-waybill from Inventory App without "
 "generating an invoice\n"
 msgstr ""
+"Indijski e-tovorni list za zalogo\n"
+"==========================\n"
+"\n"
+"Ta modul uporabnikom omogoča ustvarjanje e-tovornega lista iz aplikacije "
+"Inventar brez izdaje računa\n"
+"\n"
+"Lokacija: "
+"model:ir.module.module,description:base.module_l10n_in_ewaybill_stock"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in_hr_payroll
+#, fuzzy
 msgid ""
 "\n"
 "Indian Payroll Salary Rules.\n"
@@ -7560,30 +8378,54 @@ msgid ""
 "    - Payroll Advice and Report\n"
 "    - Yearly Salary by Employee Report\n"
 msgstr ""
+"Indijska pravila obračuna plač.\n"
+"============================\n"
+"\n"
+"    -Konfiguracija hr_payroll za indijsko lokalizacijo\n"
+"    -Vsa glavna pravila prispevkov za indijski obračun plače.\n"
+"    * Novo poročilo o obračunu plače\n"
+"    * Pogodbe zaposlenih\n"
+"    * Omogoča konfiguracijo osnovne / bruto / neto plače\n"
+"    * Obračun plače zaposlenega\n"
+"    * Dodatki / Odbitki\n"
+"    * Integrirano z upravljanjem odsotnosti\n"
+"    * Zdravstveni dodatek, potni dodatek, otroški dodatek, ...\n"
+"    - Obvestilo o obračunu plač in poročilo\n"
+"    - Poročilo o letni plači po zaposlenih\n"
+"\n"
+"Lokacija: model:ir.module.module,description:base.module_l10n_in_hr_payroll"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_id_hr_payroll
+#, fuzzy
 msgid ""
 "\n"
 "Indonesia Payroll Rules.\n"
-msgstr ""
+msgstr "Indonezijska pravila za obračun plač."
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_l10n_mx_hr_payroll_account_edi
+#, fuzzy
 msgid ""
 "\n"
 "Integrates the Mexican payroll with the Documents app so that CFDI XML "
 "files\n"
 "can be attached on payslips emails.\n"
 msgstr ""
+"Integrira mehiško obračunavanje plač z aplikacijo Dokumenti, tako da je "
+"mogoče datoteke CFDI XML\n"
+"priložiti e-poštnim sporočilom z obračunskimi listi."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_intervat
+#, fuzzy
 msgid ""
 "\n"
 "Integration with Intervat & MyMinfin APIs, allowing to send and receive\n"
 "your electronic VAT declarations.\n"
 msgstr ""
+"Integracija z API-jema Intervat in MyMinfin, ki omogoča pošiljanje in "
+"prejemanje vaših elektronskih obračunov DDV."
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_intrastat
@@ -7598,14 +8440,20 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_dk_intrastat
+#, fuzzy
 msgid ""
 "\n"
 "Intrastat for Denmark\n"
 "=====================\n"
 msgstr ""
+"Intrastat za Dansko\n"
+"=====================\n"
+"\n"
+"Lokacija: model:ir.module.module,description:base.module_l10n_dk_intrastat"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_avatax_stock
+#, fuzzy
 msgid ""
 "\n"
 "Inventory management for Avatax\n"
@@ -7618,6 +8466,16 @@ msgid ""
 "case the sale orders should be\n"
 "split per delivery.\n"
 msgstr ""
+"Upravljanje zalog za Avatax\n"
+"=======================================\n"
+"Ta modul omogoča naslove na ravni vrstic pri pridobivanju davkov iz "
+"Avataxa.\n"
+"\n"
+"Trenutna omejitev je ena vrstica naročila z več kot enim premikom zaloge "
+"(tj. 10 enot\n"
+"izdelka A, 2 odpremljeni iz skladišča št. 1 in 8 iz skladišča št. 2). V tem "
+"primeru je treba prodajna naročila\n"
+"razdeliti glede na dostavo."
 
 #. module: base
 #: model:ir.module.module,description:base.module_account
@@ -7675,22 +8533,28 @@ msgstr ""
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_module.py:0
+#, fuzzy
 msgid ""
 "\n"
 "It can be installed running: %s"
-msgstr ""
+msgstr "Namestite ga lahko z zagonom: %s"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_jo_edi_pos
+#, fuzzy
 msgid ""
 "\n"
 "Jordan Accounting EDI for POS\n"
 "=============================\n"
 "Provides electronic invoicing for Jordan in the POS.\n"
 msgstr ""
+"Jordansko računovodsko EDI za POS\n"
+"=============================\n"
+"Omogoča elektronsko izdajo računov za Jordanijo v POS."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_jo_hr_payroll
+#, fuzzy
 msgid ""
 "\n"
 "Jordan Payroll and Tax Rules\n"
@@ -7700,6 +8564,12 @@ msgid ""
 "- Tax income brackets\n"
 "- National contribution tax and social security\n"
 msgstr ""
+"Jordanska pravila obračuna plač in davkov\n"
+"========================================\n"
+"\n"
+"- Podpira osnovni izračun\n"
+"- Dohodninski davčni razredi\n"
+"- Davek na nacionalne prispevke in socialna varnost"
 
 #. module: base
 #: model:ir.module.module,description:base.module_appointment_hr_recruitment
@@ -8284,6 +9154,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_holidays
+#, fuzzy
 msgid ""
 "\n"
 "Manage time off requests and allocations\n"
@@ -8310,6 +9181,31 @@ msgid ""
 "also possible in order to automatically create a meeting when a time off "
 "request is accepted by setting up a type of meeting in time off Type.\n"
 msgstr ""
+"Upravljanje zahtev za odsotnost in dodelitev odsotnosti\n"
+"========================================\n"
+"\n"
+"Ta aplikacija nadzoruje razpored odsotnosti v vašem podjetju. Zaposlenim "
+"omogoča, da zaprosijo za odsotnost. Nato lahko vodje pregledajo zahteve za "
+"odsotnost ter jih odobrijo ali zavrnejo. Tako lahko nadzorujete celotno "
+"načrtovanje odsotnosti za podjetje ali oddelek.\n"
+"\n"
+"Konfigurirate lahko več vrst odsotnosti (bolezen, plačani dnevi, ...) in "
+"zaposlenemu ali oddelku hitro dodelite odsotnost z uporabo dodelitve "
+"odsotnosti. Zaposleni lahko tudi zaprosi za več dni odsotnosti tako, da "
+"ustvari novo dodelitev odsotnosti. To bo povečalo skupno število "
+"razpoložljivih dni za to vrsto odsotnosti (če je zahteva odobrena).\n"
+"\n"
+"Odsotnosti lahko spremljate na različne načine z naslednjimi poročili:\n"
+"\n"
+"* Povzetek odsotnosti\n"
+"* Odsotnost po oddelkih\n"
+"* Analiza odsotnosti\n"
+"\n"
+"Možna je tudi sinhronizacija z notranjim koledarjem (Sestanki modula CRM), "
+"da se samodejno ustvari sestanek, ko je zahteva za odsotnost odobrena, tako "
+"da v Vrsti odsotnosti nastavite vrsto sestanka.\n"
+"\n"
+"Lokacija: model:ir.module.module,description:base.module_hr_holidays"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mail_group
@@ -8415,6 +9311,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mr_reports
+#, fuzzy
 msgid ""
 "\n"
 "Mauritania accounting reports.\n"
@@ -8422,14 +9319,21 @@ msgid ""
 "-Profit and Loss\n"
 "-Balance Sheet\n"
 msgstr ""
+"Mavretanska računovodska poročila.\n"
+"====================================================\n"
+"-Izkaz poslovnega izida\n"
+"-Bilanca stanja"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mr
+#, fuzzy
 msgid ""
 "\n"
 "Mauritania basic package that contains the chart of accounts, the taxes, tax "
 "reports, etc.\n"
 msgstr ""
+"Osnovni mavretanski paket, ki vsebuje kontni načrt, davke, davčna poročila "
+"itd."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx_hr_payroll
@@ -8461,6 +9365,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx
+#, fuzzy
 msgid ""
 "\n"
 "Minimal accounting configuration for Mexico.\n"
@@ -8481,6 +9386,25 @@ msgid ""
 "\n"
 ".. _SAT: http://www.sat.gob.mx/\n"
 msgstr ""
+"Minimalna računovodska konfiguracija za Mehiko.\n"
+"============================================\n"
+"\n"
+"Ta kontni načrt je minimalni predlog za uporabo računovodske funkcije Odoo "
+"brez dodatne konfiguracije.\n"
+"\n"
+"Ne predstavlja celotne lokalizacije za MX, temveč le minimalne podatke, "
+"potrebne za začetek z ničle v mehiški lokalizaciji.\n"
+"\n"
+"Ta modul in njegovo vsebino ekipa openerp-mexico pogosto posodablja.\n"
+"\n"
+"S tem modulom boste imeli:\n"
+"\n"
+" - Minimalni kontni načrt, preizkušen v produkcijskih okoljih.\n"
+" - Minimalni davčni načrt za izpolnjevanje zahtev SAT_.\n"
+"\n"
+".. _SAT: http://www.sat.gob.mx/\n"
+"\n"
+"Lokacija: model:ir.module.module,description:base.module_l10n_mx"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_es_reports_2024
@@ -9693,6 +10617,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_it
+#, fuzzy
 msgid ""
 "\n"
 "Piano dei conti italiano di un'impresa generica.\n"
@@ -9700,6 +10625,12 @@ msgid ""
 "\n"
 "Italian accounting chart and localization.\n"
 msgstr ""
+"Italijanski kontni načrt splošnega podjetja.\n"
+"================================================\n"
+"\n"
+"Italijanski kontni načrt in lokalizacija.\n"
+"\n"
+"Lokacija: model:ir.module.module,description:base.module_l10n_it"
 
 #. module: base
 #: model:ir.module.module,description:base.module_planning_holidays
@@ -9941,10 +10872,11 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ro_intrastat
+#, fuzzy
 msgid ""
 "\n"
 "Romania - Intrastat Declaration\n"
-msgstr ""
+msgstr "Romunija - Romunska Intrastat prijava"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_rw
@@ -10278,6 +11210,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_au_hr_payroll_api
+#, fuzzy
 msgid ""
 "\n"
 "Single Touch Payroll and Super Stream through Superchoice API\n"
@@ -10297,6 +11230,27 @@ msgid ""
 "-   24-hour session timeout for privileged users.\n"
 "-   Audit logging for sensitive fields.\n"
 msgstr ""
+"Enotno poročanje plač in Super Stream prek API-ja Superchoice\n"
+"================================================================\n"
+"Ta modul zagotavlja potrebne API-je za obravnavo skladnosti z enotnim "
+"poročanjem plač\n"
+"(STP) in Super Stream v Avstraliji z uporabo API-ja Superchoice.\n"
+"\n"
+"Ta modul uporablja Superchoice kot klirinško hišo za upravljanje plačil "
+"pokojninskih prispevkov,\n"
+"njegov API pa se uporablja za pošiljanje poročil STP.\n"
+"\n"
+"Izvaja tudi potrebne varnostne funkcije in funkcije beleženja za "
+"izpolnjevanje zahtev ATO\n"
+"za ravnanje s podatki o plačah.\n"
+"-   Obvezna MFA za uporabnike plač in računovodstva.\n"
+"-   Največ 30-minutna časovna omejitev nedejavnosti za privilegirane "
+"uporabnike.\n"
+"-   24-urna časovna omejitev seje za privilegirane uporabnike.\n"
+"-   Beleženje revizijske sledi za občutljiva polja.\n"
+"\n"
+"Lokacija: "
+"model:ir.module.module,description:base.module_l10n_au_hr_payroll_api"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_skills
@@ -10391,10 +11345,11 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_es_intrastat
+#, fuzzy
 msgid ""
 "\n"
 "Spain - Intrastat Report\n"
-msgstr ""
+msgstr "Španija - poročilo Intrastat"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_es
@@ -10450,6 +11405,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_lk
+#, fuzzy
 msgid ""
 "\n"
 "Sri Lankan Accounting module\n"
@@ -10463,6 +11419,18 @@ msgid ""
 "- VAT001\n"
 "- WHT001\n"
 msgstr ""
+"Računovodski modul za Šrilanko\n"
+"============================\n"
+"- Kontni načrt\n"
+"- Davčni položaj\n"
+"- Davki in davčne skupine\n"
+"\n"
+"Obrazci\n"
+"=====\n"
+"- VAT001\n"
+"- WHT001\n"
+"\n"
+"Lokacija: model:ir.module.module,description:base.module_l10n_lk"
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_maintenance
@@ -10698,6 +11666,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_at_pos
+#, fuzzy
 msgid ""
 "\n"
 "The Austrian Cash Security Regulation (RKSV - "
@@ -10721,6 +11690,28 @@ msgid ""
 "\n"
 "We have implemented all this using Fiskaly.\n"
 msgstr ""
+"Avstrijski pravilnik o varnosti gotovine (RKSV – "
+"Registrierkassensicherheitsverordnung 2017).\n"
+"==========================================================================================\n"
+"* Ustvarjanje podlage za delovanje blagajn v Avstriji, zaščiteno pred "
+"nedovoljenimi posegi.\n"
+"* Skladnost s pravnimi predpisi RKSV.\n"
+"* računi, izdani v Avstriji, morajo vsebovati vsaj naslednje podatke:\n"
+"\n"
+"    * identifikacijsko številko blagajne\n"
+"    * datum in čas izdaje računa\n"
+"    * znesek gotovinskega plačila po davčni stopnji\n"
+"    * ti podatki morajo biti vključeni v kodo QR\n"
+"    * vsebino strojno berljive kode\n"
+"\n"
+"* Protokol zbiranja podatkov DEP7 (Datenerfassungsprotokoll). Vsaka "
+"posamezna gotovinska transakcija mora biti zabeležena in shranjena.\n"
+"\n"
+"    * omogočen vam je izvoz poročil DEP7 seje\n"
+"\n"
+"Vse to smo implementirali z uporabo Fiskaly.\n"
+"\n"
+"Location: model:ir.module.module,description:base.module_l10n_at_pos"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_at_saft
@@ -11017,6 +12008,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fr_pos_cert
+#, fuzzy
 msgid ""
 "\n"
 "This add-on brings the technical requirements of the French regulation CGI "
@@ -11040,6 +12032,31 @@ msgid ""
 "    Access to download the mandatory Certificate of Conformity delivered by "
 "Odoo SA (only for Odoo Enterprise users)\n"
 msgstr ""
+"Ta dodatek prinaša tehnične zahteve francoske uredbe CGI, čl. 286, I. 3° "
+"bis, ki določa nekatera merila glede nespremenljivosti, varnosti, "
+"shranjevanja in arhiviranja podatkov, povezanih s prodajo fizičnim osebam "
+"(B2C).\n"
+"-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
+"\n"
+"\n"
+"Namestite ga, če uporabljate aplikacijo Prodajno mesto za prodajo fizičnim "
+"osebam.\n"
+"\n"
+"Modul doda naslednje funkcije:\n"
+"\n"
+"    Nespremenljivost: deaktivacija vseh načinov preklica ali spreminjanja "
+"ključnih podatkov naročil POS, računov in vnosov v dnevnik\n"
+"\n"
+"    Varnost: algoritem verižnega povezovanja za preverjanje "
+"nespremenljivosti\n"
+"\n"
+"    Shranjevanje: samodejno zapiranje prodaj z izračunom periodičnih in "
+"kumulativnih skupnih vrednosti (dnevno, mesečno, letno)\n"
+"\n"
+"    Dostop do prenosa obveznega potrdila o skladnosti, ki ga izda Odoo SA "
+"(samo za uporabnike Odoo Enterprise)\n"
+"\n"
+"Lokacija: model:ir.module.module,description:base.module_l10n_fr_pos_cert"
 
 #. module: base
 #: model:ir.module.module,description:base.module_html_builder
@@ -11088,11 +12105,14 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_tw_edi_ecpay_website_sale
+#, fuzzy
 msgid ""
 "\n"
 "This bridge module allows the user to input Ecpay information in ecommerce "
 "for sending their invoices to the Ecpay system\n"
 msgstr ""
+"Ta povezovalni modul uporabniku omogoča vnos informacij Ecpay v e-trgovini "
+"za pošiljanje računov v sistem Ecpay."
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_subcontracting_dropshipping
@@ -11204,6 +12224,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fi
+#, fuzzy
 msgid ""
 "\n"
 "This is the Odoo module to manage the accounting in Finland.\n"
@@ -11218,6 +12239,19 @@ msgid ""
 "\n"
 "Set the payment reference type from the Sales Journal.\n"
 msgstr ""
+"To je modul Odoo za upravljanje računovodstva na Finskem.\n"
+"============================================================\n"
+"\n"
+"Po namestitvi tega modula boste imeli dostop do:\n"
+"    * Finski kontni načrt\n"
+"    * Davčni položaji\n"
+"    * Vrste sklicev za plačilo računa (finski standardni sklic in finski "
+"upniški sklic (RF))\n"
+"    * Finska oblika sklica za prodajna naročila\n"
+"\n"
+"Vrsto sklica za plačilo nastavite v prodajnem dnevniku.\n"
+"\n"
+"Lokacija: model:ir.module.module,description:base.module_l10n_fi"
 
 #. module: base
 #: model:ir.module.module,description:base.module_uom
@@ -11485,6 +12519,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_hn
+#, fuzzy
 msgid ""
 "\n"
 "This is the base module to manage the accounting chart for Honduras.\n"
@@ -11496,6 +12531,14 @@ msgid ""
 "taxes\n"
 "and the Lempira currency."
 msgstr ""
+"To je osnovni modul za upravljanje računovodskega kontnega načrta za "
+"Honduras.\n"
+"====================================================================\n"
+"\n"
+"Doda računovodski kontni načrt za Honduras. Vključuje tudi davke in\n"
+"valuto lempira. -- Doda računovodski kontni načrt za Honduras. Vključuje "
+"tudi davke\n"
+"in valuto lempira."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_iq
@@ -11824,6 +12867,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_uk
+#, fuzzy
 msgid ""
 "\n"
 "This is the latest UK Odoo localisation necessary to run Odoo accounting for "
@@ -11834,6 +12878,15 @@ msgid ""
 "    - InfoLogic UK counties listing\n"
 "    - a few other adaptations"
 msgstr ""
+"To je najnovejša lokalizacija Odoo za Združeno kraljestvo, potrebna za "
+"vodenje računovodstva Odoo za mala in srednja podjetja v Združenem "
+"kraljestvu z:\n"
+"=================================================================================================\n"
+"    - kontni načrt, pripravljen za CT600\n"
+"    - davčna struktura, pripravljena za VAT100\n"
+"    - seznam grofij Združenega kraljestva InfoLogic\n"
+"    - nekaj drugih prilagoditev\n"
+"Lokacija: model:ir.module.module,description:base.module_l10n_uk"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_il
@@ -11879,6 +12932,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ro_cpv_code
+#, fuzzy
 msgid ""
 "\n"
 "This is the module to add CPV (Common Procurement Vocabulary) identification "
@@ -11887,6 +12941,12 @@ msgid ""
 "categorisation of products sold to be included in the details of the line of "
 "an invoice.\n"
 msgstr ""
+"To je modul za dodajanje identifikacijske številke CPV (skupni besednjak "
+"javnih naročil) na izdelek.\n"
+"Romunski format CIUS-RO v nekaterih primerih zahteva, da se v podrobnosti "
+"vrstice računa vključi natančna kategorizacija prodanih izdelkov.\n"
+"\n"
+"Lokacija: model:ir.module.module,description:base.module_l10n_ro_cpv_code"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ro
@@ -11910,6 +12970,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ca
+#, fuzzy
 msgid ""
 "\n"
 "This is the module to manage the Canadian accounting chart in Odoo.\n"
@@ -11946,6 +13007,39 @@ msgid ""
 "registered with your\n"
 "position.\n"
 msgstr ""
+"To je modul za upravljanje kanadskega kontnega načrta v Odoo.\n"
+"===========================================================================================\n"
+"\n"
+"Kanadski kontni načrti in lokalizacije.\n"
+"\n"
+"Davčne pozicije\n"
+"----------------\n"
+"\n"
+"Pri določanju davkov, ki jih je treba uporabiti, je pomembna provinca, v "
+"kateri se izvede dostava.\n"
+"Zato smo se odločili, da v davčnih pozicijah implementiramo najpogostejši "
+"primer: za dostavo je\n"
+"odgovoren prodajalec, dostava pa se opravi na lokaciji stranke.\n"
+"\n"
+"Nekaj primerov:\n"
+"\n"
+"1) Imate stranko iz druge province in dostavite na njeno lokacijo.\n"
+"Pri stranki nastavite davčno pozicijo na njeno provinco.\n"
+"\n"
+"2) Imate stranko iz druge province. Vendar ta stranka s svojim tovornjakom "
+"pride na vašo lokacijo,\n"
+"da prevzame izdelke. Pri stranki ne nastavite nobene davčne pozicije.\n"
+"\n"
+"3) Mednarodni dobavitelj vam ne zaračuna nobenega davka. Davke ob "
+"carinjenju\n"
+"zaračuna carinski posrednik. Pri dobavitelju nastavite davčno pozicijo na "
+"Mednarodno.\n"
+"\n"
+"4) Mednarodni dobavitelj vam zaračuna vaš provincialni davek. Registriran je "
+"pri vaši\n"
+"poziciji.\n"
+"\n"
+"Lokacija: model:ir.module.module,description:base.module_l10n_ca"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_pl
@@ -11992,6 +13086,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fr_account
+#, fuzzy
 msgid ""
 "\n"
 "This is the module to manage the accounting chart for France in Odoo.\n"
@@ -12026,6 +13121,37 @@ msgid ""
 "\n"
 "**Credits:** Sistheo, Zeekom, CrysaLEAD, Akretion and Camptocamp.\n"
 msgstr ""
+"To je modul za upravljanje kontnega načrta za Francijo v Odoo.\n"
+"========================================================================\n"
+"\n"
+"Ta modul se uporablja za podjetja s sedežem v celinski Franciji. Ne "
+"uporablja se za\n"
+"podjetja s sedežem v DOM-TOM (Guadeloupe, Martinique, Guyane, Réunion, "
+"Mayotte).\n"
+"\n"
+"Ta lokalizacijski modul ustvari DDV-davke vrste »davek vključen« za nakupe\n"
+"(zlasti je potreben, ko uporabljate modul »hr_expense«). Upoštevajte, da ti\n"
+"DDV-davki z vključenim davkom niso upravljani s fiskalnimi pozicijami, ki "
+"jih zagotavlja ta\n"
+"modul (ker je v fiskalnih pozicijah zapleteno upravljati scenarija z »"
+"izključenim davkom« in\n"
+"»vključenim davkom«).\n"
+"\n"
+"Ta lokalizacijski modul ne obravnava pravilno scenarija, ko podjetje iz "
+"celinske Francije\n"
+"prodaja storitve podjetju s sedežem v DOM. To bi lahko upravljali v "
+"fiskalnih pozicijah,\n"
+"vendar bi bilo treba razlikovati med DDV-davki za »izdelke« in DDV-davki za »"
+"storitve«. Menimo,\n"
+"da je preveč »zahtevno«, da bi bilo to privzeto vključeno v l10n_fr_account; "
+"podjetja, ki prodajajo\n"
+"storitve podjetjem s sedežem v DOM, morajo konfiguracijo svojih davkov in "
+"fiskalnih pozicij\n"
+"posodobiti ročno.\n"
+"\n"
+"**Zasluge:** Sistheo, Zeekom, CrysaLEAD, Akretion in Camptocamp.\n"
+"\n"
+"Lokacija: model:ir.module.module,description:base.module_l10n_fr_account"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mn
@@ -12790,6 +13916,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_us_direct_deposit
+#, fuzzy
 msgid ""
 "\n"
 "This module allows you to initiate batch payments directly in Odoo via Wise "
@@ -12799,6 +13926,12 @@ msgid ""
 "can be initiated digitally from within Odoo and redirect to be completed "
 "within Wise via Direct Debit ACH, Standard ACH, FedWire, or Wise Balance.\n"
 msgstr ""
+"Ta modul vam omogoča, da neposredno v Odoo prek storitve Wise (https://"
+"wise.com) sprožite skupinska plačila.\n"
+"Ko ustvarite račun Wise in v Nastavitvah dodate poverilnice, je mogoče "
+"plačila dobaviteljem prek skupin sprožiti digitalno neposredno iz Odooja, "
+"nato pa se preusmerijo v Wise, kjer jih dokončate prek Direct Debit ACH, "
+"Standard ACH, FedWire ali stanja Wise."
 
 #. module: base
 #: model:ir.module.module,description:base.module_partnership
@@ -12943,11 +14076,12 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_pl_reports_account_saft
+#, fuzzy
 msgid ""
 "\n"
 "This module also provides the possibility to generate the JPK_KR_PD in xml, "
 "for Poland.\n"
-msgstr ""
+msgstr "Ta modul prav tako omogoča generiranje JPK_KR_PD v xml za Poljsko."
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_hourly_cost
@@ -13169,6 +14303,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ro_saft
+#, fuzzy
 msgid ""
 "\n"
 "This module enables generating the D.406 declaration from within Odoo.\n"
@@ -13176,6 +14311,11 @@ msgid ""
 "companies\n"
 "must submit monthly or quarterly, depending on their tax reporting period.\n"
 msgstr ""
+"Ta modul omogoča generiranje deklaracije D.406 znotraj Odooja.\n"
+"Deklaracija D.406 je datoteka XML v obliki SAF-T, ki jo morajo romunska "
+"podjetja\n"
+"predložiti mesečno ali četrtletno, odvisno od njihovega davčnega "
+"poročevalskega obdobja."
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_barcode
@@ -13264,6 +14404,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_tr_nilvera_einvoice_extended
+#, fuzzy
 msgid ""
 "\n"
 "This module enhances the core Nilvera integration by adding additional "
@@ -13276,9 +14417,23 @@ msgid ""
 "    3.Configuration of withholding reasons and exemption reasons\n"
 "    4.Addition of Tax Offices.\n"
 msgstr ""
+"Ta modul razširja osnovno integracijo Nilvera z dodajanjem dodatnih "
+"scenarijev in vrst računov, potrebnih za skladnost s turškim e-izdajanjem "
+"računov.\n"
+"\n"
+"Funkcije vključujejo:\n"
+"    1.Podpora za scenarije računov: osnovni, izvozni in javni sektor\n"
+"    2.Podpora za vrste računov: prodajni, z odtegljajem, oproščeni davka in "
+"registrirani za izvoz\n"
+"    3.Konfiguracija razlogov za odtegljaj in razlogov za oprostitev\n"
+"    4.Dodajanje davčnih uradov.\n"
+"\n"
+"Lokacija: "
+"model:ir.module.module,description:base.module_l10n_tr_nilvera_einvoice_extended"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ch_hr_payroll_elm_transmission_5_3
+#, fuzzy
 msgid ""
 "\n"
 "This module extends the certification to ELM 5.1 and ELM 5.3 adds various "
@@ -13286,6 +14441,13 @@ msgid ""
 "- Possibility to attribute LPP amounts in %\n"
 "- Add custom amounts for employer parts for LAAC and IJM\n"
 msgstr ""
+"Ta modul razširja certificiranje na ELM 5.1 in ELM 5.3 ter dodaja različne "
+"izboljšave za kakovost življenja, kot so: \n"
+"- Možnost pripisa zneskov LPP v %\n"
+"- Dodajanje poljubnih zneskov za deleže delodajalca pri LAAC in IJM\n"
+"\n"
+"Lokacija: "
+"model:ir.module.module,description:base.module_l10n_ch_hr_payroll_elm_transmission_5_3"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sms
@@ -13773,6 +14935,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_uy_edi
+#, fuzzy
 msgid ""
 "\n"
 "This module integrate Odoo so you can issue electronic documents (CFE) to "
@@ -13806,6 +14969,42 @@ msgid ""
 "* Contingency documents not implemented\n"
 "* Future implementation will have auto synchronization of Vendor bills.\n"
 msgstr ""
+"Ta modul integrira Odoo, tako da lahko DGI izdajate elektronske dokumente "
+"(CFE). Primer: e-vozovnica, e-račun ter z njimi povezani debetni in kreditni "
+"računi.\n"
+"\n"
+"Po izdaji CFE in ker je preverjanje računa asinhrono bo Odoo zagnal "
+"načrtovano dejanje, ki se bo povezalo z DGI ter preverilo/posodobilo stanje "
+"CFE (Čakanje na odgovor DGI, odobreno ali zavrnjeno).\n"
+"\n"
+"OPOMBA: Vsaka povezava se vzpostavi z uporabo programske opreme tretje osebe "
+"z imenom Uruware.\n"
+"\n"
+"Nastavitev\n"
+"----------\n"
+"\n"
+"1. Imeti morate urugvajsko podjetje (z nameščenim urugvajskim kontnim "
+"načrtom).\n"
+"2. Pojdite v Nastavitve / Računovodstvo / razdelek Urugvajska lokalizacija "
+"in nastavite polja za povezavo z UCFE: platformo Uruware za povezavo z "
+"Dirección General Impositiva (DGI).\n"
+"3. Pojdite v Nastavitve / Uporabniki / Podjetja / Podjetja ter nastavite "
+"davčno številko, kodo glavnega sedeža ali podružnice DGI in vsa polja, "
+"povezana z naslovom.\n"
+"4. Pojdite v Račune in jih potrdite. Nato uporabite Pošlji in natisni, da "
+"jih pošljete državi in ustvarite CFE. Prikazalo se bo novo polje \"Stanje "
+"CFE\", ki bo prikazovalo stanje elektronskega dokumenta: sprva bo v stanju "
+"\"Čakanje na odgovor DGI\", čez nekaj časa pa bo samodejno posodobljeno na "
+"Odobreno/Zavrnjeno. Prav tako boste prejeli pravne datoteke PDF in XML, "
+"povezane s CFE, kot priloge k dokumentu.\n"
+"\n"
+"Znane težave / načrt razvoja\n"
+"============================\n"
+"\n"
+"* Dokumenti za primer nedelovanja niso implementirani\n"
+"* V prihodnje bo implementirana samodejna sinhronizacija prejetih računov.\n"
+"\n"
+"Lokacija: model:ir.module.module,description:base.module_l10n_uy_edi"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in_pos_urban_piper
@@ -14016,6 +15215,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_hr_payroll_fix
+#, fuzzy
 msgid ""
 "\n"
 "This module patches the "
@@ -14025,6 +15225,15 @@ msgid ""
 "This prevents rounding errors when employees have half-days (0.5)\n"
 "in their leave allocations or taken leaves.\n"
 msgstr ""
+"Ta modul popravlja prehodni model "
+"'hr.payslip.employee.depature.holiday.attests.time.off.line', tako da "
+"uporablja števila s plavajočo vejico namesto celih števil.\n"
+"\n"
+"To preprečuje napake pri zaokroževanju, kadar imajo zaposleni polovice dni "
+"(0.5) v svojih dodelitvah dopusta ali izrabljenih odsotnostih.\n"
+"\n"
+"Lokacija: "
+"model:ir.module.module,description:base.module_l10n_be_hr_payroll_fix"
 
 #. module: base
 #: model:ir.module.module,description:base.module_timesheet_grid_holidays
@@ -14171,6 +15380,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_es_edi_sii
+#, fuzzy
 msgid ""
 "\n"
 "This module sends the taxes information (mostly VAT) of the\n"
@@ -14188,6 +15398,21 @@ msgid ""
 "\n"
 "You need to configure your certificate and the tax agency.\n"
 msgstr ""
+"Ta modul pošilja davčne informacije (predvsem DDV) iz računov dobaviteljev "
+"in računov strank v SII. Imenuje se Postopek G417 – DDV. Vodenje registrov. "
+"Obvezen je za vsako podjetje s prometom nad 6 milijonov EUR, druga podjetja "
+"pa ga lahko že uporabljajo. Računi se po potrditvi samodejno\n"
+"pošljejo.\n"
+"\n"
+"Način pošiljanja informacij v SII je odvisen od konfiguracije, ki je "
+"nastavljena pri davkih. Davki, ki so bili v predlogi kontnega načrta "
+"(l10n_es), so samodejno konfigurirani s pravilno vrsto. Vendar je mogoče, da "
+"je treba za določene razloge za oprostitev/neobdavčenost ustvariti dodatne "
+"davke.\n"
+"\n"
+"Konfigurirati morate svoje potrdilo in davčni organ.\n"
+"\n"
+"Lokacija: model:ir.module.module,description:base.module_l10n_es_edi_sii"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_mrp_renting
@@ -14399,6 +15624,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_transifex
+#, fuzzy
 msgid ""
 "\n"
 "Transifex integration\n"
@@ -14414,6 +15640,21 @@ msgid ""
 "The language the user tries to translate must be activated on the Transifex\n"
 "project.\n"
 msgstr ""
+"Integracija Transifex\n"
+"=====================\n"
+"Ta modul bo v pogled prevodov dodal povezavo do projekta Transifex.\n"
+"Namen tega modula je pospešiti prevajanje glavnih modulov.\n"
+"\n"
+"Za delovanje Odoo uporablja konfiguracijske datoteke Transifex `.tx/config`, "
+"da zazna\n"
+"izvor projekta. Modulov po meri ne bo mogoče prevesti (ker niso objavljeni v "
+"glavnem\n"
+"projektu Transifex).\n"
+"\n"
+"Jezik, ki ga uporabnik poskuša prevesti, mora biti aktiviran v projektu "
+"Transifex.\n"
+"\n"
+"Lokacija: model:ir.module.module,description:base.module_transifex"
 
 #. module: base
 #: model:ir.module.module,description:base.module_auth_totp
@@ -14524,6 +15765,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ae_hr_payroll
+#, fuzzy
 msgid ""
 "\n"
 "United Arab Emirates Payroll and End of Service rules.\n"
@@ -14542,6 +15784,27 @@ msgid ""
 "- Master payroll export\n"
 "- WPS\n"
 msgstr ""
+"Plače v Združenih arabskih emiratih in pravila glede odpravnine ob "
+"prenehanju delovnega razmerja.\n"
+"=======================================================\n"
+"- Izračuni osnovne plače\n"
+"- Izračuni odpravnine ob prenehanju delovnega razmerja\n"
+"- Rezervacije za letne dopuste in odpravnine ob prenehanju delovnega "
+"razmerja\n"
+"- Pravila socialnega zavarovanja za domačine\n"
+"- Pravilo za nadurno delo v primeru drugih vnosov\n"
+"- Izračuni bolniških dopustov\n"
+"- Izračuni DEWS\n"
+"- Izračuni odpravnine ob prenehanju delovnega razmerja za proste cone (DMCC)"
+"\n"
+"- Izračuni zunaj pogodbe\n"
+"- Izračun neizrabljenih dopustov za izračun odpravnine ob prenehanju "
+"delovnega razmerja\n"
+"- Dodatna pravila za druge vnose (bonusi, provizije, zaostala plačila itd.)\n"
+"- Glavni izvoz plač\n"
+"- WPS\n"
+"\n"
+"Lokacija: model:ir.module.module,description:base.module_l10n_ae_hr_payroll"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_us_hr_payroll
@@ -14620,11 +15883,15 @@ msgstr ""
 #. module: base
 #. odoo-python
 #: code:addons/models.py:0
+#, fuzzy
 msgid ""
 "\n"
 "User: %(user)s\n"
 "Groups: %(allowed_groups_msg)s"
 msgstr ""
+"Uporabnik: %(user)s\n"
+"Skupine: %(allowed_groups_msg)s\n"
+"Lokacija: code:addons/models.py:0"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sales_team
@@ -14639,6 +15906,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_vat
+#, fuzzy
 msgid ""
 "\n"
 "VAT validation for Partner's VAT numbers.\n"
@@ -14680,6 +15948,45 @@ msgid ""
 "countries,\n"
 "only the country code will be validated.\n"
 msgstr ""
+"Preverjanje številk DDV partnerjev.\n"
+"=========================================\n"
+"\n"
+"Po namestitvi tega modula bodo vrednosti, vnesene v polje DDV pri "
+"partnerjih,\n"
+"preverjene za vse podprte države. Država je določena iz 2-mestne kode "
+"države,\n"
+"ki je predpona številke DDV, npr. ``BE0477472701`` bo preverjena z uporabo\n"
+"belgijskih pravil.\n"
+"\n"
+"Obstajata dve različni ravni preverjanja številke DDV:\n"
+"--------------------------------------------------------\n"
+"    * Privzeto se izvede preprosto preverjanje brez povezave z uporabo "
+"znanih pravil\n"
+"      preverjanja za državo, običajno preproste kontrolne številke. To je "
+"hitro in\n"
+"      vedno na voljo, vendar dopušča številke, ki morda niso bile dejansko "
+"dodeljene\n"
+"      ali niso več veljavne.\n"
+"\n"
+"    * Ko je omogočena možnost \"VAT VIES Check\" (v konfiguraciji podjetja "
+"uporabnika),\n"
+"      bodo številke DDV namesto tega poslane v spletno podatkovno zbirko EU "
+"VIES,\n"
+"      ki bo resnično preverila, ali je številka veljavna in trenutno "
+"dodeljena podjetju\n"
+"      v EU. To je nekoliko počasneje od preprostega preverjanja brez "
+"povezave, zahteva\n"
+"      internetno povezavo in morda ni ves čas na voljo. Če storitev ni na "
+"voljo ali ne\n"
+"      podpira zahtevane države (npr. držav zunaj EU), bo namesto tega "
+"izvedeno preprosto\n"
+"      preverjanje.\n"
+"\n"
+"Trenutno so podprte države EU in nekaj držav zunaj EU,\n"
+"kot so Čile, Kolumbija, Mehika, Norveška ali Rusija. Za nepodprte države\n"
+"bo preverjena samo koda države.\n"
+"\n"
+"Lokacija: model:ir.module.module,description:base.module_base_vat"
 
 #. module: base
 #: model:ir.module.module,description:base.module_industry_fsm_stock
@@ -14891,10 +16198,11 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_hr_edi
+#, fuzzy
 msgid ""
 "\n"
 "e-invoicing for Croatia\n"
-msgstr ""
+msgstr "e-izdajanje računov za Hrvaško"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_rs_edi
@@ -14908,12 +16216,16 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_gr_edi
+#, fuzzy
 msgid ""
 "\n"
 "myDATA is a platform created by Greece's tax authority,\n"
 "The Independent Authority for Public Revenue (IAPR),\n"
 "to digitize business tax and accounting information declaration.\n"
 msgstr ""
+"myDATA je platforma, ki jo je ustvaril grški davčni organ,\n"
+"Neodvisni organ za javne prihodke (IAPR),\n"
+"za digitalizacijo prijavljanja davčnih in računovodskih informacij podjetij."
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_lang__time_format__%i:%m:%s_%p
@@ -14996,11 +16308,15 @@ msgstr "%(method)s na%(model)s je zasebno in ga ni mogoče poklicati z gumbom"
 #. module: base
 #. odoo-python
 #: code:addons/fields.py:0 code:addons/models.py:0
+#, fuzzy
 msgid ""
 "%(previous_message)s\n"
 "\n"
 "Implicitly accessed through '%(document_kind)s' (%(document_model)s)."
 msgstr ""
+" %(previous_message)s\n"
+"\n"
+"Implicitno dostopano prek »%(document_kind)s« (%(document_model)s)."
 
 #. module: base
 #. odoo-python
@@ -15191,18 +16507,24 @@ msgstr "- %(description)s (%(model)s)"
 #. module: base
 #. odoo-python
 #: code:addons/models.py:0
+#, fuzzy
 msgid ""
 "- Only a root company can be set on “%(record)s”. Currently set to “%"
 "(company)s”"
 msgstr ""
+"- Na »%(record)s« je mogoče nastaviti samo korensko podjetje. Trenutno je "
+"nastavljeno »%(company)s«"
 
 #. module: base
 #. odoo-python
 #: code:addons/models.py:0
+#, fuzzy
 msgid ""
 "- Record is company “%(company)s” while “%(field)s” (%(fname)s: %(values)s) "
 "belongs to another company."
 msgstr ""
+"- Zapis pripada podjetju “%(company)s”, medtem ko “%(field)s” (%(fname)s: %"
+"(values)s) pripada drugemu podjetju."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -15260,10 +16582,13 @@ msgstr "- velikost ="
 #. module: base
 #. odoo-python
 #: code:addons/models.py:0
+#, fuzzy
 msgid ""
 "- “%(record)s” belongs to company “%(company)s” while “%(field)s” (%"
 "(fname)s: %(values)s) belongs to another company."
 msgstr ""
+"- “%(record)s” pripada podjetju “%(company)s”, medtem ko “%(field)s” (%"
+"(fname)s: %(values)s) pripada drugemu podjetju."
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__base_enable_profiling_wizard__duration__days_1
@@ -15324,10 +16649,13 @@ msgstr "5 Minut"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_pe_reports_lib
+#, fuzzy
 msgid ""
 "5th and 6th Set Financial Reports. Inventory and Balance 3.1-3.7, 3.11-3.18, "
 "3.20,3.24 and 3.25"
 msgstr ""
+"5. in 6. sklop finančnih poročil. Inventar in bilanca 3.1-3.7, 3.11-3.18, "
+"3.20,3.24 in 3.25"
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_1
@@ -15503,19 +16831,27 @@ msgstr "<i class=\"fa fa-envelope me-1\" role=\"img\" aria-label=\"Login\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
+#, fuzzy
 msgid ""
 "<i class=\"fa fa-fw fa-envelope me-1 text-primary\" title=\"Email\" "
 "invisible=\"login == email\"/>"
 msgstr ""
+"<i class=\"fa fa-fw fa-envelope me-1 text-primary\" title=\"E-pošta\" "
+"invisible=\"login == email\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
+#, fuzzy
 msgid ""
 "<i class=\"fa fa-fw fa-envelope me-1 text-primary\" title=\"Login / Email\" "
 "invisible=\"login != email\"/>\n"
 "                                        <i class=\"fa fa-fw fa-key me-1 text-"
 "primary\" title=\"Login\" invisible=\"login == email\"/>"
 msgstr ""
+"<i class=\"fa fa-fw fa-envelope me-1 text-primary\" title=\"Prijava / E-"
+"pošta\" invisible=\"login != email\"/>\n"
+"                                        <i class=\"fa fa-fw fa-key me-1 text-"
+"primary\" title=\"Prijava\" invisible=\"login == email\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
@@ -15525,18 +16861,22 @@ msgstr "<i class=\"fa fa-fw fa-envelope text-primary\" title=\"Email\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
+#, fuzzy
 msgid "<i class=\"fa fa-fw fa-phone me-1 text-primary\" title=\"Phone\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-phone me-1 text-primary\" title=\"Telefon\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
+#, fuzzy
 msgid "<i class=\"fa fa-fw fa-phone text-primary\" title=\"Phone\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-phone text-primary\" title=\"Telefon\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_simple_form
+#, fuzzy
 msgid "<i class=\"fa fa-fw me-1 fa-building text-primary\" title=\"Company\"/>"
 msgstr ""
+"<i class=\"fa fa-fw me-1 fa-building text-primary\" title=\"Podjetje\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_partner_kanban_view
@@ -15559,14 +16899,16 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.res_partner_kanban_view
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 #: model_terms:ir.ui.view,arch_db:base.view_users_simple_form
+#, fuzzy
 msgid "<i class=\"fa fa-fw me-1 fa-phone text-primary\" title=\"Phone\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-fw me-1 fa-phone text-primary\" title=\"Telefon\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
+#, fuzzy
 msgid ""
 "<i class=\"fa fa-fw me-1 fa-suitcase text-primary\" title=\"Position\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-fw me-1 fa-suitcase text-primary\" title=\"Položaj\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_mail_server_form
@@ -15956,9 +17298,12 @@ msgstr "<strong>Oznaka</strong>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_users_identitycheck_view_form
+#, fuzzy
 msgid ""
 "<strong>Let's first confirm it's you. Enter your current password:</strong>"
 msgstr ""
+"<strong>Najprej potrdimo, da ste to vi. Vnesite svoje trenutno geslo:</"
+"strong>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodulereference
@@ -16405,8 +17750,9 @@ msgstr "UI"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_esg_csrd_ai
+#, fuzzy
 msgid "AI - ESG CSRD"
-msgstr ""
+msgstr "UI - ESG CSRD"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_ai_auto_install
@@ -16478,13 +17824,15 @@ msgstr "AI CRM klepet v živo"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_esg_csrd_ai
+#, fuzzy
 msgid "AI integration with ESG CSRD"
-msgstr ""
+msgstr "Integracija umetne inteligence z ESG CSRD"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_ai_account
+#, fuzzy
 msgid "AI text draft integration with accounting"
-msgstr ""
+msgstr "Integracija AI osnutka besedila z računovodstvom"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_ai_knowledge
@@ -16682,8 +18030,9 @@ msgstr "Račun - Dovoli posodabljanje davčnih tabel"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_pos_settle_due
+#, fuzzy
 msgid "Account - Point of Sale Settle Due"
-msgstr ""
+msgstr "Računovodstvo - Zapadlost plačila na prodajnem mestu"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_bank_statement_extract
@@ -16890,30 +18239,46 @@ msgstr "Računovodski/vozni most"
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_2
 #: model_terms:res.partner,website_description:base.res_partner_4
+#, fuzzy
 msgid ""
 "Acme Corporation designs, develops, integrates and supports HR and Supply\n"
 "                Chain processes in order to make our customers more "
 "productive,\n"
 "                responsive and profitable."
 msgstr ""
+"Družba Acme načrtuje, razvija, integrira in podpira procese na področju "
+"človeških virov in dobavne\n"
+"                verige, da bi bili naši kupci produktivnejši,\n"
+"                odzivnejši in donosnejši."
 
 #. module: base
 #: model:res.partner,website_short_description:base.res_partner_2
 #: model:res.partner,website_short_description:base.res_partner_4
+#, fuzzy
 msgid ""
 "Acme Corporation designs, develops, integrates and supports HR and Supply "
 "Chain processes in order to make our customers more productive, responsive "
 "and profitable."
 msgstr ""
+"Družba Acme načrtuje, razvija, integrira in podpira procese na področju "
+"človeških virov in dobavne verige, da bi bili naši kupci produktivnejši, "
+"odzivnejši in donosnejši."
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_2
 #: model_terms:res.partner,website_description:base.res_partner_4
+#, fuzzy
 msgid ""
 "Acme Corporation integrates ERP for Global Companies and supports PME\n"
 "                with Open Sources software to manage their businesses. Our\n"
 "                consultants are experts in the following areas:"
 msgstr ""
+"Acme Corporation vključuje ERP za globalna podjetja in podpira MSP\n"
+"                z odprtokodno programsko opremo za upravljanje njihovih "
+"podjetij. Naši\n"
+"                svetovalci so strokovnjaki na naslednjih področjih:\n"
+"Lokacija: model_terms:res.partner,website_description:base.res_partner_2, "
+"model_terms:res.partner,website_description:base.res_partner_4"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window_view__act_window_id
@@ -17131,8 +18496,9 @@ msgstr "V razprave dodajte OdooBot"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_add_gln
+#, fuzzy
 msgid "Add Partner GLN"
-msgstr ""
+msgstr "Dodaj GLN partnerja"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_crm_sms
@@ -17353,8 +18719,10 @@ msgstr "Dodajanje"
 
 #. module: base
 #: model:res.partner,website_short_description:base.res_partner_address_31
+#, fuzzy
 msgid "Addison Olson is a mighty sales representative at Acme Corporation."
 msgstr ""
+"Addison Olson je izjemen prodajni predstavnik v družbi Acme Corporation."
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_address_31
@@ -18202,9 +19570,11 @@ msgstr ""
 
 #. module: base
 #: model_terms:res.company,invoice_terms_html:base.demo_company_be
+#, fuzzy
 msgid ""
 "All our contractual relations will be governed exclusively by Belgium law."
 msgstr ""
+"Vsa naša pogodbena razmerja bodo urejala izključno belgijska zakonodaja."
 
 #. module: base
 #: model_terms:res.company,invoice_terms_html:base.main_company
@@ -19577,10 +20947,14 @@ msgstr "Za delovanje funkcije find_or_create je potreben e-poštni naslov"
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_model.py:0
+#, fuzzy
 msgid ""
 "An error occurred while evaluating the domain:\n"
 "%(error)s"
 msgstr ""
+"Pri vrednotenju domene je prišlo do napake:\n"
+"%(error)s\n"
+"Mesto: code:addons/base/models/ir_model.py:0"
 
 #. module: base
 #. odoo-python
@@ -19656,6 +21030,7 @@ msgstr "Angvila"
 #. module: base
 #. odoo-python
 #: code:addons/models.py:0
+#, fuzzy
 msgid ""
 "Another model is using the record you are trying to delete.\n"
 "\n"
@@ -19663,6 +21038,12 @@ msgid ""
 "Thanks to the following constraint: %(field_display)s\n"
 "How about archiving the record instead?"
 msgstr ""
+"Drug model uporablja zapis, ki ga poskušate izbrisati.\n"
+"\n"
+"Težavo povzroča: %(model_display)s\n"
+"Zaradi naslednje omejitve: %(field_display)s\n"
+"Kaj če bi zapis namesto tega arhivirali?\n"
+"Lokacija: code:addons/models.py:0"
 
 #. module: base
 #. odoo-python
@@ -20826,8 +22207,9 @@ msgstr "Att"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_documents_l10n_mx_hr_payroll_account_edi
+#, fuzzy
 msgid "Attach Mexican payroll CFDI XML to payslips emails"
-msgstr ""
+msgstr "Priložite mehiški XML CFDI e-poštnim sporočilom s plačilnimi listami"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_attachment
@@ -21120,8 +22502,9 @@ msgstr "Avstrijska finančna poročila"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_at_intrastat
+#, fuzzy
 msgid "Austrian Intrastat Declaration"
-msgstr ""
+msgstr "Avstrijska Intrastat prijava"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_at_saft
@@ -21359,13 +22742,15 @@ msgstr "Avatax Brazil"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_br_edi_fiscal_reform
+#, fuzzy
 msgid "Avatax Brazil Fiscal Reform"
-msgstr ""
+msgstr "Davčna reforma Avatax Brazilija"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_br_edi_pos_fiscal_reform
+#, fuzzy
 msgid "Avatax Brazil POS Fiscal Reform"
-msgstr ""
+msgstr "Davčna reforma POS Avatax Brazilija"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_br_avatax_sale
@@ -21375,13 +22760,15 @@ msgstr "Prodaja Avatax Brazil"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_br_edi_sale_fiscal_reform
+#, fuzzy
 msgid "Avatax Brazil Sale Fiscal Reform"
-msgstr ""
+msgstr "Davčna reforma prodaje Avatax Brazilija"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_br_website_sale_fiscal_reform
+#, fuzzy
 msgid "Avatax Brazil eCommerce Fiscal Reform"
-msgstr ""
+msgstr "Davčna reforma e-trgovine Avatax Brazilija"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_avatax_stock
@@ -21501,6 +22888,7 @@ msgstr "BBAN Plusgiro Bankgiro"
 
 #. module: base
 #: model_terms:res.company,invoice_terms_html:base.demo_company_be
+#, fuzzy
 msgid ""
 "BE Company CoA undertakes to do its best to supply performant services in "
 "due time in accordance with the agreed timeframes. However, none of its "
@@ -21509,6 +22897,12 @@ msgid ""
 "appear as a third party in the context of any claim for damages filed "
 "against the client by an end consumer."
 msgstr ""
+"BE Company CoA si prizadeva po svojih najboljših močeh pravočasno "
+"zagotavljati učinkovite storitve v skladu z dogovorjenimi roki. Vendar "
+"nobene od njegovih obveznosti ni mogoče šteti za obveznost doseganja "
+"rezultata. BE Company CoA v nobenih okoliščinah ni mogoče prisiliti, da na "
+"podlagi zahtevka za povračilo škode, ki ga končni potrošnik vloži zoper "
+"naročnika, nastopi kot tretja stranka."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__layout_background_image
@@ -21922,8 +23316,9 @@ msgstr "Belorusija"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_intervat
+#, fuzzy
 msgid "Belgian Intervat & Myminfin Edi"
-msgstr ""
+msgstr "Belgijski Intervat in Myminfin Edi"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_intrastat
@@ -21944,8 +23339,9 @@ msgstr "Belgijska plačilna lista - prisotnost"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll_fix
+#, fuzzy
 msgid "Belgian Payroll - Holiday Attest Fix"
-msgstr ""
+msgstr "Belgijski obračun plač – popravek potrdila o dopustu"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_blackbox_be
@@ -21983,8 +23379,9 @@ msgstr "Belgija - Računovodska poročila - SMS"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_reports_client_nihil
+#, fuzzy
 msgid "Belgium - Accounting Reports Client Nihil"
-msgstr ""
+msgstr "Belgija - Računovodska poročila Client Nihil"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_fiscal_categories_fleet
@@ -22022,8 +23419,9 @@ msgstr "Belgijske plačne liste - Dimona"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll_dimona_auto
+#, fuzzy
 msgid "Belgium - Payroll - Dimona - Automation"
-msgstr ""
+msgstr "Belgijske plačne liste - Dimona - Avtomatizacija"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll_acerta
@@ -22100,8 +23498,9 @@ msgstr "Benin - Knjigovodstvo"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_bj_reports
+#, fuzzy
 msgid "Benin - Accounting Reports"
-msgstr ""
+msgstr "Benin - Računovodska poročila"
 
 #. module: base
 #: model:res.country,name:base.bm
@@ -22443,8 +23842,9 @@ msgstr "Most za spletno prodajo za Brazilijo"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_esg_csrd_hr_fleet
+#, fuzzy
 msgid "Bridge between ESG with CSRD and ESG - Fleet"
-msgstr ""
+msgstr "Povezava med ESG s CSRD in ESG - Vozni park"
 
 #. module: base
 #: model:ir.module.module,description:base.module_iap_crm
@@ -22466,8 +23866,9 @@ msgstr "Most med MRP - proizvodnjo in računovodstvom"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_purchase_accountant
+#, fuzzy
 msgid "Bridge between Purchase and Accounting"
-msgstr ""
+msgstr "Most med nabavo in računovodstvom"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_account_accountant
@@ -22858,8 +24259,9 @@ msgstr "CRM v avtomatizaciji trženja"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_esg_csrd
+#, fuzzy
 msgid "CSRD integration with ESG"
-msgstr ""
+msgstr "Integracija CSRD z ESG"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__cst6cdt
@@ -22900,10 +24302,13 @@ msgstr "Pekarna"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_esg
+#, fuzzy
 msgid ""
 "Calculate and report your company's Environmental, Social, and Governance "
 "impact."
 msgstr ""
+"Izračunajte in poročajte o okoljskem, družbenem in upravljavskem vplivu "
+"vašega podjetja."
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_act_window_view__view_mode__calendar
@@ -23111,8 +24516,9 @@ msgstr "Nastavitev ni možno podvajati!"
 #. module: base
 #. odoo-python
 #: code:addons/models.py:0
+#, fuzzy
 msgid "Cannot grab a lock on records"
-msgstr ""
+msgstr "Zaklepa zapisov ni mogoče pridobiti"
 
 #. module: base
 #. odoo-python
@@ -23129,8 +24535,9 @@ msgstr ""
 #. module: base
 #. odoo-python
 #: code:addons/models.py:0
+#, fuzzy
 msgid "Cannot update a record without specifying its id or xml_id"
-msgstr ""
+msgstr "Zapisa ni mogoče posodobiti, ne da bi navedli njegov id ali xml_id"
 
 #. module: base
 #. odoo-python
@@ -23176,8 +24583,9 @@ msgstr "Kategorija"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_catering
+#, fuzzy
 msgid "Catering"
-msgstr ""
+msgstr "Gostinstvo"
 
 #. module: base
 #: model:res.country,name:base.ky
@@ -23355,6 +24763,7 @@ msgstr "Centi"
 
 #. module: base
 #: model_terms:res.company,invoice_terms_html:base.demo_company_be
+#, fuzzy
 msgid ""
 "Certain countries apply withholding at source on the amount of invoices, in "
 "accordance with their internal legislation. Any withholding at source will "
@@ -23364,6 +24773,12 @@ msgid ""
 "entirety and does not include any costs relating to the legislation of the "
 "country in which the client is located."
 msgstr ""
+"Nekatere države v skladu s svojo notranjo zakonodajo obračunavajo davčni "
+"odtegljaj od zneska računov. Morebitni davčni odtegljaj bo stranka plačala "
+"davčnim organom. Pod nobenim pogojem družba BE Company CoA ne more biti "
+"vključena v stroške, povezane z zakonodajo določene države. Celoten znesek "
+"računa je zato v celoti dolgovan družbi BE Company CoA in ne vključuje "
+"nobenih stroškov, povezanih z zakonodajo države, v kateri ima stranka sedež."
 
 #. module: base
 #: model_terms:res.company,invoice_terms_html:base.main_company
@@ -24403,8 +25818,9 @@ msgstr "Povezava spletnega odjemalca s strojno periferijo"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_codaclean
+#, fuzzy
 msgid "Connect to Codaclean and automatically import CODA statements."
-msgstr ""
+msgstr "Povežite se s Codaclean in samodejno uvozite izpiske CODA."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_gr_edi
@@ -24516,13 +25932,15 @@ msgstr "Gradbeništvo"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_construction
+#, fuzzy
 msgid "Construction Builder"
-msgstr ""
+msgstr "Gradbeni izvajalec"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_construction_developer
+#, fuzzy
 msgid "Construction Developer"
-msgstr ""
+msgstr "Gradbeni razvijalec"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_paptic
@@ -24696,8 +26114,9 @@ msgstr "Poslovno, Storitve, Tehnologija, Oblike, Ilustracije"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_cosmetics_store
+#, fuzzy
 msgid "Cosmetics Store"
-msgstr ""
+msgstr "Trgovina s kozmetiko"
 
 #. module: base
 #: model:res.country,name:base.cr
@@ -24728,11 +26147,14 @@ msgstr "Stika brez e-poštnega naslova ni mogoče ustvariti!"
 #. module: base
 #. odoo-python
 #: code:addons/fields_relational.py:0
+#, fuzzy
 msgid ""
 "Couldn't generate a company-dependent domain for field %s. The model doesn't "
 "have a 'company_id' or 'company_ids' field, and isn't company-dependent "
 "either."
 msgstr ""
+"Ni bilo mogoče ustvariti domene, odvisne od podjetja, za polje %s. Model "
+"nima polja »company_id« ali »company_ids« in tudi ni odvisen od podjetja."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model__count
@@ -25306,8 +26728,9 @@ msgstr "Hrvaška - Računovodska poročila"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_hr_edi
+#, fuzzy
 msgid "Croatia - e-invoicing"
-msgstr ""
+msgstr "Hrvaška - E-fakturiranje"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_hr_intrastat
@@ -25510,8 +26933,9 @@ msgstr "Prilagojene bližnjice"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_test_custo
+#, fuzzy
 msgid "Custom Theme (Testing suite)"
-msgstr ""
+msgstr "Tema po meri (testni sklop)"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__selection_value
@@ -25655,8 +27079,9 @@ msgstr "DIN 5008"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_din5008_expense
+#, fuzzy
 msgid "DIN 5008 - Expenses"
-msgstr ""
+msgstr "DIN 5008 - Stroški"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_din5008_industry_fsm
@@ -26032,10 +27457,13 @@ msgstr "Izbriši dejanje"
 #. module: base
 #. odoo-python
 #: code:addons/base/models/res_users.py:0
+#, fuzzy
 msgid ""
 "Deleting the public user is not allowed. Deleting this profile will "
 "compromise critical functionalities."
 msgstr ""
+"Brisanje javnega uporabnika ni dovoljeno. Brisanje tega profila bo ogrozilo "
+"ključne funkcije."
 
 #. module: base
 #. odoo-python
@@ -26174,8 +27602,9 @@ msgstr "Danska - Uvoz SAF-T"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_dk_nemhandel
+#, fuzzy
 msgid "Denmark EDI - Nemhandel"
-msgstr ""
+msgstr "Danska EDI – Nemhandel"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__depends
@@ -26202,8 +27631,9 @@ msgstr "Odvisnost"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_deposit_management
+#, fuzzy
 msgid "Deposit Management"
-msgstr ""
+msgstr "Upravljanje depozitov"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment__description
@@ -26743,8 +28173,9 @@ msgstr "Dokumenti - Kenijska plačilna lista"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_documents_l10n_mx_hr_payroll_account_edi
+#, fuzzy
 msgid "Documents - Mexican Payroll"
-msgstr ""
+msgstr "Dokumenti - Mehiška plačilna lista"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_documents_hr_payroll
@@ -26797,8 +28228,9 @@ msgstr "Preglednica dokumentov"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_documents_full
 #: model:ir.module.module,summary:base.module_test_documents_full
+#, fuzzy
 msgid "Documents Testing Module"
-msgstr ""
+msgstr "Modul za testiranje dokumentov"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_documents_account_peppol
@@ -26916,8 +28348,11 @@ msgstr "dong"
 
 #. module: base
 #: model:res.partner,website_short_description:base.res_partner_address_3
+#, fuzzy
 msgid "Douglas Fletcher is a mighty functional consultant at Acme Corporation"
 msgstr ""
+"Douglas Fletcher je izjemen funkcionalni svetovalec v podjetju Acme "
+"Corporation"
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_address_3
@@ -27051,8 +28486,9 @@ msgstr "Elektronsko fakturiranje s SInvoice by Viettel"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_tw_edi_ecpay_website_sale
+#, fuzzy
 msgid "ECpay E-invoice bridge module for Ecommerce"
-msgstr ""
+msgstr "Modul mostu ECpay za e-račune v e-trgovini"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_localizations_edi
@@ -27099,13 +28535,15 @@ msgstr "ESG"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_esg_csrd
+#, fuzzy
 msgid "ESG CSRD"
-msgstr ""
+msgstr "ESG CSRD"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_esg_csrd_hr_fleet
+#, fuzzy
 msgid "ESG CSRD - Fleet"
-msgstr ""
+msgstr "ESG CSRD - Vozni park"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_esg_hr
@@ -27587,11 +29025,15 @@ msgstr "Dobava energije"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_uy_edi_stock
+#, fuzzy
 msgid ""
 "Enhances stock picking operations with compliant electronic delivery guides "
 "(e-Remitos) for Uruguay. This module integrates with the EDI system to "
 "generate e-Remitos according to Uruguayan fiscal requirements."
 msgstr ""
+"Izboljšuje operacije skladiščnih premikov s skladnimi elektronskimi "
+"dobavnicami (e-Remitos) za Urugvaj. Ta modul se integrira s sistemom EDI za "
+"ustvarjanje e-Remitosov v skladu z urugvajskimi davčnimi zahtevami."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_crm_iap_enrich
@@ -28268,8 +29710,9 @@ msgstr "Evropa/Malta"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__europe/mariehamn
+#, fuzzy
 msgid "Europe/Mariehamn"
-msgstr ""
+msgstr "Europe/Mariehamn"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__europe/minsk
@@ -28758,9 +30201,12 @@ msgstr "Izvoz je dokončan"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_pl_edi
+#, fuzzy
 msgid ""
 "Export FA(3) compliant XML invoices and prepare for integration with KSeF."
 msgstr ""
+"Izvozite račune XML, skladne s FA(3), in jih pripravite za integracijo s "
+"KSeF."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_exports__export_fields
@@ -29066,14 +30512,16 @@ msgstr ""
 #. module: base
 #. odoo-python
 #: code:addons/fields_relational.py:0
+#, fuzzy
 msgid "Failed to read field %s"
-msgstr ""
+msgstr "Polja %s ni bilo mogoče prebrati"
 
 #. module: base
 #. odoo-python
 #: code:addons/fields_relational.py:0
+#, fuzzy
 msgid "Failed to write field %s"
-msgstr ""
+msgstr "Polja %s ni bilo mogoče zapisati"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron__failure_count
@@ -29550,8 +30998,9 @@ msgstr "Finska prodaja"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fi_intrastat
+#, fuzzy
 msgid "Finnish Intrastat Declaration"
-msgstr ""
+msgstr "Finska Intrastat prijava"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_company__font__fira_mono
@@ -29642,8 +31091,9 @@ msgstr "Cvetličar, Vrtovi, Cvetovi, Narava, Zeleno, Lepota, Trgovine"
 
 #. module: base
 #: model:res.partner,website_short_description:base.res_partner_address_4
+#, fuzzy
 msgid "Floyd Steward is a mighty analyst at Acme Corporation."
-msgstr ""
+msgstr "Floyd Steward je izjemen analitik v podjetju Acme Corporation."
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_address_4
@@ -29850,10 +31300,13 @@ msgstr "Trgovanje s fosilnimi gorivi"
 #. module: base
 #. odoo-python
 #: code:addons/models.py:0
+#, fuzzy
 msgid ""
 "Found more than 10 errors and more than one error per 10 records, "
 "interrupted to avoid showing too many errors."
 msgstr ""
+"Najdenih je bilo več kot 10 napak in več kot ena napaka na 10 zapisov; "
+"prekinjeno, da se izognemo prikazu prevelikega števila napak."
 
 #. module: base
 #. odoo-python
@@ -29898,8 +31351,9 @@ msgstr "Francija - Računovodska poročila"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fr_facturx_chorus_pro
+#, fuzzy
 msgid "France - BIS3 integration for Chorus Pro"
-msgstr ""
+msgstr "Francija - integracija BIS3 za Chorus Pro"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fr_fec_import
@@ -30640,8 +32094,9 @@ msgstr ""
 #. module: base
 #. odoo-python
 #: code:addons/models.py:0
+#, fuzzy
 msgid "Grouping by HTML properties is not supported."
-msgstr ""
+msgstr "Združevanje glede na lastnosti HTML ni podprto."
 
 #. module: base
 #. odoo-python
@@ -30736,8 +32191,9 @@ msgstr "Gvatemala - e-fakturiranje"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_gt_edi_pos
+#, fuzzy
 msgid "Guatemalan Accounting EDI for POS"
-msgstr ""
+msgstr "Gvatemalsko računovodsko EDI za prodajno točko"
 
 #. module: base
 #: model:res.country,name:base.gg
@@ -30852,8 +32308,9 @@ msgstr "HMRC"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_esg_csrd_hr
+#, fuzzy
 msgid "HR - ESG CSRD"
-msgstr ""
+msgstr "ČV - ESG CSRD"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_livechat
@@ -30877,8 +32334,9 @@ msgstr "HR organigram"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_esg_csrd_hr
+#, fuzzy
 msgid "HR integration with ESG CSRD"
-msgstr ""
+msgstr "Integracija človeških virov z ESG CSRD"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__hst
@@ -31219,8 +32677,9 @@ msgstr "Počitniška hiša"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_holidays_homeworking
+#, fuzzy
 msgid "Holidays with Remote Work"
-msgstr ""
+msgstr "Dopusti z delom na daljavo"
 
 #. module: base
 #: model:res.country,name:base.va
@@ -31271,8 +32730,9 @@ msgstr "Hong Kong - Plačni seznam"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_hk_hr_payroll_empf
+#, fuzzy
 msgid "Hong Kong - Payroll eMPF"
-msgstr ""
+msgstr "Hong Kong - Plačni seznam eMPF"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_hk_hr_payroll_account
@@ -31288,8 +32748,9 @@ msgstr "Hong Kong"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_hospitaility
+#, fuzzy
 msgid "Hospitaility"
-msgstr ""
+msgstr "Gostinstvo"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_hospitality
@@ -31620,8 +33081,9 @@ msgstr "IT/Komunikacije"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_ar_reports_simple
+#, fuzzy
 msgid "IVA Simple Reporting for Argentinean Localization"
-msgstr ""
+msgstr "Poročanje IVA Simple za argentinsko lokalizacijo"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_iap_extract
@@ -31663,11 +33125,15 @@ msgstr ""
 
 #. module: base
 #: model_terms:res.company,invoice_terms_html:base.demo_company_be
+#, fuzzy
 msgid ""
 "If a payment is still outstanding more than sixty (60) days after the due "
 "payment date, BE Company CoA reserves the right to call on the services of a "
 "debt recovery company. All legal expenses will be payable by the client."
 msgstr ""
+"Če plačilo še vedno ni poravnano več kot šestdeset (60) dni po datumu "
+"zapadlosti plačila, si družba BE Company CoA pridržuje pravico najeti "
+"podjetje za izterjavo dolgov. Vse pravne stroške bo poravnala stranka."
 
 #. module: base
 #: model_terms:res.company,invoice_terms_html:base.main_company
@@ -31920,8 +33386,9 @@ msgstr "Slika Mixin"
 #. module: base
 #. odoo-python
 #: code:addons/fields_binary.py:0
+#, fuzzy
 msgid "Image is not encoded in base64."
-msgstr ""
+msgstr "Slika ni kodirana v base64."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_upgrade
@@ -32059,8 +33526,9 @@ msgstr "Uvozi podatke iz WinBooks"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_lazada
+#, fuzzy
 msgid "Import Lazada orders and sync deliveries"
-msgstr ""
+msgstr "Uvoz naročil Lazada in sinhronizacija dostav"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_bank_statement_import_ofx
@@ -32149,12 +33617,16 @@ msgstr ""
 
 #. module: base
 #: model_terms:res.company,invoice_terms_html:base.demo_company_be
+#, fuzzy
 msgid ""
 "In order for it to be admissible, BE Company CoA must be notified of any "
 "claim by means of a letter sent by recorded delivery to its registered "
 "office within 8 days of the delivery of the goods or the provision of the "
 "services."
 msgstr ""
+"Da bi bil dopusten, mora biti BE Company CoA o vsakem zahtevku obveščen s "
+"pismom, poslanim s priporočeno pošiljko na njegov registrirani sedež v roku "
+"8 dni od dobave blaga ali opravljanja storitev."
 
 #. module: base
 #: model_terms:res.company,invoice_terms_html:base.main_company
@@ -32620,8 +34092,9 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_dpopay
+#, fuzzy
 msgid "Integrate your POS with DPO payment terminal."
-msgstr ""
+msgstr "Integrirajte svoj POS s plačilnim terminalom DPO"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_pine_labs
@@ -32636,8 +34109,9 @@ msgstr "Integrirajte svoj POS z avtomatsko napravo Glory za plačilo v gotovini"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_mollie
+#, fuzzy
 msgid "Integrate your POS with a Mollie payment terminal"
-msgstr ""
+msgstr "Integrirajte svoj POS s plačilnim terminalom Mollie"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_razorpay
@@ -32804,11 +34278,15 @@ msgstr "Samo-opazovalna poročila o predmetih"
 #. module: base
 #. odoo-python
 #: code:addons/models.py:0
+#, fuzzy
 msgid ""
 "Invalid \"order\" specified (%s). A valid \"order\" specification is a comma-"
 "separated list of valid field names (optionally followed by asc/desc for the "
 "direction)"
 msgstr ""
+"Določen je neveljaven \"order\" (%s). Veljavna specifikacija \"order\" je z "
+"vejicami ločen seznam veljavnih imen polj (po želji mu sledi asc/desc za "
+"določitev smeri)"
 
 #. module: base
 #. odoo-python
@@ -33006,10 +34484,13 @@ msgstr ""
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_default.py:0
+#, fuzzy
 msgid ""
 "Invalid value in Default Value field. Expected type '%(field_type)s' for '%"
 "(model_name)s.%(field_name)s'."
 msgstr ""
+"Neveljavna vrednost v polju Privzeta vrednost. Pričakovan je tip '%"
+"(field_type)s' za '%(model_name)s.%(field_name)s'."
 
 #. module: base
 #. odoo-python
@@ -33307,6 +34788,7 @@ msgstr ""
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_3
+#, fuzzy
 msgid ""
 "It undertakes and promotes research in the field of fluid\n"
 "                    dynamics. It possesses about fifty different wind "
@@ -33324,11 +34806,23 @@ msgid ""
 "well\n"
 "                    as industries."
 msgstr ""
+"Izvaja in spodbuja raziskave na področju dinamike\n"
+"                    tekočin. Ima približno petdeset različnih vetrovnikov,\n"
+"                    turbostrojev in drugih specializiranih preskusnih "
+"naprav, od katerih\n"
+"                    so nekatere edinstvene ali največje na svetu. Obsežne\n"
+"                    raziskave eksperimentalnih, računalniških in teoretičnih "
+"vidikov tokov plinov in tekočin se izvajajo pod\n"
+"                    vodstvom profesorjev in raziskovalnih inženirjev, "
+"financirajo pa jih predvsem\n"
+"                    vladne in mednarodne agencije ter\n"
+"                    industrijska podjetja."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_it_intrastat
+#, fuzzy
 msgid "Italian Intrastat Declaration"
-msgstr ""
+msgstr "Italijanska Intrastat prijava"
 
 #. module: base
 #: model:res.country,name:base.it
@@ -33512,8 +35006,9 @@ msgstr "Jordanske plačne liste s knjigovodstvom"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_jo_edi_pos
+#, fuzzy
 msgid "Jordan Accounting EDI for POS"
-msgstr ""
+msgstr "Jordansko računovodsko EDI za prodajno točko"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_jo_edi
@@ -33707,8 +35202,9 @@ msgstr "Kiribati"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_mrp
+#, fuzzy
 msgid "Kit Availability"
-msgstr ""
+msgstr "Razpoložljivost kompleta"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_mrp_renting
@@ -34445,8 +35941,9 @@ msgstr "Limit"
 #. module: base
 #. odoo-python
 #: code:addons/base/models/res_users.py:0
+#, fuzzy
 msgid "Limit of %s API keys is reached for programmatic creation"
-msgstr ""
+msgstr "Dosežena je omejitev %s ključev API za programsko ustvarjanje"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_logging__line
@@ -34940,8 +36437,9 @@ msgstr "Makao"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_machine_tool_rental
+#, fuzzy
 msgid "Machine & Tools Rental"
-msgstr ""
+msgstr "Najem strojev in orodij"
 
 #. module: base
 #: model:res.country,name:base.mg
@@ -35188,8 +36686,9 @@ msgstr "Upravljanje integracij oglasnih desk s spletnim mestom"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_mrp
+#, fuzzy
 msgid "Manage Kit product inventory & availability"
-msgstr ""
+msgstr "Upravljaj zalogo izdelkov kompleta & razpoložljivost"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_room
@@ -35318,8 +36817,9 @@ msgstr "Upravljanje prostega časa v PaySlips Enterprise"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_databases
+#, fuzzy
 msgid "Manage a fleet of Odoo databases"
-msgstr ""
+msgstr "Upravljajte floto podatkovnih zbirk Odoo"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_forum
@@ -35416,8 +36916,9 @@ msgstr "Upravljanje fiskalnih kategorij z voznimi parki"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_holidays_homeworking
+#, fuzzy
 msgid "Manage holidays with remote work"
-msgstr ""
+msgstr "Upravljanje dopustov z delom na daljavo"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_stock
@@ -35760,13 +37261,15 @@ msgstr "Mavretanija"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mr
+#, fuzzy
 msgid "Mauritania - Accounting"
-msgstr ""
+msgstr "Mavretanija - Računovodstvo"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mr_reports
+#, fuzzy
 msgid "Mauritania - Accounting Reports"
-msgstr ""
+msgstr "Mavretanija - Računovodska poročila"
 
 #. module: base
 #: model:res.country,name:base.mu
@@ -35802,10 +37305,13 @@ msgstr "Mayotte"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_esg_hr_fleet
+#, fuzzy
 msgid ""
 "Measure fleet emissions based on your employees' commuting distance and "
 "vehicle data."
 msgstr ""
+"Izmerite emisije voznega parka na podlagi razdalje, ki jo vaši zaposleni "
+"prevozijo na poti na delo, in podatkov o vozilih."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_room
@@ -35826,8 +37332,9 @@ msgstr "Klub članov"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mental_therapy
+#, fuzzy
 msgid "Mental Therapy"
-msgstr ""
+msgstr "Duševna terapija"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_ui_menu
@@ -35897,10 +37404,13 @@ msgstr "Spoji z ročnim preverjanjem"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_peppol_advanced_fields
+#, fuzzy
 msgid ""
 "Merged prematurly, not working correctly. Please don't use. Better solution "
 "coming soon."
 msgstr ""
+"Prezgodaj združeno, ne deluje pravilno. Prosimo, ne uporabljajte. Kmalu "
+"prihaja boljša rešitev."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_logging__message
@@ -36232,8 +37742,9 @@ msgstr "Razno"
 #. module: base
 #. odoo-python
 #: code:addons/template_inheritance.py:0
+#, fuzzy
 msgid "Missing 'expr' attribute in xpath specification"
-msgstr ""
+msgstr "Manjka atribut 'expr' v specifikaciji xpath"
 
 #. module: base
 #. odoo-python
@@ -36250,6 +37761,7 @@ msgstr ""
 #. module: base
 #. odoo-python
 #: code:addons/models.py:0
+#, fuzzy
 msgid ""
 "Missing required value for the field %(field_display)s.\n"
 "Model: %(model_display)s\n"
@@ -36257,6 +37769,13 @@ msgid ""
 "- delete: another model requires the record being deleted, you can archive "
 "it instead\n"
 msgstr ""
+"Manjkajoča zahtevana vrednost za polje %(field_display)s.\n"
+"Model: %(model_display)s\n"
+"- ustvarjanje/posodabljanje: obvezno polje ni nastavljeno\n"
+"- brisanje: drug model zahteva zapis, ki se briše; namesto tega ga lahko "
+"arhivirate\n"
+"\n"
+"Lokacija: code:addons/models.py:0"
 
 #. module: base
 #. odoo-python
@@ -36569,8 +38088,9 @@ msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_module_uninstall__module_ids
+#, fuzzy
 msgid "Module(s)"
-msgstr ""
+msgstr "Modul(i)"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_category__module_ids
@@ -37149,8 +38669,9 @@ msgstr "Nigerija - Računovodska poročila"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_night_clubs
+#, fuzzy
 msgid "Night Clubs"
-msgstr ""
+msgstr "Nočni klubi"
 
 #. module: base
 #: model:res.country,name:base.nu
@@ -37193,8 +38714,9 @@ msgstr "Trenutno nobena skupina ne dovoljuje te operacije."
 #. module: base
 #. odoo-python
 #: code:addons/fields_relational.py:0
+#, fuzzy
 msgid "No inverse field \"%(inverse_field)s\" found for \"%(comodel)s\""
-msgstr ""
+msgstr "Za \"%(comodel)s\" ni bilo najdeno inverzno polje \"%(inverse_field)s\""
 
 #. module: base
 #. odoo-python
@@ -37290,8 +38812,9 @@ msgstr "Brez"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_non_profit_organization
+#, fuzzy
 msgid "Nonprofit organization"
-msgstr ""
+msgstr "Neprofitna organizacija"
 
 #. module: base
 #: model:res.country,name:base.nf
@@ -37470,6 +38993,7 @@ msgstr "Predmet:"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_blog
+#, fuzzy
 msgid ""
 "Odoo Blog\n"
 "----------\n"
@@ -37577,9 +39101,128 @@ msgid ""
 "do\n"
 "not have to configure things twice.\n"
 msgstr ""
+"Odoo Blog\n"
+"----------\n"
+"\n"
+"Pišite, oblikujte, promovirajte in pritegnite obiskovalce z <a "
+"href=\"https://www.odoo.com/app/blog\">Odoo Blogom</a>.\n"
+"\n"
+"Izrazite se s poslovno blogersko platformo Odoo. Pišite\n"
+"čudovite objave na blogu, pritegnite obiskovalce, prevajajte vsebino in "
+"moderirajte\n"
+"družbene tokove.\n"
+"\n"
+"Zagotovite učinkovito uvrstitev svojih objav na blogu v Googlu in jih "
+"prevedite v več\n"
+"jezikov z le nekaj kliki.\n"
+"\n"
+"Pišite čudovite objave na blogu\n"
+"--------------------------\n"
+"\n"
+"Povlecite in spustite dobro zasnovane *»gradnike«* za ustvarjanje čudovitih "
+"objav na blogu,\n"
+"ki popolnoma vključujejo slike, videoposnetke, pozive k dejanju, citate, "
+"pasice,\n"
+"itd.\n"
+"\n"
+"Z našim edinstvenim pristopom *»urejanja v vrstici«* vam za ustvarjanje\n"
+"odlične, privlačne vsebine ni treba biti oblikovalec. Vsaka objava na blogu "
+"bo videti,\n"
+"kot da jo je oblikoval profesionalni oblikovalec.\n"
+"\n"
+"Samodejno prevajanje, ki ga opravijo strokovnjaki\n"
+"--------------------------------------\n"
+"\n"
+"Svoje objave na blogu brez truda prevedite v več jezikov. Naša funkcija "
+"prevajanja »na zahtevo«\n"
+"vam omogoča, da izkoristite storitve profesionalnih prevajalcev, ki "
+"samodejno prevedejo vse vaše spremembe. (\\$0.05 na besedo)\n"
+"Prevedene različice se samodejno posodobijo, ko jih prevedejo profesionalni "
+"prevajalci\n"
+"(približno 32 ur).\n"
+"\n"
+"Pritegnite svoje obiskovalce\n"
+"-------------------------\n"
+"\n"
+"Vgrajena funkcija klepeta v živo na spletnem mestu vam omogoča, da začnete "
+"klepetati v realnem času s\n"
+"svojimi obiskovalci, pridobite povratne informacije o svojih najnovejših "
+"objavah ali dobite ideje za pisanje novih objav.\n"
+"\n"
+"Pritegovanje obiskovalcev je tudi odličen način za pretvorbo obiskovalcev v\n"
+"stranke.\n"
+"\n"
+"Gradite zvestobo obiskovalcev\n"
+"---------------------\n"
+"\n"
+"Gumb za *sledenje* z enim klikom bo obiskovalcem omogočil, da brez truda "
+"prejemajo vaše objave na blogu po\n"
+"e-pošti, ne da bi se morali registrirati. Ikone družbenih omrežij "
+"obiskovalcem omogočajo preprosto\n"
+"sledenje vašim najboljšim objavam na blogu.\n"
+"\n"
+"Integracija z Google Analytics\n"
+"----------------------------\n"
+"\n"
+"Pridobite jasen pregled svojega prodajnega lijaka. Odoojevi sledilniki "
+"Google Analytics\n"
+"so privzeto konfigurirani za sledenje vsem vrstam dogodkov, povezanih z "
+"nakupovalnimi\n"
+"vozički, pozivi k dejanju itd.\n"
+"\n"
+"Ker so Odoojeva marketinška orodja (množično pošiljanje e-pošte, kampanje "
+"itd.) prav tako povezana z\n"
+"Google Analytics, dobite 360-stopinjski pregled svojega poslovanja.\n"
+"\n"
+"SEO-optimizirane objave na blogu\n"
+"------------------------\n"
+"\n"
+"Orodja SEO so pripravljena za uporabo in ne zahtevajo konfiguracije. Odoo "
+"predlaga\n"
+"ključne besede za vaše naslove glede na najbolj iskane izraze v Googlu, "
+"Google\n"
+"Analytics spremlja zanimanja vaših obiskovalcev, zemljevidi spletnih mest se "
+"samodejno ustvarijo\n"
+"za hitro indeksiranje v Googlu itd.\n"
+"\n"
+"Sistem celo samodejno ustvarja strukturirano vsebino za učinkovito promocijo "
+"vaših\n"
+"izdelkov in dogodkov v Googlu.\n"
+"\n"
+"Teme, prijazne oblikovalcem\n"
+"------------------------\n"
+"\n"
+"Teme so odlične in jih je enostavno oblikovati. Za ustvarjanje novih\n"
+"strani, tem ali gradnikov vam ni treba razvijati. Uporabljamo čisto "
+"strukturo HTML,\n"
+"CSS [bootstrap](http://getbootstrap.com/) in naša modularnost vam omogoča "
+"enostavno\n"
+"razširjanje tem.\n"
+"\n"
+"Pristop z gradniki omogoča, da spletno mesto ostane urejeno, tudi ko končni "
+"uporabniki\n"
+"začnejo ustvarjati nove vsebine.\n"
+"\n"
+"Preproste pravice dostopa\n"
+"------------------\n"
+"\n"
+"Vsi ne potrebujejo enakega dostopa do vašega spletnega mesta. Oblikovalci "
+"upravljajo\n"
+"postavitev spletnega mesta, uredniki odobravajo vsebino, avtorji pa to "
+"vsebino pišejo.\n"
+"Tako lahko postopek objavljanja organizirate glede na svoje potrebe.\n"
+"\n"
+"Druge pravice dostopa so povezane s poslovnimi objekti (izdelki, osebami, "
+"dogodki\n"
+"itd.) in neposredno sledijo Odoojevi standardni ureditvi pravic dostopa, "
+"zato vam\n"
+"ni treba dvakrat konfigurirati nastavitev.\n"
+"\n"
+"Lokacija: model:ir.module.module,description:base.module_website_blog"
 
 #. module: base
 #: model:ir.module.module,description:base.module_crm
+#, fuzzy
 msgid ""
 "Odoo CRM\n"
 "--------\n"
@@ -37699,6 +39342,126 @@ msgid ""
 "Compare revenues with forecasts and budgets in real time.\n"
 "\n"
 msgstr ""
+"Povečajte prodajno produktivnost, izboljšajte stopnjo uspešnosti in "
+"povečajte prihodke z Odoo\n"
+"<a href=\"https://www.odoo.com/app/crm\">odprtokodnim sistemom CRM</a>.\n"
+"\n"
+"Upravljajte svoj prodajni lijak brez truda. Pridobivajte potencialne "
+"stranke, spremljajte telefonske\n"
+"klice in sestanke. Analizirajte kakovost svojih potencialnih strank za "
+"sprejemanje premišljenih odločitev\n"
+"in prihranite čas z neposredno integracijo e-pošte v aplikacijo.\n"
+"\n"
+"Vaš prodajni lijak, kot vam ustreza\n"
+"--------------------------------------\n"
+"\n"
+"Spremljajte svoj prodajni tok s pomočjo revolucionarnega pogleda kanban. "
+"Delajte\n"
+"znotraj svojega prodajnega lijaka in pridobite takojšnje vizualne "
+"informacije o naslednjih dejanjih,\n"
+"novih sporočilih, najboljših priložnostih in pričakovanih prihodkih.\n"
+"\n"
+"Enostavno upravljanje potencialnih strank\n"
+"-----------------------------------------\n"
+"\n"
+"Samodejno ustvarjajte potencialne stranke iz prejetih e-poštnih sporočil. "
+"Analizirajte učinkovitost\n"
+"potencialnih strank in primerjajte uspešnost po kampanjah, kanalih ali "
+"prodajni ekipi.\n"
+"\n"
+"Poiščite podvojene zapise, združite potencialne stranke in jih v enem koraku "
+"dodelite pravemu prodajalcu. Porabite manj časa za administracijo in več "
+"časa za ocenjevanje potencialnih strank.\n"
+"\n"
+"Organizirajte svoje priložnosti\n"
+"---------------------------\n"
+"\n"
+"Organizirajte svoje priložnosti, da ostanete osredotočeni na najboljše "
+"posle. Upravljajte vse\n"
+"stike s strankami iz priložnosti, kot so e-poštna sporočila, telefonski "
+"klici,\n"
+"interna sporočila, sestanki in ponudbe.\n"
+"\n"
+"Spremljajte priložnosti, ki vas zanimajo, in bodite obveščeni o določenih "
+"dogodkih:\n"
+"dobljen ali izgubljen posel, sprememba stopnje, nova zahteva stranke itd.\n"
+"\n"
+"Integracija e-pošte in avtomatizacija\n"
+"--------------------------------\n"
+"\n"
+"Delajte z e-poštnimi aplikacijami, ki jih že vsak dan uporabljate. Ne glede "
+"na to, ali vaše\n"
+"podjetje uporablja Microsoft Outlook ali Gmail, nikomur ni treba spreminjati "
+"načina dela,\n"
+"tako da lahko vsi ostanejo produktivni.\n"
+"\n"
+"Samodejno usmerjajte, razvrščajte in filtrirajte prejeta e-poštna sporočila. "
+"Odoo CRM obravnava prejeta\n"
+"e-poštna sporočila in jih usmerja k pravim priložnostim ali prodajni ekipi. "
+"Nove potencialne stranke se\n"
+"ustvarijo sproti, zainteresirani prodajalci pa so samodejno obveščeni.\n"
+"\n"
+"Sodelovalni urnik\n"
+"--------------------\n"
+"\n"
+"Načrtujte sestanke in telefonske klice z uporabo integriranega koledarja. "
+"Svoj urnik in urnike\n"
+"sodelavcev si lahko ogledate v enem pogledu. Kot vodja lahko preprosto "
+"vidite, s čim se ukvarja vaša ekipa.\n"
+"\n"
+"Avtomatizacija potencialnih strank in trženjske kampanje\n"
+"---------------------------------------\n"
+"\n"
+"Izboljšajte uspešnost z avtomatizacijo opravil z Odoo <a href=\"https://"
+"www.odoo.com/app/crm\">CRM</a>.\n"
+"\n"
+"Uporabite naše trženjske kampanje za avtomatizacijo pridobivanja "
+"potencialnih strank, nadaljnjega spremljanja in\n"
+"promocij. Določite pravila avtomatizacije (npr. prosite prodajalca, naj "
+"pokliče, pošlje e-pošto, ...)\n"
+"na podlagi sprožilcev (20 dni ni bilo dejavnosti, odgovor na promocijsko e-"
+"pošto itd.).\n"
+"\n"
+"Optimizirajte kampanje od pridobitve potencialne stranke do zaključka, na "
+"vsakem kanalu. Sprejemajte pametnejše odločitve\n"
+"o tem, kam vlagati, in pokažite vpliv svojih trženjskih dejavnosti na končni "
+"rezultat svojega podjetja.\n"
+"\n"
+"Prilagodite svoj prodajni cikel\n"
+"--------------------------\n"
+"\n"
+"Prilagodite svoj prodajni cikel tako, da konfigurirate prodajne stopnje, ki "
+"se popolnoma ujemajo z vašim\n"
+"prodajnim pristopom. Nadzorujte statistiko za pridobivanje natančnih "
+"napovedi in izboljšajte svojo prodajno uspešnost na vsaki stopnji odnosa s "
+"stranko.\n"
+"\n"
+"Spodbujajte sodelovanje z igrifikacijo\n"
+"----------------------------------\n"
+"\n"
+"### Izkoristite naravno tekmovalnost svoje ekipe\n"
+"\n"
+"Okrepite dobre navade in izboljšajte stopnjo uspešnosti s priznanji in "
+"nagradami v realnem času, ki jih navdihujejo\n"
+"[mehanike iger](http://en.wikipedia.org/wiki/Gamification). Prodajne ekipe "
+"uskladite z jasnimi poslovnimi cilji s pomočjo izzivov, osebnih ciljev in "
+"lestvic ekip.\n"
+"\n"
+"### Lestvice\n"
+"\n"
+"Spodbujajte vodilne in tekmovalnost med prodajnimi ekipami z razmerji "
+"uspešnosti.\n"
+"\n"
+"### Osebni cilji\n"
+"\n"
+"Uporabnikom dodelite jasne cilje, da jih uskladite s cilji podjetja.\n"
+"\n"
+"### Cilji ekipe\n"
+"\n"
+"Primerjajte prihodke z napovedmi in proračuni v realnem času.\n"
+"\n"
+"\n"
+"Location: model:ir.module.module,description:base.module_crm"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_module_module__license__oeel-1
@@ -37712,6 +39475,7 @@ msgstr "Odoo Enterprise Modul"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr
+#, fuzzy
 msgid ""
 "Odoo Human Resources\n"
 "--------------------\n"
@@ -37818,9 +39582,125 @@ msgid ""
 "Compare revenues with forecasts and budgets in real time.\n"
 "\n"
 msgstr ""
+"Odoo človeški viri\n"
+"--------------------\n"
+"\n"
+"Z Odoojevim <a href=\"https://www.odoo.com/app/employees\">upravljanjem "
+"človeških virov</a>\n"
+" upravljajte najpomembnejše sredstvo v svojem podjetju: ljudi\n"
+"\n"
+"Zagotovite enostavno upravljanje vseh operacij na področju človeških virov: "
+"deljenje znanja, zaposlovanje,\n"
+"ocenjevanja, časovni izkazi, pogodbe, prisotnosti, obračun plač itd.\n"
+"\n"
+"Vsako potrebo pokriva posebna aplikacija, ki jo aktivirate na zahtevo.\n"
+"\n"
+"Upravljajte svoje zaposlene\n"
+"---------------------------\n"
+"\n"
+"Nadzirajte vse pomembne informacije v imeniku svojega podjetja. Nekatere\n"
+"informacije so omejene na vodje kadrovske službe, druge pa so javne, da "
+"lahko preprosto\n"
+"poiščete sodelavce.\n"
+"\n"
+"Zabeležite pogodbe zaposlenih in prejemajte opozorila, ko jih je treba "
+"obnoviti.\n"
+"\n"
+"Poenostavite svoj zaposlitveni proces\n"
+"-------------------------------------\n"
+"\n"
+"Indeksirajte življenjepise, spremljajte kandidate in iščite profile z <a "
+"href=\"https://www.odoo.com/app/employees\">Odoo HR</a>.\n"
+"\n"
+"Objavite ponudbe za delo in spremljajte vsako prejeto prijavo. Spremljajte "
+"kandidate\n"
+"v svojem zaposlitvenem procesu s pametnim pogledom kanban.\n"
+"\n"
+"Prihranite čas z avtomatizacijo nekaterih komunikacij s predlogami e-pošte. "
+"Življenjepisi se\n"
+"samodejno indeksirajo, kar vam omogoča preprosto iskanje določenih "
+"profilov.\n"
+"\n"
+"Podjetno družbeno omrežje\n"
+"-------------------------\n"
+"\n"
+"Odpravite informacijske silose. Delite znanje in najboljše prakse med vsemi\n"
+"zaposlenimi. Spremljajte določene osebe ali dokumente in se pridružite "
+"interesnim skupinam,\n"
+"da boste lahko delili strokovno znanje in dokumente.\n"
+"\n"
+"V realnem času komunicirajte s sodelavci prek klepeta v živo na spletnem "
+"mestu.\n"
+"\n"
+"Spremljajte čas in prisotnosti\n"
+"------------------------------\n"
+"\n"
+"Spremljajte čas, porabljen za projekte, stranke ali opravila. Preprosto je "
+"beležiti\n"
+"časovne izkaze ali preverjati prisotnost vsakega zaposlenega. Zagotovite "
+"samodejno\n"
+"knjiženje analitičnega računovodstva na podlagi časa, porabljenega za vaše "
+"projekte.\n"
+"\n"
+"Upravljanje odsotnosti\n"
+"----------------------\n"
+"\n"
+"Spremljajte število dni dopusta, ki jih je pridobil vsak zaposleni. "
+"Zaposleni vnesejo\n"
+"svoje zahteve (plačani dopust, bolniški dopust itd.), ki jih morajo vodje "
+"odobriti in\n"
+"potrditi. Vse je urejeno v le nekaj klikih. Urnik vsakega zaposlenega se\n"
+"ustrezno posodobi.\n"
+"\n"
+"Spremljajte stroške zaposlenih\n"
+"------------------------------\n"
+"\n"
+"Znebite se papirjev in spremljajte stroške zaposlenih neposredno v Odooju.\n"
+"Ne izgubljajte časa ali denarja z nadzorom celotnega postopka: potrjevanje "
+"stroškov,\n"
+"povračilo stroškov zaposlenim, knjiženje v računovodstvu in ponovno "
+"zaračunavanje\n"
+"strankam.\n"
+"\n"
+"Spremljajte redna ocenjevanja\n"
+"-----------------------------\n"
+"\n"
+"Nastavite načrte ocenjevanj in/ali ankete za svoje zaposlene ter spremljajte "
+"njihov\n"
+"razvoj. Določite korake za razgovore in Odoo bo vodje ali podrejene "
+"samodejno\n"
+"obvestil, da se pripravijo na ocenjevanja. Občasno spremljajte napredek\n"
+"svojega osebja.\n"
+"\n"
+"Povečajte zavzetost z igrifikacijo\n"
+"----------------------------------\n"
+"\n"
+"### Določite jasne cilje in zagotavljajte povratne informacije v realnem "
+"času\n"
+"\n"
+"Spodbujajte dosežke z izzivi, cilji in nagradami. Določite jasne cilje\n"
+"in zagotavljajte povratne informacije v realnem času ter oprijemljive "
+"rezultate. Najuspešnejše\n"
+"izpostavite vsemu kanalu in javno priznajte dobro opravljeno delo.\n"
+"\n"
+"### Lestvice najboljših\n"
+"\n"
+"Spodbujajte vodilne in tekmovalnost med prodajno ekipo z razmerji "
+"uspešnosti.\n"
+"\n"
+"### Osebni cilji\n"
+"\n"
+"Uporabnikom dodelite jasne cilje, da jih uskladite s cilji podjetja.\n"
+"\n"
+"### Cilji ekipe\n"
+"\n"
+"V realnem času primerjajte prihodke z napovedmi in proračuni.\n"
+"\n"
+"Lokacija: model:ir.module.module,description:base.module_hr"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp
+#, fuzzy
 msgid ""
 "Odoo Manufacturing Resource Planning\n"
 "------------------------------------\n"
@@ -37898,9 +39778,91 @@ msgid ""
 "manufacturing operations.\n"
 "\n"
 msgstr ""
+"Odoo načrtovanje proizvodnih virov\n"
+"------------------------------------\n"
+"\n"
+"Upravljajte kosovnice, načrtujte proizvodne naloge in spremljajte delovne "
+"naloge z\n"
+"aplikacijo Odoo <a href=\"https://www.odoo.com/app/manufacturing\">"
+"odprtokodnega MRP</a>.\n"
+"\n"
+"Naj Odoo upravlja vse vaše postopke sestavljanja ali proizvodnje. Samodejno "
+"načrtujte\n"
+"proizvodne in delovne naloge. Preglejte predlagano načrtovanje s pametnima "
+"pogledoma\n"
+"kanban in gantogram. Z naprednimi analitičnimi funkcijami odkrijte ozka grla "
+"pri\n"
+"zmogljivostih virov in lokacijah zalog.\n"
+"\n"
+"Učinkovito načrtujte proizvodne naloge\n"
+"--------------------------------------\n"
+"\n"
+"Proizvodne in delovne naloge se bodo samodejno načrtovale na podlagi vaših "
+"pravil\n"
+"nabave, napovedanih količin in odvisnega povpraševanja (povpraševanja po tem "
+"delu,\n"
+"ki temelji na tem, da ga porablja drug del).\n"
+"\n"
+"Opredelite prilagodljive osnovne podatke\n"
+"---------------------------------------\n"
+"\n"
+"Ustvarite lahko večnivojske kosovnice, neobvezne delovne postopke, spremembe "
+"različic\n"
+"in fiktivne kosovnice. Kosovnico lahko uporabite za komplete ali proizvodne "
+"naloge.\n"
+"\n"
+"Prilagodljivost pri vseh postopkih\n"
+"----------------------------------\n"
+"\n"
+"Ročno uredite vse predlagane postopke na kateri koli stopnji napredka. Z "
+"Odoom ne\n"
+"boste razočarani zaradi togega sistema.\n"
+"\n"
+"Načrtujte delovne naloge\n"
+"------------------------\n"
+"\n"
+"Preverite zmogljivosti virov in odpravite ozka grla. Določite delovne "
+"postopke ter\n"
+"načrtujte delovni čas in zmogljivost svojih virov. Hitro prepoznajte potrebe "
+"po virih\n"
+"in ozka grla ter zagotovite, da bo vaša proizvodnja izpolnila predvidene "
+"datume dobave.\n"
+"\n"
+"\n"
+"Produktiven uporabniški vmesnik\n"
+"-------------------------------\n"
+"\n"
+"Organizirajte proizvodne in delovne naloge po svojih željah. Naslednje "
+"naloge obdelujte\n"
+"v pogledu seznama, jih nadzorujte v pogledu koledarja in uredite predlagani "
+"urnik v\n"
+"pogledu gantograma.\n"
+"\n"
+"\n"
+"Analitika zalog in proizvodnje\n"
+"------------------------------\n"
+"\n"
+"Spremljajte spreminjanje vrednosti zalog glede na raven proizvodnih "
+"dejavnosti, ko\n"
+"napredujejo v procesu preoblikovanja.\n"
+"\n"
+"Popolnoma integrirano s poslovanjem\n"
+"-----------------------------------\n"
+"\n"
+"Zaradi popolne integracije z aplikacijama za prodajo in nabavo bo vaše "
+"načrtovanje\n"
+"proizvodnih virov natančno. Integracija z računovodstvom omogoča vrednotenje "
+"v\n"
+"računovodstvu v realnem času ter podrobnejše poročanje o stroških in "
+"prihodkih pri\n"
+"vaših proizvodnih postopkih.\n"
+"\n"
+"\n"
+"Lokacija: model:ir.module.module,description:base.module_mrp"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mass_mailing
+#, fuzzy
 msgid ""
 "Odoo Mass Mailing\n"
 "-----------------\n"
@@ -38023,6 +39985,133 @@ msgid ""
 "emails directly into the application.\n"
 "\n"
 msgstr ""
+"Odoo množično pošiljanje\n"
+"-----------------\n"
+"\n"
+"Preprosto pošljite množična sporočila svojim potencialnim strankam, "
+"prodajnim priložnostim ali kupcem\n"
+"z Odoo <a href=\"https://www.odoo.com/app/email-marketing\">e-poštnim "
+"trženjem</a>. Spremljajte\n"
+"uspešnost trženjskih kampanj, da izboljšate stopnje konverzije. Oblikujte\n"
+"profesionalna e-poštna sporočila in z nekaj kliki znova uporabite predloge.\n"
+"\n"
+"Pošiljajte profesionalna e-poštna sporočila\n"
+"------------------------\n"
+"\n"
+"V nekaj klikih uvozite zbirko podatkov o potencialnih strankah ali "
+"filtrirajte obstoječe potencialne stranke, prodajne priložnosti in\n"
+"kupce.\n"
+"\n"
+"Določite e-poštne predloge za ponovno uporabo vsebine ali posebnega "
+"oblikovanja za svoje glasilo.\n"
+"Nastavite več e-poštnih strežnikov z lastnim naslovom IP/domeno, da "
+"optimizirate stopnje odpiranja.\n"
+"\n"
+"Organizirajte trženjske kampanje\n"
+"----------------------------\n"
+"\n"
+"Oblikujte, pošiljajte in spremljajte kampanje z našo aplikacijo <a "
+"href=\"https://www.odoo.com/app/email-marketing\">Avtomatizacija "
+"potencialnih strank</a>.\n"
+"\n"
+"Pridobite statistiko o uspešnosti kampanj v realnem času, da izboljšate "
+"svojo stopnjo\n"
+"konverzije. Spremljajte poslana, prejeta, odprta in odgovorjena sporočila.\n"
+"\n"
+"Preprosto upravljajte svoje trženjske kampanje, skupine za razpravo, "
+"potencialne stranke in\n"
+"prodajne priložnosti v eni preprosti in zmogljivi platformi.\n"
+"\n"
+"Integrirano z aplikacijami Odoo\n"
+"-------------------------\n"
+"\n"
+"Pridobite dostop do funkcij množičnega pošiljanja iz vsake aplikacije Odoo "
+"in izboljšajte način, kako vaši\n"
+"uporabniki komunicirajo.\n"
+"\n"
+"Pošiljajte e-poštne predloge iz Odoovih <a href=\"https://www.odoo.com/app/"
+"email-marketing\">priložnosti CRM</a>, izberite potencialne stranke na "
+"podlagi\n"
+"trženjskih segmentov, pošiljajte <a href=\"https://www.odoo.com/app/"
+"recruitment\">ponudbe za delo</a> in avtomatizirajte\n"
+"odgovore kandidatom, znova uporabite e-poštne predloge v trženjskih "
+"kampanjah avtomatizacije potencialnih strank.\n"
+"\n"
+"Odgovori na vaša e-poštna sporočila se samodejno prikažejo v zgodovini "
+"vsakega dokumenta\n"
+"z modulom družbenega omrežja.\n"
+"\n"
+"Očistite svojo zbirko podatkov o potencialnih strankah\n"
+"------------------------\n"
+"\n"
+"Pridobite čisto zbirko podatkov o potencialnih strankah, ki se sčasoma "
+"izboljšuje z uporabo uspešnosti\n"
+"vaših e-poštnih sporočil. Odoo učinkovito obravnava povratna sporočila, "
+"ustrezno označi napačne potencialne\n"
+"stranke in vam zagotovi statistiko o kakovosti vaših potencialnih strank.\n"
+"\n"
+"Pošiljanje e-pošte z enim klikom\n"
+"---------------------\n"
+"\n"
+"Trženjski oddelek bo z veseljem delal na kampanjah. Vendar lahko možnost "
+"množičnega pošiljanja z enim klikom omogočite tudi\n"
+"vsem drugim uporabnikom za njihove lastne potencialne stranke ali "
+"dokumente.\n"
+"\n"
+"Izberite nekaj dokumentov (npr. potencialne stranke, zahtevke za podporo, "
+"dobavitelje, kandidate,\n"
+"...) in z enim klikom pošljite e-poštna sporočila njihovim stikom ter znova "
+"uporabite obstoječe e-poštne\n"
+"predloge.\n"
+"\n"
+"Spremljajte odgovore\n"
+"--------------------\n"
+"\n"
+"Funkcija klepeta vam omogoča hitrejšo in učinkovitejšo komunikacijo\n"
+"s stranko. Na podlagi odgovorov na kampanje množičnega pošiljanja samodejno "
+"ustvarite dokumente (potencialne stranke, prodajne priložnosti,\n"
+"naloge, ...). Spremljajte razpravo neposredno v poslovnih dokumentih znotraj "
+"Odooja ali prek e-pošte.\n"
+"\n"
+"Vsa pogajanja in razprave pripnite pravemu dokumentu, ustrezne vodje pa "
+"obvestite o posebnih dogodkih.\n"
+"\n"
+"Nadzorna plošča kampanj\n"
+"-------------------\n"
+"\n"
+"Pridobite vpoglede, ki jih potrebujete za pametnejše trženjske kampanje. "
+"Spremljajte statistiko\n"
+"po kampanjah: stopnje povratnih sporočil, poslana sporočila, najboljšo "
+"vsebino itd. Pregledne nadzorne plošče\n"
+"vam omogočajo neposreden pregled uspešnosti kampanj.\n"
+"\n"
+"Popolnoma integrirano z drugimi aplikacijami\n"
+"---------------------------------\n"
+"\n"
+"Določite pravila avtomatizacije (npr. prosite prodajalca, naj pokliče, "
+"pošljite e-poštno sporočilo, ...)\n"
+"na podlagi sprožilcev (brez dejavnosti že 20 dni, odgovor na promocijsko e-"
+"poštno sporočilo,\n"
+"itd.).\n"
+"\n"
+"Optimizirajte kampanje od potencialne stranke do zaključka po vseh kanalih. "
+"Sprejemajte pametnejše odločitve\n"
+"o tem, kam vlagati, in prikažite vpliv svojih trženjskih dejavnosti na "
+"končni rezultat svojega podjetja.\n"
+"\n"
+"Preprosto vključite kontaktni obrazec na svoje spletno mesto. Oddaje "
+"obrazcev samodejno ustvarijo potencialne stranke\n"
+"v Odoo CRM. Potencialne stranke lahko uporabite v trženjskih kampanjah.\n"
+"\n"
+"Upravljajte svoj <a href=\"https://www.odoo.com/app/crm\">prodajni lijak</a> "
+"brez\n"
+"napora. Privabite potencialne stranke ter spremljajte telefonske klice in "
+"sestanke. Analizirajte\n"
+"kakovost svojih potencialnih strank za sprejemanje premišljenih odločitev in "
+"prihranite čas z neposredno vključitvijo\n"
+"e-poštnih sporočil v aplikacijo.\n"
+"\n"
+"Lokacija: model:ir.module.module,description:base.module_mass_mailing"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_reports
@@ -38059,6 +40148,7 @@ msgstr "Odoo Partner"
 
 #. module: base
 #: model:ir.module.module,description:base.module_point_of_sale
+#, fuzzy
 msgid ""
 "Odoo Point of Sale\n"
 "-----------------------------\n"
@@ -38185,6 +40275,137 @@ msgid ""
 "interaction history, profiles, and more.\n"
 "\n"
 msgstr ""
+"Odoojevo <a href=\"https://www.odoo.com/app/point-of-sale-shop\">prodajno "
+"mesto</a>\n"
+"predstavlja izjemno čist vmesnik brez potrebe po namestitvi, ki deluje\n"
+"spletno in brez povezave na sodobni strojni opremi.\n"
+"\n"
+"Popolna integracija z zalogo in računovodstvom podjetja vam omogoča "
+"statistične\n"
+"podatke v realnem času ter konsolidacijo med vsemi trgovinami brez težav, ki "
+"jih\n"
+"povzroča povezovanje več aplikacij.\n"
+"\n"
+"Uporabite strojno opremo, ki jo že imate\n"
+"---------------------------------------\n"
+"\n"
+"### V spletnem brskalniku\n"
+"\n"
+"Odoo POS je spletna aplikacija, ki lahko deluje v kateri koli napravi, ki "
+"lahko\n"
+"prikazuje spletna mesta, pri čemer je potrebna le minimalna ali nobena "
+"nastavitev.\n"
+"\n"
+"### Zaslon na dotik ali tipkovnica?\n"
+"\n"
+"Prodajno mesto deluje brezhibno na vseh vrstah naprav z zaslonom na dotik, "
+"naj gre\n"
+"za tablične računalnike z večdotikovnim zaslonom, kot je iPad, ali terminale "
+"z\n"
+"uporovnim zaslonom na dotik brez tipkovnice.\n"
+"\n"
+"### Tehtnice in tiskalniki\n"
+"\n"
+"Čitalniki črtnih kod in tiskalniki so podprti že takoj, brez nastavitev. "
+"Tehtnice,\n"
+"blagajne in druge zunanje naprave lahko uporabljate s posredniškim API-jem.\n"
+"\n"
+"Spletno in brez povezave\n"
+"------------------------\n"
+"\n"
+"### Odoo POS ostane zanesljiv, tudi če vaša povezava ni\n"
+"\n"
+"Nove trgovine uvedite le z internetno povezavo: **brez namestitve in brez "
+"potrebe\n"
+"po posebni strojni opremi**. Deluje z vsakim **iPadom, tabličnim "
+"računalnikom,\n"
+"prenosnikom** ali industrijskim POS-sistemom.\n"
+"\n"
+"Čeprav je za zagon prodajnega mesta potrebna internetna povezava, bo "
+"delovalo\n"
+"tudi po popolni prekinitvi povezave.\n"
+"\n"
+"\n"
+"Izjemno čist uporabniški vmesnik\n"
+"--------------------------------\n"
+"\n"
+"### Preprosto in čudovito\n"
+"\n"
+"Poslovite se od grde in zastarele programske opreme POS ter uživajte v "
+"spletnem\n"
+"vmesniku Odoo, zasnovanem za sodobne trgovce.\n"
+"\n"
+"### Zasnovano za produktivnost\n"
+"\n"
+"Ne glede na to, ali gre za restavracijo ali trgovino, lahko aktivirate več\n"
+"naročil vzporedno, da vašim strankam ne bo treba čakati.\n"
+"\n"
+"### Bliskovito hitro iskanje\n"
+"\n"
+"Skenirajte izdelke, brskajte po hierarhičnih kategorijah ali pridobite "
+"hitre\n"
+"informacije o izdelkih z bliskovito hitrim filtrom za vse vaše izdelke.\n"
+"\n"
+"Integrirano upravljanje zalog\n"
+"-----------------------------\n"
+"\n"
+"V realnem času združite vse svoje prodajne ekipe: trgovine, e-trgovino in "
+"prodajne\n"
+"ekipe. Pridobite nadzor nad zalogo v realnem času ter natančne napovedi za\n"
+"upravljanje nabave.\n"
+"\n"
+"Celoten sistem za upravljanje skladišča na dosegu roke: pridobite "
+"informacije o\n"
+"razpoložljivosti izdelkov, sprožite zahtevke za nabavo itd.\n"
+"\n"
+"Zagotovite storitve za stranke v trgovini\n"
+"-----------------------------------------\n"
+"\n"
+"Svojim kupcem zagotovite izjemno izkušnjo z integracijo storitev za stranke "
+"v\n"
+"trgovini. Obravnavajte popravila, spremljajte garancije, obravnavajte "
+"zahtevke\n"
+"strank, načrtujte naročila za dostavo itd.\n"
+"\n"
+"Integracija izdajanja računov in računovodstva\n"
+"----------------------------------------------\n"
+"\n"
+"Račune za stranke izdelajte z le nekaj kliki. Nadzirajte prodajo in gotovino "
+"v\n"
+"realnem času ter uporabite zmogljiva poročila Odoo za sprejemanje boljših\n"
+"odločitev in izboljšanje učinkovitosti svoje trgovine.\n"
+"\n"
+"Nič več težav z integracijo programske opreme: vsa prodaja in operacije z "
+"zalogo\n"
+"se samodejno knjižijo v vašo glavno knjigo.\n"
+"\n"
+"Enotni podatki med vsemi trgovinami\n"
+"----------------------------------\n"
+"\n"
+"Novi izdelki, cenovne strategije in promocije se samodejno uporabijo v "
+"izbranih\n"
+"trgovinah. Delajte z enotno bazo strank. Za izvajanje globalne strategije v "
+"vseh\n"
+"vaših trgovinah ni potreben zapleten vmesnik.\n"
+"\n"
+"Z Odoo kot zalednim sistemom imate sistem, ki je dokazano popolnoma primeren "
+"za\n"
+"majhne trgovine in velike multinacionalke.\n"
+"\n"
+"Spoznajte svoje stranke – v trgovini in zunaj nje\n"
+"-----------------------------------------------\n"
+"\n"
+"Uspešne blagovne znamke povezujejo vse odnose s strankami prek vseh svojih\n"
+"kanalov, da ustvarijo natančen profil stranke in komunicirajo s kupci, ko se "
+"ti\n"
+"odločajo za nakup, v trgovini ali na spletu.\n"
+"\n"
+"Z Odoo dobite 360-stopinjski pogled na stranko, vključno s prodajo prek "
+"različnih\n"
+"kanalov, zgodovino interakcij, profili in še več.\n"
+"\n"
+"\n"
+"Lokacija: model:ir.module.module,description:base.module_point_of_sale"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_module_module__license__opl-1
@@ -38193,6 +40414,7 @@ msgstr "Odoo lastniška licenca v1.0"
 
 #. module: base
 #: model:ir.module.module,description:base.module_purchase
+#, fuzzy
 msgid ""
 "Odoo Supply Chain\n"
 "-----------------\n"
@@ -38269,9 +40491,94 @@ msgid ""
 "etc.\n"
 "\n"
 msgstr ""
+"Odoo dobavna veriga\n"
+"-----------------\n"
+"\n"
+"Avtomatizirajte proces od zahtevka do plačila in nadzorujte izdajanje "
+"računov z Odoo\n"
+"<a href=\"https://www.odoo.com/app/purchase\">odprtokodno dobavno verigo</a>"
+".\n"
+"\n"
+"Avtomatizirajte nabavne predloge, zaženite zahteve za ponudbe, sledite\n"
+"nabavnim naročilom, upravljajte informacije o dobaviteljih, nadzorujte "
+"prevzem\n"
+"izdelkov in preverjajte račune dobaviteljev.\n"
+"\n"
+"Avtomatizirani nabavni predlogi\n"
+"----------------------------------\n"
+"\n"
+"Z nabavnimi pravili zmanjšajte raven zalog. Ob pravem času pridobite pravi\n"
+"nabavni predlog in tako zmanjšajte raven zalog. Izboljšajte uspešnost nabave "
+"in\n"
+"upravljanja zalog z nabavnimi pravili, ki so odvisna od ravni zalog, "
+"logističnih\n"
+"pravil, prodajnih naročil, napovedanih proizvodnih naročil itd.\n"
+"\n"
+"Zahteve za ponudbe ali nabavna naročila pošljite dobavitelju z enim klikom.\n"
+"Iz svojega nabavnega naročila dostopajte do prevzemov izdelkov in računov.\n"
+"\n"
+"Nabavni razpisi\n"
+"----------------\n"
+"\n"
+"Zaženite nabavne razpise, vključite odgovore dobaviteljev v proces in\n"
+"primerjajte predloge. Izberite najboljšo ponudbo in preprosto pošljite "
+"nabavna naročila.\n"
+"Z naknadnim poročanjem analizirajte kakovost svojih dobaviteljev.\n"
+"\n"
+"\n"
+"E-poštne integracije\n"
+"------------------\n"
+"\n"
+"Vso komunikacijo z dobavitelji v zvezi z nabavnimi naročili (ali zahtevami "
+"za ponudbe)\n"
+"vključite v nabavna naročila, da zagotovite dobro sledljivost pogajanj ali "
+"težav\n"
+"s poprodajnimi storitvami. Za sledenje težavam, povezanim z dobavitelji, "
+"uporabite\n"
+"modul za upravljanje zahtevkov.\n"
+"\n"
+"Standardna cena, povprečna cena, FIFO\n"
+"-----------------------------------\n"
+"\n"
+"Uporabite metodo kalkulacije stroškov, ki odraža vaše poslovanje: standardno "
+"ceno,\n"
+"povprečno ceno, FIFO ali LIFO. V realnem času pridobite svoje računovodske "
+"vnose\n"
+"in pravilno vrednotenje zalog; Odoo vse upravlja namesto vas, pregledno.\n"
+"\n"
+"Uvoz cenikov dobaviteljev\n"
+"--------------------------\n"
+"\n"
+"Sprejemajte pametne nabavne odločitve z uporabo najboljših cen. Preprosto "
+"uvozite cenike dobaviteljev,\n"
+"da boste lahko sprejemali pametnejše nabavne odločitve na podlagi promocij, "
+"cen,\n"
+"odvisnih od količin, in posebnih pogodbenih pogojev. Prodajno ceno lahko "
+"določite\n"
+"tudi na podlagi cen svojih dobaviteljev.\n"
+"\n"
+"Nadzor izdelkov in računov\n"
+"-----------------------------\n"
+"\n"
+"Noben izdelek ali naročilo ne bo spregledano; nadzor zalog vam omogoča "
+"upravljanje\n"
+"naknadnih naročil, vračil, prevzema izdelkov in nadzora kakovosti. Izberite "
+"pravi\n"
+"način nadzora glede na svoje potrebe.\n"
+"\n"
+"Račune dobaviteljev nadzorujte brez napora. Izberite pravi način glede na "
+"svoje\n"
+"potrebe: vnaprej ustvarite osnutke računov na podlagi nabavnih naročil ali "
+"prevzemov\n"
+"izdelkov, račune ustvarite ročno in uvozite vrstice iz nabavnih naročil "
+"itd.\n"
+"\n"
+"\n"
+"Lokacija: model:ir.module.module,description:base.module_purchase"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website
+#, fuzzy
 msgid ""
 "Odoo Website Builder\n"
 "--------------------\n"
@@ -38404,6 +40711,150 @@ msgid ""
 "Schedule, organize, promote or sell events online; conferences, trainings, "
 "webinars, etc.\n"
 msgstr ""
+"Odoo Website Builder\n"
+"--------------------\n"
+"\n"
+"Ustvarite čudovito in <a href=\"https://www.odoo.com/app/website\">"
+"brezplačno spletno mesto</a>,\n"
+"ki ga lahko preprosto prilagodite z Odoovim <a href=\"https://www.odoo.com/"
+"app/website\">izdelovalnikom spletnih mest</a>.\n"
+"\n"
+"Ustvarite spletno mesto za podjetja z našim izjemno preprostim "
+"izdelovalnikom. Uporabite skrbno\n"
+"oblikovane gradnike in vse urejajte neposredno na strani.\n"
+"\n"
+"Izkoristite poslovne funkcije, ki so na voljo takoj; e-trgovino, dogodke, "
+"bloge, objave prostih\n"
+"delovnih mest, reference strank, pozive k dejanju itd.\n"
+"\n"
+"Urejajte vse neposredno na strani\n"
+"--------------------\n"
+"\n"
+"Ustvarite čudovita spletna mesta brez tehničnega znanja. Odoov edinstveni "
+"pristop *»urejaj\n"
+"neposredno na strani«* naredi ustvarjanje spletnih mest presenetljivo "
+"preprosto. Nič več\n"
+"zapletenega zaledja; samo kliknite kamor koli in spremenite katero koli "
+"vsebino.\n"
+"\n"
+"»Želite spremeniti ceno izdelka? Ali ga želite odebeliti? Želite spremeniti "
+"naslov\n"
+"bloga?« Samo kliknite in spremenite. Kar vidite, to dobite. Resnično.\n"
+"\n"
+"Čudovito. Osupljivo lepo.\n"
+"---------------------------------\n"
+"\n"
+"Odoovi gradniki omogočajo oblikovanje sodobnih spletnih mest, ki jih s "
+"tradicionalnimi\n"
+"urejevalniki strani WYSIWYG ni mogoče ustvariti.\n"
+"\n"
+"Ne glede na to, ali gre za opise izdelkov, bloge ali statične strani, vam za "
+"ustvarjanje čistih\n"
+"vsebin ni treba biti profesionalni oblikovalec. Samo povlecite in spustite "
+"ter prilagodite\n"
+"vnaprej določene gradnike.\n"
+"\n"
+"Pripravljeno za podjetja, takoj na voljo\n"
+"--------------------------------\n"
+"\n"
+"Aktivirajte že pripravljene poslovne funkcije z enim samim klikom; e-"
+"trgovino,\n"
+"pozive k dejanju, objave prostih delovnih mest, dogodke, reference strank, "
+"bloge itd.\n"
+"\n"
+"Tradicionalne e-trgovine in sistemi CMS imajo slabo oblikovana zaledja, saj "
+"to ni njihova\n"
+"osrednja naloga. Z integracijo z Odoojem pridobite najboljšo programsko "
+"opremo za upravljanje,\n"
+"s katero lahko spremljate svoja naročila, kandidate za zaposlitev, "
+"potencialne stranke itd.\n"
+"\n"
+"Odlična mobilna izkušnja\n"
+"-------------------------\n"
+"\n"
+"Zahvaljujoč odzivnemu oblikovanju, ki temelji na Bootstrapu, pridobite "
+"mobilnim napravam\n"
+"prilagojeno spletno mesto. Vse vaše strani se samodejno prilagodijo "
+"velikosti zaslona.\n"
+"(mobilni telefoni, tablični računalniki, namizni računalniki) Ni vam treba "
+"skrbeti za mobilne\n"
+"vsebine, saj delujejo privzeto.\n"
+"\n"
+"Orodja SEO na dosegu roke\n"
+"-----------------------------\n"
+"\n"
+"Orodje *Promote* predlaga ključne besede glede na najbolj iskane izraze v "
+"Googlu.\n"
+"Orodja za optimizacijo za iskalnike so pripravljena za uporabo brez potrebne "
+"konfiguracije.\n"
+"\n"
+"Google Analytics privzeto spremlja dogodke vaše nakupovalne košarice. "
+"Zemljevid spletnega mesta\n"
+"in strukturirana vsebina se samodejno ustvarita za Googlovo indeksiranje.\n"
+"\n"
+"Več jezikov na preprost način\n"
+"-------------------------\n"
+"\n"
+"Svoje spletno mesto brez truda prevedite v več jezikov. Odoo samodejno "
+"predlaga in\n"
+"posreduje prevode po straneh ter upošteva spremembe, ki jih opravite na "
+"glavni strani.\n"
+"\n"
+"Predloge, prijazne oblikovalcem\n"
+"---------------------------\n"
+"\n"
+"Predloge so čudovite in jih je preprosto oblikovati. Za ustvarjanje novih "
+"strani, tem ali\n"
+"gradnikov vam ni treba razvijati. Uporabljamo čisto strukturo HTML in CSS\n"
+"[bootstrap](http://getbootstrap.com/).\n"
+"\n"
+"Vsako stran sproti prilagodite z vgrajenim urejevalnikom predlog. Svoje delo "
+"preprosto\n"
+"razdelite kot modul Odoo.\n"
+"\n"
+"Tekoče razporejanje v mreži\n"
+"--------------------\n"
+"\n"
+"Oblikujte popolne strani tako, da gradnike povlečete in spustite. Premikajte "
+"jih in jim\n"
+"spreminjajte velikost, da se prilegajo želeni postavitvi.\n"
+"\n"
+"Gradniki temeljijo na odzivnem, mobilnim napravam prijaznem tekočem mrežnem "
+"sistemu,\n"
+"ki se ustrezno razširi do 12 stolpcev, ko se povečata velikost naprave ali "
+"vidnega polja.\n"
+"\n"
+"Profesionalne teme\n"
+"-------------------\n"
+"\n"
+"Oblikujte temo po meri ali ponovno uporabite vnaprej določene teme, da "
+"prilagodite videz\n"
+"in občutek svojega spletnega mesta.\n"
+"\n"
+"Preprosto preizkusite novo barvno shemo; temo lahko kadar koli spremenite z "
+"enim samim\n"
+"klikom.\n"
+"\n"
+"Integrirano z aplikacijami Odoo\n"
+"-------------------------\n"
+"\n"
+"### E-trgovina\n"
+"\n"
+"Promovirajte izdelke, prodajajte prek spleta in optimizirajte nakupovalno "
+"izkušnjo obiskovalcev.\n"
+"\n"
+"\n"
+"### Blog\n"
+"\n"
+"Pišite novice, privabite nove obiskovalce in gradite zvestobo strank.\n"
+"\n"
+"\n"
+"### Spletni dogodki\n"
+"\n"
+"Načrtujte, organizirajte, promovirajte ali prodajajte dogodke prek spleta; "
+"konference, usposabljanja, spletne seminarje itd.\n"
+"\n"
+"Lokacija: model:ir.module.module,description:base.module_website"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale
@@ -39004,6 +41455,7 @@ msgstr "Ruda"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_event_track
+#, fuzzy
 msgid ""
 "Organize Events, Trainings & Webinars\n"
 "-------------------------------------\n"
@@ -39055,9 +41507,62 @@ msgid ""
 "You can activate a blog for each event allowing you to communicate on "
 "specific events. Visitors can subscribe to news to get informed."
 msgstr ""
+"Organizirajte dogodke, usposabljanja in spletne seminarje\n"
+"-------------------------------------\n"
+"\n"
+"### Načrtujte, promovirajte, prodajajte, organizirajte\n"
+"\n"
+"Za vsak dogodek pridobite dodatne funkcije; več strani, sponzorje, več "
+"predavanj, obrazec za predloge predavanj, dnevni red, novice, povezane z "
+"dogodkom, dokumente (prosojnice predstavitev), menije, specifične za "
+"dogodek.\n"
+"\n"
+"Organizirajte svoje sklope\n"
+"--------------------------\n"
+"\n"
+"### Od predloga predavanja do objave\n"
+"\n"
+"Na svojih dogodkih dodajte obrazec za predloge predavanj, da obiskovalcem "
+"omogočite oddajo predavanj in predavateljev. Organizirajte postopek "
+"potrjevanja vsakega predavanja in ga preprosto razporedite.\n"
+"\n"
+"Odoova edinstvena integracija uporabniškega vmesnika in zaledja omogoča tako "
+"preprosto organizacijo in objavo. Preprosto oblikujte čudovite biografije "
+"predavateljev in opise predavanj.\n"
+"\n"
+"Dnevni red in seznam predavanj\n"
+"------------------------------\n"
+"\n"
+"### Zmogljiv uporabniški vmesnik\n"
+"\n"
+"Za vsak dogodek pridobite čudovit dnevni red, ki se samodejno objavi na "
+"vašem spletnem mestu. Obiskovalcem omogočite preprosto iskanje in brskanje "
+"po predavanjih ter filtriranje po oznakah, lokacijah ali predavateljih.\n"
+"\n"
+"Upravljajte sponzorje\n"
+"---------------------\n"
+"\n"
+"### Prodajajte sponzorstva, promovirajte svoje sponzorje\n"
+"\n"
+"Svojim dogodkom dodajte sponzorje in jih objavite glede na raven (npr. "
+"bronasto, srebrno, zlato) na dnu vsake strani dogodka.\n"
+"\n"
+"Pakete sponzorstva prodajajte prek spletne trgovine Odoo za popolno "
+"integracijo prodajnega cikla.\n"
+"\n"
+"Učinkovito komunicirajte\n"
+"------------------------\n"
+"\n"
+"### Aktivirajte blog za nekatere dogodke\n"
+"\n"
+"Za vsak dogodek lahko aktivirate blog, kar vam omogoča komunikacijo o "
+"posameznih dogodkih. Obiskovalci se lahko naročijo na novice in tako "
+"ostanejo obveščeni.\n"
+"Location: model:ir.module.module,description:base.module_website_event_track"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_event
+#, fuzzy
 msgid ""
 "Organize Events, Trainings & Webinars\n"
 "-------------------------------------\n"
@@ -39197,6 +41702,153 @@ msgid ""
 "\n"
 "Create a great \"About us\" page by presenting your team efficiently.\n"
 msgstr ""
+"Organizirajte dogodke, usposabljanja in spletne seminarje\n"
+"-------------------------------------\n"
+"\n"
+"### Načrtujte, promovirajte, prodajajte, organizirajte\n"
+"\n"
+"Organizirajte, promovirajte in prodajajte dogodke prek spleta. Ne glede na "
+"to, ali organizirate srečanja, konference, usposabljanja ali spletne "
+"seminarje, vam Odoo zagotavlja vse funkcije, ki jih potrebujete za "
+"upravljanje dogodkov.\n"
+"\n"
+"Ustvarite odlične strani dogodkov\n"
+"--------------------------\n"
+"\n"
+"### Znebite se starih urejevalnikov WYSIWYG\n"
+"\n"
+"Ustvarite čudovite strani dogodkov tako, da z vlečenjem in spuščanjem dodate "
+"dobro zasnovane *'gradnike'*. Objavite fotografije dogodkov, govorce, urnik "
+"itd.\n"
+"\n"
+"Odoov edinstveni pristop *'urejanja v vrstici'* naredi ustvarjanje spletnih "
+"strani presenetljivo preprosto. »Želite predstaviti govorca? Spremeniti ceno "
+"vstopnice? Posodobiti pasico? Promovirati sponzorje?« Samo kliknite in "
+"spremenite.\n"
+"\n"
+"Prodajajte vstopnice prek spleta\n"
+"-------------------\n"
+"\n"
+"### Avtomatizirajte postopek registracije in plačila\n"
+"\n"
+"Prodajajte prijave na svoj dogodek s funkcijo več vstopnic. Dogodki so lahko "
+"brezplačni ali plačljivi. Udeleženci lahko plačajo prek spleta s kreditno "
+"kartico ali na podlagi računa, odvisno od vaše konfiguracije.\n"
+"\n"
+"Povečajte prodajo z zgodnjimi cenami, posebnimi pogoji za člane ali "
+"dodatnimi storitvami z več vstopnicami.\n"
+"\n"
+"Čista integracija z Google Analytics\n"
+"------------------------------------\n"
+"\n"
+"### Nadzorujte svoj prodajni lijak z Google Analytics\n"
+"\n"
+"Pridobite jasen vpogled v svoj prodajni lijak. Odoovi sledilniki Google "
+"Analytics so privzeto nastavljeni tako, da sledijo vsem vrstam dogodkov, "
+"povezanih z nakupovalnimi vozički, pozivi k dejanju itd.\n"
+"\n"
+"Ker so Odoova marketinška orodja (množično pošiljanje e-pošte, kampanje "
+"itd.) prav tako povezana z Google Analytics, dobite popoln pregled nad "
+"svojim poslovanjem.\n"
+"\n"
+"Učinkovito promovirajte dogodke\n"
+"--------------------------\n"
+"\n"
+"### Množično pošiljanje e-pošte in družbena omrežja\n"
+"\n"
+"Uporabite segmentacijo, integracijo z družbenimi omrežji in funkcije "
+"množičnega pošiljanja e-pošte, da svoje dogodke promovirate pravemu "
+"občinstvu. Nastavite avtomatizirana e-poštna sporočila za udeležence in jim "
+"pošljite zadnje podrobnosti.\n"
+"\n"
+"Teme, prijazne oblikovalcem\n"
+"------------------------\n"
+"\n"
+"### Oblikovalci radi delajo z Odoo\n"
+"\n"
+"Teme so odlične in jih je preprosto oblikovati. Za ustvarjanje novih strani, "
+"tem ali gradnikov vam ni treba programirati. Uporabljamo čisto strukturo "
+"HTML, CSS [bootstrap](http://getbootstrap.com/) in naša modularnost omogoča "
+"preprosto distribucijo vaših tem.\n"
+"\n"
+"Pristop z gradniki omogoča, da spletna stran ostane urejena, ko končni "
+"uporabniki začnejo ustvarjati nove vsebine.\n"
+"\n"
+"Poskrbite za večjo vidnost svojega dogodka\n"
+"----------------------------\n"
+"\n"
+"### Orodja SEO na dosegu roke\n"
+"\n"
+"Orodja SEO so pripravljena za uporabo in ne zahtevajo konfiguracije. Odoo "
+"predlaga ključne besede glede na najpogosteje iskane izraze v Googlu, Google "
+"Analytics sledi dogodkom vašega nakupovalnega vozička, zemljevidi spletnih "
+"mest pa se ustvarijo samodejno.\n"
+"\n"
+"Strukturirano vsebino samodejno ustvarjamo tudi za učinkovito promocijo "
+"vaših dogodkov in izdelkov v Googlu.\n"
+"\n"
+"Izkoristite družbena omrežja\n"
+"---------------------\n"
+"\n"
+"### Optimizirajte: od oglasov do konverzij\n"
+"\n"
+"Z Odoovo funkcijo urejanja v vrstici preprosto ustvarite nove pristajalne "
+"strani. Obiskovalce iz različnih marketinških kampanj usmerite na "
+"pristajalne strani dogodkov in optimizirajte konverzije.\n"
+"\n"
+"In še veliko več ...\n"
+"----------------\n"
+"\n"
+"### Načrtovanje\n"
+"\n"
+"-   Koledar dogodkov\n"
+"-   Objavljanje povezanih dokumentov\n"
+"-   Razporejanje virov\n"
+"-   Avtomatizacija nakupov (pogostitev ...)\n"
+"-   Več lokacij in organizatorjev\n"
+"-   Mobilni vmesnik\n"
+"\n"
+"### Prodaja\n"
+"\n"
+"-   Spletna ali nespletna prodaja\n"
+"-   Avtomatizirano izdajanje računov\n"
+"-   Pravilniki odpovedi\n"
+"-   Posebne cene za člane\n"
+"-   Nadzorne plošče in poročanje\n"
+"\n"
+"### Organizacija\n"
+"\n"
+"-   Napredno načrtovanje\n"
+"-   Tiskanje značk\n"
+"-   Avtomatizacija nadaljnjih e-poštnih sporočil\n"
+"-   Najmanjše/največje zmogljivosti\n"
+"-   Upravljanje tečajev in virov\n"
+"-   Ustvarjanje skupin udeležencev\n"
+"-   Avtomatizacija anket zadovoljstva\n"
+"\n"
+"Popolnoma integrirano z drugimi aplikacijami\n"
+"---------------------------------\n"
+"\n"
+"### Brezplačno pridobite na stotine odprtokodnih aplikacij\n"
+"\n"
+"\n"
+"### e-trgovina\n"
+"\n"
+"Promovirajte izdelke, prodajajte prek spleta in optimizirajte nakupovalne "
+"izkušnje obiskovalcev.\n"
+"\n"
+"\n"
+"### Blog\n"
+"\n"
+"Pišite novice, privabljajte nove obiskovalce in gradite zvestobo strank.\n"
+"\n"
+"\n"
+"### Naša ekipa\n"
+"\n"
+"Ustvarite odlično stran »O nas« tako, da učinkovito predstavite svojo "
+"ekipo.\n"
+"\n"
+"Lokacija: model:ir.module.module,description:base.module_website_event"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_project
@@ -39301,6 +41953,7 @@ msgstr ""
 
 #. module: base
 #: model_terms:res.company,invoice_terms_html:base.demo_company_be
+#, fuzzy
 msgid ""
 "Our invoices are payable within 21 working days, unless another payment "
 "timeframe is indicated on either the invoice or the order. In the event of "
@@ -39309,6 +41962,12 @@ msgid ""
 "CoA will be authorized to suspend any provision of services without prior "
 "warning in the event of late payment."
 msgstr ""
+"Naši računi so plačljivi v 21 delovnih dneh, razen če je na računu ali "
+"naročilu naveden drug plačilni rok. V primeru neplačila do datuma zapadlosti "
+"si BE Company CoA pridržuje pravico zahtevati plačilo fiksnih obresti v "
+"višini 10 % preostalega dolgovanega zneska. BE Company CoA bo v primeru "
+"zamude pri plačilu upravičena začasno ustaviti zagotavljanje vseh storitev "
+"brez predhodnega opozorila."
 
 #. module: base
 #: model_terms:res.company,invoice_terms_html:base.main_company
@@ -39470,8 +42129,9 @@ msgstr "POS Skeniranje črtne kode v mobilni napravi"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_enterprise_sms_whatsapp
+#, fuzzy
 msgid "POS Enterprise SMS Whatsapp"
-msgstr ""
+msgstr "POS za podjetja, SMS in WhatsApp"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_glory_cash
@@ -39496,8 +42156,9 @@ msgstr "POS Tržnica Pago"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_mollie
+#, fuzzy
 msgid "POS Mollie"
-msgstr ""
+msgstr "POS Mollie"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_pine_labs
@@ -39610,8 +42271,9 @@ msgstr "POS UrbanPiper - Uber Eats"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_imin
+#, fuzzy
 msgid "POS iMin"
-msgstr ""
+msgstr "POS iMin"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__prc
@@ -40252,8 +42914,9 @@ msgstr "Vzorec za oblikovanje"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_us_direct_deposit
+#, fuzzy
 msgid "Pay Vendors via Wise"
-msgstr ""
+msgstr "Plačevanje dobaviteljev prek Wise"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_appointment_account_payment
@@ -40507,8 +43170,9 @@ msgstr "Peru - Računovodska poročila"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_pe_reports_lib
+#, fuzzy
 msgid "Peru - Inventory and Balance Reports"
-msgstr ""
+msgstr "Peru - Poročila o zalogah in bilanci"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_pe_reports_stock
@@ -40696,8 +43360,9 @@ msgstr "Fotografija"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_physical_therapy
+#, fuzzy
 msgid "Physical Therapy"
-msgstr ""
+msgstr "Fizioterapija"
 
 #. module: base
 #: model:res.currency,currency_subunit_label:base.SSP
@@ -40827,8 +43492,9 @@ msgstr "PoS - Razprodaja dogodkov"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_dpopay
+#, fuzzy
 msgid "PoS DPO Pay"
-msgstr ""
+msgstr "PoS DPO Pay"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_iot_adam_scale
@@ -40929,8 +43595,9 @@ msgstr "Naročnina na prodajno mesto"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_edi_ubl
+#, fuzzy
 msgid "Point of Sale UBL"
-msgstr ""
+msgstr "Prodajna točka UBL"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_enterprise
@@ -40979,18 +43646,21 @@ msgstr "Poljske plačne liste s knjigovodstvom"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_pl_reports_account_saft
+#, fuzzy
 msgid "Poland - SAFT Income Tax Report (JPK KR PD)"
-msgstr ""
+msgstr "Poljska - poročilo SAFT o davku od dohodka (JPK KR PD)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_pl_edi
+#, fuzzy
 msgid "Polish E-Invoicing FA(3)"
-msgstr ""
+msgstr "Poljsko elektronsko izdajanje računov FA(3)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_pl_intrastat
+#, fuzzy
 msgid "Polish Intrastat Declaration"
-msgstr ""
+msgstr "Poljska Intrastat prijava"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_portal_rating
@@ -41038,8 +43708,9 @@ msgstr "Portugalska - Računovodska poročila"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_pt_intrastat
+#, fuzzy
 msgid "Portuguese Intrastat Declaration"
-msgstr ""
+msgstr "Portugalska Intrastat prijava"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_constraint__definition
@@ -41250,8 +43921,9 @@ msgstr "Primerjave izdelkov"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_product_conversion
+#, fuzzy
 msgid "Product Conversion & Grading Management"
-msgstr ""
+msgstr "Upravljanje pretvorbe in razvrščanja izdelkov"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_product_email_template
@@ -41346,8 +44018,9 @@ msgstr "Rezultati profiliranja"
 #. module: base
 #. odoo-python
 #: code:addons/base/models/res_users.py:0
+#, fuzzy
 msgid "Programmatic API keys are not enabled"
-msgstr ""
+msgstr "Programski ključi API niso omogočeni"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_cron_progress
@@ -41794,8 +44467,9 @@ msgstr "Obeti"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_lk
+#, fuzzy
 msgid "Provides accounting localizations for Sri Lanka."
-msgstr ""
+msgstr "Zagotavlja računovodske lokalizacije za Šrilanko."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mail_mobile
@@ -41894,8 +44568,9 @@ msgstr "Nabava"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_purchase_accountant
+#, fuzzy
 msgid "Purchase Accounting"
-msgstr ""
+msgstr "Računovodstvo nabave"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_purchase_requisition
@@ -42202,8 +44877,9 @@ msgstr "Qweb polje - mnogo-proti-mnogo"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_one2many
+#, fuzzy
 msgid "Qweb field one2many"
-msgstr ""
+msgstr "Qweb polje - ena-proti-mnogo"
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_R
@@ -42442,8 +45118,9 @@ msgstr "Poročanje o zaposlovanju"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_recruitment_ai
+#, fuzzy
 msgid "Recruitment With AI"
-msgstr ""
+msgstr "Zaposlovanje z umetno inteligenco"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_appointment_hr_recruitment
@@ -42453,8 +45130,9 @@ msgstr "Sledenje zaposlovanju na sestankih"
 #. module: base
 #. odoo-python
 #: code:addons/models.py:0
+#, fuzzy
 msgid "Recursion Detected."
-msgstr ""
+msgstr "Zaznana rekurzija."
 
 #. module: base
 #. odoo-python
@@ -42972,8 +45650,9 @@ msgstr "Vloga / Javno"
 
 #. module: base
 #: model:res.groups,name:base.group_user
+#, fuzzy
 msgid "Role / User"
-msgstr ""
+msgstr "Vloga / Uporabnik"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
@@ -42998,8 +45677,9 @@ msgstr "Romunija - Računovodska poročila"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ro_cpv_code
+#, fuzzy
 msgid "Romania - CPV Code"
-msgstr ""
+msgstr "Romunija - koda CPV"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ro_edi_stock
@@ -43021,8 +45701,9 @@ msgstr "Rumunija - E-fakturiranje"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ro_intrastat
+#, fuzzy
 msgid "Romania - Intrastat Declaration"
-msgstr ""
+msgstr "Romunija - Romunska Intrastat prijava"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ro_hr_payroll
@@ -44899,11 +47580,15 @@ msgstr "Preskoči te stike"
 #. module: base
 #. odoo-python
 #: code:addons/models.py:0
+#, fuzzy
 msgid ""
 "Skipping a company check for model %(model_name)s. Its fields %"
 "(field_names)s are set as company-dependent, but the model doesn't have a "
 "`company_id` or `company_ids` field!"
 msgstr ""
+"Preskakovanje preverjanja podjetja za model %(model_name)s. Njegova polja %"
+"(field_names)s so nastavljena kot odvisna od podjetja, vendar model nima "
+"polja `company_id` ali `company_ids`!"
 
 #. module: base
 #. odoo-python
@@ -44924,8 +47609,9 @@ msgstr "Slovaška"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_sk_reports
+#, fuzzy
 msgid "Slovakia - Accounting Reports"
-msgstr ""
+msgstr "Slovaška - Računovodska poročila"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_sk_hr_payroll
@@ -45174,8 +47860,9 @@ msgstr "Južni Sudan"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_spa_resort
+#, fuzzy
 msgid "Spa Resort"
-msgstr ""
+msgstr "Zdraviliško letovišče"
 
 #. module: base
 #. odoo-python
@@ -45207,8 +47894,9 @@ msgstr "Španija - Računovodska poročila (posodobitev 2024)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_es_reports_2025
+#, fuzzy
 msgid "Spain - Accounting Reports (2025 Update)"
-msgstr ""
+msgstr "Španija - Računovodska poročila (posodobitev 2025)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_es_sale_amazon
@@ -45224,8 +47912,9 @@ msgstr "Španija - Facturae EDI"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_es_intrastat
+#, fuzzy
 msgid "Spain - Intrastat Declaration"
-msgstr ""
+msgstr "Španija - Intrastat prijava"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_es_edi_tbai_pos
@@ -45565,13 +48254,15 @@ msgstr "Šrilanka"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_lk
+#, fuzzy
 msgid "Sri Lanka - Accounting"
-msgstr ""
+msgstr "Šrilanka - knjigovodstvo"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_lk_reports
+#, fuzzy
 msgid "Sri Lanka - Accounting Reports"
-msgstr ""
+msgstr "Šrilanka - Računovodska poročila"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_sequence__implementation__standard
@@ -45960,8 +48651,9 @@ msgstr "Dobavna veriga"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_pl_edi
+#, fuzzy
 msgid "Support for FA(3) electronic invoices in Poland via KSeF"
-msgstr ""
+msgstr "Podpora za elektronske račune FA(3) na Poljskem prek KSeF"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event_track_live
@@ -46025,8 +48717,9 @@ msgstr "Švedska - Računovodska poročila"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_se_returns
+#, fuzzy
 msgid "Sweden - Accounting Returns"
-msgstr ""
+msgstr "Švedska - računovodski obračuni"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_se_sie4_export
@@ -46060,8 +48753,9 @@ msgstr "Švica - Prodajna točka"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ch_hr_payroll_elm_transmission_5_3
+#, fuzzy
 msgid "Swissdec Certified Payroll ELM 5.3"
-msgstr ""
+msgstr "Certificirani obračun plač Swissdec ELM 5.3"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.language_install_view_form_lang_switch
@@ -46254,8 +48948,9 @@ msgstr "Tajvan - Elektronsko izdajanje računov"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_tw_edi_ecpay_website_sale
+#, fuzzy
 msgid "Taiwan - E-invoicing Ecommerce"
-msgstr ""
+msgstr "Tajvan - Elektronsko izdajanje računov za e-trgovino"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_company__font__tajawal
@@ -46752,8 +49447,9 @@ msgstr "Pošljite sporočila svojim stikom na WhatsAppu"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_textile_manufacturing
+#, fuzzy
 msgid "Textile Manufacturing"
-msgstr ""
+msgstr "Tekstilna proizvodnja"
 
 #. module: base
 #: model:res.country,name:base.th
@@ -46833,12 +49529,17 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in_hr_holidays
+#, fuzzy
 msgid ""
 "The Indian Time Off module provides additional features to the application. "
 "With it, you'll be able to define Sandwich Leaves on your time off type, "
 "including weekends or holidays in the duration of the employee leave's "
 "request."
 msgstr ""
+"Modul za indijske odsotnosti aplikaciji zagotavlja dodatne funkcionalnosti. "
+"Z njim boste lahko za svojo vrsto odsotnosti določili sendvične odsotnosti, "
+"kar vključuje vikende ali praznike v trajanje zahteve zaposlenega za "
+"odsotnost."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_lang__grouping
@@ -47129,12 +49830,17 @@ msgstr ""
 #. module: base
 #. odoo-python
 #: code:addons/fields_textual.py:0
+#, fuzzy
 msgid ""
 "The field value you're saving (%(model)s %(field)s) includes content that is "
 "restricted for security reasons. It is possible that someone with higher "
 "privileges previously modified it, and you are therefore not able to modify "
 "it yourself while preserving the content."
 msgstr ""
+"Vrednost polja, ki jo shranjujete (%(model)s %(field)s), vključuje vsebino, "
+"ki je iz varnostnih razlogov omejena. Možno je, da jo je predhodno spremenil "
+"nekdo z višjimi pravicami, zato je sami ne morete spreminjati, ne da bi "
+"ohranili vsebino."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_cron__first_failure_date
@@ -47468,14 +50174,17 @@ msgstr ""
 #. module: base
 #. odoo-python
 #: code:addons/base/models/res_users.py:0
+#, fuzzy
 msgid "The provided API key is invalid or does not belong to the current user."
 msgstr ""
+"Posredovani ključ API je neveljaven ali ne pripada trenutnemu uporabniku."
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/res_users.py:0
+#, fuzzy
 msgid "The provided API key is invalid."
-msgstr ""
+msgstr "Navedeni ključ API-ja je neveljaven."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_currency_rate__rate
@@ -47495,6 +50204,7 @@ msgstr "Tečaj valute v primerjavi z valuto, katerega tečaj je enak 1"
 #. module: base
 #. odoo-python
 #: code:addons/models.py:0
+#, fuzzy
 msgid ""
 "The record %(xml_id)s has the module prefix %(module_name)s. This is the "
 "part before the '.' in the external id. Because the prefix refers to an "
@@ -47503,6 +50213,11 @@ msgid ""
 "For example, __import__, resulting in the external id __import__.%"
 "(record_id)s."
 msgstr ""
+"Zapis %(xml_id)s ima predpono modula %(module_name)s. To je del pred '.' v "
+"zunanjem ID-ju. Ker se predpona nanaša na obstoječi modul, bi bil zapis ob "
+"nadgradnji modula izbrisan. Uporabite bodisi brez predpone in pike bodisi "
+"predpono, ki ni obstoječi modul. Na primer __import__, kar povzroči zunanji "
+"ID __import__.%(record_id)s."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_company__company_registry
@@ -47638,11 +50353,17 @@ msgstr "Podana vrednost (%s) mora biti pozitivna"
 #. module: base
 #. odoo-python
 #: code:addons/models.py:0
+#, fuzzy
 msgid ""
 "The value for %(field_display)s already exists.\n"
 "\n"
 "Detail: %(detail)s\n"
 msgstr ""
+"Vrednost za %(field_display)s že obstaja.\n"
+"\n"
+"Podrobnost: %(detail)s\n"
+"\n"
+"Lokacija: code:addons/models.py:0"
 
 #. module: base
 #. odoo-python
@@ -47689,8 +50410,9 @@ msgstr "Trgovina s temami"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_themes
+#, fuzzy
 msgid "Themes Testing Module"
-msgstr ""
+msgstr "Modul za testiranje tem"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.base_partner_merge_automatic_wizard_form
@@ -47858,11 +50580,14 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_dhl
+#, fuzzy
 msgid ""
 "This is the legacy integration with DHL Express that is no longer "
 "supported.         Please install the new \"DHL Express Shipping\" module "
 "and uninstall this one as soon as possible."
 msgstr ""
+"To je stara integracija z DHL Expressom, ki ni več podprta.         Prosimo, "
+"namestite novi modul »DHL Express Shipping« in čim prej odstranite tega."
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_fedex
@@ -47952,12 +50677,17 @@ msgstr "Ta modul dodaja funkcije upravljanja aplikaciji za najem in prodajo."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_add_gln
+#, fuzzy
 msgid ""
 "This module adds the Global Location Number to the partner. Used on delivery "
 "addresses, it is used to identify stock locations and is mandatory on the "
 "UBL/CII eInvoices (but not only). The module is intended be merged with "
 "account, later on, in master"
 msgstr ""
+"Ta modul partnerju doda globalno lokacijsko številko (GLN). Uporablja se na "
+"naslovih za dostavo, za identifikacijo skladiščnih lokacij in je obvezna na "
+"e-računih UBL/CII (vendar ne samo tam). Modul je namenjen poznejši združitvi "
+"z modulom account v veji master."
 
 #. module: base
 #: model:ir.module.module,description:base.module_mail_bot_hr
@@ -48016,10 +50746,13 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_whatsapp_sign
+#, fuzzy
 msgid ""
 "This module allows users to send signature requests via WhatsApp using Odoo "
 "Sign"
 msgstr ""
+"Ta modul uporabnikom omogoča pošiljanje zahtev za podpis prek WhatsAppa z "
+"uporabo Odoo Sign"
 
 #. module: base
 #: model:ir.module.module,description:base.module_iot_box_image
@@ -48311,10 +51044,12 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_enterprise_sms_whatsapp
+#, fuzzy
 msgid ""
 "This module enables communication via WhatsApp and SMS in the preparation "
 "display"
 msgstr ""
+"Ta modul omogoča komunikacijo prek WhatsAppa in SMS-ov v prikazu priprave"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_barcodelookup
@@ -48327,10 +51062,13 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_whatsapp_sign
+#, fuzzy
 msgid ""
 "This module enables users to send signature requests via WhatsApp in Odoo "
 "Sign"
 msgstr ""
+"Ta modul uporabnikom omogoča pošiljanje zahtev za podpis prek WhatsAppa v "
+"Odoo Sign"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_event_track_gantt
@@ -48409,8 +51147,10 @@ msgstr "Ta modul se uporablja za sinhronizacijo spletne banke."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_dk_nemhandel
+#, fuzzy
 msgid "This module is used to send/receive documents with Nemhandel"
 msgstr ""
+"Ta modul se uporablja za pošiljanje/prejemanje dokumentov z Nemhandelom."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_peppol
@@ -48439,6 +51179,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_themes
+#, fuzzy
 msgid ""
 "This module will help you to quickly test all the Odoo\n"
 "    themes without having to switch from one theme to another on your "
@@ -48447,6 +51188,12 @@ msgid ""
 "every\n"
 "    theme on one website."
 msgstr ""
+"Ta modul vam bo pomagal hitro preizkusiti vse Odoo\n"
+"    teme, ne da bi morali na svojem spletnem mestu preklapljati z ene teme "
+"na drugo.\n"
+"    Preprosto bo ustvaril novo spletno mesto za vsako temo Odoo in namestil "
+"vsako\n"
+"    temo na enem spletnem mestu."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_upgrade
@@ -48496,8 +51243,9 @@ msgstr "Ločilo tisočic"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_thrift_store
+#, fuzzy
 msgid "Thrift Store"
-msgstr ""
+msgstr "Trgovina z rabljenim blagom"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_lang__week_start__4
@@ -48631,8 +51379,9 @@ msgstr "Opravek"
 #. module: base
 #. odoo-python
 #: code:addons/models.py:0
+#, fuzzy
 msgid "To avoid a mess, no company crossover is allowed!"
-msgstr ""
+msgstr "Da bi se izognili zmedi, prehajanje med podjetji ni dovoljeno!"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_module_module__state__to_install
@@ -48894,9 +51643,11 @@ msgstr "Prevodi"
 #. module: base
 #. odoo-python
 #: code:addons/models.py:0
+#, fuzzy
 msgid ""
 "Translations for model translated fields only accept falsy values and str"
 msgstr ""
+"Prevodi za prevedena polja modela sprejemajo samo neresnične vrednosti in str"
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_fleet
@@ -49116,8 +51867,9 @@ msgstr "Turčija - Nilvera e-Račun"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_tr_nilvera_einvoice_extended
+#, fuzzy
 msgid "Türkiye - Nilvera E-Invoice Extended"
-msgstr ""
+msgstr "Turčija - razširjeni Nilvera e-Račun"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_tr_hr_payroll
@@ -49144,8 +51896,9 @@ msgstr "U - DEJAVNOSTI EKSTRATERITORIALNIH ORGANIZACIJ IN ORGANOV"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_edi_ubl
+#, fuzzy
 msgid "UBL in the Point of Sale "
-msgstr ""
+msgstr "UBL na prodajnem mestu"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__uct
@@ -49221,8 +51974,9 @@ msgstr "URL Koda"
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_attachment.py:0
+#, fuzzy
 msgid "URL attachment (%s) shouldn't be migrated to local."
-msgstr ""
+msgstr "URL-priloge (%s) ni treba preseliti v lokalno."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_server__webhook_url
@@ -49392,8 +52146,11 @@ msgstr ""
 #. module: base
 #. odoo-python
 #: code:addons/models.py:0
+#, fuzzy
 msgid "Uh-oh! You’ve got some company inconsistencies here:"
 msgstr ""
+"Ojoj! Tukaj imate nekaj nedoslednosti podjetja:\n"
+"Lokacija: code:addons/models.py:0"
 
 #. module: base
 #: model:res.country,name:base.ua
@@ -49409,10 +52166,13 @@ msgstr "Ukrajina - knjigovodstvo"
 #. module: base
 #. odoo-python
 #: code:addons/models.py:0
+#, fuzzy
 msgid ""
 "Unable to delete %(record)s because it is used as the default value of %"
 "(field)s"
 msgstr ""
+"Zapisa %(record)s ni mogoče izbrisati, ker se uporablja kot privzeta "
+"vrednost polja %(field)s"
 
 #. module: base
 #. odoo-python
@@ -49560,8 +52320,9 @@ msgstr "Združeni arabski emirati - Računovodska poročila"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ae_faf
+#, fuzzy
 msgid "United Arab Emirates - FTA VAT Audit"
-msgstr ""
+msgstr "Združeni arabski emirati - revizija DDV FTA"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ae_hr_payroll
@@ -49604,8 +52365,9 @@ msgstr "Združene države - knjigovodstvo"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_us_direct_deposit
+#, fuzzy
 msgid "United States - Direct Deposit"
-msgstr ""
+msgstr "Združene države - Neposredno nakazilo"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_us
@@ -49671,8 +52433,9 @@ msgstr "Neznano"
 #. module: base
 #. odoo-python
 #: code:addons/models.py:0
+#, fuzzy
 msgid "Unknown database error: '%s'"
-msgstr ""
+msgstr "Neznana napaka zbirke podatkov: '%s'"
 
 #. module: base
 #. odoo-python
@@ -49684,8 +52447,11 @@ msgstr "Neznan identifikator baze '%s'"
 #. module: base
 #. odoo-python
 #: code:addons/models.py:0
+#, fuzzy
 msgid "Unknown error during import: %(error_type)s: %(error_message)s"
 msgstr ""
+"Neznana napaka med uvozom: %(error_type)s: %(error_message)s\n"
+"Lokacija: code:addons/models.py:0"
 
 #. module: base
 #. odoo-python
@@ -49771,8 +52537,9 @@ msgstr "Unsplash knjižnica slik"
 #. module: base
 #. odoo-python
 #: code:addons/domains.py:0
+#, fuzzy
 msgid "Unsupported operator on %(field_label)s %(model_label)s in %(domain)s"
-msgstr ""
+msgstr "Nepodprt operator za %(field_label)s %(model_label)s v %(domain)s"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_appointment_account_payment
@@ -49838,10 +52605,13 @@ msgstr "Posodobi sorodni model"
 #. module: base
 #. odoo-python
 #: code:addons/fields_properties.py:0
+#, fuzzy
 msgid ""
 "Updating records with different property fields definitions is not "
 "supported. Update by separate definition instead."
 msgstr ""
+"Posodabljanje zapisov z različnimi definicijami polj lastnosti ni podprto. "
+"Posodobite jih z ločeno definicijo."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_form
@@ -49891,8 +52661,9 @@ msgstr "Uruguay - Računovodska poročila"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_uy_edi_stock
+#, fuzzy
 msgid "Uruguay - E-Remitos"
-msgstr ""
+msgstr "Urugvaj - E-dobavnice"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_uy_edi
@@ -50435,8 +53206,9 @@ msgstr "Navpična vrstica"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_veterinary_clinic
+#, fuzzy
 msgid "Veterinary Clinic"
-msgstr ""
+msgstr "Veterinarska klinika"
 
 #. module: base
 #: model:res.country,name:base.vn
@@ -50575,8 +53347,9 @@ msgstr "Prikazi, ki se podedujejo od trenutnega"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_vineyard
+#, fuzzy
 msgid "Vineyard"
-msgstr ""
+msgstr "Vinograd"
 
 #. module: base
 #: model:res.country,name:base.vg
@@ -50909,8 +53682,9 @@ msgstr "Spletna stran - Plačilo"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_website_sale
+#, fuzzy
 msgid "Website Sale"
-msgstr ""
+msgstr "Spletna prodaja"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_website_sale_full
@@ -51048,8 +53822,9 @@ msgstr "WhatsApp-Razprodaja"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_whatsapp_sign
+#, fuzzy
 msgid "WhatsApp-Sign"
-msgstr ""
+msgstr "WhatsApp-Sign"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_whatsapp_event
@@ -51635,10 +54410,13 @@ msgstr "Uporabnika, s katerim si trenutno prijavljen, ni mogoče deaktivirati."
 #. module: base
 #. odoo-python
 #: code:addons/models.py:0
+#, fuzzy
 msgid ""
 "You cannot delete %(to_delete_record)s, as it is used by %"
 "(on_restrict_record)s"
 msgstr ""
+"Zapisa %(to_delete_record)s ne morete izbrisati, ker ga uporablja %"
+"(on_restrict_record)s"
 
 #. module: base
 #. odoo-python
@@ -51745,14 +54523,18 @@ msgstr "Parametrov konfiguracije ni mogoče preimenovati s ključi %s"
 #. module: base
 #. odoo-python
 #: code:addons/models.py:0
+#, fuzzy
 msgid ""
 "You cannot use “%(property_name)s” because the linked “%(model_name)s” model "
 "doesn't exist or is invalid"
 msgstr ""
+"Ne morete uporabiti “%(property_name)s”, ker povezani model “%(model_name)s” "
+"ne obstaja ali ni veljaven"
 
 #. module: base
 #. odoo-python
 #: code:addons/models.py:0
+#, fuzzy
 msgid ""
 "You do not have enough rights to access the field \"%(field)s\" on %"
 "(document_kind)s (%(document_model)s). Please contact your system "
@@ -51760,6 +54542,10 @@ msgid ""
 "\n"
 "Operation: %(operation)s"
 msgstr ""
+"Nimate dovolj pravic za dostop do polja »%(field)s« v %(document_kind)s (%"
+"(document_model)s). Obrnite se na skrbnika sistema.\n"
+"\n"
+"Operacija: %(operation)s"
 
 #. module: base
 #. odoo-python
@@ -51770,9 +54556,10 @@ msgstr "Nimate dovolj pravic dostopa za izvedbo tega dejanja."
 #. module: base
 #. odoo-python
 #: code:addons/models.py:0
+#, fuzzy
 msgid ""
 "You don't have the rights to export data. Please contact an Administrator."
-msgstr ""
+msgstr "Nimate pravic za izvoz podatkov. Obrnite se na skrbnika."
 
 #. module: base
 #. odoo-python
@@ -51940,13 +54727,15 @@ msgstr "Zulu"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_peppol_advanced_fields
+#, fuzzy
 msgid "[DEPRECATED] Account Peppol Advanced Fields"
-msgstr ""
+msgstr "[ZASTARELO] Napredna polja za Peppol v računovodstvu"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_es_pos
+#, fuzzy
 msgid "[Deprecated] Spain - Point of Sale"
-msgstr ""
+msgstr "[Zastarelo] Španija - prodajno mesto"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_account
@@ -51979,14 +54768,16 @@ msgstr "AI strežniška dejanja"
 #. module: base
 #. odoo-python
 #: code:addons/models.py:0
+#, fuzzy
 msgid "allowed for groups %s"
-msgstr ""
+msgstr "dovoljeno za skupine %s"
 
 #. module: base
 #. odoo-python
 #: code:addons/models.py:0
+#, fuzzy
 msgid "always forbidden"
-msgstr ""
+msgstr "vedno prepovedano"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
@@ -52045,8 +54836,9 @@ msgstr "ustvari"
 #. module: base
 #. odoo-python
 #: code:addons/models.py:0
+#, fuzzy
 msgid "custom field access rules"
-msgstr ""
+msgstr "pravila dostopa do polj po meri"
 
 #. module: base
 #: model:res.currency,currency_subunit_label:base.STN
@@ -52256,8 +55048,9 @@ msgstr "eUčenje"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_elearning_platform
+#, fuzzy
 msgid "eLearning Platform"
-msgstr ""
+msgstr "Platforma za e-učenje"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_services_expenses
@@ -52332,8 +55125,9 @@ msgstr "HTML vrednost"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_imin
+#, fuzzy
 msgid "iMin ePOS Printers in PoS"
-msgstr ""
+msgstr "Tiskalniki iMin ePOS v POS"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_filters__embedded_parent_res_id
@@ -52695,8 +55489,9 @@ msgstr "vrednost"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_studio_ai_fields
+#, fuzzy
 msgid "web_studio_ai_fields"
-msgstr ""
+msgstr "Polja umetne inteligence za Studio"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_helpdesk_sale_loyalty

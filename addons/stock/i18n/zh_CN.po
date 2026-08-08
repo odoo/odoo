@@ -22,7 +22,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-24 17:38+0000\n"
-"PO-Revision-Date: 2026-06-29 19:25+0000\n"
+"PO-Revision-Date: 2026-08-04 03:55+0000\n"
 "Last-Translator: 张飞虎 <feihu.zhang@live.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
 "projects/odoo-19/stock/zh_Hans/>\n"
@@ -157,8 +157,7 @@ msgstr " - 产品：%(product)s，序列号码：%(lot)s"
 msgid ""
 " When different than 0, inventory count date for products stored at this "
 "location will be automatically set at the defined frequency."
-msgstr ""
-" 当与0不同时，储存在这个位置的产品的库存清点日期将按定义的频率自动设置。"
+msgstr " 当与0不同时，储存在这个位置的产品的库存清点日期将按定义的频率自动设置。"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__return_count
@@ -531,8 +530,7 @@ msgstr "<br>需求产生于 <b>%s</b> 为满足这个需求，规则将会被触
 msgid ""
 "<br>If the products are not available in <b>%s</b>, a rule will be triggered "
 "to bring the missing quantity in this location."
-msgstr ""
-"<br>如果<b>%s</b>里的产品不可用，规则将被触发来把缺失的数量带入此位置。"
+msgstr "<br>如果<b>%s</b>里的产品不可用，规则将被触发来把缺失的数量带入此位置。"
 
 #. module: stock
 #. odoo-python
@@ -592,8 +590,8 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>您好，"
-"<br/><br/>\n"
+"        <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>您好"
+"，<br/><br/>\n"
 "        我们很高兴地通知您，您的订单已发货。\n"
 "        <t t-if=\"hasattr(object, 'carrier_tracking_ref') and "
 "object.carrier_tracking_ref\">\n"
@@ -603,8 +601,8 @@ msgstr ""
 "                <t t-set=\"multiple_carrier_tracking\" t-"
 "value=\"object.get_multiple_carrier_tracking()\"/>\n"
 "                <t t-if=\"multiple_carrier_tracking\">\n"
-"                    <t t-foreach=\"multiple_carrier_tracking\" t-"
-"as=\"line\">\n"
+"                    <t t-foreach=\"multiple_carrier_tracking\" t-as=\"line\">"
+"\n"
 "                        <br/><a t-att-href=\"line[1]\" target=\"_blank\" t-"
 "out=\"line[0] or ''\"/>\n"
 "                    </t>\n"
@@ -624,8 +622,8 @@ msgstr ""
 "        谢谢，\n"
 "        <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
 "            <br/>\n"
-"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/></"
-"t>Mitchell Admin</t></div>\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/></t>"
+"Mitchell Admin</t></div>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -1172,8 +1170,8 @@ msgid ""
 "incoming products into specific child locations straight away (e.g. specific "
 "bins, racks)."
 msgstr ""
-"添加并自定义路线作业以处理您库存中的产品调拨：例如：卸货>品控>进货，拣货>包装"
-">发运。\n"
+"添加并自定义路线作业以处理您库存中的产品调拨：例如：卸货>品控>进货，拣货>包"
+"装>发运。\n"
 "您也可以在仓位置置设置上架策略，以便直接将进货产品发送到特定的子位置（例如："
 "特定的货位、货架）。"
 
@@ -1186,8 +1184,8 @@ msgid ""
 "strategies on warehouse locations in order to send incoming products into "
 "specific child locations straight away (e.g. specific bins, racks)."
 msgstr ""
-"添加并自定义路线作业以处理您库存中的产品调拨：例如：卸货>品控>进货，拣货>包装"
-">发运。您也可以在仓位置置设置上架策略，以便直接将进货产品发送到特定的子位置"
+"添加并自定义路线作业以处理您库存中的产品调拨：例如：卸货>品控>进货，拣货>包"
+"装>发运。您也可以在仓位置置设置上架策略，以便直接将进货产品发送到特定的子位置"
 "（例如：特定的货位、货架）。"
 
 #. module: stock
@@ -3085,8 +3083,7 @@ msgstr "交货单"
 msgid ""
 "Delivery lead time, in days. It's the number of days, promised to the "
 "customer, between the confirmation of the sales order and the delivery."
-msgstr ""
-"交货提前期， 依日计算。此为承诺给客户的交期， 即从下单到交货所需要的天数。"
+msgstr "交货提前期， 依日计算。此为承诺给客户的交期， 即从下单到交货所需要的天数。"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__delivery_count
@@ -3133,8 +3130,7 @@ msgid ""
 "Depending on the modules installed, this will allow you to define the route "
 "of the product: whether it will be bought, manufactured, replenished on "
 "order, etc."
-msgstr ""
-"根据所安装的模块，这将允许您定义路线产品:是否会购买，制造，补充订单，等。"
+msgstr "根据所安装的模块，这将允许您定义路线产品:是否会购买，制造，补充订单，等。"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__note
@@ -4347,8 +4343,7 @@ msgstr "如果勾选该复选框，Odoo 将在采摘验证时自动打印采摘�
 msgid ""
 "If this checkbox is ticked, Odoo will automatically print the reception "
 "report of a picking when it is validated and has assigned moves."
-msgstr ""
-"如果勾选该复选框，Odoo 将在采摘验证并分配移动后自动打印采摘的接收报告。"
+msgstr "如果勾选该复选框，Odoo 将在采摘验证并分配移动后自动打印采摘的接收报告。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_return_slip
@@ -4362,8 +4357,7 @@ msgstr "如果勾选该复选框，Odoo 将在验证拣货时自动打印退货�
 msgid ""
 "If this checkbox is ticked, Odoo will automatically show the reception "
 "report (if there are moves to allocate to) when validating."
-msgstr ""
-"如果勾选此复选框，Odoo将在验证时自动显示接收报表（如果有要分配的库存移动）。"
+msgstr "如果勾选此复选框，Odoo将在验证时自动显示接收报表（如果有要分配的库存移动）。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__show_operations
@@ -4962,8 +4956,7 @@ msgstr "保持<strong>计算的计数</strong>（差额将被更新）。"
 msgid ""
 "Keep the <strong>Difference</strong> (the Counted Quantity will be updated "
 "to reflect the same difference as when you counted)"
-msgstr ""
-"保留<strong>差额</strong>（计算的计数将被更新，以反映与您计算时相同的差额）。"
+msgstr "保留<strong>差额</strong>（计算的计数将被更新，以反映与您计算时相同的差额）。"
 
 #. module: stock
 #: model:ir.actions.server,name:stock.action_print_labels
@@ -5803,8 +5796,8 @@ msgid ""
 "against the client by an end consumer."
 msgstr ""
 "我公司（芝加哥）承诺尽最大努力按照商定的时间框架在适当的时候提供有效的服务。"
-"然而，它的任何义务都不能被认为是取得成果的义务。在任何情况下，我公司（芝加"
-"哥）不能被客户要求作为第三方出现在最终消费者对客户提出的任何损害索赔中。"
+"然而，它的任何义务都不能被认为是取得成果的义务。在任何情况下，我公司（芝加哥"
+"）不能被客户要求作为第三方出现在最终消费者对客户提出的任何损害索赔中。"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
@@ -6757,8 +6750,7 @@ msgstr "包裹"
 msgid ""
 "Packages %(duplicate_names)s are moved to different locations while being in "
 "the same container %(container_name)s."
-msgstr ""
-"包装 %(duplicate_names)s 在同一容器 %(container_name)s 中被移动到不同位置。"
+msgstr "包装 %(duplicate_names)s 在同一容器 %(container_name)s 中被移动到不同位置。"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__packages_count
@@ -6774,8 +6766,8 @@ msgid ""
 "products can be unpacked and moved as single units again."
 msgstr ""
 "包裹通常是通过转移（在包裹作业期间）创建的，可以包含不同的产品。 \n"
-" 创建完成后，整个包裹可以立即调拨，或者产品可以拆开包裹并再次作为单个单元调"
-"拨。"
+" 创建完成后，整个包裹可以立即调拨，或者产品可以拆开包裹并再次作为单个单元调拨"
+"。"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__packaging_uom_id
@@ -7021,8 +7013,7 @@ msgstr "是否存在取决于作业类型。"
 msgid ""
 "Press the \"New\" button to define the quantity for a product in your stock "
 "or import quantities from a spreadsheet via the Actions menu"
-msgstr ""
-"点击【新增】按钮，为产品设定库存数量，或通过【操作】菜单从电子表格导入数量。"
+msgstr "点击【新增】按钮，为产品设定库存数量，或通过【操作】菜单从电子表格导入数量。"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__price_unit
@@ -8484,8 +8475,8 @@ msgid ""
 "Scheduled time for the first part of the shipment to be processed. Setting "
 "manually a value here would set it as expected date for all the stock moves."
 msgstr ""
-"计划时间的第一部分运输即将进行。在此手动设定一个值表示所有库存调拨的期望时"
-"间。"
+"计划时间的第一部分运输即将进行。在此手动设定一个值表示所有库存调拨的期望时间"
+"。"
 
 #. module: stock
 #: model:ir.actions.server,name:stock.action_scrap
@@ -8764,8 +8755,8 @@ msgstr ""
 "先进先出（FIFO）：先入库的产品/批次将先移出。\n"
 "后进先出（LIFO）：最后入库的产品/批次将先被移出。\n"
 "最接近位置：最接近目标位置的产品/批次将首先移出。\n"
-"临期先出（FEFO）：最接近移除日期的产品/批次将首先移除（此方法的可用性取决于 "
-"“有效期” 设置）。\n"
+"临期先出（FEFO）：最接近移除日期的产品/批次将首先移除（此方法的可用性取决于 “"
+"有效期” 设置）。\n"
 "最少包裹：先进先出，但在有多个包裹包含相同产品时，尽可能减少包裹数量。"
 
 #. module: stock
@@ -9821,8 +9812,8 @@ msgid ""
 "set on the product (Buy or Manufacture route)."
 msgstr ""
 "此操作会添加 “按订单补货（MTO）” 路线，该路线可应用于产品，以便在销售订单（例"
-"如）确认后立即生成与其直接关联的按需补货。系统会根据产品设置的补货方式（“购"
-"买”或“制造”路线）触发相应的采购订单、制造订单等。"
+"如）确认后立即生成与其直接关联的按需补货。系统会根据产品设置的补货方式（“购买"
+"”或“制造”路线）触发相应的采购订单、制造订单等。"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -9958,8 +9949,8 @@ msgid ""
 "advised to change the Product Type since it can lead to inconsistencies. A "
 "better solution could be to archive the product and create a new one instead."
 msgstr ""
-"该产品已至少在库存调拨中使用过一次。 不建议更改产品类型，因为它可能导致不一"
-"致。 更好的解决方案是将产品存档，然后创建一个新产品。"
+"该产品已至少在库存调拨中使用过一次。 不建议更改产品类型，因为它可能导致不一致"
+"。 更好的解决方案是将产品存档，然后创建一个新产品。"
 
 #. module: stock
 #. odoo-python
@@ -10565,8 +10556,8 @@ msgid ""
 "\n"
 "To avoid this, please discard the source location change before saving."
 msgstr ""
-"更新此转移的位置，将导致取消保留当前已指派的项目。系统会尝试在新位置预订物"
-"品，先前传输的链接将被丢弃。\n"
+"更新此转移的位置，将导致取消保留当前已指派的项目。系统会尝试在新位置预订物品"
+"，先前传输的链接将被丢弃。\n"
 "\n"
 "为了避免这种情况，请在保存之前，放弃来源位置变更。"
 
@@ -10979,8 +10970,8 @@ msgid ""
 "b> are created from <b>%(source_location)s</b> to fulfill the need. %"
 "(suffix)s"
 msgstr ""
-"当 <b>%(destination)s</b> 需要产品时，<br>会自动创建<b>%(operation)s</b> 操"
-"作，由 <b>%(source_location)s</b> 调配产品，以满足需求。%(suffix)s"
+"当 <b>%(destination)s</b> 需要产品时，<br>会自动创建<b>%(operation)s</b> 操作"
+"，由 <b>%(source_location)s</b> 调配产品，以满足需求。%(suffix)s"
 
 #. module: stock
 #. odoo-python
@@ -10989,8 +10980,8 @@ msgid ""
 "When products arrive in <b>%(source_location)s</b>, <br> <b>%(operation)s</"
 "b> are created to send them to <b>%(destination)s</b>."
 msgstr ""
-"产品到达<b>%(source_location)s</b>时，<br>会自动建立<b>%(operation)s</b>操"
-"作，将产品运往<b>%(destination)s</b>。"
+"产品到达<b>%(source_location)s</b>时，<br>会自动建立<b>%(operation)s</b>操作"
+"，将产品运往<b>%(destination)s</b>。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__location_dest_from_rule
@@ -11126,8 +11117,8 @@ msgid ""
 "type. To change this, go on the operation type and tick the box \"Create New "
 "Lots/Serial Numbers\"."
 msgstr ""
-"在此作业类型下不能创建批次或者序列号。要更改此设置，请在相应的作业类型下勾选"
-"“创建新的批次 / 序列号” 选项。"
+"在此作业类型下不能创建批次或者序列号。要更改此设置，请在相应的作业类型下勾选“"
+"创建新的批次 / 序列号” 选项。"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_destination_form_view
@@ -11272,8 +11263,7 @@ msgstr "您不能更改当前位置属于其他公司的批号/序列号的公�
 msgid ""
 "You cannot change the ratio of this unit of measure as some products with "
 "this UoM have already been moved or are currently reserved."
-msgstr ""
-"您无法更改此度量单位的比率，因为具有此UoM的某些产品已被调拨或当前已预留。"
+msgstr "您无法更改此度量单位的比率，因为具有此UoM的某些产品已被调拨或当前已预留。"
 
 #. module: stock
 #. odoo-python
@@ -11315,8 +11305,7 @@ msgstr "如果产品来自不同的转运，且操作类型不同，则不能将
 msgid ""
 "You cannot set a location as a scrap location when it is assigned as a "
 "destination location for a manufacturing type operation."
-msgstr ""
-"当某个位置已被指定为生产类型操作的目的地位置时，不能将该位置设置为报废位置。"
+msgstr "当某个位置已被指定为生产类型操作的目的地位置时，不能将该位置设置为报废位置。"
 
 #. module: stock
 #. odoo-python

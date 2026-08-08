@@ -3,13 +3,16 @@
 # * project_sms
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025, 2026.
+# Jan Zorko <jan.zorko@implex.si>, 2026.
+# Žiga Trček <ziga.trcek@implex.si>, 2026.
+# NEDŽAD BEUS <nedzad.beus@implex.si>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:36+0000\n"
-"PO-Revision-Date: 2026-06-30 03:12+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"PO-Revision-Date: 2026-08-08 07:23+0000\n"
+"Last-Translator: NEDŽAD BEUS <nedzad.beus@implex.si>\n"
 "Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-19/"
 "project_sms/sl/>\n"
 "Language: sl\n"
@@ -22,38 +25,47 @@ msgstr ""
 
 #. module: project_sms
 #: model:ir.model,website_form_label:project_sms.model_project_task
+#, fuzzy
 msgid "Create a Task"
-msgstr ""
+msgstr "Ustvari nalogo"
 
 #. module: project_sms
 #: model:ir.model.fields,field_description:project_sms.field_project_project__display_name
 #: model:ir.model.fields,field_description:project_sms.field_project_project_stage__display_name
 #: model:ir.model.fields,field_description:project_sms.field_project_task__display_name
 #: model:ir.model.fields,field_description:project_sms.field_project_task_type__display_name
+#, fuzzy
 msgid "Display Name"
-msgstr ""
+msgstr "Prikazni naziv"
 
 #. module: project_sms
 #: model:ir.model.fields,field_description:project_sms.field_project_project__id
 #: model:ir.model.fields,field_description:project_sms.field_project_project_stage__id
 #: model:ir.model.fields,field_description:project_sms.field_project_task__id
 #: model:ir.model.fields,field_description:project_sms.field_project_task_type__id
+#, fuzzy
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: project_sms
 #: model:ir.model.fields,help:project_sms.field_project_project_stage__sms_template_id
+#, fuzzy
 msgid ""
 "If set, an SMS Text Message will be automatically sent to the customer when "
 "the project reaches this stage."
 msgstr ""
+"Če je nastavljeno, bo stranki, ko projekt doseže to fazo, samodejno poslano "
+"sporočilo SMS."
 
 #. module: project_sms
 #: model:ir.model.fields,help:project_sms.field_project_task_type__sms_template_id
+#, fuzzy
 msgid ""
 "If set, an SMS Text Message will be automatically sent to the customer when "
 "the task reaches this stage."
 msgstr ""
+"Če je nastavljeno, bo stranki, ko opravilo doseže to fazo, samodejno poslano "
+"sporočilo SMS."
 
 #. module: project_sms
 #: model:ir.model,name:project_sms.model_project_project
@@ -62,8 +74,9 @@ msgstr "Projekt"
 
 #. module: project_sms
 #: model:ir.model,name:project_sms.model_project_project_stage
+#, fuzzy
 msgid "Project Stage"
-msgstr ""
+msgstr "Faza projekta"
 
 #. module: project_sms
 #: model:ir.model.fields,field_description:project_sms.field_project_project_stage__sms_template_id
@@ -89,6 +102,7 @@ msgstr "Stopnja opravila"
 
 #. module: project_sms
 #: model:ir.model.fields,help:project_sms.field_project_task__display_name
+#, fuzzy
 msgid ""
 "Use these keywords in the title to set new tasks:\n"
 "\n"
@@ -102,3 +116,14 @@ msgid ""
 "        Make sure to use the right format and order e.g. Improve the "
 "configuration screen 5h #feature #v16 @Mitchell !"
 msgstr ""
+"Uporabite te ključne besede v naslovu za nastavljanje novih opravil:\n"
+"\n"
+"        30h Dodeli 30 ur opravilu\n"
+"        #tags Nastavi oznake opravila\n"
+"        @user Dodeli opravilo uporabniku\n"
+"        ! Nastavi opravilo na srednjo prioriteto\n"
+"        !! Nastavi opravilo na visoko prioriteto\n"
+"        !!! Nastavi opravilo na nujno prioriteto\n"
+"\n"
+"        Prepričajte se, da uporabite pravi zapis in vrstni red, npr. "
+"Izboljšaj konfiguracijski zaslon 5h #feature #v16 @Mitchell !"

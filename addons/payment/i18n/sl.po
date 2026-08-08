@@ -17,12 +17,13 @@
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025, 2026.
 # NEDŽAD BEUS <nedzad.beus@implex.si>, 2026.
 # Žiga Trček <ziga.trcek@implex.si>, 2026.
+# Jan Zorko <jan.zorko@implex.si>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-10 17:37+0000\n"
-"PO-Revision-Date: 2026-07-01 22:44+0000\n"
+"PO-Revision-Date: 2026-08-08 04:16+0000\n"
 "Last-Translator: NEDŽAD BEUS <nedzad.beus@implex.si>\n"
 "Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-19/"
 "payment/sl/>\n"
@@ -75,10 +76,10 @@ msgid ""
 "transactions you intend to capture can only be captured in full. Handle the "
 "transactions individually to capture a partial amount.\"/>"
 msgstr ""
-"<i class=\"fa fa-info-circle oe_inline\" "
-"invisible=\"support_partial_capture != 'full_only'\" title=\"Nekatere od "
-"transakcij, ki jih nameravate zajeti, je mogoče zajeti le v celoti. "
-"Posamezno se ukvarjajte s transakcijami, da zajamete delni znesek.\"/>"
+"<i class=\"fa fa-info-circle oe_inline\" invisible=\"support_partial_capture "
+"!= 'full_only'\" title=\"Nekatere od transakcij, ki jih nameravate zajeti, "
+"je mogoče zajeti le v celoti. Posamezno se ukvarjajte s transakcijami, da "
+"zajamete delni znesek.\"/>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.token_form
@@ -153,24 +154,30 @@ msgstr "<span><i class=\"fa fa-lock\"/> Varno s</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
+#, fuzzy
 msgid ""
 "<strong><i class=\"fa fa-file-text\"/> Show availability report</strong>"
 msgstr ""
+"<strong><i class=\"fa fa-file-text\"/> Prikaži poročilo o razpoložljivosti</"
+"strong>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
+#, fuzzy
 msgid "<strong><i class=\"oi oi-arrow-right\"/> Payment Methods</strong>"
-msgstr ""
+msgstr "<strong><i class=\"oi oi-arrow-right\"/> Načini plačila</strong>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
+#, fuzzy
 msgid "<strong><i class=\"oi oi-arrow-right\"/> Payment Providers</strong>"
-msgstr ""
+msgstr "<strong><i class=\"oi oi-arrow-right\"/> Ponudniki plačil</strong>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
+#, fuzzy
 msgid "<strong>No payment method available</strong>"
-msgstr ""
+msgstr "<strong>Na voljo ni nobenega načina plačila</strong>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_capture_wizard_view_form
@@ -200,8 +207,8 @@ msgid ""
 "em> button is not supported.\n"
 "                        Please use the <em>Duplicate</em> action instead."
 msgstr ""
-"<strong>Opozorilo</strong> Ustvarjanje ponudnika plačil iz gumba "
-"<em>USTVARI</em> ni podprto.\n"
+"<strong>Opozorilo</strong> Ustvarjanje ponudnika plačil iz gumba <em>"
+"USTVARI</em> ni podprto.\n"
 "                        Namesto tega uporabite dejanje <em>Dvojniki</em>."
 
 #. module: payment
@@ -233,13 +240,15 @@ msgstr "ACH Direct Debit"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
+#, fuzzy
 msgid "ACTIVATE"
-msgstr ""
+msgstr "AKTIVIRAJ"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_abitab
+#, fuzzy
 msgid "Abitab"
-msgstr ""
+msgstr "Abitab"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_kanban
@@ -254,8 +263,9 @@ msgstr "Aktivno"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_config_settings__active_provider_id
+#, fuzzy
 msgid "Active Provider"
-msgstr ""
+msgstr "Aktivni ponudnik"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_address
@@ -300,8 +310,9 @@ msgstr "Alipay"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_alipay_plus
+#, fuzzy
 msgid "Alipay+"
-msgstr ""
+msgstr "Alipay+"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__allow_express_checkout
@@ -330,8 +341,9 @@ msgstr "Že razveljavljeno."
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_aman
+#, fuzzy
 msgid "Aman"
-msgstr ""
+msgstr "Aman"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_amazon_pay
@@ -374,13 +386,15 @@ msgstr "Prišlo je do napake med obdelavo vašega plačila."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.state_header
+#, fuzzy
 msgid "An error occurred while saving your payment method."
-msgstr ""
+msgstr "Pri shranjevanju vašega plačilnega sredstva je prišlo do napake."
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_appota
+#, fuzzy
 msgid "Appota"
-msgstr ""
+msgstr "Appota"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_token_form
@@ -415,8 +429,9 @@ msgstr "Asiapay"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_astropay
+#, fuzzy
 msgid "Astropay TEF"
-msgstr ""
+msgstr "Astropay TEF"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_atome
@@ -450,8 +465,9 @@ msgstr "Razpoložljivost"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.availability_report
+#, fuzzy
 msgid "Availability report"
-msgstr ""
+msgstr "Poročilo o razpoložljivosti"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_method_search
@@ -490,13 +506,15 @@ msgstr "BancNet"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_banco_guayaquil
+#, fuzzy
 msgid "Banco Guayaquil"
-msgstr ""
+msgstr "Banco Guayaquil"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_banco_pichincha
+#, fuzzy
 msgid "Banco Pichincha"
-msgstr ""
+msgstr "Banco Pichincha"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_banco_de_bogota
@@ -525,8 +543,9 @@ msgstr "Bančni račun"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_installments_eg
+#, fuzzy
 msgid "Bank Installments"
-msgstr ""
+msgstr "Bančni obroki"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_bni
@@ -636,8 +655,9 @@ msgstr "Preklicano"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__cancel_msg
+#, fuzzy
 msgid "Cancelled Message"
-msgstr ""
+msgstr "Sporočilo o preklicu"
 
 #. module: payment
 #. odoo-javascript
@@ -686,8 +706,9 @@ msgstr "Kartica"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_dpo
+#, fuzzy
 msgid "Card / Mobile"
-msgstr ""
+msgstr "Kartica / Mobilno"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_carnet
@@ -790,8 +811,9 @@ msgstr "Podjetje"
 
 #. module: payment
 #: model:ir.model,name:payment.model_res_config_settings
+#, fuzzy
 msgid "Config Settings"
-msgstr ""
+msgstr "Uredi nastavitve"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_method_form
@@ -802,8 +824,9 @@ msgstr "Nastavitve"
 #. module: payment
 #. odoo-javascript
 #: code:addons/payment/static/src/interactions/payment_form.js:0
+#, fuzzy
 msgid "Confirm"
-msgstr ""
+msgstr "Potrdi"
 
 #. module: payment
 #. odoo-javascript
@@ -824,8 +847,9 @@ msgstr "Stik"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_cvs
+#, fuzzy
 msgid "Convenience Stores"
-msgstr ""
+msgstr "Trgovine z mešanim blagom"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_cordial
@@ -845,8 +869,9 @@ msgstr "Ustrezni modul"
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_provider.py:0
+#, fuzzy
 msgid "Could not establish the connection to the payment provider."
-msgstr ""
+msgstr "Povezave s ponudnikom plačil ni bilo mogoče vzpostaviti."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method__supported_country_ids
@@ -928,8 +953,9 @@ msgstr "Stranka"
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_dpo
+#, fuzzy
 msgid "DPO Pay"
-msgstr ""
+msgstr "DPO Pay"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_dana
@@ -989,8 +1015,9 @@ msgstr "Prikazani naziv"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_status
+#, fuzzy
 msgid "Don't hesitate to contact us if you don't receive it."
-msgstr ""
+msgstr "Ne oklevajte in nas kontaktirajte, če ga ne prejmete."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__done_msg
@@ -1009,8 +1036,9 @@ msgstr "DuitNow"
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_ecpay
+#, fuzzy
 msgid "ECPay"
-msgstr ""
+msgstr "ECPay"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_emi_india
@@ -1051,8 +1079,9 @@ msgstr "Napaka"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method__support_express_checkout
 #: model:ir.model.fields,field_description:payment.field_payment_provider__support_express_checkout
+#, fuzzy
 msgid "Express Checkout"
-msgstr ""
+msgstr "Express Checkout"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__express_checkout_form_view_id
@@ -1082,13 +1111,15 @@ msgstr "FPX"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_facilito
+#, fuzzy
 msgid "Facilito"
-msgstr ""
+msgstr "Facilito"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_family_mart
+#, fuzzy
 msgid "Family Mart"
-msgstr ""
+msgstr "Family Mart"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_floa_bank
@@ -1102,15 +1133,17 @@ msgstr "Flutterwave"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_forsa
+#, fuzzy
 msgid "Forsa"
-msgstr ""
+msgstr "Forsa"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_method__support_manual_capture__partial
 #: model:ir.model.fields.selection,name:payment.selection__payment_method__support_refund__partial
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider__support_refund__partial
+#, fuzzy
 msgid "Full & Partial"
-msgstr ""
+msgstr "Polno in delno"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_method__support_manual_capture__full_only
@@ -1167,8 +1200,9 @@ msgstr "HTTP usmerjanje"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_halan
+#, fuzzy
 msgid "Halan"
-msgstr ""
+msgstr "Halan"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__has_draft_children
@@ -1177,8 +1211,9 @@ msgstr "Ima osnutke otrok."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_config_settings__has_enabled_provider
+#, fuzzy
 msgid "Has Enabled Provider"
-msgstr ""
+msgstr "Ima omogočenega ponudnika"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__has_remaining_amount
@@ -1197,8 +1232,9 @@ msgstr "Sporočilo za pomoč"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_hi_life
+#, fuzzy
 msgid "Hi-Life"
-msgstr ""
+msgstr "Hi-Life"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_hipercard
@@ -1232,9 +1268,10 @@ msgstr "ID"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
+#, fuzzy
 msgid ""
 "If you believe that it is an error, please contact the website administrator."
-msgstr ""
+msgstr "Če menite, da gre za napako, se obrnite na skrbnika spletnega mesta."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method__image
@@ -1264,8 +1301,9 @@ msgstr "Namesti"
 
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_provider
+#, fuzzy
 msgid "Install the provider you want to add."
-msgstr ""
+msgstr "Namestite ponudnika, ki ga želite dodati."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__module_state
@@ -1284,8 +1322,9 @@ msgstr "Je znesek za zajem veljaven"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_country__is_mercado_pago_supported_country
+#, fuzzy
 msgid "Is Mercado Pago Supported Country"
-msgstr ""
+msgstr "Ali je država podprta za Mercado Pago"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__is_post_processed
@@ -1310,8 +1349,9 @@ msgstr "It is currently linked to the following documents:"
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_iyzico
+#, fuzzy
 msgid "Iyzico"
-msgstr ""
+msgstr "Iyzico"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_jcb
@@ -1380,8 +1420,9 @@ msgstr "KrungThai Bank"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_kfh
+#, fuzzy
 msgid "Kuwait Finance House"
-msgstr ""
+msgstr "Kuvajtska finančna hiša"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_linepay
@@ -1435,8 +1476,9 @@ msgstr "LinkAja"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_nuvei_local
+#, fuzzy
 msgid "Local Payments"
-msgstr ""
+msgstr "Lokalna plačila"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_mpesa
@@ -1485,8 +1527,9 @@ msgstr "Mandiri"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method__support_manual_capture
+#, fuzzy
 msgid "Manual Capture"
-msgstr ""
+msgstr "Ročni zajem"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__support_manual_capture
@@ -1536,8 +1579,9 @@ msgstr "Mercado Pago"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_mercado_pago_wallet
+#, fuzzy
 msgid "Mercado Pago Wallet"
-msgstr ""
+msgstr "Denarnica Mercado Pago"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__state_message
@@ -1557,18 +1601,21 @@ msgstr "MoMo"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_mobile
+#, fuzzy
 msgid "Mobile"
-msgstr ""
+msgstr "Mobilni telefon"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_mobile_wallet
+#, fuzzy
 msgid "Mobile Wallet"
-msgstr ""
+msgstr "Mobilna denarnica"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_mobile_wallet_eg
+#, fuzzy
 msgid "Mobile Wallets Egypt"
-msgstr ""
+msgstr "Mobilne denarnice Egipt"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_mobile_money
@@ -1641,13 +1688,15 @@ msgstr "Ni bilo najdenih načinov plačila za vaše ponudnike plačil."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
+#, fuzzy
 msgid "No payment providers are configured."
-msgstr ""
+msgstr "Noben ponudnik plačil ni konfiguriran."
 
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_provider
+#, fuzzy
 msgid "No providers available"
-msgstr ""
+msgstr "Ponudniki niso na voljo"
 
 #. module: payment
 #. odoo-python
@@ -1657,18 +1706,21 @@ msgstr "No token can be assigned to the public partner."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
+#, fuzzy
 msgid "None is configured for:"
-msgstr ""
+msgstr "Za None ni nastavljeno:"
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_nuvei
+#, fuzzy
 msgid "Nuvei"
-msgstr ""
+msgstr "Nuvei"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_ok_mart
+#, fuzzy
 msgid "OK Mart"
-msgstr ""
+msgstr "OK Mart"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_ovo
@@ -1702,8 +1754,9 @@ msgstr "OmanNet"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_config_settings__onboarding_payment_module
+#, fuzzy
 msgid "Onboarding Payment Module"
-msgstr ""
+msgstr "Uvajanje plačilnega modula"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_online_banking_czech_republic
@@ -1857,8 +1910,9 @@ msgstr "PaySafeCard"
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_payu
+#, fuzzy
 msgid "PayU"
-msgstr ""
+msgstr "PayU"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -1872,8 +1926,9 @@ msgstr "Čarovnik za zajem plačila"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
+#, fuzzy
 msgid "Payment Confirmation"
-msgstr ""
+msgstr "Potrditev plačila"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token__payment_details
@@ -1892,8 +1947,9 @@ msgstr "Obrazec za plačilo"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
+#, fuzzy
 msgid "Payment Info"
-msgstr ""
+msgstr "Podatki o plačilu"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__link
@@ -2020,8 +2076,9 @@ msgstr "Ponudniki plačilnih storitev"
 
 #. module: payment
 #: model:ir.actions.server,name:payment.cron_post_process_payment_tx_ir_actions_server
+#, fuzzy
 msgid "Payment: Post-process transactions"
-msgstr ""
+msgstr "Plačila: naknadna obdelava transakcij"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_token_form
@@ -2030,8 +2087,9 @@ msgstr "Plačila"
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_paymob
+#, fuzzy
 msgid "Paymob"
-msgstr ""
+msgstr "Paymob"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_paypal
@@ -2093,18 +2151,21 @@ msgstr "Zamenjajte na podjetje."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.state_header
+#, fuzzy
 msgid "Please wait..."
-msgstr ""
+msgstr "Prosimo, počakajte..."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
+#, fuzzy
 msgid "Post-process"
-msgstr ""
+msgstr "Naknadno obdelaj"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_post_finance
+#, fuzzy
 msgid "PostFinance Pay"
-msgstr ""
+msgstr "PostFinance Pay"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_poste_pay
@@ -2113,8 +2174,9 @@ msgstr "PostePay"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_premium_card
+#, fuzzy
 msgid "Premium Card"
-msgstr ""
+msgstr "Premium kartica"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_presto
@@ -2135,8 +2197,9 @@ msgstr "Obdelal"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__is_live
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_search
+#, fuzzy
 msgid "Production Environment"
-msgstr ""
+msgstr "Produkcijsko okolje"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_promptpay
@@ -2209,13 +2272,15 @@ msgstr "Predsablon Obrazca Preusmerjanja"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_redpagos
+#, fuzzy
 msgid "Redpagos"
-msgstr ""
+msgstr "Redpagos"
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_redsys
+#, fuzzy
 msgid "Redsys"
-msgstr ""
+msgstr "Redsys"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__reference
@@ -2280,8 +2345,9 @@ msgstr "RuPay"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
+#, fuzzy
 msgid "Run the post-processing step for this transaction."
-msgstr ""
+msgstr "Zaženite korak naknadne obdelave za to transakcijo."
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_sepa_direct_debit
@@ -2296,8 +2362,9 @@ msgstr "SPEI"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_stcpay
+#, fuzzy
 msgid "STCPay"
-msgstr ""
+msgstr "STCPay"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_samsung_pay
@@ -2311,8 +2378,9 @@ msgstr "Shrani"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.state_header
+#, fuzzy
 msgid "Saving your payment method."
-msgstr ""
+msgstr "Shranjevanje vašega načina plačila."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_method_form
@@ -2382,8 +2450,9 @@ msgstr ""
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_souhoola
+#, fuzzy
 msgid "Souhoola"
-msgstr ""
+msgstr "Souhoola"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__source_transaction_id
@@ -2427,8 +2496,9 @@ msgstr "Podprto od"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.availability_report_records
+#, fuzzy
 msgid "Supported providers:"
-msgstr ""
+msgstr "Podprti ponudniki:"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_swish
@@ -2437,8 +2507,9 @@ msgstr "Swish"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_sympl
+#, fuzzy
 msgid "Sympl"
-msgstr ""
+msgstr "Sympl"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_tenpay
@@ -2452,18 +2523,21 @@ msgstr "TTB"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_twqr
+#, fuzzy
 msgid "TWQR"
-msgstr ""
+msgstr "TWQR"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_tabby
+#, fuzzy
 msgid "Tabby"
-msgstr ""
+msgstr "Tabby"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_tamara
+#, fuzzy
 msgid "Tamara"
-msgstr ""
+msgstr "Tamara"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_tmb
@@ -2505,45 +2579,54 @@ msgstr "Hvala Vam!"
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
+#, fuzzy
 msgid "The %(tx_label)s %(ref)s of %(formatted_amount)s encountered an error."
 msgstr ""
+"Pri %(tx_label)s %(ref)s v znesku %(formatted_amount)s je prišlo do napake."
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
+#, fuzzy
 msgid "The %(tx_label)s %(ref)s of %(formatted_amount)s has been authorized."
 msgstr ""
+"%(tx_label)s %(ref)s v znesku %(formatted_amount)s je bila avtorizirana."
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
+#, fuzzy
 msgid "The %(tx_label)s %(ref)s of %(formatted_amount)s has been canceled."
-msgstr ""
+msgstr "%(tx_label)s %(ref)s v znesku %(formatted_amount)s je bila preklicana."
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
+#, fuzzy
 msgid "The %(tx_label)s %(ref)s of %(formatted_amount)s has been confirmed."
-msgstr ""
+msgstr "%(tx_label)s %(ref)s v znesku %(formatted_amount)s je bila potrjena."
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
+#, fuzzy
 msgid "The %(tx_label)s %(ref)s of %(formatted_amount)s is pending."
-msgstr ""
+msgstr "%(tx_label)s %(ref)s v znesku %(formatted_amount)s je v čakanju."
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
+#, fuzzy
 msgid ""
 "The amount from the payment data doesn't match the one from the transaction."
-msgstr ""
+msgstr "Znesek iz podatkov o plačilu se ne ujema z zneskom transakcije."
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
+#, fuzzy
 msgid "The amount or currency is missing from the payment data."
-msgstr ""
+msgstr "V podatkih o plačilu manjka znesek ali valuta."
 
 #. module: payment
 #. odoo-python
@@ -2607,10 +2690,11 @@ msgstr ""
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
+#, fuzzy
 msgid ""
 "The currency from the payment data doesn't match the one from the "
 "transaction."
-msgstr ""
+msgstr "Valuta iz podatkov o plačilu se ne ujema z valuto transakcije."
 
 #. module: payment
 #. odoo-python
@@ -2627,18 +2711,24 @@ msgstr "The following kwargs are not whitelisted: %s"
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_method.py:0
+#, fuzzy
 msgid ""
 "The following payment methods cannot be enabled because their payment "
 "provider has manual capture activated: %s"
 msgstr ""
+"Naslednjih plačilnih metod ni mogoče omogočiti, ker je pri njihovem "
+"plačilnem ponudniku aktiviran ročni zajem: %s"
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_provider.py:0
+#, fuzzy
 msgid ""
 "The following payment methods must be disabled in order to enable manual "
 "capture: %s"
 msgstr ""
+"Naslednje plačilne metode morajo biti onemogočene, da omogočite ročni zajem: "
+"%s"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__reference
@@ -2691,9 +2781,11 @@ msgstr "Sporočilo se prikaže, če je plačilo potrjeno."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__cancel_msg
+#, fuzzy
 msgid ""
 "The message displayed if the order is cancelled during the payment process"
 msgstr ""
+"Sporočilo, ki se prikaže, če je naročilo preklicano med postopkom plačila."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__done_msg
@@ -2718,16 +2810,20 @@ msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__support_manual_capture
+#, fuzzy
 msgid "The payment is authorized and captured in two steps instead of one."
-msgstr ""
+msgstr "Plačilo je avtorizirano in zajeto v dveh korakih namesto v enem."
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_provider.py:0
+#, fuzzy
 msgid ""
 "The payment provider rejected the request.\n"
 "%s"
 msgstr ""
+"Ponudnik plačilnih storitev je zahtevo zavrnil.\n"
+"%s"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__primary_payment_method_id
@@ -2755,8 +2851,9 @@ msgstr "Sklic ponudnika transakcije"
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
+#, fuzzy
 msgid "The refund %(ref)s of %(formatted_amount)s has been initiated."
-msgstr ""
+msgstr "Vračilo %(ref)s v višini %(formatted_amount)s je bilo sproženo."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method__image_payment_form
@@ -2770,8 +2867,9 @@ msgstr "Usmeritvena pot, na katero je uporabnik preusmerjen po transakciji"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.state_header
+#, fuzzy
 msgid "The saving of your payment method has been canceled."
-msgstr ""
+msgstr "Shranjevanje vašega plačilnega sredstva je bilo preklicano."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__source_transaction_id
@@ -2825,8 +2923,9 @@ msgstr ""
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
+#, fuzzy
 msgid "The transaction %(ref)s of %(formatted_amount)s has been initiated."
-msgstr ""
+msgstr "Transakcija %(ref)s v višini %(formatted_amount)s je bila sprožena."
 
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_transaction
@@ -2852,18 +2951,24 @@ msgstr "Ničesar ni treba plačati."
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_method.py:0
+#, fuzzy
 msgid ""
 "This action will also archive %s tokens that are registered with this "
 "payment method."
 msgstr ""
+"To dejanje bo arhiviralo tudi %s žetonov, ki so registrirani s tem plačilnim "
+"načinom."
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_provider.py:0
+#, fuzzy
 msgid ""
 "This action will also archive %s tokens that are registered with this "
 "provider. "
 msgstr ""
+"To dejanje bo arhiviralo tudi %s žetonov, ki so registrirani pri tem "
+"ponudniku."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__allow_tokenization
@@ -2924,13 +3029,15 @@ msgstr "Tinka"
 
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_provider
+#, fuzzy
 msgid "To add a provider to the current company:"
-msgstr ""
+msgstr "Za dodajanje ponudnika trenutnemu podjetju:"
 
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_provider
+#, fuzzy
 msgid "Toggle the main company in the company switcher."
-msgstr ""
+msgstr "Preklopite glavno podjetje v preklopniku podjetij."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__token_inline_form_view_id
@@ -2955,8 +3062,9 @@ msgstr ""
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_toss_payments
+#, fuzzy
 msgid "Toss Payments"
-msgstr ""
+msgstr "Toss Payments"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_touch_n_go
@@ -2980,8 +3088,9 @@ msgstr ""
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_troy
+#, fuzzy
 msgid "Troy"
-msgstr ""
+msgstr "Troy"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_truemoney
@@ -3055,18 +3164,21 @@ msgstr "VISA"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_vnptwallet
+#, fuzzy
 msgid "VNPT Money"
-msgstr ""
+msgstr "VNPT Money"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_vpbank
+#, fuzzy
 msgid "VP Bank"
-msgstr ""
+msgstr "VP Bank"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_valu
+#, fuzzy
 msgid "ValU"
-msgstr ""
+msgstr "ValU"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__operation__validation
@@ -3080,8 +3192,9 @@ msgstr "Venmo"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_vietcapital
+#, fuzzy
 msgid "Viet Capital"
-msgstr ""
+msgstr "Viet Capital"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_vietcom
@@ -3090,8 +3203,9 @@ msgstr "Vietcombank"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_viettelpay
+#, fuzzy
 msgid "Viettel Pay"
-msgstr ""
+msgstr "Viettel Pay"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_vipps
@@ -3110,8 +3224,9 @@ msgstr "Neveljavna transakcija"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_wero
+#, fuzzy
 msgid "WERO"
-msgstr ""
+msgstr "WERO"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_wallets_india
@@ -3180,10 +3295,13 @@ msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__is_live
+#, fuzzy
 msgid ""
 "Whether the transaction happened in a production environment. False for "
 "transactions created before this tracking was implemented."
 msgstr ""
+"Ali je transakcija potekala v produkcijskem okolju. Vrednost False za "
+"transakcije, ustvarjene pred uvedbo tega sledenja."
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_transfer
@@ -3192,8 +3310,9 @@ msgstr "Bančno nakazilo"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_woori
+#, fuzzy
 msgid "Woori Bank"
-msgstr ""
+msgstr "Woori Bank"
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_worldline
@@ -3208,10 +3327,13 @@ msgstr "Xendit"
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_token.py:0
+#, fuzzy
 msgid ""
 "You can't unarchive tokens linked to inactive payment methods or disabled "
 "providers."
 msgstr ""
+"Žetonov, povezanih z neaktivnimi načini plačila ali onemogočenimi ponudniki, "
+"ne morete odarhivirati."
 
 #. module: payment
 #. odoo-python
@@ -3226,8 +3348,9 @@ msgstr ""
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_method.py:0
+#, fuzzy
 msgid "You cannot delete the default payment method."
-msgstr ""
+msgstr "Privzetega plačilnega načina ne morete izbrisati."
 
 #. module: payment
 #. odoo-python
@@ -3253,10 +3376,14 @@ msgstr "You do not have access to this payment token."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_status
+#, fuzzy
 msgid ""
 "You should receive an email confirming your payment within a few\n"
 "                                    minutes."
 msgstr ""
+"V nekaj\n"
+"                                    minutah bi morali prejeti e-poštno "
+"sporočilo s potrditvijo vašega plačila."
 
 #. module: payment
 #. odoo-python
@@ -3344,8 +3471,9 @@ msgstr "Vaše plačilo je bilo preklicano."
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_toss_payments
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_worldline
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_xendit
+#, fuzzy
 msgid "Your payment has been processed but is waiting for approval."
-msgstr ""
+msgstr "Vaše plačilo je bilo obdelano, vendar čaka na odobritev."
 
 #. module: payment
 #. odoo-python
@@ -3374,8 +3502,9 @@ msgstr ""
 #: model_terms:payment.provider,done_msg:payment.payment_provider_transfer
 #: model_terms:payment.provider,done_msg:payment.payment_provider_worldline
 #: model_terms:payment.provider,done_msg:payment.payment_provider_xendit
+#, fuzzy
 msgid "Your payment has been processed."
-msgstr ""
+msgstr "Vaše plačilo je bilo obdelano."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.state_header
@@ -3384,13 +3513,15 @@ msgstr "Vaše plačilo še ni bilo obdelano."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_status
+#, fuzzy
 msgid "Your payment is on its way!"
-msgstr ""
+msgstr "Vaše plačilo je na poti!"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.state_header
+#, fuzzy
 msgid "Your payment method has been saved."
-msgstr ""
+msgstr "Vaš način plačila je bil shranjen."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.form
@@ -3400,16 +3531,20 @@ msgstr "Vaše metode plačila"
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
+#, fuzzy
 msgid ""
 "Your payment operation could not be completed for following transactions: %"
 "(tx_refs)s"
 msgstr ""
+"Vaše plačilne operacije ni bilo mogoče dokončati za naslednje transakcije: %"
+"(tx_refs)s"
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
+#, fuzzy
 msgid "Your payment operation has been successfully submitted."
-msgstr ""
+msgstr "Vaša plačilna operacija je bila uspešno poslana."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
@@ -3440,8 +3575,9 @@ msgstr "eNETS"
 #. module: payment
 #. odoo-python
 #: code:addons/payment/const.py:0
+#, fuzzy
 msgid "express checkout not supported"
-msgstr ""
+msgstr "Hitro plačilo ni podprto"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_ideal
@@ -3451,8 +3587,9 @@ msgstr "iDEAL"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_ipass_money
+#, fuzzy
 msgid "iPASS Money"
-msgstr ""
+msgstr "iPASS Money"
 
 #. module: payment
 #. odoo-python
@@ -3468,38 +3605,44 @@ msgstr "in3"
 #. module: payment
 #. odoo-python
 #: code:addons/payment/const.py:0
+#, fuzzy
 msgid "incompatible country"
-msgstr ""
+msgstr "nezdružljiva država"
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/const.py:0
+#, fuzzy
 msgid "incompatible currency"
-msgstr ""
+msgstr "nezdružljiva valuta"
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/const.py:0
+#, fuzzy
 msgid "incompatible website"
-msgstr ""
+msgstr "nezdružljiva spletna stran"
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/const.py:0
+#, fuzzy
 msgid "manual capture not supported"
-msgstr ""
+msgstr "Ročno zajemanje ni podprto"
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/const.py:0
+#, fuzzy
 msgid "maximum amount exceeded"
-msgstr ""
+msgstr "Presežen je najvišji znesek"
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/const.py:0
+#, fuzzy
 msgid "no supported provider available"
-msgstr ""
+msgstr "ni na voljo noben podprt ponudnik"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_search
@@ -3524,14 +3667,16 @@ msgstr ""
 #. module: payment
 #. odoo-python
 #: code:addons/payment/const.py:0
+#, fuzzy
 msgid "tokenization not supported"
-msgstr ""
+msgstr "Tokenizacija ni podprta"
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/const.py:0
+#, fuzzy
 msgid "tokenization without payment no supported"
-msgstr ""
+msgstr "Tokenizacija brez plačila ni podprta"
 
 #~ msgid " Data Fetched"
 #~ msgstr " Pridobljeni podatki"

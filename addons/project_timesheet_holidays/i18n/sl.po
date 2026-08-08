@@ -10,13 +10,16 @@
 # Matjaz Mozetic <m.mozetic@matmoz.si>, 2022
 # Jasmina Macur <jasmina@hbs.si>, 2022
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025, 2026.
+# Jan Zorko <jan.zorko@implex.si>, 2026.
+# Žiga Trček <ziga.trcek@implex.si>, 2026.
+# NEDŽAD BEUS <nedzad.beus@implex.si>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-05 19:29+0000\n"
-"PO-Revision-Date: 2026-06-30 17:04+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"PO-Revision-Date: 2026-08-08 07:14+0000\n"
+"Last-Translator: NEDŽAD BEUS <nedzad.beus@implex.si>\n"
 "Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-19/"
 "project_timesheet_holidays/sl/>\n"
 "Language: sl\n"
@@ -109,18 +112,26 @@ msgstr "Opravilo"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,help:project_timesheet_holidays.field_res_config_settings__internal_project_id
+#, fuzzy
 msgid ""
 "The default project used when automatically generating timesheets via time "
 "off requests. You can specify another project on each time off type "
 "individually."
 msgstr ""
+"Privzeti projekt, ki se uporablja pri samodejnem ustvarjanju časovnih listov "
+"na podlagi zahtevkov za odsotnost. Za vsako vrsto odsotnosti lahko določite "
+"drug projekt."
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,help:project_timesheet_holidays.field_res_config_settings__leave_timesheet_task_id
+#, fuzzy
 msgid ""
 "The default task used when automatically generating timesheets via time off "
 "requests. You can specify another task on each time off type individually."
 msgstr ""
+"Privzeta naloga, ki se uporablja pri samodejnem ustvarjanju časovnih listov "
+"na podlagi zahtevkov za odsotnost. Za vsako vrsto odsotnosti lahko določite "
+"drugo nalogo."
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -135,28 +146,34 @@ msgstr "Odsotnost"
 #. odoo-python
 #: code:addons/project_timesheet_holidays/models/hr_leave.py:0
 #: code:addons/project_timesheet_holidays/models/resource_calendar_leaves.py:0
+#, fuzzy
 msgid "Time Off (%(index)s/%(total)s)"
-msgstr ""
+msgstr "Odsotnost (%(index)s/%(total)s)"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_company__leave_timesheet_task_id
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_config_settings__leave_timesheet_task_id
+#, fuzzy
 msgid "Time Off Task"
-msgstr ""
+msgstr "Opravilo odsotnosti"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_project_task__leave_types_count
+#, fuzzy
 msgid "Time Off Types Count"
-msgstr ""
+msgstr "Število tipov odsotnosti"
 
 #. module: project_timesheet_holidays
 #. odoo-python
 #: code:addons/project_timesheet_holidays/models/account_analytic.py:0
+#, fuzzy
 msgid "Timesheets linked to public holidays cannot be modified."
 msgstr ""
+"Časovnih izkazov, povezanih z dela prostimi dnevi, ni mogoče spreminjati."
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,help:project_timesheet_holidays.field_project_task__display_name
+#, fuzzy
 msgid ""
 "Use these keywords in the title to set new tasks:\n"
 "\n"
@@ -170,48 +187,72 @@ msgid ""
 "        Make sure to use the right format and order e.g. Improve the "
 "configuration screen 5h #feature #v16 @Mitchell !"
 msgstr ""
+"Uporabite te ključne besede v naslovu za nastavljanje novih opravil:\n"
+"\n"
+"        30h Dodeli 30 ur opravilu\n"
+"        #tags Nastavi oznake opravila\n"
+"        @user Dodeli opravilo uporabniku\n"
+"        ! Nastavi opravilo na srednjo prioriteto\n"
+"        !! Nastavi opravilo na visoko prioriteto\n"
+"        !!! Nastavi opravilo na nujno prioriteto\n"
+"\n"
+"        Prepričajte se, da uporabite pravi zapis in vrstni red, npr. "
+"Izboljšaj konfiguracijski zaslon 5h #feature #v16 @Mitchell !"
 
 #. module: project_timesheet_holidays
 #. odoo-python
 #: code:addons/project_timesheet_holidays/models/account_analytic.py:0
+#, fuzzy
 msgid "View Time Off"
-msgstr ""
+msgstr "Ogled odsotnosti"
 
 #. module: project_timesheet_holidays
 #. odoo-python
 #: code:addons/project_timesheet_holidays/models/account_analytic.py:0
+#, fuzzy
 msgid ""
 "You cannot create timesheets for a task that is linked to a time off type. "
 "Please use the Time Off application to request new time off instead."
 msgstr ""
+"Za opravilo, ki je povezano z vrsto odsotnosti, ne morete ustvariti "
+"časovnic. Namesto tega uporabite aplikacijo Odsotnosti in zahtevajte novo "
+"odsotnost."
 
 #. module: project_timesheet_holidays
 #. odoo-python
 #: code:addons/project_timesheet_holidays/models/account_analytic.py:0
+#, fuzzy
 msgid "You cannot delete timesheets that are linked to global time off."
-msgstr ""
+msgstr "Časovnic, povezanih z globalno odsotnostjo, ni mogoče izbrisati."
 
 #. module: project_timesheet_holidays
 #. odoo-python
 #: code:addons/project_timesheet_holidays/models/account_analytic.py:0
+#, fuzzy
 msgid ""
 "You cannot delete timesheets that are linked to time off requests. Please "
 "cancel your time off request from the Time Off application instead."
 msgstr ""
+"Časovnih listov, povezanih z zahtevki za odsotnost, ni mogoče izbrisati. "
+"Zahtevek za odsotnost prekličite v aplikaciji Odsotnosti."
 
 #. module: project_timesheet_holidays
 #. odoo-python
 #: code:addons/project_timesheet_holidays/models/account_analytic.py:0
+#, fuzzy
 msgid ""
 "You cannot modify timesheets that are linked to time off requests. Please "
 "use the Time Off application to modify your time off requests instead."
 msgstr ""
+"Časovnic, povezanih z zahtevami za odsotnost, ne morete spreminjati. Za "
+"spreminjanje zahtev za odsotnost raje uporabite aplikacijo Odsotnosti."
 
 #. module: project_timesheet_holidays
 #. odoo-python
 #: code:addons/project_timesheet_holidays/__init__.py:0
+#, fuzzy
 msgid "allow_timesheets"
-msgstr ""
+msgstr "omogoči časovne liste"
 
 #~ msgid "Generate Timesheet"
 #~ msgstr "Ustvari časovnice"

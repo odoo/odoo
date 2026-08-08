@@ -3,13 +3,16 @@
 # * pos_mercado_pago
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025, 2026.
+# Žiga Trček <ziga.trcek@implex.si>, 2026.
+# Jan Zorko <jan.zorko@implex.si>, 2026.
+# NEDŽAD BEUS <nedzad.beus@implex.si>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-03 17:35+0000\n"
-"PO-Revision-Date: 2026-07-01 16:58+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"PO-Revision-Date: 2026-08-08 07:14+0000\n"
+"Last-Translator: NEDŽAD BEUS <nedzad.beus@implex.si>\n"
 "Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-19/"
 "pos_mercado_pago/sl/>\n"
 "Language: sl\n"
@@ -22,14 +25,16 @@ msgstr ""
 
 #. module: pos_mercado_pago
 #: model_terms:ir.ui.view,arch_db:pos_mercado_pago.pos_payment_method_view_form_inherit_pos_mercado_pago
+#, fuzzy
 msgid "APP_USR-..."
-msgstr ""
+msgstr "APP_USR-..."
 
 #. module: pos_mercado_pago
 #. odoo-python
 #: code:addons/pos_mercado_pago/models/mercado_pago_pos_request.py:0
+#, fuzzy
 msgid "Cannot decode Mercado Pago POS response. Error: %s"
-msgstr ""
+msgstr "Odziva POS sistema Mercado Pago ni mogoče dekodirati. Napaka: %s"
 
 #. module: pos_mercado_pago
 #: model:ir.model.fields,field_description:pos_mercado_pago.field_pos_payment_method__display_name
@@ -40,20 +45,25 @@ msgstr "Prikazani naziv"
 #. module: pos_mercado_pago
 #. odoo-python
 #: code:addons/pos_mercado_pago/models/pos_payment_method.py:0
+#, fuzzy
 msgid "Do not have access to fetch token from Mercado Pago"
-msgstr ""
+msgstr "Nimate dostopa za pridobitev žetona iz storitve Mercado Pago"
 
 #. module: pos_mercado_pago
 #: model:ir.model.fields,help:pos_mercado_pago.field_pos_payment_method__mp_id_point_smart
+#, fuzzy
 msgid ""
 "Enter your Point Smart terminal serial number written on the back of your "
 "terminal (after the S/N:)"
 msgstr ""
+"Vnesite serijsko številko terminala Point Smart, navedeno na zadnji strani "
+"terminala (za S/N:)"
 
 #. module: pos_mercado_pago
 #: model_terms:ir.ui.view,arch_db:pos_mercado_pago.pos_payment_method_view_form_inherit_pos_mercado_pago
+#, fuzzy
 msgid "Force PDV"
-msgstr ""
+msgstr "Prisili PDV"
 
 #. module: pos_mercado_pago
 #: model:ir.model.fields,field_description:pos_mercado_pago.field_pos_payment_method__id
@@ -64,74 +74,90 @@ msgstr "ID"
 #. module: pos_mercado_pago
 #. odoo-javascript
 #: code:addons/pos_mercado_pago/static/src/app/utils/payment/payment_mercado_pago.js:0
+#, fuzzy
 msgid "Mercado Pago %s"
-msgstr ""
+msgstr "Mercado Pago %s"
 
 #. module: pos_mercado_pago
 #: model:ir.model.fields,help:pos_mercado_pago.field_pos_payment_method__mp_bearer_token
+#, fuzzy
 msgid ""
 "Mercado Pago customer production user token: https://www.mercadopago.com.mx/"
 "developers/en/reference"
 msgstr ""
+"Produkcijski uporabniški žeton stranke Mercado Pago: https://"
+"www.mercadopago.com.mx/developers/en/reference"
 
 #. module: pos_mercado_pago
 #: model:ir.model.fields,help:pos_mercado_pago.field_pos_payment_method__mp_webhook_secret_key
+#, fuzzy
 msgid ""
 "Mercado Pago production secret key from integration application: https://"
 "www.mercadopago.com.mx/developers/panel/app"
 msgstr ""
+"Produkcijski skrivni ključ iz integracijske aplikacije Mercado Pago: https://"
+"www.mercadopago.com.mx/developers/panel/app"
 
 #. module: pos_mercado_pago
 #: model:ir.model.fields,field_description:pos_mercado_pago.field_pos_payment_method__mp_id_point_smart_complet
+#, fuzzy
 msgid "Mp Id Point Smart Complet"
-msgstr ""
+msgstr "ID MP točke Smart Complet"
 
 #. module: pos_mercado_pago
 #. odoo-javascript
 #: code:addons/pos_mercado_pago/static/src/app/utils/payment/payment_mercado_pago.js:0
+#, fuzzy
 msgid "Payment has been canceled"
-msgstr ""
+msgstr "Plačilo je bilo preklicano"
 
 #. module: pos_mercado_pago
 #. odoo-javascript
 #: code:addons/pos_mercado_pago/static/src/app/utils/payment/payment_mercado_pago.js:0
+#, fuzzy
 msgid "Payment has been processed"
-msgstr ""
+msgstr "Plačilo je bilo obdelano"
 
 #. module: pos_mercado_pago
 #. odoo-javascript
 #: code:addons/pos_mercado_pago/static/src/app/utils/payment/payment_mercado_pago.js:0
+#, fuzzy
 msgid "Payment has been rejected"
-msgstr ""
+msgstr "Plačilo je bilo zavrnjeno"
 
 #. module: pos_mercado_pago
 #. odoo-javascript
 #: code:addons/pos_mercado_pago/static/src/app/utils/payment/payment_mercado_pago.js:0
+#, fuzzy
 msgid "Payment has to be canceled on terminal"
-msgstr ""
+msgstr "Plačilo mora biti preklicano na terminalu"
 
 #. module: pos_mercado_pago
 #. odoo-javascript
 #: code:addons/pos_mercado_pago/static/src/app/utils/payment/payment_mercado_pago.js:0
+#, fuzzy
 msgid "Payment not found (canceled/finished on terminal)"
-msgstr ""
+msgstr "Plačila ni bilo mogoče najti (preklicano/dokončano na terminalu)"
 
 #. module: pos_mercado_pago
 #. odoo-javascript
 #: code:addons/pos_mercado_pago/static/src/app/utils/payment/payment_mercado_pago.js:0
+#, fuzzy
 msgid "Payment status could not be confirmed"
-msgstr ""
+msgstr "Stanja plačila ni bilo mogoče potrditi"
 
 #. module: pos_mercado_pago
 #. odoo-python
 #: code:addons/pos_mercado_pago/models/pos_payment_method.py:0
+#, fuzzy
 msgid "Please verify your production user token as it was rejected"
-msgstr ""
+msgstr "Preverite žeton produkcijskega uporabnika, saj je bil zavrnjen"
 
 #. module: pos_mercado_pago
 #: model:ir.model,name:pos_mercado_pago.model_pos_payment_method
+#, fuzzy
 msgid "Point of Sale Payment Methods"
-msgstr ""
+msgstr "Načini plačila prodajne točke"
 
 #. module: pos_mercado_pago
 #: model:ir.model,name:pos_mercado_pago.model_pos_session
@@ -140,44 +166,52 @@ msgstr "Seja POS"
 
 #. module: pos_mercado_pago
 #: model:ir.model.fields,field_description:pos_mercado_pago.field_pos_payment_method__mp_webhook_secret_key
+#, fuzzy
 msgid "Production secret key"
-msgstr ""
+msgstr "Produkcijski skrivni ključ"
 
 #. module: pos_mercado_pago
 #: model:ir.model.fields,field_description:pos_mercado_pago.field_pos_payment_method__mp_bearer_token
+#, fuzzy
 msgid "Production user token"
-msgstr ""
+msgstr "Žeton produkcijskega uporabnika"
 
 #. module: pos_mercado_pago
 #. odoo-javascript
 #: code:addons/pos_mercado_pago/static/src/app/utils/payment/payment_mercado_pago.js:0
+#, fuzzy
 msgid "System error"
-msgstr ""
+msgstr "Sistemska napaka"
 
 #. module: pos_mercado_pago
 #: model:ir.model.fields,field_description:pos_mercado_pago.field_pos_payment_method__mp_id_point_smart
+#, fuzzy
 msgid "Terminal S/N"
-msgstr ""
+msgstr "Serijska številka terminala"
 
 #. module: pos_mercado_pago
 #. odoo-python
 #: code:addons/pos_mercado_pago/models/pos_payment_method.py:0
+#, fuzzy
 msgid "The terminal serial number is not registered on Mercado Pago"
-msgstr ""
+msgstr "Serijska številka terminala ni registrirana pri Mercado Pago"
 
 #. module: pos_mercado_pago
 #. odoo-python
 #: code:addons/pos_mercado_pago/models/pos_payment_method.py:0
+#, fuzzy
 msgid "Unexpected Mercado Pago response: %s"
-msgstr ""
+msgstr "Nepričakovan odgovor Mercado Pago: %s"
 
 #. module: pos_mercado_pago
 #. odoo-javascript
 #: code:addons/pos_mercado_pago/static/src/app/utils/payment/payment_mercado_pago.js:0
+#, fuzzy
 msgid "Unknown payment status"
-msgstr ""
+msgstr "Neznan status plačila"
 
 #. module: pos_mercado_pago
 #: model_terms:ir.ui.view,arch_db:pos_mercado_pago.pos_payment_method_view_form_inherit_pos_mercado_pago
+#, fuzzy
 msgid "c2f3662..."
-msgstr ""
+msgstr "c2f3662..."

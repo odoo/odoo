@@ -30,8 +30,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-17 17:37+0000\n"
-"PO-Revision-Date: 2026-07-27 09:03+0000\n"
-"Last-Translator: Rosen Vladimirov <vladimirov.rosen@gmail.com>\n"
+"PO-Revision-Date: 2026-08-03 02:38+0000\n"
+"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Bulgarian <https://translate.odoo.com/projects/odoo-19/"
 "account/bg/>\n"
 "Language: bg\n"
@@ -1211,8 +1211,8 @@ msgid ""
 "<span class=\"o_form_label oe_inline\" invisible=\"amount_type == "
 "'fixed'\">%</span>"
 msgstr ""
-"<span class=\"o_form_label oe_inline\" invisible=\"amount_type == "
-"'fixed'\">%</span>"
+"<span class=\"o_form_label oe_inline\" invisible=\"amount_type == 'fixed'\">"
+"%</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -1882,8 +1882,8 @@ msgstr ""
 "<div style=\"margin: 0px; padding: 0px; font-family:Verdana, Arial,sans-"
 "serif; color: #454748;\">\n"
 "    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-"
-"top: 16px; background-color: #F1F1F1; width: 100%; border-collapse:separate;"
-"\">\n"
+"top: 16px; background-color: #F1F1F1; width: 100%; border-"
+"collapse:separate;\">\n"
 "       <tr>\n"
 "            <td align=\"center\"> \n"
 "               <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
@@ -1898,14 +1898,14 @@ msgstr ""
 "                                   <td align=\"left\" style=\"padding-left: "
 "16px;\"> \n"
 "                                        Получихте <t t-if=\"invoice_count "
-"&gt; 1\">нови електронни фактури!</t><t t-else=\"\">нова електронна фактура!"
-"</t>\n"
+"&gt; 1\">нови електронни фактури!</t><t t-else=\"\">нова електронна "
+"фактура!</t>\n"
 "                                    </td>\n"
 "                                   <td align=\"right\" style=\"padding-"
 "right: 16px;\">\n"
 "                                        <img alt=\"Odoo\" src=\"/web/static/"
-"img/logo_inverse_white_206px.png\" style=\"height: 2em; object-fit: contain;"
-"\" class=\"align-baseline w-auto\"/> \n"
+"img/logo_inverse_white_206px.png\" style=\"height: 2em; object-fit: "
+"contain;\" class=\"align-baseline w-auto\"/> \n"
 "                                   </td>\n"
 "                                </tr> \n"
 "                           </table>\n"
@@ -1956,11 +1956,11 @@ msgstr ""
 "                                                    <span style=\"font-"
 "weight:bold;\"> Доставчик:</span> <t t-out=\"inv.partner_id.name\"/><br/>\n"
 "                                                </t> \n"
-"                                               <t t-"
-"if=\"inv.amount_total\">\n"
+"                                               <t t-if=\"inv.amount_total\">"
+"\n"
 "                                                    <span style=\"font-"
-"weight:bold;\"> Сума:</span> <t t-out=\"inv.amount_total\" t-"
-"options=\"{'widget': 'monetary', 'display_currency': inv.currency_id or "
+"weight:bold;\"> Сума:</span> <t t-out=\"inv.amount_total\" t-options=\""
+"{'widget': 'monetary', 'display_currency': inv.currency_id or "
 "object.company_id.currency_id}\"/><br/>\n"
 "                                                </t> \n"
 "                                               <t t-"
@@ -1976,11 +1976,11 @@ msgstr ""
 "padding-top: 24px;\"> \n"
 "                                           <a t-if=\"invoice_count != 1\" t-"
 "attf-href=\"/odoo/accounting/action-"
-"account.action_account_moves_email_preview?"
-"active_ids={{ invoice_preview_ids }}\" target=\"_blank\" t-attf-"
-"style=\"padding: 12px 24px; font-size: 14px; font-weight: bold; color: "
-"#FFFFFF; text-decoration: none !important; background-color: #008384; border-"
-"radius:3px; display: inline-block;\"> \n"
+"account.action_account_moves_email_preview?active_ids={{ "
+"invoice_preview_ids }}\" target=\"_blank\" t-attf-style=\"padding: 12px "
+"24px; font-size: 14px; font-weight: bold; color: #FFFFFF; text-decoration: "
+"none !important; background-color: #008384; border-radius:3px; display: "
+"inline-block;\"> \n"
 "                                               Преглед на фактури\n"
 "                                           </a>\n"
 "                                            <a t-else=\"\" t-attf-href=\"/"
@@ -3759,8 +3759,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_secure_entries_wizard__unreconciled_bank_statement_line_ids
 msgid "All unreconciled bank statement lines before the selected date."
-msgstr ""
-"Всички несъгласувани редове за банкови извлечения преди избраната дата."
+msgstr "Всички несъгласувани редове за банкови извлечения преди избраната дата."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__allow_foreign_vat
@@ -5318,8 +5317,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 msgid "Cannot create an accrual entry with orders in different currencies."
-msgstr ""
-"Не може да се създаде запис за начисляване с поръчки в различни валути."
+msgstr "Не може да се създаде запис за начисляване с поръчки в различни валути."
 
 #. module: account
 #. odoo-python
@@ -7411,8 +7409,7 @@ msgstr "Дефинирайте стойност по подразбиране в
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Define the smallest coinage of the currency used to pay by cash"
-msgstr ""
-"Определете най-малката монета на валутата, използвана за плащане в брой"
+msgstr "Определете най-малката монета на валутата, използвана за плащане в брой"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_group__company_id
@@ -16539,8 +16536,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__active
 msgid "Set active to false to hide the tax without removing it."
-msgstr ""
-"Задайте активно на невярно, за да скриете данъка, без да го премахвате."
+msgstr "Задайте активно на невярно, за да скриете данъка, без да го премахвате."
 
 #. module: account
 #: model:onboarding.onboarding.step,button_text:account.onboarding_onboarding_step_sales_tax
@@ -17900,8 +17896,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_payment_term.py:0
 msgid "The Early Payment Discount days must be strictly positive."
-msgstr ""
-"Дните за отстъпка при ранно плащане трябва да бъдат строго положителни."
+msgstr "Дните за отстъпка при ранно плащане трябва да бъдат строго положителни."
 
 #. module: account
 #. odoo-python
@@ -20726,8 +20721,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__show_on_dashboard
 msgid "Whether this journal should be displayed on the dashboard or not"
-msgstr ""
-"Дали това списание трябва да се показва на таблото за управление или не"
+msgstr "Дали това списание трябва да се показва на таблото за управление или не"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__new_journal_name

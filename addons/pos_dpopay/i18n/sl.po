@@ -1,14 +1,17 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* pos_dpopay
+# * pos_dpopay
 #
+# Žiga Trček <ziga.trcek@implex.si>, 2026.
+# Jan Zorko <jan.zorko@implex.si>, 2026.
+# NEDŽAD BEUS <nedzad.beus@implex.si>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:36+0000\n"
-"PO-Revision-Date: 2026-06-30 07:02+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2026-08-08 07:31+0000\n"
+"Last-Translator: NEDŽAD BEUS <nedzad.beus@implex.si>\n"
 "Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-19/"
 "pos_dpopay/sl/>\n"
 "Language: sl\n"
@@ -21,249 +24,311 @@ msgstr ""
 
 #. module: pos_dpopay
 #: model:ir.model.fields,help:pos_dpopay.field_pos_payment_method__dpopay_bearer_token
+#, fuzzy
 msgid ""
 "Bearer token used for authenticating requests. Automatically refreshed when "
 "expired."
 msgstr ""
+"Žeton nosilca, ki se uporablja za preverjanje pristnosti zahtevkov. "
+"Samodejno se osveži ob poteku."
 
 #. module: pos_dpopay
 #: model:ir.model.fields.selection,name:pos_dpopay.selection__pos_payment_method__dpopay_payment_mode__card
+#, fuzzy
 msgid "Card"
-msgstr ""
+msgstr "Kartica"
 
 #. module: pos_dpopay
 #: model:ir.model.fields,help:pos_dpopay.field_pos_payment_method__dpopay_test_mode
+#, fuzzy
 msgid "Check this to use DPO Pay's sandbox environment for testing purposes."
 msgstr ""
+"Označite to možnost za uporabo peskovnega okolja DPO Pay za namene "
+"testiranja."
 
 #. module: pos_dpopay
 #: model:ir.model.fields,help:pos_dpopay.field_pos_payment_method__dpopay_payment_mode
+#, fuzzy
 msgid ""
 "Choose allowed payment mode:\n"
 "Card - regular card payments\n"
 "Mobile Money - M-Pesa / Airtel Mobile Money"
 msgstr ""
+"Izberite dovoljeni način plačila:\n"
+"Kartica - običajna plačila s kartico\n"
+"Mobilni denar - M-Pesa / Airtel Mobile Money"
 
 #. module: pos_dpopay
 #: model:ir.model.fields,help:pos_dpopay.field_pos_payment__dpopay_mobile_money_phone
+#, fuzzy
 msgid "Customer's phone number used to complete the Mobile Money payment."
 msgstr ""
+"Telefonska številka stranke, uporabljena za dokončanje plačila prek storitve "
+"Mobile Money."
 
 #. module: pos_dpopay
 #: model_terms:ir.ui.view,arch_db:pos_dpopay.pos_payment_method_view_form_inherit_pos_dpopay
+#, fuzzy
 msgid "DPO Pay"
-msgstr ""
+msgstr "DPO Pay"
 
 #. module: pos_dpopay
 #: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment_method__dpopay_chain_id
+#, fuzzy
 msgid "DPO Pay Chain-ID"
-msgstr ""
+msgstr "DPO Pay ID verige"
 
 #. module: pos_dpopay
 #: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment_method__dpopay_client_id
+#, fuzzy
 msgid "DPO Pay Client ID"
-msgstr ""
+msgstr "ID odjemalca DPO Pay"
 
 #. module: pos_dpopay
 #: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment_method__dpopay_client_secret
+#, fuzzy
 msgid "DPO Pay Client Secret"
-msgstr ""
+msgstr "Skrivnost odjemalca DPO Pay"
 
 #. module: pos_dpopay
 #: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment_method__dpopay_mid
+#, fuzzy
 msgid "DPO Pay Merchant ID"
-msgstr ""
+msgstr "ID trgovca DPO Pay"
 
 #. module: pos_dpopay
 #: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment_method__dpopay_tid
+#, fuzzy
 msgid "DPO Pay Terminal ID"
-msgstr ""
+msgstr "ID plačilnega terminala DPO Pay"
 
 #. module: pos_dpopay
 #. odoo-javascript
 #: code:addons/pos_dpopay/static/src/app/utils/payment/payment_dpopay.js:0
+#, fuzzy
 msgid "DPO Pay terminal is currently offline."
-msgstr ""
+msgstr "Plačilni terminal DPO Pay je trenutno brez povezave."
 
 #. module: pos_dpopay
 #: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment__display_name
 #: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment_method__display_name
+#, fuzzy
 msgid "Display Name"
-msgstr ""
+msgstr "Prikazni naziv"
 
 #. module: pos_dpopay
 #. odoo-javascript
 #: code:addons/pos_dpopay/static/src/app/utils/payment/payment_dpopay.js:0
+#, fuzzy
 msgid "Dpo Pay Error"
-msgstr ""
+msgstr "Napaka Dpo Pay"
 
 #. module: pos_dpopay
 #: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment_method__dpopay_bearer_token
+#, fuzzy
 msgid "Dpopay Bearer Token"
-msgstr ""
+msgstr "Dpopay žeton nosilca"
 
 #. module: pos_dpopay
 #: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment_method__dpopay_payment_mode
+#, fuzzy
 msgid "Dpopay Payment Mode"
-msgstr ""
+msgstr "Način plačila Dpopay"
 
 #. module: pos_dpopay
 #: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment_method__dpopay_test_mode
+#, fuzzy
 msgid "Enable Test Mode"
-msgstr ""
+msgstr "Omogoči testni način"
 
 #. module: pos_dpopay
 #: model:ir.model.fields,help:pos_dpopay.field_pos_payment_method__dpopay_chain_id
+#, fuzzy
 msgid "Enter the Chain-ID header value(e.g., DPO-DTM-Testing)"
-msgstr ""
+msgstr "Vnesite vrednost glave Chain-ID (npr. DPO-DTM-Testing)"
 
 #. module: pos_dpopay
 #: model:ir.model.fields,help:pos_dpopay.field_pos_payment_method__dpopay_mid
+#, fuzzy
 msgid "Enter the Merchant ID assigned by DPO Pay (e.g., 123456789012)."
-msgstr ""
+msgstr "Vnesite ID trgovca, ki ga je dodelil DPO Pay (npr. 123456789012)."
 
 #. module: pos_dpopay
 #: model:ir.model.fields,help:pos_dpopay.field_pos_payment_method__dpopay_tid
+#, fuzzy
 msgid ""
 "Enter the unique Terminal ID (TID) of your DPO Pay POS terminal (e.g., "
 "XXXXXXXX)."
 msgstr ""
+"Vnesite edinstveni ID terminala (TID) svojega terminala DPO Pay POS (npr. "
+"XXXXXXXX)."
 
 #. module: pos_dpopay
 #. odoo-javascript
 #: code:addons/pos_dpopay/static/src/app/utils/payment/payment_dpopay.js:0
+#, fuzzy
 msgid "Failed to cancel payment."
-msgstr ""
+msgstr "Plačila ni bilo mogoče preklicati."
 
 #. module: pos_dpopay
 #. odoo-javascript
 #: code:addons/pos_dpopay/static/src/app/utils/payment/payment_dpopay.js:0
+#, fuzzy
 msgid "Failed to fetch last transaction result."
-msgstr ""
+msgstr "Ni bilo mogoče pridobiti rezultata zadnje transakcije."
 
 #. module: pos_dpopay
 #. odoo-javascript
 #: code:addons/pos_dpopay/static/src/app/utils/payment/payment_dpopay.js:0
+#, fuzzy
 msgid "Failed to retrieve payment status."
-msgstr ""
+msgstr "Ni bilo mogoče pridobiti stanja plačila."
 
 #. module: pos_dpopay
 #. odoo-javascript
 #: code:addons/pos_dpopay/static/src/app/utils/payment/payment_dpopay.js:0
+#, fuzzy
 msgid "Failed to retrieve transaction result."
-msgstr ""
+msgstr "Ni bilo mogoče pridobiti rezultata transakcije."
 
 #. module: pos_dpopay
 #: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment__id
 #: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment_method__id
+#, fuzzy
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: pos_dpopay
 #. odoo-python
 #: code:addons/pos_dpopay/models/pos_payment_method.py:0
+#, fuzzy
 msgid "Invalid Chain ID. Please verify the configuration. %s"
-msgstr ""
+msgstr "Neveljaven ID verige. Preverite konfiguracijo. %s"
 
 #. module: pos_dpopay
 #. odoo-python
 #: code:addons/pos_dpopay/models/pos_payment_method.py:0
+#, fuzzy
 msgid "Invalid endpoint"
-msgstr ""
+msgstr "Neveljavna končna točka"
 
 #. module: pos_dpopay
 #: model:ir.model.fields.selection,name:pos_dpopay.selection__pos_payment_method__dpopay_payment_mode__momo
+#, fuzzy
 msgid "Mobile Money"
-msgstr ""
+msgstr "Mobile money"
 
 #. module: pos_dpopay
 #: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment__dpopay_mobile_money_phone
+#, fuzzy
 msgid "Mobile Money Phone Number(Last 4 Digit)"
-msgstr ""
+msgstr "Telefonska številka mobilnega denarja (zadnje 4 števke)"
 
 #. module: pos_dpopay
 #. odoo-javascript
 #: code:addons/pos_dpopay/static/src/app/utils/payment/payment_dpopay.js:0
+#, fuzzy
 msgid "Payment is declined by DPO Pay."
-msgstr ""
+msgstr "Plačilo je zavrnil DPO Pay."
 
 #. module: pos_dpopay
 #. odoo-javascript
 #: code:addons/pos_dpopay/static/src/app/utils/payment/payment_dpopay.js:0
+#, fuzzy
 msgid "Payment is unsuccessful."
-msgstr ""
+msgstr "Plačilo ni bilo uspešno."
 
 #. module: pos_dpopay
 #. odoo-python
 #: code:addons/pos_dpopay/models/pos_payment_method.py:0
+#, fuzzy
 msgid ""
 "Please ensure the device is online and confirm that the Merchant ID (MID) "
 "and Terminal ID (TID) are correct. %s"
 msgstr ""
+"Prepričajte se, da je naprava povezana v internet in potrdite, da sta ID "
+"trgovca (MID) in ID terminala (TID) pravilna. %s"
 
 #. module: pos_dpopay
 #: model:ir.model,name:pos_dpopay.model_pos_payment_method
+#, fuzzy
 msgid "Point of Sale Payment Methods"
-msgstr ""
+msgstr "Načini plačila prodajne točke"
 
 #. module: pos_dpopay
 #: model:ir.model,name:pos_dpopay.model_pos_payment
+#, fuzzy
 msgid "Point of Sale Payments"
-msgstr ""
+msgstr "Plačila na prodajnem mestu"
 
 #. module: pos_dpopay
 #: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment__dpopay_rrn
+#, fuzzy
 msgid "RRN"
-msgstr ""
+msgstr "RRN"
 
 #. module: pos_dpopay
 #: model:ir.model.fields,help:pos_dpopay.field_pos_payment__dpopay_transaction_ref
+#, fuzzy
 msgid "Reference number required for Mobile Money refund transactions."
-msgstr ""
+msgstr "Referenčna številka je obvezna za transakcije vračila Mobile Money."
 
 #. module: pos_dpopay
 #: model:ir.model.fields,help:pos_dpopay.field_pos_payment__dpopay_rrn
+#, fuzzy
 msgid "Retrieval Reference Number generated for the DPO Pay transaction."
-msgstr ""
+msgstr "Referenčna številka pridobitve, ustvarjena za transakcijo DPO Pay."
 
 #. module: pos_dpopay
 #: model:ir.model.fields,help:pos_dpopay.field_pos_payment_method__dpopay_client_id
+#, fuzzy
 msgid "The Client ID provided by DPO Pay for authenticating requests."
 msgstr ""
+"ID odjemalca, ki ga je zagotovil DPO Pay za preverjanje pristnosti zahtevkov."
 
 #. module: pos_dpopay
 #: model:ir.model.fields,help:pos_dpopay.field_pos_payment_method__dpopay_client_secret
+#, fuzzy
 msgid ""
 "The Client Secret provided by DPO Pay for secure access. Keep it "
 "confidential."
 msgstr ""
+"Skrivnost odjemalca, ki jo zagotovi DPO Pay za varen dostop. Hranite jo "
+"zaupno."
 
 #. module: pos_dpopay
 #: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment__dpopay_transaction_ref
+#, fuzzy
 msgid "Transaction Reference"
-msgstr ""
+msgstr "Referenca transakcije"
 
 #. module: pos_dpopay
 #. odoo-javascript
 #: code:addons/pos_dpopay/static/src/app/utils/payment/payment_dpopay.js:0
+#, fuzzy
 msgid "Transaction amount must be greater than zero."
-msgstr ""
+msgstr "Znesek transakcije mora biti večji od nič."
 
 #. module: pos_dpopay
 #. odoo-javascript
 #: code:addons/pos_dpopay/static/src/app/utils/payment/payment_dpopay.js:0
+#, fuzzy
 msgid "Unable to initiate DPO payment. Please try again."
-msgstr ""
+msgstr "Plačila DPO ni mogoče začeti. Poskusite znova."
 
 #. module: pos_dpopay
 #. odoo-javascript
 #: code:addons/pos_dpopay/static/src/app/utils/payment/payment_dpopay.js:0
+#, fuzzy
 msgid "Unable to reach DPO Pay terminal."
-msgstr ""
+msgstr "Terminala DPO Pay ni mogoče doseči."
 
 #. module: pos_dpopay
 #. odoo-python
 #: code:addons/pos_dpopay/models/pos_payment_method.py:0
+#, fuzzy
 msgid ""
 "Unable to retrieve DPO Pay bearer token: check Client ID and Client Secret."
 msgstr ""
+"Žetona nosilca DPO Pay ni mogoče pridobiti: preverite ID odjemalca in "
+"skrivnost odjemalca."

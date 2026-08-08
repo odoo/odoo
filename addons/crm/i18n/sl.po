@@ -16,12 +16,13 @@
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # NEDŽAD BEUS <nedzad.beus@implex.si>, 2026.
+# Žiga Trček <ziga.trcek@implex.si>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-20 18:35+0000\n"
-"PO-Revision-Date: 2026-06-30 22:48+0000\n"
+"PO-Revision-Date: 2026-08-08 07:27+0000\n"
 "Last-Translator: NEDŽAD BEUS <nedzad.beus@implex.si>\n"
 "Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-19/crm/"
 "sl/>\n"
@@ -89,14 +90,16 @@ msgstr "%spriložnost"
 #. module: crm
 #. odoo-python
 #: code:addons/crm/models/res_users.py:0
+#, fuzzy
 msgid "(Team Leader)"
-msgstr ""
+msgstr "(Vodja ekipe)"
 
 #. module: crm
 #. odoo-javascript
 #: code:addons/crm/static/src/views/crm_form/crm_pls_tooltip_button.xml:0
+#, fuzzy
 msgid "(sample data)"
-msgstr ""
+msgstr "(vzorčni podatki)"
 
 #. module: crm
 #. odoo-javascript
@@ -123,18 +126,21 @@ msgstr ""
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.quick_create_opportunity_form
+#, fuzzy
 msgid "<i class=\"fa fa-briefcase\" title=\"Opportunity Name\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-briefcase\" title=\"Ime priložnosti\"/>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.quick_create_opportunity_form
+#, fuzzy
 msgid "<i class=\"fa fa-building\" title=\"Company\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-building\" title=\"Podjetje\"/>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.quick_create_opportunity_form
+#, fuzzy
 msgid "<i class=\"fa fa-envelope\" title=\"Contact Email\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-envelope\" title=\"Kontaktni e-poštni naslov\"/>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
@@ -143,23 +149,27 @@ msgstr "<i class=\"fa fa-info-circle me-2\" title=\"Assigned Lead Count\"/>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.quick_create_opportunity_form
+#, fuzzy
 msgid "<i class=\"fa fa-mobile fa-lg\" title=\"Contact Phone\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-mobile fa-lg\" title=\"Kontaktni telefon\"/>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.quick_create_opportunity_form
+#, fuzzy
 msgid "<i class=\"fa fa-money\" title=\"Expected Revenue\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-money\" title=\"Pričakovani prihodek\"/>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.quick_create_opportunity_form
+#, fuzzy
 msgid "<i class=\"fa fa-refresh\" title=\"Recurring Revenue\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-refresh\" title=\"Ponavljajoči se prihodek\"/>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.quick_create_opportunity_form
+#, fuzzy
 msgid "<i class=\"fa fa-user\" title=\"Contact\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-user\" title=\"Kontakt\"/>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -296,6 +306,7 @@ msgstr "<span>v to.</span>"
 
 #. module: crm
 #: model:mail.template,body_html:crm.mail_template_demo_crm_lead
+#, fuzzy
 msgid ""
 "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: "
 "16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; "
@@ -404,6 +415,113 @@ msgid ""
 "</table>\n"
 "        "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: "
+"16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; "
+"color: #454748; width: 100%; border-collapse:separate;\"><tr><td "
+"align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+"style=\"padding: 24px; background-color: white; color: #454748; border-"
+"collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- HEADER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+"width=\"100%\" style=\"background-color: white; padding: 0; border-"
+"collapse:separate;\">\n"
+"                <tr><td valign=\"middle\">\n"
+"                    <span style=\"font-size: 10px;\">Vaša potencialna "
+"stranka/priložnost</span><br/>\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;\" t-"
+"out=\"object.name or ''\">Zanimanje za vaše izdelke</span>\n"
+"                </td><td valign=\"middle\" align=\"right\">\n"
+"                    <img t-attf-src=\"/logo.png?company={{ "
+"object.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: 48px;\" "
+"t-att-alt=\"object.company_id.name\"/>\n"
+"                </td></tr>\n"
+"                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"                    <hr width=\"100%\" style=\"background-color:rgb"
+"(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-"
+"height:1px;line-height:0; margin:4px 0px 32px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- CONTENT -->\n"
+"    <tr>\n"
+"        <td style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+"width=\"590\" style=\"min-width: 590px; background-color: white; padding: "
+"0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr>\n"
+"                    <td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                        <div>\n"
+"                            Pozdravljeni <t t-out=\"object.partner_id and "
+"object.partner_id.name or ''\">Acme Corporation</t>,<br/><br/>\n"
+"                            Dobrodošli v <t t-out=\"object.company_id.name "
+"or ''\">Moje podjetje (San Francisco)</t>.\n"
+"                            Veseli nas, da smo vas spoznali! Zdaj, ko ste z "
+"nami, boste odkrili, kaj vam lahko ponudi <t t-out=\"object.company_id.name "
+"or ''\">Moje podjetje (San Francisco)</t>. Moje ime je <t t-"
+"out=\"object.user_id.name or ''\">Marc Demo</t> in pomagal vam bom kar "
+"najbolje izkoristiti Odoo. Bi lahko kmalu načrtovali kratko "
+"predstavitev?<br/>\n"
+"                            Kadar koli se lahko obrnete name!<br/><br/>\n"
+"                            Lep pozdrav,<br/>\n"
+"                            <t t-if=\"object.user_id\">\n"
+"                                <b><t t-out=\"object.user_id.name or ''\">"
+"Marc Demo</t></b>\n"
+"                                <br/>E-pošta: <t t-"
+"out=\"object.user_id.email or ''\">mark.brown23@example.com</t>\n"
+"                                <br/>Telefon: <t t-"
+"out=\"object.user_id.phone or ''\">+1 650-123-4567</t>\n"
+"                            </t>\n"
+"                            <t t-else=\"\">\n"
+"                                <t t-out=\"object.company_id.name or ''\">"
+"Moje podjetje (San Francisco)</t>\n"
+"                            </t>\n"
+"                        </div>\n"
+"                    </td>\n"
+"                </tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- FOOTER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px; padding: 0 8px 0 8px; "
+"font-size:11px;\">\n"
+"            <hr width=\"100%\" style=\"background-color:rgb(204,204,204)"
+";border:medium none;clear:both;display:block;font-size:0px;min-"
+"height:1px;line-height:0; margin: 16px 0px 4px 0px;\"/>\n"
+"            <b t-out=\"object.company_id.name or ''\">Moje podjetje (San "
+"Francisco)</b><br/>\n"
+"            <div style=\"color: #999999;\">\n"
+"                <t t-out=\"object.company_id.phone or ''\">+1 650-123-4567</"
+"t>\n"
+"                <t t-if=\"object.company_id.email\">\n"
+"                    | <a t-attf-href=\"'mailto:%s' % {{ "
+"object.company_id.email }}\" style=\"text-decoration:none; color: #999999;\" "
+"t-out=\"object.company_id.email or ''\">info@yourcompany.com</a>\n"
+"                </t>\n"
+"                <t t-if=\"object.company_id.website\">\n"
+"                    | <a t-attf-href=\"'%s' % {{ object.company_id.website }}"
+"\" style=\"text-decoration:none; color: #999999;\" t-"
+"out=\"object.company_id.website or ''\">http://www.example.com</a>\n"
+"                </t>\n"
+"            </div>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"<!-- POWERED BY -->\n"
+"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"    Poganja ga <a target=\"_blank\" href=\"https://"
+"www.odoo.com?utm_source=db&amp;utm_medium=email\" t-attf-style=\"color: {"
+"{object.company_id.email_secondary_color or '#875A7B'}};;\">Odoo</a>\n"
+"</td></tr>\n"
+"</table>\n"
+"        "
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_defaults
@@ -460,14 +578,16 @@ msgstr "UI"
 #. module: crm
 #. odoo-javascript
 #: code:addons/crm/static/src/views/crm_form/crm_pls_tooltip_button.xml:0
+#, fuzzy
 msgid "AI-computed chances of winning"
-msgstr ""
+msgstr "AI-izračunana verjetnost zmage"
 
 #. module: crm
 #. odoo-javascript
 #: code:addons/crm/static/src/views/crm_form/crm_pls_tooltip_button.xml:0
+#, fuzzy
 msgid "AI-computed chances of winning for"
-msgstr ""
+msgstr "AI-izračunane možnosti za zmago za"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
@@ -522,8 +642,9 @@ msgstr ""
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
+#, fuzzy
 msgid "Activities of"
-msgstr ""
+msgstr "Aktivnosti od"
 
 #. module: crm
 #: model:ir.model,name:crm.model_mail_activity
@@ -978,8 +1099,9 @@ msgstr ""
 #. module: crm
 #. odoo-javascript
 #: code:addons/crm/static/src/views/crm_form/crm_pls_tooltip_button.xml:0
+#, fuzzy
 msgid "Close opportunities to get insights."
-msgstr ""
+msgstr "Zaprite priložnosti, da dobite vpoglede."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__date_closed
@@ -1029,8 +1151,9 @@ msgstr "Podjetje"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
+#, fuzzy
 msgid "Company Information"
-msgstr ""
+msgstr "Podatki o podjetju"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner__lead_partner_name
@@ -1058,8 +1181,9 @@ msgstr "Datum končanja"
 #. module: crm
 #. odoo-javascript
 #: code:addons/crm/static/src/views/crm_form/crm_pls_tooltip_button.xml:0
+#, fuzzy
 msgid "Computed by Odoo AI using your data."
-msgstr ""
+msgstr "Izračunano s strani Odoo AI na podlagi vaših podatkov."
 
 #. module: crm
 #: model:ir.model,name:crm.model_res_config_settings
@@ -1378,8 +1502,9 @@ msgstr "Datum zaključka"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__rotting_days
+#, fuzzy
 msgid "Day count since this resource was last updated"
-msgstr ""
+msgstr "Število dni od zadnje posodobitve tega vira"
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__res_config_settings__crm_auto_assignment_interval_type__days
@@ -1388,8 +1513,9 @@ msgstr "Dni"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__rotting_days
+#, fuzzy
 msgid "Days Rotting"
-msgstr ""
+msgstr "Dnevi zastaranja"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__day_open
@@ -1403,8 +1529,9 @@ msgstr "Dnevi do končanja"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage__rotting_threshold_days
+#, fuzzy
 msgid "Days to rot"
-msgstr ""
+msgstr "Dni do zastaranja"
 
 #. module: crm
 #. odoo-python
@@ -1522,14 +1649,16 @@ msgstr "Ali res želite posodobiti to stopnjo?"
 #. module: crm
 #. odoo-javascript
 #: code:addons/crm/static/src/views/crm_form/crm_pls_tooltip_button.xml:0
+#, fuzzy
 msgid "Does not have a"
-msgstr ""
+msgstr "Nima"
 
 #. module: crm
 #. odoo-javascript
 #: code:addons/crm/static/src/views/crm_form/crm_pls_tooltip_button.xml:0
+#, fuzzy
 msgid "Does not have an"
-msgstr ""
+msgstr "Nima"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
@@ -1538,8 +1667,9 @@ msgstr "Domena"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner
+#, fuzzy
 msgid "Don't link to a company"
-msgstr ""
+msgstr "Ne poveži s podjetjem"
 
 #. module: crm
 #. odoo-javascript
@@ -1693,8 +1823,9 @@ msgstr "Pričakovani prihodki"
 #. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
+#, fuzzy
 msgid "Exploration"
-msgstr ""
+msgstr "Raziskovanje"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -1754,12 +1885,17 @@ msgstr "Font izjemna ikona npr. fa-tasks"
 
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_1
+#, fuzzy
 msgid ""
 "For a sales team, there is nothing worse than being dry on leads. "
 "Fortunately, in just a few clicks, you can generate leads specifically "
 "targeted to your needs: company size, industry, etc. To help you test the "
 "feature, we offer you 20 credits for free."
 msgstr ""
+"Za prodajno ekipo ni nič hujšega kot pomanjkanje potencialnih strank. Na "
+"srečo lahko v nekaj klikih ustvarite potencialne stranke, posebej "
+"prilagojene vašim potrebam: velikost podjetja, panoga itd. Da bi vam "
+"pomagali preizkusiti funkcijo, vam brezplačno ponujamo 20 kreditov."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner__force_assignment
@@ -1835,8 +1971,9 @@ msgstr "Ima sporočilo"
 #. module: crm
 #. odoo-javascript
 #: code:addons/crm/static/src/views/crm_form/crm_pls_tooltip_button.xml:0
+#, fuzzy
 msgid "Has a"
-msgstr ""
+msgstr "Ima"
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead__priority__2
@@ -1845,17 +1982,23 @@ msgstr "Visok"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage__rotting_threshold_days
+#, fuzzy
 msgid ""
 "Highlight opportunities that haven't been updated for this many "
 "days.         Set to 0 to disable. Changing this parameter will not affect "
 "the rotting status/date of resources last updated before this change."
 msgstr ""
+"Označite priložnosti, ki niso bile posodobljene toliko dni.         "
+"Nastavite na 0, da onemogočite. Spreminjanje tega parametra ne bo vplivalo "
+"na status/datum zastaranja virov, ki so bili nazadnje posodobljeni pred to "
+"spremembo."
 
 #. module: crm
 #. odoo-javascript
 #: code:addons/crm/static/src/views/crm_form/crm_pls_tooltip_button.xml:0
+#, fuzzy
 msgid "Historic win rate"
-msgstr ""
+msgstr "Zgodovinska stopnja uspeha"
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__res_config_settings__crm_auto_assignment_interval_type__hours
@@ -2068,8 +2211,9 @@ msgstr "Jezik"
 #. module: crm
 #. odoo-javascript
 #: code:addons/crm/static/src/views/crm_form/crm_pls_tooltip_button.xml:0
+#, fuzzy
 msgid "Language is"
-msgstr ""
+msgstr "Jezik je"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
@@ -2145,8 +2289,9 @@ msgstr "Indic"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.mail_activity_plan_action_lead
+#, fuzzy
 msgid "Lead Activity Plans"
-msgstr ""
+msgstr "Načrti aktivnosti potencialnih strank"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__assignment_enabled
@@ -2414,8 +2559,9 @@ msgstr "Lokalna koda"
 #. module: crm
 #. odoo-javascript
 #: code:addons/crm/static/src/views/crm_form/crm_pls_tooltip_button.xml:0
+#, fuzzy
 msgid "Located in"
-msgstr ""
+msgstr "Nahaja se v"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lead_action_my_activities
@@ -2509,10 +2655,13 @@ msgstr "Upravljanje ponavljajočih se načrtov"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
+#, fuzzy
 msgid ""
 "Manage members or partners. Members get grades and pricelists, partners "
 "allow lead assignment and commission plans."
 msgstr ""
+"Upravljajte člane ali partnerje. Člani dobijo razrede in cenike, partnerji "
+"pa omogočajo dodeljevanje potencialnih poslov in komisijskih načrtov."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_res_config_settings__crm_auto_assignment_action
@@ -2620,8 +2769,9 @@ msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__module_partnership
+#, fuzzy
 msgid "Membership / Partnership"
-msgstr ""
+msgstr "Članstvo / Partnerstvo"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_merge_opportunities
@@ -2814,8 +2964,9 @@ msgstr ""
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
+#, fuzzy
 msgid "No closing estimate"
-msgstr ""
+msgstr "Brez ocene zaprtja"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_opportunity_report_action
@@ -2826,8 +2977,9 @@ msgstr "Ni najdenih podatkov!"
 #. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
+#, fuzzy
 msgid "No detours, no delays - from %(stage_name)s straight to the win! 🚀"
-msgstr ""
+msgstr "Brez obvozov, brez zamud - od %(stage_name)s naravnost do zmage! 🚀"
 
 #. module: crm
 #. odoo-python
@@ -2926,15 +3078,20 @@ msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team_member__lead_day_count
+#, fuzzy
 msgid ""
 "Number of leads assigned to this member in the last 24 hours (lost leads "
 "excluded)"
 msgstr ""
+"Število leadov, dodeljenih temu članu v zadnjih 24 urah (izključeni so "
+"izgubljeni leadi)"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team_member__lead_month_count
+#, fuzzy
 msgid "Number of leads assigned to this member in the last 30 days"
 msgstr ""
+"Število potencialnih priložnosti, dodeljenih temu članu v zadnjih 30 dneh"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__message_needaction_counter
@@ -3106,8 +3263,9 @@ msgstr "Priložnost pridobljena"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.quick_create_opportunity_form
+#, fuzzy
 msgid "Opportunity's Name"
-msgstr ""
+msgstr "Ime priložnosti"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_force_thread_id
@@ -3191,8 +3349,11 @@ msgstr "Nerešeno"
 #. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
+#, fuzzy
 msgid "Phew, that took some effort — but you nailed it. Good job!"
 msgstr ""
+"Uf, to je zahtevalo nekaj truda — ampak si to odlično opravil. Dobro "
+"opravljeno!"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__phone
@@ -3469,8 +3630,9 @@ msgstr "Ringover VOIP Telefon"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__is_rotting
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
+#, fuzzy
 msgid "Rotting"
-msgstr ""
+msgstr "Zastareli"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__crm_use_auto_assignment
@@ -3571,13 +3733,15 @@ msgstr "Iskanje priložnosti"
 #. module: crm
 #. odoo-javascript
 #: code:addons/crm/static/src/views/crm_form/crm_pls_tooltip_button.xml:0
+#, fuzzy
 msgid "See AI-computed chances details"
-msgstr ""
+msgstr "Prikaži podrobnosti AI-izračunanih verjetnosti"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_lost_view_form
+#, fuzzy
 msgid "Select a Lost Reason..."
-msgstr ""
+msgstr "Izberite razlog izgube..."
 
 #. module: crm
 #. odoo-python
@@ -3620,8 +3784,9 @@ msgstr "Nastavitve"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_stage_form
+#, fuzzy
 msgid "Shared with all teams"
-msgstr ""
+msgstr "Skupno z vsemi ekipami"
 
 #. module: crm
 #: model:res.groups,name:crm.group_use_lead
@@ -3677,8 +3842,9 @@ msgstr "Vir"
 #. module: crm
 #. odoo-javascript
 #: code:addons/crm/static/src/views/crm_form/crm_pls_tooltip_button.xml:0
+#, fuzzy
 msgid "Source is"
-msgstr ""
+msgstr "Vir je"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
@@ -3795,8 +3961,9 @@ msgstr "Podvrsta"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
+#, fuzzy
 msgid "Switch to AI-computed probabilities"
-msgstr ""
+msgstr "Preklopi na AI-izračunane verjetnosti"
 
 #. module: crm
 #: model:ir.model,name:crm.model_ir_config_parameter
@@ -3812,8 +3979,9 @@ msgstr "Ključna beseda"
 #. module: crm
 #. odoo-javascript
 #: code:addons/crm/static/src/views/crm_form/crm_pls_tooltip_button.xml:0
+#, fuzzy
 msgid "Tagged as"
-msgstr ""
+msgstr "Označeno kot"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__tag_ids
@@ -3991,10 +4159,13 @@ msgstr "Vir povezave. Primer: Iskalnik, druga domena, naziv e-poštnega seznama"
 #. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
+#, fuzzy
 msgid ""
 "This new lead created by %(creation_source)s was automatically assigned to "
 "team leader %(user_name)s"
 msgstr ""
+"Ta nova priložnost, ustvarjena preko %(creation_source)s, je bila samodejno "
+"dodeljena vodji ekipe %(user_name)s"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -4092,14 +4263,16 @@ msgstr "Predrago"
 #. module: crm
 #. odoo-javascript
 #: code:addons/crm/static/src/views/crm_form/crm_pls_tooltip_button.xml:0
+#, fuzzy
 msgid "Top Negatives"
-msgstr ""
+msgstr "Najpomembnejši negativni dejavniki"
 
 #. module: crm
 #. odoo-javascript
 #: code:addons/crm/static/src/views/crm_form/crm_pls_tooltip_button.xml:0
+#, fuzzy
 msgid "Top Positives"
-msgstr ""
+msgstr "Najpomembnejše prednosti"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_search
@@ -4388,20 +4561,23 @@ msgstr "Zmage/Izgube"
 #. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
+#, fuzzy
 msgid "Wow, that was fast. That deal didn’t stand a chance!"
-msgstr ""
+msgstr "Vau, to je bilo hitro. Ta posel ni imel nobene možnosti!"
 
 #. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
+#, fuzzy
 msgid "Yay, your first win from %(utm_source_name)s!"
-msgstr ""
+msgstr "Čestitke, vaš prvi uspeh iz %(utm_source_name)s!"
 
 #. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
+#, fuzzy
 msgid "Yeah! Best deal out of the last 7 days for the team."
-msgstr ""
+msgstr "Ja! Najboljši posel v zadnjih 7 dneh za ekipo."
 
 #. module: crm
 #: model:crm.recurring.plan,name:crm.crm_recurring_plan_yearly
@@ -4441,8 +4617,9 @@ msgstr "Pravkar ste premagati svoj osebni rekord v zadnjih 7 dneh."
 #. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
+#, fuzzy
 msgid "You just expanded the map! First win in %(country)s."
-msgstr ""
+msgstr "Pravkar ste razširili zemljevid! Prva zmaga v %(country)s."
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_case_form_view_salesteams_opportunity
@@ -4460,14 +4637,16 @@ msgstr ""
 #. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
+#, fuzzy
 msgid "You're on a winning streak. 3 deals in 3 days, congrats!"
-msgstr ""
+msgstr "Na zmagovalnem pohodu ste. 3 posli v 3 dneh, čestitke!"
 
 #. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
+#, fuzzy
 msgid "You're on fire! Fifth deal won today 🔥"
-msgstr ""
+msgstr "Odlično ti gre! Danes si sklenil/-a že peti posel 🔥"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -4523,8 +4702,9 @@ msgstr "npr. mycompany.si"
 #. module: crm
 #. odoo-javascript
 #: code:addons/crm/static/src/views/crm_form/crm_pls_tooltip_button.xml:0
+#, fuzzy
 msgid "email address"
-msgstr ""
+msgstr "e-poštni naslov"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -4539,14 +4719,16 @@ msgstr "ustvari priložnosti v vašem prodajnem lijaku?<br>"
 #. module: crm
 #. odoo-javascript
 #: code:addons/crm/static/src/views/crm_form/crm_pls_tooltip_button.xml:0
+#, fuzzy
 msgid "has value"
-msgstr ""
+msgstr "ima vrednost"
 
 #. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
+#, fuzzy
 msgid "incoming email"
-msgstr ""
+msgstr "dohodna e-pošta"
 
 #. module: crm
 #. odoo-python
@@ -4557,32 +4739,37 @@ msgstr "izgubljeni_razlog_id"
 #. module: crm
 #. odoo-javascript
 #: code:addons/crm/static/src/views/forecast_kanban/forecast_kanban_column_quick_create.js:0
+#, fuzzy
 msgid "next %s"
-msgstr ""
+msgstr "Naslednji %s"
 
 #. module: crm
 #. odoo-javascript
 #: code:addons/crm/static/src/views/crm_form/crm_pls_tooltip_button.xml:0
+#, fuzzy
 msgid "phone number"
-msgstr ""
+msgstr "telefonska številka"
 
 #. module: crm
 #. odoo-javascript
 #: code:addons/crm/static/src/views/crm_form/crm_pls_tooltip_button.xml:0
+#, fuzzy
 msgid "sample data"
-msgstr ""
+msgstr "vzorčni podatki"
 
 #. module: crm
 #. odoo-javascript
 #: code:addons/crm/static/src/views/crm_form/crm_pls_tooltip_button.xml:0
+#, fuzzy
 msgid "stage"
-msgstr ""
+msgstr "stopnja"
 
 #. module: crm
 #. odoo-javascript
 #: code:addons/crm/static/src/views/crm_form/crm_pls_tooltip_button.xml:0
+#, fuzzy
 msgid "team"
-msgstr ""
+msgstr "ekipa"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage__team_count
@@ -4592,8 +4779,9 @@ msgstr "število_ekip"
 #. module: crm
 #. odoo-javascript
 #: code:addons/crm/static/src/views/crm_form/crm_pls_tooltip_button.xml:0
+#, fuzzy
 msgid "this lead"
-msgstr ""
+msgstr "to priložnost"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_action_helper
@@ -4620,14 +4808,16 @@ msgstr "neznano"
 #. module: crm
 #. odoo-javascript
 #: code:addons/crm/static/src/views/crm_form/crm_pls_tooltip_button.xml:0
+#, fuzzy
 msgid "valid email address"
-msgstr ""
+msgstr "veljaven e-poštni naslov"
 
 #. module: crm
 #. odoo-javascript
 #: code:addons/crm/static/src/views/crm_form/crm_pls_tooltip_button.xml:0
+#, fuzzy
 msgid "valid phone number"
-msgstr ""
+msgstr "veljavna telefonska številka"
 
 #~ msgid ""
 #~ "<span class=\"opacity-50 p-2\" "

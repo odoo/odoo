@@ -11,13 +11,15 @@
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # NEDŽAD BEUS <nedzad.beus@implex.si>, 2026.
+# Žiga Trček <ziga.trcek@implex.si>, 2026.
+# Jan Zorko <jan.zorko@implex.si>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-05 19:29+0000\n"
-"PO-Revision-Date: 2026-06-30 05:34+0000\n"
-"Last-Translator: NEDŽAD BEUS <nedzad.beus@implex.si>\n"
+"PO-Revision-Date: 2026-08-08 07:12+0000\n"
+"Last-Translator: Jan Zorko <jan.zorko@implex.si>\n"
 "Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-19/"
 "mrp_account/sl/>\n"
 "Language: sl\n"
@@ -31,14 +33,16 @@ msgstr ""
 #. module: mrp_account
 #. odoo-python
 #: code:addons/mrp_account/models/stock_move.py:0
+#, fuzzy
 msgid "%(value)s for %(quantity)s %(unit)s from %(production)s"
-msgstr ""
+msgstr "%(value)s za %(quantity)s %(unit)s iz %(production)s"
 
 #. module: mrp_account
 #. odoo-python
 #: code:addons/mrp_account/models/mrp_production.py:0
+#, fuzzy
 msgid "%s - Labour"
-msgstr ""
+msgstr "%s - Delo"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.view_move_form_inherit_mrp_account
@@ -47,8 +51,9 @@ msgstr "<span class=\"o_stat_text\">Proizvodnja</span>"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.mrp_production_form_view_inherited
+#, fuzzy
 msgid "<span class=\"o_stat_text\">WIP</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Nedokončana proizvodnja</span>"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
@@ -67,8 +72,9 @@ msgstr "<span>Datum</span>"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
+#, fuzzy
 msgid "<span>Product</span>"
-msgstr ""
+msgstr "<span>Izdelek</span>"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
@@ -77,18 +83,21 @@ msgstr "<span>Količina</span>"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
+#, fuzzy
 msgid "<span>Ref.</span>"
-msgstr ""
+msgstr "<span>Sklic</span>"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
+#, fuzzy
 msgid "<span>Unit of Measure</span>"
-msgstr ""
+msgstr "<span>Merska enota</span>"
 
 #. module: mrp_account
 #: model:ir.model.constraint,message:mrp_account.constraint_mrp_account_wip_accounting_line_check_debit_credit
+#, fuzzy
 msgid "A single line cannot be both credit and debit."
-msgstr ""
+msgstr "Posamezna vrstica ne more biti hkrati v dobro in v breme."
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting_line__account_id
@@ -102,8 +111,11 @@ msgstr "Vrstica za premikanje računa"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_account_wip_accounting_line
+#, fuzzy
 msgid "Account move line to be created when posting WIP account move"
 msgstr ""
+"Vrstica kontnega premika, ki bo ustvarjena ob knjiženju kontnega premika "
+"nedokončane proizvodnje"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_account_analytic_account
@@ -139,13 +151,15 @@ msgstr "Kosovnica"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__bom_count
+#, fuzzy
 msgid "BoM Count"
-msgstr ""
+msgstr "Število kosovnic"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__bom_ids
+#, fuzzy
 msgid "Bom"
-msgstr ""
+msgstr "Kosovnica"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_line__category
@@ -154,8 +168,9 @@ msgstr "Kategorija"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_res_company
+#, fuzzy
 msgid "Companies"
-msgstr ""
+msgstr "Podjetja"
 
 #. module: mrp_account
 #: model:ir.actions.server,name:mrp_account.action_compute_price_bom_product
@@ -163,17 +178,21 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mrp_account.product_product_ext_form_view2
 #: model_terms:ir.ui.view,arch_db:mrp_account.product_product_view_form_normal_inherit_extended
 #: model_terms:ir.ui.view,arch_db:mrp_account.product_variant_easy_edit_view_bom_inherit
+#, fuzzy
 msgid "Compute Price from BoM"
-msgstr ""
+msgstr "Izračunaj ceno iz kosovnice"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.product_product_ext_form_view2
 #: model_terms:ir.ui.view,arch_db:mrp_account.product_product_view_form_normal_inherit_extended
 #: model_terms:ir.ui.view,arch_db:mrp_account.product_variant_easy_edit_view_bom_inherit
+#, fuzzy
 msgid ""
 "Compute the price of the product using products and operations of related "
 "bill of materials, for manufactured products only."
 msgstr ""
+"Izračunajte ceno izdelka z uporabo izdelkov in operacij povezane kosovnice, "
+"samo za proizvedene izdelke."
 
 #. module: mrp_account
 #. odoo-javascript
@@ -186,8 +205,9 @@ msgstr "Stroški proizvodnje"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter__costs_hour_account_ids
+#, fuzzy
 msgid "Costs Hour Account"
-msgstr ""
+msgstr "Konto stroškov na uro"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__create_uid
@@ -265,8 +285,9 @@ msgstr "Konto stroškov"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_production__extra_cost
+#, fuzzy
 msgid "Extra Unit Cost"
-msgstr ""
+msgstr "Dodatni strošek na enoto"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__id
@@ -330,8 +351,9 @@ msgstr "Poročilo s pregledom PN"
 #. module: mrp_account
 #. odoo-python
 #: code:addons/mrp_account/wizard/mrp_wip_accounting.py:0
+#, fuzzy
 msgid "Manual Entry"
-msgstr ""
+msgstr "Ročni vnos"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_production
@@ -351,45 +373,54 @@ msgstr "Proizvodni nalogi"
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__production_count
 #: model:ir.model.fields,field_description:mrp_account.field_account_bank_statement_line__wip_production_count
 #: model:ir.model.fields,field_description:mrp_account.field_account_move__wip_production_count
+#, fuzzy
 msgid "Manufacturing Orders Count"
-msgstr ""
+msgstr "Število proizvodnih nalogov"
 
 #. module: mrp_account
 #. odoo-python
 #: code:addons/mrp_account/wizard/mrp_wip_accounting.py:0
+#, fuzzy
 msgid "Manufacturing WIP - %(orders_list)s"
-msgstr ""
+msgstr "Nedokončana proizvodnja - %(orders_list)s"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__mo_ids
+#, fuzzy
 msgid "Mo"
-msgstr ""
+msgstr "PN"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_workorder__mo_analytic_account_line_ids
+#, fuzzy
 msgid "Mo Analytic Account Line"
-msgstr ""
+msgstr "Vrstica analitičnega konta proizvodnega naloga"
 
 #. module: mrp_account
 #. odoo-python
 #: code:addons/mrp_account/wizard/mrp_wip_accounting.py:0
+#, fuzzy
 msgid "Please make sure the total credit amount equals the total debit amount."
 msgstr ""
+"Prepričajte se, da je skupni znesek v dobro enak skupnemu znesku v breme."
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.view_wip_accounting_form
+#, fuzzy
 msgid "Post Manufacturing WIP"
-msgstr ""
+msgstr "Knjiži nedokončano proizvodnjo"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.view_wip_accounting_form
+#, fuzzy
 msgid "Post WIP"
-msgstr ""
+msgstr "Knjiži nedokončano proizvodnjo"
 
 #. module: mrp_account
 #: model:ir.actions.act_window,name:mrp_account.action_wip_accounting
+#, fuzzy
 msgid "Post WIP Accounting Entry"
-msgstr ""
+msgstr "Knjiži računovodsko knjižbo nedokončane proizvodnje"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_product_template
@@ -413,8 +444,9 @@ msgstr "Proizvodnja"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_product_category__property_stock_account_production_cost_id
+#, fuzzy
 msgid "Production Account"
-msgstr ""
+msgstr "Proizvodni konto"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__reference
@@ -424,8 +456,9 @@ msgstr "Referenca"
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_account_bank_statement_line__wip_production_ids
 #: model:ir.model.fields,field_description:mrp_account.field_account_move__wip_production_ids
+#, fuzzy
 msgid "Relevant WIP MOs"
-msgstr ""
+msgstr "Relevantni proizvodni nalogi WIP"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__reversal_date
@@ -435,8 +468,9 @@ msgstr "Datum razveljavitve"
 #. module: mrp_account
 #. odoo-python
 #: code:addons/mrp_account/wizard/mrp_wip_accounting.py:0
+#, fuzzy
 msgid "Reversal date must be after the posting date."
-msgstr ""
+msgstr "Datum razveljavitve mora biti po datumu knjiženja."
 
 #. module: mrp_account
 #. odoo-python
@@ -462,27 +496,38 @@ msgstr "Vrednotenje zalog"
 #. module: mrp_account
 #: model:ir.model.fields,help:mrp_account.field_account_bank_statement_line__wip_production_ids
 #: model:ir.model.fields,help:mrp_account.field_account_move__wip_production_ids
+#, fuzzy
 msgid ""
 "The MOs that this WIP entry was based on. Expected to be set at time of WIP "
 "entry creation."
 msgstr ""
+"Proizvodni nalogi, na katerih temelji ta vnos nedokončane proizvodnje. "
+"Predvideno je, da se nastavijo ob ustvarjanju vnosa nedokončane proizvodnje."
 
 #. module: mrp_account
 #: model:ir.model.fields,help:mrp_account.field_mrp_workcenter__expense_account_id
+#, fuzzy
 msgid ""
 "The expense is accounted for when the manufacturing order is marked as done. "
 "If not set, it is the expense account of the final product that will be used "
 "instead."
 msgstr ""
+"Odhodek se knjiži, ko je proizvodni nalog označen kot dokončan. Če ni "
+"nastavljeno, bo namesto tega uporabljen konto odhodkov končnega izdelka."
 
 #. module: mrp_account
 #: model:ir.model.fields,help:mrp_account.field_product_category__property_stock_account_production_cost_id
+#, fuzzy
 msgid ""
 "This account will be used as a valuation counterpart for both components and "
 "final products for manufacturing orders.\n"
 "                If there are any workcenter/employee costs, this value will "
 "remain on the account once the production is completed."
 msgstr ""
+"Ta konto bo uporabljen kot nasprotni konto vrednotenja za komponente in "
+"končne izdelke pri proizvodnih nalogih.\n"
+"                Če obstajajo kakršni koli stroški delovnega centra/"
+"zaposlenih, bo ta vrednost po zaključku proizvodnje ostala na kontu."
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.view_wip_accounting_form
@@ -497,66 +542,78 @@ msgstr "Skupaj breme"
 #. module: mrp_account
 #. odoo-python
 #: code:addons/mrp_account/wizard/mrp_wip_accounting.py:0
+#, fuzzy
 msgid "WIP - Component Value"
-msgstr ""
+msgstr "Nedokončana proizvodnja - vrednost komponente"
 
 #. module: mrp_account
 #. odoo-python
 #: code:addons/mrp_account/wizard/mrp_wip_accounting.py:0
+#, fuzzy
 msgid "WIP - Overhead"
-msgstr ""
+msgstr "Nedokončana proizvodnja - režijski stroški"
 
 #. module: mrp_account
 #. odoo-python
 #: code:addons/mrp_account/models/mrp_production.py:0
+#, fuzzy
 msgid "WIP Entries of %s"
-msgstr ""
+msgstr "Vnosi nedokončane proizvodnje za %s"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_production__wip_move_count
+#, fuzzy
 msgid "WIP Journal Entry Count"
-msgstr ""
+msgstr "Število vnosov v dnevnik nedokončane proizvodnje"
 
 #. module: mrp_account
 #. odoo-python
 #: code:addons/mrp_account/models/account_move.py:0
+#, fuzzy
 msgid "WIP MOs of %s"
-msgstr ""
+msgstr "Nedokončani proizvodni nalogi za %s"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
+#, fuzzy
 msgid "WIP Report for"
-msgstr ""
+msgstr "Poročilo o nedokončani proizvodnji za"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__line_ids
+#, fuzzy
 msgid "WIP accounting lines"
-msgstr ""
+msgstr "Računovodske vrstice nedokončane proizvodnje"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting_line__wip_accounting_id
+#, fuzzy
 msgid "WIP accounting wizard"
-msgstr ""
+msgstr "Čarovnik za računovodstvo nedokončane proizvodnje"
 
 #. module: mrp_account
 #: model:ir.actions.report,name:mrp_account.wip_report
+#, fuzzy
 msgid "WIP report"
-msgstr ""
+msgstr "Poročilo o nedokončani proizvodnji"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_workorder__wc_analytic_account_line_ids
+#, fuzzy
 msgid "Wc Analytic Account Line"
-msgstr ""
+msgstr "Vrstica analitičnega konta delovnega centra"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_production__wip_move_ids
+#, fuzzy
 msgid "Wip Move"
-msgstr ""
+msgstr "Premik nedokončane proizvodnje"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_account_wip_accounting
+#, fuzzy
 msgid "Wizard to post Manufacturing WIP account move"
-msgstr ""
+msgstr "Čarovnik za knjiženje računovodske knjižbe WIP proizvodnje"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_workcenter
@@ -570,8 +627,9 @@ msgstr "Delovni nalog"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__workorder_count
+#, fuzzy
 msgid "Work Order Count"
-msgstr ""
+msgstr "Število delovnih nalogov"
 
 #. module: mrp_account
 #. odoo-python
@@ -586,15 +644,17 @@ msgstr "Delovni center"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_workcenter_productivity
+#, fuzzy
 msgid "Workcenter Productivity Log"
-msgstr ""
+msgstr "Dnevnik produktivnosti delovnega centra"
 
 #. module: mrp_account
 #. odoo-python
 #: code:addons/mrp_account/models/mrp_production.py:0
 #: code:addons/mrp_account/models/mrp_workorder.py:0
+#, fuzzy
 msgid "[WC] %s"
-msgstr ""
+msgstr "[DC] %s"
 
 #~ msgid "Units"
 #~ msgstr "Enot"

@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-24 17:38+0000\n"
-"PO-Revision-Date: 2026-06-30 23:49+0000\n"
+"PO-Revision-Date: 2026-08-06 02:01+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
 "account_peppol/ja/>\n"
@@ -89,8 +89,8 @@ msgid ""
 "<u>mandatory as of January 2026</u> - don't wait to register."
 msgstr ""
 "<br/>\n"
-"                                ベルギーでは電子請求が <u>2026年1月より義務化"
-"</u>されます。 - 今すぐご登録ください。"
+"                                ベルギーでは電子請求が <u>2026年1月より義務"
+"化</u>されます。 - 今すぐご登録ください。"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -223,26 +223,26 @@ msgstr ""
 "                                    <div style=\"margin-bottom: 5px; margin-"
 "top: 18px;\">\n"
 "                                        <a t-attf-href=\"/odoo/accounting/\" "
-"target=\"_blank\" t-attf-style=\"padding: 8px 12px; font-size: 12px; color: "
-"{{ object.email_primary_color or '#FFFFFF' }}; text-decoration: none !"
-"important; font-weight: 400; background-color: "
-"{{ object.email_secondary_color or '#875A7B' }}; border-radius:3px\">\n"
+"target=\"_blank\" t-attf-style=\"padding: 8px 12px; font-size: 12px; color: {"
+"{ object.email_primary_color or '#FFFFFF' }}; text-decoration: none "
+"!important; font-weight: 400; background-color: {{ "
+"object.email_secondary_color or '#875A7B' }}; border-radius:3px\">\n"
 "                                            請求書を送付\n"
 "                                        </a>\n"
 "                                    </div>\n"
 "                                </td>\n"
 "                                <td valign=\"middle\" align=\"right\">\n"
-"                                    <t t-if=\"not "
-"object.uses_default_logo\">\n"
-"                                        <img t-att-src=\"'/logo.png?"
-"company=%s' % object.id\" style=\"height: auto; width: 80px; margin-right: "
-"10px;\" t-att-alt=\"'%s' % object.name\"/>\n"
+"                                    <t t-if=\"not object.uses_default_logo\">"
+"\n"
+"                                        <img t-att-src=\"'/"
+"logo.png?company=%s' % object.id\" style=\"height: auto; width: 80px; margin-"
+"right: 10px;\" t-att-alt=\"'%s' % object.name\"/>\n"
 "                                    </t>\n"
 "                                </td>\n"
 "                            </tr>\n"
 "                            <tr>\n"
-"                                <td colspan=\"2\" style=\"text-align:center;"
-"\">\n"
+"                                <td colspan=\"2\" style=\"text-"
+"align:center;\">\n"
 "                                    <hr style=\"background-color:#CCCCCC; "
 "border:none; height:1px; margin:16px 0;\"/>\n"
 "                                </td>\n"
@@ -258,11 +258,11 @@ msgstr ""
 "collapse:separate;\">\n"
 "                            <tr>\n"
 "                                <td style=\"font-size: 14px;\">\n"
-"                                    <p> <t t-out=\"object.name or "
-"''\">YourCompany</t>様</p>\n"
+"                                    <p> <t t-out=\"object.name or ''\">"
+"YourCompany</t>様</p>\n"
 "\n"
-"                                    <p>貴社を<strong>Peppol Networkネットワー"
-"ク</strong>に追加いたしました。</p>\n"
+"                                    <p>貴社を<strong>Peppol Network"
+"ネットワーク</strong>に追加いたしました。</p>\n"
 "\n"
 "                                    <p>Odoo経由で電子請求書を <strong>送信<t "
 "t-if=\"object.account_peppol_proxy_state == 'receiver'\">・  受信</t></"
@@ -330,8 +330,8 @@ msgid ""
 "A fragment is received but more than one fragment message in a group of "
 "fragments specifies a value for a compression element."
 msgstr ""
-"フラグメントを受信したが、フラグメントグループ内の複数のフラグメントメッセー"
-"ジが圧縮要素の値を指定している場合。"
+"フラグメントを受信したが、フラグメントグループ内の複数の"
+"フラグメントメッセージが圧縮要素の値を指定している場合。"
 
 #. module: account_peppol
 #. odoo-python
@@ -340,8 +340,8 @@ msgid ""
 "A fragment is received but more than one fragment message in a group of "
 "fragments specifies a value for this element."
 msgstr ""
-"フラグメントを受信したが、フラグメントのグループ内の複数のフラグメント・メッ"
-"セージがこのエレメントの値を指定。"
+"フラグメントを受信したが、フラグメントのグループ内の複数のフラグメント・"
+"メッセージがこのエレメントの値を指定。"
 
 #. module: account_peppol
 #. odoo-python
@@ -357,8 +357,8 @@ msgid ""
 "A message unit in a bundle was not processed because a related message unit "
 "in the bundle caused an error."
 msgstr ""
-"バンドル内の関連メッセージユニットがエラーを起こしたため、バンドル内のメッ"
-"セージユニットが処理されませんでした。"
+"バンドル内の関連メッセージユニットがエラーを起こしたため、バンドル内の"
+"メッセージユニットが処理されませんでした。"
 
 #. module: account_peppol
 #. odoo-python
@@ -383,8 +383,8 @@ msgid ""
 "A responding MSH indicates that it applies the alternate MEP binding to the "
 "response message."
 msgstr ""
-"応答するMSHは、代替MEPバインディングを応答メッセージに適用することを示しま"
-"す。"
+"応答するMSHは、代替MEPバインディングを応答メッセージに適用することを示します"
+"。"
 
 #. module: account_peppol
 #. odoo-python
@@ -537,8 +537,8 @@ msgid ""
 "of the MSH, with respect to supported features."
 msgstr ""
 "メッセージドキュ券とは構文的にもスキーマ的にも正しいものの、いくつかの要素や"
-"属性の有無が、サポートされている機能に関する MSH の対応能力と一致していませ"
-"ん。"
+"属性の有無が、サポートされている機能に関する MSH の対応能力と一致していません"
+"。"
 
 #. module: account_peppol
 #. odoo-python
@@ -558,8 +558,7 @@ msgstr ""
 msgid ""
 "An Intermediary MSH was unable to route an ebMS message and stopped "
 "processing the message."
-msgstr ""
-"仲介MSHがebMSメッセージをルーティングできず、メッセージの処理を停止しました。"
+msgstr "仲介MSHがebMSメッセージをルーティングできず、メッセージの処理を停止しました。"
 
 #. module: account_peppol
 #. odoo-python
@@ -611,9 +610,9 @@ msgid ""
 "was prepared to wait for the message to be pulled, and that limit has been "
 "reached."
 msgstr ""
-"中間の MSH はメッセージをプル用の MPC に割り当て、正常に保存しました。しか"
-"し、中間 MSH はメッセージがプルされるのを待機する時間に制限を設けており、その"
-"制限時間に達しました。"
+"中間の MSH はメッセージをプル用の MPC に割り当て、正常に保存しました。しかし"
+"、中間 MSH はメッセージがプルされるのを待機する時間に制限を設けており、その制"
+"限時間に達しました。"
 
 #. module: account_peppol
 #. odoo-python
@@ -733,8 +732,8 @@ msgid ""
 "             List available at https://docs.peppol.eu/poacc/billing/3.0/"
 "codelist/eas/"
 msgstr ""
-"BIS Billing 3.0およびその派生版のエンドポイントを識別するために使用されるコー"
-"ド。\n"
+"BIS Billing 3.0およびその派生版のエンドポイントを識別するために使用される"
+"コード。\n"
 "             List available at https://docs.peppol.eu/poacc/billing/3.0/"
 "codelist/eas/"
 
@@ -798,8 +797,7 @@ msgstr ""
 msgid ""
 "Could not find an XSD with which to validate the document with identifier "
 "\"%s\"."
-msgstr ""
-"識別子を持つドキュメントを検証するための XSD が見つかりませんでした\"%s\""
+msgstr "識別子を持つドキュメントを検証するための XSD が見つかりませんでした\"%s\""
 
 #. module: account_peppol
 #: model:ir.model,website_form_label:account_peppol.model_res_partner
@@ -830,8 +828,7 @@ msgstr "作成日"
 #. odoo-python
 #: code:addons/account_peppol/models/account_move_send.py:0
 msgid "Customer is on Peppol but did not enable receiving documents."
-msgstr ""
-"顧客はPeppolを使用していますが、ドキュメントの受信を有効にしていません。"
+msgstr "顧客はPeppolを使用していますが、ドキュメントの受信を有効にしていません。"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
@@ -1035,8 +1032,8 @@ msgid ""
 msgstr ""
 "Peppolアクセスポイントへの接続に失敗しました。バックアップからデータベースを"
 "復元した場合や、中立化せずにコピーした場合に発生することがあります。解決する"
-"には、管理設定 > 会計 > Peppol設定から、「このデータベースを再接続」をクリッ"
-"クします。"
+"には、管理設定 > 会計 > Peppol設定から、「このデータベースを再接続」を"
+"クリックします。"
 
 #. module: account_peppol
 #. odoo-python
@@ -1121,8 +1118,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_peppol/controllers/portal.py:0
 msgid "If you want to be invoiced by Peppol, your configuration must be valid."
-msgstr ""
-"Peppolから顧客請求書を受取りたい場合は、設定が検証済である必要があります。"
+msgstr "Peppolから顧客請求書を受取りたい場合は、設定が検証済である必要があります。"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -1212,8 +1208,8 @@ msgid ""
 "More time than %s has passed since the first fragment was received but not "
 "all other fragments are received."
 msgstr ""
-"最初のフラグメントを受信してから %s 以上の時間が経過していますが、他のフラグ"
-"メントはすべて受信されていません。"
+"最初のフラグメントを受信してから %s 以上の時間が経過していますが、他の"
+"フラグメントはすべて受信されていません。"
 
 #. module: account_peppol
 #. odoo-python
@@ -1292,8 +1288,7 @@ msgstr "PEPPOLにより、電子顧客請求書の送受信の完全自動化が
 #: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.xml:0
 msgid ""
 "PEPPOL is the secure standard for e-invoices used in EU and across the world."
-msgstr ""
-"PEPPOLは、EUおよび世界中で使用されている電子請求書の安全な標準規格です。"
+msgstr "PEPPOLは、EUおよび世界中で使用されている電子請求書の安全な標準規格です。"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_bank_statement_line__peppol_message_uuid
@@ -1590,8 +1585,7 @@ msgstr ""
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 msgid ""
 "Please set a journal for Peppol invoices on %s before receiving documents."
-msgstr ""
-"ドキュメントを受け取る前に、%sに Peppol 請求書の仕訳帳を設定してください。"
+msgstr "ドキュメントを受け取る前に、%sに Peppol 請求書の仕訳帳を設定してください。"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__contact_email
@@ -1954,8 +1948,8 @@ msgid ""
 "The eb3:Message header copied to the fragment header does not match the "
 "eb3:Message header in the reassembled source message."
 msgstr ""
-"フラグメントヘッダにコピーされたeb3:Messageヘッダが、再アセンブルされたソース"
-"メッセージのeb3:Messageヘッダと一致しません。"
+"フラグメントヘッダにコピーされたeb3:Messageヘッダが、再アセンブルされた"
+"ソースメッセージのeb3:Messageヘッダと一致しません。"
 
 #. module: account_peppol
 #. odoo-python
@@ -1964,8 +1958,8 @@ msgid ""
 "The ebMS header is either not well formed as an XML document, or does not "
 "conform to the ebMS packaging rules."
 msgstr ""
-"ebMSヘッダーはXMLドキュメントとしてうまく形成されていないか、ebMSパッケージン"
-"グ 規則に準拠していません。"
+"ebMSヘッダーはXMLドキュメントとしてうまく形成されていないか、ebMS"
+"パッケージング 規則に準拠していません。"
 
 #. module: account_peppol
 #. odoo-python
@@ -2035,9 +2029,9 @@ msgid ""
 "other than the fragment header and a data part are in the message. are added "
 "or the SOAP Body is not empty."
 msgstr ""
-"href 属性が有効な MIME データパートを参照していない、またはメッセージ内にフラ"
-"グメントヘッダーおよびデータパート以外の MIME パートが含まれている、あるいは "
-"SOAP Body が空でない可能性があります。"
+"href 属性が有効な MIME データパートを参照していない、またはメッセージ内に"
+"フラグメントヘッダーおよびデータパート以外の MIME パートが含まれている、ある"
+"いは SOAP Body が空でない可能性があります。"
 
 #. module: account_peppol
 #. odoo-python
@@ -2086,8 +2080,8 @@ msgid ""
 "The signature in the Security header intended for the \"ebms\" SOAP actor, "
 "could not be validated by the Security module."
 msgstr ""
-"セキュリティヘッダー内の \"ebms\" SOAP アクター向けの署名を、セキュリティモ"
-"ジュールで検証できませんでした。"
+"セキュリティヘッダー内の \"ebms\" SOAP アクター向けの署名を、"
+"セキュリティモジュールで検証できませんでした。"
 
 #. module: account_peppol
 #. odoo-python
@@ -2164,8 +2158,7 @@ msgstr "この支店は、以下にある有効なPeppol接続を利用します
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 msgid ""
 "This connection has been superseded by another database. Register again."
-msgstr ""
-"この接続は別のデータベースによって置き換えられました。再度登録してください。"
+msgstr "この接続は別のデータベースによって置き換えられました。再度登録してください。"
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_res_config_settings__account_is_token_out_of_sync
@@ -2387,8 +2380,7 @@ msgstr "連絡先メールアドレスを変更する権限がありません。
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
 msgid ""
 "You are sending and receiving your e-invoices via Odoo with this Peppol ID"
-msgstr ""
-"このPeppol IDを使用して、Odoo経由で電子顧客請求書の送受信を行っています。"
+msgstr "このPeppol IDを使用して、Odoo経由で電子顧客請求書の送受信を行っています。"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -2496,8 +2488,8 @@ msgid ""
 "Your company is already registered on an Access Point (%s) for receiving "
 "invoices. We will register you on Odoo as a sender only."
 msgstr ""
-"貴社はすでに顧客請求書を受け取るためのアクセスポイント(%s)に登録されていま"
-"す。Odooに送信者としてのみ登録します。"
+"貴社はすでに顧客請求書を受け取るためのアクセスポイント(%s)に登録されています"
+"。Odooに送信者としてのみ登録します。"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form

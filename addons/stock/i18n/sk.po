@@ -24,7 +24,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-24 17:38+0000\n"
-"PO-Revision-Date: 2026-08-01 19:01+0000\n"
+"PO-Revision-Date: 2026-08-08 07:10+0000\n"
 "Last-Translator: Tomáš Píšek <Tomas.Pisek@seznam.cz>\n"
 "Language-Team: Slovak <https://translate.odoo.com/projects/odoo-19/stock/sk/>"
 "\n"
@@ -388,8 +388,7 @@ msgstr "(čiarový kód SČ)"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
 msgid "), a replenishment must be done to reach the maximum level of stock ("
-msgstr ""
-"), je potrebné doplniť zásoby, aby sa dosiahla maximálna úroveň zásob ("
+msgstr "), je potrebné doplniť zásoby, aby sa dosiahla maximálna úroveň zásob ("
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.alternative_zpl_label
@@ -634,8 +633,8 @@ msgstr ""
 "                <t t-set=\"multiple_carrier_tracking\" t-"
 "value=\"object.get_multiple_carrier_tracking()\"/>\n"
 "                <t t-if=\"multiple_carrier_tracking\">\n"
-"                    <t t-foreach=\"multiple_carrier_tracking\" t-"
-"as=\"line\">\n"
+"                    <t t-foreach=\"multiple_carrier_tracking\" t-as=\"line\">"
+"\n"
 "                        <br/><a t-att-href=\"line[1]\" target=\"_blank\" t-"
 "out=\"line[0] or ''\"/>\n"
 "                    </t>\n"
@@ -656,8 +655,8 @@ msgstr ""
 "        <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
 "            <br/>\n"
 "            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
-"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></"
-"div>\n"
+"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>"
+"\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -668,8 +667,8 @@ msgstr ""
 msgid ""
 "<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Date\" title=\"Date\"/>"
 msgstr ""
-"<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Dátum\" title=\"Dátum\"/"
-">"
+"<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Dátum\" "
+"title=\"Dátum\"/>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -781,7 +780,7 @@ msgstr "<span class=\"o_stat_text\">Výdaj:</span>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "<span class=\"o_stat_text\">Packages</span>"
-msgstr "<span class=\"o_stat_text\">Balenia</span>"
+msgstr "<span class=\"o_stat_text\">Balíky</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_scrap_form_view
@@ -854,7 +853,7 @@ msgstr "<span>OBTRETU</span>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
 msgid "<span>Package Type: </span>"
-msgstr "<span>Typ balenia: </span>"
+msgstr "<span>Typ balíku: </span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -983,7 +982,7 @@ msgstr "<strong>Dátum balenia:</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
 msgid "<strong>Package Type:</strong>"
-msgstr "<strong>Typ balenia:</strong>"
+msgstr "<strong>Typ balíku:</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -1073,7 +1072,7 @@ msgstr "? Môže to viesť k nezrovnalostiam v zásobách."
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_package_type_barcode_uniq
 msgid "A barcode can only be assigned to one package type!"
-msgstr "Čiarový kód možno priradiť len k jednému typu balenia!"
+msgstr "Čiarový kód možno priradiť len k jednému typu balíku!"
 
 #. module: stock
 #. odoo-python
@@ -1081,7 +1080,7 @@ msgstr "Čiarový kód možno priradiť len k jednému typu balenia!"
 msgid ""
 "A package can't have one of its contained packages as destination container."
 msgstr ""
-"Balenie nemôže mať ako cieľový kontajner žiadne z balení, ktoré obsahuje."
+"Balenie nemôže mať ako cieľový kontajner žiadny z balíkov, ktoré obsahuje."
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_warehouse_orderpoint_product_location_check
@@ -1312,7 +1311,7 @@ msgstr "Všetky kategórie"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package__all_children_package_ids
 msgid "All Children Package"
-msgstr "Všetky vnorené balenia"
+msgstr "Všetky vnorené balíky"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_putaway_list
@@ -1457,7 +1456,7 @@ msgstr "Použiteľné na"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_route__package_type_selectable
 msgid "Applicable on Package Type"
-msgstr "Platí pre typ balenia"
+msgstr "Platí pre typ balíka"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_route__product_selectable
@@ -1571,7 +1570,7 @@ msgstr "Pripradiť k"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package__child_package_dest_ids
 msgid "Assigned Contained Packages"
-msgstr "Priradené balenia s obsahom"
+msgstr "Priradené balíky s obsahom"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -1629,12 +1628,12 @@ msgstr "Automatická tlač štítkov šarží/sériových čísiel"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__auto_print_package_label
 msgid "Auto Print Package Label"
-msgstr "Automatická tlač štítkov balenia"
+msgstr "Automatická tlač štítkov balíkov"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__auto_print_packages
 msgid "Auto Print Packages"
-msgstr "Automatická tlač balenia"
+msgstr "Automatická tlač balíkov"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__auto_print_product_labels
@@ -1805,7 +1804,7 @@ msgstr "Na základe"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_stock_picking_batch
 msgid "Batch, Wave & Cluster Transfers"
-msgstr "Hromadné, vlnové a skupinové prevody"
+msgstr "Hromadné, vlnové a skupinové presuny"
 
 #. module: stock
 #. odoo-python
@@ -1939,13 +1938,13 @@ msgstr "Zrušené"
 #. odoo-python
 #: code:addons/stock/models/stock_package.py:0
 msgid "Cannot move an empty package"
-msgstr "Prázdne balenie nie je možné presunúť"
+msgstr "Prázdny balík nie je možné presunúť"
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_package.py:0
 msgid "Cannot remove the location of a non empty package"
-msgstr "Nie je možné odstrániť lokáciu z neprázdneho balenia"
+msgstr "Nie je možné odstrániť lokáciu z neprázdneho balíka"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_storage_category__capacity_ids
@@ -1956,7 +1955,7 @@ msgstr "Kapacita"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_storage_category_form
 msgid "Capacity by Package"
-msgstr "Kapacita podľa balenia"
+msgstr "Kapacita podľa balíka"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_storage_category_form
@@ -2213,8 +2212,8 @@ msgid ""
 "                                    <strong>(please go to Home&gt;Apps to "
 "install)</strong>"
 msgstr ""
-"Vypočítajte náklady na dopravu a odošlite zásielku prostredníctvom FedEx<br/"
-">\n"
+"Vypočítajte náklady na dopravu a odošlite zásielku prostredníctvom FedEx<br/>"
+"\n"
 "                                    <strong>(prejdite na hlavnú stránku a "
 "nainštalujte si aplikáciu)</strong>"
 
@@ -2365,7 +2364,7 @@ msgstr "Kontakt"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package__child_package_ids
 msgid "Contained Packages"
-msgstr "Obsiahnuté balenia"
+msgstr "Obsiahnuté balíky"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package__contained_quant_ids
@@ -2528,7 +2527,7 @@ msgstr "Vytvoriť nový typ operácie"
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_package_view
 msgid "Create a new package"
-msgstr "Vytvoriť nové balenie"
+msgstr "Vytvoriť nový balík"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -3058,7 +3057,7 @@ msgstr ""
 "prvé.\n"
 "Najbližšia lokácia: produkty/šarže, ktoré sú najbližšie k cieľovému miestu, "
 "budú vyberané ako prvé.\n"
-"Najmenej v balení: produkty/šarže, ktoré boli naskladnené v balení s "
+"Najmenej v balíku: produkty/šarže, ktoré boli naskladnené v balíku s "
 "najmenším množstvom, budú vyberané ako prvé.\n"
 "FEFO: produkty/šarže s najbližším dátumom vyradenia budú vyberané ako prvé "
 "(dostupnosť tejto metódy závisí od nastavenia „Dátumy spotreby“)."
@@ -3306,12 +3305,12 @@ msgstr "Cieľová lokácia"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_relocate__dest_package_id
 msgid "Dest Package"
-msgstr "Cieľové balenie"
+msgstr "Cieľový balík"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_relocate__dest_package_id_domain
 msgid "Dest Package Id Domain"
-msgstr "Doména pre cieľové balenie"
+msgstr "Doména pre cieľový balík"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_put_in_pack__location_dest_id
@@ -3375,17 +3374,17 @@ msgstr "Cieľové pohyby"
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
 #: model_terms:ir.ui.view,arch_db:stock.view_move_line_form
 msgid "Destination Package"
-msgstr "Cieľové balenie"
+msgstr "Cieľový balík"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__result_package_dest_name
 msgid "Destination Package Name"
-msgstr "Názov cieľového balenia"
+msgstr "Názov cieľového balíka"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.message_body
 msgid "Destination Package:"
-msgstr "Cieľové balenie:"
+msgstr "Cieľový balík:"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package__location_dest_id
@@ -3396,7 +3395,7 @@ msgstr "Cieľová lokácia"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__location_dest_from_rule
 msgid "Destination location origin from rule"
-msgstr ""
+msgstr "Cieľová lokácia podľa pravidlá"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__route_ids
@@ -3724,8 +3723,8 @@ msgstr ""
 "Vychutnajte si rýchly zážitok s aplikáciou Odoo na čiarové kódy. Je bleskovo "
 "rýchla a funguje aj bez stabilného internetového pripojenia. Podporuje "
 "všetky pracovné postupy: úpravy zásob, skladový presun v dávkach, presun "
-"šarží alebo paliet, kontroly nízkych stavov zásob atď. Prejdite do ponuky "
-"„Aplikácie“, aby ste aktivovali rozhranie pre čiarové kódy."
+"šarží alebo paliet, kontroly nízkych stavov zásob atď. Prejdite do ponuky „"
+"Aplikácie“, aby ste aktivovali rozhranie pre čiarové kódy."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__tracking
@@ -3897,7 +3896,7 @@ msgstr "Ikona písma font awesome, napr. fa-tasks"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_category__removal_strategy_id
 msgid "Force Removal Strategy"
-msgstr "Vymôcť spôsob vyradenia"
+msgstr "Vymôcť spôsob výberu"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__qty_forecast
@@ -4069,7 +4068,7 @@ msgstr "Celé meno lokácie"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package__complete_name
 msgid "Full Package Name"
-msgstr "Úplný názov balenia"
+msgstr "Úplný názov balíka"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
@@ -4185,7 +4184,7 @@ msgstr "Má obsah"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__has_lines_without_result_package
 msgid "Has Lines Without Result Package"
-msgstr "Obsahuje riadky bez balenia"
+msgstr "Obsahuje riadky bez balíka"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__has_message
@@ -4254,8 +4253,7 @@ msgstr "Horizont"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__reservation_method
 msgid "How products in transfers of this operation type should be reserved."
-msgstr ""
-"Ako by sa mali rezervovať produkty na presunoch s týmto typom operácie."
+msgstr "Ako by sa mali rezervovať produkty na presunoch s týmto typom operácie."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_barcode_rule__id
@@ -4357,7 +4355,7 @@ msgid ""
 "each numbers"
 msgstr ""
 "Ak je definovaný oddeľovač, vygeneruje sa QR kód obsahujúci všetky sériové "
-"čísla obsiahnuté v balení, pričom na oddelenie jednotlivých čísel sa použijú "
+"čísla obsiahnuté v balíku, pričom na oddelenie jednotlivých čísel sa použijú "
 "definované znaky"
 
 #. module: stock
@@ -4390,7 +4388,7 @@ msgstr "Ak zaškrtnuté, keď je tento pohyb zrušený, zruší sa aj prepojený
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_line__result_package_id
 msgid "If set, the operations are packed into this package"
-msgstr "Ak nastavené, produkty sú vložené do tohto balenia"
+msgstr "Ak nastavené, produkty sú vložené do tohto balíka"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_lot_label_layout__label_quantity
@@ -4458,8 +4456,8 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically print the package label "
 "when \"Put in Pack\" button is used."
 msgstr ""
-"Ak je toto políčko zaškrtnuté, Odoo automaticky vytlačí štítok balenia pri "
-"stlačení tlačidla „Vložiť do balení“."
+"Ak je toto políčko zaškrtnuté, Odoo automaticky vytlačí štítok balíku pri "
+"stlačení tlačidla „Vložiť do balíka“."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_packages
@@ -4467,7 +4465,7 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically print the packages and "
 "their contents of a picking when it is validated."
 msgstr ""
-"Ak je toto políčko zaškrtnuté, Odoo automaticky vytlačí balenia a ich obsah "
+"Ak je toto políčko zaškrtnuté, Odoo automaticky vytlačí balíkov a ich obsah "
 "keď je presun potvrdený."
 
 #. module: stock
@@ -4586,8 +4584,8 @@ msgid ""
 "If ticked, you will be able to select which package or package type to use "
 "in a put in pack"
 msgstr ""
-"Ak je táto možnosť zaškrtnutá, budete môcť vybrať, ktoré balenie alebo typ "
-"balenia sa má použiť pri balení"
+"Ak je táto možnosť zaškrtnutá, budete môcť vybrať, ktorý balík alebo typ "
+"balíka sa má použiť pri balení"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__active
@@ -4996,7 +4994,7 @@ msgstr "Viacero lokácií"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_relocate__is_partial_package
 msgid "Is Partial Package"
-msgstr "Je čiastočné balenie"
+msgstr "Je čiastočný balík"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__is_date_editable
@@ -5011,7 +5009,7 @@ msgstr "Je podpísané"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__is_entire_pack
 msgid "Is added through entire package"
-msgstr "Je pridané celým balením"
+msgstr "Je pridané celým balíkom"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__is_initial_demand_editable
@@ -5128,8 +5126,7 @@ msgstr "Zachovať súčasné riadky"
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_conflict_form_view
 msgid ""
 "Keep the <strong>Counted Quantity</strong> (the Difference will be updated)"
-msgstr ""
-"Použiť <strong>Spočítané množstvo</strong> (rozdiel bude aktualizovaný)"
+msgstr "Použiť <strong>Spočítané množstvo</strong> (rozdiel bude aktualizovaný)"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_conflict_form_view
@@ -5667,7 +5664,7 @@ msgstr "Pravidlo Na objednávku (MTO)"
 #: model_terms:ir.ui.view,arch_db:stock.package_history_search_view
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_view_search
 msgid "Main Packages"
-msgstr "Hlavné balenia"
+msgstr "Hlavné balíky"
 
 #. module: stock
 #: model:res.groups,name:stock.group_tracking_owner
@@ -5692,7 +5689,7 @@ msgstr "Správa viacerých skladov"
 #. module: stock
 #: model:res.groups,name:stock.group_tracking_lot
 msgid "Manage Packages"
-msgstr "Spravovať balenia"
+msgstr "Spravovať balíky"
 
 #. module: stock
 #: model:res.groups,name:stock.group_adv_location
@@ -5875,7 +5872,7 @@ msgstr "Detail pohybu"
 #: model:ir.model.fields,field_description:stock.field_stock_picking__picking_type_entire_packs
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__show_entire_packs
 msgid "Move Entire Packages"
-msgstr "Presun celých balení"
+msgstr "Presun celých balíkov"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_lot_label_layout__move_line_ids
@@ -6148,7 +6145,7 @@ msgstr "Žiadna nevybavená objednávka"
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/stock_package_m2m.js:0
 msgid "No Package"
-msgstr "Žiadny balenie"
+msgstr "Žiadny balík"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_quant_action
@@ -6624,7 +6621,7 @@ msgstr "Zdrojové pohyby"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_put_in_pack__origin_package_ids
 msgid "Origin Package"
-msgstr "Pôvodné balenie"
+msgstr "Pôvodný balík"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__origin_returned_move_id
@@ -6818,29 +6815,29 @@ msgstr "Balík B"
 #: model:ir.actions.report,name:stock.action_report_package_barcode_small
 #: model:ir.actions.report,name:stock.action_report_package_history_barcode_small
 msgid "Package Barcode (PDF)"
-msgstr "Čiarový kód balenia (PDF)"
+msgstr "Čiarový kód balíka (PDF)"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.label_package_history_template
 #: model:ir.actions.report,name:stock.label_package_template
 msgid "Package Barcode (ZPL)"
-msgstr "Čiarový kód balenia (ZPL)"
+msgstr "Čiarový kód balíka (ZPL)"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_package_barcode
 #: model:ir.actions.report,name:stock.action_report_package_history_barcode
 msgid "Package Barcode with Contents"
-msgstr "Čiarový kód balenia s obsahom"
+msgstr "Čiarový kód balíka s obsahom"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_storage_category__package_capacity_ids
 msgid "Package Capacity"
-msgstr "Kapacita balenia"
+msgstr "Kapacita balíka"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 msgid "Package Content"
-msgstr "Obsah balenia"
+msgstr "Obsah balíka"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__package_history_id
@@ -6850,19 +6847,19 @@ msgstr "História balíka"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 msgid "Package Label"
-msgstr "Štítok balenia"
+msgstr "Štítok balíka"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__package_label_to_print
 msgid "Package Label to Print"
-msgstr "Štítok balenia na tlač"
+msgstr "Štítok balíka na tlač"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_history__package_name
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_view_list
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_view_search
 msgid "Package Name"
-msgstr "Názov balenia"
+msgstr "Názov balíka"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package__dest_complete_name
@@ -6874,12 +6871,12 @@ msgstr "Názov balíka v mieste určenia"
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_view_form
 msgid "Package Reference"
-msgstr "Referencia balenia"
+msgstr "Referencia balíka"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_view_form
 msgid "Package Transfers"
-msgstr "Presuny balenia"
+msgstr "Presuny balíka"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package__package_type_id
@@ -6894,41 +6891,41 @@ msgstr "Presuny balenia"
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_type_form
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_view_search
 msgid "Package Type"
-msgstr "Typ balenia"
+msgstr "Typ balíka"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
 msgid "Package Type Demo"
-msgstr "Typu balenia Demo"
+msgstr "Typu balíka Demo"
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_package_type.py:0
 msgid "Package Type Sequence %(code)s"
-msgstr "Sekvencia typov balenia %(code)s"
+msgstr "Sekvencia typov balíkov %(code)s"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
 msgid "Package Type:"
-msgstr "Typ balenia:"
+msgstr "Typ balíka:"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_package_type_view
 #: model:ir.ui.menu,name:stock.menu_packaging_types
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_type_tree
 msgid "Package Types"
-msgstr "Typy balení"
+msgstr "Typy balíkov"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_type__package_use
 msgid "Package Use"
-msgstr "Použitie obalu"
+msgstr "Použitie balíka"
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_package.py:0
 msgid "Package manually relocated"
-msgstr "Balenie bolo ručne presunuté"
+msgstr "Balík bol ručne presunutý"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package__valid_sscc
@@ -6938,7 +6935,7 @@ msgstr "Názov balíka je platný SSCC"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_putaway_list
 msgid "Package type"
-msgstr "Typ balenia"
+msgstr "Typ balíka"
 
 #. module: stock
 #. odoo-python
@@ -6953,7 +6950,7 @@ msgstr "Typ balenia"
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_package_history_list
 msgid "Packages"
-msgstr "Balenia"
+msgstr "Balíky"
 
 #. module: stock
 #. odoo-python
@@ -6968,7 +6965,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__packages_count
 msgid "Packages Count"
-msgstr "Počet balení"
+msgstr "Počet balíkov"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_package_view
@@ -8158,13 +8155,13 @@ msgstr "Vyradenie"
 #: model:ir.model,name:stock.model_product_removal
 #: model:ir.model.fields,field_description:stock.field_stock_location__removal_strategy_id
 msgid "Removal Strategy"
-msgstr "Spôsob vyradenia"
+msgstr "Spôsob výberu"
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 msgid "Removal strategy %s not implemented."
-msgstr "Spôsob vyradenia %s neimplementovaný."
+msgstr "Spôsob výberu %s neimplementovaný."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_view_list_editable
@@ -8492,8 +8489,8 @@ msgstr ""
 "čiarového kódu sa naskenovaním opakovane použiteľnej škatule pridajú výrobky "
 "do tohto boxu.\n"
 "        Jednorazové boxy sa opätovne nepoužívajú, pri naskenovaní "
-"jednorazového boxu v aplikácii čiarového kódu sa produkty pridajú do "
-"presunu ."
+"jednorazového boxu v aplikácii čiarového kódu sa produkty pridajú do presunu "
+"."
 
 #. module: stock
 #: model:ir.actions.server,name:stock.action_revert_inventory_adjustment
@@ -8829,7 +8826,7 @@ msgstr "Vyberte trasu"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_put_in_pack_form
 msgid "Select a Package Type"
-msgstr "Vyberte typ balenia"
+msgstr "Vyberte typ balíka"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view
@@ -8980,7 +8977,7 @@ msgstr "Sekvencia sériových čísel/čísiel šarží"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__set_package_type
 msgid "Set Package Type"
-msgstr "Nastaviť typ balenia"
+msgstr "Nastaviť typ balíka"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -9014,7 +9011,7 @@ msgstr ""
 "budú vyberané ako prvé.\n"
 "FEFO: produkty/šarže s najbližším dátumom vyradenia budú vyberané ako prvé "
 "(dostupnosť tejto metódy závisí od nastavenia „Dátumy spotreby“).\n"
-"Najmenej balení: FIFO, avšak s čo najmenším počtom balení, ak existuje "
+"Najmenej balíkov: FIFO, avšak s čo najmenším počtom balení, ak existuje "
 "viacero balení obsahujúcich ten istý produkt."
 
 #. module: stock
@@ -9331,12 +9328,12 @@ msgstr "Názov zdroja"
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
 #: model_terms:ir.ui.view,arch_db:stock.view_move_line_form
 msgid "Source Package"
-msgstr "Zdrojové balenie"
+msgstr "Zdrojový balík"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.message_body
 msgid "Source Package:"
-msgstr "Zdrojové balenie:"
+msgstr "Zdrojový balík:"
 
 #. module: stock
 #: model:ir.actions.server,name:stock.stock_split_picking
@@ -9456,12 +9453,12 @@ msgstr "Skladová operácia"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_package_destination
 msgid "Stock Package Destination"
-msgstr "Cieľové balenie v sklade"
+msgstr "Cieľový balík v sklade"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_package_history
 msgid "Stock Package History"
-msgstr "História skladového balenia"
+msgstr "História skladového balíku"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__stock_quant_ids
@@ -9566,7 +9563,7 @@ msgstr "Skladové pohyby ktoré boli spracované"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_package_type
 msgid "Stock package type"
-msgstr "Typ skladového balenia"
+msgstr "Typ skladového balíku"
 
 #. module: stock
 #: model:ir.model,name:stock.model_report_stock_report_stock_rule
@@ -9701,7 +9698,7 @@ msgstr "Vziať zo skladu"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_rule__procure_method__mts_else_mto
 msgid "Take From Stock, if unavailable, Trigger Another Rule"
-msgstr "Použiť zo zásoby; ak nie je k dispozícii, spustiť iné pravidlo"
+msgstr "Vziať zo zásob; ak nie je k dispozícii, spustiť iné pravidlo"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__procure_method
@@ -9730,8 +9727,8 @@ msgid ""
 "Technical Field used to decide whether the button \"Allocation\" should be "
 "displayed."
 msgstr ""
-"Technické pole, ktoré sa používa na rozhodnutie, či sa má zobraziť tlačidlo "
-"„Pridelenie“."
+"Technické pole, ktoré sa používa na rozhodnutie, či sa má zobraziť tlačidlo „"
+"Pridelenie“."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__lot_sequence_id
@@ -9801,8 +9798,8 @@ msgid ""
 "Otherwise, the serial number should be corrected to prevent inconsistent "
 "data."
 msgstr ""
-"Sériové číslo (%(serial_number)s) sa už používa v lokáciach: %"
-"(location_list)s.\n"
+"Sériové číslo (%(serial_number)s) sa už používa v lokáciach: %(location_list)"
+"s.\n"
 "\n"
 "Je to očakávané správanie? K tejto situácii môže napríklad dôjsť, ak je "
 "operácia dodania overená skôr, ako je overená príslušná operácia príjmu. V "
@@ -9907,8 +9904,7 @@ msgstr "Boli vytvorené presuny medzi skladmi"
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_location_inventory_freq_nonneg
 msgid "The inventory frequency (days) for a location must be non-negative"
-msgstr ""
-"Frekvencia inventúry zásob (dni) pre danú lokáciu musí byť kladné číslo"
+msgstr "Frekvencia inventúry zásob (dni) pre danú lokáciu musí byť kladné číslo"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_replenishment_info__product_min_qty
@@ -10012,7 +10008,7 @@ msgid ""
 "a common location."
 msgstr ""
 "Vybrané množstvá nepatria všetky do tej istej lokácie.\n"
-"                    Nemôžete im priradiť balenie bez toho, aby ste ich "
+"                    Nemôžete im priradiť balík bez toho, aby ste ich "
 "presunuli do spoločnej lokácie."
 
 #. module: stock
@@ -10211,8 +10207,8 @@ msgstr ""
 msgid ""
 "This lot %(lot_name)s is incompatible with this product %(product_name)s"
 msgstr ""
-"Táto šarža %(lot_name)s nie je kompatibilná s týmto produktom %"
-"(product_name)s"
+"Táto šarža %(lot_name)s nie je kompatibilná s týmto produktom %(product_name)"
+"s"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_move_action
@@ -10267,7 +10263,7 @@ msgstr ""
 #: code:addons/stock/models/stock_package.py:0
 msgid "This package is currently set to be sent in %(location_names_list)s."
 msgstr ""
-"Toto balenie je momentálne nastavené na presun do %(location_names_list)s."
+"Tento balík je momentálne nastavený na presun do %(location_names_list)s."
 
 #. module: stock
 #. odoo-python
@@ -10452,7 +10448,7 @@ msgstr "Na objednanie (ručne)"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_quant_relocate_view_form
 msgid "To Package"
-msgstr "Do balenia"
+msgstr "Do balíka"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
@@ -10565,12 +10561,12 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__weight_bulk
 msgid "Total weight of products which are not in a package."
-msgstr "Celková hmotnosť produktov, ktoré nie sú v balení."
+msgstr "Celková hmotnosť produktov, ktoré nie sú zabalené."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_package__shipping_weight
 msgid "Total weight of the package."
-msgstr "Celková hmotnosť balenia."
+msgstr "Celková hmotnosť balíka."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -10675,7 +10671,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__package_history_ids
 msgid "Transfered Packages"
-msgstr "Presunuté balenia"
+msgstr "Presunuté balíky"
 
 #. module: stock
 #. odoo-python
@@ -10708,7 +10704,7 @@ msgstr "Presuny umožňujú presúvať produkty z jedného miesta na druhé."
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_package__picking_ids
 msgid "Transfers in which the Package is set as Destination Package"
-msgstr "Presuny, kde je balenie nastavené ako cieľový balík"
+msgstr "Presuny, kde je balík nastavený ako cieľový balík"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_location__usage__transit
@@ -11310,7 +11306,7 @@ msgstr ""
 #: model:ir.model.fields,help:stock.field_stock_route__package_type_selectable
 msgid "When checked, the route will be selectable on package types"
 msgstr ""
-"Ak je táto možnosť zaškrtnutá, trasa bude voliteľná pre dané typy balení"
+"Ak je táto možnosť zaškrtnutá, trasa bude voliteľná pre dané typy balíkov"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_route__product_categ_selectable
@@ -11456,10 +11452,10 @@ msgid ""
 "                    Those quantities will be removed from the following "
 "package(s):"
 msgstr ""
-"Chystáte sa presunúť množstvá v balení bez toho, aby ste presunuli celé "
-"balenie.\n"
-"             Tieto množstvá budú odstránené z nasledujúceho balenia "
-"(nasledujúcich balení):"
+"Chystáte sa presunúť množstvá v balíku bez toho, aby ste presunuli celé "
+"balík.\n"
+"             Tieto množstvá budú odstránené z nasledujúceho balíka "
+"(nasledujúcich balíkov):"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_form
@@ -11505,7 +11501,7 @@ msgid ""
 "You are trying to put products going to different locations into the same "
 "package"
 msgstr ""
-"Pokúšate sa zadať produkty patriace na rozličné lokácie do jedného balenia"
+"Pokúšate sa zadať produkty patriace na rozličné lokácie do jedného balíka"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_routes_form
@@ -11690,8 +11686,8 @@ msgid ""
 "You cannot move the same package content more than once in the same transfer "
 "or split the same package into two location."
 msgstr ""
-"V rámci jedného presunu nemôžete presunúť obsah toho istého balenia viac ako "
-"raz ani rozdeliť to isté balenie na dve lokácie."
+"V rámci jedného presunu nemôžete presunúť obsah toho istého balíka viac ako "
+"raz ani rozdeliť ten istý balík na dve lokácie."
 
 #. module: stock
 #. odoo-python
@@ -11700,7 +11696,7 @@ msgid ""
 "You cannot pack products into the same package when they are from different "
 "transfers with different operation types"
 msgstr ""
-"Výrobky nie je možné zabaliť do toho istého balenia, ak pochádzajú z rôznych "
+"Výrobky nie je možné zabaliť do toho istého balíka, ak pochádzajú z rôznych "
 "presunov s rôznymi typmi operácií"
 
 #. module: stock
@@ -11724,8 +11720,8 @@ msgstr "Nemôžete rozdeliť návrh skladového pohybu. Najskôr musí byť potv
 #: code:addons/stock/models/stock_move.py:0
 msgid "You cannot split a stock move that has been set to 'Done' or 'Cancel'."
 msgstr ""
-"Nie je možné rozdeliť skladový pohyb, ktorý bol nastavený na „Hotové“ alebo "
-"„Zrušené\"."
+"Nie je možné rozdeliť skladový pohyb, ktorý bol nastavený na „Hotové“ alebo „"
+"Zrušené\"."
 
 #. module: stock
 #. odoo-python
@@ -11805,7 +11801,7 @@ msgstr "Môžete vrátiť iba jeden presun naraz."
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 msgid "You need a transfer to add these packages to."
-msgstr "Na pridanie týchto balení potrebujete transfer."
+msgstr "Na pridanie týchto balíkov potrebujete transfer."
 
 #. module: stock
 #. odoo-python
@@ -11868,8 +11864,8 @@ msgstr ""
 "zásob.\n"
 "           Vyberte množstvo, ktoré chcete nakúpiť alebo vyrobiť, a vytvorte "
 "objednávky jedným kliknutím.\n"
-"           Ak chcete v budúcnosti ušetriť čas, nastavte pravidlá ako "
-"„automatické“."
+"           Ak chcete v budúcnosti ušetriť čas, nastavte pravidlá ako „"
+"automatické“."
 
 #. module: stock
 #: model_terms:res.company,lunch_notify_message:stock.res_company_1

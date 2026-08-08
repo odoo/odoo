@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-17 17:37+0000\n"
-"PO-Revision-Date: 2026-07-08 09:21+0000\n"
+"PO-Revision-Date: 2026-08-08 00:19+0000\n"
 "Last-Translator: \"Nurul Aini Akrima Sabila (nuaas)\" <nuaas@odoo.com>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-19/mail/"
 "id/>\n"
@@ -249,10 +249,10 @@ msgstr ""
 "%(new_line)s%(new_line)sKetik %(bold_start)s@username%(bold_end)s untuk "
 "mention orang lain, dan menarik perhatian mereka.%(new_line)sKetik %"
 "(bold_start)s#channel%(bold_end)s untuk mention channel.%(new_line)sKetik %"
-"(bold_start)s/command%(bold_end)s untuk menjalankan command.%"
-"(new_line)sKetik %(bold_start)s::shortcut%(bold_end)s untuk memasukkan "
-"tanggapan otomatis di pesan Anda.%(new_line)sKetik %(bold_start)s:emoji:%"
-"(bold_end)s untuk memasukkan emoji di pesan Anda."
+"(bold_start)s/command%(bold_end)s untuk menjalankan command.%(new_line)"
+"sKetik %(bold_start)s::shortcut%(bold_end)s untuk memasukkan tanggapan "
+"otomatis di pesan Anda.%(new_line)sKetik %(bold_start)s:emoji:%(bold_end)s "
+"untuk memasukkan emoji di pesan Anda."
 
 #. module: mail
 #. odoo-javascript
@@ -269,8 +269,8 @@ msgid ""
 "(open_em)sto %(open_save)ssave%(close_save)s%(close_em)s"
 msgstr ""
 "%(open_samp)sEsc%(close_samp)s %(open_em)suntuk %(open_cancel)smembatalkan%"
-"(close_cancel)s%(close_em)s, %(open_samp)sCTRL-Enter%(close_samp)s %"
-"(open_em)suntuk %(open_save)smenyimpan%(close_save)s%(close_em)s"
+"(close_cancel)s%(close_em)s, %(open_samp)sCTRL-Enter%(close_samp)s %(open_em)"
+"suntuk %(open_save)smenyimpan%(close_save)s%(close_em)s"
 
 #. module: mail
 #. odoo-javascript
@@ -281,8 +281,8 @@ msgid ""
 "(open_save)ssave%(close_save)s%(close_em)s"
 msgstr ""
 "%(open_samp)sEsc%(close_samp)s %(open_em)suntuk %(open_cancel)smembatalkan%"
-"(close_cancel)s%(close_em)s, %(open_samp)sEnter%(close_samp)s %"
-"(open_em)suntuk %(open_save)smenyimpan%(close_save)s%(close_em)s"
+"(close_cancel)s%(close_em)s, %(open_samp)sEnter%(close_samp)s %(open_em)"
+"suntuk %(open_save)smenyimpan%(close_save)s%(close_em)s"
 
 #. module: mail
 #. odoo-python
@@ -597,9 +597,9 @@ msgid ""
 "groups.</p> <p>Try to <b>create your first channel</b> (e.g. sales, "
 "marketing, product XYZ, after work party, etc).</p>"
 msgstr ""
-"<p>Saluran memudahkan Anda mengelola informasi dari berbagai topik dan grup."
-"</p> <p>Coba <b>buat saluran Anda</b> (mis. penjualan, pemasaran, produk "
-"XYZ, ngopi setelah kerja, dll).</p>"
+"<p>Saluran memudahkan Anda mengelola informasi dari berbagai topik dan "
+"grup.</p> <p>Coba <b>buat saluran Anda</b> (mis. penjualan, pemasaran, "
+"produk XYZ, ngopi setelah kerja, dll).</p>"
 
 #. module: mail
 #. odoo-javascript
@@ -2389,8 +2389,8 @@ msgid ""
 "(e.g. ::hello) to use in your messages."
 msgstr ""
 "Tanggapan otomatis yang akan secara otomatis dimasukkan dengan konten lebih "
-"panjang di pesan Anda. Ketik '::' diikuti nama shortcut Anda "
-"(contoh. ::hello) untuk menggunakannya di pesan Anda."
+"panjang di pesan Anda. Ketik '::' diikuti nama shortcut Anda (contoh. "
+"::hello) untuk menggunakannya di pesan Anda."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_canned_response_view_tree
@@ -2407,8 +2407,7 @@ msgstr "Tidak dapat mengubah kelompok otoritas dari sub-channel: %(channels)s."
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid "Cannot change initial message nor parent channel of: %(channels)s."
-msgstr ""
-"Tidak dapat mengubah pesan awal atau channel induk untuk: %(channels)s."
+msgstr "Tidak dapat mengubah pesan awal atau channel induk untuk: %(channels)s."
 
 #. module: mail
 #. odoo-python
@@ -3691,8 +3690,8 @@ msgid ""
 "its invitation link. No value means display text (no voice/video)."
 msgstr ""
 "Menentukan bagaimana channel akan ditampilkan secara default saat membukanya "
-"dari link undangan. Tidak ada value berarti teks tampilan (tanpa suara/"
-"video)."
+"dari link undangan. Tidak ada value berarti teks tampilan (tanpa suara/video)"
+"."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_canned_response__is_editable
@@ -5908,8 +5907,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid "Invalid field “%(field_name)s” when creating a channel with members."
-msgstr ""
-"Field “%(field_name)s” tidak valid saat membuat channel dengan anggota."
+msgstr "Field “%(field_name)s” tidak valid saat membuat channel dengan anggota."
 
 #. module: mail
 #. odoo-javascript
@@ -7081,8 +7079,7 @@ msgstr "Anggota"
 #: model:ir.model.fields,help:mail.field_discuss_channel__channel_name_member_ids
 msgid ""
 "Members from which the channel name is computed when the name field is empty."
-msgstr ""
-"Anggota-anggota dari mana nama channel dihitung saat field nama kosong."
+msgstr "Anggota-anggota dari mana nama channel dihitung saat field nama kosong."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel__group_ids
@@ -8339,8 +8336,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/mail_message.py:0
 msgid "Only administrators can modify 'model' and 'res_id' fields."
-msgstr ""
-"Hanya administrator yang dapat memodifikasi field 'model' dan 'res_id'."
+msgstr "Hanya administrator yang dapat memodifikasi field 'model' dan 'res_id'."
 
 #. module: mail
 #. odoo-python
@@ -9179,8 +9175,8 @@ msgid ""
 "Posting a message should receive partners as a list of IDs (received %"
 "(pids)s)"
 msgstr ""
-"Memposting pesan harus menerima partner sebagai list of ID (diterima %"
-"(pids)s)"
+"Memposting pesan harus menerima partner sebagai list of ID (diterima %(pids)"
+"s)"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_layout
@@ -11317,8 +11313,8 @@ msgid ""
 "(activity_type_model)s\"."
 msgstr ""
 "Tipe kegiatan \"%(activity_type_name)s\" tidak kompatibel dengan rencana \"%"
-"(plan_name)s\" karena terabatas hanya untuk model \"%"
-"(activity_type_model)s\"."
+"(plan_name)s\" karena terabatas hanya untuk model \"%(activity_type_model)"
+"s\"."
 
 #. module: mail
 #. odoo-javascript
@@ -12559,8 +12555,7 @@ msgstr "Gunakan Server Gmail"
 #. odoo-python
 #: code:addons/mail/models/fetchmail.py:0
 msgid "Use a local script to fetch your emails and create new records."
-msgstr ""
-"Gunakan skrip lokal untuk mengambil email Anda dan membuat record baru."
+msgstr "Gunakan skrip lokal untuk mengambil email Anda dan membuat record baru."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -13745,8 +13740,8 @@ msgstr "contoh \"Email selamat datang\""
 msgid ""
 "e.g. \"Welcome to MyCompany\" or \"Nice to meet you, {{ object.name }}\""
 msgstr ""
-"contoh \"Selamat datang ke PerusahaanSaya\" atau \"Senang bertemu Anda, "
-"{{ object.name }}\""
+"contoh \"Selamat datang ke PerusahaanSaya\" atau \"Senang bertemu Anda, {{ "
+"object.name }}\""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form

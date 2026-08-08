@@ -25,7 +25,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-10 17:37+0000\n"
-"PO-Revision-Date: 2026-07-28 14:47+0000\n"
+"PO-Revision-Date: 2026-08-08 07:14+0000\n"
 "Last-Translator: Hanna Kharraziha <hakha@odoo.com>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-19/payment/"
 "sv/>\n"
@@ -80,10 +80,10 @@ msgid ""
 "transactions you intend to capture can only be captured in full. Handle the "
 "transactions individually to capture a partial amount.\"/>"
 msgstr ""
-"<i class=\"fa fa-info-circle oe_inline\" "
-"invisible=\"support_partial_capture != 'full_only'\" title=\"Vissa av de "
-"transaktioner som du avser att fånga kan bara fångas i sin helhet. Hantera "
-"transaktionerna individuellt för att fånga en del av beloppet.\"/>"
+"<i class=\"fa fa-info-circle oe_inline\" invisible=\"support_partial_capture "
+"!= 'full_only'\" title=\"Vissa av de transaktioner som du avser att fånga "
+"kan bara fångas i sin helhet. Hantera transaktionerna individuellt för att "
+"fånga en del av beloppet.\"/>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.token_form
@@ -824,7 +824,7 @@ msgstr "Bekräfta radering"
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__state__done
 msgid "Confirmed"
-msgstr "Bekräftad"
+msgstr "Bekräftade"
 
 #. module: payment
 #: model:ir.model,name:payment.model_res_partner
@@ -899,7 +899,7 @@ msgstr "Skapad av"
 #: model:ir.model.fields,field_description:payment.field_payment_token__create_date
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__create_date
 msgid "Created on"
-msgstr "Skapad den"
+msgstr "Skapades den"
 
 #. module: payment
 #. odoo-python
@@ -1989,7 +1989,7 @@ msgstr "Betalningstransaktion"
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_list
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_pivot
 msgid "Payment Transactions"
-msgstr "Betalningstransaktioner"
+msgstr "Transaktioner"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_payment_transaction_linked_to_token
@@ -2148,7 +2148,7 @@ msgstr "Bearbetad av"
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__is_live
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_search
 msgid "Production Environment"
-msgstr ""
+msgstr "Produktionsmiljö"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_promptpay
@@ -2401,7 +2401,7 @@ msgstr "Souhoola"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__source_transaction_id
 msgid "Source Transaction"
-msgstr "Källtransaktion"
+msgstr "Ursprunglig transaktion"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__state
@@ -2569,8 +2569,7 @@ msgstr ""
 #: model:ir.model.fields,help:payment.field_payment_method__image
 #: model:ir.model.fields,help:payment.field_payment_method__image_payment_form
 msgid "The base image used for this payment method; in a 64x64 px format."
-msgstr ""
-"Den basbild som används för denna betalningsmetod; i formatet 64x64 px."
+msgstr "Den basbild som används för denna betalningsmetod; i formatet 64x64 px."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__brand_ids
@@ -2709,8 +2708,7 @@ msgstr "Det meddelande som visas om betalningen godkänns"
 #: model:ir.model.fields,help:payment.field_payment_provider__cancel_msg
 msgid ""
 "The message displayed if the order is cancelled during the payment process"
-msgstr ""
-"Det meddelande som visas om ordern annulleras under betalningsprocessen"
+msgstr "Det meddelande som visas om ordern annulleras under betalningsprocessen"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__done_msg
@@ -2849,12 +2847,12 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_transaction
 msgid "There are no transactions to show"
-msgstr "Det finns inga transaktioner att visa"
+msgstr "Inga transaktioner hittades."
 
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_token
 msgid "There is no token created yet."
-msgstr "Det finns ingen pollett skapad ännu."
+msgstr "Inga tokens hittades."
 
 #. module: payment
 #. odoo-python

@@ -18,8 +18,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-10 17:36+0000\n"
-"PO-Revision-Date: 2026-07-31 06:47+0000\n"
-"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
+"PO-Revision-Date: 2026-08-03 02:15+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
 "website_sale/ja/>\n"
 "Language: ja\n"
@@ -59,8 +59,8 @@ msgid ""
 "                 -"
 msgstr ""
 "&amp;copy;\n"
-"                <span class=\"o_footer_copyright_name align-baseline\">会社名"
-"</span>\n"
+"                <span class=\"o_footer_copyright_name align-baseline\">会社"
+"名</span>\n"
 "                 -"
 
 #. module: website_sale
@@ -248,8 +248,8 @@ msgid ""
 ">\n"
 "                    <span class=\"o_label small ms-1\">Add to Cart</span>"
 msgstr ""
-"<i class=\"fa fa-fw fa-shopping-cart o_not-animable\" role=\"presentation\"/"
-">\n"
+"<i class=\"fa fa-fw fa-shopping-cart o_not-animable\" role=\"presentation\"/>"
+"\n"
 "                    <span class=\"o_label small ms-1\">カートに入れる</span>"
 
 #. module: website_sale
@@ -491,8 +491,8 @@ msgid ""
 "animable\"/> Fast Shipping\n"
 "                                </span>"
 msgstr ""
-"<span class=\"s_badge badge text-bg-primary o_animable\" data-"
-"name=\"Badge\">\n"
+"<span class=\"s_badge badge text-bg-primary o_animable\" data-name=\"Badge\">"
+"\n"
 "                                    <i class=\"fa fa-dollar fa-fw o_not-"
 "animable\"/>低価格\n"
 "                                </span>\n"
@@ -534,8 +534,8 @@ msgid ""
 "<span class=\"text-muted\" invisible=\"product_variant_count &lt;= 1\">Based "
 "on variants</span>"
 msgstr ""
-"<span class=\"text-muted\" invisible=\"product_variant_count &lt;= 1\">バリア"
-"ントに基づく</span>"
+"<span class=\"text-muted\" invisible=\"product_variant_count &lt;= 1\">"
+"バリアントに基づく</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -606,8 +606,8 @@ msgid ""
 "                        Please contact the responsible of the shop for more "
 "information.</span>"
 msgstr ""
-"<span>支払額はカートの金額と一致していないため、オーダは確認できませんでし"
-"た。\n"
+"<span>支払額はカートの金額と一致していないため、オーダは確認できませんでした"
+"。\n"
 "                        詳しい情報は店舗の担当までご連絡ください。</span>"
 
 #. module: website_sale
@@ -726,8 +726,8 @@ msgstr ""
 "width=\"590\" style=\"min-width: 590px; background-color: white; padding: "
 "0px 0px 0px 0px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
-"                    <h1 style=\"color:#A9A9A9;\">カートに商品が残っています。"
-"</h1>\n"
+"                    <h1 style=\"color:#A9A9A9;\">カートに商品が残っています"
+"。</h1>\n"
 "                    購入に進みますか?<br/><br/>\n"
 "                    <t t-if=\"object.order_line\">\n"
 "                        <t t-foreach=\"object.website_order_line\" t-"
@@ -735,17 +735,17 @@ msgstr ""
 "                            <hr/>\n"
 "                            <table width=\"100%\">\n"
 "                                <tr>\n"
-"                                    <td style=\"padding: 10px; width:150px;"
-"\">\n"
+"                                    <td style=\"padding: 10px; "
+"width:150px;\">\n"
 "                                        <img t-attf-src=\"/web/image/"
 "product.product/{{ line.product_id.id }}/image_128\" style=\"width: 100px; "
 "height: 100px; object-fit: contain;\" alt=\"Product image\"/>\n"
 "                                    </td>\n"
 "                                    <td>\n"
 "                                        <strong t-"
-"out=\"line.product_id.display_name or ''\">[FURN_7800] 組合せデスク</"
-"strong><br/><t t-out=\"line.name or ''\">[FURN_7800] デスク 組合せデスク、ブ"
-"ラックブラウン：チェア＋デスク＋引き出し </t>\n"
+"out=\"line.product_id.display_name or ''\">[FURN_7800] 組合せデスク</strong>"
+"<br/><t t-out=\"line.name or ''\">[FURN_7800] デスク 組合せデスク、"
+"ブラックブラウン：チェア＋デスク＋引き出し </t>\n"
 "                                    </td>\n"
 "                                    <td width=\"100px\" align=\"right\">\n"
 "                                        <t t-out=\"int(line.product_uom_qty) "
@@ -760,10 +760,10 @@ msgstr ""
 "0px; font-size: 14px;\">\n"
 "                        <a t-attf-href=\"{{ object.get_base_url() }}/shop/"
 "cart?id={{ object.id }}&amp;access_token={{ object.access_token }}\" "
-"target=\"_blank\" t-attf-style=\"background-color: "
-"{{object.user_id.company_id.email_secondary_color or '#875A7B'}}; padding: "
-"8px 16px 8px 16px; text-decoration: none; color: "
-"{{object.user_id.company_id.email_primary_color or '#FFFFFF'}}; border-"
+"target=\"_blank\" t-attf-style=\"background-color: {"
+"{object.user_id.company_id.email_secondary_color or '#875A7B'}}; padding: "
+"8px 16px 8px 16px; text-decoration: none; color: {"
+"{object.user_id.company_id.email_primary_color or '#FFFFFF'}}; border-"
 "radius: 5px; font-size:13px;\">\n"
 "                            オーダを続ける\n"
 "                        </a>\n"
@@ -790,8 +790,8 @@ msgid ""
 "This description will be copied to every Sales Order, Delivery Order and "
 "Customer Invoice/Credit Note"
 msgstr ""
-"顧客に見せたい製品の説明。この説明は販売注文、配送注文、顧客請求書/クレジット"
-"ノートにコピーされます。"
+"顧客に見せたい製品の説明。この説明は販売注文、配送注文、顧客請求書/"
+"クレジットノートにコピーされます。"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_title
@@ -826,8 +826,8 @@ msgid ""
 "A single feed cannot contain more than %(limit)s products. Please separate "
 "products with Categories."
 msgstr ""
-"1つのフィードには %(limit)s 件を超えるプロダクトを含めることはできません。カ"
-"テゴリごとにプロダクトを分けてください。"
+"1つのフィードには %(limit)s 件を超えるプロダクトを含めることはできません。"
+"カテゴリごとにプロダクトを分けてください。"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
@@ -897,8 +897,8 @@ msgid ""
 "Accessories show up when the customer reviews the cart before payment (cross-"
 "sell strategy)."
 msgstr ""
-"お客様は支払う前にカートを確認する時、製品のアクセサリが表示されます (クロス"
-"セル戦略)。"
+"お客様は支払う前にカートを確認する時、製品のアクセサリが表示されます "
+"(クロスセル戦略)。"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__accessory_product_ids
@@ -1024,8 +1024,8 @@ msgid ""
 "Align the category content on the shop page. Corresponds to the 'Center "
 "Content' editor option."
 msgstr ""
-"ショップページのカテゴリコンテンツを整列します。「中央揃え」エディタオプショ"
-"ンに対応しています。"
+"ショップページのカテゴリコンテンツを整列します。「中央揃え」"
+"エディタオプションに対応しています。"
 
 #. module: website_sale
 #. odoo-javascript
@@ -1075,8 +1075,7 @@ msgstr "すべてのウェブサイト"
 msgid ""
 "Allow customers to pick up their online purchases at your store and pay in "
 "person"
-msgstr ""
-"顧客がオンラインで購入した商品を店舗で受け取り、直接支払いができるようにする"
+msgstr "顧客がオンラインで購入した商品を店舗で受け取り、直接支払いができるようにする"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_pricelist__selectable
@@ -1323,11 +1322,11 @@ msgid ""
 "minimum purchase amount, period). Rewards can be discounts (% or "
 "amount)                            or free products."
 msgstr ""
-"クーポン、プロモーション、ギフトカード、ロイヤリティな"
-"ど、                            様々なキャンペーンで売上を向上させます。特定"
-"な条件を設定できます (プロダクト、                            お客様、最低購"
-"入数、期間)。リワードとしては、割引(% または値引"
-"額)                            や無料プロダクトを提供できます。"
+"クーポン、プロモーション、ギフトカード、ロイヤリティなど、"
+"                            様々なキャンペーンで売上を向上させます。特定な条"
+"件を設定できます (プロダクト、                            お客様、最低購入数"
+"、期間)。リワードとしては、割引(% または値引額)                            や"
+"無料プロダクトを提供できます。"
 
 #. module: website_sale
 #. odoo-javascript
@@ -1603,8 +1602,7 @@ msgstr "受取拠点を選択してください"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 msgid "Choose one pre-made preset and customise it as you wish"
-msgstr ""
-"あらかじめ用意されたプリセットから1つ選び、お好みにカスタマイズしてください"
+msgstr "あらかじめ用意されたプリセットから1つ選び、お好みにカスタマイズしてください"
 
 #. module: website_sale
 #. odoo-javascript
@@ -2369,8 +2367,8 @@ msgid ""
 "Display the category title on the shop page. Corresponds to the 'Show Title' "
 "editor option."
 msgstr ""
-"ショップページにカテゴリのタイトルを表示します。「タイトルを表示」エディター"
-"オプションに対応しています。"
+"ショップページにカテゴリのタイトルを表示します。「タイトルを表示」"
+"エディターオプションに対応しています。"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
@@ -2437,8 +2435,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "Drag building blocks here to customize the header for the shop page."
 msgstr ""
-"ここにビルディングブロックをドラッグして、ショップページのヘッダーをカスタマ"
-"イズしてください。"
+"ここにビルディングブロックをドラッグして、ショップページのヘッダーを"
+"カスタマイズしてください。"
 
 #. module: website_sale
 #. odoo-python
@@ -2768,8 +2766,8 @@ msgid ""
 "For formula or fixed pricing, the original price isn’t shown in\n"
 "                    sale orders or checkout."
 msgstr ""
-"定価や数式による価格設定を使用している場合、元の価格は販売オーダやチェックア"
-"ウト画面\n"
+"定価や数式による価格設定を使用している場合、元の価格は販売オーダや"
+"チェックアウト画面\n"
 "                    には表示されません。"
 
 #. module: website_sale
@@ -3718,8 +3716,7 @@ msgstr "次の検索結果が見つかりませんでした: 「"
 msgid ""
 "No shipping method is available for your current order and shipping address. "
 "Please contact us for more information."
-msgstr ""
-"現在の注文と配送先には配送方法がありません。 詳細はお問い合わせください。"
+msgstr "現在の注文と配送先には配送方法がありません。 詳細はお問い合わせください。"
 
 #. module: website_sale
 #. odoo-python
@@ -3846,8 +3843,7 @@ msgstr "<b>保存</b>をクリックすると、製品が更新されます。"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "One product might have different attributes (size, color, etc.)"
-msgstr ""
-"1つのプロダクトには、異なる属性(サイズや色など)を持たせることができます"
+msgstr "1つのプロダクトには、異なる属性(サイズや色など)を持たせることができます"
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_report_sales
@@ -4809,8 +4805,8 @@ msgid ""
 "Reverses the horizontal order of items on desktop and larger screens (mobile "
 "layout remains unchanged)"
 msgstr ""
-"デスクトップなどの大きい画面で、項目の横方向の並び順を逆にします(モバイルのレ"
-"イアウトは変更されません)"
+"デスクトップなどの大きい画面で、項目の横方向の並び順を逆にします(モバイルの"
+"レイアウトは変更されません)"
 
 #. module: website_sale
 #. odoo-javascript
@@ -5497,8 +5493,8 @@ msgid ""
 "Technical field to enhance performance when looking up default code of "
 "productvariants (LIKE/ILIKE)"
 msgstr ""
-"プロダクトバリアントのデフォルトコードを (LIKE/ILIKE で)検索する際のパフォー"
-"マンスを向上させるための技術フィールド"
+"プロダクトバリアントのデフォルトコードを (LIKE/ILIKE で)検索する際の"
+"パフォーマンスを向上させるための技術フィールド"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.template_footer_website_sale
@@ -5571,8 +5567,8 @@ msgid ""
 "The company of the website you are trying to sell from (%(website_company)s) "
 "is different than the one you want to use (%(company)s)"
 msgstr ""
-"ウェブサイトで販売する会社 (%(website_company)s)は使用したい会社 (%"
-"(company)s)と違っています"
+"ウェブサイトで販売する会社 (%(website_company)s)は使用したい会社 (%(company)"
+"s)と違っています"
 
 #. module: website_sale
 #. odoo-python
@@ -5602,16 +5598,14 @@ msgstr "サイト経由して、文書にアクセスする完全なURL。"
 #: model:ir.model.fields,help:website_sale.field_product_template__website_absolute_url
 #: model:ir.model.fields,help:website_sale.field_website_checkout_step__website_absolute_url
 msgid "The full absolute URL to access the document through the website."
-msgstr ""
-"ウェブサイト経由でこのドキュメントにアクセスするための完全な絶対URLです。"
+msgstr "ウェブサイト経由でこのドキュメントにアクセスするための完全な絶対URLです。"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_delivery_carrier__website_url
 #: model:ir.model.fields,help:website_sale.field_product_template__website_url
 #: model:ir.model.fields,help:website_sale.field_website_checkout_step__website_url
 msgid "The full relative URL to access the document through the website."
-msgstr ""
-"ウェブサイト経由でこのドキュメントにアクセスするための完全な相対URLです。"
+msgstr "ウェブサイト経由でこのドキュメントにアクセスするための完全な相対URLです。"
 
 #. module: website_sale
 #. odoo-python
@@ -5951,8 +5945,7 @@ msgstr "Google Places API を使用して住所を検証する"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 msgid "Use auto values or force the link-color defined in the Theme Tab"
-msgstr ""
-"自動値を使用するか、テーマタブで定義されたリンクカラーを強制的に適用します"
+msgstr "自動値を使用するか、テーマタブで定義されたリンクカラーを強制的に適用します"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_attribute__is_thumbnail_visible
@@ -6527,8 +6520,7 @@ msgstr "して、前のカートを現在のカートと合併します。"
 msgid ""
 "if you want to restore your previous cart. Your current cart will be "
 "replaced with your previous cart."
-msgstr ""
-"して、前のカートを復元します。現在のカートは前のカートで置き換えられます。"
+msgstr "して、前のカートを復元します。現在のカートは前のカートで置き換えられます。"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products

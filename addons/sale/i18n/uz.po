@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-10 17:37+0000\n"
-"PO-Revision-Date: 2026-06-30 19:31+0000\n"
+"PO-Revision-Date: 2026-08-02 14:20+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Uzbek <https://translate.odoo.com/projects/odoo-19/sale/uz/>\n"
 "Language: uz\n"
@@ -181,9 +181,9 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\"> <p style=\"margin: 0px; padding: "
 "0px; font-size: 12px;\"> <t t-set=\"transaction_sudo\" t-"
-"value=\"object.get_portal_last_transaction()\"/> Assalomu alaykum, <br/><br/"
-"> <span style=\"font-weight:bold;\" t-out=\"transaction_sudo.reference or "
-"''\">SOOO49</span> raqamli, <span style=\"font-weight:bold;\" t-"
+"value=\"object.get_portal_last_transaction()\"/> Assalomu alaykum, <br/>"
+"<br/> <span style=\"font-weight:bold;\" t-out=\"transaction_sudo.reference "
+"or ''\">SOOO49</span> raqamli, <span style=\"font-weight:bold;\" t-"
 "out=\"format_amount(transaction_sudo.amount, object.currency_id) or ''\">$ "
 "10.00</span> miqdoridagi to‘lov <span style=\"font-weight:bold;\" t-"
 "out=\"object.name or ''\">S00049</span> raqamli buyurtmangiz uchun <t t-"
@@ -195,13 +195,12 @@ msgstr ""
 "style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total - "
 "object.amount_paid - transaction_sudo.amount, object.currency_id) or ''\">$ "
 "10.00</span> miqdori to‘lanishi kerak bo‘ladi.         </t> </t> <t t-"
-"else=\"\"> tasdiqlandi. <t t-"
-"if=\"object.currency_id.compare_amounts(object.amount_paid, "
-"object.amount_total) < 0\"> <br/> <span style=\"font-weight:bold;\" t-"
-"out=\"format_amount(object.amount_total - object.amount_paid, "
-"object.currency_id) or ''\">$ 10.00</span> miqdori hali to‘lanishi kerak. </"
-"t> </t> <br/><br/> Ishonchingiz uchun tashakkur! <br/> Savollaringiz bo‘lsa, "
-"bizga murojaat qilishdan tortinmang. <t t-if=\"not "
+"else=\"\"> tasdiqlandi. <t t-if=\"object.currency_id.compare_amounts"
+"(object.amount_paid, object.amount_total) < 0\"> <br/> <span style=\"font-"
+"weight:bold;\" t-out=\"format_amount(object.amount_total - "
+"object.amount_paid, object.currency_id) or ''\">$ 10.00</span> miqdori hali "
+"to‘lanishi kerak. </t> </t> <br/><br/> Ishonchingiz uchun tashakkur! <br/> "
+"Savollaringiz bo‘lsa, bizga murojaat qilishdan tortinmang. <t t-if=\"not "
 "is_html_empty(object.user_id.signature)\" data-o-mail-quote-container=\"1\"> "
 "<div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
 "out=\"object.user_id.signature or ''\" data-o-mail-quote=\"1\">Mitchell "
@@ -586,26 +585,26 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\"> <p style=\"margin: 0px; padding: "
 "0px; font-size: 13px;\"> <t t-set=\"doc_name\" t-value=\"'quotation' if "
-"object.state in ('draft','sent') else 'order'\"/> Assalomu alaykum, <br/><br/"
-"> Sizning <t t-out=\"doc_name or ''\">taklifingiz</t> <span style=\"font-"
+"object.state in ('draft','sent') else 'order'\"/> Assalomu alaykum, <br/>"
+"<br/> Sizning <t t-out=\"doc_name or ''\">taklifingiz</t> <span style=\"font-"
 "weight: bold;\" t-out=\"object.name or ''\"/> <t t-if=\"object.origin\"> "
 "(havola raqami: <t t-out=\"object.origin or ''\">S00052</t>) </t> umumiy "
-"summasi <span style=\"font-weight: bold;\" t-"
-"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
-"10,00</span> bo‘lgan holda ko‘rib chiqishga tayyor.         <br/> <t t-"
-"set=\"documents\" t-value=\"object._get_product_documents()\"/> <t t-"
-"if=\"documents\"> <br/> <t t-if=\"len(documents)&gt;1\"> Quyida sizni "
-"qiziqtirishi mumkin bo‘lgan qo‘shimcha hujjatlar mavjud: </t> <t t-"
-"else=\"\"> Quyida sizni qiziqtirishi mumkin bo‘lgan qo‘shimcha hujjat "
-"mavjud: </t> <ul style=\"margin-bottom: 0;\"> <t t-foreach=\"documents\" t-"
-"as=\"document\"> <li style=\"font-size: 13px;\"> <a t-"
-"out=\"document.ir_attachment_id.name\" t-att-href=\"object.get_portal_url('/"
-"document/' + str(document.id))\" t-att-target=\"target\"/> </li> </t> </ul> "
-"</t> <br/> Savollaringiz bo‘lsa, bizga murojaat qilishdan "
-"tortinmang.         <t t-if=\"not is_html_empty(object.user_id.signature)\" "
-"data-o-mail-quote-container=\"1\"> <div data-o-mail-quote=\"1\">--<br data-o-"
-"mail-quote=\"1\"/><t t-out=\"object.user_id.signature or ''\" data-o-mail-"
-"quote=\"1\">Mitchell Admin</t></div> </t> </p> </div>"
+"summasi <span style=\"font-weight: bold;\" t-out=\"format_amount"
+"(object.amount_total, object.currency_id) or ''\">$ 10,00</span> bo‘lgan "
+"holda ko‘rib chiqishga tayyor.         <br/> <t t-set=\"documents\" t-"
+"value=\"object._get_product_documents()\"/> <t t-if=\"documents\"> <br/> <t "
+"t-if=\"len(documents)&gt;1\"> Quyida sizni qiziqtirishi mumkin bo‘lgan "
+"qo‘shimcha hujjatlar mavjud: </t> <t t-else=\"\"> Quyida sizni qiziqtirishi "
+"mumkin bo‘lgan qo‘shimcha hujjat mavjud: </t> <ul style=\"margin-bottom: "
+"0;\"> <t t-foreach=\"documents\" t-as=\"document\"> <li style=\"font-size: "
+"13px;\"> <a t-out=\"document.ir_attachment_id.name\" t-att-"
+"href=\"object.get_portal_url('/document/' + str(document.id))\" t-att-"
+"target=\"target\"/> </li> </t> </ul> </t> <br/> Savollaringiz bo‘lsa, bizga "
+"murojaat qilishdan tortinmang.         <t t-if=\"not is_html_empty"
+"(object.user_id.signature)\" data-o-mail-quote-container=\"1\"> <div data-o-"
+"mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
+"out=\"object.user_id.signature or ''\" data-o-mail-quote=\"1\">Mitchell "
+"Admin</t></div> </t> </p> </div>"
 
 #. module: sale
 #: model:mail.template,body_html:sale.email_template_proforma
@@ -640,18 +639,18 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\"> <p style=\"margin: 0px; padding: "
 "0px; font-size: 13px;\"> <t t-set=\"doc_name\" t-value=\"'quotation' if "
-"object.state in ('draft','sent') else 'order'\"/> Assalomu alaykum, <br/><br/"
-"> Sizning <t t-out=\"doc_name yoki ''\">quotation</t> <span style=\"font-"
+"object.state in ('draft','sent') else 'order'\"/> Assalomu alaykum, <br/>"
+"<br/> Sizning <t t-out=\"doc_name yoki ''\">quotation</t> <span style=\"font-"
 "weight: bold;\" t-out=\"object.name yoki ''\">S00052</span> raqamli <t t-"
 "if=\"object.origin\"> (havola raqami: <t t-out=\"object.origin yoki ''\"/>) "
-"</t> <span style=\"font-weight: bold;\" t-"
-"out=\"format_amount(object.amount_total, object.currency_id) yoki ''\">$ "
-"10,00</span> miqdoridagi pro-forma hisob-fakturangiz tayyor.         <br/"
-"><br/> Savollaringiz bo‘lsa, biz bilan bog‘lanishdan tortinmang.         <t "
-"t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-quote-"
-"container=\"1\"> <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/"
-"><t t-out=\"object.user_id.signature yoki ''\" data-o-mail-"
-"quote=\"1\">Mitchell Admin</t></div> </t> </p> </div>"
+"</t> <span style=\"font-weight: bold;\" t-out=\"format_amount"
+"(object.amount_total, object.currency_id) yoki ''\">$ 10,00</span> "
+"miqdoridagi pro-forma hisob-fakturangiz tayyor.         <br/><br/> "
+"Savollaringiz bo‘lsa, biz bilan bog‘lanishdan tortinmang.         <t t-"
+"if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-quote-"
+"container=\"1\"> <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>"
+"<t t-out=\"object.user_id.signature yoki ''\" data-o-mail-quote=\"1\">"
+"Mitchell Admin</t></div> </t> </p> </div>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -929,8 +928,7 @@ msgstr "Tasdiqlangan savdo buyurtmasi tasdiqlash sanasini talab qiladi."
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #, fuzzy
 msgid "A note, whose content usually applies to the section or product above."
-msgstr ""
-"Izoh, uning mazmuni odatda yuqoridagi bo‘lim yoki mahsulotga taalluqli."
+msgstr "Izoh, uning mazmuni odatda yuqoridagi bo‘lim yoki mahsulotga taalluqli."
 
 #. module: sale
 #. odoo-python
@@ -1755,8 +1753,8 @@ msgid ""
 "                                    <strong>(please go to Home&gt;Apps to "
 "install)</strong>"
 msgstr ""
-"Yetkazib berish xarajatlarini hisoblang va DHL orqali jo‘nating<br/> "
-"<strong>(o‘rnatish uchun Asosiy&gt;Ilovalar bo‘limiga o‘ting)</strong>"
+"Yetkazib berish xarajatlarini hisoblang va DHL orqali jo‘nating<br/> <strong>"
+"(o‘rnatish uchun Asosiy&gt;Ilovalar bo‘limiga o‘ting)</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1807,8 +1805,8 @@ msgid ""
 "                                    <strong>(please go to Home&gt;Apps to "
 "install)</strong>"
 msgstr ""
-"Yetkazib berish xarajatlarini hisoblang va UPS orqali jo‘nating<br/> "
-"<strong>(o‘rnatish uchun Asosiy&gt;Ilovalar bo‘limiga o‘ting)</strong>"
+"Yetkazib berish xarajatlarini hisoblang va UPS orqali jo‘nating<br/> <strong>"
+"(o‘rnatish uchun Asosiy&gt;Ilovalar bo‘limiga o‘ting)</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2851,8 +2849,8 @@ msgid ""
 "Goods are tangible materials and merchandise you provide.\n"
 "A service is a non-material product you provide."
 msgstr ""
-"Tovarlar - siz taqdim etadigan moddiy materiallar va mahsulotlar. Xizmat esa "
-"- siz ko‘rsatadigan nomoddiy mahsulot."
+"Tovarlar - siz taqdim etadigan moddiy materiallar va mahsulotlar. Xizmat "
+"esa - siz ko‘rsatadigan nomoddiy mahsulot."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3016,15 +3014,13 @@ msgstr "Darhol"
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 #, fuzzy
 msgid "Import Amazon orders and sync deliveries"
-msgstr ""
-"Amazon buyurtmalarini import qilish va yetkazib berishlarni sinxronlash"
+msgstr "Amazon buyurtmalarini import qilish va yetkazib berishlarni sinxronlash"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 #, fuzzy
 msgid "Import Shopee orders and sync deliveries"
-msgstr ""
-"Shopee buyurtmalarini import qilish va yetkazib berishlarni sinxronlash"
+msgstr "Shopee buyurtmalarini import qilish va yetkazib berishlarni sinxronlash"
 
 #. module: sale
 #. odoo-python
@@ -3173,8 +3169,7 @@ msgstr ""
 #: code:addons/sale/models/product_template.py:0
 #, fuzzy
 msgid "Invoice ordered quantities as soon as this service is sold."
-msgstr ""
-"Ushbu xizmat sotilishi bilanoq buyurtma qilingan miqdorlarni hisoblash."
+msgstr "Ushbu xizmat sotilishi bilanoq buyurtma qilingan miqdorlarni hisoblash."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_crm_team__invoiced
@@ -3363,8 +3358,7 @@ msgstr "Chiqarilgan sana"
 msgid ""
 "It is forbidden to modify the following fields in a locked order:\n"
 "%s"
-msgstr ""
-"Qulflangan buyurtmada quyidagi maydonlarni o‘zgartirish taqiqlanadi: %s"
+msgstr "Qulflangan buyurtmada quyidagi maydonlarni o‘zgartirish taqiqlanadi: %s"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_move
@@ -3834,8 +3828,9 @@ msgid ""
 "Once the quotation is confirmed by the customer, it becomes a sales order."
 "<br> You will be able to create an invoice and collect the payment."
 msgstr ""
-"Narx taklifi mijoz tomonidan tasdiqlangach, u savdo buyurtmasiga aylanadi."
-"<br> Siz hisob-faktura yaratishingiz va to‘lovni qabul qilishingiz mumkin."
+"Narx taklifi mijoz tomonidan tasdiqlangach, u savdo buyurtmasiga "
+"aylanadi.<br> Siz hisob-faktura yaratishingiz va to‘lovni qabul qilishingiz "
+"mumkin."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders
@@ -6551,8 +6546,7 @@ msgstr ""
 #: code:addons/sale/models/sale_order.py:0
 #, fuzzy
 msgid "You cannot cancel a locked order. Please unlock it first."
-msgstr ""
-"Qulflangan buyurtmani bekor qila olmaysiz. Avval uni qulfdan chiqaring."
+msgstr "Qulflangan buyurtmani bekor qila olmaysiz. Avval uni qulfdan chiqaring."
 
 #. module: sale
 #. odoo-python
@@ -6804,8 +6798,8 @@ msgid ""
 "a' }})"
 msgstr ""
 "{{ object.company_id.name }} {{ (object.get_portal_last_transaction().state "
-"== 'pending') and 'Kutilayotgan buyurtma' or 'Buyurtma' }} (Havola "
-"{{ object.name or 'mavjud emas' }})"
+"== 'pending') and 'Kutilayotgan buyurtma' or 'Buyurtma' }} (Havola {{ "
+"object.name or 'mavjud emas' }})"
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_proforma

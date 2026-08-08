@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:38+0000\n"
-"PO-Revision-Date: 2026-07-31 11:09+0000\n"
+"PO-Revision-Date: 2026-08-08 00:24+0000\n"
 "Last-Translator: NEDŽAD BEUS <nedzad.beus@implex.si>\n"
 "Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-19/"
 "account_peppol_response/sl/>\n"
@@ -57,10 +57,13 @@ msgstr "Predlagani ukrepi"
 #. module: account_peppol_response
 #. odoo-python
 #: code:addons/account_peppol_response/models/account_edi_proxy_user.py:0
+#, fuzzy
 msgid ""
 "An error occurred while responding to this invoice's expeditor.%(br)sStatus:"
 " %(status)s - %(error)s"
 msgstr ""
+"Pri odgovarjanju pošiljatelju tega računa je prišlo do napake.%(br)sStanje: %"
+"(status)s – %(error)s"
 
 #. module: account_peppol_response
 #: model:ir.model.fields.selection,name:account_peppol_response.selection__account_peppol_response__response_code__ap
@@ -438,18 +441,25 @@ msgstr "Prejemnik tega dokumenta prek Peppol je odgovoril, da ga je prejel."
 
 #. module: account_peppol_response
 #: model:ir.model.fields,help:account_peppol_response.field_account_peppol_rejection_wizard__action_ids
+#, fuzzy
 msgid ""
 "The actions to be suggested to the document's sender in order for the "
 "document to be accepted when sent again (eventually). These will be sent to "
 "the document's sender. Not mandatory."
 msgstr ""
+"Dejanja, ki jih je treba predlagati pošiljatelju dokumenta, da bo dokument "
+"ob ponovnem pošiljanju (sčasoma) sprejet. Ta bodo poslana pošiljatelju "
+"dokumenta. Ni obvezno."
 
 #. module: account_peppol_response
 #: model:ir.model.fields,help:account_peppol_response.field_account_peppol_rejection_wizard__reason_ids
+#, fuzzy
 msgid ""
 "The reasons to reject the received PEPPOL document. These will be sent to "
 "the document's sender."
 msgstr ""
+"Razlogi za zavrnitev prejetega dokumenta PEPPOL. Ti bodo poslani "
+"pošiljatelju dokumenta."
 
 #. module: account_peppol_response
 #: model:ir.model.fields.selection,name:account_peppol_response.selection__account_peppol_response__response_code__uq

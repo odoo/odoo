@@ -3,13 +3,16 @@
 # * payment_stripe
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025, 2026.
+# Žiga Trček <ziga.trcek@implex.si>, 2026.
+# Jan Zorko <jan.zorko@implex.si>, 2026.
+# NEDŽAD BEUS <nedzad.beus@implex.si>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:37+0000\n"
-"PO-Revision-Date: 2026-06-29 15:14+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"PO-Revision-Date: 2026-08-08 07:12+0000\n"
+"Last-Translator: NEDŽAD BEUS <nedzad.beus@implex.si>\n"
 "Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-19/"
 "payment_stripe/sl/>\n"
 "Language: sl\n"
@@ -23,8 +26,9 @@ msgstr ""
 #. module: payment_stripe
 #. odoo-javascript
 #: code:addons/payment_stripe/static/src/interactions/payment_form.js:0
+#, fuzzy
 msgid "Cannot display the payment form"
-msgstr ""
+msgstr "Plačilnega obrazca ni mogoče prikazati"
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_provider__code
@@ -33,8 +37,9 @@ msgstr "Oznaka"
 
 #. module: payment_stripe
 #: model_terms:ir.ui.view,arch_db:payment_stripe.payment_provider_form
+#, fuzzy
 msgid "Connect Stripe"
-msgstr ""
+msgstr "Poveži Stripe"
 
 #. module: payment_stripe
 #. odoo-javascript
@@ -51,8 +56,9 @@ msgstr "Prikazani naziv"
 
 #. module: payment_stripe
 #: model_terms:ir.ui.view,arch_db:payment_stripe.payment_provider_form
+#, fuzzy
 msgid "Enable Apple Pay"
-msgstr ""
+msgstr "Omogoči Apple Pay"
 
 #. module: payment_stripe
 #. odoo-javascript
@@ -62,13 +68,15 @@ msgstr "Brezplačna dostava"
 
 #. module: payment_stripe
 #: model_terms:ir.ui.view,arch_db:payment_stripe.payment_provider_form
+#, fuzzy
 msgid "Generate your webhook"
-msgstr ""
+msgstr "Ustvari svoj webhook"
 
 #. module: payment_stripe
 #: model_terms:ir.ui.view,arch_db:payment_stripe.payment_provider_form
+#, fuzzy
 msgid "Get your Secret and Publishable keys"
-msgstr ""
+msgstr "Pridobite svoj skrivni ključ in javni ključ"
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_provider__id
@@ -79,22 +87,28 @@ msgstr "ID"
 
 #. module: payment_stripe
 #: model:ir.model.fields,help:payment_stripe.field_payment_provider__stripe_webhook_secret
+#, fuzzy
 msgid ""
 "If a webhook is enabled on your Stripe account, this signing secret must be "
 "set to authenticate the messages sent from Stripe to Odoo."
 msgstr ""
+"Če je spletna kljuka omogočena v vašem računu Stripe, mora biti ta podpisna "
+"skrivnost nastavljena za preverjanje pristnosti sporočil, poslanih iz Stripe "
+"v Odoo."
 
 #. module: payment_stripe
 #. odoo-javascript
 #: code:addons/payment_stripe/static/src/interactions/payment_form.js:0
+#, fuzzy
 msgid "Incorrect payment details"
-msgstr ""
+msgstr "Napačni podatki o plačilu"
 
 #. module: payment_stripe
 #. odoo-python
 #: code:addons/payment_stripe/models/payment_provider.py:0
+#, fuzzy
 msgid "Other Payment Providers"
-msgstr ""
+msgstr "Drugi ponudniki plačil"
 
 #. module: payment_stripe
 #: model:ir.model,name:payment_stripe.model_payment_provider
@@ -119,31 +133,36 @@ msgstr "Plačilna transakcija"
 #. module: payment_stripe
 #. odoo-javascript
 #: code:addons/payment_stripe/static/src/interactions/payment_form.js:0
+#, fuzzy
 msgid "Payment processing failed"
-msgstr ""
+msgstr "Obdelava plačila ni uspela"
 
 #. module: payment_stripe
 #. odoo-python
 #: code:addons/payment_stripe/models/payment_provider.py:0
+#, fuzzy
 msgid "Please use live credentials to enable Apple Pay."
-msgstr ""
+msgstr "Za omogočanje Apple Paya uporabite produkcijske poverilnice."
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_provider__stripe_publishable_key
+#, fuzzy
 msgid "Publishable Key"
-msgstr ""
+msgstr "Javni ključ"
 
 #. module: payment_stripe
 #. odoo-python
 #: code:addons/payment_stripe/models/payment_transaction.py:0
+#, fuzzy
 msgid "Received data with invalid intent status: %s."
-msgstr ""
+msgstr "Prejeti podatki z neveljavnim stanjem namena: %s."
 
 #. module: payment_stripe
 #. odoo-python
 #: code:addons/payment_stripe/models/payment_transaction.py:0
+#, fuzzy
 msgid "Received data with missing intent status."
-msgstr ""
+msgstr "Prejeti podatki z manjkajočim statusom plačilnega namena."
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_provider__stripe_secret_key
@@ -167,92 +186,116 @@ msgstr ""
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_token__stripe_mandate
+#, fuzzy
 msgid "Stripe Mandate"
-msgstr ""
+msgstr "Stripeovo pooblastilo"
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_token__stripe_payment_method
+#, fuzzy
 msgid "Stripe Payment Method ID"
-msgstr ""
+msgstr "ID plačilnega sredstva Stripe"
 
 #. module: payment_stripe
 #. odoo-python
 #: code:addons/payment_stripe/models/payment_transaction.py:0
+#, fuzzy
 msgid "The customer left the payment page."
-msgstr ""
+msgstr "Stranka je zapustila plačilno stran."
 
 #. module: payment_stripe
 #: model:ir.model.fields,help:payment_stripe.field_payment_provider__stripe_publishable_key
+#, fuzzy
 msgid "The key solely used to identify the account with Stripe"
-msgstr ""
+msgstr "Ključ, ki se uporablja izključno za identifikacijo računa pri Stripe"
 
 #. module: payment_stripe
 #. odoo-python
 #: code:addons/payment_stripe/models/payment_transaction.py:0
+#, fuzzy
 msgid ""
 "The refund did not go through. Please log into your Stripe Dashboard to get "
 "more information on that matter, and address any accounting discrepancies."
 msgstr ""
+"Vračilo ni bilo izvedeno. Prijavite se v svojo nadzorno ploščo Stripe, da "
+"pridobite več informacij o tej zadevi, in odpravite morebitna računovodska "
+"neskladja."
 
 #. module: payment_stripe
 #: model:ir.model.fields,help:payment_stripe.field_payment_provider__code
+#, fuzzy
 msgid "The technical code of this payment provider."
-msgstr ""
+msgstr "Tehnična koda tega ponudnika plačil."
 
 #. module: payment_stripe
 #. odoo-python
 #: code:addons/payment_stripe/models/payment_token.py:0
+#, fuzzy
 msgid "Unable to convert payment token to new API."
-msgstr ""
+msgstr "Plačilnega žetona ni mogoče pretvoriti v novi API."
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_provider__stripe_webhook_secret
+#, fuzzy
 msgid "Webhook Signing Secret"
-msgstr ""
+msgstr "Skrivnost za podpis spletnega kaveljčka"
 
 #. module: payment_stripe
 #. odoo-python
 #: code:addons/payment_stripe/models/payment_provider.py:0
+#, fuzzy
 msgid "You Stripe Webhook was successfully set up!"
-msgstr ""
+msgstr "Vaš spletni kavelj Stripe je bil uspešno nastavljen!"
 
 #. module: payment_stripe
 #. odoo-python
 #: code:addons/payment_stripe/models/payment_provider.py:0
+#, fuzzy
 msgid ""
 "You cannot create a Stripe Webhook if your Stripe Secret Key is not set."
 msgstr ""
+"Stripe spletnega kavlja ne morete ustvariti, če vaš skrivni ključ Stripe ni "
+"nastavljen."
 
 #. module: payment_stripe
 #. odoo-python
 #: code:addons/payment_stripe/models/payment_provider.py:0
+#, fuzzy
 msgid ""
 "You cannot set the provider state to Enabled until your onboarding to Stripe "
 "is completed."
 msgstr ""
+"Stanja ponudnika ne morete nastaviti na Omogočeno, dokler ne dokončate "
+"uvajanja v Stripe."
 
 #. module: payment_stripe
 #. odoo-python
 #: code:addons/payment_stripe/models/payment_provider.py:0
+#, fuzzy
 msgid ""
 "You cannot set the provider to Test Mode while it is linked with your Stripe "
 "account."
 msgstr ""
+"Ponudnika ne morete nastaviti na preskusni način, dokler je povezan z vašim "
+"računom Stripe."
 
 #. module: payment_stripe
 #. odoo-python
 #: code:addons/payment_stripe/models/payment_provider.py:0
+#, fuzzy
 msgid "Your Stripe Webhook is already set up."
-msgstr ""
+msgstr "Vaš Stripe webhook je že nastavljen."
 
 #. module: payment_stripe
 #. odoo-javascript
 #: code:addons/payment_stripe/static/src/interactions/express_checkout.js:0
+#, fuzzy
 msgid "Your order"
-msgstr ""
+msgstr "Vaše naročilo"
 
 #. module: payment_stripe
 #. odoo-python
 #: code:addons/payment_stripe/models/payment_provider.py:0
+#, fuzzy
 msgid "Your web domain was successfully verified."
-msgstr ""
+msgstr "Vaša spletna domena je bila uspešno preverjena."

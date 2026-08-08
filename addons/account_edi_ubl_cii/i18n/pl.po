@@ -10,8 +10,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-17 17:37+0000\n"
-"PO-Revision-Date: 2026-06-30 22:42+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2026-08-07 07:55+0000\n"
+"Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-19/"
 "account_edi_ubl_cii/pl/>\n"
 "Language: pl\n"
@@ -48,6 +48,11 @@ msgid ""
 "                        Preview\n"
 "                    </span>"
 msgstr ""
+"<span style=\"font-size: 16px; font-weight: bold; color: #ffffff; display: "
+"inline-block; vertical-align: middle; text-transform: uppercase; margin: 0px "
+"8px; letter-spacing: 0.5px;\">\n"
+"                        Podgląd\n"
+"                    </span>"
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
@@ -195,8 +200,7 @@ msgstr "Sieć rejestrów przedsiębiorstw"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_move.py:0
 msgid "Cannot decode origin file, try by importing it again"
-msgstr ""
-"Nie można zdekodować pliku źródłowego, spróbuj zaimportować go ponownie"
+msgstr "Nie można zdekodować pliku źródłowego, spróbuj zaimportować go ponownie"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -296,8 +300,8 @@ msgid ""
 "Could not retrieve partner with details: Name: %(name)s, Vat: %(vat)s, "
 "Phone: %(phone)s, Email: %(email)s"
 msgstr ""
-"Nie można było pobrać partnera ze szczegółami: Nazwa: %(name)s, NIP: %"
-"(vat)s, Telefon: %(phone)s, E-mail: %(email)s"
+"Nie można było pobrać partnera ze szczegółami: Nazwa: %(name)s, NIP: %(vat)"
+"s, Telefon: %(phone)s, E-mail: %(email)s"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -907,8 +911,7 @@ msgstr "Wypełnij VAT lub adres Peppol partnera."
 msgid ""
 "Please fill in your company's VAT or Peppol Address to generate a complete "
 "XML file."
-msgstr ""
-"Wypełnij swój VAT lub adres Peppol, aby wygenerować kompletny plik XML."
+msgstr "Wypełnij swój VAT lub adres Peppol, aby wygenerować kompletny plik XML."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -944,6 +947,11 @@ msgid ""
 "met, the customer will be liable for the payment of the tax, interest, and "
 "penalties due in relation to this condition."
 msgstr ""
+"Odwrotne obciążenie: W przypadku braku pisemnego sprzeciwu w ciągu miesiąca "
+"od otrzymania faktury uznaje się, że klient potwierdza, iż jest podatnikiem "
+"zobowiązanym do składania okresowych deklaracji podatkowych. Jeśli warunek "
+"ten nie zostanie spełniony, klient będzie zobowiązany do zapłaty podatku, "
+"odsetek i kar należnych w związku z tym warunkiem."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9947
@@ -1109,6 +1117,8 @@ msgstr ""
 #: code:addons/account_edi_ubl_cii/models/res_partner.py:0
 msgid "The Peppol endpoint is not valid. A valid email is required"
 msgstr ""
+"Punkt końcowy Peppol jest nieprawidłowy. Wymagany jest prawidłowy adres e-"
+"mail"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1143,6 +1153,10 @@ msgid ""
 "line for product '%(product)s' because it is not compatible with the "
 "product's Unit of Measure '%(product_uom)s'. The UoM was left empty."
 msgstr ""
+"Jednostka miary „%(uom)s” (z kodu jednostki „%(code)s”) została zignorowana "
+"w wierszu dotyczącym produktu „%(product)s”, ponieważ nie jest zgodna z "
+"jednostką miary produktu „%(product_uom)s”. Pole jednostki miary "
+"pozostawiono puste."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,help:account_edi_ubl_cii.field_account_tax__ubl_cii_tax_category_code
@@ -1236,6 +1250,9 @@ msgid ""
 "                    <strong style=\"color: #495057;\">It is not an official "
 "document.</strong>"
 msgstr ""
+"Jest to wizualna reprezentacja treści xml.<br/>\n"
+"                    <strong style=\"color: #495057;\">Nie jest to dokument "
+"oficjalny.</strong>"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9952
@@ -1335,7 +1352,7 @@ msgstr "Nieznany partner"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/wizard/account_move_send_wizard.py:0
 msgid "Unsupported file type via %s"
-msgstr ""
+msgstr "Nieobsługiwany typ pliku przez %s"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1510,8 +1527,8 @@ msgid ""
 "VATEX-EU-135-1 - Exempt based on article 135, section 1 of Council Directive "
 "2006/112/EC"
 msgstr ""
-"VATEX-EU-135-1 – Zwolnienie na podstawie art. 135 ust. 1 dyrektywy Rady "
-"2006/112/WE"
+"VATEX-EU-135-1 – Zwolnienie na podstawie art. 135 ust. 1 dyrektywy Rady 2006/"
+"112/WE"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-143
@@ -2141,9 +2158,9 @@ msgid ""
 "Invoice line (BG-25) shall be categorized with an Invoiced item VAT category "
 "code (BT-151)."
 msgstr ""
-"Należy uwzględnić co najmniej jeden podatek w każdej pozycji faktury. [BR-"
-"CO-04]-Każda pozycja faktury (BG-25) powinna być skategoryzowana za pomocą "
-"kodu kategorii VAT pozycji fakturowanej (BT-151)."
+"Należy uwzględnić co najmniej jeden podatek w każdej pozycji faktury. [BR-CO-"
+"04]-Każda pozycja faktury (BG-25) powinna być skategoryzowana za pomocą kodu "
+"kategorii VAT pozycji fakturowanej (BT-151)."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_category_code__z

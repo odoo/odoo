@@ -4,13 +4,16 @@
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
+# Jan Zorko <jan.zorko@implex.si>, 2026.
+# Žiga Trček <ziga.trcek@implex.si>, 2026.
+# NEDŽAD BEUS <nedzad.beus@implex.si>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:36+0000\n"
-"PO-Revision-Date: 2026-06-29 11:08+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-08-08 04:03+0000\n"
+"Last-Translator: NEDŽAD BEUS <nedzad.beus@implex.si>\n"
 "Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-19/"
 "microsoft_outlook/sl/>\n"
 "Language: sl\n"
@@ -30,28 +33,41 @@ msgstr "<i class=\"fa fa-cog\" title=\"Edit Settings\"/>"
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.fetchmail_server_view_form
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.ir_mail_server_view_form
+#, fuzzy
 msgid ""
 "<i class=\"oi oi-arrow-right\"/>\n"
 "                        Connect your Outlook account"
 msgstr ""
+"<i class=\"oi oi-arrow-right\"/>\n"
+"                        Povežite svoj Outlook račun"
 
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.fetchmail_server_view_form
+#, fuzzy
 msgid ""
 "<span invisible=\"server_type != 'outlook' or not "
 "microsoft_outlook_refresh_token\" class=\"badge text-bg-success\">\n"
 "                        Outlook Token Valid\n"
 "                    </span>"
 msgstr ""
+"<span invisible=\"server_type != 'outlook' or not "
+"microsoft_outlook_refresh_token\" class=\"badge text-bg-success\">\n"
+"                        Veljaven žeton Outlook\n"
+"                    </span>"
 
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.ir_mail_server_view_form
+#, fuzzy
 msgid ""
 "<span invisible=\"smtp_authentication != 'outlook' or not "
 "microsoft_outlook_refresh_token\" class=\"badge text-bg-success\">\n"
 "                        Outlook Token Valid\n"
 "                    </span>"
 msgstr ""
+"<span invisible=\"smtp_authentication != 'outlook' or not "
+"microsoft_outlook_refresh_token\" class=\"badge text-bg-success\">\n"
+"                        Veljaven žeton Outlook\n"
+"                    </span>"
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_fetchmail_server__active
@@ -63,8 +79,9 @@ msgstr "Aktivno"
 #. module: microsoft_outlook
 #. odoo-python
 #: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
+#, fuzzy
 msgid "An error occurred when fetching the access token. %s"
-msgstr ""
+msgstr "Pri pridobivanju dostopnega žetona je prišlo do napake. %s"
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__smtp_authentication
@@ -75,8 +92,9 @@ msgstr "Preverjanje pristnosti z"
 #: model:ir.model.fields,field_description:microsoft_outlook.field_fetchmail_server__microsoft_outlook_uri
 #: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__microsoft_outlook_uri
 #: model:ir.model.fields,field_description:microsoft_outlook.field_microsoft_outlook_mixin__microsoft_outlook_uri
+#, fuzzy
 msgid "Authentication URI"
-msgstr ""
+msgstr "URI za avtentikacijo"
 
 #. module: microsoft_outlook
 #: model:ir.model,name:microsoft_outlook.model_res_config_settings
@@ -86,20 +104,28 @@ msgstr "Uredi nastavitve"
 #. module: microsoft_outlook
 #. odoo-python
 #: code:addons/microsoft_outlook/models/ir_mail_server.py:0
+#, fuzzy
 msgid ""
 "Connect your Outlook account with the OAuth Authentication process.  \n"
 "By default, only a user with a matching email address will be able to use "
 "this server. To extend its use, you should set a \"mail.default.from\" "
 "system parameter."
 msgstr ""
+"Povežite svoj Outlook račun s postopkom preverjanja pristnosti OAuth.  \n"
+"Privzeto bo ta strežnik lahko uporabljal le uporabnik z ustreznim e-poštnim "
+"naslovom. Če želite razširiti njegovo uporabo, morate nastaviti sistemski "
+"parameter »mail.default.from«."
 
 #. module: microsoft_outlook
 #. odoo-python
 #: code:addons/microsoft_outlook/models/fetchmail_server.py:0
+#, fuzzy
 msgid ""
 "Connect your personal Outlook account using OAuth. \n"
 "You will be redirected to the Outlook login page to accept the permissions."
 msgstr ""
+"Povežite svoj osebni račun Outlook z uporabo OAuth. Preusmerjeni boste na "
+"prijavno stran Outlooka, kjer boste potrdili dovoljenja."
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_fetchmail_server__display_name
@@ -127,8 +153,9 @@ msgstr "ID"
 
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.res_config_settings_view_form
+#, fuzzy
 msgid "ID of your Outlook app"
-msgstr ""
+msgstr "ID vaše aplikacije Outlook"
 
 #. module: microsoft_outlook
 #: model:ir.model,name:microsoft_outlook.model_fetchmail_server
@@ -138,10 +165,13 @@ msgstr "Strežnih vhodne pošte"
 #. module: microsoft_outlook
 #. odoo-python
 #: code:addons/microsoft_outlook/models/ir_mail_server.py:0
+#, fuzzy
 msgid ""
 "Incorrect Connection Security for Outlook mail server “%s”. Please set it to "
 "\"TLS (STARTTLS)\"."
 msgstr ""
+"Nepravilna varnost povezave za poštni strežnik Outlook “%s”. Nastavite jo na "
+"»TLS (STARTTLS)«."
 
 #. module: microsoft_outlook
 #: model:ir.model,name:microsoft_outlook.model_ir_mail_server
@@ -150,33 +180,40 @@ msgstr "Poštni strežnik"
 
 #. module: microsoft_outlook
 #: model:ir.model,name:microsoft_outlook.model_microsoft_outlook_mixin
+#, fuzzy
 msgid "Microsoft Outlook Mixin"
-msgstr ""
+msgstr "Microsoft Outlook mešanica"
 
 #. module: microsoft_outlook
 #. odoo-python
 #: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
+#, fuzzy
 msgid "Only the administrator can link an Outlook mail server."
-msgstr ""
+msgstr "Samo skrbnik lahko poveže poštni strežnik Outlook."
 
 #. module: microsoft_outlook
 #. odoo-python
 #: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
+#, fuzzy
 msgid "Oops, we could not authenticate you. Please try again later."
-msgstr ""
+msgstr "Ups, vaše preverjanje pristnosti ni uspelo. Poskusite znova pozneje."
 
 #. module: microsoft_outlook
 #. odoo-python
 #: code:addons/microsoft_outlook/controllers/main.py:0
+#, fuzzy
 msgid ""
 "Oops, you're creating an authorization to send from %(email_login)s but your "
 "address is %(email_server)s. Make sure your addresses match!"
 msgstr ""
+"Ups, ustvarjate avtorizacijo za pošiljanje iz %(email_login)s, vendar je vaš "
+"naslov %(email_server)s. Prepričajte se, da se naslova ujemata!"
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_res_users__outgoing_mail_server_type
+#, fuzzy
 msgid "Outgoing Mail Server Type"
-msgstr ""
+msgstr "Vrsta odhodnega poštnega strežnika"
 
 #. module: microsoft_outlook
 #: model:ir.model.fields.selection,name:microsoft_outlook.selection__res_users__outgoing_mail_server_type__outlook
@@ -187,15 +224,17 @@ msgstr "Outlook"
 #: model:ir.model.fields,field_description:microsoft_outlook.field_fetchmail_server__microsoft_outlook_access_token
 #: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__microsoft_outlook_access_token
 #: model:ir.model.fields,field_description:microsoft_outlook.field_microsoft_outlook_mixin__microsoft_outlook_access_token
+#, fuzzy
 msgid "Outlook Access Token"
-msgstr ""
+msgstr "Žeton za dostop do Outlooka"
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_fetchmail_server__microsoft_outlook_access_token_expiration
 #: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__microsoft_outlook_access_token_expiration
 #: model:ir.model.fields,field_description:microsoft_outlook.field_microsoft_outlook_mixin__microsoft_outlook_access_token_expiration
+#, fuzzy
 msgid "Outlook Access Token Expiration Timestamp"
-msgstr ""
+msgstr "Časovni žig poteka dostopnega žetona"
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_res_config_settings__microsoft_outlook_client_identifier
@@ -210,50 +249,62 @@ msgstr "Outlook Client Skrivnost"
 #. module: microsoft_outlook
 #: model:ir.model.fields.selection,name:microsoft_outlook.selection__fetchmail_server__server_type__outlook
 #: model:ir.model.fields.selection,name:microsoft_outlook.selection__ir_mail_server__smtp_authentication__outlook
+#, fuzzy
 msgid "Outlook OAuth Authentication"
-msgstr ""
+msgstr "Preverjanje pristnosti OAuth v Outlooku"
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_fetchmail_server__microsoft_outlook_refresh_token
 #: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__microsoft_outlook_refresh_token
 #: model:ir.model.fields,field_description:microsoft_outlook.field_microsoft_outlook_mixin__microsoft_outlook_refresh_token
+#, fuzzy
 msgid "Outlook Refresh Token"
-msgstr ""
+msgstr "Osvežitveni žeton Outlook"
 
 #. module: microsoft_outlook
 #. odoo-python
 #: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
+#, fuzzy
 msgid "Please configure your Outlook credentials."
-msgstr ""
+msgstr "Konfigurirajte svoje poverilnice za Outlook."
 
 #. module: microsoft_outlook
 #. odoo-python
 #: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
+#, fuzzy
 msgid "Please connect with your Outlook account before using it."
-msgstr ""
+msgstr "Pred uporabo se povežite s svojim računom Outlook."
 
 #. module: microsoft_outlook
 #. odoo-python
 #: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
+#, fuzzy
 msgid "Please enter a valid email address."
-msgstr ""
+msgstr "Vnesite veljaven e-poštni naslov."
 
 #. module: microsoft_outlook
 #. odoo-python
 #: code:addons/microsoft_outlook/models/ir_mail_server.py:0
+#, fuzzy
 msgid ""
 "Please fill the \"Username\" field with your Outlook/Office365 username "
 "(your email address). This should be the same account as the one used for "
 "the Outlook OAuthentication Token."
 msgstr ""
+"V polje »Uporabniško ime« vnesite svoje uporabniško ime za Outlook/Office365 "
+"(vaš e-poštni naslov). To mora biti isti račun, kot je tisti, ki ste ga "
+"uporabili za žeton Outlook OAuthentication."
 
 #. module: microsoft_outlook
 #. odoo-python
 #: code:addons/microsoft_outlook/models/ir_mail_server.py:0
+#, fuzzy
 msgid ""
 "Please leave the password field empty for Outlook mail server “%s”. The "
 "OAuth process does not require it"
 msgstr ""
+"Polje za geslo za Outlookov poštni strežnik “%s” pustite prazno. Postopek "
+"OAuth ga ne zahteva"
 
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.ir_mail_server_view_form
@@ -263,8 +314,9 @@ msgstr "Preberi več"
 #. module: microsoft_outlook
 #. odoo-python
 #: code:addons/microsoft_outlook/models/fetchmail_server.py:0
+#, fuzzy
 msgid "SSL is required for server “%s”."
-msgstr ""
+msgstr "SSL je obvezen za strežnik “%s”."
 
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.res_config_settings_view_form
@@ -273,8 +325,9 @@ msgstr "Skrivnost"
 
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.res_config_settings_view_form
+#, fuzzy
 msgid "Secret of your Outlook app"
-msgstr ""
+msgstr "Skrivnost vaše aplikacije Outlook"
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_fetchmail_server__server_type
@@ -285,14 +338,16 @@ msgstr "Tip Strežnika"
 #: model:ir.model.fields,help:microsoft_outlook.field_fetchmail_server__microsoft_outlook_uri
 #: model:ir.model.fields,help:microsoft_outlook.field_ir_mail_server__microsoft_outlook_uri
 #: model:ir.model.fields,help:microsoft_outlook.field_microsoft_outlook_mixin__microsoft_outlook_uri
+#, fuzzy
 msgid "The URL to generate the authorization code from Outlook"
-msgstr ""
+msgstr "URL povezava za ustvarjanje kode za overitev iz Outlooka"
 
 #. module: microsoft_outlook
 #. odoo-python
 #: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
+#, fuzzy
 msgid "Unknown error."
-msgstr ""
+msgstr "Neznana napaka"
 
 #. module: microsoft_outlook
 #: model:ir.model,name:microsoft_outlook.model_res_users

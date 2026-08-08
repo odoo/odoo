@@ -38,12 +38,13 @@
 # Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # "Noemi Pla Garcia (nopl)" <nopl@odoo.com>, 2025, 2026.
 # Guillem Palomino Muñoz <guillem.palomino@midgard.cat>, 2026.
+# Santiago Payà <santiagopim@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-17 17:37+0000\n"
-"PO-Revision-Date: 2026-07-24 07:57+0000\n"
+"PO-Revision-Date: 2026-08-08 07:26+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Catalan <https://translate.odoo.com/projects/odoo-19/account/"
 "ca/>\n"
@@ -453,22 +454,22 @@ msgstr "... (Veure-ho tot)"
 #. module: account
 #: model:account.tax,name:account.1_sale_export_tax_template
 msgid "0% Exports"
-msgstr ""
+msgstr "Exportacions del 0%"
 
 #. module: account
 #: model:account.tax,name:account.1_purchase_import_tax_template
 msgid "0% Imports"
-msgstr ""
+msgstr "Importacions del 0%"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_30_days_end_month_the_10
 msgid "10 Days after End of Next Month"
-msgstr "10 dies després del fi del següent mes"
+msgstr "10 dies després del final del següent mes"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "100.00 USD"
-msgstr "100,00 EUR"
+msgstr "100,00 USD"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_15days
@@ -619,10 +620,10 @@ msgstr ""
 "''\">SUB003</t>)\n"
 "                </t>\n"
 "                per un import de <span style=\"font-weight:bold;\" t-"
-"out=\"format_amount(object.amount_total, object.currency_id) or "
-"''\">143.750,00 €</span>\n"
-"                de <t t-out=\"object.company_id.name or "
-"''\">LaVostraEmpresa</t>.\n"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\">"
+"143.750,00 €</span>\n"
+"                de <t t-out=\"object.company_id.name or ''\">"
+"LaVostraEmpresa</t>.\n"
 "                <br/><br/>\n"
 "                No dubti a contactar amb nosaltres si té qualsevol "
 "pregunta.\n"
@@ -735,8 +736,8 @@ msgstr ""
 "            factura\n"
 "        </t>\n"
 "        <t t-if=\"object.invoice_origin\">\n"
-"            (amb referència:: <t t-out=\"object.invoice_origin or "
-"''\">SUB003</t>)\n"
+"            (amb referència:: <t t-out=\"object.invoice_origin or ''\">"
+"SUB003</t>)\n"
 "        </t>\n"
 "        per un import de <span style=\"font-weight:bold;\" t-"
 "out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
@@ -771,8 +772,8 @@ msgstr ""
 "o-mail-quote-container=\"1\">\n"
 "            <br/><br/>\n"
 "            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
-"out=\"object.invoice_user_id.signature or ''\" data-o-mail-"
-"quote=\"1\">Mitchell Admin</t></div>\n"
+"out=\"object.invoice_user_id.signature or ''\" data-o-mail-quote=\"1\">"
+"Mitchell Admin</t></div>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -863,12 +864,12 @@ msgstr ""
 "            autofactura\n"
 "        </t>\n"
 "        <t t-if=\"object.invoice_origin\">\n"
-"            (amb referència: <t t-out=\"object.invoice_origin or "
-"''\">SUB003</t>)\n"
+"            (amb referència: <t t-out=\"object.invoice_origin or ''\">"
+"SUB003</t>)\n"
 "        </t>\n"
 "        per un import de <span style=\"font-weight:bold;\" t-"
-"out=\"format_amount(object.amount_total, object.currency_id) or "
-"''\">143.750,00 €</span>\n"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\">"
+"143.750,00 €</span>\n"
 "        de <t t-out=\"object.company_id.name or ''\">LaVostraEmpresa</t>.\n"
 "        <t t-if=\"object.payment_state in ('paid', 'in_payment')\">\n"
 "            Aquesta autofactura ja ha estat abonada.\n"
@@ -886,8 +887,8 @@ msgstr ""
 "o-mail-quote-container=\"1\">\n"
 "            <br/><br/>\n"
 "            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
-"out=\"object.invoice_user_id.signature or ''\" data-o-mail-"
-"quote=\"1\">Mitchell Admin</t></div>\n"
+"out=\"object.invoice_user_id.signature or ''\" data-o-mail-quote=\"1\">"
+"Mitchell Admin</t></div>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -956,12 +957,12 @@ msgstr ""
 "            factura rectificativa\n"
 "        </t>\n"
 "        <t t-if=\"object.invoice_origin\">\n"
-"            (amb referència: <t t-out=\"object.invoice_origin or "
-"''\">SUB003</t>)\n"
+"            (amb referència: <t t-out=\"object.invoice_origin or ''\">"
+"SUB003</t>)\n"
 "        </t>\n"
 "        per un import de <span style=\"font-weight:bold;\" t-"
-"out=\"format_amount(object.amount_total, object.currency_id) or "
-"''\">143.750,00 €</span>\n"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\">"
+"143.750,00 €</span>\n"
 "        de <t t-out=\"object.company_id.name or ''\">LaSevaEmpresa</t>.\n"
 "        <br/><br/>\n"
 "        No dubti a contactar amb nosaltres si té alguna pregunta.\n"
@@ -969,8 +970,8 @@ msgstr ""
 "o-mail-quote-container=\"1\">\n"
 "            <br/><br/>\n"
 "            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
-"out=\"object.invoice_user_id.signature or ''\" data-o-mail-"
-"quote=\"1\">Mitchell Admin</t></div>\n"
+"out=\"object.invoice_user_id.signature or ''\" data-o-mail-quote=\"1\">"
+"Mitchell Admin</t></div>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -1009,12 +1010,12 @@ msgstr ""
 "        Benvolgut/da <t t-out=\"object.partner_id.name or ''\">Azure "
 "Interior:</t><br/><br/>\n"
 "        Gràcies pel pagament.\n"
-"        Aquí té el seu rebut <span style=\"font-weight:bold;\" t-"
-"out=\"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</span> "
-"per un import\n"
-"        de <span style=\"font-weight:bold;\" t-"
-"out=\"format_amount(object.amount, object.currency_id) or ''\">10,00 €</"
-"span> de <t t-out=\"object.company_id.name or ''\">LaSevaEmpresa</t>.\n"
+"        Aquí té el seu rebut <span style=\"font-weight:bold;\" t-out=\""
+"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</span> per un "
+"import\n"
+"        de <span style=\"font-weight:bold;\" t-out=\"format_amount"
+"(object.amount, object.currency_id) or ''\">10,00 €</span> de <t t-"
+"out=\"object.company_id.name or ''\">LaSevaEmpresa</t>.\n"
 "        <br/><br/>\n"
 "        No dubti a contactar amb nosaltres si té qualsevol pregunta.\n"
 "        <br/><br/>\n"
@@ -1023,8 +1024,8 @@ msgstr ""
 "container=\"1\">\n"
 "            <br/><br/>\n"
 "            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
-"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></"
-"div>\n"
+"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>"
+"\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -1122,6 +1123,12 @@ msgid ""
 "                            <span class=\"text-danger\" "
 "invisible=\"duplicated_ref_ids.length &gt; 1\">Delete duplicate</span>"
 msgstr ""
+"<i class=\"fa fa-trash text-danger\"/>\n"
+"                            <span class=\"text-danger\" "
+"invisible=\"duplicated_ref_ids.length == 1\">Eliminar tots els duplicats</"
+"span>\n"
+"                            <span class=\"text-danger\" "
+"invisible=\"duplicated_ref_ids.length &gt; 1\">Eliminar duplicat</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_terms_conditions_setting_banner
@@ -1152,6 +1159,10 @@ msgid ""
 "invoices, and with which electronic format.\n"
 "                    </small>"
 msgstr ""
+"<small class=\"form-text text-muted\">\n"
+"                        Pots escollir com vols que t'enviem les teves "
+"factures i en quin format electrònic.\n"
+"                    </small>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -1177,6 +1188,9 @@ msgid ""
 "                                        To Review\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"badge text-bg-info\">\n"
+"                                        A revisar\n"
+"                                    </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_form_inherit_account
@@ -1219,8 +1233,8 @@ msgid ""
 "<span class=\"o_form_label oe_inline\" invisible=\"amount_type == "
 "'fixed'\">%</span>"
 msgstr ""
-"<span class=\"o_form_label oe_inline\" invisible=\"amount_type == "
-"'fixed'\">%</span>"
+"<span class=\"o_form_label oe_inline\" invisible=\"amount_type == 'fixed'\">"
+"%</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -1327,8 +1341,8 @@ msgid ""
 "                            </span>"
 msgstr ""
 "<span class=\"text-muted ms-2\">\n"
-"                                <i>inclòs, perquè no es puguin modificar</"
-"i>\n"
+"                                <i>inclòs, perquè no es puguin modificar</i>"
+"\n"
 "                            </span>"
 
 #. module: account
@@ -1487,7 +1501,7 @@ msgstr "<span>$ <span class=\"oe_currency_value\">19,250.00</span></span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<span>1.00</span>"
-msgstr ""
+msgstr "<span>1,00</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -1608,7 +1622,7 @@ msgstr "<span>El compte bancari podria ser un duplicat de</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "<span>This document might be a duplicate of</span>"
-msgstr ""
+msgstr "<span>Aquest document podria ser un duplicat de</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -1623,8 +1637,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_terms_conditions_setting_banner
 msgid "<span>This is a preview of your Terms &amp; Conditions.</span>"
-msgstr ""
-"<span>Això és una vista prèvia dels vostres Termes i Condicions.</span>"
+msgstr "<span>Això és una vista prèvia dels vostres Termes i Condicions.</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -1728,7 +1741,7 @@ msgstr "<strong>Subtotal</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Taxable Supply</strong>"
-msgstr ""
+msgstr "<strong>Operació subjecta a impostos</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1745,7 +1758,7 @@ msgstr "<strong>Tipus: </strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_currency_form_inherit
 msgid "<strong>WARNING - This change is irreversible</strong>"
-msgstr ""
+msgstr "<strong>ATENCIÓ - Aquest canvi és irreversible</strong>"
 
 #. module: account
 #: model:mail.template,body_html:account.mail_template_einvoice_notification
@@ -5487,9 +5500,9 @@ msgid ""
 "Comma-separated list of fields from account.move.line (Journal Item). When "
 "set, this line will generate sublines grouped by those keys."
 msgstr ""
-"Llista separada per comes de camps de account.move.line (Element de la "
-"font). Quan s'estableix, aquesta línia generarà sublínies agrupades per "
-"aquestes claus."
+"Llista separada per comes de camps de account.move.line (Element de la font)"
+". Quan s'estableix, aquesta línia generarà sublínies agrupades per aquestes "
+"claus."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__commercial_partner_id
@@ -7977,8 +7990,7 @@ msgstr "Mode de descompte de pagament anticipat"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term__discount_percentage
 msgid "Early Payment Discount granted for this payment term"
-msgstr ""
-"Descompte per pagament anticipat atorgat per a aquest terme de pagament"
+msgstr "Descompte per pagament anticipat atorgat per a aquest terme de pagament"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
@@ -9069,7 +9081,7 @@ msgstr "Des de l'últim any fiscal"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__date_scope__previous_return_period
 msgid "From previous return period"
-msgstr ""
+msgstr "D'un període de declaració anterior"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__date_scope__from_fiscalyear
@@ -9707,8 +9719,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_res_company__message_needaction
 #: model:ir.model.fields,help:account.field_res_partner_bank__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
-"Si està marcat, hi ha nous missatges que requereixen la vostra atenció."
+msgstr "Si està marcat, hi ha nous missatges que requereixen la vostra atenció."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__message_has_error
@@ -10704,7 +10715,7 @@ msgstr "Factures"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_menu_invoice
 msgid "Invoices &amp; Bills"
-msgstr "Factures i amp; Factures"
+msgstr "Factures de client i de proveïdor"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_invoice_report_all
@@ -11367,7 +11378,7 @@ msgstr "Últim trimestre"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__default_opening_date_filter__previous_return_period
 msgid "Last Return Period"
-msgstr ""
+msgstr "Últim període de declaració"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__last_statement_id
@@ -12404,8 +12415,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Navigate easily through reports and see what is behind the numbers"
-msgstr ""
-"Navegueu fàcilment pels informes i vegeu què hi ha darrere dels números"
+msgstr "Navegueu fàcilment pels informes i vegeu què hi ha darrere dels números"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__half-up
@@ -15095,8 +15105,8 @@ msgstr "Informes"
 #: model:ir.model.fields,help:account.field_account_cash_rounding__rounding
 msgid "Represent the non-zero value smallest coinage (for example, 0.05)."
 msgstr ""
-"Representa la moneda més petita de valor diferent de zero (per exemple, "
-"0.05)."
+"Representa la moneda més petita de valor diferent de zero (per exemple, 0.05)"
+"."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -17331,8 +17341,8 @@ msgstr ""
 "següents: prefix1, year, prefix2, month, prefix3, seq, suffix.\n"
 "Els grups de prefix* són els separadors entre l'any, el mes i el número de "
 "seqüència creixent real (seq).\n"
-"per exemple: ^(?P<prefix1>.*?)(?P<year>\\d{4})(?P<prefix2>\\D*?)(?"
-"P<month>\\d{2})(?P<prefix3>\\D+?)(?P<seq>\\d+)(?P<suffix>\\D*?)$"
+"per exemple: ^(?P<prefix1>.*?)(?P<year>\\d{4})(?P<prefix2>\\D*?)(?P<month>\\d"
+"{2})(?P<prefix3>\\D+?)(?P<seq>\\d+)(?P<suffix>\\D*?)$"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_technology
@@ -17677,8 +17687,8 @@ msgid ""
 msgstr ""
 "La freqüència de facturació per a %(partner_name)s no sembla habitual. "
 "Segons les teves dades històriques, la data esperada per a la pròxima "
-"factura és després del %(expected_date)s (cada %(mean)s (± %(wiggle)s) "
-"dies).\n"
+"factura és després del %(expected_date)s (cada %(mean)s (± %(wiggle)s) dies)"
+".\n"
 "Si us plau, verifica si aquesta data és correcta."
 
 #. module: account
@@ -18099,8 +18109,7 @@ msgstr "La longitud de l' inici i el prefix de final ha de ser el mateix"
 #: code:addons/account/models/account_move.py:0
 msgid ""
 "The move could not be posted for the following reason: %(error_message)s"
-msgstr ""
-"El moviment no s'ha pogut publicar pel motiu següent: %(error_message)s"
+msgstr "El moviment no s'ha pogut publicar pel motiu següent: %(error_message)s"
 
 #. module: account
 #. odoo-python
@@ -18285,8 +18294,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_bank_statement.py:0
 msgid "The running balance (%s) doesn't match the specified ending balance."
-msgstr ""
-"El saldo en execució (%s) no coincideix amb el saldo final especificat."
+msgstr "El saldo en execució (%s) no coincideix amb el saldo final especificat."
 
 #. module: account
 #. odoo-python
@@ -18945,8 +18953,7 @@ msgstr "Aquesta entrada periòdica es va originar a partir de %s"
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__auto_post_until
 #: model:ir.model.fields,help:account.field_account_move__auto_post_until
 msgid "This recurring move will be posted up to and including this date."
-msgstr ""
-"Aquest moviment periòdic es publicarà fins a aquesta data i s'inclourà."
+msgstr "Aquest moviment periòdic es publicarà fins a aquesta data i s'inclourà."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -20309,8 +20316,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 msgid "Write a customer name to <b>create one</b> or <b>see suggestions</b>."
-msgstr ""
-"Escriviu un nom d'usuari a <b>crear un</b> o <b>veure suggeriments</b>."
+msgstr "Escriviu un nom d'usuari a <b>crear un</b> o <b>veure suggeriments</b>."
 
 #. module: account
 #. odoo-javascript
@@ -20505,8 +20511,8 @@ msgid ""
 "in the %(journal)s journal."
 msgstr ""
 "No es pot crear un nou pagament sense un compte de pagaments/cobraments "
-"establert en l'empresa o en el mètode %(payment_method)s del diari %"
-"(journal)s."
+"establert en l'empresa o en el mètode %(payment_method)s del diari %(journal)"
+"s."
 
 #. module: account
 #. odoo-python
@@ -20604,8 +20610,7 @@ msgstr ""
 msgid ""
 "You can't register payments for both inbound and outbound moves at the same "
 "time."
-msgstr ""
-"No podeu enregistrar pagaments per ambdós ingressos i pagaments alhora."
+msgstr "No podeu enregistrar pagaments per ambdós ingressos i pagaments alhora."
 
 #. module: account
 #. odoo-python

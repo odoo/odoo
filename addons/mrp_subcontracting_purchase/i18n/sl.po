@@ -4,13 +4,15 @@
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025, 2026.
 # NEDŽAD BEUS <nedzad.beus@implex.si>, 2026.
+# Žiga Trček <ziga.trcek@implex.si>, 2026.
+# Jan Zorko <jan.zorko@implex.si>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:36+0000\n"
-"PO-Revision-Date: 2026-06-30 02:26+0000\n"
-"Last-Translator: NEDŽAD BEUS <nedzad.beus@implex.si>\n"
+"PO-Revision-Date: 2026-08-08 07:22+0000\n"
+"Last-Translator: Jan Zorko <jan.zorko@implex.si>\n"
 "Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-19/"
 "mrp_subcontracting_purchase/sl/>\n"
 "Language: sl\n"
@@ -24,8 +26,9 @@ msgstr ""
 #. module: mrp_subcontracting_purchase
 #. odoo-python
 #: code:addons/mrp_subcontracting_purchase/models/stock_move.py:0
+#, fuzzy
 msgid "%(value)s for %(quantity)s %(unit)s from %(production)s"
-msgstr ""
+msgstr "%(value)s za %(quantity)s %(unit)s iz %(production)s"
 
 #. module: mrp_subcontracting_purchase
 #. odoo-python
@@ -35,34 +38,40 @@ msgstr "+ %d dan/dni"
 
 #. module: mrp_subcontracting_purchase
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting_purchase.purchase_order_form_mrp_subcontracting_purchase
+#, fuzzy
 msgid "<span class=\"o_stat_text\">Resupply</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Ponovna oskrba</span>"
 
 #. module: mrp_subcontracting_purchase
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting_purchase.stock_picking_form_mrp_subcontracting
+#, fuzzy
 msgid "<span class=\"o_stat_text\">Source PO</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Izvorno nabavno naročilo</span>"
 
 #. module: mrp_subcontracting_purchase
 #: model:ir.model,name:mrp_subcontracting_purchase.model_report_mrp_report_bom_structure
+#, fuzzy
 msgid "BOM Overview Report"
-msgstr ""
+msgstr "Poročilo s pregledom kosovnice"
 
 #. module: mrp_subcontracting_purchase
 #: model:ir.model.fields,field_description:mrp_subcontracting_purchase.field_purchase_order__subcontracting_resupply_picking_count
+#, fuzzy
 msgid "Count of Subcontracting Resupply"
-msgstr ""
+msgstr "Število dobav za oskrbo podizvajalca"
 
 #. module: mrp_subcontracting_purchase
 #: model:ir.model.fields,help:mrp_subcontracting_purchase.field_purchase_order__subcontracting_resupply_picking_count
+#, fuzzy
 msgid "Count of Subcontracting Resupply for component"
-msgstr ""
+msgstr "Število dobav za oskrbo podizvajalca za komponento"
 
 #. module: mrp_subcontracting_purchase
 #. odoo-python
 #: code:addons/mrp_subcontracting_purchase/models/stock_rule.py:0
+#, fuzzy
 msgid "Days to Supply Components"
-msgstr ""
+msgstr "Dnevi za dobavo komponent"
 
 #. module: mrp_subcontracting_purchase
 #: model:ir.model.fields,field_description:mrp_subcontracting_purchase.field_account_move_line__display_name
@@ -72,8 +81,9 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp_subcontracting_purchase.field_stock_move__display_name
 #: model:ir.model.fields,field_description:mrp_subcontracting_purchase.field_stock_picking__display_name
 #: model:ir.model.fields,field_description:mrp_subcontracting_purchase.field_stock_rule__display_name
+#, fuzzy
 msgid "Display Name"
-msgstr ""
+msgstr "Prikazni naziv"
 
 #. module: mrp_subcontracting_purchase
 #: model:ir.model.fields,field_description:mrp_subcontracting_purchase.field_account_move_line__id
@@ -83,8 +93,9 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp_subcontracting_purchase.field_stock_move__id
 #: model:ir.model.fields,field_description:mrp_subcontracting_purchase.field_stock_picking__id
 #: model:ir.model.fields,field_description:mrp_subcontracting_purchase.field_stock_rule__id
+#, fuzzy
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: mrp_subcontracting_purchase
 #: model:ir.model,name:mrp_subcontracting_purchase.model_account_move_line
@@ -99,24 +110,28 @@ msgstr "Proizvodni pretočni čas"
 
 #. module: mrp_subcontracting_purchase
 #: model:ir.model.fields,field_description:mrp_subcontracting_purchase.field_stock_picking__subcontracting_source_purchase_count
+#, fuzzy
 msgid "Number of subcontracting PO Source"
-msgstr ""
+msgstr "Število izvornih nabavnih naročil za podizvajanje"
 
 #. module: mrp_subcontracting_purchase
 #: model:ir.model.fields,help:mrp_subcontracting_purchase.field_stock_picking__subcontracting_source_purchase_count
+#, fuzzy
 msgid "Number of subcontracting Purchase Order Source"
-msgstr ""
+msgstr "Število izvornih nabavnih naročil za podizvajanje"
 
 #. module: mrp_subcontracting_purchase
 #: model:ir.model,name:mrp_subcontracting_purchase.model_product_product
+#, fuzzy
 msgid "Product Variant"
-msgstr ""
+msgstr "Različica proizvoda"
 
 #. module: mrp_subcontracting_purchase
 #. odoo-python
 #: code:addons/mrp_subcontracting_purchase/models/stock_rule.py:0
+#, fuzzy
 msgid "Production Start Date"
-msgstr ""
+msgstr "Datum začetka proizvodnje"
 
 #. module: mrp_subcontracting_purchase
 #: model:ir.model,name:mrp_subcontracting_purchase.model_purchase_order
@@ -126,14 +141,16 @@ msgstr "Nabavni nalog"
 #. module: mrp_subcontracting_purchase
 #. odoo-python
 #: code:addons/mrp_subcontracting_purchase/models/stock_rule.py:0
+#, fuzzy
 msgid "Receipt Date"
-msgstr ""
+msgstr "Datum prejema"
 
 #. module: mrp_subcontracting_purchase
 #. odoo-python
 #: code:addons/mrp_subcontracting_purchase/models/stock_picking.py:0
+#, fuzzy
 msgid "Source PO of %s"
-msgstr ""
+msgstr "Izvorno nabavno naročilo za %s"
 
 #. module: mrp_subcontracting_purchase
 #: model:ir.model,name:mrp_subcontracting_purchase.model_stock_move
@@ -153,8 +170,9 @@ msgstr "Prenos"
 #. module: mrp_subcontracting_purchase
 #. odoo-python
 #: code:addons/mrp_subcontracting_purchase/models/stock_rule.py:0
+#, fuzzy
 msgid "Vendor Lead Time"
-msgstr ""
+msgstr "Dobavni rok dobavitelja"
 
 #~ msgid "Stock Valuation Layer"
 #~ msgstr "Sloj vrednotenja zalog"
