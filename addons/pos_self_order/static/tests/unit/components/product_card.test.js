@@ -87,7 +87,7 @@ test("a snoozed product is dimmed and cannot be added to the cart", async () => 
 });
 
 test("selectProduct", async () => {
-    const store = await setupSelfPosEnv();
+    const store = await setupSelfPosEnv("kiosk", "counter", "each", {}, true);
     const models = store.models;
     const product = models["product.template"].get(5);
     const selected = [];

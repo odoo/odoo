@@ -12,7 +12,7 @@ export function flyToCart(eventTarget) {
     if (!eventTarget) {
         return;
     }
-    const productEl = eventTarget.closest(".o_self_product_box");
+    const productEl = eventTarget.closest(".o_self_product_card");
 
     const destinationEl = document.querySelector(".to-order");
     if (!destinationEl || window.getComputedStyle(destinationEl).display === "none" || !productEl) {

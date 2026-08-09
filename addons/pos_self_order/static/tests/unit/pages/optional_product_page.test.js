@@ -46,7 +46,7 @@ test("optionalProducts skips products not available in self order", async () => 
 });
 
 test("optional product UI behavior for self-order", async () => {
-    const store = await setupSelfPosEnv();
+    const store = await setupSelfPosEnv("kiosk", "counter", "each", {}, true);
     store.ticketPrinter.printOrderReceipt = () => {};
     store.config.use_presets = false;
     const order = store.currentOrder;
@@ -71,13 +71,13 @@ test("optional product UI behavior for self-order", async () => {
 
     await Utils.clickProduct("Cake");
     await Utils.page.isProduct();
-    await Utils.setupAttribute([{ name: "Flavor", value: "Vanilla" }]);
+    await Utils.setupAttributeNew([{ name: "Flavor", value: "Vanilla" }]);
     await Utils.page.isOptionalProduct();
     Utils.expectProductCardQty("Cake", 1);
 
     await Utils.clickProduct("Product combo (no upsell)");
     await Utils.page.isCombo();
-    await Utils.setupCombo([{ product: "Steel Chair" }, { product: "Wood desk", qty: 2 }]);
+    await Utils.setupComboNew([{ product: "Steel Chair" }, { product: "Wood desk", qty: 2 }]);
     await Utils.page.isOptionalProduct();
     Utils.expectProductCardQty("Product combo (no upsell)", 1);
 

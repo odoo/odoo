@@ -23,9 +23,8 @@ patch(ProductTemplate.prototype, {
             ) {
                 return { show: true, selectedCombos: [] };
             }
-            const item = this.models["product.combo.item"].get(combo_item_ids[0].id);
             selectedCombos.push({
-                combo_item_id: item,
+                combo_item_id: combo_item_ids[0],
                 qty: 1,
                 configuration: {
                     attribute_custom_values: [],
