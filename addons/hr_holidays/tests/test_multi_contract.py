@@ -179,6 +179,45 @@ class TestHolidaysMultiContract(TestHolidayContract):
         self.assertEqual(leave.state, 'confirm')
         self.assertEqual(leave.number_of_days, 4)
 
+    def test_update_calendar_preserves_leave_request_dates(self):
+        duration_calendar = self.env['resource.calendar'].create({
+            'name': 'Tuesday to Friday',
+            'attendance_ids': [
+                (0, 0, {
+                    'dayofweek': dayofweek,
+                    'duration_hours': 7.6,
+                })
+                for dayofweek in ['1', '2', '3', '4']
+            ],
+        })
+        employee = self.env['hr.employee'].create({
+            'name': 'Employee with a new working schedule',
+            'tz': 'Europe/Brussels',
+        })
+        employee.version_id.write({
+            'date_version': date(2025, 3, 3),
+            'contract_date_start': date(2025, 3, 3),
+        })
+        monday_leave = self.create_leave(
+            date(2026, 2, 23), date(2026, 2, 26), employee_id=employee.id,
+        )
+        control_leave = self.create_leave(
+            date(2026, 3, 3), date(2026, 3, 6), employee_id=employee.id,
+        )
+        self.assertEqual(monday_leave.number_of_days, 4)
+        self.assertEqual(control_leave.number_of_days, 4)
+
+        employee.version_id.write({
+            'resource_calendar_id': duration_calendar.id,
+        })
+
+        self.assertEqual(monday_leave.number_of_days, 3)
+        self.assertEqual(monday_leave.request_date_from, date(2026, 2, 23))
+        self.assertEqual(monday_leave.request_date_to, date(2026, 2, 26))
+        self.assertEqual(control_leave.number_of_days, 4)
+        self.assertEqual(control_leave.request_date_from, date(2026, 3, 3))
+        self.assertEqual(control_leave.request_date_to, date(2026, 3, 6))
+
     def test_contract_traceability_calculate_nbr_leave(self):
         """
             The goal is to test the traceability of contracts in the past,

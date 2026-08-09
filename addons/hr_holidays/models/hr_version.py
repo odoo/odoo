@@ -179,7 +179,11 @@ class HrVersion(models.Model):
             return
         leave.resource_calendar_id = first_contract.resource_calendar_id
         if leave.work_entry_type_request_unit != 'hour':
-            leave.with_context(leave_skip_date_check=True, leave_skip_state_check=True)._compute_date_from_to()
+            leave.with_context(
+                leave_fast_create=True,
+                leave_skip_date_check=True,
+                leave_skip_state_check=True,
+            )._compute_date_from_to()
             if leave.state == 'validate':
                 leave._validate_leave_request()
 
