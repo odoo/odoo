@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_drs_dashboard_custom" model="ir.actions.client">
+        <field name="name">Dashboard</field>
+        <field name="tag">drs_dashboard_action</field>
+    </record>
+
+    <!-- Base Root Menu -->
+    <menuitem id="menu_mrp_drs_root" name="DRS Extrusion" sequence="20"/>
+
+    <menuitem id="menu_mrp_drs_dashboard_custom"
+              name="Dashboard"
+              parent="menu_mrp_drs_root"
+              action="action_drs_dashboard_custom"
+              sequence="0"/>
+</odoo>

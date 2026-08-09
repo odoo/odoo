@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Add Role Checkboxes to the Employee Form -->
+    <record id="view_employee_form_inherit_drs" model="ir.ui.view">
+        <field name="name">hr.employee.form.inherit.drs</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='category_ids']" position="after">
+                <group>
+                    <field name="is_drs_supervisor" widget="boolean_toggle"/>
+                    <field name="is_drs_technician" widget="boolean_toggle"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Client Action for Supervisor Dashboard -->
+    <record id="action_drs_supervisors_dashboard" model="ir.actions.client">
+        <field name="name">Supervisors Overview</field>
+        <field name="tag">drs_supervisor_dashboard_action</field>
+    </record>
+
+    <!-- NEW: Client Action for Technician Dashboard -->
+    <record id="action_drs_technicians_dashboard" model="ir.actions.client">
+        <field name="name">Technicians Overview</field>
+        <field name="tag">drs_technician_dashboard_action</field>
+    </record>
+
+    <!-- Personnel Menus -->
+    <menuitem id="menu_mrp_drs_personnel"
+              name="Personnel Directory"
+              parent="menu_mrp_drs_root"
+              sequence="15"/>
+
+    <menuitem id="menu_drs_supervisors"
+              name="Supervisors"
+              parent="menu_mrp_drs_personnel"
+              action="action_drs_supervisors_dashboard"
+              sequence="1"/>
+
+    <menuitem id="menu_drs_technicians"
+              name="Technicians"
+              parent="menu_mrp_drs_personnel"
+              action="action_drs_technicians_dashboard"
+              sequence="2"/>
+</odoo>

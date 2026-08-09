@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_mrp_drs_production_list" model="ir.ui.view">
+        <field name="name">mrp.drs.production.list</field>
+        <field name="model">mrp.drs.production</field>
+        <field name="arch" type="xml">
+            <list string="DRS Production Reports">
+                <field name="date"/>
+                <field name="machine_number"/>
+                <field name="output_roll_number"/>
+                <field name="product_code"/>
+                <field name="shift"/>
+                <field name="supervisor_id"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_mrp_drs_production_form" model="ir.ui.view">
+        <field name="name">mrp.drs.production.form</field>
+        <field name="model">mrp.drs.production</field>
+        <field name="arch" type="xml">
+            <form string="DRS Production Report">
+                <header>
+                    <button name="action_export_excel" string="Print Excel Report" type="object" class="btn-primary"
+                            icon="fa-file-excel-o"/>
+                </header>
+                <sheet>
+                    <!-- AUTOMATIC ALERTS -->
+                    <div class="alert alert-danger mb-4" role="alert" invisible="not has_temp_warnings">
+                        <i class="fa fa-exclamation-triangle me-2"/>
+                        <strong>Warning:</strong>
+                        Temperature deviation detected in one or more extruder zones! Check the Extruder Readings tab
+                        (rows highlighted in red).
+                    </div>
+                    <div class="alert alert-warning mb-4" role="alert" invisible="spray_variance_percent &lt; 10">
+                        <i class="fa fa-balance-scale me-2"/>
+                        <strong>Quality Alert:</strong>
+                        The spray variance between the start (F11) and end (F12) of the roll is exceptionally high (
+                        <field name="spray_variance_percent" nolabel="1" widget="float"/>%). Spray may be uneven.
+                    </div>
+
+                    <div class="oe_title">
+                        <h1>
+                            <field name="output_roll_number" placeholder="Output Roll Number..."/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Shift &amp; Operations">
+                            <field name="date"/>
+                            <field name="machine_number"/>
+                            <field name="shift"/>
+                            <label for="time_from" string="Time (From/To)"/>
+                            <div class="o_row">
+                                <field name="time_from" widget="float_time"/>
+                                -
+                                <field name="time_to" widget="float_time"/>
+                            </div>
+                            <field name="supervisor_id"/>
+                            <field name="technician_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                        </group>
+                        <group string="Product &amp; Material Specifications">
+                            <field name="input_roll_number"/>
+                            <field name="product_code"/>
+                            <field name="category"/>
+                            <field name="face"/>
+                            <field name="thickness"/>
+                            <field name="length"/>
+                            <field name="final_weight"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Extruder Readings (قراءات الاكسترودر)">
+                            <field name="extruder_line_ids">
+                                <list editable="bottom" limit="40" decoration-danger="is_temp_warning == True">
+                                    <field name="extruder_name"/>
+                                    <field name="zone"/>
+                                    <field name="extruder_speed"/>
+                                    <field name="air_pressure"/>
+                                    <field name="set_temperature"/>
+                                    <field name="actual_temperature"/>
+                                    <field name="temp_deviation" optional="hide"/>
+                                    <field name="is_temp_warning" column_invisible="True"/>
+                                    <field name="melt_flow_rate"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Speeds &amp; Samples (السرعات والعينات)">
+                            <group>
+                                <group string="Machine Speeds (سرعات الماكينة)">
+                                    <label for="line_speed"/>
+                                    <div class="o_row">
+                                        <field name="line_speed"/>
+                                        متر/دقيقة
+                                    </div>
+                                    <field name="trolley_a_speed"/>
+                                    <field name="trolley_b_speed"/>
+                                </group>
+                                <group string="Smart Analysis (تحليل ذكي)">
+                                    <label for="weight_per_meter"/>
+                                    <div class="o_row">
+                                        <field name="weight_per_meter"/>
+                                        kg / m
+                                    </div>
+                                    <label for="spray_variance_percent"/>
+                                    <div class="o_row">
+                                        <field name="spray_variance_percent"/>
+                                        %
+                                    </div>
+                                    <label for="average_spray_weight"/>
+                                    <div class="o_row">
+                                        <field name="average_spray_weight"/>
+                                        جم/سم²
+                                    </div>
+                                </group>
+                            </group>
+                            <group string="Sample Weights (أوزان العينات)">
+                                <group>
+                                    <label for="f11_weight_before" string="Sample F11 (عينة أول الرول)"/>
+                                    <div class="o_row">
+                                        <field name="f11_weight_before" placeholder="Before (قبل)"/>
+                                        -
+                                        <field name="f11_weight_after" placeholder="After (بعد)"/>
+                                        =
+                                        <field name="f11_net_weight" readonly="1" force_save="1"/>
+                                    </div>
+                                </group>
+                                <group>
+                                    <label for="f12_weight_before" string="Sample F12 (عينة آخر الرول)"/>
+                                    <div class="o_row">
+                                        <field name="f12_weight_before" placeholder="Before (قبل)"/>
+                                        -
+                                        <field name="f12_weight_after" placeholder="After (بعد)"/>
+                                        =
+                                        <field name="f12_net_weight" readonly="1" force_save="1"/>
+                                    </div>
+                                </group>
+                            </group>
+                            <group string="Notes &amp; Breakdowns (ملاحظات وأعطال)">
+                                <field name="notes" nolabel="1"
+                                       placeholder="Record any breakdowns or notes during the roll operation here..."/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_export_excel_multi" model="ir.actions.server">
+        <field name="name">Print Excel Report</field>
+        <field name="model_id" ref="model_mrp_drs_production"/>
+        <field name="binding_model_id" ref="model_mrp_drs_production"/>
+        <field name="binding_view_types">list,form</field>
+        <field name="state">code</field>
+        <field name="code">
+            action = records.action_export_excel()
+        </field>
+    </record>
+
+    <record id="action_mrp_drs_production" model="ir.actions.act_window">
+        <field name="name">DRS Production Reports</field>
+        <field name="res_model">mrp.drs.production</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="menu_mrp_drs_production" name="Production Reports" parent="menu_mrp_drs_root"
+              action="action_mrp_drs_production" sequence="1"/>
+</odoo>

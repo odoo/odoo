@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mrp_drs_production.SupervisorDashboardTemplate" owl="1">
+        <style>
+            .sup-bg { background-color: #f8f9fa; color: #344767; }
+            .sup-card { background: #ffffff; border-radius: 12px; border: 1px solid #e9ecef; box-shadow: 0 4px 6px rgba(0,0,0,0.02); transition: transform 0.2s, box-shadow 0.2s; }
+            .sup-card:hover { transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); border-color: #cce5ff; }
+            .sup-avatar { width: 72px; height: 72px; object-fit: cover; border-radius: 50%; border: 3px solid #e6f2ff; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+            .sup-avatar-placeholder { width: 72px; height: 72px; border-radius: 50%; background-color: #e6f2ff; color: #005b9f; display: flex; align-items: center; justify-content: center; font-size: 28px; border: 3px solid #cce5ff; }
+            .machine-badge { font-size: 0.75rem; padding: 4px 8px; border-radius: 6px; font-weight: bold; }
+            .nav-tabs .nav-link { color: #6c757d; font-weight: 600; border-radius: 8px 8px 0 0; border: none; border-bottom: 3px solid transparent; padding: 12px 24px; cursor: pointer; }
+            .nav-tabs .nav-link.active { color: #005b9f; background-color: transparent; border-bottom: 3px solid #005b9f; }
+            .form-corporate { background: white; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); border: 1px solid #e9ecef; }
+        </style>
+
+        <div class="vh-100 overflow-auto sup-bg p-4">
+
+            <!-- Header -->
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h2 class="fw-bold mb-0" style="color: #005b9f;">
+                    <i class="fa fa-id-badge me-2"/>
+                    Supervisor Management
+                </h2>
+                <button class="btn btn-outline-secondary rounded-pill px-4" t-on-click="openEmployeeDirectory">
+                    <i class="fa fa-address-book me-2"/>
+                    Open Full Directory
+                </button>
+            </div>
+
+            <!-- Tab Navigation -->
+            <ul class="nav nav-tabs mb-4 border-bottom">
+                <li class="nav-item">
+                    <a class="nav-link" t-att-class="{'active': state.activeTab === 'overview'}"
+                       t-on-click="() => this.setTab('overview')">
+                        <i class="fa fa-bar-chart me-2"/>
+                        Performance Overview
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" t-att-class="{'active': state.activeTab === 'add'}"
+                       t-on-click="() => this.setTab('add')">
+                        <i class="fa fa-user-plus me-2"/>
+                        Add New Supervisor
+                    </a>
+                </li>
+            </ul>
+
+            <!-- Tab Content 1: Overview Grid -->
+            <div t-if="state.activeTab === 'overview'" class="row g-4">
+                <t t-foreach="state.supervisors" t-as="sup" t-key="sup.id">
+                    <div class="col-md-6 col-lg-4">
+                        <div class="sup-card p-4 h-100" style="cursor: pointer;"
+                             t-on-click="() => this.openSupervisorWork(sup.id)">
+
+                            <div class="d-flex align-items-center mb-4">
+                                <t t-if="sup.id !== 0">
+                                    <img t-attf-src="/web/image?model=hr.employee&amp;id={{sup.id}}&amp;field=avatar_128"
+                                         class="sup-avatar me-3" alt="Avatar"/>
+                                </t>
+                                <t t-else="">
+                                    <div class="sup-avatar-placeholder me-3"><i class="fa fa-user-secret"/></div>
+                                </t>
+
+                                <div>
+                                    <h5 class="fw-bold text-dark mb-1"><t t-esc="sup.name"/></h5>
+                                    <span class="badge bg-light text-dark border">Total: <t t-esc="sup.totalRolls"/>
+                                        Rolls</span>
+                                    <span class="badge bg-light text-primary border ms-1"><t t-esc="sup.totalWeight"/>
+                                        kg</span>
+                                </div>
+                            </div>
+
+                            <div class="bg-light rounded-3 p-3 border">
+                                <h6 class="small fw-bold text-muted text-uppercase mb-3"><i class="fa fa-cogs me-1"/>
+                                    Linked Machines Output</h6>
+
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <div class="d-flex align-items-center">
+                                        <span class="machine-badge bg-primary text-white me-2">M-311</span>
+                                        <span class="small fw-bold"><t t-esc="sup.m311.rolls"/>
+                                            Rolls</span>
+                                    </div>
+                                    <span class="fw-bold text-dark"><t t-esc="sup.m311.weight"/>
+                                        kg</span>
+                                </div>
+                                <div class="progress mb-3" style="height: 6px;">
+                                    <div class="progress-bar bg-primary"
+                                         t-attf-style="width: #{sup.totalWeight > 0 ? (sup.m311.weight / sup.totalWeight) * 100 : 0}%"></div>
+                                </div>
+
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <div class="d-flex align-items-center">
+                                        <span class="machine-badge bg-info text-white me-2">M-312</span>
+                                        <span class="small fw-bold"><t t-esc="sup.m312.rolls"/>
+                                            Rolls</span>
+                                    </div>
+                                    <span class="fw-bold text-dark"><t t-esc="sup.m312.weight"/>
+                                        kg</span>
+                                </div>
+                                <div class="progress" style="height: 6px;">
+                                    <div class="progress-bar bg-info"
+                                         t-attf-style="width: #{sup.totalWeight > 0 ? (sup.m312.weight / sup.totalWeight) * 100 : 0}%"></div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </t>
+            </div>
+
+            <!-- Tab Content 2: Add Supervisor Form -->
+            <div t-if="state.activeTab === 'add'" class="row justify-content-center">
+                <div class="col-md-8 col-lg-6">
+                    <div class="form-corporate p-4 p-md-5">
+                        <div class="text-center mb-4">
+                            <div class="sup-avatar-placeholder mx-auto mb-3"
+                                 style="width: 80px; height: 80px; font-size: 32px; background-color: #f8f9fa;">
+                                <i class="fa fa-user-plus text-primary"/>
+                            </div>
+                            <h4 class="fw-bold text-dark">Quick Add Profile</h4>
+                            <p class="text-muted small">Instantly register a new supervisor to the database.</p>
+                        </div>
+
+                        <form t-on-submit="createSupervisor">
+                            <div class="mb-3">
+                                <label class="form-label fw-bold text-secondary small text-uppercase">Full Name <span
+                                        class="text-danger">*</span></label>
+                                <input type="text" class="form-control form-control-lg bg-light"
+                                       t-model="state.newSup.name" placeholder="e.g. Ahmed Ali" required="1"/>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-bold text-secondary small text-uppercase">Job Position</label>
+                                <input type="text" class="form-control bg-light" t-model="state.newSup.job_title"
+                                       placeholder="Production Supervisor"/>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-bold text-secondary small text-uppercase">Email</label>
+                                    <input type="email" class="form-control bg-light" t-model="state.newSup.work_email"
+                                           placeholder="name@company.com"/>
+                                </div>
+                                <div class="col-md-6 mb-4">
+                                    <label class="form-label fw-bold text-secondary small text-uppercase">Phone Number</label>
+                                    <input type="tel" class="form-control bg-light" t-model="state.newSup.work_phone"
+                                           placeholder="+20 10..."/>
+                                </div>
+                            </div>
+
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-end border-top pt-4">
+                                <button type="button" class="btn btn-light px-4 text-muted fw-bold"
+                                        t-on-click="() => this.setTab('overview')">Cancel</button>
+                                <button type="submit" class="btn btn-primary px-5 fw-bold"
+                                        style="background-color: #005b9f;">
+                                    <i class="fa fa-save me-2"/>
+                                    Save Profile
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </t>
+</templates>

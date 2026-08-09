@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Interactive Graph View -->
+    <record id="view_mrp_drs_production_graph" model="ir.ui.view">
+        <field name="name">mrp.drs.production.graph</field>
+        <field name="model">mrp.drs.production</field>
+        <field name="arch" type="xml">
+            <!-- Default to a bar chart grouped by date and machine -->
+            <graph string="Production Analysis" type="bar" sample="1">
+                <field name="date" interval="day"/>
+                <field name="machine_number"/>
+                <field name="final_weight" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- Interactive Pivot (Matrix) View -->
+    <record id="view_mrp_drs_production_pivot" model="ir.ui.view">
+        <field name="name">mrp.drs.production.pivot</field>
+        <field name="model">mrp.drs.production</field>
+        <field name="arch" type="xml">
+            <pivot string="Production Analysis" sample="1">
+                <field name="date" interval="month" type="row"/>
+                <field name="shift" type="row"/>
+                <field name="machine_number" type="col"/>
+                <field name="final_weight" type="measure"/>
+                <field name="length" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <!-- Dashboard Action -->
+    <record id="action_mrp_drs_dashboard" model="ir.actions.act_window">
+        <field name="name">Production Dashboard</field>
+        <field name="res_model">mrp.drs.production</field>
+        <!-- Opens Graph view first, then Pivot, with List/Form as fallbacks -->
+        <field name="view_mode">graph,pivot,list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Start logging production data to see your interactive dashboard!
+            </p>
+        </field>
+    </record>
+
+    <!-- Add Dashboard Menu at the top (Sequence 0) -->
+    <menuitem id="menu_mrp_drs_dashboard"
+              name="Dashboard"
+              parent="menu_mrp_drs_root"
+              action="action_mrp_drs_dashboard"
+              sequence="0"/>
+</odoo>

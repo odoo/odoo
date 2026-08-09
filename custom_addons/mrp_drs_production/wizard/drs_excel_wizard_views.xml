@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_drs_production_excel_wizard_form" model="ir.ui.view">
+        <field name="name">drs.production.excel.wizard.form</field>
+        <field name="model">drs.production.excel.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Print DRS Excel Report">
+                <group>
+                    <group>
+                        <field name="filter_type" widget="radio"/>
+                        <field name="machine_number"/>
+                    </group>
+                    <group invisible="filter_type == 'today'">
+                        <field name="date_from"/>
+                        <field name="date_to"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="action_print_excel" string="Export Excel" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_drs_production_excel_wizard" model="ir.actions.act_window">
+        <field name="name">Print Excel Report</field>
+        <field name="res_model">drs.production.excel.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem id="menu_mrp_drs_excel_wizard"
+              name="Print Excel Report"
+              parent="menu_mrp_drs_root"
+              action="action_drs_production_excel_wizard"
+              sequence="10"/>
+</odoo>

@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mrp_drs_production.TechnicianDashboardTemplate" owl="1">
+        <style>
+            .tech-bg { background-color: #f4f6f9; color: #2d3748; }
+            .tech-card { background: #ffffff; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 2px 4px rgba(0,0,0,0.02); transition: transform 0.2s, box-shadow 0.2s; }
+            .tech-card:hover { transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.06); border-color: #c3dafe; }
+            .tech-avatar { width: 72px; height: 72px; object-fit: cover; border-radius: 50%; border: 3px solid #ebf4ff; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+            .tech-avatar-placeholder { width: 72px; height: 72px; border-radius: 50%; background-color: #ebf4ff; color: #434190; display: flex; align-items: center; justify-content: center; font-size: 28px; border: 3px solid #c3dafe; }
+            .machine-badge { font-size: 0.75rem; padding: 4px 8px; border-radius: 6px; font-weight: bold; }
+            .nav-tabs .nav-link { color: #718096; font-weight: 600; border-radius: 8px 8px 0 0; border: none; border-bottom: 3px solid transparent; padding: 12px 24px; cursor: pointer; }
+            .nav-tabs .nav-link.active { color: #434190; background-color: transparent; border-bottom: 3px solid #434190; }
+            .form-corporate { background: white; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); border: 1px solid #e2e8f0; }
+        </style>
+
+        <div class="vh-100 overflow-auto tech-bg p-4">
+
+            <!-- Header -->
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h2 class="fw-bold mb-0" style="color: #434190;">
+                    <i class="fa fa-wrench me-2"/>
+                    Technician Management
+                </h2>
+                <button class="btn btn-outline-secondary rounded-pill px-4" t-on-click="openEmployeeDirectory">
+                    <i class="fa fa-address-book me-2"/>
+                    Open Full Directory
+                </button>
+            </div>
+
+            <!-- Tab Navigation -->
+            <ul class="nav nav-tabs mb-4 border-bottom">
+                <li class="nav-item">
+                    <a class="nav-link" t-att-class="{'active': state.activeTab === 'overview'}"
+                       t-on-click="() => this.setTab('overview')">
+                        <i class="fa fa-bar-chart me-2"/>
+                        Performance Overview
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" t-att-class="{'active': state.activeTab === 'add'}"
+                       t-on-click="() => this.setTab('add')">
+                        <i class="fa fa-user-plus me-2"/>
+                        Add New Technician
+                    </a>
+                </li>
+            </ul>
+
+            <!-- Tab Content 1: Overview Grid -->
+            <div t-if="state.activeTab === 'overview'" class="row g-4">
+                <t t-foreach="state.technicians" t-as="tech" t-key="tech.id">
+                    <div class="col-md-6 col-lg-4">
+                        <div class="tech-card p-4 h-100" style="cursor: pointer;"
+                             t-on-click="() => this.openTechnicianWork(tech.id)">
+
+                            <div class="d-flex align-items-center mb-4">
+                                <t t-if="tech.id !== 0">
+                                    <img t-attf-src="/web/image?model=hr.employee&amp;id={{tech.id}}&amp;field=avatar_128"
+                                         class="tech-avatar me-3" alt="Avatar"/>
+                                </t>
+                                <t t-else="">
+                                    <div class="tech-avatar-placeholder me-3"><i class="fa fa-user-secret"/></div>
+                                </t>
+
+                                <div>
+                                    <h5 class="fw-bold text-dark mb-1"><t t-esc="tech.name"/></h5>
+                                    <span class="badge bg-light text-dark border">Total: <t t-esc="tech.totalRolls"/>
+                                        Rolls</span>
+                                    <span class="badge bg-light border ms-1" style="color: #434190;"><t t-esc="tech.totalWeight"/>
+                                        kg</span>
+                                </div>
+                            </div>
+
+                            <div class="bg-light rounded-3 p-3 border">
+                                <h6 class="small fw-bold text-muted text-uppercase mb-3"><i class="fa fa-cogs me-1"/>
+                                    Linked Machines Output</h6>
+
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <div class="d-flex align-items-center">
+                                        <span class="machine-badge bg-primary text-white me-2">M-311</span>
+                                        <span class="small fw-bold"><t t-esc="tech.m311.rolls"/>
+                                            Rolls</span>
+                                    </div>
+                                    <span class="fw-bold text-dark"><t t-esc="tech.m311.weight"/>
+                                        kg</span>
+                                </div>
+                                <div class="progress mb-3" style="height: 6px;">
+                                    <div class="progress-bar bg-primary"
+                                         t-attf-style="width: #{tech.totalWeight > 0 ? (tech.m311.weight / tech.totalWeight) * 100 : 0}%"></div>
+                                </div>
+
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <div class="d-flex align-items-center">
+                                        <span class="machine-badge bg-info text-white me-2">M-312</span>
+                                        <span class="small fw-bold"><t t-esc="tech.m312.rolls"/>
+                                            Rolls</span>
+                                    </div>
+                                    <span class="fw-bold text-dark"><t t-esc="tech.m312.weight"/>
+                                        kg</span>
+                                </div>
+                                <div class="progress" style="height: 6px;">
+                                    <div class="progress-bar bg-info"
+                                         t-attf-style="width: #{tech.totalWeight > 0 ? (tech.m312.weight / tech.totalWeight) * 100 : 0}%"></div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </t>
+            </div>
+
+            <!-- Tab Content 2: Add Technician Form -->
+            <div t-if="state.activeTab === 'add'" class="row justify-content-center">
+                <div class="col-md-8 col-lg-6">
+                    <div class="form-corporate p-4 p-md-5">
+                        <div class="text-center mb-4">
+                            <div class="tech-avatar-placeholder mx-auto mb-3"
+                                 style="width: 80px; height: 80px; font-size: 32px; background-color: #f8f9fa;">
+                                <i class="fa fa-wrench" style="color: #434190;"/>
+                            </div>
+                            <h4 class="fw-bold text-dark">Quick Add Technician</h4>
+                            <p class="text-muted small">Instantly register a new technician to the database.</p>
+                        </div>
+
+                        <form t-on-submit="createTechnician">
+                            <div class="mb-3">
+                                <label class="form-label fw-bold text-secondary small text-uppercase">Full Name <span
+                                        class="text-danger">*</span></label>
+                                <input type="text" class="form-control form-control-lg bg-light"
+                                       t-model="state.newTech.name" placeholder="e.g. Omar Hassan" required="1"/>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-bold text-secondary small text-uppercase">Job Position</label>
+                                <input type="text" class="form-control bg-light" t-model="state.newTech.job_title"
+                                       placeholder="Extrusion Technician"/>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-bold text-secondary small text-uppercase">Email</label>
+                                    <input type="email" class="form-control bg-light" t-model="state.newTech.work_email"
+                                           placeholder="name@company.com"/>
+                                </div>
+                                <div class="col-md-6 mb-4">
+                                    <label class="form-label fw-bold text-secondary small text-uppercase">Phone Number</label>
+                                    <input type="tel" class="form-control bg-light" t-model="state.newTech.work_phone"
+                                           placeholder="+20 10..."/>
+                                </div>
+                            </div>
+
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-end border-top pt-4">
+                                <button type="button" class="btn btn-light px-4 text-muted fw-bold"
+                                        t-on-click="() => this.setTab('overview')">Cancel</button>
+                                <button type="submit" class="btn px-5 fw-bold text-white"
+                                        style="background-color: #434190;">
+                                    <i class="fa fa-save me-2"/>
+                                    Save Profile
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </t>
+</templates>

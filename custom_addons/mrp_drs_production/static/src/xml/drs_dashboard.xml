@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mrp_drs_production.DashboardTemplate" owl="1">
+        <div class="o_drs_dashboard vh-100 overflow-auto">
+            <!-- Header -->
+            <div class="o_drs_header d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
+                <div>
+                    <h2 class="fw-bolder mb-1" style="color: #1e1b4b;">
+                        DRS Extrusion Control Center
+                    </h2>
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="text-muted small fw-semibold">Updated <t t-esc="state.lastUpdated"/></span>
+                    </div>
+                </div>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-light border-0 shadow-sm fw-bold btn-sm rounded-pill px-3"
+                            t-on-click="() => this.openFilteredWork([], 'All Production')">
+                        <i class="fa fa-list me-1 text-primary"/>View All
+                    </button>
+                </div>
+            </div>
+
+            <!-- Filter Bar -->
+            <div class="o_drs_filterbar d-flex flex-wrap align-items-center gap-3 mb-4">
+                <div class="btn-group btn-group-sm shadow-sm rounded-pill overflow-hidden bg-white" role="group">
+                    <button t-attf-class="btn border-0 {{ state.filters.quickRange === 'today' ? 'active-tab' : 'text-muted' }}"
+                            t-on-click="() => this.setQuickRange('today')">Today</button>
+                    <button t-attf-class="btn border-0 {{ state.filters.quickRange === 'week' ? 'active-tab' : 'text-muted' }}"
+                            t-on-click="() => this.setQuickRange('week')">Last 7 Days</button>
+                    <button t-attf-class="btn border-0 {{ state.filters.quickRange === 'month' ? 'active-tab' : 'text-muted' }}"
+                            t-on-click="() => this.setQuickRange('month')">This Month</button>
+                    <button t-attf-class="btn border-0 {{ state.filters.quickRange === 'all' ? 'active-tab' : 'text-muted' }}"
+                            t-on-click="() => this.setQuickRange('all')">All Time</button>
+                </div>
+                <div class="d-flex align-items-center gap-2 bg-white p-1 rounded-pill shadow-sm px-3 border">
+                    <input type="date" class="border-0 bg-transparent form-control-sm"
+                           t-att-value="state.filters.dateFrom"
+                           t-on-change="(ev) => this.onFilterChange('dateFrom', ev)"/>
+                    <span class="text-muted small">to</span>
+                    <input type="date" class="border-0 bg-transparent form-control-sm"
+                           t-att-value="state.filters.dateTo" t-on-change="(ev) => this.onFilterChange('dateTo', ev)"/>
+                </div>
+                <select class="form-select form-select-sm bg-white border-0 shadow-sm rounded-pill px-3 w-auto fw-semibold"
+                        t-on-change="(ev) => this.onFilterChange('machine', ev)">
+                    <option value="all" t-att-selected="state.filters.machine === 'all'">All Machines</option>
+                    <option value="311" t-att-selected="state.filters.machine === '311'">Machine 311</option>
+                    <option value="312" t-att-selected="state.filters.machine === '312'">Machine 312</option>
+                </select>
+                <select class="form-select form-select-sm bg-white border-0 shadow-sm rounded-pill px-3 w-auto fw-semibold"
+                        t-on-change="(ev) => this.onFilterChange('shift', ev)">
+                    <option value="all" t-att-selected="state.filters.shift === 'all'">All Shifts</option>
+                    <option value="first" t-att-selected="state.filters.shift === 'first'">First Shift</option>
+                    <option value="second" t-att-selected="state.filters.shift === 'second'">Second Shift</option>
+                </select>
+                <button class="btn btn-link btn-sm text-danger text-decoration-none fw-bold" t-on-click="resetFilters">
+                    <i class="fa fa-refresh me-1"/>Reset
+                </button>
+            </div>
+
+            <!-- LIVE ALERTS BANNER -->
+            <t t-if="state.activeAlerts.length > 0">
+                <div class="alert alert-danger d-flex align-items-center fw-bold border-0 shadow-sm mb-4 o_drs_alert_banner rounded-4"
+                     role="alert">
+                    <i class="fa fa-exclamation-triangle fa-lg me-3 pulse-alert-icon"/>
+                    <div>
+                        <t t-foreach="state.activeAlerts" t-as="alert" t-key="alert_index">
+                            <div class="mb-1"><t t-esc="alert"/></div>
+                        </t>
+                    </div>
+                </div>
+            </t>
+
+            <!-- STATS & ANALYTICS: VERTICAL CARDS (Matching Reference Image) -->
+            <div class="row g-4 mb-4">
+                <div class="col-xl-2 col-md-4 col-sm-6">
+                    <div class="o_drs_kpi_card">
+                        <div class="o_drs_kpi_icon bg-primary-subtle text-primary"><i class="fa fa-balance-scale"/></div>
+                        <div class="o_drs_kpi_label">Production Today</div>
+                        <div class="o_drs_kpi_value"><t t-esc="state.kpi.totalWeight"/>
+                            <span class="o_drs_kpi_unit">kg</span></div>
+                    </div>
+                </div>
+                <div class="col-xl-2 col-md-4 col-sm-6">
+                    <div class="o_drs_kpi_card">
+                        <div class="o_drs_kpi_icon bg-success-subtle text-success"><i class="fa fa-check-circle"/></div>
+                        <div class="o_drs_kpi_label">Quality Score</div>
+                        <div class="o_drs_kpi_value"><t t-esc="state.kpi.qualityScore"/>
+                            <span class="o_drs_kpi_unit">%</span></div>
+                    </div>
+                </div>
+                <div class="col-xl-2 col-md-4 col-sm-6">
+                    <div class="o_drs_kpi_card">
+                        <div class="o_drs_kpi_icon bg-purple-subtle text-purple"><i class="fa fa-cogs"/></div>
+                        <div class="o_drs_kpi_label">Active Machines</div>
+                        <div class="o_drs_kpi_value"><t t-esc="state.kpi.activeMachines"/></div>
+                    </div>
+                </div>
+                <div class="col-xl-2 col-md-4 col-sm-6">
+                    <div class="o_drs_kpi_card">
+                        <div class="o_drs_kpi_icon bg-info-subtle text-info"><i class="fa fa-cubes"/></div>
+                        <div class="o_drs_kpi_label">Rolls Produced</div>
+                        <div class="o_drs_kpi_value"><t t-esc="state.kpi.totalRolls"/></div>
+                    </div>
+                </div>
+                <div class="col-xl-2 col-md-4 col-sm-6">
+                    <div class="o_drs_kpi_card">
+                        <div class="o_drs_kpi_icon bg-warning-subtle text-warning"><i class="fa fa-pie-chart"/></div>
+                        <div class="o_drs_kpi_label">Avg Roll Weight</div>
+                        <div class="o_drs_kpi_value"><t t-esc="state.kpi.avgWeight"/>
+                            <span class="o_drs_kpi_unit">kg</span></div>
+                    </div>
+                </div>
+                <div class="col-xl-2 col-md-4 col-sm-6">
+                    <div class="o_drs_kpi_card">
+                        <div class="o_drs_kpi_icon bg-danger-subtle text-danger"><i class="fa fa-arrows-h"/></div>
+                        <div class="o_drs_kpi_label">Total Length</div>
+                        <div class="o_drs_kpi_value"><t t-esc="state.kpi.totalLength"/>
+                            <span class="o_drs_kpi_unit">m</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- LIVE PRODUCTION TREND -->
+            <div class="o_drs_panel mb-4">
+                <h6 class="o_drs_panel_title"><i class="fa fa-line-chart me-2 text-primary"/>Live Production Output
+                    Trend</h6>
+                <t t-if="state.hasData">
+                    <div class="o_drs_chart_wrap" style="height: 280px;"><canvas t-ref="trendChart"/></div>
+                </t>
+                <t t-else="">
+                    <div class="o_drs_empty_state">
+                        <i class="fa fa-bar-chart"/>
+                        <strong>No production data yet</strong>
+                        <span>Live output will appear here automatically</span>
+                    </div>
+                </t>
+            </div>
+
+            <!-- ROW 2: Machine Status & Temperature -->
+            <div class="row g-4 mb-4">
+                <div class="col-lg-5">
+                    <div class="o_drs_panel h-100">
+                        <h6 class="o_drs_panel_title"><i class="fa fa-server me-2 text-primary"/>Machine Status</h6>
+                        <t t-if="state.machineList.length > 0">
+                            <t t-foreach="state.machineList" t-as="m" t-key="m.name">
+                                <div t-attf-class="machine_status_row {{ m.hasAlert ? 'alert-border' : '' }}">
+                                    <div class="d-flex align-items-center me-auto">
+                                        <div t-attf-class="machine_status_dot {{ m.hasAlert ? 'alert' : '' }}"/>
+                                        <div class="fw-bold">M-<t t-esc="m.name"/></div>
+                                    </div>
+                                    <div class="text-end small">
+                                        <span class="badge bg-light text-dark border me-2"><t t-esc="m.weight"/>
+                                            kg</span>
+                                        <span class="text-muted">Shift: <t t-esc="m.shift"/></span>
+                                    </div>
+                                </div>
+                            </t>
+                        </t>
+                        <t t-else="">
+                            <div class="o_drs_empty_state">
+                                <i class="fa fa-power-off"/>
+                                <strong>All machines idle</strong>
+                                <span>Status will update when production begins</span>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+                <div class="col-lg-7">
+                    <div class="o_drs_panel h-100">
+                        <h6 class="o_drs_panel_title"><i class="fa fa-thermometer-half me-2 text-primary"/>Set vs Actual
+                            Temperature</h6>
+                        <t t-if="state.hasData">
+                            <div class="o_drs_chart_wrap" style="height: 240px;"><canvas t-ref="qualityChart"/></div>
+                        </t>
+                        <t t-else="">
+                            <div class="o_drs_empty_state">
+                                <i class="fa fa-line-chart"/>
+                                <strong>No temperature logs</strong>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ROW 3: Shift Performance & Recent -->
+            <div class="row g-4 mb-4">
+                <div class="col-lg-4">
+                    <div class="o_drs_panel h-100">
+                        <h6 class="o_drs_panel_title"><i class="fa fa-clock-o me-2 text-primary"/>Shift Performance</h6>
+                        <t t-if="state.hasData">
+                            <div class="o_drs_chart_wrap" style="height: 220px;"><canvas t-ref="shiftChart"/></div>
+                        </t>
+                        <t t-else="">
+                            <div class="o_drs_empty_state"><i class="fa fa-pie-chart"/>
+                                <strong>No shift data</strong></div>
+                        </t>
+                    </div>
+                </div>
+                <div class="col-lg-8">
+                    <div class="o_drs_panel h-100">
+                        <h6 class="o_drs_panel_title"><i class="fa fa-history me-2 text-primary"/>Recent Production</h6>
+                        <t t-if="state.recent.length > 0">
+                            <div class="table-responsive">
+                                <table class="table table-borderless o_drs_table">
+                                    <thead>
+                                        <tr>
+                                            <th>Roll #</th>
+                                            <th>Machine</th>
+                                            <th>Shift</th>
+                                            <th class="text-end">Weight</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="state.recent" t-as="rec" t-key="rec.id">
+                                            <tr style="cursor: pointer;" t-on-click="() => this.openRecord(rec.id)">
+                                                <td class="fw-bold text-dark"><t t-esc="rec.output_roll_number"/></td>
+                                                <td><span class="badge rounded-pill bg-light text-dark border px-2 py-1">M-<t
+                                                        t-esc="rec.machine_number"/></span></td>
+                                                <td class="text-capitalize text-muted fw-semibold"><t t-esc="rec.shift"/></td>
+                                                <td class="text-end fw-bolder text-dark"><t t-esc="rec.final_weight"/>
+                                                    kg</td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </t>
+                        <t t-else="">
+                            <div class="o_drs_empty_state"><i class="fa fa-inbox"/>
+                                <strong>No recent activity</strong></div>
+                        </t>
+                    </div>
+                </div>
+            </div>
+
+            <t t-if="state.initialLoad">
+                <div class="o_drs_loading_overlay">
+                    <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            </t>
+        </div>
+    </t>
+</templates>
