@@ -3,7 +3,6 @@ import { ProductTemplate } from "@point_of_sale/app/models/product_template";
 import { ProductProduct } from "@point_of_sale/app/models/product_product";
 import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { flyToCart } from "@pos_self_order/app/utils/ui_animations";
-import { useService } from "@web/core/utils/hooks";
 import { formatProductName } from "@pos_self_order/app/utils";
 import { ProductInfoPopup } from "../product_info_popup/product_info_popup";
 
@@ -21,7 +20,6 @@ export class ProductCard extends Component {
 
     setup() {
         this.selfOrder = useSelfOrder();
-        this.dialog = useService("dialog");
     }
 
     get isProductAvailable() {
@@ -41,7 +39,7 @@ export class ProductCard extends Component {
     }
 
     displayProductInfo() {
-        this.dialog.add(ProductInfoPopup, {
+        this.selfOrder.dialog.add(ProductInfoPopup, {
             productTemplate: this.productTmpl,
         });
     }

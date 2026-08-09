@@ -1,20 +1,17 @@
-import { Component, props, proxy, signal, types } from "@odoo/owl";
+import { Component, proxy, types, useProps } from "@odoo/owl";
 import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { useService } from "@web/core/utils/hooks";
-import { useScrollShadow } from "../../utils/scroll_shadow_hook";
-import { useStickyTitleObserver } from "@pos_self_order/app/utils/sticky_title_observer";
 import { ProductCard } from "@pos_self_order/app/components/product_card/product_card";
+import { ProductInterface } from "@pos_self_order/app/components/product_interface/product_interface";
 import { ProductTemplate } from "@point_of_sale/app/models/product_template";
 
 export class OptionalProductPage extends Component {
     static template = "pos_self_order.OptionalProductPage";
-    static components = { ProductCard };
+    static components = { ProductCard, ProductInterface };
 
-    props = props({
+    props = useProps({
         productTemplate: types.instanceOf(ProductTemplate),
     });
-
-    scrollContainerRef = signal(null);
 
     setup() {
         this.selfOrder = useSelfOrder();
@@ -26,13 +23,8 @@ export class OptionalProductPage extends Component {
         }
 
         this.state = proxy({
-            showStickyTitle: false,
             optionalProductQtyById: history.state?.optionalProductQtys || {},
         });
-        this.scrollShadow = useScrollShadow(this.scrollContainerRef);
-        this.productNameRef = useStickyTitleObserver(
-            (isSticky) => (this.state.showStickyTitle = isSticky)
-        );
     }
 
     get productTemplate() {
@@ -47,6 +39,11 @@ export class OptionalProductPage extends Component {
 
     get isOptionalProductSelected() {
         return Object.values(this.state.optionalProductQtyById).some((qty) => qty > 0);
+    }
+
+    get productCardClasses() {
+        return `btn btn-light d-flex flex-row-reverse flex-md-column align-items-center w-100 py-2 px-3
+            rounded-4 shadow-sm overflow-hidden border-2 text-md-center text-start border-transparent`;
     }
 
     /**

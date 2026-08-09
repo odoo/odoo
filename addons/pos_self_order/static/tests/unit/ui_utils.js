@@ -88,12 +88,12 @@ export async function checkSlotUnavailable(slotValue) {
 }
 
 export async function clickProduct(name) {
-    await contains(`.product_list .o_self_product_box span:contains('${name}')`).click();
+    await contains(`.o_self_product_card span:contains('${name}')`).click();
     await animationFrame();
 }
 
 export async function clickProductInfo(name) {
-    await contains(`.o_self_product_box:contains('${name}') .product_info_icon`).click();
+    await contains(`.o_self_product_card:contains('${name}') .product_info_icon`).click();
     await animationFrame();
 }
 
@@ -116,12 +116,12 @@ export async function clickChildCategory(name) {
 }
 
 export async function waitProduct(name) {
-    await waitFor(`.o_self_product_box span:contains('${name}')`);
+    await waitFor(`.o_self_product_card span:contains('${name}')`);
 }
 
 export async function checkProductQty(name, qty) {
     await waitFor(
-        `.o_self_product_list_page .o_self_product_box:has(.self_order_product_name:contains('${name}')) .badge:contains('${qty}')`
+        `.o_self_product_list_page .o_self_product_card:has(.self_order_product_name:contains('${name}')) .badge:contains('${qty}')`
     );
 }
 
@@ -133,12 +133,12 @@ export async function checkOrderTotal(amount) {
 
 export async function checkReferenceNotInProductName(productName, reference) {
     await waitFor(
-        `.o_self_product_box span:contains('${productName}'):not(:contains("${reference}"))`
+        `.o_self_product_card span:contains('${productName}'):not(:contains("${reference}"))`
     );
 }
 
 export function isProductDisplayed(productName, isOutOfStock = false) {
-    let selector = `.o_self_product_box:has(span:contains('${productName}'))`;
+    let selector = `.o_self_product_card:has(span:contains('${productName}'))`;
     if (isOutOfStock) {
         selector += `:has(div:contains('Out of stock'))`;
     }
@@ -146,12 +146,12 @@ export function isProductDisplayed(productName, isOutOfStock = false) {
 }
 
 export async function isProductNotDisplayed(productName) {
-    expect(`.o_self_product_box:has(span:contains('${productName}'))`).toHaveCount(0);
+    expect(`.o_self_product_card:has(span:contains('${productName}'))`).toHaveCount(0);
 }
 
 export function checkNthProduct(n, name) {
     expect(
-        `.product_list .o_self_product_box:nth-child(${n}) span:contains('${name}')`
+        `.product_list .o_self_product_card:nth-child(${n}) span:contains('${name}')`
     ).toHaveCount(1);
 }
 
@@ -481,6 +481,10 @@ export async function dialogBodyIs(text) {
 export async function clickNumpad(digit) {
     await contains(`.numpad button:contains("${digit}")`).click();
     await animationFrame();
+}
+
+export async function hasBtn(buttonName) {
+    waitFor(`.btn:contains(${buttonName})`);
 }
 
 export async function clickBtn(buttonName) {
