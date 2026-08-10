@@ -69,6 +69,9 @@ patch(Thread.prototype, {
     get hasWelcomeMessage() {
         return this.channel_type === "livechat" && !this.chatbot && !this.requested_by_operator;
     },
+    get isActive() {
+        return super.isActive || this.isTransient;
+    },
     /** @returns {Promise<import("models").Message} */
     async post() {
         if (
