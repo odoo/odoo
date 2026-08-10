@@ -116,7 +116,7 @@ class TestL10nCnBaiwangFlow(TestAccountMoveSendCommon):
             return {'success': False, 'error': {'reference': 'invalid_payload', 'data': {'message': 'bad payload'}}}
 
         with self.assertRaises(UserError) as err:
-            client._call_proxy(fake_proxy_call, {'foo': 'bar'}, error_prefix='Baiwang proxy error: %s')
+            client._call_proxy(fake_proxy_call, {'foo': 'bar'}, error_prefix='Baiwang proxy error: %(error)s')
         self.assertIn('The Baiwang request payload is invalid.', str(err.exception))
 
     def test_03c_provider_error_with_known_code(self):
@@ -133,7 +133,7 @@ class TestL10nCnBaiwangFlow(TestAccountMoveSendCommon):
             }
 
         with self.assertRaises(UserError) as err:
-            client._call_proxy(fake_proxy_call, {'foo': 'bar'}, error_prefix='Baiwang proxy error: %s')
+            client._call_proxy(fake_proxy_call, {'foo': 'bar'}, error_prefix='Baiwang proxy error: %(error)s')
         self.assertIn('Authentication failed. Please verify your Baiwang credentials.', str(err.exception))
         self.assertIn('Baiwang [101]: token rejected', str(err.exception))
 
@@ -151,7 +151,7 @@ class TestL10nCnBaiwangFlow(TestAccountMoveSendCommon):
             }
 
         with self.assertRaises(UserError) as err:
-            client._call_proxy(fake_proxy_call, {'foo': 'bar'}, error_prefix='Baiwang proxy error: %s')
+            client._call_proxy(fake_proxy_call, {'foo': 'bar'}, error_prefix='Baiwang proxy error: %(error)s')
         self.assertIn('Baiwang error [777777]: upstream rejected request', str(err.exception))
 
     def test_03e_malformed_error_payload_fallback(self):
@@ -162,7 +162,7 @@ class TestL10nCnBaiwangFlow(TestAccountMoveSendCommon):
             return {'success': False, 'error': []}
 
         with self.assertRaises(UserError) as err:
-            client._call_proxy(fake_proxy_call, {'foo': 'bar'}, error_prefix='Baiwang proxy error: %s')
+            client._call_proxy(fake_proxy_call, {'foo': 'bar'}, error_prefix='Baiwang proxy error: %(error)s')
         self.assertIn('Unexpected Baiwang proxy error.', str(err.exception))
 
     def test_03f_proxy_structured_error_passthrough(self):
@@ -199,7 +199,7 @@ class TestL10nCnBaiwangFlow(TestAccountMoveSendCommon):
             }
 
         with self.assertRaises(UserError) as err:
-            client._call_proxy(fake_proxy_call, {'foo': 'bar'}, error_prefix='Baiwang proxy error: %s')
+            client._call_proxy(fake_proxy_call, {'foo': 'bar'}, error_prefix='Baiwang proxy error: %(error)s')
         self.assertIn('Authentication failed. Please verify your Baiwang credentials.', str(err.exception))
         self.assertIn('Baiwang [101]: token rejected', str(err.exception))
 
@@ -407,6 +407,6 @@ class TestL10nCnBaiwangFlow(TestAccountMoveSendCommon):
             client._call_proxy(
                 lambda company, *args: {'success': False, 'error': 'string error'},
                 {},
-                error_prefix='Baiwang proxy error: %s',
+                error_prefix='Baiwang proxy error: %(error)s',
             )
         self.assertIn('string error', ctx.exception.args[0])
