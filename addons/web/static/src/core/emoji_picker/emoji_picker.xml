@@ -15,8 +15,11 @@
         <t t-else="">
             <div class="o-EmojiPicker-search d-flex align-items-center mx-2 mt-2 rounded">
                 <span class="o-EmojiPicker-searchContour d-flex mx-1 w-100 rounded o-active align-items-center justify-content-center border border-secondary bg-view">
+                    <i class="oi ps-2 py-1 fs-7 rounded-start-0 rounded-3 o-active opacity-50" data-icon="search" title="Search..." role="img" aria-label="Search..."/>
                     <t t-call="web.EmojiPicker.searchInput"/>
-                    <i class="oi px-2 py-1 fs-7 rounded-start-0 rounded-3 o-active opacity-50" data-icon="search" title="Search..." role="img" aria-label="Search..."/>
+                    <button t-if="this.searchTerm()" class="btn btn-sm btn-link p-0 px-1 opacity-50 opacity-100-hover" title="Clear search" t-on-click="this.clearSearch">
+                        <i class="oi oi-filled" data-icon="cancel"/>
+                    </button> 
                 </span>
             </div>
             <t t-set="itemIndex" t-value="0"/>
