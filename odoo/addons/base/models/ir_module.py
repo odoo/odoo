@@ -622,17 +622,6 @@ class IrModuleModule(models.Model):
         self.env.cr.execute("SET LOCAL lock_timeout = '3s'")
 
         try:
-            # raise error if database is updating for module operations
-            # acquire the shared-lock for the current transaction only
-            self.env.cr.execute("SELECT pg_advisory_xact_lock_shared(hashtext('registry_loading')) NOWAIT")
-            # raise error if another transaction is trying to schedule module operations concurrently
-            self.env.cr.execute("LOCK ir_module_module IN EXCLUSIVE MODE")
-        except psycopg2.OperationalError:
-            self.env.cr.rollback()
-            raise UserError(_("Odoo is currently processing another module operation.\n"
-                               "Please try again later or contact your system administrator."))
-
-        try:
             # This is done because the installation/uninstallation/upgrade can modify a currently
             # running cron job and prevent it from finishing, and since the ir_cron table is locked
             # during execution, the lock won't be released until timeout.
