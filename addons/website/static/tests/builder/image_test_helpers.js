@@ -1,5 +1,6 @@
 import { before, globals } from "@odoo/hoot";
 import { contains, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { dummyBase64Img } from "@html_builder/../tests/helpers";
 import { ImagePositionOverlay } from "@html_builder/plugins/image/image_position_overlay";
 
 // Pre-fetch image routes so they're cached and available faster during tests
@@ -31,6 +32,14 @@ export const testSvgImgSrc = "/web/image/457-test/test.svg";
 
 export const testSvgImg = `
     <img src='${testSvgImgSrc}'>
+    `;
+
+export const testBase64Img = `
+    <img src="${dummyBase64Img}"
+        data-attachment-id="1" data-original-id="1"
+        data-original-src="${dummyBase64Img}"
+        data-mimetype-before-conversion="image/png"
+        >
     `;
 
 const imageData = {
