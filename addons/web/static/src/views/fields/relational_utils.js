@@ -4,6 +4,7 @@ import {
     proxy,
     signal,
     t,
+    untrack,
     usePlugin,
     useProps,
     useScope,
@@ -176,8 +177,9 @@ export function useSpecialData(loadFn) {
 
     /** @type {{ data: Record<string, T> }} */
     const result = proxy({ data: {} });
-    useRecordObserver(async (record, props) => {
-        result.data = await loadFn(ormWithCache, { ...props, record });
+    useRecordObserver(async () => {
+        const currentProps = untrack(() => ({ ...props }));
+        result.data = await loadFn(ormWithCache, currentProps);
     });
     onWillUpdateProps(async (nextProps) => {
         // useRecordObserver callback is not called when the record doesn't change

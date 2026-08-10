@@ -16,8 +16,9 @@ export class PurchaseOrderLineProductField extends ProductLabelSectionAndNoteFie
         this.currentValue = this.props.record.data[this.props.name];
 
         useRecordObserver((record) => {
-            if (record.isInEdition && this.props.record.data[this.props.name]) {
-                if (!this.currentValue || this.currentValue.id != record.data[this.props.name].id) {
+            const name = this.props.name;
+            if (record.isInEdition && record.data[name]) {
+                if (!this.currentValue || this.currentValue.id != record.data[name].id) {
                     // Field was updated if line was open in edit mode,
                     //      field is not emptied,
                     //      new value is different than existing value.
@@ -25,7 +26,7 @@ export class PurchaseOrderLineProductField extends ProductLabelSectionAndNoteFie
                     this._onProductTemplateUpdate();
                 }
             }
-            this.currentValue = record.data[this.props.name];
+            this.currentValue = record.data[name];
         });
         this.matrixConfigurator = useMatrixConfigurator();
     }

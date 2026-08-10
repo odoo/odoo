@@ -714,7 +714,7 @@ test(`faulty useRecordObserver in widget`, async () => {
     patchWithCleanup(CharField.prototype, {
         setup() {
             super.setup();
-            useRecordObserver((record, props) => {
+            useRecordObserver(() => {
                 throw new Error("faulty record observer");
             });
         },
