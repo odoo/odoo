@@ -30,6 +30,7 @@ class HrLeaveEmployeeReport(models.Model):
     def _table_query(self):
         return SQL(
             """
+            -- Step 1: Gather validated leave facts, calendar metadata and leave type options.
             WITH leave_base AS (
                 SELECT
                     hl.id AS leave_id,
@@ -44,6 +45,7 @@ class HrLeaveEmployeeReport(models.Model):
                     hl.resource_calendar_id,
                     hl.employee_company_id,
                     COALESCE(rc.tz, 'UTC') AS tz,
+                    COALESCE(rc.two_weeks_calendar, FALSE) AS two_weeks_calendar,
                     hlt.include_public_holidays_in_duration
                 FROM hr_leave AS hl
                 JOIN hr_leave_type AS hlt
@@ -54,11 +56,20 @@ class HrLeaveEmployeeReport(models.Model):
                   AND hl.employee_id IS NOT NULL
                   AND hl.date_from IS NOT NULL
                   AND hl.date_to IS NOT NULL
-            ), cal_workday AS (
-                SELECT DISTINCT
-                    calendar_id,
-                    dayofweek::INTEGER AS dayofweek
-                FROM resource_calendar_attendance
+
+            -- Step 2: Pre-aggregate planned working hours per calendar/day/week bucket.
+            ), cal_day_hours AS (
+                SELECT
+                    rca.calendar_id,
+                    rca.dayofweek::INTEGER AS dayofweek,
+                    rca.week_type,
+                    SUM(rca.hour_to - rca.hour_from) AS day_work_hours
+                FROM resource_calendar_attendance AS rca
+                WHERE rca.display_type IS NULL
+                  AND rca.day_period != 'lunch'
+                GROUP BY rca.calendar_id, rca.dayofweek, rca.week_type
+
+            -- Step 3: Expand each leave into local days, keep only working days, and optionally exclude public holidays.
             ), leave_days AS (
                 SELECT
                     lb.leave_id,
@@ -70,6 +81,7 @@ class HrLeaveEmployeeReport(models.Model):
                     lb.holiday_status_id,
                     lb.state,
                     lb.description,
+                    day_hours.day_work_hours,
                     ((gs.day::TIMESTAMP AT TIME ZONE lb.tz) AT TIME ZONE 'UTC') AS day_start_utc
                 FROM leave_base AS lb
                 CROSS JOIN LATERAL GENERATE_SERIES(
@@ -77,9 +89,14 @@ class HrLeaveEmployeeReport(models.Model):
                     (lb.date_to AT TIME ZONE 'UTC' AT TIME ZONE lb.tz)::DATE,
                     INTERVAL '1 day'
                 ) AS gs(day)
-                JOIN cal_workday AS cw
-                  ON cw.calendar_id = lb.resource_calendar_id
-                 AND cw.dayofweek = EXTRACT(ISODOW FROM gs.day)::INTEGER - 1
+                JOIN cal_day_hours AS day_hours
+                  ON day_hours.calendar_id = lb.resource_calendar_id
+                 AND day_hours.dayofweek = EXTRACT(ISODOW FROM gs.day)::INTEGER - 1
+                 AND (
+                     (NOT lb.two_weeks_calendar AND day_hours.week_type IS NULL)
+                     OR (lb.two_weeks_calendar AND day_hours.week_type = ((((gs.day::DATE - DATE '0001-01-01')::INTEGER / 7) %% 2))::TEXT)
+                 )
+                 AND day_hours.day_work_hours > 0
                 LEFT JOIN LATERAL (
                     SELECT 1
                     FROM resource_calendar_leaves AS rcl
@@ -93,19 +110,24 @@ class HrLeaveEmployeeReport(models.Model):
                     LIMIT 1
                 ) AS public_holiday ON TRUE
                 WHERE lb.include_public_holidays_in_duration OR public_holiday IS NULL
+
+            -- Step 4: Compute per-leave denominators for day split and hour weighting.
             ), leave_days_numbered AS (
                 SELECT
                     ld.*,
-                    COUNT(*) OVER (PARTITION BY ld.leave_id) AS workday_count
+                    COUNT(*) OVER (PARTITION BY ld.leave_id) AS workday_count,
+                    SUM(ld.day_work_hours) OVER (PARTITION BY ld.leave_id) AS leave_work_hours_total
                 FROM leave_days AS ld
             )
+
+            -- Step 5: At the end we want 1 row per day containing hours and days.
             SELECT
                 ROW_NUMBER() OVER(ORDER BY leave_id, day_start_utc) AS id,
                 leave_id,
                 employee_id,
                 GREATEST(date_from, day_start_utc) AS working_schedule_aligned_date_from,
                 number_of_days / workday_count::FLOAT AS number_of_days,
-                number_of_hours / workday_count::FLOAT AS number_of_hours,
+                number_of_hours * day_work_hours / leave_work_hours_total AS number_of_hours,
                 description,
                 holiday_status_id,
                 state
