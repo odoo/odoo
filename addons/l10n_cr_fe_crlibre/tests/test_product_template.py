@@ -22,3 +22,11 @@ class TestProductTemplateCabys(TransactionCase):
             self.env['product.template'].create({
                 'name': 'Producto inválido', 'l10n_cr_fe_cabys': 'abcdefghijklm',
             })
+
+    def test_action_buscar_cabys_abre_wizard_con_producto(self):
+        product = self.env['product.template'].create({'name': 'Aguacate Hass'})
+        action = product.action_l10n_cr_fe_buscar_cabys()
+        self.assertEqual(action['res_model'], 'l10n_cr.fe.cabys.wizard')
+        self.assertEqual(action['type'], 'ir.actions.act_window')
+        self.assertEqual(action['target'], 'new')
+        self.assertEqual(action['context']['default_product_id'], product.id)
