@@ -20,7 +20,6 @@ from collections import defaultdict
 
 import psycopg2
 import requests
-from PIL import Image
 
 try:
     import xlrd
@@ -60,6 +59,7 @@ except ImportError:
 from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools.translate import _
+from odoo.tools.image import ImageProcess
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools import config, DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, parse_version
 
@@ -1400,14 +1400,7 @@ class Base_ImportImport(models.TransientModel):
                         field=field
                     )
 
-            image = Image.open(io.BytesIO(content))
-            w, h = image.size
-            if w * h > 42e6:  # Nokia Lumia 1020 photo resolution
-                raise ImportValidationError(
-                    _("Image size excessive, imported images must be smaller than 42 million pixel"),
-                    field=field
-                )
-
+            ImageProcess(bytes(content), verify_resolution=True)
             return base64.b64encode(content)
         except Exception as e:
             _logger.warning(e, exc_info=True)
