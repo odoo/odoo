@@ -2,6 +2,7 @@
 
 import { registry } from "@web/core/registry";
 import { batchedOrmService } from "@analytic/services/batched_orm_service";
+import { analyticDistributionService } from "@analytic/services/analytic_distribution_service";
 
 import {
     addRow,
@@ -130,6 +131,7 @@ QUnit.module("Analytic", (hooks) => {
 
         setupViewRegistries();
         registry.category("services").add("batchedOrm", batchedOrmService);
+        registry.category("services").add("analytic_distribution", analyticDistributionService);
     });
 
     QUnit.module("AnalyticDistribution");
