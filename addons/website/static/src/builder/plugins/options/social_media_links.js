@@ -1,6 +1,6 @@
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { useDomState } from "@html_builder/core/utils";
-import { onWillStart, proxy, signal } from "@odoo/owl";
+import { proxy, signal } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { useSortable } from "@web/core/utils/sortable_owl";
 
@@ -13,19 +13,7 @@ export class SocialMediaLinks extends BaseOptionComponent {
     setup() {
         super.setup();
 
-        const { reorderSocialMediaLink, prefillSocialMediaLinks } =
-            this.dependencies.socialMediaOptionPlugin;
-        onWillStart(async () => {
-            // Prefill placeholder social media links for existing static
-            // content (e.g., footer snippets) that are not added via drag and
-            // drop.
-            this.dependencies.operation.next(async () => {
-                const prefilled = await prefillSocialMediaLinks(this.env.getEditingElement());
-                if (prefilled) {
-                    this.dependencies.history.commit({ areSocialMediaLinksPrefilled: true });
-                }
-            });
-        });
+        const { reorderSocialMediaLink } = this.dependencies.socialMediaOptionPlugin;
         this.domState = useDomState((editingElement) => ({
             presentLinks: [...editingElement.querySelectorAll(":scope > a[href]")],
         }));

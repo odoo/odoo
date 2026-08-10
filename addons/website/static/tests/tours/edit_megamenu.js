@@ -119,6 +119,9 @@ registry.category("web_tour.tours").add("megamenu_active_nav_link", {
         },
         ...simulateLotOfMenusAsOnRunbot,
         ...addMegaMenu("MegaTron"),
+        {
+            trigger: "body:not(:has(.options-container-header))",
+        },
         clickOnExtraMenuItem({}, true),
         toggleMegaMenu,
         ...openLinkPopup({
@@ -298,6 +301,26 @@ const openMenu = () => ({
     trigger: ":iframe body[is-ready=true] span.navbar-toggler-icon",
     run: "click",
 });
+const returnToMenu = (menuName) => [
+    {
+        content: "Return to menu",
+        trigger: ":iframe .o_mega_nav button[data-icon=chevron_backward]",
+        run: "click",
+    },
+    {
+        content: "Await transition",
+        trigger: "body",
+        run: () => {
+            const deferred = Promise.withResolvers();
+            setTimeout(deferred.resolve, 300);
+            return deferred.promise;
+        },
+    },
+    {
+        content: "Wait for sub-menu to be gone",
+        trigger: `:iframe header#top a:not(.show)[aria-expanded=false] > span:contains('${menuName}')`,
+    },
+];
 
 registry.category("web_tour.tours").add("edit_megamenu_visibility", {
     steps: () => [
@@ -323,6 +346,9 @@ registry.category("web_tour.tours").add("edit_megamenu_visibility", {
         {
             trigger: ".modal:not(.o_inactive_modal) .modal-footer .btn-primary:contains(save)",
             run: "click",
+        },
+        {
+            trigger: "body:not(:has(.options-container-header))",
         },
         selectHeader(),
 
@@ -353,6 +379,7 @@ registry.category("web_tour.tours").add("edit_megamenu_visibility", {
             trigger:
                 '.options-container [data-label="Visibility"] button[data-action-param="no_mobile"].active',
         },
+        ...returnToMenu("MM des"),
         // Mega Menu 2: Mobile Only
         {
             content: "Open the second mega menu",
@@ -378,6 +405,7 @@ registry.category("web_tour.tours").add("edit_megamenu_visibility", {
             trigger:
                 '.options-container [data-label="Visibility"] button[data-action-param="no_desktop"].active',
         },
+        ...returnToMenu("MM mob"),
         // Mega Menu 3: Logged Out Only
         {
             content: "Open the third mega menu",
@@ -394,6 +422,7 @@ registry.category("web_tour.tours").add("edit_megamenu_visibility", {
         },
         ...changeOptionInPopover("Block", "Visibility", "Conditionally"),
         ...changeOptionInPopover("Block", "Users", "Visible for Logged Out"),
+        ...returnToMenu("MM cond"),
         ...clickOnSave(),
         // Check desktop visibility while NOT editing
         openMenu(),
