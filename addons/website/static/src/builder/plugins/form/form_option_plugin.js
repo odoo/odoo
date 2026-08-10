@@ -67,6 +67,9 @@ import { withSequence } from "@html_editor/utils/resource";
  * @property { FormOptionPlugin['setLabelsMark'] } setLabelsMark
  * @property { FormOptionPlugin['clearValidationDataset'] } clearValidationDataset
  * @property { FormOptionPlugin['fetchModels'] } fetchModels
+ * @property { FormOptionPlugin['toggleFormSteps'] } toggleFormSteps
+ * @property { FormOptionPlugin['addFormStep'] } addFormStep
+ * @property { FormOptionPlugin['getFormStepEls'] } getFormStepEls
  */
 
 export const INNER_SNIPPETS_EXCLUDED_FROM_FORMS = [
@@ -104,6 +107,9 @@ export class FormOptionPlugin extends Plugin {
         "setLabelsMark",
         "clearValidationDataset",
         "fetchModels",
+        "toggleFormSteps",
+        "addFormStep",
+        "getFormStepEls",
     ];
     /** @type {import("plugins").WebsiteResources} */
     resources = {
@@ -169,6 +175,9 @@ export class FormOptionPlugin extends Plugin {
             OnSuccessAction,
             ToggleEndMessageAction,
             FormToggleRecaptchaLegalAction,
+            ToggleFormStepsAction,
+            AddFormStepAction,
+            StepsIndicatorColorAction,
             // Field actions
             CustomFieldAction,
             ExistingFieldAction,
@@ -183,6 +192,8 @@ export class FormOptionPlugin extends Plugin {
             SetVisibilityAction,
             SetVisibilityDependencyAction,
             SetFormCustomFieldValueListAction,
+            SetNumberInputDisplayAction,
+            SetComputedFormulaAction,
             PropertyAction,
             SetDependencyValueListAction,
             SetCustomErrorMessageAction,
@@ -207,6 +218,7 @@ export class FormOptionPlugin extends Plugin {
         clean_for_save_processors: [
             this.removeSuccessMessagePreviews.bind(this),
             this.removeIncompleteRequirements.bind(this),
+            this.normalizeFormSteps.bind(this),
             // Early in sequence to run before the plugin removing empty nodes
             withSequence(5, this.writeDefaultLabels.bind(this)),
         ],
@@ -394,6 +406,101 @@ export class FormOptionPlugin extends Plugin {
         }
     }
     /**
+     * @param {HTMLElement} formEl
+     * @returns {HTMLElement[]} the step containers of the form, in order
+     */
+    getFormStepEls(formEl) {
+        return [...formEl.querySelectorAll(".s_website_form_step")];
+    }
+    makeFormStepEl(formEl, number) {
+        const stepEl = formEl.ownerDocument.createElement("div");
+        stepEl.className = "s_website_form_step row s_col_no_bgcolor";
+        stepEl.dataset.name = "Step";
+        stepEl.dataset.step = number;
+        return stepEl;
+    }
+    /**
+     * Turn a form into a multi-step form (all current fields in step 1), or
+     * back into a single-page form (steps unwrapped in order).
+     *
+     * The step navigation and the progress indicator are rendered by the
+     * public interaction, not saved in the page.
+     *
+     * @param {HTMLElement} formEl
+     * @param {boolean} enable
+     */
+    toggleFormSteps(formEl, enable) {
+        const rowsEl = formEl.querySelector(".s_website_form_rows");
+        if (!rowsEl || formEl.classList.contains("s_website_form_multistep") === enable) {
+            return;
+        }
+        if (enable) {
+            formEl.classList.add("s_website_form_multistep");
+            if (!formEl.dataset.stepsIndicator) {
+                formEl.dataset.stepsIndicator = "dots";
+            }
+            rowsEl.classList.remove("row");
+            const stepEl = this.makeFormStepEl(formEl, 1);
+            // Hidden configuration fields, the recaptcha legal terms and the
+            // submit button stay outside the steps.
+            const stepChildEls = [...rowsEl.children].filter(
+                (el) =>
+                    !el.matches(
+                        ".s_website_form_dnone, .s_website_form_submit, .s_website_form_recaptcha"
+                    )
+            );
+            rowsEl.insertBefore(stepEl, stepChildEls[0] || null);
+            stepChildEls.forEach((el) => stepEl.appendChild(el));
+        } else {
+            formEl.classList.remove("s_website_form_multistep");
+            delete formEl.dataset.stepsIndicator;
+            formEl.style.removeProperty("--form-steps-indicator-color");
+            rowsEl.classList.add("row");
+            for (const stepEl of this.getFormStepEls(formEl)) {
+                while (stepEl.firstChild) {
+                    stepEl.parentNode.insertBefore(stepEl.firstChild, stepEl);
+                }
+                stepEl.remove();
+            }
+        }
+    }
+    /**
+     * Append an empty step to a multi-step form.
+     *
+     * @param {HTMLElement} formEl
+     * @returns {HTMLElement|null} the new step container
+     */
+    addFormStep(formEl) {
+        const stepEls = this.getFormStepEls(formEl);
+        if (!stepEls.length) {
+            return null;
+        }
+        const stepEl = this.makeFormStepEl(formEl, stepEls.length + 1);
+        stepEls.at(-1).insertAdjacentElement("afterend", stepEl);
+        return stepEl;
+    }
+    /**
+     * Keep multi-step forms consistent on save: sequential step numbering,
+     * no fields outside a step, no empty multi-step state.
+     */
+    normalizeFormSteps(rootEl) {
+        for (const formEl of selectElements(rootEl, "form.s_website_form_multistep")) {
+            const stepEls = this.getFormStepEls(formEl);
+            if (!stepEls.length) {
+                this.toggleFormSteps(formEl, false);
+                continue;
+            }
+            stepEls.forEach((stepEl, i) => (stepEl.dataset.step = i + 1));
+            const rowsEl = formEl.querySelector(".s_website_form_rows");
+            for (const el of [...rowsEl.children]) {
+                if (el.matches(".s_website_form_field:not(.s_website_form_dnone)")) {
+                    stepEls.at(-1).appendChild(el);
+                }
+            }
+        }
+        return rootEl;
+    }
+    /**
      * Apply the model on the form changing its fields
      *
      * @param {HTMLElement} el
@@ -408,6 +515,8 @@ export class FormOptionPlugin extends Plugin {
             if (oldFormKey) {
                 oldFormInfo = this.getRegistryFormInfo(oldFormKey);
             }
+            // The new action's default fields are not step-aware.
+            this.toggleFormSteps(el, false);
             for (const fieldEl of el.querySelectorAll(".s_website_form_field")) {
                 fieldEl.remove();
             }
@@ -547,6 +656,12 @@ export class FormOptionPlugin extends Plugin {
         const field = getCustomField("char", this.dependencies.websiteBridge._t("Custom Text"));
         field.formatInfo = getDefaultFormat(formEl);
         const fieldEl = renderField(field);
+        const lastStepEl = this.getFormStepEls(formEl).at(-1);
+        if (lastStepEl) {
+            lastStepEl.insertAdjacentElement("beforeend", fieldEl);
+            this.dependencies.builderOptions.setNextTarget(fieldEl);
+            return;
+        }
         let locationEl = formEl.querySelector(".s_website_form_submit, .s_website_form_recaptcha");
         if (!locationEl) {
             locationEl = formEl.querySelector(".s_website_form_rows");
@@ -860,6 +975,11 @@ export class FormOptionPlugin extends Plugin {
                 defaults: JSON.stringify(defaults),
                 availableRecords: availableRecords,
                 newRecordId: isFieldCustom(fieldEl) ? getNewRecordId(fieldEl) : "",
+                // Numeric option weights only matter when a computed field
+                // uses this form's options in its formula.
+                withWeight:
+                    isFieldCustom(fieldEl) &&
+                    !!formEl.querySelector('.s_website_form_field[data-type="computed"]'),
             });
         }
         return {
@@ -1361,6 +1481,114 @@ export class ToggleEndMessageAction extends BuilderAction {
         return el.classList.contains("o_show_form_success_message");
     }
 }
+export class ToggleFormStepsAction extends BuilderAction {
+    static id = "toggleFormSteps";
+    static dependencies = ["websiteFormOption"];
+    setup() {
+        this.preview = false;
+    }
+    apply({ editingElement: el, value }) {
+        this.dependencies.websiteFormOption.toggleFormSteps(el, value === "steps");
+    }
+    isApplied({ editingElement: el, value }) {
+        return el.classList.contains("s_website_form_multistep") === (value === "steps");
+    }
+}
+export class AddFormStepAction extends BuilderAction {
+    static id = "addFormStep";
+    static dependencies = ["websiteFormOption", "builderOptions"];
+    setup() {
+        this.preview = false;
+    }
+    apply({ editingElement: el }) {
+        const stepEl = this.dependencies.websiteFormOption.addFormStep(el);
+        if (stepEl) {
+            this.dependencies.builderOptions.setNextTarget(stepEl);
+        }
+    }
+}
+export class StepsIndicatorColorAction extends BuilderAction {
+    static id = "stepsIndicatorColor";
+    static dependencies = ["builderActions"];
+    setup() {
+        // Read by the runtime progress indicator (dots / bar), which is not
+        // part of the saved page: only the variable is.
+        this.colorVarName = "--form-steps-indicator-color";
+        this.style = this.dependencies.builderActions.getAction("styleAction");
+    }
+    getValue(args) {
+        return this.style.getValue({ ...args, params: { mainParam: this.colorVarName } });
+    }
+    apply(args) {
+        this.style.apply({ ...args, params: { mainParam: this.colorVarName } });
+    }
+}
+export class SetNumberInputDisplayAction extends BuilderAction {
+    static id = "setNumberInputDisplay";
+    static dependencies = ["websiteFormOption"];
+    load(context) {
+        return this.dependencies.websiteFormOption.prepareFields(context);
+    }
+    apply({ editingElement: fieldEl, value, loadResult: fields }) {
+        const field = getActiveField(fieldEl, { fields });
+        field.inputDisplay = value === "slider" ? "slider" : undefined;
+        this.dependencies.websiteFormOption.replaceField(fieldEl, field, fields);
+    }
+    isApplied({ editingElement: fieldEl, value }) {
+        return (fieldEl.dataset.inputDisplay || "input") === value;
+    }
+}
+export class SetComputedFormulaAction extends BuilderAction {
+    static id = "setComputedFormula";
+    apply({ editingElement: fieldEl, value }) {
+        const formEl = fieldEl.closest("form");
+        // Resolve a term reference (input name from the records dialog, or a
+        // label typed by hand) to the source field's input name.
+        const resolveName = (ref) => {
+            if (!ref) {
+                return undefined;
+            }
+            if (formEl.querySelector(`.s_website_form_input[name="${CSS.escape(ref)}"]`)) {
+                return ref;
+            }
+            const target = ref.trim().toLowerCase();
+            for (const labelEl of formEl.querySelectorAll(".s_website_form_label_content")) {
+                if (labelEl.textContent.trim().toLowerCase() === target) {
+                    const inputEl = labelEl
+                        .closest(".s_website_form_field")
+                        .querySelector(".s_website_form_input");
+                    if (inputEl?.name) {
+                        return inputEl.name;
+                    }
+                }
+            }
+            return ref;
+        };
+        const terms = JSON.parse(value).map((row) => ({
+            field: resolveName(row.id ? String(row.id) : row.display_name),
+            label: row.display_name,
+            coef: row.coef === undefined || row.coef === "" ? 1 : parseFloat(row.coef) || 0,
+            ...(row.multiplier ? { multiplier: resolveName(row.multiplier) } : {}),
+        }));
+        fieldEl.dataset.formula = JSON.stringify(terms);
+    }
+    getValue({ editingElement: fieldEl }) {
+        let terms = [];
+        try {
+            terms = JSON.parse(fieldEl.dataset.formula || "[]");
+        } catch {
+            terms = [];
+        }
+        return JSON.stringify(
+            terms.map((term) => ({
+                id: term.field,
+                display_name: term.label || term.field,
+                coef: term.coef === undefined ? 1 : term.coef,
+                multiplier: term.multiplier || "",
+            }))
+        );
+    }
+}
 export class FormToggleRecaptchaLegalAction extends BuilderAction {
     static id = "formToggleRecaptchaLegal";
     apply({ editingElement: el }) {
@@ -1498,14 +1726,16 @@ export class LinkStateToCountryAction extends BuilderAction {
 }
 export class MultiCheckboxDisplayAction extends BuilderAction {
     static id = "multiCheckboxDisplay";
-    apply({ editingElement: fieldEl, value }) {
-        const targetEl = getMultipleInputs(fieldEl);
-        const isHorizontal = value === "horizontal";
-        for (const el of targetEl.querySelectorAll(".checkbox, .radio")) {
-            el.classList.toggle("col-lg-4", isHorizontal);
-            el.classList.toggle("col-md-6", isHorizontal);
-        }
-        targetEl.dataset.display = value;
+    static dependencies = ["websiteFormOption"];
+    load(context) {
+        return this.dependencies.websiteFormOption.prepareFields(context);
+    }
+    apply({ editingElement: fieldEl, value, loadResult: fields }) {
+        // Re-render the field: the "buttons" and "boxed" displays use a
+        // different inner markup than the checkbox/radio ones.
+        const field = getActiveField(fieldEl, { fields });
+        field.formatInfo.multiPosition = value;
+        this.dependencies.websiteFormOption.replaceField(fieldEl, field, fields);
     }
     isApplied({ editingElement: fieldEl, value }) {
         const targetEl = getMultipleInputs(fieldEl);

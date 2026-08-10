@@ -112,6 +112,31 @@ export class FormFieldOption extends BaseOptionComponent {
             return { value: getFieldName(el) === "state_id" && hasCountryField };
         });
 
+        // Fields of the form usable as terms of a computed field: number
+        // fields and selection-like fields (through their option weights).
+        this.formulaSources = useDomState((el) => {
+            const formEl = el.closest("form");
+            const sources = [];
+            for (const fieldEl of formEl.querySelectorAll(
+                ".s_website_form_field:not(.s_website_form_dnone)"
+            )) {
+                if (fieldEl === el || fieldEl.dataset.type === "computed") {
+                    continue;
+                }
+                const inputEl = fieldEl.querySelector(".s_website_form_input");
+                const labelEl = fieldEl.querySelector(".s_website_form_label_content");
+                if (!inputEl || !inputEl.name || !labelEl) {
+                    continue;
+                }
+                const isNumeric = ["number", "range"].includes(inputEl.type);
+                const isChoice = !!(fieldEl.querySelector("select") || getMultipleInputs(fieldEl));
+                if (isNumeric || isChoice) {
+                    sources.push({ id: inputEl.name, display_name: labelEl.textContent.trim() });
+                }
+            }
+            return { json: JSON.stringify(sources) };
+        });
+
         onWillStart(async () => {
             const el = this.env.getEditingElement();
             const fieldOptionData = await loadFieldOptionData(el);

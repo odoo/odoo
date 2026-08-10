@@ -23,6 +23,27 @@
         </span>
     </t>
 
+    <!-- Multi-step navigation buttons (inserted at runtime). -->
+    <t t-name="website.s_website_form_steps_nav">
+        <a href="#" role="button" class="btn btn-secondary s_website_form_step_prev me-2 d-none">Previous</a>
+        <a href="#" role="button" class="btn btn-primary s_website_form_step_next me-2">Next</a>
+    </t>
+
+    <!-- Multi-step progress indicator (inserted at runtime). -->
+    <t t-name="website.s_website_form_steps_progress">
+        <div class="s_website_form_steps_progress col-12 mb-4">
+            <div t-if="type === 'bar'" class="progress" style="height: 8px;">
+                <div class="progress-bar" role="progressbar" style="width: 0%"/>
+            </div>
+            <div t-elif="type === 'dots'" class="d-flex align-items-center justify-content-center">
+                <t t-foreach="stepNumbers" t-as="step" t-key="step">
+                    <span t-if="step > 1" class="s_website_form_step_line border-top mx-2"/>
+                    <span class="s_website_form_step_dot badge rounded-pill text-bg-secondary" t-out="step"/>
+                </t>
+            </div>
+        </div>
+    </t>
+
     <!-- A block containing the file name and a cross to delete the file. -->
     <t t-name="website.file_block">
         <div class="o_file_block col-4">

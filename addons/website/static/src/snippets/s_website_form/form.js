@@ -45,6 +45,11 @@ export class Form extends Interaction {
             }),
         },
         "input[type=file]": { "t-on-change": this.changeFile },
+        "input[type=range]": { "t-on-input": this.onRangeInput },
+        ".s_website_form_range_value": {
+            "t-on-input": this.onRangeValueInput,
+            "t-on-change": this.onRangeValueChange,
+        },
         "input.o_add_files_button": { "t-on-click": this.clickAddFilesButton },
         ".s_website_form_field[data-type=binary]": { "t-on-click": this.clickFileDelete }, // delegate on ".o_file_delete"
         ".s_website_form_field": {
@@ -82,6 +87,13 @@ export class Form extends Interaction {
         this.visibilityFunctionByFieldEl = new Map();
         this.visibilityFunctionByFieldName = new Map();
         this.disabledInputEls = new Set();
+        this.stepEls = [...this.el.querySelectorAll(".s_website_form_step")];
+        this.isMultistep =
+            this.el.classList.contains("s_website_form_multistep") && this.stepEls.length > 0;
+        this.currentStep = 0;
+        this.computedFieldEls = [
+            ...this.el.querySelectorAll('.s_website_form_field[data-type="computed"]'),
+        ];
         this.inputEls = this.el.querySelectorAll(
             ".s_website_form_field.s_website_form_field_hidden_if .s_website_form_input"
         );
@@ -155,6 +167,12 @@ export class Form extends Interaction {
             filesZoneEl.classList.add("o_files_zone", "row", "gx-1");
             inputEl.parentNode.insertBefore(filesZoneEl, inputEl);
         });
+
+        if (this.isMultistep) {
+            this.setupSteps();
+        }
+        this.el.querySelectorAll("input[type=range]").forEach((el) => this.updateRangeValue(el));
+        this.updateComputedFields();
     }
 
     destroy() {
@@ -202,6 +220,12 @@ export class Form extends Interaction {
         this.el
             .querySelectorAll(".s_website_form_field_hidden_if:not(.d-none)")
             .forEach((el) => el.classList.add("d-none"));
+
+        // Undo the multi-step runtime state (steps hiding, hidden submit).
+        if (this.isMultistep) {
+            this.stepEls.forEach((stepEl) => stepEl.classList.remove("d-none"));
+            this.el.querySelector(".s_website_form_send")?.classList.remove("d-none");
+        }
 
         // Prevent "data-for" values removal on destroy, they are still used
         // in edit mode to keep the form linked to its predefined server
@@ -368,6 +392,16 @@ export class Form extends Interaction {
         this.el.querySelector("#s_website_form_result, #o_website_form_result")?.replaceChildren(); // !compatibility
         this.removeErrorMessages();
         if (!this.checkErrorFields({})) {
+            if (this.isMultistep) {
+                // Bring the visitor to the first step containing an error.
+                const errorStep = this.stepEls.findIndex((stepEl) =>
+                    stepEl.querySelector(".o_has_error")
+                );
+                if (errorStep >= 0 && errorStep !== this.currentStep) {
+                    this.currentStep = errorStep;
+                    this.updateStepDisplay();
+                }
+            }
             this.updateStatus("error", _t("Please fill in the form correctly."));
             return false;
         }
@@ -585,6 +619,12 @@ export class Form extends Interaction {
     resetForm() {
         this.el.reset();
 
+        // Back to the first step.
+        if (this.isMultistep && this.stepNavEls) {
+            this.currentStep = 0;
+            this.updateStepDisplay();
+        }
+
         // Remove previous error messages.
         this.removeErrorMessages();
         // For file inputs, remove the files zone, restore the file input
@@ -598,11 +638,11 @@ export class Form extends Interaction {
         });
     }
 
-    checkErrorFields(errorFields) {
+    checkErrorFields(errorFields, rootEl = this.el) {
         let formValid = true;
         let firstInvalidInput = null;
         // Loop on all fields
-        for (const fieldEl of this.el.querySelectorAll(".form-field, .s_website_form_field")) {
+        for (const fieldEl of rootEl.querySelectorAll(".form-field, .s_website_form_field")) {
             // !compatibility
             // FIXME that seems broken, "for" does not contain the field
             // but this is used to retrieve errors sent from the server...
@@ -1141,6 +1181,204 @@ export class Form extends Interaction {
         // Generates a new snapshot of the current form data, including disabled
         // fields, which is necessary for visibility calculations.
         this.lastFormData = this.getFormDataIncludingDisabledFields(this.el);
+        this.updateComputedFields();
+    }
+
+    /**
+     * Inserts the step navigation buttons and the progress indicator of a
+     * multi-step form, then shows the first step. Both elements are runtime
+     * chrome: they are never part of the saved page.
+     */
+    setupSteps() {
+        const sendEl = this.el.querySelector(".s_website_form_send, .o_website_form_send");
+        if (!sendEl) {
+            return;
+        }
+        this.renderAt("website.s_website_form_steps_nav", {}, sendEl, "beforebegin", (els) => {
+            this.stepNavEls = els;
+            for (const el of els) {
+                this.addListener(
+                    el,
+                    "click",
+                    this.locked((ev) => {
+                        ev.preventDefault();
+                        return el.matches(".s_website_form_step_next")
+                            ? this.nextStep()
+                            : this.prevStep();
+                    })
+                );
+            }
+        });
+        const indicatorType = this.el.dataset.stepsIndicator || "dots";
+        if (indicatorType !== "none") {
+            const rowsEl = this.el.querySelector(".s_website_form_rows");
+            this.renderAt(
+                "website.s_website_form_steps_progress",
+                { type: indicatorType, stepNumbers: this.stepEls.map((el, i) => i + 1) },
+                rowsEl,
+                "beforebegin",
+                (els) => (this.stepsProgressEl = els[0])
+            );
+        }
+        this.updateStepDisplay();
+    }
+
+    nextStep() {
+        this.removeErrorMessages();
+        if (!this.checkErrorFields({}, this.stepEls[this.currentStep])) {
+            return;
+        }
+        if (this.currentStep < this.stepEls.length - 1) {
+            this.currentStep++;
+            this.updateStepDisplay();
+        }
+    }
+
+    prevStep() {
+        if (this.currentStep > 0) {
+            this.currentStep--;
+            this.updateStepDisplay();
+        }
+    }
+
+    updateStepDisplay() {
+        const isLast = this.currentStep === this.stepEls.length - 1;
+        this.stepEls.forEach((stepEl, i) =>
+            stepEl.classList.toggle("d-none", i !== this.currentStep)
+        );
+        const prevEl = this.el.querySelector(".s_website_form_step_prev");
+        const nextEl = this.el.querySelector(".s_website_form_step_next");
+        const sendEl = this.el.querySelector(".s_website_form_send, .o_website_form_send");
+        prevEl?.classList.toggle("d-none", this.currentStep === 0);
+        nextEl?.classList.toggle("d-none", isLast);
+        sendEl?.classList.toggle("d-none", !isLast);
+        if (this.stepsProgressEl) {
+            const barEl = this.stepsProgressEl.querySelector(".progress-bar");
+            if (barEl) {
+                barEl.style.width = `${((this.currentStep + 1) / this.stepEls.length) * 100}%`;
+            }
+            this.stepsProgressEl
+                .querySelectorAll(".s_website_form_step_dot")
+                .forEach((dotEl, i) => {
+                    dotEl.classList.toggle("text-bg-primary", i <= this.currentStep);
+                    dotEl.classList.toggle("text-bg-secondary", i > this.currentStep);
+                });
+        }
+    }
+
+    onRangeInput(ev) {
+        this.updateRangeValue(ev.currentTarget);
+    }
+
+    updateRangeValue(inputEl) {
+        const valueEl = inputEl
+            .closest(".s_website_form_range_wrap")
+            ?.querySelector(".s_website_form_range_value");
+        if (valueEl) {
+            valueEl.value = inputEl.value;
+        }
+    }
+
+    /**
+     * Mirror the editable number input into the range input, which clamps the
+     * value to its own min/max/step. The input event bubbles up to the field,
+     * so computed fields recompute from the debounced field hook as usual.
+     */
+    onRangeValueInput(ev) {
+        const valueEl = ev.currentTarget;
+        const rangeEl = valueEl
+            .closest(".s_website_form_range_wrap")
+            ?.querySelector("input[type=range]");
+        if (rangeEl && valueEl.value !== "") {
+            rangeEl.value = valueEl.value;
+        }
+    }
+
+    onRangeValueChange(ev) {
+        // On commit (blur/enter), snap the mirror to the clamped range value.
+        const valueEl = ev.currentTarget;
+        const rangeEl = valueEl
+            .closest(".s_website_form_range_wrap")
+            ?.querySelector("input[type=range]");
+        if (rangeEl) {
+            valueEl.value = rangeEl.value;
+        }
+    }
+
+    /**
+     * Recomputes the value of every computed field: a base amount plus a sum
+     * of terms, each term being a source field's numeric value times a
+     * coefficient, optionally times another field's value. Selection-like
+     * source fields contribute the numeric weight (data-form-value) of their
+     * selected option(s).
+     */
+    updateComputedFields() {
+        for (const fieldEl of this.computedFieldEls) {
+            let terms;
+            try {
+                terms = JSON.parse(fieldEl.dataset.formula || "[]");
+            } catch {
+                continue;
+            }
+            let total = parseFloat(fieldEl.dataset.formulaBase) || 0;
+            for (const term of terms) {
+                const coef = term.coef === undefined ? 1 : parseFloat(term.coef) || 0;
+                let termValue = coef * this.getNumericFieldValue(term.field);
+                if (term.multiplier) {
+                    termValue *= this.getNumericFieldValue(term.multiplier);
+                }
+                total += termValue;
+            }
+            const decimals = parseInt(fieldEl.dataset.formulaDecimals) || 0;
+            const formatted = total.toFixed(decimals);
+            const inputEl = fieldEl.querySelector(".s_website_form_input");
+            if (inputEl) {
+                inputEl.value = formatted;
+            }
+            const outputEl = fieldEl.querySelector(".s_website_form_computed_value");
+            if (outputEl) {
+                outputEl.textContent = formatted;
+            }
+        }
+    }
+
+    /**
+     * @param {string} name input name of the source field
+     * @returns {number} its current numeric value (0 when hidden/empty)
+     */
+    getNumericFieldValue(name) {
+        if (!name) {
+            return 0;
+        }
+        const inputEls = [
+            ...this.el.querySelectorAll(`.s_website_form_input[name="${CSS.escape(name)}"]`),
+        ];
+        if (!inputEls.length) {
+            return 0;
+        }
+        const firstEl = inputEls[0];
+        // Conditionally-hidden fields are disabled and excluded from the
+        // submission, so they do not count either.
+        if (firstEl.nodeName === "SELECT") {
+            if (firstEl.disabled) {
+                return 0;
+            }
+            const optionEl = firstEl.selectedOptions[0];
+            if (!optionEl) {
+                return 0;
+            }
+            return parseFloat(optionEl.dataset.formValue ?? optionEl.value) || 0;
+        }
+        if (["radio", "checkbox"].includes(firstEl.type)) {
+            let total = 0;
+            for (const el of inputEls) {
+                if (el.checked && !el.disabled) {
+                    total += parseFloat(el.dataset.formValue ?? el.value) || 0;
+                }
+            }
+            return total;
+        }
+        return (!firstEl.disabled && parseFloat(firstEl.value)) || 0;
     }
 
     /**

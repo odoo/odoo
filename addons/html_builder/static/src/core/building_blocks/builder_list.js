@@ -284,7 +284,12 @@ export class BuilderList extends Component {
         }
         const item = items.find((item) => item._id === id);
         item[propertyName] = value;
-        if (!isCheckbox) {
+        // `id` mirrors the main text column; other columns (e.g. a numeric
+        // weight next to an option label) must not overwrite it.
+        if (
+            !isCheckbox &&
+            (propertyName === "display_name" || !("display_name" in this.props.itemShape))
+        ) {
             item.id = isSmallInteger(value) ? parseInt(value) : value;
         }
 

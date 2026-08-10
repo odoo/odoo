@@ -4,6 +4,25 @@
         display: block !important;
         opacity: 0.5;
     }
+    // Multi-step forms show all steps stacked while editing; the runtime
+    // navigation and progress indicator only exist on the public page.
+    .s_website_form_step {
+        position: relative;
+        margin-bottom: map-get($spacers, 3);
+        padding-top: map-get($spacers, 4);
+        border: 1px dashed $o-we-fg-light;
+        border-radius: $border-radius;
+
+        &::before {
+            content: "Step " attr(data-step);
+            position: absolute;
+            top: 0;
+            inset-inline-start: 0;
+            padding: 0 map-get($spacers, 2);
+            @include font-size(0.75rem);
+            color: $o-we-fg-light;
+        }
+    }
     // Fields with conditional visibility are visible and identifiable in the editor
     .s_website_form_field_hidden_if {
         display: block !important;
@@ -87,6 +106,48 @@
     }
     .s_website_form_field_description {
         display: block;
+    }
+
+    // Invalid state of options displayed as buttons/boxes (btn-check inputs
+    // are not targeted by the .form-check-input invalid styling).
+    .o_has_error .btn-check + .btn {
+        border-color: var(--bs-form-invalid-border-color);
+    }
+
+    // The selected option of buttons/boxed choice fields must stay obvious
+    // even when the theme's .btn active styling is subtle (same background as
+    // the resting state, for example), and keyboard focus must be visible.
+    .btn-check:checked + .s_website_form_check_label.btn {
+        font-weight: $font-weight-bold;
+        box-shadow: inset 0 0 0 ($border-width * 2) currentColor;
+    }
+    .btn-check:focus-visible + .s_website_form_check_label.btn {
+        outline: $focus-ring-width solid $focus-ring-color;
+        outline-offset: $border-width;
+    }
+
+    // Mirror input of the slider display: as narrow as its bounds allow.
+    input.s_website_form_range_value {
+        width: 6em;
+        flex: 0 0 auto;
+        text-align: center;
+    }
+
+    .s_website_form_step_line {
+        min-width: 24px;
+        flex: 1 1 0;
+        max-width: 64px;
+    }
+
+    // Custom color of the progress indicator, set by the builder option as a
+    // CSS variable on the form; the fallbacks are the Bootstrap defaults.
+    .s_website_form_steps_progress {
+        .progress-bar {
+            background-color: var(--form-steps-indicator-color, var(--bs-progress-bar-bg));
+        }
+        .s_website_form_step_dot.text-bg-primary {
+            background-color: var(--form-steps-indicator-color, RGBA(var(--bs-primary-rgb), var(--bs-bg-opacity, 1))) !important;
+        }
     }
 
     // File blocks.
