@@ -13,7 +13,16 @@
                 <block title="French Electronic Invoicing" id="pdp" invisible="country_code != 'FR'">
                     <div id="l10n_fr_pdp" class="col-12 o_setting_box">
                         <div class="o_setting_right_pane border-0">
+<<<<<<< d9c06a66356dd9d5a50821b8cde6194967353c18
                             <div invisible="account_peppol_eas == '0225' or peppol_use_parent_company or account_peppol_proxy_state not in ('sender', 'receiver', 'smp_registration')">
+||||||| f21308e85fb8643a64c6be9729358f9c53d559d9
+                            <field name="l10n_fr_pdp_registered" invisible="1"/>  <!-- used in `invisible` modifier below -->
+                            <div invisible="account_peppol_eas == '0225' or peppol_use_parent_company or account_peppol_proxy_state not in ('sender', 'active', 'pending')">
+=======
+                            <field name="l10n_fr_pdp_registered" invisible="1"/>  <!-- used in `invisible` modifier below -->
+                            <field name="peppol_use_parent_company" invisible="1"/>
+                            <div invisible="account_peppol_eas == '0225' or peppol_use_parent_company or account_peppol_proxy_state not in ('sender', 'active', 'pending')">
+>>>>>>> c4cc960013c1d9701ce7eefa81d75573970c8039
                                 Your Peppol ID <field name="account_peppol_edi_identification" class="oe_inline o_form_label" readonly="1"/>
                                 <field name="account_peppol_proxy_state" class="oe_inline o_form_label text-lowercase" readonly="1"/>
                                 <span class="ps-2" invisible="account_peppol_edi_mode == 'prod'">
