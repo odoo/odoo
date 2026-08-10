@@ -27,7 +27,7 @@ from odoo.tools import (
     DEFAULT_SERVER_DATETIME_FORMAT,
     config,
 )
-from odoo.tools.image import binary_to_image
+from odoo.tools.image import ImageProcess
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools.translate import _
 
@@ -1378,16 +1378,8 @@ class Base_ImportImport(models.TransientModel):
                         field=field
                     )
 
-            if not guess_mimetype(content).startswith('image/'):
-                return content
-
-            image = binary_to_image(content)
-            w, h = image.size
-            if w * h > 42e6:  # Nokia Lumia 1020 photo resolution
-                raise ImportValidationError(
-                    _("Image size excessive, imported images must be smaller than 42 million pixel"),
-                    field=field
-                )
+            if guess_mimetype(content).startswith('image/'):
+                ImageProcess(content, verify_resolution=True)
 
             return content
         except Exception as e:
