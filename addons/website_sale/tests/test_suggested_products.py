@@ -117,6 +117,14 @@ class TestSuggestedProducts(WebsiteSaleCommon, CronMixinCase):
         self.template_desk._update_suggested_products()
         self.assertEqual(self.template_desk.optional_product_ids, self.template_chair)
 
+    def test_update_suggested_products_without_published_product_sharing_category(self):
+        """Test updating suggested products when no published product shares the product's category."""
+        # Ensure no other published products shares template_desk's category
+        self.template_desk.public_categ_ids.product_tmpl_ids.website_published = False
+        self.template_desk.action_update_suggested_products()
+
+        self.assertFalse(self.template_desk.alternative_product_ids)
+
     def test_cron_write_preserves_automation(self):
         """Test that writing from cron context doesn't disable the automation flags."""
         self.template_desk.suggest_alternative_products = True
