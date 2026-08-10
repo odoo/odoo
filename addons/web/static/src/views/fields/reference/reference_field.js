@@ -1,4 +1,4 @@
-import { Component, proxy, t, untrack, useProps } from "@odoo/owl";
+import { Component, computed, proxy, t, untrack, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useRecordObserver } from "@web/model/relational_model/utils";
@@ -42,7 +42,15 @@ export const referenceFieldProps = {
 export class ReferenceField extends Component {
     static template = "web.ReferenceField";
     static components = { Many2One };
+
     props = useProps(referenceFieldProps);
+
+    isCharField = computed(() => this.props.record.fields[this.props.name].type === "char");
+
+    /** @type {import("@odoo/owl").ReactiveValue<ReferenceValue>} */
+    getValue = computed(() =>
+        this.isCharField() ? this.state.formattedCharValue : this.props.record.data[this.props.name]
+    );
 
     setup() {
         /** @type {{formattedCharValue?: ReferenceValue, modelName?: string}} */
@@ -51,34 +59,35 @@ export class ReferenceField extends Component {
             modelName: undefined, // Name get of the value of the model field
             currentRelation: undefined,
         });
-        if (this._isCharField(this.props)) {
+        if (this.isCharField()) {
             /** Fetch the display name of the record referenced by the field */
             let currentValue = undefined;
-            useRecordObserver(async (record, props) => {
-                if (currentValue !== record.data[props.name]) {
-                    this.state.formattedCharValue = await this._fetchReferenceCharData(props);
-                    currentValue = record.data[props.name];
+            useRecordObserver(async (record) => {
+                const recordValue = record.data[this.props.name];
+                if (currentValue !== recordValue) {
+                    this.state.formattedCharValue = await this._fetchReferenceCharData();
+                    currentValue = recordValue;
                 }
             });
         } else if (this.props.modelField) {
             /** Fetch the technical name of the co model */
-            useRecordObserver(async (record, props) => {
-                if (this.currentModelId !== record.data[props.modelField]?.id) {
-                    this.state.modelName = await this._fetchModelTechnicalName(props);
+            useRecordObserver(async (record) => {
+                const { modelField, name } = this.props;
+                const recordId = record.data[modelField]?.id;
+                if (this.currentModelId !== recordId) {
+                    this.state.modelName = await this._fetchModelTechnicalName();
                     if (this.currentModelId !== undefined) {
-                        record.update({ [props.name]: false });
+                        record.update({ [name]: false });
                     }
-                    this.currentModelId = record.data[props.modelField]?.id;
+                    this.currentModelId = recordId;
                 }
             });
         } else {
             /** Sync the currentRelation with current value's resModel */
-            useRecordObserver(async (record, props) => {
-                if (
-                    record.data[props.name]?.resModel &&
-                    untrack(() => this.state.currentRelation) !== record.data[props.name].resModel
-                ) {
-                    this.state.currentRelation = record.data[props.name].resModel;
+            useRecordObserver((record) => {
+                const resModel = record.data[this.props.name]?.resModel;
+                if (resModel && untrack(() => this.state.currentRelation) !== resModel) {
+                    this.state.currentRelation = resModel;
                 }
             });
         }
@@ -94,7 +103,7 @@ export class ReferenceField extends Component {
         };
     }
     get selection() {
-        if (!this._isCharField(this.props) && !this.hideModelSelector) {
+        if (!this.isCharField() && !this.hideModelSelector) {
             return this.props.record.fields[this.props.name].selection;
         }
         return [];
@@ -115,17 +124,6 @@ export class ReferenceField extends Component {
             return value.resModel;
         } else {
             return this.state.currentRelation;
-        }
-    }
-
-    /**
-     * @returns {ReferenceValue|false}
-     */
-    getValue() {
-        if (this._isCharField(this.props)) {
-            return this.state.formattedCharValue;
-        } else {
-            return this.props.record.data[this.props.name];
         }
     }
 
@@ -153,27 +151,18 @@ export class ReferenceField extends Component {
     }
 
     /**
-     * Return true if the reference field is a char field.
-     */
-    _isCharField(props) {
-        return props.record.fields[props.name].type === "char";
-    }
-
-    /**
      * Fetch special data if the reference field is a char field.
      * It fetches the display name of the record.
-     *
-     * @returns {Promise<{ resId: number, resModel: string, displayName: string }|false>}
      */
-    async _fetchReferenceCharData(props) {
-        const recordData = props.record.data[props.name];
+    async _fetchReferenceCharData() {
+        const recordData = this.props.record.data[this.props.name];
         if (!recordData) {
             return false;
         }
         const [resModel, _resId] = recordData.split(",");
         const resId = parseInt(_resId, 10);
         if (resModel && resId) {
-            const { specialDataCaches, orm } = props.record.model;
+            const { specialDataCaches, orm } = this.props.record.model;
             const key = `__reference__name_get-${recordData}`;
             if (!specialDataCaches[key]) {
                 specialDataCaches[key] = orm.read(resModel, [resId], ["display_name"]);
@@ -191,11 +180,12 @@ export class ReferenceField extends Component {
     /**
      * Ensure that the modelField is a many2one to ir.model
      */
-    _assertMany2OneToIrModel(props) {
-        const field = props.modelField && props.record.fields[props.modelField];
+    _assertMany2OneToIrModel() {
+        const { modelField, name, record } = this.props;
+        const field = modelField && record.fields[modelField];
         if (field && (field.type !== "many2one" || field.relation !== "ir.model")) {
             throw new Error(
-                `The model_field (${props.modelField}) of the reference field ${props.name} must be a many2one('ir.model').`
+                `The model_field (${modelField}) of the reference field ${name} must be a many2one('ir.model').`
             );
         }
     }
@@ -206,14 +196,14 @@ export class ReferenceField extends Component {
      *
      * @returns {Promise<string|false>}
      */
-    async _fetchModelTechnicalName(props) {
-        this._assertMany2OneToIrModel(props);
-        const record = props.record;
-        const modelId = record.data[props.modelField]?.id;
+    async _fetchModelTechnicalName() {
+        this._assertMany2OneToIrModel();
+        const { modelField, record } = this.props;
+        const modelId = record.data[modelField]?.id;
         if (!modelId) {
             return false;
         }
-        const { specialDataCaches, orm } = props.record.model;
+        const { specialDataCaches, orm } = record.model;
         const key = `__reference__ir_model-${modelId}`;
         if (!specialDataCaches[key]) {
             specialDataCaches[key] = orm.read("ir.model", [modelId], ["model"]);

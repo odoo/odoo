@@ -1,4 +1,4 @@
-import { Component, proxy, t, usePlugin, useProps } from "@odoo/owl";
+import { Component, proxy, t, untrack, usePlugin, useProps } from "@odoo/owl";
 import { DebugModePlugin } from "@web/core/debug_mode_plugin";
 import { Domain, InvalidDomainError } from "@web/core/domain";
 import { DomainSelector } from "@web/core/domain_selector/domain_selector";
@@ -49,8 +49,8 @@ export class DomainField extends Component {
         });
 
         this.debugDomain = null;
-        useRecordObserver(async (record, nextProps) => {
-            nextProps = { ...nextProps, record };
+        useRecordObserver(async (record) => {
+            const nextProps = untrack(() => ({ ...this.props }));
             if (this.debugDomain && this.props.readonly !== nextProps.readonly) {
                 this.debugDomain = null;
             }
@@ -58,7 +58,7 @@ export class DomainField extends Component {
                 this.state.isValid = await this.quickValidityCheck(nextProps);
                 if (!this.state.isValid) {
                     this.state.recordCount = 0;
-                    nextProps.record.setInvalidField(nextProps.name);
+                    record.setInvalidField(nextProps.name);
                 }
             } else {
                 this.checkProps(nextProps); // not awaited
