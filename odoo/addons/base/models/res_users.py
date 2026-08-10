@@ -577,14 +577,13 @@ class Users(models.Model):
     def USER_PRIVATE_FIELDS(self):
         return list(USER_PRIVATE_FIELDS)
 
-    def _fetch_query(self, query, fields):
-        records = super()._fetch_query(query, fields)
-        if not set(self.USER_PRIVATE_FIELDS).isdisjoint(field.name for field in fields):
-            if self.browse().has_access('write'):
-                return records
-            for fname in self.USER_PRIVATE_FIELDS:
-                self.env.cache.update(records, self._fields[fname], repeat('********'))
-        return records
+    def _field_to_sql(self, alias, fname, query=None, flush=True):
+        if (
+            fname.split('.', 1)[0] in self.USER_PRIVATE_FIELDS
+            and not self.browse().has_access('write')
+        ):
+            return SQL("'********'")
+        return super()._field_to_sql(alias, fname, query, flush)
 
     @api.constrains('company_id', 'company_ids', 'active')
     def _check_company(self):
@@ -700,14 +699,6 @@ class Users(models.Model):
         if fname in self.USER_PRIVATE_FIELDS:
             raise AccessError(_("Cannot groupby on %s parameter", fname))
         return super()._read_group_groupby(groupby_spec, query)
-
-    @api.model
-    def _search(self, domain, offset=0, limit=None, order=None):
-        if not self.env.su and domain:
-            domain_fields = {term[0] for term in domain if isinstance(term, (tuple, list))}
-            if domain_fields.intersection(self.USER_PRIVATE_FIELDS):
-                raise AccessError(_('Invalid search criterion'))
-        return super()._search(domain, offset, limit, order)
 
     @api.model_create_multi
     def create(self, vals_list):
