@@ -4,6 +4,7 @@ import {
 } from "@web/views/fields/many2many_tags/many2many_tags_field";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
+import { Record } from "@web/model/relational_model/record";
 
 export class FieldMany2ManyTagsSalaryBank extends Many2ManyTagsField {
     setup() {
@@ -19,6 +20,18 @@ export class FieldMany2ManyTagsSalaryBank extends Many2ManyTagsField {
             await this.props.record.load();
             return result;
         };
+    }
+
+    onFocusIn() {
+        super.onFocusIn();
+
+        if (!this.props.record.resId) {
+            if (this.props.record.model.root instanceof Record) {
+                this.props.record.model.root.save();
+            } else {
+                this.props.record.save();
+            }
+        }
     }
 
     getTagProps(record) {
