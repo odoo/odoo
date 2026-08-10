@@ -7,8 +7,10 @@ export class SubtaskCounter extends Component {
     static template = "project.SubtaskCounter";
     props = useProps(standardWidgetProps);
 
-    onClick() {
+    onClick(ev) {
         this.props.record.toggleSubtasksList();
+        ev.currentTarget.classList.toggle("active");
+        ev.currentTarget.querySelector(".oi").classList.toggle("oi-rotate-90");
     }
 
     get closedSubtaskCount() {
