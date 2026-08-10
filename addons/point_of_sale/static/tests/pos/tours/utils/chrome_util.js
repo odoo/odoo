@@ -424,3 +424,26 @@ export function flushPendingOrdersSync() {
         },
     ];
 }
+
+export function mockClearStorage() {
+    return {
+        content: "Mock .clear() for session and local storage.",
+        trigger: "body",
+        run: function () {
+            window.sessionStorage.constructor.prototype.clear = function () {
+                console.log("Mock: sessionStorage.clear() blocked");
+            };
+            window.localStorage.constructor.prototype.clear = function () {
+                console.log("Mock: localStorage.clear() blocked");
+            };
+        },
+    };
+}
+export function reloadData({ full = false } = {}) {
+    return [
+        clickMenuButton(),
+        mockClearStorage(),
+        clickMenuDropdownOption("Reload Data"),
+        clickBtn(full ? "Full" : "Limited", { expectUnloadPage: true }),
+    ];
+}
