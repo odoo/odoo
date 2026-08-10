@@ -114,8 +114,8 @@ class ResPartner(models.Model):
             ('9947', "Romania VAT"),
             ('9948', "Serbia VAT"),
             ('0195', "Singapore UEN"),
-            ('0245', "SK Tax identification number (DIČ)"),
             ('9949', "Slovenia VAT"),
+            ('0245', "Slovakia DIČ (Tax identification number)"),
             ('9950', "Slovakia VAT"),
             ('9920', "Spain VAT"),
             ('0007', "Sweden Org.nr."),
@@ -252,7 +252,7 @@ class ResPartner(models.Model):
         value = field in self._fields and self[field]
 
         if (
-            country_code in ('BE', 'SK')
+            country_code == 'BE'
             and field == 'company_registry'
             and not value
             and self.vat
