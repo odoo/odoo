@@ -45,6 +45,7 @@ export class PhoneField extends Component {
     get actionButtons() {
         return [
             {
+                href: this.value ? this.phoneHref : undefined,
                 icon: "phone",
                 onSelected: () => this.onLinkClicked(),
                 name: _t("Call"),

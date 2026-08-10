@@ -26,6 +26,7 @@ class Partner extends models.Model {
 defineModels([Partner]);
 
 async function assertUrl(target, url) {
+    expect(target).toHaveAttribute("href", url);
     await contains(target, {
         visible: false,
     }).click();
@@ -76,8 +77,8 @@ test("PhoneField in form view on normal screens (edit)", async () => {
     });
     expect(`input[type="tel"]`).toHaveCount(1);
     expect(`input[type="tel"]`).toHaveValue("yop");
-    expect(".o_field_phone button i[data-icon='phone']").toHaveCount(1);
-    await assertUrl(`.o_field_widget button i[data-icon='phone']`, "tel:yop");
+    expect(".o_field_phone a i[data-icon='phone']").toHaveCount(1);
+    await assertUrl(`.o_field_widget a.o_phone_form_link`, "tel:yop");
 
     // change value in edit mode
     await click(`input[type="tel"]`);
