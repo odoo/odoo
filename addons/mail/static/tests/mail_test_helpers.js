@@ -13,7 +13,6 @@ import {
     test,
 } from "@odoo/hoot";
 import { hover as hootHover, queryFirst, resize } from "@odoo/hoot-dom";
-import { microTick } from "@odoo/hoot-mock";
 import {
     MockServer,
     authenticate,
@@ -926,15 +925,6 @@ export function assertChatHub({ opened = [], folded = [] }) {
 export const STORE_FETCH_ROUTES = ["/mail/store"];
 
 /**
- * In-flight store fetches, keyed by name, each holding a FIFO queue of the `DataResponse` promises
- * returned by `Store.fetchStoreData`. That promise resolves once the requested data has actually been
- * applied to the store (after the RPC insert for auto-resolve fetches, or once the awaited data lands
- * for `requestData` fetches), so `waitStoreFetch` can await it to be sure the response was processed and
- * not just that the request was sent. Populated by `listenStoreFetch`, consumed by `waitStoreFetch`.
- */
-const storeFetchQueues = new Map();
-
-/**
  * Prepares listeners for the various ways a store fetch could be triggered. It is important to call
  * this method before the RPC are done (typically before the start() of the test) to not miss any of
  * them. Each intercepted fetch should have a corresponding waitStoreFetch in the test.
@@ -947,50 +937,46 @@ const storeFetchQueues = new Map();
  *  and the specific params should be logged in expect.step. By default only the name is logged.
  */
 export function listenStoreFetch(nameOrNames = [], { logParams = [], onRpc: onRpcOverride } = {}) {
-    storeFetchQueues.clear();
+    const namesToRegister = typeof nameOrNames === "string" ? [nameOrNames] : nameOrNames;
+    function isRegistered(name) {
+        return namesToRegister.length === 0 || namesToRegister.includes(name);
+    }
     patchWithCleanup(StoreService.prototype, {
-        fetchStoreData(name) {
-            const promise = super.fetchStoreData(...arguments);
-            const queue = storeFetchQueues.get(name) ?? [];
-            queue.push(promise);
-            storeFetchQueues.set(name, queue);
-            return promise;
+        async fetchStoreData(name, params) {
+            const res = await super.fetchStoreData(...arguments);
+            if (isRegistered(name)) {
+                if (logParams.includes(name)) {
+                    expect.step(`store fetch: ${name} - ${JSON.stringify(params)}`);
+                } else {
+                    expect.step(`store fetch: ${name}`);
+                }
+            }
+            return res;
         },
     });
-    async function registerStep(request, name, params) {
-        const res = await onRpcOverride?.(request);
-        if (logParams.includes(name)) {
-            expect.step(`store fetch: ${name} - ${JSON.stringify(params)}`);
-        } else {
-            expect.step(`store fetch: ${name}`);
-        }
-        return res;
+    if (!onRpcOverride) {
+        return;
     }
-    async function registerSteps(request, fetchParams) {
-        const namesToRegister = typeof nameOrNames === "string" ? [nameOrNames] : nameOrNames;
+    async function callOverride(request, fetchParams) {
         let res;
         for (const fetchParam of fetchParams) {
             const name = typeof fetchParam === "string" ? fetchParam : fetchParam[0];
-            const params = typeof fetchParam === "string" ? undefined : fetchParam[1];
-            if (namesToRegister.length > 0) {
-                if (namesToRegister.some((namesToRegister) => namesToRegister === name)) {
-                    res = await registerStep(request, name, params);
-                }
-            } else {
-                res = await registerStep(request, name, params);
+            if (isRegistered(name)) {
+                res = await onRpcOverride(request);
             }
         }
         return res;
     }
     onRpc("/mail/store", async (request) => {
         const { params } = await request.json();
-        return registerSteps(request, params.fetch_params);
+        return callOverride(request, params.fetch_params);
     });
 }
 
 /**
- * Waits for the given name or names of store fetch parameters to have been fetched from the server,
- * in the given order. Expected names have to be registered with listenStoreFetch beforehand.
+ * Waits for the given name(s) of store fetch parameters to have been fetched
+ * and applied to the store, in the given order. Expected names have to be registered with
+ * listenStoreFetch beforehand.
  * If other expect.step are resolving in the same flow, they must be provided to stepsAfter (if they
  * are resolved after the fetch) or stepsBefore (if they are resolved before the fetch). The order
  * can be ignored with ignoreOrder option.
@@ -1023,27 +1009,6 @@ export async function waitStoreFetch(
         ],
         { ignoreOrder, timeout }
     );
-    /**
-     * The expect.step above is logged when the RPC request is intercepted, not when its response is
-     * applied to the store. Await the corresponding `DataResponse` promise(s) so the fetched data is
-     * actually in the store before resolving, otherwise a late response could still land (and clobber
-     * concurrent bus updates) after the test moved on. Awaiting all the promises queued so far for the
-     * name (and emptying the queue) consumes them without assuming a 1:1 mapping between fetches and
-     * waitStoreFetch calls: a fetch that no test awaits (e.g. one that is expected to fail) is settled
-     * here too. `allSettled` is used so an expected fetch failure does not reject this helper.
-     */
-    const names = (typeof nameOrNames === "string" ? [nameOrNames] : nameOrNames).map(
-        (nameOrNameAndParams) =>
-            typeof nameOrNameAndParams === "string" ? nameOrNameAndParams : nameOrNameAndParams[0]
-    );
-    await Promise.allSettled(names.flatMap((name) => storeFetchQueues.get(name)?.splice(0) ?? []));
-    /**
-     * Extra tick necessary to ensure the RPC is fully processed before resolving.
-     * This is necessary because the expect.step in onRpc is not synchronous with the moment
-     * the RPC result is resolved and processed in the business code. Removing this tick
-     * won't make everything fail, but it might create subtle race conditions.
-     */
-    await microTick();
 }
 
 export function userContext() {
