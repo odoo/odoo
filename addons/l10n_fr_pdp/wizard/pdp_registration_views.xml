@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <form js_class="pdp_status_listener">
                 <div class="alert alert-warning" role="alert" invisible="pdp_kyc_status != 'processing'">
-                    <i class="fa fa-warning me-2"/>Authentication in progress. Clicking "Cancel" will abort the process.
+                    <i class="oi me-2" data-icon="warning"/>Authentication in progress. Clicking "Cancel" will abort the process.
                 </div>
                 <sheet>
                     <div class="m-0" name="warnings" invisible="not warnings or not account_peppol_proxy_state">

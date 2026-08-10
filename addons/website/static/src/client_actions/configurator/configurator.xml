@@ -243,7 +243,7 @@
                                     </button>
                                 </div>
                                 <t t-if="this.state.recommendedPalette">
-                                    <i class="oi oi-arrow-right fs-4 text-muted me-1" aria-hidden="true"/>
+                                    <i class="oi fs-4 text-muted me-1" data-icon="east" aria-hidden="true"/>
                                     <t t-set="logoPalette" t-value="this.state.recommendedPalette"/>
                                     <button t-attf-class="palette_card o_palette_selection_logo_palette o_btn_reset cursor-pointer d-flex align-items-center gap-2 h-100 w-auto position-relative flex-shrink-0 px-3 py-2 rounded border {{this.state.getSelectedPaletteName() === 'recommendedPalette' ? 'selected' : ''}}"
                                             t-attf-style="background-color: {{logoPalette.color3}}; color: {{logoPalette.color5}};"

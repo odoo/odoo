@@ -331,7 +331,7 @@ export class Store extends BaseStore {
         const rtc = this.env.services["discuss.rtc"];
         if (rtc.channel) {
             const hasConfirmed = await rtc.askCallSwitchConfirmation({
-                confirmIcon: "fa fa-video-camera fa-fw",
+                confirmIcon: "videocam",
                 confirmLabel: _t("Start Meeting"),
                 description: _t(
                     "You will leave the ongoing call and automatically join the new meeting."
