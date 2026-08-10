@@ -17,9 +17,7 @@
     word-wrap: normal;
     direction: ltr;
     -webkit-font-smoothing: antialiased;
-    -webkit-font-feature-settings: 'liga';
     -moz-osx-font-smoothing: grayscale;
-    -moz-font-feature-settings: 'liga';
 }
 
 .oi::before {
@@ -27,8 +25,9 @@
     display: inline-block;
 }
 
-.oi.oi-filled[data-icon]:not([data-icon=""]):not([data-icon^="oi_"])::before {
-    content: attr(data-icon) "_f";
+.oi.oi-filled {
+    -webkit-font-variation-settings: 'FILL' 1;
+    font-variation-settings: 'FILL' 1;
 }
 
 .oi-fw {

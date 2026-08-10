@@ -10,8 +10,11 @@ Two-stage pipeline:
 
 2. **Process** — instantiate two static builds (FILL=0 and FILL=1), detect which
    icons have a distinct filled shape, strip unused glyphs with fontext, and
-   merge both builds into a single optimized WOFF2.  Filled glyphs get a ``_f``
-   suffix on the ligature sequence: ``home`` → outlined, ``home_f`` → filled.
+   merge both builds into a single optimized WOFF2.  A filled glyph is reachable
+   two ways: through the ``FILL`` variation axis (``home`` + ``font-variation-
+   settings: 'FILL' 1``), which is what ``.oi-filled`` uses, and through a ``_f``
+   suffix on the ligature sequence (``home_f``), kept for the stylesheets that
+   spell the filled name out in a ``content`` declaration.
 
 Outputs
 -------
@@ -43,12 +46,17 @@ from pathlib import Path
 
 try:
     from fontTools import subset
-    from fontTools.otlLib.builder import buildLigatureSubstSubtable
+    from fontTools.otlLib.builder import (
+        buildLigatureSubstSubtable,
+        buildStatTable,
+    )
     from fontTools.pens import recordingPen, transformPen, ttGlyphPen
     from fontTools.ttLib import TTFont, newTable, removeOverlaps
     from fontTools.ttLib.tables import otTables
     from fontTools.ttLib.tables._c_m_a_p import CmapSubtable
+    from fontTools.ttLib.tables._f_v_a_r import Axis
     from fontTools.varLib import instancer as vl_instancer
+    from fontTools.varLib.featureVars import addFeatureVariations
 except ImportError as exc:
     raise SystemExit(
         "fontTools (with the pathops extra) is required.\n"
@@ -56,6 +64,26 @@ except ImportError as exc:
     ) from exc
 
 FILL_SUFFIX = "_f"
+
+# The merged font advertises the same FILL axis as the upstream variable font, so
+# that `.oi-filled` can reach the filled artwork with `font-variation-settings`
+# instead of appending FILL_SUFFIX to the ligature name (which needs two `content`
+# items, and Firefox charges the advance of a ligature straddling them twice).
+#
+# The axis is *not* backed by glyph variations: no `gvar` is emitted, only `fvar`
+# plus a GSUB condition swapping the outlined glyph for the filled one above
+# FILL_THRESHOLD.  The switch is a snap, not an interpolation, which is what keeps
+# the two pre-baked glyph sets and the overlap removal of
+# :func:`redraw_font_glyphs` (interpolating would require the FILL=1 counters
+# collapsed onto the edges, and those show up as thin grooves under antialiasing).
+FILL_AXIS = "FILL"
+FILL_THRESHOLD = 0.5
+
+# Feature carrying the conditional substitution.  It must be applied *after*
+# `liga`, otherwise there is no icon glyph to swap yet: HarfBuzz runs `rvrn` in
+# its preprocessing stage, before the ligature fires.  `rclt` runs in the same
+# stage as `liga`, is on by default, and no stylesheet would think of disabling it.
+FILL_FEATURE = "rclt"
 
 # Private Use Area used by the `_pua_cmap` fonts. The generated
 # Python mapping is the public contract; callers should never persist these
@@ -255,9 +283,24 @@ def resolve_icons(font: TTFont, icon_names: list[str]) -> dict[str, str]:
     return results
 
 
-def build_ligatures(font: TTFont, ligatures: dict[str, str]) -> list[str]:
-    """Replace every GSUB lookup with a single ligature lookup mapping each name
-    in *ligatures* to its glyph, and return the names that could not be encoded.
+def make_feature_record(tag: str, lookup_indices: list[int]) -> otTables.FeatureRecord:
+    feature = otTables.Feature()
+    feature.FeatureParams = None
+    feature.LookupListIndex = lookup_indices
+    feature.LookupCount = len(lookup_indices)
+    record = otTables.FeatureRecord()
+    record.FeatureTag = tag
+    record.Feature = feature
+    return record
+
+
+def build_gsub(font: TTFont, ligatures: dict[str, str]) -> list[str]:
+    """Rebuild the GSUB table from scratch and return the names that could not be
+    encoded.
+
+    A single ``liga`` lookup is emitted, mapping each name in *ligatures* to its
+    glyph.  :func:`add_fill_axis` appends its own lookup afterwards, so that the
+    shaper resolves the name before swapping the artwork.
 
     Rebuilding the table instead of merging the ones the two subsets came with is
     what makes the icon names unambiguous.  Inside a ligature set the *first*
@@ -278,19 +321,72 @@ def build_ligatures(font: TTFont, ligatures: dict[str, str]) -> list[str]:
             continue
         mapping[seq] = glyph_name
 
-    lookup = otTables.Lookup()
-    lookup.LookupType = 4
-    lookup.LookupFlag = 0
-    lookup.SubTable = [buildLigatureSubstSubtable(mapping)]
-    lookup.SubTableCount = 1
+    liga_lookup = otTables.Lookup()
+    liga_lookup.LookupType = 4
+    liga_lookup.LookupFlag = 0
+    liga_lookup.SubTable = [buildLigatureSubstSubtable(mapping)]
+    liga_lookup.SubTableCount = 1
+
+    lookups = [liga_lookup]
+    features = [make_feature_record('liga', [0])]
 
     gsub = font['GSUB'].table
-    gsub.LookupList.Lookup = [lookup]
-    gsub.LookupList.LookupCount = 1
-    for feature_record in gsub.FeatureList.FeatureRecord:
-        feature_record.Feature.LookupListIndex = [0]
-        feature_record.Feature.LookupCount = 1
+    gsub.LookupList.Lookup = lookups
+    gsub.LookupList.LookupCount = len(lookups)
+    gsub.FeatureList.FeatureRecord = features
+    gsub.FeatureList.FeatureCount = len(features)
+    for script_record in gsub.ScriptList.ScriptRecord:
+        script = script_record.Script
+        lang_systems = [r.LangSys for r in script.LangSysRecord]
+        if script.DefaultLangSys:
+            lang_systems.append(script.DefaultLangSys)
+        for lang_sys in lang_systems:
+            lang_sys.FeatureIndex = list(range(len(features)))
+            lang_sys.FeatureCount = len(features)
     return unencodable
+
+
+def add_fill_axis(font: TTFont, filled_glyphs: dict[str, str]) -> None:
+    """Turn *font* into a variable font whose only axis snaps between the outlined
+    and the filled artwork (see :data:`FILL_AXIS`).
+
+    ``fvar`` declares the axis and ``STAT`` names its two ends — both are needed
+    for the font to be recognized as variable — while a GSUB FeatureVariations
+    condition substitutes each outlined glyph of *filled_glyphs* for its filled
+    counterpart once the axis passes :data:`FILL_THRESHOLD`.
+
+    Must run *after* :func:`strip_font_metadata`, which would drop the name
+    records ``fvar``/``STAT`` point at, and after the ``_pua_cmap`` font has been
+    cloned off, that one being deliberately shaping-free.
+    """
+    if not filled_glyphs:
+        return
+
+    axis = Axis()
+    axis.axisTag = FILL_AXIS
+    axis.minValue, axis.defaultValue, axis.maxValue = 0, 0, 1
+    axis.axisNameID = font['name'].addMultilingualName({'en': "Fill"}, font, minNameID=255)
+
+    fvar = newTable('fvar')
+    fvar.axes = [axis]
+    # No named instances: nothing consumes them, and each costs a name record.
+    fvar.instances = []
+    font['fvar'] = fvar
+
+    buildStatTable(font, [{
+        'tag': FILL_AXIS,
+        'name': "Fill",
+        'values': [
+            {'value': 0, 'name': "Outlined", 'flags': 0x2},  # ElidableAxisValueName
+            {'value': 1, 'name': "Filled"},
+        ],
+    }])
+
+    addFeatureVariations(
+        font,
+        [([{FILL_AXIS: (FILL_THRESHOLD, 1)}], filled_glyphs)],
+        featureTag=FILL_FEATURE,
+    )
 
 
 def add_suffix_to_symbols(font: TTFont, suffix: str) -> TTFont:
@@ -706,6 +802,7 @@ def build_font(
     # ligature behind it doesn't render the outlined icon, it lets the shaper
     # match whatever it can find inside the name instead.
     ligatures = {}
+    filled_glyphs = {}
     unresolved = []
     for icon, src in glyphs_map.items():
         if src not in outline_glyph:
@@ -713,8 +810,13 @@ def build_font(
             continue
         ligatures[icon] = outline_glyph[src]
         ligatures[icon + FILL_SUFFIX] = fill_glyph.get(src, outline_glyph[src])
+        # Icons with no filled variant are left out, the axis being a no-op for
+        # them.  A glyph shared by several names (`help` / `help_outline` …) is
+        # listed once.
+        if src in fill_glyph and fill_glyph[src] != outline_glyph[src]:
+            filled_glyphs[outline_glyph[src]] = fill_glyph[src]
 
-    unresolved += build_ligatures(merged, ligatures)
+    unresolved += build_gsub(merged, ligatures)
     if unresolved:
         print(f"  {len(unresolved)} icons could not be encoded: {sorted(unresolved)}")  # noqa: T201
 
@@ -730,6 +832,8 @@ def build_font(
         strip_font_metadata(pua_cmap_font, f"{style} PUA cmap")
 
     strip_font_metadata(merged, style)
+    # After the metadata strip and the `_pua_cmap` clone, see :func:`add_fill_axis`.
+    add_fill_axis(merged, filled_glyphs)
     icons = {name: {'has_fill': name in icons_with_fill} for name in wishlist if name in glyphs_map}
 
     print("  Saving fonts…")  # noqa: T201

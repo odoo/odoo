@@ -117,9 +117,7 @@ ul {
     direction: ltr;
     speak: never;
     -webkit-font-smoothing: antialiased;
-    -webkit-font-feature-settings: 'liga';
     -moz-osx-font-smoothing: grayscale;
-    -moz-font-feature-settings: 'liga';
 }
 
 .oi:before {
@@ -128,8 +126,9 @@ ul {
     text-rendering: geometricPrecision;
 }
 
-.oi-filled[data-icon]:not([data-icon=""]):not([data-icon^="oi_"]):before {
-    content: attr(data-icon) "_f";
+.oi.oi-filled {
+    -webkit-font-variation-settings: 'FILL' 1;
+    font-variation-settings: 'FILL' 1;
 }
 
 .oi-flip-horizontal {
