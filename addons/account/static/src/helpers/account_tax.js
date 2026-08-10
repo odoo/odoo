@@ -848,16 +848,19 @@ export const accountTaxHelpers = {
         const normalize_results = this.normalize_target_factors(target_factors, {
             allow_negative_factors: allow_negative_factors,
         });
+        const sum_of_factors = normalize_results.sum_of_factors;
+        const plus_delta_factor = sum_of_factors ? normalize_results.plus_sum_of_factors / sum_of_factors : 0.0;
+        const neg_delta_factor = sum_of_factors ? normalize_results.neg_sum_of_factors / sum_of_factors : 0.0;
         const factor_groups = [
             [
                 1,
                 normalize_results.plus_factors,
-                normalize_results.plus_sum_of_factors / normalize_results.sum_of_factors,
+                plus_delta_factor
             ],
             [
                 -1,
                 normalize_results.neg_factors,
-                normalize_results.neg_sum_of_factors / normalize_results.sum_of_factors,
+                neg_delta_factor
             ],
         ];
 
