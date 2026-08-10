@@ -20,6 +20,7 @@ from odoo.exceptions import AccessError, MissingError
 from odoo.tools import SQL, reset_cached_properties, sql
 from odoo.tools.constants import PREFETCH_MAX
 from odoo.tools.misc import frozendict, SENTINEL, Sentinel, unique
+from odoo.tools.safe_eval import _UNSAFE_ATTRIBUTES
 
 from .domains import Domain
 from .query import Query
@@ -77,11 +78,11 @@ def determine(needle, records: BaseModel, *args):
     if not isinstance(records, _models.BaseModel):
         raise TypeError("Determination requires a subject recordset")
     if isinstance(needle, str):
-        needle = getattr(records, needle)
-        if needle.__name__.find('__'):
+        if '__' not in needle and needle not in _UNSAFE_ATTRIBUTES:
+            needle = getattr(records, needle)
             return needle(*args)
     elif callable(needle):
-        if needle.__name__.find('__'):
+        if '__' not in needle.__name__ and needle.__name__ not in _UNSAFE_ATTRIBUTES:
             return needle(records, *args)
 
     raise TypeError("Determination requires a callable or method name")
