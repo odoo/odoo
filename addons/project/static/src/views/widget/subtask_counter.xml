@@ -4,10 +4,10 @@
 
     <t t-name="project.SubtaskCounter" owl="1">
         <a t-att-title="this.counterTitle"
-           class="subtask_list_button btn-link text-dark"
-           t-on-click.prevent="() => this.onClick()">
+           class="subtask_list_button btn btn-light d-flex align-items-center p-1"
+           t-on-click.prevent="(ev) => this.onClick(ev)">
             <i class="oi me-1" data-icon="subdirectory_arrow_right"></i>
-            <t t-out="this.counterDisplay"/>
+            <small t-out="this.counterDisplay" class="lh-1"/>
         </a>
     </t>
 

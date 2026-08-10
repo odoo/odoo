@@ -1,5 +1,9 @@
 .o_project_kanban .o_kanban_renderer {
 
+    footer {
+        --#{$prefix}border-style: dashed;
+    }
+
     .o_project_kanban_main {
         // Prevents the kanban settings menu from overflowing and creating a scrollbar.
         .o_kanban_card_manage_pane .o_kanban_card_manage_section a {
@@ -7,47 +11,6 @@
         }
         .o_project_kanban_body {
             padding-left: 2px;
-        }
-    }
-
-    .o_project_kanban_boxes {
-        display: flex;
-        flex-flow: row wrap;
-        justify-content: space-between;
-
-        .o_project_kanban_box {
-            position: relative;
-            text-align: center;
-            padding: 0 0 0 0;
-            margin: 0 5px;
-
-            &:first-child {
-                 margin: 0 5px 0 0;
-             }
-
-            .o_value {
-                font-weight: 800;
-            }
-
-            > div {
-                font-weight: 500;
-
-                button.o_needaction {
-                    font-size: small;
-                    font-weight: 400;
-                    margin-left: 4px;
-                    @include o-hover-opacity(0.5, 1);
-
-                    &:before {
-                        content: "/ ";
-                    }
-
-                    &:after {
-                        content: "forum_f";
-                        font: normal normal normal 14px/1 'Material Symbols Outlined';
-                    }
-                }
-            }
         }
     }
 

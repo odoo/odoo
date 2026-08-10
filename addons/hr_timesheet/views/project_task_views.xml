@@ -183,15 +183,18 @@
                     <field name="allow_timesheets"/>
                     <field name="encode_uom_in_days" invisible="1"/>
                 </templates>
-                <xpath expr="//footer//field[@name='priority']" position="before">
+                <xpath expr="//div[hasclass('o_project_deadline_wrap')]" position="after">
                    <t name="allocated_hours" t-if="record.allocated_hours.raw_value &gt; 0 and record.allow_timesheets.raw_value" groups="hr_timesheet.group_hr_timesheet_user">
-                        <t t-set="badge" t-value="'border border-success'"/>
-                        <t t-set="badge" t-value="'border border-warning'" t-if="record.progress.raw_value &gt;= 0.8 and record.progress.raw_value &lt;= 1"/>
-                        <t t-set="badge" t-value="'border border-danger'" t-if="record.remaining_hours.raw_value &lt; 0"/>
+                        <t t-set="color" t-value="' text-success'"/>
+                        <t t-set="color" t-value="' text-warning'" t-if="record.progress.raw_value &gt;= 0.8 and record.progress.raw_value &lt;= 1"/>
+                        <t t-set="color" t-value="' text-danger'" t-if="record.remaining_hours.raw_value &lt; 0"/>
                         <t t-set="title" t-if="record.encode_uom_in_days.raw_value">Remaining days</t>
                         <t t-set="title" t-else="">Time Remaining</t>
-                        <div t-attf-class="bg-transparent badge {{ badge }} me-0" t-att-title="title">
-                            <field name="remaining_hours" widget="timesheet_uom" />
+                        <div class="d-inline-flex align-items-baseline gap-1 flex-basis-50">
+                            <i class="oi" data-icon="timer" t-att-title="title" t-att-data-tooltip="title"/>
+                            <div t-att-class="color">
+                                <field name="remaining_hours" widget="timesheet_uom"/>
+                            </div>
                         </div>
                    </t>
                 </xpath>
