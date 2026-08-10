@@ -857,11 +857,69 @@ class AccountMove(models.Model):
         if error_message:
             raise UserError(error_message)
 
+<<<<<<< dca56de21905fbea42663ff77b3e2d653ac3c184
         if 'result' in invoice_lookup:
             tax_code = invoice_lookup['result'][0]['codeOfTax']
             if not tax_code:
                 raise UserError(_("The Code Of Tax is not available for this invoice. Please make sure it has been processed on SInvoice side."))
             self._l10n_vn_edi_fetch_invoice_files()
+||||||| 3f9b86f3ceef1dd29c46c4afd8f2dbc284ed6c9e
+        access_token = request_response['access_token']
+
+        try:
+            access_token_expiry = datetime.now() + timedelta(seconds=int(request_response['expires_in']))
+        except ValueError:  # Simple security measure in case we don't get the expected format in the response.
+            return "", _('Error while parsing API answer. Please try again later.')
+
+        # Tokens are valid for 5 minutes. Storing it helps reduce api calls and speed up things a little bit.
+        credentials_company.write({
+            'l10n_vn_edi_token': access_token,
+            'l10n_vn_edi_token_expiry': access_token_expiry,
+        })
+
+        return request_response['access_token'], ""
+
+    def _l10n_vn_edi_get_credentials_company(self):
+        """ The company holding the credentials could be one of the parent companies.
+        We need to ensure that:
+            - We use the credentials of the parent company, if no credentials are set on the child one.
+            - We store the access token on the appropriate company, based on which holds the credentials.
+        """
+        if self.company_id.l10n_vn_edi_username and self.company_id.l10n_vn_edi_password:
+            return self.company_id
+
+        return self.company_id.sudo().parent_ids.filtered(
+            lambda c: c.l10n_vn_edi_username and c.l10n_vn_edi_password
+        )[-1:]
+=======
+        access_token = request_response['access_token']
+
+        try:
+            access_token_expiry = datetime.now() + timedelta(seconds=int(request_response['expires_in']))
+        except ValueError:  # Simple security measure in case we don't get the expected format in the response.
+            return "", _('Error while parsing API answer. Please try again later.')
+
+        # Tokens are valid for 5 minutes. Storing it helps reduce api calls and speed up things a little bit.
+        credentials_company.write({
+            'l10n_vn_edi_token': access_token,
+            'l10n_vn_edi_token_expiry': access_token_expiry,
+        })
+
+        return request_response['access_token'], ""
+
+    def _l10n_vn_edi_get_credentials_company(self):
+        """ The company holding the credentials could be one of the parent companies.
+        We need to ensure that:
+            - We use the credentials of the parent company, if no credentials are set on the child one.
+            - We store the access token on the appropriate company, based on which holds the credentials.
+        """
+        if self.company_id.sudo().l10n_vn_edi_username and self.company_id.sudo().l10n_vn_edi_password:
+            return self.company_id
+
+        return self.company_id.parent_ids.filtered(
+            lambda c: c.sudo().l10n_vn_edi_username and c.sudo().l10n_vn_edi_password
+        )[-1:]
+>>>>>>> 8c32f2086d36bd5dfb6fae7b8630c8bc56680fef
 
     # -------------------------------------------------------------------------
     # HELPERS
