@@ -495,7 +495,8 @@ class ProductTemplate(models.Model):
         return products_by_sales
 
     def _get_products_by_categories(self, company):
-        return dict(
+        return defaultdict(
+            lambda: self.env["product.template"],
             self._read_group(
                 Domain([
                     ("sale_ok", "=", True),
@@ -504,7 +505,7 @@ class ProductTemplate(models.Model):
                 ]),
                 groupby=["public_categ_ids"],
                 aggregates=["id:recordset"],
-            )
+            ),
         )
 
     def _get_suggested_optionals_and_accessories(self, products_by_sales, max_optionals):
@@ -531,7 +532,7 @@ class ProductTemplate(models.Model):
         # Limit to 1000 other products with at least one category in common (random order)
         other_products_sharing_categories = self.env["product.template"]
         for categ in self.public_categ_ids:
-            other_products_sharing_categories |= products_by_categories.get(categ)
+            other_products_sharing_categories |= products_by_categories[categ]
         other_products_sharing_categories = list(other_products_sharing_categories - self)
         random.shuffle(other_products_sharing_categories)
 
