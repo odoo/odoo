@@ -1118,3 +1118,12 @@ test("should not apply color to selection placeholder nodes", async () => {
         `)
     );
 });
+
+test("should only target fully selected nodes when applying color", async () => {
+    await testEditor({
+        contentBefore: "<p><b>a[b</b>c]d</p>",
+        stepFunction: setColor("red", "color"),
+        contentAfter:
+            '<p><b>a<font style="color: red;">[b</font></b><font style="color: red;">c]</font>d</p>',
+    });
+});
