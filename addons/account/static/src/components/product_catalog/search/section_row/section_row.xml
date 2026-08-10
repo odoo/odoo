@@ -14,7 +14,8 @@
             >
                 <button
                     class="o_toggle_fold btn border-0 rounded-end-0 px-0 bg-transparent"
-                    t-attf-class="{{this.props.isOpen ? 'fa fa-caret-down' : 'fa fa-caret-right'}} {{this.hasChildren ? '' : 'opacity-0 pe-none'}}"
+                    t-att-class="this.hasChildren ? '' : 'opacity-0 pe-none'"
+                    t-att-data-icon="this.props.isOpen ? 'arrow_drop_down' : 'arrow_right'"
                     t-att-tabindex="this.hasChildren ? '0' : '-1'"
                     t-on-click.stop="() => this.env.toggleSection(this.props.id)"
                 />

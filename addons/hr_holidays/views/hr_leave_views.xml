@@ -368,7 +368,7 @@
             </div>
             <sheet>
                 <div class="oe_button_box" name="button_box">
-                    <button name="action_open_employee_calendar" type="object" class="oe_stat_button" icon="fa-calendar" invisible="not employee_id">
+                    <button name="action_open_employee_calendar" type="object" class="oe_stat_button" icon="calendar_today" icon_class="oi-filled" invisible="not employee_id">
                         <div class="o_stat_info">
                             <span class="o_stat_text">Calendar</span>
                         </div>
@@ -386,7 +386,7 @@
                         <widget name="web_ribbon" title="Cancelled" bg_color="text-bg-danger" invisible="state != 'cancel'"/>
                             <group name="col_left" class="m-0" col="1">
                                 <div class="d-flex gap-2">
-                                    <i class="fa fa-tag fa-lg align-self-center" title="Time Off Type" name="work_entry_type_id"/>
+                                    <i class="oi oi-lg align-self-center" data-icon="label" title="Time Off Type" name="work_entry_type_id"/>
                                     <label for="work_entry_type_id" string="Time Type"/>
                                 </div>
                                 <div>
@@ -411,7 +411,7 @@
                                     />
                                 </div>
                                 <div class="d-flex gap-2">
-                                    <i class="fa fa-clock-o fa-lg align-self-center" title="Dates" name="date"/>
+                                    <i class="oi oi-lg align-self-center" data-icon="schedule" title="Dates" name="date"/>
                                     <label for="request_date_from" string="Dates"/>
                                 </div>
                                 <div>
@@ -435,7 +435,7 @@
                                     </div>
                                     <div class="d-flex gap-2" invisible="work_entry_type_request_unit != 'half_day' or not last_several_days">
                                         <field name="request_date_from_period" invisible="work_entry_type_request_unit != 'half_day'" required="work_entry_type_request_unit == 'half_day'" readonly="state != 'confirm'"/>
-                                        <i class="fa fa-long-arrow-right" aria-label="to" title="To"/>
+                                        <i class="oi" data-icon="east" aria-label="to" title="To"/>
                                         <field name="request_date_to_period" invisible="work_entry_type_request_unit != 'half_day'" required="work_entry_type_request_unit == 'half_day'" readonly="state != 'confirm'"/>
                                     </div>
                                     <div class="d-flex gap-2" invisible="work_entry_type_request_unit == 'half_day' and not last_several_days">
@@ -464,7 +464,7 @@
                                     </div>
                                 </div>
                                 <div class="d-flex gap-2">
-                                    <i class="fa fa-pencil fa-lg align-self-center" title="Description" name="name"/>
+                                    <i class="oi oi-lg oi-filled align-self-center" data-icon="edit" title="Description" name="name"/>
                                     <label for="name" string="Description"/>
                                 </div>
                                 <div>
@@ -649,7 +649,7 @@
             <xpath expr="//form/field[@name='employee_id']" position="replace"/> <!--to focus on selected employee-->
             <xpath expr="//group[@name='col_left']/*[1]" position="before">
                 <div class="d-flex gap-2">
-                    <i class="fa fa-user fa-lg align-self-center" title="Employee" name="employee_id"/>
+                    <i class="oi oi-lg oi-filled align-self-center" data-icon="person" title="Employee" name="employee_id"/>
                     <label for="employee_id" string="Employee"/>
                 </div>
                 <div>

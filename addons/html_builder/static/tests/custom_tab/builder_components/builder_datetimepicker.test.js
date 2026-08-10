@@ -199,7 +199,7 @@ test("toggles today as a relative date", async () => {
     await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
     const inputSelector = ".we-bg-options-container input.o-hb-input-base";
-    const todayButtonSelector = ".we-bg-options-container button:has(.fa-calendar-check-o)";
+    const todayButtonSelector = ".we-bg-options-container button:has([data-icon='event_available'])";
 
     await contains(inputSelector).edit("01/01/2025");
     await waitFor(":iframe .test-options-target[data-date]");

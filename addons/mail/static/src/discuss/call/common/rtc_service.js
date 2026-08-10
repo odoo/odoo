@@ -946,7 +946,7 @@ export class Rtc extends Record {
      * @returns {Promise<boolean>} Whether the user confirmed the action.
      */
     async askCallSwitchConfirmation({
-        confirmIcon = "fa fa-phone fa-fw",
+        confirmIcon = "phone",
         confirmLabel = _t("Switch"),
         description = _t("This will disconnect you from your ongoing call."),
         message = _t("Switch to the other call?"),
@@ -965,7 +965,7 @@ export class Rtc extends Record {
                 ]),
                 cancel: () => resolve(false),
                 cancelLabel: htmlJoin([
-                    markup`<i class="fa fa-close fa-fw me-1 opacity-75"></i>`,
+                    markup`<i class="oi oi-fw me-1 opacity-75" data-icon="close"></i>`,
                     _t("Cancel"),
                 ]),
                 confirm: () => resolve(true),

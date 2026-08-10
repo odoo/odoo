@@ -3,7 +3,7 @@
     <t t-name="im_livechat.LivechatStatusLabel">
         <t t-set="btn" t-value="templateParams.btn"/>
         <t t-set="inThreadActions" t-value="templateParams.inThreadActions"/>
-        <span class="o-livechat-LivechatStatusLabel fa" t-att-title="btn.label" t-att-class="{
+        <span class="o-livechat-LivechatStatusLabel" t-att-title="btn.label" t-att-class="{
             'text-success': btn.status === 'in_progress',
             'o-help': btn.status === 'need_help',
         }">

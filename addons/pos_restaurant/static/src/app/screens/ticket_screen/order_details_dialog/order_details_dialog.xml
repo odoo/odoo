@@ -8,7 +8,7 @@
                     <t t-set="table" t-value="this.props.order.table_id"/>
                     <t t-if="table and table.orderDuration()">
                         <div class="position-absolute start-50 translate-middle-x d-flex gap-1 text-muted">
-                            <i class="fa fa-clock-o fs-3 m-auto"/>
+                            <i class="oi fs-3 m-auto" data-icon="schedule"/>
                             <span class="fs-3" t-out="table.orderDuration()"/>
                         </div>
                     </t>
