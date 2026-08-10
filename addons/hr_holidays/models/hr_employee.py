@@ -657,5 +657,5 @@ class HrEmployee(models.Model):
             elif holiday and holiday.leave_type_request_unit == 'day':
                 leave_start = datetime.combine(start.date(), time.min, tz)
                 leave_stop = datetime.combine(stop.date() + timedelta(days=1), time.min, tz)
-            adjusted_leaves += Intervals([(leave_start, leave_stop, leave)])
+            adjusted_leaves |= Intervals([(leave_start, leave_stop, leave)])
         return adjusted_leaves
