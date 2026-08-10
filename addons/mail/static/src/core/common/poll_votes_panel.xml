@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="mail.PollVotesPanel">
-        <Dialog size="'md'" bodyClass="'o-mail-PollVotesPanel d-flex flex-column'" header="true" footer="false" contentClass="this.contentClass">
+        <Dialog size="'md'" bodyClass="'o-mail-PollVotesPanel d-flex flex-column'" header="true" footer="false" contentClass="this.contentClass" modalRef="this.modalRef">
             <t t-set-slot="header">
                 <div class="d-flex w-100">
                     <div class="d-flex flex-column fs-4">
                         <span class="fw-bold" t-out="this.props.poll.poll_question"/>
                         <span class="text-muted smaller" t-out="this.props.poll.voteCountText(this.props.poll.numberOfVotes)"/>
                     </div>
-                    <button class="btn-close" t-on-click="this.props.close" title="Close" aria-label="Close" tabindex="-1" data-available-offline=""/>
+                    <button class="btn-close p-3" t-on-click="this.props.close" title="Close" aria-label="Close" tabindex="-1" data-available-offline=""/>
                 </div>
             </t>
-            <Tabs initialTabId="this.props.poll.option_ids[0]?.id" direction="this.store.useMobileView ? 'h' : 'v'" ref="this.tabsRef">
+            <Tabs initialTabId="this.props.poll.option_ids[0]?.id" direction="this.store.useMobileView ? 'h' : 'v'">
                 <t t-set-slot="headers">
                     <TabHeader t-foreach="this.props.poll.option_ids" t-as="option" t-key="option.id" id="option.id">
                         <div class="d-flex align-items-center gap-1 w-100 min-w-0 px-2 py-1">

@@ -1,11 +1,20 @@
-import { onExternalClick } from "@mail/utils/common/hooks";
+import { TabHeader, TabPanel, Tabs } from "@mail/core/common/tabs";
+import { useDialogCloseOnClickAway } from "@mail/utils/common/hooks";
 
-import { Component, onMounted, signal, t, untrack, useEffect, useListener, useProps } from "@odoo/owl";
+import {
+    Component,
+    onMounted,
+    signal,
+    t,
+    untrack,
+    useEffect,
+    useListener,
+    useProps,
+} from "@odoo/owl";
 
 import { Dialog } from "@web/core/dialog/dialog";
 import { emojiLoader, useLoadEmoji } from "@web/core/emoji_picker/emoji_loader";
 import { useService } from "@web/core/utils/hooks";
-import { TabHeader, TabPanel, Tabs } from "./tabs";
 
 export class MessageReactionMenu extends Component {
     static components = { Dialog, Tabs, TabHeader, TabPanel };
@@ -13,7 +22,7 @@ export class MessageReactionMenu extends Component {
 
     setup() {
         super.setup();
-        this.tabsRef = signal.ref();
+        this.modalRef = signal.ref();
         this.store = useService("mail.store");
         this.props = useProps({
             close: t.function([]),
@@ -26,7 +35,7 @@ export class MessageReactionMenu extends Component {
             untrack(() => closeFn?.());
         });
         useListener(document, "keydown", (ev) => this.onKeydown(ev));
-        onExternalClick(this.tabsRef, () => this.props.close());
+        useDialogCloseOnClickAway(this.modalRef, () => this.props.close());
         onMounted(useLoadEmoji());
     }
 
