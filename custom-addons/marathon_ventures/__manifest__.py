@@ -125,6 +125,7 @@
         'views/phase14_reports_views.xml',
         'views/phase16_program_daypart_views.xml',
         'views/phase17_dataloader_views.xml',
+        'views/phase25_bundle_paperwork_views.xml',
         'views/menus_root_action.xml',
         'views/web_noindex.xml',
     ],

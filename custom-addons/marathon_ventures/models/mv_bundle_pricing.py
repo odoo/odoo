@@ -39,15 +39,15 @@ class MvBundlePricing(models.Model):
 
     # === Computed / Roll-Up ===
 
-    @api.depends('sf_external_id')
+    @api.depends('station.call_letters')
     def _compute_call_letters(self):
         # SF formula (verbatim, may need translation):
         #   Station__r.Call_Letters__c
         for rec in self:
             # TODO: translate SF formula to Python
-            rec.call_letters = False
+            rec.call_letters = rec.station.call_letters or False
 
-    @api.depends('sf_external_id')
+    @api.depends('days')
     def _compute_edited_days(self):
         # SF formula (verbatim, may need translation):
         #   if(INCLUDES(Days__c,"Monday"),"M","-")&
@@ -57,30 +57,43 @@ class MvBundlePricing(models.Model):
         #   if(INCLUDES(Days__c,"Friday"),"F","-")&
         #   if(INCLUDES(Days__c,"Saturday"),"S","-")&
         #   if(INCLUDES(Days__c,"Sunday"),"S","-")
+        day_map = [
+            ('Monday', 'M'),
+            ('Tuesday', 'T'),
+            ('Wednesday', 'W'),
+            ('Thursday', 'T'),
+            ('Friday', 'F'),
+            ('Saturday', 'S'),
+            ('Sunday', 'S'),
+        ]
         for rec in self:
-            # TODO: translate SF formula to Python
-            rec.edited_days = False
+            selected = {d.name for d in rec.days}
+            rec.edited_days = ''.join(
+                letter if day in selected else '-' for day, letter in day_map
+            )
 
-    @api.depends('sf_external_id')
+    @api.depends('station.market.name')
     def _compute_market(self):
         # SF formula (verbatim, may need translation):
         #   Station__r.Market__r.Name
         for rec in self:
             # TODO: translate SF formula to Python
-            rec.market = False
+            rec.market = rec.station.market.name or False
 
     @api.depends('sf_external_id')
     def _compute_start_end_time(self):
         # SF formula (verbatim, may need translation):
         #   text(Start_Time__c )&"-"&text( End_Time__c )
+        start_labels = dict(self._fields['start_time']._description_selection(self.env))
+        end_labels = dict(self._fields['end_time']._description_selection(self.env))
         for rec in self:
-            # TODO: translate SF formula to Python
-            rec.start_end_time = False
+            start = start_labels.get(rec.start_time, '') if rec.start_time else ''
+            end = end_labels.get(rec.end_time, '') if rec.end_time else ''
+            rec.start_end_time = '%s-%s' % (start, end)
 
     @api.depends('sf_external_id')
     def _compute_total(self):
         # SF formula (verbatim, may need translation):
         #   Rate_per_30__c  *  Units__c
         for rec in self:
-            # TODO: translate SF formula to Python
-            rec.total = False
+            rec.total = (rec.rate_per_30 or 0.0) * (rec.units or 0)

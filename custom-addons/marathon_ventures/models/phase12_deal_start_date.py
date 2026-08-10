@@ -89,10 +89,13 @@ class MvDealUnitsStartDate(models.Model):
 
     units_start_date = fields.Date(
         string='Deal Start Date',
-        default=fields.Date.context_today,
+        default=lambda self: _snap_to_monday(
+            fields.Date.context_today(self)
+        ),
         help='Drives the Units / Capping Report week columns. Columns '
              'run from the Monday of this date through the last Monday '
-             'whose week ends within the same broadcast quarter.',
+             'whose week ends within the same broadcast quarter. New '
+             'deals default to the Monday of the current week.',
     )
 
     # ------------------------------------------------------------------

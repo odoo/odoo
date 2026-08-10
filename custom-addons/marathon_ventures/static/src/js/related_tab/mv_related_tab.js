@@ -45,6 +45,9 @@ const RELATED_TAB_CONFIG = {
     "mv.deal": {
         "mv.schedules": ["rate", "week"],
         "mv.traffic":   [],
+        // Bundle Paperwork files (linked via
+        // mv.deal.bundle_paperwork_attachment_ids Many2many).
+        "ir.attachment": ["name", "mv_bundle_paperwork_kind", "create_date"],
     },
     "mv.schedules": {
         "mv.spot_data":          [],

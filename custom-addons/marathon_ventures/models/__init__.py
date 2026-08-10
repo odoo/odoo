@@ -138,3 +138,4 @@ from . import phase19_related_tab
 from . import phase22_partner_display_flip
 from . import phase24_schedule_daypart
 from . import phase27_schedule_daypart_autosync
+from . import phase25_bundle_paperwork
