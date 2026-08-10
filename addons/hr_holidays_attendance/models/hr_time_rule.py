@@ -15,12 +15,13 @@ class HrTimeRule(models.Model):
         alloc_create_vals = []
 
         for employee, by_source in excess.items():
+            hours_per_day = employee.resource_calendar_id.hours_per_day or 8.0
             for _source_att, intervals in by_source.items():
                 resolved = self._resolve_output_intervals([(s, e, r) for s, e, r, _pp in intervals])
                 for s, e, rule in resolved:
                     if not (rule.leave_compensation_rate > 0 and rule.allocation_type_id):
                         continue
-                    alloc_days = (e - s).total_seconds() / 3600 * rule.leave_compensation_rate / 100
+                    alloc_days = (e - s).total_seconds() / 3600 * rule.leave_compensation_rate / hours_per_day
                     allocation = self.env['hr.leave.allocation'].sudo().search([
                         ('employee_id', '=', employee.id),
                         ('work_entry_type_id', '=', rule.allocation_type_id.id),
@@ -43,6 +44,7 @@ class HrTimeRule(models.Model):
             new_allocs.action_approve()
 
         for employee, by_source in deficit.items():
+            hours_per_day = employee.resource_calendar_id.hours_per_day or 8.0
             for _source_att, intervals in by_source.items():
                 effective_rule = min(
                     (rule for _, _, rule, _pp in intervals if rule.work_entry_type_id),
@@ -56,7 +58,7 @@ class HrTimeRule(models.Model):
                         continue
                     if not (rule.leave_compensation_rate > 0 and rule.allocation_type_id):
                         continue
-                    deduct = (e - s).total_seconds() / 3600 * rule.leave_compensation_rate / 100
+                    deduct = (e - s).total_seconds() / 3600 * rule.leave_compensation_rate / hours_per_day
                     allocation = self.env['hr.leave.allocation'].sudo().search([
                         ('employee_id', '=', employee.id),
                         ('work_entry_type_id', '=', rule.allocation_type_id.id),

@@ -1587,7 +1587,7 @@ class HrLeave(models.Model):
     def _get_source_extra_fields_domain(self):
         return [
             ('is_time_rule_output', '=', False),
-            ('state', '=', 'validated'),
+            ('state', '=', 'validate'),
             ('work_entry_type_id.request_unit', '=', 'hour'),
         ]
 

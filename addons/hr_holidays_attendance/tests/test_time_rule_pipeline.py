@@ -861,10 +861,10 @@ class TestTimeRulePipeline(TransactionCase):
             'leave_validation_type': 'no_validation',
         })
         self.time_rule.write({
-            'leave_compensation_rate': 50.0,  # 50% of excess hours -> allocation days
+            'leave_compensation_rate': 0.5,  # 50% of excess hours -> allocation days
             'allocation_type_id': comp_type.id,
         })
-        # 14h on 8h day -> 6h excess -> 6 * 50% = 3 allocation days
+        # 14h on 8h day -> 6h excess -> 6h * 50% / 8h_per_day = 0.375 allocation days
         self.env['hr.attendance'].create({
             'employee_id': self.cal_emp.id,
             'check_in': datetime(2022, 12, 12, 6),
@@ -875,8 +875,8 @@ class TestTimeRulePipeline(TransactionCase):
             ('work_entry_type_id', '=', comp_type.id),
         ])
         self.assertEqual(len(allocation), 1, "Allocation should be auto-created")
-        self.assertAlmostEqual(allocation.number_of_days, 3.0, places=5,
-                               msg="6h * 50% = 3 compensatory days")
+        self.assertAlmostEqual(allocation.number_of_days, 0.375, places=5,
+                               msg="6h * 50% / 8h_per_day = 0.375 compensatory days")
 
     def test_employee_domain_filters_rule(self):
         """employee_domain limits rule application to matching employees only."""
@@ -1312,7 +1312,7 @@ class TestTimeRulePipeline(TransactionCase):
     def test_deficit_compensation_deducts_from_allocation(self):
         """Deficit rule with leave_compensation_rate deducts from a compensatory allocation.
 
-        Employee works 4h of an 8h day -> 4h deficit -> 4 days deducted at 100% rate.
+        Employee works 4h of an 8h day -> 4h deficit -> 4h * 100% / 8h_per_day = 0.5 days deducted.
         """
         comp_type = self.env['hr.work.entry.type'].create({
             'name': 'Flexi Leave', 'code': 'FLEXIDEF',
@@ -1333,10 +1333,10 @@ class TestTimeRulePipeline(TransactionCase):
         self.time_rule.write({
             'threshold_operator': 'less_than',
             'work_entry_type_id': gap_type.id,
-            'leave_compensation_rate': 100.0,
+            'leave_compensation_rate': 1.0,
             'allocation_type_id': comp_type.id,
         })
-        # Morning block only [8:00-12:00] -> gap [13:00-17:00] = 4h -> 4h * 100% = 4 days deducted
+        # Morning block only [8:00-12:00] -> gap [13:00-17:00] = 4h -> 4h * 100% / 8h_per_day = 0.5 days deducted
         self.env['hr.attendance'].create({
             'employee_id': self.cal_emp.id,
             'check_in': datetime(2022, 12, 12, 8),
@@ -1344,8 +1344,8 @@ class TestTimeRulePipeline(TransactionCase):
         })
         allocation.invalidate_recordset()
         self.assertAlmostEqual(
-            allocation.number_of_days, 6.0, places=5,
-            msg="10 initial - 4 deducted = 6 remaining days",
+            allocation.number_of_days, 9.5, places=5,
+            msg="10 initial - 0.5 deducted (4h * 100% / 8h_per_day) = 9.5 remaining days",
         )
 
     def test_daily_and_weekly_rules_combined(self):

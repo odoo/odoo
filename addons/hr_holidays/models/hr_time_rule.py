@@ -31,26 +31,36 @@ class HrTimeRule(models.Model):
     )
 
     def _get_remainder_leave_vals(self, employee, source_leave, date_from, date_to):
+        tz = ZoneInfo(employee._get_tz())
+        local_from = date_from.replace(tzinfo=UTC).astimezone(tz)
+        local_to = date_to.replace(tzinfo=UTC).astimezone(tz)
         return {
             'employee_id': employee.id,
             'work_entry_type_id': source_leave.work_entry_type_id.id,
             'date_from': date_from,
             'date_to': date_to,
-            'request_date_from': date_from.date(),
-            'request_date_to': date_to.date(),
+            'request_date_from': local_from.date(),
+            'request_date_to': local_to.date(),
+            'request_hour_from': local_from.hour + local_from.minute / 60,
+            'request_hour_to': local_to.hour + local_to.minute / 60,
             'source_leave_id': source_leave.id,
             'resource_calendar_id': source_leave.resource_calendar_id.id,
             'state': 'validate',
         }
 
     def _get_output_leave_vals(self, employee, rule, date_from, date_to, source_leave, all_rules=None, accumulated_pp=frozenset()):
+        tz = ZoneInfo(employee._get_tz())
+        local_from = date_from.replace(tzinfo=UTC).astimezone(tz)
+        local_to = date_to.replace(tzinfo=UTC).astimezone(tz)
         return {
             'employee_id': employee.id,
             'work_entry_type_id': rule.work_entry_type_id.id,
             'date_from': date_from,
             'date_to': date_to,
-            'request_date_from': date_from.date(),
-            'request_date_to': date_to.date(),
+            'request_date_from': local_from.date(),
+            'request_date_to': local_to.date(),
+            'request_hour_from': local_from.hour + local_from.minute / 60,
+            'request_hour_to': local_to.hour + local_to.minute / 60,
             'time_rule_id': rule.id,
             'source_leave_id': source_leave.id,
             'resource_calendar_id': source_leave.resource_calendar_id.id,
@@ -90,6 +100,7 @@ class HrTimeRule(models.Model):
 
         for employee, by_source in deficit.items():
             tz = ZoneInfo(employee._get_tz())
+            hours_per_day = employee.resource_calendar_id.hours_per_day or 8.0
             for source_leave, intervals in by_source.items():
                 all_source_ids.add(source_leave.id)
                 by_period = defaultdict(list)
@@ -111,17 +122,17 @@ class HrTimeRule(models.Model):
                             winning_intervals.append((s, e, r, all_period_rules))
 
                 for start_local, stop_local, rule, all_rules in winning_intervals:
-                    if not rule.work_entry_type_id:
-                        continue
                     date_from = start_local.replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
                     date_to = stop_local.replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
-                    leave_create_vals.append(
-                        self._get_output_leave_vals(employee, rule, date_from, date_to, source_leave, all_rules=all_rules)
-                    )
+
+                    if rule.work_entry_type_id:
+                        leave_create_vals.append(
+                            self._get_output_leave_vals(employee, rule, date_from, date_to, source_leave, all_rules=all_rules)
+                        )
 
                     if rule.leave_compensation_rate > 0 and rule.allocation_type_id:
                         deficit_hours = (date_to - date_from).total_seconds() / 3600
-                        deduct_days = deficit_hours * rule.leave_compensation_rate / 100
+                        deduct_days = deficit_hours * rule.leave_compensation_rate / hours_per_day
                         allocation = self.env['hr.leave.allocation'].sudo().search([
                             ('employee_id', '=', employee.id),
                             ('work_entry_type_id', '=', rule.allocation_type_id.id),
@@ -134,6 +145,7 @@ class HrTimeRule(models.Model):
 
         for employee, by_source in excess.items():
             tz = ZoneInfo(employee._get_tz())
+            hours_per_day = employee.resource_calendar_id.hours_per_day or 8.0
             for source_leave, intervals in by_source.items():
                 all_source_ids.add(source_leave.id)
                 pp_by_range = {}
@@ -142,22 +154,27 @@ class HrTimeRule(models.Model):
                     pp_by_range[key] = pp_by_range.get(key, frozenset()) | pp
 
                 slices = list(_record_overlap_intervals([(s, e, r) for s, e, r, _pp in intervals]))
-                output_slices = [
+                all_slices = [
                     (start, stop, rules, pp_by_range.get((start, stop), frozenset()))
                     for start, stop, rules in slices
-                    if stop > start and rules.filtered('work_entry_type_id')
+                    if stop > start
                 ]
-                if not output_slices:
+                output_slices = [
+                    (start, stop, rules, pp)
+                    for start, stop, rules, pp in all_slices
+                    if rules.filtered('work_entry_type_id')
+                ]
+                if not all_slices:
                     continue
 
                 alloc_create_vals = []
-                for start_local, stop_local, rules, _pp in output_slices:
+                for start_local, stop_local, rules, _pp in all_slices:
                     alloc_rules = rules.filtered(
                         lambda r: r.leave_compensation_rate > 0 and r.allocation_type_id
                     )
                     for alloc_rule in alloc_rules:
                         excess_hours = (stop_local - start_local).total_seconds() / 3600
-                        alloc_days = excess_hours * alloc_rule.leave_compensation_rate / 100
+                        alloc_days = excess_hours * alloc_rule.leave_compensation_rate / hours_per_day
                         if alloc_days <= 0:
                             continue
                         allocation = self.env['hr.leave.allocation'].sudo().search([
@@ -178,6 +195,9 @@ class HrTimeRule(models.Model):
                 if alloc_create_vals:
                     new_allocs = self.env['hr.leave.allocation'].sudo().with_context(skip_time_rules=True).create(alloc_create_vals)
                     new_allocs.action_approve()
+
+                if not output_slices:
+                    continue
 
                 merged_slices = []
                 for start, stop, rules, pp in output_slices:
@@ -211,9 +231,11 @@ class HrTimeRule(models.Model):
                         leave_create_vals.append(self._get_remainder_leave_vals(employee, source_leave, df, dt))
                 else:
                     # OT starts after source start → shrink source date_to; source IS remainder[0]
+                    local_end = min_out_start_local.replace(tzinfo=tz)
                     Leave.browse([source_leave.id]).with_context(**auto_ctx).write({
                         'date_to': min_out_start_utc,
                         'request_date_to': min_out_start_utc.date(),
+                        'request_hour_to': local_end.hour + local_end.minute / 60,
                     })
                     for seg_s, seg_e, _ in remainder_segments[1:]:
                         df = seg_s.replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
