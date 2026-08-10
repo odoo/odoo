@@ -1911,9 +1911,13 @@ class AccountTax(models.Model):
 
         # Distribute using the factor first.
         normalize_results = self._normalize_target_factors(target_factors, allow_negative_factors=allow_negative_factors)
+        sum_of_factors = normalize_results['sum_of_factors']
+        plus_delta_factor = normalize_results['plus_sum_of_factors'] / sum_of_factors if sum_of_factors else 0.0
+        neg_delta_factor = normalize_results['neg_sum_of_factors'] / sum_of_factors if sum_of_factors else 0.0
+
         for sign_factor, signed_factors, delta_factor in (
-            (1, normalize_results['plus_factors'], normalize_results['plus_sum_of_factors'] / normalize_results['sum_of_factors']),
-            (-1, normalize_results['neg_factors'], normalize_results['neg_sum_of_factors'] / normalize_results['sum_of_factors']),
+            (1, normalize_results['plus_factors'], plus_delta_factor),
+            (-1, normalize_results['neg_factors'], neg_delta_factor),
         ):
             nb_of_errors = round(abs(delta_amount * delta_factor / precision_rounding))
             remaining_errors = nb_of_errors
