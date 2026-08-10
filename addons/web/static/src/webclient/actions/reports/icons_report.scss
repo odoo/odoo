@@ -8,6 +8,12 @@
     font-family: var(--icon-font-family, #{$ms-font-family});
 }
 
+// wkhtmltopdf doesn't understand FILL font feature, so we need to use the "_f"
+// suffix to get the filled version of the icon.
+.oi.oi-filled[data-icon]:not([data-icon=""]):not([data-icon^="oi_"])::before {
+    content: attr(data-icon) "_f";
+}
+
 .oi-fw {
     width: $oi-fw-ratio * $oi-default-size;
     width: calc(#{$oi-fw-ratio} * var(--oi-font-size, #{$oi-default-size}));

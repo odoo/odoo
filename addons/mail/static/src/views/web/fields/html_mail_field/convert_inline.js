@@ -1041,6 +1041,23 @@ function convertCSSColorToPILRgba(color) {
     }
     return false;
 }
+
+/**
+ * Return whether the icon rendered by the given `::before` style is the filled
+ * variant of its glyph. It can be reached two ways: the `FILL` variation axis
+ * of the icon font, which snaps at 0.5, and a `_f` suffix on the ligature name.
+ *
+ * @param {CSSStyleDeclaration} beforeStyle the `::before` computed style
+ * @param {string} content the `content` value of that style, without quotes
+ * @returns {boolean}
+ */
+function isIconFilled(beforeStyle, content) {
+    if (content.endsWith("_f")) {
+        return true;
+    }
+    const fillAxis = beforeStyle["font-variation-settings"].match(/["']FILL["']\s+([\d.]+)/);
+    return parseFloat(fillAxis?.[1]) >= 0.5;
+}
 /**
  * Convert font icons to images.
  *
@@ -1057,9 +1074,7 @@ function fontToImg(element) {
             icon = content.codePointAt(0);
         } else {
             icon = content.replace(/_f$/, "");
-            if (icon !== content) {
-                fill = 1;
-            }
+            fill = isIconFilled(beforeStyle, content) ? 1 : 0;
         }
         if (icon) {
             const color =

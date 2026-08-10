@@ -26,9 +26,7 @@ $oi-fw-ratio: 1.28571429; // Matches .fa-fw
     direction: ltr;
     speak: never;
     -webkit-font-smoothing: antialiased;
-    -webkit-font-feature-settings: 'liga';
     -moz-osx-font-smoothing: grayscale;
-    -moz-font-feature-settings: 'liga';
 
     &:before {
         display: inline-block;
@@ -36,8 +34,10 @@ $oi-fw-ratio: 1.28571429; // Matches .fa-fw
         // Geometric precision necessary for WebKit to apply icon ligatures
         text-rendering: geometricPrecision;
     }
-    &.oi-filled[data-icon]:not([data-icon=""]):not([data-icon^="oi_"]):before {
-        content: attr(data-icon) "_f";
+
+    &.oi-filled {
+        -webkit-font-variation-settings: 'FILL' 1;
+        font-variation-settings: 'FILL' 1;
     }
 }
 
