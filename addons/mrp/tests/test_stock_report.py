@@ -380,10 +380,9 @@ class TestMrpStockReports(TestReportsCommon):
         })
 
         mo.action_confirm()
-        # check that the mo and bom cost are correctly calculated after mo confirmation
+        # Check that the MO cost is correctly calculated after MO confirmation.
         overview_values = self.env['report.mrp.report_mo_overview'].get_report_values(mo.id)
         self.assertEqual(round(overview_values['data']['operations']['summary']['mo_cost'], 2), 14.45)
-        self.assertEqual(round(overview_values['data']['operations']['summary']['bom_cost'], 2), 14.44)
         mo.button_mark_done()
         mo.qty_produced = 0.
 
@@ -514,10 +513,8 @@ class TestMrpStockReports(TestReportsCommon):
     def test_report_price_variants(self):
         """
         This tests the MO's report price when a variant is involved. It makes sure
-        that the BoM price takes only the current variant and not all of them. It also
-        tests that the lines that were removed from the MO but are still in the bom are
-        used in the BoM cost computing. Lastly, it makes sure that Kits are also accounted
-        for and used in the BoM cost as they should.
+        that the MO cost takes only the current variant and not all of them. It also
+        tests that Kits are accounted for and used in the MO cost as they should.
         """
         # Create a color variant, which will be used to create a Product
         attribute_color = self.env['product.attribute'].create({'name': 'Color'})
@@ -630,14 +627,12 @@ class TestMrpStockReports(TestReportsCommon):
             'bom_id': bom_normal.id,
         })
         mo_report = self.env['report.mrp.report_mo_overview'].get_report_values(mo.id)
-        self.assertEqual(mo_report['data']['extras']['unit_bom_cost'], mo_report['data']['extras']['unit_mo_cost'], 'The BoM unit cost should be equal to the sum of the products of said BoM')
-        # Check that the missing components (the components that were removed from the MO but are still in the BoM)
-        # are taken into account when computing the BoM cost
+        self.assertEqual(mo_report['data']['extras']['unit_mo_cost'], 120, 'The MO unit cost should be equal to the sum of the standard prices of all products in the BoM')
+        # Check that the MO cost follows the component lines still present on the MO.
         mo.move_raw_ids.filtered(lambda m: m.product_id == missing_product.product_variant_id and m.bom_line_id.bom_id.type != 'phantom').unlink()
-        # When a product has two possible variants, and then is deleted, it should be taken in the missing components
         mo.move_raw_ids.filtered(lambda m: m.product_id == black_white_product and m.bom_line_id.bom_id.type != 'phantom').unlink()
         mo_report = self.env['report.mrp.report_mo_overview'].get_report_values(mo.id)
-        self.assertEqual(mo_report['data']['extras']['unit_bom_cost'], mo_report['data']['extras']['unit_mo_cost'] + missing_product.standard_price + black_white_product.standard_price, 'The BoM unit cost should take the missing components into account, which are the deleted MO lines')
+        self.assertEqual(mo_report['data']['extras']['unit_mo_cost'], 55, 'The MO unit cost should only include the remaining MO component lines')
 
     def test_mo_overview_operation_cost(self):
         """ Test that operations correctly compute their cost depending on their cost_mode. """
@@ -679,21 +674,52 @@ class TestMrpStockReports(TestReportsCommon):
 
         overview_values = self.env['report.mrp.report_mo_overview'].get_report_values(mo.id)
         self.assertEqual(overview_values['data']['operations']['details'][0]['mo_cost'], 33.0)
-        self.assertEqual(overview_values['data']['operations']['details'][0]['real_cost'], 5.5)
         self.assertEqual(overview_values['data']['operations']['details'][1]['mo_cost'], 33.0)
-        self.assertEqual(overview_values['data']['operations']['details'][1]['real_cost'], 33.0)
 
-        # Costs should stay the same for a done MO and/or if the cost_mode of the operation is changed
+        # Once the MO is done, the MO cost column uses the actual cost.
         mo.button_mark_done()
         bom_baguette.operation_ids.filtered(lambda o: o.cost_mode == 'estimated').cost_mode = 'actual'
         overview_values = self.env['report.mrp.report_mo_overview'].get_report_values(mo.id)
-        self.assertEqual(overview_values['data']['operations']['details'][0]['mo_cost'], 33.0)
-        self.assertEqual(overview_values['data']['operations']['details'][0]['real_cost'], 5.5)
+        self.assertEqual(overview_values['data']['operations']['details'][0]['mo_cost'], 5.5)
         self.assertEqual(overview_values['data']['operations']['details'][1]['mo_cost'], 33.0)
-        self.assertEqual(overview_values['data']['operations']['details'][1]['real_cost'], 33.0)
+
+    def test_mo_overview_decorators(self):
+        """Test MO overview decorators for overconsumed components and operation duration.
+        """
+        workcenter = self.env['mrp.workcenter'].create({'name': 'Workcenter'})
+        bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': self.product1.product_tmpl_id.id,
+            'bom_line_ids': [Command.create({'product_id': self.product.id})],
+            'operation_ids': [Command.create({
+                'name': 'Operation',
+                'workcenter_id': workcenter.id,
+            })],
+        })
+        mo = self.env['mrp.production'].create({'bom_id': bom.id})
+        mo.action_confirm()
+        overview_data = self.env['report.mrp.report_mo_overview'].get_report_values(mo.id)['data']
+        self.assertFalse(overview_data['components'][0]['summary'].get('quantity_decorator'))
+        self.assertFalse(overview_data['components'][0]['summary'].get('qty_consumed_decorator'))
+        self.assertFalse(overview_data['operations']['summary'].get('quantity_decorator'))
+        self.assertFalse(overview_data['operations']['details'][0].get('quantity_decorator'))
+
+        mo.move_raw_ids.quantity = 2
+        mo.workorder_ids.duration = 90
+        overview_data = self.env['report.mrp.report_mo_overview'].get_report_values(mo.id)['data']
+        self.assertFalse(overview_data['components'][0]['summary'].get('quantity_decorator'))
+        self.assertEqual(overview_data['components'][0]['summary']['qty_consumed_decorator'], 'danger')
+        self.assertEqual(overview_data['operations']['summary']['quantity_decorator'], 'danger')
+        self.assertEqual(overview_data['operations']['details'][0]['quantity_decorator'], 'danger')
+
+        mo.move_raw_ids.picked = True
+        Form.from_action(self.env, mo.button_mark_done()).save().action_confirm()
+        overview_data = self.env['report.mrp.report_mo_overview'].get_report_values(mo.id)['data']
+        self.assertEqual(overview_data['components'][0]['summary']['quantity_decorator'], 'danger')
+        self.assertEqual(overview_data['operations']['summary']['quantity_decorator'], 'danger')
+        self.assertEqual(overview_data['operations']['details'][0]['quantity_decorator'], 'danger')
 
     def test_mo_overview_with_different_uom(self):
-        """Ensure that the MO overview correctly computes costs
+        """Ensure that the MO overview correctly compute MO cost
         when the product UoM differs from the BoM UoM.
 
         In this case, the product is defined in Unit while the BoM
@@ -717,9 +743,8 @@ class TestMrpStockReports(TestReportsCommon):
         })
 
         mo.action_confirm()
-        # check that the mo and bom cost are correctly calculated after mo confirmation
+        # Check that the MO cost is correctly calculated after MO confirmation.
         overview_values = self.env['report.mrp.report_mo_overview'].get_report_values(mo.id)
-        self.assertEqual(overview_values['data']['components'][0]['summary']['bom_cost'], 120)
         self.assertEqual(overview_values['data']['components'][0]['summary']['mo_cost'], 120)
 
         # Test without BoM
@@ -736,7 +761,6 @@ class TestMrpStockReports(TestReportsCommon):
         })
         mo_no_bom.action_confirm()
         overview_values_no_bom = self.env['report.mrp.report_mo_overview'].get_report_values(mo_no_bom.id)
-        self.assertEqual(overview_values_no_bom['data']['components'][0]['summary']['bom_cost'], 120)
         self.assertEqual(overview_values_no_bom['data']['components'][0]['summary']['mo_cost'], 120)
 
     def test_forecast_report_cross_warehouse_mo(self):

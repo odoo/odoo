@@ -1110,9 +1110,6 @@ class MrpWorkorder(models.Model):
             'views': [(self.env.ref('mrp.mrp_production_workorder_tree_view_backorders').id, 'list'), (False, 'form')],
         }
 
-    def _get_current_theoretical_operation_cost(self, without_employee_cost=False):
-        return (self.get_duration() / 60.0) * (self.costs_hour or self.workcenter_id.costs_hour)
-
     def _set_cost_mode(self):
         """ This should only be called once when the MO is confirmed. """
         for workorder in self:

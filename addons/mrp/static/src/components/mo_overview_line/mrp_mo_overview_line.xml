@@ -18,7 +18,7 @@
                 <span t-attf-class="badge rounded-pill o_mrp_overview_badge {{ this.stateDecorator }}" t-out="this.data.formatted_state"/>
             </div>
         </td>
-        <td t-attf-class="text-end" t-out="this.formattedQuantity"/>
+        <td t-attf-class="text-end {{ this.getColorClass(this.data.quantity_decorator) }}" t-out="this.formattedQuantity"/>
         <td t-if="this.props.showOptions.uom" class="text-start" t-out="this.data.uom_name"/>
         <td class="text-end" t-if="this.props.showOptions.availabilities">
             <t t-if="this.hasQuantity('quantity_on_hand')">
@@ -26,8 +26,8 @@
                 <t t-out="this.formatFloat(this.data.quantity_on_hand)"/>
             </t>
         </td>
-        <td class="text-end" t-if="this.props.showOptions.availabilities">
-            <t t-if="this.hasQuantity('quantity_reserved')" t-out="this.formatFloat(this.data.quantity_reserved)"/>
+        <td t-attf-class="text-end {{ this.getColorClass(this.data.qty_consumed_decorator) }}" t-if="this.props.showOptions.availabilities">
+            <t t-if="this.hasQuantity('quantity_consumed')" t-out="this.formatFloat(this.data.quantity_consumed)"/>
         </td>
         <td class="text-end" t-if="this.props.showOptions.receipts">
             <t t-if="this.data.receipt">
@@ -36,9 +36,7 @@
             </t>
         </td>
         <td class="text-end" t-if="this.props.showOptions.unitCosts" t-out="this.formatMonetary(this.data.unit_cost)"/>
-        <td t-attf-class="text-end {{ this.getColorClass(this.data.mo_cost_decorator) }}" t-if="this.props.showOptions.moCosts" t-out="this.formatMonetary(this.data.mo_cost)"/>
-        <td class="text-end" t-if="this.props.showOptions.bomCosts" t-out="this.formatMonetary(this.data.bom_cost)"/>
-        <td t-attf-class="text-end {{ this.getColorClass(this.data.real_cost_decorator) }}" t-if="this.props.showOptions.realCosts" t-out="this.formatMonetary(this.data.real_cost)"/>
+        <td class="text-end" t-if="this.props.showOptions.moCosts" t-out="this.formatMonetary(this.data.mo_cost)"/>
     </tr>
 
 </templates>
