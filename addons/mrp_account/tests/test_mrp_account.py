@@ -589,8 +589,8 @@ class TestMrpAccountWorkorder(TestBomPriceOperationCommon):
             self.skipTest('Timesheets is not installed')
 
         mrp_user = new_test_user(self.env, 'temp_mrp_user', 'mrp.group_mrp_user, hr_timesheet.group_hr_timesheet_user')
-        analytic_plan = self.env['account.analytic.plan'].create({'name': 'Plan Test'})
-        wc_analytic_account = self.env['account.analytic.account'].create({'name': 'Analytic Account', 'plan_id': analytic_plan.id})
+        analytic_plan = self.env['account.analytic.plan'].sudo().create({'name': 'Plan Test'})
+        wc_analytic_account = self.env['account.analytic.account'].sudo().create({'name': 'Analytic Account', 'plan_id': analytic_plan.id})
         mo_1 = self._create_mo(self.bom_1, 1)
 
         mo_1.workorder_ids[0].workcenter_id.analytic_distribution = {str(wc_analytic_account.id): 100.0}
