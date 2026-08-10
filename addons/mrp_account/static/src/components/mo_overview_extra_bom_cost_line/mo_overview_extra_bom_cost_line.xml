@@ -11,8 +11,6 @@
                 <td t-if="this.props.showOptions.receipts"/>
                 <td class="text-end" t-if="this.props.showOptions.unitCosts" t-out="this.formatMonetary(this.props.summary.extra_cost)"/>
                 <td class="text-end" t-if="this.props.showOptions.moCosts" t-out="this.formatMonetary(this.props.summary.extra_cost * this.props.summary.quantity)"/>
-                <td class="text-end" t-if="this.props.showOptions.bomCosts" t-out="this.formatMonetary(this.props.summary.extra_cost * this.props.summary.quantity)"/>
-                <td class="text-end" t-if="this.props.showOptions.realCosts" t-out="this.formatMonetary(this.props.summary.extra_cost * this.props.summary.quantity)"/>
             </tr>
         </xpath>
     </t>

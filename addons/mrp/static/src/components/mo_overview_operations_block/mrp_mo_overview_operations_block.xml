@@ -12,15 +12,13 @@
                     </span>
                 </td>
                 <td class="text-center" t-if="this.props.showOptions.replenishments"/>
-                <td t-attf-class="text-end" t-out="this.totalQuantity"/>
+                <td t-attf-class="text-end {{ this.getColorClass(this.props.summary.quantity_decorator) }}" t-out="this.totalQuantity"/>
                 <td class="text-start" t-if="this.props.showOptions.uom" t-out="this.props.summary.uom_name"/>
                 <td class="text-end" t-if="this.props.showOptions.availabilities"/>
                 <td class="text-end" t-if="this.props.showOptions.availabilities"/>
                 <td class="text-end" t-if="this.props.showOptions.receipts"/>
                 <td class="text-end" t-if="this.props.showOptions.unitCosts"/>
-                <td t-attf-class="text-end {{ this.getColorClass(this.props.summary.mo_cost_decorator) }}" t-if="this.props.showOptions.moCosts" t-out="this.formatMonetary(this.props.summary.mo_cost)"/>
-                <td class="text-end" t-if="this.props.showOptions.bomCosts" t-out="this.formatMonetary(this.props.summary.bom_cost)"/>
-                <td t-attf-class="text-end {{ this.getColorClass(this.props.summary.real_cost_decorator) }}" t-if="this.props.showOptions.realCosts" t-out="this.formatMonetary(this.props.summary.real_cost)"/>
+                <td class="text-end" t-if="this.props.showOptions.moCosts" t-out="this.formatMonetary(this.props.summary.mo_cost)"/>
             </tr>
             <t t-if="!this.state.isFolded" t-foreach="this.props.operations" t-as="operation" t-key="operation.index">
                 <MoOverviewLine data="operation" showOptions="this.props.showOptions"/>

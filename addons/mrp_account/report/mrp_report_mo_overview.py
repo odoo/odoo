@@ -12,8 +12,6 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
         production = self.env['mrp.production'].browse(production_id)
         self._update_summary_with_extra_cost_values(res['summary'], production, res['summary']['quantity'])
         res['extras']['unit_mo_cost'] += production.extra_cost
-        res['extras']['unit_bom_cost'] += production.extra_cost
-        res['extras']['unit_real_cost'] += production.extra_cost
         return res
 
     def _get_replenishment_lines(self, production, move_raw, replenish_data, level, current_index):
@@ -30,9 +28,7 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
             summary['extra_cost'] = production.extra_cost
             summary['price_precision'] = self.env['decimal.precision'].precision_get('Product Price')
             summary['product_precision'] = self.env['decimal.precision'].precision_get('Product Unit')
-            summary['bom_cost'] += production.extra_cost * summary['quantity']
             summary['mo_cost'] += production.extra_cost * summary['quantity']
-            summary['real_cost'] += production.extra_cost * summary['quantity']
         return summary
 
     def _get_unit_cost(self, move):
