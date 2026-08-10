@@ -11,7 +11,16 @@ import {
     untrackFunctions,
 } from "./misc";
 import { RecordList } from "./record_list";
-import { computed, immediateEffect, markRaw, proxy, signal, toRaw, untrack } from "@odoo/owl";
+import {
+    Scope,
+    computed,
+    immediateEffect,
+    markRaw,
+    proxy,
+    signal,
+    toRaw,
+    untrack,
+} from "@odoo/owl";
 import { RecordUses } from "./record_uses";
 import { LocalStorageEntry } from "@mail/utils/common/local_storage";
 
@@ -49,6 +58,36 @@ function observeField(recordProxy, fieldName, callback) {
     return disposeFn;
 }
 
+/**
+ * Owner of the owl computeds of one record. owl attaches a computed to the
+ * scope that is active when it is created and disposes it with that scope, so
+ * without a scope of its own a record loses its computeds as soon as the
+ * component that happened to create them is destroyed.
+ */
+class RecordScope extends Scope {
+    /** @param {import("models").Store} store */
+    constructor(store) {
+        super(store._.app);
+        this.store = store;
+    }
+
+    destroy() {
+        this.finalize((error) => this.store.handleError(error));
+    }
+
+    /**
+     * A deleted record can still be read, and owl refuses to run in a
+     * destroyed scope: ignore this scope then, and let the calling one own the
+     * computeds.
+     *
+     * @param {Function} fn returning a promise here ties it to the record: owl
+     *  rejects it with an AbortError once the record is deleted
+     */
+    run(fn, ...args) {
+        return this.isDestroyed() ? fn(...args) : super.run(fn, ...args);
+    }
+}
+
 export class RecordInternal {
     [IS_RECORD_SYM] = true;
     /**
@@ -67,6 +106,13 @@ export class RecordInternal {
      * @type {Set<Function>}
      */
     disposeFns = new Set();
+    /**
+     * Scope holding the owl computeds of this record, made on the first one and
+     * disposed with the record.
+     *
+     * @type {RecordScope}
+     */
+    scope;
     // Note: state of fields in Maps rather than object is intentional for improved performance.
     /**
      * For computed field, determines whether the field is computing its value.
@@ -132,6 +178,14 @@ export class RecordInternal {
 
     constructor() {
         markRaw(this);
+    }
+
+    /**
+     * @param {Record} record
+     * @returns {RecordScope} the scope owning the computeds of this record
+     */
+    ensureScope(record) {
+        return (this.scope ??= new RecordScope(record._rawStore));
     }
 
     /**
@@ -270,18 +324,20 @@ export class RecordInternal {
                 const compute = Model._.fieldsCompute.get(name);
                 const { isUpdateInProgress } = record._rawStore._;
                 let lastValue = record._.fieldsDefault.get(name);
-                computedField = computed(function computeFieldValue() {
-                    if (untrack(isUpdateInProgress)) {
-                        // Hold while a write is being applied: the relations this
-                        // reads are written one by one. onAdd, onDelete and onUpdate
-                        // run between writes, at depth 0, so they read fresh values.
-                        // Subscribe only while held, so the release computes once.
-                        void isUpdateInProgress();
+                computedField = record._.ensureScope(record).run(() =>
+                    computed(function computeFieldValue() {
+                        if (untrack(isUpdateInProgress)) {
+                            // Hold while a write is being applied: the relations this
+                            // reads are written one by one. onAdd, onDelete and onUpdate
+                            // run between writes, at depth 0, so they read fresh values.
+                            // Subscribe only while held, so the release computes once.
+                            void isUpdateInProgress();
+                            return lastValue;
+                        }
+                        lastValue = compute.call(record._proxy);
                         return lastValue;
-                    }
-                    lastValue = compute.call(record._proxy);
-                    return lastValue;
-                });
+                    })
+                );
                 record._.fieldsComputed.set(name, computedField);
             }
             return computedField();

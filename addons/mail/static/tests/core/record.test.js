@@ -1,8 +1,14 @@
 import { toRawValue } from "@mail/utils/common/local_storage";
 import { defineMailModels, start as start2 } from "@mail/../tests/mail_test_helpers";
 import { after, afterEach, beforeEach, describe, expect, test, tick } from "@odoo/hoot";
-import { immediateEffect, markup, toRaw } from "@odoo/owl";
-import { getService, mockService, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { animationFrame } from "@odoo/hoot-mock";
+import { Component, immediateEffect, markup, proxy, toRaw, xml } from "@odoo/owl";
+import {
+    getService,
+    mockService,
+    mountWithCleanup,
+    patchWithCleanup,
+} from "@web/../tests/web_test_helpers";
 
 import { Record, Store, makeStore } from "@mail/model/export";
 import { AND, fields, makeRecordFieldLocalId, normalizeManyCommands } from "@mail/model/misc";
@@ -1510,4 +1516,80 @@ test("Normalize many commands", () => {
     expect(() => normalizeManyCommands(mixed)).toThrow(
         "Many commands cannot mix raw values and commands"
     );
+});
+
+test("observers of a record created by a component outlive that component", async () => {
+    (class Persona extends Record {
+        static id = "name";
+        name;
+        counter = 0;
+    }).register(localRegistry);
+    const store = await start();
+    let persona;
+    class Creator extends Component {
+        static props = {};
+        static template = xml`<t/>`;
+        setup() {
+            persona = store.Persona.insert("John");
+            persona.onChange(
+                () => [persona.counter],
+                () => expect.step(`counter:${persona.counter}`),
+                { immediate: true, initialRun: false }
+            );
+        }
+    }
+    class Parent extends Component {
+        static components = { Creator };
+        static props = {};
+        static template = xml`<Creator t-if="this.state.hasCreator"/>`;
+        setup() {
+            this.state = proxy({ hasCreator: true });
+        }
+    }
+    const parent = await mountWithCleanup(Parent);
+    persona.counter = 1;
+    expect.verifySteps(["counter:1"]);
+    parent.state.hasCreator = false;
+    await animationFrame();
+    persona.counter = 2;
+    expect.verifySteps(["counter:2"]);
+});
+
+test("computed field first read by a component outlives that component", async () => {
+    (class Channel extends Record {
+        static id = "id";
+        id;
+        count = 0;
+        multiplicity = fields.Attr(undefined, {
+            compute() {
+                return this.count > 3 ? "many" : "few";
+            },
+        });
+    }).register(localRegistry);
+    const store = await start();
+    const channel = store.Channel.insert(1);
+    class Reader extends Component {
+        static props = {};
+        static template = xml`<t/>`;
+        setup() {
+            expect.step(`read:${channel.multiplicity}`);
+        }
+    }
+    class Parent extends Component {
+        static components = { Reader };
+        static props = {};
+        static template = xml`<Reader t-if="this.state.hasReader"/>`;
+        setup() {
+            this.state = proxy({ hasReader: true });
+        }
+    }
+    const parent = await mountWithCleanup(Parent);
+    expect.verifySteps(["read:few"]);
+    const disposeFn = immediateEffect(() => expect.step(`multiplicity:${channel.multiplicity}`));
+    after(() => disposeFn());
+    expect.verifySteps(["multiplicity:few"]);
+    parent.state.hasReader = false;
+    await animationFrame();
+    channel.count = 5;
+    expect.verifySteps(["multiplicity:many"]);
 });

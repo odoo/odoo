@@ -12,7 +12,7 @@ import { StoreInternal } from "./store_internal";
 import { ModelInternal } from "./model_internal";
 import { RecordInternal } from "./record_internal";
 
-import { proxy, toRaw } from "@odoo/owl";
+import { proxy, toRaw, useApp } from "@odoo/owl";
 
 /** @returns {import("models").Store} */
 export function makeStore(env, { localRegistry } = {}) {
@@ -22,6 +22,8 @@ export function makeStore(env, { localRegistry } = {}) {
     store.env = env;
     store.Model = Store;
     store._ = new StoreInternal();
+    // services start in the scope of the app, which every record scope needs
+    store._.app = useApp();
     store._raw = store;
     store._proxyInternal = store;
     store._proxy = store;
