@@ -613,7 +613,17 @@ class Product(models.Model):
 
     def _get_dates_info(self, date, location, route_ids=False):
         rules = self._get_rules_from_location(location, route_ids=route_ids)
-        delays, _ = rules.with_context(bypass_delay_description=True)._get_lead_days(self)
+        values = {}
+        supplier_id = self.env.context.get('orderpoint_supplier_id')
+        qty_to_order = self.env.context.get('orderpoint_qty_to_order')
+        
+        if supplier_id:
+            values['supplierinfo'] = self.env['product.supplierinfo'].browse(supplier_id)
+        elif qty_to_order and hasattr(self, '_select_seller'):
+            values['supplierinfo'] = self._select_seller(quantity=qty_to_order)
+            
+        # Pass the identified supplierinfo down so Odoo bypasses its flawed `quantity=None` fallback
+        delays, _ = rules.with_context(bypass_delay_description=True)._get_lead_days(self, **values)
         return {
             'date_planned': date - relativedelta(days=delays['security_lead_days']),
             'date_order': date - relativedelta(days=delays['security_lead_days'] + delays['purchase_delay']),
