@@ -18,6 +18,7 @@
         'views/account_debit_note_views.xml',
         'views/proveedor_upload_views.xml',
         'views/mr_motivo_wizard_views.xml',
+        'views/cabys_wizard_views.xml',
         'views/proveedor_email_views.xml',
         'data/mail_template.xml',
     ],

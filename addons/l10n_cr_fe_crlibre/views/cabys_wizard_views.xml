@@ -1,0 +1,32 @@
+<odoo>
+    <record id="view_l10n_cr_fe_cabys_wizard_form" model="ir.ui.view">
+        <field name="name">l10n_cr.fe.cabys.wizard.form</field>
+        <field name="model">l10n_cr.fe.cabys.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Buscar código CABYS">
+                <field name="product_id" invisible="1"/>
+                <field name="searched" invisible="1"/>
+                <group>
+                    <field name="query" placeholder="Ej. Aguacate Hass, o un código de 13 dígitos"/>
+                </group>
+                <button name="action_buscar" string="Buscar" type="object"
+                        class="btn-primary" icon="fa-search"/>
+                <field name="result_ids" invisible="not searched">
+                    <list create="false" delete="false">
+                        <field name="codigo"/>
+                        <field name="descripcion"/>
+                        <field name="impuesto" string="IVA %"/>
+                        <button name="action_usar" type="object"
+                                string="Usar este código" class="btn-link" icon="fa-check"/>
+                    </list>
+                </field>
+                <p invisible="not searched or result_ids">
+                    No se encontraron coincidencias para esta búsqueda.
+                </p>
+                <footer>
+                    <button string="Cerrar" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

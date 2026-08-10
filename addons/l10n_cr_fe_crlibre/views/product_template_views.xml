@@ -6,6 +6,9 @@
         <field name="arch" type="xml">
             <xpath expr="//group[@name='group_standard_price']/field[@name='categ_id']" position="after">
                 <field name="l10n_cr_fe_cabys" string="Código CABYS"/>
+                <field name="l10n_cr_fe_cabys_descripcion" string="Descripción CABYS" readonly="1"/>
+                <button name="action_l10n_cr_fe_buscar_cabys" type="object"
+                        string="Buscar CABYS" class="btn-link" icon="fa-search"/>
             </xpath>
         </field>
     </record>

@@ -98,3 +98,20 @@ class TestCabysWizard(TransactionCase):
         self.assertTrue(any(
             'no existe un impuesto de venta' in (msg.body or '')
             for msg in self.product.message_ids))
+
+    def test_flujo_completo_boton_producto_hasta_seleccion(self):
+        tax = self.env['account.tax'].create({
+            'name': 'IVA 1%', 'amount_type': 'percent', 'amount': 1.0,
+            'type_tax_use': 'sale', 'company_id': self.company.id,
+        })
+        action = self.product.action_l10n_cr_fe_buscar_cabys()
+        wizard = self.env['l10n_cr.fe.cabys.wizard'].with_context(
+            action['context']).create({'query': 'aguacate'})
+        self.assertEqual(wizard.product_id, self.product)
+        with self._patch_buscar([
+            {'codigo': '0131100020400', 'descripcion': 'Aguacate haas, fresco', 'impuesto': 1.0},
+        ]):
+            wizard.action_buscar()
+        wizard.result_ids.action_usar()
+        self.assertEqual(self.product.l10n_cr_fe_cabys, '0131100020400')
+        self.assertEqual(self.product.taxes_id, tax)
