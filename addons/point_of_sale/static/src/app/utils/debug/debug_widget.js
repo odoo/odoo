@@ -31,7 +31,7 @@ export class DebugWidget extends Component {
             ),
         });
 
-        useBus(this.numberBuffer, "buffer-update", this._onBufferUpdate);
+        useBus(this.numberBuffer, "buffer-update", this._onBufferUpdate.bind(this));
         onMounted(() => {
             if (!this.importOrderInput()) {
                 return;

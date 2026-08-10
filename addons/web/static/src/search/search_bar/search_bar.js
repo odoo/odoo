@@ -14,6 +14,7 @@ import { hasTouch } from "@web/core/browser/feature_detection";
 import { SearchBarDropdown } from "../search_bar_dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { useNavigation } from "@web/core/navigation/navigation";
+import { render } from "@web/owl2/utils";
 
 const parsers = registry.category("parsers");
 
@@ -109,7 +110,7 @@ export class SearchBar extends Component {
             this.inputRef().focus();
         });
 
-        useBus(this.env.searchModel, "update", this.render);
+        useBus(this.env.searchModel, "update", () => render(this));
     }
 
     /**

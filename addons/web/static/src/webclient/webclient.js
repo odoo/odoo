@@ -56,7 +56,7 @@ export class WebClient extends Component {
                 this.state.fullscreen = mode === "fullscreen";
             }
         });
-        useBus(this.env.bus, "WEBCLIENT:LOAD_DEFAULT_APP", this._loadDefaultApp);
+        useBus(this.env.bus, "WEBCLIENT:LOAD_DEFAULT_APP", this._loadDefaultApp.bind(this));
         onMounted(() => {
             this.loadRouterState();
             // the chat window and dialog services listen to 'web_client_ready' event in

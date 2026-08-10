@@ -13,7 +13,7 @@ export class EditInBackendSystrayItem extends Component {
         this.state = proxy({ mainObjectName: "" });
 
         onWillStart(this._updateMainObjectName);
-        useBus(websiteSystrayRegistry, "CONTENT-UPDATED", this._updateMainObjectName);
+        useBus(websiteSystrayRegistry, "CONTENT-UPDATED", this._updateMainObjectName.bind(this));
     }
 
     editInBackend() {

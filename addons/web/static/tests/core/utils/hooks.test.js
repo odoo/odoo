@@ -289,7 +289,7 @@ describe("useBus", () => {
         class MyComponent extends Component {
             static template = xml`<div/>`;
             setup() {
-                useBus(this.env.bus, "test-event", this.myCallback);
+                useBus(this.env.bus, "test-event", this.myCallback.bind(this));
             }
             myCallback() {
                 expect.step("callback");
