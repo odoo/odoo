@@ -342,3 +342,29 @@ class TestPdpPosFlowLifecycle(TestPoSCommon):
             'l10n_fr_pdp_flow_10_report_type': False,
             'l10n_fr_pdp_status': 'out_of_scope',
         }])
+
+    def test_ubl_21_fr_pro_forma_with_error(self):
+        """
+        Tests that requesting an invoice for a client with ubl_21_fr set but
+        incomplete e-invoicing information still produces a regular invoice PDF
+        instead of falling back to a Pro-Forma one.
+        """
+        bad_partner = self.env['res.partner'].create({
+            'name': 'Error',
+            'country_id': self.env.ref('base.fr').id,
+            'is_company': True,
+            'invoice_edi_format': 'ubl_21_fr',
+        })
+
+        with self._patch_pos_date('2025-09-03'):
+            session = self.open_new_session()
+            order_data = self.create_ui_order_data([(self.pos_product, 1)])
+            order_data['partner_id'] = bad_partner.id
+            order_data['to_invoice'] = True
+            self.env['pos.order'].sync_from_ui([order_data])
+            session.action_pos_session_validate()
+
+        order = self.env['pos.order'].search([('session_id', '=', session.id)], limit=1)
+        self.assertFalse(order.account_move._need_ubl_cii_xml('ubl_21_fr'))
+        order.account_move._generate_and_send()
+        self.assertTrue(order.account_move.invoice_pdf_report_id)
