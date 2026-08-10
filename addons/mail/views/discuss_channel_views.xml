@@ -92,13 +92,16 @@
                         <notebook>
                             <page string="Members" name="members">
                                 <field name="channel_type" invisible="1"/>
-                                <field name="channel_member_ids" mode="list" context="{'active_test': False}" readonly="channel_type == 'chat'">
+                                <field name="channel_member_ids" widget="discuss_channel_member_list" mode="list" context="{'active_test': False}" readonly="channel_type == 'chat'">
                                     <list string="Members" editable="bottom">
                                         <control>
                                             <delete invisible="not can_unlink"/>
+                                            <create name="add_members" string="Add Members" context="{'add_members': True}"/>
                                         </control>
-                                        <field name="partner_id" readonly="id or guest_id" required="not guest_id"/>
-                                        <field name="guest_id" readonly="id or partner_id" required="not partner_id"/>
+                                        <column string="Name">
+                                            <field name="partner_id" context="{'display_email': True}" readonly="id or guest_id" required="not guest_id" invisible="guest_id"/>
+                                            <field name="guest_id" context="{'display_email': True}" readonly="id or partner_id" required="not partner_id" invisible="partner_id"/>
+                                        </column>
                                     </list>
                                 </field>
                             </page>

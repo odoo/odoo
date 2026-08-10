@@ -27,6 +27,18 @@ class ResPartner(models.Model):
         for partner in self:
             partner.is_in_call = bool(partner.rtc_session_ids)
 
+    @api.depends("name", "email")
+    @api.depends_context("display_email", "formatted_display_name")
+    def _compute_display_name(self):
+        if not self.env.context.get("display_email"):
+            super()._compute_display_name()
+            return
+        for partner in self:
+            if self.env.context.get("formatted_display_name"):
+                partner.display_name = f"{partner.name}" + (f" --({partner.email})--" if partner.email else "")
+            else:
+                partner.display_name = f"{partner.name}" + (f" ({partner.email})" if partner.email else "")
+
     @api.readonly
     @api.model
     def search_for_channel_invite(self, search_term, channel_id=None, limit=30):
@@ -76,24 +88,42 @@ class ResPartner(models.Model):
             "store_data": store,
         }
 
-    @api.readonly
     @api.model
-    def _search_for_channel_invite(self, store: Store, search_term, channel_id=None, limit=30):
+    def _get_channel_invite_domain(self, channel):
+        """Returns the domain of the partners that may be invited to ``channel``.
+
+        Shared by the Discuss invitation panel and the back-end channel form, so
+        that both propose the same candidates.
+
+        :param channel: channel to invite to, empty recordset to only apply the
+            channel independent conditions.
+        :type channel: discuss.channel
+        """
         domain = Domain.AND(
             [
-                Domain("name", "ilike", search_term) | Domain("email", "ilike", search_term),
-                [('id', '!=', self.env.user.partner_id.id)],
                 [("active", "=", True)],
                 [("user_ids", "!=", False)],
                 [("user_ids.active", "=", True)],
             ]
         )
-        channel = self.env["discuss.channel"]
-        if channel_id:
-            channel = self.env["discuss.channel"].search([("id", "=", int(channel_id))])
+        if channel:
             domain &= Domain("channel_ids", "not in", channel.id)
             if channel.group_public_id:
                 domain &= Domain("user_ids.all_group_ids", "in", channel.group_public_id.id)
+        return domain
+
+    @api.readonly
+    @api.model
+    def _search_for_channel_invite(self, store: Store, search_term, channel_id=None, limit=30):
+        channel = self.env["discuss.channel"]
+        if channel_id:
+            channel = self.env["discuss.channel"].search([("id", "=", int(channel_id))])
+        domain = self._get_channel_invite_domain(channel) & Domain.AND(
+            [
+                Domain("name", "ilike", search_term) | Domain("email", "ilike", search_term),
+                [('id', '!=', self.env.user.partner_id.id)],
+            ]
+        )
         selectable_partners = self.search(domain, limit=limit + 1, order="name, id")
         store.add(
             selectable_partners,

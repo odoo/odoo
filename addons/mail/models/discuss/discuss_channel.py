@@ -918,6 +918,14 @@ class DiscussChannel(models.Model):
             for email in emails
         }
 
+    @api.readonly
+    def get_invite_partner_domain(self):
+        """Returns the domain of the partners that may still be invited to this channel."""
+        self.ensure_one()
+        if not self.env.user._is_internal() or not self.has_access("read"):
+            raise AccessError(self.env._("You don't have access to invite users to this channel."))
+        return list(self.env["res.partner"]._get_channel_invite_domain(self))
+
     def invite_by_email(self, emails):
         """
         Send channel invitation emails to a list of email addresses. Existing members'
