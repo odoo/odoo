@@ -58,9 +58,26 @@ test("visitor leaving ends the livechat conversation", async () => {
         livechat_channel_id: livechatChannelId,
         create_uid: serverState.publicUserId,
     });
+<<<<<<< 6a6c36d3336e19ef5e024e06334613152c0ec901
+||||||| 9f5cbb19b043d74babcbecdd9ff0ad42b4531df6
+    listenStoreFetch("channels_as_member");
+=======
+    pyEnv["discuss.channel"].create({ name: "General" });
+>>>>>>> d8f8db46621f37008aebf5f42d9e77930723cc56
     setupChatHub({ opened: [channel_id] });
     await start();
     await contains(".o-mail-ChatWindow");
+<<<<<<< 6a6c36d3336e19ef5e024e06334613152c0ec901
+||||||| 9f5cbb19b043d74babcbecdd9ff0ad42b4531df6
+    // The first message received will trigger the fetch of
+    // `channels_as_member` which can conflict with the rest of the
+    // test. Open the messaging menu to do it beforehand.
+    await click(".o_menu_systray i[aria-label='Messages']");
+    await waitStoreFetch("channels_as_member");
+=======
+    await click(".o_menu_systray i[aria-label='Messages']");
+    await contains(".o-mail-NotificationItem:text('General')"); // wait for `channels_as_member`
+>>>>>>> d8f8db46621f37008aebf5f42d9e77930723cc56
     // simulate visitor leaving
     await withGuest(guestId, () => rpc("/im_livechat/visitor_leave_session", { channel_id }));
     await contains("span", { text: "This live chat conversation has ended." });
