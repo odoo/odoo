@@ -579,12 +579,14 @@ class ResourceCalendar(models.Model):
             interval_hours = (stop - start).total_seconds() / 3600
             day_hours[start.date()] += interval_hours
 
+        hours_per_week = sum(self.attendance_ids.mapped('duration_hours'))
+        days_per_week = self._get_days_per_week() if self else 0
+        if self.two_weeks_calendar:
+            hours_per_week /= 2
+        average_hours_per_day = hours_per_week / days_per_week if days_per_week else 0
+
         for day, hours in day_hours.items():
-            if len(self) == 1 and self._is_duration_based_on_date(day):
-                hours_per_day = self._get_duration_based_work_hours_on_date(day)
-                day_days[start.date()] += hours / hours_per_day if hours_per_day else 0
-            else:
-                day_days[day] = 0.5 if hours <= self.hours_per_day * 3 / 4 else 1
+            day_days[day] += 0.5 if hours <= average_hours_per_day * 3 / 4 else 1
 
         return {
             # Round the number of days to the closest 16th of a day.
