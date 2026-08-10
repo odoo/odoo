@@ -73,21 +73,24 @@ export class IrWebSocket extends busModels.IrWebSocket {
         channels = channels.filter(
             (c) => typeof c !== "string" || !c.startsWith("discuss.channel_")
         );
-        const allChannels = DiscussChannel.search_read([
+        const allChannels = DiscussChannel.search_read(
             [
-                "id",
-                "in",
-                DiscussChannelMember.search_read([
-                    "|",
-                    guest
-                        ? ["guest_id", "=", guest.id]
-                        : ["partner_id", "=", authenticatedPartner.id],
-                    ["channel_id", "in", discussChannelIds],
-                ]).map((member) =>
-                    isIterable(member.channel_id) ? member.channel_id[0] : member.channel_id
-                ),
+                [
+                    "id",
+                    "in",
+                    DiscussChannelMember.search_read([
+                        "|",
+                        guest
+                            ? ["guest_id", "=", guest.id]
+                            : ["partner_id", "=", authenticatedPartner.id],
+                        ["channel_id", "in", discussChannelIds],
+                    ]).map((member) =>
+                        isIterable(member.channel_id) ? member.channel_id[0] : member.channel_id
+                    ),
+                ],
             ],
-        ]);
+            makeKwArgs({ context: { active_test: false } })
+        );
         for (const channel of allChannels) {
             channels.push(channel);
             if (!discussChannelIds.includes(channel.id)) {

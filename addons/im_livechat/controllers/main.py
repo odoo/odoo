@@ -214,7 +214,7 @@ class LivechatController(http.Controller):
     @http.route("/im_livechat/feedback", type="json", auth="public")
     @add_guest_to_context
     def feedback(self, channel_id, rate, reason=None, **kwargs):
-        if channel := request.env["discuss.channel"].search([("id", "=", channel_id)]):
+        if channel := request.env["discuss.channel"]._find_channels(channel_id):
             # limit the creation : only ONE rating per session
             values = {
                 'rating': rate,
@@ -247,14 +247,14 @@ class LivechatController(http.Controller):
     @http.route("/im_livechat/history", type="json", auth="public")
     @add_guest_to_context
     def history_pages(self, pid, channel_id, page_history=None):
-        if channel := request.env["discuss.channel"].search([("id", "=", channel_id)]):
+        if channel := request.env["discuss.channel"]._find_channels(channel_id):
             if pid in channel.sudo().channel_member_ids.partner_id.ids:
                 request.env["res.partner"].browse(pid)._bus_send_history_message(channel, page_history)
 
     @http.route("/im_livechat/email_livechat_transcript", type="json", auth="public")
     @add_guest_to_context
     def email_livechat_transcript(self, channel_id, email):
-        if channel := request.env["discuss.channel"].search([("id", "=", channel_id)]):
+        if channel := request.env["discuss.channel"]._find_channels(channel_id):
             channel._email_livechat_transcript(email)
 
     @http.route("/im_livechat/visitor_leave_session", type="json", auth="public")
