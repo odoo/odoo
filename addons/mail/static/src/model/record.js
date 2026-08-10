@@ -391,7 +391,9 @@ export class Record {
             // the dummy record collecting the field declarations has no internals
             return;
         }
-        const deps = computed(dependencies.bind(record), { equals: shallowEqual });
+        const deps = record._.ensureScope(record).run(() =>
+            computed(dependencies.bind(record), { equals: shallowEqual })
+        );
         const boundCallback = callback.bind(record);
         let firstRun = true;
         let cleanup;
@@ -473,6 +475,8 @@ export class Record {
         for (const f of this._.disposeFns) {
             this._runDisposeFn(f);
         }
+        // after the effects, so that none of them recomputes a disposed computed
+        this._.scope?.destroy();
     }
 
     /**

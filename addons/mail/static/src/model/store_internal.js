@@ -39,6 +39,13 @@ export class StoreInternal extends RecordInternal {
     ERRORS = [];
     UPDATE = 0;
     /**
+     * The owl app this store belongs to, needed by the scope of each of its
+     * records.
+     *
+     * @type {import("@odoo/owl").App}
+     */
+    app;
+    /**
      * Number of update functions currently running, nested included. An owl
      * computed() field holds its last value while one runs, as the relations
      * it reads are written one by one. onAdd, onDelete and onUpdate run
