@@ -65,6 +65,7 @@ export class Animation extends Interaction {
         this.isAnimated = false;
         this.isAnimateOnScroll = this.el.classList.contains("o_animate_on_scroll");
         this.isResetting = false;
+        this.hasVisibleCleanup = false;
         const style = window.getComputedStyle(this.el);
         this.playState = style.animationPlayState;
         this.delay = undefined;
@@ -93,27 +94,21 @@ export class Animation extends Interaction {
      */
     startAnimation() {
         // Forces the browser to redraw using setTimeout.
-        this.waitForTimeout(() => {
-            this.isAnimating = true;
-            this.playState = "running";
-            for (const eventName of [
-                "webkitAnimationEnd",
-                "oanimationend",
-                "msAnimationEnd",
-                "animationend",
-            ]) {
-                this.addListener(
-                    this.el,
-                    eventName,
-                    () => {
+        return new Promise((resolve) =>
+            this.waitForTimeout(() => {
+                this.isAnimating = true;
+                this.isAnimated = false;
+                this.playState = "running";
+                for (const eventName of ["webkitAnimationEnd", "oanimationend", "msAnimationEnd", "animationend"]) {
+                    this.addListener(this.el, eventName, () => {
                         this.isAnimating = false;
                         this.isAnimated = true;
                         window.dispatchEvent(new Event("resize"));
-                    },
-                    { once: true }
-                );
-            }
-        });
+                    }, { once: true });
+                }
+                resolve();
+            })
+        );
     }
 
     resetAnimation() {
@@ -204,6 +199,10 @@ export class Animation extends Interaction {
         } else {
             if (visible && this.playState === "paused") {
                 el.classList.add("o_visible");
+                if (!this.hasVisibleCleanup) {
+                    this.hasVisibleCleanup = true;
+                    this.registerCleanup(() => this.el.classList.remove("o_visible"));
+                }
                 this.startAnimation();
             } else if (
                 !visible &&
