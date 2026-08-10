@@ -135,6 +135,7 @@ export class DiscussCoreCommon {
         if (
             !channel.loadNewer &&
             !message.isSelfAuthored &&
+            channel.scrollTop === "bottom" &&
             channel.composer.isFocused &&
             this.store.self.type === "partner" &&
             channel.newestPersistentMessage?.eq(channel.newestMessage) &&
