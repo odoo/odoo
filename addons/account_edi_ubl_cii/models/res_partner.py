@@ -252,7 +252,7 @@ class ResPartner(models.Model):
         value = field in self._fields and self[field]
 
         if (
-            country_code == 'BE'
+            country_code in ('BE', 'SK')
             and field == 'company_registry'
             and not value
             and self.vat
