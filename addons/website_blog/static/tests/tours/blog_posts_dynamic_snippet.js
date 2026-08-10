@@ -20,8 +20,7 @@ const blogPostsSnippet = {
 registerWebsitePreviewTour(
     "blog_posts_dynamic_snippet_options",
     {
-        undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
-        url: "/?debug=1",
+        url: "/",
         edition: true,
     },
     () => [
@@ -39,11 +38,18 @@ registerWebsitePreviewTour(
         ...insertSnippet(dynamicSnippet),
         ...clickOnSnippet(dynamicSnippet),
         ...changeOptionInPopover("Dynamic Snippet", "Filter", "Latest Blog Posts"),
-        ...changeOptionInPopover(
-            "Dynamic Snippet",
-            "Fetched Elements",
-            `div[data-action-param*='1']`
-        ),
+        {
+            content: "Open Fetched Elements dropdown",
+            trigger:
+                "[data-container-title='Dynamic Snippet'] [data-label='Fetched Elements'] .o-hb-select-toggle",
+            run: "click",
+        },
+        {
+            content: "Set Fetched Elements to 1",
+            trigger:
+                ".o_popover .o-dropdown-item[data-action-id='numberOfRecords'][data-action-param='1']",
+            run: "click",
+        },
         {
             content: "Check That the `Model` option is visible",
             trigger: `.options-container [data-label="Model"]`,
