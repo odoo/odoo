@@ -143,7 +143,8 @@ class HrEmployeeDeparture(models.Model):
                 },
             }
 
-        departures_per_user = self.grouped(lambda departure: departure.employee_id.user_id)
+        departures_to_archive = self._get_departures_to_archive()
+        departures_per_user = departures_to_archive.grouped(lambda departure: departure.employee_id.user_id)
         users_to_archive = self.env['res.users']
         users_to_keep_active = self.env['res.users']
         for user, departures in departures_per_user.items():
@@ -159,7 +160,7 @@ class HrEmployeeDeparture(models.Model):
             users_to_archive.sudo().action_archive()
 
         emp_to_archive = self.env['hr.employee']
-        for departure in self:
+        for departure in departures_to_archive:
             employee = departure.employee_id
             apply_date = departure.action_date or departure.departure_date + relativedelta(days=1) or fields.Date.today()
             if apply_date > fields.Date.today():
@@ -175,7 +176,7 @@ class HrEmployeeDeparture(models.Model):
             employee.version_ids.filtered(lambda v: v.date_version > departure.departure_date).unlink()
 
         emp_to_archive.action_archive()
-        self.apply_date = fields.Date.context_today(self)
+        departures_to_archive.apply_date = fields.Date.context_today(self)
 
         next_action = {'type': 'ir.actions.act_window_close'}
         if users_to_archive:
@@ -192,3 +193,8 @@ class HrEmployeeDeparture(models.Model):
             next_action = _get_user_archive_notification_action(message, 'danger', next_action)
 
         return next_action
+
+    def _get_departures_to_archive(self):
+        """ Overrideable function to allow excluding departures from archival, e.g. per
+        country rules. """
+        return self

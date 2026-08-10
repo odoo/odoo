@@ -12,6 +12,12 @@ class HrEmployeeDeparture(models.Model):
         res = super().action_register()
         if not self:
             return res
+        self._cleanup_employee_departure_leaves()
+        return res
+
+    def _cleanup_employee_departure_leaves(self):
+        """ Clean up the employee's leaves and allocations when processing their departure,
+        optionally refusing future leaves instead of deleting them. """
         all_leaves_sudo = self.sudo().env['hr.leave'].search([
             ('employee_id', 'in', self.employee_id.ids),
             ('date_to', '>', min(self.mapped('departure_date'))),
@@ -49,9 +55,15 @@ class HrEmployeeDeparture(models.Model):
                 cancel_msg = self.env._('The employee will leave the company on %(departure_date)s.',
                     departure_date=departure.departure_date)
                 leaves_to_cancel_sudo._force_cancel(cancel_msg, notify_responsibles=False)
-                # Delete others leaves
-                leaves_to_delete_sudo = leaves_after_departure_sudo - leaves_to_cancel_sudo
-                leaves_to_delete_sudo.with_context(leave_skip_state_check=True).unlink()
+
+                remaining_leaves_sudo = leaves_after_departure_sudo - leaves_to_cancel_sudo
+                if departure._check_refuse_future_leaves_condition():
+                    # Refuse remaining leaves instead of deleting them
+                    refusable_leaves = remaining_leaves_sudo.filtered(lambda leave: leave.state == 'confirm')
+                    refusable_leaves.action_refuse()
+                else:
+                    # Delete remaining leaves
+                    remaining_leaves_sudo.with_context(leave_skip_state_check=True).unlink()
 
             employee_allocations_sudo = all_allocations_sudo.filtered_domain([
                 ('employee_id', '=', departure.employee_id.id),
@@ -76,4 +88,8 @@ class HrEmployeeDeparture(models.Model):
                 to_modify.date_to = departure.departure_date
 
             departure.employee_id.message_post(body=self.env._("Time off and allocation requests have been cleaned for %s", departure.employee_id.name))
-        return res
+
+    def _check_refuse_future_leaves_condition(self):
+        """ Return whether future leaves should be refused. Can be overridden by localizations. """
+        self.ensure_one()
+        return False
