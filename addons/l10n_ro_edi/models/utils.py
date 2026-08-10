@@ -36,7 +36,7 @@ def make_efactura_request(session, company, endpoint, params, data=None) -> dict
     else:
         return {'error': company.env._('Unknown endpoint.')}
     headers = {'Content-Type': 'application/xml',
-               'Authorization': f'Bearer {company.l10n_ro_edi_access_token}'}
+               'Authorization': f'Bearer {company.sudo().l10n_ro_edi_access_token}'}
     if endpoint == 'transformare':
         url = "https://webservicesp.anaf.ro/prod/FCTEL/rest/transformare/FACT1/DA"
         headers = {'Content-Type': 'text/plain'}

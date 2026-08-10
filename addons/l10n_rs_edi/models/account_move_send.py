@@ -28,7 +28,7 @@ class AccountMoveSend(models.AbstractModel):
             # Not all invoices may need EDI.
             if 'rs_edi' not in invoice_data['extra_edis']:
                 continue
-            if not invoice.company_id.l10n_rs_edi_api_key:
+            if not invoice.company_id.sudo().l10n_rs_edi_api_key:
                 invoice_data["error"] = {
                     "error_title": _("eFaktura API Key is missing."),
                     "errors": [_("Please configure the eFaktura API Key in the company settings.")],

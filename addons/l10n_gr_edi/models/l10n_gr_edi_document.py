@@ -39,8 +39,8 @@ def _make_mydata_request(company, endpoint, xml_content) -> dict[str, str] | dic
             data=xml_content,
             timeout=10,
             headers={
-                'aade-user-id': company.l10n_gr_edi_aade_id,
-                'ocp-apim-subscription-key': company.l10n_gr_edi_aade_key,
+                'aade-user-id': company.sudo().l10n_gr_edi_aade_id,
+                'ocp-apim-subscription-key': company.sudo().l10n_gr_edi_aade_key,
             },
         )
         response.raise_for_status()

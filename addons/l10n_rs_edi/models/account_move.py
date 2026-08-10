@@ -127,7 +127,7 @@ class AccountMove(models.Model):
         url = DEMO_EFAKTURA_URL if self.company_id.l10n_rs_edi_demo_env else EFAKTURA_URL
         headers = {
             'Content-Type': 'application/xml',
-            'ApiKey': self.company_id.l10n_rs_edi_api_key,
+            'ApiKey': self.company_id.sudo().l10n_rs_edi_api_key,
         }
         error_message = False
         try:

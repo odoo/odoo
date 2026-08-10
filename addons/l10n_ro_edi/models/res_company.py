@@ -13,14 +13,14 @@ from odoo.tools.safe_eval import json
 class ResCompany(models.Model):
     _inherit = 'res.company'
 
-    l10n_ro_edi_client_id = fields.Char(string='eFactura Client ID')
-    l10n_ro_edi_client_secret = fields.Char(string='Client Secret')
-    l10n_ro_edi_access_token = fields.Char(string='Access Token')
-    l10n_ro_edi_refresh_token = fields.Char(string='Refresh Token')
-    l10n_ro_edi_access_expiry_date = fields.Date(string='Access Token Expiry Date')
-    l10n_ro_edi_refresh_expiry_date = fields.Date(string='Refresh Token Expiry Date')
-    l10n_ro_edi_callback_url = fields.Char(compute='_compute_l10n_ro_edi_callback_url')
-    l10n_ro_edi_test_env = fields.Boolean(string='Use Test Environment', default=True)
+    l10n_ro_edi_client_id = fields.Char(string='eFactura Client ID', groups='base.group_system')
+    l10n_ro_edi_client_secret = fields.Char(string='Client Secret', groups='base.group_system')
+    l10n_ro_edi_access_token = fields.Char(string='Access Token', groups='base.group_system')
+    l10n_ro_edi_refresh_token = fields.Char(string='Refresh Token', groups='base.group_system')
+    l10n_ro_edi_access_expiry_date = fields.Date(string='Access Token Expiry Date', groups='base.group_user')
+    l10n_ro_edi_refresh_expiry_date = fields.Date(string='Refresh Token Expiry Date', groups='base.group_user')
+    l10n_ro_edi_callback_url = fields.Char(compute='_compute_l10n_ro_edi_callback_url', groups='base.group_user')
+    l10n_ro_edi_test_env = fields.Boolean(string='Use Test Environment', default=True, groups='base.group_user')
     l10n_ro_edi_anaf_imported_inv_journal_id = fields.Many2one(
         comodel_name='account.journal',
         string="Select journal for SPV imported bills",

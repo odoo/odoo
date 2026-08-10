@@ -46,7 +46,7 @@ class ETransportAPI:
         url = f"{ETRANSPORT_URLS[api_env]}/{endpoint}"
         headers = {
             'Content-Type': 'application/xml',
-            'Authorization': f'Bearer {company.l10n_ro_edi_access_token}',
+            'Authorization': f'Bearer {company.sudo().l10n_ro_edi_access_token}',
         }
 
         # encode data to utf-8 because it could contain some Romanian characters that are not part of latin-1

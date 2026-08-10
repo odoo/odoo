@@ -449,7 +449,7 @@ class Picking(models.Model):
         errors = []
 
         # API access token
-        if not data['company_id'].l10n_ro_edi_access_token:
+        if not data['company_id'].sudo().l10n_ro_edi_access_token:
             errors.append(_('Romanian access token not found. Please generate or fill it in the settings.'))
 
         # carrier partner fields
@@ -580,7 +580,7 @@ class Picking(models.Model):
             errors = []
         self.ensure_one()
 
-        if not self.company_id.l10n_ro_edi_access_token:
+        if not self.company_id.sudo().l10n_ro_edi_access_token:
             errors.append(_('Romanian access token not found. Please generate or fill it in the settings.'))
             return errors
 

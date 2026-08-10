@@ -340,7 +340,8 @@ class StockPicking(models.Model):
             errors['l10n_gr_edi_picking_not_done'] = {
                 'message': self.env._("myDATA: You can only send to myDATA from a done delivery order."),
             }
-        if not (self.company_id.l10n_gr_edi_aade_id and self.company_id.l10n_gr_edi_aade_key):
+        company_sudo = self.company_id.sudo()
+        if not (company_sudo.l10n_gr_edi_aade_id and company_sudo.l10n_gr_edi_aade_key):
             errors['l10n_gr_edi_company_no_cred'] = {
                 'message': self.env._("myDATA: You need to set AADE ID and Key in the company settings."),
                 **error_action_gr_settings,

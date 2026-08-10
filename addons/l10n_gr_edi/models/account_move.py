@@ -553,7 +553,8 @@ class AccountMove(models.Model):
             errors['l10n_gr_edi_move_not_posted'] = {
                 'message': _("You can only send to myDATA from a posted invoice."),
             }
-        if not self.company_id.l10n_gr_edi_aade_id or not self.company_id.l10n_gr_edi_aade_key:
+        company_sudo = self.company_id.sudo()
+        if not company_sudo.l10n_gr_edi_aade_id or not company_sudo.l10n_gr_edi_aade_key:
             errors['l10n_gr_edi_company_no_cred'] = {
                 'message': _("You need to set AADE ID and Key in the company settings."),
                 **error_action_gr_settings,
