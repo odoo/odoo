@@ -9,6 +9,7 @@ patch(PosSession.prototype, {
             "pos.config",
             "pos.session",
             "pos.preset",
+            "resource.calendar",
             "resource.calendar.attendance",
             "pos.order",
             "pos.order.line",
@@ -47,6 +48,7 @@ patch(PosSession.prototype, {
             "res.country.state",
             "pos.prep.order",
             "pos.prep.line",
+            "pos.snooze",
         ];
     },
     getModelsToLoad(opts) {

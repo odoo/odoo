@@ -1,10 +1,11 @@
 import { test, expect } from "@odoo/hoot";
-import { queryFirst, animationFrame } from "@odoo/hoot-dom";
+import { animationFrame } from "@odoo/hoot-dom";
 import { mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { CartPage } from "@pos_self_order/app/pages/cart_page/cart_page";
 import { setupSelfPosEnv, getFilledSelfOrder, addComboProduct } from "../utils";
 import { definePosSelfModels } from "../data/generate_model_definitions";
 import { ChooseComboPopup } from "@pos_self_order/app/components/choose_combo_popup/choose_combo_popup";
+import * as Utils from "@pos_self_order/../tests/unit/ui_utils";
 
 definePosSelfModels();
 
@@ -101,12 +102,14 @@ test("getPrice", async () => {
 });
 
 test("add note button is not shown in kiosk mode", async () => {
-    const store = await setupSelfPosEnv("kiosk");
-    await getFilledSelfOrder(store);
-    await mountWithCleanup(CartPage, {});
+    await setupSelfPosEnv("kiosk", "counter", "each", {}, true);
+    await Utils.clickOrderNow();
+    await Utils.selectLocation("Test-Takeout");
+    await Utils.clickCategory("Miscellaneous");
+    await Utils.clickProduct("Coca-Cola");
+    await Utils.clickBtn("Checkout");
 
-    const orderNoteContainer = queryFirst(".order-note");
-    expect(orderNoteContainer).toBe(null);
+    Utils.checkNoOrderNote();
 });
 
 test("pay opens combo suggestion popup and applies a direct combo", async () => {
@@ -323,7 +326,7 @@ test("payButton", async () => {
 });
 
 test("OrderWidget renders back and pay buttons in the DOM", async () => {
-    const store = await setupSelfPosEnv();
+    const store = await setupSelfPosEnv("kiosk", "counter", "each", {}, true);
     await getFilledSelfOrder(store);
     store.hasPaymentMethod = () => true;
     await mountWithCleanup(CartPage, {});

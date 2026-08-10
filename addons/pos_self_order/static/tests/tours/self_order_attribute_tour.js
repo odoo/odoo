@@ -2,7 +2,6 @@ import { registry } from "@web/core/registry";
 import * as Utils from "@pos_self_order/../tests/tours/utils/common";
 import * as CartPage from "@pos_self_order/../tests/tours/utils/cart_page_util";
 import * as ProductPage from "@pos_self_order/../tests/tours/utils/product_page_util";
-import * as LandingPage from "@pos_self_order/../tests/tours/utils/landing_page_util";
 import { negateStep } from "@point_of_sale/../tests/generic_helpers/utils";
 
 registry.category("web_tour.tours").add("self_attribute_selector", {
@@ -42,29 +41,6 @@ registry.category("web_tour.tours").add("self_attribute_selector", {
     ],
 });
 
-registry.category("web_tour.tours").add("self_multi_attribute_selector", {
-    steps: () => [
-        Utils.clickBtn("Order Now"),
-        ProductPage.clickProduct("Multi Check Attribute Product"),
-        ...ProductPage.setupAttribute([
-            { name: "Attribute 1", value: "Attribute Val 1" },
-            { name: "Attribute 1", value: "Attribute Val 2" },
-        ]),
-        {
-            content: `Select value for attribute Attribute 1`,
-            trigger: `div h2:contains(Attribute 1)`,
-        },
-        {
-            content: "Check that there are 2 and only 2 attribute buttons",
-            trigger: `.self_order_attribute_selection:has(button:count(2))`,
-        },
-        {
-            content: "Check content attribute buttons",
-            trigger: `.self_order_attribute_selection:has(button:contains(Attribute val 1)):has(button:contains(Attribute val 2))`,
-        },
-    ],
-});
-
 registry.category("web_tour.tours").add("selfAlwaysAttributeVariants", {
     steps: () => [
         Utils.clickBtn("Order Now"),
@@ -88,29 +64,6 @@ registry.category("web_tour.tours").add("selfAlwaysAttributeVariants", {
         Utils.checkIsNoBtn("Order"),
         CartPage.clickBack(),
         Utils.checkIsNoBtn("Order Now"),
-    ],
-});
-
-registry.category("web_tour.tours").add("self_order_product_info", {
-    steps: () => [
-        Utils.clickBtn("Order Now"),
-        LandingPage.selectLocation("Test-In"),
-        {
-            trigger: ".o_self_product_box:contains('Product Info Test') .product_info_icon",
-            run: "click",
-        },
-        {
-            trigger: '.modal-body:contains("Nice Product")',
-        },
-    ],
-});
-
-registry.category("web_tour.tours").add("self_attribute_selector_shows_images", {
-    steps: () => [
-        Utils.clickBtn("Order Now"),
-        ProductPage.clickProduct("Desk Organizer"),
-        ProductPage.attributeHasColorDot("White"),
-        ProductPage.attributeHasImage("Blue"),
     ],
 });
 

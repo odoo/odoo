@@ -53,9 +53,11 @@ describe("initProducts", () => {
         store.initData();
 
         store.computeAvailableCategories();
-        expect(models["pos.category"].length).toBe(5);
-        expect(store.availableCategories).toHaveLength(6); // Uncategorised also added
-        expect(store.availableCategories.map((c) => c.id)).toEqual([1, 2, 4, 3, 5, 0]);
+        expect(models["pos.category"].length).toBe(14);
+        expect(store.availableCategories).toHaveLength(15); // Uncategorised also added
+        expect(store.availableCategories.map((c) => c.id)).toEqual([
+            1, 200, 2, 201, 4, 203, 3, 204, 5, 205, 206, 207, 208, 209, 0,
+        ]);
 
         // When all products have categories - Uncategorised should be not there
         models["product.template"]
@@ -63,8 +65,10 @@ describe("initProducts", () => {
             .forEach((prd) => prd.update({ pos_categ_ids: [2] }));
         store.initData();
         store.computeAvailableCategories();
-        expect(store.availableCategories).toHaveLength(5);
-        expect(store.availableCategories.map((c) => c.id)).toEqual([1, 2, 4, 3, 5]);
+        expect(store.availableCategories).toHaveLength(14);
+        expect(store.availableCategories.map((c) => c.id)).toEqual([
+            1, 200, 2, 201, 4, 203, 3, 204, 5, 205, 206, 207, 208, 209,
+        ]);
 
         // Time availability
         const unAvailableCatg = models["pos.category"].get(1);
@@ -74,7 +78,7 @@ describe("initProducts", () => {
         });
         mockDate("2025-11-29 18:00:00");
         store.computeAvailableCategories();
-        expect(store.availableCategories).toHaveLength(4);
+        expect(store.availableCategories).toHaveLength(13);
         expect(store.isCategoryAvailable(unAvailableCatg)).toBeEmpty();
     });
 });
@@ -138,7 +142,15 @@ test("applyPendingComboConversion", async () => {
 });
 
 test("createNewOrder", async () => {
-    const store = await setupSelfPosEnv();
+    const store = await setupSelfPosEnv(
+        "kiosk",
+        "counter",
+        "each",
+        {
+            default_preset_id: 1,
+        },
+        true
+    );
     const models = store.models;
     {
         expect(store.config.available_preset_ids.length > 1).toBe(true);
@@ -476,7 +488,7 @@ test("resetCategorySelection", async () => {
 
 describe("printOrderChanges", () => {
     beforeEach(async () => {
-        const store = await setupSelfPosEnv();
+        const store = await setupSelfPosEnv("kiosk", "counter", "each", {}, true);
 
         store.config.self_ordering_mode = "kiosk";
         for (const relPrinter of store.models["pos.printer"].getAll()) {
@@ -497,12 +509,6 @@ describe("printOrderChanges", () => {
             async generateIframe(template, data) {
                 printedData.push(data.changes.data.map((line) => line.basic_name));
                 return document.createElement("iframe");
-            },
-            setIframeSizeFromPrinter(iframe, printer) {
-                return;
-            },
-            async generateImage() {
-                return "fake_image_data";
             },
             print() {
                 return { successful: true };

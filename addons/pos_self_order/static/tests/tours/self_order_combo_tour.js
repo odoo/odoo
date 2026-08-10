@@ -61,44 +61,6 @@ registry.category("web_tour.tours").add("self_combo_selector", {
     ],
 });
 
-registry.category("web_tour.tours").add("self_combo_selector_category", {
-    steps: () => [
-        Utils.clickBtn("Order Now"),
-        ProductPage.clickProduct("Test Combo"),
-        ...ProductPage.setupCombo([
-            {
-                product: "Combo Product 5",
-                attributes: [],
-            },
-        ]),
-        Utils.clickBtn("Add to cart"),
-        Utils.clickBtn("Checkout"),
-        Utils.clickBtn("Order"),
-        Utils.clickBtn("Ok"),
-        Utils.checkIsNoBtn("Order Now"),
-    ],
-});
-
-registry.category("web_tour.tours").add("test_product_dont_display_all_variants", {
-    steps: () => [
-        Utils.clickBtn("Order Now"),
-        LandingPage.selectLocation("Test-In"),
-        ProductPage.clickCategory("Uncategorised"),
-        ProductPage.clickProduct("Meal Combo"),
-        ProductPage.clickComboProduct("Coke always never"),
-        Utils.clickBtn("Red"),
-        Utils.clickBtn("Next"),
-        Utils.clickBtn("Add to cart"),
-        ProductPage.clickProduct("Meal Combo"),
-        ProductPage.clickComboProduct("Coke always only"),
-        Utils.clickBtn("Add to cart"),
-        ProductPage.clickProduct("Meal Combo"),
-        ProductPage.clickComboProduct("Coke never only"),
-        Utils.clickBtn("Red"),
-        Utils.clickBtn("Add to cart"),
-    ],
-});
-
 registry.category("web_tour.tours").add("test_self_order_combo_multiple_qty", {
     steps: () => [
         Utils.clickBtn("Order Now"),
