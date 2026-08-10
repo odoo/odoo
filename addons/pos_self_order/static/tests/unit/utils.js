@@ -13,6 +13,38 @@ import { registry } from "@web/core/registry";
 import { selfOrderIndex } from "@pos_self_order/app/self_order_index";
 import { setupPosEnv } from "@point_of_sale/../tests/unit/utils";
 import { unpatchSelf } from "@pos_self_order/app/services/data_service";
+import { SelfOrderRouter } from "@pos_self_order/app/services/self_order_router_service";
+import { PosSession } from "@point_of_sale/../tests/unit/data/pos_session.data";
+
+function checkPosOrder(deviceType, order) {
+    const count = MockServer.env["pos.order"].search_count([]) + 1;
+    const configId = order.config_id || 1;
+    const pos_reference = `0001-001-${String(count).padStart(5, "0")}`;
+    const prefix = deviceType === "kiosk" ? `K${configId}-` : "S";
+    const tracking_number = `${prefix}${count}`;
+
+    if (!order.access_token) {
+        order.access_token = uuidv4();
+    }
+
+    let floating_order_name = order.floating_order_name;
+    if (deviceType === "kiosk") {
+        floating_order_name = order.table_stand_number
+            ? `Table tracker ${order.table_stand_number}`
+            : String(count);
+    } else if (!floating_order_name) {
+        floating_order_name = order.table_id
+            ? `Self-Order T ${order.table_id}`
+            : `Self-Order ${count}`;
+    }
+
+    order.pos_reference = pos_reference;
+    order.tracking_number = tracking_number;
+    order.floating_order_name = floating_order_name;
+    order.state = order.state || "draft";
+    order.source = deviceType === "kiosk" ? "kiosk" : "mobile";
+    return order;
+}
 
 export function initMockRpc() {
     onRpc("/pos-self/relations/1", () =>
@@ -25,6 +57,11 @@ export function initMockRpc() {
 
     const mockProcssOrder = async (request) => {
         const { params } = await request.json();
+        const deviceType = request.url.includes("/kiosk") ? "kiosk" : "mobile";
+        if (params.order.amount_total == 0) {
+            params.order.state = "paid";
+        }
+        checkPosOrder(deviceType, params.order);
         const response = MockServer.env["pos.order"].sync_from_ui([params.order]);
         const models = MockServer.env["pos.session"]._load_self_data_models();
         return Object.fromEntries(Object.entries(response).filter(([key]) => models.includes(key)));
@@ -51,11 +88,57 @@ export function initMockRpc() {
         };
     };
 
+    const mockValidatePartner = async (request) => {
+        const { params } = await request.json();
+        delete params.access_token;
+        delete params.preset_id;
+        const partnerId = MockServer.env["res.partner"].create(params);
+        const partnerFields = MockServer.env["res.partner"]._load_pos_data_fields(odoo.config_id);
+        return {
+            "res.partner": MockServer.env["res.partner"].read([partnerId], partnerFields, false),
+        };
+    };
+
+    const mockGetUserData = async (request) => {
+        const { params } = await request.json();
+        const order_access_tokens = params.order_access_tokens || [];
+        const orderIds = [];
+        for (const token of order_access_tokens) {
+            const orders = MockServer.env["pos.order"].search_read([
+                ["access_token", "=", token.access_token],
+            ]);
+            for (const order of orders) {
+                if (order.state !== token.state || order.write_date > token.write_date) {
+                    orderIds.push(order.id);
+                }
+            }
+        }
+        return orderIds.length > 0 ? MockServer.env["pos.order"].read_pos_data(orderIds) : {};
+    };
+
+    const mockGetSlots = async (request) => {
+        const { params } = await request.json();
+        const usage_utc = {};
+        const orders = MockServer.env["pos.order"].search_read([
+            ["preset_id", "=", params.preset_id],
+            ["preset_time", "!=", false],
+            ["state", "in", ["draft", "paid"]],
+        ]);
+        for (const order of orders) {
+            usage_utc[order.preset_time] ??= [];
+            usage_utc[order.preset_time].push(order.id);
+        }
+        return { usage_utc };
+    };
+
     onRpc("/pos-self-order/process-order/kiosk", mockProcssOrder);
     onRpc("/pos-self-order/process-order/mobile", mockProcssOrder);
-    onRpc("/pos-self-order/get-slots/", () => ({ usage_utc: {} }));
+    onRpc("/pos-self-order/get-slots", mockGetSlots);
     onRpc("/pos-self-order/remove-order", () => ({}));
     onRpc("/pos-self-order/sync-from-ui", mockSyncOrder);
+    onRpc("/pos-self-order/validate-partner", mockValidatePartner);
+    onRpc("/pos-self-order/change-printer-status", () => ({}));
+    onRpc("/pos-self-order/get-user-data", mockGetUserData);
 }
 
 export const setupPoSEnvForSelfOrder = async () => {
@@ -66,18 +149,30 @@ export const setupPoSEnvForSelfOrder = async () => {
 export const setupSelfPosEnv = async (
     mode = "kiosk",
     service_mode = "counter",
-    pay_after = "each"
+    pay_after = "each",
+    configOverrides = {},
+    sessionOpened = false
 ) => {
-    // Do not change these variables, they are in accordance with the setup data
-    odoo.pos_session_id = 1;
     odoo.pos_config_id = 1;
     odoo.self_ordering_mode = mode;
     odoo.access_token = uuidv4();
     odoo.info = {
         isEnterprise: true,
     };
+
+    if (sessionOpened) {
+        odoo.pos_session_id = 1;
+        PosSession._records = PosSession._records.map((r) => ({
+            ...r,
+            state: "opened",
+        }));
+    } else {
+        odoo.pos_session_id = null;
+    }
+
     patchWithCleanup(session, {
         db: "test",
+        test_mode: true,
         data: {
             config_id: 1,
         },
@@ -97,6 +192,36 @@ export const setupSelfPosEnv = async (
     store.config.self_ordering_mode = mode;
     store.config.self_ordering_service_mode = service_mode;
     store.config.self_ordering_pay_after = pay_after;
+    patchWithCleanup(store.ticketPrinter, {
+        async generateIframe(template, data) {
+            return document.createElement("iframe");
+        },
+        setIframeSizeFromPrinter(iframe, printer) {
+            return;
+        },
+        async generateImage() {
+            return "fake_image_data";
+        },
+    });
+
+    if (Object.keys(configOverrides).length) {
+        Object.assign(store.config, configOverrides);
+        store.initProducts();
+        store.computeAvailableCategories();
+    }
+
+    patchWithCleanup(SelfOrderRouter.prototype, {
+        navigate(routeName, routeParams = {}, historyState = {}) {
+            const { route } = this.registeredRoutes[routeName];
+            const pathName = route.replace(
+                /\{\w+:(\w+)\}/g,
+                (match, paramName) => routeParams[paramName]
+            );
+            this.path = pathName;
+            this.historyPage = pathName;
+            window.history.replaceState(historyState, "");
+        },
+    });
 
     await mountWithCleanup(selfOrderIndex);
     return store;

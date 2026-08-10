@@ -3,35 +3,35 @@ import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { ProductListPage } from "@pos_self_order/app/pages/product_list_page/product_list_page";
 import { setupSelfPosEnv, getFilledSelfOrder } from "../utils";
 import { definePosSelfModels } from "../data/generate_model_definitions";
+import * as Utils from "@pos_self_order/../tests/unit/ui_utils";
 
 definePosSelfModels();
 
 test("selectProduct", async () => {
-    const store = await setupSelfPosEnv();
+    const store = await setupSelfPosEnv("kiosk", "counter", "each", {}, true);
     const models = store.models;
-    const product = models["product.template"].get(5);
-    const comp = await mountWithCleanup(ProductListPage, {});
-    comp.flyToCart = () => {};
-
-    comp.selectProduct(product);
+    await Utils.clickOrderNow();
+    await Utils.selectLocation("Dine in");
+    await Utils.clickProduct("TEST");
     expect(store.currentOrder.lines).toHaveLength(1);
     expect(store.currentOrder.lines[0].product_id.id).toBe(5);
 
     // Combo Product
     const comboProduct = models["product.template"].get(7);
     comboProduct.combo_ids = [2];
-    comp.selectProduct(comboProduct);
-    // Should not add combo product to cart; should navigate to combo selection page
+    await Utils.clickCategory("Category 2");
+    await Utils.clickProduct("Product combo");
     expect(store.currentOrder.lines).toHaveLength(1);
+    await Utils.clickBackFromProduct();
 
     // Combo Product with one choice
     models["product.combo.item"].get(3).delete();
-    comp.selectProduct(comboProduct);
+    await Utils.clickProduct("Product combo");
     expect(store.currentOrder.lines).toHaveLength(3);
 });
 
 test("getSubCategories and selectCategory", async () => {
-    const store = await setupSelfPosEnv();
+    const store = await setupSelfPosEnv("kiosk", "counter", "each", {}, true);
     const models = store.models;
     expect(store.currentCategory).toBeEmpty();
     const comp = await mountWithCleanup(ProductListPage, {});
@@ -124,7 +124,7 @@ test("total", async () => {
 });
 
 test("OrderWidget renders the Discard button when there are pending changes", async () => {
-    const store = await setupSelfPosEnv();
+    const store = await setupSelfPosEnv("kiosk", "counter", "each", {}, true);
     await getFilledSelfOrder(store);
     await mountWithCleanup(ProductListPage, {});
 
@@ -135,7 +135,7 @@ test("OrderWidget renders the Discard button when there are pending changes", as
 });
 
 test("OrderWidget renders the Back button when there are no pending changes", async () => {
-    const store = await setupSelfPosEnv();
+    const store = await setupSelfPosEnv("kiosk", "counter", "each", {}, true);
     const order = await getFilledSelfOrder(store);
     order.lines = [];
     await mountWithCleanup(ProductListPage, {});

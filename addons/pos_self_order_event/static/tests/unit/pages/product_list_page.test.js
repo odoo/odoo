@@ -49,7 +49,7 @@ describe("ProductListPage", () => {
     });
 
     test("selectProduct", async () => {
-        const store = await setupSelfPosEnv();
+        const store = await setupSelfPosEnv("kiosk", "counter", "each", {}, true);
         const models = store.models;
         const comp = await mountWithCleanup(ProductListPage);
         comp.flyToCart = () => {};

@@ -13,7 +13,7 @@ test("validSelection", async () => {
     const models = store.models;
 
     const order = await getFilledSelfOrder(store);
-    const preset = models["pos.preset"].get(10);
+    const preset = models["pos.preset"].get(1);
     order.preset_id = preset;
     const comp = await mountWithCleanup(PresetInfoPopup, {
         props: { close: () => {}, getPayload: () => {} },

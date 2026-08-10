@@ -1,8 +1,9 @@
-import { describe, test, expect, click } from "@odoo/hoot";
+import { describe, test, expect } from "@odoo/hoot";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { ProductPage } from "@pos_self_order/app/pages/product_page/product_page";
 import { setupSelfPosEnv } from "../utils";
 import { definePosSelfModels } from "../data/generate_model_definitions";
+import * as Utils from "@pos_self_order/../tests/unit/ui_utils";
 
 definePosSelfModels();
 
@@ -113,7 +114,7 @@ describe("getProductPrice with variants", () => {
         expect(comp.getProductPrice()).toBe(10);
 
         // select the second variant.
-        await click(".self_order_attribute_selection div:nth-child(2) button");
+        await Utils.selectNthAttributeValue(2);
         expect(comp.getProductPrice()).toBe(15);
 
         // that variant price changes with a different pricelist.
@@ -131,11 +132,11 @@ describe("getProductPrice with variants", () => {
         expect(comp.getProductPrice()).toBe(200);
 
         // select the normal variant, no extra price
-        await click(".self_order_attribute_selection div:nth-child(1) button");
+        await Utils.selectNthAttributeValue(1);
         expect(comp.getProductPrice()).toBe(200);
 
         // select the second variant, with price extra of 10
-        await click(".self_order_attribute_selection div:nth-child(2) button");
+        await Utils.selectNthAttributeValue(2);
         expect(comp.getProductPrice()).toBe(210);
     });
 
@@ -149,21 +150,17 @@ describe("getProductPrice with variants", () => {
         expect(comp.getProductPrice()).toBe(100);
 
         // select Size S
-        await click("h2:contains(Size) + .self_order_attribute_selection div:nth-child(1) button");
+        await Utils.selectNthAttributeValue(1, "Size");
         expect(comp.getProductPrice()).toBe(100);
         // select Size M (price_extra 5)
-        await click("h2:contains(Size) + .self_order_attribute_selection div:nth-child(2) button");
+        await Utils.selectNthAttributeValue(2, "Size");
         expect(comp.getProductPrice()).toBe(105);
 
         // select Packaging Standard
-        await click(
-            "h2:contains(Packaging) + .self_order_attribute_selection div:nth-child(1) button"
-        );
+        await Utils.selectNthAttributeValue(1, "Packaging");
         expect(comp.getProductPrice()).toBe(105);
         // select Packaging Gift (price_extra 10)
-        await click(
-            "h2:contains(Packaging) + .self_order_attribute_selection div:nth-child(2) button"
-        );
+        await Utils.selectNthAttributeValue(2, "Packaging");
         expect(comp.getProductPrice()).toBe(115);
     });
 });
@@ -194,4 +191,56 @@ test("hide attribute with single 'is_custom' value", async () => {
         attributeLines[0].product_template_value_ids[1]
     );
     expect(comp.isAddToCartEnabled()).toBe(true);
+});
+
+test("multi attributes are optional and can be selected together", async () => {
+    const store = await setupSelfPosEnv();
+    const models = store.models;
+    const product = models["product.template"].get(102);
+    const attribute = models["product.attribute"].create({
+        id: 201,
+        name: "Attribute 1",
+        display_type: "multi",
+        template_value_ids: [],
+        attribute_line_ids: [],
+        create_variant: "no_variant",
+    });
+    const attributeValue1 = models["product.template.attribute.value"].create({
+        id: 201,
+        attribute_id: attribute,
+        price_extra: 0,
+        name: "Attribute Val 1",
+        is_custom: false,
+        html_color: false,
+        image: false,
+        excluded_value_ids: [],
+    });
+    const attributeValue2 = models["product.template.attribute.value"].create({
+        id: 202,
+        attribute_id: attribute,
+        price_extra: 0,
+        name: "Attribute Val 2",
+        is_custom: false,
+        html_color: false,
+        image: false,
+        excluded_value_ids: [],
+    });
+    const attributeLine = models["product.template.attribute.line"].create({
+        id: 201,
+        attribute_id: attribute,
+        product_template_value_ids: [["link", attributeValue1, attributeValue2]],
+    });
+    product.update({ attribute_line_ids: [["set", attributeLine]] });
+
+    const comp = await mountWithCleanup(ProductPage, { props: { productTemplate: product } });
+
+    Utils.checkAttributeIsOptional("Attribute 1");
+    Utils.checkAttributeValueCount(2);
+    Utils.checkAttributeGroupHasValues(["Attribute Val 1", "Attribute Val 2"]);
+    expect(comp.isAddToCartEnabled()).toBe(true);
+
+    await Utils.selectAttributeValue("Attribute Val 1");
+    await Utils.selectAttributeValue("Attribute Val 2");
+
+    expect(comp.getSelectedAttributesValues()).toEqual([201, 202]);
 });

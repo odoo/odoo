@@ -31,51 +31,6 @@ class TestSelfOrderAttribute(SelfOrderCommonTest):
         self.assertEqual(order.lines[0].price_extra, 1.0)
         self.assertEqual(order.lines[1].price_extra, 2.0)
 
-    def test_self_order_multi_check_attribute(self):
-        self.pos_config.write({
-            'self_ordering_default_user_id': self.pos_admin.id,
-            'self_ordering_mode': 'mobile',
-            'self_ordering_pay_after': 'each',
-            'self_ordering_service_mode': 'counter',
-            'available_preset_ids': [(5, 0)]
-        })
-
-        pos_categ_misc = self.env['pos.category'].create({
-            'name': 'Miscellaneous',
-        })
-
-        product = self.env['product.product'].create({
-            'name': 'Multi Check Attribute Product',
-            'available_in_pos': True,
-            'list_price': 1,
-            'pos_categ_ids': [(4, pos_categ_misc.id)],
-        })
-        attribute = self.env['product.attribute'].create({
-            'name': 'Attribute 1',
-            'display_type': 'multi',
-            'create_variant': 'no_variant',
-        })
-        attribute_val_1 = self.env['product.attribute.value'].create({
-            'name': 'Attribute Val 1',
-            'attribute_id': attribute.id,
-        })
-        attribute_val_2 = self.env['product.attribute.value'].create({
-            'name': 'Attribute Val 2',
-            'attribute_id': attribute.id,
-        })
-
-        self.env['product.template.attribute.line'].create({
-            'product_tmpl_id': product.product_tmpl_id.id,
-            'attribute_id': attribute.id,
-            'value_ids': [(6, 0, [attribute_val_1.id, attribute_val_2.id])]
-        })
-
-        self.pos_config.with_user(self.pos_user).open_ui()
-        self.pos_config.current_session_id.set_opening_control(0, "")
-        self_route = self.pos_config._get_self_order_route()
-
-        self.start_tour(self_route, "self_multi_attribute_selector")
-
     def test_self_order_always_attribute(self):
         self.pos_config.write({
             'self_ordering_default_user_id': self.pos_admin.id,
@@ -120,74 +75,6 @@ class TestSelfOrderAttribute(SelfOrderCommonTest):
         self.assertEqual(order.lines[1].product_id.id, chair_product_tmpl.product_variant_ids[1].id)
         self.assertEqual(order.lines[1].attribute_value_ids.ids, chair_product_tmpl.product_variant_ids[1].product_template_attribute_value_ids.ids)
         self.assertEqual(order.lines[1].price_unit, 15.0)
-
-    def test_self_order_product_info(self):
-        floor = self.env["restaurant.floor"].create({
-            "name": 'Main Floor',
-            "table_ids": [(0, 0, {
-                "table_number": 1,
-            })],
-        })
-
-        self.pos_config.write({
-            'self_ordering_default_user_id': self.pos_admin.id,
-            'self_ordering_mode': 'mobile',
-            'self_ordering_pay_after': 'each',
-            'self_ordering_service_mode': 'counter',
-            "floor_ids": [(6, 0, [floor.id])],
-        })
-
-        pos_categ_misc = self.env['pos.category'].create({
-            'name': 'Miscellaneous',
-        })
-
-        self.env['product.product'].create({
-            'name': 'Product Info Test',
-            'available_in_pos': True,
-            'list_price': 1,
-            'pos_categ_ids': [(4, pos_categ_misc.id)],
-            'public_description': 'Nice Product'
-        })
-        self.pos_config.limit_categories = True
-        self.pos_config.iface_available_categ_ids = [(4, pos_categ_misc.id)]
-        self.pos_config.with_user(self.pos_user).open_ui()
-        self.pos_config.current_session_id.set_opening_control(0, "")
-        self_route = self.pos_config._get_self_order_route(floor.table_ids[0].id)
-
-        self.start_tour(self_route, "self_order_product_info")
-
-    def test_self_order_check_attributes_show_images(self):
-        self.pos_config.write({
-            'self_ordering_default_user_id': self.pos_admin.id,
-            'self_ordering_mode': "mobile",
-            'self_ordering_pay_after': "each",
-            'self_ordering_service_mode': "counter",
-            'available_preset_ids': [Command.clear()],
-        })
-        attributes = self.env['product.attribute'].create([
-            {
-                'name': "Colour",
-                'display_type': "color",
-                'create_variant': "always",
-                'value_ids': [
-                    Command.create({'name': "White", 'default_extra_price': 0, 'html_color': '#FAFAFA'}),
-                    Command.create({'name': "Blue", 'default_extra_price': 2, 'image': 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+ip1sAAAAASUVORK5CYII='}),
-                ],
-            },
-        ])
-
-        self.env['product.template.attribute.line'].create([
-            {
-                'product_tmpl_id': self.desk_organizer.product_tmpl_id.id,
-                'attribute_id': attr.id,
-                'value_ids': [Command.link(val.id) for val in attr.value_ids],
-            }
-            for attr in attributes
-        ])
-        self.pos_config.with_user(self.pos_user).open_ui()
-        self.pos_config.current_session_id.set_opening_control(0, "")
-        self_route = self.pos_config._get_self_order_route()
-        self.start_tour(self_route, "self_attribute_selector_shows_images")
 
     def test_self_order_multi_check_attribute_with_extra_price(self):
         self.pos_config.write({

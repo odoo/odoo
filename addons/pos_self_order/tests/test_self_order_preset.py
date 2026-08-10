@@ -38,21 +38,6 @@ class TestSelfOrderPreset(SelfOrderCommonTest):
             'available_preset_ids': [(6, 0, [self.preset_takeaway.id, self.preset_delivery.id])],
         })
 
-    def test_preset_dine_in_tour(self):
-        floor = self.env["restaurant.floor"].create({
-            "name": 'Main Floor',
-            "table_ids": [(0, 0, {
-                "table_number": 1,
-            })],
-        })
-        self.pos_config.write({
-            "floor_ids": [(6, 0, [floor.id])],
-        })
-        self.pos_config.with_user(self.pos_user).open_ui()
-        self.pos_config.current_session_id.set_opening_control(0, "")
-        self_route = self.pos_config._get_self_order_route(floor.table_ids[0].id)
-        self.start_tour(self_route, "self_order_preset_dine_in_tour")
-
     def test_preset_takeaway_tour(self):
         self.pos_config.with_user(self.pos_user).open_ui()
         self.pos_config.current_session_id.set_opening_control(0, "")
@@ -127,33 +112,3 @@ class TestSelfOrderPreset(SelfOrderCommonTest):
         last_order = self.env["pos.order"].search([], limit=1, order="id desc")
         self.assertEqual(last_order.floating_order_name, 'Dr Dre')
         self.assertNotEqual(last_order.preset_time, False)
-
-    def test_slot_limit_orders(self):
-        """
-        Tests that when a slot reached it's limit capacity, it is not shown
-        in the selector anymore.
-        """
-        resource_calendar = self.env['resource.calendar'].create({
-            'name': 'Takeaway',
-            'attendance_ids': [(0, 0, {
-                'dayofweek': '0',
-                'hour_from': 0,
-                'hour_to': 24,
-            })],
-        })
-        self.preset_takeaway.write({
-            'use_timing': True,
-            'resource_calendar_id': resource_calendar,
-            'slots_per_interval': 1,
-            'interval_time': 20,
-        })
-        self.pos_config.with_user(self.pos_user).open_ui()
-        self.pos_config.current_session_id.set_opening_control(0, "")
-        self_route = self.pos_config._get_self_order_route()
-        self.start_tour(self_route, "test_slot_limit_orders")
-
-    def test_self_order_preset_btn(self):
-        self.pos_config.self_ordering_mode = 'kiosk'
-        self.pos_config.with_user(self.pos_user).open_ui()
-        self.pos_config.current_session_id.set_opening_control(0, '')
-        self.start_tour(self.pos_config._get_self_order_route(), 'test_self_order_preset_btn')

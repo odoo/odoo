@@ -7,7 +7,7 @@ definePosSelfModels();
 test("needsEmail", async () => {
     const store = await setupSelfPosEnv();
     const models = store.models;
-    const preset = models["pos.preset"].get(10);
+    const preset = models["pos.preset"].get(21);
 
     expect(preset.needsEmail).toBeEmpty();
     preset.mail_template_id = 21;

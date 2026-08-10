@@ -10,4 +10,8 @@ export class ResourceCalendar extends models.ServerModel {
             attendance_ids: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
         },
     ];
+
+    _load_pos_data_fields() {
+        return ["id", "name", "attendance_ids"];
+    }
 }

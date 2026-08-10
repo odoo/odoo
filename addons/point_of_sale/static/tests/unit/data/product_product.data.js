@@ -69,7 +69,7 @@ export class ProductProduct extends models.ServerModel {
             product_tmpl_id: 7,
             lst_price: 100,
             standard_price: 0,
-            display_name: "Office combo",
+            display_name: "Product combo",
             product_tag_ids: [],
             barcode: false,
             default_code: false,
