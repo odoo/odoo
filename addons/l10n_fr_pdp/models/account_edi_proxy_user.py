@@ -379,7 +379,7 @@ class AccountEdiProxyClientUser(models.Model):
                 bodies={move.id: log_message for move in reference_moves},
             )
             return
-        self.env['account.peppol.response'].create([
+        responses = self.env['account.peppol.response'].create([
             {
                 'peppol_message_uuid': message['message_uuid'],
                 'response_code': status,
@@ -394,12 +394,25 @@ class AccountEdiProxyClientUser(models.Model):
                 'pdp_flow_number': '2',
             }
             for message, move in zip(response.get('messages'), reference_moves)
+            if message.get('message_uuid')
         ])
-        log_message = self.env._(
+
+        sent_moves = responses.move_id
+        unsent_moves = reference_moves - sent_moves
+
+        sent_message = self.env._(
             "A French e-invoicing response with Response Code '%(status)s' was sent to the Approved Platform.",
             status=status_string,
         )
-        reference_moves._message_log_batch(bodies={move.id: log_message for move in reference_moves})
+        unsent_message = self.env._(
+            "A French e-invoicing response with Response Code '%(status)s' could not be sent to the Approved Platform.",
+            status=status_string,
+        )
+        message_bodies = {
+            **{move.id: sent_message for move in sent_moves},
+            **{move.id: unsent_message for move in unsent_moves},
+        }
+        reference_moves._message_log_batch(bodies=message_bodies)
 
     def _peppol_process_new_messages(self, messages):
         self.ensure_one()
