@@ -1200,10 +1200,13 @@ class PosOrder(models.Model):
         return invoice
 
     def _reconcile_invoice_payments(self, invoice, payment_moves):
+        # Gather the lines with the same rights that reconcile them: a salesperson cannot read the payment moves.
+        invoice = invoice.sudo()
+        payment_moves = payment_moves.sudo()
         receivable_account = self.env["res.partner"]._find_accounting_partner(invoice.partner_id).with_company(self.company_id).property_account_receivable_id
         payment_receivable_lines = payment_moves.pos_payment_ids._get_receivable_lines_for_invoice_reconciliation(receivable_account)
         invoice_receivable_lines = invoice.line_ids.filtered(lambda line: line.account_id == receivable_account and not line.reconciled)
-        (payment_receivable_lines | invoice_receivable_lines).sudo().with_company(invoice.company_id).reconcile()
+        (payment_receivable_lines | invoice_receivable_lines).with_company(invoice.company_id).reconcile()
 
     def cancel_order_from_pos(self):
         draft_orders = self.filtered(lambda o: o.state == 'draft')
