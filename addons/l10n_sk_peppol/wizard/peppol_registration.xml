@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="peppol_sk_registration_form" model="ir.ui.view">
+        <field name="name">peppol.registration.form</field>
+        <field name="model">peppol.registration</field>
+        <field name="inherit_id" ref="account_peppol.peppol_registration_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//field[@name='contact_email']" position="attributes">
+                <attribute name="invisible">peppol_eas == '0245'</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='phone_number']" position="attributes"> <!-- TODO: modifier le required comme ça, c'est nul -->
+                <attribute name="required">edi_mode not in ('demo', 'test') and peppol_eas != '0245'</attribute>
+                <attribute name="invisible">peppol_eas == '0245'</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='phone_number']" position="after">
+                <div invisible="edi_mode == 'prod' or peppol_eas != '0245'">
+                        <div class="alert alert-info" role="alert">
+                        <h4>Activate Electronic Invoicing (Slovakia – Peppol)</h4>
+                        <p>
+                            Your company is registered in Slovakia. Before you can send and receive
+                            electronic invoices via Peppol, you need to complete your registration on
+                            the official government portal.
+                        </p>
+
+                        <p><strong>Steps to follow:</strong></p>
+
+                        <ol>
+                            <li>
+                                <strong>Register your company on the Slovak government portal</strong><br/>
+                                Click on the following link and, on the government portal, designate Odoo as your service provider (Access Point):
+                                <a href="https://www.financnasprava.sk/sk/podnikatelia/dane/dan-z-pridanej-hodnoty/e-faktura" target="_blank">
+                                    Peppol Registration
+                                </a>
+                                <br/><br/>
+                            </li>
+
+                            <li>
+                                <strong>Retrieve your verification token</strong><br/>
+                                After validation, the portal will generate a unique verification token.
+                                <ul>
+                                    <li>This token will be sent to your email.</li>
+                                    <li>It will also be sent to Odoo to confirm your identity.</li>
+                                </ul>
+                                <br/>
+                            </li>
+
+                            <li>
+                                <strong>Enter the verification token below</strong><br/>
+                                <div class="border-bottom">
+                                    <field name="peppol_validation_token" required="peppol_eas == '0245'"/>
+                                </div>
+                            </li>
+                        </ol>
+
+                        <p class="mb-0">
+                            <strong>Important:</strong> Without this token, your company will not be able
+                            to send or receive electronic invoices via Peppol in Slovakia.
+                        </p>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>
