@@ -226,6 +226,8 @@ export class UseSuggestion {
         }
         if (option.partner) {
             this.composer.mentionedPartners.add({ id: option.partner.id });
+        } else if (option.user) {
+            this.composer.mentionedPartners.add({ id: option.user.partner_id.id });
         } else if (option.role) {
             this.composer.mentionedRoles.add(option.role);
         } else if (option.cannedResponse) {
@@ -337,6 +339,15 @@ export function mapSuggestionsToOptions(type, suggestions, { thread } = {}) {
                             classList,
                         };
                     }
+                    if (suggestion?.Model?.getName?.() === "res.users") {
+                        return {
+                            optionTemplate: "mail.Composer.suggestionUser",
+                            group: 1,
+                            user: suggestion,
+                            thread,
+                            classList,
+                        };
+                    }
                     return {
                         group: 1,
                         label:
@@ -393,6 +404,8 @@ export function makeMentionFromOption(option, { thread } = {}) {
     let inlineElement;
     if (option.partner) {
         inlineElement = generatePartnerMentionElement(option.partner, { thread });
+    } else if (option.user) {
+        inlineElement = generatePartnerMentionElement(option.user.partner_id, { thread });
     } else if (option.isSpecial) {
         inlineElement = generateSpecialMentionElement(option.label);
     } else if (option.role) {

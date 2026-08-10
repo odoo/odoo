@@ -144,25 +144,33 @@ export class DiscussCommandPalette {
     buildResults(filtered) {
         const TOTAL_LIMIT = this.ui.isSmall ? 7 : 10;
         const remaining = TOTAL_LIMIT - (filtered ? filtered.size : 0);
-        let partners = [];
+        let partnersOrUsers = [];
+        const usersByPartnerId = new Map();
         if (this.store.self_user?.share === false) {
-            partners = Object.values(this.store["res.partner"].records).filter(
+            const users = Object.values(this.store["res.users"].records).filter(
+                (user) =>
+                    user.share === false &&
+                    (normalize(user.displayName || "").includes(this.cleanedTerm) ||
+                        normalize(user.email || "").includes(this.cleanedTerm)) &&
+                    (!filtered || !filtered.has(user.partner_id))
+            );
+            const partners = Object.values(this.store["res.partner"].records).filter(
                 (partner) =>
                     partner.main_user_id?.share === false &&
                     (normalize(partner.displayName || "").includes(this.cleanedTerm) ||
                         normalize(partner.email || "").includes(this.cleanedTerm)) &&
-                    (!filtered || !filtered.has(partner))
+                    (!filtered || !filtered.has(partner)) &&
+                    !users.some((u) => u.partner_id === partner)
             );
-            partners = this.suggestion
-                .sortPartnerSuggestions(partners, this.cleanedTerm)
+            partnersOrUsers = this.suggestion
+                .sortPartnerSuggestions([...partners, ...users], this.cleanedTerm)
                 .slice(0, TOTAL_LIMIT);
         }
-        const selfPartner = this.store.self_user?.partner_id?.in(partners)
-            ? this.store.self_user.partner_id
+        const selfUser = this.store.self_user?.in(partnersOrUsers)
+            ? this.store.self_user
             : undefined;
-        if (selfPartner) {
-            // selfPersona filtered here to put at the bottom as lowest priority
-            partners = partners.filter((p) => p.notEq(selfPartner));
+        if (selfUser) {
+            partnersOrUsers = partnersOrUsers.filter((p) => p.notEq(selfUser));
         }
         const channels = Object.values(this.store["discuss.channel"].records)
             .filter(
@@ -185,10 +193,10 @@ export class DiscussCommandPalette {
         // balance remaining: half personas, half channels
         const numberOfChannels = Math.floor(remaining / 2);
         const numberOfPersonas = numberOfChannels + (remaining % 2);
-        const elligiblePersonas = partners.slice(0, numberOfPersonas);
+        const elligiblePersonas = partnersOrUsers.slice(0, numberOfPersonas);
         const elligibleChannels = channels.slice(0, numberOfChannels);
         elligiblePersonas.push(
-            ...partners.slice(
+            ...partnersOrUsers.slice(
                 numberOfPersonas,
                 numberOfPersonas + elligibleChannels.length - numberOfChannels
             )
@@ -199,9 +207,14 @@ export class DiscussCommandPalette {
                 numberOfChannels + elligiblePersonas.length - numberOfPersonas
             )
         );
-        const records = [...elligiblePersonas, ...elligibleChannels];
-        if (selfPartner && elligiblePersonas.length + elligibleChannels.length < remaining) {
-            records.push(selfPartner);
+        const records = [
+            ...elligiblePersonas.map((p) => {
+                usersByPartnerId.get(p) || p;
+            }),
+            ...elligibleChannels,
+        ];
+        if (selfUser && elligiblePersonas.length + elligibleChannels.length < remaining) {
+            records.push(usersByPartnerId.get(selfUser) || selfUser);
         }
         for (const record of records) {
             this.commands.push(this.makeDiscussCommand(record));
@@ -231,14 +244,22 @@ export class DiscussCommandPalette {
                 },
             };
         }
-        if (channelOrPersona?.Model?.getName() === "res.partner") {
+        if (["res.partner", "res.users"].includes(channelOrPersona?.Model?.getName())) {
+            let chatOptions = {};
+            if (channelOrPersona.Model.getName() === "res.users") {
+                chatOptions = { userId: channelOrPersona.id };
+                channelOrPersona = channelOrPersona.partner_id;
+            } else {
+                chatOptions = { partnerId: channelOrPersona.id };
+            }
+
             /** @type {import("models").Persona} */
             const persona = channelOrPersona;
             const chat = persona.searchChat();
             return {
                 Component: DiscussCommand,
                 action: () => {
-                    this.store.openChat({ partnerId: persona.id });
+                    this.store.openChat(chatOptions);
                 },
                 name: persona.displayName,
                 category,
