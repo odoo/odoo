@@ -14,7 +14,7 @@ class TestFieldGeneration(PopulateTestCase):
             'name': 'Many2One Test Blueprint',
             'definition_json': [
                 {
-                    'type': 'create',
+                    'operation': 'create',
                     'model': 'test_populate.product',
                     'count': 5,
                     'fields': {
@@ -67,7 +67,7 @@ class TestMany2OnePopulation(PopulateTestCase):
             'name': 'Domain Filter Test',
             'definition_json': [
                 {
-                    'type': 'create',
+                    'operation': 'create',
                     'model': 'test_populate.product',
                     'count': 10,
                     'fields': {
@@ -109,7 +109,7 @@ class TestMany2OnePopulation(PopulateTestCase):
             'name': 'Required Many2One Test',
             'definition_json': [
                 {
-                    'type': 'create',
+                    'operation': 'create',
                     'model': 'test_populate.order',
                     'count': 3,
                     'fields': {
@@ -145,7 +145,7 @@ class TestMany2OnePopulation(PopulateTestCase):
             'name': 'Reference with Ref Test',
             'definition_json': [
                 {
-                    'type': 'create',
+                    'operation': 'create',
                     'model': 'test_populate.supplier',
                     'id': 'premium_suppliers',
                     'count': 3,
@@ -156,7 +156,7 @@ class TestMany2OnePopulation(PopulateTestCase):
                     },
                 },
                 {
-                    'type': 'create',
+                    'operation': 'create',
                     'model': 'test_populate.product',
                     'count': 5,
                     'fields': {
@@ -217,7 +217,7 @@ class TestOne2ManyPopulation(PopulateTestCase):
             'name': 'One2Many Test Blueprint',
             'definition_json': [
                 {
-                    'type': 'create',
+                    'operation': 'create',
                     'model': 'test_populate.supplier',
                     'count': 3,
                     'fields': {
@@ -273,7 +273,7 @@ class TestOne2ManyPopulation(PopulateTestCase):
             'name': 'Domain Filter One2Many Test',
             'definition_json': [
                 {
-                    'type': 'create',
+                    'operation': 'create',
                     'model': 'test_populate.supplier',
                     'count': 2,
                     'fields': {
@@ -312,7 +312,7 @@ class TestOne2ManyPopulation(PopulateTestCase):
             'name': 'Reference Many with Ref Test',
             'definition_json': [
                 {
-                    'type': 'create',
+                    'operation': 'create',
                     'model': 'test_populate.product',
                     'id': 'special_products',
                     'count': 4,
@@ -323,7 +323,7 @@ class TestOne2ManyPopulation(PopulateTestCase):
                     },
                 },
                 {
-                    'type': 'create',
+                    'operation': 'create',
                     'model': 'test_populate.supplier',
                     'count': 2,
                     'fields': {

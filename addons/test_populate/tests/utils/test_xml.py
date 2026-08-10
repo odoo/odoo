@@ -47,6 +47,12 @@ class TestXMLEnsureRoot(TransactionCase):
 
 class TestXMLParse(TransactionCase):
 
+    def test_parse_operation_attribute_raises(self):
+        xml_str = '<data><create model="test_populate.product" operation="write"/></data>'
+
+        with self.assertRaisesRegex(ValueError, "element name already defines the operation"):
+            xml.parse(xml_str)
+
     def test_parse_simple_model(self):
         xml_str = '''
         <data>
@@ -152,7 +158,7 @@ class TestXMLParse(TransactionCase):
 
         result = xml.parse(xml_str)
 
-        self.assertEqual(result[0]['type'], 'function')
+        self.assertEqual(result[0]['operation'], 'function')
         self.assertEqual(result[0]['model'], 'test_populate.customer')
         self.assertEqual(result[0]['name'], 'populate_set_notes_from_args')
         self.assertEqual(result[0]['ref'], 'customers')

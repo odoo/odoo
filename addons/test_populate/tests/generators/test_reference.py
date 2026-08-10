@@ -204,7 +204,7 @@ class TestReferenceRawSessionBinding(PopulateTestCase):
             'name': 'Product Blueprint',
             'definition_json': [
                 {
-                    'type': 'create',
+                    'operation': 'create',
                     'model': 'test_populate.product',
                     'id': 'special_products',
                     'count': 3,

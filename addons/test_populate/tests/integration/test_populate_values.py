@@ -9,7 +9,7 @@ class TestValuesJSON(PopulateTestCase):
             'name': 'Generated Values Test',
             'definition_json': [
                 {
-                    'type': 'create',
+                    'operation': 'create',
                     'model': 'test_populate.product',
                     'count': 3,
                     'values': {
@@ -90,7 +90,7 @@ class TestValueDependencies(PopulateTestCase):
             'name': 'Generated Values Dependency Test',
             'definition_json': [
                 {
-                    'type': 'create',
+                    'operation': 'create',
                     'model': 'test_populate.product',
                     'count': 4,
                     'values': {
@@ -134,7 +134,7 @@ class TestValueDependencies(PopulateTestCase):
             'name': 'Multiple Generated Values Test',
             'definition_json': [
                 {
-                    'type': 'create',
+                    'operation': 'create',
                     'model': 'test_populate.product',
                     'count': 3,
                     'values': {
@@ -182,7 +182,7 @@ class TestValueDependencies(PopulateTestCase):
             'name': 'Nonexistent Generated Value Test',
             'definition_json': [
                 {
-                    'type': 'create',
+                    'operation': 'create',
                     'model': 'test_populate.product',
                     'count': 2,
                     'values': {

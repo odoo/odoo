@@ -72,37 +72,37 @@ class Blueprint(models.Model):
 
         for blueprint in self:
             for block in blueprint.definition:
-                block_type = block.get('type')
-                if not block_type:
-                    fail(blueprint, block, self.env._("Missing 'type'."))
-                    continue  # The operation type decides which id/ref/domain rules apply.
+                operation = block.get('operation')
+                if not operation:
+                    fail(blueprint, block, self.env._("Missing 'operation'."))
+                    continue  # The operation decides which id/ref/domain rules apply.
 
-                if block_type not in ('create', 'write', 'function'):
-                    fail(blueprint, block, self.env._("Unknown block type '%(type)s'.", type=block_type))
+                if operation not in ('create', 'write', 'function'):
+                    fail(blueprint, block, self.env._("Unknown operation '%(operation)s'.", operation=operation))
                     continue  # Unknown operations have no validation rules.
 
-                if block_type == 'create' and 'ref' in block:
+                if operation == 'create' and 'ref' in block:
                     fail(blueprint, block, self.env._("Create blocks use 'id', not 'ref'."))
 
-                if block_type == 'write' and 'id' in block:
+                if operation == 'write' and 'id' in block:
                     fail(blueprint, block, self.env._("Write blocks use 'ref', not 'id'."))
 
-                if block_type == 'function' and 'id' in block:
+                if operation == 'function' and 'id' in block:
                     fail(blueprint, block, self.env._("Function blocks use 'ref', not 'id'."))
 
-                if block_type == 'create' and 'batched' in block:
+                if operation == 'create' and 'batched' in block:
                     fail(blueprint, block, self.env._("Create blocks cannot define 'batched'."))
 
-                if block_type == 'function' and not block.get('name'):
+                if operation == 'function' and not block.get('name'):
                     fail(blueprint, block, self.env._("Function blocks require 'name'."))
 
-                if block_type == 'function' and block.get('fields'):
+                if operation == 'function' and block.get('fields'):
                     fail(blueprint, block, self.env._("Function blocks use 'arg', not 'field'."))
 
-                if block_type in ('create', 'write') and block.get('args'):
+                if operation in ('create', 'write') and block.get('args'):
                     fail(blueprint, block, self.env._(
-                        "%(type)s blocks cannot define 'arg'.",
-                        type=block_type.capitalize(),
+                        "%(operation)s blocks cannot define 'arg'.",
+                        operation=operation.capitalize(),
                     ))
 
                 if 'model' not in block:
@@ -127,7 +127,7 @@ class Blueprint(models.Model):
                         fields=', '.join(repr(field) for field in unknown_fields),
                     ))
 
-                if block_type == 'function':
+                if operation == 'function':
                     method_name = block.get('name')
                     method = get_model_method(self.env[model_name], method_name)
                     if method is None:

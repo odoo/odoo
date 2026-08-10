@@ -135,7 +135,7 @@ class TestRelationOneSessionBinding(PopulateTestCase):
             'name': 'Supplier Blueprint',
             'definition_json': [
                 {
-                    'type': 'create',
+                    'operation': 'create',
                     'model': 'test_populate.supplier',
                     'id': 'my_suppliers',
                     'count': 3,
@@ -508,7 +508,7 @@ class TestRelationManySessionBinding(PopulateTestCase):
             'name': 'Product Blueprint',
             'definition_json': [
                 {
-                    'type': 'create',
+                    'operation': 'create',
                     'model': 'test_populate.product',
                     'id': 'tagged_products',
                     'count': 4,

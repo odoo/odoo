@@ -14,7 +14,7 @@ class TestSessionCreation(TransactionCase):
             'name': 'Test Product Blueprint',
             'definition_json': [
                 {
-                    'type': 'create',
+                    'operation': 'create',
                     'model': 'test_populate.product',
                     'count': 5,
                     'fields': {
@@ -38,7 +38,7 @@ class TestSessionCreation(TransactionCase):
             'name': 'Job Test Blueprint',
             'definition_json': [
                 {
-                    'type': 'create',
+                    'operation': 'create',
                     'model': 'test_populate.product',
                     'count': 2,
                     'fields': {
@@ -64,7 +64,7 @@ class TestSessionCreation(TransactionCase):
         blueprint = self.env['populate.blueprint'].create({
             'name': 'Create Domain Blueprint',
             'definition_json': [{
-                'type': 'create',
+                'operation': 'create',
                 'model': 'test_populate.product',
                 'count': 1,
                 'domain': "[('category', '=', 'books')]",
@@ -94,7 +94,7 @@ class TestSessionExecution(PopulateTestCase):
             'name': 'Customer Test Blueprint',
             'definition_json': [
                 {
-                    'type': 'create',
+                    'operation': 'create',
                     'model': 'test_populate.customer',
                     'count': 3,
                     'fields': {
@@ -124,7 +124,7 @@ class TestSessionExecution(PopulateTestCase):
             'name': 'Multi-Model Blueprint',
             'definition_json': [
                 {
-                    'type': 'create',
+                    'operation': 'create',
                     'model': 'test_populate.supplier',
                     'count': 2,
                     'fields': {
@@ -134,7 +134,7 @@ class TestSessionExecution(PopulateTestCase):
                     },
                 },
                 {
-                    'type': 'create',
+                    'operation': 'create',
                     'model': 'test_populate.product',
                     'count': 5,
                     'fields': {
@@ -166,7 +166,7 @@ class TestSessionExecution(PopulateTestCase):
             'name': 'State Test Blueprint',
             'definition_json': [
                 {
-                    'type': 'create',
+                    'operation': 'create',
                     'model': 'test_populate.customer',
                     'count': 1,
                     'fields': {
@@ -190,7 +190,7 @@ class TestSessionExecution(PopulateTestCase):
             'name': 'Cascade Test Blueprint',
             'definition_json': [
                 {
-                    'type': 'create',
+                    'operation': 'create',
                     'model': 'test_populate.product',
                     'count': 2,
                     'fields': {
