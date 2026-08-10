@@ -16,9 +16,9 @@ class ResCompany(models.Model):
     _inherit = 'res.company'
 
     l10n_ro_edi_client_id = fields.Char(string='eFactura Client ID')
-    l10n_ro_edi_client_secret = fields.Char(string='Client Secret')
-    l10n_ro_edi_access_token = fields.Char(string='Access Token')
-    l10n_ro_edi_refresh_token = fields.Char(string='Refresh Token')
+    l10n_ro_edi_client_secret = fields.Char(string='Client Secret', groups='base.group_user')
+    l10n_ro_edi_access_token = fields.Char(string='Access Token', groups='base.group_user')
+    l10n_ro_edi_refresh_token = fields.Char(string='Refresh Token', groups='base.group_user')
     l10n_ro_edi_access_expiry_date = fields.Date(string='Access Token Expiry Date')
     l10n_ro_edi_refresh_expiry_date = fields.Date(string='Refresh Token Expiry Date')
     l10n_ro_edi_callback_url = fields.Char(compute='_compute_l10n_ro_edi_callback_url')

@@ -64,12 +64,14 @@ class ResCompany(models.Model):
         string='Primary contact email',
         compute='_compute_account_peppol_contact_email', store=True, readonly=False,
         help='Primary contact email for Peppol-related communication',
+        groups='base.group_user',
     )
     account_peppol_migration_key = fields.Char(string="Migration Key", groups="base.group_system")
     account_peppol_phone_number = fields.Char(
         string='Mobile number (for validation)',
         compute='_compute_account_peppol_phone_number', store=True, readonly=False,
         help='You will receive a verification code to this mobile number',
+        groups='base.group_user',
     )
     account_peppol_proxy_state = fields.Selection(
         selection=[
