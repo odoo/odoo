@@ -58,19 +58,37 @@ class AccountEdiProxyClientUser(models.Model):
                 bodies={move.id: log_message for move in reference_moves},
             )
         else:
-            self.env['account.peppol.response'].create([{
+            responses = self.env['account.peppol.response'].create([{
                     'peppol_message_uuid': message['message_uuid'],
                     'response_code': status,
                     'peppol_state': 'processing',
                     'move_id': move.id,
                 }
                 for message, move in zip(response.get('messages'), reference_moves)
+                if message.get('message_uuid')
             ])
-            log_message = self.env._(
-                "A Peppol response was sent to the Peppol Access Point declaring you %(status)s this document.",
-                status=self.env._('received') if status == 'AB' else self.env._('accepted') if status == 'AP' else self.env._('rejected'),
+
+            sent_moves = responses.move_id
+            unsent_moves = reference_moves - sent_moves
+
+            status_string = (
+                self.env._('received') if status == 'AB'
+                else self.env._('accepted') if status == 'AP'
+                else self.env._('rejected')
             )
-            reference_moves._message_log_batch(bodies={move.id: log_message for move in reference_moves})
+            sent_message = self.env._(
+                "A Peppol response was sent to the Peppol Access Point declaring you %(status)s this document.",
+                status=status_string,
+            )
+            unsent_message = self.env._(
+                "A Peppol response declaring you %(status)s this document could not be sent to the Peppol Access Point.",
+                status=status_string,
+            )
+            message_bodies = {
+                **{move.id: sent_message for move in sent_moves},
+                **{move.id: unsent_message for move in unsent_moves},
+            }
+            reference_moves._message_log_batch(bodies=message_bodies)
 
     @api.model
     def _peppol_extract_response_info(self, document):
