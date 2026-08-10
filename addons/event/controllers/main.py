@@ -12,6 +12,7 @@ from odoo.tools import consteq, format_datetime
 
 class EventController(Controller):
 
+<<<<<<< c2c11a3c5287f9683e68e9e6d77457f27ef7f4b4
     @route(['''/event/<model("event.event"):event>/ics'''], type='http', auth="public", website=True, sitemap=False)
     def event_ics_file(self, event, **kwargs):
         slot_id = int(kwargs['slot_id']) if kwargs.get('slot_id') else False
@@ -22,6 +23,28 @@ class EventController(Controller):
         files = event._get_ics_file(slot=slot)
         if event.id not in files:
             raise NotFound()
+||||||| 9fbca93cfc3c49e8a58ec2a2c4578a77fe38c89c
+    @route(['''/event/<model("event.event"):event>/ics'''], type='http', auth="public")
+    def event_ics_file(self, event, **kwargs):
+        lang = request.context.get('lang', request.env.user.lang)
+        if request.env.user._is_public():
+            lang = request.cookies.get('frontend_lang')
+        event = event.with_context(lang=lang)
+        files = event._get_ics_file()
+        if not event.id in files:
+            return NotFound()
+=======
+    @route(['''/event/<model("event.event"):event>/ics'''], type='http', auth="public")
+    def event_ics_file(self, event, lang=None, **kwargs):
+        if lang not in dict(request.env['res.lang'].get_installed()):
+            lang = request.context.get('lang', request.env.user.lang)
+            if request.env.user._is_public():
+                lang = request.cookies.get('frontend_lang')
+        event = event.with_context(lang=lang)
+        files = event._get_ics_file()
+        if not event.id in files:
+            return NotFound()
+>>>>>>> 974e43b4b2e45c279a155864f861bb7e1fefe5d8
         content = files[event.id]
         return request.make_response(content, [
             ('Content-Type', 'application/octet-stream'),

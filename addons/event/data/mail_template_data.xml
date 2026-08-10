@@ -63,6 +63,7 @@
                             <strong t-out="object.event_id.name or ''">OpenWood Collection Online Reveal</strong>.
                         </t>
                     </div>
+<<<<<<< c2c11a3c5287f9683e68e9e6d77457f27ef7f4b4
                     <br/>
                     <table style="width: auto;">
                         <tr>
@@ -90,6 +91,29 @@
                         </tr>
                     </table>
                     <br/><br/>
+||||||| 9fbca93cfc3c49e8a58ec2a2c4578a77fe38c89c
+                    <div>
+                        <br />
+                        <strong>Add this event to your calendar</strong>
+                        <a t-attf-href="https://www.google.com/calendar/render?action=TEMPLATE&amp;text={{ object.event_id.name }}&amp;dates={{ date_begin }}/{{ date_end }}&amp;location={{ location }}&amp;details={{ object.event_id._get_external_description_url_encoded() }}" style="padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;" target="new"><img src="/web_editor/font_to_img/61525/rgb(135,90,123)/16" style="vertical-align:middle;" height="16" alt=""/> Google</a>
+                        <a t-attf-href="/event/{{ slug(object.event_id) }}/ics" style="padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;"><img src="/web_editor/font_to_img/61525/rgb(135,90,123)/16" style="vertical-align:middle;" height="16" alt=""/> iCal/Outlook</a>
+                        <a t-attf-href="https://calendar.yahoo.com/?v=60&amp;view=d&amp;type=20&amp;title={{ object.event_id.name }}&amp;in_loc={{ location }}&amp;st={{ format_datetime(object.event_id.date_begin, tz='UTC', dt_format='yyyyMMdd\'T\'HHmmss') }}&amp;et={{ format_datetime(object.event_id.date_end, tz='UTC', dt_format='yyyyMMdd\'T\'HHmmss') }}" style="padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;" target="new">
+                            <img src="/web_editor/font_to_img/61525/rgb(135,90,123)/16" style="vertical-align:middle;" height="16" alt=""/> Yahoo
+                        </a>
+                        <br /><br />
+                    </div>
+=======
+                    <div>
+                        <br />
+                        <strong>Add this event to your calendar</strong>
+                        <a t-attf-href="https://www.google.com/calendar/render?action=TEMPLATE&amp;text={{ object.event_id.name }}&amp;dates={{ date_begin }}/{{ date_end }}&amp;location={{ location }}&amp;details={{ object.event_id._get_external_description_url_encoded() }}" style="padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;" target="new"><img src="/web_editor/font_to_img/61525/rgb(135,90,123)/16" style="vertical-align:middle;" height="16" alt=""/> Google</a>
+                        <a t-attf-href="/event/{{ slug(object.event_id) }}/ics{{ '?lang=%s' % ctx['lang'] if ctx.get('lang') else '' }}" style="padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;"><img src="/web_editor/font_to_img/61525/rgb(135,90,123)/16" style="vertical-align:middle;" height="16" alt=""/> iCal/Outlook</a>
+                        <a t-attf-href="https://calendar.yahoo.com/?v=60&amp;view=d&amp;type=20&amp;title={{ object.event_id.name }}&amp;in_loc={{ location }}&amp;st={{ format_datetime(object.event_id.date_begin, tz='UTC', dt_format='yyyyMMdd\'T\'HHmmss') }}&amp;et={{ format_datetime(object.event_id.date_end, tz='UTC', dt_format='yyyyMMdd\'T\'HHmmss') }}" style="padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;" target="new">
+                            <img src="/web_editor/font_to_img/61525/rgb(135,90,123)/16" style="vertical-align:middle;" height="16" alt=""/> Yahoo
+                        </a>
+                        <br /><br />
+                    </div>
+>>>>>>> 974e43b4b2e45c279a155864f861bb7e1fefe5d8
                     <div>
                         See you soon,<br/>
                         <span style="color: #454748;">
@@ -351,6 +375,7 @@
                             <t t-out="object.sale_order_line_id.price_total" t-options="{'widget': 'monetary', 'display_currency': object.sale_order_line_id.currency_id}"/>
                         </t>.
                     </div>
+<<<<<<< c2c11a3c5287f9683e68e9e6d77457f27ef7f4b4
                     <br/>
                     <table style="width: auto;">
                         <tr>
@@ -378,6 +403,29 @@
                         </tr>
                     </table>
                     <br/><br/>
+||||||| 9fbca93cfc3c49e8a58ec2a2c4578a77fe38c89c
+                    <div>
+                        <br />
+                        <strong>Add this event to your calendar</strong>
+                        <a t-attf-href="https://www.google.com/calendar/render?action=TEMPLATE&amp;text={{ object.event_id.name }}&amp;dates={{ date_begin }}/{{ date_end }}&amp;location={{ location }}&amp;details={{ object.event_id._get_external_description_url_encoded() }}" style="padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;" target="new"><img src="/web_editor/font_to_img/61525/rgb(135,90,123)/16" style="vertical-align:middle;" height="16" alt=""/> Google</a>
+                        <a t-attf-href="/event/{{ slug(object.event_id) }}/ics" style="padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;"><img src="/web_editor/font_to_img/61525/rgb(135,90,123)/16" style="vertical-align:middle;" height="16" alt=""/> iCal/Outlook</a>
+                        <a t-attf-href="https://calendar.yahoo.com/?v=60&amp;view=d&amp;type=20&amp;title={{ object.event_id.name }}&amp;in_loc={{ location }}&amp;st={{ format_datetime(object.event_id.date_begin, tz='UTC', dt_format='yyyyMMdd\'T\'HHmmss') }}&amp;et={{ format_datetime(object.event_id.date_end, tz='UTC', dt_format='yyyyMMdd\'T\'HHmmss') }}" style="padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;" target="new">
+                            <img src="/web_editor/font_to_img/61525/rgb(135,90,123)/16" style="vertical-align:middle;" height="16" alt=""/> Yahoo
+                        </a>
+                        <br /><br />
+                    </div>
+=======
+                    <div>
+                        <br />
+                        <strong>Add this event to your calendar</strong>
+                        <a t-attf-href="https://www.google.com/calendar/render?action=TEMPLATE&amp;text={{ object.event_id.name }}&amp;dates={{ date_begin }}/{{ date_end }}&amp;location={{ location }}&amp;details={{ object.event_id._get_external_description_url_encoded() }}" style="padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;" target="new"><img src="/web_editor/font_to_img/61525/rgb(135,90,123)/16" style="vertical-align:middle;" height="16" alt=""/> Google</a>
+                        <a t-attf-href="/event/{{ slug(object.event_id) }}/ics{{ '?lang=%s' % ctx['lang'] if ctx.get('lang') else '' }}" style="padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;"><img src="/web_editor/font_to_img/61525/rgb(135,90,123)/16" style="vertical-align:middle;" height="16" alt=""/> iCal/Outlook</a>
+                        <a t-attf-href="https://calendar.yahoo.com/?v=60&amp;view=d&amp;type=20&amp;title={{ object.event_id.name }}&amp;in_loc={{ location }}&amp;st={{ format_datetime(object.event_id.date_begin, tz='UTC', dt_format='yyyyMMdd\'T\'HHmmss') }}&amp;et={{ format_datetime(object.event_id.date_end, tz='UTC', dt_format='yyyyMMdd\'T\'HHmmss') }}" style="padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;" target="new">
+                            <img src="/web_editor/font_to_img/61525/rgb(135,90,123)/16" style="vertical-align:middle;" height="16" alt=""/> Yahoo
+                        </a>
+                        <br /><br />
+                    </div>
+>>>>>>> 974e43b4b2e45c279a155864f861bb7e1fefe5d8
                     <div>
                         See you soon,<br/>
                         <span style="color: #454748;">
@@ -626,6 +674,7 @@
                         </t>
                         is starting <strong t-out="object.event_date_range or ''">today</strong>.
                     </div>
+<<<<<<< c2c11a3c5287f9683e68e9e6d77457f27ef7f4b4
                     <br/>
                     <table style="width: auto;">
                         <tr>
@@ -653,6 +702,29 @@
                         </tr>
                     </table>
                     <br/><br/>
+||||||| 9fbca93cfc3c49e8a58ec2a2c4578a77fe38c89c
+                    <div>
+                        <br />
+                        <strong>Add this event to your calendar</strong>
+                        <a t-attf-href="https://www.google.com/calendar/render?action=TEMPLATE&amp;text={{ object.event_id.name }}&amp;dates={{ date_begin }}/{{ date_end }}&amp;location={{ location }}&amp;details={{ object.event_id._get_external_description_url_encoded() }}" style="padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;" target="new"><img src="/web_editor/font_to_img/61525/rgb(135,90,123)/16" style="vertical-align:middle;" height="16" alt=""/> Google</a>
+                        <a t-attf-href="/event/{{ slug(object.event_id) }}/ics" style="padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;"><img src="/web_editor/font_to_img/61525/rgb(135,90,123)/16" style="vertical-align:middle;" height="16" alt=""/> iCal/Outlook</a>
+                        <a t-attf-href="https://calendar.yahoo.com/?v=60&amp;view=d&amp;type=20&amp;title={{ object.event_id.name }}&amp;in_loc={{ location }}&amp;st={{ format_datetime(object.event_id.date_begin, tz='UTC', dt_format='yyyyMMdd\'T\'HHmmss') }}&amp;et={{ format_datetime(object.event_id.date_end, tz='UTC', dt_format='yyyyMMdd\'T\'HHmmss') }}" style="padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;" target="new">
+                            <img src="/web_editor/font_to_img/61525/rgb(135,90,123)/16" style="vertical-align:middle;" height="16" alt=""/> Yahoo
+                        </a>
+                        <br /><br />
+                    </div>
+=======
+                    <div>
+                        <br />
+                        <strong>Add this event to your calendar</strong>
+                        <a t-attf-href="https://www.google.com/calendar/render?action=TEMPLATE&amp;text={{ object.event_id.name }}&amp;dates={{ date_begin }}/{{ date_end }}&amp;location={{ location }}&amp;details={{ object.event_id._get_external_description_url_encoded() }}" style="padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;" target="new"><img src="/web_editor/font_to_img/61525/rgb(135,90,123)/16" style="vertical-align:middle;" height="16" alt=""/> Google</a>
+                        <a t-attf-href="/event/{{ slug(object.event_id) }}/ics{{ '?lang=%s' % ctx['lang'] if ctx.get('lang') else '' }}" style="padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;"><img src="/web_editor/font_to_img/61525/rgb(135,90,123)/16" style="vertical-align:middle;" height="16" alt=""/> iCal/Outlook</a>
+                        <a t-attf-href="https://calendar.yahoo.com/?v=60&amp;view=d&amp;type=20&amp;title={{ object.event_id.name }}&amp;in_loc={{ location }}&amp;st={{ format_datetime(object.event_id.date_begin, tz='UTC', dt_format='yyyyMMdd\'T\'HHmmss') }}&amp;et={{ format_datetime(object.event_id.date_end, tz='UTC', dt_format='yyyyMMdd\'T\'HHmmss') }}" style="padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;" target="new">
+                            <img src="/web_editor/font_to_img/61525/rgb(135,90,123)/16" style="vertical-align:middle;" height="16" alt=""/> Yahoo
+                        </a>
+                        <br /><br />
+                    </div>
+>>>>>>> 974e43b4b2e45c279a155864f861bb7e1fefe5d8
                     <div>
                         We confirm your registration and hope to meet you there,<br/>
                         <span style="color: #454748;">
