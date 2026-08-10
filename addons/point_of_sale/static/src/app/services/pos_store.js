@@ -280,6 +280,8 @@ export class PosStore extends WithLazyGetterTrap {
         const orders = this.models["pos.order"].getAll();
         this.device.saveUnusedNumber(orders);
         await this.data.resetIndexedDB();
+        sessionStorage.clear();
+        localStorage.clear();
         const url = new URL(window.location.href);
 
         if (fullReload) {
