@@ -64,8 +64,12 @@ class PosSession(models.Model):
         data = super()._reconcile_account_move_lines(data)
         online_payment_to_receivable_lines = data.get('online_payment_to_receivable_lines')
 
-        for payment, lines in online_payment_to_receivable_lines.items():
-            if payment.online_account_payment_id.partner_id.property_account_receivable_id.reconcile:
-                lines.filtered(lambda line: not line.reconciled).reconcile()
+        reconciliation_plan = [
+            lines.filtered(lambda line: not line.reconciled)
+            for payment, lines in online_payment_to_receivable_lines.items()
+            if payment.online_account_payment_id.partner_id.property_account_receivable_id.reconcile
+        ]
+        if reconciliation_plan:
+            self.env['account.move.line']._reconcile_plan(reconciliation_plan)
 
         return data
