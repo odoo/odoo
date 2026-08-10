@@ -32,6 +32,7 @@ from odoo.osv import expression
 from odoo.service.db import check_super
 from odoo.tools import is_html_empty, partition, collections, frozendict, lazy_property
 from odoo.tools.misc import OrderedSet
+from odoo.tools.sql import SQL
 
 _logger = logging.getLogger(__name__)
 
@@ -550,14 +551,13 @@ class Users(models.Model):
     def USER_PRIVATE_FIELDS(self):
         return list(USER_PRIVATE_FIELDS)
 
-    def _fetch_query(self, query, fields):
-        records = super()._fetch_query(query, fields)
-        if not set(self.USER_PRIVATE_FIELDS).isdisjoint(field.name for field in fields):
-            if self.check_access_rights('write', raise_exception=False):
-                return records
-            for fname in self.USER_PRIVATE_FIELDS:
-                self.env.cache.update(records, self._fields[fname], repeat('********'))
-        return records
+    def _field_to_sql(self, alias, fname, query=None):
+        if (
+            fname.split('.', 1)[0] in self.USER_PRIVATE_FIELDS
+            and not self.check_access_rights('write', raise_exception=False)
+        ):
+            return SQL("'********'")
+        return super()._field_to_sql(alias, fname, query)
 
     @api.constrains('company_id', 'company_ids', 'active')
     def _check_company(self):
@@ -665,14 +665,6 @@ class Users(models.Model):
         super()._read_group_check_field_access_rights(field_names)
         if set(field_names).intersection(self.USER_PRIVATE_FIELDS):
             raise AccessError(_("Invalid 'group by' parameter"))
-
-    @api.model
-    def _search(self, domain, offset=0, limit=None, order=None, access_rights_uid=None):
-        if not self.env.su and domain:
-            domain_fields = {term[0] for term in domain if isinstance(term, (tuple, list))}
-            if domain_fields.intersection(self.USER_PRIVATE_FIELDS):
-                raise AccessError(_('Invalid search criterion'))
-        return super()._search(domain, offset, limit, order, access_rights_uid)
 
     @api.model_create_multi
     def create(self, vals_list):
