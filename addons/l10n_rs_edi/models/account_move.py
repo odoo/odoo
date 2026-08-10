@@ -133,8 +133,20 @@ class AccountMove(models.Model):
         try:
             response = requests.post(url=url, params=params, headers=headers, data=xml, timeout=30)
             response.raise_for_status()
-        except (Timeout, ConnectionError, HTTPError) as exception:
+        except (Timeout, ConnectionError) as exception:
             error_message = _("There was a problem with the connection with eFaktura: %s", exception)
+            self.message_post(body=error_message)
+            return xml, error_message
+        except HTTPError as exception:
+            try:
+                error_response = response.json()
+                error_message = _(
+                    "%(error_code)s: %(message)s",
+                    error_code=error_response.get('ErrorCode', response.status_code),
+                    message=error_response.get('Message', response.reason)
+                )
+            except JSONDecodeError:
+                error_message = _("eFaktura returned an invalid response: %s", exception)
             self.message_post(body=error_message)
             return xml, error_message
         dict_response = {}
