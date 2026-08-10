@@ -19,13 +19,10 @@ QUnit.module("py", {}, () => {
         });
 
         QUnit.test("context_today() + 2h", (assert) => {
-            patchTimeZone(0)
-            patchDate(2023, 11, 31, 23, 30, 0);
-
-            const expected = luxon.DateTime.now().toUTC().toFormat("yyyy-MM-dd");
-
             patchTimeZone(120)
             patchDate(2024, 0, 1, 1, 30, 0);
+
+            const expected = "2023-12-31";
 
             assert.strictEqual(BUILTINS.context_today().strftime("%Y-%m-%d"), expected);
             assert.strictEqual(evaluateExpr("context_today().strftime('%Y-%m-%d')"), expected);
@@ -53,13 +50,10 @@ QUnit.module("py", {}, () => {
         });
 
         QUnit.test("today + 2h", (assert) => {
-            patchTimeZone(0)
-            patchDate(2023, 11, 31, 23, 30, 0);
-
-            const expected = luxon.DateTime.now().toUTC().toFormat("yyyy-MM-dd");
-
             patchTimeZone(120)
             patchDate(2024, 0, 1, 1, 30, 0);
+
+            const expected = "2023-12-31";
 
             assert.strictEqual(BUILTINS.today, expected);
             assert.strictEqual(evaluateExpr("today"), expected);
@@ -128,13 +122,10 @@ QUnit.module("py", {}, () => {
         });
 
         QUnit.test("current_date + 2h", (assert) => {
-            patchTimeZone(0)
-            patchDate(2023, 11, 31, 23, 30, 0);
-
-            const expected = luxon.DateTime.now().toUTC().toFormat("yyyy-MM-dd");
-
             patchTimeZone(120)
             patchDate(2024, 0, 1, 1, 30, 0);
+
+            const expected = "2023-12-31";
 
             assert.strictEqual(BUILTINS.current_date, expected);
             assert.strictEqual(evaluateExpr("current_date"), expected);
