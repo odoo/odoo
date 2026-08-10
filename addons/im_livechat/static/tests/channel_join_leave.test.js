@@ -149,20 +149,12 @@ test("visitor leaving ends the livechat conversation", async () => {
         livechat_operator_id: serverState.partnerId,
         create_uid: serverState.publicUserId,
     });
+    pyEnv["discuss.channel"].create({ name: "General" });
     setupChatHub({ opened: [channel_id] });
-    onRpc("/mail/data", async (req) => {
-        const { params } = await req.json();
-        if (params.fetch_params.includes("channels_as_member")) {
-            expect.step("fetch channels_as_member");
-        }
-    });
     await start();
     await contains(".o-mail-ChatWindow");
-    // The first message received will trigger the fetch of
-    // `channels_as_member` which can conflict with the rest of the
-    // test. Open the messaging menu to do it beforehand.
     await click(".o_menu_systray i[aria-label='Messages']");
-    await expect.waitForSteps(["fetch channels_as_member"], { timeout: 3000 });
+    await contains(".o-mail-NotificationItem:text('General')"); // wait for `channels_as_member`
     // simulate visitor leaving
     await withGuest(guestId, () => rpc("/im_livechat/visitor_leave_session", { channel_id }));
     await contains("span", { text: "This livechat conversation has ended." });
