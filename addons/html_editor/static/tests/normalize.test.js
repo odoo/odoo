@@ -99,3 +99,34 @@ test("should flag mutations from normalization", async () => {
     // Checking the result for good measure.
     expect(getContent(el)).toBe('<p class="blue" style="color: blue;">abc[]d</p>');
 });
+
+test("should not distribute table color to tds of a nested table", async () => {
+    await testEditor({
+        contentBefore: unformat(`
+                <table style="color: red;"><tbody>
+                    <tr><td>ab</td></tr>
+                    <tr><td>
+                        <table><tbody>
+                            <tr><td>cd</td></tr>
+                        </tbody></table>
+                    </td></tr>
+                </tbody></table>
+            `),
+        contentBeforeEdit: unformat(`
+            <p data-selection-placeholder=""><br></p>
+            <table>
+                <tbody>
+                    <tr><td style="color: red;">ab</td></tr>
+                    <tr><td style="color: red;">
+                        <table>
+                            <tbody>
+                                <tr><td>cd</td></tr>
+                            </tbody>
+                        </table>
+                    </td></tr>
+                </tbody>
+            </table>
+            <p data-selection-placeholder=""><br></p>
+        `),
+    });
+});
