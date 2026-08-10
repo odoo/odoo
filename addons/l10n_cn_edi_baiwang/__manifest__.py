@@ -29,8 +29,5 @@ Features:
         'security/ir.access.csv',
     ],
     'author': 'Odoo S.A.',
-    'demo': [
-        'data/demo_credentials.xml',
-    ],
     'license': 'LGPL-3',
 }
