@@ -13,7 +13,7 @@ from odoo.exceptions import ValidationError
 from ast import literal_eval
 from odoo.tools.date_utils import float_to_time, sum_intervals
 from odoo.tools.float_utils import float_compare
-from odoo.tools.intervals import Intervals, _boundaries, invert_intervals
+from odoo.tools.intervals import Intervals, invert_intervals
 
 
 def resolve_intervals_by_sequence(intervals):
@@ -37,29 +37,6 @@ def resolve_intervals_by_sequence(intervals):
         if best:
             result.append((t0, t1, best))
     return result
-
-
-def _record_overlap_intervals(intervals):
-    """Split overlapping rule intervals so each slice carries exactly its active rule set."""
-    boundaries = sorted(_boundaries(intervals, 'start', 'stop'))
-    counts = {}
-    interval_vals = []
-    ids = set()
-    start = None
-    for (time_pt, flag, records) in boundaries:
-        for record in records:
-            if (new_count := counts.get(record.id, 0) + {'start': 1, 'stop': -1}[flag]):
-                counts[record.id] = new_count
-            else:
-                del counts[record.id]
-        new_ids = set(counts.keys())
-        if ids != new_ids:
-            if ids and start is not None:
-                interval_vals.append((start, time_pt, records.browse(ids)))
-            if new_ids:
-                start = time_pt
-        ids = new_ids
-    return Intervals(interval_vals, keep_distinct=True)
 
 
 def _naivify(intervals):
@@ -283,7 +260,7 @@ class HrTimeRule(models.Model):
     @api.depends('country_id', 'company_id')
     def _compute_country_work_entry_type_ids(self):
         for rule in self:
-            country = rule.country_id or rule.company_id.country_id or self.env.company.country_id
+            country = rule.country_id or rule.company_id.country_id
             if not country or not self.env['hr.work.entry.type'].search_count([('country_id', '=', country.id)], limit=1):
                 domain = [('country_id', '=', False)]
             else:
@@ -531,6 +508,155 @@ class HrTimeRule(models.Model):
         """Return frozenset of premium pay IDs to attach when this rule classifies an interval."""
         self.ensure_one()
         return frozenset()
+
+    def _get_output_in_place_extra_vals(self, accumulated_pp=frozenset()):
+        """Extra write vals when the source record is repurposed in-place as the first output segment.
+
+        Override to propagate fields that _get_output_*_vals sets on newly created records
+        but that the in-place write path would otherwise miss (e.g. l10n_be_premium_pay_rule_ids).
+        """
+        return {}
+
+    def _resolve_output_intervals(self, intervals):
+        """For each time slice, pick the lowest-sequence rule with a work entry type.
+
+        intervals: iterable of (start, stop, rule, pp) 4-tuples.
+        Returns a list of (start, stop, rule, pp) 4-tuples where pp is the union of
+        all accumulated_pp values from intervals where the winning rule covers the slice.
+        Subclasses may merge consecutive slices (e.g. by merge key for leaves).
+        """
+        raw = [(s, e, r) for s, e, r, _pp in intervals if r.work_entry_type_id]
+        resolved = resolve_intervals_by_sequence(raw)
+        result = []
+        ivs = list(intervals)
+        for seg_s, seg_e, rule in resolved:
+            pp = frozenset().union(*(
+                orig_pp for orig_s, orig_e, orig_r, orig_pp in ivs
+                if orig_r == rule and orig_s <= seg_s and orig_e >= seg_e
+            ))
+            result.append((seg_s, seg_e, rule, pp))
+        return result
+
+    def _apply_output(self, excess, deficit):
+        """Shared apply-output implementation for both leaves and attendances.
+
+        Returns (new_records, all_source_ids, excess_alloc, deficit_alloc) where
+        excess_alloc / deficit_alloc are lists of (employee, rule, hours) for callers
+        that need to adjust leave allocation balances.
+        """
+        create_vals = []
+        all_source_ids = set()
+        dummy = self.env['resource.calendar']
+        excess_alloc = []
+        deficit_alloc = []
+
+        for employee, by_source in deficit.items():
+            tz = ZoneInfo(employee._get_tz())
+            for source, intervals in by_source.items():
+                all_source_ids.add(source.id)
+                # group by period, pick the lowest-sequence rule per period
+                by_period = defaultdict(list)
+                for s, e, rule, pp in intervals:
+                    if not rule.work_entry_type_id or e <= s:
+                        continue
+                    if rule.quantity_period == 'week':
+                        ws = int(rule.week_start or '0')
+                        days_to_end = ((ws - 1) % 7 - s.weekday()) % 7
+                        period_key = s.date() + timedelta(days=days_to_end)
+                    else:
+                        period_key = s.date()
+                    by_period[period_key].append((s, e, rule, pp))
+                for period_key, period_ivs in by_period.items():
+                    winning_rule = min(period_ivs, key=lambda t: t[2].sequence)[2]
+                    period_end_date = period_key + timedelta(1)
+                    period_end = datetime.combine(period_end_date, time.min).replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
+                    for s, e, rule, pp in period_ivs:
+                        if rule != winning_rule:
+                            continue
+                        df = s.replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
+                        deficit_hours = (e - s).total_seconds() / 3600
+                        occupied = source._get_time_rule_deficit_occupied(employee.id, df, period_end)
+                        remaining = deficit_hours
+                        for slot_s, slot_e, _ in Intervals([(df, period_end, dummy)]) - occupied:
+                            if remaining <= 1e-6:
+                                break
+                            slot_hours = (slot_e - slot_s).total_seconds() / 3600
+                            if slot_hours > remaining:
+                                slot_e = slot_s + timedelta(hours=remaining)
+                            create_vals.append(source._get_time_rule_output_vals(rule, slot_s, slot_e, pp))
+                            remaining -= (slot_e - slot_s).total_seconds() / 3600
+                        deficit_alloc.append((employee, rule, deficit_hours))
+
+        for employee, by_source in excess.items():
+            tz = ZoneInfo(employee._get_tz())
+            for source, intervals in by_source.items():
+                all_source_ids.add(source.id)
+                output_intervals = self._resolve_output_intervals(intervals)
+                if not output_intervals:
+                    continue
+
+                start_field = source._time_rule_span_start_field
+                src_start_local = source[start_field].replace(tzinfo=UTC).astimezone(tz).replace(tzinfo=None)
+                src_stop_local = source[source._time_rule_span_end_field].replace(tzinfo=UTC).astimezone(tz).replace(tzinfo=None)
+                source_wet_id = source.work_entry_type_id.id
+
+                out_union = Intervals([(s, e, dummy) for s, e, _r, _pp in output_intervals], keep_distinct=True)
+                remainder_segments = list(Intervals([(src_start_local, src_stop_local, dummy)]) - out_union)
+
+                min_out_start_utc = min(
+                    seg_s.replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
+                    for seg_s, _e, _r, _pp in output_intervals
+                )
+                src_start_utc = source[start_field]
+
+                if min_out_start_utc <= src_start_utc:
+                    _first_s, first_e, first_rule, first_pp = output_intervals[0]
+                    first_end_utc = first_e.replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
+                    if not (
+                        source.work_entry_type_id == first_rule.work_entry_type_id
+                        and source.time_rule_id == first_rule
+                        and source[source._time_rule_span_end_field] == first_end_utc
+                    ):
+                        source.sudo().with_context(**source._time_rule_write_ctx).write({
+                            'work_entry_type_id': first_rule.work_entry_type_id.id,
+                            'time_rule_id': first_rule.id,
+                            **source._get_time_rule_end_write_vals(first_end_utc, first_e),
+                            **first_rule._get_output_in_place_extra_vals(accumulated_pp=first_pp),
+                        })
+                    for seg_s, seg_e, _ in remainder_segments:
+                        df = seg_s.replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
+                        dt = seg_e.replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
+                        vals = source._get_time_rule_remainder_vals(df, dt)
+                        vals['work_entry_type_id'] = source_wet_id
+                        create_vals.append(vals)
+                    subsequent = output_intervals[1:]
+                else:
+                    min_out_start_local = min(seg_s for seg_s, _e, _r, _pp in output_intervals)
+                    source.sudo().with_context(**source._time_rule_write_ctx).write(
+                        source._get_time_rule_end_write_vals(min_out_start_utc, min_out_start_local)
+                    )
+                    for seg_s, seg_e, _ in remainder_segments[1:]:
+                        df = seg_s.replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
+                        dt = seg_e.replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
+                        vals = source._get_time_rule_remainder_vals(df, dt)
+                        vals['work_entry_type_id'] = source_wet_id
+                        create_vals.append(vals)
+                    subsequent = output_intervals
+
+                for seg_s, seg_e, rule, acc_pp in subsequent:
+                    df = seg_s.replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
+                    dt = seg_e.replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
+                    create_vals.append(source._get_time_rule_output_vals(rule, df, dt, acc_pp))
+                    excess_alloc.append((employee, rule, (seg_e - seg_s).total_seconds() / 3600))
+
+        any_source = next(
+            (src for by_source in excess.values() for src in by_source),
+            next((src for by_source in deficit.values() for src in by_source), None),
+        )
+        if any_source is None:
+            return None, frozenset(), [], []
+        new_records = self.env[any_source._name].sudo().with_context(**any_source._time_rule_write_ctx).create(create_vals)
+        return new_records, all_source_ids, excess_alloc, deficit_alloc
 
     def _evaluate_period(self, start, stop, record_intervals, schedule):
         """Evaluate one time period against this rule's threshold.

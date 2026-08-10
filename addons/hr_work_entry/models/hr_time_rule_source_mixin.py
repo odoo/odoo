@@ -3,21 +3,9 @@
 from collections import defaultdict
 from datetime import date, datetime, time, timedelta, UTC
 
+from dateutil.relativedelta import relativedelta
+
 from odoo import api, models
-
-
-def _max_span_end(children, src_field, start_field, end_field):
-    result = {}
-    for child in children:
-        src = child[src_field]
-        if not src:
-            continue
-        if child[start_field] > src[end_field]:
-            continue  # deficit child extends past source end
-        child_end = child[end_field]
-        if child_end and (src.id not in result or child_end > result[src.id]):
-            result[src.id] = child_end
-    return result
 
 
 class HrTimeRuleSourceMixin(models.AbstractModel):
@@ -31,8 +19,9 @@ class HrTimeRuleSourceMixin(models.AbstractModel):
     _time_rule_output_field = ''      # o2m from source to output
     _time_rule_span_start_field = ''  # span start field name
     _time_rule_span_end_field = ''    # span end field name
+    _time_rule_write_ctx = {'skip_time_rules': True, 'tracking_disable': True}
 
-    def _apply_record_output(self, excess, deficit):
+    def _apply_record_output(self, rules, excess, deficit):
         raise NotImplementedError
 
     def _get_source_extra_fields_domain(self):
@@ -41,9 +30,39 @@ class HrTimeRuleSourceMixin(models.AbstractModel):
     def _get_write_source_extra_source_fields(self):
         return {}
 
+    def _get_time_rule_end_write_vals(self, end_utc, stop_local):
+        """Write vals dict for updating the span-end field.
+
+        end_utc is the new UTC end datetime; stop_local is the same instant as a
+        naive datetime in the employee's tz.  Leave overrides to also write
+        request_date_to / request_hour_to.
+        """
+        return {self._time_rule_span_end_field: end_utc}
+
+    def _get_time_rule_deficit_occupied(self, employee_id, start_utc, period_end_utc):
+        """Return Intervals of existing records that occupy [start_utc, period_end_utc].
+
+        Used by the deficit go-around algorithm to find free slots.
+        """
+        raise NotImplementedError
+
+    def _get_time_rule_output_vals(self, rule, df, dt, pp):
+        """Create vals for a new time rule output record.
+
+        df/dt are UTC datetimes; pp is a frozenset of premium pay rule IDs.
+        """
+        raise NotImplementedError
+
+    def _get_time_rule_remainder_vals(self, df, dt):
+        """Create vals for a remainder record (source's original type, trimmed span).
+
+        df/dt are UTC datetimes. work_entry_type_id is intentionally omitted;
+        the caller fills it with the source's original WET before creating.
+        """
+        raise NotImplementedError
+
     def _get_source_records_for_time_rules(self, start_dt, end_dt, employees=None, check_end=False):
         domain = [
-            (self._time_rule_source_field, '=', False),
             (self._time_rule_span_end_field, '>=', start_dt.replace(tzinfo=None)),
             (self._time_rule_span_end_field, '!=', False),
         ]
@@ -57,21 +76,7 @@ class HrTimeRuleSourceMixin(models.AbstractModel):
         if employees:
             assert 'employee_id' in self._fields
             domain.append(('employee_id', 'in', employees.ids))
-        return self.sudo().with_context(active_test=False).search(domain)
-
-    def _collect_auto_ctx(self):
-        """Context dict used for internal writes during collection."""
-        return dict(skip_time_rules=True, tracking_disable=True)
-
-    def _restore_source_span(self, source, original_end, auto_ctx):
-        """Write original_end back as the span-end field of source."""
-        source.with_context(**auto_ctx).write({
-            'active': True,
-            self._time_rule_span_end_field: original_end,
-        })
-
-    def _after_source_restore(self, modified_sources, auto_ctx):
-        """Called after span restoration; override for model-specific side effects."""
+        return self.sudo().search(domain)
 
     def _merge_rule_outputs(self, a, b):
         merged = defaultdict(lambda: defaultdict(list))
@@ -93,43 +98,11 @@ class HrTimeRuleSourceMixin(models.AbstractModel):
             end_dt = datetime.combine(date_to, time.max).replace(tzinfo=UTC)
             by_range[start_dt, end_dt].append(employee)
 
-        auto_ctx = self._collect_auto_ctx()
-        src_field = self._time_rule_source_field
-        start_field = self._time_rule_span_start_field
-        end_field = self._time_rule_span_end_field
-
         for (start_dt, end_dt), employees in by_range.items():
             employee_rs = self.env['hr.employee'].browse([e.id for e in employees])
             sources = self._get_source_records_for_time_rules(start_dt, end_dt, employee_rs)
             if not sources:
                 continue
-
-            is_weekly = bool(rules) and all(r.quantity_period == 'week' for r in rules)
-            all_children = self.sudo().search([(src_field, 'in', sources.ids)])
-
-            if is_weekly:
-                # only delete prior weekly-rule outputs; day-rule outputs must be preserved
-                non_weekly = all_children.filtered(lambda c: c.time_rule_id not in rules)
-                (all_children - non_weekly).with_context(skip_time_rules=True).unlink()
-                span_end_by_src = _max_span_end(non_weekly, src_field, start_field, end_field)
-            else:
-                # skip restore when caller explicitly wrote a new span-end (don't override intent)
-                from_write = self.env.context.get('source_bounds_from_write')
-                span_end_by_src = (
-                    {} if from_write
-                    else _max_span_end(all_children, src_field, start_field, end_field)
-                )
-                all_children.with_context(skip_time_rules=True).unlink()
-
-            modified_sources = self.browse()
-            for src in sources:
-                src_end = src[end_field]
-                original_end = max(src_end, span_end_by_src.get(src.id, src_end))
-                if not src.active or original_end != src_end:
-                    self._restore_source_span(src, original_end, auto_ctx)
-                    modified_sources |= src
-
-            self._after_source_restore(modified_sources, auto_ctx)
 
             excess, deficit = rules._evaluate_rules(sources, start_dt, end_dt)
 
@@ -262,10 +235,6 @@ class HrTimeRuleSourceMixin(models.AbstractModel):
         if not self.env.context.get('skip_time_rules') and trigger_fields.intersection(vals):
             self._trigger_time_rules()
         return res
-
-    @api.ondelete(at_uninstall=False)
-    def _unlink_output_leaves(self):
-        self.sudo().mapped(self._time_rule_output_field).with_context(skip_time_rules=True).unlink()
 
     def unlink(self):
         # capture affected info before records are deleted, for the post-deletion recompute

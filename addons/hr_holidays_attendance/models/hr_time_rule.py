@@ -7,63 +7,44 @@ class HrTimeRule(models.Model):
     _inherit = 'hr.time.rule'
 
     def _apply_attendance_output(self, excess, deficit):
-        super()._apply_attendance_output(excess, deficit)
-        self._apply_allocation_compensation(excess, deficit)
-
-    def _apply_allocation_compensation(self, excess, deficit):
-        """Manage hr.leave.allocation balances for time rule outputs."""
+        _new_records, _all_source_ids, excess_alloc, deficit_alloc = self._apply_output(excess, deficit)
         alloc_create_vals = []
-
-        for employee, by_source in excess.items():
+        for employee, rule, excess_hours in excess_alloc:
+            if not (rule.leave_compensation_rate > 0 and rule.allocation_type_id):
+                continue
             hours_per_day = employee.resource_calendar_id.hours_per_day or 8.0
-            for _source_att, intervals in by_source.items():
-                resolved = self._resolve_output_intervals([(s, e, r) for s, e, r, _pp in intervals])
-                for s, e, rule in resolved:
-                    if not (rule.leave_compensation_rate > 0 and rule.allocation_type_id):
-                        continue
-                    alloc_days = (e - s).total_seconds() / 3600 * rule.leave_compensation_rate / hours_per_day
-                    allocation = self.env['hr.leave.allocation'].sudo().search([
-                        ('employee_id', '=', employee.id),
-                        ('work_entry_type_id', '=', rule.allocation_type_id.id),
-                        ('state', '=', 'validate'),
-                        ('date_to', '=', False),
-                    ], limit=1)
-                    if allocation:
-                        allocation.number_of_days += alloc_days
-                    else:
-                        alloc_create_vals.append({
-                            'employee_id': employee.id,
-                            'work_entry_type_id': rule.allocation_type_id.id,
-                            'number_of_days': alloc_days,
-                            'date_to': False,
-                            'state': 'confirm',
-                        })
-
+            alloc_days = excess_hours * rule.leave_compensation_rate / hours_per_day
+            if alloc_days <= 0:
+                continue
+            allocation = self.env['hr.leave.allocation'].sudo().search([
+                ('employee_id', '=', employee.id),
+                ('work_entry_type_id', '=', rule.allocation_type_id.id),
+                ('state', '=', 'validate'),
+                ('date_to', '=', False),
+            ], limit=1)
+            if allocation:
+                allocation.number_of_days += alloc_days
+            else:
+                alloc_create_vals.append({
+                    'employee_id': employee.id,
+                    'work_entry_type_id': rule.allocation_type_id.id,
+                    'number_of_days': alloc_days,
+                    'date_to': False,
+                    'state': 'confirm',
+                })
         if alloc_create_vals:
             new_allocs = self.env['hr.leave.allocation'].sudo().with_context(skip_time_rules=True).create(alloc_create_vals)
             new_allocs.action_approve()
-
-        for employee, by_source in deficit.items():
+        for employee, rule, deficit_hours in deficit_alloc:
+            if not (rule.leave_compensation_rate > 0 and rule.allocation_type_id):
+                continue
             hours_per_day = employee.resource_calendar_id.hours_per_day or 8.0
-            for _source_att, intervals in by_source.items():
-                effective_rule = min(
-                    (rule for _, _, rule, _pp in intervals if rule.work_entry_type_id),
-                    key=lambda r: r.sequence,
-                    default=None,
-                )
-                if not effective_rule:
-                    continue
-                for s, e, rule, _pp in intervals:
-                    if rule != effective_rule or e <= s:
-                        continue
-                    if not (rule.leave_compensation_rate > 0 and rule.allocation_type_id):
-                        continue
-                    deduct = (e - s).total_seconds() / 3600 * rule.leave_compensation_rate / hours_per_day
-                    allocation = self.env['hr.leave.allocation'].sudo().search([
-                        ('employee_id', '=', employee.id),
-                        ('work_entry_type_id', '=', rule.allocation_type_id.id),
-                        ('state', '=', 'validate'),
-                        ('date_to', '=', False),
-                    ], limit=1)
-                    if allocation:
-                        allocation.number_of_days -= deduct
+            deduct = deficit_hours * rule.leave_compensation_rate / hours_per_day
+            allocation = self.env['hr.leave.allocation'].sudo().search([
+                ('employee_id', '=', employee.id),
+                ('work_entry_type_id', '=', rule.allocation_type_id.id),
+                ('state', '=', 'validate'),
+                ('date_to', '=', False),
+            ], limit=1)
+            if allocation:
+                allocation.number_of_days = max(0, allocation.number_of_days - deduct)

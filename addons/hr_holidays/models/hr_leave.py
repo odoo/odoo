@@ -149,9 +149,8 @@ class HrLeave(models.Model):
     user_id = fields.Many2one('res.users', string='User', related='employee_id.user_id', related_sudo=True, compute_sudo=True, store=True, readonly=True, index=True)
     # leave type configuration
     work_entry_type_id = fields.Many2one(
-        "hr.work.entry.type", compute='_compute_work_entry_type_id',
-        store=True, string="Time Type",
-        required=True, index=True, readonly=False,
+        "hr.work.entry.type", string="Time Type",
+        required=True, index=True,
         domain="""[
             [('id', 'in', allowed_work_entry_type_ids)],
             ('time_off_selectable', '=', True),
@@ -525,7 +524,6 @@ class HrLeave(models.Model):
             & Domain('employee_id', 'in', check_warning_leaves.employee_id.ids)
             & Domain('work_entry_type_id.allow_request_on_top', '=', False)
             & Domain('state', 'not in', ['cancel', 'refuse'])
-            & not_generated
         )
         for holiday in check_warning_leaves:
             conflicting_holidays = all_leaves.filtered_domain([
@@ -778,25 +776,26 @@ class HrLeave(models.Model):
         return domain
 
     # so that when we consider allocated work entry types for employees that don't have allocations, it doesn't revert back to a generic one
-    @api.depends('employee_id', 'request_date_from', 'request_date_to')
-    def _compute_work_entry_type_id(self):
-        draft_leaves = self.filtered(lambda l: l.state == 'confirm')
-        for holiday in draft_leaves:
-            allowed_country_ids = [holiday.employee_id.company_id.country_id.id]
-            local_work_entry_types = self.env['hr.work.entry.type'].with_context(default_date_from=holiday.request_date_from, default_date_to=holiday.request_date_to).search([('country_id', 'in', allowed_country_ids)])
-            if holiday.work_entry_type_id and holiday.work_entry_type_id in local_work_entry_types:
+    @api.onchange('employee_id', 'request_date_from', 'request_date_to')
+    def _onchange_work_entry_type_id(self):
+        for holiday in self:
+            if not holiday.work_entry_type_id.requires_allocation:
                 continue
-            all_valid_work_entry_types = local_work_entry_types.filtered_domain([('has_valid_allocation', '=', True)])
-            no_alloc_types = local_work_entry_types.filtered_domain([('requires_allocation', '=', False)])
-            if holiday.employee_id:
+            if not holiday.work_entry_type_id.get_work_entry_types_with_valid_allocations(holiday.request_date_from, holiday.request_date_to, holiday.employee_id.id):
+                local_work_entry_types = self.env['hr.work.entry.type'].with_context(
+                    default_date_from=holiday.request_date_from,
+                    default_date_to=holiday.request_date_to,
+                ).search([('country_id', 'in', [holiday.employee_id.country_id.id or holiday.employee_id.company_id.country_id.id] + [False])])
+                all_valid_work_entry_types = local_work_entry_types.with_context(
+                    default_date_from=holiday.request_date_from,
+                    default_date_to=holiday.request_date_to,
+                ).filtered_domain([('has_valid_allocation', '=', True)])
+                no_allocation_required = local_work_entry_types.filtered_domain([('requires_allocation', '=', False)])
                 valid_types = all_valid_work_entry_types.get_work_entry_types_with_valid_allocations(holiday.request_date_from, holiday.request_date_to, holiday.employee_id.id)
-                if valid_types:
+                if not valid_types or not holiday.employee_id:
+                    holiday.work_entry_type_id = no_allocation_required[:1] or False
+                else:
                     holiday.work_entry_type_id = valid_types[0]
-                    continue
-            if no_alloc_types:
-                holiday.work_entry_type_id = no_alloc_types[0]
-            else:
-                holiday.work_entry_type_id = False
 
     @api.depends('employee_id')
     def _compute_department_id(self):
@@ -1456,11 +1455,14 @@ class HrLeave(models.Model):
         if any(not vals.get('employee_id', self.env.context.get('default_employee_id')) for vals in vals_list):
             raise UserError(_("There is no employee set on the time off. Please make sure you're logged in the correct company."))
         holidays = super(HrLeave, self.with_context(mail_create_nosubscribe=True)).create(vals_list)
-        real_holidays = holidays.filtered(lambda leave: leave.work_entry_type_id.time_off_selectable)
-        employees_without_allocation, zero_duration_employees = real_holidays.with_context(multi_leave_request=self.env.context.get('multi_leave_request'))._check_validity()
-        invalid_holidays = real_holidays.filtered(lambda l: l.employee_id in (employees_without_allocation | zero_duration_employees))
-        holidays -= invalid_holidays
-        invalid_holidays.unlink()
+        employees_without_allocation = self.env['hr.employee']
+        zero_duration_employees = self.env['hr.employee']
+        if not self.env.context.get('leave_skip_date_check'):
+            real_holidays = holidays.filtered(lambda leave: leave.work_entry_type_id.time_off_selectable)
+            employees_without_allocation, zero_duration_employees = real_holidays.with_context(multi_leave_request=self.env.context.get('multi_leave_request'))._check_validity()
+            invalid_holidays = real_holidays.filtered(lambda l: l.employee_id in (employees_without_allocation | zero_duration_employees))
+            holidays -= invalid_holidays
+            invalid_holidays.unlink()
         self.env['hr.leave.allocation'].invalidate_model(['leaves_taken', 'max_leaves'])  # missing dependency on compute
 
         for holiday in holidays:
@@ -1487,7 +1489,7 @@ class HrLeave(models.Model):
                 'type': 'danger',
                 'message': self.env._('There is no valid allocation to cover this request for the following employees: %s', invalid_employee_names),
             })
-        if self.env.context.get('leave_fast_create'):
+        if self.env.context.get('leave_fast_create') and not self.env.context.get('skip_create_resource_leave'):
             holidays.filtered(lambda l: l.state == 'validate')._create_resource_leave()
         if zero_duration_employees:
             self.env.user._bus_send('simple_notification', {
@@ -1550,7 +1552,8 @@ class HrLeave(models.Model):
                 validated_leaves._create_resource_leave()
         if any(field in values for field in ['request_date_from', 'date_from', 'request_date_from', 'date_to', 'work_entry_type_id', 'employee_id', 'state']):
             if not values.get('state') or values.get('state') not in ('refuse', 'cancel'):
-                self.filtered(lambda leave: leave.work_entry_type_id.time_off_selectable)._check_validity()
+                if not self.env.context.get('leave_skip_date_check'):
+                    self.filtered(lambda leave: leave.work_entry_type_id.time_off_selectable)._check_validity()
             self.env['hr.leave.allocation'].invalidate_model(['leaves_taken', 'max_leaves'])  # missing dependency on compute
         if not self.env.context.get('leave_fast_create'):
             for holiday in self:
@@ -1585,38 +1588,58 @@ class HrLeave(models.Model):
         rules._apply_leave_output(excess, deficit)
 
     def _get_source_extra_fields_domain(self):
-        return [
-            ('is_time_rule_output', '=', False),
-            ('state', '=', 'validate'),
-            ('work_entry_type_id.request_unit', '=', 'hour'),
-        ]
+        return [('state', '=', 'validate')]
 
     def _get_write_source_extra_source_fields(self):
         return {'work_entry_type_id', 'state'}
 
-    def _collect_auto_ctx(self):
-        return dict(
-            skip_time_rules=True,
-            leave_fast_create=True,
-            leave_skip_date_check=True,
-            leave_skip_state_check=True,
-            tracking_disable=True,
-            mail_activity_automation_skip=True,
-            skip_leave_version_check=True,
-            skip_create_resource_leave=True,
-        )
+    _time_rule_write_ctx = {
+        'skip_time_rules': True,
+        'leave_fast_create': True,
+        'leave_skip_date_check': True,
+        'leave_skip_state_check': True,
+        'tracking_disable': True,
+        'mail_activity_automation_skip': True,
+        'skip_leave_version_check': True,
+        'skip_create_resource_leave': True,
+    }
 
-    def _restore_source_span(self, source, original_end, auto_ctx):
-        source.with_context(**auto_ctx).write({
-            'active': True,
-            'date_to': original_end,
-            'request_date_to': original_end.date(),
-            'date_from': source.date_from,  # TODO MEPE what the point of this line ? :/
-        })
+    def _get_time_rule_end_write_vals(self, end_utc, stop_local):
+        return {
+            'date_to': end_utc,
+            'request_date_to': stop_local.date(),
+            'request_hour_to': stop_local.hour + stop_local.minute / 60,
+        }
 
-    def _after_source_restore(self, modified_sources, auto_ctx):
-        if modified_sources:
-            modified_sources.with_context(**auto_ctx)._create_resource_leave()
+    def _get_time_rule_deficit_occupied(self, employee_id, start_utc, period_end_utc):
+        dummy = self.env['resource.calendar']
+        existing = self.env['hr.leave'].sudo().search([
+            ('employee_id', '=', employee_id),
+            ('date_from', '<', period_end_utc),
+            ('date_to', '>', start_utc),
+            ('state', '=', 'validate'),
+        ])
+        return Intervals([(l.date_from, l.date_to, dummy) for l in existing], keep_distinct=True)
+
+    def _get_time_rule_output_vals(self, rule, df, dt, pp):
+        return rule._get_output_leave_vals(self.employee_id, rule, df, dt, self, accumulated_pp=pp)
+
+    def _get_time_rule_remainder_vals(self, df, dt):
+        tz = ZoneInfo(self.employee_id._get_tz())
+        df_local = df.replace(tzinfo=UTC).astimezone(tz).replace(tzinfo=None)
+        dt_local = dt.replace(tzinfo=UTC).astimezone(tz).replace(tzinfo=None)
+        return {
+            'employee_id': self.employee_id.id,
+            'date_from': df,
+            'date_to': dt,
+            'request_date_from': df_local.date(),
+            'request_date_to': dt_local.date(),
+            'request_hour_from': df_local.hour + df_local.minute / 60,
+            'request_hour_to': dt_local.hour + dt_local.minute / 60,
+            'source_leave_id': self.id,
+            'resource_calendar_id': self.resource_calendar_id.id,
+            'state': 'validate',
+        }
 
     def copy_data(self, default=None):
         vals_list = super().copy_data(default=default)
@@ -1924,38 +1947,6 @@ class HrLeave(models.Model):
                     partner_ids=holiday.employee_id.user_id.partner_id.ids)
 
         self.activity_update()
-        to_cleanup = self.filtered(
-            lambda l: l.date_from and l.date_to and not l.is_time_rule_output and not l.source_leave_id
-        )
-        if to_cleanup:
-            auto_ctx = dict(
-                skip_time_rules=True,
-                leave_fast_create=True,
-                leave_skip_date_check=True,
-                leave_skip_state_check=True,
-                tracking_disable=True,
-                mail_activity_automation_skip=True,
-                skip_leave_version_check=True,
-                skip_create_resource_leave=True,
-            )
-            all_children = to_cleanup.sudo().output_leave_ids
-            max_child_dt = {}
-            for child in all_children:
-                sid = child.source_leave_id.id
-                if child.date_to and (sid not in max_child_dt or child.date_to > max_child_dt[sid]):
-                    max_child_dt[sid] = child.date_to
-            all_children.with_context(skip_time_rules=True).unlink()
-            affected = []
-            for src in to_cleanup.sudo():
-                original_dt = max(src.date_to, max_child_dt.get(src.id, src.date_to))
-                affected.append((src.employee_id, src.date_from, original_dt))
-                if not src.active or original_dt != src.date_to:
-                    src.with_context(**auto_ctx).write({
-                        'active': True,
-                        'date_to': original_dt,
-                        'request_date_to': original_dt.date(),
-                    })
-            self._trigger_time_rules_for_affected(affected)
         return True
 
     def _notify_manager(self):

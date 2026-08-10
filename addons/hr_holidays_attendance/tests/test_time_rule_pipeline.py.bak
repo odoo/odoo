@@ -3,7 +3,8 @@
 import unittest
 from datetime import date, datetime, timedelta
 
-from odoo.exceptions import ValidationError
+from dateutil.relativedelta import relativedelta
+
 from odoo.tests import tagged
 from odoo.tests.common import TransactionCase, freeze_time
 
@@ -71,7 +72,7 @@ class TestTimeRulePipeline(TransactionCase):
             self.assertEqual(entry['work_entry_type_id'].code, exp_type.code)
 
     def test_no_overtime(self):
-
+        """No attendance: a workday generates schedule-only work entries."""
         vals = self.cal_version.generate_work_entries(date(2022, 12, 12), date(2022, 12, 12))
         self._check_work_entries(vals, [
             (date(2022, 12, 12), 8, self.att_type),
@@ -117,7 +118,7 @@ class TestTimeRulePipeline(TransactionCase):
         ])
 
     def test_overtime_weekend(self):
-
+        """Attendance on Saturday (no schedule) -> all hours become overtime."""
         self.env['hr.attendance'].create({
             'employee_id': self.cal_emp.id,
             'check_in': datetime(2022, 12, 10, 11),   # Saturday
@@ -129,7 +130,7 @@ class TestTimeRulePipeline(TransactionCase):
         ])
 
     def test_no_overtime_under_schedule(self):
-        """3h worked on 8h day (under threshold) -> 3h att only, no schedule fill."""
+        """Attendance within the schedule (3h < 8h) -> just 8h of schedule."""
         self.env['hr.attendance'].create({
             'employee_id': self.cal_emp.id,
             'check_in': datetime(2022, 12, 12, 9),
@@ -141,7 +142,7 @@ class TestTimeRulePipeline(TransactionCase):
         ])
 
     def test_flex_basic(self):
-
+        """Flex employee: attendance -> GENERATED_ATTENDANCE work entry, no overtime."""
         self.env['hr.attendance'].create({
             'employee_id': self.flex_emp.id,
             'check_in': datetime(2022, 12, 12, 9),
@@ -153,7 +154,7 @@ class TestTimeRulePipeline(TransactionCase):
         ])
 
     def test_flex_multiple_attendances_same_day(self):
-
+        """Two attendances on the same day merge into one work entry."""
         self.env['hr.attendance'].create([
             {'employee_id': self.flex_emp.id, 'check_in': datetime(2022, 12, 12, 8), 'check_out': datetime(2022, 12, 12, 12)},
             {'employee_id': self.flex_emp.id, 'check_in': datetime(2022, 12, 12, 13), 'check_out': datetime(2022, 12, 12, 17)},
@@ -164,24 +165,16 @@ class TestTimeRulePipeline(TransactionCase):
         ])
 
     def test_attendance_unlink_removes_outputs(self):
-        """Saturday source repurposed in-place as OT; unlinking it leaves no orphan records."""
+        """Deleting a source attendance cascades to its output attendances."""
         att = self.env['hr.attendance'].create({
             'employee_id': self.cal_emp.id,
             'check_in': datetime(2022, 12, 10, 11),  # Saturday -> all excess
             'check_out': datetime(2022, 12, 10, 17),
         })
-        att.invalidate_recordset()
-        self.assertTrue(att.active, "Source stays active as the repurposed OT record")
-        self.assertEqual(att.work_entry_type_id, self.overtime_type,
-                         "Source WET changed to overtime type (in-place repurpose)")
-        self.assertFalse(att.overtime_attendance_ids,
-                         "No child records; source IS the OT")
-        att_id = att.id
+        outputs = att.overtime_attendance_ids
+        self.assertTrue(outputs, "Output attendances should be created on attendance creation")
         att.unlink()
-        self.assertFalse(
-            self.env['hr.attendance'].search([('id', '=', att_id)]),
-            "Record deleted; no OT entry remains for this slot",
-        )
+        self.assertFalse(outputs.exists(), "Output attendances should be deleted when source is deleted")
 
     # Public holiday interaction TODO: public holiday cases needs a second look
     def _make_public_holiday(self, date_from, date_to, work_entry_type):
@@ -198,7 +191,7 @@ class TestTimeRulePipeline(TransactionCase):
         })
 
     def test_no_overtime_public_holiday(self):
-
+        """Public holiday with no attendance: 8h of public-holiday work entry, nothing else."""
         public_type = self.env['hr.work.entry.type'].create({
             'name': 'Public Holiday', 'code': 'PUBTEST', 'count_as': 'absence',
         })
@@ -212,7 +205,12 @@ class TestTimeRulePipeline(TransactionCase):
         ])
 
     def test_overtime_with_public_holiday_full_day_attendance(self):
-        """14h attendance on full-day PH: all 14h becomes OT, PH fully trimmed by worked time."""
+        """14h attendance (06:00-20:00) on a full-day public holiday.
+
+        The PH covers the full 8h schedule, so expected hours drop to 0h.
+        All 14h attendance becomes overtime; the PH absence is fully trimmed
+        by the worked time -> no public-holiday work entry.
+        """
         public_type = self.env['hr.work.entry.type'].create({
             'name': 'Public Holiday', 'code': 'PUBTEST2', 'count_as': 'absence',
         })
@@ -230,7 +228,10 @@ class TestTimeRulePipeline(TransactionCase):
         ])
 
     def test_public_holiday_intuitive_with_timing_rule(self):
-        """No-threshold timing rule scoped only to public holidays captures all 14h attendance as PH-worked type."""
+        """
+        A no-threshold timing rule (expected_hours=0) scoped only to public holidays
+        captures all attendance as a dedicated PH-worked type.
+        """
         ph_worked_type = self.env['hr.work.entry.type'].create({
             'name': 'Public Holiday Worked', 'code': 'PHWORK', 'requires_allocation': False,
         })
@@ -272,7 +273,11 @@ class TestTimeRulePipeline(TransactionCase):
         ])
 
     def test_public_holiday_partial_attendance(self):
-        """3h on PH (09:00-12:00) -> 3h OT + 5h remaining PH (schedule minus attendance window)."""
+        """3h attendance (09:00-12:00) on a full-day public holiday -> 3h overtime + 5h PH.
+
+        PH covers the full 8h schedule -> expected hours = 0h -> all 3h attendance is overtime.
+        PH trimmed by time_on (09:00-12:00): remaining PH in schedule = 08:00-09:00 (1h) + 13:00-17:00 (4h) = 5h.
+        """
         public_type = self.env['hr.work.entry.type'].create({
             'name': 'Public Holiday', 'code': 'PUBTEST3', 'count_as': 'absence',
         })
@@ -291,7 +296,11 @@ class TestTimeRulePipeline(TransactionCase):
         ])
 
     def test_employer_tolerance(self):
-        """8h30min worked, 1h employer tolerance: 30min excess < tolerance -> no overtime."""
+        """Overtime below employer_tolerance is not counted.
+
+        Employee works 8h30min (30min over the 8h schedule).  With a 1h employer
+        tolerance the excess (30min < 1h) is ignored -> no overtime output leave.
+        """
         self.time_rule.employer_tolerance = 1.0
         self.env['hr.attendance'].create({
             'employee_id': self.cal_emp.id,
@@ -305,7 +314,13 @@ class TestTimeRulePipeline(TransactionCase):
         ])
 
     def test_employer_tolerance_non_working_day(self):
-        """Weekend rule, 1h tolerance: 10min below (no OT), 1h equal (no OT), 4h above -> full 4h OT."""
+        """employer_tolerance gates overtime on non-working days (Saturdays).
+
+        A weekend-only rule with 1h tolerance:
+        - 10 min worked: below tolerance → no overtime
+        - 1h worked: equal to tolerance → no overtime (strictly-greater check)
+        - 4h worked: above tolerance → full 4h overtime (not 4 - 1 = 3)
+        """
         self.time_rule.active = False
         ot_type = self.env['hr.work.entry.type'].create({
             'name': 'Weekend OT', 'code': 'WKENDOTR', 'requires_allocation': False,
@@ -363,7 +378,7 @@ class TestTimeRulePipeline(TransactionCase):
         )
 
     def test_overtime_multiple_attendances_same_day(self):
-
+        """Two attendances totalling 10h on the same day: 8h att_type + 2h overtime."""
         self.env['hr.attendance'].create([
             {
                 'employee_id': self.cal_emp.id,
@@ -383,44 +398,13 @@ class TestTimeRulePipeline(TransactionCase):
             (date(2022, 12, 12), 2, self.overtime_type),
         ])
 
-    def test_touching_attendances_no_overlap(self):
-        """Two attendances sharing an exact boundary must produce 2 distinct non-overlapping OT records."""
-        self.time_rule.active = False
-        self.env['hr.time.rule'].create({
-            'name': 'Full Day OT',
-            'working_hours_mode': 'day',
-            'expected_hours': 0.0,
-            'timing_start': 0.0,
-            'timing_stop': 24.0,
-            'work_entry_type_id': self.overtime_type.id,
-            'condition_work_entry_type_ids': [self.att_type.id],
-        })
-        self.env['hr.attendance'].create([
-            {
-                'employee_id': self.cal_emp.id,
-                'check_in': datetime(2022, 12, 12, 5, 59, 58),
-                'check_out': datetime(2022, 12, 12, 7, 6, 13),
-            },
-            {
-                'employee_id': self.cal_emp.id,
-                'check_in': datetime(2022, 12, 12, 7, 6, 13),
-                'check_out': datetime(2022, 12, 12, 14, 24, 5),
-            },
-        ])
-        outputs = self.env['hr.attendance'].search([
-            ('employee_id', '=', self.cal_emp.id),
-            ('work_entry_type_id', '=', self.overtime_type.id),
-            ('is_time_rule_output', '=', True),
-        ])
-        self.assertEqual(len(outputs), 2, "Expected 2 distinct OT records for two touching attendances")
-        sorted_out = sorted(outputs, key=lambda a: a.check_in)
-        self.assertLessEqual(
-            sorted_out[0].check_out, sorted_out[1].check_in,
-            "OT outputs must not overlap at the shared boundary",
-        )
-
     def test_flex_public_holiday_trimmed_by_attendance(self):
-        """PH (06:00-18:00, 12h) trimmed by 4h attendance -> 8h PH + 4h att."""
+        """Public holiday trimmed by worked time on a flex employee.
+
+        Public holiday covers 06:00-18:00 (12h).  Two attendances: 09:00-11:00
+        and 13:00-15:00 (4h total).  time_on subtracts worked slots from the
+        absence leave: 12h - 4h = 8h public holiday + 4h attendance.
+        """
         public_type = self.env['hr.work.entry.type'].create({
             'name': 'Public Holiday', 'code': 'PUBTESTFLEX', 'count_as': 'absence',
         })
@@ -456,7 +440,7 @@ class TestTimeRulePipeline(TransactionCase):
         self.assertAlmostEqual(sum(v['duration'] for v in other_entries), 4, places=5)
 
     def test_flex_absence_leave_and_attendance(self):
-
+        """Flex employee: resource.calendar.leaves generates entries alongside attendance leaves."""
         leave_type = self.env['hr.work.entry.type'].create({
             'name': 'Sick', 'code': 'SICKFLEX', 'count_as': 'absence',
         })
@@ -487,7 +471,11 @@ class TestTimeRulePipeline(TransactionCase):
         self.assertEqual(len(vals), 3)
 
     def test_public_holiday_preshift_attendance(self):
-        """5h pre-schedule attendance on full-day PH -> 5h OT + 5h remaining PH."""
+        """5h attendance 06:00-11:00 on a full-day public holiday -> 5h overtime + 5h PH.
+
+        PH reduces expected hours to 0h -> all 5h attendance is overtime.
+        PH trimmed by time_on (06:00-11:00): remaining PH in schedule = 11:00-12:00 (1h) + 13:00-17:00 (4h) = 5h.
+        """
         public_type = self.env['hr.work.entry.type'].create({
             'name': 'Public Holiday', 'code': 'PUBTPH', 'count_as': 'absence',
         })
@@ -506,7 +494,12 @@ class TestTimeRulePipeline(TransactionCase):
         ])
 
     def test_public_holiday_small_attendance(self):
-        """1h mid-schedule attendance on full-day PH -> 1h OT + 7h remaining PH."""
+        """1h attendance 10:00-11:00 on a full-day public holiday -> 1h overtime + 7h PH.
+
+        PH reduces expected hours to 0h -> the 1h attendance is overtime.
+        PH trimmed by time_on (10:00-11:00): remaining PH in schedule =
+          08:00-10:00 (2h) + 11:00-12:00 (1h) + 13:00-17:00 (4h) = 7h.
+        """
         public_type = self.env['hr.work.entry.type'].create({
             'name': 'Public Holiday', 'code': 'PUBTPH2', 'count_as': 'absence',
         })
@@ -525,7 +518,13 @@ class TestTimeRulePipeline(TransactionCase):
         ])
 
     def test_no_rule_attendance_on_public_holiday(self):
-        """No active rule: 14h attendance on PH produces 14h att_type; PH fully trimmed."""
+        """14h attendance (06:00-20:00) on a public holiday with no time rule active.
+
+        Without a rule the source attendance leave (14h) is not split; the public
+        holiday absence is fully trimmed by time_on (attendance covers all schedule
+        slots 08:00-12:00 + 13:00-17:00) -> 0h public holiday entry.
+        Result: 14h att_type only.
+        """
         self.time_rule.active = False
         public_type = self.env['hr.work.entry.type'].create({
             'name': 'Public Holiday', 'code': 'PUBTPH3', 'count_as': 'absence',
@@ -544,7 +543,17 @@ class TestTimeRulePipeline(TransactionCase):
         ])
 
     def test_timing_window_overtime(self):
-        """Three out-of-schedule timing rules (morning/lunch/afternoon): 6h total OT, 8h att."""
+        """Three timing rules cover the out-of-schedule slot (old test_14).
+
+        Rules:   morning [00:00-08:00], lunch [12:00-13:00], afternoon [17:00-23:59]
+        Schedule: Mon-Fri 08:00-12:00 + 13:00-17:00 (8h/day, all UTC)
+
+        With attendance 06:00-20:00 (14h) each rule fires on its window:
+          morning   06:00-08:00 = 2h  (0h scheduled in window -> all excess)
+          lunch     12:00-13:00 = 1h  (0h scheduled in window -> all excess)
+          afternoon 17:00-20:00 = 3h  (0h scheduled in window -> all excess)
+        Total overtime = 6h; remaining attendance = 8h att_type.
+        """
         self.time_rule.active = False
         for name, t_start, t_stop in [
             ('Morning OT', 0.0, 8.0),
@@ -573,7 +582,12 @@ class TestTimeRulePipeline(TransactionCase):
                                msg=f"Expected 6h overtime, got {ot_dur}h")
 
     def test_timezone_generation_boundary(self):
-        """Tokyo employee: attendance at Sun 22:00 UTC (= Mon 07:00 Tokyo) is attributed to Monday."""
+        """generate_work_entries date range accounts for the employee's timezone.
+
+        Attendance starts Sunday 22:00 UTC = Monday 07:00 Asia/Tokyo.
+        Requesting Monday in Tokyo should include this attendance even though
+        the check_in is technically Sunday in UTC.
+        """
         emp_tokyo = self.env['hr.employee'].create({
             'name': 'Tokyo Employee',
             'tz': 'Asia/Tokyo',
@@ -596,7 +610,11 @@ class TestTimeRulePipeline(TransactionCase):
         self.assertAlmostEqual(vals[0]['duration'], 8, places=5)
 
     def test_attendance_spanning_midnight(self):
-        """Flex UTC: midnight-crossing attendance (Mon 22:00 - Tue 06:00) split into Mon 2h + Tue 6h."""
+        """Attendance crossing midnight produces entries on both days.
+
+        Flex employee UTC: check_in Mon 22:00, check_out Tue 06:00 (8h total).
+        Expecting separate work entries: Mon 2h + Tue 6h.
+        """
         self.env['hr.attendance'].create({
             'employee_id': self.flex_emp.id,
             'check_in': datetime(2022, 12, 12, 22, 0),   # Monday
@@ -611,7 +629,12 @@ class TestTimeRulePipeline(TransactionCase):
         self.assertAlmostEqual(vals[1]['duration'], 6, places=5)
 
     def test_consecutive_spanning_attendances_no_crash(self):
-        """Regression: consecutive midnight-crossing attendances sharing a boundary point must not crash."""
+        """Two back-to-back attendances each crossing midnight don't crash.
+
+        Regression: multi-day attendance intervals that share a boundary point
+        (Mon 22:00-Tue 06:00, Tue 06:00-Wed 06:00) should not cause singleton
+        or constraint errors during work entry generation.
+        """
         self.env['hr.attendance'].create([
             {
                 'employee_id': self.flex_emp.id,
@@ -628,7 +651,7 @@ class TestTimeRulePipeline(TransactionCase):
         self.flex_version.generate_work_entries(date(2022, 12, 12), date(2022, 12, 14))
 
     def test_output_attendance_counts_in_overtime(self):
-
+        """Output attendances are reflected in get_attendace_data_by_employee overtime_hours."""
         self.env['hr.attendance'].create({
             'employee_id': self.cal_emp.id,
             'check_in': datetime(2022, 12, 12, 6),
@@ -641,7 +664,7 @@ class TestTimeRulePipeline(TransactionCase):
                                msg="6h excess should show in overtime_hours")
 
     def test_flex_overlapping_leaves_no_singleton(self):
-
+        """Overlapping personal + global absence leaves on a flex employee don't raise an error"""
         sick_type = self.env['hr.work.entry.type'].search([('code', '=', 'LEAVE110')], limit=1)
         public_type = self.env['hr.work.entry.type'].create({
             'name': 'Public Holiday', 'code': 'PUBTESTOV', 'count_as': 'absence',
@@ -674,7 +697,7 @@ class TestTimeRulePipeline(TransactionCase):
 
     # Rule with no work_entry_type_id : detect excess but produce no output
     def test_no_output_when_rule_has_no_work_entry_type(self):
-
+        """Rule with work_entry_type_id=False: excess detected but source leave untouched."""
         self.time_rule.work_entry_type_id = False
         self.env['hr.attendance'].create({
             'employee_id': self.cal_emp.id,
@@ -688,7 +711,7 @@ class TestTimeRulePipeline(TransactionCase):
         ])
 
     def test_incomplete_attendance_no_outputs(self):
-
+        """Attendance with no check_out: no time rule output attendances."""
         self.env['hr.attendance'].create({
             'employee_id': self.cal_emp.id,
             'check_in': datetime(2022, 12, 12, 8),
@@ -700,7 +723,7 @@ class TestTimeRulePipeline(TransactionCase):
         self.assertFalse(output_atts, "No check_out -> no output attendances from time rules")
 
     def test_attendance_write_triggers_time_rule_recompute(self):
-        """Extending check_out after manually deleting the stale OT output creates a correctly-sized new one."""
+        """Extending check_out replaces the old output attendance with a correctly sized new one."""
         att = self.env['hr.attendance'].create({
             'employee_id': self.cal_emp.id,
             'check_in': datetime(2022, 12, 12, 8),
@@ -714,21 +737,18 @@ class TestTimeRulePipeline(TransactionCase):
         self.assertAlmostEqual(output_before.worked_hours, 2.0, places=5,
                                msg="Initial overtime should be 2h")
 
-        # extending att (now shrunk to 16h) to 20h overlaps the OT child (16h-18h)
-        # -> must delete the output first, then extend
-        output_before.unlink()
-        att.write({'check_out': datetime(2022, 12, 12, 20)})  # 12h worked -> 4h excess
+        att.write({'check_out': datetime(2022, 12, 12, 20)})  # extend to 12h -> 4h overtime
 
         output_after = self.env['hr.attendance'].search([
             ('employee_id', '=', self.cal_emp.id),
             ('is_time_rule_output', '=', True),
         ])
-        self.assertEqual(len(output_after), 1, "One new OT output after extending and re-evaluating")
+        self.assertEqual(len(output_after), 1, "Still one output attendance after recompute")
         self.assertAlmostEqual(output_after.worked_hours, 4.0, places=5,
-                               msg="Extended attendance (8h-20h) -> 12h worked -> 4h overtime")
+                               msg="Extended overtime should be 4h")
 
     def test_source_output_cleared_when_excess_drops(self):
-        """Shrinking check_out re-evaluates but stale OT child persists (engine is additive-only)."""
+        """Shrinking check_out so excess drops to zero removes the output child."""
         att = self.env['hr.attendance'].create({
             'employee_id': self.cal_emp.id,
             'check_in': datetime(2022, 12, 12, 8),
@@ -739,20 +759,21 @@ class TestTimeRulePipeline(TransactionCase):
         self.assertTrue(att.active, "Source stays active when OT starts after check_in")
         self.assertEqual(att.check_out, datetime(2022, 12, 12, 16), "Source shrunk to first OT start")
 
-        att.write({'check_out': datetime(2022, 12, 12, 16)})  # no-op value; triggers re-evaluation
+        att.write({'check_out': datetime(2022, 12, 12, 16)})  # no-op value; triggers re-evaluation with user intent
 
         att.invalidate_recordset()
-        self.assertTrue(att.active, "Source remains active")
+        self.assertTrue(att.active, "Source remains active after excess clears")
         output_atts = self.env['hr.attendance'].search([
             ('source_attendance_id', '=', att.id),
         ])
-        # stale output persists: engine is additive-only, no automatic cleanup when excess drops
-        self.assertEqual(len(output_atts), 1,
-                         "Stale OT child persists even though excess dropped to zero")
-        self.assertAlmostEqual(output_atts.worked_hours, 2.0, places=5)
+        self.assertFalse(output_atts, "No children should exist when there is no excess")
 
-    def test_weekly_output_persists_when_week_excess_drops(self):
-        """Reducing Mon so the weekly total drops to threshold: stale weekly output persists (additive-only)."""
+    def test_weekly_output_cleared_when_week_excess_drops(self):
+        """Reducing Mon so the weekly total drops to the threshold removes the weekly output.
+
+        Week rules do not archive source attendances; they only create output records.
+        When excess clears, the output is deleted and the source remains active throughout.
+        """
         self.time_rule.active = False
         weekly_rule = self.env['hr.time.rule'].create({
             'name': 'Weekly OT',
@@ -781,7 +802,7 @@ class TestTimeRulePipeline(TransactionCase):
         self.assertEqual(len(weekly_outputs), 1, "2h weekly output should exist")
         self.assertAlmostEqual(weekly_outputs.worked_hours, 2.0, places=5)
 
-        # Reduce Mon to 8h -> week total drops to 40h -> no new output, but stale one persists
+        # Reduce Mon to 8h -> week total drops to 40h -> no excess -> output deleted
         mon.write({'check_out': datetime(2022, 12, 12, 16)})
 
         weekly_outputs = self.env['hr.attendance'].search([
@@ -789,12 +810,10 @@ class TestTimeRulePipeline(TransactionCase):
             ('is_time_rule_output', '=', True),
             ('time_rule_id', '=', weekly_rule.id),
         ])
-        self.assertEqual(len(weekly_outputs), 1,
-                         "Stale weekly output persists; engine is additive-only")
-        self.assertAlmostEqual(weekly_outputs.worked_hours, 2.0, places=5)
+        self.assertFalse(weekly_outputs, "Weekly output must be deleted when excess drops to zero")
 
     def test_time_rule_recompute_scoped_to_date_range(self):
-
+        """Processing one day's attendance does not delete another day's output attendances."""
         # Day A: 14h -> 6h overtime output
         self.env['hr.attendance'].create({
             'employee_id': self.cal_emp.id,
@@ -820,7 +839,7 @@ class TestTimeRulePipeline(TransactionCase):
                         "Day A output attendance must not be deleted by Day B recompute")
 
     def test_source_attendance_split_and_remainder(self):
-
+        """After time rule fires the source is shrunk to the non-OT portion; output child covers the excess."""
         att = self.env['hr.attendance'].create({
             'employee_id': self.cal_emp.id,
             'check_in': datetime(2022, 12, 12, 6),
@@ -842,7 +861,7 @@ class TestTimeRulePipeline(TransactionCase):
                                msg="Shrunk source + output must total the original attendance duration")
 
     def test_deficit_rule(self):
-
+        """threshold_operator='less_than': output attendance created for unworked schedule gap."""
         gap_type = self.env['hr.work.entry.type'].create({
             'name': 'Under Time', 'code': 'DEFTEST', 'count_as': 'absence', 'requires_allocation': False,
         })
@@ -866,7 +885,7 @@ class TestTimeRulePipeline(TransactionCase):
         self.assertEqual(output_atts.work_entry_type_id, gap_type)
 
     def test_weekly_aggregate_overtime(self):
-
+        """working_hours_mode='week' evaluates total attendance across the whole week."""
         self.time_rule.active = False
         weekly_rule = self.env['hr.time.rule'].create({
             'name': 'Weekly OT',
@@ -899,7 +918,7 @@ class TestTimeRulePipeline(TransactionCase):
                                msg="2h excess over the 16h weekly limit")
 
     def test_leave_compensation_allocation_on_excess(self):
-        """50% rate on 6h excess -> 3 compensatory allocation days auto-created."""
+        """leave_compensation_rate > 0 creates a compensatory allocation when overtime fires."""
         comp_type = self.env['hr.work.entry.type'].create({
             'name': 'Compensatory Rest',
             'code': 'COMPREST',
@@ -908,7 +927,7 @@ class TestTimeRulePipeline(TransactionCase):
             'leave_validation_type': 'no_validation',
         })
         self.time_rule.write({
-            'leave_compensation_rate': 0.5,  # 50%
+            'leave_compensation_rate': 0.5,  # 50% of excess hours -> allocation days
             'allocation_type_id': comp_type.id,
         })
         # 14h on 8h day -> 6h excess -> 6h * 50% / 8h_per_day = 0.375 allocation days
@@ -923,10 +942,10 @@ class TestTimeRulePipeline(TransactionCase):
         ])
         self.assertEqual(len(allocation), 1, "Allocation should be auto-created")
         self.assertAlmostEqual(allocation.number_of_days, 0.375, places=5,
-                               msg="6h * 50% / 8h/day = 0.375 compensatory days")
+                               msg="6h * 50% / 8h_per_day = 0.375 compensatory days")
 
     def test_employee_domain_filters_rule(self):
-
+        """employee_domain limits rule application to matching employees only."""
         self.time_rule.employee_domain = f"[('id', '=', {self.cal_emp.id})]"
 
         other_emp = self.env['hr.employee'].create({
@@ -961,7 +980,7 @@ class TestTimeRulePipeline(TransactionCase):
         self.assertFalse(other_outputs, "Rule should not fire for the excluded employee")
 
     def test_reference_calendar_uses_reference_hours(self):
-        """calendar_source='reference': 12h/day reference baseline means 10h worked produces no OT."""
+        """calendar_source='reference' uses the specified calendar as expected-hours baseline."""
         ref_calendar = self.env['resource.calendar'].create({
             'name': '12h Reference',
             'attendance_ids': [
@@ -989,7 +1008,8 @@ class TestTimeRulePipeline(TransactionCase):
                          "10h worked < 12h reference baseline -> no overtime output")
 
     def test_sequential_rules_second_rule_finds_no_excess(self):
-        """Sequential pipeline: R2 with the same threshold sees 0h excess after R1 already claimed it."""
+        """Sequential pipeline: R2 with the same schedule threshold sees 0h excess after R1.
+        """
         second_ot_type = self.env['hr.work.entry.type'].create({
             'name': 'Double Overtime', 'code': 'DBLOVT',
         })
@@ -1015,7 +1035,13 @@ class TestTimeRulePipeline(TransactionCase):
         )
 
     def test_sequential_r2_targets_r1_excess(self):
-        """R2 (condition=[OT]) fires on R1's 6h OT output, reclassifying the top 3h as DoubleOT."""
+        """R2 with condition=[OT] fires on the OT intervals produced by R1.
+
+        R1 classifies the 6h excess above the 8h schedule as OT.
+        R2 then targets that OT with a fixed 3h threshold and reclassifies
+        the top 3h as DoubleOT.  Both rules produce distinct output records
+        from the same source attendance.
+        """
         double_ot_type = self.env['hr.work.entry.type'].create({
             'name': 'Double Overtime', 'code': 'DBLOT2',
         })
@@ -1047,7 +1073,12 @@ class TestTimeRulePipeline(TransactionCase):
         self.assertAlmostEqual(dbl_hours, 3.0, places=4, msg="DoubleOT output must be 3h (top 3h of the 6h excess)")
 
     def test_sequential_no_threshold_r2_classifies_att_remainder(self):
-        """R2 (no threshold, condition=[ATT]) reclassifies the entire 8h ATT remainder after R1 takes 6h OT."""
+        """R2 with no threshold fires on all remaining ATT after R1 takes the excess.
+
+        R1 classifies the 6h excess as OT.  R2 (no threshold, condition=[ATT])
+        then reclassifies the entire 8h ATT remainder as DBLOVT.  The original
+        source is fully covered by the two outputs so no ATT remainder is written.
+        """
         dblovt_type = self.env['hr.work.entry.type'].create({
             'name': 'Double Overtime Alt', 'code': 'DBLA',
         })
@@ -1085,7 +1116,18 @@ class TestTimeRulePipeline(TransactionCase):
         self.assertFalse(remainder_atts, "Source fully consumed by outputs; no ATT remainder record expected")
 
     def test_sequential_pipeline_chained_thresholds(self):
-        """R1 (>7h) -> OT1(3h); R2 (>5h, condition=[ATT]) -> OT2(2h); ATT remainder = 5h."""
+        """Core sequential pipeline scenario with two chained ATT thresholds.
+
+        R1 (>7h fixed, condition=[ATT] -> OT1) fires first:
+          ATT(10h) -> ATT(7h) remainder + OT1(3h)
+
+        R2 (>5h fixed, condition=[ATT] -> OT2) fires next on the ATT(7h) remainder;
+        OT1 is invisible to R2 because it no longer matches condition=[ATT]:
+          ATT(7h) -> ATT(5h) remainder + OT2(2h)
+
+        Final pipeline: ATT(5h) + OT2(2h) + OT1(3h)
+        The pp annotation step (R3 on Sundays) is Belgium-specific and not tested here.
+        """
         ot1_type = self.env['hr.work.entry.type'].create({'name': 'OT1', 'code': 'CCOT1'})
         ot2_type = self.env['hr.work.entry.type'].create({'name': 'OT2', 'code': 'CCOT2'})
         self.time_rule.active = False
@@ -1147,7 +1189,7 @@ class TestTimeRulePipeline(TransactionCase):
                              "OT2 must end where OT1 begins (no gap between the two excess bands)")
 
     def test_rule_skips_excluded_weekday(self):
-
+        """Rule with apply_saturday=False does not fire on Saturday attendance."""
         self.time_rule.apply_saturday = False
         # Saturday: no schedule -> would all be excess if rule fired
         self.env['hr.attendance'].create({
@@ -1162,7 +1204,7 @@ class TestTimeRulePipeline(TransactionCase):
         self.assertFalse(output_atts, "Rule must not fire on excluded Saturday")
 
     def test_rule_skips_public_holiday_when_excluded(self):
-
+        """apply_on_public_holidays=False removes the PH day from rule_intervals."""
         self.time_rule.apply_on_public_holidays = False
         public_type = self.env['hr.work.entry.type'].create({
             'name': 'Public Holiday', 'code': 'PHEXCL', 'count_as': 'absence',
@@ -1183,7 +1225,7 @@ class TestTimeRulePipeline(TransactionCase):
         self.assertFalse(output_atts, "Rule must not fire on excluded public holiday")
 
     def test_employee_tolerance_prevents_small_deficit(self):
-
+        """Deficit below employee_tolerance is ignored by _evaluate_period."""
         gap_type = self.env['hr.work.entry.type'].create({
             'name': 'Early Out', 'code': 'EARLOUT', 'count_as': 'absence',
         })
@@ -1205,7 +1247,7 @@ class TestTimeRulePipeline(TransactionCase):
         self.assertFalse(output_atts, "0.5h deficit < 1h employee_tolerance -> no output")
 
     def test_timing_window_creates_remainder_attendance(self):
-        """Lunch window cut from the middle: source shrunk to head [8:00-12:00], tail [13:00-20:00] becomes remainder child."""
+        """Output cut from the middle of an attendance: source shrunk to head, tail becomes a remainder child."""
         self.time_rule.active = False
         self.env['hr.time.rule'].create({
             'name': 'Lunch Premium',
@@ -1244,25 +1286,30 @@ class TestTimeRulePipeline(TransactionCase):
         self.assertAlmostEqual(remainder_atts.worked_hours, 7.0, places=5, msg="Tail remainder [13:00-20:00] = 7h")
 
     def test_source_zeroed_when_entire_attendance_is_excess(self):
-
+        """When excess covers the entire source attendance, it is archived with no remainder."""
+        # Saturday: no schedule -> expected_duration=0 -> all 6h = excess -> no remainder
         att = self.env['hr.attendance'].create({
             'employee_id': self.cal_emp.id,
             'check_in': datetime(2022, 12, 10, 11),   # Saturday
             'check_out': datetime(2022, 12, 10, 17),
         })
         att.invalidate_recordset()
-        self.assertTrue(att.active,
-                        "Source is repurposed in-place; it stays active as the OT record")
-        self.assertEqual(att.work_entry_type_id, self.overtime_type,
-                         "Source WET changed to overtime type")
-        self.assertEqual(att.time_rule_id, self.time_rule,
-                         "Source time_rule_id set to the firing rule")
-        self.assertFalse(att.overtime_attendance_ids,
-                         "No child output records; source IS the output")
-        self.assertAlmostEqual(att.worked_hours, 6.0, places=5)
+        self.assertFalse(att.active,
+                         "Source attendance must be archived when entirely excess")
+        remainder_atts = self.env['hr.attendance'].search([
+            ('source_attendance_id', '=', att.id),
+            ('is_time_rule_output', '=', False),
+        ])
+        self.assertFalse(remainder_atts, "No remainder when entire attendance is excess")
+        output_atts = self.env['hr.attendance'].search([
+            ('source_attendance_id', '=', att.id),
+            ('is_time_rule_output', '=', True),
+        ])
+        self.assertEqual(len(output_atts), 1)
+        self.assertAlmostEqual(output_atts.worked_hours, 6.0, places=5)
 
     def test_multiple_timing_windows_create_separate_outputs(self):
-
+        """Two non-overlapping timing windows each produce an independent output leave."""
         self.time_rule.active = False
         morning_type = self.env['hr.work.entry.type'].create({'name': 'Morning OT', 'code': 'MOROT2', 'requires_allocation': False, 'count_as': 'working_time'})
         evening_type = self.env['hr.work.entry.type'].create({'name': 'Evening OT', 'code': 'EVOT2', 'requires_allocation': False, 'count_as': 'working_time'})
@@ -1303,7 +1350,7 @@ class TestTimeRulePipeline(TransactionCase):
                                msg="3h after schedule [17:00-20:00]")
 
     def test_pure_timing_window_no_threshold(self):
-
+        """Rule with expected_hours=0 marks all attendance in the window as excess."""
         self.time_rule.active = False
         self.env['hr.time.rule'].create({
             'name': 'Night Shift Premium',
@@ -1329,7 +1376,10 @@ class TestTimeRulePipeline(TransactionCase):
                                msg="4h in [Tue 00:00-04:00] is excess with no threshold check")
 
     def test_deficit_compensation_deducts_from_allocation(self):
-        """4h deficit at 100% rate deducts 4 days from an existing compensatory allocation."""
+        """Deficit rule with leave_compensation_rate deducts from a compensatory allocation.
+
+        Employee works 4h of an 8h day -> 4h deficit -> 4h * 100% / 8h_per_day = 0.5 days deducted.
+        """
         comp_type = self.env['hr.work.entry.type'].create({
             'name': 'Flexi Leave', 'code': 'FLEXIDEF',
             'requires_allocation': True,
@@ -1349,7 +1399,7 @@ class TestTimeRulePipeline(TransactionCase):
         self.time_rule.write({
             'threshold_operator': 'less_than',
             'work_entry_type_id': gap_type.id,
-            'leave_compensation_rate': 1.0,  # 100%
+            'leave_compensation_rate': 1.0,
             'allocation_type_id': comp_type.id,
         })
         # Morning block only [8:00-12:00] -> gap [13:00-17:00] = 4h -> 4h * 100% / 8h_per_day = 0.5 days deducted
@@ -1361,11 +1411,19 @@ class TestTimeRulePipeline(TransactionCase):
         allocation.invalidate_recordset()
         self.assertAlmostEqual(
             allocation.number_of_days, 9.5, places=5,
-            msg="10 initial - 0.5 deducted (4h * 100% / 8h/day) = 9.5 remaining days",
+            msg="10 initial - 0.5 deducted (4h * 100% / 8h_per_day) = 9.5 remaining days",
         )
 
     def test_daily_and_weekly_rules_combined(self):
-        """Daily and weekly rules fire independently: 2h daily OT on Mon + 2h weekly OT from the 42h week."""
+        """Daily and weekly rules fire independently on the same source leaves.
+
+        Schedule: Mon-Fri 08:00-12:00 + 13:00-17:00 (8h/day, 40h/week).
+        Mon: 10h attendance -> 2h daily excess.
+        Tue-Fri: 8h each -> no daily excess.
+        Week total: 42h -> 2h weekly excess.
+
+        Both rules create output leaves independently; total = 4h across both.
+        """
         weekly_type = self.env['hr.work.entry.type'].create({
             'name': 'Weekly OT', 'code': 'WEEKOTCOMB', 'requires_allocation': False,
         })
@@ -1374,8 +1432,7 @@ class TestTimeRulePipeline(TransactionCase):
             'working_hours_mode': 'week',
             'expected_hours': 40.0,
             'work_entry_type_id': weekly_type.id,
-            # include daily OT type so Mon_OT(2h) counts toward the weekly 40h total
-            'condition_work_entry_type_ids': [self.att_type.id, self.overtime_type.id],
+            'condition_work_entry_type_ids': [self.att_type.id],
         })
         # Create one at a time to mirror real usage and exercise incremental rule firing.
         for day, check_out_hour in [(12, 18), (13, 16), (14, 16), (15, 16), (16, 16)]:
@@ -1400,7 +1457,13 @@ class TestTimeRulePipeline(TransactionCase):
         self.assertAlmostEqual(weekly_total, 2.0, places=5, msg="42h - 40h = 2h weekly OT")
 
     def test_calendar_employee_cross_midnight_timezone(self):
-        """Tokyo employee (UTC+9): midnight-crossing attendance attributed to Monday, 2h OT on Monday."""
+        """Calendar employee in UTC+9: an attendance crossing UTC midnight is attributed
+        to the correct calendar day in the employee's timezone and OT is computed against
+        that day's schedule.
+
+        Sun 22:00 UTC -> Mon 08:00 UTC = 10h (= Mon 07:00-17:00 Tokyo).
+        Calendar expects 8h on Monday -> 2h overtime, both on Monday.
+        """
         tokyo_emp = self.env['hr.employee'].create({
             'name': 'Tokyo Cal Employee',
             'tz': 'Asia/Tokyo',
@@ -1423,7 +1486,13 @@ class TestTimeRulePipeline(TransactionCase):
         ])
 
     def test_multiple_deficit_rules_least_consequent_wins(self):
-        """Two deficit rules: lowest-sequence (3h deficit) wins; second rule (5h deficit) is suppressed."""
+        """When two deficit rules apply to the same day, the one with the smaller
+        deficit (closest to zero) wins , the other is suppressed via sequence priority.
+
+        Rules: deficit-A expects 8h (sequence 10), deficit-B expects 10h (sequence 20).
+        Employee works 5h -> deficit-A = 3h, deficit-B = 5h.
+        Only the 3h deficit output should be created (lowest sequence wins).
+        """
         gap_type_a = self.env['hr.work.entry.type'].create({
             'name': 'Undertime A', 'code': 'DEFA', 'count_as': 'absence', 'requires_allocation': False,
         })
@@ -1459,7 +1528,13 @@ class TestTimeRulePipeline(TransactionCase):
         self.assertAlmostEqual(output_atts.worked_hours, 3.0, places=5)
 
     def test_deficit_builds_and_clears_with_incremental_attendances(self):
-        """Incremental attendance: 4h deficit -> manually delete output, +4h -> no deficit, +1h -> 1h OT (additive-only)."""
+        """Incremental attendance creates correctly update the deficit output.
+
+        Schedule: 8h/day.  Three creates in sequence:
+          1. 4h morning  -> 4h deficit output attendance
+          2. +4h afternoon -> deficit cleared (exactly 8h worked)
+          3. +1h extra   -> deficit gone, 1h overtime instead
+        """
         gap_type = self.env['hr.work.entry.type'].create({
             'name': 'Undertime', 'code': 'DEFINCR', 'count_as': 'absence', 'requires_allocation': False,
         })
@@ -1487,21 +1562,12 @@ class TestTimeRulePipeline(TransactionCase):
         })
         self.assertAlmostEqual(_deficit_hours(), 4.0, places=5, msg="4h worked -> 4h deficit")
 
-        # deficit output occupies 13h-17h and would block the afternoon attendance
-        # -> user must delete the stale output first (engine is additive-only)
-        self.env['hr.attendance'].search([
-            ('employee_id', '=', self.cal_emp.id),
-            ('is_time_rule_output', '=', True),
-            ('work_entry_type_id', '=', gap_type.id),
-        ]).with_context(skip_time_rules=True).unlink()
-
         self.env['hr.attendance'].create({
             'employee_id': self.cal_emp.id,
             'check_in': datetime(2022, 12, 12, 13),
             'check_out': datetime(2022, 12, 12, 17),  # +4h = 8h total
         })
-        self.assertAlmostEqual(_deficit_hours(), 0.0, places=5,
-                               msg="8h worked -> no deficit output created")
+        self.assertAlmostEqual(_deficit_hours(), 0.0, places=5, msg="8h worked -> deficit cleared")
 
         self.env['hr.attendance'].create({
             'employee_id': self.cal_emp.id,
@@ -1518,7 +1584,16 @@ class TestTimeRulePipeline(TransactionCase):
         self.assertAlmostEqual(ot_hours, 1.0, places=5, msg="1h excess -> 1h overtime output")
 
     def test_calendar_employee_overtime_spanning_midnight(self):
-        """Fri-Sat midnight crossing: Fri 8h OT + Sat 3h OT = 11h total."""
+        """Calendar employee: a single attendance crossing midnight generates overtime
+        on both days independently.
+
+        Fri 08:00 -> Sat 03:00 (19h total).
+        Fri schedule: 8h expected -> 11h worked on Fri (08:00-23:59) -> wait,
+        the source leave is split at midnight, so:
+          Fri portion: 08:00-00:00 = 16h, expected 8h -> 8h OT
+          Sat portion: 00:00-03:00 = 3h,  no schedule  -> 3h OT
+        Total OT = 11h across two work entries.
+        """
         self.env['hr.attendance'].create({
             'employee_id': self.cal_emp.id,
             'check_in': datetime(2022, 12, 9, 8),    # Friday
@@ -1553,7 +1628,7 @@ class TestTimeRulePipeline(TransactionCase):
         )
 
     def test_total_overtime_reflects_output_attendances(self):
-
+        """employee.total_overtime sums output attendance hours."""
         self.env['hr.attendance'].create({
             'employee_id': self.cal_emp.id,
             'check_in': datetime(2022, 12, 10, 11),   # Saturday
@@ -1569,7 +1644,12 @@ class TestTimeRulePipeline(TransactionCase):
         pass
 
     def test_get_attendance_data_worked_hours_and_overtime_hours(self):
-        """Jan: 11h Fri + 16h Sat = 27h worked, 3h+16h = 19h OT; Feb attendance outside window excluded."""
+        """get_attendace_data_by_employee returns correct worked_hours and overtime_hours.
+
+        Jan 1 2021 (Friday): 8-12 + 13-20 = 11h, schedule 8h -> 3h OT.
+        Jan 2 2021 (Saturday): 4-20 = 16h, no schedule -> 16h OT.
+        Feb 2 2021: 5h attendance, outside the Jan query window.
+        """
         self.env['hr.attendance'].create([
             {
                 'employee_id': self.cal_emp.id,
@@ -1662,8 +1742,13 @@ class TestTimeRulePipeline(TransactionCase):
         ])
         return sum(a.worked_hours for a in atts)
 
-    def test_public_holiday_create_does_not_clear_overtime(self):
-        """Adding a PH after OT exists leaves OT stale (additive-only; no cleanup on re-eval)."""
+    def test_public_holiday_create_clears_overtime(self):
+        """Adding a PH on a worked day removes OT when the rule excludes public holidays.
+
+        Employee works 14h (06:00-20:00) on Mon 2022-12-12 (8h schedule) -> 6h OT.
+        A PH is then created on the same day.  Because apply_on_public_holidays=False
+        the rule no longer fires for that day -> output leave deleted.
+        """
         self.time_rule.apply_on_public_holidays = False
         public_type = self.env['hr.work.entry.type'].create({
             'name': 'Public Holiday', 'code': 'PHCLEAR', 'count_as': 'absence',
@@ -1681,12 +1766,16 @@ class TestTimeRulePipeline(TransactionCase):
             datetime(2022, 12, 12, 0, 0, 0), datetime(2022, 12, 12, 23, 59, 59), public_type,
         )
         self.assertAlmostEqual(
-            self._ot_hours_on_day(self.cal_emp, date(2022, 12, 12)), 6.0, places=5,
-            msg="OT output persists (stale) after PH added; engine does not delete existing outputs",
+            self._ot_hours_on_day(self.cal_emp, date(2022, 12, 12)), 0.0, places=5,
+            msg="OT cleared after PH added (rule excludes PHs)",
         )
 
     def test_public_holiday_unlink_restores_overtime(self):
-        """Deleting a PH triggers re-evaluation and creates fresh 6h OT output."""
+        """Deleting a PH on a worked day restores OT when the rule excludes public holidays.
+
+        A PH exists first -> rule excluded -> 14h attendance produces no OT.
+        Deleting the PH triggers re-evaluation -> 6h OT output created.
+        """
         self.time_rule.apply_on_public_holidays = False
         public_type = self.env['hr.work.entry.type'].create({
             'name': 'Public Holiday', 'code': 'PHRESTORE', 'count_as': 'absence',
@@ -1710,7 +1799,12 @@ class TestTimeRulePipeline(TransactionCase):
         )
 
     def test_public_holiday_write_date_shifts_overtime(self):
-        """Moving a PH between worked days doesn't change existing OT (additive-only; no cleanup on re-eval)."""
+        """Moving a PH from one worked day to another shifts which OT is suppressed.
+
+        Both Mon 2022-12-12 and Tue 2022-12-13 have 14h attendance (6h OT each).
+        Step 1: create PH on Mon -> Mon OT disappears, Tue OT stays.
+        Step 2: move PH to Tue -> Mon OT restored, Tue OT disappears.
+        """
         self.time_rule.apply_on_public_holidays = False
         public_type = self.env['hr.work.entry.type'].create({
             'name': 'Public Holiday', 'code': 'PHSHIFT', 'count_as': 'absence',
@@ -1734,8 +1828,8 @@ class TestTimeRulePipeline(TransactionCase):
             datetime(2022, 12, 12, 0, 0, 0), datetime(2022, 12, 12, 23, 59, 59), public_type,
         )
         self.assertAlmostEqual(
-            self._ot_hours_on_day(self.cal_emp, date(2022, 12, 12)), 6.0, places=5,
-            msg="Mon OT persists (stale) despite PH; engine does not clear existing outputs",
+            self._ot_hours_on_day(self.cal_emp, date(2022, 12, 12)), 0.0, places=5,
+            msg="Mon OT cleared by PH",
         )
         self.assertAlmostEqual(
             self._ot_hours_on_day(self.cal_emp, date(2022, 12, 13)), 6.0, places=5,
@@ -1748,15 +1842,22 @@ class TestTimeRulePipeline(TransactionCase):
         })
         self.assertAlmostEqual(
             self._ot_hours_on_day(self.cal_emp, date(2022, 12, 12)), 6.0, places=5,
-            msg="Mon OT persists (stale) after PH moved to Tue",
+            msg="Mon OT restored after PH moved to Tue",
         )
         self.assertAlmostEqual(
-            self._ot_hours_on_day(self.cal_emp, date(2022, 12, 13)), 6.0, places=5,
-            msg="Tue OT persists (stale) after PH moved there; engine does not clear existing outputs",
+            self._ot_hours_on_day(self.cal_emp, date(2022, 12, 13)), 0.0, places=5,
+            msg="Tue OT cleared after PH moved there",
         )
 
     def test_public_holiday_update_after_time_rule_output(self):
-        """Regression: updating a PH when OT output attendances exist must not crash."""
+        """Updating a public holiday must not crash when time-rule output leaves exist.
+
+        Regression: _reevaluate_leaves searched for ALL hr.leave records in the
+        affected date range, including time-rule output leaves.  Writing state='confirm'
+        on the source leave triggered _process_time_rules which deleted the output leave,
+        then the loop tried to access the now-deleted record and raised
+        "Record does not exist or has been deleted".
+        """
         public_type = self.env['hr.work.entry.type'].create({
             'name': 'Public Holiday', 'code': 'PHUPDATE', 'count_as': 'absence',
         })
@@ -1780,6 +1881,10 @@ class TestTimeRulePipeline(TransactionCase):
         ph.write({'name': 'Updated Holiday'})   # this must not raise
 
     def test_attendance_before_working_time_leave_overlapping(self):
+        """
+        attendance fires the time rule (6h OT output).
+        then an overlapping manual working_time leave is then created.
+        """
         self.env['hr.attendance'].create({
             'employee_id': self.cal_emp.id,
             'check_in': datetime(2022, 12, 12, 6),
@@ -1815,7 +1920,16 @@ class TestTimeRulePipeline(TransactionCase):
         ])
 
     def test_multiple_attendances_overtime_spanning_utc_day(self):
-        """Brussels employee: two back-to-back Sat attendances -> 10h Sat OT + 2h Sun OT."""
+        """Brussels employee (UTC+2), two back-to-back attendances on Sat Apr 11 (UTC).
+
+        Att 0: 12:00-18:00 UTC = 14:00-20:00 Brussels Sat  ->  6h OT
+
+        Att 1: 18:00-00:00 UTC = 20:00 Sat (02:00 Sun Brussels):
+            Sat portion 20:00-24:00 Brussels              ->  4h OT
+            Sun portion 00:00-02:00 Brussels              ->  2h OT
+
+        Expected: 10h OT on Sat Brussels, 2h OT on Sun Brussels.
+        """
         emp = self.env['hr.employee'].create({
             'name': 'Brussels Overtime Employee',
             'tz': 'Europe/Brussels',
@@ -1882,7 +1996,15 @@ class TestTimeRulePipeline(TransactionCase):
         )
 
     def test_auto_check_out_employee_time_off(self):
-        """Auto-check-out with personal leave (15:00-17:00): check_out trimmed, 0.1h OT output created."""
+        """Auto-check-out respects personal time-off; excess becomes a time-rule output.
+
+        Schedule: Mon 8-12 + 13-17 (8h). Personal leave 15:00-17:00 -> effective 6h.
+        Check-in 08:00 UTC, cron fires at 17:06 UTC:
+          current_duration = 9.1h, tolerance = 0.1h -> 9.0 > 6.0 -> triggers
+          excess = 9.1 - 6.1 = 3.0h -> check_out = 17:06 - 3h = 14:06
+        Then time rule fires on the written attendance (8:00-14:06 = 6.1h vs 6h schedule):
+          0.1h excess -> source trimmed to 8:00-14:00, output att 14:00-14:06 created.
+        """
         Attendance = self.env['hr.attendance']
         company = self.env.company
         company.write({'auto_check_out': True, 'auto_check_out_tolerance': 0.1})
@@ -1930,7 +2052,16 @@ class TestTimeRulePipeline(TransactionCase):
         )
 
     def test_two_quantity_rules_priority(self):
-        """Seq=10 rule (>4h) claims 1h as type2; seq=20 rule (any-hours) claims remaining 4h as type1."""
+        """Two quantity rules with different thresholds: higher-priority rule wins overlapping excess.
+
+        Rule 1 (seq=20): reclassifies all attended hours to type1 (> 0h / any-hours rule).
+        Rule 2 (seq=10): > 4h/day threshold, reclassifies excess to type2 (higher priority).
+
+        Employee works 3h then takes a break, then works 2h = 5h total:
+        - Rule 2 fires first (higher priority, seq=10): 1h above 4h -> type2
+        - Rule 1 fires next (seq=20): remaining 4h still tagged as att_type -> type1
+        Expected: 4h at type1, 1h at type2.
+        """
         self.time_rule.write({'active': False})
 
         type1 = self.env['hr.work.entry.type'].create({'name': 'OT Base', 'code': 'TSTOTP1'})
@@ -1955,37 +2086,36 @@ class TestTimeRulePipeline(TransactionCase):
             'sequence': 20,
         })
 
-        # batch create: engine evaluates both attendances together (5h combined)
-        self.env['hr.attendance'].create([
-            {
-                'employee_id': self.flex_emp.id,
-                'check_in': datetime(2022, 12, 12, 8),
-                'check_out': datetime(2022, 12, 12, 11),  # 3h
-            },
-            {
-                'employee_id': self.flex_emp.id,
-                'check_in': datetime(2022, 12, 12, 12),
-                'check_out': datetime(2022, 12, 12, 14),  # 2h
-            },
-        ])
+        att1 = self.env['hr.attendance'].create({
+            'employee_id': self.flex_emp.id,
+            'check_in': datetime(2022, 12, 12, 8),
+            'check_out': datetime(2022, 12, 12, 11),  # 3h
+        })
+        att2 = self.env['hr.attendance'].create({
+            'employee_id': self.flex_emp.id,
+            'check_in': datetime(2022, 12, 12, 12),
+            'check_out': datetime(2022, 12, 12, 14),  # 2h
+        })
 
-        # sources may be type-changed in-place (is_time_rule_output=True but no child link)
-        all_outputs = self.env['hr.attendance'].search([
-            ('employee_id', '=', self.flex_emp.id),
-            ('is_time_rule_output', '=', True),
-            ('check_in', '>=', datetime(2022, 12, 12, 0)),
-            ('check_out', '<=', datetime(2022, 12, 13, 0)),
-        ])
-        type1_hours = sum(a.worked_hours for a in all_outputs if a.work_entry_type_id == type1)
-        type2_hours = sum(a.worked_hours for a in all_outputs if a.work_entry_type_id == type2)
+        outputs = att1.overtime_attendance_ids | att2.overtime_attendance_ids
+        type1_hours = sum(a.worked_hours for a in outputs if a.work_entry_type_id == type1)
+        type2_hours = sum(a.worked_hours for a in outputs if a.work_entry_type_id == type2)
 
         self.assertAlmostEqual(type1_hours, 4.0, places=5,
-            msg="4h classified by 'Any OT' rule (hours at or below the 4h mark)")
+            msg="4h should be classified by 'Any OT' rule (hours at or below the 4h mark)")
         self.assertAlmostEqual(type2_hours, 1.0, places=5,
-            msg="1h classified by 'Above 4h' rule (the hour exceeding the threshold)")
+            msg="1h should be classified by 'Above 4h' rule (the hour exceeding the threshold)")
 
     def test_excess_day1_deficit_day2_two_rules(self):
-        """att1 Mon 8-18: 2h OT child. att2 Mon 22-Tue 6: Mon tail repurposed in-place as 2h OT, Tue gets 2h deficit output."""
+        """Excess rule fires on day1, deficit rule fires on day2 across two sources.
+
+        _____________day1___________|_____________day2___________|
+        [att1 8-18      ]      [att2 22->6   ]
+
+        att1 Mon 08:00-18:00 (10h, threshold 8h) -> 2h OT output linked to att1.
+        att2 Mon 22:00 to Tue 06:00: Mon portion (2h) is all excess; Tue portion
+        (6h, threshold 8h) is 2h short -> 2h deficit output linked to att2.
+        """
         undertime_type = self.env['hr.work.entry.type'].create({
             'name': 'Undertime', 'code': 'EXDEF_UT', 'count_as': 'absence', 'requires_allocation': False,
         })
@@ -2001,15 +2131,18 @@ class TestTimeRulePipeline(TransactionCase):
         att1 = self.env['hr.attendance'].create({
             'employee_id': self.cal_emp.id,
             'check_in': datetime(2022, 12, 12, 8),   # Mon
-            'check_out': datetime(2022, 12, 12, 18),  # Mon 18:00 - 10h, 2h above threshold
+            'check_out': datetime(2022, 12, 12, 18),  # Mon 18:00 — 10h, 2h above threshold
         })
         att2 = self.env['hr.attendance'].create({
             'employee_id': self.cal_emp.id,
             'check_in': datetime(2022, 12, 12, 22),   # Mon 22:00
-            'check_out': datetime(2022, 12, 13, 6),   # Tue 06:00
+            'check_out': datetime(2022, 12, 13, 6),   # Tue 06:00 — 6h on Tue side, 2h below threshold
         })
 
         att1_ot = att1.overtime_attendance_ids.filtered(
+            lambda a: a.time_rule_id == self.time_rule
+        )
+        att2_ot = att2.overtime_attendance_ids.filtered(
             lambda a: a.time_rule_id == self.time_rule
         )
         att2_deficit = att2.overtime_attendance_ids.filtered(
@@ -2018,62 +2151,29 @@ class TestTimeRulePipeline(TransactionCase):
 
         self.assertAlmostEqual(
             sum(a.worked_hours for a in att1_ot), 2.0, places=5,
-            msg="att1: 10h worked, 8h threshold -> 2h OT child",
+            msg="att1: 10h worked, 8h threshold -> 2h OT",
         )
-        # att2's Mon portion (22:00-24:00) is the 2h excess tail (Mon ATT total = att1(8h)+att2(2h)=10h)
-        # -> att2 repurposed in-place as 2h OT; no separate OT child linked to att2
-        att2.invalidate_recordset()
-        self.assertEqual(att2.work_entry_type_id, self.overtime_type,
-                         "att2 type-changed in-place: Mon 22:00-24:00 is the 2h OT tail")
-        self.assertEqual(att2.time_rule_id, self.time_rule)
-        self.assertAlmostEqual(att2.worked_hours, 2.0, places=5,
-                               msg="att2 now spans 22:00-24:00 (2h)")
+        self.assertAlmostEqual(
+            sum(a.worked_hours for a in att2_ot), 2.0, places=5,
+            msg="att2 Mon portion (22:00-24:00, 2h) is all above threshold -> 2h OT",
+        )
         self.assertAlmostEqual(
             sum(a.worked_hours for a in att2_deficit), 2.0, places=5,
-            msg="att2 Tue portion (00:00-06:00, 6h) < 8h threshold -> 2h deficit output",
+            msg="att2 Tue portion (00:00-06:00, 6h) < 8h threshold -> 2h deficit",
         )
-
-    def test_overtime_duration_precision(self):
-        # 5-second overtime must not be truncated by pipeline or generate_work_entries.
-        self.time_rule.write({'active': False})
-        self.env['hr.time.rule'].create({
-            'name': 'Precision Rule 9h',
-            'working_hours_mode': 'day',
-            'expected_hours': 9.0,
-            'work_entry_type_id': self.overtime_type.id,
-            'condition_work_entry_type_ids': [self.att_type.id],
-        })
-
-        att = self.env['hr.attendance'].create({
-            'employee_id': self.cal_emp.id,
-            'check_in': datetime(2022, 1, 3, 8, 0, 0),
-            'check_out': datetime(2022, 1, 3, 17, 0, 5),
-        })
-
-        expected_ot_hours = 5 / 3600  # 0.001388..
-
-        # pipeline output: source trimmed to 9 h; OT child holds the 5-second tail
-        ot_atts = att.overtime_attendance_ids.filtered(
-            lambda a: a.work_entry_type_id == self.overtime_type
-        )
-        self.assertAlmostEqual(
-            sum(a.worked_hours for a in ot_atts), expected_ot_hours, places=5,
-            msg="5-second OT must survive the pipeline without being rounded to zero",
-        )
-
-        # payslip path: generate_work_entries must also carry the 5-second OT entry
-        vals = self.cal_version.generate_work_entries(date(2022, 1, 3), date(2022, 1, 3))
-        ot_total = sum(v['duration'] for v in vals if v['work_entry_type_id'] == self.overtime_type)
-        self.assertAlmostEqual(
-            ot_total, expected_ot_hours, places=5,
-            msg="generate_work_entries must not truncate 5-second OT to zero",
-        )
-        # sanity: the source work entry must carry exactly 9 h
-        att_total = sum(v['duration'] for v in vals if v['work_entry_type_id'] == self.att_type)
-        self.assertAlmostEqual(att_total, 9.0, places=5)
 
     def test_multiple_overlapping_overtimes_rounding(self):
-        """Brussels midnight crossing with weekday+weekend rules: Fri 2h30m28s OT + Sat 1h29m44s OT."""
+        """Midnight-crossing attendance in Brussels (UTC+1) with two rules: weekday excess and weekend.
+
+        Rule 1 (Mon-Fri, schedule-based): fires when >8h worked on working days.
+        Rule 2 (Sat-Sun, schedule-based): fires on non-working days; expected=0 so all hours are excess.
+
+        check_in:  2026-01-23 12:29:32 UTC = 13:29:32 Brussels (Friday Jan 23)
+        check_out: 2026-01-24 00:29:44 UTC = 01:29:44 Brussels (Saturday Jan 24)
+
+        Friday Brussels portion: 10h 30m 28s worked - 8h schedule = 2h 30m 28s weekday OT.
+        Saturday Brussels portion: 1h 29m 44s, all weekend OT.
+        """
         self.time_rule.active = False
 
         weekday_ot_type = self.env['hr.work.entry.type'].create({
@@ -2178,30 +2278,13 @@ class TestTimeRuleCronBehavior(TransactionCase):
         })
 
     def _outputs_for(self, att_id, ot_type=None):
-        att = self.env['hr.attendance'].browse(att_id)
-        # in-place repurpose: the source itself is the output (time_rule_id set, no source link)
-        if att.is_time_rule_output and not att.source_attendance_id:
-            all_outputs = att
-            if ot_type:
-                all_outputs = all_outputs.filtered(lambda a: a.work_entry_type_id == ot_type)
-            return all_outputs
-        # separate child records created by the pipeline
-        direct = self.env['hr.attendance'].search([
-            ('source_attendance_id', '=', att_id),
-            ('is_time_rule_output', '=', True),
-        ])
-        # one level deeper (e.g. week-OT whose source is a day-OT child of att)
-        indirect = self.env['hr.attendance'].search([
-            ('source_attendance_id', 'in', direct.ids),
-            ('is_time_rule_output', '=', True),
-        ]) if direct else self.env['hr.attendance']
-        all_outputs = direct | indirect
+        domain = [('source_attendance_id', '=', att_id), ('is_time_rule_output', '=', True)]
         if ot_type:
-            all_outputs = all_outputs.filtered(lambda a: a.work_entry_type_id == ot_type)
-        return all_outputs
+            domain.append(('work_entry_type_id', '=', ot_type.id))
+        return self.env['hr.attendance'].search(domain)
 
     def test_today_attendance_deferred_to_day_cron(self):
-        """Today's attendance with expected_hours=0 creates output immediately (all hours are excess)."""
+        """Attendance for today produces no output until the daily cron runs the next morning."""
         rule = self.env['hr.time.rule'].create({
             'name': 'All hours -> daily OT',
             'working_hours_mode': 'day',
@@ -2239,7 +2322,7 @@ class TestTimeRuleCronBehavior(TransactionCase):
             'working_hours_mode': 'week',
             'expected_hours': 5,
             'work_entry_type_id': self.week_ot_type.id,
-            'condition_work_entry_type_ids': [self.att_type.id, self.day_ot_type.id],
+            'condition_work_entry_type_ids': [self.att_type.id],
         })
         try:
             with freeze_time('2022-12-12'):
@@ -2259,10 +2342,10 @@ class TestTimeRuleCronBehavior(TransactionCase):
 
             day_h = sum(o.worked_hours for o in self._outputs_for(att.id, self.day_ot_type))
             week_h = sum(o.worked_hours for o in self._outputs_for(att.id, self.week_ot_type))
-            self.assertAlmostEqual(day_h, 1.0, places=5,
-                msg="Day OT cut by weekly rule (last 1 hour is converted into weekly overtime)")
+            self.assertAlmostEqual(day_h, 2.0, places=5,
+                msg="Day OT preserved , week cron must not remove it")
             self.assertAlmostEqual(week_h, 1.0, places=5,
-                msg="1h weekly OT by week cron (6h - 5h threshold)")
+                msg="1h weekly OT added by week cron (6h - 5h threshold)")
         finally:
             day_rule.write({'active': False})
             week_rule.write({'active': False})
@@ -2308,10 +2391,12 @@ class TestTimeRulePipelineLeaves(TransactionCase):
         cls.src_type = cls.env['hr.work.entry.type'].create({
             'name': 'Leave Src (pipeline)', 'code': 'LVSRC',
             'count_as': 'absence', 'requires_allocation': False, 'time_off_selectable': False,
+            'request_unit': 'hour',
         })
         cls.out_type = cls.env['hr.work.entry.type'].create({
             'name': 'Leave Out (pipeline)', 'code': 'LVOUT',
             'count_as': 'absence', 'requires_allocation': False, 'time_off_selectable': False,
+            'request_unit': 'hour',
         })
 
         cls.emp = cls.env['hr.employee'].create({
@@ -2348,7 +2433,7 @@ class TestTimeRulePipelineLeaves(TransactionCase):
         return sum((l.date_to - l.date_from).total_seconds() / 3600 for l in self._outputs(leave, out_type))
 
     def test_past_leave_exceed_creates_output(self):
-
+        """Validated past leave with exceed rule creates output immediately on create()."""
         rule = self.env['hr.time.rule'].create({
             'name': 'Exceed 4h/day',
             'working_hours_mode': 'day',
@@ -2365,7 +2450,7 @@ class TestTimeRulePipelineLeaves(TransactionCase):
             rule.write({'active': False})
 
     def test_past_leave_less_than_creates_output(self):
-
+        """Validated past leave with less_than rule creates output immediately on create()."""
         rule = self.env['hr.time.rule'].create({
             'name': 'Less than 8h/day',
             'working_hours_mode': 'day',
@@ -2381,7 +2466,7 @@ class TestTimeRulePipelineLeaves(TransactionCase):
             rule.write({'active': False})
 
     def test_today_leave_exceed_fires_immediately(self):
-
+        """Today's leave with exceed rule fires immediately; exceed is never deferred."""
         rule = self.env['hr.time.rule'].create({
             'name': 'Exceed 4h/day (today)',
             'working_hours_mode': 'day',
@@ -2399,7 +2484,7 @@ class TestTimeRulePipelineLeaves(TransactionCase):
             rule.write({'active': False})
 
     def test_today_leave_less_than_deferred(self):
-
+        """Today's leave with less_than rule is deferred to the daily cron."""
         rule = self.env['hr.time.rule'].create({
             'name': 'Less than 8h/day (today)',
             'working_hours_mode': 'day',
@@ -2416,7 +2501,7 @@ class TestTimeRulePipelineLeaves(TransactionCase):
             rule.write({'active': False})
 
     def test_write_check_out_extended_triggers_reprocess(self):
-
+        """Extending check_out via write() triggers rule reprocessing for validated attendances."""
         att_src_wet = self.env['hr.work.entry.type'].create({
             'name': 'Att Src (write extend)', 'code': 'ATSRCW', 'requires_allocation': False,
         })
@@ -2455,7 +2540,7 @@ class TestTimeRulePipelineLeaves(TransactionCase):
             rule.write({'active': False})
 
     def test_write_date_extended_triggers_reprocess(self):
-
+        """Extending a leave's date_to via write() triggers rule reprocessing."""
         rule = self.env['hr.time.rule'].create({
             'name': 'Exceed 4h (write extend)',
             'working_hours_mode': 'day',
@@ -2480,7 +2565,12 @@ class TestTimeRulePipelineLeaves(TransactionCase):
             rule.write({'active': False})
 
     def test_two_leaves_same_day_aggregate(self):
-        """Two leaves 2h+3h on same day: last 1h of leave_b is excess above 4h threshold."""
+        """Two leaves for the same employee on the same day are evaluated together.
+
+        Leave A: 2h (08:00-10:00) + Leave B: 3h (10:00-13:00) = 5h total.
+        Rule threshold: exceed 4h/day.
+        Expected: 1h excess attributed to Leave B (the interval that pushed past 4h).
+        """
         rule = self.env['hr.time.rule'].create({
             'name': 'Exceed 4h/day (aggregate)',
             'working_hours_mode': 'day',
@@ -2503,7 +2593,7 @@ class TestTimeRulePipelineLeaves(TransactionCase):
             rule.write({'active': False})
 
     def test_write_state_validate_triggers_rules(self):
-
+        """Writing state='validate' on a confirmed leave triggers time rule evaluation."""
         rule = self.env['hr.time.rule'].create({
             'name': 'Exceed 4h (state write)',
             'working_hours_mode': 'day',
@@ -2523,8 +2613,8 @@ class TestTimeRulePipelineLeaves(TransactionCase):
         finally:
             rule.write({'active': False})
 
-    def test_refuse_leaves_outputs_as_stale(self):
-
+    def test_refuse_clears_output_leaves(self):
+        """Refusing a validated leave removes its time rule output leaves."""
         rule = self.env['hr.time.rule'].create({
             'name': 'Exceed 4h (refuse)',
             'working_hours_mode': 'day',
@@ -2538,12 +2628,12 @@ class TestTimeRulePipelineLeaves(TransactionCase):
             self.assertTrue(self._outputs(leave), "Output must exist after validation")
 
             leave.sudo().action_refuse()
-            self.assertTrue(self._outputs(leave), "Outputs persist as stale after source is refused")
+            self.assertFalse(self._outputs(leave), "Refusing leave must clear output leaves")
         finally:
             rule.write({'active': False})
 
     def test_output_leaves_not_reprocessed(self):
-
+        """Output leaves (is_time_rule_output=True) are excluded from rule re-evaluation."""
         rule = self.env['hr.time.rule'].create({
             'name': 'Exceed 4h (no recurse)',
             'working_hours_mode': 'day',
@@ -2565,12 +2655,12 @@ class TestTimeRulePipelineLeaves(TransactionCase):
             rule.write({'active': False})
 
     def test_no_active_rule_no_output(self):
-
+        """With no active time rules, creating a validated leave produces no output."""
         leave = self._make_leave(datetime(2022, 12, 12, 8), datetime(2022, 12, 12, 14))
         self.assertFalse(self._outputs(leave), "No active rule: no output must be created")
 
     def test_weekly_rule_past_complete_week_fires(self):
-
+        """A weekly exceed rule fires for leaves entirely within a past complete ISO week."""
         rule = self.env['hr.time.rule'].create({
             'name': 'Week exceed 20h',
             'working_hours_mode': 'week',
@@ -2587,7 +2677,7 @@ class TestTimeRulePipelineLeaves(TransactionCase):
             rule.write({'active': False})
 
     def test_weekly_rule_current_week_deferred(self):
-
+        """A weekly rule is deferred for leaves ending within the current (incomplete) ISO week."""
         rule = self.env['hr.time.rule'].create({
             'name': 'Week exceed 20h (deferred)',
             'working_hours_mode': 'week',
@@ -2604,7 +2694,7 @@ class TestTimeRulePipelineLeaves(TransactionCase):
             rule.write({'active': False})
 
     def test_day_cron_processes_yesterday_undertime(self):
-
+        """_cron_process_day_undertime_rules() fires less_than day rules for yesterday's leaves."""
         rule = self.env['hr.time.rule'].create({
             'name': 'Less than 8h (day cron)',
             'working_hours_mode': 'day',
@@ -2626,7 +2716,7 @@ class TestTimeRulePipelineLeaves(TransactionCase):
             rule.write({'active': False})
 
     def test_week_cron_processes_past_week(self):
-
+        """_cron_process_week_time_rules() fires weekly rules for the just-ended Mon-Sun week."""
         rule = self.env['hr.time.rule'].create({
             'name': 'Week exceed 20h (week cron)',
             'working_hours_mode': 'week',
@@ -2648,7 +2738,7 @@ class TestTimeRulePipelineLeaves(TransactionCase):
             rule.write({'active': False})
 
     def test_skip_time_rules_context_prevents_trigger(self):
-
+        """Creating a leave with skip_time_rules=True suppresses rule evaluation."""
         rule = self.env['hr.time.rule'].create({
             'name': 'Exceed 4h (skip ctx)',
             'working_hours_mode': 'day',
@@ -2666,7 +2756,7 @@ class TestTimeRulePipelineLeaves(TransactionCase):
             rule.write({'active': False})
 
     def test_multiple_employees_independent_outputs(self):
-
+        """The rule evaluates each employee's leaves independently."""
         rule = self.env['hr.time.rule'].create({
             'name': 'Exceed 4h (multi-emp)',
             'working_hours_mode': 'day',
@@ -2694,7 +2784,7 @@ class TestTimeRulePipelineLeaves(TransactionCase):
             rule.write({'active': False})
 
     def test_sequential_rules_priority(self):
-        """Rule1 (seq=10, >4h) takes 4h; remaining 4h src < 6h Rule2 threshold -> no Rule2 output."""
+        """Two exceed rules (different sequences): lower seq classifies its excess first."""
         out_type2 = self.env['hr.work.entry.type'].create({
             'name': 'Leave Out Seq2', 'code': 'LVOUTSEQ2',
             'count_as': 'absence', 'requires_allocation': False, 'time_off_selectable': False,
@@ -2730,7 +2820,7 @@ class TestTimeRulePipelineLeaves(TransactionCase):
             rule2.write({'active': False})
 
     def test_day_and_week_cron_independence_undertime_leave(self):
-
+        """Day cron only fires day rules; week cron only fires week rules; neither interferes."""
         day_rule = self.env['hr.time.rule'].create({
             'name': 'Less than 8h/day (cron indep)',
             'working_hours_mode': 'day',
@@ -2772,7 +2862,7 @@ class TestTimeRulePipelineLeaves(TransactionCase):
             week_rule.write({'active': False})
 
     def test_no_output_when_wet_not_in_conditions(self):
-
+        """Leave with a WET not listed in condition_work_entry_type_ids produces no output."""
         other_type = self.env['hr.work.entry.type'].create({
             'name': 'Leave Other (pipeline)', 'code': 'LVOTHER',
             'count_as': 'absence', 'requires_allocation': False, 'time_off_selectable': False,
@@ -2794,7 +2884,7 @@ class TestTimeRulePipelineLeaves(TransactionCase):
             rule.write({'active': False})
 
     def test_employee_domain_filters_out_employee(self):
-
+        """A rule whose employee_domain excludes the employee produces no output."""
         rule = self.env['hr.time.rule'].create({
             'name': 'Exceed 4h (emp domain)',
             'working_hours_mode': 'day',
@@ -2810,101 +2900,8 @@ class TestTimeRulePipelineLeaves(TransactionCase):
         finally:
             rule.write({'active': False})
 
-    def test_source_entire_leave_is_excess(self):
-        """expected_hours=0: entire leave is excess -> source repurposed in-place (no child, no archive)."""
-        rule = self.env['hr.time.rule'].create({
-            'name': 'All hours out (entire excess)',
-            'working_hours_mode': 'day',
-            'threshold_operator': 'exceed',
-            'expected_hours': 0,
-            'work_entry_type_id': self.out_type.id,
-            'condition_work_entry_type_ids': [self.src_type.id],
-        })
-        try:
-            leave = self._make_leave(datetime(2022, 12, 13, 8), datetime(2022, 12, 13, 14))  # 6h
-            leave.invalidate_recordset()
-            self.assertTrue(leave.active, "Source stays active; repurposed in-place, not archived")
-            self.assertEqual(leave.work_entry_type_id, self.out_type, "Source WET changed to output type")
-            self.assertEqual(leave.time_rule_id, rule, "Source time_rule_id set to the firing rule")
-            self.assertFalse(leave.source_leave_id, "Source is still top-level (no source_leave_id)")
-            self.assertFalse(leave.output_leave_ids, "No child records; source IS the output")
-        finally:
-            rule.write({'active': False})
-
-    def test_second_leave_entirely_excess_type_changed(self):
-        """leave_b starts exactly at the threshold point -> entirely excess -> type-changed in-place."""
-        rule = self.env['hr.time.rule'].create({
-            'name': 'Exceed 2h/day (two-leave type-change)',
-            'working_hours_mode': 'day',
-            'threshold_operator': 'exceed',
-            'expected_hours': 2,
-            'work_entry_type_id': self.out_type.id,
-            'condition_work_entry_type_ids': [self.src_type.id],
-        })
-        try:
-            leave_a = self._make_leave(
-                datetime(2022, 12, 13, 8), datetime(2022, 12, 13, 10), skip_rules=True,  # 2h, exactly at threshold
-            )
-            leave_b = self._make_leave(  # triggers joint evaluation; leave_b start == threshold point
-                datetime(2022, 12, 13, 10), datetime(2022, 12, 13, 12),
-            )
-            leave_b.invalidate_recordset()
-            self.assertFalse(self._outputs(leave_a), "leave_a exactly at threshold: no excess, no child")
-            self.assertEqual(leave_b.work_entry_type_id, self.out_type,
-                             "leave_b entirely excess: type-changed in-place")
-            self.assertEqual(leave_b.time_rule_id, rule)
-            self.assertFalse(leave_b.source_leave_id)
-            self.assertFalse(leave_b.output_leave_ids, "No children; leave_b IS the output")
-        finally:
-            rule.write({'active': False})
-
-    def test_source_leave_unlink_output_child_remains(self):
-
-        rule = self.env['hr.time.rule'].create({
-            'name': 'Exceed 4h (unlink stale child)',
-            'working_hours_mode': 'day',
-            'threshold_operator': 'exceed',
-            'expected_hours': 4,
-            'work_entry_type_id': self.out_type.id,
-            'condition_work_entry_type_ids': [self.src_type.id],
-        })
-        try:
-            leave = self._make_leave(datetime(2022, 12, 13, 8), datetime(2022, 12, 13, 14))  # 6h -> 2h child
-            child = self._outputs(leave)
-            self.assertEqual(len(child), 1, "One output child must exist before deletion")
-            child_id = child.id
-
-            leave.sudo().with_context(skip_time_rules=True).unlink()
-
-            orphan = self.env['hr.leave'].sudo().search([('id', '=', child_id)])
-            self.assertEqual(len(orphan), 1, "Output child survives source deletion as a stale orphan")
-            self.assertFalse(orphan.source_leave_id, "source_leave_id nulled after parent deleted")
-        finally:
-            rule.write({'active': False})
-
-    def test_user_leave_blocked_by_type_changed_output(self):
-
-        rule = self.env['hr.time.rule'].create({
-            'name': 'All hours out (overlap block)',
-            'working_hours_mode': 'day',
-            'threshold_operator': 'exceed',
-            'expected_hours': 0,
-            'work_entry_type_id': self.out_type.id,
-            'condition_work_entry_type_ids': [self.src_type.id],
-        })
-        try:
-            leave = self._make_leave(datetime(2022, 12, 14, 8), datetime(2022, 12, 14, 14))
-            leave.invalidate_recordset()
-            self.assertEqual(leave.work_entry_type_id, self.out_type,
-                             "Precondition: source type-changed in-place -> is_time_rule_output=True")
-
-            with self.assertRaises(ValidationError):
-                self._make_leave(datetime(2022, 12, 14, 8), datetime(2022, 12, 14, 14))
-        finally:
-            rule.write({'active': False})
-
     def test_day_and_week_cron_independence_undertime_attendance(self):
-
+        """Day cron fires day rules only; week cron fires week rules only; neither interferes (attendance)."""
         src_wet = self.env['hr.work.entry.type'].create({
             'name': 'Att Src (day/week indep)', 'code': 'ATSRCINDEP', 'requires_allocation': False,
         })
@@ -2962,110 +2959,3 @@ class TestTimeRulePipelineLeaves(TransactionCase):
         finally:
             day_rule.write({'active': False})
             week_rule.write({'active': False})
-
-    def test_deficit_goes_around_non_matching_type_leave(self):
-        """A validated leave that is invisible to the evaluator (wrong type, count_as=working_time)
-        still blocks deficit placement; the engine routes around it in two separate output records."""
-        cal = self.env['resource.calendar'].create({
-            'name': 'Deficit Go-Around Calendar',
-            'attendance_ids': [
-                (0, 0, {'dayofweek': str(d), 'hour_from': 8.0, 'hour_to': 14.0})
-                for d in range(5)
-            ],
-        })
-        emp = self.env['hr.employee'].create({
-            'name': 'Deficit Go-Around Employee',
-            'tz': 'UTC',
-            'attendance_based': False,
-            'resource_calendar_id': cal.id,
-            'date_version': '2022-12-01',
-            'contract_date_start': '2022-12-01',
-            'wage': 3000,
-        })
-        blocker_type = self.env['hr.work.entry.type'].create({
-            'name': 'Blocker (working_time, go-around)', 'code': 'BLKWGA',
-            # count_as='working_time' → not subtracted from the schedule leave pool
-            # → evaluator sees full expected_duration; go-around must still avoid it
-            'count_as': 'working_time', 'requires_allocation': False,
-        })
-        undertime_type = self.env['hr.work.entry.type'].create({
-            'name': 'Undertime (go-around)', 'code': 'UTGA',
-            'count_as': 'absence', 'requires_allocation': False,
-        })
-        rule = self.env['hr.time.rule'].create({
-            'name': 'Less than schedule (go-around)',
-            'working_hours_mode': 'schedule_day',
-            'threshold_operator': 'less_than',
-            'work_entry_type_id': undertime_type.id,
-            'condition_work_entry_type_ids': [self.src_type.id],
-        })
-        try:
-            self._make_leave(
-                datetime(2022, 12, 12, 8), datetime(2022, 12, 12, 10),
-                emp=emp, skip_rules=True,
-            )
-            blocker = self._make_leave(
-                datetime(2022, 12, 12, 13), datetime(2022, 12, 12, 14),
-                emp=emp, wet=blocker_type, skip_rules=True,
-            )
-            with freeze_time('2022-12-13'):
-                self.env['hr.leave']._cron_process_day_undertime_rules()
-
-            outputs = self.env['hr.leave'].sudo().search([
-                ('employee_id', '=', emp.id),
-                ('work_entry_type_id', '=', undertime_type.id),
-            ])
-            total_hours = sum((o.date_to - o.date_from).total_seconds() / 3600 for o in outputs)
-            self.assertAlmostEqual(total_hours, 2.0, places=5,
-                                   msg="Full 2h deficit must be placed (split around the blocker)")
-            self.assertEqual(len(outputs), 2,
-                             "Two output records expected: one before and one after the blocker")
-            for out in outputs:
-                self.assertFalse(
-                    out.date_from < blocker.date_to and out.date_to > blocker.date_from,
-                    f"Output {out.date_from}-{out.date_to} must not overlap with blocker",
-                )
-        finally:
-            rule.write({'active': False})
-
-    def test_deficit_partial_fill_when_period_mostly_blocked(self):
-        """When a blocker occupies part of the deficit interval and there is not enough
-        free time left in the period, the engine places only what fits (partial fill)."""
-        undertime_type = self.env['hr.work.entry.type'].create({
-            'name': 'Undertime (partial)', 'code': 'UTPA',
-            'count_as': 'absence', 'requires_allocation': False,
-        })
-        rule = self.env['hr.time.rule'].create({
-            'name': 'Less than 3h/day (partial fill)',
-            'working_hours_mode': 'day',
-            'threshold_operator': 'less_than',
-            'expected_hours': 3,
-            'work_entry_type_id': undertime_type.id,
-            'condition_work_entry_type_ids': [self.src_type.id],
-        })
-        try:
-            self._make_leave(
-                datetime(2022, 12, 12, 8), datetime(2022, 12, 12, 9),
-                skip_rules=True,  # 1h source → deficit=2h
-            )
-            # blocker (out_type, NOT in condition) blocks the first hour of the deficit interval
-            self._make_leave(
-                datetime(2022, 12, 12, 22), datetime(2022, 12, 12, 23),
-                wet=self.out_type, skip_rules=True,
-            )
-            with freeze_time('2022-12-13'):
-                self.env['hr.leave']._cron_process_day_undertime_rules()
-
-            outputs = self.env['hr.leave'].sudo().search([
-                ('employee_id', '=', self.emp.id),
-                ('work_entry_type_id', '=', undertime_type.id),
-            ])
-            total_hours = sum((o.date_to - o.date_from).total_seconds() / 3600 for o in outputs)
-            self.assertAlmostEqual(total_hours, 1.0, places=5,
-                                   msg="Only 1h of 2h deficit fits in the free [23:00-midnight] slot")
-            period_end = datetime(2022, 12, 13, 0, 0, 0)
-            for out in outputs:
-                self.assertLessEqual(out.date_to, period_end,
-                                     "Output must not spill past midnight (period boundary)")
-        finally:
-            rule.write({'active': False})

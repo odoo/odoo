@@ -159,7 +159,7 @@ class HrEmployee(models.Model):
         for employee in self:
             employee.total_overtime = 0.0
 
-    @api.depends('attendance_ids', 'attendance_ids.check_in', 'attendance_ids.check_out', 'attendance_ids.worked_hours', 'attendance_ids.validated_overtime_hours')
+    @api.depends('attendance_ids', 'attendance_ids.check_in', 'attendance_ids.check_out', 'attendance_ids.worked_hours', 'attendance_ids.time_rule_id')
     def _compute_hours_last_month(self):
         """
         Compute hours and overtime hours in the current month, if we are the 15th of october, will compute from 1 oct to 15 oct
@@ -178,10 +178,11 @@ class HrEmployee(models.Model):
                 current_month_attendances = employee.attendance_ids.filtered(
                     lambda att: att.check_in >= start_naive and att.check_out and att.check_out <= end_naive
                 )
-                hours = sum(att.worked_hours or 0 for att in current_month_attendances)
+                hours = sum(att.worked_hours or 0 for att in current_month_attendances if not att.time_rule_id)
+                overtime_hours = sum(att.worked_hours or 0 for att in current_month_attendances if att.time_rule_id)
                 employee.hours_last_month = round(hours, 2)
                 employee.hours_last_month_display = self.env._("%(hours)g h in %(month)s") % {'hours': employee.hours_last_month, 'month': now_tz.strftime('%b')}
-                employee.hours_last_month_overtime = 0.0
+                employee.hours_last_month_overtime = round(overtime_hours, 2)
 
     @api.depends('attendance_ids', 'attendance_ids.check_in', 'attendance_ids.check_out', 'attendance_ids.break_duration')
     def _compute_hours_today(self):

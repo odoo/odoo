@@ -16,6 +16,10 @@ class HrVersion(models.Model):
     )
 
     @api.model
+    def _get_whitelist_fields_from_template(self):
+        return super()._get_whitelist_fields_from_template() + ['attendance_based']
+
+    @api.model
     def _get_versions_by_employee_and_date(self, employee_dates):
         # for `employee_dates` a dict[employee] -> dates
         # Generate a 2 level dict[employee][date] -> version

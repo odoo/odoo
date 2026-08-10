@@ -95,7 +95,7 @@ class HrVersion(models.Model):
     def _get_interval_leave_work_entry_type(self, interval):
         self.ensure_one()
         payload = interval[2]
-        if not payload:
+        if payload is None:
             return self.env.ref('hr_work_entry.generic_work_entry_type_leave')
         interval_start = interval[0].astimezone(UTC).replace(tzinfo=None)
         interval_stop = interval[1].astimezone(UTC).replace(tzinfo=None)
@@ -249,7 +249,8 @@ class HrVersion(models.Model):
                 for s, e, rca in expected_attendances
                 if rca.work_entry_type_id[:1] and rca.work_entry_type_id[:1].count_as == 'absence'
             ], keep_distinct=True)
-            real_leaves = real_leaves | absence_attendances
+            # give prio to absence attendances if same sequence
+            real_leaves = absence_attendances | real_leaves
             real_worked_leaves = version._get_real_worked_leaves(worked_leaves, real_leaves)
             work_attendances = Intervals([
                 iv for iv in expected_attendances

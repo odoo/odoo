@@ -3,6 +3,8 @@
 from datetime import datetime
 
 from odoo import models
+from odoo.tools.date_utils import sum_intervals
+from odoo.tools.intervals import Intervals
 
 
 class HrLeaveAllocation(models.Model):

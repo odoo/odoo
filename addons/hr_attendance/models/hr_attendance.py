@@ -88,7 +88,7 @@ class HrAttendance(models.Model):
     break_duration = fields.Float(string="Break Duration", tracking=True, help="Extra unpaid break duration (hours)")
     work_entry_type_id = fields.Many2one(
         'hr.work.entry.type', string="Time Type", index=True,
-        default=lambda self: self.env.company.attendance_work_entry_type_id,
+        default=lambda self: self.env.company.sudo().attendance_work_entry_type_id,
     )
 
     active = fields.Boolean(default=True)
@@ -102,7 +102,7 @@ class HrAttendance(models.Model):
     # time rule engine output fields
     is_time_rule_output = fields.Boolean(compute='_compute_is_time_rule_output', search='_search_is_time_rule_output')
     time_rule_id = fields.Many2one('hr.time.rule', index=True)
-    source_attendance_id = fields.Many2one('hr.attendance', ondelete='cascade', index=True)
+    source_attendance_id = fields.Many2one('hr.attendance', index=True)
     overtime_attendance_ids = fields.One2many('hr.attendance', 'source_attendance_id')
 
     @api.depends('date')
@@ -189,7 +189,6 @@ class HrAttendance(models.Model):
                 if float_compare(attendance.break_duration, total_hours, precision_digits=4) > 0:
                     raise ValidationError(self.env._("Break duration cannot exceed the attendance duration."))
 
-
     @api.depends('time_rule_id')
     def _compute_is_time_rule_output(self):
         for att in self:
@@ -227,16 +226,19 @@ class HrAttendance(models.Model):
 
     @api.constrains('check_in', 'check_out', 'employee_id')
     def _check_validity(self):
-        """Verify attendance records don't overlap; skip time rule engine output records."""
+        """Verify attendance records don't overlap.
+
+        Engine outputs (is_time_rule_output / source_attendance_id) are exempt from
+        the check themselves — the engine places them with skip_time_rules and they
+        are allowed to occupy any slot.  User-owned records, however, must not
+        overlap with engine outputs: the user should delete the output first.
+        """
         if self.env.context.get('skip_time_rules'):
             return
-        # archived sources and remainder children are managed by the time rule engine; skip them
         for attendance in self.filtered(lambda a: not a.is_time_rule_output and not a.source_attendance_id and a.active):
             src_domain = [
                 ('employee_id', '=', attendance.employee_id.id),
                 ('id', '!=', attendance.id),
-                ('is_time_rule_output', '=', False),
-                ('source_attendance_id', '=', False),
             ]
             last_before_check_in = self.env['hr.attendance'].search(
                 src_domain + [('check_in', '<=', attendance.check_in)],
@@ -281,7 +283,10 @@ class HrAttendance(models.Model):
             not self.env.user.has_group('hr_attendance.group_hr_attendance_manager') and \
             self.env['hr.employee'].sudo().browse(vals['employee_id']).attendance_manager_id.id != self.env.user.id:
             raise AccessError(_("Do not have access, user cannot edit the attendances that are not their own or if they are not the attendance manager of the employee."))
-        return super().write(vals)
+        result = super().write(vals)
+        if 'check_out' in vals and not self.env.context.get('skip_time_rules') and 'state' not in vals:
+            self._update_tolerance_state()
+        return result
 
     def copy(self, default=None):
         raise exceptions.UserError(_('You cannot duplicate an attendance.'))
@@ -644,51 +649,72 @@ class HrAttendance(models.Model):
     def _apply_record_output(self, rules, excess, deficit):
         rules._apply_attendance_output(excess, deficit)
 
+    def _get_time_rule_deficit_occupied(self, employee_id, start_utc, period_end_utc):
+        dummy = self.env['resource.calendar']
+        existing = self.env['hr.attendance'].sudo().search([
+            ('employee_id', '=', employee_id),
+            ('check_in', '<', period_end_utc),
+            ('check_out', '>', start_utc),
+        ])
+        return Intervals([(a.check_in, a.check_out, dummy) for a in existing], keep_distinct=True)
+
+    def _get_time_rule_output_vals(self, rule, df, dt, pp):
+        return rule._get_output_attendance_vals(self.employee_id, rule, df, dt, self, accumulated_pp=pp)
+
+    def _get_time_rule_remainder_vals(self, df, dt):
+        return {
+            'employee_id': self.employee_id.id,
+            'check_in': df,
+            'check_out': dt,
+            'source_attendance_id': self.id,
+        }
+
     def _get_source_extra_fields_domain(self):
-        return [
-            ('is_time_rule_output', '=', False),
-            ('state', '=', 'validated'),
-        ]
+        return [('state', '=', 'validated')]
 
     def _get_write_source_extra_source_fields(self):
         return {'work_entry_type_id', 'state'}
+
+    def _update_tolerance_state(self):
+        to_validate = self.browse()
+        candidates = self.filtered(lambda a: a.state == 'draft' and a.check_out and not a.time_rule_id)
+        for att in candidates:
+            company = att.employee_id.company_id or self.env.company
+            if company.attendance_validation != 'tolerance_validation':
+                continue
+            tz = ZoneInfo(att.employee_id._get_tz())
+            day = att.check_in.replace(tzinfo=UTC).astimezone(tz).date()
+            expected = sum_intervals(att.employee_id._get_expected_attendances(
+                datetime.combine(day, time.min, tz),
+                datetime.combine(day, time.max, tz),
+            ))
+            worked = (att.check_out - att.check_in).total_seconds() / 3600
+            if not expected or abs(worked - expected) <= company.attendance_validation_tolerance:
+                to_validate |= att
+        if to_validate:
+            to_validate.with_context(skip_time_rules=True, tracking_disable=True).write({'state': 'validated'})
 
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
             if 'state' not in vals:
                 if vals.get('time_rule_id') or vals.get('source_attendance_id'):
-                    # system-generated records (outputs and remainders) always auto-validate
+                    # system-generated outputs always auto-validate
                     vals['state'] = 'validated'
                 else:
                     company = self.env.company
                     if vals.get('employee_id'):
-                        employee = self.env['hr.employee'].browse(vals['employee_id'])
-                        company = employee.company_id or company
-                    vals['state'] = 'draft' if company.attendance_validation == 'manual_validation' else 'validated'
-        return super().create(vals_list)
+                        company = self.env['hr.employee'].browse(vals['employee_id']).company_id or company
+                    vals['state'] = 'validated' if company.attendance_validation == 'no_validation' else 'draft'
+        res = super().create(vals_list)
+        res._update_tolerance_state()
+        return res
 
     def action_validate(self):
         self.write({'state': 'validated'})
 
     def action_refuse(self):
         self.with_context(skip_time_rules=True).write({'state': 'refused'})
-        to_cleanup = self.filtered(lambda a: a.check_in and a.check_out and not a.is_time_rule_output and not a.source_attendance_id)
-        if not to_cleanup:
-            return
-        all_children = to_cleanup.sudo().mapped('overtime_attendance_ids')
-        max_child_co = {}
-        for child in all_children:
-            sid = child.source_attendance_id.id
-            if child.check_out and (sid not in max_child_co or child.check_out > max_child_co[sid]):
-                max_child_co[sid] = child.check_out
-        all_children.with_context(skip_time_rules=True).unlink()
-        auto_ctx = dict(skip_time_rules=True, tracking_disable=True)
-        for src in to_cleanup.sudo():
-            original_co = max(src.check_out, max_child_co.get(src.id, src.check_out))
-            if not src.active or original_co != src.check_out:
-                src.with_context(**auto_ctx).write({'active': True, 'check_out': original_co})
-        self._trigger_time_rules_for_affected([(a.employee_id, a.check_in, a.check_out) for a in to_cleanup])
 
     def action_reset_to_draft(self):
         self.write({'state': 'draft'})

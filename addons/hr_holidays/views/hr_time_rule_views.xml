@@ -32,12 +32,10 @@
         <field name="inherit_id" ref="hr_work_entry.hr_time_rule_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//group[contains(@style,'row-gap: 12px')]" position="inside">
-                <span class="o_form_label"
-                    invisible="threshold_operator == 'less_than'">Allocate</span>
-                <span class="o_form_label"
-                    invisible="threshold_operator != 'less_than'">Take</span>
-                <div class="d-flex gap-1 align-items-center">
-                    <field name="leave_compensation_rate" widget="percentage" nolabel="1" style="width:8ch"/>
+                <span class="o_form_label" invisible="threshold_operator == 'less_than'">Allocate <sup class="d-print-none text-info p-1 ms-1" data-tooltip="You can grant time to the employee, with the rate of your choice (100% means 1:1), allowing him to take leave in compensation.">?</sup></span>
+                <span class="o_form_label" invisible="threshold_operator != 'less_than'">Take <sup class="d-print-none text-info p-1 ms-1" data-tooltip="You can take time from the employee, with the rate of your choice (100% means 1:1).">?</sup></span>
+                <div class="d-flex gap-3 align-items-baseline">
+                    <field name="leave_compensation_rate" widget="percentage" nolabel="1" style="width:6ch"/>
                     <span class="text-muted" invisible="not leave_compensation_rate">to</span>
                     <field name="allocation_type_id" nolabel="1"
                         invisible="not leave_compensation_rate"

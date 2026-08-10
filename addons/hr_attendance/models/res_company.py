@@ -3,6 +3,7 @@
 import uuid
 
 from odoo import fields, models, api
+from odoo.tools import SQL
 from odoo.tools.urls import urljoin as url_join
 
 
@@ -33,7 +34,12 @@ class ResCompany(models.Model):
     attendance_validation = fields.Selection([
         ('no_validation', 'Worked days are automatically approved'),
         ('manual_validation', 'Worked days require manual approval'),
+        ('tolerance_validation', 'Worked days require approval if outside tolerance'),
     ], string="Attendance Validation", default='no_validation')
+    attendance_validation_tolerance = fields.Float(
+        string="Validation Tolerance (Hours)",
+        default=0.0,
+    )
     attendance_work_entry_type_id = fields.Many2one(
         'hr.work.entry.type',
         string="Attendance Time Type",
@@ -63,6 +69,7 @@ class ResCompany(models.Model):
         for company in self:
             company.attendance_kiosk_url = url_join(self.env['res.company'].get_base_url(), '/hr_attendance/%s' % company.attendance_kiosk_key)
  
+    @api.depends('country_id')
     def _compute_attendance_work_entry_type_id(self):
         fallback = self.env.ref('hr_work_entry.generic_work_entry_type_attendance', raise_if_not_found=False)
         country_codes = self.mapped('country_id.code')

@@ -501,3 +501,48 @@ class TestWorkEntryHolidays(TestWorkEntryBase, TestHolidayContract):
         self.assertEqual(working_leave.request_hour_from, 11)
         self.assertEqual(working_leave.request_hour_to, 17)
         self.assertEqual(working_leave.with_context(leave_skip_state_check=True).duration_display, "6:00 hours")
+
+    def test_worked_time_leave_over_public_holiday(self):
+        """Worked-time leaves should not duplicate overlapping public holidays."""
+        self.richard_emp.version_id.tz = 'UTC'
+        worked_time_type = self.env['hr.work.entry.type'].create({
+            'name': 'Worked Time Off',
+            'code': 'WORKEDTIMEOFF',
+            'count_as': 'working_time',
+            'requires_allocation': False,
+        })
+        self.env['resource.calendar.leaves'].create({
+            'name': 'Public holiday',
+            'date_from': datetime(2026, 1, 6, 0, 0, 0),
+            'date_to': datetime(2026, 1, 6, 23, 59, 59),
+            'calendar_id': self.richard_emp.resource_calendar_id.id,
+            'count_as': 'absence',
+        })
+        leave = self.env['hr.leave'].create({
+            'name': 'Worked time leave',
+            'employee_id': self.richard_emp.id,
+            'work_entry_type_id': worked_time_type.id,
+            'request_date_from': date(2026, 1, 5),
+            'request_date_to': date(2026, 1, 7),
+        })
+        leave.action_approve()
+
+        work_entries_vals = self.richard_emp.version_id.generate_work_entries(date(2026, 1, 5), date(2026, 1, 7))
+        employee_work_entries_vals = [
+            vals for vals in work_entries_vals
+            if vals['employee_id'] == self.richard_emp and date(2026, 1, 5) <= vals['date'] <= date(2026, 1, 7)
+        ]
+        pto_entries_vals = [
+            vals for vals in employee_work_entries_vals
+            if vals['work_entry_type_id'] == worked_time_type
+        ]
+        public_holiday_entries_vals = [
+            vals for vals in employee_work_entries_vals
+            if vals['work_entry_type_id'] != worked_time_type
+        ]
+
+        self.assertEqual(len(employee_work_entries_vals), 3)
+        self.assertEqual(sorted(vals['date'] for vals in pto_entries_vals), [date(2026, 1, 5), date(2026, 1, 7)])
+        self.assertEqual(len(public_holiday_entries_vals), 1)
+        self.assertEqual(public_holiday_entries_vals[0]['date'], date(2026, 1, 6))
+        self.assertFalse(public_holiday_entries_vals[0]['work_entry_type_id'])

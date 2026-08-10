@@ -4,6 +4,7 @@
         <field name="name">Time Rules</field>
         <field name="res_model">hr.time.rule</field>
         <field name="view_mode">list,form</field>
+        <field name="context">{'default_company_id': context.get('allowed_company_ids', [False])[0]}</field>
     </record>
 
     <record id="hr_time_rule_view_form" model="ir.ui.view">
@@ -29,10 +30,16 @@
 
                             <group string="Conditions" style="grid-template-columns: max-content 1fr; row-gap: 20px;">
 
-                                <span class="o_form_label">Employees</span>
+                                <label for="employee_domain" string="Employees" help="The rule will automatically apply to all times entries for matching employees."/>
                                 <field name="employee_domain" widget="domain" options="{'model': 'hr.employee'}" nolabel="1"/>
 
-                                <span class="o_form_label">Working Hours</span>
+                                <!-- Time Type (input filter) -->
+                                <label for="condition_work_entry_type_ids" string="Time Type" help="If set, only selected types will be considered by this rule."/>
+                                <field name="condition_work_entry_type_ids" widget="many2many_tags"
+                                    nolabel="1"
+                                    placeholder="Select the time types considered in the rule's computation"/>
+
+                                <label for="working_hours_mode" string="Working Hours" help="Define a condition based on the quantity of work made by the employee on a specific period of time."/>
                                 <div>
                                     <span class="d-flex gap-1 align-items-baseline">
                                         <field name="threshold_operator" nolabel="1"
@@ -66,7 +73,7 @@
                                     </span>
                                 </div>
                                 <!-- Work Days -->
-                                <span class="o_form_label">Work Days</span>
+                                <span class="o_form_label">Work Days <sup class="d-print-none text-info p-1 ms-1" data-tooltip="Define a condition based on the timing of the time entry.">?</sup></span>
                                 <div>
                                     <div class="d-flex gap-3 align-items-center">
                                         <div class="d-flex gap-1 align-items-center"><field name="apply_monday" nolabel="1"/><label for="apply_monday" string="Mon"/></div>
@@ -89,20 +96,12 @@
                                         <span class="text-muted ms-2">hours</span>
                                     </div>
                                 </div>
-
-                                <!-- Time Type (input filter) -->
-                                <span class="o_form_label">Time Type</span>
-                                <field name="condition_work_entry_type_ids" widget="many2many_tags"
-                                    nolabel="1"
-                                    placeholder="Select the time types triggering this rule"/>
                             </group>
 
                             <separator string="Effect"/>
                             <group style="grid-template-columns: max-content 1fr; row-gap: 12px;">
-                                <span class="o_form_label"
-                                    invisible="threshold_operator == 'less_than'">Set Excess to</span>
-                                <span class="o_form_label"
-                                    invisible="threshold_operator != 'less_than'">Set Deficit to</span>
+                                <span class="o_form_label" invisible="threshold_operator == 'less_than'">Set Excess to <sup class="d-print-none text-info p-1 ms-1" data-tooltip="You can define a time type that will be created to count the amount of time in excess.">?</sup></span>
+                                <span class="o_form_label" invisible="threshold_operator != 'less_than'">Set Deficit to <sup class="d-print-none text-info p-1 ms-1" data-tooltip="You can define a time type that will be created to count the amount of time missing to fullfill the condition.">?</sup></span>
                                 <div>
                                     <field name="work_entry_type_id" nolabel="1"
                                         options="{'no_create': True}"
