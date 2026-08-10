@@ -282,7 +282,9 @@ export class ColorPlugin extends Plugin {
                 .getTargetedNodes()
                 .filter(
                     (node) =>
-                        this.dependencies.selection.isNodeEditable(node) && node.nodeName !== "T"
+                        this.dependencies.selection.isNodeEditable(node) &&
+                        node.nodeName !== "T" &&
+                        this.dependencies.selection.areNodeContentsFullySelected(node)
                 );
             if (isEmptyBlock(selection.endContainer)) {
                 targetedNodes.push(selection.endContainer, ...descendants(selection.endContainer));
