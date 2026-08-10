@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import api, fields, models
 from odoo.fields import Domain
 from odoo.tools import SQL
 
@@ -21,8 +21,9 @@ class ProjectTask(models.Model):
         for task in self:
             task.leave_types_count = timesheet_count_per_task.get(task.id, 0)
 
+    @api.depends_context('allowed_company_ids')
     def _compute_is_timeoff_task(self):
-        timeoff_tasks = self.filtered(lambda task: task.leave_types_count or task.company_id.leave_timesheet_task_id == task)
+        timeoff_tasks = self & self.env.companies.leave_timesheet_task_id
         timeoff_tasks.is_timeoff_task = True
         (self - timeoff_tasks).is_timeoff_task = False
 
@@ -30,6 +31,7 @@ class ProjectTask(models.Model):
         if operator != 'in':
             return NotImplemented
 
+<<<<<<< 466c1f11fb0d4c9ea315ac324712087a92c9aa26
         timeoff_tasks_ids = {row[0] for row in self.env.execute_query(
             self.env['account.analytic.line']._search(
                 [('task_id', '!=', False), '|', ('holiday_id', '!=', False), ('global_leave_id', '!=', False)],
@@ -40,3 +42,17 @@ class ProjectTask(models.Model):
             timeoff_tasks_ids.add(self.env.company.leave_timesheet_task_id.id)
 
         return Domain('id', 'in', tuple(timeoff_tasks_ids))
+||||||| 9db68e615a72514a8673eb6dd06cb95ff857eda8
+        timeoff_tasks_ids = {row[0] for row in self.env.execute_query(
+            self.env['account.analytic.line']._search(
+                [('task_id', '!=', False), '|', ('holiday_id', '!=', False), ('global_leave_id', '!=', False)],
+            ).select('DISTINCT task_id')
+        )}
+
+        if self.env.company.leave_timesheet_task_id:
+            timeoff_tasks_ids.add(self.env.company.leave_timesheet_task_id.id)
+
+        return Domain('id', 'in', tuple(timeoff_tasks_ids))
+=======
+        return Domain('id', 'in', self.env.companies.leave_timesheet_task_id.ids)
+>>>>>>> 80da40ba86218c555a4df0e1e098352d631e348c
