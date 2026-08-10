@@ -47,3 +47,32 @@ test("should remove `style.color` from table and apply it to td without `style.c
         `),
     });
 });
+
+test("should not distribute table color to tds of a nested table", async () => {
+    await testEditor({
+        contentBefore: unformat(`
+                <table style="color: red;"><tbody>
+                    <tr><td>ab</td></tr>
+                    <tr><td>
+                        <table><tbody>
+                            <tr><td>cd</td></tr>
+                        </tbody></table>
+                    </td></tr>
+                </tbody></table>
+            `),
+        contentBeforeEdit: unformat(`
+            <table style="">
+                <tbody>
+                    <tr><td style="color: red;">ab</td></tr>
+                    <tr><td style="color: red;">
+                        <table>
+                            <tbody>
+                                <tr><td>cd</td></tr>
+                            </tbody>
+                        </table>
+                    </td></tr>
+                </tbody>
+            </table>
+        `),
+    });
+});
