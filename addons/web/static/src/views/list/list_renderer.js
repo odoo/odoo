@@ -1327,6 +1327,14 @@ export class ListRenderer extends Component {
         };
     }
 
+    getGroupText(group) {
+        if (group.count <= 1) {
+            return `${group.count} record`;
+        } else {
+            return `${group.count} records`;
+        }
+    }
+
     computeOptionalActiveFields() {
         const optionalActiveFields = {};
         const localStorageValue = browser.localStorage.getItem(this.keyOptionalFields);
