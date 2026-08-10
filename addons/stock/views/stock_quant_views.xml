@@ -285,6 +285,7 @@ in this location. That leads to a negative stock.
                     <button name="stock.action_stock_inventory_adjustement_name" type="action" string="Apply"/>
                     <button name="action_reset" type="object" string="Clear" groups="stock.group_stock_manager"/>
                     <button name="stock.action_stock_request_count" groups="stock.group_stock_manager" type="action" string="Request a Count"/>
+                    <button name="action_stock_quant_relocate" string="Relocate" type="object" groups="stock.group_stock_manager"/>
                 </header>
                 <field name="create_date" column_invisible="True"/>
                 <field name="write_date" column_invisible="True"/>
@@ -343,18 +344,6 @@ in this location. That leads to a negative stock.
         <field name="group_ids" eval="[(4, ref('stock.group_stock_manager'))]"/>
         <field name="code">
             action = records.action_set_inventory_quantity_zero()
-        </field>
-    </record>
-
-    <record model="ir.actions.server" id="action_stock_quant_relocate">
-        <field name="name">Relocate</field>
-        <field name="model_id" ref="model_stock_quant"/>
-        <field name="binding_model_id" ref="stock.model_stock_quant"/>
-        <field name="binding_view_types">list,kanban</field>
-        <field name="state">code</field>
-        <field name="group_ids" eval="[(4, ref('stock.group_stock_manager'))]"/>
-        <field name="code">
-            action = records.with_context(action_ref='stock.action_view_inventory_tree').action_stock_quant_relocate()
         </field>
     </record>
 
