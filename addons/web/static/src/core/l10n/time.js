@@ -139,7 +139,7 @@ export class Time {
  * Returns whether the given format is a 24-hour format.
  * Falls back to localization time format if none is given.
  *
- * @param {string} format
+ * @param {string} [format]
  */
 export function is24HourFormat(format) {
     return /H/.test(format || localization.timeFormat);
@@ -149,7 +149,7 @@ export function is24HourFormat(format) {
  * Returns whether the given format uses a meridiem suffix (AM/PM).
  * Falls back to localization time format if none is given.
  *
- * @param {string} format
+ * @param {string} [format]
  */
 export function isMeridiemFormat(format) {
     return /a/.test(format || localization.timeFormat);

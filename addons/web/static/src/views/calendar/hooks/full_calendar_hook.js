@@ -1,14 +1,5 @@
+import { onMounted, onPatched, onWillStart, onWillUnmount, signal, useProps } from "@odoo/owl";
 import { loadBundle } from "@web/core/assets";
-
-import {
-    onMounted,
-    onPatched,
-    onWillStart,
-    onWillUnmount,
-    signal,
-    untrack,
-    useProps,
-} from "@odoo/owl";
 
 /**
  * @param {import("@odoo/owl").Signal<HTMLElement>} ref
@@ -19,16 +10,14 @@ export function useFullCalendar(ref, params) {
     const instance = signal(null);
 
     onWillStart(() => loadBundle("web.fullcalendar_lib"));
-
     onMounted(() => {
         try {
-            instance.set(new FullCalendar.Calendar(untrack(ref), params));
+            instance.set(new FullCalendar.Calendar(ref(), params));
             instance().render();
         } catch (e) {
             throw new Error(`Cannot instantiate FullCalendar\n${e.message}`);
         }
     });
-
     onPatched(() => {
         instance().refetchEvents();
         instance().setOption("weekends", props.isWeekendVisible);
@@ -37,16 +26,7 @@ export function useFullCalendar(ref, params) {
             instance().render();
         }
     });
-    onWillUnmount(() => {
-        instance().destroy();
-    });
+    onWillUnmount(() => instance().destroy());
 
-    return {
-        get api() {
-            return instance();
-        },
-        get el() {
-            return untrack(ref);
-        },
-    };
+    return instance;
 }

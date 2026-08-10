@@ -1,4 +1,4 @@
-import { onMounted, onWillDestroy, onWillUnmount, useScope, status } from "@odoo/owl";
+import { onMounted, onWillDestroy, onWillUnmount, useScope } from "@odoo/owl";
 import { isBrowserSafari } from "@web/core/browser/feature_detection";
 import { renderToElement, renderToFragment } from "@web/core/utils/render";
 import { getCSSRules, toInline } from "@mail/views/web/fields/html_mail_field/convert_inline";
@@ -29,7 +29,7 @@ export function useEmailHtmlConverter({ bundles = [] }) {
     });
     const setupIframe = async () => {
         await convertInlineIframeService.readyPromise;
-        if (status(scope.component) === "destroyed") {
+        if (scope.isDestroyed()) {
             return;
         }
         convertInlineIframeService.add(referenceIframe);
@@ -46,7 +46,7 @@ export function useEmailHtmlConverter({ bundles = [] }) {
         });
         const loadPromise = Promise.all([contentPromise, assetsPromise]);
         loadPromise.catch((error) => {
-            if (status(scope.component) === "destroyed") {
+            if (scope.isDestroyed()) {
                 // Ignore loading errors if the Component was destroyed, since the
                 // iframe was removed, there is nothing to load for.
                 return;

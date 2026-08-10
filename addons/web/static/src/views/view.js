@@ -1,4 +1,4 @@
-import { useSubEnv } from "@web/owl2/utils";
+import { render, useSubEnv } from "@web/owl2/utils";
 import { useDebugCategory } from "@web/core/debug/debug_context";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
@@ -243,7 +243,7 @@ export class View extends Component {
             ),
         });
 
-        this.handleActionLinks = useActionLinks({ resModel });
+        this.handleActionLinks = useActionLinks(resModel, () => render(this));
 
         onWillStart(() => this.loadView(this.props));
         onWillUpdateProps((nextProps) => this.onWillUpdateProps(nextProps));
