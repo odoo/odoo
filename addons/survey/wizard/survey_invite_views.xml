@@ -51,14 +51,14 @@
                         <group col="2">
                             <field name="subject" invisible="not send_email" placeholder="Subject..." widget="char_emojis"/>
                         </group>
-                        <hr/>
+                        <hr invisible="not send_email"/>
                         <field name="can_edit_body" invisible="1"/>
                         <field name="body" class="oe-bordered-editor"
                             widget="html_mail"
                             options="{'height': 300}"
                             invisible="not send_email"
                             readonly="not can_edit_body" force_save="1"/>
-                        <hr/>
+                        <hr invisible="not send_email"/>
                         <group invisible="not send_email">
                             <field name="deadline" string="Deadline"
                                 placeholder="The interview link will expire after the deadline."/>
