@@ -96,9 +96,3 @@ class MailingFilter(models.Model):
             'views': [(False, 'form')]
         })
         return action
-
-    def action_duplicate(self):
-        self.ensure_one()
-        if self.copy():
-            return {'type': 'ir.actions.client', 'tag': 'soft_reload'}
-        return False
