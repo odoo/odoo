@@ -468,7 +468,6 @@ class AccountEdiProxyClientUser(models.Model):
             'peppol_company_city': self.company_id.city,
             'peppol_company_zip': self.company_id.zip,
             'peppol_country_code': self.company_id.country_id.code,
-            'peppol_phone_number': self.company_id.account_peppol_phone_number,
             'peppol_contact_email': self.company_id.account_peppol_contact_email,
             'peppol_migration_key': self.company_id.sudo().account_peppol_migration_key,
         }

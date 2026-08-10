@@ -441,27 +441,33 @@ class ResCompany(models.Model):
             raise UserError(_("Authentication is required but not available. Please contact Odoo support."))
         return auth['authorization_url']
 
+    def _get_connection_params(self, peppol_identifier, public_key, auth_token):
+        return {
+            'peppol_identifier': peppol_identifier,
+            'db_uuid': self.env['ir.config_parameter'].sudo().get_param('database.uuid'),
+            'public_key': public_key,
+            'auth_token': auth_token,
+            'peppol_company_name': self.display_name,
+            'peppol_company_vat': self.vat,
+            'peppol_company_street': self.street,
+            'peppol_company_city': self.city,
+            'peppol_company_zip': self.zip,
+            'peppol_country_code': self.country_id.code,
+            'peppol_phone_number': self.account_peppol_phone_number,
+            'peppol_contact_email': self.account_peppol_contact_email,
+            'peppol_migration_key': self.sudo().account_peppol_migration_key,
+            'supported_identifiers': list(self._peppol_supported_document_types()),
+        }
+
     @handle_demo
     def _peppol_create_connection(self, peppol_identifier, auth_token=None):
         """Register though ``/api/peppol/2/connect`` and create proxy user record"""
         self.ensure_one()
         edi_mode = self._get_peppol_edi_mode()
         private_key_sudo = self.env['certificate.key'].sudo()._generate_rsa_private_key(self, name=f"peppol_{edi_mode}_{self.id}.key")
+        public_key = private_key_sudo._get_public_key_bytes(encoding='pem').decode()
         response = PeppolIAPConnector(self).create_connection(
-            peppol_identifier=peppol_identifier,
-            db_uuid=self.env['ir.config_parameter'].sudo().get_param('database.uuid'),
-            public_key=private_key_sudo._get_public_key_bytes(encoding='pem').decode(),
-            auth_token=auth_token,
-            peppol_company_name=self.display_name,
-            peppol_company_vat=self.vat,
-            peppol_company_street=self.street,
-            peppol_company_city=self.city,
-            peppol_company_zip=self.zip,
-            peppol_country_code=self.country_id.code,
-            peppol_phone_number=self.account_peppol_phone_number,
-            peppol_contact_email=self.account_peppol_contact_email,
-            peppol_migration_key=self.sudo().account_peppol_migration_key,
-            supported_identifiers=list(self._peppol_supported_document_types()),
+            **self._get_connection_params(peppol_identifier, public_key, auth_token)
         )
         edi_user = self.env['account_edi_proxy_client.user'].sudo().create({
             'id_client': response['id_client'],
