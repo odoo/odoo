@@ -341,7 +341,7 @@ class AccountMove(models.Model):
         if self.l10n_cn_buyer_bank_id:
             # Fapiao prints these on a single line ("开户行及账号").
             invoice_data['buyerBankName'] = f"{self.l10n_cn_buyer_bank_id.bank_name or ''} {self.l10n_cn_buyer_bank_id.account_number or ''}".strip()
-        invoice_data['drawer'] = self.env.user.name
+        invoice_data['drawer'] = self.company_id.l10n_cn_baiwang_drawer or self.env.user.name
         invoice_data['buyerNaturalPerson'] = 'Y' if not self.partner_id.vat else 'N'
         return invoice_data
 

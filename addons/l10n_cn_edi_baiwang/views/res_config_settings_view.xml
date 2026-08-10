@@ -12,6 +12,10 @@
                             <field name="l10n_cn_edi_mode" widget="radio"/>
                         </div>
                         <div class="mt8" invisible="l10n_cn_edi_mode == 'prod'"> In Test mode, e-Fapiao requests are sent to the Baiwang sandbox environment. </div>
+                        <div class="row mt8">
+                            <label for="l10n_cn_baiwang_drawer" class="col-lg-4"/>
+                            <field name="l10n_cn_baiwang_drawer"/>
+                        </div>
                         <div class="content-group" invisible="not l10n_cn_edi_mode">
                             <div class="row mt8" groups="base.group_no_one">
                                 <label for="l10n_cn_baiwang_org_auth_code" class="col-lg-4"/>

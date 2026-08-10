@@ -16,6 +16,7 @@ class ResConfigSettings(models.TransientModel):
     l10n_cn_edi_mode = fields.Selection(related="company_id.l10n_cn_edi_mode", readonly=False)
     l10n_cn_edi_company_vat = fields.Char(string="Company Tax ID", related="company_id.vat")
     l10n_cn_baiwang_org_auth_code = fields.Char(related="company_id.l10n_cn_baiwang_org_auth_code", readonly=False)
+    l10n_cn_baiwang_drawer = fields.Char(related="company_id.l10n_cn_baiwang_drawer", readonly=False)
     l10n_cn_baiwang_subscription_status = fields.Selection(
         related="company_id.l10n_cn_baiwang_subscription_status",
         readonly=True,
