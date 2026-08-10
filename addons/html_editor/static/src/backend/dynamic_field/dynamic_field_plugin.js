@@ -13,15 +13,7 @@ const DUMMY_CONTENT_ATTRS = ["data-oe-demo", "data-oe-expression-readable"];
 
 export class DynamicFieldPlugin extends Plugin {
     static id = "dynamicField";
-    static dependencies = [
-        "selection",
-        "domObserver",
-        "history",
-        "overlay",
-        "dom",
-        "toolbar",
-        QWebPlugin.id,
-    ];
+    static dependencies = ["selection", "history", "overlay", "dom", "toolbar", QWebPlugin.id];
 
     /** @type {import("plugins").EditorResources} */
     resources = {
@@ -175,15 +167,13 @@ export class DynamicFieldPlugin extends Plugin {
                     if (label !== initialLabel) {
                         target.setAttribute("data-oe-demo", label);
                         const prevText = target.textContent;
-                        this.dependencies.domObserver.applyCustomMutation({
-                            apply: () => {
-                                target.textContent = "";
-                                this.normalizeQwebPlaceholders(target);
-                                this.trigger("on_dynamic_field_edit_applied_handlers", target);
-                            },
-                            revert: () => {
-                                target.textContent = prevText;
-                            },
+                        const apply = () => {
+                            target.textContent = "";
+                            this.normalizeQwebPlaceholders(target);
+                            this.trigger("on_dynamic_field_edit_applied_handlers", target);
+                        };
+                        this.dependencies.history.stage(apply, () => {
+                            target.textContent = prevText;
                         });
                     }
 

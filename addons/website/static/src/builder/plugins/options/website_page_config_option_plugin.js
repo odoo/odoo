@@ -10,6 +10,7 @@ import { BuilderAction } from "@html_builder/core/builder_action";
  * @property { WebsitePageConfigOptionPlugin['getVisibilityItem'] } getVisibilityItem
  * @property { WebsitePageConfigOptionPlugin['getFooterVisibility'] } getFooterVisibility
  * @property { WebsitePageConfigOptionPlugin['doesPageOptionExist'] } doesPageOptionExist
+ * @property { WebsitePageConfigOptionPlugin['getTarget'] } getTarget
  */
 
 export class WebsitePageConfigOptionPlugin extends Plugin {
@@ -180,11 +181,11 @@ export class WebsitePageConfigOptionPlugin extends Plugin {
 }
 export class BaseWebsitePageConfigAction extends BuilderAction {
     static id = "baseWebsitePageConfig";
-    static dependencies = ["websitePageConfigOptionPlugin", "domObserver", "visibility"];
+    static dependencies = ["websitePageConfigOptionPlugin", "visibility", "history"];
     setup() {
         this.websitePageConfig = this.dependencies.websitePageConfigOptionPlugin;
         this.visibility = this.dependencies.visibility;
-        this.domObserver = this.dependencies.domObserver;
+        this.history = this.dependencies.history;
         this.headerVisibilityHandlers = this.getVisibilityHandlers("header");
         this.breadcrumbVisibilityHandlers = this.getVisibilityHandlers("breadcrumb");
     }
@@ -270,10 +271,11 @@ export class SetWebsiteHeaderVisibilityAction extends BaseWebsitePageConfigActio
     static id = "setWebsiteHeaderVisibility";
     apply({ editingElement, value: headerPositionValue, isPreviewing }) {
         const lastValue = this.websitePageConfig.getVisibilityItem("header");
-        this.domObserver.applyCustomMutation({
-            apply: () => this.headerVisibilityHandlers[headerPositionValue](),
-            revert: () => this.headerVisibilityHandlers[lastValue](),
-        });
+        this.headerVisibilityHandlers[headerPositionValue]();
+        this.history.stage(
+            () => this.headerVisibilityHandlers[headerPositionValue](),
+            () => this.headerVisibilityHandlers[lastValue]()
+        );
 
         this.websitePageConfig.setDirty(isPreviewing);
     }
@@ -288,10 +290,11 @@ export class SetWebsiteBreadcrumbVisibilityAction extends BaseWebsitePageConfigA
     }
     apply({ value, isPreviewing }) {
         const lastValue = this.websitePageConfig.getVisibilityItem("breadcrumb");
-        this.domObserver.applyCustomMutation({
-            apply: () => this.breadcrumbVisibilityHandlers[value](),
-            revert: () => this.breadcrumbVisibilityHandlers[lastValue](),
-        });
+        this.breadcrumbVisibilityHandlers[value]();
+        this.history.stage(
+            () => this.breadcrumbVisibilityHandlers[value](),
+            () => this.breadcrumbVisibilityHandlers[lastValue]()
+        );
         this.websitePageConfig.setDirty(isPreviewing);
     }
 }

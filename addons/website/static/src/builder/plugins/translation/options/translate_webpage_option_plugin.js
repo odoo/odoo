@@ -16,7 +16,7 @@ import { uniqueId } from "@web/core/utils/functions";
  */
 export class TranslateToAction extends BuilderAction {
     static id = "translateWebpageAI";
-    static dependencies = ["translateWebpageOption", "translation", "history", "domObserver"];
+    static dependencies = ["translateWebpageOption", "translation", "history"];
 
     setup() {
         this.canTimeout = false;
@@ -283,17 +283,15 @@ export class TranslateToAction extends BuilderAction {
         }
 
         if (allMutations.length > 0) {
-            this.dependencies.domObserver.applyCustomMutation({
-                apply: () => {
-                    for (const mutation of allMutations) {
-                        mutation.apply();
-                    }
-                },
-                revert: () => {
-                    for (let i = allMutations.length - 1; i >= 0; i--) {
-                        allMutations[i].revert();
-                    }
-                },
+            const apply = () => {
+                for (const mutation of allMutations) {
+                    mutation.apply();
+                }
+            };
+            this.dependencies.history.stage(apply, () => {
+                for (let i = allMutations.length - 1; i >= 0; i--) {
+                    allMutations[i].revert();
+                }
             });
             // Single commit for all translations, so that undo/redo is easier
             // to manage for the user.

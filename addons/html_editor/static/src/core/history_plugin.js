@@ -76,6 +76,7 @@ export class HistoryPlugin extends Plugin {
         "redo",
         "canUndo",
         "canRedo",
+        "stage",
         "getCommits",
         "reset",
         "createSnapshotCommit",
@@ -140,9 +141,38 @@ export class HistoryPlugin extends Plugin {
         },
         on_will_reset_history_handlers: this.resetAuthorTimestamp.bind(this),
         on_committed_to_history_handlers: this.resetAuthorTimestamp.bind(this),
+
+        // Stage
+
+        pending_history_commit_data_processors: (data) => {
+            if (this.currentStage.length) {
+                data.custom = [...this.currentStage];
+                this.currentStage = [];
+            }
+            return data;
+        },
+        on_apply_history_commit_handlers: (commit) => {
+            commit.data.custom?.forEach(({ apply }) => apply());
+        },
+        on_revert_history_commit_handlers: (commit) => {
+            commit.data.custom?.forEach(({ revert }) => revert());
+        },
+        on_will_invalidate_pending_changes_handlers: () => {
+            this.currentStage.forEach(({ revert }) => revert());
+            this.currentStage = [];
+        },
+        on_savepoint_restored_handlers: (savePoint) => {
+            savePoint.data.custom?.forEach(({ apply }) => apply());
+        },
+        has_history_commit_changes_predicates: (commit) => {
+            if (commit.data.custom?.length) {
+                return true;
+            }
+        },
     };
 
     setup() {
+        this.currentStage = [];
         this.resetAuthorTimestamp();
         this._onKeyupResetContenteditableNodes = [];
         this.addDomListener(this.document, "beforeinput", this.onDocumentBeforeInput.bind(this));
@@ -239,6 +269,10 @@ export class HistoryPlugin extends Plugin {
             this.applyCommit(stashedCommit);
             this.trigger("on_pending_changes_unstashed_handlers", stashedCommit);
         }
+    }
+
+    stage(apply, revert) {
+        this.currentStage.push({ apply, revert });
     }
 
     /**

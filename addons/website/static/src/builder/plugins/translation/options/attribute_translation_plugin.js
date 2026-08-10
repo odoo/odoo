@@ -53,7 +53,7 @@ registry
 
 export class TranslateAttributeAction extends BuilderAction {
     static id = "translateAttribute";
-    static dependencies = ["domObserver", "translation"];
+    static dependencies = ["translation", "history"];
 
     getValue({ editingElement, params: { mainParam: attr } }) {
         if (attr === "value" && editingElement.tagName === "TEXTAREA") {
@@ -86,13 +86,14 @@ export class TranslateAttributeAction extends BuilderAction {
             this.dependencies.translation.updateTranslationMap(editingElement, value, attr);
         };
 
-        this.dependencies.domObserver.applyCustomMutation({
-            apply: () => {
+        setCustomHistory(value);
+        this.dependencies.history.stage(
+            () => {
                 setCustomHistory(value);
             },
-            revert: () => {
+            () => {
                 setCustomHistory(oldValue);
-            },
-        });
+            }
+        );
     }
 }

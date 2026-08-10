@@ -14,7 +14,7 @@ registry.category("website-options").add(PopupOption.id, PopupOption);
 
 export class PopupOptionPlugin extends Plugin {
     static id = "PopupOption";
-    static dependencies = ["anchor", "visibility", "domObserver", "popupVisibilityPlugin"];
+    static dependencies = ["anchor", "visibility", "popupVisibilityPlugin", "history"];
 
     /** @type {import("plugins").WebsiteResources} */
     resources = {
@@ -54,27 +54,27 @@ export class PopupOptionPlugin extends Plugin {
     onSnippetDropped({ snippetEl }) {
         if (snippetEl.matches(".s_popup")) {
             this.assignUniqueID(snippetEl);
-            this.dependencies.domObserver.stageCustomMutation({
-                apply: () => {
+            this.dependencies.history.stage(
+                () => {
                     this.dependencies.visibility.toggleTargetVisibility(snippetEl, true);
                 },
-                revert: () => {
+                () => {
                     this.dependencies.visibility.toggleTargetVisibility(snippetEl, false);
-                },
-            });
+                }
+            );
         }
     }
 
     onWillRemove(el) {
         this.dependencies.visibility.toggleTargetVisibility(el, false);
-        this.dependencies.domObserver.stageCustomMutation({
-            apply: () => {
+        this.dependencies.history.stage(
+            () => {
                 this.dependencies.visibility.toggleTargetVisibility(el, false);
             },
-            revert: () => {
+            () => {
                 this.dependencies.visibility.toggleTargetVisibility(el, true);
-            },
-        });
+            }
+        );
     }
 
     assignUniqueID(editingElement) {
