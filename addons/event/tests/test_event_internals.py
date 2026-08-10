@@ -2,13 +2,15 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import date, datetime, timedelta
+from urllib.parse import urlsplit
 from freezegun import freeze_time
+from lxml import html
 
 from odoo import Command
 from odoo.addons.event.tests.common import EventCase
 from odoo import exceptions
 from odoo.fields import Datetime as FieldsDatetime
-from odoo.tests import Form, users, tagged
+from odoo.tests import Form, HttpCase, users, tagged
 from odoo.tools import mute_logger
 
 
@@ -1175,3 +1177,39 @@ class TestEventTypeData(TestEventInternalsCommon):
         event_type.write({'has_seats_limitation': False})
         self.assertFalse(event_type.has_seats_limitation)
         self.assertEqual(event_type.seats_max, 0)
+
+
+@tagged('post_install', '-at_install')
+class TestEventIcs(HttpCase):
+
+    def test_ics_file_matches_the_mail_language(self):
+        """Check that the calendar file linked in the event subscription mail is written in the language of that mail."""
+        self.env['res.lang']._activate_lang('fr_FR')
+        self.env.ref('base.user_admin').lang = 'en_US'
+        english_attendee, french_attendee = self.env['res.partner'].create([
+            {'name': 'Kevin', 'lang': 'en_US'},
+            {'name': 'Claire', 'lang': 'fr_FR'},
+        ])
+        event = self.env['event.event'].create({
+            'name': 'Wood Workshop',
+            'date_begin': datetime.now() + timedelta(days=1),
+            'date_end': datetime.now() + timedelta(days=2),
+            'registration_ids': [
+                Command.create({'partner_id': english_attendee.id}),
+                Command.create({'partner_id': french_attendee.id}),
+            ],
+        })
+        event.with_context(lang='fr_FR').name = 'Atelier du bois'
+
+        bodies = self.env.ref('event.event_subscription')._render_field(
+            'body_html', event.registration_ids.ids, compute_lang=True)
+
+        self.authenticate('admin', 'admin')
+        summaries = {}
+        for registration in event.registration_ids:
+            href = html.fromstring(bodies[registration.id]).xpath("//a[contains(@href, '/ics')]/@href")[0]
+            ics_url = urlsplit(href)
+            summaries[registration.partner_id.lang] = self.url_open(f'{ics_url.path}?{ics_url.query}').text
+
+        self.assertIn('SUMMARY:Wood Workshop', summaries['en_US'])
+        self.assertIn('SUMMARY:Atelier du bois', summaries['fr_FR'])
