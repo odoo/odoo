@@ -180,7 +180,7 @@ export class ImageStrategyPlugin extends Plugin {
     isFontIcon({ referenceNode }) {
         // TODO EGGMAIL: check new material icons PR, and if this selector needs to be
         // adapted/completed
-        return referenceNode.nodeType === Node.ELEMENT_NODE && referenceNode.matches(".fa,.oi");
+        return referenceNode.nodeType === Node.ELEMENT_NODE && referenceNode.matches(".oi");
     }
 
     getFontIconContent(referenceNode) {
@@ -288,7 +288,7 @@ export class ImageStrategyPlugin extends Plugin {
      * so that it does not require direct access to referenceNode, and it can build everything
      * from facts.
      * Register everything needed into facts
-     * => the EmailNode should output the image properly instead of the element with the .fa,.oi class
+     * => the EmailNode should output the image properly instead of the element with the .oi class
      */
     /**
      * can get computedStyle, ::before
@@ -323,10 +323,21 @@ export class ImageStrategyPlugin extends Plugin {
         // rgb can also have an alpha channel
         // the value should be normalized for PILLOW
         // maybe it should be normalized for emails too.
-        const font = fontIcon.matches(".fa") ? "fa" : "oi";
+        const font = "oi";
         const isCustom = fontIcon.matches("[data-icon^='oi_'");
         const content = this.getFontIconContent(fontIcon) || " ";
-        const icon = font === "fa" || isCustom ? content.codePointAt(0) : content;
+        let icon = isCustom ? content.codePointAt(0) : content;
+        let fill = 0;
+        if (font === "oi" && !isCustom) {
+            const strippedIcon = icon.replace(/_f$/, "");
+            if (
+                icon !== strippedIcon ||
+                this.getFontIconPropertyValue(fontIcon, "font-feature-settings").includes("ss01")
+            ) {
+                icon = strippedIcon;
+                fill = 1;
+            }
+        }
         const color = this.getFontIconPropertyValue(fontIcon, "color");
         const pilColor =
             this.convertCSSColorToPILRgba(color) || this.convertCSSColorToPILRgba("rgb(0,0,0)");
@@ -355,7 +366,7 @@ export class ImageStrategyPlugin extends Plugin {
         const renderWidth = Math.max(1, Math.round(scaledWidth * 2));
         const renderHeight = Math.max(1, Math.round(scaledHeight * 2));
         const renderFontSize = Math.max(1, Math.round(scaledFontSize * 2));
-        const src = `/mail/font_to_img/${icon}/${font}/${pilColor}/${pilBg}/${renderWidth}x${renderHeight}fs${renderFontSize}`;
+        const src = `/mail/font_to_img/${icon}/${font}/${fill}/${pilColor}/${pilBg}/${renderWidth}x${renderHeight}fs${renderFontSize}`;
         const defaultStyleInfo = StyleInfo.from({
             width: `${scaledWidth}px`,
             height: `${scaledHeight}px`,
