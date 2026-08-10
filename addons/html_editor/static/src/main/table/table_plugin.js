@@ -233,7 +233,9 @@ export class TablePlugin extends Plugin {
         [...root.querySelectorAll("table")]
             .filter((table) => table.style["color"] || table.style["backgroundColor"])
             .forEach((table) => {
-                const tds = table.querySelectorAll("td");
+                const tds = [...table.querySelectorAll("td")].filter(
+                    (td) => closestElement(td, "table") === table
+                );
                 for (const td of tds) {
                     td.style["color"] = td.style["color"] || table.style["color"];
                     td.style["backgroundColor"] =
