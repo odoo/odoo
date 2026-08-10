@@ -100,6 +100,7 @@ export class DiscussCoreCommon {
         if (
             !channel.loadNewer &&
             !message.isSelfAuthored &&
+            channel.scrollTop === "bottom" &&
             channel.composer.isFocused &&
             this.store.self_user &&
             channel.newestPersistentMessage?.eq(channel.newestMessage) &&
