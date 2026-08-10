@@ -888,11 +888,11 @@ class AccountMove(models.Model):
             - We use the credentials of the parent company, if no credentials are set on the child one.
             - We store the access token on the appropriate company, based on which holds the credentials.
         """
-        if self.company_id.l10n_vn_edi_username and self.company_id.l10n_vn_edi_password:
+        if self.company_id.sudo().l10n_vn_edi_username and self.company_id.sudo().l10n_vn_edi_password:
             return self.company_id
 
-        return self.company_id.sudo().parent_ids.filtered(
-            lambda c: c.l10n_vn_edi_username and c.l10n_vn_edi_password
+        return self.company_id.parent_ids.filtered(
+            lambda c: c.sudo().l10n_vn_edi_username and c.sudo().l10n_vn_edi_password
         )[-1:]
 
     # -------------------------------------------------------------------------
