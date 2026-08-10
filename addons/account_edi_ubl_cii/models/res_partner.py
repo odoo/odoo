@@ -232,7 +232,7 @@ class ResPartner(models.Model):
         value = field in self._fields and self[field]
 
         if (
-            country_code == 'BE'
+            country_code in ('BE', 'SK')  # TODO: wait for PR #280178 (income_tax_id/l10n_sk_dic) --> remove as company_registry wouldn't be possible for SK
             and field == 'company_registry'
             and not value
             and self.vat
