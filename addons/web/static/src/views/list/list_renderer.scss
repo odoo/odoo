@@ -264,6 +264,10 @@
 
         // Grouped list views
         tbody > tr.o_group_header {
+            --table-bg: var(--table-striped-bg);
+            --table-color: var(--table-striped-color);
+            height: 40px;
+
             &:hover .o_group_config {
                 visibility: visible;
             }
@@ -298,10 +302,16 @@
                 .o_pager_previous,
                 .o_pager_next {
                     max-height: 30px;
-                    padding: 0 5px;
+                    padding: 0 5px !important;
                     background-color: lighten($o-brand-lightsecondary, 10%);
+                    display: flex;
+                    align-items: center;
                     &:hover {
                         background-color: $o-brand-lightsecondary;
+                    }
+                    i {
+                        font-size: 10px;
+                        font-weight: 500 !important;
                     }
                 }
             }
@@ -452,7 +462,7 @@
 
             .o_mass_edit_btn {
                 display: var(--mass-edit-btn-display);
-               
+
             }
 
             &:hover {

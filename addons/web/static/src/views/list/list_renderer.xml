@@ -236,7 +236,7 @@
                     <span t-attf-class="o_group_caret oi me-1 {{group.isFolded ? 'arrow_right' : 'arrow_down' }}"
                         t-attf-style="--o-list-group-level: {{this.getGroupLevel(group)}}"/>
                     <span>
-                        <t t-out="this.odoomark(group.displayName)"/> <span class="ms-1">(<t t-esc="group.count"/>)</span>
+                        <t t-out="this.odoomark(group.displayName)"/> <span class="ms-3 me-2 text-muted" t-out="this.getGroupText(group)"/>
                     </span>
                     <div t-if="(this.groupByButtons[group.groupByField.name] and !group.isFolded and group.record.resId)" class="o_group_buttons">
                         <t t-foreach="this.groupByButtons[group.groupByField.name]" t-as="button" t-key="button.id">
@@ -283,6 +283,7 @@
             </td>
             <t t-set="groupPagerColspan" t-value="this.getGroupPagerCellColspan(group)"/>
             <th t-on-keydown="(ev) => this.onCellKeydown(ev, group)" t-if="groupPagerColspan > 0" t-att-colspan="groupPagerColspan"/>
+            <th t-if="this.hasOpenFormViewColumn" class="o_list_open_form_view w-print-0 p-print-0"/>
             <th class="p-0" t-on-keydown="(ev) => this.onCellKeydown(ev, group)">
                 <GroupConfigMenu t-if="this.showGroupConfigMenu(group)" t-props="this.getGroupConfigMenuProps(group)"/>
             </th>
