@@ -590,12 +590,16 @@ class AccountMove(models.Model):
         latest_doc.write({'state': 'failed', 'error_message': self.env._("Rejected by user.")})
         self.message_post(body=self.env._("Inbound Red Form %s rejected.", latest_doc.baiwang_red_form_number))
 
-    @api.depends('l10n_cn_edi_document_ids.baiwang_red_form_type')
+    @api.depends('l10n_cn_edi_document_ids.baiwang_red_form_type', 'l10n_cn_edi_document_ids.state')
     def _compute_l10n_cn_baiwang_red_form_type(self):
         for move in self:
-            latest_doc = move.l10n_cn_edi_document_ids.sorted('create_date', reverse=True)[:1]
+            latest_doc = move.l10n_cn_edi_document_ids.filtered(
+                lambda doc: doc.state != 'failed',
+            ).sorted('create_date', reverse=True)[:1]
             if latest_doc and latest_doc.baiwang_red_form_type:
                 move.l10n_cn_baiwang_red_form_type = latest_doc.baiwang_red_form_type
+            else:
+                move.l10n_cn_baiwang_red_form_type = False
 
     @api.depends(
         'l10n_cn_edi_document_ids.state',
