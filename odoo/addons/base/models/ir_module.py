@@ -768,12 +768,6 @@ class IrModuleModule(models.Model):
             'to_buy': False
         }
 
-    def write(self, vals):
-        res = super().write(vals)
-        if any(self._ids) and ('name' in vals or 'state' in vals):
-            self.env.registry.clear_cache('stable')
-        return res
-
     @api.model_create_multi
     def create(self, vals_list):
         modules = super().create(vals_list)
