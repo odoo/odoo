@@ -7,16 +7,14 @@
             <t t-set="granularity"
                 t-value="this.env.model.getters.getChartGranularity(this.props.chartId)?.granularity" />
             <t t-if="this.env.model.getters.isDashboard() and granularity and this.granularityOptions.length">
-                <select t-on-change="this.onGranularitySelected"
-                    class="position-relative o-chart-menu-item w-auto form-select rounded py-0 px-1 text-muted"
-                    name="chart-granularity">
-                    <t t-foreach="this.granularityOptions" t-as="option" t-key="option.value">
-                        <option t-att-value="option.value"
-                            t-att-selected="option.value === granularity">
-                            <span t-out="option.label" />
-                        </option>
-                    </t>
-                </select>
+                <Select
+                    class="'position-relative o-chart-menu-item w-auto py-0 px-1 text-muted text-nowrap rounded border-0'"
+                    popoverClass="'w-auto'"
+                    name="'chart-granularity'"
+                    values="this.granularityOptions"
+                    selectedValue="granularity"
+                    onChange.bind="this.onGranularitySelected"
+                />
             </t>
         </xpath>
     </div>
