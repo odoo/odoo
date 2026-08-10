@@ -57,7 +57,6 @@ class TestModuleManifest(BaseCase):
             'init_xml': [],
             'installable': True,
             'images': [],
-            'images_preview_theme': {},
             'kpi_providers': [],
             'license': 'MIT',
             'live_test_url': '',
