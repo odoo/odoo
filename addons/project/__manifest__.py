@@ -227,6 +227,9 @@
             'mail/static/src/chatter/web/form_renderer.scss',
             'mail/static/src/views/fields/**/*',
 
+            'resource/static/src/views/form_with_html_expander/form_controller_with_html_expander.js',
+            'resource/static/src/views/form_with_html_expander/form_controller_with_html_expander.xml',
+
             'project/static/src/components/project_task_name_with_subtask_count_char_field/*',
             'project/static/src/components/project_task_state_selection/*',
             'project/static/src/components/project_many2one_field/*',
@@ -237,6 +240,11 @@
             'project/static/src/views/project_task_relational_model.js',
             'project/static/src/views/project_model_mixin.js',
             'project/static/src/views/project_relational_model.js',
+            'project/static/src/views/project_task_kanban/project_task_group_config_menu.js',
+            'project/static/src/views/components/*',
+            'project/static/src/views/project_task_form/project_task_form_controller.js',
+            'project/static/src/views/project_task_form/project_task_form_controller.xml',
+            'project/static/src/views/project_task_list/*',
 
             ('include', 'portal.assets_chatter_helpers'),
             'portal/static/src/chatter/core/**/*',
