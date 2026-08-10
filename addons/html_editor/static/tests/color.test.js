@@ -718,3 +718,12 @@ test("should be able to remove color applied by 'text-*' classes (2)", async () 
         contentAfter: '<p><a href="#">[a]</a></p>',
     });
 });
+
+test("should only target fully selected nodes when applying color", async () => {
+    await testEditor({
+        contentBefore: "<p><b>a[b</b>c]d</p>",
+        stepFunction: setColor("red", "color"),
+        contentAfter:
+            '<p><b>a<font style="color: red;">[b</font></b><font style="color: red;">c]</font>d</p>',
+    });
+});
