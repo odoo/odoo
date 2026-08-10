@@ -82,10 +82,10 @@ export class CalendarCommonRenderer extends Component {
         this.timeFormat = is24HourFormat() ? "HH:mm" : "hh:mm a";
         this.dayHeaderListeners = {};
         useBus(this.props.model.bus, "SCROLL_TO_CURRENT_HOUR", () =>
-            this.fc.api.scrollToTime(`${luxon.DateTime.local().hour - 2}:00:00`)
+            this.fc().scrollToTime(`${luxon.DateTime.local().hour - 2}:00:00`)
         );
 
-        const fullCalendarRenderDebounced = useDebounced(() => this.fc.api.updateSize(), 100, {
+        const fullCalendarRenderDebounced = useDebounced(() => this.fc().updateSize(), 100, {
             immediate: true,
             trailing: true,
         });
@@ -258,7 +258,7 @@ export class CalendarCommonRenderer extends Component {
         }
     }
     highlightEvent(event, className) {
-        for (const el of this.fc.api.el.querySelectorAll(this.computeEventSelector(event))) {
+        for (const el of this.fc().el.querySelectorAll(this.computeEventSelector(event))) {
             el.classList.add(className);
         }
     }
@@ -389,7 +389,7 @@ export class CalendarCommonRenderer extends Component {
         info.jsEvent.preventDefault();
         this.popover.close();
         await this.props.createRecord(this.fcEventToRecord(info));
-        this.fc.api.unselect();
+        this.fc().unselect();
     }
     isSelectionAllowed(event) {
         return event.end.getDate() === event.start.getDate() || event.allDay;
@@ -411,7 +411,7 @@ export class CalendarCommonRenderer extends Component {
         }
     }
     onEventDrop(info) {
-        this.fc.api.unselect();
+        this.fc().unselect();
         let forceAllDay = false;
         // allDay should change if the event was dropped in an "allday" section
         // from a regular section or conversely. This ensures `allDay` fullcalendar events
@@ -425,7 +425,7 @@ export class CalendarCommonRenderer extends Component {
         });
     }
     onEventResize(info) {
-        this.fc.api.unselect();
+        this.fc().unselect();
         this.props.model.updateRecord(this.fcEventToRecord(info.event)).catch((e) => {
             info.revert();
             throw e;
@@ -495,7 +495,7 @@ export class CalendarCommonRenderer extends Component {
         this.popover.close();
         this.props.cleanSquareSelection();
         info.el.classList.add(info.view.type);
-        this.fc.api.unselect();
+        this.fc().unselect();
         this.highlightEvent(info.event, "o_cw_custom_highlight");
         this.ref().classList.add("o_interacting", "o_grabbing");
         if (!this.uiService.isSmall) {
@@ -504,11 +504,11 @@ export class CalendarCommonRenderer extends Component {
     }
     onEventResizeStart(info) {
         this.props.cleanSquareSelection();
-        this.fc.api.unselect();
+        this.fc().unselect();
         this.highlightEvent(info.event, "o_cw_custom_highlight");
     }
     onEventLimitClick() {
-        this.fc.api.unselect();
+        this.fc().unselect();
         return "popover";
     }
     onWindowResize() {

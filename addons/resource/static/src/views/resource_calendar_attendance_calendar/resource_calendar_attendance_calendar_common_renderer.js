@@ -25,7 +25,7 @@ export class ResourceCalendarAttendanceCalendarCommonRenderer extends CalendarCo
         this.popover = usePopover(this.resourceCalendarAttendancePopoverLoader.component, {
             position: "right",
             onClose: () => {
-                this.fc.api.unselect();
+                this.fc().unselect();
                 this.popoverPromise.resolve();
             },
         });
@@ -84,7 +84,7 @@ export class ResourceCalendarAttendanceCalendarCommonRenderer extends CalendarCo
     onEventResize(info) {
         const record = this.props.model.records[info.event.id];
         if (record.rawRecord.recurrency) {
-            this.fc.api.unselect();
+            this.fc().unselect();
             const dropTarget = document.elementFromPoint(
                 info.jsEvent.clientX,
                 info.jsEvent.clientY
@@ -111,7 +111,7 @@ export class ResourceCalendarAttendanceCalendarCommonRenderer extends CalendarCo
         }
         const record = this.props.model.records[info.event.id];
         if (record.rawRecord.recurrency) {
-            this.fc.api.unselect();
+            this.fc().unselect();
             const dropTarget = document.elementFromPoint(
                 info.jsEvent.clientX,
                 info.jsEvent.clientY

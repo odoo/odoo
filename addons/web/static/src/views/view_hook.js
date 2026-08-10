@@ -1,38 +1,35 @@
-import { useListener } from "@odoo/owl";
-import { render, useComponent } from "@web/owl2/utils";
+import { onWillUnmount, useListener, usePlugin } from "@odoo/owl";
+import {
+    ConfirmationDialog,
+    deleteConfirmationMessage,
+} from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
-import { useBus, useService } from "@web/core/utils/hooks";
-import { browser } from "@web/core/browser/browser";
-import { evaluateExpr } from "@web/core/py_js/py";
 import { download } from "@web/core/network/download";
 import { rpc } from "@web/core/network/rpc";
-import { ExportDataDialog } from "@web/views/view_dialogs/export_data_dialog";
-import {
-    deleteConfirmationMessage,
-    ConfirmationDialog,
-} from "@web/core/confirmation_dialog/confirmation_dialog";
-
+import { ORM } from "@web/core/orm_plugin";
+import { evaluateExpr } from "@web/core/py_js/py";
+import { useBus, useService } from "@web/core/utils/hooks";
 import { DynamicList } from "@web/model/relational_model/dynamic_list";
+import { useEnv } from "@web/owl2/utils";
+import { ExportDataDialog } from "@web/views/view_dialogs/export_data_dialog";
 
 /**
  * Allows for a component (usually a View component) to handle links with
  * attribute type="action". This is used to support onboarding banners and content helpers.
  *
- * A @web/core/concurrency:KeepLast must be present in the owl environment to allow coordinating
- * between clicks. (env.keepLast)
+ * A `keepLast` property must be present in the owl environment to allow coordinating
+ * between clicks. @see @web/core/utils/concurrency:KeepLast
  *
  * Note that this is similar but quite different from action buttons, since action links
  * are not dynamic according to the record.
- * @param {Object} params
- * @param  {String} params.resModel The default resModel to which actions will apply
- * @param  {Function} [params.reload] The function to execute to reload, if a button has data-reload-on-close
+ *
+ * @param {string} resModel default resModel to which actions will apply
+ * @param {() => any} reload function to run to reload, if a button has data-reload-on-close
  */
-export function useActionLinks({ resModel, reload }) {
-    const component = useComponent();
-    const keepLast = component.env.keepLast;
-
-    const orm = useService("orm");
+export function useActionLinks(resModel, reload) {
     const { doAction } = useService("action");
+    const { keepLast } = useEnv();
+    const orm = usePlugin(ORM);
 
     async function handler(ev) {
         ev.preventDefault();
@@ -46,7 +43,7 @@ export function useActionLinks({ resModel, reload }) {
         if (data.method !== undefined && data.model !== undefined) {
             const options = {};
             if (data.reloadOnClose) {
-                options.onClose = reload || (() => render(component));
+                options.onClose = reload;
             }
             const action = await keepLast.add(orm.call(data.model, data.method));
             if (action !== null) {
@@ -106,13 +103,14 @@ export function useBounceButton(containerRef, shouldBounce) {
         const button = ui.activeElement.querySelector("[data-bounce-button]");
         if (button && shouldBounce(ev.target)) {
             button.classList.add("o_catch_attention");
-            browser.clearTimeout(timeout);
-            timeout = browser.setTimeout(() => {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => {
                 button.classList.remove("o_catch_attention");
             }, 400);
         }
     };
     useListener(containerRef, "click", onClick);
+    onWillUnmount(() => clearTimeout(timeout));
 }
 
 export function useExportRecords(env, context, getDefaultExportList) {

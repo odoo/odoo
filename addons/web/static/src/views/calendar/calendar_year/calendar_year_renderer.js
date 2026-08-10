@@ -160,7 +160,7 @@ export class CalendarYearRenderer extends Component {
     }
     unselect() {
         for (const fc of Object.values(this.fcs)) {
-            fc.api.unselect();
+            fc().unselect();
         }
     }
     updateSize() {

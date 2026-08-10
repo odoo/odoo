@@ -15,11 +15,11 @@ patch(AttendeeCalendarCommonRenderer.prototype, {
             const businessHours = this.props.model.workingHours;
             if (businessHours !== previousBusinessHours) {
                 previousBusinessHours = businessHours;
-                this.fc.api.setOption("businessHours", businessHours);
+                this.fc().setOption("businessHours", businessHours);
             }
             // Force to rerender the FC.
             // As it doesn't redraw the header when the event's data changes
-            this.fc.api.render();
+            this.fc().render();
         });
 	},
 	get options() {
