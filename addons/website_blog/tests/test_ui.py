@@ -157,7 +157,7 @@ class TestWebsiteBlogUi(odoo.tests.HttpCase, TestWebsiteBlogCommon):
         self.start_tour(self.env["website"].get_client_action_url("/blog"), "blog_no_manager", login="eve")
 
     def test_blog_posts_dynamic_snippet_options(self):
-        self.start_tour(self.env['website'].get_client_action_url('/'), 'blog_posts_dynamic_snippet_options', login='admin')
+        self.start_tour(self.env['website'].get_client_action_url('/', True, True), 'blog_posts_dynamic_snippet_options', login='admin')
 
     def test_blog_posts_dynamic_snippet_visibility(self):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'blog_posts_dynamic_snippet_edit', login='admin')
