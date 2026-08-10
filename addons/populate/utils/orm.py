@@ -145,7 +145,7 @@ def get_ref_domain(
         ref_job = env['populate.job'].search(
             scope_domain
             & Domain([
-                ('type', '=', 'create'),
+                ('operation', '=', 'create'),
                 ('parent_id', '=', False),
                 ('ref', '=', ref),
             ]),

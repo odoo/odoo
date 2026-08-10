@@ -8,7 +8,7 @@ from odoo.tools import mute_logger
 class TestBlueprintDefinition(TransactionCase):
 
     def test_xml_definition_priority(self):
-        json_def = [{'type': 'create', 'model': 'test_populate.product', 'count': 5, 'fields': {}}]
+        json_def = [{'operation': 'create', 'model': 'test_populate.product', 'count': 5, 'fields': {}}]
         xml_def = '<data><create model="test_populate.customer" count="3"></create></data>'
 
         blueprint = self.env['populate.blueprint'].create({
@@ -19,7 +19,7 @@ class TestBlueprintDefinition(TransactionCase):
 
         parsed_xml_def = [
             {
-                'type': 'create',
+                'operation': 'create',
                 'model': 'test_populate.customer',
                 'count': 3,
                 'fields': {},
@@ -31,7 +31,7 @@ class TestBlueprintDefinition(TransactionCase):
     def test_definition_compute_json_only(self):
         json_def = [
             {
-                'type': 'create',
+                'operation': 'create',
                 'model': 'test_populate.product',
                 'count': 10,
                 'fields': {
@@ -59,7 +59,7 @@ class TestBlueprintDefinition(TransactionCase):
     def test_blueprint_name_required(self):
         with self.assertRaises(IntegrityError):
             self.env['populate.blueprint'].create({
-                'definition_json': [{'type': 'create', 'model': 'test_populate.product', 'count': 1, 'fields': {}}],
+                'definition_json': [{'operation': 'create', 'model': 'test_populate.product', 'count': 1, 'fields': {}}],
             })
 
     def test_blueprint_instantiation_creates_jobs(self):
@@ -67,7 +67,7 @@ class TestBlueprintDefinition(TransactionCase):
             'name': 'Instantiation Test',
             'definition_json': [
                 {
-                    'type': 'create',
+                    'operation': 'create',
                     'model': 'test_populate.product',
                     'count': 5,
                     'fields': {
@@ -76,7 +76,7 @@ class TestBlueprintDefinition(TransactionCase):
                     },
                 },
                 {
-                    'type': 'create',
+                    'operation': 'create',
                     'model': 'test_populate.customer',
                     'count': 3,
                     'fields': {
@@ -113,7 +113,7 @@ class TestBlueprintDefinition(TransactionCase):
         with self.assertRaises(ExceptionGroup) as ctx:
             self.env['populate.blueprint'].create({
                 'name': 'Invalid Model Test',
-                'definition_json': [{'type': 'create', 'model': 'populate.does_not_exist', 'count': 1, 'fields': {}}],
+                'definition_json': [{'operation': 'create', 'model': 'populate.does_not_exist', 'count': 1, 'fields': {}}],
             })
 
         errors = ctx.exception.exceptions
@@ -125,8 +125,8 @@ class TestBlueprintDefinition(TransactionCase):
             self.env['populate.blueprint'].create({
                 'name': 'Multi Invalid Model Test',
                 'definition_json': [
-                    {'type': 'create', 'model': 'populate.ghost_one', 'count': 1, 'fields': {}},
-                    {'type': 'create', 'model': 'populate.ghost_two', 'count': 1, 'fields': {}},
+                    {'operation': 'create', 'model': 'populate.ghost_one', 'count': 1, 'fields': {}},
+                    {'operation': 'create', 'model': 'populate.ghost_two', 'count': 1, 'fields': {}},
                 ],
             })
 
@@ -138,7 +138,7 @@ class TestBlueprintDefinition(TransactionCase):
             self.env['populate.blueprint'].create({
                 'name': 'Invalid Field Test',
                 'definition_json': [{
-                    'type': 'create',
+                    'operation': 'create',
                     'model': 'test_populate.product',
                     'count': 1,
                     'fields': {
@@ -156,7 +156,7 @@ class TestBlueprintDefinition(TransactionCase):
         blueprint = self.env['populate.blueprint'].create({
             'name': 'Generated Value Test',
             'definition_json': [{
-                'type': 'create',
+                'operation': 'create',
                 'model': 'test_populate.product',
                 'count': 1,
                 'values': {
@@ -174,7 +174,7 @@ class TestBlueprintDefinition(TransactionCase):
             self.env['populate.blueprint'].create({
                 'name': 'Duplicate Field Value Test',
                 'definition_json': [{
-                    'type': 'create',
+                    'operation': 'create',
                     'model': 'test_populate.product',
                     'count': 1,
                     'values': {
@@ -193,7 +193,7 @@ class TestBlueprintDefinition(TransactionCase):
             'name': 'Function Job Instantiation Test',
             'definition_json': [
                 {
-                    'type': 'create',
+                    'operation': 'create',
                     'model': 'test_populate.customer',
                     'id': 'customers',
                     'count': 2,
@@ -203,7 +203,7 @@ class TestBlueprintDefinition(TransactionCase):
                     },
                 },
                 {
-                    'type': 'function',
+                    'operation': 'function',
                     'model': 'test_populate.customer',
                     'name': 'populate_set_notes_from_args',
                     'ref': 'customers',
@@ -217,7 +217,7 @@ class TestBlueprintDefinition(TransactionCase):
         })
 
         session = self.env['populate.session'].create({'blueprint_id': blueprint.id})
-        function_job = session.job_ids.filtered(lambda job: job.type == 'function')
+        function_job = session.job_ids.filtered(lambda job: job.operation == 'function')
 
         self.assertEqual(function_job.model_name, 'test_populate.customer')
         self.assertEqual(function_job.method_name, 'populate_set_notes_from_args')
@@ -230,12 +230,12 @@ class TestBlueprintDefinition(TransactionCase):
     def test_function_validation_rejects_invalid_shapes(self):
         invalid_blocks = [
             ("function block is missing the required method name", {
-                'type': 'function',
+                'operation': 'function',
                 'model': 'test_populate.customer',
                 'ref': 'customers',
             }),
             ("function block uses field declarations instead of arg declarations", {
-                'type': 'function',
+                'operation': 'function',
                 'model': 'test_populate.customer',
                 'name': 'populate_set_notes_from_args',
                 'fields': {
@@ -244,7 +244,7 @@ class TestBlueprintDefinition(TransactionCase):
                 'domain': '[]',
             }),
             ("create block cannot define function arguments", {
-                'type': 'create',
+                'operation': 'create',
                 'model': 'test_populate.customer',
                 'count': 1,
                 'args': {
@@ -256,7 +256,7 @@ class TestBlueprintDefinition(TransactionCase):
                 },
             }),
             ("create block cannot use batched because ORM create already receives a list of vals", {
-                'type': 'create',
+                'operation': 'create',
                 'model': 'test_populate.customer',
                 'count': 1,
                 'batched': True,
@@ -266,19 +266,19 @@ class TestBlueprintDefinition(TransactionCase):
                 },
             }),
             ("function block points to an unknown method", {
-                'type': 'function',
+                'operation': 'function',
                 'model': 'test_populate.customer',
                 'name': 'does_not_exist',
                 'domain': '[]',
             }),
             ("function block points to a dunder method", {
-                'type': 'function',
+                'operation': 'function',
                 'model': 'test_populate.customer',
                 'name': '__class__',
                 'domain': '[]',
             }),
             ("positional argument indexes must start at 0 without gaps", {
-                'type': 'function',
+                'operation': 'function',
                 'model': 'test_populate.customer',
                 'name': 'populate_set_notes_from_args',
                 'domain': '[]',
@@ -300,7 +300,7 @@ class TestBlueprintDefinition(TransactionCase):
             self.env['populate.blueprint'].create({
                 'name': 'Duplicate Value Arg Test',
                 'definition_json': [{
-                    'type': 'function',
+                    'operation': 'function',
                     'model': 'test_populate.customer',
                     'name': 'populate_set_notes_from_args',
                     'domain': '[]',
@@ -320,7 +320,7 @@ class TestBlueprintDefinition(TransactionCase):
             self.env['populate.blueprint'].create({
                 'name': 'Multi Invalid Fields Test',
                 'definition_json': [{
-                    'type': 'create',
+                    'operation': 'create',
                     'model': 'test_populate.product',
                     'count': 1,
                     'fields': {

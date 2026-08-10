@@ -44,14 +44,14 @@ class TestXMLToJSONConversion(TransactionCase):
         self.assertEqual(len(definition), 2)
 
         create_model = definition[0]
-        self.assertEqual(create_model['type'], 'create')
+        self.assertEqual(create_model['operation'], 'create')
         self.assertEqual(create_model['model'], 'test_populate.supplier')
         self.assertEqual(create_model['count'], 5)
         self.assertEqual(create_model.get('id'), 'some_supplies')
 
         write_model = definition[1]
         self.assertEqual(write_model['model'], 'test_populate.supplier')
-        self.assertEqual(write_model['type'], 'write')
+        self.assertEqual(write_model['operation'], 'write')
         self.assertEqual(write_model.get('ref'), 'some_supplies')
         self.assertNotIn('count', write_model)
 
@@ -61,8 +61,8 @@ class TestXMLToJSONConversion(TransactionCase):
 
         self.assertEqual(len(session.job_ids), 2)
 
-        create_job = session.job_ids.filtered(lambda j: j.type == 'create')
-        write_job = session.job_ids.filtered(lambda j: j.type == 'write')
+        create_job = session.job_ids.filtered(lambda j: j.operation == 'create')
+        write_job = session.job_ids.filtered(lambda j: j.operation == 'write')
 
         self.assertEqual(len(create_job), 1)
         self.assertEqual(len(write_job), 1)
@@ -70,13 +70,13 @@ class TestXMLToJSONConversion(TransactionCase):
         self.assertEqual(create_job.model_name, 'test_populate.supplier')
         self.assertEqual(create_job.record_count, 5)
         self.assertEqual(create_job.ref, 'some_supplies')
-        self.assertEqual(create_job.type, 'create')
+        self.assertEqual(create_job.operation, 'create')
         self.assertIn('name', create_job.instructions['fields'])
         self.assertIn('is_active', create_job.instructions['fields'])
 
         self.assertEqual(write_job.model_name, 'test_populate.supplier')
         self.assertEqual(write_job.ref, 'some_supplies')
-        self.assertEqual(write_job.type, 'write')
+        self.assertEqual(write_job.operation, 'write')
         self.assertIn('is_active', write_job.instructions['fields'])
 
         self.assertLess(create_job.id, write_job.id)  # jobs are created in order of dependencies

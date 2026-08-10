@@ -23,7 +23,7 @@ def get_profile_description(job: Job) -> str:
     ref = f" [{job.ref}]" if job.ref else ""
     return (
         f"populate session {job.session_id.id} | job {job.parent_path[:-1]} | "
-        f"{job.model_name} {job.type}{ref}"
+        f"{job.model_name} {job.operation}{ref}"
     )
 
 

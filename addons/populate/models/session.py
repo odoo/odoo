@@ -169,12 +169,12 @@ class Session(models.Model):
         created_counts_by_ref = defaultdict(lambda: defaultdict(int))  # {ref | None: {model_name: count}}
         for index, block in enumerate(self.blueprint_id.definition):
             model_name = block['model']
-            block_type = block['type']
-            source_ref = block.get('id') if block_type == 'create' else block.get('ref')
+            operation = block['operation']
+            source_ref = block.get('id') if operation == 'create' else block.get('ref')
             ref, _, ref_relation = (part or None for part in (source_ref or '').partition('.'))
             vals = {
                 'model_name': model_name,
-                'type': block_type,
+                'operation': operation,
                 'instructions': {
                     'fields': block.get('fields', {}),
                     'values': block.get('values', {}),
@@ -183,7 +183,7 @@ class Session(models.Model):
                 'session_id': self.id,
                 'seed': derive_seed_from(self.seed, index),
             }
-            if block_type == 'function':
+            if operation == 'function':
                 vals['method_name'] = block['name']
             if source_ref:
                 vals['ref'] = source_ref
@@ -193,9 +193,9 @@ class Session(models.Model):
 
             vals.update(**{k: v for k, v in block.items() if k in ('parallel', 'context', 'domain', 'batched')})
 
-            defaults = self.env['populate.job'].default_get(['type', 'record_count'])
+            defaults = self.env['populate.job'].default_get(['operation', 'record_count'])
 
-            if block_type == 'create':
+            if operation == 'create':
                 created_counts_by_ref[ref][model_name] += vals.get('record_count', defaults['record_count'])
             else:
                 # Compute target job record_count for write/function blocks:

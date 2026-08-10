@@ -16,7 +16,7 @@ class TestSessionFieldGeneration(PopulateTestCase):
             'name': 'Eval Generator Test',
             'definition_json': [
                 {
-                    'type': 'create',
+                    'operation': 'create',
                     'model': 'test_populate.product',
                     'count': 3,
                     'fields': {
@@ -53,7 +53,7 @@ class TestSessionFieldGeneration(PopulateTestCase):
             'name': 'Eval Lambda Generator Test',
             'definition_json': [
                 {
-                    'type': 'create',
+                    'operation': 'create',
                     'model': 'test_populate.product',
                     'count': 5,
                     'fields': {
@@ -106,7 +106,7 @@ class TestSessionFieldGeneration(PopulateTestCase):
         blueprint = self.env['populate.blueprint'].create({
             'name': 'Default Generator Test',
             'definition_json': [{
-                'type': 'create',
+                'operation': 'create',
                 'model': 'test_populate.customer',
                 'count': 3,
                 'fields': {
@@ -135,7 +135,7 @@ class TestSessionFieldGeneration(PopulateTestCase):
         blueprint = self.env['populate.blueprint'].create({
             'name': 'Unknown Type Test',
             'definition_json': [{
-                'type': 'create',
+                'operation': 'create',
                 'model': 'test_populate.product',
                 'count': 1,
                 'values': {
@@ -156,7 +156,7 @@ class TestSessionFieldGeneration(PopulateTestCase):
         blueprint = self.env['populate.blueprint'].create({
             'name': 'Eval Priority Test',
             'definition_json': [{
-                'type': 'create',
+                'operation': 'create',
                 'model': 'test_populate.product',
                 'count': 3,
                 'fields': {
@@ -178,7 +178,7 @@ class TestSessionFieldGeneration(PopulateTestCase):
         blueprint = self.env['populate.blueprint'].create({
             'name': 'Create Context Test',
             'definition_json': [{
-                'type': 'create',
+                'operation': 'create',
                 'model': 'test_populate.customer',
                 'count': 1,
                 'context': {
@@ -214,7 +214,7 @@ class TestWriteJobTargeting(PopulateTestCase):
             'name': 'Write Test Blueprint',
             'definition_json': [
                 {
-                    'type': 'write',
+                    'operation': 'write',
                     'model': 'test_populate.product',
                     'domain': "[]",
                     'count': 1,
@@ -240,7 +240,7 @@ class TestWriteJobTargeting(PopulateTestCase):
             'name': 'Create and Write Blueprint',
             'definition_json': [
                 {
-                    'type': 'create',
+                    'operation': 'create',
                     'model': 'test_populate.supplier',
                     'id': 'test_suppliers',
                     'count': 2,
@@ -251,7 +251,7 @@ class TestWriteJobTargeting(PopulateTestCase):
                     },
                 },
                 {
-                    'type': 'write',
+                    'operation': 'write',
                     'model': 'test_populate.supplier',
                     'ref': 'test_suppliers',
                     'fields': {
@@ -299,7 +299,7 @@ class TestWriteJobTargeting(PopulateTestCase):
             'name': 'Write All Blueprint',
             'definition_json': [
                 {
-                    'type': 'write',
+                    'operation': 'write',
                     'model': 'test_populate.supplier',
                     'domain': "[]",
                     'fields': {
@@ -331,7 +331,7 @@ class TestWriteJobTargeting(PopulateTestCase):
         blueprint = self.env['populate.blueprint'].create({
             'name': 'Write Domain Blueprint',
             'definition_json': [{
-                'type': 'write',
+                'operation': 'write',
                 'model': 'test_populate.supplier',
                 'domain': "[('country_code', '=', 'US')]",
                 'fields': {
@@ -358,7 +358,7 @@ class TestWriteJobTargeting(PopulateTestCase):
         blueprint = self.env['populate.blueprint'].create({
             'name': 'Write Implicit Empty Domain Blueprint',
             'definition_json': [{
-                'type': 'write',
+                'operation': 'write',
                 'model': 'test_populate.supplier',
                 'fields': {
                     'notes': {'eval': '"Implicit empty domain"'},
@@ -376,7 +376,7 @@ class TestWriteJobTargeting(PopulateTestCase):
             'name': 'Write Ref Domain Blueprint',
             'definition_json': [
                 {
-                    'type': 'create',
+                    'operation': 'create',
                     'model': 'test_populate.supplier',
                     'id': 'mixed_suppliers',
                     'count': 2,
@@ -393,7 +393,7 @@ class TestWriteJobTargeting(PopulateTestCase):
                     },
                 },
                 {
-                    'type': 'write',
+                    'operation': 'write',
                     'model': 'test_populate.supplier',
                     'ref': 'mixed_suppliers',
                     'domain': "[('country_code', '=', 'US')]",
@@ -407,7 +407,7 @@ class TestWriteJobTargeting(PopulateTestCase):
         session = self.env['populate.session'].create({
             'blueprint_id': blueprint.id,
         })
-        write_job = session.job_ids.filtered(lambda job: job.type == 'write')
+        write_job = session.job_ids.filtered(lambda job: job.operation == 'write')
         self.assertEqual(write_job.domain, "[('country_code', '=', 'US')]")
         self.assertEqual(
             write_job.record_count,
@@ -445,7 +445,7 @@ class TestWriteJobTargeting(PopulateTestCase):
         blueprint = self.env['populate.blueprint'].create({
             'name': 'Batched Write Blueprint',
             'definition_json': [{
-                'type': 'write',
+                'operation': 'write',
                 'model': 'test_populate.customer',
                 'domain': f"[('id', 'in', {customers.ids})]",
                 'batched': True,
@@ -471,7 +471,7 @@ class TestFunctionJobExecution(PopulateTestCase):
             'name': 'Per Record Function Blueprint',
             'definition_json': [
                 {
-                    'type': 'create',
+                    'operation': 'create',
                     'model': 'test_populate.customer',
                     'id': 'function_customers',
                     'count': 3,
@@ -481,7 +481,7 @@ class TestFunctionJobExecution(PopulateTestCase):
                     },
                 },
                 {
-                    'type': 'function',
+                    'operation': 'function',
                     'model': 'test_populate.customer',
                     'name': 'populate_set_notes_from_args',
                     'ref': 'function_customers',
@@ -518,7 +518,7 @@ class TestFunctionJobExecution(PopulateTestCase):
             'name': 'Batched Function Blueprint',
             'definition_json': [
                 {
-                    'type': 'create',
+                    'operation': 'create',
                     'model': 'test_populate.customer',
                     'id': 'batched_function_customers',
                     'count': 3,
@@ -528,7 +528,7 @@ class TestFunctionJobExecution(PopulateTestCase):
                     },
                 },
                 {
-                    'type': 'function',
+                    'operation': 'function',
                     'model': 'test_populate.customer',
                     'name': 'populate_set_notes_from_args',
                     'ref': 'batched_function_customers',
@@ -564,7 +564,7 @@ class TestFunctionJobExecution(PopulateTestCase):
         blueprint = self.env['populate.blueprint'].create({
             'name': 'Model Function Blueprint',
             'definition_json': [{
-                'type': 'function',
+                'operation': 'function',
                 'model': 'test_populate.customer',
                 'name': 'populate_create_customer_from_model',
                 'domain': "[('email', '=', 'no-target@example.com')]",
@@ -604,7 +604,7 @@ class TestFunctionJobExecution(PopulateTestCase):
         blueprint = self.env['populate.blueprint'].create({
             'name': 'Function Domain Blueprint',
             'definition_json': [{
-                'type': 'function',
+                'operation': 'function',
                 'model': 'test_populate.customer',
                 'name': 'populate_set_notes_from_args',
                 'domain': "[('name', '=', 'Function Domain Match')]",
@@ -635,7 +635,7 @@ class TestFunctionJobExecution(PopulateTestCase):
         blueprint = self.env['populate.blueprint'].create({
             'name': 'Function Implicit Empty Domain Blueprint',
             'definition_json': [{
-                'type': 'function',
+                'operation': 'function',
                 'model': 'test_populate.customer',
                 'name': 'populate_set_notes_from_args',
                 'args': {
@@ -645,7 +645,7 @@ class TestFunctionJobExecution(PopulateTestCase):
         })
 
         session = self.env['populate.session'].create({'blueprint_id': blueprint.id})
-        function_job = session.job_ids.filtered(lambda job: job.type == 'function')
+        function_job = session.job_ids.filtered(lambda job: job.operation == 'function')
         self.assertEqual(function_job.record_count, len(customers))
 
         start_populate(session)
@@ -661,7 +661,7 @@ class TestFunctionJobExecution(PopulateTestCase):
         blueprint = self.env['populate.blueprint'].create({
             'name': 'Function Context Blueprint',
             'definition_json': [{
-                'type': 'function',
+                'operation': 'function',
                 'model': 'test_populate.customer',
                 'name': 'populate_set_notes_from_context',
                 'domain': f"[('id', '=', {customer.id})]",
@@ -680,14 +680,14 @@ class TestFunctionJobExecution(PopulateTestCase):
         blueprint = self.env['populate.blueprint'].create({
             'name': 'Function Dunder Execution Blueprint',
             'definition_json': [{
-                'type': 'function',
+                'operation': 'function',
                 'model': 'test_populate.customer',
                 'name': 'populate_set_notes_from_args',
                 'domain': '[]',
             }],
         })
         session = self.env['populate.session'].create({'blueprint_id': blueprint.id})
-        function_job = session.job_ids.filtered(lambda job: job.type == 'function')
+        function_job = session.job_ids.filtered(lambda job: job.operation == 'function')
 
         # Blueprint validation already rejects dunder methods. Change the instantiated
         # job directly to verify that execution cannot bypass that validation.
@@ -708,7 +708,7 @@ class TestFunctionJobExecution(PopulateTestCase):
                 blueprint = self.env['populate.blueprint'].create({
                     'name': f'Unsafe {arg_kind.title()} Argument Blueprint',
                     'definition_json': [{
-                        'type': 'function',
+                        'operation': 'function',
                         'model': 'test_populate.customer',
                         'name': 'populate_set_notes_from_args',
                         'domain': f"[('id', '=', {customer.id})]",
@@ -718,7 +718,7 @@ class TestFunctionJobExecution(PopulateTestCase):
                     }],
                 })
                 session = self.env['populate.session'].create({'blueprint_id': blueprint.id})
-                function_job = session.job_ids.filtered(lambda job: job.type == 'function')
+                function_job = session.job_ids.filtered(lambda job: job.operation == 'function')
 
                 with self.assertRaisesRegex(TypeError, "Unsafe eval argument:"):
                     function_job._execute()
@@ -732,7 +732,7 @@ class TestWriteJobRecordCount(PopulateTestCase):
             'name': 'Write Ref Count Blueprint',
             'definition_json': [
                 {
-                    'type': 'create',
+                    'operation': 'create',
                     'model': 'test_populate.customer',
                     'count': 50,
                     'id': 'my_customers',
@@ -742,7 +742,7 @@ class TestWriteJobRecordCount(PopulateTestCase):
                     },
                 },
                 {
-                    'type': 'write',
+                    'operation': 'write',
                     'model': 'test_populate.customer',
 
                     'ref': 'my_customers',
@@ -758,8 +758,8 @@ class TestWriteJobRecordCount(PopulateTestCase):
         })
 
         jobs = session.job_ids
-        create_job = jobs.filtered(lambda j: j.type == 'create')
-        write_job = jobs.filtered(lambda j: j.type == 'write')
+        create_job = jobs.filtered(lambda j: j.operation == 'create')
+        write_job = jobs.filtered(lambda j: j.operation == 'write')
 
         self.assertEqual(create_job.record_count, 50)
         self.assertEqual(write_job.record_count, 50,
@@ -775,7 +775,7 @@ class TestWriteJobRecordCount(PopulateTestCase):
             'name': 'Write No Ref Blueprint',
             'definition_json': [
                 {
-                    'type': 'write',
+                    'operation': 'write',
                     'model': 'test_populate.customer',
                     'domain': "[]",
                     'fields': {
@@ -789,7 +789,7 @@ class TestWriteJobRecordCount(PopulateTestCase):
             'blueprint_id': blueprint.id,
         })
 
-        write_job = session.job_ids.filtered(lambda j: j.type == 'write')
+        write_job = session.job_ids.filtered(lambda j: j.operation == 'write')
         expected_count = self.env['test_populate.customer'].search_count([])
         self.assertEqual(write_job.record_count, expected_count,
                          "Write job without ref should have record_count equal to existing records in DB")
@@ -805,7 +805,7 @@ class TestWriteJobRecordCount(PopulateTestCase):
             'name': 'Create Then Write Domain No Ref Blueprint',
             'definition_json': [
                 {
-                    'type': 'create',
+                    'operation': 'create',
                     'model': 'test_populate.customer',
                     'count': 5,
                     'fields': {
@@ -814,7 +814,7 @@ class TestWriteJobRecordCount(PopulateTestCase):
                     },
                 },
                 {
-                    'type': 'write',
+                    'operation': 'write',
                     'model': 'test_populate.customer',
 
                     'domain': "[('age', '>=', 20)]",
@@ -829,7 +829,7 @@ class TestWriteJobRecordCount(PopulateTestCase):
             'blueprint_id': blueprint.id,
         })
 
-        write_job = session.job_ids.filtered(lambda job: job.type == 'write')
+        write_job = session.job_ids.filtered(lambda job: job.operation == 'write')
         self.assertEqual(
             write_job.record_count,
             7,
@@ -845,7 +845,7 @@ class TestWriteJobRecordCount(PopulateTestCase):
             'name': 'Create Then Write No Ref Blueprint',
             'definition_json': [
                 {
-                    'type': 'create',
+                    'operation': 'create',
                     'model': 'test_populate.customer',
                     'count': 20,
                     'fields': {
@@ -854,7 +854,7 @@ class TestWriteJobRecordCount(PopulateTestCase):
                     },
                 },
                 {
-                    'type': 'create',
+                    'operation': 'create',
                     'model': 'test_populate.customer',
                     'count': 10,
                     'id': 'referenced_customers',
@@ -864,7 +864,7 @@ class TestWriteJobRecordCount(PopulateTestCase):
                     },
                 },
                 {
-                    'type': 'write',
+                    'operation': 'write',
                     'model': 'test_populate.customer',
                     'domain': "[]",
                     'fields': {
@@ -878,7 +878,7 @@ class TestWriteJobRecordCount(PopulateTestCase):
             'blueprint_id': blueprint.id,
         })
 
-        write_job = session.job_ids.filtered(lambda j: j.type == 'write')
+        write_job = session.job_ids.filtered(lambda j: j.operation == 'write')
         self.assertEqual(
             write_job.record_count,
             len(existing) + 30,
@@ -891,7 +891,7 @@ class TestWriteJobRecordCount(PopulateTestCase):
             'name': 'Scaled Write Blueprint',
             'definition_json': [
                 {
-                    'type': 'create',
+                    'operation': 'create',
                     'model': 'test_populate.customer',
                     'count': 100,
                     'id': 'scaled_customers',
@@ -901,7 +901,7 @@ class TestWriteJobRecordCount(PopulateTestCase):
                     },
                 },
                 {
-                    'type': 'write',
+                    'operation': 'write',
                     'model': 'test_populate.customer',
 
                     'ref': 'scaled_customers',
@@ -917,8 +917,8 @@ class TestWriteJobRecordCount(PopulateTestCase):
             'scaling_factor': 5.0,
         })
 
-        create_job = session.job_ids.filtered(lambda j: j.type == 'create' and not j.parent_id)
-        write_job = session.job_ids.filtered(lambda j: j.type == 'write' and not j.parent_id)
+        create_job = session.job_ids.filtered(lambda j: j.operation == 'create' and not j.parent_id)
+        write_job = session.job_ids.filtered(lambda j: j.operation == 'write' and not j.parent_id)
 
         self.assertEqual(create_job.record_count, 500)  # 100 * 5.0
         self.assertEqual(write_job.record_count, 500,
@@ -934,7 +934,7 @@ class TestWriteJobRecordCount(PopulateTestCase):
             'name': 'Multi Create Then Write Blueprint',
             'definition_json': [
                 {
-                    'type': 'create',
+                    'operation': 'create',
                     'model': 'test_populate.customer',
                     'count': 10,
                     'fields': {
@@ -943,7 +943,7 @@ class TestWriteJobRecordCount(PopulateTestCase):
                     },
                 },
                 {
-                    'type': 'create',
+                    'operation': 'create',
                     'model': 'test_populate.customer',
                     'count': 15,
                     'fields': {
@@ -952,7 +952,7 @@ class TestWriteJobRecordCount(PopulateTestCase):
                     },
                 },
                 {
-                    'type': 'write',
+                    'operation': 'write',
                     'model': 'test_populate.customer',
                     'domain': "[]",
                     'fields': {
@@ -966,7 +966,7 @@ class TestWriteJobRecordCount(PopulateTestCase):
             'blueprint_id': blueprint.id,
         })
 
-        write_job = session.job_ids.filtered(lambda j: j.type == 'write')
+        write_job = session.job_ids.filtered(lambda j: j.operation == 'write')
         expected = existing_count + 10 + 15
         self.assertEqual(write_job.record_count, expected,
                          "Write job without ref should sum existing records + all preceding unreferenced creates")
@@ -989,7 +989,7 @@ class TestProfilerIntegration(PopulateTestCase):
         blueprint = self.env['populate.blueprint'].create({
             'name': 'Unprofiled Populate Test',
             'definition_json': [{
-                'type': 'create',
+                'operation': 'create',
                 'model': 'test_populate.product',
                 'count': 1,
                 'fields': {
@@ -1008,7 +1008,7 @@ class TestProfilerIntegration(PopulateTestCase):
             'name': 'Profiled Populate Test',
             'definition_json': [
                 {
-                    'type': 'create',
+                    'operation': 'create',
                     'model': 'test_populate.product',
                     'id': 'profiled_products',
                     'count': 2,
@@ -1017,7 +1017,7 @@ class TestProfilerIntegration(PopulateTestCase):
                     },
                 },
                 {
-                    'type': 'write',
+                    'operation': 'write',
                     'model': 'test_populate.product',
 
                     'ref': 'profiled_products',
@@ -1050,7 +1050,7 @@ class TestProfilerIntegration(PopulateTestCase):
         blueprint = self.env['populate.blueprint'].create({
             'name': 'Profiled Split Populate Test',
             'definition_json': [{
-                'type': 'create',
+                'operation': 'create',
                 'model': 'test_populate.product',
                 'count': MAX_RECORD_COMMIT_SIZE + 1,
                 'fields': {
@@ -1087,7 +1087,7 @@ class TestSubjobs(PopulateTestCase):
             'name': 'Large Count Blueprint',
             'definition_json': [
                 {
-                    'type': 'create',
+                    'operation': 'create',
                     'model': 'test_populate.product',
                     'count': create_count,
                     'fields': {
@@ -1112,7 +1112,7 @@ class TestSubjobs(PopulateTestCase):
             'name': 'Large Write Blueprint',
             'definition_json': [
                 {
-                    'type': 'create',
+                    'operation': 'create',
                     'model': 'test_populate.customer',
                     'count': create_count,
                     'id': 'big_customers',
@@ -1122,7 +1122,7 @@ class TestSubjobs(PopulateTestCase):
                     },
                 },
                 {
-                    'type': 'write',
+                    'operation': 'write',
                     'model': 'test_populate.customer',
 
                     'ref': 'big_customers',
@@ -1137,7 +1137,7 @@ class TestSubjobs(PopulateTestCase):
             'blueprint_id': blueprint.id,
         })
 
-        write_job = session.job_ids.filtered(lambda j: j.type == 'write' and not j.parent_id)
+        write_job = session.job_ids.filtered(lambda j: j.operation == 'write' and not j.parent_id)
         self.assertTrue(write_job.child_ids,
                         "Write job with large record_count should be split into subjobs")
         self.assertEqual(write_job.record_count, create_count)
@@ -1163,7 +1163,7 @@ class TestSubjobs(PopulateTestCase):
         blueprint = self.env['populate.blueprint'].create({
             'name': 'Split Write Domain Blueprint',
             'definition_json': [{
-                'type': 'write',
+                'operation': 'write',
                 'model': 'test_populate.customer',
 
                 'domain': "[('age', '>=', 20)]",
@@ -1178,7 +1178,7 @@ class TestSubjobs(PopulateTestCase):
             'blueprint_id': blueprint.id,
         })
 
-        write_job = session.job_ids.filtered(lambda j: j.type == 'write' and not j.parent_id)
+        write_job = session.job_ids.filtered(lambda j: j.operation == 'write' and not j.parent_id)
         self.assertEqual(write_job.record_count, len(matching_customers))
         self.assertTrue(write_job.child_ids, "The domain-targeted write job should be split into subjobs")
         self.assertEqual(sum(write_job.child_ids.mapped('record_count')), len(matching_customers))
@@ -1215,7 +1215,7 @@ class TestDottedRefTargeting(PopulateTestCase):
             'name': 'Relational Ref Write Test',
             'definition_json': [
                 {
-                    'type': 'create',
+                    'operation': 'create',
                     'model': 'test_populate.supplier',
                     'id': 'test_suppliers',
                     'count': 2,
@@ -1225,7 +1225,7 @@ class TestDottedRefTargeting(PopulateTestCase):
                     },
                 },
                 {
-                    'type': 'create',
+                    'operation': 'create',
                     'model': 'test_populate.product',
                     'count': 4,
                     'fields': {
@@ -1240,7 +1240,7 @@ class TestDottedRefTargeting(PopulateTestCase):
                 },
                 {
                     # Write on products reachable via supplier_ids.product_ids
-                    'type': 'write',
+                    'operation': 'write',
                     'model': 'test_populate.product',
 
                     'ref': 'test_suppliers.product_ids',
@@ -1286,7 +1286,7 @@ class TestDottedRefTargeting(PopulateTestCase):
             'name': 'Multilevel Relational Ref Write Test',
             'definition_json': [
                 {
-                    'type': 'create',
+                    'operation': 'create',
                     'model': 'test_populate.warehouse',
                     'id': 'test_warehouses_ml',
                     'count': 2,
@@ -1295,7 +1295,7 @@ class TestDottedRefTargeting(PopulateTestCase):
                     },
                 },
                 {
-                    'type': 'create',
+                    'operation': 'create',
                     'model': 'test_populate.supplier',
                     'count': 3,
                     'fields': {
@@ -1308,7 +1308,7 @@ class TestDottedRefTargeting(PopulateTestCase):
                     },
                 },
                 {
-                    'type': 'create',
+                    'operation': 'create',
                     'model': 'test_populate.product',
                     'count': 6,
                     'fields': {
@@ -1324,7 +1324,7 @@ class TestDottedRefTargeting(PopulateTestCase):
                     # Two-level path: warehouse -> supplier_ids -> product_ids
                     # Only products whose supplier belongs to one of the ref'd warehouses
                     # should be updated.
-                    'type': 'write',
+                    'operation': 'write',
                     'model': 'test_populate.product',
 
                     'ref': 'test_warehouses_ml.supplier_ids.product_ids',
@@ -1379,7 +1379,7 @@ class TestDottedRefTargeting(PopulateTestCase):
             'name': 'Relational Ref Zero Count Blueprint',
             'definition_json': [
                 {
-                    'type': 'create',
+                    'operation': 'create',
                     'model': 'test_populate.supplier',
                     'id': 'ref_suppliers',
                     'count': 3,
@@ -1389,7 +1389,7 @@ class TestDottedRefTargeting(PopulateTestCase):
                     },
                 },
                 {
-                    'type': 'write',
+                    'operation': 'write',
                     'model': 'test_populate.product',
 
                     'ref': 'ref_suppliers.product_ids',
@@ -1403,7 +1403,7 @@ class TestDottedRefTargeting(PopulateTestCase):
         session = self.env['populate.session'].create({'blueprint_id': blueprint.id})
 
         write_job = session.job_ids.filtered(
-            lambda j: j.type == 'write' and not j.parent_id,
+            lambda j: j.operation == 'write' and not j.parent_id,
         )
         self.assertEqual(len(write_job), 1)
         self.assertEqual(
@@ -1420,7 +1420,7 @@ class TestDottedRefTargeting(PopulateTestCase):
             'name': 'Relational Ref No Split Blueprint',
             'definition_json': [
                 {
-                    'type': 'create',
+                    'operation': 'create',
                     'model': 'test_populate.supplier',
                     'id': 'suppliers_nosplit',
                     'count': 30000,  # Large enough that a known count would trigger a split
@@ -1430,7 +1430,7 @@ class TestDottedRefTargeting(PopulateTestCase):
                     },
                 },
                 {
-                    'type': 'write',
+                    'operation': 'write',
                     'model': 'test_populate.product',
 
                     'ref': 'suppliers_nosplit.product_ids',
@@ -1447,7 +1447,7 @@ class TestDottedRefTargeting(PopulateTestCase):
         })
 
         write_job = session.job_ids.filtered(
-            lambda j: j.type == 'write' and not j.parent_id,
+            lambda j: j.operation == 'write' and not j.parent_id,
         )
         self.assertFalse(
             write_job.child_ids,
@@ -1459,7 +1459,7 @@ class TestDottedRefTargeting(PopulateTestCase):
             'name': 'Relational Ref Domain No Split Blueprint',
             'definition_json': [
                 {
-                    'type': 'create',
+                    'operation': 'create',
                     'model': 'test_populate.supplier',
                     'id': 'suppliers_domain_nosplit',
                     'count': 30000,
@@ -1468,7 +1468,7 @@ class TestDottedRefTargeting(PopulateTestCase):
                     },
                 },
                 {
-                    'type': 'write',
+                    'operation': 'write',
                     'model': 'test_populate.product',
 
                     'ref': 'suppliers_domain_nosplit.product_ids',
@@ -1486,7 +1486,7 @@ class TestDottedRefTargeting(PopulateTestCase):
         })
 
         write_job = session.job_ids.filtered(
-            lambda job: job.type == 'write' and not job.parent_id,
+            lambda job: job.operation == 'write' and not job.parent_id,
         )
         self.assertEqual(write_job.record_count, 0)
         self.assertEqual(write_job.domain, "[('category', '=', 'books')]")

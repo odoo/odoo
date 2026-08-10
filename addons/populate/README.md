@@ -57,7 +57,7 @@ code will be imported, allowing for custom generators, if needed.
 
 ### XML Structure
 
-A blueprint definition is a list of typed operation blocks. Use
+A blueprint definition is an ordered list of operation blocks. Use
 `<create>` to create records, `<write>` to update records, and
 `<function>` to call a method on targeted records.
 `<field>` declarations are persisted through ORM `create`/`write`;
@@ -88,12 +88,13 @@ blocks use `<arg>` declarations for generated method arguments.
 
 Blueprints can also be defined in JSON via the `definition_json` field
 on `populate.blueprint`. The JSON format mirrors the XML structure 
-directly:
+directly. The mandatory `operation` key corresponds to the XML operation
+element name (`create`, `write`, or `function`):
 
 ```json
 [
     {
-        "type": "create",
+        "operation": "create",
         "model": "res.partner",
         "count": 500,
         "id": "my_partners",
@@ -107,7 +108,7 @@ directly:
         }
     },
     {
-        "type": "write",
+        "operation": "write",
         "model": "res.partner",
         "ref": "my_partners",
         "batched": true,
@@ -119,7 +120,7 @@ directly:
         }
     },
     {
-        "type": "function",
+        "operation": "function",
         "model": "res.partner",
         "name": "message_subscribe",
         "ref": "my_partners",

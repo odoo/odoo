@@ -383,7 +383,7 @@ class TestInheritanceChaining(TransactionCase):
     def test_inherit_from_json_only_parent_fails(self):
         json_blueprint = self.env['populate.blueprint'].create({
             'name': 'JSON Blueprint',
-            'definition_json': [{'type': 'create', 'model': 'test_populate.product', 'count': 10, 'fields': {}}],
+            'definition_json': [{'operation': 'create', 'model': 'test_populate.product', 'count': 10, 'fields': {}}],
         })
 
         with self.assertRaises(ValueError):
@@ -429,7 +429,7 @@ class TestInheritanceChaining(TransactionCase):
             'name': 'JSON Only Blueprint',
             'definition_json': [
                 {
-                    'type': 'create',
+                    'operation': 'create',
                     'model': 'test_populate.product',
                     'count': 42,
                     'fields': {

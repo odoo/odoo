@@ -65,14 +65,14 @@ class Job(models.Model):
     is_done = fields.Boolean()
 
     ref = fields.Char(help="""Reference the batch of records used by the job.
-    If the job type is 'create' -> Annotates the records for referencing.
-    If the job type is 'write' or 'function' -> Refers to records with said reference.
+    If the job operation is 'create' -> Annotates the records for referencing.
+    If the job operation is 'write' or 'function' -> Refers to records with said reference.
     """)
     domain = fields.Char(help="Domain selecting target records for jobs that update existing records.")
     model_name = fields.Char(required=True)
     method_name = fields.Char(help="Method called by function jobs.")
     record_count = fields.Integer(default=1)  # Semantics: 0 <-> None
-    type = fields.Selection([
+    operation = fields.Selection([
         ('create', "Create"),
         ('write', "Write"),
         ('function', "Function"),
@@ -83,21 +83,21 @@ class Job(models.Model):
     instructions = fields.Json()
 
     _record_count_invariant = models.Constraint(
-        "CHECK (record_count > 0 OR (type IN ('write', 'function') AND record_count = 0))",
+        "CHECK (record_count > 0 OR (operation IN ('write', 'function') AND record_count = 0))",
         "A job's record_count needs to be a non-zero positive integer. "
         "Only write and function jobs are allowed to have no record_count, "
         "whose cardinality is unknown at creation time.",
     )
     _create_job_without_domain = models.Constraint(
-        "CHECK (type != 'create' OR domain IS NULL OR domain = '')",
+        "CHECK (operation != 'create' OR domain IS NULL OR domain = '')",
         "Create jobs cannot define a domain.",
     )
     # partial unique constraint, subjobs copy the info from parents,
     # and you can have multiple write jobs refer the same created records' ref.
     _unique_ref_per_session = models.UniqueIndex(
-        "(ref, session_id) WHERE parent_id IS NULL AND type = 'create'",
+        "(ref, session_id) WHERE parent_id IS NULL AND operation = 'create'",
         "A job with this reference already exists in this session. "
-        "References must be unique for create-type jobs within a session.",
+        "References must be unique for create operations within a session.",
     )
     _records_idx = models.Index('(model_name, ref, session_id, blueprint_id)')
 
@@ -215,7 +215,7 @@ class Job(models.Model):
                 generators = self.__create_generators(seed or self.seed)
 
             if self.is_executable:
-                match self.type:
+                match self.operation:
                     case 'create':
                         self._execute_create(generators)
                     case 'write':
@@ -232,7 +232,7 @@ class Job(models.Model):
         :param generators: Generators keyed by target name.
         """
         self.ensure_one()
-        assert self.type == 'create'
+        assert self.operation == 'create'
 
         model = self.env[self.model_name]
         records_vals = []
@@ -260,7 +260,7 @@ class Job(models.Model):
         :param generators: Generators keyed by target name.
         """
         self.ensure_one()
-        assert self.type == 'write'
+        assert self.operation == 'write'
 
         records = self._get_target_records()
         if not records:
@@ -287,7 +287,7 @@ class Job(models.Model):
         :param generators: Generators are keyed by the target name.
         """
         self.ensure_one()
-        assert self.type == 'function'
+        assert self.operation == 'function'
 
         model = self.env[self.model_name].with_context(active_test=False)
         if context := self.context:
@@ -445,7 +445,7 @@ class Job(models.Model):
                 'create': 'Creating',
                 'write': 'Writing on',
                 'function': f'Calling {self.method_name} on',
-            }[self.type]
+            }[self.operation]
             count = f' {self.record_count}' if self.record_count else ''
 
             if self.parent_id:

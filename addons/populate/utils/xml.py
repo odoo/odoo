@@ -43,34 +43,34 @@ def parse(xml):
     """
 
     def parse_block(block_elem):
-        block_type = etree.QName(block_elem).localname
+        operation = etree.QName(block_elem).localname
 
-        if block_elem.get('type'):
+        if block_elem.get('operation'):
             raise ValueError(
-                f"<{block_type}> cannot define a 'type' attribute. "
-                f"The XML tag already defines the operation type.",
+                f"<{operation}> cannot define an 'operation' attribute. "
+                f"The XML element name already defines the operation.",
             )
 
         model_name = block_elem.get('model')
         if not model_name:
             msg = (
-                f"Missing required 'model' attribute on <{block_type}> element. "
-                f"Each <{block_type}> must specify the Odoo model name."
+                f"Missing required 'model' attribute on <{operation}> element. "
+                f"Each <{operation}> must specify the Odoo model name."
             )
             raise ValueError(msg)
 
-        if block_type == 'create' and block_elem.get('ref'):
+        if operation == 'create' and block_elem.get('ref'):
             raise ValueError("<create> cannot define a 'ref' attribute. Use 'id' for create references.")
-        if block_type in ('write', 'function') and block_elem.get('id'):
-            raise ValueError(f"<{block_type}> cannot define an 'id' attribute. Use 'ref' for targets.")
+        if operation in ('write', 'function') and block_elem.get('id'):
+            raise ValueError(f"<{operation}> cannot define an 'id' attribute. Use 'ref' for targets.")
 
         block_data = {
-            'type': block_type,
+            'operation': operation,
             'model': model_name,
             'fields': {},
             'values': {},
         }
-        if block_type == 'function':
+        if operation == 'function':
             block_data['args'] = {}
             if name := block_elem.get('name'):
                 block_data['name'] = name
@@ -80,7 +80,7 @@ def parse(xml):
             block_data['scale'] = str2bool(scale)
         if batched := block_elem.get('batched'):
             block_data['batched'] = str2bool(batched)
-        if block_type == 'create':
+        if operation == 'create':
             if ref := block_elem.get('id'):
                 block_data['id'] = ref
         elif ref := block_elem.get('ref'):
@@ -114,9 +114,9 @@ def parse(xml):
         if not isinstance(block_elem.tag, str):
             continue
 
-        block_type = etree.QName(block_elem).localname
-        if block_type not in ('create', 'write', 'function'):
-            raise ValueError(f"Unsupported populate operation <{block_type}>. Expected <create>, <write> or <function>.")
+        operation = etree.QName(block_elem).localname
+        if operation not in ('create', 'write', 'function'):
+            raise ValueError(f"Unsupported populate operation <{operation}>. Expected <create>, <write> or <function>.")
 
         block_data = parse_block(block_elem)
         arg_index = 0
