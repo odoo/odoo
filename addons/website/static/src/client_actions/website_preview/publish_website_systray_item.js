@@ -71,7 +71,7 @@ export class PublishSystrayItem extends Component {
         this.updateState();
 
         // TODO: website service should share a reactive
-        useBus(websiteSystrayRegistry, "CONTENT-UPDATED", this.updateState);
+        useBus(websiteSystrayRegistry, "CONTENT-UPDATED", this.updateState.bind(this));
     }
 
     get label() {

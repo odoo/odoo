@@ -14,6 +14,7 @@ import { CustomGroupByItem } from "@web/search/custom_group_by_item/custom_group
 import { CheckboxItem } from "@web/core/dropdown/checkbox_item";
 import { FACET_ICONS, GROUPABLE_TYPES } from "@web/search/utils/misc";
 import { _t } from "@web/core/l10n/translation";
+import { render } from "@web/owl2/utils";
 
 const favoriteMenuRegistry = registry.category("favoriteMenu");
 
@@ -46,7 +47,7 @@ export class SearchBarMenu extends Component {
         this.fields = sortBy(fields, "string");
         // Favorite
         this.state = proxy({ sharedFavoritesExpanded: false });
-        useBus(this.env.searchModel, "update", this.render);
+        useBus(this.env.searchModel, "update", () => render(this));
         this.dialogService = useService("dialog");
         this.notificationService = useService("notification");
 

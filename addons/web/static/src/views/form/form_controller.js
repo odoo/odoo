@@ -12,7 +12,7 @@ import { omit } from "@web/core/utils/objects";
 import { createElement, parseXML } from "@web/core/utils/xml";
 import { useModel } from "@web/model/model";
 import { addFieldDependencies, extractFieldsFromArchInfo } from "@web/model/relational_model/utils";
-import { useEnv, useSubEnv } from "@web/owl2/utils";
+import { render, useEnv, useSubEnv } from "@web/owl2/utils";
 import { useSetupAction } from "@web/search/action_hook";
 import { STATIC_ACTIONS_GROUP_NUMBER } from "@web/search/action_menus/action_menus";
 import { Layout } from "@web/search/layout";
@@ -43,10 +43,10 @@ import {
     onPatched,
     onWillDestroy,
     onWillUnmount,
-    usePlugin,
     proxy,
     signal,
     t,
+    usePlugin,
     useProps,
 } from "@odoo/owl";
 import { OfflinePlugin } from "@web/core/offline/offline_plugin";
@@ -171,7 +171,7 @@ export class FormController extends Component {
         this.viewService = useService("view");
         this.ui = useService("ui");
         this.offlinePlugin = usePlugin(OfflinePlugin);
-        useBus(this.ui.bus, "resize", this.render);
+        useBus(this.ui.bus, "resize", () => render(this));
 
         this.archInfo = this.props.archInfo;
         const { create, edit } = this.archInfo.activeActions;

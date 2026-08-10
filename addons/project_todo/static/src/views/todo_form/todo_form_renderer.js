@@ -4,7 +4,7 @@ import { useBus } from "@web/core/utils/hooks";
 export class TodoFormRenderer extends FormRendererWithHtmlExpander {
     setup() {
         super.setup();
-        useBus(this.env.bus, "TODO:TOGGLE_CHATTER", this.toggleChatter);
+        useBus(this.env.bus, "TODO:TOGGLE_CHATTER", this.toggleChatter.bind(this));
         this.sizeToExpandHTMLField = 1;
     }
 

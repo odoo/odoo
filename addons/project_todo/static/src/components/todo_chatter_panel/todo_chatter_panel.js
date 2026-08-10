@@ -18,7 +18,7 @@ export class TodoChatterPanel extends Component {
         this.state = proxy({
             displayChatter: this.uiService.isSmall,
         });
-        useBus(this.env.bus, "TODO:TOGGLE_CHATTER", this.toggleChatter);
+        useBus(this.env.bus, "TODO:TOGGLE_CHATTER", this.toggleChatter.bind(this));
     }
 
     toggleChatter(ev) {

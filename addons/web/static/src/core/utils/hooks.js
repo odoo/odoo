@@ -93,18 +93,14 @@ export function useAutofocus({ ref, selectAll, mobile } = {}) {
 /**
  * Ensures a bus event listener is attached and cleared the proper way.
  *
- * @param {import("@odoo/owl").EventBus} bus
- * @param {string} eventName
- * @param {EventListener} callback
+ * @template {EventTarget} T
+ * @param {T} target
+ * @param {Parameters<T["addEventListener"]>[0]} type
+ * @param {Parameters<T["addEventListener"]>[1]} listener
  */
-export function useBus(bus, eventName, callback) {
-    const { component } = useScope();
-    let listener;
-    onMounted(() => {
-        listener = callback.bind(component);
-        bus.addEventListener(eventName, listener);
-    });
-    onWillUnmount(() => bus.removeEventListener(eventName, listener));
+export function useBus(target, type, listener) {
+    onMounted(() => target.addEventListener(type, listener));
+    onWillUnmount(() => target.removeEventListener(type, listener));
 }
 
 // -----------------------------------------------------------------------------
