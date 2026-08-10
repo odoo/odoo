@@ -701,44 +701,66 @@
                             <field name="color" widget="kanban_color_picker"/>
                         </t>
                         <t t-name="card">
-                            <main t-att-class="['1_done', '1_canceled'].includes(record.state.raw_value) ? 'opacity-50' : ''">
-                                <a t-if="record.parent_id.raw_value" class="o_kanban_parent mw-100 me-auto pe-3 btn-link o_small-fs text-dark text-truncate" title="See Parent Task" name="action_open_parent_task" type="object" role="button">
-                                    <i class="oi me-1" data-icon="subdirectory_arrow_right"/>
-                                    <field name="parent_id"/>
-                                </a>
-                                <field name="name" class="fw-bold fs-5"/>
-                                <div class="text-muted d-flex flex-column">
-                                    <field invisible="context.get('default_project_id', False)" name="project_id" options="{'no_open': True}"/>
-                                    <field name="partner_id" invisible="context.get('template_project')"/>
-                                    <field t-if="record.allow_milestones.raw_value and record.milestone_id.raw_value" t-att-class="record.has_late_and_unreached_milestone.raw_value and !record.state.raw_value.startsWith('1_') ? 'text-danger' : ''" name="milestone_id" options="{'no_open': True}"/>
+                            <main class="row-gap-1" t-att-class="['1_done', '1_canceled'].includes(record.state.raw_value) ? 'opacity-50' : ''">
+                                <div class="o_kanban_project_header">
+                                    <a t-if="record.parent_id.raw_value" class="o_kanban_parent btn btn-link d-inline-flex gap-1 align-items-center mw-100 me-4 p-1 text-truncate" title="See Parent Task" name="action_open_parent_task" type="object" role="button">
+                                        <i class="oi oi-flip-vertical" data-icon="subdirectory_arrow_right"/>
+                                        <field name="parent_id" class="text-truncate small lh-1"/>
+                                    </a>
+                                    <div class="d-flex gap-2 justify-content-between">
+                                        <div class="d-flex align-items-baseline me-4 pe-2">
+                                            <i t-if="!record.project_id.raw_value and !record.is_template.raw_value" title="Private Task" class="oi me-1 text-muted" data-icon="lock" data-tooltip="Private task"/>
+                                            <field name="name" class="fw-bold fs-5"/>
+                                        </div>
+                                    </div>
                                 </div>
-                                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"/>
-                                <field t-if="record.date_deadline.raw_value" invisible="state in ['1_done', '1_canceled']" name="date_deadline" widget="relative_date"/>
-                                <field name="task_properties" widget="properties"/>
-                                <field name="displayed_image_id" widget="attachment_image"/>
-                                <footer t-if="!selection_mode" class="pt-1">
-                                    <div class="d-flex align-items-center gap-1">
-                                        <field name="activity_ids" widget="kanban_activity" style="margin-right: 2px"/>
-                                        <b t-if="record.rating_active.raw_value and record.rating_count.raw_value &gt; 0">
-                                            <span class="oi oi-fw o_button_icon text-success rating_face" data-icon="sentiment_satisfied" t-if="record.rating_avg.raw_value &gt;= 3.66" title="Average Rating: Happy" role="img" aria-label="Happy face"/>
-                                            <span class="oi oi-fw o_button_icon text-warning rating_face" data-icon="sentiment_neutral" t-elif="record.rating_avg.raw_value &gt;= 2.33" title="Average Rating: Neutral" role="img" aria-label="Neutral face"/>
-                                            <span class="oi oi-fw o_button_icon text-danger rating_face" data-icon="sentiment_sad" t-else="" title="Average Rating: Unhappy" role="img" aria-label="Unhappy face"/>
-                                        </b>
-                                        <a t-if="!record.project_id.raw_value and !record.is_template.raw_value" class="text-muted" style="font-size: 17px; margin-left: 1.5px">
-                                            <i title="Private Task" class="oi" data-icon="lock"/>
-                                        </a>
-                                        <t t-if="record.project_id.raw_value and record.subtask_count.raw_value">
-                                            <widget name="subtask_counter" class="me-1"/>
-                                        </t>
-                                        <field name="priority" class="lh-1" widget="priority"/>
-                                        <field name="is_rotting" invisible="1"/>
-                                        <field name="rotting_days" widget="rotting_days" class="ms-1 d-flex"/>
+                                <field name="displayed_image_id" widget="attachment_image" invisible="not displayed_image_id"/>
+                                <div class="d-flex d-empty-none flex-column text-muted">
+                                    <span t-if="record.project_id.raw_value and !context.default_project_id" class="d-flex gap-1 align-items-baseline">
+                                        <i class="oi" data-icon="assignment_turned_in" title="Project" data-tooltip="Project"/>
+                                        <field name="project_id" options="{'no_open': True}"/>
+                                    </span>
+                                    <span t-if="record.partner_id.raw_value and !context.template_project" class="d-flex gap-1 align-items-baseline">
+                                        <i class="oi oi-filled" data-icon="person" title="Customer" data-tooltip="Customer"/>
+                                        <field name="partner_id"/>
+                                    </span>
+                                    <span t-if="record.allow_milestones.raw_value and record.milestone_id.raw_value" class="d-flex gap-1 align-items-baseline" t-att-class="record.has_late_and_unreached_milestone.raw_value and !record.state.raw_value.startsWith('1_') ? 'text-danger' : ''">
+                                        <i class="oi oi-filled" data-icon="flag" title="Miltstone" data-tooltip="Milestone"/>
+                                        <field name="milestone_id" options="{'no_open': True}"/>
+                                    </span>
+                                    <field name="task_properties" widget="card.properties" icon="stat_0" t-if="(record.task_properties.raw_value || []).some((property) =&gt; property.value)"/>
+                                    <div class="d-flex flex-wrap d-empty-none">
+                                        <div t-if="record.date_deadline.raw_value" class="o_project_deadline_wrap d-flex flex-basis-100 gap-1 align-items-baseline">
+                                            <t t-set="deadline_diff_days" t-value="Math.floor(luxon.DateTime.fromISO(record.date_deadline.raw_value).startOf('day').diff(luxon.DateTime.local().startOf('day'), 'days').days)"/>
+                                            <i class="oi" data-icon="calendar_clock" data-tooltip="Deadline" title="Deadline"/>
+                                            <field invisible="state in ['1_done', '1_canceled']" name="date_deadline" widget="relative_date"/>
+                                        </div>
+                                        <t t-set="rating_value" t-value="record.rating_avg.raw_value"/>
+                                        <t t-set="rating_mood" t-value="rating_value &gt;= 3.66 ? 'happy' : rating_value &gt;= 2.33 ? 'neutral' : 'unhappy'"/>
+                                        <t t-set="rating_tooltip" t-value="{happy: 'Average Rating: Happy', neutral: 'Average Rating: Neutral', unhappy: 'Average Rating: Unhappy'}[rating_mood]"/>
+                                        <span t-if="record.rating_active.raw_value and record.rating_count.raw_value &gt; 0" class="d-flex gap-1 align-items-baseline flex-basis-50">
+                                            <i class="oi"
+                                                t-att-data-icon="{happy: 'sentiment_satisfied', neutral: 'sentiment_neutral', unhappy: 'sentiment_sad'}[rating_mood]"
+                                                t-att-aria-label="rating_tooltip"
+                                                role="img"
+                                                t-att-title="rating_tooltip"
+                                                t-att-data-tooltip="rating_tooltip"
+                                            />
+                                            <span t-att-class="{happy: 'text-success', neutral: 'text-warning', unhappy: 'text-danger'}[rating_mood]"><t t-out="rating_value"/>/5</span>
+                                        </span>
                                     </div>
-                                    <div class="d-flex ms-auto">
-                                        <field name="project_sharing_portal_user_ids" invisible="1"/>
-                                        <field name="user_ids" widget="many2many_avatar_user"/>
-                                        <field name="state" class="ms-1" widget="project_task_state_selection" options="{'is_toggle_mode': false}"/>
-                                    </div>
+                                </div>
+                                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}" invisible="not tag_ids"/>
+                                <footer t-if="!selection_mode" class="mt-1 p-0">
+                                    <field name="activity_ids" widget="kanban_activity" class="me-1"/>
+                                    <t t-if="record.project_id.raw_value and record.subtask_count.raw_value">
+                                        <widget name="subtask_counter" class="me-1"/>
+                                    </t>
+                                    <field name="priority" widget="priority"/>
+                                    <field name="is_rotting" invisible="1"/>
+                                    <field name="rotting_days" invisible="not rotting_days" widget="rotting_days" class="d-inline-block"/>
+                                    <field name="user_ids" widget="many2many_avatar_user" class="ms-auto"/>
+                                    <field name="state" widget="project_task_state_selection" options="{'is_toggle_mode': false}"/>
                                 </footer>
                             </main>
                             <widget name="subtask_kanban_list"/>
