@@ -1,3 +1,4 @@
+from . import cabys_client
 from . import crlibre_client
 from . import fe_config
 from . import product_template
