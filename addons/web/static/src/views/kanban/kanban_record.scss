@@ -1,4 +1,6 @@
 .o_kanban_record {
+    --Avatar-size: 1.5rem;
+
     /* Scoped here rather than on the root so nested rules keep their specificity. */
     &:not(.o_kanban_ghost) {
         background-color: var(--o-view-background-color);
@@ -28,6 +30,10 @@
 
     .o_dropdown_kanban .btn {
         border-radius: calc(var(--o-bs-border-radius-lg) - var(--o-bs-spacer-1));
+    }
+
+    .o_field_many2many_tags_avatar {
+        --img-text-gap-v: 0;
     }
 
     @media (pointer: fine) {
