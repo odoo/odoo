@@ -6,13 +6,44 @@
         <field name="inherit_id" ref="account.res_config_settings_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//app[@name='account']/block" position="after">
-                <block title="Spain Localization" name="spain_localization" invisible="1">
+                <block title="Spain Localization" name="spain_localization" invisible="country_code != 'ES'">
                     <setting string="Simplified Invoice Limit" title="">
                         <div class="text-muted">
                             Above this limit the simplified invoice won't be made
                         </div>
                         <field name="l10n_es_simplified_invoice_limit"/>
                     </setting>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <setting title="Spanish Tax plan" name="l10n_es_tax_plan">
+                                <field name="l10n_es_tax_plan"/>
+                            </setting>
+                        </div>
+                        <div class="col-lg-6">
+                            <setting title="Real Estate" name="real_estate">
+                                <field name="module_l10n_es_real_estates"/>
+                            </setting>
+                            <setting title="Intracomunitary OSS" name="intracomunitary_oss">
+                                <field name="intracomunitary_oss"/>
+                            </setting>
+                            <setting title="igic" name="IGIC" invisible="l10n_es_tax_plan == 'igic'">
+                                <field name="igic"/>
+                            </setting>
+                            <setting title="aeat" name="AEAT" invisible="l10n_es_tax_plan != 'igic'">
+                                <field name="aeat"/>
+                            </setting>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <setting title="EDIs" name="l10n_es_edi">
+                            <field name="l10n_es_edi"/>
+                        </setting>
+                    </div>
+                    <div class="row">
+                        <setting title="Régimenes IRPF" name="l10n_es_irpf_regime">
+                            <field name="l10n_es_irpf_regime"/>
+                        </setting>
+                    </div>
                 </block>
             </xpath>
         </field>
