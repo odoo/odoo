@@ -56,7 +56,7 @@
 
     .o-EmojiPicker-sectionIcon + small,
     .o-EmojiPicker-empty + span,
-    .o-EmojiPicker-search input:focus + [data-icon="search"] {
+    .o-EmojiPicker-search:has(input:focus) [data-icon="search"] {
         color: var(--EmojiPicker-text-color, $text-muted);
     }
 
@@ -90,9 +90,10 @@
             opacity: var(--EmojiPicker-placeholderOpacity, 50%);
             color: var(--EmojiPicker-text-color, $input-placeholder-color);
         }
+    }
 
-        & + [data-icon="search"] {
-            color: var(--EmojiPicker-text-color, $body-color);
-        }
+    [data-icon="search"],
+    [data-icon="cancel"] {
+        color: var(--EmojiPicker-text-color, $body-color);
     }
 }

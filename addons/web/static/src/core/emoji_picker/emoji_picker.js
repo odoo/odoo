@@ -99,9 +99,7 @@ export class EmojiPicker extends Component {
     emojiNavbarRepr = signal(null, { type: t.or([t.array(), t.literal(null)]) });
 
     recentEmojis = computed(() => {
-        const recent = Object.entries(this.frequentEmojiService.all())
-            .sort(([, usage_1], [, usage_2]) => usage_2 - usage_1)
-            .map(([codepoints]) => emojiLoader.map.get(codepoints));
+        const recent = this.recentSnapshot ?? [];
         if (this.searchTerm() && recent.length > 0) {
             return fuzzyLookup(this.searchTerm(), recent, (emoji) =>
                 [emoji.name].concat(emoji.keywords, emoji.emoticons, emoji.shortcodes)
@@ -125,6 +123,9 @@ export class EmojiPicker extends Component {
         useAutofocus({ ref: this.autofocusRef });
         onWillStart(async () => {
             await loadEmoji();
+            this.recentSnapshot = Object.entries(this.frequentEmojiService.all())
+                .sort(([, usage_1], [, usage_2]) => usage_2 - usage_1)
+                .map(([codepoints]) => emojiLoader.map.get(codepoints));
             this.recentCategory = {
                 name: "Frequently used",
                 displayName: _t("Frequently used"),
@@ -148,7 +149,6 @@ export class EmojiPicker extends Component {
             if (this.props.storeScroll) {
                 this.gridRef().scrollTop = this.props.storeScroll.get();
             }
-            this.hoveredEmoji.set(this.activeEmoji());
         });
         onPatched(() => {
             if (!emojiLoader.loaded) {
@@ -172,12 +172,13 @@ export class EmojiPicker extends Component {
             if (!this.gridRef()) {
                 return;
             }
-            const active = this.gridRef().querySelector(".o-Emoji.o-active");
+            const active = this.gridRef().querySelector(
+                `.o-Emoji[data-index="${this.activeEmojiIndex()}"]`
+            );
             if (active && this.keyboardNavigated && !isElementVisible(active, this.gridRef())) {
                 active.scrollIntoView({ block: "center", behavior: "instant" });
                 this.keyboardNavigated = false;
             }
-            this.hoveredEmoji.set(this.activeEmoji());
         });
         useEffect(() => {
             if (!this.gridRef()) {
@@ -252,7 +253,13 @@ export class EmojiPicker extends Component {
     }
 
     get placeholder() {
-        return this.hoveredEmoji()?.shortcodes.join(" ") ?? _t("Search emoji");
+        return this.hoveredEmoji()?.shortcodes.join(" ") ?? _t("Find the perfect emoji");
+    }
+
+    clearSearch() {
+        this.searchTerm.set("");
+        this.activeEmojiIndex.set(0);
+        this.autofocusRef().focus();
     }
 
     /**
@@ -268,7 +275,7 @@ export class EmojiPicker extends Component {
      * @param {Emoji} emoji
      */
     onMouseleaveEmoji(ev, emoji) {
-        this.hoveredEmoji.set(this.activeEmoji());
+        this.hoveredEmoji.set(null);
     }
 
     /**
@@ -347,6 +354,7 @@ export class EmojiPicker extends Component {
             }
         }
         this.activeEmojiIndex.set(newIdx ?? this.activeEmojiIndex());
+        this.hoveredEmoji.set(this.activeEmoji());
     }
 
     /**
