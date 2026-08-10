@@ -41,7 +41,8 @@ class TestEventIcs(HttpCase):
             (datetime(2025, 4, 21, 14, 0, 0, tzinfo=timezone.utc), datetime(2025, 4, 21, 17, 0, 0, tzinfo=timezone.utc)),
         )
         self.assertNotEqual(slot_dts, event_dts)
-        common_vals = {'date_begin': event_start.replace(tzinfo=None), 'date_end': event_end.replace(tzinfo=None)}
+        common_vals = {'date_begin': event_start.replace(tzinfo=None), 'date_end': event_end.replace(tzinfo=None),
+                       'date_tz': 'UTC'}
         events_vals = [
             {'name': 'Event', 'event_slot_ids': [
                 Command.create({'date': date(2025, 4, 21), 'start_hour': slot_start.hour, 'end_hour': slot_end.hour}),
