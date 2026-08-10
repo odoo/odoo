@@ -39,6 +39,11 @@ class ResCompany(models.Model):
         default='test',
         string="Baiwang Mode",
     )
+    l10n_cn_baiwang_drawer = fields.Char(
+        string="Drawer (开票人)",
+        help="Name printed as the drawer (开票人) on issued Baiwang e-Fapiao. "
+             "Defaults to the current user when left empty.",
+    )
 
     @api.depends('account_edi_proxy_client_ids', 'l10n_cn_edi_mode')
     def _compute_l10n_cn_baiwang_proxy_user_id(self):
