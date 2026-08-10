@@ -18,6 +18,7 @@
                     <div id="l10n_fr_pdp" class="col-12 o_setting_box">
                         <div class="o_setting_right_pane border-0">
                             <field name="l10n_fr_pdp_registered" invisible="1"/>  <!-- used in `invisible` modifier below -->
+                            <field name="peppol_use_parent_company" invisible="1"/>
                             <div invisible="account_peppol_eas == '0225' or peppol_use_parent_company or account_peppol_proxy_state not in ('sender', 'active', 'pending')">
                                 Your Peppol ID <field name="account_peppol_edi_identification" class="oe_inline o_form_label" readonly="1"/>
                                 <field name="l10n_fr_pdp_peppol_proxy_display_state" class="oe_inline o_form_label text-lowercase" readonly="1"/>
