@@ -1228,8 +1228,10 @@ export function formatTables(element) {
             parent = parent.parentElement;
             height = parent.style.getPropertyValue("height");
         }
-        if (parent) {
-            parent.style.setProperty("height", parent.getBoundingClientRect().height);
+        if (parent && !height) {
+            // A 0 height lets the children resolve their percent heights while
+            // the cell still grows with its content.
+            parent.style.setProperty("height", "0");
         }
     }
     // Align self and justify content don't work on table cells.
