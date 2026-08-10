@@ -140,7 +140,7 @@ class AccountMove(models.Model):
         self.ensure_one()
         if raw_date and len(raw_date) >= 14:
             return f"{raw_date[:4]}-{raw_date[4:6]}-{raw_date[6:8]} {raw_date[8:10]}:{raw_date[10:12]}:{raw_date[12:14]}"
-        return fields.Datetime.now()
+        return False
 
     def _l10n_cn_baiwang_get_or_create_red_form_document(self):
         self.ensure_one()
@@ -473,9 +473,9 @@ class AccountMove(models.Model):
                 vals = {'l10n_cn_baiwang_state': 'issued'}
                 if resp.get('redInvoiceNo'):
                     vals['l10n_cn_baiwang_invoice_no'] = resp['redInvoiceNo']
-                vals['l10n_cn_baiwang_invoice_date'] = self._l10n_cn_baiwang_parse_red_invoice_datetime(
-                    resp.get('redInvoiceDate'),
-                )
+                parsed_date = self._l10n_cn_baiwang_parse_red_invoice_datetime(resp.get('redInvoiceDate'))
+                if parsed_date:
+                    vals['l10n_cn_baiwang_invoice_date'] = parsed_date
                 self.write(vals)
                 self.message_post(body=self.env._("Red Form confirmed (auto-approved). No: %s", resp.get('redConfirmNo')))
                 self.activity_schedule(
