@@ -765,7 +765,7 @@ class Module(models.Model):
 
     def write(self, values):
         res = super().write(values)
-        if any(self._ids) and ('name' in values or 'state' in values):
+        if not self.env.registry._init_modules and any(self._ids) and ('name' in values or 'state' in values):
             self.env.registry.clear_cache()
         return res
 
