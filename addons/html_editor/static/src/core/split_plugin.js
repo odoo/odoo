@@ -25,6 +25,7 @@ import {
 } from "../utils/dom_traversal";
 import { DIRECTIONS, childNodeIndex, nodeSize } from "../utils/position";
 import { isProtected, isProtecting } from "@html_editor/utils/dom_info";
+import { isBrowserSafari } from "@web/core/browser/feature_detection";
 
 const isInList = (node, editable) =>
     ancestors(node, editable).find((ancestor) => isListItem(ancestor));
@@ -126,6 +127,13 @@ export class SplitPlugin extends Plugin {
             }
         },
     };
+
+    setup() {
+        super.setup();
+        if (isBrowserSafari()) {
+            this.addDomListener(this.editable, "keydown", this.onKeyDown);
+        }
+    }
 
     // --------------------------------------------------------------------------
     // commands
@@ -497,8 +505,19 @@ export class SplitPlugin extends Plugin {
     onBeforeInput(e) {
         if (e.inputType === "insertParagraph") {
             e.preventDefault();
+            // Safari reports Shift+Enter as "insertParagraph" instead of "insertLineBreak"
+            // Track it on keydown to handle it properly
+            if (this.forceLineBreak) {
+                this.forceLineBreak = false;
+                this.dependencies.lineBreak.insertLineBreak();
+                return;
+            }
             this.splitBlock();
             this.dependencies.history.addStep();
         }
+    }
+
+    onKeyDown(e) {
+        this.forceLineBreak = e.key === "Enter" && e.shiftKey;
     }
 }
