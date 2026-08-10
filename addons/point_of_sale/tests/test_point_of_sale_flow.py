@@ -694,6 +694,44 @@ class TestPointOfSaleFlow(CommonPosTest):
 
         self.assertEqual(order.account_move.amount_residual, 0)
 
+    def test_order_invoiced_by_user_without_accounting_access(self):
+        """
+            Invoicing an order from the POS must reconcile the invoice with its
+            payments even when the salesperson has no accounting access rights.
+        """
+        pos_user = self.env['res.users'].create({
+            'name': 'Salesperson without accounting access',
+            'login': 'pos_user_no_accounting',
+            'company_id': self.company.id,
+            'company_ids': [Command.set(self.company.ids)],
+            'group_ids': [Command.set([
+                self.env.ref('base.group_user').id,
+                self.env.ref('point_of_sale.group_pos_user').id,
+            ])],
+        })
+
+        self.pos_config_usd.open_ui()
+        order, _ = self.create_backend_pos_order({
+            'order_data': {
+                'partner_id': self.partner_jcb.id,
+                'pricelist_id': self.partner_jcb.property_product_pricelist.id,
+            },
+            'line_data': [
+                {'product_id': self.twenty_dollars_with_10_incl.product_variant_id.id},
+            ],
+            'payment_data': [
+                {'payment_method_id': self.cash_payment_method.id, 'amount': 20},
+            ],
+        })
+
+        order.with_user(pos_user).action_pos_order_invoice()
+
+        invoice = order.account_move
+        receivable_account = self.partner_jcb.property_account_receivable_id
+        invoice_receivable_lines = invoice.line_ids.filtered(lambda line: line.account_id == receivable_account)
+        self.assertTrue(all(invoice_receivable_lines.mapped('reconciled')))
+        self.assertEqual(invoice.amount_residual, 0)
+
     def test_journal_entries_category_without_account(self):
         # Set company's default accounts to false
         self.env.company.income_account_id = False
