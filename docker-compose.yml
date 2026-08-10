@@ -31,7 +31,7 @@ services:
     # the LAN. Production: keep this commented out — nginx/odoo reach the db
     # over the compose network.
     ports:
-      - "127.0.0.1:5432:5432"
+      - "127.0.0.1:5434:5432"
     command:
       - postgres
       - -c
@@ -77,6 +77,8 @@ services:
       PORT: ${ODOO_DB_PORT:-5432}
       USER: ${ODOO_DB_USER:-odoo}
       PASSWORD: ${ODOO_DB_PASSWORD:-odoo}
+      # Pass Anthropic API key securely from environment
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
       # Tell Odoo it's behind a reverse proxy so it trusts
       # X-Forwarded-For and X-Forwarded-Proto headers.
       # Equivalent to proxy_mode = True in odoo.conf

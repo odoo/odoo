@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_invoice_agent" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.invoice.agent</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <!-- TARGET //form INSTEAD OF //div[hasclass('settings')] -->
+            <xpath expr="//form" position="inside">
+                <div class="app_settings_block" data-string="Invoice Agent"
+                     string="Invoice Agent" data-key="invoice_agent"
+                     groups="base.group_system">
+                    <h2>Anthropic</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane"/>
+                            <div class="o_setting_right_pane">
+                                <label for="invoice_agent_anthropic_api_key"/>
+                                <div class="text-muted">
+                                    Secret key for the Anthropic Messages API.
+                                    Never committed to git.
+                                </div>
+                                <div class="content-group">
+                                    <div class="mt16">
+                                        <field name="invoice_agent_anthropic_api_key"
+                                               password="True"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane"/>
+                            <div class="o_setting_right_pane">
+                                <label for="invoice_agent_anthropic_model"/>
+                                <div class="content-group">
+                                    <div class="mt16">
+                                        <field name="invoice_agent_anthropic_model"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

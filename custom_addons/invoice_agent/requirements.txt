@@ -1,12 +1,26 @@
-# Invoice Agent — extra Python dependencies beyond Odoo's built-in requirements
+# Invoice Agent — extra Python dependencies beyond Odoo's built-in requirements.
 # These are installed as a separate pip layer for Docker layer caching.
-#
-# NOTE: The invoice_agent addon currently uses Odoo standard models only.
-# These packages are declared here so the Docker layer is ready when the
-# extraction pipeline is wired in — no rebuild needed.
+# When the source code changes but these deps do not, the layer is reused.
 
-# Anthropic Claude API client — used for structured-output extraction from OCR text
+# Anthropic Claude API client — used for structured-output extraction from OCR text.
+# client.messages.parse(output_format=...) requires a Pydantic v2 model.
 anthropic>=0.70.0
 
-# Tesseract OCR Python wrapper — runs the local tesseract binary
+# Pydantic v2 — the InvoiceExtraction schema, and the typed output of
+# client.messages.parse(output_format=...). Transitive dep of anthropic but
+# pinned explicitly so the schema module imports standalone.
+pydantic>=2.0.0
+
+# Tesseract OCR Python wrapper — runs the local tesseract binary.
 pytesseract>=0.3.10
+
+# pdf2image — renders PDF pages to PIL images via poppler (pdftoppm).
+# This is the page-rasterization step before Tesseract OCR: pdf2image
+# itself only wraps the poppler binary (no C extension). jpeg4py is an
+# optional dependency of pdf2image whose PyPI releases cap at 0.1.x —
+# do NOT pin it here.
+pdf2image>=1.17.0
+
+# AWS Boto3 — Textract AnalyzeExpense fallback OCR engine (see docs/adr-002-ocr-engine.md).
+# We pin the runtime pieces of boto3 only; botocore is pulled transitively.
+boto3>=1.34.0

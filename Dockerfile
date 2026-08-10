@@ -25,10 +25,19 @@ USER root
 # node-less, all Python C-ext deps (libxml2, libxslt1, libldap2, etc.).
 # We add only what the invoice agent pipeline needs.
 # --------------------------------------------------------------------------
-RUN apt-get update \
+# Retry loop: archive.ubuntu.com connections drop intermittently on slow
+# links; a failed apt-get update leaves the universe index (where
+# tesseract lives) unreadable and the install below "cannot locate package".
+# Keep retrying the update until it fully succeeds, then install once.
+RUN for i in $(seq 1 6); do \
+    if apt-get update; then break; fi; \
+    echo "apt-get update attempt $i failed — retrying in 5s"; \
+    sleep 5; \
+    done \
     && apt-get install -y --no-install-recommends \
     tesseract-ocr \
     tesseract-ocr-eng \
+    tesseract-ocr-ara \
     ghostscript \
     poppler-utils \
     && rm -rf /var/lib/apt/lists/*
@@ -46,13 +55,24 @@ COPY custom_addons/invoice_agent/requirements.txt /tmp/invoice_agent_requirement
 # tries to uninstall the system version, which fails because deb packages
 # don't have pip RECORD files. --ignore-installed tells pip to just overlay
 # the new version without touching the old package metadata.
+# Retry loop: this mirror is flaky and truncates large PyPI metadata
+# responses mid-transfer (pip then fails with a JSONDecodeError on the
+# truncated body). pip's own --retries only covers connection errors, not
+# a response that "completed" with a cut-off body — so retry the whole
+# install atomically a few times before giving up.
 RUN if [ -s /tmp/invoice_agent_requirements.txt ]; then \
     pip cache purge 2>/dev/null || true; \
-    pip install --break-system-packages --no-cache-dir \
+    for i in $(seq 1 5); do \
+    if pip install --break-system-packages --no-cache-dir \
     --ignore-installed \
     --default-timeout=300 --retries=5 \
     --no-input \
-    -r /tmp/invoice_agent_requirements.txt; \
+    -r /tmp/invoice_agent_requirements.txt; then \
+    break; \
+    fi; \
+    echo "pip install attempt $i failed — retrying in 5s"; \
+    sleep 5; \
+    done; \
     fi \
     && rm -f /tmp/invoice_agent_requirements.txt
 

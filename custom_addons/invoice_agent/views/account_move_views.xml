@@ -28,6 +28,16 @@
                             <field name="ai_extracted_on"/>
                             <field name="ai_validated_on"/>
                         </group>
+                        <group string="OCR Pipeline">
+                            <field name="ocr_state" widget="badge"
+                                   decoration-danger="ocr_state == 'failed'"
+                                   decoration-success="ocr_state == 'done'"
+                                   decoration-info="ocr_state == 'pending'"
+                                   decoration-warning="ocr_state == 'running'"/>
+                            <field name="ocr_confidence" widget="progressbar"/>
+                            <field name="ocr_engine"/>
+                            <field name="ocr_error_message"/>
+                        </group>
                         <group string="Variance">
                             <field name="amount_total"/>
                             <field name="ai_extracted_total"/>
@@ -42,8 +52,20 @@
                     <group string="AI Extracted Raw OCR Text">
                         <field name="ai_ocr_text" nolabel="1" readonly="1"/>
                     </group>
-                    <group string="Per-Field Extraction Details">
-                        <field name="extraction_line_ids" nolabel="1"/>
+                    <group string="Tesseract OCR Text">
+                        <field name="ocr_text" nolabel="1" readonly="1"
+                               invisible="ocr_state != 'done'"/>
+                    </group>
+                    <group string="AI Suggestion Panel">
+                        <!-- OWL widget: Accept/Reject chips. Each accept
+                             calls account.move.apply_suggested_value(field). -->
+                        <field name="extraction_line_ids" nolabel="1"
+                               widget="invoice_suggestion_panel"
+                               readonly="ai_extraction_status != 'extracted'"/>
+                    </group>
+                    <group string="Persisted Extraction Payload">
+                        <field name="extraction_json" nolabel="1" readonly="1"/>
+                        <field name="extraction_model"/>
                     </group>
                     <group string="Raw AI Payload">
                         <field name="ai_extracted_json" nolabel="1" readonly="1"/>
@@ -56,6 +78,18 @@
                 <field name="ai_extraction_status" widget="statusbar"
                        statusbar_visible="pending,extracted,validated,failed"
                        invisible="move_type not in ('in_invoice', 'in_refund')"/>
+
+                <!-- Suggest with AI — header button, Agent Reviewer+ only.
+                     Hidden unless the bill is a draft vendor bill. The Python
+                     handler blocks double submission by checking the
+                     extraction state, and always returns an
+                     ir.actions.client notification. -->
+                <button name="action_suggest_extraction" type="object"
+                        string="Suggest with AI"
+                        icon="fa-magic"
+                        groups="invoice_agent.group_invoice_agent_user"
+                        class="btn-primary"
+                        invisible="state != 'draft' or move_type not in ('in_invoice', 'in_refund')"/>
             </xpath>
         </field>
     </record>
