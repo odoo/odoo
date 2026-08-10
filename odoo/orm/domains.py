@@ -1901,10 +1901,10 @@ def _operator_parent_of_domain(comodel: BaseModel, parent):
 
 class ExprContext(Mapping):
     def __init__(self, model: BaseModel):
-        self.env = model.env
+        self.model = model
 
     def __getitem__(self, key):
-        env = self.env
+        env = self.model.env
         match key:
             case 'user':
                 value = env.user
@@ -1920,15 +1920,17 @@ class ExprContext(Mapping):
                 value = env.website
             case 'context':
                 return env.context
+            case 'active':
+                return Domain(self.model._active_name, '=', True) if self.model._active_name else Domain.TRUE
             case _:
                 raise KeyError(key)
         return value.with_env(env)
 
     def __iter__(self):
-        return iter(('user', 'company', 'companies', 'partner_id', 'groups', 'website', 'context'))
+        return iter(('user', 'company', 'companies', 'partner_id', 'groups', 'website', 'context', 'active'))
 
     def __len__(self):
-        return 7
+        return 8
 
 
 @operator_optimization(['expr'], OptimizationLevel.DYNAMIC_VALUES)
@@ -1954,6 +1956,8 @@ def _operator_expr_eval(condition, model):
         if (field.model_name if field.name == 'id' else field.comodel_name) != value._name:
             condition._raise(f"Cannot compare {field} and {value}")
         value = value.ids
+    elif isinstance(value, Domain):
+        return DomainCondition(condition.field_expr, 'any', value)
     elif not isinstance(value, COLLECTION_TYPES):
         value = [value]
     return DomainCondition(condition.field_expr, 'in', value)
