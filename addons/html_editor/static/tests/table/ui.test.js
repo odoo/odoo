@@ -3087,7 +3087,7 @@ describe("unmerge cells option", () => {
                             <td><p><br></p></td>
                         </tr>
                         <tr>
-                            <td><p><br></p></td>
+                            <td class="a"><p><br></p></td>
                             <td><p><br></p></td>
                             <td><p><br></p></td>
                         </tr>
@@ -3154,8 +3154,8 @@ describe("unmerge cells option", () => {
                         </tr>
                         <tr>
                             <td class="a"><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p></td>
-                            <td><p><br></p></td>
-                            <td><p><br></p></td>
+                            <td class="a"><p><br></p></td>
+                            <td class="a"><p><br></p></td>
                         </tr>
                     </tbody>
                 </table>
@@ -3220,7 +3220,7 @@ describe("unmerge cells option", () => {
                             <td><p><br></p></td>
                         </tr>
                         <tr>
-                            <td><p><br></p></td>
+                            <td class="a"><p><br></p></td>
                             <td><p><br></p></td>
                             <td><p><br></p></td>
                         </tr>
@@ -3287,8 +3287,8 @@ describe("unmerge cells option", () => {
                         </tr>
                         <tr>
                             <td class="a"><p>a[]</p><p>b</p></td>
-                            <td><p><br></p></td>
-                            <td><p><br></p></td>
+                            <td class="a"><p><br></p></td>
+                            <td class="a"><p><br></p></td>
                         </tr>
                     </tbody>
                 </table>
@@ -3328,5 +3328,108 @@ describe("unmerge cells option", () => {
         await click("[data-type='row'].o-we-table-menu");
         await expectElementCount(".dropdown-menu", 1);
         expect(availableCommands(queryOne(".dropdown-menu"))).not.toInclude("unmerge_cell");
+    });
+
+    test("unmerge a cell merged both horizontally and vertically", async () => {
+        const { editor, el } = await setupEditor(
+            unformat(`
+                <table class="table table-bordered o_table">
+                    <tbody>
+                        <tr><td rowspan="2" colspan="2"><p>[]a</p></td><td><p>b</p></td></tr>
+                        <tr><td><p>c</p></td></tr>
+                    </tbody>
+                </table>`)
+        );
+        editor.shared.table.unmergeSelectedCell();
+        expect(getContent(el)).toBe(
+            unformat(`
+                <p data-selection-placeholder=""><br></p>
+                <table class="table table-bordered o_table">
+                    <tbody>
+                        <tr>
+                            <td><p>[]a</p></td>
+                            <td><p><br></p></td>
+                            <td><p>b</p></td>
+                        </tr>
+                        <tr>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                            <td><p>c</p></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
+        );
+    });
+
+    test("unmerge a header cell: new cells keep its style and are normal cells below the header row", async () => {
+        const style = "background-color: rgb(255, 0, 0); vertical-align: middle;";
+        const { editor, el } = await setupEditor(
+            unformat(`
+                <table class="table table-bordered o_table">
+                    <tbody>
+                        <tr>
+                            <th class="o_table_header" rowspan="2" colspan="2" style="${style}"><p>[]a</p></th>
+                            <th class="o_table_header"><p>b</p></th>
+                        </tr>
+                        <tr><td><p>c</p></td></tr>
+                    </tbody>
+                </table>`)
+        );
+        editor.shared.table.unmergeSelectedCell();
+        expect(getContent(el)).toBe(
+            unformat(`
+                <p data-selection-placeholder=""><br></p>
+                <table class="table table-bordered o_table">
+                    <tbody>
+                        <tr>
+                            <th class="o_table_header" style="${style}"><p>[]a</p></th>
+                            <th class="o_table_header" style="${style}"><p><br></p></th>
+                            <th class="o_table_header"><p>b</p></th>
+                        </tr>
+                        <tr>
+                            <td style="${style}"><p><br></p></td>
+                            <td style="${style}"><p><br></p></td>
+                            <td><p>c</p></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
+        );
+    });
+
+    test("unmerge a cell next to another merged cell keeps the cells in their column", async () => {
+        const { editor, el } = await setupEditor(
+            unformat(`
+                <table class="table table-bordered o_table">
+                    <tbody>
+                        <tr>
+                            <td rowspan="2"><p>a</p></td>
+                            <td rowspan="2"><p>[]b</p></td>
+                            <td><p>c</p></td>
+                        </tr>
+                        <tr><td><p>d</p></td></tr>
+                    </tbody>
+                </table>`)
+        );
+        editor.shared.table.unmergeSelectedCell();
+        expect(getContent(el)).toBe(
+            unformat(`
+                <p data-selection-placeholder=""><br></p>
+                <table class="table table-bordered o_table">
+                    <tbody>
+                        <tr>
+                            <td rowspan="2"><p>a</p></td>
+                            <td><p>[]b</p></td>
+                            <td><p>c</p></td>
+                        </tr>
+                        <tr>
+                            <td><p><br></p></td>
+                            <td><p>d</p></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
+        );
     });
 });
