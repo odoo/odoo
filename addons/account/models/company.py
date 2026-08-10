@@ -331,27 +331,7 @@ class ResCompany(models.Model):
         compute='_compute_has_ledger',
     )
 
-    def check_coa_updates(self):
-        self.ensure_one()
-        template_code = self.chart_template
-        if not template_code:
-            _logger.error("Chart of accounts not set.")
-            return False
-        template_data = self.env['account.chart.template']._get_chart_template_data(template_code)
-        for model_name in ['account.account', 'account.tax', 'account.fiscal.position', 'account.tax.group']:
-            templates = template_data.get(model_name, {})
-            if templates:
-                expected_names = [f"{self.id}_{xml_id}" for xml_id in templates]
-                db_count = self.env['ir.model.data'].search_count([
-                    ('module', '=', 'account'),
-                    ('model', '=', model_name),
-                    ('name', 'in', expected_names),
-                ])
-                if db_count != len(expected_names):
-                    _logger.error("COA Update Detected: Missing records for model %s in company %s", model_name, self.name)
-                    return True
-        _logger.error("No COA updates found")
-        return False
+    coa_hash = fields.Char(string="COA Hash")
 
     def get_next_batch_payment_communication(self):
         '''

@@ -641,8 +641,6 @@ class AccountJournal(models.Model):
         self.env['account.move.line'].flush_model()
         self.env['account.payment'].flush_model()
         dashboard_data = {}  # container that will be filled by functions below
-        for company in self.mapped('company_id'):
-            company.check_coa_updates()
         for journal in self:
             dashboard_data[journal.id] = {
                 'currency_id': journal.currency_id.id or journal.company_id.sudo().currency_id.id,
@@ -654,6 +652,23 @@ class AccountJournal(models.Model):
         self._fill_general_dashboard_data(dashboard_data)
         self._fill_onboarding_data(dashboard_data)
         return dashboard_data
+
+    @api.model
+    def get_coa_update(self):
+        company = self.env.company
+        template_code = company.chart_template
+        if not template_code:
+            return {'show_banner': False, 'coa_name': ''}
+        current_hash = self.env['account.chart.template']._get_coa_template_hash(template_code)
+        if not company.coa_hash:
+            company.coa_hash = current_hash
+            return {'show_banner': False, 'coa_name': ''}
+        mapping = self.env['account.chart.template']._get_chart_template_mapping()
+        coa_name = mapping.get(template_code, {}).get('name', '')
+        return {
+            'show_banner': bool(current_hash and current_hash != company.coa_hash),
+            'coa_name': coa_name,
+        }
 
     def _fill_dashboard_data_count(self, dashboard_data, model, name, domain):
         """Populate the dashboard data with the result of a count.
@@ -1327,6 +1342,9 @@ class AccountJournal(models.Model):
         ctx = dict(self.env.context, active_model='account.journal', active_id=self.id)
         moves_to_validate = self.env['account.move'].search([('journal_id', '=', self.id)])
         return moves_to_validate.with_context(ctx).action_validate_moves_with_confirmation()
+
+    def action_reload_coa(self):
+        self.env['account.chart.template'].try_loading(self.company_id.chart_template, company=self.company_id)
 
     def open_action_with_context(self):
         action_name = self.env.context.get('action_name', False)
