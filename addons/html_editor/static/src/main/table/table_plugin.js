@@ -432,8 +432,10 @@ export class TablePlugin extends Plugin {
 
             if (tableColor || tableBgColor) {
                 for (const td of table.querySelectorAll("td")) {
-                    td.style.color = td.style.color || tableColor;
-                    td.style.backgroundColor = td.style.backgroundColor || tableBgColor;
+                    if (closestElement(td, "table") === table) {
+                        td.style.color = td.style.color || tableColor;
+                        td.style.backgroundColor = td.style.backgroundColor || tableBgColor;
+                    }
                 }
                 table.style.color = "";
                 table.style.backgroundColor = "";
