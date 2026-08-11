@@ -6,14 +6,13 @@
         <field name="arch" type="xml">
             <form string="Point of Sale Session" create="0" edit="0">
                 <header>
-                    <widget name="pos_open_ui_button" action="open_frontend_cb" invisible="rescue or state not in ['opening_control', 'opened']"/>
+                    <widget name="pos_open_ui_button" action="open_frontend_cb" invisible="state not in ['opening_control', 'opened']"/>
                     <button id="validate_closing_control" name="close_session_from_ui" type="object" string="Close Session &amp; Post Entries"
-                            invisible="(state != 'closing_control' and not rescue or state == 'closed' and rescue) and state != 'closing_control'"
+                            invisible="state != 'closing_control'"
                     class="oe_highlight"/>
                     <field name="state" widget="statusbar" statusbar_visible="opened,closing_control,closed" nolabel="1" />
                 </header>
                 <sheet>
-                    <field name="rescue" invisible="1"/>
                     <div class="oe_button_box" name="button_box">
                         <button name="action_view_order"
                             class="oe_stat_button"

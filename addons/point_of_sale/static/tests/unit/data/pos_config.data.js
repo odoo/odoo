@@ -84,7 +84,6 @@ export class PosConfig extends models.ServerModel {
             session_ids: [1],
             current_session_id: 1,
             current_session_state: "opening_control",
-            number_of_rescue_session: 0,
             last_session_closing_date: false,
             pos_session_username: "Administrator",
             pos_session_state: "opening_control",
