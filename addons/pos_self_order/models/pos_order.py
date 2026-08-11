@@ -296,11 +296,13 @@ class PosOrder(models.Model):
         self.amount_tax = tax_totals['tax_amount_currency']
         self.amount_total = tax_totals['total_amount_currency']
 
+    def _get_line_price(self, product, line):
+        return self.pricelist_id._get_product_price(product, 1.0, currency=self.currency_id)
+
     def _compute_line_price(self, line):
-        pricelist = self.pricelist_id
         selected_attributes = line.attribute_value_ids
         product = line.product_id.with_context(line.product_id._get_product_price_context(selected_attributes))
-        price = pricelist._get_product_price(product, 1.0, currency=self.currency_id)
+        price = self._get_line_price(product, line)
         line.price_unit = price
         line.tax_ids = line.product_id.taxes_id._filter_taxes_by_company(self.company_id)
         self._compute_line_subtotals(line)
