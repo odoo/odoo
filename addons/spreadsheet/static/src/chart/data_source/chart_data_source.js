@@ -41,6 +41,7 @@ export class ChartDataSource extends OdooViewsDataSource {
                 orm: this._orm,
             }
         );
+        this._startTime = performance.now();
         await this._model.load(this._searchParams);
         this._chartData = undefined;
         this._hierarchicalData = undefined;

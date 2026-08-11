@@ -99,6 +99,7 @@ export class OdooViewsDataSource extends LoadableDataSource {
      * @protected
      */
     async _load() {
+        this._startTime = performance.now();
         await this.loadMetadata();
     }
 
