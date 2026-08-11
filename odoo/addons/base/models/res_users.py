@@ -585,6 +585,13 @@ class ResUsers(models.Model):
         return users
 
     def write(self, vals):
+        if len(self) == 1 and self == self.env.user:
+            for fname, value in vals.items():
+                field = self._fields.get(fname)
+                if field and field.type == 'many2many' and not field.store:
+                    if isinstance(value, (list, tuple)):
+                        vals[fname] = [(6, 0, list(field.convert_to_cache(value, self)))]
+
         if vals.get('active') and SUPERUSER_ID in self._ids:
             raise UserError(_("You cannot activate the superuser."))
         if vals.get('active') == False and self.env.uid in self._ids:  # noqa: E712
