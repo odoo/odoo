@@ -101,36 +101,45 @@ export class ColorPlugin extends Plugin {
             }
         },
         is_format_splittable_predicates: (ancestor, formatName, formatProps) => {
-            // Over: non gradient, applying: any mode => split
-            if (!isColorGradient(ancestor.style["background-image"])) {
+            // `false` keeps the ancestor whole and nests the format inside it,
+            // `undefined` abstains and lets the walk split it.
+            const newColor = formatProps?.color;
+            const isRemoving = !newColor;
+
+            // A text gradient clips its element's background to the glyphs, so
+            // an ancestor painting one hosts it nested instead.
+            if (
+                formatName === "color" &&
+                isColorGradient(newColor) &&
+                hasColor(ancestor, "backgroundColor")
+            ) {
+                return false;
+            }
+
+            // The mode the ancestor's own gradient paints in: glyphs or box.
+            const gradientMode = isColorGradient(ancestor.style["background-image"])
+                ? ancestor.classList.contains("text-gradient")
+                    ? "color"
+                    : "backgroundColor"
+                : undefined;
+            if (!gradientMode) {
                 return;
             }
-            if (formatName === "color" || formatName === "backgroundColor") {
-                const gradientMode = ancestor.classList.contains("text-gradient")
-                    ? "color"
-                    : "backgroundColor";
-                // Over: gradient, same mode, removing => split, fully selected => split
-                if (
-                    gradientMode === formatName &&
-                    (!formatProps?.color ||
-                        this.dependencies.selection.areNodeContentsFullySelected(ancestor))
-                ) {
+            // That gradient is being removed or entirely replaced.
+            if (
+                gradientMode === formatName &&
+                (isRemoving || this.dependencies.selection.areNodeContentsFullySelected(ancestor))
+            ) {
+                return;
+            }
+            if (gradientMode === "color" && formatName === "backgroundColor") {
+                // Two gradients on one element cannot render.
+                if (isColorGradient(newColor)) {
                     return;
                 }
-                // Over: text-gradient, applying: backgroundColor gradient => split
-                // Reason: it can't be rendered correctly.
+                // The cleared background must expose the one painted above.
                 if (
-                    gradientMode === "color" &&
-                    formatName === "backgroundColor" &&
-                    isColorGradient(formatProps?.color)
-                ) {
-                    return;
-                }
-                // Over: text-gradient, removing: backgroundColor painted above => split
-                if (
-                    gradientMode === "color" &&
-                    formatName === "backgroundColor" &&
-                    !formatProps?.color &&
+                    isRemoving &&
                     findUpTo(ancestor.parentElement, closestBlock(ancestor), (n) =>
                         hasColor(n, "backgroundColor")
                     )
@@ -138,8 +147,6 @@ export class ColorPlugin extends Plugin {
                     return;
                 }
             }
-            // Over: gradient, applying: anything else => keep
-            // Reason: cutting a gradient restarts it on each fragment.
             return false;
         },
 
