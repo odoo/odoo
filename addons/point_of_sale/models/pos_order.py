@@ -919,9 +919,13 @@ class PosOrder(models.Model):
 
         fiscal_position = self.fiscal_position_id
         pos_config = self.config_id
-        move_type = 'out_invoice' if not any(
-            order.is_refund or order.amount_total < 0.0 for order in self
-        ) else 'out_refund'
+        # A document whose total is negative for its type cannot be posted, so the move type
+        # follows the sign of the net amount of the whole group.
+        amount_total = sum(self.mapped('amount_total'))
+        if self.currency_id.is_zero(amount_total):
+            move_type = 'out_refund' if all(order.is_refund for order in self) else 'out_invoice'
+        else:
+            move_type = 'out_invoice' if amount_total > 0.0 else 'out_refund'
         invoice_payment_term_id = (
             self.partner_id.property_payment_term_id.id
             if self.partner_id.property_payment_term_id and any(p.payment_method_id.type == 'pay_later' for p in self.payment_ids)
