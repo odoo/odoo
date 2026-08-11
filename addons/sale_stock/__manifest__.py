@@ -38,6 +38,7 @@ Preferences
         'data/return_reason_data.xml',
         'data/sale_stock_data.xml',
 
+        'wizard/stock_replenishment_info.xml',
         'wizard/stock_rules_report_views.xml',
         'security/ir.access.csv',
     ],
