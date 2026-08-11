@@ -164,6 +164,18 @@ export class Message extends Component {
                     if (!this.store.isOdooWhiteTheme) {
                         this.shadowRoot().appendChild(shadowStyle);
                     }
+                    if (isMobileOS()) {
+                        // Equivalent to .o-disable-safari-native-long-press
+                        const touchCalloutStyle = document.createElement("style");
+                        touchCalloutStyle.textContent = `
+                        * {
+                            -webkit-touch-callout: none !important;
+                            -webkit-user-select: none !important;
+                            user-select: none !important;
+                        }
+                    `;
+                        this.shadowRoot().appendChild(touchCalloutStyle);
+                    }
                     const ellipsisStyle = document.createElement("style");
                     ellipsisStyle.textContent = `
                     .o-mail-ellipsis {
@@ -301,7 +313,7 @@ export class Message extends Component {
 
     get attClass() {
         return {
-            "user-select-none o-isMobileOS": isMobileOS(),
+            "user-select-none o-disable-safari-native-long-press o-isMobileOS": isMobileOS(),
             [this.props.className]: true,
             "o-selfAuthored": this.message.isSelfAuthored && !this.env.messageCard,
             "o-selected":
