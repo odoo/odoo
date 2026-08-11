@@ -290,12 +290,14 @@
             <div t-if="invoice.currency_id.is_zero(invoice.amount_residual)" class="rounded text-bg-success fw-normal badge">
                 <i class="fa fa-fw fa-check-circle"/> Paid
             </div>
-            <div t-if="invoice.payment_state == 'in_payment' and not invoice.currency_id.is_zero(invoice.amount_residual)" class="rounded text-bg-info fw-normal badge">
-                <i class="fa fa-fw fa-check-circle"/> Processing Payment
-            </div>
-            <div t-elif="pending_txs" class="rounded text-bg-info fw-normal badge">
-                <i class="fa fa-fw fa-check-circle"/> Pending
-            </div>
+            <t t-if="not invoice.currency_id.is_zero(invoice.amount_residual)">
+                <div t-if="invoice.payment_state == 'in_payment'" class="rounded text-bg-info fw-normal badge">
+                    <i class="fa fa-fw fa-check-circle"/> Processing Payment
+                </div>
+                <div t-elif="pending_txs" class="rounded text-bg-info fw-normal badge">
+                    <i class="fa fa-fw fa-check-circle"/> Pending
+                </div>
+            </t>
         </xpath>
         <xpath expr="//t[@t-call='portal.portal_record_sidebar']//div[hasclass('o_download_pdf')]" position="before">
             <a t-if="invoice._has_to_be_paid()"
@@ -308,7 +310,7 @@
         </xpath>
         <xpath expr="//div[@id='invoice_content']//div[hasclass('o_portal_html_view')]" position="before">
             <t t-set="tx" t-value="invoice.get_portal_last_transaction()"/>
-            <div t-if="invoice.get_portal_last_transaction() and invoice.amount_total and not success and not error and (invoice.payment_state != 'not_paid' or tx.state in ('pending', 'authorized'))"
+            <div t-if="invoice.get_portal_last_transaction() and invoice.amount_total and not success and not error and (invoice.payment_state != 'not_paid' or tx.state in ('pending', 'authorized')) and not (invoice.payment_state == 'paid' and tx.state != 'done')"
                  class="o_account_payment_tx_status"
                  t-att-data-invoice-id="invoice.id">
                 <t t-call="payment.state_header"/>
