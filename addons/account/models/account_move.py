@@ -3971,10 +3971,14 @@ class AccountMove(models.Model):
             # Disallow modifying readonly fields on a posted move
             move_state = vals.get('state', move.state)
             if not self.env.context.get('skip_readonly_check') and move_state == "posted" and modified_accounting_fields:
-                raise UserError(_("You cannot modify the following readonly fields on a posted move: %s", ', '.join(
-                    self._fields[fname]._description_string(self.env)
-                    for fname in modified_accounting_fields
-                )))
+                raise UserError(self.env._(
+                    "You cannot modify the following readonly fields on the posted move %(move)s: %(fields)s",
+                    move=move.name or move.ref or move.id,
+                    fields=', '.join(
+                        self._fields[fname]._description_string(self.env)
+                        for fname in modified_accounting_fields
+                    ),
+                ))
 
             if move.journal_id.sequence_override_regex and vals.get('name') and vals['name'] != '/' and not re.match(move.journal_id.sequence_override_regex, vals['name']):
                 if not self.env.user.has_group('account.group_account_manager'):
