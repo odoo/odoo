@@ -531,11 +531,9 @@ export class DynamicList extends DataPoint {
     }
 
     async _toggleSelection() {
-        if (this.selection.length === this.records.length) {
-            this.records.forEach((record) => {
-                record._toggleSelection(false);
-            });
-            this._selectDomain(false);
+        // As soon as something is selected, clicking the header checkbox clears the selection.
+        if (this.isDomainSelected || this.selection.length > 0) {
+            this._unselectAll();
         } else {
             this.records.forEach((record) => {
                 record._toggleSelection(true);
