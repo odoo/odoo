@@ -19,7 +19,7 @@ class ProductTemplate(models.Model):
             website
             and website.company_id.country_code == 'AR'
             and website.l10n_ar_website_sale_show_both_prices
-            and website.show_line_subtotals_tax_selection == 'tax_included'
+            and website.tax_display == 'tax_included'
         ):
             for template in self:
                 price_info = prices[template.id]
@@ -43,7 +43,7 @@ class ProductTemplate(models.Model):
             website
             and website.company_id.country_code == 'AR'
             and website.l10n_ar_website_sale_show_both_prices
-            and website.show_line_subtotals_tax_selection == 'tax_included'
+            and website.tax_display == 'tax_included'
         ):
             # Store the tax-excluded price in the res for use in showing both prices
             combination_info['l10n_ar_price_tax_excluded'] = self._apply_taxes_to_price(
