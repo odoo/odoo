@@ -957,7 +957,7 @@ stepUtils.autoExpandMoreButtons(),
     content: 'Set the quantity producing',
     run: "edit 1 && click body",
 },
-...stepUtils.statusbarButtonsSteps('Produce', "Produce", ".o_statusbar_status .dropdown-toggle:contains('To Close')"),
+...stepUtils.statusbarButtonsSteps('Produce', "Produce", ".o_statusbar_status .dropdown-toggle:contains('Confirmed')"),
 ...stepUtils.toggleHomeMenu(),
 ...stepUtils.goToAppSteps('sale.sale_menu_root', "Organize your sales activities with the Sales app."),
 {

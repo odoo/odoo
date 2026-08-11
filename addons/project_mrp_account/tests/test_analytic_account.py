@@ -87,7 +87,7 @@ class TestAnalyticAccount(TestMrpAnalyticAccount):
         # setting it to False again to enable changing move.quantity when changing mo.qty_producing
         mo.move_raw_ids.picked = True
         mo.move_raw_ids.picked = False
-        self.assertEqual(mo.state, 'progress')
+        self.assertEqual(mo.state, 'confirmed')
         self.assertEqual(mo.move_raw_ids.analytic_account_line_ids.amount, -50.0)
 
         # increase qty_producing to 10.0
@@ -126,7 +126,7 @@ class TestAnalyticAccount(TestMrpAnalyticAccount):
         mo_form = Form(mo)
         mo_form.qty_producing = 5.0
         mo_form.save()
-        self.assertEqual(mo.state, 'progress')
+        self.assertEqual(mo.state, 'confirmed')
         self.assertFalse(mo.move_raw_ids.analytic_account_line_ids)
 
         # increase qty_producing to 10.0
@@ -164,7 +164,7 @@ class TestAnalyticAccount(TestMrpAnalyticAccount):
         # setting it to False again to enable changing move.quantity when changing mo.qty_producing
         mo.move_raw_ids.picked = True
         mo.move_raw_ids.picked = False
-        self.assertEqual(mo.state, 'progress')
+        self.assertEqual(mo.state, 'confirmed')
         self.assertEqual(mo.move_raw_ids.analytic_account_line_ids.amount, -50.0)
 
         Form.from_action(self.env, mo.button_mark_done()).save().action_backorder()
@@ -358,7 +358,7 @@ class TestAnalyticAccount(TestMrpAnalyticAccount):
         mo_form = Form(mo)
         mo_form.qty_producing = 1
         mo = mo_form.save()
-        self.assertEqual(mo.state, 'to_close')
+        self.assertEqual(mo.state, 'confirmed')
         mo.button_mark_done()
         self.assertEqual(mo.state, 'done')
         self.assertEqual(analytic_account.debit, 100)
@@ -405,7 +405,7 @@ class TestAnalyticAccount(TestMrpAnalyticAccount):
         mo_form = Form(mo)
         mo_form.qty_producing = 5.0
         mo_form.save()
-        self.assertEqual(mo.state, 'progress')
+        self.assertEqual(mo.state, 'confirmed')
         # Setting the move as picked to trigger analytic account lines calculations and
         # setting it to False again to enable changing move.quantity when changing mo.qty_producing
         mo.move_raw_ids.picked = True
@@ -474,7 +474,7 @@ class TestAnalyticAccount(TestMrpAnalyticAccount):
         # setting it to False again to enable changing move.quantity when changing mo.qty_producing
         mo.move_raw_ids.picked = True
         mo.move_raw_ids.picked = False
-        self.assertEqual(mo.state, 'progress')
+        self.assertEqual(mo.state, 'confirmed')
         self.assertEqual(self.analytic_account.balance, -50.0)
 
         # decrease qty_producing to 0.0

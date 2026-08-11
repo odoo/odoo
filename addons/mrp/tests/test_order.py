@@ -47,7 +47,7 @@ class TestMrpOrder(TestMrpCommon, MailCase):
     def test_mrp_plan_and_unplan_reset_date_start(self):
         past_date = fields.Datetime.now() - timedelta(days=1)
         mo = self.env['mrp.production'].create({
-            'product_id': self.bom_2.product_id.id,
+            'product_id': self.bom_4.product_id.id,
             'product_uom_qty': 1.0,
             'date_start': past_date,
         })
@@ -140,7 +140,7 @@ class TestMrpOrder(TestMrpCommon, MailCase):
         man_order = mo_form.save()
 
         action = man_order.button_mark_done()
-        self.assertEqual(man_order.state, 'progress', "Production order should be open a backorder wizard, then not done yet.")
+        self.assertEqual(man_order.state, 'confirmed', "Production order should be open a backorder wizard, then not done yet.")
 
         backorder = Form(self.env['mrp.production.backorder'].with_context(**action['context'])).save()
         Form.from_action(self.env, backorder.action_close_mo()).save().action_confirm()
@@ -608,8 +608,8 @@ class TestMrpOrder(TestMrpCommon, MailCase):
         """Editing the scheduled date after planning the MO should unplan the MO, and adjust the date on the stock moves"""
         date_start = datetime(2023, 5, 15, 9, 0)
         mo_form = Form(self.env['mrp.production'])
-        mo_form.product_id = self.product_4
-        mo_form.bom_id = self.bom_1
+        mo_form.product_id = self.product_6
+        mo_form.bom_id = self.bom_4
         mo_form.product_qty = 1
         mo_form.date_start = date_start
         mo = mo_form.save()
@@ -819,7 +819,7 @@ class TestMrpOrder(TestMrpCommon, MailCase):
 
         # Won't accept to be done, instead return a wizard
         mo.button_mark_done()
-        self.assertEqual(mo.state, 'to_close')
+        self.assertEqual(mo.state, 'confirmed')
 
         consumption_issues = mo._get_consumption_issues()
         action = mo._action_generate_consumption_wizard(consumption_issues)
@@ -5261,8 +5261,8 @@ class TestMrpOrder(TestMrpCommon, MailCase):
         copied_operation = bom.operation_ids[1]
         self.assertFalse(copied_operation.bom_product_template_attribute_value_ids, "'Apply on Variants' should not be copied to the new operation.")
 
-    def test_mo_split_in_progress(self):
-        """Test to ensure that splitting an in progress MO is working as intended
+    def test_mo_split_with_qty_producing(self):
+        """Test to ensure that splitting an MO with a quantity producing is working as intended
         i.e Only splitting with a quantity less than the original quantity to produce and more than 0.
         """
         mo = self.env['mrp.production'].create({
@@ -5275,6 +5275,7 @@ class TestMrpOrder(TestMrpCommon, MailCase):
         self.assertEqual(mo.qty_producing, mo.product_qty)  # MO product_qty = 8
         with self.assertRaises(UserError):
             mo.action_split()
+        mo.action_start()
         mo.qty_producing = 0
         with self.assertRaises(UserError):
             mo.action_split()

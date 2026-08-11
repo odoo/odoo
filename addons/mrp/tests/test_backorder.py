@@ -635,6 +635,7 @@ class TestMrpProductionBackorder(TestMrpCommon):
             mo_form = Form(mo)
             mo_form.qty_producing = 1
             mo = mo_form.save()
+            mo.action_start()
             action = mo.button_mark_done()
             backorder = Form(self.env['mrp.production.backorder'].with_context(**action['context']))
             backorder.save().action_backorder()
