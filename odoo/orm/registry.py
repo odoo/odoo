@@ -161,6 +161,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
                     cr.execute("DELETE FROM ir_config_parameter WHERE key='base.partially_updated_database'")
                     if cr.rowcount:
                         update_module = True
+            from odoo.http import borrow_request  # noqa: PLC0415
             # This should be a method on Registry
             from odoo.modules.loading import load_modules, reset_modules_state  # noqa: PLC0415
             exit_stack = ExitStack()
@@ -171,14 +172,15 @@ class Registry(Mapping[str, type["BaseModel"]]):
                     new_db_demo = config['with_demo']
                 if first_registry and not update_module:
                     exit_stack.enter_context(gc.disabling_gc())
-                load_modules(
-                    registry,
-                    update_module=update_module,
-                    upgrade_modules=upgrade_modules,
-                    install_modules=install_modules,
-                    new_db_demo=new_db_demo,
-                    models_to_check=models_to_check,
-                )
+                with borrow_request():
+                    load_modules(
+                        registry,
+                        update_module=update_module,
+                        upgrade_modules=upgrade_modules,
+                        install_modules=install_modules,
+                        new_db_demo=new_db_demo,
+                        models_to_check=models_to_check,
+                    )
             except Exception:
                 reset_modules_state(db_name)
                 raise
