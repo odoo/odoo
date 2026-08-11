@@ -43,13 +43,13 @@ test("Visitor going offline shows disconnection banner to operator", async () =>
     mockDate("2025-01-01 12:00:00", +1);
     sendPresenceUpdate("mail.guest", guestId, "offline");
     await contains(".o-livechat-VisitorDisconnected", {
-        text: "Visitor is disconnected since 1:00 PM",
+        text: "Visitor has been disconnected since 1:00 PM",
     });
     mockDate("2025-01-02 12:00:00", +1);
     await click("button[title*='Fold']");
     await click(".o-mail-ChatBubble");
     await contains(".o-livechat-VisitorDisconnected", {
-        text: "Visitor is disconnected since yesterday at 1:00 PM",
+        text: "Visitor has been disconnected since yesterday at 1:00 PM",
     });
     mockDate("2025-01-05 12:00:00", +1);
     await click("button[title*='Fold']");

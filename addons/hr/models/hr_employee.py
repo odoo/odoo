@@ -1239,7 +1239,7 @@ class HrEmployee(models.Model):
     def action_create_user(self):
         self.ensure_one()
         if self.user_id:
-            raise ValidationError(self.env._("This employee already has an user."))
+            raise ValidationError(self.env._("This employee already has a user."))
         return {
             'name': self.env._('Create User'),
             'type': 'ir.actions.act_window',
@@ -1795,16 +1795,15 @@ class HrEmployee(models.Model):
         hr_root_menu = self.env.ref('hr.menu_hr_root')
         for employee in employees:
             # Launch onboarding plans
-            link = Markup('<a href="/odoo/%(employee_id)s/action-hr.plan_wizard_action?active_model=hr.employee&menu_id=%(menu_id)s">%(text)s</a>') % {
-                'employee_id': employee.id,
-                'menu_id': hr_root_menu.id,
-                'text': self.env._('onboarding plan'),
-            }
-            message = Markup('<b>%(title)s</b> %(text)s %(onboarding_plan_link)s?') % {
-                'title': self.env._('Congratulations!'),
-                'text': self.env._('May I recommend you to setup an'),
-                'onboarding_plan_link': link,
-            }
+            message = self.env._(
+                "%(b_start)sCongratulations!%(b_end)s May I recommend setting up an %(link_start)sonboarding plan%(link_end)s?",
+                b_start=Markup('<b>'),
+                b_end=Markup('</b>'),
+                link_start=Markup(
+                    '<a href="/odoo/%(employee_id)s/action-hr.plan_wizard_action?active_model=hr.employee&menu_id=%(menu_id)s">',
+                ) % {'employee_id': employee.id, 'menu_id': hr_root_menu.id},
+                link_end=Markup('</a>'),
+            )
             onboarding_notes_bodies[employee.id] = message
         employees._message_log_batch(onboarding_notes_bodies)
         employees.invalidate_recordset()
