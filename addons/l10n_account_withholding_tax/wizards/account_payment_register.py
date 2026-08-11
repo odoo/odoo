@@ -232,6 +232,16 @@ class AccountPaymentRegister(models.TransientModel):
                     ('type', '=', 'general'),
                 ], limit=1)
 
+    @api.depends('withhold')
+    def _compute_available_journal_ids(self):
+        withhold_only = self.filtered(lambda w: w.withhold == 'withhold')
+        super(AccountPaymentRegister, self - withhold_only)._compute_available_journal_ids()
+        for wizard in withhold_only:
+            wizard.available_journal_ids = self.env['account.journal'].search([
+                *self.env['account.journal']._check_company_domain(wizard.company_id),
+                ('type', '=', 'general'),
+            ])
+
     # ----------------------------
     # Onchange, Constraint methods
     # ----------------------------
