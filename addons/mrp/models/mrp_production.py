@@ -1453,7 +1453,7 @@ class MrpProduction(models.Model):
     def _mark_byproducts_as_produced(self):
         self.move_byproduct_ids.picked = True
 
-    def _set_qty_producing(self, mark_moves_picked=True):
+    def _set_qty_producing(self, mark_moves_picked=True, workorder=False):
         if self.product_id.tracking == 'serial':
             qty_producing_uom = self.uom_id._compute_quantity(self.qty_producing, self.product_id.uom_id, rounding_method='HALF-UP')
             qty_production_uom = self.uom_id._compute_quantity(self.product_qty, self.product_id.uom_id, rounding_method='HALF-UP')
@@ -1465,6 +1465,8 @@ class MrpProduction(models.Model):
             self.move_raw_ids
             | self.move_finished_ids.filtered(lambda m: m.product_id != self.product_id or m.product_id.tracking == 'serial')
         ):
+            if workorder and move.workorder_id and move.workorder_id != workorder:
+                continue
             is_byproduct = move in self.move_byproduct_ids
             # Never update already picked moves.
             # sudo needed for portal users
