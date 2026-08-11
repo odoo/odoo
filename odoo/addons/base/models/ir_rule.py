@@ -113,7 +113,8 @@ class IrRule(models.Model):
         )
 
         # if all records get returned, the group rules are not failing
-        if Model.search_count(group_domains & Domain('id', 'in', record_ids)) < len(record_ids):
+        records_domain = Domain('id', 'in', record_ids)
+        if Model.with_context(search_domain=records_domain).search_count(group_domains & records_domain) < len(record_ids):
             failing_ids.update(r.rule_id for r in rules if r.group_id in user_group_ids)
 
         # check failing global rules
@@ -121,7 +122,7 @@ class IrRule(models.Model):
             if r.group_id:
                 continue
             dom = r.domain if isinstance(r.domain, Domain) else Domain(safe_eval(r.domain, eval_context))
-            if Model.search_count(dom & Domain('id', 'in', record_ids)) < len(record_ids):
+            if Model.with_context(search_domain=records_domain).search_count(dom & records_domain) < len(record_ids):
                 failing_ids.add(r.rule_id)
 
         # re-filter to keep the order from rules
