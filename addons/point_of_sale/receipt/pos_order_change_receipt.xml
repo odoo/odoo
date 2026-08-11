@@ -18,7 +18,7 @@
                                 <span><t t-esc="config['name']"/> : <t t-esc="extra_data['time']"/></span><br/>
                                 <span t-if="extra_data.get('employee_name')">By: <t t-esc="extra_data['employee_name']"/></span>
                             </div>
-                            <div name="order-info" class="my-2 text-huge">
+                            <div name="order-info" class="mt-2 text-huge">
                                 <div name="tracking-number">
                                     <span t-esc="extra_data['prefix']"/>
                                     <span> </span>
