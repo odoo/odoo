@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="resource.Many2OneResourceCalendarField">
+        <Many2One t-props="this.m2oProps">
+            <t t-set-slot="autoCompleteItem" t-slot-scope="autoCompleteItemScope">
+                <div class="d-flex flex-column">
+                    <div class="d-flex justify-content-between">
+                        <span t-out="autoCompleteItemScope.label"/>
+                        <span class="text-muted ms-3" t-esc="this.formatWorkTimeRate(autoCompleteItemScope.record)"/>
+                    </div>
+                    <small class="text-muted" t-esc="this.getSchedulePreview(autoCompleteItemScope.record)"/>
+                </div>
+            </t>
+        </Many2One>
+    </t>
+</templates>

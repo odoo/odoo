@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="resource.CalendarHoursByDay">
+        <div t-if="this.isVariable" class="w-100 text-center" t-esc="this.variableScheduleSummary"/>
+        <div t-else="" class="d-grid w-100 align-items-center" t-attf-style="grid-template-columns: {{this.gridTemplateColumns}};">
+            <t t-foreach="this.hoursByDay" t-as="day" t-key="day_index">
+                <span class="o_resource_calendar_hours_cell text-start text-nowrap overflow-hidden" t-att-title="day.label">
+                    <t t-esc="day.hours"/>
+                </span>
+            </t>
+        </div>
+    </t>
+</templates>
