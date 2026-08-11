@@ -313,7 +313,6 @@ test("should apply a color to a slice of text containing a span", async () => {
     await testEditor({
         contentBefore: '<p>a[b<span class="a">c</span>d]e</p>',
         stepFunction: setColor("rgb(255, 0, 0)", "color"),
-        // should be applied to span.a?
         contentAfter:
             '<p>a<span style="color: rgb(255, 0, 0);">[b</span><span class="a"><span style="color: rgb(255, 0, 0);">c</span></span><span style="color: rgb(255, 0, 0);">d]</span>e</p>',
     });
