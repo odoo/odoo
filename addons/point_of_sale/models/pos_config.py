@@ -128,7 +128,6 @@ class PosConfig(models.Model):
     session_ids = fields.One2many('pos.session', 'config_id', string='Sessions')
     current_session_id = fields.Many2one('pos.session', compute='_compute_current_session', string="Current Session", search='_search_current_session')
     current_session_state = fields.Char(compute='_compute_current_session')
-    number_of_rescue_session = fields.Integer(string="Number of Rescue Session", compute='_compute_current_session')
     current_cash_register_balance = fields.Float(compute='_compute_current_cash_register_balance', string="Cash Register")
     last_session_closing_date = fields.Date(compute='_compute_last_session')
     pos_session_username = fields.Char(compute='_compute_current_session_user')
@@ -372,13 +371,11 @@ class PosConfig(models.Model):
         self.session_ids.fetch(["state"])
         for pos_config in self:
             opened_sessions = pos_config.session_ids.filtered(lambda s: s.state != 'closed')
-            rescue_sessions = opened_sessions.filtered('rescue')
-            session = pos_config.session_ids.filtered(lambda s: s.state != 'closed' and not s.rescue)
+            session = pos_config.session_ids.filtered(lambda s: s.state != 'closed')
             # sessions ordered by id desc
             pos_config.has_active_session = bool(opened_sessions.filtered(lambda s: s.state != 'opening_control')) or False
             pos_config.current_session_id = (session and session[0].id) or False
             pos_config.current_session_state = (session and session[0].state) or False
-            pos_config.number_of_rescue_session = len(rescue_sessions)
 
     def _search_current_session(self, operator, value):
         if operator != 'in':
@@ -387,7 +384,7 @@ class PosConfig(models.Model):
 
     def _compute_statistics_for_session(self):
         for config in self:
-            session = config.session_ids.filtered(lambda s: s.state != 'closed' and not s.rescue)
+            session = config.session_ids.filtered(lambda s: s.state != 'closed')
             session_record = session[0] if session else None
             if not session_record or not session_record.exists():
                 config.statistics_for_current_session = False
@@ -539,7 +536,7 @@ class PosConfig(models.Model):
     @api.depends('session_ids')
     def _compute_current_session_user(self):
         for pos_config in self:
-            session = pos_config.session_ids.filtered(lambda s: s.state in ['opening_control', 'opened', 'closing_control'] and not s.rescue)
+            session = pos_config.session_ids.filtered(lambda s: s.state in ['opening_control', 'opened', 'closing_control'])
             if session:
                 pos_config.pos_session_username = session[0].user_id.sudo().name
                 pos_config.pos_session_state = session[0].state
@@ -1020,24 +1017,6 @@ class PosConfig(models.Model):
             'res_model': 'pos.session',
             'res_id': session_id,
             'view_id': False,
-            'type': 'ir.actions.act_window',
-        }
-
-    def open_opened_rescue_session_form(self):
-        rescue_session_ids = self.session_ids.filtered(lambda s: s.state != 'closed' and s.rescue)
-
-        if len(rescue_session_ids) == 1:
-            return {
-                'res_model': 'pos.session',
-                'view_mode': 'form',
-                'res_id': rescue_session_ids.id,
-                'type': 'ir.actions.act_window',
-            }
-        return {
-            'name': _('Rescue Sessions'),
-            'res_model': 'pos.session',
-            'view_mode': 'list,form',
-            'domain': [('id', 'in', rescue_session_ids.ids)],
             'type': 'ir.actions.act_window',
         }
 

@@ -124,11 +124,6 @@ class PosSession(models.Model):
     )
     order_ids = fields.One2many('pos.order', 'session_id', string='Orders')
     order_count = fields.Integer(compute='_compute_order_count')
-    rescue = fields.Boolean(
-        string='Recovery Session',
-        help="Auto-generated session for orphan orders, ignored in constraints",
-        readonly=True,
-        copy=False)
     payment_method_ids = fields.Many2many(
         'pos.payment.method',
         related='config_id.payment_method_ids',
@@ -337,7 +332,6 @@ class PosSession(models.Model):
         if not onboarding_creation and self.search_count([
                 ('state', '!=', 'closed'),
                 ('config_id', '=', self.config_id.id),
-                ('rescue', '=', False),
             ]) > 1:
             raise ValidationError(_("Another session is already opened for this point of sale."))
 
