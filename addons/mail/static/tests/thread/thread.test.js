@@ -650,17 +650,10 @@ test("[text composer] Opening thread with needaction messages should mark all me
         { name: "Sales" },
     ]);
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
-    const [firstMessageId] = pyEnv["mail.message"].create([
+    pyEnv["mail.message"].create([
         { body: "Hello", model: "discuss.channel", res_id: channelId },
         { body: "World", model: "discuss.channel", res_id: channelId },
     ]);
-    const [selfMemberId] = pyEnv["discuss.channel.member"].search([
-        ["channel_id", "=", channelId],
-        ["partner_id", "=", serverState.partnerId],
-    ]);
-    pyEnv["discuss.channel.member"].write([selfMemberId], {
-        new_message_separator: firstMessageId,
-    });
     onRpc("mail.message", "mark_all_as_read", ({ args }) => {
         expect.step("mark-all-messages-as-read");
         expect(args[0]).toEqual([
@@ -672,7 +665,7 @@ test("[text composer] Opening thread with needaction messages should mark all me
     await start();
     await openDiscuss(channelId);
     await expect.waitForSteps([
-        `store fetch: /discuss/channel/messages - {"channel_id":${channelId},"fetch_params":{"limit":60,"around":${firstMessageId}}}`,
+        `store fetch: /discuss/channel/messages - {"channel_id":${channelId},"fetch_params":{"limit":60,"around":0}}`,
     ]);
     await contains(".o-mail-Message", { count: 2 });
     await click("button:has(:text('Sales'))");
@@ -715,17 +708,10 @@ test("Opening thread with needaction messages should mark all messages of thread
         { name: "Sales" },
     ]);
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
-    const [firstMessageId] = pyEnv["mail.message"].create([
+    pyEnv["mail.message"].create([
         { body: "Hello", model: "discuss.channel", res_id: channelId },
         { body: "World", model: "discuss.channel", res_id: channelId },
     ]);
-    const [selfMemberId] = pyEnv["discuss.channel.member"].search([
-        ["channel_id", "=", channelId],
-        ["partner_id", "=", serverState.partnerId],
-    ]);
-    pyEnv["discuss.channel.member"].write([selfMemberId], {
-        new_message_separator: firstMessageId,
-    });
     onRpc("mail.message", "mark_all_as_read", ({ args }) => {
         expect.step("mark-all-messages-as-read");
         expect(args[0]).toEqual([
@@ -739,7 +725,7 @@ test("Opening thread with needaction messages should mark all messages of thread
     composerService.setHtmlComposer();
     await openDiscuss(channelId);
     await expect.waitForSteps([
-        `store fetch: /discuss/channel/messages - {"channel_id":${channelId},"fetch_params":{"limit":60,"around":${firstMessageId}}}`,
+        `store fetch: /discuss/channel/messages - {"channel_id":${channelId},"fetch_params":{"limit":60,"around":0}}`,
     ]);
     await contains(".o-mail-Message", { count: 2 });
     await click("button:has(:text('Sales'))");
