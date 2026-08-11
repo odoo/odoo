@@ -5,7 +5,7 @@ import { Component, EventBus, t, useProps } from "@odoo/owl";
 
 /**
  * @typedef {import("./command_palette").CommandPaletteConfig} CommandPaletteConfig
- * @typedef {import("../hotkeys/hotkey_service").HotkeyOptions} HotkeyOptions
+ * @typedef {import("../hotkeys/hotkey_plugin").HotkeyOptions} HotkeyOptions
  */
 
 /**

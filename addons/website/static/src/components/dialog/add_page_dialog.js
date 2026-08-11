@@ -12,7 +12,7 @@ import {
     useListener,
 } from "@odoo/owl";
 import { isBrowserFirefox } from "@web/core/browser/feature_detection";
-import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
+import { getActiveHotkey } from "@web/core/hotkeys/hotkey_utils";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { SIZES, utils as uiUtils } from "@web/core/ui/ui_utils";

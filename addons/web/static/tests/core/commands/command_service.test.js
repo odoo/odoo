@@ -13,6 +13,7 @@ import { Component, proxy, signal, useProps, xml } from "@odoo/owl";
 
 import { useCommand } from "@web/core/commands/command_hook";
 import { HotkeyCommandItem } from "@web/core/commands/default_providers";
+import { HotkeyPlugin } from "@web/core/hotkeys/hotkey_plugin";
 import { registry } from "@web/core/registry";
 import { useActiveElement } from "@web/core/ui/ui_plugin";
 
@@ -963,11 +964,6 @@ test("display shortcuts correctly for MacOS ", async () => {
 });
 
 test("display shortcuts correctly for non-MacOS with a new overlayModifier", async () => {
-    const hotkeyService = registry.category("services").get("hotkey");
-    patchWithCleanup(hotkeyService, {
-        overlayModifier: "alt+control",
-    });
-
     class MyComponent extends Component {
         static components = { TestComponent };
         static template = xml`
@@ -980,6 +976,9 @@ test("display shortcuts correctly for non-MacOS with a new overlayModifier", asy
     }
 
     await mountWithCleanup(MyComponent);
+    patchWithCleanup(getService(HotkeyPlugin), {
+        overlayModifier: "alt+control",
+    });
     // Open palette
     await press(["Control", "k"]);
     await animationFrame();
@@ -989,11 +988,6 @@ test("display shortcuts correctly for non-MacOS with a new overlayModifier", asy
 
 test("display shortcuts correctly for MacOS with a new overlayModifier", async () => {
     mockUserAgent("mac");
-
-    const hotkeyService = registry.category("services").get("hotkey");
-    patchWithCleanup(hotkeyService, {
-        overlayModifier: "alt+control",
-    });
 
     class MyComponent extends Component {
         static components = { TestComponent };
@@ -1007,6 +1001,9 @@ test("display shortcuts correctly for MacOS with a new overlayModifier", async (
     }
 
     await mountWithCleanup(MyComponent);
+    patchWithCleanup(getService(HotkeyPlugin), {
+        overlayModifier: "alt+control",
+    });
     // Open palette
     await press(["meta", "k"]);
     await animationFrame();

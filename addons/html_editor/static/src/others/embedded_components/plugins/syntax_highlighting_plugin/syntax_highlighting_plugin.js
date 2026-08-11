@@ -7,7 +7,7 @@ import {
     newlinesToLineBreaks,
 } from "../../core/syntax_highlighting/syntax_highlighting_utils";
 import { removeInvisibleWhitespace } from "@html_editor/utils/dom";
-import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
+import { getActiveHotkey } from "@web/core/hotkeys/hotkey_utils";
 import { closestBlock } from "@html_editor/utils/blocks";
 import { DISABLED_NAMESPACE } from "@html_editor/main/toolbar/toolbar_plugin";
 import { closestElement } from "@html_editor/utils/dom_traversal";

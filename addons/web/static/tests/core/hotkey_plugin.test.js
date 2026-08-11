@@ -22,14 +22,15 @@ import {
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
-import { getActiveHotkey, hotkeyService } from "@web/core/hotkeys/hotkey_service";
+import { getActiveHotkey } from "@web/core/hotkeys/hotkey_utils";
 import { useActiveElement } from "@web/core/ui/ui_plugin";
+import { HotkeyPlugin } from "@web/core/hotkeys/hotkey_plugin";
 
 const getOverlays = () => queryAllTexts(".o_web_hotkey_overlay");
 
 test("register / unregister", async () => {
     await makeTestApp();
-    const hotkey = getService("hotkey");
+    const hotkey = getService(HotkeyPlugin);
 
     const key = "q";
     await press(key);
@@ -48,7 +49,7 @@ test("register / unregister", async () => {
 
 test("should ignore when IME is composing", async () => {
     await makeTestApp();
-    const hotkey = getService("hotkey");
+    const hotkey = getService(HotkeyPlugin);
     const key = "enter";
     hotkey.add(key, () => expect.step(key));
     await animationFrame();
@@ -65,7 +66,7 @@ test("hotkey handles wrongly formed KeyboardEvent", async () => {
     //doesn't mention that field may be unset. (https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key).
     await makeTestApp();
 
-    const hotkey = getService("hotkey");
+    const hotkey = getService(HotkeyPlugin);
 
     const handler = (ev) => {
         ev.stopPropagation();
@@ -279,7 +280,7 @@ test("hook", async () => {
 
 test("non-MacOS usability", async () => {
     await makeTestApp();
-    const hotkey = getService("hotkey");
+    const hotkey = getService(HotkeyPlugin);
     const key = "q";
 
     // On non-MacOS, ALT is NOT replaced by CONTROL key
@@ -399,7 +400,7 @@ test("MacOS usability", async () => {
     mockUserAgent("mac");
     await makeTestApp();
 
-    const hotkey = getService("hotkey");
+    const hotkey = getService(HotkeyPlugin);
     const key = "q";
 
     // On MacOS, ALT is replaced by CONTROL key
@@ -454,13 +455,13 @@ test("registration allows repeat if specified", async () => {
     const disallowRepeatKey = "b";
     const defaultBehaviourKey = "c";
 
-    getService("hotkey").add(allowRepeatKey, () => expect.step(allowRepeatKey), {
+    getService(HotkeyPlugin).add(allowRepeatKey, () => expect.step(allowRepeatKey), {
         allowRepeat: true,
     });
-    getService("hotkey").add(disallowRepeatKey, () => expect.step(disallowRepeatKey), {
+    getService(HotkeyPlugin).add(disallowRepeatKey, () => expect.step(disallowRepeatKey), {
         allowRepeat: false,
     });
-    getService("hotkey").add(defaultBehaviourKey, () => expect.step(defaultBehaviourKey));
+    getService(HotkeyPlugin).add(defaultBehaviourKey, () => expect.step(defaultBehaviourKey));
     await animationFrame();
 
     await keyDown(allowRepeatKey);
@@ -504,7 +505,7 @@ test("[data-hotkey] never allow repeat", async () => {
 
 test("hotkeys evil 👹", async () => {
     await makeTestApp();
-    const hotkey = getService("hotkey");
+    const hotkey = getService(HotkeyPlugin);
 
     expect(() => hotkey.add()).toThrow(/must specify an hotkey/);
     expect(() => hotkey.add(null)).toThrow(/must specify an hotkey/);
@@ -657,7 +658,7 @@ test("replace the overlayModifier for non-MacOs", async () => {
         }
     }
     await mountWithCleanup(MyComponent);
-    patchWithCleanup(hotkeyService, {
+    patchWithCleanup(getService(HotkeyPlugin), {
         overlayModifier: "alt+shift",
     });
     const key = "b";
@@ -684,7 +685,7 @@ test("replace the overlayModifier for MacOs", async () => {
         }
     }
     await mountWithCleanup(MyComponent);
-    patchWithCleanup(hotkeyService, {
+    patchWithCleanup(getService(HotkeyPlugin), {
         overlayModifier: "alt+shift",
     });
 
@@ -765,7 +766,7 @@ test("protects editable elements: an editable can allow hotkeys", async () => {
 test("ignore numpad keys", async () => {
     await makeTestApp();
     const key = "1";
-    getService("hotkey").add(`alt+${key}`, () => expect.step(key));
+    getService(HotkeyPlugin).add(`alt+${key}`, () => expect.step(key));
     await animationFrame();
 
     await keyDown("alt"); // for the whole test
@@ -779,7 +780,7 @@ test("ignore numpad keys", async () => {
 
 test("within iframes", async () => {
     await makeTestApp();
-    getService("hotkey").add("enter", () => expect.step("called"));
+    getService(HotkeyPlugin).add("enter", () => expect.step("called"));
     await animationFrame();
 
     // Dispatch directly to target to show that the hotkey service works as expected
@@ -800,7 +801,7 @@ test("within iframes", async () => {
     expect.verifySteps([]);
 
     // Register the iframe to the hotkey service
-    getService("hotkey").registerIframe(iframe);
+    getService(HotkeyPlugin).registerIframe(iframe);
     await press("Enter");
     expect.verifySteps(["called"]);
 });

@@ -6,8 +6,9 @@ import { capitalize } from "@web/core/utils/strings";
 import { getVisibleElements } from "@web/core/utils/ui";
 import { DefaultCommandItem } from "./command_palette";
 
-import { Component, t, useProps } from "@odoo/owl";
+import { Component, t, useProps, usePlugin } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
+import { HotkeyPlugin } from "@web/core/hotkeys/hotkey_plugin";
 
 const commandSetupRegistry = registry.category("command_setup");
 commandSetupRegistry.add("default", {
@@ -77,7 +78,7 @@ commandProviderRegistry.add("command", {
 commandProviderRegistry.add("data-hotkeys", {
     provide: (env, options = {}) => {
         const commands = [];
-        const overlayModifier = registry.category("services").get("hotkey").overlayModifier;
+        const overlayModifier = usePlugin(HotkeyPlugin).overlayModifier;
         // Also retrieve all hotkeyables elements
         for (const el of getVisibleElements(
             options.activeElement,

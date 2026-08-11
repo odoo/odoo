@@ -6,8 +6,8 @@ import { useService } from "@web/core/utils/hooks";
  * when the caller component will mount/unmount.
  *
  * @param {string} hotkey
- * @param {import("./hotkey_service").HotkeyCallback} callback
- * @param {import("./hotkey_service").HotkeyOptions} [options] additional options
+ * @param {import("./hotkey_plugin").HotkeyCallback} callback
+ * @param {import("./hotkey_plugin").HotkeyOptions} [options] additional options
  */
 export function useHotkey(hotkey, callback, options = {}) {
     const hotkeyService = useService("hotkey");

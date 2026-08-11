@@ -4,7 +4,7 @@ import { useDomState } from "@html_builder/core/utils";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
 import { DATASET_KEY_PREFIX, addChartColumn, addChartRow, getColor } from "./chart_option_utils";
-import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
+import { getActiveHotkey } from "@web/core/hotkeys/hotkey_utils";
 
 export class ChartOption extends BaseOptionComponent {
     static id = "chart_option";

@@ -119,7 +119,7 @@ export class Navigator {
 
     /**
      * @param {NavigationOptions} options
-     * @param {import("@web/core/hotkeys/hotkey_service").HotkeyService} hotkeyService
+     * @param {import("@web/core/hotkeys/hotkey_plugin").HotkeyService} hotkeyService
      */
     constructor(options, hotkeyService) {
         this._hotkeyService = hotkeyService;

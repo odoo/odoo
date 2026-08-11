@@ -2,7 +2,7 @@ import { Component, onWillUpdateProps, proxy, signal, t, useProps } from "@odoo/
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
+import { getActiveHotkey } from "@web/core/hotkeys/hotkey_utils";
 import { Time, parseTime } from "@web/core/l10n/time";
 import { mergeClasses } from "@web/core/utils/classname";
 import { useService } from "@web/core/utils/hooks";

@@ -1,5 +1,5 @@
 import { convertNumericToUnit, getHtmlStyle } from "@html_editor/utils/formatting";
-import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
+import { getActiveHotkey } from "@web/core/hotkeys/hotkey_utils";
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
 

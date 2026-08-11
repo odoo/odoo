@@ -3,7 +3,7 @@ import { registry } from "@web/core/registry";
 import { services } from "@web/core/services";
 import { BlockUI } from "./block_ui";
 import { isFocusable } from "@web/core/utils/ui";
-import { getActiveHotkey } from "../hotkeys/hotkey_service";
+import { getActiveHotkey } from "../hotkeys/hotkey_utils";
 import { getFirstAndLastTabableElements, refreshMedias, utils } from "./ui_utils";
 
 import { computed, EventBus, Plugin, signal, untrack, useListener, usePlugin } from "@odoo/owl";

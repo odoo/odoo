@@ -2,7 +2,7 @@ import { useLayoutEffect } from "@web/owl2/utils";
 /** @odoo-module */
 
 import { _t } from "@web/core/l10n/translation";
-import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
+import { getActiveHotkey } from "@web/core/hotkeys/hotkey_utils";
 import { Component, onMounted, onPatched, onWillUnmount, proxy, signal, useProps } from "@odoo/owl";
 import { many2OneFieldProps } from "@web/views/fields/many2one/many2one_field";
 import { useProductAndLabelAutoresize } from "./product_and_label_autoresize";

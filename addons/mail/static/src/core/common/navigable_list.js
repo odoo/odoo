@@ -5,7 +5,7 @@ import { markEventHandled, isEventHandled } from "@web/core/utils/misc";
 
 import { Component, proxy, signal, t, useListener, useOnChange, useProps } from "@odoo/owl";
 
-import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
+import { getActiveHotkey } from "@web/core/hotkeys/hotkey_utils";
 import { usePosition } from "@web/core/position/position_hook";
 import { useService } from "@web/core/utils/hooks";
 

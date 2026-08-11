@@ -1,5 +1,5 @@
 import { parseEmail } from "@mail/utils/common/format";
-import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
+import { getActiveHotkey } from "@web/core/hotkeys/hotkey_utils";
 import { useService } from "@web/core/utils/hooks";
 import { isEmail } from "@web/core/utils/strings";
 

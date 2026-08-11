@@ -10,7 +10,7 @@ import {
     useListener,
 } from "@odoo/owl";
 import { isMobileOS } from "@web/core/browser/feature_detection";
-import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
+import { getActiveHotkey } from "@web/core/hotkeys/hotkey_utils";
 import { _t } from "@web/core/l10n/translation";
 import { OfflinePlugin } from "@web/core/offline/offline_plugin";
 import { usePosition } from "@web/core/position/position_hook";
