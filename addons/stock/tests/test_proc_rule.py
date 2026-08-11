@@ -909,7 +909,7 @@ class TestProcRule(TransactionCase):
         self.assertEqual(graph_data['daily_demand'], 0.48)
         self.assertEqual(graph_data['average_stock'], 30.0)
         self.assertEqual(graph_data['ordering_period'], 82.0)
-        self.assertListEqual(graph_data['x_axis_vals'], ['', 'In 82 day(s)', 'In 164 day(s)', 'In 246 day(s)'])
+        self.assertListEqual(graph_data['x_axis_vals'], ['', 'In 82 days', 'In 164 days', 'In 246 days'])
         self.assertListEqual([curve_line_val['y'] for curve_line_val in graph_data['curve_line_vals']], [50, 10, 50, 10, 50, 10])
 
         info.write({
@@ -922,7 +922,7 @@ class TestProcRule(TransactionCase):
         self.assertEqual(graph_data['daily_demand'], 4.29)
         self.assertEqual(graph_data['average_stock'], 30.0)
         self.assertEqual(graph_data['ordering_period'], 4.0)
-        self.assertListEqual(graph_data['x_axis_vals'], ['', 'In 4 day(s)', 'In 8 day(s)', 'In 12 day(s)'])
+        self.assertListEqual(graph_data['x_axis_vals'], ['', 'In 4 days', 'In 8 days', 'In 12 days'])
         self.assertListEqual([curve_line_val['y'] for curve_line_val in graph_data['curve_line_vals']], [40, 20, 40, 20, 40, 20])
 
         late_out_move = self.env['stock.move'].create({
@@ -939,7 +939,7 @@ class TestProcRule(TransactionCase):
         self.assertEqual(graph_data['daily_demand'], 8.57)
         self.assertEqual(graph_data['average_stock'], 30.0)
         self.assertEqual(graph_data['ordering_period'], 2.0)
-        self.assertListEqual(graph_data['x_axis_vals'], ['', 'In 2 day(s)', 'In 4 day(s)', 'In 6 day(s)'])
+        self.assertListEqual(graph_data['x_axis_vals'], ['', 'In 2 days', 'In 4 days', 'In 6 days'])
         self.assertListEqual([curve_line_val['y'] for curve_line_val in graph_data['curve_line_vals']], [40, 20, 40, 20, 40, 20])
 
     def test_get_rules_from_location_preserves_route(self):

@@ -388,7 +388,7 @@ class StockRule(models.Model):
             delays['total_delay'] += sum(delaying_rules.mapped('delay'))
             if not bypass_delay_description:
                 delay_description = [
-                    (_('Delay on %s', rule.name), _('+ %d day(s)', rule.delay))
+                    (_('Delay on %s', rule.name), _('+ %d days', rule.delay))
                     for rule in delaying_rules
                 ]
         # Check if there's a horizon set
@@ -399,7 +399,7 @@ class StockRule(models.Model):
         if global_horizon_days:
             delays['horizon_time'] += global_horizon_days
             if not bypass_delay_description:
-                delay_description.append((_('Time Horizon'), _('+ %d day(s)', global_horizon_days)))
+                delay_description.append((_('Time Horizon'), _('+ %d days', global_horizon_days)))
         return delays, delay_description
 
     @api.model

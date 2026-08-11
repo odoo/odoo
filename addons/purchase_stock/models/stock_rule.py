@@ -189,7 +189,7 @@ class StockRule(models.Model):
             delays['total_delay'] += 365
             delays['no_vendor_found_delay'] += 365
             if not bypass_delay_description:
-                delay_description.append((_('No Vendor Found'), _('+ %s day(s)', 365)))
+                delay_description.append((_('No Vendor Found'), _('+ %s days', 365)))
             return delays, delay_description
         buy_rule.ensure_one()
         if not self.env.context.get('ignore_vendor_lead_time'):
@@ -198,12 +198,12 @@ class StockRule(models.Model):
             delays['purchase_delay'] += supplier_delay
             if not bypass_delay_description:
                 delay_description.append((_('Receipt Date'), supplier_delay))
-                delay_description.append((_('Vendor Lead Time'), _('+ %d day(s)', supplier_delay)))
+                delay_description.append((_('Vendor Lead Time'), _('+ %d days', supplier_delay)))
         days_to_order = buy_rule.company_id.days_to_purchase
         delays['total_delay'] += days_to_order
         if not bypass_delay_description:
             delay_description.append((_('Order Deadline'), days_to_order))
-            delay_description.append((_('Days to Purchase'), _('+ %d day(s)', days_to_order)))
+            delay_description.append((_('Days to Purchase'), _('+ %d days', days_to_order)))
         return delays, delay_description
 
     @api.model

@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates id="template" xml:space="preserve">
     <div t-name="stock.leadDays">
-        <h2>Forecasted Date</h2>
-        <hr/>
+        <h2>Replenishment Time (<span t-out="this.jsonValue['lead_time']"/> days)</h2>
         <table t-if="this.jsonValue.lead_days_description" class="table table-borderless table-sm">
             <tbody>
                 <tr class="table-secondary">
@@ -34,9 +33,9 @@
                 <span class="pt-2">Average Stock: <span t-out="this.averageStock"/> <span t-out="this.productUomName"/></span>
             </h6>
             <h6 class="row text-muted">
-                <span t-if="!this.qtiesAreTheSame">Ordering Frequency: <span t-out="this.orderingPeriod"/> day(s)</span>
+                <span t-if="!this.qtiesAreTheSame">Ordering Frequency: <span t-out="this.orderingPeriod"/> days</span>
                 <span t-if="this.qtiesAreTheSame">Ordering Frequency: On demand</span>
-                <span class="pt-2">Lead Time: <span t-out="this.leadTime"/> day(s)</span>
+                <span class="pt-2">Lead Time: <span t-out="this.leadTime"/> days</span>
             </h6>
         </div>
     </div>
