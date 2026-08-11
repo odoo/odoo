@@ -925,6 +925,47 @@ export function useForwardRefsToParent(propName, getRefIdFn, ref) {
     new UseForwardRefsToParent(propName, getRefIdFn, ref);
 }
 
+const PROP_COMPUTED_SYM = Symbol("propComputed");
+const PROP_SIGNAL_SYM = Symbol("propSignal");
+const PROP_STATIC_SYM = Symbol("propStatic");
+
+/**
+ * @template S
+ * @typedef {{
+ *  [PROP_COMPUTED_SYM]: true,
+ *  shape: S,
+ * }} PropComputed_Extra
+ */
+
+/**
+ * @template S
+ * @typedef {import("@odoo/owl").ReactiveValue<import("@odoo/owl").StripBrands<S>>} PropComputed_Main
+ */
+
+/**
+ * @template S
+ * @typedef {PropComputed_Main<S> & PropComputed_Extra<S>} PropComputed
+ */
+
+/**
+ * @template S
+ * @typedef {{
+ *  [PROP_SIGNAL_SYM]: true,
+ *  optional: boolean,
+ *  shape: S,
+ * }} PropSignal_Extra
+ */
+
+/**
+ * @template S
+ * @typedef {import("@odoo/owl").ReactiveValue<import("@odoo/owl").StripBrands<S>>} PropSignal_Main
+ */
+
+/**
+ * @template S
+ * @typedef {PropSignal_Main<S> & PropSignal_Extra<S>} PropSignal
+ */
+
 /**
  * Single read-only signal derived from one plain-value prop. The result is a signal tracking prop
  * changes, but it is less efficient than `propSignal` as a prop change always triggers an
@@ -932,14 +973,15 @@ export function useForwardRefsToParent(propName, getRefIdFn, ref) {
  * is not possible to update all parents to pass signals.
  *
  * @template S
- * @param {string} name
  * @param {S} shape shape of the final value (e.g. `t.number()`)
- * @returns {import("@odoo/owl").ReactiveValue<import("@odoo/owl").StripBrands<S>>} the resulting
+ * @returns {PropComputed<S>} the resulting
  *   (read-only) signal, which always exists (never `undefined`), even when the prop is optional.
  */
-export function propComputed(name, shape) {
-    const rawProps = useProps({ [name]: shape });
-    return computed(() => rawProps[name]);
+export function propComputed(shape) {
+    return {
+        [PROP_COMPUTED_SYM]: true,
+        shape,
+    };
 }
 
 /**
@@ -948,13 +990,97 @@ export function propComputed(name, shape) {
  * may change).
  *
  * @template S
- * @param {string} name
  * @param {S} shape shape of the final value (e.g. `t.number()`)
  * @param {object} [options]
  * @param {boolean} [options.optional]
- * @returns {import("@odoo/owl").ReactiveValue<import("@odoo/owl").StripBrands<S>>}
+ * @returns {PropSignal<S>}
  */
-export function propSignal(name, shape, { optional = false } = {}) {
-    const type = t.signal(shape);
-    return useProps.static(name, optional ? type.optional() : type);
+export function propSignal(shape, { optional = false } = {}) {
+    return {
+        [PROP_SIGNAL_SYM]: true,
+        optional,
+        shape,
+    };
 }
+
+/**
+ * @template S
+ * @typedef {{
+ *  [PROP_STATIC_SYM]: true,
+ *  shape: S,
+ * }} PropStatic_Extra
+ */
+
+/**
+ * @template S
+ * @typedef {import("@odoo/owl").StripBrands<S>} PropStatic_Main
+ */
+
+/**
+ * @template S
+ * @typedef {PropStatic_Main<S> & PropStatic_Extra<S>} PropStatic
+ */
+
+/**
+ * Single static prop: a thin wrapper over `useProps.static` that lets a static prop be declared as
+ * part of a `usePropsPlus({...})` shape instead of a separate `useProps.static(name, shape)` call.
+ * The value is read once (dev mode asserts it never changes across re-renders).
+ *
+ * @template S
+ * @param {S} shape shape of the prop (e.g. `t.function([])`)
+ * @returns {PropStatic<S>} the resulting value, read directly (no signal/computed call needed).
+ */
+export function propStatic(shape) {
+    return {
+        [PROP_STATIC_SYM]: true,
+        shape,
+    };
+}
+
+/** @type {import("@odoo/owl").PropsFunction} */
+export const usePropsPlus = (shape) => {
+    const usePropsObj = {};
+    /** @type {Object<string, PropComputed<Object>>} */
+    const usePropsComputed = {};
+    /** @type {Object<string, PropSignal<Object>>} */
+    const usePropsSignal = {};
+    /** @type {Object<string, PropStatic<Object>>} */
+    const usePropsStatic = {};
+
+    for (const [key, shapeItem] of Object.entries(shape)) {
+        if (shapeItem && typeof shapeItem === "object") {
+            if (PROP_COMPUTED_SYM in shapeItem) {
+                usePropsComputed[key] = shapeItem;
+            } else if (PROP_SIGNAL_SYM in shapeItem) {
+                usePropsSignal[key] = shapeItem;
+            } else if (PROP_STATIC_SYM in shapeItem) {
+                usePropsStatic[key] = shapeItem;
+            } else {
+                usePropsObj[key] = shapeItem;
+            }
+        } else {
+            usePropsObj[key] = shapeItem;
+        }
+    }
+    const result = useProps(usePropsObj);
+    const propsComputedObj = Object.fromEntries(
+        Object.entries(usePropsComputed).map(([propName, pComputed]) => {
+            const localProps = useProps({ [propName]: pComputed.shape });
+            return [propName, computed(() => localProps[propName])];
+        })
+    );
+    const propsSignalObj = Object.fromEntries(
+        Object.entries(usePropsSignal).map(([propName, pSignal]) => {
+            const type = t.signal(pSignal.shape);
+            return [propName, useProps.static(propName, pSignal.optional ? type.optional() : type)];
+        })
+    );
+    const propsStaticObj = Object.fromEntries(
+        Object.entries(usePropsStatic).map(([propName, pStatic]) => [
+            propName,
+            useProps.static(propName, pStatic.shape),
+        ])
+    );
+    Object.assign(result, propsComputedObj, propsSignalObj, propsStaticObj);
+    return result;
+};

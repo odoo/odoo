@@ -2,22 +2,22 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.Composer">
-    <t t-set="isChatterComposer" t-value="this.extended and !this.props.composer.message"/>
+    <t t-set="isChatterComposer" t-value="this.extended and !this.props.composer().message"/>
     <t t-set="partitionedActions" t-value="this.composerActions.partition"/>
     <t t-set="actionsContainerClass" t-value="'o-mail-Composer-actions d-flex o-rounded-bubble flex-shrink-0'"/>
     <div class="d-print-none" t-ref="this.rootRef">
         <div class="o-mail-Composer d-grid flex-shrink-0 pt-0 position-relative"
                 t-att-class="{
-                    'pb-2': this.extended and !this.props.composer.message,
+                    'pb-2': this.extended and !this.props.composer().message,
                     'o-extended': this.extended,
                     'o-isUiSmall': this.ui.isSmall,
                     'ps-2 pe-4 pb-2': this.normal and !this.env.inDiscussApp and !this.env.inMeetingView,
                     'ps-0 pe-3 pb-2': this.normal and this.env.inMeetingView,
                     'o-hasSelfAvatar': this.showComposerAvatar,
-                    'o-focused': this.props.composer.isFocused,
-                    'o-editing': this.props.composer.message,
+                    'o-focused': this.props.composer().isFocused,
+                    'o-editing': this.props.composer().message,
                     'o-chatWindow mx-2 my-1': this.env.inChatWindow,
-                    'mb-2': this.env.inChatWindow and !this.props.composer.message,
+                    'mb-2': this.env.inChatWindow and !this.props.composer().message,
                     'o-discussApp pt-1 ps-2 pe-4 o-pb-2_5': this.env.inDiscussApp,
                     'o-disabled': this.props.disabled,
                 }" t-attf-class="{{ this.props.className }}">
@@ -30,28 +30,28 @@
                 <img class="o-mail-Composer-avatar mx-auto o_avatar rounded-3" t-att-src="(this.thread?.effectiveSelf or this.message.effectiveSelf).avatarUrl" alt="Avatar of user"/>
             </div>
             <div class="o-mail-Composer-coreHeader min-w-0">
-                <div t-if="this.props.composer.replyToMessage" class="text-truncate small p-2">
-                    <span class="cursor-pointer" t-on-click="() => this.env.messageHighlight?.highlightMessage(this.props.composer.replyToMessage)">
-                        Replying to <b t-out="this.props.composer.replyToMessage.authorName"/>
+                <div t-if="this.props.composer().replyToMessage" class="text-truncate small p-2">
+                    <span class="cursor-pointer" t-on-click="() => this.env.messageHighlight?.highlightMessage(this.props.composer().replyToMessage)">
+                        Replying to <b t-out="this.props.composer().replyToMessage.authorName"/>
                     </span>
-                    <span t-if="this.props.composer.replyToMessage.thread?.notEq(this.props.composer.thread)">
-                        on: <b><t t-out="this.props.composer.replyToMessage.thread.displayName"/></b>
+                    <span t-if="this.props.composer().replyToMessage.thread?.notEq(this.props.composer().thread)">
+                        on: <b><t t-out="this.props.composer().replyToMessage.thread.displayName"/></b>
                     </span>
-                    <i class="oi oi-lg oi-filled rounded-circle p-0 ms-1 cursor-pointer" data-icon="cancel" title="Discard" t-on-click="() => (this.props.composer.replyToMessage = undefined)"/>
+                    <i class="oi oi-lg oi-filled rounded-circle p-0 ms-1 cursor-pointer" data-icon="cancel" title="Discard" t-on-click="() => (this.props.composer().replyToMessage = undefined)"/>
                 </div>
-                <span t-if="this.props.composer.message and this.ui.isSmall" class="px-1" t-on-click="this.onClickCancelOrSaveEditText">
+                <span t-if="this.props.composer().message and this.ui.isSmall" class="px-1" t-on-click="this.onClickCancelOrSaveEditText">
                     <button class="btn btn-sm btn-secondary rounded-pill border border-secondary ps-1 pe-2 py-0 mb-1" t-att-data-type="this.EDIT_CLICK_TYPE.CANCEL">
                         <i class="oi pe-2" data-icon="close_small" t-att-data-type="this.EDIT_CLICK_TYPE.CANCEL"></i>
                         Discard editing
                     </button>
                 </span>
             </div>
-            <div class="o-mail-Composer-coreMain min-w-0 d-flex flex-nowrap align-items-start flex-grow-1" t-att-class="{ 'flex-column' : this.extended or this.props.composer.message }">
+            <div class="o-mail-Composer-coreMain min-w-0 d-flex flex-nowrap align-items-start flex-grow-1" t-att-class="{ 'flex-column' : this.extended or this.props.composer().message }">
                 <div class="o-mail-Composer-inputContainer o-mail-Composer-bg d-flex flex-grow-1 min-w-0 overflow-x-hidden border o-rounded-bubble"
                     t-att-class="{
                         'o-iosPwa': this.isIosPwa,
                         'align-self-stretch' : this.extended,
-                        'w-100': this.props.composer.message,
+                        'w-100': this.props.composer().message,
                     }"
                     t-ref="this.inputContainerRef"
                 >
@@ -63,7 +63,7 @@
                             'o-mail-Composer-inputStyle form-control border-0 o-rounded-bubble': true,
                             'o-mobile': this.isMobileOS,
                             'ps-2': partitionedActions.other.length === 0,
-                            'text-muted': this.props.composer.restoredFromFullComposer,
+                            'text-muted': this.props.composer().restoredFromFullComposer,
                         }"/>
                         <Wysiwyg t-if="this.composerService.htmlEnabled" class="'w-100 min-w-0 text-break overflow-auto'" config="this.wysiwygConfig" onLoad.bind="this.onLoadWysiwyg"/>
                         <t t-else="">
@@ -75,11 +75,11 @@
                                 t-on-focusout="this.onFocusout"
                                 t-on-click="(ev) => this.markEventHandled(ev, 'composer.onClickTextarea')"
                                 t-on-paste="this.onPaste"
-                                t-model.proxy="this.props.composer.composerText"
+                                t-model.proxy="this.props.composer().composerText"
                                 t-on-input="(ev) => this.onInput(ev)"
                                 t-att-placeholder="this.placeholder"
-                                t-att-readOnly="!this.state.active or this.props.composer.restoredFromFullComposer"
-                                t-att-disabled="this.props.disabled or this.props.composer.restoredFromFullComposer"
+                                t-att-readOnly="!this.state.active or this.props.composer().restoredFromFullComposer"
+                                t-att-disabled="this.props.disabled or this.props.composer().restoredFromFullComposer"
                                 tabindex="0"
                             />
                             <!--
@@ -90,7 +90,7 @@
                             <textarea
                                 class="o-mail-Composer-fake position-absolute overflow-hidden"
                                 t-att-class="inputClasses"
-                                t-att-value="this.props.composer.composerText"
+                                t-att-value="this.props.composer().composerText"
                                 t-ref="this.fakeTextarea"
                                 disabled="1"
                             />
@@ -101,10 +101,10 @@
             </div>
             <div class="o-mail-Composer-footer min-w-0 overflow-auto o-scrollbar-thin">
                 <AttachmentList
-                    t-if="this.props.composer.attachments.length > 0"
-                    attachments="this.props.composer.attachments"
+                    t-if="this.props.composer().attachments.length > 0"
+                    attachments="this.props.composer().attachments"
                     unlinkAttachment.bind="this.unlinkAttachment"/>
-                <div t-if="!this.extended and !this.props.composer.message" class="o-mail-Composer-pickerContainer" t-att-class="{ 'o-active': this.composerActions.activeAction and this.ui.isSmall }" t-ref="this.pickerContainerRef">
+                <div t-if="!this.extended and !this.props.composer().message" class="o-mail-Composer-pickerContainer" t-att-class="{ 'o-active': this.composerActions.activeAction and this.ui.isSmall }" t-ref="this.pickerContainerRef">
                     <div t-if="partitionedActions.actionPanels.length > 1 and this.composerActions.activeAction and this.ui.isSmall" class="btn-group w-100">
                         <button t-foreach="partitionedActions.actionPanels" t-as="action" t-key="'ACTION_PANEL_' + action.id" class="btn btn-secondary" t-out="action.actionPanelName" t-on-click="(ev) => action.onSelected(ev)" t-att-class="{
                             'active': action.isActive
@@ -115,15 +115,15 @@
                     </div>
                 </div>
                 <div t-else="" class="d-flex align-items-center gap-1 w-100 pe-1">
-                    <div class="pt-1" t-att-class="{ 'mt-2': !this.props.composer.message }">
-                        <span t-if="this.props.composer.message and !this.ui.isSmall" class="text-muted px-1 small" t-out="this.CANCEL_OR_SAVE_EDIT_TEXT" t-on-click="this.onClickCancelOrSaveEditText" />
-                        <t t-elif="!this.props.composer.message and !this.props.composer.restoredFromFullComposer">
+                    <div class="pt-1" t-att-class="{ 'mt-2': !this.props.composer().message }">
+                        <span t-if="this.props.composer().message and !this.ui.isSmall" class="text-muted px-1 small" t-out="this.CANCEL_OR_SAVE_EDIT_TEXT" t-on-click="this.onClickCancelOrSaveEditText" />
+                        <t t-elif="!this.props.composer().message and !this.props.composer().restoredFromFullComposer">
                             <t t-call="mail.Composer.sendButton"/>
                             <span t-if="!this.isSendButtonDisabled and !this.isMobileOS" class="text-muted small ms-1" t-out="this.OR_PRESS_SEND_KEYBIND"/>
                         </t>
                     </div>
                     <span class="flex-grow-1"/>
-                    <t t-if="!this.props.composer.message" t-call="mail.Composer.extraActions"/>
+                    <t t-if="!this.props.composer().message" t-call="mail.Composer.extraActions"/>
                 </div>
             </div>
         </div>
@@ -137,8 +137,8 @@
             'btn-primary btn-sm': this.extended,
             'btn-link rounded-circle p-0': !this.extended,
             'me-2': this.env.inDiscussApp,
-            'border-start-0': this.env.inDiscussApp and !this.props.composer.message,
-            'border-0': this.props.composer.message,
+            'border-start-0': this.env.inDiscussApp and !this.props.composer().message,
+            'border-0': this.props.composer().message,
         }"
         t-on-click="this.sendMessage"
         t-att-disabled="this.isSendButtonDisabled"

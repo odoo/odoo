@@ -1,9 +1,10 @@
 import { CALL_ICON_DEAFEN, CALL_ICON_MUTED } from "@mail/discuss/call/common/call_actions";
 import { TalkingAudioBars } from "@mail/discuss/call/common/talking_audio_bars";
 import { AvatarStack } from "@mail/discuss/core/common/avatar_stack";
+import { propStatic, usePropsPlus } from "@mail/utils/common/hooks";
 import { toggleFn } from "@mail/utils/common/signal";
 
-import { Component, computed, signal, t, useEffect, useProps } from "@odoo/owl";
+import { Component, computed, signal, t, useEffect } from "@odoo/owl";
 
 import { localeCompare } from "@web/core/l10n/utils/collation";
 import { _t } from "@web/core/l10n/translation";
@@ -20,20 +21,24 @@ export class MessagingMenuCallParticipants extends Component {
     personas = computed(() =>
         this.sessions.map((session) => session.channel_member_id?.persona).filter(Boolean)
     );
-    selfInCall = computed(() => Boolean(this.rtc.selfSession?.in(this.channel.rtc_session_ids)));
+    selfInCall = computed(() =>
+        Boolean(this.rtc.selfSession?.in(this.props.channel.rtc_session_ids))
+    );
 
     setup() {
         super.setup();
         this.store = useService("mail.store");
         this.rtc = useService("discuss.rtc");
-        this.channel = useProps.static("channel", t.instanceOf(this.store["discuss.channel"]));
+        this.props = usePropsPlus({
+            channel: propStatic(t.instanceOf(this.store["discuss.channel"])),
+        });
         useEffect(() => {
             this.expanded.set(this.selfInCall());
         });
     }
 
     get sessions() {
-        const sessions = [...this.channel.rtc_session_ids];
+        const sessions = [...this.props.channel.rtc_session_ids];
         return sessions.sort((s1, s2) => {
             const nameDiff = localeCompare(s1.name, s2.name);
             if (nameDiff !== 0) {

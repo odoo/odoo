@@ -64,15 +64,15 @@ export class AttendeeCalendarActivityListPopoverItem extends ActivityListPopover
     }
 
     get hasViewMeetingButton() {
-        return this.activity().calendar_event_id;
+        return this.props.activity().calendar_event_id;
     }
 
     /**
      * Remove the activity from the list when marking it as done.
      */
     onClickDone() {
-        this.activity().remove();
-        this.calendarProps.onRemoveActivityItem(this.activity().id);
+        this.props.activity().remove();
+        this.calendarProps.onRemoveActivityItem(this.props.activity().id);
     }
 
     /**
@@ -82,7 +82,7 @@ export class AttendeeCalendarActivityListPopoverItem extends ActivityListPopover
      */
     async onClickOpenRelatedRecord(ev, isMiddleClick) {
         const action = await this.orm.call("mail.activity", "action_open_document", [
-            this.activity().id,
+            this.props.activity().id,
         ]);
         this.action.doAction(action, {
             newWindow: isMiddleClick,
@@ -94,7 +94,7 @@ export class AttendeeCalendarActivityListPopoverItem extends ActivityListPopover
      * (i.e. when an activity of type Document is marked as done).
      */
     async onFileUploaded(data) {
-        const activity = this.activity();
+        const activity = this.props.activity();
         await super.onFileUploaded(data);
         activity.remove();
         this.calendarProps.onRemoveActivityItem(activity.id);
@@ -106,10 +106,10 @@ export class AttendeeCalendarActivityListPopoverItem extends ActivityListPopover
      */
     onRescheduleActivity(targetDay) {
         // Do nothing if rescheduled on same date.
-        if (targetDay.day.hasSame(this.activity().date_deadline, "day")) {
+        if (targetDay.day.hasSame(this.props.activity().date_deadline, "day")) {
             return;
         }
-        const activity = this.activity();
+        const activity = this.props.activity();
         this.action.doActionButton({
             type: "object",
             name: targetDay.actionName,
@@ -118,7 +118,7 @@ export class AttendeeCalendarActivityListPopoverItem extends ActivityListPopover
             onClose: () => {
                 activity.remove();
                 this.calendarProps.onRemoveActivityItem(activity.id);
-                this.onActivityChanged?.();
+                this.props.onActivityChanged?.();
             },
         });
     }

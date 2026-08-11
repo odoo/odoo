@@ -1,17 +1,19 @@
-import { Component, onMounted, signal, types, useProps, xml } from "@odoo/owl";
+import { propStatic, usePropsPlus } from "@mail/utils/common/hooks";
+
+import { Component, onMounted, signal, types, xml } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 
 const mainComponents = registry.category("main_components");
 
 export class ConvertInlineContainer extends Component {
-    static template = xml`<div class="o-convert-inline" t-ref="this.rootRef"/>`;
+    static template = xml`<div class="o-convert-inline" t-ref="this.props.rootRef"/>`;
 
     setup() {
-        this.props = useProps({
+        this.props = usePropsPlus({
             onMounted: types.function([]),
+            /** Root element, owned by the service and bound here with `t-ref`. */
+            rootRef: propStatic(types.signal(types.instanceOf(HTMLDivElement))),
         });
-        /** Root element, owned by the service and bound here with `t-ref`. */
-        this.rootRef = useProps.static("rootRef", types.signal(types.instanceOf(HTMLDivElement)));
         onMounted(() => {
             this.props.onMounted();
         });

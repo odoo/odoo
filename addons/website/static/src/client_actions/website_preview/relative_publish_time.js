@@ -1,21 +1,21 @@
 import { render } from "@web/owl2/utils";
 import { RelativeTime } from "@mail/core/common/relative_time";
+import { propComputed } from "@mail/utils/common/hooks";
 import { _t } from "@web/core/l10n/translation";
+
+import { t, types } from "@odoo/owl";
 
 const MINUTE = 60 * 1000;
 const HOUR = 60 * MINUTE;
 
 export class RelativePublishTime extends RelativeTime {
-    static props = {
-        datetime: {
-            type: Object,
-            optional: true,
-        },
-        negativeDeltaCallback: {
-            type: Function,
-            optional: true,
-        },
-    };
+    getPropsDefinition() {
+        return {
+            ...super.getPropsDefinition(...arguments),
+            datetime: propComputed(types.instanceOf(luxon.DateTime).optional()),
+            negativeDeltaCallback: t.function([]).optional(),
+        };
+    }
 
     computeRelativeTime(datetime) {
         if (this.timeout) {
@@ -50,7 +50,7 @@ export class RelativePublishTime extends RelativeTime {
         const updateDelay = delta < HOUR ? MINUTE : HOUR;
 
         this.timeout = setTimeout(() => {
-            this.computeRelativeTime(this.props.datetime ?? datetime);
+            this.computeRelativeTime(this.props.datetime() ?? datetime);
             render(this);
         }, updateDelay);
     }

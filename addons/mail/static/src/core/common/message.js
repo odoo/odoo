@@ -14,7 +14,7 @@ import { PollResult } from "@mail/core/common/poll_result";
 import { RelativeTime } from "@mail/core/common/relative_time";
 import { htmlToTextContentInline } from "@mail/utils/common/format";
 
-import { Component, computed, proxy, signal, t, untrack, useApp, useProps } from "@odoo/owl";
+import { Component, computed, proxy, signal, t, untrack, useApp } from "@odoo/owl";
 import { MessageSearchState } from "@mail/core/common/message_search_hook";
 
 import { isMobileOS } from "@web/core/browser/feature_detection";
@@ -31,6 +31,8 @@ import { discussComponentRegistry } from "./discuss_component_registry";
 import { NotificationMessage } from "./notification_message";
 import {
     MessageSelectionState,
+    propStatic,
+    usePropsPlus,
     useForwardRefsToParent,
     useLongPress,
 } from "@mail/utils/common/hooks";
@@ -79,7 +81,7 @@ export class Message extends Component {
         super.setup();
         this.nbsp = nbsp;
         this.store = useService("mail.store");
-        this.props = useProps({
+        this.props = usePropsPlus({
             className: t.string().optional(),
             hasActions: t.boolean().optional(true),
             isFirstMessage: t.boolean().optional(),
@@ -88,15 +90,12 @@ export class Message extends Component {
             messageRefs: t.instanceOf(Map).optional(),
             messageSearch: t.instanceOf(MessageSearchState).optional(),
             messageSelection: t.instanceOf(MessageSelectionState).optional(),
+            onParentMessageClick: propStatic(onParentMessageClickType(this.store).optional()),
             previousMessage: t.instanceOf(this.store["mail.message"]).optional(),
             showDates: t.boolean().optional(true),
             squashed: t.boolean().optional(),
             thread: t.instanceOf(this.store["mail.thread"]).optional(),
         });
-        this.onParentMessageClick = useProps.static(
-            "onParentMessageClick",
-            onParentMessageClickType(this.store).optional()
-        );
         this.popover = usePopover(this.constructor.components.Popover, { position: "top" });
         this.state = proxy({
             isHovered: false,

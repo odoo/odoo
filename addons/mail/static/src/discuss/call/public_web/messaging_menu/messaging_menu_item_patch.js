@@ -8,7 +8,7 @@ MessagingMenuItem.components = { ...MessagingMenuItem.components, MessagingMenuC
 /** @type {MessagingMenuItem} */
 const messagingMenuItemPatch = {
     get attClass() {
-        return { ...super.attClass, "o-my-0_5": this.channel?.hasRtcSessionActive };
+        return { ...super.attClass, "o-my-0_5": this.props.channel?.hasRtcSessionActive };
     },
 };
 patch(MessagingMenuItem.prototype, messagingMenuItemPatch);

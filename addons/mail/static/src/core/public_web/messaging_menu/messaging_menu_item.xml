@@ -8,9 +8,9 @@
             <t t-set-slot="name">
                 <div class="o-mail-MessagingMenuItem-name d-flex text-nowrap">
                     <t name="itemNameBefore">
-                        <Priority t-if="this.message?.thread?.priority" thread="this.message?.thread"/>
+                        <Priority t-if="this.props.message?.thread?.priority" thread="this.props.message?.thread"/>
                     </t>
-                    <t name="itemName"><span t-att-class="{'ms-1': this.message?.thread?.priority}" class="text-truncate" t-out="this.itemName"/></t>
+                    <t name="itemName"><span t-att-class="{'ms-1': this.props.message?.thread?.priority}" class="text-truncate" t-out="this.itemName"/></t>
                 </div>
             </t>
             <t t-set-slot="name-after"/>

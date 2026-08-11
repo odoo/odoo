@@ -85,7 +85,7 @@
                                                 'o-green': this.message.bubbleColor === 'green',
                                                 'o-orange': this.message.bubbleColor === 'orange',
                                             }"/>
-                                            <MessageInReply t-if="this.message.parent_id" class="'mx-2 p-1 pb-0 ' + (this.showTextVisually ? 'mt-1' : 'my-1')" message="this.message" onClick="this.onParentMessageClick"/>
+                                            <MessageInReply t-if="this.message.parent_id" class="'mx-2 p-1 pb-0 ' + (this.showTextVisually ? 'mt-1' : 'my-1')" message="this.message" onClick="this.props.onParentMessageClick"/>
                                             <div class="position-relative text-break o-mail-Message-body" t-att-class="this.bodyAttClass" t-ref="this.messageBody">
                                                 <i t-if="this.message.isEmpty" class="text-muted opacity-75" t-out="this.message.inlineBody"/>
                                                 <Composer t-elif="this.isEditing" autofocus="true" composer="this.message.composer" dropzoneRef="this.messageBody" onDiscardCallback.bind="this.exitEditMode" onPostCallback.bind="this.exitEditMode" mode="'compact'" sidebar="false"/>
