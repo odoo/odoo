@@ -154,6 +154,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
         if (registry := cls.registries.get(db_name)) and not registry.ready:
             raise Exception('Registry for database %s can not be loaded recursively' % db_name)
 
+        from odoo.http.requestlib import borrow_request, request  # noqa: PLC0415
         from odoo.modules import db  # noqa: PLC0415
         from odoo.modules.loading import load_modules, reset_modules_state  # noqa: PLC0415
 
@@ -215,6 +216,8 @@ class Registry(Mapping[str, type["BaseModel"]]):
                     new_db_demo = config['with_demo']
                 if first_registry and not update_module:
                     exit_stack.enter_context(gc.disabling_gc())
+                if request:
+                    exit_stack.enter_context(borrow_request())
                 retries = 5 if update_module else 1
                 for _ in range(retries):
                     # load_modules multiple times in case there are modules to be uninstalled
