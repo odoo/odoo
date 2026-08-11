@@ -722,6 +722,10 @@ test("[text composer] Opening thread with needaction messages should mark all me
     pyEnv["res.users"].write(serverState.userId, { notification_type: "inbox" });
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    pyEnv["mail.message"].create([
+        { body: "Hello", model: "discuss.channel", res_id: channelId },
+        { body: "World", model: "discuss.channel", res_id: channelId },
+    ]);
     onRpc("mail.message", "mark_all_as_read", ({ args }) => {
         asyncStep("mark-all-messages-as-read");
         expect(args[0]).toEqual([
@@ -729,26 +733,13 @@ test("[text composer] Opening thread with needaction messages should mark all me
             ["res_id", "=", channelId],
         ]);
     });
-    const helloMessageId = pyEnv["mail.message"].create({
-        body: "Hello there!",
-        model: "discuss.channel",
-        res_id: channelId,
-        author_id: partnerId,
-    });
-    // Mark the pre-existing message as read: otherwise reopening the channel
-    // reloads it around the 0 separator, and that /discuss/channel/messages
-    // fetch marks the needaction message as read (set_message_done) instead of
-    // the tested `mark_all_as_read` flow, racing (and losing to) the assertion.
-    const [selfMember] = pyEnv["discuss.channel.member"].search_read([
-        ["partner_id", "=", serverState.partnerId],
-        ["channel_id", "=", channelId],
-    ]);
-    pyEnv["discuss.channel.member"].write([selfMember.id], {
-        new_message_separator: helloMessageId + 1,
-    });
+    onRpcBefore("/discuss/channel/messages", (args) =>
+        asyncStep(`load messages - ${args["channel_id"]}`)
+    );
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-Message", { text: "Hello there!" });
+    await contains(".o-mail-Message", { count: 2 });
+    await waitForSteps([`load messages - ${channelId}`]);
     await contains("button", { text: "Inbox", contains: [".badge", { count: 0 }] });
     await contains(".o-mail-Composer-input");
     await triggerEvents(".o-mail-Composer-input", ["blur", "focusout"]);
@@ -789,6 +780,10 @@ test("Opening thread with needaction messages should mark all messages of thread
     pyEnv["res.users"].write(serverState.userId, { notification_type: "inbox" });
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    pyEnv["mail.message"].create([
+        { body: "Hello", model: "discuss.channel", res_id: channelId },
+        { body: "World", model: "discuss.channel", res_id: channelId },
+    ]);
     onRpc("mail.message", "mark_all_as_read", ({ args }) => {
         asyncStep("mark-all-messages-as-read");
         expect(args[0]).toEqual([
@@ -796,10 +791,15 @@ test("Opening thread with needaction messages should mark all messages of thread
             ["res_id", "=", channelId],
         ]);
     });
+    onRpcBefore("/discuss/channel/messages", (args) =>
+        asyncStep(`load messages - ${args["channel_id"]}`)
+    );
     await start();
     const composerService = getService("mail.composer");
     composerService.setHtmlComposer();
     await openDiscuss(channelId);
+    await contains(".o-mail-Message", { count: 2 });
+    await waitForSteps([`load messages - ${channelId}`]);
     await contains(".o-mail-Composer-html.odoo-editor-editable");
     await triggerEvents(".o-mail-Composer-html.odoo-editor-editable", ["blur", "focusout"]);
     await click("button", { text: "Inbox" });
