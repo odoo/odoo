@@ -438,7 +438,7 @@ class TestMrpByProduct(common.TransactionCase):
         mo_form = Form(mo)
         mo_form.qty_producing = 1
         mo = mo_form.save()
-        self.assertEqual(mo.state, 'to_close')
+        self.assertEqual(mo.state, 'confirmed')
         mo.button_mark_done()
         self.assertEqual(mo.state, 'done')
 

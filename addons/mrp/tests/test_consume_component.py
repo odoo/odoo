@@ -441,6 +441,7 @@ class TestConsumeComponent(TestConsumeComponentCommon):
         self.assertRecordValues(mo.move_raw_ids, [
             {'should_consume_qty': 1.0, 'quantity': 1.0, 'picked': False},
         ])
+        mo.action_start()
         move = self.env['stock.move'].create({
             'product_id': compo2.id,
             'raw_material_production_id': mo.id,
@@ -490,6 +491,7 @@ class TestConsumeComponent(TestConsumeComponentCommon):
             'bom_id': False,
         })
         mo.action_confirm()
+        mo.action_start()
         sn = self.env['stock.lot'].create({'product_id': self.raw_serial.id, 'name': 'SN0013'})
         self.env['stock.quant']._update_available_quantity(self.raw_serial, mo.warehouse_id.lot_stock_id, 1, lot_id=sn)
         mo.action_generate_serial()

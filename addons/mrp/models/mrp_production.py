@@ -583,17 +583,16 @@ class MrpProduction(models.Model):
             production.finished_move_line_ids = production.move_finished_ids.mapped('move_line_ids')
 
     @api.depends(
-        'move_raw_ids.state', 'move_raw_ids.quantity', 'move_finished_ids.state',
-        'workorder_ids.state', 'product_qty', 'qty_producing', 'move_raw_ids.picked')
+        'move_raw_ids.state', 'move_finished_ids.state',
+        'workorder_ids.state', 'move_raw_ids.picked')
     def _compute_state(self):
         """ Compute the production state. This uses a similar process to stock
         picking, but has been adapted to support having no moves. This adaption
         includes some state changes outside of this compute.
 
         There exist 3 extra steps for production:
-        - progress: At least one item is produced or consumed.
-        - to_close: The quantity produced is greater than the quantity to
-        produce and all work orders has been finished.
+        - progress: At least one item(component) is consumed, or at least one work order is either in_progress or done.
+        - to_close: All work orders are either Finished or Cancelled.
         """
         for production in self:
             if not production.state or not production.uom_id or not (production.id or production._origin.id):
@@ -608,11 +607,8 @@ class MrpProduction(models.Model):
                 production.state = 'done'
             elif production.workorder_ids and all(wo_state in ('done', 'cancel') for wo_state in production.workorder_ids.mapped('state')):
                 production.state = 'to_close'
-            elif not production.workorder_ids and production.uom_id.compare(production.qty_producing, production.product_qty) >= 0:
-                production.state = 'to_close'
             elif (
                 any(wo_state in ('progress', 'done') for wo_state in production.workorder_ids.mapped('state'))
-                or production.uom_id and not production.uom_id.is_zero(production.qty_producing)
                 or any(production.move_raw_ids.mapped('picked'))
             ):
                 production.state = 'progress'
@@ -985,8 +981,6 @@ class MrpProduction(models.Model):
     def _change_producing(self):
         if self.state in ['draft', 'cancel'] or (self.state == 'done' and self.is_locked):
             return False
-        if self.state not in ('progress', 'done'):
-            self.state = 'progress'
         if self.product_tracking == 'serial' and self.lot_producing_ids and float_is_zero(self.qty_producing, precision_digits=0):
             self.qty_producing = len(self.lot_producing_ids)
         productions_bypass_qty_producting = self.filtered(lambda p: p.lot_producing_ids and p.product_tracking == 'lot' and p._origin and p._origin.qty_producing == p.qty_producing)
@@ -1735,10 +1729,7 @@ class MrpProduction(models.Model):
 
     def _link_workorders_and_moves(self):
         self.ensure_one()
-        if not self.workorder_ids:
-            return
         workorder_per_operation = {workorder.operation_id: workorder for workorder in self.workorder_ids}
-        workorder_boms = self.workorder_ids.operation_id.bom_id
         last_workorder_per_bom = defaultdict(lambda: self.env['mrp.workorder'])
         self.allow_workorder_dependencies = self.bom_id.allow_operation_dependencies
 
@@ -1774,13 +1765,24 @@ class MrpProduction(models.Model):
 
     def button_plan(self, as_soon_as_possible=True):
         """ Create work orders. And probably do stuff, like things. """
+        skip_orders_count = 0
         for order in self:
-            if order.is_planned:
+            if order.is_planned or not order._has_workorders():
+                skip_orders_count += 1
                 continue
             if as_soon_as_possible:
                 order.date_start = fields.Datetime.now()
             order._plan_workorders()
             order.message_post(body=self.env._("The manufacturing order has been planned."), subtype_id=self.env.ref('mrp.mt_mo_state').id)
+        if skip_orders_count == len(self):
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'message': self.env._("This MO cannot be planned because it has no Work Orders to Plan."),
+                    'type': 'warning',
+                },
+            }
         return True
 
     def _plan_workorders(self):
@@ -1788,10 +1790,6 @@ class MrpProduction(models.Model):
         work schedule.
         """
         self.ensure_one()
-
-        if not self.workorder_ids:
-            self.is_planned = True
-            return
 
         self._link_workorders_and_moves()
 
@@ -1802,8 +1800,9 @@ class MrpProduction(models.Model):
         )._action_plan(from_date=self.date_start)
 
     def button_unplan(self):
-        self._unplan_workorders()
-        for order in self:
+        orders_to_unplan = self.filtered(lambda order: order.is_planned)
+        orders_to_unplan._unplan_workorders()
+        for order in orders_to_unplan:
             if order.previous_date_start:
                 order.date_start = order.previous_date_start
             order.message_post(body=self.env._("The manufacturing order has been unplanned."))
@@ -2615,7 +2614,7 @@ class MrpProduction(models.Model):
             action['res_id'] = wizard.id
             return action
         else:
-            if self.state not in ('draft', 'confirmed'):
+            if self.state not in ('draft', 'confirmed') or self.qty_producing > 0:
                 if self.qty_producing <= 0:
                     raise UserError(_("Please specify a quantity greater than 0."))
                 if self.qty_producing >= self.product_qty:
