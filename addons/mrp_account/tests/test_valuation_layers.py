@@ -401,7 +401,8 @@ class TestMrpValuationStandard(TestBomPriceCommon):
 
         super_product = super_product.with_context(allowed_company_ids=(company_1 + company_2).ids)
         self.assertEqual(super_product.total_value, 500)
-        self.assertEqual(super_product.qty_available, 10)
+        # component product has zero quantity
+        self.assertEqual(super_product.qty_available, 0)
 
     def test_validate_branch_mo_with_main_company_component(self):
         """

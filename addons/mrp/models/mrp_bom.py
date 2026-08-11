@@ -374,7 +374,7 @@ class MrpBom(models.Model):
             )
         ) & Domain('active', '=', True)
         if company_id or self.env.context.get('company_id'):
-            domain &= Domain('company_id', 'in', [False, company_id or self.env.context.get('company_id')])
+            domain &= Domain('company_id', '=', False) | Domain('company_id', 'in', company_id or self.env.context.get('company_id'))
         if picking_type:
             domain &= Domain('picking_type_id', 'in', [picking_type.id, False])
         if bom_type:
