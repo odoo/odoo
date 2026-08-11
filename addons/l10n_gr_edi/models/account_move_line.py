@@ -165,7 +165,7 @@ class AccountMoveLine(models.Model):
                 'noupdate': True,
             }])
 
-        return preferred_id
+        return preferred_id.filtered_domain(domain)
 
     @api.depends(
         'move_id.l10n_gr_edi_inv_type',
