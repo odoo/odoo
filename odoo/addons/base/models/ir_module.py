@@ -164,6 +164,8 @@ class IrModuleModule(models.Model):
     _description = "Module"
     _order = 'application desc,sequence,name'
     _allow_sudo_commands = False
+    _clear_cache_name = 'stable'      # cache to clear on create/write/update
+    _clear_cache_on_fields = ('name', 'state')
 
     @classmethod
     def get_module_info(cls, name):
@@ -338,12 +340,6 @@ class IrModuleModule(models.Model):
         for module in self:
             if module.state in ('installed', 'to upgrade', 'to remove', 'to install'):
                 raise UserError(_('You are trying to remove a module that is installed or will be installed.'))
-
-    def unlink(self):
-        res = super().unlink()
-        if self:
-            self.env.transaction.invalidate_ormcache('stable')
-        return res
 
     def _get_modules_to_load_domain(self):
         """ Domain to retrieve the modules that should be loaded by the registry. """
@@ -791,7 +787,6 @@ class IrModuleModule(models.Model):
             'noupdate': True,
         } for module in modules]
         self.env['ir.model.data'].create(module_metadata_list)
-        self.env.transaction.invalidate_ormcache('stable')
         return modules
 
     # update the list of available packages
