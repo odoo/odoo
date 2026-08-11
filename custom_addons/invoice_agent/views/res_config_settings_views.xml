@@ -40,6 +40,29 @@
                             </div>
                         </div>
                     </div>
+
+                    <h2>Confidence Routing</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane"/>
+                            <div class="o_setting_right_pane">
+                                <label for="invoice_agent_confidence_threshold"/>
+                                <div class="text-muted">
+                                    Extracted bills scoring at or above this
+                                    value ride the Auto kanban column; below it
+                                    they land in Needs Review. Overrides the
+                                    per-journal ai_min_confidence and can be
+                                    changed at runtime — no redeploy needed
+                                    (the rollback path for a bad threshold).
+                                </div>
+                                <div class="content-group">
+                                    <div class="mt16">
+                                        <field name="invoice_agent_confidence_threshold"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </xpath>
         </field>
