@@ -5,6 +5,7 @@
 """
 from __future__ import annotations
 
+import contextvars
 import functools
 import logging
 import threading
@@ -216,8 +217,10 @@ class Registry(Mapping[str, type["BaseModel"]]):
                 retries = 5 if update_module else 1
                 for _ in range(retries):
                     # load_modules multiple times in case there are modules to be uninstalled
+                    # the load happens in a new context to be independent from things such as requests
                     try:
-                        load_modules(
+                        contextvars.Context().run(
+                            load_modules,
                             registry,
                             cr=cr,
                             update_module=update_module,
