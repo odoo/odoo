@@ -216,8 +216,19 @@ class IrAccess(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        def with_operation(vals):
+            if 'operation' not in vals and (operation := ''.join((
+                'c' if vals.get('for_create') else '',
+                'r' if vals.get('for_read') else '',
+                'u' if vals.get('for_write') else '',
+                'd' if vals.get('for_unlink') else '',
+            ))):
+                return dict(vals, operation=operation)
+            return vals
+
         # process all pending recomputations with current access rights
         self.env._recompute_all()
+        vals_list = [with_operation(vals) for vals in vals_list]
         accesses = super().create(vals_list)
         self._clear_caches()
         return accesses
