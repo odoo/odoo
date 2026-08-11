@@ -108,7 +108,12 @@ class ormcache:
 
     def lookup(self, *args, **kwargs):
         model: BaseModel = args[0]
-        d = model.env.transaction.ormcaches__[self.cache_name]
+        try:
+            d = model.env.transaction.ormcaches__[self.cache_name]
+        except TypeError:
+            if model.env.transaction is None:
+                raise RuntimeError("Trying to get cache from a closed transaction") from None
+            raise
         key = self.key(*args, **kwargs)
         counter = _COUNTERS[model.pool.db_name, self.method]
 
