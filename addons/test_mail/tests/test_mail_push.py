@@ -419,7 +419,7 @@ class TestWebPushNotification(SMSCommon):
         push_to_end_point.assert_called_once()
         payload_value = json.loads(push_to_end_point.call_args.kwargs['payload'])
         self.assertEqual(
-            f'{container_update_subtype.description}\n{container.name}*{container2.name}* {container.name}',
+            f'{container_update_subtype.description}\n{container.name} → *{container2.name}* ({container.name})',
             payload_value['options']['body'],
             'Tracking changes should be included in push notif payload'
         )
