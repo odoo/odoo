@@ -63,7 +63,7 @@ const BUFFER_COEFFICIENT = 1;
  */
 function getIndexes({ sizes, start, span, prevStartIndex, bufferCoef = BUFFER_COEFFICIENT }) {
     if (!sizes || !sizes.length) {
-        return [];
+        return;
     }
     if (sizes.at(-1) < span) {
         // all items could be displayed
@@ -109,26 +109,11 @@ export function useVirtualGrid({ scrollableRef, initialScroll, onChange, bufferC
     const comp = useComponent();
     onChange ||= () => comp.render();
 
-    const current = { scroll: { left: 0, top: 0, ...initialScroll } };
-    const computeColumnsIndexes = () => {
-        return getIndexes({
-            sizes: current.summedColumnsWidths,
-            start: Math.abs(current.scroll.left),
-            span: window.innerWidth,
-            prevStartIndex: current.columnsIndexes?.[0],
-            bufferCoef,
-        });
-    };
-    const computeRowsIndexes = () => {
-        return getIndexes({
-            sizes: current.summedRowsHeights,
-            start: current.scroll.top,
-            span: window.innerHeight,
-            prevStartIndex: current.rowsIndexes?.[0],
-            bufferCoef,
-        });
-    };
-    const throttledCompute = useThrottleForAnimation(() => {
+    const scrollLeft = () => Math.floor(scrollableRef.el?.scrollLeft || 0);
+    const scrollTop = () => Math.floor(scrollableRef.el?.scrollTop || 0);
+
+    const current = {};
+    const compute = () => {
         const changed = [];
         const columnsVisibleIndexes = computeColumnsIndexes();
         if (!shallowEqual(columnsVisibleIndexes, current.columnsIndexes)) {
@@ -143,20 +128,44 @@ export function useVirtualGrid({ scrollableRef, initialScroll, onChange, bufferC
         if (changed.length) {
             onChange(pick(current, ...changed));
         }
-    });
-    const scrollListener = (/** @type {Event & { target: Element }} */ ev) => {
-        current.scroll.left = ev.target.scrollLeft;
-        current.scroll.top = ev.target.scrollTop;
-        throttledCompute();
     };
+    const computeColumnsIndexes = () => {
+        return getIndexes({
+            sizes: current.summedColumnsWidths,
+            start: Math.abs(scrollLeft()),
+            span: window.innerWidth,
+            prevStartIndex: current.columnsIndexes?.[0],
+            bufferCoef,
+        });
+    };
+    const computeRowsIndexes = () => {
+        return getIndexes({
+            sizes: current.summedRowsHeights,
+            start: scrollTop(),
+            span: window.innerHeight,
+            prevStartIndex: current.rowsIndexes?.[0],
+            bufferCoef,
+        });
+    };
+    const throttledCompute = useThrottleForAnimation(compute);
     useEffect(
         (el) => {
-            el?.addEventListener("scroll", scrollListener);
-            return () => el?.removeEventListener("scroll", scrollListener);
+            if (!el) {
+                return;
+            }
+            if (typeof initialScroll?.left === "number") {
+                el.scrollLeft = initialScroll.left;
+            }
+            if (typeof initialScroll?.top === "number") {
+                el.scrollTop = initialScroll.top;
+            }
+            compute();
+            el.addEventListener("scroll", throttledCompute);
+            return () => el.removeEventListener("scroll", throttledCompute);
         },
         () => [scrollableRef.el]
     );
-    useExternalListener(window, "resize", () => throttledCompute());
+    useExternalListener(window, "resize", throttledCompute);
     return {
         get columnsIndexes() {
             return current.columnsIndexes;
