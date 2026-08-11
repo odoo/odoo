@@ -1,7 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta
 from unittest.mock import patch
 
+from odoo.exceptions import ValidationError
 from odoo.tests import tagged
 
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
@@ -113,6 +114,19 @@ class TestLeaveOutsideSchedule(TestHrHolidaysCommon):
         self.assertEqual(leave.number_of_hours, 4)
         self.assertEqual((leave.date_to - leave.date_from).total_seconds() / 3600.0, 4)
 
+    def test_hour_unit_working_time_outside_schedule_longer_than_the_day(self):
+        """ Hours that run past the day they are asked on are refused, not spread onto
+        the days after. """
+        with self.assertRaises(ValidationError):
+            self.env['hr.leave'].with_context(tracking_disable=True).create({
+                'employee_id': self.employee_emp.id,
+                'work_entry_type_id': self.working_time_type_hour.id,
+                'request_date_from': self.saturday,
+                'request_date_to': self.saturday,
+                'request_duration': 'full',
+                'number_of_hours': 20,
+            })
+
     def test_get_hours_for_date_duration_based_calendar_outside_schedule(self):
         """ A calendar whose schedule is defined purely as durations (e.g.
         "8 hours/day", no fixed clock times) still returns a sensible hour
@@ -152,9 +166,8 @@ class TestLeaveOutsideSchedule(TestHrHolidaysCommon):
         self.assertEqual(leave.request_hour_to, 16.0)
 
     def test_hour_unit_working_time_night_shift_crossing_midnight(self):
-        """ A working time request whose hours roll over midnight into the
-        next day (a night leave from 20:00 to 24:00) must get
-        a correct date_to, not one derived from a stale request_date_to"""
+        """ A night shift running from 22:00 to 02:00 keeps its four hours across the
+        midnight it crosses, in the timezone of the employee working it. """
         employee = self.env['hr.employee'].create({
             'name': 'Test Night Shift Employee',
             'company_id': self.company.id,
@@ -164,12 +177,11 @@ class TestLeaveOutsideSchedule(TestHrHolidaysCommon):
             'employee_id': employee.id,
             'work_entry_type_id': self.working_time_type_hour.id,
             'request_date_from': date(2025, 1, 6),
-            'request_date_to': date(2025, 1, 6),
-            'request_hour_from': 20,
-            'request_hour_to': 24,
+            'request_date_to': date(2025, 1, 7),
+            'request_hour_from': 22,
+            'request_hour_to': 2,
             'number_of_hours': 4,
         })
-        self.assertEqual(leave.request_date_to, date(2025, 1, 7))
-        self.assertEqual(leave.request_hour_to, 0.0)
-        self.assertTrue(leave.date_from < leave.date_to, "date_to must not end up before date_from")
-        self.assertEqual((leave.date_to - leave.date_from).total_seconds() / 3600.0, 4)
+        self.assertEqual((leave.date_from, leave.date_to),
+                         (datetime(2025, 1, 6, 18), datetime(2025, 1, 6, 22)))
+        self.assertEqual(leave.number_of_hours, 4)

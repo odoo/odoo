@@ -63,21 +63,20 @@ export class TimeOffCalendarModel extends CalendarModel {
         }
         if (["week", "day"].includes(this.scale)) {
             context["default_work_entry_type_request_unit"] = "hour";
-            const hour_from = deserialize(context["default_date_from"] ?? this.date);
-            const hour_to = deserialize(context["default_date_to"] ?? this.date);
+            const hour_from = deserialize(context["default_request_date_hour_from"] ?? this.date);
+            const hour_to = deserialize(context["default_request_date_hour_to"] ?? this.date);
             context["default_request_hour_from"] = hour_from.hour + hour_from.minute / 60;
             context["default_request_hour_to"] = hour_to.hour + hour_to.minute / 60;
         }
 
-        if ("default_date_from" in context) {
-            context["default_date_from"] = serializeDateTime(
-                deserialize(context["default_date_from"]).set({ hours: 7 })
-            );
-        }
-        if ("default_date_to" in context) {
-            context["default_date_to"] = serializeDateTime(
-                deserialize(context["default_date_to"]).set({ hours: 19 })
-            );
+        for (const [bound, hour] of [
+            ["from", 7],
+            ["to", 19],
+        ]) {
+            const key = `default_request_date_hour_${bound}`;
+            if (key in context) {
+                context[key] = serializeDateTime(deserialize(context[key]).set({ hours: hour }));
+            }
         }
         return context;
     }
