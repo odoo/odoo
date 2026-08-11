@@ -1022,7 +1022,7 @@ class ResPartner(models.Model):
         self.ensure_one()
         if not parent_name:
             raise ValueError(_('Parent Name is required at this point'))
-        parent_values = dict(name=parent_name, vat=self.vat)
+        parent_values = dict(name=parent_name, vat=self.vat, lang=self.lang)
         parent_values.update(self._convert_fields_to_values(self._address_fields()))
         if additional_values:
             parent_values.update(**additional_values)
