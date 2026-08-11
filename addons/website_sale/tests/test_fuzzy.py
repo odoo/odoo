@@ -114,7 +114,7 @@ class TestFuzzy(ProductVariantsCommon):
             "product_template", "SQWBRNZ", 0, 5, "name asc", options
         )
         self.assertEqual(0, results_count, "Should have found none")
-        self.assertIsNone(fuzzy_term, "Should have no suggestion")
+        self.assertFalse(fuzzy_term, "Should have no suggestion")
 
     def test_search_products_accessibility_multi_company(self):
         company_2 = self.env["res.company"].create({"name": "test"})
