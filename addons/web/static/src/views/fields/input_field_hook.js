@@ -1,4 +1,4 @@
-import { untrack, useProps } from "@odoo/owl";
+import { untrack, useListener, useProps } from "@odoo/owl";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { useBus } from "@web/core/utils/hooks";
 import { onWillRender, useLayoutEffect } from "@web/owl2/utils";
@@ -105,21 +105,9 @@ export function useInputField(params) {
         }
     }
 
-    useLayoutEffect(
-        (inputEl) => {
-            if (inputEl) {
-                inputEl.addEventListener("input", onInput);
-                inputEl.addEventListener("change", onChange);
-                inputEl.addEventListener("keydown", onKeydown);
-                return () => {
-                    inputEl.removeEventListener("input", onInput);
-                    inputEl.removeEventListener("change", onChange);
-                    inputEl.removeEventListener("keydown", onKeydown);
-                };
-            }
-        },
-        () => [getEl()]
-    );
+    useListener(inputRef, "input", onInput);
+    useListener(inputRef, "change", onChange);
+    useListener(inputRef, "keydown", onKeydown);
 
     // We need to call getValue to always observe
     // the corresponding value in the record. Otherwise, in some cases,

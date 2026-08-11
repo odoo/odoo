@@ -1,5 +1,5 @@
-import { untrack } from "@odoo/owl";
-import { render, useComponent, useLayoutEffect } from "@web/owl2/utils";
+import { useListener } from "@odoo/owl";
+import { render, useComponent } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { browser } from "@web/core/browser/browser";
@@ -102,31 +102,17 @@ export function useActionLinks({ resModel, reload }) {
 export function useBounceButton(containerRef, shouldBounce) {
     let timeout;
     const ui = useService("ui");
-    // The read is untracked: getContainerEl() is called in the layout-effect
-    // deps (run during the render phase via onWillRender), so a tracked read
-    // would subscribe the component to the ref signal and cause a spurious
-    // re-render when the ref is set on mount (a second render on initial mount).
-    const getContainerEl = () => untrack(containerRef);
-    useLayoutEffect(
-        (containerEl) => {
-            if (!containerEl) {
-                return;
-            }
-            const handler = (ev) => {
-                const button = ui.activeElement.querySelector("[data-bounce-button]");
-                if (button && shouldBounce(ev.target)) {
-                    button.classList.add("o_catch_attention");
-                    browser.clearTimeout(timeout);
-                    timeout = browser.setTimeout(() => {
-                        button.classList.remove("o_catch_attention");
-                    }, 400);
-                }
-            };
-            containerEl.addEventListener("click", handler);
-            return () => containerEl.removeEventListener("click", handler);
-        },
-        () => [getContainerEl()]
-    );
+    const onClick = (ev) => {
+        const button = ui.activeElement.querySelector("[data-bounce-button]");
+        if (button && shouldBounce(ev.target)) {
+            button.classList.add("o_catch_attention");
+            browser.clearTimeout(timeout);
+            timeout = browser.setTimeout(() => {
+                button.classList.remove("o_catch_attention");
+            }, 400);
+        }
+    };
+    useListener(containerRef, "click", onClick);
 }
 
 export function useExportRecords(env, context, getDefaultExportList) {

@@ -1,5 +1,4 @@
-import { untrack } from "@odoo/owl";
-import { useLayoutEffect } from "@web/owl2/utils";
+import { useListener } from "@odoo/owl";
 import { InputConfirmationDialog } from "@portal/js/components/input_confirmation_dialog/input_confirmation_dialog";
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
@@ -24,19 +23,10 @@ export class TotpConfirmationDialog extends InputConfirmationDialog {
                 setTimeout(this.tooltip.close, 800);
             });
         };
-        useLayoutEffect(
-            (clipboardButtonEl) => {
-                if (clipboardButtonEl) {
-                    clipboardButtonEl.addEventListener("click", onClickClipboardButton);
-                    return () =>
-                        clipboardButtonEl.removeEventListener("click", onClickClipboardButton);
-                }
-            },
-            () => [
-                untrack(this.modalRef)?.querySelector(
-                    "#collapseTotpSecret .o_clipboard_button"
-                ),
-            ]
+        useListener(
+            () => this.modalRef()?.querySelector("#collapseTotpSecret .o_clipboard_button"),
+            "click",
+            onClickClipboardButton
         );
     }
 }
