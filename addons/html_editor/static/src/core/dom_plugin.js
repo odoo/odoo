@@ -42,7 +42,22 @@ import {
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { isFakeLineBreak } from "@html_editor/utils/dom_state";
+import { NATIVE_MUTATION_TYPES } from "./dom_observer_plugin";
 
+const IS_MARKER = Symbol("isMarker");
+/**
+ * Creates and returns an empty text node that may be needed to mark the
+ * position of insertion. It is flagged as a marker so its mutations can be
+ * ignored.
+ *
+ * @param {HTMLDocument} doc
+ * @returns { Node & { isMarker: true }}
+ */
+const createMarkerNode = (doc) => {
+    const marker = doc.createTextNode("");
+    marker[IS_MARKER] = true;
+    return marker;
+};
 /**
  * Helper for { @see insert }. Take a selection point and return a node at its
  * deepest position, inserting the given marker if needed.
@@ -148,6 +163,14 @@ export class DomPlugin extends Plugin {
         is_functional_empty_node_predicates: (node) => {
             if (isSelfClosingElement(node) || isEditorTab(node)) {
                 return true;
+            }
+        },
+        is_mutation_savable_predicates: (mutation) => {
+            if (
+                mutation.type === NATIVE_MUTATION_TYPES.CHILD_LIST &&
+                [...mutation.addedNodes, ...mutation.removedNodes].every((node) => node[IS_MARKER])
+            ) {
+                return false;
             }
         },
     };
@@ -287,7 +310,7 @@ export class DomPlugin extends Plugin {
         const isUnsplittable = this.dependencies.split.isUnsplittable.bind(this);
 
         // An empty text node may be needed to mark the position of insertion.
-        const marker = this.document.createTextNode("");
+        const marker = createMarkerNode(this.document);
 
         // Find the first insertion reference (the node before which to insert).
         let refNode = findInsertionReferenceNode(
