@@ -6,7 +6,8 @@ import { renderToElement } from "@web/core/utils/render";
 import { registry } from "@web/core/registry";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { random5Chars, uuidv4, Counter, orderUsageUTCtoLocalUtil } from "@point_of_sale/utils";
-import { ConnectionLostError } from "@web/core/network/rpc";
+import { ConnectionLostError, RPCError } from "@web/core/network/rpc";
+import { browser } from "@web/core/browser/browser";
 import { OrderReceipt } from "@point_of_sale/app/components/receipt/order_receipt";
 import { _t } from "@web/core/l10n/translation";
 import { OpeningControlPopup } from "@point_of_sale/app/components/popups/opening_control_popup/opening_control_popup";
@@ -3065,6 +3066,17 @@ export class PosStore extends WithLazyGetterTrap {
         return (
             (await this.data.orm.searchCount("pos.session", [["id", "=", this.session.id]])) === 0
         );
+    }
+
+    async reloadIfSessionDeleted(error) {
+        if (
+            error instanceof RPCError &&
+            error.data.name === "odoo.exceptions.MissingError" &&
+            (await this.isSessionDeleted())
+        ) {
+            return browser.location.reload();
+        }
+        throw error;
     }
 
     async validateOrderFast(paymentMethod) {
