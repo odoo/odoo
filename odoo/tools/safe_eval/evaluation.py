@@ -48,9 +48,11 @@ __all__ = [
     '_import',
     'assert_valid_codeobj',
     'check_values',
+    'compile_codeobj',
     'const_eval',
     'datetime',
     'dateutil',
+    'eval_codeobj',
     'json',
     'safe_eval',
     'test_python_expr',
@@ -310,6 +312,25 @@ def compile_codeobj(expr: str, /, filename: str = '<unknown>', mode: typing.Lite
         raise ValueError('%r while compiling\n%r' % (e, expr))
 
 
+def eval_codeobj(code_obj: types.CodeType, context: dict, expr: str):
+    assert type(code_obj) is types.CodeType, 'Compile `expr` using `compile_codeobj`'
+    globals_dict = dict(
+        context or {},
+        __name__=f'{__name__}.<evaluated_code>',
+        __builtins__=dict(_BUILTINS),
+    )
+
+    try:
+        # empty locals dict makes the eval behave like top-level code
+        return unsafe_eval(code_obj, globals_dict, None)
+
+    finally:
+        if context is not None:
+            del globals_dict['__builtins__']
+            del globals_dict['__name__']
+            context.update(globals_dict)
+
+
 def const_eval(expr):
     """const_eval(expression) -> value
 
@@ -418,29 +439,15 @@ def safe_eval(expr, /, context=None, *, mode="eval", filename=None):
 
     check_values(context)
 
-    globals_dict = dict(
-        context or {},
-        __name__=f'{__name__}.<evaluated_code>',
-        __builtins__=dict(_BUILTINS),
-    )
-
     c = compile_codeobj(expr, filename=filename, mode=mode)
     assert_valid_codeobj(_SAFE_OPCODES, c, expr)
-    try:
-        # empty locals dict makes the eval behave like top-level code
-        return unsafe_eval(c, globals_dict, None)
 
+    try:
+        return eval_codeobj(c, context, expr)
     except _BUBBLEUP_EXCEPTIONS:
         raise
-
     except (Exception, UnsafeError) as e:  # noqa: BLE001
-        raise ValueError('%r while evaluating\n%r' % (e, expr))
-
-    finally:
-        if context is not None:
-            del globals_dict['__builtins__']
-            del globals_dict['__name__']
-            context.update(globals_dict)
+        raise ValueError(f'{e!r} while evaluating\n{expr!r}')
 
 
 def test_python_expr(expr, mode="eval"):
