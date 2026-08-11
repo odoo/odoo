@@ -18,6 +18,8 @@ Outputs
 * ``static/src/libs/materialsymbols/material_symbols_{outlined,sharp}_subset.woff2``
 * ``static/src/libs/materialsymbols/material_symbols_{outlined,sharp}.css``
 * ``html_editor/.../ms_icons.js`` — icon list with fill-variant flags
+* ``mail/static/src/fonts/material_symbols_outlined_pua_cmap.woff2`` — custom cmap font for PIL
+* ``mail/tools/material_symbols_pua_codepoints.py`` — custom mappings ligature -> codepoint for PIL
 
 Usage
 -----
@@ -40,10 +42,12 @@ from io import BytesIO
 from pathlib import Path
 
 try:
+    from fontTools import subset
     from fontTools.otlLib.builder import buildLigatureSubstSubtable
     from fontTools.pens import recordingPen, transformPen, ttGlyphPen
-    from fontTools.ttLib import TTFont, removeOverlaps
+    from fontTools.ttLib import TTFont, newTable, removeOverlaps
     from fontTools.ttLib.tables import otTables
+    from fontTools.ttLib.tables._c_m_a_p import CmapSubtable
     from fontTools.varLib import instancer as vl_instancer
 except ImportError as exc:
     raise SystemExit(
@@ -52,6 +56,12 @@ except ImportError as exc:
     ) from exc
 
 FILL_SUFFIX = "_f"
+
+# Private Use Area used by the `_pua_cmap` fonts. The generated
+# Python mapping is the public contract; callers should never persist these
+# codepoints themselves.
+PUA_START = 0xE000
+PUA_END = 0xF8FF
 
 # Material Symbols centers its artwork on the em square, i.e. 50% of the em
 # above the baseline, whereas text-adjacent icons need to sit lower to look
@@ -493,7 +503,157 @@ def strip_font_metadata(font: TTFont, style: str) -> None:
     name_table.names = new_records
 
 
-def build_font(style: str, ms_dir: Path, wishlist: list[str]) -> tuple[dict, Path]:
+def allocate_pua_codepoints(icon_names: list[str]) -> dict[str, int]:
+    """Assign one BMP Private-Use codepoint to both forms of every icon.
+
+    Icons whose FILL=0 and FILL=1 outlines are identical get a separate ``_f``
+    codepoint; both codepoints may simply map to the same glyph.
+    """
+    names = [
+        variant
+        for icon in sorted(set(icon_names))
+        for variant in (icon, icon + FILL_SUFFIX)
+    ]
+    capacity = PUA_END - PUA_START + 1
+    if len(names) > capacity:
+        raise ValueError(
+            f"Need {len(names)} private-use codepoints, but the BMP PUA only "
+            f"contains {capacity}.",
+        )
+    return {name: PUA_START + index for index, name in enumerate(names)}
+
+
+def replace_cmap(font: TTFont, codepoint_to_glyph: dict[int, str]) -> None:
+    """Replace the font cmap with a PUA-only Unicode cmap."""
+    cmap = newTable("cmap")
+    cmap.tableVersion = 0
+    cmap.tables = []
+
+    # Unicode BMP cmap.
+    unicode_table = CmapSubtable.newSubtable(4)
+    unicode_table.platformID = 0
+    unicode_table.platEncID = 3
+    unicode_table.language = 0
+    unicode_table.cmap = dict(codepoint_to_glyph)
+    cmap.tables.append(unicode_table)
+
+    # Microsoft Unicode BMP cmap, duplicating the Unicode mapping for
+    # compatibility with font consumers that prefer Microsoft cmap subtables.
+    windows_table = CmapSubtable.newSubtable(4)
+    windows_table.platformID = 3
+    windows_table.platEncID = 1
+    windows_table.language = 0
+    windows_table.cmap = dict(codepoint_to_glyph)
+    cmap.tables.append(windows_table)
+
+    font["cmap"] = cmap
+
+
+def clone_font(font: TTFont) -> TTFont:
+    """Round-trip *font* through memory so the ``_pua_cmap`` font is
+    independent.
+    """
+    data = BytesIO()
+    font.save(data)
+    return TTFont(
+        BytesIO(data.getvalue()),
+        recalcBBoxes=False,
+        recalcTimestamp=False,
+    )
+
+
+def build_pua_cmap_font(
+    merged: TTFont,
+    ligatures: dict[str, str],
+    pua_codepoints: dict[str, int],
+) -> tuple[TTFont, set[str]]:
+    """Build a cmap-only font from the final merged icon glyphs.
+
+    ``ligatures`` already contains the exact output glyph for every plain and
+    ``_f`` name, including the fallback where the filled form intentionally
+    reuses the outlined glyph.  The ``_pua_cmap`` font maps PUA codepoints
+    directly to those glyphs, then subsets away the ASCII ligature-input glyphs
+    and OpenType shaping tables.  It therefore needs FreeType only, not
+    RAQM/HarfBuzz.
+    """
+    encoded = {
+        name: (pua_codepoints[name], glyph_name)
+        for name, glyph_name in ligatures.items()
+        if name in pua_codepoints
+    }
+    codepoint_to_glyph = dict(encoded.values())
+
+    pua_cmap_font = clone_font(merged)
+    replace_cmap(pua_cmap_font, codepoint_to_glyph)
+
+    # This font is intentionally shaping-independent.
+    for tag in ("GSUB", "GPOS", "GDEF"):
+        if tag in pua_cmap_font:
+            del pua_cmap_font[tag]
+
+    # Keep only glyphs reachable through the new PUA cmap (plus .notdef and
+    # composite dependencies automatically retained by fontTools).
+    options = subset.Options()
+    options.layout_features = []
+    subsetter = subset.Subsetter(options=options)
+    subsetter.populate(unicodes=sorted(codepoint_to_glyph))
+    subsetter.subset(pua_cmap_font)
+
+    pua_cmap_font.flavor = "woff2"
+    return pua_cmap_font, set(encoded)
+
+
+def write_python_icon_mapping(
+    dst_path: Path,
+    pua_codepoints: dict[str, int],
+    available_names: set[str],
+) -> None:
+    """Write the generated name -> PUA mappings used by Pillow/server code."""
+    unfilled_mapping = {
+        name: pua_codepoints[name]
+        for name in sorted(available_names)
+        if not name.endswith(FILL_SUFFIX)
+    }
+    filled_mapping = {
+        name.removesuffix(FILL_SUFFIX): pua_codepoints[name]
+        for name in sorted(available_names)
+        if name.endswith(FILL_SUFFIX)
+    }
+
+    def entries(mapping: dict[str, int]) -> str:
+        return "\n".join(
+            f"    {name!r}: 0x{codepoint:04X},"
+            for name, codepoint in mapping.items()
+        )
+
+    dst_path.write_text(
+        "# Generated by generate_icons.py — do not edit manually.\n\n"
+        "MATERIAL_SYMBOL_CODEPOINTS_FILL_0 = {\n"
+        f"{entries(unfilled_mapping)}\n"
+        "}\n\n"
+        "MATERIAL_SYMBOL_CODEPOINTS_FILL_1 = {\n"
+        f"{entries(filled_mapping)}\n"
+        "}\n\n\n"
+        "def material_symbol_char(content: str, fill: bool = False) -> str:\n"
+        '    """Return the single cmap character for a Material Symbol name.\n'
+        '    That character can be used to access a symbol in\n'
+        '    ``material_symbols_outlined_pua_cmap.woff2``\n'
+        '    """\n'
+        "    codepoints = MATERIAL_SYMBOL_CODEPOINTS_FILL_0\n"
+        "    if fill:\n"
+        "        codepoints = MATERIAL_SYMBOL_CODEPOINTS_FILL_1\n"
+        "    return chr(codepoints[content])\n",
+        encoding="utf-8",
+    )
+
+
+def build_font(
+    style: str,
+    ms_dir: Path,
+    wishlist: list[str],
+    pua_codepoints: dict[str, int] | None = None,
+    pua_ms_dir: Path | None = None,
+) -> tuple[dict, Path, Path | None, set[str] | None]:
     print(f"Building {style} font…")  # noqa: T201
     print("  Downloading font from Google…")  # noqa: T201
     font = fetch_google_font(style, wishlist)
@@ -558,16 +718,34 @@ def build_font(style: str, ms_dir: Path, wishlist: list[str]) -> tuple[dict, Pat
     if unresolved:
         print(f"  {len(unresolved)} icons could not be encoded: {sorted(unresolved)}")  # noqa: T201
 
-    strip_font_metadata(merged, style)
+    if pua_codepoints is not None:
+        # Build a second, server/runtime-only font from the exact same final
+        # glyphs. It has a PUA cmap instead of name ligatures and therefore does
+        # not require RAQM/HarfBuzz at render time.
+        pua_cmap_font, pua_names = build_pua_cmap_font(
+            merged,
+            ligatures,
+            pua_codepoints,
+        )
+        strip_font_metadata(pua_cmap_font, f"{style} PUA cmap")
 
-    print("  Saving font…")  # noqa: T201
+    strip_font_metadata(merged, style)
+    icons = {name: {'has_fill': name in icons_with_fill} for name in wishlist if name in glyphs_map}
+
+    print("  Saving fonts…")  # noqa: T201
     ms_dir.mkdir(parents=True, exist_ok=True)
+
     output_font_path = ms_dir / f'material_symbols_{style.lower()}_subset.woff2'
     merged.save(output_font_path)
     write_font_face_css(ms_dir, style.lower(), output_font_path.name)
 
-    icons = {name: {'has_fill': name in icons_with_fill} for name in wishlist if name in glyphs_map}
-    return icons, output_font_path
+    if pua_codepoints is not None:
+        pua_ms_dir.mkdir(parents=True, exist_ok=True)
+
+        pua_cmap_font_path = pua_ms_dir / f'material_symbols_{style.lower()}_pua_cmap.woff2'
+        pua_cmap_font.save(pua_cmap_font_path)
+        return icons, output_font_path, pua_cmap_font_path, pua_names
+    return icons, output_font_path, None, None
 
 
 def write_font_face_css(ms_dir: Path, style_lower: str, font_file: str) -> None:
@@ -623,10 +801,21 @@ def main() -> None:
         sys.exit("Could not locate the 'web' module.")
 
     ms_dir = module_path / 'static' / 'src' / 'libs' / 'materialsymbols'
+    pua_ms_dir = module_path.parent / 'mail' / 'static' / 'src' / 'fonts'
     wishlist = load_wishlist()
+    pua_codepoints = allocate_pua_codepoints(wishlist)
 
-    icons, outline_path = build_font("Outlined", ms_dir, wishlist)
-    _, sharp_path = build_font("Sharp", ms_dir, wishlist)
+    icons, outline_path, outline_pua_path, pua_names = build_font(
+        "Outlined", ms_dir, wishlist, pua_codepoints, pua_ms_dir
+    )
+    _, sharp_path, *_ = build_font("Sharp", ms_dir, wishlist)
+
+    python_mapping_path = module_path.parent / 'mail' / 'tools' / 'material_symbols_pua_codepoints.py'
+    write_python_icon_mapping(
+        python_mapping_path,
+        pua_codepoints,
+        pua_names,
+    )
 
     write_js_icon_list(
         module_path.parent / 'html_editor' / 'static' / 'src' / 'main' / 'media' / 'media_dialog' / 'ms_icons.js',
@@ -636,8 +825,10 @@ def main() -> None:
     n_filled = sum(1 for icon in icons.values() if icon['has_fill'])
     print(  # noqa: T201
         f"\n✓  Generated fonts with {len(icons)} icons ({n_filled} with filled variant)\n"
-        f"   outlined  → {outline_path}  ({outline_path.stat().st_size // 1000} kb)\n"
-        f"   sharp     → {sharp_path}  ({sharp_path.stat().st_size // 1000} kb)\n",
+        f"   outlined web     → {outline_path}  ({outline_path.stat().st_size // 1000} kb)\n"
+        f"   sharp web        → {sharp_path}  ({sharp_path.stat().st_size // 1000} kb)\n"
+        f"   outlined cmap    → {outline_pua_path}  ({outline_pua_path.stat().st_size // 1000} kb)\n"
+        f"   Python mapping   → {python_mapping_path}\n",
     )
 
 

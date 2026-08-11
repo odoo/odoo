@@ -2,7 +2,7 @@ import { isBlock } from "@html_editor/utils/blocks";
 import { getAdjacentPreviousSiblings } from "@html_editor/utils/dom_traversal";
 import { loadImage } from "@html_editor/utils/image_processing";
 import { getImageSrc } from "@html_editor/utils/image";
-import { blendColors } from "@web/core/utils/colors";
+import { blendColors, convertCSSColorToRgba } from "@web/core/utils/colors";
 import { range } from "@web/core/utils/numbers";
 
 function parentsGet(node, root = undefined) {
@@ -1024,6 +1024,23 @@ function flattenBackgroundImages(element) {
         }
     }
 }
+function convertCSSColorToPILRgba(color) {
+    const obj = convertCSSColorToRgba(color);
+    const bind8bitsIntToHex = (value) =>
+        Math.max(0, Math.min(255, Math.round(value)))
+            .toString(16)
+            .padStart(2, "0");
+    if (obj) {
+        obj.red = bind8bitsIntToHex(obj.red);
+        obj.green = bind8bitsIntToHex(obj.green);
+        obj.blue = bind8bitsIntToHex(obj.blue);
+        // convertCSSColorToRgba returns opacity as a float percentage,
+        // but PIL library needs a 8 bits integer.
+        obj.opacity = bind8bitsIntToHex((255 * obj.opacity) / 100);
+        return `${obj.red}${obj.green}${obj.blue}${obj.opacity}`;
+    }
+    return false;
+}
 /**
  * Convert font icons to images.
  *
@@ -1032,15 +1049,21 @@ function flattenBackgroundImages(element) {
  */
 function fontToImg(element) {
     for (const font of element.querySelectorAll(".oi")) {
-        let content;
         const beforeStyle = getComputedStyle(font, "::before");
-        content = beforeStyle["content"].trim().replace(/['"]/g, "");
+        const content = beforeStyle["content"].trim().replace(/['"]/g, "");
+        let icon = content;
+        let fill = 0;
         if (font.matches("[data-icon^='oi_']")) {
-            content = content.codePointAt(0);
+            icon = content.codePointAt(0);
+        } else {
+            icon = content.replace(/_f$/, "");
+            if (icon !== content) {
+                fill = 1;
+            }
         }
-        content = "oi_" + content;
-        if (content) {
-            const color = _getStylePropertyValue(font, "color").replace(/\s/g, "");
+        if (icon) {
+            const color =
+                convertCSSColorToPILRgba(_getStylePropertyValue(font, "color")) || "000000ff";
             let backgroundColoredElement = font;
             let bg, isTransparent;
             do {
@@ -1056,6 +1079,7 @@ function fontToImg(element) {
                 // is not supported.
                 bg = "rgb(255,255,255)";
             }
+            bg = convertCSSColorToPILRgba(bg) || "00000000";
             const style = font.getAttribute("style");
             const width = _getWidth(font);
             const height = _getHeight(font);
@@ -1078,14 +1102,11 @@ function fontToImg(element) {
             const image = document.createElement("img");
             image.setAttribute("width", intrinsicWidth);
             image.setAttribute("height", intrinsicHeight);
+            const renderWidth = Math.max(1, Math.round(intrinsicWidth));
+            const renderHeight = Math.max(1, Math.round(intrinsicHeight));
             image.setAttribute(
                 "src",
-                `/mail/font_to_img/${content}/${encodeURIComponent(color)}/${encodeURIComponent(
-                    bg
-                )}/${Math.max(1, Math.round(intrinsicWidth))}x${Math.max(
-                    1,
-                    Math.round(intrinsicHeight)
-                )}`
+                `/mail/font_to_img/${icon}/oi/${fill}/${color}/${bg}/${renderWidth}x${renderHeight}fs${renderHeight}`
             );
             image.setAttribute("data-class", font.getAttribute("class"));
             image.setAttribute("data-style", style);
