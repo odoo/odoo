@@ -65,5 +65,5 @@ class CustomerPortal(portal.CustomerPortal):
             order_line.product_uom_qty = quantity
 
         disabled = self.env['ir.config_parameter'].sudo().get_bool('sale.disable_sale_update', default=False)
-        if not disabled and order_sudo.has_active_pricelist:
+        if not disabled and order_sudo.has_active_pricelist and order_line.product_id:
             order_line._reset_price_unit()
