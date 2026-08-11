@@ -53,7 +53,7 @@ export class EventQuestion extends models.ServerModel {
             id: 4,
             title: "Gender",
             question_type: "simple_choice",
-            event_ids: [1],
+            event_ids: [1, 6],
             sequence: 4,
             once_per_order: false,
             is_mandatory_answer: false,

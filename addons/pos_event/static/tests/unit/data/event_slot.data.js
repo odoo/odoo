@@ -27,6 +27,15 @@ export class EventSlot extends models.ServerModel {
             seats_available: 5,
             start_datetime: "2019-03-11 11:00:00",
         },
+        {
+            id: 2,
+            date: "2019-03-11",
+            display_name: "Event Slot 2",
+            event_id: 6,
+            registration_ids: [],
+            seats_available: 0,
+            start_datetime: "2019-03-11 11:00:00",
+        },
     ];
 }
 

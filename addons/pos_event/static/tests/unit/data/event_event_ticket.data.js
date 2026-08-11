@@ -56,6 +56,18 @@ export class EventEventTicket extends models.ServerModel {
             start_sale_datetime: "2019-03-10 11:00:00",
             end_sale_datetime: "2019-03-15 12:00:00",
         },
+        {
+            id: 6,
+            name: "Unlimited Slot Ticket",
+            event_id: 6,
+            seats_used: 0,
+            seats_available: 0,
+            price: 100,
+            product_id: 106,
+            seats_max: 0,
+            start_sale_datetime: "2019-03-10 11:00:00",
+            end_sale_datetime: "2019-03-15 12:00:00",
+        },
     ];
 }
 
