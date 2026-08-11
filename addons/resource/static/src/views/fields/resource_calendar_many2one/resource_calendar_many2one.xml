@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="resource.Many2OneResourceCalendarField">
+        <Many2One t-props="this.m2oProps">
+            <t t-set-slot="autoCompleteItem" t-slot-scope="autoCompleteItemScope">
+                <t t-set="record" t-value="autoCompleteItemScope.record"/>
+                <t t-set="wrmInfo" t-value="this.getWrmInfo(record)"/>
+                <div class="d-flex flex-column">
+                    <div class="d-flex justify-content-between">
+                        <span t-out="autoCompleteItemScope.label"/>
+                        <span class="text-muted ms-3" t-out="this.formatWorkTimeRate(record)"/>
+                    </div>
+                    <div class="d-flex justify-content-between text-muted">
+                        <small t-if="this.isVariable(record)" t-out="this.variableSummary(record)"/>
+                        <small t-else="">
+                            <t t-foreach="this.hoursByDay(record)" t-as="day" t-key="day_index">
+                                <t t-if="!day_first"> - </t>
+                                <t t-out="day.hours"/><sup t-if="day.marker" t-out="day.marker"/>
+                            </t>
+                        </small>
+                        <small t-if="wrmInfo" class="ms-3"><sup t-out="wrmInfo.marker"/> <t t-out="wrmInfo.name"/></small>
+                    </div>
+                </div>
+            </t>
+        </Many2One>
+    </t>
+</templates>
