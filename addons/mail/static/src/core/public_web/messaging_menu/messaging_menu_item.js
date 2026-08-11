@@ -122,7 +122,9 @@ export class MessagingMenuItem extends Component {
     }
 
     get attClass() {
-        return {};
+        return {
+            "user-select-none o-disable-safari-native-long-press": isMobileOS(),
+        };
     }
 
     get itemName() {

@@ -391,6 +391,13 @@ a.o-discuss-mention {
     border-radius: 0 !important;
 }
 
+.o-disable-safari-native-long-press {
+    // Prevent user selection so that this isn't accidentally triggered with long-press.
+    -webkit-touch-callout: none; // disable iOS Safari native selection UI
+    -webkit-user-select: none; // disable iOS Safari native selection UI
+    user-select: none;
+}
+
 .o-visible-short-delay {
     animation: o-visible-short-delay-animation 0s ease-in 0.25s forwards;
     display: none;
