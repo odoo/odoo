@@ -2,8 +2,9 @@
 <odoo>
     <data>
         <template id="pos_restaurant.pos_order_change_receipt" inherit_id="point_of_sale.pos_order_change_receipt">
-            <div name="order-label" position="after">
-                <div t-if="extra_data.get('table_name')" name="table-info" class="text-large">
+             <xpath expr="//div[@name='receipt-header']//div[@name='order-label'] |
+                          //div[@name='receipt-header']/*[last()]" position="after">
+                <div t-if="extra_data.get('table_name')" name="table-info" class="mb-2 text-large">
                     <span t-if="extra_data.get('floor_name')">
                         <span t-esc="extra_data['floor_name'] + ' - '"/>
                         <span class="text-bold">T </span>
@@ -11,10 +12,8 @@
                     <span t-else="" class="text-bold">Table </span>
                     <span class="text-bold" t-esc="extra_data['table_name']"/>
                 </div>
-            </div>
-            <div name="order-reference" position="before">
-                <div t-if="order.get('customer_count')">Guest <t t-out="order['customer_count']"/></div>
-            </div>
+                <div t-if="order.get('customer_count')" class="text-normal">Guest <t t-out="order['customer_count']"/></div>
+            </xpath>
         </template>
     </data>
 </odoo>
