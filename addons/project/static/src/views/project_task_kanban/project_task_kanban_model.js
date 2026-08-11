@@ -44,11 +44,20 @@ export class ProjectTaskRecord extends Record {
             project_sharing_portal_user_ids,
         } = this.config.fields;
         const activeField = makeActiveField({ onChange: true });
+        const userIdsActiveField = makeActiveField();
+        userIdsActiveField.related = {
+            activeFields: {
+                display_name: makeActiveField(),
+            },
+            fields: {
+                display_name: { name: "display_name", type: "char" },
+            },
+        };
         activeField.related = {
             activeFields: {
                 display_name: makeActiveField(),
                 state: makeActiveField(),
-                user_ids: makeActiveField(),
+                user_ids: userIdsActiveField,
                 project_id: makeActiveField(),
                 sequence: makeActiveField(),
                 company_id: makeActiveField(),
