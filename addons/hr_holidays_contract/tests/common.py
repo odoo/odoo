@@ -54,7 +54,10 @@ class TestHolidayContract(TransactionCase):
             ],
             'tz': 'Europe/Brussels',
         })
-        cls.calendar_40h = cls.env['resource.calendar'].create({'name': 'Default calendar'})
+        cls.calendar_40h = cls.env['resource.calendar'].create({
+            'name': 'Default calendar',
+            'tz': 'Europe/Brussels',
+        })
 
         # This contract ends at the 15th of the month
         cls.contract_cdd = cls.env['hr.contract'].create({  # Fixed term contract
