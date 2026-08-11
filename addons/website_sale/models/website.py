@@ -64,10 +64,12 @@ class Website(models.Model):
         default=_default_salesteam_id,
     )
     show_line_subtotals_tax_selection = fields.Selection(
-        string="Line Subtotals Tax Display",
+        string="Display Product Prices",
         selection=[("tax_excluded", "Tax Excluded"), ("tax_included", "Tax Included")],
         compute="_compute_show_line_subtotals_tax_selection",
+        precompute=True,
         readonly=False,
+        required=True,
         store=True,
     )
 
@@ -319,6 +321,10 @@ class Website(models.Model):
         compute_sql="_compute_sql_currency_id",
         compute_sudo=True,
     )
+    tax_display = fields.Selection(
+        selection=[("tax_excluded", "Tax Excluded"), ("tax_included", "Tax Included")],
+        compute="_compute_tax_display",
+    )
 
     # === COMPUTE METHODS ===#
 
@@ -364,8 +370,14 @@ class Website(models.Model):
 
     @api.depends("company_id.account_fiscal_country_id")
     def _compute_show_line_subtotals_tax_selection(self):
+        self.show_line_subtotals_tax_selection = "tax_excluded"
+
+    @api.depends("pricelist_id", "show_line_subtotals_tax_selection")
+    def _compute_tax_display(self):
         for website in self:
-            website.show_line_subtotals_tax_selection = "tax_excluded"
+            website.tax_display = (
+                website.pricelist_id.tax_display or website.show_line_subtotals_tax_selection
+            )
 
     # === SELECTION METHODS ===#
 
@@ -636,8 +648,13 @@ class Website(models.Model):
         if not self.env["res.groups"]._is_feature_enabled("product.group_product_pricelist"):
             return ProductPricelist  # Skip pricelist computation if pricelists are disabled.
 
-        country_code = self._get_geoip_country_code()
         website = self.with_company(self.company_id)
+
+        country_code = False
+        if request and not self.env["ir.http"].is_a_bot():
+            # Crawler agents should always see the default prices, otherwise, prices crawled from
+            # the US would be indexed for european customers.
+            country_code = self._get_geoip_country_code()
 
         partner_sudo = website.env.user.partner_id
         if not self.env.user._is_public():

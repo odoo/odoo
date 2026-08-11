@@ -85,7 +85,7 @@ class SaleOrder(models.Model):
         self.amount_delivery = 0.0
         for order in self.filtered("website_id"):
             delivery_lines = order.order_line.filtered("is_delivery")
-            if order.website_id.show_line_subtotals_tax_selection == "tax_excluded":
+            if order.website_id.tax_display == "tax_excluded":
                 order.amount_delivery = sum(delivery_lines.mapped("price_subtotal"))
             else:
                 order.amount_delivery = sum(delivery_lines.mapped("price_total"))

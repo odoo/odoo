@@ -33,8 +33,12 @@ class ProductPricelist(models.Model):
         "you must fill in this field or make it selectable."
         "Otherwise, the pricelist will not apply to any website.",
     )
-    code = fields.Char(string="E-commerce Promotional Code", groups="base.group_user")
+    code = fields.Char(string="Access Code", groups="base.group_user")
     selectable = fields.Boolean(help="Allow the end user to choose this price list")
+    tax_display = fields.Selection(
+        string="eCommerce Price Display",
+        selection=[("tax_included", "Taxes Included"), ("tax_excluded", "Taxes Excluded")],
+    )
 
     # === CONSTRAINT METHODS ===#
 
