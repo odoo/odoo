@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import datetime
 from odoo import api, fields, models, SUPERUSER_ID, _
+from odoo.tools import format_date
 
 
 class StockLot(models.Model):
@@ -21,22 +22,21 @@ class StockLot(models.Model):
     product_expiry_alert = fields.Boolean(compute='_compute_product_expiry_alert', help="The Expiration Date has been reached.")
     product_expiry_reminded = fields.Boolean(string="Expiry has been reminded")
 
-    @api.depends('use_expiration_date', 'expiration_date', 'alert_date')
-    @api.depends_context('formatted_display_name')
+    @api.depends('use_expiration_date', 'expiration_date', 'alert_date', 'removal_date')
+    @api.depends_context('formatted_display_name', 'show_lot_removal_date')
     def _compute_display_name(self):
-        lots_to_process_ids = []
+        super()._compute_display_name()
+        current_date = fields.Datetime.now()
         for lot in self:
-            if lot.env.context.get('formatted_display_name') and lot.use_expiration_date and lot.expiration_date:
-                name = f"{lot.name}"
-                if fields.Datetime.now() >= lot.expiration_date:
+            name = lot.display_name
+            if self.env.context.get('show_lot_removal_date') and lot.use_expiration_date and lot.removal_date:
+                name += f" - {format_date(self.env, lot.removal_date)}"
+            if self.env.context.get('formatted_display_name') and lot.use_expiration_date and lot.expiration_date:
+                if current_date >= lot.expiration_date:
                     name += self.env._("\t--Expired--")
-                elif lot.alert_date and fields.Datetime.now() >= lot.alert_date:
-                    name += self.env._("\t--Expire on %(date)s--", date=fields.Datetime.to_string(lot.expiration_date))
-                lot.display_name = name
-            else:
-                lots_to_process_ids.append(lot.id)
-        if lots_to_process_ids:
-            super(StockLot, self.env['stock.lot'].browse(lots_to_process_ids))._compute_display_name()
+                elif lot.alert_date and current_date >= lot.alert_date:
+                    name += self.env._("\t--Expire on %(date)s--", date=fields.Date.to_string(lot.expiration_date))
+            lot.display_name = name
 
     @api.depends('expiration_date')
     def _compute_product_expiry_alert(self):
@@ -74,9 +74,15 @@ class StockLot(models.Model):
                 # when change
                 elif lot._origin.expiration_date:
                     time_delta = lot.expiration_date - lot._origin.expiration_date
-                    lot.use_date = lot._origin.use_date and lot._origin.use_date + time_delta
-                    lot.removal_date = lot._origin.removal_date and lot._origin.removal_date + time_delta
-                    lot.alert_date = lot._origin.alert_date and lot._origin.alert_date + time_delta
+                    lot._sync_related_dates(time_delta)
+
+    def _sync_related_dates(self, time_delta):
+        if not time_delta:
+            return
+        lot = self._origin
+        self.use_date = lot.use_date and lot.use_date + time_delta
+        self.removal_date = lot.removal_date and lot.removal_date + time_delta
+        self.alert_date = lot.alert_date and lot.alert_date + time_delta
 
     @api.model
     def _alert_date_exceeded(self):
