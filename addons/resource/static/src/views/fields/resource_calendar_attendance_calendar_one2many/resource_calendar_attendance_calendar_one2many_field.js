@@ -1,6 +1,7 @@
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { Component, useProps, providePlugins, types as t } from "@odoo/owl";
+import { Component, providePlugins } from "@odoo/owl";
+import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { View } from "@web/views/view";
 import { ResourceCalendarPlugin } from "@resource/plugins/resource_calendar_plugin";
 import "@resource/views/resource_calendar_attendance_calendar/resource_calendar_attendance_calendar_view";
@@ -8,14 +9,7 @@ import "@resource/views/resource_calendar_attendance_calendar/resource_calendar_
 export class CalendarOne2Many extends Component {
     static template = "resource.CalendarOne2Many";
     static components = { View };
-
-    // When available, to replace with owl3 standardFieldProps
-    props = useProps({
-        id: t.string().optional(),
-        name: t.string(),
-        readonly: t.boolean().optional(),
-        record: t.record(),
-    });
+    static props = standardFieldProps;
 
     setup() {
         super.setup();
