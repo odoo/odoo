@@ -36,5 +36,30 @@
             <field name="priority">5</field>
             <field name="nextcall" eval="(DateTime.now() + timedelta(minutes=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
         </record>
+
+        <!-- ============================================================
+             ir.cron: Claude extraction queue (week 7)
+
+             Consumes moves that finished OCR ('ocr_state == done') and are
+             waiting in 'ai_extraction_status == processing'. Each record is
+             processed inside its own commit: OCR -> Claude extraction ->
+             calibrated confidence scoring -> kanban routing (Auto /
+             Needs Review / Approved). Sub-threshold extractions get one
+             high-effort Claude pass (effort='high') before final routing.
+
+             This cron is the queue-side twin of the OCR cron: it pairs
+             with it to complete the end-to-end scan-to-draft pipeline.
+             ============================================================ -->
+        <record id="cron_extract_pending_bills" model="ir.cron">
+            <field name="name">Invoice Agent: Extract Pending Bills</field>
+            <field name="model_id" ref="account.model_account_move"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_extract_pending_bills(batch_size=5)</field>
+            <field name="interval_number">2</field>
+            <field name="interval_type">minutes</field>
+            <field name="active" eval="True"/>
+            <field name="priority">6</field>
+            <field name="nextcall" eval="(DateTime.now() + timedelta(minutes=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </record>
     </data>
 </odoo>
