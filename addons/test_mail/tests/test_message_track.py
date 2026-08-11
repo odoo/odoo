@@ -1104,15 +1104,15 @@ class TestTrackingInternals(TestTrackingCommon):
                         ],
                     }
                 )
-                self.assertRegex(new_message.body, f'{expected_start}<b>{expected_end}</b><i>Datetime</i>')
-                self.assertRegex(new_message.body, f'None<b>{expected_date}</b><i>Date</i>')
+                self.assertRegex(new_message.body, f'{expected_start} → <b>{expected_end}</b> <i>\\(Datetime\\)</i>')
+                self.assertRegex(new_message.body, f'None → <b>{expected_date}</b> <i>\\(Date\\)</i>')
                 self.assertRegex(
                     new_message.body,
-                    f'{expected_start}<b>None</b><i>Properties: Property Datetime</i>',
+                    f'{expected_start} → <b>None</b> <i>\\(Properties: Property Datetime\\)</i>',
                 )
                 self.assertRegex(
                     new_message.body,
-                    f'{expected_date}<b>None</b><i>Properties: Property Date</i>',
+                    f'{expected_date} → <b>None</b> <i>\\(Properties: Property Date\\)</i>',
                 )
 
     @users('employee')
