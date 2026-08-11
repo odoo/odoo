@@ -1747,7 +1747,7 @@ class MrpProduction(models.Model):
         self._unplan_workorders()
         for order in self:
             previous_date_start = None
-            for message in order.message_ids:
+            for message in order.sudo().message_ids:
                 if message.tracking_value_ids.field_id.mapped('name') == ['date_start']:
                     previous_date_start = message.tracking_value_ids.old_value_datetime
                     break

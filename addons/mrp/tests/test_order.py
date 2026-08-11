@@ -5499,6 +5499,18 @@ class TestMrpOrder(TestMrpCommon):
         production.button_plan()
         self.assertGreaterEqual(production.date_start, now)
 
+    def test_unplan_access_rights_manager(self):
+        """ An MRP manager without Settings/Administration rights should be able to
+        unplan a manufacturing order they were able to plan. """
+        man_order = self.env['mrp.production'].with_user(self.user_mrp_manager).create({
+            'bom_id': self.bom_1.id,
+        })
+        man_order.action_confirm()
+        man_order.button_plan()
+        self.assertTrue(man_order.is_planned)
+        man_order.button_unplan()
+        self.assertFalse(man_order.is_planned)
+
     def test_update_component_qty_consumption(self):
         """Ensure that when updating the component's quantity to consume,
         the move is not marked as picked allowing the new quantity to be
