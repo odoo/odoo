@@ -1,8 +1,9 @@
-import { Component, onWillStart, signal } from "@odoo/owl";
+import { Component, onWillStart, signal, usePlugin } from "@odoo/owl";
 import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { useService } from "@web/core/utils/hooks";
 import { LanguagePopup } from "@pos_self_order/app/components/language_popup/language_popup";
 import { useCarousel } from "@pos_self_order/app/utils/carousel_hook";
+import { LedControllerPlugin } from "@pos_self_order/app/plugins/led_controller/led_controller_plugin";
 
 export class LandingPage extends Component {
     static template = "pos_self_order.LandingPage";
@@ -14,6 +15,9 @@ export class LandingPage extends Component {
         this.router = useService("router");
         this.dialog = useService("dialog");
         this.activeSelected = false;
+
+        this.ledController = usePlugin(LedControllerPlugin);
+        this.ledController.setIdleState();
 
         onWillStart(() => {
             if (this.selfOrder.config.self_ordering_mode === "kiosk") {

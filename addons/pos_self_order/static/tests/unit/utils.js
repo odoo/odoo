@@ -15,6 +15,7 @@ import { setupPosEnv } from "@point_of_sale/../tests/unit/utils";
 import { unpatchSelf } from "@pos_self_order/app/services/data_service";
 import { SelfOrderRouter } from "@pos_self_order/app/services/self_order_router_service";
 import { PosSession } from "@point_of_sale/../tests/unit/data/pos_session.data";
+import { LedControllerPlugin } from "@pos_self_order/app/plugins/led_controller/led_controller_plugin";
 
 function checkPosOrder(deviceType, order) {
     const count = MockServer.env["pos.order"].search_count([]) + 1;
@@ -186,8 +187,9 @@ export const setupSelfPosEnv = async (
 
     initMockRpc();
     assignDialogTestEnv();
-    await makeTestApp();
+    const app = await makeTestApp();
     const store = getService("self_order");
+    app.pluginManager.startPlugins([LedControllerPlugin]);
 
     store.config.self_ordering_mode = mode;
     store.config.self_ordering_service_mode = service_mode;

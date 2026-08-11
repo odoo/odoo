@@ -1,9 +1,19 @@
-import { Component, onMounted, onWillUnmount, proxy, t, useEffect, useProps } from "@odoo/owl";
-import { PrintingFailurePopup } from "@pos_self_order/app/components/printing_failure_popup/printing_failure_popup";
+import {
+    Component,
+    onMounted,
+    onWillUnmount,
+    proxy,
+    t,
+    useEffect,
+    usePlugin,
+    useProps,
+} from "@odoo/owl";
 import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { cookie } from "@web/core/browser/cookie";
 import { rpc } from "@web/core/network/rpc";
 import { useService } from "@web/core/utils/hooks";
+import { PrintingFailurePopup } from "@pos_self_order/app/components/printing_failure_popup/printing_failure_popup";
+import { LedControllerPlugin } from "@pos_self_order/app/plugins/led_controller/led_controller_plugin";
 
 export class ConfirmationPage extends Component {
     static template = "pos_self_order.ConfirmationPage";
@@ -18,6 +28,9 @@ export class ConfirmationPage extends Component {
             onReload: true,
             payment: this.props.screenMode === "pay",
         });
+
+        this.ledController = usePlugin(LedControllerPlugin);
+        this.ledController.setSuccessState();
 
         onMounted(() => {
             if (this.selfOrder.config.self_ordering_mode === "kiosk") {

@@ -44,6 +44,7 @@
             'web/static/src/core/browser/router.js',
         ],
         'web.assets_unit_tests': [
+            'web/static/src/public/lazyloader.js',
             'pos_self_order/static/tests/unit/**/*',
         ],
         'point_of_sale._assets_pos': [

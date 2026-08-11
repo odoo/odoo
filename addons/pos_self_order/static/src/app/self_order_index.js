@@ -1,4 +1,4 @@
-import { Component } from "@odoo/owl";
+import { Component, providePlugins } from "@odoo/owl";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { Router } from "@pos_self_order/app/router";
@@ -16,6 +16,7 @@ import { LoadingOverlay } from "@pos_self_order/app/components/loading_overlay/l
 import { hasTouch } from "@web/core/browser/feature_detection";
 import { init as initDebugFormatters } from "@point_of_sale/app/utils/debug-formatter";
 import { insertKioskStyle } from "./kiosk_style";
+import { LedControllerPlugin } from "@pos_self_order/app/plugins/led_controller/led_controller_plugin";
 
 export class selfOrderIndex extends Component {
     static template = "pos_self_order.selfOrderIndex";
@@ -53,6 +54,10 @@ export class selfOrderIndex extends Component {
         if (this.env.debug) {
             initDebugFormatters();
         }
+
+        providePlugins([LedControllerPlugin], {
+            idleColor: this.selfOrder.config.self_ordering_primary_color || "",
+        });
     }
     get selfIsReady() {
         return this.selfOrder.models["product.product"].length > 0;
