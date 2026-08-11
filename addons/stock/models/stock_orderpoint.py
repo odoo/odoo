@@ -56,11 +56,15 @@ class StockWarehouseOrderpoint(models.Model):
     product_uom_name = fields.Char(string='Product unit of measure label', related='uom_id.display_name', readonly=True)
     product_min_qty = fields.Float(
         'Min Quantity', digits='Product Unit', required=True, default=0.0,
-        help="The minimum Stock level that will trigger a replenishment.")
+        help="Minimum Forecasted stock level that will trigger a replenishment.\nA safety stock is included in the min "
+             "to cover unusual situations if days of demand covered by the Minimum Level is > Replenishment Lead Times "
+             "- Availability Time.")
     product_max_qty = fields.Float(
         'Max Quantity', digits='Product Unit', required=True, default=0.0,
         compute='_compute_product_max_qty', readonly=False, store=True,
-        help="Stock level to reach when replenishing.")
+        help="Forecasted stock level when replenishing.\nAutomatically calculated as = Min + Max (Order frequency x "
+             "Daily Demand x Growth factor, MoQ) with MoQ = Minimum quantity from vendor pricelist / BOM.\nWon't be "
+             "reached by on Hand stock if unforecasted demand is delivered while waiting for arrival.")
     allowed_replenishment_uom_ids = fields.Many2many('uom.uom', compute='_compute_allowed_replenishment_uom_ids')
     replenishment_uom_id = fields.Many2one(
         'uom.uom', 'Multiple',

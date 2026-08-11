@@ -39,7 +39,7 @@ class StockReplenishmentInfo(models.TransientModel):
         ],
         default='one_month',
         string='Based on',
-        help="Estimate the sales volume for the period based on past period or order the forecasted quantity for that period.",
+        help="Estimate the daily average future demand volume based on past period or choose Custom Demand to enter manually average daily demand.",
         required=True
     )
     percent_factor = fields.Integer(default=100, required=True)
@@ -79,11 +79,12 @@ class StockReplenishmentInfo(models.TransientModel):
             if not replenishment_report.product_id or not replenishment_report.orderpoint_id.location_id:
                 continue
             orderpoint = replenishment_report.orderpoint_id
-            _, lead_days_description = replenishment_report._get_lead_days_and_description()
+            lead_days, lead_days_description = replenishment_report._get_lead_days_and_description()
             if lead_days_description:
                 lead_days_description = _format_description(lead_days_description)
             replenishment_report.json_lead_days = dumps({
                 'lead_horizon_date': format_date(self.env, replenishment_report.orderpoint_id.lead_horizon_date),
+                'lead_time': lead_days.get('total_delay', 0),
                 'lead_days_description': lead_days_description,
                 'today': format_date(self.env, fields.Date.context_today(self)),
                 'trigger': orderpoint.trigger,
@@ -131,7 +132,7 @@ class StockReplenishmentInfo(models.TransientModel):
             x_axis_vals = ['']
             curve_line_vals = [{'x': '', 'y': self.product_max_qty}]
             for i in range(1, 4):
-                date_string = _("In %s day(s)", int(i * ordering_period))
+                date_string = _("In %s days", int(i * ordering_period))
                 x_axis_vals.append(date_string)
                 curve_line_vals.append({'x': date_string, 'y': self.product_min_qty})
                 curve_line_vals.append({'x': date_string, 'y': self.product_max_qty})

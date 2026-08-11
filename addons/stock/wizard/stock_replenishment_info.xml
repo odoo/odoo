@@ -7,17 +7,16 @@
             <form class="o_stock_replenishment_info">
                 <field name="orderpoint_id" invisible="1"/>
                 <field name="qty_to_order" invisible="1"/>
-                <div class="alert alert-info" role="alert">
-                    <span>When the stock level at the forecasted date is below the minimum (<field name="product_min_qty" readonly="True"/> <field name="product_uom_name"/>), a replenishment must be done to reach the maximum level of stock (<field name="product_max_qty" readonly="True"/> <field name="product_uom_name"/>).</span>
-                </div>
                 <group>
                     <group>
                         <field nolabel="1" name="json_lead_days" colspan="2" widget="lead_days_widget"/>
                     </group>
                     <group>
                         <div>
-                            <h2>Min - Max</h2>
-                            <hr/>
+                            <div class="mb8">
+                                <h2>Min - Max Suggestion</h2>
+                                <span class="text-muted">When forecasted inventory reaches the minimum, replenish to reach maximum.</span>
+                            </div>
                             <div>
                                 <label for="based_on"/>
                                 <field name="based_on" class="oe_inline" widget="time_period_selection"/> x
@@ -45,7 +44,7 @@
                 </notebook>
                 <footer>
                     <button string="Save" class="btn btn-primary" special="save" data-hotkey="q"/>
-                    <button string="Close" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                    <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x"/>
                 </footer>
             </form>
         </field>

@@ -47,7 +47,7 @@ export class ForecastedHeader extends Component {
     }
 
     get leadTimeShort() {
-        let short = " " + (this.leadTime.total_delay) + " day(s)";
+        let short = " " + (this.leadTime.total_delay) + " days";
         if (this.leadTime.total_delay != 0) {
             short += " (" + this.leadTime.earliestPossibleArrival + ")";
         }
