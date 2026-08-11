@@ -152,6 +152,16 @@ export class TourPointer extends Component {
             pointerPositionOptions
         );
 
+        const uiService = useService("ui");
+        const onActiveElementChanged = () => {
+            const activeEl = uiService.activeElement;
+            const pointerAnchor = this.trigger;
+            if (pointerAnchor) {
+                this.state.triggerBelow = !activeEl.contains(pointerAnchor);
+            }
+        };
+        useBus(uiService.bus, "active-element-changed", onActiveElementChanged);
+
         useLayoutEffect(
             () => {
                 const trigger = this.trigger;
@@ -159,6 +169,7 @@ export class TourPointer extends Component {
                     return;
                 }
 
+                onActiveElementChanged();
                 this.popover.close();
                 if (this.props.pointerState.isZone && this.dropzoneRef()) {
                     const triggerRect = this.trigger.getBoundingClientRect();
@@ -195,15 +206,6 @@ export class TourPointer extends Component {
             set: () => {},
             enumerable: true,
         });
-        const uiService = useService("ui");
-        const onActiveElementChanged = () => {
-            const activeEl = uiService.activeElement;
-            const pointerAnchor = this.trigger;
-            if (pointerAnchor) {
-                this.state.triggerBelow = !activeEl.contains(pointerAnchor);
-            }
-        };
-        useBus(uiService.bus, "active-element-changed", onActiveElementChanged);
 
         this.popover = usePopover(TourPointerPopover, popoverOptions);
     }
