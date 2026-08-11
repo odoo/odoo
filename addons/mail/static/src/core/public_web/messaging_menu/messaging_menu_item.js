@@ -1,8 +1,9 @@
 import { ActionList } from "@mail/core/common/action_list";
 import { useMessageActions } from "@mail/core/common/message_actions";
 import { Priority } from "@mail/core/common/priority";
+import { MessagingMenuItemContextMenu } from "@mail/core/public_web/messaging_menu/messaging_menu_item_context_menu";
 import { NotificationItem } from "@mail/core/public_web/notification_item";
-import { propSignal, useLongPress } from "@mail/utils/common/hooks";
+import { propSignal, useLongPress, useRightClickMenu } from "@mail/utils/common/hooks";
 
 import { Component, computed, signal, types, useProps } from "@odoo/owl";
 
@@ -21,6 +22,7 @@ export class MessagingMenuItem extends Component {
     static components = {
         ActionList,
         Dropdown,
+        MessagingMenuItemContextMenu,
         NotificationItem,
         Priority,
     };
@@ -57,6 +59,9 @@ export class MessagingMenuItem extends Component {
         this.messageDropdownState = useDropdownState();
         this.ui = useService("ui");
         useSubEnv({ inMessagingMenu: true });
+        this.rightClickMenu = useRightClickMenu(this.root, {
+            extraMenuProps: () => ({ actionsList: this.actionsList }),
+        });
         if (isMobileOS()) {
             useLongPress(this.root, {
                 action: () => {
