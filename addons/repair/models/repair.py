@@ -248,14 +248,14 @@ class RepairOrder(models.Model):
     @api.depends('invoice_ids', 'invoice_ids.state')
     def _compute_invoice_count(self):
         for repair in self:
-            repair.invoice_count = len(repair.invoice_ids)
+            repair.invoice_count = len(repair.sudo().invoice_ids)
 
     @api.depends('invoice_ids', 'invoice_ids.state', 'partner_id', 'sale_order_id', 'state')
     def _compute_can_create_sale_or_invoice(self):
         for repair in self:
             repair.can_create_sale_or_invoice = (
                 repair.partner_id
-                and all(invoice.state == "cancel" for invoice in repair.invoice_ids)
+                and all(invoice.state == "cancel" for invoice in repair.sudo().invoice_ids)
                 and not repair.sale_order_id
                 and repair.state != "cancel"
             )
