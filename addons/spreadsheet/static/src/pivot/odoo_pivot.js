@@ -481,6 +481,10 @@ export class OdooPivot {
         return this.loader.lastUpdate;
     }
 
+    get loadingTime() {
+        return this.loader.loadingTime;
+    }
+
     isModelValid() {
         return this.loader.isModelValid();
     }
