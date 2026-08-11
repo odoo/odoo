@@ -537,12 +537,12 @@ class HrTimeRule(models.Model):
             result.append((seg_s, seg_e, rule, pp))
         return result
 
-    def _apply_output(self, excess, deficit):
+    def _apply_output(self, excess, deficit, active_iv=None):
         """Shared apply-output implementation for both leaves and attendances.
 
+        active_iv: schedule-clipped pipeline intervals per source.
         Returns (new_records, all_source_ids, excess_alloc, deficit_alloc) where
-        excess_alloc / deficit_alloc are lists of (employee, rule, hours) for callers
-        that need to adjust leave allocation balances.
+        excess_alloc / deficit_alloc are lists of (employee, rule, hours).
         """
         create_vals = []
         all_source_ids = set()
@@ -601,7 +601,12 @@ class HrTimeRule(models.Model):
                 source_wet_id = source.work_entry_type_id.id
 
                 out_union = Intervals([(s, e, dummy) for s, e, _r, _pp in output_intervals], keep_distinct=True)
-                remainder_segments = list(Intervals([(src_start_local, src_stop_local, dummy)]) - out_union)
+                src_iv = (
+                    active_iv[employee][source]
+                    if active_iv and source in active_iv.get(employee, {})
+                    else Intervals([(src_start_local, src_stop_local, dummy)])
+                )
+                remainder_segments = list(src_iv - out_union)
 
                 min_out_start_utc = min(
                     seg_s.replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
@@ -741,30 +746,50 @@ class HrTimeRule(models.Model):
         """Evaluate all rules sequentially against a recordset of time records.
 
         Each rule fires in sequence order and sees all current pipeline intervals —
-        both original and those classified by prior rules. Returns (excess, deficit)
+        both original and those classified by prior rules. Returns (excess, deficit, active_iv)
         keyed by employee then source record, with 4-tuple (s, e, rule, pp) values.
+        active_iv carries the union of pipeline segments per source for remainder computation.
         """
         excess = defaultdict(lambda: defaultdict(list))
         deficit = defaultdict(lambda: defaultdict(list))
+        active_iv = defaultdict(lambda: defaultdict(Intervals))
 
         if not records:
-            return excess, deficit
+            return excess, deficit, active_iv
 
         employees = records.employee_id
         applicable_rules = self.filtered(lambda r: bool(r._get_applicable_employees(employees)))
         if not applicable_rules:
-            return excess, deficit
+            return excess, deficit, active_iv
         work_intervals_by_calendar = applicable_rules._build_work_intervals_by_calendar(employees, start_dt, end_dt)
         start_field = records._time_rule_span_start_field
+
+        # base schedule for schedule-aware interval splitting (e.g. multi-day absence leaves).
+        # mirrors _get_durations: by default compute_leaves=True subtracts public holidays,
+        # but leave types with include_public_holidays_in_duration=True keep them.
+        base_work = work_intervals_by_calendar.get(False) or next(iter(work_intervals_by_calendar.values()), {})
+        base_raw_sched = base_work.get('schedule', defaultdict(Intervals))
+        base_public_leave = base_work.get('public_leave', defaultdict(Intervals))
+        base_sched_no_ph = defaultdict(Intervals)
+        for emp in employees:
+            base_sched_no_ph[emp] = base_raw_sched[emp] - base_public_leave[emp]
 
         # pipeline: (start, stop, current_wet, pp, source, classifying_rule)
         # classifying_rule=None means the interval is still in its original state
         pipeline_by_emp = defaultdict(list)
+        dummy = self.env['resource.calendar']
         for record in records.sorted(start_field):
-            start_local, stop_local = self._get_record_interval_local(record)
-            pipeline_by_emp[record.employee_id].append(
-                (start_local, stop_local, record.work_entry_type_id, frozenset(), record, None)
-            )
+            # include_public_holidays_in_duration=True: PH hours are part of leave duration → use raw schedule
+            # default (False): PH not counted in duration → subtract them (compute_leaves=True equivalent)
+            wet = record.work_entry_type_id
+            include_ph = wet._fields.get('include_public_holidays_in_duration') and wet.include_public_holidays_in_duration
+            emp_schedule = base_raw_sched[record.employee_id] if include_ph else base_sched_no_ph[record.employee_id]
+            segs = record._get_pipeline_intervals_local(emp_schedule)
+            for seg_start, seg_stop in segs:
+                active_iv[record.employee_id][record] |= Intervals([(seg_start, seg_stop, dummy)])
+                pipeline_by_emp[record.employee_id].append(
+                    (seg_start, seg_stop, record.work_entry_type_id, frozenset(), record, None)
+                )
 
         for rule in applicable_rules:
             work_intervals = work_intervals_by_calendar[rule._get_schedule_calendar().id or False]
@@ -863,4 +888,4 @@ class HrTimeRule(models.Model):
                 if cls_rule is not None and iv_end > iv_start:
                     excess[employee][source].append((iv_start, iv_end, cls_rule, acc_pp))
 
-        return excess, deficit
+        return excess, deficit, active_iv

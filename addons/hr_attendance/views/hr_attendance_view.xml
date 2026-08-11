@@ -467,15 +467,15 @@
                        decoration-danger="state == 'refused'"
                        readonly="1"/>
                 <button name="action_validate" string="Validate" type="object"
-                        icon="fa-check"
+                        icon="check"
                         invisible="state != 'draft'"
                         groups="hr_attendance.group_hr_attendance_officer"/>
                 <button name="action_refuse" string="Refuse" type="object"
-                        icon="fa-times"
+                        icon="close"
                         invisible="state not in ('draft', 'validated')"
                         groups="hr_attendance.group_hr_attendance_officer"/>
                 <button name="action_reset_to_draft" string="Reset to Draft" type="object"
-                        icon="fa-undo"
+                        icon="undo"
                         invisible="state != 'refused'"
                         groups="hr_attendance.group_hr_attendance_officer"/>
             </list>

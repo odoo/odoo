@@ -2,17 +2,16 @@
 
 from calendar import monthrange
 from collections import defaultdict
-from datetime import UTC, date, datetime, time, timedelta
+from datetime import UTC, datetime, time, timedelta
 from random import randint
 from zoneinfo import ZoneInfo
 
 from dateutil.relativedelta import relativedelta
-from dateutil.rrule import DAILY, rrule
 
 from odoo import _, api, exceptions, fields, models
 from odoo.exceptions import AccessError, ValidationError
 from odoo.http import request
-from odoo.tools import convert, float_compare, float_is_zero, format_datetime, format_duration, format_time
+from odoo.tools import convert, float_compare, format_datetime, format_duration, format_time
 from odoo.tools.date_utils import float_to_time, sum_intervals, time_to_float
 from odoo.tools.intervals import Intervals
 
@@ -646,8 +645,8 @@ class HrAttendance(models.Model):
             ON hr_attendance (check_in, check_out, employee_id);
         """)
 
-    def _apply_record_output(self, rules, excess, deficit):
-        rules._apply_attendance_output(excess, deficit)
+    def _apply_record_output(self, rules, excess, deficit, active_iv=None):
+        rules._apply_attendance_output(excess, deficit, active_iv=active_iv)
 
     def _get_time_rule_deficit_occupied(self, employee_id, start_utc, period_end_utc):
         dummy = self.env['resource.calendar']

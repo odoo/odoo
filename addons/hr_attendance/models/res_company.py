@@ -68,7 +68,7 @@ class ResCompany(models.Model):
     def _compute_attendance_kiosk_url(self):
         for company in self:
             company.attendance_kiosk_url = url_join(self.env['res.company'].get_base_url(), '/hr_attendance/%s' % company.attendance_kiosk_key)
- 
+
     @api.depends('country_id')
     def _compute_attendance_work_entry_type_id(self):
         fallback = self.env.ref('hr_work_entry.generic_work_entry_type_attendance', raise_if_not_found=False)

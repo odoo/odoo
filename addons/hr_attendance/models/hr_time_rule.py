@@ -26,5 +26,5 @@ class HrTimeRule(models.Model):
             'time_rule_id': rule.id,
         }
 
-    def _apply_attendance_output(self, excess, deficit):
-        self._apply_output(excess, deficit)
+    def _apply_attendance_output(self, excess, deficit, active_iv=None):
+        self._apply_output(excess, deficit, active_iv=active_iv)

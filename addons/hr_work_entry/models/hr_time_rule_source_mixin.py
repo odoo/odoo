@@ -2,10 +2,12 @@
 
 from collections import defaultdict
 from datetime import date, datetime, time, timedelta, UTC
+from zoneinfo import ZoneInfo
 
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, models
+from odoo.tools.intervals import Intervals
 
 
 class HrTimeRuleSourceMixin(models.AbstractModel):
@@ -21,8 +23,20 @@ class HrTimeRuleSourceMixin(models.AbstractModel):
     _time_rule_span_end_field = ''    # span end field name
     _time_rule_write_ctx = {'skip_time_rules': True, 'tracking_disable': True}
 
-    def _apply_record_output(self, rules, excess, deficit):
+    def _apply_record_output(self, rules, excess, deficit, active_iv=None):
         raise NotImplementedError
+
+    def _get_pipeline_intervals_local(self, schedule):
+        """Return (start, stop) local-naive pairs for this record's pipeline segments.
+
+        Default: one interval for the full raw span.
+        Override for multi-day absence leaves, clip to schedule.
+        """
+        self.ensure_one()
+        tz = ZoneInfo(self.employee_id.sudo()._get_tz())
+        start = self[self._time_rule_span_start_field].replace(tzinfo=UTC).astimezone(tz).replace(tzinfo=None)
+        stop = self[self._time_rule_span_end_field].replace(tzinfo=UTC).astimezone(tz).replace(tzinfo=None)
+        return [(start, stop)]
 
     def _get_source_extra_fields_domain(self):
         return []
@@ -86,11 +100,20 @@ class HrTimeRuleSourceMixin(models.AbstractModel):
                     merged[emp][record].extend(items)
         return merged
 
+    def _merge_active_iv(self, a, b):
+        merged = defaultdict(lambda: defaultdict(Intervals))
+        for active_iv in (a, b):
+            for emp, by_src in active_iv.items():
+                for src, iv in by_src.items():
+                    merged[emp][src] |= iv
+        return merged
+
     def _collect_time_rule_outputs(self, rules, ranges_by_employee):
         all_excess = defaultdict(lambda: defaultdict(list))
         all_deficit = defaultdict(lambda: defaultdict(list))
+        all_active_iv = defaultdict(lambda: defaultdict(Intervals))
         if not rules:
-            return all_excess, all_deficit
+            return all_excess, all_deficit, all_active_iv
 
         by_range = defaultdict(list)
         for employee, (date_from, date_to) in ranges_by_employee.items():
@@ -104,7 +127,7 @@ class HrTimeRuleSourceMixin(models.AbstractModel):
             if not sources:
                 continue
 
-            excess, deficit = rules._evaluate_rules(sources, start_dt, end_dt)
+            excess, deficit, active_iv = rules._evaluate_rules(sources, start_dt, end_dt)
 
             for emp, by_src in excess.items():
                 for src, items in by_src.items():
@@ -112,8 +135,11 @@ class HrTimeRuleSourceMixin(models.AbstractModel):
             for emp, by_src in deficit.items():
                 for src, items in by_src.items():
                     all_deficit[emp][src].extend(items)
+            for emp, by_src in active_iv.items():
+                for src, iv in by_src.items():
+                    all_active_iv[emp][src] |= iv
 
-        return all_excess, all_deficit
+        return all_excess, all_deficit, all_active_iv
 
     @api.model
     def _cron_process_day_undertime_rules(self):
@@ -192,12 +218,13 @@ class HrTimeRuleSourceMixin(models.AbstractModel):
                     wdt = max(wdt, wdt + relativedelta(days=(ws - 1 - wdt.weekday()) % 7))
                 week_rules_ranges[employee] = (wdf, wdt)
 
-        day_excess, day_deficit = self._collect_time_rule_outputs(day_rules, day_rules_ranges)
-        week_excess, week_deficit = self._collect_time_rule_outputs(week_rules, week_rules_ranges)
+        day_excess, day_deficit, day_active_iv = self._collect_time_rule_outputs(day_rules, day_rules_ranges)
+        week_excess, week_deficit, week_active_iv = self._collect_time_rule_outputs(week_rules, week_rules_ranges)
 
         merged_excess = self._merge_rule_outputs(day_excess, week_excess)
         merged_deficit = self._merge_rule_outputs(day_deficit, week_deficit)
-        self._apply_record_output(day_rules | week_rules, merged_excess, merged_deficit)
+        merged_active_iv = self._merge_active_iv(day_active_iv, week_active_iv)
+        self._apply_record_output(day_rules | week_rules, merged_excess, merged_deficit, merged_active_iv)
 
     def _trigger_time_rules(self):
         """Apply the full day/week, past/current, exceed/undertime split for validated source record."""
@@ -234,22 +261,6 @@ class HrTimeRuleSourceMixin(models.AbstractModel):
         trigger_fields = {'employee_id', self._time_rule_span_start_field, self._time_rule_span_end_field} | self._get_write_source_extra_source_fields()
         if not self.env.context.get('skip_time_rules') and trigger_fields.intersection(vals):
             self._trigger_time_rules()
-        return res
-
-    def unlink(self):
-        # capture affected info before records are deleted, for the post-deletion recompute
-        if not self.env.context.get('skip_time_rules'):
-            assert 'employee_id' in self._fields
-            domain = [
-                (self._time_rule_span_start_field, '!=', False),
-                (self._time_rule_span_end_field, '!=', False),
-            ]
-            domain.extend(self._get_source_extra_fields_domain())
-            validated = self.filtered_domain(domain)
-            affected = [(r.employee_id, r[r._time_rule_span_start_field], r[r._time_rule_span_end_field]) for r in validated]
-        res = super().unlink()
-        if not self.env.context.get('skip_time_rules') and affected:
-            self._trigger_time_rules_for_affected(affected)
         return res
 
     @api.model_create_multi

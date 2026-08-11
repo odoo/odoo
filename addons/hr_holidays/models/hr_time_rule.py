@@ -65,8 +65,8 @@ class HrTimeRule(models.Model):
         """
         return self
 
-    def _apply_leave_output(self, excess, deficit):
-        new_records, all_source_ids, excess_alloc, deficit_alloc = self._apply_output(excess, deficit)
+    def _apply_leave_output(self, excess, deficit, active_iv=None):
+        new_records, all_source_ids, excess_alloc, deficit_alloc = self._apply_output(excess, deficit, active_iv=active_iv)
         alloc_create_vals = []
         for employee, rule, excess_hours in excess_alloc:
             if not (rule.leave_compensation_rate > 0 and rule.allocation_type_id):

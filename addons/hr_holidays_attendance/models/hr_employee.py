@@ -72,5 +72,4 @@ class HrEmployee(models.Model):
         for employee, overtime_hours in overtime_atts:
             attendance_data[employee.id]['overtime_hours'] = overtime_hours
 
-
         return attendance_data

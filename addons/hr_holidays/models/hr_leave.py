@@ -1,5 +1,3 @@
-import logging
-
 from collections import defaultdict
 
 from datetime import date, datetime, timedelta, time, UTC
@@ -21,7 +19,6 @@ from odoo.tools.intervals import Intervals
 from odoo.tools.misc import clean_context, format_date, format_duration
 from odoo.tools.translate import _
 
-_logger = logging.getLogger(__name__)
 
 
 def get_employee_from_context(values, context, user_employee_id):
@@ -1584,8 +1581,26 @@ class HrLeave(models.Model):
         res = super(HrLeave, self.with_context(leave_skip_date_check=True)).unlink()
         return res
 
-    def _apply_record_output(self, rules, excess, deficit):
-        rules._apply_leave_output(excess, deficit)
+    def _apply_record_output(self, rules, excess, deficit, active_iv=None):
+        rules._apply_leave_output(excess, deficit, active_iv=active_iv)
+
+    def _get_pipeline_intervals_local(self, schedule):
+        """For multi-day absence leaves, clip to the work schedule.
+
+        A leave of type 'absence' from Mon 08:00 to Wed 16:00 only removes
+        scheduled working hours — the overnight gaps (Mon 16:00→Tue 00:00, etc.)
+        are not absence time and should not count toward rule thresholds.
+        Single-day leaves and non-absence types keep the raw interval.
+        """
+        self.ensure_one()
+        tz = ZoneInfo(self.employee_id.sudo()._get_tz())
+        start = self.date_from.replace(tzinfo=UTC).astimezone(tz).replace(tzinfo=None)
+        stop = self.date_to.replace(tzinfo=UTC).astimezone(tz).replace(tzinfo=None)
+        if self.work_entry_type_id.count_as != 'absence' or start.date() == stop.date():
+            return [(start, stop)]
+        raw_iv = Intervals([(start, stop, self.env['resource.calendar'])])
+        clipped = raw_iv & schedule
+        return [(s, e) for s, e, _ in clipped] if clipped else [(start, stop)]
 
     def _get_source_extra_fields_domain(self):
         return [('state', '=', 'validate')]

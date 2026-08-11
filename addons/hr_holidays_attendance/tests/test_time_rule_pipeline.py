@@ -3069,3 +3069,48 @@ class TestTimeRulePipelineLeaves(TransactionCase):
                                      "Output must not spill past midnight (period boundary)")
         finally:
             rule.write({'active': False})
+
+    def test_multiday_absence_leave_clips_to_schedule(self):
+        """Multi-day absence leave must only count scheduled working hours per day.
+
+        Without schedule-clipping, a Mon 08:00 -> Wed 16:00 leave:
+          Monday sees 16h, Tuesday 24h, Wednesday 16h (56h total).
+        With clipping to the 8h/day schedule, each day sees exactly 8h (24h total).
+        With a 4h/day threshold the correct excess is 4h * 3 days = 12h.
+        """
+        calendar = self.env['resource.calendar'].create({
+            'name': '8h/day Mon-Fri (multi-day test)',
+            'attendance_ids': [
+                (0, 0, {'dayofweek': wd, 'hour_from': 8, 'hour_to': 16})
+                for wd in ['0', '1', '2', '3', '4']
+            ],
+        })
+        emp = self.env['hr.employee'].create({
+            'name': 'Multi-Day Leave Employee',
+            'tz': 'UTC',
+            'attendance_based': False,
+            'date_version': '2020-01-01',
+            'contract_date_start': '2020-01-01',
+            'wage': 3000,
+        })
+        emp.sudo().version_id.write({'resource_calendar_id': calendar.id})
+
+        rule = self.env['hr.time.rule'].create({
+            'name': 'Exceed 4h/day (multi-day)',
+            'working_hours_mode': 'day',
+            'threshold_operator': 'exceed',
+            'expected_hours': 4,
+            'work_entry_type_id': self.out_type.id,
+            'condition_work_entry_type_ids': [self.src_type.id],
+        })
+        try:
+            leave = self._make_leave(
+                datetime(2022, 12, 12, 8), datetime(2022, 12, 14, 16),
+                emp=emp,
+            )
+            self.assertAlmostEqual(
+                self._output_hours(leave, self.out_type), 12.0, places=5,
+                msg="3-day absence leave: 8h/day - 4h threshold = 4h excess * 3 days = 12h total",
+            )
+        finally:
+            rule.write({'active': False})

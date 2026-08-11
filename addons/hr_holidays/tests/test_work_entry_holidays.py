@@ -503,7 +503,12 @@ class TestWorkEntryHolidays(TestWorkEntryBase, TestHolidayContract):
         self.assertEqual(working_leave.with_context(leave_skip_state_check=True).duration_display, "6:00 hours")
 
     def test_worked_time_leave_over_public_holiday(self):
-        """Worked-time leaves should not duplicate overlapping public holidays."""
+        """Worked-time leaves should not duplicate overlapping public holidays.
+
+        When a worked-time leave spans a public holiday, the public holiday takes precedence
+        on that day and produces its own work entry (with the holiday wet). The worked-time
+        leave entries appear only on the non-holiday days.
+        """
         self.richard_emp.version_id.tz = 'UTC'
         worked_time_type = self.env['hr.work.entry.type'].create({
             'name': 'Worked Time Off',
@@ -511,13 +516,16 @@ class TestWorkEntryHolidays(TestWorkEntryBase, TestHolidayContract):
             'count_as': 'working_time',
             'requires_allocation': False,
         })
-        self.env['resource.calendar.leaves'].create({
+        # resource.calendar.leaves without resource_id auto-computes a public
+        # holiday wet via _compute_work_entry_type_id; capture it for assertions
+        public_holiday_leave = self.env['resource.calendar.leaves'].create({
             'name': 'Public holiday',
             'date_from': datetime(2026, 1, 6, 0, 0, 0),
             'date_to': datetime(2026, 1, 6, 23, 59, 59),
             'calendar_id': self.richard_emp.resource_calendar_id.id,
             'count_as': 'absence',
         })
+        public_holiday_wet = public_holiday_leave.work_entry_type_id
         leave = self.env['hr.leave'].create({
             'name': 'Worked time leave',
             'employee_id': self.richard_emp.id,
@@ -545,4 +553,5 @@ class TestWorkEntryHolidays(TestWorkEntryBase, TestHolidayContract):
         self.assertEqual(sorted(vals['date'] for vals in pto_entries_vals), [date(2026, 1, 5), date(2026, 1, 7)])
         self.assertEqual(len(public_holiday_entries_vals), 1)
         self.assertEqual(public_holiday_entries_vals[0]['date'], date(2026, 1, 6))
-        self.assertFalse(public_holiday_entries_vals[0]['work_entry_type_id'])
+        # the public holiday wet is auto-computed from the resource.calendar.leaves
+        self.assertEqual(public_holiday_entries_vals[0]['work_entry_type_id'], public_holiday_wet)
