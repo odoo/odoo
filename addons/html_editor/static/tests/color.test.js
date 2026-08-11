@@ -523,7 +523,18 @@ test("should apply gradient color when a when background color is applied on spa
             "color"
         ),
         contentAfter:
-            '<p><span style="background-color: rgb(255, 0, 0)">ab</span><span class="text-gradient" style="background-image: linear-gradient(135deg, rgb(255, 174, 127) 0%, rgb(109, 204, 0) 100%);">[ca]</span><span style="background-color: rgb(255, 0, 0)">bc</span></p>',
+            '<p><span style="background-color: rgb(255, 0, 0)">ab<span class="text-gradient" style="background-image: linear-gradient(135deg, rgb(255, 174, 127) 0%, rgb(109, 204, 0) 100%);">[ca]</span>bc</span></p>',
+    });
+});
+test("should apply gradient color when a when background color class is applied on span", async () => {
+    await testEditor({
+        contentBefore: '<p><span class="bg-200">ab[ca]bc</span></p>',
+        stepFunction: setColor(
+            "linear-gradient(135deg, rgb(255, 174, 127) 0%, rgb(109, 204, 0) 100%)",
+            "color"
+        ),
+        contentAfter:
+            '<p><span class="bg-200">ab<span class="text-gradient" style="background-image: linear-gradient(135deg, rgb(255, 174, 127) 0%, rgb(109, 204, 0) 100%);">[ca]</span>bc</span></p>',
     });
 });
 test("should apply a gradient color to a slice of text in a span", async () => {
@@ -555,7 +566,7 @@ test("should not break a gradient and apply gradient background color to a slice
             "color"
         ),
         contentAfter:
-            '<p><span style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);"><span class="a">ab<span class="text-gradient" style="background-image: linear-gradient(135deg, rgb(255, 174, 127) 0%, rgb(109, 204, 0) 100%);">[ca]</span>bc</span></span></p>',
+            '<p><span style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);"><span class="a">ab<span style="background-color: rgb(255, 0, 0);"><span class="text-gradient" style="background-image: linear-gradient(135deg, rgb(255, 174, 127) 0%, rgb(109, 204, 0) 100%);">[ca]</span></span>bc</span></span></p>',
     });
 });
 test("should apply gradient color on selected text", async () => {
