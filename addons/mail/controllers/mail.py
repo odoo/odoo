@@ -15,6 +15,7 @@ from odoo.tools import consteq
 from odoo.tools.misc import file_open
 
 from odoo.addons.mail.tools.discuss import add_guest_to_context
+from odoo.addons.mail.tools.material_symbols_pua_codepoints import material_symbol_char
 
 try:
     from werkzeug.utils import send_file
@@ -184,26 +185,20 @@ class MailController(http.Controller):
         return request.redirect(url)
 
     @staticmethod
-    def _get_icon_rendering_info(icon, font):
-        # default to 'oi' (material icons)
-        info = {
-            'path': 'web/static/src/libs/materialsymbols/material_symbols_outlined_subset.woff2',
-            'layout_engine': ImageFont.Layout.RAQM,
-            'features': ['liga'],
-            'icon': icon,
-        }
+    def _get_icon_rendering_info(icon, font, fill=False):
+        info = {}
         if font == 'oi' and icon.isdigit():
             # custom odoo icon
             info['path'] = 'web/static/lib/odoo_ui_icons/fonts/odoo_ui_icons.woff2'
-            info['layout_engine'] = None
-            info['features'] = None
             info['icon'] = chr(int(icon))
         elif font == 'fa':
             # legacy fontawesome icon
             info['path'] = 'web/static/src/libs/fontawesome/fonts/fontawesome-webfont.ttf'
-            info['layout_engine'] = None
-            info['features'] = None
             info['icon'] = chr(int(icon)) if icon.isdigit() else icon  # legacy fallback
+        else:
+            # default to 'oi' (material icons)
+            info['path'] = 'mail/static/src/fonts/material_symbols_outlined_pua_cmap.woff2'
+            info['icon'] = material_symbol_char(icon, fill)
         return info
 
     @http.route('/mail/view', type='http', auth='public')
@@ -312,9 +307,6 @@ class MailController(http.Controller):
             :returns PNG image converted from given font
         """
         # --- Legacy font and icon normalization
-        if icon.startswith('oi_'):
-            icon = icon.removeprefix('oi_')
-            font = 'oi'
         # For custom icons, use the corresponding custom font
         if icon.isdigit():
             oi_font_char_codes = {
@@ -363,18 +355,19 @@ class MailController(http.Controller):
         height = max(1, min(height, 512))
         font_size = height
 
-        return self.export_icon_to_png(icon, font=font, color=color, bg=bg, width=width, height=height, font_size=font_size)
+        return self.export_icon_to_png(icon, font=font, fill=0, color=color, bg=bg, width=width, height=height, font_size=font_size)
 
     # all routes need to be kept otherwise mail already sent won't be able to load icons anymore
     @http.route([
-        '/mail/font_to_img/<icon>/<font>/<color>/<bg>/<int:width>x<int:height>fs<int:font_size>',
+        '/mail/font_to_img/<icon>/<font>/<int:fill>/<color>/<bg>/<int:width>x<int:height>fs<int:font_size>',
     ], type='http', auth='none')
-    def export_icon_to_png(self, icon, font='oi', color='000000ff', bg='00000000', width=16, height=16, font_size=16):
+    def export_icon_to_png(self, icon, font='oi', fill=0, color='000000ff', bg='00000000', width=16, height=16, font_size=16):
         """ Convert an icon to an image. Is used only for mass mailing because
             custom fonts are not supported in mail.
             :param icon : icon ligature, or decimal encoding of unicode
               character
             :param font : font key ('fa' or 'oi')
+            :param fill : FILL axis (0 or 1), ignored if not relevant
             :param color : font color RGB or RGBA hexadecimal string
             :param bg : background color RGB or RGBA hexadecimal string
             :param width : Pixels in integer
@@ -383,10 +376,10 @@ class MailController(http.Controller):
 
             :returns PNG image converted from given font
         """
-        rendering_info = self._get_icon_rendering_info(icon, font)
+        rendering_info = self._get_icon_rendering_info(icon, font, bool(fill))
         font_path = rendering_info['path']
-        layout_engine = rendering_info['layout_engine']
-        features = rendering_info['features']
+        layout_engine = rendering_info.get('layout_engine')
+        features = rendering_info.get('features')
         icon = rendering_info['icon']
 
         # Format colors for PIL
@@ -401,24 +394,24 @@ class MailController(http.Controller):
         # Determine the dimensions of the icon using a dummy draw
         draw = ImageDraw.Draw(Image.new('L', (1, 1)))
         fd = None
-        try:
+
+        def extract_font_info():
             fd = file_open(font_path, 'rb')
             font_obj = ImageFont.truetype(fd, font_size, layout_engine=layout_engine)
             box = draw.textbbox((0, 0), icon, font=font_obj, features=features)
             box_w = box[2] - box[0]
             box_h = box[3] - box[1]
+            return fd, font_obj, box, box_w, box_h
+        try:
+            fd, font_obj, box, box_w, box_h = extract_font_info()
             max_ratio = max(box_w / width, box_h / height)
             if max_ratio > 1:
                 # the old font_obj will no longer be used
                 fd.close()
                 fd = None
-                fd = file_open(font_path, 'rb')
                 # adjust the font_size to fit in requested dimensions
                 font_size = max(1, int(font_size / max_ratio))
-                font_obj = ImageFont.truetype(fd, font_size, layout_engine=layout_engine)
-                box = draw.textbbox((0, 0), icon, font=font_obj, features=features)
-                box_w = box[2] - box[0]
-                box_h = box[3] - box[1]
+                fd, font_obj, box, box_w, box_h = extract_font_info()
             left, top = box[:2]
 
             # Create an alpha mask
