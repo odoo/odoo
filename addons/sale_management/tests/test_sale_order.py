@@ -611,3 +611,25 @@ class TestSaleOrder(SaleManagementCommon):
                 self.sale_order.id, line.id, input_quantity=1
             )
         self.assertEqual(line.price_unit, 80.0)
+
+    def test_update_optional_line_without_product_on_portal(self):
+        """Test updating an optional line without a product on the portal."""
+        self.sale_order.write({
+            "order_line": [
+                Command.create({
+                    "display_type": "line_section",
+                    "name": "Optional products",
+                    "is_optional": True,
+                }),
+                Command.create({"name": "Test line", "product_uom_qty": 1}),
+            ],
+        })
+
+        line = self._get_optional_product_lines(self.sale_order)
+        self.assertFalse(line.product_id)
+
+        with MockRequest(self.env):
+            CustomerPortal().portal_quote_option_update(
+                self.sale_order.id, line.id, input_quantity=5
+            )
+        self.assertEqual(line.product_uom_qty, 5)
