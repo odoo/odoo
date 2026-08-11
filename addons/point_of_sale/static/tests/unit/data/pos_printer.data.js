@@ -12,6 +12,7 @@ export class PosPrinter extends models.ServerModel {
             "use_type",
             "printer_ip",
             "use_cashdrawer",
+            "use_lna",
         ];
     }
 
