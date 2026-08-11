@@ -645,10 +645,10 @@ class IrAttachment(models.Model):
 
         # remove computed field depending of datas
         vals_list = [{
-            key: value
-            for key, value
-            in vals.items()
-            if key not in ('file_size', 'checksum', 'store_fname')
+            **vals,
+            'file_size': 0,
+            'checksum': False,
+            'store_fname': False,
         } for vals in vals_list]
 
         for values in vals_list:
