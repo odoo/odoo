@@ -65,6 +65,26 @@ class StockWarehouseOrderpoint(models.Model):
         help="Forecasted stock level when replenishing.\nAutomatically calculated as = Min + Max (Order frequency x "
              "Daily Demand x Growth factor, MoQ) with MoQ = Minimum quantity from vendor pricelist / BOM.\nWon't be "
              "reached by on Hand stock if unforecasted demand is delivered while waiting for arrival.")
+    daily_demand = fields.Float(
+        "Daily Demand", digits='Product Unit', required=True, default=0.0, readonly=False, store=True)
+    based_on = fields.Selection(
+        selection=[
+            ('one_week', "Last 7 days"),
+            ('one_month', "Last 30 days"),
+            ('three_months', "Last 3 months"),
+            ('one_year', "Last 12 months"),
+            ('last_year', "Same month last year"),
+            ('last_year_2', "Next month last year"),
+            ('last_year_3', "After next month last year"),
+            ('last_year_quarter', "Last year quarter"),
+            ('custom', "Custom Demand"),
+        ],
+        default='one_month',
+        string='Based on',
+        help="Estimate the daily average future demand volume based on past period or choose Custom Demand to enter manually average daily demand.",
+        required=True
+    )
+    percent_factor = fields.Integer(default=100, required=True)
     allowed_replenishment_uom_ids = fields.Many2many('uom.uom', compute='_compute_allowed_replenishment_uom_ids')
     replenishment_uom_id = fields.Many2one(
         'uom.uom', 'Multiple',
@@ -350,6 +370,8 @@ class StockWarehouseOrderpoint(models.Model):
         )
         res = self.env['stock.replenishment.info'].create({
             'orderpoint_id': self.id,
+            'based_on': self.min_max_based_on,
+            'percent_factor': self.min_max_based_on_factor,
         })
         action['res_id'] = res.id
         return action
@@ -752,7 +774,7 @@ class StockWarehouseOrderpoint(models.Model):
                             date = orderpoint._get_orderpoint_procurement_date()
                             global_horizon_days = orderpoint.get_horizon_days()
                             if global_horizon_days:
-                                date -= relativedelta.relativedelta(days=int(global_horizon_days))
+                                date -= relativedelta(days=int(global_horizon_days))
                             values = orderpoint._prepare_procurement_values(date=date)
                             procurements.append(self.env['stock.rule'].Procurement(
                                 orderpoint.product_id, orderpoint.qty_to_order, orderpoint.uom_id,

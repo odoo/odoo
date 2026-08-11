@@ -23,6 +23,9 @@ class StockReplenishmentInfo(models.TransientModel):
     product_uom_name = fields.Char(related='orderpoint_id.product_uom_name')
     product_min_qty = fields.Float('Min', related='orderpoint_id.product_min_qty', readonly=False, related_sudo=False, required=True)
     product_max_qty = fields.Float('Max', related='orderpoint_id.product_max_qty', readonly=False, related_sudo=False, required=True)
+    daily_demand = fields.Float("Demand is", related='orderpoint_id.daily_demand', readonly=False, related_sudo=False, required=True)
+    min_coverage = fields.Integer(compute='_compute_min_coverage', readonly=False)
+    replenish_frequency = fields.Integer(compute='_compute_replenish_frequency', readonly=False)
     qty_to_order = fields.Float(related='orderpoint_id.qty_to_order')
     json_lead_days = fields.Char(compute='_compute_json_lead_days')
     json_replenishment_graph = fields.Char(compute='_compute_json_replenishment_graph')
@@ -36,13 +39,16 @@ class StockReplenishmentInfo(models.TransientModel):
             ('last_year_2', "Next month last year"),
             ('last_year_3', "After next month last year"),
             ('last_year_quarter', "Last year quarter"),
+            ('custom', "Custom Demand"),
         ],
         default='one_month',
         string='Based on',
         help="Estimate the daily average future demand volume based on past period or choose Custom Demand to enter manually average daily demand.",
-        required=True
+        required=True,
+        inverse='_inverse_based_on',
     )
-    percent_factor = fields.Integer(default=100, required=True)
+    percent_factor = fields.Integer(default=100, required=True, inverse='_inverse_percent_factor')
+    danger_level = fields.Char(compute='_compute_danger_level')
 
     warehouseinfo_ids = fields.One2many(related='orderpoint_id.warehouse_id.resupply_route_ids')
     wh_replenishment_option_ids = fields.One2many('stock.replenishment.option', 'replenishment_info_id', compute='_compute_wh_replenishment_options')
@@ -96,39 +102,41 @@ class StockReplenishmentInfo(models.TransientModel):
                 'virtual': orderpoint.trigger == 'manual' and orderpoint.create_uid.id == SUPERUSER_ID,
             })
 
-    def _get_period_of_time(self):
+    def _get_period_of_time(self, period=None):
         self.ensure_one()
+        if not period:
+            period = self.based_on
         today = fields.Datetime.now()
         start_date = limit_date = today
-        if self.based_on == 'one_week':
+        if period == 'one_week':
             start_date = start_date - relativedelta(weeks=1)
-        elif self.based_on == 'one_month':
+        elif period == 'one_month':
             start_date = start_date - relativedelta(months=1)
-        elif self.based_on == 'three_months':
+        elif period == 'three_months':
             start_date = start_date - relativedelta(months=3)
-        elif self.based_on == 'one_year':
+        elif period == 'one_year':
             start_date = start_date - relativedelta(years=1)
         else:  # Relative period of time.
             start_date = datetime(year=today.year - 1, month=today.month, day=1)
-            if self.based_on == 'last_year_2':
+            if period == 'last_year_2':
                 start_date += relativedelta(months=1)
-            elif self.based_on == 'last_year_3':
+            elif period == 'last_year_3':
                 start_date += relativedelta(months=2)
-            if self.based_on == 'last_year_quarter':
+            if period == 'last_year_quarter':
                 limit_date = start_date + relativedelta(months=3)
             else:
                 limit_date = start_date + relativedelta(months=1)
         return start_date, limit_date
 
-    def _prepare_graph_data(self, daily_demand=0):
+    def _prepare_graph_data(self):
         self.ensure_one()
-        if not daily_demand:
+        if self.daily_demand == 0:
             ordering_period = 0
             x_axis_vals = ['', ' ']
             curve_line_vals = []
         else:
             qty_diff = self.product_max_qty - self.product_min_qty or 1
-            ordering_period = max(1, int(qty_diff / daily_demand))
+            ordering_period = max(1, int(qty_diff / self.daily_demand))
             x_axis_vals = ['']
             curve_line_vals = [{'x': '', 'y': self.product_max_qty}]
             for i in range(1, 4):
@@ -148,43 +156,94 @@ class StockReplenishmentInfo(models.TransientModel):
         }
         return ordering_period, graph_data
 
-    @api.depends('orderpoint_id', 'based_on', 'percent_factor', 'product_min_qty', 'product_max_qty')
+    def _inverse_based_on(self):
+        for report in self:
+            if report.orderpoint_id.based_on != report.based_on:
+                report.orderpoint_id.based_on = report.based_on
+
+    def _inverse_percent_factor(self):
+        for report in self:
+            if report.orderpoint_id.percent_factor != report.percent_factor:
+                report.orderpoint_id.percent_factor = report.percent_factor
+
+    @api.onchange('daily_demand')
+    def _onchange_daily_demand(self):
+        self.based_on = 'custom'
+        old_coverage = self.min_coverage
+        old_frequency = self.replenish_frequency
+        self.product_min_qty = float_round(self.daily_demand * self.min_coverage, precision_rounding=1)
+        self.product_max_qty = float_round(self.product_min_qty + (self.daily_demand * self.replenish_frequency), precision_rounding=1)
+        self.min_coverage = old_coverage
+        self.replenish_frequency = old_frequency
+
+    @api.onchange('min_coverage')
+    def _onchange_min_coverage(self):
+        old_coverage = self.min_coverage
+        old_frequency = self.replenish_frequency
+        self.product_min_qty = float_round(self.daily_demand * self.min_coverage, precision_rounding=1)
+        self.product_max_qty = float_round(self.product_min_qty + (self.daily_demand * self.replenish_frequency), precision_rounding=1)
+        self.min_coverage = old_coverage
+        self.replenish_frequency = old_frequency
+
+    @api.onchange('replenish_frequency')
+    def _onchange_replenish_frequency(self):
+        old_frequency = self.replenish_frequency
+        self.product_max_qty = float_round(self.product_min_qty + (self.daily_demand * self.replenish_frequency), precision_rounding=1)
+        self.replenish_frequency = old_frequency
+
+    @api.depends('product_min_qty')
+    def _compute_min_coverage(self):
+        for report in self:
+            if report.daily_demand == 0:
+                report.min_coverage = 0
+            else:
+                report.min_coverage = float_round(report.product_min_qty / report.daily_demand, precision_rounding=1)
+
+    @api.depends('product_max_qty')
+    def _compute_replenish_frequency(self):
+        for report in self:
+            if report.daily_demand == 0:
+                report.replenish_frequency = 0
+            else:
+                qty_diff = report.product_max_qty - report.product_min_qty
+                report.replenish_frequency = float_round(qty_diff / report.daily_demand, precision_rounding=1)
+
+    @api.depends('min_coverage')
+    def _compute_danger_level(self):
+        for report in self:
+            warning_days = report._get_warning_days()
+            if report.min_coverage > warning_days:
+                report.danger_level = 'success'
+            elif report.min_coverage == warning_days:
+                report.danger_level = 'warning'
+            else:
+                report.danger_level = 'danger'
+
+    def _get_warning_days(self):
+        self.ensure_one()
+        lead_days, _ = self._get_lead_days_and_description()
+        return lead_days.get('total_delay', 0)
+
+    @api.depends('orderpoint_id', 'based_on', 'percent_factor', 'product_min_qty', 'product_max_qty', 'daily_demand')
     def _compute_json_replenishment_graph(self):
         for replenishment_report in self:
             if not replenishment_report.product_id or not replenishment_report.orderpoint_id.location_id:
                 continue
             lead_days, _ = replenishment_report._get_lead_days_and_description()
-            date_from, date_to = replenishment_report._get_period_of_time()
-            domain = Domain.AND([
-                [('product_id', '=', replenishment_report.product_id.id)],
-                [('date', '>=', date_from)],
-                [('date', '<=', datetime.combine(date_to, time.max))],
-                [('state', 'in', ['assigned', 'confirmed', 'partially_available', 'done'])],
-                [('company_id', '=', replenishment_report.orderpoint_id.company_id.id)],
-            ])
-            quantity_out = self.env['stock.move']._read_group(
-                Domain.AND([domain, [('location_dest_id.usage', 'in', ['customer', 'production'])]]),
-                aggregates=['product_qty:sum'],
-            )[0][0] or 0.0
-            quantity_returned = self.env['stock.move']._read_group(
-                Domain.AND([domain, [('location_id.usage', '=', 'customer')]]),
-                aggregates=['product_qty:sum'],
-            )[0][0] or 0.0
 
             if replenishment_report.product_max_qty < replenishment_report.product_min_qty:
                 replenishment_report.product_max_qty = replenishment_report.product_min_qty
             average_stock = replenishment_report.product_min_qty + ((replenishment_report.product_max_qty - replenishment_report.product_min_qty) / 2)
             lead_time = lead_days.get('total_delay', 0)
-            daily_demand = ((quantity_out - quantity_returned) / (date_to - date_from).days) * (replenishment_report.percent_factor / 100)
 
-            ordering_period, graph_data = replenishment_report._prepare_graph_data(daily_demand=daily_demand)
+            ordering_period, graph_data = replenishment_report._prepare_graph_data()
             replenishment_report.json_replenishment_graph = dumps({
                 'product_uom_name': replenishment_report.product_uom_name,
                 'product_max_qty': replenishment_report.product_max_qty,
                 'product_min_qty': replenishment_report.product_min_qty,
                 'qty_on_hand': replenishment_report.orderpoint_id.qty_on_hand,
                 'lead_time': lead_time,
-                'daily_demand': replenishment_report.product_id.uom_id.round(daily_demand),
+                'daily_demand': replenishment_report.product_id.uom_id.round(replenishment_report.daily_demand),
                 'average_stock': replenishment_report.product_id.uom_id.round(average_stock),
                 'ordering_period': float_round(ordering_period, precision_rounding=1),
                 'x_axis_vals': graph_data["x_axis_vals"],
@@ -193,6 +252,55 @@ class StockReplenishmentInfo(models.TransientModel):
                 'curve_line_vals': graph_data["curve_line_vals"],
             })
 
+    def get_daily_demand(self, period=None, ratio=None):
+        self.ensure_one()
+        if not ratio:
+            ratio = self.percent_factor
+        date_from, date_to = self._get_period_of_time(period=period)
+        domain = Domain.AND([
+            [('product_id', '=', self.product_id.id)],
+            [('date', '>=', date_from)],
+            [('date', '<=', datetime.combine(date_to, time.max))],
+            [('state', 'in', ['assigned', 'confirmed', 'partially_available', 'done'])],
+            [('company_id', '=', self.orderpoint_id.company_id.id)],
+        ])
+        quantity_out = self.env['stock.move']._read_group(
+            Domain.AND([domain, [('location_dest_id.usage', 'in', ['customer', 'production'])]]),
+            aggregates=['product_qty:sum'],
+        )[0][0] or 0.0
+        quantity_returned = self.env['stock.move']._read_group(
+            Domain.AND([domain, [('location_id.usage', '=', 'customer')]]),
+            aggregates=['product_qty:sum'],
+        )[0][0] or 0.0
+        return ((quantity_out - quantity_returned) / (date_to - date_from).days) * (ratio / 100)
+
+    def action_update_daily_demand(self):
+        self.ensure_one()
+        if self.based_on == 'custom':
+            return self.orderpoint_id.action_stock_replenishment_info()
+        date_from, date_to = self._get_period_of_time()
+        domain = Domain.AND([
+            [('product_id', '=', self.product_id.id)],
+            [('date', '>=', date_from)],
+            [('date', '<=', datetime.combine(date_to, time.max))],
+            [('state', 'in', ['assigned', 'confirmed', 'partially_available', 'done'])],
+            [('company_id', '=', self.orderpoint_id.company_id.id)],
+        ])
+        quantity_out = self.env['stock.move']._read_group(
+            Domain.AND([domain, [('location_dest_id.usage', 'in', ['customer', 'production'])]]),
+            aggregates=['product_qty:sum'],
+        )[0][0] or 0.0
+        quantity_returned = self.env['stock.move']._read_group(
+            Domain.AND([domain, [('location_id.usage', '=', 'customer')]]),
+            aggregates=['product_qty:sum'],
+        )[0][0] or 0.0
+        daily_demand = ((quantity_out - quantity_returned) / (date_to - date_from).days) * (self.percent_factor / 100)
+        product_min_qty = daily_demand * self.min_coverage
+        product_max_qty = product_min_qty + (daily_demand * self.replenish_frequency)
+        self.product_min_qty = product_min_qty
+        self.product_max_qty = product_max_qty
+        self.daily_demand = daily_demand
+        return self.orderpoint_id.action_stock_replenishment_info()
 
 class StockReplenishmentOption(models.TransientModel):
     _name = 'stock.replenishment.option'

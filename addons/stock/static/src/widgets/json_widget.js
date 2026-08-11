@@ -4,6 +4,7 @@ import { getColor } from "@web/core/colors/colors";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
+import { useService } from "@web/core/utils/hooks";
 import { Component, onWillStart } from "@odoo/owl";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 
@@ -34,6 +35,41 @@ export const popOverLeadDays = {
     component: PopOverLeadDays,
 };
 registry.category("fields").add("lead_days_widget", popOverLeadDays);
+
+// --------------------------------------------------------------------------
+// Update Button
+// --------------------------------------------------------------------------
+
+export class UpdateButton extends Component {
+    static template = "stock.updateButton";
+    static props = { ...standardFieldProps };
+
+    setup() {
+        super.setup();
+        this.orm = useService("orm");
+    }
+
+    async updateDailyDemand(ev) {
+        if (this.props.record.data.based_on != "custom") {
+            const daily = await this.orm.call("stock.replenishment.info", "get_daily_demand", [
+                this.props.record.resId,
+                this.props.record.data.based_on,
+                this.props.record.data.percent_factor
+            ]);
+            this.props.record.update({
+                'daily_demand': daily,
+            });
+            this.props.record.update({
+                'based_on': this.props.record.data.based_on,
+            });
+        }
+    }
+}
+
+export const updateButton = {
+    component: UpdateButton,
+}
+registry.category("fields").add("update_demand_button", updateButton);
 
 // --------------------------------------------------------------------------
 // Forecast Graph
