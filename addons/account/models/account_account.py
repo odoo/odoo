@@ -30,6 +30,7 @@ class AccountAccount(models.Model):
     _parent_store = True
     _check_company_auto = True
     _check_company_domain = models.check_companies_domain_parent_of
+    .
 
     @api.constrains('account_type', 'reconcile')
     def _check_reconcile(self):
