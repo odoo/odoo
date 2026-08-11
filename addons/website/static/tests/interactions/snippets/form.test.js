@@ -367,7 +367,7 @@ const formTemplateWithRadioAndSelect = /* html */ `
                 <div data-name="Field" class="s_website_form_field">
                     <input class="form-control s_website_form_input" type="text" name="subject" id="o7r4gf8heilh">
                 </div>
-                <div data-name="Field" class="s_website_form_field s_website_form_custom" data-type="selection" data-other-option-allowed="true" data-other-option-label="Other" data-other-option-placeholder="Other option... (radio)">
+                <div data-name="Field" class="s_website_form_field s_website_form_custom s_website_form_field_hidden_if d-none" data-type="selection" data-other-option-allowed="true" data-other-option-label="Other" data-other-option-placeholder="Other option... (radio)" data-visibility-dependency="subject" data-visibility-comparator="set">
                     <div class="row s_website_form_multiple" data-name="Radio Button">
                         <div class="form-check">
                             <input type="radio" class="s_website_form_input form-check-input" id="obd2szn9ilqn0" name="Radio Button" value="Option 1" required="">
@@ -834,17 +834,18 @@ test("should make 'Other' input fields required when 'Other' option is selected"
     const radioOtherInputEl = queryOne(".o_other_input[placeholder='Other option... (radio)']");
 
     await contains("input[name=email_from]").fill("a@b.com");
+    // Filling the subject makes the radio field visible.
     await contains("input[name=subject]").fill("Subject");
+    await advanceTime(400); // Debounce delay.
     await click(".form-select");
     await select("_other");
+    await click(".s_website_form_input[value='_other']");
+    await advanceTime(400); // Debounce delay.
     await click("a.s_website_form_send");
     checkField(selectOtherInputEl, true, true);
-
-    await contains(selectOtherInputEl).fill("Other option input for select");
-    await click(".s_website_form_input[value='_other']");
-    await click("a.s_website_form_send");
     checkField(radioOtherInputEl, true, true);
 
+    await contains(selectOtherInputEl).fill("Other option input for select");
     await contains(radioOtherInputEl).fill("Other option input for radio");
     // Wait for the debounced input event to update the form state.
     await advanceTime(400);
@@ -857,6 +858,29 @@ test("should make 'Other' input fields required when 'Other' option is selected"
     });
     await click("a.s_website_form_send");
     expect.verifySteps(["Valid Radio Value", "Valid Select Value"]);
+});
+
+test("should keep the 'Other' input disabled when hidden", async () => {
+    await startInteractions(formTemplateWithRadioAndSelect);
+    const radioOtherInputEl = queryOne(".o_other_input[placeholder='Other option... (radio)']");
+
+    // Filling the subject makes the radio field visible.
+    await contains("input[name=subject]").fill("Subject");
+    await advanceTime(400); // Debounce delay.
+    await click(".s_website_form_input[value='_other']");
+    await advanceTime(400); // Debounce delay.
+    expect(radioOtherInputEl).toBeEnabled();
+
+    await click(".s_website_form_input[value='Option 1']");
+    await advanceTime(400); // Debounce delay.
+    expect(radioOtherInputEl).not.toBeEnabled();
+
+    // Hide the radio field, then show it back.
+    await contains("input[name=subject]").clear();
+    await advanceTime(400); // Debounce delay.
+    await contains("input[name=subject]").fill("Subject");
+    await advanceTime(400); // Debounce delay.
+    expect(radioOtherInputEl).not.toBeEnabled();
 });
 
 test("check multi value restrictions on email and text fields.", async () => {
