@@ -308,3 +308,33 @@ class TestAccruedPurchaseOrders(AccountTestInvoicingCommon):
         wizard_form.date = False
         with self.assertRaises(AssertionError):
             wizard_form.save()
+
+    def test_accrued_order_wizard_zero_total(self):
+        """
+        Test that setting a PO line quantity to 0 (resulting in a 0 total)
+        does not cause a ZeroDivisionError in the Accrued Expense Entry wizard.
+        """
+        purchase_order = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({
+                    'name': self.product_a.name,
+                    'product_id': self.product_a.id,
+                    'product_qty': 10.0,
+                    'price_unit': 100.0,
+                })
+            ]
+        })
+        purchase_order.button_confirm()
+        purchase_order.order_line.qty_received = 10.0
+        purchase_order.order_line.product_qty = 0.0
+
+        wizard = self.env['account.accrued.orders.wizard'].with_context({
+            'active_model': 'purchase.order',
+            'active_ids': purchase_order.ids,
+        }).create({
+            'account_id': self.company_data['default_account_payable'].id,
+        })
+
+        accrued_entry = wizard.create_entries()
+        self.assertTrue(accrued_entry)

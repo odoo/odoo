@@ -320,7 +320,7 @@ class AccountAccruedOrdersWizard(models.TransientModel):
             analytic_distribution = {}
             total = sum(order.amount_total for order in orders)
             for line in orders.order_line:
-                ratio = line.price_total / total
+                ratio = line.price_total / total if total else 0.0
                 if not line.analytic_distribution:
                     continue
                 for account_id, distribution in line.analytic_distribution.items():
