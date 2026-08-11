@@ -497,7 +497,7 @@ class SaleOrderLine(models.Model):
                 line.product_uom_qty = 0.0
                 continue
 
-            if not line.product_packaging_id:
+            if not line.product_uom or not line.product_packaging_id:
                 continue
             packaging_uom = line.product_packaging_id.product_uom_id
             qty_per_packaging = line.product_packaging_id.qty
@@ -768,6 +768,9 @@ class SaleOrderLine(models.Model):
         for line in self:
             if not line.product_id or line.display_type:
                 line.discount = 0.0
+
+            if not line.product_uom:
+                continue
 
             if not (line.order_id.pricelist_id and discount_enabled):
                 continue
@@ -1234,7 +1237,7 @@ class SaleOrderLine(models.Model):
 
     @api.onchange('product_packaging_id')
     def _onchange_product_packaging_id(self):
-        if self.product_packaging_id and self.product_uom_qty:
+        if self.product_packaging_id and self.product_uom and self.product_uom_qty:
             newqty = self.product_packaging_id._check_qty(self.product_uom_qty, self.product_uom, "UP")
             if float_compare(newqty, self.product_uom_qty, precision_rounding=self.product_uom.rounding) != 0:
                 return {

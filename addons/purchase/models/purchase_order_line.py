@@ -393,7 +393,7 @@ class PurchaseOrderLine(models.Model):
 
     @api.onchange('product_packaging_id')
     def _onchange_product_packaging_id(self):
-        if self.product_packaging_id and self.product_qty:
+        if self.product_packaging_id and self.product_uom and self.product_qty:
             newqty = self.product_packaging_id._check_qty(self.product_qty, self.product_uom, "UP")
             if float_compare(newqty, self.product_qty, precision_rounding=self.product_uom.rounding) != 0:
                 return {
@@ -420,7 +420,7 @@ class PurchaseOrderLine(models.Model):
     @api.depends('product_packaging_qty')
     def _compute_product_qty(self):
         for line in self:
-            if line.product_packaging_id:
+            if line.product_packaging_id and line.product_uom:
                 packaging_uom = line.product_packaging_id.product_uom_id
                 qty_per_packaging = line.product_packaging_id.qty
                 product_qty = packaging_uom._compute_quantity(line.product_packaging_qty * qty_per_packaging, line.product_uom)
