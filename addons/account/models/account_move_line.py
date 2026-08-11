@@ -865,25 +865,28 @@ class AccountMoveLine(models.Model):
 
         date_from = self.env.context.get('date_from')
         date_to = self.env.context['date_to']
-        historical, average, current = self.env['res.currency']._get_parsed_rates(self.env.companies - self.env.company, date_from, date_to)
+        historical, average, current, average_previous_year = self.env['res.currency']._get_parsed_rates(self.env.companies - self.env.company, date_from, date_to)
 
         raw_rates_alias = table._make_alias(f'raw_{currency_translation}')
         raw_rates_table = SQL(
             """(
                 SELECT %(historical)s::jsonb AS historical,
                        %(average)s::jsonb AS average,
-                       %(current)s::jsonb AS current
+                       %(current)s::jsonb AS current,
+                       %(average_previous_year)s::jsonb AS average_previous_year
             )""",
             historical=json.dumps(historical),
             average=json.dumps(average),
             current=json.dumps(current),
+            average_previous_year=json.dumps(average_previous_year),
         )
         cta_alias = table._make_alias(currency_translation)
         if currency_translation == 'cta':
             conversion_table = SQL(
                 """(
                     SELECT CASE WHEN %(base_line_account_type)s = 'equity' THEN (%(historical)s->>(%(base_line_company)s::text))::jsonb->>(%(base_line_date)s::text)
-                                WHEN %(base_line_account_type)s LIKE ANY (ARRAY['income%%', 'expense%%', 'equity_unaffected']) THEN %(average)s->>(%(base_line_company)s::text)
+                                WHEN %(base_line_account_type)s LIKE ANY (ARRAY['equity_unaffected', 'equity_retained']) THEN (%(average_previous_year)s->>(%(base_line_company)s::text))::jsonb->>(%(base_line_date)s::text)
+                                WHEN %(base_line_account_type)s LIKE ANY (ARRAY['income%%', 'expense%%']) THEN (%(average)s->>(%(base_line_company)s::text))::jsonb->>(%(base_line_date)s::text)
                                 ELSE %(current)s->>(%(base_line_company)s::text)
                            END::numeric AS rate
                 )""",
@@ -893,6 +896,7 @@ class AccountMoveLine(models.Model):
                 historical=raw_rates_alias.historical,
                 average=raw_rates_alias.average,
                 current=raw_rates_alias.current,
+                average_previous_year=raw_rates_alias.average_previous_year,
             )
         else:
             conversion_table = SQL(
@@ -900,8 +904,10 @@ class AccountMoveLine(models.Model):
                 base_line_company=table.company_id,
                 current=raw_rates_alias.current,
             )
+
         table._query.add_join(kind='JOIN', alias=raw_rates_alias, table=raw_rates_table, condition=SQL("TRUE"))
         table._query.add_join(kind='LEFT JOIN LATERAL', alias=cta_alias, table=conversion_table, condition=SQL("TRUE"))
+
         return SQL("COALESCE(%s, 1)", cta_alias.rate)
 
     def _compute_sql_debit_converted(self, table):
