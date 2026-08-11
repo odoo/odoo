@@ -204,6 +204,7 @@
                 <field name="contract_renewal_overdue" invisible="1"/>
                 <field name="vehicle_properties"/>
                 <field name="contract_state" widget="badge" decoration-info="contract_state == 'open'"
+                    decoration-success="contract_state == 'done'"
                     decoration-danger="contract_state == 'expired'" optional="hide"/>
                 <field name="activity_exception_decoration" widget="activity_exception"/>
             </list>

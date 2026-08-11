@@ -132,6 +132,7 @@ class FleetVehicle(models.Model):
         [('futur', 'Incoming'),
          ('open', 'In Progress'),
          ('expired', 'Expired'),
+         ('done', 'Done'),
          ('closed', 'Closed')
         ], string='Last Contract State', compute='_compute_contract_reminder', required=False)
     car_value = fields.Float(string="Catalog Value (Tax Incl.)", tracking=True)
@@ -329,8 +330,11 @@ class FleetVehicle(models.Model):
             vehicle_data = prepared_data.get(record.id)
             if vehicle_data:
                 diff_time = (vehicle_data['expiration_date'] - current_date).days
-                record.contract_renewal_overdue = diff_time < 0
-                record.contract_renewal_due_soon = not record.contract_renewal_overdue and (diff_time < delay_alert_contract)
+                # A done contract is already taken care of, so it should not warn us anymore.
+                is_done = vehicle_data['state'] == 'done'
+                record.contract_renewal_overdue = not is_done and diff_time < 0
+                record.contract_renewal_due_soon = not is_done and not record.contract_renewal_overdue and (diff_time < delay_alert_contract)
+                # We still show the state so the user knows the contract was handled.
                 record.contract_state = vehicle_data['state']
             else:
                 record.contract_renewal_overdue = False

@@ -48,6 +48,7 @@ class FleetVehicleLogContract(models.Model):
         [('futur', 'New'),
          ('open', 'Running'),
          ('expired', 'Expired'),
+         ('done', 'Done'),
          ('closed', 'Closed')
         ], 'Status', default='futur',
         help='Choose whether the contract is still valid or not',
@@ -104,7 +105,8 @@ class FleetVehicleLogContract(models.Model):
     def _update_state(self):
         date_today = fields.Date.context_today(self)
         future_contracts, running_contracts, expired_contracts = self.env[self._name], self.env[self._name], self.env[self._name]
-        for contract in self.filtered(lambda c: c.start_date and c.state != 'closed'):
+        # Done and closed are the last steps, so a new date should never bring them back.
+        for contract in self.filtered(lambda c: c.start_date and c.state not in ('closed', 'done')):
             if date_today < contract.start_date:
                 future_contracts |= contract
             elif not contract.expiration_date or contract.start_date <= date_today <= contract.expiration_date:
@@ -142,6 +144,12 @@ class FleetVehicleLogContract(models.Model):
     def action_expire(self):
         self.write({'state': 'expired'})
 
+    def action_done(self):
+        """ Mark an expired contract as processed so it stops asking for an action. """
+        self.write({'state': 'done'})
+        # The renewal reminder is useless once someone took care of the contract.
+        self.activity_unlink(['fleet.mail_act_fleet_contract_to_renew'])
+
     def action_reactivate(self):
         self.write({'state': 'futur'})
         self._update_state()
@@ -170,10 +178,11 @@ class FleetVehicleLogContract(models.Model):
                 user_id=contract.user_id.id)
 
         today = fields.Date.context_today(self)
-        expired_contracts = self.search([('state', 'not in', ['expired', 'closed']), ('expiration_date', '<', today)])
+        # Contracts marked as done are skipped here because the team already handled them.
+        expired_contracts = self.search([('state', 'not in', ['expired', 'closed', 'done']), ('expiration_date', '<', today)])
         expired_contracts.action_expire()
 
-        futur_contracts = self.search([('state', 'not in', ['futur', 'closed']), ('start_date', '>', today)])
+        futur_contracts = self.search([('state', 'not in', ['futur', 'closed', 'done']), ('start_date', '>', today)])
         futur_contracts.action_draft()
 
         now_running_contracts = self.search([('state', '=', 'futur'), ('start_date', '<=', today)])
