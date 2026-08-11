@@ -966,6 +966,12 @@ export class Form extends Interaction {
     }
 
     isInputVisible(inputEl) {
+        // The "Other" input shares its name with its select/radio field, so it
+        // must stay disabled while hidden, otherwise its value is submitted
+        // along with the selected option.
+        if (inputEl.matches(".o_other_input.d-none")) {
+            return false;
+        }
         return this.isFieldVisible(inputEl.closest(".s_website_form_field"));
     }
 
