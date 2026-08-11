@@ -2,295 +2,24 @@
   "version": "19.3.10",
   "sheets": [
     {
-      "id": "sheet1",
+      "id": "dashboard_sheet_id",
       "name": "Dashboard",
-      "colNumber": 7,
-      "rowNumber": 55,
+      "colNumber": 10,
+      "rowNumber": 63,
       "rows": {
-        "6": { "size": 40 },
-        "22": { "size": 40 },
-        "23": { "size": 40 },
-        "24": { "size": 30 },
-        "25": { "size": 30 },
-        "26": { "size": 30 },
-        "27": { "size": 30 },
-        "28": { "size": 30 },
-        "29": { "size": 30 },
-        "30": { "size": 30 },
-        "31": { "size": 30 },
-        "32": { "size": 30 },
-        "33": { "size": 30 },
-        "34": { "size": 30 },
-        "35": { "size": 40 },
-        "36": { "size": 40 },
-        "37": { "size": 30 },
-        "38": { "size": 30 },
-        "39": { "size": 30 },
-        "40": { "size": 30 },
-        "41": { "size": 30 },
-        "42": { "size": 30 },
-        "43": { "size": 30 },
-        "44": { "size": 30 },
-        "45": { "size": 30 },
-        "46": { "size": 30 },
-        "47": { "size": 30 }
+        "62": { "size": 4 }
       },
       "cols": {
-        "0": { "size": 275 },
-        "1": { "size": 103 },
-        "2": { "size": 100 },
-        "3": { "size": 50 },
-        "4": { "size": 275 },
-        "5": { "size": 103 },
-        "6": { "size": 100 }
+        "0": { "size": 136 }
       },
       "merges": [],
-      "cells": {
-        "A7": "[Tasks by Stage](odoo://view/{\"viewType\":\"graph\",\"action\":{\"domain\":[],\"context\":{\"group_by\":[\"stage_id\",\"state\"],\"graph_measure\":\"__count\",\"graph_mode\":\"bar\",\"graph_groupbys\":[\"stage_id\",\"state\"]},\"modelName\":\"report.project.task.user\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"list\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Tasks Analysis\"})",
-        "A23": "[Top Assignees](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"user_ids\",\"!=\",false]],\"context\":{\"group_by\":[],\"pivot_measures\":[\"effective_hours\",\"nbr\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"user_ids\"]},\"modelName\":\"report.project.task.user\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"list\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Tasks Analysis\"})",
-        "A24": "=_t(\"Assignee\")",
-        "A25": "=PIVOT.HEADER(1,\"#user_ids\",1)",
-        "A26:A34": {
-          "N": "=|+1",
-          "S": ["="]
-        },
-        "A36": "[Top Tags](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"tag_ids\",\"!=\",false]],\"context\":{\"group_by\":[\"tag_ids\"],\"pivot_measures\":[\"effective_hours\",\"nbr\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"tag_ids\"]},\"modelName\":\"report.project.task.user\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"list\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Tasks Analysis\"})",
-        "A37": "=_t(\"Tag\")",
-        "A38": "=PIVOT.HEADER(3,\"#tag_ids\",1)",
-        "A39:A47": {
-          "N": "=|+1",
-          "S": ["="]
-        },
-        "B24": "=_t(\"Hours Logged\")",
-        "B25": "=PIVOT.VALUE(1,\"effective_hours\",\"#user_ids\",1)",
-        "B26:B34": {
-          "N": "=|+1",
-          "S": ["=", "="]
-        },
-        "B37": "=_t(\"Hours Logged\")",
-        "B38": "=PIVOT.VALUE(3,\"effective_hours\",\"#tag_ids\",1)",
-        "B39:B47": {
-          "N": "=|+1",
-          "S": ["=", "="]
-        },
-        "C24": "=_t(\"Tasks\")",
-        "C25": "=PIVOT.VALUE(1,\"nbr\",\"#user_ids\",1)",
-        "C26:C34": {
-          "N": "=|+1",
-          "S": ["=", "="]
-        },
-        "C37": "=_t(\"Tasks\")",
-        "C38": "=PIVOT.VALUE(3,\"nbr\",\"#tag_ids\",1)",
-        "C39:C47": {
-          "N": "=|+1",
-          "S": ["=", "="]
-        },
-        "E7": "[Tasks by State](odoo://view/{\"viewType\":\"graph\",\"action\":{\"domain\":[],\"context\":{\"group_by\":[\"state\"],\"graph_measure\":\"__count\",\"graph_mode\":\"pie\",\"graph_groupbys\":[\"state\"]},\"modelName\":\"report.project.task.user\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"list\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Tasks Analysis\"})",
-        "E23": "[Top Projects](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"project_id\",\"!=\",false]],\"context\":{\"group_by\":[\"project_id\"],\"pivot_measures\":[\"effective_hours\",\"nbr\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"project_id\"]},\"modelName\":\"report.project.task.user\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"list\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Tasks Analysis\"})",
-        "E24": "=_t(\"Project\")",
-        "E25": "=PIVOT.HEADER(2,\"#project_id\",1)",
-        "E26:E34": {
-          "N": "=|+1",
-          "S": ["="]
-        },
-        "E36": "[Top Customers](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"partner_id\",\"!=\",false]],\"context\":{\"group_by\":[\"partner_id\"],\"pivot_measures\":[\"effective_hours\",\"nbr\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"partner_id\"]},\"modelName\":\"report.project.task.user\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"list\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Tasks Analysis\"})",
-        "E37": "=_t(\"Customer\")",
-        "E38": "=PIVOT.HEADER(4,\"#partner_id\",1)",
-        "E39:E47": {
-          "N": "=|+1",
-          "S": ["="]
-        },
-        "F24": "=_t(\"Hours Logged\")",
-        "F25": "=PIVOT.VALUE(2,\"effective_hours\",\"#project_id\",1)",
-        "F26:F34": {
-          "N": "=|+1",
-          "S": ["=", "="]
-        },
-        "F37": "=_t(\"Hours Logged\")",
-        "F38": "=PIVOT.VALUE(4,\"effective_hours\",\"#partner_id\",1)",
-        "F39:F47": {
-          "N": "=|+1",
-          "S": ["=", "="]
-        },
-        "G24": "=_t(\"Tasks\")",
-        "G25": "=PIVOT.VALUE(2,\"nbr\",\"#project_id\",1)",
-        "G26:G34": {
-          "N": "=|+1",
-          "S": ["=", "="]
-        },
-        "G37": "=_t(\"Tasks\")",
-        "G38": "=PIVOT.VALUE(4,\"nbr\",\"#partner_id\",1)",
-        "G39:G47": {
-          "N": "=|+1",
-          "S": ["=", "="]
-        }
-      },
-      "styles": {
-        "A7": 1,
-        "A23": 1,
-        "A36": 1,
-        "E7": 1,
-        "E23": 1,
-        "E36": 1,
-        "A24": 2,
-        "A37": 2,
-        "E24": 2,
-        "E37": 2,
-        "A25:C34": 3,
-        "A38:C47": 3,
-        "E25:G34": 3,
-        "E38:G47": 3,
-        "B24:C24": 4,
-        "B37:C37": 4,
-        "F24:G24": 4,
-        "F37:G37": 4
-      },
+      "cells": {},
+      "styles": {},
       "formats": {},
-      "borders": {
-        "A7:C7": 1,
-        "A23:C23": 1,
-        "A36:C36": 1,
-        "E7:G7": 1,
-        "E23:G23": 1,
-        "E36:G36": 1,
-        "A8:C8": 2,
-        "A24:C24": 2,
-        "A37:C37": 2,
-        "E8:G8": 2,
-        "E24:G24": 2,
-        "E37:G37": 2,
-        "A25:C25": 3,
-        "A38:C38": 3,
-        "E25:G25": 3,
-        "E38:G38": 3,
-        "A26:C33": 4,
-        "A39:C46": 4,
-        "E26:G33": 4,
-        "E39:G46": 4,
-        "A34:C34": 5,
-        "A47:C47": 5,
-        "E34:G34": 5,
-        "E47:G47": 5,
-        "A35:C35": 6,
-        "A48:C48": 6,
-        "E35:G35": 6,
-        "E48:G48": 6
-      },
-      "conditionalFormats": [
-        {
-          "rule": { "type": "DataBarRule", "color": 15531509, "rangeValues": "C25:C34" },
-          "id": "62781980-687b-452e-bf4b-1d95aa74b206",
-          "ranges": ["A25:A34"]
-        },
-        {
-          "rule": { "type": "DataBarRule", "color": 15726335, "rangeValues": "G25:G34" },
-          "id": "fa3cf786-7e59-4040-b972-a8ea6adfa84a",
-          "ranges": ["E25:E34"]
-        },
-        {
-          "rule": { "type": "DataBarRule", "color": 16775149, "rangeValues": "C38:C47" },
-          "id": "4da45c58-2120-47f1-9c38-efc72705ce1e",
-          "ranges": ["A38:A47"]
-        },
-        {
-          "rule": { "type": "DataBarRule", "color": 16708338, "rangeValues": "F38:F47" },
-          "id": "1de4a8fb-1ffa-4cc5-977c-e9bce8921269",
-          "ranges": ["E38:E47"]
-        }
-      ],
+      "borders": {},
+      "conditionalFormats": [],
       "dataValidationRules": [],
       "figures": [
-        {
-          "id": "26f09a19-26d7-4d7d-b8d9-9eda7661ef5a",
-          "width": 475,
-          "height": 344,
-          "tag": "chart",
-          "data": {
-            "title": { "text": "" },
-            "legendPosition": "top",
-            "type": "bar",
-            "stacked": true,
-            "humanize": true,
-            "dataSource": {
-              "type": "odoo",
-              "metaData": {
-                "groupBy": ["stage_id", "state"],
-                "measure": "__count",
-                "order": null,
-                "resModel": "report.project.task.user",
-                "mode": "bar",
-                "cumulatedStart": false
-              },
-              "searchParams": {
-                "comparison": null,
-                "context": {
-                  "group_by": [],
-                  "graph_measure": "__count__"
-                },
-                "domain": [],
-                "groupBy": ["stage_id", "state"],
-                "orderBy": []
-              }
-            },
-            "dataSetStyles": {},
-            "chartId": "26f09a19-26d7-4d7d-b8d9-9eda7661ef5a",
-            "fieldMatching": {
-              "83b5c62c-1c67-4477-a057-c0ec29edd595": { "chain": "create_date", "type": "datetime", "offset": 0 },
-              "fb7f6ae2-e19c-40d5-9976-7a05b1f18c2d": { "chain": "user_ids", "type": "many2many" },
-              "3fc9b370-1aae-436e-b77e-6bbc5f10f56c": { "chain": "project_id", "type": "many2one" },
-              "cfccbf2c-c86e-4915-a73d-c1e8ae69abe9": { "chain": "tag_ids", "type": "many2many" },
-              "9c9461c3-974d-41c1-8cbd-2fa8e89de148": { "chain": "partner_id", "type": "many2one" }
-            }
-          },
-          "offset": { "x": 0, "y": 178 },
-          "col": 0,
-          "row": 0
-        },
-        {
-          "id": "70a88eff-8ce0-4392-8905-156ef2771086",
-          "width": 480,
-          "height": 344,
-          "tag": "chart",
-          "data": {
-            "title": { "text": "" },
-            "legendPosition": "top",
-            "type": "pie",
-            "humanize": true,
-            "dataSource": {
-              "type": "odoo",
-              "metaData": {
-                "groupBy": ["state"],
-                "measure": "__count",
-                "order": null,
-                "resModel": "report.project.task.user",
-                "mode": "pie",
-                "cumulatedStart": false
-              },
-              "searchParams": {
-                "comparison": null,
-                "context": {
-                  "group_by": [],
-                  "graph_measure": "__count__"
-                },
-                "domain": [],
-                "groupBy": ["state"],
-                "orderBy": []
-              }
-            },
-            "dataSetStyles": {},
-            "chartId": "70a88eff-8ce0-4392-8905-156ef2771086",
-            "fieldMatching": {
-              "83b5c62c-1c67-4477-a057-c0ec29edd595": { "chain": "create_date", "type": "datetime", "offset": 0 },
-              "fb7f6ae2-e19c-40d5-9976-7a05b1f18c2d": { "chain": "user_ids", "type": "many2many" },
-              "3fc9b370-1aae-436e-b77e-6bbc5f10f56c": { "chain": "project_id", "type": "many2one" },
-              "cfccbf2c-c86e-4915-a73d-c1e8ae69abe9": { "chain": "tag_ids", "type": "many2many" },
-              "9c9461c3-974d-41c1-8cbd-2fa8e89de148": { "chain": "partner_id", "type": "many2one" }
-            }
-          },
-          "offset": { "x": 525, "y": 178 },
-          "col": 0,
-          "row": 0
-        },
         {
           "id": "8eae55ae-5435-49ee-ad58-dae822bbd9dd",
           "width": 200,
@@ -300,14 +29,14 @@
             "baselineColorDown": "#DC6965",
             "baselineColorUp": "#00A04A",
             "baselineMode": "difference",
-            "title": { "text": "Tasks", "bold": true, "color": "#434343" },
+            "title": { "text": "Tasks", "bold": true, "color": "#01666B" },
             "type": "scorecard",
-            "background": "#EFF6FF",
+            "background": "",
             "keyValue": "Data!D2",
             "humanize": false,
             "chartId": "8eae55ae-5435-49ee-ad58-dae822bbd9dd"
           },
-          "offset": { "x": 0, "y": 10 },
+          "offset": { "x": 0, "y": 9 },
           "col": 0,
           "row": 0
         },
@@ -320,16 +49,16 @@
             "baselineColorDown": "#DC6965",
             "baselineColorUp": "#00A04A",
             "baselineMode": "percentage",
-            "title": { "text": "Hours Logged", "bold": true, "color": "#434343" },
+            "title": { "text": "Hours Logged", "bold": true, "color": "#01666B" },
             "type": "scorecard",
-            "background": "#FEF2F2",
+            "background": "",
             "baseline": "Data!E3",
             "baselineDescr": { "text": "since last period" },
             "keyValue": "Data!D3",
             "humanize": false,
             "chartId": "746a2799-0dc9-4bce-b309-4cedffa67a3a"
           },
-          "offset": { "x": 210, "y": 10 },
+          "offset": { "x": 210, "y": 9 },
           "col": 0,
           "row": 0
         },
@@ -342,16 +71,16 @@
             "baselineColorDown": "#DC6965",
             "baselineColorUp": "#00A04A",
             "baselineMode": "difference",
-            "title": { "text": "Time to Assign", "bold": true, "color": "#434343" },
+            "title": { "text": "Time to Assign", "bold": true, "color": "#01666B" },
             "type": "scorecard",
-            "background": "#FEF2F2",
+            "background": "",
             "baseline": "Data!E4",
             "baselineDescr": { "text": "last period" },
             "keyValue": "Data!D4",
             "humanize": false,
             "chartId": "488da38e-01db-46a0-b4b0-e2fafc4ad390"
           },
-          "offset": { "x": 420, "y": 10 },
+          "offset": { "x": 420, "y": 9 },
           "col": 0,
           "row": 0
         },
@@ -364,84 +93,251 @@
             "baselineColorDown": "#DC6965",
             "baselineColorUp": "#00A04A",
             "baselineMode": "difference",
-            "title": { "text": "Time to Close", "color": "#434343", "bold": true },
+            "title": { "text": "Time to Close", "color": "#01666B", "bold": true },
             "type": "scorecard",
-            "background": "#FEF2F2",
+            "background": "",
             "baseline": "Data!E5",
             "baselineDescr": { "text": "last period" },
             "keyValue": "Data!D5",
             "humanize": false,
             "chartId": "ce7e17ea-eed0-493e-9968-5905c0969ca9"
           },
-          "offset": { "x": 629, "y": 10 },
+          "offset": { "x": 630, "y": 9 },
           "col": 0,
           "row": 0
+        },
+        {
+          "id": "3aeb1b25-04f3",
+          "col": 0,
+          "row": 0,
+          "offset": { "x": 0, "y": 127 },
+          "width": 495,
+          "height": 421,
+          "tag": "carousel",
+          "data": {
+            "chartDefinitions": {
+              "26f09a19-26d7-4d7d-b8d9-9eda7661ef5a": {
+                "title": { "text": "" },
+                "legendPosition": "top",
+                "type": "bar",
+                "stacked": true,
+                "humanize": true,
+                "dataSource": {
+                  "type": "odoo",
+                  "metaData": {
+                    "groupBy": ["stage_id", "state"],
+                    "measure": "__count",
+                    "order": null,
+                    "resModel": "report.project.task.user",
+                    "mode": "bar",
+                    "cumulatedStart": false
+                  },
+                  "searchParams": {
+                    "comparison": null,
+                    "context": {
+                      "group_by": [],
+                      "graph_measure": "__count__"
+                    },
+                    "domain": [],
+                    "groupBy": ["stage_id", "state"],
+                    "orderBy": []
+                  }
+                },
+                "dataSetStyles": {}
+              }
+            },
+            "title": {
+              "text": "Tasks by Stage",
+              "bold": true,
+              "fontSize": 21,
+              "color": "#01666B"
+            },
+            "items": [
+              { "type": "chart", "chartId": "26f09a19-26d7-4d7d-b8d9-9eda7661ef5a" }
+            ],
+            "fieldMatching": {
+              "26f09a19-26d7-4d7d-b8d9-9eda7661ef5a": {
+                "83b5c62c-1c67-4477-a057-c0ec29edd595": { "chain": "create_date", "type": "datetime", "offset": 0 },
+                "fb7f6ae2-e19c-40d5-9976-7a05b1f18c2d": { "chain": "user_ids", "type": "many2many" },
+                "3fc9b370-1aae-436e-b77e-6bbc5f10f56c": { "chain": "project_id", "type": "many2one" },
+                "cfccbf2c-c86e-4915-a73d-c1e8ae69abe9": { "chain": "tag_ids", "type": "many2many" },
+                "9c9461c3-974d-41c1-8cbd-2fa8e89de148": { "chain": "partner_id", "type": "many2one" }
+              }
+            }
+          }
+        },
+        {
+          "id": "f9bd36af-0186",
+          "col": 0,
+          "row": 0,
+          "offset": { "x": 505, "y": 127 },
+          "width": 495,
+          "height": 421,
+          "tag": "carousel",
+          "data": {
+            "chartDefinitions": {
+              "70a88eff-8ce0-4392-8905-156ef2771086": {
+                "title": { "text": "" },
+                "legendPosition": "top",
+                "type": "pie",
+                "humanize": true,
+                "dataSource": {
+                  "type": "odoo",
+                  "metaData": {
+                    "groupBy": ["state"],
+                    "measure": "__count",
+                    "order": null,
+                    "resModel": "report.project.task.user",
+                    "mode": "pie",
+                    "cumulatedStart": false
+                  },
+                  "searchParams": {
+                    "comparison": null,
+                    "context": {
+                      "group_by": [],
+                      "graph_measure": "__count__"
+                    },
+                    "domain": [],
+                    "groupBy": ["state"],
+                    "orderBy": []
+                  }
+                },
+                "dataSetStyles": {}
+              }
+            },
+            "title": {
+              "text": "Tasks by State",
+              "fontSize": 21,
+              "bold": true,
+              "color": "#01666B"
+            },
+            "items": [
+              { "type": "chart", "chartId": "70a88eff-8ce0-4392-8905-156ef2771086" }
+            ],
+            "fieldMatching": {
+              "70a88eff-8ce0-4392-8905-156ef2771086": {
+                "83b5c62c-1c67-4477-a057-c0ec29edd595": { "chain": "create_date", "type": "datetime", "offset": 0 },
+                "fb7f6ae2-e19c-40d5-9976-7a05b1f18c2d": { "chain": "user_ids", "type": "many2many" },
+                "3fc9b370-1aae-436e-b77e-6bbc5f10f56c": { "chain": "project_id", "type": "many2one" },
+                "cfccbf2c-c86e-4915-a73d-c1e8ae69abe9": { "chain": "tag_ids", "type": "many2many" },
+                "9c9461c3-974d-41c1-8cbd-2fa8e89de148": { "chain": "partner_id", "type": "many2one" }
+              }
+            }
+          }
+        },
+        {
+          "id": "d4f2d929-d75e",
+          "col": 0,
+          "row": 0,
+          "offset": { "x": 0, "y": 558 },
+          "width": 495,
+          "height": 421,
+          "tag": "carousel",
+          "data": {
+            "chartDefinitions": {},
+            "title": {
+              "text": "Top Assignees",
+              "bold": true,
+              "fontSize": 21,
+              "color": "#01666B"
+            },
+            "items": [
+              {
+                "type": "carouselDataView",
+                "rangeData": {
+                  "_sheetId": "a8e1f26e-326c",
+                  "_zone": { "top": 0, "left": 0, "bottom": 50, "right": 2 }
+                }
+              }
+            ],
+            "fieldMatching": {}
+          }
+        },
+        {
+          "id": "9475bda6-3d00",
+          "col": 0,
+          "row": 0,
+          "offset": { "x": 505, "y": 558 },
+          "width": 495,
+          "height": 421,
+          "tag": "carousel",
+          "data": {
+            "chartDefinitions": {},
+            "title": {
+              "text": "Top Projects",
+              "bold": true,
+              "fontSize": 21,
+              "color": "#01666B"
+            },
+            "items": [
+              {
+                "type": "carouselDataView",
+                "rangeData": {
+                  "_sheetId": "f0bbb77c-fd8e",
+                  "_zone": { "top": 0, "left": 0, "bottom": 50, "right": 2 }
+                },
+                "columnWeights": [627, 244, 129]
+              }
+            ],
+            "fieldMatching": {}
+          }
+        },
+        {
+          "id": "b7b1ae87-2f9b",
+          "col": 0,
+          "row": 0,
+          "offset": { "x": 0, "y": 989 },
+          "width": 495,
+          "height": 421,
+          "tag": "carousel",
+          "data": {
+            "chartDefinitions": {},
+            "title": { "text": "Top Tags", "bold": true, "fontSize": 21, "color": "#01666B" },
+            "items": [
+              {
+                "type": "carouselDataView",
+                "rangeData": {
+                  "_sheetId": "72a88345-7e97",
+                  "_zone": { "top": 0, "left": 0, "bottom": 50, "right": 2 }
+                }
+              }
+            ],
+            "fieldMatching": {}
+          }
+        },
+        {
+          "id": "9c1bc675-ee8d",
+          "col": 0,
+          "row": 0,
+          "offset": { "x": 505, "y": 989 },
+          "width": 495,
+          "height": 421,
+          "tag": "carousel",
+          "data": {
+            "chartDefinitions": {},
+            "title": {
+              "text": "Top Customers",
+              "bold": true,
+              "fontSize": 21,
+              "color": "#01666B"
+            },
+            "items": [
+              {
+                "type": "carouselDataView",
+                "rangeData": {
+                  "_sheetId": "291a0046-f72a",
+                  "_zone": { "top": 0, "left": 0, "bottom": 50, "right": 2 }
+                }
+              }
+            ],
+            "fieldMatching": {}
+          }
         }
       ],
-      "tables": [
-        {
-          "range": "A24:C34",
-          "type": "static",
-          "config": {
-            "hasFilters": false,
-            "totalRow": false,
-            "firstColumn": false,
-            "lastColumn": false,
-            "numberOfHeaders": 1,
-            "bandedRows": true,
-            "bandedColumns": false,
-            "automaticAutofill": true,
-            "styleId": "None"
-          }
-        },
-        {
-          "range": "A37:C47",
-          "type": "static",
-          "config": {
-            "hasFilters": false,
-            "totalRow": false,
-            "firstColumn": false,
-            "lastColumn": false,
-            "numberOfHeaders": 1,
-            "bandedRows": true,
-            "bandedColumns": false,
-            "automaticAutofill": true,
-            "styleId": "None"
-          }
-        },
-        {
-          "range": "E24:G34",
-          "type": "static",
-          "config": {
-            "hasFilters": false,
-            "totalRow": false,
-            "firstColumn": false,
-            "lastColumn": false,
-            "numberOfHeaders": 1,
-            "bandedRows": true,
-            "bandedColumns": false,
-            "automaticAutofill": true,
-            "styleId": "None"
-          }
-        },
-        {
-          "range": "E37:G47",
-          "type": "static",
-          "config": {
-            "hasFilters": false,
-            "totalRow": false,
-            "firstColumn": false,
-            "lastColumn": false,
-            "numberOfHeaders": 1,
-            "bandedRows": true,
-            "bandedColumns": false,
-            "automaticAutofill": true,
-            "styleId": "None"
-          }
-        }
-      ],
+      "tables": [],
       "areGridLinesVisible": true,
       "isVisible": true,
+      "backgroundColor": "#F9FAFB",
       "headerGroups": {
         "ROW": [],
         "COL": []
@@ -520,7 +416,7 @@
         "E4": "=ROUND(C4)",
         "E5": { "R": "+R1" }
       },
-      "styles": { "A1:C1": 5, "D1:E1": 6, "D2:E3": 7, "D4:E5": 8 },
+      "styles": { "A1:E1": 1, "D4:E5": 2 },
       "formats": {},
       "borders": {},
       "conditionalFormats": [],
@@ -534,46 +430,436 @@
         "COL": []
       },
       "comments": {}
+    },
+    {
+      "id": "a8e1f26e-326c",
+      "name": "Top Assignees",
+      "colNumber": 26,
+      "rowNumber": 100,
+      "rows": {
+        "0": { "size": 28 },
+        "1": { "size": 28 },
+        "2": { "size": 28 },
+        "3": { "size": 28 },
+        "4": { "size": 28 },
+        "5": { "size": 28 },
+        "6": { "size": 28 },
+        "7": { "size": 28 },
+        "8": { "size": 28 },
+        "9": { "size": 28 },
+        "10": { "size": 28 },
+        "11": { "size": 28 },
+        "12": { "size": 28 },
+        "13": { "size": 28 },
+        "14": { "size": 28 },
+        "15": { "size": 28 },
+        "16": { "size": 28 },
+        "17": { "size": 28 },
+        "18": { "size": 28 },
+        "19": { "size": 28 },
+        "20": { "size": 28 },
+        "21": { "size": 28 },
+        "22": { "size": 28 },
+        "23": { "size": 28 },
+        "24": { "size": 28 },
+        "25": { "size": 28 },
+        "26": { "size": 28 },
+        "27": { "size": 28 },
+        "28": { "size": 28 },
+        "29": { "size": 28 },
+        "30": { "size": 28 },
+        "31": { "size": 28 },
+        "32": { "size": 28 },
+        "33": { "size": 28 },
+        "34": { "size": 28 },
+        "35": { "size": 28 },
+        "36": { "size": 28 },
+        "37": { "size": 28 },
+        "38": { "size": 28 },
+        "39": { "size": 28 },
+        "40": { "size": 28 },
+        "41": { "size": 28 },
+        "42": { "size": 28 },
+        "43": { "size": 28 },
+        "44": { "size": 28 },
+        "45": { "size": 28 },
+        "46": { "size": 28 },
+        "47": { "size": 28 },
+        "48": { "size": 28 },
+        "49": { "size": 28 },
+        "50": { "size": 28 }
+      },
+      "cols": {
+        "1": { "size": 103 },
+        "3": { "size": 134 }
+      },
+      "merges": [],
+      "cells": { "A1": "=PIVOT(1,50,FALSE,FALSE)" },
+      "styles": {
+        "A1": 3,
+        "A2:A51": 4,
+        "B4:C51": 4,
+        "B1": 5,
+        "B2:C3": 6,
+        "H2": 6,
+        "C1": 7
+      },
+      "formats": { "A2:A13": 1, "B4:B51": 2, "D4": 3, "H2": 4 },
+      "borders": {},
+      "conditionalFormats": [
+        {
+          "id": "863aed31-8573",
+          "rule": { "type": "DataBarRule", "color": 14609659, "rangeValues": "C2:C51" },
+          "ranges": ["A2:A51"]
+        }
+      ],
+      "dataValidationRules": [],
+      "figures": [],
+      "tables": [],
+      "areGridLinesVisible": true,
+      "isVisible": true,
+      "isLocked": false,
+      "panes": { "xSplit": 0, "ySplit": 1 },
+      "headerGroups": {
+        "ROW": [],
+        "COL": []
+      },
+      "defaultStyle": {
+        "colDefault": { "0": 9 },
+        "rowDefault": {},
+        "sheetDefault": 8
+      },
+      "comments": {}
+    },
+    {
+      "id": "f0bbb77c-fd8e",
+      "name": "Top Projects",
+      "colNumber": 26,
+      "rowNumber": 100,
+      "rows": {
+        "0": { "size": 28 },
+        "1": { "size": 28 },
+        "2": { "size": 28 },
+        "3": { "size": 28 },
+        "4": { "size": 28 },
+        "5": { "size": 28 },
+        "6": { "size": 28 },
+        "7": { "size": 28 },
+        "8": { "size": 28 },
+        "9": { "size": 28 },
+        "10": { "size": 28 },
+        "11": { "size": 28 },
+        "12": { "size": 28 },
+        "13": { "size": 28 },
+        "14": { "size": 28 },
+        "15": { "size": 28 },
+        "16": { "size": 28 },
+        "17": { "size": 28 },
+        "18": { "size": 28 },
+        "19": { "size": 28 },
+        "20": { "size": 28 },
+        "21": { "size": 28 },
+        "22": { "size": 28 },
+        "23": { "size": 28 },
+        "24": { "size": 28 },
+        "25": { "size": 28 },
+        "26": { "size": 28 },
+        "27": { "size": 28 },
+        "28": { "size": 28 },
+        "29": { "size": 28 },
+        "30": { "size": 28 },
+        "31": { "size": 28 },
+        "32": { "size": 28 },
+        "33": { "size": 28 },
+        "34": { "size": 28 },
+        "35": { "size": 28 },
+        "36": { "size": 28 },
+        "37": { "size": 28 },
+        "38": { "size": 28 },
+        "39": { "size": 28 },
+        "40": { "size": 28 },
+        "41": { "size": 28 },
+        "42": { "size": 28 },
+        "43": { "size": 28 },
+        "44": { "size": 28 },
+        "45": { "size": 28 },
+        "46": { "size": 28 },
+        "47": { "size": 28 },
+        "48": { "size": 28 },
+        "49": { "size": 28 },
+        "50": { "size": 28 }
+      },
+      "cols": {
+        "0": { "size": 333 },
+        "1": { "size": 103 },
+        "3": { "size": 134 }
+      },
+      "merges": [],
+      "cells": { "A1": "=PIVOT(2,50,FALSE,FALSE)" },
+      "styles": {
+        "A1": 3,
+        "A2:A51": 4,
+        "B4:C51": 4,
+        "B1": 5,
+        "B2:C3": 6,
+        "H2": 6,
+        "C1": 7
+      },
+      "formats": { "A2:A13": 1, "B4:B51": 2, "D4": 3, "H2": 4 },
+      "borders": {},
+      "conditionalFormats": [
+        {
+          "id": "863aed31-8573",
+          "rule": { "type": "DataBarRule", "color": 14609659, "rangeValues": "C2:C51" },
+          "ranges": ["A2:A51"]
+        }
+      ],
+      "dataValidationRules": [],
+      "figures": [],
+      "tables": [],
+      "areGridLinesVisible": true,
+      "isVisible": true,
+      "isLocked": false,
+      "panes": { "xSplit": 0, "ySplit": 1 },
+      "headerGroups": {
+        "ROW": [],
+        "COL": []
+      },
+      "defaultStyle": {
+        "colDefault": { "0": 9 },
+        "rowDefault": {},
+        "sheetDefault": 8
+      },
+      "comments": {}
+    },
+    {
+      "id": "72a88345-7e97",
+      "name": "Top Tags",
+      "colNumber": 26,
+      "rowNumber": 100,
+      "rows": {
+        "0": { "size": 28 },
+        "1": { "size": 28 },
+        "2": { "size": 28 },
+        "3": { "size": 28 },
+        "4": { "size": 28 },
+        "5": { "size": 28 },
+        "6": { "size": 28 },
+        "7": { "size": 28 },
+        "8": { "size": 28 },
+        "9": { "size": 28 },
+        "10": { "size": 28 },
+        "11": { "size": 28 },
+        "12": { "size": 28 },
+        "13": { "size": 28 },
+        "14": { "size": 28 },
+        "15": { "size": 28 },
+        "16": { "size": 28 },
+        "17": { "size": 28 },
+        "18": { "size": 28 },
+        "19": { "size": 28 },
+        "20": { "size": 28 },
+        "21": { "size": 28 },
+        "22": { "size": 28 },
+        "23": { "size": 28 },
+        "24": { "size": 28 },
+        "25": { "size": 28 },
+        "26": { "size": 28 },
+        "27": { "size": 28 },
+        "28": { "size": 28 },
+        "29": { "size": 28 },
+        "30": { "size": 28 },
+        "31": { "size": 28 },
+        "32": { "size": 28 },
+        "33": { "size": 28 },
+        "34": { "size": 28 },
+        "35": { "size": 28 },
+        "36": { "size": 28 },
+        "37": { "size": 28 },
+        "38": { "size": 28 },
+        "39": { "size": 28 },
+        "40": { "size": 28 },
+        "41": { "size": 28 },
+        "42": { "size": 28 },
+        "43": { "size": 28 },
+        "44": { "size": 28 },
+        "45": { "size": 28 },
+        "46": { "size": 28 },
+        "47": { "size": 28 },
+        "48": { "size": 28 },
+        "49": { "size": 28 },
+        "50": { "size": 28 }
+      },
+      "cols": {
+        "0": { "size": 333 },
+        "1": { "size": 103 },
+        "3": { "size": 134 }
+      },
+      "merges": [],
+      "cells": { "A1": "=PIVOT(3,50,FALSE,FALSE)" },
+      "styles": {
+        "A1": 3,
+        "A2:A51": 4,
+        "B4:C51": 4,
+        "B1": 5,
+        "B2:C3": 6,
+        "H2": 6,
+        "C1": 7
+      },
+      "formats": { "A2:A13": 1, "B4:B51": 2, "D4": 3, "H2": 4 },
+      "borders": {},
+      "conditionalFormats": [
+        {
+          "id": "863aed31-8573",
+          "rule": { "type": "DataBarRule", "color": 14609659, "rangeValues": "C2:C51" },
+          "ranges": ["A2:A51"]
+        }
+      ],
+      "dataValidationRules": [],
+      "figures": [],
+      "tables": [],
+      "areGridLinesVisible": true,
+      "isVisible": true,
+      "isLocked": false,
+      "panes": { "xSplit": 0, "ySplit": 1 },
+      "headerGroups": {
+        "ROW": [],
+        "COL": []
+      },
+      "defaultStyle": {
+        "colDefault": { "0": 9 },
+        "rowDefault": {},
+        "sheetDefault": 8
+      },
+      "comments": {}
+    },
+    {
+      "id": "291a0046-f72a",
+      "name": "Top Customers",
+      "colNumber": 26,
+      "rowNumber": 100,
+      "rows": {
+        "0": { "size": 28 },
+        "1": { "size": 28 },
+        "2": { "size": 28 },
+        "3": { "size": 28 },
+        "4": { "size": 28 },
+        "5": { "size": 28 },
+        "6": { "size": 28 },
+        "7": { "size": 28 },
+        "8": { "size": 28 },
+        "9": { "size": 28 },
+        "10": { "size": 28 },
+        "11": { "size": 28 },
+        "12": { "size": 28 },
+        "13": { "size": 28 },
+        "14": { "size": 28 },
+        "15": { "size": 28 },
+        "16": { "size": 28 },
+        "17": { "size": 28 },
+        "18": { "size": 28 },
+        "19": { "size": 28 },
+        "20": { "size": 28 },
+        "21": { "size": 28 },
+        "22": { "size": 28 },
+        "23": { "size": 28 },
+        "24": { "size": 28 },
+        "25": { "size": 28 },
+        "26": { "size": 28 },
+        "27": { "size": 28 },
+        "28": { "size": 28 },
+        "29": { "size": 28 },
+        "30": { "size": 28 },
+        "31": { "size": 28 },
+        "32": { "size": 28 },
+        "33": { "size": 28 },
+        "34": { "size": 28 },
+        "35": { "size": 28 },
+        "36": { "size": 28 },
+        "37": { "size": 28 },
+        "38": { "size": 28 },
+        "39": { "size": 28 },
+        "40": { "size": 28 },
+        "41": { "size": 28 },
+        "42": { "size": 28 },
+        "43": { "size": 28 },
+        "44": { "size": 28 },
+        "45": { "size": 28 },
+        "46": { "size": 28 },
+        "47": { "size": 28 },
+        "48": { "size": 28 },
+        "49": { "size": 28 },
+        "50": { "size": 28 }
+      },
+      "cols": {
+        "0": { "size": 333 },
+        "1": { "size": 103 },
+        "3": { "size": 134 }
+      },
+      "merges": [],
+      "cells": { "A1": "=PIVOT(4,50,FALSE,FALSE)" },
+      "styles": {
+        "A1": 3,
+        "A2:A51": 4,
+        "B4:C51": 4,
+        "B1": 5,
+        "B2:C3": 6,
+        "H2": 6,
+        "C1": 7
+      },
+      "formats": { "A2:A13": 1, "B4:B51": 2, "D4": 3, "H2": 4 },
+      "borders": {},
+      "conditionalFormats": [
+        {
+          "id": "863aed31-8573",
+          "rule": { "type": "DataBarRule", "color": 14609659, "rangeValues": "C2:C51" },
+          "ranges": ["A2:A51"]
+        }
+      ],
+      "dataValidationRules": [],
+      "figures": [],
+      "tables": [],
+      "areGridLinesVisible": true,
+      "isVisible": true,
+      "isLocked": false,
+      "panes": { "xSplit": 0, "ySplit": 1 },
+      "headerGroups": {
+        "ROW": [],
+        "COL": []
+      },
+      "defaultStyle": {
+        "colDefault": { "0": 9 },
+        "rowDefault": {},
+        "sheetDefault": 8
+      },
+      "comments": {}
     }
   ],
   "styles": {
-    "1": { "textColor": "#01666b", "fontSize": 16, "bold": true },
-    "2": { "textColor": "#434343", "bold": true, "fontSize": 11 },
-    "3": { "textColor": "#434343", "verticalAlign": "middle" },
-    "4": {
-      "textColor": "#434343",
-      "bold": true,
-      "fontSize": 11,
-      "align": "center"
-    },
-    "5": { "bold": true },
-    "6": { "bold": true, "fillColor": "#f2f2f2" },
-    "7": { "fillColor": "#f2f2f2" },
-    "8": { "align": "right", "fillColor": "#f2f2f2" }
-  },
-  "formats": {},
-  "borders": {
-    "1": {
-      "bottom": { "style": "thin", "color": "#CCCCCC" }
-    },
-    "2": {
-      "top": { "style": "thin", "color": "#CCCCCC" }
-    },
-    "3": {
-      "bottom": { "style": "thick", "color": "#FFFFFF" }
-    },
-    "4": {
-      "top": { "style": "thick", "color": "#FFFFFF" },
-      "bottom": { "style": "thick", "color": "#FFFFFF" }
-    },
+    "1": { "bold": true },
+    "2": { "align": "right" },
+    "3": { "bold": true, "align": "left", "verticalAlign": "top", "fontSize": 11 },
+    "4": { "verticalAlign": "middle" },
     "5": {
-      "top": { "style": "thick", "color": "#FFFFFF" },
-      "bottom": { "style": "thin", "color": "#FFFFFF" }
+      "bold": true,
+      "align": "left",
+      "verticalAlign": "top",
+      "fontSize": 11,
+      "textColor": "#434343"
     },
-    "6": {
-      "top": { "style": "thin", "color": "#FFFFFF" }
-    }
+    "6": { "verticalAlign": "middle", "textColor": "#434343" },
+    "7": {
+      "bold": true,
+      "align": "center",
+      "verticalAlign": "top",
+      "fontSize": 11,
+      "textColor": "#434343"
+    },
+    "8": {},
+    "9": { "textColor": "#434343" }
   },
+  "formats": { "1": "@", "2": "hhhh\"h\"mm\"m\"", "3": "hh\"h\"mm\"m\"", "4": "hhhh:mm" },
+  "borders": {},
   "revisionId": "START_REVISION",
   "uniqueFigureIds": true,
   "settings": {
@@ -607,11 +893,30 @@
       ],
       "id": "1",
       "measures": [
-        { "id": "effective_hours", "fieldName": "effective_hours" },
-        { "id": "nbr", "fieldName": "nbr" }
+        {
+          "id": "effective_hours",
+          "fieldName": "effective_hours",
+          "userDefinedName": "Hours Logged 2",
+          "isHidden": true,
+          "format": ""
+        },
+        {
+          "id": "Hours Logged:sum",
+          "fieldName": "Hours Logged",
+          "aggregator": "sum",
+          "userDefinedName": "Hours Logged",
+          "computedBy": { "sheetId": "a8e1f26e-326c", "formula": "=effective_hours/24" },
+          "format": "hhhh\"h\"mm\"m\""
+        },
+        {
+          "id": "nbr",
+          "fieldName": "nbr",
+          "userDefinedName": "Tasks",
+          "format": ""
+        }
       ],
       "model": "report.project.task.user",
-      "name": "Tasks Analysis by Assignees",
+      "name": "Assignee",
       "sortedColumn": {
         "measure": "nbr",
         "order": "desc",
@@ -621,7 +926,8 @@
       "columns": [],
       "rows": [
         { "fieldName": "user_ids" }
-      ]
+      ],
+      "filters": []
     },
     "2": {
       "type": "ODOO",
@@ -641,11 +947,23 @@
       ],
       "id": "2",
       "measures": [
-        { "id": "effective_hours", "fieldName": "effective_hours" },
-        { "id": "nbr", "fieldName": "nbr" }
+        {
+          "id": "effective_hours",
+          "fieldName": "effective_hours",
+          "userDefinedName": "Hours Logged 2",
+          "isHidden": true
+        },
+        {
+          "id": "Hours Logged:sum",
+          "fieldName": "Hours Logged",
+          "aggregator": "sum",
+          "userDefinedName": "Hours Logged",
+          "computedBy": { "sheetId": "f0bbb77c-fd8e", "formula": "=effective_hours/24" }
+        },
+        { "id": "nbr", "fieldName": "nbr", "userDefinedName": "Tasks" }
       ],
       "model": "report.project.task.user",
-      "name": "Tasks Analysis by Project",
+      "name": "Project",
       "sortedColumn": {
         "measure": "nbr",
         "order": "desc",
@@ -655,7 +973,8 @@
       "columns": [],
       "rows": [
         { "fieldName": "project_id" }
-      ]
+      ],
+      "filters": []
     },
     "3": {
       "type": "ODOO",
@@ -675,11 +994,22 @@
       ],
       "id": "3",
       "measures": [
-        { "id": "effective_hours", "fieldName": "effective_hours" },
-        { "id": "nbr", "fieldName": "nbr" }
+        {
+          "id": "effective_hours",
+          "fieldName": "effective_hours",
+          "isHidden": true
+        },
+        {
+          "id": "Hours Logged:sum",
+          "fieldName": "Hours Logged",
+          "aggregator": "sum",
+          "userDefinedName": "Hours Logged",
+          "computedBy": { "sheetId": "72a88345-7e97", "formula": "=effective_hours/24" }
+        },
+        { "id": "nbr", "fieldName": "nbr", "userDefinedName": "Tasks" }
       ],
       "model": "report.project.task.user",
-      "name": "Tasks Analysis by Tags",
+      "name": "Tag",
       "sortedColumn": {
         "measure": "nbr",
         "order": "desc",
@@ -689,7 +1019,8 @@
       "columns": [],
       "rows": [
         { "fieldName": "tag_ids" }
-      ]
+      ],
+      "filters": []
     },
     "4": {
       "type": "ODOO",
@@ -709,8 +1040,19 @@
       ],
       "id": "4",
       "measures": [
-        { "id": "effective_hours", "fieldName": "effective_hours" },
-        { "id": "nbr", "fieldName": "nbr" }
+        {
+          "id": "effective_hours",
+          "fieldName": "effective_hours",
+          "isHidden": true
+        },
+        {
+          "id": "Hours Logged:sum",
+          "fieldName": "Hours Logged",
+          "aggregator": "sum",
+          "userDefinedName": "Hours Logged",
+          "computedBy": { "sheetId": "291a0046-f72a", "formula": "=effective_hours/24" }
+        },
+        { "id": "nbr", "fieldName": "nbr", "userDefinedName": "Tasks" }
       ],
       "model": "report.project.task.user",
       "name": "Tasks Analysis by Customer",
@@ -723,7 +1065,8 @@
       "columns": [],
       "rows": [
         { "fieldName": "partner_id" }
-      ]
+      ],
+      "filters": []
     },
     "5": {
       "type": "ODOO",
