@@ -806,6 +806,7 @@ class SaleOrderLine(models.Model):
             self,
             **{
                 'tax_ids': self.tax_id,
+                'product_uom_id': self.product_uom,
                 'quantity': self.product_uom_qty,
                 'partner_id': self.order_id.partner_id,
                 'currency_id': self.order_id.currency_id or self.order_id.company_id.currency_id,
