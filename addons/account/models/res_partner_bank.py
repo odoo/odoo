@@ -4,7 +4,7 @@ from odoo import _, api, fields, models, SUPERUSER_ID, tools
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import SQL
 from odoo.tools.image import image_data_uri
-from odoo.addons.account.tools import format_account_number, validate_iban, validate_clabe
+from odoo.tools.bank_account_number import format_account_number, validate_iban, validate_clabe
 
 
 class ResPartnerBank(models.Model):

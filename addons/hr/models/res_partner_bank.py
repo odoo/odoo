@@ -1,6 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.exceptions import ValidationError
+from odoo.tools.bank_account_number import validate_iban
 
 
 class ResPartnerBank(models.Model):
@@ -48,3 +50,14 @@ class ResPartnerBank(models.Model):
                 account.sudo(self.env.su).display_name = \
                     account.account_number[:2] + "*" * len(account.account_number[2:-4]) + account.account_number[-4:]
         super(ResPartnerBank, self - account_employee)._compute_display_name()
+
+    @api.model
+    def _is_iban_valid(self, iban):
+        if iban is None:
+            return False
+        try:
+            validate_iban(self.env, iban)
+            return True
+        except ValidationError:
+            pass
+        return False
