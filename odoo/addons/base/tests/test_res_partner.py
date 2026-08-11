@@ -286,6 +286,19 @@ class TestPartner(TransactionCaseWithUserDemo):
         self.assertEqual(partner.name, 'Raoulette Vachette')
         self.assertEqual(partner.lang, 'en_US')
 
+    def test_create_parent_lang_propagation(self):
+        """ Ensure a parent company created from ``parent_name`` inherits the
+            contact's explicitly set language instead of overriding it with the default.
+        """
+        self.env['res.lang']._activate_lang('fr_FR')
+        partner = self.env['res.partner'].with_context(default_lang='en_US').create({
+            'name': 'Jean Dupont',
+            'parent_name': 'Dupont SARL',
+            'lang': 'fr_FR'
+        })
+        self.assertEqual(partner.lang, 'fr_FR', 'Child contact language should be kept as fr_FR')
+        self.assertEqual(partner.parent_id.lang, 'fr_FR', 'Parent company should inherit the contact\'s language')
+
     def test_name_search(self):
         res_partner = self.env['res.partner']
         sources = [
