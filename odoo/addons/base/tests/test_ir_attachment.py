@@ -101,6 +101,19 @@ class TestIrAttachment(TransactionCaseWithUserDemo):
         a2_fn = os.path.join(self.filestore, a2_store_fname2)
         self.assertTrue(os.path.isfile(a2_fn))
 
+    def test_06_create_with_reused_values(self):
+        vals_list = [
+            {'name': 'blob1', 'raw': self.blob1_v},
+            {'name': 'blob2', 'raw': self.blob2_v},
+        ]
+
+        for _ in range(2):
+            attachments = self.Attachment.create(vals_list)
+            self.assertEqual(
+                [attachment.raw.content for attachment in attachments],
+                [self.blob1, self.blob2],
+            )
+
     def test_07_write_mimetype(self):
         """
         Tests the consistency of documents' mimetypes
