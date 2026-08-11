@@ -130,7 +130,7 @@ export class ColorUIPlugin extends Plugin {
     }
 
     getUsedCustomColors(mode) {
-        const allSpans = this.editable.querySelectorAll("span");
+        const allSpans = this.editable.querySelectorAll("span[style*='color']");
         const usedCustomColors = new Set();
         for (const span of allSpans) {
             if (isCSSColor(span.style[mode])) {

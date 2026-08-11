@@ -526,6 +526,7 @@ export class FormatPlugin extends Plugin {
      *
      * @param {Element} fromEl
      * @param {Element} toEl
+     * @param {string[]} [formatNames] formats to move (defaults to all)
      */
     moveFormats(fromEl, toEl, formatNames = this.formatSpecs.map((spec) => spec.id)) {
         for (const formatSpec of this.formatSpecs) {

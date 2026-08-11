@@ -794,6 +794,11 @@ pre {
     }
     // A font change gives the descendant its own text box, misaligning the
     // ancestor's clip: re-clip the inherited gradient to its own glyphs.
+    // TODO: `*=` also matches any class merely containing "-fs", and re-clipping
+    // an element that did not change font restarts the gradient on it. CSS
+    // cannot express "a token ending in -fs" ($= and *= match the whole
+    // attribute, ~= only whole tokens), so this wants the font size classes
+    // enumerated - `small` included, which no -fs match catches.
     :is([style*="font-size"], [style*="font-family"], [class*="-fs"]) {
         background-size: auto;
         -webkit-background-clip: text;
