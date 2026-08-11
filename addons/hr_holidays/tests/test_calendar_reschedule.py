@@ -137,28 +137,26 @@ class TestCalendarReschedule(TestHrHolidaysCommon):
 
     @freeze_time("2024-01-08")
     def test_calendar_drag_writes_request_dates(self):
-        # The calendar maps a drag/resize to a write on date_from/date_to (the
-        # readonly computed date_start/date_stop). The base write() must bridge
-        # these onto the writable request_date_from/to and recompute the leave.
+        # A drag sends the endpoints the calendar displays, request_date_hour_from/to,
+        # whose end is exclusive. reschedule_from_calendar maps them back onto the
+        # writable request_date_from/to, from which the leave is recomputed.
         leave = self._create_leave(
             self.type_manager, "2024-02-05", "2024-02-06", user=self.user_employee_id
-        )
+        ).with_user(self.user_employee_id)
         self.assertEqual(leave.state, "confirm")
 
-        leave.with_user(self.user_employee_id).write(
-            {
-                "date_from": "2024-03-04 06:00:00",
-                "date_to": "2024-03-05 15:00:00",
-            }
+        # four weeks later: the same weekdays, so the request keeps its extent
+        leave.reschedule_from_calendar(
+            leave.request_date_hour_from + relativedelta(weeks=4),
+            leave.request_date_hour_to + relativedelta(weeks=4),
         )
         self.assertEqual(leave.request_date_from, fields.Date.from_string("2024-03-04"))
         self.assertEqual(leave.request_date_to, fields.Date.from_string("2024-03-05"))
 
     @freeze_time("2024-01-08")
-    def test_hourly_resize_needs_request_hours(self):
-        # An hourly leave's end is governed by request_hour_to, so a week/day resize
-        # that only writes date_to is reverted by the recompute. The calendar must
-        # also send request_hour_from/to (see TimeOffCalendarModel.buildRawRecord).
+    def test_hourly_resize_moves_request_hours(self):
+        # An hourly leave's extent lives in request_hour_from/to: a resize on the time
+        # grid lands there, and date_from/to follow from the recompute.
         leave = (
             self.env["hr.leave"]
             .with_user(self.user_employee_id)
@@ -177,32 +175,15 @@ class TestCalendarReschedule(TestHrHolidaysCommon):
         self.assertEqual(leave.work_entry_type_request_unit, "hour")
         original_to = leave.date_to
 
-        # Bare date_to write (the naive resize) is silently reverted.
-        leave.with_user(self.user_employee_id).write(
-            {"date_to": original_to + relativedelta(hours=2)}
+        leave.reschedule_from_calendar(
+            leave.request_date_hour_from,
+            leave.request_date_hour_to + relativedelta(hours=2),
         )
-        leave.invalidate_recordset()
-        self.assertEqual(
-            leave.date_to,
-            original_to,
-            "Hourly end comes from request_hour_to, so a bare date_to write reverts",
-        )
-
-        # Sending the new hours alongside the dates persists the resize.
-        leave.with_user(self.user_employee_id).write(
-            {
-                "date_from": leave.date_from,
-                "date_to": leave.date_to + relativedelta(hours=2),
-                "request_hour_from": 10,
-                "request_hour_to": 14,
-            }
-        )
-        leave.invalidate_recordset()
         self.assertEqual(leave.request_hour_to, 14)
         self.assertEqual(
             leave.date_to,
             original_to + relativedelta(hours=2),
-            "Sending the new request hours persists the resize",
+            "The dragged end is carried by request_hour_to",
         )
 
     @freeze_time("2024-01-08")

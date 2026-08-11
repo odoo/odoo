@@ -433,6 +433,10 @@
                                                options="{'end_date_field': 'request_date_hour_to', 'always_range': True}"
                                         />
                                         <field name="request_date_hour_to" invisible="1"/>
+                                        <!-- the onchanges write the request hours, and only what the view
+                                             holds survives the next round trip -->
+                                        <field name="request_hour_from" invisible="1"/>
+                                        <field name="request_hour_to" invisible="1"/>
                                     </div>
                                     <div class="d-flex gap-2" invisible="work_entry_type_request_unit != 'half_day' or not last_several_days">
                                         <field name="request_date_from_period" invisible="work_entry_type_request_unit != 'half_day'" required="work_entry_type_request_unit == 'half_day'" readonly="state != 'confirm'"/>
@@ -606,8 +610,8 @@
                     string="Time Off Request"
                     form_view_id="%(hr_holidays.hr_leave_view_form_dashboard_manager_new_time_off)d"
                     event_open_popup="true"
-                    date_start="date_from"
-                    date_stop="date_to"
+                    date_start="request_date_hour_from"
+                    date_stop="request_date_hour_to"
                     quick_create="0"
                     show_date_picker="0"
                     show_unusual_days="True"
@@ -644,8 +648,8 @@
                     js_class="time_off_calendar_dashboard"
                     form_view_id="%(hr_holidays.hr_leave_view_form_dashboard_new_time_off)d"
                     event_open_popup="true"
-                    date_start="date_from"
-                    date_stop="date_to"
+                    date_start="request_date_hour_from"
+                    date_stop="request_date_hour_to"
                     mode="year"
                     quick_create="0"
                     show_date_picker="0"

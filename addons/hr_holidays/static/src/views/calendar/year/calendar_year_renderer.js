@@ -3,6 +3,7 @@ import { useService } from "@web/core/utils/hooks";
 import { useMandatoryDays } from "../../hooks";
 import { useCalendarPopover } from "@web/views/calendar/hooks/calendar_popover_hook";
 import { TimeOffCalendarYearPopover } from "./calendar_year_popover";
+import { getLeaveLastMoment } from "../utils";
 
 export class TimeOffCalendarYearRenderer extends CalendarYearRenderer {
     setup() {
@@ -27,16 +28,36 @@ export class TimeOffCalendarYearRenderer extends CalendarYearRenderer {
         };
     }
 
-    /** @override **/
+    /** The leaves a day holds, each counted from its first day to its last. */
+    getLeavesForDate(date) {
+        return Object.values(this.props.model.records).filter((leave) =>
+            luxon.Interval.fromDateTimes(
+                leave.start.startOf("day"),
+                getLeaveLastMoment(leave).endOf("day")
+            ).contains(date)
+        );
+    }
+
+    /**
+     * @override
+     * A mandatory day opens its own popover, listing the day itself above the time off.
+     */
     async onDateClick(info) {
         const is_mandatory_day = [...info.dayEl.classList].some((elClass) =>
             elClass.startsWith("hr_mandatory_day_")
         );
         this.mandatoryDayPopover.close();
-        if (is_mandatory_day && !this.uiService.isSmall) {
-            this.popover.close();
-            const date = luxon.DateTime.fromISO(info.dateStr);
-            const target = info.dayEl;
+        if (this.uiService.isSmall) {
+            return super.onDateClick(info);
+        }
+        this.popover.close();
+
+        // With date value we don't want to change the time, we need the exact date
+        const date = luxon.DateTime.fromISO(info.dateStr);
+        const target = info.dayEl;
+        const leaves = this.getLeavesForDate(date);
+
+        if (is_mandatory_day) {
             const mandatory_days_data = await this.orm.call(
                 "hr.employee",
                 "get_mandatory_days_data",
@@ -46,16 +67,13 @@ export class TimeOffCalendarYearRenderer extends CalendarYearRenderer {
                 mandatory_day_data["start"] = luxon.DateTime.fromISO(mandatory_day_data["start"]);
                 mandatory_day_data["end"] = luxon.DateTime.fromISO(mandatory_day_data["end"]);
             });
-            const records = Object.values(this.props.model.records).filter((r) =>
-                luxon.Interval.fromDateTimes(r.start.startOf("day"), r.end.endOf("day")).contains(
-                    date
-                )
-            );
-            const props = this.getPopoverProps(date, records);
+            const props = this.getPopoverProps(date, leaves);
             props["records"] = mandatory_days_data.concat(props["records"]);
             this.mandatoryDayPopover.open(target, props, "o_cw_popover_holidays o_cw_popover");
-        } else {
-            super.onDateClick(info);
+        } else if (leaves.length) {
+            this.openPopover(target, date, leaves);
+        } else if (this.props.model.canCreate) {
+            this.props.createRecord({ start: date, isAllDay: true });
         }
     }
 
@@ -107,37 +125,33 @@ export class TimeOffCalendarYearRenderer extends CalendarYearRenderer {
      */
     eventClassNames({ event }) {
         const classesToAdd = super.eventClassNames(...arguments);
-        const record = this.props.model.records[event.id];
-        if (record) {
+        const leave = this.props.model.records[event.id];
+        if (leave) {
+            const isHourUnit = leave.rawRecord?.work_entry_type_request_unit === "hour";
+            const leaveEnd = getLeaveLastMoment(leave);
             const isHalfStart =
-                record.requestDateFromPeriod === "pm" ||
-                (record?.rawRecord?.work_entry_type_request_unit === "hour" &&
-                    record.start.c.hour >= 12);
+                leave.requestDateFromPeriod === "pm" || (isHourUnit && leave.start.c.hour >= 12);
             const isHalfEnd =
-                record.requestDateToPeriod === "am" ||
-                (record?.rawRecord?.work_entry_type_request_unit === "hour" &&
-                    record.end.c.hour <= 12);
+                leave.requestDateToPeriod === "am" || (isHourUnit && leaveEnd.c.hour <= 12);
             if (!isHalfStart && !isHalfEnd) {
                 return classesToAdd;
             }
 
-            const isMultiWeek = record.start.localWeekNumber != record.end.localWeekNumber;
+            const isMultiWeek = leave.start.localWeekNumber != leaveEnd.localWeekNumber;
             let start = 0;
             let end = 100;
 
             if (!isMultiWeek) {
                 const lastRowStart =
-                    record.start > record.end.startOf("month")
-                        ? record.start
-                        : record.end.startOf("month");
+                    leave.start > leaveEnd.startOf("month")
+                        ? leave.start
+                        : leaveEnd.startOf("month");
                 const firstRowEnd =
-                    record.end < record.start.endOf("month")
-                        ? record.end
-                        : record.start.endOf("month");
+                    leaveEnd < leave.start.endOf("month") ? leaveEnd : leave.start.endOf("month");
                 const daysInFirstRow =
-                    firstRowEnd.startOf("day").diff(record.start.startOf("day"), "days").days + 1;
+                    firstRowEnd.startOf("day").diff(leave.start.startOf("day"), "days").days + 1;
                 const daysInLastRow =
-                    record.end.startOf("day").diff(lastRowStart.startOf("day"), "days").days + 1;
+                    leaveEnd.startOf("day").diff(lastRowStart.startOf("day"), "days").days + 1;
 
                 start = isHalfStart ? Math.round(50 / daysInFirstRow) : 0;
                 end = isHalfEnd ? Math.round(100 - 50 / daysInLastRow) : 100;
@@ -145,21 +159,21 @@ export class TimeOffCalendarYearRenderer extends CalendarYearRenderer {
                 // Multi-week: first slice — only care about start
                 if (isHalfStart) {
                     const rowEnd =
-                        record.start.endOf("week") < record.start.endOf("month")
-                            ? record.start.endOf("week").minus({ days: 1 })
-                            : record.start.endOf("month");
+                        leave.start.endOf("week") < leave.start.endOf("month")
+                            ? leave.start.endOf("week").minus({ days: 1 })
+                            : leave.start.endOf("month");
                     const daysInFirstRow =
-                        rowEnd.startOf("day").diff(record.start.startOf("day"), "days").days + 1;
+                        rowEnd.startOf("day").diff(leave.start.startOf("day"), "days").days + 1;
                     start = Math.round(50 / daysInFirstRow);
                 }
                 // Multi-week: last slice — only care about end
                 if (isHalfEnd) {
                     const rowStart =
-                        record.end.startOf("week") > record.end.startOf("month")
-                            ? record.end.startOf("week").minus({ days: 1 })
-                            : record.end.startOf("month");
+                        leaveEnd.startOf("week") > leaveEnd.startOf("month")
+                            ? leaveEnd.startOf("week").minus({ days: 1 })
+                            : leaveEnd.startOf("month");
                     const daysInLastRow =
-                        record.end.startOf("day").diff(rowStart.startOf("day"), "days").days + 1;
+                        leaveEnd.startOf("day").diff(rowStart.startOf("day"), "days").days + 1;
                     end = Math.round(100 - 50 / daysInLastRow);
                 }
             }

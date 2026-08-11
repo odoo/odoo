@@ -15,7 +15,7 @@ from odoo.addons.base.models.res_partner import _tz_get
 from odoo.addons.resource.models.utils import HOURS_PER_DAY
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Command, Date, Domain
-from odoo.tools.date_utils import float_to_time, sum_intervals, time_to_float
+from odoo.tools.date_utils import convert_timezone, float_to_time, sum_intervals, time_to_float
 from odoo.tools.float_utils import float_round, float_compare, float_is_zero
 from odoo.tools.intervals import Intervals
 from odoo.tools.misc import clean_context, format_date, format_duration
@@ -29,6 +29,11 @@ def get_employee_from_context(values, context, user_employee_id):
     employee_ids = employee_ids_list[-1] if employee_ids_list else []
     employee_id_value = employee_ids[0] if employee_ids else False
     return employee_id_value or context.get('default_employee_id', context.get('employee_id', user_employee_id))
+
+
+# what the position of a request is derived from, shared by its two bounds
+POSITION_DEPENDS = ('date_from', 'date_to', 'tz', 'request_date_from', 'request_date_to',
+                    'request_date_from_period', 'request_date_to_period', 'work_entry_type_request_unit')
 
 
 class HrLeave(models.Model):
@@ -120,15 +125,18 @@ class HrLeave(models.Model):
         # Note:
         # Without the application of the timezone, days based on UTC datetimes
         # will be returned (and will therefore not be correct for the client).
+        # request_date_hour_from/to are computed, so a default on them is overwritten by
+        # their own compute before any onchange may map it: they are read here as well
         client_tz = self.env.tz
-        if values.get('date_from'):
-            if not values.get('request_date_from'):
-                values['request_date_from'] = values['date_from'].replace(tzinfo=UTC).astimezone(client_tz)
-            del values['date_from']
-        if values.get('date_to'):
-            if not values.get('request_date_to'):
-                values['request_date_to'] = values['date_to'].replace(tzinfo=UTC).astimezone(client_tz)
-            del values['date_to']
+        for datetime_field, date_field in (('date_from', 'request_date_from'),
+                                           ('date_to', 'request_date_to'),
+                                           ('request_date_hour_from', 'request_date_from'),
+                                           ('request_date_hour_to', 'request_date_to')):
+            if values.get(datetime_field):
+                if not values.get(date_field):
+                    moment = fields.Datetime.to_datetime(values[datetime_field])
+                    values[date_field] = moment.replace(tzinfo=UTC).astimezone(client_tz)
+                del values[datetime_field]
         return values
 
     # description
@@ -189,7 +197,8 @@ class HrLeave(models.Model):
         'Duration (Days)', compute='_compute_duration', store=True, tracking=True,
         help='Number of days of the time off request. Used in the calculation.')
     number_of_hours = fields.Float(
-        'Duration (Hours)', compute='_compute_duration', store=True, tracking=True, inverse="_inverse_number_of_hours",
+        'Duration (Hours)', compute='_compute_duration', store=True, tracking=True,
+        inverse="_inverse_number_of_hours",
         help='Number of hours of the time off request. Used in the calculation.')
     last_several_days = fields.Boolean("All day", compute="_compute_last_several_days")
     duration_display = fields.Char('Requested', compute='_compute_duration_display')
@@ -226,12 +235,12 @@ class HrLeave(models.Model):
     request_date_from = fields.Date('Request Start Date')
     request_date_to = fields.Date('Request End Date')
     # Interface fields used when using hour-based computation
-    request_hour_from = fields.Float(string='Hour from', compute='_compute_request_hour_from_to', readonly=False, store=True)
-    request_hour_to = fields.Float(string='Hour to', compute='_compute_request_hour_from_to', readonly=False, store=True)
-    # pure display fields combining the two above, used by the hour request unit daterange widget.
-    # editing them decomposes back into request_date_from/to and request_hour_from/to, see the inverse
-    request_date_hour_from = fields.Datetime(compute='_compute_request_date_hour_from', inverse='_inverse_request_date_hour_from_to', readonly=False)
-    request_date_hour_to = fields.Datetime(compute='_compute_request_date_hour_to', inverse='_inverse_request_date_hour_from_to', readonly=False)
+    request_hour_from = fields.Float(string='Hour from')
+    request_hour_to = fields.Float(string='Hour to')
+    # Interface fields and should only by used from the frontend
+    # one compute each, on purpose: see _compute_request_date_hour_from
+    request_date_hour_from = fields.Datetime(compute='_compute_request_date_hour_from', readonly=False, search='_search_request_date_hour_from', inverse='_inverse_request_date_hour_from_to')
+    request_date_hour_to = fields.Datetime(compute='_compute_request_date_hour_to', readonly=False, search='_search_request_date_hour_to', inverse='_inverse_request_date_hour_from_to')
     # used only when the leave is taken in half days
     request_date_from_period = fields.Selection([
         ('am', 'Morning'), ('pm', 'Afternoon')],
@@ -301,25 +310,6 @@ class HrLeave(models.Model):
                 'default_employee_id': self.employee_id.id,
             },
         }
-
-    @api.depends('employee_id', 'request_date_from', 'request_date_to')
-    def _compute_request_hour_from_to(self):
-        env_company_calendar = self.env.company.resource_calendar_id
-        for leave in self:
-            calendar = leave.resource_calendar_id or env_company_calendar
-            if (
-                leave.employee_id
-                and leave.request_date_from
-                and leave.request_date_to
-                and calendar
-                and (
-                    leave.work_entry_type_id.request_unit != 'hour'
-                    or (not leave.request_hour_from and not leave.request_hour_to)
-                )
-            ):
-                hour_from, hour_to = leave._get_hour_from_to(leave.request_date_from, leave.request_date_to)
-                leave.request_hour_from = hour_from
-                leave.request_hour_to = hour_to
 
     @api.depends(
         'virtual_remaining_leaves', 'number_of_days', 'number_of_hours',
@@ -419,50 +409,47 @@ class HrLeave(models.Model):
         self.request_hour_from = hour_from
         self.request_hour_to = hour_to
 
-    # request_date_hour_from/to are computed separately on purpose: they used to share
-    # one compute method, so writing a dependency of one (e.g. request_date_from) would
-    # invalidate both as a group, wiping out the other's not-yet-consumed raw value when
-    # the two inverses ran back to back. computing them independently keeps the from/to
-    # sides fully decoupled, so neither can clobber the other
-    @api.depends('request_date_from', 'request_hour_from')
+    @api.depends(*POSITION_DEPENDS)
+    @api.depends_context('uid')
     def _compute_request_date_hour_from(self):
+        """ Wall clock of the request, restamped in the reader's timezone -- 8:00 in Tokyo
+        looks like 8:00 in Brussels. One compute per bound, or the one left alone reads False. """
+        reader_tz = self._reader_tz()
         for leave in self:
-            if not leave.request_date_from:
-                leave.request_date_hour_from = False
-                continue
-            hour_from = float_to_time(leave.request_hour_from)
-            leave_tz = ZoneInfo(leave.tz or 'UTC')
-            leave.request_date_hour_from = datetime.combine(leave.request_date_from, hour_from).replace(
-                tzinfo=leave_tz).astimezone(UTC).replace(tzinfo=None)
+            leave.request_date_hour_from = leave._get_request_date_hours(reader_tz)[0]
 
-    @api.depends('request_date_to', 'request_hour_to')
+    @api.depends(*POSITION_DEPENDS)
+    @api.depends_context('uid')
     def _compute_request_date_hour_to(self):
+        """ The end of the request, see _compute_request_date_hour_from. """
+        reader_tz = self._reader_tz()
         for leave in self:
-            if not leave.request_date_to:
-                leave.request_date_hour_to = False
-                continue
-            hour_to = float_to_time(leave.request_hour_to)
-            leave_tz = ZoneInfo(leave.tz or 'UTC')
-            leave.request_date_hour_to = datetime.combine(leave.request_date_to, hour_to).replace(
-                tzinfo=leave_tz).astimezone(UTC).replace(tzinfo=None)
+            leave.request_date_hour_to = leave._get_request_date_hours(reader_tz)[1]
 
-    def _inverse_request_date_hour_from_to(self):
-        for leave in self:
-            if not (leave.request_date_hour_from and leave.request_date_hour_to):
-                continue
-            leave_tz = ZoneInfo(leave.tz or 'UTC')
-            date_hour_from = leave.request_date_hour_from.replace(tzinfo=UTC).astimezone(leave_tz)
-            date_hour_to = leave.request_date_hour_to.replace(tzinfo=UTC).astimezone(leave_tz)
-            leave.request_date_from = date_hour_from.date()
-            leave.request_date_to = date_hour_to.date()
-            leave.request_hour_from = time_to_float(date_hour_from.time())
-            leave.request_hour_to = time_to_float(date_hour_to.time())
+    def _reader_tz(self):
+        """ The clock a request is read on: the one of the reader, not the one the
+        context happens to name. """
+        return ZoneInfo(self.env.user.tz or 'UTC')
 
-    # inverse methods only fire when the form is saved, mirror them here so
-    # request_date_from/request_hour_from and friends stay in sync
-    @api.onchange('request_date_hour_from', 'request_date_hour_to')
-    def _onchange_request_date_hour_from_to(self):
-        self._inverse_request_date_hour_from_to()
+    def _get_request_date_hours(self, reader_tz):
+        """ Days and half days sit on the halves of a day they occupy, so that moving
+        one by half a day moves it by one period. Hours carry their hours. """
+        self.ensure_one()
+        if self.work_entry_type_request_unit == 'hour':
+            leave_tz = ZoneInfo(self.tz or 'UTC')
+            return tuple(
+                value and convert_timezone(value, leave_tz, reader_tz).replace(microsecond=0)
+                for value in (self.date_from, self.date_to)
+            )
+        if not (self.request_date_from and self.request_date_to):
+            return (False, False)
+        is_half_day = self.work_entry_type_request_unit == 'half_day'
+        start = datetime.combine(self.request_date_from, time.min) + timedelta(
+            hours=12 if is_half_day and self.request_date_from_period == 'pm' else 0)
+        stop = datetime.combine(self.request_date_to, time.min) + timedelta(
+            hours=12 if is_half_day and self.request_date_to_period == 'am' else 24)
+        # same as stamping and converting, 20x cheaper -- runs for every request read
+        return start - reader_tz.utcoffset(start), stop - reader_tz.utcoffset(stop)
 
     @api.depends('employee_id', 'state', 'request_date_from', 'request_date_to',
             'request_hour_from', 'request_hour_to', 'request_date_from_period', 'request_date_to_period')
@@ -550,6 +537,22 @@ class HrLeave(models.Model):
             domain &= Domain('user_id', '=', self.env.user.id)
         query = self.sudo()._search(domain)
         return Domain('id', 'in', query)
+
+    def _search_request_date_hour_from(self, operator, value):
+        return self._get_search_request_date_hour_from_to_domain('request_date_from', 'request_hour_from', operator, value)
+
+    def _search_request_date_hour_to(self, operator, value):
+        return self._get_search_request_date_hour_from_to_domain('request_date_to', 'request_hour_to', operator, value)
+
+    def _get_search_request_date_hour_from_to_domain(self, date_field, hour_field, operator, value):
+        if not isinstance(value, datetime):
+            return Domain(date_field, operator, value) & Domain(hour_field, operator, value)
+        localized_value = value.replace(tzinfo=UTC).astimezone(self._reader_tz())
+        on_date = Domain(date_field, operator, localized_value.date())
+        on_hour = Domain(hour_field, operator, time_to_float(localized_value.time()))
+        if operator in ('=', '!='):
+            return on_date & on_hour
+        return on_date | (on_hour & Domain(date_field, '=', localized_value.date()))
 
     @api.depends('employee_id', 'request_date_from', 'request_date_to')
     def _compute_resource_calendar_id(self):
@@ -677,29 +680,14 @@ class HrLeave(models.Model):
             holiday.date_to = self._to_utc(holiday.request_date_to, hour_to, holiday.employee_id or holiday)
 
     def reschedule_from_calendar(self, date_from, date_to):
-        """Reschedule a leave from a calendar drag/resize.
-
-        ``date_from``/``date_to`` are the dragged endpoints as naive UTC datetimes,
-        read in the leave's own timezone and mapped onto the request_* fields for its
-        request unit. Doing it server-side keeps the AM/PM split and request date
-        correct when the employee's timezone differs from the editing user's. An
-        already-approved request is reset to "To Approve".
-        """
+        """ Reschedule a leave from a calendar drag/resize. The endpoints are the ones the
+        calendar displays, request_date_hour_from/to, so the mapping back onto the request
+        fields is theirs too. An already-approved request is reset to "To Approve". """
         self.ensure_one()
-        tz = ZoneInfo(self.tz)
-        start = fields.Datetime.to_datetime(date_from).replace(tzinfo=UTC).astimezone(tz)
-        stop = fields.Datetime.to_datetime(date_to).replace(tzinfo=UTC).astimezone(tz)
-        vals = {
-            'request_date_from': start.date(),
-            'request_date_to': stop.date(),
-        }
-        request_unit = self.work_entry_type_id.request_unit
-        if request_unit == 'hour':
-            vals['request_hour_from'] = start.hour + start.minute / 60
-            vals['request_hour_to'] = stop.hour + stop.minute / 60
-        elif request_unit == 'half_day':
-            vals['request_date_from_period'] = 'am' if start.hour < 12 else 'pm'
-            vals['request_date_to_period'] = 'am' if stop.hour <= 12 else 'pm'
+        vals = self._get_request_vals_from_date_hours(
+            fields.Datetime.to_datetime(date_from), fields.Datetime.to_datetime(date_to))
+        if not vals:
+            return
         if self.state in ('validate', 'validate1') and self.validation_type != 'no_validation':
             vals['state'] = 'confirm'
         self.write(vals)
@@ -945,7 +933,7 @@ class HrLeave(models.Model):
                     work_days_data = work_days_data_mapped[leave.date_from, leave.date_to, leave.work_entry_type_id.include_public_holidays_in_duration, calendar][leave.employee_id.id]
                     hours, days = work_days_data['hours'], work_days_data['days']
                     if (hours, days) == (0, 0) and leave.work_entry_type_id.count_as == "working_time":
-                        hours = leave.request_hour_to - leave.request_hour_from
+                        hours = (leave.date_to - leave.date_from).total_seconds() / 3600
             else:
                 today_hours = calendar.get_work_hours_count(
                     datetime.combine(leave.date_from.date(), time.min),
@@ -979,8 +967,9 @@ class HrLeave(models.Model):
     @api.depends('request_date_from', 'request_date_to')
     def _compute_last_several_days(self):
         for holiday in self:
+            # an end before its start is a request half edited, not one of several days
             holiday.last_several_days = holiday.request_date_from and holiday.request_date_to \
-                                        and holiday.request_date_from != holiday.request_date_to
+                                        and holiday.request_date_to > holiday.request_date_from
 
     @api.depends('tz')
     @api.depends_context('uid')
@@ -1013,17 +1002,116 @@ class HrLeave(models.Model):
                 display = f"{duration} {unit}"
             leave.duration_display = display
 
-    def _inverse_number_of_hours(self):
+    @api.model
+    def _get_request_duration(self, date_from, period_from, date_to, period_to):
+        """ 'am' or 'pm' for a lone half day, 'full' otherwise. """
+        return period_from if (date_from, period_from) == (date_to, period_to) else 'full'
+
+    def _get_request_vals_from_date_hours(self, date_hour_from, date_hour_to):
+        """ Reverse of the compute: map the pair back onto the request fields. The
+        stop is exclusive, so 00:00 on D+1 ends the afternoon of D. """
+        self.ensure_one()
+        tz = self._reader_tz()
+        current_from, current_to = self._get_request_date_hours(tz)
+        # a caller may move one bound and leave the other alone, and a form may hold
+        # neither yet: an empty bound means unmoved, not unset
+        date_hour_from = date_hour_from or current_from
+        date_hour_to = date_hour_to or current_to
+        if not (date_hour_from and date_hour_to):
+            return {}
+        date_hour_from = date_hour_from.replace(microsecond=0)
+        date_hour_to = date_hour_to.replace(microsecond=0)
+        if date_hour_to <= date_hour_from:
+            return {}
+        if (date_hour_from, date_hour_to) == (current_from, current_to):
+            # an echo of the compute, not a move: re-deriving it would snap the
+            # request onto whole halves of a day
+            return {}
+        local_from = date_hour_from.replace(tzinfo=UTC).astimezone(tz)
+        local_to = date_hour_to.replace(tzinfo=UTC).astimezone(tz)
+        local_to_incl = local_to - timedelta(seconds=1)
+
+        # only hours write request_hour_from/to; elsewhere the periods carry the
+        # request and the hours belong to the calendar
+        vals = {
+            'request_date_from': local_from.date(),
+            'request_date_to': local_to_incl.date(),
+            'request_duration': 'full',
+        }
+        unit = self.work_entry_type_request_unit
+        if unit == 'half_day':
+            from_period = 'am' if local_from.hour < 12 else 'pm'
+            to_period = 'am' if local_to_incl.hour < 12 else 'pm'
+            vals['request_date_from_period'] = from_period
+            vals['request_date_to_period'] = to_period
+            vals['request_duration'] = self._get_request_duration(
+                vals['request_date_from'], from_period, vals['request_date_to'], to_period)
+        elif unit == 'hour':
+            # a bound on a day boundary carries no hour of its own, and a request_hour
+            # of 0 reads as unset everywhere: keep the hour the request already has
+            vals['request_duration'] = 'specific'
+            vals['request_hour_from'] = (self.request_hour_from if local_from.time() == time.min
+                                         else time_to_float(local_from.time()))
+            vals['request_hour_to'] = 24.0 if local_to.time() == time.min else time_to_float(local_to.time())
+        elif self.request_date_from and self.request_date_to and (
+                local_from.time() != time.min or local_to.time() != time.min):
+            # Days have no boundary inside a day to snap on: quantize the move itself,
+            # on wall clocks, or the two bounds part ways at a change of offset.
+            for fname, days_after, moved in (('request_date_from', 0, local_from),
+                                             ('request_date_to', 1, local_to)):
+                stood_on = datetime.combine(self[fname], time.min) + timedelta(days=days_after)
+                moved_by = (moved.replace(tzinfo=None) - stood_on).total_seconds() / 86400
+                vals[fname] = self[fname] + timedelta(days=int(float_round(moved_by, precision_digits=0)))
+        return vals
+
+    @api.onchange('request_date_hour_from', 'request_date_hour_to')
+    def _onchange_request_date_hour_from_to(self):
+        # an inverse never runs on a draft record, so the form maps the pair itself.
+        # Only hours expose it; elsewhere the form edits the request fields.
+        if self.work_entry_type_request_unit != 'hour':
+            return
+        if vals := self._get_request_vals_from_date_hours(self.request_date_hour_from, self.request_date_hour_to):
+            self.update(vals)
+
+    def _inverse_request_date_hour_from_to(self):
+        moved_per_vals = defaultdict(self.browse)
         for leave in self:
-            if not leave.employee_id or not leave.request_date_from or not leave.date_from or leave.state != 'confirm':
-                continue
-            if leave.work_entry_type_id.count_as != 'absence' and leave.work_entry_type_id.request_unit == 'hour':
+            if vals := leave._get_request_vals_from_date_hours(leave.request_date_hour_from, leave.request_date_hour_to):
+                moved_per_vals[tuple(vals.items())] |= leave
+        for vals, moved in moved_per_vals.items():
+            moved.write(dict(vals))
+        # the datetimes are protected, so modified() propagates nothing: mark what the
+        # request dates feed, minus what the caller set itself
+        all_moved = self.browse().union(*moved_per_vals.values())
+        for fname in ('date_from', 'date_to', 'number_of_days', 'number_of_hours'):
+            field = self._fields[fname]
+            self.env.add_to_compute(field, all_moved - self.env.protected(field))
+
+    @api.onchange('number_of_hours')
+    def _onchange_number_of_hours(self):
+        # an inverse only runs at save, and the form needs the end to follow at once
+        if self._origin and self.request_date_hour_to != self._origin.request_date_hour_to:
+            return  # the end moved, the duration only followed it
+        self._inverse_number_of_hours()
+
+    def _inverse_number_of_hours(self):
+        # the end follows a duration the reader states, never one the dates already say,
+        # and a duration is counted in worked hours: the end is planned in them too
+        candidates = self.filtered(lambda leave: leave.employee_id and leave.request_date_from
+                                   and leave.date_from and leave.state == 'confirm')
+        implied = candidates._get_durations()
+        for leave in candidates:
+            _days, implied_hours = implied.get(leave.id, (0, 0))
+            if float_compare(leave.number_of_hours, implied_hours, precision_digits=2) == 0:
+                continue  # the dates already say this duration
+            calendar = leave.employee_id.sudo()._get_version(leave.request_date_from).resource_calendar_id
+            compute_leaves = not leave.work_entry_type_id.include_public_holidays_in_duration
+            if (leave.work_entry_type_id.count_as != 'absence' and leave.work_entry_type_id.request_unit == 'hour'
+                    and not calendar.get_work_hours_count(leave.date_from, leave.date_to, compute_leaves=compute_leaves)):
                 if not leave.request_date_hour_from:
                     continue
                 request_date_hour_to = leave.request_date_hour_from + relativedelta(hours=leave.number_of_hours)
             else:
-                calendar = leave.employee_id.sudo()._get_version(leave.request_date_from).resource_calendar_id
-                compute_leaves = not leave.work_entry_type_id.include_public_holidays_in_duration
                 request_date_hour_to = calendar.plan_hours(
                     leave.number_of_hours,
                     leave.date_from,
@@ -1033,7 +1121,7 @@ class HrLeave(models.Model):
             if request_date_hour_to:
                 leave_tz = ZoneInfo(leave.tz or 'UTC')
                 if request_date_hour_to.tzinfo is None:
-                    request_date_hour_to = request_date_hour_to.replace(tzinfo=ZoneInfo('UTC'))
+                    request_date_hour_to = request_date_hour_to.replace(tzinfo=UTC)
                 date_hour_to_user_tz = request_date_hour_to.astimezone(leave_tz).replace(tzinfo=None)
                 new_request_date_to = date_hour_to_user_tz.date()
                 new_request_hour_to = time_to_float(date_hour_to_user_tz.time())
@@ -1433,10 +1521,6 @@ class HrLeave(models.Model):
                     else:
                         employees = self.mapped('employee_id')
                     self._check_double_validation_rules(employees, values['state'])
-            if 'date_from' in values:
-                values['request_date_from'] = values['date_from']
-            if 'date_to' in values:
-                values['request_date_to'] = values['date_to']
         result = super().write(values)
         if any(field in values for field in ['request_date_from', 'date_from', 'request_date_from', 'date_to', 'work_entry_type_id', 'employee_id', 'state']):
             if not values.get('state') or values.get('state') not in ('refuse', 'cancel'):
@@ -1662,6 +1746,19 @@ class HrLeave(models.Model):
         return self.filtered(
             lambda l: l.employee_id and not l.number_of_days and not l.number_of_hours and l.work_entry_type_id.count_as == 'absence' and l.work_entry_type_id.code not in bypass_work_entry_types)
 
+    def _get_split_hour_vals(self, date_from=None, date_to=None):
+        """ A request in hours is whole where it is cut too: the part that keeps a new
+        first or last day takes the hours of that day, not the ones the request ended on. """
+        self.ensure_one()
+        if self.work_entry_type_request_unit != 'hour':
+            return {}
+        vals = {'request_duration': 'specific'}
+        if date_from and date_from != self.request_date_from:
+            vals['request_hour_from'] = self.employee_id.sudo()._get_hours_for_date(date_from)[0]
+        if date_to and date_to != self.request_date_to:
+            vals['request_hour_to'] = self.employee_id.sudo()._get_hours_for_date(date_to)[1]
+        return vals
+
     def _split_leaves(self, split_date_from, split_date_to=False):
         """
         This method splits an original leave in two leaves and returns the new one for each leave in self.
@@ -1683,17 +1780,32 @@ class HrLeave(models.Model):
         for leave in multi_day_leaves:
             new_leave_vals = []
             target_leave_vals = []
+            # the cut is on a day boundary, so both parts are whole where they are
+            # cut -- without this they keep the half day copied from the original
             if leave.request_date_from < split_date_from:
+                date_to = split_date_from + timedelta(days=-1)
+                # whole where it is cut, but the original end is not a cut
+                period_to = leave.request_date_to_period if date_to == leave.request_date_to else 'pm'
                 new_leave_vals.append(leave.with_context(skip_copy_check=True).copy_data({
-                    'request_date_to': split_date_from + timedelta(days=-1),
-                    'state': leave.state
+                    'request_date_to': date_to,
+                    'request_date_to_period': period_to,
+                    'request_duration': leave._get_request_duration(
+                        leave.request_date_from, leave.request_date_from_period, date_to, period_to),
+                    'state': leave.state,
+                    **leave._get_split_hour_vals(date_to=date_to),
                 })[0])
 
             # Do the same for the new leave after the split
             if leave.request_date_to >= split_date_to:
+                period_from = (leave.request_date_from_period
+                               if split_date_to == leave.request_date_from else 'am')
                 new_leave_vals.append(leave.with_context(skip_copy_check=True).copy_data({
                     'request_date_from': split_date_to,
-                    'state': leave.state
+                    'request_date_from_period': period_from,
+                    'request_duration': leave._get_request_duration(
+                        split_date_to, period_from, leave.request_date_to, leave.request_date_to_period),
+                    'state': leave.state,
+                    **leave._get_split_hour_vals(date_from=split_date_to),
                 })[0])
 
             # For those two new leaves, only create them if they actually have a non-zero duration.
@@ -1706,8 +1818,13 @@ class HrLeave(models.Model):
             if target_leave_vals:
                 vals = target_leave_vals.pop(0)
                 leave.with_context(leave_skip_state_check=True).write({
-                    'request_date_from': vals['request_date_from'],
-                    'request_date_to': vals['request_date_to'],
+                    fname: vals[fname]
+                    # date_from/date_to too: the created part gets them from the same
+                    # vals, so don't leave this one waiting for a recompute
+                    for fname in ('request_date_from', 'request_date_to', 'request_duration',
+                                  'request_date_from_period', 'request_date_to_period',
+                                  'request_hour_from', 'request_hour_to', 'date_from', 'date_to')
+                    if fname in vals
                 })
                 if target_leave_vals:
                     new_leaves_vals.extend(target_leave_vals)
@@ -2152,9 +2269,9 @@ class HrLeave(models.Model):
         return employee.sudo(False)._get_unusual_days(date_from, date_to)
 
     def _to_utc(self, date, hour, resource):
-        hour = float_to_time(float(hour))
+        # float_to_time carries the rounded minutes itself, but stops at 24h
         holiday_tz = ZoneInfo(resource.tz or self.env.user.tz or 'UTC')
-        return datetime.combine(date, hour, tzinfo=holiday_tz).astimezone(UTC).replace(tzinfo=None)
+        return datetime.combine(date, float_to_time(min(float(hour), 24.0)), tzinfo=holiday_tz).astimezone(UTC).replace(tzinfo=None)
 
     def _get_hour_from_to(self, request_date_from, request_date_to, day_period=None, count_non_working_days=False):
         """
@@ -2164,7 +2281,8 @@ class HrLeave(models.Model):
         If there are no attendances on the exact days of the request, return
         the earliest hour_from and latest hour_to that exist in the schedule.
         """
-        if self.work_entry_type_id.request_unit == "hour" and self.work_entry_type_id.count_as == "working_time":
+        if (self.work_entry_type_id.request_unit == "hour" and self.work_entry_type_id.count_as == "working_time"
+                and (self.request_hour_from or self.request_hour_to)):
             hour_from, hour_to = self.request_hour_from, self.request_hour_to
         else:
             hour_from, _ = self.employee_id.sudo()._get_hours_for_date(request_date_from, day_period, count_non_working_days)

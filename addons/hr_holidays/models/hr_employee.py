@@ -760,49 +760,51 @@ class HrEmployee(models.Model):
         if not target_date:
             err = "Target Date cannot be empty"
             raise ValueError(err)
+
+        def around_noon(hours_a_day):
+            """ Hours that name no clock hour of their own sit centred on midday. """
+            half = hours_a_day / 2.0
+            if day_period:
+                return (12.0 - half, 12.0) if day_period == 'morning' else (12.0, 12.0 + half)
+            return (12.0 - half, 12.0 + half)
+
         calendar = self.env.company.resource_calendar_id
         if self:
             version = self._get_version(target_date)
             if version.is_fully_flexible:
                 return (0, 24)
+            if version.is_flexible:
+                # a schedule naming no average day is worked whole, like a fully flexible one
+                return around_noon(version.hours_per_day) if version.hours_per_day else (0, 24)
             calendar = version.resource_calendar_id
-            duration_based_attendances = calendar.attendance_ids.filtered('duration_based')._filter_by_date(target_date)
-            if version.is_flexible or duration_based_attendances or count_non_working_days:
-                # Quick calculation to center flexible hours around 12PM midday
-                if version.is_flexible:
-                    hours_day = version.hours_per_day
-                    # no average hours configured: treat as fully flexible (full day)
-                    if not hours_day:
-                        return (0, 24)
-                elif count_non_working_days:
-                    hours_day = calendar.hours_per_day
-                else:
-                    hours_day = sum(duration_based_attendances.mapped('duration_hours'))
-                datetimes = [12.0 - hours_day / 2.0, 12.0, 12.0 + hours_day / 2.0]
-                if day_period:
-                    return (datetimes[0], datetimes[1]) if day_period == 'morning' else (datetimes[1], datetimes[2])
-                return (datetimes[0], datetimes[2])
+        # a variable schedule declares no average day, and no day may end where it starts
+        hours_a_day = calendar.hours_per_day or HOURS_PER_DAY
+        if count_non_working_days:
+            # every day counts as a whole working one, so none of them names its hours
+            return around_noon(hours_a_day)
 
-        def _filter_by_period(att_list):
+        def hours_of(day):
+            """ The hours the schedule names for one day, a full day cut at midday. """
+            attendances = calendar.attendance_ids._filter_by_date(day)
+            if duration_based := attendances.filtered('duration_based'):
+                return around_noon(sum(duration_based.mapped('duration_hours')))
             if not day_period:
-                return list(att_list)
-            result = [att for att in att_list if att['day_period'] == day_period]
-            for attendance in filter(lambda att: att['day_period'] == 'full_day', att_list):
-                attendance.update({
-                    'hour_from': min(attendance['hour_from'], 12) if day_period == 'morning' else max(12, attendance['hour_from']),
-                    'hour_to': max(attendance['hour_to'], 12) if day_period == 'afternoon' else min(12, attendance['hour_to']),
-                })
-                result.append(attendance)
-            return result
+                bounds = [(att.hour_from, att.hour_to) for att in attendances]
+            else:
+                # a full day covers the half asked for, up to midday
+                keep_half = min if day_period == 'morning' else max
+                bounds = [
+                    (att.hour_from, att.hour_to) if att.day_period == day_period
+                    else (keep_half(att.hour_from, 12.0), keep_half(att.hour_to, 12.0))
+                    for att in attendances
+                    if att.day_period in (day_period, 'full_day')
+                ]
+            return (min(f for f, _t in bounds), max(t for _f, t in bounds)) if bounds else None
 
-        fields_needed = ['hour_from', 'hour_to', 'day_period']
-        attendances = _filter_by_period(calendar.attendance_ids._filter_by_date(target_date).read(fields_needed))
-        default_attendances = _filter_by_period(calendar.attendance_ids.read(fields_needed))
-
-        default_start = min((att['hour_from'] for att in default_attendances), default=0.0)
-        default_end = max((att['hour_to'] for att in default_attendances), default=0.0)
-
-        hour_from = min((att['hour_from'] for att in attendances), default=default_start)
-        hour_to = max((att['hour_to'] for att in attendances), default=default_end)
-
-        return (hour_from, hour_to)
+        # a day the schedule leaves out names no hour of its own: borrow the nearest day
+        # it does name, whose hours are a day's, unlike those of the whole schedule
+        days_away = (0, *(sign * away for away in range(1, 8) for sign in (1, -1)))
+        for away in days_away:
+            if hours := hours_of(target_date + timedelta(days=away)):
+                return hours
+        return around_noon(hours_a_day)
