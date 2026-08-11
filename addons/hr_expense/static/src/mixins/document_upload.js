@@ -1,8 +1,8 @@
-import { props, proxy, signal, t } from "@odoo/owl";
+import { props, proxy, signal, t, useListener } from "@odoo/owl";
 import { useLayoutEffect } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { Domain } from "@web/core/domain";
-import { useBus, useRefListener, useService } from '@web/core/utils/hooks';
+import { useBus, useService } from '@web/core/utils/hooks';
 
 export const ExpenseDocumentDropZone = (T, parentProps) => class ExpenseDocumentDropZone extends T {
     props = props({
@@ -36,7 +36,7 @@ export const ExpenseDocumentDropZone = (T, parentProps) => class ExpenseDocument
             () => [document.querySelector('.o_content')]
         );
 
-        useRefListener(this.rootRef, 'click', (ev) => {
+        useListener(this.rootRef, 'click', (ev) => {
             let targetElement = ev.target;
             if (targetElement.closest('.o_view_nocontent_expense_receipt')) {
                 this.props.uploadDocument();
