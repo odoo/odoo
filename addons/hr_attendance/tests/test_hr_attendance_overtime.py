@@ -139,6 +139,20 @@ class TestHrAttendanceOvertime(TransactionCase):
         self.assertEqual(overtime.duration, 3, 'Should have 3 hours of overtime')
         self.assertEqual(self.employee.total_overtime, 3, 'Should still have 3 hours of overtime')
 
+    def test_overtime_with_microseconds(self):
+        attendance = self.env['hr.attendance'].create({
+            'employee_id': self.employee.id,
+            'check_in': datetime(2021, 1, 2, 8, 0),
+        })
+        attendance.write({'check_out': datetime(2021, 1, 2, 12, 0, 0, 1)})
+
+        overtime = self.env['hr.attendance.overtime'].search([
+            ('employee_id', '=', self.employee.id),
+            ('date', '=', date(2021, 1, 2)),
+        ])
+        self.assertEqual(len(overtime), 1, 'One local day should create one overtime record')
+        self.assertAlmostEqual(overtime.duration, 4, 2)
+
     def test_overtime_multiple(self):
         attendance = self.env['hr.attendance'].create({
             'employee_id': self.employee.id,

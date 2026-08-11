@@ -300,7 +300,7 @@ class HrAttendance(models.Model):
             date_employee_tz = pytz.utc.localize(dt).astimezone(pytz.timezone(employee._get_tz()))
         else:
             date_employee_tz = dt
-        start_day_employee_tz = date_employee_tz.replace(hour=0, minute=0, second=0)
+        start_day_employee_tz = date_employee_tz.replace(hour=0, minute=0, second=0, microsecond=0)
         return (start_day_employee_tz.astimezone(pytz.utc).replace(tzinfo=None), start_day_employee_tz.date())
 
     def _get_attendances_dates(self):
