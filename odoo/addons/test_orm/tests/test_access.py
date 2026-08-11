@@ -94,6 +94,14 @@ class TestAccess(TransactionCase):
         access.for_create = False
         self.assertEqual(access.operation, 'ru')
 
+        # special case: create access without field 'operation'
+        access = self.env['ir.access'].create({
+            'name': "no operation",
+            'model_id': self.env['ir.model']._get_id(self.MODEL),
+            'for_create': True,
+        })
+        self.assertEqual(access.operation, 'c')
+
     def test_sudo(self):
         records = self.records.sudo()
 
