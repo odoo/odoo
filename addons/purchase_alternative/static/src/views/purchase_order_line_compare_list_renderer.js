@@ -1,24 +1,25 @@
-import { useSubEnv } from "@web/owl2/utils";
-import { ListRenderer } from "@web/views/list/list_renderer";
 import { onWillStart, proxy } from "@odoo/owl";
+import { ListRenderer } from "@web/views/list/list_renderer";
+import {
+    provideViewButtonHandler,
+    useViewButtonHandler,
+} from "@web/views/view_button/view_button_hook";
 
 export class PurchaseOrderLineCompareListRenderer extends ListRenderer {
     setup() {
         super.setup();
         this.bestFields = proxy({
-                best_price_ids: [],
-                best_date_ids: [],
-                best_price_unit_ids: [],
+            best_price_ids: [],
+            best_date_ids: [],
+            best_price_unit_ids: [],
         });
         onWillStart(async () => {
             await this.updateBestFields();
         });
-        const defaultOnClickViewButton = this.env.onClickViewButton;
-        useSubEnv({
-            onClickViewButton: async (params) => {
-                await defaultOnClickViewButton(params);
-                await this.updateBestFields();
-            }
+        const defaultOnClickViewButton = useViewButtonHandler();
+        provideViewButtonHandler(async (params) => {
+            await defaultOnClickViewButton(params);
+            await this.updateBestFields();
         });
     }
 
