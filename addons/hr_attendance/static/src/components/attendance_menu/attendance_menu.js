@@ -93,7 +93,7 @@ export class ActivityMenu extends Component {
             body: _t("Unable to get a valid location. Do you want to proceed with your check-in/out anyway?"),
             confirmLabel: _t("Proceed Anyway"),
             confirm: async () => await this.checking(),
-            cancel: () => this._attendanceInProgress = false,
+            cancel: () => { this._attendanceInProgress = false; },
         });
     }
 
