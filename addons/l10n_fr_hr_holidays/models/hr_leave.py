@@ -134,6 +134,11 @@ class HrLeave(models.Model):
                     ('date_from', '<', max(fr_leaves.mapped('date_to')) + relativedelta(days=1)),
                     ('date_to', '>', min(fr_leaves.mapped('date_from')) - relativedelta(days=1)),
                 ])
+            standard_duration = super(HrLeave, fr_leaves)._get_durations(
+                check_work_entry_type=check_work_entry_type,
+                resource_calendar=resource_calendar,
+                additional_domain=additional_domain,
+            )
             for company, leaves in fr_leaves_by_company.items():
                 company_cal = company.resource_calendar_id
                 holidays_days_list = []
@@ -180,7 +185,6 @@ class HrLeave(models.Model):
                             else:
                                 legal_days += 1.0
                         current += relativedelta(days=1)
-                    standard_duration = super()._get_durations(check_work_entry_type=check_work_entry_type, resource_calendar=resource_calendar, additional_domain=additional_domain)
                     _, hours = standard_duration.get(leave.id, (0.0, 0.0))
 
                     duration_by_leave_id[leave.id] = (legal_days, hours)
