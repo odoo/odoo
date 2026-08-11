@@ -3,6 +3,7 @@ import { URL_REGEX, cleanZWChars } from "./utils";
 import { isImageUrl } from "@html_editor/utils/url";
 import { Plugin } from "@html_editor/plugin";
 import { childNodeIndex } from "@html_editor/utils/position";
+import { findInSelection } from "@html_editor/utils/selection";
 
 /**
  * @typedef {((text: string, url: string) => void | true)[]} paste_url_overrides
@@ -61,10 +62,24 @@ export class LinkPastePlugin extends Plugin {
         if (this.delegateTo("paste_url_overrides", text, url)) {
             return;
         }
-        const label =
-            !selection.isCollapsed && cleanZWChars(selection.textContent()).length
-                ? selection.textContent()
-                : text;
+        let label;
+        const selectedText = cleanZWChars(selection.textContent());
+        if (!selection.isCollapsed && selectedText.length) {
+            // If the entire link is selected and its label matches the URL,
+            // replace the existing link with the new URL.
+            const link = findInSelection(selection, "a");
+            if (link) {
+                const linkLabel = cleanZWChars(link.textContent);
+                const href = link.getAttribute("href");
+                const labelMatchesHref =
+                    linkLabel === href || linkLabel + "/" === href || linkLabel === href + "/";
+                label = labelMatchesHref ? text : selectedText;
+            } else {
+                label = selectedText;
+            }
+        } else {
+            label = text;
+        }
         this.dependencies.link.insertLink(url, label);
     }
     /**
