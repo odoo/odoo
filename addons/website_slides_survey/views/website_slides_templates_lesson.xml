@@ -2,7 +2,7 @@
 <odoo>
     <data>
         <template id="slide_content_detailed" inherit_id="website_slides.slide_content_detailed">
-            <xpath expr="//div[hasclass('o_wslides_lesson_content_type')]" position="inside">
+            <xpath expr="//div[@t-else and hasclass('o_wslides_lesson_content_type')]" position="inside">
                 <div t-if="slide.slide_category == 'certification' and not channel_progress[slide.id].get('completed')" class="col mt32 mb8 text-center">
                     <a role="button"
                         class="btn btn-primary btn-lg"
