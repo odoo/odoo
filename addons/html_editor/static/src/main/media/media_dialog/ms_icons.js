@@ -292,6 +292,10 @@ const MS_ICONS = {
         has_fill: true,
         tags: "agenda appointment booking calendar calendaricon calendartoday daily date dating day diary event grid lines month monthly organizer plan planning punctual rectangle reminder schedule square time today todaycalendar week year yearly",
     },
+    call: {
+        has_fill: true,
+        tags: "audio business call cell communication connect connection contact contact us customer service device dial directory emergency handset hardware help incoming local phone mobile office outgoing phone phone alt receiver ring speak support talk telecommunication telephone voice",
+    },
     call_merge: {
         has_fill: false,
         tags: "arrow arrows branches call collapse combine connect connect points connecting points consolidate consolidate lines converge converging lines data device diagram direction dots flowchart graph integrate join lines link merge mobile network node points structure union unity",
