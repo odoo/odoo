@@ -454,6 +454,9 @@ export class CallDebrief extends Component {
      * Transitions to the next segment if possible otherwise pauses.
      */
     onMediaEnded() {
+        if (!this.state.currentSegment) {
+            return;
+        }
         if (this.isSwitchingSegment) {
             return;
         }
