@@ -311,8 +311,9 @@ class AccountAccount(models.Model):
     def _check_account_code(self):
         for account in self:
             if account.code and not re.match(ACCOUNT_CODE_REGEX, account.code):
-                raise ValidationError(_(
-                    "The account code can only contain alphanumeric characters and dots."
+                raise ValidationError(self.env._(
+                    "The account code can only contain alphanumeric characters and dots. (account code: %s)",
+                    account.code,
                 ))
 
     @api.constrains('account_type')
