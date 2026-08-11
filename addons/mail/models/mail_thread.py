@@ -3105,21 +3105,9 @@ class MailThread(models.AbstractModel):
         values are given in a reversed ordering, as DB model reads them by id
         DESC -> most important one is given last to be inserted last (see
         'mail_tracking' module). HTML therefore needs to reverse ordering. """
-
-        # Stable fix: simulate `mail.mail_tracking_template`, but add arrow and parenthesis
-        lines = []
-        for val in reversed(tracking_values):
-            line = Markup('')
-            if val.get('company_name'):
-                line += Markup('<em>%s</em>') % (val['company_name'] + ': ')
-            if val.get('old_value'):
-                line += val['old_value']
-            line += " → "
-            line += Markup('<b>%s</b> <i>(%s)</i><br/>') % (val['new_value'], val['field_label'])
-            lines.append(line)
-
-        tracking_html = Markup('<div class="o_track_no_arrow">%s</div>') % Markup('').join(lines)
-
+        tracking_html = self.env['ir.qweb']._render(
+            "mail.mail_tracking_template", {'trackingValues': reversed(tracking_values)}
+        ).strip()
         return append_content_to_html(
             body, tracking_html,
             plaintext=False,

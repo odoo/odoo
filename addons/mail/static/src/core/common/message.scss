@@ -69,37 +69,12 @@
 .o_track {
     padding-left: 0px;
 
-    b::before {
-        color: $body-color;
-        content: "\2192";
-        margin: 0 5px;
-    }
-    i {
-      &::before {
-        margin-left: 5px;
-        content: "(";
-      }
-
-      &::after {
-        content: ")";
-      }
-    }
-
     b {
         color: $info;
         font-weight: bold;
     }
     i {
         color: $text-muted;
-    }
-
-    // Stable fix: new tracking body are embedded to be able to disable the CSS only for new mail message
-    .o_track_no_arrow {
-        b::before,
-        i::before,
-        i::after {
-            content: none !important;
-        }
     }
 }
 
