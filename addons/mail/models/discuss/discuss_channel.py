@@ -956,6 +956,27 @@ class DiscussChannel(models.Model):
         self.ensure_one()
         return f"call_{self.id}"
 
+    def _unpin_empty_meetings(self):
+        """Unpin the meetings of ``self`` in which nothing was ever posted.
+
+        A meeting whose call is over and that holds no message is not worth keeping in the
+        list of conversations of its members.
+        """
+        # sudo - discuss.channel: unpinning a meeting when condition met is allowed
+        meetings = self.sudo().filtered(
+            lambda channel: channel.default_display_mode == "video_full_screen"
+            and not channel.message_count
+        )
+        now = fields.Datetime.now()
+        for meeting in meetings:
+            members = meeting.channel_member_ids
+            interest_dts = [meeting.last_interest_dt, *members.mapped("last_interest_dt")]
+            members.unpin_dt = max(
+                [now, *(dt + timedelta(seconds=1) for dt in interest_dts if dt)]
+            )
+            for __, store in members._get_member_store_list():
+                store.add(meeting, {"close_chat_window": True, "isLocallyPinned": False})
+
     def _rtc_cancel_invitations(self, member_ids=None):
         """ Cancels the invitations of the RTC call from all invited members,
             if member_ids is provided, only the invitations of the specified members are canceled.

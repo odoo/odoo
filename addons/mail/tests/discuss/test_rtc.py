@@ -1183,11 +1183,47 @@ class TestChannelRTC(MailCommon, HttpCase):
         self.assertEqual(unused_ids, outdated_rtc_sessions.ids)
         self.assertFalse(outdated_rtc_sessions.exists())
 
+    @users("employee")
+    @mute_logger("odoo.models.unlink")
+    @freeze_time("2023-03-15 12:34:56")
+    def test_55_ending_call_should_unpin_meeting_without_message(self):
+        meeting = self._create_meeting()
+        meeting.self_member_id.sudo()._rtc_join_call()
+        meeting.self_member_id.sudo()._rtc_leave_call()
+        self.assertEqual(meeting.channel_member_ids.sudo().mapped("is_pinned"), [False, False])
+
+    @users("employee")
+    @mute_logger("odoo.models.unlink")
+    @freeze_time("2023-03-15 12:34:56")
+    def test_56_ending_call_should_keep_meeting_with_message_pinned(self):
+        meeting = self._create_meeting()
+        meeting.self_member_id.sudo()._rtc_join_call()
+        meeting.message_post(
+            body="See you next week", message_type="comment", subtype_xmlid="mail.mt_comment",
+        )
+        meeting.self_member_id.sudo()._rtc_leave_call()
+        self.assertEqual(meeting.channel_member_ids.sudo().mapped("is_pinned"), [True, True])
+
+    @users("employee")
+    @mute_logger("odoo.models.unlink")
+    @freeze_time("2023-03-15 12:34:56")
+    def test_57_ending_call_should_keep_group_without_message_pinned(self):
+        self.member_of_employee_in_group_b.sudo()._rtc_join_call()
+        self.member_of_employee_in_group_b.sudo()._rtc_leave_call()
+        self.assertTrue(self.member_of_employee_in_group_b.is_pinned)
+
     @freeze_time("2023-03-15 12:34:56")
     def test_70_call_invitation_ui(self):
         self.member_of_employee_in_group_a.sudo()._rtc_join_call()
         self._reset_bus()
         self.start_tour("/odoo", "discuss_call_invitation.js", login="test_user")
+
+    def _create_meeting(self):
+        return self.env["discuss.channel"]._create_group(
+            users_to=self.user_employee + self.test_user,
+            default_display_mode="video_full_screen",
+            name="A meeting with user_employee and test_user inside",
+        )
 
     def _res_for_guest(self, guest, common=True, internal=False):
         res = {"id": guest.id}
