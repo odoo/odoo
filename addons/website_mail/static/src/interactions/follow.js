@@ -41,9 +41,9 @@ export class Follow extends Interaction {
 
         this.isUser = data[0].is_user;
         for (const jsFollowEl of jsFollowEls) {
-            const model = this.el.dataset.object;
+            const model = jsFollowEl.dataset.object;
             const email = data[0].email;
-            const needToEnable = model in data[1] && data[1][model].includes(parseInt(this.el.dataset.id));
+            const needToEnable = model in data[1] && data[1][model].includes(parseInt(jsFollowEl.dataset.id));
             this.toggleSubscription(needToEnable, email, jsFollowEl);
             jsFollowEl.classList.remove("d-none");
         }
