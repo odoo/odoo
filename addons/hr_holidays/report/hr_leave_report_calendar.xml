@@ -27,16 +27,16 @@
 
                     <div class="o_row" id="dates_label">
                         <i class="oi oi-lg ms-2" data-icon="schedule" title="Dates" name="date"/>
-                        <label for="start_datetime" string=""/>
+                        <label for="request_date_from" string=""/>
                     </div>
                     <!-- Do something here for if the leave is in hours on the same day -->
                     <div id="full_date" class="o_row">
                         <field
                             string='dates'
-                            name="start_datetime"
+                            name="request_date_from"
                             widget="daterange"
                             readonly='1'
-                            options="{'end_date_field': 'stop_datetime', 'show_time': false}"
+                            options="{'end_date_field': 'request_date_to'}"
                             nolabel="1"/>
                         <span>( <field name="duration_display" readonly="1" class="w-auto"/> )</span>
                     </div>
@@ -85,8 +85,8 @@
         <field name="arch" type="xml">
             <calendar
                 string="Time Off"
-                date_start="start_datetime"
-                date_stop="stop_datetime"
+                date_start="request_date_hour_from"
+                date_stop="request_date_hour_to"
                 mode="month"
                 quick_create="0"
                 color="employee_id"
@@ -110,8 +110,8 @@
         <field name="arch" type="xml">
             <calendar
                 string="Time Off"
-                date_start="start_datetime"
-                date_stop="stop_datetime"
+                date_start="request_date_hour_from"
+                date_stop="request_date_hour_to"
                 mode="year"
                 quick_create="0"
                 color="employee_id"
