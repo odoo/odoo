@@ -7,6 +7,7 @@ import odoo.tests
 from odoo.addons.pos_self_order.tests.self_order_common_test import SelfOrderCommonTest
 from odoo.addons.point_of_sale.tests.common_setup_methods import setup_product_combo_items
 from odoo.fields import Command
+from odoo.tools import mute_logger
 
 
 @odoo.tests.tagged("post_install", "-at_install")
@@ -636,3 +637,303 @@ class TestSelfOrderCombo(SelfOrderCommonTest):
                 self.assertNotEqual(order.state, 'paid',
                     msg="An unpaid combo order must not be accepted as paid")
                 self.assertFalse(order.payment_ids)
+
+    def _setup_kiosk_session(self):
+        self.pos_config.write({
+            'self_ordering_mode': 'kiosk',
+            'available_preset_ids': [(5, 0)],
+            'use_presets': False,
+        })
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.pos_config.current_session_id.set_opening_control(0, "")
+
+    def _post_self_order(self, lines, relations_uuid_mapping=None):
+        """Send a raw order payload on the public self-order endpoint."""
+        order_uuid = str(uuid4())
+        response = self.url_open(
+            "/pos-self-order/process-order/kiosk",
+            headers={"Content-Type": "application/json"},
+            data=json.dumps({
+                "jsonrpc": "2.0",
+                "method": "call",
+                "id": str(uuid4()),
+                "params": {
+                    "access_token": self.pos_config.access_token,
+                    "table_identifier": None,
+                    "order": {
+                        "id": None,
+                        "session_id": self.pos_config.current_session_id.id,
+                        "state": "draft",
+                        "preset_id": False,
+                        "amount_total": 0,
+                        "amount_tax": 0,
+                        "amount_paid": 0,
+                        "amount_return": 0,
+                        "uuid": order_uuid,
+                        "lines": lines,
+                        "relations_uuid_mapping": relations_uuid_mapping or {},
+                    },
+                },
+            }),
+        )
+        return response.json(), order_uuid
+
+    def _make_expensive_combo(self):
+        expensive_product = self.env['product.product'].create({
+            'available_in_pos': True,
+            'list_price': 100.0,
+            'name': 'Expensive Product',
+            'taxes_id': False,
+        })
+        combo = self.env['product.combo'].create({
+            'name': 'Expensive Combo',
+            'qty_free': 1,
+            'qty_max': 1,
+            'combo_item_ids': [
+                Command.create({'product_id': expensive_product.id, 'extra_price': 0}),
+            ],
+        })
+        combo_product = self.env['product.product'].create({
+            'available_in_pos': True,
+            'list_price': 1.0,
+            'name': 'Cheap Combo Product',
+            'type': 'combo',
+            'combo_ids': [Command.set([combo.id])],
+            'taxes_id': False,
+        })
+        return expensive_product, combo, combo_product
+
+    @mute_logger('odoo.http')
+    def test_combo_parent_from_another_order_is_refused(self):
+        """
+        A combo child is priced from its parent line. If the parent belongs to another order it
+        is never repriced with the child, so the child would keep the zero price of the payload:
+        such an order must be refused.
+        """
+        self._setup_kiosk_session()
+        expensive_product, combo, _ = self._make_expensive_combo()
+
+        result, _ = self._post_self_order([[0, 0, {
+            "uuid": str(uuid4()), "product_id": self.cola.id, "qty": 1,
+            "price_unit": 0, "price_subtotal": 0, "price_subtotal_incl": 0,
+        }]])
+        first_order = self.env['pos.order'].browse(result['result']['pos.order'][0]['id'])
+        parent_line_id = result['result']['pos.order.line'][0]['id']
+
+        result, order_uuid = self._post_self_order([[0, 0, {
+            "uuid": str(uuid4()), "product_id": expensive_product.id, "qty": 1,
+            "combo_parent_id": parent_line_id,
+            "combo_item_id": combo.combo_item_ids.id,
+            "price_unit": 0, "price_subtotal": 0, "price_subtotal_incl": 0,
+        }]])
+
+        self.assertIn('error', result, "An order whose combo parent belongs to another order must be refused")
+        self.assertFalse(self.env['pos.order'].search([('uuid', '=', order_uuid)]),
+            msg="The refused order must not be created")
+        self.assertFalse(first_order.lines.combo_line_ids,
+            msg="No combo relation must be created towards the line of another order")
+
+    @mute_logger('odoo.http')
+    def test_forged_combo_composition_is_refused(self):
+        """
+        A single order made of a cheap non-combo parent and a child selling an expensive product
+        through an unrelated combo item would have the child priced from the parent instead of
+        from its own product: such an order must be refused.
+        """
+        self._setup_kiosk_session()
+        expensive_product, combo, _ = self._make_expensive_combo()
+        parent_uuid, child_uuid = str(uuid4()), str(uuid4())
+
+        result, order_uuid = self._post_self_order([
+            [0, 0, {
+                "uuid": parent_uuid, "product_id": self.free.id, "qty": 1,
+                "price_unit": 0, "price_subtotal": 0, "price_subtotal_incl": 0,
+            }],
+            [0, 0, {
+                "uuid": child_uuid, "product_id": expensive_product.id, "qty": 1,
+                "combo_item_id": combo.combo_item_ids.id,
+                "price_unit": 0, "price_subtotal": 0, "price_subtotal_incl": 0,
+            }],
+        ], {"pos.order.line": {child_uuid: {"combo_parent_id": parent_uuid}}})
+
+        self.assertIn('error', result, "An order with a forged combo composition must be refused")
+        self.assertFalse(self.env['pos.order'].search([('uuid', '=', order_uuid)]),
+            msg="The refused order must not be created")
+
+    def test_valid_combo_order_is_still_accepted(self):
+        """The check on the combo hierarchy must leave a legitimate combo order untouched."""
+        self._setup_kiosk_session()
+        _, combo, combo_product = self._make_expensive_combo()
+        order = self._process_zeroed_combo_order(combo_product, combo.combo_item_ids)
+        self.assertAlmostEqual(order.amount_total, combo_product.lst_price,
+            msg="A valid combo order must be priced from the combo product")
+        self.assertEqual(order.lines.filtered(lambda line: line.combo_parent_id).combo_parent_id.product_id,
+            combo_product, msg="The combo child must stay linked to its parent line")
+
+    def _create_external_combo_child(self, combo_product, combo_item):
+        """Create a legitimate combo (parent + child) in its own order and return the child
+        line together with the uuid it was created with, so another request can try to steal it."""
+        parent_uuid, child_uuid = str(uuid4()), str(uuid4())
+        result, _ = self._post_self_order([
+            [0, 0, {
+                "uuid": parent_uuid, "product_id": combo_product.id, "qty": 1,
+                "price_unit": 0, "price_subtotal": 0, "price_subtotal_incl": 0,
+            }],
+            [0, 0, {
+                "uuid": child_uuid, "product_id": combo_item.product_id.id,
+                "combo_item_id": combo_item.id, "qty": 1,
+                "price_unit": 0, "price_subtotal": 0, "price_subtotal_incl": 0,
+            }],
+        ], {"pos.order.line": {child_uuid: {"combo_parent_id": parent_uuid}}})
+        order = self.env['pos.order'].browse(result['result']['pos.order'][0]['id'])
+        child_line = order.lines.filtered(lambda line: line.combo_parent_id)
+        return order, child_uuid, child_line
+
+    @mute_logger('odoo.http')
+    def test_foreign_negative_attribute_on_combo_child_is_refused(self):
+        """
+        Attribute extras are summed into the combo child price server-side. An attribute that
+        belongs to an unrelated product (e.g. a negative-price one) must not be accepted on the
+        child line, otherwise it can zero an otherwise valid combo child.
+        """
+        self._setup_kiosk_session()
+        expensive_product, combo, combo_product = self._make_expensive_combo()
+
+        # A negative-price attribute value that belongs to a *different* product.
+        discount_attribute = self.env['product.attribute'].create({
+            'name': 'Rogue Discount',
+            'create_variant': 'no_variant',
+            'value_ids': [Command.create({'name': 'Minus'})],
+        })
+        foreign_template = self.env['product.template'].create({
+            'name': 'Foreign Product',
+            'available_in_pos': True,
+            'list_price': 0.0,
+            'attribute_line_ids': [Command.create({
+                'attribute_id': discount_attribute.id,
+                'value_ids': [Command.set(discount_attribute.value_ids.ids)],
+            })],
+        })
+        foreign_ptav = foreign_template.attribute_line_ids.product_template_value_ids
+        foreign_ptav.price_extra = -100.0
+
+        parent_uuid, child_uuid = str(uuid4()), str(uuid4())
+        result, order_uuid = self._post_self_order([
+            [0, 0, {
+                "uuid": parent_uuid, "product_id": combo_product.id, "qty": 1,
+                "price_unit": 0, "price_subtotal": 0, "price_subtotal_incl": 0,
+            }],
+            [0, 0, {
+                "uuid": child_uuid, "product_id": expensive_product.id,
+                "combo_item_id": combo.combo_item_ids.id, "qty": 1,
+                "attribute_value_ids": [foreign_ptav.id],
+                "price_unit": 0, "price_subtotal": 0, "price_subtotal_incl": 0,
+            }],
+        ], {"pos.order.line": {child_uuid: {"combo_parent_id": parent_uuid}}})
+
+        self.assertIn('error', result,
+            "A combo child carrying an attribute of an unrelated product must be refused")
+        self.assertFalse(self.env['pos.order'].search([('uuid', '=', order_uuid)]),
+            msg="The refused order must not be created")
+
+    @mute_logger('odoo.http')
+    def test_negative_combo_parent_quantity_is_refused(self):
+        """A negative (or non-finite) quantity on the combo parent zeroes the combo total and
+        must be refused: public self-order quantities have to be finite and strictly positive."""
+        self._setup_kiosk_session()
+        expensive_product, combo, combo_product = self._make_expensive_combo()
+        parent_uuid, child_uuid = str(uuid4()), str(uuid4())
+
+        result, order_uuid = self._post_self_order([
+            [0, 0, {
+                "uuid": parent_uuid, "product_id": combo_product.id, "qty": -1,
+                "price_unit": 0, "price_subtotal": 0, "price_subtotal_incl": 0,
+            }],
+            [0, 0, {
+                "uuid": child_uuid, "product_id": expensive_product.id,
+                "combo_item_id": combo.combo_item_ids.id, "qty": 1,
+                "price_unit": 0, "price_subtotal": 0, "price_subtotal_incl": 0,
+            }],
+        ], {"pos.order.line": {child_uuid: {"combo_parent_id": parent_uuid}}})
+
+        self.assertIn('error', result, "A combo order with a negative parent quantity must be refused")
+        self.assertFalse(self.env['pos.order'].search([('uuid', '=', order_uuid)]),
+            msg="The refused order must not be created")
+
+    @mute_logger('odoo.http')
+    def test_zero_and_fractional_quantities_are_refused(self):
+        """Zero, and non-finite quantities must be rejected on the public route."""
+        self._setup_kiosk_session()
+        for bad_qty in (0, "1", None):
+            with self.subTest(qty=bad_qty):
+                result, order_uuid = self._post_self_order([[0, 0, {
+                    "uuid": str(uuid4()), "product_id": self.cola.id, "qty": bad_qty,
+                    "price_unit": 0, "price_subtotal": 0, "price_subtotal_incl": 0,
+                }]])
+                self.assertIn('error', result, "A non-positive/invalid quantity must be refused")
+                self.assertFalse(self.env['pos.order'].search([('uuid', '=', order_uuid)]),
+                    msg="The refused order must not be created")
+
+    @mute_logger('odoo.http')
+    def test_external_child_stolen_through_relations_uuid_mapping_is_refused(self):
+        """
+        relations_uuid_mapping is applied generically under sudo() by the base sync_from_ui. A
+        public payload that uses it to re-parent a combo child of another order onto a line of
+        its own puts a foreign line in the new parent's inverse collection: _check_combo_lines
+        validates that downward edge and must refuse the whole request.
+        """
+        self._setup_kiosk_session()
+        _, combo, combo_product = self._make_expensive_combo()
+
+        first_order, external_child_uuid, external_child = self._create_external_combo_child(
+            combo_product, combo.combo_item_ids)
+        original_parent = external_child.combo_parent_id
+
+        new_parent_uuid = str(uuid4())
+        result, order_uuid = self._post_self_order(
+            [[0, 0, {
+                "uuid": new_parent_uuid, "product_id": combo_product.id, "qty": 1,
+                "price_unit": 0, "price_subtotal": 0, "price_subtotal_incl": 0,
+            }]],
+            {"pos.order.line": {external_child_uuid: {"combo_parent_id": new_parent_uuid}}},
+        )
+
+        self.assertIn('error', result,
+            "Re-parenting a foreign combo child through relations_uuid_mapping must be refused")
+        self.assertFalse(self.env['pos.order'].search([('uuid', '=', order_uuid)]),
+            msg="The refused order must not be created")
+        external_child.invalidate_recordset()
+        self.assertEqual(external_child.combo_parent_id, original_parent,
+            msg="The rolled-back request must leave the external combo child untouched")
+        self.assertEqual(external_child.order_id, first_order,
+            msg="The external combo child must stay on its original order")
+
+    @mute_logger('odoo.http')
+    def test_external_child_stolen_through_combo_line_ids_is_refused(self):
+        """
+        A raw integer combo_line_ids referencing an existing child line of another order puts
+        that foreign line in the new parent's inverse collection. _check_combo_lines validates
+        that downward edge and must refuse the whole request.
+        """
+        self._setup_kiosk_session()
+        _, combo, combo_product = self._make_expensive_combo()
+
+        first_order, _, external_child = self._create_external_combo_child(
+            combo_product, combo.combo_item_ids)
+        original_parent = external_child.combo_parent_id
+
+        result, order_uuid = self._post_self_order([[0, 0, {
+            "uuid": str(uuid4()), "product_id": combo_product.id, "qty": 1,
+            "combo_line_ids": [external_child.id],
+            "price_unit": 0, "price_subtotal": 0, "price_subtotal_incl": 0,
+        }]])
+
+        self.assertIn('error', result,
+            "Re-parenting a foreign combo child through raw combo_line_ids must be refused")
+        self.assertFalse(self.env['pos.order'].search([('uuid', '=', order_uuid)]),
+            msg="The refused order must not be created")
+        external_child.invalidate_recordset()
+        self.assertEqual(external_child.combo_parent_id, original_parent,
+            msg="The rolled-back request must leave the external combo child untouched")
+        self.assertEqual(external_child.order_id, first_order,
+            msg="The external combo child must stay on its original order")
