@@ -1,12 +1,15 @@
-import { useSubEnv } from "@web/owl2/utils";
-import { useBus, useService } from "@web/core/utils/hooks";
+import { userHasEmployeeInCurrentCompany } from "@hr_holidays/utils";
 import { exportTimeOffRecords } from "@hr_holidays/views/hr_leave_export";
-import { registry } from "@web/core/registry";
-import { listView } from "@web/views/list/list_view";
-import { ListController } from "@web/views/list/list_controller";
 import { onWillStart } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
-import { userHasEmployeeInCurrentCompany } from "@hr_holidays/utils";
+import { registry } from "@web/core/registry";
+import { useBus, useService } from "@web/core/utils/hooks";
+import { ListController } from "@web/views/list/list_controller";
+import { listView } from "@web/views/list/list_view";
+import {
+    provideViewButtonHandler,
+    useViewButtonHandler,
+} from "@web/views/view_button/view_button_hook";
 
 export class HolidaysListController extends ListController {
     static template = "hr_holidays.HolidaysListView";
@@ -24,11 +27,8 @@ export class HolidaysListController extends ListController {
         this.orm = useService("orm");
 
         // Store reference to original button click handler for fallback
-        this.onClickViewButton = this.env.onClickViewButton;
-
-        useSubEnv({
-            onClickViewButton: (params) => this.handleViewButtonClick(params),
-        });
+        this.onClickViewButton = useViewButtonHandler();
+        provideViewButtonHandler(this.handleViewButtonClick.bind(this));
 
         onWillStart(async () => {
             const hasEmployee = await userHasEmployeeInCurrentCompany(this.orm);
@@ -39,7 +39,9 @@ export class HolidaysListController extends ListController {
             const ignoreHasEmployee = ignoreActions.includes(this.env.config.actionXmlId);
             if (!hasEmployee && !ignoreHasEmployee) {
                 this.env.services.notification.add(
-                    _t("You are not linked to an employee in the current company, so you cannot create requests for yourself."),
+                    _t(
+                        "You are not linked to an employee in the current company, so you cannot create requests for yourself."
+                    ),
                     { type: "warning" }
                 );
             }

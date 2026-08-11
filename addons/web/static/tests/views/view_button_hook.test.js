@@ -4,7 +4,7 @@ import { contains, mockService, mountWithCleanup } from "@web/../tests/web_test_
 import { Component, signal, useProps, xml } from "@odoo/owl";
 
 import { ViewButton } from "@web/views/view_button/view_button";
-import { useViewButtons } from "@web/views/view_button/view_button_hook";
+import { useViewButtonHandler, useViewButtons } from "@web/views/view_button/view_button_hook";
 import { registry } from "@web/core/registry";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -38,6 +38,7 @@ test("action can be prevented", async () => {
                     return executeInHook;
                 },
             });
+            this.onClickViewButton = useViewButtonHandler();
         }
 
         onClick() {
@@ -50,7 +51,7 @@ test("action can be prevented", async () => {
                 expect.step("beforeExecuteAction on handler");
                 return executeInHandler;
             };
-            this.env.onClickViewButton({ beforeExecute, getResParams, clickParams });
+            this.onClickViewButton({ beforeExecute, getResParams, clickParams });
         }
     }
 
@@ -127,6 +128,7 @@ test("execute action in new window", async () => {
         rootRef = signal.ref();
         setup() {
             useViewButtons(this.rootRef);
+            this.onClickViewButton = useViewButtonHandler();
         }
 
         onClick() {
@@ -135,7 +137,7 @@ test("execute action in new window", async () => {
                 resId: 3,
             });
             const clickParams = {};
-            this.env.onClickViewButton({ getResParams, clickParams, newWindow: true });
+            this.onClickViewButton({ getResParams, clickParams, newWindow: true });
         }
     }
 

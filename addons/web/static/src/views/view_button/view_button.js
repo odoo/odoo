@@ -3,6 +3,7 @@ import { _t } from "@web/core/l10n/translation";
 import { useDropdownCloser } from "@web/core/dropdown/dropdown_hooks";
 import { pick } from "@web/core/utils/objects";
 import { debounce as debounceFn } from "@web/core/utils/timing";
+import { useViewButtonHandler } from "@web/views/view_button/view_button_hook";
 
 const explicitRankClasses = [
     "btn-primary",
@@ -50,6 +51,8 @@ export const viewButtonProps = {
 export class ViewButton extends Component {
     static template = "web.views.ViewButton";
     props = useProps(viewButtonProps);
+
+    handleViewButton = useViewButtonHandler();
 
     setup() {
         if (this.props.icon) {
@@ -116,7 +119,7 @@ export class ViewButton extends Component {
             return this.props.onClick();
         }
 
-        this.env.onClickViewButton({
+        this.handleViewButton({
             clickParams: this.clickParams,
             getResParams: () =>
                 pick(
