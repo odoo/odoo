@@ -18,7 +18,6 @@ from odoo.tools.date_utils import all_timezones
 from odoo.tools.translate import LazyGettext
 from odoo.tools.partner_identifiers import (
     ADDITIONAL_IDENTIFIERS_METADATA,
-    ALL_IDENTIFIERS_METADATA,
     TIN_METADATA,
     get_deduced_identifiers,
     get_tin_metadata_of_country,
@@ -1474,10 +1473,13 @@ class ResPartner(models.Model):
 
     @api.model
     def _get_all_identifiers_metadata(self):
-        """ Returns a dict with the metadata of the additional identifiers.
-        TO BE OVERRIDEN by modules that want to add or modify the default metadata.
+        """ Returns a dict with the metadata of every known identifier: the TIN ones, which
+        describe the generic `vat` field, plus the additional ones.
+        Only override this to register an identifier that must NOT be added in
+        `additional_identifiers` (e.g. a corner case scheme); in any other case override
+        `_get_all_additional_identifiers_metadata` instead.
         """
-        return ALL_IDENTIFIERS_METADATA
+        return {**TIN_METADATA, **self._get_all_additional_identifiers_metadata()}
 
     @api.model
     def _get_all_identifiers_metadata_by_scheme(self):
@@ -1489,10 +1491,12 @@ class ResPartner(models.Model):
 
     @api.model
     def _get_all_additional_identifiers_metadata(self):
-        """ Returns a dict with the metadata of the additional identifiers.
-        TO BE OVERRIDEN by modules that want to add or modify the default metadata.
+        """ Returns a dict with the metadata of the identifiers available in `additional_identifiers`.
+        TO BE OVERRIDDEN by modules that want to add or modify the default
+        metadata. Entries added here are automatically picked up by
+        `_get_all_identifiers_metadata`, hence used for validation, labels, etc.
         """
-        return ADDITIONAL_IDENTIFIERS_METADATA
+        return {**ADDITIONAL_IDENTIFIERS_METADATA}
 
     @api.model
     def _get_legal_entity_category_priority(self):
