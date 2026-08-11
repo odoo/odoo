@@ -1083,7 +1083,8 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
         # previous without div / beginning string
         # track_re = re.compile(r'(?:^|<br>)(?P<pre>.*?)<b>(?P<post>.*?)</b><i>(?P<key>.*?)</i>')
         track_re = re.compile(
-            r'(?:<em>(?P<company>[^>]+)</em>)?(?P<pre>[^<>]+)<b>(?P<post>.*?)</b><i>(?P<key>.*?)</i><br>'
+            r'(?:<em>(?P<company>[^>]+)</em>)?(?P<pre>[^<>]+?) → '
+            r'<b>(?P<post>.*?)</b> <i>\((?P<key>.*?)\)</i>'
         )
         for match in track_re.finditer(body_html):
             _company, pre, post, key = match.group('company'), match.group('pre'), match.group('post'), match.group('key')
