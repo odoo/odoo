@@ -93,7 +93,15 @@ class ResCompany(models.CachedModel):
     partner_id = fields.Many2one('res.partner', string='Partner', required=True, index=True)
     report_header = fields.Html(string='Company Tagline', translate=True, help="Company tagline, which is included in a printed document's header or footer (depending on the selected layout).")
     report_footer = fields.Html(string='Report Footer', translate=True, help="Footer text displayed at the bottom of all reports.")
-    company_details = fields.Html(string='Company Details', translate=True, help="Header text displayed at the top of all reports.")
+    company_details = fields.Html(
+        string="Company Details",
+        translate=True,
+        help="Header text displayed at the top of all reports.",
+        compute="_compute_parent_fields",
+        store=True,
+        readonly=False,
+        recursive=True,
+    )
     is_company_details_empty = fields.Boolean(compute='_compute_empty_company_details')
     logo = fields.Binary(related='partner_id.image_1920', default=_get_logo, string="Company Logo", readonly=False)
     logo_web = fields.Binary(compute='_compute_logo_web', store=True)
@@ -169,6 +177,12 @@ class ResCompany(models.CachedModel):
     def _get_company_address_update(self, partner):
         return dict((fname, partner[fname])
                     for fname in self._get_company_address_field_names())
+
+    @api.depends('parent_id', 'parent_id.company_details')
+    def _compute_parent_fields(self):
+        for company in self:
+            if company.parent_id and not company.company_details:
+                company.company_details = company.parent_id.company_details
 
     @api.depends('parent_path')
     def _compute_parent_ids(self):
