@@ -251,6 +251,16 @@ test("remove color from list item", async () => {
     });
 });
 
+test("should remove color from a list item whose only content is an image", async () => {
+    // The item holds no formattable leaf, so it is only reachable through
+    // list_plugin's is_formattable_node_predicates.
+    await testEditor({
+        contentBefore: '<ul><li style="color: rgb(255, 0, 0);">[<img src="#">]</li></ul>',
+        stepFunction: setColor("", "color"),
+        contentAfter: '<ul><li>[<img src="#">]</li></ul>',
+    });
+});
+
 test("should remove color from partially selected list item", async () => {
     await testEditor({
         contentBefore: '<ol><li style="color: rgb(255, 0, 0);">ab[cd]ef</li></ol>',

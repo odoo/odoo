@@ -93,7 +93,6 @@ export class QWebPlugin extends Plugin {
         },
 
         /** Providers */
-        color_target_providers: (node) => closestElement(node, PROTECTED_QWEB_SELECTOR),
         formattable_node_providers: (node) => closestElement(node, PROTECTED_QWEB_SELECTOR),
 
         system_attributes: QWEB_DATA_ATTRIBUTES,

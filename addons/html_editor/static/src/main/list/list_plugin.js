@@ -209,13 +209,23 @@ export class ListPlugin extends Plugin {
             }
         },
 
-        /** Providers */
-        color_target_providers: (node) => {
-            const li = closestElement(node, isListItem);
-            if (li && this.dependencies.selection.areNodeContentsFullySelected(li)) {
-                return li;
+        is_formattable_node_predicates: (node, formatName) => {
+            if (
+                (formatName === "color" || formatName === "backgroundColor") &&
+                isListItem(node) &&
+                this.dependencies.selection.areNodeContentsFullySelected(node)
+            ) {
+                // Without this the item is only reachable through a formattable
+                // leaf inside it, so an item holding just an <img> or <hr>
+                // would keep its color. Restricted to colors on purpose: for
+                // the other LIST_ITEM_FORMATS, admitting the <li> would make
+                // isFormatActive see an unformatted element and report the
+                // format inactive for the whole selection.
+                return node.isContentEditable;
             }
         },
+
+        /** Providers */
         formattable_node_providers: (node, { formatProps, formatSpec }) => {
             if (!LIST_ITEM_FORMATS.includes(formatSpec.id) || isColorGradient(formatProps?.color)) {
                 return;

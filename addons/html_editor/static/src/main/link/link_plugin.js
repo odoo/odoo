@@ -181,6 +181,7 @@ export class LinkPlugin extends Plugin {
         "lineBreak",
         "overlay",
         "color",
+        "format",
         "baseContainer",
         "feff",
         "delete",
@@ -779,7 +780,7 @@ export class LinkPlugin extends Plugin {
                 });
                 if (!this.config.hideStylingInLinkPopover) {
                     link.removeAttribute("style");
-                    this.dependencies.color.removeAllColor();
+                    this.dependencies.format.removeSelectionFormats(["color", "backgroundColor"]);
                 }
                 // Remove the current link (linkInDocument) if it has no content
                 if (

@@ -3,12 +3,10 @@ import {
     BG_CLASSES_REGEX,
     COLOR_COMBINATION_CLASSES_REGEX,
     getColorOrClass,
-    hasAnyNodesColor,
     hasColor,
     TEXT_CLASSES_REGEX,
 } from "@html_editor/utils/color";
 import { removeClass, removeStyle } from "@html_editor/utils/dom";
-import { isTextNode } from "@html_editor/utils/dom_info";
 import { closestElement, findUpTo } from "@html_editor/utils/dom_traversal";
 import { closestBlock } from "@html_editor/utils/blocks";
 import { isColorGradient, normalizeCSSColor } from "@web/core/utils/colors";
@@ -21,7 +19,6 @@ const COLOR_COMBINATION_SELECTOR = COLOR_COMBINATION_CLASSES.map((c) => `.${c}`)
 /**
  * @typedef { Object } ColorShared
  * @property { ColorPlugin['colorElement'] } colorElement
- * @property { ColorPlugin['removeAllColor'] } removeAllColor
  * @property { ColorPlugin['getElementColors'] } getElementColors
  */
 
@@ -36,7 +33,7 @@ const COLOR_COMBINATION_SELECTOR = COLOR_COMBINATION_CLASSES.map((c) => `.${c}`)
 export class ColorPlugin extends Plugin {
     static id = "color";
     static dependencies = ["selection", "split", "history", "format", "delete"];
-    static shared = ["colorElement", "removeAllColor", "getElementColors", "getColorCombination"];
+    static shared = ["colorElement", "getElementColors", "getColorCombination"];
     /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: [
@@ -80,8 +77,7 @@ export class ColorPlugin extends Plugin {
                 }
             },
         })),
-        /** Handlers */
-        on_all_formats_removed_handlers: this.removeAllColor.bind(this),
+        /** Providers */
         color_combination_providers: getColorCombinationFromClass,
 
         /** Predicates */
@@ -171,48 +167,6 @@ export class ColorPlugin extends Plugin {
                     ? gradient
                     : normalizeCSSColor(backgroundColor),
         };
-    }
-
-    removeAllColor() {
-        const colorModes = ["color", "backgroundColor"];
-        const colorNodeProviders = this.getResource("color_target_providers");
-        let someColorWasRemoved = true;
-        while (someColorWasRemoved) {
-            someColorWasRemoved = false;
-            for (const mode of colorModes) {
-                let max = 40;
-                const hasAnySelectedNodeColor = (mode) => {
-                    const nodes = new Set();
-                    const editableTargetedNodes = this.dependencies.selection
-                        .getTargetedNodes()
-                        .filter(this.dependencies.selection.isNodeEditable);
-                    for (const node of editableTargetedNodes) {
-                        for (const getColorNode of colorNodeProviders) {
-                            const colorNode = getColorNode(node);
-                            if (colorNode) {
-                                nodes.add(colorNode);
-                            }
-                        }
-                        if (isTextNode(node)) {
-                            nodes.add(node);
-                        }
-                    }
-                    return hasAnyNodesColor([...nodes], mode);
-                };
-                while (hasAnySelectedNodeColor(mode) && max > 0) {
-                    this.dependencies.format.requestFormat(mode, {
-                        applyStyle: false,
-                        commit: false,
-                    });
-                    someColorWasRemoved = true;
-                    max--;
-                }
-                if (max === 0) {
-                    someColorWasRemoved = false;
-                    throw new Error("Infinite Loop in removeAllColor().");
-                }
-            }
-        }
     }
 
     /**
