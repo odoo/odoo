@@ -2,26 +2,15 @@
   "version": "19.3.10",
   "sheets": [
     {
-      "id": "sheet1",
+      "id": "dashboard_sheet_id",
       "name": "Dashboard",
-      "colNumber": 11,
-      "rowNumber": 56,
+      "colNumber": 10,
+      "rowNumber": 41,
       "rows": {
-        "6": { "size": 40 },
-        "22": { "size": 40 }
+        "40": { "size": 4 }
       },
       "cols": {
-        "0": { "size": 100 },
-        "1": { "size": 100 },
-        "2": { "size": 100 },
-        "3": { "size": 100 },
-        "4": { "size": 75 },
-        "5": { "size": 50 },
-        "6": { "size": 100 },
-        "7": { "size": 100 },
-        "8": { "size": 100 },
-        "9": { "size": 100 },
-        "10": { "size": 75 }
+        "0": { "size": 136 }
       },
       "merges": [],
       "cells": {},
@@ -138,8 +127,8 @@
         {
           "id": "e147124e-1d37",
           "col": 0,
-          "row": 5,
-          "offset": { "x": 0, "y": 15 },
+          "row": 0,
+          "offset": { "x": 0, "y": 126 },
           "width": 1000,
           "height": 394,
           "tag": "carousel",
@@ -193,9 +182,9 @@
         {
           "id": "33cfbb10-7b6b",
           "col": 0,
-          "row": 22,
-          "offset": { "x": 0, "y": 13 },
-          "width": 496,
+          "row": 0,
+          "offset": { "x": 0, "y": 530 },
+          "width": 495,
           "height": 374,
           "tag": "carousel",
           "data": {
@@ -245,10 +234,10 @@
         },
         {
           "id": "fd05664a-4735",
-          "col": 5,
-          "row": 22,
-          "offset": { "x": 33, "y": 13 },
-          "width": 492,
+          "col": 0,
+          "row": 0,
+          "offset": { "x": 505, "y": 530 },
+          "width": 495,
           "height": 374,
           "tag": "carousel",
           "data": {
@@ -370,7 +359,28 @@
       "styles": { "B1:E1": 1, "D5": 2 },
       "formats": {},
       "borders": {},
-      "conditionalFormats": [],
+      "conditionalFormats": [
+        {
+          "id": "2c79a42b-76d6",
+          "rule": {
+            "type": "CellIsRule",
+            "operator": "isGreaterThan",
+            "style": { "fillColor": "", "textColor": "#28A745" },
+            "values": ["0"]
+          },
+          "ranges": ["D6"]
+        },
+        {
+          "id": "cacc1d09-761f",
+          "rule": {
+            "type": "CellIsRule",
+            "operator": "isLessThan",
+            "style": { "fillColor": "", "textColor": "#D44C59" },
+            "values": ["0"]
+          },
+          "ranges": ["D6"]
+        }
+      ],
       "dataValidationRules": [],
       "figures": [],
       "tables": [],
@@ -406,7 +416,9 @@
   "pivots": {
     "4": {
       "type": "ODOO",
-      "fieldMatching": {},
+      "fieldMatching": {
+        "46b74887-ff98-4c97-9629-4a5a14084321": {}
+      },
       "context": {},
       "domain": [
         ["is_published", "=", true]
@@ -481,7 +493,9 @@
     },
     "9": {
       "type": "ODOO",
-      "fieldMatching": {},
+      "fieldMatching": {
+        "46b74887-ff98-4c97-9629-4a5a14084321": {}
+      },
       "context": {},
       "domain": [
         "&",
@@ -566,7 +580,7 @@
       "id": "46b74887-ff98-4c97-9629-4a5a14084321",
       "type": "date",
       "label": "Period",
-      "defaultValue": "last_12_months"
+      "defaultValue": "this_year"
     }
   ],
   "lists": {},
