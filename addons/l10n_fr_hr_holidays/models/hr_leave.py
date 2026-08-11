@@ -100,7 +100,7 @@ class HrLeave(models.Model):
         return (date_start, date_target)
 
     @api.depends('request_date_from_period', 'request_date_to_period', 'request_hour_from', 'request_hour_to',
-                'request_date_from', 'request_date_to', 'work_entry_type_request_unit', 'employee_id')
+                'request_date_from', 'request_date_to', 'employee_id')
     def _compute_date_from_to(self):
         super()._compute_date_from_to()
         for leave in self:
