@@ -230,7 +230,7 @@ class AccountEdiProxyClientUser(models.Model):
             document_identifiers = supported_identifiers if receiver.company_id.peppol_purchase_journal_id else supported_identifiers_wo_responses
             try:
                 iap_stored_services = receiver._call_peppol_proxy(
-                    receiver._get_peppol_proxy_endpoint('/2/get_services'),
+                    receiver._get_peppol_proxy_endpoint('2/get_services'),
                 )
                 if set(iap_stored_services['services']) == document_identifiers:
                     continue
