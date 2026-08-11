@@ -69,17 +69,22 @@ class TestForumController(TestForumCommon, HttpCase):
     @mute_logger('odoo.http')
     def test_post_comment_without_subscribed_partner_read_rights(self):
         """ Test restricted portal user comments properly notify subscribers. """
+        self.forum_1.write({
+            'karma_answer': KARMA['ans'],
+            'karma_comment_own': KARMA['com_own'],
+            'karma_comment_all': KARMA['com_all'],
+        })
         self.user_employee.karma = KARMA['com_all']
         self.user_portal.karma = 0
         with self.assertRaises(AccessError):
             self.user_employee.partner_id.with_user(self.user_portal).check_access('read')
 
-        forum_slug = self.env['ir.http']._slug(self.base_forum)
-        forum_post = self.forum_post(self.user_employee, self.base_forum)
+        forum_slug = self.env['ir.http']._slug(self.forum_1)
+        forum_post = self.forum_post(self.user_employee, self.forum_1)
         forum_post.sudo().message_subscribe(self.user_employee.partner_id.ids)
         forum_answer = self.env['forum.post'].with_user(self.user_employee).create({
             'name': 'This is an answer',
-            'forum_id': self.base_forum.id,
+            'forum_id': self.forum_1.id,
             'parent_id': forum_post.id,
         })
         forum_answer_slug = self.env['ir.http']._slug(forum_answer)
@@ -97,7 +102,7 @@ class TestForumController(TestForumCommon, HttpCase):
         )
         self.assertEqual(res.status_code, 403)
 
-        self.user_portal.karma = KARMA['com_own']
+        self.user_portal.karma = KARMA['com_all']
         res = self.url_open(
             f'/forum/{forum_slug}/post/{forum_answer_slug}/comment',
             data=data,
