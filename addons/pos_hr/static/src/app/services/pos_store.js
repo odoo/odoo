@@ -58,9 +58,13 @@ patch(PosStore.prototype, {
     setCashierUpdateSession(employee) {
         if (this.config.module_pos_hr) {
             if (!this.data.network.offline && this.session?.id) {
-                this.data.write("pos.session", [this.session.id], {
-                    employee_id: employee.id,
-                });
+                this.data
+                    .ormWrite("pos.session", [this.session.id], {
+                        employee_id: employee.id,
+                    })
+                    .catch(async (error) => {
+                        await this.reloadIfSessionDeleted(error);
+                    });
             } else {
                 this.employeeBuffer.push(employee);
             }
