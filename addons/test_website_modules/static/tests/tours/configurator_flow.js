@@ -99,7 +99,7 @@ registry.category("web_tour.tours").add("configurator_flow", {
             trigger: `:iframe .top_menu a[href^='${url}']:not(:visible)`,
         })),
         {
-            trigger: ":iframe h1:contains(your journey starts here)",
+            trigger: ":iframe .oe_structure > [data-snippet]",
         },
     ],
 });
