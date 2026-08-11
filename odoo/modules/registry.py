@@ -92,9 +92,11 @@ class Registry(Mapping):
         cls.registries[db_name] = registry  # pylint: disable=unsupported-assignment-operation
         try:
             registry.setup_signaling()
+            from odoo.http import borrow_request  # noqa: PLC0415
             # This should be a method on Registry
             try:
-                odoo.modules.load_modules(registry, force_demo, status, update_module)
+                with borrow_request():
+                    odoo.modules.load_modules(registry, force_demo, status, update_module)
             except Exception:
                 odoo.modules.reset_modules_state(db_name)
                 raise
