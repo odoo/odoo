@@ -1,7 +1,8 @@
 import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 import { useChannelMemberActions } from "@mail/discuss/core/common/channel_member_actions";
-import { propComputed } from "@mail/utils/common/hooks";
+import { ChannelMemberContextMenu } from "@mail/discuss/core/common/channel_member_context_menu";
+import { propComputed, useRightClickMenu } from "@mail/utils/common/hooks";
 
 import { Component, signal, t } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -11,7 +12,13 @@ import { useService } from "@web/core/utils/hooks";
 import { ActionList } from "@mail/core/common/action_list";
 
 export class ChannelMember extends Component {
-    static components = { ActionList, ActionPanel, DiscussAvatar, Dropdown };
+    static components = {
+        ActionList,
+        ActionPanel,
+        ChannelMemberContextMenu,
+        DiscussAvatar,
+        Dropdown,
+    };
     static template = "discuss.ChannelMember";
 
     displayNameRef = signal.ref();
@@ -22,6 +29,10 @@ export class ChannelMember extends Component {
         this.member = propComputed("member", t.instanceOf(this.store["discuss.channel.member"]));
         this.actions = useChannelMemberActions({ member: this.member });
         this.showingActions = useDropdownState();
+        this.rootRef = signal.ref(HTMLDivElement);
+        this.rightClickMenu = useRightClickMenu(this.rootRef, {
+            extraMenuProps: () => ({ member: this.member() }),
+        });
     }
 
     /** @param {import("models").ChannelMember} member */
