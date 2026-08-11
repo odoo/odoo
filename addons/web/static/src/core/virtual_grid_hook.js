@@ -7,7 +7,6 @@ import { useThrottleForAnimation } from "@web/core/utils/timing";
  * @typedef VirtualGridParams
  * @property {ReturnType<typeof import("@odoo/owl").useRef>} scrollableRef
  *  a ref to the scrollable element
- * @property {ScrollPosition} [initialScroll={ left: 0, top: 0 }]
  *  the initial scroll position of the scrollable element
  * @property {(changed: Partial<VirtualGridIndexes>) => void} [onChange=() => this.render()]
  *  a callback called when the visible items change, i.e. when on scroll or resize.
@@ -59,7 +58,7 @@ const BUFFER_COEFFICIENT = 1;
  * This function calculates the indexes of the visible items in a virtual list.
  *
  * @param {GetIndexesParams} param0
- * @returns {[number, number] | undefined} the indexes of the visible items with a surrounding buffer of totalSize on each side.
+ * @returns {[number, number] | []} the indexes of the visible items with a surrounding buffer of totalSize on each side.
  */
 function getIndexes({ sizes, start, span, prevStartIndex, bufferCoef = BUFFER_COEFFICIENT }) {
     if (!sizes || !sizes.length) {
@@ -109,7 +108,29 @@ export function useVirtualGrid({ scrollableRef, initialScroll, onChange, bufferC
     const comp = useComponent();
     onChange ||= () => comp.render();
 
-    const current = { scroll: { left: 0, top: 0, ...initialScroll } };
+    const current = {
+        columnsIndexes: [],
+        rowsIndexes: [],
+        // FIXME: the scroll position should be retrieved from the element, or at
+        // least be reflected on the scrollable element.
+        scroll: { top: 0, left: 0, ...initialScroll },
+    };
+    const computeVirtualIndexes = () => {
+        const changed = [];
+        const columnsVisibleIndexes = computeColumnsIndexes();
+        if (!shallowEqual(columnsVisibleIndexes, current.columnsIndexes)) {
+            current.columnsIndexes = columnsVisibleIndexes;
+            changed.push("columnsIndexes");
+        }
+        const rowsVisibleIndexes = computeRowsIndexes();
+        if (!shallowEqual(rowsVisibleIndexes, current.rowsIndexes)) {
+            current.rowsIndexes = rowsVisibleIndexes;
+            changed.push("rowsIndexes");
+        }
+        if (changed.length) {
+            onChange(pick(current, ...changed));
+        }
+    };
     const computeColumnsIndexes = () => {
         return getIndexes({
             sizes: current.summedColumnsWidths,
@@ -128,35 +149,27 @@ export function useVirtualGrid({ scrollableRef, initialScroll, onChange, bufferC
             bufferCoef,
         });
     };
-    const throttledCompute = useThrottleForAnimation(() => {
-        const changed = [];
-        const columnsVisibleIndexes = computeColumnsIndexes();
-        if (!shallowEqual(columnsVisibleIndexes, current.columnsIndexes)) {
-            current.columnsIndexes = columnsVisibleIndexes;
-            changed.push("columnsIndexes");
-        }
-        const rowsVisibleIndexes = computeRowsIndexes();
-        if (!shallowEqual(rowsVisibleIndexes, current.rowsIndexes)) {
-            current.rowsIndexes = rowsVisibleIndexes;
-            changed.push("rowsIndexes");
-        }
-        if (changed.length) {
-            onChange(pick(current, ...changed));
-        }
-    });
-    const scrollListener = (/** @type {Event & { target: Element }} */ ev) => {
-        current.scroll.left = ev.target.scrollLeft;
-        current.scroll.top = ev.target.scrollTop;
+    const throttledCompute = useThrottleForAnimation(computeVirtualIndexes);
+    const scrollListener = (
+        /** @type {Event & { currentTarget: HTMLElement }} */
+        { currentTarget }
+    ) => {
+        current.scroll.left = currentTarget.scrollLeft;
+        current.scroll.top = currentTarget.scrollTop;
         throttledCompute();
     };
     useEffect(
         (el) => {
-            el?.addEventListener("scroll", scrollListener);
-            return () => el?.removeEventListener("scroll", scrollListener);
+            if (!el) {
+                return;
+            }
+            computeVirtualIndexes();
+            el.addEventListener("scroll", scrollListener);
+            return () => el.removeEventListener("scroll", scrollListener);
         },
         () => [scrollableRef.el]
     );
-    useExternalListener(window, "resize", () => throttledCompute());
+    useExternalListener(window, "resize", throttledCompute);
     return {
         get columnsIndexes() {
             return current.columnsIndexes;
