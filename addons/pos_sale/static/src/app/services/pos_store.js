@@ -184,7 +184,11 @@ patch(PosStore.prototype, {
 
             const lot_splitted_lines = [];
             const product_unit = line.product_id.uom_id;
-            if (product_unit && !product_unit.is_pos_groupable) {
+            if (
+                product_unit &&
+                !product_unit.is_pos_groupable &&
+                !product_unit.isZero(newLine.qty)
+            ) {
                 let remaining_quantity = newLine.qty;
                 newLineValues.product_id = newLine.product_id;
                 const priceUnit = newLine.price_unit;

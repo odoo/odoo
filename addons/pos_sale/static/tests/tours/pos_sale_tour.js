@@ -145,6 +145,17 @@ registry.category("web_tour.tours").add("test_import_lot_groupable_and_non_group
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("test_settle_delivered_order_non_groupable_uom", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            PosSale.settleNthOrder(1),
+            ProductScreen.checkOrderlinesNumber(1),
+            ProductScreen.selectedOrderlineHas("Non Groupable Delivered Product", "0"),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("PosSettleOrderWithNote", {
     steps: () =>
         [
