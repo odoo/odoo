@@ -683,3 +683,22 @@ class TestAccountPaymentTerms(AccountTestInvoicingCommon):
             'company_id': other_company.id
         })
         self.assertFalse(invoice.invoice_payment_term_id)
+
+    def test_payment_term_rejects_negative_day_of_next_month(self):
+        payment_term = self.env['account.payment.term'].new({
+            'name': 'Invalid next-month day',
+            'line_ids': [Command.create({
+                'value': 'percent',
+                'value_amount': 100,
+                'nb_days': 0,
+                'delay_type': 'days_end_of_month_on_the',
+                'days_next_month': -1,
+            })],
+        })
+
+        # Accessing the computed field triggers the due-date computation.
+        payment_term.example_preview
+
+        vals = payment_term._convert_to_write(payment_term._cache)
+        with self.assertRaisesRegex(ValidationError, 'The days added must be between 0 and 31.'):
+            self.env['account.payment.term'].create(vals)
