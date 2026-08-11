@@ -790,10 +790,10 @@ class IrAttachment(models.Model):
         if self.env.context.get('ir_attachment_from_stream') is not CREATE_FROM_STREAM_FLAG:
             # remove computed field depending of raw
             vals_list = [{
-                key: value
-                for key, value
-                in vals.items()
-                if key not in ('file_size', 'checksum', 'store_fname')
+                **vals,
+                'file_size': 0,
+                'checksum': False,
+                'store_fname': False,
             } for vals in vals_list]
         checksum_raw_map = {}
 
