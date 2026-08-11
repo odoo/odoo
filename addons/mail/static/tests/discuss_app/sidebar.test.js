@@ -78,7 +78,7 @@ test("default thread rendering", async () => {
     await contains(".o-mail-Thread:has(:text('Demo'))");
 });
 
-test("sidebar: basic chat rendering", async () => {
+test("sidebar: can open chat actions", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
     pyEnv["discuss.channel"].create({
@@ -110,6 +110,12 @@ test("sidebar: basic chat rendering", async () => {
     await waitFor(`${group[3]} .o-dropdown-item:count(1)`);
     await waitFor(`${group[3]} .o-dropdown-item:text('Hide Until New Message')`);
     await contains(".o-mail-MessagingMenuItem .badge", { count: 0 });
+    await click(".o-mail-DiscussApp-sidebar");
+    await contains(".o-dropdown-item", { count: 0 });
+    // Can also right-click to see messaging menu item actions
+    await rightClick(".o-mail-MessagingMenuItem");
+    await contains(".o-mail-MessagingMenuItem[data-right-clicking]");
+    await waitFor(".o-dropdown-item:count(8)");
 });
 
 test("sidebar: dispatch recording action", async () => {
