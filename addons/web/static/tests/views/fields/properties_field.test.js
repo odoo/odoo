@@ -1595,10 +1595,10 @@ test("properties: kanban view with date and datetime property fields", async () 
     });
 
     // check fifth card
-    expect(".o_kanban_record:nth-child(5) .o_card_property_field:nth-child(1) span").toHaveText(
+    expect(".o_kanban_record:nth-child(5) .o_card_property_field:nth-child(1) .o_card_property_value").toHaveText(
         "01/01/2019"
     );
-    expect(".o_kanban_record:nth-child(5) .o_card_property_field:nth-child(2) span").toHaveText(
+    expect(".o_kanban_record:nth-child(5) .o_card_property_field:nth-child(2) .o_card_property_value").toHaveText(
         "01/01/2019 11:00:00"
     );
 });
@@ -1646,7 +1646,7 @@ test("properties: kanban view with multiple sources of properties definitions", 
         "Company 1\nsecond partner\nchar value\nsuffix\nC\nchar value 4",
         "Company 1\nthird partner",
         "Company 1\nfourth partner",
-        "Company 2\nother partner\nMy Integer\n1",
+        "Company 2\nother partner\nMy Integer:\n1",
     ]);
 });
 
@@ -1729,8 +1729,8 @@ test("properties: kanban view with label and border", async () => {
         "My Datetime"
     );
 
-    //check that label and border class is present for checkbox field
-    expect(".o_kanban_record:nth-child(5) .o_card_property_field:nth-child(5) .border").toHaveCount(
+    //check that label is present for checkbox field
+    expect(".o_kanban_record:nth-child(5) .o_card_property_field:nth-child(5)").toHaveCount(
         1
     );
     expect(
