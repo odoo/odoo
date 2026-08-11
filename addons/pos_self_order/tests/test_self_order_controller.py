@@ -3,6 +3,7 @@
 import json
 import odoo.tests
 from datetime import timedelta
+from odoo import Command
 from odoo.addons.pos_self_order.tests.self_order_common_test import SelfOrderCommonTest
 
 
@@ -314,3 +315,34 @@ class TestSelfOrderController(SelfOrderCommonTest):
         data = self.env['pos.order']._check_pos_order(self.pos_config, params, 'mobile')
         self.assertFalse('account_move' in data)  # Do not add it back, if needed contact the PoS team.
         self.assertFalse('access_token' in data)  # Do not add it back, if needed contact the PoS team.
+
+    def test_foreign_line_update_is_dropped(self):
+        self.pos_config.write({
+            'self_ordering_mode': 'mobile',
+            'self_ordering_pay_after': 'each',
+        })
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.pos_config.current_session_id.set_opening_control(0, '')
+
+        victim_order, _ = self.create_backend_pos_order({
+            'order_data': {'table_id': self.pos_table_1.id},
+            'line_data': [{'qty': 1, 'price_unit': 1.0, 'product_id': self.cola.id}],
+        })
+        victim_line = victim_order.lines[0]
+
+        params = {
+            'uuid': '61f8181c-18e1-4b83-8a7b-21224750fe2f',  # attacker order, unrelated to victim_order
+            'state': 'draft',
+            'preset_id': self.in_preset.id,
+            'session_id': self.pos_config.current_session_id.id,
+            'lines': [[Command.UPDATE, victim_line.id, {
+                'product_id': self.cola.id, 'qty': 10,
+                'price_unit': self.cola.lst_price,
+            }]],
+        }
+        data = self.env['pos.order']._check_pos_order(self.pos_config, params, 'mobile')
+
+        # The update targets a line of another order: it must not reach sync_from_ui.
+        self.assertFalse(data['lines'])
+        self.assertEqual(victim_line.qty, 1)
+        self.assertEqual(victim_line.order_id, victim_order)

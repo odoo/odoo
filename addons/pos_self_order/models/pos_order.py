@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
+import math
 
 from odoo import Command, models, fields, api, _
 from odoo.exceptions import UserError
@@ -141,13 +142,37 @@ class PosOrder(models.Model):
             command = Command.CREATE if line[0] == Command.CREATE else Command.UPDATE
             id_to_use = line[1] if line[0] == Command.UPDATE else 0
 
+            # An update must target a line of the order being synced. Without this an arbitrary
+            # line id would be written, and reparented to this order through the order_id below.
+            if command == Command.UPDATE and id_to_use not in existing_lines.ids:
+                return []
+
+            # A public payload must carry finite, strictly positive quantities. A negative or
+            # non-finite quantity is a way to zero a combo total (see _compute_combo_price):
+            # returns, if ever needed, require a separate authorized refund flow.
+            qty = line_data.get('qty')
+            if command == Command.CREATE or qty is not None:
+                if isinstance(qty, bool) or not isinstance(qty, (int, float)) or not math.isfinite(qty) or qty <= 0:
+                    raise UserError(_("Invalid quantity"))
+
+            # Attribute extras are priced server-side (their price_extra is summed into the line
+            # price, see _compute_combo_price). The payload must therefore not attach an attribute
+            # that does not belong to the ordered product's template, otherwise an unrelated
+            # possibly negative, attribute extra could be applied to this line.
+            requested_attr_ids = [id for id in line_data.get('attribute_value_ids', []) if isinstance(id, int)]
+            attribute_values = pos_config.env['product.template.attribute.value'].browse(requested_attr_ids).exists()
+            if set(attribute_values.ids) != set(requested_attr_ids) or any(
+                ptav.product_tmpl_id != product.product_tmpl_id for ptav in attribute_values
+            ):
+                raise UserError(_("Invalid product attribute"))
+
             return [command, id_to_use, {
                 'combo_id': line_data.get('combo_id'),
                 'product_id': line_data.get('product_id'),
                 'tax_ids': tax_ids.ids,
-                'attribute_value_ids': [id for id in line_data.get('attribute_value_ids', []) if isinstance(id, int)],
+                'attribute_value_ids': attribute_values.ids,
                 'price_unit': line_data.get('price_unit'),
-                'qty': line_data.get('qty'),
+                'qty': qty,
                 'price_subtotal': 0.0,  # always recomputed server-side by recompute_prices().
                 'price_subtotal_incl': 0.0,  # always recomputed server-side by recompute_prices().
                 'price_extra': line_data.get('price_extra'),
@@ -173,6 +198,12 @@ class PosOrder(models.Model):
         if not preset_id and pos_config.use_presets:
             raise UserError(_("Invalid preset"))
 
+        if preset_id and not preset_id.available_in_self and preset_id != pos_config.default_preset_id:
+            raise UserError(_("Preset is not available in self-ordering"))
+
+        if preset_id and not preset_id in pos_config.available_preset_ids:
+            raise UserError(_("Preset is not available in this configuration"))
+
         existing_order = pos_config.env['pos.order']._get_open_order(order)
         if not existing_order.exists():
             pos_reference, tracking_number = pos_config._get_next_order_refs()
@@ -195,6 +226,14 @@ class PosOrder(models.Model):
         lines = [line for line in lines if len(line)]
         partner_id = order.get('partner_id')
         partner = pos_config.env['res.partner'].browse(partner_id) if partner_id else None
+
+        if order.get('id') and order.get('uuid') and isinstance(order['id'], int):
+            exists = pos_config.env['pos.order'].search_count([
+                ('id', '=', order['id']),
+                ('uuid', '=', order['uuid']),
+            ])
+            if not exists:
+                raise UserError(_("The order ID isn't linked to the order UUID. This is a sign of a tampered payload."))
 
         return {
             'id': order.get('id'),
@@ -236,8 +275,46 @@ class PosOrder(models.Model):
             'relations_uuid_mapping': order.get('relations_uuid_mapping', {}),
         }
 
+    def _check_combo_lines(self):
+        """
+        Refuse an order whose combo hierarchy has been tampered with.
+
+        A combo child is the only line whose price is derived from another line instead of
+        from its own product (see _compute_combo_price), so a parent or a combo item chosen
+        freely from the public self-order route is a way to get any product for the price of
+        a combo item.
+        """
+        for line in self.lines:
+            parent = line.combo_parent_id
+            combo_item = line.combo_item_id
+            children = line.combo_line_ids
+
+            if not parent and not combo_item and not children:
+                continue
+
+            # Child -> parent edge: a combo child must point up to a valid parent and item of
+            # this order. This rejects a child whose parent belongs to another order, or a child
+            # sold through an unrelated combo item.
+            if parent or combo_item:
+                if (
+                    parent.order_id != self
+                    or parent.product_id.type != 'combo'
+                    or combo_item.combo_id not in parent.product_id.combo_ids
+                    or combo_item.product_id != line.product_id
+                ):
+                    raise UserError(_("Invalid combo line"))
+
+            # Parent -> child edge: every line reachable through a parent's inverse collection
+            # must belong to this order and point back to it. The upward check alone is
+            # one-directional; without this a foreign child injected into combo_line_ids would
+            # never be validated
+            for child in children:
+                if child.order_id != self or child.combo_parent_id != line:
+                    raise UserError(_("Invalid combo line"))
+
     def recompute_prices(self):
         self.ensure_one()
+        self._check_combo_lines()
         company = self.company_id
 
         for line in self.lines:
