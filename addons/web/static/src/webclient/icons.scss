@@ -151,28 +151,6 @@ $icon-sizes: (
     }
 }
 
-$icon-bundles: (
-    "fa": $fa-icon-map,
-    "oi": $oi-icon-map
-);
-
-@each $prefix, $map in $icon-bundles {
-    @each $icon-slug, $config in $map {
-
-        .#{$prefix}-#{$icon-slug} {
-            $type: nth($config, 1);
-            $icon-name: nth($config, 2);
-
-            @if $type =="oi" {
-                @include oi-icon($icon-name);
-            }
-            @else if $type =="ms" {
-                $is-filled: length($config) >=3 and nth($config, 3)=="filled";
-                @include ms-icon($icon-name, $is-filled);
-            }
-        }
-    }
-}
 
 // ================================
 // UTILITY CLASSES & ADVANCED FEATURES
@@ -180,7 +158,6 @@ $icon-bundles: (
 
 // Dynamic size generation using SCSS loops
 @each $name, $size in $icon-sizes {
-    .fa-#{$name},
     .oi-#{$name} {
         font-size: $size;
 
@@ -191,7 +168,7 @@ $icon-bundles: (
 }
 
 // Temporary kept for compatibility.
-.oi-stack, .fa-stack {
+.oi-stack {
     position: relative;
     display: inline-block;
     width: 2em;
@@ -200,54 +177,40 @@ $icon-bundles: (
     vertical-align: middle;
 }
 
-.oi-stack-1x, .oi-stack-2x,
-.fa-stack-1x, .fa-stack-2x {
+.oi-stack-1x, .oi-stack-2x {
     position: absolute;
     left: 0;
     width: 100%;
     text-align: center;
 }
 
-.oi-stack-2x, .fa-stack-2x {
+.oi-stack-2x {
     font-size: 2em;
 }
 
-// Fixed width for consistent alignment
-// To remove after the switch
-.fa-fw {
-    width: $fa-fw-width;
-    text-align: center;
-}
-
 // Rotation classes using mixin
-.fa-rotate-90,
 .oi-rotate-90 {
     @include rotate(90);
 }
 
-.fa-rotate-180,
 .oi-rotate-180 {
     @include rotate(180);
 }
 
-.fa-rotate-270,
 .oi-rotate-270 {
     @include rotate(270);
 }
 
 // Flipping classes using mixin
-.fa-flip-horizontal,
 .oi-flip-horizontal {
     @include flip(-1, 1);
 }
 
-.fa-flip-vertical,
 .oi-flip-vertical {
     @include flip(1, -1);
 }
 
 // Spinning animation
-.fa-spin,
 .oi-spin {
     -webkit-animation: fa-spin 2s infinite linear;
     animation: fa-spin 2s infinite linear;
