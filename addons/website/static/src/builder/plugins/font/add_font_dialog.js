@@ -282,6 +282,9 @@ export class AddFontDialog extends Component {
                     },
                 ],
             ]);
+            await this.orm.write("ir.attachment", [fontCssId], {
+                url: `/web/font/${fontCssId}/${uploadedFontName}`,
+            });
             this.props.uploadedLocalFonts.push(`'${uploadedFontName}': ${fontCssId}`);
             font = uploadedFontName;
         } else {

@@ -1828,6 +1828,7 @@ class Website(Home):
                     'mimetype': 'application/json',
                     'raw': json_content,
                 })
+                metadata['url'] = f"/web/font/{metadata.id}/{metadata['name']}"
         return json.loads(metadata.raw.content)
 
     def _get_customize_data(self, keys, is_view_data):
@@ -1964,6 +1965,7 @@ class Website(Home):
                 'raw': data,
                 'public': True,
             })
+            attachment['url'] = f"/web/font/{attachment.id}/{font['name']}"
             font['id'] = attachment.id
             font['url'] = f"/web/content/{attachment.id}/{font['name']}"
             return font
