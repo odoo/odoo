@@ -413,7 +413,7 @@
         >
             <t
                 t-set="tax_included"
-                t-value="website_sale_order.website_id.show_line_subtotals_tax_selection == 'tax_included'"
+                t-value="website_sale_order.website_id.tax_display == 'tax_included'"
             />
             <table name="cart_total_table" class="table mb-0">
                 <tr
@@ -505,7 +505,7 @@
         <tbody id="order_tax_lines_container">
             <t
                 t-set="tax_included"
-                t-value="website_sale_order.website_id.show_line_subtotals_tax_selection == 'tax_included'"
+                t-value="website_sale_order.website_id.tax_display == 'tax_included'"
             />
             <t t-if="website_sale_order.tax_totals and website_sale_order.tax_totals['subtotals']">
                 <t t-foreach="website_sale_order.tax_totals['subtotals']" t-as="line">

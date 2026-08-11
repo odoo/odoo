@@ -714,10 +714,7 @@ class TestWebsitePriceListAvailableGeoIP(TestWebsitePriceListAvailable):
         website_id = self.ref('base.default_website')
         self.website1_be_pl += self.env.user.with_context(website_id=website_id).partner_id.property_product_pricelist
 
-        with patch(
-            "odoo.addons.website_sale.models.website.Website._get_geoip_country_code",
-            return_value=self.BE.code,
-        ):
+        with self.mock_request(country_code=self.BE.code):
             pls = self.website.get_pricelist_available()
         self.assertEqual(
             pls,
@@ -729,10 +726,7 @@ class TestWebsitePriceListAvailableGeoIP(TestWebsitePriceListAvailable):
     def test_get_pricelist_available_geoip2(self):
         # Test get all available pricelists with geoip and a partner pricelist not website compliant
         self.env.user.partner_id.property_product_pricelist = self.backend_pl
-        with patch(
-            "odoo.addons.website_sale.models.website.Website._get_geoip_country_code",
-            return_value=self.BE.code,
-        ):
+        with self.mock_request(country_code=self.BE.code):
             pls = self.website.get_pricelist_available()
         self.assertEqual(
             pls,
@@ -745,10 +739,7 @@ class TestWebsitePriceListAvailableGeoIP(TestWebsitePriceListAvailable):
         # Test get all available pricelists with geoip and a partner pricelist website compliant
         # (but not geoip compliant)
         self.env.user.partner_id.property_product_pricelist = self.w1_pl_code_select
-        with patch(
-            "odoo.addons.website_sale.models.website.Website._get_geoip_country_code",
-            return_value=self.BE.code,
-        ):
+        with self.mock_request(country_code=self.BE.code):
             pls = self.website.get_pricelist_available()
         self.assertEqual(
             pls,
@@ -765,13 +756,7 @@ class TestWebsitePriceListAvailableGeoIP(TestWebsitePriceListAvailable):
         pls_to_return += self.env.user.with_context(website_id=website_id).partner_id.property_product_pricelist
 
         current_pl = self.w1_pl_code
-        with (
-            patch(
-                "odoo.addons.website_sale.models.website.Website._get_geoip_country_code",
-                return_value=self.BE.code,
-            ),
-            self.mock_request(website_sale_current_pl=current_pl.id),
-        ):
+        with self.mock_request(website_sale_current_pl=current_pl.id, country_code=self.BE.code):
             pls = self.website.get_pricelist_available(show_visible=True)
         self.assertEqual(
             pls,
@@ -783,10 +768,7 @@ class TestWebsitePriceListAvailableGeoIP(TestWebsitePriceListAvailable):
     def test_get_pricelist_available_geoip5(self):
         # Test get all available pricelists with geoip for a country not existing in any pricelists
 
-        with patch(
-            "odoo.addons.website_sale.models.website.Website._get_geoip_country_code",
-            return_value=self.US.code,
-        ):
+        with self.mock_request(country_code=self.US.code):
             pricelists = self.website.get_pricelist_available()
         self.assertFalse(
             pricelists, "Pricelists specific to NL and BE should not be returned for US."
@@ -800,10 +782,7 @@ class TestWebsitePriceListAvailableGeoIP(TestWebsitePriceListAvailable):
         exclude.country_group_ids = False
         self.website1_be_pl -= exclude
 
-        with patch(
-            "odoo.addons.website_sale.models.website.Website._get_geoip_country_code",
-            return_value=self.BE.code,
-        ):
+        with self.mock_request(country_code=self.BE.code):
             pls = self.website.get_pricelist_available()
 
         for pl in pls:
