@@ -103,11 +103,13 @@ class ResCompany(models.Model):
             if not siren:
                 raise UserError(self.env._("The identifier %s is not valid. The expected format is: SIREN, SIREN_SIRET, SIREN_SIRET_CodeRoutage or SIREN_SuffixeAdressage", record.pdp_identifier))
             siret = match.group(2)[1:] if match and match.group(2) else False  # Remove `_` at the start
-            record.partner_id.write({
+            vals = {
                 'peppol_eas': '0225',
                 'peppol_endpoint': record.pdp_identifier,  # Will be verified by `_check_peppol_fields` constraint
-                'siret': siret or siren,
-            })
+            }
+            if siret:
+                vals['siret'] = siret
+            record.partner_id.write(vals)
 
     @api.depends('l10n_fr_pdp_annuaire_start_date', 'account_peppol_proxy_state')
     def _compute_l10n_fr_pdp_registered(self):

@@ -251,3 +251,27 @@ class ResPartner(models.Model):
     @handle_demo
     def button_account_peppol_check_partner_endpoint(self, company=None):
         return super().button_account_peppol_check_partner_endpoint(company=company)
+
+    @api.model
+    @handle_demo
+    def _active_annuaire_registries(self, siren):
+        edi_mode = self.env.company._get_peppol_edi_mode()
+        origin = self.env['account_edi_proxy_client.user']._get_proxy_urls()['pdp'][edi_mode]
+        query = parse.urlencode({'pdp_endpoint': siren, 'active_only': True})
+        endpoint = f'{origin}/api/pdp/1/pdp_annuaire_lookup?{query}'
+
+        try:
+            response = requests.get(endpoint, timeout=10)
+            decoded_response = response.json()
+        except requests.exceptions.RequestException as e:
+            _logger.debug("failed to query annuaire for identifier %s: %s", siren, e)
+            return None
+
+        lines = decoded_response.get('annuaire_lines', [])
+        identifiers = list({line['identifier'] for line in lines})
+
+        return {
+            'in_annuaire': bool(identifiers),
+            'identifiers': identifiers,
+            'count': len(identifiers),
+        }
