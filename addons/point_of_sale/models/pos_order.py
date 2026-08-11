@@ -1356,6 +1356,9 @@ class PosOrder(models.Model):
         to create move lines for sales and refunds.
         - Session closing: lines are aggregated by taxes
         - Order invoice: no aggregation, each line is a separate entry
+
+        The 'pos_invoice_group_move_type' context key, when set, signs lines by the group's
+        move_type instead of each order's own direction (see _prepare_base_lines_for_taxes_computation).
         """
         AccountTax = self.env['account.tax']
         company = self.company_id
@@ -1501,14 +1504,18 @@ class PosOrder(models.Model):
                     refunded_line.order_id.account_move.id,
                 )
 
-        is_some_refund = any(order.is_refund_or_negative() for order in self)
-        is_total_negative = sum(order.amount_total for order in self) < 0
-        move_type = 'out_refund' if is_some_refund or is_total_negative else 'out_invoice'
+        # A document whose total is negative for its type cannot be posted, so the move type
+        # follows the sign of the net amount of the whole group.
+        amount_total = sum(self.mapped('amount_total'))
+        if self.currency_id.is_zero(amount_total):
+            move_type = 'out_refund' if all(order.is_refund for order in self) else 'out_invoice'
+        else:
+            move_type = 'out_invoice' if amount_total > 0.0 else 'out_refund'
         partner_term = self.partner_id.property_payment_term_id
         is_pay_later = any(p.payment_method_id.type == 'pay_later' for p in self.payment_ids)
         invoice_payment_term_id = partner_term.id if partner_term and is_pay_later else False
         lines = []
-        for order in self:
+        for order in self.with_context(pos_invoice_group_move_type=move_type):
             lines += order._prepare_account_move_line_data(False)
         line_commands = [Command.create(line['account.move.line']) for line in lines]
         users = self.user_id.ids

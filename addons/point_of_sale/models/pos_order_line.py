@@ -262,6 +262,9 @@ class PosOrderLine(models.Model):
     def _prepare_base_lines_for_taxes_computation(self):
         base_lines = []
         is_order_refund = self.order_id.is_refund_or_negative()  # All lines are refunds or not
+        # A consolidated invoice signs lines by the group's move_type, not each order's own.
+        group_move_type = self.env.context.get('pos_invoice_group_move_type')
+        is_refund_document = (group_move_type == 'out_refund') if group_move_type else is_order_refund
         commercial_partner = self.order_id.partner_id.commercial_partner_id
         fiscal_position = self.order_id.fiscal_position_id
 
@@ -289,11 +292,11 @@ class PosOrderLine(models.Model):
                     product_id=line.product_id,
                     tax_ids=line.tax_ids_after_fiscal_position,
                     price_unit=line.price_unit,
-                    quantity=line.qty * (-1 if is_order_refund else 1),
+                    quantity=line.qty * (-1 if is_refund_document else 1),
                     discount=line.discount,
                     account_id=account,
-                    is_refund=is_order_refund,
-                    sign=-1 if is_order_refund else 1,
+                    is_refund=is_refund_document,
+                    sign=-1 if is_refund_document else 1,
                 ),
                 'uom_id': line.product_uom_id,
                 'name': product_name,
