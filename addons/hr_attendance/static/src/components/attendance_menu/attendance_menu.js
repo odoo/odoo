@@ -135,7 +135,7 @@ export class ActivityMenu extends Component {
             ),
             confirmLabel: _t("Proceed Anyway"),
             confirm: async () => await this.checking({ checkInImage }),
-            cancel: () => (this._attendanceInProgress = false),
+            cancel: () => { this._attendanceInProgress = false; },
         });
     }
 
