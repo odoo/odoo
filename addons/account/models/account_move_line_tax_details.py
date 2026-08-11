@@ -37,7 +37,7 @@ class AccountMoveLine(models.Model):
 
         group_taxes_query_list = []
         for group_tax in group_taxes:
-            children_taxes = group_tax.children_tax_ids
+            children_taxes = group_tax.children_tax_ids.filtered(lambda tax: tax.is_base_affected)
             if not children_taxes:
                 continue
 
