@@ -1363,6 +1363,10 @@ $-product-radius-map: (
     &.o_grid_solo {
         --o-wsale-grid-product-col-display: contents;
 
+        .o_product_detail_img_wrapper {
+            width: 100%;
+        }
+
         @include media-breakpoint-up(lg) {
             .o_wsale_product_page_grid_column, .o_product_detail_img_wrapper, .product_detail_img {
                 border-radius: var(--o-wsale-product-image-radius);
