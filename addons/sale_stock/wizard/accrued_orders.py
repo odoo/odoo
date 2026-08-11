@@ -1,8 +1,8 @@
 from odoo import models, api
 
 
-class AccountAccruedOrdersWizard(models.TransientModel):
-    _inherit = 'account.accrued.orders.wizard'
+class StockAccountAccruedOrdersWizard(models.TransientModel):
+    _inherit = 'stock_account.accrued.orders.wizard'
 
     @api.model
     def _get_product_expense_and_stock_var_accounts(self, product):

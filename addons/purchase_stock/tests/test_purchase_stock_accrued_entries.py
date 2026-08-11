@@ -58,7 +58,7 @@ class TestAccruedPurchaseStock(AccountTestInvoicingCommon):
         pick.button_validate()
         pick.move_ids.write({'date': fields.Date.to_date('2020-01-06')})
 
-        wizard = self.env['account.accrued.orders.wizard'].with_context({
+        wizard = self.env['stock_account.accrued.orders.wizard'].with_context({
             'active_model': 'purchase.order',
             'active_ids': self.purchase_order.ids,
         }).create({
@@ -115,7 +115,7 @@ class TestAccruedPurchaseStock(AccountTestInvoicingCommon):
         move.invoice_date = fields.Date.to_date('2020-01-08')
         move.action_post()
 
-        wizard = self.env['account.accrued.orders.wizard'].with_context({
+        wizard = self.env['stock_account.accrued.orders.wizard'].with_context({
             'active_model': 'purchase.order',
             'active_ids': self.purchase_order.ids,
         }).create({
@@ -218,7 +218,7 @@ class TestAccruedPurchaseStock(AccountTestInvoicingCommon):
         wizard_create_backorder.process()
 
         # Use accrued order wizard and check generated values for date in the past.
-        wizard = self.env['account.accrued.orders.wizard'].with_context({
+        wizard = self.env['stock_account.accrued.orders.wizard'].with_context({
             'active_model': 'purchase.order',
             'active_ids': [purchase_order.id],
         }).create({
@@ -243,7 +243,7 @@ class TestAccruedPurchaseStock(AccountTestInvoicingCommon):
         ])
 
         # Use accrued order wizard and check generated values (at last week.)
-        wizard = self.env['account.accrued.orders.wizard'].with_context({
+        wizard = self.env['stock_account.accrued.orders.wizard'].with_context({
             'active_model': 'purchase.order',
             'active_ids': [purchase_order.id],
         }).create({
@@ -268,7 +268,7 @@ class TestAccruedPurchaseStock(AccountTestInvoicingCommon):
         ])
 
         # Use accrued order wizard and check generated values (at yesterday.)
-        wizard = self.env['account.accrued.orders.wizard'].with_context({
+        wizard = self.env['stock_account.accrued.orders.wizard'].with_context({
             'active_model': 'purchase.order',
             'active_ids': [purchase_order.id],
         }).create({
@@ -293,7 +293,7 @@ class TestAccruedPurchaseStock(AccountTestInvoicingCommon):
         ])
 
         # Use accrued order wizard and check generated values (at today.)
-        wizard = self.env['account.accrued.orders.wizard'].with_context({
+        wizard = self.env['stock_account.accrued.orders.wizard'].with_context({
             'active_model': 'purchase.order',
             'active_ids': [purchase_order.id],
         }).create({

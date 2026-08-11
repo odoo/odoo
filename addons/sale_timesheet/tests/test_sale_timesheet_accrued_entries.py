@@ -14,6 +14,10 @@ class TestAccruedTimeSheetSaleOrders(TestCommonSaleTimesheet):
     def setUpClass(cls):
         super().setUpClass()
 
+        # accrued orders are available in sale_stock, skip if not installed
+        if not cls.env['ir.module.module'].search_count([('name', '=', 'sale_stock'), ('state', '=', 'installed')]):
+            cls.skipTest(cls, 'sale_stock is not installed')
+
         cls.sale_order = cls.env['sale.order'].create({
             'partner_id': cls.partner_a.id,
             'partner_invoice_id': cls.partner_a.id,
@@ -47,7 +51,7 @@ class TestAccruedTimeSheetSaleOrders(TestCommonSaleTimesheet):
         self._log_hours(10, '2020-01-02')
         # log 10 hours on 2020-01-05
         self._log_hours(10, '2020-01-05')
-        wizard = self.env['account.accrued.orders.wizard'].with_context({
+        wizard = self.env['stock_account.accrued.orders.wizard'].with_context({  # noqa: OLS03001
             'active_model': 'sale.order',
             'active_ids': self.sale_order.ids,
         }).create({
@@ -98,7 +102,7 @@ class TestAccruedTimeSheetSaleOrders(TestCommonSaleTimesheet):
         inv.invoice_date = fields.Date.to_date('2020-01-08')
         inv.action_post()
 
-        wizard = self.env['account.accrued.orders.wizard'].with_context({
+        wizard = self.env['stock_account.accrued.orders.wizard'].with_context({  # noqa: OLS03001
             'active_model': 'sale.order',
             'active_ids': self.sale_order.ids,
         }).create({

@@ -9,8 +9,8 @@ from odoo.tools import date_utils
 from odoo.tools.misc import formatLang
 
 
-class AccountAccruedOrdersWizard(models.TransientModel):
-    _name = 'account.accrued.orders.wizard'
+class StockAccountAccruedOrdersWizard(models.TransientModel):
+    _name = 'stock_account.accrued.orders.wizard'
     _description = 'Accrued Orders Wizard'
     _check_company_auto = True
 
@@ -325,7 +325,7 @@ class AccountAccruedOrdersWizard(models.TransientModel):
                 if not line.analytic_distribution:
                     continue
                 for account_id, distribution in line.analytic_distribution.items():
-                    analytic_distribution.update({account_id : analytic_distribution.get(account_id, 0) + distribution*ratio})
+                    analytic_distribution.update({account_id: analytic_distribution.get(account_id, 0) + distribution * ratio})
             values = _get_aml_vals(orders, -total_balance, 0.0, self.account_id.id, label=_('Accrued total'), analytic_distribution=analytic_distribution)
             move_lines.append(Command.create(values))
 
