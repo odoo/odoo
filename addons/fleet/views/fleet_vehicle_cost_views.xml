@@ -7,10 +7,12 @@
             <form string="Contract logs">
                 <field name="company_id" invisible="1"/>
                 <header>
-                    <button name="action_close" string="Close" type="object" class="btn-secondary" invisible="state == 'closed'"/>
-                    <button name="action_reactivate" string="Reactivate" type="object" class="btn-secondary" invisible="state != 'closed'"/>
-                    <field name="state" widget="statusbar" statusbar_visible="futur,open" invisible="state in ('expired', 'closed')"/>
+                    <button name="action_done" string="Mark as Done" type="object" class="btn-primary" invisible="state != 'expired'"/>
+                    <button name="action_close" string="Close" type="object" class="btn-secondary" invisible="state in ('closed', 'done')"/>
+                    <button name="action_reactivate" string="Reactivate" type="object" class="btn-secondary" invisible="state not in ('closed', 'done')"/>
+                    <field name="state" widget="statusbar" statusbar_visible="futur,open" invisible="state in ('expired', 'closed', 'done')"/>
                     <field name="state" widget="statusbar" statusbar_visible="futur,open,expired" invisible="state != 'expired'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="futur,open,done" invisible="state != 'done'"/>
                     <field name="state" widget="statusbar" statusbar_visible="futur,open,closed" invisible="state != 'closed'"/>
                 </header>
                 <sheet>
@@ -83,7 +85,7 @@
             <list string="Contract logs"
                 decoration-warning="expires_today"
                 decoration-danger="days_left==0 and not expires_today and not has_open_contract"
-                decoration-muted="state=='closed'"
+                decoration-muted="state in ('closed', 'done')"
                 default_order="expiration_date"
                 sample="1">
                 <field name="active" column_invisible="True"/>
@@ -100,7 +102,7 @@
                 <field name="cost_generated" widget="monetary"/>
                 <field name="currency_id" column_invisible="True"/>
                 <field name="cost_frequency"/>
-                <field name="state" widget="badge" decoration-info="state == 'open'" decoration-danger="state == 'expired' and not has_open_contract" />
+                <field name="state" widget="badge" decoration-info="state == 'open'" decoration-success="state == 'done'" decoration-danger="state == 'expired' and not has_open_contract" />
                 <field name="activity_exception_decoration" widget="activity_exception"/>
             </list>
         </field>
@@ -149,6 +151,7 @@
                 <field name="insurer_id" string="Vendor" filter_domain="[('insurer_id','child_of', self)]"/>
                 <filter string="In Progress" name="open" domain="[('state', '=', 'open')]"/>
                 <filter string="Expired" name="expired" domain="[('state', '=', 'expired')]"/>
+                <filter string="Done" name="done" domain="[('state', '=', 'done')]"/>
                 <filter string="Start Date" name="start_date" date="start_date" default_period="month"/>
                 <filter string="Expiration Date" name="expiration_date" date="expiration_date" default_period="month"/>
                 <field name="activity_user_id" string="Activities of"/>
