@@ -190,6 +190,17 @@ class TestRepairCommon(common.TransactionCase):
 @tagged('post_install', '-at_install')
 class TestRepair(TestRepairCommon):
 
+    def test_stock_user_can_read_repair_order_without_invoicing_rights(self):
+        """A user with only Inventory/User rights must be able to open a repair
+        order even though they have no access to account.move."""
+        stock_user = self.env['res.users'].create({
+            'name': 'Stock User',
+            'login': 'repair_stock_user',
+            'group_ids': [Command.set([self.env.ref('stock.group_stock_user').id])],
+        })
+        self.repair0.invalidate_recordset()
+        self.repair0.with_user(stock_user).read(['invoice_count', 'can_create_sale_or_invoice'])
+
     def test_01_repair_states_transition(self):
         repair = self._create_simple_repair_order()
         # Draft -> Confirmed -> Cancel -> Draft -> Done -> Failing Cancel
