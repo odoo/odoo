@@ -4383,6 +4383,12 @@ test(`header checkbox is indeterminate when only some records are selected`, asy
     expect(`thead .o_list_record_selector input`).toBeChecked({ indeterminate: true });
     expect(headerInput().indeterminate).toBe(true);
 
+    // Clicking the header checkbox while indeterminate clears the selection
+    await contains(`thead .o_list_record_selector input`).click();
+    expect(`.o_data_row .o_list_record_selector input:checked`).toHaveCount(0);
+    expect(`thead .o_list_record_selector input`).not.toBeChecked();
+    expect(headerInput().indeterminate).toBe(false);
+
     // Select all: fully checked, not indeterminate
     await contains(`thead .o_list_record_selector input`).click();
     expect(`thead .o_list_record_selector input`).toBeChecked();
@@ -4392,6 +4398,47 @@ test(`header checkbox is indeterminate when only some records are selected`, asy
     await contains(`.o_data_row:eq(0) .o_list_record_selector input`).click();
     expect(`thead .o_list_record_selector input`).toBeChecked({ indeterminate: true });
     expect(headerInput().indeterminate).toBe(true);
+});
+
+test.tags("desktop");
+test(`clicking the indeterminate header checkbox unselects all records`, async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `<list><field name="foo"/><field name="bar"/></list>`,
+    });
+
+    // select 2 records out of 4 => header checkbox is indeterminate
+    await contains(`.o_data_row:eq(0) .o_list_record_selector input`).click();
+    await contains(`.o_data_row:eq(1) .o_list_record_selector input`).click();
+    expect(`.o_data_row .o_list_record_selector input:checked`).toHaveCount(2);
+    expect(`thead .o_list_record_selector input`).toBeChecked({ indeterminate: true });
+
+    // clicking the header checkbox clears the selection instead of selecting all
+    await contains(`thead .o_list_record_selector input`).click();
+    expect(`.o_data_row .o_list_record_selector input:checked`).toHaveCount(0);
+    expect(`thead .o_list_record_selector input`).not.toBeChecked();
+    expect(`.o_control_panel_actions .o_selection_box`).toHaveCount(0);
+});
+
+test.tags("desktop");
+test(`clicking the indeterminate header checkbox unselects all records (grouped)`, async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `<list><field name="foo"/><field name="bar"/></list>`,
+        groupBy: ["foo"],
+    });
+
+    // open first group (2 records) and select one of them => header is indeterminate
+    await contains(`.o_group_header`).click();
+    await contains(`.o_data_row:eq(0) .o_list_record_selector input`).click();
+    expect(`thead .o_list_record_selector input`).toBeChecked({ indeterminate: true });
+
+    await contains(`thead .o_list_record_selector input`).click();
+    expect(`.o_data_row .o_list_record_selector input:checked`).toHaveCount(0);
+    expect(`thead .o_list_record_selector input`).not.toBeChecked();
+    expect(`.o_control_panel_actions .o_selection_box`).toHaveCount(0);
 });
 
 test.tags("desktop");
@@ -4440,7 +4487,10 @@ test(`selection box is properly displayed (single page)`, async () => {
     expect(`.o_selection_box .o_select_domain`).toHaveCount(0);
     expect(`.o_selection_box`).toHaveText("1\nselected");
 
-    // select all records of first page
+    // select all records of first page (the header checkbox first clears the
+    // partial selection, then selects everything)
+    await contains(`thead .o_list_record_selector input`).click();
+    expect(`.o_control_panel_actions .o_selection_box`).toHaveCount(0);
     await contains(`thead .o_list_record_selector input`).click();
     expect(`.o_control_panel_actions .o_selection_box`).toHaveCount(1);
     expect(`.o_selection_box .o_select_domain`).toHaveCount(0);
@@ -4477,7 +4527,10 @@ test(`selection box is properly displayed (multi pages) on desktop`, async () =>
     expect(`.o_selection_box .o_select_domain`).toHaveCount(0);
     expect(`.o_selection_box`).toHaveText("1\nselected");
 
-    // select all records of first page
+    // select all records of first page (the header checkbox first clears the
+    // partial selection, then selects everything)
+    await contains(`thead .o_list_record_selector input`).click();
+    expect(`.o_control_panel_actions .o_selection_box`).toHaveCount(0);
     await contains(`thead .o_list_record_selector input`).click();
     expect(`.o_control_panel_actions .o_selection_box`).toHaveCount(1);
     expect(`.o_selection_box .o_select_domain`).toHaveCount(1);
@@ -4576,7 +4629,10 @@ test(`selection box is properly displayed (group list)`, async () => {
     expect(`.o_selection_box .o_select_domain`).toHaveCount(0);
     expect(`.o_selection_box`).toHaveText("1\nselected");
 
-    // select all records of first page
+    // select all records of first page (the header checkbox first clears the
+    // partial selection, then selects everything)
+    await contains(`thead .o_list_record_selector input`).click();
+    expect(`.o_control_panel_actions .o_selection_box`).toHaveCount(0);
     await contains(`thead .o_list_record_selector input`).click();
     expect(`.o_control_panel_actions .o_selection_box`).toHaveCount(1);
     expect(`.o_selection_box .o_select_domain`).toHaveCount(1);
@@ -5000,6 +5056,10 @@ test(`aggregates are computed correctly on desktop`, async () => {
     await contains(`tbody .o_list_record_selector input:eq(3)`).click();
     expect(queryAllTexts(`tfoot td`)).toEqual(["", "6", "0.50"]);
 
+    // the header checkbox first clears the partial selection, then selects
+    // everything: in both cases the aggregates cover all the records
+    await contains(`thead .o_list_record_selector input`).click();
+    expect(queryAllTexts(`tfoot td`)).toEqual(["", "32", "1.50"]);
     await contains(`thead .o_list_record_selector input`).click();
     expect(queryAllTexts(`tfoot td`)).toEqual(["", "32", "1.50"]);
 
@@ -9906,8 +9966,8 @@ test(`execute ActionMenus actions with correct params (single page) on desktop`,
     await toggleMenuItem("Custom Action");
 
     // add a domain and select first two records (need to unselect records first)
-    await contains(`thead .o_list_record_selector input`).click(); // select all
     await contains(`thead .o_list_record_selector input`).click(); // unselect all
+    expect(`.o_list_record_selector input:checked`).toHaveCount(0);
     await toggleSearchBarMenu();
     await toggleMenuItem("bar");
     expect(`.o_data_row`).toHaveCount(3);
@@ -15893,7 +15953,10 @@ test(`selection is kept when optional fields are toggled`, async () => {
     expect(`th`).toHaveCount(4);
     expect(`.o_list_record_selector input:checked`).toHaveCount(1);
 
-    // select all records
+    // select all records (the header checkbox first clears the partial
+    // selection, then selects everything)
+    await contains(`thead .o_list_record_selector input`).click();
+    expect(`.o_list_record_selector input:checked`).toHaveCount(0);
     await contains(`thead .o_list_record_selector input`).click();
     expect(`.o_list_record_selector input:checked`).toHaveCount(5);
 
