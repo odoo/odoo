@@ -22,7 +22,7 @@ patch(spreadsheet.components.ScorecardChart.prototype, {
     getEventTargetSection(ev) {
         const canvasRect = this.canvas().getBoundingClientRect();
         const ctx = this.canvas().getContext("2d");
-        const zoom = this.viewStore.zoomLevel;
+        const zoom = this.zoomStore.zoomLevel;
         const config = this.config(canvasRect, zoom);
 
         const y = (ev.clientY - canvasRect.top) / zoom;
