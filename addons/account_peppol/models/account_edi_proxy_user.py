@@ -381,8 +381,7 @@ class AccountEdiProxyClientUser(models.Model):
                     # thrown when the IAP is still processing the message
                     continue
                 move.peppol_move_state = 'error'
-                error = content['error']
-                move._message_log(body=render_peppol_errors(move, error.get('data', {}).get('message') or error['message']))
+                move._message_log(body=self._peppol_get_message_status_error_body(move, content['error']))
                 processed_message_uuids.append(uuid)
                 continue
 
@@ -392,8 +391,7 @@ class AccountEdiProxyClientUser(models.Model):
         return processed_message_uuids
 
     def _peppol_get_message_status_error_body(self, move, error):
-        # DEPRECATED, TO BE REMOVED IN MASTER
-        pass
+        return render_peppol_errors(move, error)
 
     def _peppol_get_message_status_update_body(self, move, content):
         self.ensure_one()
