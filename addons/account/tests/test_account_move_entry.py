@@ -345,7 +345,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
             'invoice_cash_rounding_id': 42424242,
         }
         for fname, value in readonly_fields.items():
-            with self.assertRaisesRegex(UserError, "You cannot modify the following readonly fields on a posted move"):
+            with self.assertRaisesRegex(UserError, "You cannot modify the following readonly fields on the posted move %s" % self.test_move.name):
                 self.test_move.write({fname: value})
         for fname in readonly_fields:
             if fname.endswith('_ids'):
