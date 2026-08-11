@@ -1012,6 +1012,8 @@ ADDITIONAL_IDENTIFIERS_METADATA = {
 }
 
 
+# Should most likely not be used directly.
+# Use `res.partner._get_all_identifiers_metadata()` instead.
 ALL_IDENTIFIERS_METADATA = {
     **TIN_METADATA,
     **ADDITIONAL_IDENTIFIERS_METADATA,
