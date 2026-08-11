@@ -108,6 +108,7 @@ class PurchaseOrderLine(models.Model):
         return self.env['account.tax']._prepare_base_line_for_taxes_computation(
             self,
             tax_ids=self.taxes_id,
+            product_uom_id=self.product_uom,
             quantity=self.product_qty,
             partner_id=self.order_id.partner_id,
             currency_id=self.order_id.currency_id or self.order_id.company_id.currency_id,

@@ -852,6 +852,11 @@ class TestSaleOrder(SaleCommon):
         context = self.sale_order._notify_by_email_prepare_rendering_context(message=self.env['mail.message'])
         self.assertEqual(context['subtitles'][0], f"{self.sale_order.name} - Test Partner")
 
+    def test_base_line_product_uom(self):
+        """ The uom of the line must reach the taxes computation, some taxes are based on it. """
+        sol = self.sale_order.order_line[0]
+        base_line = sol._prepare_base_line_for_taxes_computation()
+        self.assertEqual(base_line['product_uom_id'], sol.product_uom)
 
 @tagged('post_install', '-at_install')
 class TestSaleOrderInvoicing(AccountTestInvoicingCommon, SaleCommon):
