@@ -14,7 +14,7 @@ import {
     usePlugin,
     useProps,
 } from "@odoo/owl";
-import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
+import { getActiveHotkey } from "@web/core/hotkeys/hotkey_utils";
 
 import { DiscussContent } from "@mail/core/public_web/discuss_content";
 import { MessagingMenu } from "@mail/core/public_web/messaging_menu/messaging_menu";

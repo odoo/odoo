@@ -26,7 +26,7 @@ import { localization } from "@web/core/l10n/localization";
 import { _t } from "@web/core/l10n/translation";
 import { useBackButton, useService } from "@web/core/utils/hooks";
 import { Typing } from "@mail/discuss/typing/common/typing";
-import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
+import { getActiveHotkey } from "@web/core/hotkeys/hotkey_utils";
 import { isMobileOS } from "@web/core/browser/feature_detection";
 
 export class ChatWindow extends Component {

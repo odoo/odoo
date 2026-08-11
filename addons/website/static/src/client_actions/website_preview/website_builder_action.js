@@ -16,7 +16,7 @@ import { loadBundle } from "@web/core/assets";
 import { browser } from "@web/core/browser/browser";
 import { isBrowserChrome, isBrowserMicrosoftEdge } from "@web/core/browser/feature_detection";
 import { router } from "@web/core/browser/router";
-import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
+import { getActiveHotkey } from "@web/core/hotkeys/hotkey_utils";
 import { _t } from "@web/core/l10n/translation";
 import { LazyComponent } from "@web/core/lazy_component";
 import { post } from "@web/core/network/http_service";

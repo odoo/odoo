@@ -1,5 +1,5 @@
 import { Component, markup, onMounted, useProps, signal, t, xml } from "@odoo/owl";
-import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
+import { getActiveHotkey } from "@web/core/hotkeys/hotkey_utils";
 import { useActionInfo, useSelectableItemComponent } from "../utils";
 import { BuilderComponent } from "./builder_component";
 import { BuilderSelectableWrapperComponent } from "./builder_selectable_wrapper_component";

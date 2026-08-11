@@ -7,7 +7,7 @@ declare module "services" {
     import { effectService } from "@web/core/effects/effect_plugin";
     import { fieldService } from "@web/core/field_service";
     import { fileUploadService } from "@web/core/file_upload/file_upload_service";
-    import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
+    import { hotkeyService } from "@web/core/hotkeys/hotkey_plugin";
     import { nameService } from "@web/core/name_service";
     import { httpService } from "@web/core/network/http_service";
     import { notificationService } from "@web/core/notifications/notification_plugin";

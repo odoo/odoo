@@ -1,6 +1,6 @@
 import { BarcodeDialog, barcodeDialogProps } from "@web/core/barcode/barcode_dialog";
 import { Component, onMounted, proxy, signal, t, useProps } from "@odoo/owl";
-import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
+import { getActiveHotkey } from "@web/core/hotkeys/hotkey_utils";
 import { _t } from "@web/core/l10n/translation";
 
 export class BarcodeInput extends Component {

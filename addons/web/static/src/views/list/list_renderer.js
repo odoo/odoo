@@ -3,7 +3,7 @@ import { CheckBox } from "@web/core/checkbox/checkbox";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
-import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
+import { getActiveHotkey } from "@web/core/hotkeys/hotkey_utils";
 import { localization } from "@web/core/l10n/localization";
 import { Pager } from "@web/core/pager/pager";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";

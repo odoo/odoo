@@ -1,7 +1,7 @@
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
 import { redirect } from "@web/core/utils/urls";
-import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
+import { getActiveHotkey } from "@web/core/hotkeys/hotkey_utils";
 
 export class SurveyResult extends Interaction {
     static selector = ".o_survey_result";

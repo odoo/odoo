@@ -1,6 +1,6 @@
 import { propSignal } from "@mail/utils/common/hooks";
 import { Component, signal, types, useEffect, useProps } from "@odoo/owl";
-import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
+import { getActiveHotkey } from "@web/core/hotkeys/hotkey_utils";
 
 export class DiscussSearch extends Component {
     static template = "mail.DiscussSearch";

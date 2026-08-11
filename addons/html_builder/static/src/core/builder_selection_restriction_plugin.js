@@ -1,5 +1,5 @@
 import { Plugin } from "@html_editor/plugin";
-import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
+import { getActiveHotkey } from "@web/core/hotkeys/hotkey_utils";
 import { getDeepestPosition, isElement, isIconElement } from "@html_editor/utils/dom_info";
 import { DIRECTIONS, leftPos, nodeSize, rightPos } from "@html_editor/utils/position";
 import { closestElement } from "@html_editor/utils/dom_traversal";

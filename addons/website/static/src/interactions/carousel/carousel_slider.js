@@ -1,6 +1,6 @@
 import { Interaction } from "@web/public/interaction";
 import { browser } from "@web/core/browser/browser";
-import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
+import { getActiveHotkey } from "@web/core/hotkeys/hotkey_utils";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { onceAllImagesLoaded } from "@website/utils/images";

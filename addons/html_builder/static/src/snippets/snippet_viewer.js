@@ -1,6 +1,6 @@
 import { Component, markup, signal } from "@odoo/owl";
 import { useMatrixKeyNavigation } from "@html_builder/utils/keyboard_navigation";
-import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
+import { getActiveHotkey } from "@web/core/hotkeys/hotkey_utils";
 import { localization } from "@web/core/l10n/localization";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";

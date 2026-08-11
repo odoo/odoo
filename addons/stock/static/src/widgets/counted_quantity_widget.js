@@ -1,7 +1,7 @@
 import { proxy, useEffect } from "@odoo/owl";
 import { FloatField, floatField } from "@web/views/fields/float/float_field";
 import { registry } from "@web/core/registry";
-import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
+import { getActiveHotkey } from "@web/core/hotkeys/hotkey_utils";
 
 export class CountedQuantityWidgetField extends FloatField {
     setup() {

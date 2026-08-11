@@ -5,7 +5,7 @@ import { browser } from "@web/core/browser/browser";
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
 import { fadeIn, fadeOut } from "@survey/utils";
-import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
+import { getActiveHotkey } from "@web/core/hotkeys/hotkey_utils";
 import { useListener, onWillStart } from "@odoo/owl";
 
 const nextPageTooltips = {
