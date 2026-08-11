@@ -10,7 +10,8 @@ import {
     getTimeUtil,
     generateQRCodeDataUrl,
 } from "@point_of_sale/utils";
-import { ConnectionLostError } from "@web/core/network/rpc";
+import { ConnectionLostError, RPCError } from "@web/core/network/rpc";
+import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
 import { OpeningControlPopup } from "@point_of_sale/app/components/popups/opening_control_popup/opening_control_popup";
 import { OrderDetailsDialog } from "@point_of_sale/app/screens/ticket_screen/order_details_dialog/order_details_dialog";
@@ -2645,6 +2646,7 @@ export class PosStore extends WithLazyGetterTrap {
         );
     }
 
+<<<<<<< aa0a1512b5c50aff0738088bf6b6e2ad1aa78c47
     // -------- Order Validation -------- //
     getValidationOrderOptions(args = {}) {
         const { order = this.getOrder() } = args;
@@ -2687,6 +2689,20 @@ export class PosStore extends WithLazyGetterTrap {
         return false;
     }
 
+||||||| 34e5f89a5cf51b77140b6a475ed73122296e9342
+=======
+    async reloadIfSessionDeleted(error) {
+        if (
+            error instanceof RPCError &&
+            error.data.name === "odoo.exceptions.MissingError" &&
+            (await this.isSessionDeleted())
+        ) {
+            return browser.location.reload();
+        }
+        throw error;
+    }
+
+>>>>>>> bb01053924f8e8b6da2e18d97977accf6e47d043
     async validateOrderFast(paymentMethod) {
         const validation = new OrderPaymentValidation({
             pos: this,
