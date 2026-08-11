@@ -6,7 +6,7 @@ from stdnum.util import clean
 
 from odoo import api, fields, models, _
 from odoo.addons.base.models.res_partner_bank import sanitize_account_number
-from odoo.addons.account.tools import format_account_number, validate_iban, get_iban_part
+from odoo.tools.bank_account_number import format_account_number, validate_iban, get_iban_part
 from odoo.exceptions import ValidationError
 from odoo.tools import LazyTranslate
 from odoo.tools.business_data import street_split, mod10r
