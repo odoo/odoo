@@ -50,7 +50,7 @@ class AccountEdiProxyClientUser(models.Model):
         if not proxy_type:
             self.ensure_one()
             proxy_type = self.proxy_type
-        return f"/api/{proxy_type}/{endpoint}"
+        return f"/api/{proxy_type}/{endpoint.lstrip('/')}"
 
     @handle_demo
     def _call_peppol_proxy(self, endpoint, params=None):
