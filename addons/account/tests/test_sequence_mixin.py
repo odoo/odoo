@@ -851,6 +851,247 @@ class TestSequenceGaps(TestSequenceMixinCommon):
         new_move.action_post()
         self.assertEqual(new_move.made_sequence_gap, True)
 
+    @classmethod
+    def _create_sequence_moves(cls, prefix='NEW/', suffix='', count=3, post=True):
+        moves = cls.env['account.move']
+        for number in range(1, 1 + count):
+            moves += cls.create_move(name=f'{prefix}00000{number}{suffix}', post=post)
+        return moves
+
+    def test_suffix_independent_sequences(self):
+        """Gaps in one suffix sequence must not affect `made_sequence_gap` in another."""
+        no_suffix_moves = self._create_sequence_moves(suffix='')
+        a_suffix_moves = self._create_sequence_moves(suffix='A')
+        all_moves = no_suffix_moves + a_suffix_moves
+
+        self.assertEqual(all_moves.mapped('made_sequence_gap'), 6 * [False])
+
+        # Case 1: A gap in sequence A doesn't impact No Suffix sequence
+        a2_move = a_suffix_moves[1]
+        a2_move.button_draft()
+        a2_move.name = 'NEW/000004A'
+        a2_move.action_post()
+        self.assertRecordValues(
+            a_suffix_moves.sorted('sequence_number'),
+            [
+                {'name': 'NEW/000001A', 'sequence_number': 1, 'made_sequence_gap': False},
+                {'name': 'NEW/000003A', 'sequence_number': 3, 'made_sequence_gap': True},
+                {'name': 'NEW/000004A', 'sequence_number': 4, 'made_sequence_gap': False},
+            ]
+        )
+        self.assertEqual(no_suffix_moves.mapped('made_sequence_gap'), [False, False, False])
+        a2_move.button_draft()
+        a2_move.name = 'NEW/000002A'
+        a2_move.action_post()
+
+        # Case 2: A gap in sequence No Suffix doesn't impact A sequence
+        no2_move = no_suffix_moves[1]
+        no2_move.button_draft()
+        no2_move.name = 'NEW/000004'
+        no2_move.action_post()
+        self.assertRecordValues(
+            no_suffix_moves.sorted('sequence_number'),
+            [
+                {'name': 'NEW/000001', 'sequence_number': 1, 'made_sequence_gap': False},
+                {'name': 'NEW/000003', 'sequence_number': 3, 'made_sequence_gap': True},
+                {'name': 'NEW/000004', 'sequence_number': 4, 'made_sequence_gap': False},
+            ]
+        )
+        self.assertEqual(a_suffix_moves.mapped('made_sequence_gap'), [False, False, False])
+
+    def test_suffix_any_start_no_gap(self):
+        """A suffix sequence starting at an arbitrary number must not be marked as a gap."""
+        a5_move = self.create_move(name='NEW/000005A', post=True)
+        self.assertEqual(a5_move.made_sequence_gap, False)
+
+        b7_move = self.create_move(name='NEW/000007B', post=True)
+        self.assertEqual(b7_move.made_sequence_gap, False)
+
+    def test_suffix_limit_not_polluted_by_other_suffix(self):
+        """The two closest neighbors used for gap detection must belong to the same
+        suffix sequence. A large number of moves with a different suffix must not
+        fill the LIMIT 2 window and hide a real gap."""
+        spacer_suffix_moves = self._create_sequence_moves(suffix='SPACER', count=9)
+        self.assertEqual(spacer_suffix_moves.mapped('made_sequence_gap'), 9 * [False])
+        a1_move = self.create_move(name='NEW/000001A', post=True)
+        a9_move = self.create_move(name='NEW/000009A', post=True)
+        self.assertEqual(a1_move.made_sequence_gap, False)
+        self.assertEqual(a9_move.made_sequence_gap, True)
+
+    def test_suffix_full_match(self):
+        """Suffix matching must be exact: 'AB' must not interact with 'A' or 'B'."""
+        a_suffix_moves = self._create_sequence_moves(suffix='A')
+        b_suffix_moves = self._create_sequence_moves(suffix='B')
+        ab_suffix_moves = self._create_sequence_moves(suffix='AB')
+
+        ab2_move = ab_suffix_moves[1]
+        ab2_move.button_draft()
+        ab2_move.name = 'NEW/000004AB'
+        ab2_move.action_post()
+        self.assertRecordValues(
+            ab_suffix_moves.sorted('sequence_number'),
+            [
+                {'name': 'NEW/000001AB', 'sequence_number': 1, 'made_sequence_gap': False},
+                {'name': 'NEW/000003AB', 'sequence_number': 3, 'made_sequence_gap': True},
+                {'name': 'NEW/000004AB', 'sequence_number': 4, 'made_sequence_gap': False},
+            ]
+        )
+        self.assertEqual((a_suffix_moves + b_suffix_moves).mapped('made_sequence_gap'), 6 * [False])
+
+    def test_suffix_fill_other_sequence_gap(self):
+        """Moving a move from one suffix sequence to another must create a gap
+        in the source sequence and fill the gap in the target sequence."""
+        no_suffix_moves = self._create_sequence_moves(suffix='')
+        a_suffix_moves = self._create_sequence_moves(suffix='A')
+
+        # Create the gap in No Suffix
+        no2_move = no_suffix_moves[1]
+        no2_move.button_draft()
+        no2_move.name = 'NEW/000004'
+        no2_move.action_post()
+
+        self.assertRecordValues(
+            no_suffix_moves.sorted('sequence_number'),
+            [
+                {'name': 'NEW/000001', 'sequence_number': 1, 'made_sequence_gap': False},
+                {'name': 'NEW/000003', 'sequence_number': 3, 'made_sequence_gap': True},
+                {'name': 'NEW/000004', 'sequence_number': 4, 'made_sequence_gap': False},
+            ]
+        )
+
+        # Move A in No Suffix gap
+        a2_move = a_suffix_moves[1]
+        a2_move.button_draft()
+        a2_move.name = 'NEW/000002'
+        a2_move.action_post()
+
+        self.assertRecordValues(
+            (no_suffix_moves + a2_move).sorted('sequence_number'),
+            [
+                {'name': 'NEW/000001', 'sequence_number': 1, 'made_sequence_gap': False},
+                {'name': 'NEW/000002', 'sequence_number': 2, 'made_sequence_gap': False},
+                {'name': 'NEW/000003', 'sequence_number': 3, 'made_sequence_gap': False},
+                {'name': 'NEW/000004', 'sequence_number': 4, 'made_sequence_gap': False},
+            ]
+        )
+        self.assertRecordValues(
+            (a_suffix_moves - a2_move).sorted('sequence_number'),
+            [
+                {'name': 'NEW/000001A', 'sequence_number': 1, 'made_sequence_gap': False},
+                {'name': 'NEW/000003A', 'sequence_number': 3, 'made_sequence_gap': True},
+            ]
+        )
+
+    def test_suffix_special_characters(self):
+        """Suffixes containing LIKE special characters ('_', '%', '\\') must be
+        escaped correctly and must not match other suffix sequences."""
+        a_suffix_moves = self._create_sequence_moves(suffix='A')
+        b_suffix_moves = self._create_sequence_moves(suffix='B')
+        c_suffix_moves = self._create_sequence_moves(suffix='C')
+        a_b_c_moves = a_suffix_moves + b_suffix_moves + c_suffix_moves
+
+        underscore_a_suffix_moves = self._create_sequence_moves(suffix='_A')
+        underscore_a2_move = underscore_a_suffix_moves[1]
+        underscore_a2_move.button_draft()
+        underscore_a2_move.name = 'NEW/000004_A'
+        underscore_a2_move.action_post()
+        self.assertRecordValues(
+            underscore_a_suffix_moves.sorted('sequence_number'),
+            [
+                {'name': 'NEW/000001_A', 'sequence_number': 1, 'made_sequence_gap': False},
+                {'name': 'NEW/000003_A', 'sequence_number': 3, 'made_sequence_gap': True},
+                {'name': 'NEW/000004_A', 'sequence_number': 4, 'made_sequence_gap': False},
+            ]
+        )
+
+        percent_b_suffix_moves = self._create_sequence_moves(suffix='%B')
+        percent_b2_move = percent_b_suffix_moves[1]
+        percent_b2_move.button_draft()
+        percent_b2_move.name = 'NEW/000004%B'
+        percent_b2_move.action_post()
+        self.assertRecordValues(
+            percent_b_suffix_moves.sorted('sequence_number'),
+            [
+                {'name': 'NEW/000001%B', 'sequence_number': 1, 'made_sequence_gap': False},
+                {'name': 'NEW/000003%B', 'sequence_number': 3, 'made_sequence_gap': True},
+                {'name': 'NEW/000004%B', 'sequence_number': 4, 'made_sequence_gap': False},
+            ]
+        )
+
+        backslash_c_suffix_moves = self._create_sequence_moves(suffix='\\C')
+        backslash_c2_move = backslash_c_suffix_moves[1]
+        backslash_c2_move.button_draft()
+        backslash_c2_move.name = 'NEW/000004\\C'
+        backslash_c2_move.action_post()
+        self.assertRecordValues(
+            backslash_c_suffix_moves.sorted('sequence_number'),
+            [
+                {'name': 'NEW/000001\\C', 'sequence_number': 1, 'made_sequence_gap': False},
+                {'name': 'NEW/000003\\C', 'sequence_number': 3, 'made_sequence_gap': True},
+                {'name': 'NEW/000004\\C', 'sequence_number': 4, 'made_sequence_gap': False},
+            ]
+        )
+
+        self.assertEqual(a_b_c_moves.mapped('made_sequence_gap'), 9 * [False])
+
+    def test_suffix_batch_unlink_multiple_suffixes(self):
+        """Unlinking moves from multiple suffix sequences in a single batch must
+        compute `made_sequence_gap` correctly per suffix."""
+        a_suffix_moves = self._create_sequence_moves(suffix='A', count=5)
+        b_suffix_moves = self._create_sequence_moves(suffix='B', count=5)
+        c_suffix_moves = self._create_sequence_moves(suffix='C', count=5)
+
+        # Unlink from all three sequences at once to verify the per-suffix map is correct in batch.
+        to_remove = a_suffix_moves[1] + b_suffix_moves[3] + c_suffix_moves[0]
+        to_remove.button_draft()
+        to_remove.unlink()
+
+        self.assertRecordValues(
+            (a_suffix_moves - a_suffix_moves[1]).sorted('sequence_number'),
+            [
+                {'name': 'NEW/000001A', 'sequence_number': 1, 'made_sequence_gap': False},
+                {'name': 'NEW/000003A', 'sequence_number': 3, 'made_sequence_gap': True},
+                {'name': 'NEW/000004A', 'sequence_number': 4, 'made_sequence_gap': False},
+                {'name': 'NEW/000005A', 'sequence_number': 5, 'made_sequence_gap': False},
+            ]
+        )
+        self.assertRecordValues(
+            (b_suffix_moves - b_suffix_moves[3]).sorted('sequence_number'),
+            [
+                {'name': 'NEW/000001B', 'sequence_number': 1, 'made_sequence_gap': False},
+                {'name': 'NEW/000002B', 'sequence_number': 2, 'made_sequence_gap': False},
+                {'name': 'NEW/000003B', 'sequence_number': 3, 'made_sequence_gap': False},
+                {'name': 'NEW/000005B', 'sequence_number': 5, 'made_sequence_gap': True},
+            ]
+        )
+        self.assertRecordValues(
+            (c_suffix_moves - c_suffix_moves[0]).sorted('sequence_number'),
+            [
+                {'name': 'NEW/000002C', 'sequence_number': 2, 'made_sequence_gap': False},  # New first so no gap
+                {'name': 'NEW/000003C', 'sequence_number': 3, 'made_sequence_gap': False},
+                {'name': 'NEW/000004C', 'sequence_number': 4, 'made_sequence_gap': False},
+                {'name': 'NEW/000005C', 'sequence_number': 5, 'made_sequence_gap': False},
+            ]
+        )
+
+    def test_suffix_draft_between_posted(self):
+        """A drafted move in a suffix sequence must be seen as a gap in that sequence
+        and must not affect other suffix sequences."""
+        no_suffix_moves = self._create_sequence_moves(suffix='')
+        a_suffix_moves = self._create_sequence_moves(suffix='A')
+
+        a_suffix_moves[1].button_draft()
+
+        self.assertRecordValues(
+            a_suffix_moves.sorted('sequence_number'),
+            [
+                {'sequence_number': 1, 'made_sequence_gap': False, 'state': 'posted'},
+                {'sequence_number': 2, 'made_sequence_gap': True, 'state': 'draft'},
+                {'sequence_number': 3, 'made_sequence_gap': False, 'state': 'posted'},
+            ]
+        )
+        self.assertEqual(no_suffix_moves.mapped('made_sequence_gap'), [False, False, False])
+
     def test_draft1(self):
         self.all_moves[0].button_draft()
         self.assertEqual(self.all_moves.mapped('made_sequence_gap'), [False, False, False])
