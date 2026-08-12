@@ -2,7 +2,13 @@ import { test, expect } from "@odoo/hoot";
 import { queryFirst, animationFrame } from "@odoo/hoot-dom";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { CartPage } from "@pos_self_order/app/pages/cart_page/cart_page";
-import { setupSelfPosEnv, getFilledSelfOrder, addComboProduct } from "../utils";
+import {
+    setupSelfPosEnv,
+    getFilledSelfOrder,
+    addComboProduct,
+    isSlotAvailable,
+    clickBtn,
+} from "../utils";
 import { definePosSelfModels } from "../data/generate_model_definitions";
 
 definePosSelfModels();
@@ -88,4 +94,18 @@ test("add note button is not shown in kiosk mode", async () => {
 
     const orderNoteContainer = queryFirst(".order-note");
     expect(orderNoteContainer).toBe(null);
+});
+
+test("test_slot_limit_orders: occupied slots are hidden in self order", async () => {
+    const store = await setupSelfPosEnv();
+    const preset = store.models["pos.preset"].get(2);
+    preset.slots_per_interval = 1;
+
+    const order = await getFilledSelfOrder(store);
+    order.preset_id = preset;
+    order.partner_id = false;
+
+    await mountWithCleanup(CartPage, {});
+    await clickBtn("Order");
+    expect(await isSlotAvailable("12:00")).toBe(false);
 });

@@ -6,12 +6,14 @@ import {
     MockServer,
     mountWithCleanup,
     makeDialogMockEnv,
+    contains,
 } from "@web/../tests/web_test_helpers";
 import { session } from "@web/session";
 import { registry } from "@web/core/registry";
 import { selfOrderIndex } from "@pos_self_order/app/self_order_index";
 import { setupPosEnv } from "@point_of_sale/../tests/unit/utils";
 import { unpatchSelf } from "@pos_self_order/app/services/data_service";
+import { animationFrame, queryAll, waitFor } from "@odoo/hoot-dom";
 
 export function initMockRpc() {
     onRpc("/pos-self/relations/1", () =>
@@ -31,7 +33,7 @@ export function initMockRpc() {
 
     onRpc("/pos-self-order/process-order/kiosk", mockProcssOrder);
     onRpc("/pos-self-order/process-order/mobile", mockProcssOrder);
-    onRpc("/pos-self-order/get-slots/", () => ({ usage_utc: {} }));
+    onRpc("/pos-self-order/get-slots", () => ({ usage_utc: { "2019-03-12 11:00:00": [1] } }));
     onRpc("/pos-self-order/remove-order", () => ({}));
 }
 
@@ -167,6 +169,17 @@ export async function checkKioskPreparationTicketData(store, expectedData) {
         }
     }
     return true;
+}
+
+export async function isSlotAvailable(slotValue) {
+    await waitFor(".self_order_pills_selection_popup");
+    const slots = queryAll(".self_order_pills_selection_popup .option-item");
+    return !!slots.find((el) => el.textContent.trim() === slotValue);
+}
+
+export async function clickBtn(buttonName) {
+    await contains(`.cart.btn:contains('${buttonName}')`).click();
+    await animationFrame();
 }
 
 export function mockNavigate(router) {
