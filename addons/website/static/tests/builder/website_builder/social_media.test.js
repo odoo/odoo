@@ -245,6 +245,7 @@ test("share snippet should not be editable (except title) nor user-selectable", 
 });
 
 test("Edit share icon", async () => {
+    onRpc("/web/material_symbols/search", () => []);
     const dragAndDropSnippet = async (dataSnippet) => {
         const dragUtils = await contains(
             `.o-snippets-menu #snippet_content .o_snippet_thumbnail[data-snippet='${dataSnippet}']`

@@ -609,6 +609,9 @@ test("remove caption when replacing an image with other media", async () => {
             public: true,
         },
     ]);
+    onRpc("/web/material_symbols/search", () => [
+        { name: "favorite", variant: "outline", source: "ms" },
+    ]);
     const { el } = await setupEditorWithEmbeddedCaption(
         unformat(
             `<figure>

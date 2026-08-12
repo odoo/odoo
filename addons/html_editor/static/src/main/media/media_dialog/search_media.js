@@ -5,14 +5,14 @@ import { Component, signal, useEffect } from "@odoo/owl";
 
 export class SearchMedia extends Component {
     static template = "html_editor.SearchMedia";
-    static props = ["searchPlaceholder", "search", "needle"];
+    static props = ["searchPlaceholder", "search", "needle", "debounceDelay?"];
 
     input = signal(this.props.needle || "");
     autofocusRef = signal.ref();
 
     setup() {
         useAutofocus({ ref: this.autofocusRef, mobile: true });
-        this.debouncedSearch = useDebounced(this.props.search, 1000);
+        this.debouncedSearch = useDebounced(this.props.search, this.props.debounceDelay ?? 1000);
 
         useEffect(() => {
             const input = this.input();

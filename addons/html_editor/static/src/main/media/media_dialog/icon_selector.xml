@@ -3,26 +3,44 @@
     <div>
         <div class="o_we_file_selector_control_panel o_we_file_selector_control_panel_icons border-bottom sticky-top d-flex gap-2 align-items-center mb-1 px-3">
             <SearchMedia searchPlaceholder.translate="Search a pictogram"
-                search.bind="this.search"
-                needle="this.state.needle"/>
+                search.bind="this.onNeedleChange"
+                needle="this.state.needle"
+                debounceDelay="300"/>
+            <div class="btn-group" role="group" aria-label="Icon variant">
+                <input type="radio" class="btn-check" name="media-dialog-icon-selector-variant" id="media-dialog-icon-selector-outline" autocomplete="off" value="outline" t-model.proxy="this.state.variant"/>
+                <label
+                    class="btn btn-sm"
+                    t-att-class="{
+                        'btn-primary': this.state.variant === 'outline',
+                        'btn-secondary': this.state.variant !== 'outline',
+                    }"
+                    for="media-dialog-icon-selector-outline">Outline</label>
+                <input type="radio" class="btn-check" name="media-dialog-icon-selector-variant" id="media-dialog-icon-selector-filled" autocomplete="off" value="filled" t-model.proxy="this.state.variant"/>
+                <label 
+                    class="btn btn-sm"
+                    t-att-class="{
+                        'btn-primary': this.state.variant === 'filled',
+                        'btn-secondary': this.state.variant !== 'filled',
+                    }"
+                    for="media-dialog-icon-selector-filled">Filled</label>
+            </div>
         </div>
         <div class="font-icons-icons">
             <!-- Material Symbols and Odoo UI icons: rendered via the data-icon attribute -->
             <t t-foreach="this.state.filteredIcons" t-as="icon" t-key="icon.id">
-                <t t-foreach="[false, true]" t-as="filled" t-key="filled">
-                    <span
-                        t-if="!filled || icon.hasFilledVersion"
-                        t-att-title="icon.name"
-                        t-att-aria-label="icon.name"
-                        role="img"
-                        class="font-icons-icon oi m-1 fs-2 p-3 cursor-pointer text-center"
-                        t-att-data-icon="icon.dataIcon"
-                        t-att-class="{
-                            o_we_attachment_selected: this.isIconSelected(icon, filled),
-                            'oi-filled': filled,
-                        }"
-                        t-on-click="() => this.onClickIcon(icon, filled)"/>
-                </t>
+                <span
+                    t-att-title="icon.name"
+                    t-att-aria-label="icon.name"
+                    role="img"
+                    class="font-icons-icon oi m-2 fs-2 p-3 cursor-pointer text-center"
+                    t-att-data-icon="icon.dataIcon"
+                    t-att-tabindex="icon_index === this.state.focusedIconIndex ? '0' : '-1'"
+                    t-att-class="{
+                        o_we_attachment_selected: this.isIconSelected(icon),
+                        'oi-filled': icon.variant === 'filled',
+                    }"
+                    t-on-keydown="(ev) => this.onIconKeydown(ev)"
+                    t-on-click="() => this.onClickIcon(icon)"/>
             </t>
         </div>
     </div>

@@ -1,5 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import { contains } from "@web/../tests/web_test_helpers";
+import { contains, onRpc } from "@web/../tests/web_test_helpers";
 import {
     defineWebsiteModels,
     setupWebsiteBuilderWithSnippet,
@@ -8,6 +8,9 @@ import {
 defineWebsiteModels();
 
 test("Icon List Snippet", async () => {
+    onRpc("/web/material_symbols/search", () => [
+        { name: "close", variant: "outline", source: "ms" },
+    ]);
     await setupWebsiteBuilderWithSnippet("s_icon_list", { loadIframeBundles: true });
     await contains(":iframe .s_icon_list").click();
 

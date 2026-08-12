@@ -5,10 +5,15 @@ import {
     defineWebsiteModels,
     setupWebsiteBuilder,
 } from "@website/../tests/builder/website_helpers";
+import { onRpc } from "@web/../tests/web_test_helpers";
 
 defineWebsiteModels();
 
 test("Icon styles should be retained when it is replaced with another icon", async () => {
+    onRpc("/web/material_symbols/search", () => [
+        { name: "search", variant: "outline", source: "ms" },
+        { name: "favorite", variant: "outline", source: "ms" },
+    ]);
     const extractClasses = "rounded-circle rounded shadow img-thumbnail";
     await setupWebsiteBuilder(`<i class="oi ${extractClasses}" data-icon="search"/>`);
 

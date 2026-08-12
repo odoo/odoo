@@ -95,12 +95,13 @@ export class NavBar extends Component {
     get currentApp() {
         const app = this.menuService.getCurrentApp();
         if (app?.webIcon) {
-            const [webIconClass, webIconColor, webIconBg] = app.webIcon.split(",");
+            const [webIconClass, webIconColor, webIconBg, webIconVariant] = app.webIcon.split(",");
             return {
                 ...app,
                 webIconClass,
                 webIconColor,
                 webIconBg,
+                webIconVariant: webIconVariant || "outline",
             };
         }
         return app;

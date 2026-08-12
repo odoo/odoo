@@ -1,5 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import { contains } from "@web/../tests/web_test_helpers";
+import { contains, onRpc } from "@web/../tests/web_test_helpers";
 import {
     defineWebsiteModels,
     setupWebsiteBuilder,
@@ -22,6 +22,10 @@ async function dragIcon() {
 }
 
 test("Drag & drop an 'Icon' snippet opens the dialog to select an icon", async () => {
+    onRpc("/web/material_symbols/search", () => [
+        { name: "favorite", variant: "outline", source: "ms" },
+        { name: "favorite", variant: "filled", source: "ms" },
+    ]);
     const { getEditableContent } = await setupWebsiteBuilder(`<div><p>Icon</p></div>`);
     const contentEl = getEditableContent();
     expect(contentEl).toHaveInnerHTML(`<div><p>Icon</p></div>`);
@@ -41,6 +45,10 @@ test("Drag & drop an 'Icon' snippet opens the dialog to select an icon", async (
 });
 
 test("Drag & drop an 'Icon' snippet in inline does not add <p>", async () => {
+    onRpc("/web/material_symbols/search", () => [
+        { name: "favorite", variant: "outline", source: "ms" },
+        { name: "favorite", variant: "filled", source: "ms" },
+    ]);
     await setupWebsiteBuilder(`<div><p>Text<a class="btn">button</a>Text</p></div>`);
     const { drop } = await contains(
         ".o-website-builder_sidebar [name='Icon'] .o_snippet_thumbnail"
