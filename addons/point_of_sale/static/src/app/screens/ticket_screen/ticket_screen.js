@@ -88,6 +88,7 @@ export class TicketScreen extends Component {
         this.doPrint = useTrackedAsync((_selectedSyncedOrder) => this.print(_selectedSyncedOrder));
         this.numberBuffer.use({
             triggerAtInput: (event) => this._onUpdateSelectedOrderline(event),
+            useWithBarcode: true,
         });
 
         this.state = proxy({
@@ -245,6 +246,8 @@ export class TicketScreen extends Component {
         await this._updateSyncedOrders();
     }
     onClickOrder(clickedOrder) {
+        // Pending keystrokes belong to the line they were typed for.
+        this.numberBuffer.capture();
         this.setSelectedOrder(clickedOrder);
         this.numberBuffer.reset();
         if ((!clickedOrder || clickedOrder.finalized) && !this.getSelectedOrderlineId()) {
@@ -319,6 +322,7 @@ export class TicketScreen extends Component {
                 });
                 return;
             }
+            this.numberBuffer.capture();
             this.state.selectedOrderlineIds[order.id] = orderline.id;
             this.numberBuffer.reset();
         }
@@ -405,6 +409,11 @@ export class TicketScreen extends Component {
     async addAdditionalRefundInfo(order, destinationOrder) {
         // used by L10N, e.g: add a refund reason using a specific L10N field
         return Promise.resolve();
+    }
+    async onClickRefund() {
+        // Flush pending keystrokes so the refund uses the quantities shown on screen.
+        this.numberBuffer.capture();
+        await this.onDoRefund();
     }
     async onDoRefund() {
         const order = this.getSelectedOrder();
@@ -719,6 +728,12 @@ export class TicketScreen extends Component {
             return false;
         }
         if (this._doesOrderHaveSoleItem(order)) {
+            return true;
+        }
+        // A just-typed quantity may still be waiting on useWithBarcode's delay: don't grey
+        // out the action while it is, or a quick click right after typing would land on a
+        // disabled button instead of reaching onClickRefund's own capture().
+        if (this.numberBuffer.hasPendingInput()) {
             return true;
         }
         const total = Object.values(order.uiState.lineToRefund).reduce((acc, val) => {
