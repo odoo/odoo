@@ -3423,6 +3423,49 @@ class TestUi(TestPointOfSaleHttpCommon):
             login="pos_user",
         )
 
+    def test_free_product_multiple_reward_products(self):
+        """
+        Test that with a free product reward on several products having the same
+        price, adding quantity on a product other than the one of the reward line
+        still gives the second free product.
+        """
+        self.env['loyalty.program'].search([]).write({'active': False})
+
+        promo_tag = self.env['product.tag'].create({'name': 'Promo Item'})
+        self.env['product.product'].create([{
+            'name': 'Promo Item %s' % suffix,
+            'list_price': 10,
+            'available_in_pos': True,
+            'taxes_id': False,
+            'product_tag_ids': [Command.link(promo_tag.id)],
+        } for suffix in ('A', 'B', 'C')])
+
+        self.env['loyalty.program'].create({
+            'name': 'Buy 2 Take 1',
+            'program_type': 'buy_x_get_y',
+            'trigger': 'auto',
+            'applies_on': 'current',
+            'rule_ids': [(0, 0, {
+                'reward_point_mode': 'unit',
+                'minimum_qty': 1,
+                'product_tag_id': promo_tag.id,
+            })],
+            'reward_ids': [(0, 0, {
+                'reward_type': 'product',
+                'reward_product_tag_id': promo_tag.id,
+                'reward_product_qty': 1,
+                'required_points': 2,
+            })],
+            'pos_config_ids': [Command.link(self.main_pos_config.id)],
+        })
+
+        self.main_pos_config.open_ui()
+        self.start_tour(
+            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "test_free_product_multiple_reward_products",
+            login="pos_user",
+        )
+
     def test_discount_after_unknown_scan(self):
         """
         Make sure discount is still applied after scanning an unknow barcode
