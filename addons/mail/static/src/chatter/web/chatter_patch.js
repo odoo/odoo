@@ -21,6 +21,7 @@ import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { useCustomDropzone } from "@web/core/dropzone/dropzone_hook";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
+import { useAnimationMark } from "@web/core/utils/animation";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
@@ -35,6 +36,8 @@ const CHATTER_PANEL = Object.freeze({
 });
 
 export const DELAY_FOR_SPINNER = 1000;
+/** Kept in step with `$o-mail-ChatterPin-duration` in `chatter_animations.scss`. */
+const PIN_ANIMATION_DURATION = 500;
 
 Object.assign(Chatter.components, {
     Activity,
@@ -101,6 +104,10 @@ const chatterPatch = {
             showAttachmentLoading: false,
             showScheduledMessages: true,
         });
+        // The pin drops on a click alone. Held apart from the active state,
+        // which outlives the button: it is re-created when moving from one
+        // record to the next, and would drop again on each of them.
+        this.justPinned = useAnimationMark(PIN_ANIMATION_DURATION);
         this.dialog = useService("dialog");
         this.messageSearch = useMessageSearch();
         this.attachmentUploader = useAttachmentUploader(this.thread);
@@ -415,6 +422,7 @@ const chatterPatch = {
         const isOpening = this.state.activePanel !== CHATTER_PANEL.PINNED_MESSAGES;
         this.state.activePanel = isOpening ? CHATTER_PANEL.PINNED_MESSAGES : CHATTER_PANEL.NONE;
         if (isOpening) {
+            this.justPinned.mark();
             this.state.thread?.fetchPinnedMessages();
         }
     },
