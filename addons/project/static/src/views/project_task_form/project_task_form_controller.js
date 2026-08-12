@@ -2,8 +2,7 @@ import { _t } from "@web/core/l10n/translation";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { HistoryDialog } from "@html_editor/components/history_dialog/history_dialog";
 import { useService } from '@web/core/utils/hooks';
-import { useLayoutEffect } from "@web/owl2/utils";
-import { markup, useProps, t } from "@odoo/owl";
+import { markup, onMounted, useProps, t } from "@odoo/owl";
 import { formControllerProps } from "@web/views/form/form_controller";
 import { FormControllerWithHTMLExpander } from '@resource/views/form_with_html_expander/form_controller_with_html_expander';
 import { getHtmlFieldMetadata, setHtmlFieldMetadata } from "@html_editor/fields/html_field";
@@ -33,18 +32,7 @@ export class ProjectTaskFormController extends FormControllerWithHTMLExpander {
         this.notifications = useService("notification");
 
         if (this.props.focusTitle) {
-            useLayoutEffect(
-                () => {
-                    const rootEl = this.rootRef();
-                    if (rootEl) {
-                        const title = rootEl.querySelector("#name_0");
-                        if (title) {
-                            title.focus();
-                        }
-                    }
-                },
-                () => []
-            );
+            onMounted(() => this.rootRef().querySelector("#name_0")?.focus());
         }
     }
 
