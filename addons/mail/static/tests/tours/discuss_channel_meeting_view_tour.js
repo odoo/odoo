@@ -1,8 +1,6 @@
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 
-const CLICK_ON_CHAT_STEP = "click-on-chat-action";
-
 function getMeetingViewTourSteps({ inWelcomePage = false } = {}) {
     const steps = [
         { trigger: ".o-mail-Meeting" },
@@ -24,7 +22,6 @@ function getMeetingViewTourSteps({ inWelcomePage = false } = {}) {
         {
             trigger: ".o-mail-Meeting [title='Chat']",
             run: "click",
-            content: CLICK_ON_CHAT_STEP,
         },
         {
             trigger:
