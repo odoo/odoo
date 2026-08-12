@@ -1,10 +1,12 @@
 <templates>
 
     <t t-name="account.DashboardKanbanRenderer" t-inherit="web.KanbanRenderer" t-inherit-mode="primary">
-        <xpath expr="//t[@t-foreach='this.getGroupsOrRecords()']" position="before">
-            <div t-if="this.coaState.showBanner" class="alert alert-warning d-flex align-items-center p-3" style="margin: calc(var(--KanbanRecord-margin-v) * 0.5) var(--KanbanRecord-margin-h); width: calc(100% - (var(--KanbanRecord-margin-h) * 2));" role="alert">
-                <span>You have updates in your COA package <strong><t t-out="this.coaState.coaName"/></strong>.</span>
-                <a class="mx-2 btn btn-link p-0 align-baseline" role="button" t-on-click="this.reloadCoa">Reload COA</a>
+        <xpath expr="//div[@t-ref='this.rootRef']" position="before">
+            <div t-if="this.coaState.showBanner" class="alert alert-warning d-flex align-items-center p-3 m-3 mb-0" role="alert">
+                <span>
+                    You have updates in your COA package <strong><t t-out="this.coaState.coaName"/></strong>.
+                    <a class="btn btn-link p-0 align-baseline mx-2" role="button" t-on-click="this.reloadCoa">Reload COA</a>
+                </span>
             </div>
         </xpath>
         <xpath expr="//div[@t-ref='this.rootRef']" position="attributes">

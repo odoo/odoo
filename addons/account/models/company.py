@@ -1,7 +1,6 @@
 from collections import defaultdict
 from datetime import timedelta, datetime, date
 import calendar
-import logging
 
 from odoo import fields, models, api, _, Command
 from odoo.exceptions import LockError, ValidationError, UserError, RedirectWarning
@@ -14,8 +13,6 @@ from odoo.addons.account.models.product import ACCOUNT_DOMAIN
 from odoo.addons.base.models.res_partner import _ref_vat
 from odoo.addons.base.models.res_company import company_default_for
 from odoo.fields import Domain
-
-_logger = logging.getLogger(__name__)
 
 
 MONTH_SELECTION = [
@@ -330,8 +327,6 @@ class ResCompany(models.Model):
     has_ledger = fields.Boolean(
         compute='_compute_has_ledger',
     )
-
-    coa_hash = fields.Char(string="COA Hash")
 
     def get_next_batch_payment_communication(self):
         '''

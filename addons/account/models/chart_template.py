@@ -6,7 +6,6 @@ from collections import defaultdict
 from functools import wraps
 from inspect import getmembers
 from copy import deepcopy
-from hashlib import sha256
 
 import logging
 import re
@@ -96,23 +95,6 @@ class AccountChartTemplate(models.AbstractModel):
                 template_register[demo][template][model].append(func)
         cls._template_register = template_register
         return template_register
-
-    @property
-    def _coa_template_hashes(self):
-        registry = self.env.registry
-        if not hasattr(registry, 'coa_template_hashes'):
-            registry.coa_template_hashes = {}
-        return registry.coa_template_hashes
-
-    def _get_coa_template_hash(self, template_code):
-        hashes = self._coa_template_hashes
-        if template_code not in hashes:
-            data = self._get_chart_template_data(template_code)
-            clean_data = {model: dict(vals) for model, vals in data.items()}
-            coa_str = str(clean_data)
-            from hashlib import sha256
-            hashes[template_code] = sha256(coa_str.encode('utf-8')).hexdigest()
-        return hashes[template_code]
 
     def _post_model_setup__(self):
         super()._post_model_setup__()
@@ -264,8 +246,6 @@ class AccountChartTemplate(models.AbstractModel):
         self._load_data(data)
         self._post_load_data(template_code, company, template_data)
         self._load_translations(companies=company)
-
-        company.coa_hash = self._get_coa_template_hash(template_code)
 
         # Install the demo data when the first localization is instanciated on the company
         if install_demo and not reload_template:
