@@ -20,6 +20,21 @@ class ResourceCalendar(models.Model):
     def _compute_hours_per_day(self):
         super()._compute_hours_per_day()
 
+    def _get_reference_hours_per_day(self, day):
+        """
+        Attendances counted as an absence, like a partial incapacity or a rest day, are left out
+        of hours_per_day, but the employee is not available on them either. The theoretical day
+        of such a day is therefore the whole span the calendar defines for it.
+        """
+        hours_per_day = super()._get_reference_hours_per_day(day)
+        attendances = self.sudo().attendance_ids._filter_by_date(day)
+        has_absence = any(attendance.work_entry_type_id.count_as == 'absence' for attendance in attendances)
+        # Only a day holding an absence needs another reference than the average day.
+        if not has_absence:
+            return hours_per_day
+        # The average day stays a minimum, so a day made of absences only still counts in full.
+        return max(hours_per_day, sum(attendances.mapped('duration_hours')))
+
     def _work_intervals_batch(self, start_dt, end_dt, resources_per_tz=None, domain=None, compute_leaves=True):
         work_intervals = super()._work_intervals_batch(
             start_dt,
