@@ -857,7 +857,7 @@ export class RelationalModel extends Model {
             unfold_read_specification: unfoldReadSpecification,
             unfold_read_default_limit: this.initialLimit,
             groupby_read_specification: groupByReadSpecification,
-            context: { read_group_expand: true, ...config.context },
+            context: { bin_size: true, read_group_expand: true, ...config.context },
         };
         const orm = cache ? this.orm.cache(cache) : this.orm;
         const result = await orm.webReadGroup(
