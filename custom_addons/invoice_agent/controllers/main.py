@@ -36,6 +36,7 @@ Why ``auth='none'`` on the upload route:
 
 import functools
 import logging
+import time
 
 from werkzeug.exceptions import BadRequest, NotFound, Unauthorized
 
@@ -126,7 +127,7 @@ class InvoiceAgentController(http.Controller):
         methods=["POST"],
         csrf=False,
         save_session=False,
-        readonly=False,  
+        readonly=False,
     )
     @_require_bearer_auth
     def invoice_agent_upload(self, **kwargs):
@@ -214,7 +215,6 @@ class InvoiceAgentController(http.Controller):
             )
         request.update_env(user=uid)
 
-
         # ---- Store the source document ----
         attachment = request.env["ir.attachment"].create(
             {
@@ -275,6 +275,66 @@ class InvoiceAgentController(http.Controller):
                 },
             },
             status=201,
+        )
+
+    # ------------------------------------------------------------------
+    # POST /invoice_agent/measure/trigger  (dev-only measurement route)
+    # ------------------------------------------------------------------
+    # Dev-only endpoint that exercises the *exact* worker hold of a real
+    # Claude call without credentials or API spend: it runs
+    # ``invoice.llm.service.extract_invoice`` synchronously inside a regular
+    # HTTP worker. When the ``invoice_agent.measure_delay`` config parameter
+    # is set (seconds), ``_client()`` sleeps inside the worker for that
+    # duration before failing on the missing API key — the elapsed time
+    # returned is the proof that one extraction holds one HTTP worker for
+    # the full Claude round-trip.
+    #
+    # Used by scripts/measure_blocking.py (ADR-003 evidence). Not for
+    # production use: no authentication, no rate limiting, deliberately
+    # minimal.
+    # ------------------------------------------------------------------
+    @http.route(
+        "/invoice_agent/measure/trigger",
+        type="http",
+        auth="none",
+        methods=["POST"],
+        csrf=False,
+        save_session=False,
+    )
+    def invoice_agent_measure_trigger(self, **kwargs):
+        """Run one synchronous Claude client-construction inside this worker.
+
+        Returns the wall-clock time the worker spent inside the Claude call
+        path (the ``measure_delay`` sleep in ``invoice.llm.service._client``).
+        A 200 response with ``elapsed_seconds`` near the configured delay is
+        the measured proof that the request occupied a whole worker process
+        for the duration — exactly where a real Claude round-trip holds it.
+
+        ``_client()`` is called instead of ``extract_invoice()`` because the
+        latter is an ``@api.model`` method that begins with ``ensure_one()``
+        and would raise immediately on the empty model recordset; the sleep
+        hook lives in ``_client()`` regardless.
+        """
+        started = time.monotonic()
+        try:
+            self.env["invoice.llm.service"]._client()
+        except Exception as exc:
+            _logger.info(
+                "invoice_agent measure trigger: client build raised %s after "
+                "%.2fs (expected when no API key is configured)",
+                type(exc).__name__,
+                time.monotonic() - started,
+            )
+        return request.make_json_response(
+            {
+                "jsonrpc": "2.0",
+                "id": None,
+                "result": {
+                    "elapsed_seconds": round(time.monotonic() - started, 3),
+                    "endpoint": "/invoice_agent/measure/trigger",
+                },
+            },
+            status=200,
         )
 
     # ------------------------------------------------------------------

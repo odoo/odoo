@@ -1,0 +1,259 @@
+openapi: 3.1.0
+info:
+  title: invoice-ai — Vendor Invoice Extraction Service
+  version: 1.0.0
+  description: |
+    Standalone extraction service for the `invoice_agent` Odoo addon
+    (ADR-003). Owns OCR, the Anthropic Claude call, and prompt handling so
+    the 5-20 s LLM round-trip never pins an Odoo HTTP worker.
+
+    Boundary contract, locked before any client exists:
+    * `/v1` prefix is versioned and stable — breaking changes ship as
+      `/v2`, never as mutations of `/v1`.
+    * One endpoint family: extract + health. No per-feature services.
+    * Every failure returns the `ErrorEnvelope` shape below.
+
+    Schemas mirror `custom_addons/invoice_agent/models/invoice_extraction.py`
+    verbatim: `additionalProperties: false` everywhere (pydantic `extra="forbid"`),
+    explicit `required`, no numeric/length constraints, line-level `confidence`
+    optional, `field_confidence` + `notes` advisory.
+servers:
+  - url: http://localhost:8100
+    description: Local dev (uvicorn app.main:app)
+
+tags:
+  - name: Extraction
+  - name: Ops
+
+paths:
+  /v1/extract:
+    post:
+      tags: [Extraction]
+      operationId: extractInvoice
+      summary: Extract structured invoice data from a PDF/image or OCR text
+      description: |
+        Accept either a multipart upload (`file`: PDF or raster image,
+        max 10 MB) OR a plain-text field (`text`: pre-OCR'd text). When a
+        PDF/image is given the service OCRs it with Tesseract
+        (`app/ocr.py`, psm 6 @ 300 DPI) before calling Claude
+        (structured outputs, `output_format=InvoiceExtraction`, prompt
+        `prompts/v3.md` with cache_control on the frozen system block).
+
+        Returns the schema-validated extraction plus usage metadata.
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              oneOf:
+                - required: [file]
+                  properties:
+                    file:
+                      type: string
+                      format: binary
+                      description: PDF or PNG/JPEG/TIFF scan. Max 10 MiB.
+                    effort:
+                      type: string
+                      enum: [normal, high]
+                      default: normal
+                - required: [text]
+                  properties:
+                    text:
+                      type: string
+                      minLength: 1
+                      description: Raw OCR text of the invoice.
+                    effort:
+                      type: string
+                      enum: [normal, high]
+                      default: normal
+      responses:
+        "200":
+          description: Schema-validated extraction
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExtractionResponse"
+        "400":
+          $ref: "#/components/responses/ErrorEnvelope"
+        "413":
+          description: Upload larger than the 10 MiB limit
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorEnvelope"
+        "415":
+          description: Uploaded file is neither PDF nor a supported image mimetype
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorEnvelope"
+        "422":
+          description: Claude output failed schema validation (never persisted)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorEnvelope"
+        "429":
+          description: Upstream Anthropic rate limit
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorEnvelope"
+        "503":
+          description: Upstream AI provider unavailable (rate limit or API error)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorEnvelope"
+
+  /healthz:
+    get:
+      tags: [Ops]
+      operationId: healthz
+      summary: Liveness probe
+      responses:
+        "200":
+          description: Service is alive
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthResponse"
+
+components:
+  schemas:
+    # ----------------------------------------------------------------
+    # Mirrors custom_addons/invoice_agent/models/invoice_extraction.py
+    # verbatim. additionalProperties:false everywhere; required only where
+    # a real vendor invoice always carries the field; no constraints.
+    # ----------------------------------------------------------------
+    InvoiceExtraction:
+      type: object
+      additionalProperties: false
+      required: [vendor_name, invoice_date, currency, amount_total, lines]
+      properties:
+        vendor_name:
+          type: string
+        vendor_vat:
+          type: [string, "null"]
+        invoice_date:
+          type: string
+          format: date
+        due_date:
+          type: [string, "null"]
+          format: date
+        currency:
+          type: string
+          description: ISO-4217 code, e.g. EUR
+        subtotal:
+          type: [number, "null"]
+        tax_total:
+          type: [number, "null"]
+        amount_total:
+          type: number
+        lines:
+          type: array
+          items:
+            $ref: "#/components/schemas/InvoiceLine"
+        field_confidence:
+          $ref: "#/components/schemas/ExtractionFieldConfidence"
+        notes:
+          type: [string, "null"]
+
+    InvoiceLine:
+      type: object
+      additionalProperties: false
+      required: [name, quantity, price_unit]
+      properties:
+        name:
+          type: string
+        quantity:
+          type: number
+        price_unit:
+          type: number
+        confidence:
+          type: [number, "null"]
+
+    ExtractionFieldConfidence:
+      type: object
+      additionalProperties: false
+      properties:
+        overall: { type: [number, "null"], minimum: 0, maximum: 1 }
+        vendor_name: { type: [number, "null"], minimum: 0, maximum: 1 }
+        vendor_vat: { type: [number, "null"], minimum: 0, maximum: 1 }
+        invoice_date: { type: [number, "null"], minimum: 0, maximum: 1 }
+        due_date: { type: [number, "null"], minimum: 0, maximum: 1 }
+        currency: { type: [number, "null"], minimum: 0, maximum: 1 }
+        subtotal: { type: [number, "null"], minimum: 0, maximum: 1 }
+        tax_total: { type: [number, "null"], minimum: 0, maximum: 1 }
+        amount_total: { type: [number, "null"], minimum: 0, maximum: 1 }
+        lines: { type: [number, "null"], minimum: 0, maximum: 1 }
+
+    ExtractionResponse:
+      type: object
+      additionalProperties: false
+      required: [extraction, usage]
+      properties:
+        extraction:
+          $ref: "#/components/schemas/InvoiceExtraction"
+        usage:
+          type: object
+          additionalProperties: false
+          properties:
+            input_tokens:
+              type: [integer, "null"]
+            cache_creation_input_tokens:
+              type: [integer, "null"]
+            cache_read_input_tokens:
+              type: [integer, "null"]
+            output_tokens:
+              type: [integer, "null"]
+        model:
+          type: string
+          example: claude-opus-4-8
+
+    ErrorEnvelope:
+      type: object
+      additionalProperties: false
+      required: [error]
+      properties:
+        error:
+          type: object
+          additionalProperties: false
+          required: [code, message]
+          properties:
+            code:
+              type: string
+              description: |
+                Stable machine code. Extraction codes:
+                * E4001 bad request (missing file/text, empty text)
+                * E4131 upload too large
+                * E4151 unsupported mimetype
+                * E4221 validation failed (Claude output rejected)
+                * E4291 upstream rate limit (Retry-After recommended)
+                * E5031 upstream provider error
+            message:
+              type: string
+            retry_after_seconds:
+              type: [integer, "null"]
+              description: From the Anthropic Retry-After header, when present.
+            details:
+              type: [object, "null"]
+              additionalProperties: true
+
+    HealthResponse:
+      type: object
+      additionalProperties: false
+      required: [status]
+      properties:
+        status:
+          type: string
+          enum: [ok]
+
+  responses:
+    ErrorEnvelope:
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorEnvelope"
