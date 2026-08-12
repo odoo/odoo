@@ -4,6 +4,7 @@ import { BomOverviewDisplayFilter } from "../bom_overview_display_filter/mrp_bom
 
 export const SHOW_OPTIONS = t.object({
     uom: t.boolean(),
+    toReplenish: t.boolean(),
     replenishments: t.boolean(),
     availabilities: t.boolean(),
     receipts: t.boolean(),

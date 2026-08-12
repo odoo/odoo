@@ -100,6 +100,7 @@ export class MoOverview extends Component {
     getDefaultConfig() {
         return {
             uom: false,
+            toReplenish: false,
             replenishments: true,
             availabilities: true,
             receipts: true,
@@ -170,6 +171,10 @@ export class MoOverview extends Component {
 
     get isProductionDone() {
         return this.state.data?.summary?.state === "done";
+    }
+
+    get isProductionCancelled() {
+        return this.state.data?.summary?.state === "cancel";
     }
 
     get hasOperations() {
