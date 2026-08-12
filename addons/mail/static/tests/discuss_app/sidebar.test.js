@@ -16,9 +16,13 @@ import {
     waitStoreFetch,
     MENU_ACTIVE_IDS,
 } from "@mail/../tests/mail_test_helpers";
-import { insertTextInComposer } from "@mail/../tests/mail_test_helpers_composer";
+import {
+    containsTextInComposer,
+    insertTextInComposer,
+} from "@mail/../tests/mail_test_helpers_composer";
 import { PEEK_TAB_DELAY } from "@mail/core/public_web/messaging_menu/messaging_menu";
 import { PEEK_CLOSE_DELAY, PEEK_DELAY } from "@mail/utils/common/hooks";
+import { toRawValue } from "@mail/utils/common/local_storage";
 import { describe, expect, mockTouch, test, waitFor } from "@odoo/hoot";
 import {
     animationFrame,
@@ -46,6 +50,83 @@ import { range } from "@web/core/utils/numbers";
 
 describe.current.tags("desktop");
 defineMailModels();
+
+test("sidebar shows draft indicator and drafts are sorted first", async () => {
+    const pyEnv = await startServer();
+    const [zuluId, alphaId] = pyEnv["discuss.channel"].create([
+        { name: "Zulu", channel_type: "channel" },
+        { name: "Alpha", channel_type: "channel" },
+    ]);
+    pyEnv["mail.message"].create({
+        body: "Hi",
+        message_type: "comment",
+        model: "discuss.channel",
+        res_id: alphaId,
+    });
+    await start();
+    await openDiscuss(zuluId);
+    await insertTextInComposer(".o-mail-Composer", "Hello");
+    await waitFor(
+        ".o-mail-NotificationItem:has(:text('Zulu')) .text-danger:text('Draft'):count(1)"
+    );
+    await waitFor(
+        ".o-mail-NotificationItem:has(:text('Zulu')) .o-mail-MessagingMenuItem-body:text('Hello')"
+    );
+    await mailContains(".o-mail-NotificationItem:has(:text('Zulu'))", {
+        before: [".o-mail-NotificationItem:has(:text('Alpha'))"],
+    });
+    await contains(".o-mail-NotificationItem:has(:text('Alpha')):count(1)").click();
+    await waitFor(".o-mail-DiscussContent-threadName:value(Alpha):count(1)");
+    await waitFor(
+        ".o-mail-NotificationItem:has(:text('Zulu')) .text-danger:text('Draft'):count(1)"
+    );
+    await waitFor(
+        ".o-mail-NotificationItem:has(:text('Zulu')) .o-mail-MessagingMenuItem-body:text('Hello')"
+    );
+    await mailContains(".o-mail-NotificationItem:has(:text('Zulu'))", {
+        before: [".o-mail-NotificationItem:has(:text('Alpha'))"],
+    });
+    await contains(".o-mail-NotificationItem:has(:text('Zulu')):count(1)").click();
+    await waitFor(".o-mail-DiscussContent-threadName:value(Zulu):count(1)");
+    await containsTextInComposer(".o-mail-Composer", "Hello");
+    await mailContains(".o-mail-NotificationItem:has(:text('Zulu'))", {
+        before: [".o-mail-NotificationItem:has(:text('Alpha'))"],
+    });
+    await press("Enter");
+    await waitFor(".o-mail-Message-content:text('Hello')");
+    await contains(".o-mail-NotificationItem:has(:text('Alpha')):count(1)").click();
+    await waitFor(".o-mail-DiscussContent-threadName:value(Alpha):count(1)");
+    await waitFor(
+        ".o-mail-NotificationItem:has(:text('Zulu')) .o-mail-MessagingMenuItem-body:text('You: Hello')"
+    );
+    await waitForNone(".o-mail-NotificationItem:has(:text('Zulu')) .text-danger:text('Draft')");
+});
+
+test("sidebar loads a draft channel first even when older than a full page", async () => {
+    const pyEnv = await startServer();
+    const draftId = pyEnv["discuss.channel"].create({
+        channel_type: "channel",
+        last_interest_dt: "2020-01-01 00:00:00",
+        name: "Drafty",
+    });
+    pyEnv["discuss.channel"].create(
+        range(0, 20).map((i) => ({
+            channel_type: "channel",
+            last_interest_dt: "2025-01-01 00:00:00",
+            name: `Recent ${i}`,
+        }))
+    );
+    localStorage.setItem(`discuss.channel,${draftId}:draftPreview`, toRawValue("Not sent yet"));
+    await start();
+    await openDiscuss();
+    await contains(".o-mail-MessagingMenu-tab[data-id='channel']:count(1)").click();
+    await waitFor(
+        ".o-mail-NotificationItem:has(:text('Drafty')) .text-danger:text('Draft'):count(1)"
+    );
+    await mailContains(".o-mail-NotificationItem:has(:text('Drafty'))", {
+        before: [".o-mail-NotificationItem:has(:text('Recent 19'))"],
+    });
+});
 
 test("default thread rendering", async () => {
     const pyEnv = await startServer();

@@ -13,6 +13,9 @@ import { useAncestors } from "@mail/core/common/ancestor_plugin";
 import {
     Component,
     computed,
+    onMounted,
+    onPatched,
+    onWillPatch,
     providePlugins,
     signal,
     types,
@@ -30,6 +33,62 @@ import { useDebounced } from "@web/core/utils/timing";
 
 /** How long the pointer rests on a tab for the shown list to change to it. */
 export const PEEK_TAB_DELAY = 50;
+/** How long a re-ordered row stays in place before it slides, so it does not leave at the first key. */
+const REORDER_DELAY = 300;
+/** How long a re-ordered row takes to slide to its new place. */
+const REORDER_DURATION = 200;
+
+/**
+ * Slides the rows of the list from their previous place when they only change order.
+ *
+ * @param {import("@odoo/owl").Signal<HTMLElement|null>} listRef
+ * @param {() => string[]} keys keys of the rows, in their order
+ */
+function useReorderSlide(listRef, keys) {
+    let previousKeys = [];
+    /** @type {Map<HTMLElement, number>|undefined} */
+    let previousTops;
+    /** @type {WeakMap<HTMLElement, Animation>} */
+    const slides = new WeakMap();
+    const rows = () => [
+        ...(listRef()?.querySelectorAll(":scope > .o-mail-MessagingMenuItem") ?? []),
+    ];
+    onMounted(() => (previousKeys = keys()));
+    onWillPatch(() => {
+        const nextKeys = keys();
+        const known = new Set(previousKeys);
+        const reordered =
+            nextKeys.length === previousKeys.length &&
+            nextKeys.every((key) => known.has(key)) &&
+            nextKeys.some((key, i) => key !== previousKeys[i]);
+        previousKeys = nextKeys;
+        previousTops = reordered
+            ? new Map(rows().map((el) => [el, el.getBoundingClientRect().top]))
+            : undefined;
+    });
+    onPatched(() => {
+        if (!previousTops) {
+            return;
+        }
+        for (const el of rows()) {
+            slides.get(el)?.cancel();
+            const offset = previousTops.get(el) - el.getBoundingClientRect().top;
+            if (!offset) {
+                continue;
+            }
+            slides.set(
+                el,
+                el.animate([{ transform: `translateY(${offset}px)` }, { transform: "none" }], {
+                    delay: REORDER_DELAY,
+                    duration: REORDER_DURATION,
+                    easing: "cubic-bezier(0.2, 0, 0, 1)",
+                    fill: "backwards",
+                })
+            );
+        }
+        previousTops = undefined;
+    });
+}
 
 export class MessagingMenu extends Component {
     static components = {
@@ -149,6 +208,12 @@ export class MessagingMenu extends Component {
                 tab.loadMore({ filter: tab.defaultFilter });
             }
         });
+        useReorderSlide(this.tabContentRef, () => this.rowKeys());
+    }
+
+    /** Keys of the rows of the list, in their order. */
+    rowKeys() {
+        return this.messages().map((m) => m.localId);
     }
 
     get isEmpty() {

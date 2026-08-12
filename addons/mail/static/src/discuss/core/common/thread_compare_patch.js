@@ -5,6 +5,21 @@ import { compareDatetime } from "@mail/utils/common/misc";
  * @param {import("models").Thread} thread1
  * @param {import("models").Thread} thread2
  */
+export function compareDrafts(thread1, thread2) {
+    const c1Draft = Boolean(thread1.channel?.isDraftOrSending);
+    const c2Draft = Boolean(thread2.channel?.isDraftOrSending);
+    if (c2Draft && !c1Draft) {
+        return 1;
+    }
+    if (c1Draft && !c2Draft) {
+        return -1;
+    }
+}
+
+/**
+ * @param {import("models").Thread} thread1
+ * @param {import("models").Thread} thread2
+ */
 export function compareFavorites(thread1, thread2) {
     const c1Fav = Boolean(thread1.channel?.self_member_id?.is_favorite);
     const c2Fav = Boolean(thread2.channel?.self_member_id?.is_favorite);
@@ -17,6 +32,8 @@ export function compareFavorites(thread1, thread2) {
 }
 
 threadCompareRegistry.add("mail.favorite", compareFavorites, { sequence: 10 });
+
+threadCompareRegistry.add("mail.draft", compareDrafts, { sequence: 15 });
 
 threadCompareRegistry.add(
     "mail.last-interest",

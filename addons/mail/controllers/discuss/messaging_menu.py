@@ -139,12 +139,15 @@ class DiscussMessagingMenuController(WebclientController):
         filter_ids=None,
         exclude_ids=None,
         search_term=None,
+        draft_ids=None,
     ):
         domain = self._get_menu_load_more_domain(tab_id, filter_ids, exclude_ids)
         if search_term:
             domain &= Domain("name", "ilike", search_term)
-        # Favorites first, plus any tab specific priority.
+        # Favorites and drafts first, plus any tab specific priority.
         priority_domain = Domain("self_member_id.is_favorite", "=", True)
+        if draft_ids:
+            priority_domain |= Domain("id", "in", draft_ids)
         if priority_extra_domain := self._get_menu_tab_priority_domain(tab_id):
             priority_domain |= priority_extra_domain
         channels = self.env["discuss.channel"].search_fetch(
