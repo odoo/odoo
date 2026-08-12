@@ -11,6 +11,7 @@ from odoo import tests
 from odoo.tests.common import MockHTTPClient
 from odoo.tools.misc import mute_logger, submap
 from odoo.addons.website.controllers.main import Website
+from odoo.addons.website.controllers.backend import WebsiteBackend
 from odoo.addons.http_routing.tests.common import MockRequest
 
 
@@ -240,3 +241,24 @@ class TestControllers(tests.HttpCase):
                 redirect.headers['Location'],
                 f'{self.base_url()}/website/force/{website.id}?isredir=1&path=%2F%3Fa%3Db%26c%3Dd'
             )
+
+    def test_website_fetch_dashboard_data(self):
+        """
+        Test that /website/fetch_dashboard_data defaults to the base.default_website
+        """
+        default_website = self.env.ref('base.default_website')
+        alternative_website = self.env['website'].create({
+            'name': 'Alternative Website',
+        })
+        with MockRequest(self.env):
+            dashboard_data = WebsiteBackend().fetch_dashboard_data(None)
+        # dashboard_data should contain at least default and alternative
+        # website, and only the default one should be selected
+        data_per_website = {
+            website["id"]: website
+            for website in dashboard_data["websites"]
+        }
+        default_website_dashboard = data_per_website[default_website.id]
+        alternative_website_dashboard = data_per_website[alternative_website.id]
+        self.assertTrue(default_website_dashboard.get('selected'))
+        self.assertFalse(alternative_website_dashboard.get('selected'))
