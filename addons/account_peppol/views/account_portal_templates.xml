@@ -12,7 +12,7 @@
                         t-foreach="routing_scheme_list"
                         t-as="eas"
                         t-att-value="eas"
-                        t-att-selected="(routing_scheme or current_eas) == eas"
+                        t-att-selected="current_eas == eas"
                         t-out="eas_value"
                     />
                 </select>
@@ -23,7 +23,7 @@
                     type="text"
                     name="routing_endpoint"
                     class="form-control"
-                    t-att-value="routing_endpoint or current_endpoint"
+                    t-att-value="current_endpoint"
                 />
             </div>
         </select>
