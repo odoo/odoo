@@ -77,6 +77,7 @@ test("presetBtnName", async () => {
     const comp = await mountWithCleanup(OrderWidget, { props: { action: () => {} } });
     const order = await getFilledSelfOrder(store);
 
+    store.session.state = "opened";
     store.config.use_presets = true;
     order.preset_id = false;
     expect(comp.presetBtnName).toBe(null);
