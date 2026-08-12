@@ -16,7 +16,7 @@ class Website(models.Model):
 
     def get_suggested_controllers(self):
         suggested_controllers = super().get_suggested_controllers()
-        suggested_controllers.append((_('Forum'), self.env['ir.http']._url_for('/forum'), 'website_forum'))
+        suggested_controllers.append((_('Forum'), self.env['ir.http']._url_for('/forum')))
         return suggested_controllers
 
     def configurator_get_footer_links(self):
