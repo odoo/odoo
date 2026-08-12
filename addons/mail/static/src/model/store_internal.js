@@ -4,7 +4,7 @@
 import { htmlEscape, markup, toRaw } from "@odoo/owl";
 import { RecordInternal } from "./record_internal";
 import { deserializeDate, deserializeDateTime } from "@web/core/l10n/dates";
-import { IS_DELETED_SYM, isCommand, isMany } from "./misc";
+import { isCommand, isMany } from "./misc";
 import { browser } from "@web/core/browser/browser";
 import { parseRawValue } from "@mail/utils/common/local_storage";
 
@@ -28,8 +28,6 @@ export class StoreInternal extends RecordInternal {
     RO_QUEUE = new Map(); // record-onchanges
     /** @type {Map<Record, true>} */
     RD_QUEUE = new Map(); // record-deletes
-    /** @type {Map<Record, true>} */
-    RHD_QUEUE = new Map(); // record-hard-deletes
     ERRORS = [];
     UPDATE = 0;
     /**
@@ -75,7 +73,7 @@ export class StoreInternal extends RecordInternal {
     }
 
     /**
-     * @param {"compute"|"sort"|"onAdd"|"onDelete"|"onUpdate"|"hard_delete"} type
+     * @param {"compute"|"sort"|"onAdd"|"onDelete"|"onUpdate"} type
      * @param {...any} params
      */
     ADD_QUEUE(type, ...params) {
@@ -162,16 +160,6 @@ export class StoreInternal extends RecordInternal {
                     this.FU_QUEUE.set(record, recMap);
                 }
                 recMap.set(fieldName, true);
-                break;
-            }
-            case "hard_delete": {
-                /** @type {import("./record").Record} */
-                const [record] = params;
-                record._proxy[IS_DELETED_SYM] = true;
-                delete record.Model.records[record.localId];
-                if (!this.RHD_QUEUE.has(record)) {
-                    this.RHD_QUEUE.set(record, true);
-                }
                 break;
             }
         }
