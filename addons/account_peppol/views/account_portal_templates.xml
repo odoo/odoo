@@ -7,7 +7,7 @@
                 <label class="col-form-label label-optional" for="routing_scheme">
                     Peppol e-Address (EAS)
                 </label>
-                <select name="routing_scheme">
+                <select name="routing_scheme" class="form-select">
                     <option
                         t-foreach="routing_scheme_list"
                         t-as="eas"
@@ -22,6 +22,7 @@
                 <input
                     type="text"
                     name="routing_endpoint"
+                    class="form-control"
                     t-att-value="routing_endpoint or current_endpoint"
                 />
             </div>
