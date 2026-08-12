@@ -231,15 +231,6 @@ patch(PosStore.prototype, {
         if (!this.config.down_payment_product_id && this.config.raw.down_payment_product_id) {
             await this.data.read("product.product", [this.config.raw.down_payment_product_id]);
         }
-        if (!this.config.down_payment_product_id) {
-            this.dialog.add(AlertDialog, {
-                title: _t("No down payment product"),
-                body: _t(
-                    "It seems that you didn't configure a down payment product in your point of sale. You can go to your point of sale settings to choose one."
-                ),
-            });
-            return;
-        }
         const colorClassMap = {
             [DECIMAL.value]: "o_colorlist_item_numpad_color_6",
             Backspace: "o_colorlist_item_numpad_color_1",
@@ -275,15 +266,6 @@ patch(PosStore.prototype, {
     async loadDownPaymentProduct() {
         if (!this.config.down_payment_product_id && this.config.raw.down_payment_product_id) {
             await this.data.read("product.product", [this.config.raw.down_payment_product_id]);
-        }
-        if (!this.config.down_payment_product_id) {
-            this.dialog.add(AlertDialog, {
-                title: _t("No down payment product"),
-                body: _t(
-                    "It seems that you didn't configure a down payment product in your point of sale. You can go to your point of sale configuration to choose one."
-                ),
-            });
-            return;
         }
     },
     addDownPaymentProductOrderlineToOrder(saleOrder, amount, isPercentage) {
