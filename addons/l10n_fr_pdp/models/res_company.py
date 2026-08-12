@@ -270,7 +270,7 @@ class ResCompany(models.Model):
         base_url = self._pdp_get_iap_url()
         response = iap_tools.iap_jsonrpc(f'{base_url}/api/signaturit_id_authentication/1/kyc_status', params={
             'object_uuid': self.pdp_authentication_uuid,
-        })
+        }, raise_user_error=True)
         kyc_status = response.get('kyc_status')
         if kyc_status == 'success':
             self.pdp_kyc_status = kyc_status
