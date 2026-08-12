@@ -769,7 +769,8 @@ class TestQWebBasic(TransactionCase):
 
         IrQweb = self.env['ir.qweb']
         for expr, q_values, result in tests:
-            expr_namespace = IrQweb._compile_expr(expr)
+            compile_context = {}
+            expr_namespace = IrQweb._compile_expr(expr, compile_context)
 
             compiled = compile("""def test(values):\n  values['result'] = %s""" % expr_namespace, '<test>', 'exec')
             globals_dict = IrQweb._IrQweb__prepare_globals()

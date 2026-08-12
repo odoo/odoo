@@ -1479,7 +1479,7 @@ class IrQweb(models.AbstractModel):
 
     # compile python expression and format string
 
-    def _compile_format(self, expr):
+    def _compile_format(self, expr, compile_context):
         """ Parses the provided format string and compiles it to a single
         expression python, uses string with format method.
         Use format is faster to concat string and values.
@@ -1488,7 +1488,7 @@ class IrQweb(models.AbstractModel):
         # =>
         # values['name'] = 'Hello %s %%s !' % (values['world'],)
         values = [
-            f'self._compile_to_str({self._compile_expr(m.group(1) or m.group(2))})'
+            f'self._compile_to_str({self._compile_expr(m.group(1) or m.group(2), compile_context)})'
             for m in FORMAT_REGEX.finditer(expr)
         ]
         if not values:
@@ -1655,7 +1655,7 @@ class IrQweb(models.AbstractModel):
 
         return ''.join(code)
 
-    def _compile_expr(self, expr, raise_on_missing=False):
+    def _compile_expr(self, expr, compile_context, raise_on_missing=False):
         """Transform string coming into a python instruction in textual form by
         adding the namepaces for the dynamic values.
         This method tokenize the string and call ``_compile_expr_tokens``
@@ -1970,15 +1970,15 @@ class IrQweb(models.AbstractModel):
             if key.startswith('t-options-'):
                 value = el.attrib.pop(key)
                 option_name = key[10:]
-                dict_options.append(f'{option_name!r}:{self._compile_expr(value)}')
+                dict_options.append(f'{option_name!r}:{self._compile_expr(value, compile_context)}')
 
         t_options = el.attrib.pop('t-options', None)
         if t_options and dict_options:
-            code.append(indent_code(f"values['__qweb_options__'] = {{**{self._compile_expr(t_options)}, {', '.join(dict_options)}}}", level))
+            code.append(indent_code(f"values['__qweb_options__'] = {{**{self._compile_expr(t_options, compile_context)}, {', '.join(dict_options)}}}", level))
         elif dict_options:
             code.append(indent_code(f"values['__qweb_options__'] = {{{', '.join(dict_options)}}}", level))
         elif t_options:
-            code.append(indent_code(f"values['__qweb_options__'] = {self._compile_expr(t_options)}", level))
+            code.append(indent_code(f"values['__qweb_options__'] = {self._compile_expr(t_options, compile_context)}", level))
         else:
             code.append(indent_code("values['__qweb_options__'] = {}", level))
 
@@ -2056,14 +2056,14 @@ class IrQweb(models.AbstractModel):
             if key.startswith('t-attf-'):
                 value = el.attrib.pop(key)
                 name = key[7:]
-                code.append(indent_code(f"attrs[{name!r}] = {self._compile_format(value)}", level))
+                code.append(indent_code(f"attrs[{name!r}] = {self._compile_format(value, compile_context)}", level))
             elif key.startswith('t-att-'):
                 value = el.attrib.pop(key)
-                code.append(indent_code(f"attrs[{key[6:]!r}] = {self._compile_expr(value)}", level))
+                code.append(indent_code(f"attrs[{key[6:]!r}] = {self._compile_expr(value, compile_context)}", level))
             elif key == 't-att':
                 value = el.attrib.pop(key)
                 code.append(indent_code(f"""
-                    atts_value = {self._compile_expr(value)}
+                    atts_value = {self._compile_expr(value, compile_context)}
                     if isinstance(atts_value, dict):
                         attrs.update(atts_value)
                     elif isinstance(atts_value, (list, tuple)) and not isinstance(atts_value[0], (list, tuple)):
@@ -2172,18 +2172,18 @@ class IrQweb(models.AbstractModel):
 
             if 't-value' in el.attrib:
                 expr = el.attrib.pop('t-value') or 'None'
-                code.append(indent_code(f"values[{varname!r}] = {self._compile_expr(expr)}", level))
+                code.append(indent_code(f"values[{varname!r}] = {self._compile_expr(expr, compile_context)}", level))
             elif 't-valuef' in el.attrib:
                 exprf = el.attrib.pop('t-valuef')
-                code.append(indent_code(f"values[{varname!r}] = {self._compile_format(exprf)}", level))
+                code.append(indent_code(f"values[{varname!r}] = {self._compile_format(exprf, compile_context)}", level))
             elif 't-valuef.translate' in el.attrib:
                 exprf = el.attrib.pop('t-valuef.translate')
                 if self.env.context.get('edit_translations'):
-                    code.append(indent_code(f"values[{varname!r}] = Markup({self._compile_format(exprf)})", level))
+                    code.append(indent_code(f"values[{varname!r}] = Markup({self._compile_format(exprf, compile_context)})", level))
                 else:
-                    code.append(indent_code(f"values[{varname!r}] = {self._compile_format(exprf)}", level))
+                    code.append(indent_code(f"values[{varname!r}] = {self._compile_format(exprf, compile_context)}", level))
             elif varname[0] == '{':
-                code.append(indent_code(f"values.update({self._compile_expr(varname)})", level))
+                code.append(indent_code(f"values.update({self._compile_expr(varname, compile_context)})", level))
             else:
                 # set the content as value
                 _ref, path, xml = compile_context['_qweb_error_path_xml']
@@ -2273,7 +2273,7 @@ class IrQweb(models.AbstractModel):
         code = self._flush_text(compile_context, level)
 
         _ref, path, xml = compile_context['_qweb_error_path_xml']
-        code.append(indent_code(f"if {self._compile_expr(expr)}:", level))
+        code.append(indent_code(f"if {self._compile_expr(expr, compile_context)}:", level))
         code.append(indent_code(f'# element: {path!r} , {xml!r}', level + 1))
         body = []
         if strip:
@@ -2418,7 +2418,7 @@ class IrQweb(models.AbstractModel):
             """, level))
         else:
             code.append(indent_code(f"""
-                {t_foreach} = {self._compile_expr(expr_foreach)} or []
+                {t_foreach} = {self._compile_expr(expr_foreach, compile_context)} or []
                 if isinstance({t_foreach}, Sized):
                     values[{expr_as + '_size'!r}] = {size} = len({t_foreach})
                 elif ({t_foreach}).__class__ == int:
@@ -2511,7 +2511,7 @@ class IrQweb(models.AbstractModel):
             code = []
             record, field_name = expr.rsplit('.', 1)
             attr_name = 'field_attrs' if compile_context.get('qweb_attrs_created') else 'attrs'
-            code.append(indent_code(f"""{attr_name}, content, force_display = self._get_field({self._compile_expr(record, raise_on_missing=True)}, {field_name!r}, {expr!r}, {el.tag!r}, values.pop('__qweb_options__', {{}}), values)""", level))
+            code.append(indent_code(f"""{attr_name}, content, force_display = self._get_field({self._compile_expr(record, compile_context, raise_on_missing=True)}, {field_name!r}, {expr!r}, {el.tag!r}, values.pop('__qweb_options__', {{}}), values)""", level))
             if compile_context.get('qweb_attrs_created'):
                 code.append(indent_code("""
                     if attrs is None:
@@ -2531,7 +2531,7 @@ class IrQweb(models.AbstractModel):
             if expr == T_CALL_SLOT:
                 code.append(indent_code(f"content = values.get({T_CALL_SLOT}, '')", level))
             else:
-                code.append(indent_code(f"content = {self._compile_expr(expr)}", level))
+                code.append(indent_code(f"content = {self._compile_expr(expr, compile_context)}", level))
 
             if code_options == 'True':
                 attr_name = 'widget_attrs' if compile_context.get('qweb_attrs_created') else 'attrs'
@@ -2702,21 +2702,21 @@ class IrQweb(models.AbstractModel):
             if key.endswith('.f'):
                 name = key.removesuffix(".f")
                 value = el.attrib.pop(key)
-                code.append(indent_code(f"t_call_values[{name!r}] = {self._compile_format(value)}", level))
+                code.append(indent_code(f"t_call_values[{name!r}] = {self._compile_format(value, compile_context)}", level))
             elif key.endswith('.translate'):
                 name = key.removesuffix(".f").removesuffix(".translate")
                 value = el.attrib.pop(key)
                 if self.env.context.get('edit_translations'):
-                    code.append(indent_code(f"t_call_values[{name!r}] = Markup({self._compile_format(value)})", level))
+                    code.append(indent_code(f"t_call_values[{name!r}] = Markup({self._compile_format(value, compile_context)})", level))
                 else:
-                    code.append(indent_code(f"t_call_values[{name!r}] = {self._compile_format(value)}", level))
+                    code.append(indent_code(f"t_call_values[{name!r}] = {self._compile_format(value, compile_context)}", level))
             elif not key.startswith('t-'):
                 value = el.attrib.pop(key)
-                code.append(indent_code(f"t_call_values[{key!r}] = {self._compile_expr(value)}", level))
+                code.append(indent_code(f"t_call_values[{key!r}] = {self._compile_expr(value, compile_context)}", level))
             elif key == 't-args':
                 value = el.attrib.pop(key)
                 code.append(indent_code(f"""
-                    atts_value = {self._compile_expr(value)}
+                    atts_value = {self._compile_expr(value, compile_context)}
                     if isinstance(atts_value, dict):
                         t_call_values.update(atts_value)
                     elif isinstance(atts_value, (list, tuple)) and not isinstance(atts_value[0], (list, tuple)):
@@ -2725,7 +2725,7 @@ class IrQweb(models.AbstractModel):
                         t_call_values.update(dict(atts_value))
                     """, level))
 
-        template = expr if expr.isnumeric() else self._compile_format(expr)
+        template = expr if expr.isnumeric() else self._compile_format(expr, compile_context)
 
         # call
         code.append(indent_code(f"""
