@@ -53,6 +53,7 @@
         'views/mv_prelog_data_mirror_views.xml',
         'views/mv_prelog_data_mirrors_views.xml',
         'views/mv_prelog_data_views.xml',
+        'views/mv_prelog_import_job_views.xml',
         'views/mv_prelog_fuzzy_match_views.xml',
         'views/mv_programs_views.xml',
         'views/mv_pto_views.xml',

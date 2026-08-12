@@ -123,6 +123,12 @@ class PrelogImportEngine:
             vals_list.append(vals)
         return vals_list, summary
 
+    def build_row_vals(self, row, import_week, version, row_index):
+        return self._build_row_vals(row, import_week, version, row_index)
+
+    def export_field_names(self):
+        return list(self._field_map().keys())
+
     def _normalize_row(self, row):
         normalized = {}
         for canonical_name, candidates in self._field_map().items():
