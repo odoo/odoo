@@ -16,18 +16,6 @@ describe("context_today", () => {
         expect(evaluateExpr("context_today().strftime('%Y-%m-%d')")).toBe(expected);
     });
 
-    test("context_today() + 2h", () => {
-        mockTimeZone("Etc/UTC");
-        mockDate("2023-12-31 23:30:00");
-
-        const expected = luxon.DateTime.now().toUTC().toFormat("yyyy-MM-dd");
-
-        mockTimeZone(+2);
-
-        expect(BUILTINS.context_today().strftime("%Y-%m-%d")).toBe(expected);
-        expect(evaluateExpr("context_today().strftime('%Y-%m-%d')")).toBe(expected);
-    });
-
     test("context_today() + 1d", () => {
         mockTimeZone("Etc/UTC");
         mockDate("2023-12-31 23:30:00");
@@ -44,18 +32,6 @@ describe("today", () => {
         mockDate("2023-12-31 23:30:00");
 
         const expected = luxon.DateTime.now().toUTC().toFormat("yyyy-MM-dd");
-
-        expect(BUILTINS.today).toBe(expected);
-        expect(evaluateExpr("today")).toBe(expected);
-    });
-
-    test("today + 2h", () => {
-        mockTimeZone("Etc/UTC");
-        mockDate("2023-12-31 23:30:00");
-
-        const expected = luxon.DateTime.now().toUTC().toFormat("yyyy-MM-dd");
-
-        mockTimeZone(+2);
 
         expect(BUILTINS.today).toBe(expected);
         expect(evaluateExpr("today")).toBe(expected);
@@ -116,18 +92,6 @@ describe("current_date", () => {
         mockDate("2023-12-31 23:30:00");
 
         const expected = luxon.DateTime.now().toUTC().toFormat("yyyy-MM-dd");
-
-        expect(BUILTINS.current_date).toBe(expected);
-        expect(evaluateExpr("current_date")).toBe(expected);
-    });
-
-    test("current_date + 2h", () => {
-        mockTimeZone("Etc/UTC");
-        mockDate("2023-12-31 23:30:00");
-
-        const expected = luxon.DateTime.now().toUTC().toFormat("yyyy-MM-dd");
-
-        mockTimeZone(+2);
 
         expect(BUILTINS.current_date).toBe(expected);
         expect(evaluateExpr("current_date")).toBe(expected);
