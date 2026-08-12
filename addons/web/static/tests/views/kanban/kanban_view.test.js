@@ -10380,3 +10380,24 @@ test("[Offline] disable new button even if previously visited (on_create)", asyn
     await setOffline(true);
     expect("button.o-kanban-button-new").toHaveClass("o_disabled_offline");
 });
+
+test("web_read_group must not load base64 images", async () => {
+    onRpc("web_read_group", async (args) => {
+        expect.step("web_read_group");
+        expect(args.kwargs.context.bin_size).toBe(true);
+        expect(args.kwargs.context.read_group_expand).toBe(true);
+    });
+    await mountView({
+        type: "kanban",
+        resModel: "partner",
+        arch: `
+            <kanban default_group_by="product_id">
+                <templates>
+                    <t t-name="card">
+                        <field name="display_name" />
+                    </t>
+                </templates>
+            </kanban>`,
+    });
+    expect.verifySteps(["web_read_group"]);
+});
