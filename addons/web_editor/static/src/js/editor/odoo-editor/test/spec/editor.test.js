@@ -6972,6 +6972,46 @@ X[]
                 });
             });
         });
+        describe('resizing columns', () => {
+            const dragRightBorder = async (cell, delta) => {
+                const rect = cell.getBoundingClientRect();
+                const clientY = rect.y + rect.height / 2;
+                await triggerEvent(cell, 'mousedown', { clientX: rect.right - 1, clientY });
+                await triggerEvent(cell, 'mousemove', { clientX: rect.right + delta, clientY });
+                await triggerEvent(cell, 'mouseup', { clientX: rect.right + delta, clientY });
+            };
+            const contentBefore = unformat(
+                `<table><tbody>
+                    <tr>
+                        <td colspan="2" style="width: 200px;"><p>[]11</p></td>
+                    </tr>
+                    <tr>
+                        <td style="width: 100px;"><p>21</p></td>
+                        <td style="width: 100px;"><p>22</p></td>
+                    </tr>
+                </tbody></table>`
+            );
+            it('should resize the last column when the first row has fewer cells', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore,
+                    stepFunction: async (editor) => {
+                        const cell = editor.editable.querySelector('tr:last-child td:last-child');
+                        const width = cell.getBoundingClientRect().width;
+                        await dragRightBorder(cell, 50);
+                        window.chai.expect(parseFloat(cell.style.width)).to.be.closeTo(width + 50, 1);
+                    },
+                });
+            });
+            it('should not crash when resizing a middle column and the first row has fewer cells', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore,
+                    stepFunction: async (editor) => {
+                        const cell = editor.editable.querySelector('tr:last-child td:first-child');
+                        await dragRightBorder(cell, 20);
+                    },
+                });
+            });
+        });
         describe('swapping rows', () => {
             it('should maintain widths when moving first row down', async () => {
                 await testEditor(BasicEditor, {
