@@ -1,6 +1,6 @@
 import { PgSnapshot } from "@mail/model/field_version";
 import { Record } from "./record";
-import { STORE_SYM, modelRegistry } from "./misc";
+import { IS_DELETED_SYM, STORE_SYM, modelRegistry } from "./misc";
 
 import { immediateEffect, proxy, toRaw, untrack } from "@odoo/owl";
 
@@ -38,8 +38,8 @@ export class Store extends Record {
             this.handleError(err);
         }
         this._.UPDATE--;
-        const deletingRecordsByLocalId = new Map();
         if (this._.UPDATE === 0) {
+            const deletingRecordsByLocalId = new Map();
             // pretend an increased update cycle so that nothing in queue creates many small update cycles
             this._.UPDATE++;
             while (
@@ -49,8 +49,7 @@ export class Store extends Record {
                 this._.FD_QUEUE.size > 0 ||
                 this._.FU_QUEUE.size > 0 ||
                 this._.RO_QUEUE.size > 0 ||
-                this._.RD_QUEUE.size > 0 ||
-                this._.RHD_QUEUE.size > 0
+                this._.RD_QUEUE.size > 0
             ) {
                 const FC_QUEUE = new Map(this._.FC_QUEUE);
                 const FS_QUEUE = new Map(this._.FS_QUEUE);
@@ -59,7 +58,6 @@ export class Store extends Record {
                 const FU_QUEUE = new Map(this._.FU_QUEUE);
                 const RO_QUEUE = new Map(this._.RO_QUEUE);
                 const RD_QUEUE = new Map(this._.RD_QUEUE);
-                const RHD_QUEUE = new Map(this._.RHD_QUEUE);
                 this._.FC_QUEUE.clear();
                 this._.FS_QUEUE.clear();
                 this._.FA_QUEUE.clear();
@@ -67,7 +65,6 @@ export class Store extends Record {
                 this._.FU_QUEUE.clear();
                 this._.RO_QUEUE.clear();
                 this._.RD_QUEUE.clear();
-                this._.RHD_QUEUE.clear();
                 while (FC_QUEUE.size > 0) {
                     /** @type {[Record, Map<string, true>]} */
                     const [record, recMap] = FC_QUEUE.entries().next().value;
@@ -175,15 +172,9 @@ export class Store extends Record {
                     }
                     deletingRecordsByLocalId.set(record.localId, record);
                     this.recordByLocalId.delete(record.localId);
-                    this._.ADD_QUEUE("hard_delete", toRaw(record));
-                }
-                while (RHD_QUEUE.size > 0) {
-                    // effectively delete the record
-                    /** @type {Record} */
-                    const record = RHD_QUEUE.keys().next().value;
+                    record._proxy[IS_DELETED_SYM] = true;
+                    delete record.Model.records[record.localId];
                     record._runDisposeFns();
-                    RHD_QUEUE.delete(record);
-                    deletingRecordsByLocalId.delete(record.localId);
                 }
             }
             this._.UPDATE--;
