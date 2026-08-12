@@ -270,9 +270,12 @@ patch(PosOrder.prototype, {
             if (reward.reward.reward_type == "discount") {
                 allRewardsMerged.push(reward);
             } else {
+                // Each quantity is bound to the availability of its own `_reward_product_id`.
                 const reward_index = allRewardsMerged.findIndex(
                     (item) =>
-                        item.reward.id === reward.reward.id && item.args.price === reward.args.price
+                        item.reward.id === reward.reward.id &&
+                        item.args.price === reward.args.price &&
+                        item.args.product?.id === reward.args.product?.id
                 );
                 if (reward_index > -1) {
                     allRewardsMerged[reward_index].args.quantity += reward.args.quantity;
