@@ -7,6 +7,7 @@ import { Component, xml, onMounted, onWillUnmount } from "@odoo/owl";
 import { useSpreadsheetNotificationStore } from "@spreadsheet/hooks";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { MainComponentsContainer } from "@web/core/main_components_container";
+import { render } from "@web/owl2/utils";
 
 const { useStoreProvider, ModelStore } = stores;
 
@@ -20,8 +21,8 @@ class Parent extends Component {
         const stores = useStoreProvider();
         stores.inject(ModelStore, this.props.model);
         onMounted(() => {
-            this.props.model.on("update", this, () => this.render(true));
-            stores.on("store-updated", this, this.render.bind(this, true));
+            this.props.model.on("update", this, () => render(this, true));
+            stores.on("store-updated", this, () => render(this, true));
         });
         onWillUnmount(() => {
             this.props.model.off("update", this);

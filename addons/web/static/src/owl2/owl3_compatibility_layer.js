@@ -36,9 +36,6 @@
 const owl = globalThis.owl;
 
 class Component extends owl.Component {
-    static template = "";
-    static props = {};
-
     /**
      * @param {any} node
      */
@@ -53,13 +50,10 @@ class Component extends owl.Component {
         }
         this.props = owl.useProps();
         this.env = useEnv();
-        this.__owl__ = node;
     }
 
-    setup() {}
-
     /**
-     * @param {boolean} deep
+     * @param {boolean} [deep]
      */
     render(deep = false) {
         this.__owl__.render(deep === true);
