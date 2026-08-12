@@ -681,7 +681,8 @@ class DiscussChannelMember(models.Model):
         if not last_message:
             return
         self._set_last_seen_message(last_message)
-        self._set_new_message_separator(last_message.id + 1)
+        # Mark as read only moves forward.
+        self._set_new_message_separator(max(self.new_message_separator, last_message.id + 1))
 
     def _set_last_seen_message(self, message, notify=True):
         """
