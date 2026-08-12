@@ -30,23 +30,23 @@ class PortalAccount(CustomerPortal):
         )
 
         if address_values.get('invoice_sending_method') == 'peppol':
-            peppol_eas = address_values.get('peppol_eas')
-            peppol_endpoint = address_values.get('peppol_endpoint')
+            routing_scheme = address_values.get('routing_scheme')
+            routing_endpoint = address_values.get('routing_endpoint')
             edi_format = address_values.get('invoice_edi_format')
             if request.env['res.country'].browse(int(address_values.get('country_id'))).code not in PEPPOL_LIST:
                 invalid_fields.add('country_id')
                 address_values['country_id'] = 'error'
                 error_messages.append(_("That country is not available for Peppol."))
-            result = request.env['res.partner']._validate_identifier_by_scheme(peppol_eas, peppol_endpoint)
+            result = request.env['res.partner']._validate_identifier_by_scheme(routing_scheme, routing_endpoint)
             if not result['valid']:
-                invalid_fields.add('peppol_endpoint')
-                peppol_endpoint = result['value']
+                invalid_fields.add('routing_endpoint')
+                routing_endpoint = result['value']
                 identifier_label = request.env['res.partner']._get_identifier_label(result['key'])
                 endpoint_error_message = validation_error_message(request.env, identifier_label, result['value'], example=result['example'])
                 error_messages.append(endpoint_error_message)
-            peppol_identifier = f'{peppol_eas}:{peppol_endpoint}'
-            if request.env['res.partner']._get_peppol_verification_state(peppol_identifier, edi_format) != 'valid':
-                invalid_fields.update({'peppol_eas', 'peppol_endpoint', 'invoice_edi_format'})
+            routing_identifier = f'{routing_scheme}:{routing_endpoint}'
+            if request.env['res.partner']._get_peppol_verification_state(routing_identifier, edi_format) != 'valid':
+                invalid_fields.update({'routing_scheme', 'routing_endpoint', 'invoice_edi_format'})
                 error_messages.append(_("If you want to be invoiced by Peppol, your configuration must be valid."))
 
         return invalid_fields, missing_fields, error_messages

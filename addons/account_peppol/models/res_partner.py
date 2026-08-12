@@ -278,7 +278,7 @@ class ResPartner(models.Model):
 
     def _get_frontend_writable_fields(self):
         frontend_writable_fields = super()._get_frontend_writable_fields()
-        frontend_writable_fields.update({'routing_identifier'})
+        frontend_writable_fields.update({'routing_scheme', 'routing_endpoint'})
 
         return frontend_writable_fields
 
