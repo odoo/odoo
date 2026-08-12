@@ -81,6 +81,12 @@ class StockLot(models.Model):
 
     def _update_standard_price(self):
         # TODO: Add extra value and extra quantity kwargs to avoid total recomputation
+        avco_lots = self.filtered(
+            lambda l: l.lot_valuated and l.product_id.cost_method == 'average').with_context(
+                warehouse_id=False)
+        _, _, std_price_by_lot_id, _ = avco_lots.product_id._run_average_batch_lot(
+            lots=avco_lots,
+        )
         for lot in self:
             lot = lot.with_context(disable_auto_revaluation=True)
             if not lot.product_id.lot_valuated:
@@ -90,7 +96,7 @@ class StockLot(models.Model):
                     lot.standard_price = lot.product_id.standard_price
                 continue
             elif lot.product_id.cost_method == 'average':
-                lot.standard_price = lot.product_id._run_avco(lot=lot)[0]
+                lot.standard_price = std_price_by_lot_id.get(lot.id, 0.0)
             else:
                 lot.standard_price = lot.product_id._run_fifo_batch(lot=lot)[0].get(lot.product_id.id, lot.standard_price)
 
