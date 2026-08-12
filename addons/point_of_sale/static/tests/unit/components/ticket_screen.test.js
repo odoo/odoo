@@ -1,6 +1,7 @@
-import { test, expect, waitFor } from "@odoo/hoot";
+import { test, expect, waitFor, waitForNone } from "@odoo/hoot";
+import { click } from "@odoo/hoot-dom";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
-import { setupPosEnv } from "../utils";
+import { setupPosEnv, getFilledOrder } from "../utils";
 import { TicketScreen } from "@point_of_sale/app/screens/ticket_screen/ticket_screen";
 import { definePosModels } from "@point_of_sale/../tests/unit/data/generate_model_definitions";
 import * as Utils from "../ui_utils";
@@ -56,6 +57,18 @@ test("_onUpdateSelectedOrderline: refund moves to next", async () => {
     expect(ticketScreen.getSelectedOrderlineId()).toBe(line1.id);
     ticketScreen._onUpdateSelectedOrderline({ key: "Enter", buffer: "3" });
     expect(ticketScreen.getSelectedOrderlineId()).toBe(line2.id);
+});
+
+test("Clicking Edit Payment closes OrderDetailsDialog and navigates to PaymentScreen", async () => {
+    const store = await setupPosEnv();
+    const order = await getFilledOrder(store, {}, true);
+
+    const ticketScreen = await mountWithCleanup(TicketScreen);
+    ticketScreen._onInfoOrder(order);
+    await waitFor(".o_dialog");
+    await click(".fa-pencil");
+    await waitForNone(".o_dialog");
+    expect(order.getScreenData().name).toBe("PaymentScreen");
 });
 
 test("refund order should not have preset_id", async () => {
