@@ -24,7 +24,7 @@ class Driver(Thread):
     interface: type[Interface] = None
 
     def __init__(self, identifier, device):
-        super().__init__(daemon=True)
+        super().__init__(daemon=True, name=f"{self.__class__.__name__}({identifier})")
         self.dev = device
         self.device_identifier = identifier
         self.device_name = ""
