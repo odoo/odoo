@@ -1046,6 +1046,18 @@
         <field name="country_id" ref="base.mx"/>
     </record>
 
+    <record id="hr_work_entry.l10n_mx_work_entry_type_care_children_with_cancer_imss" model="hr.work.entry.type">
+        <field name="requires_allocation">False</field>
+        <field name="leave_validation_type">no_validation</field>
+        <field name="allocation_validation_type">hr</field>
+        <field name="request_unit">day</field>
+        <field name="unit_of_measure">day</field>
+        <field name="unpaid" eval="True"/>
+        <field name="leave_notif_subtype_id" ref="hr_holidays.mt_leave_unpaid"/>
+        <field name="color">5</field>
+        <field name="country_id" ref="base.mx"/>
+    </record>
+
 <!-- OM : Oman -->
     <record id="hr_work_entry.l10n_om_work_entry_type_sick_leave_100" model="hr.work.entry.type">
         <field name="name">Sick Leave (100% Paid)</field>
