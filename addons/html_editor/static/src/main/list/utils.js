@@ -1,7 +1,14 @@
-import { removeStyle, unwrapContents } from "@html_editor/utils/dom";
-import { closestElement, firstLeaf, lastLeaf } from "@html_editor/utils/dom_traversal";
+import { getColorOrClass } from "@html_editor/utils/color";
+import { unwrapContents, removeClass, removeStyle } from "@html_editor/utils/dom";
 import { getFontSizeOrClass } from "@html_editor/utils/formatting";
 import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
+import { isColorGradient } from "@web/core/utils/colors";
+
+const bulletFormats = {
+    color: (element) =>
+        isColorGradient(element.style.backgroundImage) ? null : getColorOrClass(element),
+    "font-size": getFontSizeOrClass,
+};
 
 export function createList(document, mode) {
     const node = document.createElement(mode === "OL" ? "OL" : "UL");
@@ -21,34 +28,28 @@ export function insertListAfter(document, afterNode, mode, content = [], cursors
         li.append(el);
     }
     if (content.length === 1 && content[0].nodeType === Node.ELEMENT_NODE) {
-        const firstLeafNode = firstLeaf(content[0]);
-        const lastLeafNode = lastLeaf(content[0]);
-        const firstClosestFont = closestElement(firstLeafNode, "font");
-        const lastClosestFont = closestElement(lastLeafNode, "font");
-        if (firstClosestFont && lastClosestFont && firstClosestFont === lastClosestFont) {
-            li.style.color = firstClosestFont.style.color;
-            removeStyle(firstClosestFont, "color");
-            if (!firstClosestFont.hasAttributes()) {
-                cursors?.update(callbacksForCursorUpdate.unwrap(firstClosestFont));
-                unwrapContents(firstClosestFont);
+        let current = li;
+        while (current.childNodes.length === 1 && current.children.length) {
+            const child = current.firstElementChild;
+            const tag = child.tagName;
+            if (tag === "FONT" || tag === "SPAN") {
+                for (const [property, getFormat] of Object.entries(bulletFormats)) {
+                    const format = getFormat(child);
+                    if (format?.type === "class") {
+                        li.classList.add(format.value);
+                        removeClass(child, format.value);
+                    } else if (format) {
+                        li.style.setProperty(property, format.value);
+                        removeStyle(child, property);
+                    }
+                }
+                if (!child.hasAttributes()) {
+                    cursors?.update(callbacksForCursorUpdate.unwrap(child));
+                    unwrapContents(child);
+                    continue;
+                }
             }
-        }
-        const firstClosestSpan = closestElement(firstLeafNode, "span");
-        const lastClosestSpan = closestElement(lastLeafNode, "span");
-        let fontSizeStyle;
-        if (
-            firstClosestSpan &&
-            lastClosestSpan &&
-            firstClosestSpan === lastClosestSpan &&
-            (fontSizeStyle = getFontSizeOrClass(firstClosestSpan))
-        ) {
-            if (fontSizeStyle.type === "font-size") {
-                li.style.fontSize = fontSizeStyle.value;
-            } else if (fontSizeStyle.type === "class") {
-                li.classList.add(fontSizeStyle.value);
-            }
-            cursors?.update(callbacksForCursorUpdate.unwrap(firstClosestSpan));
-            unwrapContents(firstClosestSpan);
+            current = child;
         }
     }
     cursors?.update(callbacksForCursorUpdate.append(list, li));
