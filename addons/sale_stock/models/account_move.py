@@ -221,6 +221,8 @@ class AccountMoveLine(models.Model):
     def _related_analytic_distribution(self):
         # EXTENDS 'account'
         vals = super()._related_analytic_distribution()
-        if not self.sale_line_ids and not self.analytic_distribution and self.move_id.stock_move_id.sale_line_id:
-            vals |= self.move_id.stock_move_id.sale_line_id.analytic_distribution or {}
+        sale_line = self.move_id.stock_move_id.sale_line_id
+        if not self.sale_line_ids and not self.analytic_distribution and sale_line \
+                and self._should_use_related_analytic_distribution(sale_line):
+            vals |= sale_line.analytic_distribution or {}
         return vals
