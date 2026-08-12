@@ -1,13 +1,4 @@
-import {
-    Component,
-    onWillUpdateProps,
-    proxy,
-    signal,
-    t,
-    usePlugin,
-    useProps,
-    useScope,
-} from "@odoo/owl";
+import { Component, proxy, signal, t, useEffect, usePlugin, useProps, useScope } from "@odoo/owl";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { makeContext } from "@web/core/context";
 import { Dialog } from "@web/core/dialog/dialog";
@@ -93,7 +84,6 @@ export function useActiveActions({
         /** @type {RelationalActiveActions} */
         const result = { type: fieldType, onDelete: null };
         const evalAction = (actionName) => evals[actionName](evalContext);
-
         // We need to take care of tags "control" and "create" to set create stuff
         result.create = !readonly && evalAction("create");
         result.createEdit = !readonly && result.create && crudOptions.createEdit; // always a boolean
@@ -133,10 +123,9 @@ export function useActiveActions({
         }
     }
 
-    // Compute active actions
-    const activeActions = compute(getEvalParams(props));
-    onWillUpdateProps((nextProps) => {
-        Object.assign(activeActions, compute(getEvalParams(nextProps)));
+    const activeActions = proxy({});
+    useEffect(() => {
+        Object.assign(activeActions, compute(getEvalParams(props)));
     });
 
     return activeActions;
@@ -179,12 +168,13 @@ export function useSpecialData(loadFn) {
     useRecordObserver(async (record, props) => {
         result.data = await loadFn(ormWithCache, { ...props, record });
     });
-    onWillUpdateProps(async (nextProps) => {
-        // useRecordObserver callback is not called when the record doesn't change
-        if (nextProps.record.id === props.record.id) {
-            result.data = await loadFn(ormWithCache, nextProps);
+    const onRootLoaded = record.model.hooks.onRootLoaded;
+    record.model.hooks.onRootLoaded = async (root) => {
+        await onRootLoaded(root);
+        if (props.record.id === root.id) {
+            result.data = await loadFn(ormWithCache, props);
         }
-    });
+    };
     return result;
 }
 

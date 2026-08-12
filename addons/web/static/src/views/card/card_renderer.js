@@ -9,7 +9,7 @@ import { getFormattedValue } from "../utils";
 import { CARD_ATTRIBUTE } from "./card_arch_parser";
 import { CardCompiler } from "./card_compiler";
 
-import { Component, computed, onWillUpdateProps, plugin, proxy, t, useProps } from "@odoo/owl";
+import { Component, computed, plugin, proxy, t, useEffect, useProps } from "@odoo/owl";
 import { OfflinePlugin } from "@web/core/offline/offline_plugin";
 
 const formatters = registry.category("formatters");
@@ -105,8 +105,10 @@ export class CardRenderer extends Component {
         this.templates = useViewCompiler(ViewCompiler, templates);
 
         this.dataState = proxy({ widget: {} });
-        this.createWidget(this.props);
-        onWillUpdateProps(this.createWidget);
+        useEffect(() => {
+            void this.props.record;
+            this.createWidget();
+        });
     }
 
     get record() {
@@ -124,10 +126,10 @@ export class CardRenderer extends Component {
      *
      * @param {Object} props
      */
-    createWidget(props) {
+    createWidget() {
         this.dataState.widget = {
-            deletable: props.archInfo.activeActions.delete && !props.readonly,
-            editable: props.archInfo.activeActions.edit && !props.readonly,
+            deletable: this.props.archInfo.activeActions.delete && !this.props.readonly,
+            editable: this.props.archInfo.activeActions.edit && !this.props.readonly,
         };
     }
 
