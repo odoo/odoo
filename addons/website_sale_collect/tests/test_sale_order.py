@@ -6,6 +6,8 @@ from odoo.fields import Command
 from odoo.exceptions import ValidationError
 from odoo.tests import tagged
 
+from odoo.addons.website_sale.controllers.delivery import Delivery
+from odoo.addons.website_sale.tests.common import MockRequest
 from odoo.addons.website_sale_collect.tests.common import ClickAndCollectCommon
 
 
@@ -16,6 +18,7 @@ class TestSaleOrder(ClickAndCollectCommon):
     def setUpClass(cls):
         super().setUpClass()
         cls.product_2 = cls._create_product()
+        cls.Controller = Delivery()
 
     def test_warehouse_is_updated_when_changing_delivery_line(self):
         self.warehouse_2 = self._create_warehouse()
@@ -193,3 +196,22 @@ class TestSaleOrder(ClickAndCollectCommon):
             any(partner.email == self.partner.email
             for partner in new_so.picking_ids.message_ids.notified_partner_ids
         ))
+
+    def test_so_confirmation_preserves_selected_pickup_location(self):
+        """Ensure pickup location is not reset when calling shop/confirm_order route."""
+        order = self._create_in_store_delivery_order()
+        with MockRequest(self.env, website=self.website, sale_order_id=order.id) as request:
+            order = request.cart
+            order.partner_id.write(self.dummy_partner_address_values)
+            order._set_delivery_method(self.in_store_dm)
+            order._set_pickup_location(json.dumps({
+                "id": self.warehouse.id,
+                "name": self.warehouse.partner_id.name,
+                "street": "New test street",
+                "zip_code": self.warehouse.partner_id.zip,
+                "city": "New test city",
+                "state": self.warehouse.partner_id.state_id.code,
+                "country_code": self.warehouse.partner_id.country_code,
+            }))
+            self.Controller.shop_confirm_order()
+        self.assertTrue(order.pickup_location_data)
