@@ -323,3 +323,22 @@ registry.category("web_tour.tours").add("test_multiple_reward_line_free_product"
             PosLoyalty.hasRewardLine("Free Product - Product A", "-20", "2.00"),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_free_product_multiple_reward_products", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Promo Item A"),
+            ProductScreen.clickDisplayedProduct("Promo Item B"),
+            ProductScreen.clickDisplayedProduct("Promo Item C"),
+            PosLoyalty.hasRewardLine("Free Product", "-10.00", "1.00"),
+            ProductScreen.totalAmountIs("20.00"),
+            // 6 products, the 2nd free product is claimed on another product than the reward line's one
+            ProductScreen.clickDisplayedProduct("Promo Item B"),
+            ProductScreen.clickDisplayedProduct("Promo Item B"),
+            ProductScreen.clickDisplayedProduct("Promo Item B"),
+            ProductScreen.selectedOrderlineHas("Promo Item B", "4.00"),
+            ProductScreen.totalAmountIs("40.00"),
+        ].flat(),
+});
