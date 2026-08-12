@@ -102,6 +102,31 @@ WITH
         FROM
             GENERATE_SERIES(0, 1, 1) is_duplicated,
             existing_sm sm
+    ),
+    move_horizon (id, product_id, product_tmpl_id, company_id, warehouse_id, right_edge) AS (
+        SELECT
+            MIN(m.id),
+            m.product_id, m.tmpl_id, m.company_id,
+            CASE
+                WHEN m.whs_id IS NOT NULL AND m.whd_id IS NULL THEN m.whs_id
+                WHEN m.whd_id IS NOT NULL AND m.whs_id IS NULL THEN m.whd_id
+            END,
+            GREATEST(
+                (now() at time zone 'utc')::date + interval '%(report_period)s month',
+                MAX(m.date::date)
+            )
+        FROM all_sm m
+        WHERE m.product_qty != 0 AND
+            (
+                (m.whs_id IS NOT NULL AND m.whd_id IS NULL) OR
+                (m.whd_id IS NOT NULL AND m.whs_id IS NULL)
+            )
+        GROUP BY
+            m.product_id, m.tmpl_id, m.company_id,
+            CASE
+                WHEN m.whs_id IS NOT NULL AND m.whd_id IS NULL THEN m.whs_id
+                WHEN m.whd_id IS NOT NULL AND m.whs_id IS NULL THEN m.whd_id
+            END
     )
 SELECT
     MIN(id) as id,
@@ -146,14 +171,17 @@ FROM (SELECT
         q.company_id,
         wh.id as warehouse_id
     FROM
-        GENERATE_SERIES((now() at time zone 'utc')::date - interval '%(report_period)s month',
-        (now() at time zone 'utc')::date + interval '%(report_period)s month', '1 day'::interval) date,
         stock_quant q
     LEFT JOIN stock_location l on (l.id=q.location_id)
     LEFT JOIN stock_warehouse wh
             ON l.parent_path LIKE concat('%%/', wh.view_location_id, '/%%')
             OR l.parent_path LIKE concat(wh.view_location_id, '/%%')
     LEFT JOIN product_product pp on pp.id=q.product_id
+    LEFT JOIN move_horizon mh
+            ON mh.product_id = q.product_id AND mh.company_id = q.company_id AND mh.warehouse_id = wh.id,
+        GENERATE_SERIES((now() at time zone 'utc')::date - interval '%(report_period)s month',
+        COALESCE(mh.right_edge, (now() at time zone 'utc')::date + interval '%(report_period)s month'),
+        '1 day'::interval) date
     WHERE
         (l.usage = 'internal' AND wh.id IS NOT NULL) OR
         l.usage = 'transit'
@@ -169,7 +197,7 @@ FROM (SELECT
             ELSE GREATEST(m.date::date, (now() at time zone 'utc')::date - interval '%(report_period)s month')
         END,
         CASE
-            WHEN m.state != 'done' THEN (now() at time zone 'utc')::date + interval '%(report_period)s month'
+            WHEN m.state != 'done' THEN COALESCE(mh.right_edge, (now() at time zone 'utc')::date + interval '%(report_period)s month')
             ELSE m.date::date - interval '1 day'
         END, '1 day'::interval)::date date,
         CASE
@@ -185,8 +213,28 @@ FROM (SELECT
         END AS warehouse_id
     FROM
         all_sm m
+    LEFT JOIN move_horizon mh
+        ON mh.product_id = m.product_id AND mh.company_id = m.company_id
+        AND mh.warehouse_id = CASE
+            WHEN m.whs_id IS NOT NULL AND m.whd_id IS NULL THEN m.whs_id
+            WHEN m.whd_id IS NOT NULL AND m.whs_id IS NULL THEN m.whd_id
+        END
     WHERE
-        m.product_qty != 0) AS forecast_qty
+        m.product_qty != 0
+    UNION ALL
+    SELECT
+        mh.id,
+        mh.product_id,
+        mh.product_tmpl_id,
+        'forecast' as state,
+        gs::date as date,
+        0 as product_qty,
+        mh.company_id,
+        mh.warehouse_id
+    FROM
+        move_horizon mh,
+        GENERATE_SERIES((now() at time zone 'utc')::date - interval '%(report_period)s month',
+                        mh.right_edge, '1 day'::interval) gs) AS forecast_qty
 GROUP BY product_id, product_tmpl_id, state, date, company_id, warehouse_id
 );
 """
