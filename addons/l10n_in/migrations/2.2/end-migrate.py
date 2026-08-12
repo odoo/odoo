@@ -90,7 +90,7 @@ def migrate(cr, version):
         """
         UPDATE account_move_line aml
            SET l10n_in_gstr_section = 'purchase_out_of_scope'
-         WHERE aml.l10n_in_gstr_section = 'purchase_cdnur_regular'
+         WHERE aml.l10n_in_gstr_section = 'purchase_cdnur_overseas'
         """
     )
 
