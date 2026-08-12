@@ -194,6 +194,20 @@ class IrSequence(models.Model):
         return res
 
     def _next_do(self):
+        if self._context.get("dry_run"):
+            # PostgreSQL's nextval() can't be undone by rollback, so a
+            # Preview only, don't consume a real number.
+            # 'standard' sequence would lose numbers every time Test is
+            # clicked if we called nextval() here. Instead we just look
+            # at the current value without advancing it.
+            # 'no_gap' sequences store their counter in number_next
+            # itself, so we can just read that field directly.
+            if self.implementation == 'standard':
+                number_next = _predict_nextval(self, "%03d" % self.id)
+            else:
+                number_next = self.number_next
+            return self.get_next_char(number_next)
+
         if self.implementation == 'standard':
             number_next = _select_nextval(self._cr, 'ir_sequence_%03d' % self.id)
         else:
