@@ -194,7 +194,7 @@ class IrSequence(models.Model):
         return res
 
     def _next_do(self):
-        if self._context.get("dry_run"):
+        if self.env.context.get("dry_run"):
             # PostgreSQL's nextval() can't be undone by rollback, so a
             # Preview only, don't consume a real number.
             # 'standard' sequence would lose numbers every time Test is
