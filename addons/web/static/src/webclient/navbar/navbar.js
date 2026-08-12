@@ -216,10 +216,6 @@ export class NavBar extends Component {
             // Do not render if more menu items stayed the same.
             return;
         }
-        this.render();
-    }
-
-    render() {
         render(this);
     }
 

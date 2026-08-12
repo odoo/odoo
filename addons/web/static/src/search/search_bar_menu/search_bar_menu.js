@@ -1,4 +1,5 @@
 import { Component, proxy, t, useProps } from "@odoo/owl";
+import { render } from "@web/owl2/utils";
 import { PropertiesGroupByItem } from "@web/search/properties_group_by_item/properties_group_by_item";
 import { SearchBarDropdown } from "../search_bar_dropdown";
 import { dropdownProps } from "@web/core/dropdown/dropdown";
@@ -46,7 +47,7 @@ export class SearchBarMenu extends Component {
         this.fields = sortBy(fields, "string");
         // Favorite
         this.state = proxy({ sharedFavoritesExpanded: false });
-        useBus(this.env.searchModel, "update", this.render);
+        useBus(this.env.searchModel, "update", () => render(this));
         this.dialogService = useService("dialog");
         this.notificationService = useService("notification");
 
@@ -87,13 +88,13 @@ export class SearchBarMenu extends Component {
     async onToggle({ itemId, optionsParams }) {
         if (optionsParams.toBeLoaded) {
             await this.env.searchModel.loadLazyParentFilter(itemId);
-            this.render();
+            render(this);
         }
     }
 
     async onLoadMoreOptions({ itemId }) {
         await this.env.searchModel.loadMoreOptions(itemId);
-        this.render();
+        render(this);
     }
 
     // GroupBy Panel
