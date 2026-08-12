@@ -1,7 +1,7 @@
 <templates>
 
     <t t-name="project.TaskStageWithStateSelection">
-        <div class="d-flex gap-1">
+        <div class="d-flex gap-1 align-items-center">
             <Many2One t-props="this.stageProps"/>
             <ProjectTaskStateSelection t-props="this.stateProps"/>
         </div>

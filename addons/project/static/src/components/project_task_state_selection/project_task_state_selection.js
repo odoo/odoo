@@ -27,34 +27,26 @@ export class ProjectTaskStateSelection extends StateSelectionField {
             isStateButtonHighlighted: false,
         });
         this.icons = {
-            "02_changes_requested": "priority_high",
+            "02_changes_requested": "circle",
             "1_done": "check_circle",
             "1_canceled": "cancel",
             "04_waiting_normal": "hourglass_empty",
+            "01_in_progress": "circle",
+            "03_approved": "circle",
         };
         this.classIcons = {
-            "02_changes_requested": "oi oi-filled o_status",
-            "1_done": "oi oi-filled",
-            "1_canceled": "oi oi-filled",
-            "04_waiting_normal": "oi",
-            "01_in_progress": "o_status",
-            "03_approved": "o_status o_status_green",
+            "1_done": "oi-filled",
+            "1_canceled": "oi-filled",
+            "02_changes_requested": "oi-filled",
+            "03_approved": "oi-filled",
         };
         this.colorIcons = {
-            "01_in_progress": "",
-            "03_approved": "text-success",
-            "02_changes_requested": "o_status_changes_requested",
-            "1_done": "text-success",
-            "1_canceled": "text-danger",
-            "04_waiting_normal": "btn-outline-info",
-        };
-        this.colorButton = {
-            "01_in_progress": "btn-outline-secondary",
-            "03_approved": "btn-outline-success",
-            "02_changes_requested": "btn-outline-warning",
-            "1_done": "btn-outline-success",
-            "1_canceled": "btn-outline-danger",
-            "04_waiting_normal": "btn-outline-info",
+            "01_in_progress": "text-muted",
+            "03_approved": "o_status o_status_green",
+            "02_changes_requested": "o_status o_status_orange",
+            "1_done": "o_status o_status_green",
+            "1_canceled": "o_status o_status_red",
+            "04_waiting_normal": "o_status o_status_blue",
         };
         if (this.props.viewType != 'form') {
             super.setup();
@@ -110,11 +102,17 @@ export class ProjectTaskStateSelection extends StateSelectionField {
         });
     }
 
+    /**
+     * @override
+     */
     stateIcon(value) {
         return this.icons[value] || "";
     }
 
-    stateClassIcon(value) {
+    /**
+     * @override
+     */
+    stateIconClass(value) {
         return this.classIcons[value] || "";
     }
 
@@ -138,23 +136,19 @@ export class ProjectTaskStateSelection extends StateSelectionField {
         return viewNames.includes(this.props.viewType);
     }
 
+    // The tooltip service copies data-tooltip when the mouse enters and never re-reads it.
+    // So we can't switch the text on isStateButtonHighlighted (set on that same mouseenter):
+    // the open tooltip would keep the old label. Return the hovered text ("Mark as done") directly.
+    get toggleTooltip() {
+        if (this.props.showLabel) {
+            return "";
+        }
+        return this.uiService.isSmall ? this.label : _t("Mark as done");
+    }
+
     async toggleState() {
         const toggleVal = this.currentValue == "1_done" ? "01_in_progress" : "1_done";
         await this.updateRecord(toggleVal);
-    }
-
-    getDropdownPosition() {
-        if (this.isView(['activity', 'card', 'list', 'calendar']) || this.uiService.isSmall) {
-            return '';
-        }
-        return 'bottom-end';
-    }
-
-    getTogglerClass(currentValue) {
-        if (this.isView(['activity', 'card', 'list', 'calendar']) || this.uiService.isSmall) {
-            return 'btn btn-link d-flex p-0';
-        }
-        return 'o_state_button btn rounded-pill ' + this.colorButton[currentValue];
     }
 
     async updateRecord(value) {
@@ -193,10 +187,9 @@ export const projectTaskStateSelection = {
             type: "boolean"
         }
     ],
-    extractProps({ options, viewType }) {
+    extractProps({ options }) {
         const props = stateSelectionField.extractProps(...arguments);
         props.isToggleMode = Boolean(options.is_toggle_mode);
-        props.viewType = viewType;
         return props;
     },
 }
