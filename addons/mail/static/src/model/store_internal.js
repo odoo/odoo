@@ -28,8 +28,6 @@ export class StoreInternal extends RecordInternal {
     FU_QUEUE = new Map(); // field-onupdates
     /** @type {Map<Record, true>} */
     RD_QUEUE = new Map(); // record-deletes
-    /** @type {Map<Record, true>} */
-    RHD_QUEUE = new Map(); // record-hard-deletes
     ERRORS = [];
     UPDATE = 0;
     /**
@@ -109,7 +107,7 @@ export class StoreInternal extends RecordInternal {
     }
 
     /**
-     * @param {"compute"|"onAdd"|"onDelete"|"onUpdate"|"hard_delete"} type
+     * @param {"compute"|"onAdd"|"onDelete"|"onUpdate"} type
      * @param {...any} params
      */
     ADD_QUEUE(type, ...params) {
@@ -182,15 +180,6 @@ export class StoreInternal extends RecordInternal {
                     this.FU_QUEUE.set(record, recMap);
                 }
                 recMap.set(fieldName, true);
-                break;
-            }
-            case "hard_delete": {
-                /** @type {import("./record").Record} */
-                const [record] = params;
-                delete record.Model.records[record.localId];
-                if (!this.RHD_QUEUE.has(record)) {
-                    this.RHD_QUEUE.set(record, true);
-                }
                 break;
             }
         }
