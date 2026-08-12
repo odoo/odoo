@@ -102,6 +102,29 @@ WITH
         FROM
             GENERATE_SERIES(0, 1, 1) is_duplicated,
             existing_sm sm
+    ),
+    move_pw AS (
+        -- Move information for interval without any correction to avoid gap
+        -- When move is Done, the correction is backward, otherwise upwards
+        SELECT
+            MIN(m.id) as id,
+            m.product_id,
+            m.tmpl_id AS product_tmpl_id,
+            m.company_id,
+            COALESCE(m.whs_id, m.whd_id) AS warehouse_id,
+            COALESCE(MAX(m.date::date) FILTER (WHERE m.state = 'done'),
+                     (now() at time zone 'utc')::date - interval '%(report_period)s month') AS gap_start,
+            COALESCE(MIN(m.date::date) FILTER (WHERE m.state != 'done') - interval '1 day',
+                     (now() at time zone 'utc')::date + interval '%(report_period)s month') AS gap_end
+        FROM all_sm m
+        WHERE m.product_qty != 0 AND COALESCE(m.whs_id, m.whd_id) IS NOT NULL
+        GROUP BY m.product_id, m.tmpl_id, m.company_id, COALESCE(m.whs_id, m.whd_id)
+        HAVING
+            COALESCE(MAX(m.date::date) FILTER (WHERE m.state = 'done'),
+                     (now() at time zone 'utc')::date - interval '%(report_period)s month')
+            <=
+            COALESCE(MIN(m.date::date) FILTER (WHERE m.state != 'done') - interval '1 day',
+                     (now() at time zone 'utc')::date + interval '%(report_period)s month')
     )
 SELECT
     MIN(id) as id,
@@ -186,7 +209,21 @@ FROM (SELECT
     FROM
         all_sm m
     WHERE
-        m.product_qty != 0 OR (m.state = 'done' AND m.quantity != 0)) AS forecast_qty
+        m.product_qty != 0 OR (m.state = 'done' AND m.quantity != 0)
+    UNION ALL
+    SELECT
+        pw.id,
+        pw.product_id,
+        pw.product_tmpl_id,
+        'forecast' as state,
+        date.*::date,
+        0 as product_qty,
+        pw.company_id,
+        pw.warehouse_id
+    FROM
+        move_pw pw,
+        GENERATE_SERIES(pw.gap_start, pw.gap_end, '1 day'::interval) date
+    ) AS forecast_qty
 GROUP BY product_id, product_tmpl_id, state, date, company_id, warehouse_id
 );
 """
