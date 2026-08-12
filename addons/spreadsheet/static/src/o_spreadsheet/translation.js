@@ -3,7 +3,8 @@ import { _t, appTranslateFn } from "@web/core/l10n/translation";
 import { OdooUIPlugin } from "@spreadsheet/plugins";
 
 const { arg, toString } = spreadsheet.helpers;
-const { functionRegistry, featurePluginRegistry } = spreadsheet.registries;
+const { functionRegistry, featurePluginRegistry, NonSquishableFunctionRegistry } =
+    spreadsheet.registries;
 
 /**
  * Standard spreadsheet dashboards defined in the source code need to be translated.
@@ -45,3 +46,5 @@ functionRegistry.add("_t", {
     returns: ["STRING"],
     hidden: true,
 });
+
+NonSquishableFunctionRegistry.add("_t", "_t");
