@@ -309,7 +309,7 @@ export class DiscussChannelMember extends models.ServerModel {
         this._set_last_seen_message([member.id], last_message_id);
         this.env["discuss.channel.member"]._set_new_message_separator(
             [member.id],
-            last_message_id + 1
+            Math.max(member.new_message_separator, last_message_id + 1)
         );
     }
 
