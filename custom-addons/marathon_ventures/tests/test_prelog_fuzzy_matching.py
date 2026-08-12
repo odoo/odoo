@@ -1,10 +1,12 @@
 import csv
 import io
-from datetime import date
+from datetime import date, datetime
 
 from odoo import Command
 from odoo.exceptions import UserError
 from odoo.tests import TransactionCase, new_test_user, tagged
+
+from ..services.prelog_import.engine import PrelogImportEngine
 
 
 @tagged('post_install', '-at_install')
@@ -287,6 +289,85 @@ class TestPrelogFuzzyMatching(TransactionCase):
         )
         self.assertFalse(in_window)
         self.assertEqual(distance, 150)
+
+    def test_upload_time_window_includes_rotation_boundaries(self):
+        engine = PrelogImportEngine(
+            self.env,
+            program=self.program,
+            upload_file=False,
+            upload_filename='',
+        )
+
+        self.assertTrue(engine._is_valid_schedule_window(
+            self.schedule,
+            6,
+            datetime(2026, 7, 27, 9, 0),
+        ))
+        self.assertTrue(engine._is_valid_schedule_window(
+            self.schedule,
+            6,
+            datetime(2026, 7, 27, 10, 0),
+        ))
+        self.assertFalse(engine._is_valid_schedule_window(
+            self.schedule,
+            6,
+            datetime(2026, 7, 27, 8, 59, 59),
+        ))
+        self.assertFalse(engine._is_valid_schedule_window(
+            self.schedule,
+            6,
+            datetime(2026, 7, 27, 10, 0, 1),
+        ))
+
+    def test_upload_time_window_handles_half_hour_overnight_rotation(self):
+        overnight_schedule = self.env['mv.schedules'].create({
+            'deal_parent': self.deal.id,
+            'week': self.week,
+            'start_time': 'v_11_00p',
+            'end_time': 'v_02_30a',
+            'days_allowed': [Command.set(self.monday.ids)],
+            'rate': 100.0,
+            'status': 'sold',
+        })
+        engine = PrelogImportEngine(
+            self.env,
+            program=self.program,
+            upload_file=False,
+            upload_filename='',
+        )
+
+        one_am = engine._air_datetime(
+            self.week,
+            '01:00 AM',
+            6,
+        )
+        end_boundary = engine._air_datetime(
+            self.week,
+            '02:30 AM',
+            6,
+        )
+        after_end = engine._air_datetime(
+            self.week,
+            '02:30:01 AM',
+            6,
+        )
+
+        self.assertEqual(one_am, datetime(2026, 7, 28, 1, 0))
+        self.assertTrue(engine._is_valid_schedule_window(
+            overnight_schedule,
+            6,
+            one_am,
+        ))
+        self.assertTrue(engine._is_valid_schedule_window(
+            overnight_schedule,
+            6,
+            end_boundary,
+        ))
+        self.assertFalse(engine._is_valid_schedule_window(
+            overnight_schedule,
+            6,
+            after_end,
+        ))
 
     def test_manual_override_must_be_confirmed(self):
         prelog = self._create_prelog(network_deal_number='MISSING')
