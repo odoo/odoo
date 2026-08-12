@@ -3,6 +3,12 @@
         i.oi {
             font-size: var(--Favorite-font-size, 1rem);
         }
+        // Scoped to the click that just happened, set by the component: on
+        // `oi-filled` alone, any render rebuilding the star replayed the pop.
+        &.o-isJustSet i[data-icon="star"].oi-filled {
+            @include o-star-fillAnimation($o-main-favorite-color);
+        }
+
         i[data-icon="star"] {
             @include o-hover-text-color($o-main-color-muted, $o-main-favorite-color);
 

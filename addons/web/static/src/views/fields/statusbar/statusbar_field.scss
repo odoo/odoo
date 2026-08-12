@@ -1,3 +1,71 @@
+// The shape of one step. Which sides are cut into a point and which are rounded
+// depend on where the step sits in the bar, so both are decided here from
+// `.o_first` / `.o_last` alone: a side facing another step is pointed, one at
+// the end of the bar is straight and rounded. The buttons and the highlighter
+// travelling behind them take the same shape from this mixin — the point cut
+// applies as-is, and each reads `--o-statusbar-step-radius` the way it can.
+@mixin o-statusbar-step-shape {
+    --o-statusbar-step-radius: 0;
+
+    clip-path: polygon(
+        var(--o-statusbar-point-top-left),
+        var(--o-statusbar-point-top-right),
+        var(--o-statusbar-point-middle-right),
+        var(--o-statusbar-point-bottom-right),
+        var(--o-statusbar-point-bottom-left),
+        var(--o-statusbar-point-middle-left)
+    );
+
+    // Left end of the bar: nothing to point into, so the side goes straight.
+    &.o_last {
+        --o-statusbar-point-top-left: 0 0;
+        --o-statusbar-point-middle-left: 0 50%;
+        --o-statusbar-point-bottom-left: 0 100%;
+        --o-statusbar-step-radius: var(--o-statusbar-radius) 0 0 var(--o-statusbar-radius);
+    }
+
+    // Right end of the bar: no point sticking out past it.
+    &.o_first {
+        --o-statusbar-point-top-right: 100% 0;
+        --o-statusbar-point-middle-right: 100% 50%;
+        --o-statusbar-point-bottom-right: 100% 100%;
+        --o-statusbar-step-radius: 0 var(--o-statusbar-radius) var(--o-statusbar-radius) 0;
+    }
+
+    // A lone step is both ends at once.
+    &.o_first.o_last {
+        --o-statusbar-step-radius: var(--o-statusbar-radius);
+    }
+
+    // The bar reads right to left, so every point and every rounded end swaps.
+    .o_rtl & {
+        --o-statusbar-point-top-left: calc(var(--o-statusbar-caret-width) + var(--o-statusbar-caret-gap)) 0;
+        --o-statusbar-point-top-right: calc(100% - var(--o-statusbar-caret-gap)) 0;
+        --o-statusbar-point-middle-left: var(--o-statusbar-caret-gap) 50%;
+        --o-statusbar-point-middle-right: calc(100% - var(--o-statusbar-caret-width) - var(--o-statusbar-caret-gap)) 50%;
+        --o-statusbar-point-bottom-left: calc(var(--o-statusbar-caret-width) + var(--o-statusbar-caret-gap)) 100%;
+        --o-statusbar-point-bottom-right: calc(100% - var(--o-statusbar-caret-gap)) 100%;
+
+        &.o_last {
+            --o-statusbar-point-top-right: 100% 0;
+            --o-statusbar-point-middle-right: 100% 50%;
+            --o-statusbar-point-bottom-right: 100% 100%;
+            --o-statusbar-step-radius: 0 var(--o-statusbar-radius) var(--o-statusbar-radius) 0;
+        }
+
+        &.o_first {
+            --o-statusbar-point-top-left: 0 0;
+            --o-statusbar-point-middle-left: 0 50%;
+            --o-statusbar-point-bottom-left: 0 100%;
+            --o-statusbar-step-radius: var(--o-statusbar-radius) 0 0 var(--o-statusbar-radius);
+        }
+
+        &.o_first.o_last {
+            --o-statusbar-step-radius: var(--o-statusbar-radius);
+        }
+    }
+}
+
 .o_field_statusbar {
     > .o_statusbar_status {
         @include media-breakpoint-up(md) {
@@ -8,6 +76,7 @@
         }
 
         // TODO: replace the following properties with utility classes ?
+        position: relative;
         display: flex;
         align-content: space-around;
         margin-left: auto;
@@ -29,96 +98,78 @@
         --o-statusbar-point-bottom-left: var(--o-statusbar-caret-gap) 100%;
         --o-statusbar-point-bottom-right:  calc(100% - var(--o-statusbar-caret-width) - var(--o-statusbar-caret-gap)) 100%;
 
+        // Travelling background of the selected item, laid out by the component
+        // from the measured geometry of that item.
+        > .o_statusbar_highlighter {
+            position: absolute;
+            top: var(--o-statusbar-highlight-y, 0);
+            left: 0;
+            z-index: 0;
+            width: var(--o-statusbar-highlight-width, 0);
+            height: var(--o-statusbar-highlight-height, 100%);
+            transform: translateX(var(--o-statusbar-highlight-x, 0));
+            background-color: var(--o-statusbar-background-current, #{$o-component-active-bg});
+            border-radius: $btn-border-radius;
+            pointer-events: none;
+
+            // The component copies `o_first` / `o_last` from the step it
+            // covers, so the same mixin cuts it to that step's shape.
+            @include media-breakpoint-up(md) {
+                border-radius: var(--o-statusbar-step-radius);
+
+                @include o-statusbar-step-shape;
+            }
+        }
+
+        // The highlighter only travels once it has been placed a first time, so
+        // that it does not slide in from the left edge on the first render.
+        &.o-statusbar-animated > .o_statusbar_highlighter {
+            transition:
+                transform .2s ease-out,
+                width .2s ease-out,
+                // Both ends change shape when the highlight reaches one, and
+                // that reshaping travels with it rather than preceding it.
+                clip-path .2s ease-out,
+                border-radius .2s ease-out;
+        }
+
         .o_arrow_button:not(.d-none) {
             --#{$prefix}btn-hover-bg: #{$gray-200};
             --#{$prefix}btn-active-bg: #{$gray-300};
-            --#{$prefix}btn-disabled-bg: #{$o-component-active-bg};
+            // The current step is painted by the highlighter travelling behind
+            // it, so no button carries a background of its own.
+            --#{$prefix}btn-disabled-bg: transparent;
+            --#{$prefix}btn-disabled-border-color: transparent;
             --#{$prefix}btn-disabled-color: var(--#{$prefix}btn-active-color);
             --#{$prefix}btn-focus-box-shadow: 0;
 
+            // Above the highlighter, which the buttons let show through.
+            position: relative;
+
             @include media-breakpoint-up(md) {
                 --#{$prefix}btn-bg: transparent;
+                --#{$prefix}btn-border-radius: var(--o-statusbar-step-radius);
 
                 margin-left: calc(-1 * var(--o-statusbar-caret-width) - var(--o-statusbar-border-width) * sqrt(3));
                 border: 0;
                 padding: var(--o-statusbar-button-padding-y) calc(var(--o-statusbar-button-padding-x) * 1.375);
-                clip-path: polygon(
-                    var(--o-statusbar-point-top-left),
-                    var(--o-statusbar-point-top-right),
-                    var(--o-statusbar-point-middle-right),
-                    var(--o-statusbar-point-bottom-right),
-                    var(--o-statusbar-point-bottom-left),
-                    var(--o-statusbar-point-middle-left)
-                );
 
+                @include o-statusbar-step-shape;
+
+                // The overlap only exists where a neighbour points into this
+                // step, so the two ends of the bar pull their own padding back.
                 &.o_last {
-                    --o-statusbar-point-top-left: 0 0;
-                    --o-statusbar-point-middle-left: 0 50%;
-                    --o-statusbar-point-bottom-left: 0 100%;
-
                     margin-left: 0;
                     padding-inline-start: var(--o-statusbar-button-padding-x);
-
-                    &:not(.o_first) {
-                        --#{$prefix}btn-border-radius: var(--o-statusbar-radius) 0 0 var(--o-statusbar-radius);
-                    }
                 }
 
                 &.o_first {
-                    --o-statusbar-point-top-right: 100% 0;
-                    --o-statusbar-point-middle-right: 100% 50%;
-                    --o-statusbar-point-bottom-right: 100% 100%;
-
                     padding-inline-end: var(--o-statusbar-button-padding-x);
-
-                    &:not(.o_last) {
-                        --#{$prefix}btn-border-radius: 0 var(--o-statusbar-radius) var(--o-statusbar-radius) 0;
-                    }
-                }
-
-                &.o_first.o_last {
-                    --#{$prefix}btn-border-radius: var(--o-statusbar-radius);
                 }
 
                 &.dropdown-toggle::after {
                     content: normal;
                 }
-
-                &:not(.o_last, .o_first) {
-                    --#{$prefix}btn-border-radius: 0;
-                }
-
-                .o_rtl & {
-                    --o-statusbar-point-top-left: calc(var(--o-statusbar-caret-width) + var(--o-statusbar-caret-gap)) 0;
-                    --o-statusbar-point-top-right: calc(100% - var(--o-statusbar-caret-gap)) 0;
-                    --o-statusbar-point-middle-left: var(--o-statusbar-caret-gap) 50%;
-                    --o-statusbar-point-middle-right: calc(100% - var(--o-statusbar-caret-width) - var(--o-statusbar-caret-gap)) 50%;
-                    --o-statusbar-point-bottom-left: calc(var(--o-statusbar-caret-width) + var(--o-statusbar-caret-gap)) 100%;
-                    --o-statusbar-point-bottom-right: calc(100% - var(--o-statusbar-caret-gap)) 100%;
-
-                    &.o_last {
-                        --o-statusbar-point-top-right: 100% 0;
-                        --o-statusbar-point-middle-right: 100% 50%;
-                        --o-statusbar-point-bottom-right: 100% 100%;
-                        --#{$prefix}btn-border-radius: 0 var(--o-statusbar-radius) var(--o-statusbar-radius) 0;
-                    }
-
-                    &.o_first {
-                        --o-statusbar-point-top-left: 0 0;
-                        --o-statusbar-point-middle-left: 0 50%;
-                        --o-statusbar-point-bottom-left: 0 100%;
-                        --#{$prefix}btn-border-radius: var(--o-statusbar-radius) 0 0 var(--o-statusbar-radius);
-                    }
-
-                    &.o_first.o_last {
-                        --#{$prefix}btn-border-radius: var(--o-statusbar-radius);
-                    }
-                }
-            }
-
-            &:not(.o_arrow_button_current) {
-                --#{$prefix}btn-disabled-bg: transparent;
-                --#{$prefix}btn-disabled-border-color: transparent;
             }
 
             &:disabled {
