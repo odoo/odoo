@@ -156,10 +156,10 @@ def download_iot_handlers(server_url=None):
         _logger.info('No new IoT handler to download')
         return
 
-    try:
-        system.update_conf({'iot_handlers_etag': response.headers['ETag'].strip('"')})
-    except KeyError:
-        _logger.exception('No ETag in the response headers')
+    if "ETag" in response.headers:
+        system.update_conf({
+            "iot_handlers_etag": response.headers["ETag"].strip('"'),
+        })
 
     try:
         zip_file = zipfile.ZipFile(io.BytesIO(data))
