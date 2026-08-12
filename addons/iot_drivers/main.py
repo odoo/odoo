@@ -27,7 +27,7 @@ class Manager(Thread):
     ws_client = None
 
     def __init__(self):
-        super().__init__(daemon=True)
+        super().__init__(daemon=True, name="Manager")
         self.identifier = system.IOT_IDENTIFIER
         self.domain = self._get_domain()
         self.version = system.get_version(detailed_version=True)

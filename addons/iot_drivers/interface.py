@@ -14,7 +14,7 @@ class Interface(Thread):
     allow_unsupported = False
 
     def __init__(self):
-        super().__init__(daemon=True)
+        super().__init__(daemon=True, name=self.__class__.__name__)
         self._detected_devices = set()
         old_linkage = hasattr(self, 'connection_type')  # TODO: remove when v19.0 is deprecated
         if old_linkage:
