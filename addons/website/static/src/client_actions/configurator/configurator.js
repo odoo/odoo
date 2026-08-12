@@ -94,6 +94,7 @@ export const CUSTOM_BG_COLOR_ATTRS = ["menu", "footer"];
 
 const MAX_NBR_DISPLAY_MAIN_THEMES = 6;
 const DESKTOP_PREVIEW_WIDTH = 1440;
+const MIN_INDUSTRY_MATCH_CONFIDENCE = 70;
 const PREVIEW_IMAGE_LIST = [
     "landscape_md_2",
     "landscape_md_6",
@@ -299,11 +300,18 @@ export class DescriptionScreen extends Component {
         this.selectPositioning();
     }
 
-    _setSelectedIndustry(label, id) {
+    async _setSelectedIndustry(label, id) {
         this.state.selectIndustry(label, id);
         this.setImages({});
-        this.fetchIndustryImages(id);
         this.fetchPositionings(label);
+        if (id === -1) {
+            id = await this.findClosestIndustryId(label);
+            if (this.state.selectedIndustry?.label !== label) {
+                return;
+            }
+            this.state.setIndustryId(id);
+        }
+        this.fetchIndustryImages(id);
     }
 
     setImages(images) {
@@ -321,6 +329,39 @@ export class DescriptionScreen extends Component {
             this.state.selectedIndustry?.id === industryId
         ) {
             this.setImages(images);
+        }
+    }
+
+    async findClosestIndustryId(unknownIndustry) {
+        const industries = this.state.industries;
+        const catalog = industries
+            .map(({ id, label, synonyms }) => `${id}: ${label}${synonyms ? ` (${synonyms})` : ""}`)
+            .join("\n");
+        const prompt = `A user typed "${unknownIndustry}" as their business industry but it is not part of the known industries listed below, one per line as "id: label (synonyms)":
+${catalog}
+
+Find the single known industry that best matches what the user typed.
+
+Return ONLY a JSON object with:
+- "id": the numeric id of the best matching industry
+- "confidence": an integer between 0 and 100 telling how confident you are that this industry is what the user meant`;
+        try {
+            const response = await rpc("/html_editor/generate_text", {
+                prompt,
+                conversation_history: [],
+            });
+            const match = response?.match(/\{[\s\S]*\}/);
+            const { id, confidence } = (match && JSON.parse(match[0])) || {};
+            if (
+                confidence >= MIN_INDUSTRY_MATCH_CONFIDENCE &&
+                industries.some((industry) => industry.id === id)
+            ) {
+                return id;
+            } else {
+                return -1;
+            }
+        } catch {
+            return -1;
         }
     }
 
@@ -558,7 +599,7 @@ export class DescriptionScreen extends Component {
     checkDescriptionCompletion() {
         const { selectedType, selectedPositioning, selectedIndustry } = this.state;
         if (selectedType && selectedPositioning && selectedIndustry) {
-            if (selectedIndustry.id === -1) {
+            if (this.state.isSelectedIndustryUnknown()) {
                 this.orm.call("website", "configurator_missing_industry", [], {
                     unknown_industry: selectedIndustry.label,
                 });
@@ -1344,6 +1385,11 @@ export class Store {
         return palette ? palette.name || "recommendedPalette" : false;
     }
 
+    isSelectedIndustryUnknown() {
+        const label = this.selectedIndustry.label.toLowerCase();
+        return !this.industries.some((industry) => industry.label.toLowerCase() === label);
+    }
+
     //-------------------------------------------------------------------------
     // Actions
     //-------------------------------------------------------------------------
@@ -1358,6 +1404,10 @@ export class Store {
         } else {
             this.selectedIndustry = { id, label };
         }
+    }
+
+    setIndustryId(id) {
+        this.selectedIndustry = { ...this.selectedIndustry, id };
     }
 
     changeLogo(data, attachmentId) {
