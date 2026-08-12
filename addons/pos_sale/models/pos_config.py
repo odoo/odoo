@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, api
+from odoo.exceptions import UserError, ValidationError
+from odoo import _, fields, models, api
 
 
 class PosConfig(models.Model):
@@ -45,3 +46,30 @@ class PosConfig(models.Model):
 
         if values:
             self.with_context(active_test=False).search([]).write(values)
+
+    @api.constrains('default_product_id')
+    def _check_default_products(self):
+        for config in self:
+            if not config.default_product_id:
+                raise ValidationError(_("%s needs a Default Product", config.display_name))
+
+    @api.constrains('down_payment_product_id')
+    def _check_downproduct_products(self):
+        for config in self:
+            if not config.down_payment_product_id:
+                raise ValidationError(_("%s needs a Down Payment Product", config.display_name))
+
+    def _check_before_creating_new_session(self):
+        if not (self.default_product_id and self.down_payment_product_id):
+            self._ensure_default_products()
+            if not self.default_product_id:
+                raise UserError(_(
+                    "Please set a Default Product on %s before opening a session.",
+                    self.display_name,
+                ))
+            if not self.down_payment_product_id:
+                raise UserError(_(
+                    "Please set a Down Payment Product on %s before opening a session.",
+                    self.display_name,
+                ))
+        return super()._check_before_creating_new_session()
