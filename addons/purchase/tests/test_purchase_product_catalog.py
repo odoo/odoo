@@ -150,6 +150,10 @@ class TestPurchaseProductCatalog(AccountTestInvoicingCommon, HttpCase):
                     'discount': 22.5
                 }),
                 Command.create({
+                    'partner_id': vendor_by_liter.id,
+                    'price': 3.0,
+                }),
+                Command.create({
                     'partner_id': vendor_by_unit.id,
                     'uom_id': self.uom_unit.id,
                     'price': 2.5,
