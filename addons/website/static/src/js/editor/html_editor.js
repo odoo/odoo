@@ -89,6 +89,18 @@ patch(LinkPopover.prototype, {
         }
     },
 
+    /**
+     * @override
+     * Remembers the URL that was set on the link, the button or the image,
+     * including one typed by hand, to suggest it first the next time a URL has
+     * to be chosen. URLs selected from the suggestions are already remembered
+     * on selection.
+     */
+    onClickApply() {
+        super.onClickApply();
+        wUtils.setRecentlyUsedUrl(this.state.url);
+    },
+
     updateValue(val) {
         this.state.url = val;
         if (!this.state.isImage) {

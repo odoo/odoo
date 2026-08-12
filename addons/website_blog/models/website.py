@@ -11,7 +11,7 @@ class Website(models.Model):
 
     def get_suggested_controllers(self):
         suggested_controllers = super(Website, self).get_suggested_controllers()
-        suggested_controllers.append((_('Blog'), self.env['ir.http']._url_for('/blog'), 'website_blog'))
+        suggested_controllers.append((_('Blog'), self.env['ir.http']._url_for('/blog')))
         return suggested_controllers
 
     def _get_cta_candidates(self, website_type):
