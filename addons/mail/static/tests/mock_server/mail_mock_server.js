@@ -275,6 +275,12 @@ async function channel_call_leave(request) {
     BusBus._sendmany(notifications);
 }
 
+registerRoute("/mail/rtc/channel/upgrade_connection", channel_upgrade_connection);
+/** @type {RouteCallback} */
+async function channel_upgrade_connection() {
+    // tests have no SFU server to hand out, so the call stays peer to peer
+}
+
 registerRoute("/discuss/channel/sub_channel/create", discuss_channel_sub_channel_create);
 async function discuss_channel_sub_channel_create(request) {
     /** @type {import("mock_models").DiscussChannel} */
@@ -1025,7 +1031,9 @@ function _process_request_for_all(store, name, params, context = {}) {
             ],
             makeKwArgs({ limit: 100 })
         );
-        const memberCount = DiscussChannelMember.search_count([["channel_id", "=", params.channel_id]]);
+        const memberCount = DiscussChannelMember.search_count([
+            ["channel_id", "=", params.channel_id],
+        ]);
         store.add(DiscussChannel.browse(params.channel_id), { member_count: memberCount });
         store.add(DiscussChannelMember.browse(memberIds));
     }
