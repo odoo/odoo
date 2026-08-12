@@ -1,4 +1,6 @@
-import { Component, proxy, t, useProps } from "@odoo/owl";
+import { Component, onWillUnmount, proxy, status, t, useProps } from "@odoo/owl";
+import { browser } from "@web/core/browser/browser";
+import { _t } from "@web/core/l10n/translation";
 import { useBus } from "@web/core/utils/hooks";
 
 export function useStatusIndicator(model, actions = {}) {
@@ -31,6 +33,22 @@ export class FormStatusIndicator extends Component {
         discard: t.function(),
     });
 
+    setup() {
+        this.state = proxy({ feedback: undefined });
+        onWillUnmount(() => browser.clearTimeout(this.feedbackTimeout));
+    }
+
+    showFeedback(text, icon, className) {
+        // Discarding a new record navigates back, which destroys this one.
+        if (status(this) !== "mounted") {
+            return;
+        }
+        browser.clearTimeout(this.feedbackTimeout);
+        this.state.feedback = { text, icon, className };
+        // Kept in step with the fade timed by `form_status_indicator.css`.
+        this.feedbackTimeout = browser.setTimeout(() => (this.state.feedback = undefined), 2000);
+    }
+
     get displayButtons() {
         return this.indicatorMode !== "saved";
     }
@@ -45,8 +63,11 @@ export class FormStatusIndicator extends Component {
 
     async discard() {
         await this.props.discard();
+        this.showFeedback(_t("Discarded"), "close", "text-muted");
     }
     async save() {
-        await this.props.save();
+        if (await this.props.save()) {
+            this.showFeedback(_t("Saved"), "check", "text-success");
+        }
     }
 }

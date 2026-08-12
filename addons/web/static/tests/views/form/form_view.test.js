@@ -5049,6 +5049,28 @@ test(`buttons with attr "special" in dialog close the dialog`, async () => {
 });
 
 test.tags("desktop");
+test(`status indicator acknowledges a save and a discard`, async () => {
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `<form><field name="foo"/></form>`,
+        resId: 1,
+    });
+    expect(`.o_form_status_indicator_feedback`).toHaveCount(0);
+
+    await contains(`.o_field_widget[name=foo] input`).edit("saved value");
+    await contains(`.o_form_button_save`).click();
+    expect(`.o_form_status_indicator_feedback`).toHaveText("Saved");
+    await runAllTimers();
+    expect(`.o_form_status_indicator_feedback`).toHaveCount(0);
+
+    await contains(`.o_field_widget[name=foo] input`).edit("discarded value");
+    await contains(`.o_form_button_cancel`).click();
+    expect(`.o_form_status_indicator_feedback`).toHaveText("Discarded");
+    expect(`.o_field_widget[name=foo] input`).toHaveValue("saved value");
+});
+
+test.tags("desktop");
 test(`Add custom buttons to default buttons (replace="0")`, async () => {
     Product._views = {
         form: `
