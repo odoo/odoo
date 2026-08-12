@@ -205,10 +205,16 @@ class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
 
     @freeze_time('2026-01-23')
     def test_ksef_fa3_reverse_charge(self):
-        invoice_lines = self._prepare_invoice_line(product_id=self.product.id, quantity=1,
-        price_unit=1000.0, tax_ids=[Command.set(self.env['account.chart.template'].ref('vs_stal').ids)])
-        invoice = self._create_invoice(invoice_date=fields.Date.today(), partner_id=self.partner_pl,
-        invoice_line_ids=[invoice_lines], post=True)
+        K_12_tax = self.env['account.chart.template'].ref('vs_dostu')
+        K_31_tax = self.env['account.chart.template'].ref('vs_stal')
+        invoice = self._create_invoice(
+            invoice_date=fields.Date.today(),
+            partner_id=self.partner_pl,
+            invoice_line_ids=[
+                Command.create({'product_id': self.product_a.id, 'quantity': 1, 'price_unit': 1000.0, 'tax_ids': K_12_tax.ids}),
+                Command.create({'product_id': self.product_a.id, 'quantity': 1, 'price_unit': 500.0, 'tax_ids': K_31_tax.ids}),
+            ],
+            post=True)
         self._assert_export_invoice(invoice, 'standard_fa3_format_invoice_reverse_charge.xml')
 
     @freeze_time('2026-01-23')
