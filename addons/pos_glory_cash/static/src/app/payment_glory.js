@@ -218,7 +218,7 @@ export class PaymentGlory extends PaymentInterface {
         const isSuccessful = paymentResponse.status === "SUCCESS";
         const { transactionId, cashGiven, cashReturned } = paymentResponse;
         this.paymentLine.transaction_id = transactionId;
-        this.paymentLine.setAmount(this.gloryAmountToPosAmount(cashGiven));
+        this.paymentLine.setAmount(this.gloryAmountToPosAmount(cashGiven - cashReturned));
         this.paymentLine.setReceiptInfo(
             this.makeReceiptMessage(transactionId, cashGiven, cashReturned, isSuccessful)
         );
