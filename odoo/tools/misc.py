@@ -54,6 +54,7 @@ __all__ = [
     'DEFAULT_SERVER_DATE_FORMAT',
     'DEFAULT_SERVER_TIME_FORMAT',
     'NON_BREAKING_SPACE',
+    'ROUNDING_UNIT_CHARS',
     'SKIPPED_ELEMENT_TYPES',
     'DotDict',
     'LastOrderedSet',
@@ -111,6 +112,11 @@ default_parser.set_element_class_lookup(objectify.ObjectifyElementClassLookup())
 objectify.set_default_parser(default_parser)
 
 NON_BREAKING_SPACE = u'\N{NO-BREAK SPACE}'
+ROUNDING_UNIT_CHARS = {
+    'thousands': 'k',
+    'lakhs': 'L',
+    'millions': 'M',
+}
 
 # ensure we have a non patched time for query times when using freezegun
 real_time = time.time.__call__  # type: ignore
@@ -1315,9 +1321,9 @@ def formatLang(
     :param rounding_unit: The rounding unit to be used:
         **decimals** will round to decimals with ``digits`` or ``dp`` precision,
         **units** will round to units without any decimals,
-        **thousands** will round to thousands without any decimals,
-        **lakhs** will round to lakhs without any decimals,
-        **millions** will round to millions without any decimals.
+        **thousands** will round to thousands without any decimals and append 'k',
+        **lakhs** will round to lakhs without any decimals and append 'L',
+        **millions** will round to millions without any decimals and append 'M'.
 
     :returns: The value formatted.
     """
@@ -1346,6 +1352,9 @@ def formatLang(
     rounded_value = float_round(value, precision_digits=digits, rounding_method=rounding_method)
     lang = env['res.lang'].browse(get_lang(env).id)
     formatted_value = lang.format(f'%.{digits}f', rounded_value, grouping=grouping)
+
+    if unit_char := ROUNDING_UNIT_CHARS.get(rounding_unit):
+        formatted_value = f'{formatted_value}{unit_char}'
 
     if currency_obj and currency_obj.symbol:
         arguments = (formatted_value, NON_BREAKING_SPACE, currency_obj.symbol)

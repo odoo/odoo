@@ -528,14 +528,14 @@ class TestFormatLang(TransactionCase):
     def test_rounding_unit(self):
         self.assertEqual(misc.formatLang(self.env, 1000000.00), '1,000,000.00')
         self.assertEqual(misc.formatLang(self.env, 1000000.00, rounding_unit='units'), '1,000,000')
-        self.assertEqual(misc.formatLang(self.env, 1000000.00, rounding_unit='thousands'), '1,000')
-        self.assertEqual(misc.formatLang(self.env, 1000000.00, rounding_unit='lakhs'), '10')
-        self.assertEqual(misc.formatLang(self.env, 1000000.00, rounding_unit="millions"), '1')
+        self.assertEqual(misc.formatLang(self.env, 1000000.00, rounding_unit='thousands'), '1,000k')
+        self.assertEqual(misc.formatLang(self.env, 1000000.00, rounding_unit='lakhs'), '10L')
+        self.assertEqual(misc.formatLang(self.env, 1000000.00, rounding_unit="millions"), '1M')
 
     def test_rounding_method_and_rounding_unit(self):
-        self.assertEqual(misc.formatLang(self.env, 1822060000, rounding_method='HALF-UP', rounding_unit='lakhs'), '18,221')
-        self.assertEqual(misc.formatLang(self.env, 1822050000, rounding_method='HALF-UP', rounding_unit='lakhs'), '18,221')
-        self.assertEqual(misc.formatLang(self.env, 1822049900, rounding_method='HALF-UP', rounding_unit='lakhs'), '18,220')
+        self.assertEqual(misc.formatLang(self.env, 1822060000, rounding_method='HALF-UP', rounding_unit='lakhs'), '18,221L')
+        self.assertEqual(misc.formatLang(self.env, 1822050000, rounding_method='HALF-UP', rounding_unit='lakhs'), '18,221L')
+        self.assertEqual(misc.formatLang(self.env, 1822049900, rounding_method='HALF-UP', rounding_unit='lakhs'), '18,220L')
 
     def test_format_decimal_point_without_grouping(self):
         lang = self.env['res.lang'].browse(misc.get_lang(self.env).id)
