@@ -14,6 +14,7 @@
         ],
         'point_of_sale.payment_terminals': [
             'pos_stripe/static/src/app/payment_stripe.js',
+            'pos_stripe/static/src/overrides/models/pos_payment.js',
         ],
         'web.assets_unit_tests': [
             'pos_stripe/static/tests/unit/data/**/*'
