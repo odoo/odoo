@@ -12,6 +12,13 @@
                 <button class="btn btn-primary" t-on-click="this.onUnfold">Unfold</button>
             </t>
 
+            <t t-set-slot="control-panel-navigation-additional">
+                <div t-if="!this.isProductionDone and !this.isProductionCancelled" class="o_row" t-on-click="() => this.onChangeDisplay('toReplenish')">
+                    <i class="btn oi oi-lg pe-1" t-att-data-icon="this.state.showOptions.toReplenish ? 'toggle_on' : 'toggle_off'"/>
+                    <span>To Replenish</span>
+                </div>
+            </t>
+
             <div class="overflow-auto border-bottom bg-view container-fluid">
                 <table name="overview" class="table">
                     <thead class="o_mrp_mo_overview_thead">
