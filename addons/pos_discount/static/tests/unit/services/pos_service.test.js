@@ -49,6 +49,7 @@ describe("PoS Discount", () => {
         expect(productLine.priceIncl).toBe(30);
         expect(discountLine.priceIncl).toBe(-3);
     });
+<<<<<<< aef56898d9ea5a97948af04c03ae101d17b8b4a3
 
     test("fixed global discount mirrors its sign when refunding", async () => {
         const store = await setupPosEnv();
@@ -71,4 +72,24 @@ describe("PoS Discount", () => {
         await store.applyDiscount(5, "fixed", refund);
         expect(refund.priceIncl).toBe(-saleTotal); // -29.50, not -39.50
     });
+||||||| c8b8c942e3f31bc6773dbffe50e31b7078db02ee
+=======
+
+    test("fixed global discount mirrors its sign when refunding", async () => {
+        const store = await setupPosEnv();
+        const product = store.models["product.template"].get(5);
+
+        const sale = store.addNewOrder();
+        await store.addLineToOrder({ product_tmpl_id: product, qty: 10 }, sale);
+        await store.applyDiscount(5, "fixed", sale);
+        const saleTotal = sale.priceIncl;
+        expect(saleTotal).toBe(29.5); // 34.50 incl - 5.00 fixed discount
+
+        const refund = store.addNewOrder();
+        refund.is_refund = true;
+        await store.addLineToOrder({ product_tmpl_id: product, qty: -10 }, refund);
+        await store.applyDiscount(5, "fixed", refund);
+        expect(refund.priceIncl).toBe(-saleTotal); // -29.50, not -39.50
+    });
+>>>>>>> 0b9f7299bd05c4e7b38e43be0c5261743300779d
 });
