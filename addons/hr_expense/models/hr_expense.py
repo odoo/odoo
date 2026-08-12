@@ -1302,17 +1302,19 @@ class HrExpense(models.Model):
         # Counting the expenses to display in the dashboard:
         # - To Submit: contains the expenses paid either by the employee or by the company, and that are draft or reported
         # - Waiting approval: contains expenses paid by the employee or paid by the company, and that have been submitted but still need to be approved/refused
-        # - To be reimbursed: contains ONLY expenses paid by the employee that are approved, the payment has not yet been made
+        # - To be reimbursed: contains ONLY expenses paid by the employee that are approved or posted, the payment has not yet been made
         base_domain = [
             ('employee_id', 'child_of', self.env.user.employee_ids.ids),
             '|', ('state', 'in', ('draft', 'submitted')),
-            '&', ('payment_mode', '=', 'own_account'), ('state', '=', 'approved')
+            '&', ('payment_mode', '=', 'own_account'), ('state', 'in', ('approved', 'posted'))
         ]
         if domain := self.env.context.get('domain'):
             base_domain = Domain.AND([base_domain, domain])
 
         fetched_expenses = self._read_group(base_domain, ['state'], ['total_amount:sum'])
         for state, total_amount_sum in fetched_expenses:
+            if state == 'posted':  # Not reimbursed yet, fused with the "approved" state
+                state = 'approved'
             expense_state[state]['amount'] += total_amount_sum
         return expense_state
 

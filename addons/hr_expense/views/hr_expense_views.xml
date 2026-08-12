@@ -429,7 +429,7 @@
                     <filter string="To Submit" name="draft" domain="[('state', '=', 'draft')]"/>
                     <filter string="Waiting Approval" name="submitted" domain="[('state', '=', 'submitted')]"/>
                     <filter string="To Post" name="approved" domain="[('state', '=', 'approved')]"/>
-                    <filter string="Waiting Reimbursement" name="to_pay" domain="[('state', '=', 'approved'), ('payment_mode', '=', 'own_account')]"/>
+                    <filter string="Waiting Reimbursement" name="to_pay" domain="[('state', 'in', ('approved', 'posted')), ('payment_mode', '=', 'own_account')]"/>
                     <separator />
                     <filter string="Expense Date" name="date" date="date"/>
                     <separator/>
