@@ -3,5 +3,9 @@
         i.oi {
             font-size: var(--Favorite-font-size, 1rem);
         }
+
+        &:focus:not(:focus-visible) {
+            --btn-focus-box-shadow: none;
+        }
     }
 }
