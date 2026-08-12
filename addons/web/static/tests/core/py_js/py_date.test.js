@@ -14,6 +14,13 @@ const check = (expr, fn) => {
 const format = (n) => String(n).padStart(2, "0");
 
 const formatDate = (d) => {
+    const year = d.getFullYear();
+    const month = format(d.getMonth() + 1);
+    const day = format(d.getDate());
+    return `${year}-${month}-${day}`;
+};
+
+const formatUTCDate = (d) => {
     const year = d.getUTCFullYear();
     const month = format(d.getUTCMonth() + 1);
     const day = format(d.getUTCDate());
@@ -24,7 +31,7 @@ const formatDateTime = (d) => {
     const h = format(d.getUTCHours());
     const m = format(d.getUTCMinutes());
     const s = format(d.getUTCSeconds());
-    return `${formatDate(d)} ${h}:${m}:${s}`;
+    return `${formatUTCDate(d)} ${h}:${m}:${s}`;
 };
 
 describe.current.tags("headless");
