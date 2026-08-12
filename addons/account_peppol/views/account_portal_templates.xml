@@ -5,7 +5,7 @@
                 <label class="col-form-label label-optional" for="peppol_eas">
                     Peppol e-Address (EAS)
                 </label>
-                <select name="peppol_eas">
+                <select name="peppol_eas" class="form-select">
                     <option
                         t-foreach="peppol_eas_list"
                         t-as="eas"
@@ -20,6 +20,7 @@
                 <input
                     type="text"
                     name="peppol_endpoint"
+                    class="form-control"
                     t-att-value="peppol_endpoint or partner_sudo.peppol_endpoint"
                 />
             </div>
