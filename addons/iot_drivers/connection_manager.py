@@ -29,7 +29,7 @@ def _try_print_pairing_code():
 class ConnectionManager(Thread):
 
     def __init__(self):
-        super().__init__(daemon=True)
+        super().__init__(daemon=True, name="ConnectionManager")
         self.pairing_code = False
         self.pairing_uuid = False
         self.pairing_code_expired = False
