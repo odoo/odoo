@@ -1381,10 +1381,8 @@ class TestUpdateEvents(TestCommon):
         with self.assertRaises(ValidationError):
             event.with_user(self.organizer_user).write({'user_id': self.attendee_user.id})
 
-        # Set mock return values for the event re-creation.
-        event_id = "123"
-        event_iCalUId = "456"
-        mock_insert.return_value = (event_id, event_iCalUId)
+        # Set mock return values for the event re-creation
+        mock_insert.side_effect = lambda *args, **kwargs: (f"123-{mock_insert.call_count}", f"456-{mock_insert.call_count}")
         mock_get_events.return_value = ([], None)
 
         # Change the event organizer: user B (the organizer) is synced and now listed as an attendee.
