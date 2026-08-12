@@ -838,7 +838,7 @@ class PosOrder(models.Model):
             author_id = self.session_id._get_message_author().id
             draft_orders._post_cancel_message(author_id=author_id)
             for config in draft_orders.mapped('config_id'):
-                config.notify_synchronisation(config.current_session_id.id, self.env.context.get('device_identifier', 0))
+                config.notify_synchronisation({'pos.order': draft_orders.filtered(lambda o: o.config_id == config)})
 
         return {
             'pos.order': self._load_pos_data_read(draft_orders, self.config_id),
@@ -848,8 +848,8 @@ class PosOrder(models.Model):
         orders = self.browse(self.env.context.get('active_ids'))
         orders.write({'state': 'cancel', 'date_order': fields.Datetime.now()})
         orders._post_cancel_message()
-        for config in orders.config_id:
-            config.notify_synchronisation(config.current_session_id.id, 0)
+        for config in orders.mapped('config_id'):
+            config.notify_synchronisation({'pos.order': orders.filtered(lambda o: o.config_id == config)})
 
     def _get_open_order(self, order):
         return self.env["pos.order"].search([('uuid', '=', order.get('uuid'))], limit=1, order='id desc')
@@ -908,11 +908,6 @@ class PosOrder(models.Model):
         # Sometime pos_orders_ids can be empty.
         pos_order_ids = self.env['pos.order'].browse(order_ids)
         config = pos_order_ids.config_id[0] if pos_order_ids else False
-
-        for order in pos_order_ids:
-            order._ensure_access_token()
-            if not self.env.context.get('preparation'):
-                order.config_id.notify_synchronisation(order.config_id.current_session_id.id, self.env.context.get('device_identifier', 0))
 
         _logger.info("PoS synchronisation #%d finished", sync_token)
         return pos_order_ids.read_pos_data(orders, config)
@@ -1009,8 +1004,10 @@ class PosOrder(models.Model):
                     refund_line._onchange_amount_line_all()
             refund_order._compute_prices()
             refund_orders |= refund_order
-            refund_order.config_id.notify_synchronisation(current_session.id, 0)
+
         refund_orders._compute_prices()
+        for config in refund_orders.mapped('config_id'):
+            config.notify_synchronisation({'pos.order': refund_orders.filtered(lambda o: o.config_id == config)})
         return refund_orders
 
     def refund(self):

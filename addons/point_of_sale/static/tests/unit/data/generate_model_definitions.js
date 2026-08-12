@@ -108,5 +108,9 @@ export const definePosModels = () => {
         (modelClass) => !posModelNames.includes(modelClass.prototype.constructor._name)
     );
     onRpc("/pos/ping", () => {});
+    onRpc("/pos/webrtc/announce", () => ({}));
+    onRpc("/pos/webrtc/signal", () => ({}));
+    onRpc("/pos_customer_display/webrtc/announce", () => ({}));
+    onRpc("/pos_customer_display/webrtc/signal", () => ({}));
     defineModels([...modelsFromMail, ...hootPosModels]);
 };

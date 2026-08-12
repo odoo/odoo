@@ -28,7 +28,6 @@ class PosOrder(models.Model):
     def _load_pos_self_data_domain(self, data, config):
         return [('id', '=', False)]
 
-    @api.model
     def remove_from_ui(self, server_ids):
         order_ids = self.env['pos.order'].browse(server_ids)
         order_ids.state = 'cancel'
@@ -43,20 +42,16 @@ class PosOrder(models.Model):
         return result
 
     def cancel_order_from_pos(self):
-        orders = super().cancel_order_from_pos()
-        success_orders_ids = [o['id'] for o in orders['pos.order'] if o['state'] == 'cancel']
-        orders_ids = self.browse(success_orders_ids).exists()
-        self._send_notification(orders_ids)
-        return orders
+        result = super().cancel_order_from_pos()
+        self._send_notification(self)
+        return result
 
     def action_pos_order_cancel(self):
         super().action_pos_order_cancel()
         self._send_notification(self)
 
     def _send_notification(self, order_ids):
-        config_ids = order_ids.config_id
-        for config in config_ids:
-            config.notify_synchronisation(config.current_session_id.id, self.env.context.get('device_identifier', 0))
+        for config in order_ids.mapped('config_id'):
             config._notify('ORDER_STATE_CHANGED', {})
 
     def _send_self_order_receipt(self):

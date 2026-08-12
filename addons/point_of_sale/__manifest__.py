@@ -217,7 +217,6 @@
             'point_of_sale/static/src/**/*',
             ('remove', 'point_of_sale/static/src/backend/**/*'),
             ('remove', 'point_of_sale/static/src/customer_display/**/*'),
-            'point_of_sale/static/src/customer_display/utils.js',
             ('include', 'point_of_sale.payment_terminals'),
             # main.js boots the pos app, it is only included in the prod bundle as tests mount the app themselves
             ('remove', 'point_of_sale/static/src/app/main.js'),
@@ -267,6 +266,8 @@
             "point_of_sale/static/src/app/components/price_formatter/**/*",
             "point_of_sale/static/src/app/components/validation_animation/**/*",
             "point_of_sale/static/src/app/components/feedback_payment_summary/**/*",
+            "point_of_sale/static/src/app/webrtc/**/*",
+            "point_of_sale/static/src/app/components/popups/webrtc_debug_popup/*",
         ],
         'point_of_sale.customer_display_assets_dark': [
             ('include', 'point_of_sale.customer_display_assets'),

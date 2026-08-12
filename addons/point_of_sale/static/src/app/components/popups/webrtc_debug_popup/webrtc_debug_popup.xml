@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="point_of_sale.WebrtcDebugPopup">
+        <Dialog title.translate="WebRTC peers" size="'lg'">
+            <div class="overflow-y-auto flex-grow-1">
+                <table class="table align-middle">
+                    <thead>
+                        <tr>
+                            <th>Peer</th>
+                            <th>Group</th>
+                            <th>Device UUID</th>
+                            <th>Local</th>
+                            <th>Remote</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="table-secondary" style="background-color: var(--table-bg); border-color: var(--table-border-color); color: var(--table-color);">
+                            <td><code t-out="this.state.peer.id"/></td>
+                            <td t-out="this.state.peer.group"/>
+                            <td><code t-out="this.state.peer.deviceUuid or '—'"/></td>
+                            <td>—</td>
+                            <td>—</td>
+                        </tr>
+                        <t t-if="this.state.peer.connections.length === 0">
+                            <tr>
+                                <td colspan="5" class="text-muted ps-4">No direct peer connections.</td>
+                            </tr>
+                        </t>
+                        <tr t-else="" t-foreach="this.state.peer.connections" t-as="conn" t-key="conn.id">
+                            <td class="ps-4">
+                                <span class="text-muted">↳</span>
+                                <code t-out="conn.id"/>
+                            </td>
+                            <td t-out="conn.group"/>
+                            <td><code t-out="conn.deviceUuid or '—'"/></td>
+                            <t t-set="localBadge" t-value="this.stateBadge(conn.state)"/>
+                            <td>
+                                <span t-attf-class="badge rounded {{localBadge.class}}">
+                                    <t t-out="localBadge.label"/>
+                                </span>
+                            </td>
+                            <t t-set="remoteBadge" t-value="this.stateBadge(conn.theirState)"/>
+                            <td>
+                                <span t-attf-class="badge rounded {{remoteBadge.class}}">
+                                    <t t-out="remoteBadge.label"/>
+                                </span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <t t-set-slot="footer">
+                <button class="btn btn-primary" t-on-click="() => this.refresh()">Refresh</button>
+                <button class="btn btn-secondary" t-on-click="this.props.close">Close</button>
+            </t>
+        </Dialog>
+    </t>
+
+</templates>

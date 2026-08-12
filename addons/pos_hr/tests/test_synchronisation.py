@@ -19,11 +19,4 @@ class TestPointOfSaleSync(CommonPosTest):
         })
         emp3.write({"active": False})
 
-        self.pos_config_usd.notify_synchronisation(
-            session_id=self.pos_config_usd.current_session_id.id,
-            device_identifier='1',
-            records={
-                'pos.session': [],
-                'hr.employee': [emp3.id]
-            }
-        )
+        self.pos_config_usd.notify_synchronisation(records={'hr.employee': emp3})

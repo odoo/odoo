@@ -1,4 +1,5 @@
 import { Base, createRelatedModels } from "@point_of_sale/app/models/related_models";
+import { SERIALIZED_UI_STATE_PROP } from "@point_of_sale/app/models/related_models/utils";
 import { registry } from "@web/core/registry";
 import { Mutex } from "@web/core/utils/concurrency";
 import { markRaw, proxy } from "@odoo/owl";
@@ -18,11 +19,12 @@ const CONSOLE_COLOR = "#28ffeb";
 
 export class PosData {
     static modelToLoad = []; // When empty all models are loaded
-    static serviceDependencies = ["orm", "bus_service"];
+    static serviceDependencies = ["orm", "bus_service", "webrtc"];
 
-    async setup(env, { orm, bus_service }) {
+    async setup(env, { orm, bus_service, webrtc }) {
         this.orm = orm;
         this.bus = bus_service;
+        this.webrtc = webrtc;
         this.relations = [];
         this.custom = {};
         this.syncInProgress = false;
@@ -111,6 +113,7 @@ export class PosData {
 
     reconnectWebSocket() {
         this.initializeWebsocket();
+        this.webrtc.reAnnounce();
         const channels = [...this.channels];
         this.channels = [];
         while (channels.length) {
@@ -550,43 +553,329 @@ export class PosData {
     }
 
     initListeners() {
-        for (const dynamicModel of this.opts.dynamicModels) {
-            if (!this.models[dynamicModel]) {
+        const dynamicModels = this.opts.dynamicModels;
+        const relationModels = Object.keys(this.relations);
+
+        this._applyingSync = false;
+        this._syncQueue = Promise.resolve();
+        this._deletedKeys = {};
+        this._lastSyncedAt = new Map();
+
+        this.webrtc.register("sync", (peer, payload) => {
+            if (this.webrtc.group !== "terminal" || peer.group !== "terminal") {
+                return;
+            }
+            this._syncQueue = this._syncQueue
+                .catch(() => {})
+                .then(() => this._handlePeerSync(peer.id, payload));
+        });
+
+        this.webrtc.registerSnapshot("sync", {
+            build: (peer) => {
+                if (this.webrtc.group !== "terminal" || peer.group !== "terminal") {
+                    return null;
+                }
+                const since = this._lastSyncedAt.get(peer.id);
+                const payload = this._buildFullSyncPayload(since);
+                if (!Object.keys(payload.records).length && !Object.keys(payload.deleted).length) {
+                    return null;
+                }
+                this._lastSyncedAt.set(peer.id, Date.now());
+                return payload;
+            },
+            apply: (peer, payload) => {
+                if (this.webrtc.group !== "terminal" || peer.group !== "terminal") {
+                    return;
+                }
+                this._syncQueue = this._syncQueue
+                    .catch(() => {})
+                    .then(() => this._handleSnapshot(peer.id, peer.group, payload));
+            },
+        });
+
+        this.connectWebSocket("SERVER_SYNCHRONISATION", (payload) => {
+            this._syncQueue = this._syncQueue
+                .catch(() => {})
+                .then(() => this._handleServerSync(payload));
+        });
+
+        for (const model of relationModels) {
+            this._registerModelBroadcaster(model);
+            if (dynamicModels.includes(model)) {
+                this.dynamicModelListener(model);
+            } else {
+                this.staticModelListener(model);
+            }
+        }
+    }
+
+    // ─── Mutation tracking ────────────────────────────────────────────────────────
+
+    _trackMutation(model, event, params) {
+        if (event === "update") {
+            const record = this.models[model].get(params.id);
+            if (!record) {
+                return;
+            }
+            const now = Date.now();
+            for (const field of params.fields) {
+                if (field === SERIALIZED_UI_STATE_PROP) {
+                    continue;
+                }
+                record._mutations[field] = now;
+            }
+        } else if (event === "delete") {
+            this._deletedKeys[model] ||= new Set();
+            this._deletedKeys[model].add(params.key);
+        }
+    }
+
+    _buildFullSyncPayload(since) {
+        const records = {};
+        const deleted = {};
+
+        for (const model of this.opts.dynamicModels) {
+            const modelKey = this.opts.databaseTable[model]?.key;
+            if (!modelKey) {
                 continue;
             }
+            const modelRecords = {};
 
-            this.models[dynamicModel].addEventListener(
-                "update",
-                this.debouncedSynchronizeLocalDataInIndexedDB.bind(this)
-            );
+            for (const record of this.models[model].getAll()) {
+                if (since !== undefined && !this._wasMutatedSince(record, since)) {
+                    continue;
+                }
+                modelRecords[record[modelKey]] = {
+                    data: record.serializeForIndexedDB(),
+                    meta: { mutations: record._mutations ?? {} },
+                };
+            }
+
+            if (Object.keys(modelRecords).length) {
+                records[model] = modelRecords;
+            }
+            if (this._deletedKeys[model]?.size) {
+                deleted[model] = Array.from(this._deletedKeys[model]);
+            }
         }
 
-        const ignore = Object.keys(this.opts.databaseTable);
-        for (const model of Object.keys(this.relations)) {
-            if (ignore.includes(model)) {
-                continue;
-            }
+        return { records, deleted };
+    }
 
-            this.models[model].addEventListener("delete", (params) => {
-                this.indexedDB.delete(model, [params.key]);
-            });
+    _wasMutatedSince(record, since) {
+        const mutations = record._mutations;
+        if (!mutations) {
+            return false;
+        }
+        return Object.values(mutations).some((mutatedAt) => mutatedAt > since);
+    }
 
-            this.models[model].addEventListener("update", (params) => {
-                const record = this.models[model].get(params.id)?.raw;
-                if (!record) {
-                    return; // the record may be deleted
+    // ─── WebRTC broadcasting ──────────────────────────────────────────────────────
+
+    _registerModelBroadcaster(model) {
+        const modelKey = this.opts.databaseTable[model]?.key || "id";
+
+        for (const event of ["update", "create", "delete"]) {
+            this.models[model].addEventListener(event, (params) => {
+                this._trackMutation(model, event, params);
+
+                if (this._applyingSync) {
+                    return;
                 }
-                for (const [key, value] of Object.entries(record)) {
-                    if (value instanceof Base) {
-                        record[key] = value.id;
-                    } else if (Array.isArray(value) && value[0] instanceof Base) {
-                        record[key] = value.map((v) => v.id);
+
+                const ids = params.ids ?? [params.id];
+                const records = ids.map((id) => {
+                    const record = this.models[model].get(id);
+                    const data = record
+                        ? record.serializeForIndexedDB()
+                        : { id, [modelKey]: params.key };
+                    return { data, meta: { mutations: record?._mutations ?? {} } };
+                });
+
+                this.webrtc.pushMessage("sync", [{ event, model, key: modelKey, records }], {
+                    group: "terminal",
+                });
+                this.webrtc.debounceSendMessages();
+            });
+        }
+    }
+
+    // ─── Incoming sync handlers ───────────────────────────────────────────────────
+
+    async _handleServerSync({ records = {}, deleted_record_ids: deletedRecordIds = {} }) {
+        const deletionsByModel = Object.fromEntries(
+            Object.entries(deletedRecordIds).map(([model, ids]) => [model, new Set(ids)])
+        );
+        await this._applyParsedSync(records, deletionsByModel, { deletionsByServerId: true });
+    }
+
+    async _handlePeerSync(from, payload) {
+        const { recordsByModel, deletionsByModel } = this._mergePeerSyncs(payload);
+        this._excludeShouldNotSync(recordsByModel, deletionsByModel);
+        const resolved = this._resolveConflicts(recordsByModel);
+        await this._applyParsedSync(resolved, deletionsByModel);
+    }
+
+    async _handleSnapshot(from, group, payload) {
+        if (group === "terminal") {
+            const { records, deleted = {} } = payload;
+            const deletionsByModel = Object.fromEntries(
+                Object.entries(deleted).map(([model, keys]) => [model, new Set(keys)])
+            );
+            this._excludeShouldNotSync(records, deletionsByModel);
+            const resolved = this._resolveConflicts(records);
+            await this._applyParsedSync(resolved, deletionsByModel);
+        }
+    }
+
+    async _applyParsedSync(resolved, deletionsByModel, { deletionsByServerId = false } = {}) {
+        const preloadData = await this.preLoadData(resolved);
+        const missing = this.network.offline
+            ? preloadData
+            : await this.missingRecursive(preloadData);
+        this._applyingSync = true;
+        try {
+            this.models.connectNewData(missing, []);
+            this._applyDeletions(deletionsByModel, { deletionsByServerId });
+        } finally {
+            this._applyingSync = false;
+        }
+    }
+
+    _applyDeletions(deletionsByModel, { deletionsByServerId = false } = {}) {
+        for (const [model, keysSet] of Object.entries(deletionsByModel)) {
+            const keyField = this.opts.databaseTable[model]?.key || "id";
+            const toDelete =
+                keyField === "id" || deletionsByServerId
+                    ? this.models[model].readMany([...keysSet])
+                    : this.models[model].filter((r) => keysSet.has(r[keyField]));
+            if (toDelete.length) {
+                this.models[model].deleteMany(toDelete, { silent: true });
+            }
+        }
+    }
+
+    // ─── Sync merging & conflict resolution ──────────────────────────────────────
+
+    _shouldNotSync(model, data) {
+        return model === "pos.order" && data.lines?.length === 0;
+    }
+
+    _excludeShouldNotSync(recordsByModel, deletionsByModel) {
+        for (const [model, records] of Object.entries(recordsByModel)) {
+            for (const [key, { data }] of Object.entries(records)) {
+                if (this._shouldNotSync(model, data)) {
+                    delete records[key];
+                    deletionsByModel[model] ||= new Set();
+                    deletionsByModel[model].add(key);
+                }
+            }
+        }
+    }
+
+    _mergePeerSyncs(syncs) {
+        const recordsByModel = {};
+        const deletionsByModel = {};
+
+        for (const { event, model, key, records } of syncs) {
+            recordsByModel[model] ||= {};
+            deletionsByModel[model] ||= new Set();
+
+            for (const record of records) {
+                const { data, meta } = record;
+                const { mutations } = meta;
+                const recordKey = data[key] ?? data.id;
+
+                if (deletionsByModel[model].has(recordKey)) {
+                    continue;
+                }
+
+                if (event === "delete") {
+                    delete recordsByModel[model][recordKey];
+                    deletionsByModel[model].add(recordKey);
+                    continue;
+                }
+
+                recordsByModel[model][recordKey] ||= { data: {}, meta: { mutations: {} } };
+                const entry = recordsByModel[model][recordKey];
+
+                if (event === "create" && Object.keys(entry.data).length === 0) {
+                    entry.data = data;
+                } else if (event === "update") {
+                    entry.data = data;
+                    entry.meta.mutations = mutations;
+                }
+            }
+        }
+
+        return { recordsByModel, deletionsByModel };
+    }
+
+    _resolveConflicts(recordsByModel) {
+        const resolved = {};
+
+        for (const [model, records] of Object.entries(recordsByModel)) {
+            resolved[model] = [];
+            const keyField = this.opts.databaseTable[model]?.key || "id";
+
+            for (const [recordKey, record] of Object.entries(records)) {
+                const { data, meta } = record;
+                const { mutations } = meta;
+                if (this._deletedKeys[model]?.has(recordKey)) {
+                    continue; // record was deleted locally
+                }
+
+                const localRecord =
+                    keyField === "id"
+                        ? this.models[model].get(recordKey)
+                        : this.models[model].getBy(keyField, recordKey);
+                const finalData = { ...data };
+
+                if (localRecord) {
+                    for (const [field, remoteDate] of Object.entries(mutations)) {
+                        const localDate = localRecord._mutations[field];
+                        if (localDate && localDate > remoteDate) {
+                            finalData[field] = localRecord.raw[field];
+                        }
                     }
                 }
 
-                this.synchronizeServerDataInIndexedDB({ [model]: [record] });
-            });
+                resolved[model].push(finalData);
+            }
         }
+
+        return resolved;
+    }
+
+    // ─── IndexedDB sync ───────────────────────────────────────────────────────────
+
+    dynamicModelListener(model) {
+        this.models[model].addEventListener(
+            "update",
+            this.debouncedSynchronizeLocalDataInIndexedDB.bind(this)
+        );
+    }
+
+    staticModelListener(model) {
+        this.models[model].addEventListener("delete", ({ key }) => {
+            this.indexedDB.delete(model, [key]);
+        });
+
+        this.models[model].addEventListener("update", ({ id }) => {
+            const record = this.models[model].get(id)?.raw;
+            if (!record) {
+                return; // the record may be deleted
+            }
+            for (const [key, value] of Object.entries(record)) {
+                if (value instanceof Base) {
+                    record[key] = value.id;
+                } else if (Array.isArray(value) && value[0] instanceof Base) {
+                    record[key] = value.map((v) => v.id);
+                }
+            }
+
+            this.synchronizeServerDataInIndexedDB({ [model]: [record] });
+        });
     }
 
     async execute({
@@ -1034,7 +1323,6 @@ export class PosData {
         }
 
         if (data) {
-            this.deviceSync?.dispatch && this.deviceSync.dispatch(data);
             const result = this.models.connectNewData(data);
             this.synchronizeServerDataInIndexedDB(data);
             return result;
@@ -1047,10 +1335,7 @@ export class PosData {
     }
 
     async ormWrite(model, ids, values, queue = true) {
-        const result = await this.execute({ type: "write", model, ids, values, queue });
-        this.deviceSync?.dispatch &&
-            this.deviceSync.dispatch({ [model]: ids.map((id) => ({ id })) });
-        return result;
+        return await this.execute({ type: "write", model, ids, values, queue });
     }
 
     async ormDelete(model, ids, queue = true) {

@@ -40,40 +40,21 @@ describe(`Related models Events`, () => {
         let orderCreates = [];
         let orderUpdates = [];
 
-        models["pos.order"].addEventListener("create", (data) => {
-            orderCreates.push(data);
-        });
+        models["pos.order"].addEventListener("create", (data) => orderCreates.push(data));
+        models["pos.order"].addEventListener("update", (data) => orderUpdates.push(data));
 
         const order1 = models["pos.order"].create({});
-        models["pos.order"].addEventListener("update", (data) => {
-            orderUpdates.push(data);
-        });
-
-        expect(orderUpdates.length).toBe(0);
-        expect(orderCreates.length).toBe(1);
-        expect(orderCreates[0].ids).toEqual([order1.id]);
+        expect(orderCreates).toEqual([{ ids: [order1.id] }]);
 
         orderCreates = [];
         orderUpdates = [];
 
         models.connectNewData({
-            "pos.order": [
-                {
-                    id: 1,
-                    uuid: order1.uuid, //Update
-                },
-                {
-                    id: 2,
-                },
-                {
-                    id: 3,
-                },
-            ],
+            "pos.order": [{ id: 1, uuid: order1.uuid }, { id: 2 }, { id: 3 }],
         });
 
-        expect(orderUpdates.length).toBe(1);
-        expect(orderCreates.length).toBe(1);
-        expect(orderCreates[0].ids).toEqual([2, 3]);
+        expect(orderUpdates).toEqual([{ id: order1.id, fields: ["id", "uuid"] }]);
+        expect(orderCreates).toEqual([{ ids: [2, 3] }]);
     });
 
     test("Connecting new data", async () => {

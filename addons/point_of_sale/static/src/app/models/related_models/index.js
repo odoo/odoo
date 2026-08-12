@@ -598,7 +598,8 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                 silentModels: opts.silent ? [record.model.name] : [],
             });
             const key = database[this.name]?.key || "id";
-            this.triggerEvents("delete", { key: record[key], id: record.id });
+            const deleteParams = { key: record[key], id: record.id };
+            this.triggerEvents("delete", deleteParams);
             return id;
         }
 
@@ -789,10 +790,8 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                         if (!isUpdate) {
                             createdIds.push(record.id);
                         } else {
-                            modelEvents.triggerEvents("update", {
-                                id: record.id,
-                                fields: Object.keys(rawData),
-                            });
+                            const params = { id: record.id, fields: Object.keys(vals) };
+                            modelEvents.triggerEvents("update", params);
                         }
                         resultsArray.push(record);
                     }
