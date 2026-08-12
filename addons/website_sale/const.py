@@ -38,11 +38,9 @@ SHOP_PAGE_STYLE_MAPPING = {
         "img_src": "/website_sale/static/src/img/configurator/shop/modern_grid.webp",
         "views": {
             "enable": [
-                "website.header_width_full",  # Header width
                 "website_sale.products_mobile_cols_single",  # Mobile cols single
                 "website_sale.products_attributes_top",  # Filters
                 "website_sale.filmstrip_categories_grid",  # Category style
-                "website.footer_copyright_content_width_fluid",  # Footer width
             ],
             "disable": [
                 "website_sale.products_attributes"  # Filters
@@ -77,12 +75,10 @@ SHOP_PAGE_STYLE_MAPPING = {
         "img_src": "/website_sale/static/src/img/configurator/shop/showcase.webp",
         "views": {
             "enable": [
-                "website.header_width_full",  # Header width
                 "website_sale.products_shop_title_align",  # Shop title centered
                 "website_sale.filmstrip_categories_pills",  # Category style
                 "website_sale.products_attributes_top",  # Filters
                 "website_sale.floating_bar",  # Toolbar/floating
-                "website.footer_copyright_content_width_fluid",  # Footer width
             ],
             "disable": [
                 "website_sale.products_attributes"  # Filters
@@ -153,7 +149,6 @@ SHOP_PAGE_STYLE_MAPPING = {
         "img_src": "/website_sale/static/src/img/configurator/shop/condensed_list.webp",
         "views": {
             "enable": [
-                "website.no_autohide_menu",  # Header
                 "website_sale.filmstrip_categories_images",  # Category style
             ],
             "disable": [],
