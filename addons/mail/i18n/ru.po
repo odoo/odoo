@@ -11,8 +11,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-31 17:36+0000\n"
-"PO-Revision-Date: 2026-06-13 13:12+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-08-11 12:17+0000\n"
+"Last-Translator: \"Anastasiia Koroleva (koan)\" <koan@odoo.com>\n"
 "Language-Team: Russian <https://translate.odoo.com/projects/odoo-s19-2/mail/"
 "ru/>\n"
 "Language: ru\n"
@@ -117,7 +117,6 @@ msgstr "%(author name)s из %(channel name)s"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/notification_message.js:0
-#, fuzzy
 msgid "%(author)s started a call."
 msgstr "%(author)s начал звонок."
 
@@ -138,14 +137,12 @@ msgstr ""
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
-#, fuzzy
 msgid "%(author_name)s has invited you to a channel"
 msgstr "%(author_name)s пригласил вас в канал"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_model.js:0
-#, fuzzy
 msgid "%(caller)s started a call"
 msgstr "%(caller)s начал звонок"
 
@@ -231,14 +228,12 @@ msgstr "ещё %(extraCount)s"
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
-#, fuzzy
 msgid "%(file1)s and %(count)d other attachments"
 msgstr "%(file1)s и следующее количество других вложений %(count)d"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_model.js:0
-#, fuzzy
 msgid "%(file1)s and %(count)s other attachments"
 msgstr "%(file1)s и следующее количество других вложений %(count)s"
 
@@ -308,7 +303,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/js/rotting_mixin/rotting_widget.js:0
 msgid "%(numberOfDays)sd"
-msgstr ""
+msgstr "%(numberOfDays)s д."
 
 #. module: mail
 #. odoo-python
@@ -325,35 +320,30 @@ msgstr ""
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_model.js:0
-#, fuzzy
 msgid "%(user)s changed the channel name to %(name)s"
 msgstr "Пользователь %(user)s изменил название канала на %(name)s"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_model.js:0
-#, fuzzy
 msgid "%(user)s changed the thread name to %(name)s"
 msgstr "Пользователь %(user)s изменил название обсуждения на %(name)s"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_model.js:0
-#, fuzzy
 msgid "%(user)s deleted the thread \"%(thread_name)s\""
 msgstr "%(user)s удалил обсуждение «%(thread_name)s»"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/web/discuss_core_web_service.js:0
-#, fuzzy
 msgid "%(user)s just connected for the first time. Wish them luck!"
 msgstr "%(user)s только что подключился в первый раз. Пожелайте удачи!"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
-#, fuzzy
 msgid "%(user)s started a thread: %(goto)s%(thread_name)s%(goto_end)s."
 msgstr "%(user)s начал обсуждение: %(goto)s%(thread_name)s%(goto_end)s."
 
@@ -372,7 +362,6 @@ msgstr "%(user1)s, %(user2)s и другие печатают..."
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
-#, fuzzy
 msgid ""
 "%(user_name)s has invited you to the %(strong_start)s%(channel_name)s%"
 "(strong_end)s channel."
@@ -435,7 +424,7 @@ msgstr "%s новых сообщений"
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 #: code:addons/mail/static/src/discuss/core/common/discuss_channel_model.js:0
 msgid "%s others"
-msgstr ""
+msgstr "%s другие"
 
 #. module: mail
 #. odoo-javascript
@@ -446,7 +435,6 @@ msgstr "%s поднял(а) руку"
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/res_users.py:0
-#, fuzzy
 msgid "%s's outgoing email"
 msgstr "Исходящая почта %s"
 
@@ -464,13 +452,13 @@ msgstr "&amp;nbsp;&amp;nbsp;"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.xml:0
 msgid "(Keep formatting)"
-msgstr ""
+msgstr "(Сохранить форматирование)"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.xml:0
 msgid "(Remove formatting)"
-msgstr ""
+msgstr "(Удалить форматирование)"
 
 #. module: mail
 #. odoo-javascript
@@ -573,7 +561,7 @@ msgstr "1 новое сообщение"
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 #: code:addons/mail/static/src/discuss/core/common/discuss_channel_model.js:0
 msgid "1 other"
-msgstr ""
+msgstr "Еще 1"
 
 #. module: mail
 #. odoo-javascript
@@ -614,7 +602,6 @@ msgstr "8 часов"
 
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.action_email_server_tree
-#, fuzzy
 msgid ""
 "<b class=\"o_view_nocontent_smiling_face\">\n"
 "                        No Incoming Servers yet\n"
@@ -734,7 +721,6 @@ msgstr "<span class=\"d-block w-75 py-2\">Цвет кнопки</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
-#, fuzzy
 msgid "<span class=\"d-block w-75 py-2\">Button Text</span>"
 msgstr "<span class=\"d-block w-75 py-2\">Текст кнопки</span>"
 
@@ -751,25 +737,21 @@ msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_ice_server_kanban
-#, fuzzy
 msgid "<span class=\"fw-bold me-1\">Credential:</span>"
 msgstr "<span class=\"fw-bold me-1\">Учетные данные:</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_ice_server_kanban
-#, fuzzy
 msgid "<span class=\"fw-bold me-1\">Type:</span>"
 msgstr "<span class=\"fw-bold me-1\">Тип:</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_ice_server_kanban
-#, fuzzy
 msgid "<span class=\"fw-bold me-1\">URI:</span>"
 msgstr "<span class=\"fw-bold me-1\">URI:</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_ice_server_kanban
-#, fuzzy
 msgid "<span class=\"fw-bold me-1\">Username:</span>"
 msgstr "<span class=\"fw-bold me-1\">Имя пользователя:</span>"
 
@@ -786,7 +768,6 @@ msgstr "<span class=\"me-1\">@</span>"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_users_form_mail
 #: model_terms:ir.ui.view,arch_db:mail.view_users_form_simple_modif_mail
-#, fuzzy
 msgid ""
 "<span class=\"o_form_label fw-bold\" invisible=\"not "
 "has_external_mail_server\">Outgoing Mail Server</span>"
@@ -808,7 +789,6 @@ msgstr "<span class=\"o_stat_text\">Открыть родительский до
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_server_action_form_template
-#, fuzzy
 msgid ""
 "<span invisible=\"mail_post_method != 'email'\">\n"
 "                                        The message will be sent as an email "
@@ -988,7 +968,6 @@ msgstr ""
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_alias_domain.py:0
-#, fuzzy
 msgid "A personal mail server is using that address, you can not use it."
 msgstr ""
 "Персональный почтовый сервер использует этот адрес, вы не можете его "
@@ -996,7 +975,6 @@ msgstr ""
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_res_role_unique_name
-#, fuzzy
 msgid "A role with the same name already exists."
 msgstr "Роль с таким именем уже существует."
 
@@ -1086,7 +1064,6 @@ msgstr "Учетная запись"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__twilio_account_token
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
-#, fuzzy
 msgid "Account Auth Token"
 msgstr "Токен авторизации учетной записи"
 
@@ -1207,7 +1184,6 @@ msgstr "Активности должны быть связаны с запис�
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_activity_check_user_id_is_set_if_model
-#, fuzzy
 msgid "Activities must be assigned if not attached to a document."
 msgstr ""
 "Если дело не прикреплено к документу, то оно должно быть назначено "
@@ -1272,7 +1248,7 @@ msgstr "Планы активностей"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule_line__activity_schedule_id
 msgid "Activity Schedule"
-msgstr ""
+msgstr "Запланированные дела"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
@@ -1408,6 +1384,10 @@ msgid ""
 "If you were using a Tenor GIF API key (service shutdown on June 30, 2026), "
 "please replace it here with a Klipy GIF API key"
 msgstr ""
+"Добавьте ключ API Klipy GIF, чтобы включить поддержку GIF-файлов. https://"
+"docs.klipy.com/getting-started\n"
+"Если вы использовали ключ API Tenor GIF (сервис будет закрыт 30 июня 2026 "
+"года), пожалуйста, замените его здесь на ключ API Klipy GIF"
 
 #. module: mail
 #. odoo-javascript
@@ -1865,7 +1845,6 @@ msgstr ""
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_delete_dialog.xml:0
-#, fuzzy
 msgid "Are you sure you want to bid farewell to this message forever?"
 msgstr "Вы уверены, что хотите навсегда удалить это сообщение?"
 
@@ -2131,7 +2110,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
 msgid "Auto: %(subject)s"
-msgstr ""
+msgstr "Авто: %(subject)s"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__message_type__auto_comment
@@ -2153,7 +2132,7 @@ msgstr "Автоматическое сообщение"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
 msgid "Available everywhere"
-msgstr ""
+msgstr "Доступно везде"
 
 #. module: mail
 #. odoo-javascript
@@ -2217,7 +2196,6 @@ msgstr ""
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/blur_performance_warning.xml:0
-#, fuzzy
 msgid "Background Blur Performance Warning"
 msgstr "Предупреждение о производительности при размытии фона"
 
@@ -2231,7 +2209,7 @@ msgstr "Интенсивность размытия фона"
 #. odoo-javascript
 #: code:addons/mail/static/src/views/fields/badge_selection_icons/badge_selection_icons_field.js:0
 msgid "Badges with Icons"
-msgstr ""
+msgstr "Значки с иконками"
 
 #. module: mail
 #: model:ir.model,name:mail.model_base
@@ -2455,18 +2433,17 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/pip_banner.xml:0
 msgid "Bring back"
-msgstr ""
+msgstr "Вернуть"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/pip_banner.xml:0
 msgid "Bring call back"
-msgstr ""
+msgstr "Вернуть вызов"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/pip_banner.xml:0
-#, fuzzy
 msgid "Bring the call back here"
 msgstr "Вернуть звонок сюда"
 
@@ -2479,7 +2456,7 @@ msgstr "Браузер"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/device_select.js:0
 msgid "Browser Default"
-msgstr ""
+msgstr "Браузер по умолчанию"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_push_device__endpoint
@@ -2500,11 +2477,10 @@ msgstr "Занят"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__res_users__notification_type__email
 msgid "By Emails"
-msgstr ""
+msgstr "По электронной почте"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
-#, fuzzy
 msgid "By order of server priority"
 msgstr "В порядке приоритета серверов"
 
@@ -2535,19 +2511,16 @@ msgstr "Звонок"
 #: model:ir.ui.menu,name:mail.discuss_call_history_menu
 #: model_terms:ir.ui.view,arch_db:mail.discuss_call_history_view_form
 #: model_terms:ir.ui.view,arch_db:mail.discuss_call_history_view_tree
-#, fuzzy
 msgid "Call History"
 msgstr "История звонков"
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_discuss_call_history_channel_id_not_null_constraint
-#, fuzzy
 msgid "Call history must have a channel"
 msgstr "История звонков должна иметь канал"
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_discuss_call_history_start_dt_is_not_null_constraint
-#, fuzzy
 msgid "Call history must have a start date"
 msgstr "История звонков должна иметь дату начала"
 
@@ -2555,7 +2528,7 @@ msgstr "История звонков должна иметь дату нача�
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/notification_message.js:0
 msgid "Call lasted %(duration)s."
-msgstr ""
+msgstr "Длительность звонка: %(duration)s."
 
 #. module: mail
 #. odoo-javascript
@@ -2579,7 +2552,7 @@ msgstr "Можно редактировать тело"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users__can_edit_role
 msgid "Can Edit Role"
-msgstr ""
+msgstr "Может редактировать роль"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__can_join
@@ -2616,14 +2589,12 @@ msgstr "Может отправлять сообщения через bus.bus"
 #. module: mail
 #. odoo-python
 #: code:addons/mail/wizard/mail_activity_schedule.py:0
-#, fuzzy
 msgid "Can't launch a plan without a record."
 msgstr "Невозможно запустить план без записи."
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/wizard/mail_activity_schedule.py:0
-#, fuzzy
 msgid "Can't schedule activities without either a record or a user."
 msgstr "Невозможно запланировать дела без записи или пользователя."
 
@@ -2685,7 +2656,6 @@ msgstr "Готовый ответ"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_canned_response__source
-#, fuzzy
 msgid ""
 "Canned response that will automatically be substituted with longer content "
 "in your messages. Type '::' followed by the name of your shortcut "
@@ -2738,7 +2708,6 @@ msgstr ""
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
-#, fuzzy
 msgid ""
 "Cannot create %(channels)s: initial message should belong to parent channel "
 "or one of its sub-channels."
@@ -2886,7 +2855,7 @@ msgstr "Канал"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/public_web/discuss_app/sidebar/channel.js:0
 msgid "Channel Actions"
-msgstr ""
+msgstr "Действия с каналом"
 
 #. module: mail
 #. odoo-javascript
@@ -2906,7 +2875,7 @@ msgstr "Участник канала"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__channel_name_member_ids
 msgid "Channel Name Member"
-msgstr ""
+msgstr "Участник канала"
 
 #. module: mail
 #. odoo-javascript
@@ -2997,7 +2966,7 @@ msgstr "Чат"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/public_web/discuss_app/sidebar/channel.js:0
 msgid "Chat Actions"
-msgstr ""
+msgstr "Действия в чате"
 
 #. module: mail
 #. odoo-javascript
@@ -3173,7 +3142,6 @@ msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
-#, fuzzy
 msgid "Comma-separated carbon copy of recipients addresses"
 msgstr "Адреса получателей копии, разделенные запятыми"
 
@@ -3281,7 +3249,7 @@ msgstr "Конфигурация"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Configure ICE Servers"
-msgstr ""
+msgstr "Настройка ICE-серверов"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -3328,7 +3296,7 @@ msgstr "Сбой подключения (проблема с сервером и
 #. odoo-javascript
 #: code:addons/mail/static/src/views/fields/mail_server_configurator_selection/mail_server_configurator_selection.js:0
 msgid "Connection failed: %s"
-msgstr ""
+msgstr "Ошибка подключения: %s"
 
 #. module: mail
 #. odoo-python
@@ -3438,7 +3406,7 @@ msgstr "Содержимое"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.xml:0
 msgid "Continue with Full Composer?"
-msgstr ""
+msgstr "Продолжить в полном редакторе?"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.discuss_call_history_view_tree
@@ -3462,7 +3430,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/search_message_input.js:0
 msgid "Conversations"
-msgstr ""
+msgstr "Диалоги"
 
 #. module: mail
 #. odoo-javascript
@@ -3485,7 +3453,6 @@ msgstr ""
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
-#, fuzzy
 msgid ""
 "Could not contact the mail server, please check your outgoing email server "
 "configuration."
@@ -3753,19 +3720,18 @@ msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
-#, fuzzy
 msgid "Custom ICE Server with Twilio"
 msgstr "Кастомный ICE-сервер с Twilio"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Custom ICE Servers"
-msgstr ""
+msgstr "Пользовательские ICE-серверы"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Custom SFU Server"
-msgstr ""
+msgstr "Пользовательский SFU-сервер"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_template__template_category__custom_template
@@ -3779,13 +3745,11 @@ msgstr "Пользовательские шаблоны"
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_notification_notification_partner_required
-#, fuzzy
 msgid "Customer is required for inbox notification"
 msgstr "Клиент должен быть указан для получения уведомлений по почте"
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_notification_notification_partner_or_email_required
-#, fuzzy
 msgid "Customer or email is required for inbox / email notification"
 msgstr ""
 "Для получения уведомлений в системе или по почте необходимо указать клиента "
@@ -3824,11 +3788,10 @@ msgstr "Дата"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule_line__line_date_deadline
 msgid "Date Deadline"
-msgstr ""
+msgstr "Крайний срок"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_fetchmail_server__error_date
-#, fuzzy
 msgid "Date of last failure, reset on success."
 msgstr "Дата последнего сбоя, сбрасывается при успешной отправке."
 
@@ -3950,7 +3913,7 @@ msgstr "Заметка по умолчанию"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__use_default_to
 msgid "Default Recipients"
-msgstr ""
+msgstr "Получатели по умолчанию"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -4070,7 +4033,7 @@ msgstr "Удалить письма"
 #: code:addons/mail/static/src/discuss/core/common/delete_thread_dialog.xml:0
 #: code:addons/mail/static/src/discuss/core/common/thread_actions.js:0
 msgid "Delete Thread"
-msgstr ""
+msgstr "Удалить ветку"
 
 #. module: mail
 #. odoo-javascript
@@ -4118,7 +4081,6 @@ msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
-#, fuzzy
 msgid "Describe when this template should be used"
 msgstr "Опишите, когда следует использовать этот шаблон"
 
@@ -4144,7 +4106,6 @@ msgstr ""
 #: code:addons/mail/static/src/core/common/notification_model.js:0
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__failure_type__mail_spam
 #: model:ir.model.fields.selection,name:mail.selection__mail_notification__failure_type__mail_spam
-#, fuzzy
 msgid "Detected As Spam"
 msgstr "Помечено как спам"
 
@@ -4199,7 +4160,7 @@ msgstr "Отменить"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.xml:0
 msgid "Discard editing"
-msgstr ""
+msgstr "Отменить редактирование"
 
 #. module: mail
 #. odoo-javascript
@@ -4212,7 +4173,6 @@ msgstr "Отключиться"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/rtc_service.js:0
-#, fuzzy
 msgid "Disconnected from the call by the server"
 msgstr "Соединение разорвано сервером"
 
@@ -4268,7 +4228,7 @@ msgstr "Отклонить"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/blur_performance_warning.xml:0
 msgid "Dismiss warning"
-msgstr ""
+msgstr "Скрыть предупреждение"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_base_module_uninstall__display_name
@@ -4377,7 +4337,6 @@ msgstr "Отображать имя аватара"
 #: code:addons/mail/static/src/core/common/im_status_dropdown.js:0
 #: code:addons/mail/static/src/core/common/im_status_dropdown.xml:0
 #: model:ir.model.fields.selection,name:mail.selection__res_users__manual_im_status__busy
-#, fuzzy
 msgid "Do Not Disturb"
 msgstr "Не беспокоить"
 
@@ -4390,7 +4349,6 @@ msgstr "Вы действительно хотите удалить этот п�
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_permission_dialog.js:0
-#, fuzzy
 msgid "Do you want people to hear you in the meeting?"
 msgstr "Вы хотите, чтобы участники встречи вас слышали?"
 
@@ -4403,7 +4361,6 @@ msgstr ""
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_permission_dialog.js:0
-#, fuzzy
 msgid "Do you want people to see you in the meeting?"
 msgstr "Вы хотите, чтобы участники встречи вас видели?"
 
@@ -4587,7 +4544,7 @@ msgstr "Срок"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_call_history__duration_hour
 msgid "Duration Hour"
-msgstr ""
+msgstr "Длительность (ч)"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users_settings__voice_active_duration
@@ -4709,7 +4666,7 @@ msgstr "Цвет кнопки в Email"
 #: model:ir.model.fields,field_description:mail.field_res_company__email_primary_color
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__email_primary_color
 msgid "Email Button Text"
-msgstr ""
+msgstr "Текст кнопки в письме"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_alias_domain
@@ -4853,7 +4810,7 @@ msgstr "Получатели писем"
 #. odoo-javascript
 #: code:addons/mail/static/src/views/fields/mail_server_configurator_selection/mail_server_configurator_selection.xml:0
 msgid "Emails sent via"
-msgstr ""
+msgstr "Письма отправлены через"
 
 #. module: mail
 #. odoo-javascript
@@ -4899,7 +4856,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_call_history__end_dt
 msgid "End Dt"
-msgstr ""
+msgstr "Дата окончания"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_poll__end_message_id
@@ -5052,7 +5009,6 @@ msgstr "Выйти из полноэкранного режима"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
-#, fuzzy
 msgid "Exit Picture in Picture"
 msgstr "Выход из режима «Картинка в картинке»"
 
@@ -5131,11 +5087,17 @@ msgid ""
 "Template Source Snippet:\n"
 "%(template_src)s"
 msgstr ""
+"Ошибка обработки шаблона QWeb для %(template_label)s\n"
+"Целевая модель: %(model_name)s\n"
+"Языковой контекст: %(lang_context)s\n"
+"Ошибка: %(error_details)s\n"
+"\n"
+"Фрагмент исходного кода шаблона:\n"
+"%(template_src)s"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
-#, fuzzy
 msgid ""
 "Failed to render inline_template template: %(template_txt)s\n"
 "Error details: %(error)s"
@@ -5293,7 +5255,7 @@ msgstr "Файлы"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/search_message_input.xml:0
 msgid "Filter Messages"
-msgstr ""
+msgstr "Фильтр сообщений"
 
 #. module: mail
 #. odoo-javascript
@@ -5480,7 +5442,6 @@ msgstr ""
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_tracking_duration_mixin.py:0
-#, fuzzy
 msgid "For performance reasons, use \"=\" operators on rotting fields."
 msgstr ""
 "Для повышения производительности используйте операторы «=» для «зависших» "
@@ -5518,6 +5479,8 @@ msgstr "Отформатированный email-адрес"
 #: code:addons/mail/static/src/core/common/composer.xml:0
 msgid "Formatting can only be restored in Full Composer."
 msgstr ""
+"Форматирование текста можно восстановить только в режиме полного текстового "
+"редактора."
 
 #. module: mail
 #. odoo-javascript
@@ -5531,7 +5494,7 @@ msgstr "Вперёд"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/message_actions_patch.js:0
 msgid "Forward Message"
-msgstr ""
+msgstr "Переслать сообщение"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__email_from
@@ -5743,7 +5706,6 @@ msgstr "HTTP-маршрутизация"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/blur_performance_warning.xml:0
-#, fuzzy
 msgid ""
 "Hardware acceleration is disabled. Blur effect impacts performance "
 "significantly."
@@ -5760,12 +5722,12 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template_preview__has_attachments
 msgid "Has Attachments"
-msgstr ""
+msgstr "Содержит вложения"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__has_dynamic_reports
 msgid "Has Dynamic Reports"
-msgstr ""
+msgstr "Содержит динамические отчеты"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__has_error
@@ -5790,7 +5752,7 @@ msgstr "Есть черный список"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__has_mail_server
 msgid "Has Mail Server"
-msgstr ""
+msgstr "Подключен почтовый сервер"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_model__is_mail_thread
@@ -5825,20 +5787,18 @@ msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template_preview__has_several_languages_installed
-#, fuzzy
 msgid "Has Several Languages Installed"
 msgstr "Установлено несколько языков"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_attachment__has_thumbnail
-#, fuzzy
 msgid "Has Thumbnail"
-msgstr "Имеет миниатюру"
+msgstr "Есть миниатюра"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__has_warning
 msgid "Has Warning"
-msgstr ""
+msgstr "Содержит предупреждение"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_rtc_session__is_deaf
@@ -5910,7 +5870,7 @@ msgstr "Скрыть все беседы"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_invitation.js:0
 msgid "Hide camera preview"
-msgstr ""
+msgstr "Скрыть предпросмотр камеры"
 
 #. module: mail
 #. odoo-javascript
@@ -5962,12 +5922,12 @@ msgstr ""
 #. module: mail
 #: model:ir.model,name:mail.model_mail_ice_server
 msgid "ICE Server"
-msgstr ""
+msgstr "ICE-сервер"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_ice_server_form
 msgid "ICE Server Configuration"
-msgstr ""
+msgstr "Конфигурация ICE-серверов"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_ice_servers
@@ -6099,7 +6059,6 @@ msgstr "Статус IM"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users__manual_im_status
-#, fuzzy
 msgid "IM status manually set by the user"
 msgstr "Статус присутствия, установленный пользователем вручную"
 
@@ -6295,7 +6254,6 @@ msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__use_sfu_server
-#, fuzzy
 msgid "If you want to setup SFU server for large group calls."
 msgstr "Если вы хотите настроить сервер SFU для больших групповых звонков."
 
@@ -6327,6 +6285,8 @@ msgid ""
 "If you were using a Tenor API key, please replace it with a Klipy API key in "
 "the General Settings."
 msgstr ""
+"Если вы использовали ключ API Tenor, пожалуйста, замените его на ключ API "
+"Klipy в разделе «Общие настройки»."
 
 #. module: mail
 #. odoo-javascript
@@ -6663,7 +6623,6 @@ msgstr "URL-адрес приглашения"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/channel_invitation.xml:0
-#, fuzzy
 msgid "Invitation already sent to this address"
 msgstr "Приглашение уже отправлено на этот адрес"
 
@@ -6683,7 +6642,7 @@ msgstr "Пригласить"
 #. odoo-javascript
 #: code:addons/mail/static/src/views/web/fields/avatar_autocomplete/avatar_many2x_autocomplete.js:0
 msgid "Invite \"%s\""
-msgstr ""
+msgstr "Пригласить «%s »"
 
 #. module: mail
 #. odoo-javascript
@@ -6703,12 +6662,11 @@ msgstr "Пригласите людей"
 #. odoo-javascript
 #: code:addons/mail/static/src/views/web/fields/avatar_autocomplete/avatar_many2x_autocomplete.js:0
 msgid "Invite teammates"
-msgstr ""
+msgstr "Пригласить коллег"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/views/web/fields/avatar_autocomplete/avatar_many2x_autocomplete.js:0
-#, fuzzy
 msgid "Invite teammates via email"
 msgstr "Пригласить коллег по почте"
 
@@ -6732,7 +6690,6 @@ msgstr "Приглашенный участник"
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
-#, fuzzy
 msgid "Inviting by email is not allowed for this channel type (%s)."
 msgstr ""
 "Отправка приглашений по электронной почте не разрешена для этого типа канала "
@@ -6783,7 +6740,7 @@ msgstr "Скрыт"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_partner__is_in_call
 msgid "Is In Call"
-msgstr ""
+msgstr "В звонке"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__is_member
@@ -6828,7 +6785,7 @@ msgstr "Является ли внешний партнер подписчико
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users__is_in_call
 msgid "Is in call"
-msgstr ""
+msgstr "В звонке"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_rtc_session__is_muted
@@ -6927,18 +6884,17 @@ msgstr "Присоединиться к группе"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/public/welcome_page.xml:0
 msgid "Join call"
-msgstr ""
+msgstr "Присоединиться к звонку"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/thread_actions.js:0
 msgid "Join the Call"
-msgstr ""
+msgstr "Присоединиться к звонку"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/thread_actions.js:0
-#, fuzzy
 msgid "Join the Call with Camera"
 msgstr "Подключиться с видео"
 
@@ -6964,7 +6920,7 @@ msgstr "Перейти к последним"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/attachment_list.xml:0
 msgid "KB"
-msgstr ""
+msgstr "КБ"
 
 #. module: mail
 #: model:ir.model,name:mail.model_kpi_provider
@@ -7002,7 +6958,6 @@ msgstr ""
 
 #. module: mail
 #: model:ir.model,name:mail.model_discuss_call_history
-#, fuzzy
 msgid "Keep the call history"
 msgstr "Сохранить историю звонков"
 
@@ -7021,7 +6976,7 @@ msgstr "С наилучшими пожеланиями"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__tenor_api_key
 msgid "Klipy API key"
-msgstr ""
+msgstr "Ключ API Klipy"
 
 #. module: mail
 #. odoo-javascript
@@ -7048,19 +7003,18 @@ msgstr "Последняя активность"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_form
-#, fuzzy
 msgid "Last Error"
 msgstr "Последняя ошибка"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_fetchmail_server__error_date
 msgid "Last Error Date"
-msgstr ""
+msgstr "Дата последней ошибки"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_fetchmail_server__error_message
 msgid "Last Error Message"
-msgstr ""
+msgstr "Текст последней ошибки"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_fetchmail_server__date
@@ -7250,7 +7204,7 @@ msgstr "Покинуть этот канал"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule_line__line_description
 msgid "Line Description"
-msgstr ""
+msgstr "Описание строки"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__link_field_id
@@ -7261,7 +7215,7 @@ msgstr "Поле связи"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_link_preview__link_preview_id
 msgid "Link Preview"
-msgstr ""
+msgstr "Предпросмотр ссылки"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_link_preview_action
@@ -7273,7 +7227,6 @@ msgstr "Предпросмотры ссылок"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_message_link_preview
-#, fuzzy
 msgid "Link between link previews and messages"
 msgstr "Связь между предварительным просмотром ссылок и сообщениями"
 
@@ -7286,7 +7239,7 @@ msgstr "Ссылка на"
 #: model:ir.model.fields,field_description:mail.field_mail_mail__linked_message_ids
 #: model:ir.model.fields,field_description:mail.field_mail_message__linked_message_ids
 msgid "Linked Message"
-msgstr ""
+msgstr "Связанное сообщение"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_tree
@@ -7441,7 +7394,6 @@ msgstr "Активность"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_activity_schedule_line
-#, fuzzy
 msgid "Mail Activity Schedule Line"
 msgstr "Параметры очереди отправки писем"
 
@@ -7476,7 +7428,7 @@ msgstr "Миксин компоновщика писем"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_notification__mail_email_address
 msgid "Mail Email Address"
-msgstr ""
+msgstr "Адрес электронной почты"
 
 #. module: mail
 #. odoo-javascript
@@ -7541,7 +7493,6 @@ msgstr "Сброс шаблона письма"
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
-#, fuzzy
 msgid "Mail Template: '%(name)s' (ID: %(record_id)s)"
 msgstr "Шаблон письма: '%(name)s' (ID: %(record_id)s)"
 
@@ -7638,7 +7589,7 @@ msgstr "Основное вложение"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Main partner's language"
-msgstr ""
+msgstr "Основной язык партнера"
 
 #. module: mail
 #. odoo-javascript
@@ -7686,7 +7637,7 @@ msgstr "Отметить как выполненное"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/thread_actions.js:0
 msgid "Mark Read"
-msgstr ""
+msgstr "Отметить как прочитанное"
 
 #. module: mail
 #. odoo-javascript
@@ -7724,7 +7675,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
 msgid "Mass Mailing Template: '%(name)s' (ID: %(record_id)s)"
-msgstr ""
+msgstr "Шаблон массовой рассылки: '%(name)s' (ID: %(record_id)s)"
 
 #. module: mail
 #. odoo-javascript
@@ -7767,7 +7718,6 @@ msgstr "Участники"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel__channel_name_member_ids
-#, fuzzy
 msgid ""
 "Members from which the channel name is computed when the name field is empty."
 msgstr ""
@@ -7883,7 +7833,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_mail__message_link_preview_ids
 #: model:ir.model.fields,field_description:mail.field_mail_message__message_link_preview_ids
 msgid "Message Link Preview"
-msgstr ""
+msgstr "Предварительный просмотр ссылки на сообщение"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_notification
@@ -8049,7 +7999,6 @@ msgstr "Поиск сообщений"
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_discuss_call_history_message_id_unique_constraint
-#, fuzzy
 msgid "Messages can only be linked to one call history"
 msgstr "Сообщения могут быть связаны только с одной историей звонков"
 
@@ -8089,12 +8038,12 @@ msgstr "Метаданные для голосовых вложений"
 #: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
 #: code:addons/mail/static/src/discuss/call/common/quick_voice_settings.xml:0
 msgid "Microphone"
-msgstr ""
+msgstr "Микрофон"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__failure_type__mail_email_missing
 msgid "Missing email"
-msgstr "Отсутствует email"
+msgstr "Отсутствует адрес эл. почты"
 
 #. module: mail
 #. odoo-javascript
@@ -8142,7 +8091,6 @@ msgstr "Модель"
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_tracking_duration_mixin.py:0
-#, fuzzy
 msgid "Model configuration does not support the rotting feature"
 msgstr "Конфигурация модели не поддерживает функцию устаревания данных"
 
@@ -8295,7 +8243,7 @@ msgstr "Новый канал"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/public_web/discuss_search.js:0
 msgid "New Meeting"
-msgstr ""
+msgstr "Новая встреча"
 
 #. module: mail
 #. odoo-javascript
@@ -8431,7 +8379,6 @@ msgstr "Нет подписчиков"
 
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.action_ice_servers
-#, fuzzy
 msgid "No ICE servers found. Let's create one!"
 msgstr "ICE-серверы не найдены. Настройте новый сервер."
 
@@ -8465,7 +8412,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/action_list.xml:0
 msgid "No content."
-msgstr ""
+msgstr "Контент отсутствует."
 
 #. module: mail
 #. odoo-javascript
@@ -8488,7 +8435,6 @@ msgstr "Пока нет бесед..."
 #. module: mail
 #. odoo-python
 #: code:addons/mail/wizard/mail_followers_edit.py:0
-#, fuzzy
 msgid "No documents found for the selected records."
 msgstr "Для выбранных записей документы не найдены."
 
@@ -8501,21 +8447,18 @@ msgstr "Нет сообщений в истории"
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
-#, fuzzy
 msgid "No language detected in context"
 msgstr "В контексте не обнаружен язык"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/views/fields/activity_model_selector/activity_model_selector.xml:0
-#, fuzzy
 msgid "No linked record"
 msgstr "Нет связанной записи"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/res_users.py:0
-#, fuzzy
 msgid "No mail server configured"
 msgstr "Почтовый сервер не настроен"
 
@@ -8528,7 +8471,6 @@ msgstr "Сообщения не найдены"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/public/welcome_page.xml:0
-#, fuzzy
 msgid "No one else is here."
 msgstr "Здесь больше никого нет."
 
@@ -8628,7 +8570,7 @@ msgstr "Ничего"
 #: model_terms:ir.ui.view,arch_db:mail.view_users_form_mail
 #: model_terms:ir.ui.view,arch_db:mail.view_users_form_simple_modif_mail
 msgid "None planned"
-msgstr ""
+msgstr "Ничего не запланировано"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_gateway_allowed__email_normalized
@@ -8824,14 +8766,12 @@ msgstr ""
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.xml:0
-#, fuzzy
 msgid "Notify users with this role"
 msgstr "Уведомить пользователей с этой ролью"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.xml:0
-#, fuzzy
 msgid "Notify users with this role who have permission to view this channel"
 msgstr ""
 "Уведомить пользователей с этой ролью, у которых есть разрешение на просмотр "
@@ -8963,7 +8903,7 @@ msgstr "Не в сети - %(offline_count)s"
 #: model:ir.model.fields,field_description:mail.field_res_partner__offline_since
 #: model:ir.model.fields,field_description:mail.field_res_users__offline_since
 msgid "Offline since"
-msgstr ""
+msgstr "Не в сети с"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__old_value_char
@@ -9012,7 +8952,6 @@ msgstr ""
 #. module: mail
 #. odoo-python
 #: code:addons/mail/controllers/thread.py:0
-#, fuzzy
 msgid ""
 "One or more attachments do not exist, or you do not have the rights to "
 "access them."
@@ -9043,7 +8982,6 @@ msgstr "В сети - %(online_count)s"
 #. module: mail
 #. odoo-python
 #: code:addons/mail/controllers/attachment.py:0
-#, fuzzy
 msgid "Only PDF files can have thumbnail."
 msgstr "Только PDF-файлы могут иметь миниатюры."
 
@@ -9096,7 +9034,6 @@ msgstr "Только внутренние пользователи могут п
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/res_users.py:0
-#, fuzzy
 msgid "Only internal users can configure a personal mail server."
 msgstr ""
 "Только внутренние пользователи могут настраивать персональный почтовый "
@@ -9105,7 +9042,6 @@ msgstr ""
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/res_users.py:0
-#, fuzzy
 msgid "Only internal users can configure personal mail servers."
 msgstr ""
 "Только внутренние пользователи могут настраивать персональные почтовые "
@@ -9146,7 +9082,6 @@ msgstr ""
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_template.py:0
-#, fuzzy
 msgid ""
 "Oops! We couldn't save your template due to an issue.\n"
 "\n"
@@ -9357,37 +9292,35 @@ msgstr "В противном случае вы можете спокойно и
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users__out_of_office_from
-#, fuzzy
 msgid "Out Of Office From"
 msgstr "Вне офиса с"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users__out_of_office_to
-#, fuzzy
 msgid "Out Of Office To"
 msgstr "Вне офиса по"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users__is_out_of_office
 msgid "Out of Office"
-msgstr ""
+msgstr "Вне офиса"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_users_form_mail
 #: model_terms:ir.ui.view,arch_db:mail.view_users_form_simple_modif_mail
 msgid "Out-of-office"
-msgstr ""
+msgstr "Вне офиса"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_message__message_type__out_of_office
 msgid "Out-of-office Message"
-msgstr ""
+msgstr "Автоответчик при отсутствии"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message.js:0
 msgid "Out-of-office message"
-msgstr ""
+msgstr "Автоответчик при отсутствии"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__state__outgoing
@@ -9422,7 +9355,6 @@ msgstr "Сервер исходящей почты"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users__outgoing_mail_server_type
-#, fuzzy
 msgid "Outgoing Mail Server Type"
 msgstr "Тип исходящего почтового сервера"
 
@@ -9511,12 +9443,12 @@ msgstr "Собственник"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_mail_server__owner_limit_count
 msgid "Owner Limit Count"
-msgstr ""
+msgstr "Максимальное количество для владельца"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_mail_server__owner_limit_time
 msgid "Owner Limit Time"
-msgstr ""
+msgstr "Ограничение по времени для владельца"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_search
@@ -9623,7 +9555,6 @@ msgstr "Партнер"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__partner_ids_all_have_email
-#, fuzzy
 msgid "Partner Ids All Have Email"
 msgstr "У всех партнеров есть электронная почта"
 
@@ -9664,12 +9595,11 @@ msgstr "Полезная нагрузка"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/blur_performance_warning.xml:0
 msgid "Performance Warning:"
-msgstr ""
+msgstr "Предупреждение о производительности:"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/delete_thread_dialog.xml:0
-#, fuzzy
 msgid "Permanently delete this thread?"
 msgstr "Удалить это обсуждение навсегда?"
 
@@ -9677,7 +9607,7 @@ msgstr "Удалить это обсуждение навсегда?"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/device_select.js:0
 msgid "Permission Needed"
-msgstr ""
+msgstr "Требуется разрешение"
 
 #. module: mail
 #. odoo-javascript
@@ -9730,7 +9660,7 @@ msgstr "Выберите определенное время"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
 msgid "Picture in Picture"
-msgstr ""
+msgstr "Картинка в картинке"
 
 #. module: mail
 #. odoo-javascript
@@ -9802,7 +9732,6 @@ msgstr ""
 #. module: mail
 #. odoo-python
 #: code:addons/mail/wizard/mail_activity_schedule.py:0
-#, fuzzy
 msgid "Plan-based scheduling are available only on documents."
 msgstr "Создание графика на основе плана доступно только для документов."
 
@@ -9905,14 +9834,12 @@ msgstr "Пожалуйста, свяжитесь с нами по адресу"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/recipients_input_tags_list_popover.xml:0
-#, fuzzy
 msgid "Please provide a valid email"
 msgstr "Пожалуйста, укажите корректный адрес электронной почты"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/res_users.py:0
-#, fuzzy
 msgid "Please set your email before connecting your mail server."
 msgstr ""
 "Пожалуйста, укажите вашу электронную почту перед подключением почтового "
@@ -9926,7 +9853,6 @@ msgstr "Пожалуйста, подождите, идет загрузка фа
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_users__notification_type
-#, fuzzy
 msgid ""
 "Policy on how to handle Chatter notifications:\n"
 "- By Emails: notifications are sent to your email address\n"
@@ -10135,7 +10061,6 @@ msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__use_exclusion_list
-#, fuzzy
 msgid ""
 "Prevent sending messages to blacklisted contacts. Disable only when "
 "absolutely necessary."
@@ -10229,7 +10154,7 @@ msgstr "Горячая клавиша 'Нажми и говори'"
 #: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
 #: code:addons/mail/static/src/discuss/call/common/quick_voice_settings.xml:0
 msgid "Push-to-Talk"
-msgstr ""
+msgstr "Режим «Нажми и говори»"
 
 #. module: mail
 #. odoo-javascript
@@ -10367,7 +10292,7 @@ msgstr "Готово к отправке"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/public/welcome_page.xml:0
 msgid "Ready to join?"
-msgstr ""
+msgstr "Готовы присоединиться?"
 
 #. module: mail
 #. odoo-javascript
@@ -10411,7 +10336,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_notification__mail_email_address
 msgid "Recipient email address"
-msgstr ""
+msgstr "E-mail получателя"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__partner_ids
@@ -10736,7 +10661,6 @@ msgstr "Отчет"
 
 #. module: mail
 #: model:ir.model,name:mail.model_res_role
-#, fuzzy
 msgid ""
 "Represents a role in the system used to categorize users. Each role has a "
 "unique name and can be associated with multiple users. Roles can be "
@@ -10778,7 +10702,7 @@ msgstr "Сбросить шаблон"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/chat_hub.js:0
 msgid "Reset initial position"
-msgstr ""
+msgstr "Сбросить к исходной позиции"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_user_id
@@ -10809,7 +10733,6 @@ msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.ir_mail_server_view_form
-#, fuzzy
 msgid "Restrict usage to a user"
 msgstr "Ограничить использование пользователем"
 
@@ -10871,7 +10794,7 @@ msgstr "Роли"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_role_view_search
 msgid "Roles Search"
-msgstr ""
+msgstr "Поиск ролей"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_duration_mixin__is_rotting
@@ -10913,7 +10836,7 @@ msgstr "SSL/TLS"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_ice_server_search
 msgid "STUN"
-msgstr ""
+msgstr "STUN"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_partner__user_id
@@ -10985,7 +10908,7 @@ msgstr "Запланировать активность для выбранны�
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__plan_schedule_line_ids
 msgid "Schedule Lines"
-msgstr ""
+msgstr "Строки расписания"
 
 #. module: mail
 #. odoo-javascript
@@ -11056,14 +10979,12 @@ msgstr "Пользователь планировщика"
 #. module: mail
 #. odoo-python
 #: code:addons/mail/wizard/mail_activity_schedule.py:0
-#, fuzzy
 msgid "Scheduling personal activities requires an assigned user."
 msgstr "Для планирования личных дел необходимо назначить пользователя."
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/rtc_service.js:0
-#, fuzzy
 msgid "Screen sharing access blocked. Enable in browser settings."
 msgstr ""
 "Доступ к демонстрации экрана заблокирован. Разрешите его в настройках "
@@ -11094,7 +11015,7 @@ msgstr "Поиск псевдонима"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_ice_server_search
 msgid "Search ICE Servers"
-msgstr ""
+msgstr "Поиск ICE-серверов"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_search
@@ -11105,7 +11026,7 @@ msgstr "Поиск серверов входящей почты"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
 msgid "Search Klipy"
-msgstr ""
+msgstr "Поиск в Klipy"
 
 #. module: mail
 #. odoo-javascript
@@ -11157,7 +11078,7 @@ msgstr "Поиск по названию"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/public_web/discuss_search.xml:0
 msgid "Search conversations"
-msgstr ""
+msgstr "Поиск по диалогам"
 
 #. module: mail
 #. odoo-javascript
@@ -11273,7 +11194,6 @@ msgstr ""
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/views/fields/activity_model_selector/activity_model_selector.js:0
-#, fuzzy
 msgid "Select a Record To Link"
 msgstr "Выберите запись для привязки"
 
@@ -11315,7 +11235,6 @@ msgstr ""
 #. module: mail
 #. odoo-python
 #: code:addons/mail/wizard/mail_activity_schedule.py:0
-#, fuzzy
 msgid "Selected user '%(user)s' cannot upload documents on model '%(model)s'"
 msgstr ""
 "Выбранный пользователь «%(user)s» не может загружать документы в модель «%"
@@ -11337,7 +11256,6 @@ msgstr "Отправить"
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/ir_actions_server.py:0
-#, fuzzy
 msgid "Send %(template_name)s"
 msgstr "Отправить %(template_name)s"
 
@@ -11349,7 +11267,6 @@ msgstr "Отправить и закрыть"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/views/web/view_dialog/avatar_user_form_view_dialog.xml:0
-#, fuzzy
 msgid "Send & New Invitation"
 msgstr "Отправить и новое приглашение"
 
@@ -11390,7 +11307,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Send Instantly"
-msgstr ""
+msgstr "Отправить мгновенно"
 
 #. module: mail
 #. odoo-javascript
@@ -11467,14 +11384,13 @@ msgstr "Отправить сообщение"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_delete_dialog.xml:0
-#, fuzzy
 msgid "Send this message to the great trash can in the sky?"
 msgstr "Удалить это сообщение безвозвратно?"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Sender & Recipients"
-msgstr ""
+msgstr "Отправитель и получатели"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template_preview__email_from
@@ -11494,7 +11410,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Sender's email"
-msgstr ""
+msgstr "E-mail отправителя"
 
 #. module: mail
 #. odoo-javascript
@@ -11632,7 +11548,6 @@ msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
-#, fuzzy
 msgid ""
 "Set up your own server for large group calls by routing connections centrally"
 msgstr ""
@@ -11641,7 +11556,6 @@ msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
-#, fuzzy
 msgid ""
 "Set up your own server for small group calls using peer-to-peer connections"
 msgstr ""
@@ -11693,7 +11607,6 @@ msgstr "Общий"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
-#, fuzzy
 msgid "Shared with all users"
 msgstr "Доступно всем пользователям"
 
@@ -11712,7 +11625,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/command_palette.js:0
 msgid "Show All Activities"
-msgstr ""
+msgstr "Показать все дела"
 
 #. module: mail
 #. odoo-javascript
@@ -11724,7 +11637,7 @@ msgstr "Показать подписчиков"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/command_palette.js:0
 msgid "Show My Activities"
-msgstr ""
+msgstr "Показать мои дела"
 
 #. module: mail
 #. odoo-javascript
@@ -11746,7 +11659,6 @@ msgstr "Показать активности"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
-#, fuzzy
 msgid "Show all records whose next action date is this week"
 msgstr ""
 "Показать все записи, по которым следующее действие запланировано на этой "
@@ -11754,7 +11666,6 @@ msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
-#, fuzzy
 msgid "Show all records whose next action date is tomorrow"
 msgstr "Показать все записи, дата следующего действия по которым завтра"
 
@@ -11769,7 +11680,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_invitation.js:0
 msgid "Show camera preview"
-msgstr ""
+msgstr "Показать предпросмотр камеры"
 
 #. module: mail
 #. odoo-javascript
@@ -11885,17 +11796,17 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/thread_actions.js:0
 msgid "Start Call"
-msgstr ""
+msgstr "Начать звонок"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_call_history__start_call_message_id
 msgid "Start Call Message"
-msgstr ""
+msgstr "Сообщение о начале звонка"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_call_history__start_dt
 msgid "Start Dt"
-msgstr ""
+msgstr "Дата начала"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_poll__start_message_id
@@ -11906,7 +11817,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/thread_actions.js:0
 msgid "Start Video Call"
-msgstr ""
+msgstr "Начать видеозвонок"
 
 #. module: mail
 #. odoo-javascript
@@ -11936,7 +11847,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/thread.js:0
 msgid "Started by %(authorName)s"
-msgstr ""
+msgstr "Организатор: %(authorName)s"
 
 #. module: mail
 #. odoo-javascript
@@ -12133,7 +12044,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_tree
 msgid "Suggested Next"
-msgstr ""
+msgstr "Рекомендуемое следующее"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_plan_template__suggested_next_type_id
@@ -12169,12 +12080,11 @@ msgstr "Поддержка аутентификации Outlook"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
 msgid "Switch Camera"
-msgstr ""
+msgstr "Переключить камеру"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/res_users.py:0
-#, fuzzy
 msgid "Switching back to the default server."
 msgstr "Возврат к серверу по умолчанию."
 
@@ -12194,7 +12104,7 @@ msgstr "Системное уведомление"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_ice_server_search
 msgid "TURN"
-msgstr ""
+msgstr "TURN"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_translation__target_lang
@@ -12284,7 +12194,7 @@ msgstr "Язык предпросмотра шаблона"
 #. odoo-python
 #: code:addons/mail/models/mail_template.py:0
 msgid "Template Preview: \"%(template_name)s\""
-msgstr ""
+msgstr "Предпросмотр шаблона: «%(template_name)s»"
 
 #. module: mail
 #: model:ir.model,name:mail.model_template_reset_mixin
@@ -12300,7 +12210,6 @@ msgstr "Создание шаблона из редактора требует �
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
-#, fuzzy
 msgid "Template name not identified"
 msgstr "Имя шаблона не определено"
 
@@ -12393,7 +12302,6 @@ msgstr ""
 #. module: mail
 #. odoo-python
 #: code:addons/mail/wizard/mail_activity_schedule.py:0
-#, fuzzy
 msgid "The activity can be launched, with these additional effects:"
 msgstr "Дело может быть запущено со следующими дополнительными эффектами:"
 
@@ -12577,7 +12485,6 @@ msgstr ""
 #. module: mail
 #. odoo-python
 #: code:addons/mail/wizard/mail_activity_schedule.py:0
-#, fuzzy
 msgid ""
 "The plan \"%(plan_name)s\" can be launched, with these additional effects:"
 msgstr ""
@@ -12659,7 +12566,6 @@ msgstr ""
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/ir_mail_server.py:0
-#, fuzzy
 msgid ""
 "The server \"%s\" cannot be forced as it belongs to a user and is archived."
 msgstr ""
@@ -12669,7 +12575,6 @@ msgstr ""
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/ir_mail_server.py:0
-#, fuzzy
 msgid "The server \"%s\" cannot be forced as it belongs to a user."
 msgstr ""
 "Сервер «%s» не может быть принудительно назначен, так как он принадлежит "
@@ -12678,7 +12583,6 @@ msgstr ""
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/ir_mail_server.py:0
-#, fuzzy
 msgid ""
 "The server \"%s\" cannot be forced as the owner does not use it anymore."
 msgstr ""
@@ -12723,7 +12627,6 @@ msgstr "Нет компании-кандидата с правами чтени�
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
-#, fuzzy
 msgid ""
 "There was an error when trying to deliver your Email, please check your "
 "configuration."
@@ -12769,7 +12672,6 @@ msgstr "Это действие отправит письмо."
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/js/rotting_mixin/rotting_widget.js:0
-#, fuzzy
 msgid "This applicant has been stuck in this stage for %(numberOfDays)s days."
 msgstr ""
 "Этот кандидат находится на данном этапе уже следующее количество дней: %"
@@ -12808,7 +12710,6 @@ msgstr ""
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/store_service.js:0
-#, fuzzy
 msgid "This conversation isn’t available."
 msgstr "Эта беседа недоступна."
 
@@ -12843,21 +12744,18 @@ msgstr ""
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/thread.js:0
-#, fuzzy
 msgid "This is the start of %(conversationName)s group"
 msgstr "Это начало группы %(conversationName)s"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/thread.js:0
-#, fuzzy
 msgid "This is the start of the #%(channelName)s channel"
 msgstr "Это начало канала #%(channelName)s"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/thread.js:0
-#, fuzzy
 msgid "This is the start of your direct chat with %(userName)s"
 msgstr "Это начало вашей переписки с %(userName)s"
 
@@ -12870,7 +12768,6 @@ msgstr "Похоже, этот макет больше не существует
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/js/rotting_mixin/rotting_widget.js:0
-#, fuzzy
 msgid "This lead has been stuck in this stage for %(numberOfDays)s days."
 msgstr ""
 "Этот лид находится на данном этапе уже следующее количество дней: %"
@@ -12912,7 +12809,6 @@ msgstr "Эта запись имеет активность-исключение
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/js/rotting_mixin/rotting_widget.js:0
-#, fuzzy
 msgid "This record has been stuck in this stage for %(numberOfDays)s days."
 msgstr ""
 "Эта запись находится на данном этапе уже следующее количество дней: %"
@@ -12940,7 +12836,6 @@ msgstr ""
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/js/rotting_mixin/rotting_widget.js:0
-#, fuzzy
 msgid "This task has been stuck in this stage for %(numberOfDays)s days."
 msgstr ""
 "Эта задача находится на данном этапе уже следующее количество дней: %"
@@ -12949,7 +12844,6 @@ msgstr ""
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/store_service.js:0
-#, fuzzy
 msgid "This thread is no longer available."
 msgstr "Это обсуждение больше не доступно."
 
@@ -12983,7 +12877,6 @@ msgstr "Обсуждение"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/delete_thread_dialog.js:0
-#, fuzzy
 msgid "Thread \"%(thread_name)s\" has been deleted"
 msgstr "Обсуждение «%(thread_name)s» было удалено"
 
@@ -12991,7 +12884,7 @@ msgstr "Обсуждение «%(thread_name)s» было удалено"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/public_web/discuss_app/sidebar/subchannel.js:0
 msgid "Thread Actions"
-msgstr ""
+msgstr "Действия с веткой"
 
 #. module: mail
 #. odoo-javascript
@@ -13037,7 +12930,6 @@ msgstr "Часовой пояс"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
-#, fuzzy
 msgid "Tip: Write /field to insert dynamic content!"
 msgstr "Совет: Введите /поле для вставки динамического контента!"
 
@@ -13224,7 +13116,7 @@ msgstr "Отслеживать получателей"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/search_message_input.js:0
 msgid "Tracked Changes"
-msgstr ""
+msgstr "Отслеживаемые изменения"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__tracking_value_ids
@@ -13454,12 +13346,11 @@ msgstr "Не назначено"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
 msgid "Unassigned Activities"
-msgstr ""
+msgstr "Неназначенные дела"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_mail.py:0
-#, fuzzy
 msgid "Unauthorized server for some of the sending mails."
 msgstr "Неавторизованный сервер для некоторых отправляемых писем."
 
@@ -13492,7 +13383,6 @@ msgstr "Отменить"
 #. module: mail
 #. odoo-python
 #: code:addons/mail/controllers/im_status.py:0
-#, fuzzy
 msgid "Unexpected IM status %(status)s"
 msgstr "Неизвестный статус в чате %(status)s"
 
@@ -13564,21 +13454,18 @@ msgstr "Без названия"
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_tracking_value.py:0
-#, fuzzy
 msgid "Unnamed %(record_model_name)s (%(record_id)s)"
-msgstr "%(record_model_name)s без названия (%(record_id)s)"
+msgstr "Без названия %(record_model_name)s (%(record_id)s)"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
-#, fuzzy
 msgid "Unnamed Mail Template"
 msgstr "Шаблон письма без названия"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
-#, fuzzy
 msgid "Unnamed Mailing"
 msgstr "Рассылка без названия"
 
@@ -13717,7 +13604,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_permission_dialog.js:0
 msgid "Use Camera"
-msgstr ""
+msgstr "Использовать камеру"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__external_email_server_default
@@ -13732,7 +13619,6 @@ msgstr "Использовать по умолчанию"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__use_exclusion_list
-#, fuzzy
 msgid "Use Exclusion List"
 msgstr "Использовать список исключений"
 
@@ -13750,12 +13636,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_permission_dialog.js:0
 msgid "Use Microphone"
-msgstr ""
+msgstr "Использовать микрофон"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__use_sfu_server
 msgid "Use SFU server"
-msgstr ""
+msgstr "Использовать SFU-сервер"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__use_twilio_rtc_servers
@@ -13817,7 +13703,6 @@ msgstr "Используйте message_notify для отправки уведо
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_permission_dialog.xml:0
-#, fuzzy
 msgid "Use microphone and camera"
 msgstr "Использовать микрофон и камеру"
 
@@ -13838,7 +13723,6 @@ msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
-#, fuzzy
 msgid ""
 "Use your own servers for calls to manage heavy traffic and ensure "
 "reliability if Twilio is unavailable"
@@ -13848,7 +13732,6 @@ msgstr ""
 
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.action_ice_servers
-#, fuzzy
 msgid ""
 "Use your own servers for calls to manage heavy traffic and ensure "
 "reliability if Twilio is unavailable."
@@ -13923,7 +13806,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users__role_ids
 msgid "User Roles"
-msgstr ""
+msgstr "Роли пользователей"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users_settings_volumes__user_setting_id
@@ -13963,7 +13846,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.ir_mail_server_view_form
 msgid "User email"
-msgstr ""
+msgstr "E-mail пользователя"
 
 #. module: mail
 #. odoo-javascript
@@ -13974,7 +13857,6 @@ msgstr "Пользователь — бот"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/im_status.js:0
-#, fuzzy
 msgid "User is busy"
 msgstr "Пользователь занят"
 
@@ -14026,7 +13908,6 @@ msgstr "Пользователи"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_users__role_ids
-#, fuzzy
 msgid ""
 "Users are notified whenever one of their roles is @-mentioned in a "
 "conversation."
@@ -14054,7 +13935,6 @@ msgstr ""
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/pip_banner.xml:0
-#, fuzzy
 msgid ""
 "Using picture-in-picture lets you stay in the call while you do other things."
 msgstr ""
@@ -14075,7 +13955,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users__out_of_office_message
 msgid "Vacation Responder"
-msgstr ""
+msgstr "Автоответчик на период отпуска"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_alias__alias_status__valid
@@ -14187,7 +14067,6 @@ msgstr "Просмотреть все активности"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_invitation.js:0
-#, fuzzy
 msgid "View chat with %(channel_name)s"
 msgstr "Открыть чат %(channel_name)s"
 
@@ -14214,7 +14093,6 @@ msgstr "Zobrazení výsledků"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_invitation.js:0
-#, fuzzy
 msgid "View the %(channel_name)s channel"
 msgstr "Просмотреть канал «%(channel_name)s»"
 
@@ -14378,7 +14256,7 @@ msgstr "Недели"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/thread.js:0
 msgid "Welcome to #%(channelName)s!"
-msgstr ""
+msgstr "Добро пожаловать в #%(channelName)s!"
 
 #. module: mail
 #. odoo-javascript
@@ -14486,7 +14364,6 @@ msgstr "Напишите ваше сообщение здесь..."
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/res_users.py:0
-#, fuzzy
 msgid "Wrong email address %s."
 msgstr "Неверный адрес электронной почты %s."
 
@@ -14594,7 +14471,6 @@ msgstr "Вам не разрешено изменять целевую запи�
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/res_users.py:0
-#, fuzzy
 msgid "You are not allowed to create a personal mail server."
 msgstr "Вам не разрешено создавать персональный почтовый сервер."
 
@@ -14607,7 +14483,6 @@ msgstr "Вам не разрешено отправлять это заплан�
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/res_users.py:0
-#, fuzzy
 msgid "You are not allowed to test personal mail servers."
 msgstr "Вам не разрешено тестировать персональные почтовые серверы."
 
@@ -14661,7 +14536,6 @@ msgstr ""
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_permission_dialog.js:0
-#, fuzzy
 msgid "You can still turn off your %s anytime."
 msgstr "Вы все еще можете выключить ваш %s в любое время."
 
@@ -14669,13 +14543,13 @@ msgstr "Вы все еще можете выключить ваш %s в любо
 #: model:ir.model.fields,help:mail.field_res_partner__vat
 #: model:ir.model.fields,help:mail.field_res_users__vat
 msgid "You can use '/' to indicate that the customer has no Tax ID."
-msgstr ""
+msgstr "Вы можете использовать символ «/», если у клиента нет ИНН."
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_alias_domain.py:0
 msgid "You cannot assign an empty domain name."
-msgstr ""
+msgstr "Нельзя указывать пустое доменное имя."
 
 #. module: mail
 #. odoo-python
@@ -14763,7 +14637,6 @@ msgstr ""
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
-#, fuzzy
 msgid "You don't have access to invite users to this channel."
 msgstr "У вас нет прав для приглашения пользователей в этот канал."
 
@@ -14787,7 +14660,6 @@ msgstr "Вас пригласили в #%s"
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_mail.py:0
-#, fuzzy
 msgid "You may not create a message using another user's mail server."
 msgstr ""
 "Вы не можете создать сообщение, используя почтовый сервер другого "
@@ -14802,7 +14674,6 @@ msgstr "Вы не можете определить шаблон для абст
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/im_status_dropdown.xml:0
-#, fuzzy
 msgid "You will not receive any notifications"
 msgstr "Вы не будете получать никаких уведомлений"
 
@@ -14885,14 +14756,12 @@ msgstr "Ваш браузер не поддерживает WebRTC."
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/pip_banner.xml:0
-#, fuzzy
 msgid "Your call is in another window."
 msgstr "Ваш звонок находится в другом окне."
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/res_users.py:0
-#, fuzzy
 msgid ""
 "Your email address is used by an alias domain, and so you can not create a "
 "mail server for it."
@@ -14910,7 +14779,7 @@ msgstr "Ваше имя"
 #: model_terms:ir.ui.view,arch_db:mail.view_users_form_mail
 #: model_terms:ir.ui.view,arch_db:mail.view_users_form_simple_modif_mail
 msgid "Your out-of-office message..."
-msgstr ""
+msgstr "Ваш автоответчик при отсутствии..."
 
 #. module: mail
 #. odoo-python
@@ -14932,7 +14801,6 @@ msgstr "адреса, связанные с зарегистрированным
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__delay_from__current_date
-#, fuzzy
 msgid "after previous activity completion date"
 msgstr "после даты завершения предыдущего дела"
 
@@ -15034,7 +14902,7 @@ msgstr "создал этот канал."
 #. odoo-javascript
 #: code:addons/mail/static/src/js/rotting_mixin/rotting_statusbar.xml:0
 msgid "d"
-msgstr ""
+msgstr "д."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_alert
@@ -15212,7 +15080,6 @@ msgstr "например, Запланировать встречу"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
-#, fuzzy
 msgid "e.g. Welcome to MyCompany!"
 msgstr "Например: «Добро пожаловать в MyCompany!»"
 
@@ -15221,12 +15088,12 @@ msgstr "Например: «Добро пожаловать в MyCompany!»"
 #: code:addons/mail/static/src/views/web/fields/shortcut_char_field/shortcut_char_field.js:0
 #: model_terms:ir.ui.view,arch_db:mail.mail_canned_response_view_tree
 msgid "e.g. hello"
-msgstr ""
+msgstr "например, Здравствуйте"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid "e.g. info@company.com"
-msgstr ""
+msgstr "например, info@company.com"
 
 #. module: mail
 #. odoo-javascript
@@ -15259,7 +15126,7 @@ msgstr "например: Отправить подтверждение зака
 #: model:ir.model.fields,field_description:mail.field_mail_mail__outgoing_email_to
 #: model:ir.model.fields,field_description:mail.field_mail_message__outgoing_email_to
 msgid "emails To"
-msgstr ""
+msgstr "Адреса получателей"
 
 #. module: mail
 #. odoo-javascript
@@ -15355,9 +15222,8 @@ msgstr "Ошибка медиаплеера"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_link_preview_list
-#, fuzzy
 msgid "messages"
-msgstr "messages"
+msgstr "сообщения"
 
 #. module: mail
 #. odoo-javascript
@@ -15446,7 +15312,6 @@ msgstr "другие участники."
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_ir_mail_server_unique_owner_user_id
-#, fuzzy
 msgid "owner_user_id must be unique"
 msgstr "owner_user_id должен быть уникальным"
 
@@ -15514,7 +15379,7 @@ msgstr "stun:"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_ice_server_form
 msgid "stun:stun.google.com:19302 or turn:turn.example.com:3478"
-msgstr ""
+msgstr "stun:stun.google.com:19302 or turn:turn.example.com:3478"
 
 #. module: mail
 #. odoo-python
@@ -15607,7 +15472,7 @@ msgstr "«%(member_name)s» в «%(channel_name)s»"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/activity.js:0
 msgid "“%s”"
-msgstr ""
+msgstr "«%s»"
 
 #. module: mail
 #. odoo-python
