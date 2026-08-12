@@ -320,7 +320,7 @@ class MrpWorkorder(models.Model):
         for order in self.filtered(lambda p: p.production_id and p.production_id.uom_id):
             order.is_produced = order.production_id.uom_id.compare(order.qty_produced, order.qty_production) >= 0
 
-    @api.depends('operation_id', 'workcenter_id', 'qty_producing', 'qty_production')
+    @api.depends('operation_id', 'workcenter_id', 'qty_production')
     def _compute_duration_expected(self):
         for workorder in self:
             if workorder.state not in ['done', 'cancel']:
@@ -539,8 +539,8 @@ class MrpWorkorder(models.Model):
         if values.get('qty_produced'):
             for workorder in self:
                 if workorder.state == 'done' and not workorder.time_ids:
-                    workorder.duration = workorder.duration_expected / (workorder.qty_producing or workorder.qty_to_produce or workorder.qty_production) * workorder.qty_produced
-
+                    ratio = workorder.qty_produced / workorder.qty_to_produce
+                    workorder.duration = workorder._get_duration_expected(ratio=ratio)
             productions_to_update = self.production_id.filtered(lambda p: p.state != 'done' and not p.bom_id.continuous)
             productions_to_update.qty_producing = values['qty_produced']
             if not self.env.context.get('bypass_change_producing') and not workorder.production_bom_id.continuous:
@@ -868,23 +868,18 @@ class MrpWorkorder(models.Model):
             duration_expected_working = (self.duration_expected - setup - cleanup) * self.workcenter_id.time_efficiency / 100.0
             if duration_expected_working < 0:
                 duration_expected_working = 0
-            if self.qty_producing not in (0, self.qty_production, self._origin.qty_producing):
-                qty_ratio = self.qty_producing / (self._origin.qty_producing or self.qty_production)
-            else:
-                qty_ratio = 1
-            return setup + cleanup + duration_expected_working * qty_ratio * ratio * 100.0 / self.workcenter_id.time_efficiency
-        qty_production = self.qty_producing or self.qty_production
-        cycle_number = float_round(qty_production / capacity, precision_digits=0, rounding_method='UP')
+            return setup + cleanup + duration_expected_working * ratio * 100.0 / self.workcenter_id.time_efficiency
+        cycle_number = float_round(self.qty_to_produce / capacity, precision_digits=0, rounding_method='UP')
         if alternative_workcenter:
             # TODO : find a better alternative : the settings of workcenter can change
             duration_expected_working = (self.duration_expected - setup - cleanup) * self.workcenter_id.time_efficiency / (100.0 * cycle_number)
             if duration_expected_working < 0:
                 duration_expected_working = 0
             capacity, setup, cleanup = alternative_workcenter._get_capacity(self.product_id, self.uom_id, self.production_bom_id.product_qty or 1)
-            cycle_number = float_round(qty_production / capacity, precision_digits=0, rounding_method='UP')
-            return setup + cleanup + cycle_number * duration_expected_working * 100.0 / alternative_workcenter.time_efficiency
+            cycle_number = float_round(self.qty_to_produce / capacity, precision_digits=0, rounding_method='UP')
+            return setup + cleanup + cycle_number * duration_expected_working * ratio * 100.0 / alternative_workcenter.time_efficiency
         time_cycle = self.operation_id.time_cycle
-        return setup + cleanup + cycle_number * time_cycle * 100.0 / self.workcenter_id.time_efficiency
+        return setup + cleanup + cycle_number * time_cycle * ratio * 100.0 / self.workcenter_id.time_efficiency
 
     def _get_conflicted_workorder_ids(self):
         """Get conlicted workorder(s) with self.

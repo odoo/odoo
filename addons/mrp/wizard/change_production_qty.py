@@ -87,7 +87,7 @@ class ChangeProductionQty(models.TransientModel):
                 else:
                     quantity = quantity if (quantity > 0 and not float_is_zero(quantity, precision_digits=precision)) else 0
                 wo._update_qty_producing(quantity if wo.production_id.state != 'to_close' else wo.qty_production)
-                wo.duration_expected = wo._get_duration_expected(ratio=new_production_qty / old_production_qty)
+                wo.duration_expected = wo._get_duration_expected(ratio=1 if wo.operation_id else new_production_qty / old_production_qty)
                 if wo.qty_produced < wo.qty_production and wo.state == 'done':
                     wo.state = 'progress'
                 if wo.qty_produced == wo.qty_production and wo.state == 'progress':

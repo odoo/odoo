@@ -2276,6 +2276,7 @@ class MrpProduction(models.Model):
             for index, workorder in enumerate(bo.workorder_ids):
                 remaining_qty = initial_workorder_remaining_qty[index % workorders_len]
                 workorder.qty_reported_from_previous_wo = max(workorder.qty_production - remaining_qty, 0)
+                workorder.duration_expected = workorder._get_duration_expected()
                 if remaining_qty:
                     initial_workorder_remaining_qty[index % workorders_len] = max(remaining_qty - workorder.qty_produced, 0)
                 else:
