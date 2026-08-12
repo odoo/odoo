@@ -299,16 +299,8 @@ export class HybridFluidStrategyPlugin extends Plugin {
             );
             cellEmailNode.appendChild(child);
         }
-        if (
-            clusterEmailNodes.length === 1 &&
-            this.attemptMerge(cellEmailNode, clusterEmailNodes.at(0))
-        ) {
-            for (const child of cellEmailNode.children) {
-                child.analysis.facts.desktopMarginStyleInfo = this.getCellMarginStyleInfo(
-                    child.analysis.facts.desktopMarginStyleInfo,
-                    child
-                );
-            }
+        if (clusterEmailNodes.length === 1) {
+            this.attemptCellMerge(cellEmailNode, clusterEmailNodes.at(0));
         }
         return cellEmailNode;
     }

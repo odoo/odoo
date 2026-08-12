@@ -43,6 +43,7 @@ export class TableStrategyPlugin extends Plugin {
         "applyCellNewWidth",
         "applyDescendantBackground",
         "applyDescendantBorder",
+        "attemptCellMerge",
         "buildCell",
         "buildCellWithOffset",
         "buildEmptyCell",
@@ -51,6 +52,7 @@ export class TableStrategyPlugin extends Plugin {
         "fillTableContainer",
         "getCellMarginStyleInfo",
         "getClusterEmailNodes",
+        "getVerticalAlign",
     ];
     resources = {
         element_layout_analysis_processors: [
@@ -96,6 +98,10 @@ export class TableStrategyPlugin extends Plugin {
         this.backgroundStyleRules = new Rules();
         this.cellMarginStyleRules = new Rules();
         this.provideStyleRules();
+    }
+
+    getVerticalAlign(align) {
+        return VERTICAL_ALIGN[align];
     }
 
     mergeTableStrategyReport({ fact, isConstraint }) {
@@ -240,7 +246,7 @@ export class TableStrategyPlugin extends Plugin {
         if (!(alignSelf in VERTICAL_ALIGN)) {
             return defaultEmailNodeArguments;
         }
-        const verticalAlign = VERTICAL_ALIGN[alignSelf];
+        const verticalAlign = this.getVerticalAlign(alignSelf);
         const { analysis } = defaultEmailNodeArguments;
         analysis.bottomUpConstraints.push((emailNode) => {
             if (!emailNode.analysis.facts.isCell || emailNode.children.length !== 1) {
@@ -726,8 +732,9 @@ export class TableStrategyPlugin extends Plugin {
         const contextStyleInfo = this.getTableContextStyleInfo(referenceNode);
         // TODO EGGMAIL: approximate vertical alignment support:
         // start/center/end/stretch -> default stretch
-        const verticalAlign =
-            VERTICAL_ALIGN[this.getStylePropertyValue(referenceNode, "align-items")];
+        const verticalAlign = this.getVerticalAlign(
+            this.getStylePropertyValue(referenceNode, "align-items")
+        );
         // STEP 1: construct measure bundles
         const rowMeasures = [];
         for (const band of desktopBlock.bands) {
@@ -871,10 +878,14 @@ export class TableStrategyPlugin extends Plugin {
             );
             cellEmailNode.appendChild(child);
         }
-        if (
-            clusterEmailNodes.length === 1 &&
-            this.attemptMerge(cellEmailNode, clusterEmailNodes.at(0))
-        ) {
+        if (clusterEmailNodes.length === 1) {
+            this.attemptCellMerge(cellEmailNode, clusterEmailNodes.at(0));
+        }
+        return cellEmailNode;
+    }
+
+    attemptCellMerge(cellEmailNode, emailNode) {
+        if (this.attemptMerge(cellEmailNode, emailNode)) {
             for (const child of cellEmailNode.children) {
                 child.analysis.facts.desktopMarginStyleInfo = this.getCellMarginStyleInfo(
                     child.analysis.facts.desktopMarginStyleInfo,
@@ -882,7 +893,6 @@ export class TableStrategyPlugin extends Plugin {
                 );
             }
         }
-        return cellEmailNode;
     }
 
     buildEmptyCell({ emptyCell, strategy }, { widthRatio }) {

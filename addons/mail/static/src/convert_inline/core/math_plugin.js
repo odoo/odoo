@@ -19,6 +19,7 @@ export class MathPlugin extends Plugin {
         "siblingSpacing",
         "containerPadding",
         "ratioPercentage",
+        "formatValue",
     ];
 
     pixelTolerance() {
@@ -151,7 +152,7 @@ export class MathPlugin extends Plugin {
         value,
         { inputUnit = 1, outputUnit = 100, precision = 2, percentageLeft } = {}
     ) {
-        const truncatedValue = this.formatPercentage(value, {
+        const truncatedValue = this.formatValue(value, {
             inputUnit,
             outputUnit,
             precision,
@@ -162,7 +163,7 @@ export class MathPlugin extends Plugin {
         return truncatedValue;
     }
 
-    formatPercentage(value, { inputUnit = 1, outputUnit = 100, precision = 2 } = {}) {
+    formatValue(value, { inputUnit = 1, outputUnit = 100, precision = 2 } = {}) {
         const precisionFactor = 10 ** precision;
         return Math.trunc(((value * outputUnit) / inputUnit) * precisionFactor) / precisionFactor;
     }
