@@ -241,7 +241,7 @@ class PdpRegistration(models.TransientModel):
             'company_name': self.company_id.name,
             'localization': 'FR',
             'db_url': self.get_base_url(),
-        })
+        }, raise_user_error=True)
         if error := response.get('error'):
             raise UserError(error)
 
@@ -314,7 +314,7 @@ class PdpRegistration(models.TransientModel):
             'vat': self._get_kyc_siren(),
             'auth_email': self.contact_email,
             'object_uuid': self.pdp_authentication_uuid,
-        })
+        }, raise_user_error=True)
         if error := response.get('error'):
             raise UserError(error)
 
