@@ -1047,3 +1047,43 @@ class TestTimesheet(TestCommonTimesheet):
             'user_id': self.user_manager.id,
         })
         self.assertEqual(timesheet.company_id, self.env.company)
+
+    def test_is_project_overtime_filter(self):
+        self.project.allocated_hours = 3.0
+        self.assertEqual(self.project.remaining_hours, 3.0)
+        task_1, task_2 = self.env['project.task'].create([
+            {
+                'name': 'Task 1',
+                'project_id': self.project.id,
+            },
+            {
+                'name': 'Task 2 (done)',
+                'project_id': self.project.id,
+                'state': '1_done',
+            }
+        ])
+        self.env['account.analytic.line'].create([
+            {
+                'name': 'Timesheet Task 1',
+                'unit_amount': 2.0,
+                'project_id': self.project.id,
+                'employee_id': self.empl_employee.id,
+                'task_id': task_1.id,
+            },
+            {
+                'name': 'Timesheet Task 2 (done)',
+                'unit_amount': 2.0,
+                'project_id': self.project.id,
+                'employee_id': self.empl_employee.id,
+                'task_id': task_2.id,
+            },
+        ])
+        self.assertRecordValues(self.project, [{
+            'is_project_overtime': True,
+            'remaining_hours': -1.0
+        }])
+        self.project.flush_model()  # Ensures the `project.allocated_hours` is saved in the database
+        self.assertIn(
+            self.project,
+            self.env['project.project'].search([('is_project_overtime', '=', True)])
+        )
