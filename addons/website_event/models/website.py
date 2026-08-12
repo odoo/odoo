@@ -73,7 +73,7 @@ class Website(models.Model):
 
     def get_suggested_controllers(self):
         suggested_controllers = super(Website, self).get_suggested_controllers()
-        suggested_controllers.append((_('Events'), self.env['ir.http']._url_for('/event'), 'website_event'))
+        suggested_controllers.append((_('Events'), self.env['ir.http']._url_for('/event')))
         return suggested_controllers
 
     def get_cta_data(self, website_purpose, website_type):
