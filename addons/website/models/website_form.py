@@ -210,7 +210,7 @@ class IrModelFields(models.Model):
         # Other HTML fields strip `<form>` on every write and need not be scanned.
         for model_name, field_name in self.env['website']._get_html_fields():
             field = self.env[model_name]._fields[field_name]
-            if field.type == 'html' and field.sanitize and field.sanitize_form and not field.sanitize_overridable:
+            if field.type in ['html', 'qweb_content'] and field.sanitize and field.sanitize_form and not field.sanitize_overridable:
                 continue
             records = self.env[model_name].sudo().with_context(active_test=False).search(_form_domain(field_name))
             for record in records:
