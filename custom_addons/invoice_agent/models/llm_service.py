@@ -84,6 +84,16 @@ EXTRACT_TIMEOUT_SECONDS = 90
 TIMEOUT_RETRIES = 1
 
 # ---------------------------------------------------------------------------
+# Claude Opus 4 pricing (USD per million tokens) — used by models/usage.py
+# to compute each extraction's ledger cost. Cache writes and reads are
+# billed at 25% / 10% of the input price respectively.
+# ---------------------------------------------------------------------------
+OPUS_PRICE_PER_MT_INPUT = 15.00
+OPUS_PRICE_PER_MT_CACHE_WRITE = 3.75  # 25% of input
+OPUS_PRICE_PER_MT_CACHE_READ = 1.50  # 10% of input
+OPUS_PRICE_PER_MT_OUTPUT = 75.00
+
+# ---------------------------------------------------------------------------
 # Circuit breaker (per-process).
 # ---------------------------------------------------------------------------
 CIRCUIT_FAILURE_THRESHOLD = 5
