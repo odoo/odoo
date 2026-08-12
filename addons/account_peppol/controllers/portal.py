@@ -39,14 +39,14 @@ class PortalAccount(CustomerPortal):
                 error_messages.append(_("That country is not available for Peppol."))
             result = request.env['res.partner']._validate_identifier_by_scheme(peppol_eas, peppol_endpoint)
             if not result['valid']:
-                invalid_fields.add('invalid_peppol_endpoint')
+                invalid_fields.add('peppol_endpoint')
                 peppol_endpoint = result['value']
                 identifier_label = request.env['res.partner']._get_identifier_label(result['key'])
                 endpoint_error_message = validation_error_message(request.env, identifier_label, result['value'], example=result['example'])
                 error_messages.append(endpoint_error_message)
             peppol_identifier = f'{peppol_eas}:{peppol_endpoint}'
             if request.env['res.partner']._get_peppol_verification_state(peppol_identifier, edi_format) != 'valid':
-                invalid_fields.add('invalid_peppol_config')
+                invalid_fields.update({'peppol_eas', 'peppol_endpoint', 'invoice_edi_format'})
                 error_messages.append(_("If you want to be invoiced by Peppol, your configuration must be valid."))
 
         return invalid_fields, missing_fields, error_messages
