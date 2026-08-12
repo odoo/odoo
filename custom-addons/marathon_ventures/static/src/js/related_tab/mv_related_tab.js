@@ -11,9 +11,10 @@
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import {
-    Component, useState, onWillStart, onWillUpdateProps,
+    Component, useState, onWillStart, onWillUpdateProps, useRef,
 } from "@odoo/owl";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
+import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 
 
 // =========================================================================
@@ -67,6 +68,12 @@ export class MvRelatedTab extends Component {
     setup() {
         this.orm = useService("orm");
         this.action = useService("action");
+        this.notification = useService("notification");
+        this.dialog = useService("dialog");
+        this.fileInputRef = useRef("fileInput");
+        // Section that requested the next Attach File click. Set by
+        // onAttachFile so onFilePicked knows where to route the upload.
+        this._uploadSpec = null;
         this.state = useState({
             loading: true,
             error: "",
@@ -117,7 +124,16 @@ export class MvRelatedTab extends Component {
         // Build the domain the same way Odoo's own O2M "list all"
         // does for the two relationship flavours.
         let domain = [];
-        if (spec.type === "one2many" && spec.inverse_name) {
+        // Polymorphic sections (ir.attachment via res_model/res_id)
+        // don't have a field_name or an inverse M2O - build the
+        // domain from the upload_res_model / upload_res_id the
+        // backend spec carries.
+        if (spec.type === "polymorphic" && spec.upload_res_model) {
+            domain = [
+                ["res_model", "=", spec.upload_res_model],
+                ["res_id",    "=", spec.upload_res_id],
+            ];
+        } else if (spec.type === "one2many" && spec.inverse_name) {
             domain = [[spec.inverse_name, "=", this.resId]];
         } else {
             // Many2one lookup by the record's own m2m field ids
@@ -155,6 +171,109 @@ export class MvRelatedTab extends Component {
             views: [[false, "form"]],
             target: "current",
         });
+    }
+
+    // ---- New <Label>: open FormViewDialog with parent auto-filled --
+    onNewRecord(spec) {
+        if (!spec || !spec.accessible || !spec.supports_create) return;
+        // When we have an inverse M2O ('mv.split.traffic' -> mv.traffic),
+        // pre-fill it so the user doesn't have to pick the parent.
+        // For direct M2M/O2M relationships we can't safely default the
+        // M2M value from context; the user picks / it's set on save.
+        const context = {};
+        if (spec.inverse_name && spec.parent_id) {
+            context["default_" + spec.inverse_name] = spec.parent_id;
+        }
+        // dialog.add() returns a `close` callback we invoke explicitly
+        // after the record is saved. The default FormViewDialog only
+        // auto-closes when the user clicks its own "Save & Close"
+        // button; if the record is saved via the mv.* Save button
+        // injected by phase7 (mv.save.button.mixin) the dialog would
+        // otherwise stay open. Capturing close here fixes that.
+        const close = this.dialog.add(FormViewDialog, {
+            resModel: spec.comodel,
+            context: context,
+            title: `New ${spec.label}`,
+            onRecordSaved: async () => {
+                await this.reload();
+                if (typeof close === "function") {
+                    close();
+                }
+            },
+        });
+    }
+
+    // ---- Attach File: click a hidden <input type=file> --------------
+    onAttachFile(spec) {
+        if (!spec || !spec.supports_upload) return;
+        if (!this.fileInputRef.el) return;
+        this._uploadSpec = spec;
+        // Reset value so picking the same file twice still fires
+        // the change event.
+        this.fileInputRef.el.value = "";
+        this.fileInputRef.el.click();
+    }
+
+    async onFilePicked(ev) {
+        const spec = this._uploadSpec;
+        this._uploadSpec = null;
+        const files = ev && ev.target && ev.target.files;
+        if (!spec || !files || files.length === 0) return;
+        try {
+            for (const file of files) {
+                const dataUrl = await this._readAsDataURL(file);
+                // dataUrl is like "data:<mime>;base64,<payload>"
+                const idx = dataUrl.indexOf(",");
+                const b64 = idx >= 0 ? dataUrl.slice(idx + 1) : dataUrl;
+                await this.orm.create("ir.attachment", [{
+                    name: file.name || "Attachment",
+                    datas: b64,
+                    res_model: spec.upload_res_model,
+                    res_id: spec.upload_res_id,
+                    mimetype: file.type || false,
+                    type: "binary",
+                }]);
+            }
+            this.notification.add(
+                files.length === 1
+                    ? `Uploaded ${files[0].name}`
+                    : `Uploaded ${files.length} files`,
+                { type: "success" },
+            );
+            await this.reload();
+        } catch (e) {
+            this.notification.add(
+                (e && e.data && e.data.message) || (e && e.message) || String(e),
+                { type: "danger" },
+            );
+        } finally {
+            // Clear the input so re-picking works.
+            if (this.fileInputRef.el) this.fileInputRef.el.value = "";
+        }
+    }
+
+    _readAsDataURL(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = () => reject(reader.error);
+            reader.readAsDataURL(file);
+        });
+    }
+
+    // ---- Delete an attachment row ----------------------------------
+    async onDeleteRow(spec, rec) {
+        if (!rec || !rec.id || !spec) return;
+        if (!confirm(`Delete "${rec.display_name || rec.name || rec.id}"?`)) return;
+        try {
+            await this.orm.unlink(spec.comodel, [rec.id]);
+            await this.reload();
+        } catch (e) {
+            this.notification.add(
+                (e && e.data && e.data.message) || (e && e.message) || String(e),
+                { type: "danger" },
+            );
+        }
     }
 }
 

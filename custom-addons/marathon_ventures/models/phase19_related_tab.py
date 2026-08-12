@@ -135,6 +135,66 @@ class MvRelated(models.AbstractModel):
         Parent = rec
         parent_model = Parent._name
 
+        # ------- Special case: ir.attachment is polymorphic --------
+        # It uses res_model/res_id instead of a real inverse M2O, so
+        # neither of the two standard discovery paths finds it. We
+        # short-circuit and search directly by res_model/res_id, which
+        # returns every attachment owned by this parent (uploads from
+        # the Related tab's Attach File button + chatter attachments +
+        # anything else with res_model set to the parent).
+        if comodel == 'ir.attachment':
+            spec = {
+                'field_name': False,
+                'label': 'Notes & Attachments',
+                'type': 'polymorphic',
+                'comodel': comodel,
+                'comodel_label': Co._description or comodel,
+                'inverse_name': 'res_id',
+                'count': 0,
+                'accessible': True,
+                'columns': [],
+                'preview': [],
+                # UI flag - frontend uses this to render the Attach
+                # File button and to filter uploads to this parent.
+                'supports_upload': True,
+                'upload_res_model': parent_model,
+                'upload_res_id': rec.id,
+            }
+            if not Co.has_access('read'):
+                spec['accessible'] = False
+                return spec
+            try:
+                related_recs = Co.search([
+                    ('res_model', '=', parent_model),
+                    ('res_id', '=', rec.id),
+                ], order='create_date desc, id desc')
+            except Exception as e:
+                _logger.warning(
+                    "[Related] fetch ir.attachment for %s#%s failed: %s",
+                    parent_model, rec.id, e,
+                )
+                spec['accessible'] = False
+                return spec
+            col_names = []
+            for cn in col_names_raw:
+                if cn in Co._fields:
+                    col_names.append(cn)
+            if not col_names:
+                col_names = ['display_name']
+            spec['columns'] = [
+                {
+                    'name': n,
+                    'label': (
+                        'Name' if n == 'display_name'
+                        else (Co._fields[n].string or n)
+                    ),
+                }
+                for n in col_names
+            ]
+            spec['count'] = len(related_recs)
+            spec['preview'] = self._collect_preview(related_recs, col_names)
+            return spec
+
         # ------- Locate the relationship path (direct or inverse) -------
         field_name = False
         inverse_name = False
@@ -166,6 +226,16 @@ class MvRelated(models.AbstractModel):
             'accessible': True,
             'columns': [],
             'preview': [],
+            'supports_upload': False,
+            # A section supports "New <Label>" whenever we can wire
+            # the new record's parent link automatically. For inverse
+            # M2O paths that's default_<inverse_name>=parent_id. For
+            # direct M2M/O2M paths the frontend still opens the form
+            # dialog; the user can pick the parent themselves if the
+            # comodel doesn't accept a default_* hint.
+            'supports_create': bool(inverse_name or field_name),
+            'parent_model': parent_model,
+            'parent_id': rec.id,
         }
 
         # No relationship found at all -> flag as inaccessible with a

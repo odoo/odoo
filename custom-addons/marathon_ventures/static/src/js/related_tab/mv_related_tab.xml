@@ -3,6 +3,15 @@
 
     <t t-name="marathon_ventures.MvRelatedTab">
         <div class="mv-related">
+            <!-- Hidden file input reused by every section's Attach File
+                 button. onAttachFile sets this._uploadSpec so
+                 onFilePicked knows which parent to attach into. -->
+            <input type="file"
+                   t-ref="fileInput"
+                   multiple="multiple"
+                   style="display:none"
+                   t-on-change="(ev) => this.onFilePicked(ev)"/>
+
             <div t-if="!resId" class="mv-related__hint">
                 Save this record to see its related items.
             </div>
@@ -16,7 +25,7 @@
                 No related relationships defined on this model.
             </div>
             <div t-else="" class="mv-related__grid">
-                <t t-foreach="state.specs" t-as="spec" t-key="spec.field_name">
+                <t t-foreach="state.specs" t-as="spec" t-key="spec.field_name || spec.comodel">
                     <div class="mv-related-section">
                         <div class="mv-related-section__head">
                             <span class="mv-related-section__title">
@@ -26,6 +35,27 @@
                                   t-att-class="'mv-related-section__count ' + (spec.count === 0 ? 'is-empty' : '')">
                                 (<t t-esc="spec.count"/>)
                             </span>
+
+                            <!-- Attach File button - only shows for
+                                 sections whose backend spec set
+                                 supports_upload: true (currently just
+                                 ir.attachment). -->
+                            <button t-if="spec.accessible and spec.supports_upload"
+                                    class="mv-related-section__attach btn btn-sm btn-outline-primary"
+                                    t-on-click.prevent="() => this.onAttachFile(spec)">
+                                <i class="fa fa-paperclip"/> Attach File
+                            </button>
+
+                            <!-- New <Label> button - opens the standard
+                                 form view for the comodel in a modal,
+                                 with the parent relation pre-filled via
+                                 default_<inverse_name> context. -->
+                            <button t-if="spec.accessible and spec.supports_create and !spec.supports_upload"
+                                    class="mv-related-section__new btn btn-sm btn-primary"
+                                    t-on-click.prevent="() => this.onNewRecord(spec)">
+                                <i class="fa fa-plus"/> New <t t-esc="spec.label"/>
+                            </button>
+
                             <button t-if="spec.accessible and spec.count > 0"
                                     class="mv-related-section__view-all btn btn-link"
                                     t-on-click.prevent="() => this.onViewAll(spec)">
@@ -40,21 +70,30 @@
                         </t>
                         <t t-elif="spec.count === 0">
                             <div class="mv-related-section__empty">
-                                No related records found.
+                                <t t-if="spec.supports_upload">
+                                    No attachments yet. Click <b>Attach File</b> to add one.
+                                </t>
+                                <t t-elif="spec.supports_create">
+                                    No related records found. Click <b>New <t t-esc="spec.label"/></b> to create one.
+                                </t>
+                                <t t-else="">
+                                    No related records found.
+                                </t>
                             </div>
                         </t>
                         <t t-else="">
                             <!-- Salesforce-style table: one row per record.
                                  The first column is ALWAYS the display_name
                                  link opening the record. Additional columns
-                                 come from spec.columns (built server-side
-                                 from RELATED_TAB_COLUMNS[comodel]) - any
-                                 entry whose name is "display_name" is
-                                 filtered out to avoid duplicating that
-                                 first column. -->
+                                 come from spec.columns (built server-side).
+                                 For ir.attachment sections we render an
+                                 extra Action column with a Delete button. -->
                             <table class="mv-related-section__table">
                                 <thead>
                                     <tr>
+                                        <t t-if="spec.supports_upload">
+                                            <th class="mv-related-section__th mv-related-section__th--action">Action</th>
+                                        </t>
                                         <th class="mv-related-section__th mv-related-section__th--name">Name</th>
                                         <t t-foreach="spec.columns" t-as="col" t-key="col.name">
                                             <th t-if="col.name !== 'display_name'"
@@ -68,6 +107,15 @@
                                     <tr t-foreach="spec.preview" t-as="rec"
                                         t-key="rec.id"
                                         class="mv-related-section__tr">
+                                        <t t-if="spec.supports_upload">
+                                            <td class="mv-related-section__td mv-related-section__td--action">
+                                                <a href="#"
+                                                   class="mv-related-section__delete"
+                                                   t-on-click.prevent="() => this.onDeleteRow(spec, rec)">
+                                                    <i class="fa fa-trash"/> Del
+                                                </a>
+                                            </td>
+                                        </t>
                                         <td class="mv-related-section__td mv-related-section__td--name">
                                             <a href="#"
                                                class="mv-related-section__record-name"

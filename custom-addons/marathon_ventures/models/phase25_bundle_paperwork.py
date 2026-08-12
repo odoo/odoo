@@ -137,7 +137,7 @@ class MvDealBundlePaperwork(models.Model):
         relation='mv_deal_bundle_paperwork_rel',
         column1='deal_id',
         column2='attachment_id',
-        string='Bundle Paperwork Files',
+        string='Notes & Attachments',
     )
 
     def action_open_bundle_paperwork(self):

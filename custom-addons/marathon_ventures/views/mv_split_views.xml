@@ -7,7 +7,7 @@
       <list string="Split">
         <field name="name"/>
         <field name="active"/>
-        <field name="days_allowed"/>
+        <field name="days_allowed" widget="many2many_tags"/>
         <field name="double_check_date"/>
         <field name="double_check"/>
         <field name="end_date"/>
@@ -44,7 +44,7 @@
                 <field name="x800_number"/>
                 <field name="active"/>
                 <field name="double_check"/>
-                <field name="days_allowed"/>
+                <field name="days_allowed" widget="mv_days_picker"/>
                 <field name="end_time"/>
                 <field name="rotation"/>
                 <field name="start_time"/>

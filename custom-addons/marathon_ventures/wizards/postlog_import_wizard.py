@@ -1,10 +1,32 @@
 # -*- coding: utf-8 -*-
-"""Postlog import wizard."""
+"""Postlog import wizard.
+
+The dropdown now offers the six BUNDLE codes (tegna, hearst,
+univision, american_spirit, gray, paid_programming) that the
+Node-side handler used - not the list of mv.programs records.
+`action_import` creates a `mv.post_log_import` job (see
+models/phase28_post_log_import.py) and hands the file off to the
+background cron. The user gets a notification saying results will
+be emailed.
+
+The old mv.programs-based engine path is kept for backward
+compatibility with anything upstream that still creates the wizard
+with a `program_id`, but the primary flow is the bundle-code path.
+"""
+import base64
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 
-from ..services.postlog_import.engine import PostlogImportEngine
+
+_BUNDLE_SELECTION = [
+    ('tegna',            'Tegna Connect'),
+    ('hearst',           'Hearst Unwired / Primary Hearst Connect'),
+    ('univision',        'Univision / Unimas Connect'),
+    ('american_spirit',  'American Spirit Connect'),
+    ('gray',             'Gray (Bounce / Primary / Retro / Telemundo)'),
+    ('paid_programming', 'Paid Programming'),
+]
 
 
 class MvPostlogImportWizard(models.TransientModel):
@@ -13,85 +35,64 @@ class MvPostlogImportWizard(models.TransientModel):
 
     upload_file = fields.Binary(string="Upload", required=True)
     upload_filename = fields.Char(string="Filename")
-    program_id = fields.Many2one("mv.programs", string="Program Record", required=True)
+    # Kept as optional legacy plumbing - the primary flow uses the
+    # bundle-code path below.
+    program_id = fields.Many2one(
+        "mv.programs", string="Program Record",
+    )
     program_choice = fields.Selection(
-        selection="_get_program_selection",
+        selection=_BUNDLE_SELECTION,
         string="Program",
         required=True,
+        help="Bundle program the post-log belongs to. Determines the "
+             "column mapping and schedule-matching rules.",
     )
     import_week = fields.Date(string="Import Week", readonly=True)
 
-    @api.model
-    def _get_program_selection(self):
-        programs = self.env["mv.programs"].search([], order="name")
-        return [(str(program.id), program.display_name) for program in programs]
-
-    @api.onchange("program_choice")
-    def _onchange_program_choice(self):
-        for wizard in self:
-            wizard.program_id = int(wizard.program_choice) if wizard.program_choice else False
-
-    @api.onchange("program_id")
-    def _onchange_program_id(self):
-        for wizard in self:
-            wizard.program_choice = str(wizard.program_id.id) if wizard.program_id else False
-
-    @api.onchange("program_choice", "upload_file", "upload_filename")
-    def _onchange_import_defaults(self):
-        for wizard in self:
-            wizard.import_week = False
-            wizard.program_id = int(wizard.program_choice) if wizard.program_choice else False
-            if not wizard.program_id or not wizard.upload_file:
-                continue
-
-            try:
-                _, detected_week = wizard._build_import_engine().extract_rows_and_week()
-            except UserError:
-                continue
-
-            wizard.import_week = detected_week
-
-    def _build_import_engine(self):
-        self.ensure_one()
-        return PostlogImportEngine(
-            self.env,
-            program=self.program_id,
-            upload_file=self.upload_file,
-            upload_filename=self.upload_filename,
-        )
-
+    # -----------------------------------------------------------------
+    # No engine lookup / week autodetect - the phase28 processor does
+    # week detection itself from the first row of the file, so we
+    # don't need to peek at the upload here.
+    # -----------------------------------------------------------------
     def action_import(self):
+        """Create a mv.post_log_import job and hand off to the cron."""
         self.ensure_one()
-        if self.program_choice and not self.program_id:
-            self.program_id = int(self.program_choice)
-        if not self.program_id:
-            raise UserError(_("Program is required."))
+        if not self.program_choice:
+            raise UserError(_("Please choose a Program."))
+        if not self.upload_file:
+            raise UserError(_("Please upload a file."))
 
-        engine = self._build_import_engine()
-        rows, import_week = engine.extract_rows_and_week()
-        self.import_week = import_week
-        summary = engine.import_rows(rows, import_week)
-
-        message = _(
-            "Imported %(spots)s Spot Data rows for %(program)s, week %(week)s. "
-            "Matched: %(matched)s. Unmatched: %(unmatched)s."
-        ) % {
-            "program": self.program_id.display_name,
-            "week": import_week,
-            "spots": summary["spot_created"],
-            "matched": summary["matched"],
-            "unmatched": summary["unmatched"],
-        }
-        if summary["errors"]:
-            message += _("\n\nFirst issues:\n%s") % "\n".join(summary["errors"][:5])
+        # The phase28 model expects binary data + filename. The wizard
+        # already holds those. Copying so the job record owns its own
+        # copy of the bytes.
+        raw = base64.b64decode(self.upload_file)
+        job = self.env['mv.post_log_import'].create({
+            'program': self.program_choice,
+            'upload_file': base64.b64encode(raw),
+            'upload_filename': self.upload_filename or 'postlog.csv',
+            'email': self.env.user.email or '',
+        })
+        # Queue it and trigger the cron. Reuse the action so we keep
+        # a single code path for validation + trigger.
+        job.action_queue_import()
 
         return {
-            "type": "ir.actions.client",
-            "tag": "display_notification",
-            "params": {
-                "title": _("Postlog Import"),
-                "message": message,
-                "sticky": bool(summary["errors"]),
-                "type": "success" if not summary["errors"] else "warning",
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': _('Postlog Import'),
+                'message': _(
+                    "Import queued for %(prog)s. You will receive an "
+                    "email at %(mail)s with the results when the "
+                    "background job finishes."
+                ) % {
+                    'prog': dict(_BUNDLE_SELECTION).get(
+                        self.program_choice, self.program_choice,
+                    ),
+                    'mail': self.env.user.email or _('your account'),
+                },
+                'type': 'success',
+                'sticky': False,
+                'next': {'type': 'ir.actions.act_window_close'},
             },
         }

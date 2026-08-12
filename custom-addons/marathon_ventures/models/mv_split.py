@@ -20,7 +20,21 @@ class MvSplit(models.Model):
     sf_legacy_data = fields.Json(string='SF Legacy Payload')
 
     # === SF Custom Fields ===
-    active = fields.Boolean(string='Active', compute='_compute_active', store=True)  # SF: Active__c
+    # NOTE: `active` is a MAGIC field name in Odoo - the ORM treats
+    # records with active=False as archived and hides them from every
+    # default search. The Salesforce field `Active__c` is a business
+    # flag (Start <= today <= End) that shouldn't hijack that archive
+    # semantic. We keep the Odoo default (Boolean default=True) so
+    # new records are visible on save, and expose the SF business
+    # flag under `sf_active_flag`.
+    active = fields.Boolean(string='Active', default=True)
+    sf_active_flag = fields.Boolean(
+        string='SF Active Flag',
+        compute='_compute_sf_active_flag',
+        store=True,
+        help='True when today falls between Start Date and End Date '
+             '(mirrors the Salesforce Active__c formula).',
+    )
     days_allowed = fields.Many2many(string='Days Allowed', comodel_name='mv.days_allowed.tag', relation='mv_split_days_allowed_rel')  # SF: Days_Allowed__c
     double_check_date = fields.Datetime(string='Double Check Date')  # SF: Double_Check_Date__c
     double_check = fields.Boolean(string='Double Check', help='Related Video File accurate.')  # SF: Double_Check__c
@@ -39,34 +53,36 @@ class MvSplit(models.Model):
 
     # === Computed / Roll-Up ===
 
-    @api.depends()
-    def _compute_active(self):
-        # SF formula (verbatim, may need translation):
-        #   AND(
-        #   Start_Date__c <= TODAY(),
-        #   End_Date__c >= TODAY()
-        #   )
+    @api.depends('start_date', 'end_date')
+    def _compute_sf_active_flag(self):
+        # SF formula:
+        #   AND(Start_Date__c <= TODAY(), End_Date__c >= TODAY())
+        today = fields.Date.context_today(self)
         for rec in self:
-            # TODO: translate SF formula to Python
-            rec.active = False
+            rec.sf_active_flag = bool(
+                rec.start_date and rec.end_date
+                and rec.start_date <= today <= rec.end_date
+            )
 
-    @api.depends()
+    @api.depends('isci')
     def _compute_isci_no_char(self):
-        # SF formula (verbatim, may need translation):
+        # SF formula:
         #   SUBSTITUTE(ISCI__c, "-", "")
         for rec in self:
-            # TODO: translate SF formula to Python
-            rec.isci_no_char = False
+            rec.isci_no_char = (rec.isci or '').replace('-', '') or False
 
     # === Constraints (translated from SF Validation Rules) ===
-
-    @api.constrains('sf_external_id')
-    def _check_days_allowed_cannot_be_null(self):
-        # SF Validation Rule: Days_Allowed_cannot_be_null
-        # SF condition (fires when TRUE):
-        #   ISNULL(Days_Allowed__c)
-        for rec in self:
-            # TODO: translate SF formula; the condition below is a placeholder
-            condition = False
-            if condition:
-                raise ValidationError(_("Days Allowed must be populated."))
+    #
+    # The generator emitted a placeholder for `Days_Allowed_cannot_be_null`
+    # with a hard-coded `condition = False` and a wrong `@api.constrains`
+    # dependency (`sf_external_id` instead of `days_allowed`). Since the
+    # check never fired and the business intent has since been relaxed
+    # (splits are created via the Traffic Instructions Related tab where
+    # Days Allowed can be picked afterwards), we drop it. If it needs to
+    # come back later, add:
+    #
+    #     @api.constrains('days_allowed')
+    #     def _check_days_allowed(self):
+    #         for rec in self:
+    #             if not rec.days_allowed:
+    #                 raise ValidationError(_("Days Allowed must be populated."))

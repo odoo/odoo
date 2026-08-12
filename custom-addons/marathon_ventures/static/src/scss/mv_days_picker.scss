@@ -1,0 +1,25 @@
+/*  Bundle Pricing Days Picker widget.
+    Simple two-row layout: Select All at top, seven day chips below. */
+
+.mv_days_picker {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 4px 0;
+
+    .mv_days_picker__all {
+        border-bottom: 1px solid var(--o-color-border, #dee2e6);
+        padding-bottom: 6px;
+        margin-bottom: 2px;
+    }
+
+    .mv_days_picker__list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px 20px;
+
+        .form-check {
+            margin-right: 0;   /* rely on flex gap instead */
+        }
+    }
+}

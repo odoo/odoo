@@ -80,7 +80,7 @@ class MvBundlePricing(models.Model):
             # TODO: translate SF formula to Python
             rec.market = rec.station.market.name or False
 
-    @api.depends('sf_external_id')
+    @api.depends('start_time', 'end_time')
     def _compute_start_end_time(self):
         # SF formula (verbatim, may need translation):
         #   text(Start_Time__c )&"-"&text( End_Time__c )
@@ -91,7 +91,7 @@ class MvBundlePricing(models.Model):
             end = end_labels.get(rec.end_time, '') if rec.end_time else ''
             rec.start_end_time = '%s-%s' % (start, end)
 
-    @api.depends('sf_external_id')
+    @api.depends('rate_per_30', 'units')
     def _compute_total(self):
         # SF formula (verbatim, may need translation):
         #   Rate_per_30__c  *  Units__c

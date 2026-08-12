@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+  <!-- List view -->
+  <record id="view_mv_post_log_import_list" model="ir.ui.view">
+    <field name="name">mv.post_log_import.list</field>
+    <field name="model">mv.post_log_import</field>
+    <field name="arch" type="xml">
+      <list string="Post Log Imports"
+            decoration-info="state == 'queued'"
+            decoration-warning="state == 'processing'"
+            decoration-success="state == 'done'"
+            decoration-danger="state == 'failed'">
+        <field name="create_date" string="Uploaded"/>
+        <field name="program"/>
+        <field name="upload_filename" string="File"/>
+        <field name="email" string="Notify"/>
+        <field name="state"/>
+        <field name="processed_at" optional="hide"/>
+        <field name="result_summary" optional="show"/>
+      </list>
+    </field>
+  </record>
+
+  <!-- Form view -->
+  <record id="view_mv_post_log_import_form" model="ir.ui.view">
+    <field name="name">mv.post_log_import.form</field>
+    <field name="model">mv.post_log_import</field>
+    <field name="arch" type="xml">
+      <form string="Post Log Import">
+        <header>
+          <button name="action_queue_import"
+                  type="object"
+                  string="Queue Import"
+                  class="btn-primary"
+                  invisible="state != 'draft'"/>
+          <field name="state" widget="statusbar"
+                 statusbar_visible="draft,queued,processing,done"/>
+        </header>
+        <sheet>
+          <div class="oe_title">
+            <h1><field name="display_name" readonly="1"/></h1>
+          </div>
+          <group>
+            <group>
+              <field name="program"
+                     required="1"
+                     readonly="state != 'draft'"/>
+              <field name="upload_file"
+                     filename="upload_filename"
+                     required="1"
+                     readonly="state != 'draft'"/>
+              <field name="upload_filename" invisible="1"/>
+            </group>
+            <group>
+              <field name="email"
+                     required="1"
+                     readonly="state != 'draft'"/>
+              <field name="processed_at" readonly="1"
+                     invisible="not processed_at"/>
+            </group>
+          </group>
+          <group string="Result" invisible="state == 'draft'">
+            <field name="result_summary" readonly="1" nolabel="1"/>
+          </group>
+          <div invisible="state != 'draft'" class="text-muted">
+            <p>
+              Pick a <b>Program</b>, upload the post-log file, and click
+              <b>Queue Import</b>. A background job will match each row to
+              a schedule + station, create the Spot Data records, and email
+              you the results (errors.csv + uploaded-spots.csv). Fixed
+              program recipients are copied on the email.
+            </p>
+          </div>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <!-- Search / filters -->
+  <record id="view_mv_post_log_import_search" model="ir.ui.view">
+    <field name="name">mv.post_log_import.search</field>
+    <field name="model">mv.post_log_import</field>
+    <field name="arch" type="xml">
+      <search string="Post Log Imports">
+        <field name="program"/>
+        <field name="upload_filename"/>
+        <field name="email"/>
+        <separator/>
+        <filter name="draft"      string="Draft"      domain="[('state','=','draft')]"/>
+        <filter name="queued"     string="Queued"     domain="[('state','=','queued')]"/>
+        <filter name="processing" string="Processing" domain="[('state','=','processing')]"/>
+        <filter name="done"       string="Done"       domain="[('state','=','done')]"/>
+        <filter name="failed"     string="Failed"     domain="[('state','=','failed')]"/>
+        <separator/>
+        <filter name="group_program" string="Group by Program"
+                context="{'group_by': 'program'}"/>
+        <filter name="group_state"   string="Group by Status"
+                context="{'group_by': 'state'}"/>
+      </search>
+    </field>
+  </record>
+
+  <!-- Action + menu -->
+  <record id="action_mv_post_log_import" model="ir.actions.act_window">
+    <field name="name">Import Post Log</field>
+    <field name="res_model">mv.post_log_import</field>
+    <field name="view_mode">list,form</field>
+    <field name="help" type="html">
+      <p class="o_view_nocontent_smiling_face">
+        Upload a post-log file
+      </p>
+      <p>
+        Pick a bundle program, attach the CSV / XLSX from the network,
+        and Queue Import. Results are emailed to you as
+        <code>uploaded-spots.csv</code> and <code>errors.csv</code>.
+      </p>
+    </field>
+  </record>
+
+  <menuitem id="menu_mv_post_log_import"
+            name="Import Post Log"
+            parent="menu_mv_operations"
+            action="action_mv_post_log_import"
+            sequence="20"/>
+
+</odoo>
