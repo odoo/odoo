@@ -216,6 +216,23 @@ class TestMrpAccount(TestBomPriceCommon):
         overview_values = self.env['report.mrp.report_mo_overview'].get_report_values(mo.id)
         self.assertEqual(round(overview_values['data']['summary']['mo_cost'], 2), 677.08)
 
+    def test_mo_overview_comp_big_uom_difference(self):
+        """ Test that the overview keeps the component's cost even with different uom
+        """
+        self.glass.is_storable = False
+        self.glass.uom_id = self.env.ref('uom.product_uom_ton')
+        glass_line = self.bom_1.bom_line_ids.filtered(lambda l: l.product_id == self.glass)
+        glass_line.product_uom_id = self.env.ref('uom.product_uom_kgm')
+        glass_line.product_qty = 1.0
+        mo = self._create_mo(self.bom_1, 1)
+        overview_values = self.env['report.mrp.report_mo_overview'].get_report_values(mo.id)
+        self.assertEqual(round(overview_values['data']['summary']['mo_cost'], 2), 618.85,
+            "468.75 (Table head components) + 50 (screw) + 100 (leg) + 0.1 (1kg of glass at 100/Ton)")
+
+        mo.button_mark_done()
+        overview_values = self.env['report.mrp.report_mo_overview'].get_report_values(mo.id)
+        self.assertEqual(round(overview_values['data']['summary']['mo_cost'], 2), 618.85)
+
     def test_mo_overview_unit_cost_extra_component_after_unlock(self):
         """When a component is added to an unlocked done MO, its move must be correctly
         valued and its unit_cost in the overview must reflect the product's standard_price.
