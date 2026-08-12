@@ -1,5 +1,5 @@
 import { plugin } from "@odoo/owl";
-import { UncaughtPromiseError } from "../errors/error_service";
+import { UncaughtPromiseError } from "../errors/error_plugin";
 import { ConnectionLostError } from "../network/rpc";
 import { registry } from "../registry";
 import { OfflinePlugin } from "./offline_plugin";
