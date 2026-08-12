@@ -12,3 +12,4 @@ from . import test_config_settings
 from . import test_create
 from . import test_index_method
 from . import test_indexed_translation
+from . import test_inherits

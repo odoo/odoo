@@ -6,6 +6,7 @@
     'data': [
         'data/test_access_feedback.xml',
         'data/test_action_bindings.xml',
+        'data/test_inherits.xml',
         'security/common/ir.access.csv',
         'security/test_access/ir.access.csv',
         'security/test_access_feedback/ir.access.csv',
@@ -14,6 +15,7 @@
         'security/test_check_access/ir.access.csv',
         'security/test_company_checks/ir.access.csv',
         'security/test_indexed_translation/ir.access.csv',
+        'security/test_inherits/ir.access.csv',
     ],
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',

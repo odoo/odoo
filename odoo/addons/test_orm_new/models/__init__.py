@@ -8,3 +8,4 @@ from . import test_check_access
 from . import test_company_checks
 from . import test_config_settings
 from . import test_indexed_translation
+from . import test_inherits
