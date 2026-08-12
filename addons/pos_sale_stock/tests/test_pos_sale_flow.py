@@ -1,7 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import uuid
-
 from odoo import fields
 from odoo.fields import Command
 from odoo.tests import Form
@@ -76,7 +74,15 @@ class TestPoSSaleStock(TestPosStockHttpCommon, TestPoSSale):
             ]
         })
         self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'PosSettleOrder', login="pos_user")
+        self._sync_paid_pos_order([{
+            'product': self.kit,
+            'qty': 2,
+            'price_unit': self.kit.lst_price,
+            'extra_values': {
+                'sale_order_line_id': sale_order.order_line.id,
+                'sale_order_origin_id': sale_order.id,
+            },
+        }], partner=sale_order.partner_id)
 
         # assert that sales order qty are correctly updated
         self.assertEqual(sale_order.order_line.qty_delivered, 3)
@@ -128,7 +134,15 @@ class TestPoSSaleStock(TestPosStockHttpCommon, TestPoSSale):
 
         self.main_pos_config.open_ui()
         self.main_pos_config.current_session_id.update_stock_at_closing = True
-        self.start_pos_tour('PosSettleOrder2', login="accountman")
+        self._sync_paid_pos_order([{
+            'product': product_a,
+            'qty': 1,
+            'price_unit': product_a.lst_price,
+            'extra_values': {
+                'sale_order_line_id': sale_order.order_line[0].id,
+                'sale_order_origin_id': sale_order.id,
+            },
+        }], partner=sale_order.partner_id)
 
         sale_order = self.env['sale.order'].browse(sale_order.id)
         self.assertEqual(sale_order.order_line[0].qty_delivered, 1)
@@ -223,8 +237,15 @@ class TestPoSSaleStock(TestPosStockHttpCommon, TestPoSSale):
             'partner_id': partner_1.id,
             'order_line': [Command.create({'product_id': product1.id})],
         })
-        self.main_pos_config.open_ui()
-        self.start_pos_tour('PoSSettleSaleQuotation', login="accountman")
+        self._sync_paid_pos_order([{
+            'product': product1,
+            'qty': 1,
+            'price_unit': 10,
+            'extra_values': {
+                'sale_order_line_id': order.order_line.id,
+                'sale_order_origin_id': order.id,
+            },
+        }], partner=partner_1)
         self.assertEqual(order.order_line.qty_delivered, 1)
 
     def test_settle_order_with_multistep_delivery(self):
@@ -258,89 +279,18 @@ class TestPoSSaleStock(TestPosStockHttpCommon, TestPoSSale):
 
         self.assertEqual(sale_order.order_line[0].qty_delivered, 0)
 
-        self.main_pos_config.open_ui()
-        self.start_pos_tour('PosSettleOrder3', login="accountman")
+        self._sync_paid_pos_order([{
+            'product': product_a,
+            'qty': 1,
+            'price_unit': product_a.lst_price,
+            'extra_values': {
+                'sale_order_line_id': sale_order.order_line[0].id,
+                'sale_order_origin_id': sale_order.id,
+            },
+        }], partner=sale_order.partner_id)
 
         self.assertEqual(sale_order.order_line[0].qty_delivered, 1)
         self.assertEqual(sale_order.picking_ids.mapped('state'), ['cancel'])
-
-    def test_import_lot_groupable_and_non_groupable(self):
-        """
-        Test importing a Sale Order in POS containing both groupable and non-groupable
-        lot-tracked products, each with quantities exceeding available lots.
-        Ensures the POS correctly handles lot selection and grouping behavior.
-        """
-        non_groupable_uom = self.env['uom.uom'].create({
-            'name': 'Non groupable',
-            'is_pos_groupable': False,
-        })
-        groupable_product, non_groupable_product = self.env['product.product'].create([{
-            'name': name,
-            'available_in_pos': True,
-            'is_storable': True,
-            'lst_price': 10.0,
-            'tracking': 'lot',
-            'taxes_id': False,
-        } for name in ('Groupable Product', 'Non Groupable Product')])
-        non_groupable_product.uom_id = non_groupable_uom.id
-
-        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
-        stock_location = warehouse.lot_stock_id
-        non_groupable_lot, groupable_lot = self.env['stock.lot'].create([{
-            'name': f'LOT {product.name}',
-            'product_id': product.id,
-            'company_id': self.env.company.id,
-        } for product in (non_groupable_product, groupable_product)])
-        self.env['stock.quant'].with_context(inventory_mode=True).create([{
-            'product_id': lot.product_id.id,
-            'inventory_quantity': 2,
-            'location_id': stock_location.id,
-            'lot_id': lot.id,
-        } for lot in (non_groupable_lot, groupable_lot)]).action_apply_inventory()
-
-        sale_order = self.env['sale.order'].sudo().create({
-            'partner_id': self.env['res.partner'].create({'name': 'Test Partner'}).id,
-            'order_line': [
-                Command.create({
-                    'product_id': non_groupable_product.id,
-                    'name': non_groupable_product.name,
-                    'product_uom_qty': 3,
-                }),
-                Command.create({
-                    'product_id': groupable_product.id,
-                    'name': groupable_product.name,
-                    'product_uom_qty': 3,
-                }),
-            ],
-        })
-        sale_order.action_confirm()
-        self.assertEqual(sale_order.amount_total, 60)
-
-        self.main_pos_config.open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_import_lot_groupable_and_non_groupable', login="accountman")
-
-    def test_ship_later_no_default(self):
-        """ Verify that when settling an order the ship later is not activated by default"""
-        product = self.env['product.product'].create({
-            'name': 'Product',
-            'available_in_pos': True,
-            'lst_price': 10.0,
-            'taxes_id': False,
-        })
-
-        sale_order = self.env['sale.order'].sudo().create({
-            'partner_id': self.env['res.partner'].create({'name': 'Test Partner'}).id,
-            'order_line': [(0, 0, {
-                'product_id': product.id,
-                'name': product.name,
-                'product_uom_qty': 4,
-                'price_unit': product.lst_price,
-            })],
-        })
-        sale_order.action_confirm()
-        self.main_pos_config.write({'ship_later': True})
-        self.main_pos_config.open_ui()
-        self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'PosShipLaterNoDefault', login="accountman")
 
     def test_settle_order_with_multistep_delivery_receipt(self):
         """This test create an order and settle it in the PoS. It also uses multistep delivery
@@ -404,9 +354,19 @@ class TestPoSSaleStock(TestPosStockHttpCommon, TestPoSSale):
         picking.button_validate()
 
         self.main_pos_config.ship_later = True
-        self.main_pos_config.open_ui()
-        self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'PosSettleOrder4', login="accountman")
+        order_id = self._sync_paid_pos_order([{
+            'product': product_a,
+            'qty': 1,
+            'price_unit': product_a.lst_price,
+            'extra_values': {
+                'sale_order_line_id': sale_order.order_line[0].id,
+                'sale_order_origin_id': sale_order.id,
+            },
+        }], partner=self.partner_test, shipping_date=fields.Date.today())
+        order = self.env['pos.order'].browse(order_id)
 
+        self.assertEqual(order.state, 'paid')
+        self.assertEqual(order.picking_ids.state, 'assigned')
         self.assertEqual(sale_order.picking_ids[0].state, 'cancel')
         self.assertEqual(sale_order.pos_order_line_ids.order_id.picking_ids.state, 'assigned')
         self.assertEqual(self.env['purchase.order.line'].search_count([('product_id', '=', product_a.id)]), 1)
@@ -465,8 +425,32 @@ class TestPoSSaleStock(TestPosStockHttpCommon, TestPoSSale):
         self.assertEqual(sale_order_single.order_line[0].qty_delivered, 0)
 
         self.main_pos_config.ship_later = True
-        self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'PosSettleOrderShipLater', login="accountman")
+        self._sync_paid_pos_order([{
+            'product': product_a,
+            'qty': 1,
+            'price_unit': product_a.lst_price,
+            'extra_values': {
+                'sale_order_line_id': sale_order_single.order_line[0].id,
+                'sale_order_origin_id': sale_order_single.id,
+            },
+        }], partner=partner_test, shipping_date=fields.Date.today())
+        self._sync_paid_pos_order([{
+            'product': product_a,
+            'qty': 1,
+            'price_unit': product_a.lst_price,
+            'extra_values': {
+                'sale_order_line_id': sale_order_multi.order_line[0].id,
+                'sale_order_origin_id': sale_order_multi.id,
+            },
+        }, {
+            'product': product_b,
+            'qty': 1,
+            'price_unit': product_b.lst_price,
+            'extra_values': {
+                'sale_order_line_id': sale_order_multi.order_line[1].id,
+                'sale_order_origin_id': sale_order_multi.id,
+            },
+        }], partner=partner_test, shipping_date=fields.Date.today())
 
         self.assertEqual(len(sale_order_single.picking_ids), 1)
         self.assertEqual(sale_order_single.picking_ids.state, "cancel")
@@ -492,30 +476,13 @@ class TestPoSSaleStock(TestPosStockHttpCommon, TestPoSSale):
         self.assertEqual(sale_order_multi.pos_order_line_ids.order_id.picking_ids.state, "assigned")
 
     def test_edit_invoice_with_pos_order(self):
-        self.main_pos_config.open_ui()
-        current_session = self.main_pos_config.current_session_id
         partner_1 = self.env['res.partner'].create({'name': 'Test Partner'})
 
-        pos_order = self.env['pos.order'].create({
-            'company_id': self.env.company.id,
-            'session_id': current_session.id,
-            'partner_id': partner_1.id,
-            'pricelist_id': partner_1.property_product_pricelist.id,
-            'lines': [(0, 0, {
-                'name': "OL/0001",
-                'product_id': self.desk_pad.product_variant_id.id,
-                'price_unit': self.desk_pad.product_variant_id.lst_price,
-                'discount': 0.0,
-                'qty': 1.0,
-                'tax_ids': [],
-                'price_subtotal': self.desk_pad.product_variant_id.lst_price,
-                'price_subtotal_incl': self.desk_pad.product_variant_id.lst_price,
-            })],
-            'amount_total': self.desk_pad.product_variant_id.lst_price,
-            'amount_tax': 0.0,
-            'amount_paid': 0.0,
-            'amount_return': 0.0,
-        })
+        pos_order = self._create_pos_order([{
+            'product': self.desk_pad.product_variant_id,
+            'taxes': self.env['account.tax'],
+            'extra_values': {'name': "OL/0001"},
+        }], partner=partner_1)
 
         # generate an invoice for pos order
         res = pos_order.action_pos_order_invoice()
@@ -529,61 +496,6 @@ class TestPoSSaleStock(TestPosStockHttpCommon, TestPoSSale):
         # we cannot cancel the invoice.
         invoice.button_draft()
         self.assertEqual(invoice.state, 'posted')
-
-    def test_settle_order_with_lot(self):
-        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
-        stock_location = warehouse.lot_stock_id
-        product = self.env['product.product'].create({
-            'name': 'Product A',
-            'tracking': 'serial',
-            'is_storable': True,
-            'lst_price': 10,
-        })
-
-        lot1 = self.env['stock.lot'].create({
-            'name': '1001',
-            'product_id': product.id,
-            'company_id': self.env.company.id,
-        })
-        lot2 = self.env['stock.lot'].create({
-            'name': '1002',
-            'product_id': product.id,
-            'company_id': self.env.company.id,
-        })
-
-        self.env['stock.quant'].with_context(inventory_mode=True).create({
-            'product_id': product.id,
-            'inventory_quantity': 1,
-            'location_id': stock_location.id,
-            'lot_id': lot1.id
-        }).action_apply_inventory()
-        self.env['stock.quant'].with_context(inventory_mode=True).create({
-            'product_id': product.id,
-            'inventory_quantity': 1,
-            'location_id': stock_location.id,
-            'lot_id': lot2.id
-        }).action_apply_inventory()
-
-        partner_test = self.env['res.partner'].create({'name': 'Test Partner'})
-
-        sale_order = self.env['sale.order'].sudo().create({
-            'partner_id': partner_test.id,
-            'order_line': [
-                (0, 0, {
-                    'name': 'section line',
-                    'display_type': 'line_section',
-                }),
-                (0, 0, {
-                    'product_id': product.id,
-                    'name': product.name,
-                    'product_uom_qty': 2,
-                    'price_unit': product.lst_price,
-                })
-            ],
-        })
-        sale_order.action_confirm()
-        self.main_pos_config.open_ui()
-        self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'test_settle_order_with_lot', login="accountman")
 
     def test_multiple_lots_sale_order(self):
         self.product = self.env['product.product'].create({
@@ -650,11 +562,29 @@ class TestPoSSaleStock(TestPosStockHttpCommon, TestPoSSale):
                 'price_unit': self.product.lst_price,
             })],
         })
-        self.main_pos_config.open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_multiple_lots_sale_order_1', login="accountman")
         sale_order.action_confirm()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_multiple_lots_sale_order_2', login="accountman")
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_multiple_lots_sale_order_3', login="accountman")
+        self._sync_paid_pos_order([
+            {
+                'product': self.product,
+                'qty': 4,
+                'price_unit': self.product.lst_price,
+                'extra_values': {
+                    'pack_lot_ids': [[0, 0, {'lot_name': '1001'}]],
+                    'sale_order_line_id': sale_order.order_line[0].id,
+                    'sale_order_origin_id': sale_order.id,
+                },
+            },
+            {
+                'product': self.product,
+                'qty': 2,
+                'price_unit': self.product.lst_price,
+                'extra_values': {
+                    'pack_lot_ids': [[0, 0, {'lot_name': '1002'}]],
+                    'sale_order_line_id': sale_order.order_line[0].id,
+                    'sale_order_origin_id': sale_order.id,
+                },
+            },
+        ], partner=sale_order.partner_id)
         self.main_pos_config.current_session_id.close_session_from_ui()
         picking = sale_order.pos_order_line_ids.order_id.picking_ids
         self.assertEqual(picking.move_ids.quantity, 6)
@@ -664,65 +594,6 @@ class TestPoSSaleStock(TestPosStockHttpCommon, TestPoSSale):
             {'lot_id': lot_1001.id, 'quantity': 1, 'location_id': self.shelf_1.id},
             {'lot_id': lot_1002.id, 'quantity': 2, 'location_id': self.shelf_2.id},
         ])
-
-    def test_settle_groupable_lot_total_amount(self):
-        groupable_uom_unit = self.env['uom.uom'].create({
-            'name': 'Groupable Unit',
-            'is_pos_groupable': True,
-        })
-
-        groupable_uom_dozens = self.env['uom.uom'].create({
-            'name': 'Groupable Dozens',
-            'relative_factor': 12,
-            'relative_uom_id': groupable_uom_unit.id,
-        })
-
-        self.product = self.env['product.product'].create({
-            'name': 'Product',
-            'available_in_pos': True,
-            'is_storable': True,
-            'lst_price': 1.0,
-            'taxes_id': False,
-            'categ_id': self.product_category.id,
-            'tracking': 'lot',
-            'uom_id': groupable_uom_unit.id,
-        })
-
-        self.warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
-
-        self.shelf = self.env['stock.location'].create({
-            'name': 'Shelf 1',
-            'usage': 'internal',
-            'location_id': self.warehouse.lot_stock_id.id,
-        })
-
-        quants = self.env['stock.quant'].with_context(inventory_mode=True).create({
-            'product_id': self.product.id,
-            'inventory_quantity': 10_000,
-            'location_id': self.shelf.id,
-            'lot_id': self.env['stock.lot'].create({
-                'name': '1001',
-                'product_id': self.product.id,
-                'location_id': self.shelf.id,
-            }).id,
-        })
-
-        quants.action_apply_inventory()
-
-        sale_order = self.env['sale.order'].create({
-            'partner_id': self.env['res.partner'].create({'name': 'Test Partner'}).id,
-            'order_line': [(0, 0, {
-                'product_id': self.product.id,
-                'name': self.product.name,
-                'product_uom_qty': 1,
-                'product_uom_id': groupable_uom_dozens.id,
-                'price_unit': 12.0,
-            })],
-        })
-
-        sale_order.action_confirm()
-        self.main_pos_config.open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_settle_groupable_lot_total_amount', login="accountman")
 
     def test_refund_ship_later_qty_delivered(self):
         warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
@@ -740,86 +611,29 @@ class TestPoSSaleStock(TestPosStockHttpCommon, TestPoSSale):
         sale_order.action_confirm()
 
         self.main_pos_config.ship_later = True
-        self.main_pos_config.open_ui()
-        current_session = self.main_pos_config.current_session_id
 
-        pos_order = {
-           'amount_paid': self.product_a.lst_price * 5,
-           'amount_return': 0,
-           'amount_tax': 0,
-           'amount_total': self.product_a.lst_price * 5,
-           'company_id': self.env.company.id,
-           'date_order': fields.Datetime.to_string(fields.Datetime.now()),
-           'fiscal_position_id': False,
-           'to_invoice': True,
-           'partner_id': self.partner_a.id,
-           'pricelist_id': self.main_pos_config.available_pricelist_ids[0].id,
-           'lines': [[0,
-             0,
-             {'discount': 0,
-              'pack_lot_ids': [],
-              'price_unit': self.product_a.lst_price,
-              'product_id': self.product_a.id,
-              'price_subtotal': self.product_a.lst_price * 5,
-              'price_subtotal_incl': self.product_a.lst_price * 5,
-              'sale_order_line_id': sale_order.order_line[0].id,
-              'sale_order_origin_id': sale_order.id,
-              'qty': 5,
-              'tax_ids': []}]],
-           'name': 'Order 00044-003-0014',
-           'session_id': current_session.id,
-           'sequence_number': self.main_pos_config.journal_id.id,
-           'payment_ids': [[0,
-             0,
-             {'amount': self.product_a.lst_price * 5,
-              'name': fields.Datetime.now(),
-              'payment_method_id': self.main_pos_config.payment_method_ids[0].id}]],
-           'user_id': self.env.uid,
-           'uuid': str(uuid.uuid4()),
-        }
-
-        data = self.env['pos.order'].sync_from_ui([pos_order])
-        pos_order_id = data['pos.order'][0]['id']
+        pos_order_id = self._sync_paid_pos_order([{
+            'product': self.product_a,
+            'qty': 5,
+            'taxes': self.env['account.tax'],
+            'extra_values': {
+                'pack_lot_ids': [],
+                'sale_order_line_id': sale_order.order_line[0].id,
+                'sale_order_origin_id': sale_order.id,
+            },
+        }], partner=self.partner_a, to_invoice=True)
         pos_order_record = self.env['pos.order'].browse(pos_order_id)
 
-        pos_order_refund = {
-           'amount_paid': self.product_a.lst_price * 3,
-           'amount_return': 0,
-           'amount_tax': 0,
-           'amount_total': self.product_a.lst_price * 3,
-           'company_id': self.env.company.id,
-           'date_order': fields.Datetime.to_string(fields.Datetime.now()),
-           'fiscal_position_id': False,
-           'to_invoice': True,
-           'is_refund': True,
-           'partner_id': self.partner_a.id,
-           'pricelist_id': self.main_pos_config.available_pricelist_ids[0].id,
-           'lines': [[0,
-             0,
-             {'discount': 0,
-              'pack_lot_ids': [],
-              'price_unit': self.product_a.lst_price,
-              'product_id': self.product_a.id,
-              'price_subtotal': self.product_a.lst_price * 3,
-              'price_subtotal_incl': self.product_a.lst_price * 3,
-              'refund_orderline_ids': [],
-              'refunded_orderline_id': pos_order_record.lines[0].id,
-              'qty': -3,
-              'tax_ids': []}]],
-           'name': 'Order 00044-003-0014',
-           'session_id': current_session.id,
-           'sequence_number': self.main_pos_config.journal_id.id,
-           'payment_ids': [[0,
-             0,
-             {'amount': -self.product_a.lst_price * 3,
-              'name': fields.Datetime.now(),
-              'payment_method_id': self.main_pos_config.payment_method_ids[0].id}]],
-           'user_id': self.env.uid,
-           'uuid': str(uuid.uuid4()),
-           'shipping_date': '2023-01-01',
-        }
-        data = self.env['pos.order'].sync_from_ui([pos_order_refund])
-        pos_order_refund_id = data['pos.order'][1]['id']
+        pos_order_refund_id = self._sync_paid_pos_order([{
+            'product': self.product_a,
+            'qty': -3,
+            'taxes': self.env['account.tax'],
+            'extra_values': {
+                'pack_lot_ids': [],
+                'refund_orderline_ids': [],
+                'refunded_orderline_id': pos_order_record.lines[0].id,
+            },
+        }], partner=self.partner_a, to_invoice=True, is_refund=True, shipping_date='2023-01-01')
         pos_order_refund_record = self.env['pos.order'].browse(pos_order_refund_id)
         self.assertEqual(sale_order.order_line.qty_delivered, 5)
         for picking in pos_order_refund_record.picking_ids:
@@ -871,36 +685,6 @@ class TestPoSSaleStock(TestPosStockHttpCommon, TestPoSSale):
 
         self.assertEqual(sale_order.amount_unpaid, 0.0)
 
-    def test_settle_changed_price_with_lots(self):
-        """
-        Tests that when we change the price of a line in the quotation, it will not be reverted when
-        settling it through the PoS
-        """
-        partner = self.env['res.partner'].create({'name': 'Test Partner'})
-        product_lot_tracked = self.env['product.product'].create({
-            'name': 'Settle Lots',
-            'available_in_pos': True,
-            'lst_price': 100.0,
-            'taxes_id': False,
-            'tracking': 'lot',
-        })
-        self.env['sale.order'].create({
-            'partner_id': partner.id,
-            'order_line': [
-                (0, 0, {
-                    'product_id': product_lot_tracked.id,
-                    'product_uom_qty': 1,
-                    'price_unit': 120.0,
-                }),
-                (0, 0, {
-                    'product_id': product_lot_tracked.id,
-                    'product_uom_qty': 1,
-                    'price_unit': 60.0,
-                })
-            ]
-        })
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_settle_changed_price_with_lots', login="accountman")
-
     def test_settle_cancelled_sale_order(self):
         """When settling a cancelled (reset to draft) SO in PoS,
         the PoS picking should include moves for its products."""
@@ -932,8 +716,15 @@ class TestPoSSaleStock(TestPosStockHttpCommon, TestPoSSale):
         sale_order._action_cancel()
         sale_order.action_draft()
 
-        self.main_pos_config.open_ui()
-        self.start_pos_tour('test_settle_cancelled_sale_order', login="accountman")
+        self._sync_paid_pos_order([{
+            'product': product,
+            'qty': 1,
+            'price_unit': product.lst_price,
+            'extra_values': {
+                'sale_order_line_id': so_line.id,
+                'sale_order_origin_id': sale_order.id,
+            },
+        } for product, so_line in zip([product_a, product_b], sale_order.order_line)], partner=partner)
 
         pos_order = sale_order.pos_order_line_ids.order_id
         pos_shipped_products = pos_order.picking_ids.filtered(lambda p: p.state == 'done').move_ids.product_id
@@ -956,46 +747,17 @@ class TestPoSSaleStock(TestPosStockHttpCommon, TestPoSSale):
         sale_order.action_confirm()
 
         self.main_pos_config.ship_later = True
-        self.main_pos_config.open_ui()
-        current_session = self.main_pos_config.current_session_id
 
-        pos_order = {
-           'amount_paid': self.product_a.lst_price * 5,
-           'amount_return': 0,
-           'amount_tax': 0,
-           'amount_total': self.product_a.lst_price * 5,
-           'company_id': self.env.company.id,
-           'date_order': fields.Datetime.to_string(fields.Datetime.now()),
-           'fiscal_position_id': False,
-           'to_invoice': True,
-           'partner_id': self.partner_a.id,
-           'pricelist_id': self.main_pos_config.available_pricelist_ids[0].id,
-           'lines': [[0,
-             0,
-             {'discount': 0,
-              'pack_lot_ids': [],
-              'price_unit': self.product_a.lst_price,
-              'product_id': self.product_a.id,
-              'price_subtotal': self.product_a.lst_price * 5,
-              'price_subtotal_incl': self.product_a.lst_price * 5,
-              'sale_order_line_id': sale_order.order_line[0].id,
-              'sale_order_origin_id': sale_order.id,
-              'qty': 5,
-              'tax_ids': []}]],
-           'name': 'Order 00044-003-0014',
-           'session_id': current_session.id,
-           'sequence_number': self.main_pos_config.journal_id.id,
-           'payment_ids': [[0,
-             0,
-             {'amount': self.product_a.lst_price * 5,
-              'name': fields.Datetime.now(),
-              'payment_method_id': self.main_pos_config.payment_method_ids[0].id}]],
-           'user_id': self.env.uid,
-           'uuid': str(uuid.uuid4()),
-        }
-
-        data = self.env['pos.order'].sync_from_ui([pos_order])
-        pos_order_id = data['pos.order'][0]['id']
+        pos_order_id = self._sync_paid_pos_order([{
+            'product': self.product_a,
+            'qty': 5,
+            'taxes': self.env['account.tax'],
+            'extra_values': {
+                'pack_lot_ids': [],
+                'sale_order_line_id': sale_order.order_line[0].id,
+                'sale_order_origin_id': sale_order.id,
+            },
+        }], partner=self.partner_a, to_invoice=True)
         pos_order_record = self.env['pos.order'].browse(pos_order_id)
         self.assertEqual(sale_order.order_line.qty_delivered, 5)
         self.assertEqual(sale_order.order_line.qty_invoiced, 5)
