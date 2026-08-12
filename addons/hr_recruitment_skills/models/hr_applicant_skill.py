@@ -9,7 +9,6 @@ class HrApplicantSkill(models.Model):
     _inherit = "hr.individual.skill.mixin"
     _description = "Skill level for an applicant"
     _rec_name = 'skill_id'
-    _order = "skill_type_id, skill_level_id desc"
 
     applicant_id = fields.Many2one(
         comodel_name="hr.applicant",
