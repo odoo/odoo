@@ -79,8 +79,6 @@ owl.onWillRender = function onWillRender(cb) {
     };
 };
 
-/**
- */
 owl.useComponent = function useComponent() {
     return owl.useScope().component;
 };
@@ -91,12 +89,13 @@ owl.useComponent = function useComponent() {
  * @param {Function} handler
  * @param {any} eventParams
  */
-owl.useExternalListener = function useExternalListener(target, eventName, handler, eventParams) {
+function useExternalListener(target, eventName, handler, eventParams) {
     const node = owl.useScope();
     const boundHandler = handler.bind(node.component);
     owl.onMounted(() => target.addEventListener(eventName, boundHandler, eventParams));
     owl.onWillUnmount(() => target.removeEventListener(eventName, boundHandler, eventParams));
-};
+}
+owl.useExternalListener = useExternalListener; // kept for spreadsheet
 
 /**
  * @param {Function} effect
@@ -243,16 +242,10 @@ const customDirectives = {
     /**
      * @param {HTMLElement} node
      * @param {string} value
-     * @param {string[]} modifiers
      */
-    model: (node, value, modifiers) => {
-        let attribute = "t-model";
-        for (const modifier of modifiers) {
-            attribute += `.${modifier}`;
-        }
-        const getter = `() => ${value}`;
-        const setter = `(nv) => {${value} = nv;}`;
-        node.setAttribute(attribute, `__globals__.createModelSignal(${getter}, ${setter})`);
+    model: (node, value) => {
+        // kept for spreadsheet
+        node.setAttribute("t-model.proxy", value);
     },
     /**
      * @param {HTMLElement} node
@@ -268,11 +261,6 @@ const customDirectives = {
 };
 
 const globalValues = {
-    /**
-     * @param {Function} getter
-     * @param {Function} setter
-     */
-    createModelSignal: (getter, setter) => Object.assign(getter, { set: setter }),
     Portal,
 };
 
