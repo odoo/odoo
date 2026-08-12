@@ -134,6 +134,12 @@ export const productCatalog = {
         return [{ content, trigger }];
     },
 
+    selectProductUoM(productName, uom) {
+        const trigger = `.o_kanban_record:contains("${productName}") .o_product_catalog_quantity select`;
+        const content = `Select the UoM ${uom} for product "${productName}"`;
+        return [{ content, trigger, run: `selectByLabel ${uom}` }];
+    },
+
     waitForQuantity(productName, quantity) {
         const trigger = `.o_kanban_record:contains("${productName}") input[type=number]:value("${quantity}")`;
         return [{ trigger }];

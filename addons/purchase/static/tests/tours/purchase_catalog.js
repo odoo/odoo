@@ -70,5 +70,15 @@ registry.category("web_tour.tours").add("test_catalog_vendor_uom", {
             unitPrice: "2.00",
             totalPrice: "$ 1.55",
         }),
+
+        // Reopen the PO for `vendor_by_liter` and verify that the price is updated based on the UoM change.
+        { trigger: "li.o_back_button:first-child", run: "click" },
+        { trigger: ".o_data_cell:text(PO/TEST/00001)", run: "click" },
+        ...purchaseForm.openCatalog(),
+        ...productCatalog.checkProductUoM("Crab Juice", "L"),
+        ...productCatalog.checkProductPrice("Crab Juice", "$ 1.55"),
+        ...productCatalog.selectProductUoM("Crab Juice", "Units"),
+        ...productCatalog.checkProductUoM("Crab Juice", "Units"),
+        ...productCatalog.checkProductPrice("Crab Juice", "$ 3.00"),
     ],
 });

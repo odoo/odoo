@@ -105,8 +105,7 @@ export class ProductCatalogKanbanRecord extends KanbanRecord {
             if (data.productUomFactor !== undefined) {
                 data.productUomFactor = data.productUomFactor * oldUom.factor / newUom.factor;
             }
-            const price = await this._updateQuantityAndGetPrice();
-            data.price = parseFloat(price);
+            await this._onQuantityChange();
         }
     }
 
