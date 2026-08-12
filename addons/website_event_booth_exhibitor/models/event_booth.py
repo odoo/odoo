@@ -14,7 +14,7 @@ class EventBooth(models.Model):
     sponsor_email = fields.Char(string='Sponsor Email', related='sponsor_id.email')
     sponsor_phone = fields.Char(string='Sponsor Phone', related='sponsor_id.phone')
     sponsor_subtitle = fields.Char(string='Sponsor Slogan', related='sponsor_id.subtitle')
-    sponsor_website_description = fields.Html(string='Sponsor Description', related='sponsor_id.website_description')
+    sponsor_website_description = fields.Qweb(string='Sponsor Description', related='sponsor_id.website_description')
     sponsor_image_512 = fields.Image(string='Sponsor Logo', related='sponsor_id.image_512')
 
     def action_view_sponsor(self):
