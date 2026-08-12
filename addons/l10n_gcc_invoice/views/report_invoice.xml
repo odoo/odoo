@@ -219,7 +219,7 @@
                 </t>
             </p>
             <p name="payment_communication_en" t-if="display_in_en" t-translation="off">
-                Payment Communication: <span class="fw-bold" t-out="o_sec.payment_reference">INV/2023/00001</span>
+                Payment Reference: <span class="fw-bold" t-out="o_sec.payment_reference">INV/2023/00001</span>
                 <t t-if="o_sec.partner_bank_id">
                     <br/> on this account: <span t-out="o_sec.partner_bank_id.account_number" class="fw-bold"/>
                 </t>

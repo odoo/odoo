@@ -53,7 +53,7 @@ class ResCompany(models.Model):
             ('simplified_monthly', "Simplified VAT Regime (Monthly)"),
             ('simplified_bimonthly', "Franchised VAT Regime (Bimonthly)"),
         ],
-        string="Flow 10 Report Periodicity",
+        string="Flow 10 Report Period",
         default='normal_monthly',
         required=True,
         help="""Legal reporting period for transaction and payments flows according to the TVA regime table.

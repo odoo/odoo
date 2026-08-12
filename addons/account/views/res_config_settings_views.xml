@@ -242,7 +242,7 @@
                             </setting>
                         </block>
                         <block title="Vendor Bills" id="account_vendor_bills">
-                            <setting id="autopost_bills" help="Propose to validate bills automatically when AI accuracy is right 3 times in a row for a vendor.">
+                            <setting id="autopost_bills" help="Propose auto-validating bills for a vendor after the AI achieves three consecutive accurate results">
                                 <field name="autopost_bills"/>
                             </setting>
                         </block>
@@ -382,10 +382,10 @@
                                 <field name="quick_edit_mode_enabled"/>
                                 <field name="quick_edit_mode" required="quick_edit_mode_enabled" invisible="not quick_edit_mode_enabled"/>
                             </setting>
-                            <setting  id="document_sequence_editable" company_dependent="1" help="The document's sequence becomes editable on all documents.">
+                            <setting  id="document_sequence_editable" company_dependent="1" help="The document sequence can be edited on all documents.">
                                 <field name="document_sequence_editable"/>
                             </setting>
-                            <setting  id="set_to_review_documents" company_dependent="1" help="Review all the modification done by the user with right under bookkeeper.">
+                            <setting  id="set_to_review_documents" company_dependent="1" help="Review all modifications made by users with Bookkeeper access rights">
                                 <field name="set_to_review_documents"/>
                             </setting>
                         </block>

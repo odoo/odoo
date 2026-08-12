@@ -90,7 +90,7 @@ class EventEvent(models.Model):
         'event.type', string='Template', ondelete='set null',
         help="Choose a template to auto-fill tickets, communications, descriptions and other fields.")
     event_mail_ids = fields.One2many(
-        'event.mail', 'event_id', string='Mail Schedule', copy=True,
+        'event.mail', 'event_id', string='Email Schedule', copy=True,
         compute='_compute_event_mail_ids', readonly=False, store=True)
     tag_ids = fields.Many2many(
         'event.tag', string="Tags", readonly=False,

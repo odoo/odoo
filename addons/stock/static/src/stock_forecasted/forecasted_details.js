@@ -228,7 +228,7 @@ export class ForecastedDetails extends Component {
     }
 
     get freeStockLabel() {
-        return _t('Free Stock');
+        return _t('Available Inventory');
     }
 
     get lines() {

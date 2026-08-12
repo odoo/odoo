@@ -96,11 +96,11 @@ class GamificationChallenge(models.Model):
             ('monthly', "Monthly"),
             ('yearly', "Yearly")
         ], default='once',
-        string="Periodicity",
+        string="Frequency",
         help="Period of automatic goal assignment. If none is selected, should be launched manually.",
         required=True)
-    start_date = fields.Date("Start Date", help="The day a new challenge will be automatically started. If no periodicity is set, will use this date as the goal start date.")
-    end_date = fields.Date("End Date", help="The day a new challenge will be automatically closed. If no periodicity is set, will use this date as the goal end date.")
+    start_date = fields.Date("Start Date", help="The day a new challenge will be automatically started. If no frequency is set, will use this date as the goal start date.")
+    end_date = fields.Date("End Date", help="The day a new challenge will be automatically closed. If no frequency is set, will use this date as the goal end date.")
 
     invited_user_ids = fields.Many2many('res.users', 'gamification_invited_user_ids_rel', string="Suggest to users")
 

@@ -29,7 +29,7 @@ class SaleOrderTemplate(models.Model):
 
     mail_template_id = fields.Many2one(
         comodel_name="mail.template",
-        string="Confirmation Mail",
+        string="Confirmation Email",
         domain=[("model", "=", "sale.order")],
         help="This e-mail template will be sent on confirmation. Leave empty to send nothing.",
     )

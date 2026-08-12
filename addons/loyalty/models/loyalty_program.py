@@ -646,7 +646,7 @@ class LoyaltyProgram(models.Model):
                 "icon": "coupons",
             },
             "fidelity": {
-                "title": self.env._("Fidelity Card"),
+                "title": self.env._("Reward Card"),
                 "description": self.env._("Buy 10 products to get 10$ off on the 11th one"),
                 "icon": "fidelity_cards",
             },
@@ -726,7 +726,7 @@ class LoyaltyProgram(models.Model):
                 **program_type_defaults["next_order_coupons"],
             },
             "fidelity": {
-                "name": self.env._("Fidelity Cards"),
+                "name": self.env._("Reward Cards"),
                 "program_type": "loyalty",
                 "applies_on": "both",
                 "trigger": "auto",

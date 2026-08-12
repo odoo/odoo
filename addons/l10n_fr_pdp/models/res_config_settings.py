@@ -25,7 +25,7 @@ class ResConfigSettings(models.TransientModel):
         string="Approved Platform Registered",
     )
     l10n_fr_pdp_periodicity = fields.Selection(
-        string="Flow 10 Report Periodicity",
+        string="Flow 10 Report Period",
         related='company_id.l10n_fr_pdp_periodicity', readonly=False,
         required=True,
         help="""Legal reporting period for transaction and payments flows according to the TVA regime table.

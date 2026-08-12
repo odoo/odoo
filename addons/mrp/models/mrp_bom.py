@@ -72,7 +72,7 @@ class MrpBom(models.Model):
         'product.template.attribute.value',
         compute='_compute_possible_product_template_attribute_value_ids')
     allow_operation_dependencies = fields.Boolean('Custom Operation Dependencies',
-        help="Select to customise operation dependencies. When checked, operations will be in parallel by default.",
+        help="Select to customize operation dependencies. When checked, operations will be in parallel by default.",
     )
     produce_delay = fields.Integer(
         'Manufacturing Lead Time', default=0,

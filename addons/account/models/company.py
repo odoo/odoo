@@ -256,7 +256,7 @@ class ResCompany(models.Model):
             ('out_and_in_invoices', 'Customer Invoices and Vendor Bills')],
         default='out_and_in_invoices',
     )
-    document_sequence_editable = fields.Boolean(string="Document's sequence editable")
+    document_sequence_editable = fields.Boolean(string="Editable Document Sequence")
     set_to_review_documents = fields.Boolean(string="Review data")
 
     # Separate account for allocation of discounts

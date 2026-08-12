@@ -168,7 +168,7 @@ patch(OrderSummary.prototype, {
                 if (this.currentOrder.duplicateCouponChanges(code)) {
                     this.dialog.add(ConfirmationDialog, {
                         title: _t("Validation Error"),
-                        body: _t("A coupon/loyalty card must have a unique code."),
+                        body: _t("A coupon/reward card must have a unique code."),
                     });
                     return;
                 }
