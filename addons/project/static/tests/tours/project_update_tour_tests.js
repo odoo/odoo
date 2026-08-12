@@ -137,7 +137,7 @@ registry.category("web_tour.tours").add('project_update_tour', {
     trigger: ".project_task_state_selection_menu.dropdown-menu",
 },
 {
-    trigger: ".project_task_state_selection_menu.dropdown-menu span.text-danger",
+    trigger: ".project_task_state_selection_menu.dropdown-menu span:has(.o_status_danger)",
     run: "click",
 }, {
     trigger: ".o-overlay-container:not(:visible):not(:has(.project_task_state_selection_menu))",

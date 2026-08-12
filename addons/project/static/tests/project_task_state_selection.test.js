@@ -33,7 +33,7 @@ test("project.task (kanban): check task state widget", async () => {
         message: "Once the button has been pressed the dropdown should appear",
     });
 
-    await click(".o-dropdown--menu span.text-danger");
+    await click(".o-dropdown--menu i.o_status_red");
     await animationFrame();
     expect("div[name='state']:first-child button.dropdown-toggle i[data-icon='cancel']").toBeVisible({
         message:
@@ -52,7 +52,7 @@ test("project.task (form): check task state widget", async () => {
         form: `<form js_class="project_task_form">
                     <field name="project_id"/>
                     <field name="name"/>
-                    <field name="state" widget="project_task_state_selection" nolabel="1"/>
+                    <field name="state" widget="project_task_state_selection" nolabel="1" options="{'hide_label': false}"/>
                 </form>`,
     };
     await mountView({
