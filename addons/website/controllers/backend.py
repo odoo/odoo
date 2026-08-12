@@ -8,7 +8,7 @@ from odoo.addons.web.controllers.home import Home
 class WebsiteBackend(http.Controller):
 
     @http.route('/website/fetch_dashboard_data', type="jsonrpc", auth='user', readonly=True)
-    def fetch_dashboard_data(self, website_id):
+    def fetch_dashboard_data(self, website_id=None):
         Website = request.env['website']
         has_group_system = request.env.user.has_group('base.group_system')
         has_group_designer = request.env.user.has_group('website.group_website_designer')
@@ -20,7 +20,7 @@ class WebsiteBackend(http.Controller):
             'dashboards': {}
         }
 
-        current_website = website_id and Website.browse(website_id) or self.env.website
+        current_website = website_id and Website.browse(website_id) or self.env.ref('base.default_website')
         multi_website = request.env.user.has_group('website.group_multi_website')
         websites = multi_website and request.env['website'].search([]) or current_website
         dashboard_data['websites'] = websites.read(['id', 'name'])
