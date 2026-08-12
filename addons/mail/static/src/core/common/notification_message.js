@@ -55,6 +55,10 @@ export class NotificationMessage extends Component {
             }
         );
     }
+    
+    get showDate() {
+        return true;
+    }
 
     get callInformation() {
         const history = this.callHistory();
