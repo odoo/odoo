@@ -66,6 +66,7 @@ export class TicketScreen extends Component {
         this.doPrint = useTrackedAsync((_selectedSyncedOrder) => this.print(_selectedSyncedOrder));
         this.numberBuffer.use({
             triggerAtInput: (event) => this._onUpdateSelectedOrderline(event),
+            useWithBarcode: true,
         });
 
         this.state = useState({
@@ -181,6 +182,8 @@ export class TicketScreen extends Component {
         }
     }
     onClickOrder(clickedOrder) {
+        // Pending keystrokes belong to the line they were typed for.
+        this.numberBuffer.capture();
         this.setSelectedOrder(clickedOrder);
         this.numberBuffer.reset();
         if ((!clickedOrder || clickedOrder.finalized) && !this.getSelectedOrderlineId()) {
@@ -227,6 +230,7 @@ export class TicketScreen extends Component {
     onClickOrderline(orderline) {
         if (this.getSelectedOrder()?.finalized) {
             const order = this.getSelectedOrder();
+            this.numberBuffer.capture();
             this.state.selectedOrderlineIds[order.id] = orderline.id;
             this.numberBuffer.reset();
         }
@@ -307,6 +311,11 @@ export class TicketScreen extends Component {
     // Used to override inside `pos_blackbox_be` and `pos_urban_piper`
     async _doneOrder(order) {
         return;
+    }
+    async onClickRefund() {
+        // Flush pending keystrokes so the refund uses the quantities shown on screen.
+        this.numberBuffer.capture();
+        await this.onDoRefund();
     }
     async onDoRefund() {
         const order = this.getSelectedOrder();
