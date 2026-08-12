@@ -11,7 +11,7 @@ class Website(models.Model):
 
     def get_suggested_controllers(self):
         suggested_controllers = super(Website, self).get_suggested_controllers()
-        suggested_controllers.append((_('Courses'), self.env['ir.http']._url_for('/slides'), 'website_slides'))
+        suggested_controllers.append((_('Courses'), self.env['ir.http']._url_for('/slides')))
         return suggested_controllers
 
     def _get_search_scopes(self):
