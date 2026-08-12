@@ -1,0 +1,22 @@
+// This file is compiled separately (not as part of the main bundle) to extract
+// the Google/local font URLs that should be loaded via <link> tags.
+
+.o-website-font-urls {
+    $-i: 1;
+    $-seen-urls: ();
+    @each $alias, $key in $o-font-aliases-to-keys {
+        $-url: o-get-font-info($alias, 'url');
+        @if $-url and index($-seen-urls, $-url) == null {
+            $-seen-urls: append($-seen-urls, $-url);
+            --o-font-url-#{$-i}: "https://fonts.googleapis.com/css?family=#{unquote($-url)}&display=swap&subset=latin,latin-ext,vietnamese";
+            $-i: $-i + 1;
+        } @else {
+            $-name: o-get-font-info($alias, 'name');
+            $-attachment: o-get-font-info($alias, 'attachment');
+            @if $-attachment {
+                --o-font-url-#{$-i}: "/web/content/#{$-attachment}/google-font-#{unquote($-name)}";
+                $-i: $-i + 1;
+            }
+        }
+    }
+}

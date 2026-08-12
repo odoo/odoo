@@ -1292,6 +1292,33 @@ class Website(models.CachedModel):
         home_menu = self.env['website.menu'].search([('website_id', '=', self.id), ('url', '=', '/')])
         home_menu.page_id = homepage_page
 
+    @tools.conditional(
+        'xml' not in tools.config['dev_mode'],
+        api.ormcache(
+            'self.id',
+            "tuple(sorted(self.env['ir.asset']._get_asset_params().items()))",
+            cache='assets',
+        ),
+    )
+    def _get_font_urls(self):
+        """Return the list of font URLs to emit as <link> tags in <head>."""
+
+        # 1. Compile the font_urls_export bundle using Odoo's asset system.
+        try:
+            bundle = self.env['ir.qweb']._get_asset_bundle(
+                'website.font_urls_export',
+                js=False,
+                css=True,
+                assets_params=self.env['ir.asset']._get_asset_params(),
+            )
+            compiled = bundle.preprocess_css()
+        except Exception as e:
+            logger.warning("Font URL bundle compilation failed: %s", e)
+            raise
+
+        # 2. Parse --o-font-url-N: "..." custom properties
+        return re.findall(r'--o-font-url-\d+:\s*"([^"]*)"', compiled)
+
     def copy_menu_hierarchy(self, top_menu):
         def copy_menu(menu, t_menu):
             new_menu = menu.copy({

@@ -220,6 +220,7 @@ export class AddFontDialog extends Component {
                 font-family: "${baseFontName}";
                 font-style: ${font.style};
                 font-weight: ${font.weight};
+                font-display: swap;
                 src:url("${font.url}");
             }`);
         }
