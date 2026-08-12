@@ -1,5 +1,5 @@
 import { CustomColorPicker } from "@html_editor/components/color_picker/custom_color_picker/custom_color_picker";
-import { Component, proxy, signal, t, untrack, useListener, useProps } from "@odoo/owl";
+import { Component, useProps, proxy, signal, t, useListener } from "@odoo/owl";
 import { cookie } from "@web/core/browser/cookie";
 import { isMobileOS } from "@web/core/browser/feature_detection";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -388,18 +388,7 @@ export function useColorPicker(ref, props, options = {}) {
         }
     }
 
-    useLayoutEffect(
-        (el) => {
-            if (!el) {
-                return;
-            }
-            el.addEventListener("click", onClick);
-            return () => {
-                el.removeEventListener("click", onClick);
-            };
-        },
-        () => [untrack(ref)]
-    );
+    useListener(ref, "click", onClick);
 
     return colorPicker;
 }
