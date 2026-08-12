@@ -1,3 +1,7 @@
+from datetime import timedelta
+
+from odoo.fields import Datetime
+from odoo.tools import mute_logger
 from odoo.addons.base.tests.common import HttpCaseWithUserPortal
 from odoo.tests import tagged
 
@@ -63,6 +67,48 @@ class TestWebsiteEventSale(HttpCaseWithUserPortal, TestWebsiteEventSaleCommon):
             ('order_line.event_ticket_id', '=', self.ticket.id),
             ('order_line.event_ticket_id', '=', free_ticket.id)
         ]), "Sale order should be created for the free/paid tickets mix")
+
+    @mute_logger('odoo.http')  # the forged tickets are rejected with a UserError
+    def test_website_event_sale_closed_ticket(self):
+        """ A visitor cannot register on a ticket whose sales window is closed by
+        forging its id in the registration request, neither to attend for free
+        (closed free tier, no order and no payment) nor to underpay (closed
+        cheaper tier). """
+        self.authenticate(None, None)
+        free_ticket, early_bird_ticket = self.env['event.event.ticket'].create([{
+            'event_id': self.event.id,
+            'name': 'Free Pass',
+            'product_id': self.product_event.id,
+            'price': 0,
+            'end_sale_datetime': Datetime.now() - timedelta(days=1),
+        }, {
+            'event_id': self.event.id,
+            'name': 'Early Bird',
+            'product_id': self.product_event.id,
+            'price': 10,
+            'end_sale_datetime': Datetime.now() - timedelta(days=1),
+        }])
+        event_questions = self.event.question_ids
+        name_question = event_questions.filtered(lambda q: q.question_type == 'name')
+        email_question = event_questions.filtered(lambda q: q.question_type == 'email')
+        existing_so = self.env['sale.order'].search([])
+        event_registration_count = len(self.event.registration_ids)
+
+        for ticket in (free_ticket, early_bird_ticket):
+            with self.subTest(ticket=ticket.name):
+                self.url_open(f'/event/{self.event.id}/registration/confirm', data={
+                    f'1-name-{name_question.id}': 'Bob',
+                    f'1-email-{email_question.id}': 'bob@test.lan',
+                    '1-event_ticket_id': ticket.id,
+                    'csrf_token': self.csrf_token(),
+                })
+                self.assertFalse(
+                    ticket.registration_ids,
+                    "No registration should be created on a ticket out of its sales window",
+                )
+
+        self.assertEqual(len(self.event.registration_ids), event_registration_count)
+        self.assertEqual(self.env['sale.order'].search([]), existing_so)
 
     def test_website_event_sale_giftcard_covers_full_cost(self):
         """Test saleorder is not auto confirmed if the gift card in the card can fully cover the cost"""
