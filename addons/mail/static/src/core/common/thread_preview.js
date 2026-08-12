@@ -37,6 +37,9 @@ export class ThreadPreview extends Component {
     }
 
     previewText() {
+        if (this.props.channel.hasDraft) {
+            return this.props.channel.draftPreview;
+        }
         return this.lastMessage()?.previewText || _t("This is the start of your conversation");
     }
 }

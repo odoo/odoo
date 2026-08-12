@@ -331,6 +331,7 @@ export class DiscussChannel extends Record {
         }
         return this.name;
     }
+    draftPreview = this.localStorage("");
     create_date = fields.Datetime();
     create_uid = fields.One("res.users");
     /** @type {"not_fetched"|"pending"|"fetched"} */
@@ -409,6 +410,7 @@ export class DiscussChannel extends Record {
         return message;
     }
     firstUnreadMessage = this.computed(() => this.getFirstNewerMessage());
+    hasDraft = this.computed(() => Boolean(this.draftPreview));
     hasOtherMembersTyping = this.computed(() => {
         if (this.self_member_id?.mute_until_dt) {
             return false;

@@ -1,5 +1,4 @@
 import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
-import { MessageSeenIndicator } from "@mail/discuss/core/common/message_seen_indicator";
 import { useHover } from "@mail/utils/common/hooks";
 import { useAncestors } from "@mail/core/common/ancestor_plugin";
 
@@ -15,7 +14,7 @@ const isMarkAsRead = t.boolean();
 const isMiddleClick = t.boolean();
 
 export class NotificationItem extends Component {
-    static components = { ActionSwiper, DiscussAvatar, MessageSeenIndicator };
+    static components = { ActionSwiper, DiscussAvatar };
     static template = "mail.NotificationItem";
 
     markAsReadRef = signal.ref();
@@ -65,10 +64,6 @@ export class NotificationItem extends Component {
             return this.props.datetime?.toLocaleString({ month: "short", day: "numeric" });
         }
         return this.props.datetime?.toLocaleString(DateTime.DATE_MED);
-    }
-
-    get message() {
-        return this.props.thread?.newestPersistentOfAllMessage;
     }
 
     get attClass() {

@@ -16,7 +16,12 @@ import {
     useMaybePlugin,
     useVisible,
 } from "@mail/utils/common/hooks";
-import { addLink, parseAndTransform, trimEmptyBlocksAround } from "@mail/utils/common/format";
+import {
+    addLink,
+    htmlToTextContentInline,
+    parseAndTransform,
+    trimEmptyBlocksAround,
+} from "@mail/utils/common/format";
 import { isDragSourceExternalFile } from "@mail/utils/common/misc";
 import { Wysiwyg } from "@html_editor/wysiwyg";
 
@@ -84,6 +89,8 @@ const EDIT_CLICK_TYPE = {
 };
 /** Shorter than any soft keyboard, taller than other viewport changes. */
 const SOFT_KEYBOARD_MIN_HEIGHT = 100;
+/** Amount of characters of the draft kept to preview it in the sidebar and in the chat bubbles. */
+const DRAFT_PREVIEW_LENGTH = 200;
 export const MENTION_AMOUNT_WARNING = 50;
 export const COMPOSER_TYPES = {
     NOTE: "note",
@@ -1224,9 +1231,16 @@ export class Composer extends Component {
             replyToMessageId,
             fromFullComposer = this.props.composer.restoredFromFullComposer,
         }) => {
+            const channel = this.composer().thread?.channel;
             if (isHtmlEmpty(composerHtml)) {
                 await this.deleteSavedContent();
             } else {
+                if (channel) {
+                    channel.draftPreview = htmlToTextContentInline(composerHtml).slice(
+                        0,
+                        DRAFT_PREVIEW_LENGTH
+                    );
+                }
                 const db = new IndexedDB("mail");
                 await db.write("composer", this.props.composer.localId, {
                     emailAddSignature,
@@ -1259,6 +1273,10 @@ export class Composer extends Component {
     }
 
     async deleteSavedContent() {
+        const channel = this.composer().thread?.channel;
+        if (channel) {
+            channel.draftPreview = "";
+        }
         const db = new IndexedDB("mail");
         await db.delete("composer", this.props.composer.localId);
     }
