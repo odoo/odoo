@@ -465,6 +465,10 @@ class ProductProduct(models.Model):
             ('company_id', '=', self.env.company.id),
             '|', '|', ('is_in', '=', True), ('is_dropship', '=', True), ('is_out', '=', True)
         ])
+        if lots:
+            moves_domain &= Domain([
+                ('move_line_ids.lot_id', 'in', lots._as_query()),
+            ])
         if at_date:
             moves_domain &= Domain([
                 ('date', '<=', at_date),
