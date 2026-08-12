@@ -54,7 +54,7 @@
                 id="lna_epson"
                 t-att-checked="this.checked('lna_epson')"
                 t-on-click="this.toggle" />
-            <label class="form-check-label ms-2" for="lna_router"> I use an Epson printer (Check supported printers in Odoo documentation) </label>
+            <label class="form-check-label ms-2" for="lna_epson"> I use an Epson printer (Check supported printers in Odoo documentation) </label>
             <br />
             <input
                 class="form-check-input ms-3"
@@ -80,7 +80,7 @@
                 id="lna_ip"
                 t-att-checked="this.checked('lna_ip')"
                 t-on-click="this.toggle" />
-            <label class="form-check-label ms-2" for="lna_ip"> Printer's local IP address is printerd </label>
+            <label class="form-check-label ms-2" for="lna_ip"> Printer's local IP address is printed </label>
             <br />
             <input
                 class="form-check-input"
@@ -88,7 +88,7 @@
                 id="lna_printer_config"
                 t-att-checked="this.checked('lna_printer_config')"
                 t-on-click="this.toggle" />
-            <label class="form-check-label ms-2" for="lna_printer_config"> Access printer configuration panel by puttin this URL in your search bar: </label>
+            <label class="form-check-label ms-2" for="lna_printer_config"> Access printer configuration panel by putting this URL in your search bar: </label>
                 <p style="text-indent:1em;">(Replace [printer_ip] with the printer IP address)</p>
                 <p><code>http://[printer_ip]/cgi-bin/epos/service.cgi?devid=local_printer</code></p>
             <input
@@ -108,9 +108,9 @@
                 id="lna_printer_check"
                 t-att-checked="this.checked('lna_printer_check')"
                 t-on-click="this.toggle" />
-            <label class="form-check-label ms-2" for="lna_printer_check"> Access the below URL but replace [printer_ip] with your current Pritner IP address </label>
+            <label class="form-check-label ms-2" for="lna_printer_check"> Access the below URL but replace [printer_ip] with your current Printer IP address </label>
             <p><code>http://[printer_ip]/cgi-bin/epos/service.cgi?devid=local_printer</code></p>
-            <p>If this endpoint does not returan a 404 error and displays a blank page, everything is ready.</p>
+            <p>If this endpoint does not return a 404 error and displays a blank page, everything is ready.</p>
 
             <h3> SSL/TLS &gt; Basic </h3>
             <input
@@ -141,8 +141,8 @@
                 t-att-checked="this.checked('lna_secure_print')"
                 t-on-click="this.toggle" />
             <label class="form-check-label ms-2" for="lna_secure_print"> If you have the secure printing setting, disable it </label>
-            <li> If you have the secure printing setting, disable it </li>
-            <img class="img-fluid" src="/point_of_sale/static/img/lna_config/image_3.png" alt="ePOS print enabled"/>
+            <p> If you have the secure printing setting, disable it </p>
+            <img class="img-fluid" src="/point_of_sale/static/img/lna_config/image_3.png" alt="Secure printing enabled"/>
 
             <h3 class="text-success"> Now your printer is properly configured to work with LNA </h3>
 
