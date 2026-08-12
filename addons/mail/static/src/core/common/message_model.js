@@ -773,7 +773,11 @@ export class Message extends Record {
     showDeleteConfirm(owner, rootRef) {
         this.store.env.services.dialog.add(
             discussComponentRegistry.get("MessageDeleteDialog"),
-            { message: this, onConfirm: () => this.onShowDeleteConfirm(owner) },
+            {
+                closeOnClickAway: true,
+                message: this,
+                onConfirm: () => this.onShowDeleteConfirm(owner),
+            },
             { rootRef }
         );
     }

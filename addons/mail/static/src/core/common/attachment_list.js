@@ -108,6 +108,7 @@ export class AttachmentList extends Component {
                         attachment.name
                     ),
                     confirmLabel: _t("Delete Attachment"),
+                    closeOnClickAway: true,
                     cancel: () => resolve(false),
                     confirm: () => {
                         this.onConfirmUnlink(attachment);
