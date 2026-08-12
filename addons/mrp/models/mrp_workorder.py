@@ -805,8 +805,10 @@ class MrpWorkorder(models.Model):
             'res_model': 'mrp.production',
             'views': [(self.env.ref('mrp.mrp_production_to_plan').id, 'list')],
             'type': 'ir.actions.act_window',
-            'domain': [('state', 'in', ['confirmed', 'progress', 'to_close'])],
-            'context': {'search_default_filter_to_plan': True},
+            'context': {
+                'search_default_filter_confirmed': True,
+                'search_default_filter_to_plan': True,
+            },
             'target': 'new',
         }
 
