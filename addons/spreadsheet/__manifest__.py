@@ -31,9 +31,6 @@
         'spreadsheet.o_spreadsheet': [
             ('include', 'spreadsheet.o_spreadsheet_core'),
         ],
-        'web.assets_web_print': [
-            'spreadsheet/static/src/print_assets/**/*',
-        ],
         'spreadsheet.public_spreadsheet': [
             ('include', 'web.assets_frontend'),
             ('include', 'spreadsheet.o_spreadsheet_core'),
@@ -51,7 +48,6 @@
             'spreadsheet/static/src/o_spreadsheet/o_spreadsheet.css',
             'spreadsheet/static/src/**/*.scss',
             'spreadsheet/static/src/assets_backend/**/*',
-            ('remove', 'spreadsheet/static/src/print_assets/**/*'),
         ],
         'web.assets_unit_tests': [
             'spreadsheet/static/tests/**/*',
