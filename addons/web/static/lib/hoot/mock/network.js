@@ -380,7 +380,8 @@ export async function mockedFetch(input, init) {
     }
 
     // Result can be a request or the final request value
-    const responseHeaders = getHeaders(result, result);
+    // Guess the content type of a raw value only: a response already carries its headers.
+    const responseHeaders = getHeaders(result, isInstanceOf(result, Response) ? null : result);
 
     if (result instanceof MockResponse) {
         // Mocked response
