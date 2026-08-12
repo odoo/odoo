@@ -30,6 +30,11 @@ class TestWebsiteSaleProductPage(HttpCase, ProductVariantsCommon, WebsiteSaleCom
 
         self.start_tour(red_sofa.website_url, 'website_sale_contact_us_button')
 
+    def test_invalid_attribute_value_query_params_are_ignored(self):
+        """Malformed URL query params must not trigger an internal server error."""
+        response = self.url_open(f"{self.product_template_sofa.website_url}?attribute_values=96--")
+        self.assertEqual(response.status_code, 200)
+
     def test_product_reviews_reactions_public(self):
         """ Check that public users can not react to reviews """
         password = "Pl1bhD@2!kXZ"

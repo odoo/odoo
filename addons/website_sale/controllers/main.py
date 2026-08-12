@@ -832,7 +832,10 @@ class WebsiteSale(payment_portal.PaymentPortal):
             keep = QueryURL(self._get_shop_path(original_category))
 
         if attribute_values := kwargs.get('attribute_values', ''):
-            attribute_value_ids = {int(i) for i in attribute_values.split(',')}
+            unslug = request.env["ir.http"]._unslug
+            attribute_value_ids = {
+                value_id for value in attribute_values.split(",") if (value_id := unslug(value)[1])
+            }
             combination = product.attribute_line_ids.mapped(
                 lambda ptal: (
                     ptal.product_template_value_ids.filtered(
