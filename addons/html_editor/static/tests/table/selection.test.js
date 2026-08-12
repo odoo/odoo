@@ -13,9 +13,10 @@ import {
     click,
     keyDown,
     keyUp,
+    manuallyDispatchProgrammaticEvent,
     press,
     queryAll,
-    manuallyDispatchProgrammaticEvent,
+    waitFor,
 } from "@odoo/hoot-dom";
 import { animationFrame, tick } from "@odoo/hoot-mock";
 import { nodeSize } from "@html_editor/utils/position";
@@ -2238,6 +2239,7 @@ describe("deselecting table", () => {
 
         press(["Shift", "ArrowUp"]);
         await animationFrame();
+        await waitFor("table:not(.o_selected_table)");
 
         expectContentToBe(
             el,
