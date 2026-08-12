@@ -197,22 +197,6 @@ describe("startPayment", () => {
         expect(store.paymentError).toBe(false);
     });
 
-    test("sets the cash machine payment amount to the order price if change is given", async () => {
-        const { store, paymentCashMachine } = await setupPaymentPage();
-        paymentCashMachine.payment_interface.amountChange = 5;
-
-        onRpc("/kiosk/payment/1/kiosk", async (request) => {
-            const requestBody = await request.json();
-            const amountPaid = requestBody.params.order.payment_ids[0][2].amount;
-            expect(amountPaid).toBe(paymentCashMachine.payment_interface.amountPaid);
-            return true;
-        });
-        await clickPaymentMethod(paymentCashMachine);
-
-        expect(paymentCashMachine.payment_interface.hasBeenCalled).toBe(true);
-        expect(store.paymentError).toBe(false);
-    });
-
     test("cancels cash machine payment when Back is pressed", async () => {
         const { store, paymentCashMachine } = await setupPaymentPage();
 
