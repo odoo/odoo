@@ -29,7 +29,13 @@ export class DynamicGroupList extends DynamicList {
      */
     _setData(data) {
         /** @type {import("./group").Group[]} */
-        this.groups = data.groups.map((g) => this._createGroupDatapoint(g));
+        const nonEmptyGroups = [];
+        for (const group of data.groups) {
+            if (group.count > 0) {
+                nonEmptyGroups.push(this._createGroupDatapoint(group));
+            }
+        }
+        this.group = nonEmptyGroups;
         this.count = data.length;
         this._selectDomain(this.isDomainSelected);
     }

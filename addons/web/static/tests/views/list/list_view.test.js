@@ -4746,7 +4746,7 @@ test(`monetary aggregates in grouped list (!= currencies in same group, delete)`
     await toggleMenuItem("Delete");
     await contains(`.o_dialog footer .btn-primary`).click(); // confirm
     expect(`.o_data_row`).toHaveCount(0);
-    expect(`.o_group_header:last`).toHaveText("Yes (0)\n 0.00");
+    expect(`.o_group_header:last`).toHaveText("No (1)\n $ 0.00");
 });
 
 test(`list with monetary field with attribute column_invisible="1"`, async () => {
@@ -19652,4 +19652,83 @@ test("should not crash in lists with groupby node and sample data", async () => 
     });
 
     expect(queryAll(".o_group_header").length).toBeGreaterThan(0);
+});
+
+test("Empty Groups: Valid groups stay, empty groups are removed", async () => {
+    onRpc("web_read_group", () => ({
+        groups: [
+            { m2o: { id: 1, name: "Journal A" }, __count: 5 },
+            { m2o: { id: 2, name: "Journal B" }, __count: 0 },
+            { m2o: { id: 3, name: "Journal C" }, __count: 10 },
+        ],
+        length: 3,
+    }));
+
+    await mountView({
+        type: "list",
+        resModel: "foo",
+        arch: `
+            <list>
+                <field name="foo"/>
+                <field name="m2o"/>
+            </list>
+        `,
+        groupBy: ["m2o"],
+    });
+
+    const renderedGroups = queryAll(".o_group_header");
+    expect(renderedGroups.length).toBe(2, {
+        message: "Only 2 groups should be rendered (0-count group should be removed)",
+    });
+});
+
+test("Empty Groups: No groups are accidentally deleted", async () => {
+    onRpc("web_read_group", () => ({
+        groups: [
+            { m2o: { id: 1, name: "Journal A" }, __count: 5 },
+            { m2o: { id: 2, name: "Journal B" }, __count: 2 },
+            { m2o: { id: 3, name: "Journal C" }, __count: 10 },
+        ],
+        length: 3,
+    }));
+
+    await mountView({
+        type: "list",
+        resModel: "foo",
+        arch: `
+            <list>
+                <field name="foo"/>
+                <field name="m2o"/>
+            </list>
+        `,
+        groupBy: ["m2o"],
+    });
+
+    const renderedGroups = queryAll(".o_group_header");
+    expect(renderedGroups.length).toBe(3, { message: "Exactly 3 group headers should be drawn" });
+});
+
+test("Empty Groups: Handles 0 valid records gracefully", async () => {
+    onRpc("web_read_group", () => ({
+        groups: [
+            { m2o: { id: 1, name: "Journal A" }, __count: 0 },
+            { m2o: { id: 2, name: "Journal B" }, __count: 0 },
+        ],
+        length: 2,
+    }));
+
+    await mountView({
+        type: "list",
+        resModel: "foo",
+        arch: `
+            <list>
+                <field name="foo"/>
+                <field name="m2o"/>
+            </list>
+        `,
+        groupBy: ["m2o"],
+    });
+
+    const renderedGroups = queryAll(".o_group_header");
+    expect(renderedGroups.length).toBe(0, { message: "Exactly 0 group headers should be drawn" });
 });
