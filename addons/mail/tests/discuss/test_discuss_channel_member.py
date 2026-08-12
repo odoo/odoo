@@ -104,6 +104,14 @@ class TestDiscussChannelMember(MailCommon):
         ])
         self.assertEqual(channel_1_rel_user_2.message_unread_counter, 1, "should have 1 unread message after someone else posted a message")
 
+    def test_unread_counter_with_outdated_mark_as_read(self):
+        channel = self.env["discuss.channel"].create({"name": "Channel"})
+        member = channel.self_member_id
+        message = channel.message_post(body="Test", message_type="comment")
+        channel.message_post(body="Test 2", message_type="comment")
+        member._mark_as_read(message.id)
+        self.assertEqual(member.message_unread_counter, 0)
+
     def test_unread_counter_with_message_post_multi_channel(self):
         channel_1_as_user_1 = self.env['discuss.channel'].with_user(self.user_1)._create_channel(group_id=None, name='wololo channel')
         channel_2_as_user_2 = self.env['discuss.channel'].with_user(self.user_2)._create_channel(group_id=None, name='walala channel')
