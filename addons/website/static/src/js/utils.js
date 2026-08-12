@@ -1,7 +1,23 @@
 import * as urlUtils from "@html_editor/utils/url";
+import { browser } from "@web/core/browser/browser";
 import { rpc } from "@web/core/network/rpc";
 import { patch } from "@web/core/utils/patch";
 import { UrlAutoComplete } from "@website/components/autocomplete_with_pages/url_autocomplete";
+
+const RECENTLY_USED_URL = "website.recently_used_url";
+
+/**
+ * Stores the URL that was just set on a link, a button or an image, so that it
+ * can be suggested first the next time a URL has to be chosen.
+ *
+ * @param {string} url
+ */
+function setRecentlyUsedUrl(url) {
+    if (!url?.startsWith("/")) {
+        return;
+    }
+    browser.localStorage.setItem(RECENTLY_USED_URL, url);
+}
 
 /**
  * Allows to load anchors from a page.
@@ -88,7 +104,7 @@ export function mountAutocompleteComponent(app, ComponentClass, props) {
 function autocompleteWithPages(app, input, options = {}) {
     return mountAutocompleteComponent(app, UrlAutoComplete, {
         options,
-        loadAnchors,
+        loadOptionsSource,
         targetDropdown: input,
     });
 }
@@ -101,7 +117,9 @@ function autocompleteWithPages(app, input, options = {}) {
  * - If it starts with `http` or is empty, returns no suggestions to avoid
  *   unnecessary RPC calls.
  * - Otherwise, fetches suggested internal links from the backend and formats
- *   them into selectable autocomplete items, including optional categories.
+ *   them into selectable autocomplete items, as a flat list of URLs: the
+ *   recently used URL, the last modified pages, the pages matching the term
+ *   and finally the apps urls.
  *
  * @param {string} term Current value of the URL input.
  * @param {HTMLElement} body Document body used to search for anchor targets.
@@ -114,7 +132,6 @@ async function loadOptionsSource(term, body, onSelect) {
         cssClass: "ui-autocomplete-item",
         label: item.label,
         onSelect: () => onSelect(item.value),
-        data: { icon: item.icon || false, isCategory: false },
     });
 
     if (term[0] === "#") {
@@ -129,18 +146,23 @@ async function loadOptionsSource(term, body, onSelect) {
         needle: term,
         limit: 15,
     });
-    const choices = res.matching_pages.map(makeItem);
-    for (const other of res.others) {
-        if (other.values.length) {
-            choices.push({
-                cssClass: "ui-autocomplete-category",
-                label: other.title,
-                data: { icon: false, isCategory: true },
-            });
-            choices.push(...other.values.map(makeItem));
-        }
-    }
+    // `others` is built by the controller with the last modified pages first,
+    // then the apps urls. The matching pages are displayed in between.
+    const [lastModifiedPages, ...appsUrls] = res.others;
+    let links = [
+        ...(lastModifiedPages?.values || []),
+        ...res.matching_pages,
+        ...appsUrls.flatMap((group) => group.values),
+    ];
 
+    const choices = [];
+    const recentlyUsedUrl = browser.localStorage.getItem(RECENTLY_USED_URL);
+    if (recentlyUsedUrl?.toLowerCase().includes(term.toLowerCase())) {
+        const knownLink = links.find((link) => link.value === recentlyUsedUrl);
+        choices.push(makeItem(knownLink || { value: recentlyUsedUrl, label: recentlyUsedUrl }));
+        links = links.filter((link) => link.value !== recentlyUsedUrl);
+    }
+    choices.push(...links.map((link) => makeItem(link)));
     return choices;
 }
 
@@ -363,6 +385,7 @@ export default {
     loadAnchors: loadAnchors,
     autocompleteWithPages: autocompleteWithPages,
     loadOptionsSource: loadOptionsSource,
+    setRecentlyUsedUrl: setRecentlyUsedUrl,
     svgToPNG: svgToPNG,
     webpToPNG: webpToPNG,
     generateGMapLink: generateGMapLink,

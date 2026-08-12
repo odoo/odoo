@@ -910,11 +910,8 @@ class Website(Home):
         suggested_controllers = []
         for name, url, mod in self.env.website.get_suggested_controllers():
             if needle.lower() in name.lower() or needle.lower() in url.lower():
-                module_sudo = mod and request.env.ref('base.module_%s' % mod, False).sudo()
-                icon = mod and '%s' % (module_sudo and module_sudo.icon or mod) or ''
                 suggested_controllers.append({
                     'value': url,
-                    'icon': icon,
                     'label': '%s (%s)' % (url, name),
                 })
 
