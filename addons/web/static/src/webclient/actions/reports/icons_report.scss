@@ -1,0 +1,20 @@
+// wkhtmltopdf (Qt 4.8 WebKit) drops any declaration using `var()` or `calc()`,
+// which silently leaves the icons of `icons.scss` without a font family. Each
+// of those declarations is repeated here, preceded by a plain counterpart
+// wkhtmltopdf can use as is and modern engines simply override.
+
+.oi {
+    font-family: $ms-font-family;
+    font-family: var(--icon-font-family, #{$ms-font-family});
+}
+
+.oi-fw {
+    width: $oi-fw-ratio * $oi-default-size;
+    width: calc(#{$oi-fw-ratio} * var(--oi-font-size, #{$oi-default-size}));
+}
+
+// Icons of the Odoo UI library switch font through `--icon-font-family`, hence
+// the plain `font-family` they need on top of the rule above.
+.oi[data-icon^="oi_"] {
+    font-family: $oi-font-family;
+}

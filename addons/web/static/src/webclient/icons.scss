@@ -33,6 +33,7 @@ $oi-fw-ratio: 1.28571429; // Matches .fa-fw
     &:before {
         display: inline-block;
         content: attr(data-icon);
+        // Geometric precision necessary for WebKit to apply icon ligatures
         text-rendering: geometricPrecision;
     }
     &.oi-filled[data-icon]:not([data-icon=""]):not([data-icon^="oi_"]):before {
