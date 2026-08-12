@@ -555,13 +555,20 @@ class ResourceCalendar(models.Model):
                 hours_per_day = sum(attendances.mapped('duration_hours'))
                 day_days[day] += hours / hours_per_day if hours_per_day else 0
             else:
-                day_days[day] = 0.5 if hours <= self.hours_per_day * 3 / 4 else 1
+                # A day is only a full one above 3 / 4 of the theoretical day, below that it is half a day.
+                reference_hours = self._get_reference_hours_per_day(day) if self else self.hours_per_day
+                day_days[day] = 0.5 if hours <= reference_hours * 3 / 4 else 1
 
         return {
             # Round the number of days to the closest 16th of a day.
             'days': float_round(sum(day_days[day] for day in day_days), precision_rounding=0.001),
             'hours': sum(day_hours.values()),
         }
+
+    def _get_reference_hours_per_day(self, day):
+        """ Return the number of hours the given day is theoretically made of. """
+        self.ensure_one()
+        return self.hours_per_day
 
     def _get_closest_work_time(self, dt, match_end=False, resource=None, search_range=None, compute_leaves=True):
         """Return the closest work interval boundary within the search range.
