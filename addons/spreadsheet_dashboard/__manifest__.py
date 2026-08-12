@@ -24,9 +24,6 @@
             "spreadsheet_dashboard/static/src/public/**/*.xml",
             "spreadsheet_dashboard/static/src/public/**/*.scss",
         ],
-        'web.assets_web_print': [
-            'spreadsheet_dashboard/static/src/print_assets/**/*',
-        ],
         "web.assets_backend": [
             "spreadsheet_dashboard/static/src/assets/**/*.js",
             "spreadsheet_dashboard/static/src/**/*.scss",
