@@ -1,8 +1,6 @@
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 
-const CLICK_ON_CHAT_STEP = "click-on-chat-action";
-
 /** Pathname of the channel invitation link, which holds the channel secret token. */
 function getInvitationPathname() {
     /** @type {import("models").Store} */
@@ -31,7 +29,6 @@ function getMeetingViewTourSteps({ isPublicPage = false } = {}) {
         {
             trigger: ".o-mail-Meeting [title='Chat']",
             run: "click",
-            content: CLICK_ON_CHAT_STEP,
         },
         {
             trigger:
