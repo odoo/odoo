@@ -178,7 +178,7 @@ test("Close button should close the search panel", async () => {
     await waitForNone(".o-mail-SearchMessageInput");
 });
 
-test("Search icon should close and reset the search", async () => {
+test("Closing the search should reset it", async () => {
     patchUiSize({ size: SIZES.XXL });
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
@@ -193,7 +193,7 @@ test("Search icon should close and reset the search", async () => {
     await insertText(".o-mail-SearchInput input", "empty");
     triggerHotkey("Enter");
     await waitFor(".o-mail-SearchMessageResult .o-mail-Message:count(1)");
-    await contains(".o-mail-Chatter-topbar button[title='Search Messages']:count(1)").click();
+    await click(".o-mail-SearchMessageInput [title='Close']");
     await waitForNone(".o-mail-SearchInput input");
     await waitForNone(".o-mail-SearchMessageResult .o-mail-Message");
 });

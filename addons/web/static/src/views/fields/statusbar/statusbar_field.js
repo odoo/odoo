@@ -6,6 +6,7 @@ import {
     useProps,
     computed,
     untrack,
+    onMounted,
     onPatched,
     useEffect,
 } from "@odoo/owl";
@@ -73,6 +74,7 @@ export class StatusBarField extends Component {
     rootRef = signal.ref();
     afterRef = signal.ref();
     dropdownRef = signal.ref();
+    highlighterRef = signal.ref();
 
     allItems = computed(() => this.getAllItems());
     adjustedItems = signal(null);
@@ -134,12 +136,14 @@ export class StatusBarField extends Component {
         }
 
         let itemsKey = this.itemsKey();
+        onMounted(() => this.syncHighlighter());
         onPatched(() => {
             const nextItemsKey = this.itemsKey();
             if (nextItemsKey !== itemsKey) {
                 this.adjustKey.set(this.adjustKey() + 1);
             }
             itemsKey = nextItemsKey;
+            this.syncHighlighter();
         });
 
         useEffect(() => {
@@ -150,6 +154,7 @@ export class StatusBarField extends Component {
             const after = this.afterRef();
             if (root && dropdown && before && after) {
                 this.adjustedItems.set(untrack(() => this.adjustVisibleItems(this.sortedItems())));
+                untrack(() => this.syncHighlighter());
             }
         });
 
@@ -292,9 +297,44 @@ export class StatusBarField extends Component {
         return sortedItems;
     }
 
+    /**
+     * Places the travelling highlight over the selected item. Its geometry can
+     * only be measured, never derived: items are as wide as their label, their
+     * number varies, and the bar lays them out reversed and wrapping.
+     */
+    syncHighlighter() {
+        const root = this.rootRef();
+        const highlighter = this.highlighterRef();
+        if (!root || !highlighter) {
+            return;
+        }
+        const isSameRecord = this.syncedResId === this.props.record.resId;
+        this.syncedResId = this.props.record.resId;
+        if (!isSameRecord) {
+            root.classList.remove("o-statusbar-animated");
+        }
+        const current = root.querySelector(".o_arrow_button_current:not(.d-none)");
+        highlighter.classList.toggle("d-none", !current);
+        if (current) {
+            const { left, top } = root.getBoundingClientRect();
+            const rect = current.getBoundingClientRect();
+            const x = rect.left - left - root.clientLeft;
+            const y = rect.top - top - root.clientTop;
+            root.style.setProperty("--o-statusbar-highlight-x", `${x}px`);
+            root.style.setProperty("--o-statusbar-highlight-y", `${y}px`);
+            root.style.setProperty("--o-statusbar-highlight-width", `${current.offsetWidth}px`);
+            root.style.setProperty("--o-statusbar-highlight-height", `${current.offsetHeight}px`);
+            highlighter.classList.toggle("o_first", current.classList.contains("o_first"));
+            highlighter.classList.toggle("o_last", current.classList.contains("o_last"));
+        }
+        if (!isSameRecord) {
+            requestAnimationFrame(() => root.classList.add("o-statusbar-animated"));
+        }
+    }
+
     areItemsWrapping() {
         const root = this.rootRef();
-        const firstItem = root.querySelector(":scope > :not(.d-none)");
+        const firstItem = root.querySelector(":scope > :not(.d-none, .o_statusbar_highlighter)");
         if (!firstItem) {
             return false;
         }
