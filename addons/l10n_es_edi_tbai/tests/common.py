@@ -1,7 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from contextlib import contextmanager
 from datetime import date, datetime, UTC
-from unittest.mock import Mock
+from unittest.mock import Mock, patch
 
 import requests
 from dateutil.relativedelta import relativedelta
@@ -10,6 +11,7 @@ from odoo import fields
 from odoo.tools import file_open
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.account.tests.test_account_move_send import TestAccountMoveSendCommon
+from odoo.addons.l10n_es_edi_tbai.models.l10n_es_edi_tbai_agencies import URLS_BIZKAIA, URLS_GIPUZKOA
 
 
 class TestEsEdiTbaiCommon(TestAccountMoveSendCommon):
@@ -155,6 +157,30 @@ class TestEsEdiTbaiCommon(TestAccountMoveSendCommon):
         with file_open(f'l10n_es_edi_tbai/tests/response_xmls/{filename}', 'rb') as file:
             content = file.read()
         return content
+
+
+@contextmanager
+def mock_tbai_agency_request(mock_response):
+    def side_effect(session_self, method, *args, **kwargs):
+        url = kwargs.get('url', '')
+
+        if url in {
+            URLS_BIZKAIA['post_url_test'],
+            URLS_BIZKAIA['cancel_url_test'],
+            URLS_GIPUZKOA['post_url_test'],
+            URLS_GIPUZKOA['cancel_url_test'],
+        }:
+            return mock_response
+
+        return original_request(session_self, method, *args, **kwargs)
+
+    original_request = requests.Session.request
+    with patch(
+        'odoo.addons.l10n_es_edi_tbai.models.l10n_es_edi_tbai_document.requests.Session.request',
+        autospec=True,
+        side_effect=side_effect
+    ):
+        yield
 
 
 def create_mock_response(content, headers=None):
