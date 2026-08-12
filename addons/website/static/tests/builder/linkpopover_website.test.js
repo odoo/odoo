@@ -19,6 +19,7 @@ import {
     waitFor,
     waitForNone,
 } from "@odoo/hoot";
+import { queryAllTexts } from "@odoo/hoot-dom";
 import { contains, onRpc, serverState } from "@web/../tests/web_test_helpers";
 import { location } from "@web/core/browser/browser";
 import { patch } from "@web/core/utils/patch";
@@ -72,8 +73,9 @@ test("autocomplete should shown and able to edit the link", async () => {
     await waitFor(".o-autocomplete--dropdown-menu", { timeout: 3000 });
     expect.verifySteps(["/website/get_suggested_links"]);
 
-    expect(".ui-autocomplete-category").toHaveCount(1);
-    expect(".o-autocomplete--dropdown-item img").toHaveCount(1);
+    // The suggestions are a flat list of URLs, without category titles.
+    expect(".ui-autocomplete-category").toHaveCount(0);
+    expect(".o-autocomplete--dropdown-item img").toHaveCount(0);
 
     await click(".o-autocomplete--dropdown-item:first");
     // Should update preview with selected item.
@@ -144,8 +146,9 @@ test("autocomplete suggestions for image links don’t update preview until appl
     await waitFor(".o-autocomplete--dropdown-menu", { timeout: 3000 });
     expect.verifySteps(["/website/get_suggested_links"]);
 
-    expect(".ui-autocomplete-category").toHaveCount(1);
-    expect(".o-autocomplete--dropdown-item img").toHaveCount(1);
+    // The suggestions are a flat list of URLs, without category titles.
+    expect(".ui-autocomplete-category").toHaveCount(0);
+    expect(".o-autocomplete--dropdown-item img").toHaveCount(0);
 
     await click(".o-autocomplete--dropdown-item:first");
     // selecting suggestion shouldn’t change image link preview.
@@ -385,4 +388,61 @@ test("should allow target _blank on custom button", async () => {
     await contains(".o_we_apply_link").click();
     const anchor = editor.editable.querySelector("a");
     expect(anchor).toHaveAttribute("target", "_blank");
+});
+
+test("the applied URL is suggested on top when the user has not typed anything", async () => {
+    onRpc("/website/get_suggested_links", () => ({
+        matching_pages: [
+            {
+                value: "/aboutus",
+                label: "/aboutus (About us)",
+            },
+        ],
+        others: [
+            {
+                title: "Last modified pages",
+                values: [
+                    {
+                        value: "/",
+                        label: "/ (Home)",
+                    },
+                ],
+            },
+            {
+                title: "Apps url",
+                values: [
+                    {
+                        value: "/contactus",
+                        icon: "/website/static/description/icon.png",
+                        label: "/contactus (Contact Us)",
+                    },
+                ],
+            },
+        ],
+    }));
+    onRpc("/contactus", () => ({}));
+    onRpc("/html_editor/link_preview_internal", () => ({}));
+
+    await setupEditor('<p>this is a <a href="http://test.com/">li[]nk</a></p>');
+    await waitFor(".o-we-linkpopover");
+
+    // Apply an URL on the link: it becomes the recently used one.
+    await click(".o_we_edit_link");
+    await contains(".o-we-linkpopover input.o_we_href_input_link").edit("/contactus", {
+        confirm: false,
+    });
+    await contains(".o_we_apply_link").click();
+    expect(localStorage.getItem("website.recently_used_url")).toBe("/contactus");
+
+    await waitFor(".o_we_edit_link");
+    await click(".o_we_edit_link");
+    await contains(".o-autocomplete--input").focus();
+    await press("/");
+    await waitFor(".o-autocomplete--dropdown-menu");
+
+    expect(queryAllTexts(".o-autocomplete--dropdown-item")).toEqual([
+        "/contactus (Contact Us)",
+        "/ (Home)",
+        "/aboutus (About us)",
+    ]);
 });

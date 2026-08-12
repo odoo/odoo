@@ -9,7 +9,7 @@ class Website(models.Model):
 
     def get_suggested_controllers(self):
         suggested_controllers = super(Website, self).get_suggested_controllers()
-        suggested_controllers.append((_('Jobs'), self.env['ir.http']._url_for('/jobs'), 'website_hr_recruitment'))
+        suggested_controllers.append((_('Jobs'), self.env['ir.http']._url_for('/jobs')))
         return suggested_controllers
 
     def _get_search_scopes(self):

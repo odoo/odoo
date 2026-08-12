@@ -1043,17 +1043,15 @@ class Website(Home):
                     'label': '%s (%s)' % (url, name),
                 })
 
-        suggested_controllers = []
-        for name, url, mod in self.env.website.get_suggested_controllers():
-            if needle.lower() in name.lower() or needle.lower() in url.lower():
-                module_sudo = mod and request.env.ref('base.module_%s' % mod, False).sudo()
-                icon = mod and '%s' % (module_sudo and module_sudo.icon or mod) or ''
-                suggested_controllers.append({
-                    'value': url,
-                    'icon': icon,
-                    'label': '%s (%s)' % (url, name),
-                })
-
+        matching_controllers = [
+            (name, url) for name, url in self.env.website.get_suggested_controllers()
+            if needle.lower() in name.lower() or needle.lower() in url.lower()
+        ]
+        existing_urls = self.env.website._filter_existing_pages(url for _name, url in matching_controllers)
+        suggested_controllers = [{
+            'value': url,
+            'label': '%s (%s)' % (url, name),
+        } for name, url in matching_controllers if url in existing_urls]
         return {
             'matching_pages': sorted(matching_pages, key=lambda o: o['label']),
             'others': [

@@ -1961,20 +1961,37 @@ class Website(models.CachedModel):
             Returns a boolean, whether the page is considered to exist for the
             current website. This is a heuristic and is not perfectly reliable.
         """
+        return bool(self._filter_existing_pages([page]))
+
+    def _filter_existing_pages(self, pages):
+        """
+            Returns the set of urls from ``pages`` that are considered to exist
+            for the current website (see `check_existing_page`), using a single
+            query per check for all of them.
+        """
+        pages = set(pages)
+        if not pages:
+            return pages
+
         # The page exists if there is a 'website.page' record with this url
-        if len(self._get_website_pages(domain=[('url', '=', page), ('view_id', '!=', False)], limit=1)) > 0:
-            return True
+        website_pages = self._get_website_pages(domain=[('url', 'in', list(pages)), ('view_id', '!=', False)])
+        existing_pages = pages & set(website_pages.mapped('url'))
 
         # The page is considered to exist if there is a 'website.rewrite' record
         # that does a redirect 301 or 302, for simplicity we do not check
         # further whether the redirection points to an existing url.
-        redirects_domain = self.env.website.website_domain() & Domain(
-            [('url_from', '=', page), ('redirect_type', 'in', ('301', '302'))]
-        )
-        if len(self.env['website.rewrite'].search(redirects_domain, limit=1)) > 0:
-            return True
+        remaining_pages = pages - existing_pages
+        if remaining_pages:
+            redirects_domain = self.env.website.website_domain() & Domain(
+                [('url_from', 'in', list(remaining_pages)), ('redirect_type', 'in', ('301', '302'))]
+            )
+            existing_pages |= remaining_pages & set(self.env['website.rewrite'].search(redirects_domain).mapped('url_from'))
 
         router = self.env['ir.http'].routing_map().bind('')
+        existing_pages |= {page for page in pages - existing_pages if self._is_existing_route(router, page)}
+        return existing_pages
+
+    def _is_existing_route(self, router, page):
         # If there is no rules matching this page, it does not exists
         if not router.test(path_info=page, method='GET'):
             return False
@@ -2005,12 +2022,14 @@ class Website(models.CachedModel):
 
     def get_suggested_controllers(self):
         """
-            Returns a tuple (name, url, icon).
-            Where icon can be a module name, or a path
+            Returns a list of tuples (name, url) for internal pages that should
+            be suggested to the user when choosing a URL (e.g. in the link
+            dialog or the URL picker). Each addon can extend this list to add
+            its own controller URLs.
         """
         suggested_controllers = [
-            (_('Homepage'), self.env['ir.http']._url_for('/'), 'website'),
-            (_('Contact Us'), self.env['ir.http']._url_for('/contactus'), 'website_crm'),
+            (_('Homepage'), self.env['ir.http']._url_for('/')),
+            (_('Contact Us'), self.env['ir.http']._url_for('/contactus')),
         ]
         return suggested_controllers
 
