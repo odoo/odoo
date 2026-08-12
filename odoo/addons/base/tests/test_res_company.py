@@ -58,6 +58,7 @@ class TestCompany(TransactionCase):
         branch = self.env['res.company'].with_context(default_parent_id=self.env.company.id).create({'name': 'Branch Company'})
         self.assertFalse(branch.partner_id.parent_id)
 
+<<<<<<< d32c1e430100cec6d160bd7ff4acf15c0dc77d52
     def test_correct_order_of_company(self):
         """Ensure that companies are correctly ordered in a hierarchy"""
         Company = self.env['res.company']
@@ -78,6 +79,13 @@ class TestCompany(TransactionCase):
             "Companies are not in the correct order",
         )
 
+||||||| e5a4af13360c0fb54ea5ae3301804cccb09668cd
+=======
+    def test_create_company_with_default_company_id_context(self):
+        company = self.env['res.company'].with_context(default_company_id=self.env.company.id).create({'name': 'foo'})
+        self.assertFalse(company.partner_id.company_id)
+
+>>>>>>> 35e2a5437b01ed55b1ea380bcfec2535d23a81ab
     def test_write_company_root_delegated_field_names(self):
         self.env['res.company'].with_context(default_parent_id=self.env.company.id).create({'name': 'foo'})
         new_currency = self.env['res.currency'].create({
