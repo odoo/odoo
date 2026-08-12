@@ -34,6 +34,68 @@ class TestProcessingFlow(XenditCommon, PaymentHttpCommon):
         self.assertEqual(handle_notification_data_mock.call_count, 1)
 
     @mute_logger('odoo.addons.payment_xendit.controllers.main')
+    def test_webhook_notification_unwraps_envelope(self):
+        """ Test that webhook notifications wrapped in an `event` envelope are unwrapped before
+        being passed to the notification handlers. """
+        self._create_transaction('redirect')
+        url = self._build_url(XenditController._webhook_url)
+        envelope = {'event': 'payment_session.completed', 'data': self.webhook_notification_data}
+        with patch(
+            'odoo.addons.payment_xendit.controllers.main.XenditController'
+            '._verify_notification_token'
+        ), patch(
+            'odoo.addons.payment.models.payment_transaction.PaymentTransaction'
+            '._handle_notification_data'
+        ) as handle_notification_data_mock:
+            self._make_json_request(url, data=envelope)
+        self.assertEqual(handle_notification_data_mock.call_count, 1)
+        self.assertEqual(
+            handle_notification_data_mock.call_args.args[1], self.webhook_notification_data
+        )
+
+    @mute_logger('odoo.addons.payment_xendit.controllers.main')
+    def test_webhook_notification_tokenizes_on_activation_event(self):
+        """ Test that a `payment_token.activation` webhook notification tokenizes the
+        transaction directly, bypassing the generic notification data handler. """
+        self._create_transaction('redirect', tokenize=True)
+        url = self._build_url(XenditController._webhook_url)
+        envelope = {
+            'event': 'payment_token.activation', 'data': self.token_activation_notification_data
+        }
+        with patch(
+            'odoo.addons.payment_xendit.controllers.main.XenditController'
+            '._verify_notification_token'
+        ), patch(
+            'odoo.addons.payment.models.payment_transaction.PaymentTransaction'
+            '._handle_notification_data'
+        ) as handle_notification_data_mock, patch(
+            'odoo.addons.payment_xendit.models.payment_transaction.PaymentTransaction'
+            '._xendit_tokenize_from_notification_data'
+        ) as tokenize_mock:
+            self._make_json_request(url, data=envelope)
+        self.assertEqual(handle_notification_data_mock.call_count, 0)
+        self.assertEqual(tokenize_mock.call_count, 1)
+
+    @mute_logger('odoo.addons.payment_xendit.controllers.main')
+    def test_webhook_notification_skips_activation_event_without_tokenize(self):
+        """ Test that a `payment_token.activation` webhook notification is ignored for a
+        transaction that doesn't request tokenization. """
+        self._create_transaction('redirect')  # tokenize defaults to False
+        url = self._build_url(XenditController._webhook_url)
+        envelope = {
+            'event': 'payment_token.activation', 'data': self.token_activation_notification_data
+        }
+        with patch(
+            'odoo.addons.payment_xendit.controllers.main.XenditController'
+            '._verify_notification_token'
+        ), patch(
+            'odoo.addons.payment_xendit.models.payment_transaction.PaymentTransaction'
+            '._xendit_tokenize_from_notification_data'
+        ) as tokenize_mock:
+            self._make_json_request(url, data=envelope)
+        self.assertEqual(tokenize_mock.call_count, 0)
+
+    @mute_logger('odoo.addons.payment_xendit.controllers.main')
     def test_webhook_notification_triggers_signature_check(self):
         """ Test that receiving a webhook notification triggers a signature check. """
         self._create_transaction('redirect')
