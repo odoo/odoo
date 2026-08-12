@@ -142,3 +142,21 @@ test("Scrolling bottom in non-aside chatter should load more searched message", 
     await scroll(".o_content", "bottom");
     await contains(".o-mail-SearchMessageResult .o-mail-Message", { count: 60 });
 });
+
+test("Switching chatter filters after empty result should show messages", async () => {
+    const pyEnv = await startServer();
+    pyEnv["mail.message"].create({
+        body: "not empty",
+        model: "res.partner",
+        res_id: serverState.partnerId,
+    });
+    await start();
+    await openFormView("res.partner", serverState.partnerId);
+    await click("[title='Search Messages']");
+    await click("[title='Filter Messages']");
+    await click(".o-dropdown-item:text('Tracked Changes')");
+    await contains(".o-mail-MessageCardList:text('No messages found')");
+    await click("[title='Filter Messages']");
+    await click(".o-dropdown-item:text('Conversations')");
+    await contains(".o-mail-SearchMessageResult .o-mail-Message-content:text('not empty')");
+});
