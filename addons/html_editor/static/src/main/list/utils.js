@@ -1,5 +1,5 @@
+import { getTextColorOrClass } from "@html_editor/utils/color";
 import { unwrapContents } from "@html_editor/utils/dom";
-import { closestElement, firstLeaf, lastLeaf } from "@html_editor/utils/dom_traversal";
 import { getFontSizeOrClass } from "@html_editor/utils/formatting";
 
 export function createList(document, mode) {
@@ -11,37 +11,47 @@ export function createList(document, mode) {
 }
 
 export function insertListAfter(document, afterNode, mode, content = []) {
+    const parent = afterNode.parentNode;
+    const nextSibling = afterNode.nextSibling;
     const list = createList(document, mode);
-    afterNode.after(list);
     const li = document.createElement("LI");
     li.append(...content);
     if (content.length === 1 && content[0].nodeType === Node.ELEMENT_NODE) {
-        const firstLeafNode = firstLeaf(content[0]);
-        const lastLeafNode = lastLeaf(content[0]);
-        const firstClosestFont = closestElement(firstLeafNode, "font");
-        const lastClosestFont = closestElement(lastLeafNode, "font");
-        if (firstClosestFont && lastClosestFont && firstClosestFont === lastClosestFont) {
-            li.style.color = firstClosestFont.style.color;
-            unwrapContents(firstClosestFont);
-        }
-        const firstClosestSpan = closestElement(firstLeafNode, "span");
-        const lastClosestSpan = closestElement(lastLeafNode, "span");
-        let fontSizeStyle;
-        if (
-            firstClosestSpan &&
-            lastClosestSpan &&
-            firstClosestSpan === lastClosestSpan &&
-            (fontSizeStyle = getFontSizeOrClass(firstClosestSpan))
-        ) {
-            if (fontSizeStyle.type === "font-size") {
-                li.style.fontSize = fontSizeStyle.value;
-            } else if (fontSizeStyle.type === "class") {
-                li.classList.add(fontSizeStyle.value);
+        const moveFormatting = (element, property, info) => {
+            if (!info) {
+                return;
             }
-            unwrapContents(firstClosestSpan);
+            if (info.type === "class") {
+                li.classList.add(info.value);
+                element.classList.remove(info.value);
+            } else {
+                li.style.setProperty(property, info.value);
+                element.style.removeProperty(property);
+            }
+        };
+
+        let current = li;
+        while (current.childNodes.length === 1) {
+            const child = current.firstChild;
+            if (child.nodeType !== Node.ELEMENT_NODE) {
+                break;
+            }
+            const tag = child.tagName;
+            if (tag === "FONT" || tag === "SPAN") {
+                moveFormatting(child, "color", getTextColorOrClass(child));
+                if (tag === "SPAN") {
+                    moveFormatting(child, "font-size", getFontSizeOrClass(child));
+                }
+                if (!child.style.length && !child.classList.length) {
+                    unwrapContents(child);
+                    continue;
+                }
+            }
+            current = child;
         }
     }
     list.append(li);
+    parent.insertBefore(list, nextSibling);
     return list;
 }
 
