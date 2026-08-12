@@ -451,7 +451,7 @@ class StockMove(models.Model):
 
     def _get_valued_qty(self, lot=None):
         self.ensure_one()
-        return self._get_valued_qty_batch()[self._origin.id][lot or False]
+        return self._get_valued_qty_batch().get(self._origin.id, {}).get(lot or False, 0.0)
 
     def _get_location_domains(self, company):
         base_domain = (

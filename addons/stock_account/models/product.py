@@ -465,6 +465,10 @@ class ProductProduct(models.Model):
             ('company_id', '=', self.env.company.id),
             '|', '|', ('is_in', '=', True), ('is_dropship', '=', True), ('is_out', '=', True)
         ])
+        if lots:
+            moves_domain &= Domain([
+                ('move_line_ids.lot_id', 'in', lots._as_query()),
+            ])
         if at_date:
             moves_domain &= Domain([
                 ('date', '<=', at_date),
@@ -553,11 +557,12 @@ class ProductProduct(models.Model):
             moves_batch.fetch(move_fields)
             moves_batch.move_line_ids.fetch(move_line_fields)
             for move in moves_batch:
+                vq = valued_qty.get(move.id, {})
+
                 quantity = quantity_by_product_id.get(move.product_id.id, 0.0)
-                average_cost = std_price_by_product_id.get(move.product_id.id, move.value / move._get_valued_qty() if move._get_valued_qty() else 0)
+                average_cost = std_price_by_product_id.get(move.product_id.id, move.value / vq[False] if vq.get(False, 0.0) else 0)
                 value = value_by_product_id.get(move.product_id.id, 0.0)
 
-                vq = valued_qty[move.id]
                 valuated_lots_in_move = {}
                 if lots:
                     valuated_lots_in_move = lots & self.env['stock.lot'].concat(
@@ -588,7 +593,7 @@ class ProductProduct(models.Model):
                     for lot in valuated_lots_in_move:
                         if lot_from_date.get(lot.id) and move.date <= lot_from_date[lot.id]:
                             continue
-                        lot_qty = vq[lot]
+                        lot_qty = vq.get(lot, 0.0)
                         lot_in_value = (in_value * lot_qty / in_qty) if in_qty else 0
 
                         if lot.id not in lot_quantity:
