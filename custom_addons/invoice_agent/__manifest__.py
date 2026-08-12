@@ -1,6 +1,6 @@
 {
     "name": "Invoice Agent",
-    "version": "19.0.0.5.0",
+    "version": "19.0.0.6.0",
     "category": "Accounting/Accounting",
     "summary": "AI Extraction for account.move — queue, wizard, security, automations, cron",
     "depends": ["account", "sale", "base_automation"],

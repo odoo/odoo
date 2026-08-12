@@ -9,6 +9,33 @@
 # =============================================================================
 
 services:
+  invoice-ai:
+    build:
+      context: ./invoice-ai
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      INVOICE_AI_JWT_SECRET: ${INVOICE_AI_JWT_SECRET:-}
+      INVOICE_AI_JWT_AUDIENCE: invoice-ai
+      INVOICE_AI_ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+    healthcheck:
+      test: [ "CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/healthz', timeout=5)\"" ]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    deploy:
+      resources:
+        limits:
+          memory: 768M
+        reservations:
+          memory: 256M
+
   db:
     image: postgres:16
     restart: unless-stopped
@@ -138,6 +165,7 @@ services:
       - certbot-conf:/etc/letsencrypt
     depends_on:
       - odoo
+      - invoice-ai
     logging:
       driver: json-file
       options:

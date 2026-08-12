@@ -25,5 +25,13 @@ class Settings(BaseSettings):
     max_upload_bytes: int = 10 * 1024 * 1024  # 10 MiB — matches docs/openapi.yaml
     ocr_render_dpi: int = 300
 
+    # JWT auth (app/auth.py). The shared secret is distributed out-of-band
+    # to the Odoo side via ir.config_parameter (invoice_agent.jwt_secret).
+    # audience is a claim that must match on both sides — a token minted
+    # with the right secret but wrong aud is rejected.
+    jwt_secret: str = ""
+    jwt_audience: str = "invoice-ai"
+    jwt_ttl_seconds: int = 60
+
 
 settings = Settings()

@@ -310,18 +310,15 @@ class InvoiceAgentController(http.Controller):
         the measured proof that the request occupied a whole worker process
         for the duration — exactly where a real Claude round-trip holds it.
 
-        ``_client()`` is called instead of ``extract_invoice()`` because the
-        latter is an ``@api.model`` method that begins with ``ensure_one()``
-        and would raise immediately on the empty model recordset; the sleep
-        hook lives in ``_client()`` regardless.
         """
         started = time.monotonic()
         try:
-            self.env["invoice.llm.service"]._client()
+            self.env["invoice.llm.service"].extract_invoice(
+                "MEASURE-PLACEHOLDER TEXT",
+            )
         except Exception as exc:
             _logger.info(
-                "invoice_agent measure trigger: client build raised %s after "
-                "%.2fs (expected when no API key is configured)",
+                "invoice_agent measure trigger: extraction raised %s after %.2fs",
                 type(exc).__name__,
                 time.monotonic() - started,
             )

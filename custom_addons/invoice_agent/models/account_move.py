@@ -7,6 +7,8 @@ from datetime import timedelta
 from odoo import _, api, fields, models
 from odoo.exceptions import AccessError, UserError, ValidationError
 
+from .llm_service import AIServiceUnavailable
+
 _logger = logging.getLogger(__name__)
 
 _CLAUDE_SYSTEM_PROMPT = (
@@ -647,6 +649,27 @@ class AccountMove(models.Model):
                     "AI Suggestion panel and accept what looks right.",
                 )
                 % {"summary": summary},
+            )
+        except AIServiceUnavailable as exc:
+            # The AI service is down / rate-limited (503). Do NOT mark the
+            # bill permanently failed — flip it back to a retryable state so
+            # the ir.cron worker re-runs it once the service recovers.
+            _logger.warning(
+                "invoice_agent suggest deferred (service unavailable) for %s: %s",
+                self.display_name,
+                exc,
+            )
+            self.write(
+                {
+                    "ai_extraction_status": "pending",
+                    "ocr_state": "pending",
+                    "ai_error_message": str(exc)[:2000],
+                },
+            )
+            return self._suggest_notification(
+                "warning",
+                _("Extraction queued for retry"),
+                str(exc),
             )
         except Exception as exc:
             _logger.warning(
@@ -1598,6 +1621,23 @@ class AccountMove(models.Model):
                 raw_text = response.content[0].text
                 payload = move._parse_claude_payload(raw_text)
                 move._apply_extraction_payload(payload)
+            except AIServiceUnavailable as exc:
+                # The AI service is down / rate-limited (503): the move stays
+                # retryable — flip it back to pending so the next cron tick
+                # re-runs it, instead of marking it permanently failed.
+                _logger.warning(
+                    "invoice_agent extraction deferred (service unavailable) "
+                    "for %s: %s",
+                    move.display_name,
+                    exc,
+                )
+                move.write(
+                    {
+                        "ai_extraction_status": "pending",
+                        "ocr_state": "pending",
+                        "ai_error_message": str(exc)[:2000],
+                    },
+                )
             except Exception as exc:
                 _logger.warning(
                     "invoice_agent extraction failed for %s: %s",

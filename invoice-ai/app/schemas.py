@@ -32,6 +32,7 @@ Confidence contract (mirrors the addon's week-7 milestone):
 
 from datetime import date
 from decimal import Decimal
+from typing import Literal
 
 from pydantic import BaseModel, ConfigDict
 
@@ -95,7 +96,54 @@ class InvoiceExtraction(BaseModel):
     notes: str | None = None
 
 
-def invoice_extraction_json_schema():
+class Usage(BaseModel):
+    """Token counters returned next to every extraction.
+
+    Mirrors docs/openapi.yaml ``ExtractionResponse.usage``:
+    ``additionalProperties: false`` with four nullable integer counters.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    input_tokens: int | None = None
+    cache_creation_input_tokens: int | None = None
+    cache_read_input_tokens: int | None = None
+    output_tokens: int | None = None
+
+
+class ExtractionResponse(BaseModel):
+    """The 200 envelope of ``POST /v1/extract``.
+
+    Matches docs/openapi.yaml ``ExtractionResponse`` exactly: the validated
+    extraction, the usage ledger, and the model id. Declared as the route's
+    ``response_model`` so the generated OpenAPI actually carries these
+    components — a plain-dict return annotation would leave the contract
+    schemas out of the spec (the drift check in
+    ``scripts/check_openapi_drift.py`` enforces their presence).
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    extraction: InvoiceExtraction
+    usage: Usage
+    model: str
+
+
+class HealthResponse(BaseModel):
+    """The 200 envelope of ``GET /healthz``.
+
+    ``status`` is pinned to ``ok`` (the compose healthcheck asserts on it);
+    ``build_sha`` is the git SHA stamped at image build time
+    (``INVOICE_AI_BUILD_SHA``), defaulting to ``dev`` on local checkouts.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    status: Literal["ok"]
+    build_sha: str
+
+
+def invoice_extraction_json_schema() -> dict:
     """Return the JSON Schema view of ``InvoiceExtraction``.
 
     Used for the ``output_config={'format': {'type': 'json_schema',

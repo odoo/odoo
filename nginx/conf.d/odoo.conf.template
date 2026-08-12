@@ -106,6 +106,28 @@ server {
     }
 
     # ========================
+    # /ai/ — invoice-ai extraction service (ADR-003)
+    # ========================
+    # The AI service publishes no port to the host; nginx is its only
+    # external entry point. /ai/healthz → /healthz so probes work end-to-end.
+    # proxy_read_timeout raised to 300s for slow extractions (multi-page
+    # scan OCR + Claude round-trip can exceed nginx's 60s default).
+    location /ai/ {
+        proxy_pass http://invoice-ai:8000/;
+        proxy_set_header Host             $host;
+        proxy_set_header X-Forwarded-For   $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+
+        proxy_read_timeout 300s;
+        proxy_connect_timeout 30s;
+        proxy_send_timeout 300s;
+        # Service caps uploads at 10 MiB; keep nginx above it so the
+        # service's own 413 wins instead of an nginx 413.
+        client_max_body_size 12m;
+        proxy_buffering off;
+    }
+
+    # ========================
     # Static assets — serve directly from Odoo (or CDN if needed)
     # ========================
     location /web/static/ {
