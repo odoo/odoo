@@ -9,6 +9,7 @@ import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
 import { useDebounced } from "@web/core/utils/timing";
 import { FormRenderer } from "@web/views/form/form_renderer";
+import { render } from "@web/owl2/utils";
 
 patch(FormRenderer.prototype, {
     setup() {
@@ -26,7 +27,7 @@ patch(FormRenderer.prototype, {
         this.uiService = useService("ui");
         this.mailPopoutService = useService("mail.popout");
 
-        this.onResize = useDebounced(this.render.bind(this), 200);
+        this.onResize = useDebounced(() => render(this), 200);
         onMounted(() => browser.addEventListener("resize", this.onResize));
         onWillUnmount(() => browser.removeEventListener("resize", this.onResize));
     },

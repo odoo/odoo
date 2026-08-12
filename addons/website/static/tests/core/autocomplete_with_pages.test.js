@@ -4,6 +4,7 @@ import { mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpe
 import { defineMailModels } from "@mail/../tests/mail_test_helpers";
 import { UrlAutoComplete } from "@website/components/autocomplete_with_pages/url_autocomplete";
 import { AutoCompleteWithPages } from "@website/components/autocomplete_with_pages/autocomplete_with_pages";
+import { render } from "@web/owl2/utils";
 
 defineMailModels();
 
@@ -40,7 +41,7 @@ test("event on targetDropdown does not crash when the inner input ref is gone", 
     // Detach the inner input subtree, then force a render so OWL sweeps the
     // now-disconnected ref to null (component and its listeners stay alive).
     component.inputRef().closest(".o-autocomplete").remove();
-    component.render(true);
+    render(component, true);
     await animationFrame();
     expect(component.inputRef()).toBe(null);
 

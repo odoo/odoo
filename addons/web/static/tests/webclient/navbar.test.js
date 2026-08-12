@@ -341,11 +341,11 @@ test("'more' menu sections adaptations do not trigger render in some cases", asy
             await super.adapt();
             adaptRunning = false;
         }
-        async render() {
+        render() {
             if (adaptRunning) {
                 adaptRenderCount++;
             }
-            await super.render(...arguments);
+            super.render();
         }
     }
 

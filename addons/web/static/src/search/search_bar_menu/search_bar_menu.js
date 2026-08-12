@@ -88,13 +88,13 @@ export class SearchBarMenu extends Component {
     async onToggle({ itemId, optionsParams }) {
         if (optionsParams.toBeLoaded) {
             await this.env.searchModel.loadLazyParentFilter(itemId);
-            this.render();
+            render(this);
         }
     }
 
     async onLoadMoreOptions({ itemId }) {
         await this.env.searchModel.loadMoreOptions(itemId);
-        this.render();
+        render(this);
     }
 
     // GroupBy Panel
