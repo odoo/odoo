@@ -53,6 +53,10 @@ const getDecimalPoint = () => localization.decimalPoint;
 export class PosNumberBufferPlugin extends Plugin {
     state = proxy({});
     isReset = signal(false);
+    // Whether a keystroke is queued, waiting for useWithBarcode's delay (or a manual
+    // capture()) before it reaches the buffer. A signal so components basing a render
+    // (e.g. disabling an action button) on it re-render as soon as it changes.
+    hasPendingInput = signal(false);
     sound = usePlugin(SoundEffectsPlugin);
     overlay = usePlugin(OverlayPlugin);
     bufferHolderStack = [];
@@ -98,6 +102,7 @@ export class PosNumberBufferPlugin extends Plugin {
             clearTimeout(this._timeout);
             this.handler(true);
             delete this.handler;
+            this.hasPendingInput.set(false);
         }
     }
     /**
@@ -193,8 +198,13 @@ export class PosNumberBufferPlugin extends Plugin {
             }
             clearTimeout(this._timeout);
             this.eventsBuffer.push(event);
-            this._timeout = setTimeout(handler, this.maxTimeBetweenKeys);
-            this.handler = handler;
+            const timedHandler = (...args) => {
+                this.hasPendingInput.set(false);
+                handler(...args);
+            };
+            this._timeout = setTimeout(timedHandler, this.maxTimeBetweenKeys);
+            this.handler = timedHandler;
+            this.hasPendingInput.set(true);
         };
     }
     _onInput(keyAccessor) {
