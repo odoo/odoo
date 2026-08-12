@@ -845,7 +845,8 @@ class SaleOrder(models.Model):
 
     def _remove_delivery_line(self):
         super()._remove_delivery_line()
-        self.pickup_location_data = {}  # Reset the pickup location data.
+        if not self.env.context.get("keep_pickup_location"):
+            self.pickup_location_data = {}  # Reset the pickup location data.
 
     def _get_preferred_delivery_method(self, available_delivery_methods):
         """ Get the preferred delivery method based on available delivery methods for the order.
@@ -953,6 +954,8 @@ class SaleOrder(models.Model):
         """Recompute taxes and prices for the current cart."""
         self._recompute_taxes()
         self._recompute_prices()
+        if self.carrier_id:
+            self.with_context(keep_pickup_location=True)._set_delivery_method(self.carrier_id)
 
     def _archive_partner_if_no_user(self):  # TODO: remove in master
         """Archive SO customer if it has no linked users."""
