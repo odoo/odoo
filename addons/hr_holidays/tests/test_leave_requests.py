@@ -1903,6 +1903,48 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         })
         self.assertEqual(leave_half_day_multi4.duration_display, '2 days')
 
+    @freeze_time('2026-03-16')
+    def test_leave_duration_with_absence_attendances(self):
+        """
+        Ensure that a leave on a calendar mixing working time and absence attendances
+        only counts the part of the day the employee is supposed to work.
+        """
+        partial_incapacity = self.env['hr.work.entry.type'].create({
+            'name': 'Partial Incapacity',
+            'code': 'TESTPARTIALINCAPACITY',
+            'count_as': 'absence',
+        })
+        # The employee works every morning and is medically unavailable every afternoon.
+        calendar = self.env['resource.calendar'].create({
+            'name': 'Half Time Partial Incapacity',
+            'company_id': self.company.id,
+            'attendance_ids': [
+                Command.create({'dayofweek': str(dayofweek), 'hour_from': 8, 'hour_to': 12})
+                for dayofweek in range(5)
+            ] + [
+                Command.create({
+                    'dayofweek': str(dayofweek), 'hour_from': 13, 'hour_to': 17,
+                    'work_entry_type_id': partial_incapacity.id,
+                })
+                for dayofweek in range(5)
+            ],
+        })
+        self.employee_emp.resource_calendar_id = calendar
+        # Only the 4 hours of the mornings are working time, the afternoons are not.
+        self.assertEqual(calendar.hours_per_day, 4, "Only the mornings should be counted as working time.")
+
+        # A whole week off, from Monday to Friday.
+        week_off = self.env['hr.leave'].create({
+            'name': 'Week Off',
+            'employee_id': self.employee_emp_id,
+            'work_entry_type_id': self.holidays_type_half.id,
+            'request_date_from': '2026-03-16',
+            'request_date_to': '2026-03-20',
+        })
+        # The afternoons are already off, so the employee only takes 5 mornings.
+        self.assertEqual(week_off.number_of_days, 2.5, "A week off should only count the mornings.")
+        self.assertEqual(week_off.number_of_hours, 20, "A week off should only count the worked hours.")
+
     def test_unified_time_off_half_day_scenarios_irregular_calendar(self):
         employee = self.employee_emp
         employee.resource_calendar_id = self.irregular_calendar
