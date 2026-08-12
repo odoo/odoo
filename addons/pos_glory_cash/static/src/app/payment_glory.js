@@ -217,9 +217,9 @@ export class PaymentGlory extends PaymentInterface {
      * @param {{ status: string, cashGiven?: number, cashReturned?: number, transactionId?: string }} paymentResponse
      */
     setPaymentInfo(paymentResponse) {
-        const { transactionId, cashGiven } = paymentResponse;
+        const { transactionId, cashGiven, cashReturned } = paymentResponse;
         this.paymentLine.transaction_id = transactionId;
-        this.paymentLine.setAmount(this.gloryAmountToPosAmount(cashGiven));
+        this.paymentLine.setAmount(this.gloryAmountToPosAmount(cashGiven - cashReturned));
     }
 
     gloryAmountToPosAmount(amountInCents) {
