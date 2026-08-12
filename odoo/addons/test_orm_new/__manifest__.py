@@ -12,6 +12,7 @@
         'security/test_action_bindings/ir.access.csv',
         'security/test_autovacuum/ir.access.csv',
         'security/test_check_access/ir.access.csv',
+        'security/test_company_checks/ir.access.csv',
     ],
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
