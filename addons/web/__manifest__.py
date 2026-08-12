@@ -294,6 +294,7 @@ This module provides the core of the Odoo Web Client.
 
             'base/static/src/css/description.css',
             ('include', 'web.icons_fonts'),
+            'web/static/src/webclient/actions/reports/icons_report.scss',
             'web/static/fonts/fonts.scss',
 
             'web/static/src/webclient/actions/reports/bootstrap_review_report.scss',

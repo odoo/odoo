@@ -2,7 +2,10 @@
     font-family: 'odoo_ui_icons';
     src:
         /* see web.odoo_ui_icons asset */
-        url('/web/static/lib/odoo_ui_icons/fonts/odoo_ui_icons.woff2') format('woff2');
+        url('/web/static/lib/odoo_ui_icons/fonts/odoo_ui_icons.woff2') format('woff2'),
+        /* WOFF1 fallback for wkhtmltopdf, which cannot read WOFF2. Browsers
+           only download the first format they support, so it costs nothing. */
+        url('/web/static/lib/odoo_ui_icons/fonts/odoo_ui_icons.woff') format('woff');
     font-weight: normal;
     font-style: normal;
     font-display: block;
