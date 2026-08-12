@@ -273,3 +273,22 @@ class TestSaleOrder(ClickAndCollectCommon):
                 for partner in new_so.picking_ids.message_ids.notified_partner_ids
             )
         )
+
+    def test_recompute_cart_preserves_selected_pickup_location(self):
+        """Ensure the pickup location is not reset when the cart is recomputed."""
+        wh_partner = self.warehouse.partner_id
+        order = self._create_in_store_delivery_order()
+        order.set_pickup_location(
+            json.dumps({
+                "id": self.warehouse.id,
+                "name": wh_partner.name,
+                "street": "New test street",
+                "zip_code": wh_partner.zip,
+                "city": "New test city",
+                "state": wh_partner.state_id.code,
+                "country_code": wh_partner.country_code,
+            })
+        )
+        order._set_delivery_method(self.in_store_dm)  # Create the delivery line.
+        order._update_cart_taxes_and_prices()
+        self.assertTrue(order.partner_shipping_id.pickup_location_data)

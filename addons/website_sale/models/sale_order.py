@@ -1377,6 +1377,8 @@ class SaleOrder(models.Model):
         initial_amount = self.amount_total
         self._recompute_taxes()
         self._recompute_prices()
+        if self.carrier_id:
+            self.with_context(keep_pickup_location=True)._set_delivery_method(self.carrier_id)
         if self.currency_id.compare_amounts(self.amount_total, initial_amount):
             self._add_warning_alert(self.env._("Prices have changed. Please review your cart."))
             return True
