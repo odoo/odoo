@@ -55,7 +55,7 @@ export class MosaicStrategyPlugin extends Plugin {
             return emailNode;
         }
         // TODO EGGMAIL: while skipping nodes, we may loose background color
-        // or border info, think of a way to recover them
+        // or border info or outside-paddings think of a way to recover them
         const rectToEmailNode = new Map();
         for (const childEmailNode of emailNode.children) {
             const node = childEmailNode.firstReferenceNode;
@@ -63,10 +63,6 @@ export class MosaicStrategyPlugin extends Plugin {
             rectToEmailNode.set(rect, childEmailNode);
         }
         const rects = [...rectToEmailNode.keys()];
-        // create a matrix in which each cell can be assigned to a childEmailNode
-        // multiple times
-        // => don't create the matrix yet, order elements first
-        // don't use the same band algorithm than responsive blocks,
         const filterSimilarValues = (values) =>
             values
                 .reduce(
@@ -85,12 +81,21 @@ export class MosaicStrategyPlugin extends Plugin {
                     (aggregate) =>
                         aggregate.reduce((total, v) => total + v, 0) / (aggregate.length || 1)
                 );
+        const containerRect = this.getBoundingClientRect(emailNode.lastReferenceNode);
         const xs = filterSimilarValues(
-            rects.flatMap((r) => [r.left, r.right]).sort((a, b) => a - b)
+            rects
+                .flatMap((r) => [r.left, r.right])
+                .concat([containerRect.left, containerRect.right])
+                .sort((a, b) => a - b)
         );
         const ys = filterSimilarValues(
-            rects.flatMap((r) => [r.top, r.bottom]).sort((a, b) => a - b)
+            rects
+                .flatMap((r) => [r.top, r.bottom])
+                .concat([containerRect.top, containerRect.bottom])
+                .sort((a, b) => a - b)
         );
+        const columnCount = xs.length - 1;
+        const rowCount = ys.length - 1;
         const cells = rects.map((rect) => {
             const col = xs.findIndex((x) => this.isZero(rect.left - x));
             const row = ys.findIndex((y) => this.isZero(rect.top - y));
@@ -100,11 +105,50 @@ export class MosaicStrategyPlugin extends Plugin {
             const rowspan = nextRow - row;
             return { col, row, colspan, rowspan, emailNode: rectToEmailNode.get(rect) };
         });
-        // TODO EGGMAIL: working here: need to consider empty cells, useful
-        // to output the total dimensions of the table (matrix)
-        // so that it does not need to be computed later
-        // from this result, we can build a normal html table
-        console.log(cells);
+        const occupied = Array.from({ length: rowCount }, () => Array(columnCount).fill(null));
+        for (const cell of cells) {
+            for (let row = cell.row; row < cell.row + cell.rowspan; row++) {
+                for (let col = cell.col; col < cell.col + cell.colspan; col++) {
+                    occupied[row][col] = cell;
+                }
+            }
+        }
+        const spacerCells = [];
+        for (let col = 0; col < columnCount; col++) {
+            let cell;
+            for (let row = 0; row < rowCount; row++) {
+                if (occupied[row][col] === null) {
+                    if (cell && cell.row + cell.rowspan === row) {
+                        cell.rowspan++;
+                        occupied[row][col] = cell;
+                    } else {
+                        cell = { col, row, colspan: 1, rowspan: 1 };
+                        occupied[row][col] = cell;
+                        spacerCells.push(cell);
+                    }
+                } else {
+                    cell = undefined;
+                }
+            }
+        }
+        // TODO EGGMAIL:
+        // spacer cells contains cells for borders and spacing that are not part
+        // of the declared cells => the challenge will be mapping the border color
+        // to a background color of that cell.
+        // The issue is that a border consideration can be merged with a spacing
+        // consideration, or not, depending on the configuration, so maybe not
+        // the best idea to keep the current logic as is
+        // TODO EGGMAIL:
+        // currently we have the table layout, but dimensions are not properly
+        // assigned.
+        // we want % values for every cell width, and height px value for spacer cells
+        // with rowspan = 1 and only have spacer cells on the same row
+
+        // working here
+        // keep all cells for now, determine later how we want to handle
+        // borders, so consider them as spacing for now => maybe these spacing
+        // cells can have the border of their sibling?
+        console.log(cells.concat(spacerCells));
         return emailNode;
     }
 }
