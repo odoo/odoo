@@ -179,7 +179,8 @@ def handle_demo(func, /):
     execute.
     """
     def wrapped(self, *args, **kwargs):
-        if self.env.company._get_peppol_edi_mode() == 'demo':
+        temporary_eas = self.peppol_eas if 'peppol_eas' in self._fields else False
+        if self.env.company._get_peppol_edi_mode(temporary_eas=temporary_eas) == 'demo':
             return _demo_behaviour[func.__name__](func, self, *args, **kwargs)
         return func(self, *args, **kwargs)
     return wrapped

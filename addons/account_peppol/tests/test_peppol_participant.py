@@ -64,6 +64,21 @@ class TestPeppolParticipant(TransactionCase):
         with self.assertRaises(ValidationError):
             wizard.button_register_peppol_participant()
 
+    def test_register_with_odoo_demo_id_without_config_param(self):
+        """ Selecting the 'Odoo Demo ID' EAS must be enough to register in demo mode,
+        even without the 'account_peppol.edi.mode' system parameter (e.g. a fresh database
+        created without demo data, where that parameter is never set).
+        """
+        self.env['ir.config_parameter'].sudo().search([('key', '=', 'account_peppol.edi.mode')]).unlink()
+        wizard = self.env['peppol.registration'].create({
+            'peppol_eas': 'odemo',
+            'peppol_endpoint': 'democompany',
+        })
+        self.assertEqual(wizard.edi_mode, 'demo')
+        wizard.button_register_peppol_participant()
+        self.assertRecordValues(self.env.company, [{'account_peppol_proxy_state': 'receiver'}])
+        self.assertRecordValues(self.env.company.account_peppol_edi_user, [{'edi_mode': 'demo'}])
+
     def test_peppol_registration_wizard_form_view(self):
         """ Form-test for the wizard basic registrationflow. """
         with (
