@@ -98,6 +98,45 @@ test("should be able to search for a new user to invite from an existing chat", 
     await contains(".o-discuss-ChannelInvitation-selectable:has(:text('TestPartner2'))");
 });
 
+test("Can quick unselect people from the channel invitation", async () => {
+    const pyEnv = await startServer();
+    const partnerId_1 = pyEnv["res.partner"].create({
+        email: "testpartner@odoo.com",
+        name: "TestPartner",
+    });
+    const partnerId_2 = pyEnv["res.partner"].create({
+        email: "testpartner2@odoo.com",
+        name: "TestPartner2",
+    });
+    pyEnv["res.users"].create({ partner_id: partnerId_1 });
+    pyEnv["res.users"].create({ partner_id: partnerId_2 });
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "TestChannel",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId_1 }),
+        ],
+        channel_type: "channel",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-discuss-ChannelMemberList"); // wait for auto-open of this panel
+    await click("button[title='Add People']");
+    await click(".o-discuss-ChannelInvitation-selectable:has(:text('TestPartner2'))");
+    await click(".o-discuss-ChannelInvitation-selectable:has(:text('TestPartner2')).o-selected");
+    const selectedButtonsSelector = ".o-discuss-ChannelInvitation-selectedList button";
+    await contains(selectedButtonsSelector);
+    await contains(".o-discuss-ChannelInvitation-selectedList button:text(TestPartner2)");
+    await contains(
+        ".o-discuss-ChannelInvitation-selectedList button:text(TestPartner2) [data-icon='close_small']"
+    );
+    await click(".o-discuss-ChannelInvitation-selectedList button:text(TestPartner2)");
+    await click(
+        ".o-discuss-ChannelInvitation-selectable:has(:text('TestPartner2')):not(.o-selected)"
+    );
+    await contains(selectedButtonsSelector, { count: 0 });
+});
+
 test("Invitation form should display channel group restriction", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({
