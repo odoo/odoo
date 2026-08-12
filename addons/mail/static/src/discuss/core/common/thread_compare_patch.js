@@ -2,6 +2,21 @@ import { threadCompareRegistry } from "@mail/core/common/thread_compare";
 import { compareDatetime } from "@mail/utils/common/misc";
 
 threadCompareRegistry.add(
+    "mail.draft",
+    (t1, t2) => {
+        const c1Draft = Boolean(t1.channel?.hasDraft);
+        const c2Draft = Boolean(t2.channel?.hasDraft);
+        if (c2Draft && !c1Draft) {
+            return 1;
+        }
+        if (c1Draft && !c2Draft) {
+            return -1;
+        }
+    },
+    { sequence: 5 }
+);
+
+threadCompareRegistry.add(
     "mail.favorite",
     (t1, t2) => {
         const c1Fav = Boolean(t1.channel?.self_member_id?.is_favorite);

@@ -7,7 +7,11 @@ import { NavigableList } from "@mail/core/common/navigable_list";
 import { MAIL_PLUGINS, MAIL_SMALL_UI_PLUGINS } from "@mail/core/common/plugin/plugin_sets";
 import { mapSuggestionsToOptions, useSuggestion } from "@mail/core/common/suggestion_hook";
 import { propComputed, useSelection, useVisible } from "@mail/utils/common/hooks";
-import { generatePartnerMentionElement, trimEmptyBlocksAround } from "@mail/utils/common/format";
+import {
+    generatePartnerMentionElement,
+    htmlToTextContentInline,
+    trimEmptyBlocksAround,
+} from "@mail/utils/common/format";
 import { getInnerHtml } from "@mail/utils/common/html";
 import { isDragSourceExternalFile } from "@mail/utils/common/misc";
 import { Wysiwyg } from "@html_editor/wysiwyg";
@@ -67,6 +71,8 @@ const EDIT_CLICK_TYPE = {
     CANCEL: "cancel",
     SAVE: "save",
 };
+/** Amount of characters of the draft kept to preview it in the sidebar and in the chat bubbles. */
+const DRAFT_PREVIEW_LENGTH = 200;
 export const MENTION_AMOUNT_WARNING = 50;
 export const COMPOSER_TYPES = {
     NOTE: "note",
@@ -859,6 +865,11 @@ export class Composer extends Component {
 
     async sendMessage() {
         this.composerActions.activeAction?.actionPanelClose?.();
+        const channel = this.composer().thread?.channel;
+        if (channel) {
+            channel.draftPreview = "";
+            channel.hasDraft = false;
+        }
         if (this.props.composer.message) {
             this.editMessage();
             return;
@@ -1065,8 +1076,13 @@ export class Composer extends Component {
             replyToMessageId,
             fromFullComposer = this.props.composer.restoredFromFullComposer,
         }) => {
+            const channel = this.composer().thread?.channel;
             if (isHtmlEmpty(composerHtml)) {
                 await this.deleteSavedContent();
+                if (channel) {
+                    channel.draftPreview = "";
+                    channel.hasDraft = false;
+                }
             } else {
                 const db = new IndexedDB("mail");
                 await db.write("composer", this.props.composer.localId, {
@@ -1075,6 +1091,13 @@ export class Composer extends Component {
                     composerHtml: isMarkup(composerHtml) ? ["markup", composerHtml] : composerHtml,
                     fromFullComposer,
                 });
+                if (channel) {
+                    channel.draftPreview = htmlToTextContentInline(composerHtml).slice(
+                        0,
+                        DRAFT_PREVIEW_LENGTH
+                    );
+                    channel.hasDraft = true;
+                }
             }
         };
         if (this.state.isFullComposerOpen) {
