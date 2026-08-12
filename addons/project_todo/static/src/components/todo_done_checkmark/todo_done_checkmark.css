@@ -4,3 +4,29 @@
 .o_form_view .o_form_sheet .o_field_widget.o_field_todo_done_checkmark {
     width: initial;
 }
+
+/* Done animation: the check grows in from nothing, and the ring leaves its
+   edge once it has arrived. */
+@keyframes o-todo-donePop {
+    from { transform: scale(0); }
+    to { transform: scale(1); }
+}
+
+.o_todo_done_button,
+.o_todo_done_button_mobile {
+    position: relative;
+
+    /* Keyed on the click, not on `done_button_enabled`: that class is withheld
+       while the cursor stays on the checkmark, so the pop would land on the
+       mouse leaving instead of on the click. */
+    &.o-isJustDone {
+        --o-todo-donePop-duration: .2s;
+        --ringBurst-duration: .3s;
+        --ringBurst-delay: var(--o-todo-donePop-duration);
+        --ringBurst-scaleFrom: .67;
+
+        &::before {
+            animation: o-todo-donePop var(--o-todo-donePop-duration) ease-out both;
+        }
+    }
+}
