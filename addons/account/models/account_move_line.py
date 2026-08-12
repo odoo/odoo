@@ -915,20 +915,50 @@ class AccountMoveLine(models.Model):
     def _compute_totals(self):
         """ Compute 'price_subtotal' / 'price_total' outside of `_sync_tax_lines` because those values must be visible for the
         user on the UI with draft moves and the dynamic lines are synchronized only when saving the record.
+
+        Lines of the same move are rounded together (not one by one), matching the redistribution
+        '_sync_tax_lines' applies to 'balance' under the 'round_globally' rounding method.
         """
         AccountTax = self.env['account.tax']
+        groupable_display_types = ('product', 'non_deductible_product', 'non_deductible_product_total')
+
+        moves = self.env['account.move']
+        dirty_lines = self.env['account.move.line']
         for line in self:
             # TODO remove the need of cogs lines to have a price_subtotal/price_total
-            if line.display_type not in ('product', 'cogs', 'non_deductible_product', 'non_deductible_product_total') or not line.move_id:
+            if line.display_type not in (*groupable_display_types, 'cogs') or not line.move_id:
                 line.price_total = line.price_subtotal = False
-                continue
+            elif line.display_type == 'cogs':
+                # cogs lines carry no tax, so they're rounded on their own.
+                company = line.company_id or self.env.company
+                base_line = line.move_id._prepare_product_base_line_for_taxes_computation(line)
+                AccountTax._add_tax_details_in_base_line(base_line, company)
+                AccountTax._round_base_lines_tax_details([base_line], company)
+                line.price_subtotal = base_line['tax_details']['total_excluded_currency']
+                line.price_total = base_line['tax_details']['total_included_currency']
+            else:
+                moves |= line.move_id
+                dirty_lines |= line
 
-            company = line.company_id or self.env.company
-            base_line = line.move_id._prepare_product_base_line_for_taxes_computation(line)
-            AccountTax._add_tax_details_in_base_line(base_line, company)
-            AccountTax._round_base_lines_tax_details([base_line], company)
-            line.price_subtotal = base_line['tax_details']['total_excluded_currency']
-            line.price_total = base_line['tax_details']['total_included_currency']
+        # Use every relevant line of the move as the rounding basis, not just 'self': 'amount_currency'
+        # is a dependency of this compute too, so '_sync_tax_lines' writing it back would otherwise
+        # re-trigger this method one line at a time and undo the grouped rounding.
+        # Only lines actually in 'self' get written, so callers that preset 'price_subtotal' to bypass
+        # this compute (like a manual withholding amount) keep their value.
+        for move in moves:
+            company = move.company_id or self.env.company
+            group_lines = move.line_ids.filtered(lambda l: l.display_type in groupable_display_types)
+            base_lines = [move._prepare_product_base_line_for_taxes_computation(line) for line in group_lines]
+            AccountTax._add_tax_details_in_base_lines(base_lines, company)
+            AccountTax._round_base_lines_tax_details(base_lines, company)
+            for record, base_line in zip(group_lines, base_lines):
+                if record not in dirty_lines:
+                    continue
+                tax_details = base_line['tax_details']
+                record.price_subtotal = tax_details['total_excluded_currency'] + tax_details['delta_total_excluded_currency']
+                record.price_total = record.price_subtotal + sum(
+                    tax_data['tax_amount_currency'] for tax_data in tax_details['taxes_data']
+                )
 
     @api.depends('product_id', 'product_uom_id')
     def _compute_price_unit(self):

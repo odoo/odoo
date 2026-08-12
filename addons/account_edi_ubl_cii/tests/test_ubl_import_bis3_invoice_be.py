@@ -132,6 +132,35 @@ class TestUblImportBis3InvoiceBE(TestUblBis3Common, TestUblCiiBECommon):
             ],
         )
 
+    @freeze_time('2020-01-01')
+    def test_price_subtotal_agrees_with_balance(self):
+        """Importing a UBL invoice on a round_globally company used to leave price_subtotal out
+        of sync with the balance actually posted on lines nudged by the rounding redistribution.
+        """
+        self.assertEqual(
+            self.company_data['company'].tax_calculation_rounding_method, 'round_globally',
+            "This repro requires round_globally (the be_comp default) to trigger.",
+        )
+
+        invoice = self._import_invoice_as_attachment_on(
+            test_name='subtotal_agrees_with_balance',
+            journal=self.company_data['default_journal_sale'],
+        )
+
+        # The other two lines need a cent of rounding; round_globally nudges it onto this line
+        # instead, so its subtotal is 1000.01, not the 1000.00 the file declared for it alone.
+        big_line = invoice.invoice_line_ids.filtered(lambda l: l.quantity == 1)
+        self.assertEqual(big_line.price_subtotal, 1000.01)
+        self.assertEqual(big_line.balance, -1000.01)
+
+        # Every line's price_subtotal must agree with its posted balance.
+        for line in invoice.invoice_line_ids.filtered(lambda l: l.display_type == 'product'):
+            self.assertAlmostEqual(line.price_subtotal, -line.balance)
+
+        sum_of_displayed_price_subtotal = sum(invoice.invoice_line_ids.mapped('price_subtotal'))
+        self.assertEqual(sum_of_displayed_price_subtotal, 1066.67)
+        self.assertEqual(invoice.amount_untaxed, 1066.67)
+
     def test_import_embedded_pdf(self):
         """
         Importing an xml with embedded pdf should correctly import the
