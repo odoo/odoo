@@ -6,11 +6,13 @@ ProductTemplateAttributeLine._records = [
         id: 101,
         attribute_id: 7,
         product_template_value_ids: [101, 102],
+        active: true,
     },
     {
         id: 102,
         attribute_id: 101,
         product_template_value_ids: [103, 104],
+        active: true,
     },
     {
         id: 200,

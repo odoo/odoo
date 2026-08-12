@@ -72,23 +72,3 @@ export function downPaymentFirstOrder(amount) {
         Dialog.proceed({ title: "down payment", button: "Apply" }),
     ];
 }
-
-export function checkOrdersListEmpty() {
-    return [
-        ...ProductScreen.clickControlButton("Quotation / Order"),
-        {
-            content: "Check that the orders list is empty",
-            trigger: "p:contains(No record found)",
-        },
-    ];
-}
-
-export function checkOrdersListNotEmpty() {
-    return [
-        ...ProductScreen.clickControlButton("Quotation / Order"),
-        {
-            content: "Check that the orders list is not empty",
-            trigger: ".o_data_row",
-        },
-    ];
-}
