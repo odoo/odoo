@@ -1,5 +1,5 @@
 import { closestElement } from "@html_editor/utils/dom_traversal";
-import { URL_REGEX, cleanZWChars } from "./utils";
+import { URL_REGEX, cleanZWChars, deduceURLfromText } from "./utils";
 import { isImageUrl } from "@html_editor/utils/url";
 import { Plugin } from "@html_editor/plugin";
 import { childNodeIndex } from "@html_editor/utils/position";
@@ -54,7 +54,13 @@ export class LinkPastePlugin extends Plugin {
      */
     handlePasteTextUrl(selection, text) {
         const selectionIsInsideALink = !!closestElement(selection.anchorNode, "a");
+<<<<<<< e00ab26ac02890540e9aee3f4863a378cc197f1f
         const url = /^https?:\/\//i.test(text) ? text : "https://" + text;
+||||||| bed72230cab9cc743e57ac5772b82314fede5dfd
+        const url = /^https?:\/\//i.test(text) ? text : "http://" + text;
+=======
+        const url = deduceURLfromText(text);
+>>>>>>> 071536cd5dcba4056ee3d4a3bf6a466feae7020f
         if (selectionIsInsideALink) {
             this.handlePasteTextUrlInsideLink(text, url);
             return;
@@ -104,12 +110,20 @@ export class LinkPastePlugin extends Plugin {
     handlePasteTextMultiUrl(selection, splitAroundUrl) {
         const selectionIsInsideALink = !!closestElement(selection.anchorNode, "a");
         for (let i = 0; i < splitAroundUrl.length; i++) {
+<<<<<<< e00ab26ac02890540e9aee3f4863a378cc197f1f
             const url = /^https?:\/\//gi.test(splitAroundUrl[i])
                 ? splitAroundUrl[i]
                 : "https://" + splitAroundUrl[i];
+||||||| bed72230cab9cc743e57ac5772b82314fede5dfd
+            const url = /^https?:\/\//gi.test(splitAroundUrl[i])
+                ? splitAroundUrl[i]
+                : "http://" + splitAroundUrl[i];
+=======
+>>>>>>> 071536cd5dcba4056ee3d4a3bf6a466feae7020f
             // Even indexes will always be plain text, and odd indexes will always be URL.
             // A url cannot be transformed inside an existing link.
             if (i % 2 && !selectionIsInsideALink) {
+                const url = deduceURLfromText(splitAroundUrl[i]);
                 this.dependencies.dom.insert(
                     this.dependencies.link.createLink(url, splitAroundUrl[i])
                 );
