@@ -291,7 +291,6 @@ class InvoiceLlmService(models.AbstractModel):
                     headers=headers,
                     timeout=EXTRACT_TIMEOUT_SECONDS,
                 )
-                _circuit_record_success()
                 break
             except requests.Timeout as exc:
                 last_timeout = exc
@@ -404,18 +403,21 @@ class InvoiceLlmService(models.AbstractModel):
             )
             raise UserError(
                 _(
-                    "The AI service rejected the extraction request (HTTP %s): "
-                    "%s",
+                    "The AI service rejected the extraction request (HTTP %s, "
+                    "code %s): %s",
                     response.status_code,
+                    code or "unknown",
                     message or "no error detail",
                 ),
             )
 
-        # 200 — re-validate through the addon's own schema.
+        # 200 — re-validate through the addon's own schema, then re-arm the
+        # circuit breaker (a success clears the consecutive-failure counter).
         try:
             extraction = InvoiceExtraction.model_validate(
                 body.get("extraction") or body,
             )
+            _circuit_record_success()
         except Exception as exc:
             _logger.error(
                 "invoice_agent: response from %s failed schema validation: %s",

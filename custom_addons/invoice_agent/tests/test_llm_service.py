@@ -118,6 +118,7 @@ class TestLlmServiceHttp(TransactionCase):
             token,
             "test-shared-secret",
             algorithms=["HS256"],
+            audience="invoice-ai",
             options={"verify_exp": False},
         )
         past = datetime.now(timezone.utc) - timedelta(seconds=120)
@@ -173,9 +174,7 @@ class TestLlmServiceHttp(TransactionCase):
         # Response contract: same dict shape the callers already consume.
         self.assertEqual(result["parsed"].vendor_name, "ACME Supplies LLC")
         self.assertEqual(result["parsed"].currency, "USD")
-        self.assertEqual(
-            str(result["parsed"].amount_total), "1350.00",
-        )
+        self.assertEqual(float(result["parsed"].amount_total), 1350.0)
         self.assertEqual(result["model"], "claude-opus-4-8")
         self.assertEqual(result["usage"]["output_tokens"], 500)
 

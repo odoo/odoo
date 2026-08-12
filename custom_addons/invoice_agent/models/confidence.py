@@ -233,7 +233,7 @@ def _self_reported(payload):
         return None, {}
     overall = confidence.get("overall")
     return _as_float(overall), {
-        key: _as_float(confidence[key]) for key in FIELD_GROUPS
+        key: _as_float(confidence.get(key)) for key in FIELD_GROUPS
     }
 
 
