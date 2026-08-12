@@ -175,6 +175,9 @@ class AccountMove(models.Model):
                 lines = lines.filtered(lambda line: line.tax_ids if 'Base' in tax_tag_string else not line.tax_ids)
             return -self.direction_sign * sum(lines.mapped('price_subtotal'))
 
+        def get_base_amount_reverse_charge():
+            return get_base_amounts_from_tag("K_12") + get_base_amounts_from_tag("K_31")
+
         def compute_p_12(tag_names):
             """
                 Determines the KSeF tax rate code (P_12) based on the line's tax.
@@ -278,13 +281,14 @@ class AccountMove(models.Model):
             'get_amounts_from_tag': get_amounts_from_tag,
             'get_amounts_from_tag_in_PLN_currency': get_amounts_from_tag_in_PLN_currency,
             'get_base_amounts_from_tag': get_base_amounts_from_tag,
+            'get_base_amount_reverse_charge': get_base_amount_reverse_charge,
             'invoice_type': ksef_type,
             'related_invoices': self._l10n_pl_edi_get_related_invoices(),
             'correction_info': correction_info,
             'special_transactions': {'OSS_Base', 'OSS_Tax', 'Triangular Sale'} & invoice_tag_names,
             'triangular_transaction': '1' if 'Triangular Sale' in invoice_tag_names else '2',
             'prefiks_podatnika': bool({'K_21', 'K_12', 'Triangular Sale'} & invoice_tag_names),
-            'reverse_charge': any(invoice_line_vals['P_12'] == 'oo' for invoice_line_vals in invoice_lines_vals),
+            'reverse_charge': any(invoice_line_vals['P_12'] in ('np II', 'oo') for invoice_line_vals in invoice_lines_vals),
         }
 
     def _l10n_pl_edi_render_xml(self):
