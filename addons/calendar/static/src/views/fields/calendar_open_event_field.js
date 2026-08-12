@@ -8,6 +8,7 @@ export class CalendarOpenEventField extends Component {
     props = useProps(charFieldProps);
 
     setup() {
+        this.actionService = useService("action");
         this.orm = useService("orm");
     }
     async onClickOpenRecord() {

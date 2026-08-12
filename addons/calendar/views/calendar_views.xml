@@ -423,7 +423,7 @@
                 />
                 <field name="videocall_location" widget="CopyClipboardURL" text="Join Video Call"
                        options="{'icon': 'videocam', 'icon_class': 'oi-filled'}" invisible="not videocall_location"/>
-                <field name="res_model_name" invisible="not res_model_name" widget="calendar_open_event"
+                <field name="res_model_name" invisible="not res_id" widget="calendar_open_event"
                        options="{'icon': 'link'}"/>
                 <field name="alarm_ids" invisible="not alarm_ids" options="{'icon': 'notifications'}"/>
                 <field name="categ_ids" invisible="not categ_ids" options="{'icon': 'label', 'color_field': 'color', 'on_tag_click': 'edit_color'}"/>
