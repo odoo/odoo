@@ -107,7 +107,7 @@ class ResConfigSettings(models.TransientModel):
     def _update_l10n_in_feature(self, column):
         """ This way, after installing the module, the field will already be set for the active company. """
         if not column_exists(self.env.cr, "res_company", column):
-            create_column(self.env.cr, "res_company", column, "boolean")
+            create_column(self.env.cr, "res_company", column, "bool")
             self.env.cr.execute(SQL(
                 f"""
                     UPDATE res_company
