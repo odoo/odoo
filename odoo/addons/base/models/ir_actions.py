@@ -1039,7 +1039,7 @@ class IrActionsServer(models.Model):
             target_records = reduce(getitem, path[:-1], starting_record)
             if self.update_property and starting_record.get_property_definition(self.update_field_id.name + "." + self.update_property):
                 value = vals[self.id]
-                property_value = starting_record._fields[self.update_field_id.name].convert_to_export(target_records, starting_record)
+                property_value = starting_record._fields[self.update_field_id.name].convert_to_export(target_records, starting_record) or {}
                 if self.value_field_to_show == 'x2many':
                     value = property_value.get(self.update_property) or []
                     command = vals[self.id][0]
