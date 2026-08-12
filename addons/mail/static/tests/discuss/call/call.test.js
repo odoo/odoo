@@ -33,6 +33,7 @@ import { ChannelMember } from "@mail/discuss/core/common/channel_member_model";
 
 import {
     advanceTime,
+    animationFrame,
     beforeEach,
     describe,
     expect,
@@ -1461,7 +1462,7 @@ test("Can see raised hands from other call participants", async () => {
     await contains(".o-discuss-Call-notification:contains('Bob raised their hand')");
 });
 
-test("Can see videos from other call participants", async () => {
+test("rebind remote video when its stream changes", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const channelMemberId = pyEnv["discuss.channel.member"].create({
@@ -1475,8 +1476,16 @@ test("Can see videos from other call participants", async () => {
     await click("[title='Join Call']");
     await contains(".o-discuss-CallParticipantCard[aria-label='Bob']");
     await bobRemote.updateConnectionState("connected");
-    await bobRemote.updateUpload("screen", createVideoStream().getVideoTracks()[0]);
-    await contains(".o-discuss-CallParticipantCard[aria-label='Bob'] video");
+    const selector = ".o-discuss-CallParticipantCard[aria-label='Bob'] video";
+    const firstTrack = createVideoStream().getVideoTracks()[0];
+    await bobRemote.updateUpload("camera", firstTrack);
+    await contains(selector);
+    expect(queryFirst(selector).srcObject.getVideoTracks()[0]).toBe(firstTrack);
+
+    const replacementTrack = createVideoStream().getVideoTracks()[0];
+    await bobRemote.updateUpload("camera", replacementTrack);
+    await animationFrame();
+    expect(queryFirst(selector).srcObject.getVideoTracks()[0]).toBe(replacementTrack);
 });
 
 test("show all participants on other user stops screen share", async () => {

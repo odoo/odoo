@@ -1,11 +1,10 @@
 import {
     Component,
-    onMounted,
-    onPatched,
     onWillUnmount,
     signal,
     status,
     t,
+    useEffect,
     useListener,
     useProps,
 } from "@odoo/owl";
@@ -29,9 +28,17 @@ export class CallParticipantVideo extends Component {
                 .optional(),
             session: t.instanceOf(this.store["discuss.channel.rtc.session"].Class),
             type: t.selection(["camera", "screen"]),
+            videoStream: t.instanceOf(MediaStream),
         });
-        onMounted(() => this._update());
-        onPatched(() => this._update());
+        useEffect(() => {
+            const stream = this.props.videoStream;
+            const video = this.root();
+            if (!video || video.srcObject === stream) {
+                return;
+            }
+            video.srcObject = stream;
+            video.load();
+        });
         onWillUnmount(() => {
             if (this.root()) {
                 // A <video>/<audio> element with an active srcObject is kept alive by the
@@ -45,18 +52,6 @@ export class CallParticipantVideo extends Component {
         useListener(this.env.bus, "RTC-SERVICE:PLAY_MEDIA", async () => {
             await this.play();
         });
-    }
-
-    _update() {
-        if (!this.root()) {
-            return;
-        }
-        if (!this.props.session || !this.props.session.getStream(this.props.type)) {
-            this.root().srcObject = undefined;
-        } else {
-            this.root().srcObject = this.props.session.getStream(this.props.type);
-        }
-        this.root().load();
     }
 
     async play() {

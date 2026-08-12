@@ -35,7 +35,13 @@
                     </div>
                 </div>
             </t>
-            <CallParticipantVideo t-elif="this.hasVideo" session="this.rtcSession" type="this.props.cardData.type" inset="this.props.inset"/>
+            <CallParticipantVideo
+                t-elif="this.hasVideo"
+                session="this.rtcSession"
+                type="this.props.cardData.type"
+                videoStream="this.props.cardData.videoStream"
+                inset="this.props.inset"
+            />
             <div t-else="" class="o-discuss-CallParticipantCard-avatar d-flex align-items-center justify-content-center h-100 w-100 rounded-3" t-att-class="{ 'o-minimized': this.props.minimized, 'o-isRemoteVideo': this.isRemoteVideo, 'o-selfInCall': this.isActiveCall }" draggable="false">
                 <img t-if="!this.showRemoteWarning" alt="Avatar" class="rounded-circle border-5 object-fit-cover" t-att-src="this.channelMember?.avatarUrl" draggable="false" t-att-class="{
                     'o-isTalking': this.isTalking,
