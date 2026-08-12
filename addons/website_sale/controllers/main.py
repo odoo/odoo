@@ -991,35 +991,13 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 for value_id in attribute_values.split(",")
                 if value_id and value_id.isdigit()
             }
+            combination = product._get_combination_from_attribute_values(attribute_value_ids)
             grouped_attributes_values = (
-                self
-                .env["product.attribute.value"]
-                .browse(attribute_value_ids)
-                .exists()
-                .sorted()
-                .grouped("attribute_id")
+                combination.product_attribute_value_id.sorted().grouped("attribute_id")
             )
             return {"redirect_url": self._get_url_with_attribute_values(grouped_attributes_values)}
         if attribute_value_ids:
-            combination = product.attribute_line_ids.mapped(
-                lambda ptal: (
-                    (
-                        ptal.product_template_value_ids.filtered(
-                            lambda ptav: (
-                                ptav.ptav_active
-                                and ptav.product_attribute_value_id.id in attribute_value_ids
-                            )
-                        )[:1]
-                    )
-                    or (
-                        ptal.product_template_value_ids.filtered(
-                            lambda ptav: (
-                                ptav.ptav_active and ptal.attribute_id.display_type != "multi"
-                            )
-                        )[:1]
-                    )
-                )
-            )
+            combination = product._get_combination_from_attribute_values(attribute_value_ids)
             combination_info = product._get_combination_info(
                 combination=combination.with_env(self.env)
             )
