@@ -406,7 +406,6 @@ class TestUi(TestPointOfSaleHttpCommon, OnlinePaymentCommon):
                 'price_unit': 15.28,
                 'price_subtotal': 15.28,
                 'price_subtotal_incl': 15.28,
-                'pack_lot_ids': [],
             }]],
             'payment_ids': [[0, 0, {
                 'amount': 10.0,
