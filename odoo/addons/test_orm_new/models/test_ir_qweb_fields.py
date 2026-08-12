@@ -3,7 +3,7 @@ from odoo import fields, models
 
 class TestOrmIrQwebFields(models.Model):
     _name = 'test_orm.ir_qweb_fields'
-    _description = 'Test ORM ir.qweb.fields'
+    _description = 'Test ORM ir_qweb_fields'
 
     char = fields.Char()
     integer = fields.Integer()

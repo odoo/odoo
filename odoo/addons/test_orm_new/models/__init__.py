@@ -10,3 +10,4 @@ from . import test_config_settings
 from . import test_indexed_translation
 from . import test_inherits
 from . import test_ir_qweb_fields
+from . import test_ir_rules
