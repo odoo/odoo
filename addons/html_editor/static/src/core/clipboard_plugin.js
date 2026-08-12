@@ -21,6 +21,7 @@ import {
     getBaseContainerSelector,
 } from "@html_editor/utils/base_container";
 import { DIRECTIONS } from "../utils/position";
+import { EMAIL_REGEX } from "@html_editor/main/link/utils";
 
 /**
  * @typedef { import("./selection_plugin").EditorSelection } EditorSelection
@@ -101,7 +102,10 @@ export const CLIPBOARD_WHITELISTS = {
     styledTags: ["SPAN", "B", "STRONG", "I", "S", "U", "FONT", "TD"],
 };
 
-const ONLY_LINK_REGEX = /^(https?:\/\/)?([\w-]+\.)+[\w-]+(\/[\w-./?%&=]*)?$/i;
+const ONLY_LINK_REGEX = new RegExp(
+    `^(https?:\\/\\/)?([\\w-]+\\.)+[\\w-]+(\\/[\\w-./?%&=]*)?$|${EMAIL_REGEX.source}`,
+    "i"
+);
 
 /**
  * @typedef {Object} ClipboardShared
