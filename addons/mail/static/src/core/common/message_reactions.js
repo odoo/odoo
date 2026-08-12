@@ -3,7 +3,7 @@ import { Component, signal, t, useProps } from "@odoo/owl";
 import { useMessageActions } from "@mail/core/common/message_actions";
 import { MessageReactionList, openReactionMenuType } from "@mail/core/common/message_reaction_list";
 import { QuickReactionMenu } from "@mail/core/common/quick_reaction_menu";
-import { propComputed } from "@mail/utils/common/hooks";
+import { propComputed, propSignal } from "@mail/utils/common/hooks";
 import { useService } from "@web/core/utils/hooks";
 import { useEmojiPicker } from "@web/core/emoji_picker/emoji_picker";
 import { isMobileOS } from "@web/core/browser/feature_detection";
@@ -18,6 +18,7 @@ export class MessageReactions extends Component {
         super.setup();
         this.store = useService("mail.store");
         this.message = propComputed("message", t.instanceOf(this.store["mail.message"]));
+        this.isReadOnly = propSignal("isReadOnly", t.boolean().optional(false));
         this.openReactionMenu = useProps.static(
             "openReactionMenu",
             openReactionMenuType(this.store)

@@ -31,6 +31,7 @@ import { discussComponentRegistry } from "./discuss_component_registry";
 import { NotificationMessage } from "./notification_message";
 import {
     MessageSelectionState,
+    propComputed,
     useForwardRefsToParent,
     useLongPress,
 } from "@mail/utils/common/hooks";
@@ -83,7 +84,6 @@ export class Message extends Component {
             className: t.string().optional(),
             hasActions: t.boolean().optional(true),
             isFirstMessage: t.boolean().optional(),
-            isReadOnly: t.boolean().optional(),
             message: t.instanceOf(this.store["mail.message"]),
             messageRefs: t.instanceOf(Map).optional(),
             messageSearch: t.instanceOf(MessageSearchState).optional(),
@@ -93,6 +93,7 @@ export class Message extends Component {
             squashed: t.boolean().optional(),
             thread: t.instanceOf(this.store["mail.thread"]).optional(),
         });
+        this.isReadOnly = propComputed("isReadOnly", t.boolean().optional());
         this.onParentMessageClick = useProps.static(
             "onParentMessageClick",
             onParentMessageClickType(this.store).optional()
@@ -329,7 +330,7 @@ export class Message extends Component {
     }
 
     get isEditing() {
-        return !this.props.isReadOnly && this.props.message.composer;
+        return !this.isReadOnly() && this.props.message.composer;
     }
 
     get message() {

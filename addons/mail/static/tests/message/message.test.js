@@ -1361,8 +1361,14 @@ test("Notification Sent", async () => {
     await click(".o-mail-Message-notification");
     await contains(".o-mail-MessageNotificationPopover");
     await contains(".o-mail-MessageNotificationPopover i", { count: 2 });
-    expect(".o-mail-MessageNotificationPopover i:first[data-icon='check']").toHaveAttribute("data-icon", "check");
-    expect(".o-mail-MessageNotificationPopover i:last[data-icon='check']").toHaveAttribute("data-icon", "check");
+    expect(".o-mail-MessageNotificationPopover i:first[data-icon='check']").toHaveAttribute(
+        "data-icon",
+        "check"
+    );
+    expect(".o-mail-MessageNotificationPopover i:last[data-icon='check']").toHaveAttribute(
+        "data-icon",
+        "check"
+    );
     await contains(".o-mail-MessageNotificationPopover:text('ToSomeone CcSomeoneInCc')");
 });
 
@@ -1543,6 +1549,46 @@ test("Can delete a message", async () => {
     );
     await click("button:text('Delete')");
     await contains(".o-mail-Message:has(:text('This message has been removed'))");
+});
+
+test("Message in message delete dialog should be read-only", async () => {
+    // The message is meant for preview, not to trigger action such as 'Add a reaction'
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "general",
+        channel_type: "channel",
+    });
+    pyEnv["mail.message"].create({
+        author_id: serverState.partnerId,
+        body: "not empty",
+        model: "discuss.channel",
+        subject: "Hello, wanderer",
+        res_id: channelId,
+        message_type: "comment",
+        reaction_ids: [
+            pyEnv["mail.message.reaction"].create({
+                content: "😅",
+                partner_id: serverState.partnerId,
+            }),
+        ],
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-MessageReaction");
+    await contains(".o-mail-MessageReaction:text(😅 1)");
+    await contains(".o-mail-MessageReactions [title='Add a Reaction']");
+    const messageActionsSelector = ".o-mail-Message-actions";
+    await contains(messageActionsSelector);
+    await click(".o-mail-Message [title='Expand']");
+    await click(".o-dropdown-item:text('Delete')");
+    await contains(
+        ".modal-body p:text('Are you sure you want to permanently delete this message?')"
+    );
+    await contains(".modal .pe-none .o-mail-Message"); // pe-none around message prevents any button click
+    await contains(".modal .o-mail-MessageReaction");
+    await contains(".modal .o-mail-MessageReaction:text(😅 1)");
+    await contains(".modal .o-mail-MessageReactions [title='Add a Reaction']", { count: 0 });
+    await contains(`.modal ${messageActionsSelector}`, { count: 0 });
 });
 
 test("Clear message body should not open message delete dialog if it has attachments", async () => {
