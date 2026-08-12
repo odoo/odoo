@@ -134,6 +134,7 @@ patch(ControlButtons.prototype, {
             title: _t("Enter Code"),
             placeholder: _t("Gift card or Discount code"),
             size: "md",
+            removeNewLines: true,
             getPayload: async (code) => {
                 code = code.trim();
                 if (code === "") {

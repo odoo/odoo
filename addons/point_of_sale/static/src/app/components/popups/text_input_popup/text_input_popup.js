@@ -11,6 +11,7 @@ export class TextInputPopup extends Component {
         startingValue: t.string().optional(""),
         placeholder: t.string().optional(""),
         rows: t.number().optional(1),
+        removeNewLines: t.boolean().optional(),
         getPayload: t.function(),
         close: t.function(),
     });
@@ -51,6 +52,15 @@ export class TextInputPopup extends Component {
             if (this.state.inputValue.trim()) {
                 this.confirm();
             }
+        }
+    }
+
+    onPaste(ev) {
+        if (this.props.removeNewLines) {
+            ev.preventDefault();
+            const pastedText = ev.clipboardData.getData("text");
+            const cleanedText = pastedText.replace(/\r?\n/g, "");
+            document.execCommand("insertText", false, cleanedText);
         }
     }
 }

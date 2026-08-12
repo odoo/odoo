@@ -1,3 +1,55 @@
 .pos-coupon-rewards .coupon-container {
     font-size: 75%;
 }
+
+.o_reward-icon-active {
+    color: #ffc107;
+}
+
+.o_catch_attention_reward {
+    position: relative;
+}
+
+.o_reward-star {
+    position: absolute;
+    inset: 50% auto auto 50%;
+    z-index: 1;
+    color: #ffc107;
+    font-size: 1.5em;
+    line-height: 1;
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(.4);
+    text-shadow: 0 0 .15em rgba(255, 193, 7, .8), 0 0 .35em rgba(255, 193, 7, .5);
+    animation: rewardStar 2s ease-in-out infinite;
+}
+
+.o_catch_attention_reward > i {
+    animation: rewardDots 2s ease-in-out infinite;
+}
+
+@keyframes rewardDots {
+    0%, 15%, 85%, 100% {
+        opacity: 1;
+    }
+    25%, 70% {
+        opacity: 0;
+    }
+    78% {
+        opacity: .5;
+    }
+}
+
+@keyframes rewardStar {
+    0%, 20%, 75%, 100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(.4);
+    }
+    30% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+    30%, 65% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
