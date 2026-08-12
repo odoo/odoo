@@ -8,6 +8,8 @@ export class CalendarEvent extends Record {
     name;
     /** @type {String} */
     location;
+    /** @type {String} */
+    videocall_location;
     start = fields.Datetime();
     stop = fields.Datetime();
     partner_ids = fields.Many("res.partner");

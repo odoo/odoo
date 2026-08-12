@@ -9,6 +9,7 @@ import { propComputed } from "@mail/utils/common/hooks";
 import { Component, computed, onMounted, onWillUnmount, t, useProps } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
+import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
 import { pick } from "@web/core/utils/objects";
@@ -43,6 +44,15 @@ export class Activity extends Component {
 
     get displayName() {
         return this.activity().summary || this.activity().display_name;
+    }
+
+    get hasMailButton() {
+        const activity = this.activity();
+        return (
+            activity.state !== "done" &&
+            activity.activity_type_id?.id === (this.store.emailActivityTypeId ?? false) && // type is the built-in email type
+            activity.mail_template_ids.length == 0
+        );
     }
 
     get tooltipInfo() {
@@ -80,6 +90,52 @@ export class Activity extends Component {
             activity: this.activity,
             onActivityChanged: this.onActivityChanged,
         });
+    }
+
+    /**
+     * For activity of type email, open email composer and send message then mark activity as done.
+     */
+    async onClickMail() {
+        const activity = this.activity();
+        const thread = this.thread();
+        const recipients = [
+            ...thread.suggestedRecipients,
+            ...thread.additionalRecipients
+        ].filter((r) => r.partner_id);
+        this.action.doAction(
+            {
+                type: "ir.actions.act_window",
+                name: _t("Compose Email"),
+                view_mode: "form",
+                res_model: "mail.compose.message",
+                views: [[false, "form"]],
+                target: "new",
+                view_id: false,
+                context: {
+                    default_composition_mode: "comment",
+                    default_model: activity.res_model,
+                    default_res_ids: [activity.res_id],
+                    default_partner_ids: recipients
+                        .filter((r) => r.recipient_type !== "cc")
+                        .map((r) => r.partner_id),
+                    default_partner_cc_ids: recipients
+                        .filter((r) => r.recipient_type === "cc")
+                        .map((r) => r.partner_id),
+                    force_email: true,
+                },
+            },
+            {
+                onClose: async (args) => {
+                    if (args?.dismiss || args?.special) {
+                        // Close or Discard
+                        return;
+                    }
+                    // Mark done
+                    await activity.markAsDone();
+                    this.onActivityChanged(thread);
+                },
+            }
+        );
     }
 
     onClickMarkAsDone(ev) {
