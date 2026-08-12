@@ -1,0 +1,19 @@
+.o-mail-NotificationItem-text:has(.o-mail-MessagingMenuItem-draft) {
+    &, &.o-muted {
+        opacity: 1;
+    }
+    .o-mail-MessagingMenuItem-body {
+        opacity: var(--mail-NotificationItem-textOpacity, .75);
+    }
+    &.o-muted .o-mail-MessagingMenuItem-body {
+        opacity: var(--mail-NotificationItem-textMutedOpacity, .5);
+    }
+}
+
+.o-mail-MessagingMenuItem-draft {
+    opacity: .75;
+
+    .o-mail-NotificationItem:not(.o-interest) & {
+        opacity: calc(.75 / var(--mail-NotificationItem-notInterestOpacity, .875));
+    }
+}

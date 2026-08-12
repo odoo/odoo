@@ -252,7 +252,7 @@ registerStoreHandler(
         const DiscussChannel = this.env["discuss.channel"];
         /** @type {import("mock_models").DiscussChannelMember} */
         const DiscussChannelMember = this.env["discuss.channel.member"];
-        const { tab_id, filter_ids, exclude_ids, limit, search_term } = params;
+        const { tab_id, filter_ids, exclude_ids, limit, search_term, draft_ids = [] } = params;
         const channelDomain = _get_menu_tab_full_domain(this.env, tab_id, filter_ids);
         if (exclude_ids?.length) {
             channelDomain.push(["id", "not in", exclude_ids]);
@@ -261,14 +261,14 @@ registerStoreHandler(
             channelDomain.push(["name", "ilike", search_term]);
         }
         const resolvedDomain = _resolve_self_member_domain.call(this, channelDomain);
-        // Favorites first, plus any tab-specific priority.
+        // Favorites and drafts first, plus any tab-specific priority.
         const selfFavoriteChannelIds = DiscussChannelMember._filter([
             ["is_favorite", "=", true],
         ]).map((m) => m.channel_id);
         const priorityDomain = messagingMenuHelpers._get_menu_tab_priority_domain(this.env, tab_id);
         const priority = [
             "|",
-            ["id", "in", selfFavoriteChannelIds],
+            ["id", "in", [...selfFavoriteChannelIds, ...draft_ids]],
             ...(priorityDomain
                 ? _resolve_self_member_domain.call(this, priorityDomain)
                 : [["id", "=", false]]),

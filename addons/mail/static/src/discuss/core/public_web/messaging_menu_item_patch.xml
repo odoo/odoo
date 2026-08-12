@@ -19,6 +19,10 @@
     <xpath expr="//t[@t-set-slot='name-after']" position="inside">
         <span t-if="this.channel?.correspondent?.partner_id?.statusSubtitle()" class="mw-100 smaller text-truncate"><t t-call="mail.statusSubtitle" partner="this.channel.correspondent.partner_id"/></span>
     </xpath>
+    <xpath expr="//t[@t-set-slot='body']/span" position="before">
+        <span t-if="this.channel?.hasDraft" class="o-mail-MessagingMenuItem-draft badge border border-danger text-danger fw-normal rounded-1 px-1 py-0 me-1 align-baseline overflow-visible">Draft</span>
+        <MessageSeenIndicator t-elif="this.channel?.newestPersistentOfAllMessage?.showSeenIndicator(this.channel.thread)" message="this.channel.newestPersistentOfAllMessage"/>
+    </xpath>
     <xpath expr="//t[@t-set-slot='icon']" position="inside">
         <CountryFlag t-if="this.channel?.showCorrespondentCountry" country="this.channel.correspondentCountry" class="'o-mail-NotificationItem-country position-absolute border shadow-sm'"/>
     </xpath>

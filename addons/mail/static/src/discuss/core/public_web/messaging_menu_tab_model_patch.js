@@ -4,6 +4,9 @@ import { fields } from "@mail/model/export";
 
 import { patch } from "@web/core/utils/patch";
 
+/** Local storage key of `DiscussChannel.draftPreview`. */
+const DRAFT_PREVIEW_KEY = /^discuss\.channel,(\d+):draftPreview$/;
+
 /** @type {import("models").MessagingMenuTab} */
 const messagingMenuTabPatch = {
     setup() {
@@ -65,6 +68,22 @@ const messagingMenuTabPatch = {
                     c.thread.isLoaded
             )
             .map((c) => c.id);
+    },
+
+    /** @override */
+    _fetchPage(filterIds, params) {
+        if (this.recordType !== "discuss.channel") {
+            return super._fetchPage(...arguments);
+        }
+        // Drafts only live in this browser: the server needs their ids to load them first.
+        const draftIds = [];
+        for (let i = 0; i < localStorage.length; i++) {
+            const id = localStorage.key(i).match(DRAFT_PREVIEW_KEY)?.[1];
+            if (id) {
+                draftIds.push(Number(id));
+            }
+        }
+        return super._fetchPage(filterIds, { ...params, draft_ids: draftIds });
     },
 };
 patch(MessagingMenuTab.prototype, messagingMenuTabPatch);
