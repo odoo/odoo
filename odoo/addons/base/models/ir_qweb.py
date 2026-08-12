@@ -1067,7 +1067,7 @@ class IrQweb(models.AbstractModel):
         assert isinstance(self, IrQweb)
         ref = self._get_template_info(template)['id'] if isinstance(template, (int, str)) else None
 
-        code, options, def_name, error = self._generate_code(template)
+        code, options, compiled_exprs, def_name, error = self._generate_code(template)
 
         if error:
             Error, message, stack = error
@@ -1083,17 +1083,21 @@ class IrQweb(models.AbstractModel):
             return {'not_found_template': not_found_template}, 'not_found_template', frozendict(options), ''
 
         wrap_code = '\n'.join([
-            "def generate_functions():",
+            # `qweb_expr` is passed directly in param to not inject it in globals (because contains internal code which depends on the function)
+            "def generate_functions(qweb_expr):",
             indent_code(code, 1),
             f"    code = {code!r}",
             "    return template_functions, code",
         ])
         compiled = compile(wrap_code, f"<{ref}>", 'exec')
-        globals_dict = self.__prepare_globals(options)
+        globals_dict = self.__prepare_globals()
         globals_dict['__builtins__'] = globals_dict  # So that unknown/unsafe builtins are never added.
         unsafe_eval(compiled, globals_dict)
 
-        template_functions, code = globals_dict['generate_functions']()
+        qweb_expr = lambda id_, values: compiled_exprs[id_](values)
+
+        template_functions, code = globals_dict['generate_functions'](qweb_expr)
+        # Template functions make refrence to `qweb_expr`
         return template_functions, def_name, frozendict(options), code
 
     def _generate_code(self, template: int | str | etree._Element):
@@ -1150,6 +1154,8 @@ class IrQweb(models.AbstractModel):
         compile_context['root'] = element.getroottree()
         # Reference to the last node being compiled. It is mainly used for debugging and displaying error messages.
         compile_context['_qweb_error_path_xml'] = compile_context.get('_qweb_error_path_xml', [None, None, None])
+        # Reference to expressions
+        compile_context['_qweb_exprs'] = {}
 
         compile_context['nsmap'] = {
             ns_prefix: str(ns_definition)
@@ -1165,7 +1171,6 @@ class IrQweb(models.AbstractModel):
             key: compile_context.get(key, False)
             for key in self._get_template_cache_keys() + ['ref', 'ref_name']
         }
-        options['_qweb_exprs'] = compile_context['_qweb_exprs'] = {}
 
         # generate code
         ref_name = compile_context['ref_name'] or ''
@@ -1221,7 +1226,7 @@ class IrQweb(models.AbstractModel):
         compile_context['_qweb_error_path_xml'][1] = None
         compile_context['_qweb_error_path_xml'][2] = None
 
-        return (code, options, def_name, None)
+        return (code, options, compile_context['_qweb_exprs'], def_name, None)
 
     # read and load input template
 
@@ -1400,7 +1405,7 @@ class IrQweb(models.AbstractModel):
         context = {'dev_mode': 'qweb' in tools.config['dev_mode']}
         return self.with_context(**context)
 
-    def __prepare_globals(self, compile_context):
+    def __prepare_globals(self):
         """ Prepare the global context that will sent to eval the qweb
         generated code.
         """
@@ -1415,7 +1420,6 @@ class IrQweb(models.AbstractModel):
             'QwebContent': QwebContent,
             'ValueError': ValueError,
             **_BUILTINS,
-            **compile_context['_qweb_exprs'],
         }
 
     # helpers for compilation
@@ -1683,12 +1687,12 @@ class IrQweb(models.AbstractModel):
         code_obj = compile_codeobj(expression)
         assert_valid_codeobj(_SAFE_QWEB_OPCODES, code_obj, expr)
 
-        id_expr = f'expr_{len(compile_context['_qweb_exprs'])}'
-        compile_context['_qweb_exprs'][id_expr] = (
+        expr_name = compile_context['make_name']('expr')
+        compile_context['_qweb_exprs'][expr_name] = (
             lambda values: eval_codeobj(code_obj, {'values': values}, expression)
         )
 
-        return f"({id_expr}(values))"
+        return f"(qweb_expr({expr_name!r}, values))"
 
     def _compile_bool(self, attr, default=False):
         """Convert the statements as a boolean."""
