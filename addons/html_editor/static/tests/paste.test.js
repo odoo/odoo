@@ -1,5 +1,5 @@
 import { CLIPBOARD_WHITELISTS } from "@html_editor/core/clipboard_plugin";
-import { beforeEach, describe, expect, test } from "@odoo/hoot";
+import { beforeEach, describe, expect, manuallyDispatchProgrammaticEvent, test } from "@odoo/hoot";
 import { manuallyDispatchProgrammaticEvent as dispatch, press, waitFor } from "@odoo/hoot-dom";
 import { animationFrame, tick } from "@odoo/hoot-mock";
 import { onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
@@ -3189,6 +3189,106 @@ describe("link", () => {
                     pasteText(editor, "`http://www.xyz.com`");
                 },
                 contentAfter: '<p>ab`<a href="http://www.xyz.com">http://www.xyz.com</a>`[]cd</p>',
+            });
+        });
+
+        test("should transform a mail URL when pasting a mail as text content", async () => {
+            await testEditor({
+                contentBefore: "<p>ab[]</p>",
+                stepFunction: async (editor) => {
+                    pasteText(editor, "user@domain.com");
+                },
+                contentAfter: '<p>ab<a href="mailto:user@domain.com">user@domain.com</a>[]</p>',
+            });
+        });
+
+        test("should transform a mail URL when pasting a mail as text content (2)", async () => {
+            await testEditor({
+                contentBefore: "<p>ab[]</p>",
+                stepFunction: async (editor) => {
+                    pasteText(editor, "mailto:user@domain.com");
+                },
+                contentAfter:
+                    '<p>ab<a href="mailto:user@domain.com">mailto:user@domain.com</a>[]</p>',
+            });
+        });
+
+        test("should transform a mail URL when pasting a mail as text content (3)", async () => {
+            await testEditor({
+                contentBefore: "<p>ab[]</p>",
+                stepFunction: async (editor) => {
+                    pasteText(editor, "MAILTO:user@domain.com");
+                },
+                contentAfter:
+                    '<p>ab<a href="MAILTO:user@domain.com">MAILTO:user@domain.com</a>[]</p>',
+            });
+        });
+
+        test("should transform a mail URL when pasting a mail as html content", async () => {
+            const { el } = await setupEditor("<p>ab[]</p>");
+
+            const clipboardData = new DataTransfer();
+            clipboardData.setData(
+                "text/html",
+                '<span style="color: rgb(0, 0, 0);font-weight: normal;">user@domain.com</span>'
+            );
+            clipboardData.setData("text/plain", "user@domain.com");
+            await manuallyDispatchProgrammaticEvent(el, "paste", { clipboardData });
+            expect(cleanLinkArtifacts(getContent(el))).toBe(
+                '<p>ab<a href="mailto:user@domain.com">user@domain.com</a>[]</p>'
+            );
+        });
+
+        test("should transform a mail URL when pasting a mail as html content (2)", async () => {
+            const { el } = await setupEditor("<p>ab[]</p>");
+
+            const clipboardData = new DataTransfer();
+            clipboardData.setData(
+                "text/html",
+                '<span style="color: rgb(0, 0, 0);font-weight: normal;">mailto:user@domain.com</span>'
+            );
+            clipboardData.setData("text/plain", "mailto:user@domain.com");
+            await manuallyDispatchProgrammaticEvent(el, "paste", { clipboardData });
+            expect(cleanLinkArtifacts(getContent(el))).toBe(
+                '<p>ab<a href="mailto:user@domain.com">mailto:user@domain.com</a>[]</p>'
+            );
+        });
+
+        test("should transform a mail URL when pasting a mail as odoo html", async () => {
+            const { el } = await setupEditor("<p>ab[]</p>");
+
+            const clipboardData = new DataTransfer();
+            clipboardData.setData("application/vnd.odoo.odoo-editor", "<p>user@domain.com</p>");
+            clipboardData.setData("text/plain", "user@domain.com");
+            await manuallyDispatchProgrammaticEvent(el, "paste", { clipboardData });
+            expect(cleanLinkArtifacts(getContent(el))).toBe(
+                '<p>ab<a href="mailto:user@domain.com">user@domain.com</a>[]</p>'
+            );
+        });
+
+        test("should transform a mail URL when pasting a mail as odoo html (2)", async () => {
+            const { el } = await setupEditor("<p>ab[]</p>");
+
+            const clipboardData = new DataTransfer();
+            clipboardData.setData(
+                "application/vnd.odoo.odoo-editor",
+                "<p>mailto:user@domain.com</p>"
+            );
+            clipboardData.setData("text/plain", "mailto:user@domain.com");
+            await manuallyDispatchProgrammaticEvent(el, "paste", { clipboardData });
+            expect(cleanLinkArtifacts(getContent(el))).toBe(
+                '<p>ab<a href="mailto:user@domain.com">mailto:user@domain.com</a>[]</p>'
+            );
+        });
+
+        test("should transform a mail URL when pasting multiple URLs among text", async () => {
+            await testEditor({
+                contentBefore: "<p>ab []</p>",
+                stepFunction: async (editor) => {
+                    pasteText(editor, "visit https://google.com user@domain.com");
+                },
+                contentAfter:
+                    '<p>ab visit <a href="https://google.com">https://google.com</a> <a href="mailto:user@domain.com">user@domain.com</a>[]</p>',
             });
         });
     });
