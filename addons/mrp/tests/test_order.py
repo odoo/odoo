@@ -2875,7 +2875,7 @@ class TestMrpOrder(TestMrpCommon, MailCase):
         self.assertEqual(mo.state, 'done')
 
         mo_2 = mo.production_group_id.production_ids - mo
-        wo_4, wo_5, wo_6 = mo_2.workorder_ids
+        wo_5, wo_6, wo_4 = mo_2.workorder_ids
 
         self.assertEqual(wo_4.state, 'cancel')
         self.assertEqual(wo_5.duration_expected, 12 + 15 * 60)
@@ -2904,7 +2904,7 @@ class TestMrpOrder(TestMrpCommon, MailCase):
         self.assertEqual(mo_2.state, 'done')
 
         mo_3 = mo.production_group_id.production_ids - (mo | mo_2)
-        wo_7, wo_8, wo_9 = mo_3.workorder_ids
+        wo_9, wo_7, wo_8 = mo_3.workorder_ids
 
         self.assertEqual(wo_7.state, 'cancel')
         self.assertEqual(wo_8.state, 'cancel')

@@ -582,7 +582,7 @@ class MrpWorkorder(models.Model):
         for production in self.mapped("production_id"):
             production._link_workorders_and_moves()
 
-    def _action_plan(self, from_date=False, alternative=True, consider_blocked_by=True):
+    def _action_plan(self, from_date=False, alternative=True, consider_blocked_by=True, ignore_schedule=False):
         """Plan or replan a set of manufacturing workorders
 
         :param from_date: An optional `datetime` object. If provided, The planning will start from
@@ -599,6 +599,21 @@ class MrpWorkorder(models.Model):
         workorders_to_plan = self.filtered(lambda wo: wo.state in ['ready', 'blocked'])
         if not workorders_to_plan:
             return
+        leaves_to_ignore = ignore_schedule
+        if ignore_schedule is True:
+            workcenters = workorders_to_plan.production_id.workorder_ids.workcenter_id
+            if alternative:
+                workcenters |= workcenters.alternative_workcenter_ids
+            now = max(from_date or datetime.now(), datetime.now())
+            leaves_to_ignore = self.env['resource.calendar.leaves'].search([
+                ('resource_id', 'in', workcenters.resource_id.ids),
+                ('count_as', '=', 'working_time'),
+                '|',
+                    '&',
+                        ('date_from', '<=', now),
+                        ('date_to', '>=', now),
+                    ('date_from', '>=', now),
+            ])
         # we need to keep the order of the workorder before removing the start date
         done_wo = set()
         workorders_to_plan.action_unplan()
@@ -607,7 +622,7 @@ class MrpWorkorder(models.Model):
                 continue
             date_start = max(from_date or datetime.now(), datetime.now())
             if consider_blocked_by:
-                wo.blocked_by_workorder_ids.filtered(lambda wo: wo.id not in done_wo and not wo.is_planned)._action_plan(from_date=from_date, alternative=alternative)
+                wo.blocked_by_workorder_ids.filtered(lambda wo: wo.id not in done_wo and not wo.is_planned)._action_plan(from_date=from_date, alternative=alternative, ignore_schedule=leaves_to_ignore)
             done_wo.update(wo.blocked_by_workorder_ids.ids)
             if wo.blocked_by_workorder_ids and wo.blocked_by_workorder_ids[-1].date_finished:
                 date_start = wo.blocked_by_workorder_ids[-1].date_finished
@@ -628,7 +643,7 @@ class MrpWorkorder(models.Model):
                     duration_expected = wo.duration_expected
                 else:
                     duration_expected = wo._get_duration_expected(alternative_workcenter=workcenter)
-                from_date, to_date = workcenter._get_first_available_slot(date_start, duration_expected)
+                from_date, to_date = workcenter._get_first_available_slot(date_start, duration_expected, leaves_to_ignore=leaves_to_ignore)
                 # If the workcenter is unavailable, try planning on the next one
                 if not from_date:
                     continue
