@@ -41,6 +41,7 @@ export class SearchMessageInput extends Component {
     /** @param {SearchFilter} searchFilter */
     onChangeSearchFilter(searchFilter) {
         if (searchFilter.is_notification !== this.props.messageSearch.is_notification) {
+            this.props.messageSearch.lastEmptyTerm = undefined;
             this.props.messageSearch.is_notification = searchFilter.is_notification;
         }
     }
