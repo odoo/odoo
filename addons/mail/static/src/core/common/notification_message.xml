@@ -13,7 +13,7 @@
             <t t-else="">
                 <span class="o-mail-NotificationMessage-author d-inline text-muted" t-if="!this.message.richBody.includes(this.htmlEscape(this.message.authorName))" t-out="this.message.authorName"/> <span class="text-muted" t-out="this.message.richBody"/>
             </t>
-            <span class="o-mail-Message-date o-xsmaller ms-1" t-out="this.message.dateSimpleWithDay"/>
+            <span t-if="this.showDate" class="o-mail-Message-date o-xsmaller ms-1" t-out="this.message.dateSimpleWithDay"/>
         </div>
     </t>
 </templates>

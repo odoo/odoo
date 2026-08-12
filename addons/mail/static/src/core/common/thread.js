@@ -813,4 +813,11 @@ export class Thread extends Component {
             userName: this.channel.displayName,
         });
     }
+
+    showNewMessageLine(msg, prevMsg) {
+        return (
+            msg.threadAsFirstUnread?.eq(this.props.thread) &&
+            (prevMsg || this.channel?.markedAsUnread)
+        );
+    }
 }
