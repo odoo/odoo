@@ -16,6 +16,7 @@
         'security/test_company_checks/ir.access.csv',
         'security/test_indexed_translation/ir.access.csv',
         'security/test_inherits/ir.access.csv',
+        'security/test_ir_qweb_fields/ir.access.csv',
     ],
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
