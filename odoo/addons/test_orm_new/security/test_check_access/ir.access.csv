@@ -1,0 +1,7 @@
+id,name,model_id,group_id/id,operation,domain
+access_test_orm_check_access_public,access_test_orm_check_access_public,test_orm.check_access,base.group_portal,r,"[
+                '|',
+                    ('message_partner_ids', 'child_of', [user.partner_id.commercial_partner_id.id]),
+                    ('message_partner_ids', 'in', [user.partner_id.id])
+            ]"
+access_test_orm_check_access,access_test_orm_check_access,test_orm.check_access,base.group_user,crud,
