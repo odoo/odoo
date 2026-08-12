@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo auto_sequence="1">
     <record id="l10n_kr_simplified_tp_vat" model="account.report">
-        <field name="name">VAT Report - Simplified Taxpayer</field>
-        <field name="name@ko_KR">간이과세자 부가가치세 신고서</field>
+        <field name="name">VAT Report - Simplified Taxpayer (Jan 2026 Rev.)</field>
+        <field name="name@ko_KR">간이과세자 부가가치세 신고서 (2026년 1월 개정안)</field>
         <field name="root_report_id" ref="account.generic_tax_report"/>
         <field name="country_id" ref="base.kr"/>
+        <field name="active_fallback" eval="False"/>
         <field name="filter_multi_company">tax_units</field>
         <field name="allow_foreign_vat" eval="1"/>
         <field name="default_opening_date_filter">previous_return_period</field>
@@ -15,6 +16,18 @@
                 <field name="name">Amount</field>
                 <field name="name@ko_KR">금액</field>
                 <field name="expression_label">balance</field>
+            </record>
+            <record id="l10n_kr_simplified_tp_vat_column_varate" model="account.report.column">
+                <field name="name">Value Added Rate</field>
+                <field name="name@ko_KR">부가가치율</field>
+                <field name="expression_label">varate</field>
+                <field name="figure_type">string</field>
+            </record>
+            <record id="l10n_kr_simplified_tp_vat_column_rate" model="account.report.column">
+                <field name="name">Rate</field>
+                <field name="name@ko_KR">세율</field>
+                <field name="expression_label">rate</field>
+                <field name="figure_type">string</field>
             </record>
             <record id="l10n_kr_simplified_tp_vat_column_tax" model="account.report.column">
                 <field name="name">Tax Amount</field>
@@ -50,14 +63,28 @@
                                             <record id="l10n_kr_simplified_tp_vat_segsw_balance"
                                                     model="account.report.expression">
                                                 <field name="label">balance</field>
-                                                <field name="engine">tax_tags</field>
-                                                <field name="formula">ST1a</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=0</field>
+                                            </record>
+                                            <record id="l10n_kr_simplified_tp_vat_segsw_rate"
+                                                    model="account.report.expression">
+                                                <field name="label">rate</field>
+                                                <field name="engine">text</field>
+                                                <field name="formula">10/100</field>
+                                            </record>
+                                            <record id="l10n_kr_simplified_tp_vat_segsw_varate"
+                                                    model="account.report.expression">
+                                                <field name="label">varate</field>
+                                                <field name="engine">text</field>
+                                                <field name="formula">5/100</field>
                                             </record>
                                             <record id="l10n_kr_simplified_tp_vat_segsw_tax"
                                                     model="account.report.expression">
                                                 <field name="label">tax</field>
-                                                <field name="engine">tax_tags</field>
-                                                <field name="formula">ST1b</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=0</field>
                                             </record>
                                         </field>
                                     </record>
@@ -72,14 +99,28 @@
                                             <record id="l10n_kr_simplified_tp_vat_srtcw_balance"
                                                     model="account.report.expression">
                                                 <field name="label">balance</field>
-                                                <field name="engine">tax_tags</field>
-                                                <field name="formula">ST2a</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=0</field>
+                                            </record>
+                                            <record id="l10n_kr_simplified_tp_vat_srtcw_rate"
+                                                    model="account.report.expression">
+                                                <field name="label">rate</field>
+                                                <field name="engine">text</field>
+                                                <field name="formula">10/100</field>
+                                            </record>
+                                            <record id="l10n_kr_simplified_tp_vat_srtcw_varate"
+                                                    model="account.report.expression">
+                                                <field name="label">varate</field>
+                                                <field name="engine">text</field>
+                                                <field name="formula">10/100</field>
                                             </record>
                                             <record id="l10n_kr_simplified_tp_vat_srtcw_tax"
                                                     model="account.report.expression">
                                                 <field name="label">tax</field>
-                                                <field name="engine">tax_tags</field>
-                                                <field name="formula">ST2b</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=0</field>
                                             </record>
                                         </field>
                                     </record>
@@ -94,14 +135,28 @@
                                             <record id="l10n_kr_simplified_tp_vat_smgf_balance"
                                                     model="account.report.expression">
                                                 <field name="label">balance</field>
-                                                <field name="engine">tax_tags</field>
-                                                <field name="formula">ST3a</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=0</field>
+                                            </record>
+                                            <record id="l10n_kr_simplified_tp_vat_smgf_rate"
+                                                    model="account.report.expression">
+                                                <field name="label">rate</field>
+                                                <field name="engine">text</field>
+                                                <field name="formula">10/100</field>
+                                            </record>
+                                            <record id="l10n_kr_simplified_tp_vat_smgf_varate"
+                                                    model="account.report.expression">
+                                                <field name="label">varate</field>
+                                                <field name="engine">text</field>
+                                                <field name="formula">20/100</field>
                                             </record>
                                             <record id="l10n_kr_simplified_tp_vat_smgf_tax"
                                                     model="account.report.expression">
                                                 <field name="label">tax</field>
-                                                <field name="engine">tax_tags</field>
-                                                <field name="formula">ST3b</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=0</field>
                                             </record>
                                         </field>
                                     </record>
@@ -114,14 +169,28 @@
                                             <record id="l10n_kr_simplified_tp_vat_sclo_balance"
                                                     model="account.report.expression">
                                                 <field name="label">balance</field>
-                                                <field name="engine">tax_tags</field>
-                                                <field name="formula">ST4a</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=0</field>
+                                            </record>
+                                            <record id="l10n_kr_simplified_tp_vat_sclo_rate"
+                                                    model="account.report.expression">
+                                                <field name="label">rate</field>
+                                                <field name="engine">text</field>
+                                                <field name="formula">10/100</field>
+                                            </record>
+                                            <record id="l10n_kr_simplified_tp_vat_sclo_varate"
+                                                    model="account.report.expression">
+                                                <field name="label">varate</field>
+                                                <field name="engine">text</field>
+                                                <field name="formula">30/100</field>
                                             </record>
                                             <record id="l10n_kr_simplified_tp_vat_sclo_tax"
                                                     model="account.report.expression">
                                                 <field name="label">tax</field>
-                                                <field name="engine">tax_tags</field>
-                                                <field name="formula">ST4b</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=0</field>
                                             </record>
                                         </field>
                                     </record>
@@ -144,14 +213,27 @@
                                             <record id="l10n_kr_simplified_tp_vat_srtcwr_balance"
                                                     model="account.report.expression">
                                                 <field name="label">balance</field>
-                                                <field name="engine">tax_tags</field>
-                                                <field name="formula">-ST5a</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('tax_tag_ids', 'in', ('[간이매출] 공급가액 - 15%', '[간이매출] 세액 - 15%'))]"/>
+                                                <field name="subformula">-sum</field>
+                                            </record>
+                                            <record id="l10n_kr_simplified_tp_vat_srtcwr_rate"
+                                                    model="account.report.expression">
+                                                <field name="label">rate</field>
+                                                <field name="engine">text</field>
+                                                <field name="formula">10/100</field>
+                                            </record>
+                                            <record id="l10n_kr_simplified_tp_vat_srtcwr_varate"
+                                                    model="account.report.expression">
+                                                <field name="label">varate</field>
+                                                <field name="engine">text</field>
+                                                <field name="formula">15/100</field>
                                             </record>
                                             <record id="l10n_kr_simplified_tp_vat_srtcwr_tax"
                                                     model="account.report.expression">
                                                 <field name="label">tax</field>
-                                                <field name="engine">tax_tags</field>
-                                                <field name="formula">-ST5b</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">KR_SRTCWR.balance * 0.015</field>
                                             </record>
                                         </field>
                                     </record>
@@ -166,14 +248,27 @@
                                             <record id="l10n_kr_simplified_tp_vat_smafft_balance"
                                                     model="account.report.expression">
                                                 <field name="label">balance</field>
-                                                <field name="engine">tax_tags</field>
-                                                <field name="formula">-ST6a</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('tax_tag_ids', 'in', ('[간이매출] 공급가액 - 20%', '[간이매출] 세액 - 20%'))]"/>
+                                                <field name="subformula">-sum</field>
+                                            </record>
+                                            <record id="l10n_kr_simplified_tp_vat_smafft_rate"
+                                                    model="account.report.expression">
+                                                <field name="label">rate</field>
+                                                <field name="engine">text</field>
+                                                <field name="formula">10/100</field>
+                                            </record>
+                                            <record id="l10n_kr_simplified_tp_vat_smafft_varate"
+                                                    model="account.report.expression">
+                                                <field name="label">varate</field>
+                                                <field name="engine">text</field>
+                                                <field name="formula">20/100</field>
                                             </record>
                                             <record id="l10n_kr_simplified_tp_vat_smafft_tax"
                                                     model="account.report.expression">
                                                 <field name="label">tax</field>
-                                                <field name="engine">tax_tags</field>
-                                                <field name="formula">-ST6b</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">KR_SMAFFT.balance * 0.02</field>
                                             </record>
                                         </field>
                                     </record>
@@ -186,14 +281,27 @@
                                             <record id="l10n_kr_simplified_tp_vat_sacc_balance"
                                                     model="account.report.expression">
                                                 <field name="label">balance</field>
-                                                <field name="engine">tax_tags</field>
-                                                <field name="formula">-ST7a</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('tax_tag_ids', 'in', ('[간이매출] 공급가액 - 25%', '[간이매출] 세액 - 25%'))]"/>
+                                                <field name="subformula">-sum</field>
+                                            </record>
+                                            <record id="l10n_kr_simplified_tp_vat_sacc_rate"
+                                                    model="account.report.expression">
+                                                <field name="label">rate</field>
+                                                <field name="engine">text</field>
+                                                <field name="formula">10/100</field>
+                                            </record>
+                                            <record id="l10n_kr_simplified_tp_vat_sacc_varate"
+                                                    model="account.report.expression">
+                                                <field name="label">varate</field>
+                                                <field name="engine">text</field>
+                                                <field name="formula">25/100</field>
                                             </record>
                                             <record id="l10n_kr_simplified_tp_vat_sacc_tax"
                                                     model="account.report.expression">
                                                 <field name="label">tax</field>
-                                                <field name="engine">tax_tags</field>
-                                                <field name="formula">-ST7b</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">KR_SACC.balance * 0.025</field>
                                             </record>
                                         </field>
                                     </record>
@@ -208,23 +316,36 @@
                                             <record id="l10n_kr_simplified_tp_vat_sctsic_balance"
                                                     model="account.report.expression">
                                                 <field name="label">balance</field>
-                                                <field name="engine">tax_tags</field>
-                                                <field name="formula">-ST8a</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('tax_tag_ids', 'in', ('[간이매출] 공급가액 - 30%', '[간이매출] 세액 - 30%'))]"/>
+                                                <field name="subformula">-sum</field>
+                                            </record>
+                                            <record id="l10n_kr_simplified_tp_vat_sctsic_rate"
+                                                    model="account.report.expression">
+                                                <field name="label">rate</field>
+                                                <field name="engine">text</field>
+                                                <field name="formula">10/100</field>
+                                            </record>
+                                            <record id="l10n_kr_simplified_tp_vat_sctsic_varate"
+                                                    model="account.report.expression">
+                                                <field name="label">varate</field>
+                                                <field name="engine">text</field>
+                                                <field name="formula">30/100</field>
                                             </record>
                                             <record id="l10n_kr_simplified_tp_vat_sctsic_tax"
                                                     model="account.report.expression">
                                                 <field name="label">tax</field>
-                                                <field name="engine">tax_tags</field>
-                                                <field name="formula">-ST8b</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">KR_SCTSIC.balance * 0.03</field>
                                             </record>
                                         </field>
                                     </record>
                                     <record id="l10n_kr_simplified_tp_vat_sfipsctb" model="account.report.line">
                                         <field name="name">(9) Finance and insurance related services, professional,
                                             scientific and technical activities (excluding photography and videotaping
-                                            of events services), business facilities management and business support
-                                            services, activities related to real estate and leasing
-                                        </field>
+                                                of events services), business facilities management and business support
+                                                services, activities related to real estate and leasing
+                                            </field>
                                         <field name="name@ko_KR">(9) 금융 및 보험 관련 서비스업, 전문ᆞ과학 및 기술서비스업(인물사진 및 행사용 영상 촬영업 제외), 사업시설관리ᆞ사업지원 및 임대서비스업, 부동산 관련 서비스업, 부동산임대업</field>
                                         <field name="code">KR_SFIPSCTB</field>
                                         <field name="hierarchy_level">3</field>
@@ -232,14 +353,27 @@
                                             <record id="l10n_kr_simplified_tp_vat_sfipsctb_balance"
                                                     model="account.report.expression">
                                                 <field name="label">balance</field>
-                                                <field name="engine">tax_tags</field>
-                                                <field name="formula">-ST9a</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('tax_tag_ids', 'in', ('[간이매출] 공급가액 - 40%', '[간이매출] 세액 - 40%'))]"/>
+                                                <field name="subformula">-sum</field>
+                                            </record>
+                                            <record id="l10n_kr_simplified_tp_vat_sfipsctb_rate"
+                                                    model="account.report.expression">
+                                                <field name="label">rate</field>
+                                                <field name="engine">text</field>
+                                                <field name="formula">10/100</field>
+                                            </record>
+                                            <record id="l10n_kr_simplified_tp_vat_sfipsctb_varate"
+                                                    model="account.report.expression">
+                                                <field name="label">varate</field>
+                                                <field name="engine">text</field>
+                                                <field name="formula">40/100</field>
                                             </record>
                                             <record id="l10n_kr_simplified_tp_vat_sfipsctb_tax"
                                                     model="account.report.expression">
                                                 <field name="label">tax</field>
-                                                <field name="engine">tax_tags</field>
-                                                <field name="formula">-ST9b</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">KR_SFIPSCTB.balance * 0.04</field>
                                             </record>
                                         </field>
                                     </record>
@@ -260,8 +394,22 @@
                                             <record id="l10n_kr_simplified_tp_vat_szrti_balance"
                                                     model="account.report.expression">
                                                 <field name="label">balance</field>
-                                                <field name="engine">tax_tags</field>
-                                                <field name="formula">ST10a</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=0</field>
+                                            </record>
+                                            <record id="l10n_kr_simplified_tp_vat_szrti_rate"
+                                                    model="account.report.expression">
+                                                <field name="label">rate</field>
+                                                <field name="engine">text</field>
+                                                <field name="formula">0/100</field>
+                                            </record>
+                                            <record id="l10n_kr_simplified_tp_vat_szrti_tax"
+                                                    model="account.report.expression">
+                                                <field name="label">tax</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=0</field>
                                             </record>
                                         </field>
                                     </record>
@@ -274,8 +422,22 @@
                                             <record id="l10n_kr_simplified_tp_vat_szro_balance"
                                                     model="account.report.expression">
                                                 <field name="label">balance</field>
-                                                <field name="engine">tax_tags</field>
-                                                <field name="formula">ST11a</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=0</field>
+                                            </record>
+                                            <record id="l10n_kr_simplified_tp_vat_szro_rate"
+                                                    model="account.report.expression">
+                                                <field name="label">rate</field>
+                                                <field name="engine">text</field>
+                                                <field name="formula">0/100</field>
+                                            </record>
+                                            <record id="l10n_kr_simplified_tp_vat_szro_tax"
+                                                    model="account.report.expression">
+                                                <field name="label">tax</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=0</field>
                                             </record>
                                         </field>
                                     </record>
@@ -309,6 +471,11 @@
                                             KR_SCLO.balance + KR_SRTCWR.balance + KR_SMAFFT.balance + KR_SACC.balance +
                                             KR_SCTSIC.balance + KR_SFIPSCTB.balance + KR_SZRTI.balance + KR_SZRO.balance
                                         </field>
+                                    </record>
+                                    <record id="l10n_kr_simplified_tp_vat_stbott_rate" model="account.report.expression">
+                                        <field name="label">rate</field>
+                                        <field name="engine">text</field>
+                                        <field name="formula">(가)</field>
                                     </record>
                                     <record id="l10n_kr_simplified_tp_vat_stbott_tax" model="account.report.expression">
                                         <field name="label">tax</field>
@@ -364,14 +531,15 @@
                                             <record id="l10n_kr_simplified_tp_vat_sticra_balance"
                                                     model="account.report.expression">
                                                 <field name="label">balance</field>
-                                                <field name="engine">tax_tags</field>
-                                                <field name="formula">ST15a</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('move_id.l10n_kr_issuance_type', 'in', ('tax_invoice', 'tax_exempt_invoice', 'card_payment', 'cash_receipt')), ('tax_tag_ids', 'in', ('[매입] 공급가액 - 10%', '[매입] 세액 - 10%', '[매입] 공급가액 - 고정자산 10%', '[매입] 세액 - 고정자산 10%'))]"/>
+                                                <field name="subformula">sum</field>
                                             </record>
                                             <record id="l10n_kr_simplified_tp_vat_sticra_tax"
                                                     model="account.report.expression">
                                                 <field name="label">tax</field>
-                                                <field name="engine">tax_tags</field>
-                                                <field name="formula">ST15b</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">KR_STICRA.balance * 0.005</field>
                                             </record>
                                         </field>
                                     </record>
@@ -386,13 +554,15 @@
                                     <record id="l10n_kr_simplified_tp_vat_sdit_balance"
                                             model="account.report.expression">
                                         <field name="label">balance</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">ST16a</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=0</field>
                                     </record>
                                     <record id="l10n_kr_simplified_tp_vat_sdit_tax" model="account.report.expression">
                                         <field name="label">tax</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">ST16b</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=0</field>
                                     </record>
                                 </field>
                             </record>
@@ -433,14 +603,15 @@
                                             <record id="l10n_kr_simplified_tp_vat_stibpa_balance"
                                                     model="account.report.expression">
                                                 <field name="label">balance</field>
-                                                <field name="engine">tax_tags</field>
-                                                <field name="formula">ST18a</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('move_id.l10n_kr_issuance_type', '=', 'purchaser_tax_invoice'), ('tax_tag_ids', 'in', ('[매입] 공급가액 - 10%', '[매입] 세액 - 10%', '[매입] 공급가액 - 고정자산 10%', '[매입] 세액 - 고정자산 10%'))]"/>
+                                                <field name="subformula">sum</field>
                                             </record>
                                             <record id="l10n_kr_simplified_tp_vat_stibpa_tax"
                                                     model="account.report.expression">
                                                 <field name="label">tax</field>
-                                                <field name="engine">tax_tags</field>
-                                                <field name="formula">ST18b</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">KR_STIBPA.balance * 0.005</field>
                                             </record>
                                         </field>
                                     </record>
@@ -511,14 +682,15 @@
                                             <record id="l10n_kr_simplified_tp_vat_stccssa_balance"
                                                     model="account.report.expression">
                                                 <field name="label">balance</field>
-                                                <field name="engine">tax_tags</field>
-                                                <field name="formula">ST22a</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('move_id.l10n_kr_issuance_type', 'in', ('card_payment', 'cash_receipt')), ('tax_tag_ids', 'in', ('[간이매출] 공급가액 - 15%', '[간이매출] 공급가액 - 20%', '[간이매출] 공급가액 - 25%', '[간이매출] 공급가액 - 30%', '[간이매출] 공급가액 - 40%', '[간이매출] 세액 - 15%', '[간이매출] 세액 - 20%', '[간이매출] 세액 - 25%', '[간이매출] 세액 - 30%', '[간이매출] 세액 - 40%'))]"/>
+                                                <field name="subformula">-sum</field>
                                             </record>
                                             <record id="l10n_kr_simplified_tp_vat_stccssa_tax"
                                                     model="account.report.expression">
                                                 <field name="label">tax</field>
-                                                <field name="engine">tax_tags</field>
-                                                <field name="formula">ST22b</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">KR_STCCSSA.balance * 0.013</field>
                                             </record>
                                         </field>
                                     </record>
@@ -533,8 +705,9 @@
                                     <record id="l10n_kr_simplified_tp_vat_siticro_balance"
                                             model="account.report.expression">
                                         <field name="label">balance</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">ST23a</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=0</field>
                                     </record>
                                     <record id="l10n_kr_simplified_tp_vat_siticro_tax"
                                             model="account.report.expression">
@@ -560,6 +733,11 @@
                                             KR_SITICRO.tax
                                         </field>
                                     </record>
+                                    <record id="l10n_kr_simplified_tp_vat_siticrt_rate" model="account.report.expression">
+                                        <field name="label">rate</field>
+                                        <field name="engine">text</field>
+                                        <field name="formula">(나)</field>
+                                    </record>
                                 </field>
                             </record>
                         </field>
@@ -576,6 +754,11 @@
                                 <field name="formula">sum</field>
                                 <field name="subformula">editable;rounding=0</field>
                             </record>
+                            <record id="l10n_kr_simplified_tp_vat_sptapsp_rate" model="account.report.expression">
+                                <field name="label">rate</field>
+                                <field name="engine">text</field>
+                                <field name="formula">(다)</field>
+                            </record>
                         </field>
                     </record>
                     <record id="l10n_kr_simplified_tp_vat_seta" model="account.report.line">
@@ -590,11 +773,35 @@
                                 <field name="formula">sum</field>
                                 <field name="subformula">editable;rounding=0</field>
                             </record>
+                            <record id="l10n_kr_simplified_tp_vat_seta_rate" model="account.report.expression">
+                                <field name="label">rate</field>
+                                <field name="engine">text</field>
+                                <field name="formula">(라)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_kr_simplified_tp_vat_soita" model="account.report.line">
+                        <field name="name">(27) Occasional imposition tax amount</field>
+                        <field name="name@ko_KR">(27) 수시부과세액</field>
+                        <field name="code">KR_SOITA</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_kr_simplified_tp_vat_soita_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable;rounding=0</field>
+                            </record>
+                            <record id="l10n_kr_simplified_tp_vat_soita_rate" model="account.report.expression">
+                                <field name="label">rate</field>
+                                <field name="engine">text</field>
+                                <field name="formula">(마)</field>
+                            </record>
                         </field>
                     </record>
                     <record id="l10n_kr_simplified_tp_vat_sata" model="account.report.line">
-                        <field name="name">(27) Additional tax amount</field>
-                        <field name="name@ko_KR">(27) 가산세액계</field>
+                        <field name="name">(28) Additional tax amount</field>
+                        <field name="name@ko_KR">(28) 가산세액계</field>
                         <field name="code">KR_SATA</field>
                         <field name="hierarchy_level">1</field>
                         <field name="expression_ids">
@@ -603,201 +810,166 @@
                                 <field name="engine">aggregation</field>
                                 <field name="formula">KR_SPT.tax</field>
                             </record>
+                            <record id="l10n_kr_simplified_tp_vat_sata_rate" model="account.report.expression">
+                                <field name="label">rate</field>
+                                <field name="engine">text</field>
+                                <field name="formula">(바)</field>
+                            </record>
                         </field>
                     </record>
                     <record id="l10n_kr_simplified_tp_vat_stpad" model="account.report.line">
-                        <field name="name">(28) Tax payable after deduction (tax receivable)</field>
-                        <field name="name@ko_KR">(28) 차감 납부할 세액(환급받을 세액) (가-나-다-라+마)</field>
+                        <field name="name">(29) Tax payable after deduction (tax receivable)</field>
+                        <field name="name@ko_KR">(29) 차감 납부할 세액(환급받을 세액) (가-나-다-라-마+바)</field>
                         <field name="code">KR_STPAD</field>
                         <field name="hierarchy_level">1</field>
                         <field name="expression_ids">
                             <record id="l10n_kr_simplified_tp_vat_stpad_tax" model="account.report.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">aggregation</field>
-                                <field name="formula">KR_STBOTT.tax - KR_SITICRT.tax - KR_SPTAPSP.tax - KR_SETA.tax + KR_SATA.tax
+                                <field name="formula">KR_STBOTT.tax - KR_SITICRT.tax - KR_SPTAPSP.tax - KR_SETA.tax - KR_SOITA.tax + KR_SATA.tax
                                 </field>
+                                <field name="subformula">if_above(KRW(0))</field>
+                            </record>
+                            <record id="l10n_kr_simplified_tp_vat_stpad_rate" model="account.report.expression">
+                                <field name="label">rate</field>
+                                <field name="engine">text</field>
+                                <field name="formula">(29)</field>
                             </record>
                         </field>
                     </record>
                 </field>
             </record>
-            <record id="l10n_kr_simplified_tp_vat_stbi" model="account.report.line">
-                <field name="name">2. Tax Base Information</field>
-                <field name="name@ko_KR">2. 과세표준 명세</field>
-                <field name="code">KR_STBI</field>
+            <record id="l10n_kr_simplified_tp_vat_stbpi" model="account.report.line">
+                <field name="name">Tax base breakdown</field>
+                <field name="name@ko_KR">과세표준 명세</field>
+                <field name="code">KR_STBPI</field>
                 <field name="hierarchy_level">0</field>
                 <field name="children_ids">
-                    <record id="l10n_kr_simplified_tp_vat_sbt1" model="account.report.line">
-                        <field name="name">(29)</field>
-                        <field name="name@ko_KR">(29)</field>
-                        <field name="code">KR_SBT1</field>
+                    <record id="l10n_kr_simplified_tp_vat_stbpi_1" model="account.report.line">
+                        <field name="name">(30) Main business activity</field>
+                        <field name="name@ko_KR">(30) 주업종</field>
+                        <field name="code">KR_STBPI_1</field>
                         <field name="hierarchy_level">1</field>
                         <field name="expression_ids">
-                            <record id="l10n_kr_simplified_tp_vat_sbt1_balance" model="account.report.expression">
-                                <field name="label">balance</field>
-                                <field name="engine">tax_tags</field>
-                                <field name="formula">-ST29a</field>
-                            </record>
-                        </field>
-                    </record>
-                    <record id="l10n_kr_simplified_tp_vat_sbt2" model="account.report.line">
-                        <field name="name">(30)</field>
-                        <field name="name@ko_KR">(30)</field>
-                        <field name="code">KR_SBT2</field>
-                        <field name="hierarchy_level">1</field>
-                        <field name="expression_ids">
-                            <record id="l10n_kr_simplified_tp_vat_sbt2_balance" model="account.report.expression">
-                                <field name="label">balance</field>
-                                <field name="engine">tax_tags</field>
-                                <field name="formula">ST30a</field>
-                            </record>
-                        </field>
-                    </record>
-                    <record id="l10n_kr_simplified_tp_vat_sbto" model="account.report.line">
-                        <field name="name">(31) Others(Import amount exemption)</field>
-                        <field name="name@ko_KR">(31) 기타(수입금액 제외분)</field>
-                        <field name="code">KR_SBTO</field>
-                        <field name="hierarchy_level">1</field>
-                        <field name="expression_ids">
-                            <record id="l10n_kr_simplified_tp_vat_sbto_balance" model="account.report.expression">
-                                <field name="label">balance</field>
-                                <field name="engine">tax_tags</field>
-                                <field name="formula">ST31a</field>
-                            </record>
-                        </field>
-                    </record>
-                    <record id="l10n_kr_simplified_tp_vat_sbtt" model="account.report.line">
-                        <field name="name">(32) Total</field>
-                        <field name="name@ko_KR">(32) 합계</field>
-                        <field name="code">KR_SBTT</field>
-                        <field name="hierarchy_level">1</field>
-                        <field name="expression_ids">
-                            <record id="l10n_kr_simplified_tp_vat_sbtt_balance" model="account.report.expression">
+                            <record id="l10n_kr_simplified_tp_vat_stbpi_1_balance" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">aggregation</field>
-                                <field name="formula">KR_SBT1.balance + KR_SBT2.balance - KR_SBTO.balance</field>
+                                <field name="formula">KR_STBPI_1.sub_balance - KR_STBPI_2.balance - KR_STBPI_EX.balance</field>
+                            </record>
+                            <record id="l10n_kr_simplified_tp_vat_stbpi_1_sub_balance" model="account.report.expression">
+                                <field name="label">sub_balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">KR_STBOTT.balance</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_kr_simplified_tp_vat_stbpi_2" model="account.report.line">
+                        <field name="name">(31) Additional business activity</field>
+                        <field name="name@ko_KR">(31) 부업종</field>
+                        <field name="code">KR_STBPI_2</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_kr_simplified_tp_vat_stbpi_2_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable;rounding=0</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_kr_simplified_tp_vat_stbpi_ex" model="account.report.line">
+                        <field name="name">(32) Others (Excluded from totals)</field>
+                        <field name="name@ko_KR">(32) 기타(수입금액 제외분)</field>
+                        <field name="code">KR_STBPI_EX</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_kr_simplified_tp_vat_stbpi_ex_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable;rounding=0</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_kr_simplified_tp_vat_stbpi_t" model="account.report.line">
+                        <field name="name">(33) Totals</field>
+                        <field name="name@ko_KR">(33) 합계</field>
+                        <field name="code">KR_STBPI_T</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_kr_simplified_tp_vat_stbpi_t_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">KR_STBPI_1.balance + KR_STBPI_2.balance + KR_STBPI_EX.balance</field>
                             </record>
                         </field>
                     </record>
                 </field>
             </record>
-            <record id="l10n_kr_simplified_tp_vat_stosvb" model="account.report.line">
-                <field name="name">3. Turnover of sales of VAT-free business</field>
-                <field name="name@ko_KR">3. 면세수입금액</field>
-                <field name="code">KR_STOSVB</field>
+            <record id="l10n_kr_simplified_tp_vat_stebpi" model="account.report.line">
+                <field name="name">Turnover of sales of VAT-free business</field>
+                <field name="name@ko_KR">면세수입금액 명세</field>
+                <field name="code">KR_STEBPI</field>
                 <field name="hierarchy_level">0</field>
                 <field name="children_ids">
-                    <record id="l10n_kr_simplified_tp_vat_sbt3" model="account.report.line">
-                        <field name="name">(33)</field>
-                        <field name="name@ko_KR">(33)</field>
-                        <field name="code">KR_SBT3</field>
+                    <record id="l10n_kr_simplified_tp_vat_stebpi_1" model="account.report.line">
+                        <field name="name">(34) Main business activity</field>
+                        <field name="name@ko_KR">(34) 주업종</field>
+                        <field name="code">KR_STEBPI_1</field>
                         <field name="hierarchy_level">1</field>
                         <field name="expression_ids">
-                            <record id="l10n_kr_simplified_tp_vat_sbt3_balance" model="account.report.expression">
-                                <field name="label">balance</field>
-                                <field name="engine">tax_tags</field>
-                                <field name="formula">ST33a</field>
-                            </record>
-                        </field>
-                    </record>
-                    <record id="l10n_kr_simplified_tp_vat_sbt4" model="account.report.line">
-                        <field name="name">(34)</field>
-                        <field name="name@ko_KR">(34)</field>
-                        <field name="code">KR_SBT4</field>
-                        <field name="hierarchy_level">1</field>
-                        <field name="expression_ids">
-                            <record id="l10n_kr_simplified_tp_vat_sbt4_balance" model="account.report.expression">
-                                <field name="label">balance</field>
-                                <field name="engine">tax_tags</field>
-                                <field name="formula">ST34a</field>
-                            </record>
-                        </field>
-                    </record>
-                    <record id="l10n_kr_simplified_tp_vat_siae" model="account.report.line">
-                        <field name="name">(35) Import amount exemption</field>
-                        <field name="name@ko_KR">(35) 수입금액 제외분</field>
-                        <field name="code">KR_SIAE</field>
-                        <field name="hierarchy_level">1</field>
-                        <field name="expression_ids">
-                            <record id="l10n_kr_simplified_tp_vat_siae_balance" model="account.report.expression">
-                                <field name="label">balance</field>
-                                <field name="engine">tax_tags</field>
-                                <field name="formula">ST35a</field>
-                            </record>
-                        </field>
-                    </record>
-                    <record id="l10n_kr_simplified_tp_vat_stosvbt" model="account.report.line">
-                        <field name="name">(36) Total</field>
-                        <field name="name@ko_KR">(36) 합계</field>
-                        <field name="code">KR_STOSVBT</field>
-                        <field name="hierarchy_level">1</field>
-                        <field name="expression_ids">
-                            <record id="l10n_kr_simplified_tp_vat_stosvbt_balance" model="account.report.expression">
+                            <record id="l10n_kr_simplified_tp_vat_stebpi_1_balance" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">aggregation</field>
-                                <field name="formula">KR_SBT3.balance + KR_SBT4.balance - KR_SIAE.balance</field>
+                                <field name="formula">KR_STEBPI_1.sub_balance - KR_STEBPI_2.balance - KR_STEBPI_EX.balance</field>
+                            </record>
+                            <record id="l10n_kr_simplified_tp_vat_stebpi_1_sub_balance" model="account.report.expression">
+                                <field name="label">sub_balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-[매출] 공급가액 - 면세</field>
                             </record>
                         </field>
                     </record>
-                </field>
-            </record>
-            <record id="l10n_kr_simplified_tp_vat_sbatr" model="account.report.line">
-                <field name="name">4. Bank Account for Tax Refund</field>
-                <field name="name@ko_KR">4. 국세환급금계좌신고</field>
-                <field name="code">KR_SBATR</field>
-                <field name="hierarchy_level">0</field>
-                <field name="expression_ids">
-                    <record id="l10n_kr_simplified_tp_vat_sbatr_balance" model="account.report.expression">
-                        <field name="label">balance</field>
-                        <field name="engine">external</field>
-                        <field name="formula">sum</field>
-                        <field name="subformula">editable;rounding=0</field>
+                    <record id="l10n_kr_simplified_tp_vat_stebpi_2" model="account.report.line">
+                        <field name="name">(35) Additional business activity</field>
+                        <field name="name@ko_KR">(35) 부업종</field>
+                        <field name="code">KR_STEBPI_2</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_kr_simplified_tp_vat_stebpi_2_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable;rounding=0</field>
+                            </record>
+                        </field>
                     </record>
-                    <record id="l10n_kr_simplified_tp_vat_sbatr_tax" model="account.report.expression">
-                        <field name="label">tax</field>
-                        <field name="engine">external</field>
-                        <field name="formula">sum</field>
-                        <field name="subformula">editable;rounding=0</field>
+                    <record id="l10n_kr_simplified_tp_vat_stebpi_ex" model="account.report.line">
+                        <field name="name">(36) Others (Excluded from totals)</field>
+                        <field name="name@ko_KR">(36) 기타(수입금액 제외분)</field>
+                        <field name="code">KR_STEBPI_EX</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_kr_simplified_tp_vat_stebpi_ex_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable;rounding=0</field>
+                            </record>
+                        </field>
                     </record>
-                </field>
-            </record>
-            <record id="l10n_kr_simplified_tp_vat_srbc" model="account.report.line">
-                <field name="name">5. Report for Business Closure</field>
-                <field name="name@ko_KR">5. 폐업신고</field>
-                <field name="code">KR_SRBC</field>
-                <field name="hierarchy_level">0</field>
-                <field name="expression_ids">
-                    <record id="l10n_kr_simplified_tp_vat_srbc_balance" model="account.report.expression">
-                        <field name="label">balance</field>
-                        <field name="engine">external</field>
-                        <field name="formula">sum</field>
-                        <field name="subformula">editable;rounding=0</field>
-                    </record>
-                    <record id="l10n_kr_simplified_tp_vat_srbc_tax" model="account.report.expression">
-                        <field name="label">tax</field>
-                        <field name="engine">external</field>
-                        <field name="formula">sum</field>
-                        <field name="subformula">editable;rounding=0</field>
-                    </record>
-                </field>
-            </record>
-            <record id="l10n_kr_simplified_tp_vat_srzrt" model="account.report.line">
-                <field name="name">6. Reciprocity of Zero Rate Tax</field>
-                <field name="name@ko_KR">6. 영세율상호주의</field>
-                <field name="code">KR_SRZRT</field>
-                <field name="hierarchy_level">0</field>
-                <field name="expression_ids">
-                    <record id="l10n_kr_simplified_tp_vat_srzrt_balance" model="account.report.expression">
-                        <field name="label">balance</field>
-                        <field name="engine">external</field>
-                        <field name="formula">sum</field>
-                        <field name="subformula">editable;rounding=0</field>
-                    </record>
-                    <record id="l10n_kr_simplified_tp_vat_srzrt_tax" model="account.report.expression">
-                        <field name="label">tax</field>
-                        <field name="engine">external</field>
-                        <field name="formula">sum</field>
-                        <field name="subformula">editable;rounding=0</field>
+                    <record id="l10n_kr_simplified_tp_vat_stebpi_t" model="account.report.line">
+                        <field name="name">(37) Totals</field>
+                        <field name="name@ko_KR">(37) 합계</field>
+                        <field name="code">KR_STEBPI_T</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_kr_simplified_tp_vat_stebpi_t_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">KR_STEBPI_1.balance + KR_STEBPI_2.balance + KR_STEBPI_EX.balance</field>
+                            </record>
+                        </field>
                     </record>
                 </field>
             </record>
@@ -814,72 +986,76 @@
                         <field name="hierarchy_level">2</field>
                         <field name="children_ids">
                             <record id="l10n_kr_simplified_tp_vat_s5" model="account.report.line">
-                                <field name="name">(5) Retail trade. collection and wholesale of recycling materials and
-                                    restaurants
+                                <field name="name">(5) Retail trade, collection and sale of recyclable materials, and
+                                    food service activities
                                 </field>
                                 <field name="name@ko_KR">(5) 소매업, 재생용 재료수집 및 판매업, 음식점업</field>
                                 <field name="code">KR_S5</field>
                                 <field name="hierarchy_level">3</field>
                                 <field name="children_ids">
                                     <record id="l10n_kr_simplified_tp_vat_s5tii" model="account.report.line">
-                                        <field name="name">(37) Tax Invoice Issued</field>
-                                        <field name="name@ko_KR">(37) 세금계산서 발급분</field>
+                                        <field name="name">(38) Tax Invoice Issued</field>
+                                        <field name="name@ko_KR">(38) 세금계산서 발급분</field>
                                         <field name="code">KR_S5TII</field>
                                         <field name="hierarchy_level">4</field>
                                         <field name="expression_ids">
                                             <record id="l10n_kr_simplified_tp_vat_s5tii_balance"
                                                     model="account.report.expression">
                                                 <field name="label">balance</field>
-                                                <field name="engine">tax_tags</field>
-                                                <field name="formula">-ST37a</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('move_id.l10n_kr_issuance_type', '=', 'tax_invoice'), ('tax_tag_ids', 'in', ('[간이매출] 공급가액 - 15%', '[간이매출] 세액 - 15%'))]"/>
+                                                <field name="subformula">-sum</field>
                                             </record>
                                         </field>
                                     </record>
                                     <record id="l10n_kr_simplified_tp_vat_s5tiip" model="account.report.line">
-                                        <field name="name">(38) Tax invoice issued by purchasee</field>
-                                        <field name="name@ko_KR">(38) 매입자발행 세금계산서</field>
+                                        <field name="name">(39) Tax invoice issued by purchasee</field>
+                                        <field name="name@ko_KR">(39) 매입자발행 세금계산서</field>
                                         <field name="code">KR_S5TIIP</field>
                                         <field name="hierarchy_level">4</field>
                                         <field name="expression_ids">
                                             <record id="l10n_kr_simplified_tp_vat_s5tiip_balance"
                                                     model="account.report.expression">
                                                 <field name="label">balance</field>
-                                                <field name="engine">tax_tags</field>
-                                                <field name="formula">-ST38a</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('move_id.l10n_kr_issuance_type', '=', 'purchaser_tax_invoice'), ('tax_tag_ids', 'in', ('[간이매출] 공급가액 - 15%', '[간이매출] 세액 - 15%'))]"/>
+                                                <field name="subformula">-sum</field>
                                             </record>
                                         </field>
                                     </record>
                                     <record id="l10n_kr_simplified_tp_vat_s5tccri" model="account.report.line">
-                                        <field name="name">(39) Card or Cash Receipt Issued</field>
-                                        <field name="name@ko_KR">(39) 신용카드ᆞ현금영수증 발행분</field>
+                                        <field name="name">(40) Card or Cash Receipt Issued</field>
+                                        <field name="name@ko_KR">(40) 신용카드ᆞ현금영수증 발행분</field>
                                         <field name="code">KR_S5TCCRI</field>
                                         <field name="hierarchy_level">4</field>
                                         <field name="expression_ids">
                                             <record id="l10n_kr_simplified_tp_vat_s5tccri_balance"
                                                     model="account.report.expression">
                                                 <field name="label">balance</field>
-                                                <field name="engine">tax_tags</field>
-                                                <field name="formula">-ST39a</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('move_id.l10n_kr_issuance_type', 'in', ('card_payment', 'cash_receipt')), ('tax_tag_ids', 'in', ('[간이매출] 공급가액 - 15%', '[간이매출] 세액 - 15%'))]"/>
+                                                <field name="subformula">-sum</field>
                                             </record>
                                         </field>
                                     </record>
                                     <record id="l10n_kr_simplified_tp_vat_s5o" model="account.report.line">
-                                        <field name="name">(40) Others</field>
-                                        <field name="name@ko_KR">(40) 기타(정규영수증 외 매출분)</field>
+                                        <field name="name">(41) Others</field>
+                                        <field name="name@ko_KR">(41) 기타(정규영수증 외 매출분)</field>
                                         <field name="code">KR_S5O</field>
                                         <field name="hierarchy_level">4</field>
                                         <field name="expression_ids">
                                             <record id="l10n_kr_simplified_tp_vat_s5o_balance"
                                                     model="account.report.expression">
                                                 <field name="label">balance</field>
-                                                <field name="engine">tax_tags</field>
-                                                <field name="formula">-ST40a</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('move_id.l10n_kr_issuance_type', '=', 'other'), ('tax_tag_ids', 'in', ('[간이매출] 공급가액 - 15%', '[간이매출] 세액 - 15%'))]"/>
+                                                <field name="subformula">-sum</field>
                                             </record>
                                         </field>
                                     </record>
                                     <record id="l10n_kr_simplified_tp_vat_s5t" model="account.report.line">
-                                        <field name="name">(41) Total</field>
-                                        <field name="name@ko_KR">(41) 합계</field>
+                                        <field name="name">(42) Total</field>
+                                        <field name="name@ko_KR">(42) 합계</field>
                                         <field name="code">KR_S5T</field>
                                         <field name="hierarchy_level">4</field>
                                         <field name="expression_ids">
@@ -896,72 +1072,76 @@
                                 </field>
                             </record>
                             <record id="l10n_kr_simplified_tp_vat_s6" model="account.report.line">
-                                <field name="name">(6) Manufacture, agriculture, forestry, fishing and transport of
-                                    parcels
+                                <field name="name">6) Manufacturing; agriculture, forestry, and fishing; and specialized
+                                    parcel delivery services
                                 </field>
                                 <field name="name@ko_KR">(6) 제조업, 농ᆞ임ᆞ어업, 소화물 전문 운송업</field>
                                 <field name="code">KR_S6</field>
                                 <field name="hierarchy_level">3</field>
                                 <field name="children_ids">
                                     <record id="l10n_kr_simplified_tp_vat_s6tii" model="account.report.line">
-                                        <field name="name">(42) Tax Invoice Issued</field>
-                                        <field name="name@ko_KR">(42) 세금계산서 발급분</field>
+                                        <field name="name">(43) Tax Invoice Issued</field>
+                                        <field name="name@ko_KR">(43) 세금계산서 발급분</field>
                                         <field name="code">KR_S6TII</field>
                                         <field name="hierarchy_level">4</field>
                                         <field name="expression_ids">
                                             <record id="l10n_kr_simplified_tp_vat_s6tii_balance"
                                                     model="account.report.expression">
                                                 <field name="label">balance</field>
-                                                <field name="engine">tax_tags</field>
-                                                <field name="formula">-ST42a</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('move_id.l10n_kr_issuance_type', '=', 'tax_invoice'), ('tax_tag_ids', 'in', ('[간이매출] 공급가액 - 20%', '[간이매출] 세액 - 20%'))]"/>
+                                                <field name="subformula">-sum</field>
                                             </record>
                                         </field>
                                     </record>
                                     <record id="l10n_kr_simplified_tp_vat_s6tiip" model="account.report.line">
-                                        <field name="name">(43) Tax invoice issued by purchasee</field>
-                                        <field name="name@ko_KR">(43) 매입자발행 세금계산서</field>
+                                        <field name="name">(44) Tax invoice issued by purchasee</field>
+                                        <field name="name@ko_KR">(44) 매입자발행 세금계산서</field>
                                         <field name="code">KR_S6TIIP</field>
                                         <field name="hierarchy_level">4</field>
                                         <field name="expression_ids">
                                             <record id="l10n_kr_simplified_tp_vat_s6tiip_balance"
                                                     model="account.report.expression">
                                                 <field name="label">balance</field>
-                                                <field name="engine">tax_tags</field>
-                                                <field name="formula">-ST43a</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('move_id.l10n_kr_issuance_type', '=', 'purchaser_tax_invoice'), ('tax_tag_ids', 'in', ('[간이매출] 공급가액 - 20%', '[간이매출] 세액 - 20%'))]"/>
+                                                <field name="subformula">-sum</field>
                                             </record>
                                         </field>
                                     </record>
                                     <record id="l10n_kr_simplified_tp_vat_s6tccri" model="account.report.line">
-                                        <field name="name">(44) Card or Cash Receipt Issued</field>
-                                        <field name="name@ko_KR">(44) 신용카드ᆞ현금영수증 발행분</field>
+                                        <field name="name">(45) Card or Cash Receipt Issued</field>
+                                        <field name="name@ko_KR">(45) 신용카드ᆞ현금영수증 발행분</field>
                                         <field name="code">KR_S6TCCRI</field>
                                         <field name="hierarchy_level">4</field>
                                         <field name="expression_ids">
                                             <record id="l10n_kr_simplified_tp_vat_s6tccri_balance"
                                                     model="account.report.expression">
                                                 <field name="label">balance</field>
-                                                <field name="engine">tax_tags</field>
-                                                <field name="formula">-ST44a</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('move_id.l10n_kr_issuance_type', 'in', ('card_payment', 'cash_receipt')), ('tax_tag_ids', 'in', ('[간이매출] 공급가액 - 20%', '[간이매출] 세액 - 20%'))]"/>
+                                                <field name="subformula">-sum</field>
                                             </record>
                                         </field>
                                     </record>
                                     <record id="l10n_kr_simplified_tp_vat_s6o" model="account.report.line">
-                                        <field name="name">(45) Others</field>
-                                        <field name="name@ko_KR">(45) 기타(정규영수증 외 매출분)</field>
+                                        <field name="name">(46) Others</field>
+                                        <field name="name@ko_KR">(46) 기타(정규영수증 외 매출분)</field>
                                         <field name="code">KR_S6O</field>
                                         <field name="hierarchy_level">4</field>
                                         <field name="expression_ids">
                                             <record id="l10n_kr_simplified_tp_vat_s6o_balance"
                                                     model="account.report.expression">
                                                 <field name="label">balance</field>
-                                                <field name="engine">tax_tags</field>
-                                                <field name="formula">-ST45a</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('move_id.l10n_kr_issuance_type', '=', 'other'), ('tax_tag_ids', 'in', ('[간이매출] 공급가액 - 20%', '[간이매출] 세액 - 20%'))]"/>
+                                                <field name="subformula">-sum</field>
                                             </record>
                                         </field>
                                     </record>
                                     <record id="l10n_kr_simplified_tp_vat_s6t" model="account.report.line">
-                                        <field name="name">(46) Total</field>
-                                        <field name="name@ko_KR">(46) 합계</field>
+                                        <field name="name">(47) Total</field>
+                                        <field name="name@ko_KR">(47) 합계</field>
                                         <field name="code">KR_S6T</field>
                                         <field name="hierarchy_level">4</field>
                                         <field name="expression_ids">
@@ -978,70 +1158,74 @@
                                 </field>
                             </record>
                             <record id="l10n_kr_simplified_tp_vat_s7" model="account.report.line">
-                                <field name="name">(7) Accommodations</field>
+                                <field name="name">(7) Accommodation (Lodging)</field>
                                 <field name="name@ko_KR">(7) 숙박업</field>
                                 <field name="code">KR_S7</field>
                                 <field name="hierarchy_level">3</field>
                                 <field name="children_ids">
                                     <record id="l10n_kr_simplified_tp_vat_s7tii" model="account.report.line">
-                                        <field name="name">(47) Tax Invoice Issued</field>
-                                        <field name="name@ko_KR">(47) 세금계산서 발급분</field>
+                                        <field name="name">(48) Tax Invoice Issued</field>
+                                        <field name="name@ko_KR">(48) 세금계산서 발급분</field>
                                         <field name="code">KR_S7TII</field>
                                         <field name="hierarchy_level">4</field>
                                         <field name="expression_ids">
                                             <record id="l10n_kr_simplified_tp_vat_s7tii_balance"
                                                     model="account.report.expression">
                                                 <field name="label">balance</field>
-                                                <field name="engine">tax_tags</field>
-                                                <field name="formula">-ST47a</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('move_id.l10n_kr_issuance_type', '=', 'tax_invoice'), ('tax_tag_ids', 'in', ('[간이매출] 공급가액 - 25%', '[간이매출] 세액 - 25%'))]"/>
+                                                <field name="subformula">-sum</field>
                                             </record>
                                         </field>
                                     </record>
                                     <record id="l10n_kr_simplified_tp_vat_s7tiip" model="account.report.line">
-                                        <field name="name">(48) Tax invoice issued by purchasee</field>
-                                        <field name="name@ko_KR">(48) 매입자발행 세금계산서</field>
+                                        <field name="name">(49) Tax invoice issued by purchasee</field>
+                                        <field name="name@ko_KR">(49) 매입자발행 세금계산서</field>
                                         <field name="code">KR_S7TIIP</field>
                                         <field name="hierarchy_level">4</field>
                                         <field name="expression_ids">
                                             <record id="l10n_kr_simplified_tp_vat_s7tiip_balance"
                                                     model="account.report.expression">
                                                 <field name="label">balance</field>
-                                                <field name="engine">tax_tags</field>
-                                                <field name="formula">-ST48a</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('move_id.l10n_kr_issuance_type', '=', 'purchaser_tax_invoice'), ('tax_tag_ids', 'in', ('[간이매출] 공급가액 - 25%', '[간이매출] 세액 - 25%'))]"/>
+                                                <field name="subformula">-sum</field>
                                             </record>
                                         </field>
                                     </record>
                                     <record id="l10n_kr_simplified_tp_vat_s7tccri" model="account.report.line">
-                                        <field name="name">(49) Card or Cash Receipt Issued</field>
-                                        <field name="name@ko_KR">(49) 신용카드ᆞ현금영수증 발행분</field>
+                                        <field name="name">(50) Card or Cash Receipt Issued</field>
+                                        <field name="name@ko_KR">(50) 신용카드ᆞ현금영수증 발행분</field>
                                         <field name="code">KR_S7TCCRI</field>
                                         <field name="hierarchy_level">4</field>
                                         <field name="expression_ids">
                                             <record id="l10n_kr_simplified_tp_vat_s7tccri_balance"
                                                     model="account.report.expression">
                                                 <field name="label">balance</field>
-                                                <field name="engine">tax_tags</field>
-                                                <field name="formula">-ST49a</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('move_id.l10n_kr_issuance_type', 'in', ('card_payment', 'cash_receipt')), ('tax_tag_ids', 'in', ('[간이매출] 공급가액 - 25%', '[간이매출] 세액 - 25%'))]"/>
+                                                <field name="subformula">-sum</field>
                                             </record>
                                         </field>
                                     </record>
                                     <record id="l10n_kr_simplified_tp_vat_s7o" model="account.report.line">
-                                        <field name="name">(50) Others</field>
-                                        <field name="name@ko_KR">(50) 기타(정규영수증 외 매출분)</field>
+                                        <field name="name">(51) Others</field>
+                                        <field name="name@ko_KR">(51) 기타(정규영수증 외 매출분)</field>
                                         <field name="code">KR_S7O</field>
                                         <field name="hierarchy_level">4</field>
                                         <field name="expression_ids">
                                             <record id="l10n_kr_simplified_tp_vat_s7o_balance"
                                                     model="account.report.expression">
                                                 <field name="label">balance</field>
-                                                <field name="engine">tax_tags</field>
-                                                <field name="formula">-ST50a</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('move_id.l10n_kr_issuance_type', '=', 'other'), ('tax_tag_ids', 'in', ('[간이매출] 공급가액 - 25%', '[간이매출] 세액 - 25%'))]"/>
+                                                <field name="subformula">-sum</field>
                                             </record>
                                         </field>
                                     </record>
                                     <record id="l10n_kr_simplified_tp_vat_s7t" model="account.report.line">
-                                        <field name="name">(51) Total</field>
-                                        <field name="name@ko_KR">(51) 합계</field>
+                                        <field name="name">(52) Total</field>
+                                        <field name="name@ko_KR">(52) 합계</field>
                                         <field name="code">KR_S7T</field>
                                         <field name="hierarchy_level">4</field>
                                         <field name="expression_ids">
@@ -1058,72 +1242,76 @@
                                 </field>
                             </record>
                             <record id="l10n_kr_simplified_tp_vat_s8" model="account.report.line">
-                                <field name="name">(8) Construction, transporation and storage (excluding transportation
-                                    of parcels), information and communication and other services
+                                <field name="name">(8) Construction; transportation and warehousing (excluding specialized
+                                    parcel delivery services); information and communication; and other service activities
                                 </field>
                                 <field name="name@ko_KR">(8) 건설업, 운수 및 창고업(소화물 전문 운송업 제외), 정보통신업, 그 밖의 서비스업</field>
                                 <field name="code">KR_S8</field>
                                 <field name="hierarchy_level">3</field>
                                 <field name="children_ids">
                                     <record id="l10n_kr_simplified_tp_vat_s8tii" model="account.report.line">
-                                        <field name="name">(52) Tax Invoice Issued</field>
-                                        <field name="name@ko_KR">(52) 세금계산서 발급분</field>
+                                        <field name="name">(53) Tax Invoice Issued</field>
+                                        <field name="name@ko_KR">(53) 세금계산서 발급분</field>
                                         <field name="code">KR_S8TII</field>
                                         <field name="hierarchy_level">4</field>
                                         <field name="expression_ids">
                                             <record id="l10n_kr_simplified_tp_vat_s8tii_balance"
                                                     model="account.report.expression">
                                                 <field name="label">balance</field>
-                                                <field name="engine">tax_tags</field>
-                                                <field name="formula">-ST52a</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('move_id.l10n_kr_issuance_type', '=', 'tax_invoice'), ('tax_tag_ids', 'in', ('[간이매출] 공급가액 - 30%', '[간이매출] 세액 - 30%'))]"/>
+                                                <field name="subformula">-sum</field>
                                             </record>
                                         </field>
                                     </record>
                                     <record id="l10n_kr_simplified_tp_vat_s8tiip" model="account.report.line">
-                                        <field name="name">(53) Tax invoice issued by purchasee</field>
-                                        <field name="name@ko_KR">(53) 매입자발행 세금계산서</field>
+                                        <field name="name">(54) Tax invoice issued by purchasee</field>
+                                        <field name="name@ko_KR">(54) 매입자발행 세금계산서</field>
                                         <field name="code">KR_S8TIIP</field>
                                         <field name="hierarchy_level">4</field>
                                         <field name="expression_ids">
                                             <record id="l10n_kr_simplified_tp_vat_s8tiip_balance"
                                                     model="account.report.expression">
                                                 <field name="label">balance</field>
-                                                <field name="engine">tax_tags</field>
-                                                <field name="formula">-ST53a</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('move_id.l10n_kr_issuance_type', '=', 'purchaser_tax_invoice'), ('tax_tag_ids', 'in', ('[간이매출] 공급가액 - 30%', '[간이매출] 세액 - 30%'))]"/>
+                                                <field name="subformula">-sum</field>
                                             </record>
                                         </field>
                                     </record>
                                     <record id="l10n_kr_simplified_tp_vat_s8tccri" model="account.report.line">
-                                        <field name="name">(54) Card or Cash Receipt Issued</field>
-                                        <field name="name@ko_KR">(54) 신용카드ᆞ현금영수증 발행분</field>
+                                        <field name="name">(55) Card or Cash Receipt Issued</field>
+                                        <field name="name@ko_KR">(55) 신용카드ᆞ현금영수증 발행분</field>
                                         <field name="code">KR_S8TCCRI</field>
                                         <field name="hierarchy_level">4</field>
                                         <field name="expression_ids">
                                             <record id="l10n_kr_simplified_tp_vat_s8tccri_balance"
                                                     model="account.report.expression">
                                                 <field name="label">balance</field>
-                                                <field name="engine">tax_tags</field>
-                                                <field name="formula">-ST54a</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('move_id.l10n_kr_issuance_type', 'in', ('card_payment', 'cash_receipt')), ('tax_tag_ids', 'in', ('[간이매출] 공급가액 - 30%', '[간이매출] 세액 - 30%'))]"/>
+                                                <field name="subformula">-sum</field>
                                             </record>
                                         </field>
                                     </record>
                                     <record id="l10n_kr_simplified_tp_vat_s8o" model="account.report.line">
-                                        <field name="name">(55) Others</field>
-                                        <field name="name@ko_KR">(55) 기타(정규영수증 외 매출분)</field>
+                                        <field name="name">(56) Others</field>
+                                        <field name="name@ko_KR">(56) 기타(정규영수증 외 매출분)</field>
                                         <field name="code">KR_S8O</field>
                                         <field name="hierarchy_level">4</field>
                                         <field name="expression_ids">
                                             <record id="l10n_kr_simplified_tp_vat_s8o_balance"
                                                     model="account.report.expression">
                                                 <field name="label">balance</field>
-                                                <field name="engine">tax_tags</field>
-                                                <field name="formula">-ST55a</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('move_id.l10n_kr_issuance_type', '=', 'other'), ('tax_tag_ids', 'in', ('[간이매출] 공급가액 - 30%', '[간이매출] 세액 - 30%'))]"/>
+                                                <field name="subformula">-sum</field>
                                             </record>
                                         </field>
                                     </record>
                                     <record id="l10n_kr_simplified_tp_vat_s8t" model="account.report.line">
-                                        <field name="name">(56) Total</field>
-                                        <field name="name@ko_KR">(56) 합계</field>
+                                        <field name="name">(57) Total</field>
+                                        <field name="name@ko_KR">(57) 합계</field>
                                         <field name="code">KR_S8T</field>
                                         <field name="hierarchy_level">4</field>
                                         <field name="expression_ids">
@@ -1140,74 +1328,78 @@
                                 </field>
                             </record>
                             <record id="l10n_kr_simplified_tp_vat_s9" model="account.report.line">
-                                <field name="name">(9) Finance eand insurance related services, professional, scientific
-                                    and technical activities (excluding photography and videotaping of events services),
-                                    business facilities management and business support services, activities related to
-                                    real estate and leasing
+                                <field name="name">(9) Financial and insurance-related services; professional, scientific,
+                                    and technical services (excluding portrait photography and event video recording services);
+                                    business facility management, business support, and leasing services; real estate-related
+                                    services; and real estate leasing
                                 </field>
                                 <field name="name@ko_KR">(9) 금융 및 보험 관련 서비스업, 전문ᆞ과학 및 기술서비스업(인물사진 및 행사용 영상 촬영업 제외), 사업시설관리ᆞ사업지원 및 임대서비스업, 부동산 관련 서비스업, 부동산임대업</field>
                                 <field name="code">KR_S9</field>
                                 <field name="hierarchy_level">3</field>
                                 <field name="children_ids">
                                     <record id="l10n_kr_simplified_tp_vat_s9tii" model="account.report.line">
-                                        <field name="name">(57) Tax Invoice Issued</field>
-                                        <field name="name@ko_KR">(57) 세금계산서 발급분</field>
+                                        <field name="name">(58) Tax Invoice Issued</field>
+                                        <field name="name@ko_KR">(58) 세금계산서 발급분</field>
                                         <field name="code">KR_S9TII</field>
                                         <field name="hierarchy_level">4</field>
                                         <field name="expression_ids">
                                             <record id="l10n_kr_simplified_tp_vat_s9tii_balance"
                                                     model="account.report.expression">
                                                 <field name="label">balance</field>
-                                                <field name="engine">tax_tags</field>
-                                                <field name="formula">-ST57a</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('move_id.l10n_kr_issuance_type', '=', 'tax_invoice'), ('tax_tag_ids', 'in', ('[간이매출] 공급가액 - 40%', '[간이매출] 세액 - 40%'))]"/>
+                                                <field name="subformula">-sum</field>
                                             </record>
                                         </field>
                                     </record>
                                     <record id="l10n_kr_simplified_tp_vat_s9tiip" model="account.report.line">
-                                        <field name="name">(58) Tax invoice issued by purchasee</field>
-                                        <field name="name@ko_KR">(58) 매입자발행 세금계산서</field>
+                                        <field name="name">(59) Tax invoice issued by purchasee</field>
+                                        <field name="name@ko_KR">(59) 매입자발행 세금계산서</field>
                                         <field name="code">KR_S9TIIP</field>
                                         <field name="hierarchy_level">4</field>
                                         <field name="expression_ids">
                                             <record id="l10n_kr_simplified_tp_vat_s9tiip_balance"
                                                     model="account.report.expression">
                                                 <field name="label">balance</field>
-                                                <field name="engine">tax_tags</field>
-                                                <field name="formula">-ST58a</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('move_id.l10n_kr_issuance_type', '=', 'purchaser_tax_invoice'), ('tax_tag_ids', 'in', ('[간이매출] 공급가액 - 40%', '[간이매출] 세액 - 40%'))]"/>
+                                                <field name="subformula">-sum</field>
                                             </record>
                                         </field>
                                     </record>
                                     <record id="l10n_kr_simplified_tp_vat_s9tccri" model="account.report.line">
-                                        <field name="name">(59) Card or Cash Receipt Issued</field>
-                                        <field name="name@ko_KR">(59) 신용카드ᆞ현금영수증 발행분</field>
+                                        <field name="name">(60) Card or Cash Receipt Issued</field>
+                                        <field name="name@ko_KR">(60) 신용카드ᆞ현금영수증 발행분</field>
                                         <field name="code">KR_S9TCCRI</field>
                                         <field name="hierarchy_level">4</field>
                                         <field name="expression_ids">
                                             <record id="l10n_kr_simplified_tp_vat_s9tccri_balance"
                                                     model="account.report.expression">
                                                 <field name="label">balance</field>
-                                                <field name="engine">tax_tags</field>
-                                                <field name="formula">-ST59a</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('move_id.l10n_kr_issuance_type', 'in', ('card_payment', 'cash_receipt')), ('tax_tag_ids', 'in', ('[간이매출] 공급가액 - 40%', '[간이매출] 세액 - 40%'))]"/>
+                                                <field name="subformula">-sum</field>
                                             </record>
                                         </field>
                                     </record>
                                     <record id="l10n_kr_simplified_tp_vat_s9o" model="account.report.line">
-                                        <field name="name">(60) Others</field>
-                                        <field name="name@ko_KR">(60) 기타(정규영수증 외 매출분)</field>
+                                        <field name="name">(61) Others</field>
+                                        <field name="name@ko_KR">(61) 기타(정규영수증 외 매출분)</field>
                                         <field name="code">KR_S9O</field>
                                         <field name="hierarchy_level">4</field>
                                         <field name="expression_ids">
                                             <record id="l10n_kr_simplified_tp_vat_s9o_balance"
                                                     model="account.report.expression">
                                                 <field name="label">balance</field>
-                                                <field name="engine">tax_tags</field>
-                                                <field name="formula">-ST60a</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('move_id.l10n_kr_issuance_type', '=', 'other'), ('tax_tag_ids', 'in', ('[간이매출] 공급가액 - 40%', '[간이매출] 세액 - 40%'))]"/>
+                                                <field name="subformula">-sum</field>
                                             </record>
                                         </field>
                                     </record>
                                     <record id="l10n_kr_simplified_tp_vat_s9t" model="account.report.line">
-                                        <field name="name">(61) Total</field>
-                                        <field name="name@ko_KR">(61) 합계</field>
+                                        <field name="name">(62) Total</field>
+                                        <field name="name@ko_KR">(62) 합계</field>
                                         <field name="code">KR_S9T</field>
                                         <field name="hierarchy_level">4</field>
                                         <field name="expression_ids">
@@ -1226,14 +1418,14 @@
                         </field>
                     </record>
                     <record id="l10n_kr_simplified_tp_vat_sp" model="account.report.line">
-                        <field name="name">Penalties</field>
-                        <field name="name@ko_KR">가산세액 계</field>
+                        <field name="name">(28) Penalties</field>
+                        <field name="name@ko_KR">(28) 가산세액 명세</field>
                         <field name="code">KR_SP</field>
                         <field name="hierarchy_level">2</field>
                         <field name="children_ids">
                             <record id="l10n_kr_simplified_tp_vat_sfiti" model="account.report.line">
-                                <field name="name">(62) Failure to issue tax invoice</field>
-                                <field name="name@ko_KR">(62) 사업자 미등록 등</field>
+                                <field name="name">(63) Failure to register business</field>
+                                <field name="name@ko_KR">(63) 사업자 미등록 등</field>
                                 <field name="code">KR_SFITI</field>
                                 <field name="hierarchy_level">3</field>
                                 <field name="expression_ids">
@@ -1246,8 +1438,125 @@
                                     </record>
                                     <record id="l10n_kr_simplified_tp_vat_sfiti_tax" model="account.report.expression">
                                         <field name="label">tax</field>
-                                        <field name="engine">aggregation</field>
-                                        <field name="formula">KR_SFITI.balance * 0.005</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=0</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_kr_simplified_tp_vat_sfitip" model="account.report.line">
+                                <field name="name">Tax Invoice issued by purchaser</field>
+                                <field name="name@ko_KR">세금계산서</field>
+                                <field name="code">KR_SFITIP</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="children_ids">
+                                    <record id="l10n_kr_simplified_tp_vat_sdoiti" model="account.report.line">
+                                        <field name="name">(64) Delay of issuance</field>
+                                        <field name="name@ko_KR">(64) 지연발급 등</field>
+                                        <field name="code">KR_SDOITI</field>
+                                        <field name="hierarchy_level">4</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_kr_simplified_tp_vat_sdoiti_balance"
+                                                    model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="subformula">editable;rounding=0</field>
+                                                <field name="formula">sum</field>
+                                            </record>
+                                            <record id="l10n_kr_simplified_tp_vat_sdoiti_rate"
+                                                    model="account.report.expression">
+                                                <field name="label">rate</field>
+                                                <field name="engine">text</field>
+                                                <field name="formula">1/100</field>
+                                            </record>
+                                            <record id="l10n_kr_simplified_tp_vat_sdoiti_tax"
+                                                    model="account.report.expression">
+                                                <field name="label">tax</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">KR_SDOITI.balance * 0.01</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_kr_simplified_tp_vat_sfoiti" model="account.report.line">
+                                        <field name="name">(65) Failure of issuance</field>
+                                        <field name="name@ko_KR">(65) 미발급 등</field>
+                                        <field name="code">KR_SFOITI</field>
+                                        <field name="hierarchy_level">4</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_kr_simplified_tp_vat_sfoiti_balance"
+                                                    model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="subformula">editable;rounding=0</field>
+                                                <field name="formula">sum</field>
+                                            </record>
+                                            <record id="l10n_kr_simplified_tp_vat_sfoiti_rate"
+                                                    model="account.report.expression">
+                                                <field name="label">rate</field>
+                                                <field name="engine">text</field>
+                                                <field name="formula">2/100</field>
+                                            </record>
+                                            <record id="l10n_kr_simplified_tp_vat_sfoiti_tax"
+                                                    model="account.report.expression">
+                                                <field name="label">tax</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">KR_SFOITI.balance * 0.02</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_kr_simplified_tp_vat_siofti" model="account.report.line">
+                                        <field name="name">(66) Fraudulent issuance and receipt of tax invoices</field>
+                                        <field name="name@ko_KR">(66) 가공발급ㆍ수취 등</field>
+                                        <field name="code">KR_SIOFTI</field>
+                                        <field name="hierarchy_level">4</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_kr_simplified_tp_vat_siofti_balance"
+                                                    model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=0</field>
+                                            </record>
+                                            <record id="l10n_kr_simplified_tp_vat_siofti_rate"
+                                                    model="account.report.expression">
+                                                <field name="label">rate</field>
+                                                <field name="engine">text</field>
+                                                <field name="formula">4/100</field>
+                                            </record>
+                                            <record id="l10n_kr_simplified_tp_vat_siofti_tax"
+                                                    model="account.report.expression">
+                                                <field name="label">tax</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">KR_SIOFTI.balance * 0.04</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_kr_simplified_tp_vat_sforr" model="account.report.line">
+                                        <field name="name">(67) Failure of reception</field>
+                                        <field name="name@ko_KR">(67) 미수취</field>
+                                        <field name="code">KR_SFORR</field>
+                                        <field name="hierarchy_level">4</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_kr_simplified_tp_vat_sforr_balance"
+                                                    model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="subformula">editable;rounding=0</field>
+                                                <field name="formula">sum</field>
+                                            </record>
+                                            <record id="l10n_kr_simplified_tp_vat_sforr_rate"
+                                                    model="account.report.expression">
+                                                <field name="label">rate</field>
+                                                <field name="engine">text</field>
+                                                <field name="formula">5/1000</field>
+                                            </record>
+                                            <record id="l10n_kr_simplified_tp_vat_sforr_tax"
+                                                    model="account.report.expression">
+                                                <field name="label">tax</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">KR_SFORR.balance * 0.005</field>
+                                            </record>
+                                        </field>
                                     </record>
                                 </field>
                             </record>
@@ -1258,66 +1567,51 @@
                                 <field name="hierarchy_level">3</field>
                                 <field name="children_ids">
                                     <record id="l10n_kr_simplified_tp_vat_sfdoi" model="account.report.line">
-                                        <field name="name">(63) Delay of issuance</field>
-                                        <field name="name@ko_KR">(63) 지연발급 등</field>
+                                        <field name="name">(68) Delay of issuance</field>
+                                        <field name="name@ko_KR">(68) 지연전송</field>
                                         <field name="code">KR_SFDOI</field>
                                         <field name="hierarchy_level">4</field>
                                         <field name="expression_ids">
-                                            <record id="l10n_kr_simplified_tp_vat_sfdoi_balance"
-                                                    model="account.report.expression">
+                                            <record id="l10n_kr_simplified_tp_vat_sfdoi_balance" model="account.report.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">external</field>
-                                                <field name="subformula">editable;rounding=0</field>
                                                 <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=0</field>
                                             </record>
-                                            <record id="l10n_kr_simplified_tp_vat_sfdoi_tax"
-                                                    model="account.report.expression">
+                                            <record id="l10n_kr_simplified_tp_vat_sfdoi_rate" model="account.report.expression">
+                                                <field name="label">rate</field>
+                                                <field name="engine">text</field>
+                                                <field name="formula">3/1000</field>
+                                            </record>
+                                            <record id="l10n_kr_simplified_tp_vat_sfdoi_tax" model="account.report.expression">
                                                 <field name="label">tax</field>
                                                 <field name="engine">aggregation</field>
-                                                <field name="formula">KR_SFDOI.balance * 0.01</field>
+                                                <field name="formula">KR_SFDOI.balance * 0.003</field>
                                             </record>
                                         </field>
                                     </record>
                                     <record id="l10n_kr_simplified_tp_vat_sffoi" model="account.report.line">
-                                        <field name="name">(64) Failure of issuance</field>
-                                        <field name="name@ko_KR">(64) 미발급 등</field>
+                                        <field name="name">(69) Failure of issuance</field>
+                                        <field name="name@ko_KR">(69) 미전송</field>
                                         <field name="code">KR_SFFOI</field>
                                         <field name="hierarchy_level">4</field>
                                         <field name="expression_ids">
-                                            <record id="l10n_kr_simplified_tp_vat_sffoi_balance"
-                                                    model="account.report.expression">
+                                            <record id="l10n_kr_simplified_tp_vat_sffoi_balance" model="account.report.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">external</field>
-                                                <field name="subformula">editable;rounding=0</field>
-                                                <field name="formula">sum</field>
-                                            </record>
-                                            <record id="l10n_kr_simplified_tp_vat_sffoi_tax"
-                                                    model="account.report.expression">
-                                                <field name="label">tax</field>
-                                                <field name="engine">external</field>
                                                 <field name="formula">sum</field>
                                                 <field name="subformula">editable;rounding=0</field>
                                             </record>
-                                        </field>
-                                    </record>
-                                    <record id="l10n_kr_simplified_tp_vat_sffor" model="account.report.line">
-                                        <field name="name">(65) Failure of reception</field>
-                                        <field name="name@ko_KR">(65) 미수취</field>
-                                        <field name="code">KR_SFFOR</field>
-                                        <field name="hierarchy_level">4</field>
-                                        <field name="expression_ids">
-                                            <record id="l10n_kr_simplified_tp_vat_sffor_balance"
-                                                    model="account.report.expression">
-                                                <field name="label">balance</field>
-                                                <field name="engine">external</field>
-                                                <field name="subformula">editable;rounding=0</field>
-                                                <field name="formula">sum</field>
+                                            <record id="l10n_kr_simplified_tp_vat_sffoi_rate" model="account.report.expression">
+                                                <field name="label">rate</field>
+                                                <field name="engine">text</field>
+                                                <field name="formula">5/1000</field>
                                             </record>
-                                            <record id="l10n_kr_simplified_tp_vat_sffor_tax"
-                                                    model="account.report.expression">
+                                            <record id="l10n_kr_simplified_tp_vat_sffoi_tax" model="account.report.expression">
                                                 <field name="label">tax</field>
                                                 <field name="engine">aggregation</field>
-                                                <field name="formula">KR_SFFOR.balance * 0.005</field>
+                                                <field name="formula">KR_SFFOI.balance * 0.005</field>
+                                                <field name="subformula"></field> <!--To drop subformula on upgrade to v20-->
                                             </record>
                                         </field>
                                     </record>
@@ -1330,8 +1624,8 @@
                                 <field name="hierarchy_level">3</field>
                                 <field name="children_ids">
                                     <record id="l10n_kr_simplified_tp_vat_sffs" model="account.report.line">
-                                        <field name="name">(66) Failure to submit</field>
-                                        <field name="name@ko_KR">(66) 제출 불성실</field>
+                                        <field name="name">(70) Failure to submit</field>
+                                        <field name="name@ko_KR">(70) 제출 불성실</field>
                                         <field name="code">KR_SFFS</field>
                                         <field name="hierarchy_level">4</field>
                                         <field name="expression_ids">
@@ -1342,6 +1636,11 @@
                                                 <field name="subformula">editable;rounding=0</field>
                                                 <field name="formula">sum</field>
                                             </record>
+                                            <record id="l10n_kr_simplified_tp_vat_sffs_rate" model="account.report.expression">
+                                                <field name="label">rate</field>
+                                                <field name="engine">text</field>
+                                                <field name="formula">5/1000</field>
+                                            </record>
                                             <record id="l10n_kr_simplified_tp_vat_sffs_tax"
                                                     model="account.report.expression">
                                                 <field name="label">tax</field>
@@ -1351,8 +1650,8 @@
                                         </field>
                                     </record>
                                     <record id="l10n_kr_simplified_tp_vat_sfds" model="account.report.line">
-                                        <field name="name">(67) Delayed Submission</field>
-                                        <field name="name@ko_KR">(67) 지연제출</field>
+                                        <field name="name">(71) Delayed Submission</field>
+                                        <field name="name@ko_KR">(71) 지연제출</field>
                                         <field name="code">KR_SFDS</field>
                                         <field name="hierarchy_level">4</field>
                                         <field name="expression_ids">
@@ -1362,6 +1661,11 @@
                                                 <field name="engine">external</field>
                                                 <field name="subformula">editable;rounding=0</field>
                                                 <field name="formula">sum</field>
+                                            </record>
+                                            <record id="l10n_kr_simplified_tp_vat_sfds_rate" model="account.report.expression">
+                                                <field name="label">rate</field>
+                                                <field name="engine">text</field>
+                                                <field name="formula">3/1000</field>
                                             </record>
                                             <record id="l10n_kr_simplified_tp_vat_sfds_tax"
                                                     model="account.report.expression">
@@ -1380,18 +1684,11 @@
                                 <field name="hierarchy_level">3</field>
                                 <field name="children_ids">
                                     <record id="l10n_kr_simplified_tp_vat_sfftsg" model="account.report.line">
-                                        <field name="name">(68) Failure to submit (General)</field>
-                                        <field name="name@ko_KR">(68) 무신고(일반)</field>
+                                        <field name="name">(72) Failure to submit (General)</field>
+                                        <field name="name@ko_KR">(72) 무신고(일반)</field>
                                         <field name="code">KR_SFFTSG</field>
                                         <field name="hierarchy_level">4</field>
                                         <field name="expression_ids">
-                                            <record id="l10n_kr_simplified_tp_vat_sfftsg_balance"
-                                                    model="account.report.expression">
-                                                <field name="label">balance</field>
-                                                <field name="engine">external</field>
-                                                <field name="subformula">editable;rounding=0</field>
-                                                <field name="formula">sum</field>
-                                            </record>
                                             <record id="l10n_kr_simplified_tp_vat_sfftsg_tax"
                                                     model="account.report.expression">
                                                 <field name="label">tax</field>
@@ -1402,18 +1699,11 @@
                                         </field>
                                     </record>
                                     <record id="l10n_kr_simplified_tp_vat_sfftsi" model="account.report.line">
-                                        <field name="name">(69) Failure to submit (Intentional)</field>
-                                        <field name="name@ko_KR">(69) 무신고(부당)</field>
+                                        <field name="name">(73) Failure to submit (Intentional)</field>
+                                        <field name="name@ko_KR">(73) 무신고(부당)</field>
                                         <field name="code">KR_SFFTSI</field>
                                         <field name="hierarchy_level">4</field>
                                         <field name="expression_ids">
-                                            <record id="l10n_kr_simplified_tp_vat_sfftsi_balance"
-                                                    model="account.report.expression">
-                                                <field name="label">balance</field>
-                                                <field name="engine">external</field>
-                                                <field name="subformula">editable;rounding=0</field>
-                                                <field name="formula">sum</field>
-                                            </record>
                                             <record id="l10n_kr_simplified_tp_vat_sfftsi_tax"
                                                     model="account.report.expression">
                                                 <field name="label">tax</field>
@@ -1424,18 +1714,11 @@
                                         </field>
                                     </record>
                                     <record id="l10n_kr_simplified_tp_vat_sfurg" model="account.report.line">
-                                        <field name="name">(70) Understatement/Excess Report (General)</field>
-                                        <field name="name@ko_KR">(70) 과소신고(일반)</field>
+                                        <field name="name">(74) Understatement/Excess Report (General)</field>
+                                        <field name="name@ko_KR">(74) 과소신고(일반)</field>
                                         <field name="code">KR_SFURG</field>
                                         <field name="hierarchy_level">4</field>
                                         <field name="expression_ids">
-                                            <record id="l10n_kr_simplified_tp_vat_sfurg_balance"
-                                                    model="account.report.expression">
-                                                <field name="label">balance</field>
-                                                <field name="engine">external</field>
-                                                <field name="subformula">editable;rounding=0</field>
-                                                <field name="formula">sum</field>
-                                            </record>
                                             <record id="l10n_kr_simplified_tp_vat_sfurg_tax"
                                                     model="account.report.expression">
                                                 <field name="label">tax</field>
@@ -1446,18 +1729,11 @@
                                         </field>
                                     </record>
                                     <record id="l10n_kr_simplified_tp_vat_sfuri" model="account.report.line">
-                                        <field name="name">(71) Understatement/Excess Report (Intentional)</field>
-                                        <field name="name@ko_KR">(71) 과소신고(부당)</field>
+                                        <field name="name">(75) Understatement/Excess Report (Intentional)</field>
+                                        <field name="name@ko_KR">(75) 과소신고(부당)</field>
                                         <field name="code">KR_SFURI</field>
                                         <field name="hierarchy_level">4</field>
                                         <field name="expression_ids">
-                                            <record id="l10n_kr_simplified_tp_vat_sfuri_balance"
-                                                    model="account.report.expression">
-                                                <field name="label">balance</field>
-                                                <field name="engine">external</field>
-                                                <field name="subformula">editable;rounding=0</field>
-                                                <field name="formula">sum</field>
-                                            </record>
                                             <record id="l10n_kr_simplified_tp_vat_sfuri_tax"
                                                     model="account.report.expression">
                                                 <field name="label">tax</field>
@@ -1470,18 +1746,11 @@
                                 </field>
                             </record>
                             <record id="l10n_kr_simplified_tp_vat_sdpot" model="account.report.line">
-                                <field name="name">(72) Delayed Payment of tax</field>
-                                <field name="name@ko_KR">(72) 납부지연</field>
+                                <field name="name">(76) Delayed Payment of tax</field>
+                                <field name="name@ko_KR">(76) 납부지연</field>
                                 <field name="code">KR_SDPOT</field>
                                 <field name="hierarchy_level">3</field>
                                 <field name="expression_ids">
-                                    <record id="l10n_kr_simplified_tp_vat_sdpot_balance"
-                                            model="account.report.expression">
-                                        <field name="label">balance</field>
-                                        <field name="engine">external</field>
-                                        <field name="formula">sum</field>
-                                        <field name="subformula">editable;rounding=0</field>
-                                    </record>
                                     <record id="l10n_kr_simplified_tp_vat_sdpot_tax" model="account.report.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">external</field>
@@ -1491,9 +1760,9 @@
                                 </field>
                             </record>
                             <record id="l10n_kr_simplified_tp_vat_scit" model="account.report.line">
-                                <field name="name">(73) Credit for input tax confirmed by decision correction agency
+                                <field name="name">(77) Credit for input tax confirmed by decision correction agency
                                 </field>
-                                <field name="name@ko_KR">(73) 결정ᆞ경정기관 확인 매입세액 공제</field>
+                                <field name="name@ko_KR">(77) 결정ᆞ경정기관 확인 매입세액 공제</field>
                                 <field name="code">KR_SCIT</field>
                                 <field name="hierarchy_level">3</field>
                                 <field name="expression_ids">
@@ -1504,6 +1773,11 @@
                                         <field name="formula">sum</field>
                                         <field name="subformula">editable;rounding=0</field>
                                     </record>
+                                    <record id="l10n_kr_simplified_tp_vat_scit_rate" model="account.report.expression">
+                                        <field name="label">rate</field>
+                                        <field name="engine">text</field>
+                                        <field name="formula">5/1000</field>
+                                    </record>
                                     <record id="l10n_kr_simplified_tp_vat_scit_tax" model="account.report.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
@@ -1512,10 +1786,10 @@
                                 </field>
                             </record>
                             <record id="l10n_kr_simplified_tp_vat_sftrur" model="account.report.line">
-                                <field name="name">(74) Failure to report or under-reporting of tax base for
+                                <field name="name">(78) Failure to report or under-reporting of tax base for
                                     zero-rating
                                 </field>
-                                <field name="name@ko_KR">(74) 영세율 과세표준신고 불성실</field>
+                                <field name="name@ko_KR">(78) 영세율 과세표준신고 불성실</field>
                                 <field name="code">KR_SFTRUR</field>
                                 <field name="hierarchy_level">3</field>
                                 <field name="expression_ids">
@@ -1525,6 +1799,11 @@
                                         <field name="engine">external</field>
                                         <field name="formula">sum</field>
                                         <field name="subformula">editable;rounding=0</field>
+                                    </record>
+                                    <record id="l10n_kr_simplified_tp_vat_sftrur_rate" model="account.report.expression">
+                                        <field name="label">rate</field>
+                                        <field name="engine">text</field>
+                                        <field name="formula">5/1000</field>
                                     </record>
                                     <record id="l10n_kr_simplified_tp_vat_sftrur_tax" model="account.report.expression">
                                         <field name="label">tax</field>
@@ -1540,8 +1819,8 @@
                                 <field name="hierarchy_level">3</field>
                                 <field name="children_ids">
                                     <record id="l10n_kr_simplified_tp_vat_sftuta" model="account.report.line">
-                                        <field name="name">(75) Failure to use transaction account</field>
-                                        <field name="name@ko_KR">(75) 거래계좌 미사용</field>
+                                        <field name="name">(79) Failure to use transaction account</field>
+                                        <field name="name@ko_KR">(79) 거래계좌 미사용</field>
                                         <field name="code">KR_SFTUTA</field>
                                         <field name="hierarchy_level">4</field>
                                         <field name="expression_ids">
@@ -1555,25 +1834,18 @@
                                             <record id="l10n_kr_simplified_tp_vat_sftuta_tax"
                                                     model="account.report.expression">
                                                 <field name="label">tax</field>
-                                                <field name="engine">external</field>
-                                                <field name="formula">sum</field>
-                                                <field name="subformula">editable;rounding=0</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">KR_SFTUTA.balance * 0.1</field>
+                                                <field name="subformula"></field> <!--To drop subformula on upgrade to v20-->
                                             </record>
                                         </field>
                                     </record>
                                     <record id="l10n_kr_simplified_tp_vat_sdpta" model="account.report.line">
-                                        <field name="name">(76) Delayed payment to the transaction account</field>
-                                        <field name="name@ko_KR">(76) 거래계좌 지연입금</field>
+                                        <field name="name">(80) Delayed payment to the transaction account</field>
+                                        <field name="name@ko_KR">(80) 거래계좌 지연입금</field>
                                         <field name="code">KR_SDPTA</field>
                                         <field name="hierarchy_level">4</field>
                                         <field name="expression_ids">
-                                            <record id="l10n_kr_simplified_tp_vat_sdpta_balance"
-                                                    model="account.report.expression">
-                                                <field name="label">balance</field>
-                                                <field name="engine">external</field>
-                                                <field name="subformula">editable;rounding=0</field>
-                                                <field name="formula">sum</field>
-                                            </record>
                                             <record id="l10n_kr_simplified_tp_vat_sdpta_tax"
                                                     model="account.report.expression">
                                                 <field name="label">tax</field>
@@ -1586,17 +1858,18 @@
                                 </field>
                             </record>
                             <record id="l10n_kr_simplified_tp_vat_spt" model="account.report.line">
-                                <field name="name">(77) Total</field>
-                                <field name="name@ko_KR">(77) 합계</field>
+                                <field name="name">(81) Total</field>
+                                <field name="name@ko_KR">(81) 합계</field>
                                 <field name="code">KR_SPT</field>
                                 <field name="hierarchy_level">3</field>
                                 <field name="expression_ids">
                                     <record id="l10n_kr_simplified_tp_vat_spt_tax" model="account.report.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
-                                        <field name="formula">KR_SFITI.tax + KR_SFDOI.tax + KR_SFFOI.tax + KR_SFFOR.tax + KR_SFFS.tax +
-                                            KR_SFDS.tax + KR_SFFTSG.tax + KR_SFFTSI.tax + KR_SFURG.tax + KR_SFURI.tax + KR_SDPOT.tax +
-                                            KR_SCIT.tax + KR_SFTRUR.tax + KR_SFTUTA.tax + KR_SDPTA.tax
+                                        <field name="formula">KR_SFITI.tax + KR_SDOITI.tax + KR_SFOITI.tax + KR_SIOFTI.tax +
+                                            KR_SFORR.tax + KR_SFDOI.tax + KR_SFFOI.tax + KR_SFFS.tax + KR_SFDS.tax + KR_SFFTSG.tax +
+                                            KR_SFFTSI.tax + KR_SFURG.tax + KR_SFURI.tax + KR_SDPOT.tax + KR_SCIT.tax + KR_SFTRUR.tax +
+                                            KR_SFTUTA.tax + KR_SDPTA.tax
                                         </field>
                                     </record>
                                 </field>

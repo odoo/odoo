@@ -15,6 +15,8 @@ This provides a base chart of accounts and taxes template for use in Odoo.
         'data/res_country_data.xml',
         'data/general_tax_report.xml',
         'data/simplified_tax_report.xml',
+        'views/res_partner_views.xml',
+        'views/account_move_views.xml',
     ],
     'demo': [
         'demo/demo_company.xml',

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_move_form_l10n_kr" model="ir.ui.view">
+        <field name="name">account.move.form.l10n_kr</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <div name="journal_div" position="after">
+                <field name="l10n_kr_issuance_type"
+                       invisible="country_code != 'KR' or move_type == 'entry'"/>
+            </div>
+            <group name="accounting_info_group" position="inside">
+                <field name="l10n_kr_edocument_number"
+                       invisible="country_code != 'KR' or move_type == 'entry'"/>
+            </group>
+        </field>
+    </record>
+</odoo>
