@@ -372,9 +372,16 @@ var owl = (() => {
     onDestroy(cb) {
       if (this.status >= STATUS.DESTROYED) {
         cb();
-        return;
+        return () => {};
       }
-      (this._destroyCbs ??= []).push(cb);
+      const cbs = (this._destroyCbs ??= []);
+      cbs.push(cb);
+      return () => {
+        const index = cbs.indexOf(cb);
+        if (index > -1) {
+          cbs.splice(index, 1);
+        }
+      };
     }
     /**
      * Aborts the scope's signal, runs all registered onDestroy callbacks in
@@ -391,7 +398,7 @@ var owl = (() => {
       if (this._controller && !this._controller.signal.aborted) {
         this._controller.abort();
       }
-      const cbs = this._destroyCbs;
+      const cbs = this._destroyCbs?.slice();
       if (cbs) {
         this._destroyCbs = null;
         for (let i = cbs.length - 1; i >= 0; i--) {
@@ -1487,7 +1494,8 @@ ${issueStrings}`);
       this.pluginManager = this;
       if (options.parent) {
         const parent = options.parent;
-        parent.onDestroy(() => this.destroy());
+        const removeParentDestroy = parent.onDestroy(() => this.destroy());
+        this.onDestroy(removeParentDestroy);
         this.plugins = Object.create(parent.plugins);
       } else {
         this.plugins = {};
