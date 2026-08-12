@@ -6,6 +6,7 @@
     <field name="arch" type="xml">
       <list string="Prelog Data">
         <field name="name"/>
+        <field name="schedule"/>
         <field name="network_deal_number"/>
         <field name="actual_000_primary_demo"/>
         <field name="advertiserproduct"/>
@@ -109,8 +110,16 @@
     <field name="arch" type="xml">
       <search string="Prelog Data">
         <field name="name"/>
+        <field name="import_program"/>
+        <field name="import_week_value"/>
+        <field name="version"/>
         <field name="network_deal_number"/>
+        <field name="schedule"/>
         <field name="sf_external_id"/>
+        <separator/>
+        <filter name="filter_no_schedule"
+                string="No Schedule ID"
+                domain="[('schedule', '=', False)]"/>
       </search>
     </field>
   </record>

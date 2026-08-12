@@ -1,4 +1,5 @@
 import csv
+import base64
 import io
 from datetime import date, datetime
 
@@ -99,6 +100,7 @@ class TestPrelogFuzzyMatching(TransactionCase):
         self.assertEqual(row['suggested']['id'], self.schedule.id)
         self.assertTrue(row['suggestion_attachable'])
         self.assertFalse(row['reason'])
+        self.assertEqual(row['match_quality'], 'exact')
 
         applied = self.env['mv.prelog_data'].fuzzy_match_apply([{
             'prelog_id': prelog.id,
@@ -402,3 +404,84 @@ class TestPrelogFuzzyMatching(TransactionCase):
         self.assertEqual(parsed[0][-1], 'Reason')
         self.assertEqual(parsed[1][9], '\'=2+2, "Quoted" Product')
         self.assertEqual(parsed[1][10], 'No schedules found for deal number')
+
+    def test_workbench_tabs_remove_and_unremove_clear_schedule(self):
+        matched = self._create_prelog(version=8, schedule=self.schedule.id)
+        suggested = self._create_prelog(version=8, advertiserproduct='Suggested')
+        no_suggestion = self._create_prelog(
+            version=8,
+            network_deal_number='NOT-FOUND',
+            advertiserproduct='No Suggestion',
+        )
+        already_removed = self._create_prelog(
+            version=8,
+            removed=True,
+            advertiserproduct='Removed',
+        )
+
+        result = self.env['mv.prelog_data'].fuzzy_match_search(
+            self.program.id, self.week.isoformat(), 8,
+        )
+        self.assertEqual(result['counts'], {
+            'all': 3,
+            'matched': 1,
+            'suggestions': 1,
+            'no_suggestion': 1,
+            'removed': 1,
+        })
+        self.assertNotIn(already_removed.id, [row['id'] for row in result['rows']])
+
+        self.env['mv.prelog_data'].fuzzy_match_set_removed(
+            [matched.id], True, self.program.id, self.week.isoformat(), 8,
+        )
+        self.assertTrue(matched.removed)
+        self.assertFalse(matched.schedule)
+        self.assertEqual(matched.import_match_status, 'created_without_schedule')
+
+        removed = self.env['mv.prelog_data'].fuzzy_match_search(
+            self.program.id, self.week.isoformat(), 8, 0, 200, 'removed',
+        )
+        self.assertEqual(removed['total'], 2)
+        self.env['mv.prelog_data'].fuzzy_match_set_removed(
+            [matched.id], False, self.program.id, self.week.isoformat(), 8,
+        )
+        self.assertFalse(matched.removed)
+        self.assertFalse(matched.schedule)
+        refreshed = self.env['mv.prelog_data'].fuzzy_match_search(
+            self.program.id, self.week.isoformat(), 8, 0, 200, 'suggestions',
+        )
+        self.assertIn(matched.id, [row['id'] for row in refreshed['rows']])
+        self.assertIn(suggested.id, [row['id'] for row in refreshed['rows']])
+        self.assertFalse(no_suggestion.schedule)
+
+    def test_buffer_only_suggestion_is_fuzzy_not_exact(self):
+        prelog = self._create_prelog(version=9, scheduletime='11:00:00 AM')
+        result = self.env['mv.prelog_data'].fuzzy_match_search(
+            self.program.id, self.week.isoformat(), 9, 0, 200, 'suggestions',
+        )
+        row = result['rows'][0]
+        self.assertEqual(row['id'], prelog.id)
+        self.assertEqual(row['match_quality'], 'fuzzy')
+        self.assertIn('Within fuzzy buffer', row['reason'])
+
+    def test_options_default_to_current_users_latest_completed_upload(self):
+        job = self.env['mv.prelog_import_job'].create({
+            'state': 'completed',
+            'upload_file': base64.b64encode(b'header\nvalue'),
+            'upload_filename': 'must-not-be-exposed.csv',
+            'file_checksum': 'fuzzy-workbench-options',
+            'program_id': self.program.id,
+            'import_week': self.week,
+            'prelog_version': 10,
+            'submitted_by_id': self.env.user.id,
+        })
+        prelog = self._create_prelog(version=10, import_job=job.id)
+        options = self.env['mv.prelog_data'].fuzzy_match_get_options()
+        latest = options['latest_upload']
+        self.assertEqual(latest['id'], job.id)
+        self.assertEqual(latest['program_id'], self.program.id)
+        self.assertEqual(latest['version'], 10)
+        self.assertEqual(latest['row_count'], 1)
+        self.assertNotIn('filename', latest)
+        self.assertNotIn('upload_filename', latest)
+        self.assertEqual(prelog.import_job, job)

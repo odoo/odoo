@@ -42,7 +42,7 @@ class MvPrelogDataFuzzyMatching(models.Model):
 
     @api.model
     def fuzzy_match_get_options(self, program_id=False, week_start=False):
-        """Return every Program plus versions available for the filters."""
+        """Return filters and the current user's latest completed upload."""
         self._fuzzy_check_access()
         programs = self.env['mv.programs'].search([], order='name, id')
         versions = []
@@ -76,6 +76,7 @@ class MvPrelogDataFuzzyMatching(models.Model):
             'versions': versions,
             'page_size': self._FUZZY_PAGE_SIZE,
             'time_buffer_minutes': self._FUZZY_TIME_BUFFER_MINUTES,
+            'latest_upload': self._fuzzy_latest_user_upload(),
         }
 
     @api.model
@@ -86,8 +87,14 @@ class MvPrelogDataFuzzyMatching(models.Model):
         version,
         offset=0,
         limit=None,
+        status='all',
+        search_term='',
+        air_date=False,
+        issue_filter='',
+        sort_by='air_date',
+        import_job_id=False,
     ):
-        """Return one page of unmatched Prelog Data and suggestions."""
+        """Return a classified page for the Prelog Operations Workbench."""
         self._fuzzy_check_access()
         program, selected_week, selected_version = self._fuzzy_validate_filters(
             program_id,
@@ -101,26 +108,48 @@ class MvPrelogDataFuzzyMatching(models.Model):
             program.id,
             selected_week,
             selected_version,
+            unmatched_only=False,
+            include_removed=True,
+            import_job_id=import_job_id,
         )
-        total = self.search_count(domain)
+        prelogs = self.search(domain, order='airdate asc, scheduletime asc, id asc')
+        all_rows = self._fuzzy_build_rows(
+            prelogs,
+            program,
+            selected_week,
+            use_attached=True,
+        )
+        for row, prelog in zip(all_rows, prelogs):
+            self._fuzzy_classify_row(row, prelog)
+
+        counts = {
+            'all': sum(row['status'] != 'removed' for row in all_rows),
+            'matched': sum(row['status'] == 'matched' for row in all_rows),
+            'suggestions': sum(row['status'] == 'suggestion' for row in all_rows),
+            'no_suggestion': sum(row['status'] == 'no_suggestion' for row in all_rows),
+            'removed': sum(row['status'] == 'removed' for row in all_rows),
+        }
+        rows = self._fuzzy_filter_workbench_rows(
+            all_rows,
+            status=status,
+            search_term=search_term,
+            air_date=air_date,
+            issue_filter=issue_filter,
+            sort_by=sort_by,
+        )
+        total = len(rows)
         if total:
             offset = min(offset, ((total - 1) // limit) * limit)
         else:
             offset = 0
-        prelogs = self.search(
-            domain,
-            order='airdate asc, scheduletime asc, id asc',
-            offset=offset,
-            limit=limit,
-        )
-        rows = self._fuzzy_build_rows(prelogs, program, selected_week)
         return {
-            'rows': rows,
+            'rows': rows[offset:offset + limit],
             'total': total,
             'offset': offset,
             'limit': limit,
             'page': (offset // limit) + 1 if total else 0,
             'pages': ((total + limit - 1) // limit) if total else 0,
+            'counts': counts,
         }
 
     @api.model
@@ -173,6 +202,7 @@ class MvPrelogDataFuzzyMatching(models.Model):
                 'schedule_ref': (item.get('schedule_ref') or '').strip(),
                 'source': item.get('source') or 'suggested',
                 'confirmed_override': bool(item.get('confirmed_override')),
+                'replace_existing': bool(item.get('replace_existing')),
             })
 
         prelogs = self.search([('id', 'in', list(seen_prelog_ids))])
@@ -188,9 +218,13 @@ class MvPrelogDataFuzzyMatching(models.Model):
                     % {'id': item['prelog_id']}
                 )
                 continue
-            if prelog.schedule:
+            if prelog.schedule and not (
+                item['source'] == 'manual'
+                and item['replace_existing']
+                and item['confirmed_override']
+            ):
                 errors.append(
-                    _('%(prelog)s was already matched. Refresh the page and try again.')
+                    _('%(prelog)s is already matched. Use Replace Schedule to change it.')
                     % {'prelog': prelog.display_name}
                 )
                 continue
@@ -286,16 +320,16 @@ class MvPrelogDataFuzzyMatching(models.Model):
                 )
                 continue
 
-            prepared.append((prelog, schedule, item['source']))
+            prepared.append((prelog, schedule, item['source'], prelog.schedule))
 
         if errors:
             raise UserError('\n'.join(errors))
 
         now = fields.Datetime.now()
         user_name = self.env.user.display_name
-        for prelog, schedule, source in prepared:
+        for prelog, schedule, source, previous_schedule in prepared:
             audit_line = _(
-                'Schedule %(schedule)s attached from Prelog Fuzzy Matching '
+                'Schedule %(schedule)s attached from Prelog Fuzzy Matching / Operations Workbench '
                 '(%(source)s) by %(user)s on %(date)s.'
             ) % {
                 'schedule': schedule.display_name,
@@ -303,6 +337,16 @@ class MvPrelogDataFuzzyMatching(models.Model):
                 'user': user_name,
                 'date': fields.Datetime.to_string(now),
             }
+            if previous_schedule:
+                audit_line = _(
+                    'Schedule %(previous)s replaced with %(schedule)s from '
+                    'Prelog Operations Workbench by %(user)s on %(date)s.'
+                ) % {
+                    'previous': previous_schedule.display_name,
+                    'schedule': schedule.display_name,
+                    'user': user_name,
+                    'date': fields.Datetime.to_string(now),
+                }
             detail = '\n'.join(
                 part
                 for part in (prelog.import_match_detail, audit_line)
@@ -318,6 +362,106 @@ class MvPrelogDataFuzzyMatching(models.Model):
             'attached': len(prepared),
             'message': _('%(count)s schedule(s) successfully attached.')
             % {'count': len(prepared)},
+        }
+
+    @api.model
+    def fuzzy_match_set_removed(
+        self,
+        prelog_ids,
+        removed,
+        program_id=False,
+        week_start=False,
+        version=False,
+        import_job_id=False,
+    ):
+        """Soft-remove rows; removing always clears the attached Schedule ID."""
+        self._fuzzy_check_access()
+        prelogs = self._fuzzy_validate_selected_prelogs(
+            prelog_ids,
+            program_id,
+            week_start,
+            version,
+            import_job_id,
+        )
+        removed = bool(removed)
+        now = fields.Datetime.now()
+        for prelog in prelogs:
+            previous_schedule = prelog.schedule.display_name if prelog.schedule else ''
+            if removed:
+                line = _(
+                    'Removed from Prelog Operations Workbench by %(user)s on %(date)s.'
+                ) % {
+                    'user': self.env.user.display_name,
+                    'date': fields.Datetime.to_string(now),
+                }
+                if previous_schedule:
+                    line += ' ' + _(
+                        'Cleared Schedule %(schedule)s.'
+                    ) % {'schedule': previous_schedule}
+            else:
+                line = _(
+                    'Unremoved from Prelog Operations Workbench by %(user)s on %(date)s; '
+                    'schedule suggestions will be recalculated.'
+                ) % {
+                    'user': self.env.user.display_name,
+                    'date': fields.Datetime.to_string(now),
+                }
+            detail = '\n'.join(
+                part for part in (prelog.import_match_detail, line) if part
+            )
+            prelog.write({
+                'removed': removed,
+                'schedule': False,
+                'import_match_status': 'created_without_schedule',
+                'import_match_detail': detail,
+            })
+        return {
+            'updated': len(prelogs),
+            'message': _('%(count)s Prelog row(s) %(action)s.') % {
+                'count': len(prelogs),
+                'action': _('removed') if removed else _('unremoved'),
+            },
+        }
+
+    @api.model
+    def fuzzy_match_detach(
+        self,
+        prelog_ids,
+        program_id=False,
+        week_start=False,
+        version=False,
+        import_job_id=False,
+    ):
+        self._fuzzy_check_access()
+        prelogs = self._fuzzy_validate_selected_prelogs(
+            prelog_ids,
+            program_id,
+            week_start,
+            version,
+            import_job_id,
+        )
+        now = fields.Datetime.now()
+        detached = 0
+        for prelog in prelogs.filtered('schedule'):
+            line = _(
+                'Schedule %(schedule)s detached in Prelog Operations Workbench '
+                'by %(user)s on %(date)s.'
+            ) % {
+                'schedule': prelog.schedule.display_name,
+                'user': self.env.user.display_name,
+                'date': fields.Datetime.to_string(now),
+            }
+            prelog.write({
+                'schedule': False,
+                'import_match_status': 'created_without_schedule',
+                'import_match_detail': '\n'.join(
+                    part for part in (prelog.import_match_detail, line) if part
+                ),
+            })
+            detached += 1
+        return {
+            'updated': detached,
+            'message': _('%(count)s schedule(s) detached.') % {'count': detached},
         }
 
     @api.model
@@ -399,6 +543,71 @@ class MvPrelogDataFuzzyMatching(models.Model):
             'count': exported,
         }
 
+    @api.model
+    def fuzzy_workbench_export_csv(
+        self,
+        program_id,
+        week_start,
+        version,
+        status='all',
+        search_term='',
+        air_date=False,
+        issue_filter='',
+        sort_by='air_date',
+        import_job_id=False,
+    ):
+        """Export the active workbench tab and its current filters."""
+        self._fuzzy_check_access()
+        program, selected_week, selected_version = self._fuzzy_validate_filters(
+            program_id, week_start, version
+        )
+        prelogs = self.search(
+            self._fuzzy_prelog_domain(
+                program.id,
+                selected_week,
+                selected_version,
+                unmatched_only=False,
+                include_removed=True,
+                import_job_id=import_job_id,
+            ),
+            order='airdate asc, scheduletime asc, id asc',
+        )
+        rows = self._fuzzy_build_rows(
+            prelogs, program, selected_week, use_attached=True
+        )
+        for row, prelog in zip(rows, prelogs):
+            self._fuzzy_classify_row(row, prelog)
+        rows = self._fuzzy_filter_workbench_rows(
+            rows,
+            status=status,
+            search_term=search_term,
+            air_date=air_date,
+            issue_filter=issue_filter,
+            sort_by=sort_by,
+        )
+
+        output = io.StringIO(newline='')
+        writer = csv.writer(output)
+        writer.writerow([
+            'Prelog', 'Status', 'Match Quality', 'Network', 'Air Date',
+            'Air Time', 'Length', 'Rate', 'Week', 'Network Deal #',
+            'Adv/Product', 'Schedule', 'Reason',
+        ])
+        for row in rows:
+            schedule = row.get('attached') or row.get('suggested') or {}
+            writer.writerow(self._fuzzy_csv_row([
+                row['name'], row['status_label'], row['match_quality_label'],
+                row['network'], row['air_date'], row['air_time'], row['length'],
+                row['rate'], row['week'], row['deal_number'],
+                row['advertiser_product'], schedule.get('name', ''), row['reason'],
+            ]))
+        safe_program = re.sub(r'[^A-Za-z0-9_-]+', '-', program.display_name).strip('-')
+        filename = 'PrelogWorkbench-%s-%s-v%s-%s.csv' % (
+            safe_program or 'Program', fields.Date.to_string(selected_week),
+            selected_version, status,
+        )
+        return {'filename': filename, 'content': output.getvalue(), 'count': len(rows)}
+
     # ------------------------------------------------------------------
     # Query and result construction
     # ------------------------------------------------------------------
@@ -415,6 +624,31 @@ class MvPrelogDataFuzzyMatching(models.Model):
                     'Operator access right.'
                 )
             )
+
+    @api.model
+    def _fuzzy_latest_user_upload(self):
+        """Return metadata only; the uploaded filename is intentionally hidden."""
+        if 'mv.prelog_import_job' not in self.env.registry.models:
+            return False
+        job = self.env['mv.prelog_import_job'].search([
+            ('state', '=', 'completed'),
+            ('submitted_by_id', '=', self.env.user.id),
+            ('prelog_ids', '!=', False),
+        ], order='finished_at desc, id desc', limit=1)
+        if not job:
+            return False
+        return {
+            'id': job.id,
+            'program_id': job.program_id.id,
+            'program_name': job.program_id.display_name,
+            'week_start': fields.Date.to_string(job.import_week),
+            'version': job.prelog_version,
+            'submitted_at': (
+                fields.Datetime.to_string(job.finished_at or job.create_date)
+            ),
+            'submitted_by': job.submitted_by_id.display_name,
+            'row_count': len(job.prelog_ids),
+        }
 
     @api.model
     def _fuzzy_validate_filters(self, program_id, week_start, version):
@@ -447,16 +681,152 @@ class MvPrelogDataFuzzyMatching(models.Model):
         selected_week,
         version,
         unmatched_only=True,
+        include_removed=False,
+        import_job_id=False,
     ):
         domain = [
-            ('removed', '=', False),
             ('version', '=', version),
             ('import_program', '=', program_id),
             ('import_week_value', '=', selected_week),
         ]
+        if not include_removed:
+            domain.insert(0, ('removed', '=', False))
         if unmatched_only:
             domain.insert(0, ('schedule', '=', False))
+        if import_job_id:
+            domain.append(('import_job', '=', self._fuzzy_int(import_job_id)))
         return domain
+
+    @api.model
+    def _fuzzy_classify_row(self, row, prelog):
+        if prelog.removed:
+            status = 'removed'
+        elif prelog.schedule:
+            status = 'matched'
+        elif row.get('suggested'):
+            status = 'suggestion'
+        else:
+            status = 'no_suggestion'
+        row.update({
+            'status': status,
+            'status_label': {
+                'matched': _('Matched'),
+                'suggestion': _('Fuzzy Suggestion'),
+                'no_suggestion': _('No Suggestion'),
+                'removed': _('Removed'),
+            }[status],
+            'removed': bool(prelog.removed),
+            'attached': (
+                self._fuzzy_schedule_payload(prelog.schedule)
+                if prelog.schedule else False
+            ),
+            'agency': prelog.agency or '',
+            'title': prelog.title or '',
+            'match_detail': prelog.import_match_detail or '',
+            'import_job_name': prelog.import_job.name if prelog.import_job else '',
+        })
+
+    @api.model
+    def _fuzzy_filter_workbench_rows(
+        self,
+        rows,
+        status='all',
+        search_term='',
+        air_date=False,
+        issue_filter='',
+        sort_by='air_date',
+    ):
+        status = status if status in {
+            'all', 'matched', 'suggestions', 'no_suggestion', 'removed'
+        } else 'all'
+        status_map = {
+            'matched': 'matched',
+            'suggestions': 'suggestion',
+            'no_suggestion': 'no_suggestion',
+            'removed': 'removed',
+        }
+        if status == 'all':
+            result = [row for row in rows if row['status'] != 'removed']
+        else:
+            result = [row for row in rows if row['status'] == status_map[status]]
+
+        needle = normalize_match_text(search_term)
+        if needle:
+            result = [
+                row for row in result
+                if needle in normalize_match_text(' '.join([
+                    str(row.get('name') or ''),
+                    str(row.get('advertiser_product') or ''),
+                    str(row.get('deal_number') or ''),
+                    str((row.get('attached') or {}).get('name') or ''),
+                    str((row.get('suggested') or {}).get('name') or ''),
+                ]))
+            ]
+        if air_date:
+            try:
+                normalized_date = fields.Date.to_string(fields.Date.to_date(air_date))
+            except (TypeError, ValueError):
+                normalized_date = ''
+            if normalized_date:
+                result = [row for row in result if row['air_date'] == normalized_date]
+
+        issue_checks = {
+            'time': lambda row: row['time_mismatch'],
+            'length': lambda row: row['length_mismatch'],
+            'ambiguous': lambda row: row['ambiguous_count'] > 1,
+            'missing_deal': lambda row: row['reason'] == _('Missing deal number'),
+        }
+        if issue_filter in issue_checks:
+            result = [row for row in result if issue_checks[issue_filter](row)]
+
+        sort_keys = {
+            'deal_number': lambda row: (
+                normalize_match_text(row['deal_number']), row['air_date'], row['id']
+            ),
+            'advertiser_product': lambda row: (
+                normalize_match_text(row['advertiser_product']), row['air_date'], row['id']
+            ),
+            'air_date': lambda row: (row['air_date'], row['air_time'], row['id']),
+        }
+        return sorted(result, key=sort_keys.get(sort_by, sort_keys['air_date']))
+
+    @api.model
+    def _fuzzy_validate_selected_prelogs(
+        self,
+        prelog_ids,
+        program_id=False,
+        week_start=False,
+        version=False,
+        import_job_id=False,
+    ):
+        ids = []
+        for value in prelog_ids or []:
+            parsed_id = self._fuzzy_int(value)
+            if parsed_id and parsed_id not in ids:
+                ids.append(parsed_id)
+        if not ids:
+            raise UserError(_('Select at least one Prelog Data row.'))
+        if len(ids) > 1000:
+            raise UserError(_('Update no more than 1,000 rows at a time.'))
+        program, selected_week, selected_version = self._fuzzy_validate_filters(
+            program_id,
+            week_start,
+            version,
+        )
+        domain = self._fuzzy_prelog_domain(
+            program.id,
+            selected_week,
+            selected_version,
+            unmatched_only=False,
+            include_removed=True,
+            import_job_id=import_job_id,
+        ) + [('id', 'in', ids)]
+        prelogs = self.search(domain)
+        if len(prelogs) != len(ids):
+            raise UserError(
+                _('One or more selected rows no longer belong to the active upload and filters.')
+            )
+        return prelogs
 
     @api.model
     def _fuzzy_build_rows(
@@ -622,6 +992,23 @@ class MvPrelogDataFuzzyMatching(models.Model):
                 reason = _(
                     '%(count)s equally ranked schedules; review before attaching'
                 ) % {'count': ambiguous_count}
+            elif not suggested_analysis['exact_time_match']:
+                reason = _(
+                    'Within fuzzy buffer (%(minutes)s minute(s) from rotation)'
+                ) % {'minutes': suggested_analysis['time_distance'] or 0}
+
+        exact_match = bool(
+            suggested_analysis
+            and suggested.status == 'sold'
+            and ambiguous_count <= 1
+            and suggested_analysis['network_match']
+            and suggested_analysis['deal_match']
+            and suggested_analysis['week_match']
+            and suggested_analysis['rate_match']
+            and suggested_analysis['day_match']
+            and suggested_analysis['exact_time_match']
+            and suggested_analysis['length_match']
+        )
 
         return {
             'id': prelog.id,
@@ -656,6 +1043,13 @@ class MvPrelogDataFuzzyMatching(models.Model):
                 else False
             ),
             'suggestion_attachable': suggestion_attachable,
+            'match_quality': 'exact' if exact_match else ('fuzzy' if suggested else ''),
+            'match_quality_label': _('Exact') if exact_match else (_('Fuzzy') if suggested else ''),
+            'explanation': self._fuzzy_match_explanation(
+                suggested_analysis,
+                reason,
+                ambiguous_count,
+            ),
             'ambiguous_count': ambiguous_count,
             'time_mismatch': time_mismatch,
             'length_mismatch': length_mismatch,
@@ -681,6 +1075,12 @@ class MvPrelogDataFuzzyMatching(models.Model):
             self._fuzzy_selection_label(schedule, 'end_time'),
             self._FUZZY_TIME_BUFFER_MINUTES,
         )
+        exact_time_match, unused_exact_distance = self._fuzzy_time_window_analysis(
+            prelog.scheduletime,
+            self._fuzzy_selection_label(schedule, 'start_time'),
+            self._fuzzy_selection_label(schedule, 'end_time'),
+            0,
+        )
         length_match = prelog_length == schedule_length
         return {
             'schedule': schedule,
@@ -701,10 +1101,37 @@ class MvPrelogDataFuzzyMatching(models.Model):
             'rate_match': self._fuzzy_rate_matches(prelog, schedule),
             'day_match': self._fuzzy_day_matches(prelog, schedule),
             'time_match': time_match,
+            'exact_time_match': exact_time_match,
             'time_distance': time_distance,
             'length_match': length_match,
             'schedule_length': schedule_length,
         }
+
+    @api.model
+    def _fuzzy_match_explanation(self, analysis, reason, ambiguous_count):
+        if not analysis:
+            return reason or _('No eligible sold schedule was found.')
+        parts = []
+        if analysis['network_match']:
+            parts.append(_('network matches'))
+        if analysis['deal_match']:
+            parts.append(_('deal matches'))
+        if analysis['rate_match']:
+            parts.append(_('rate matches'))
+        if analysis['day_match']:
+            parts.append(_('air day matches'))
+        if analysis['exact_time_match']:
+            parts.append(_('airtime is inside rotation'))
+        elif analysis['time_match']:
+            parts.append(
+                _('airtime is %(minutes)s minute(s) from rotation')
+                % {'minutes': analysis['time_distance'] or 0}
+            )
+        if analysis['length_match']:
+            parts.append(_('length matches'))
+        if ambiguous_count > 1:
+            parts.append(_('%(count)s schedules are tied') % {'count': ambiguous_count})
+        return '; '.join(parts) + (('. ' + reason) if reason else '')
 
     @api.model
     def _fuzzy_no_suggestion_reason(self, analyses):
