@@ -427,6 +427,7 @@ class ResUsers(models.Model):
         if not self._is_public():
             odoobot = odoobot.with_prefetch((odoobot + self.partner_id).ids)
         res.attr("action_discuss_id", xmlid_to_res_id("mail.action_discuss"))
+        res.attr("emailActivityTypeId", xmlid_to_res_id("mail.mail_activity_data_email"))
         res.attr("hasLinkPreviewFeature", self.env["mail.link.preview"]._is_link_preview_enabled())
         res.attr("internalUserGroupId", self.env.ref("base.group_user").id)
         res.attr("mt_comment", xmlid_to_res_id("mail.mt_comment"))
