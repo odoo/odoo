@@ -1,6 +1,9 @@
 import { test, expect, waitFor, waitForNone } from "@odoo/hoot";
 import { click } from "@odoo/hoot-dom";
-import { mountWithCleanup } from "@web/../tests/web_test_helpers";
+import { advanceTime } from "@odoo/hoot-mock";
+import { mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { session } from "@web/session";
+import { barcodeService } from "@barcodes/barcode_service";
 import { setupPosEnv, getFilledOrder } from "../utils";
 import { TicketScreen } from "@point_of_sale/app/screens/ticket_screen/ticket_screen";
 import { definePosModels } from "@point_of_sale/../tests/unit/data/generate_model_definitions";
@@ -152,4 +155,37 @@ test("refund keeps the fiscal position of the refunded order when the default pr
     expect(refund.fiscal_position_id?.id).toBe(mappedFp.id);
     expect(appliedTaxIds(refund.lines[0])).toEqual([2]);
     expect(refund.priceIncl).toBe(-250);
+});
+
+test("scanning a barcode on the ticket screen does not feed the refund quantity", async () => {
+    // The buffer only drops fast multi-key sequences outside of test mode.
+    patchWithCleanup(session, { test_mode: false });
+
+    const store = await setupPosEnv();
+    const order = store.addNewOrder({});
+    await store.addLineToOrder(
+        { product_tmpl_id: store.models["product.template"].get(5), qty: 10 },
+        order
+    );
+    order.state = "paid";
+    const line = order.lines[0];
+
+    const comp = await mountWithCleanup(TicketScreen, { props: {} });
+    comp.setSelectedOrder(order);
+    comp.state.selectedOrderlineIds[order.id] = line.id;
+
+    const dialogTitles = [];
+    patchWithCleanup(comp.dialog, {
+        add: (_component, props) => dialogTitles.push(props.title.toString()),
+    });
+
+    // A scanner types the barcode a few ms per character.
+    for (const char of "5901234123457") {
+        window.dispatchEvent(new KeyboardEvent("keyup", { key: char }));
+        await advanceTime(10);
+    }
+    await advanceTime(barcodeService.maxTimeBetweenKeysInMs);
+
+    expect(comp.getToRefundDetail(line).qty).toBe(0);
+    expect(dialogTitles).toEqual([]);
 });
