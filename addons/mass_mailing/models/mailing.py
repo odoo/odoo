@@ -12,6 +12,7 @@ import random
 import re
 import requests
 import threading
+import uuid
 import werkzeug.urls
 from ast import literal_eval
 from dateutil.relativedelta import relativedelta
@@ -31,6 +32,8 @@ _logger = logging.getLogger(__name__)
 # Syntax of the data URL Scheme: https://tools.ietf.org/html/rfc2397#section-3
 # Used to find inline images
 image_re = re.compile(r"data:(image/[A-Za-z]+);base64,(.*)")
+# Used to swap inline image payloads for placeholders while the body is parsed
+b64_payload_re = re.compile(r"(data:image/[A-Za-z]+;base64,)([A-Za-z0-9+/=]+)")
 DEFAULT_IMAGE_TIMEOUT = 3
 DEFAULT_IMAGE_MAXBYTES = 10 * 1024 * 1024  # 10MB
 DEFAULT_IMAGE_CHUNK_SIZE = 32768
@@ -1356,7 +1359,15 @@ class MassMailing(models.Model):
         Find VML v:image elements, crop their source images, make an attachement
         out of them and replace their source with an url to the attachement.
         """
-        root = lxml.html.fromstring(html_content)
+        b64_payloads = {}
+        placeholder_prefix = f'o-inline-image-{uuid.uuid4().hex}-'
+
+        def stash_payload(match):
+            placeholder = f'{placeholder_prefix}{len(b64_payloads)}'
+            b64_payloads[placeholder] = match[2].encode()
+            return f'{match[1]}{placeholder}'
+
+        root = lxml.html.fromstring(b64_payload_re.sub(stash_payload, html_content))
         did_modify_body = False
 
         conversion_info = []  # list of tuples (image: base64 image, node: lxml node, old_url: string or None, original_id))
@@ -1405,7 +1416,8 @@ class MassMailing(models.Model):
                                 conversion_info.append((base64.b64encode(image.source), node, url, int(node.attrib.get('data-original-id') or "0")))
 
         # Apply the changes.
-        urls = self._create_attachments_from_inline_images([(image, original_id) for (image, _, _, original_id) in conversion_info])
+        urls = self._create_attachments_from_inline_images(
+            [(b64_payloads.get(image.decode(), image), original_id) for (image, _, _, original_id) in conversion_info])
         for ((image, node, old_url, original_id), new_url) in zip(conversion_info, urls):
             did_modify_body = True
             if node.tag == 'img':
@@ -1416,7 +1428,8 @@ class MassMailing(models.Model):
                 node.text = node.text.replace(old_url, new_url)
 
         if did_modify_body:
-            return lxml.html.tostring(root, encoding='unicode')
+            html_result = lxml.html.tostring(root, encoding='unicode')
+            return re.sub(rf'{placeholder_prefix}\d+', lambda match: b64_payloads[match[0]].decode(), html_result)
         return html_content
 
     def _create_attachments_from_inline_images(self, b64images):

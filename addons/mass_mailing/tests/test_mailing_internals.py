@@ -148,6 +148,27 @@ class TestMassMailValues(MassMailCommon):
         self.assertIn("Fake url, in text:", mailing.body_html)
 
     @users('user_marketing')
+    def test_mailing_body_inline_image_huge_body(self):
+        """ Testing mail mailing body kept whole when its inline images exceed the parser buffer limit. """
+        big_image = base64.b64encode(b'\x89PNG\r\n\x1a\n' + b'y' * 1300000).decode()
+        body = f"""
+                <section>
+                    {f'<img src="data:image/png;base64,{big_image}">' * 6}
+                    <p>Last line of the mailing</p>
+                </section>
+            """
+        self.assertGreater(len(body), 10000000, "inline images must exceed the parser buffer limit")
+        mailing = self.env['mailing.mailing'].create({
+            'name': 'Test',
+            'subject': 'Test',
+            'state': 'draft',
+            'mailing_model_id': self.env['ir.model']._get('res.partner').id,
+        })
+        mailing.write({'body_html': body})
+        self.assertIn('Last line of the mailing', mailing.body_html)
+        self.assertEqual(len(re.findall(r'/web/image/\d+\?access_token=[a-zA-Z0-9\-_=]+', mailing.body_html)), 6)
+
+    @users('user_marketing')
     def test_mailing_body_responsive(self):
         """ Testing mail mailing responsive mail body
 
