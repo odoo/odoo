@@ -2,8 +2,13 @@ import { test, expect } from "@odoo/hoot";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { setupPosEnv } from "@point_of_sale/../tests/unit/utils";
 import { ControlButtons } from "@point_of_sale/app/screens/product_screen/control_buttons/control_buttons";
+import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
 import { definePosModels } from "@point_of_sale/../tests/unit/data/generate_model_definitions";
-import { deactivateAllProgramsExcept } from "@pos_loyalty/../tests/unit/utils";
+import {
+    deactivateAllProgramsExcept,
+    addProductLineToOrder,
+} from "@pos_loyalty/../tests/unit/utils";
+import * as PosUiUtils from "@point_of_sale/../tests/unit/ui_utils";
 
 definePosModels();
 
@@ -31,4 +36,21 @@ test("getPotentialRewards", async () => {
 
     expect(rewards[0].reward).toEqual(reward);
     expect(rewards[0].reward.program_id).toEqual(loyaltyProgram);
+});
+
+test("more button catches attention when rewards are available", async () => {
+    const store = await setupPosEnv();
+    const order = store.addNewOrder();
+    const card = store.models["loyalty.card"].get(1);
+
+    await addProductLineToOrder(store, order);
+    order._code_activated_coupon_ids = [card];
+
+    await mountWithCleanup(ProductScreen, { props: { orderUuid: order.uuid } });
+    const moreButtonSelector = PosUiUtils.isMobile() ? ".mobile-more-button" : ".more-btn";
+    if (PosUiUtils.isMobile()) {
+        PosUiUtils.ensurePane("left");
+    }
+    expect(moreButtonSelector).toHaveClass("o_catch_attention_reward");
+    expect(`${moreButtonSelector} .o_reward-star`).toHaveCount(1);
 });

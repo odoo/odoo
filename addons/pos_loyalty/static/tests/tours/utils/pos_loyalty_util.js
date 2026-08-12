@@ -77,7 +77,7 @@ export function isRewardButtonHighlighted(isHighlighted, closeModal = true) {
         Dialog.is({ title: "Actions" }),
         {
             trigger: isHighlighted
-                ? '.control-buttons button.highlight:contains("Reward")'
+                ? '.control-buttons button.active:contains("Reward")'
                 : '.control-buttons button.disabled:contains("Reward")',
         },
     ];

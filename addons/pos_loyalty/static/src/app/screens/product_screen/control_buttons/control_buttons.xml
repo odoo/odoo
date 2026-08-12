@@ -36,15 +36,32 @@
             </t>
             <t t-if="this.pos.models['loyalty.program'].length and this.pos.cashier._role !== 'minimal'" t-call="point_of_sale.controlButton"
                 icon="'star'"
-                iconClasses="'oi-filled'"
+                iconClasses="'oi-filled ' + (this.nbrRewards() ? 'o_reward-icon-active' : '')"
                 btnText.translate="Reward"
-                btnClasses="'btn-secondary ' + (this.nbrRewards() ? ' highlight' : 'disabled')"
+                btnClasses="'btn-secondary ' + (this.nbrRewards() ? 'active' : 'disabled')"
                 disabled="!this.nbrRewards()"
                 onClick="() => this.clickRewards()">
             </t>
         </xpath>
         <xpath expr="//button[hasclass('more-btn')]" position="attributes">
-            <attribute name="t-attf-class">{{ this.nbrRewards() ? 'active text-action' : '' }}</attribute>
+            <attribute name="t-attf-class">
+                {{ this.nbrRewards() ? 'active text-action o_catch_attention_reward' : '' }}
+            </attribute>
+        </xpath>
+
+        <xpath expr="//button[hasclass('more-btn')]" position="inside">
+            <span t-if="this.nbrRewards()" class="o_reward-star">★</span>
         </xpath>
     </t>
+
+    <t t-name="pos_loyalty.ActionpadWidget" t-inherit="point_of_sale.ActionpadWidget" t-inherit-mode="extension">
+        <xpath expr="//button[hasclass('mobile-more-button')]" position="attributes">
+            <attribute name="t-attf-class">{{ this.pos.getOrder()?.availableRewards.length ? 'active text-action o_catch_attention_reward' : '' }}</attribute>
+        </xpath>
+
+        <xpath expr="//button[hasclass('mobile-more-button')]" position="inside">
+            <span t-if="this.pos.getOrder()?.availableRewards.length" class="o_reward-star">★</span>
+        </xpath>
+    </t>
+
 </templates>
