@@ -1,7 +1,6 @@
-import { onWillStart, t, untrack, useProps } from "@odoo/owl";
+import { onWillStart, t, onMounted, useProps } from "@odoo/owl";
 import { FormControllerWithHTMLExpander } from '@resource/views/form_with_html_expander/form_controller_with_html_expander';
 import { user } from "@web/core/user";
-import { useLayoutEffect } from "@web/owl2/utils";
 import { formControllerProps } from "@web/views/form/form_controller";
 import { ProjectTemplateDropdown } from "../components/project_template_dropdown";
 
@@ -27,17 +26,7 @@ export class ProjectProjectFormController extends FormControllerWithHTMLExpander
         });
 
         if (this.props.focusTitle) {
-            useLayoutEffect(
-                (el) => {
-                    if (el) {
-                        const title = el.querySelector("#name_0");
-                        if (title) {
-                            title.focus();
-                        }
-                    }
-                },
-                () => [untrack(this.rootRef)]
-            );
+            onMounted(() => this.rootRef().querySelector("#name_0")?.focus());
         }
     }
 
