@@ -212,6 +212,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         Channel = self.env["discuss.channel"].with_user(self.users[0])
         self.channel_general = self.env.ref('mail.channel_all_employees')  # Unfortunately #general cannot be deleted. Assertions below assume data from a fresh db with demo.
         self.channel_general.message_ids.unlink() # Remove messages to avoid depending on demo data.
+        self.channel_general.discuss_category_id = False  # Remove category to avoid depending on demo data.
         self.channel_general.last_interest_dt = False  # Reset state
         self.channel_general.channel_member_ids.sudo().last_interest_dt = False  # Reset state
         self.env['discuss.channel'].sudo().search([('id', '!=', self.channel_general.id)]).unlink()
