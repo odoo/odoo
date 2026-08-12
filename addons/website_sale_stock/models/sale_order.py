@@ -23,7 +23,7 @@ class SaleOrder(models.Model):
 
     def write(self, vals):
         """Override to adapt pickup location-related data on delivery method change."""
-        if "carrier_id" in vals:
+        if "carrier_id" in vals and not self.env.context.get("keep_pickup_location"):
             for order in self:
                 # Reset the shipping partner if it is a pickup location.
                 partner_shipping_dm_id = order.partner_shipping_id.pickup_delivery_method_id
