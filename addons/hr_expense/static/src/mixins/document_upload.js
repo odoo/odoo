@@ -2,7 +2,6 @@ import { proxy, signal, t, useListener, useProps } from "@odoo/owl";
 import { Domain } from "@web/core/domain";
 import { _t } from "@web/core/l10n/translation";
 import { useBus, useService } from '@web/core/utils/hooks';
-import { useLayoutEffect } from "@web/owl2/utils";
 
 export const ExpenseDocumentDropZone = (T, parentProps) => class ExpenseDocumentDropZone extends T {
     props = useProps({
@@ -16,25 +15,11 @@ export const ExpenseDocumentDropZone = (T, parentProps) => class ExpenseDocument
             showDragZone: false,
         });
 
-        useLayoutEffect(
-            (el) => {
-                if (!el) {
-                    return;
-                }
-                const highlight = this.highlight.bind(this);
-                const unhighlight = this.unhighlight.bind(this);
-                const drop = this.onDrop.bind(this);
-                el.addEventListener("dragover", highlight);
-                el.addEventListener("dragleave", unhighlight);
-                el.addEventListener("drop", drop);
-                return () => {
-                    el.removeEventListener("dragover", highlight);
-                    el.removeEventListener("dragleave", unhighlight);
-                    el.removeEventListener("drop", drop);
-                };
-            },
-            () => [document.querySelector('.o_content')]
-        );
+        // The drop zone is the whole content area the renderer is displayed in.
+        const contentEl = () => this.rootRef()?.closest(".o_content");
+        useListener(contentEl, "dragover", this.highlight.bind(this));
+        useListener(contentEl, "dragleave", this.unhighlight.bind(this));
+        useListener(contentEl, "drop", this.onDrop.bind(this));
 
         useListener(this.rootRef, 'click', (ev) => {
             let targetElement = ev.target;

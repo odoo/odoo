@@ -8,7 +8,7 @@ import { KeepLast } from "@web/core/utils/concurrency";
 import { user } from "@web/core/user";
 import { useDebounced } from "@web/core/utils/timing";
 import { SearchMedia } from "./search_media";
-import { Component, onWillStart, proxy, signal, untrack, xml } from "@odoo/owl";
+import { Component, onWillStart, proxy, signal, useListener, xml } from "@odoo/owl";
 
 export const IMAGE_MIMETYPES = [
     "image/jpg",
@@ -229,16 +229,12 @@ export class FileSelector extends Component {
         this.debouncedOnScroll = useDebounced(this.updateScroll.bind(this), 15);
         this.debouncedScrollUpdate = useDebounced(this.updateScroll.bind(this), 500);
 
-        useLayoutEffect(
-            (modalEl) => {
-                if (modalEl) {
-                    modalEl.addEventListener("scroll", this.debouncedOnScroll);
-                    return () => {
-                        modalEl.removeEventListener("scroll", this.debouncedOnScroll);
-                    };
-                }
-            },
-            () => [untrack(this.props.modalRef)?.querySelector("main.modal-body")]
+        // The modal body is a structural part of the dialog, it is therefore
+        // only rendered along with the modal itself.
+        useListener(
+            () => this.props.modalRef()?.querySelector("main.modal-body"),
+            "scroll",
+            this.debouncedOnScroll
         );
 
         useLayoutEffect(
