@@ -37,6 +37,16 @@ from odoo import models, fields, api
 _logger = logging.getLogger(__name__)
 
 
+# Sections that expose a "New <Label>" button in the Related tab.
+# Kept as an explicit (parent_model, comodel) whitelist so quick-
+# create only shows up where it's genuinely helpful; every other
+# section renders as read-only preview + View All. Extend this set
+# to enable quick-create on more sections.
+_CREATE_ENABLED_PAIRS = {
+    ('mv.traffic', 'mv.split'),
+}
+
+
 # Field names we never want to show as a Related section - they're
 # framework plumbing rather than business relationships.
 _HIDDEN_FIELDS = frozenset([
@@ -227,13 +237,13 @@ class MvRelated(models.AbstractModel):
             'columns': [],
             'preview': [],
             'supports_upload': False,
-            # A section supports "New <Label>" whenever we can wire
-            # the new record's parent link automatically. For inverse
-            # M2O paths that's default_<inverse_name>=parent_id. For
-            # direct M2M/O2M paths the frontend still opens the form
-            # dialog; the user can pick the parent themselves if the
-            # comodel doesn't accept a default_* hint.
-            'supports_create': bool(inverse_name or field_name),
+            # Only whitelisted (parent, comodel) pairs render the
+            # "New <Label>" button (see _CREATE_ENABLED_PAIRS at the
+            # top of this module). Everything else is preview-only.
+            'supports_create': (
+                (parent_model, comodel) in _CREATE_ENABLED_PAIRS
+                and bool(inverse_name or field_name)
+            ),
             'parent_model': parent_model,
             'parent_id': rec.id,
         }
