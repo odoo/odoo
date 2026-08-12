@@ -35,8 +35,18 @@ class PortalAccount(CustomerPortal):
             edi_format = address_values.get('invoice_edi_format')
             if request.env['res.country'].browse(int(address_values.get('country_id'))).code not in PEPPOL_LIST:
                 invalid_fields.add('country_id')
-                address_values['country_id'] = 'error'
                 error_messages.append(_("That country is not available for Peppol."))
+                return invalid_fields, missing_fields, error_messages
+            error_message = self.env._("If you want to be invoiced by Peppol, your configuration must be valid.")
+            if not routing_scheme or not routing_endpoint or not edi_format:
+                if not routing_scheme:
+                    missing_fields.add('routing_scheme')
+                if not routing_endpoint:
+                    missing_fields.add('routing_endpoint')
+                if not edi_format:
+                    missing_fields.add('invoice_edi_format')
+                error_messages.append(error_message)
+                return invalid_fields, missing_fields, error_messages
             result = request.env['res.partner']._validate_identifier_by_scheme(routing_scheme, routing_endpoint)
             if not result['valid']:
                 invalid_fields.add('routing_endpoint')
@@ -47,6 +57,6 @@ class PortalAccount(CustomerPortal):
             routing_identifier = f'{routing_scheme}:{routing_endpoint}'
             if request.env['res.partner']._get_peppol_verification_state(routing_identifier, edi_format) != 'valid':
                 invalid_fields.update({'routing_scheme', 'routing_endpoint', 'invoice_edi_format'})
-                error_messages.append(_("If you want to be invoiced by Peppol, your configuration must be valid."))
+                error_messages.append(error_message)
 
         return invalid_fields, missing_fields, error_messages
