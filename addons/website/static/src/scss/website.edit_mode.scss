@@ -38,7 +38,7 @@ $-editor-messages-margin-x: 2%;
 
 .o_savable {
     &:not(:empty), &[data-oe-type] {
-        &:not([data-oe-model="ir.ui.view"]):not([data-oe-type="html"]):not(.o_editable_no_shadow):not([data-oe-type="image"]):hover,
+        &:not([data-oe-model="ir.ui.view"]):not([data-oe-type="html"], [data-oe-type="qweb_content"]):not(.o_editable_no_shadow):not([data-oe-type="image"]):hover,
         &.o_editable_date_field_linked {
             outline: $o-we-handle-border-width solid $o-we-handles-accent-color;
             outline-offset: $o-we-handle-border-width;
@@ -90,7 +90,7 @@ $-editor-messages-margin-x: 2%;
 
     // This style block is about the "editor message" which highlights the areas
     // where the user can drag & drop snippets.
-    &.oe_structure.oe_empty, &[data-oe-type=html], .oe_structure.oe_empty {
+    &.oe_structure.oe_empty, &[data-oe-type=html], &[data-oe-type=qweb_content], .oe_structure.oe_empty {
         // Base case (website.page (#wrap), t-field (product description), ..)
         > .oe_drop_zone.oe_insert:not(.oe_vertical) {
             @extend %o-editor-messages;
@@ -131,7 +131,7 @@ $-editor-messages-margin-x: 2%;
             color: #aaa;
         }
     }
-    &[data-oe-type=html].oe_empty:empty {
+    &[data-oe-type=html].oe_empty:empty, &[data-oe-type=qweb_content].oe_empty:empty {
         @extend %o-editor-messages;
     }
 }
@@ -163,7 +163,7 @@ $-editor-messages-margin-x: 2%;
 }
 
 // TODO: in master check if the class / rule is relevant at all
-.editor_enable [data-oe-type=html].oe_no_empty:empty {
+.editor_enable [data-oe-type=html].oe_no_empty:empty, .editor_enable [data-oe-type=qweb_content].oe_no_empty:empty {
     height: 16px!important;
 }
 

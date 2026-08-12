@@ -102,7 +102,7 @@ export const isHtmlContentSupported = weakMemoize(
     (/** @type {EditorSelection} */ selection) =>
         !closestElement(
             selection.focusNode,
-            '[data-oe-model]:not([data-oe-type="html"]):not([data-oe-field="arch"]):not([data-oe-translation-source-sha])'
+            '[data-oe-model]:not([data-oe-type="html"], [data-oe-type="qweb_content"]):not([data-oe-field="arch"]):not([data-oe-translation-source-sha])'
         )
 );
 

@@ -891,7 +891,8 @@ export class SeoChecks extends Component {
                     !recordEl ||
                     ((recordEl.dataset.oeModel !== "ir.ui.view" ||
                         recordEl.dataset.oeField !== "arch") &&
-                        recordEl.dataset.oeType !== "html")
+                        recordEl.dataset.oeType !== "html" &&
+                        recordEl.dataset.oeType !== "qweb_content")
                 ) {
                     return false;
                 }
