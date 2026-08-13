@@ -59,3 +59,18 @@ class AccountMove(models.Model):
                 cash_rounding=move.invoice_cash_rounding_id,
             )
             move.l10n_sg_customer_accounting_gst_amount = tax_totals['tax_amount']
+
+    def _get_base_document_title(self):
+        self.ensure_one()
+
+        if (
+            self.company_id.account_fiscal_country_id.code != 'SG'
+            or self.move_type not in {'out_invoice', 'in_invoice'}
+            or (self.is_debit_note() and self.move_type == 'out_invoice')
+        ):
+            return super()._get_base_document_title()
+
+        if self.move_type == 'in_invoice' and self.journal_id.is_self_billing:
+            return self.env._("Self-Billing Tax Invoice")
+
+        return self.env._("Tax Invoice")
