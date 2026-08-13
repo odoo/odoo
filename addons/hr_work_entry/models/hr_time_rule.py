@@ -617,6 +617,7 @@ class HrTimeRule(models.Model):
                 if min_out_start_utc <= src_start_utc:
                     _first_s, first_e, first_rule, first_pp = output_intervals[0]
                     first_end_utc = first_e.replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
+                    extra_vals = first_rule._get_output_in_place_extra_vals(accumulated_pp=first_pp)
                     if not (
                         source.work_entry_type_id == first_rule.work_entry_type_id
                         and source.time_rule_id == first_rule
@@ -626,8 +627,11 @@ class HrTimeRule(models.Model):
                             'work_entry_type_id': first_rule.work_entry_type_id.id,
                             'time_rule_id': first_rule.id,
                             **source._get_time_rule_end_write_vals(first_end_utc, first_e),
-                            **first_rule._get_output_in_place_extra_vals(accumulated_pp=first_pp),
+                            **extra_vals,
                         })
+                    elif extra_vals:
+                        # main fields already match but pp categories may still need updating
+                        source.sudo().with_context(**source._time_rule_write_ctx).write(extra_vals)
                     for seg_s, seg_e, _ in remainder_segments:
                         df = seg_s.replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
                         dt = seg_e.replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None)

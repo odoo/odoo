@@ -1474,12 +1474,14 @@ class HrLeave(models.Model):
                     holiday_sudo.message_subscribe(partner_ids=holiday.employee_id.leave_manager_id.partner_id.ids)
                 if holiday.validation_type == 'no_validation' or self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
                     # Automatic validation should be done in sudo, because user might not have the rights to do it by himself
-                    # skip_time_rules: create() handles the time rule call once for all past leaves below
+                    # skip_time_rules: bulk trigger below, once resource.calendar.leaves exist for all auto-approved leaves
                     holiday_sudo.with_context(skip_time_rules=True).action_approve()
                     holiday_sudo.message_subscribe(partner_ids=holiday._get_responsible_for_approval().partner_id.ids)
                     holiday_sudo.message_post(body=_("The time off has been automatically approved"), subtype_xmlid="mail.mt_comment") # Message from OdooBot (sudo)
                 elif not self.env.context.get('import_file'):
                     holiday_sudo.activity_update()
+        if not self.env.context.get('skip_time_rules'):
+            holidays._trigger_time_rules()
         if employees_without_allocation:
             invalid_employee_names = ', '.join(self.env._('%s', employee.name) for employee in employees_without_allocation)
             self.env.user._bus_send('simple_notification', {
