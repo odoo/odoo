@@ -7,11 +7,15 @@
     "depends": ["mail", "portal"],
     "data": [
         "data/portal_entry_data.xml",
+        "views/discuss_public_templates.xml",
         "views/portal_templates.xml",
     ],
     "assets": {
         "mail.assets_public": [
             "portal_discuss/static/src/core/common/**/*",
+        ],
+        "web.assets_frontend": [
+            "portal_discuss/static/src/scss/portal_discuss.scss",
         ],
     },
     "auto_install": True,
