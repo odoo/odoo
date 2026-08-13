@@ -20,6 +20,7 @@ import odoo.addons
 import odoo.release as release
 import odoo.tools as tools
 import odoo.upgrade
+from odoo.tools.lru import LRU
 
 if typing.TYPE_CHECKING:
     from unittest import TestCase
@@ -180,6 +181,10 @@ def initialize_sys_path() -> None:
 class Manifest(Mapping[str, typing.Any]):
     """The manifest data of a module."""
 
+    _addon_manifests: dict[str, Manifest] = {}
+    _addon_manifests_complete: bool = False
+    _missing_addons: LRU[str, None] = LRU(256)
+
     def __init__(self, *, path: str, manifest_content: dict):
         assert os.path.isabs(path), "path of module must be absolute"
         self.path = path
@@ -276,14 +281,17 @@ class Manifest(Mapping[str, typing.Any]):
     def __repr__(self):
         return f'Manifest({self.name})'
 
-    # limit cache size because this may get called from any module with any input
     @staticmethod
-    @functools.lru_cache(10_000)
     def _get_manifest_from_addons(module: str) -> Manifest | None:
         """Get the module's manifest from a name. Searching only in addons paths."""
+        if manifest := Manifest._addon_manifests.get(module):
+            return manifest
+        if Manifest._addon_manifests_complete or module in Manifest._missing_addons:
+            return None
         for adp in odoo.addons.__path__:
             if manifest := Manifest._from_path(opj(adp, module)):
-                return manifest
+                return Manifest._addon_manifests.setdefault(module, manifest)
+        Manifest._missing_addons[module] = None
         return None
 
     @staticmethod
@@ -320,18 +328,24 @@ class Manifest(Mapping[str, typing.Any]):
     @staticmethod
     def all_addon_manifests() -> list[Manifest]:
         """Read all manifests in the addons paths."""
-        modules: dict[str, Manifest] = {}
+        if Manifest._addon_manifests_complete:
+            return list(Manifest._addon_manifests.values())
+        addon_manifests = Manifest._addon_manifests
         for adp in odoo.addons.__path__:
             if not os.path.isdir(adp):
                 _logger.warning("addons path is not a directory: %s", adp)
                 continue
             for file_name in os.listdir(adp):
-                if file_name in modules:
+                if file_name in addon_manifests:
                     continue
                 if mod := Manifest._from_path(opj(adp, file_name)):
                     assert file_name == mod.name
-                    modules[file_name] = mod
-        return sorted(modules.values(), key=lambda m: m.name)
+                    addon_manifests.setdefault(file_name, mod)
+        sorted_addon_manifests = dict(sorted(addon_manifests.items()))
+        Manifest._addon_manifests = sorted_addon_manifests
+        Manifest._addon_manifests_complete = True
+        Manifest._missing_addons.clear()
+        return list(sorted_addon_manifests.values())
 
 
 def get_module_path(module: str, display_warning: bool = True) -> str | None:
@@ -467,12 +481,13 @@ def get_manifest(module: str, mod_path: str | None = None) -> Mapping[str, typin
     :returns: The module manifest as a dict or an empty dict
         when the manifest was not found.
     """
+    mod = Manifest.for_addon(module, display_warning=False)
     if mod_path:
-        mod = Manifest._from_path(mod_path)
+        mod_path = os.path.realpath(mod_path)
+        if not mod or os.path.realpath(mod.path) != mod_path:
+            mod = Manifest._from_path(mod_path)
         if mod and mod.name != module:
             raise ValueError(f"Invalid path for module {module}: {mod_path}")
-    else:
-        mod = Manifest.for_addon(module, display_warning=False)
     return mod if mod is not None else {}
 
 

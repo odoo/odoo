@@ -22,6 +22,20 @@ class TestModuleManifest(BaseCase):
         patcher = patch.object(odoo.addons, '__path__', [cls.addons_path])
         cls.startClassPatcher(patcher)
 
+        # Server init already froze the interned catalog. Keep interned
+        # manifests (e.g. base) but allow lookups of new names on the patched path.
+        cls._saved_addon_manifests = dict(Manifest._addon_manifests)
+        cls._saved_addon_manifests_complete = Manifest._addon_manifests_complete
+        Manifest._addon_manifests_complete = False
+        Manifest._missing_addons.clear()
+        cls.addClassCleanup(cls._restore_addon_manifests)
+
+    @classmethod
+    def _restore_addon_manifests(cls):
+        Manifest._addon_manifests = cls._saved_addon_manifests
+        Manifest._addon_manifests_complete = cls._saved_addon_manifests_complete
+        Manifest._missing_addons.clear()
+
     def setUp(self):
         self.module_root = tempfile.mkdtemp(prefix='odoo_test_module_', dir=self.addons_path)
         self.module_name = os.path.basename(self.module_root)
