@@ -683,3 +683,51 @@ class TestIrCron(TransactionCase, CronMixinCase):
 
         self.env.invalidate_all()
         self.assertFalse(self.cron.active)
+
+    def test_run_job_rereads_progress_after_stale_cache(self):
+        """A stale ir.cron.progress browse must not mark remaining work FULLY_DONE.
+
+        `_run_job` keeps a browse of the progress row across `_callback`. If that
+        cache still shows done=0/remaining=0 after `_commit_progress` wrote
+        remaining work, the job is misclassified and no ASAP trigger is created.
+        """
+        default_progress_values = {'done': 0, 'remaining': 0, 'timed_out_counter': 0}
+        original_callback = self.registry['ir.cron']._callback
+
+        def mocked_run(action_self):
+            action_self.env['ir.cron']._commit_progress(processed=1, remaining=4)
+
+        def poisoned_callback(cron_self, cron_name, server_action_id):
+            progress_id = cron_self.env.context['ir_cron_progress_id']
+            original_callback(cron_self, cron_name, server_action_id)
+
+            # Simulate a browse that still holds pre-update values after the callback.
+            progress = cron_self.env['ir.cron.progress'].browse(progress_id)
+            progress.env.cache.set(progress, progress._fields['done'], 0)
+            progress.env.cache.set(progress, progress._fields['remaining'], 0)
+
+        self.cron._trigger()
+        self.env.flush_all()
+        mono = {'t': 0.0}
+
+        def fake_monotonic():
+            # Each read advances so `_run_job` can exit after MIN_RUNS_PER_JOB
+            # even when freezegun freezes other clocks.
+            mono['t'] += 2.0
+            return mono['t']
+
+        with self.capture_triggers(self.cron.id) as capture, \
+                self.enter_registry_test_mode(), \
+                patch.object(self.registry['ir.actions.server'], 'run', mocked_run), \
+                patch.object(self.registry['ir.cron'], '_callback', poisoned_callback), \
+                patch.object(time, 'monotonic', side_effect=fake_monotonic), \
+                self.registry.cursor() as cr:
+            self.registry['ir.cron']._process_job(
+                cr,
+                {**self.cron.read(load=None)[0], **default_progress_values},
+            )
+
+        self.assertTrue(
+            capture.records,
+            "remaining work must reschedule ASAP even if the progress browse was stale",
+        )

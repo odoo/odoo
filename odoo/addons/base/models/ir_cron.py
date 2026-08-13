@@ -508,6 +508,12 @@ class IrCron(models.Model):
                     _logger.exception('Job %r (%s) server action #%s failed',
                         job['cron_name'], job['id'], job['ir_actions_server_id'])
                 finally:
+                    # `_commit_progress` may have updated this row in the database
+                    # while this browse record still holds pre-callback values.
+                    # Re-read before classifying FULLY_DONE vs PARTIALLY_DONE.
+                    progress.invalidate_recordset([
+                        'done', 'remaining', 'deactivate', 'timed_out_counter',
+                    ])
                     done, remaining = progress.done, progress.remaining
                     match (success, done, remaining):
                         case (False, d, r) if d and r:
