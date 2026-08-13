@@ -167,3 +167,33 @@ class TestGetBaseUrl(odoo.tests.TransactionCase):
 
         with self.assertRaises(ValidationError):
             website.write({'domain': 'https://my-website.net['})
+
+    def test_04_outgoing_mail_uses_record_base_url(self):
+        website_1 = self.env['website'].create({
+            'name': 'Website Test 1',
+            'domain': 'https://website-one.example.com',
+        })
+        website_2 = self.env['website'].create({
+            'name': 'Website Test 2',
+            'domain': 'https://website-two.example.com',
+        })
+        self.env['ir.config_parameter'].sudo().set_str('web.base.url', website_1.domain)
+        partner = self.env['res.partner'].create({
+            'name': 'Website Test Partner',
+            'website_id': website_2.id,
+        })
+        message = self.env['mail.message'].create({
+            'body': '<a href="/terms">Terms</a>',
+            'model': partner._name,
+            'res_id': partner.id,
+        })
+        mail = self.env['mail.mail'].create({
+            'body_html': message.body,
+            'mail_message_id': message.id,
+        })
+
+        self.assertIn(
+            f'href="{website_2.domain}/terms"',
+            mail._prepare_outgoing_body(),
+            "Outgoing relative links should use the related record's website instead of web.base.url.",
+        )
