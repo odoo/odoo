@@ -148,7 +148,7 @@ const registerSteps = [
         expectUnloadPage: true,
     },
     {
-        trigger: "h5:contains(Book your talks)",
+        trigger: "div.plan_your_xp",
     },
 ];
 
@@ -176,7 +176,7 @@ var browseTalksSteps = [{
     expectUnloadPage: true,
 }, {
     content: 'Check we are on the talk list page',
-    trigger: 'h5:contains("Book your talks")',
+    trigger: 'div.plan_your_xp',
 }];
 
 var browseBackSteps = [{
@@ -186,7 +186,7 @@ var browseBackSteps = [{
     expectUnloadPage: true,
 }, {
     content: 'Check we are back on the talk list page',
-    trigger: 'h5:contains("Book your talks")',
+    trigger: 'div.plan_your_xp',
 }];
 
 registry.category("web_tour.tours").add('wevent_register', {
