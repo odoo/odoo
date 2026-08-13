@@ -7,10 +7,21 @@ import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { FormViewDialog, formViewDialogProps } from "@web/views/view_dialogs/form_view_dialog";
 import { formView } from "@web/views/form/form_view";
 import { renderToFragment } from "@web/core/utils/render";
-import { Component, onMounted, onWillDestroy, useProps, signal, xml, proxy, t } from "@odoo/owl";
+import {
+    Component,
+    onMounted,
+    onWillDestroy,
+    useProps,
+    signal,
+    xml,
+    proxy,
+    t,
+    usePlugin,
+} from "@odoo/owl";
 import { FormController, formControllerProps } from "@web/views/form/form_controller";
 import { registry } from "@web/core/registry";
 import { addLoadingEffect } from "@web/core/utils/ui";
+import { BootstrapInstance } from "@web/core/utils/bootstrap_plugin";
 
 export const pageDependenciesProps = {
     resIds: t.array(),
@@ -35,6 +46,7 @@ export class PageDependencies extends Component {
 
     setup() {
         super.setup();
+        this.bootstrap = usePlugin(BootstrapInstance);
         this.orm = useService("orm");
 
         this.sprintf = sprintf;
@@ -67,7 +79,7 @@ export class PageDependencies extends Component {
     }
 
     showDependencies() {
-        const popover = window.Popover.getOrCreateInstance(this.action(), {
+        const popover = this.bootstrap.getOrCreateInstance(window.Popover, this.action(), {
             title: _t("Dependencies"),
             boundary: "viewport",
             placement: "right",
@@ -95,7 +107,7 @@ export class PageDependencies extends Component {
                     actionEl.addEventListener("hidden.bs.popover", handler);
                 });
             }
-            popover.dispose();
+            this.bootstrap.disposeBootstrapInstance(popover);
         }
     }
 }

@@ -1,6 +1,8 @@
+import { usePlugin } from "@odoo/owl";
 import { scrollTo } from "@html_builder/utils/scrolling";
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
+import { BootstrapInstance } from "@web/core/utils/bootstrap_plugin";
 
 import { ReCaptcha } from "@google_recaptcha/js/recaptcha";
 import { localization } from "@web/core/l10n/localization";
@@ -74,6 +76,7 @@ export class Form extends Interaction {
     };
 
     setup() {
+        this.bootstrap = usePlugin(BootstrapInstance);
         this.isHidden = false;
         this.datepickerInitialized = false;
         this.recaptcha = new ReCaptcha();
@@ -707,13 +710,14 @@ export class Form extends Interaction {
                 }
                 if (typeof errorFields[fieldName] === "string") {
                     // update error message and show it.
-                    const popover = Popover.getOrCreateInstance(fieldEl, {
-                        content: errorFields[fieldName],
-                        trigger: "hover",
-                        container: "body",
-                        placement: "top",
-                    });
-                    popover.show();
+                    this.bootstrap
+                        .getOrCreateInstance(Popover, fieldEl, {
+                            content: errorFields[fieldName],
+                            trigger: "hover",
+                            container: "body",
+                            placement: "top",
+                        })
+                        .show();
                 }
                 if (!firstInvalidInput) {
                     firstInvalidInput = invalidInputs[0] || controlEls[0];

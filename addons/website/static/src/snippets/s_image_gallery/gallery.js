@@ -1,8 +1,10 @@
+import { usePlugin } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 
 import { uniqueId } from "@web/core/utils/functions";
 import { Interaction } from "@web/public/interaction";
+import { BootstrapInstance } from "@web/core/utils/bootstrap_plugin";
 
 export class Gallery extends Interaction {
     static selector = ".s_image_gallery.o_image_popup";
@@ -13,12 +15,11 @@ export class Gallery extends Interaction {
     };
 
     setup() {
+        this.bootstrap = usePlugin(BootstrapInstance);
         this.originalSources = [...this.el.querySelectorAll("img")].map((img) =>
             img.getAttribute("src")
         );
         this.carouselEl = this.el.querySelector(".carousel");
-        this.carouselInstance =
-            this.carouselEl && window.Carousel.getOrCreateInstance(this.carouselEl);
     }
 
     /**
@@ -34,10 +35,12 @@ export class Gallery extends Interaction {
         }
 
         // Pause carousel autoplay while the lightbox is active
+        let carousel;
         if (this.carouselEl) {
-            this.carouselRideValue = this.carouselInstance._config.ride;
-            this.carouselInstance.pause();
-            this.carouselInstance._config.ride = false;
+            carousel = this.bootstrap.getOrCreateInstance(window.Carousel, this.carouselEl);
+            this.carouselRideValue = carousel._config.ride;
+            carousel.pause();
+            carousel._config.ride = false;
         }
 
         let imageEls = this.el.querySelectorAll("img");
@@ -76,14 +79,23 @@ export class Gallery extends Interaction {
                 _t("Slide %(itemPosition)s of %(total)s", { itemPosition, total }),
         })[0];
         this.insert(this.modalEl, document.body);
-        new Modal(this.modalEl, { keyboard: true }).show();
+        const modal = this.bootstrap.getOrCreateInstance(Modal, this.modalEl, {
+            keyboard: true,
+        });
+        const disposeModal = () => {
+            this.bootstrap.disposeBootstrapInstance(modal);
+            this.modalEl.remove();
+        };
+        this.addListener(this.modalEl, "hidden.bs.modal", disposeModal, { once: true });
+        this.registerCleanup(disposeModal);
+        modal.show();
 
         // Restore carousel autoplay when closing the lightbox modal
         if (this.carouselEl) {
             this.addListener(this.modalEl, "hidden.bs.modal", () => {
                 // Restore the carousel's original auto-cycling state
-                this.carouselInstance._config.ride = this.carouselRideValue;
-                this.carouselInstance._maybeEnableCycle();
+                carousel._config.ride = this.carouselRideValue;
+                carousel._maybeEnableCycle();
             });
         }
     }

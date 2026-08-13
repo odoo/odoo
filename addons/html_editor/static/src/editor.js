@@ -1,4 +1,4 @@
-import { providePlugins, useEnv, useScope } from "@odoo/owl";
+import { useEnv, useScope } from "@odoo/owl";
 import { MAIN_PLUGINS, TOUCH_EXCLUDED_PLUGINS } from "./plugin_sets";
 import { createBaseContainer, SUPPORTED_BASE_CONTAINER_NAMES } from "./utils/base_container";
 import { removeClass } from "./utils/dom";
@@ -245,26 +245,28 @@ export class Editor {
         const Plugins = sortPlugins(filteredPluginList);
         this.config = Object.assign({}, ...Plugins.map((P) => P.defaultConfig), this.config);
         this.pluginsMap = new Map();
-        for (const P of Plugins) {
-            if (P.id === "") {
-                throw new Error(`Missing plugin id (class ${P.name})`);
-            }
-            if (this.pluginsMap.has(P.id)) {
-                throw new Error(`Duplicate plugin id: ${P.id}`);
-            }
-            this.pluginsMap.set(P.id, P);
-            const plugin = this.scope.run(() => new P(this.getEditorContext(P.dependencies)));
-            plugin.__editor = this;
-            this.plugins.push(plugin);
-            const exports = {};
-            for (const h of P.shared) {
-                if (!(h in plugin)) {
-                    throw new Error(`Missing helper implementation: ${h} in plugin ${P.id}`);
+        this.scope.run(() => {
+            for (const P of Plugins) {
+                if (P.id === "") {
+                    throw new Error(`Missing plugin id (class ${P.name})`);
                 }
-                exports[h] = plugin[h].bind(plugin);
+                if (this.pluginsMap.has(P.id)) {
+                    throw new Error(`Duplicate plugin id: ${P.id}`);
+                }
+                this.pluginsMap.set(P.id, P);
+                const plugin = new P(this.getEditorContext(P.dependencies));
+                plugin.__editor = this;
+                this.plugins.push(plugin);
+                const exports = {};
+                for (const h of P.shared) {
+                    if (!(h in plugin)) {
+                        throw new Error(`Missing helper implementation: ${h} in plugin ${P.id}`);
+                    }
+                    exports[h] = plugin[h].bind(plugin);
+                }
+                this.shared[P.id] = exports;
             }
-            this.shared[P.id] = exports;
-        }
+        });
         const resources = this.createResources();
         for (const plugin of this.plugins) {
             plugin._resources = resources;
@@ -273,9 +275,11 @@ export class Editor {
     }
 
     startPlugins() {
-        for (const plugin of this.plugins) {
-            this.scope.run(() => plugin.setup());
-        }
+        this.scope.run(() => {
+            for (const plugin of this.plugins) {
+                plugin.setup();
+            }
+        });
         this.trigger("on_editor_started_handlers");
     }
 
@@ -546,7 +550,6 @@ export class Editor {
  */
 export function useEditor(config) {
     const env = useEnv();
-    providePlugins([]);
     const scope = useScope();
     return new Editor(scope, config, env.services);
 }

@@ -1,12 +1,13 @@
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
 
-import { markup } from "@odoo/owl";
+import { markup, usePlugin } from "@odoo/owl";
 import { rpc } from "@web/core/network/rpc";
 import { getTemplate } from "@web/core/templates";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { utils as ui } from "@web/core/ui/ui_utils";
 import { renderToElement } from "@web/core/utils/render";
+import { BootstrapInstance } from "@web/core/utils/bootstrap_plugin";
 
 export class SearchBar extends Interaction {
     static selector = ".o_searchbar_form";
@@ -34,6 +35,7 @@ export class SearchBar extends Interaction {
     autocompleteMinWidth = 300;
 
     setup() {
+        this.bootstrap = usePlugin(BootstrapInstance);
         this.keepLast = new KeepLast();
         this.inputEl = this.el.querySelector(".search-query");
         this.buttonEl = this.el.querySelector(".oe_search_button");
@@ -271,8 +273,9 @@ export class SearchBar extends Interaction {
             wrapperEl.querySelector(".o_searchbar_form").appendChild(clone);
         });
         this.insert(wrapperEl, document.body);
-        const modal = new Modal(wrapperEl);
-        wrapperEl.addEventListener(
+        const modal = this.bootstrap.getOrCreateInstance(Modal, wrapperEl);
+        this.addListener(
+            wrapperEl,
             "shown.bs.modal",
             () => {
                 const modalInput = wrapperEl.querySelector(".search-query");
@@ -280,13 +283,12 @@ export class SearchBar extends Interaction {
             },
             { once: true }
         );
-        wrapperEl.addEventListener(
-            "hidden.bs.modal",
-            () => {
-                wrapperEl.remove();
-            },
-            { once: true }
-        );
+        const disposeModal = () => {
+            this.bootstrap.disposeBootstrapInstance(modal);
+            wrapperEl.remove();
+        };
+        this.addListener(wrapperEl, "hidden.bs.modal", disposeModal, { once: true });
+        this.registerCleanup(disposeModal);
         modal.show();
     }
 }

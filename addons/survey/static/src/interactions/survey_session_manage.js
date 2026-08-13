@@ -6,7 +6,8 @@ import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
 import { fadeIn, fadeOut } from "@survey/utils";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_utils";
-import { useListener, onWillStart } from "@odoo/owl";
+import { useListener, onWillStart, usePlugin } from "@odoo/owl";
+import { BootstrapInstance } from "@web/core/utils/bootstrap_plugin";
 
 const nextPageTooltips = {
     closingWords: _t("End of Survey"),
@@ -67,6 +68,7 @@ export class SurveySessionManage extends Interaction {
     };
 
     setup() {
+        this.bootstrap = usePlugin(BootstrapInstance);
         if (this.el.dataset.isSessionClosed) {
             this.isSessionClosed = true;
             this.el.classList.remove("invisible");
@@ -109,20 +111,14 @@ export class SurveySessionManage extends Interaction {
         // Background Management
         this.refreshBackground = this.el.dataset.refreshBackground;
         // Prepare the copy link tooltip
-        this.copyBtnTooltip = window.Tooltip.getOrCreateInstance(
-            this.el.querySelector(".o_survey_session_copy"),
-            {
-                title: _t("Click to copy link"),
-                placement: "right",
-                container: "body",
-                trigger: "hover",
-                offset: "0, 3",
-                delay: 0,
-            }
-        );
-        this.registerCleanup(() => {
-            this.copyBtnPopover?.dispose();
-            this.copyBtnTooltip?.dispose();
+        const copyBtnEl = this.el.querySelector(".o_survey_session_copy");
+        this.bootstrap.getOrCreateInstance(window.Tooltip, copyBtnEl, {
+            title: _t("Click to copy link"),
+            placement: "right",
+            container: "body",
+            trigger: "hover",
+            offset: "0, 3",
+            delay: 0,
         });
         // Attendees count & navigation label
         this.sessionAttendeesCountText = "";
@@ -176,9 +172,8 @@ export class SurveySessionManage extends Interaction {
      */
     async onCopySessionLink(ev) {
         const copyBtnTooltipHideDelay = 800;
-        this.copyBtnTooltip?.dispose();
-        delete this.copyBtnTooltip;
-        this.copyBtnPopover = window.Popover.getOrCreateInstance(ev.currentTarget, {
+        this.bootstrap.disposeBootstrapInstance(window.Tooltip.getInstance(ev.currentTarget));
+        const copyBtnPopover = this.bootstrap.getOrCreateInstance(window.Popover, ev.currentTarget, {
             content: _t("Copied!"),
             trigger: "manual",
             placement: "right",
@@ -189,8 +184,8 @@ export class SurveySessionManage extends Interaction {
             browser.navigator.clipboard.writeText(ev.currentTarget.innerText.trim())
         );
         this.protectSyncAfterAsync(() => {
-            this.copyBtnPopover.show();
-            this.waitForTimeout(() => this.copyBtnPopover.hide(), copyBtnTooltipHideDelay);
+            copyBtnPopover.show();
+            this.waitForTimeout(() => copyBtnPopover.hide(), copyBtnTooltipHideDelay);
         })();
     }
 

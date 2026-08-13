@@ -1,5 +1,7 @@
+import { usePlugin } from "@odoo/owl";
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
+import { BootstrapInstance } from "@web/core/utils/bootstrap_plugin";
 
 import { SIZES, utils as uiUtils } from "@web/core/ui/ui_utils";
 
@@ -21,6 +23,7 @@ export class HoverableDropdown extends Interaction {
     };
 
     setup() {
+        this.bootstrap = usePlugin(BootstrapInstance);
         this.dropdownMenuEls = this.el.querySelectorAll(".dropdown-menu");
         this.breakpointSize = SIZES.LG; // maybe need to check in .navbar elem like in BaseHeader?
     }
@@ -42,7 +45,7 @@ export class HoverableDropdown extends Interaction {
         if (this.isSmall() || !dropdownToggleEl || dropdownEl.closest(".o_extra_menu_items")) {
             return;
         }
-        const dropdown = Dropdown.getOrCreateInstance(dropdownToggleEl);
+        const dropdown = this.bootstrap.getOrCreateInstance(Dropdown, dropdownToggleEl);
         show ? dropdown.show() : dropdown.hide();
     }
 

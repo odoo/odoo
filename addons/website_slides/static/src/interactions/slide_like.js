@@ -1,10 +1,11 @@
-import { htmlEscape, markup } from "@odoo/owl";
+import { htmlEscape, markup, usePlugin } from "@odoo/owl";
 
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
 
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
+import { BootstrapInstance } from "@web/core/utils/bootstrap_plugin";
 
 export class SlideLike extends Interaction {
     static selector = ".o_wslides_js_slide_like";
@@ -17,11 +18,15 @@ export class SlideLike extends Interaction {
         },
     };
 
+    setup() {
+        this.bootstrap = usePlugin(BootstrapInstance);
+    }
+
     /**
      * @param {String} message
      */
     showAlert(message) {
-        const bsPopover = window.Popover.getOrCreateInstance(this.el, {
+        const bsPopover = this.bootstrap.getOrCreateInstance(window.Popover, this.el, {
             trigger: "focus",
             delay: { hide: 300 },
             placement: "bottom",
@@ -32,7 +37,6 @@ export class SlideLike extends Interaction {
             },
         });
         bsPopover.show();
-        this.registerCleanup(() => bsPopover.dispose());
     }
 
     /**

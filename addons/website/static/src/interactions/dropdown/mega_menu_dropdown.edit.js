@@ -35,9 +35,7 @@ const MegaMenuDropdownEdit = (I) =>
             this.registerCleanup(() => {
                 const megaMenuToggleEls = this.el.querySelectorAll(".o_mega_menu_toggle.show");
                 for (const megaMenuToggleEl of megaMenuToggleEls) {
-                    const bsDropdown = window.Dropdown.getOrCreateInstance(megaMenuToggleEl);
-                    bsDropdown.hide();
-                    bsDropdown.dispose();
+                    this.bootstrap.getOrCreateInstance(window.Dropdown, megaMenuToggleEl).hide();
                 }
             });
         }

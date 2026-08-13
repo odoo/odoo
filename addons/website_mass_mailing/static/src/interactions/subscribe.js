@@ -1,9 +1,11 @@
+import { usePlugin } from '@odoo/owl';
 import { Interaction } from '@web/public/interaction';
 import { registry } from '@web/core/registry';
 import { rpc } from '@web/core/network/rpc';
 import { session } from '@web/session';
 import { ReCaptcha } from '@google_recaptcha/js/recaptcha';
 import { isVisible } from "@html_editor/utils/dom_info";
+import { BootstrapInstance } from "@web/core/utils/bootstrap_plugin";
 
 export class Subscribe extends Interaction {
     static selector = '.js_subscribe';
@@ -12,6 +14,7 @@ export class Subscribe extends Interaction {
     };
 
     setup() {
+        this.bootstrap = usePlugin(BootstrapInstance);
         this._recaptcha = new ReCaptcha();
         this.notification = this.services['notification'];
         if (session.turnstile_site_key) {
@@ -133,7 +136,10 @@ export class Subscribe extends Interaction {
             this._updateSubscribeControlsStatus(true);
             const modalEl = this.el.closest('.o_newsletter_modal');
             if (modalEl) {
-                window.Modal.getOrCreateInstance(modalEl).hide();
+                this.addListener(modalEl, 'hidden.bs.modal', () => {
+                    this.bootstrap.disposeBootstrapInstance(window.Modal.getInstance(modalEl));
+                }, { once: true });
+                this.bootstrap.getOrCreateInstance(window.Modal, modalEl).hide();
             }
         }
         this.notification.add(result.toast_content, {

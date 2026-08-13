@@ -1,13 +1,19 @@
+import { usePlugin } from "@odoo/owl";
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
+import { BootstrapInstance } from "@web/core/utils/bootstrap_plugin";
 
 import { parseDate } from "@web/core/l10n/dates";
 
 export class ProjectRatingImage extends Interaction {
     static selector = ".o_portal_project_rating .o_rating_image";
 
+    setup() {
+        this.bootstrap = usePlugin(BootstrapInstance);
+    }
+
     start() {
-        window.Popover.getOrCreateInstance(this.el, {
+        this.bootstrap.getOrCreateInstance(window.Popover, this.el, {
             placement: "bottom",
             trigger: "hover",
             html: true,

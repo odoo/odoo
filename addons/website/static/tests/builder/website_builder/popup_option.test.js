@@ -41,7 +41,10 @@ describe("Popup options: empty page before edit", () => {
     // Note: for some reason, `before()` doesn't work.
     // Done in `beforeEach` because frontend JS takes too much time to load.
     beforeEach(async () => {
-        await setupWebsiteBuilder("", { loadIframeBundles: true, loadAssetsFrontendJS: true });
+        await setupWebsiteBuilder("", {
+            loadIframeBundles: true,
+            loadAssetsFrontendJS: true,
+        });
     });
     test("dropping the popup snippet automatically displays it", async () => {
         await insertCategorySnippet({ group: "content", snippet: "s_popup" });

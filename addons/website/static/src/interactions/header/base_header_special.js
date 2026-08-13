@@ -88,7 +88,7 @@ export class BaseHeaderSpecial extends BaseHeader {
                 this.hideEl
                     .querySelectorAll(".dropdown-toggle.show")
                     .forEach((dropdownToggleEl) => {
-                        Dropdown.getOrCreateInstance(dropdownToggleEl).hide();
+                        this.bootstrap.getOrCreateInstance(Dropdown, dropdownToggleEl).hide();
                     });
                 elHeight = this.hideEl.offsetHeight;
             } else {
@@ -120,7 +120,7 @@ export class BaseHeaderSpecial extends BaseHeader {
         }
 
         if (!this.cssAffixed && this.dropdownClickedEl) {
-            const dropdown = Dropdown.getOrCreateInstance(this.dropdownClickedEl);
+            const dropdown = this.bootstrap.getOrCreateInstance(Dropdown, this.dropdownClickedEl);
             dropdown.show();
             this.dropdownClickedEl = null;
         }
