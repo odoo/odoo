@@ -51,8 +51,8 @@ class ResConfigSettings(models.TransientModel):
             ('proxy_type', '=', 'l10n_cn_edi_baiwang'),
         ], limit=1) or company._l10n_cn_baiwang_create_proxy_user()
         params = {'tax_no': company.vat}
-        if company.l10n_cn_baiwang_last_request_id:
-            params['baiwang_request_id'] = company.l10n_cn_baiwang_last_request_id
+        if company.l10n_cn_baiwang_subscription_request_id:
+            params['subscription_request_id'] = company.l10n_cn_baiwang_subscription_request_id
         response = proxy_user._l10n_cn_baiwang_contact_proxy(
             endpoint='api/l10n_cn_edi_baiwang/1/get_registration_state',
             params=params,
@@ -81,7 +81,7 @@ class ResConfigSettings(models.TransientModel):
         proxy_user = self.company_id._l10n_cn_baiwang_create_proxy_user()
         proxy_url = proxy_user._get_server_url().rstrip('/')
         request_id = uuid.uuid4().hex
-        self.company_id.sudo().l10n_cn_baiwang_last_request_id = request_id
+        self.company_id.sudo().l10n_cn_baiwang_subscription_request_id = request_id
 
         params = urlencode({
             'taxNo': self.company_id.vat or '',
