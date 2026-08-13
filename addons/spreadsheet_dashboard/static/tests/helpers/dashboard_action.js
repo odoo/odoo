@@ -74,12 +74,5 @@ export async function createDashboardLoader(params = {}) {
     });
     const env = getMockEnv();
     const orm = getService("orm");
-    return new DashboardLoader(env, orm, async (dashboardId) => {
-        const [record] = await orm.read(
-            "spreadsheet.dashboard",
-            [dashboardId],
-            ["spreadsheet_data"]
-        );
-        return { data: JSON.parse(record.spreadsheet_data), revisions: [] };
-    });
+    return new DashboardLoader(env, orm);
 }
