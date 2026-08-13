@@ -9,6 +9,7 @@
             border-radius: calc(.5 * var(--field-spacing-unit));
             border: 1px solid var(--o-field-box-border-color);
             padding: var(--field-spacing-unit) calc(1.5 * var(--field-spacing-unit));
+            background-color: #{$o-view-background-color};
 
             &:has(.o_required_modifier):not(:has(.o_readonly_modifier, .o_field_invalid, :focus-within)) {
                 --o-field-box-border-color: var(--gray-600);
