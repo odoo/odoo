@@ -186,6 +186,23 @@ class TestUiHK(TestPosQrCommon):
 
         self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'PaymentScreenWithQRPayment', login="pos_user")
 
+    def test_03_pos_emv_qr_payment_value(self):
+        """ The QR-code image is drawn by the POS client, so the server has to
+        return the raw EMV payload the bank application expects, and not the URL
+        of the report rendering that payload.
+        """
+        self.bank_account.write({
+            'proxy_type': 'mobile',
+            'proxy_value': '+852-67891234',
+            'include_reference': True,
+        })
+        qr_payment = self.main_pos_config.payment_method_ids.filtered(lambda pm: pm.payment_method_type == 'bank_qr_code')
+
+        self.assertEqual(
+            qr_payment.get_qr_code_value(4.8, 'Order 00042', '', self.company.currency_id.id, False),
+            '00020101021226330012hk.com.hkicl0313+852-6789123452040000530334454034.85802HK5914company_1_data6002HK62150511Order 000426304EBF2',
+        )
+
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestUIBR(TestPosQrCommon):
