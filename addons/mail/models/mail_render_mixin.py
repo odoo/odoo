@@ -160,7 +160,8 @@ class MailRenderMixin(models.AbstractModel):
 
         It is done using regex because it is shorter than using an html parser
         to create a potentially complex soupe and hope to have a result that
-        has not been harmed.
+        has not been harmed. ``base_url`` can be a callable so that it is only
+        resolved when a local link is found.
         """
         if not html:
             return html
@@ -170,6 +171,8 @@ class MailRenderMixin(models.AbstractModel):
 
         def _sub_relative2absolute(match):
             # compute here to do it only if really necessary + cache will ensure it is done only once
+            if callable(_sub_relative2absolute.base_url):
+                _sub_relative2absolute.base_url = _sub_relative2absolute.base_url()
             # if not base_url
             if not _sub_relative2absolute.base_url:
                 _sub_relative2absolute.base_url = self.env["ir.config_parameter"].sudo().get_str("web.base.url")
