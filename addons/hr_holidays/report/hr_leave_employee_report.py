@@ -46,7 +46,10 @@ class HrLeaveEmployeeReport(models.Model):
                     hl.employee_company_id,
                     COALESCE(v.tz, 'UTC') AS tz,
                     COALESCE(rc.two_weeks_calendar, FALSE) AS two_weeks_calendar,
-                    wet.include_public_holidays_in_duration
+                    wet.include_public_holidays_in_duration,
+                    wet.request_unit,
+                    hl.request_date_from_period,
+                    hl.request_date_to_period
                 FROM hr_leave AS hl
                 JOIN hr_work_entry_type AS wet
                   ON wet.id = hl.work_entry_type_id
@@ -73,7 +76,7 @@ class HrLeaveEmployeeReport(models.Model):
                     rca.calendar_id,
                     rca.dayofweek::INTEGER AS dayofweek,
                     rca.week_type,
-                    SUM(rca.hour_to - rca.hour_from) AS day_work_hours
+                    SUM(rca.duration_hours) AS day_work_hours
                 FROM resource_calendar_attendance AS rca
                 WHERE rca.day_period != 'lunch'
                 GROUP BY rca.calendar_id, rca.dayofweek, rca.week_type
@@ -91,7 +94,9 @@ class HrLeaveEmployeeReport(models.Model):
                     lb.state,
                     lb.description,
                     day_hours.day_work_hours,
-                    ((gs.day::TIMESTAMP AT TIME ZONE lb.tz) AT TIME ZONE 'UTC') AS day_start_utc
+                    ((gs.day::TIMESTAMP AT TIME ZONE lb.tz) AT TIME ZONE 'UTC') AS day_start_utc,
+                    ROW_NUMBER() OVER (PARTITION BY lb.leave_id ORDER BY gs.day) AS day_rank,
+                    COUNT(*)    OVER (PARTITION BY lb.leave_id)                  AS workday_count
                 FROM leave_base AS lb
                 CROSS JOIN LATERAL GENERATE_SERIES(
                     (lb.date_from AT TIME ZONE 'UTC' AT TIME ZONE lb.tz)::DATE,
@@ -119,15 +124,58 @@ class HrLeaveEmployeeReport(models.Model):
                     LIMIT 1
                 ) AS public_holiday ON TRUE
                 WHERE lb.include_public_holidays_in_duration OR public_holiday IS NULL
+                -- carry the local calendar day and its dayofweek/week_type bucket
+                -- forward so Step 4 can re-join the individual attendance
+                -- intervals (not just their SUM) for that exact day.
 
-            -- Step 4: Compute per-leave denominators for day split and hour weighting.
-            ), leave_days_numbered AS (
+            -- Step 4: For each leave/day, sum the actual worked hours by
+            -- clipping every attendance interval of that day to the leave's
+            -- real [date_from, date_to] instants. This replaces the old
+            -- "divide the leave total evenly" logic, which ignored that
+            -- date_from/date_to can start/end mid-day (e.g. a half-day).
+            ), leave_day_hours AS (
                 SELECT
-                    ld.*,
-                    COUNT(*) OVER (PARTITION BY ld.leave_id) AS workday_count,
-                    SUM(ld.day_work_hours) OVER (PARTITION BY ld.leave_id) AS leave_work_hours_total
+                    ld.leave_id,
+                    ld.employee_id,
+                    ld.date_from,
+                    ld.date_to,
+                    ld.work_entry_type_id,
+                    ld.state,
+                    ld.description,
+                    ld.day_work_hours,
+                    ld.day_start_utc,
+                    SUM(
+                        -- duration-based calendars: no hour window to clip against; scale by 0.5 on half-day boundaries.
+                        CASE
+                            WHEN rca.hour_from = rca.hour_to
+                                THEN rca.duration_hours * CASE
+                                    WHEN ld.day_rank = 1              AND lb.request_unit = 'half_day' AND lb.request_date_from_period = 'pm' THEN 0.5
+                                    WHEN ld.day_rank = ld.workday_count AND lb.request_unit = 'half_day' AND lb.request_date_to_period   = 'am' THEN 0.5
+                                    ELSE 1.0
+                                END
+                            ELSE GREATEST(0, EXTRACT(EPOCH FROM (
+                                LEAST(ld.date_to, ((gs.day::TIMESTAMP + rca.hour_to * INTERVAL '1 hour') AT TIME ZONE lb.tz) AT TIME ZONE 'UTC')
+                                -
+                                GREATEST(ld.date_from, ((gs.day::TIMESTAMP + rca.hour_from * INTERVAL '1 hour') AT TIME ZONE lb.tz) AT TIME ZONE 'UTC')
+                            )) / 3600.0)
+                        END
+                    ) AS worked_hours
                 FROM leave_days AS ld
-            )
+                JOIN leave_base AS lb ON lb.leave_id = ld.leave_id
+                CROSS JOIN LATERAL (SELECT (ld.day_start_utc AT TIME ZONE 'UTC' AT TIME ZONE lb.tz)::DATE AS day) AS gs
+                JOIN resource_calendar_attendance AS rca
+                  ON rca.calendar_id = lb.resource_calendar_id
+                 AND rca.day_period != 'lunch'
+                 AND rca.dayofweek::INTEGER = EXTRACT(ISODOW FROM gs.day)::INTEGER - 1
+                 AND (
+                     (NOT lb.two_weeks_calendar AND rca.week_type IS NULL)
+                     OR (lb.two_weeks_calendar AND rca.week_type = ((((gs.day - DATE '0001-01-01')::INTEGER / 7) %% 2))::TEXT)
+                 )
+                GROUP BY ld.leave_id, ld.employee_id, ld.date_from, ld.date_to,
+                         ld.work_entry_type_id, ld.state, ld.description,
+                         ld.day_work_hours, ld.day_start_utc,
+                         ld.day_rank, ld.workday_count
+             )
 
             -- Step 5: At the end we want 1 row per day containing hours and days.
             SELECT
@@ -135,13 +183,13 @@ class HrLeaveEmployeeReport(models.Model):
                 leave_id,
                 employee_id,
                 GREATEST(date_from, day_start_utc) AS working_schedule_aligned_date_from,
-                number_of_days / workday_count::FLOAT AS number_of_days,
-                number_of_hours * day_work_hours / leave_work_hours_total AS number_of_hours,
+                worked_hours / NULLIF(day_work_hours, 0) AS number_of_days,
+                worked_hours AS number_of_hours,
                 description,
                 work_entry_type_id,
                 state
-            FROM leave_days_numbered
-            WHERE workday_count > 0
+            FROM leave_day_hours
+            WHERE worked_hours > 0
             """,
             company_ids=tuple(self.env.companies.ids),
         )
