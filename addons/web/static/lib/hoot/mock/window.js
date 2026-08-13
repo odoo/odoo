@@ -336,6 +336,16 @@ function mockedMatchMedia(mediaQueryString) {
     return new MockMediaQueryList(mediaQueryString);
 }
 
+/** @type {typeof open} */
+function mockedOpen(url, target, _features) {
+    if (target !== "_blank") {
+        mockLocation.href = url;
+    }
+    // Fails to open a new window by default; patch `window.open` method if your
+    // test requires a new window.
+    return null;
+}
+
 function mockedPreventDefault() {
     preventedEvents.add(this);
     return preventDefault.call(this, ...arguments);
@@ -543,6 +553,7 @@ const WINDOW_MOCK_DESCRIPTORS = {
     MutationObserver: { value: MockMutationObserver },
     navigator: { value: mockNavigator },
     Notification: { value: MockNotification },
+    open: { value: mockedOpen },
     outerHeight: { get: () => getCurrentDimensions().height },
     outerWidth: { get: () => getCurrentDimensions().width },
     Request: { value: MockRequest, writable: false },
