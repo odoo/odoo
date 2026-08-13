@@ -50,3 +50,7 @@ class AccountMove(models.Model):
         ):
             starting_sequence = "D" + starting_sequence
         return starting_sequence
+
+    def is_debit_note(self):
+        super().is_debit_note()
+        return bool(self.debit_origin_id)

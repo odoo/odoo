@@ -26,41 +26,6 @@
             </div>
         </div>
         <!-- End ZATCA QR -->
-        <!-- Debit note title -->
-        <xpath expr="//t[@name='invoice_title']/.." position="attributes">
-            <attribute name="t-if">o.move_type == 'out_invoice' and o.state == 'posted' and not o.debit_origin_id</attribute>
-        </xpath>
-        <xpath expr="//t[@name='draft_invoice_title']/.." position="attributes">
-            <attribute name="t-elif">o.move_type == 'out_invoice' and o.state == 'draft' and not o.debit_origin_id</attribute>
-        </xpath>
-        <xpath expr="//t[@name='invoice_title_ar']/.." position="attributes">
-            <attribute name="t-if">o.move_type == 'out_invoice' and o.state == 'posted' and not o.debit_origin_id</attribute>
-        </xpath>
-        <xpath expr="//t[@name='draft_invoice_title_ar']/.." position="attributes">
-            <attribute name="t-elif">o.move_type == 'out_invoice' and o.state == 'posted' and not o.debit_origin_id</attribute>
-        </xpath>
-        <xpath expr="//t[@name='invoice_title_en']/.." position="attributes">
-            <attribute name="t-if">o.move_type == 'out_invoice' and o.state == 'posted' and not o.debit_origin_id</attribute>
-        </xpath>
-        <xpath expr="//t[@name='draft_invoice_title_en']/.." position="attributes">
-            <attribute name="t-elif">o.move_type == 'out_invoice' and o.state == 'posted' and not o.debit_origin_id</attribute>
-        </xpath>
-        <xpath expr="//t[@name='invoice_title']/.." position="after">
-            <span t-elif="o.move_type == 'out_invoice' and o.debit_origin_id">
-                <t name="debit_note_title">Debit Note</t>
-            </span>
-        </xpath>
-        <xpath expr="//t[@name='invoice_title_ar']/.." position="after">
-            <span t-elif="o.move_type == 'out_invoice' and o.debit_origin_id">
-                <t name="debit_note_title_ar">إشعار المدين</t>
-            </span>
-        </xpath>
-        <xpath expr="//t[@name='invoice_title_en']/.." position="after">
-            <span t-elif="o.move_type == 'out_invoice' and o.debit_origin_id">
-                <t name="debit_note_title_en">Debit Note</t>
-            </span>
-        </xpath>
-        <!-- End Debit note title -->
         <!-- Information div -->
         <xpath expr="//div[@name='delivery_date']/strong[3]" position="replace">
             <strong>Supply Date</strong>
