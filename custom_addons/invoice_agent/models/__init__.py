@@ -2,6 +2,7 @@ from . import (
     account_journal,
     account_move,
     account_move_line,
+    confidence,
     invoice_agent_extraction_line,
     invoice_extraction,
     llm_service,

@@ -10,20 +10,21 @@
                 <div class="app_settings_block" data-string="Invoice Agent"
                      string="Invoice Agent" data-key="invoice_agent"
                      groups="base.group_system">
-                    <h2>Anthropic</h2>
+                    <h2>AI Service (invoice-ai)</h2>
                     <div class="row mt16 o_settings_container">
                         <div class="col-12 col-lg-6 o_setting_box">
                             <div class="o_setting_left_pane"/>
                             <div class="o_setting_right_pane">
-                                <label for="invoice_agent_anthropic_api_key"/>
+                                <label for="invoice_agent_llm_service_url"/>
                                 <div class="text-muted">
-                                    Secret key for the Anthropic Messages API.
-                                    Never committed to git.
+                                    Base URL of the standalone invoice-ai
+                                    FastAPI service. Normally the compose
+                                    service name on the internal bridge:
+                                    http://invoice-ai:8000
                                 </div>
                                 <div class="content-group">
                                     <div class="mt16">
-                                        <field name="invoice_agent_anthropic_api_key"
-                                               password="True"/>
+                                        <field name="invoice_agent_llm_service_url"/>
                                     </div>
                                 </div>
                             </div>
@@ -31,10 +32,39 @@
                         <div class="col-12 col-lg-6 o_setting_box">
                             <div class="o_setting_left_pane"/>
                             <div class="o_setting_right_pane">
-                                <label for="invoice_agent_anthropic_model"/>
+                                <label for="invoice_agent_jwt_secret"/>
+                                <div class="text-muted">
+                                    Shared HS256 secret for the service-to-service
+                                    JWT. Must equal the container's
+                                    INVOICE_AI_JWT_SECRET. Never committed to git.
+                                </div>
                                 <div class="content-group">
                                     <div class="mt16">
-                                        <field name="invoice_agent_anthropic_model"/>
+                                        <field name="invoice_agent_jwt_secret"
+                                               password="True"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h2>Confidence Routing</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane"/>
+                            <div class="o_setting_right_pane">
+                                <label for="invoice_agent_confidence_threshold"/>
+                                <div class="text-muted">
+                                    Extracted bills scoring at or above this
+                                    value ride the Auto kanban column; below it
+                                    they land in Needs Review. Overrides the
+                                    per-journal ai_min_confidence and can be
+                                    changed at runtime — no redeploy needed
+                                    (the rollback path for a bad threshold).
+                                </div>
+                                <div class="content-group">
+                                    <div class="mt16">
+                                        <field name="invoice_agent_confidence_threshold"/>
                                     </div>
                                 </div>
                             </div>

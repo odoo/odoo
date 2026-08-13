@@ -8,27 +8,33 @@
         <field name="model">account.move</field>
         <field name="priority" eval="99"/>
         <field name="arch" type="xml">
-            <kanban class="o_kanban_mobile" sample="0" default_group_by="ai_extraction_status">
-                <progressbar field="ai_extraction_status"
-                             colors='{"pending": "info", "extracted": "warning", "validated": "success", "failed": "danger"}'
+            <!-- Week 7: the queue kanban splits into the three routing
+                 columns — Auto (cleared the threshold), Needs Review
+                 (sub-threshold / failed / flagged), Approved (human
+                 validated) — grouped by ai_extraction_state. -->
+            <kanban class="o_kanban_mobile" sample="0"
+                    default_group_by="ai_extraction_state">
+                <progressbar field="ai_extraction_state"
+                             colors='{"auto": "success", "needs_review": "warning", "approved": "primary"}'
                              sum_field="amount_total"/>
                 <!-- Declare fields so they're available in the template -->
+                <field name="ai_extraction_state"/>
                 <field name="ai_extraction_status"/>
                 <field name="ai_confidence"/>
+                <field name="confidence_score"/>
                 <field name="ai_needs_review"/>
                 <templates>
                     <t t-name="card">
                         <div class="d-flex flex-column h-100">
-                            <!-- Header: partner name + status badge -->
+                            <!-- Header: partner name + routing badge -->
                             <div class="d-flex align-items-start justify-content-between mb-2">
                                 <div class="fw-bold text-truncate flex-grow-1">
                                     <field name="partner_id" class="text-truncate"/>
                                 </div>
-                                <field name="ai_extraction_status" widget="badge"
-                                       decoration-info="ai_extraction_status == 'pending'"
-                                       decoration-warning="ai_extraction_status == 'extracted'"
-                                       decoration-success="ai_extraction_status == 'validated'"
-                                       decoration-danger="ai_extraction_status == 'failed'"/>
+                                <field name="ai_extraction_state" widget="badge"
+                                       decoration-success="ai_extraction_state == 'auto'"
+                                       decoration-warning="ai_extraction_state == 'needs_review'"
+                                       decoration-primary="ai_extraction_state == 'approved'"/>
                             </div>
 
                             <!-- Reference / invoice number -->
@@ -42,13 +48,13 @@
                                     <field name="amount_total" widget="monetary"/>
                                 </div>
                                 <div class="w-50 ms-2">
-                                    <field name="ai_confidence" widget="progressbar"/>
+                                    <field name="confidence_score" widget="progressbar"/>
                                 </div>
                             </div>
 
                             <!-- Confidence badge -->
                             <div class="mt-1 text-end">
-                                <t t-if="0.8 > record.ai_confidence.raw_value">
+                                <t t-if="record.ai_extraction_state.raw_value == 'needs_review'">
                                     <span class="badge text-bg-warning">Low Confidence</span>
                                 </t>
                                 <t t-if="record.ai_needs_review.raw_value">
@@ -70,10 +76,15 @@
         <field name="model">account.move</field>
         <field name="priority" eval="99"/>
         <field name="arch" type="xml">
-            <list string="AI Queue" multi_edit="1" default_group_by="ai_extraction_status"
+            <list string="AI Queue" multi_edit="1" default_group_by="ai_extraction_state"
                   decoration-warning="ai_needs_review == True"
                   decoration-danger="ai_extraction_status == 'failed'"
                   decoration-success="ai_extraction_status == 'validated'">
+                <field name="ai_extraction_state" widget="badge"
+                       decoration-success="ai_extraction_state == 'auto'"
+                       decoration-warning="ai_extraction_state == 'needs_review'"
+                       decoration-primary="ai_extraction_state == 'approved'"
+                       optional="show"/>
                 <field name="partner_id" optional="show"/>
                 <field name="invoice_date" optional="show"/>
                 <field name="amount_total" widget="monetary" optional="show"/>
@@ -83,7 +94,7 @@
                        decoration-success="ai_extraction_status == 'validated'"
                        decoration-danger="ai_extraction_status == 'failed'"
                        optional="show"/>
-                <field name="ai_confidence" widget="progressbar" optional="show"/>
+                <field name="confidence_score" widget="progressbar" optional="show"/>
                 <field name="ai_needs_review" optional="show"/>
                 <field name="ai_review_required" optional="hide"/>
                 <field name="ai_source_sale_order_id" optional="hide"/>
@@ -114,14 +125,24 @@
                 <filter string="Failed" name="failed" domain="[('ai_extraction_status', '=', 'failed')]"/>
 
                 <separator/>
+                <!-- Routing filters -->
+                <filter string="Auto" name="state_auto" domain="[('ai_extraction_state', '=', 'auto')]"/>
+                <filter string="Needs Review" name="state_needs_review"
+                        domain="[('ai_extraction_state', '=', 'needs_review')]"/>
+                <filter string="Approved" name="state_approved"
+                        domain="[('ai_extraction_state', '=', 'approved')]"/>
+
+                <separator/>
                 <!-- Quality filters -->
                 <filter string="Low Confidence" name="low_confidence"
-                        domain="['!', ('ai_confidence', '>=', 0.8)]"/>
-                <filter string="Needs Review" name="needs_review"
+                        domain="['!', ('confidence_score', '>=', 0.8)]"/>
+                <filter string="Flagged" name="needs_review"
                         domain="[('ai_needs_review', '=', True)]"/>
 
                 <separator/>
                 <!-- Group-bys -->
+                <filter string="Extraction State" name="group_by_state"
+                        context="{'group_by': 'ai_extraction_state'}"/>
                 <filter string="Extraction Status" name="group_by_status"
                         context="{'group_by': 'ai_extraction_status'}"/>
                 <filter string="Partner" name="group_by_partner"

@@ -19,16 +19,17 @@ Error contract (``app/errors.py``): every upstream failure surfaces as a
 typed exception that the router maps to the OpenAPI ``ErrorEnvelope``.
 """
 
-import json
 import logging
+from datetime import UTC
+from typing import Any
 
-from anthropic import AsyncAnthropic
 from anthropic import (
     APIConnectionError,
     APIStatusError,
+    AsyncAnthropic,
     NotFoundError,
 )
-from anthropic.types import Message
+from anthropic.types import CacheControlEphemeralParam, Message, TextBlockParam
 
 from .config import Settings, settings
 from .errors import (
@@ -40,10 +41,10 @@ from .schemas import InvoiceExtraction, invoice_extraction_json_schema
 
 _logger = logging.getLogger(__name__)
 
-CACHE_CONTROL = {"type": "ephemeral"}
+CACHE_CONTROL: CacheControlEphemeralParam = {"type": "ephemeral"}
 
 
-def _system_blocks():
+def _system_blocks() -> list[TextBlockParam]:
     """Build the cacheable system prefix from prompts/v3.md.
 
     ``cache_control`` on the last block marks the whole prefix cacheable.
@@ -65,7 +66,7 @@ def _system_blocks():
     ]
 
 
-def _usage_dict(message: Message) -> dict:
+def _usage_dict(message: Message) -> dict[str, Any]:
     usage = message.usage
     return {
         "input_tokens": getattr(usage, "input_tokens", None),
@@ -77,10 +78,10 @@ def _usage_dict(message: Message) -> dict:
     }
 
 
-def _retry_after_seconds(exc) -> int | None:
+def _retry_after_seconds(exc: object) -> int | None:
     """Read Anthropic's Retry-After header (int seconds or HTTP-date)."""
     import email.utils
-    from datetime import datetime, timezone
+    from datetime import datetime
 
     response = getattr(exc, "response", None)
     if response is None:
@@ -94,13 +95,13 @@ def _retry_after_seconds(exc) -> int | None:
         pass
     try:
         retry_at = email.utils.parsedate_to_datetime(value)
-        delta = retry_at - datetime.now(timezone.utc)
+        delta = retry_at - datetime.now(UTC)
         return max(1, int(delta.total_seconds()))
     except (TypeError, ValueError):
         return None
 
 
-def _map_upstream_error(exc) -> Exception:
+def _map_upstream_error(exc: Exception) -> Exception:
     """Map the SDK exception hierarchy to service exceptions."""
     if isinstance(exc, NotFoundError):
         return ClaudeUpstreamError(
@@ -141,7 +142,7 @@ class ClaudeService:
         )
         self._cfg = cfg
 
-    async def extract(self, text: str, effort: str = "normal") -> dict:
+    async def extract(self, text: str, effort: str = "normal") -> dict[str, Any]:
         """Extract structured invoice data from OCR text.
 
         :return: dict with ``parsed`` (validated ``InvoiceExtraction``),
@@ -151,10 +152,17 @@ class ClaudeService:
         """
         # Never pass None to messages.parse(output_config=...): the SDK
         # merges {**output_config, "format": ...} and crashes on None.
-        output_config = {}
+        output_config: Any = {}
         if effort and effort != "normal":
             output_config = {"effort": effort}
 
+        # ``message`` is typed as Any because the version-fallback path below
+        # can bind either a ParsedMessage[InvoiceExtraction] (messages.parse)
+        # or a plain Message (messages.create) — the SDK stubs type the two
+        # differently. Both expose .usage/.model/.stop_reason/.content, and
+        # "_parse_content" normalizes the fallback, so the ambiguity is
+        # confined to this method.
+        message: Any
         try:
             message = await self._client.messages.parse(
                 model=self._cfg.anthropic_model,
@@ -164,9 +172,13 @@ class ClaudeService:
                 output_format=InvoiceExtraction,
                 output_config=output_config,
             )
+            parsed: InvoiceExtraction = message.parsed_output
         except TypeError:
             # Older SDK without messages.parse(): fall back to JSON schema
-            # in output_config and validate with pydantic.
+            # in output_config and validate with pydantic. The ``create``
+            # call is deliberately version-agnostic (the json_schema dict is
+            # accepted at runtime), so the strict OutputConfigParam stub
+            # mismatch is silenced.
             _logger.info("messages.parse unavailable; using json_schema path")
             message = await self._client.messages.create(
                 model=self._cfg.anthropic_model,
@@ -187,8 +199,6 @@ class ClaudeService:
             raise _map_upstream_error(exc) from exc
         except APIConnectionError as exc:
             raise _map_upstream_error(exc) from exc
-        else:
-            parsed = message.parsed_output
 
         if message.stop_reason == "max_tokens":
             raise ExtractionValidationError(

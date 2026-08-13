@@ -4,6 +4,11 @@ Runs through httpx.ASGITransport (no network, no Anthropic SDK call) with the
 Claude service mocked at the FastAPI dependency seam — the same "mock the
 client, test the contract" approach the Odoo suite uses.
 
+JWT auth (week's brief): `/v1/extract` requires a valid Bearer JWT
+(``Depends(require_token)``); ``/healthz`` stays open for the compose
+healthcheck. Positive-path tests carry the ``auth_headers`` fixture; the
+negative JWT matrix lives in ``test_auth.py``.
+
 Coverage required by the week's brief:
   * happy path — text input returns InvoiceExtraction + usage
   * PDF upload path — OCR runs first, then Claude on the OCR text
@@ -21,15 +26,20 @@ from app.errors import ClaudeRateLimitError
 async def test_healthz(client):
     response = await client.get("/healthz")
     assert response.status_code == 200
-    assert response.json() == {"status": "ok"}
+    body = response.json()
+    assert body["status"] == "ok"
+    # Build provenance is stamped on the probe so a deployed image can be
+    # traced to the git revision it was built from.
+    assert body["build_sha"]
 
 
 @pytest.mark.anyio
-async def test_extract_happy_path_text(fake_claude, client, default_result):
+async def test_extract_happy_path_text(fake_claude, client, default_result, auth_headers):
     fake_claude.result = default_result
 
     response = await client.post(
         "/v1/extract",
+        headers=auth_headers,
         data={"text": "ACME SUPPLIES LLC\nTOTAL USD 1,350.00"},
     )
 
@@ -49,7 +59,7 @@ async def test_extract_happy_path_text(fake_claude, client, default_result):
 
 @pytest.mark.anyio
 async def test_extract_with_pdf_upload_runs_ocr(
-    fake_claude, client, default_result, monkeypatch,
+    fake_claude, client, default_result, monkeypatch, auth_headers,
 ):
     """A PDF upload goes through OCR first, then Claude on the OCR text."""
     fake_claude.result = default_result
@@ -62,6 +72,7 @@ async def test_extract_with_pdf_upload_runs_ocr(
 
     response = await client.post(
         "/v1/extract",
+        headers=auth_headers,
         files={"file": ("invoice.pdf", b"%PDF-1.4 fake", "application/pdf")},
     )
 
@@ -72,18 +83,19 @@ async def test_extract_with_pdf_upload_runs_ocr(
 
 
 @pytest.mark.anyio
-async def test_extract_missing_both_file_and_text_returns_400(client):
-    response = await client.post("/v1/extract", data={})
+async def test_extract_missing_both_file_and_text_returns_400(client, auth_headers):
+    response = await client.post("/v1/extract", headers=auth_headers, data={})
     assert response.status_code == 400
     assert response.json()["error"]["code"] == "E4001"
 
 
 @pytest.mark.anyio
-async def test_extract_oversized_upload_returns_413(fake_claude, client):
+async def test_extract_oversized_upload_returns_413(fake_claude, client, auth_headers):
     # 11 MiB of zeros — over the 10 MiB service limit.
     oversized = b"\0" * (11 * 1024 * 1024)
     response = await client.post(
         "/v1/extract",
+        headers=auth_headers,
         files={"file": ("big.pdf", oversized, "application/pdf")},
     )
     assert response.status_code == 413
@@ -91,9 +103,10 @@ async def test_extract_oversized_upload_returns_413(fake_claude, client):
 
 
 @pytest.mark.anyio
-async def test_extract_bad_mimetype_returns_415(fake_claude, client):
+async def test_extract_bad_mimetype_returns_415(fake_claude, client, auth_headers):
     response = await client.post(
         "/v1/extract",
+        headers=auth_headers,
         files={"file": ("notes.txt", b"hello", "text/plain")},
     )
     assert response.status_code == 415
@@ -101,13 +114,14 @@ async def test_extract_bad_mimetype_returns_415(fake_claude, client):
 
 
 @pytest.mark.anyio
-async def test_extract_upstream_rate_limit_maps_to_503(fake_claude, client):
+async def test_extract_upstream_rate_limit_maps_to_503(fake_claude, client, auth_headers):
     fake_claude.error = ClaudeRateLimitError(
         message="Anthropic rate limit (HTTP 429)",
         retry_after_seconds=17,
     )
     response = await client.post(
         "/v1/extract",
+        headers=auth_headers,
         data={"text": "ACME SUPPLIES LLC\nTOTAL USD 1,350.00"},
     )
     # The client contract: any upstream AI failure is 503 Service
@@ -119,12 +133,13 @@ async def test_extract_upstream_rate_limit_maps_to_503(fake_claude, client):
 
 
 @pytest.mark.anyio
-async def test_extract_upstream_generic_error_maps_to_503(fake_claude, client):
+async def test_extract_upstream_generic_error_maps_to_503(fake_claude, client, auth_headers):
     fake_claude.error = ClaudeRateLimitError(
         message="Anthropic API error",
     )
     response = await client.post(
         "/v1/extract",
+        headers=auth_headers,
         data={"text": "ACME SUPPLIES LLC"},
     )
     assert response.status_code == 503

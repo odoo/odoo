@@ -11,14 +11,16 @@ docs/adr-003-ai-service.md: 33.5× login degradation with workers=2).
 
 import asyncio
 import logging
-from typing import Annotated
+import os
+from typing import Annotated, Any
 
-from fastapi import Depends, FastAPI, File, Form, UploadFile
+from fastapi import Depends, FastAPI, File, Form, Request, UploadFile
 from fastapi.responses import JSONResponse
 
+from .auth import require_token
+from .claude import ClaudeService
 from .config import settings
 from .dependencies import get_claude_service
-from .claude import ClaudeService
 from .errors import (
     BadRequestError,
     ServiceError,
@@ -26,8 +28,14 @@ from .errors import (
     UploadTooLargeError,
 )
 from .ocr import extract_bytes
+from .schemas import ExtractionResponse, HealthResponse
 
 _logger = logging.getLogger(__name__)
+
+# Build provenance for /healthz. INVOICE_AI_BUILD_SHA is stamped by the
+# Dockerfile builder stage (git rev-parse --short HEAD); defaults to
+# "dev" when running from a checkout so local uvicorn never fails.
+BUILD_SHA = os.environ.get("INVOICE_AI_BUILD_SHA", "dev")
 
 app = FastAPI(
     title="invoice-ai",
@@ -40,8 +48,8 @@ app = FastAPI(
 # ---------------------------------------------------------------------------
 # Error envelope — mirrors docs/openapi.yaml ErrorEnvelope.
 # ---------------------------------------------------------------------------
-def _error_payload(exc: ServiceError) -> dict:
-    error = {
+def _error_payload(exc: ServiceError) -> dict[str, Any]:
+    error: dict[str, Any] = {
         "code": exc.code,
         "message": exc.message,
     }
@@ -53,13 +61,13 @@ def _error_payload(exc: ServiceError) -> dict:
 
 
 @app.exception_handler(ServiceError)
-async def _service_error_handler(_, exc: ServiceError):
+async def _service_error_handler(_: Request, exc: ServiceError) -> JSONResponse:
     _logger.warning("invoice-ai error %s: %s", exc.code, exc.message)
     return JSONResponse(status_code=exc.status_code, content=_error_payload(exc))
 
 
 @app.exception_handler(Exception)
-async def _unexpected_error_handler(_, exc: Exception):
+async def _unexpected_error_handler(_: Request, exc: Exception) -> JSONResponse:
     _logger.exception("unexpected invoice-ai error: %r", exc)
     return JSONResponse(
         status_code=500,
@@ -75,19 +83,25 @@ async def _unexpected_error_handler(_, exc: Exception):
 # ---------------------------------------------------------------------------
 # Routes
 # ---------------------------------------------------------------------------
-@app.get("/healthz")
-async def healthz():
-    """Liveness probe (OpenAPI /healthz)."""
-    return {"status": "ok"}
+@app.get("/healthz", response_model=HealthResponse)
+async def healthz() -> dict[str, str]:
+    """Liveness probe (OpenAPI /healthz).
+
+    Open to unauthenticated callers — the compose healthcheck curls this
+    without a JWT. Carries the build SHA so a deployed image can be traced
+    back to the git revision that produced it.
+    """
+    return {"status": "ok", "build_sha": BUILD_SHA}
 
 
-@app.post("/v1/extract")
+@app.post("/v1/extract", response_model=ExtractionResponse)
 async def extract_invoice(
     claude: Annotated[ClaudeService, Depends(get_claude_service)],
-    file: UploadFile | None = File(default=None),
-    text: str | None = Form(default=None),
-    effort: str = Form(default="normal"),
-):
+    _auth: Annotated[dict, Depends(require_token)],
+    file: Annotated[UploadFile | None, File()] = None,
+    text: Annotated[str | None, Form()] = None,
+    effort: Annotated[str, Form()] = "normal",
+) -> dict[str, Any]:
     """Extract structured invoice data from a PDF/image or OCR text.
 
     Either ``file`` (multipart upload, PDF or PNG/JPEG/TIFF, max 10 MiB) or

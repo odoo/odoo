@@ -18,8 +18,9 @@ Tesseract psm 6 @ 300 DPI). Contract unchanged:
 
 import io
 import logging
+from typing import Any
 
-from .errors import BadRequestError, UploadTooLargeError, UnsupportedMediaTypeError
+from .errors import BadRequestError, UnsupportedMediaTypeError, UploadTooLargeError
 
 _logger = logging.getLogger(__name__)
 
@@ -31,7 +32,7 @@ OCR_OEM = 3
 ALLOWED_MIMETYPES = ("application/pdf", "image/png", "image/jpeg", "image/tiff")
 
 
-def extract_bytes(raw: bytes, mimetype: str, filename: str = "") -> dict:
+def extract_bytes(raw: bytes, mimetype: str, filename: str = "") -> dict[str, Any]:
     """Return ``{"text": str, "confidence": float}`` for raw document bytes."""
     if not raw:
         raise BadRequestError("No document bytes to OCR.")
@@ -53,7 +54,7 @@ def extract_bytes(raw: bytes, mimetype: str, filename: str = "") -> dict:
     return _ocr_images(images)
 
 
-def _rasterize_pdf(raw: bytes, filename: str):
+def _rasterize_pdf(raw: bytes, filename: str) -> list[Any]:
     from pdf2image import convert_from_bytes
 
     try:
@@ -65,7 +66,7 @@ def _rasterize_pdf(raw: bytes, filename: str):
     return images
 
 
-def _read_image(raw: bytes, filename: str):
+def _read_image(raw: bytes, filename: str) -> Any:
     from PIL import Image
 
     try:
@@ -76,7 +77,7 @@ def _read_image(raw: bytes, filename: str):
         raise BadRequestError(f"Could not read image '{filename}': {exc}") from exc
 
 
-def _ocr_images(images) -> dict:
+def _ocr_images(images: list[Any]) -> dict[str, Any]:
     import pytesseract
 
     text_parts = []

@@ -1,5 +1,5 @@
 {
-    "description": "Golden set for the week-seven extraction baseline. Ten vendor invoice texts (realistic OCR line-art) with hand-labelled ground truth matching the InvoiceExtraction schema. vendor_vat / due_date / subtotal / tax_total are genuinely omitted by some vendors, exercising the Optional fields.",
+    "description": "Golden set for the week-seven extraction baseline. Twenty vendor invoice texts: the original ten realistic OCR line-art invoices (hand-labelled ground truth matching the InvoiceExtraction schema), five additional clean multi-currency invoices, and five deliberately awful scans (ids prefixed 'awful_') that exercise the low-confidence routing path — garbled totals, torn headers, duplicated lines, truncated columns, and contrast-inverted OCR noise. vendor_vat / due_date / subtotal / tax_total are genuinely omitted by some vendors, exercising the Optional fields.",
     "invoices": [
         {
             "id": "acme_hosting",
@@ -272,6 +272,281 @@
                         "name": "Fuel adjustment (BAF)",
                         "quantity": 1.0,
                         "price_unit": 40.0
+                    }
+                ]
+            }
+        },
+        {
+            "id": "dubai_services_aed",
+            "text": "DIGITAL NEXUS TECHNOLOGIES LLC\nDubai, UAE\nTRN 310123456789014\n\nTax Invoice 10432\nDate: 2026-03-18\n\nCloud migration consulting      1x   AED 4,500.00\nManaged AWS setup               1x   AED 2,250.00\n\nSubtotal            6,750.00\nVAT (5%)              337.50\nTOTAL             AED 7,087.50",
+            "expected": {
+                "vendor_name": "DIGITAL NEXUS TECHNOLOGIES LLC",
+                "vendor_vat": "310123456789014",
+                "invoice_date": "2026-03-18",
+                "due_date": null,
+                "currency": "AED",
+                "subtotal": 6750.0,
+                "tax_total": 337.5,
+                "amount_total": 7087.5,
+                "lines": [
+                    {
+                        "name": "Cloud migration consulting",
+                        "quantity": 1.0,
+                        "price_unit": 4500.0
+                    },
+                    {
+                        "name": "Managed AWS setup",
+                        "quantity": 1.0,
+                        "price_unit": 2250.0
+                    }
+                ]
+            }
+        },
+        {
+            "id": "madrid_consulting_eur",
+            "text": "CONSULTORIA MADRID SL\nCIF ESB12345678\nCalle Mayor 12, Madrid\n\nFactura 2026-0147\nFecha 2026-04-05\nVencimiento 2026-05-05\n\nAnálisis de procesos        1    € 1,200.00\nFormación equipo            1      € 450.00\n\nBase imponible   1,650.00\nIVA 21%            346.50\nTotal           1,996.50",
+            "expected": {
+                "vendor_name": "CONSULTORIA MADRID SL",
+                "vendor_vat": "ESB12345678",
+                "invoice_date": "2026-04-05",
+                "due_date": "2026-05-05",
+                "currency": "EUR",
+                "subtotal": 1650.0,
+                "tax_total": 346.5,
+                "amount_total": 1996.5,
+                "lines": [
+                    {
+                        "name": "Análisis de procesos",
+                        "quantity": 1.0,
+                        "price_unit": 1200.0
+                    },
+                    {
+                        "name": "Formación equipo",
+                        "quantity": 1.0,
+                        "price_unit": 450.0
+                    }
+                ]
+            }
+        },
+        {
+            "id": "singapore_logistics_sgd",
+            "text": "Meridian Logistics Pte Ltd\n10 Pasir Panjang Rd, Singapore\nGST Reg 201234567A\n\nINVOICE ML-8871\nDate: 2026-05-02\nDue: 2026-06-01\n\nSea freight LA->SG        1   SGD 2,400.00\nWarehousing (10 days)     10     SGD 85.00\n\nSubtotal      3,250.00\nGST 9%          292.50\nTOTAL        SGD 3,542.50",
+            "expected": {
+                "vendor_name": "Meridian Logistics Pte Ltd",
+                "vendor_vat": "201234567A",
+                "invoice_date": "2026-05-02",
+                "due_date": "2026-06-01",
+                "currency": "SGD",
+                "subtotal": 3250.0,
+                "tax_total": 292.5,
+                "amount_total": 3542.5,
+                "lines": [
+                    {
+                        "name": "Sea freight LA->SG",
+                        "quantity": 1.0,
+                        "price_unit": 2400.0
+                    },
+                    {
+                        "name": "Warehousing (10 days)",
+                        "quantity": 10.0,
+                        "price_unit": 85.0
+                    }
+                ]
+            }
+        },
+        {
+            "id": "saopaulo_software_brl",
+            "text": "SOFTWARE SÃO PAULO LTDA\nCNPJ 12.345.678/0001-90\nRua Augusta 500, São Paulo\n\nNOTA FISCAL NF-e 4521\nEmissão: 2026-06-22\n\nLicença anual ERP      1   R$ 3,600.00\nSuporte premium       12    R$ 150.00\n\nSubtotal    5,400.00\nICMS 18%      972.00\nTotal      6,372.00",
+            "expected": {
+                "vendor_name": "SOFTWARE SÃO PAULO LTDA",
+                "vendor_vat": "12.345.678/0001-90",
+                "invoice_date": "2026-06-22",
+                "due_date": null,
+                "currency": "BRL",
+                "subtotal": 5400.0,
+                "tax_total": 972.0,
+                "amount_total": 6372.0,
+                "lines": [
+                    {
+                        "name": "Licença anual ERP",
+                        "quantity": 1.0,
+                        "price_unit": 3600.0
+                    },
+                    {
+                        "name": "Suporte premium",
+                        "quantity": 12.0,
+                        "price_unit": 150.0
+                    }
+                ]
+            }
+        },
+        {
+            "id": "warsaw_marketing_pln",
+            "text": "Warszawska Agencja Marketingu Sp. z o.o.\nNIP 5252345678\nul. Nowy Świat 22, Warszawa\n\nFAKTURA VAT 2026/88\nData wystawienia 2026-07-14\nTermin płatności 2026-08-13\n\nKampania social media     1    PLN 2,000.00\nProdukcja wideo           1    PLN 3,500.00\n\nNetto       5,500.00\nVAT 23%     1,265.00\nBrutto      6,765.00",
+            "expected": {
+                "vendor_name": "Warszawska Agencja Marketingu Sp. z o.o.",
+                "vendor_vat": "5252345678",
+                "invoice_date": "2026-07-14",
+                "due_date": "2026-08-13",
+                "currency": "PLN",
+                "subtotal": 5500.0,
+                "tax_total": 1265.0,
+                "amount_total": 6765.0,
+                "lines": [
+                    {
+                        "name": "Kampania social media",
+                        "quantity": 1.0,
+                        "price_unit": 2000.0
+                    },
+                    {
+                        "name": "Produkcja wideo",
+                        "quantity": 1.0,
+                        "price_unit": 3500.0
+                    }
+                ]
+            }
+        },
+        {
+            "id": "awful_blurry_total",
+            "text": "NORTHWIND TRADING\nInvoice 8892\nDate: 2026-03-0?\n\nItem              Qty   Price\nWidget A           4    12.50\nWidget B           6    18.00\n\nSubtotal       ????.??\nVAT 20%        ??.??\nTOTAL          1???.??",
+            "expected": {
+                "vendor_name": "NORTHWIND TRADING",
+                "vendor_vat": null,
+                "invoice_date": "2026-03-08",
+                "due_date": null,
+                "currency": "EUR",
+                "subtotal": 158.0,
+                "tax_total": 31.6,
+                "amount_total": 189.6,
+                "lines": [
+                    {
+                        "name": "Widget A",
+                        "quantity": 4.0,
+                        "price_unit": 12.5
+                    },
+                    {
+                        "name": "Widget B",
+                        "quantity": 6.0,
+                        "price_unit": 18.0
+                    }
+                ]
+            }
+        },
+        {
+            "id": "awful_rotated_header",
+            "text": "Rotated scan — vendor header torn\n\nnortheast oi SERVICES\n(invoice number unreadable)\nTwo date stamps: 06/04/2026 and 2026-09-04\n\nItem            Qty      Unit\nOps retainer     1      950.00\nOn-call          1      300.00\n\nNET 1,250.00\nVAT (19%)         237.50\nTOTAL 1,487.50",
+            "expected": {
+                "vendor_name": "Northeast OI Services",
+                "vendor_vat": null,
+                "invoice_date": "2026-09-04",
+                "due_date": null,
+                "currency": "EUR",
+                "subtotal": 1250.0,
+                "tax_total": 237.5,
+                "amount_total": 1487.5,
+                "lines": [
+                    {
+                        "name": "Ops retainer",
+                        "quantity": 1.0,
+                        "price_unit": 950.0
+                    },
+                    {
+                        "name": "On-call",
+                        "quantity": 1.0,
+                        "price_unit": 300.0
+                    }
+                ]
+            }
+        },
+        {
+            "id": "awful_duplicate_lines",
+            "text": "Galleria Supplies Srl\nFattura 2026/221\nData 2026-05-11\n\nQty  Description           Importo\n2     Carta A4              9.90\n1     Penne blu            12.40\n2     Carta A4              9.90\n1     Cartucce stampante   34.00\n\nImponibile  66.20\nIVA 22%     14.56\nTotale      80.76",
+            "expected": {
+                "vendor_name": "Galleria Supplies Srl",
+                "vendor_vat": null,
+                "invoice_date": "2026-05-11",
+                "due_date": null,
+                "currency": "EUR",
+                "subtotal": 66.2,
+                "tax_total": 14.56,
+                "amount_total": 80.76,
+                "lines": [
+                    {
+                        "name": "Carta A4",
+                        "quantity": 2.0,
+                        "price_unit": 9.9
+                    },
+                    {
+                        "name": "Penne blu",
+                        "quantity": 1.0,
+                        "price_unit": 12.4
+                    },
+                    {
+                        "name": "Carta A4",
+                        "quantity": 2.0,
+                        "price_unit": 9.9
+                    },
+                    {
+                        "name": "Cartucce stampante",
+                        "quantity": 1.0,
+                        "price_unit": 34.0
+                    }
+                ]
+            }
+        },
+        {
+            "id": "awful_missing_columns",
+            "text": "Atlas Freight GmbH\nRechnung 55601-8\nDatum 2026-08-29\n\nPosition        Menge   EP\nTransport      ??        420.00\nLagerung       3        5??.??\nVerpackung     1        15.00\n\nSumme netto  ????.??\nUSt 19%        ???.??\nGesamt 1,0??.??",
+            "expected": {
+                "vendor_name": "Atlas Freight GmbH",
+                "vendor_vat": null,
+                "invoice_date": "2026-08-29",
+                "due_date": null,
+                "currency": "EUR",
+                "subtotal": 585.0,
+                "tax_total": 111.15,
+                "amount_total": 696.15,
+                "lines": [
+                    {
+                        "name": "Transport",
+                        "quantity": 1.0,
+                        "price_unit": 420.0
+                    },
+                    {
+                        "name": "Lagerung",
+                        "quantity": 3.0,
+                        "price_unit": 50.0
+                    },
+                    {
+                        "name": "Verpackung",
+                        "quantity": 1.0,
+                        "price_unit": 15.0
+                    }
+                ]
+            }
+        },
+        {
+            "id": "awful_contrast_inverted",
+            "text": "PRIME EDGE CONSULTING\n(low contrast, characters swapped)\nInv 4471  0etə 2026-10-07\n\nServ1ces retainer    1     2,4OO.OO\nDed1cated eng1neer    1     6,5OO.OO\n\nNet 8,9OO.OO\nVAT 10% B9O.OO\nT0tAL 9,79O.OO",
+            "expected": {
+                "vendor_name": "PRIME EDGE CONSULTING",
+                "vendor_vat": null,
+                "invoice_date": "2026-10-07",
+                "due_date": null,
+                "currency": "USD",
+                "subtotal": 8900.0,
+                "tax_total": 890.0,
+                "amount_total": 9790.0,
+                "lines": [
+                    {
+                        "name": "Services retainer",
+                        "quantity": 1.0,
+                        "price_unit": 2400.0
+                    },
+                    {
+                        "name": "Dedicated engineer",
+                        "quantity": 1.0,
+                        "price_unit": 6500.0
                     }
                 ]
             }

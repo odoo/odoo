@@ -7,6 +7,8 @@ from datetime import timedelta
 from odoo import _, api, fields, models
 from odoo.exceptions import AccessError, UserError, ValidationError
 
+from .llm_service import AIServiceUnavailable
+
 _logger = logging.getLogger(__name__)
 
 _CLAUDE_SYSTEM_PROMPT = (
@@ -61,6 +63,53 @@ class AccountMove(models.Model):
         digits=(3, 2),
         tracking=True,
         help="Overall extraction confidence score between 0.00 and 1.00.",
+    )
+    # === Week-7 Confidence Routing (calibrated, never the raw self-report) ===
+    confidence_score = fields.Float(
+        string="Confidence Score",
+        compute="_compute_confidence_score",
+        store=True,
+        digits=(3, 2),
+        readonly=True,
+        index=True,
+        help="Calibrated blend of the model's self-reported certainty, the "
+        "Tesseract per-word confidence, and the deterministic cross-checks "
+        "(arithmetic line-sum, VAT/IBAN regex rescue). This is the score the "
+        "routing threshold compares against — the self-reported "
+        "field_confidence is only one input, weighted and audited.",
+    )
+    ai_confidence_details = fields.Json(
+        string="Confidence Details",
+        compute="_compute_confidence_score",
+        store=True,
+        readonly=True,
+        help="Audit trail for confidence_score: every input, the blend "
+        "weights, the verified cross-check list, and which fallback path "
+        "fired on this move (normal pass, high-effort pass, rescue:vat, "
+        "rescue:iban, arithmetic).",
+    )
+    ai_confidence_notes = fields.Text(
+        string="Confidence Notes",
+        compute="_compute_confidence_score",
+        store=True,
+        readonly=True,
+        help="Free-text ambiguity notes from the extraction (schema 'notes'), "
+        "surfaced verbatim on the Needs Review chatter message.",
+    )
+    ai_extraction_state = fields.Selection(
+        selection=[
+            ("auto", "Auto"),
+            ("needs_review", "Needs Review"),
+            ("approved", "Approved"),
+        ],
+        string="Extraction State",
+        compute="_compute_confidence_score",
+        store=True,
+        readonly=True,
+        index=True,
+        help="Kanban routing state: 'auto' when confidence cleared the "
+        "journal threshold, 'needs_review' when it did not (or the pipeline "
+        "failed), 'approved' when a human validated the bill.",
     )
     ai_extracted_json = fields.Json(
         string="AI Extracted Raw Payload",
@@ -235,8 +284,125 @@ class AccountMove(models.Model):
                 move.ai_line_confidence_avg = 0.0
 
     # -------------------------------------------------------------------------
-    # CONSTRAINT: Validated status requires minimum confidence
+    # COMPUTE: Confidence score + kanban routing state (week 7)
     # -------------------------------------------------------------------------
+    # The stored ``confidence_score`` is the calibrated blend computed by
+    # ``invoice.llm.service.score_extraction`` (self-report + OCR conf +
+    # arithmetic + VAT/IBAN rescue), over the persisted ``ai_extracted_json``
+    # payload. When no payload has been scored yet the score is 0 and the
+    # routing state is ``needs_review`` — an unscored bill must never slip
+    # through as Auto.
+    #
+    # Routing:
+    #   * ``approved``  — human validated the bill.
+    #   * ``auto``      — scored >= journal threshold (``ai_min_confidence``).
+    #   * ``needs_review`` — scored below threshold, pipeline failed, or no
+    #     payload at all.
+    # -------------------------------------------------------------------------
+    @api.depends(
+        "ai_extracted_json",
+        "ai_extraction_status",
+        "ai_review_required",
+        "ai_confidence",
+        "ocr_confidence",
+        "ocr_text",
+        "journal_id.ai_agent_enabled",
+        "journal_id.ai_min_confidence",
+    )
+    def _compute_confidence_score(self):
+        for move in self:
+            move._score_and_route_move()
+
+    def _score_and_route_move(self):
+        """Score one move and set its kanban routing state.
+
+        Never raises: a malformed stored payload or a missing OCR text
+        degrades the move to ``needs_review`` so nothing silently slips
+        through as Auto.
+        """
+        self.ensure_one()
+        payload = self.ai_extracted_json
+        if not isinstance(payload, dict):
+            payload = {}
+
+        if self.ai_extraction_status == "validated":
+            # A human confirmed the bill — the state is Approved regardless
+            # of the (already constraint-checked) threshold.
+            self.confidence_score = self.ai_confidence or 0.0
+            self.ai_confidence_details = self.ai_confidence_details or {}
+            self.ai_confidence_notes = self.ai_confidence_notes or ""
+            self.ai_extraction_state = "approved"
+            return
+
+        if not payload or self.ai_review_required:
+            # Unscored (pending/processing), flagged by a human, or an empty
+            # payload — never Auto.
+            self.confidence_score = self.confidence_score or 0.0
+            self.ai_confidence_details = self.ai_confidence_details or {}
+            self.ai_confidence_notes = self.ai_confidence_notes or ""
+            self.ai_extraction_state = "needs_review"
+            return
+
+        checks = []
+        if self.ai_confidence_details and isinstance(self.ai_confidence_details, dict):
+            checks = list(self.ai_confidence_details.get("checks") or [])
+
+        score, details = self.env["invoice.llm.service"].score_extraction(
+            payload,
+            ocr_text=self.ocr_text or self.ai_ocr_text,
+            ocr_confidence=self.ocr_confidence,
+            checks=checks,
+        )
+
+        notes = payload["notes"] if isinstance(payload.get("notes"), str) else ""
+
+        # Re-rescue the (possibly mutated) payload so the audit trail and the
+        # stored payload stay in sync with what the blend actually saw.
+        if details.get("checks") and self.ai_extracted_json != payload:
+            self.ai_extracted_json = payload
+
+        self.confidence_score = score
+        self.ai_confidence_details = details
+        self.ai_confidence_notes = notes
+
+        threshold = self._get_ai_min_confidence()
+        if self.ai_extraction_status == "failed":
+            self.ai_extraction_state = "needs_review"
+        elif score >= threshold:
+            self.ai_extraction_state = "auto"
+        else:
+            self.ai_extraction_state = "needs_review"
+            self.ai_review_required = True
+
+    def _flag_needs_review(self, reason="low confidence"):
+        """Mark a bill for human review and post the reason on the chatter.
+
+        Called by the routing helpers whenever a move must not quietly
+        produce an untouched draft: sub-threshold score, failed pipeline, or
+        an explicit review flag. Setting ``ai_review_required`` drives the
+        routing compute to ``needs_review``; ``message_post`` makes the
+        reason visible on the bill's chatter so the accountant sees it in
+        the queue too.
+        """
+        self.ensure_one()
+        self.write({"ai_review_required": True})
+        body = (
+            "\u26a0\ufe0f <b>AI Needs Review</b><br/>"
+            "Confidence score: <b>%.0f%%</b><br/>Reason: %s"
+        ) % ((self.confidence_score or 0.0) * 100, reason)
+        if self.ai_confidence_notes:
+            body += "<br/>Notes: <i>%s</i>" % self.ai_confidence_notes
+        try:
+            self.message_post(
+                body=body,
+                subject="AI Needs Review: %s" % self.display_name,
+            )
+        except Exception:
+            _logger.exception(
+                "invoice_agent failed to post review message on %s",
+                self.display_name,
+            )
+
     @api.constrains("ai_confidence", "ai_extraction_status")
     def _check_ai_confidence_validation(self):
         for move in self:
@@ -256,7 +422,17 @@ class AccountMove(models.Model):
                 )
 
     def _get_ai_min_confidence(self):
+        """Resolve the routing threshold for this move.
+
+        Priority: the global ``invoice_agent.confidence_threshold``
+        ir.config_parameter (zero-downtime tuning / rollback, see
+        ``invoice.llm.service.confidence_threshold``) → the journal's
+        ``ai_min_confidence`` → 0.70 default.
+        """
         self.ensure_one()
+        global_threshold = self.env["invoice.llm.service"].confidence_threshold()
+        if global_threshold is not None:
+            return global_threshold
         if self.journal_id.ai_agent_enabled:
             return self.journal_id.ai_min_confidence
         return 0.70
@@ -309,54 +485,74 @@ class AccountMove(models.Model):
             if currency_code
             else self.env["res.currency"]
         )
+        # Per-field self-reported confidence from the schema's
+        # ``field_confidence`` block, when the model provided it. The OWL
+        # panel renders the chip with this number instead of a flat 1.0.
+        reported = payload.get("field_confidence") or {}
+        if not isinstance(reported, dict):
+            reported = {}
+
+        def _field_conf(key):
+            value = reported.get(key)
+            try:
+                return float(value) if value is not None else 1.0
+            except (TypeError, ValueError):
+                return 1.0
+
         suggested = [
             {
                 "field_name": "vendor_name",
                 "extracted_value": payload.get("vendor_name") or "",
-                "field_confidence": 1.0,
+                "field_confidence": _field_conf("vendor_name"),
             },
             {
                 "field_name": "vendor_vat",
                 "extracted_value": payload.get("vendor_vat") or "",
-                "field_confidence": 1.0,
+                "field_confidence": _field_conf("vendor_vat"),
             },
             {
                 "field_name": "invoice_date",
                 "extracted_value": payload.get("invoice_date") or "",
-                "field_confidence": 1.0,
+                "field_confidence": _field_conf("invoice_date"),
             },
             {
                 "field_name": "due_date",
                 "extracted_value": payload.get("due_date") or "",
-                "field_confidence": 1.0,
+                "field_confidence": _field_conf("due_date"),
             },
             {
                 "field_name": "currency",
                 "extracted_value": currency_code,
-                "field_confidence": 1.0 if currency else 0.0,
+                "field_confidence": _field_conf("currency"),
             },
             {
                 "field_name": "subtotal",
                 "extracted_value": payload.get("subtotal"),
-                "field_confidence": 1.0,
+                "field_confidence": _field_conf("subtotal"),
             },
             {
                 "field_name": "tax_total",
                 "extracted_value": payload.get("tax_total"),
-                "field_confidence": 1.0,
+                "field_confidence": _field_conf("tax_total"),
             },
             {
                 "field_name": "amount_total",
                 "extracted_value": payload.get("amount_total"),
-                "field_confidence": 1.0,
+                "field_confidence": _field_conf("amount_total"),
             },
         ]
         for index, line in enumerate(payload.get("lines") or []):
+            line_conf = 1.0
+            if isinstance(line, dict) and line.get("confidence") is not None:
+                try:
+                    line_conf = float(line["confidence"])
+                except (TypeError, ValueError):
+                    line_conf = 1.0
             suggested.append(
                 {
                     "field_name": f"line:{index}",
                     "extracted_value": json.dumps(line),
-                    "field_confidence": 1.0,
+                    "field_confidence": line_conf,
                 },
             )
         return suggested
@@ -453,6 +649,27 @@ class AccountMove(models.Model):
                     "AI Suggestion panel and accept what looks right.",
                 )
                 % {"summary": summary},
+            )
+        except AIServiceUnavailable as exc:
+            # The AI service is down / rate-limited (503). Do NOT mark the
+            # bill permanently failed — flip it back to a retryable state so
+            # the ir.cron worker re-runs it once the service recovers.
+            _logger.warning(
+                "invoice_agent suggest deferred (service unavailable) for %s: %s",
+                self.display_name,
+                exc,
+            )
+            self.write(
+                {
+                    "ai_extraction_status": "pending",
+                    "ocr_state": "pending",
+                    "ai_error_message": str(exc)[:2000],
+                },
+            )
+            return self._suggest_notification(
+                "warning",
+                _("Extraction queued for retry"),
+                str(exc),
             )
         except Exception as exc:
             _logger.warning(
@@ -962,17 +1179,40 @@ class AccountMove(models.Model):
         return payload
 
     def _apply_extraction_payload(self, payload):
-        """Write a normalized extraction payload onto the move."""
+        """Write a normalized extraction payload onto the move.
+
+        Scores the payload through ``invoice.llm.service.score_extraction``
+        (arithmetic + VAT/IBAN rescue + self-report blend) and routes the
+        move: a sub-threshold score flags ``ai_review_required`` and posts
+        the reason + notes on the chatter — the bill is drafted, never
+        silently posted.
+        """
         self.ensure_one()
+        ocr_text = self.ocr_text or self.ai_ocr_text
+        score, details = self.env["invoice.llm.service"].score_extraction(
+            payload,
+            ocr_text=ocr_text,
+            ocr_confidence=self.ocr_confidence,
+        )
+        # Keep the rescued payload (VAT/IBAN filled from the OCR text) as the
+        # audit source of truth for this run.
+        payload = details.get("rescued_payload") or payload
+
+        # NOTE: confidence_score / ai_confidence_details / ai_confidence_notes
+        # are stored *computed* fields — never write them directly. They
+        # regenerate from the inputs below (ai_extracted_json, ai_confidence,
+        # ocr_*) through ``_compute_confidence_score``, which re-runs the
+        # same deterministic blend and reproduces this exact audit trail.
         vals = {
-            "ai_ocr_text": payload.get("notes"),
+            # NOTE: ai_ocr_text is intentionally NOT written here — the OCR
+            # cron already stored the raw text (see _ocr_process_one) and the
+            # confidence compute re-scores against it.
             "ai_extracted_json": payload,
             "ai_extracted_total": payload.get("amount_total"),
             "ai_review_required": bool(payload.get("review_required")),
             "ai_extraction_status": "extracted",
+            "ai_confidence": score,
         }
-        if payload.get("extraction_confidence") is not None:
-            vals["ai_confidence"] = payload["extraction_confidence"]
         if payload.get("extracted_vendor_id"):
             vals["partner_id"] = payload["extracted_vendor_id"]
         for field_name in ("invoice_date", "invoice_date_due", "ref"):
@@ -1001,6 +1241,379 @@ class AccountMove(models.Model):
             vals["invoice_line_ids"] = line_vals
         self.write(vals)  # write() stamps ai_extracted_on on status change
 
+        # Route: sub-threshold or pipeline-flagged extractions must land in
+        # Needs Review with the reason visible on the chatter.
+        threshold = (
+            self.journal_id.ai_min_confidence
+            if self.journal_id.ai_agent_enabled
+            else 0.70
+        )
+        if self.ai_review_required or score < threshold:
+            self._flag_needs_review(
+                reason=(
+                    "extracted confidence %.0f%% is below the %.0f%% journal "
+                    "threshold"
+                    % (score * 100, threshold * 100)
+                ),
+            )
+
+    # -------------------------------------------------------------------------
+    # MAP: Pydantic extraction -> account.move ORM values dict
+    # -------------------------------------------------------------------------
+    # Tolerance used when comparing the sum of the extracted lines against the
+    # extracted grand total. A cent-sized rounding discrepancy is normal on
+    # real invoices; anything larger means the extraction is internally
+    # inconsistent and the record must not be created.
+    EXTRACTION_LINE_SUM_TOLERANCE = 0.01
+
+    @api.model
+    def _map_extraction_to_move(self, extraction):
+        """Convert a schema-validated ``InvoiceExtraction`` into ORM values.
+
+        The single place that turns the Pydantic object into an
+        ``account.move`` values dict. Handles three conversions the ORM
+        cannot do by itself:
+
+        * ``fields.Date`` — pydantic returns ``datetime.date`` objects; the
+          ORM (and JSON serialization) wants ``YYYY-MM-DD`` strings.
+        * ``currency_id`` — the extraction carries an ISO-4217 code
+          (``res.currency.name`` in the main branch). An un-resolvable code
+          leaves the currency empty (the company currency applies) instead of
+          guessing the wrong currency.
+        * line sum vs ``amount_total`` — an extraction whose lines do not add
+          up to the printed grand total is internally inconsistent and is
+          rejected with a ``ValidationError`` rather than persisted.
+
+        :param extraction: validated ``InvoiceExtraction`` pydantic model.
+        :return: dict of ORM values for ``account.move.create()``.
+        :raises ValidationError: when the line sum diverges from
+            ``amount_total`` beyond the tolerance.
+        """
+        payload = self.env["invoice.llm.service"].extraction_to_dict(extraction)
+        lines = payload.get("lines") or []
+
+        # ---- Balance check: sum(price_unit * quantity) == amount_total ----
+        line_sum = sum(
+            float(line.get("quantity") or 1.0) * float(line.get("price_unit") or 0.0)
+            for line in lines
+        )
+        # Lines add up to the *subtotal* on a taxed invoice; only
+        # grand-total-only layouts must match amount_total directly.
+        balance_target = payload.get("subtotal")
+        if balance_target is None:
+            balance_target = payload.get("amount_total")
+        balance_target = float(balance_target or 0.0)
+        if abs(line_sum - balance_target) > self.EXTRACTION_LINE_SUM_TOLERANCE:
+            raise ValidationError(
+                _(
+                    "Extraction rejected for '%s': the line items sum to "
+                    "%.2f but the extracted subtotal/total is %.2f. Refusing "
+                    "to create an inconsistent bill.",
+                    payload.get("vendor_name") or "unknown vendor",
+                    line_sum,
+                    balance_target,
+                ),
+            )
+
+        # ---- Extracted grand total (persisted for variance/review) ----
+        # The balance check above verified the line items; this is the total
+        # the draft bill carries as ``ai_extracted_total``. Falls back to the
+        # balance target when the model omitted the plain grand total
+        # (subtotal-only layouts) — that value already passed the line-sum
+        # guard, so it is safe to persist.
+        amount_total = payload.get("amount_total")
+        if amount_total is None:
+            amount_total = balance_target
+        amount_total = float(amount_total)
+
+        # ---- Resolve the vendor: VAT first, then fuzzy name, else empty ----
+        partner = self.env["res.partner"]
+        if extraction.vendor_vat:
+            partner = partner.search(
+                [("vat", "=", extraction.vendor_vat), ("parent_id", "=", False)],
+                limit=1,
+            )
+        if not partner and extraction.vendor_name:
+            partner = partner.search(
+                [("name", "ilike", extraction.vendor_name), ("parent_id", "=", False)],
+                limit=1,
+            )
+
+        # ---- Resolve the currency from the ISO-4217 code ----
+        currency = self.env["res.currency"]
+        if extraction.currency:
+            currency = currency.search([("name", "=", extraction.currency)], limit=1)
+
+        # ---- Calibrated confidence (week 7) --------------------------------
+        # Score the payload through the deterministic blend (self-report +
+        # arithmetic + VAT/IBAN rescue) so the draft bill carries a real
+        # confidence_score from creation. OCR text is applied by the
+        # orchestrator later; without it the OCR/rescue terms stay neutral
+        # and the score reflects the self-report + line-sum check.
+        score, details = self.env["invoice.llm.service"].score_extraction(
+            payload,
+            ocr_text=None,
+            ocr_confidence=0.5,
+        )
+
+        invoice_line_vals = []
+        for line in lines:
+            try:
+                price_unit = float(line.get("price_unit") or 0.0)
+                quantity = float(line.get("quantity") or 1.0)
+            except (TypeError, ValueError):
+                price_unit = 0.0
+                quantity = 1.0
+            invoice_line_vals.append(
+                (0, 0, {
+                    "name": line.get("name") or "Imported line",
+                    "price_unit": price_unit,
+                    "quantity": quantity,
+                    "ai_confidence": line.get("confidence"),
+                }),
+            )
+
+        vals = {
+            "move_type": "in_invoice",
+            "partner_id": partner.id or False,
+            "invoice_date": (
+                fields.Date.to_string(extraction.invoice_date)
+                if extraction.invoice_date
+                else False
+            ),
+            "invoice_date_due": (
+                fields.Date.to_string(extraction.due_date)
+                if extraction.due_date
+                else False
+            ),
+            "invoice_line_ids": invoice_line_vals,
+            # The move is created as a draft — it is never posted by the
+            # pipeline. Routing: only extractions scoring at/above the
+            # journal threshold ride the Auto kanban column; everything else
+            # is flagged (review_required) and lands in Needs Review.
+            #
+            # NOTE: confidence_score / details / notes are stored *computed*
+            # fields and regenerate from the inputs below through
+            # ``_compute_confidence_score`` — never write them here.
+            "ai_extraction_status": "extracted",
+            "ai_confidence": score,
+            "ai_review_required": score < (
+                self.journal_id.ai_min_confidence
+                if self.journal_id.ai_agent_enabled
+                else 0.70
+            ),
+            "ai_extracted_total": amount_total,
+            "ai_extracted_json": payload,
+            "extraction_json": json.dumps(payload),
+        }
+        if currency:
+            vals["currency_id"] = currency.id
+
+        _logger.info(
+            "invoice_agent _map_extraction_to_move: vendor=%s lines=%d sum=%.2f total=%.2f",
+            payload.get("vendor_name"),
+            len(invoice_line_vals),
+            line_sum,
+            amount_total,
+        )
+        return vals
+
+    # -------------------------------------------------------------------------
+    # ORCHESTRATOR: OCR -> Claude -> map -> create
+    # -------------------------------------------------------------------------
+    @api.model
+    def _create_move_from_extraction(self, attachment, ocr_text=None):
+        """Run the full OCR → LLM → map → create chain for one attachment.
+
+        This is the queue-side twin of ``_run_extraction`` for the *upload*
+        path where no move exists yet: the controller stores the attachment
+        and hands it here; the chain produces a complete draft ``account.move``
+        with partner, dates, lines and taxes resolved.
+
+        Chain (see task brief):
+            ocr_service._extract_text(attachment)
+              -> llm_service.extract_invoice(ocr_text)
+              -> _map_extraction_to_move(extraction)
+              -> env['account.move'].create(vals)
+
+        Vendor matching follows the VAT-first, fuzzy-name-second rule and
+        leaves ``partner_id`` empty rather than guessing the wrong vendor.
+
+        :param attachment: ``ir.attachment`` holding the scanned PDF/image.
+        :param ocr_text: optional pre-computed OCR text (skips the OCR pass).
+        :return: the created ``account.move`` record (draft, never posted).
+        :raises ValidationError: on an inconsistent extraction (line sum);
+            other failures are left to the caller to degrade.
+        """
+        attachment = attachment.exists() if attachment else attachment
+        if not attachment:
+            raise UserError(_("No source attachment to extract from."))
+        if ocr_text is None:
+            ocr_result = self.env["invoice.ocr.service"]._extract_text(attachment)
+            ocr_text = ocr_result["text"]
+
+        result = self.env["invoice.llm.service"].extract_invoice(ocr_text)
+        extraction = result["parsed"]
+        vals = self._map_extraction_to_move(extraction)
+        vals.update(
+            {
+                "ai_source_attachment_id": attachment.id,
+                "ai_ocr_text": ocr_text,
+                "ocr_state": "done",
+                "ocr_text": ocr_text,
+                "extraction_model": result.get("model"),
+            },
+        )
+        move = self.create(vals)
+
+        # Persist the token ledger row for auditability / cost tracking.
+        try:
+            self.env["invoice.llm.service"].log_usage(
+                move.id,
+                result.get("usage") or {},
+                model=result.get("model"),
+            )
+        except Exception:
+            _logger.exception(
+                "invoice_agent failed to log usage for move_id=%s", move.id,
+            )
+
+        _logger.info(
+            "invoice_agent orchestrator: created move_id=%d total=%s",
+            move.id,
+            move.amount_total,
+        )
+        return move
+
+    # -------------------------------------------------------------------------
+    # HIGH-EFFORT SECOND PASS (week 7 fallback)
+    # -------------------------------------------------------------------------
+    # Sub-threshold extractions get one more Claude pass with
+    # ``effort='high'`` (mapped to ``output_config={'effort': 'high'}`` in
+    # the LLM service). Only the *lowest* score triggers it, and only once —
+    # ``ai_confidence_details['checks']`` records ``"high_effort"`` so a
+    # re-run never loops. The second pass runs through the same
+    # ``score_extraction`` blend; if the re-scored payload still sits below
+    # the journal threshold the move is flagged for Needs Review.
+    # -------------------------------------------------------------------------
+    def _run_high_effort_pass(self, threshold):
+        """Re-extract with effort='high' and re-score the move.
+
+        :return: True when the high-effort pass produced a better score.
+        """
+        self.ensure_one()
+        ocr_text = self.ocr_text or self.ai_ocr_text
+        if not ocr_text:
+            return False
+        try:
+            result = self.env["invoice.llm.service"].extract_invoice(
+                ocr_text,
+                effort="high",
+            )
+        except Exception as exc:
+            _logger.warning(
+                "invoice_agent high-effort pass failed for %s: %s",
+                self.display_name,
+                exc,
+            )
+            return False
+
+        extraction = result.get("parsed")
+        if extraction is None:
+            return False
+        payload = self.env["invoice.llm.service"].extraction_to_dict(extraction)
+        score, details = self.env["invoice.llm.service"].score_extraction(
+            payload,
+            ocr_text=ocr_text,
+            ocr_confidence=self.ocr_confidence,
+            checks=["high_effort"],
+        )
+        previous = self.confidence_score or 0.0
+        _logger.info(
+            "invoice_agent high-effort pass: move_id=%d score %.2f -> %.2f "
+            "threshold %.2f usage=%s",
+            self.id,
+            previous,
+            score,
+            threshold,
+            result.get("usage"),
+        )
+        if score <= previous:
+            # The second pass did not improve certainty — keep the original
+            # extraction and route to review as before.
+            return False
+
+        self._apply_extraction_payload(payload)
+        # The improvement is already recorded via _apply_extraction_payload;
+        # append the provenance so the audit trail shows which path fired.
+        details = dict(self.ai_confidence_details or {})
+        checks = list(details.get("checks") or [])
+        if "high_effort" not in checks:
+            checks.append("high_effort")
+            details["checks"] = checks
+            self.write({"ai_confidence_details": details})
+        try:
+            self.env["invoice.llm.service"].log_usage(
+                self.id,
+                result.get("usage") or {},
+                model=result.get("model"),
+            )
+        except Exception:
+            _logger.exception(
+                "invoice_agent failed to log high-effort usage for move_id=%s",
+                self.id,
+            )
+        return score > previous
+
+    # -------------------------------------------------------------------------
+    # EXTRACTION QUEUE CRON: consume processed moves through the pipeline
+    # -------------------------------------------------------------------------
+    @api.model
+    def _cron_extract_pending_bills(self, batch_size=10):
+        """Claim moves with OCR done + extraction 'processing' and run them.
+
+        Mirrors ``_cron_ocr_pending_bills``: bounded batch, per-record
+        isolation, never raises. Each move flows through
+        ``_run_extraction`` and, when the first pass scores below the
+        journal threshold, one ``_run_high_effort_pass`` before being
+        routed to Auto / Needs Review.
+        """
+        moves = self.search(
+            [
+                ("ai_extraction_status", "=", "processing"),
+                ("ocr_state", "=", "done"),
+            ],
+            order="write_date asc, id asc",
+            limit=batch_size,
+        )
+        processed = 0
+        for move in moves:
+            try:
+                self.env.cr.commit()
+                move._run_extraction()
+                if move.ai_extraction_status == "extracted" and (
+                    move.confidence_score or 0.0
+                ) < move._get_ai_min_confidence():
+                    try:
+                        move._run_high_effort_pass(move._get_ai_min_confidence())
+                    except Exception:
+                        _logger.exception(
+                            "High-effort pass crashed for move_id=%d — "
+                            "original extraction stands",
+                            move.id,
+                        )
+                processed += 1
+            except Exception:
+                _logger.exception(
+                    "Extraction cron failed for move %s — marked failed and "
+                    "continuing",
+                    move.display_name,
+                )
+            finally:
+                self.env.cr.rollback()
+                self.env.cr.commit()
+        return processed
+
     def _run_extraction(self):
         """Run the OCR → Claude → normalize pipeline on moves in 'processing'.
 
@@ -1019,6 +1632,23 @@ class AccountMove(models.Model):
                 raw_text = response.content[0].text
                 payload = move._parse_claude_payload(raw_text)
                 move._apply_extraction_payload(payload)
+            except AIServiceUnavailable as exc:
+                # The AI service is down / rate-limited (503): the move stays
+                # retryable — flip it back to pending so the next cron tick
+                # re-runs it, instead of marking it permanently failed.
+                _logger.warning(
+                    "invoice_agent extraction deferred (service unavailable) "
+                    "for %s: %s",
+                    move.display_name,
+                    exc,
+                )
+                move.write(
+                    {
+                        "ai_extraction_status": "pending",
+                        "ocr_state": "pending",
+                        "ai_error_message": str(exc)[:2000],
+                    },
+                )
             except Exception as exc:
                 _logger.warning(
                     "invoice_agent extraction failed for %s: %s",
@@ -1145,7 +1775,6 @@ class AccountMove(models.Model):
             "ai_extraction_status": "pending",
             "ai_confidence": payload.get("overall_confidence"),
             "ai_extracted_total": payload.get("amount_total"),
-            "ai_ocr_text": payload.get("notes"),
             "ai_extracted_json": payload,
         }
         if journal_id:

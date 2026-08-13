@@ -24,3 +24,7 @@ pdf2image>=1.17.0
 # AWS Boto3 — Textract AnalyzeExpense fallback OCR engine (see docs/adr-002-ocr-engine.md).
 # We pin the runtime pieces of boto3 only; botocore is pulled transitively.
 boto3>=1.34.0
+
+# PyJWT — mints the 60-second HS256 service-to-service token for the
+# invoice-ai FastAPI service (see models/llm_service.py).
+PyJWT>=2.8.0

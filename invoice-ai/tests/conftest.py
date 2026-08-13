@@ -6,19 +6,27 @@ by name does NOT work: ``Depends(get_claude_service)`` captured the function
 object at import time, so monkeypatching the module attribute never changes
 what FastAPI calls.) No Anthropic SDK, network, or API key is ever touched —
 the same "mock the client" principle the Odoo suite uses.
+
+JWT auth: ``/v1/extract`` now sits behind ``Depends(require_token)``. The
+``jwt_secret`` autouse fixture sets ``settings.jwt_secret`` per test so
+authenticated requests succeed and negative auth tests can mint their own
+(expired/wrong-audience) tokens.
 """
 
-from datetime import date
+from datetime import UTC, date, datetime, timedelta
 from decimal import Decimal
 
+import jwt
 import pytest
 from httpx import ASGITransport, AsyncClient
 
 from app.claude import ClaudeService
+from app.config import settings
 from app.dependencies import get_claude_service
-from app.errors import ClaudeRateLimitError
 from app.main import app
-from app.schemas import InvoiceLine, InvoiceExtraction
+from app.schemas import InvoiceExtraction, InvoiceLine
+
+TEST_JWT_SECRET = "test-shared-secret-not-for-production"
 
 
 class FakeClaude(ClaudeService):
@@ -37,6 +45,54 @@ class FakeClaude(ClaudeService):
         if self.error is not None:
             raise self.error
         return self.result
+
+
+@pytest.fixture(autouse=True)
+def jwt_settings(monkeypatch):
+    """Set a known JWT secret + audience for every test.
+
+    Autouse so the pre-auth-era tests keep working unchanged once they send
+    the ``auth_headers`` fixture, and so negative auth tests can rely on a
+    deterministic secret.
+    """
+    monkeypatch.setattr(settings, "jwt_secret", TEST_JWT_SECRET)
+    monkeypatch.setattr(settings, "jwt_audience", "invoice-ai")
+    yield
+
+
+def mint_token(
+    secret: str = TEST_JWT_SECRET,
+    *,
+    audience: str = "invoice-ai",
+    issuer: str = "odoo.invoice-agent",
+    subject: str = "invoice.llm.service",
+    expires_in: timedelta = timedelta(seconds=60),
+    now: datetime | None = None,
+) -> str:
+    """Mint a JWT exactly like the Odoo side does (60 s expiry, HS256).
+
+    The claims mirror ``invoice_agent.models.llm_service._mint_jwt``: iss,
+    aud, sub, iat, exp. ``now`` lets tests mint an *already-expired* token
+    by passing ``now=datetime.now(timezone.utc) - timedelta(seconds=120)``.
+    """
+    now = now or datetime.now(UTC)
+    return jwt.encode(
+        {
+            "iss": issuer,
+            "aud": audience,
+            "sub": subject,
+            "iat": now,
+            "exp": now + expires_in,
+        },
+        secret,
+        algorithm="HS256",
+    )
+
+
+@pytest.fixture
+def auth_headers() -> dict[str, str]:
+    """A valid Authorization header for the happy-path tests."""
+    return {"Authorization": f"Bearer {mint_token()}"}
 
 
 @pytest.fixture

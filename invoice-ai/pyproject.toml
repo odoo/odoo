@@ -19,10 +19,18 @@ dependencies = [
     "pytesseract>=0.3.10",
     "pdf2image>=1.17.0",
     "Pillow>=10.0.0",
+    "PyJWT>=2.8.0",
 ]
 
 [project.optional-dependencies]
-dev = ["pytest>=8.0.0", "anyio>=4.0.0", "httpx>=0.27.0", "ruff>=0.6.0"]
+dev = [
+    "pytest>=8.0.0",
+    "anyio>=4.0.0",
+    "httpx>=0.27.0",
+    "ruff>=0.6.0",
+    "mypy>=1.10.0",
+    "pyyaml>=6.0.0",
+]
 
 [tool.hatch.build.targets.wheel]
 packages = ["app"]
@@ -36,3 +44,20 @@ target-version = "py311"
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B"]
+
+[tool.mypy]
+python_version = "3.12"
+# The task brief pins two mypy docs rules: no unchecked send/recv on
+# sockets (only relevant on native code — n/a here) and strict typing.
+warn_unused_ignores = true
+warn_redundant_casts = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+no_implicit_optional = true
+
+# Third-party SDKs (anthropic, pdf2image, pytesseract) either lack stubs or
+# ship broad vendor stubs; their interfaces are exercised indirectly through
+# the isolated app/claude.py + app/ocr.py seams.
+[[tool.mypy.overrides]]
+module = ["anthropic.*", "pdf2image.*", "pytesseract.*"]
+ignore_missing_imports = true
