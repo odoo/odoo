@@ -6,7 +6,7 @@ import { delay } from "@web/core/utils/concurrency";
 import { getDataURLFromFile, redirect } from "@web/core/utils/urls";
 import { getCSSVariableValue } from "@html_editor/utils/formatting";
 import { _t } from "@web/core/l10n/translation";
-import { svgToPNG, webpToPNG } from "@website/js/utils";
+import { isImageFile, svgToPNG, webpToPNG } from "@website/js/utils";
 import { escapeRegExp } from "@web/core/utils/strings";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { clamp } from "@web/core/utils/numbers";
@@ -789,6 +789,16 @@ Return ONLY a JSON object with:
             if (file.size > 2500000) {
                 this.notification.add(
                     _t("The logo is too large. Please upload a logo smaller than 2.5 MB."),
+                    {
+                        title: file.name,
+                        type: "warning",
+                    }
+                );
+                return;
+            }
+            if (!(await isImageFile(file))) {
+                this.notification.add(
+                    _t("The logo must be an image (PNG, JPEG, GIF, WEBP or SVG)."),
                     {
                         title: file.name,
                         type: "warning",
