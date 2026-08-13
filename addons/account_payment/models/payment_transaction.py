@@ -95,18 +95,17 @@ class PaymentTransaction(models.Model):
 
     # === LIFECYCLE METHODS - POST-PROCESSING === #
 
-    def _post_process(self):
-        """ Override of `payment` to add account-specific logic to the post-processing.
-
-        In particular, for confirmed transactions we write a message in the chatter with the payment
-        and transaction references, post relevant fiscal documents, and create missing payments. For
-        draft, cancelled, or errored transactions, we cancel the payment.
+    def _finalize_done_transactions(self):
+        """ Override of `payment` to write a message in the chatter with the payment and
+        transaction references, post relevant fiscal documents, and create missing payments for
+        confirmed transactions.
         """
-        super()._post_process()
-        for tx in self.filtered(lambda t: t.state == 'done'):
-            # Validate invoices automatically once the transaction is confirmed.
-            tx.invoice_ids.filtered(lambda inv: inv.state == 'draft').action_post()
+        super()._finalize_done_transactions()
 
+        # Validate invoices automatically once the transaction is confirmed.
+        self.mapped('invoice_ids').filtered(lambda inv: inv.state == 'draft').action_post()
+
+        for tx in self:
             # Create and post missing payments.
             if tx._should_create_payment():
                 tx.with_company(tx.company_id)._create_payment()
@@ -118,8 +117,21 @@ class PaymentTransaction(models.Model):
                     link=tx.payment_id._get_html_link(),
                 )
                 tx._log_message_on_linked_documents(message)
-        for tx in self.filtered(lambda t: t.state in ('draft', 'cancel', 'error')):
-            tx.payment_id.action_cancel()
+
+    def _finalize_draft_transactions(self):
+        """ Override of `payment` to cancel the payment of draft transactions. """
+        super()._finalize_draft_transactions()
+        self.payment_id.action_cancel()
+
+    def _finalize_cancel_transactions(self):
+        """ Override of `payment` to cancel the payment of cancelled transactions. """
+        super()._finalize_cancel_transactions()
+        self.payment_id.action_cancel()
+
+    def _finalize_error_transactions(self):
+        """ Override of `payment` to cancel the payment of errored transactions. """
+        super()._finalize_error_transactions()
+        self.payment_id.action_cancel()
 
     def _should_create_payment(self):
         """Return whether an `account.payment` should be created for this transaction.

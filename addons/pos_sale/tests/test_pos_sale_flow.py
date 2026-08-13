@@ -1370,13 +1370,7 @@ class TestPoSSalePayment(PoSSaleSyncCommon, TestPointOfSaleHttpCommon, PaymentCo
         """
         # Disable account payment generation while keeping Sales' post-processing
         self._disable_post_process_patcher()
-        self.startPatcher(
-            patch(
-                "odoo.addons.account_payment.models.payment_transaction.PaymentTransaction"
-                "._post_process",
-                autospec=True,
-            )
-        )
+        self._patch_account_payment_post_process()
         self.product_a.available_in_pos = True
         self.env.company.sale_automatic_invoice = True
         self.partner_a.email = "test.customer@example.com"

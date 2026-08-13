@@ -460,6 +460,7 @@ class TestPaymentTransaction(PaymentCommon):
     def test_try_post_process_post_includes_source_transaction(self):
         source_tx = self._create_transaction("redirect", state="done")
         child_tx = source_tx._create_child_transaction(source_tx.amount)
+        child_tx.with_context(payment_safe_write=True)._set_done()
         child_tx._try_post_process()
         self.assertEqual(self.post_process_mock.call_args[0][0], child_tx + source_tx)
 
