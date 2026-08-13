@@ -46,6 +46,12 @@ export class ModelInternal {
     /** @type {Set<string>} */
     fieldsLocalStorage = new Set();
     /**
+     * Fields whose value is mutated in place, so a read returns it as a proxy.
+     *
+     * @type {Set<string>}
+     */
+    fieldsAttrAsProxy = new Set();
+    /**
      * Set of field names on the current model that are _inherits fields.
      *
      * @type {Set<string>}
@@ -159,6 +165,13 @@ export class ModelInternal {
                 }
                 case "onUpdate": {
                     this.registerOnUpdate(fieldName, value);
+                    break;
+                }
+                case "asProxy": {
+                    if (!value) {
+                        break;
+                    }
+                    this.fieldsAttrAsProxy.add(fieldName);
                     break;
                 }
                 case "type": {

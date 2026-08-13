@@ -115,7 +115,7 @@ export class MessagingMenuTab extends Record {
      *
      * @type {Object<string, "new"|"idle"|"loading"|"loaded">}
      */
-    loadStatusByFilterId = {};
+    loadStatusByFilterId = fields.Attr({}, { asProxy: true });
     /** IDs of already loaded records, used to exclude them from `loadMore` requests. */
     loadMoreExcludeIds = fields.Attr([], {
         compute() {

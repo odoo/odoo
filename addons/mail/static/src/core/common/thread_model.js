@@ -229,7 +229,7 @@ export class Thread extends Record {
     autoTranslateEnabled = fields.Attr(undefined, { localStorage: true });
     /* The additional recipients are the recipients that are manually added
      * by the user by using the "To" or "Cc" fields of the Chatter. */
-    additionalRecipients = fields.Attr([]);
+    additionalRecipients = fields.Attr([], { asProxy: true });
     /** @type {number|undefined} */
     recipients = fields.Many("mail.followers");
     recipientsCount = undefined;

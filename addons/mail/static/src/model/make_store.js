@@ -12,7 +12,7 @@ import { StoreInternal } from "./store_internal";
 import { ModelInternal } from "./model_internal";
 import { RecordInternal } from "./record_internal";
 
-import { proxy, toRaw, useApp } from "@odoo/owl";
+import { markRaw, proxy, toRaw, useApp } from "@odoo/owl";
 
 /** @returns {import("models").Store} */
 export function makeStore(env, { localRegistry } = {}) {
@@ -50,6 +50,20 @@ export function makeStore(env, { localRegistry } = {}) {
                     record._ = record[STORE_SYM] ? new StoreInternal() : new RecordInternal();
                     this.setup();
                     record._proxyInternal = new Proxy(record, {
+                        /**
+                         * Route a plain data descriptor through the set trap, as
+                         * patching a record defines the field rather than sets it.
+                         */
+                        defineProperty(target, name, descriptor) {
+                            if (
+                                descriptor.enumerable &&
+                                descriptor.writable &&
+                                "value" in descriptor
+                            ) {
+                                return record._.proxySet(target, name, descriptor.value);
+                            }
+                            return Reflect.defineProperty(target, name, descriptor);
+                        },
                         get: (...args) => record._.proxyGet(...args),
                         deleteProperty: (...args) => record._.proxyDeleteProperty(...args),
                         /**
@@ -58,7 +72,7 @@ export function makeStore(env, { localRegistry } = {}) {
                          */
                         set: (...args) => record._.proxySet(...args),
                     });
-                    record._proxy = proxy(record._proxyInternal);
+                    record._proxy = markRaw(record._proxyInternal);
                     if (record?.[STORE_SYM]) {
                         record.recordByLocalId = store.recordByLocalId;
                         record._ = store._;
@@ -173,7 +187,7 @@ export function makeStore(env, { localRegistry } = {}) {
     for (const Model of Object.values(Models)) {
         Model._rawStore = store;
         Model.store = store._proxy;
-        store._proxy[Model.getName()] = Model;
+        store[Model.getName()] = Model;
     }
     Object.assign(store, { Models, storeReady: true });
     return store._proxy;

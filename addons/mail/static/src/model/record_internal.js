@@ -2,12 +2,12 @@
 /** @typedef {import("./record_list").RecordList} RecordList */
 
 import {
-    IS_DELETED_SYM,
     IS_RECORD_SYM,
     isFieldDefinition,
     isMany,
     isRelation,
     makeRecordFieldLocalId,
+    technicalKeysOnRecords,
     untrackFunctions,
 } from "./misc";
 import { RecordList } from "./record_list";
@@ -37,11 +37,10 @@ import { LocalStorageEntry } from "@mail/utils/common/local_storage";
  */
 function observeField(recordProxy, fieldName, callback) {
     let running = false;
-    const targetProxy = proxy(recordProxy);
     const disposeFn = untrack(() =>
         immediateEffect(() => {
             // read once: a reactive get() per read would be observed as many times
-            const val = targetProxy[fieldName];
+            const val = recordProxy[fieldName];
             if (typeof val === "object" && val !== null) {
                 void Object.keys(val);
             }
@@ -158,12 +157,23 @@ export class RecordInternal {
     fieldsOnUpdateStop = new Map();
     /** @type {Map<string, any>} */
     fieldsDefault = new Map();
+    /**
+     * Value of each attr field of this record, declared or not, one signal per
+     * field: the sole storage, and the only thing a read of that field observes.
+     *
+     * @type {Map<string, import("@odoo/owl").Signal<any>>}
+     */
+    fieldsAttrSignal = new Map();
+    /**
+     * Whether the record is deleted. A signal, so that setting it re-runs the
+     * readers of `exists()`.
+     *
+     * @type {import("@odoo/owl").Signal<boolean>}
+     */
+    isDeleted = signal(false);
     uses = new RecordUses();
-    updatingAttrs = new Map();
-    proxyUsed = new Map();
     /** @type {string} */
     localId;
-    gettingField = false;
     /** @type {Map<string, import("@mail/model/field_version").SingleFieldVersion|import("@mail/model/field_version").ManyFieldVersion>} */
     fieldsVersion = new Map();
 
@@ -178,6 +188,38 @@ export class RecordInternal {
 
     constructor() {
         markRaw(this);
+    }
+
+    /**
+     * Get-or-create the signal holding the value of the attr field `fieldName`,
+     * declared or not.
+     *
+     * @param {Record} record
+     * @param {string} fieldName
+     * @param {any} [value] initial value, on creation only
+     * @param {Object} [param3={}]
+     * @param {boolean} [param3.accessor=true] whether to define the accessor
+     *  that reads and writes the field as a property of the record
+     * @returns {import("@odoo/owl").Signal<any>}
+     */
+    ensureFieldSignal(record, fieldName, value, { accessor = true } = {}) {
+        let sig = this.fieldsAttrSignal.get(fieldName);
+        if (sig) {
+            return sig;
+        }
+        sig = signal(value);
+        this.fieldsAttrSignal.set(fieldName, sig);
+        if (accessor) {
+            Object.defineProperty(record, fieldName, {
+                configurable: true,
+                enumerable: true,
+                get: () => sig(),
+                set: (val) => {
+                    sig.set(val);
+                },
+            });
+        }
+        return sig;
     }
 
     /**
@@ -212,9 +254,10 @@ export class RecordInternal {
             });
             record[fieldName] = recordList;
         } else {
-            record[fieldName] = isFieldDefinition(record[fieldName])
+            const value = isFieldDefinition(record[fieldName])
                 ? record[fieldName].default
                 : record[fieldName];
+            this.ensureFieldSignal(record, fieldName, value);
         }
         this.fieldsDefault.set(fieldName, record[fieldName]);
         // register local storage fields
@@ -286,7 +329,8 @@ export class RecordInternal {
                 recordList.clear();
                 return true;
             }
-            return Reflect.deleteProperty(record, name);
+            record._.ensureFieldSignal(record, name).set(undefined);
+            return true;
         });
     }
 
@@ -310,8 +354,23 @@ export class RecordInternal {
             }
             return Reflect.get(parentRecordFullProxy, name);
         }
-        if (record._.gettingField || !Model._.fields.get(name)) {
+        if (!Model._.fields.get(name)) {
+            const sig = record._.fieldsAttrSignal.get(name);
+            if (sig) {
+                return sig();
+            }
             let res = Reflect.get(...arguments);
+            if (
+                res === undefined &&
+                typeof name === "string" &&
+                !technicalKeysOnRecords.has(name) &&
+                !(name in record)
+            ) {
+                // Create the signal on read, so a reader before the first write observes it.
+                return record._.ensureFieldSignal(record, name, undefined, {
+                    accessor: false,
+                })();
+            }
             // a model is a class, so a function: binding it would hide its statics
             if (typeof res === "function" && !res._) {
                 res = res.bind(recordFullProxy);
@@ -348,30 +407,29 @@ export class RecordInternal {
                 record._.compute(record, name, { fromInNeed: true });
             }
         }
-        record._.gettingField = true;
-        let val;
-        try {
-            val = recordFullProxy[name];
-        } finally {
-            record._.gettingField = false;
-        }
         if (isRelation(Model, name)) {
-            const recordListFullProxy = val._proxy;
+            const recordListFullProxy = record[name]._proxy;
             if (isMany(Model, name)) {
                 return recordListFullProxy;
             }
             return recordListFullProxy[0];
         }
-        return Reflect.get(record, name, recordFullProxy);
+        const val = (
+            record._.fieldsAttrSignal.get(name) ?? record._.ensureFieldSignal(record, name)
+        )();
+        if (typeof val === "object" && val !== null && Model._.fieldsAttrAsProxy.has(name)) {
+            // Return the value as a proxy, as this field is mutated in place.
+            return proxy(val);
+        }
+        return val;
     }
 
     /**
      * @param {Record} record
      * @param {string} name
      * @param {any} val
-     * @param {any} receiver
      */
-    proxySet(record, name, val, receiver) {
+    proxySet(record, name, val) {
         const Model = record.Model;
         const store = record._rawStore;
         if (Model._.parentFields.has(name)) {
@@ -379,26 +437,14 @@ export class RecordInternal {
             const parentRecordProxyInternal = record._proxyInternal[parentFieldName];
             return Reflect.set(parentRecordProxyInternal, name, val);
         }
-        // ensure each field write goes through the updatingAttrs method exactly once
-        if (record._.updatingAttrs.has(name)) {
-            record[name] = val;
-            return true;
-        }
         return store.MAKE_UPDATE(function recordSet() {
-            const reactiveSet = receiver !== record._proxyInternal;
-            if (reactiveSet) {
-                record._.proxyUsed.set(name, true);
-            }
             store._.updateFields(record, { [name]: val });
-            if (reactiveSet) {
-                record._.proxyUsed.delete(name);
-            }
             return true;
         });
     }
 
     requestCompute(record, fieldName, { force = false } = {}) {
-        if (record[IS_DELETED_SYM]) {
+        if (untrack(this.isDeleted)) {
             return;
         }
         const Model = record.Model;

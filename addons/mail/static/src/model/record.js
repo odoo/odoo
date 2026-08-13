@@ -1,6 +1,14 @@
-import { computed, effect, immediateEffect, markup, shallowEqual, toRaw, untrack } from "@odoo/owl";
 import {
-    IS_DELETED_SYM,
+    computed,
+    effect,
+    immediateEffect,
+    markRaw,
+    markup,
+    shallowEqual,
+    toRaw,
+    untrack,
+} from "@odoo/owl";
+import {
     OR_SYM,
     STORE_SYM,
     isCommandList,
@@ -42,6 +50,11 @@ export class Record {
     static store;
     /** @type {string} */
     static _name;
+
+    constructor() {
+        markRaw(this);
+    }
+
     /** @param {() => any} fn */
     static MAKE_UPDATE(fn) {
         return this.store.MAKE_UPDATE(...arguments);
@@ -341,7 +354,7 @@ export class Record {
     }
 
     exists() {
-        return !this[IS_DELETED_SYM];
+        return !this._.isDeleted();
     }
 
     /** @param {Record} record */
