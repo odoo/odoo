@@ -220,8 +220,7 @@
 
 <!-- Tracks: List-based display -->
 <template id="tracks_display_list" name="Tracks: List Display">
-    <div t-if="tracks" class="pt24">
-        <h5>Book your talks</h5>
+    <div t-if="tracks and not search_wishlist" class="pt-1 plan_your_xp">
         <p>Plan your experience by adding your favorites talks to your wishlist</p>
     </div>
     <div t-if="tracks" class="o_wesession_list mb-3">
