@@ -127,6 +127,11 @@ class TestGetBaseUrl(odoo.tests.TransactionCase):
             'company_id': company_1.id,
             'sequence': website_1.sequence - 1,
         })
+        self.assertEqual(
+            attach.with_context(website_id=website_1.id).get_base_url(),
+            website_1_domain,
+            "The current same-company website should take precedence over the company's default website.",
+        )
         # .. on create ..
         self.assertEqual(attach.get_base_url(), website_2_domain,
                          "Domain should be the one from the record.company_id.website_id and company_1.website_id should be the one with lowest sequence.")
