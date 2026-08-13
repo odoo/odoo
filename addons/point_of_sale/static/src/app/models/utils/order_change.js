@@ -29,7 +29,7 @@ export const getStrNotes = (note) => {
     return "";
 };
 
-export const filterChangeByCategories = (categoryIdsSet, currentOrderChange, models) => {
+export const filterChangeByCategories = (categoryIdsSet, currentOrderChange, models, opts = {}) => {
     const matchesCategories = (productId) => {
         const product = models["product.product"].get(productId);
         const categoryIds = product.parentPosCategIds;
