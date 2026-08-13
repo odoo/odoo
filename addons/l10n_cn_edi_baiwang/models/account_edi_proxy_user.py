@@ -46,6 +46,52 @@ class AccountEdiProxyClientUser(models.Model):
             return company.vat
         return super()._get_proxy_identification(company, proxy_type)
 
+    def _l10n_cn_baiwang_create_proxy_user(self, company, edi_mode):
+        """Register the company on the Baiwang proxy through its dedicated /connect route.
+
+        This mirrors account_edi_proxy_client.user._register_proxy_user but targets the
+        format-specific 'api/l10n_cn_edi_baiwang/1/connect' endpoint instead of the shared
+        '/iap/account_edi/2/create_user' route.
+        """
+        private_key_sudo = self.env['certificate.key'].sudo()._generate_rsa_private_key(
+            company,
+            name=f"l10n_cn_edi_baiwang_{edi_mode}_{company.id}.key",
+        )
+        edi_identification = self._get_proxy_identification(company, 'l10n_cn_edi_baiwang')
+        if edi_mode == 'demo':
+            # simulate registration
+            response = {'id_client': f'demo{company.id}l10n_cn_edi_baiwang', 'refresh_token': 'demo'}
+        else:
+            try:
+                response = self._make_request(
+                    url=url_join(
+                        self._get_server_url('l10n_cn_edi_baiwang', edi_mode),
+                        'api/l10n_cn_edi_baiwang/1/connect',
+                    ),
+                    params={
+                        'tax_no': edi_identification,
+                        'dbuuid': company.env['ir.config_parameter'].get_str('database.uuid'),
+                        'company_id': company.id,
+                        'public_key': private_key_sudo._get_public_key_bytes(encoding='pem').decode(),
+                    },
+                )
+            except AccountEdiProxyError as e:
+                raise UserError(e.message)
+            if 'error' in response:
+                if response['error'] == 'A user already exists with this identification.':
+                    raise UserError(self.env._('A user already exists with theses credentials on our server. Please check your information.'))
+                raise UserError(response['error'])
+
+        return self.create({
+            'id_client': response['id_client'],
+            'company_id': company.id,
+            'proxy_type': 'l10n_cn_edi_baiwang',
+            'edi_mode': edi_mode,
+            'edi_identification': edi_identification,
+            'private_key_id': private_key_sudo.id,
+            'refresh_token': response['refresh_token'],
+        })
+
     def _l10n_cn_baiwang_contact_proxy(self, endpoint, params):
         self.ensure_one()
         try:
