@@ -1501,6 +1501,7 @@ export class Model extends Array {
     _fold_name = "fold";
     /** @type {string | null} */
     _inherit = null;
+    _lastRecId = 0;
     /** @type {string} */
     _name = "";
     /** @type {Record<string, (record: ModelRecord) => any>} */
@@ -2971,7 +2972,7 @@ export class Model extends Array {
      * @private
      */
     _getNextId() {
-        return Math.max(0, ...this.map((record) => record?.id || 0)) + 1;
+        return ++this._lastRecId;
     }
 
     /**
