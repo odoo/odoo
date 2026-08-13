@@ -159,6 +159,7 @@ export class SplitBillScreen extends Component {
         const comboMap = new Map();
         const lineToDel = [];
         const newCourses = new Map();
+        const splitPrepTransfers = [];
         for (const line of originalOrder.lines) {
             if (this.qtyTracker[line.uuid]) {
                 let newCourse;
@@ -216,9 +217,13 @@ export class SplitBillScreen extends Component {
                     newOrder.last_order_preparation_change.lines,
                     line,
                     newLine,
-                    this.qtyTracker[line.uuid],
-                    true
+                    this.qtyTracker[line.uuid]
                 );
+                splitPrepTransfers.push({
+                    src_uuid: line.uuid,
+                    dest_uuid: newLine.uuid,
+                    qty: this.qtyTracker[line.uuid],
+                });
             }
         }
 
@@ -227,6 +232,7 @@ export class SplitBillScreen extends Component {
         }
 
         await this.pos.syncAllOrders({ orders: [originalOrder, newOrder] });
+        await this.pos.transferSplitPreparation(originalOrder, newOrder, splitPrepTransfers);
         originalOrder.customer_count -= 1;
         originalOrder.setScreenData({ name: "ProductScreen" });
         this.pos.selectedOrderUuid = null;
