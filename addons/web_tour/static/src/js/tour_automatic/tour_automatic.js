@@ -30,65 +30,9 @@ export class TourAutomatic {
     start() {
         setupEventActions(document.createElement("div"), { allowSubmit: true });
         enableEventLogs(this.debugMode);
-        const { stepDelay } = this.config;
         const macroSteps = this.steps
             .filter((step) => step.index >= this.currentIndex)
-            .flatMap((step) => [
-                {
-                    action: async () => {
-                        if (this.debugMode) {
-                            console.groupCollapsed(step.describeMe);
-                            console.log(step.stringify);
-                            if (stepDelay > 0) {
-                                await hootDom.delay(stepDelay);
-                            }
-                            if (step.break) {
-                                // eslint-disable-next-line no-debugger
-                                debugger;
-                            }
-                        } else {
-                            console.log(step.describeMe);
-                        }
-                    },
-                },
-                {
-                    trigger: step.trigger ? () => step.findTrigger() : null,
-                    timeout:
-                        step.pause && this.debugMode
-                            ? 9999999
-                            : step.timeout || this.timeout || 10000,
-                    action: async (trigger) => {
-                        this.allowUnload = false;
-                        if (!step.skipped && step.expectUnloadPage) {
-                            this.allowUnload = true;
-                            setTimeout(() => {
-                                const message = `
-                                    The key { expectUnloadPage } is defined but page has not been unloaded within 20000 ms.
-                                    You probably don't need it.
-                                `.replace(/^\s+/gm, "");
-                                this.throwError(message);
-                            }, 20000);
-                        }
-                        await step.doAction();
-                        if (this.debugMode) {
-                            console.log(trigger);
-                            if (step.skipped) {
-                                console.log("This step has been skipped");
-                            } else {
-                                console.log("This step has run successfully");
-                            }
-                            console.groupEnd();
-                            if (step.pause) {
-                                await this.pause();
-                            }
-                        }
-                        tourState.setCurrentIndex(step.index + 1);
-                        if (this.allowUnload) {
-                            return "StopTheMacro!";
-                        }
-                    },
-                },
-            ]);
+            .flatMap((step) => step.actions);
 
         const end = () => {
             delete window[hootNameSpace];
@@ -118,7 +62,7 @@ export class TourAutomatic {
             steps: macroSteps,
             onError: ({ error }) => {
                 if (error.type === "Timeout") {
-                    this.throwError(...this.currentStep.describeWhyIFailed, error.message);
+                    this.throwError(...this.currentStep.error, error.message);
                 } else {
                     this.throwError(error.message);
                 }

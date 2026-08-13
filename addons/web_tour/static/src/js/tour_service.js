@@ -94,7 +94,8 @@ export class TourService {
         }
 
         if (tourState.getCurrentTour()) {
-            if (tourState.getCurrentConfig().mode === "auto" || this.toursEnabled) {
+            const currentConfig = tourState.getCurrentConfig();
+            if (currentConfig.mode === "auto" || currentConfig.robot || this.toursEnabled) {
                 this.resumeTour();
             } else {
                 tourState.clear();
@@ -303,12 +304,21 @@ export class TourService {
      * @param {number} [options.showPointerDuration=0] - Duration to show the pointer on each step.
      * @param {boolean} [options.debug=false] - Enables debug mode for the tour.
      * @param {boolean} [options.redirect=true] - Whether to redirect to `tour.url` if necessary.
+     * @param {boolean} [options.robot=false] - In "manual" mode, performs each step's action
+     * automatically (using the same helpers as automatic tours) instead of waiting for a real
+     * user interaction, while still resolving and displaying the tour pointer as it would for a
+     * human. Useful to test that onboarding tours' pointer resolves correctly.
      */
     async startTour(name, options = {}) {
         this.removePointer();
         this.removeTourRecorder();
 
-        if (!session.is_public && !this.toursEnabled && options.mode === "manual") {
+        if (
+            !session.is_public &&
+            !this.toursEnabled &&
+            options.mode === "manual" &&
+            !options.robot
+        ) {
             this.toursEnabled = await this.orm.call("res.users", "switch_tour_enabled", [
                 !this.toursEnabled,
             ]);
@@ -320,6 +330,7 @@ export class TourService {
             showPointerDuration: 0,
             debug: false,
             redirect: true,
+            robot: false,
             ...options,
         };
 

@@ -2,7 +2,6 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 
 import { markup } from "@odoo/owl";
-import { delay } from "@web/core/utils/concurrency";
 
 registry.category("web_tour.tours").add("discuss_channel_tour", {
     steps: () => [
@@ -41,20 +40,22 @@ registry.category("web_tour.tours").add("discuss_channel_tour", {
             run: `edit SomeText_${new Date().getTime()}`,
         },
         {
-            trigger: ".o-mail-Composer-input",
+            trigger: ".o-sendMessageActive",
             content: _t("Post your message on the thread"),
             tooltipPosition: "top",
-            run: "press Enter",
+            run: "click",
         },
         {
-            trigger:
-                ".o-mail-Message[data-persistent] [name='more-action:undefined']:not(:visible)",
-            content: _t("Hover and click to view more actions on the message"),
+            trigger: ".o-mail-Message[data-persistent]",
+            content: _t("Hover over your message to reveal its actions"),
             tooltipPosition: "top",
-            async run(helpers) {
-                await delay(1000);
-                await helpers.click();
-            },
+            run: "hover",
+        },
+        {
+            trigger: ".o-mail-Message[data-persistent] [name='more-action:undefined']",
+            content: _t("Click to view more actions on the message"),
+            tooltipPosition: "top",
+            run: "click",
         },
         {
             trigger: ".o-dropdown-item[name='add-bookmark']",

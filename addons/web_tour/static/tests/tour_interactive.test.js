@@ -158,6 +158,77 @@ test("perform edit on next step", async () => {
     expect(".o_tour_pointer_tip").toHaveCount(0);
 });
 
+test("robot mode performs every step automatically, without any human interaction", async () => {
+    Tour._records = [{ name: "tour_robot" }];
+    registry.category("web_tour.tours").add("tour_robot", {
+        steps: () => [
+            {
+                trigger: ".interval input",
+                run: "edit 5",
+            },
+            {
+                trigger: "button.inc",
+                run: "click",
+            },
+        ],
+    });
+    class Root extends Component {
+        static props = ["*"];
+        static components = { Counter };
+        static template = xml/*html*/ `
+            <t>
+                <Counter />
+            </t>
+        `;
+    }
+
+    await mountWithCleanup(Root);
+    await getService("tour_service").startTour("tour_robot", { mode: "manual", robot: true });
+    await waitFor(".o_tour_pointer");
+    await waitForNone(".o_tour_pointer");
+    expect(".counter .value").toHaveText("5");
+});
+
+test("robot mode waits for its trigger to re-enable if it got disabled after being resolved", async () => {
+    Tour._records = [{ name: "tour_robot_disabled" }];
+    registry.category("web_tour.tours").add("tour_robot_disabled", {
+        steps: () => [
+            {
+                trigger: "button.inc",
+                run: "click",
+            },
+        ],
+    });
+    const state = proxy({ disabled: false, value: 0 });
+    class Root extends Component {
+        static props = ["*"];
+        static template = xml/*html*/ `
+            <t>
+                <button class="inc" t-att-disabled="this.state.disabled" t-on-click="this.onClick">+</button>
+            </t>
+        `;
+        setup() {
+            this.state = state;
+        }
+        onClick() {
+            this.state.value++;
+        }
+    }
+
+    await mountWithCleanup(Root);
+    await getService("tour_service").startTour("tour_robot_disabled", {
+        mode: "manual",
+        robot: true,
+    });
+    state.disabled = true;
+    await waitFor(".o_tour_pointer");
+    expect(queryFirst("button.inc")).toHaveProperty("disabled", true);
+    expect(state.value).toBe(0);
+    state.disabled = false;
+    await waitForNone(".o_tour_pointer");
+    expect(state.value).toBe(1);
+});
+
 test("manual tour with inactive steps", async () => {
     Tour._records = [{ name: "tour_de_wallonie" }];
     registry.category("web_tour.tours").add("tour_de_wallonie", {
@@ -336,7 +407,11 @@ test("Tour backward when the pointed element disappear and ignore warn step", as
         { trigger: "button.bar", run: "click", tour_id: 1 },
     ];
     patchWithCleanup(console, {
-        warn: (msg) => expect.step(msg),
+        log: (msg) => {
+            if (typeof msg === "string" && msg.endsWith("ignored.")) {
+                expect.step(msg);
+            }
+        },
     });
 
     registry.category("web_tour.tours").add("tour1", {
@@ -423,7 +498,11 @@ test("Tour started by the URL", async () => {
 test("Log a warning if step ignored", async () => {
     Tour._records = [{ name: "tour1" }];
     patchWithCleanup(console, {
-        warn: (msg) => expect.step(msg),
+        log: (msg) => {
+            if (typeof msg === "string" && msg.endsWith("ignored.")) {
+                expect.step(msg);
+            }
+        },
     });
     registry.category("web_tour.tours").add("tour1", {
         steps: () => [

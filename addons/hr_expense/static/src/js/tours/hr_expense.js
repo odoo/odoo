@@ -7,11 +7,11 @@ import { markup } from "@odoo/owl";
 
 registry.category("web_tour.tours").add('hr_expense_tour' , {
     steps: () => [stepUtils.showAppsMenuItem(), {
-    isActive: ["mobile"],
+    isActive: ["mobile", "community"],
     trigger: ".o_menu_toggle",
     run: "click",
 }, {
-    isActive: ["mobile"],
+    isActive: ["mobile", "community"],
     trigger: ".o_sidebar_topbar a.btn-primary",
     run: "click",
 }, {
@@ -168,6 +168,10 @@ registry.category("web_tour.tours").add('hr_expense_tour' , {
     run: "click",
 },
 {
+    isActive: ["mobile"],
+    trigger: "body:not(:has(.o_burger_menu))",
+},
+{
     trigger: ".o_graph_canvas_container",
 },
 {
@@ -192,9 +196,27 @@ registry.category("web_tour.tours").add('hr_expense_tour' , {
     run: "click",
 },
 {
-    trigger: '.o_list_renderer .o_data_row:first .o_many2one_avatar_employee_cell',
-    content: _t('Managers can inspect all expenses from here.'),
+    isActive: ["desktop"],
+    trigger: '.o_list_renderer .o_data_row:first .o_list_record_selector',
+    content: _t('Managers can inspect and select expenses from here.'),
     run: "click",
 },
-...stepUtils.statusbarButtonsSteps(_t("Approve"), _t("Managers can approve the expense here, then an accountant can post the accounting entries.")),
+{
+    isActive: ["desktop"],
+    trigger: '.o_control_panel_main_buttons button:contains("Approve")',
+    content: _t("Managers can approve the expense here, then an accountant can post the accounting entries."),
+    run: "click",
+},
+{
+    isActive: ["mobile"],
+    trigger: '.o_list_renderer .o_data_row:first',
+    content: _t('Managers can inspect expenses from here.'),
+    run: "click",
+},
+{
+    isActive: ["mobile"],
+    trigger: '.o_statusbar_buttons button:enabled:contains("Approve"), .dropdown-item button:enabled:contains("Approve")',
+    content: _t("Managers can approve the expense here, then an accountant can post the accounting entries."),
+    run: "click",
+},
 ]});
