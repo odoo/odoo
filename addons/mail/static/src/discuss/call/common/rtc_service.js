@@ -469,6 +469,16 @@ export class Rtc extends Record {
     _p2pRecoveryCount = 0;
 
     /**
+     * Determines which media permission a meeting should request.
+     * @returns {"microphone" | "camera"}
+     */
+    get initialMeetingMedia() {
+        return this.microphonePermission === "prompt" && this.cameraPermission === "prompt"
+            ? "microphone"
+            : "camera";
+    }
+
+    /**
      * Whether this tab serves as a remote for a call hosted on another tab.
      */
     get isRemote() {
