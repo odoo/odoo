@@ -141,19 +141,166 @@ class MvDealBundlePaperwork(models.Model):
     )
 
     def action_open_bundle_paperwork(self):
-        """Open the small modal that offers Generate Paperwork."""
+        """Return an ir.actions.client so the OWL Bundle Paperwork
+        Dialog (registered under the tag below) opens with this
+        deal's id in scope. The dialog then calls the RPC methods on
+        this model to read state + trigger actions."""
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'mv_bundle_paperwork_dialog',
+            'params': {'deal_id': self.id},
+        }
+
+    # ================================================================
+    # RPC surface for the OWL dialog
+    # ================================================================
+    def bundle_paperwork_state(self):
+        """Snapshot the dialog needs to render:
+          * bundle info (name, brand)
+          * bundle action selection options
+          * current bundle_action / bundle_start_week values on this Deal
+          * generated files (xml + excel) with their attachment ids
+        Returns a JSON-friendly dict.
+        """
+        self.ensure_one()
+        Attachment = self.env['ir.attachment']
+        atts = Attachment.search([
+            ('res_model', '=', 'mv.deal'),
+            ('res_id', '=', self.id),
+            ('mv_bundle_paperwork_kind', 'in', ['xml', 'excel']),
+        ], order='create_date desc, id desc')
+
+        def _serialize(att):
+            return {
+                'id': att.id,
+                'name': att.name,
+                'kind': att.mv_bundle_paperwork_kind or '',
+                'station': att.mv_bundle_paperwork_station or '',
+                'create_date': fields.Datetime.to_string(att.create_date) or '',
+            }
+
+        action_selection = self._fields['bundle_action'].selection or []
+        bundle_actions = [
+            {'code': code, 'label': label}
+            for code, label in action_selection
+        ]
+        return {
+            'deal_id': self.id,
+            'deal_name': self.name or '',
+            'brand': self.brands.name if self.brands else '',
+            'program': self.program.display_name if self.program else '',
+            'bundle_action': self.bundle_action or '',
+            'bundle_start_week': (
+                self.bundle_start_week.isoformat()
+                if self.bundle_start_week else ''
+            ),
+            'bundle_actions': bundle_actions,
+            'xml_files':   [_serialize(a) for a in atts if a.mv_bundle_paperwork_kind == 'xml'],
+            'excel_files': [_serialize(a) for a in atts if a.mv_bundle_paperwork_kind == 'excel'],
+        }
+
+    def bundle_paperwork_generate(self):
+        """Delegate to the wizard for the actual XML + Excel build,
+        then return the fresh state so the OWL dialog can re-render
+        without a page refresh."""
         self.ensure_one()
         wizard = self.env['mv.bundle_paperwork.wizard'].create({
             'deal_id': self.id,
         })
+        wizard.action_generate_paperwork()
+        return self.bundle_paperwork_state()
+
+    def bundle_paperwork_send(self, attachment_id):
+        """Return the act_window that opens the mail composer with
+        the file pre-attached. Frontend does_action's it."""
+        self.ensure_one()
+        att = self.env['ir.attachment'].browse(int(attachment_id)).exists()
+        if not att:
+            raise UserError(_("Attachment not found."))
         return {
             'type': 'ir.actions.act_window',
-            'name': _('Bundle Paperwork'),
-            'res_model': 'mv.bundle_paperwork.wizard',
-            'res_id': wizard.id,
+            'name': _('Send %s') % (att.name or ''),
+            'res_model': 'mail.compose.message',
             'view_mode': 'form',
             'target': 'new',
+            'context': {
+                'default_model': 'mv.deal',
+                'default_res_ids': [self.id],
+                'default_composition_mode': 'comment',
+                'default_attachment_ids': [(6, 0, [att.id])],
+                'default_subject': att.name or '',
+            },
         }
+
+    def bundle_paperwork_regenerate(self, attachment_id):
+        """Regenerate one XML in place. Rewrites the same
+        ir.attachment so the download url stays valid. Returns the
+        fresh state."""
+        self.ensure_one()
+        att = self.env['ir.attachment'].browse(int(attachment_id)).exists()
+        if not att:
+            raise UserError(_("Attachment not found."))
+        if att.mv_bundle_paperwork_kind != 'xml':
+            raise UserError(_(
+                "Regenerate is only available for XML files."
+            ))
+        call = att.mv_bundle_paperwork_station or ''
+        wizard = self.env['mv.bundle_paperwork.wizard'].new({
+            'deal_id': self.id,
+        })
+        wizard._validate_deal(self)
+        chunks = wizard._build_schedule_chunks(self)
+        stations = wizard._group_bundle_pricing_by_station(self)
+        if call not in stations:
+            raise UserError(_(
+                "Station %s is no longer in the program's active "
+                "Bundle Pricing records."
+            ) % call)
+        body = wizard._generate_xml_for_station(
+            self, chunks, stations[call], self.name or '',
+        )
+        att.write({'datas': base64.b64encode(body.encode('utf-8'))})
+        return self.bundle_paperwork_state()
+
+    def bundle_paperwork_run_action(self, action_code, bundle_start_week):
+        """Save the picked Bundle Action + Bundle Start Week on this
+        Deal, then trigger the corresponding downstream logic. The
+        placeholder here just writes the two fields and posts a
+        chatter note; wire the real workflow behind this method as
+        the specific action-per-workflow gets defined."""
+        self.ensure_one()
+        # Validate the action_code against the Selection options.
+        valid_codes = {c for c, _l in (self._fields['bundle_action'].selection or [])}
+        if action_code and action_code not in valid_codes:
+            raise UserError(_("Unknown Bundle Action: %s") % action_code)
+        vals = {}
+        if action_code:
+            vals['bundle_action'] = action_code
+        if bundle_start_week:
+            vals['bundle_start_week'] = bundle_start_week
+        if vals:
+            self.write(vals)
+        # Chatter log so the action is auditable even before the
+        # per-workflow logic is filled in.
+        if hasattr(self, 'message_post'):
+            action_label = dict(
+                self._fields['bundle_action'].selection or []
+            ).get(action_code, action_code or '')
+            try:
+                self.message_post(body=_(
+                    "Bundle Action <b>%(action)s</b> triggered with "
+                    "Start Week <b>%(week)s</b>."
+                ) % {
+                    'action': action_label,
+                    'week': bundle_start_week or '',
+                })
+            except Exception:
+                _logger.exception(
+                    "bundle_paperwork_run_action: chatter post failed "
+                    "for deal id=%s", self.id,
+                )
+        return self.bundle_paperwork_state()
 
 
 # =====================================================================

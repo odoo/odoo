@@ -137,7 +137,12 @@
 
       <div t-if="!state.loaded" class="mv-units-loading">Loading capping grid...</div>
 
-      <table t-if="state.loaded and state.payload" class="mv-units-table mv-cap-table">
+      <!-- Sticky-header scroll wrapper. Mirrors the Units Report:
+           the thead th becomes position: sticky so the DAYPART /
+           week / DELIVERS row stays pinned while the operator
+           scrolls the rows below it. -->
+      <div t-if="state.loaded and state.payload" class="mv-cap-table-scroll">
+      <table class="mv-units-table mv-cap-table">
         <thead>
           <tr>
             <th class="mv-cap-check-col">
@@ -146,7 +151,7 @@
             <th class="mv-daypart-col">DAYPART</th>
             <th t-foreach="state.payload.weeks" t-as="w" t-key="w" class="mv-week-col">
               <div class="mv-week-col__date" t-esc="fmtWeekShort(w)"/>
-              <div class="mv-week-col__dow">Mon</div>
+              <!-- <div class="mv-week-col__dow">Mon</div> -->
             </th>
             <th class="mv-total-col">DELIVERS</th>
           </tr>
@@ -231,6 +236,7 @@
           </tr>
         </tbody>
       </table>
+      </div>  <!-- /.mv-cap-table-scroll -->
     </div>
   </t>
 

@@ -1,0 +1,174 @@
+/*  Bundle Paperwork OWL dialog styling.
+
+    Layout goals:
+      * Never overflow horizontally (no h-scroll) - buttons wrap.
+      * File name gets the full row width when needed and truncates
+        with ellipsis, so long generated names don't collapse the
+        action column.
+      * Clear visual hierarchy: generate button hero, section headers
+        with icons + count, one card per file, bundle-action buttons
+        on their own wrap-row so they never squeeze the filename.
+*/
+
+.mv-bp {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    &__hint {
+        color: var(--o-color-text-muted, #6c757d);
+        padding: 12px 4px;
+    }
+
+    // ---- Header block ----
+    &__header {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px 16px;
+        align-items: center;
+        justify-content: space-between;
+        padding-bottom: 12px;
+        border-bottom: 1px solid var(--o-color-border, #dee2e6);
+    }
+    &__header-info {
+        font-size: 0.95rem;
+        color: var(--o-color-text, #212529);
+
+        .mv-bp__sep {
+            margin: 0 6px;
+            color: var(--o-color-text-muted, #6c757d);
+        }
+    }
+    &__generate-btn {
+        min-width: 240px;
+        white-space: nowrap;
+    }
+
+    // ---- Empty state ----
+    &__empty {
+        text-align: center;
+        padding: 32px 20px;
+        border: 1px dashed var(--o-color-border, #dee2e6);
+        border-radius: 6px;
+        background: var(--o-color-bg-view-hover, #fafbfc);
+    }
+    &__empty-icon {
+        font-size: 2.5rem;
+        color: var(--o-color-text-muted, #adb5bd);
+        display: block;
+        margin-bottom: 12px;
+    }
+
+    // ---- Section ----
+    &__section {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+    &__section-head {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        padding-bottom: 6px;
+        border-bottom: 1px solid var(--o-color-border, #dee2e6);
+    }
+    &__section-title {
+        font-weight: 600;
+        font-size: 1rem;
+    }
+    &__section-count {
+        margin-left: 4px;
+        font-size: 0.85rem;
+        color: var(--o-color-text-muted, #6c757d);
+        background: var(--o-color-bg-view-hover, #eef1f4);
+        padding: 1px 8px;
+        border-radius: 10px;
+    }
+
+    // ---- File list ----
+    &__file-list {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    // Single file card. Uses flex-wrap so the filename gets its own
+    // row when the actions don't fit.
+    &__file {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 8px 12px;
+        padding: 10px 12px;
+        border: 1px solid var(--o-color-border, #dee2e6);
+        border-radius: 6px;
+        background: var(--o-color-bg-view, #ffffff);
+    }
+
+    &__file-name {
+        flex: 1 1 60%;
+        min-width: 0;                   // enables text-ellipsis inside
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        a {
+            display: inline-flex;
+            align-items: center;
+            max-width: 100%;
+            text-decoration: none;
+            color: var(--o-color-text, #212529);
+
+            &:hover .mv-bp__file-name-text {
+                text-decoration: underline;
+            }
+        }
+    }
+    &__file-name-text {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        display: inline-block;
+        max-width: 100%;
+    }
+    &__file-badge {
+        flex-shrink: 0;
+    }
+
+    &__file-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        justify-content: flex-end;
+        margin-left: auto;
+    }
+
+    // Bundle actions row inside a file card - lives on its own line
+    // and wraps freely. Keeps long action labels from stealing the
+    // filename's width.
+    &__bundle-actions {
+        flex: 1 1 100%;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 6px 8px;
+        margin-top: 6px;
+        padding-top: 8px;
+        border-top: 1px dashed var(--o-color-border, #e5e7eb);
+    }
+    &__bundle-actions-label {
+        font-size: 0.85rem;
+        margin-right: 4px;
+    }
+}
+
+// Mini dialog
+.mv-bsw {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    &__hint {
+        margin-bottom: 4px;
+    }
+}

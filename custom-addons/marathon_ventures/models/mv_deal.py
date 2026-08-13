@@ -239,13 +239,22 @@ class MvDeal(models.Model):
             # TODO: translate SF formula to Python
             rec.conga_invoice_wapa = False
 
-    @api.depends()
+    @api.depends('contact', 'contact.parent_id', 'contact.parent_id.name',
+                 'contact.name')
     def _compute_contactaccount(self):
-        # SF formula (verbatim, may need translation):
-        #   Contact__r.Account.Name
+        # SF formula: Contact__r.Account.Name
+        # Odoo maps: the Contact picker (`contact` -> res.partner) is
+        # the person; the "Account" is that person's parent partner
+        # (their company). Fall back to the contact's own name if the
+        # contact isn't linked to a parent (i.e., it's the account
+        # record itself).
         for rec in self:
-            # TODO: translate SF formula to Python
-            rec.contactaccount = False
+            if rec.contact and rec.contact.parent_id:
+                rec.contactaccount = rec.contact.parent_id.name or False
+            elif rec.contact:
+                rec.contactaccount = rec.contact.name or False
+            else:
+                rec.contactaccount = False
 
     @api.depends()
     def _compute_contact_email(self):

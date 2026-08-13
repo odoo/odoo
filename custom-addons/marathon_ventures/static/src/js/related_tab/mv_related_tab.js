@@ -57,7 +57,7 @@ const RELATED_TAB_CONFIG = {
         "mv.prelog_data_mirror": [],
     },
     "mv.traffic": {
-        "mv.split": []
+        "mv.split": ["isci", "days_allowed", "active"]
     }
 };
 

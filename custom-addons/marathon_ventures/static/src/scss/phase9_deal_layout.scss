@@ -232,6 +232,21 @@
     border: 1px solid #e4e6eb;
     border-radius: 8px;
     margin: 6px 0 18px 0;
+    padding: 10px 14px;
+
+    /* col=6 outer group -> Odoo builds a 6-column CSS grid. Force
+       equal column widths and clip anything that overflows so a
+       long field value (e.g. a brand name) can't bleed into the
+       next column. */
+    .o_group.o_inner_group,
+    > .o_inner_group {
+        min-width: 0;
+    }
+}
+
+.mv-deal-redesign .mv-key-ribbon > .o_group {
+    grid-template-columns: repeat(6, minmax(0, 1fr)) !important;
+    gap: 10px 18px;
 }
 
 .mv-deal-redesign .mv-key-ribbon .o_form_label {
@@ -244,6 +259,26 @@
 
 .mv-deal-redesign .mv-key-ribbon .o_inner_group {
     grid-template-columns: auto;
+    min-width: 0;             /* enables ellipsis inside */
+    overflow: hidden;         /* clip anything that spills sideways */
+}
+
+/* Ellipsize the field value if it doesn't fit its column. Keeps
+   Brand from bleeding into Advertiser and so on. */
+.mv-deal-redesign .mv-key-ribbon .o_field_widget,
+.mv-deal-redesign .mv-key-ribbon .o_form_uri,
+.mv-deal-redesign .mv-key-ribbon .o_field_char,
+.mv-deal-redesign .mv-key-ribbon .o_field_many2one {
+    display: block;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.mv-deal-redesign .mv-key-ribbon .o_field_widget > * {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 /* Responsive: collapse to 1 column on narrow screens. */
