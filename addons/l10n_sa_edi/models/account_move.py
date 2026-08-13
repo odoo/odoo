@@ -151,7 +151,7 @@ class AccountMove(models.Model):
     def button_draft(self):
         # OVERRIDE
         for move in self:
-            if move.country_code == "SA" and move.l10n_sa_chain_index and move.company_id.l10n_sa_edi_is_production:
+            if move.country_code == "SA" and move.l10n_sa_chain_index and move.company_id.l10n_sa_api_mode == 'prod':
                 raise UserError(_("The Invoice(s) are linked to a validated EDI document and cannot be modified according to ZATCA rules"))
         return super().button_draft()
 
