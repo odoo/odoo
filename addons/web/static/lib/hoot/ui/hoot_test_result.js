@@ -250,7 +250,7 @@ export class HootTestResult extends Component {
                         <t t-foreach="this.filteredEvents()[index]" t-as="event" t-key="event_index">
                             <t t-set="sType" t-value="this.getTypeName(event.type)" />
                             <t t-set="eventIcon" t-value="this.CASE_EVENT_TYPES[sType].icon" />
-                            <t t-set="eventIconClass" t-value="this.CASE_EVENT_TYPES[sType].icon_class" />
+                            <t t-set="eventIconClass" t-value="this.CASE_EVENT_TYPES[sType].iconClass" />
                             <t t-set="eventColor" t-value="
                                 'pass' in event ?
                                     (event.pass ? 'emerald' : 'rose') :

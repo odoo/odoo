@@ -28,7 +28,7 @@
                         <span class="o_search_panel_category mb-2">
                             <i t-if="category.icon"
                                 class="o_search_panel_section_icon oi mb-2"
-                                t-att-class="category.icon_class"
+                                t-att-class="category.iconClass"
                                 t-att-data-icon="category.icon"
                                 t-att-style="category.color and ('color: ' + category.color)"
                             />
@@ -39,7 +39,7 @@
                         <span class="o_search_panel_filter mb-2">
                             <i t-if="filter.icon"
                                 class="o_search_panel_section_icon oi mb-2"
-                                t-att-class="filter.icon_class"
+                                t-att-class="filter.iconClass"
                                 t-att-data-icon="filter.icon"
                                 t-att-style="filter.color and ('color: ' + filter.color)"
                             />
@@ -73,7 +73,7 @@
             <header
                 class="o_search_panel_section_header ps-1 pb-2 text-uppercase cursor-default"
                 t-attf-class="{{section_first ? 'pt-2' : 'pt-3'}}">
-                <i t-attf-class="oi o_search_panel_section_icon {{!section.color &amp;&amp; section.type == 'filter' ? 'text-warning' : !section.color ? 'text-primary': ''}} me-2" t-att-class="section.icon_class" t-att-data-icon="section.icon"
+                <i t-attf-class="oi o_search_panel_section_icon {{!section.color &amp;&amp; section.type == 'filter' ? 'text-warning' : !section.color ? 'text-primary': ''}} me-2" t-att-class="section.iconClass" t-att-data-icon="section.icon"
                     t-att-style="section.color and ('color: ' + section.color)"
                 />
                 <b t-out="section.description"/>
@@ -162,7 +162,7 @@
             </div>
             <Dropdown t-foreach="this.sections" t-as="section" t-key="section.id" state="this.getDropdownState(section.id)" menuClass="'my-2 mx-1'">
                 <span class="btn btn-secondary my-2 mx-1 o-dropdown-caret">
-                    <i t-attf-class="oi o_search_panel_section_icon {{!section.color &amp;&amp; section.type == 'filter' ? 'text-warning' : !section.color ? 'text-primary': ''}} me-2" t-att-class="section.icon_class" t-att-data-icon="section.icon"
+                    <i t-attf-class="oi o_search_panel_section_icon {{!section.color &amp;&amp; section.type == 'filter' ? 'text-warning' : !section.color ? 'text-primary': ''}} me-2" t-att-class="section.iconClass" t-att-data-icon="section.icon"
                         t-att-style="section.color and ('color: ' + section.color)"
                     />
                     <b class="pe-2" t-if="section.type !== 'category' || !this.state.active[section.id]" t-out="section.description"/>

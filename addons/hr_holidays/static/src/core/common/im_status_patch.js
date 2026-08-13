@@ -6,7 +6,7 @@ imStatusDataRegistry.add(
     {
         condition: ({ user }) => Boolean(user?.employee_id?.leave_date_to),
         icon: "travel",
-        icon_class: "",
+        iconClass: "",
         title: {
             online: _t("User is on leave and online"),
             away: _t("User is on leave and idle"),

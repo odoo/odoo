@@ -16,7 +16,7 @@
                 <button t-if="this.props.close and (this.env.inChatWindow or this.env.hasPreviousActionPanel?.())" class="btn p-1 opacity-75 opacity-100-hover" t-att-title="this.backButtonTitle" t-on-click.stop="this.props.close" data-available-offline="">
                     <i class="oi oi-fw" data-icon="west"/>
                 </button>
-                <i t-if="this.props.icon" class="oi oi-fw text-muted" t-att-class="this.props.icon_class" t-att-data-icon="this.props.icon"/>
+                <i t-if="this.props.icon" class="oi oi-fw text-muted" t-att-class="this.props.iconClass" t-att-data-icon="this.props.icon"/>
                 <p t-if="this.props.title" class="fw-bold text-uppercase m-0 flex-grow-1" t-out="this.props.title"/>
                 <t t-call-slot="header-extra"/>
                 <button t-if="this.props.close and this.env.inMeetingView" class="btn p-1 opacity-75 opacity-100-hover ms-auto" title="Close panel" t-on-click.stop="this.props.close" data-available-offline="">

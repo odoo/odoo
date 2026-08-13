@@ -28,7 +28,7 @@ export class TableOfContentPlugin extends Plugin {
                 title: _t("Table of Contents"),
                 description: _t("Highlight the structure (headings)"),
                 icon: "bookmark",
-                icon_class: "oi-filled",
+                iconClass: "oi-filled",
                 run: this.insertTableOfContent.bind(this),
                 isAvailable: isHtmlContentSupported,
             },

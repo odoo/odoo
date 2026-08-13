@@ -65,7 +65,7 @@ export class HootConfigMenu extends Component {
                         t-att-title="order.title"
                         t-on-click.stop="() => this.setExecutionOrder(order.value)"
                     >
-                        <i t-attf-class="oi w-5 h-5 #{[order.icon_class]}" t-att-data-icon="[order.icon]"/>
+                        <i t-attf-class="oi w-5 h-5 #{[order.iconClass]}" t-att-data-icon="[order.icon]"/>
                     </button>
                 </t>
             </div>
@@ -198,7 +198,7 @@ export class HootConfigMenu extends Component {
                         t-attf-title="{{ isDisplayed ? 'Hide' : 'Show' }} {{ sType }} events"
                         t-on-click.stop="(ev) => this.toggleEventType(ev, sType)"
                     >
-                        <i class="oi" t-att-class="this.CASE_EVENT_TYPES[sType].icon_class" t-att-data-icon="this.CASE_EVENT_TYPES[sType].icon"/>
+                        <i class="oi" t-att-class="this.CASE_EVENT_TYPES[sType].iconClass" t-att-data-icon="this.CASE_EVENT_TYPES[sType].icon"/>
                     </button>
                 </t>
             </div>
@@ -284,7 +284,7 @@ export class HootConfigMenu extends Component {
             value: "fifo",
             title: "First in, first out",
             icon: "sort",
-            icon_class: "oi-flip-vertical",
+            iconClass: "oi-flip-vertical",
         },
         { value: "lifo", title: "Last in, first out", icon: "sort" },
         { value: "random", title: "Random", icon: "shuffle" },

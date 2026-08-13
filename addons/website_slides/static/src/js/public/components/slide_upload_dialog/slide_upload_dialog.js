@@ -22,7 +22,7 @@ export class SlideUploadDialog extends Component {
     static categoryData = {
         document: { icon: "picture_as_pdf", label: _t("Presentation / Doc") },
         infographic: { icon: "image", label: _t("Image") },
-        article: { icon: "article", icon_class: "oi-filled", label: _t("Article") },
+        article: { icon: "article", iconClass: "oi-filled", label: _t("Article") },
         video: { icon: "movie", label: _t("Video") },
         quiz: { icon: "help", label: _t("Quiz") },
     };

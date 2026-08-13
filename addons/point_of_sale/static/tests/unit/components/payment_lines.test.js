@@ -117,7 +117,7 @@ test("getPaymentActionState", async () => {
     expect(normalizeActionState(stateWaitingCardRefund)).toEqual({
         id: "waiting_refund",
         icon: "autorenew",
-        icon_class: "oi-spin",
+        iconClass: "oi-spin",
         title: "Refund in process",
         actions: [
             {
@@ -143,7 +143,7 @@ test("getPaymentActionState", async () => {
     expect(normalizeActionState(stateWaitingCardNoRefund)).toEqual({
         id: "waiting_card",
         icon: "autorenew",
-        icon_class: "oi-spin",
+        iconClass: "oi-spin",
         title: "Waiting for card",
         actions: [
             {
@@ -169,7 +169,7 @@ test("getPaymentActionState", async () => {
     expect(normalizeActionState(stateWaitingScan)).toEqual({
         id: "waiting_scan",
         icon: "autorenew",
-        icon_class: "oi-spin",
+        iconClass: "oi-spin",
         title: "Waiting for the customer to scan the QR Code",
         actions: [
             {
@@ -195,7 +195,7 @@ test("getPaymentActionState", async () => {
     expect(normalizeActionState(stateWaiting)).toEqual({
         id: "waiting",
         icon: "autorenew",
-        icon_class: "oi-spin",
+        iconClass: "oi-spin",
         title: "Request sent",
         actions: [
             {
@@ -221,7 +221,7 @@ test("getPaymentActionState", async () => {
     expect(normalizeActionState(stateWaitingCancel)).toEqual({
         id: "waiting_cancel",
         icon: "autorenew",
-        icon_class: "oi-spin",
+        iconClass: "oi-spin",
         title: "Request sent",
         actions: [
             {
@@ -247,7 +247,7 @@ test("getPaymentActionState", async () => {
     expect(normalizeActionState(stateWaitingCapture)).toEqual({
         id: "waiting_capture",
         icon: "autorenew",
-        icon_class: "oi-spin",
+        iconClass: "oi-spin",
         title: "Request sent",
         actions: [
             {

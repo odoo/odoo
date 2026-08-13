@@ -45,7 +45,7 @@ import { removeStyle } from "@html_editor/utils/dom";
  * @property {Object} [commandParams] Passed to the command's `run` function
  * @property {TranslatedString | TranslatedStringGetter} [description] * - becomes the button's title (and tooltip content)
  * @property {string} [icon] *
- * @property {string} [icon_class] *
+ * @property {string} [iconClass] *
  * @property {string} [text] Can be used with (or instead of) `icon`
  * @property {(selection: EditorSelection) => boolean} [isAvailable] ? *
  * @property {(selection: EditorSelection, nodes: Node[]) => boolean} [isActive]
@@ -74,7 +74,7 @@ import { removeStyle } from "@html_editor/utils/dom";
  * @property {TranslatedStringGetter} description
  * @property {Function} run
  * @property {string} [icon]
- * @property {string} [icon_class]
+ * @property {string} [iconClass]
  * @property {string} [text]
  * @property {(selection: EditorSelection) => boolean} isAvailable
  * @property {(selection: EditorSelection, nodes: Node[]) => boolean} [isActive]
@@ -129,7 +129,7 @@ export const DISABLED_NAMESPACE = "disabled";
  *                 run: myCommandFunction,
  *                 description: _t("My Command"),
  *                 icon: "bug_report",
- *                 icon_class: "oi-filled",
+ *                 iconClass: "oi-filled",
  *             },
  *         ],
  *         // see ToolbarGroup
@@ -531,7 +531,7 @@ export class ToolbarPlugin extends Plugin {
                         ...(button.Component
                             ? pick(button, "Component", "props")
                             : {
-                                  ...pick(button, "run", "icon", "icon_class", "text"),
+                                  ...pick(button, "run", "icon", "iconClass", "text"),
                                   isActive: !!button.isActive?.(selection, targetedNodes),
                               }),
                     })),

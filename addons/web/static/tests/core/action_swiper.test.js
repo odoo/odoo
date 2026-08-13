@@ -53,7 +53,7 @@ test("render only its target on non-touch devices", async () => {
         static components = { ActionSwiper };
         static template = xml`
                 <div class="d-flex">
-                    <ActionSwiper onLeftSwipe="{action: () => {}, icon: 'circle', icon_class: 'oi-filled', bgColor: 'bg-warning'}">
+                    <ActionSwiper onLeftSwipe="{action: () => {}, icon: 'circle', iconClass: 'oi-filled', bgColor: 'bg-warning'}">
                         <div class="target-component"/>
                     </ActionSwiper>
                 </div>
@@ -70,7 +70,7 @@ test("only render the necessary divs", async () => {
             onRightSwipe: {
                 action: () => {},
                 icon: "circle",
-                icon_class: "oi-filled",
+                iconClass: "oi-filled",
                 bgColor: "bg-warning",
             },
             slots: {},
@@ -83,7 +83,7 @@ test("only render the necessary divs", async () => {
             onLeftSwipe: {
                 action: () => {},
                 icon: "circle",
-                icon_class: "oi-filled",
+                iconClass: "oi-filled",
                 bgColor: "bg-warning",
             },
             slots: {},
@@ -102,7 +102,7 @@ test("render with the height of its content", async () => {
                     <ActionSwiper onRightSwipe = "{
                         action: () => this.onRightSwipe(),
                         icon: 'circle',
-                        icon_class: 'oi-filled',
+                        iconClass: 'oi-filled',
                         bgColor: 'bg-warning'
                     }">
                         <div class="target-component" style="height: 800px">This element is very high and
@@ -134,7 +134,7 @@ test("can perform actions by swiping to the right", async () => {
                 <ActionSwiper onRightSwipe = "{
                     action: () => this.onRightSwipe(),
                     icon: 'circle',
-                    icon_class: 'oi-filled',
+                    iconClass: 'oi-filled',
                     bgColor: 'bg-warning'
                 }">
                     <div class="target-component" style="width: 200px; height: 80px">Test</div>
@@ -196,7 +196,7 @@ test("can perform actions by swiping in both directions", async () => {
                         <ActionSwiper
                             onRightSwipe = "{
                                 action: () => this.onRightSwipe(),
-                                icon_class: 'oi-filled',
+                                iconClass: 'oi-filled',
                                 bgColor: 'bg-warning'
                             }"
                             onLeftSwipe = "{
@@ -275,7 +275,7 @@ test("invert the direction of swipes when language is rtl", async () => {
                             onRightSwipe = "{
                                 action: () => this.onRightSwipe(),
                                 icon: 'circle',
-                                icon_class: 'oi-filled',
+                                iconClass: 'oi-filled',
                                 bgColor: 'bg-warning'
                             }"
                             onLeftSwipe = "{
@@ -315,7 +315,7 @@ test("swiping when the swiper contains scrollable areas", async () => {
                 <ActionSwiper
                     onRightSwipe = "{
                         action: () => this.onRightSwipe(),
-                        icon_class: 'oi-filled',
+                        iconClass: 'oi-filled',
                         bgColor: 'bg-warning'
                     }"
                     onLeftSwipe = "{
@@ -483,7 +483,7 @@ test("preventing swipe on scrollable areas when language is rtl", async () => {
                 <ActionSwiper
                     onRightSwipe="{
                         action: () => this.onRightSwipe(),
-                        icon_class: 'oi-filled',
+                        iconClass: 'oi-filled',
                         bgColor: 'bg-warning'
                     }"
                     onLeftSwipe="{
@@ -630,7 +630,7 @@ test("an async action is awaited before being executed", async () => {
                 <div class="d-flex">
                    <ActionSwiper animationType="'forwards'" onRightSwipe = "{
                        action: () => this.onRightSwipe(),
-                       icon_class: 'oi-filled',
+                       iconClass: 'oi-filled',
                        bgColor: 'bg-warning',
                    }">
                        <span>test</span>

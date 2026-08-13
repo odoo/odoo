@@ -3,13 +3,13 @@ import { Component, useProps, t, xml } from "@odoo/owl";
 export class CenteredIcon extends Component {
     props = useProps({
         icon: t.string(),
-        icon_class: t.string().optional(),
+        iconClass: t.string().optional(),
         text: t.string().optional(),
         class: t.string().optional(""),
     });
     static template = xml`
         <div t-attf-class="{{this.props.class}} d-flex flex-column align-items-center justify-content-center">
-            <i class="oi" t-att-class="this.props.icon_class" t-att-data-icon="this.props.icon" role="img" />
+            <i class="oi" t-att-class="this.props.iconClass" t-att-data-icon="this.props.icon" role="img" />
             <h3 t-if="this.props.text" t-out="this.props.text" class="w-75 mt-2 text-center"/>
         </div>
     `;

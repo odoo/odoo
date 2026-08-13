@@ -240,7 +240,7 @@ export class TableMenu extends Component {
             !this.isFirst && {
                 name: "move_left",
                 icon: "chevron_left",
-                icon_class: "disabled",
+                iconClass: "disabled",
                 text: ltr ? _t("Move left") : _t("Move right"),
                 action: (target) =>
                     this.props.moveColumn(this.tableGrid[0].indexOf(target) - 1, target),
@@ -271,7 +271,7 @@ export class TableMenu extends Component {
             {
                 name: "delete",
                 icon: "delete",
-                icon_class: "oi-filled",
+                iconClass: "oi-filled",
                 text: _t("Delete"),
                 action: this.props.removeColumn.bind(this),
             },
@@ -315,7 +315,7 @@ export class TableMenu extends Component {
             this.hasContent && {
                 name: "clear_content",
                 icon: "cancel",
-                icon_class: "oi-filled",
+                iconClass: "oi-filled",
                 text: _t("Clear content"),
                 action: this.props.clearColumnContent.bind(this),
             },
@@ -400,7 +400,7 @@ export class TableMenu extends Component {
             {
                 name: "delete",
                 icon: "delete",
-                icon_class: "oi-filled",
+                iconClass: "oi-filled",
                 text: _t("Delete"),
                 action: (target) => this.props.removeRow(target.parentElement),
             },
@@ -429,7 +429,7 @@ export class TableMenu extends Component {
             this.hasContent && {
                 name: "clear_content",
                 icon: "cancel",
-                icon_class: "oi-filled",
+                iconClass: "oi-filled",
                 text: _t("Clear content"),
                 action: (target) => this.props.clearRowContent(target.parentElement),
             },

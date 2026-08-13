@@ -36,13 +36,13 @@
         </div>
         <div t-if="this.props.hasSettingsAtBottom" class="d-flex justify-content-center gap-2 flex-wrap flex-lg-nowrap w-100 mw-100 mt-2">
             <div class="o-mail-CallPreview-deviceSelect">
-                <DeviceSelect icon_class="'oi oi-fw'" icon="'mic'" kind="'audioinput'"/>
+                <DeviceSelect iconClass="'oi oi-fw'" icon="'mic'" kind="'audioinput'"/>
             </div>
             <div class="o-mail-CallPreview-deviceSelect">
-                <DeviceSelect icon_class="'oi oi-fw'" icon="'volume_up'" kind="'audiooutput'"/>
+                <DeviceSelect iconClass="'oi oi-fw'" icon="'volume_up'" kind="'audiooutput'"/>
             </div>
             <div class="o-mail-CallPreview-deviceSelect">
-                <DeviceSelect icon_class="'oi oi-fw oi-filled'" icon="'videocam'" kind="'videoinput'"/>
+                <DeviceSelect iconClass="'oi oi-fw oi-filled'" icon="'videocam'" kind="'videoinput'"/>
             </div>
             <a role="button" class="btn btn-secondary" t-on-click="this.onClickSettings" title="Advanced Settings">
                 <i class="oi oi-fw oi-filled" data-icon="settings"/>

@@ -58,7 +58,7 @@ test("getPaymentActionState", async () => {
     expect(normalizeActionState(comp.getPaymentActionState(paymentline))).toEqual({
         id: "waiting_card",
         icon: "autorenew",
-        icon_class: "oi-spin",
+        iconClass: "oi-spin",
         title: "Waiting for card",
         actions: [
             {

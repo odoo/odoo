@@ -56,7 +56,7 @@ export class ImagePlugin extends Plugin {
                 id: "deleteImage",
                 description: _t("Remove (DELETE) image"),
                 icon: "delete",
-                icon_class: "oi-filled text-danger",
+                iconClass: "oi-filled text-danger",
                 run: this.deleteImage.bind(this),
                 isAvailable: isHtmlContentSupported,
             },

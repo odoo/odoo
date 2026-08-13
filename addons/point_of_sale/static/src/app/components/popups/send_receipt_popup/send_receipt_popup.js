@@ -74,7 +74,7 @@ export class SendReceiptPopup extends Component {
                             this.sendReceipt.lastArgs?.[0]?.name == "Email" &&
                             this.sendReceipt.status,
                         icon: "send",
-                        icon_class: "oi-filled",
+                        iconClass: "oi-filled",
                         disabled: () => !this.isValidEmail,
                     },
                 ],

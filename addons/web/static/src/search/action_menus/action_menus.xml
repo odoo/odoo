@@ -38,7 +38,7 @@
                              t-else=""
                              class="{ [item.class]: !!item.class, 'o_menu_item': true, 'pe-none text-muted opacity-50': this.offlinePlugin.isOffline() and !item.availableOffline }"
                              onSelected="() => this.onItemSelected(item)">
-                                <i t-if="item.icon" class="oi oi-fw me-1" t-att-class="item.icon_class" t-att-data-icon="item.icon"/>
+                                <i t-if="item.icon" class="oi oi-fw me-1" t-att-class="item.iconClass" t-att-data-icon="item.icon"/>
                                 <t t-out="item.description"/>
                             </DropdownItem>
                             <t t-set="currentGroup" t-value="item.groupNumber"/>

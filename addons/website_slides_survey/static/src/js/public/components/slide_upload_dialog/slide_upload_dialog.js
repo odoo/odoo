@@ -12,7 +12,7 @@ patch(SlideUploadDialog.prototype, {
             "website_slides_survey.SlideCategoryTutorial.Certification";
         this.slideCategoryData["certification"] = {
             icon: "trophy",
-            icon_class: "oi-filled",
+            iconClass: "oi-filled",
             label: _t("Certification"),
         };
     },

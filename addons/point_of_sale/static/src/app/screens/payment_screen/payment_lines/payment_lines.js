@@ -70,7 +70,7 @@ export class PaymentScreenPaymentLines extends Component {
      * @property {string} title                   - Title of the payment status section.
      * @property {Array<PaymentAction>} actions   - Actions available for the current payment state.
      * @property {string} [icon]                  - Optional icon representing the payment state.
-     * @property {string} [icon_class]            - Additional classes for the icon.
+     * @property {string} [iconClass]            - Additional classes for the icon.
      *
      * @type {PaymentActionState}
      */
@@ -161,7 +161,7 @@ export class PaymentScreenPaymentLines extends Component {
             state.id = isRefund ? "waiting_refund" : camelToSnakeCase(status);
             state.title = isRefund ? _t("Refund in process") : titles[status];
             state.icon = SPINNER_ICON;
-            state.icon_class = SPINNER_ICON_CLASS;
+            state.iconClass = SPINNER_ICON_CLASS;
             state.actions = [ACTIONS.forceDone, ACTIONS.cancel];
         }
 
@@ -170,7 +170,7 @@ export class PaymentScreenPaymentLines extends Component {
             state.id = camelToSnakeCase(status);
             state.title = _t("Request sent");
             state.icon = SPINNER_ICON;
-            state.icon_class = SPINNER_ICON_CLASS;
+            state.iconClass = SPINNER_ICON_CLASS;
             state.actions = [
                 { ...ACTIONS.forceDone, show: status === "waiting" },
                 { ...ACTIONS.forceCancel, show: status === "waitingCancel" },

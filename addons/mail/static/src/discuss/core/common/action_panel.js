@@ -14,7 +14,7 @@ export class ActionPanel extends Component {
             close: t.function([]).optional(),
             contentPadding: t.boolean().optional(true),
             icon: t.string().optional(),
-            icon_class: t.string().optional(),
+            iconClass: t.string().optional(),
             initialWidth: t.number().optional(),
             minWidth: t.number().optional(),
             resizable: t.boolean().optional(true),
