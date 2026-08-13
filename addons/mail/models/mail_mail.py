@@ -360,7 +360,14 @@ class MailMail(models.Model):
         self.ensure_one()
         if tools.is_html_empty(self.body_html):
             return ''
-        return self.env['mail.render.mixin']._replace_local_links(self.body_html)
+
+        def get_base_url():
+            record = self.env.get(self.model) if self.model else None
+            if record is not None:
+                record = record.browse(self.res_id)
+            return record.get_base_url() if record else None
+
+        return self.env['mail.render.mixin']._replace_local_links(self.body_html, get_base_url)
 
     def _personalize_outgoing_body(self, body, partner=False, doc_to_followers=None):
         """ Return a modified body based on the recipient (partner).
