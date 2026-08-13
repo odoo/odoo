@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.fields import Command
-from odoo.tests import tagged
+from odoo.tests import new_test_user, tagged
 
 from odoo.addons.sale_loyalty.tests.common import TestSaleCouponCommon
 
@@ -136,4 +136,30 @@ class TestSaleInvoicing(TestSaleCouponCommon):
         order._update_programs_and_rewards()
         self._claim_reward(order, self.discount_coupon_program)
         reward_line = order.order_line.filtered('is_reward_line')
+<<<<<<< efa9d2dda80922f35892fc13786e441cce5210b1
         self.assertEqual(reward_line.tax_ids, tax_quebec)
+||||||| 095e7c996ec11a7b2249588968fd7dd07b1f7aa6
+        self.assertEqual(reward_line.tax_id, tax_quebec)
+=======
+        self.assertEqual(reward_line.tax_id, tax_quebec)
+
+    def test_invoicing_user_can_read_invoice_with_reward_line(self):
+        """ A user with only invoicing rights (no access to loyalty rewards) should be able to
+        display an invoice that comes from an order with a discount reward line. """
+        invoicing_user = new_test_user(
+            self.env, login='invoicing_user', groups='account.group_account_invoice',
+        )
+        order = self.empty_order
+        order.order_line = [Command.create({'product_id': self.product_A.id})]
+        order._update_programs_and_rewards()
+        self._claim_reward(order, self.discount_coupon_program)
+        order.action_confirm()
+        invoice = order._create_invoices()
+        reward = invoice.invoice_line_ids.sale_line_ids.reward_id
+        self.assertTrue(reward)
+
+        # Invalidate the cache so that the next statement re-reads from the database and runs the check_access
+        # as the invoicing user instead of reading from the cache.
+        reward.invalidate_recordset(['reward_type'])
+        invoice.with_user(invoicing_user).read(['tax_totals'])
+>>>>>>> 1e23dfc77d1b3d3caf6bfaf68a5fda8335494632
