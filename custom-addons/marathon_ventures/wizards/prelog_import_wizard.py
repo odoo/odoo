@@ -119,7 +119,7 @@ class MvPrelogImportWizard(models.TransientModel):
         if not self.program_id:
             raise UserError(_("Program is required."))
         engine = self._build_import_engine()
-        rows, import_week = engine.extract_rows_and_week()
+        extracted_rows, import_week = engine.extract_rows_and_week()
         self.import_week = import_week
         version = int(self.prelog_version or 0)
         self._validate_prelog_version(version)
@@ -138,24 +138,35 @@ class MvPrelogImportWizard(models.TransientModel):
                 'target': 'new',
             }
 
-        vals_list, import_summary = engine.build_prelog_vals(rows, import_week, version)
-        if existing_prelogs:
-            existing_prelogs.unlink()
-
-        created = self.env['mv.prelog_data'].create(vals_list)
+        job, created = self.env['mv.prelog_import_job'].create_from_wizard(
+            program=self.program_id,
+            upload_file=self.upload_file,
+            upload_filename=self.upload_filename,
+            import_week=import_week,
+            prelog_version=version,
+            replace_existing=bool(existing_prelogs),
+        )
         self.program_id.prelog_version = version
 
-        message = _(
-            "Imported %(count)s Prelogs for %(program)s, week %(week)s, version %(version)s. "
-            "Matched: %(matched)s. Created without schedule: %(without_schedule)s."
-        ) % {
-            'count': len(created),
-            'program': self.program_id.display_name,
-            'week': import_week,
-            'version': version,
-            'matched': import_summary['matched'],
-            'without_schedule': import_summary['created_without_schedule'],
-        }
+        if created:
+            message = _(
+                "Upload started for %(program)s, week %(week)s, version %(version)s. "
+                "You'll receive an email when it finishes."
+            ) % {
+                'program': self.program_id.display_name,
+                'week': import_week,
+                'version': version,
+            }
+        else:
+            message = _(
+                "An identical upload is already %(state)s for %(program)s, week %(week)s, version %(version)s. "
+                "You'll receive an email when it finishes."
+            ) % {
+                'state': job.state,
+                'program': self.program_id.display_name,
+                'week': import_week,
+                'version': version,
+            }
         return {
             'type': 'ir.actions.client',
             'tag': 'display_notification',

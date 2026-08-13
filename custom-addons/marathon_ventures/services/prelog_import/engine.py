@@ -9,7 +9,13 @@ from odoo.exceptions import UserError
 
 from .config_loader import load_program_config
 from .parsers import read_tabular_rows
-from .transforms import apply_transforms, header_key, normalize_text, normalize_time_value
+from .transforms import (
+    apply_transforms,
+    header_key,
+    normalize_match_text,
+    normalize_text,
+    normalize_time_value,
+)
 
 
 class PrelogImportEngine:
@@ -116,6 +122,12 @@ class PrelogImportEngine:
             summary[vals["import_match_status"]] += 1
             vals_list.append(vals)
         return vals_list, summary
+
+    def build_row_vals(self, row, import_week, version, row_index):
+        return self._build_row_vals(row, import_week, version, row_index)
+
+    def export_field_names(self):
+        return list(self._field_map().keys())
 
     def _normalize_row(self, row):
         normalized = {}
@@ -329,7 +341,7 @@ class PrelogImportEngine:
         }
 
     def _has_network_match(self, row, deal, report):
-        row_network = normalize_text(row.get("network"))
+        row_network = normalize_match_text(row.get("network"))
         if row_network and row_network not in self._network_names_for_match(deal):
             report.network_deal_number_not_found = True
             return False
@@ -407,14 +419,10 @@ class PrelogImportEngine:
                 start_dt += timedelta(days=1)
                 end_dt += timedelta(days=1)
 
-            if (
-                end_dt.hour <= start_dt.hour
-                and end_dt.minute <= start_dt.minute
-                and end_time != "12:00A"
-            ):
+            if end_dt <= start_dt and end_time != "12:00A":
                 end_dt += timedelta(days=1)
 
-            if air_datetime > start_dt and air_datetime < end_dt:
+            if start_dt <= air_datetime <= end_dt:
                 return True
         return False
 
@@ -478,11 +486,11 @@ class PrelogImportEngine:
         names = set()
         config_names = self.config.get("networkNames", [])
         for value in config_names:
-            normalized = normalize_text(value)
+            normalized = normalize_match_text(value)
             if normalized:
                 names.add(normalized)
         if deal.program and deal.program.display_name:
-            names.add(normalize_text(deal.program.display_name))
+            names.add(normalize_match_text(deal.program.display_name))
         return names
 
     @staticmethod

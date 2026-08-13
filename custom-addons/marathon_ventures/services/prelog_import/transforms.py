@@ -4,6 +4,7 @@
 from ..import_utils.transforms import (
     apply_transforms,
     header_key,
+    normalize_match_text,
     normalize_text,
     normalize_time_value,
     parse_date_value,

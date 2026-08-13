@@ -31,6 +31,29 @@
   </record>
 
   <data noupdate="1">
+    <record id="module_category_marathon_ventures" model="ir.module.category">
+      <field name="name">Marathon Ventures</field>
+      <field name="sequence">35</field>
+    </record>
+
+    <record id="privilege_prelog_fuzzy_matching" model="res.groups.privilege">
+      <field name="name">Prelog Fuzzy Matching</field>
+      <field name="category_id" ref="module_category_marathon_ventures"/>
+    </record>
+
+    <record id="group_prelog_fuzzy_matching" model="res.groups">
+      <field name="name">Operator</field>
+      <field name="comment">
+        Review unmatched Prelog Data and attach schedules, including confirmed
+        manual overrides.
+      </field>
+      <field name="privilege_id" ref="privilege_prelog_fuzzy_matching"/>
+      <field name="implied_ids" eval="[Command.link(ref('base.group_user'))]"/>
+      <field name="implied_by_ids" eval="[Command.link(ref('base.group_system'))]"/>
+    </record>
+  </data>
+
+  <data noupdate="1">
     <!-- Record rules placeholder.  Uncomment + adapt if a SF object has OWD = Private. -->
     <!--
     <record id="rule_mv_example_owner" model="ir.rule">

@@ -80,6 +80,7 @@ class MvPrelogData(models.Model):
         index=True,
     )
     import_match_detail = fields.Text(string='Import Match Detail')
+    import_job = fields.Many2one(string='Import Job', comodel_name='mv.prelog_import_job', ondelete='set null', index=True)
     import_program = fields.Many2one(string='Import Program', comodel_name='mv.programs', ondelete='restrict', index=True)
     import_week_value = fields.Date(string='Import Week', index=True)
     total_000_primary_demo = fields.Integer(string='Total (000) - Primary Demo', compute='_compute_total_000_primary_demo', store=True)  # SF: Total_000_Primary_Demo__c

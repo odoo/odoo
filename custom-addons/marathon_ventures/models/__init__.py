@@ -43,6 +43,8 @@ from . import mv_prelog_data
 from . import mv_prelog_data_mirror
 from . import mv_prelog_data_mirrors
 from . import mv_prelog_fuzzy_match
+from . import mv_prelog_fuzzy_matching_service
+from . import mv_prelog_import_job
 from . import mv_programs
 from . import mv_pto
 from . import mv_purchase_order

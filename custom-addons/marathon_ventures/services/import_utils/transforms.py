@@ -43,6 +43,11 @@ def normalize_text(value):
     return str(value or "").strip() or False
 
 
+def normalize_match_text(value):
+    normalized = normalize_text(value)
+    return normalized.casefold() if normalized else False
+
+
 def normalize_time_value(value):
     if value in (None, ""):
         return False
