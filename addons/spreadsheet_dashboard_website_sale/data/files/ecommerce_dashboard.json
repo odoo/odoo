@@ -277,21 +277,11 @@
       "merges": [],
       "cells": {
         "A1": "=_t(\"KPI\")",
-        "A2": {
-          "S": ["Carts"]
-        },
-        "A3": {
-          "S": ["Orders"]
-        },
-        "A4": {
-          "S": ["Abandoned Carts"]
-        },
-        "A5": {
-          "S": ["Revenue"]
-        },
-        "B1": {
-          "S": ["Current"]
-        },
+        "A2": "=_t(\"Carts\")",
+        "A3": "=_t(\"Orders\")",
+        "A4": "=_t(\"Abandoned Carts\")",
+        "A5": "=_t(\"Revenue\")",
+        "B1": "=_t(\"Current\")",
         "B2": "=B3+B4",
         "B3": "=PIVOT.VALUE(7,\"order_reference\")",
         "B4": "=PIVOT.VALUE(2,\"order_reference\",\"is_abandoned_cart\",\"true\")",
