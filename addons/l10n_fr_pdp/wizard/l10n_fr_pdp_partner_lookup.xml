@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_l10n_fr_pdp_partner_lookup_form" model="ir.ui.view">
+        <field name="name">l10n_fr_pdp.partner.lookup.form</field>
+        <field name="model">l10n_fr_pdp.partner.lookup</field>
+        <field name="arch" type="xml">
+            <form string="PDP Partner Lookup">
+                <sheet>
+                    <group>
+                        <field name="selected_line_id" required="True"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button string="Save" name="action_change_pdp_endpoint" type="object" class="btn btn-primary"/>
+                    <button string="Close" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_l10n_fr_pdp_annuaire_line_tree" model="ir.ui.view">
+        <field name="name">l10n_fr_pdp.annuaire.line.tree</field>
+        <field name="model">l10n_fr_pdp.annuaire.line</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="identifier"/>
+                <field name="platform_id"/>
+                <field name="nature"/>
+            </list>
+        </field>
+    </record>
+</odoo>
