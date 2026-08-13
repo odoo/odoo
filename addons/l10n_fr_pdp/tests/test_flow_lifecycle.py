@@ -1188,7 +1188,7 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
         )
         initial_flow = invoice.l10n_fr_pdp_last_flow_id
 
-        invoice.with_context(l10n_fr_pdp_bypass_draft_check=True).button_draft()
+        invoice.button_draft()
         invoice.invoice_line_ids.price_unit = 150.0
         invoice.action_post()
         invoice.is_move_sent = True
@@ -1643,7 +1643,7 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
         )
         flow = kept_invoice.l10n_fr_pdp_last_flow_id
 
-        draft_invoice.with_context(l10n_fr_pdp_bypass_draft_check=True).button_draft()
+        draft_invoice.button_draft()
         cancelled_invoice.button_cancel()
         self._refresh_pdp_fields(draft_invoice | cancelled_invoice)
         xml = self._build_flow_xml(flow)
