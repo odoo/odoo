@@ -1315,6 +1315,17 @@ class AccountMove(models.Model):
                 ),
             )
 
+        # ---- Extracted grand total (persisted for variance/review) ----
+        # The balance check above verified the line items; this is the total
+        # the draft bill carries as ``ai_extracted_total``. Falls back to the
+        # balance target when the model omitted the plain grand total
+        # (subtotal-only layouts) — that value already passed the line-sum
+        # guard, so it is safe to persist.
+        amount_total = payload.get("amount_total")
+        if amount_total is None:
+            amount_total = balance_target
+        amount_total = float(amount_total)
+
         # ---- Resolve the vendor: VAT first, then fuzzy name, else empty ----
         partner = self.env["res.partner"]
         if extraction.vendor_vat:
