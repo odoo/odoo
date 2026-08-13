@@ -59,6 +59,7 @@ export async function waitForOdooSources(model) {
  * @returns {Promise<void>}
  */
 export async function waitForDataLoaded(model) {
+    await model.getters.loadUsedGeoJsonFeatures();
     await waitForOdooSources(model);
     const odooDataProvider = model.config.custom.odooDataProvider;
     if (!odooDataProvider) {
