@@ -69,8 +69,8 @@ class TestImage(TransactionCase):
 
         # Create an animated GIF with an adaptive color palette to preserve frames during processing
         gif_stream = io.BytesIO()
-        gif_f1 = Image.new("RGB", (200, 200), color="red").convert("P", palette=Image.Palette.ADAPTIVE)
-        gif_f2 = Image.new("RGB", (200, 200), color="blue").convert("P", palette=Image.Palette.ADAPTIVE)
+        gif_f1 = Image.new("RGB", (200, 200), color="red").convert("P", palette=Image.ADAPTIVE)
+        gif_f2 = Image.new("RGB", (200, 200), color="blue").convert("P", palette=Image.ADAPTIVE)
         gif_f1.save(gif_stream, format="GIF", save_all=True, append_images=[gif_f2], duration=100, loop=0)
         self.img_animated_gif = gif_stream.getvalue()
 
