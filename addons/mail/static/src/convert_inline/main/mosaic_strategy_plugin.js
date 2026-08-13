@@ -69,6 +69,7 @@ export class MosaicStrategyPlugin extends Plugin {
     // TODO EGGMAIL: while skipping nodes, we may loose background color
     // or border info or outside-paddings think of a way to recover them
     extractTableInfo(emailNode) {
+        // 1) Determine the table matrix in which children (cells) fit (mosaic)
         const rectToEmailNode = new Map();
         for (const childEmailNode of emailNode.children) {
             const node = childEmailNode.firstReferenceNode;
@@ -107,6 +108,7 @@ export class MosaicStrategyPlugin extends Plugin {
                 .concat([containerRect.top, containerRect.bottom])
                 .sort((a, b) => a - b)
         );
+        // 2) Compute metrics useful to build the html table
         let ratio = 100;
         const heights = ys.reduce((heights, y, i) => {
             if (i === 0) {
@@ -141,6 +143,7 @@ export class MosaicStrategyPlugin extends Plugin {
             }
             return result;
         };
+        // 3) Define cells characteristics for the html table
         const columnCount = xs.length - 1;
         const rowCount = ys.length - 1;
         const cells = rects.map((rect) => {
@@ -159,6 +162,9 @@ export class MosaicStrategyPlugin extends Plugin {
                 ...getWidth(col, colspan),
             };
         });
+        // 4) Build the occupancy matrix, and compute spacer cells that will
+        //   fill up the table. Aggregate spacers cells vertically whenever
+        //   possible.
         const rows = new Set(Array.from({ length: rowCount }, (_, i) => i));
         const rowsWithHeight = new Map();
         const occupied = Array.from({ length: rowCount }, () => Array(columnCount).fill(null));
@@ -172,7 +178,6 @@ export class MosaicStrategyPlugin extends Plugin {
                 }
             }
         }
-
         const spacerCells = new Set();
         for (let col = 0; col < columnCount; col++) {
             let cell;
@@ -193,6 +198,11 @@ export class MosaicStrategyPlugin extends Plugin {
                 }
             }
         }
+        // 5) Determine which spacers are necessary and sufficient to define
+        //   the height of unspecified rows. Some rowspan may still have an
+        //   unspecified height after this. TODO EGGMAIL: un-aggregate some
+        //   spacers to define a spacer with specific height for problematic
+        //   rowspan if the current implementation fails in some relevant cases.
         const canDefineRow = (cell, row) => {
             for (let r = cell.row; r < cell.row + cell.rowspan; r++) {
                 if (r !== row && !rowsWithHeight.has(r)) {
@@ -222,7 +232,7 @@ export class MosaicStrategyPlugin extends Plugin {
             }
         } while (
             rowsWithoutHeight.size > 0 &&
-            (rowsWithoutHeight.size !== lastSize || rowspan + 1 <= rowCount)
+            (rowsWithoutHeight.size !== lastSize || rowspan < rowCount)
         );
         // Remove all unnecessary heights on spacers (a spacer that does not
         // define the height of a rowspan should not have a set height)
