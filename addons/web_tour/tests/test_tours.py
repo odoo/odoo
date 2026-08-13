@@ -85,7 +85,7 @@ class WebTourHttp(HttpCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.eager_files = ["/web_tour/static/src/js/tour_automatic/tour_helpers.js"]
+        cls.eager_files = ["/web_tour/static/src/js/tour_helpers/tour_helpers.js"]
 
     def test_sanity_automatic(self):
         ResUsers = self.env["res.users"]
