@@ -41,6 +41,9 @@ class SlideChannelPartner(models.Model):
         'The completion of a channel is a percentage and should be between 0% and 100.',
     )
 
+    def get_base_url(self):
+        return self.channel_id.get_base_url()
+
     @api.depends('channel_id', 'partner_id')
     def _compute_invitation_link(self):
         ''' This sets the url used as hyperlink in the channel invitation email in template mail_notification_channel_invite.
