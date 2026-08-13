@@ -492,6 +492,9 @@ class EventTrack(models.Model):
     # MIXINS
     # ------------------------------------------------------------
 
+    def get_base_url(self):
+        return self.event_id.get_base_url()
+
     @api.model
     def _search_get_detail(self, website, order, options):
         event_id = self.env['ir.http']._unslug(options['event'])[1]
