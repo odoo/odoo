@@ -78,7 +78,7 @@ registry.category("web_tour.tours").add("PosHrTour", {
             TicketScreen.nthRowContains(2, "Pos Employee1", false),
 
             // Cash in/out should be accessible for all users.
-            Chrome.clickMenuOption("Cash In/Out"),
+            Chrome.doCashMove("50", "Test cash out"),
             Dialog.discard(),
 
             // order for admin

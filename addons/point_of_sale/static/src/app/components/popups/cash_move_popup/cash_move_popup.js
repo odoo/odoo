@@ -70,7 +70,7 @@ export class CashMovePopup extends Component {
             "pos.session",
             "try_cash_in_out",
             this._prepareTryCashInOutPayload(type, amount, reason, this.partnerId),
-            {},
+            this._getCashInOutExtraParams(),
             true
         );
         await this.pos.logEmployeeMessage(
@@ -112,6 +112,9 @@ export class CashMovePopup extends Component {
     _prepareTryCashInOutPayload(type, amount, reason, partnerId) {
         return [[this.pos.session.id], type, amount, reason, partnerId];
     }
+    _getCashInOutExtraParams() {
+        return {};
+    }
     isValidCashMove() {
         return this.pos.isValidFloat(this.state.amount) && this.state.reason.trim() !== "";
     }
@@ -142,6 +145,10 @@ export class CashMovePopup extends Component {
         }
     }
     handleAmountBlur() {
-        this.state.amount = this.pos.formatCurrency(parseFloat(this.state.amount));
+        this.state.amount = this.pos.formatCurrency(
+            parseFloat(this.state.amount),
+            this.pos.config.currency_id.id,
+            { noSymbol: true }
+        );
     }
 }
