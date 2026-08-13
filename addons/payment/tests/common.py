@@ -105,7 +105,8 @@ class PaymentCommon(BaseCommon):
         super().setUp()
         PaymentTransaction = self.registry["payment.transaction"]
         self.process_mock = self.post_process_mock = None
-        self._process_patcher = self._post_process_patcher = None
+        self._process_patcher = None
+        self._post_process_patchers = []
         if self.enable_process_patcher:
             # Skip the processing business logic
             self._process_patcher = patch.object(PaymentTransaction, "_process", autospec=True)
@@ -115,15 +116,15 @@ class PaymentCommon(BaseCommon):
             # Skip the post-processing business logic (e.g., account payment generation).
             # Transactions are still flagged as post-processed so users can be redirected from
             # /payment/status to the landing page.
-            self._post_process_patcher = patch.object(
-                PaymentTransaction,
-                "_post_process",
-                autospec=True,
-                side_effect=lambda txs: txs.with_context(payment_safe_write=True).write({
-                    "is_post_processed": True
-                }),
-            )
-            self.post_process_mock = self._post_process_patcher.start()
+            for hook_name in (
+                "_finalize_draft_transactions",
+                "_finalize_cancel_transactions",
+                "_finalize_error_transactions",
+                "_finalize_done_transactions",
+            ):
+                patcher = patch.object(PaymentTransaction, hook_name, autospec=True)
+                self.post_process_mock = patcher.start()
+                self._post_process_patchers.append(patcher)
             self.addCleanup(self._disable_post_process_patcher)
 
     def _disable_process_patcher(self):
@@ -134,9 +135,29 @@ class PaymentCommon(BaseCommon):
 
     def _disable_post_process_patcher(self):
         """Restore the real `_post_process` to test its business logic."""
-        if self._post_process_patcher:
-            self._post_process_patcher.stop()
-            self._post_process_patcher = None
+        for patcher in self._post_process_patchers:
+            patcher.stop()
+        self._post_process_patchers = []
+
+    def _patch_account_payment_post_process(self):
+        """Patch only the account payment generation part of the post-processing hooks.
+
+        Call `_disable_post_process_patcher()` first to re-enable the whole post-processing chain,
+        then skip only the account payment generation.
+        """
+        for hook_name in (
+            "_finalize_draft_transactions",
+            "_finalize_cancel_transactions",
+            "_finalize_error_transactions",
+            "_finalize_done_transactions",
+        ):
+            self.post_process_mock = self.startPatcher(
+                patch(
+                    "odoo.addons.account_payment.models.payment_transaction.PaymentTransaction."
+                    + hook_name,
+                    autospec=True,
+                )
+            )
 
     # === Utils ===#
 
@@ -288,11 +309,13 @@ class PaymentCommon(BaseCommon):
         """
         self._run_cron_job("payment.processing_cron")
 
-    def _run_post_processing(self):
+    def _run_post_processing(self, tx=None):
         """Run the post-processing of all transactions that have not been post-processed yet.
 
         By running the post-processing through the cron, this method bypasses the write guard.
 
+        :param recordset tx: Optional transactions expected to be post-processed by this run;
+            unused, as the cron always processes every pending transaction regardless.
         :rtype: None
         """
         self._run_cron_job("payment.post_processing_cron")
