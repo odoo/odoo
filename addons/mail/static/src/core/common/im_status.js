@@ -19,7 +19,7 @@ imStatusDataRegistry.add(
             offline: "circle",
             default: "help",
         },
-        icon_class: {
+        iconClass: {
             online: "oi-filled",
             away: "",
             busy: "",
@@ -42,7 +42,7 @@ imStatusDataRegistry.add(
     {
         condition: ({ persona }) => persona?.isBot,
         icon: "favorite",
-        icon_class: "oi-filled o-pt-0_5",
+        iconClass: "oi-filled o-pt-0_5",
         title: _t("User is a bot"),
     },
     { sequence: 90 }
@@ -107,9 +107,7 @@ export class ImStatus extends Component {
 
     get iconClass() {
         const data = this.activeImStatusData;
-        return (
-            data.icon_class[this.persona.imStatusUI] || data.icon_class.default || data.icon_class
-        );
+        return data.iconClass[this.persona.imStatusUI] || data.iconClass.default || data.iconClass;
     }
 
     get title() {

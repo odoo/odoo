@@ -32,7 +32,7 @@ export class GroupConfigMenu extends Component {
             label: desc.label,
             class: typeof desc.class === "function" ? desc.class(args) : desc.class,
             icon: desc.icon,
-            icon_class: desc.icon_class,
+            iconClass: desc.iconClass,
             isVisible: typeof desc.isVisible === "function" ? desc.isVisible(args) : desc.isVisible,
             method: typeof desc.method === "function" ? desc.method : this[desc.method].bind(this),
         }));
@@ -92,7 +92,7 @@ groupConfigItems.add(
         isVisible: ({ permissions }) => permissions.canEditGroup,
         class: "o_group_edit",
         icon: "edit",
-        icon_class: "oi-filled",
+        iconClass: "oi-filled",
         method: "editGroup",
     },
     { sequence: 20 }
@@ -104,7 +104,7 @@ groupConfigItems.add(
         isVisible: ({ permissions }) => permissions.canDeleteGroup,
         class: "o_group_delete text-danger",
         icon: "delete",
-        icon_class: "oi-filled",
+        iconClass: "oi-filled",
         method: "deleteGroup",
     },
     { sequence: 30 }

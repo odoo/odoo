@@ -7,7 +7,7 @@
                 <span>View Documentation</span>
             </t>
             <t t-else="">
-                <i t-if="this.props.icon" class="oi pe-1" t-att-class="this.props.icon_class" t-att-data-icon="this.props.icon"></i>
+                <i t-if="this.props.icon" class="oi pe-1" t-att-data-icon="this.props.icon"></i>
                 <span t-out="this.props.label"/>
             </t>
         </a>

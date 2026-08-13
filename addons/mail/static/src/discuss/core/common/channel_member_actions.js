@@ -27,7 +27,7 @@ export function registerChannelMemberAction(id, definition) {
 registerChannelMemberAction("set-admin", {
     condition: ({ member }) => member.canSetAdmin,
     icon: "star",
-    icon_class: "oi-filled text-primary",
+    iconClass: "oi-filled text-primary",
     name: _t("Set Admin"),
     onSelected: ({ member }) => member.setChannelRole("admin"),
     sequence: 10,
@@ -36,7 +36,7 @@ registerChannelMemberAction("set-admin", {
 registerChannelMemberAction("remove-admin", {
     condition: ({ member }) => member.canRemoveAdmin || member.canRemoveOwner,
     icon: "star",
-    icon_class: ({ member }) => (member.canRemoveOwner ? "text-primary" : "text-warning"),
+    iconClass: ({ member }) => (member.canRemoveOwner ? "text-primary" : "text-warning"),
     name: ({ member }) => (member.canRemoveOwner ? _t("Remove Owner") : _t("Remove Admin")),
     onSelected: ({ member }) => member.setChannelRole(false),
     sequence: 20,
@@ -45,7 +45,7 @@ registerChannelMemberAction("remove-admin", {
 registerChannelMemberAction("set-owner", {
     condition: ({ member }) => member.canSetOwner,
     icon: "star",
-    icon_class: "oi-filled text-warning",
+    iconClass: "oi-filled text-warning",
     name: _t("Set Owner"),
     onSelected: ({ member }) => member.setChannelRole("owner"),
     sequence: 30,

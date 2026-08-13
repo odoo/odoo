@@ -10,7 +10,7 @@
                         <button t-foreach="item.buttons" t-as="button" t-key="button_index" t-att-style="`width: ${this.ui.isSmall ? '4rem' : '8rem'}`" class="btn btn-primary btn-lg lh-lg rounded-start-0 h-100" t-att-disabled="button.disabled()" t-on-click="() => button.click.call()">
                             <i
                                 class="oi"
-                                t-attf-class="{{button.status === 'loading' ? 'oi-fw oi-spin' : ''}} {{button.icon_class || ''}}"
+                                t-attf-class="{{button.status === 'loading' ? 'oi-fw oi-spin' : ''}} {{button.iconClass || ''}}"
                                 t-attf-data-icon="{{button.status === 'loading' ? 'autorenew' : button.icon}}"
                             />
                         </button>

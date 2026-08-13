@@ -41,7 +41,7 @@
                         <div class="paymentline_status_title d-flex justify-content-between align-items-center gap-2 py-3 px-4 fs-4" t-attf-class="paymentline_status_title_{{state.id}}">
                             <span class="text-truncate" t-out="state.title" />
                             <t t-if="state.icon">
-                                <i class="oi" t-att-class="state.icon_class" t-att-data-icon="state.icon" role="img" />
+                                <i class="oi" t-att-class="state.iconClass" t-att-data-icon="state.icon" role="img" />
                             </t>
                         </div>
                         <div t-if="state.id == 'waiting' and line.payment_method_id.payment_interface?.amountInserted != null"

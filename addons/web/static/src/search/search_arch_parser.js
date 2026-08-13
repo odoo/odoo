@@ -385,7 +385,7 @@ export class SearchArchParser {
                 expand: evaluateBooleanExpr(attrs.expand),
                 fieldName: attrs.name,
                 icon: attrs.icon || null,
-                icon_class: attrs.icon_class || null,
+                iconClass: attrs.icon_class || null,
                 id: nextSectionId++,
                 limit: evaluateExpr(attrs.limit || String(DEFAULT_LIMIT)),
                 type,
@@ -394,7 +394,7 @@ export class SearchArchParser {
             if (type === "category") {
                 section.activeValueId = this.searchPanelDefaults[attrs.name];
                 section.icon = section.icon || "folder";
-                section.icon_class = section.icon_class || "oi-filled";
+                section.iconClass = section.iconClass || "oi-filled";
                 section.hierarchize = evaluateBooleanExpr(attrs.hierarchize || "1");
                 section.depth = attrs.depth ? parseInt(attrs.depth) : 0;
                 section.values.set(false, {
@@ -409,7 +409,7 @@ export class SearchArchParser {
                 section.domain = attrs.domain || "[]";
                 section.groupBy = attrs.groupby || null;
                 section.icon = section.icon || "filter_alt";
-                section.icon_class = section.icon_class || "oi-filled";
+                section.iconClass = section.iconClass || "oi-filled";
                 hasFilterWithDomain = hasFilterWithDomain || section.domain !== "[]";
             }
             this.sections.push([section.id, section]);

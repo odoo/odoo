@@ -9,6 +9,7 @@ export class NoteButton extends Component {
     static template = "point_of_sale.NoteButton";
     props = useProps({
         icon: t.string().optional(),
+        iconClass: t.string().optional(""),
         label: t.string(),
         class: t.string().optional(),
     });

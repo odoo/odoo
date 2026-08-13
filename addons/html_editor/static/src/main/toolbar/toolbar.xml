@@ -27,7 +27,7 @@
                             >
                                 <t t-if="button.icon">
                                     <t t-if="button.icon.includes('.')" t-call="{{ button.icon }}"/>
-                                    <span t-else="" t-attf-class="oi oi-fw {{button.icon_class || ''}}" t-att-data-icon="button.icon"/>
+                                    <span t-else="" t-attf-class="oi oi-fw {{button.iconClass || ''}}" t-att-data-icon="button.icon"/>
                                 </t>
                                 <span t-if="button.text" t-out="button.text"/>
                             </button>

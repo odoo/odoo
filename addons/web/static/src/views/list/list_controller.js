@@ -486,7 +486,7 @@ export class ListController extends Component {
                 availableOffline: true,
                 sequence: 50,
                 icon: "delete",
-                icon_class: "oi-filled",
+                iconClass: "oi-filled",
                 description: _t("Delete"),
                 class: "text-danger",
                 callback: () => this.onDeleteSelectedRecords(),

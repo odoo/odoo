@@ -13,7 +13,7 @@ export const inputProps = {
     isSmall: t.boolean().optional(false),
     debounceMillis: t.number().optional(0),
     icon: t.string().optional(),
-    icon_class: t.string().optional(),
+    iconClass: t.string().optional(),
     getRef: t.function().optional(),
     autofocus: t.boolean().optional(false),
     autofocusMobile: t.boolean().optional(false),

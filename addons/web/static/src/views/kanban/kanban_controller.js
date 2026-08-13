@@ -409,7 +409,7 @@ export class KanbanController extends Component {
                 isAvailable: () => this.props.archInfo.activeActions.delete,
                 sequence: 50,
                 icon: "delete",
-                icon_class: "oi-filled",
+                iconClass: "oi-filled",
                 description: _t("Delete"),
                 class: "text-danger",
                 callback: () =>

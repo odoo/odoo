@@ -12,7 +12,7 @@
             persona="this.store.odoobot"
             hasMarkAsReadButton="!this.ui.isSmall"
             onClick="(isMarkAsRead, isMiddleClick) => isMarkAsRead ? this.cancelNotifications(failure) : this.onClickFailure(failure, {isMiddleClick})"
-            onSwipeRight="this.hasTouch() ? { action: () => this.cancelNotifications(failure), icon: 'cancel', 'icon_class': 'oi-filled', bgColor: 'bg-warning' } : undefined"
+            onSwipeRight="this.hasTouch() ? { action: () => this.cancelNotifications(failure), icon: 'cancel', 'iconClass': 'oi-filled', bgColor: 'bg-warning' } : undefined"
         >
             <t t-set-slot="body" t-out="failure.body"/>
             <t t-set-slot="name"><t t-out="this.getFailureNotificationName(failure)"/></t>

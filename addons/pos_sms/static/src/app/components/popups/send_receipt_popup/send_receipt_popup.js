@@ -19,7 +19,7 @@ patch(SendReceiptPopup.prototype, {
                 click: () => this.actionSendReceiptOnSMS(),
                 status: this.sendReceipt.lastArgs?.[0]?.name == "SMS" && this.sendReceipt.status,
                 icon: "smartphone",
-                icon_class: "oi-lg",
+                iconClass: "oi-lg",
                 disabled: () => !this.isValidPhone,
             });
         }

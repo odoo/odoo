@@ -138,8 +138,8 @@ export class Homepage extends Component {
                         Please connect your IoT Box to internet via an Ethernet cable or via Wi-Fi by clicking on "Configure" below
                     </small>
                 </div>
-                <SingleData name="'Identifier'" value="this.store.base().identifier" icon="'contact_mail'" icon_class="'oi-filled'" />
-                <SingleData t-if="this.store.advanced()" name="'Mac Address'" value="this.store.base().mac_address" icon="'contact_page'" icon_class="'oi-filled'" />
+                <SingleData name="'Identifier'" value="this.store.base().identifier" icon="'contact_mail'" iconClass="'oi-filled'" />
+                <SingleData t-if="this.store.advanced()" name="'Mac Address'" value="this.store.base().mac_address" icon="'contact_page'" iconClass="'oi-filled'" />
                 <SingleData t-if="this.store.advanced()" name="'Version'" value="this.store.base().version" icon="'memory'">
                     <t t-set-slot="button">
                         <UpdateDialog />

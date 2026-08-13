@@ -117,7 +117,7 @@
                 </button>
                 <t t-set-slot="content">
                     <DropdownItem t-foreach="this.props.actions" t-as="action" t-key="action_index" class="'px-2 py-1 d-flex align-items-center rounded-0'" onSelected="action.onSelect">
-                        <i class="oi oi-fw" t-att-data-icon="action.icon" t-att-class="action.icon_class"/>
+                        <i class="oi oi-fw" t-att-data-icon="action.icon" t-att-class="action.iconClass"/>
                         <span class="mx-2" t-out="action.label"/>
                     </DropdownItem>
                 </t>

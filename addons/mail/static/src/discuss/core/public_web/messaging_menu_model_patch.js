@@ -28,7 +28,7 @@ const messagingMenuPatch = {
                         ["chat", "group"].includes(c.channel_type) &&
                         !c.isMeetingOrMeetingChild,
                     icon: "group",
-                    icon_class: "oi-filled",
+                    iconClass: "oi-filled",
                     sequence: 15,
                     label: _t("Chats"),
                     emptyState: {
@@ -121,7 +121,7 @@ const messagingMenuPatch = {
                         c.self_member_id?.is_pinned &&
                         c.isMeetingOrMeetingChild,
                     icon: "videocam",
-                    icon_class: "oi-filled",
+                    iconClass: "oi-filled",
                     sequence: 45,
                     label: _t("Meetings"),
                     emptyState: {

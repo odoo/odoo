@@ -36,7 +36,7 @@ export const viewButtonProps = {
     context: t.any().optional(),
     clickParams: t.any().optional({}),
     icon: t.any().optional(),
-    icon_class: t.any().optional(),
+    iconClass: t.any().optional(),
     defaultRank: t.any().optional(),
     disabled: t.any().optional(),
     size: t.any().optional(),

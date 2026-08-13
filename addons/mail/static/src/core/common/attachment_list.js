@@ -153,7 +153,7 @@ export class AttachmentList extends Component {
             res.push({
                 label: _t("Remove"),
                 icon: "delete",
-                icon_class: "oi-filled",
+                iconClass: "oi-filled",
                 onSelect: () => this.onClickUnlink(attachment),
             });
         }

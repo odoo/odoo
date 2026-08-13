@@ -19,7 +19,7 @@ import { debounce } from "@web/core/utils/timing";
  * @property {Object} [commandParams]
  * @property {string} [description] Can be inferred from the user command
  * @property {string} [icon] Can be inferred from the user command
- * @property {string} [icon_class] Can be inferred from the user command
+ * @property {string} [iconClass] Can be inferred from the user command
  * @property {string} [text] Mandatory if `icon` is not provided
  * @property {string} [isAvailable] Can be inferred from the user command
  */
@@ -92,7 +92,7 @@ export class PowerButtonsPlugin extends Plugin {
         const composePowerButton = (/**@type {PowerButton} */ item) => {
             const command = this.dependencies.userCommand.getCommand(item.commandId);
             return {
-                ...pick(command, "description", "icon", "icon_class"),
+                ...pick(command, "description", "icon", "iconClass"),
                 ...omit(item, "commandId", "commandParams"),
                 run: () => command.run(item.commandParams),
                 isAvailable: (selection) =>
@@ -101,11 +101,11 @@ export class PowerButtonsPlugin extends Plugin {
                         .every((predicate) => predicate(selection)),
             };
         };
-        const renderButton = ({ description, icon, icon_class, text, run }) => {
+        const renderButton = ({ description, icon, iconClass, text, run }) => {
             const btn = this.dependencies.localOverlay.createElement("button");
             let className = "power_button btn px-2 py-1 cursor-pointer";
             if (icon) {
-                className += ` oi ${icon_class ? icon_class : ""}`;
+                className += ` oi ${iconClass ?? ""}`;
                 btn.dataset.icon = icon;
             } else {
                 const span = this.document.createElement("span");

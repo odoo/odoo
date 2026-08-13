@@ -42,7 +42,7 @@ export class BannerPlugin extends Plugin {
                 title: _t("Banner Success"),
                 description: _t("Insert a success banner"),
                 icon: "check_circle",
-                icon_class: "oi-filled",
+                iconClass: "oi-filled",
                 isAvailable: (selection) =>
                     this.checkPredicates(
                         "is_banner_command_available_predicates",

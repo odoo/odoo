@@ -18,6 +18,8 @@ import { toStringExpression, BUTTON_CLICK_PARAMS } from "./utils";
 import { xml } from "@odoo/owl";
 
 const BUTTON_STRING_PROPS = ["string", "size", "title", "icon", "icon_class", "id", "disabled"];
+// arch attribute name -> ViewButton prop name, when they differ
+const BUTTON_STRING_PROP_NAMES = { icon_class: "iconClass" };
 const INTERP_REGEXP = /(\{\{|#\{)(.*?)(\}{1,2})/g;
 
 /**
@@ -338,7 +340,10 @@ export class ViewCompiler {
             if (BUTTON_CLICK_PARAMS.includes(name)) {
                 clickParams[name] = value;
             } else if (BUTTON_STRING_PROPS.includes(name)) {
-                button.setAttribute(name, toStringExpression(value));
+                button.setAttribute(
+                    BUTTON_STRING_PROP_NAMES[name] || name,
+                    toStringExpression(value)
+                );
             } else if (!name.startsWith("t-")) {
                 attrs[name] = value;
             }
