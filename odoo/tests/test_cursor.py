@@ -93,11 +93,6 @@ class TestCursor(Cursor):
             self._cnx._cursor.sql_log_count += self.sql_log_count  # propagate stats to the main cursor
             self._lock.release()
 
-    def commit(self) -> None:
-        """ Perform an SQL `COMMIT` """
-        self.precommit.add(self.postcommit.clear)  # ignore post-commit hooks
-        super().commit()
-
     def rollback(self) -> None:
         super().rollback()
         # rollback again to release the savepoint that may be created during

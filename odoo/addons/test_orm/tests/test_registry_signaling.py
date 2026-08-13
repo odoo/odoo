@@ -558,10 +558,10 @@ class TestCursorHooks(common.TransactionCase):
 
         cr = self.registry.cursor()
 
-        # check hook on commit(); post-commit hooks are ignored
+        # check hook on commit()
         self.prepare_hooks(cr)
         cr.commit()
-        self.assertEqual(self.log, ['preC'])
+        self.assertEqual(self.log, ['preC', 'postC'])
 
         # check hook on flush(), then on rollback()
         self.prepare_hooks(cr)

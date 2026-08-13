@@ -581,6 +581,9 @@ class Cursor(_CursorProtocol):
         try:
             self.postrollback.run()
         except Exception:
+            if self.closed:
+                _logger.exception("Error during postrollback execution, cursor closed")
+                return
             _logger.exception("Error during postrollback execution, rollback again")
             # make sure there are no more hooks and retry
             self.prerollback.clear()
