@@ -31,3 +31,10 @@ class IrAttachment(models.Model):
 
     def _set_voice_metadata(self):
         self.env["discuss.voice.metadata"].create([{"attachment_id": att.id} for att in self])
+
+    def _get_preview_symbol_and_name(self):
+        self.ensure_one()
+        # sudo: discuss.voice.metadata - only reading whether the attachment is a voice message
+        if self.sudo().voice_ids:
+            return "🎤", self.env._("Voice Message")
+        return super()._get_preview_symbol_and_name()

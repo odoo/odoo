@@ -129,3 +129,10 @@ class IrAttachment(models.Model):
     def _get_thumbnail_token(self):
         self.ensure_one()
         return limited_field_access_token(self, "thumbnail", scope="binary")
+
+    def _get_preview_symbol_and_name(self):
+        self.ensure_one()
+        # Use emoji rather than pictographic symbols (e.g. U+1F5BB, U+1F5B9): the
+        # latter have no emoji presentation and could render as tofu on some OSes.
+        symbols = {"audio": "🎵", "image": "📷", "video": "🎥"}
+        return symbols.get(self.mimetype.partition("/")[0], "📄"), self.name

@@ -564,23 +564,27 @@ export class Message extends Record {
         return markup`<i class="oi me-1" data-icon="${this.previewIcon}"></i>${messageBody}`;
     });
 
-    previewText = this.computed(() => {
-        const messageBody = this.bodyPreview;
-        if (this.isSelfAuthored) {
-            return markup`<i class="oi me-1 opacity-75" data-icon="reply"></i>${_t(
-                "You: %(message_content)s",
-                { message_content: messageBody }
-            )}`;
-        }
+    _prefixWithAuthor(body) {
         if (!this.author || this.author.notEq(this.thread?.channel?.correspondent?.persona)) {
             return _t("%(authorName)s: %(message_content)s", {
                 authorName: this.authorName,
-                message_content: messageBody,
+                message_content: body,
             });
         }
-        return messageBody;
+        return body;
+    }
+
+    previewText = this.computed(() => {
+        if (this.isSelfAuthored) {
+            return markup`<i class="oi me-1 opacity-75" data-icon="reply"></i>${_t(
+                "You: %(message_content)s",
+                { message_content: this.bodyPreview }
+            )}`;
+        }
+        return this._prefixWithAuthor(this.bodyPreview);
     });
 
+    /** Material icon name for in-app previews (chatter, discuss, systray). */
     get previewIcon() {
         const { attachment_ids: attachments } = this;
         if (!this.hasAttachments) {
@@ -596,6 +600,31 @@ export class Message extends Record {
                 return "videocam";
             default:
                 return "description";
+        }
+    }
+
+    /**
+     * Unicode symbol for OS-level browser notifications (which render plain text only).
+     * Emoji are used rather than pictographic symbols (e.g. U+1F5BB, U+1F5B9): the
+     * latter have no emoji presentation and could render as tofu on some OSes.
+     */
+    get previewSymbol() {
+        const { attachment_ids: attachments } = this;
+        if (!this.hasAttachments) {
+            return "";
+        }
+        const firstAttachment = attachments[0];
+        switch (true) {
+            case firstAttachment.voice:
+                return "🎤";
+            case firstAttachment.isImage:
+                return "📷";
+            case firstAttachment.isVideo:
+                return "🎥";
+            case firstAttachment.isAudio:
+                return "🎵";
+            default:
+                return "📄";
         }
     }
 
