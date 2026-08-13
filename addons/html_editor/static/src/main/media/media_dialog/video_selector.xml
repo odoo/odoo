@@ -22,6 +22,17 @@
         allowfullscreen="allowfullscreen" frameborder="0"/>
 </t>
 
+<t t-name="html_editor.VideoFilePreview">
+    <video t-ref="this.videoRef" t-att-src="this.props.src"
+        class="o_video_dialog_iframe mw-100 mh-100 overflow-hidden shadow"
+        width="1280" height="720"
+        t-att-controls="!this.props.options?.hideControls"
+        t-att-loop="this.props.options?.loop"
+        t-att-autoplay="this.props.options?.autoplay"
+        t-att-muted="this.props.options?.muted"
+        preload="metadata" playsinline=""/>
+</t>
+
 <t t-name="html_editor.VideoSelector">
     <div class="row mx-0">
         <div class="col mt-4 o_video_dialog_form">
@@ -30,9 +41,9 @@
                     <b>Video code </b>(URL or Embed)
                 </label>
                 <div class="text-start">
-                    <small class="text-muted">Accepts <b><i>Youtube</i></b>, <b><i>Vimeo</i></b>, <b><i>Dailymotion</i></b>, <b><i>Facebook</i></b>, <b><i>Instagram</i></b>, <b><i>Google Drive</i></b>, <b><i>Twitch</i></b> and <b><i>Loom</i></b> videos</small>
+                    <small class="text-muted">Accepts <b><i>Youtube</i></b>, <b><i>Vimeo</i></b>, <b><i>Dailymotion</i></b>, <b><i>Facebook</i></b>, <b><i>Instagram</i></b>, <b><i>Google Drive</i></b>, <b><i>Twitch</i></b> and <b><i>Loom</i></b> videos<t t-if="this.props.allowVideoFile">, as well as a direct link to a video file</t></small>
                 </div>
-                <textarea t-ref="this.urlInputRef" t-model.proxy="this.state.urlInput" class="form-control" id="o_video_text" placeholder="Copy-paste your URL or embed code here" t-on-input="this.onChangeUrl" t-att-class="{ 'is-valid': this.state.urlInput and !this.state.errorMessage, 'is-invalid': this.state.urlInput and this.state.errorMessage }"/>
+                <textarea t-ref="this.urlInputRef" t-model.proxy="this.state.urlInput" class="form-control" id="o_video_text" placeholder="Copy-paste your URL or embed code here" t-on-input="this.onChangeUrl" t-att-class="{ 'is-valid': this.state.urlInput and !this.state.errorMessage and !this.state.isValidatingUrl, 'is-invalid': this.state.urlInput and this.state.errorMessage }"/>
             </div>
             <div t-if="this.visibleVideoOptions.length" class="o_video_dialog_options">
                 <VideoOption t-foreach="this.visibleVideoOptions" t-as="option" t-key="option.id"
@@ -48,7 +59,7 @@
                 <span class="fw-bold">Suggestions</span>
                 <div id="video-suggestion" class="mt-4 d-flex flex-wrap mh-75 overflow-auto">
                     <t t-foreach="this.state.vimeoPreviews" t-as="vimeoPreview" t-key="vimeoPreview.id">
-                        <div class="o_sample_video w-25 mh-100 cursor-pointer" t-on-click="() => this.onClickSuggestion(vimeoPreview.src)">
+                        <div class="o_sample_video w-25 mh-100 cursor-pointer" t-on-click="() => this.setVideoUrl(vimeoPreview.src)">
                             <img class="mw-100 mh-100 p-1" t-att-src="vimeoPreview.thumbnailSrc"/>
                         </div>
                     </t>
@@ -57,12 +68,18 @@
         </div>
         <div class="col-md-6">
             <div class="o_video_preview position-relative border-0 p-3">
-                <div t-if="this.state.src and !this.state.errorMessage" class="o_video_dialog_preview_text mb-2">Preview</div>
+                <div t-if="this.state.src and !this.state.errorMessage and !this.state.isValidatingUrl" class="o_video_dialog_preview_text mb-2">Preview</div>
                 <div class="media_iframe_video">
                     <div t-att-class="this.state.options?.isVertical?.isActive ? 'media_iframe_video_size_for_vertical' : 'media_iframe_video_size'"/>
-                    <VideoIframe
-                        t-if="this.state.src and !this.state.errorMessage"
-                        src="this.state.src"/>
+                    <div t-if="this.state.isValidatingUrl" class="o_video_dialog_loading position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center">
+                        <span class="spinner-border text-muted" role="status">
+                            <span class="visually-hidden">Checking the video…</span>
+                        </span>
+                    </div>
+                    <t t-elif="this.state.src and !this.state.errorMessage">
+                        <VideoFilePreview t-if="this.isVideoFile" src="this.state.src" options="this.state.previewOptions"/>
+                        <VideoIframe t-else="" src="this.state.src"/>
+                    </t>
                     <div t-if="this.state.errorMessage" class="alert alert-warning o_video_dialog_iframe mw-100 mh-100 mb-2 mt-2" t-out="this.state.errorMessage"/>
                 </div>
             </div>
