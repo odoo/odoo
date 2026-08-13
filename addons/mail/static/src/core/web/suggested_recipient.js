@@ -1,6 +1,7 @@
 import { Component } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
+import { uniqueId } from "@web/core/utils/functions";
 import { useService } from "@web/core/utils/hooks";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 
@@ -17,6 +18,7 @@ export class SuggestedRecipient extends Component {
 
     setup() {
         super.setup();
+        this.checkboxId = uniqueId("o-mail-SuggestedRecipient-checkbox-");
         this.dialogService = useService("dialog");
     }
 
