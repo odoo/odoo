@@ -5,25 +5,6 @@
             <t t-set="forced_vat" t-value="o.company_id.vat"/>
         </xpath>
 
-        <t name="invoice_title" position="replace">
-            <t name="invoice_title">VAT Invoice</t>
-        </t>
-        <t name="draft_invoice_title" position="replace">
-            <t name="draft_invoice_title">Draft VAT Invoice</t>
-        </t>
-        <t name="cancelled_invoice_title" position="replace">
-            <t name="cancelled_invoice_title">Cancelled VAT Invoice</t>
-        </t>
-        <t name="proforma_invoice_title" position="replace">
-            <t name="proforma_invoice_title">Proforma VAT Invoice</t>
-        </t>
-        <t name="draft_proforma_invoice_title" position="replace">
-            <t name="draft_proforma_invoice_title">Draft Proforma VAT Invoice</t>
-        </t>
-        <t name="cancelled_proforma_invoice_title" position="replace">
-            <t name="cancelled_proforma_invoice_title">Cancelled Proforma VAT Invoice</t>
-        </t>
-
         <xpath expr="//t[@name='address_not_same_as_shipping']" position="inside">
             <span t-out="o.partner_id._get_additional_identifier('MU_BRN')"/>
         </xpath>
