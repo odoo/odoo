@@ -1816,7 +1816,8 @@ test("filtered column is reloaded when dragging out its last record", async () =
     expect(getKanbanRecordTexts(0)).toEqual(["4blip", "1yop"]);
     expect(getKanbanColumnTooltips(1)).toEqual(["1 blip", "1 Other"]);
     expect(getKanbanRecordTexts(1)).toEqual(["2blip", "3gnap"]);
-    expect.verifySteps(["web_save", "read_progress_bar", "web_search_read", "web_resequence"]);
+    // the column reload goes through the model mutex, which the move holds until the end
+    expect.verifySteps(["web_save", "read_progress_bar", "web_resequence", "web_search_read"]);
 });
 
 test.tags("desktop");
