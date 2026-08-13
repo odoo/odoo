@@ -463,6 +463,9 @@ export class TableStrategyPlugin extends Plugin {
                 report.spacing = { ...report.spacing, marginRect: storedMarginRect };
                 const topDownConstraints = [];
                 let shouldPropagate = true;
+                if (analysis.facts.stopTableStrategyReportPropagation) {
+                    shouldPropagate = false;
+                }
                 if (analysis.facts.acceptTableOuterSpacing) {
                     shouldPropagate = false;
                     topDownConstraints.push(...tableStrategyReport.spacing.cleanup);

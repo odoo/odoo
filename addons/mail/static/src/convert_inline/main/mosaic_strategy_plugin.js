@@ -14,6 +14,7 @@ export class MosaicStrategyPlugin extends Plugin {
         "tableStrategy",
     ];
     resources = {
+        accept_table_strategy_report_overrides: this.acceptTableStrategyReport.bind(this),
         element_layout_analysis_processors: this.analyzeElementLayout.bind(this),
         synthetic_email_node_processors: (emailNode) => {
             if (!emailNode.analysis.facts.isMosaicContainer) {
@@ -23,6 +24,10 @@ export class MosaicStrategyPlugin extends Plugin {
             return this.fillMosaicContainer(emailNode, tableMeasures);
         },
     };
+
+    acceptTableStrategyReport(emailNode) {
+        return emailNode.analysis.facts.useMosaicStrategy;
+    }
 
     analyzeElementLayout(defaultEmailNodeArguments, { referenceNode, parentEmailNode }) {
         const { layout, analysis } = defaultEmailNodeArguments;
@@ -260,27 +265,38 @@ export class MosaicStrategyPlugin extends Plugin {
      * WORKING HERE
      * LIMITATIONS: border overlapping multiple cells is discarded in general
      *
-     * TODO EGGMAIL WORKING HERE
      * need strategy for:
      * overlapping borders:
-     * - draw them mirrored in the spacers around the cell | do not support rounded corners
+     * - (both) draw them mirrored in the spacers around the cell | do not support rounded corners
+     *   - overlapping borders providers => give border info and which emailNode should be wrapped
+     *   - detect spacers around the cell from that info and apply the rule => no constraint
+     *   - WHEN: between extract and filltable (before building emailNodes)
      *
      * borders:
-     * - bottom-up constraint to the cell (like table strategy)
+     * - (masonry) bottom-up constraint to the cell (like table strategy)
+     *   OR: direct extraction from the child => no constraint
+     *   WHEN: building a cell
+     * - (comparison) => no change
      *
      * overlapping background color:
-     * - identify every discarded background color
-     * - define a colspan/rowspan range, apply on every cell inside in multiple passes (with respect to opacity)
+     * - (both) identify every discarded background color
+     * - (both) define a colspan/rowspan range, apply on every cell inside in multiple passes (with respect to opacity)
+     *   WHEN: background-color provider => give background color and concerned cells, sorted by depth (for alpha compositing)
+     *   between extract and filltable (before building emailnodes) => assign a color to each cell
      *
      * background color:
-     * - masonry bottom-up constraint to the cell (like table strategy)
-     * - s_comparison
+     * - (masonry) bottom-up constraint to the cell (like table strategy)
+     *   OR: direct extraction from the child => no constraint
+     *   WHEN: building a cell
+     * - (comparison)
      *   - card body => up to the cell AND the card-footer
      *   - card footer => replace by color without alpha channel (computing ancestors)
+     *   WHEN between extract and fillTable (need provider of combo body/bottom, to apply on background color)
      *
      * vertical align:
-     * - masonry => middle for every cell, forced
-     * - s_comparison => top for card body, bottom for card footer
+     * - (masonry) => middle for every cell, forced -> direct
+     * - (comparison) => top for card body, bottom for card footer
+     *   Need provider for bottom and body, or they should have it as a fact
      *
      */
     fillMosaicContainer(emailNode, tableMeasures) {
@@ -378,6 +394,10 @@ export class MosaicStrategyPlugin extends Plugin {
         analysis.facts.isCell = true;
         analysis.facts.useMosaicStrategy = true;
         const layout = new CellLayout({ refs });
+        // WORKING HERE: refine analysis completion
+        emailNode.analysis.facts.stopTableStrategyReportPropagation = true;
+        analysis.facts.stopTableStrategyReportPropagation = true;
+        analysis.facts.acceptDescendantBorder;
         const cellEmailNode = new EmailNode({ layout, analysis });
         cellEmailNode.appendChild(emailNode);
         this.attemptCellMerge(cellEmailNode, emailNode);
