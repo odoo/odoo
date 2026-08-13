@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<odoo><data noupdate="1">
+
+    <record id="sms_template_data_event_registration" model="sms.template">
+        <field name="name">Event: Registration</field>
+        <field name="model_id" ref="event.model_event_registration"/>
+        <field name="body">{{ object.event_id.organizer_id.name or object.event_id.company_id.name or user.env.company.name }}: We are happy to confirm your registration for the {{ object.event_id.name }} event.</field>
+        <field name="lang">{{ object.partner_id.lang }}</field>
+    </record>
+
+    <record id="sms_template_data_event_reminder" model="sms.template">
+        <field name="name">Event: Reminder</field>
+        <field name="model_id" ref="event.model_event_registration"/>
+        <field name="body">Ready for "{{ object.event_id.name }}" {{ object.event_date_range }}?
+{{ 'It starts at %s' % format_time(time=object.event_begin_date, tz=object.event_id.date_tz, time_format='short', lang_code=object.partner_id.lang) + (', at %s' % object.event_id.address_inline if object.event_id.address_inline else '') + '.\nSee you there!' if object.event_id.address_inline or 'website_published' not in object.event_id._fields else 'Join us on %s/event/%i!' % (object.get_base_url(), object.event_id.id) }}</field>
+        <field name="lang">{{ object.partner_id.lang }}</field>
+    </record>
+
+</data></odoo>

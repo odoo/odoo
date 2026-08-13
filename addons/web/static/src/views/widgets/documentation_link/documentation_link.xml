@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="web.DocumentationLink">
+        <a t-att-href="url" title="Documentation" t-att-class="classes" target="_blank">
+            <t t-if="!props.icon and !props.label">
+                <i class="fa fa-external-link" aria-hidden="true"></i>
+                <span>View Documentation</span>
+            </t>
+            <t t-else="">
+                <i t-if="props.icon" t-att-class="'fa ' + props.icon"></i>
+                <span t-esc="props.label"/>
+            </t>
+        </a>
+    </t>
+</templates>

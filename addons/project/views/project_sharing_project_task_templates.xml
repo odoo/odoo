@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="project_sharing_portal" name="My Project">
+        <t t-call="portal.frontend_layout">
+            <t t-set="pageName" t-value="'o_project_sharing_container'"/>
+            <t t-set="no_footer" t-value="true"/>
+            <t t-call="project.project_sharing"/>
+        </t>
+    </template>
+
+    <template id="project_sharing" name="Project Sharing View">
+        <!--    We need to forward the request lang to ensure that the lang set on the portal match the lang delivered -->
+        <iframe class="flex-grow-1" frameborder="0" t-attf-src="/{{ request.context['lang'] }}/my/projects/{{ str(project_id) }}/project_sharing{{ '?task_id=' + task_id if task_id else '' }}"/>
+    </template>
+
+    <template id="project_sharing_embed" name="Project Sharing View Embed">
+        <t t-call="web.layout">
+            <t t-set="head_project_sharing">
+                <script type="text/javascript">
+                    odoo.__session_info__ = <t t-out="json.dumps(session_info)"/>;
+                    // Prevent the menu_service to load anything. In an ideal world, Project Sharing assets would only contain
+                    // what is genuinely necessary, and not the whole backend.
+                    odoo.loadMenusPromise = Promise.resolve();
+                </script>
+                <base target="_parent"/>
+                <t t-call-assets="project.webclient"/>
+            </t>
+            <t t-set="head" t-value="head_project_sharing + (head or '')"/>
+            <t t-set="body_classname" t-value="'o_web_client o_project_sharing'"/>
+        </t>
+    </template>
+</odoo>

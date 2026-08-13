@@ -1,0 +1,21 @@
+<templates id="template" xml:space="preserve">
+
+    <t t-name="project.ChatterPager">
+        <div class="d-flex justify-content-center">
+            <ul class="pagination mb-0 pb-4" t-if="state.pages.length &gt; 1">
+                <li t-if="props.page != props.page_previous" t-att-data-page="state.pagePrevious" class="page-item o_portal_chatter_pager_btn">
+                    <a t-on-click="() => this.onPageChanged(state.pagePrevious)" class="page-link"><i class="oi oi-chevron-left" role="img" aria-label="Previous" title="Previous"/></a>
+                </li>
+                <t t-foreach="state.pages" t-as="page" t-key="page_index">
+                    <li t-att-data-page="page" t-attf-class="page-item #{page == props.page ? 'o_portal_chatter_pager_btn active' : 'o_portal_chatter_pager_btn'}">
+                        <a t-on-click="() => this.onPageChanged(page)" t-att-disabled="page == props.page" class="page-link"><t t-esc="page"/></a>
+                    </li>
+                </t>
+                <li t-if="props.page != state.pageNext" t-att-data-page="state.pageNext" class="page-item o_portal_chatter_pager_btn">
+                    <a t-on-click="() => this.onPageChanged(state.pageNext)" class="page-link"><i class="oi oi-chevron-right" role="img" aria-label="Next" title="Next"/></a>
+                </li>
+            </ul>
+        </div>
+    </t>
+
+</templates>

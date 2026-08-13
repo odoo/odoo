@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="product_document_form" model="ir.ui.view">
+        <field name="name">product.document.form.website_sale</field>
+        <field name="model">product.document</field>
+        <field name="inherit_id" ref="sale.product_document_form"/>
+        <field name="arch" type="xml">
+            <sheet position="inside">
+                <group name="website_sale" string="E-commerce" invisible="res_model == 'product.product'">
+                    <field name="shown_on_product_page"/>
+                </group>
+            </sheet>
+        </field>
+    </record>
+
+    <record id="product_document_kanban" model="ir.ui.view">
+        <field name="name">product.document.kanban.website_sale</field>
+        <field name="model">product.document</field>
+        <field name="inherit_id" ref="sale.product_document_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//main/div" position="inside">
+                <div class="d-flex mt-2" invisible="res_model == 'product.product'">
+                    <span>Publish on website</span>
+                    <field name="shown_on_product_page" class="ms-2" widget="boolean_toggle"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="product_document_list" model="ir.ui.view">
+        <field name="name">product.document.list.website_sale</field>
+        <field name="model">product.document</field>
+        <field name="inherit_id" ref="sale.product_document_list"/>
+        <field name="arch" type="xml">
+            <field name="attached_on_sale" position="after">
+                <field name="shown_on_product_page" invisible="res_model == 'product.product'"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="product_document_search" model="ir.ui.view">
+        <field name="name">product.document.search.sale</field>
+        <field name="model">product.document</field>
+        <field name="inherit_id" ref="sale.product_document_search"/>
+        <field name="arch" type="xml">
+            <search position="inside">
+                <separator/>
+                <filter name="e_commerce" string="Show on Ecommerce" domain="[('shown_on_product_page', '=', True)]"/>
+            </search>
+        </field>
+    </record>
+</odoo>

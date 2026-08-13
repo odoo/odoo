@@ -1,0 +1,2298 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * payment
+#
+# Translators:
+# Martin Trigaux <mat@odoo.com>, 2017
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
+# Bone NI <bounkirdni@gmail.com>, 2026.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-05-16 13:49+0000\n"
+"PO-Revision-Date: 2026-05-20 09:49+0000\n"
+"Last-Translator: Bone NI <bounkirdni@gmail.com>\n"
+"Language-Team: Lao <https://translate.odoo.com/projects/odoo-18/payment/lo/>"
+"\n"
+"Language: lo\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.17\n"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard___data_fetched
+msgid " Data Fetched"
+msgstr " ດຶງຂໍ້ມູນແລ້ວ"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.pay
+msgid "<b>Amount:</b>"
+msgstr "<b>ມູນຄ່າ:</b>"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.pay
+msgid "<b>Reference:</b>"
+msgstr "<b>ອ້າງອີງ:</b>"
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/wizards/payment_onboarding_wizard.py:0
+msgid "<h3>Please make a payment to: </h3><ul><li>Bank: %s</li><li>Account Number: %s</li><li>Account Holder: %s</li></ul>"
+msgstr ""
+"<h3>ກະລຸນາຊຳລະເງິນໄປທີ່: </h3><ul><li>ທະນາຄານ: %s</li><li>ເລກບັນຊີ: %s</li><li>ຊື່ເຈົ້າ"
+"ຂອງບັນຊີ: %s</li></ul>"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.confirm
+msgid "<i class=\"fa fa-arrow-circle-right\"/> Back to My Account"
+msgstr "<i class=\"fa fa-arrow-circle-right\"/> ກັບໄປທີ່ບັນຊີຂອງຂ້ອຍ"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.portal_breadcrumb
+msgid "<i class=\"fa fa-home\" role=\"img\" title=\"Home\" aria-label=\"Home\"/>"
+msgstr ""
+"<i class=\"fa fa-home\" role=\"img\" title=\"ໜ້າຫຼັກ\" aria-label=\"ໜ້າຫຼັກ\"/>"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_capture_wizard_view_form
+msgid "<i class=\"fa fa-info-circle oe_inline\" attrs=\"{'invisible': [('support_partial_capture', '!=', 'full_only')]}\" title=\"Some of the transactions you intend to capture can only be captured in full. Handle the transactions individually to capture a partial amount.\"/>"
+msgstr ""
+"<i class=\"fa fa-info-circle oe_inline\" attrs=\"{'invisible': ["
+"('support_partial_capture', '!=', 'full_only')]}\" title=\"ບາງທຸລະກຳທີ່ທ່ານຕ້ອງການ"
+"ຮຽກເກັບເງິນ ສາມາດຮຽກເກັບໄດ້ແບບເຕັມຈຳນວນເທົ່ານັ້ນ. ກະລຸນາຈັດການທຸລະກຳແຍກຕ່າງຫາກເພື່ອຮຽກເກັບບາງ"
+"ສ່ວນ.\"/>"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.manage
+msgid "<i class=\"fa fa-trash\"/> Delete"
+msgstr "<i class=\"fa fa-trash\"/> ລຶບ"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.checkout
+#: model_terms:ir.ui.view,arch_db:payment.manage
+msgid "<span class=\"fs-4\">Saved payment methods</span>"
+msgstr "<span class=\"fs-4\">ວິທີການຊຳລະເງິນທີ່ບັນທຶກໄວ້</span>"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
+msgid "<span class=\"o_stat_text text-danger\">Unpublished</span>"
+msgstr "<span class=\"o_stat_text text-danger\">ຍັງບໍ່ໄດ້ເຜີຍແຜ່</span>"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
+msgid "<span class=\"o_stat_text text-success\">Published</span>"
+msgstr "<span class=\"o_stat_text text-success\">ເຜີຍແຜ່ແລ້ວ</span>"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.view_partners_form_payment_defaultcreditcard
+msgid "<span class=\"o_stat_text\">Saved Payment Methods</span>"
+msgstr "<span class=\"o_stat_text\">ວິທີການຊຳລະເງິນທີ່ບັນທຶກໄວ້</span>"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_provider_onboarding_wizard_form
+msgid "<span><i class=\"oi oi-arrow-right\"/> How to configure your PayPal account</span>"
+msgstr ""
+"<span><i class=\"oi oi-arrow-right\"/> ວິທີຕັ້ງຄ່າບັນຊີ PayPal ຂອງທ່ານ</span>"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.pay
+msgid ""
+"<strong>No suitable payment option could be found.</strong><br/>\n"
+"                                If you believe that it is an error, please contact the website administrator."
+msgstr ""
+"<strong>ບໍ່ພົບຕົວເລືອກການຊຳລະເງິນທີ່ເໝາະສົມ.</strong><br/>\n"
+"                                ຫາກທ່ານຄິດວ່ານີ້ແມ່ນຂໍ້ຜິດພາດ, ກະລຸນາຕິດຕໍ່ຜູ້ເບິ່ງແຍງລະບົບເວັບໄ"
+"ຊ."
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_methods
+msgid "<strong>No suitable payment provider could be found.</strong>"
+msgstr "<strong>ບໍ່ພົບຜູ້ໃຫ້ບໍລິການຊຳລະເງິນທີ່ເໝາະສົມ.</strong>"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_capture_wizard_view_form
+msgid ""
+"<strong>Warning!</strong> There is a partial capture pending. Please wait a\n"
+"                    moment for it to be processed. Check your payment provider configuration if\n"
+"                    the capture is still pending after a few minutes."
+msgstr ""
+"<strong>ຄຳເຕືອນ!</strong> ມີການຮຽກເກັບເງິນບາງສ່ວນທີ່ກຳລັງລໍຖ້າການປະມວນຜົນ. ກະລຸນາລໍຖ້າ\n"
+"                    ຈັກຄາວເພື່ອໃຫ້ລະບົບເຮັດວຽກ. ກວດສອບການຕັ້ງຄ່າຜູ້ໃຫ້ບໍລິການຊຳລະເງິນຂອງທ່ານ "
+"ຫາກ\n"
+"                    ຍັງຢູ່ໃນສະຖານະລໍຖ້າຫຼັງຈາກຜ່ານໄປຫຼາຍນາທີ."
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_capture_wizard_view_form
+msgid ""
+"<strong>Warning!</strong> You can not capture a negative amount nor more\n"
+"                    than"
+msgstr ""
+"<strong>ຄຳເຕືອນ!</strong> ທ່ານບໍ່ສາມາດຮຽກເກັບເງິນເປັນຄ່າລົບ ຫຼື ຫຼາຍກວ່າ\n"
+"                    ຈຳນວນ"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
+msgid ""
+"<strong>Warning</strong> Creating a payment provider from the <em>CREATE</em> button is not supported.\n"
+"                        Please use the <em>Duplicate</em> action instead."
+msgstr ""
+"<strong>ຄຳເຕືອນ</strong> ບໍ່ຮອງຮັບການສ້າງຜູ້ໃຫ້ບໍລິການຊຳລະເງິນຈາກປຸ່ມ <em>ສ້າງ</em>.\n"
+"                        ກະລຸນາໃຊ້ຄຳສັ່ງ <em>ເຮັດຊ້ຳ</em> ແທນ."
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.pay
+msgid "<strong>Warning</strong> Make sure your are logged in as the right partner before making this payment."
+msgstr ""
+"<strong>ຄຳເຕືອນ</strong> ກວດສອບໃຫ້ແນ່ໃຈວ່າທ່ານເຂົ້າສູ່ລະບົບໃນນາມຄູ່ຄ້າທີ່ຖືກຕ້ອງກ່ອນທີ່ຈະຊຳລະເງິນ"
+"ນີ້."
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.pay
+msgid "<strong>Warning</strong> The currency is missing or incorrect."
+msgstr "<strong>ຄຳເຕືອນ</strong> ຂໍ້ມູນສະກຸນເງິນຫາຍສາບສູນ ຫຼື ບໍ່ຖືກຕ້ອງ."
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.pay
+msgid "<strong>Warning</strong> You must be logged in to pay."
+msgstr "<strong>ຄຳເຕືອນ</strong> ທ່ານຕ້ອງເຂົ້າສູ່ລະບົບກ່ອນເພື່ອຊຳລະເງິນ."
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_transaction.py:0
+msgid "A refund request of %(amount)s has been sent. The payment will be created soon. Refund transaction reference: %(ref)s (%(provider_name)s)."
+msgstr ""
+"ຄຳຮ້ອງຂໍຄືນເງິນຈຳນວນ %(amount)s ໄດ້ຖືກສົ່ງແລ້ວ. ການຊຳລະເງິນຈະຖືກສ້າງຂຶ້ນໃນໄວໆນີ້. ອ້າງອີງທຸລະກຳຄື"
+"ນເງິນ: %(ref)s (%(provider_name)s)."
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_token.py:0
+msgid "A token cannot be unarchived once it has been archived."
+msgstr "ໂທເຄັນບໍ່ສາມາດຍົກເລີກການຈັດເກັບໄດ້ ເມື່ອມັນຖືກຈັດເກັບໄປແລ້ວ."
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_transaction.py:0
+msgid "A transaction with reference %(ref)s has been initiated (%(provider_name)s)."
+msgstr "ທຸລະກຳທີ່ມີເລກອ້າງອີງ %(ref)s ໄດ້ຖືກເລີ່ມຕົ້ນແລ້ວ (%(provider_name)s)."
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_transaction.py:0
+msgid "A transaction with reference %(ref)s has been initiated to save a new payment method (%(provider_name)s)"
+msgstr ""
+"ທຸລະກຳທີ່ມີເລກອ້າງອີງ %(ref)s ໄດ້ຖືກເລີ່ມຕົ້ນເພື່ອບັນທຶກວິທີການຊຳລະເງິນໃໝ່ (%(provider_name)s)"
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_transaction.py:0
+msgid "A transaction with reference %(ref)s has been initiated using the payment method %(token)s (%(provider_name)s)."
+msgstr ""
+"ທຸລະກຳທີ່ມີເລກອ້າງອີງ %(ref)s ໄດ້ຖືກເລີ່ມຕົ້ນໂດຍໃຊ້ວິທີການຊຳລະເງິນ %(token)s (%"
+"(provider_name)s)."
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/wizards/payment_onboarding_wizard.py:0
+msgid "Account"
+msgstr "ບັນຊີ"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard__acc_number
+msgid "Account Number"
+msgstr "ເລກບັນຊີ"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_provider_kanban
+msgid "Activate"
+msgstr "ເປີດໃຊ້ງານ"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_token__active
+msgid "Active"
+msgstr "ເປີດໃຊ້ງານ"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider__fees_active
+msgid "Add Extra Fees"
+msgstr "ເພີ່ມຄ່າທຳນຽມເພີ່ມເຕີມ"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.manage
+msgid "Add new payment method"
+msgstr "ເພີ່ມວິທີການຊຳລະເງິນໃໝ່"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_address
+#: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
+msgid "Address"
+msgstr "ທີ່ຢູ່"
+
+#. module: payment
+#: model:payment.provider,name:payment.payment_provider_adyen
+msgid "Adyen"
+msgstr "Adyen"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider__allow_express_checkout
+msgid "Allow Express Checkout"
+msgstr "ອະນຸຍາດໃຫ້ຊຳລະເງິນແບບດ່ວນ"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_link_wizard__payment_provider_selection
+msgid "Allow Payment Provider"
+msgstr "ອະນຸຍາດຜູ້ໃຫ້ບໍລິການຊຳລະເງິນ"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider__allow_tokenization
+msgid "Allow Saving Payment Methods"
+msgstr "ອະນຸຍາດໃຫ້ບັນທຶກວິທີການຊຳລະເງິນ"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__captured_amount
+msgid "Already Captured"
+msgstr "ຮຽກເກັບເງິນແລ້ວ"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__voided_amount
+msgid "Already Voided"
+msgstr "ຍົກເລີກແລ້ວ"
+
+#. module: payment
+#: model:payment.provider,display_as:payment.payment_provider_aps
+#: model:payment.provider,name:payment.payment_provider_aps
+msgid "Amazon Payment Services"
+msgstr "Amazon Payment Services"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_link_wizard__amount
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__amount
+#: model_terms:ir.ui.view,arch_db:payment.confirm
+msgid "Amount"
+msgstr "ມູນຄ່າ"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_link_wizard__amount_max
+msgid "Amount Max"
+msgstr "ມູນຄ່າສູງສຸດ"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__amount_to_capture
+msgid "Amount To Capture"
+msgstr "ມູນຄ່າທີ່ຕ້ອງຮຽກເກັບ"
+
+#. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
+msgid "An error occurred during the processing of this payment."
+msgstr "ເກີດຂໍ້ຜິດພາດໃນລະຫວ່າງການປະມວນຜົນການຊຳລະເງິນນີ້."
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.transaction_status
+msgid "An error occurred during the processing of your payment."
+msgstr "ເກີດຂໍ້ຜິດພາດໃນລະຫວ່າງການປະມວນຜົນການຊຳລະເງິນຂອງທ່ານ."
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_provider_onboarding_wizard_form
+msgid "Apply"
+msgstr "ນຳໃຊ້"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_token_form
+#: model_terms:ir.ui.view,arch_db:payment.payment_token_search
+msgid "Archived"
+msgstr "ຈັດເກັບແລ້ວ"
+
+#. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/js/manage_form.js:0
+msgid "Are you sure you want to delete this payment method?"
+msgstr "ທ່ານແນ່ໃຈບໍ່ວ່າຕ້ອງການລຶບວິທີການຊຳລະເງິນນີ້?"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
+msgid "Are you sure you want to void the authorized transaction? This action can't be undone."
+msgstr ""
+"ທ່ານແນ່ໃຈບໍ່ວ່າຕ້ອງການຍົກເລີກທຸລະກຳທີ່ໄດ້ຮັບອະນຸມັດແລ້ວ? ການດຳເນີນການນີ້ບໍ່ສາມາດກັບຄືນໄດ້."
+
+#. module: payment
+#: model:payment.provider,name:payment.payment_provider_asiapay
+msgid "Asiapay"
+msgstr "Asiapay"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider__auth_msg
+msgid "Authorize Message"
+msgstr "ຂໍ້ຄວາມການອະນຸຍາດ"
+
+#. module: payment
+#: model:payment.provider,name:payment.payment_provider_authorize
+msgid "Authorize.net"
+msgstr "Authorize.net"
+
+#. module: payment
+#: model:ir.model.fields.selection,name:payment.selection__payment_transaction__state__authorized
+msgid "Authorized"
+msgstr "ອະນຸຍາດແລ້ວ"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__authorized_amount
+msgid "Authorized Amount"
+msgstr "ມູນຄ່າທີ່ໄດ້ຮັບອະນຸມັດ"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
+msgid "Availability"
+msgstr "ຄວາມພ້ອມໃຊ້ງານ"
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/wizards/payment_onboarding_wizard.py:0
+msgid "Bank"
+msgstr "ທະນາຄານ"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard__journal_name
+msgid "Bank Name"
+msgstr "ຊື່ທະນາຄານ"
+
+#. module: payment
+#: model:payment.provider,name:payment.payment_provider_buckaroo
+msgid "Buckaroo"
+msgstr "Buckaroo"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_model_id
+msgid "Callback Document Model"
+msgstr "ໂມເດວເອກະສານ Callback"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_is_done
+msgid "Callback Done"
+msgstr "Callback ສຳເລັດແລ້ວ"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_hash
+msgid "Callback Hash"
+msgstr "Callback Hash"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_method
+msgid "Callback Method"
+msgstr "ວິທີການ Callback"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_res_id
+msgid "Callback Record ID"
+msgstr "ລະຫັດບັນທຶກ Callback"
+
+#. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/js/manage_form.js:0
+#: model_terms:ir.ui.view,arch_db:payment.payment_provider_onboarding_wizard_form
+msgid "Cancel"
+msgstr "ຍົກເລີກ"
+
+#. module: payment
+#: model:ir.model.fields.selection,name:payment.selection__payment_transaction__state__cancel
+msgid "Canceled"
+msgstr "ຍົກເລີກແລ້ວ"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider__cancel_msg
+msgid "Canceled Message"
+msgstr "ຂໍ້ຄວາມການຍົກເລີກ"
+
+#. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
+msgid "Canceled operations"
+msgstr "ການດຳເນີນການທີ່ຖືກຍົກເລີກ"
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_transaction.py:0
+#: model_terms:ir.ui.view,arch_db:payment.payment_capture_wizard_view_form
+msgid "Capture"
+msgstr "ຮຽກເກັບເງິນ"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider__capture_manually
+msgid "Capture Amount Manually"
+msgstr "ຮຽກເກັບມູນຄ່າດ້ວຍຕົນເອງ"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
+msgid "Capture Transaction"
+msgstr "ບັນທຶກທຸລະກຳ"
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_provider__capture_manually
+msgid ""
+"Capture the amount from Odoo, when the delivery is completed.\n"
+"Use this if you want to charge your customers cards only when\n"
+"you are sure you can ship the goods to them."
+msgstr ""
+"ຮຽກເກັບມູນຄ່າຈາກ Odoo ເມື່ອການຈັດສົ່ງສຳເລັດແລ້ວ.\n"
+"ໃຊ້ສິ່ງນີ້ ຫາກທ່ານຕ້ອງການຕັດເງິນຈາກບັດຂອງລູກຄ້າກໍ່ຕໍ່ເມື່ອ\n"
+"ທ່ານແນ່ໃຈວ່າສາມາດຈັດສົ່ງສິນຄ້າໃຫ້ພວກເຂົາໄດ້."
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__child_transaction_ids
+msgid "Child Transactions"
+msgstr "ທຸລະກຳລູກ"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
+msgid "Child transactions"
+msgstr "ທຸລະກຳລູກ"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_provider_onboarding_wizard_form
+msgid "Choose a payment method"
+msgstr "ເລືອກວິທີການຊຳລະເງິນ"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_city
+#: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
+msgid "City"
+msgstr "ເມືອງ"
+
+#. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
+msgid "Click here to be redirected to the confirmation page."
+msgstr "ຄລິກທີ່ນີ້ເພື່ອໄປທີ່ໜ້າຍືນຢັນ."
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_capture_wizard_view_form
+#: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
+msgid "Close"
+msgstr "ປິດ"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider__code
+#: model:ir.model.fields,field_description:payment.field_payment_token__provider_code
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__provider_code
+msgid "Code"
+msgstr "ລະຫັດ"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider__color
+msgid "Color"
+msgstr "ສີ"
+
+#. module: payment
+#: model:ir.model,name:payment.model_res_company
+msgid "Companies"
+msgstr "ບໍລິສັດ"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_link_wizard__company_id
+#: model:ir.model.fields,field_description:payment.field_payment_provider__company_id
+#: model:ir.model.fields,field_description:payment.field_payment_token__company_id
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__company_id
+#: model_terms:ir.ui.view,arch_db:payment.payment_provider_search
+#: model_terms:ir.ui.view,arch_db:payment.payment_token_search
+#: model_terms:ir.ui.view,arch_db:payment.payment_transaction_search
+msgid "Company"
+msgstr "ບໍລິສັດ"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
+msgid "Configuration"
+msgstr "ການຕັ້ງຄ່າ"
+
+#. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/js/manage_form.js:0
+msgid "Confirm Deletion"
+msgstr "ຢືນຢັນການລຶບ"
+
+#. module: payment
+#: model:ir.model.fields.selection,name:payment.selection__payment_transaction__state__done
+msgid "Confirmed"
+msgstr "ຢືນຢັນແລ້ວ"
+
+#. module: payment
+#: model:ir.model,name:payment.model_res_partner
+msgid "Contact"
+msgstr "ຜູ້ຕິດຕໍ່"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider__module_id
+msgid "Corresponding Module"
+msgstr "ໂມດູນທີ່ກ່ຽວຂ້ອງ"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider__available_country_ids
+msgid "Countries"
+msgstr "ປະເທດ"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_country_id
+#: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
+msgid "Country"
+msgstr "ປະເທດ"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__tokenize
+msgid "Create Token"
+msgstr "ສ້າງໂທເຄັນ"
+
+#. module: payment
+#: model_terms:ir.actions.act_window,help:payment.action_payment_provider
+msgid "Create a new payment provider"
+msgstr "ສ້າງຜູ້ໃຫ້ບໍລິການຊຳລະເງິນໃໝ່"
+
+#. module: payment
+#: model_terms:ir.actions.act_window,help:payment.action_payment_method
+msgid "Create a payment method"
+msgstr "ສ້າງວິທີການຊຳລະເງິນ"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__create_uid
+#: model:ir.model.fields,field_description:payment.field_payment_link_wizard__create_uid
+#: model:ir.model.fields,field_description:payment.field_payment_method__create_uid
+#: model:ir.model.fields,field_description:payment.field_payment_provider__create_uid
+#: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard__create_uid
+#: model:ir.model.fields,field_description:payment.field_payment_token__create_uid
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__create_uid
+msgid "Created by"
+msgstr "ສ້າງໂດຍ"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__create_date
+#: model:ir.model.fields,field_description:payment.field_payment_link_wizard__create_date
+#: model:ir.model.fields,field_description:payment.field_payment_method__create_date
+#: model:ir.model.fields,field_description:payment.field_payment_provider__create_date
+#: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard__create_date
+#: model:ir.model.fields,field_description:payment.field_payment_token__create_date
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__create_date
+msgid "Created on"
+msgstr "ສ້າງເມື່ອ"
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_transaction.py:0
+msgid "Creating a transaction from an archived token is forbidden."
+msgstr "ຫ້າມສ້າງທຸລະກຳຈາກໂທເຄັນທີ່ຖືກຈັດເກັບແລ້ວ."
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
+msgid "Credentials"
+msgstr "ຂໍ້ມູນການຢືນຢັນຕົວຕົນ"
+
+#. module: payment
+#: model:payment.provider,display_as:payment.payment_provider_stripe
+msgid "Credit & Debit Card"
+msgstr "ບັດເຄຣດິດ ແລະ ເດບິດ"
+
+#. module: payment
+#: model:payment.provider,display_as:payment.payment_provider_razorpay
+msgid "Credit & Debit Card, UPI (Powered by Razorpay)"
+msgstr "ບັດເຄຣດິດ ແລະ ເດບິດ, UPI (ໂດຍ Razorpay)"
+
+#. module: payment
+#: model:ir.model.fields.selection,name:payment.selection__payment_provider_onboarding_wizard__payment_method__stripe
+msgid "Credit & Debit card (via Stripe)"
+msgstr "ບັດເຄຣດິດ ແລະ ເດບິດ (ຜ່ານ Stripe)"
+
+#. module: payment
+#: model:payment.provider,display_as:payment.payment_provider_adyen
+msgid "Credit Card (powered by Adyen)"
+msgstr "ບັດເຄຣດິດ (ໂດຍ Adyen)"
+
+#. module: payment
+#: model:payment.provider,display_as:payment.payment_provider_asiapay
+msgid "Credit Card (powered by Asiapay)"
+msgstr "ບັດເຄຣດິດ (ໂດຍ Asiapay)"
+
+#. module: payment
+#: model:payment.provider,display_as:payment.payment_provider_authorize
+msgid "Credit Card (powered by Authorize)"
+msgstr "ບັດເຄຣດິດ (ໂດຍ Authorize)"
+
+#. module: payment
+#: model:payment.provider,display_as:payment.payment_provider_buckaroo
+msgid "Credit Card (powered by Buckaroo)"
+msgstr "ບັດເຄຣດິດ (ໂດຍ Buckaroo)"
+
+#. module: payment
+#: model:payment.provider,display_as:payment.payment_provider_mercado_pago
+msgid "Credit Card (powered by Mercado Pago)"
+msgstr "ບັດເຄຣດິດ (ໂດຍ Mercado Pago)"
+
+#. module: payment
+#: model:payment.provider,display_as:payment.payment_provider_sips
+msgid "Credit Card (powered by Sips)"
+msgstr "ບັດເຄຣດິດ (ໂດຍ Sips)"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider__available_currency_ids
+msgid "Currencies"
+msgstr "ສະກຸນເງິນ"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__currency_id
+#: model:ir.model.fields,field_description:payment.field_payment_link_wizard__currency_id
+#: model:ir.model.fields,field_description:payment.field_payment_provider__main_currency_id
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__currency_id
+msgid "Currency"
+msgstr "ສະກຸນເງິນ"
+
+#. module: payment
+#: model:ir.model.fields.selection,name:payment.selection__payment_provider_onboarding_wizard__payment_method__manual
+msgid "Custom payment instructions"
+msgstr "ຄຳແນະນຳການຊຳລະເງິນແບບກຳນົດເອງ"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_id
+msgid "Customer"
+msgstr "ລູກຄ້າ"
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_provider__sequence
+msgid "Define the display order"
+msgstr "ກຳນົດລຳດັບການສະແດງຜົນ"
+
+#. module: payment
+#: model:payment.provider,name:payment.payment_provider_demo
+msgid "Demo"
+msgstr "ສາທິດ"
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_provider__display_as
+msgid "Description of the provider for customers"
+msgstr "ລາຍລະອຽດຂອງຜູ້ໃຫ້ບໍລິການສຳລັບລູກຄ້າ"
+
+#. module: payment
+#: model:ir.model.fields.selection,name:payment.selection__payment_provider__state__disabled
+#: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
+msgid "Disabled"
+msgstr "ປິດໃຊ້ງານ"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.transaction_status
+msgid "Dismiss"
+msgstr "ຍົກເລີກ"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__display_name
+#: model:ir.model.fields,field_description:payment.field_payment_link_wizard__display_name
+#: model:ir.model.fields,field_description:payment.field_payment_method__display_name
+#: model:ir.model.fields,field_description:payment.field_payment_provider__display_name
+#: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard__display_name
+#: model:ir.model.fields,field_description:payment.field_payment_token__display_name
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__display_name
+msgid "Display Name"
+msgstr "ຊື່ທີ່ສະແດງ"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider__display_as
+msgid "Displayed as"
+msgstr "ສະແດງເປັນ"
+
+#. module: payment
+#: model:ir.model.fields.selection,name:payment.selection__res_company__payment_provider_onboarding_state__done
+msgid "Done"
+msgstr "ສຳເລັດ"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider__done_msg
+msgid "Done Message"
+msgstr "ຂໍ້ຄວາມເມື່ອສຳເລັດ"
+
+#. module: payment
+#: model:ir.model.fields.selection,name:payment.selection__payment_transaction__state__draft
+msgid "Draft"
+msgstr "ຮ່າງ"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_link_wizard__partner_email
+#: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard__paypal_email_account
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_email
+#: model_terms:ir.ui.view,arch_db:payment.payment_provider_onboarding_wizard_form
+msgid "Email"
+msgstr "ອີເມລ"
+
+#. module: payment
+#: model:ir.model.fields.selection,name:payment.selection__payment_provider__state__enabled
+msgid "Enabled"
+msgstr "ເປີດໃຊ້ແລ້ວ"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_provider_kanban
+msgid "Enterprise"
+msgstr "Enterprise"
+
+#. module: payment
+#: model:ir.model.fields.selection,name:payment.selection__payment_transaction__state__error
+msgid "Error"
+msgstr "ຂໍ້ຜິດພາດ"
+
+#. module: payment
+#. odoo-python
+#. odoo-javascript
+#: code:addons/payment/models/payment_transaction.py:0
+#: code:addons/payment/static/src/js/payment_form_mixin.js:0
+msgid "Error: %s"
+msgstr "ຂໍ້ຜິດພາດ: %s"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider__express_checkout_form_view_id
+msgid "Express Checkout Form Template"
+msgstr "ແບບຟອມການຊຳລະເງິນແບບດ່ວນ"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider__support_express_checkout
+msgid "Express Checkout Supported"
+msgstr "ຮອງຮັບການຊຳລະເງິນແບບດ່ວນ"
+
+#. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
+msgid "Failed operations"
+msgstr "ການດຳເນີນການທີ່ຫຼົ້ມເຫຼວ"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__fees
+#: model_terms:ir.ui.view,arch_db:payment.checkout
+#: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
+msgid "Fees"
+msgstr "ຄ່າທຳນຽມ"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider__support_fees
+msgid "Fees Supported"
+msgstr "ຮອງຮັບຄ່າທຳນຽມ"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider__fees_dom_fixed
+msgid "Fixed domestic fees"
+msgstr "ຄ່າທຳນຽມພາຍໃນປະເທດແບບຄົງທີ່"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider__fees_int_fixed
+msgid "Fixed international fees"
+msgstr "ຄ່າທຳນຽມລະຫວ່າງປະເທດແບບຄົງທີ່"
+
+#. module: payment
+#: model:payment.provider,name:payment.payment_provider_flutterwave
+msgid "Flutterwave"
+msgstr "Flutterwave"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.confirm
+msgid "From"
+msgstr "ຈາກ"
+
+#. module: payment
+#: model:ir.model.fields.selection,name:payment.selection__payment_provider__support_manual_capture__full_only
+#: model:ir.model.fields.selection,name:payment.selection__payment_provider__support_refund__full_only
+msgid "Full Only"
+msgstr "ເຕັມຈຳນວນເທົ່ານັ້ນ"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
+msgid "Generate Payment Link"
+msgstr "ສ້າງລິ້ງການຊຳລະເງິນ"
+
+#. module: payment
+#: model:ir.model,name:payment.model_payment_link_wizard
+msgid "Generate Sales Payment Link"
+msgstr "ສ້າງລິ້ງການຊຳລະເງິນສຳລັບການຂາຍ"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
+msgid "Generate and Copy Payment Link"
+msgstr "ສ້າງ ແລະ ຄັດລອກລິ້ງການຊຳລະເງິນ"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_provider_search
+#: model_terms:ir.ui.view,arch_db:payment.payment_token_search
+#: model_terms:ir.ui.view,arch_db:payment.payment_transaction_search
+msgid "Group By"
+msgstr "ຈັດກຸ່ມໂດຍ"
+
+#. module: payment
+#: model:ir.model,name:payment.model_ir_http
+msgid "HTTP Routing"
+msgstr "ການກຳນົດເສັ້ນທາງ HTTP"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__has_draft_children
+msgid "Has Draft Children"
+msgstr "ມີລາຍການຮ່າງທີ່ກ່ຽວຂ້ອງ"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_link_wizard__has_multiple_providers
+msgid "Has Multiple Providers"
+msgstr "ມີຜູ້ໃຫ້ບໍລິການຫຼາຍແຫ່ງ"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__has_remaining_amount
+msgid "Has Remaining Amount"
+msgstr "ມີມູນຄ່າຄົງເຫຼືອ"
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_transaction__is_post_processed
+msgid "Has the payment been post-processed"
+msgstr "ການຊຳລະເງິນໄດ້ຖືກປະມວນຜົນຂັ້ນສຸດທ້າຍແລ້ວບໍ່"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider__pre_msg
+msgid "Help Message"
+msgstr "ຂໍ້ຄວາມຊ່ວຍເຫຼືອ"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__id
+#: model:ir.model.fields,field_description:payment.field_payment_link_wizard__id
+#: model:ir.model.fields,field_description:payment.field_payment_method__id
+#: model:ir.model.fields,field_description:payment.field_payment_provider__id
+#: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard__id
+#: model:ir.model.fields,field_description:payment.field_payment_token__id
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__id
+msgid "ID"
+msgstr "ລະຫັດ"
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_link_wizard__payment_provider_selection
+msgid "If a specific payment provider is selected, customers will only be allowed to pay via this one. If 'All' is selected, customers can pay via any available payment provider."
+msgstr ""
+"ຫາກເລືອກຜູ້ໃຫ້ບໍລິການຊຳລະເງິນສະເພາະ, ລູກຄ້າຈະຖືກອະນຸຍາດໃຫ້ຊຳລະຜ່ານລາຍການນັ້ນເທົ່ານັ້ນ. ຫາກເລືອກ "
+"'ທັງໝົດ', ລູກຄ້າສາມາດຊຳລະຜ່ານຜູ້ໃຫ້ບໍລິການໃດກໍ່ໄດ້ທີ່ມີ."
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
+msgid "If not defined, the provider name will be used."
+msgstr "ຫາກບໍ່ໄດ້ກຳນົດ, ຊື່ຜູ້ໃຫ້ບໍລິການຈະຖືກນຳໃຊ້."
+
+#. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
+msgid "If the payment hasn't been confirmed you can contact us."
+msgstr "ຫາກການຊຳລະເງິນຍັງບໍ່ທັນໄດ້ຮັບການຢືນຢັນ ທ່ານສາມາດຕິດຕໍ່ຫາພວກເຮົາໄດ້."
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_methods
+msgid "If you believe that it is an error, please contact the website administrator."
+msgstr "ຫາກທ່ານເຊື່ອວ່ານີ້ແມ່ນຂໍ້ຜິດພາດ, ກະລຸນາຕິດຕໍ່ຜູ້ເບິ່ງແຍງລະບົບເວັບໄຊ."
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_method__image
+#: model:ir.model.fields,field_description:payment.field_payment_provider__image_128
+msgid "Image"
+msgstr "ຮູບພາບ"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_method__image_payment_form
+msgid "Image displayed on the payment form"
+msgstr "ຮູບພາບທີ່ສະແດງຢູ່ໃນແບບຟອມການຊຳລະເງິນ"
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_provider__state
+msgid ""
+"In test mode, a fake payment is processed through a test payment interface.\n"
+"This mode is advised when setting up the provider."
+msgstr ""
+"ໃນໂໝດທົດລອງ, ການຊຳລະເງິນຈຳລອງຈະຖືກປະມວນຜົນຜ່ານໜ້າການຊຳລະທົດລອງ.\n"
+"ແນະນຳໃຫ້ໃຊ້ໂໝດນີ້ເມື່ອຕັ້ງຄ່າຜູ້ໃຫ້ບໍລິການ."
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider__inline_form_view_id
+msgid "Inline Form Template"
+msgstr "ແບບຟອມຊຳລະເງິນແບບຝັງ (Inline Form)"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
+#: model_terms:ir.ui.view,arch_db:payment.payment_provider_kanban
+msgid "Install"
+msgstr "ຕິດຕັ້ງ"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider__module_state
+msgid "Installation State"
+msgstr "ສະຖານະການຕິດຕັ້ງ"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_provider_search
+msgid "Installed"
+msgstr "ຕິດຕັ້ງແລ້ວ"
+
+#. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
+msgid "Internal server error"
+msgstr "ຂໍ້ຜິດພາດຈາກເຊີບເວີ"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__is_amount_to_capture_valid
+msgid "Is Amount To Capture Valid"
+msgstr "ມູນຄ່າທີ່ຕ້ອງຮຽກເກັບຖືກຕ້ອງບໍ່"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__is_post_processed
+msgid "Is Post-processed"
+msgstr "ຜ່ານການປະມວນຜົນຂັ້ນສຸດທ້າຍແລ້ວ"
+
+#. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/js/manage_form.js:0
+msgid "It is currently linked to the following documents:"
+msgstr "ຕອນນີ້ມັນຖືກເຊື່ອມໂຍງກັບເອກະສານດັ່ງຕໍ່ໄປນີ້:"
+
+#. module: payment
+#: model:ir.model.fields.selection,name:payment.selection__res_company__payment_provider_onboarding_state__just_done
+msgid "Just done"
+msgstr "ຫາກໍ່ສຳເລັດ"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__landing_route
+msgid "Landing Route"
+msgstr "ເສັ້ນທາງປາຍທາງ (Landing Route)"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_lang
+msgid "Language"
+msgstr "ພາສາ"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__last_state_change
+msgid "Last State Change Date"
+msgstr "ວັນທີປ່ຽນສະຖານະຫຼ້າສຸດ"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__write_uid
+#: model:ir.model.fields,field_description:payment.field_payment_link_wizard__write_uid
+#: model:ir.model.fields,field_description:payment.field_payment_method__write_uid
+#: model:ir.model.fields,field_description:payment.field_payment_provider__write_uid
+#: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard__write_uid
+#: model:ir.model.fields,field_description:payment.field_payment_token__write_uid
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__write_uid
+msgid "Last Updated by"
+msgstr "ອັບເດດຫຼ້າສຸດໂດຍ"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__write_date
+#: model:ir.model.fields,field_description:payment.field_payment_link_wizard__write_date
+#: model:ir.model.fields,field_description:payment.field_payment_method__write_date
+#: model:ir.model.fields,field_description:payment.field_payment_provider__write_date
+#: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard__write_date
+#: model:ir.model.fields,field_description:payment.field_payment_token__write_date
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__write_date
+msgid "Last Updated on"
+msgstr "ອັບເດດຫຼ້າສຸດເມື່ອ"
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_transaction.py:0
+msgid "Making a request to the provider is not possible because the provider is disabled."
+msgstr ""
+"ບໍ່ສາມາດສົ່ງຄຳຮ້ອງຂໍຫາຜູ້ໃຫ້ບໍລິການໄດ້ ເພາະວ່າຜູ້ໃຫ້ບໍລິການຖືກປິດໃຊ້ງານ."
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.pay_meth_link
+msgid "Manage payment methods"
+msgstr "ຈັດການວິທີການຊຳລະເງິນ"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.checkout
+#: model_terms:ir.ui.view,arch_db:payment.manage
+msgid "Managed by"
+msgstr "ຈັດການໂດຍ"
+
+#. module: payment
+#: model:ir.model.fields.selection,name:payment.selection__res_company__payment_onboarding_payment_method__manual
+msgid "Manual"
+msgstr "ດ້ວຍຕົນເອງ"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider__support_manual_capture
+msgid "Manual Capture Supported"
+msgstr "ຮອງຮັບການຮຽກເກັບເງິນດ້ວຍຕົນເອງ"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider__maximum_amount
+msgid "Maximum Amount"
+msgstr "ມູນຄ່າສູງສຸດ"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__available_amount
+msgid "Maximum Capture Allowed"
+msgstr "ມູນຄ່າຮຽກເກັບສູງສຸດທີ່ອະນຸຍາດ"
+
+#. module: payment
+#: model:payment.provider,name:payment.payment_provider_mercado_pago
+msgid "Mercado Pago"
+msgstr "Mercado Pago"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__state_message
+#: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
+msgid "Message"
+msgstr "ຂໍ້ຄວາມ"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
+msgid "Messages"
+msgstr "ຂໍ້ຄວາມ"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard__manual_name
+msgid "Method"
+msgstr "ວິທີການ"
+
+#. module: payment
+#: model:payment.provider,name:payment.payment_provider_mollie
+msgid "Mollie"
+msgstr "Mollie"
+
+#. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/js/payment_form_mixin.js:0
+msgid "Multiple payment options selected"
+msgstr "ເລືອກຫຼາຍຕົວເລືອກການຊຳລະເງິນ"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_method__name
+#: model:ir.model.fields,field_description:payment.field_payment_provider__name
+#: model_terms:ir.ui.view,arch_db:payment.payment_method_form
+#: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
+msgid "Name"
+msgstr "ຊື່"
+
+#. module: payment
+#: model:ir.model.fields.selection,name:payment.selection__payment_provider__code__none
+msgid "No Provider Set"
+msgstr "ບໍ່ໄດ້ຕັ້ງຄ່າຜູ້ໃຫ້ບໍລິການ"
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/wizards/payment_onboarding_wizard.py:0
+msgid "No manual payment method could be found for this company. Please create one from the Payment Provider menu."
+msgstr ""
+"ບໍ່ພົບວິທີການຊຳລະເງິນດ້ວຍຕົນເອງສຳລັບບໍລິສັດນີ້. ກະລຸນາສ້າງໃໝ່ຈາກເມນູຜູ້ໃຫ້ບໍລິການຊຳລະເງິນ."
+
+#. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
+msgid "No payment has been processed."
+msgstr "ບໍ່ມີການຊຳລະເງິນທີ່ຖືກປະມວນຜົນ."
+
+#. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/js/payment_form_mixin.js:0
+msgid "No payment option selected"
+msgstr "ບໍ່ໄດ້ເລືອກຕົວເລືອກການຊຳລະເງິນ"
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_token.py:0
+msgid "No token can be assigned to the public partner."
+msgstr "ບໍ່ສາມາດກຳນົດໂທເຄັນໃຫ້ກັບຄູ່ຄ້າສາທາລະນະໄດ້."
+
+#. module: payment
+#: model:ir.model.fields.selection,name:payment.selection__res_company__payment_provider_onboarding_state__not_done
+msgid "Not done"
+msgstr "ຍັງບໍ່ທັນສຳເລັດ"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.verified_token_checkmark
+msgid "Not verified"
+msgstr "ຍັງບໍ່ທັນໄດ້ຢືນຢັນ"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider__module_to_buy
+msgid "Odoo Enterprise Module"
+msgstr "ໂມດູນ Odoo Enterprise"
+
+#. module: payment
+#: model:ir.model.fields.selection,name:payment.selection__payment_transaction__operation__offline
+msgid "Offline payment by token"
+msgstr "ການຊຳລະເງິນແບບອອບລາຍດ້ວຍໂທເຄັນ"
+
+#. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/js/payment_form_mixin.js:0
+#: model_terms:ir.ui.view,arch_db:payment.verified_token_checkmark
+msgid "Ok"
+msgstr "ຕົກລົງ"
+
+#. module: payment
+#: model:ir.model.fields.selection,name:payment.selection__payment_transaction__operation__online_direct
+msgid "Online direct payment"
+msgstr "ການຊຳລະເງິນໂດຍກົງແບບອອນລາຍ"
+
+#. module: payment
+#: model:ir.model.fields.selection,name:payment.selection__payment_transaction__operation__online_token
+msgid "Online payment by token"
+msgstr "ການຊຳລະເງິນອອນລາຍດ້ວຍໂທເຄັນ"
+
+#. module: payment
+#: model:ir.model.fields.selection,name:payment.selection__payment_transaction__operation__online_redirect
+msgid "Online payment with redirection"
+msgstr "ການຊຳລະເງິນອອນລາຍແບບປ່ຽນເສັ້ນທາງ"
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/wizards/payment_onboarding_wizard.py:0
+msgid "Only administrators can access this data."
+msgstr "ສະເພາະຜູ້ເບິ່ງແຍງລະບົບເທົ່ານັ້ນທີ່ສາມາດເຂົ້າເຖິງຂໍ້ມູນນີ້ໄດ້."
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_transaction.py:0
+msgid "Only authorized transactions can be voided."
+msgstr "ສະເພາະທຸລະກຳທີ່ໄດ້ຮັບອະນຸມັດເທົ່ານັ້ນທີ່ສາມາດຍົກເລີກໄດ້."
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_transaction.py:0
+msgid "Only confirmed transactions can be refunded."
+msgstr "ສະເພາະທຸລະກຳທີ່ຢືນຢັນແລ້ວເທົ່ານັ້ນທີ່ສາມາດຄືນເງິນໄດ້."
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__operation
+msgid "Operation"
+msgstr "ການດຳເນີນການ"
+
+#. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
+msgid "Operations in progress"
+msgstr "ການດຳເນີນການທີ່ກຳລັງເຮັດຢູ່"
+
+#. module: payment
+#: model:ir.model.fields.selection,name:payment.selection__res_company__payment_onboarding_payment_method__other
+msgid "Other"
+msgstr "ອື່ນໆ"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.checkout
+msgid "Other payment methods"
+msgstr "ວິທີການຊຳລະເງິນອື່ນໆ"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard__paypal_pdt_token
+msgid "PDT Identity Token"
+msgstr "ໂທເຄັນຢືນຢັນຕົວຕົນ PDT"
+
+#. module: payment
+#: model:ir.model.fields.selection,name:payment.selection__payment_provider__support_manual_capture__partial
+#: model:ir.model.fields.selection,name:payment.selection__payment_provider__support_refund__partial
+msgid "Partial"
+msgstr "ບາງສ່ວນ"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_link_wizard__partner_id
+#: model:ir.model.fields,field_description:payment.field_payment_token__partner_id
+#: model_terms:ir.ui.view,arch_db:payment.payment_token_search
+#: model_terms:ir.ui.view,arch_db:payment.payment_transaction_search
+msgid "Partner"
+msgstr "ຄູ່ຄ້າ"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_name
+msgid "Partner Name"
+msgstr "ຊື່ຄູ່ຄ້າ"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.checkout
+msgid "Pay"
+msgstr "ຊຳລະ"
+
+#. module: payment
+#: model:ir.model.fields.selection,name:payment.selection__payment_provider_onboarding_wizard__payment_method__paypal
+#: model:ir.model.fields.selection,name:payment.selection__res_company__payment_onboarding_payment_method__paypal
+#: model:payment.provider,name:payment.payment_provider_paypal
+msgid "PayPal"
+msgstr "PayPal"
+
+#. module: payment
+#: model:ir.model,name:payment.model_payment_capture_wizard
+msgid "Payment Capture Wizard"
+msgstr "ຕົວຊ່ວຍການຮຽກເກັບເງິນ"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_token__payment_details
+msgid "Payment Details"
+msgstr "ລາຍລະອຽດການຊຳລະເງິນ"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
+msgid "Payment Followup"
+msgstr "ການຕິດຕາມການຊຳລະເງິນ"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
+msgid "Payment Form"
+msgstr "ແບບຟອມການຊຳລະເງິນ"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard__manual_post_msg
+msgid "Payment Instructions"
+msgstr "ຄຳແນະນຳການຊຳລະເງິນ"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_link_wizard__link
+msgid "Payment Link"
+msgstr "ລິ້ງການຊຳລະເງິນ"
+
+#. module: payment
+#: model:ir.model,name:payment.model_payment_method
+#: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard__payment_method
+#: model_terms:ir.ui.view,arch_db:payment.payment_method_form
+msgid "Payment Method"
+msgstr "ວິທີການຊຳລະເງິນ"
+
+#. module: payment
+#: model:ir.actions.act_window,name:payment.action_payment_method
+msgid "Payment Methods"
+msgstr "ວິທີການຊຳລະເງິນ"
+
+#. module: payment
+#: model:ir.model,name:payment.model_payment_provider
+msgid "Payment Provider"
+msgstr "ຜູ້ໃຫ້ບໍລິການຊຳລະເງິນ"
+
+#. module: payment
+#: model:ir.actions.act_window,name:payment.action_payment_provider
+#: model_terms:ir.ui.view,arch_db:payment.payment_provider_list
+msgid "Payment Providers"
+msgstr "ຜູ້ໃຫ້ບໍລິການຊຳລະເງິນ"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_link_wizard__available_provider_ids
+msgid "Payment Providers Available"
+msgstr "ຜູ້ໃຫ້ບໍລິການຊຳລະເງິນທີ່ມີ"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_link_wizard__description
+msgid "Payment Ref"
+msgstr "ອ້າງອີງການຊຳລະ"
+
+#. module: payment
+#: model:ir.model,name:payment.model_payment_token
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__token_id
+msgid "Payment Token"
+msgstr "ໂທເຄັນການຊຳລະເງິນ"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_res_partner__payment_token_count
+#: model:ir.model.fields,field_description:payment.field_res_users__payment_token_count
+msgid "Payment Token Count"
+msgstr "ຈຳນວນໂທເຄັນການຊຳລະເງິນ"
+
+#. module: payment
+#: model:ir.actions.act_window,name:payment.action_payment_token
+#: model:ir.model.fields,field_description:payment.field_res_partner__payment_token_ids
+#: model:ir.model.fields,field_description:payment.field_res_users__payment_token_ids
+#: model_terms:ir.ui.view,arch_db:payment.payment_token_form
+#: model_terms:ir.ui.view,arch_db:payment.payment_token_list
+#: model_terms:ir.ui.view,arch_db:payment.payment_token_search
+msgid "Payment Tokens"
+msgstr "ໂທເຄັນການຊຳລະເງິນ"
+
+#. module: payment
+#: model:ir.model,name:payment.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "ທຸລະກຳການຊຳລະເງິນ"
+
+#. module: payment
+#: model:ir.actions.act_window,name:payment.action_payment_transaction
+#: model:ir.model.fields,field_description:payment.field_payment_token__transaction_ids
+#: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
+#: model_terms:ir.ui.view,arch_db:payment.payment_transaction_list
+msgid "Payment Transactions"
+msgstr "ທຸລະກຳການຊຳລະເງິນ"
+
+#. module: payment
+#: model:ir.actions.act_window,name:payment.action_payment_transaction_linked_to_token
+msgid "Payment Transactions Linked To Token"
+msgstr "ທຸລະກຳການຊຳລະເງິນທີ່ເຊື່ອມໂຍງກັບໂທເຄັນ"
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_token.py:0
+msgid "Payment details saved on %(date)s"
+msgstr "ລາຍລະອຽດການຊຳລະເງິນບັນທຶກເມື່ອ %(date)s"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
+msgid "Payment provider"
+msgstr "ຜູ້ໃຫ້ບໍລິການຊຳລະເງິນ"
+
+#. module: payment
+#: model:ir.model,name:payment.model_payment_provider_onboarding_wizard
+msgid "Payment provider onboarding wizard"
+msgstr "ຕົວຊ່ວຍການຕັ້ງຄ່າຜູ້ໃຫ້ບໍລິການຊຳລະເງິນ"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_token_form
+msgid "Payments"
+msgstr "ການຊຳລະເງິນ"
+
+#. module: payment
+#: model:ir.model.fields.selection,name:payment.selection__payment_transaction__state__pending
+msgid "Pending"
+msgstr "ລໍຖ້າການປະມວນຜົນ"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider__pending_msg
+msgid "Pending Message"
+msgstr "ຂໍ້ຄວາມສະຖານະລໍຖ້າ"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_phone
+msgid "Phone"
+msgstr "ເບີໂທລະສັບ"
+
+#. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/js/payment_form_mixin.js:0
+msgid "Please select a payment option."
+msgstr "ກະລຸນາເລືອກຕົວເລືອກການຊຳລະເງິນ."
+
+#. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/js/payment_form_mixin.js:0
+msgid "Please select only one payment option."
+msgstr "ກະລຸນາເລືອກພຽງແຕ່ໜຶ່ງຕົວເລືອກການຊຳລະເງິນ."
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/wizards/payment_link_wizard.py:0
+msgid "Please set an amount smaller than %s."
+msgstr "ກະລຸນາຕັ້ງມູນຄ່າທີ່ນ້ອຍກວ່າ %s."
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.company_mismatch_warning
+msgid "Please switch to company"
+msgstr "ກະລຸນາປ່ຽນໄປທີ່ບໍລິສັດ"
+
+#. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
+msgid "Please wait ..."
+msgstr "ກະລຸນາລໍຖ້າ ..."
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.confirm
+msgid "Processed by"
+msgstr "ປະມວນຜົນໂດຍ"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_token__provider_id
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__provider_id
+#: model_terms:ir.ui.view,arch_db:payment.payment_provider_search
+#: model_terms:ir.ui.view,arch_db:payment.payment_token_search
+#: model_terms:ir.ui.view,arch_db:payment.payment_transaction_search
+msgid "Provider"
+msgstr "ຜູ້ໃຫ້ບໍລິການ"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_token__provider_ref
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__provider_reference
+msgid "Provider Reference"
+msgstr "ອ້າງອີງຈາກຜູ້ໃຫ້ບໍລິການ"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_method__provider_ids
+msgid "Providers"
+msgstr "ຜູ້ໃຫ້ບໍລິການ"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_method_form
+msgid "Providers list"
+msgstr "ລາຍຊື່ຜູ້ໃຫ້ບໍລິການ"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider__is_published
+#: model_terms:ir.ui.view,arch_db:payment.payment_provider_kanban
+msgid "Published"
+msgstr "ເຜີຍແຜ່ແລ້ວ"
+
+#. module: payment
+#: model:payment.provider,name:payment.payment_provider_razorpay
+msgid "Razorpay"
+msgstr "Razorpay"
+
+#. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
+msgid "Reason:"
+msgstr "ເຫດຜົນ:"
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_transaction.py:0
+msgid "Reason: %s"
+msgstr "ເຫດຜົນ: %s"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider__redirect_form_view_id
+msgid "Redirect Form Template"
+msgstr "ແບບຟອມປ່ຽນເສັ້ນທາງ (Redirect Form)"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__reference
+#: model_terms:ir.ui.view,arch_db:payment.confirm
+msgid "Reference"
+msgstr "ອ້າງອີງ"
+
+#. module: payment
+#: model:ir.model.constraint,message:payment.constraint_payment_transaction_reference_uniq
+msgid "Reference must be unique!"
+msgstr "ເລກອ້າງອີງຕ້ອງບໍ່ຊ້ຳກັນ!"
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_transaction.py:0
+#: model:ir.model.fields.selection,name:payment.selection__payment_transaction__operation__refund
+msgid "Refund"
+msgstr "ຄືນເງິນ"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
+msgid "Refunds"
+msgstr "ການຄືນເງິນ"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__refunds_count
+msgid "Refunds Count"
+msgstr "ຈຳນວນການຄືນເງິນ"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_link_wizard__res_id
+msgid "Related Document ID"
+msgstr "ລະຫັດເອກະສານທີ່ກ່ຽວຂ້ອງ"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_link_wizard__res_model
+msgid "Related Document Model"
+msgstr "ໂມເດວເອກະສານທີ່ກ່ຽວຂ້ອງ"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider__require_currency
+msgid "Require Currency"
+msgstr "ຕ້ອງການສະກຸນເງິນ"
+
+#. module: payment
+#: model:payment.provider,name:payment.payment_provider_sepa_direct_debit
+msgid "SEPA Direct Debit"
+msgstr "SEPA Direct Debit"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.manage
+msgid "Save Payment Method"
+msgstr "ບັນທຶກວິທີການຊຳລະເງິນ"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.checkout
+msgid "Save my payment details"
+msgstr "ບັນທຶກລາຍລະອຽດການຊຳລະເງິນຂອງຂ້ອຍ"
+
+#. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
+msgid "Saving your payment method, please wait..."
+msgstr "ກຳລັງບັນທຶກວິທີການຊຳລະເງິນຂອງທ່ານ, ກະລຸນາລໍຖ້າ..."
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
+msgid "Select countries. Leave empty to make available everywhere."
+msgstr "ເລືອກປະເທດ. ປ່ອຍຫວ່າງໄວ້ເພື່ອໃຫ້ໃຊ້ໄດ້ໃນທຸກບ່ອນ."
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
+msgid "Select currencies. Leave empty not to restrict any."
+msgstr "ເລືອກສະກຸນເງິນ. ປ່ອຍຫວ່າງໄວ້ເພື່ອບໍ່ຈຳກັດສະກຸນເງິນໃດໆ."
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_res_company__payment_onboarding_payment_method
+msgid "Selected onboarding payment method"
+msgstr "ເລືອກວິທີການຊຳລະເງິນສຳລັບການຕັ້ງຄ່າ"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_method__sequence
+#: model:ir.model.fields,field_description:payment.field_payment_provider__sequence
+msgid "Sequence"
+msgstr "ລຳດັບ"
+
+#. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/js/manage_form.js:0
+#: code:addons/payment/static/src/js/payment_form_mixin.js:0
+msgid "Server Error"
+msgstr "ຂໍ້ຜິດພາດຈາກເຊີບເວີ"
+
+#. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
+msgid "Server error:"
+msgstr "ຂໍ້ຜິດພາດຈາກເຊີບເວີ:"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider__show_allow_express_checkout
+msgid "Show Allow Express Checkout"
+msgstr "ສະແດງການອະນຸຍາດຊຳລະເງິນແບບດ່ວນ"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider__show_allow_tokenization
+msgid "Show Allow Tokenization"
+msgstr "ສະແດງການອະນຸຍາດສ້າງໂທເຄັນ"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider__show_auth_msg
+msgid "Show Auth Msg"
+msgstr "ສະແດງຂໍ້ຄວາມການອະນຸຍາດ"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider__show_cancel_msg
+msgid "Show Cancel Msg"
+msgstr "ສະແດງຂໍ້ຄວາມການຍົກເລີກ"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider__show_credentials_page
+msgid "Show Credentials Page"
+msgstr "ສະແດງໜ້າຂໍ້ມູນການຢືນຢັນຕົວຕົນ"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider__show_done_msg
+msgid "Show Done Msg"
+msgstr "ສະແດງຂໍ້ຄວາມເມື່ອສຳເລັດ"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider__show_payment_method_ids
+msgid "Show Payment Method"
+msgstr "ສະແດງວິທີການຊຳລະເງິນ"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider__show_pending_msg
+msgid "Show Pending Msg"
+msgstr "ສະແດງຂໍ້ຄວາມສະຖານະລໍຖ້າ"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider__show_pre_msg
+msgid "Show Pre Msg"
+msgstr "ສະແດງຂໍ້ຄວາມກ່ອນການຊຳລະ"
+
+#. module: payment
+#: model:payment.provider,name:payment.payment_provider_sips
+msgid "Sips"
+msgstr "Sips"
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/wizards/payment_capture_wizard.py:0
+msgid "Some of the transactions you intend to capture can only be captured in full. Handle the transactions individually to capture a partial amount."
+msgstr ""
+"ບາງທຸລະກຳທີ່ທ່ານຕ້ອງການຮຽກເກັບເງິນ ສາມາດຮຽກເກັບໄດ້ແບບເຕັມຈຳນວນເທົ່ານັ້ນ. ກະລຸນາຈັດການທຸລະກຳແຍກ"
+"ຕ່າງຫາກເພື່ອຮຽກເກັບບາງສ່ວນ."
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__source_transaction_id
+msgid "Source Transaction"
+msgstr "ທຸລະກຳຕົ້ນທາງ"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider__state
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_state_id
+#: model_terms:ir.ui.view,arch_db:payment.payment_provider_search
+#: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
+msgid "State"
+msgstr "ແຂວງ/ລັດ"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_res_company__payment_provider_onboarding_state
+msgid "State of the onboarding payment provider step"
+msgstr "ສະຖານະຂອງຂັ້ນຕອນການຕັ້ງຄ່າຜູ້ໃຫ້ບໍລິການຊຳລະເງິນ"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__state
+#: model_terms:ir.ui.view,arch_db:payment.payment_transaction_search
+msgid "Status"
+msgstr "ສະຖານະ"
+
+#. module: payment
+#: model:ir.model.fields.selection,name:payment.selection__res_company__payment_onboarding_payment_method__stripe
+#: model:payment.provider,name:payment.payment_provider_stripe
+msgid "Stripe"
+msgstr "Stripe"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__support_partial_capture
+msgid "Support Partial Capture"
+msgstr "ຮອງຮັບການຮຽກເກັບເງິນບາງສ່ວນ"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider__payment_method_ids
+msgid "Supported Payment Methods"
+msgstr "ວິທີການຊຳລະເງິນທີ່ຮອງຮັບ"
+
+#. module: payment
+#: model:ir.model.fields.selection,name:payment.selection__payment_provider__state__test
+#: model_terms:ir.ui.view,arch_db:payment.checkout
+#: model_terms:ir.ui.view,arch_db:payment.manage
+#: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
+msgid "Test Mode"
+msgstr "ໂໝດທົດລອງ"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.test_token_badge
+msgid "Test Token"
+msgstr "ໂທເຄັນທົດລອງ"
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/controllers/portal.py:0
+msgid "The access token is invalid."
+msgstr "ໂທເຄັນການເຂົ້າເຖິງບໍ່ຖືກຕ້ອງ."
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/wizards/payment_capture_wizard.py:0
+msgid "The amount to capture must be positive and cannot be superior to %s."
+msgstr "ມູນຄ່າທີ່ຕ້ອງຮຽກເກັບຕ້ອງເປັນຄ່າບວກ ແລະ ບໍ່ສາມາດຫຼາຍກວ່າ %s."
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_transaction__child_transaction_ids
+msgid "The child transactions of the transaction."
+msgstr "ທຸລະກຳລູກຂອງທຸລະກຳນີ້."
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_token__payment_details
+msgid "The clear part of the payment method's payment details."
+msgstr "ສ່ວນທີ່ຊັດເຈນຂອງລາຍລະອຽດການຊຳລະເງິນຂອງວິທີການຊຳລະເງິນ."
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_provider__color
+msgid "The color of the card in kanban view"
+msgstr "ສີຂອງບັດໃນມຸມມອງຄຳບັງ (Kanban)"
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_transaction__state_message
+msgid "The complementary information message about the state"
+msgstr "ຂໍ້ຄວາມຂໍ້ມູນເພີ່ມເຕີມກ່ຽວກັບສະຖານະ"
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_provider__available_country_ids
+msgid "The countries in which this payment provider is available. Leave blank to make it available in all countries."
+msgstr ""
+"ປະເທດທີ່ຜູ້ໃຫ້ບໍລິການຊຳລະເງິນນີ້ສາມາດໃຊ້ໄດ້. ປ່ອຍຫວ່າງໄວ້ເພື່ອໃຫ້ໃຊ້ໄດ້ໃນທຸກປະເທດ."
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_provider__available_currency_ids
+msgid "The currencies available with this payment provider. Leave empty not to restrict any."
+msgstr ""
+"ສະກຸນເງິນທີ່ສາມາດໃຊ້ໄດ້ກັບຜູ້ໃຫ້ບໍລິການນີ້. ປ່ອຍຫວ່າງໄວ້ເພື່ອບໍ່ຈຳກັດສະກຸນເງິນໃດໆ."
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_transaction__fees
+msgid "The fees amount; set by the system as it depends on the provider"
+msgstr "ມູນຄ່າຄ່າທຳນຽມ; ຖືກກຳນົດໂດຍລະບົບຕາມຜູ້ໃຫ້ບໍລິການ"
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_provider.py:0
+msgid "The following fields must be filled: %s"
+msgstr "ຊ່ອງຂໍ້ມູນຕໍ່ໄປນີ້ຕ້ອງຖືກຕື່ມໃຫ້ຄົບຖ້ວນ: %s"
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_transaction__reference
+msgid "The internal reference of the transaction"
+msgstr "ເລກອ້າງອີງພາຍໃນຂອງທຸລະກຳ"
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_method__provider_ids
+msgid "The list of providers supporting this payment method"
+msgstr "ລາຍຊື່ຜູ້ໃຫ້ບໍລິການທີ່ຮອງຮັບວິທີການຊຳລະເງິນນີ້"
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_provider__main_currency_id
+msgid "The main currency of the company, used to display monetary fields."
+msgstr "ສະກຸນເງິນຫຼັກຂອງບໍລິສັດ, ໃຊ້ເພື່ອສະແດງຜົນໃນຊ່ອງຂໍ້ມູນການເງິນ."
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_provider__maximum_amount
+msgid "The maximum payment amount that this payment provider is available for. Leave blank to make it available for any payment amount."
+msgstr ""
+"ມູນຄ່າການຊຳລະສູງສຸດທີ່ຜູ້ໃຫ້ບໍລິການນີ້ຮອງຮັບ. ປ່ອຍຫວ່າງໄວ້ເພື່ອໃຫ້ໃຊ້ໄດ້ກັບທຸກມູນຄ່າ."
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_provider__auth_msg
+msgid "The message displayed if payment is authorized"
+msgstr "ຂໍ້ຄວາມທີ່ຈະສະແດງຫາກການຊຳລະເງິນໄດ້ຮັບອະນຸມັດ"
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_provider__cancel_msg
+msgid "The message displayed if the order is canceled during the payment process"
+msgstr "ຂໍ້ຄວາມທີ່ຈະສະແດງຫາກຄຳສັ່ງຊື້ຖືກຍົກເລີກໃນລະຫວ່າງຂັ້ນຕອນການຊຳລະເງິນ"
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_provider__done_msg
+msgid "The message displayed if the order is successfully done after the payment process"
+msgstr "ຂໍ້ຄວາມທີ່ຈະສະແດງຫາກຄຳສັ່ງຊື້ສຳເລັດສົມບູນຫຼັງຈາກຂັ້ນຕອນການຊຳລະເງິນ"
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_provider__pending_msg
+msgid "The message displayed if the order pending after the payment process"
+msgstr ""
+"ຂໍ້ຄວາມທີ່ຈະສະແດງຫາກຄຳສັ່ງຊື້ຍັງຢູ່ໃນສະຖານະລໍຖ້າຫຼັງຈາກຂັ້ນຕອນການຊຳລະເງິນ"
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_provider__pre_msg
+msgid "The message displayed to explain and help the payment process"
+msgstr "ຂໍ້ຄວາມທີ່ຈະສະແດງເພື່ອອະທິບາຍ ແລະ ຊ່ວຍເຫຼືອໃນຂັ້ນຕອນການຊຳລະເງິນ"
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/controllers/portal.py:0
+msgid "The payment should either be direct, with redirection, or made by a token."
+msgstr "ການຊຳລະເງິນຄວນເປັນແບບໂດຍກົງ, ແບບປ່ຽນເສັ້ນທາງ ຫຼື ຜ່ານໂທເຄັນ."
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_token__provider_ref
+msgid "The provider reference of the token of the transaction"
+msgstr "ເລກອ້າງອີງຈາກຜູ້ໃຫ້ບໍລິການຂອງໂທເຄັນໃນທຸລະກຳ"
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_transaction__provider_reference
+msgid "The provider reference of the transaction"
+msgstr "ເລກອ້າງອີງຈາກຜູ້ໃຫ້ບໍລິການຂອງທຸລະກຳ"
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_transaction__landing_route
+msgid "The route the user is redirected to after the transaction"
+msgstr "ເສັ້ນທາງທີ່ຜູ້ໃຊ້ຈະຖືກປ່ຽນໄປຫາຫຼັງຈາກທຸລະກຳສຳເລັດ"
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_transaction__source_transaction_id
+msgid "The source transaction of the related child transactions"
+msgstr "ທຸລະກຳຕົ້ນທາງຂອງທຸລະກຳລູກທີ່ກ່ຽວຂ້ອງ"
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_provider__code
+#: model:ir.model.fields,help:payment.field_payment_token__provider_code
+#: model:ir.model.fields,help:payment.field_payment_transaction__provider_code
+msgid "The technical code of this payment provider."
+msgstr "ລະຫັດທາງເຕັກນິກຂອງຜູ້ໃຫ້ບໍລິການຊຳລະເງິນນີ້."
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_provider__redirect_form_view_id
+msgid "The template rendering a form submitted to redirect the user when making a payment"
+msgstr "ແບບຟອມທີ່ຈະສະແດງເພື່ອປ່ຽນເສັ້ນທາງຜູ້ໃຊ້ເມື່ອມີການຊຳລະເງິນ"
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_provider__express_checkout_form_view_id
+msgid "The template rendering the express payment methods' form."
+msgstr "ແບບຟອມທີ່ຈະສະແດງສຳລັບວິທີການຊຳລະເງິນແບບດ່ວນ."
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_provider__inline_form_view_id
+msgid "The template rendering the inline payment form when making a direct payment"
+msgstr "ແບບຟອມທີ່ຈະສະແດງສຳລັບການຊຳລະເງິນແບບຝັງເມື່ອມີການຊຳລະເງິນໂດຍກົງ"
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_provider__token_inline_form_view_id
+msgid "The template rendering the inline payment form when making a payment by token."
+msgstr "ແບບຟອມທີ່ຈະສະແດງສຳລັບການຊຳລະເງິນແບບຝັງເມື່ອມີການຊຳລະເງິນຜ່ານໂທເຄັນ."
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_transaction.py:0
+msgid "The transaction with reference %(ref)s for %(amount)s encountered an error (%(provider_name)s)."
+msgstr ""
+"ທຸລະກຳເລກອ້າງອີງ %(ref)s ຈຳນວນ %(amount)s ເກີດຂໍ້ຜິດພາດ (%(provider_name)s)."
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_transaction.py:0
+msgid "The transaction with reference %(ref)s for %(amount)s has been authorized (%(provider_name)s)."
+msgstr ""
+"ທຸລະກຳເລກອ້າງອີງ %(ref)s ຈຳນວນ %(amount)s ໄດ້ຮັບອະນຸມັດແລ້ວ (%(provider_name)s)."
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_transaction.py:0
+msgid "The transaction with reference %(ref)s for %(amount)s has been confirmed (%(provider_name)s)."
+msgstr ""
+"ທຸລະກຳເລກອ້າງອີງ %(ref)s ຈຳນວນ %(amount)s ໄດ້ຮັບການຢືນຢັນແລ້ວ (%(provider_name)s)."
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/wizards/payment_link_wizard.py:0
+msgid "The value of the payment amount must be positive."
+msgstr "ມູນຄ່າຂອງການຊຳລະເງິນຕ້ອງເປັນຄ່າບວກ."
+
+#. module: payment
+#: model_terms:ir.actions.act_window,help:payment.action_payment_transaction
+msgid "There are no transactions to show"
+msgstr "ບໍ່ມີທຸລະກຳທີ່ຈະສະແດງ"
+
+#. module: payment
+#: model_terms:ir.actions.act_window,help:payment.action_payment_token
+msgid "There is no token created yet."
+msgstr "ຍັງບໍ່ທັນມີໂທເຄັນທີ່ຖືກສ້າງຂຶ້ນ."
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.pay
+msgid "There is nothing to pay."
+msgstr "ບໍ່ມີຫຍັງຕ້ອງຊຳລະ."
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_provider.py:0
+msgid "This action will also archive %s tokens that are registered with this provider. Archiving tokens is irreversible."
+msgstr ""
+"ການດຳເນີນການນີ້ຈະຈັດເກັບ %s ໂທເຄັນທີ່ລົງທະບຽນກັບຜູ້ໃຫ້ບໍລິການນີ້. ການຈັດເກັບໂທເຄັນບໍ່ສາມາດກັບຄືນໄດ້."
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_provider__allow_tokenization
+msgid ""
+"This controls whether customers can save their payment methods as payment tokens.\n"
+"A payment token is an anonymous link to the payment method details saved in the\n"
+"provider's database, allowing the customer to reuse it for a next purchase."
+msgstr ""
+"ສິ່ງນີ້ຄວບຄຸມວ່າລູກຄ້າສາມາດບັນທຶກວິທີການຊຳລະເງິນເປັນໂທເຄັນໄດ້ບໍ່.\n"
+"ໂທເຄັນການຊຳລະແມ່ນລິ້ງທີ່ບໍ່ລະບຸຕົວຕົນໄປຫາລາຍລະອຽດວິທີການຊຳລະທີ່ບັນທຶກໄວ້ໃນ\n"
+"ຖານຂໍ້ມູນຂອງຜູ້ໃຫ້ບໍລິການ, ເຮັດໃຫ້ລູກຄ້າສາມາດນຳມາໃຊ້ໃໝ່ໃນການຊື້ຄັ້ງຕໍ່ໄປ."
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_provider__allow_express_checkout
+msgid "This controls whether customers can use express payment methods. Express checkout enables customers to pay with Google Pay and Apple Pay from which address information is collected at payment."
+msgstr ""
+"ສິ່ງນີ້ຄວບຄຸມວ່າລູກຄ້າສາມາດໃຊ້ວິທີການຊຳລະເງິນແບບດ່ວນໄດ້ບໍ່. ການຊຳລະເງິນແບບດ່ວນຊ່ວຍໃຫ້ລູກຄ້າສາມາດຊຳລ"
+"ະຜ່ານ Google Pay ແລະ Apple Pay ເຊິ່ງຈະມີການເກັບຂໍ້ມູນທີ່ຢູ່ໃນເວລານັ້ນ."
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_method__image
+#: model:ir.model.fields,help:payment.field_payment_method__image_payment_form
+msgid "This field holds the image used for this payment method, limited to 64x64 px"
+msgstr ""
+"ຊ່ອງຂໍ້ມູນນີ້ເກັບຮູບພາບທີ່ໃຊ້ສຳລັບວິທີການຊຳລະເງິນນີ້, ຈຳກັດຂະໜາດທີ່ 64x64 ພິກເຊວ"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
+msgid ""
+"This partner has no email, which may cause issues with some payment providers.\n"
+"                     Setting an email for this partner is advised."
+msgstr ""
+"ຄູ່ຄ້ານີ້ບໍ່ມີອີເມລ, ເຊິ່ງອາດຈະເຮັດໃຫ້ເກີດບັນຫາກັບຜູ້ໃຫ້ບໍລິການຊຳລະເງິນບາງແຫ່ງ.\n"
+"                     ແນະນຳໃຫ້ຕັ້ງຄ່າອີເມລສຳລັບຄູ່ຄ້ານີ້."
+
+#. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
+msgid "This payment has been canceled."
+msgstr "ການຊຳລະເງິນນີ້ຖືກຍົກເລີກແລ້ວ."
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.verified_token_checkmark
+msgid "This payment method has been verified by our system."
+msgstr "ວິທີການຊຳລະເງິນນີ້ໄດ້ຮັບການຢືນຢັນໂດຍລະບົບຂອງພວກເຮົາແລ້ວ."
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.verified_token_checkmark
+msgid "This payment method has not been verified by our system."
+msgstr "ວິທີການຊຳລະເງິນນີ້ຍັງບໍ່ທັນໄດ້ຮັບການຢືນຢັນໂດຍລະບົບຂອງພວກເຮົາ."
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_transaction.py:0
+msgid "This transaction has been confirmed following the processing of its partial capture and partial void transactions (%(provider)s)."
+msgstr ""
+"ທຸລະກຳນີ້ໄດ້ຮັບການຢືນຢັນຫຼັງຈາກການປະມວນຜົນການຮຽກເກັບເງິນບາງສ່ວນ ແລະ ທຸລະກຳທີ່ເປັນໂມຄະບາງສ່ວນ (%"
+"(provider)s)."
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider__token_inline_form_view_id
+msgid "Token Inline Form Template"
+msgstr "ແບບຟອມຝັງສຳລັບໂທເຄັນ (Token Inline Form)"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider__support_tokenization
+msgid "Tokenization Supported"
+msgstr "ຮອງຮັບການສ້າງໂທເຄັນ"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__transaction_ids
+msgid "Transaction"
+msgstr "ທຸລະກຳ"
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_transaction.py:0
+msgid "Transaction authorization is not supported by the following payment providers: %s"
+msgstr ""
+"ການອະນຸຍາດທຸລະກຳບໍ່ໄດ້ຮັບການຮອງຮັບໂດຍຜູ້ໃຫ້ບໍລິການຊຳລະເງິນດັ່ງຕໍ່ໄປນີ້: %s"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider__support_refund
+msgid "Type of Refund Supported"
+msgstr "ປະເພດການຄືນເງິນທີ່ຮອງຮັບ"
+
+#. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
+msgid "Unable to contact the Odoo server."
+msgstr "ບໍ່ສາມາດຕິດຕໍ່ເຊີບເວີ Odoo ໄດ້."
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.checkout
+#: model_terms:ir.ui.view,arch_db:payment.manage
+#: model_terms:ir.ui.view,arch_db:payment.payment_provider_kanban
+msgid "Unpublished"
+msgstr "ຍັງບໍ່ໄດ້ເຜີຍແຜ່"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
+#: model_terms:ir.ui.view,arch_db:payment.payment_provider_kanban
+msgid "Upgrade"
+msgstr "ອັບເກຣດ"
+
+#. module: payment
+#: model:ir.model.fields.selection,name:payment.selection__payment_transaction__operation__validation
+msgid "Validation of the payment method"
+msgstr "ການກວດສອບຄວາມຖືກຕ້ອງຂອງວິທີການຊຳລະເງິນ"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider__fees_dom_var
+msgid "Variable domestic fees"
+msgstr "ຄ່າທຳນຽມພາຍໃນປະເທດແບບປ່ຽນແປງ"
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_provider.py:0
+msgid "Variable fees must always be positive and below 100%."
+msgstr "ຄ່າທຳນຽມແບບປ່ຽນແປງຕ້ອງເປັນຄ່າບວກ ແລະ ຕ່ຳກວ່າ 100% ສະເໝີ."
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider__fees_int_var
+msgid "Variable international fees"
+msgstr "ຄ່າທຳນຽມລະຫວ່າງປະເທດແບບປ່ຽນແປງ"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_token__verified
+msgid "Verified"
+msgstr "ຢືນຢັນແລ້ວ"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__void_remaining_amount
+msgid "Void Remaining Amount"
+msgstr "ຍົກເລີກມູນຄ່າທີ່ເຫຼືອ"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
+msgid "Void Transaction"
+msgstr "ຍົກເລີກທຸລະກຳ"
+
+#. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
+msgid "Waiting for operations to process"
+msgstr "ກຳລັງລໍຖ້າການປະມວນຜົນ"
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_provider.py:0
+msgid "Warning"
+msgstr "ຄຳເຕືອນ"
+
+#. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/js/manage_form.js:0
+msgid "Warning!"
+msgstr "ຄຳເຕືອນ!"
+
+#. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/js/manage_form.js:0
+msgid "We are not able to delete your payment method."
+msgstr "ພວກເຮົາບໍ່ສາມາດລຶບວິທີການຊຳລະເງິນຂອງທ່ານໄດ້."
+
+#. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
+msgid "We are not able to find your payment, but don't worry."
+msgstr "ພວກເຮົາບໍ່ພົບຂໍ້ມູນການຊຳລະເງິນຂອງທ່ານ, ແຕ່ບໍ່ຕ້ອງເປັນຫ່ວງ."
+
+#. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/js/payment_form_mixin.js:0
+msgid "We are not able to process your payment."
+msgstr "ພວກເຮົາບໍ່ສາມາດປະມວນຜົນການຊຳລະເງິນຂອງທ່ານໄດ້."
+
+#. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/js/manage_form.js:0
+msgid "We are not able to save your payment method."
+msgstr "ພວກເຮົາບໍ່ສາມາດບັນທຶກວິທີການຊຳລະເງິນຂອງທ່ານໄດ້."
+
+#. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/js/post_processing.js:0
+msgid "We are processing your payment, please wait ..."
+msgstr "ພວກເຮົາກຳລັງປະມວນຜົນການຊຳລະເງິນຂອງທ່ານ, ກະລຸນາລໍຖ້າ ..."
+
+#. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
+msgid "We are waiting for the payment provider to confirm the payment."
+msgstr "ພວກເຮົາກຳລັງລໍຖ້າໃຫ້ຜູ້ໃຫ້ບໍລິການຊຳລະເງິນຢືນຢັນການຊຳລະ."
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_transaction__tokenize
+msgid "Whether a payment token should be created when post-processing the transaction"
+msgstr "ຄວນສ້າງໂທເຄັນການຊຳລະເມື່ອມີການປະມວນຜົນທຸລະກຳຂັ້ນສຸດທ້າຍບໍ່"
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_capture_wizard__support_partial_capture
+msgid "Whether each of the transactions' provider supports the partial capture."
+msgstr "ຜູ້ໃຫ້ບໍລິການຂອງແຕ່ລະທຸລະກຳຮອງຮັບການຮຽກເກັບເງິນບາງສ່ວນບໍ່."
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_transaction__callback_is_done
+msgid "Whether the callback has already been executed"
+msgstr "Callback ໄດ້ຖືກດຳເນີນການໄປແລ້ວບໍ່"
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_provider__is_published
+msgid "Whether the provider is visible on the website or not. Tokens remain functional but are only visible on manage forms."
+msgstr ""
+"ຜູ້ໃຫ້ບໍລິການຈະສະແດງໃນເວັບໄຊບໍ່. ໂທເຄັນຍັງໃຊ້ງານໄດ້ຕາມປົກກະຕິ ແຕ່ຈະເຫັນໄດ້ສະເພາະໃນແບບຟອມການຈັດກ"
+"ານ."
+
+#. module: payment
+#: model:payment.provider,name:payment.payment_provider_transfer
+msgid "Wire Transfer"
+msgstr "ການໂອນເງິນຜ່ານທະນາຄານ"
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_provider.py:0
+msgid "You cannot delete the payment provider %s; archive it instead."
+msgstr "ທ່ານບໍ່ສາມາດລຶບຜູ້ໃຫ້ບໍລິການຊຳລະເງິນ %s ໄດ້; ກະລຸນາຈັດເກັບແທນ."
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_provider.py:0
+msgid "You cannot publish a disabled provider."
+msgstr "ທ່ານບໍ່ສາມາດເຜີຍແຜ່ຜູ້ໃຫ້ບໍລິການທີ່ຖືກປິດໃຊ້ງານ."
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/controllers/portal.py:0
+msgid "You do not have access to this payment token."
+msgstr "ທ່ານບໍ່ມີສິດເຂົ້າເຖິງໂທເຄັນການຊຳລະເງິນນີ້."
+
+#. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
+msgid "You should receive an email confirming your payment in a few minutes."
+msgstr "ທ່ານຄວນຈະໄດ້ຮັບອີເມລຢືນຢັນການຊຳລະເງິນພາຍໃນບໍ່ເທົ່າໃດນາທີ."
+
+#. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
+msgid "You will be notified when the payment is confirmed."
+msgstr "ທ່ານຈະໄດ້ຮັບການແຈ້ງເຕືອນເມື່ອການຊຳລະເງິນໄດ້ຮັບການຢືນຢັນ."
+
+#. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
+msgid "You will be notified when the payment is fully confirmed."
+msgstr "ທ່ານຈະໄດ້ຮັບການແຈ້ງເຕືອນເມື່ອການຊຳລະເງິນໄດ້ຮັບການຢືນຢັນຄົບຖ້ວນ."
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_provider.py:0
+#: model_terms:payment.provider,auth_msg:payment.payment_provider_adyen
+#: model_terms:payment.provider,auth_msg:payment.payment_provider_aps
+#: model_terms:payment.provider,auth_msg:payment.payment_provider_asiapay
+#: model_terms:payment.provider,auth_msg:payment.payment_provider_authorize
+#: model_terms:payment.provider,auth_msg:payment.payment_provider_buckaroo
+#: model_terms:payment.provider,auth_msg:payment.payment_provider_demo
+#: model_terms:payment.provider,auth_msg:payment.payment_provider_flutterwave
+#: model_terms:payment.provider,auth_msg:payment.payment_provider_mercado_pago
+#: model_terms:payment.provider,auth_msg:payment.payment_provider_mollie
+#: model_terms:payment.provider,auth_msg:payment.payment_provider_paypal
+#: model_terms:payment.provider,auth_msg:payment.payment_provider_razorpay
+#: model_terms:payment.provider,auth_msg:payment.payment_provider_sepa_direct_debit
+#: model_terms:payment.provider,auth_msg:payment.payment_provider_sips
+#: model_terms:payment.provider,auth_msg:payment.payment_provider_stripe
+#: model_terms:payment.provider,auth_msg:payment.payment_provider_transfer
+msgid "Your payment has been authorized."
+msgstr "ການຊຳລະເງິນຂອງທ່ານໄດ້ຮັບອະນຸມັດແລ້ວ."
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_provider.py:0
+#: model_terms:payment.provider,cancel_msg:payment.payment_provider_adyen
+#: model_terms:payment.provider,cancel_msg:payment.payment_provider_aps
+#: model_terms:payment.provider,cancel_msg:payment.payment_provider_asiapay
+#: model_terms:payment.provider,cancel_msg:payment.payment_provider_authorize
+#: model_terms:payment.provider,cancel_msg:payment.payment_provider_buckaroo
+#: model_terms:payment.provider,cancel_msg:payment.payment_provider_demo
+#: model_terms:payment.provider,cancel_msg:payment.payment_provider_flutterwave
+#: model_terms:payment.provider,cancel_msg:payment.payment_provider_mercado_pago
+#: model_terms:payment.provider,cancel_msg:payment.payment_provider_mollie
+#: model_terms:payment.provider,cancel_msg:payment.payment_provider_paypal
+#: model_terms:payment.provider,cancel_msg:payment.payment_provider_razorpay
+#: model_terms:payment.provider,cancel_msg:payment.payment_provider_sepa_direct_debit
+#: model_terms:payment.provider,cancel_msg:payment.payment_provider_sips
+#: model_terms:payment.provider,cancel_msg:payment.payment_provider_stripe
+#: model_terms:payment.provider,cancel_msg:payment.payment_provider_transfer
+msgid "Your payment has been cancelled."
+msgstr "ການຊຳລະເງິນຂອງທ່ານຖືກຍົກເລີກແລ້ວ."
+
+#. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
+msgid "Your payment has been processed."
+msgstr "ການຊຳລະເງິນຂອງທ່ານຖືກປະມວນຜົນແລ້ວ."
+
+#. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
+msgid "Your payment has been received but need to be confirmed manually."
+msgstr ""
+"ພວກເຮົາໄດ້ຮັບການຊຳລະເງິນຂອງທ່ານແລ້ວ ແຕ່ຈຳເປັນຕ້ອງໄດ້ຮັບການຢືນຢັນດ້ວຍຕົນເອງ."
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_provider.py:0
+#: model_terms:payment.provider,pending_msg:payment.payment_provider_adyen
+#: model_terms:payment.provider,pending_msg:payment.payment_provider_aps
+#: model_terms:payment.provider,pending_msg:payment.payment_provider_asiapay
+#: model_terms:payment.provider,pending_msg:payment.payment_provider_authorize
+#: model_terms:payment.provider,pending_msg:payment.payment_provider_buckaroo
+#: model_terms:payment.provider,pending_msg:payment.payment_provider_demo
+#: model_terms:payment.provider,pending_msg:payment.payment_provider_flutterwave
+#: model_terms:payment.provider,pending_msg:payment.payment_provider_mercado_pago
+#: model_terms:payment.provider,pending_msg:payment.payment_provider_mollie
+#: model_terms:payment.provider,pending_msg:payment.payment_provider_paypal
+#: model_terms:payment.provider,pending_msg:payment.payment_provider_razorpay
+#: model_terms:payment.provider,pending_msg:payment.payment_provider_sepa_direct_debit
+#: model_terms:payment.provider,pending_msg:payment.payment_provider_sips
+#: model_terms:payment.provider,pending_msg:payment.payment_provider_stripe
+msgid "Your payment has been successfully processed but is waiting for approval."
+msgstr "ການຊຳລະເງິນຂອງທ່ານຖືກປະມວນຜົນສຳເລັດແລ້ວ ແຕ່ກຳລັງລໍຖ້າການອະນຸມັດ."
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_provider.py:0
+#: model_terms:payment.provider,done_msg:payment.payment_provider_adyen
+#: model_terms:payment.provider,done_msg:payment.payment_provider_aps
+#: model_terms:payment.provider,done_msg:payment.payment_provider_asiapay
+#: model_terms:payment.provider,done_msg:payment.payment_provider_authorize
+#: model_terms:payment.provider,done_msg:payment.payment_provider_buckaroo
+#: model_terms:payment.provider,done_msg:payment.payment_provider_demo
+#: model_terms:payment.provider,done_msg:payment.payment_provider_flutterwave
+#: model_terms:payment.provider,done_msg:payment.payment_provider_mercado_pago
+#: model_terms:payment.provider,done_msg:payment.payment_provider_mollie
+#: model_terms:payment.provider,done_msg:payment.payment_provider_paypal
+#: model_terms:payment.provider,done_msg:payment.payment_provider_razorpay
+#: model_terms:payment.provider,done_msg:payment.payment_provider_sepa_direct_debit
+#: model_terms:payment.provider,done_msg:payment.payment_provider_sips
+#: model_terms:payment.provider,done_msg:payment.payment_provider_stripe
+#: model_terms:payment.provider,done_msg:payment.payment_provider_transfer
+msgid "Your payment has been successfully processed. Thank you!"
+msgstr "ການຊຳລະເງິນຂອງທ່ານຖືກປະມວນຜົນສຳເລັດແລ້ວ. ຂໍຂອບໃຈ!"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.transaction_status
+msgid "Your payment has not been processed yet."
+msgstr "ການຊຳລະເງິນຂອງທ່ານຍັງບໍ່ທັນໄດ້ຖືກປະມວນຜົນ."
+
+#. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
+msgid "Your payment is being processed, please wait..."
+msgstr "ກຳລັງປະມວນຜົນການຊຳລະເງິນຂອງທ່ານ, ກະລຸນາລໍຖ້າ..."
+
+#. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
+msgid "Your payment is in pending state."
+msgstr "ການຊຳລະເງິນຂອງທ່ານຢູ່ໃນສະຖານະລໍຖ້າ."
+
+#. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
+msgid "Your payment method has been saved."
+msgstr "ວິທີການຊຳລະເງິນຂອງທ່ານໄດ້ຖືກບັນທຶກແລ້ວ."
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
+msgid "ZIP"
+msgstr "ລະຫັດໄປສະນີ"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_zip
+msgid "Zip"
+msgstr "ລະຫັດໄປສະນີ"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.transaction_status
+msgid "danger"
+msgstr "ອັນຕະລາຍ"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.transaction_status
+msgid "info"
+msgstr "ຂໍ້ມູນ"
+
+#. module: payment
+#: model:ir.actions.server,name:payment.cron_post_process_payment_tx_ir_actions_server
+msgid "payment: post-process transactions"
+msgstr "ການຊຳລະເງິນ: ການປະມວນຜົນທຸລະກຳຂັ້ນສຸດທ້າຍ"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_provider_kanban
+#: model_terms:ir.ui.view,arch_db:payment.payment_provider_search
+msgid "provider"
+msgstr "ຜູ້ໃຫ້ບໍລິການ"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.icon_list
+msgid "show less"
+msgstr "ສະແດງໜ້ອຍລົງ"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.icon_list
+msgid "show more"
+msgstr "ສະແດງເພີ່ມເຕີມ"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.transaction_status
+msgid "success"
+msgstr "ສຳເລັດ"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.company_mismatch_warning
+msgid ""
+"to make this\n"
+"                    payment."
+msgstr ""
+"ເພື່ອເຮັດການ\n"
+"                    ຊຳລະເງິນນີ້."
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.transaction_status
+msgid "warning"
+msgstr "ຄຳເຕືອນ"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.manage
+msgid "– created on"
+msgstr "– ສ້າງເມື່ອ"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.checkout
+msgid "— created on"
+msgstr "— ສ້າງເມື່ອ"

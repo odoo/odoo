@@ -1,0 +1,11 @@
+.self_order_attribute_selection {
+    .self_order_attribute_selection_option {
+        @include media-breakpoint-down(sm) {
+            --aspect-ratio: #{map-get($aspect-ratios, "21x9")};
+        }
+
+        > .active {
+            transform: scale(.95);
+        }
+    }
+}

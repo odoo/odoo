@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t
+        t-name="product.ProductDocumentKanbanView.Buttons"
+        t-inherit="web.KanbanView.Buttons"
+        t-inherit-mode="primary"
+    >
+        <xpath expr="//div[hasclass('o_cp_buttons')]" position="inside">
+            <UploadButton
+                formData="formData"
+                allowedMIMETypes="allowedMIMETypes"
+                load.bind="() => this.model.root.load()"
+                uploadRoute="uploadRoute"
+            />
+        </xpath>
+    </t>
+</templates>

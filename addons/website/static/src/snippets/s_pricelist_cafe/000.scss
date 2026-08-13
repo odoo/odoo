@@ -1,0 +1,12 @@
+.s_pricelist_cafe {
+    @include media-breakpoint-down(lg) {
+        // By default, it hides the default shape on medium breakpoints
+        // in order to have clear sections.
+        // If the user wishes to display this shape on mobile devices,
+        // and therefore on tablets, he can always do so by using the
+        // visibility toggle feature.
+        > .o_web_editor_Origins_19:not(.o_shape_show_mobile) {
+            display: none;
+        }
+    }
+}

@@ -1,0 +1,92 @@
+.o-discuss-CallParticipantCard {
+    color: white;
+    aspect-ratio: 16/9;
+
+    &.o-isTalking {
+        box-shadow: inset 0 0 0 map-get($spacers, 1) var(--discuss-talkingColor, $o-discuss-talkingColor);
+
+        &.o-inset {
+            box-shadow: inset 0 0 0 map-get($spacers, 1)/2 var(--discuss-talkingColor, $o-discuss-talkingColor);
+        }
+    }
+
+    &.o-inset {
+        height: 20%;
+        max-height: 125px !important;
+        right: 1vh;
+        bottom: 1vh;
+        position: absolute !important;
+        cursor: move !important;
+
+        &.o-small {
+            width: 30%;
+            left: 0;
+            top: 0;
+        }
+
+        .o-mail-ChatWindow & {
+            bottom: 5vh;
+        }
+
+        .o-discuss-CallParticipantCard-avatar img {
+            max-height: #{"min(70%, 70px)"};
+            max-width: #{"min(70%, 70px)"};
+        }
+    }
+}
+
+.o-discuss-CallParticipantCard-avatar:not(.o-minimized) {
+    background-color: var(--o-discuss-CallParticipantCard-avatarBgColor, #{$o-gray-700});
+}
+
+.o-discuss-CallParticipantCard-avatar img {
+    max-height: #{"min(100%, 100px)"}; // interpolated as not supported by Sass
+    max-width: #{"min(100%, 100px)"};
+    aspect-ratio: 1;
+    border: none;
+
+    &.o-isTalking {
+        outline: 4px solid var(--discuss-talkingColor, $o-discuss-talkingColor);
+        outline-offset: -4px;
+    }
+
+    &.o-isInvitation:not(:hover) {
+        animation: o-discuss-CallParticipantCard-avatarImag_borderPulse 3s linear infinite;
+    }
+
+    &.o-isInvitation:hover {
+        border: solid map-get($theme-colors, 'danger');
+    }
+}
+
+@keyframes o-discuss-CallParticipantCard-avatarImag_borderPulse {
+    0% { border: solid white }
+    20% { border: solid $gray-600 }
+    35% { border: solid $gray-100 }
+    50% { border: solid $gray-600 }
+    70% { border: solid $gray-100 }
+    85% { border: solid $gray-700 }
+}
+
+.o-discuss-CallParticipantCard-iconBlackBg {
+    background-color: rgba(0, 0, 0, 0.75);
+    opacity: 75%;
+}
+
+.o-discuss-CallParticipantCard-overlay {
+    margin: Min(5%, map-get($spacers, 2));
+}
+
+.o-discuss-CallParticipantCard-overlayBottomName {
+    background-color: rgba(0, 0, 0, 0.75);
+}
+
+.o-discuss-CallParticipantCard-overlay-replayButton {
+    background-color: $o-gray-900;
+    &:hover {
+        background-color: $o-gray-700;
+    }
+    &:active {
+        background-color: $o-gray-800;
+    }
+}

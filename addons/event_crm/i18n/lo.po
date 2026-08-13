@@ -1,0 +1,511 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * event_crm
+#
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
+# Bone NI <bounkirdni@gmail.com>, 2026.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
+"PO-Revision-Date: 2026-05-26 04:55+0000\n"
+"Last-Translator: Bone NI <bounkirdni@gmail.com>\n"
+"Language-Team: Lao <https://translate.odoo.com/projects/odoo-18/event_crm/"
+"lo/>\n"
+"Language: lo\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.17\n"
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_event_event__lead_count
+#: model:ir.model.fields,field_description:event_crm.field_event_registration__lead_count
+msgid "# Leads"
+msgstr "# ຜູ້ສົນໃຈ"
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_crm_lead__registration_count
+msgid "# Registrations"
+msgstr "# ການລົງທະບຽນ"
+
+#. module: event_crm
+#. odoo-python
+#: code:addons/event_crm/models/event_registration.py:0
+msgid "(updated)"
+msgstr "(ອັບເດດແລ້ວ)"
+
+#. module: event_crm
+#: model_terms:ir.ui.view,arch_db:event_crm.crm_lead_view_form
+msgid "<span class=\"o_stat_text\"> Attendees</span>"
+msgstr "<span class=\"o_stat_text\"> ຜູ້ເຂົ້າຮ່ວມ</span>"
+
+#. module: event_crm
+#: model_terms:ir.ui.view,arch_db:event_crm.event_registration_view_form
+msgid "<span class=\"o_stat_text\"> Leads</span>"
+msgstr "<span class=\"o_stat_text\"> ຜູ້ສົນໃຈ</span>"
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__active
+msgid "Active"
+msgstr "ເປີດໃຊ້ງານ"
+
+#. module: event_crm
+#: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_form
+#: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_search
+msgid "Archived"
+msgstr "ເກັບໄວ້"
+
+#. module: event_crm
+#: model:ir.model.fields.selection,name:event_crm.selection__event_lead_rule__lead_creation_trigger__create
+msgid "Attendees are created"
+msgstr "ສ້າງຜູ້ເຂົ້າຮ່ວມແລ້ວ"
+
+#. module: event_crm
+#: model:ir.model.fields.selection,name:event_crm.selection__event_lead_rule__lead_creation_trigger__confirm
+msgid "Attendees are registered"
+msgstr "ຜູ້ເຂົ້າຮ່ວມລົງທະບຽນແລ້ວ"
+
+#. module: event_crm
+#: model:ir.model.fields.selection,name:event_crm.selection__event_lead_rule__lead_creation_trigger__done
+msgid "Attendees attended"
+msgstr "ຜູ້ເຂົ້າຮ່ວມໄດ້ເຂົ້າຮ່ວມແລ້ວ"
+
+#. module: event_crm
+#: model:ir.model.fields,help:event_crm.field_event_lead_rule__lead_tag_ids
+msgid "Automatically add these tags to the created leads."
+msgstr "ເພີ່ມແທັກເຫຼົ່ານີ້ໃສ່ຜູ້ສົນໃຈທີ່ຖືກສ້າງຂຶ້ນໂດຍອັດຕະໂນມັດ."
+
+#. module: event_crm
+#: model:ir.model.fields,help:event_crm.field_event_lead_rule__lead_sales_team_id
+msgid "Automatically assign the created leads to this Sales Team."
+msgstr "ມອບໝາຍຜູ້ສົນໃຈທີ່ຖືກສ້າງຂຶ້ນໃຫ້ກັບທີມຂາຍນີ້ໂດຍອັດຕະໂນມັດ."
+
+#. module: event_crm
+#: model:ir.model.fields,help:event_crm.field_event_lead_rule__lead_user_id
+msgid "Automatically assign the created leads to this Salesperson."
+msgstr "ມອບໝາຍຜູ້ສົນໃຈທີ່ຖືກສ້າງຂຶ້ນໃຫ້ກັບພະນັກງານຂາຍນີ້ໂດຍອັດຕະໂນມັດ."
+
+#. module: event_crm
+#. odoo-python
+#: code:addons/event_crm/models/event_event.py:0
+msgid "Aww! No Leads created, check your Lead Generation Rules and try again."
+msgstr ""
+"ໂອ້! ບໍ່ມີການສ້າງຜູ້ສົນໃຈ, ກະລຸນາກວດສອບກົດເກນການສ້າງຜູ້ສົນໃຈ ແລະ ລອງໃໝ່ອີກຄັ້ງ."
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__company_id
+msgid "Company"
+msgstr "ບໍລິສັດ"
+
+#. module: event_crm
+#: model:ir.model.fields,help:event_crm.field_crm_lead__registration_count
+msgid "Counter for the registrations linked to this lead"
+msgstr "ຕົວນັບສຳລັບການລົງທະບຽນທີ່ເຊື່ອມໂຍງກັບຜູ້ສົນໃຈນີ້"
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__lead_creation_basis
+msgid "Create"
+msgstr "ສ້າງ"
+
+#. module: event_crm
+#: model_terms:ir.actions.act_window,help:event_crm.event_lead_rule_action
+msgid "Create a Lead Generation Rule"
+msgstr "ສ້າງກົດເກນການສ້າງຜູ້ສົນໃຈ"
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__lead_ids
+msgid "Created Leads"
+msgstr "ຜູ້ສົນໃຈທີ່ສ້າງຂຶ້ນ"
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__create_uid
+msgid "Created by"
+msgstr "ສ້າງໂດຍ"
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__create_date
+msgid "Created on"
+msgstr "ສ້າງເມື່ອ"
+
+#. module: event_crm
+#: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_search
+msgid "Creation Type"
+msgstr "ປະເພດການສ້າງ"
+
+#. module: event_crm
+#: model:ir.model.fields,help:event_crm.field_event_lead_rule__lead_creation_trigger
+msgid ""
+"Creation: at attendee creation;\n"
+"Registered: at attendee registration, manually or automatically;\n"
+"Attended: when attendance is confirmed and registration set to done;"
+msgstr ""
+"ການສ້າງ: ເມື່ອສ້າງຜູ້ເຂົ້າຮ່ວມ;\n"
+"ລົງທະບຽນແລ້ວ: ເມື່ອລົງທະບຽນຜູ້ເຂົ້າຮ່ວມ, ດ້ວຍຕົນເອງ ຫຼື ອັດຕະໂນມັດ;\n"
+"ເຂົ້າຮ່ວມແລ້ວ: ເມື່ອຢືນຢັນການເຂົ້າຮ່ວມ ແລະ ຕັ້ງຄ່າການລົງທະບຽນເປັນສຳເລັດ;"
+
+#. module: event_crm
+#: model:ir.model.fields,help:event_crm.field_event_lead_rule__lead_type
+msgid "Default lead type when this rule is applied."
+msgstr "ປະເພດຜູ້ສົນໃຈເລີ່ມຕົ້ນເມື່ອກົດເກນນີ້ຖືກນຳໃຊ້."
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_request__display_name
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__display_name
+msgid "Display Name"
+msgstr "ຊື່ສະແດງ"
+
+#. module: event_crm
+#: model:ir.model,name:event_crm.model_event_event
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_request__event_id
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__event_id
+msgid "Event"
+msgstr "ງານກິດຈະກຳ"
+
+#. module: event_crm
+#: model:ir.actions.server,name:event_crm.ir_cron_generate_leads_ir_actions_server
+msgid "Event CRM: Generate Leads based on Rules"
+msgstr "Event CRM: ສ້າງຜູ້ສົນໃຈໂດຍອີງຕາມກົດເກນ"
+
+#. module: event_crm
+#: model:ir.model,name:event_crm.model_event_lead_request
+msgid "Event Lead Request"
+msgstr "ຄຳຮ້ອງຂໍສ້າງຜູ້ສົນໃຈຈາກກິດຈະກຳ"
+
+#. module: event_crm
+#: model:ir.model,name:event_crm.model_event_lead_rule
+msgid "Event Lead Rules"
+msgstr "ກົດເກນຜູ້ສົນໃຈຈາກກິດຈະກຳ"
+
+#. module: event_crm
+#: model:ir.model,name:event_crm.model_event_registration
+msgid "Event Registration"
+msgstr "ການລົງທະບຽນກິດຈະກຳ"
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__event_type_ids
+msgid "Event Templates"
+msgstr "ແມ່ແບບກິດຈະກຳ"
+
+#. module: event_crm
+#: model:ir.actions.act_window,name:event_crm.event_registration_action_from_lead
+msgid "Event registrations"
+msgstr "ການລົງທະບຽນກິດຈະກຳ"
+
+#. module: event_crm
+#: model:ir.model.fields,help:event_crm.field_crm_lead__event_id
+msgid "Event triggering the rule that created this lead"
+msgstr "ກິດຈະກຳທີ່ກະຕຸ້ນກົດເກນທີ່ສ້າງຜູ້ສົນໃຈນີ້"
+
+#. module: event_crm
+#: model_terms:ir.ui.view,arch_db:event_crm.crm_lead_merge_summary_inherit_event_crm
+msgid "Event:"
+msgstr "ກິດຈະກຳ:"
+
+#. module: event_crm
+#: model:ir.model.fields,help:event_crm.field_event_lead_rule__event_registration_filter
+msgid "Filter the attendees that will or not generate leads."
+msgstr "ກັ່ນຕອງຜູ້ເຂົ້າຮ່ວມທີ່ຈະສ້າງ ຫຼື ບໍ່ສ້າງຜູ້ສົນໃຈ."
+
+#. module: event_crm
+#: model:ir.model.fields,help:event_crm.field_event_lead_rule__event_type_ids
+msgid ""
+"Filter the attendees to include those of this specific event category. If "
+"not set, no event category restriction will be applied."
+msgstr ""
+"ກັ່ນຕອງຜູ້ເຂົ້າຮ່ວມເພື່ອລວມເອົາຜູ້ທີ່ຢູ່ໃນໝວດກິດຈະກຳສະເພາະນີ້. ຫາກບໍ່ໄດ້ຕັ້ງຄ່າ, ຈະບໍ່ມີການຈຳກັດໝວດກິດຈະກຳ."
+
+#. module: event_crm
+#: model:ir.model.fields,help:event_crm.field_event_lead_rule__event_id
+msgid ""
+"Filter the attendees to include those of this specific event. If not set, no"
+" event restriction will be applied."
+msgstr ""
+"ກັ່ນຕອງຜູ້ເຂົ້າຮ່ວມເພື່ອລວມເອົາຜູ້ທີ່ຢູ່ໃນກິດຈະກຳສະເພາະນີ້. ຫາກບໍ່ໄດ້ຕັ້ງຄ່າ, ຈະບໍ່ມີການຈຳກັດກິດຈະກຳ."
+
+#. module: event_crm
+#: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_form
+msgid "For any of these Events"
+msgstr "ສຳລັບກິດຈະກຳເຫຼົ່ານີ້"
+
+#. module: event_crm
+#: model_terms:ir.ui.view,arch_db:event_crm.event_view_form
+msgid "Generate Leads"
+msgstr "ສ້າງຜູ້ສົນໃຈ"
+
+#. module: event_crm
+#. odoo-python
+#: code:addons/event_crm/models/event_event.py:0
+msgid "Got it! We've noted your request. Your leads will be created soon!"
+msgstr ""
+"ຮັບຊາບແລ້ວ! ພວກເຮົາໄດ້ບັນທຶກຄຳຮ້ອງຂໍຂອງທ່ານແລ້ວ. ຜູ້ສົນໃຈຂອງທ່ານຈະຖືກສ້າງຂຶ້ນໃນໄວໆນີ້!"
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_request__id
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__id
+msgid "ID"
+msgstr "ລະຫັດ (ID)"
+
+#. module: event_crm
+#: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_form
+msgid "If the Attendees meet these Conditions"
+msgstr "ຫາກຜູ້ເຂົ້າຮ່ວມກົງກັບເງື່ອນໄຂເຫຼົ່ານີ້"
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__write_uid
+msgid "Last Updated by"
+msgstr "ອັບເດດຫຼ້າສຸດໂດຍ"
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__write_date
+msgid "Last Updated on"
+msgstr "ອັບເດດຫຼ້າສຸດເມື່ອ"
+
+#. module: event_crm
+#: model:ir.model.fields.selection,name:event_crm.selection__event_lead_rule__lead_type__lead
+msgid "Lead"
+msgstr "ຜູ້ສົນໃຈ"
+
+#. module: event_crm
+#: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_tree
+msgid "Lead Creation Type"
+msgstr "ປະເພດການສ້າງຜູ້ສົນໃຈ"
+
+#. module: event_crm
+#: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_form
+msgid "Lead Default Values"
+msgstr "ຄ່າເລີ່ມຕົ້ນຂອງຜູ້ສົນໃຈ"
+
+#. module: event_crm
+#: model:ir.ui.menu,name:event_crm.event_lead_rule_menu
+msgid "Lead Generation"
+msgstr "ການສ້າງຜູ້ສົນໃຈ"
+
+#. module: event_crm
+#: model:ir.actions.act_window,name:event_crm.event_lead_rule_action
+#: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_form
+msgid "Lead Generation Rule"
+msgstr "ກົດເກນການສ້າງຜູ້ສົນໃຈ"
+
+#. module: event_crm
+#: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_tree
+msgid "Lead Generation Rules"
+msgstr "ກົດເກນການສ້າງຜູ້ສົນໃຈ"
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__lead_type
+msgid "Lead Type"
+msgstr "ປະເພດຜູ້ສົນໃຈ"
+
+#. module: event_crm
+#: model:ir.model,name:event_crm.model_crm_lead
+msgid "Lead/Opportunity"
+msgstr "ຜູ້ສົນໃຈ/ໂອກາດ"
+
+#. module: event_crm
+#: model:ir.actions.act_window,name:event_crm.crm_lead_action_from_event
+#: model:ir.actions.act_window,name:event_crm.crm_lead_action_from_registration
+#: model:ir.model.fields,field_description:event_crm.field_event_event__lead_ids
+#: model:ir.model.fields,field_description:event_crm.field_event_registration__lead_ids
+#: model_terms:ir.ui.view,arch_db:event_crm.event_view_form
+msgid "Leads"
+msgstr "ຜູ້ສົນໃຈ"
+
+#. module: event_crm
+#: model:ir.model.fields,help:event_crm.field_event_event__lead_ids
+msgid "Leads generated from this event"
+msgstr "ຜູ້ສົນໃຈທີ່ຖືກສ້າງຂຶ້ນຈາກກິດຈະກຳນີ້"
+
+#. module: event_crm
+#: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_search
+msgid "Name"
+msgstr "ຊື່"
+
+#. module: event_crm
+#. odoo-python
+#: code:addons/event_crm/models/event_lead_rule.py:0
+msgid "New registrations"
+msgstr "ການລົງທະບຽນໃໝ່"
+
+#. module: event_crm
+#: model_terms:ir.actions.act_window,help:event_crm.crm_lead_action_from_event
+#: model_terms:ir.actions.act_window,help:event_crm.crm_lead_action_from_registration
+msgid "No leads found"
+msgstr "ບໍ່ພົບຜູ້ສົນໃຈ"
+
+#. module: event_crm
+#: model_terms:ir.actions.act_window,help:event_crm.event_registration_action_from_lead
+msgid "No registration found"
+msgstr "ບໍ່ພົບການລົງທະບຽນ"
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_event_event__has_lead_request
+msgid "Ongoing Generation Request"
+msgstr "ຄຳຮ້ອງຂໍການສ້າງທີ່ກຳລັງດຳເນີນຢູ່"
+
+#. module: event_crm
+#. odoo-python
+#: code:addons/event_crm/models/event_event.py:0
+msgid "Only Event Managers are allowed to re-generate all leads."
+msgstr "ອະນຸຍາດໃຫ້ສະເພາະຜູ້ຈັດການກິດຈະກຳເທົ່ານັ້ນໃນການສ້າງຜູ້ສົນໃຈທັງໝົດຄືນໃໝ່."
+
+#. module: event_crm
+#: model:ir.model.fields.selection,name:event_crm.selection__event_lead_rule__lead_type__opportunity
+msgid "Opportunity"
+msgstr "ໂອກາດ"
+
+#. module: event_crm
+#. odoo-python
+#: code:addons/event_crm/models/event_registration.py:0
+msgid "Participants"
+msgstr "ຜູ້ເຂົ້າຮ່ວມ"
+
+#. module: event_crm
+#: model:ir.model.fields.selection,name:event_crm.selection__event_lead_rule__lead_creation_basis__attendee
+msgid "Per Attendee"
+msgstr "ຕໍ່ຜູ້ເຂົ້າຮ່ວມ"
+
+#. module: event_crm
+#: model:ir.model.fields,help:event_crm.field_event_lead_rule__lead_creation_basis
+msgid ""
+"Per Attendee: A Lead is created for each Attendee (B2C).\n"
+"Per Order: A single Lead is created per Ticket Batch/Sale Order (B2B)"
+msgstr ""
+"ຕໍ່ຜູ້ເຂົ້າຮ່ວມ: ຜູ້ສົນໃຈຈະຖືກສ້າງຂຶ້ນສຳລັບຜູ້ເຂົ້າຮ່ວມແຕ່ລະຄົນ (B2C).\n"
+"ຕໍ່ການສັ່ງຊື້: ຜູ້ສົນໃຈດຽວຈະຖືກສ້າງຂຶ້ນຕໍ່ຊຸດປີ້/ໃບສັ່ງຂາຍ (B2B)"
+
+#. module: event_crm
+#: model:ir.model.fields.selection,name:event_crm.selection__event_lead_rule__lead_creation_basis__order
+msgid "Per Order"
+msgstr "ຕໍ່ການສັ່ງຊື້"
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_request__processed_registration_id
+msgid "Processed Registration"
+msgstr "ການລົງທະບຽນທີ່ປະມວນຜົນແລ້ວ"
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_crm_lead__event_lead_rule_id
+msgid "Registration Rule"
+msgstr "ກົດເກນການລົງທະບຽນ"
+
+#. module: event_crm
+#: model_terms:ir.ui.view,arch_db:event_crm.crm_lead_merge_summary_inherit_event_crm
+msgid "Registration Rule:"
+msgstr "ກົດເກນການລົງທະບຽນ:"
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__event_registration_filter
+msgid "Registrations Domain"
+msgstr "ໂດເມນການລົງທະບຽນ"
+
+#. module: event_crm
+#: model:ir.model.fields,help:event_crm.field_crm_lead__registration_ids
+msgid "Registrations triggering the rule that created this lead"
+msgstr "ການລົງທະບຽນທີ່ກະຕຸ້ນກົດເກນທີ່ສ້າງຜູ້ສົນໃຈນີ້"
+
+#. module: event_crm
+#: model:ir.model.fields,help:event_crm.field_event_lead_rule__company_id
+msgid ""
+"Restrict the trigger of this rule to events belonging to a specific company.\n"
+"If not set, no company restriction will be applied."
+msgstr ""
+"ຈຳກັດການກະຕຸ້ນຂອງກົດເກນນີ້ໃຫ້ສະເພາະກິດຈະກຳທີ່ເປັນຂອງບໍລິສັດໃດໜຶ່ງ.\n"
+"ຫາກບໍ່ໄດ້ຕັ້ງຄ່າ, ຈະບໍ່ມີການຈຳກັດບໍລິສັດ."
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__name
+msgid "Rule Name"
+msgstr "ຊື່ກົດເກນ"
+
+#. module: event_crm
+#: model:event.lead.rule,name:event_crm.event_lead_rule_0
+msgid "Rule on @example.com"
+msgstr "ກົດເກນສຳລັບ @example.com"
+
+#. module: event_crm
+#: model:ir.model.fields,help:event_crm.field_crm_lead__event_lead_rule_id
+msgid "Rule that created this lead"
+msgstr "ກົດເກນທີ່ສ້າງຜູ້ສົນໃຈນີ້"
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__lead_sales_team_id
+msgid "Sales Team"
+msgstr "ທີມຂາຍ"
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__lead_user_id
+msgid "Salesperson"
+msgstr "ພະນັກງານຂາຍ"
+
+#. module: event_crm
+#: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_search
+msgid "Search Lead Generation Rules"
+msgstr "ຄົ້ນຫາກົດເກນການສ້າງຜູ້ສົນໃຈ"
+
+#. module: event_crm
+#: model:ir.model.fields,help:event_crm.field_event_event__has_lead_request
+msgid "Set to True when a Lead Generation Request is currently running."
+msgstr "ຕັ້ງເປັນ True ເມື່ອມີຄຳຮ້ອງຂໍສ້າງຜູ້ສົນໃຈກຳລັງເຮັດວຽກຢູ່."
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_crm_lead__event_id
+msgid "Source Event"
+msgstr "ກິດຈະກຳຕົ້ນທາງ"
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_crm_lead__registration_ids
+msgid "Source Registrations"
+msgstr "ການລົງທະບຽນຕົ້ນທາງ"
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__lead_tag_ids
+msgid "Tags"
+msgstr "ແທັກ"
+
+#. module: event_crm
+#: model:ir.model.fields,help:event_crm.field_event_lead_request__processed_registration_id
+msgid ""
+"The ID of the last processed event.registration, used to know where to "
+"resume."
+msgstr ""
+"ລະຫັດ (ID) ຂອງການລົງທະບຽນກິດຈະກຳຫຼ້າສຸດທີ່ຖືກປະມວນຜົນ, ໃຊ້ເພື່ອຮູ້ບ່ອນທີ່ຈະເລີ່ມຄືນໃໝ່."
+
+#. module: event_crm
+#: model_terms:ir.actions.act_window,help:event_crm.event_lead_rule_action
+msgid "Those automatically create leads when attendees register."
+msgstr "ສິ່ງເຫຼົ່ານີ້ຈະສ້າງຜູ້ສົນໃຈໂດຍອັດຕະໂນມັດເມື່ອຜູ້ເຂົ້າຮ່ວມລົງທະບຽນ."
+
+#. module: event_crm
+#: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_search
+msgid "Trigger Type"
+msgstr "ປະເພດການກະຕຸ້ນ"
+
+#. module: event_crm
+#. odoo-python
+#: code:addons/event_crm/models/event_registration.py:0
+msgid "Updated registrations"
+msgstr "ການລົງທະບຽນທີ່ອັບເດດແລ້ວ"
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__lead_creation_trigger
+msgid "When"
+msgstr "ເມື່ອໃດ"
+
+#. module: event_crm
+#. odoo-python
+#: code:addons/event_crm/models/event_event.py:0
+msgid "Yee-ha, %(leads_count)s Leads have been created!"
+msgstr "ເຢ້! ສ້າງ %(leads_count)s ຜູ້ສົນໃຈແລ້ວ!"
+
+#. module: event_crm
+#: model:ir.model.constraint,message:event_crm.constraint_event_lead_request_uniq_event
+msgid "You can only have one generation request per event at a time."
+msgstr "ທ່ານສາມາດມີຄຳຮ້ອງຂໍການສ້າງໄດ້ພຽງແຕ່ໜຶ່ງຄັ້ງຕໍ່ກິດຈະກຳໃນເວລາດຽວກັນ."
+
+#. module: event_crm
+#: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_form
+msgid "e.g. B2B Fairs"
+msgstr "ຕົວຢ່າງ: ງານວາງສະແດງ B2B"

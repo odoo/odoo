@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_loyalty.OrderSummary" t-inherit="point_of_sale.OrderSummary" t-inherit-mode="extension">
+		<xpath expr="//Orderline" position="inside" >
+            <li t-if="line.isGiftCardOrEWalletReward()">
+                Current Balance: <t t-esc="line.getGiftCardOrEWalletBalance()"/>
+            </li>
+            <t t-if="!line.isGiftCardOrEWalletReward() and line.getEWalletGiftCardProgramType() === 'gift_card'">
+                <a t-if="!line.gift_code" class="text-wrap text-primary" t-on-click="manageGiftCard">Sell physical gift card?</a>
+                <div t-if="line.gift_code" class="text-wrap" t-esc="line.gift_code"/>
+            </t>
+        </xpath>
+        <xpath expr="//OrderWidget/t[@t-set-slot='details']" position="inside">
+            <t t-foreach="pos.get_order()?.getLoyaltyPoints() or []" t-as="_loyaltyStat" t-key="_loyaltyStat.couponId">
+                <div t-if="_loyaltyStat.points.won || _loyaltyStat.points.spent" class="d-flex justify-content-between mt-2 px-3 py-2 rounded-3 bg-white">
+                    <div t-esc="_loyaltyStat.points.name" class="loyalty-points-title fs-4 fw-bolder"/>
+                    <div class="d-flex gap-1 fw-bold">
+                        <div t-if='_loyaltyStat.points.balance' class="loyalty-points loyalty-points-balance">
+                            <span class='value'><t t-esc='_loyaltyStat.points.balance'/></span>
+                        </div>
+                        <div t-if='_loyaltyStat.points.won' class="loyalty-points loyalty-points-won">
+                            <span class='value text-success'>+<t t-esc='_loyaltyStat.points.won'/></span>
+                        </div>
+                        <div t-if='_loyaltyStat.points.spent' class="loyalty-points loyalty-points-spent">
+                            <span class='value text-danger'>-<t t-esc='_loyaltyStat.points.spent'/></span>
+                        </div>
+                        =
+                        <div class="loyalty-points loyalty-points-totaltext-end fw-bolder">
+                            <span class='value'><t t-esc='_loyaltyStat.points.total'/></span>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </xpath>
+    </t>
+</templates>

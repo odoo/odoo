@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="discuss.channel_member" t-inherit-mode="extension">
+        <xpath expr="//*[@t-ref='displayName']" position="inside">
+                <div t-if="member.thread.channel_type === 'livechat'" class="ms-2 d-flex flex-wrap">
+                    <span t-if="member.getLangName()" class="me-2">
+                        <i class="fa fa-comment-o me-1" aria-label="Lang"/>
+                        <t t-esc="member.getLangName()"/>
+                    </span>
+                    <span t-if="member.persona?.country or props.thread.anonymous_country">
+                        <i class="fa fa-globe me-1" aria-label="country"/>
+                        <t t-esc="member.persona?.country?.name ?? props.thread.anonymous_country.name"/>
+                    </span>
+                </div>
+        </xpath>
+    </t>
+</templates>

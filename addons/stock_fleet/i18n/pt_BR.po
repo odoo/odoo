@@ -1,0 +1,277 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* stock_fleet
+#
+# Translators:
+# Wil Odoo, 2024
+# Maitê Dietze, 2024
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:38+0000\n"
+"PO-Revision-Date: 2024-09-29 00:00+0000\n"
+"Last-Translator: Maitê Dietze, 2024\n"
+"Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/"
+"41243/pt_BR/)\n"
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % "
+"1000000 == 0 ? 1 : 2;\n"
+
+#. module: stock_fleet
+#. odoo-python
+#: code:addons/stock_fleet/models/fleet_vehicle_model.py:0
+msgid "%(display_name)s (%(load_capacity)s)"
+msgstr "%(display_name)s (%(load_capacity)s)"
+
+#. module: stock_fleet
+#. odoo-python
+#: code:addons/stock_fleet/models/fleet_vehicle_model.py:0
+msgid "%(volume_capacity)s %(volume_uom)s"
+msgstr "%(volume_capacity)s %(volume_uom)s"
+
+#. module: stock_fleet
+#. odoo-python
+#: code:addons/stock_fleet/models/fleet_vehicle_model.py:0
+msgid "%(weight_capacity)s %(weight_uom)s"
+msgstr "%(weight_capacity)s %(weight_uom)s"
+
+#. module: stock_fleet
+#: model_terms:ir.ui.view,arch_db:stock_fleet.report_picking_batch_inherit
+msgid "<strong>Dock:</strong>"
+msgstr "<strong>Doca:</strong>"
+
+#. module: stock_fleet
+#: model_terms:ir.ui.view,arch_db:stock_fleet.report_picking_batch_inherit
+msgid "<strong>Vehicle Category:</strong>"
+msgstr "<strong>Categoria de veículo:</strong>"
+
+#. module: stock_fleet
+#: model_terms:ir.ui.view,arch_db:stock_fleet.report_picking_batch_inherit
+msgid "<strong>Vehicle:</strong>"
+msgstr "<strong>Veículo:</strong>"
+
+#. module: stock_fleet
+#: model:ir.model,name:stock_fleet.model_stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_pivot
+msgid "Batch Transfer"
+msgstr "Transferência em lote"
+
+#. module: stock_fleet
+#: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_type_kanban_inherit_stock_fleet
+msgid "Batches by Route"
+msgstr "Lotes por rota"
+
+#. module: stock_fleet
+#: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_type_kanban_inherit_stock_fleet
+msgid "Calendar"
+msgstr "Calendário"
+
+#. module: stock_fleet
+#: model:ir.model,name:stock_fleet.model_fleet_vehicle_model_category
+msgid "Category of the model"
+msgstr "Categoria do modelo"
+
+#. module: stock_fleet
+#: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_type_kanban_inherit_stock_fleet
+msgid "Dock Dispatching"
+msgstr "Despacho em docas"
+
+#. module: stock_fleet
+#: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__dock_id
+#: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_filter
+msgid "Dock Location"
+msgstr "Local da doca"
+
+#. module: stock_fleet
+#: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__driver_id
+msgid "Driver"
+msgstr "Motorista"
+
+#. module: stock_fleet
+#: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__end_date
+msgid "End Date"
+msgstr "Data de término"
+
+#. module: stock_fleet
+#: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_graph
+msgid "Graph View"
+msgstr "Visualização de gráfico"
+
+#. module: stock_fleet
+#: model:ir.model,name:stock_fleet.model_stock_location
+msgid "Inventory Locations"
+msgstr "Locais de inventário"
+
+#. module: stock_fleet
+#: model:ir.model.fields,field_description:stock_fleet.field_stock_location__is_a_dock
+msgid "Is a Dock Location"
+msgstr "É um local de doca"
+
+#. module: stock_fleet
+#: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_type_kanban_inherit_stock_fleet
+msgid "Manage Batches"
+msgstr "Gerenciar lotes"
+
+#. module: stock_fleet
+#: model:ir.model.fields,field_description:stock_fleet.field_fleet_vehicle_model_category__volume_capacity
+msgid "Max Volume"
+msgstr "Volume máx."
+
+#. module: stock_fleet
+#: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__vehicle_volume_capacity
+msgid "Max Volume (m³)"
+msgstr "Volume máx. (m³)"
+
+#. module: stock_fleet
+#: model:ir.model.fields,field_description:stock_fleet.field_fleet_vehicle_model_category__weight_capacity
+msgid "Max Weight"
+msgstr "Peso máximo"
+
+#. module: stock_fleet
+#: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_filter
+msgid "Next 7 Days"
+msgstr "Próximos 7 dias"
+
+#. module: stock_fleet
+#: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_filter
+msgid "Operation Type"
+msgstr "Tipo de operação"
+
+#. module: stock_fleet
+#: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_filter
+msgid "Own Fleet"
+msgstr "Frota própria"
+
+#. module: stock_fleet
+#: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_filter
+msgid "Scheduled Date"
+msgstr "Data programada"
+
+#. module: stock_fleet
+#: model_terms:ir.ui.view,arch_db:stock_fleet.report_picking_batch_inherit
+msgid "Sequence"
+msgstr "Sequência"
+
+#. module: stock_fleet
+#: model_terms:ir.ui.view,arch_db:stock_fleet.vpicktree
+msgid "Shipping Volume"
+msgstr "Volume da remessa"
+
+#. module: stock_fleet
+#: model_terms:ir.ui.view,arch_db:stock_fleet.vpicktree
+msgid "Shipping Weight"
+msgstr "Peso da remessa"
+
+#. module: stock_fleet
+#: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_type_kanban_inherit_stock_fleet
+msgid "Statistics"
+msgstr "Estatísticas"
+
+#. module: stock_fleet
+#: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_filter
+msgid "Third Party Carrier"
+msgstr "Transportadora terceirizada"
+
+#. module: stock_fleet
+#: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_form
+msgid "Third Party Provider"
+msgstr "Provedor terceiro"
+
+#. module: stock_fleet
+#: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_filter
+msgid "Today"
+msgstr "Hoje"
+
+#. module: stock_fleet
+#: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_filter
+msgid "Tomorrow"
+msgstr "Amanhã"
+
+#. module: stock_fleet
+#: model_terms:ir.ui.view,arch_db:stock_fleet.vpicktree
+msgid "Total Shipping Volume"
+msgstr "Volume total da remessa"
+
+#. module: stock_fleet
+#: model_terms:ir.ui.view,arch_db:stock_fleet.vpicktree
+msgid "Total Shipping Weight"
+msgstr "Peso total da remessa"
+
+#. module: stock_fleet
+#: model:ir.model,name:stock_fleet.model_stock_picking
+msgid "Transfer"
+msgstr "Transferir"
+
+#. module: stock_fleet
+#: model:fleet.vehicle.tag,name:stock_fleet.vehicle_tag_transport
+msgid "Transport"
+msgstr "Transporte"
+
+#. module: stock_fleet
+#: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_type_kanban_inherit_stock_fleet
+msgid "Transport Management"
+msgstr "Gerenciamento de transporte"
+
+#. module: stock_fleet
+#: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__vehicle_weight_capacity
+msgid "Vehcilce Payload Capacity"
+msgstr "Capacidade de carga útil do veículo"
+
+#. module: stock_fleet
+#: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__vehicle_id
+#: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_filter
+msgid "Vehicle"
+msgstr "Veículo"
+
+#. module: stock_fleet
+#: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__vehicle_category_id
+#: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_filter
+msgid "Vehicle Category"
+msgstr "Categoria do veículo"
+
+#. module: stock_fleet
+#: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_form
+msgid "Volume"
+msgstr "Volume"
+
+#. module: stock_fleet
+#: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__used_volume_percentage
+msgid "Volume %"
+msgstr "Volume %"
+
+#. module: stock_fleet
+#: model:ir.model.fields,field_description:stock_fleet.field_fleet_vehicle_model_category__volume_capacity_uom_name
+#: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__volume_uom_name
+msgid "Volume unit of measure label"
+msgstr "Rótulo de unidade de medida de volume"
+
+#. module: stock_fleet
+#: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_form
+msgid "Weight"
+msgstr "Peso"
+
+#. module: stock_fleet
+#: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__used_weight_percentage
+msgid "Weight %"
+msgstr "Peso %"
+
+#. module: stock_fleet
+#: model:ir.model.fields,field_description:stock_fleet.field_fleet_vehicle_model_category__weight_capacity_uom_name
+#: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__weight_uom_name
+msgid "Weight unit of measure label"
+msgstr "Etiqueta da unidade de medida de peso"
+
+#. module: stock_fleet
+#: model:ir.model.fields,field_description:stock_fleet.field_stock_picking__zip
+msgid "Zip"
+msgstr "CEP"
+
+#. module: stock_fleet
+#: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_form
+msgid "semi-truck"
+msgstr "semirreboque"

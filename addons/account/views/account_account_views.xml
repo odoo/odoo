@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_account_form" model="ir.ui.view">
+            <field name="name">account.account.form</field>
+            <field name="model">account.account</field>
+            <field name="arch" type="xml">
+                <form string="Account">
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button class="oe_stat_button" name="action_open_related_taxes"
+                                    type="object" icon="fa-bars"
+                                    invisible="related_taxes_amount == 0">
+                                <div class="o_stat_info">
+                                    <span class="o_stat_value">
+                                        <field name="related_taxes_amount"/>
+                                    </span>
+                                    <span class="o_stat_text">
+                                        Taxes
+                                    </span>
+                                </div>
+                            </button>
+                            <button class="oe_stat_button" name="account.action_move_line_select"
+                                    type="action" icon="fa-bars">
+                                <div class="o_stat_info">
+                                    <span class="o_stat_value">
+                                        <field name="current_balance"/>
+                                    </span>
+                                    <span class="o_stat_text">
+                                        Balance
+                                    </span>
+                                </div>
+                            </button>
+                        </div>
+                        <div>
+                            <h1 style="font-size: 1.9rem;">
+                                <div class="row">
+                                    <div class="col col-md-auto">
+                                        <label for="code" string="Code"/>
+                                        <div>
+                                            <field name="placeholder_code" invisible="1"/>
+                                            <field name="code" placeholder="e.g. 101000" class="oe_inline"
+                                                   options="{'placeholder_field': 'placeholder_code'}"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col col-md-8">
+                                        <label for="name" string="Account Name"/>
+                                        <div>
+                                            <field name="name"
+                                                   placeholder="e.g. Current Assets"
+                                                   style="width:80% !important;"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </h1>
+                        </div>
+                        <notebook>
+                            <page name="accounting" string="Accounting">
+                                <group>
+                                    <group>
+                                        <field name="account_type" widget="account_type_selection"/>
+                                        <field name="tax_ids" widget="many2many_tags" invisible="account_type == 'off_balance'" options="{'no_quick_create': True}"/>
+                                        <field name="tag_ids" widget="many2many_tags" domain="[('applicability', '=', 'accounts')]" context="{'default_applicability': 'accounts'}" options="{'no_create_edit': True}"/>
+                                        <field name="allowed_journal_ids" widget="many2many_tags" options="{'no_create_edit': True}"/>
+                                    </group>
+                                    <group>
+                                        <field name="internal_group" invisible="1" readonly="1"/>
+                                        <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
+                                        <field name="deprecated"/>
+                                        <field name="group_id"/>
+                                        <field name="company_ids" widget="many2many_tags" options="{'no_create': True}" groups="base.group_multi_company"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page name="mapping" string="Mapping" groups="base.group_multi_company" invisible="not display_mapping_tab">
+                                <field name="code_mapping_ids" nolabel="1">
+                                    <list editable="bottom">
+                                        <field name="company_id" force_save="1"/>
+                                        <field name="code"/>
+                                    </list>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <!-- Chatter -->
+                    <chatter/>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_account_list" model="ir.ui.view">
+            <field name="name">account.account.list</field>
+            <field name="model">account.account</field>
+            <field name="arch" type="xml">
+                <list editable="top" create="1" delete="1" multi_edit="1" string="Chart of accounts"  open_form_view="True">
+                    <field name="placeholder_code" column_invisible="1"/>
+                    <field name="code" string="Code" widget="char_with_placeholder_field" options="{'placeholder_field': 'placeholder_code'}"/>
+                    <field name="name"/>
+                    <field name="account_type" widget="account_type_selection"/>
+                    <field name="group_id" optional="hide"/>
+                    <field name="internal_group" column_invisible="True"/>
+                    <field name="reconcile" widget="boolean_toggle" invisible="account_type in ('asset_cash', 'liability_credit_card', 'off_balance')"/>
+                    <field name="non_trade" widget="boolean_toggle" invisible="account_type not in ('liability_payable', 'asset_receivable')" optional="hide"/>
+                    <field name="tax_ids" optional="hide" widget="many2many_tags"/>
+                    <field name="tag_ids" domain="[('applicability', '=', 'accounts')]" optional="hide" widget="many2many_tags"/>
+                    <field name="allowed_journal_ids" optional="hide" widget="many2many_tags"/>
+                    <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
+                    <field name="company_ids" widget="many2many_tags" readonly="True" groups="base.group_multi_company"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="view_account_account_kanban" model="ir.ui.view">
+            <field name="name">account.account.kanban</field>
+            <field name="model">account.account</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <templates>
+                        <t t-name="card">
+                            <div class="row">
+                                <div class="col-8">
+                                    <field class="fw-bolder" name="name"/>
+                                </div>
+                                <div class="col-4 text-end">
+                                    <field class="badge rounded-pill" name="code"/>
+                                </div>
+                            </div>
+                            <div>
+                                <strong>Type: </strong>
+                                <field name="account_type"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="view_account_search" model="ir.ui.view">
+            <field name="name">account.account.search</field>
+            <field name="model">account.account</field>
+            <field name="arch" type="xml">
+                <search string="Accounts">
+                    <field name="name" filter_domain="['|', ('name', 'ilike', self), ('code', '=ilike', self + '%')]" string="Account"/>
+                    <filter string="Receivable" name="receivableacc" domain="[('account_type','=','asset_receivable')]"/>
+                    <filter string="Payable" name="payableacc" domain="[('account_type','=','liability_payable')]"/>
+                    <filter string="Equity" name="equityacc" domain="[('internal_group','=', 'equity')]"/>
+                    <filter string="Assets" name="assetsacc" domain="[('internal_group','=', 'asset')]"/>
+                    <filter string="Liability" name="liabilityacc" domain="[('internal_group','=', 'liability')]"/>
+                    <filter string="Income" name="incomeacc" domain="[('internal_group','=', 'income')]"/>
+                    <filter string="Expenses" name="expensesacc" domain="[('internal_group','=', 'expense')]"/>
+                    <separator/>
+                    <filter string="Account with Entries" name="used" domain="[('used', '=', True)]"/>
+                    <filter string="Active Account" name="activeacc" domain="[('deprecated', '=', False)]"/>
+                    <separator/>
+                    <field name="account_type"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Account Type" name="accounttype" domain="" context="{'group_by':'account_type'}"/>
+                    </group>
+                    <searchpanel class="account_root w-auto">
+                        <field name="root_id" icon="fa-filter" limit="0"/>
+                    </searchpanel>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_account_form" model="ir.actions.act_window">
+            <field name="name">Chart of Accounts</field>
+            <field name="res_model">account.account</field>
+            <field name="view_mode">list,kanban,form</field>
+            <field name="search_view_id" ref="view_account_search"/>
+            <field name="view_id" ref="view_account_list"/>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Add a new account
+              </p><p>
+                An account is part of a ledger allowing your company
+                to register all kinds of debit and credit transactions.
+                Companies present their annual accounts in two main parts: the
+                balance sheet and the income statement (profit and loss
+                account). The annual accounts of a company are required by law
+                to disclose a certain amount of information.
+              </p>
+            </field>
+            <field name="context">{'search_default_activeacc': True}</field>
+        </record>
+
+        <record model="ir.actions.server" id="action_unmerge_accounts">
+            <field name="name">Unmerge account</field>
+            <field name="model_id" ref="model_account_account"/>
+            <field name="groups_id" eval="[(4, ref('account.group_account_manager'))]"/>
+            <field name="binding_model_id" ref="account.model_account_account" />
+            <field name="binding_view_types">form,list</field>
+            <field name="state">code</field>
+            <field name="code">
+if records:
+    action = records.action_unmerge()
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.crm</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="5"/>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app data-string="CRM" string="CRM" name="crm" groups="sales_team.group_sale_manager">
+                    <block title="CRM">
+                        <setting help="Define recurring plans and revenues on Opportunities">
+                            <field name="group_use_recurring_revenues"/>
+                            <div invisible="not group_use_recurring_revenues">
+                                <button type="action" name="crm.crm_recurring_plan_action"
+                                        string="Manage Recurring Plans" icon="oi-arrow-right" class="oe_link"/>
+                            </div>
+                        </setting>
+                        <setting id="crm_lead" title="Use leads if you need a qualification step before creating an opportunity or a customer. It can be a business card you received, a contact form filled in your website, or a file of unqualified prospects you import, etc. Once qualified, the lead can be converted into a business opportunity and/or a new customer in your address book." help="Add a qualification step before the creation of an opportunity">
+                            <field name="group_use_lead"/>
+                        </setting>
+                    </block>
+                    <block>
+                        <setting help="Assign salespersons into multiple Sales Teams.">
+                            <field name="is_membership_multi"/>
+                        </setting>
+                        <setting string="Ringover VOIP Phone" id="ringover-voip" help="Make and receive calls from Odoo with Ringover's dialer. Track calls, SMS messages, and get AI-powered transcripts of your conversations.">
+                            <a class="oe_link fw-bold" href="https://chromewebstore.google.com/detail/ringover-voip-phone-for-o/bdeapcnahigpibeoehandgaiijljkdnl" target="_blank">
+                                <i class="oi oi-arrow-right"/>
+                                Install Extension
+                            </a>
+                        </setting>
+                    </block>
+                    <block>
+                        <field name="predictive_lead_scoring_fields_str" invisible="1"/>
+                        <field name="predictive_lead_scoring_start_date_str" invisible="1"/>
+                        <setting title="This can be used to compute statistical probability to close a lead" name="predictive_lead_setting_container" string="Predictive Lead Scoring">
+                            <div class="text-muted">
+                                The success rate is computed based on <b>
+                                    <field name="predictive_lead_scoring_field_labels" class="d-inline"/>
+                                </b>
+                                for the leads created as of the
+                                <b><field name="predictive_lead_scoring_start_date" class="oe_inline" readonly="1"/></b>.
+                                </div>
+                            <div class="mt16" groups="base.group_erp_manager">
+                                <button name="%(crm_lead_pls_update_action)d" type="action"
+                                    string="Update Probabilities"
+                                    class="btn-primary"/>
+                            </div>
+                        </setting>
+                        <setting title="This can be used to automatically assign leads to sales persons based on rules" documentation="/applications/sales/crm/track_leads/lead_scoring.html#assign-leads">
+                            <field name="crm_use_auto_assignment"/>
+                            <div class="text-muted">
+                                <span>Periodically assign leads based on rules</span><br />
+                                <span invisible="not crm_use_auto_assignment">
+                                    All sales teams will use this setting by default unless
+                                    specified otherwise.
+                                </span>
+                            </div>
+                            <div class="row flex-row flex-nowrap mt16" invisible="not crm_use_auto_assignment">
+                                <label string="Running" for="crm_auto_assignment_action" class="col-lg-3 o_light_label"/>
+                                <field name="crm_auto_assignment_action"
+                                    required="crm_use_auto_assignment"/>
+                                <button name="action_crm_assign_leads" type="object" class="btn-link w-auto">
+                                    <i title="Update now" role="img" aria-label="Update now" class="fa fa-fw fa-refresh"></i>
+                                </button>
+                            </div>
+                            <div class="row mt16" invisible="not crm_use_auto_assignment or crm_auto_assignment_action == 'manual'">
+                                <label string="Repeat every" for="crm_auto_assignment_interval_type" class="col-lg-3 o_light_label"/>
+                                <field name="crm_auto_assignment_interval_number"
+                                    class="oe_inline me-2"
+                                    required="crm_use_auto_assignment and crm_auto_assignment_action == 'auto'"/>
+                                <field name="crm_auto_assignment_interval_type"
+                                    class="oe_inline"
+                                    required="crm_use_auto_assignment and crm_auto_assignment_action == 'auto'"/>
+                            </div>
+                            <div class="row" invisible="not crm_use_auto_assignment or crm_auto_assignment_action == 'manual'">
+                                <label string="Next Run" for="crm_auto_assignment_run_datetime" class="col-lg-3 o_light_label"/>
+                                <field name="crm_auto_assignment_run_datetime"/>
+                            </div>
+                        </setting>
+                    </block>
+
+                    <block title="Lead Generation" name="convert_visitor_setting_container">
+                        <setting string="Lead Enrichment" help="Enrich your leads with company data based on their email addresses">
+                            <field name="module_crm_iap_enrich"/>
+                            <div class="mt8" invisible="not module_crm_iap_enrich">
+                                <field name="lead_enrich_auto" class="o_light_label" widget="radio" required="True"/>
+                            </div>
+                        </setting>
+
+                        <setting id="crm_iap_mine_settings" string="Lead Mining" documentation="/applications/sales/crm/acquire_leads/lead_mining.html" help="Generate new leads based on their country, industry, size, etc.">
+                            <field name="module_crm_iap_mine"/>
+                        </setting>
+
+                    </block>
+                    <block name="generate_lead_setting_container">
+                        <setting id="website_crm_iap_reveal_settings" string="Visits to Leads" help="Convert visitors of your website into leads and perform data enrichment based on their IP address">
+                            <field name="module_website_crm_iap_reveal"/>
+                        </setting>
+                    </block>
+                </app>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="crm_config_settings_action" model="ir.actions.act_window">
+        <field name="name">Settings</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_id" ref="res_config_settings_view_form"/>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+        <field name="context">{'module' : 'crm', 'bin_size': False}</field>
+    </record>
+
+</odoo>

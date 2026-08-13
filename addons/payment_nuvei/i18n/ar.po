@@ -1,0 +1,131 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* payment_nuvei
+#
+# Translators:
+# Wil Odoo, 2025
+# Malaz Abuidris <msea@odoo.com>, 2025
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:38+0000\n"
+"PO-Revision-Date: 2025-03-19 09:42+0000\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2025\n"
+"Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
+"Language: ar\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+#. module: payment_nuvei
+#. odoo-python
+#: code:addons/payment_nuvei/models/payment_transaction.py:0
+msgid "%(payment_method)s requires both a first and last name."
+msgstr "تتطلب طريقة الدفع %(payment_method)sالاسم الأول واسم العائلة. "
+
+#. module: payment_nuvei
+#. odoo-python
+#: code:addons/payment_nuvei/models/payment_transaction.py:0
+msgid ""
+"An error occurred during the processing of your payment (%(reason)s). Please "
+"try again."
+msgstr "حدث خطأ أثناء معالجة مدفوعاتك (%(reason)s). يرجى المحاولة مجدداً. "
+
+#. module: payment_nuvei
+#: model:ir.model.fields,field_description:payment_nuvei.field_payment_provider__code
+msgid "Code"
+msgstr "رمز "
+
+#. module: payment_nuvei
+#: model_terms:ir.ui.view,arch_db:payment_nuvei.payment_provider_form
+msgid "Merchant Identifier"
+msgstr "معرّف التاجر "
+
+#. module: payment_nuvei
+#. odoo-python
+#: code:addons/payment_nuvei/models/payment_transaction.py:0
+msgid "No transaction found matching reference %(ref)s."
+msgstr "لم يتم العثور على معاملة تطابق المرجع %(ref)s. "
+
+#. module: payment_nuvei
+#: model:ir.model.fields.selection,name:payment_nuvei.selection__payment_provider__code__nuvei
+msgid "Nuvei"
+msgstr "Nuvei"
+
+#. module: payment_nuvei
+#: model:ir.model.fields,field_description:payment_nuvei.field_payment_provider__nuvei_merchant_identifier
+msgid "Nuvei Merchant Identifier"
+msgstr "معرّف بائع Nuvei "
+
+#. module: payment_nuvei
+#: model:ir.model.fields,field_description:payment_nuvei.field_payment_provider__nuvei_secret_key
+msgid "Nuvei Secret Key"
+msgstr "المفتاح السري لـ Nuvei "
+
+#. module: payment_nuvei
+#: model:ir.model.fields,field_description:payment_nuvei.field_payment_provider__nuvei_site_identifier
+msgid "Nuvei Site Identifier"
+msgstr "معرّف موقع Nuvei "
+
+#. module: payment_nuvei
+#: model:ir.model,name:payment_nuvei.model_payment_provider
+msgid "Payment Provider"
+msgstr "مزود الدفع "
+
+#. module: payment_nuvei
+#: model:ir.model,name:payment_nuvei.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "معاملة الدفع "
+
+#. module: payment_nuvei
+#. odoo-python
+#: code:addons/payment_nuvei/models/payment_transaction.py:0
+msgid "Received data with missing payment state."
+msgstr "تم استلام البيانات دون حالة الدفع. "
+
+#. module: payment_nuvei
+#. odoo-python
+#: code:addons/payment_nuvei/models/payment_transaction.py:0
+msgid "Received data with missing reference."
+msgstr "تم استلام البيانات دون مرجع. "
+
+#. module: payment_nuvei
+#. odoo-python
+#: code:addons/payment_nuvei/models/payment_transaction.py:0
+msgid "Received invalid transaction status %(status)s and reason '%(reason)s'."
+msgstr "تم استلام حالة معاملة غير صالحة %(status)s والسبب \"%(reason)s\". "
+
+#. module: payment_nuvei
+#: model_terms:ir.ui.view,arch_db:payment_nuvei.payment_provider_form
+msgid "Secret Key"
+msgstr "المفتاح السري "
+
+#. module: payment_nuvei
+#: model_terms:ir.ui.view,arch_db:payment_nuvei.payment_provider_form
+msgid "Site Identifier"
+msgstr "معرّف الموقع "
+
+#. module: payment_nuvei
+#: model:ir.model.fields,help:payment_nuvei.field_payment_provider__nuvei_merchant_identifier
+msgid "The code of the merchant account to use with this provider."
+msgstr "كود حساب التاجر لاستخدامه مع مزود الدفع هذا. "
+
+#. module: payment_nuvei
+#. odoo-python
+#: code:addons/payment_nuvei/models/payment_transaction.py:0
+msgid "The customer left the payment page."
+msgstr "لقد غادر العميل صفحة الدفع. "
+
+#. module: payment_nuvei
+#: model:ir.model.fields,help:payment_nuvei.field_payment_provider__nuvei_site_identifier
+msgid "The site identifier code associated with the merchant account."
+msgstr "رمز معرّف الموقع المرتبط بحساب التاجر. "
+
+#. module: payment_nuvei
+#: model:ir.model.fields,help:payment_nuvei.field_payment_provider__code
+msgid "The technical code of this payment provider."
+msgstr "الكود التقني لمزود الدفع هذا. "

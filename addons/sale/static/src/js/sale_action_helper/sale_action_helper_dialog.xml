@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+    <t t-name="sale.SaleActionHelperDialog">
+        <Dialog
+            bodyClass="'shadow'"
+            contentClass="'border-0 bg-transparent shadow-none'"
+            footer="false"
+            size="'xl'"
+            technical="false"
+            withBodyPadding="false"
+            t-on-click="props.close"
+        >
+            <div class="ratio ratio-16x9">
+                <iframe
+                    allow="autoplay; encrypted-media; picture-in-picture; web-share"
+                    width="1140"
+                    height="641"
+                    t-att-src="this.props.url"
+                    title="Sale"
+                    frameborder="0"
+                    allowfullscreen="1"
+                >
+                    Your browser does not support iframe.
+                </iframe>
+            </div>
+        </Dialog>
+    </t>
+</templates>

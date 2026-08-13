@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_faq_collapse" name="FAQ">
+    <section class="s_faq_collapse pt32 pb32" data-vcss="001">
+        <div class="container">
+            <div class="row align-items-start s_nb_column_fixed">
+                <div class="col-lg-4 pt16">
+                    <h3>Frequently asked questions</h3>
+                    <p class="lead">Here are some common questions about our company.</p>
+                </div>
+                <div class="col-lg-7 offset-lg-1 s_col_no_bgcolor" data-name="Accordion Box">
+                    <t t-call="website.s_accordion">
+                        <t t-set="extra_classes" t-valuef="accordion-flush"/>
+                    </t>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<asset id="website.s_faq_collapse_000_scss" name="Faq collapse 000 SCSS" active="False">
+    <bundle>web.assets_frontend</bundle>
+    <path>website/static/src/snippets/s_faq_collapse/000.scss</path>
+</asset>
+
+</odoo>

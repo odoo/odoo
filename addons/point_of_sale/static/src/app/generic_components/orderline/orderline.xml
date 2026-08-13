@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="point_of_sale.Orderline">
+        <t t-set="line" t-value="props.line" />
+        <li class="orderline position-relative d-flex align-items-center p-2 lh-sm cursor-pointer" t-attf-class="{{ line.comboParent ? 'orderline-combo ms-4 fst-italic' : '' }}" t-att-class="props.class">
+            <div class="product-order"></div>
+            <div t-if="line.imageSrc" class="o_line_container d-flex align-items-center justify-content-center">
+                <img t-attf-style="border-radius: 1rem;" t-att-src="line.imageSrc"/>
+            </div>
+            <div class="d-flex flex-column w-100 gap-1">
+                <div class="d-flex justify-content-between">
+                    <div class="product-name d-inline-block flex-grow-1 fw-bolder pe-1 text-truncate">
+                        <span class="text-wrap" t-esc="line.productName"/>
+                        <t t-slot="product-name"/>
+                    </div>
+                    <div t-if="!props.basic_receipt" class="product-price price fw-bolder">
+                        <t t-if="line.price === 'free'">Free</t>
+                        <t t-else="" t-esc="line.price"/>
+                    </div>
+                    <div t-if="props.showTaxGroupLabels" t-esc="line.taxGroupLabels" class="text-end" style="width: 2rem"/>
+                </div>
+                <ul class="info-list d-flex flex-column">
+                    <li class="price-per-unit">
+                        <span class="qty px-1 border rounded text-bg-view fw-bolder me-1" t-esc="line.qty"/>
+                        <t t-if="!props.basic_receipt">
+                            x
+                            <t t-if="line.price !== 0">
+                                <s t-esc="line.oldUnitPrice" t-if="line.oldUnitPrice" />
+                                <t t-esc="line.unitPrice" />
+                            </t>
+                            /
+                        </t>
+                        <t t-if="line.unit" t-esc="line.unit" />
+                    </li>
+                    <li t-if="line.price !== 0 and line.discount and line.discount !== '0' and !props.basic_receipt">
+                        <t t-esc="line.price_without_discount"/> With a <em><t t-esc="line.discount" />% </em> discount
+                    </li>
+                    <li t-if="line.customerNote" class="customer-note w-100 p-2 mt-2 rounded text-break text-bg-warning bg-opacity-25">
+                        <i class="fa fa-sticky-note me-1" role="img" aria-label="Customer Note" title="Customer Note"/>
+                        <t t-esc="line.customerNote" />
+                    </li>
+                    <div class="internal-note-container d-flex gap-2">
+                        <t t-foreach="line.internalNote?.split?.('\n') or []" t-as="note" t-key="note_index">
+                            <li t-if="note.trim() !== ''" t-esc="note" class="internal-note badge mt-2 p-2 rounded-pill bg-info text-info bg-opacity-25" style="font-size: 0.85rem;" />
+                        </t>
+                    </div>
+                    <li t-foreach="line.packLotLines or []" t-as="lot" t-key="lot_index" t-esc="lot" />
+                    <t t-slot="default" />
+                </ul>
+            </div>
+        </li>
+    </t>
+</templates>

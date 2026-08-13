@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="sale_pdf_quote_builder.CustomContentKanbanLike">
+        <t t-if="state.headers.files?.length">
+            <t t-call="sale_pdf_quote_builder.section">
+                <t t-set="section" t-value="state.headers"/>
+                <t t-set="locked" t-value="state.is_so_locked"/>
+                <t
+                    t-set="save"
+                    t-value="(lineId, docId, isSelected) => {
+                        this.saveQuotationDocument(docId, isSelected);
+                    }"
+                />
+            </t>
+        </t>
+        <t t-if="state.lines?.length">
+            <t t-foreach="state.lines" t-as="section" t-key="section.id">
+                <t t-call="sale_pdf_quote_builder.section">
+                    <t t-set="locked" t-value="state.is_sol_locked"/>
+                    <t
+                        t-set="save"
+                        t-value="(lineId, docId, isSelected) => {
+                            this.saveProductDocument(lineId, docId, isSelected);
+                        }"
+                    />
+                </t>
+            </t>
+        </t>
+        <t t-if="state.footers.files?.length">
+            <t t-call="sale_pdf_quote_builder.section">
+                <t t-set="section" t-value="state.footers"/>
+                <t t-set="locked" t-value="state.is_so_locked"/>
+                <t
+                    t-set="save"
+                    t-value="(lineId, docId, isSelected) => {
+                        this.saveQuotationDocument(docId, isSelected);
+                    }"
+                />
+            </t>
+        </t>
+    </t>
+
+    <t t-name="sale_pdf_quote_builder.section">
+        <!-- Context:
+            - section: The Object describing the section, its documents, and custom form fields.
+        -->
+        <t t-set="id" t-value="section.id or section.name"/>
+        <div class="mb-4">
+            <div class="mb-2">
+                <h3 t-out="section.name"/>
+                <t t-foreach="section.files" t-as="doc" t-key="id+'-button-'+doc.id">
+                    <input
+                        type="checkbox"
+                        class="btn-check"
+                        t-att-id="id+'-'+doc.id"
+                        t-att-checked="doc.is_selected"
+                        t-att-disabled="locked"
+                        t-on-click="() => {
+                            doc.is_selected = !doc.is_selected;
+                            save(id, doc.id, doc.is_selected);
+                        }"
+                    />
+                    <label
+                        class="btn btn-secondary m-1"
+                        t-att-for="id+'-'+doc.id"
+                        t-out="doc.name"
+                    />
+                </t>
+            </div>
+            <t
+                t-foreach="section.files.filter(doc => doc.is_selected)"
+                t-as="doc"
+                t-key="id+'-'+doc.id+'-custom_form_fields'"
+            >
+                <div
+                    t-if="doc.custom_form_fields.length"
+                    t-att-class="{'pb-1 mb-3 o_horizontal_separator': !doc_last}"
+                >
+                    <t
+                        t-foreach="doc.custom_form_fields"
+                        t-as="formField"
+
+                        t-key="id+'-'+doc.id+'-custom_form_fields'+formField_index"
+                    >
+                        <CustomFieldCard
+                            name="formField.name"
+                            value="formField.value"
+                            disabled="locked"
+                            onChange="(value) => { formField.value = value; this.updateJson(); }"
+                        />
+                    </t>
+                </div>
+            </t>
+        </div>
+    </t>
+</templates>

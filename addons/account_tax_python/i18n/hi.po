@@ -1,0 +1,94 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_tax_python
+#
+# Translators:
+# Ujjawal Pathak, 2025
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
+"PO-Revision-Date: 2024-09-25 09:41+0000\n"
+"Last-Translator: Ujjawal Pathak, 2025\n"
+"Language-Team: Hindi (https://app.transifex.com/odoo/teams/41243/hi/)\n"
+"Language: hi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: account_tax_python
+#: model:ir.model.fields,help:account_tax_python.field_account_tax__amount_type
+msgid ""
+"\n"
+"    - Group of Taxes: The tax is a set of sub taxes.\n"
+"    - Fixed: The tax amount stays the same whatever the price.\n"
+"    - Percentage: The tax amount is a % of the price:\n"
+"        e.g 100 * (1 + 10%) = 110 (not price included)\n"
+"        e.g 110 / (1 + 10%) = 100 (price included)\n"
+"    - Percentage Tax Included: The tax amount is a division of the price:\n"
+"        e.g 180 / (1 - 10%) = 200 (not price included)\n"
+"        e.g 200 * (1 - 10%) = 180 (price included)\n"
+"        "
+msgstr ""
+"\n"
+"    - टैक्स का समूह: टैक्स में कई सब टैक्स हैं.\n"
+"    - फिक्स्ड: टैक्स की रकम सामान की कीमत बदलने पर भी वही रहती है, उसमें कोई बदलाव "
+"नहीं आता.\n"
+"    - प्रतिशत: टैक्स की रकम कीमत का % होगी:\n"
+"        जैसे 100 * (1 + 10%) = 110 (कीमत शामिल नहीं है)\n"
+"        जैसे 110 / (1 + 10%) = 100 (कीमत शामिल है)\n"
+"    - टैक्स का प्रतिशत शामिल होता है: टैक्स की रकम दाम के अंदर ही शामिल होती है:\n"
+"        जैसे 180 / (1 - 10%) = 200 (कीमत शामिल नहीं है)\n"
+"        जैसे 200 * (1 - 10%) = 180 (कीमत शामिल है)\n"
+"        "
+
+#. module: account_tax_python
+#: model:ir.model.fields,help:account_tax_python.field_account_tax__formula
+msgid ""
+"Compute the amount of the tax.\n"
+"\n"
+":param base: float, actual amount on which the tax is applied\n"
+":param price_unit: float\n"
+":param quantity: float\n"
+":param product: A object representing the product\n"
+msgstr ""
+"टैक्स की राशि की गणना करें.\n"
+"\n"
+":पैरामीटर base: फ्लोट, वास्तविक राशि जिस पर कर लगाया जाता है\n"
+":पैरामीटर price_unit: फ्लोट\n"
+":पैरामीटर quantity: फ्लोट\n"
+":पैरामीटर product: प्रॉडक्ट का प्रतिनिधित्व करने वाली एक वस्तु\n"
+
+#. module: account_tax_python
+#: model:ir.model.fields.selection,name:account_tax_python.selection__account_tax__amount_type__code
+msgid "Custom Formula"
+msgstr "कस्टम फ़ॉर्मूला"
+
+#. module: account_tax_python
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax__formula
+msgid "Formula"
+msgstr "फ़ॉर्मूला"
+
+#. module: account_tax_python
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax__formula_decoded_info
+msgid "Formula Decoded Info"
+msgstr "फ़ॉर्मूला डिकोड की गई जानकारी"
+
+#. module: account_tax_python
+#. odoo-python
+#: code:addons/account_tax_python/models/account_tax.py:0
+msgid "Malformed formula '%(formula)s' at position %(position)s"
+msgstr "'%(formula)s' फ़ॉर्मूला में '%(position)s' जगह पर गलती है"
+
+#. module: account_tax_python
+#: model:ir.model,name:account_tax_python.model_account_tax
+msgid "Tax"
+msgstr "टैक्स"
+
+#. module: account_tax_python
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax__amount_type
+msgid "Tax Computation"
+msgstr "टैक्स कॉम्प्यूटेशन"

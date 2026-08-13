@@ -1,0 +1,97 @@
+<templates xml:space="preserve">
+    <t t-name="html_editor.GradientPicker">
+        <div class="d-flex flex-column">
+
+            <div class="align-items-center d-flex justify-content-between my-2 o_type_row">
+                Type
+                <span class="d-flex justify-content-between">
+                    <button t-attf-class="btn btn-sm btn-light {{ this.state.type === 'linear' ? 'active' : ''}}" t-on-click="() => this.selectType('linear')"> Linear </button>
+                    <button t-attf-class="btn btn-sm btn-light {{ this.state.type === 'radial' ? 'active' : ''}}" t-on-click="() => this.selectType('radial')"> Radial </button>
+                </span>
+            </div>
+
+            <div t-if="this.state.type === 'linear'" class="d-flex align-items-center justify-content-between">
+                Angle
+                <span class="d-flex justify-content-between">
+                    <input name="angle" type="text" t-att-value="this.state.angle" t-on-change="onAngleChange" style="width: 5ch" />
+                    <span class="input-group-text">deg</span>
+                </span>
+            </div>
+            <div t-else="">
+                <div class="d-flex align-items-center justify-content-between">
+                    Position X
+                    <span class="d-flex justify-content-between">
+                        <input name="positionX" t-att-value="this.positions['x']" t-on-change="(ev) => this.onPositionChange('x', ev)" class="input" type="text" style="width: 5ch"/>
+                    </span>
+                </div>
+                <div class="d-flex align-items-center justify-content-between">
+                    Position Y
+                    <span class="d-flex justify-content-between">
+                        <input name="positionY" t-att-value="this.positions['y']" t-on-change="(ev) => this.onPositionChange('y', ev)" class="input" type="text" style="width: 5ch" />
+                    </span>
+                </div>
+                <div class="d-flex align-items-center justify-content-between">
+                    Size
+                    <span class="d-flex justify-content-between">
+                        <button t-on-click="() => this.onSizeChange('closest-side')" t-attf-class="btn btn-light p-0 {{ this.state.size === 'closest-side' ? `active` : ''}}" title="Extend to the closest side">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" viewBox="0 0 16 20" fill="none">
+                                <rect x="1.5" y="3.5" width="13" height="13" stroke="#AAAAAD"></rect>
+                                <path d="M3 4H9V8C9 8.55228 8.55228 9 8 9H4C3.44772 9 3 8.55228 3 8V4Z" fill="#8C8C92"></path>
+                                <path d="M6 11C7.65685 11 9 9.65685 9 8C9 6.34315 7.65685 5 6 5C4.34315 5 3 6.34315 3 8C3 9.65685 4.34315 11 6 11Z" fill="#74747B"></path>
+                                <path d="M6 10C7.10457 10 8 9.10457 8 8C8 6.89543 7.10457 6 6 6C4.89543 6 4 6.89543 4 8C4 9.10457 4.89543 10 6 10Z" fill="white"></path>
+                                <rect x="2" y="3" width="12" height="1" fill="white"></rect>
+                            </svg>
+                        </button>
+                        <button t-on-click="() => this.onSizeChange('closest-corner')" t-attf-class="btn btn-light p-0 {{ this.state.size === 'closest-corner' ? `active` : ''}}" title="Extend to the closest corner">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" viewBox="0 0 16 20" fill="none">
+                                <rect x="1.5" y="3.5" width="13" height="13" stroke="#AAAAAD"></rect>
+                                <path d="M2 4H9V7C9 9.20914 7.20914 11 5 11H2V4Z" fill="#8C8C92"></path>
+                                <path d="M6 11C7.65685 11 9 9.65685 9 8C9 6.34315 7.65685 5 6 5C4.34315 5 3 6.34315 3 8C3 9.65685 4.34315 11 6 11Z" fill="#74747B"></path>
+                                <path d="M6 10C7.10457 10 8 9.10457 8 8C8 6.89543 7.10457 6 6 6C4.89543 6 4 6.89543 4 8C4 9.10457 4.89543 10 6 10Z" fill="white"></path>
+                                <rect x="1" y="3" width="8" height="1" fill="white"></rect>
+                                <rect x="1" y="11" width="8" height="1" transform="rotate(-90 1 11)" fill="white"></rect>
+                            </svg>
+                        </button>
+                        <button t-on-click="() => this.onSizeChange('farthest-side')" t-attf-class="btn btn-light p-0 {{ this.state.size === 'farthest-side' ? `active` : ''}}" title="Extend to the farthest side">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" viewBox="0 0 16 20" fill="none">
+                                <rect x="1.5" y="3.5" width="13" height="13" stroke="#AAAAAD"></rect>
+                                <path d="M7 12C10.3137 12 14 10.2091 14 8C14 5.79086 10.3137 4 7 4C3.68629 4 2 5.79086 2 8C2 10.2091 3.68629 12 7 12Z" fill="#8C8C92"></path>
+                                <path d="M6 11C7.65685 11 9 9.65685 9 8C9 6.34315 7.65685 5 6 5C4.34315 5 3 6.34315 3 8C3 9.65685 4.34315 11 6 11Z" fill="#74747B"></path>
+                                <path d="M6 10C7.10457 10 8 9.10457 8 8C8 6.89543 7.10457 6 6 6C4.89543 6 4 6.89543 4 8C4 9.10457 4.89543 10 6 10Z" fill="white"></path>
+                                <rect x="14" y="4" width="1" height="12" fill="white"></rect>
+                            </svg>
+                        </button>
+                        <button t-on-click="() => this.onSizeChange('farthest-corner')" t-attf-class="btn btn-light p-0 {{ this.state.size === 'farthest-corner' ? `active`: ''}}" title="Extend to the farthest corner">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" viewBox="0 0 16 20" fill="none">
+                                <rect x="1.5" y="3.5" width="13" height="13" stroke="#AAAAAD"></rect>
+                                <path d="M2 4H14V10C14 13.3137 11.3137 16 8 16H2V4Z" fill="#8C8C92"></path>
+                                <path d="M6 11C7.65685 11 9 9.65685 9 8C9 6.34315 7.65685 5 6 5C4.34315 5 3 6.34315 3 8C3 9.65685 4.34315 11 6 11Z" fill="#74747B"></path>
+                                <path d="M6 10C7.10457 10 8 9.10457 8 8C8 6.89543 7.10457 6 6 6C4.89543 6 4 6.89543 4 8C4 9.10457 4.89543 10 6 10Z" fill="white"></path>
+                                <rect x="15" y="17" width="7" height="0.999999" transform="rotate(-180 15 17)" fill="white"></rect>
+                                <rect x="15" y="10" width="7" height="1" transform="rotate(90 15 10)" fill="white"></rect>
+                            </svg>
+                        </button>
+                    </span>
+                </div>
+            </div>
+
+            <div>
+                First color %
+                <span class="d-flex justify-content-between">
+                    <input name="firstColorPercentage" t-att-value="this.colors[0].percentage" t-on-click="() => this.state.currentColorIndex = 0" t-on-change="(ev) => this.onColorPercentageChange(0, ev)" class="w-100 form-range" type="range" min="0" max="100"/>
+                </span>
+                Second color %
+                <span class="d-flex justify-content-between">
+                    <input name="secondColorPercentage" t-att-value="this.colors[1].percentage" t-on-click="() => this.state.currentColorIndex = 1 " t-on-change="(ev) => this.onColorPercentageChange(1, ev)" class="w-100 form-range" type="range" min="0" max="100"/>
+                </span>
+            </div>
+
+            <Colorpicker
+                onColorSelect.bind="onColorChange"
+                onColorPreview.bind="onColorChange"
+                defaultColor="this.colors[this.state.currentColorIndex].hex"
+                selectedColor="this.colors[this.state.currentColorIndex].hex"
+                />
+        </div>
+    </t>
+</templates>

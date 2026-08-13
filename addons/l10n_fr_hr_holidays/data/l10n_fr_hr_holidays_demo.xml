@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_fr_part_time_calendar" model="resource.calendar">
+        <field name="name">Part time</field>
+        <field name="company_id" eval="False"/>
+        <field name="hours_per_day">9</field>
+        <field name="attendance_ids"
+            eval="[(5, 0, 0),
+                (0, 0, {'name': 'Monday Morning', 'dayofweek': '0', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Monday Afternoon', 'dayofweek': '0', 'hour_from': 13, 'hour_to': 18.0, 'day_period': 'afternoon'}),
+                (0, 0, {'name': 'Tuesday Morning', 'dayofweek': '1', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Tuesday Afternoon', 'dayofweek': '1', 'hour_from': 13, 'hour_to': 18.0, 'day_period': 'afternoon'}),
+                (0, 0, {'name': 'Thursday Morning', 'dayofweek': '3', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Thursday Afternoon', 'dayofweek': '3', 'hour_from': 13, 'hour_to': 18.0, 'day_period': 'afternoon'}),
+            ]"
+        />
+    </record>
+    <record id="base.partner_demo_company_fr" model="res.partner" forcecreate="1">
+        <field name="name">FR Company</field>
+        <field name="vat">FR91746948785</field>
+        <field name="street">Rue Abbé Huet</field>
+        <field name="city">Rennes</field>
+        <field name="country_id" ref="base.fr"/>
+
+        <field name="zip">35043</field>
+        <field name="phone">+33 6 12 34 56 78</field>
+        <field name="email">info@company.frexample.com</field>
+        <field name="website">www.frexample.com</field>
+    </record>
+
+    <record id="base.demo_company_fr" model="res.company" forcecreate="1">
+        <field name="name">FR Company</field>
+        <field name="partner_id" ref="base.partner_demo_company_fr"/>
+    </record>
+
+    <record id="l10n_fr_part_time_employee" model="hr.employee">
+        <field name="company_id" ref="base.demo_company_fr"/>
+        <field name="active" eval="1"/>
+        <field name="name">Mitchell Admin</field>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="resource_calendar_id" ref="l10n_fr_part_time_calendar"/>
+        <field name="image_1920" eval="obj(ref('base.partner_admin')).image_1920" model="res.partner"/>
+    </record>
+
+    <record id="l10n_fr_holiday_status_cl" model="hr.leave.type">
+        <field name="name">Paid Time Off</field>
+        <field name="company_id" ref="base.demo_company_fr"/>
+        <field name="requires_allocation">yes</field>
+        <field name="employee_requests">no</field>
+        <field name="leave_validation_type">both</field>
+        <field name="allocation_validation_type">hr</field>
+        <field name="responsible_ids" eval="[(4, ref('base.user_admin'))]"/>
+        <field name="icon_id" ref="hr_holidays.icon_14"/>
+        <field name="color">2</field>
+        <field name="has_valid_allocation">True</field>
+    </record>
+
+    <record id="l10n_fr_hr_holidays_allocation" model="hr.leave.allocation">
+        <field name="name">Paid Time Off allocation</field>
+        <field name="state">confirm</field>
+        <field name="holiday_status_id" ref="l10n_fr_holiday_status_cl"/>
+        <field name="number_of_days">20</field>
+        <field name="date_from" eval="time.strftime('%Y-01-01')"/>
+        <field name="date_to" eval="time.strftime('%Y-12-31')"/>
+        <field name="employee_id" ref="l10n_fr_part_time_employee"/>
+    </record>
+    <function model="hr.leave.allocation" name="action_validate">
+        <value eval="[ref('l10n_fr_hr_holidays_allocation')]"/>
+    </function>
+
+    <function model="res.company" name="write">
+        <value eval="[ref('base.demo_company_fr')]"/>
+        <value eval="{'l10n_fr_reference_leave_type': ref('l10n_fr_holiday_status_cl')}"/>
+    </function>
+
+    <function model="res.users" name="write">
+        <value eval="[ref('base.user_root'), ref('base.user_admin'), ref('base.user_demo')]"/>
+        <value eval="{'company_ids': [(4, ref('base.demo_company_fr'))]}"/>
+    </function>
+</odoo>

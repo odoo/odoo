@@ -1,0 +1,42 @@
+.o-mail-Message.o-card {
+    background-color: mix($gray-100, $gray-200);
+}
+
+.o-mail-Message-actions {
+    --mail-Message-actionIconHoveredColor: white;
+}
+
+.o-mail-Message-author {
+    opacity: 75%;
+}
+
+.o-mail-Message-date {
+    opacity: 50%;
+}
+
+.o-mail-Message-bubble {
+    &.o-blue {
+        background-color: mix($gray-100, $info, 87.5%) !important;
+        border-color: lighten(mix($gray-100, $info, 87.5%), 5%) !important;
+
+        &.o-muted {
+            background-color: mix($gray-100, mix($gray-100, $info, 87.5%)) !important;
+        }
+    }
+    &.o-green {
+        background-color: mix($gray-100, $success, 87.5%) !important;
+        border-color: lighten(mix($gray-100, $success, 87.5%), 5%) !important;
+
+        &.o-muted {
+            background-color: mix($gray-100, mix($gray-100, $success, 87.5%)) !important;
+        }
+    }
+    &.o-orange {
+        background-color: mix($gray-100, $warning, 72.5%) !important;
+        border-color: lighten(mix($gray-100, $warning, 72.5%), 5%) !important;
+
+        &.o-muted {
+            background-color: mix($gray-100, mix($gray-100, $warning, 72.5%), 85%) !important;
+        }
+    }
+}

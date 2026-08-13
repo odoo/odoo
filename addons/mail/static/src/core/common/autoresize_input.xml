@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="mail.AutoresizeInput">
+    <input
+        class="o-mail-AutoresizeInput px-1 border-1 text-truncate"
+        t-attf-class="{{ props.className }}"
+        t-att-class="{'o-focused': state.isFocused}"
+        t-att-placeholder="props.placeholder"
+        t-att-disabled="!props.enabled"
+        t-att-title="state.value"
+        t-model="state.value"
+        t-on-keydown="onKeydownInput"
+        t-on-focus="() => this.state.isFocused = true"
+        t-on-blur="onBlurInput"
+        t-ref="input"
+        type="text"
+    />
+</t>
+
+</templates>

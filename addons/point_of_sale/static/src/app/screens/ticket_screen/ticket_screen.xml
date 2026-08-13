@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="point_of_sale.TicketScreen">
+        <t t-set="_filteredOrderList" t-value="getFilteredOrderList()" />
+        <div class="ticket-screen screen h-100 bg-100">
+            <div class="screen-full-width d-flex w-100 h-100">
+                <div t-if="!ui.isSmall || pos.ticket_screen_mobile_pane === 'left'" class="rightpane pane-border d-flex flex-column flex-grow-1 w-100 h-100 h-lg-100 bg-200 overflow-y-auto">
+                    <div class="controls d-grid d-sm-flex align-items-center justify-content-between gap-2 gap-sm-3 p-2 bg-300">
+                        <div class="buttons d-flex gap-2">
+                            <button class="discard btn btn-lg btn-light text-nowrap" t-on-click="() => this.closeTicketScreen()">
+                                <i class="oi oi-chevron-left"/>
+                                <span t-if="!ui.isSmall" class="ms-2">Back</span>
+                            </button>
+                        </div>
+                        <SearchBar
+                            config="getSearchBarConfig()"
+                            placeholder.translate="Search Orders..."
+                            onSearch.bind="onSearch"
+                            onFilterSelected.bind="onFilterSelected" />
+                        <div class="item d-flex align-items-center justify-content-end">
+                            <span class="page me-2"><t t-esc="getPageNumber()" /></span>
+                            <div class="page-controls d-flex align-items-center gap-1">
+                                <button class="previous btn btn-light btn-lg" t-on-click="() => this.onPrevPage()">
+                                    <i class="fa fa-fw fa-caret-left" role="img" aria-label="Previous Order List" title="Previous Order List"></i>
+                                </button>
+                                <button class="next btn btn-light btn-lg" t-on-click="() => this.onNextPage()">
+                                    <i class="fa fa-fw fa-caret-right" role="img" aria-label="Next Order List" title="Next Order List"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="orders overflow-y-auto flex-grow-1">
+                        <t t-if="_filteredOrderList.length !== 0">
+                            <div class="header-row d-flex text-bg-700 fw-bolder" t-att-class="{ 'd-none': ui.isSmall }">
+                                <div class="col wide p-2">Date</div>
+                                <div class="col wide p-2">Receipt Number</div>
+                                <div class="col wide p-2">Order number</div>
+                                <div class="col p-2">Customer</div>
+                                <div class="col wide p-2" t-if="showCardholderName()">Cardholder Name</div>
+                                <div class="col p-2">Cashier</div>
+                                <div class="col end p-2">Total</div>
+                                <div class="col narrow p-2">Status</div>
+                                <div class="col very-narrow p-2" name="delete"></div>
+                            </div>
+                            <t t-if="!ui.isSmall" t-foreach="_filteredOrderList" t-as="order" t-key="order.uuid">
+                                <div class="order-row" t-att-class="{ 'highlight bg-primary text-white': isHighlighted(order) }"
+                                    t-on-click="() => this.onClickOrder(order)" t-on-dblclick="() => order.finalized ? ()=>{} : this._setOrder(order)" >
+                                    <div class="col wide p-2 ">
+                                        <div><t t-esc="getDate(order)"></t></div>
+                                    </div>
+                                    <div class="col wide p-2">
+                                        <div><t t-esc="order.pos_reference"></t></div>
+                                    </div>
+                                    <div class="col wide p-2">
+                                        <div><t t-esc="order.tracking_number"></t></div>
+                                    </div>
+                                    <div class="col p-2">
+                                    <!-- <t t-debug="order" /> -->
+                                        <div><t t-esc="order.partner_id?.name"></t></div>
+                                    </div>
+                                    <div t-if="showCardholderName()" class="col p-2">
+                                        <div><t t-esc="getCardholderName(order)"></t></div>
+                                    </div>
+                                    <div class="col p-2">
+                                        <t t-esc="getCashier(order)"></t>
+                                    </div>
+                                    <div class="col end p-2">
+                                        <div><t t-esc="getTotal(order)"></t></div>
+                                    </div>
+                                    <div class="col narrow p-2">
+                                        <div><t t-esc="getStatus(order)"></t></div>
+                                    </div>
+                                    <div t-if="!shouldHideDeleteButton(order)" class="col very-narrow delete-button p-2" name="delete" t-on-click.stop="() => this.pos.onDeleteOrder(order)">
+                                        <i class="fa fa-trash" aria-hidden="true"/>
+                                    </div>
+                                    <div t-else="" class="col very-narrow p-2"></div>
+                                </div>
+                            </t>
+                            <t t-if="ui.isSmall" t-foreach="_filteredOrderList" t-as="order" t-key="order.uuid">
+                                <div class="mobileOrderList order-row rounded-3" t-att-class="{ 'highlight bg-primary text-white': isHighlighted(order) }"
+                                    t-on-click="() => this.onClickOrder(order)" t-on-dblclick="() =>  order.finalized ? ()=>{} : this._setOrder(order)" >
+                                    <div class="col p-2 d-flex justify-content-between align-items-center">
+                                        <div><t t-esc="order.pos_reference"></t> / <t t-esc="order.tracking_number"></t></div>
+                                        <div><t t-esc="getTotal(order)"></t></div>
+                                    </div>
+                                    <div class="col p-2 d-flex justify-content-between align-items-center">
+                                        <div><t t-esc="getDate(order)"></t></div>
+                                        <div class="orderStatus"><t t-esc="getStatus(order)"></t></div>
+                                    </div>
+                                    <div class="col p-2">
+                                        <div t-if="!shouldHideDeleteButton(order)" class="col very-narrow delete-button p-2 rounded-2" name="delete" t-on-click.stop="() => this.pos.onDeleteOrder(order)">
+                                            <i class="fa fa-trash" aria-hidden="true"/> Delete
+                                        </div>
+                                    </div>
+                                </div>
+                            </t>
+                        </t>
+                        <CenteredIcon
+                            t-else=""
+                            icon="this.pos.data.network.loading ? 'fa-spinner fa-spin' : 'fa-shopping-cart fa-4x'"
+                            text="this.pos.data.network.loading ? 'Loading...' : 'No orders found'"
+                            class="'h-100'"/>
+                    </div>
+                    <div class="switchpane d-flex w-100 gap-2 p-2 mt-2" t-if="ui.isSmall">
+                        <t t-set="_selectedSyncedOrder" t-value="getSelectedOrder()" />
+                        <button class="btn-switchpane load-order-button primary btn btn-primary btn-lg lh-lg w-50 py-3"
+                            t-att-disabled="!_selectedSyncedOrder"
+                            t-if="!isOrderSynced"
+                            t-on-click="() => this._setOrder(_selectedSyncedOrder)">
+                            <span class="d-block">Load Order</span>
+                        </button>
+                        <button class="btn-switchpane btn btn-lg lh-lg w-50 py-3 secondary review-button" t-att-class="{'btn-primary': isOrderSynced, 'btn-light': !isOrderSynced}" t-on-click="switchPane">
+                            <span class="d-block">Review</span>
+                        </button>
+                    </div>
+                </div>
+                <!-- Hide the cart pane if no orders to list after having a search term -->
+                <div t-if="(!ui.isSmall || pos.ticket_screen_mobile_pane === 'right')" class="leftpane d-flex flex-column flex-grow-1 gap-2 w-100 h-100 h-lg-100 bg-200 p-2">
+                    <t t-set="_selectedSyncedOrder" t-value="getSelectedOrder()" />
+                    <t t-set="_selectedOrderlineId" t-value="getSelectedOrderlineId()" />
+                    <t t-if="_selectedSyncedOrder?.get_orderlines()?.length" > 
+                        <div t-if="isOrderSynced" t-att-class="{ 'highlight text-danger': !getHasItemsToRefund() }" class="py-2 px-3 rounded-3 bg-100 text-center">
+                            Select the product(s) to refund and set the quantity
+                        </div>
+                        <OrderWidget lines="_selectedSyncedOrder.lines" t-slot-scope="scope"
+                            taxTotals="_selectedSyncedOrder.taxTotals"
+                            generalNote="_selectedSyncedOrder?.general_note or ''">
+                            <t t-set="line" t-value="scope.line" />
+                            <Orderline line="line.getDisplayData()"
+                                class="{'selected': line.id === getSelectedOrderlineId()}"
+                                t-on-click="() => this.onClickOrderline(line)">
+                                <t t-set="toRefundDetail" t-value="line.order_id?.uiState?.lineToRefund?.[line.uuid]" />
+                                <li t-if="!pos.isProductQtyZero(line.refunded_qty)"
+                                    class="info refund-note mt-1">
+                                    <strong t-esc="env.utils.formatProductQty(line.refunded_qty)" />
+                                    <span> Refunded</span>
+                                </li>
+                                <li t-if="!pos.isProductQtyZero(toRefundDetail?.qty)" class="info to-refund-highlight refund-note mt-1 fw-bold text-primary">
+                                    <t t-set="_destinationOrderUid" t-value="toRefundDetail.destination_order?.uuid"/>
+                                    <t t-set="refundQty" t-value="env.utils.formatProductQty(toRefundDetail.qty)"/>
+                                    <t t-if="_destinationOrderUid">
+                                        Refunding <t t-esc="refundQty" /> in
+                                        <span t-esc="_destinationOrderUid"
+                                            class="order-link ms-1 text-decoration-underline cursor-pointer"
+                                            t-on-click.stop="() => this.onClickRefundOrderUid(_destinationOrderUid)" />
+                                    </t>
+                                    <t t-else="">
+                                        To Refund: <t t-esc="refundQty" />
+                                    </t>
+                                </li>
+                            </Orderline>
+                        </OrderWidget>
+                        <div class="pads">
+                            <t t-if="isOrderSynced">
+                                <div class="control-buttons d-flex gap-2 pb-2">
+                                    <button class="edit-order-payment control-button btn btn-light btn-lg lh-lg flex-grow-1 flex-shrink-1" t-on-click="() => this.pos.orderDetails(_selectedSyncedOrder)">
+                                        <i class="fa fa-pencil-square-o me-1" /> Details
+                                    </button>
+                                    <InvoiceButton
+                                        onInvoiceOrder.bind="onInvoiceOrder"
+                                        order="_selectedSyncedOrder" />
+                                    <button class="control-button btn btn-light btn-lg lh-lg flex-grow-1 flex-shrink-1" t-on-click="() => doPrint.call(_selectedSyncedOrder)">
+                                        <i t-attf-class="fa {{doPrint.status === 'loading' ? 'fa-fw fa-spin fa-circle-o-notch' : 'fa-print'}} me-1" />Print Receipt
+                                    </button>
+                                </div>
+                                <div class="subpads d-flex flex-column">
+                                    <Numpad class="'pb-2'" buttons="getNumpadButtons()"/>
+                                    <ActionpadWidget
+                                        partner="getSelectedOrder()?.get_partner()"
+                                        actionName.translate="Refund"
+                                        actionToTrigger.bind="onDoRefund"
+                                    />
+                                </div>
+                            </t>
+                            <div t-else="" class="pads border-top d-flex gap-2" >
+                                <BackButton onClick="() => pos.onClickBackButton()"/>
+                                <button class="button validation load-order-button w-100 btn btn-lg btn-primary py-3"
+                                    t-att-disabled="!_selectedSyncedOrder"
+                                    t-on-click="() => this._setOrder(_selectedSyncedOrder)">
+                                    <span class="d-block">Load Order</span>
+                                </button>
+                            </div>
+                        </div>
+                    </t>
+                    <t t-else="">
+                        <CenteredIcon icon="'fa-shopping-cart fa-4x'" text.translate="'Select an order'" class="'bg-100 h-100'"/>
+                        <BackButton t-if="ui.isSmall" onClick="() => pos.onClickBackButton()"/>
+                    </t>
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>

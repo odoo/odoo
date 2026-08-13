@@ -1,0 +1,829 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * delivery
+#
+# Translators:
+# Martin Trigaux <mat@odoo.com>, 2017
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
+# Bone NI <bounkirdni@gmail.com>, 2026.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 11.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-05-16 13:49+0000\n"
+"PO-Revision-Date: 2026-05-19 13:05+0000\n"
+"Last-Translator: Bone NI <bounkirdni@gmail.com>\n"
+"Language-Team: Lao <https://translate.odoo.com/projects/odoo-18/delivery/lo/>"
+"\n"
+"Language: lo\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.17\n"
+
+#. module: delivery
+#. odoo-python
+#: code:addons/delivery/wizard/choose_delivery_carrier.py:0
+msgid "%(carrier)s Error"
+msgstr "ຂໍ້ຜິດພາດ %(carrier)s"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
+msgid "<i class=\"oi oi-arrow-right me-1\"/>Get rate"
+msgstr "<i class=\"oi oi-arrow-right me-1\"/>ຂໍລາຄາ"
+
+#. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/delivery_carrier.py:0
+msgid ""
+"<p class=\"o_view_nocontent\">\n"
+"                    Buy Odoo Enterprise now to get more providers.\n"
+"                </p>"
+msgstr ""
+"<p class=\"o_view_nocontent\">\n"
+"                    ຊື້ Odoo Enterprise ດຽວນີ້ເພື່ອຮັບຜູ້ໃຫ້ບໍລິການເພີ່ມເຕີມ.\n"
+"                </p>"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+msgid ""
+"<span class=\"o_stat_text o_warning_text fw-bold\">Test</span>\n"
+"                                <span class=\"o_stat_text\">Environment</span>"
+msgstr ""
+"<span class=\"o_stat_text o_warning_text fw-bold\">ທົດສອບ</span>\n"
+"                                <span class=\"o_stat_text\">ສະພາບແວດລ້ອມ</"
+"span>"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+msgid "<span class=\"o_stat_text text-danger\">No debug</span>"
+msgstr "<span class=\"o_stat_text text-danger\">ບໍ່ມີ Debug</span>"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+msgid "<span class=\"text-success\">Debug requests</span>"
+msgstr "<span class=\"text-success\">ຄຳຂໍ Debug</span>"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+msgid ""
+"<span class=\"text-success\">Production</span>\n"
+"                                <span class=\"o_stat_text\">Environment</span>"
+msgstr ""
+"<span class=\"text-success\">ໃຊ້ງານຈິງ</span>\n"
+"                                <span class=\"o_stat_text\">ສະພາບແວດລ້ອມ</"
+"span>"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.delivery_report_saleorder_document
+msgid "<strong>Shipping Description:</strong>"
+msgstr "<strong>ຄຳອະທິບາຍການຂົນສົ່ງ:</strong>"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier__carrier_description
+msgid "A description of the delivery method that you want to communicate to your customers on the Sales Order and sales confirmation email.E.g. instructions for customers to follow."
+msgstr ""
+"ຄຳອະທິບາຍກ່ຽວກັບວິທີການຂົນສົ່ງທີ່ທ່ານຕ້ອງການສື່ສານກັບລູກຄ້າໃນ ໃບສັ່ງຂາຍ ແລະ ອີເມວຢືນຢັນການຂາຍ. ຕົວຢ່າ"
+"ງ: ຄຳແນະນຳໃຫ້ລູກຄ້າປະຕິບັດຕາມ."
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier__integration_level
+msgid "Action while validating Delivery Orders"
+msgstr "ການດຳເນີນການໃນຂະນະທີ່ຢືນຢັນລາຍການສົ່ງສິນຄ້າ"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__active
+msgid "Active"
+msgstr "ເປີດໃຊ້ງານ"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
+msgid "Add"
+msgstr "ເພີ່ມ"
+
+#. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/sale_order.py:0
+#: code:addons/delivery/wizard/choose_delivery_carrier.py:0
+msgid "Add a shipping method"
+msgstr "ເພີ່ມວິທີການຂົນສົ່ງ"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
+msgid "Add shipping"
+msgstr "ເພີ່ມການຂົນສົ່ງ"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+msgid "Additional margin"
+msgstr "ສ່ວນຕ່າງເພີ່ມເຕີມ"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__amount
+msgid "Amount"
+msgstr "ຈຳນວນເງິນ"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier__amount
+msgid "Amount of the order to benefit from a free shipping, expressed in the company currency"
+msgstr ""
+"ຈຳນວນເງິນຂອງໃບສັ່ງຊື້ທີ່ຈະໄດ້ຮັບການຂົນສົ່ງຟຣີ, ສະແດງເປັນສະກຸນເງິນຂອງບໍລິສັດ"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
+msgid "Archived"
+msgstr "ຈັດເກັບໄວ້ແລ້ວ"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__available_carrier_ids
+msgid "Available Carriers"
+msgstr "ຜູ້ໃຫ້ບໍລິການທີ່ມີຢູ່"
+
+#. module: delivery
+#: model:ir.model.fields.selection,name:delivery.selection__delivery_carrier__delivery_type__base_on_rule
+msgid "Based on Rules"
+msgstr "ອີງຕາມກົດເກນ"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__can_generate_return
+msgid "Can Generate Return"
+msgstr "ສາມາດສ້າງການສົ່ງຄືນໄດ້"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__carrier_id
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_tree
+msgid "Carrier"
+msgstr "ຜູ້ຂົນສົ່ງ"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__carrier_description
+msgid "Carrier Description"
+msgstr "ຄຳອະທິບາຍຜູ້ຂົນສົ່ງ"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__company_id
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__company_id
+msgid "Company"
+msgstr "ບໍລິສັດ"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_price_rule_form
+msgid "Condition"
+msgstr "ເງື່ອນໄຂ"
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_res_partner
+msgid "Contact"
+msgstr "ຜູ້ຕິດຕໍ່"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__display_price
+msgid "Cost"
+msgstr "ຕົ້ນທຶນ"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__country_ids
+msgid "Countries"
+msgstr "ປະເທດ"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__create_uid
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__create_uid
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__create_uid
+#: model:ir.model.fields,field_description:delivery.field_delivery_zip_prefix__create_uid
+msgid "Created by"
+msgstr "ສ້າງໂດຍ"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__create_date
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__create_date
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__create_date
+#: model:ir.model.fields,field_description:delivery.field_delivery_zip_prefix__create_date
+msgid "Created on"
+msgstr "ສ້າງເມື່ອ"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__currency_id
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__currency_id
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__currency_id
+msgid "Currency"
+msgstr "ສະກຸນເງິນ"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__partner_id
+msgid "Customer"
+msgstr "ລູກຄ້າ"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__debug_logging
+msgid "Debug logging"
+msgstr "ການບັນທຶກ Debug"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_res_partner__property_delivery_carrier_id
+#: model:ir.model.fields,help:delivery.field_res_users__property_delivery_carrier_id
+msgid "Default delivery method used in sales orders."
+msgstr "ວິທີການຂົນສົ່ງເລີ່ມຕົ້ນທີ່ໃຊ້ໃນໃບສັ່ງຂາຍ."
+
+#. module: delivery
+#: model_terms:ir.actions.act_window,help:delivery.action_delivery_carrier_form
+msgid "Define a new delivery method"
+msgstr "ກຳນົດວິທີການຂົນສົ່ງໃໝ່"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
+msgid "Delivery Carrier"
+msgstr "ຜູ້ໃຫ້ບໍລິການຂົນສົ່ງ"
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_choose_delivery_carrier
+msgid "Delivery Carrier Selection Wizard"
+msgstr "ຕົວຊ່ວຍເລືອກຜູ້ໃຫ້ບໍລິການຂົນສົ່ງ"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_price_rule_form
+msgid "Delivery Cost"
+msgstr "ຄ່າທຳນຽມການສົ່ງ"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__delivery_message
+#: model:ir.model.fields,field_description:delivery.field_sale_order__delivery_message
+msgid "Delivery Message"
+msgstr "ຂໍ້ຄວາມການຂົນສົ່ງ"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__name
+#: model:ir.model.fields,field_description:delivery.field_res_partner__property_delivery_carrier_id
+#: model:ir.model.fields,field_description:delivery.field_res_users__property_delivery_carrier_id
+#: model:ir.model.fields,field_description:delivery.field_sale_order__carrier_id
+msgid "Delivery Method"
+msgstr "ວິທີການຂົນສົ່ງ"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__delivery_price
+msgid "Delivery Price"
+msgstr "ລາຄາການຂົນສົ່ງ"
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_delivery_price_rule
+msgid "Delivery Price Rules"
+msgstr "ກົດເກນລາຄາການຂົນສົ່ງ"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__product_id
+msgid "Delivery Product"
+msgstr "ສິນຄ້າການຂົນສົ່ງ"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_sale_order__delivery_rating_success
+msgid "Delivery Rating Success"
+msgstr "ການປະເມີນການຂົນສົ່ງສຳເລັດ"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_sale_order__delivery_set
+msgid "Delivery Set"
+msgstr "ກຳນົດການຂົນສົ່ງແລ້ວ"
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_delivery_zip_prefix
+msgid "Delivery Zip Prefix"
+msgstr "ຄຳນຳໜ້າລະຫັດໄປສະນີການຂົນສົ່ງ"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_sale_order__recompute_delivery_price
+#: model:ir.model.fields,field_description:delivery.field_sale_order_line__recompute_delivery_price
+msgid "Delivery cost should be recomputed"
+msgstr "ຄວນຄິດໄລ່ຄ່າຂົນສົ່ງໃໝ່"
+
+#. module: delivery
+#: model_terms:ir.actions.act_window,help:delivery.action_delivery_zip_prefix_list
+msgid ""
+"Delivery zip prefixes are assigned to delivery carriers to restrict\n"
+"            which zips it is available to."
+msgstr ""
+"ຄຳນຳໜ້າລະຫັດໄປສະນີການຂົນສົ່ງຖືກກຳນົດໃຫ້ຜູ້ຂົນສົ່ງເພື່ອຈຳກັດລະຫັດໄປສະນີທີ່ສາມາດໃຊ້ໄດ້."
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+msgid "Description"
+msgstr "ຄຳອະທິບາຍ"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+msgid "Destination Availability"
+msgstr "ຄວາມພ້ອມຂອງປາຍທາງ"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier__sequence
+msgid "Determine the display order"
+msgstr "ກຳນົດລຳດັບການສະແດງຜົນ"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
+msgid "Discard"
+msgstr "ຍົກເລີກ"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__display_name
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__display_name
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__display_name
+#: model:ir.model.fields,field_description:delivery.field_delivery_zip_prefix__display_name
+msgid "Display Name"
+msgstr "ຊື່ທີ່ສະແດງ"
+
+#. module: delivery
+#: model_terms:ir.actions.act_window,help:delivery.action_delivery_carrier_form
+msgid ""
+"Each carrier (e.g. UPS) can have several delivery methods (e.g.\n"
+"            UPS Express, UPS Standard) with a set of pricing rules attached\n"
+"            to each method."
+msgstr ""
+"ຜູ້ຂົນສົ່ງແຕ່ລະລາຍ (ຕົວຢ່າງ: UPS) ສາມາດມີຫຼາຍວິທີການຂົນສົ່ງ (ຕົວຢ່າງ: UPS Express, UPS "
+"Standard) ພ້ອມກັບຊຸດກົດເກນການກຳນົດລາຄາທີ່ຕິດກັບແຕ່ລະວິທີ."
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__prod_environment
+msgid "Environment"
+msgstr "ສະພາບແວດລ້ອມ"
+
+#. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/delivery_carrier.py:0
+msgid "Error: this delivery method is not available for this address."
+msgstr "ຂໍ້ຜິດພາດ: ວິທີການຂົນສົ່ງນີ້ບໍ່ມີໃຫ້ສຳລັບທີ່ຢູ່ນີ້."
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier__invoice_policy
+msgid ""
+"Estimated Cost: the customer will be invoiced the estimated cost of the shipping.\n"
+"Real Cost: the customer will be invoiced the real cost of the shipping, the cost of theshipping will be updated on the SO after the delivery."
+msgstr ""
+"ຄ່າທຳນຽມໂດຍປະມານ: ລູກຄ້າຈະຖືກອອກໃບແຈ້ງໜີ້ຕາມຄ່າຂົນສົ່ງໂດຍປະມານ.\n"
+"ຄ່າທຳນຽມຕົວຈິງ: ລູກຄ້າຈະຖືກອອກໃບແຈ້ງໜີ້ຕາມຄ່າຂົນສົ່ງຕົວຈິງ, ຄ່າຂົນສົ່ງຈະຖືກອັບເດດໃນໃບສັ່ງຂາຍຫຼັງຈາກການ"
+"ສົ່ງສິນຄ້າ."
+
+#. module: delivery
+#: model:ir.model.fields.selection,name:delivery.selection__delivery_carrier__invoice_policy__estimated
+msgid "Estimated cost"
+msgstr "ຄ່າທຳນຽມໂດຍປະມານ"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_sale_order__carrier_id
+msgid "Fill this field if you plan to invoice the shipping based on picking."
+msgstr ""
+"ປ້ອນຂໍ້ມູນໃສ່ຫ້ອງນີ້ ຫາກທ່ານວາງແຜນທີ່ຈະອອກໃບແຈ້ງໜີ້ການຂົນສົ່ງໂດຍອີງໃສ່ການເກັບສິນຄ້າ."
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+msgid "Filling this form allows you to filter delivery carriers according to the delivery address of your customer."
+msgstr ""
+"ການປ້ອນຂໍ້ມູນໃນຟອມນີ້ຊ່ວຍໃຫ້ທ່ານສາມາດກັ່ນຕອງຜູ້ໃຫ້ບໍລິການຂົນສົ່ງຕາມທີ່ຢູ່ການຂົນສົ່ງຂອງລູກຄ້າ."
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__fixed_margin
+msgid "Fixed Margin"
+msgstr "ສ່ວນຕ່າງຄົງທີ່"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__fixed_price
+#: model:ir.model.fields.selection,name:delivery.selection__delivery_carrier__delivery_type__fixed
+msgid "Fixed Price"
+msgstr "ລາຄາຄົງທີ່"
+
+#. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/sale_order.py:0
+msgid "Free Shipping"
+msgstr "ຂົນສົ່ງຟຣີ"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__free_over
+msgid "Free if order amount is above"
+msgstr "ຟຣີ ຫາກຍອດສັ່ງຊື້ສູງກວ່າ"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__return_label_on_delivery
+msgid "Generate Return Label"
+msgstr "ສ້າງປ້າຍສົ່ງຄືນ"
+
+#. module: delivery
+#: model:ir.model.fields.selection,name:delivery.selection__delivery_carrier__integration_level__rate
+msgid "Get Rate"
+msgstr "ຂໍລາຄາ"
+
+#. module: delivery
+#: model:ir.model.fields.selection,name:delivery.selection__delivery_carrier__integration_level__rate_and_ship
+msgid "Get Rate and Create Shipment"
+msgstr "ຂໍລາຄາ ແລະ ສ້າງການສົ່ງສິນຄ້າ"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
+msgid "Group By"
+msgstr "ຈັດກຸ່ມໂດຍ"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__id
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__id
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__id
+#: model:ir.model.fields,field_description:delivery.field_delivery_zip_prefix__id
+msgid "ID"
+msgstr "ລະຫັດ (ID)"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier__free_over
+msgid "If the order total amount (shipping excluded) is above or equal to this value, the customer benefits from a free shipping"
+msgstr ""
+"ຫາກຍອດລວມຂອງໃບສັ່ງຊື້ (ບໍ່ລວມຄ່າຂົນສົ່ງ) ສູງກວ່າ ຫຼື ເທົ່າກັບມູນຄ່ານີ້, ລູກຄ້າຈະໄດ້ຮັບການຂົນສົ່ງຟຣີ"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+msgid "Install more Providers"
+msgstr "ຕິດຕັ້ງຜູ້ໃຫ້ບໍລິການເພີ່ມເຕີມ"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__shipping_insurance
+msgid "Insurance Percentage"
+msgstr "ເປີເຊັນປະກັນໄພ"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__integration_level
+msgid "Integration Level"
+msgstr "ລະດັບການເຊື່ອມຕໍ່"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__invoicing_message
+msgid "Invoicing Message"
+msgstr "ຂໍ້ຄວາມການອອກໃບແຈ້ງໜີ້"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__invoice_policy
+msgid "Invoicing Policy"
+msgstr "ນະໂຍບາຍການອອກໃບແຈ້ງໜີ້"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_sale_order_line__is_delivery
+msgid "Is a Delivery"
+msgstr "ແມ່ນການຂົນສົ່ງ"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__write_uid
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__write_uid
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__write_uid
+#: model:ir.model.fields,field_description:delivery.field_delivery_zip_prefix__write_uid
+msgid "Last Updated by"
+msgstr "ອັບເດດຫຼ້າສຸດໂດຍ"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__write_date
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__write_date
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__write_date
+#: model:ir.model.fields,field_description:delivery.field_delivery_zip_prefix__write_date
+msgid "Last Updated on"
+msgstr "ອັບເດດຫຼ້າສຸດເມື່ອ"
+
+#. module: delivery
+#: model:delivery.carrier,name:delivery.delivery_local_delivery
+#: model:product.template,name:delivery.product_product_local_delivery_product_template
+msgid "Local Delivery"
+msgstr "ການຂົນສົ່ງພາຍໃນທ້ອງຖິ່ນ"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier__debug_logging
+msgid "Log requests in order to ease debugging"
+msgstr "ບັນທຶກຄຳຂໍເພື່ອຊ່ວຍໃນການກວດສອບຂໍ້ຜິດພາດ (Debug)"
+
+#. module: delivery
+#: model_terms:ir.actions.act_window,help:delivery.action_delivery_zip_prefix_list
+msgid "Manage delivery zip prefixes"
+msgstr "ຈັດການຄຳນຳໜ້າລະຫັດໄປສະນີການຂົນສົ່ງ"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__margin
+msgid "Margin"
+msgstr "ສ່ວນຕ່າງ"
+
+#. module: delivery
+#: model:ir.model.constraint,message:delivery.constraint_delivery_carrier_margin_not_under_100_percent
+msgid "Margin cannot be lower than -100%"
+msgstr "ສ່ວນຕ່າງບໍ່ສາມາດຕ່ຳກວ່າ -100%"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+msgid "Margin on Rate"
+msgstr "ສ່ວນຕ່າງຂອງອັດຕາລາຄາ"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__max_value
+msgid "Maximum Value"
+msgstr "ມູນຄ່າສູງສຸດ"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__name
+msgid "Name"
+msgstr "ຊື່"
+
+#. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/delivery_carrier.py:0
+msgid "New Providers"
+msgstr "ຜູ້ໃຫ້ບໍລິການໃໝ່"
+
+#. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/delivery_carrier.py:0
+msgid "Not available for current order"
+msgstr "ບໍ່ມີໃຫ້ສຳລັບໃບສັ່ງຊື້ປັດຈຸບັນ"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__operator
+msgid "Operator"
+msgstr "ຕົວດຳເນີນການ"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__order_id
+msgid "Order"
+msgstr "ໃບສັ່ງຊື້"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+msgid "Please select a country before choosing a state or a zip prefix."
+msgstr "ກະລຸນາເລືອກປະເທດກ່ອນເລືອກລັດ ຫຼື ຄຳນຳໜ້າລະຫັດໄປສະນີ."
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_zip_prefix__name
+msgid "Prefix"
+msgstr "ຄຳນຳໜ້າ"
+
+#. module: delivery
+#: model:ir.model.constraint,message:delivery.constraint_delivery_zip_prefix_name_uniq
+msgid "Prefix already exists!"
+msgstr "ຄຳນຳໜ້ານີ້ມີຢູ່ແລ້ວ!"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier__zip_prefix_ids
+msgid "Prefixes of zip codes that this carrier applies to. Note that regular expressions can be used to support countries with varying zip code lengths, i.e. '$' can be added to end of prefix to match the exact zip (e.g. '100$' will only match '100' and not '1000')"
+msgstr ""
+"ຄຳນຳໜ້າຂອງລະຫັດໄປສະນີທີ່ຜູ້ຂົນສົ່ງນີ້ໃຊ້. ສາມາດໃຊ້ regular expressions ເພື່ອຮອງຮັບປະເທດທີ່ມີຄວາມຍ"
+"າວລະຫັດໄປສະນີຕ່າງກັນ, ເຊັ່ນ: ສາມາດຕື່ມ '$' ໃສ່ທ້າຍຄຳນຳໜ້າເພື່ອໃຫ້ກົງກັບລະຫັດໄປສະນີທີ່ແນ່ນອນ (ຕົວຢ່າ"
+"ງ: '100$' ຈະກົງກັບ '100' ເທົັ້ນນັ້ນ ແລະ ບໍ່ແມ່ນ '1000')"
+
+#. module: delivery
+#: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable__price
+#: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable_factor__price
+msgid "Price"
+msgstr "ລາຄາ"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_price_rule_form
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_price_rule_tree
+msgid "Price Rules"
+msgstr "ກົດເກນລາຄາ"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+msgid "Pricing"
+msgstr "ການກຳນົດລາຄາ"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__price_rule_ids
+msgid "Pricing Rules"
+msgstr "ກົດເກນການກຳນົດລາຄາ"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_sale_order_line__product_qty
+msgid "Product Qty"
+msgstr "ຈຳນວນສິນຄ້າ"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__delivery_type
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__delivery_type
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
+msgid "Provider"
+msgstr "ຜູ້ໃຫ້ບໍລິການ"
+
+#. module: delivery
+#: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable__quantity
+#: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable_factor__quantity
+msgid "Quantity"
+msgstr "ຈຳນວນ"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__get_return_label_from_portal
+msgid "Return Label Accessible from Customer Portal"
+msgstr "ປ້າຍສົ່ງຄືນສາມາດເຂົ້າເຖິງໄດ້ຈາກ ພອດທໍລູກຄ້າ"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__list_base_price
+msgid "Sale Base Price"
+msgstr "ລາຄາຂາຍພື້ນຖານ"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__list_price
+msgid "Sale Price"
+msgstr "ລາຄາຂາຍ"
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_sale_order
+msgid "Sales Order"
+msgstr "ໃບສັ່ງຂາຍ"
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "ລາຍການໃບສັ່ງຂາຍ"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__sequence
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__sequence
+msgid "Sequence"
+msgstr "ລຳດັບ"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_sale_order__is_all_service
+msgid "Service Product"
+msgstr "ສິນຄ້າບໍລິການ"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier__prod_environment
+msgid "Set to True if your credentials are certified for production."
+msgstr ""
+"ຕັ້ງເປັນ True ຖ້າຂໍ້ມູນການເຂົ້າລະບົບຂອງທ່ານໄດ້ຮັບການຢັ້ງຢືນສຳລັບການນຳໃຊ້ຕົວຈິງ."
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__carrier_id
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+msgid "Shipping Method"
+msgstr "ວິທີການຂົນສົ່ງ"
+
+#. module: delivery
+#: model:ir.actions.act_window,name:delivery.action_delivery_carrier_form
+#: model:ir.model,name:delivery.model_delivery_carrier
+#: model:ir.ui.menu,name:delivery.sale_menu_action_delivery_carrier_form
+#: model_terms:ir.ui.view,arch_db:delivery.res_config_settings_view_form
+msgid "Shipping Methods"
+msgstr "ວິທີການຂົນສົ່ງ"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_sale_order__shipping_weight
+msgid "Shipping Weight"
+msgstr "ນໍ້າໜັກການຂົນສົ່ງ"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier__shipping_insurance
+msgid "Shipping insurance is a service which may reimburse senders whose parcels are lost, stolen, and/or damaged in transit."
+msgstr ""
+"ປະກັນໄພການຂົນສົ່ງແມ່ນບໍລິການທີ່ຈະຊົດເຊີຍໃຫ້ຜູ້ສົ່ງໃນກໍລະນີທີ່ພັດສະດຸເສຍຫາຍ, ຖືກລັກ, ແລະ/ຫຼື ເປ່ເພໃນລະຫວ່າ"
+"ງການຂົນສົ່ງ."
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+msgid "Shipping method details to be included at bottom sales orders and their confirmation emails. E.g. Instructions for customers to follow."
+msgstr ""
+"ລາຍລະອຽດວິທີການຂົນສົ່ງທີ່ຈະລວມຢູ່ໃນສ່ວນທ້າຍຂອງໃບສັ່ງຂາຍ ແລະ ອີເມວຢືນຢັນ. ຕົວຢ່າງ: ຄຳແນະນຳໃຫ້ລູກຄ້າ"
+"ປະຕິບັດຕາມ."
+
+#. module: delivery
+#: model:delivery.carrier,name:delivery.free_delivery_carrier
+#: model:product.template,name:delivery.product_product_delivery_product_template
+msgid "Standard delivery"
+msgstr "ການຂົນສົ່ງມາດຕະຖານ"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__state_ids
+msgid "States"
+msgstr "ລັດ/ແຂວງ"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__supports_shipping_insurance
+msgid "Supports Shipping Insurance"
+msgstr "ຮອງຮັບປະກັນໄພການຂົນສົ່ງ"
+
+#. module: delivery
+#: model:delivery.carrier,name:delivery.delivery_carrier
+#: model:product.template,name:delivery.product_product_delivery_poste_product_template
+msgid "The Poste"
+msgstr "The Poste"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier__get_return_label_from_portal
+msgid "The return label can be downloaded by the customer from the customer portal."
+msgstr "ລູກຄ້າສາມາດດາວໂຫຼດປ້າຍສົ່ງຄືນໄດ້ຈາກພອດທໍລູກຄ້າ."
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier__return_label_on_delivery
+msgid "The return label is automatically generated at the delivery."
+msgstr "ປ້າຍສົ່ງຄືນຈະຖືກສ້າງຂຶ້ນໂດຍອັດຕະໂນມັດໃນຕອນສົ່ງສິນຄ້າ."
+
+#. module: delivery
+#: model:ir.model.constraint,message:delivery.constraint_delivery_carrier_shipping_insurance_is_percentage
+msgid "The shipping insurance must be a percentage between 0 and 100."
+msgstr "ປະກັນໄພການຂົນສົ່ງຕ້ອງເປັນເປີເຊັນລະຫວ່າງ 0 ຫາ 100."
+
+#. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/delivery_carrier.py:0
+msgid "The shipping is free since the order amount exceeds %.2f."
+msgstr "ການຂົນສົ່ງແມ່ນຟຣີເນື່ອງຈາກຍອດສັ່ງຊື້ເກີນ %.2f."
+
+#. module: delivery
+#: model_terms:ir.actions.act_window,help:delivery.action_delivery_carrier_form
+msgid ""
+"These methods allow to automatically compute the delivery price\n"
+"            according to your settings; on the sales order (based on the\n"
+"            quotation) or the invoice (based on the delivery orders)."
+msgstr ""
+"ວິທີການເຫຼົ່ານີ້ຊ່ວຍໃຫ້ຄິດໄລ່ລາຄາການຂົນສົ່ງໂດຍອັດຕະໂນມັດຕາມການຕັ້ງຄ່າຂອງທ່ານ; ໃນໃບສັ່ງຂາຍ (ອີງຕາມໃບສ"
+"ະເໜີລາຄາ) ຫຼື ໃບແຈ້ງໜີ້ (ອີງຕາມໃບສົ່ງສິນຄ້າ)."
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier__fixed_margin
+msgid "This fixed amount will be added to the shipping price."
+msgstr "ຈຳນວນເງິນຄົງທີ່ນີ້ຈະຖືກເພີ່ມເຂົ້າໃນລາຄາຂົນສົ່ງ."
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier__margin
+msgid "This percentage will be added to the shipping price."
+msgstr "ເປີເຊັນນີ້ຈະຖືກເພີ່ມເຂົ້າໃນລາຄາຂົນສົ່ງ."
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__total_weight
+msgid "Total Order Weight"
+msgstr "ນ້ຳໜັກລວມຂອງໃບສັ່ງຊື້"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
+msgid "Update"
+msgstr "ອັບເດດ"
+
+#. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/sale_order.py:0
+#: model_terms:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
+msgid "Update shipping cost"
+msgstr "ອັບເດດຄ່າຂົນສົ່ງ"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__variable
+msgid "Variable"
+msgstr "ຕົວປ່ຽນ"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__variable_factor
+msgid "Variable Factor"
+msgstr "ປັດໄຈຕົວປ່ຽນ"
+
+#. module: delivery
+#: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable__volume
+#: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable_factor__volume
+msgid "Volume"
+msgstr "ບໍລິມາດ"
+
+#. module: delivery
+#: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable__weight
+#: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable_factor__weight
+msgid "Weight"
+msgstr "ນໍ້າໜັກ"
+
+#. module: delivery
+#: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable__wv
+#: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable_factor__wv
+msgid "Weight * Volume"
+msgstr "ນໍ້າໜັກ * ບໍລິມາດ"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__weight_uom_name
+msgid "Weight Uom Name"
+msgstr "ຊື່ຫົວໜ່ວຍວັດແທກນໍ້າໜັກ"
+
+#. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/sale_order.py:0
+msgid ""
+"You can not update the shipping costs on an order where it was already invoiced!\n"
+"\n"
+"The following delivery lines (product, invoiced quantity and price) have already been processed:\n"
+"\n"
+msgstr ""
+"ທ່ານບໍ່ສາມາດອັບເດດຄ່າຂົນສົ່ງໃນໃບສັ່ງຊື້ທີ່ຖືກອອກໃບແຈ້ງໜີ້ໄປແລ້ວ!\n"
+"\n"
+"ລາຍການການຂົນສົ່ງຕໍ່ໄປນີ້ (ສິນຄ້າ, ຈຳນວນທີ່ອອກໃບແຈ້ງໜີ້ ແລະ ລາຄາ) ໄດ້ຖືກປະມວນຜົນໄປແລ້ວ:\n"
+"\n"
+
+#. module: delivery
+#: model:ir.actions.act_window,name:delivery.action_delivery_zip_prefix_list
+msgid "Zip Prefix"
+msgstr "ຄຳນຳໜ້າລະຫັດໄປສະນີ"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__zip_prefix_ids
+msgid "Zip Prefixes"
+msgstr "ຄຳນຳໜ້າລະຫັດໄປສະນີ"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+msgid "e.g. UPS Express"
+msgstr "ຕົວຢ່າງ: UPS Express"

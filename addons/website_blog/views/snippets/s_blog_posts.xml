@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<!-- Snippet -->
+<template id="s_blog_posts" name="Blog Posts">
+    <t t-call="website.s_dynamic_snippet_template">
+        <t t-set="snippet_name" t-value="'s_blog_posts'"/>
+        <t t-set="snippet_classes" t-value="'s_dynamic_snippet_blog_posts s_blog_post_big_picture s_blog_posts_effect_marley s_blog_posts_post_picture_size_default'"/>
+        <t t-set="custom_template_data" t-valuef='{"blog_posts_post_author_active":true, "blog_posts_post_teaser_active":true, "blog_posts_post_date_active":true}'/>
+        <t t-call="website_blog.s_dynamic_snippet_blog_posts_preview_data"/>
+    </t>
+</template>
+
+<!-- Load-time templates (rendered in JS on page load) -->
+<!-- List layout -->
+<template id="dynamic_filter_template_blog_post_list" name="List">
+    <div t-foreach="records" t-as="data" class="s_blog_posts_post border-0 rounded-3 p-3" data-extra-classes="g-3" data-column-classes="col-12 col-sm-6 col-lg-4">
+        <t t-set="record" t-value="data['_record']"/>
+        <a class="text-decoration-none text-reset" t-att-title="'Read ' + data['name']" t-att-href="data['call_to_action_url']">
+            <div class="d-flex align-items-center small">
+                <t t-call="website_blog.s_dynamic_snippet_template_author"/>
+                <t t-call="website_blog.s_dynamic_snippet_template_date"/>
+            </div>
+            <h4 class="mt-2">
+                <span t-if="is_sample" class="bg-primary text-uppercase">Sample</span>
+                <span t-field="record.name"/>
+            </h4>
+            <t t-call="website_blog.s_dynamic_snippet_template_teaser"/>
+        </a>
+    </div>
+</template>
+<!-- Big picture layout -->
+<template id="dynamic_filter_template_blog_post_big_picture" name="Big picture">
+    <div t-foreach="records" t-as="data" class="s_blog_posts_post position-relative w-100" data-extra-classes="g-3" data-column-classes="col-12 col-sm-6 col-lg-4">
+        <t t-set="record" t-value="data['_record']"/>
+        <a class="s_blog_posts_post_cover position-relative d-block h-100 rounded shadow-sm overflow-hidden text-decoration-none text-reset ratio ratio-1x1" t-att-title="'Read ' + data['name']" t-att-href="data['call_to_action_url']">
+            <t t-call="website.record_cover">
+                <t t-set="_record" t-value="record"/>
+                <t t-set="use_filters" t-value="True"/>
+                <t t-set="additionnal_classes" t-value="'h-100 w-100 bg-600 position-absolute o_snippet_not_selectable'"/>
+
+                <div class="s_blog_post_big_picture_infos position-absolute top-0 start-0 w-100 h-100 text-white">
+                    <div class="s_blog_posts_post_cover_header d-flex flex-column justify-content-end w-100">
+                        <div t-if="is_sample" class="h5 o_ribbon_right bg-primary text-uppercase">Sample</div>
+                        <h3 class="s_blog_post_big_picture_title m-0 px-4 text-white" t-field="record.name"/>
+                    </div>
+                    <div class="s_blog_posts_post_cover_hidden h-auto py-2 px-4">
+                        <t t-call="website_blog.s_dynamic_snippet_template_author"/>
+                        <p class="s_blog_posts_post_subtitle w-100 mt-2 m-0 lead overflow-hidden" t-field="record.subtitle"/>
+                    </div>
+                </div>
+            </t>
+        </a>
+    </div>
+</template>
+<!-- Horizontal layout -->
+<template id="dynamic_filter_template_blog_post_horizontal" name="Horizontal">
+    <div t-foreach="records" t-as="data" class="s_blog_posts_post w-100" data-number-of-elements="1">
+        <t t-set="record" t-value="data['_record']"/>
+        <div t-attf-class="pb-4 {{not data_last and 'border-bottom'}}">
+            <div class="row flex-md-nowrap">
+                <div class="s_blog_posts_post_cover_col col mb-2 mb-md-0">
+                    <a class="d-block h-100 text-decoration-none" t-att-href="data['call_to_action_url']" t-att-title="'Read ' + data['name']">
+                        <div class="s_blog_posts_post_cover h-100">
+                            <t t-call="website.record_cover">
+                                <t t-set="_record" t-value="record"/>
+                                <t t-set="additionnal_classes" t-value="'h-100 rounded-3 overflow-hidden o_snippet_not_selectable'"/>
+                            </t>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-12 col-md d-flex flex-column justify-content-between">
+                    <a class="mb-2 mb-md-5 text-decoration-none text-reset" t-att-href="data['call_to_action_url']" t-att-title="'Read ' + data['name']">
+                        <div t-if="is_sample" class="h5 o_ribbon_right bg-primary text-uppercase">Sample</div>
+                        <h4 class="mb-2 mt-0" t-field="record.name"/>
+                        <t t-call="website_blog.s_dynamic_snippet_template_date"/>
+                        <p class="s_blog_posts_post_subtitle mt-1 mb-0 lead overflow-hidden" t-field="record.subtitle"/>
+                    </a>
+                    <div class="d-flex justify-content-between small">
+                        <t t-call="website_blog.s_dynamic_snippet_template_author"/>
+                        <span class="text-muted">In <a class="fw-bold" t-field="record.blog_id.name" t-att-href="'/blog/%s' % record.blog_id.id" />
+                            <a t-if="is_sample" class="fw-bold" href="#">Sample</a>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+<!-- Card layout -->
+<template id="dynamic_filter_template_blog_post_card" name="Card">
+    <div t-foreach="records" t-as="data" class="s_blog_posts_post w-100" data-extra-classes="g-3" data-column-classes="col-12 col-sm-6 col-lg-4 col-xxl-3">
+        <t t-set="record" t-value="data['_record']"/>
+        <div class="card h-100">
+            <a class="text-decoration-none text-reset" t-att-href="data['call_to_action_url']" t-att-title="'Read ' + data['name']">
+                <div class="s_blog_posts_post_cover o_not_editable card-img-top ratio ratio-16x9">
+                    <t t-call="website.record_cover">
+                        <t t-set="_record" t-value="record"/>
+                        <t t-set="additionnal_classes" t-value="'position-absolute w-100 h-100 bg-600 o_snippet_not_selectable'"/>
+                    </t>
+                </div>
+                <div class="card-body">
+                    <div t-if="is_sample" class="h5 o_ribbon_right bg-primary text-uppercase">Sample</div>
+                    <h5 class="text-truncate" t-field="record.name"/>
+                    <t t-call="website_blog.s_dynamic_snippet_template_date"/>
+                    <t t-call="website_blog.s_dynamic_snippet_template_teaser"/>
+                </div>
+            </a>
+            <div class="card-footer d-flex justify-content-between mt-auto border-0 p-3 pt-0 bg-transparent small">
+                <t t-call="website_blog.s_dynamic_snippet_template_author"/>
+                <span class="text-muted">In <a class="fw-bold" t-field="record.blog_id.name" t-att-href="'/blog/%s' % record.blog_id.id" />
+                    <a t-if="is_sample" class="fw-bold" href="#">Sample</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</template>
+
+<!-- Blog Post Author (optional) -->
+<template id="website_blog.s_dynamic_snippet_template_author" name="Blog Post Author">
+    <div t-if="blog_posts_post_author_active" class="s_blog_posts_post_author d-inline-flex align-items-center">
+        <img class="o_avatar me-2 rounded-pill" t-attf-src="data:image/png;base64,{{record.author_avatar}}"/>
+        <!-- t-if to remove in MASTER -->
+        <span t-if="False" t-field="record.author_id.name"/>
+        <span t-field="record.author_name"/>
+    </div>
+</template>
+
+<!-- Blog Post Teaser (optional for Card and List layouts) -->
+<template id="website_blog.s_dynamic_snippet_template_teaser" name="Blog Post Teaser">
+    <p t-if="blog_posts_post_teaser_active" class="s_blog_posts_post_teaser my-1 overflow-hidden" t-field="record.teaser"/>
+</template>
+
+<!-- Blog Post Date (optional for Card, Horizontal and List layouts) -->
+<template id="website_blog.s_dynamic_snippet_template_date" name="Blog Post Date">
+    <small t-if="blog_posts_post_date_active" class="s_blog_posts_post_date text-muted" t-field="record.post_date" t-options='{"format": "MMM d, yyyy"}' />
+</template>
+
+<!-- Options -->
+<template id="s_blog_posts_options" inherit_id="website.snippet_options">
+    <xpath expr="." position="inside">
+        <t t-call="website_blog.s_dynamic_snippet_options_template">
+            <t t-set="snippet_name" t-value="'dynamic_snippet_blog_posts'"/>
+            <t t-set="snippet_selector" t-value="'.s_dynamic_snippet_blog_posts'"/>
+        </t>
+    </xpath>
+</template>
+
+<template id="s_dynamic_snippet_options_template" inherit_id="website.s_dynamic_snippet_options_template">
+    <xpath expr="//we-select[@data-name='filter_opt']" position="after">
+        <we-select t-if="snippet_name == 'dynamic_snippet_blog_posts'"
+            string="Blog"
+            data-no-preview="true"
+            data-name="blog_opt"
+            data-attribute-name="filterByBlogId">
+            <we-button data-select-data-attribute="-1">All blogs</we-button>
+            <!-- the blog list will be generated in js -->
+        </we-select>
+    </xpath>
+    <xpath expr="//we-select[@data-name='template_opt']" position="after">
+        <we-select t-if="snippet_name == 'dynamic_snippet_blog_posts'"
+            string="Hover Effect"
+            class="o_we_sublevel_1 o_we_inline"
+            data-no-widget-refresh="true"
+            data-name="hover_effect_opt">
+            <we-button data-select-class="">None</we-button>
+            <we-button data-select-class="s_blog_posts_effect_marley">Marley</we-button>
+            <we-button data-select-class="s_blog_posts_effect_dexter">Dexter</we-button>
+            <we-button data-select-class="s_blog_posts_effect_chico">Silly-Chico</we-button>
+        </we-select>
+    </xpath>
+    <xpath expr="//we-select[@data-name='template_opt']" position="after">
+        <we-checkbox t-if="snippet_name == 'dynamic_snippet_blog_posts'"
+            data-name="author_opt"
+            string="Author"
+            class="o_we_sublevel_1"
+            data-no-preview="true"
+            data-customize-template-key="blog_posts_post_author_active"
+            data-customize-template-values="false|true"/>
+        <we-checkbox t-if="snippet_name == 'dynamic_snippet_blog_posts'"
+            data-name="teaser_opt"
+            string="Teaser"
+            class="o_we_sublevel_1"
+            data-no-preview="true"
+            data-customize-template-key="blog_posts_post_teaser_active"
+            data-customize-template-values="false|true"/>
+        <we-checkbox t-if="snippet_name == 'dynamic_snippet_blog_posts'"
+            data-name="date_opt"
+            string="Date"
+            class="o_we_sublevel_1"
+            data-no-preview="true"
+            data-customize-template-key="blog_posts_post_date_active"
+            data-customize-template-values="false|true"/>
+    </xpath>
+    <xpath expr="//we-select[@data-name='template_opt']" position="after">
+        <we-button-group t-if="snippet_name == 'dynamic_snippet_blog_posts'"
+            class="o_we_sublevel_1 o_we_inline"
+            string="Picture size"
+            data-no-widget-refresh="true"
+            data-no-preview="true"
+            data-name="picture_size_opt">
+            <we-button data-select-class="s_blog_posts_post_picture_size_small" title="Smaller picture">Smaller</we-button>
+            <we-button data-select-class="s_blog_posts_post_picture_size_default" title="Normal picture">Normal</we-button>
+        </we-button-group>
+    </xpath>
+</template>
+
+<!-- Assets -->
+<asset id="website_blog.s_blog_posts_000_scss" name="Blog posts 000 SCSS">
+    <bundle>web.assets_frontend</bundle>
+    <path>website_blog/static/src/snippets/s_blog_posts/000.scss</path>
+</asset>
+
+<asset id="website_blog.s_blog_posts_000_js" name="Blog posts 000 JS">
+    <bundle>web.assets_frontend</bundle>
+    <path>website_blog/static/src/snippets/s_blog_posts/000.js</path>
+</asset>
+
+</odoo>

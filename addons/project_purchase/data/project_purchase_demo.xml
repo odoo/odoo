@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <function model="purchase.order.line" name="write">
+            <value model="purchase.order.line" search="[('product_id', 'in', [ref('product.product_delivery_01'), ref('product.product_product_27')]), ('order_id', '=', ref('purchase.purchase_order_1'))]"/>
+            <value eval="{'analytic_distribution': {ref('analytic.analytic_our_super_product'): 100}}"/>
+        </function>
+
+        <record id="product_product_cement" model="product.product">
+            <field name="name">Cement</field>
+            <field name="categ_id" ref="product.product_category_construction"/>
+            <field name="standard_price">100.0</field>
+            <field name="list_price">110.0</field>
+            <field name="type">consu</field>
+            <field name="weight">1.00</field>
+            <field name="uom_id" ref="uom.product_uom_ton"/>
+            <field name="uom_po_id" ref="uom.product_uom_ton"/>
+        </record>
+
+        <record id="product_product_sand" model="product.product">
+            <field name="name">Sand</field>
+            <field name="categ_id" ref="product.product_category_construction"/>
+            <field name="standard_price">80.0</field>
+            <field name="list_price">70.0</field>
+            <field name="type">consu</field>
+            <field name="weight">1.00</field>
+            <field name="uom_id" ref="uom.product_uom_ton"/>
+            <field name="uom_po_id" ref="uom.product_uom_ton"/>
+        </record>
+
+        <record id="product_product_bricks" model="product.product">
+            <field name="name">Bricks</field>
+            <field name="categ_id" ref="product.product_category_construction"/>
+            <field name="standard_price">50.0</field>
+            <field name="list_price">50.0</field>
+            <field name="type">consu</field>
+            <field name="weight">1.00</field>
+            <field name="uom_id" ref="uom.product_uom_ton"/>
+            <field name="uom_po_id" ref="uom.product_uom_ton"/>
+        </record>
+
+        <!-- Purchase order for project update -->
+        <record id="purchase_order_for_home_construction" model="purchase.order">
+            <field name="partner_id" ref="base.res_partner_4"/>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="state">draft</field>
+            <field name="date_order" eval="(datetime.today()).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="date_planned" eval="(datetime.today()).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </record>
+
+        <record id="purchase_order_line_for_home_construction_1" model="purchase.order.line">
+            <field name="order_id" ref="purchase_order_for_home_construction"/>
+            <field name="name" model="purchase.order.line" eval="obj().env.ref('project_purchase.product_product_cement').partner_ref"/>
+            <field name="product_id" ref="project_purchase.product_product_cement"/>
+            <field name="product_uom" ref="uom.product_uom_ton"/>
+            <field name="price_unit">150</field>
+            <field name="product_qty">5</field>
+            <field name="analytic_distribution" eval="{ref('project.analytic_construction'): 100}"/>
+            <field name="date_planned" eval="(datetime.today()).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </record>
+
+        <record id="purchase_order_line_for_home_construction_2" model="purchase.order.line">
+            <field name="order_id" ref="purchase_order_for_home_construction"/>
+            <field name="name" model="purchase.order.line" eval="obj().env.ref('project_purchase.product_product_sand').partner_ref"/>
+            <field name="product_id" ref="project_purchase.product_product_sand"/>
+            <field name="product_uom" ref="uom.product_uom_ton"/>
+            <field name="price_unit">100</field>
+            <field name="product_qty">10</field>
+            <field name="analytic_distribution" eval="{ref('project.analytic_construction'): 100}"/>
+            <field name="date_planned" eval="(datetime.today()).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </record>
+
+        <record id="purchase_order_line_for_home_construction_3" model="purchase.order.line">
+            <field name="order_id" ref="purchase_order_for_home_construction"/>
+            <field name="name" model="purchase.order.line" eval="obj().env.ref('project_purchase.product_product_bricks').partner_ref"/>
+            <field name="product_id" ref="project_purchase.product_product_bricks"/>
+            <field name="product_uom" ref="uom.product_uom_ton"/>
+            <field name="price_unit">50</field>
+            <field name="product_qty">15</field>
+            <field name="analytic_distribution" eval="{ref('project.analytic_construction'): 100}"/>
+            <field name="date_planned" eval="(datetime.today()).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </record>
+    </data>
+</odoo>

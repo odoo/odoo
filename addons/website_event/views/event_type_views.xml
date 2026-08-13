@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="event_type_view_form" model="ir.ui.view">
+        <field name="name">event.type.view.form.inherit.website</field>
+        <field name="model">event.type</field>
+        <field name="inherit_id" ref="event.view_event_type_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('oe_title')]" position="after">
+                    <span name="website_menu">
+                        <label for="website_menu" string="Website Submenu" class="me-1"/>
+                        <field name="website_menu" class="me-3"/>
+                    </span>
+                    <span name="community_menu" invisible="1">
+                        <label for="community_menu" string="Community" class="me-1"/>
+                        <field name="community_menu" class="me-3"/>
+                    </span>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

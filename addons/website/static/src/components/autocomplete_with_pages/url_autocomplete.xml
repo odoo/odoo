@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="website.UrlAutoComplete">
+        <AutoCompleteWithPages
+            onInput.bind="onInput"
+            onSelect.bind="onSelect"
+            dropdownClass="dropdownClass"
+            dropdownOptions="dropdownOptions"
+            sources="sources"
+            targetDropdown="props.targetDropdown"/>
+    </t>
+
+    <t t-name="website.AutoCompleteWithPagesItem">
+        <div t-att-class="{
+            'fw-bold text-capitalize p-2': option.separator,
+        }">
+            <t t-if="option.icon and option.icon.length">
+                <img t-att-src="option.icon" width="24px" height="24px" class="me-2 rounded"/>
+            </t>
+            <t t-out="option.label"/>
+        </div>
+    </t>
+</templates>

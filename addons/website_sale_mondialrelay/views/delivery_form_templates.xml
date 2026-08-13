@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="mondialrelay_delivery_method" inherit_id="website_sale.delivery_method">
+        <input name="o_delivery_radio" position="attributes">
+            <attribute name="t-att-data-is-mondialrelay">dm.is_mondialrelay</attribute>
+        </input>
+        <label class="o_delivery_carrier_label" position="after">
+            <small t-if="dm.is_mondialrelay" class="text-muted my-auto">
+                Click to choose a pickup point
+            </small>
+        </label>
+    </template>
+
+</odoo>

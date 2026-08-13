@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="point_of_sale.RadioProductAttribute">
+        <div class="configurator_radio" t-ref="root">
+            <div class="d-flex flex-wrap gap-3">
+                <t t-foreach="values" t-as="value" t-key="value.id">
+                    <div class="attribute-name-cell form-check" t-att-class="{'ptav-not-available': value.excluded}">
+                        <input class="form-check-input radio-check" type="radio" t-model="state.attribute_value_ids" t-att-name="value.attribute_id.id"
+                                t-attf-id="{{ value.attribute_id.id }}_{{ value.id }}" t-att-value="value.id"/>
+                        <label t-attf-for="{{ value.attribute_id.id }}_{{ value.id }}" class="form-check-label">
+                            <span t-esc="value.name"/>
+                        </label>
+                        <div t-if="value.price_extra" class="price-extra-cell d-inline-block ms-2">
+                            <span class="price_extra px-2 py-1 rounded-pill text-bg-info">
+                                <t t-esc="getFormatPriceExtra(value.price_extra)"/>
+                            </span>
+                        </div>
+                    </div>
+                    <div t-if="value.id == state.attribute_value_ids and value.is_custom" class="custom-value-cell">
+                        <input class="custom_value form-control form-control-lg mt-2" type="text" t-model="state.custom_value"/>
+                    </div>
+                </t>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="point_of_sale.PillsProductAttribute">
+        <div class="configurator_radio" t-ref="root">
+            <div class="d-flex flex-wrap gap-2">
+                <t t-foreach="values" t-as="value" t-key="value.id">
+                    <div class="attribute-name-cell" t-att-class="{'ptav-not-available': value.excluded}">
+                        <input class="form-check-input d-none" type="radio" t-model="state.attribute_value_ids" t-att-name="value.attribute_id.id"
+                            t-attf-id="{{ value.attribute_id.id }}_{{ value.id }}" t-att-value="value.id"/>
+                        <label
+                            t-attf-class="btn btn-secondary btn-lg lh-lg d-flex {{ value.id == state.attribute_value_ids ? 'active' : '' }}"
+                            t-att-name="value.name"
+                            t-attf-for="{{ value.attribute_id.id }}_{{ value.id }}">
+                            <span t-esc="value.name"/>
+                            <div t-if="value.price_extra" class="price-extra-cell d-inline-block ms-2">
+                                <span class="price_extra px-2 py-1 rounded-pill text-bg-info">
+                                    <t t-esc="getFormatPriceExtra(value.price_extra)"/>
+                                </span>
+                            </div>
+                        </label>
+                    </div>
+                    <div t-if="value.id == state.attribute_value_ids and value.is_custom" class="custom-value-cell">
+                        <input class="custom_value form-control form-control-lg mt-2" type="text" t-model="state.custom_value"/>
+                    </div>
+                </t>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="point_of_sale.SelectProductAttribute">
+        <div>
+            <t t-set="is_custom" t-value="false"/>
+
+            <select class="configurator_select form-select form-select-md" t-model="state.attribute_value_ids">
+                <option t-foreach="values" t-as="value" t-key="value.id" t-att-value="value.id" t-att-class="{'ptav-not-available': value.excluded}"
+                    t-att-selected="value.id == state.attribute_value_ids">
+                    <t t-set="is_custom" t-value="is_custom || (value.is_custom and value.id == state.attribute_value_ids)"/>
+                    <t t-esc="value.name"/>
+                    <t t-if="value.price_extra">
+                        <t t-esc="getFormatPriceExtra(value.price_extra)"/>
+                    </t>
+                </option>
+            </select>
+
+            <input class="custom_value form-control form-control-lg mt-2" t-if="is_custom" type="text" t-model="state.custom_value"/>
+        </div>
+    </t>
+
+    <t t-name="point_of_sale.ColorProductAttribute">
+        <div>
+            <t t-set="is_custom" t-value="false"/>
+
+            <ul class="color_attribute_list d-flex gap-3">
+                <li t-foreach="values" t-as="value" t-key="value.id" class="color_attribute_list_item">
+                    <t t-set="is_custom" t-value="is_custom || (value.is_custom and value.id == state.attribute_value_ids)"/>
+                    <t t-set="img_style" t-value="value.image ? 'background:url(/web/image/product.template.attribute.value/' + value.id + '/image); background-size:cover;' : ''"/>
+                    <t t-set="color_style" t-value="value.is_custom ? '' : 'background-color: ' + value.html_color" />
+                    <span class="d-flex flex-row justify-content-center align-items-center">
+                        <label t-attf-class="configurator_color rounded-circle border position-relative {{ value.id == state.attribute_value_ids ? 'active border-3 border-primary' : 'border-3 border-secondary' }}"
+                            t-att-class="{'ptav-not-available' : value.excluded}"
+                            t-attf-style="{{ img_style or color_style }}" t-att-data-color="value.name">
+                            <input class="m-2 opacity-0" type="radio" t-model="state.attribute_value_ids" t-att-value="value.id" t-att-name="value.attribute_id.id"/>
+                        </label>
+                        <div t-if="value.price_extra" class="price-extra-cell d-inline-block ms-2" t-att-class="{'ptav-not-available' : value.excluded}">
+                            <span class="price_extra px-2 py-1 rounded-pill text-bg-info">
+                                <t t-esc="getFormatPriceExtra(value.price_extra)"/>
+                            </span>
+                        </div>
+                    </span>
+                </li>
+            </ul>
+
+            <input class="custom_value form-control form-control-lg mt-2" t-if="is_custom" type="text" t-model="state.custom_value"/>
+        </div>
+    </t>
+
+    <t t-name="point_of_sale.MultiProductAttribute">
+        <div class="d-flex gap-2 flex-wrap">
+            <div t-foreach="values" t-as="value" t-key="value.id">
+                <input
+                    class="form-check-input d-none"
+                    type="checkbox"
+                    t-attf-id="multi-{{value.id}}"
+                    t-attf-name="multi-{{value.id}}"
+                    t-model="state.attribute_value_ids[value.id]"/>
+                <label
+                    t-attf-class="form-check-label btn btn-secondary btn-lg lh-lg d-flex {{ state.attribute_value_ids[value.id] === true ? 'active' : '' }}"
+                    t-attf-name="multi-{{value.id}}"
+                    t-attf-for="multi-{{value.id}}">
+                    <span t-esc="value.name"/>
+                    <div t-if="value.price_extra" class="price-extra-cell d-inline-block ms-2">
+                        <span class="price_extra px-2 py-1 rounded-pill text-bg-info">
+                            <t t-esc="getFormatPriceExtra(value.price_extra)"/>
+                        </span>
+                    </div>
+                </label>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="point_of_sale.ProductConfiguratorPopup">
+        <Dialog title.translate="Attribute selection">
+            <ProductInfoBanner product="this.state.product" />
+            <div t-ref="input-area">
+                <div t-if="isArchivedCombination()" class="alert alert-warning mt-3">
+                    <span>This combination does not exist.</span>
+                </div>
+                <div t-foreach="this.validAttributeLineIds" t-as="attributeLine" t-key="attributeLine.id" class="attribute mb-3">
+                    <div class="attribute_name mb-2 fw-bolder" t-esc="attributeLine.attribute_id.name"/>
+                    <RadioProductAttribute t-if="attributeLine.attribute_id.display_type === 'radio'" attributeLine="attributeLine" defaultValues="this.props.defaultValues"/>
+                    <PillsProductAttribute t-elif="attributeLine.attribute_id.display_type === 'pills'" attributeLine="attributeLine" defaultValues="this.props.defaultValues"/>
+                    <SelectProductAttribute t-elif="attributeLine.attribute_id.display_type === 'select'" attributeLine="attributeLine" defaultValues="this.props.defaultValues"/>
+                    <ColorProductAttribute t-elif="attributeLine.attribute_id.display_type === 'color'" attributeLine="attributeLine" defaultValues="this.props.defaultValues"/>
+                    <MultiProductAttribute t-elif="attributeLine.attribute_id.display_type === 'multi'" attributeLine="attributeLine"/>
+                </div>
+            </div>
+            <t t-set-slot="footer">
+                <button 
+                        class="btn btn-primary btn-lg lh-lg o-default-button"
+                        t-att-class="{'disabled': isArchivedCombination()}"
+                        t-on-click="confirm">
+                        Add
+                    </button>
+                <button class="btn btn-secondary btn-lg lh-lg o-default-button" t-on-click="close">Discard</button>
+            </t>
+        </Dialog>
+    </t>
+</templates>

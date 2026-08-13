@@ -1,0 +1,106 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * cloud_storage_azure
+#
+# Translators:
+# Wil Odoo, 2024
+# Fernanda Alvarez, 2024
+#
+# "Fernanda Alvarez (mfar)" <mfar@odoo.com>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
+"PO-Revision-Date: 2025-11-13 16:24+0000\n"
+"Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
+"Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
+"odoo-18/cloud_storage_azure/es_419/>\n"
+"Language: es_419\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
+"0) ? 1 : 2);\n"
+"X-Generator: Weblate 5.12.2\n"
+
+#. module: cloud_storage_azure
+#: model:ir.model,name:cloud_storage_azure.model_ir_attachment
+msgid "Attachment"
+msgstr "Archivos adjuntos"
+
+#. module: cloud_storage_azure
+#: model:ir.model.fields,field_description:cloud_storage_azure.field_res_config_settings__cloud_storage_azure_account_name
+msgid "Azure Account Name"
+msgstr "Nombre de la cuenta de Azure"
+
+#. module: cloud_storage_azure
+#: model:ir.model.fields,field_description:cloud_storage_azure.field_res_config_settings__cloud_storage_azure_client_id
+msgid "Azure Client ID"
+msgstr "ID de cliente de Azure"
+
+#. module: cloud_storage_azure
+#: model:ir.model.fields,field_description:cloud_storage_azure.field_res_config_settings__cloud_storage_azure_client_secret
+msgid "Azure Client Secret"
+msgstr "Secreto de cliente de Azure"
+
+#. module: cloud_storage_azure
+#: model:ir.model.fields.selection,name:cloud_storage_azure.selection__res_config_settings__cloud_storage_provider__azure
+msgid "Azure Cloud Storage"
+msgstr "Almacenamiento en la nube de Azure"
+
+#. module: cloud_storage_azure
+#: model:ir.model.fields,field_description:cloud_storage_azure.field_res_config_settings__cloud_storage_azure_container_name
+msgid "Azure Container Name"
+msgstr "Nombre del contenedor de Azure"
+
+#. module: cloud_storage_azure
+#: model:ir.model.fields,field_description:cloud_storage_azure.field_res_config_settings__cloud_storage_azure_tenant_id
+msgid "Azure Tenant ID"
+msgstr "ID de inquilino de Azure"
+
+#. module: cloud_storage_azure
+#: model:ir.model.fields,field_description:cloud_storage_azure.field_res_config_settings__cloud_storage_provider
+msgid "Cloud Storage Provider for new attachments"
+msgstr ""
+"Proveedor de almacenamiento en la nube para los nuevos archivos adjuntos"
+
+#. module: cloud_storage_azure
+#: model:ir.model,name:cloud_storage_azure.model_res_config_settings
+msgid "Config Settings"
+msgstr "Ajustes de configuración"
+
+#. module: cloud_storage_azure
+#: model:ir.model.fields,field_description:cloud_storage_azure.field_res_config_settings__cloud_storage_azure_invalidate_user_delegation_key
+msgid "Invalidate Cached Azure User Delegation Key"
+msgstr "Invalidar la clave de delegación de usuarios de Azure en caché"
+
+#. module: cloud_storage_azure
+#. odoo-python
+#: code:addons/cloud_storage_azure/models/res_config_settings.py:0
+msgid ""
+"Some Azure attachments are in use, please migrate their cloud storages "
+"before disable this module"
+msgstr ""
+"Algunos archivos adjuntos de Azure están en uso, migre su almacenamiento en "
+"la nube antes de deshabilitar este módulo. "
+
+#. module: cloud_storage_azure
+#. odoo-python
+#: code:addons/cloud_storage_azure/models/res_config_settings.py:0
+msgid ""
+"The connection string is not allowed to download blobs from the container.\n"
+"%s"
+msgstr ""
+"La cadena de conexión no tiene permitido descargar blobs del contenedor. \n"
+"%s"
+
+#. module: cloud_storage_azure
+#. odoo-python
+#: code:addons/cloud_storage_azure/models/res_config_settings.py:0
+msgid ""
+"The connection string is not allowed to upload blobs to the container.\n"
+"%s"
+msgstr ""
+"La cadena de conexión no tiene permitido subir blobs al contenedor. \n"
+"%s"

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="gizeh_png" model="ir.attachment">
+            <field name="name">gizeh.png</field>
+            <field name="type">binary</field>
+            <field name="datas" type="base64" file="test_http/static/src/img/gizeh.png"/>
+            <field name="url">/test_http/gizeh.png</field>
+            <field name="public">True</field>
+        </record>
+
+        <record id="gizeh_url" model="ir.attachment">
+            <field name="name">gizeh.png</field>
+            <field name="type">url</field>
+            <field name="url">/test_http/static/src/img/gizeh.png</field>
+            <field name="public">True</field>
+        </record>
+
+        <record id="xss_svg" model="ir.attachment">
+            <field name="name">xss.svg</field>
+            <field name="type">binary</field>
+            <field name="datas" type="base64" file="test_http/static/src/img/xss.svg"/>
+            <field name="url">/test_http/static/src/img/xss.svg</field>
+            <field name="public">True</field>
+        </record>
+
+        <record id="rickroll" model="ir.attachment">
+            <field name="name">rickroll</field>
+            <field name="type">url</field>
+            <field name="url">https://www.youtube.com/watch?v=dQw4w9WgXcQ</field>
+            <field name="public">True</field>
+        </record>
+
+        <record id="milky_way" model="test_http.galaxy">
+            <field name="name">Milky Way</field>
+            <field name="picture" type="base64" file="test_http/static/src/img/milky_way.jpg"/>
+        </record>
+
+        <record id="pegasus" model="test_http.galaxy">
+            <field name="name">Pegasus</field>
+            <field name="picture" type="base64" file="test_http/static/src/img/pegasus.jpg"/>
+        </record>
+
+        <record id="earth" model="test_http.stargate">
+            <field name="name">Earth</field>
+            <field name="address">sq5Abt</field>
+            <field name="galaxy_id" ref="test_http.milky_way"/>
+            <field name="glyph_attach" type="base64" file="test_http/static/src/img/gizeh.png"/>
+            <field name="glyph_inline" type="base64" file="test_http/static/src/img/gizeh.png"/>
+            <field name="last_use_date">2020-03-15</field>
+        </record>
+
+        <record id="abydos" model="test_http.stargate">
+            <field name="name">Abydos</field>
+            <field name="address">r7fwcu</field>
+            <field name="galaxy_id" ref="test_http.milky_way"/>
+            <field name="availability">0.91</field>
+            <field name="last_use_date">2020-03-04</field>
+        </record>
+
+        <record id="dakara" model="test_http.stargate">
+            <field name="name">Dakara</field>
+            <field name="address">gs38x4</field>
+            <field name="galaxy_id" ref="test_http.milky_way"/>
+            <field name="availability">0.95</field>
+            <field name="last_use_date">2020-01-04</field>
+        </record>
+
+        <record id="lantea" model="test_http.stargate">
+            <field name="name">Lantea</field>
+            <field name="address">u6iz7d</field>
+            <field name="galaxy_id" ref="test_http.pegasus"/>
+            <field name="has_galaxy_crystal" eval="True"/>
+            <field name="last_use_date">2020-01-08</field>
+        </record>
+
+        <record id="athos" model="test_http.stargate">
+            <field name="name">Athos</field>
+            <field name="address">mfp2rt</field>
+            <field name="galaxy_id" ref="test_http.pegasus"/>
+        </record>
+    </data>
+</odoo>

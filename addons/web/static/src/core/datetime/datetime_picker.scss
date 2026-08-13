@@ -1,0 +1,154 @@
+.o_datetime_picker {
+    --DateTimePicker__Cell-size-md: 3rem;
+    --DateTimePicker__Cell-size-lg: 5rem;
+    --DateTimePicker__Template-rows: 3;
+    --DateTimePicker__Template-columns: 4;
+    --DateTimePicker__Day-template-rows: 6;
+
+    // Header
+    .o_datetime_picker_header .o_header_part {
+        text-transform: none;
+    }
+
+    // Day
+
+    .o_date_item_cell {
+        position: relative;
+        border-radius: 0;
+    }
+
+    .o_current,
+    .o_selected {
+        color: $o-component-active-color;
+    }
+
+    .o_selected:not(.o_select_start):not(.o_select_end) {
+        background: $o-component-active-bg;
+    }
+
+    .o_current,
+    .o_highlighted,
+    .o_select_start,
+    .o_select_end {
+        &:before {
+            content: "";
+            position: absolute;
+            box-shadow: inset 0 0 0 1px $o-component-active-border;
+            width: 100%;
+            aspect-ratio: 1;
+            border-radius: 100%;
+            z-index: 1;
+        }
+    }
+
+    .o_select_start,
+    .o_select_end {
+        &:before {
+            background: mix(lighten($o-component-active-border, 10%), $o-component-active-bg, 15%);
+        }
+
+        &:after {
+            content: "";
+            position: absolute;
+            background: transparent;
+            width: 50%;
+            aspect-ratio: 1/2;
+        }
+
+        &:not(.o_select_end):after {
+            right: 0;
+            background: $o-component-active-bg;
+        }
+
+        &:not(.o_select_start):after {
+            right: 50%;
+            background: $o-component-active-bg;
+        }
+    }
+
+    .o_today span {
+        position: relative;
+
+        &::after {
+            content: "";
+            position: absolute;
+            left: 50%;
+            bottom: $spacer * -0.25;
+            transform: translateX(-50%);
+            width: 0.95em;
+            height: 0.2em;
+            border-radius: $border-radius-pill;
+            background: $danger;
+        }
+    }
+
+    .o_time_picker_select {
+        background: none;
+
+        &:focus,
+        &:hover {
+            border-color: var(--primary);
+        }
+    }
+
+    // Grids
+
+    .o_date_picker {
+        grid-template-rows: repeat(var(--DateTimePicker__Day-template-rows), 1fr);
+        grid-template-columns: repeat(var(--DateTimePicker__Day-template-columns), 1fr);
+    }
+
+    .o_date_item_picker {
+        grid-template-rows: repeat(var(--DateTimePicker__Template-rows), 1fr);
+        grid-template-columns: repeat(var(--DateTimePicker__Template-columns), 1fr);
+    }
+
+    // Utilities
+
+    .o_date_item_picker .o_datetime_button {
+        &.o_selected,
+        &:hover,
+        &.o_today:not(.o_selected):hover {
+            &:not(.o_select_start):not(.o_select_end) {
+                background: $o-component-active-bg;
+                color: $o-component-active-color;
+            }
+        }
+    }
+
+    .o_center {
+        display: grid;
+        place-items: center;
+    }
+
+    // Compute  spacing  between the two month by compensating buttons size and tables gap
+
+    .o_zoom_out {
+        gap: calc(
+            #{$btn-border-width} * 4 + #{$o-font-size-base} * 2 + #{$input-btn-padding-x} * 4
+        );
+    }
+
+    .o_cell_md {
+        aspect-ratio: 1;
+        @include media-breakpoint-up(md) {
+            padding: 0.4rem;
+            width: var(--DateTimePicker__Cell-size-md);
+            height: var(--DateTimePicker__Cell-size-md);
+        }
+    }
+
+    .o_cell_lg {
+        width: var(--DateTimePicker__Cell-size-lg);
+        height: var(--DateTimePicker__Cell-size-lg);
+    }
+
+    .o_text_sm {
+        font-size: 0.875rem;
+    }
+
+    .o_time_picker {
+        /*rtl:ignore*/
+        direction: ltr;
+    }
+}

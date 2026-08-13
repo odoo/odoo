@@ -1,0 +1,136 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* payment_nuvei
+#
+# Translators:
+# Lyall Kindmurr, 2025
+# Wil Odoo, 2025
+# Larisa_nexterp, 2025
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:38+0000\n"
+"PO-Revision-Date: 2025-03-19 09:42+0000\n"
+"Last-Translator: Larisa_nexterp, 2025\n"
+"Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
+"Language: ro\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?"
+"2:1));\n"
+
+#. module: payment_nuvei
+#. odoo-python
+#: code:addons/payment_nuvei/models/payment_transaction.py:0
+msgid "%(payment_method)s requires both a first and last name."
+msgstr ""
+"%(payment_method)s necesită atât un prenume, cât și un nume de familie."
+
+#. module: payment_nuvei
+#. odoo-python
+#: code:addons/payment_nuvei/models/payment_transaction.py:0
+msgid ""
+"An error occurred during the processing of your payment (%(reason)s). Please "
+"try again."
+msgstr ""
+"A apărut o eroare în timpul procesării plății dumneavoastră (%(reason)s). Vă "
+"rugăm să încercați din nou."
+
+#. module: payment_nuvei
+#: model:ir.model.fields,field_description:payment_nuvei.field_payment_provider__code
+msgid "Code"
+msgstr "Cod"
+
+#. module: payment_nuvei
+#: model_terms:ir.ui.view,arch_db:payment_nuvei.payment_provider_form
+msgid "Merchant Identifier"
+msgstr "Identificator comerciant"
+
+#. module: payment_nuvei
+#. odoo-python
+#: code:addons/payment_nuvei/models/payment_transaction.py:0
+msgid "No transaction found matching reference %(ref)s."
+msgstr ""
+"Nu s-a găsit nicio tranzacție care să se potrivească cu referința %(ref)s."
+
+#. module: payment_nuvei
+#: model:ir.model.fields.selection,name:payment_nuvei.selection__payment_provider__code__nuvei
+msgid "Nuvei"
+msgstr "Nuvei"
+
+#. module: payment_nuvei
+#: model:ir.model.fields,field_description:payment_nuvei.field_payment_provider__nuvei_merchant_identifier
+msgid "Nuvei Merchant Identifier"
+msgstr "Identificator comerciant Nuvei"
+
+#. module: payment_nuvei
+#: model:ir.model.fields,field_description:payment_nuvei.field_payment_provider__nuvei_secret_key
+msgid "Nuvei Secret Key"
+msgstr "Cheie secretă Nuvei"
+
+#. module: payment_nuvei
+#: model:ir.model.fields,field_description:payment_nuvei.field_payment_provider__nuvei_site_identifier
+msgid "Nuvei Site Identifier"
+msgstr "Identificator site Nuvei"
+
+#. module: payment_nuvei
+#: model:ir.model,name:payment_nuvei.model_payment_provider
+msgid "Payment Provider"
+msgstr "Procesator de plată"
+
+#. module: payment_nuvei
+#: model:ir.model,name:payment_nuvei.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "Tranzacție plată"
+
+#. module: payment_nuvei
+#. odoo-python
+#: code:addons/payment_nuvei/models/payment_transaction.py:0
+msgid "Received data with missing payment state."
+msgstr "Date primite fără status de plată."
+
+#. module: payment_nuvei
+#. odoo-python
+#: code:addons/payment_nuvei/models/payment_transaction.py:0
+msgid "Received data with missing reference."
+msgstr "Date primite fără referință."
+
+#. module: payment_nuvei
+#. odoo-python
+#: code:addons/payment_nuvei/models/payment_transaction.py:0
+msgid "Received invalid transaction status %(status)s and reason '%(reason)s'."
+msgstr "Status tranzacție invalid %(status)s și motiv '%(reason)s' primite."
+
+#. module: payment_nuvei
+#: model_terms:ir.ui.view,arch_db:payment_nuvei.payment_provider_form
+msgid "Secret Key"
+msgstr "Cheie secretă"
+
+#. module: payment_nuvei
+#: model_terms:ir.ui.view,arch_db:payment_nuvei.payment_provider_form
+msgid "Site Identifier"
+msgstr "Identificator site"
+
+#. module: payment_nuvei
+#: model:ir.model.fields,help:payment_nuvei.field_payment_provider__nuvei_merchant_identifier
+msgid "The code of the merchant account to use with this provider."
+msgstr "Codul contului comerciantului de utilizat cu acest procesator."
+
+#. module: payment_nuvei
+#. odoo-python
+#: code:addons/payment_nuvei/models/payment_transaction.py:0
+msgid "The customer left the payment page."
+msgstr "Clientul a ieșit de pe pagina de plată."
+
+#. module: payment_nuvei
+#: model:ir.model.fields,help:payment_nuvei.field_payment_provider__nuvei_site_identifier
+msgid "The site identifier code associated with the merchant account."
+msgstr "Codul identificatorului de site asociat contului comerciantului."
+
+#. module: payment_nuvei
+#: model:ir.model.fields,help:payment_nuvei.field_payment_provider__code
+msgid "The technical code of this payment provider."
+msgstr "Cod tehnic al acestui procesator de plată"

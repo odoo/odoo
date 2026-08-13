@@ -1,0 +1,97 @@
+// = Icons
+// ============================================================================
+
+
+// Sizes
+// ----------------------------------------------------------------------------
+
+$oi-default-size: 1em;   // Normally 13px
+$oi-fw-ratio: 1.28571429; // Matches .fa-fw
+
+$oi-sizes: (
+    'small': (
+        'font-size': .769em,    // ~ 10px
+        'vertical-align': 10%,
+    ),
+    'normal': (
+        'font-size': $oi-default-size,
+    ),
+    'large': (
+        'font-size': 1.315em,   // ~ 17px
+        'vertical-align': -6%,
+    ),
+    'larger': (
+        'font-size': 1.462em,   // ~ 19px
+        'vertical-align': -10%,
+    ),
+);
+
+// Force font-weight to normal
+// ----------------------------------------------------------------------------
+.oi, .fa {
+    font-weight: $font-weight-normal;
+}
+
+// Define base-classes' properties using CSS variables.
+// Allows to dinamically update rules according to the context and eventual
+// utility classes.
+// ----------------------------------------------------------------------------
+.oi, .fa {
+    &:before {
+        font-size: var(--oi-font-size, $oi-default-size);
+        vertical-align: var(--oi-vertical-align, 0);
+        text-rendering: geometricPrecision;
+    }
+}
+
+.oi-fw {
+    width: calc(#{$oi-fw-ratio} * var(--oi-font-size, #{$oi-default-size}));
+    text-align: center;
+}
+
+// Print CSS variables for each size/breakpoint
+// ----------------------------------------------------------------------------
+@each $breakpoint in map-keys($grid-breakpoints) {
+    @include media-breakpoint-up($breakpoint) {
+        $-infix: breakpoint-infix($breakpoint, $grid-breakpoints);
+
+        @each $-key, $-values in $oi-sizes {
+            .oi#{$-infix}-#{$-key} {
+                @each $-rule, $-value in $-values {
+                    @include print-variable('oi-#{$-rule}', $-value);
+                }
+            }
+        }
+    }
+}
+
+// Rely on animations already defined by FontAwesome
+// ----------------------------------------------------------------------------
+.oi-spin {
+    animation: fa-spin 2s infinite linear;
+}
+
+.oi-pulse {
+    animation: fa-spin 1s infinite steps(8);
+}
+
+.o_barcode {
+    -webkit-mask: url('/web/static/img/barcode.svg') center/contain no-repeat;
+    mask: url('/web/static/img/barcode.svg') center/contain no-repeat;
+    background-color: $o-brand-primary;
+}
+
+.o_fa_stack {
+    display: grid;
+    align-items: baseline;
+    justify-items: center;
+
+    > * {
+        grid-column: 1/-1;
+        grid-row: 1/-1;
+    }
+
+    > :first-child {
+        font-size: 2em;
+    }
+}

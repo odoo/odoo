@@ -1,0 +1,587 @@
+// ------- List renderer -------
+.o_list_renderer {
+    --ListRenderer-table-padding-x: #{$table-cell-padding-x-sm};
+    --ListRenderer-thead-padding-y: #{map-get($spacers, 4)};
+    --ListRenderer-thead-bg-color: #{$o-webclient-background-color};
+    --ListRenderer-thead-bg-active-color: #{$o-gray-200};
+    --ListRenderer-thead-border-end-color: #{$border-color};
+    --ListRenderer-tfoot-bg-color: #{$o-list-footer-bg-color};
+    --sticky-header-zindex: 1;
+    --o-view-nocontent-zindex: calc(var(--sticky-header-zindex) + 1);
+
+    margin-left: var(--ListRenderer-margin-x, unset);
+    margin-right: var(--ListRenderer-margin-x, unset);
+
+    // sticky header on desktop
+    @include media-only(screen) {
+        @include media-breakpoint-up(md) {
+            height: 100%;
+
+            .o_list_table thead {
+                @include o-position-sticky(0);
+                z-index: var(--sticky-header-zindex);
+            }
+        }
+    }
+
+    @include media-only(print) {
+        width: 100% !important;
+    }
+
+    th, td {
+        // This fixes a bug that was hidding part of cell borders on Firefox.
+        background-clip: padding-box;
+    }
+
+    .o_list_view & {
+        --ListRenderer-thead-padding-y: #{$table-cell-padding-y-sm};
+        --ListRenderer-table-padding-x: #{$o-horizontal-padding};
+
+        @include media-only(print) {
+            --ListRenderer-table-padding-x: 0;
+
+            --Tag-font-size: #{$font-size-sm};
+        }
+    }
+
+    .o_list_table {
+        --table-bg: #{$o-view-background-color};
+
+
+        // We need this to be collapse because we want to add a border on the rows
+        // for sale order/invoice lines of type section.
+        border-collapse: collapse;
+        font-variant-numeric: tabular-nums;
+
+        @include media-only(print) {
+            width: 100% !important;
+            border-collapse: separate;
+            border-spacing: 0;
+
+            &.o_list_table_grouped .o_group_header {
+                --table-bg: #{$gray-200};
+                color: color-contrast($gray-200);
+            }
+
+            &.o_list_table_ungrouped {
+                --table-striped-bg: #{$gray-100};
+                --table-striped-color: #{color-contrast($gray-100)};
+            }
+        }
+
+        > thead, > tbody, > tfoot {
+            > tr > :first-child {
+                padding-left: var(--ListRenderer-table-padding-x);
+            }
+
+            > tr > :last-child {
+                padding-right: var(--ListRenderer-table-padding-x);
+            }
+        }
+
+        thead {
+            background-color: var(--ListRenderer-thead-bg-color);
+
+            th {
+                padding-top: var(--ListRenderer-thead-padding-y);
+                background-color: transparent;
+                color: $headings-color;
+
+                @include media-only(print) {
+                    font-weight: $font-weight-bold;
+                }
+
+                &.table-active {
+                    background: var(--ListRenderer-thead-bg-active-color);
+                    box-shadow: none;
+                }
+            }
+
+            .o_list_number_th {
+                /*rtl:ignore*/
+                text-align: right;
+            }
+
+            .o_column_sortable {
+
+                .o_list_sortable_caret {
+                    background: var(--ListRenderer-thead-bg-color);
+                    position: absolute;
+                    right: .2rem;
+                    padding: 0 .2rem;
+                }
+
+                &.table-active .o_list_sortable_caret {
+                    background: var(--ListRenderer-thead-bg-active-color);
+                }
+
+                .o_list_header_label_spacer {
+                    flex: 0 0 0;
+                }
+
+                &.table-active .o_list_header_label_spacer {
+                    flex: 1 0 0.4rem;
+                    max-width: 1.2rem;
+                }
+            }
+        }
+
+        // Override BS default
+        > :not(:first-child) {
+            border-top-width: 0;
+        }
+
+        tbody > tr > td:not(.o_list_record_selector) {
+            &:not(.o_handle_cell):not(.o_list_button):not(.o_list_record_remove):not(.o_list_record_open_form_view) {
+                --fieldWidget-display: block; // Will affect inner components (see fields.scss)
+
+                display: table-cell;
+                @include text-truncate();
+
+                .o_field_priority .fa, .o_field_list_activity .fa {
+                    line-height: $o-line-size;
+                }
+
+                &.o_list_text {
+                    white-space: pre-wrap;
+                }
+            }
+
+            &.o_list_number {
+                /*rtl:ignore*/
+                text-align: right;
+                /*rtl:ignore*/
+                direction : ltr;
+            }
+            &.o_list_text {
+                word-wrap: break-word;
+                .o_field_widget textarea.o_input {
+                    vertical-align: top;
+                }
+            }
+            &.o_list_char.o_color_cell .o_field_color {
+                width: 17px;
+                height: 17px;
+            }
+            &.o_color_picker_cell .o_field_color_picker .o_colorlist {
+                justify-content: flex-end;
+            }
+            &.o_list_button {
+                > div > button {
+                    white-space: nowrap;
+                    padding: 0 5px;
+                }
+            }
+
+            // ------- Decrease table's inner content "visual depth" -------
+            &:first-of-type > tr:first-child:not(.o_group_header) {
+                box-shadow: inset 0px 5px 10px -4px rgba(black, 0.15);
+            }
+        }
+        &.o_list_computing_widths {
+            > tbody > tr > td {
+                &.o_list_text, // text field, className on the td
+                > .o_field_text {
+                    // text field with widget, className inside the td
+                    white-space: pre !important;
+                }
+                &.o_list_button > div {
+                    flex-wrap: nowrap !important;
+                }
+            }
+        }
+
+        tfoot {
+            > tr > td {
+                color: $o-list-footer-color;
+                background-color: $o-list-footer-bg-color;
+                font-weight: $o-list-footer-font-weight;
+                @include o-text-overflow(table-cell);
+            }
+
+            .o_list_number {
+                /*rtl:ignore*/
+                text-align: right;
+                /*rtl:ignore*/
+                direction : ltr;
+            }
+        }
+
+        .o_handle_cell {
+            @include media-only(print) {
+                display: none;
+            }
+        }
+
+        .o_column_sortable:not(.o_handle_cell) {
+            user-select: none;  // Prevent unwanted selection while sorting
+        }
+
+        .o_list_record_selector {
+            width: 40px;  // Don't force to keep o_group_name width dynamic
+            vertical-align: middle;
+
+            @include media-only(print) {
+                width: 1.5rem !important;
+            }
+        }
+
+        .o_list_record_remove, .o_handle_cell, .o_list_record_open_form_view {
+            width: 1px;  // to prevent the column to expand
+        }
+
+
+        .o_list_table_ungrouped {
+            .o_list_controller {
+                max-width: 35px !important;
+            }
+        }
+
+        .o_list_record_remove button, .o_list_record_open_form_view button {
+            padding: 0px;
+            background: none;
+            border-style: none;
+            display: table-cell;
+            cursor: pointer;
+        }
+
+        .o_keyboard_navigation {
+            th:focus-within, td:focus-within {
+                --table-accent-bg: none;
+                background-color: $o-form-lightsecondary;
+                outline: none;
+            }
+        }
+
+        // It's important that this appears after the keyboard navigation.
+        // Otherwise, o_keyboard_navigation will override the background color
+        // of the focused cell.
+        .o_selected_row {
+            th:focus-within, td:focus-within {
+                --table-accent-bg: none;
+                background-color: $o-view-background-color;
+            }
+        }
+
+        // Grouped list views
+        tbody > tr.o_group_header {
+            > th,
+            > td {
+                vertical-align: middle;
+                padding-top: 5px;
+                padding-bottom: 5px;
+            }
+            .o_group_name {
+                @include o-text-overflow(table-cell);
+            }
+            .o_group_buttons {
+                display: inline-block;
+                margin-left: 10px;
+
+                > button {
+                    padding-top: 0;
+                    padding-bottom: 0;
+                }
+            }
+            .o_pager {
+                cursor: text;
+                user-select: none;
+                text-align: right;
+                padding-top: 0 !important;
+                padding-bottom: 0 !important;
+                margin-top: -2px;
+                margin-bottom: -2px;
+
+                .o_pager_previous,
+                .o_pager_next {
+                    max-height: 30px;
+                    padding: 0 5px;
+                    background-color: lighten($o-brand-lightsecondary, 10%);
+                    &:hover {
+                        background-color: $o-brand-lightsecondary;
+                    }
+                }
+            }
+            .o_group_caret {
+                margin-inline-start: calc(var(--o-list-group-level, 0) * #{map-get($spacers, 4)});
+            }
+        }
+        tbody + tbody {
+            border-top: none; // Override bootstrap for grouped list views
+        }
+
+
+        .o_data_cell.o_text_overflow,
+        .o_data_cell.o_invisible_modifier {
+            // Override display: none to keep table cells aligned. Note: cannot use
+            // 'initial' as it will force them to 'inline', not 'table-cell'.
+            display: table-cell !important;
+        }
+
+        &.o_resizing tr > :not(.o_column_resizing) {
+            opacity: 0.5;
+        }
+
+        &.o_empty_list {
+            table-layout: fixed;
+        }
+
+        th {
+            position: relative;
+        }
+
+        span.o_resize {
+            cursor: col-resize;
+        }
+
+        .o_list_open_form_view {
+            width: 64px;
+            min-width: 64px
+        }
+
+        .o_list_actions_header {
+            width: 32px;
+            min-width: 32px;
+            background-color: var(--ListRenderer-thead-bg-color);
+        }
+
+        .o_data_row.o_list_no_open {
+            cursor: default;
+        }
+
+        .o_data_row:not(.o_selected_row) .o_data_cell {
+            // Boolean fields in non-selected rows completely disabled.
+            .form-check {
+                pointer-events: none;
+            }
+
+            // These widgets enable the checkbox if there is no readonly modifier.
+            &.o_boolean_button_cell,
+            &.o_boolean_favorite_cell,
+            &.o_boolean_toggle_cell,
+            &.o_toggle_button_cell {
+                > .o_field_widget:not(.o_readonly_modifier) .form-check {
+                    pointer-events: auto;
+                }
+            }
+        }
+
+        .o_data_row:not(.o_selected_row) {
+            .o_list_many2one,
+            .o_list_char,
+            .o_list_activity_cell,
+            .o_list_number {
+                white-space: nowrap;
+                .o_field_widget:not(.o_row_handle):not(.o_field_handle):not(.o_field_badge) {
+                    display: inline;
+                    &.o_field_percent_pie{
+                        @include o-text-overflow(inline-flex);
+                        span.o_pie_text{
+                            @include o-text-overflow(none);
+                        }
+                    }
+                    span:not(.o_m2o_avatar) {
+                        @include o-text-overflow(inline);
+                    }
+                }
+            }
+        }
+
+        .o_data_row.o_selected_row > .o_data_cell {
+
+            > .o_field_widget:not(.o_readonly_modifier):not(.o_invisible_modifier) {
+                width: 100%;
+                .o_input {
+                    --o-input-background-color: initial;
+
+                    border: none;
+                    padding: 0;
+                    margin: 0;
+                    width: 100%;
+                }
+                &.o_field_text {
+                    vertical-align: top;
+                }
+                .o_field_many2one_selection {
+                    .o_external_button {
+                        padding: 0;
+                        border: none;
+                        background-color: inherit;
+                        margin-left: 5px;
+                        font-size: 12px;
+                    }
+                }
+                &.o_field_monetary input {
+                    width: 0; // override width: 100px and let flex makes this input grow
+                }
+                &.o_field_monetary span.o_input {
+                    justify-content: flex-end;
+                }
+                .o_field_many2one_avatar {
+                    display: flex;
+                }
+                &.o_field_badge {
+                    width: auto; // override width: 100% to keep the optimal badge width
+                }
+                .o_input_dropdown,
+                .o_datepicker {
+                    > .o_input {
+                        padding-right: 15px; // to prevent caret overlapping
+                    }
+                    > .o_dropdown_button,
+                    .o_datepicker_button {
+                        margin-right: 5px;
+                        @include o-position-absolute(0, 0);
+                    }
+                }
+                input.o_field_translate,
+                textarea.o_field_translate {
+                    padding-right: $o-field-translate-padding;
+                }
+                .o_field_input_buttons, .btn.o_field_translate {
+                    visibility: visible;
+                }
+                > .o_row_handle {
+                    visibility: hidden; // hide sequence when editing
+                }
+            }
+        }
+
+        .o_field_x2many_list_row_add,
+        .o_group_field_row_add {
+            a:focus,
+            a:active,
+            button:focus,
+            button:active {
+                color: $link-hover-color;
+                outline: none;
+            }
+
+            button {
+                font-weight: 400;
+                padding: 0;
+                vertical-align: baseline;
+            }
+        }
+    }
+
+    .o_data_row.o_selected_row > .o_data_cell.o_required_modifier:not(.o_readonly_modifier) {
+        border-bottom: 1px solid $o-input-border-required;
+    }
+
+    .o_data_row.o_selected_row > .o_data_cell.o_invalid_cell:not(.o_readonly_modifier) {
+        border-bottom: 1px solid $danger;
+
+        &:not(:focus-within) {
+            background-color: $o-input-invalid-bg;
+        }
+    }
+
+    @include media-only(screen) {
+        /**
+        Because of border-collapse, border top and border bottom are 'merged'.
+
+        * cell border overlaps row border
+        * when there is a border collapse the first cell (e.g. A1) take over the following cell (e.g. B1 or A2)
+        ┌──┬──┐
+        │A1│B1│
+        ├──┼──┤
+        │A2│B2│
+        └──┴──┘
+
+        So we apply some rules to have the style wanted:
+        */
+        // 1. we set the global separator (gray line) of the table on the row (bottom) and not on the cell (bottom)
+        .o_data_row {
+            border-bottom-width: 1px;
+
+            &:not(.o_selected_row):not(.o_data_row_selected):focus-within > * {
+                $-focus-bg: rgba(var(--#{$variable-prefix}emphasis-color-rgb), #{$table-hover-bg-factor * 2});
+
+                --#{$variable-prefix}table-accent-bg: #{$-focus-bg};
+                --#{$variable-prefix}table-striped-bg: #{$-focus-bg};
+            }
+        }
+
+        // 2. we remove the bottom border (added by BS5) on all cells (this force to show the top border of selected cell)
+        .o_data_row > .o_data_cell {
+            border-bottom-width: 0;
+        }
+        // 3. we add only a bottom border to selected cells (this force to show the bottom border of the selected cell)
+        .o_data_row.o_data_row_selected > .o_data_cell {
+            border-bottom-width: 1px;
+        }
+    }
+
+    @include media-only(print) {
+        .o_data_cell {
+            [type="action"] {
+                display: none;
+            }
+
+            &.w-print-0.p-print-0 {
+                visibility: hidden;
+            }
+        }
+    }
+
+    .o_data_row.o_dragged {
+        display: flex;
+    }
+
+    .o_optional_columns_dropdown .dropdown-item .o-checkbox .text-truncate {
+        max-width: 30em;
+    }
+}
+
+@include media-breakpoint-down(md) {
+    .o_data_row_selected {
+        user-select: none; // Prevent text selection when editing
+    }
+
+    .o_web_client.o_touch_device .o_content table.o_list_table.table tr > {
+        .o_list_record_selector:first-child {
+            display: none;
+
+            // first-child will be hidden so add left padding to second child
+            & + * {
+                padding-left: var(--ListRenderer-table-padding-x);
+            }
+        }
+    }
+}
+
+// ------- Sample mode -------
+.o_list_view .o_view_sample_data {
+    .o_list_table {
+        cursor: default !important;
+    }
+
+    .o_data_row,
+    .o_list_footer,
+    .o_group_header {
+        @include o-sample-data-disabled;
+        border-color: rgba(0, 0, 0, 0.02);
+    }
+}
+
+.o_list_view .o_list_buttons {
+    > * {
+        margin: auto 0;
+    }
+}
+
+@include media-breakpoint-down(md) {
+    .o_web_client:has(.o_list_selection_container) .o_navbar {
+        opacity: 0.15;
+    }
+
+    .o_list_view .o_list_selection_container {
+        position: fixed;
+        top: 0;
+        left: 0;
+    }
+}
+.modal-footer .o_list_selection_box {
+    margin-bottom: 0rem !important;
+}

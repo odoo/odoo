@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="barcodes.BarcodeScanner">
+        <div class="o_barcode_mobile_container">
+            <a t-if="isBarcodeScannerSupported" role="button" class="btn btn-primary o_mobile_barcode" t-on-click="openMobileScanner">
+                <i class="fa fa-camera fa-2x o_barcode_mobile_camera"/>
+                Tap to scan
+            </a>
+            <img src="/barcodes/static/img/barcode.png" alt="Barcode"/>
+            <span class="o_barcode_laser"/>
+        </div>
+    </t>
+
+</templates>

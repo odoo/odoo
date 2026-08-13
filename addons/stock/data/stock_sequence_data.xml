@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- Sequences for orderpoint -->
+        <record id="sequence_mrp_op" model="ir.sequence">
+            <field name="name">Stock orderpoint</field>
+            <field name="code">stock.orderpoint</field>
+            <field name="prefix">OP/</field>
+            <field name="padding">5</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+            <field name="company_id"></field>
+        </record>
+
+        <!-- Sequences for procurement group -->
+        <record id="sequence_proc_group" model="ir.sequence">
+            <field name="name">Procurement Group</field>
+            <field name="code">procurement.group</field>
+            <field name="prefix">PG/</field>
+            <field name="padding">6</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+
+        <!-- Sequences for pickings -->
+        <record id="seq_picking_internal" model="ir.sequence">
+            <field name="name">Picking INT</field>
+            <field name="code">stock.picking</field>
+            <field name="prefix">INT/</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <!-- Sequences from tracking numbers -->
+        <record id="sequence_production_lots" model="ir.sequence">
+            <field name="name">Serial Numbers</field>
+            <field name="code">stock.lot.serial</field>
+            <field name="prefix"></field>
+            <field name="padding">7</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <!-- Sequences for stock.quant.package -->
+        <record id="seq_quant_package" model="ir.sequence">
+            <field name="name">Packages</field>
+            <field name="code">stock.quant.package</field>
+            <field name="prefix">PACK</field>
+            <field name="padding">7</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <!-- Scheduler -->
+        <record forcecreate="True" id="ir_cron_scheduler_action" model="ir.cron">
+            <field name="name">Procurement: run scheduler</field>
+            <field name="model_id" ref="model_procurement_group"/>
+            <field name="state">code</field>
+            <field name="code">
+model.run_scheduler(True)
+            </field>
+            <field eval="True" name="active"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+        </record>
+
+    </data>
+</odoo>

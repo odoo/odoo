@@ -1,0 +1,111 @@
+.o-dropdown {
+    &.dropdown-toggle::after {
+        content: none;
+        border: none;
+    }
+
+    &.btn-secondary, &.btn-outline-secondary {
+        transition: background-color .2s ease-in-out, border-color .2s ease-in-out;
+
+        &.show {
+            $-value: map-get($o-btns-bs-outline-override, 'secondary');
+            color: map-get($-value, 'active-color');
+            background-color: map-get($-value, 'active-background');
+            border-color: map-get($-value, 'active-border');
+        }
+    }
+
+    /*!rtl:begin:ignore*/
+    &.dropup>.o-dropdown--menu,
+    &.dropdown>.o-dropdown--menu,
+    &.dropstart>.o-dropdown--menu,
+    &.dropend>.o-dropdown--menu {
+        // Also makes sure that left/right stuffs are not polluted
+        // by bootstrap rules processed by rtlcss
+        left: auto;
+        right: auto;
+        margin-left: 0;
+        margin-right: 0;
+    }
+    /*!rtl:end:ignore*/
+}
+
+.o-dropdown,
+.o-dropdopwn-item,
+.o_menu_item {
+    &.o-dropdown-caret:not(.o-dropdown-no-caret) {
+        display: flex;
+        flex-wrap: nowrap;
+        align-items: center;
+        gap: 5px;
+
+        &:after {
+            content: "\f0d7";
+            font-family: FontAwesome;
+            display: inline-block;
+            margin-left: auto;
+
+            transform: rotate(0deg);
+            transition: .25s ease-in-out;
+        }
+
+        &.show:after {
+            transform: rotate(180deg);
+        }
+
+        &.o-dropdown--has-parent {
+            padding-right: 8px;
+
+            &:after {
+                transform: rotate(-90deg);
+            }
+
+            &.o-dropdown--open:after {
+                transform: rotate(90deg);
+            }
+        }
+    }
+}
+
+.o-dropdown--menu {
+    font-size: $dropdown-font-size;
+    margin-top: var(--Dropdown_menu-margin-y, #{map-get($spacers, 1)});
+    margin-bottom: var(--Dropdown_menu-margin-y, #{map-get($spacers, 1)});
+
+    .dropdown-toggle:focus,
+    .dropdown-item:focus {
+        background-color: transparent;
+        outline: none;
+    }
+
+    .dropdown-toggle.focus,
+    .dropdown-item.focus {
+        background-color: $dropdown-link-hover-bg;
+    }
+
+    &.o-dropdown--menu-submenu {      // the value comes from bootstrap's ".dropdown-menu" padding and border style
+        --o-dropdown--submenu-margin: calc(-.5rem - 1px);
+        margin-top: var(--o-dropdown--submenu-margin);
+        margin-bottom: var(--o-dropdown--submenu-margin);
+    }
+
+    .dropdown-item:not(.disabled):not(:disabled) {
+
+        // Needed 'cause <DropdownItem> generate <span> html tags that for
+        // browsers are normally not clickable.
+        &, label {
+            cursor: pointer;
+        }
+    }
+}
+
+// Unstyle buttons so they behave like regular dropdown-item
+.o-dropdown-item-unstyled-button {
+    &, .o_web_client.o_touch_device & {
+        button, button:hover, button:disabled {
+            all: unset;
+            display: inline-block;
+            width: 100%;
+        }
+    }
+}

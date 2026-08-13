@@ -1,0 +1,154 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* payment_worldline
+#
+# Translators:
+# Wil Odoo, 2024
+# Daye Jeong, 2024
+# Sarah Park, 2025
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:38+0000\n"
+"PO-Revision-Date: 2024-09-29 00:00+0000\n"
+"Last-Translator: Sarah Park, 2025\n"
+"Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
+"Language: ko\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: payment_worldline
+#: model_terms:ir.ui.view,arch_db:payment_worldline.payment_provider_form
+msgid "API Key"
+msgstr "API 키"
+
+#. module: payment_worldline
+#: model_terms:ir.ui.view,arch_db:payment_worldline.payment_provider_form
+msgid "API Secret"
+msgstr "API 시크릿"
+
+#. module: payment_worldline
+#: model:ir.model.fields,field_description:payment_worldline.field_payment_provider__code
+msgid "Code"
+msgstr "코드"
+
+#. module: payment_worldline
+#. odoo-python
+#: code:addons/payment_worldline/models/payment_provider.py:0
+msgid "Could not establish the connection to the API."
+msgstr "API 연결을 설정할 수 없습니다."
+
+#. module: payment_worldline
+#. odoo-python
+#: code:addons/payment_worldline/models/payment_transaction.py:0
+msgid "No transaction found matching reference %s."
+msgstr "%s 참조와 일치하는 거래 항목이 없습니다."
+
+#. module: payment_worldline
+#: model_terms:ir.ui.view,arch_db:payment_worldline.payment_provider_form
+msgid "PSPID"
+msgstr "PSPID"
+
+#. module: payment_worldline
+#: model:ir.model,name:payment_worldline.model_payment_provider
+msgid "Payment Provider"
+msgstr "결제대행업체"
+
+#. module: payment_worldline
+#: model:ir.model,name:payment_worldline.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "지불 거래"
+
+#. module: payment_worldline
+#. odoo-python
+#: code:addons/payment_worldline/models/payment_transaction.py:0
+msgid "Received data with missing payment state."
+msgstr "결제 상태가 누락된 데이터가 수신되었습니다. "
+
+#. module: payment_worldline
+#. odoo-python
+#: code:addons/payment_worldline/models/payment_transaction.py:0
+msgid "Received data with missing reference %(ref)s."
+msgstr "참조 %(ref)s가 누락된 데이터가 수신되었습니다."
+
+#. module: payment_worldline
+#. odoo-python
+#: code:addons/payment_worldline/models/payment_transaction.py:0
+msgid ""
+"Received invalid transaction status %(status)s with error code %"
+"(error_code)s."
+msgstr ""
+"잘못된 거래 상태 %(status)s 및 %(error_code)s 오류 코드가 수신되었습니다."
+
+#. module: payment_worldline
+#. odoo-python
+#: code:addons/payment_worldline/models/payment_provider.py:0
+msgid "The communication with the API failed. Details: %s"
+msgstr "API와의 통신에 실패했습니다. 세부 정보: %s"
+
+#. module: payment_worldline
+#: model:ir.model.fields,help:payment_worldline.field_payment_provider__code
+msgid "The technical code of this payment provider."
+msgstr "이 결제대행업체의 기술 코드입니다."
+
+#. module: payment_worldline
+#. odoo-python
+#: code:addons/payment_worldline/models/payment_transaction.py:0
+msgid "The transaction is not linked to a token."
+msgstr "거래가 토큰에 연결되어 있지 않습니다."
+
+#. module: payment_worldline
+#. odoo-python
+#: code:addons/payment_worldline/models/payment_transaction.py:0
+msgid "Transaction cancelled with error code %(error_code)s."
+msgstr "거래가 %(error_code)s 오류 코드로 취소되었습니다."
+
+#. module: payment_worldline
+#. odoo-python
+#: code:addons/payment_worldline/models/payment_transaction.py:0
+msgid "Transaction declined with error code %(error_code)s."
+msgstr "거래가 %(error_code)s 오류 코드로 거부되었습니다."
+
+#. module: payment_worldline
+#: model_terms:ir.ui.view,arch_db:payment_worldline.payment_provider_form
+msgid "Webhook Key"
+msgstr "웹훅 키"
+
+#. module: payment_worldline
+#: model_terms:ir.ui.view,arch_db:payment_worldline.payment_provider_form
+msgid "Webhook Secret"
+msgstr "Webhook 보안"
+
+#. module: payment_worldline
+#: model:ir.model.fields.selection,name:payment_worldline.selection__payment_provider__code__worldline
+msgid "Worldline"
+msgstr "Worldline"
+
+#. module: payment_worldline
+#: model:ir.model.fields,field_description:payment_worldline.field_payment_provider__worldline_api_key
+msgid "Worldline API Key"
+msgstr "Worldline API 키"
+
+#. module: payment_worldline
+#: model:ir.model.fields,field_description:payment_worldline.field_payment_provider__worldline_api_secret
+msgid "Worldline API Secret"
+msgstr "Worldline API 비밀번호"
+
+#. module: payment_worldline
+#: model:ir.model.fields,field_description:payment_worldline.field_payment_provider__worldline_pspid
+msgid "Worldline PSPID"
+msgstr "월드라인 PSPID"
+
+#. module: payment_worldline
+#: model:ir.model.fields,field_description:payment_worldline.field_payment_provider__worldline_webhook_key
+msgid "Worldline Webhook Key"
+msgstr "Worldline 웹훅 키"
+
+#. module: payment_worldline
+#: model:ir.model.fields,field_description:payment_worldline.field_payment_provider__worldline_webhook_secret
+msgid "Worldline Webhook Secret"
+msgstr "Worldline 웹훅 비밀번호"

@@ -1,0 +1,29 @@
+.o_fullscreen_indication {
+    display: flex;
+    position: absolute;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    top: 0;
+    margin-top: $o-navbar-height!important;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 400ms ease;
+
+    p {
+        padding: 15px 30px;
+        background-color: rgba(0, 0, 0, 0.7);
+        color: white;
+        span {
+            border: 1px solid white;
+            border-color: white;
+            border-radius: 5px;
+            padding: 7px 5px;
+            margin: 5px;
+        }
+    }
+
+    &.o_visible {
+        opacity: 1;
+    }
+}
