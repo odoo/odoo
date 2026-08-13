@@ -93,6 +93,27 @@ class TestName(TransactionCase):
         self.assertIn(variant_1.id, res_variants_ids)
         self.assertIn(variant_2.id, res_variants_ids)
 
+    def test_name_search_partial_code_match_keeps_name_matches(self):
+        """ Doing a name search should return :
+        - Only the default_code or barcode exact matches if any
+        - Both default_code and name partial matches otherwise
+        """
+        product_code, product_name = self.env['product.product'].create([
+            {'name': 'Plank 1', 'default_code': 'OAK-01'},
+            {'name': 'Oak'},
+        ])
+        res = self.env['product.product'].name_search(name='Oak')
+        res_ids = [r[0] for r in res]
+        self.assertIn(product_code.id, res_ids)
+        self.assertIn(product_name.id, res_ids)
+
+        product_exact = self.env['product.product'].create({
+            'name': 'Plank', 'default_code': 'OAK',
+        })
+        res = self.env['product.product'].name_search(name='Oak')
+        res_ids = [r[0] for r in res]
+        self.assertEqual(res_ids, [product_exact.id])
+
     def test_product_product_name_search(self):
         attribute = self.env['product.attribute'].create({
             'name': 'Attribute',
