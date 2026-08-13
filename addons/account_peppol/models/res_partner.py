@@ -85,9 +85,15 @@ class ResPartner(models.Model):
             )
 
     def _compute_routing_scheme_endpoint(self):
-        # Don't recompute on partners corresponding to registered companies
+        # Don't recompute on partners corresponding to registered companies, unless the
+        # routing_identifier_override changes or both VAT and additional_identifiers are cleared.
         partners_not_to_recompute = self.filtered_domain(self._domain_peppol_do_not_modify_routing_identifier())
-        partners_to_recompute = self.browse([partner.id for partner in self if partner._origin.id not in partners_not_to_recompute.ids])
+        partners_to_recompute = self.browse([
+            partner.id for partner in self
+            if partner._origin.id not in partners_not_to_recompute.ids
+            or partner.routing_identifier_override != partner._origin.routing_identifier_override
+            or (not partner.vat and not partner.additional_identifiers)
+        ])
         super(ResPartner, partners_to_recompute)._compute_routing_scheme_endpoint()
 
     # -------------------------------------------------------------------------
@@ -237,6 +243,7 @@ class ResPartner(models.Model):
         self._origin.invalidate_recordset(['routing_identifier'])
         self_partner = self.with_company(company)
         if not self_partner.routing_identifier:
+            self_partner.peppol_verification_state = 'not_verified'
             return False
         old_value = self_partner.peppol_verification_state
         new_value = self_partner._get_peppol_verification_state(
