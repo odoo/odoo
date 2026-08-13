@@ -1,10 +1,15 @@
 import { Message } from "@mail/core/common/message_model";
 
-import { defineMailModels, start } from "@mail/../tests/mail_test_helpers";
+import { defineMailModels, start, startServer } from "@mail/../tests/mail_test_helpers";
 
 import { expect, test } from "@odoo/hoot";
 
-import { destroyApp, getService, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import {
+    destroyApp,
+    getService,
+    patchWithCleanup,
+    serverState,
+} from "@web/../tests/web_test_helpers";
 
 defineMailModels();
 
@@ -92,4 +97,42 @@ test("store.insert different PY model having same JS model", async () => {
     expect(Boolean(store["discuss.channel"].get(1))).toBe(true);
     expect(Boolean(store["discuss.channel"].get(2))).toBe(true);
     expect(Boolean(store["discuss.channel"].get(3))).toBe(true);
+});
+
+test("no push notification while user is busy", async () => {
+    await startServer();
+    patchWithCleanup(parent.document, { hasFocus: () => false });
+    patchWithCleanup(navigator.serviceWorker, {
+        controller: {
+            postMessage(data) {
+                expect.step(data);
+            },
+        },
+    });
+    await start();
+    const store = getService("mail.store");
+    await store.isReady;
+    const requestDisplay = () =>
+        navigator.serviceWorker.dispatchEvent(
+            new MessageEvent("message", {
+                data: {
+                    type: "notification-display-request",
+                    payload: {
+                        correlationId: "push",
+                        model: "res.partner",
+                        res_id: serverState.partnerId,
+                    },
+                },
+            })
+        );
+    // online
+    store.self_user.im_status = "online";
+    requestDisplay();
+    await expect.waitForSteps([]);
+    // busy
+    store.self_user.im_status = "busy";
+    requestDisplay();
+    await expect.waitForSteps([
+        { type: "notification-display-response", payload: { correlationId: "push" } },
+    ]);
 });
