@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, models, fields
+from odoo import models, fields
 
 
 class HrAttendanceOvertimeRuleset(models.Model):
@@ -49,14 +49,3 @@ class HrAttendanceOvertimeRuleset(models.Model):
 
     def action_regenerate_overtimes(self):
         self._attendances_to_regenerate_for()._update_overtime()
-
-    @api.model
-    def _action_open_overtime_rulesets(self):
-        action = self.sudo().env.ref('hr_attendance.hr_attendance_overtime_ruleset_action').read()[0]
-        is_hr_user = self.env.user.has_group('hr.group_hr_user')
-        action['context'] = {
-            'edit': is_hr_user,
-            'create': is_hr_user,
-            'delete': is_hr_user,
-        }
-        return action

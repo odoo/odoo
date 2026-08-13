@@ -68,8 +68,9 @@ export const booleanRadio = {
         },
     ],
     supportedTypes: ["boolean"],
-    extractProps({ options }) {
+    extractProps({ options }, dynamicInfo) {
         return {
+            readonly: dynamicInfo.readonly,
             yes_label_element_id: options.yes_label_element_id,
             no_label_element_id: options.no_label_element_id,
         };
