@@ -15,13 +15,17 @@ export class BackgroundVideo extends Interaction {
         _document: {
             // We don't add the optional cookies warning for background videos
             // so that the fallback message doesn't appear behind the content.
-            "t-on-optionalCookiesAccepted.once": () => (this.iframeEl.src = this.videoSrc),
+            "t-on-optionalCookiesAccepted.once": () => {
+                if (!this.isVideoFile) {
+                    this.playerEl.src = this.videoSrc;
+                }
+            },
         },
         _window: {
-            "t-on-resize": this.throttled(this.adjustIframe),
+            "t-on-resize": this.throttled(this.adjustPlayer),
         },
         _dropdown: {
-            "t-on-shown.bs.dropdown": this.throttled(this.adjustIframe),
+            "t-on-shown.bs.dropdown": this.throttled(this.adjustPlayer),
         },
         _modal: {
             "t-on-show.bs.modal": () => (this.hideVideoContainer = true),
@@ -37,8 +41,9 @@ export class BackgroundVideo extends Interaction {
     setup() {
         this.hideVideoContainer = false;
         this.videoSrc = this.el.dataset.bgVideoSrc;
+        this.isVideoFile = "bgVideoIsFile" in this.el.dataset;
         this.iframeID = uniqueId("o_bg_video_iframe_");
-        this.iframeEl = null;
+        this.playerEl = null;
         this.bgVideoContainer = null;
     }
 
@@ -47,20 +52,26 @@ export class BackgroundVideo extends Interaction {
         if (promise) {
             this.waitFor(promise).then(this.protectSyncAfterAsync(this.appendBgVideo));
         }
-        this.__adjustIframe = this.throttled(this.adjustIframe);
-        const resizeObserver = new ResizeObserver(this.__adjustIframe.bind(this));
+        this.__adjustPlayer = this.throttled(this.adjustPlayer);
+        const resizeObserver = new ResizeObserver(this.__adjustPlayer.bind(this));
         // A change in an element padding does not trigger the resizeObserver so
         // both inner and outer element are observed for any resizing.
         resizeObserver.observe(this.el.parentElement);
         resizeObserver.observe(this.el);
     }
 
-    adjustIframe() {
-        if (!this.iframeEl) {
+    adjustPlayer() {
+        if (!this.playerEl) {
+            return;
+        }
+        if (this.isVideoFile) {
+            // A `<video>` element covers its container on its own, through
+            // `object-fit`, so it needs no manual sizing.
+            this.playerEl.classList.add("show");
             return;
         }
 
-        this.iframeEl.classList.remove("show");
+        this.playerEl.classList.remove("show");
 
         const wrapperWidth = this.el.clientWidth;
         const wrapperHeight = this.el.clientHeight;
@@ -76,22 +87,22 @@ export class BackgroundVideo extends Interaction {
             const iframeWidth = Math.round(
                 relativeRatio >= 1 ? wrapperWidth : wrapperHeight * (16 / 9)
             );
-            this.iframeEl.style.height = `${iframeHeight}px`;
-            this.iframeEl.style.width = `${iframeWidth}px`;
+            this.playerEl.style.height = `${iframeHeight}px`;
+            this.playerEl.style.width = `${iframeWidth}px`;
         } else if (relativeRatio >= 1.0) {
-            this.iframeEl.style.width = "100%";
-            this.iframeEl.style.height = relativeRatio * 100 + "%";
-            this.iframeEl.style.insetInlineStart = "0";
-            this.iframeEl.style.insetBlockStart = (-(relativeRatio - 1.0) / 2) * 100 + "%";
+            this.playerEl.style.width = "100%";
+            this.playerEl.style.height = relativeRatio * 100 + "%";
+            this.playerEl.style.insetInlineStart = "0";
+            this.playerEl.style.insetBlockStart = (-(relativeRatio - 1.0) / 2) * 100 + "%";
         } else {
-            this.iframeEl.style.width = (1 / relativeRatio) * 100 + "%";
-            this.iframeEl.style.height = "100%";
-            this.iframeEl.style.insetInlineStart = (-(1 / relativeRatio - 1.0) / 2) * 100 + "%";
-            this.iframeEl.style.insetBlockStart = "0";
+            this.playerEl.style.width = (1 / relativeRatio) * 100 + "%";
+            this.playerEl.style.height = "100%";
+            this.playerEl.style.insetInlineStart = (-(1 / relativeRatio - 1.0) / 2) * 100 + "%";
+            this.playerEl.style.insetBlockStart = "0";
         }
 
-        void this.iframeEl.offsetWidth; // Force style addition
-        this.iframeEl.classList.add("show");
+        void this.playerEl.offsetWidth; // Force style addition
+        this.playerEl.classList.add("show");
     }
 
     appendBgVideo() {
@@ -104,30 +115,31 @@ export class BackgroundVideo extends Interaction {
         this.renderAt(
             "website.background.video",
             {
-                videoSrc: allowedCookies ? this.videoSrc : "about:blank",
+                videoSrc: allowedCookies || this.isVideoFile ? this.videoSrc : "about:blank",
                 iframeID: this.iframeID,
+                isVideoFile: this.isVideoFile,
             },
             this.el,
             "afterbegin"
         );
 
         this.bgVideoContainer = this.el.querySelector(":scope > .o_bg_video_container");
-        this.iframeEl = this.bgVideoContainer.querySelector(".o_bg_video_iframe");
+        this.playerEl = this.bgVideoContainer.querySelector(".o_bg_video_iframe, .o_bg_video_file");
         this.addListener(
-            this.iframeEl,
-            "load",
+            this.playerEl,
+            this.isVideoFile ? "loadeddata" : "load",
             () => {
                 this.bgVideoContainer.querySelector(".o_bg_video_loading")?.remove();
                 // When there is a "slide in (left or right) animation" element,
-                // we need to adjust the iframe size once it has been loaded,
+                // we need to adjust the player size once it has been loaded,
                 // otherwise an horizontal scrollbar may appear.
-                this.adjustIframe();
+                this.adjustPlayer();
             },
             { once: true }
         );
 
-        this.adjustIframe();
-        triggerAutoplay(this.iframeEl);
+        this.adjustPlayer();
+        triggerAutoplay(this.playerEl);
     }
 }
 

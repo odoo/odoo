@@ -7,7 +7,17 @@
                     <span class="visually-hidden">Loading...</span>
                 </div>
             </div>
-            <iframe t-att-id="iframeID"
+            <video t-if="isVideoFile"
+                    t-att-id="iframeID"
+                    class="o_bg_video_file fade"
+                    t-att-src="videoSrc"
+                    autoplay="autoplay"
+                    loop="loop"
+                    muted="muted"
+                    playsinline="playsinline"
+                    aria-label="Background video"/>
+            <iframe t-else=""
+                    t-att-id="iframeID"
                     loading="lazy"
                     class="o_bg_video_iframe fade"
                     frameBorder="0"

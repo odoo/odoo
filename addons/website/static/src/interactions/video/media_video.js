@@ -3,10 +3,13 @@ import { registry } from "@web/core/registry";
 
 import { _t } from "@web/core/l10n/translation";
 import { setupAutoplay, triggerAutoplay } from "@website/utils/videos";
-import { generateVideoIframe } from "@website/js/content/generate_video_iframe";
+import {
+    generateVideoIframe,
+    THIRD_PARTY_VIDEO_SELECTOR,
+} from "@website/js/content/generate_video_iframe";
 
 export class MediaVideo extends Interaction {
-    static selector = ".media_iframe_video";
+    static selector = THIRD_PARTY_VIDEO_SELECTOR;
     dynamicSelectors = {
         ...this.dynamicSelectors,
         _popup: () => this.el.closest(".s_popup"),
