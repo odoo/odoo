@@ -10,10 +10,14 @@ export class DynamicRecordList extends DynamicList {
     /**
      * @param {import("./relational_model").Config} _config
      * @param {Object} data
+     * @param {Object} [options]
+     * @param {import("./group").Group} [options.group]
      */
-    setup(_config, data) {
+    setup(_config, data, { group } = {}) {
         super.setup(...arguments);
 
+        /** set only when this list is a group's content */
+        this.group = group;
         this.records = [];
         this._setData(data);
     }
@@ -77,8 +81,11 @@ export class DynamicRecordList extends DynamicList {
         return this.count;
     }
 
-    moveRecord(dataRecordId, _dataGroupId, refId, _targetGroupId) {
-        return this.resequence(dataRecordId, refId);
+    /**
+     * @param {string[]} recordIds ids of the records moved together, in display order
+     */
+    moveRecords(recordIds, refId, _targetGroupId) {
+        return this.resequence(recordIds, refId);
     }
 
     removeRecord(record) {
@@ -94,10 +101,9 @@ export class DynamicRecordList extends DynamicList {
         return record;
     }
 
-    async resequence(movedRecordId, targetRecordId) {
-        return this.model.mutex.exec(
-            async () =>
-                await this._resequence(this.records, this.resModel, movedRecordId, targetRecordId)
+    async resequence(movedRecordIds, targetRecordId) {
+        return this.model.mutex.exec(() =>
+            this._resequence(this.records, this.resModel, movedRecordIds, targetRecordId)
         );
     }
 
@@ -144,7 +150,7 @@ export class DynamicRecordList extends DynamicList {
                 mode,
             },
             data,
-            { manuallyAdded: !data.id }
+            { group: this.group, manuallyAdded: !data.id }
         );
     }
 

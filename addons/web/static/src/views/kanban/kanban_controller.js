@@ -325,6 +325,7 @@ export class KanbanController extends Component {
             activeIdsLimit: session.active_ids_limit,
             hooks: {
                 onRecordSaved: this.onRecordSaved.bind(this),
+                onSavedMulti: this.onSavedMulti.bind(this),
             },
         };
     }
@@ -521,10 +522,16 @@ export class KanbanController extends Component {
 
     onRecordSaved(record) {
         if (this.model.root.isGrouped) {
-            const group = this.model.root.groups.find((l) =>
-                l.records.find((r) => r.id === record.id)
-            );
-            this.progressBarState?.updateCounts(group);
+            this.progressBarState?.updateCounts(record.group);
+        }
+    }
+
+    /**
+     * Records saved together always land in the same group, so one update is enough.
+     */
+    onSavedMulti(records) {
+        if (this.model.root.isGrouped) {
+            this.progressBarState?.updateCounts(records[0].group);
         }
     }
 
