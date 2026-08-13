@@ -6551,6 +6551,59 @@ class AccountMove(models.Model):
             'target': 'new',
         }
 
+    def _get_base_document_title(self, proforma=False):
+        """Return the base document title.
+
+        This method is the extension point for localizations to customize the
+        document title. Status and proforma prefixes are handled by '_get_document_title'.
+        """
+
+        self.ensure_one()
+
+        if self.is_debit_note() and self.move_type == 'out_invoice':
+            return self.env._("Debit Note")
+        if self.move_type == "out_invoice":
+            return self.env._("Invoice")
+        if self.move_type == "out_refund":
+            return self.env._("Credit Note")
+        if self.move_type == "in_invoice":
+            return (
+                self.env._("Self Billing")
+                if self.journal_id.is_self_billing
+                else self.env._("Vendor Bill")
+            )
+        if self.move_type == "in_refund":
+            return (
+                self.env._("Self Billing Credit Note")
+                if self.journal_id.is_self_billing
+                else self.env._("Vendor Credit Note")
+            )
+        return ""
+
+    def _get_document_title(self, proforma=False):
+        """Return the final document title for the PDF report.
+
+        The base document title is provided by '_get_base_document_title';
+        this method applies generic prefixes such as "Proforma", "Draft", and "Cancelled".
+        """
+
+        self.ensure_one()
+
+        doc_name = self._get_base_document_title(proforma=proforma)
+
+        if proforma and not (
+            self.is_purchase_document() and self.journal_id.is_self_billing
+        ):
+            doc_name = self.env._("Proforma %(doc_name)s", doc_name=doc_name)
+
+        if self.is_sale_document():
+            if self.state == 'draft':
+                doc_name = self.env._("Draft %(doc_name)s", doc_name=doc_name)
+            elif self.state == 'cancel':
+                doc_name = self.env._("Cancelled %(doc_name)s", doc_name=doc_name)
+
+        return doc_name
+
     # -------------------------------------------------------------------------
     # PUBLIC ACTIONS
     # -------------------------------------------------------------------------
@@ -7261,6 +7314,10 @@ class AccountMove(models.Model):
 
     def is_receipt(self):
         return self.move_type in ['out_receipt', 'in_receipt']
+
+    def is_debit_note(self):
+        self.ensure_one()
+        return False
 
     @api.model
     def get_sale_types(self, include_receipts=False):

@@ -25,11 +25,6 @@ class AccountMove(models.Model):
             return 'l10n_gcc_invoice.l10n_gcc_report_invoice_document'
         return super()._get_name_invoice_report()
 
-    def _l10n_gcc_get_invoice_title(self):
-        """To be overriden by inheriting modules implementing a custom invoice title"""
-        self.ensure_one()
-        return False
-
     def _num2words(self, number, lang):
         if num2words is None:
             _logger.warning("The library 'num2words' is missing, cannot render textual amounts.")
