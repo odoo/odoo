@@ -4762,6 +4762,17 @@ class MailThread(models.AbstractModel):
     # FOLLOWERS API
     # ------------------------------------------------------
 
+    def message_update_siblings_subscription(self, partner_ids=None, subtype_ids=None):
+        self.ensure_one()
+        parent_subtype_id = self.env["mail.message.subtype"].search_fetch(
+            [("parent_id.res_model", "=", self._name)], field_names=["relation_field"], limit=1)
+        parent_record = self[parent_subtype_id.relation_field]
+        siblings = self.search([(parent_subtype_id.relation_field, "in", parent_record.ids)])
+        if subtype_ids:
+            siblings.message_subscribe(partner_ids, subtype_ids)
+        else:
+            siblings.message_unsubscribe(partner_ids)
+
     def message_subscribe(self, partner_ids=None, subtype_ids=None):
         """ Main public API to add followers to a record set. Its main purpose is
         to perform access rights checks before calling ``_message_subscribe``. """
@@ -5308,6 +5319,13 @@ class MailThread(models.AbstractModel):
 
     def _store_target(self):
         return (self, "thread")
+
+    def _store_model_name_fields(self, res: Store.FieldList):
+        res.attr(
+            "modelName",
+            lambda thread: thread.env["ir.model"]._get(thread._name).display_name,
+        )
+        res.attr("display_name")
 
     # ------------------------------------------------------
     # CONTROLLERS SECURITY HELPERS

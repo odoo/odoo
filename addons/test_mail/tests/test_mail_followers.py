@@ -275,6 +275,29 @@ class BaseFollowersTest(MailCommon):
         self.assertEqual(len(subscription_data), 1)
         self.assertEqual(subscription_data[0][1], test_record_copy.id)
 
+    @users('employee')
+    def test_message_update_siblings_subscription(self):
+        """ message_update_siblings_subscription should update the subscription
+        of all sibling records sharing the same parent (found through the
+        parent_id / relation_field configuration of mail.message.subtype) """
+        container = self.env['mail.test.container'].create({'name': 'Container'})
+        ticket_1, ticket_2 = self.env['mail.test.ticket'].create([
+            {'name': 'Ticket1', 'container_id': container.id},
+            {'name': 'Ticket2', 'container_id': container.id},
+        ])
+        subtype = self.env.ref('test_mail.st_mail_test_ticket_container_upd')
+        partner = self.env['res.partner'].create({'name': 'Test Partner', 'email': 'test.partner@test.example.com'})
+
+        ticket_1.message_update_siblings_subscription(partner_ids=partner.ids, subtype_ids=subtype.ids)
+        self.assertIn(partner, ticket_1.message_partner_ids)
+        self.assertIn(partner, ticket_2.message_partner_ids, 'Sibling ticket should be subscribed too')
+        self.assertEqual(ticket_1.message_follower_ids.filtered(lambda f: f.partner_id == partner).subtype_ids, subtype)
+        self.assertEqual(ticket_2.message_follower_ids.filtered(lambda f: f.partner_id == partner).subtype_ids, subtype)
+
+        ticket_1.message_update_siblings_subscription(partner_ids=partner.ids)
+        self.assertNotIn(partner, ticket_1.message_partner_ids)
+        self.assertNotIn(partner, ticket_2.message_partner_ids, 'Sibling ticket should be unsubscribed too')
+
 
 @tagged('mail_followers')
 class AdvancedFollowersTest(MailCommon):

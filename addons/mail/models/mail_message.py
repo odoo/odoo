@@ -1392,17 +1392,7 @@ class MailMessage(models.Model):
             "_store_notification_fields",
             value=lambda m: m.notification_ids._filtered_for_web_client(),
         )
-        res.one(
-            "thread",
-            lambda res: (
-                res.attr(
-                    "modelName",
-                    lambda thread: thread.env["ir.model"]._get(thread._name).display_name,
-                ),
-                res.attr("display_name"),
-            ),
-            as_thread=True,
-        )
+        res.one("thread", "_store_model_name_fields", as_thread=True)
 
     def _notify_message_notification_update(self):
         """Send bus notifications to update status of notifications in the web

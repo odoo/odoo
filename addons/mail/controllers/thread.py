@@ -133,7 +133,12 @@ class ThreadController(StoreController):
         subtypes = record._mail_get_message_subtypes()
         if follower.partner_id.partner_share:
             subtypes = subtypes.filtered(lambda subtype: not subtype.internal)
-        store = Store().add(subtypes, ["name"]).add(follower, ["subtype_ids"])
+        store = Store().add(subtypes, ["name", "parent_id"]).add(follower, ["subtype_ids"])
+        relation_subtype_id = request.env["mail.message.subtype"].search_fetch(
+            [("parent_id.res_model", "=", record._name)], field_names=["relation_field"], limit=1)
+        parent_record = record[relation_subtype_id.relation_field] if relation_subtype_id else None
+        store.add(parent_record, "_store_model_name_fields", as_thread=True)
+        store.add(record, "_store_model_name_fields", as_thread=True)
         return {
             "store_data": store,
             "subtype_ids": subtypes.sorted(
@@ -144,6 +149,8 @@ class ThreadController(StoreController):
                     s.sequence,
                 ),
             ).ids,
+            "parent_id": parent_record.id if parent_record else None,
+            "parent_model": parent_record._name if parent_record else None,
         }
 
     def _prepare_message_data(self, post_data, *, thread, from_create=True, **kwargs):
