@@ -1348,6 +1348,41 @@ Product 2,Produit 2,concat 2,concat_fr_2,<p>My product 2</p><p>Product 2-2</p>,<
         # if results empty, no errors
         self.assertItemsEqual(results['messages'], [])
 
+    def test_import_translation_empty_languages(self):
+        self.env['res.lang']._activate_lang('fr_FR')
+        empty_all, empty_fr, empty_en = self.env['import.base.translation'].create([
+            {'name': 'Product'},
+            {'name': 'Product'},
+            {'name': 'Product'},
+        ])
+        (empty_all | empty_fr | empty_en).with_context(lang='fr_FR').write({'name': 'Produit'})
+
+        import_wizard = self.env['base_import.import'].create({
+            'res_model': 'import.base.translation',
+            'file': BinaryBytes(
+                f"{empty_all.id},,\n"
+                f"{empty_fr.id},Product,\n"
+                f"{empty_en.id},,Produit\n".encode()
+            ),
+            'file_type': 'text/csv',
+        })
+        results = import_wizard.execute_import(
+            ['.id', 'name', 'name@fr_FR'],
+            [],
+            {'quoting': '"', 'separator': ','},
+        )
+        self.assertFalse(results.get('messages'))
+        self.assertEqual(results['ids'], [empty_all.id, empty_fr.id, empty_en.id])
+
+        self.assertEqual(empty_all.name, False)
+        self.assertEqual(empty_all.with_context(lang='fr_FR').name, False)
+
+        self.assertEqual(empty_fr.name, 'Product')
+        self.assertEqual(empty_fr.with_context(lang='fr_FR').name, '')
+
+        self.assertEqual(empty_en.name, '')
+        self.assertEqual(empty_en.with_context(lang='fr_FR').name, 'Produit')
+
     def test_import_translation_latin(self):
         self.env['res.lang']._activate_lang('sr@latin')
         import_wizard = self.env['base_import.import'].create({
