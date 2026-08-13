@@ -1,11 +1,33 @@
 from base64 import b64decode
+from importlib.metadata import version
 from ssl import SSLError
 
 import requests
-from OpenSSL.crypto import FILETYPE_PEM, load_certificate, load_privatekey
+from OpenSSL.crypto import FILETYPE_PEM, load_certificate
 from OpenSSL.crypto import Error as CryptoError
 from urllib3.contrib.pyopenssl import inject_into_urllib3
 from urllib3.util.ssl_ import create_urllib3_context
+
+from odoo.tools import parse_version
+
+# pyOpenSSL >= 24.3.0 expects native cryptography objects
+if parse_version(version('pyOpenSSL')) >= parse_version('24.3.0'):
+    from cryptography import x509
+    from cryptography.hazmat.primitives.serialization import load_pem_private_key
+
+    def _load_cert(pem):
+        return x509.load_pem_x509_certificate(pem)
+
+    def _load_key(key):
+        return load_pem_private_key(key, password=None)
+else:
+    from OpenSSL.crypto import load_privatekey
+
+    def _load_cert(pem):
+        return load_certificate(FILETYPE_PEM, pem)
+
+    def _load_key(key):
+        return load_privatekey(FILETYPE_PEM, key)
 
 
 class CertificateAdapter(requests.adapters.HTTPAdapter):
@@ -29,16 +51,16 @@ class CertificateAdapter(requests.adapters.HTTPAdapter):
         if self.ca_certificates:
             for cert in self.ca_certificates:
                 try:
-                    x509 = load_certificate(FILETYPE_PEM, b64decode(cert.pem_certificate))
-                    context._ctx.get_cert_store().add_cert(x509)
+                    x509_cert = load_certificate(FILETYPE_PEM, b64decode(cert.pem_certificate))
+                    context._ctx.get_cert_store().add_cert(x509_cert)
                 except (TypeError, CryptoError) as e:
                     raise SSLError(f"CA certificate {cert.name} is invalid: {e.message}")
 
         def patched_load_cert_chain(certificate, keyfile=None, password=None):
             certificate = certificate.sudo()
             pem, key = map(b64decode, (certificate.pem_certificate, certificate.private_key_id.pem_key))
-            context._ctx.use_certificate(load_certificate(FILETYPE_PEM, pem))
-            context._ctx.use_privatekey(load_privatekey(FILETYPE_PEM, key))
+            context._ctx.use_certificate(_load_cert(pem))
+            context._ctx.use_privatekey(_load_key(key))
 
         context.load_cert_chain = patched_load_cert_chain
 
