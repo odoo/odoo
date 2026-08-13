@@ -62,6 +62,7 @@ export class Builder extends Component {
         initialTab: t.string().optional("blocks"),
         onlyCustomizeTab: t.boolean().optional(false),
         animateThemeTabSwitch: t.boolean().optional(false),
+        localOverlayContainerKey: t.string(),
     });
 
     // Ref on the local overlay container element, owned by the parent.
@@ -190,7 +191,7 @@ export class Builder extends Component {
                 },
             },
             localOverlayContainers: {
-                key: this.env.localOverlayContainerKey,
+                key: this.props.localOverlayContainerKey,
                 ref: this.overlayRef,
             },
             saveSnippet: (snippetEl, cleanForSaveProcessors, wrapWithSaveSnippetHandlers) =>
