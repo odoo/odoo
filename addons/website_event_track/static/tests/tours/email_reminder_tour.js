@@ -22,10 +22,6 @@ registry.category("web_tour.tours").add("email_reminder_tour", {
                 run: "click",
             }]);
         }
-        steps = steps.concat([{
-            content: "Check if the notification is displayed.",
-            trigger: "div.o_send_email_reminder_success",
-        }]);
         return steps;
     })()
 });

@@ -55,7 +55,7 @@ export class WebsiteEventTrackReminder extends Interaction {
             } else {
                 this.reminderOn = reminderOnValue;
                 if (this.reminderOn) {
-                    this.favoriteAddedConfirmation = _t("Track successfully added to your favorites.");
+                    this.favoriteAddedConfirmation = _t("Track added to favorites");
                     // When the `social_push_notifications` module is installed,
                     // we display a popup that allows the user to enable push
                     // notifications to receive reminders:
@@ -66,9 +66,7 @@ export class WebsiteEventTrackReminder extends Interaction {
                     this.bellSelectorEl.classList.replace("fa-bell-o", "fa-bell");
                     this.bellSelectorEl.setAttribute("title", _t("Favorite On"));
                 } else {
-                    this.notification.add(_t("Talk removed from your Favorites"), {
-                        type: "info",
-                    });
+
                     this.favoriteAddedConfirmation = "";
                     this.bellSelectorEl.classList.replace("fa-bell", "fa-bell-o");
                     this.bellSelectorEl.setAttribute("title", _t("Set Favorite"));
@@ -131,14 +129,7 @@ export class WebsiteEventTrackReminder extends Interaction {
             track_id: this.trackId,
             email_to: emailTo
         }).then(async (result) => {
-            if (result.success || result.error == "missing_template"){
-                const emailSentInfo = result.error != "missing_template" ? _t("Check your email to add the track to your agenda.") : "";
-                this.notification.add(
-                    [this.favoriteAddedConfirmation, emailSentInfo].join(" "),
-                    {type: "info", className: "o_send_email_reminder_success"}
-                );
-            }
-            else {
+            if (!(result.success || result.error == "missing_template")){
                 if (this.favoriteAddedConfirmation) {
                     this.notification.add(this.favoriteAddedConfirmation, {type: "info"});
                 }
