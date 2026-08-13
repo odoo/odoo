@@ -364,11 +364,6 @@ class AccountMove(models.Model):
         if status and self.filtered('pdp_can_send_response') and (action := self.action_pdp_open_response_wizard(status=status)):
             return action
 
-        for move in self:
-            if move.state == 'posted' and move.l10n_fr_pdp_sent_in_flow_ids:
-                # move was sent, must rectify
-                self.env['l10n.fr.pdp.reports.flow']._get_open_flow_and_create_if_needed(move)
-                move.with_context(l10n_fr_pdp_bypass_draft_check=True).button_draft()
         return res
 
     # -------------------------------------------------------------------------
@@ -627,15 +622,15 @@ class AccountMove(models.Model):
         # All other cases: International
         return 'b2bi'
 
-    # -------------------------------------------------------------------------
-    # CRUD Override
-    # -------------------------------------------------------------------------
-
-    def _check_draftable(self):
-        """Prevent resetting to draft when invoice already sent to PDP."""
-        if not self.env.context.get('l10n_fr_pdp_bypass_draft_check') and self.l10n_fr_pdp_sent_in_flow_ids:
-            raise UserError(_(
-                "You cannot reset an invoice to draft if it was already sent to PDP. "
-                "Create a credit note and issue a new invoice instead or cancel this invoice."
-            ))
-        return super()._check_draftable()
+    def button_draft(self):
+        for move in self:
+            if move.l10n_fr_pdp_sent_in_flow_ids and move.state == 'posted':
+                # When a flow is sent it compares the moves it sends vs the moves of the previous
+                # flow to avoid sending the data twice if it's strictly the same.
+                # Setting "l10n_fr_pdp_sent_in_flow_ids" to None will ensure the move is not already
+                # considered as sent in previous flow, and allow the current flow to be sent even if
+                # it's the only diffrence between the 2 flows.
+                move.l10n_fr_pdp_sent_in_flow_ids = False
+                # Ensure RE flow exist for current move period.
+                self.env['l10n.fr.pdp.reports.flow']._get_open_flow_and_create_if_needed(move)
+        return super().button_draft()
