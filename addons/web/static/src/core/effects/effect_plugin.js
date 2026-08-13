@@ -97,6 +97,7 @@ services.add(EffectPlugin);
  * -----------------------------------------------------------------------------
  */
 export const effectService = {
+    dependencies: ["overlay"],
     start() {
         return usePlugin(EffectPlugin);
     },
