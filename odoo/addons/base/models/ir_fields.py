@@ -123,6 +123,9 @@ class IrFieldsConverter(models.AbstractModel):
                 if not value:
                     converted[field] = False
                     continue
+                if model._fields[field].translate and isinstance(value, dict) and not any(value.values()):
+                    converted[field] = False
+                    continue
                 try:
                     converted[field], ws = converters[field](value)
                     for w in ws:
