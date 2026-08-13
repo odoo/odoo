@@ -125,7 +125,7 @@ class BtManager(Thread):
             dm.start_discovery()
             dm.run()
         except NotReady:
-            _logger.error("Bluetooth adapter not ready. Set `is_adapter_powered` to `True` or run 'echo power on | sudo bluetoothctl'")
+            _logger.warning("Bluetooth adapter not ready. Set `is_adapter_powered` to `True` or run 'echo power on | sudo bluetoothctl'")
 
 
 class BTInterface(Interface):
