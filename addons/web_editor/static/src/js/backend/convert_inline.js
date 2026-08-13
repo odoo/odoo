@@ -679,8 +679,10 @@ function enforceImagesResponsivity(editable) {
     // Remove the height attribute in card images so they can resize
     // responsively, but leave it for Outlook.
     for (const image of editable.querySelectorAll('img[width="100%"][height]')) {
-        image.before(_createMso(image.outerHTML));
-        image.classList.add('mso-hide');
+        if (!image.classList.contains("mso-hide")) {
+            image.before(_createMso(image.outerHTML));
+            image.classList.add('mso-hide');
+        }
         image.removeAttribute('height');
     }
 }
@@ -748,7 +750,7 @@ export async function toInline($editable, options) {
         clone.style.setProperty('width', width + 'px');
         clone.style.removeProperty('max-width');
         image.before(_createMso(clone.outerHTML));
-        _hideForOutlook(image);
+        image.classList.add("mso-hide");
     }
 
     classToStyle($editable, cssRules);
