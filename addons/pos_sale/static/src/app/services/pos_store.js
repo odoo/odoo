@@ -154,13 +154,6 @@ patch(PosStore.prototype, {
             if (["line_section", "line_subsection"].includes(line.display_type)) {
                 continue;
             }
-            newLineValues.attribute_value_ids = (line.product_custom_attribute_value_ids || []).map(
-                (value_line) => {
-                    if (value_line?.custom_product_template_attribute_value_id) {
-                        return ["link", value_line.custom_product_template_attribute_value_id];
-                    }
-                }
-            );
             const converted_line = converted_lines.find((l) => l.id === line.id);
             newLineValues.qty = this.getConvertedQuantityFromSaleOrderline(converted_line, line);
             if (!newLineValues.qty || newLineValues.qty === 0) {
