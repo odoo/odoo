@@ -39,7 +39,6 @@ export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
         "isGlobalFilterActive",
         "getTextFilterOptions",
         "getTextFilterOptionsFromRanges",
-        "getDefaultValueFromGlobalFilter",
     ]);
     constructor(config) {
         super(config);
@@ -121,11 +120,7 @@ export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
         if (value !== undefined) {
             return value;
         }
-        return this.getDefaultValueFromGlobalFilter(filter);
-    }
-
-    getDefaultValueFromGlobalFilter(filter) {
-        const preventDefaultValue = this.values[filter.id]?.preventDefaultValue ?? false;
+        const preventDefaultValue = this.values[filterId]?.preventDefaultValue;
         if (preventDefaultValue || filter.defaultValue === undefined) {
             return undefined;
         }
