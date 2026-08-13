@@ -42,7 +42,7 @@ import {
     queryFirst,
     test,
 } from "@odoo/hoot";
-import { press } from "@odoo/hoot-dom";
+import { press, waitUntil } from "@odoo/hoot-dom";
 import {
     Command,
     mockService,
@@ -254,6 +254,27 @@ test("can share user camera", async () => {
     await contains("video");
     await click("[title='Turn camera off']");
     await contains("video", { count: 0 });
+});
+
+test("switching camera device updates the video element stream", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const env = await start();
+    await openDiscuss(channelId);
+    await click("[title='Start Call']");
+    await click("[title='Turn camera on']");
+    await contains("video[type='camera']");
+    const videoEl = queryFirst("video[type='camera']");
+    const initialStream = videoEl.srcObject;
+    expect(initialStream).toBeInstanceOf(MediaStream);
+    env.services["mail.store"].settings.cameraInputDeviceId = "mockVideoDeviceId";
+    await waitUntil(() => videoEl.srcObject !== initialStream, {
+        message: "the video element should be given the stream of the new camera device",
+        timeout: 5000,
+    });
+    // same element, new stream: the camera never went off, only the stream was replaced
+    expect(queryFirst("video[type='camera']")).toBe(videoEl);
+    expect(videoEl.srcObject).toBeInstanceOf(MediaStream);
 });
 
 test("switch front/back camera in mobile", async () => {
