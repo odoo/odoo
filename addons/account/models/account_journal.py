@@ -585,8 +585,8 @@ class AccountJournal(models.Model):
             if pending_moves:
                 raise ValidationError(_("You can not archive a journal containing draft journal entries.\n\n"
                                         "To proceed:\n"
-                                        "1/ click on the top-right button 'Journal Entries' from this journal form\n"
-                                        "2/ then filter on 'Draft' entries\n"
+                                        "1/ go to Accounting > Accounting > Journal Entries\n"
+                                        "2/ filter on this journal and on 'Unposted' entries\n"
                                         "3/ select them all and post or delete them through the action menu"))
 
     @api.depends('type')
