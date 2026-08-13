@@ -4,6 +4,7 @@ import * as _fields from "./_framework/mock_server/mock_fields";
 import * as _models from "./_framework/mock_server/mock_model";
 import { IrAccess } from "./_framework/mock_server/mock_models/ir_access";
 import { IrAttachment } from "./_framework/mock_server/mock_models/ir_attachment";
+import { IrEmbeddedActions } from "./_framework/mock_server/mock_models/ir_embedded_actions";
 import { IrHttp } from "./_framework/mock_server/mock_models/ir_http";
 import { IrModel } from "./_framework/mock_server/mock_models/ir_model";
 import { IrModelFields } from "./_framework/mock_server/mock_models/ir_model_fields";
@@ -203,6 +204,7 @@ export const webModels = {
     IrHttp,
     IrAccess,
     IrAttachment,
+    IrEmbeddedActions,
     IrModel,
     IrModelFields,
     IrModuleCategory,

@@ -68,6 +68,8 @@ import { M2xAvatarUser } from "./mock_server/mock_models/m2x_avatar_user";
 import { MailActivity } from "./mock_server/mock_models/mail_activity";
 import { MailActivitySchedule } from "./mock_server/mock_models/mail_activity_schedule";
 import { MailActivityType } from "./mock_server/mock_models/mail_activity_type";
+import { MailAlias } from "./mock_server/mock_models/mail_alias";
+import { MailAliasDomain } from "./mock_server/mock_models/mail_alias_domain";
 import { MailCallArtifact } from "./mock_server/mock_models/mail_call_artifact";
 import { MailCannedResponse } from "./mock_server/mock_models/mail_canned_response";
 import { MailComposeMessage } from "./mock_server/mock_models/mail_composer_message";
@@ -150,6 +152,8 @@ export const mailModels = {
     MailActivity,
     MailActivitySchedule,
     MailActivityType,
+    MailAlias,
+    MailAliasDomain,
     MailComposeMessage,
     MailCannedResponse,
     MailFollowers,
