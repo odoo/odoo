@@ -296,8 +296,8 @@ class Many2one(_Relational):
             raise ValueError('Many2one %s from Model to TransientModel is forbidden' % self)
         return super().update_db(model, columns)
 
-    def update_db_column(self, model, column):
-        super().update_db_column(model, column)
+    def update_db_column(self, model, column, init_value=None):
+        super().update_db_column(model, column, init_value)
         model.pool.post_init(self.update_db_foreign_key, model, column)
 
     def update_db_foreign_key(self, model, column):
