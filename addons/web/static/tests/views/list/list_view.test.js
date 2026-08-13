@@ -11129,6 +11129,128 @@ test(`list with handle widget`, async () => {
     });
 });
 
+test.tags("desktop");
+test(`list with handle widget: drag and drop multiple selected records`, async () => {
+    class MyFoo extends models.Model {
+        int_field = fields.Integer();
+        name = fields.Char();
+
+        _records = [
+            { id: 1, int_field: 0, name: "alpha" },
+            { id: 2, int_field: 1, name: "bravo" },
+            { id: 3, int_field: 2, name: "charlie" },
+            { id: 4, int_field: 3, name: "delta" },
+        ];
+    }
+    defineModels([MyFoo]);
+
+    const resequenceDef = Promise.withResolvers();
+    onRpc("web_resequence", ({ args, kwargs }) => {
+        expect.step(["web_resequence", args[0], kwargs.field_name, kwargs.offset]);
+        return resequenceDef.promise;
+    });
+
+    await mountView({
+        resModel: "my.foo",
+        type: "list",
+        arch: `
+            <list>
+                <field name="int_field" widget="handle"/>
+                <field name="name"/>
+            </list>
+        `,
+    });
+    expect(queryAllTexts(`.o_data_row td[name='name']`)).toEqual([
+        "alpha",
+        "bravo",
+        "charlie",
+        "delta",
+    ]);
+
+    // select records "bravo" and "delta"
+    await contains(`.o_data_row:eq(1) .o_list_record_selector input`).click();
+    await contains(`.o_data_row:eq(3) .o_list_record_selector input`).click();
+    expect(`.o_list_record_selector input:checked`).toHaveCount(2);
+
+    // drag "delta" and drop it before "alpha": "bravo" and "delta" move together, in that order
+    const { drop, moveTo } = await contains(`.o_data_row:eq(3) .o_handle_cell`).drag();
+    await moveTo(`.o_data_row:eq(0)`);
+    expect(`.o_data_row.o_dragged .o_multi_drag_placeholder`).toHaveText("Move 2 records");
+    expect(`.o_data_row.o_multi_drag_hidden`).toHaveCount(1);
+    // only the handle and the placeholder show on the dragged row
+    expect(`.o_data_row.o_dragged td[name='name']`).not.toBeVisible();
+    await drop(document.body);
+
+    // the rows reappear at their new position before the resequence rpc resolves
+    expect(`.o_multi_drag_placeholder`).toHaveCount(0);
+    expect(`.o_data_row.o_multi_drag_hidden`).toHaveCount(0);
+    expect(queryAllTexts(`.o_data_row td[name='name']:visible`)).toEqual([
+        "bravo",
+        "delta",
+        "alpha",
+        "charlie",
+    ]);
+    resequenceDef.resolve();
+    await animationFrame();
+
+    expect.verifySteps([["web_resequence", [2, 4, 1, 3], "int_field", 0]]);
+    expect(queryAllTexts(`.o_data_row td[name='name']`)).toEqual([
+        "bravo",
+        "delta",
+        "alpha",
+        "charlie",
+    ]);
+    expect(`.o_list_record_selector input:checked`).toHaveCount(2, {
+        message: "the moved records should still be selected after the move",
+    });
+});
+
+test.tags("desktop");
+test(`list with handle widget: drag and drop a single selected record is unaffected`, async () => {
+    class MyFoo extends models.Model {
+        int_field = fields.Integer();
+        name = fields.Char();
+
+        _records = [
+            { id: 1, int_field: 0, name: "alpha" },
+            { id: 2, int_field: 1, name: "bravo" },
+            { id: 3, int_field: 2, name: "charlie" },
+            { id: 4, int_field: 3, name: "delta" },
+        ];
+    }
+    defineModels([MyFoo]);
+
+    onRpc("web_resequence", ({ args, kwargs }) => {
+        expect.step(["web_resequence", args[0], kwargs.field_name, kwargs.offset]);
+    });
+
+    await mountView({
+        resModel: "my.foo",
+        type: "list",
+        arch: `
+            <list>
+                <field name="int_field" widget="handle"/>
+                <field name="name"/>
+            </list>
+        `,
+    });
+
+    // a single selected record behaves like a normal drag
+    await contains(`.o_data_row:eq(3) .o_list_record_selector input`).click();
+    const { drop, moveTo } = await contains(`.o_data_row:eq(3) .o_handle_cell`).drag();
+    await moveTo(`.o_data_row:eq(0)`);
+    expect(`.o_multi_drag_placeholder`).toHaveCount(0);
+    await drop(document.body);
+
+    expect.verifySteps([["web_resequence", [4, 1, 2, 3], "int_field", 0]]);
+    expect(queryAllTexts(`.o_data_row td[name='name']`)).toEqual([
+        "delta",
+        "alpha",
+        "bravo",
+        "charlie",
+    ]);
+});
+
 test(`result of consecutive resequences is correctly sorted`, async () => {
     // we want the data to be minimal to have a minimal test
     class MyFoo extends models.Model {
@@ -11455,6 +11577,161 @@ test(`editable grouped list with handle widget`, async () => {
     await contains(`tbody .o_data_row:eq(0) div[name='amount']`).click();
     expect(`tbody .o_data_row:eq(0) td:eq(-2) input`).toHaveValue("300", {
         message: "the edited record should be the good one",
+    });
+});
+
+test.tags("desktop");
+test(`grouped list with handle widget: drag and drop multiple selected records across groups`, async () => {
+    class MyFoo extends models.Model {
+        int_field = fields.Integer();
+        grp = fields.Integer();
+        name = fields.Char();
+
+        _records = [
+            { id: 1, int_field: 0, grp: 1, name: "alpha" },
+            { id: 2, int_field: 1, grp: 1, name: "bravo" },
+            { id: 3, int_field: 2, grp: 1, name: "echo" },
+            { id: 4, int_field: 0, grp: 2, name: "charlie" },
+            { id: 5, int_field: 1, grp: 2, name: "delta" },
+        ];
+    }
+    defineModels([MyFoo]);
+
+    onRpc("web_resequence", ({ args, kwargs }) => {
+        expect.step(["web_resequence", args[0], kwargs.field_name, kwargs.offset]);
+    });
+    onRpc("web_save", ({ args }) => {
+        expect.step(["web_save", args[0]]);
+    });
+
+    await mountView({
+        resModel: "my.foo",
+        type: "list",
+        arch: `
+            <list>
+                <field name="int_field" widget="handle"/>
+                <field name="name"/>
+            </list>
+        `,
+        groupBy: ["grp"],
+    });
+    expect(`.o_group_header`).toHaveCount(2);
+    await contains(`.o_group_header:eq(0)`).click();
+    await contains(`.o_group_header:eq(1)`).click();
+
+    // select "alpha" and "bravo", in the group that also contains "echo" (which stays behind)
+    await contains(`.o_data_row:contains(alpha) .o_list_record_selector input`).click();
+    await contains(`.o_data_row:contains(bravo) .o_list_record_selector input`).click();
+
+    // drag "bravo" into "charlie"'s group: "alpha" and "bravo" move there together, in that order,
+    // and both get their group-by field updated in a single web_save
+    const { drop, moveTo } = await contains(`.o_data_row:contains(bravo) .o_handle_cell`).drag();
+    await moveTo(`.o_data_row:contains(charlie)`);
+    await drop(document.body);
+
+    expect.verifySteps([
+        ["web_save", [1, 2]],
+        ["web_resequence", [1, 2, 4, 5], "int_field", 0],
+    ]);
+    expect(queryAllTexts(`.o_data_row td[name='name']`)).toEqual([
+        "alpha",
+        "bravo",
+        "charlie",
+        "delta",
+        "echo",
+    ]);
+    expect(`.o_list_record_selector input:checked`).toHaveCount(2, {
+        message: "the moved records should still be selected after the move",
+    });
+});
+
+test.tags("desktop");
+test(`grouped list with handle widget: drag and drop selected records lumped across different groups`, async () => {
+    class MyFoo extends models.Model {
+        int_field = fields.Integer();
+        grp = fields.Integer();
+        name = fields.Char();
+
+        _records = [
+            { id: 1, int_field: 0, grp: 1, name: "alpha" },
+            { id: 2, int_field: 1, grp: 1, name: "bravo" },
+            { id: 3, int_field: 2, grp: 1, name: "echo" },
+            { id: 4, int_field: 0, grp: 2, name: "charlie" },
+            { id: 5, int_field: 1, grp: 2, name: "delta" },
+        ];
+    }
+    defineModels([MyFoo]);
+
+    const saveDef = Promise.withResolvers();
+    onRpc("web_resequence", ({ args, kwargs }) => {
+        expect.step(["web_resequence", args[0], kwargs.field_name, kwargs.offset]);
+    });
+    onRpc("web_save", async ({ args }) => {
+        expect.step(["web_save", args[0]]);
+        await saveDef.promise;
+    });
+
+    await mountView({
+        resModel: "my.foo",
+        type: "list",
+        arch: `
+            <list multi_edit="1">
+                <field name="int_field" widget="handle"/>
+                <field name="name"/>
+            </list>
+        `,
+        groupBy: ["grp"],
+    });
+    expect(`.o_group_header`).toHaveCount(2);
+    await contains(`.o_group_header:eq(0)`).click();
+    await contains(`.o_group_header:eq(1)`).click();
+    // groups are displayed with the "grp=2" group ("charlie", "delta") on top
+    expect(queryAllTexts(`.o_data_row td[name='name']`)).toEqual([
+        "charlie",
+        "delta",
+        "alpha",
+        "bravo",
+        "echo",
+    ]);
+
+    // select "delta" and "bravo", which belong to two different groups
+    await contains(`.o_data_row:contains(delta) .o_list_record_selector input`).click();
+    await contains(`.o_data_row:contains(bravo) .o_list_record_selector input`).click();
+
+    // drop "bravo" at the top of its own group: "delta" comes along and changes group,
+    // while "bravo" stays in its group and needs no update
+    const { drop, moveTo } = await contains(`.o_data_row:contains(bravo) .o_handle_cell`).drag();
+    await moveTo(`.o_data_row:contains(alpha)`);
+    await drop(document.body);
+
+    // saving a single record must not ask to apply the change on the whole selection
+    expect(`.modal`).toHaveCount(0);
+    // both reappear at their new position at once, before the web_save resolves
+    expect(`.o_multi_drag_placeholder`).toHaveCount(0);
+    expect(`.o_data_row.o_multi_drag_hidden`).toHaveCount(0);
+    expect(queryAllTexts(`.o_data_row td[name='name']:visible`)).toEqual([
+        "charlie",
+        "delta",
+        "bravo",
+        "alpha",
+        "echo",
+    ]);
+    saveDef.resolve();
+    await animationFrame();
+
+    expect.verifySteps([
+        ["web_save", [5]],
+        ["web_resequence", [5, 2, 1, 3], "int_field", 0],
+    ]);
+    expect(queryAllTexts(`.o_data_row td[name='name']`)).toEqual([
+        "charlie",
+        "delta",
+        "bravo",
+        "alpha",
+        "echo",
+    ]);
+    expect(`.o_list_record_selector input:checked`).toHaveCount(2, {
+        message: "the moved records should still be selected after the move",
     });
 });
 

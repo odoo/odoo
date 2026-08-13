@@ -575,6 +575,13 @@
 
     .o_data_row.o_dragged {
         display: flex;
+        // no previous row to close the top edge
+        border-top-width: 1px;
+
+        // no border collapsing: cells would double the row's bottom border
+        > td {
+            border-bottom-width: 0;
+        }
     }
 
     .o_optional_columns .o_invalid_optional_columns_button {

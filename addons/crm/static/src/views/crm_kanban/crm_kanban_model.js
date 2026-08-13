@@ -15,18 +15,15 @@ export class CrmKanbanDynamicGroupList extends RelationalModel.DynamicGroupList 
      * If the kanban view is grouped by stage_id check if the lead is won and display
      * a rainbowman message if that's the case.
      */
-    async moveRecord(dataRecordId, dataGroupId, refId, targetGroupId) {
+    async moveRecord(recordIds, refId, targetGroupId) {
+        // the leads that change stage, i.e. the ones not already in the target group
+        const movedLeads = this.getChangingGroupRecords(recordIds, targetGroupId);
+
         await super.moveRecord(...arguments);
-        const sourceGroup = this.groups.find((g) => g.id === dataGroupId);
-        const targetGroup = this.groups.find((g) => g.id === targetGroupId);
-        if (
-            dataGroupId !== targetGroupId &&
-            sourceGroup &&
-            targetGroup &&
-            sourceGroup.groupByField.name === "stage_id"
-        ) {
-            const record = targetGroup.list.records.find((r) => r.id === dataRecordId);
-            await checkRainbowmanMessage(this.model.orm, this.model.effect, record.resId);
+
+        if (movedLeads.length && this.groupByField.name === "stage_id") {
+            // a single message, even when several leads were moved at once
+            await checkRainbowmanMessage(this.model.orm, this.model.effect, movedLeads[0].resId);
         }
     }
 }

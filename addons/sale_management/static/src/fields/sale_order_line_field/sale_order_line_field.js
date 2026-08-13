@@ -349,14 +349,14 @@ patch(SaleOrderLineListRenderer.prototype, {
      *   its quantity is reset to `1`.
      * - Non-product lines (`display_type` set) are ignored.
      */
-    async sortDrop(dataRowId, dataGroupId, { element, previous }) {
+    async sortDrop(dataRowId, { element, previous }) {
         const record = this.props.list.records.find(r => r.id === dataRowId);
         // Prevent the record from being abandoned when leaveEditMode or sortDrop is called
         record.dirty = true;
         await this.props.list.leaveEditMode();
         const recordMap = this._getRecordsToRecompute(record, previous ? previous.dataset.id : null);
 
-        await super.sortDrop(dataRowId, dataGroupId, { element, previous });
+        await super.sortDrop(dataRowId, { element, previous });
 
         await this._handleQuantityAdjustment(recordMap);
     },

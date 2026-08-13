@@ -429,8 +429,8 @@ export class StaticList extends DataPoint {
         });
     }
 
-    moveRecord(dataRecordId, _dataGroupId, refId, _targetGroupId) {
-        return this.resequence(dataRecordId, refId);
+    moveRecord(recordIds, refId, _targetGroupId) {
+        return this.resequence(recordIds, refId);
     }
 
     sortBy(fieldName) {
@@ -448,7 +448,11 @@ export class StaticList extends DataPoint {
         });
     }
 
-    async resequence(movedId, targetId) {
+    /**
+     * @param {string[]} movedIds x2many lists have no selection, so records are always
+     *  moved one at a time
+     */
+    async resequence([movedId], targetId) {
         return this.model.mutex.exec(() => this._resequence(movedId, targetId));
     }
 

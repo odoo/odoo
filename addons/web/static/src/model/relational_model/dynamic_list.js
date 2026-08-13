@@ -3,10 +3,11 @@ import { _t } from "@web/core/l10n/translation";
 import { ConnectionLostError } from "@web/core/network/rpc";
 import { x2ManyCommands } from "@web/core/orm_plugin";
 import { unique } from "@web/core/utils/arrays";
+import { shallowEqual } from "@web/core/utils/objects";
 import { DataPoint } from "./datapoint";
 import { Operation } from "./operation";
 import { Record as RelationalRecord } from "./record";
-import { getFieldsSpec, getScheduleORMExtras, resequence } from "./utils";
+import { getBasicEvalContext, getFieldsSpec, getScheduleORMExtras, resequence } from "./utils";
 
 const DEFAULT_HANDLE_FIELD = "sequence";
 
@@ -448,7 +449,65 @@ export class DynamicList extends DataPoint {
         return true;
     }
 
-    async _resequence(originalList, resModel, movedId, targetId) {
+    /**
+     * Applies the same `changes` on several records of the list, and saves them with
+     * a single rpc, which bypasses the onchanges, the validity checks and the "multi
+     * edit" flow: this is only meant for programmatic changes on records that aren't
+     * being edited.
+     *
+     * @param {RelationalRecord[]} records
+     * @param {Record<string, unknown>} changes
+     * @returns {Promise<boolean>} whether the records have been saved, `false` when a
+     *  `onWillSaveRecord` hook vetoed the save
+     */
+    async _saveRecords(records, changes) {
+        return this.model.mutex.exec(async () => {
+            for (const record of records) {
+                if ((await this.model.hooks.onWillSaveRecord(record, changes)) === false) {
+                    return false;
+                }
+            }
+            const [{ activeFields, fields, config }] = records;
+            const kwargs = {
+                context: this.context,
+                specification: getFieldsSpec(activeFields, fields, getBasicEvalContext(config)),
+            };
+            const undoFns = [];
+            const valsList = [];
+            for (const record of records) {
+                // a property is written as part of the whole properties field, so its
+                // new value depends on the other properties of the record itself
+                const recordChanges = { ...changes };
+                record._preprocessPropertiesChanges(recordChanges);
+                undoFns.push(record._applyChanges(recordChanges));
+                valsList.push(record._getChanges(recordChanges));
+            }
+            const resIds = records.map((record) => record.resId);
+            const [vals] = valsList;
+            let values;
+            try {
+                values = valsList.every((v) => shallowEqual(v, vals))
+                    ? await this.model.orm.webSave(this.resModel, resIds, vals, kwargs)
+                    : await this.model.orm.webSaveMulti(this.resModel, resIds, valsList, kwargs);
+            } catch (e) {
+                if (e instanceof ConnectionLostError) {
+                    // keep the changes and replay them when the connection is back
+                    records.forEach((record) => record._offlineSave());
+                    return true;
+                }
+                undoFns.forEach((undo) => undo());
+                throw e;
+            }
+            const valuesById = Object.fromEntries(values.map((vals) => [vals.id, vals]));
+            for (const record of records) {
+                record._setData(valuesById[record.resId]);
+                await this.model.hooks.onRecordSaved(record, changes);
+            }
+            return true;
+        });
+    }
+
+    async _resequence(originalList, resModel, movedIds, targetId) {
         if (this.resModel === resModel && !this.canResequence()) {
             return;
         }
@@ -459,7 +518,7 @@ export class DynamicList extends DataPoint {
         const resequencedRecords = await resequence({
             records: originalList,
             resModel,
-            movedId,
+            movedIds,
             targetId,
             fieldName: handleField,
             asc: order?.asc,
