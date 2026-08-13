@@ -39,6 +39,7 @@ services.add(CurrencyPlugin);
  * -----------------------------------------------------------------------------
  */
 registry.category("services").add("currency", {
+    dependencies: ["orm"],
     start() {
         return usePlugin(CurrencyPlugin);
     },
