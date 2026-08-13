@@ -2,7 +2,6 @@ import {
     Component,
     onMounted,
     onWillUnmount,
-    onWillUpdateProps,
     signal,
     t,
     untrack,
@@ -21,8 +20,6 @@ function useResizable({
 }) {
     const resizeableProps = useProps(resizablePanelProps);
 
-    let minWidth = getMinWidth(resizeableProps);
-    let resizeSide = getResizeSide(resizeableProps);
     let isChangingSize = false;
 
     useListener(document, "mouseup", () => onMouseUp());
@@ -53,11 +50,6 @@ function useResizable({
         }
     });
 
-    onWillUpdateProps((nextProps) => {
-        minWidth = getMinWidth(nextProps);
-        resizeSide = getResizeSide(nextProps);
-    });
-
     onWillUnmount(() => {
         handleRef()?.removeEventListener("mousedown", onMouseDown);
     });
@@ -76,6 +68,7 @@ function useResizable({
         if (!isChangingSize || !containerRef()) {
             return;
         }
+        const resizeSide = getResizeSide(resizeableProps);
         const direction =
             (docDirection === "ltr" && resizeSide === "end") ||
             (docDirection === "rtl" && resizeSide === "start")
@@ -90,7 +83,7 @@ function useResizable({
     function computeFinalWidth(targetContainerWidth) {
         const handleEl = handleRef();
         const handlerSpacing = handleEl ? handleEl.offsetWidth / 2 : 10;
-        const w = Math.max(minWidth, targetContainerWidth + handlerSpacing);
+        const w = Math.max(getMinWidth(resizeableProps), targetContainerWidth + handlerSpacing);
         const limit = getLimitWidth();
         return Math.min(w, limit - handlerSpacing);
     }
