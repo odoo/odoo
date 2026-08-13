@@ -13,8 +13,7 @@ from .common import TestL10nFrPdpCommon
 class TestL10nFrPdpPartner(TestL10nFrPdpCommon, MailCase):
 
     def test_pdp_identifier_derivation(self):
-        # `routing_identifier` is no longer auto-computed from the registry: the PDP routing endpoint
-        # is set explicitly, while the SIREN is derived from the FR SIRET/SIREN identifier.
+        # SIREN is derived from the FR SIRET/SIREN identifier and `routing_identifier` computed from SIREN
         partner = self.env["res.partner"].create({
             'name': 'SUPER FRENCH PARTNER',
             'street': 'Rue Fabricy, 16',
@@ -26,13 +25,9 @@ class TestL10nFrPdpPartner(TestL10nFrPdpCommon, MailCase):
             'additional_identifiers': {'FR_SIRET': '96851575905808'},
             'invoice_edi_format': 'ubl_21_fr',
         })
-        # SIREN derived from the SIRET; no routing endpoint is auto-filled.
+        # SIREN derived from the SIRET; routing endpoint is auto-filled.
         self.assertEqual(partner._l10n_fr_pdp_get_siren(), '968515759')
-        self.assertFalse(partner.routing_identifier)
-
-        # Setting the endpoint explicitly routes the partner via PDP (EAS 0225).
-        partner.routing_identifier = '0225:968515759_96851575905808'
-        self.assertTrue(partner.l10n_fr_is_pdp)
+        self.assertEqual(partner.routing_identifier, '0225:968515759')
 
         # A partner identified by SIREN only (9 digits) derives the same SIREN.
         partner_siren = self.env["res.partner"].create({
@@ -43,6 +38,18 @@ class TestL10nFrPdpPartner(TestL10nFrPdpCommon, MailCase):
             'invoice_edi_format': 'ubl_21_fr',
         })
         self.assertEqual(partner_siren._l10n_fr_pdp_get_siren(), '968515759')
+        self.assertEqual(partner_siren.routing_identifier, '0225:968515759')
+
+        partner_pdp = self.env["res.partner"].create({
+            'name': 'SUPER FRENCH PARTNER 3',
+            'country_id': self.env.ref('base.fr').id,
+            'vat': 'FR23334175221',
+            'invoice_edi_format': 'ubl_21_fr',
+        })
+        self.assertFalse(partner_pdp.l10n_fr_is_pdp)
+        # Setting the endpoint explicitly routes the partner via PDP (EAS 0225).
+        partner_pdp.routing_identifier = '0225:968515759_96851575905808'
+        self.assertTrue(partner_pdp.l10n_fr_is_pdp)
 
     def test_pdp_edi_formats(self):
         partner = self.partner_a
