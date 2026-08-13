@@ -35,8 +35,10 @@
 <t t-name="website.MenuRow">
     <li class="mb-1" t-att-data-menu-id="this.props.menu.fields['id']" t-att-data-is-mega-menu="this.props.menu.fields['is_mega_menu'] ? 'true' : undefined">
         <div class="input-group mb-1">
-            <span class="input-group-text bg-view oi align-content-center p-2 border-end-0 text-muted"
-                data-icon="drag_indicator" role="img" aria-label="Dropdown menu" title="Dropdown menu"/>
+            <button type="button" class="btn o_drag_handle input-group-text bg-view d-flex align-items-stretch p-0 border border-end-0 text-muted transition-none"
+                aria-label="Drag or use the arrow keys to reorder" title="Drag or use the arrow keys to reorder">
+                <i class="oi d-flex align-items-center p-2" data-icon="drag_indicator" aria-hidden="true"/>
+            </button>
             <span class="form-control d-flex align-items-center bg-view ms-0 border-start-0 border-end-0">
                 <span t-on-dblclick="this.edit" class="js_menu_label o_text_overflow flex-grow-1">
                     <t t-out="this.props.menu.fields['name']"/>
@@ -81,8 +83,13 @@
                     <i class="oi me-1" data-icon="add_circle"/> Add Mega Menu Item
                 </a>
             </div>
-            <small class="text-muted">
-                <i class="oi me-1" data-icon="info"/> Drag to the right to get a submenu
+            <small class="text-muted d-flex flex-column">
+                <div>
+                    <i class="oi me-1" data-icon="info"/> Drag to the right to get a submenu
+                </div>
+                <div>
+                    <i class="oi me-1" data-icon="info"/> Reorder items with the arrow keys
+                </div>
             </small>
         </div>
     </WebsiteDialog>

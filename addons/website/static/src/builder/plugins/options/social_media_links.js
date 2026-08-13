@@ -77,6 +77,10 @@ export class SocialMediaLinks extends BaseOptionComponent {
                 // hack to trigger the rebuild
                 this.reorderTriggered.trigger++;
             },
+            keyboardReorder: true,
+            getFocusToken: ({ element }) => element.dataset.id,
+            getFocusHandle: (id) =>
+                this.rootRef()?.querySelector(`tr[data-id="${id}"] .o_drag_handle`),
         });
     }
 

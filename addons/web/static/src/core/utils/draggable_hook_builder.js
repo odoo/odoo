@@ -74,6 +74,10 @@ function pointerInsideElementOffset(pointer, elementRect) {
  * @property {(params: DraggableBuildHandlerParams) => any} onDragEnd
  * @property {(params: DraggableBuildHandlerParams) => any} onDrop
  * @property {(params: DraggableBuildHandlerParams) => any} onWillStartDrag
+ * @property {(params: DraggableBuildHandlerParams & {
+ *  axis: "x" | "y", direction: -1 | 1 }) => boolean} [onKeyboardStep] moves the
+ *  placeholder by one step in the given direction and returns whether it moved.
+ *  Implementing it makes the arrow keys reorder the list from a focused handle.
  *
  * @typedef DraggableHookContext
  * @property {import("@web/core/utils/hooks").Ref} ref the container ref.
@@ -143,6 +147,7 @@ const DEFAULT_ACCEPTED_PARAMS = {
     elements: [String],
     handle: [String, Function],
     ignore: [String, Function],
+    keyboardReorder: [Boolean, Function],
     cursor: [String],
     edgeScrolling: [Object, Function],
     delay: [Number],
@@ -155,6 +160,7 @@ const DEFAULT_DEFAULT_PARAMS = {
     allowDisconnected: false,
     elements: `.${DRAGGABLE_CLASS}`,
     enable: true,
+    keyboardReorder: false,
     preventDrag: () => false,
     edgeScrolling: {
         speed: 10,
@@ -749,6 +755,111 @@ export function makeDraggableHook(hookParams) {
                 }
             };
 
+            const ARROW_REORDER_KEYS = {
+                ArrowUp: { axis: "y", direction: -1 },
+                ArrowDown: { axis: "y", direction: 1 },
+                ArrowLeft: { axis: "x", direction: -1 },
+                ArrowRight: { axis: "x", direction: 1 },
+            };
+
+            /**
+             * Watches the container for the re-render that applies a keyboard
+             * reorder, to focus the moved handle back.
+             * @type {MutationObserver | null}
+             */
+            let focusObserver = null;
+
+            const stopWatchingFocus = () => {
+                focusObserver?.disconnect();
+                focusObserver = null;
+            };
+
+            /**
+             * Handle (= ref) "keydown" event handler. Arrow keys on a focused drag
+             * handle reorder the element by one step, going through the same
+             * lifecycle as a pointer drag (onWillStartDrag → onDrop → onDragEnd).
+             * Only bound when the hook implements `onKeyboardStep`, and only active
+             * when the `keyboardReorder` param opts in: the arrow keys otherwise
+             * keep their meaning inside the sortable elements.
+             * @param {KeyboardEvent} ev
+             */
+            const onKeyDownReorder = (ev) => {
+                if (!ctx.keyboardReorder || !ctx.enable()) {
+                    return;
+                }
+                const arrow = ARROW_REORDER_KEYS[ev.key];
+                if (!arrow || ev.ctrlKey || ev.altKey || ev.shiftKey || ev.metaKey) {
+                    return;
+                }
+                const handle = ev.target.closest(ctx.fullSelector);
+                if (!handle || (ctx.ignoreSelector && ev.target.closest(ctx.ignoreSelector))) {
+                    return;
+                }
+                const element = handle.closest(ctx.elementSelector);
+                if (!element || ctx.preventDrag(handle)) {
+                    return;
+                }
+                safePrevent(ev, { stop: true });
+                keyboardReorderStep(element, arrow);
+            };
+
+            /**
+             * Performs a synthetic single-step drag triggered by the keyboard: it
+             * creates the placeholder (onWillStartDrag), lets the hook reposition it
+             * by one step (onKeyboardStep), then drops it (onDrop/onDragEnd) without
+             * ever entering a pointer drag sequence (`state.dragging` stays false, so
+             * none of the follow-cursor visuals run).
+             * @param {HTMLElement} element
+             * @param {{ axis: "x" | "y", direction: -1 | 1 }} arrow
+             */
+            const keyboardReorderStep = (element, arrow) => {
+                // Clears any leftover context, as `onPointerDown` does before a drag.
+                dragEnd(null);
+                ctx.current.element = element;
+                ctx.current.container = ctx.ref.el;
+                cleanup.add(() => (ctx.current = {}));
+
+                callBuildHandler("onWillStartDrag");
+                const moved = hookParams.onKeyboardStep({ ctx, ...helpers, ...arrow });
+                if (moved) {
+                    callBuildHandler("onDrop", { target: element });
+                    callBuildHandler("onDragEnd");
+                }
+                // Undoes everything the synthetic drag added to the DOM: the
+                // reorder is only applied by the `onDrop` handler.
+                cleanup.cleanup();
+                if (moved) {
+                    // The re-render moves or replaces the handle, so it is
+                    // identified by a token that survives it.
+                    focusHandleWhenRendered(
+                        params.getFocusToken ? params.getFocusToken({ element }) : element
+                    );
+                }
+            };
+
+            /**
+             * Focuses the moved element's handle back, so that several keyboard
+             * moves in a row need no repositioning. The reorder is applied by the
+             * `onDrop` handler, which usually re-renders asynchronously and thereby
+             * moves or replaces the handle: the container is thus observed until the
+             * handle can be resolved from `token` again.
+             * @param {any} token identifies the handle, @see params.getFocusToken
+             */
+            const focusHandleWhenRendered = (token) => {
+                stopWatchingFocus();
+                const focusHandle = () => {
+                    const handleEl = params.getFocusHandle
+                        ? params.getFocusHandle(token)
+                        : /** @type {HTMLElement} */ (token);
+                    if (handleEl?.isConnected) {
+                        stopWatchingFocus();
+                        handleEl.focus();
+                    }
+                };
+                focusObserver = new MutationObserver(focusHandle);
+                focusObserver.observe(ctx.ref.el, { childList: true, subtree: true });
+            };
+
             /**
              * Global (= ref) "pointercancel" event handler.
              */
@@ -1094,6 +1205,7 @@ export function makeDraggableHook(hookParams) {
 
                     // Enable getter
                     ctx.enable = actualParams.enable;
+                    ctx.keyboardReorder = actualParams.keyboardReorder;
 
                     // Dragging constraint
                     if (actualParams.preventDrag) {
@@ -1154,6 +1266,9 @@ export function makeDraggableHook(hookParams) {
                 const event = useMouseEvents ? "mousedown" : "pointerdown";
                 addListener(el, event, onPointerDown, { noAddedStyle: true });
                 addListener(el, "click", onClick);
+                if (typeof hookParams.onKeyboardStep === "function") {
+                    addListener(el, "keydown", onKeyDownReorder);
+                }
                 if (hasTouch()) {
                     addListener(el, "contextmenu", safePrevent);
                     // Adds a non-passive listener on touchstart: this allows
@@ -1215,7 +1330,10 @@ export function makeDraggableHook(hookParams) {
                 );
             }
 
-            setupHooks.teardown(() => dragEnd(null));
+            setupHooks.teardown(() => {
+                dragEnd(null);
+                stopWatchingFocus();
+            });
 
             return state;
         },

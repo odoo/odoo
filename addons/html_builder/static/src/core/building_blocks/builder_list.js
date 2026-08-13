@@ -2,7 +2,7 @@ import { BuilderComponent } from "@html_builder/core/building_blocks/builder_com
 import { BuilderListDialog } from "@html_builder/core/building_blocks/builder_list_dialog";
 import { useBuilderComponent, useInputBuilderComponent } from "@html_builder/core/utils";
 import { isSmallInteger } from "@html_builder/utils/utils";
-import { Component, computed, onPatched, props, proxy, signal, t, xml } from "@odoo/owl";
+import { Component, computed, onMounted, onPatched, props, proxy, signal, t, xml } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { SelectMenu } from "@web/core/select_menu/select_menu";
 import { useSortable } from "@web/core/utils/sortable_owl";
@@ -17,10 +17,11 @@ import { localeCompare } from "@web/core/l10n/utils";
  *  container's ref signal.
  */
 export function useAutoFocusNewItem(ref) {
+    const getRowEls = () => ref()?.querySelectorAll(".o_row_draggable") || [];
     let nbRow = 0;
     function autofocus() {
         const prevSize = nbRow;
-        const rowEls = ref()?.querySelectorAll(".o_row_draggable") || [];
+        const rowEls = getRowEls();
         nbRow = rowEls.length;
         if (nbRow <= prevSize) {
             return;
@@ -34,6 +35,11 @@ export function useAutoFocusNewItem(ref) {
             }
         }
     }
+    // The rows already there at mount are not new ones: focusing the last of
+    // them would steal the focus, e.g. from a drag handle being used to reorder.
+    onMounted(() => {
+        nbRow = getRowEls().length;
+    });
     onPatched(autofocus);
 }
 
@@ -136,6 +142,14 @@ export class BuilderList extends Component {
                     const { element, previous } = params;
                     this.reorderItem(element.dataset.id, previous?.dataset.id);
                 },
+                keyboardReorder: true,
+                // The row is re-created by the re-render, so the handle to focus
+                // back is looked up by item id.
+                getFocusToken: ({ element }) => element.dataset.id,
+                getFocusHandle: (itemId) =>
+                    this.tableRef()?.querySelector(
+                        `.o_row_draggable[data-id="${itemId}"] .o_handle_cell button`
+                    ),
             });
         }
     }

@@ -5,10 +5,10 @@ import {
 } from "@html_builder/../tests/helpers";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
-import { expect, test, describe } from "@odoo/hoot";
+import { expect, test, describe, beforeEach } from "@odoo/hoot";
 import { onError, xml } from "@odoo/owl";
 import { contains } from "@web/../tests/web_test_helpers";
-import { press } from "@odoo/hoot-dom";
+import { animationFrame, press } from "@odoo/hoot-dom";
 
 describe.current.tags("desktop");
 
@@ -20,18 +20,31 @@ function defaultValueWithIds(ids) {
         _id: id.toString(),
     }));
 }
-
-test("writes a list of numbers to a data attribute", async () => {
+// Registers a `<BuilderList>` option. `itemShape`, `default` and every extra
+// prop are OWL template expressions (strings). The common props are defaulted;
+// any other `<BuilderList>` prop can be passed through by name.
+function builderListOption({
+    selector = ".test-options-target",
+    itemShape = "{ value: 'number', title: 'text' }",
+    default: defaultProp = defaultValueStr,
+    ...props
+} = {}) {
+    const extraAttrs = Object.entries(props).map(([name, value]) => `${name}="${value}"`);
     addBuilderOption({
-        selector: ".test-options-target",
+        selector,
         template: xml`
             <BuilderList
                 dataAttributeAction="'list'"
-                itemShape="{ value: 'number', title: 'text' }"
-                default="${defaultValueStr}"
+                itemShape="${itemShape}"
+                default="${defaultProp}"
+                ${extraAttrs}
             />
         `,
     });
+}
+
+test("writes a list of numbers to a data attribute", async () => {
+    builderListOption();
     await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
 
@@ -55,21 +68,19 @@ test("writes a list of numbers to a data attribute", async () => {
 });
 
 test("supports arbitrary number of text and number inputs on entries", async () => {
-    addBuilderOption({
-        selector: ".test-options-target",
-        template: xml`
-            <BuilderList
-                dataAttributeAction="'list'"
-                itemShape="{ a: 'number', b: 'text', c: 'text', d: 'number' }"
-                default="{ a: '4', b: '3', c: '2', d: '1' }"
-            />
-        `,
+    builderListOption({
+        itemShape: "{ a: 'number', b: 'text', c: 'text', d: 'number' }",
+        default: "{ a: '4', b: '3', c: '2', d: '1' }",
     });
     await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
     await contains(".we-bg-options-container .builder_list_add_item").click();
     expect(".we-bg-options-container input[type=number]").toHaveCount(2);
     expect(".we-bg-options-container input[type=text]").toHaveCount(2);
+    builderListOption({
+        itemShape: "{ a: 'number', b: 'text', c: 'text', d: 'number' }",
+        default: "{ a: '4', b: '3', c: '2', d: '1' }",
+    });
     expect(":iframe .test-options-target").toHaveAttribute(
         "data-list",
         JSON.stringify([
@@ -85,16 +96,7 @@ test("supports arbitrary number of text and number inputs on entries", async () 
 });
 
 test("delete an item", async () => {
-    addBuilderOption({
-        selector: ".test-options-target",
-        template: xml`
-            <BuilderList
-                dataAttributeAction="'list'"
-                itemShape="{ value: 'number', title: 'text' }"
-                default="${defaultValueStr}"
-            />
-        `,
-    });
+    builderListOption();
     await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
 
@@ -107,51 +109,83 @@ test("delete an item", async () => {
     expect(":iframe .test-options-target").toHaveAttribute("data-list", JSON.stringify([]));
 });
 
-test("reorder items", async () => {
-    addBuilderOption({
-        selector: ".test-options-target",
-        template: xml`
-            <BuilderList
-                dataAttributeAction="'list'"
-                itemShape="{ value: 'number', title: 'text' }"
-                default="${defaultValueStr}"
-            />
-        `,
-    });
-    await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
-    await contains(":iframe .test-options-target").click();
-
-    await contains(".we-bg-options-container .builder_list_add_item").click();
-    await contains(".we-bg-options-container .builder_list_add_item").click();
-    await contains(".we-bg-options-container .builder_list_add_item").click();
+describe("ptpu test describe", () => {
     function expectOrder(ids) {
         expect(":iframe .test-options-target").toHaveAttribute(
             "data-list",
             JSON.stringify(defaultValueWithIds(ids))
         );
     }
-    expectOrder([0, 1, 2]);
+    beforeEach(async () => {
+        builderListOption();
+        await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
+        await contains(":iframe .test-options-target").click();
 
-    const rowSelector = (id) => `.we-bg-options-container .o_row_draggable[data-id="${id}"]`;
-    const rowHandleSelector = (id) => `${rowSelector(id)} .o_handle_cell`;
+        await contains(".we-bg-options-container .builder_list_add_item").click();
+        await contains(".we-bg-options-container .builder_list_add_item").click();
+        await contains(".we-bg-options-container .builder_list_add_item").click();
+        expectOrder([0, 1, 2]);
+    });
+    test("reorder items", async () => {
+        const rowSelector = (id) => `.we-bg-options-container .o_row_draggable[data-id="${id}"]`;
+        const rowHandleSelector = (id) => `${rowSelector(id)} .o_handle_cell`;
 
-    await contains(rowHandleSelector(0)).dragAndDrop(rowSelector(1));
-    expectOrder([1, 0, 2]);
+        await contains(rowHandleSelector(0)).dragAndDrop(rowSelector(1));
+        expectOrder([1, 0, 2]);
 
-    await contains(rowHandleSelector(1)).dragAndDrop(rowSelector(2));
-    expectOrder([0, 2, 1]);
+        await contains(rowHandleSelector(1)).dragAndDrop(rowSelector(2));
+        expectOrder([0, 2, 1]);
 
-    await contains(rowHandleSelector(1)).dragAndDrop(rowSelector(0));
-    expectOrder([1, 0, 2]);
+        await contains(rowHandleSelector(1)).dragAndDrop(rowSelector(0));
+        expectOrder([1, 0, 2]);
 
-    await contains(rowHandleSelector(2)).dragAndDrop(rowSelector(0));
-    expectOrder([1, 2, 0]);
+        await contains(rowHandleSelector(2)).dragAndDrop(rowSelector(0));
+        expectOrder([1, 2, 0]);
 
-    await contains(rowHandleSelector(2)).dragAndDrop(rowSelector(0));
-    expectOrder([1, 0, 2]);
+        await contains(rowHandleSelector(2)).dragAndDrop(rowSelector(0));
+        expectOrder([1, 0, 2]);
 
-    await contains(rowHandleSelector(0)).dragAndDrop(rowSelector(1));
-    expectOrder([0, 1, 2]);
+        await contains(rowHandleSelector(0)).dragAndDrop(rowSelector(1));
+        expectOrder([0, 1, 2]);
+    });
+
+    test("reorder items with the keyboard", async () => {
+        const rowHandle = (id) =>
+            `.we-bg-options-container .o_row_draggable[data-id="${id}"] .o_handle_cell button`;
+        expectOrder([0, 1, 2]);
+
+        // Focusing the handle and pressing ArrowDown moves the row down; the focus
+        // follows the moved row.
+        await contains(rowHandle(0)).click();
+        await press("ArrowDown");
+        await animationFrame();
+        expectOrder([1, 0, 2]);
+        expect(rowHandle(0)).toBeFocused();
+
+        await press("ArrowDown");
+        await animationFrame();
+        expectOrder([1, 2, 0]);
+        expect(rowHandle(0)).toBeFocused();
+
+        // Already last: ArrowDown is a no-op.
+        await press("ArrowDown");
+        await animationFrame();
+        expectOrder([1, 2, 0]);
+
+        // ArrowUp moves it back up to the top.
+        await press("ArrowUp");
+        await animationFrame();
+        expectOrder([1, 0, 2]);
+        await press("ArrowUp");
+        await animationFrame();
+        expectOrder([0, 1, 2]);
+        expect(rowHandle(0)).toBeFocused();
+
+        // Already first: ArrowUp is a no-op.
+        await press("ArrowUp");
+        await animationFrame();
+        expectOrder([0, 1, 2]);
+    });
 });
 
 async function testBuilderListFaultyProps(template) {
@@ -213,16 +247,10 @@ test("throws error if itemShape contains reserved key '_id'", async () => {
 });
 
 test("hides hiddenProperties from options", async () => {
-    addBuilderOption({
-        selector: ".test-options-target",
-        template: xml`
-            <BuilderList
-                dataAttributeAction="'list'"
-                itemShape="{ a: 'number', b: 'text', c: 'number', d: 'text' }"
-                default="{ a: '4', b: 'three', c: '2', d: 'one' }"
-                hiddenProperties="['b', 'c']"
-            />
-        `,
+    builderListOption({
+        itemShape: "{ a: 'number', b: 'text', c: 'number', d: 'text' }",
+        default: "{ a: '4', b: 'three', c: '2', d: 'one' }",
+        hiddenProperties: "['b', 'c']",
     });
     await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
@@ -422,24 +450,18 @@ test("not editable builder list option", async () => {
 });
 
 test("drops blank textual entries", async () => {
-    addBuilderOption({
+    builderListOption({
         selector: ".test-options-target-a",
-        template: xml`
-            <BuilderList
-                dataAttributeAction="'list'"
-                addItemTitle="'Add'"
-                itemShape="{ display_name: 'text' }"
-                default="{ display_name: 'default' }"/>`,
+        addItemTitle: "'Add'",
+        itemShape: "{ display_name: 'text' }",
+        default: "{ display_name: 'default' }",
     });
-    addBuilderOption({
+    builderListOption({
         selector: ".test-options-target-b",
-        template: xml`
-            <BuilderList
-                dataAttributeAction="'list'"
-                addItemTitle="'Add'"
-                itemShape="{ display_name: 'text' }"
-                default="{ display_name: 'default' }"
-                forbidLastItemRemoval="true"/>`,
+        addItemTitle: "'Add'",
+        itemShape: "{ display_name: 'text' }",
+        default: "{ display_name: 'default' }",
+        forbidLastItemRemoval: "true",
     });
     await setupHTMLBuilder(`
         <div class="test-options-target-a">a</div>
@@ -493,15 +515,10 @@ test("loads more items when the last row intersects", async () => {
 });
 
 test("should disable last checked checkbox", async () => {
-    addBuilderOption({
-        selector: ".test-options-target",
-        template: xml`
-            <BuilderList
-                dataAttributeAction="'list'"
-                itemShape="{ value: 'boolean' }"
-                default="{'value':'true'}"
-                disableLastCheckedCheckbox="true"
-            />`,
+    builderListOption({
+        itemShape: "{ value: 'boolean' }",
+        default: "{'value':'true'}",
+        disableLastCheckedCheckbox: "true",
     });
     await setupHTMLBuilder(`<div class="test-options-target">a</div>`);
     await contains(":iframe .test-options-target").click();

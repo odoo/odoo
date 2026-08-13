@@ -218,6 +218,15 @@ export class EditMenuDialog extends Component {
             onDrop: this._moveMenu.bind(this),
             isAllowed: this._isAllowedMove.bind(this),
             useElementSize: true,
+            keyboardReorder: true,
+            // Up and down reorder the menu within its siblings, right and left
+            // nest and un-nest it. A move re-creates the row, so the handle to
+            // focus back is looked up by menu id.
+            getFocusToken: ({ element }) => element.dataset.menuId,
+            getFocusHandle: (menuId) =>
+                this.menuEditor()?.querySelector(
+                    `li[data-menu-id="${menuId}"] > .input-group > .o_drag_handle`
+                ),
             /**
              * @param {DOMElement} element - moved element
              * @param {DOMElement} parent - parent element of where the element was moved
@@ -230,7 +239,9 @@ export class EditMenuDialog extends Component {
                 element.style.marginLeft =
                     parent && element.parentElement === this.menuEditor() ? "2rem" : "";
             },
-            preventDrag: (el) => el.querySelector(":scope > button"),
+            // Prevent starting a drag from the action buttons (edit, delete),
+            // but not from the drag handle itself, which is also a button.
+            preventDrag: (el) => el.querySelector(":scope > button:not(.o_drag_handle)"),
         });
     }
 

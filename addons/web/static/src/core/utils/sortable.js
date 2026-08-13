@@ -39,6 +39,20 @@ import { pick } from "@web/core/utils/objects";
  * @property {string[]} [followingElementClasses] array of classes added to the
  *  element that follow the pointer.
  *
+ * KEYBOARD REORDER (also optional)
+ *
+ * @property {boolean | (() => boolean)} [keyboardReorder] whether the arrow keys
+ *  reorder the list from a focused drag handle, one step per key press, going
+ *  through `onDrop` like a pointer drag does. It requires a focusable handle, and
+ *  makes the arrow keys lose their usual meaning inside it. As the re-render that
+ *  follows a move replaces or moves the handle, the two params below are needed to
+ *  focus it back, so that several moves in a row need no repositioning.
+ * @property {(params: { element: HTMLElement }) => any} [getFocusToken] returns
+ *  an identifier of the moved element that survives the re-render (e.g. a record
+ *  id). Defaults to the element itself, which only works if it is reused as is.
+ * @property {(token: any) => HTMLElement | null} [getFocusHandle] returns the
+ *  handle to focus back for a token returned by `getFocusToken`.
+ *
  * HANDLERS (also optional)
  *
  * @property {(params: SortableHandlerParams) => any} [onDragStart]
@@ -332,6 +346,33 @@ const hookParams = {
         addCleanup(() => current.placeHolder.remove());
 
         return pick(current, "element", "group");
+    },
+    // Keyboard reorder: moves the placeholder by one step among the current
+    // element's siblings, reusing the same before/after primitive as the pointer
+    // path. A flat list only reorders vertically, so horizontal moves are no-ops.
+    onKeyboardStep({ ctx, axis, direction }) {
+        if (axis !== "y") {
+            return false;
+        }
+        const { element, placeHolder } = ctx.current;
+        const siblings = [...element.parentElement.children].filter(
+            (el) =>
+                el !== placeHolder &&
+                el.matches(ctx.elementSelector) &&
+                !el.classList.contains(DRAGGED_CLASS)
+        );
+        const currentIndex = siblings.indexOf(element);
+        const newIndex = currentIndex + direction;
+        if (currentIndex < 0 || newIndex < 0 || newIndex >= siblings.length) {
+            return false;
+        }
+        const neighbor = siblings[newIndex];
+        if (direction === 1) {
+            neighbor.after(placeHolder);
+        } else {
+            neighbor.before(placeHolder);
+        }
+        return true;
     },
 };
 
