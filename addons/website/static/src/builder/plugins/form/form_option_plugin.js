@@ -63,6 +63,7 @@ import { withSequence } from "@html_editor/utils/resource";
  * @property { FormOptionPlugin['loadFieldOptionData'] } loadFieldOptionData
  * @property { FormOptionPlugin['prepareFields'] } prepareFields
  * @property { FormOptionPlugin['replaceField'] } replaceField
+ * @property { FormOptionPlugin['setLabelsPosition'] } setLabelsPosition
  * @property { FormOptionPlugin['prepareConditionInputs'] } prepareConditionInputs
  * @property { FormOptionPlugin['setLabelsMark'] } setLabelsMark
  * @property { FormOptionPlugin['clearValidationDataset'] } clearValidationDataset
@@ -103,6 +104,7 @@ export class FormOptionPlugin extends Plugin {
         "loadFieldOptionData",
         "prepareFields",
         "replaceField",
+        "setLabelsPosition",
         "prepareConditionInputs",
         "setLabelsMark",
         "clearValidationDataset",
@@ -773,6 +775,33 @@ export class FormOptionPlugin extends Plugin {
 
         const fieldEl = renderField(field);
         replaceFieldElement(oldFieldEl, fieldEl);
+    }
+    /**
+     * Set the labels position of every visible field of the form.
+     *
+     * @param {HTMLElement} formEl
+     * @param {string} position "top" | "left" | "right" | "none"
+     * @param {Object} fields authorized fields of the form's model
+     */
+    setLabelsPosition(formEl, position, fields) {
+        for (const fieldEl of formEl.querySelectorAll(
+            ".s_website_form_field:not(.s_website_form_dnone)"
+        )) {
+            const fieldClassName = !isTargetVisible(fieldEl) ? fieldEl.className : "";
+            const field = getActiveField(fieldEl, { fields });
+            field.formatInfo.labelPosition = position;
+            field.formatInfo.labelInvisible = position === "none";
+            // Reset label width for the "top" position.
+            if (position === "top") {
+                delete field.formatInfo.labelWidth;
+            }
+            this.replaceField(fieldEl, field, fields);
+            // For invisible fields (device visibility), we need to reapply
+            // the initial `className` before the label position update.
+            if (fieldClassName) {
+                fieldEl.className = fieldClassName;
+            }
+        }
     }
     readConditionalInputs({ fieldEl, formEl }) {
         const existingDependencyNames = [];
@@ -1753,22 +1782,7 @@ export class SelectLabelsPositionAction extends BuilderAction {
         return this.dependencies.websiteFormOption.prepareFields(context);
     }
     apply({ editingElement: formEl, value, loadResult: fields }) {
-        for (const fieldEl of formEl.querySelectorAll(this.fieldSelector)) {
-            const fieldClassName = !isTargetVisible(fieldEl) ? fieldEl.className : "";
-            const field = getActiveField(fieldEl, { fields });
-            field.formatInfo.labelPosition = value;
-            field.formatInfo.labelInvisible = value === "none";
-            // Reset label width for the "top" position.
-            if (value === "top") {
-                delete field.formatInfo.labelWidth;
-            }
-            this.dependencies.websiteFormOption.replaceField(fieldEl, field, fields);
-            // For invisible fields (device visibility), we need to reapply
-            // the initial `className` before the label position update.
-            if (fieldClassName) {
-                fieldEl.className = fieldClassName;
-            }
-        }
+        this.dependencies.websiteFormOption.setLabelsPosition(formEl, value, fields);
     }
     isApplied({ editingElement: formEl, value }) {
         const fieldEls = [...formEl.querySelectorAll(this.fieldSelector)];

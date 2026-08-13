@@ -140,13 +140,16 @@
     }
 
     // Custom color of the progress indicator, set by the builder option as a
-    // CSS variable on the form; the fallbacks are the Bootstrap defaults.
+    // CSS variable on the form. The fallback is the theme's first color, not
+    // the Bootstrap defaults: those can be invisible against the page
+    // background (a stylesheet fallback stays overridable, unlike a default
+    // set as an inline variable).
     .s_website_form_steps_progress {
         .progress-bar {
-            background-color: var(--form-steps-indicator-color, var(--bs-progress-bar-bg));
+            background-color: var(--form-steps-indicator-color, var(--o-color-1));
         }
         .s_website_form_step_dot.text-bg-primary {
-            background-color: var(--form-steps-indicator-color, RGBA(var(--bs-primary-rgb), var(--bs-bg-opacity, 1))) !important;
+            background-color: var(--form-steps-indicator-color, var(--o-color-1)) !important;
         }
     }
 

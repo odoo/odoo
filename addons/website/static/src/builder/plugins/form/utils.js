@@ -59,7 +59,9 @@ export const isRequiredMark = (el) => el.classList.contains("o_mark_required");
  */
 export function getDefaultFormat(el) {
     return {
-        labelWidth: el.querySelector(".s_website_form_label").style.width,
+        // Degraded forms may not have a label anymore: fall back to the
+        // stock template's width instead of crashing.
+        labelWidth: el.querySelector(".s_website_form_label")?.style.width || "200px",
         labelPosition: "left",
         multiPosition: "horizontal",
         requiredMark: isRequiredMark(el),
