@@ -187,8 +187,18 @@
 </t>
 
 <t t-name="website.headerContentWidthOption">
+    <t t-set="noPreviewOptionsContentWidth" t-value="[
+        'header_boxed_opt',
+        'header_sales_one_opt',
+        'header_sales_two_opt',
+        'header_sales_three_opt',
+        'header_sales_four_opt',
+        'header_search_opt'
+    ]"/>
     <BuilderRow t-if="!isActiveItem('header_sidebar_opt')" label.translate="Content Width">
-        <BuilderButtonGroup action="'previewableWebsiteConfig'" applyTo="'#o_main_nav'">
+        <BuilderButtonGroup
+            action="hasSomeOptions(noPreviewOptionsContentWidth) and 'websiteConfig' or 'previewableWebsiteConfig'"
+            applyTo="'#o_main_nav'">
             <BuilderButton title.translate="Small"
                 iconImg="'/website/static/src/img/snippets_options/content_width_small.svg'"
                 actionParam="{ views: ['website.header_width_small'], previewClass: `o_container_small`}"/>

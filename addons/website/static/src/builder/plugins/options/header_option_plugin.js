@@ -52,6 +52,9 @@ export class HeaderContentWidthOption extends BaseOptionComponent {
     static selector = "#wrapwrap > header";
     static groups = ["website.group_website_designer"];
     static editableOnly = false;
+    hasSomeOptions(opts) {
+        return opts.some((opt) => this.isActiveItem(opt));
+    }
 }
 
 export class HeaderSidebarWidthOption extends BaseOptionComponent {
