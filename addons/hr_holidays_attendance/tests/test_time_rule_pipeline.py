@@ -3114,3 +3114,66 @@ class TestTimeRulePipelineLeaves(TransactionCase):
             )
         finally:
             rule.write({'active': False})
+
+    def test_two_pp_only_rules_stack_alloc_acc(self):
+        """Two pp-only rules fire in sequence; alloc_acc grows so each rule earns allocation credit.
+
+        Pipeline after both rules fire on the same 6h interval:
+          rule1 fires: (wet, src, rule1, {})
+          rule2 fires: alloc_acc | {rule1} → (wet, src, rule2, {rule1})
+
+        In _apply_output excess processing:
+          - rule1 credited via alloc_acc loop  → excess_alloc gets (emp, rule1, 6h)
+          - rule2 credited via pp-only branch  → excess_alloc gets (emp, rule2, 6h)
+
+        Both entries create / add to the same allocation, so number_of_days == 2x.
+        """
+        comp_type = self.env['hr.work.entry.type'].create({
+            'name': 'PP Stack Comp',
+            'code': 'PPSC',
+            'requires_allocation': True,
+            'time_off_selectable': True,
+            'leave_validation_type': 'no_validation',
+        })
+
+        rule1 = self.env['hr.time.rule'].create({
+            'name': 'PP Only #1',
+            'sequence': 1,
+            'working_hours_mode': 'day',
+            'condition_work_entry_type_ids': [(4, self.src_type.id)],
+            'leave_compensation_rate': 1.0,
+            'allocation_type_id': comp_type.id,
+        })
+        rule2 = self.env['hr.time.rule'].create({
+            'name': 'PP Only #2',
+            'sequence': 2,
+            'working_hours_mode': 'day',
+            'condition_work_entry_type_ids': [(4, self.src_type.id)],
+            'leave_compensation_rate': 1.0,
+            'allocation_type_id': comp_type.id,
+        })
+        try:
+            leave = self._make_leave(datetime(2022, 12, 12, 8), datetime(2022, 12, 12, 14))  # 6h
+
+            self.assertEqual(leave.work_entry_type_id, self.src_type)
+
+            # each rule must earn allocation credit for the full 6h interval:
+            # rule1 via alloc_acc credit loop, rule2 via pp-only excess branch -> 2 credits total.
+            # the two excess_alloc entries both go through alloc_create_vals (the second search
+            # runs before the first allocation is committed) → two separate allocation records.
+            allocations = self.env['hr.leave.allocation'].sudo().search([
+                ('employee_id', '=', leave.employee_id.id),
+                ('work_entry_type_id', '=', comp_type.id),
+                ('state', '=', 'validate'),
+            ])
+            self.assertTrue(allocations, "At least one allocation must be created for comp_type")
+            hours_per_day = leave.employee_id.resource_calendar_id.hours_per_day or 8.0
+            # 6h × 1.0 rate / hours_per_day × 2 rules
+            expected_days = 2 * 6.0 / hours_per_day
+            self.assertAlmostEqual(
+                sum(a.number_of_days for a in allocations), expected_days, places=4,
+                msg="alloc_acc must stack rule1 + rule2: both rules credited for the 6h interval",
+            )
+        finally:
+            rule1.write({'active': False})
+            rule2.write({'active': False})

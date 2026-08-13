@@ -1480,7 +1480,10 @@ class HrLeave(models.Model):
                     holiday_sudo.message_post(body=_("The time off has been automatically approved"), subtype_xmlid="mail.mt_comment") # Message from OdooBot (sudo)
                 elif not self.env.context.get('import_file'):
                     holiday_sudo.activity_update()
-        if not self.env.context.get('skip_time_rules'):
+        if not self.env.context.get('leave_fast_create') and not self.env.context.get('skip_time_rules'):
+            # mixin create() fired _trigger_time_rules() before action_approve() (no-op: state != validate).
+            # now that auto-approved leaves are validated and resource.calendar.leaves exist, trigger properly.
+            # leave_fast_create leaves are created with state=validate, so mixin handles them correctly already.
             holidays._trigger_time_rules()
         if employees_without_allocation:
             invalid_employee_names = ', '.join(self.env._('%s', employee.name) for employee in employees_without_allocation)

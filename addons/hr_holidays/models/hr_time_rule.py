@@ -30,14 +30,14 @@ class HrTimeRule(models.Model):
         """Resolve output intervals, then merge consecutive slices sharing a merge key."""
         resolved = super()._resolve_output_intervals(intervals)
         merged = []
-        for seg_s, seg_e, rule, pp in resolved:
+        for seg_s, seg_e, rule, pp, effective_wet in resolved:
             mk = rule._get_output_leave_merge_key(accumulated_pp=pp)
             if merged and merged[-1][1] == seg_s and merged[-1][4] == mk:
                 merged[-1][1] = seg_e
                 merged[-1][3] |= pp
             else:
-                merged.append([seg_s, seg_e, rule, pp, mk])
-        return [(s, e, r, pp) for s, e, r, pp, _mk in merged]
+                merged.append([seg_s, seg_e, rule, pp, mk, effective_wet])
+        return [(s, e, r, pp, ew) for s, e, r, pp, _mk, ew in merged]
 
     def _get_output_leave_vals(self, employee, rule, date_from, date_to, source_leave, accumulated_pp=frozenset()):
         tz = ZoneInfo(employee._get_tz())
@@ -91,7 +91,7 @@ class HrTimeRule(models.Model):
                 })
         if alloc_create_vals:
             new_allocs = self.env['hr.leave.allocation'].sudo().with_context(skip_time_rules=True).create(alloc_create_vals)
-            new_allocs.action_approve()
+            new_allocs.with_context(leave_skip_state_check=True).action_approve()
         for employee, rule, deficit_hours in deficit_alloc:
             if not (rule.leave_compensation_rate > 0 and rule.allocation_type_id):
                 continue
