@@ -7,8 +7,45 @@
  * object for a test.
  */
 
-let sessionStorage;
-let localStorage;
+class MockStorage {
+    get length() {
+        return Object.keys(this).length;
+    }
+
+    /** @type {typeof Storage.prototype.clear} */
+    clear() {
+        for (const key in this) {
+            delete this[key];
+        }
+    }
+
+    /** @type {typeof Storage.prototype.getItem} */
+    getItem(key) {
+        key = String(key);
+        return this[key] ?? null;
+    }
+
+    /** @type {typeof Storage.prototype.key} */
+    key(index) {
+        return Object.keys(this).at(index);
+    }
+
+    /** @type {typeof Storage.prototype.removeItem} */
+    removeItem(key) {
+        key = String(key);
+        delete this[key];
+        window.dispatchEvent(new StorageEvent("storage", { key, newValue: null }));
+    }
+
+    /** @type {typeof Storage.prototype.setItem} */
+    setItem(key, value) {
+        key = String(key);
+        value = String(value);
+        this[key] = value;
+        window.dispatchEvent(new StorageEvent("storage", { key, newValue: value }));
+    }
+}
+
 try {
     sessionStorage = window.sessionStorage;
     localStorage = window.localStorage;
@@ -16,8 +53,8 @@ try {
     localStorage.setItem("__localStorage__", "true");
     localStorage.removeItem("__localStorage__");
 } catch {
-    localStorage = makeRAMLocalStorage();
-    sessionStorage = makeRAMLocalStorage();
+    window.localStorage = new MockStorage();
+    window.sessionStorage = new MockStorage();
 }
 
 export const browser = {
@@ -76,37 +113,3 @@ Object.defineProperty(browser, "innerWidth", {
     get: () => window.innerWidth,
     configurable: true,
 });
-
-// -----------------------------------------------------------------------------
-// memory localStorage
-// -----------------------------------------------------------------------------
-
-/**
- * @returns {typeof window["localStorage"]}
- */
-export function makeRAMLocalStorage() {
-    let store = {};
-    return {
-        setItem(key, value) {
-            const newValue = String(value);
-            store[key] = newValue;
-            window.dispatchEvent(new StorageEvent("storage", { key, newValue }));
-        },
-        getItem(key) {
-            return store[key] ?? null;
-        },
-        clear() {
-            store = {};
-        },
-        removeItem(key) {
-            delete store[key];
-            window.dispatchEvent(new StorageEvent("storage", { key, newValue: null }));
-        },
-        get length() {
-            return Object.keys(store).length;
-        },
-        key() {
-            return "";
-        },
-    };
-}
