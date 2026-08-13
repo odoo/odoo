@@ -160,6 +160,7 @@ describe("popover should not reposition when editing", () => {
             '<p>H<a href="https://test.com">ell[]</a>o</p>'
         );
     });
+    test.tags("desktop");
     test("In iframe, when editing the link url, the popover should not reposition", async () => {
         const { el } = await setupEditor("<p>H[ell]o</p>", { props: { iframe: true } });
         await waitFor(".o-we-toolbar");
@@ -867,6 +868,7 @@ describe("popover for file uploads", () => {
 });
 
 describe("popover with empty URL", () => {
+    test.tags("desktop");
     test("should not close the popover when pressing Enter with an empty URL", async () => {
         const { editor } = await setupEditor("<p>ab[]</p>");
         await insertText(editor, "/link");

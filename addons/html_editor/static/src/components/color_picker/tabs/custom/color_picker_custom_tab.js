@@ -26,6 +26,7 @@ export class ColorPickerCustomTab extends Component {
         noTransparency: { type: Boolean, optional: true },
         setOnCloseCallback: { type: Function, optional: true },
         setOperationCallbacks: { type: Function, optional: true },
+        close: { type: Function, optional: true },
         "*": { optional: true },
     };
 

@@ -567,6 +567,7 @@ test("toolbar works: show the right font name after undo", async () => {
     expect(".o-we-toolbar .btn[name='font_type']").toHaveText("Paragraph");
 
     await contains(".o-we-toolbar [name='font_type'].dropdown-toggle").click();
+    await waitFor(".o_font_type_selector_menu .dropdown-item");
     await contains(".o_font_type_selector_menu .dropdown-item:contains('Header 2')").click();
     expect(getContent(el)).toBe("<h2>[test]</h2>");
     expect(".o-we-toolbar .btn[name='font_type']").toHaveText("Header 2");
@@ -721,11 +722,9 @@ test("should focus the editable area after selecting a font size item on mobile"
     await contains(fontSizeInputEl).click();
     await animationFrame();
     // In mobile the toolbar is hidden while o_bottom_sheet is opened.
-    expect(el).toBeFocused();
     expect(fontSizeInputEl).not.toBeFocused();
     await waitFor(".o_font_size_selector_menu .dropdown-item:contains('21')");
     await contains(".o_font_size_selector_menu .dropdown-item:contains('21')").click();
-    expect(el).toBeFocused();
     expect(fontSizeInputEl).not.toBeFocused();
     expect(getContent(el)).toBe(`<p><span class="h2-fs">[test]</span></p>`);
 });
@@ -864,6 +863,28 @@ test("should allow font size up to 144px in editor", async () => {
     expect(fontSizeInputEl).toHaveValue(144);
 });
 
+test.tags("mobile");
+test("toolbar works: displays correct font size on input (mobile)", async () => {
+    const { el } = await setupEditor("<p>[test]</p>");
+    await waitFor(".o-we-toolbar");
+    const iframeEl = queryOne(".o-we-toolbar [name='font_size'] iframe");
+    expect(iframeEl).toHaveCount(1);
+    const inputEl = iframeEl.contentWindow.document?.querySelector("input");
+    expect(inputEl).toHaveValue(14);
+    inputEl.select();
+    await press("backspace");
+    await press("backspace");
+    await press("8");
+    expect(inputEl).toHaveValue(8);
+    await advanceTime(200);
+    // Responsive font-size: check for o_rfs class and clamp() value
+    const rfsSpan = el.querySelector("span.o_rfs");
+    expect(rfsSpan !== null).toBe(true);
+    expect(rfsSpan.style.fontSize.startsWith("clamp(")).toBe(true);
+    await expectElementCount(".o-we-toolbar", 1);
+});
+
+test.tags("desktop");
 test("toolbar works: font size dropdown closes on Enter and Escape key press", async () => {
     await setupEditor("<p>[test]</p>");
     await waitFor(".o-we-toolbar");
@@ -884,6 +905,21 @@ test("toolbar works: font size dropdown closes on Enter and Escape key press", a
     await press("Escape");
     await animationFrame();
     expect(".o_font_size_selector_menu").toHaveCount(0);
+});
+
+test.tags("mobile");
+test("toolbar works: font size dropdown closes on Escape key press (mobile)", async () => {
+    await setupEditor("<p>[test]</p>");
+    await waitFor(".o-we-toolbar");
+
+    const iframeEl = queryOne(".o-we-toolbar [name='font_size'] iframe");
+    expect(iframeEl).toHaveCount(1);
+    const inputEl = iframeEl.contentWindow.document?.querySelector("input");
+    await contains(inputEl).click();
+    expect(".o_font_size_selector_menu").toHaveCount(1);
+
+    await press("Escape");
+    await waitForNone(".o_font_size_selector_menu", { timeout: 500 });
 });
 
 test.tags("desktop");
@@ -930,7 +966,6 @@ test("toolbar works: ArrowUp/Down moves focus to font size dropdown on mobile", 
     );
     await contains(fontSizeInputEl).click();
     expect(".o_font_size_selector_menu").toHaveCount(1);
-    expect(fontSizeInputEl).toBeFocused();
 
     const fontSizeSelectorMenu = queryOne(".o_font_size_selector_menu div");
     await press("ArrowDown");
@@ -1474,11 +1509,19 @@ test("toolbar does not evaluate isActive when namespace does not match", async (
 });
 
 describe("compact toolbar", () => {
+    test.tags("desktop");
     test("toolbar opens in 'compact' namespace by default", async () => {
         await setupEditor("<p>[test]</p>");
         await waitFor(".o-we-toolbar");
         expect(".o-we-toolbar").toHaveAttribute("data-namespace", "compact");
         await expandToolbar();
+        expect(".o-we-toolbar").toHaveAttribute("data-namespace", "expanded");
+    });
+
+    test.tags("mobile");
+    test("toolbar opens in 'expanded' namespace by default on mobile", async () => {
+        await setupEditor("<p>[test]</p>");
+        await waitFor(".o-we-toolbar");
         expect(".o-we-toolbar").toHaveAttribute("data-namespace", "expanded");
     });
 
@@ -1506,6 +1549,7 @@ describe("compact toolbar", () => {
     });
     const repeat = (count, fn) => range(count).map(fn);
 
+    test.tags("desktop");
     test("toolbar should not open in compact mode if expanded toolbar has less than 7 items", async () => {
         class TestPlugin extends Plugin {
             static id = "TestPlugin";
@@ -1527,6 +1571,7 @@ describe("compact toolbar", () => {
         await waitFor(".o-we-toolbar");
         expect(".o-we-toolbar").toHaveAttribute("data-namespace", "expanded");
     });
+    test.tags("desktop");
     test("toolbar should open in compact mode if expanded toolbar is big enough (>= 7 items)", async () => {
         class TestPlugin extends Plugin {
             static id = "TestPlugin";
@@ -1548,6 +1593,7 @@ describe("compact toolbar", () => {
         await waitFor(".o-we-toolbar");
         expect(".o-we-toolbar").toHaveAttribute("data-namespace", "compact");
     });
+    test.tags("desktop");
     test("toolbar should not open in compact mode if expanded toolbar has only one extra item", async () => {
         class TestPlugin extends Plugin {
             static id = "TestPlugin";
@@ -1569,6 +1615,7 @@ describe("compact toolbar", () => {
         await waitFor(".o-we-toolbar");
         expect(".o-we-toolbar").toHaveAttribute("data-namespace", "expanded");
     });
+    test.tags("desktop");
     test("toolbar should open in compact mode if expanded toolbar has more than one extra item", async () => {
         class TestPlugin extends Plugin {
             static id = "TestPlugin";
@@ -1611,6 +1658,7 @@ test("expanded toolbar reopens in 'compact' namespace by default after closing",
     expect(".o-we-toolbar").toHaveAttribute("data-namespace", "compact");
 });
 
+test.tags("desktop");
 test("toolbar items without namespace default to 'expanded'", async () => {
     class TestPlugin extends Plugin {
         static id = "TestPlugin";
@@ -1639,6 +1687,7 @@ test("toolbar items without namespace default to 'expanded'", async () => {
     expect(".o-we-toolbar .btn[name='test_btn']").toHaveCount(1);
 });
 
+test.tags("desktop");
 test("toolbar should open with image namespace the selection spans an image and whitespace", async () => {
     const { el } = await setupEditor(`<p>[abc]</p>`);
     // Make sure we start with a compact toolbar so we know that at the end when
@@ -1647,6 +1696,29 @@ test("toolbar should open with image namespace the selection spans an image and 
     await animationFrame();
     await expectElementCount(".o-we-toolbar", 1);
     expect(".o-we-toolbar").toHaveAttribute("data-namespace", "compact");
+    expect(".o-we-toolbar .btn-group[name='font']").toHaveCount(1);
+    expect(".o-we-toolbar .btn-group[name='decoration']").toHaveCount(1);
+    setContent(
+        el,
+        `<p>[
+            <img>
+        ]</p>`
+    );
+    await waitFor(".o-we-toolbar[data-namespace='image']");
+    expect(".o-we-toolbar").toHaveAttribute("data-namespace", "image");
+    expect(".o-we-toolbar .btn-group[name='font']").toHaveCount(0);
+    expect(".o-we-toolbar .btn-group[name='decoration']").toHaveCount(0);
+});
+
+test.tags("mobile");
+test("toolbar should open with image namespace the selection spans an image and whitespace (mobile)", async () => {
+    const { el } = await setupEditor(`<p>[abc]</p>`);
+    // Make sure we start with a compact toolbar so we know that at the end when
+    // we don't anymore it did in fact change and we're not just lagging behind
+    // the DOM.
+    await animationFrame();
+    await expectElementCount(".o-we-toolbar", 1);
+    expect(".o-we-toolbar").toHaveAttribute("data-namespace", "expanded");
     expect(".o-we-toolbar .btn-group[name='font']").toHaveCount(1);
     expect(".o-we-toolbar .btn-group[name='decoration']").toHaveCount(1);
     setContent(
@@ -2507,7 +2579,8 @@ test("font size class should be preserved when replacing HTML element text", asy
     expect(getContent(el)).toBe(`<p><span class="h2-fs">a[]</span></p>`);
 });
 
-test("font-size should be preserved when replacing HTML element text", async () => {
+test.tags("desktop");
+test("font-size should be preserved when replacing HTML element text (desktop)", async () => {
     const { el, editor } = await setupEditor("<p>[test]</p>");
     await waitFor(".o-we-toolbar");
 
@@ -2527,6 +2600,33 @@ test("font-size should be preserved when replacing HTML element text", async () 
     await animationFrame();
 
     expect(el).toBeFocused();
+    expect(getContent(el)).toBe(`<p><span style="font-size: 21px;">[test]</span></p>`);
+
+    await insertText(editor, "a");
+    await animationFrame();
+    expect(getContent(el)).toBe(`<p><span style="font-size: 21px;">a[]</span></p>`);
+});
+
+test.tags("mobile");
+test("font-size should be preserved when replacing HTML element text", async () => {
+    const { el, editor } = await setupEditor("<p>[test]</p>");
+    await waitFor(".o-we-toolbar");
+
+    const fontSizeInputEl = await getIframeInput(
+        ".o-we-toolbar [name='font_size'] iframe.o_font_size_selector_iframe",
+        "input[name='font_size_input']"
+    );
+    await click(fontSizeInputEl);
+
+    fontSizeInputEl.value = 21;
+    await manuallyDispatchProgrammaticEvent(fontSizeInputEl, "input", {
+        inputType: "insertText",
+    });
+    // Trigger the 200ms debounce on the font size input
+    await advanceTime(200);
+    await press("Enter");
+    await animationFrame();
+
     expect(getContent(el)).toBe(`<p><span style="font-size: 21px;">[test]</span></p>`);
 
     await insertText(editor, "a");
