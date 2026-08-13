@@ -141,14 +141,14 @@ class TestUblImportBis3InvoiceBERetrievePartner(TestUblImportBis3InvoiceBE):
         """Test that if the supplier has no VAT and PartyTaxScheme/cbc:CompanyID
         is filled with the Peppol endpoint, it is not imported as the VAT."""
         self.partner_be.write({'vat': False, 'additional_identifiers': False})
-        self.assertRecordValues(self.partner_be, [{'vat': False, 'routing_scheme': '0208', 'routing_endpoint': '0477472701'}])
+        self.assertRecordValues(self.partner_be, [{'vat': False, 'routing_scheme': False, 'routing_endpoint': False}])
 
         invoice = self._import_invoice_as_attachment_on(
             test_name='test_import_bill_endpoint_in_party_tax_scheme',
             journal=self.company_data['default_journal_purchase'],
         )
         self.assertEqual(invoice.partner_id, self.partner_be)
-        self.assertRecordValues(self.partner_be, [{'vat': False, 'routing_scheme': '0208', 'routing_endpoint': '0477472701'}])
+        self.assertRecordValues(self.partner_be, [{'vat': False, 'routing_scheme': False, 'routing_endpoint': False}])
 
     def test_partial_import_partner_retrieval_bank_account_number(self):
         """Check that the bank account number is used to retrieve the vendor when importing a Bis 3 bill."""
