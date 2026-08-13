@@ -1116,8 +1116,20 @@ export class SelfOrder extends Reactive {
         link.click();
     }
 
+    get availablePresets() {
+        let presets = this.models["pos.preset"].getAll();
+
+        if (!this.isSessionOpened && this.ordering) {
+            presets = presets.filter((preset) => preset.use_timing);
+        }
+
+        return this.router.getTableIdentifier() != null || this.kioskMode
+            ? presets
+            : presets.filter((preset) => preset.service_at !== "table");
+    }
+
     hasPresets() {
-        return this.config.use_presets && this.models["pos.preset"].length > 1;
+        return this.config.use_presets && this.availablePresets.length > 1;
     }
     getTime(date) {
         return getTimeUtil(date);

@@ -320,3 +320,15 @@ export async function checkKioskPreparationTicketData(store, expectedData) {
     }
     return true;
 }
+
+export function mockNavigate(router) {
+    const navigate = [];
+
+    patchWithCleanup(router, {
+        navigate(route) {
+            navigate.push(route);
+        },
+    });
+
+    return navigate;
+}
