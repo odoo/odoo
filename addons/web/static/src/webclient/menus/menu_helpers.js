@@ -45,10 +45,10 @@ export function computeAppsAndMenuItems(menuTree) {
             if (menuItem.webIconData) {
                 item.webIconData = menuItem.webIconData;
             } else {
-                const [iconClass, color, backgroundColor] = (menuItem.webIcon || "").split(",");
+                const [icon, color, backgroundColor] = (menuItem.webIcon || "").split(",");
                 if (backgroundColor !== undefined) {
                     // Could split in three parts?
-                    item.webIcon = { iconClass, color, backgroundColor };
+                    item.webIcon = { icon, color, backgroundColor };
                 } else {
                     item.webIconData = "/web/static/img/default_icon_app.png";
                 }
