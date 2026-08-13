@@ -50,12 +50,13 @@ async function actionGetDrive(env, action, type) {
     }
 
     const useLna = await initLNA(notification);
+    const useLoopback = (host.includes("127.0.0.1") || host.includes("localhost")) && useLna;
 
     let result;
     try {
         result = await browser.fetch(route, {
             method: "POST",
-            targetAddressSpace: useLna ? "local" : undefined,
+            targetAddressSpace: useLoopback ? "loopback" : useLna ? "local" : undefined,
             body: jsonToFormData(action.params),
         });
         result = await result.json();
