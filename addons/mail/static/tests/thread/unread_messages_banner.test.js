@@ -11,10 +11,12 @@ import {
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, test } from "@odoo/hoot";
+import { waitUntil } from "@odoo/hoot-dom";
 import { mockUserAgent, tick } from "@odoo/hoot-mock";
 import {
     asyncStep,
     Command,
+    getService,
     onRpc,
     serverState,
     waitForSteps,
@@ -327,7 +329,9 @@ test("keep banner for messages received while scrolled up", async () => {
     await contains(".o-mail-Composer.o-focused");
     await contains(".o-mail-Thread", { scroll: "bottom" });
     await scroll(".o-mail-Thread", 0);
-    await contains(".o-mail-Thread", { scroll: 0 });
+    const store = getService("mail.store");
+    const channel = store.Thread.get({ model: "discuss.channel", id: channelId });
+    await waitUntil(() => channel.scrollTop === 0);
     await withUser(bobUserId, () =>
         rpc("/mail/message/post", {
             post_data: {
