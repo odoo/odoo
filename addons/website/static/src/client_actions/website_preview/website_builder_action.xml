@@ -19,7 +19,7 @@
         <ResizablePanel t-if="this.websiteContext.showResourceEditor" handleSide="'start'" class="'o_resource_editor_wrapper'" onResize.bind="this.onResourceEditorResize" initialWidth="this.aceEditorWidth">
             <ResourceEditor close="() => this.websiteContext.showResourceEditor = false"/>
         </ResizablePanel>
-        <LocalOverlayContainer localOverlay="this.overlayRef" identifier="this.env.localOverlayContainerKey"/>
+        <LocalOverlayContainer localOverlay="this.overlayRef" identifier="this.localOverlayContainerKey"/>
         <div t-att-class="{'o_builder_sidebar_open': this.state.isEditing and this.state.showSidebar, 'o_is_microsoft_edge': this.isMicrosoftEdge}"
             class="o-website-builder_sidebar border-start border-dark" t-ref="this.builderSidebarRef">
             <LazyComponent  t-if="this.state.isEditing" Component="'website.WebsiteBuilder'" props="() => this.websiteBuilderProps" bundle="'website.website_builder_assets'" t-key="this.state.key"/>

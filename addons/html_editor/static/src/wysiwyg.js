@@ -1,10 +1,10 @@
-import { render, useSubEnv } from "@web/owl2/utils";
-import { Component, onMounted, onWillDestroy, useProps, signal, t } from "@odoo/owl";
-import { useEditor } from "./editor";
-import { Toolbar } from "./main/toolbar/toolbar";
-import { useSpellCheck } from "@web/core/utils/hooks";
-import { LocalOverlayContainer } from "./local_overlay_container";
+import { Component, onMounted, onWillDestroy, signal, t, useProps } from "@odoo/owl";
 import { uniqueId } from "@web/core/utils/functions";
+import { useSpellCheck } from "@web/core/utils/hooks";
+import { render } from "@web/owl2/utils";
+import { useEditor } from "./editor";
+import { LocalOverlayContainer } from "./local_overlay_container";
+import { Toolbar } from "./main/toolbar/toolbar";
 
 /**
  * @typedef { import("./editor").EditorConfig } EditorConfig
@@ -44,9 +44,8 @@ export class Wysiwyg extends Component {
 
     setup() {
         this.overlayRef = signal.ref();
-        useSubEnv({
-            localOverlayContainerKey: uniqueId("wysiwyg"),
-        });
+        this.localOverlayContainerKey = uniqueId("wysiwyg");
+        this.editor = this.props.editor;
         const config = this.getEditorConfig();
         this.editor = useEditor(config);
         this.props.onLoad(this.editor);
@@ -99,7 +98,7 @@ export class Wysiwyg extends Component {
         return {
             ...this.props.config,
             localOverlayContainers: {
-                key: this.env.localOverlayContainerKey,
+                key: this.localOverlayContainerKey,
                 ref: this.overlayRef,
             },
         };

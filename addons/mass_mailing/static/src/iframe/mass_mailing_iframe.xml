@@ -8,7 +8,7 @@
             }">
             <div class="d-flex w-100 h-100">
                 <div class="flex-grow-1 position-relative" t-att-class="{'align-self-center': this.state.isMobile}">
-                    <LocalOverlayContainer localOverlay="this.overlayRef" identifier="this.env.localOverlayContainerKey"/>
+                    <LocalOverlayContainer localOverlay="this.overlayRef" identifier="this.localOverlayContainerKey"/>
                     <div class="o_mass_mailing_can_edit_overlay position-absolute h-100 w-100" t-on-click="() => this.toggleFullScreen(true)"
                         t-if="this.state.editorReady and
                             !this.props.readonly and

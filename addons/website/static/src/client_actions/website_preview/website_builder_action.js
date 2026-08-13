@@ -32,7 +32,6 @@ import { useBus, useService } from "@web/core/utils/hooks";
 import { renderToElement } from "@web/core/utils/render";
 import { getScrollingElement } from "@web/core/utils/scrolling";
 import { redirect } from "@web/core/utils/urls";
-import { useSubEnv } from "@web/owl2/utils";
 import { standardActionServiceProps } from "@web/webclient/actions/action_service";
 import { AddPageDialog } from "@website/components/dialog/add_page_dialog";
 import { ResourceEditor } from "@website/components/resource_editor/resource_editor";
@@ -93,9 +92,6 @@ export class WebsiteBuilderClientAction extends Component {
         this.isNavigatingToAnotherPage = null;
 
         this.containerRef = signal.ref();
-        useSubEnv({
-            builderRef: this.containerRef,
-        });
         this.state = proxy({ isEditing: false, showSidebar: true, key: 1, is404: false });
         this.websiteContext = proxy(this.websiteService.context);
 
@@ -121,9 +117,7 @@ export class WebsiteBuilderClientAction extends Component {
         onWillDestroy(disposeToggleMobileEffect);
 
         this.overlayRef = signal.ref();
-        useSubEnv({
-            localOverlayContainerKey: uniqueId("website"),
-        });
+        this.localOverlayContainerKey = uniqueId("website");
         this.websitePreviewRef = signal.ref();
 
         onWillStart(async () => {
@@ -262,6 +256,7 @@ export class WebsiteBuilderClientAction extends Component {
                     },
                 },
             },
+            localOverlayContainerKey: this.localOverlayContainerKey,
         };
         return { translation: this.translation, builderProps };
     }

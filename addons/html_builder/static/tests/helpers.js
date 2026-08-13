@@ -1,8 +1,7 @@
-import { useSubEnv } from "@web/owl2/utils";
 import { Builder } from "@html_builder/builder";
+import { BuilderOptionsPlugin } from "@html_builder/core/builder_options_plugin";
 import { CORE_PLUGINS } from "@html_builder/core/core_plugins";
 import { Image } from "@html_builder/core/img";
-import { BuilderOptionsPlugin } from "@html_builder/core/builder_options_plugin";
 import { SetupEditorPlugin } from "@html_builder/core/setup_editor_plugin";
 import { revertPreview } from "@html_builder/core/utils";
 import { BackgroundShapeOptionPlugin } from "@html_builder/plugins/background_option/background_shape_option_plugin";
@@ -13,8 +12,8 @@ import { LocalOverlayContainer } from "@html_editor/local_overlay_container";
 import { Plugin } from "@html_editor/plugin";
 import { defineMailModels } from "@mail/../tests/mail_test_helpers";
 import { after, click, queryAll, queryFirst } from "@odoo/hoot";
-import { animationFrame, waitForNone, queryOne, waitFor, advanceTime, tick } from "@odoo/hoot-dom";
-import { Component, onMounted, xml, proxy, signal, useProps, t } from "@odoo/owl";
+import { advanceTime, animationFrame, queryOne, tick, waitFor, waitForNone } from "@odoo/hoot-dom";
+import { Component, onMounted, proxy, signal, t, useProps, xml } from "@odoo/owl";
 import {
     contains,
     defineModels,
@@ -27,8 +26,8 @@ import {
 import { loadBundle } from "@web/core/assets";
 import { isBrowserFirefox } from "@web/core/browser/feature_detection";
 import { registry } from "@web/core/registry";
-import { uniqueId } from "@web/core/utils/functions";
 import { delay } from "@web/core/utils/concurrency";
+import { uniqueId } from "@web/core/utils/functions";
 
 // Avoid server requests for test snippet thumbnails.
 export const dummyThumbnailImg =
@@ -120,7 +119,7 @@ class BuilderContainer extends Component {
                     </div>
                 </div>
             </div>
-            <LocalOverlayContainer localOverlay="this.overlayRef" identifier="this.env.localOverlayContainerKey"/>
+            <LocalOverlayContainer localOverlay="this.overlayRef" identifier="this.localOverlayContainerKey"/>
             <div t-if="this.state.isEditing" t-att-class="{'o_builder_sidebar_open': this.state.isEditing and this.state.showSidebar}" class="o-website-builder_sidebar border-start border-dark">
                 <Builder t-props="this.getBuilderProps()"/>
             </div>
@@ -140,6 +139,7 @@ class BuilderContainer extends Component {
     websitePreviewRef = signal.ref();
     iframeRef = signal.ref();
     overlayRef = signal.ref();
+    localOverlayContainerKey = uniqueId("test");
 
     setup() {
         this.state = proxy({ isMobile: false, isEditing: false, showSidebar: true });
@@ -164,9 +164,6 @@ class BuilderContainer extends Component {
                 resolve(el);
             });
         });
-        useSubEnv({
-            builderRef: this.containerRef,
-        });
     }
 
     onLoad() {
@@ -175,6 +172,7 @@ class BuilderContainer extends Component {
 
     getBuilderProps() {
         return {
+            localOverlayContainerKey: this.localOverlayContainerKey,
             onEditorLoad: this.props.onEditorLoad,
             closeEditor: () => {},
             snippetsName: "",
@@ -370,7 +368,7 @@ export async function setupHTMLBuilder(
         getEditor: () => attachedEditor,
         getEditableContent: () => editableContent,
         contentEl: comp.iframeRef().contentDocument.body.firstChild.firstChild,
-        builderEl: comp.env.builderRef().querySelector(".o-website-builder_sidebar"),
+        builderEl: comp.containerRef().querySelector(".o-website-builder_sidebar"),
         waitSidebarUpdated,
     };
 }

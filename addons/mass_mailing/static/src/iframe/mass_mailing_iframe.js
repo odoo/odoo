@@ -23,7 +23,7 @@ import { useBus, useService } from "@web/core/utils/hooks";
 import { renderToFragment } from "@web/core/utils/render";
 import { closestScrollableY } from "@web/core/utils/scrolling";
 import { useThrottleForAnimation } from "@web/core/utils/timing";
-import { useLayoutEffect, useSubEnv } from "@web/owl2/utils";
+import { useLayoutEffect } from "@web/owl2/utils";
 import { loadGoogleFonts } from "./mass_mailing_iframe_utils";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { isBlock } from "@html_editor/utils/blocks";
@@ -59,9 +59,7 @@ export class MassMailingIframe extends Component {
         this.ui = useService("ui");
         this.overlayRef = signal.ref();
         this.isRTL = localization.direction === "rtl";
-        useSubEnv({
-            localOverlayContainerKey: uniqueId("mass_mailing_iframe"),
-        });
+        this.localOverlayContainerKey = uniqueId("mass_mailing_iframe");
         this.state = proxy({
             showFullscreen: this.props.showFullscreen && !this.ui.isSmall,
             isMobile: false,
@@ -292,7 +290,7 @@ export class MassMailingIframe extends Component {
             return;
         }
         this.editor.config.localOverlayContainers = {
-            key: this.env.localOverlayContainerKey,
+            key: this.localOverlayContainerKey,
             ref: this.overlayRef,
         };
         this.editor.attachTo(
@@ -356,6 +354,7 @@ export class MassMailingIframe extends Component {
             getThemeTab: () =>
                 odoo.loader.modules.get("@mass_mailing/builder/tabs/design_tab").DesignTab,
             themeTabDisplayName: _t("Design"),
+            localOverlayContainerKey: this.localOverlayContainerKey,
         };
     }
 
