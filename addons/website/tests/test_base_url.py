@@ -4,6 +4,7 @@ from lxml.html import document_fromstring
 
 import odoo.tests
 from odoo.exceptions import ValidationError
+from odoo.tests.common import new_test_user
 
 
 class TestUrlCommon(odoo.tests.HttpCase):
@@ -127,6 +128,11 @@ class TestGetBaseUrl(odoo.tests.TransactionCase):
             'company_id': company_1.id,
             'sequence': website_1.sequence - 1,
         })
+        self.assertEqual(
+            attach.with_context(website_id=website_1.id).get_base_url(),
+            website_1_domain,
+            "The current same-company website should take precedence over the company's default website.",
+        )
         # .. on create ..
         self.assertEqual(attach.get_base_url(), website_2_domain,
                          "Domain should be the one from the record.company_id.website_id and company_1.website_id should be the one with lowest sequence.")
@@ -157,3 +163,22 @@ class TestGetBaseUrl(odoo.tests.TransactionCase):
 
         with self.assertRaises(ValidationError):
             website.write({'domain': 'https://my-website.net['})
+
+    def test_04_signup_url_uses_user_website(self):
+        website_1 = self.env['website'].create({
+            'name': 'Website Test 1',
+            'domain': 'https://website-one.example.com',
+        })
+        website_2 = self.env['website'].create({
+            'name': 'Website Test 2',
+            'domain': 'https://website-two.example.com',
+        })
+        self.env['ir.config_parameter'].sudo().set_param('web.base.url', website_1.domain)
+        user = new_test_user(self.env, login='portal_signup_url', groups='base.group_portal', company_id=website_2.company_id.id)
+        self.assertFalse(user.partner_id.company_id, "Partners of portal users are not linked to a company.")
+
+        user.partner_id.signup_prepare(signup_type='reset')
+        self.assertTrue(
+            user.partner_id.with_context(website_id=website_2.id)._get_signup_url().startswith(f'{website_2.domain}/web/reset_password'),
+            "The signup URL should use the user's website instead of web.base.url.",
+        )
