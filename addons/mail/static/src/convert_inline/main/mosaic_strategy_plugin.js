@@ -257,24 +257,31 @@ export class MosaicStrategyPlugin extends Plugin {
     // cells can have the border of their sibling?
 
     /**
+     * WORKING HERE
      * LIMITATIONS: border overlapping multiple cells is discarded in general
      *
      * TODO EGGMAIL WORKING HERE
      * need strategy for:
-     * border => for masonry => cell border should move up to the cell
-     * => for comparisons => don't handle cell borders
-     * => for both, spanning borders need to be displayed => background-color strategy works, but
-     * not always, if border is packaged with any spacing, it won't work, also when stretched it
-     * won't work either => decision: don't support overlapping border colors for now.
-     * background => issue with discarded ancestor background color (is lost)
-     * => background color should be applied on the cell (same as with table strategy)
-     * verticalAlign => specifically for masonry, force a vertical-align middle on cells
-     * unless specified directly by align-items or align-self
-     * => specifically for s_comparisons, we would like vertical-align top for the card body
-     * and vertical-align bottom for the card footer, and we don't want to propagate the background
-     * color of the footer, but we want the footer cell background to be the same as the parent.
-     * But if we do that with alpha colors, then it won't work, so we have to force a non-alpha color
-     * => seems very complex, evaluate what can be done without going too far
+     * overlapping borders:
+     * - draw them mirrored in the spacers around the cell | do not support rounded corners
+     *
+     * borders:
+     * - bottom-up constraint to the cell (like table strategy)
+     *
+     * overlapping background color:
+     * - identify every discarded background color
+     * - define a colspan/rowspan range, apply on every cell inside in multiple passes (with respect to opacity)
+     *
+     * background color:
+     * - masonry bottom-up constraint to the cell (like table strategy)
+     * - s_comparison
+     *   - card body => up to the cell AND the card-footer
+     *   - card footer => replace by color without alpha channel (computing ancestors)
+     *
+     * vertical align:
+     * - masonry => middle for every cell, forced
+     * - s_comparison => top for card body, bottom for card footer
+     *
      */
     fillMosaicContainer(emailNode, tableMeasures) {
         const referenceNode = emailNode.lastReferenceNode;
