@@ -55,9 +55,8 @@ class ResCompany(models.Model):
     def _l10n_cn_baiwang_create_proxy_user(self):
         self.ensure_one()
         if not self.l10n_cn_baiwang_proxy_user_id:
-            self.env['account_edi_proxy_client.user']._register_proxy_user(
+            self.env['account_edi_proxy_client.user']._l10n_cn_baiwang_create_proxy_user(
                 self,
-                'l10n_cn_edi_baiwang',
                 self.l10n_cn_edi_mode,
             )
             self._compute_l10n_cn_baiwang_proxy_user_id()

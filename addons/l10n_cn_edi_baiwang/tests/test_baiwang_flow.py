@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import base64
 from unittest.mock import patch
 from urllib.parse import parse_qs, urlsplit
 
@@ -394,6 +395,36 @@ class TestL10nCnBaiwangFlow(TestAccountMoveSendCommon):
             with self.assertRaises(UserError) as ctx:
                 AccountEdiProxyClientUser._l10n_cn_baiwang_contact_proxy(proxy_user, '/api/foo', {})
         return ctx.exception.args[0]
+
+    def test_11_registration_uses_dedicated_connect_route(self):
+        company = self.company_data['company']
+        proxy_class = self.env['account_edi_proxy_client.user'].__class__
+
+        calls = {}
+
+        def fake_make_request(url, params=False, **kwargs):
+            calls['url'] = url
+            calls['params'] = params
+            return {'id_client': 'new_id_client', 'refresh_token': 'new_refresh_token'}
+
+        with patch.object(proxy_class, '_make_request', side_effect=fake_make_request):
+            new_user = self.env['account_edi_proxy_client.user']._l10n_cn_baiwang_create_proxy_user(
+                company,
+                'prod',
+            )
+
+        self.assertTrue(calls['url'].endswith('/api/l10n_cn_edi_baiwang/1/connect'))
+        self.assertEqual(calls['params']['tax_no'], company.vat)
+        self.assertEqual(calls['params']['dbuuid'], self.env['ir.config_parameter'].get_str('database.uuid'))
+        self.assertEqual(calls['params']['company_id'], company.id)
+        self.assertIn('BEGIN PUBLIC KEY', base64.b64decode(calls['params']['public_key']).decode())
+
+        self.assertEqual(new_user.id_client, 'new_id_client')
+        self.assertEqual(new_user.refresh_token, 'new_refresh_token')
+        self.assertEqual(new_user.edi_identification, company.vat)
+        self.assertEqual(new_user.proxy_type, 'l10n_cn_edi_baiwang')
+        self.assertEqual(new_user.edi_mode, 'prod')
+        self.assertTrue(new_user.private_key_id)
 
     def test_10_proxy_rate_limit_error_is_mapped(self):
         self.assertIn('maximum number of requests', self._contact_proxy_with_error('proxy_rate_limit_exceeded'))
