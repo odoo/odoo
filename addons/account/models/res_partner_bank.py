@@ -226,6 +226,11 @@ class ResPartnerBank(models.Model):
             return self._get_qr_code_base64(**vals)
         return None
 
+    def build_qr_code_value(self, amount, free_communication, structured_communication, currency, debtor_partner, qr_method=None, silent_errors=True):
+        vals = self._build_qr_code_vals(amount, free_communication, structured_communication, currency, debtor_partner, qr_method, silent_errors)
+        params = vals and self._get_qr_code_generation_params(**vals)
+        return params.get('value') if params else None
+
     def _get_qr_vals(self, qr_method, amount, currency, debtor_partner, free_communication, structured_communication):
         return None
 
