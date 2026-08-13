@@ -4985,13 +4985,14 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             'holiday_status_id': self.leave_type.id,
             'number_of_days': 10,
             'allocation_type': 'accrual',
+            'date_from': '2026-08-01',
         })
         accrual_allocation.action_approve()
         accrual_plan.level_ids = [Command.link(self.accrual_plan_start1.level_ids[0].id)]
         leave = self.env['hr.leave'].create({
             'employee_id': self.employee_emp.id,
             'holiday_status_id': self.leave_type.id,
-            'request_date_from': datetime.date.today() + relativedelta(days=2),
-            'request_date_to': datetime.date.today() + relativedelta(days=3),
+            'request_date_from': '2026-08-10',
+            'request_date_to': '2026-08-15',
         })
         self.assertTrue(leave.action_approve())
