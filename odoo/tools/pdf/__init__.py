@@ -573,12 +573,12 @@ class OdooPdfFileWriter(PdfFileWriter):
         PDFA_ANNOT_FLAG_TOGGLENOVIEW = 1 << 8
 
         for page in pages:
-            page_obj = page.getObject()
+            page_obj = page.get_object()
             annots = page_obj.get('/Annots', [])
             if isinstance(annots, IndirectObject):
-                annots = annots.getObject()
+                annots = annots.get_object()
             for annot_ref in annots:
-                annot = annot_ref.getObject()
+                annot = annot_ref.get_object()
                 if annot.get('/Subtype') == '/Popup':
                     continue
 
