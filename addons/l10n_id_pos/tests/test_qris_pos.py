@@ -132,6 +132,28 @@ class TestPosQris(TestPointOfSaleHttpCommon):
         record = qris_transaction._get_record()
         self.assertEqual(pos_order, record)
 
+    def test_qris_qr_code_value(self):
+        """ The QR-code image is drawn by the PoS client, so the server has to return the
+        raw QRIS payload the bank app expects, and not the URL of the report rendering it.
+        """
+        qris_content = "00020101021226610014COM.QRIS.WWW011893600914123456789002150000000000000000303UMI51440014ID.CO.QRIS.WWW0215ID10200211817450303UMI5204541153033605802ID5910Odoo Store6007JAKARTA6304A1B2"
+
+        def _patched_make_qris_request(endpoint, params):
+            return {
+                "status": "success",
+                "data": {
+                    "qris_content": qris_content,
+                    "qris_request_date": "2024-02-27 11:13:42",
+                    "qris_invoiceid": "413255111",
+                    "qris_nmid": "ID1020021181745",
+                },
+            }
+
+        with patch('odoo.addons.l10n_id.models.res_bank._l10n_id_make_qris_request', side_effect=_patched_make_qris_request):
+            qr_value = self.qris_pm.get_qr_code_value(1000, 'Order 00042', '', self.company.currency_id.id, False)
+
+        self.assertEqual(qr_value, qris_content)
+
     def test_tour_qris_payment_fail(self):
         """ Add products, show QR code and confirm. When confirming, the result will be status
         unpaid and so it should trigger a warning dialog informing it"""

@@ -2431,9 +2431,9 @@ export class PosStore extends WithLazyGetterTrap {
             return false;
         }
         payment.setPaymentStatus("waiting");
-        let qrCodeUrl;
+        let qrCodeValue;
         try {
-            qrCodeUrl = await this.data.call("pos.payment.method", "get_qr_code_url", [
+            qrCodeValue = await this.data.call("pos.payment.method", "get_qr_code_value", [
                 [payment.payment_method_id.id],
                 payment.amount,
                 payment.pos_order_id.name + " " + payment.pos_order_id.tracking_number,
@@ -2442,8 +2442,8 @@ export class PosStore extends WithLazyGetterTrap {
                 payment.pos_order_id.partner_id?.id,
             ]);
         } catch (error) {
-            qrCodeUrl = payment.payment_method_id.default_qr;
-            if (!qrCodeUrl) {
+            qrCodeValue = payment.payment_method_id.default_qr;
+            if (!qrCodeValue) {
                 let message;
                 if (error instanceof ConnectionLostError) {
                     message = _t(
@@ -2459,8 +2459,8 @@ export class PosStore extends WithLazyGetterTrap {
                 return false;
             }
         }
-        payment.updateCustomerDisplayQrCode(generateQRCodeDataUrl(qrCodeUrl));
-        payment.qr_code = generateQRCodeDataUrl(qrCodeUrl, { useThemeQr: true });
+        payment.updateCustomerDisplayQrCode(generateQRCodeDataUrl(qrCodeValue));
+        payment.qr_code = generateQRCodeDataUrl(qrCodeValue, { useThemeQr: true });
         return await ask(this.env.services.dialog, payment.getQrPopupProps(), {}, QRPopup).then(
             (result) => {
                 payment.updateCustomerDisplayQrCode(null);
