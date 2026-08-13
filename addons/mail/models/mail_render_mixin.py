@@ -260,7 +260,8 @@ class MailRenderMixin(models.AbstractModel):
         html = self.env['ir.qweb']._render(layout_xmlid, template_ctx, minimal_qcontext=True, raise_if_not_found=False)
         if not html:
             _logger.warning('QWeb template %s not found when rendering encapsulation template.' % (layout_xmlid))
-        html = self.env['mail.render.mixin']._replace_local_links(html)
+        base_url = context_record.get_base_url() if context_record else None
+        html = self.env['mail.render.mixin']._replace_local_links(html, base_url)
         return html
 
     @api.model
