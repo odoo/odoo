@@ -101,6 +101,10 @@ class TestUi(TestPosHrHttpCommon):
         self.main_pos_config.with_user(self.pos_admin).open_ui()
         self.start_pos_tour("PosHrTour", login="pos_admin")
 
+        session = self.main_pos_config.current_session_id
+        cash_move = session.bank_statement_line_ids[:1]
+        self.assertEqual(cash_move.employee_id, self.emp1)
+
     def test_cashier_stay_logged_in(self):
         # open a session, the /pos/ui controller will redirect to it
         self.main_pos_config.with_user(self.pos_admin).open_ui()
