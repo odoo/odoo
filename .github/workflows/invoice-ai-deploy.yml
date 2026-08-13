@@ -1,0 +1,132 @@
+name: "Deploy invoice-ai to EC2"
+
+# Deploys ONLY the invoice-ai service. Odoo is deployed by the root
+# .github/workflows/deploy.yml (production branch). The two services must
+# never need a lockstep release — each pipeline owns its image, its health
+# gate, and its rollback.
+
+"on":
+    workflow_run:
+        workflows: ["invoice-ai CI"]
+        types: [completed]
+        branches: [main]
+
+concurrency:
+    group: deploy-invoice-ai-production
+    cancel-in-progress: false
+
+permissions:
+    contents: read
+
+jobs:
+    deploy:
+        # Only deploy when the CI pipeline finished SUCCESSFULLY, and only
+        # for the image built from the exact SHA that CI just verified.
+        if: ${{ github.event.workflow_run.conclusion == 'success' }}
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+              with:
+                  # workflow_run checks out the default branch by default;
+                  # pin to the SHA whose image CI just published.
+                  ref: ${{ github.event.workflow_run.head_sha }}
+
+            - name: Deploy over SSH with health gate + auto rollback
+              uses: appleboy/ssh-action@v1.0.3
+              with:
+                  host: ${{ secrets.EC2_HOST }}
+                  username: ${{ secrets.EC2_USERNAME }}
+                  key: ${{ secrets.SSH_PRIVATE_KEY }}
+                  port: 22
+                  timeout: 120s
+                  command_timeout: 110s
+                  script: |
+                      set -eo pipefail
+
+                      TARGET_SHA="${{ github.event.workflow_run.head_sha }}"
+                      PROJ="${INVOICE_AI_PROJECT_DIR:-/opt/odoo}"
+
+                      echo "=== Deploying invoice-ai ==="
+                      echo "Target SHA: $TARGET_SHA"
+                      cd "$PROJ"
+
+                      # ------------------------------------------------------------------
+                      # 1. Discover the CURRENTLY RUNNING image tag — this is the
+                      #    rollback target. Read the container's OCI revision label
+                      #    (stamped by our Dockerfile from INVOICE_AI_BUILD_SHA),
+                      #    falling back to the image tag. Never fall back to git:
+                      #    the running container is the only source of truth.
+                      # ------------------------------------------------------------------
+                      CID=$(docker compose ps -q invoice-ai 2>/dev/null || true)
+                      if [ -n "$CID" ]; then
+                          PREVIOUS_SHA=$(docker inspect --format \
+                              '{{ index .Config.Labels "org.opencontainers.image.revision" }}' \
+                              "$CID" 2>/dev/null || true)
+                          [ -z "$PREVIOUS_SHA" ] || [ "$PREVIOUS_SHA" = "<none>" ] \
+                              && PREVIOUS_SHA=$(docker inspect --format \
+                                  '{{ index .Config.Image }}' "$CID" | sed 's/.*://')
+                      fi
+                      [ -z "$PREVIOUS_SHA" ] && PREVIOUS_SHA="none"
+                      echo "Previous SHA: $PREVIOUS_SHA"
+
+                      # ------------------------------------------------------------------
+                      # 2. Pull the SHA-tagged image and start the container.
+                      #    INVOICE_AI_TAG is consumed by the compose overlay
+                      #    (docker-compose.prod.yml) as the image tag.
+                      # ------------------------------------------------------------------
+                      INVOICE_AI_TAG="$TARGET_SHA" docker compose -f docker-compose.yml \
+                          -f docker-compose.prod.yml pull invoice-ai
+                      INVOICE_AI_TAG="$TARGET_SHA" docker compose -f docker-compose.yml \
+                          -f docker-compose.prod.yml up -d --no-deps invoice-ai
+
+                      # ------------------------------------------------------------------
+                      # 3. Health gate: poll /healthz for 30 seconds.
+                      # ------------------------------------------------------------------
+                      HEALTHY=false
+                      for i in $(seq 1 30); do
+                          STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+                              --connect-timeout 5 --max-time 10 \
+                              "http://127.0.0.1:8100/healthz" 2>/dev/null || echo "000")
+                          if [ "$STATUS" = "200" ]; then
+                              ACTUAL_SHA=$(curl -s "http://127.0.0.1:8100/healthz" | \
+                                  python3 -c \
+                                  "import sys,json;print(json.load(sys.stdin).get('build_sha',''))")
+                              if [ "$ACTUAL_SHA" = "$TARGET_SHA" ]; then
+                                  HEALTHY=true
+                                  echo "healthz OK (build_sha=$ACTUAL_SHA) after ${i}s"
+                                  break
+                              fi
+                              echo "  attempt $i: healthz 200 but build_sha=$ACTUAL_SHA != $TARGET_SHA"
+                          else
+                              echo "  attempt $i: healthz HTTP $STATUS"
+                          fi
+                          sleep 1
+                      done
+
+                      # ------------------------------------------------------------------
+                      # 4. Rollback on failure — redeploy the previous SHA, re-poll,
+                      #    then fail the job loudly (red X on main).
+                      # ------------------------------------------------------------------
+                      if [ "$HEALTHY" != "true" ]; then
+                          echo "!!! DEPLOY FAILED — rolling back to $PREVIOUS_SHA"
+                          if [ "$PREVIOUS_SHA" != "none" ]; then
+                              INVOICE_AI_TAG="$PREVIOUS_SHA" docker compose -f docker-compose.yml \
+                                  -f docker-compose.prod.yml up -d --no-deps invoice-ai
+                              for i in $(seq 1 20); do
+                                  STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+                                      --connect-timeout 5 --max-time 10 \
+                                      "http://127.0.0.1:8100/healthz" 2>/dev/null || echo "000")
+                                  if [ "$STATUS" = "200" ]; then
+                                      echo "Rollback verified — previous image healthy ($i/20)"
+                                      exit 1
+                                  fi
+                                  sleep 2
+                              done
+                              echo "!!! CRITICAL: rollback unhealthy — manual intervention required"
+                              exit 2
+                          fi
+                          echo "!!! No previous image to roll back to — manual intervention required"
+                          exit 2
+                      fi
+
+                      echo "=== Deploy completed: invoice-ai @ $TARGET_SHA ==="

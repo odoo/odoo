@@ -1,0 +1,22 @@
+# =============================================================================
+# docker-compose.prod.yml — production overlay for invoice-ai
+#
+# Overrides the dev `build:` for the invoice-ai service with a registry
+# image pull. Used by .github/workflows/deploy.yml and manual deploys:
+#
+#   INVOICE_AI_TAG=<sha> docker compose -f docker-compose.yml \
+#       -f docker-compose.prod.yml up -d --no-deps invoice-ai
+#
+# INVOICE_AI_TAG selects the GHCR tag (default :latest). The deploy pipeline
+# sets it to the commit SHA it just built/pushed, and to the previous SHA
+# during rollback.
+# =============================================================================
+
+services:
+  invoice-ai:
+    image: ghcr.io/${GITHUB_REPOSITORY_OWNER:-7ananSaif}/invoice-ai:${INVOICE_AI_TAG:-latest}
+    pull_policy: always
+    # NOTE: the base file's `build:` key is intentionally NOT overridden.
+    # `docker compose pull` + `pull_policy: always` guarantee the registry
+    # image is used on `up -d`; compose only falls back to `build` when the
+    # image is missing, which cannot happen after the explicit pull.

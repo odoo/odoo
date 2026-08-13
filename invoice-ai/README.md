@@ -1,5 +1,7 @@
 # invoice-ai
 
+[![CI](https://github.com/7ananSaif/odoo/actions/workflows/invoice-ai-ci.yml/badge.svg?branch=main)](https://github.com/7ananSaif/odoo/actions/workflows/invoice-ai-ci.yml)
+
 Standalone vendor invoice extraction service for the `invoice_agent` Odoo
 addon (see `docs/adr-003-ai-service.md` for the measured justification: a
 5 s Claude call holds an Odoo HTTP worker process, and six concurrent
@@ -72,7 +74,6 @@ guard against fragmenting further services out.
 invoice-ai/
 ├── pyproject.toml            # deps pinned: anthropic, fastapi, uvicorn[standard]
 ├── Dockerfile                # python:3.12-slim + poppler + tesseract (-eng, -ara)
-├── .github/workflows/ci.yml  # ruff + pytest + docker build
 ├── app/
 │   ├── main.py               # FastAPI app: /v1/extract + /healthz + error envelope
 │   ├── schemas.py            # InvoiceExtraction — verbatim twin of the Odoo schema

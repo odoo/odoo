@@ -19,7 +19,7 @@ services:
       INVOICE_AI_JWT_AUDIENCE: invoice-ai
       INVOICE_AI_ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
     healthcheck:
-      test: [ "CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/healthz', timeout=5)\"" ]
+      test: [ "CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://127.0.0.1:8100/healthz', timeout=5)\"" ]
       interval: 30s
       timeout: 5s
       retries: 3
