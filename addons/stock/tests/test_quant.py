@@ -1107,6 +1107,38 @@ class TestStockQuant(TestStockCommon):
         with self.assertRaises(UserError):
             _get_relocate_wizard(quants_bab_AB)
 
+    def test_relocate_reserved_entire_package(self):
+        """Ensure that a package reserved for a move can still be relocated.
+            - The package is used by a confirmed delivery.
+            - The package is relocated to 'WH/stock/shelf 1'.
+        """
+        package = self.env['stock.package'].create({'name': 'PACKX'})
+        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 10, package_id=package)
+        quant = self.env['stock.quant'].search([('product_id', '=', self.productA.id)])
+
+        delivery = self.env['stock.picking'].create({
+            'picking_type_id': self.ref('stock.picking_type_out'),
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.ref('stock.stock_location_customers'),
+            'move_ids': [Command.create({
+                'product_id': self.productA.id,
+                'location_id': self.stock_location.id,
+                'location_dest_id': self.ref('stock.stock_location_customers'),
+                'product_uom_qty': 10,
+            })],
+        })
+        delivery.action_confirm()
+        self.assertEqual(delivery.move_ids.state, 'assigned')
+        self.assertEqual(delivery.move_line_ids.result_package_id, package)
+
+        relocate_wizard = Form.from_action(self.env, quant.action_stock_quant_relocate())
+        relocate_wizard.dest_location_id = self.shelf_1
+        relocate_wizard.save().with_user(self.user_stock_manager).action_relocate_quants()
+
+        relocated_quant = self.env['stock.quant'].search([('product_id', '=', self.productA.id)])
+        self.assertEqual(relocated_quant.location_id, self.shelf_1)
+        self.assertEqual(package.picking_ids, delivery)
+
     def test_inventory_adjustment_package(self):
         """ With the changes implemented in _get_inventory_move_values(), we want to make sure that it correctly
         writes the package and destination package for inventory adjustments in _apply_inventory(). """
