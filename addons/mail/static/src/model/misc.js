@@ -242,7 +242,14 @@ export function makeRecordFieldLocalId(recordLocalId, fieldName) {
     return `${recordLocalId}:${fieldName}`;
 }
 
-export const technicalKeysOnRecords = ["_", "_proxy", "_proxyInternal", "_raw", "env", "Model"];
+export const technicalKeysOnRecords = new Set([
+    "_",
+    "_proxy",
+    "_proxyInternal",
+    "_raw",
+    "env",
+    "Model",
+]);
 
 /**
  * Wraps the given methods so they run untracked: reactive reads inside them
