@@ -1,9 +1,11 @@
+import { usePlugin } from "@odoo/owl";
 import { Interaction } from "@web/public/interaction";
 import { browser } from "@web/core/browser/browser";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_utils";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { onceAllImagesLoaded } from "@website/utils/images";
+import { BootstrapInstance } from "@web/core/utils/bootstrap_plugin";
 
 export class CarouselSlider extends Interaction {
     static selector = ".carousel";
@@ -68,6 +70,7 @@ export class CarouselSlider extends Interaction {
     showClickableSlideLinks = true;
 
     setup() {
+        this.bootstrap = usePlugin(BootstrapInstance);
         this.maxHeight = undefined;
         this.carouselInnerEl = this.el.querySelector(".carousel-inner");
         if (this.carouselInnerEl) {
@@ -86,7 +89,10 @@ export class CarouselSlider extends Interaction {
             this.el.dataset.bsRide = this.hasInterval ? "carousel" : "false";
         }
         if (this.el.dataset.bsRide === "false") {
-            window.Carousel.getOrCreateInstance(this.el, { ride: false, pause: true });
+            this.bootstrap.getOrCreateInstance(window.Carousel, this.el, {
+                ride: false,
+                pause: true,
+            });
         } else if (!this.hasInterval) {
             this.el.dataset.bsInterval = "5000";
         }
@@ -97,8 +103,11 @@ export class CarouselSlider extends Interaction {
     start() {
         this.computeMaxHeight();
         this.updateContent();
-        this.bsCarousel = window.Carousel.getOrCreateInstance(this.el, this.carouselOptions);
-        this.registerCleanup(() => this.bsCarousel.dispose());
+        // Not cached on `this`: another owner of the same element (e.g.
+        // CarouselBootstrapUpgradeFix) may force-recreate the instance later,
+        // which would leave a cached reference stale. Always re-fetch it
+        // fresh from `this.bootstrap` right before use instead.
+        this.bootstrap.getOrCreateInstance(window.Carousel, this.el, this.carouselOptions);
 
         const itemWidth = getComputedStyle(this.el).getPropertyValue(
             "--o-carousel-item-width-percentage"
@@ -154,8 +163,10 @@ export class CarouselSlider extends Interaction {
             // If images are loading, prevent the slide transition. It will
             // slide once the next images are loaded.
             ev.preventDefault();
-            onceAllImagesLoaded(this.carouselInnerEl).then(() => {
-                this.bsCarousel.to(ev.to);
+            this.waitFor(onceAllImagesLoaded(this.carouselInnerEl)).then(() => {
+                this.bootstrap
+                    .getOrCreateInstance(window.Carousel, this.el, this.carouselOptions)
+                    .to(ev.to);
             });
             return;
         }
@@ -242,16 +253,18 @@ export class CarouselSlider extends Interaction {
     }
 
     onPauseBtnClick() {
+        this.bootstrap.disposeBootstrapInstance(window.Carousel.getInstance(this.el), {
+            force: true,
+        });
         if (!this.isPausedByUser) {
-            this.bsCarousel.dispose();
-            this.bsCarousel = window.Carousel.getOrCreateInstance(this.el, {
+            this.bootstrap.getOrCreateInstance(window.Carousel, this.el, {
                 pause: true,
                 ride: false,
             });
         } else {
-            this.bsCarousel.dispose();
-            this.bsCarousel = window.Carousel.getOrCreateInstance(this.el, this.carouselOptions);
-            this.bsCarousel.cycle();
+            this.bootstrap
+                .getOrCreateInstance(window.Carousel, this.el, this.carouselOptions)
+                .cycle();
         }
         this.isPausedByUser = !this.isPausedByUser;
     }
@@ -261,7 +274,9 @@ export class CarouselSlider extends Interaction {
      */
     resumeCarouselCycling() {
         if (!this.isPausedByUser && ["true", "carousel"].includes(this.el.dataset.bsRide)) {
-            this.bsCarousel.cycle();
+            this.bootstrap
+                .getOrCreateInstance(window.Carousel, this.el, this.carouselOptions)
+                .cycle();
         }
     }
 
@@ -275,8 +290,13 @@ export class CarouselSlider extends Interaction {
         if (browser.matchMedia(`(prefers-reduced-motion: reduce)`).matches) {
             // Only recreate the Bootstrap carousel the 1st time.
             if (this.el.dataset.bsRide !== "false") {
-                window.Carousel.getInstance(this.el)?.dispose();
-                window.Carousel.getOrCreateInstance(this.el, { ride: false, pause: true });
+                this.bootstrap.disposeBootstrapInstance(window.Carousel.getInstance(this.el), {
+                    force: true,
+                });
+                this.bootstrap.getOrCreateInstance(window.Carousel, this.el, {
+                    ride: false,
+                    pause: true,
+                });
             }
             return "false";
         }

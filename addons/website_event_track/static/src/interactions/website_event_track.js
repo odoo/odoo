@@ -1,5 +1,7 @@
+import { usePlugin } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { Interaction } from "@web/public/interaction";
+import { BootstrapInstance } from "@web/core/utils/bootstrap_plugin";
 
 export class WebsiteEventTrack extends Interaction {
     static selector = ".o_wevent_event";
@@ -29,9 +31,9 @@ export class WebsiteEventTrack extends Interaction {
     };
 
     setup() {
+        this.bootstrap = usePlugin(BootstrapInstance);
         this.el.querySelectorAll("[data-bs-toggle='popover']").forEach((el) => {
-            const bsPopover = window.Popover.getOrCreateInstance(el);
-            this.registerCleanup(() => bsPopover.dispose());
+            this.bootstrap.getOrCreateInstance(window.Popover, el);
         });
 
         this.searchText = "";

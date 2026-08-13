@@ -11,9 +11,10 @@ import { insertThousandsSep, formatFloat } from '@web/core/utils/numbers';
 import { renderToElement, renderToFragment } from '@web/core/utils/render';
 import { isEmail } from '@web/core/utils/strings';
 import { throttleForAnimation } from '@web/core/utils/timing';
-import { htmlEscape, markup } from '@odoo/owl';
+import { htmlEscape, markup, usePlugin } from '@odoo/owl';
 import wSaleUtils from '@website_sale/js/website_sale_utils';
 import { ProductImageViewer } from '@website_sale/js/components/website_sale_image_viewer';
+import { BootstrapInstance } from '@web/core/utils/bootstrap_plugin';
 
 export class ProductPage extends Interaction {
     static selector = '.o_wsale_product_page';
@@ -53,6 +54,10 @@ export class ProductPage extends Interaction {
             "t-on-click": this.onClickSubmitWishlistStockNotificationForm.bind(this),
         },
     };
+
+    setup() {
+        this.bootstrap = usePlugin(BootstrapInstance);
+    }
 
     start() {
         this._applySearchParams();
@@ -379,7 +384,7 @@ export class ProductPage extends Interaction {
                 .setAttribute('content', shareImageSrc);
 
             if (images.id === 'o-carousel-product') {
-                window.Carousel.getOrCreateInstance(images).to(0);
+                this.bootstrap.getOrCreateInstance(window.Carousel, images).to(0);
             }
             this._startZoom();
         }

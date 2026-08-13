@@ -9,6 +9,7 @@ import { _t } from "@web/core/l10n/translation";
 import { isImageFile, svgToPNG, webpToPNG } from "@website/js/utils";
 import { escapeRegExp } from "@web/core/utils/strings";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
+import { BootstrapInstance } from "@web/core/utils/bootstrap_plugin";
 import { clamp } from "@web/core/utils/numbers";
 import { registry } from "@web/core/registry";
 import { rpc } from "@web/core/network/rpc";
@@ -21,10 +22,11 @@ import {
     onWillStart,
     proxy,
     signal,
+    t,
     useEffect,
     useListener,
+    usePlugin,
     useProps,
-    t,
 } from "@odoo/owl";
 import { standardActionServiceProps } from "@web/webclient/actions/action_service";
 import { fuzzyLevenshteinLookup } from "@web/core/utils/search";
@@ -260,6 +262,7 @@ export class DescriptionScreen extends Component {
     scratchPositioningRef = signal.ref();
     positioningDropdownRef = signal.ref();
     setup() {
+        this.bootstrap = usePlugin(BootstrapInstance);
         this.state = useStore();
         this.orm = useService("orm");
         useAutofocus({ ref: this.autofocusRef });
@@ -285,8 +288,9 @@ export class DescriptionScreen extends Component {
                     this.industrySelection()?.querySelector("input").focus();
                 }
                 if (selectedIndustry) {
-                    if (this.positioningDropdownRef()) {
-                        window.Dropdown.getOrCreateInstance(this.positioningDropdownRef()).show();
+                    const el = this.positioningDropdownRef();
+                    if (el) {
+                        this.bootstrap.getOrCreateInstance(window.Dropdown, el).show();
                     }
                     this.purposeSelectionRef()?.focus();
                 }
@@ -620,7 +624,9 @@ Return ONLY a JSON object with:
         // outside of it
         if (isBrowserSafari() && this.safariHackFocusedOutDropdown) {
             if (ev.target.closest(".dropdown") !== this.safariHackFocusedOutDropdown) {
-                window.Dropdown.getOrCreateInstance(this.safariHackFocusedOutDropdown).hide();
+                this.bootstrap
+                    .getOrCreateInstance(window.Dropdown, this.safariHackFocusedOutDropdown)
+                    .hide();
             }
             this.safariHackFocusedOutDropdown = null;
         }
@@ -638,7 +644,7 @@ Return ONLY a JSON object with:
             return;
         }
         if (ev.relatedTarget?.closest(".dropdown") !== ev.currentTarget) {
-            window.Dropdown.getOrCreateInstance(ev.currentTarget).hide();
+            this.bootstrap.getOrCreateInstance(window.Dropdown, ev.currentTarget).hide();
         }
     }
 

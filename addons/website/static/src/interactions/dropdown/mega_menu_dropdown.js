@@ -1,5 +1,7 @@
+import { usePlugin } from "@odoo/owl";
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
+import { BootstrapInstance } from "@web/core/utils/bootstrap_plugin";
 
 export class MegaMenuDropdown extends Interaction {
     static selector = "header#top";
@@ -16,6 +18,7 @@ export class MegaMenuDropdown extends Interaction {
     };
 
     setup() {
+        this.bootstrap = usePlugin(BootstrapInstance);
         this.mobileMegaMenuToggleEls = [];
         this.desktopMegaMenuToggleEls = [];
         const megaMenuToggleEls = this.el.querySelectorAll(".o_mega_menu_toggle");
@@ -91,7 +94,7 @@ export class MegaMenuDropdown extends Interaction {
 
         // Hiding the dropdown where the mega menu comes from before moving it,
         // so everything is in a consistent state.
-        Dropdown.getOrCreateInstance(previousMegaMenuToggleEl).hide();
+        this.bootstrap.getOrCreateInstance(Dropdown, previousMegaMenuToggleEl).hide();
         megaMenuToggleEl.insertAdjacentElement("afterend", megaMenuEl);
     }
 

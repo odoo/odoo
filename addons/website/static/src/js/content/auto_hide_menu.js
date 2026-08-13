@@ -327,7 +327,14 @@ async function autoHideMenu(el, options) {
             if (anchorInExtra) {
                 el.addEventListener("shown.bs.dropdown", setSelection, { once: true });
             }
-            window.Dropdown.getOrCreateInstance(extraMenuEl).show();
+            const dropdown = window.Dropdown.getOrCreateInstance(extraMenuEl);
+            // `extraMenuEl` is recreated on every `_adapt()` cycle (see
+            // `_restore()`), so dispose it as soon as it closes instead of
+            // leaking it.
+            extraMenuEl.addEventListener("hidden.bs.dropdown", () => dropdown.dispose(), {
+                once: true,
+            });
+            dropdown.show();
         }
         el.classList.remove(...options.loadingStyleClasses);
     }

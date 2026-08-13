@@ -1,7 +1,9 @@
+import { usePlugin } from "@odoo/owl";
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
 
 import { SIZES, utils as uiUtils } from "@web/core/ui/ui_utils";
+import { BootstrapInstance } from "@web/core/utils/bootstrap_plugin";
 
 export class CarouselProduct extends Interaction {
     static selector = "#o-carousel-product";
@@ -26,6 +28,7 @@ export class CarouselProduct extends Interaction {
     };
 
     setup() {
+        this.bootstrap = usePlugin(BootstrapInstance);
         this.top = undefined;
         this.indicatorJustify = "start";
     }
@@ -108,7 +111,7 @@ export class CarouselProduct extends Interaction {
      * @param {MouseEvent} ev
      */
     onMouseWheel(ev) {
-        const bsCarousel = window.Carousel.getOrCreateInstance(this.el);
+        const bsCarousel = this.bootstrap.getOrCreateInstance(window.Carousel, this.el);
         if (ev.deltaY > 0) {
             bsCarousel.next();
         } else {

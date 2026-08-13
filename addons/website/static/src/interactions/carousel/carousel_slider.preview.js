@@ -26,7 +26,7 @@ const CarouselSliderPreview = (I) =>
          * Starts the carousel autoplay when the mouse enters the element.
          */
         mouseEnter() {
-            const carousel = window.Carousel.getOrCreateInstance(this.el);
+            const carousel = this.bootstrap.getOrCreateInstance(window.Carousel, this.el);
             carousel.cycle();
         }
 
@@ -35,7 +35,7 @@ const CarouselSliderPreview = (I) =>
          * leaves the element.
          */
         mouseLeave() {
-            const carousel = window.Carousel.getOrCreateInstance(this.el);
+            const carousel = this.bootstrap.getOrCreateInstance(window.Carousel, this.el);
             carousel.pause();
             carousel.to(0);
         }

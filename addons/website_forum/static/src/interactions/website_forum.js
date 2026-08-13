@@ -1,7 +1,8 @@
 import { scrollTo, closestScrollable } from "@html_builder/utils/scrolling";
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
-import { markup } from "@odoo/owl";
+import { markup, usePlugin } from "@odoo/owl";
+import { BootstrapInstance } from "@web/core/utils/bootstrap_plugin";
 import { browser } from "@web/core/browser/browser";
 import { cookie } from "@web/core/browser/cookie";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
@@ -67,6 +68,7 @@ export class WebsiteForum extends Interaction {
     };
 
     setup() {
+        this.bootstrap = usePlugin(BootstrapInstance);
         this.lastsearch = [];
 
         // welcome message action button
@@ -77,8 +79,7 @@ export class WebsiteForum extends Interaction {
         }
 
         this.el.querySelectorAll("[data-bs-toggle='popover']").forEach((el) => {
-            const bsPopover = window.Popover.getOrCreateInstance(el);
-            this.registerCleanup(() => bsPopover.dispose());
+            this.bootstrap.getOrCreateInstance(window.Popover, el);
         });
 
         const selectMenuWrapperEl = document.querySelector("div.js_select_menu_wrapper");
@@ -123,14 +124,13 @@ export class WebsiteForum extends Interaction {
         });
 
         this.el.querySelectorAll(".o_wforum_bio_popover").forEach((authorBox) => {
-            const bsPopover = window.Popover.getOrCreateInstance(authorBox, {
+            this.bootstrap.getOrCreateInstance(window.Popover, authorBox, {
                 trigger: "hover",
                 offset: "10",
                 animation: false,
                 html: true,
                 customClass: "o_wforum_bio_popover_container shadow-sm",
             });
-            this.registerCleanup(() => bsPopover.dispose());
         });
 
         this.el.querySelectorAll(".o_wforum_question, .o_wforum_answer, .o_wforum_post_comment, .o_wforum_last_activity")

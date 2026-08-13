@@ -1,7 +1,9 @@
+import { usePlugin } from "@odoo/owl";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { uniqueId } from "@web/core/utils/functions";
 import { getElementsWithOption } from "@html_builder/utils/utils";
+import { BootstrapInstance } from "@web/core/utils/bootstrap_plugin";
 import { NavTabsHeaderMiddleButtons } from "./navtabs_header_buttons";
 
 const tabsSectionSelector = "section.s_tabs, section.s_tabs_images";
@@ -23,6 +25,10 @@ export class NavTabsOptionPlugin extends Plugin {
         on_cloned_handlers: this.onCloned.bind(this),
     };
 
+    setup() {
+        this.bootstrap = usePlugin(BootstrapInstance);
+    }
+
     getNavLinkEls(editingElement) {
         const navEl = editingElement.querySelector(".nav");
         return navEl.querySelectorAll(".nav-item .nav-link");
@@ -41,7 +47,7 @@ export class NavTabsOptionPlugin extends Plugin {
     }
 
     showTab(navLinkEl, paneEl) {
-        this.window.Tab.getOrCreateInstance(navLinkEl).show();
+        this.bootstrap.getOrCreateInstance(this.window.Tab, navLinkEl).show();
         // Immediately show the pane so the history remains consistent.
         paneEl.classList.add("show");
     }
@@ -71,6 +77,7 @@ export class NavTabsOptionPlugin extends Plugin {
         const nextActivePaneEl = [...this.getPaneEls(editingElement)][index];
         this.showTab(nextActiveLinkEl, nextActivePaneEl);
         // Remove the tab.
+        this.bootstrap.disposeBootstrapInstance(this.window.Tab.getInstance(activeLinkEl));
         activeLinkEl.parentElement.remove();
         activePaneEl.remove();
     }

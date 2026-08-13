@@ -1,3 +1,4 @@
+import { usePlugin } from "@odoo/owl";
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { _t } from "@web/core/l10n/translation";
@@ -5,6 +6,7 @@ import { removableNodePredicates as deletePluginPredicates } from "@html_editor/
 import { isUnremovableQWebElement } from "@html_editor/others/qweb_plugin";
 import { isEditable } from "@html_builder/utils/utils";
 import { closestElement, selectElements } from "@html_editor/utils/dom_traversal";
+import { BootstrapInstance } from "@web/core/utils/bootstrap_plugin";
 
 /** @typedef {import("plugins").CSSSelector} CSSSelector */
 
@@ -73,6 +75,7 @@ export class RemovePlugin extends Plugin {
     static shared = ["removeElement"];
 
     setup() {
+        this.bootstrap = usePlugin(BootstrapInstance);
         this.overlayTarget = null;
 
         const unremovableSelectors = [];
@@ -177,10 +180,7 @@ export class RemovePlugin extends Plugin {
 
         // Remove tooltips.
         selectElements(toRemoveEl, "*").forEach((el) => {
-            const tooltip = Tooltip.getInstance(el);
-            if (tooltip) {
-                tooltip.dispose();
-            }
+            this.bootstrap.disposeBootstrapInstance(Tooltip.getInstance(el));
         });
 
         // Remove the element.

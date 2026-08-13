@@ -1,7 +1,9 @@
+import { usePlugin } from "@odoo/owl";
 import { ReCaptcha } from "@google_recaptcha/js/recaptcha";
 import { registry } from "@web/core/registry";
 import { session } from "@web/session";
 import { Interaction } from "@web/public/interaction";
+import { BootstrapInstance } from "@web/core/utils/bootstrap_plugin";
 
 export class ModalRegistration extends Interaction {
     static selector = "#modal_attendees_registration,.o_wevent_modal_slot_ticket_registration";
@@ -15,6 +17,7 @@ export class ModalRegistration extends Interaction {
     };
 
     setup() {
+        this.bootstrap = usePlugin(BootstrapInstance);
         // dynamic get rather than import as we don't depend on this module
         if (session.turnstile_site_key) {
             const { TurnStile } = odoo.loader.modules.get(
@@ -33,7 +36,7 @@ export class ModalRegistration extends Interaction {
     }
 
     start() {
-        const formModal = window.Modal.getOrCreateInstance(this.el, {
+        const formModal = this.bootstrap.getOrCreateInstance(window.Modal, this.el, {
             backdrop: "static",
             keyboard: false,
         });
@@ -41,13 +44,22 @@ export class ModalRegistration extends Interaction {
         const form = this.el.querySelector("form#attendee_registration");
         // the turnstile container needs to be already appended to the dom before rendering
         // see modal.js for events
-        this.el.addEventListener("shown.bs.modal", () => {
+        this.addListener(this.el, "shown.bs.modal", () => {
             this._addTurnstile(form);
         });
 
         formModal.show();
+        // Note: this listener is intentionally added with a raw addEventListener
+        // instead of this.addListener, as it is only ever wired up here, while
+        // the interaction is already being destroyed (formModal.hide() only
+        // triggers "hidden.bs.modal" asynchronously, once the CSS transition
+        // ends).
         this.registerCleanup(() => {
-            this.el.addEventListener("hidden.bs.modal", () => formModal.dispose(), { once: true });
+            this.el.addEventListener(
+                "hidden.bs.modal",
+                () => this.bootstrap.disposeBootstrapInstance(formModal),
+                { once: true }
+            );
             formModal.hide();
         });
     }
@@ -75,6 +87,7 @@ export class ModalRegistration extends Interaction {
     onClick() {
         this.enableRegistrationFormSubmit();
         this.el.remove();
+        this.services["public.interactions"].stopInteractions(this.el);
     }
 
     /**

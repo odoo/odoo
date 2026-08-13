@@ -18,7 +18,9 @@ document.addEventListener("DOMContentLoaded", function () {
             ev.preventDefault();
             const db = ev.target.getAttribute("data-db");
             const target = ev.target.getAttribute("data-bs-target");
-            const modal = Modal.getOrCreateInstance(document.querySelector(target));
+            const modalEl = document.querySelector(target);
+            const modal = Modal.getOrCreateInstance(modalEl);
+            modalEl.addEventListener("hidden.bs.modal", () => modal.dispose(), { once: true });
             const inputName = modal._element.querySelector("input[name=name]");
             if (inputName) {
                 inputName.value = db;
@@ -27,16 +29,16 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-   document.getElementById('backup_format').addEventListener("change", function (ev) {
-            ev.preventDefault();
-            const no_filestore_flag = document.getElementById("filestore_div");
-            if (no_filestore_flag) {
-                if (ev.target.value != "zip") {
-                    no_filestore_flag.classList.add("d-none");
-                } else {
-                    no_filestore_flag.classList.remove("d-none");
-                }
+    document.getElementById("backup_format").addEventListener("change", function (ev) {
+        ev.preventDefault();
+        const no_filestore_flag = document.getElementById("filestore_div");
+        if (no_filestore_flag) {
+            if (ev.target.value != "zip") {
+                no_filestore_flag.classList.add("d-none");
+            } else {
+                no_filestore_flag.classList.remove("d-none");
             }
+        }
     });
 
     // close modal on submit
@@ -48,6 +50,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 return;
             }
             const modal = Modal.getOrCreateInstance(modalEl);
+            modalEl.addEventListener("hidden.bs.modal", () => modal.dispose(), { once: true });
             modal.hide();
             if (modalEl.classList.contains("o_database_backup")) {
                 if (!document.querySelector(".alert-backup-long")) {

@@ -1,7 +1,9 @@
+import { usePlugin } from "@odoo/owl";
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
 
 import { isVisible } from "@html_editor/utils/dom_info";
+import { BootstrapInstance } from "@web/core/utils/bootstrap_plugin";
 
 /**
  * This interaction is kept for compatibility with snippets dropped before 18.0.
@@ -22,6 +24,7 @@ export class GallerySlider extends Interaction {
     };
 
     setup() {
+        this.bootstrap = usePlugin(BootstrapInstance);
         // Stable fix to set `data-vjs` on snippets dropped between 18 and 19.1.
         if (!this.el.matches(".o_slideshow:not([data-vcss]), .o_slideshow[data-vcss='001']")) {
             this.el.dataset.vjs = "001";
@@ -123,7 +126,9 @@ export class GallerySlider extends Interaction {
         }
         this.page += dispatchedEl.classList.contains("o_indicators_left") ? -1 : 1;
         this.page = Math.max(0, Math.min(this.nbPages - 1, this.page)); // should not be necessary
-        window.Carousel.getOrCreateInstance(this.carouselEl).to(this.page * this.realNbPerPage);
+        this.bootstrap
+            .getOrCreateInstance(window.Carousel, this.carouselEl)
+            .to(this.page * this.realNbPerPage);
         // We dont use hide() before the slide animation in the editor because there is a traceback
         // TO DO: fix this traceback
         if (this.hideOnClickIndicator) {

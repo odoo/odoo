@@ -1,7 +1,9 @@
+import { usePlugin } from "@odoo/owl";
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
 
 import { isScrollableY } from "@web/core/utils/scrolling";
+import { BootstrapInstance } from "@web/core/utils/bootstrap_plugin";
 
 export class NoBackdropPopup extends Interaction {
     static selector = ".s_popup_no_backdrop";
@@ -13,6 +15,7 @@ export class NoBackdropPopup extends Interaction {
     };
 
     setup() {
+        this.bootstrap = usePlugin(BootstrapInstance);
         this.throttledUpdateScrollbar = this.throttled(this.updateScrollbar);
         this.removeResizeListener = null;
         this.resizeObserver = null;
@@ -30,7 +33,7 @@ export class NoBackdropPopup extends Interaction {
         // '.modal-content' (see comments in CSS).
         const modalContentEl = this.el.querySelector(".modal-content");
         const isOverflowing = isScrollableY(modalContentEl);
-        const bsModal = window.Modal.getOrCreateInstance(this.el);
+        const bsModal = this.bootstrap.getOrCreateInstance(window.Modal, this.el);
         if (isOverflowing) {
             // If the "no-backdrop" modal has a scrollbar, the page's scrollbar
             // must be hidden. This is because if the two scrollbars overlap, it

@@ -1,6 +1,8 @@
+import { usePlugin } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
 import { patchDynamicContent } from "@web/public/utils";
+import { BootstrapInstance } from "@web/core/utils/bootstrap_plugin";
 import { PortalComposer } from "@portal/interactions/portal_composer";
 
 /**
@@ -40,6 +42,7 @@ patch(PortalComposer.prototype, {
      */
     setup() {
         super.setup();
+        this.bootstrap = usePlugin(BootstrapInstance);
         patchDynamicContent(this.dynamicContent, {
             ".o-mail-Composer-stars i": {
                 "t-on-click": this.onClickStar.bind(this),
@@ -141,7 +144,7 @@ patch(PortalComposer.prototype, {
         this.addListener(modalEl, "hidden.bs.modal.noUpdate", () => {
             this.options.reloadRatingPopupComposer(result);
         });
-        window.Modal.getOrCreateInstance(modalEl).hide();
+        this.bootstrap.getOrCreateInstance(window.Modal, modalEl).hide();
     },
 
     /**

@@ -1,5 +1,7 @@
+import { usePlugin } from "@odoo/owl";
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
+import { BootstrapInstance } from "@web/core/utils/bootstrap_plugin";
 
 /**
  * This class is used to fix carousel auto-slide behavior in Odoo 17.4 and up.
@@ -33,6 +35,7 @@ export class CarouselBootstrapUpgradeFix extends Interaction {
     carouselOptions = undefined;
 
     setup() {
+        this.bootstrap = usePlugin(BootstrapInstance);
         this.sliding = false;
         this.hasInterval = ![undefined, "false", "0"].includes(this.el.dataset.bsInterval);
     }
@@ -45,15 +48,24 @@ export class CarouselBootstrapUpgradeFix extends Interaction {
                     this.addListener(this.el, "slid.bs.carousel", () => resolve(), { once: true });
                 });
             }
-            window.Carousel.getInstance(this.el)?.dispose();
+            // { force: true }: this respawn needs a genuinely fresh
+            // instance right now, not "whenever every other owner (e.g.
+            // CarouselSlider) has released its own reference" - otherwise
+            // the `getOrCreateInstance` below could silently hand back the
+            // still-alive old one. Safe here because no owner of this
+            // carousel caches a persistent reference to the instance
+            // (CarouselSlider re-fetches fresh from `this.bootstrap` before
+            // every use, for this very reason), so none can be left stale.
+            this.bootstrap.disposeBootstrapInstance(window.Carousel.getInstance(this.el), {
+                force: true,
+            });
         }
     }
 
     start() {
         if (this.hasInterval || this.el.dataset.bsRide) {
             // Respawn carousel.
-            const carousel = window.Carousel.getOrCreateInstance(this.el, this.carouselOptions);
-            this.registerCleanup(() => carousel.dispose());
+            this.bootstrap.getOrCreateInstance(window.Carousel, this.el, this.carouselOptions);
         }
     }
 }

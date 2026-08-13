@@ -1,8 +1,10 @@
+import { usePlugin } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { browser } from "@web/core/browser/browser";
 import { rpc } from "@web/core/network/rpc";
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
+import { BootstrapInstance } from "@web/core/utils/bootstrap_plugin";
 
 class WebsiteLinksCodeEditor extends Interaction {
     static selector = "#wrapwrap";
@@ -28,6 +30,7 @@ class WebsiteLinksCodeEditor extends Interaction {
     };
 
     setup() {
+        this.bootstrap = usePlugin(BootstrapInstance);
         this.codeEl = this.el.querySelector("#o_website_links_code");
         this.copyButtonEl = this.el.querySelector(".copy-to-clipboard");
         this.codeErrorEl = this.el.querySelector(".o_website_links_code_error");
@@ -37,7 +40,7 @@ class WebsiteLinksCodeEditor extends Interaction {
 
     onCopyToClipboardClick(event) {
         const copyButtonEl = event.currentTarget;
-        const tooltip = window.Tooltip.getOrCreateInstance(copyButtonEl, {
+        const tooltip = this.bootstrap.getOrCreateInstance(window.Tooltip, copyButtonEl, {
             title: _t("Link Copied!"),
             trigger: "manual",
             placement: "right",

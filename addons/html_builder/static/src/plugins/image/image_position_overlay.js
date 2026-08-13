@@ -9,7 +9,9 @@ import {
     signal,
     t,
     useListener,
+    usePlugin,
 } from "@odoo/owl";
+import { BootstrapInstance } from "@web/core/utils/bootstrap_plugin";
 
 export class ImagePositionOverlay extends Component {
     static template = "html_builder.ImagePositionOverlay";
@@ -35,6 +37,7 @@ export class ImagePositionOverlay extends Component {
     draggerRef = signal.ref();
 
     setup() {
+        this.bootstrap = usePlugin(BootstrapInstance);
         this.iframeEl = this.props.editable.ownerDocument.defaultView.frameElement;
         this.builderOverlayContainerEl = document.querySelector(
             "[data-oe-local-overlay-id='builder-overlay-container']"
@@ -93,16 +96,16 @@ export class ImagePositionOverlay extends Component {
         onWillUnmount(() => {
             this.props.targetEl.classList.remove("o_we_image_positioning");
             this.builderOverlayContainerEl.style.clipPath = "";
-            this.tooltip.dispose();
         });
     }
 
     refreshTooltip() {
-        this.tooltip = window.Tooltip.getOrCreateInstance(this.draggerRef(), {
-            trigger: "manual",
-            container: this.overlayRef(),
-        });
-        this.tooltip.show();
+        this.bootstrap
+            .getOrCreateInstance(window.Tooltip, this.draggerRef(), {
+                trigger: "manual",
+                container: this.overlayRef(),
+            })
+            .show();
     }
 
     apply() {
@@ -220,9 +223,7 @@ export class ImagePositionOverlay extends Component {
         this.draggerRef().style.setProperty("height", `${scaledRect.height}px`, "important");
 
         // Refresh tooltip position after overlay reposition
-        if (this.tooltip) {
-            this.tooltip.update();
-        }
+        this.bootstrap.getInstance(window.Tooltip, this.draggerRef())?.update();
     }
 
     /**

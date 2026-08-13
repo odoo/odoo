@@ -1,7 +1,9 @@
+import { usePlugin } from "@odoo/owl";
 import { Interaction } from "@web/public/interaction";
 
 import { SIZES, utils as uiUtils } from "@web/core/ui/ui_utils";
 import { compensateScrollbar } from "@web/core/utils/scrolling";
+import { BootstrapInstance } from "@web/core/utils/bootstrap_plugin";
 
 export class BaseHeader extends Interaction {
     dynamicContent = {
@@ -45,6 +47,7 @@ export class BaseHeader extends Interaction {
     //--------------------------------------------------------------
 
     setup() {
+        this.bootstrap = usePlugin(BootstrapInstance);
         this.topGap = 0;
         this.atTop = false;
 
@@ -109,13 +112,13 @@ export class BaseHeader extends Interaction {
         if (document.body.classList.contains("overflow-hidden") && !this.isSmall()) {
             const offCanvasEls = this.el.querySelectorAll(".offcanvas.show");
             for (const offCanvasEl of offCanvasEls) {
-                Offcanvas.getOrCreateInstance(offCanvasEl).hide();
+                this.bootstrap.getOrCreateInstance(Offcanvas, offCanvasEl).hide();
             }
             // Compatibility: can probably be removed, there is no such elements in
             // default navbars... although it could be used by custo.
             const collapseEls = this.el.querySelectorAll(".navbar-collapse.show");
             for (const collapseEl of collapseEls) {
-                Collapse.getOrCreateInstance(collapseEl).hide();
+                this.bootstrap.getOrCreateInstance(Collapse, collapseEl).hide();
             }
         } else {
             this.adjustMainPadding();
@@ -138,7 +141,7 @@ export class BaseHeader extends Interaction {
 
         if (this.closeDropdowns) {
             this.el.querySelectorAll(".dropdown-toggle.show").forEach((dropdownToggleEl) => {
-                Dropdown.getOrCreateInstance(dropdownToggleEl).hide();
+                this.bootstrap.getOrCreateInstance(Dropdown, dropdownToggleEl).hide();
             });
         }
     }

@@ -1,5 +1,7 @@
+import { usePlugin } from "@odoo/owl";
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
+import { BootstrapInstance } from "@web/core/utils/bootstrap_plugin";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { renderToMarkup } from "@web/core/utils/render";
 import { InputConfirmationDialog } from "@portal/js/components/input_confirmation_dialog/input_confirmation_dialog";
@@ -39,11 +41,12 @@ export class PortalSecurity extends Interaction {
     };
 
     setup() {
+        this.bootstrap = usePlugin(BootstrapInstance);
         // Show the "deactivate your account" modal if needed
         const modalEl = document.querySelector(".modal.show#portal_deactivate_account_modal");
         if (modalEl) {
             modalEl.classList.remove("d-block");
-            window.Modal.getOrCreateInstance(modalEl).show();
+            this.bootstrap.getOrCreateInstance(window.Modal, modalEl).show();
         }
     }
 
@@ -72,13 +75,15 @@ export class PortalSecurity extends Interaction {
                 duration_selection: duration.selection.filter((option) => option[0] !== "-1"),
             }),
             confirmLabel: _t("Confirm"),
-            size: 'md',
+            size: "md",
             confirm: async ({ inputEl }) => {
                 const formData = Object.fromEntries(new FormData(inputEl.closest("form")));
-                const wizardId = await this.services.orm.create("res.users.apikeys.description", [{
-                    name: formData['description'],
-                    duration: formData['duration']
-                }]);
+                const wizardId = await this.services.orm.create("res.users.apikeys.description", [
+                    {
+                        name: formData["description"],
+                        duration: formData["duration"],
+                    },
+                ]);
                 const res = await this.waitFor(
                     handleCheckIdentity(
                         this.waitFor(
@@ -164,12 +169,12 @@ export async function handleCheckIdentity(wrapped, ormService, dialogService) {
         }
         const checkId = r.res_id;
         return new Promise((resolve) => {
-            ormService.write("res.users.identitycheck", [checkId], {auth_method: 'password'});
+            ormService.write("res.users.identitycheck", [checkId], { auth_method: "password" });
             dialogService.add(InputConfirmationDialog, {
                 title: _t("Security Control"),
                 body: renderToMarkup("portal.identitycheck"),
                 confirmLabel: _t("Confirm Password"),
-                size: 'md',
+                size: "md",
                 confirm: async ({ inputEl }) => {
                     if (!inputEl.reportValidity()) {
                         inputEl.classList.add("is-invalid");
@@ -177,9 +182,11 @@ export async function handleCheckIdentity(wrapped, ormService, dialogService) {
                     }
                     let result;
                     try {
-                        result = await ormService.call("res.users.identitycheck", "run_check",
-                            [ checkId ],
-                            { 'context': {'password': inputEl.value} },
+                        result = await ormService.call(
+                            "res.users.identitycheck",
+                            "run_check",
+                            [checkId],
+                            { context: { password: inputEl.value } }
                         );
                     } catch {
                         inputEl.classList.add("is-invalid");

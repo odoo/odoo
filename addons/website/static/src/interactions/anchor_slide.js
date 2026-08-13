@@ -1,6 +1,8 @@
+import { usePlugin } from "@odoo/owl";
 import { scrollTo } from "@html_builder/utils/scrolling";
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
+import { BootstrapInstance } from "@web/core/utils/bootstrap_plugin";
 
 export class AnchorSlide extends Interaction {
     static selector = "a[href^='/'][href*='#'], a[href^='#']";
@@ -11,6 +13,7 @@ export class AnchorSlide extends Interaction {
     };
 
     setup() {
+        this.bootstrap = usePlugin(BootstrapInstance);
         /**
          * It expands the corresponding accordion item if the target element
          * matches the hash.
@@ -57,9 +60,11 @@ export class AnchorSlide extends Interaction {
      */
     handleAccordionAnchor(anchorEl) {
         const accordionCollapseEl = anchorEl.querySelector(".accordion-collapse");
-        Collapse.getOrCreateInstance(accordionCollapseEl, {
-            toggle: false,
-        }).show();
+        this.bootstrap
+            .getOrCreateInstance(Collapse, accordionCollapseEl, {
+                toggle: false,
+            })
+            .show();
     }
 
     /**

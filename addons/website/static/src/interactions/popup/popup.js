@@ -1,3 +1,4 @@
+import { usePlugin } from "@odoo/owl";
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
 
@@ -7,6 +8,7 @@ import { cookie } from "@web/core/browser/cookie";
 import { generateHTMLId } from "@web/core/utils/strings";
 import { getTabableElements } from "@web/core/utils/ui";
 import { utils as uiUtils, SIZES } from "@web/core/ui/ui_utils";
+import { BootstrapInstance } from "@web/core/utils/bootstrap_plugin";
 
 export class Popup extends Interaction {
     static selector = ".s_popup:not(#website_cookies_bar):not(.s_age_verification_popup)";
@@ -38,13 +40,10 @@ export class Popup extends Interaction {
     };
 
     setup() {
+        this.bootstrap = usePlugin(BootstrapInstance);
         this.cookieValue = true;
         this.modalEl = this.el.querySelector(".modal");
-        /** @type {import("bootstrap").Modal} */
-        this.bsModal = window.Modal.getOrCreateInstance(this.modalEl);
-        this.registerCleanup(() => {
-            this.bsModal.dispose();
-        });
+        this.bootstrap.getOrCreateInstance(window.Modal, this.modalEl);
 
         this.modalShownOnClickEl = this.el.querySelector(".modal[data-display='onClick']");
         if (this.modalShownOnClickEl) {
@@ -104,14 +103,14 @@ export class Popup extends Interaction {
     }
 
     hidePopup() {
-        this.bsModal.hide();
+        this.bootstrap.getOrCreateInstance(window.Modal, this.modalEl).hide();
     }
 
     showPopup() {
         if (this.popupAlreadyShown || !this.canShowPopup()) {
             return;
         }
-        this.bsModal.show();
+        this.bootstrap.getOrCreateInstance(window.Modal, this.modalEl).show();
         this.registerCleanup(() => {
             // Do not call .hide() directly, because it is queued whereas
             // .dispose() is not, making it crash. As we don't have to wait for
@@ -119,7 +118,7 @@ export class Popup extends Interaction {
             // Additionally, .hide() triggers `hide.bs.modal`, which triggers
             // onHideModal() and sets a cookie: we don't want that on destroy.
             this.modalEl.classList.remove("show");
-            this.bsModal._hideModal();
+            this.bootstrap.getOrCreateInstance(window.Modal, this.modalEl)._hideModal();
         });
     }
 

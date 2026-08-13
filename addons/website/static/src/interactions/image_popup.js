@@ -1,6 +1,8 @@
+import { usePlugin } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { Interaction } from "@web/public/interaction";
+import { BootstrapInstance } from "@web/core/utils/bootstrap_plugin";
 
 export class ImagePopUp extends Interaction {
     static selector = "img.o_image_popup";
@@ -9,6 +11,10 @@ export class ImagePopUp extends Interaction {
             "t-on-click": this.onClickImg,
         },
     };
+
+    setup() {
+        this.bootstrap = usePlugin(BootstrapInstance);
+    }
 
     /**
      * Handles the click on an image with the 'o_image_popup' class.
@@ -30,7 +36,17 @@ export class ImagePopUp extends Interaction {
                 _t("Slide %(itemPosition)s of %(total)s", { itemPosition, total }),
         })[0];
         this.insert(this.modalEl, document.body);
-        new Modal(this.modalEl, { keyboard: true, backdrop: true }).show();
+        const modal = this.bootstrap.getOrCreateInstance(Modal, this.modalEl, {
+            keyboard: true,
+            backdrop: true,
+        });
+        const disposeModal = () => {
+            this.bootstrap.disposeBootstrapInstance(modal);
+            this.modalEl.remove();
+        };
+        this.addListener(this.modalEl, "hidden.bs.modal", disposeModal, { once: true });
+        this.registerCleanup(disposeModal);
+        modal.show();
     }
 }
 

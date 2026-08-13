@@ -1,7 +1,8 @@
 /* global Carousel */
 
-import { onMounted, onWillUnmount } from "@odoo/owl";
+import { onMounted, onWillUnmount, usePlugin } from "@odoo/owl";
 import { session } from "@web/session";
+import { BootstrapInstance } from "@web/core/utils/bootstrap_plugin";
 
 /**
  * Hook to automatically cycle through carousel media (images and videos).
@@ -13,6 +14,7 @@ import { session } from "@web/session";
  * @param {number} [timeIntervalSec=5]
  */
 export function useCarousel(carouselRef, timeIntervalSec = 5) {
+    const bootstrap = usePlugin(BootstrapInstance);
     let carousel;
     let timeoutId;
 
@@ -50,9 +52,9 @@ export function useCarousel(carouselRef, timeIntervalSec = 5) {
 
     onMounted(() => {
         const el = carouselRef();
-        carousel = new Carousel(el);
+        carousel = bootstrap.getOrCreateInstance(Carousel, el);
         el.addEventListener("slid.bs.carousel", scheduleNextSlide);
-        setTimeout(scheduleNextSlide, 100);
+        timeoutId = setTimeout(scheduleNextSlide, 100);
     });
 
     onWillUnmount(() => {
