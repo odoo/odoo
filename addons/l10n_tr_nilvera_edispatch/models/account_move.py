@@ -36,7 +36,17 @@ class AccountMove(models.Model):
         moves._prefill_l10n_tr_nilvera_edispatch_ids()
         return moves
 
-    def _has_unlinked_dispatches(self):
+    def _get_related_pickings(self):
         if not self.invoice_line_ids._fields.get("sale_line_ids"):
             return False
-        return self.invoice_line_ids.sale_line_ids.order_id.picking_ids and not self.l10n_tr_nilvera_edispatch_ids
+        return self.invoice_line_ids.sale_line_ids.order_id.picking_ids
+
+    def _has_unlinked_dispatches(self):
+        return (
+            (picking_ids := self._get_related_pickings())
+            and not picking_ids.filtered(lambda p: p.l10n_tr_nilvera_dispatch_type == 'IS_DESPATCH')
+            and not self.l10n_tr_nilvera_edispatch_ids
+        )
+
+    def _has_link_picking_with_einvoice_status(self):
+        return self._get_related_pickings() and self.l10n_tr_nilvera_customer_status == 'einvoice'

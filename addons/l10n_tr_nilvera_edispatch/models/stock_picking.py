@@ -28,11 +28,12 @@ class StockPicking(models.Model):
         default=lambda self: str(uuid.uuid4()),
     )
     l10n_tr_nilvera_dispatch_type = fields.Selection(
-        string="Dispatch Type",
+        string="Dispatch Handling",
         help="Used to populate the type of dispatch.",
         selection=[
             ('SEVK', "Online"),
             ('MATBUDAN', "Pre-printed"),
+            ('IS_DESPATCH', "Invoice Serves as e-Dispatch"),
         ],
         default='SEVK',
         tracking=True,

@@ -102,12 +102,7 @@ class AccountEdiXmlUblTr(models.AbstractModel):
             document_node['cac:OrderReference']['cbc:ID'] = {'_text': prefix}
             document_node['cbc:ID'] = {'_text': prefix}
 
-        if invoice.partner_id.l10n_tr_nilvera_customer_status == 'earchive':
-            document_node['cac:AdditionalDocumentReference'] = {
-                'cbc:ID': {'_text': 'ELEKTRONIK'},
-                'cbc:IssueDate': {'_text': invoice.invoice_date},
-                'cbc:DocumentTypeCode': {'_text': 'SEND_TYPE'},
-            }
+        document_node['cac:AdditionalDocumentReference'] = self._get_additional_document_reference_vals(invoice)
         document_node['cbc:Note'] = [
             document_node['cbc:Note'],
             {'_text': self._l10n_tr_get_amount_integer_partn_text_note(invoice.amount_residual_signed, self.env.ref('base.TRY')), 'note_attrs': {}}
@@ -119,6 +114,17 @@ class AccountEdiXmlUblTr(models.AbstractModel):
         if invoice.move_type == "out_refund":
             # For credit notes, we need to add cac:BillingReference (i.e. reference to the original invoice)
             self._l10n_tr_add_billing_reference_node(document_node, vals)
+
+    def _get_additional_document_reference_vals(self, invoice):
+        # will be remove after merging e-Commerce Sales task
+        additional_document_vals = []
+        if invoice.partner_id.l10n_tr_nilvera_customer_status == 'earchive':
+            additional_document_vals.append({
+                'cbc:ID': {'_text': 'ELEKTRONIK'},
+                'cbc:IssueDate': {'_text': invoice.invoice_date},
+                'cbc:DocumentTypeCode': {'_text': 'SEND_TYPE'},
+            })
+        return additional_document_vals
 
     @api.model
     def _l10n_tr_add_billing_reference_node(self, document_node, vals):
