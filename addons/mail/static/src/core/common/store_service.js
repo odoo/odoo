@@ -428,10 +428,7 @@ export class Store extends BaseStore {
         });
         await this.chatHub.initPromise;
         channel.chatWindow?.update({ autofocus: 0 });
-        await this.env.services["discuss.rtc"].toggleCall(channel, {
-            camera: true,
-            fullscreen: true,
-        });
+        await this.env.services["discuss.rtc"].startMeetingCall(channel, { fullscreen: true });
     }
 
     /**

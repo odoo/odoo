@@ -11,7 +11,7 @@ export class WelcomePage extends Component {
     static template = "mail.WelcomePage";
     static components = { AvatarStack, CallPreview };
 
-    cameraPermissionOnMountChecked = false;
+    isMediaPermissionsChecked = false;
 
     setup() {
         super.setup();
@@ -35,8 +35,9 @@ export class WelcomePage extends Component {
                 if (!showCallPreview) {
                     return;
                 }
-                if (cameraPermission === "prompt" && !this.cameraPermissionOnMountChecked) {
-                    this.rtc.showMediaPermissionDialog("camera");
+                if (!this.isMediaPermissionsChecked) {
+                    this.isMediaPermissionsChecked = true;
+                    this.rtc.showMeetingMediaPermissionDialog();
                 }
                 if (cameraPermission === "granted") {
                     this.state.activateCamera++;
@@ -44,7 +45,6 @@ export class WelcomePage extends Component {
                 if (microphonePermission === "granted") {
                     this.state.activateMicrophone++;
                 }
-                this.cameraPermissionOnMountChecked = Boolean(cameraPermission);
             },
             () => [this.showCallPreview, this.rtc.cameraPermission, this.rtc.microphonePermission]
         );
