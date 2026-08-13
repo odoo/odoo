@@ -1489,6 +1489,46 @@ test("out-of-focus notif respects push subscription eligibility", async () => {
     await expect.waitForSteps(["notification handled", "send_notification"]);
 });
 
+test("out-of-focus notif body shows attachment symbol for attachment-only message", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Norris" });
+    const userId = pyEnv["res.users"].create({ partner_id: partnerId });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "group",
+    });
+    const attachmentId = pyEnv["ir.attachment"].create({
+        mimetype: "image/png",
+        name: "picture.png",
+        res_id: false,
+        res_model: "mail.compose.message",
+    });
+    patch(OutOfFocusService.prototype, {
+        sendNotification({ message }) {
+            expect.step(message);
+        },
+    });
+    listenStoreFetch("init_messaging");
+    await start();
+    await waitStoreFetch("init_messaging");
+    await openDiscuss();
+    await withUser(userId, () =>
+        rpc("/mail/message/post", {
+            post_data: {
+                attachment_ids: [attachmentId],
+                body: "",
+                message_type: "comment",
+            },
+            thread_id: channelId,
+            thread_model: "discuss.channel",
+        })
+    );
+    await expect.waitForSteps(["Norris: 📷\u00A0\u00A0picture.png"]);
+});
+
 test("out-of-focus notif on needaction message in group chat contributes only once", async () => {
     const pyEnv = await startServer();
     patch(document, {
