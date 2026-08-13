@@ -63,6 +63,8 @@ except ImportError as exc:
         "Install with:  pip install 'fonttools[pathops]' brotli",
     ) from exc
 
+from fontTools.misc import timeTools
+
 FILL_SUFFIX = "_f"
 
 # The merged font advertises the same FILL axis as the upstream variable font, so
@@ -557,7 +559,7 @@ def build_optimized_subset(font: TTFont, icons: list[str]) -> TTFont:
         # `post` as format 3.0 — so the warning is pure noise here.
         logging.getLogger('fontTools.ttLib.tables._p_o_s_t').setLevel(logging.ERROR)
         # Read into memory so the font outlives the temporary directory.
-        return TTFont(BytesIO(output_path.read_bytes()))
+        return TTFont(BytesIO(output_path.read_bytes()), recalcTimestamp=False)
 
 
 def strip_font_metadata(font: TTFont, style: str) -> None:
@@ -600,6 +602,35 @@ def strip_font_metadata(font: TTFont, style: str) -> None:
         )
         new_records.append(record)
     name_table.names = new_records
+
+
+def compile_font(font: TTFont) -> bytes:
+    buffer = BytesIO()
+    font.save(buffer)
+    return buffer.getvalue()
+
+
+def save_font(font: TTFont, path) -> None:
+    """Write *font* to *path*, dating it only if its content actually changed.
+
+    fontext stamps the current time into ``head``, so an unchanged rebuild would
+    still write a different file and make the binary diff of the subsets say
+    nothing about the icons.  The existing file is therefore compared against the
+    new one with both dates equalized, and left untouched when they match --
+    ``created`` is kept for the lifetime of the file, only ``modified`` follows a
+    real change.
+    """
+    head = font['head']
+    head.created = head.modified = timeTools.timestampNow()
+
+    if path.is_file():
+        previous = TTFont(path, recalcTimestamp=False)
+        head.created = previous['head'].created
+        head.modified = previous['head'].modified
+        if compile_font(font) != compile_font(previous):
+            head.modified = timeTools.timestampNow()
+
+    font.save(path)
 
 
 def allocate_pua_codepoints(icon_names: list[str]) -> dict[str, int]:
@@ -768,7 +799,10 @@ def build_font(
     font_outline = vl_instancer.instantiateVariableFont(font, {'FILL': 0})
 
     icons_with_fill = detect_filled_variants(font_outline, font_fill, glyphs_map)
-    icons_suffixed = [i + FILL_SUFFIX for i in icons_with_fill]
+    # Sorted, not in set order: fontext numbers the glyphs it keeps in the order
+    # it is given them, so an unstable order would reshuffle the filled half of
+    # the glyf table on every run and make two identical builds differ.
+    icons_suffixed = sorted(i + FILL_SUFFIX for i in icons_with_fill)
     font_fill = add_suffix_to_symbols(font_fill, FILL_SUFFIX)
 
     print("  Optimizing font…")  # noqa: T201
@@ -844,18 +878,18 @@ def build_font(
 
     output_font_path = ms_dir / f'material_symbols_{style.lower()}_subset.woff2'
     merged.flavor = 'woff2'
-    merged.save(output_font_path)
+    save_font(merged, output_font_path)
     # Same font in WOFF1, as a fallback for wkhtmltopdf (see write_font_face_css).
     woff1_font_path = output_font_path.with_suffix('.woff')
     merged.flavor = 'woff'
-    merged.save(woff1_font_path)
+    save_font(merged, woff1_font_path)
     write_font_face_css(ms_dir, style.lower(), output_font_path.name, woff1_font_path.name)
 
     if pua_codepoints is not None:
         pua_ms_dir.mkdir(parents=True, exist_ok=True)
 
         pua_cmap_font_path = pua_ms_dir / f'material_symbols_{style.lower()}_pua_cmap.woff2'
-        pua_cmap_font.save(pua_cmap_font_path)
+        save_font(pua_cmap_font, pua_cmap_font_path)
         return icons, output_font_path, pua_cmap_font_path, pua_names
     return icons, output_font_path, None, None
 
