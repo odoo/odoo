@@ -962,7 +962,7 @@ export class HistoryPlugin extends Plugin {
             applied = true;
             const stepIndex = this.steps.findLastIndex((item) => item === step);
             const lastRevertedStep = this.revertStepsUntil(stepIndex);
-            if (lastRevertedStep?.selection) {
+            if (lastRevertedStep?.selection && !draftMutations.length) {
                 selectionToRestore.setCursor((cursor) => {
                     const anchorNode = this.idToNodeMap.get(
                         lastRevertedStep.selection.anchorNodeId
