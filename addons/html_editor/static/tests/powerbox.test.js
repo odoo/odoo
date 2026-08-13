@@ -476,6 +476,22 @@ test.todo("should close the powerbox if keyup event is called on other block", a
     await expectElementCount(".o-we-powerbox", 0);
 });
 
+test("should apply a powerbox command over a non-collapsed selection", async () => {
+    const { el, editor } = await setupEditor("<p>[abc]</p>");
+
+    // Typing `/` deletes the selected content: the savepoint made to open the
+    // powerbox holds that deletion as draft mutations.
+    await insertText(editor, "/separator");
+    await waitFor(".o-we-powerbox");
+
+    await press("Enter");
+    await animationFrame();
+
+    expect(getContent(el)).toBe(
+        `<hr contenteditable="false"><p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p>`
+    );
+});
+
 test.tags("desktop");
 test("should insert a 3x3 table on type `/table`", async () => {
     const { el, editor } = await setupEditor("<p>[]</p>");
