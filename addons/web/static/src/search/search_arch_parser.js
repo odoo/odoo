@@ -167,6 +167,16 @@ export class SearchArchParser {
                         orm
                             .call(relation, "read", [value, ["display_name"]], { context })
                             .then((results) => {
+                                if (!results.length) {
+                                    console.error(
+                                        _t(
+                                            "The autocomplete value for %(field)s has not been found: the record with id %(id)s doesn't seem to exist",
+                                            { field: preField.fieldName, id: value }
+                                        )
+                                    );
+                                    preField.isDefault = false;
+                                    return;
+                                }
                                 preField.defaultAutocompleteValue.label =
                                     results[0]["display_name"];
                             })
