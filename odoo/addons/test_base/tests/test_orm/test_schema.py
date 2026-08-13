@@ -201,6 +201,29 @@ class TestSchema(common.TransactionCase):
                 },
             )
 
+    def test_default_on_module_install(self):
+        company = self.env.ref('base.main_company')
+        field = company._fields['test_orm_schema_default']
+
+        # The main company predates test_orm, so this metadata comes from adding
+        # the field to a populated table during module installation.
+        # PostgreSQL stores a fast default in pg_attribute instead of rewriting
+        # every row. pg_attrdef must have no entry for the column so future
+        # defaults stay under ORM control.
+        self.assertEqual(self.env.execute_query(SQL(
+            """ SELECT attribute.atthasmissing,
+                       attribute.attmissingval::text,
+                       definition.oid IS NULL
+                  FROM pg_attribute attribute
+             LEFT JOIN pg_attrdef definition
+                    ON definition.adrelid = attribute.attrelid
+                   AND definition.adnum = attribute.attnum
+                 WHERE attribute.attrelid = %s::regclass
+                   AND attribute.attname = %s """,
+            company._table, field.name,
+        )), [(True, '{42}', True)])
+        self.assertEqual(company.test_orm_schema_default, 42)
+
     def test_integer_field(self):
         self.assertEqual(
             self.columns_data.get('integer'),

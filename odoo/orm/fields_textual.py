@@ -539,7 +539,7 @@ class Char(BaseString):
         assert size is None or type(size) is int, "size must be an integer"
         return ('varchar', f'varchar({size})' if size and size > 0 else 'varchar')
 
-    def update_db_column(self, model, column):
+    def update_db_column(self, model, column, init_value=None):
         if (
             column and self.column_type[0] == 'varchar' and
             column['udt_name'] == 'varchar' and column['character_maximum_length'] and
@@ -547,7 +547,7 @@ class Char(BaseString):
         ):
             # the column's varchar size does not match self.size; convert it
             sql.convert_column(model.env.cr, model._table, self.name, self.stored_sql_column_type)
-        super().update_db_column(model, column)
+        super().update_db_column(model, column, init_value)
 
     _related_size = property(attrgetter('size'))
     _related_trim = property(attrgetter('trim'))
