@@ -56,11 +56,11 @@ export class PosTicketPrinterService {
     }
 
     get receiptPrinters() {
-        return this.config.receipt_printer_ids;
+        return this.config.receipt_printer_ids || [];
     }
 
     get preparationPrinters() {
-        return this.config.preparation_printer_ids;
+        return this.config.preparation_printer_ids || [];
     }
 
     get hasReceiptPrinters() {
@@ -109,11 +109,11 @@ export class PosTicketPrinterService {
         window.print();
     }
 
-    showPrinterErrorDialog(message, retryFunction, fallbackFunction = undefined) {
+    showPrinterErrorDialog(message, retryFunction, canRetry = true, fallbackFunction = undefined) {
         return this.dialog.add(RetryPrintPopup, {
             title: message.title,
             message: message.body,
-            canRetry: true,
+            canRetry: Boolean(canRetry),
             retry: retryFunction,
             download: fallbackFunction,
         });
@@ -318,6 +318,7 @@ export class PosTicketPrinterService {
         let rawChangeForRetry = null;
 
         for (const printer of printers) {
+            const template = opts.template || "point_of_sale.pos_order_change_receipt";
             const generator = this.getGenerator({ models: this.data.models, order });
             const categoryIds = new Set(printer.product_categories_ids.map((c) => c.id));
             const changes = generator.generatePreparationData(categoryIds, opts);
@@ -341,10 +342,7 @@ export class PosTicketPrinterService {
                     );
                     result = await printer._instance.print(zpl);
                 } else {
-                    const iframe = await this.generateIframe(
-                        "point_of_sale.pos_order_change_receipt",
-                        ticket
-                    );
+                    const iframe = await this.generateIframe(template, ticket);
                     this.setIframeSizeFromPrinter(iframe, printer);
                     const image = await this.generateImage(iframe);
                     result = await this.print({ printer, image });
@@ -376,7 +374,8 @@ export class PosTicketPrinterService {
                         orderChange: rawChangeForRetry,
                     },
                     retryPrinters,
-                })
+                }),
+                !opts.skipRetry
             );
         }
 
