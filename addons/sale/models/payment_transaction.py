@@ -47,15 +47,10 @@ class PaymentTransaction(models.Model):
         for trans in self:
             trans.sale_order_ids_nbr = len(trans.sale_order_ids)
 
-    def _post_process(self):
-        """Override of `payment` to add Sales-specific logic to the post-processing.
-
-        In particular, for pending transactions, we send the quotation by email; for authorized
-        transactions, we confirm the quotation; for confirmed transactions, we automatically confirm
-        the quotation and generate invoices.
-        """
-        for pending_tx in self.filtered(lambda tx: tx.state == "pending"):
-            super(PaymentTransaction, pending_tx)._post_process()
+    def _finalize_pending_transactions(self):
+        """Override of `payment` to send the quotation by email for pending transactions."""
+        for pending_tx in self:
+            super(PaymentTransaction, pending_tx)._finalize_pending_transactions()
             sales_orders = pending_tx.sale_order_ids.filtered(
                 lambda so: so.state in ["draft", "sent"]
             )
@@ -82,20 +77,20 @@ class PaymentTransaction(models.Model):
             sales_orders.mapped("transaction_ids")
             sales_orders._send_payment_succeeded_for_order_mail()
 
-        for authorized_tx in self.filtered(lambda tx: tx.state == "authorized"):
-            super(PaymentTransaction, authorized_tx)._post_process()
+    def _finalize_authorized_transactions(self):
+        """Override of `payment` to confirm the quotation for authorized transactions."""
+        for authorized_tx in self:
+            super(PaymentTransaction, authorized_tx)._finalize_authorized_transactions()
             confirmed_orders = authorized_tx._check_amount_and_confirm_order()
             if authorized_tx.operation == "validation":
                 continue
             if remaining_orders := (authorized_tx.sale_order_ids - confirmed_orders):
                 remaining_orders._send_payment_succeeded_for_order_mail()
 
-        super(
-            PaymentTransaction,
-            self.filtered(lambda tx: tx.state not in ["pending", "authorized", "done"]),
-        )._post_process()
-
-        for done_tx in self.filtered(lambda tx: tx.state == "done"):
+    def _finalize_done_transactions(self):
+        """Override of `payment` to confirm the quotation and generate invoices for confirmed
+        transactions."""
+        for done_tx in self:
             if done_tx.operation != "validation":
                 confirmed_orders = done_tx._check_amount_and_confirm_order()
                 (done_tx.sale_order_ids - confirmed_orders)._send_payment_succeeded_for_order_mail()
@@ -105,7 +100,7 @@ class PaymentTransaction(models.Model):
                 # Invoice the sales orders of confirmed transactions instead of only confirmed
                 # orders to create the invoice even if only a partial payment was made.
                 done_tx._invoice_sale_orders()
-            super(PaymentTransaction, done_tx)._post_process()  # Post the invoices.
+            super(PaymentTransaction, done_tx)._finalize_done_transactions()  # Post the invoices.
             if auto_invoice and not self.env.context.get("skip_sale_auto_invoice_send"):
                 if self.env["ir.config_parameter"].sudo().get_bool("sale.async_emails") and (
                     send_invoice_cron := self.env.ref(
