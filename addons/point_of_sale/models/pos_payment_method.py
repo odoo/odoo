@@ -357,7 +357,7 @@ class PosPaymentMethod(models.Model):
                 continue
             try:
                 # Generate QR without amount that can then be used when the POS is offline
-                pm.default_qr = pm.get_qr_code_url(False, '', '', pm.company_id.currency_id.id, False)
+                pm.default_qr = pm.get_qr_code_value(False, '', '', pm.company_id.currency_id.id, False)
             except UserError:
                 pm.default_qr = False
 
@@ -369,8 +369,12 @@ class PosPaymentMethod(models.Model):
         # the payment terminal modules don't need to depend on it.
         return []
 
-    def get_qr_code_url(self, amount, free_communication, structured_communication, currency, debtor_partner):
-        """ Generates and returns a QR-code Url
+    def get_qr_code_value(self, amount, free_communication, structured_communication, currency, debtor_partner):
+        """ Returns the payment payload to encode in the QR-code.
+
+        The QR-code image itself is drawn by the POS client, so this must be the
+        raw value the bank application expects (e.g. the EMV string), not the URL
+        of a report rendering it.
         """
         self.ensure_one()
         if self.payment_method_type != "bank_qr_code" or not self.qr_code_method:
@@ -379,5 +383,5 @@ class PosPaymentMethod(models.Model):
         debtor_partner = self.env['res.partner'].browse(debtor_partner)
         currency = self.env['res.currency'].browse(currency)
 
-        return payment_bank.with_context(is_online_qr=True).build_qr_code_url(
+        return payment_bank.with_context(is_online_qr=True).build_qr_code_value(
             float(amount), free_communication, structured_communication, currency, debtor_partner, self.qr_code_method, silent_errors=False)
