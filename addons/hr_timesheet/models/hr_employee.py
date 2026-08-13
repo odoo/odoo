@@ -3,6 +3,7 @@
 from ast import literal_eval
 
 from odoo import api, fields, models
+from odoo.exceptions import UserError
 from odoo.tools import SQL
 
 
@@ -47,6 +48,24 @@ class HrEmployee(models.Model):
         for employee in self:
             if employees_count_per_user.get(employee.user_id.id, 0) > 1:
                 employee.display_name = f'{employee.display_name} - {employee.company_id.name}'
+
+    def action_unlink_wizard(self):
+        wizard = self.env['hr.employee.delete.wizard'].create({
+            'employee_ids': self.ids,
+        })
+        if not self.env.user.has_group('hr_timesheet.group_hr_timesheet_approver') and wizard.has_timesheet and not wizard.has_active_employee:
+            raise UserError(self.env._('You cannot delete employees who have timesheets.'))
+
+        return {
+            'name': self.env._('Confirmation'),
+            'view_mode': 'form',
+            'res_model': 'hr.employee.delete.wizard',
+            'views': [(self.env.ref('hr_timesheet.hr_employee_delete_wizard_form').id, 'form')],
+            'type': 'ir.actions.act_window',
+            'res_id': wizard.id,
+            'target': 'new',
+            'context': self.env.context,
+        }
 
     def action_timesheet_from_employee(self):
         action = self.env["ir.actions.act_window"]._for_xml_id("hr_timesheet.timesheet_action_from_employee")
