@@ -5,9 +5,23 @@ from odoo import models
 class AccountMove(models.Model):
     _inherit = 'account.move'
 
-    def _get_name_invoice_report(self):
-        # Safety mechanism to avoid issues if the module has not yet been updated.
-        template = self.env.ref('l10n_nz.report_invoice_document', raise_if_not_found=False)
-        if template and self.company_id.account_fiscal_country_id.code == 'NZ':
-            return 'l10n_nz.report_invoice_document'
-        return super()._get_name_invoice_report()
+    def _get_base_document_title(self):
+        self.ensure_one()
+
+        if (
+            self.company_id.account_fiscal_country_id.code != 'NZ'
+            or (self.is_debit_note() and self.move_type == 'out_invoice')
+            or (self.is_purchase_document() and self.journal_id.is_self_billing)
+        ):
+            return super()._get_base_document_title()
+
+        if self.move_type == 'out_invoice':
+            return self.env._("Tax Invoice")
+        if self.move_type == 'out_refund':
+            return self.env._("Tax Credit Note")
+        if self.move_type == 'in_refund':
+            return self.env._("Tax Vendor Credit Note")
+        if self.move_type == 'in_invoice':
+            return self.env._("Tax Vendor Bill")
+
+        return ""
