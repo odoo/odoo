@@ -7490,6 +7490,13 @@ class AccountMove(models.Model):
             if journal := journal_by_account_id.get(line.account_id.id):
                 lines_by_journal[journal] += line
 
+        opening_balance_payment_ref = self.env._("Opening balance")
+
+        existing_bank_statement_lines = dict(self.env['account.bank.statement.line']._read_group([
+            ('journal_id', 'in', [journal.id for journal in lines_by_journal]),
+            ('payment_ref', '=', opening_balance_payment_ref),
+        ], groupby=['journal_id'], aggregates=['id:recordset']))
+
         for journal, opening_lines in lines_by_journal.items():
             balance = sum(opening_lines.mapped('balance'))
             if self.company_id.currency_id.is_zero(balance):
@@ -7502,6 +7509,14 @@ class AccountMove(models.Model):
             else:
                 amount = balance
 
+            statement_line = existing_bank_statement_lines.get(journal)
+            if statement_line and len(statement_line) == 1:
+                # Delete statement, statement lines and move so that everything is correctly re-created
+                move = statement_line.move_id
+                statement_line.statement_id.unlink()
+                move.button_draft()
+                move.unlink()  # Deletes move and statement line
+
             self.env['account.bank.statement'].create({
                 'name': self.env._("Opening Balance"),
                 'date': self.date,
@@ -7509,7 +7524,7 @@ class AccountMove(models.Model):
                 'line_ids': [
                     Command.create({
                         'date': self.date,
-                        'payment_ref': self.env._("Opening balance"),
+                        'payment_ref': opening_balance_payment_ref,
                         'amount': amount,
                         'journal_id': journal.id,
                         'counterpart_account_id': unaffected_earnings_account,
