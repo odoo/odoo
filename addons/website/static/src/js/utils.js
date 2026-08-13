@@ -144,6 +144,18 @@ async function loadOptionsSource(term, body, onSelect) {
     return choices;
 }
 
+export async function isImageFile(file) {
+    const header = new Uint8Array(await file.slice(0, 512).arrayBuffer());
+    const start = String.fromCharCode(...header);
+    return (
+        start.startsWith("\x89PNG") ||
+        start.startsWith("\xff\xd8\xff") ||
+        start.startsWith("GIF8") ||
+        (start.startsWith("RIFF") && start.slice(8, 12) === "WEBP") ||
+        /<svg[\s>]/i.test(start)
+    );
+}
+
 /**
  * Converts a base64 SVG into a base64 PNG.
  *
