@@ -3783,7 +3783,7 @@ class MailThread(models.AbstractModel):
         if not mail_body:
             _logger.warning('QWeb template %s not found or is empty when sending notification emails. Sending without layouting.', template_xmlid)
             mail_body = message.body
-        return mail_body
+        return self.env['mail.render.mixin']._replace_local_links(mail_body, self.get_base_url())
 
     def _notify_by_email_get_base_mail_values(self, message, recipients_data, additional_values=None):
         """ Return model-specific and message-related values to be used when
