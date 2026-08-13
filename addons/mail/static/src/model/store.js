@@ -2,7 +2,7 @@ import { PgSnapshot } from "@mail/model/field_version";
 import { Record } from "./record";
 import { STORE_SYM, modelRegistry, untrackFunctions } from "./misc";
 
-import { immediateEffect, proxy, toRaw, untrack } from "@odoo/owl";
+import { immediateEffect, toRaw, untrack } from "@odoo/owl";
 
 /** @typedef {import("./record_list").RecordList} RecordList */
 
@@ -153,6 +153,7 @@ export class Store extends Record {
                     }
                     deletingRecordsByLocalId.set(record.localId, record);
                     this.recordByLocalId.delete(record.localId);
+                    toRaw(record)._.isDeleted.set(true);
                     this._.ADD_QUEUE("hard_delete", toRaw(record));
                 }
                 while (RHD_QUEUE.size > 0) {
@@ -235,13 +236,12 @@ export class Store extends Record {
      * This is useful when there's desire to postpone calling the callback function,
      * in which the observe is also intended to have its invocation postponed.
      *
-     * @param {Record} record
+     * @param {Record} recordProxy
      * @param {string|string[]} key
      * @param {(observe: Function) => any} callback
      * @returns {function} function to call to stop observing changes
      */
-    _onChange(record, key, callback) {
-        let recordProxy;
+    _onChange(recordProxy, key, callback) {
         function _observe() {
             // access recordProxy[key] only once to avoid triggering reactive get() many times
             const val = recordProxy[key];
@@ -257,7 +257,7 @@ export class Store extends Record {
             /** @type {Function[]} */
             const arrayDisposeFns = [];
             for (const k of key) {
-                arrayDisposeFns.push(this._onChange(record, k, callback));
+                arrayDisposeFns.push(this._onChange(recordProxy, k, callback));
             }
             return () => {
                 arrayDisposeFns.forEach((f) => f());
@@ -265,7 +265,6 @@ export class Store extends Record {
             };
         }
         let running = false;
-        recordProxy = proxy(record);
         const disposeFn = untrack(() =>
             immediateEffect(() => {
                 if (!running) {

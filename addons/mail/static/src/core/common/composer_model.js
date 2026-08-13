@@ -104,11 +104,14 @@ export class Composer extends Record {
     });
     thread = fields.One("mail.thread");
     /** @type {{ start: number, end: number, direction: "forward" | "backward" | "none"}}*/
-    selection = {
-        start: 0,
-        end: 0,
-        direction: "none",
-    };
+    selection = fields.Attr(
+        {
+            start: 0,
+            end: 0,
+            direction: "none",
+        },
+        { asProxy: true }
+    );
     /** @type {boolean} */
     forceCursorMove;
     isFocused = fields.Attr(false, {

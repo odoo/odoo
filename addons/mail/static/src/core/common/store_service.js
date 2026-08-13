@@ -90,7 +90,7 @@ export class Store extends BaseStore {
     settings = fields.One("Settings", { compute: () => ({}) });
 
     /** @type {[[string, any, import("models").DataResponse]]} */
-    fetchParams = [];
+    fetchParams = fields.Attr([], { asProxy: true });
     fetchSilent = true;
 
     cannedReponses = this.makeCachedFetchData("mail.canned.response");

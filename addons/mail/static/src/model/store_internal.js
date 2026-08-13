@@ -2,13 +2,7 @@
 /** @typedef {import("./record_list").RecordList} RecordList */
 
 import { ManyFieldVersion, SingleFieldVersion, SKIP_REVISION } from "@mail/model/field_version";
-import {
-    IS_DELETED_SYM,
-    isCommandList,
-    isMany,
-    normalizeManyCommands,
-    untrackFunctions,
-} from "@mail/model/misc";
+import { isCommandList, isMany, normalizeManyCommands, untrackFunctions } from "@mail/model/misc";
 import { RecordInternal } from "@mail/model/record_internal";
 import { parseRawValue } from "@mail/utils/common/local_storage";
 import { incrementFn } from "@mail/utils/common/signal";
@@ -193,7 +187,6 @@ export class StoreInternal extends RecordInternal {
             case "hard_delete": {
                 /** @type {import("./record").Record} */
                 const [record] = params;
-                record._proxy[IS_DELETED_SYM] = true;
                 delete record.Model.records[record.localId];
                 if (!this.RHD_QUEUE.has(record)) {
                     this.RHD_QUEUE.set(record, true);
@@ -223,22 +216,28 @@ export class StoreInternal extends RecordInternal {
      */
     updateAttr(record, fieldName, value) {
         const Model = record.Model;
+        const parentFieldName = Model._.parentFields.get(fieldName);
+        if (parentFieldName) {
+            // Route the write to the parent record, which stores an _inherits field.
+            Reflect.set(record._proxyInternal[parentFieldName], fieldName, value);
+            return;
+        }
         const fieldType = Model._.fieldsType.get(fieldName);
         const fieldHtml = Model._.fieldsHtml.get(fieldName);
-        // ensure each field write goes through the proxy exactly once to trigger reactives
-        const targetRecord = record._.proxyUsed.has(fieldName) ? record : record._proxy;
-        let shouldChange = record[fieldName] !== value;
+        const sig = record._.ensureFieldSignal(record, fieldName);
+        const current = sig();
+        let shouldChange = current !== value;
         if (fieldType === "datetime" && value) {
             if (!(value instanceof luxon.DateTime)) {
                 value = deserializeDateTime(value);
             }
-            shouldChange = !record[fieldName] || !value.equals(record[fieldName]);
+            shouldChange = !current || !value.equals(current);
         }
         if (fieldType === "date" && value) {
             if (!(value instanceof luxon.DateTime)) {
                 value = deserializeDate(value);
             }
-            shouldChange = !record[fieldName] || !value.equals(record[fieldName]);
+            shouldChange = !current || !value.equals(current);
         }
         let newValue = value;
         if (fieldHtml) {
@@ -251,13 +250,11 @@ export class StoreInternal extends RecordInternal {
                     ? htmlEscape(value)
                     : "";
             shouldChange =
-                record[fieldName]?.toString() !== newValue?.toString() ||
-                record[fieldName] instanceof Markup != newValue instanceof Markup;
+                current?.toString() !== newValue?.toString() ||
+                current instanceof Markup != newValue instanceof Markup;
         }
         if (shouldChange) {
-            record._.updatingAttrs.set(fieldName, true);
-            targetRecord[fieldName] = newValue;
-            record._.updatingAttrs.delete(fieldName);
+            sig.set(newValue);
         }
     }
     /**

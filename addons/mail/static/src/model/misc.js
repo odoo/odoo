@@ -16,7 +16,6 @@ export const OR_SYM = Symbol("or");
 const AND_SYM = Symbol("and");
 export const IS_RECORD_SYM = Symbol("isRecord");
 export const IS_FIELD_SYM = Symbol("isField");
-export const IS_DELETED_SYM = Symbol("isDeleted");
 export const STORE_SYM = Symbol("store");
 
 export function AND(...args) {
@@ -158,6 +157,8 @@ export const fields = {
      *   behaviour of OWL reactive.
      * @param {(this: Record) => void} [param1.onUpdate] function that is called when the field value is updated.
      *   This is called at least once at record creation.
+     * @param {boolean} [param1.asProxy=false] a read returns the value as a proxy, so that
+     *   mutating its content is observed too. Only for an object, an array, a Map or a Set.
      * @param {'datetime'|'date'} [param1.type] if defined, automatically transform to a
      * specific type.
      * @returns {T}

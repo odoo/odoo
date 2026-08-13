@@ -451,7 +451,7 @@ export class Rtc extends Record {
     /** @type {Object<string, boolean>} The keys are action names and the values are booleans indicating whether each action is active */
     lastActions = {};
     /** @type {Array<string>} Array of action names representing the stack of currently active actions */
-    actionsStack = [];
+    actionsStack = fields.Attr([], { asProxy: true });
     /** @type {string|undefined} String representing the last call action activated, or undefined if none are */
     lastSelfCallAction = undefined;
     /** callbacks to be called when cleaning the state up after a call */
