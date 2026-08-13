@@ -68,7 +68,7 @@ class SaleOrderLine(models.Model):
         return super()._can_be_invoiced_alone() and not self.is_reward_line
 
     def _is_discount_line(self):
-        return super()._is_discount_line() or self.reward_id.reward_type == "discount"
+        return super()._is_discount_line() or self.reward_id.sudo().reward_type == "discount"
 
     def _reset_loyalty(self, complete=False):
         """Reset the line(s) to a state which does not impact reward computation.
@@ -109,7 +109,9 @@ class SaleOrderLine(models.Model):
                     line.coupon_id.points -= line.points_cost
                     # Same coupon: apply the delta in a single call to avoid a redundant search.
                     if line.coupon_id == previous_coupon:
-                        line.order_id._update_loyalty_history(line.coupon_id, line.points_cost - previous_cost)
+                        line.order_id._update_loyalty_history(
+                            line.coupon_id, line.points_cost - previous_cost
+                        )
                     else:
                         if previous_coupon:
                             line.order_id._update_loyalty_history(previous_coupon, -previous_cost)
