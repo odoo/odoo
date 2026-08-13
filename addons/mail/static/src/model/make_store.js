@@ -77,7 +77,7 @@ export function makeStore(env, { localRegistry } = {}) {
         const obj = new OgClass();
         obj.setup();
         for (const [name, val] of Object.entries(obj)) {
-            if (technicalKeysOnRecords.includes(name)) {
+            if (technicalKeysOnRecords.has(name)) {
                 continue;
             }
             if (!isFieldDefinition(val)) {
