@@ -1,19 +1,17 @@
 import { afterEach, expect, test } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-dom";
-import { Component, onMounted, onPatched, proxy, xml } from "@odoo/owl";
-import {
-    allowTranslations,
-    assignTestEnv,
-    clearRegistry,
-    mountWithCleanup,
-    patchWithCleanup,
-} from "@web/../tests/web_test_helpers";
-
+import { Component, onMounted, onPatched, proxy, t, useProps, xml } from "@odoo/owl";
 import {
     WithLazyGetterTrap,
     clearGettersCache,
     createLazyGetter,
 } from "@point_of_sale/lazy_getter";
+import {
+    allowTranslations,
+    clearRegistry,
+    mountWithCleanup,
+    patchWithCleanup,
+} from "@web/../tests/web_test_helpers";
 import { registry } from "@web/core/registry";
 import { zip } from "@web/core/utils/arrays";
 
@@ -90,9 +88,9 @@ class WithStore extends Component {
     `;
 
     property = "";
+    store = useProps.static("store", t.object());
 
     setup() {
-        this.store = proxy(this.env.store);
         onMounted(() => this.trackRender());
         onPatched(() => this.trackRender());
     }
@@ -136,9 +134,10 @@ class Root extends Component {
     static components = { A, B, C, D, AB, ABC, BC, CD };
     static template = xml`
         <t t-foreach="this.constructor.components" t-as="key" t-key="key">
-            <t t-component="this.constructor.components[key]" />
+            <t t-component="this.constructor.components[key]" store="this.store"/>
         </t>
     `;
+    store = useProps.static("store", t.object());
 }
 
 test("each getter should only be called once and only when needed", async () => {
@@ -164,9 +163,9 @@ test("each getter should only be called once and only when needed", async () => 
     });
 
     const store = proxy(new AppStore());
-    assignTestEnv({ store });
     await mountWithCleanup(Root, {
         noMainContainer: true,
+        props: { store },
     });
 
     verifyUnorderedSteps(["ab", "abc", "bc", "cd"]);
@@ -207,9 +206,9 @@ test("only dependent components rerender", async () => {
     });
 
     const store = proxy(new AppStore());
-    assignTestEnv({ store });
     await mountWithCleanup(Root, {
         noMainContainer: true,
+        props: { store },
     });
 
     verifyUnorderedSteps(["a", "b", "c", "d", "ab", "abc", "bc", "cd"]);
