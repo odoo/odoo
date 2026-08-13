@@ -208,6 +208,16 @@ registry.category("web_tour.tours").add("test_combo_variant_mix", {
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("test_single_attribute_value_products", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Whiteboard Pen"),
+            ProductScreen.selectedOrderlineHas("Whiteboard Pen", "1", "3.2", "add 2"),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("test_cross_exclusion_attribute_values", {
     steps: () =>
         [

@@ -107,19 +107,15 @@ export class ProductTemplate extends Base {
     async _onScaleNotAvailable() {}
 
     isConfigurable() {
-        return this.attribute_line_ids.find(
-            (l) =>
-                l.product_template_value_ids.length > 1 ||
-                l.product_template_value_ids.some((v) => v.is_custom) ||
-                l.attribute_id.display_type === "multi"
-        );
+        return this.attribute_line_ids.map((a) => a.product_template_value_ids).flat().length >= 1;
     }
 
     needToConfigure() {
         return (
-            this.isConfigurable() &&
-            this.attribute_line_ids.length > 0 &&
-            this.attribute_line_ids.some((l) => l.attribute_id.create_variant === "no_variant")
+            this.isCombo() ||
+            (this.isConfigurable() &&
+                this.attribute_line_ids.length > 0 &&
+                this.attribute_line_ids.some((l) => l.attribute_id.create_variant === "no_variant"))
         );
     }
 
