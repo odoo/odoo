@@ -56,17 +56,17 @@ class IrUiMenu(models.Model):
 
                     webIcon = menu.get('web_icon', '')
                     webIconlist = webIcon and webIcon.split(',')
-                    iconClass = color = backgroundColor = None
+                    icon = color = backgroundColor = None
                     if webIconlist:
                         if len(webIconlist) >= 2:
-                            iconClass, color = webIconlist[:2]
+                            icon, color = webIconlist[:2]
                         if len(webIconlist) == 3:
                             backgroundColor = webIconlist[2]
 
                     if menu.get('web_icon_data'):
                         web_icon_data = re.sub(r'\s/g', "", ('data:%s;base64,%s' % (menu['web_icon_data_mimetype'], menu['web_icon_data'])))
                     elif backgroundColor is not None:  # Could split in three parts?
-                        web_icon = ",".join([iconClass or "", color or "", backgroundColor])
+                        web_icon = ",".join([icon or "", color or "", backgroundColor])
                     else:
                         web_icon_data = '/web/static/img/default_icon_app.png'
 
