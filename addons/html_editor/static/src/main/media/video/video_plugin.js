@@ -7,6 +7,7 @@ export class VideoPlugin extends Plugin {
     static dependencies = ["history", "dom"];
     static defaultConfig = {
         allowVideo: true,
+        allowVideoFile: false,
     };
 
     /** @type {import("plugins").EditorResources} */
@@ -17,6 +18,9 @@ export class VideoPlugin extends Plugin {
                 title: _t("Videos"),
                 Component: this.componentForMediaDialog,
                 sequence: 30,
+                props: {
+                    allowVideoFile: !!this.config.allowVideoFile,
+                },
             },
             paste_media_url_command_providers: this.getCommandForVideoUrlPaste.bind(this),
         }),

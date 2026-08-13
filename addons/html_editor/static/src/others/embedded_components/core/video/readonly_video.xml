@@ -2,7 +2,12 @@
 <templates>
     <!-- /video template -->
     <t t-name="html_editor.EmbeddedVideo">
-        <iframe t-ref="this.iframeRef" t-att-src="this.embedUrl" t-attf-data-base-url="{{this?.state?.baseUrl || this.props?.baseUrl || ''}}"
+        <video t-if="this.isVideoFile" t-ref="this.playerRef" t-att-src="this.embedUrl"
+                class="w-100 h-100 object-fit-contain" aria-label="Video player"
+                playsinline="" preload="metadata"
+                t-att-controls="!this.videoData.params?.hideControls"
+                t-att-loop="this.videoData.params?.loop"/>
+        <iframe t-else="" t-ref="this.playerRef" t-att-src="this.embedUrl" t-attf-data-base-url="{{this?.state?.baseUrl || this.props?.baseUrl || ''}}"
                 title="Video player" frameborder="0" allowfullscreen="allowfullscreen"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share">
             Your browser does not support iframe.

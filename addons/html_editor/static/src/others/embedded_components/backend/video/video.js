@@ -31,7 +31,7 @@ export class EmbeddedVideoComponent extends ReadonlyEmbeddedVideoComponent {
         openVideoSelectorDialog: { type: Function, optional: true },
     };
 
-    iframeRef = signal.ref();
+    playerRef = signal.ref();
 
     setup() {
         super.setup();
@@ -73,7 +73,7 @@ export class EmbeddedVideoComponent extends ReadonlyEmbeddedVideoComponent {
                     replaceVideo: () => {
                         this.props.openVideoSelectorDialog((media) => {
                             this.replaceVideo(media);
-                        }, this.iframeRef());
+                        }, this.playerRef());
                     },
                     removeVideo: () => {
                         this.videoBlock.remove();

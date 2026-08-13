@@ -1,6 +1,7 @@
 import { getEmbeddedProps } from "@html_editor/others/embedded_component_utils";
 import { Component, signal } from "@odoo/owl";
 import { PLATFORMS } from "@html_editor/main/media/media_dialog/video_selector";
+import { VideoFile } from "@html_editor/main/media/video/providers/video_file";
 
 export class ReadonlyEmbeddedVideoComponent extends Component {
     static template = "html_editor.EmbeddedVideo";
@@ -16,7 +17,7 @@ export class ReadonlyEmbeddedVideoComponent extends Component {
         params: { type: Object, optional: true },
     };
 
-    iframeRef = signal.ref();
+    playerRef = signal.ref();
 
     getVideoDataFromSrc(src) {
         for (const platform of Object.values(PLATFORMS)) {
@@ -29,25 +30,37 @@ export class ReadonlyEmbeddedVideoComponent extends Component {
     }
 
     /**
-     * Get the embed url for the emebed video based on the provided props.
-     * The embed url is computed from the platform and videoId props if they are provided,
-     * otherwise it is extracted from the src prop.
+     * The description of the video to render, based on the provided props.
+     *
+     * @returns {Object}
+     */
+    get videoData() {
+        let { platform, videoId, params } = this.props;
+        if (!platform || (!videoId && this.props.src)) {
+            const videoData = this.getVideoDataFromSrc(this.props.src);
+            if (videoData) {
+                ({ platform, videoId, options: params } = videoData);
+            } else if (this.props.src) {
+                platform = VideoFile.id;
+            }
+        }
+        return { platform, videoId, params };
+    }
+
+    get isVideoFile() {
+        return this.videoData.platform === VideoFile.id;
+    }
+
+    /**
+     * Get the embed url of the video to render.
      *
      * @returns {string}
      */
     get embedUrl() {
-        let platform = this.props.platform;
-        let videoId = this.props.videoId;
-        let params = this.props.params;
-        if (!platform || (!videoId && this.props.src)) {
-            const videoData = this.getVideoDataFromSrc(this.props.src);
-            if (videoData) {
-                platform = videoData.platform;
-                videoId = videoData.videoId;
-                params = videoData.options;
-            }
+        const { platform, videoId, params } = this.videoData;
+        if (platform === VideoFile.id) {
+            return VideoFile.getEmbedUrl(this.props.baseUrl || this.props.src, params);
         }
-
         if (platform && videoId) {
             const platFormClass = PLATFORMS[platform];
             return platFormClass.getEmbedUrl(videoId, params);
