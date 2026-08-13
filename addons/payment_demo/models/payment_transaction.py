@@ -185,7 +185,11 @@ class PaymentTransaction(models.Model):
         if state == 'pending':
             self._set_pending()
         elif state == 'done':
-            if self.capture_manually and not notification_data.get('manual_capture'):
+            if (
+                self.capture_manually
+                and not notification_data.get('manual_capture')
+                and self.operation != 'refund'
+            ):
                 self._set_authorized()
             else:
                 self._set_done()
