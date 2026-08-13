@@ -2,68 +2,11 @@
 <odoo>
     <data>
         <template id="report_invoice_document">
+            <t t-set="o" t-value="o.with_context(lang=lang)" />
             <t t-set="layout_document_title">
-                <t t-if="not proforma">
-                    <span t-if="o.move_type == 'out_invoice' and o.state == 'posted'">
-                        <t name="invoice_title">Invoice</t>
-                    </span>
-                    <span t-elif="o.move_type == 'out_invoice' and o.state == 'draft'">
-                        <t name="draft_invoice_title">Draft Invoice</t>
-                    </span>
-                    <span t-elif="o.move_type == 'out_invoice' and o.state == 'cancel'">
-                        <t name="cancelled_invoice_title">Cancelled Invoice</t>
-                    </span>
-                    <span t-elif="o.move_type == 'out_refund' and o.state == 'posted'">
-                        <t name="credit_note_title">Credit Note</t>
-                    </span>
-                    <span t-elif="o.move_type == 'out_refund' and o.state == 'draft'">
-                        <t name="draft_credit_note_title">Draft Credit Note</t>
-                    </span>
-                    <span t-elif="o.move_type == 'out_refund' and o.state == 'cancel'">
-                        <t name="cancelled_credit_note_title">Cancelled Credit Note</t>
-                    </span>
-                    <span t-elif="o.move_type == 'in_refund' and not o.journal_id.is_self_billing">
-                        <t name="vendor_credit_note_title">Vendor Credit Note</t>
-                    </span>
-                    <span t-elif="o.move_type == 'in_refund' and o.journal_id.is_self_billing">
-                        <t name="self_billing_credit_note_title">Self Billing Credit Note</t>
-                    </span>
-                    <span t-elif="o.move_type == 'in_invoice' and not o.journal_id.is_self_billing">
-                        <t name="vendor_bill_title">Vendor Bill</t>
-                    </span>
-                    <span t-elif="o.move_type == 'in_invoice' and o.journal_id.is_self_billing">
-                        <t name="self_billing_invoice_title">Self Billing</t>
-                    </span>
-                </t>
-                <t t-else="">
-                    <span t-if="o.move_type == 'out_invoice' and o.state == 'posted'">
-                        <t name="proforma_invoice_title">Proforma Invoice</t>
-                    </span>
-                    <span t-elif="o.move_type == 'out_invoice' and o.state == 'draft'">
-                        <t name="draft_proforma_invoice_title">Draft Proforma Invoice</t>
-                    </span>
-                    <span t-elif="o.move_type == 'out_invoice' and o.state == 'cancel'">
-                        <t name="cancelled_proforma_invoice_title">Cancelled Proforma Invoice</t>
-                    </span>
-                    <span t-elif="o.move_type == 'out_refund' and o.state == 'posted'">
-                        <t name="proforma_credit_note_title">Proforma Credit Note</t>
-                    </span>
-                    <span t-elif="o.move_type == 'out_refund' and o.state == 'draft'">
-                        <t name="draft_proforma_credit_note_title">Draft Proforma Credit Note</t>
-                    </span>
-                    <span t-elif="o.move_type == 'out_refund' and o.state == 'cancel'">
-                        <t name="cancelled_proforma_credit_note_title">Cancelled Proforma Credit Note</t>
-                    </span>
-                    <span t-elif="o.move_type == 'in_refund'">
-                        <t name="proforma_vendor_credit_note_title">Proforma Vendor Credit Note</t>
-                    </span>
-                    <span t-elif="o.move_type == 'in_invoice'">
-                        <t name="proforma_vendor_bill_title">Proforma Vendor Bill</t>
-                    </span>
-                </t>
+                <t name="document_title" t-out="o._get_document_title(proforma=proforma)"/>
                 <span t-if="o.name and o.name != '/'" t-field="o.name">INV/2023/0001</span>
             </t>
-            <t t-set="o" t-value="o.with_context(lang=lang)" />
             <t t-set="information_block" t-if="o.partner_shipping_id and (o.partner_shipping_id != o.partner_id)" groups="account.group_delivery_invoice_address">
                 <div name="shipping_address_block">
                     <strong class="d-block mt-3">Shipping Address</strong>

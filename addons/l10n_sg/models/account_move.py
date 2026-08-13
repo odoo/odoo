@@ -59,3 +59,28 @@ class AccountMove(models.Model):
                 cash_rounding=move.invoice_cash_rounding_id,
             )
             move.l10n_sg_customer_accounting_gst_amount = tax_totals['tax_amount']
+
+    def _get_document_title(self, proforma=False, is_debit_note=False):
+        self.ensure_one()
+
+        if (
+            self.company_id.account_fiscal_country_id.code != 'SG'
+            or is_debit_note
+            or self.move_type not in ('out_invoice', 'in_invoice')
+        ):
+            return super()._get_document_title(proforma=proforma, is_debit_note=is_debit_note)
+
+        doc_name = self.env._("Tax Invoice")
+
+        if self.move_type == 'in_invoice' and self.journal_id.is_self_billing:
+            doc_name = self.env._("Self-Billing %(doc_name)s", doc_name=doc_name)
+
+        if self.move_type == 'out_invoice':
+            if proforma:
+                doc_name = self.env._("Proforma %(doc_name)s", doc_name=doc_name)
+            if self.state == 'draft':
+                doc_name = self.env._("Draft %(doc_name)s", doc_name=doc_name)
+            elif self.state == 'cancel':
+                doc_name = self.env._("Cancelled %(doc_name)s", doc_name=doc_name)
+
+        return doc_name

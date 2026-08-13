@@ -273,3 +273,11 @@ class AccountMove(models.Model):
             if not record._is_last_from_seq_chain():
                 return False
         return True
+
+    def _get_document_title(self, proforma=False, is_debit_note=False):
+        self.ensure_one()
+
+        if self._l10n_lk_is_tax_invoice_company():
+            return self.env._("Tax Invoice")
+
+        return super()._get_document_title(proforma, is_debit_note)
