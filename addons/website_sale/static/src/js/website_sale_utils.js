@@ -112,6 +112,14 @@ async function updateShopContent(interaction, {
             setElementContent(currentSidebar, markup(newSidebar.innerHTML))
         }
 
+        // The header (breadcrumb, filmstrip, sort, search) is server-rendered with `keep()` links,
+        // so refresh it to reflect the newly applied filters.
+        const newProductsHeader = updatedShopPage.querySelector('#o_wsale_products_header');
+        const currentProductsHeader = document.querySelector('#o_wsale_products_header');
+        if (newProductsHeader && currentProductsHeader) {
+            setElementContent(currentProductsHeader, markup(newProductsHeader.innerHTML))
+        }
+
         const newGrid = updatedShopPage.querySelector('.o_wsale_products_grid_table');
         const currentGrid = document.querySelector('.o_wsale_products_grid_table');
         setElementContent(currentGrid, markup(newGrid.innerHTML))

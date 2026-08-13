@@ -497,16 +497,20 @@ class WebsiteSale(payment_portal.PaymentPortal):
                         max_price if max_price >= available_min_price else available_max_price
                     )
                     post["max_price"] = max_price
+        price_domain = None
         if filter_by_price_enabled and (min_price or max_price):
             price_domain = Domain.AND([
                 Domain("list_price", ">=", (min_price or available_min_price) / conversion_rate),
                 Domain("list_price", "<=", (max_price or available_max_price) / conversion_rate),
             ])
-            filtered_query = request.env["product.template"]._search(
-                Domain.AND([shop_domain, price_domain])
-            )
-        else:
-            filtered_query = shop_query
+
+        # Shop result set (`shop_domain`), additionally narrowed by the active price range.
+        # Reused to derive the visible tags, attributes and categories.
+        filtered_query = (
+            request.env["product.template"]._search(Domain.AND([shop_domain, price_domain]))
+            if price_domain
+            else shop_query
+        )
 
         # Dynamic ribbon filters ("On sale" / "In stock")
         on_sale_active = on_sale == "1"
@@ -561,38 +565,35 @@ class WebsiteSale(payment_portal.PaymentPortal):
         categs_domain = (
             Domain("parent_id", "=", False) & Domain("not_in_shop", "=", False) & website_domain
         )
-        if search:
+        has_active_filters = bool(search or attribute_value_dict or tags or min_price or max_price)
+        if has_active_filters:
             # using a sub-query is more efficient than using a query in the shape of "ids in (...)"
             # when there are 100k product ids to match.
-            search_categories = Category.search(
-                Domain('product_tmpl_ids', 'in', shop_query)
-            ).parents_and_self
-            categs_domain &= Domain("id", "in", search_categories.ids)
+            visible_categs_ids = Category.search(
+                Domain("product_tmpl_ids", "in", filtered_query)
+            ).parents_and_self.ids
+            visible_categs_domain = Domain("id", "in", visible_categs_ids)
         else:
-            search_categories = Category
-        categs = Category.search_fetch(categs_domain)
+            # No filter: internal users preview the whole tree (incl. empty or unpublished
+            # categs), customers only see categories holding a published product.
+            visible_categs_domain = (
+                Domain.TRUE
+                if self.env.user._is_internal()
+                else Domain("has_published_products", "=", True)
+            )
+            # Lazy: only runs if the (default-off) category tree template reads it.
+            visible_categs_ids = lazy(
+                lambda: Category.search(website_domain & visible_categs_domain).ids
+            )
+        categs = Category.search_fetch(categs_domain & visible_categs_domain)
 
         category_entries = Category
         if category:
-            available_categories = category.child_id.filtered(
-                lambda c: c.website_id.id in (website.id, False)
-            )
-            category_entries = (
-                not search and available_categories
-            ) or available_categories.filtered(lambda c: c.id in search_categories.ids)
+            child_domain = website_domain & visible_categs_domain
+            category_entries = category.child_id.filtered_domain(child_domain)
             if not category_entries:
-                parent = category.parent_id
-                available_categories = parent.child_id.filtered(
-                    lambda c: c.website_id.id in (website.id, False)
-                )
-                category_entries = (
-                    not search and available_categories
-                ) or available_categories.filtered(lambda c: c.id in search_categories.ids)
-            if not search and not self.env.user._is_internal():
-                # We know the user has access to `categs` and `search_categories` because they come
-                # from a regular `search`, but we have not checked access to `category`'s children,
-                # nor its siblings or itself.
-                category_entries = category_entries.filtered("has_published_products")
+                # No matching children: fall back to the siblings.
+                category_entries = category.parent_id.child_id.filtered_domain(child_domain)
         else:
             category_entries = categs
 
@@ -664,9 +665,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
             "gap": gap,
             "categories": categs,
             "category_entries": category_entries,
+            "visible_categs_ids": visible_categs_ids,
             "attributes": attributes,
             "keep": keep,
-            "search_categories_ids": search_categories.ids,
             "get_product_prices": lambda product: products_prices[product.id],
             "float_round": float_round,
             "shop_path": SHOP_PATH,

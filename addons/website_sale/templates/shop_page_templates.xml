@@ -8,7 +8,7 @@
             _submit_classes.f="btn-{{navClass}}"
             _input_classes.f="border-0 text-bg-{{navClass}}"
             search_type.f="products"
-            action="keep(search=0)"/>
+            action="shop_path"/>
     </template>
 
     <template id="website_sale.product_variant_preview">
@@ -1291,11 +1291,7 @@
     <template id="website_sale.categories_recursive" name="Category list">
         <li class="nav-item mb-1" t-att-data-publish="c.has_published_products and 'on' or 'off'">
             <t t-call="website_sale.categorie_link"/>
-            <!-- Dynamic category display based on search -->
-            <t t-set="children" t-value="not search and c.child_id or c.child_id.filtered(lambda c: c.id in search_categories_ids)"/>
-            <!-- Only show categories with published products to portal users preventing from access errors  -->
-            <t t-set="children" t-value="env.user._is_internal() and children or children.filtered('has_published_products')"/>
-
+            <t t-set="children" t-value="c.child_id.filtered(lambda c: c.id in visible_categs_ids)"/>
             <ul t-if="children" class="nav flex-column nav-hierarchy mt-1 ps-3">
                 <!-- PERF: iterate on the original recordset to preserve _prefetch_ids -->
                 <t t-foreach="c.child_id" t-as="c">
@@ -1384,11 +1380,7 @@
     </template>
 
     <template id="website_sale.option_collapse_categories_recursive" name="Collapse Category Recursive">
-        <!-- Dynamic category display based on search -->
-        <t t-set="children" t-value="not search and c.child_id or c.child_id.filtered(lambda c: c.id in search_categories_ids)"/>
-        <!-- Only show categories with published products to portal users preventing from access errors  -->
-        <t t-set="children" t-value="env.user._is_internal() and children or children.filtered('has_published_products')"/>
-
+        <t t-set="children" t-value="c.child_id.filtered(lambda c: c.id in visible_categs_ids)"/>
         <t t-if="children">
             <t t-set="isOpen" t-value="c.id in category.parents_and_self.ids"/>
 
