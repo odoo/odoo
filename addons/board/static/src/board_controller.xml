@@ -69,7 +69,7 @@
 
     <t t-name="board.arch">
         <form t-att-string="this.title">
-            <board t-att-style="this.layout">
+            <board>
                 <column t-foreach="this.columns" t-as="column" t-key="column_index">
                     <t t-foreach="column.actions" t-as="action" t-key="action_index">
                         <action
