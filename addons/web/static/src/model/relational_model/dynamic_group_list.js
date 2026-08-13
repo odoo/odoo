@@ -98,76 +98,26 @@ export class DynamicGroupList extends DynamicList {
     }
 
     /**
-     * @param {string} dataRecordId
-     * @param {string} dataGroupId
+     * Moves records to another group and/or position, keeping their relative order.
+     * The whole move is queued on the model mutex, and the dropped layout it describes
+     * may be outdated by the time it runs: `_moveRecords` resolves it again.
+     *
+     * @param {string[]} recordIds ids of the records moved together, in display order,
+     *  possibly from several groups
      * @param {string} refId
      * @param {string} targetGroupId
      */
-    async moveRecord(dataRecordId, dataGroupId, refId, targetGroupId) {
-        const targetGroup = this.groups.find((g) => g.id === targetGroupId);
-        if (!targetGroup) {
-            return;
-        }
-        if (dataGroupId === targetGroupId) {
-            // move a record inside the same group
-            await targetGroup.list._resequence(
-                targetGroup.list.records,
-                this.resModel,
-                dataRecordId,
-                refId
-            );
-            return;
-        }
-
-        // move record from a group to another group
-        const sourceGroup = this.groups.find((g) => g.id === dataGroupId);
-        const recordIndex = sourceGroup.list.records.findIndex((r) => r.id === dataRecordId);
-        const record = sourceGroup.list.records[recordIndex];
-        // step 1: move record to correct position
-        const refIndex = targetGroup.list.records.findIndex((r) => r.id === refId);
-        const oldIndex = sourceGroup.list.records.findIndex((r) => r.id === dataRecordId);
-
-        const sourceList = sourceGroup.list;
-        // if the source contains more records than what's loaded, reload it after moving the record
-        const mustReloadSourceList = sourceList.count > sourceList.offset + sourceList.limit;
-
-        sourceGroup._removeRecords([record.id]);
-        targetGroup._addRecord(record, refIndex + 1);
-        // step 2: update record value
-        let value = targetGroup.value;
-        if (targetGroup.groupByField.type === "many2one") {
-            value = value ? { id: value, display_name: targetGroup.displayName } : false;
-        }
-
-        const revert = () => {
-            targetGroup._removeRecords([record.id]);
-            sourceGroup._addRecord(record, oldIndex);
-        };
-        try {
-            const changes = { [targetGroup.groupByField.name]: value };
-            const res = await record.update(changes, { save: true });
-            if (!res) {
-                return revert();
-            }
-        } catch (e) {
-            // revert changes
-            revert();
-            throw e;
-        }
-
-        const proms = [];
-        if (mustReloadSourceList) {
-            const { offset, limit, orderBy, domain } = sourceGroup.list;
-            proms.push(sourceGroup.list._load(offset, limit, orderBy, domain));
-        }
-        if (!targetGroup.isFolded) {
-            const targetList = targetGroup.list;
-            const records = targetList.records;
-            proms.push(targetList._resequence(records, this.resModel, dataRecordId, refId));
-        }
-        return Promise.all(proms);
+    async moveRecords(recordIds, refId, targetGroupId) {
+        return this.model.mutex.exec(() => this._moveRecords(recordIds, refId, targetGroupId));
     }
 
+    /**
+     * Moves a group after another one. Groups are dragged one at a time, unlike the
+     * records they hold, which are moved with `moveRecords`.
+     *
+     * @param {string} movedGroupId
+     * @param {string} targetGroupId
+     */
     async resequence(movedGroupId, targetGroupId) {
         if (!this.groupByField || this.groupByField.type !== "many2one") {
             throw new Error("Cannot resequence a group on a non many2one group field");
@@ -177,7 +127,7 @@ export class DynamicGroupList extends DynamicList {
             await this._resequence(
                 this.groups,
                 this.groupByField.relation,
-                movedGroupId,
+                [movedGroupId],
                 targetGroupId
             );
         });
@@ -284,7 +234,7 @@ export class DynamicGroupList extends DynamicList {
         const group = this._createGroupDatapoint(data);
         if (lastGroup) {
             const groups = [...this.groups, group];
-            await this._resequence(groups, this.groupByField.relation, group.id, lastGroup.id);
+            await this._resequence(groups, this.groupByField.relation, [group.id], lastGroup.id);
             this.groups = groups;
         } else {
             this.groups.push(group);
@@ -347,6 +297,92 @@ export class DynamicGroupList extends DynamicList {
         if (this.isDomainSelected) {
             await this._ensureCorrectRecordCount();
         }
+    }
+
+    /**
+     * @see moveRecords, which queues this on the model mutex
+     */
+    async _moveRecords(recordIds, refId, targetGroupId) {
+        const targetGroup = this.groups.find((g) => g.id === targetGroupId);
+        if (!targetGroup) {
+            return;
+        }
+        // the records to move, with the group and index they come from, in display order
+        const moved = this.records
+            .filter((record) => recordIds.includes(record.id))
+            .map((record) => ({
+                record,
+                group: record.group,
+                index: record.group.records.indexOf(record),
+            }));
+        if (!moved.length) {
+            // resequencing on ids the group doesn't hold would rewrite it entirely
+            return;
+        }
+        const movedIds = moved.map(({ record }) => record.id);
+        if (refId && !targetGroup.list.records.some((r) => r.id === refId)) {
+            // the record they were dropped after is gone: move them to the first position
+            refId = null;
+        }
+        const recordsToUpdate = moved
+            .filter(({ group }) => group !== targetGroup)
+            .map(({ record }) => record);
+
+        const resequenceTargetGroup = () =>
+            targetGroup.list._resequence(targetGroup.list.records, this.resModel, movedIds, refId);
+
+        if (!recordsToUpdate.length) {
+            return resequenceTargetGroup();
+        }
+
+        // step 1: move the records to their new position
+        const sourceGroups = new Set(moved.map(({ group }) => group));
+        // if a source group contains more records than what's loaded, reload it afterwards
+        const groupsToReload = [...sourceGroups].filter(
+            (group) =>
+                group !== targetGroup && group.list.count > group.list.offset + group.list.limit
+        );
+        for (const group of sourceGroups) {
+            group._removeRecords(movedIds);
+        }
+        // computed after the removals, as the target group may itself be a source group
+        const refIndex = targetGroup.list.records.findIndex((r) => r.id === refId);
+        moved.forEach(({ record }, i) => targetGroup._addRecord(record, refIndex + 1 + i));
+        const revert = () => {
+            targetGroup._removeRecords(movedIds);
+            for (const { record, group, index } of moved) {
+                group._addRecord(record, index);
+            }
+        };
+
+        // step 2: write the target group value on the records that changed group
+        let value = targetGroup.value;
+        if (targetGroup.groupByField.type === "many2one") {
+            value = value ? { id: value, display_name: targetGroup.displayName } : false;
+        }
+        let saved;
+        try {
+            saved = await this._saveRecords(recordsToUpdate, {
+                [targetGroup.groupByField.name]: value,
+            });
+        } catch (e) {
+            revert();
+            throw e;
+        }
+        if (!saved) {
+            // an invalid record was refused: put the whole selection back
+            return revert();
+        }
+
+        // step 3: reload the truncated source groups and resequence the target group
+        const proms = groupsToReload.map((group) => {
+            const { offset, limit, orderBy, domain } = group.list;
+            return group.list._load(offset, limit, orderBy, domain);
+        });
+        if (!targetGroup.isFolded) {
+            proms.push(resequenceTargetGroup());
+        }
+        return Promise.all(proms);
     }
 
     _removeGroup(group) {
