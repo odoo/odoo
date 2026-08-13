@@ -157,7 +157,11 @@ export class TourPointer extends Component {
             const activeEl = uiService.activeElement;
             const pointerAnchor = this.trigger;
             if (pointerAnchor) {
-                this.state.triggerBelow = !activeEl.contains(pointerAnchor);
+                const frameEl =
+                    pointerAnchor.ownerDocument !== document
+                        ? pointerAnchor.ownerDocument.defaultView?.frameElement
+                        : pointerAnchor;
+                this.state.triggerBelow = frameEl ? !activeEl.contains(frameEl) : true;
             }
         };
         useBus(uiService.bus, "active-element-changed", onActiveElementChanged);
@@ -288,6 +292,9 @@ export class TourPointer extends Component {
 
     openContent() {
         clearTimeout(this.closeTimeout);
+        if (!this.trigger) {
+            return;
+        }
         this.state.showContent = true;
         if (this.popover.isOpen) {
             return;

@@ -2,7 +2,6 @@ import { markup } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_utils";
-import { showProductColumn } from "@account/js/tours/tour_utils";
 
 registry.category("web_tour.tours").add("sale_tour", {
     steps: () => [
@@ -73,7 +72,24 @@ registry.category("web_tour.tours").add("sale_tour", {
             }
         ),
         // as we are creating product on the fly in next step, which is not supported in sol_label_text
-        ...showProductColumn("product_template_id"),
+        {
+            isActive: ["desktop"],
+            content: "Open line fields list",
+            trigger: ".o_optional_columns_dropdown_toggle",
+            run: "click",
+        },
+        {
+            isActive: ["desktop"],
+            content: "Show product column",
+            trigger: ".o-dropdown-item input[name='product_template_id']",
+            run: "click",
+        },
+        {
+            isActive: ["desktop"],
+            content: "Close line fields list",
+            trigger: ".o_optional_columns_dropdown_toggle",
+            run: "click",
+        },
         {
             isActive: ["desktop"],
             trigger: ".o_field_x2many_list_row_add > button",

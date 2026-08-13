@@ -8,11 +8,11 @@ import { markup } from "@odoo/owl";
 
 registry.category("web_tour.tours").add('event_tour', {
     steps: () => [stepUtils.showAppsMenuItem(), {
-    isActive: ["mobile"],
+    isActive: ["mobile", "community"],
     trigger: ".o_menu_toggle",
     run: "click",
 }, {
-    isActive: ["mobile"],
+    isActive: ["mobile", "community"],
     trigger: ".o_sidebar_topbar a.btn-primary",
     run: "click",
 }, {
@@ -72,7 +72,11 @@ registry.category("web_tour.tours").add('event_tour', {
     content: _t("Save the ticket."),
     trigger: '.o_dialog .o_form_button_save',
     run: "click",
-}, stepUtils.autoExpandMoreButtons(),
+}, stepUtils.autoExpandMoreButtons(), {
+    isActive: ["mobile"],
+    trigger: ".o-form-buttonbox:has(.o_button_more) .o_button_more",
+    run: "click",
+},
 ...new EventAdditionalTourSteps()._get_website_event_steps(), {
     trigger: '.o_event_form_view div[name="stage_id"]',
     content: _t("Now that your event is ready, click here to move it to another stage."),

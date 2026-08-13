@@ -1,4 +1,6 @@
+import * as hoot from "@odoo/hoot-dom";
 import { TourStep } from "@web_tour/js/tour_step";
+import { pointerState } from "@web_tour/js/tour_pointer/tour_pointer";
 
 export class TourStepInteractive extends TourStep {
     /**
@@ -63,6 +65,8 @@ export class TourStepInteractive extends TourStep {
             return `Drag element`;
         } else if (action === "press") {
             return `Press ${anchor}`;
+        } else if (action === "hover") {
+            return `Hover element`;
         }
         return ``;
     }
@@ -99,5 +103,42 @@ export class TourStepInteractive extends TourStep {
             return el.closest(".ui-sortable, .o_sortable");
         }
         return el;
+    }
+
+    /**
+     * Performs this step's action automatically, the same way an automatic
+     * tour would (through {@link TourHelpers}), instead of waiting for a real user
+     * interaction. The tour pointer is still resolved and displayed exactly as it
+     * would be for a human, so this exercises the actual anchor-finding logic used
+     * by onboarding tours. Called once per step by {@link TourInteractive.playRobot}.
+     */
+    async doAction() {
+        try {
+            await hoot.waitFor(".o_tour_pointer", { timeout: this.timeout || 10000 });
+        } catch {
+            console.error(this.error.join("\n"));
+            this.tour.robotStep = null;
+            return;
+        }
+        if (this.tour.config.stepDelay > 0) {
+            await hoot.delay(this.tour.config.stepDelay);
+        }
+        if (!pointerState.trigger?.isConnected) {
+            this.tour.robotStep = null;
+            this.tour.updatePointer();
+            return;
+        }
+        if (pointerState.trigger.disabled) {
+            try {
+                await hoot.waitUntil(() => !pointerState.trigger?.disabled, { timeout: 10000 });
+            } catch {
+                this.tour.robotStep = null;
+                return;
+            }
+            if (this.tour.currentAction.step !== this || !pointerState.trigger?.isConnected) {
+                return;
+            }
+        }
+        await super.doAction(pointerState.trigger);
     }
 }

@@ -28,6 +28,8 @@ export class TourInteractive {
         this.steps = this.steps.map((step) => new TourStepInteractive(step, this));
         this.actions = this.steps.flatMap((step) => step.actions);
         this.isBusy = false;
+        this.config = tourState.getCurrentConfig() || {};
+        this.robotStep = null;
     }
 
     /**
@@ -42,6 +44,10 @@ export class TourInteractive {
         TourInteractive.observer = new TourInteractiveObserver(() => this._onMutation());
         TourInteractive.observer.observe(document.body);
         this.currentActionIndex = tourState.getCurrentIndex();
+        if (this.config.debug && this.currentActionIndex === 0) {
+            // eslint-disable-next-line no-debugger
+            debugger;
+        }
         this.play();
         env.bus.addEventListener("ACTION_MANAGER:UPDATE", () => (this.isBusy = true));
         env.bus.addEventListener("ACTION_MANAGER:UI-UPDATED", () => (this.isBusy = false));
@@ -75,10 +81,30 @@ export class TourInteractive {
 
         this.currentAction = this.actions.at(this.currentActionIndex);
 
-        if (!this.currentAction.step.active || this.currentAction.event === "warn") {
-            if (this.currentAction.event === "warn") {
-                console.warn(`Step '${this.currentAction.anchor}' ignored.`);
+        if (this.config.robot) {
+            clearTimeout(this.robotWatchdog);
+            const actionAtCall = this.currentAction;
+            this.robotWatchdog = setTimeout(() => {
+                if (this.currentAction === actionAtCall) {
+                    throw new Error(
+                        `Robot: no progress for 10s on step '${actionAtCall.anchor}'.\n` +
+                            actionAtCall.step.error.join("\n")
+                    );
+                }
+            }, 10000);
+        }
+
+        if (!this.currentAction.step.active) {
+            this.currentActionIndex++;
+            this.play();
+            return;
+        }
+
+        if (this.currentAction.event === "warn") {
+            if (!this.currentAction.findTrigger()) {
+                return;
             }
+            console.log(`Step '${this.currentAction.anchor}' ignored.`);
             this.currentActionIndex++;
             this.play();
             return;
@@ -98,9 +124,31 @@ export class TourInteractive {
             pointerState.content = this.currentAction.content;
             pointerState.position = this.currentAction.tooltipPosition;
             pointerState.isZone = this.currentAction.event === "drop";
+            if (this.config.robot) {
+                this.playRobot();
+            }
         } else {
             pointerState.trigger = undefined;
         }
+    }
+
+    /**
+     * Schedules the current step's {@link TourStepInteractive.doAction} once per
+     * step, queued on {@link robotQueue} so steps never race each other: a step
+     * like "edit" on an autocomplete input is considered consumed by the
+     * interactive engine as soon as the first keystroke fires an "input" event,
+     * well before the typing is done. That already advances the tour to the next
+     * step (e.g. "click" on a dropdown item) and would call this again while the
+     * previous step's typing is still in progress — exactly as a human could
+     * never type and click the very same input at once.
+     */
+    playRobot() {
+        const step = this.currentAction.step;
+        if (step === this.robotStep) {
+            return;
+        }
+        this.robotStep = step;
+        this.robotQueue = (this.robotQueue || Promise.resolve()).then(() => step.doAction());
     }
 
     setActionListeners() {
@@ -275,6 +323,13 @@ export class TourInteractive {
             }
         }
 
+        if (runCommand === "hover") {
+            consumeEvents.push({
+                name: "mouseenter",
+                target: element,
+            });
+        }
+
         // Drag & drop run command
         if (runCommand === "drag") {
             consumeEvents.push({
@@ -306,6 +361,10 @@ export class TourInteractive {
     }
 
     _onMutation() {
+        if (this.currentAction?.event === "warn") {
+            this.play();
+            return;
+        }
         if (this.currentAction) {
             const tempAnchor = this.currentAction.findTrigger();
             if (tempAnchor && tempAnchor !== this.anchorEl) {

@@ -1,69 +1,75 @@
-import { tourState } from "@web_tour/js/tour_state";
 import * as hoot from "@odoo/hoot-dom";
-import { TourHelpers } from "@web_tour/js/tour_automatic/tour_helpers";
+import { tourState } from "@web_tour/js/tour_state";
 import { TourStep } from "@web_tour/js/tour_step";
 
 export class TourStepAutomatic extends TourStep {
-    error = "";
     constructor(data, tour, index) {
         super(data, tour);
         this.index = index;
-        this.tourConfig = tourState.getCurrentConfig();
-    }
-
-    get describeWhyIFailed() {
-        const errors = [];
-        if (this.element) {
-            errors.push(`Element has been found.`);
-            if (this.isUIBlocked) {
-                errors.push("BUT: DOM is blocked by UI.");
-            }
-            if (!this.elementIsInModal) {
-                errors.push(
-                    `BUT: It is not allowed to do action on an element that's below a modal.`
-                );
-            }
-            if (!this.elementIsEnabled) {
-                errors.push(
-                    `BUT: Element is not enabled. TIP: You can use :enable to wait the element is enabled before doing action on it.`
-                );
-            }
-            if (!this.parentFrameIsReady) {
-                errors.push(`BUT: parent frame is not ready ([is-ready='false']).`);
-            }
-        } else {
-            const checkElement = hoot.queryFirst(this.trigger);
-            if (checkElement) {
-                errors.push(`Element has been found.`);
-                errors.push(
-                    `BUT: Element is not visible. TIP: You can use :not(:visible) to force the search for an invisible element.`
-                );
-            } else {
-                errors.push(`Element (${this.trigger}) has not been found.`);
-            }
-        }
-        return errors;
     }
 
     /**
-     * When return null or false, macro continues.
+     * Splits this step into the pair of {@link Macro} step descriptors
+     * {@link TourAutomatic} plays it with: one to log/pause for debugging,
+     * one to actually wait for the trigger and perform the action.
+     * @returns {{action: Function}[]}
      */
-    async doAction() {
-        if (this.skipped) {
-            return false;
-        }
-        const actionHelper = new TourHelpers(this.element);
-        if (typeof this.run === "function") {
-            return await this.run.call({ anchor: this.element }, actionHelper);
-        } else if (typeof this.run === "string") {
-            let lastResult = null;
-            for (const todo of this.run.split("&&")) {
-                const m = String(todo)
-                    .trim()
-                    .match(/^(?<action>\w*) *\(? *(?<arguments>.*?)\)?$/);
-                lastResult = await actionHelper[m.groups?.action](m.groups?.arguments);
-            }
-            return lastResult;
-        }
+    get actions() {
+        return [
+            {
+                action: async () => {
+                    if (this.tour.debugMode) {
+                        console.groupCollapsed(this.describeMe);
+                        console.log(this.stringify);
+                        if (this.tour.config.stepDelay > 0) {
+                            await hoot.delay(this.tour.config.stepDelay);
+                        }
+                        if (this.break) {
+                            // eslint-disable-next-line no-debugger
+                            debugger;
+                        }
+                    } else {
+                        console.log(this.describeMe);
+                    }
+                },
+            },
+            {
+                trigger: this.trigger ? () => this.findTrigger() : null,
+                timeout:
+                    this.pause && this.tour.debugMode
+                        ? 9999999
+                        : this.timeout || this.tour.timeout || 10000,
+                action: async (trigger) => {
+                    this.tour.allowUnload = false;
+                    if (!this.skipped && this.expectUnloadPage) {
+                        this.tour.allowUnload = true;
+                        setTimeout(() => {
+                            const message = `
+                                The key { expectUnloadPage } is defined but page has not been unloaded within 20000 ms.
+                                You probably don't need it.
+                            `.replace(/^\s+/gm, "");
+                            this.tour.throwError(message);
+                        }, 20000);
+                    }
+                    await this.doAction(this.element);
+                    if (this.tour.debugMode) {
+                        console.log(trigger);
+                        if (this.skipped) {
+                            console.log("This step has been skipped");
+                        } else {
+                            console.log("This step has run successfully");
+                        }
+                        console.groupEnd();
+                        if (this.pause) {
+                            await this.tour.pause();
+                        }
+                    }
+                    tourState.setCurrentIndex(this.index + 1);
+                    if (this.tour.allowUnload) {
+                        return "StopTheMacro!";
+                    }
+                },
+            },
+        ];
     }
 }
