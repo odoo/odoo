@@ -12,18 +12,16 @@
             <xpath expr="//t[@t-set='layout_document_title']" position="before">
                 <t t-set="cas_vals" t-value="o._l10n_ph_cas_get_invoice_report_values()"/>
             </xpath>
-            <xpath expr="//t[@name='invoice_title']/.." position="after">
-                <span t-if="cas_vals['category'] == 'vat_exempt'" class="fs-4 d-block">VAT-EXEMPT SALES</span>
-                <span t-elif="cas_vals['category'] == 'zero_rated'" class="fs-4 d-block">ZERO-RATED SALES</span>
+            <xpath expr="//span[@name='document_title']" position="after">
+                <t t-if="o.move_type == 'out_invoice' and o.state == 'posted'">
+                    <span t-if="cas_vals['category'] == 'vat_exempt'" class="fs-4 d-block">VAT-EXEMPT SALES</span>
+                    <span t-elif="cas_vals['category'] == 'zero_rated'" class="fs-4 d-block">ZERO-RATED SALES</span>
+                </t>
             </xpath>
-            <xpath expr="//t[@name='invoice_title']/.." position="attributes">
-                <attribute name="class">text-uppercase fs-1</attribute>
-            </xpath>
-            <xpath expr="//t[@name='draft_invoice_title']/.." position="attributes">
-                <attribute name="class">text-uppercase fs-1</attribute>
-            </xpath>
-            <xpath expr="//t[@name='cancelled_invoice_title']/.." position="attributes">
-                <attribute name="class">text-uppercase fs-1</attribute>
+            <xpath expr="//span[@name='document_title']" position="attributes">
+                <attribute name="t-attf-class"
+                        add="#{'text-uppercase fs-1' if o.move_type == 'out_invoice' else ''}"
+                        separator=" "/>
             </xpath>
             <xpath expr="//t[@t-set='layout_document_title']/span[@t-field='o.name']" position="attributes">
                 <attribute name="class">fs-5 fw-normal d-block mt-3</attribute>
