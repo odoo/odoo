@@ -634,6 +634,6 @@ class AccountMove(models.Model):
                 # considered as sent in previous flow, and allow the current flow to be sent even if
                 # it's the only diffrence between the 2 flows.
                 move.l10n_fr_pdp_sent_in_flow_ids = False
-                # ensure RE flow exist for current move period (if move is never posted again)
+                # Ensure RE flow exist for current move period.
                 self.env['l10n.fr.pdp.reports.flow']._get_open_flow_and_create_if_needed(move)
         return super().button_draft()
