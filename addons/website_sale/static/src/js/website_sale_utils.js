@@ -58,7 +58,7 @@ function updateCartSummary(data) {
     }
     if (data['website_sale.total']) {
         document.querySelectorAll('div.o_cart_total').forEach(
-            div => div.innerHTML = data['website_sale.total']
+            div => setElementContent(div, data['website_sale.total'])
         );
     }
 }
@@ -100,34 +100,48 @@ async function updateShopContent(interaction, {
         if (headerEl){
             paramsObject.category = headerEl.dataset.categoryId;
         }
+
         const data = await interaction.waitFor(rpc('/shop/reload', paramsObject));
+        const markupData = markup(data.html);
         const updatedShopPage = document.createElement('div');
-        setElementContent(updatedShopPage, markup(data.html))
+        setElementContent(updatedShopPage, markupData);
+
         const shopPageEl = document.querySelector('.o_wsale_products_page');
         interaction.services['public.interactions'].stopInteractions(shopPageEl);
 
         const newSidebar = updatedShopPage.querySelector('#products_grid_before');
-        const currentSidebar = document.querySelector('#products_grid_before');
-        if (newSidebar && currentSidebar) {
-            setElementContent(currentSidebar, markup(newSidebar.innerHTML))
+        if (newSidebar) {
+            const markupNewSidebar = markup(newSidebar.innerHTML);
+            const currentSidebar = document.querySelector('#products_grid_before');
+            if (newSidebar)
+                setElementContent(currentSidebar, markupNewSidebar);
         }
 
         const newGrid = updatedShopPage.querySelector('.o_wsale_products_grid_table');
-        const currentGrid = document.querySelector('.o_wsale_products_grid_table');
-        setElementContent(currentGrid, markup(newGrid.innerHTML))
+        if (newGrid) {
+            const markupNewGrid = markup(newGrid.innerHTML);
+            const currentGrid = document.querySelector('.o_wsale_products_grid_table');
+            setElementContent(currentGrid, markupNewGrid);
+        }
 
         const newPager = updatedShopPage.querySelector('.products_pager');
-        const currentPager = document.querySelector('.products_pager');
-        setElementContent(currentPager, markup(newPager.innerHTML))
+        if (newPager) {
+            const markupNewPager = markup(newPager.innerHTML);
+            const currentPager = document.querySelector('.products_pager');
+            setElementContent(currentPager, markupNewPager);
+        }
 
         const newOffcanvas = updatedShopPage.querySelector('.o_website_offcanvas');
+        const markupNewOffCanvas = markup(newOffcanvas.innerHTML);
         const currentOffcanvas = document.querySelector('.o_website_offcanvas');
-        setElementContent(currentOffcanvas, markup(newOffcanvas.innerHTML))
+        setElementContent(currentOffcanvas, markupNewOffCanvas);
+
 
         const applyBtn = document.querySelector('#o_wsale_offcanvas_product_count');
         if (applyBtn) {
             setElementContent(applyBtn, data.product_count)
         }
+
         history.pushState({}, '', targetUrl);
         interaction.services['public.interactions'].startInteractions(shopPageEl);
         productGridWrapper?.classList.remove('opacity-50');

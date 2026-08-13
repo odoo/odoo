@@ -347,7 +347,7 @@ export class ProductPage extends Interaction {
         // ready).
         if (images && !isEditorEnabled && newImages) {
             this.services["public.interactions"].stopInteractions(images);
-            images.insertAdjacentHTML('beforebegin', markup(newImages));
+            images.insertAdjacentHTML('beforebegin', newImages);
             images.remove();
 
             // Re-query the latest images.
@@ -438,6 +438,9 @@ export class ProductPage extends Interaction {
         }
         if (combinationInfo.documents) {
             combinationInfo.documents = markup(combinationInfo.documents);
+        }
+        if (combinationInfo.carousel) {
+            combinationInfo.carousel = markup(combinationInfo.carousel);
         }
         combinationInfo.packaging_selector = markup(combinationInfo.packaging_selector);
 
