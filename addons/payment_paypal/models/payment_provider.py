@@ -106,9 +106,9 @@ class PaymentProvider(models.Model):
         """
         base_url = self._paypal_get_base_url()
         webhook_events = (
-            const.CHECKOUT_WEBHOOK_EVENTS +
-            const.CAPTURE_WEBHOOK_EVENTS +
-            [const.SELLER_EMAIL_CONFIRMED_WEBHOOK]
+            const.CHECKOUT_WEBHOOK_EVENTS
+            + const.CAPTURE_WEBHOOK_EVENTS
+            + [const.SELLER_EMAIL_CONFIRMED_WEBHOOK]
         )
         data = {
             "url": urls.urljoin(base_url, PaypalController._webhook_url),
@@ -186,20 +186,16 @@ class PaymentProvider(models.Model):
         for provider in self.filtered(lambda p: p.code == "paypal"):
             if not provider.paypal_client_id or not provider.paypal_client_secret:
                 continue
-            provider_pms = payment_methods.filtered(lambda pm: pm.provider_id == provider)
             eligible_method_keys = provider._paypal_get_eligible_payment_method_keys(
                 partner_id,
                 amount,
                 currency_id=currency_id,
                 user_agent=kwargs.get("paypal_customer_user_agent"),
             )
-            if eligible_method_keys is None:
-                continue
-
-            ineligible_pms = provider_pms.filtered(
+            ineligible_pms = payment_methods.filtered(
                 lambda pm: (
-                    pm.code in const.ELIGIBLE_PAYMENT_METHODS_MAPPING
-                    and const.ELIGIBLE_PAYMENT_METHODS_MAPPING[pm.code] not in eligible_method_keys
+                    pm.code in const.PAYMENT_METHODS_MAPPING
+                    and const.PAYMENT_METHODS_MAPPING[pm.code] not in eligible_method_keys
                 )
             )
             payment_utils.add_to_report(
@@ -209,7 +205,6 @@ class PaymentProvider(models.Model):
                 reason=self.env._("Not eligible according to PayPal"),
             )
             payment_methods -= ineligible_pms
-
         return payment_methods
 
     def _paypal_get_eligible_payment_method_keys(
@@ -243,7 +238,7 @@ class PaymentProvider(models.Model):
                     },
                 }
             ],
-            "preferences": {"intent": "AUTHORIZE" if self.capture_manually else "CAPTURE"},
+            "preferences": {"intent": "CAPTURE"},
         }
         try:
             response_content = self._send_api_request(
@@ -263,15 +258,16 @@ class PaymentProvider(models.Model):
         Note: `self.ensure_one()`
 
         :param res.currency currency: The transaction currency.
+        :param int partner_id: The partner of the transaction, as a `res.partner` id.
         :return: The JSON serial of the required values to render the inline form.
         :rtype: str
         """
-        partner = self.env["res.partner"].browse(partner_id)
+        partner = self.env["res.partner"].browse(partner_id).exists()
         inline_form_values = {
             "provider_id": self.id,
             "client_id": self.paypal_client_id,
             "currency_code": currency and currency.name,
-            "country_code": partner.country_code,
+            "country_code": partner and partner.country_code,
         }
         return json.dumps(inline_form_values)
 
@@ -362,34 +358,24 @@ class PaymentProvider(models.Model):
     ):
         """Override of `payment` to build the request headers."""
         if self.code != "paypal":
-            return super()._build_request_headers(
-                *args,
-                idempotency_key=idempotency_key,
-                is_refresh_token_request=is_refresh_token_request,
-                paypal_onboarding_shared_id=paypal_onboarding_shared_id,
-                paypal_onboarding_access_token=paypal_onboarding_access_token,
-                paypal_customer_user_agent=paypal_customer_user_agent,
-                **kwargs,
-            )
-
+            return super()._build_request_headers(*args, idempotency_key=idempotency_key, **kwargs)
+        is_onboarding_request = paypal_onboarding_shared_id or paypal_onboarding_access_token
         headers = {
-            "Content-Type": "application/json",
             # PayPal requires a reference specific to Odoo to be able to track Odoo customers.
-            "PayPal-Partner-Attribution-Id": "ODOO_SP_DIRECT",
+            "PayPal-Partner-Attribution-Id": "ODOO_SP_DIRECT"
         }
+        if is_onboarding_request:
+            headers["Content-Type"] = "application/x-www-form-urlencoded"
+        else:
+            headers["Content-Type"] = "application/json"
+
         if paypal_customer_user_agent:
             headers["User-Agent"] = paypal_customer_user_agent
-        if paypal_onboarding_shared_id or paypal_onboarding_access_token:
-            headers["Content-Type"] = "application/x-www-form-urlencoded"
         if paypal_onboarding_access_token:
             headers["Authorization"] = f"Bearer {paypal_onboarding_access_token}"
         if idempotency_key:
             headers["PayPal-Request-Id"] = idempotency_key
-        if (
-            not is_refresh_token_request
-            and not paypal_onboarding_shared_id
-            and not paypal_onboarding_access_token
-        ):
+        if not (is_refresh_token_request or is_onboarding_request):
             headers["Authorization"] = f"Bearer {self._paypal_fetch_access_token()}"
         return headers
 

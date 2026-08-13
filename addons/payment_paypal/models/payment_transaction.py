@@ -2,7 +2,7 @@
 
 from urllib.parse import urlencode
 
-from odoo import api, fields, models
+from odoo import api, models
 from odoo.exceptions import ValidationError
 from odoo.tools import urls
 
@@ -18,10 +18,6 @@ _logger = get_payment_logger(__name__)
 class PaymentTransaction(models.Model):
     _inherit = "payment.transaction"
 
-    # See https://developer.paypal.com/docs/api-basics/notifications/ipn/IPNandPDTVariables/
-    # this field has no use in Odoo except for debugging
-    paypal_type = fields.Char(string="PayPal Transaction Type")
-
     def _get_specific_processing_values(self, processing_values):
         """Override of `payment` to return the Paypal-specific processing values.
 
@@ -36,7 +32,8 @@ class PaymentTransaction(models.Model):
             return super()._get_specific_processing_values(processing_values)
 
         try:
-            order_data = self._paypal_create_order(scope="payment_request_order")
+            order_data = self._paypal_create_order()
+            self.provider_reference = order_data["id"]
         except ValidationError as e:
             self._set_error(str(e))
             return {}
@@ -62,7 +59,7 @@ class PaymentTransaction(models.Model):
             else self._paypal_prepare_apm_order_payload()
         )
         try:
-            order_data = self._paypal_create_order(scope="payment_request_order", payload=payload)
+            order_data = self._paypal_create_order(payload=payload)
         except ValidationError as e:
             self._set_error(str(e))
             return {}
@@ -77,9 +74,11 @@ class PaymentTransaction(models.Model):
             "url_params": payment_utils.extract_url_params(payer_action_url),
         }
 
-    def _paypal_create_order(self, scope, payload=None):
+    def _paypal_create_order(self, payload=None):
         """Create a PayPal order for the transaction and return the API response."""
-        idempotency_key = payment_utils.generate_idempotency_key(self, scope=scope)
+        idempotency_key = payment_utils.generate_idempotency_key(
+            self, scope="payment_request_order"
+        )
         return self._send_api_request(
             "POST",
             "/v2/checkout/orders",
@@ -93,13 +92,12 @@ class PaymentTransaction(models.Model):
         :return: The requested payload to create a Paypal order.
         :rtype: dict
         """
-        is_public = self.partner_id.is_public
-        shipping_address_vals = {} if is_public else paypal_utils.format_shipping_address(self)
-        invoice_address_vals = (
-            {"address": {"country_code": self.company_id.country_code}}
-            if is_public
-            else paypal_utils.format_partner_address(self.partner_id)
-        )
+        if self.partner_id.is_public:
+            invoice_address_vals = {"address": {"country_code": self.company_id.country_code}}
+            shipping_address_vals = {}
+        else:
+            invoice_address_vals = paypal_utils.format_partner_address(self.partner_id)
+            shipping_address_vals = paypal_utils.format_shipping_address(self)
 
         # See https://developer.paypal.com/docs/api/orders/v2/#orders_create!ct=application/json
         return {
@@ -128,21 +126,25 @@ class PaymentTransaction(models.Model):
         }
 
     def _paypal_get_payment_source(self, invoice_address_vals, has_shipping):
-        return_url, cancel_url = self._paypal_get_return_url(self.reference)
+        return_url, cancel_url = self._paypal_get_return_urls(self.reference)
         if self.payment_method_code == "card":
             return {
-                "card": self._paypal_add_card_data(return_url, cancel_url, invoice_address_vals)
+                "card": {
+                    "name": self.partner_name,
+                    "billing_address": invoice_address_vals.get("address", {}),
+                    "attributes": {"verification": {"method": "SCA_WHEN_REQUIRED"}},
+                    "experience_context": {"return_url": return_url, "cancel_url": cancel_url},
+                }
             }
         partner_first_name, partner_last_name = payment_utils.split_partner_name(self.partner_name)
-
         return {
             "paypal": {
                 "experience_context": {
                     "payment_method_preference": "IMMEDIATE_PAYMENT_REQUIRED",
                     "landing_page": "LOGIN",
-                    "shipping_preference": "SET_PROVIDED_ADDRESS"
-                    if has_shipping
-                    else "NO_SHIPPING",
+                    "shipping_preference": (
+                        "SET_PROVIDED_ADDRESS" if has_shipping else "NO_SHIPPING"
+                    ),
                     "user_action": "PAY_NOW",
                     "return_url": return_url,
                     "cancel_url": cancel_url,
@@ -152,23 +154,14 @@ class PaymentTransaction(models.Model):
             }
         }
 
-    def _paypal_add_card_data(self, return_url, cancel_url, invoice_address_vals):
-        return {
-            "name": self.partner_name,
-            "billing_address": invoice_address_vals.get("address", {}),
-            "attributes": {"verification": {"method": "SCA_WHEN_REQUIRED"}},
-            "experience_context": {"return_url": return_url, "cancel_url": cancel_url},
-        }
-
     def _paypal_prepare_apm_order_payload(self):
         """Prepare the payload of the create order request for an alternative payment method.
 
         :return: The payload of the create order request for the alternative payment method.
         :rtype: dict
         """
-        return_url, cancel_url = self._paypal_get_return_url(self.reference)
+        return_url, cancel_url = self._paypal_get_return_urls(self.reference)
         locale = (self.partner_id.lang or self.env.user.lang or "en_US").replace("_", "-")
-
         return {
             "intent": "CAPTURE",
             "processing_instruction": "ORDER_COMPLETE_ON_PAYMENT_APPROVAL",
@@ -213,19 +206,11 @@ class PaymentTransaction(models.Model):
 
         # Update the provider reference.
         txn_id = payment_data.get("id")
-        txn_type = payment_data.get("txn_type")
-        if not all((txn_id, txn_type)):
-            self._set_error(
-                self.env._(
-                    "Missing value for txn_id (%(txn_id)s) or txn_type (%(txn_type)s).",
-                    txn_id=txn_id,
-                    txn_type=txn_type,
-                )
-            )
+        if not all(txn_id):
+            self._set_error(self.env._("Missing value for txn_id (%(txn_id)s).", txn_id=txn_id))
             return
 
         self.provider_reference = txn_id
-        self.paypal_type = txn_type
 
         # Force PayPal as the payment method if it exists.
         self.payment_method_id = (
@@ -266,7 +251,7 @@ class PaymentTransaction(models.Model):
         currency_code = amount_data.get("currency_code")
         return {"amount": float(amount), "currency_code": currency_code}
 
-    def _paypal_get_return_url(self, ref):
+    def _paypal_get_return_urls(self, ref):
         base_url = self.provider_id._paypal_get_base_url()
         params = urlencode({"reference": ref})
         return_url = f"{urls.urljoin(base_url, PaypalController._return_url)}?{params}"

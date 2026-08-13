@@ -8,7 +8,6 @@ from odoo.tests import tagged
 from odoo.tools import mute_logger
 
 from odoo.addons.payment.tests.http_common import PaymentHttpCommon
-from odoo.addons.payment_paypal import utils as paypal_utils
 from odoo.addons.payment_paypal.controllers.main import PaypalController
 from odoo.addons.payment_paypal.tests.common import PaypalCommon
 
@@ -54,14 +53,16 @@ class PaypalTest(PaypalCommon, PaymentHttpCommon):
     def test_complete_order_confirms_transaction(self):
         """Test the processing of a webhook notification."""
         tx = self._create_transaction("direct")
-        normalized_data = paypal_utils.normalize_paypal_payment_data(self.completed_order)
+        normalized_data = PaypalController._normalize_paypal_data(
+            self, self.completed_order, is_capture_request=True
+        )
         tx.with_context(payment_safe_write=True)._process(normalized_data)
         self.assertEqual(tx.state, "done")
         self.assertEqual(tx.provider_reference, normalized_data["id"])
 
     def test_feedback_processing(self):
-        normalized_data = paypal_utils.normalize_paypal_payment_data(
-            self.payment_data.get("resource"), from_webhook=True
+        normalized_data = PaypalController._normalize_paypal_data(
+            self, self.payment_data.get("resource")
         )
 
         # Confirmed transaction
@@ -111,11 +112,11 @@ class PaypalTest(PaypalCommon, PaymentHttpCommon):
         self.assertEqual(tx.state_message, "The provided payment source cannot be used.")
 
     @mute_logger("odoo.addons.payment_paypal.controllers.main")
-    def test_capture_denied_webhook_cancels_transaction(self):
+    def test_capture_denied_webhook_updates_tx_error_status(self):
         """Test that a `PAYMENT.CAPTURE.DENIED` webhook notification cancels the transaction.
 
         The transaction is matched through the order id (`provider_reference`) as the denied capture
-        resource does not echo back the `custom_id`.
+        resource does not echo back the shared reference_id.
         """
         tx = self._create_transaction("redirect")
         self._update_transaction(tx, provider_reference=self.order_id)

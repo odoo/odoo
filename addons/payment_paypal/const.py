@@ -39,7 +39,7 @@ DEFAULT_PAYMENT_METHOD_CODES = {"paypal"}
 # `find-eligible-methods` endpoint. Local codes that have no entry in this mapping are not
 # affected by the eligibility check, e.g., because PayPal doesn't assess their eligibility.
 # See https://docs.paypal.ai/api-reference/payments_payment_v2/find-eligible-methods.
-ELIGIBLE_PAYMENT_METHODS_MAPPING = {
+PAYMENT_METHODS_MAPPING = {
     "paypal": "paypal",
     "venmo": "venmo",
     "paypal_paylater": "paypal_pay_later",

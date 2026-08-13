@@ -15,18 +15,8 @@
         <field name="code">bancontact</field>
         <field name="provider_id" ref="payment.payment_provider_paypal"/>
         <field name="image" type="bytes" file="payment/static/img/bancontact.png"/>
-        <field
-            name="supported_country_ids"
-            eval="[Command.set([
-                        ref('base.be'),
-                    ])]"
-        />
-        <field
-            name="supported_currency_ids"
-            eval="[Command.set([
-                        ref('base.EUR'),
-                    ])]"
-        />
+        <field name="supported_country_ids" eval="[Command.set([ref('base.be')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.EUR')])]"/>
     </record>
 
     <record id="payment_method_blik" model="payment.method">
@@ -34,18 +24,8 @@
         <field name="code">blik</field>
         <field name="provider_id" ref="payment.payment_provider_paypal"/>
         <field name="image" type="bytes" file="payment/static/img/blik.png"/>
-        <field
-            name="supported_country_ids"
-            eval="[Command.set([
-                        ref('base.pl'),
-                    ])]"
-        />
-        <field
-            name="supported_currency_ids"
-            eval="[Command.set([
-                        ref('base.PLN'),
-                    ])]"
-        />
+        <field name="supported_country_ids" eval="[Command.set([ref('base.pl')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.PLN')])]"/>
     </record>
 
     <record id="payment_method_card" model="payment.method">
@@ -57,29 +37,30 @@
         <field
             name="supported_country_ids"
             eval="[Command.set([
-                        ref('base.au'),
                         ref('base.at'),
+                        ref('base.au'),
                         ref('base.be'),
                         ref('base.bg'),
                         ref('base.ca'),
                         ref('base.cn'),
                         ref('base.cy'),
                         ref('base.cz'),
+                        ref('base.de'),
                         ref('base.dk'),
                         ref('base.ee'),
+                        ref('base.es'),
                         ref('base.fi'),
                         ref('base.fr'),
-                        ref('base.de'),
                         ref('base.gr'),
                         ref('base.hk'),
                         ref('base.hu'),
                         ref('base.ie'),
                         ref('base.it'),
                         ref('base.jp'),
-                        ref('base.lv'),
                         ref('base.li'),
                         ref('base.lt'),
                         ref('base.lu'),
+                        ref('base.lv'),
                         ref('base.mt'),
                         ref('base.mx'),
                         ref('base.nl'),
@@ -87,14 +68,13 @@
                         ref('base.pl'),
                         ref('base.pt'),
                         ref('base.ro'),
-                        ref('base.sg'),
-                        ref('base.sk'),
-                        ref('base.si'),
-                        ref('base.es'),
                         ref('base.se'),
+                        ref('base.sg'),
+                        ref('base.si'),
+                        ref('base.sk'),
                         ref('base.uk'),
                         ref('base.us'),
-                    ])]"
+                ])]"
         />
         <field
             name="supported_currency_ids"
@@ -121,7 +101,7 @@
                         ref('base.THB'),
                         ref('base.TWD'),
                         ref('base.USD'),
-                    ])]"
+                ])]"
         />
     </record>
 
@@ -130,18 +110,8 @@
         <field name="code">eps</field>
         <field name="provider_id" ref="payment.payment_provider_paypal"/>
         <field name="image" type="bytes" file="payment/static/img/eps.png"/>
-        <field
-            name="supported_country_ids"
-            eval="[Command.set([
-                        ref('base.at'),
-                    ])]"
-        />
-        <field
-            name="supported_currency_ids"
-            eval="[Command.set([
-                        ref('base.EUR'),
-                    ])]"
-        />
+        <field name="supported_country_ids" eval="[Command.set([ref('base.at')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.EUR')])]"/>
     </record>
 
     <record id="payment_method_ideal" model="payment.method">
@@ -149,18 +119,8 @@
         <field name="code">ideal</field>
         <field name="provider_id" ref="payment.payment_provider_paypal"/>
         <field name="image" type="bytes" file="payment/static/img/ideal.png"/>
-        <field
-            name="supported_country_ids"
-            eval="[Command.set([
-                        ref('base.nl'),
-                    ])]"
-        />
-        <field
-            name="supported_currency_ids"
-            eval="[Command.set([
-                        ref('base.EUR'),
-                    ])]"
-        />
+        <field name="supported_country_ids" eval="[Command.set([ref('base.nl')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.EUR')])]"/>
     </record>
 
     <record id="payment_method_multibanco" model="payment.method">
@@ -168,37 +128,17 @@
         <field name="code">multibanco</field>
         <field name="provider_id" ref="payment.payment_provider_paypal"/>
         <field name="image" type="bytes" file="payment/static/img/multibanco.png"/>
-        <field
-            name="supported_country_ids"
-            eval="[Command.set([
-                        ref('base.pt'),
-                    ])]"
-        />
-        <field
-            name="supported_currency_ids"
-            eval="[Command.set([
-                        ref('base.EUR'),
-                    ])]"
-        />
+        <field name="supported_country_ids" eval="[Command.set([ref('base.pt')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.EUR')])]"/>
     </record>
 
-     <record id="payment_method_mybank" model="payment.method">
+    <record id="payment_method_mybank" model="payment.method">
         <field name="name">MyBank</field>
         <field name="code">mybank</field>
         <field name="provider_id" ref="payment.payment_provider_paypal"/>
         <field name="image" type="bytes" file="payment/static/img/mybank.png"/>
-        <field
-            name="supported_country_ids"
-            eval="[Command.set([
-                        ref('base.it'),
-                    ])]"
-        />
-        <field
-            name="supported_currency_ids"
-            eval="[Command.set([
-                        ref('base.EUR'),
-                    ])]"
-        />
+        <field name="supported_country_ids" eval="[Command.set([ref('base.it')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.EUR')])]"/>
     </record>
 
     <record id="payment_method_paypal_paylater" model="payment.method">
@@ -209,26 +149,26 @@
         <field
             name="supported_country_ids"
             eval="[Command.set([
-                        ref('base.us'),
                         ref('base.au'),
                         ref('base.ca'),
-                        ref('base.fr'),
                         ref('base.de'),
-                        ref('base.it'),
                         ref('base.es'),
+                        ref('base.fr'),
+                        ref('base.it'),
                         ref('base.uk'),
-                    ])]"
+                        ref('base.us'),
+                ])]"
         />
         <field
             name="supported_currency_ids"
             eval="[Command.set([
-                        ref('base.USD'),
                         ref('base.AUD'),
                         ref('base.CAD'),
                         ref('base.EUR'),
                         ref('base.GBP'),
-                    ])]"
-    />
+                        ref('base.USD'),
+                ])]"
+        />
     </record>
 
     <record id="payment_method_p24" model="payment.method">
@@ -236,18 +176,10 @@
         <field name="code">p24</field>
         <field name="provider_id" ref="payment.payment_provider_paypal"/>
         <field name="image" type="bytes" file="payment/static/img/p24.png"/>
-        <field
-            name="supported_country_ids"
-            eval="[Command.set([
-                        ref('base.pl'),
-                    ])]"
-        />
+        <field name="supported_country_ids" eval="[Command.set([ref('base.pl')])]"/>
         <field
             name="supported_currency_ids"
-            eval="[Command.set([
-                        ref('base.EUR'),
-                        ref('base.PLN'),
-                    ])]"
+            eval="[Command.set([ref('base.EUR'), ref('base.PLN')])]"
         />
     </record>
 
@@ -265,23 +197,23 @@
                         ref('base.ee'),
                         ref('base.es'),
                         ref('base.fi'),
-                        ref('base.uk'),
-                        ref('base.lv'),
                         ref('base.lt'),
+                        ref('base.lv'),
                         ref('base.nl'),
                         ref('base.no'),
                         ref('base.se'),
-                    ])]"
+                        ref('base.uk'),
+                ])]"
         />
         <field
             name="supported_currency_ids"
             eval="[Command.set([
-                        ref('base.GBP'),
                         ref('base.DKK'),
-                        ref('base.SEK'),
-                        ref('base.NOK'),
                         ref('base.EUR'),
-                    ])]"
+                        ref('base.GBP'),
+                        ref('base.NOK'),
+                        ref('base.SEK'),
+                ])]"
         />
     </record>
 
@@ -290,18 +222,8 @@
         <field name="code">venmo</field>
         <field name="provider_id" ref="payment.payment_provider_paypal"/>
         <field name="image" type="bytes" file="payment/static/img/venmo.png"/>
-        <field
-            name="supported_country_ids"
-            eval="[Command.set([
-                        ref('base.us'),
-                    ])]"
-        />
-        <field
-            name="supported_currency_ids"
-            eval="[Command.set([
-                        ref('base.USD'),
-                    ])]"
-        />
+        <field name="supported_country_ids" eval="[Command.set([ref('base.us')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.USD')])]"/>
     </record>
 
 </odoo>
