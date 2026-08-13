@@ -44,7 +44,7 @@ Odoo Web tours.
             'web_tour/static/tests/*.test.js',
         ],
         "web.assets_tests": [
-            'web_tour/static/src/js/tour_automatic/tour_helpers.js',
+            'web_tour/static/src/js/tour_helpers/tour_helpers.js',
             ('include', 'web_tour.automatic')
         ],
         'web_tour.common': [
@@ -53,8 +53,7 @@ Odoo Web tours.
         ],
         'web_tour.helpers': [
             ('include', 'web_tour.common'),
-            'web_tour/static/src/js/tour_automatic/tour_helpers.js',
-            'web_tour/static/src/js/tour_automatic/tour_helpers_hoot.js',
+            'web_tour/static/src/js/tour_helpers/**/*',
         ],
         'web_tour.interactive': [
             ('include', 'web_tour.helpers'),
