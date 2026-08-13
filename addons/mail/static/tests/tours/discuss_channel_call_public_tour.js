@@ -3,7 +3,7 @@ import { registry } from "@web/core/registry";
 registry.category("web_tour.tours").add("discuss_channel_call_public_tour.js", {
     steps: () => [
         {
-            content: "Close the video permission dialog",
+            content: "Close the microphone permission dialog",
             trigger: ".o_dialog .modal-header .btn-close",
             run: "click",
         },
