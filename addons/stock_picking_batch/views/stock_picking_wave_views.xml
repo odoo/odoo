@@ -106,7 +106,7 @@
                 </div>
             </xpath>
             <xpath expr="//button[@name='get_action_picking_tree_ready']" position="before">
-                <button t-if="record.count_picking_batch.raw_value > 0" class="btn btn-primary me-2" name="action_batch" type="object">
+                <button t-if="record.count_picking_batch.raw_value > 0" class="btn btn-primary" name="action_batch" type="object">
                     <field name="count_picking_batch"/> Batches
                 </button>
             </xpath>
