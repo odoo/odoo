@@ -17,12 +17,17 @@ class AccountChartTemplate(models.AbstractModel):
         return {
             self.env.company.id: {
                 'account_fiscal_country_id': 'base.sa',
-                'bank_account_code_prefix': '101',
+                'bank_account_code_prefix': '160',
                 'cash_account_code_prefix': '105',
-                'transfer_account_code_prefix': '100',
+                'transfer_account_id': 'sa_account_170101',
                 'account_default_pos_receivable_account_id': 'sa_account_102012',
                 'income_currency_exchange_account_id': 'sa_account_500011',
                 'expense_currency_exchange_account_id': 'sa_account_400053',
+                'account_journal_suspense_account_id': 'sa_account_160103',
+                'account_journal_early_pay_discount_loss_account_id': 'sa_account_430800',
+                'account_journal_early_pay_discount_gain_account_id': 'sa_account_510500',
+                'default_cash_difference_income_account_id': 'sa_account_999001',
+                'default_cash_difference_expense_account_id': 'sa_account_999002',
                 'account_sale_tax_id': 'sa_sales_tax_15',
                 'account_purchase_tax_id': 'sa_purchase_tax_15',
                 'expense_account_id': 'sa_account_400001',
@@ -61,7 +66,10 @@ class AccountChartTemplate(models.AbstractModel):
                 'type': 'general',
                 'show_on_dashboard': True,
                 'sequence': 11,
-            }
+            },
+            'bank': {
+                'default_account_id': 'sa_account_160100',
+            },
         }
 
     @template('sa', 'account.account')
