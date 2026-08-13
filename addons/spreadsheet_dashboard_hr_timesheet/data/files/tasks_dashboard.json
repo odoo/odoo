@@ -360,21 +360,11 @@
       "merges": [],
       "cells": {
         "A1": "=_t(\"KPI\")",
-        "A2": {
-          "S": ["Tasks"]
-        },
-        "A3": {
-          "S": ["Hours logged"]
-        },
-        "A4": {
-          "S": ["Days to assign"]
-        },
-        "A5": {
-          "S": ["Days to close"]
-        },
-        "B1": {
-          "S": ["Current"]
-        },
+        "A2": "=_t(\"Tasks\")",
+        "A3": "=_t(\"Hours logged\")",
+        "A4": "=_t(\"Days to assign\")",
+        "A5": "=_t(\"Days to close\")",
+        "B1": "=_t(\"Current\")",
         "B2": "=PIVOT.VALUE(5,\"nbr\")",
         "B3": {
           "N": "=",
@@ -406,10 +396,7 @@
         "D2": "=FORMAT.LARGE.NUMBER(B2)",
         "D3": { "R": "+R1" },
         "D4": "=CONCATENATE(ROUND(B4),_t(\" days\"))",
-        "D5": {
-          "S": ["="],
-          "R": "+R1"
-        },
+        "D5": "=CONCATENATE(ROUND(B5),_t(\" days\"))",
         "E1": "=_t(\"Previous\")",
         "E2": "=FORMAT.LARGE.NUMBER(C2)",
         "E3": { "R": "+R1" },
