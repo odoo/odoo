@@ -2,7 +2,7 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from collections import defaultdict
-from odoo.tools import SQL, is_html_empty
+from odoo.tools import SQL, is_html_empty, sql
 from odoo.tools.translate import adapt_translated_field_value
 from datetime import date
 from odoo.fields import Domain
@@ -14,10 +14,14 @@ class ProductTemplate(models.Model):
 
     @api.model
     def _default_pos_sequence(self):
+        start_sequence = 1
+        # Schema initialization may evaluate the default before adding the column.
+        if self.env.context.get('module') and not sql.column_exists(self.env.cr, self._table, 'pos_sequence'):
+            return start_sequence
         self.env.cr.execute('SELECT MAX(pos_sequence) FROM %s' % self._table)
         max_sequence = self.env.cr.fetchone()[0]
         if max_sequence is None:
-            return 1
+            return start_sequence
         return max_sequence + 1
 
     available_in_pos = fields.Boolean(string='Available in POS', help='Check if you want this product to appear in the Point of Sale.', default=False)
