@@ -192,6 +192,21 @@ class TestCustomSnippet(TransactionCase):
             'Parseltongue Text',
             view.with_context(lang=parseltongue.code).arch)
 
+        # Simulate snippet being dropped in generic page/view and ensure the
+        # specialized cow view is translated
+        view3 = View.create({
+            'name': 'Generic View Test Translation 3',
+            'type': 'qweb',
+            'arch': '<body><div/><div/></body>',
+            'key': 'test.generic_view_test_translation_3',
+        })
+        self.assertFalse(View.search([('key', '=', 'test.generic_view_test_translation_3'), ('website_id', '!=', False)], limit=1).exists())
+        view3.with_context(website_id=website.id).save(f"<div>{snippet_arch}</div>", xpath='/body[1]/div[1]')
+        cow_view3 = View.search([('key', '=', 'test.generic_view_test_translation_3'), ('website_id', '!=', False)], limit=1)
+        self.assertIn(
+            'Texte Francais',
+            cow_view3.with_context(lang=parseltongue.code).arch)
+
 
 @tagged('post_install', '-at_install')
 class TestHttpCustomSnippet(HttpCase):
