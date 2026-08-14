@@ -76,6 +76,7 @@ actions(Check in/Check out) performed by them.
             # Public Kiosk app and its components
             "hr_attendance/static/src/public_kiosk/**/*",
             'hr_attendance/static/src/components/**/*',
+            ('remove', 'hr_attendance/static/src/components/hr_presence_status/hr_attendance_presence_status.js'),
 
             'hr_attendance/static/src/scss/kiosk/hr_attendance.scss',
             "web/static/src/views/fields/formatters.js",
