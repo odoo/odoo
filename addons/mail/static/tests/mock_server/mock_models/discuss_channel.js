@@ -324,6 +324,11 @@ export class DiscussChannel extends models.ServerModel {
         /** @type {import("mock_models").MailGuest} */
         const MailGuest = this.env["mail.guest"];
         const [channel] = this.browse(ids);
+        if (!this._allow_invite_by_email(ids)) {
+            throw new Error(
+                `Inviting by email is not allowed for this channel type (${channel.channel_type}).`
+            );
+        }
         const memberIds = emails.map((email) =>
             DiscussChannelMember.create({
                 channel_id: channel.id,
@@ -337,6 +342,15 @@ export class DiscussChannel extends models.ServerModel {
             new Store()
                 .add(DiscussChannelMember.browse(memberIds), "_store_member_fields")
                 .as_dict()
+        );
+    }
+
+    /** @param {number[]} ids */
+    _allow_invite_by_email(ids) {
+        const [channel] = this.browse(ids);
+        return (
+            ["group", "chat"].includes(channel.channel_type) ||
+            (channel.channel_type === "channel" && !channel.group_public_id)
         );
     }
 
