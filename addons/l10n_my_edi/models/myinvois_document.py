@@ -13,7 +13,7 @@ from lxml import etree
 from odoo import SUPERUSER_ID, api, fields, models, modules
 from odoo.exceptions import RedirectWarning, UserError, ValidationError
 from odoo.fields import Domain
-from odoo.tools import config, date_utils, split_every
+from odoo.tools import SQL, config, date_utils, split_every
 from odoo.tools.image import image_data_uri
 
 from odoo.addons.account.tools import dict_to_xml
@@ -270,9 +270,8 @@ class MyInvoisDocument(models.Model):
         """ Returns the SQL WHERE statement to use when fetching the latest record with the same sequence, and its params. """
         self.ensure_one()
         if not self.myinvois_issuance_date:
-            return "WHERE FALSE", {}
-        where_string = "WHERE journal_id = %(journal_id)s AND name != '/'"
-        param = {'journal_id': self.journal_id.id}
+            return SQL("FALSE")
+        condition = SQL("journal_id = %s AND name != '/'", self.journal_id.id)
 
         if not relaxed:
             domain = [('id', '!=', self.id or self._origin.id), ('name', 'not in', ('/', '', False)), ('journal_id', '=', self.journal_id.id), ('is_consolidated_invoice', '=', self.is_consolidated_invoice)]
@@ -286,30 +285,32 @@ class MyInvoisDocument(models.Model):
                 reference_name = self.sudo().search(domain, order='myinvois_issuance_date asc', limit=1).name
             sequence_number_reset = self._deduce_sequence_number_reset(reference_name)
             date_start, date_end, *_ = self._get_sequence_date_range(sequence_number_reset)
-            where_string += """ AND myinvois_issuance_date BETWEEN %(date_start)s AND %(date_end)s"""
-            param['date_start'] = date_start
-            param['date_end'] = date_end
+            condition = SQL(
+                "%s AND myinvois_issuance_date BETWEEN %s AND %s",
+                condition, date_start, date_end)
             if sequence_number_reset in ('year', 'year_range'):
-                param['anti_regex'] = re.sub(r"\?P<\w+>", "?:", self._sequence_monthly_regex.split('(?P<seq>')[0]) + '$'
+                anti_regex = re.sub(r"\?P<\w+>", "?:", self._sequence_monthly_regex.split('(?P<seq>')[0]) + '$'
             elif sequence_number_reset == 'never':
-                param['anti_regex'] = re.sub(r"\?P<\w+>", "?:", self._sequence_yearly_regex.split('(?P<seq>')[0]) + '$'
+                anti_regex = re.sub(r"\?P<\w+>", "?:", self._sequence_yearly_regex.split('(?P<seq>')[0]) + '$'
+            else:
+                anti_regex = None
 
-            if param.get('anti_regex'):
-                where_string += " AND sequence_prefix !~ %(anti_regex)s "
+            if anti_regex:
+                condition = SQL("%s AND sequence_prefix !~ %s", condition, anti_regex)
 
         if self.journal_id.refund_sequence:
             if self.move_type in ("out_refund", "in_refund"):
-                where_string += " AND move_type IN ('out_refund', 'in_refund') "
+                condition = SQL("%s AND move_type IN ('out_refund', 'in_refund')", condition)
             else:
-                where_string += " AND move_type NOT IN ('out_refund', 'in_refund') "
+                condition = SQL("%s AND move_type NOT IN ('out_refund', 'in_refund')", condition)
 
         if self._myinvois_is_debit_sequence_used():
-            where_string += " AND is_debit_note IS " + ("TRUE" if self.is_debit_note else "NOT TRUE")
+            condition = SQL("%s AND is_debit_note IS %s", condition, SQL("TRUE") if self.is_debit_note else SQL("NOT TRUE"))
 
         if self.is_consolidated_invoice:
-            where_string += " AND is_consolidated_invoice "
+            condition = SQL("%s AND is_consolidated_invoice", condition)
 
-        return where_string, param
+        return condition
 
     def _get_sequence_date_range(self, reset):
         """ Make sure that the sequence date range follows the company's fiscal year """

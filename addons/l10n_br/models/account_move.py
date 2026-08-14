@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import api, models
+from odoo.tools import SQL
 
 
 class AccountMove(models.Model):
@@ -33,11 +34,10 @@ class AccountMove(models.Model):
 
     def _get_last_sequence_domain(self, relaxed=False):
         """ Override to give sequence names in the same journal their own, independent numbering. """
-        where_string, param = super()._get_last_sequence_domain(relaxed)
+        condition = super()._get_last_sequence_domain(relaxed)
         if self.country_code == "BR" and self.l10n_latam_use_documents:
-            where_string += " AND l10n_latam_document_type_id = %(l10n_latam_document_type_id)s "
-            param["l10n_latam_document_type_id"] = self.l10n_latam_document_type_id.id or 0
-        return where_string, param
+            condition = SQL("%s AND l10n_latam_document_type_id = %s", condition, self.l10n_latam_document_type_id.id or 0)
+        return condition
 
     def _get_name_invoice_report(self):
         # EXTENDS account

@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import models
+from odoo.tools import SQL
 
 # Let us match the document types to properly suggest the DN and CN documents
 # NOTE: this can be avoided if we have an extra subclassification of UY documents
@@ -26,11 +27,10 @@ class AccountMove(models.Model):
         return "%s A%07d" % (self.l10n_latam_document_type_id.doc_code_prefix, number)
 
     def _get_last_sequence_domain(self, relaxed=False):
-        where_string, param = super(AccountMove, self)._get_last_sequence_domain(relaxed)
+        condition = super()._get_last_sequence_domain(relaxed)
         if self.company_id.account_fiscal_country_id.code == "UY" and self.l10n_latam_use_documents:
-            where_string += " AND l10n_latam_document_type_id = %(l10n_latam_document_type_id)s"
-            param['l10n_latam_document_type_id'] = self.l10n_latam_document_type_id.id or 0
-        return where_string, param
+            condition = SQL("%s AND l10n_latam_document_type_id = %s", condition, self.l10n_latam_document_type_id.id or 0)
+        return condition
 
     def _get_l10n_latam_documents_domain(self):
         """ If this is a reversal or debit, suggest only related subtypes """

@@ -4253,13 +4253,11 @@ class AccountMove(models.Model):
         return self.state == 'posted' and not self.document_sequence_editable
 
     def _get_last_sequence_domain(self, relaxed=False):
-        #pylint: disable=sql-injection
         # EXTENDS account sequence.mixin
         self.ensure_one()
         if not self.date or not self.journal_id:
-            return "WHERE FALSE", {}
-        where_string = "WHERE journal_id = %(journal_id)s AND name != '/'"
-        param = {'journal_id': self.journal_id.id}
+            return SQL("FALSE")
+        condition = SQL("journal_id = %s AND name != '/'", self.journal_id.id)
         is_payment = self.origin_payment_id or self.env.context.get('is_payment')
 
         if not relaxed:
@@ -4280,9 +4278,7 @@ class AccountMove(models.Model):
                 reference_move_name = self.sudo().search(domain, order='date asc', limit=1).name
             sequence_number_reset = self._deduce_sequence_number_reset(reference_move_name)
             date_start, date_end, *_ = self._get_sequence_date_range(sequence_number_reset)
-            where_string += """ AND date BETWEEN %(date_start)s AND %(date_end)s"""
-            param['date_start'] = date_start
-            param['date_end'] = date_end
+            condition = SQL("%s AND date BETWEEN %s AND %s", condition, date_start, date_end)
 
             # Some regex are catching more sequence formats than we want, so we
             # need to exclude them:
@@ -4296,33 +4292,34 @@ class AccountMove(models.Model):
             # Year Range         |   X   |   X    |         |     X      |                    |
             # Year range Monthly |   X   |   X    |    X    |     X      |          X         |
             if sequence_number_reset in ('year', 'year_range'):
-                param['anti_regex'] = self._make_regex_non_capturing(self._sequence_monthly_regex.split('(?P<seq>')[0]) + '$'
+                anti_regex = self._make_regex_non_capturing(self._sequence_monthly_regex.split('(?P<seq>')[0]) + '$'
             elif sequence_number_reset == 'never':
                 # Excluding yearly will also exclude "monthly", "year range" and
                 # "year range monthly"
-                param['anti_regex'] = self._make_regex_non_capturing(self._sequence_yearly_regex.split('(?P<seq>')[0]) + '$'
+                anti_regex = self._make_regex_non_capturing(self._sequence_yearly_regex.split('(?P<seq>')[0]) + '$'
+            else:
+                anti_regex = None
 
-            if param.get('anti_regex') and not self.journal_id.sequence_override_regex and not self.env.context.get('no_anti_regex'):
-                where_string += " AND sequence_prefix !~ %(anti_regex)s "
+            if anti_regex and not self.journal_id.sequence_override_regex and not self.env.context.get('no_anti_regex'):
+                condition = SQL("%s AND sequence_prefix !~ %s", condition, anti_regex)
 
         if self.journal_id.refund_sequence:
             if self.is_refund():
-                where_string += " AND move_type IN ('out_refund', 'in_refund') "
+                condition = SQL("%s AND move_type IN ('out_refund', 'in_refund')", condition)
             else:
-                where_string += " AND move_type NOT IN ('out_refund', 'in_refund') "
+                condition = SQL("%s AND move_type NOT IN ('out_refund', 'in_refund')", condition)
         elif self.journal_id.payment_sequence:
             if is_payment:
-                where_string += " AND origin_payment_id IS NOT NULL "
+                condition = SQL("%s AND origin_payment_id IS NOT NULL", condition)
             else:
-                where_string += " AND origin_payment_id IS NULL "
+                condition = SQL("%s AND origin_payment_id IS NULL", condition)
 
         if self.journal_id.is_self_billing:
             if self.partner_id:
-                where_string += " AND commercial_partner_id = %(partner_id)s "
-                param['partner_id'] = self.partner_id.commercial_partner_id.id
+                condition = SQL("%s AND commercial_partner_id = %s", condition, self.partner_id.commercial_partner_id.id)
             else:
-                where_string += " AND false "
-        return where_string, param
+                return SQL("FALSE")
+        return condition
 
     def _get_sequence_date_info(self):
         self.ensure_one()

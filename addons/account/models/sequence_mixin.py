@@ -2,6 +2,7 @@ from datetime import date
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
+from odoo.models import Query
 from odoo.tools.misc import format_date
 from odoo.tools import frozendict, date_utils, SQL
 from odoo.tools.sql import index_exists
@@ -255,7 +256,7 @@ class SequenceMixin(models.AbstractModel):
                 at the execution of the query.
         """
         self.ensure_one()
-        return "", {}
+        return SQL("TRUE")
 
     def _get_starting_sequence(self):
         """Get a default sequence number.
@@ -291,25 +292,24 @@ class SequenceMixin(models.AbstractModel):
         self.ensure_one()
         if self._sequence_field not in self._fields or not self._fields[self._sequence_field].store:
             raise ValidationError(_('%s is not a stored field', self._sequence_field))
-        where_string, param = self._get_last_sequence_domain(relaxed)
+        query = Query(self.sudo())
+        if condition := self._get_last_sequence_domain(relaxed):
+            query.add_where(condition)
         if self._origin.id:
-            where_string += " AND id != %(id)s "
-            param['id'] = self._origin.id
+            query.add_where(SQL("id != %s", self._origin.id))
+
+        # add prefix restriction with the same query
         if with_prefix is not None:
-            where_string += " AND sequence_prefix = %(with_prefix)s "
-            param['with_prefix'] = with_prefix
+            query.add_where(SQL("%s = %s", query.table.sequence_prefix, with_prefix))
+        else:
+            query.order = SQL("id DESC")
+            query.limit = 1
+            query.add_where(SQL("%s = %s", query.table.sequence_prefix, query.subselect(query.table.sequence_prefix)))
+        query.order = SQL("%s DESC", query.table.sequence_number)
+        query.limit = 1
 
-        query = f"""
-                SELECT {self._sequence_field} FROM {self._table}
-                {where_string}
-                AND sequence_prefix = (SELECT sequence_prefix FROM {self._table} {where_string} ORDER BY id DESC LIMIT 1)
-                ORDER BY sequence_number DESC
-                LIMIT 1
-        """
-
-        self.flush_model([self._sequence_field, 'sequence_number', 'sequence_prefix'])
-        self.env.cr.execute(query, param)
-        return (self.env.cr.fetchone() or [None])[0]
+        result = self.env.execute_query(query.select(query.table[self._sequence_field]))
+        return result[0][0] if result else None
 
     def _get_sequence_format_param(self, previous):
         """Get the python format and format values for the sequence.
