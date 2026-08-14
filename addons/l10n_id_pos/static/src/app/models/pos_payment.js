@@ -3,7 +3,7 @@ import { patch } from "@web/core/utils/patch";
 
 patch(PosPayment.prototype, {
     getQrPopupProps(customerDisplay = false) {
-        // Extract only required fields to prevent circular references when serializing data from CustomerDisplayPosAdapter.dispatch()
+        // Extract only required fields to prevent circular references when serializing data for customer display
         const base = super.getQrPopupProps(customerDisplay);
         return customerDisplay
             ? base

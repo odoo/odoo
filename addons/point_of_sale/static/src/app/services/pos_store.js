@@ -45,8 +45,10 @@ import { ScaleScreen } from "@point_of_sale/app/screens/scale_screen/scale_scree
 import { Domain } from "@web/core/domain";
 import { PosOrderAccounting } from "@point_of_sale/app/models/accounting/pos_order_accounting";
 import { PosOrderlineAccounting } from "@point_of_sale/app/models/accounting/pos_order_line_accounting";
+import { GeneratePrinterData } from "../utils/printer/generate_printer_data";
 import { ComboSuggestion } from "../models/utils/combo_suggestion";
 import { PosRouterPlugin } from "@point_of_sale/app/plugins/pos_router_plugin";
+import { CustomerDisplayTerminalPlugin } from "@point_of_sale/app/plugins/customer_display_terminal_plugin";
 import { SIZES } from "@web/core/ui/ui_service";
 import { SnoozeDialog } from "@point_of_sale/app/components/popups/product_info_popup/snooze_dialog/snooze_dialog";
 
@@ -58,6 +60,7 @@ export class PosStore extends WithLazyGetterTrap {
     mainScreen = { name: null, component: null };
     feedbackScreenAutoSkipDelay = 1500;
     router = usePlugin(PosRouterPlugin);
+    customerDisplay = usePlugin(CustomerDisplayTerminalPlugin);
 
     static excludedLazyGetters = [
         "defaultPage",
@@ -160,6 +163,7 @@ export class PosStore extends WithLazyGetterTrap {
             type: "pending",
             message: _t("Checking Local Network Access permission..."),
         };
+        this.debounceUpdateCustomerDisplay = debounce(() => this.sendOrderToCustomerDisplay(), 100);
 
         this.syncingOrders = new Set();
         await this.initServerData();
@@ -236,6 +240,7 @@ export class PosStore extends WithLazyGetterTrap {
             }
         });
         this.checkAccessRight();
+        await this.initCustomerDisplay();
     }
 
     handleQRPaymentLines() {
@@ -319,6 +324,7 @@ export class PosStore extends WithLazyGetterTrap {
         }
 
         this.router.navigate(routeName, routeParams);
+        this.debounceUpdateCustomerDisplay();
         return true;
     }
 
@@ -385,13 +391,9 @@ export class PosStore extends WithLazyGetterTrap {
     }
 
     get customerDisplayUrl() {
-        if (!localStorage.getItem("device_uuid")) {
-            localStorage.setItem("device_uuid", uuidv4());
-        }
-        const deviceUuid = localStorage.getItem("device_uuid");
-        return `${this.config._base_url}/pos_customer_display/${
-            this.config.id
-        }/${deviceUuid}?access_token=${this.config.access_token}&theme=${getColorScheme()}`;
+        return `${this.config._base_url}/pos_customer_display/${this.config.id}/${
+            this.device.identifier
+        }?access_token=${this.config.access_token}&theme=${getColorScheme()}`;
     }
 
     async reloadData(fullReload = false) {
@@ -1487,6 +1489,7 @@ export class PosStore extends WithLazyGetterTrap {
         if (this.config.use_presets && !data["preset_id"] && !order.isRefund) {
             this.selectPreset(this.config.default_preset_id, order, this.shouldSelectPreset(order));
         }
+        this.customerDisplay.rediscoverDisplays();
 
         return order;
     }
@@ -3028,6 +3031,43 @@ export class PosStore extends WithLazyGetterTrap {
             });
         });
     }
+
+    async initCustomerDisplay() {
+        this.customerDisplay.init({
+            identifier: this.device.identifier,
+            configId: this.config.id,
+            accessToken: this.config.access_token,
+            GeneratePrinterData,
+            models: this.models,
+            scale: this.scale,
+            bus: this.bus,
+        });
+        // model-event map that should trigger a customer display update.
+        const customerDisplayEventListeners = {
+            "pos.order": ["create", "update"],
+            "pos.order.line": ["update"],
+            "pos.payment": ["update"],
+        };
+        for (const [model, events] of Object.entries(customerDisplayEventListeners)) {
+            for (const eventName of events) {
+                this.models[model].addEventListener(
+                    eventName,
+                    this.debounceUpdateCustomerDisplay.bind(this)
+                );
+            }
+        }
+    }
+
+    sendOrderToCustomerDisplay() {
+        if (["SaverScreen", "LoginScreen"].includes(this.router.currentScreen())) {
+            this.customerDisplay.send({
+                displayScreenSaver: true,
+            });
+        } else {
+            this.customerDisplay.sendOrder(this.getOrder());
+        }
+    }
+
     getSnoozeCountdown(activeSnooze) {
         // This function will calculate and return [countdown, activeSoozeRecord]
         const now = DateTime.now();

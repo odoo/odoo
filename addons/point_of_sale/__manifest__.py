@@ -118,7 +118,6 @@
         'web.assets_tests': [
             'point_of_sale/static/tests/pos/tours/**/*',
             'point_of_sale/static/tests/generic_helpers/**/*',
-            'point_of_sale/static/tests/customer_display/**/*',
             'point_of_sale/static/src/utils.js',
         ],
         'web.assets_unit_tests_setup': [
@@ -217,7 +216,6 @@
             'point_of_sale/static/src/**/*',
             ('remove', 'point_of_sale/static/src/backend/**/*'),
             ('remove', 'point_of_sale/static/src/customer_display/**/*'),
-            'point_of_sale/static/src/customer_display/utils.js',
             ('include', 'point_of_sale.payment_terminals'),
             # main.js boots the pos app, it is only included in the prod bundle as tests mount the app themselves
             ('remove', 'point_of_sale/static/src/app/main.js'),
@@ -254,10 +252,7 @@
         'point_of_sale.customer_display_assets': [
             ('include', 'point_of_sale.base_app'),
             "point_of_sale/static/src/app/components/odoo_logo/*",
-            "point_of_sale/static/src/app/components/orderline/*",
-            "point_of_sale/static/src/app/components/centered_icon/*",
             "point_of_sale/static/src/app/utils/use_timed_press.js",
-            "point_of_sale/static/src/app/components/popups/qr_code_popup/*",
             "point_of_sale/static/src/utils.js",
             "point_of_sale/static/src/scss/pos_variables_extra.scss",
             "point_of_sale/static/src/customer_display/**/*",
@@ -267,6 +262,7 @@
             "point_of_sale/static/src/app/components/price_formatter/**/*",
             "point_of_sale/static/src/app/components/validation_animation/**/*",
             "point_of_sale/static/src/app/components/feedback_payment_summary/**/*",
+            "point_of_sale/static/src/app/utils/pretty_console_log.js",
         ],
         'point_of_sale.customer_display_assets_dark': [
             ('include', 'point_of_sale.customer_display_assets'),
@@ -274,9 +270,7 @@
         'point_of_sale.customer_display_assets_test': [
             ('include', 'point_of_sale.base_tests'),
             "point_of_sale/static/tests/pos/tours/utils/common.js",
-            "point_of_sale/static/tests/generic_helpers/order_widget_util.js",
             "point_of_sale/static/tests/generic_helpers/utils.js",
-            "point_of_sale/static/tests/customer_display/customer_display_utils.js",
         ],
         'point_of_sale.assets_debug': [
             ('include', 'point_of_sale.base_tests'),

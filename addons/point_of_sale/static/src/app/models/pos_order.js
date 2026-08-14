@@ -988,6 +988,18 @@ export class PosOrder extends PosOrderAccounting {
         };
     }
 
+    get hasRemainingDue() {
+        return this.totalDue < 0 ? this.remainingDue < 0 : this.remainingDue > 0;
+    }
+
+    get remainingDueAmount() {
+        return this.orderCurrency.convert(this.hasRemainingDue ? this.remainingDue : this.change);
+    }
+
+    get remainingDueLabel() {
+        return this.hasRemainingDue ? _t("Remaining") : _t("Change");
+    }
+
     get serviceFeeLines() {
         return this.lines?.filter((line) => line.isServiceFeeLine());
     }
