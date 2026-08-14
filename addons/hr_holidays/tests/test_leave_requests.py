@@ -2800,23 +2800,20 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         self.assertEqual(leave.request_date_to, date(2026, 8, 27))
 
     def test_hour_based_leave_request_date_synced_on_daterange_change(self):
-        """Test that request_date_from/to are synced when request_date_hour_from/to changes.
-
-        When creating an hour-based leave, changing the date/time via the daterange widget
-        must update request_date_from/to accordingly.
+        """Test that request_date_from/to and request_hour_from/to are synced when
+        request_date_hour_from/to changes via the daterange widget.
         """
-        leave = self.env['hr.leave'].new({
-            'employee_id': self.employee_emp.id,
-            'work_entry_type_id': self.holidays_type_hours.id,
-            'request_date_from': date(2026, 8, 10),
-            'request_date_to': date(2026, 8, 10),
-            'request_hour_from': 8,
-            'request_hour_to': 12,
-        })
+        self.employee_emp.tz = 'UTC'
+        with Form(self.env['hr.leave'].with_user(self.user_hrmanager_id)) as leave_form:
+            leave_form.employee_id = self.employee_emp
+            leave_form.work_entry_type_id = self.holidays_type_hours
+            leave_form.request_date_hour_from = datetime(2026, 8, 10, 8, 0, 0)
+            leave_form.request_date_hour_to = datetime(2026, 8, 10, 12, 0, 0)
 
-        # Simulate the daterange widget changing the datetime span to a different day
-        leave.request_date_hour_from = datetime(2026, 8, 11, 7, 0, 0)
-        leave.request_date_hour_to = datetime(2026, 8, 11, 11, 0, 0)
+            # Simulate the daterange widget changing the datetime span to a different day
+            leave_form.request_date_hour_from = datetime(2026, 8, 11, 7, 0, 0)
+            leave_form.request_date_hour_to = datetime(2026, 8, 11, 11, 0, 0)
+            leave = leave_form.save()
 
         self.assertEqual(
             leave.request_date_from, date(2026, 8, 11),
@@ -2825,4 +2822,12 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         self.assertEqual(
             leave.request_date_to, date(2026, 8, 11),
             "request_date_to should be updated when request_date_hour_to changes",
+        )
+        self.assertEqual(
+            leave.request_hour_from, 7,
+            "request_hour_from should be updated when request_date_hour_from changes",
+        )
+        self.assertEqual(
+            leave.request_hour_to, 11,
+            "request_hour_to should be updated when request_date_hour_to changes",
         )
