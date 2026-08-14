@@ -30,7 +30,7 @@ from odoo.addons.mail.tools.discuss import Store
 from odoo.tools.intervals import intervals_overlap
 from odoo.tools.translate import _
 from odoo.tools.misc import get_lang, babel_locale_parse
-from odoo.tools import SQL, html2plaintext, html_sanitize, is_html_empty, single_email_re
+from odoo.tools import SQL, html2plaintext, html_sanitize, is_html_empty, single_email_re, format_date, format_time
 from odoo.exceptions import UserError, ValidationError
 
 _logger = logging.getLogger(__name__)
@@ -1958,39 +1958,28 @@ class CalendarEvent(models.Model):
         """
         timezone = self.env.context.get('tz') or self.env.user.partner_id.tz or 'UTC'
 
-        # get date/time format according to context
-        format_date, format_time = self._get_date_formats()
-
-        # convert date and time into user timezone
-        self_tz = self.with_context(tz=timezone)
-        date = fields.Datetime.context_timestamp(self_tz, fields.Datetime.from_string(start))
-        date_deadline = fields.Datetime.context_timestamp(self_tz, fields.Datetime.from_string(stop))
-
         # convert into string the date and time, using user formats
-        date_str = date.strftime(format_date)
-        time_str = date.strftime(format_time)
+        self_tz = self.with_context(tz=timezone)
+        start_date_str, start_time_str = self_tz.get_formatted_date_and_time(start, time_format="short")
+        stop_date_str, stop_time_str = self_tz.get_formatted_date_and_time(stop, time_format="short")
 
         if zallday:
-            display_time = _("All Day, %(day)s", day=date_str)
+            display_time = _("All Day, %(day)s", day=start_date_str)
         elif zduration < 24:
-            duration = date + timedelta(minutes=round(zduration*60))
-            duration_time = duration.strftime(format_time)
             display_time = _(
                 u"%(day)s at (%(start)s To %(end)s) (%(timezone)s)",
-                day=date_str,
-                start=time_str,
-                end=duration_time,
+                day=start_date_str,
+                start=start_time_str,
+                end=stop_time_str,
                 timezone=timezone,
             )
         else:
-            dd_date = date_deadline.strftime(format_date)
-            dd_time = date_deadline.strftime(format_time)
             display_time = _(
                 u"%(date_start)s at %(time_start)s To\n %(date_end)s at %(time_end)s (%(timezone)s)",
-                date_start=date_str,
-                time_start=time_str,
-                date_end=dd_date,
-                time_end=dd_time,
+                date_start=start_date_str,
+                time_start=start_time_str,
+                date_end=stop_date_str,
+                time_end=stop_time_str,
                 timezone=timezone,
             )
         return display_time
@@ -2001,14 +1990,6 @@ class CalendarEvent(models.Model):
             return 0
         duration = (stop - start).total_seconds() / 3600
         return round(duration, 2)
-
-    @api.model
-    def _get_date_formats(self):
-        """ get current date and time format, according to the context lang
-            :return: a tuple with (format date, format time)
-        """
-        lang = get_lang(self.env)
-        return (lang.date_format, lang.time_format)
 
     @api.model
     def _get_recurrent_fields(self):
@@ -2044,6 +2025,19 @@ class CalendarEvent(models.Model):
         res = res or ir_default_get('calendar.event', 'duration', company_id=True)
         res = res or ir_default_get('calendar.event', 'duration')
         return res or 1
+
+    @api.model
+    def get_formatted_date_and_time(self, datetime, date_format=None, time_format=None):
+        """get the date and time converted to the environment timezone and formatted according to date_format and time_format
+
+            :param datetime: the datetime to format
+            :param str date_format: the format or the date (LDML format), if not specified the
+                        default format of the lang
+            :param str time_format: “medium”, or “short” to use res.lang format with or without the
+                        seconds. Or a custom time pattern compatible with `babel` lib
+            :return: a tuple with (formatted_datetime.date, formatted_datetime.time)
+        """
+        return format_date(self.env, datetime, date_format=date_format), format_time(self.env, datetime, time_format=time_format)
 
     # ------------------------------------------------------------
     # DISCUSS
