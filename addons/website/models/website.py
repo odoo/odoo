@@ -990,7 +990,7 @@ class Website(models.Model):
                     rendered_snippets.append(rendered_snippet)
                 except ValueError as e:
                     logger.warning(e)
-            page_view_id.save(value=f'<div class="oe_structure">{"".join(rendered_snippets)}</div>',
+            page_view_id.with_context(website_id=website.id).save(value=f'<div class="oe_structure">{"".join(rendered_snippets)}</div>',
                               xpath="(//div[hasclass('oe_structure')])[last()]")
             # Copy the configurator pages to preserve the original untouched
             # pages in the landing page category when creating a new page.
