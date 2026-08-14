@@ -5,5 +5,4 @@ UPDATE account_edi_proxy_client_user
 UPDATE res_company
    SET l10n_cn_edi_mode = 'test',
        l10n_cn_baiwang_subscription_status = 'not_subscribed',
-       l10n_cn_baiwang_org_auth_code = NULL,
-       l10n_cn_baiwang_subscription_request_id = NULL;
+       l10n_cn_baiwang_org_auth_code = NULL;
