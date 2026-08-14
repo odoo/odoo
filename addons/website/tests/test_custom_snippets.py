@@ -104,8 +104,8 @@ class TestCustomSnippet(TransactionCase):
             'key': 'test.specific_view_test_translation_2',
             'website_id': website.id,
         })
-        view2.save(f"<div>{snippet_arch}</div>", xpath='/body[1]/div[1]')
-        view2.save(f"<div>{snippet_arch2}</div>", xpath='/body[1]/div[2]')
+        view2.with_context(website_id=website.id).save(f"<div>{snippet_arch}</div>", xpath='/body[1]/div[1]')
+        view2.with_context(website_id=website.id).save(f"<div>{snippet_arch2}</div>", xpath='/body[1]/div[2]')
         self.assertIn(
             'Titre Francais',
             view2.with_context(lang=parseltongue.code).arch)
@@ -119,7 +119,7 @@ class TestCustomSnippet(TransactionCase):
             'name': 'Meaga Menu Test Translation 1',
             'mega_menu_content': '<body><div/></body>',
         })
-        view2.save(f'''
+        view2.with_context(website_id=website.id).save(f'''
             <div data-oe-xpath="/body[1]/div[1]" data-oe-model="website.menu"
                  data-oe-id="{mega_menu.id}" data-oe-field="mega_menu_content" data-oe-type="html"
                  data-oe-expression="submenu.mega_menu_content">
@@ -186,10 +186,26 @@ class TestCustomSnippet(TransactionCase):
             'Parseltongue Text',
             view.with_context(lang=parseltongue.code).arch)
 
-        view.save(f'<div>{snippet_arch}</div>', xpath='/body[1]/div[1]')
+        view.with_context(website_id=website.id).save(f'<div>{snippet_arch}</div>', xpath='/body[1]/div[1]')
         self.assertIn(
             'Parseltongue Text',
             view.with_context(lang=parseltongue.code).arch)
+
+        # Simulate snippet being dropped in generic page/view and ensure the
+        # specialized cow view is translated
+        key_view3 = 'test.generic_view_test_translation_3'
+        view3 = View.create({
+            'name': 'Generic View Test Translation 3',
+            'type': 'qweb',
+            'arch': '<body><div/><div/></body>',
+            'key': key_view3,
+        })
+        self.assertFalse(View.search([('key', '=', key_view3), ('website_id', '!=', False)], limit=1).exists())
+        view3.with_context(website_id=website.id).save(f"<div>{snippet_arch}</div>", xpath='/body[1]/div[1]')
+        cow_view3 = View.search([('key', '=', key_view3), ('website_id', '!=', False)], limit=1)
+        self.assertIn(
+            'Texte Francais',
+            cow_view3.with_context(lang=parseltongue.code).arch)
 
     def prepare_view_and_translated_custom_snippet(self):
         ResLang = self.env['res.lang']
@@ -256,10 +272,10 @@ class TestCustomSnippet(TransactionCase):
         return website, snippet_arch, view1, parseltongue
 
     def test_delayed_translations_with_custom_snippet(self):
-        _, _, view1, parseltongue = self.prepare_view_and_translated_custom_snippet()
+        website, _, view1, parseltongue = self.prepare_view_and_translated_custom_snippet()
         # 4. Simulate edition of page with delayed translation, and ensure the
         #    translated version is the last confirmed one
-        view1.with_context(delay_translations=True).save("<h1>Some New Text</h1>", xpath='/body[1]/h1[1]')
+        view1.with_context(delay_translations=True, website_id=website.id).save("<h1>Some New Text</h1>", xpath='/body[1]/h1[1]')
 
         self.assertNotIn(
             'Some New Text',
@@ -282,7 +298,7 @@ class TestCustomSnippet(TransactionCase):
 
         # 5. Simulate edition of page (with delayed translation), and the
         #    copied translations directly goes to a new confirmed version
-        view2.with_context(delay_translations=True).save(f"<div>{snippet_arch}</div>", xpath='/body[1]/div[1]')
+        view2.with_context(delay_translations=True, website_id=website.id).save(f"<div>{snippet_arch}</div>", xpath='/body[1]/div[1]')
 
         self.assertEqual(list(view2._get_stored_translations('arch_db').keys()), ['en_US', '_pa_GB', 'pa_GB'])
         self.assertNotIn('Texte Francais', view2.with_context(lang=parseltongue.code).arch)
