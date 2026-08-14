@@ -1,18 +1,13 @@
 import { isRecord, untrackFunctions } from "./misc";
 
-import { markRaw } from "@odoo/owl";
+import { markRaw, proxy, signal } from "@odoo/owl";
 
 /** @typedef {import("./record").Record} Record */
 /** @typedef {import("./record_list").RecordList} RecordList */
 
 export class RecordListInternal {
     /** @type {Record[]} raw */
-    data = [];
-    /**
-     * @type {boolean} Technical flag to immediately read attribute.
-     * Useful to read `data` while passing to owl's proxy getter again to register observer.
-     */
-    gettingField = false;
+    data;
     /** @type {string} */
     name;
     /** @type {Record} */
@@ -21,6 +16,18 @@ export class RecordListInternal {
     recordList;
 
     constructor() {
+        /**
+         * The records of the list: a signal so a replacement notifies, read
+         * as a proxy so an in-place mutation notifies the touched keys alone.
+         */
+        const data = signal([]);
+        Object.defineProperty(this, "data", {
+            configurable: true,
+            get: () => proxy(data()),
+            set: (val) => {
+                data.set(val);
+            },
+        });
         markRaw(this);
     }
 
@@ -44,10 +51,10 @@ export class RecordListInternal {
                 last,
                 function recordList_AddNoInvOneInsert(record) {
                     if (record !== self.data[0]) {
-                        const old = recordList._proxy.at(-1);
-                        recordList._proxy.data.pop();
+                        const old = recordList.at(-1);
+                        self.data.pop();
                         old?._.uses.delete(recordList);
-                        recordList._proxy.data.push(record);
+                        self.data.push(record);
                         self.syncLength();
                         record._.uses.add(recordList);
                     }
@@ -65,7 +72,7 @@ export class RecordListInternal {
                 val,
                 function recordList_AddNoInvManyInsert(record) {
                     if (self.data.indexOf(record) === -1) {
-                        recordList._proxy.data.push(record);
+                        self.data.push(record);
                         self.syncLength();
                         record._.uses.add(recordList);
                     }
@@ -86,9 +93,7 @@ export class RecordListInternal {
             // data and collection could be same record list,
             // save before clear to not push mutated recordlist that is empty
             const vals = [...collection];
-            const oldRecords = recordList._proxyInternal.slice
-                .call(recordList._proxy)
-                .map((recordProxy) => recordProxy._raw);
+            const oldRecords = [...recordList].map((recordProxy) => recordProxy._raw);
             const newRecords = vals.map((val) =>
                 self.insert(val, function recordListAssignInsert(record) {
                     if (record.notIn(oldRecords)) {
@@ -109,7 +114,7 @@ export class RecordListInternal {
                     }
                 }
             }
-            recordList._proxy.data = newRecords;
+            self.data = newRecords;
             self.syncLength();
         });
     }
@@ -133,7 +138,7 @@ export class RecordListInternal {
                 function recordList_DeleteNoInv_Insert(record) {
                     const index = self.data.indexOf(record);
                     if (index !== -1) {
-                        recordList.splice.call(recordList._proxy, index, 1);
+                        recordList.splice(index, 1);
                         self.syncLength();
                     }
                 },
@@ -210,29 +215,21 @@ export class RecordListInternal {
     }
     /**
      * @param {string} name
-     * @param {RecordList} recordListFullProxy
+     * @param {RecordList} recordListProxy
      */
-    proxyGet(name, recordListFullProxy) {
+    proxyGet(name, recordListProxy) {
         const recordList = this.recordList;
         if (name === "data") {
-            if (this.gettingField) {
-                return this.data;
-            }
-            this.gettingField = true;
-            try {
-                return recordList._proxy.data;
-            } finally {
-                this.gettingField = false;
-            }
+            return this.data;
         }
         if (
             typeof name === "symbol" ||
             Object.keys(recordList).includes(name) ||
             Object.prototype.hasOwnProperty.call(recordList.constructor.prototype, name)
         ) {
-            let res = Reflect.get(recordList, name, recordListFullProxy);
+            let res = Reflect.get(recordList, name, recordListProxy);
             if (typeof res === "function") {
-                res = res.bind(recordListFullProxy);
+                res = res.bind(recordListProxy);
             }
             return res;
         }
@@ -243,15 +240,15 @@ export class RecordListInternal {
             }
         }
         if (name === "length") {
-            return recordListFullProxy.data.length;
+            return this.data.length;
         }
         if (typeof name !== "symbol" && !window.isNaN(parseInt(name))) {
             // support for "array[index]" syntax
             const index = parseInt(name);
-            return recordListFullProxy.data[index]?._proxy;
+            return this.data[index]?._proxy;
         }
         // Attempt an unimplemented array method call
-        const array = [...recordList[Symbol.iterator].call(recordListFullProxy)];
+        const array = [...recordList];
         return array[name]?.bind(array);
     }
     /**
@@ -269,7 +266,7 @@ export class RecordListInternal {
                 const index = parseInt(name);
                 self.insert(val, function recordListSet_Insert(newRecord) {
                     const oldRecord = self.data[index];
-                    recordListProxy.data[index] = newRecord;
+                    self.data[index] = newRecord;
                     if (oldRecord && oldRecord.notEq(newRecord)) {
                         oldRecord._.uses.delete(recordList);
                     }
@@ -294,13 +291,9 @@ export class RecordListInternal {
                 const newLength = parseInt(val);
                 if (newLength !== self.data.length) {
                     if (newLength < self.data.length) {
-                        recordList.splice.call(
-                            recordListProxy,
-                            newLength,
-                            recordList.length - newLength
-                        );
+                        recordList.splice(newLength, recordList.length - newLength);
                     }
-                    recordListProxy.data.length = newLength;
+                    self.data.length = newLength;
                     self.syncLength();
                 }
             } else if (name === "data") {

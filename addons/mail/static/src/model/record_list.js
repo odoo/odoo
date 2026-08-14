@@ -1,7 +1,7 @@
 import { isRecord, untrackFunctions } from "./misc";
 import { RecordListInternal } from "./record_list_internal";
 
-import { proxy, toRaw } from "@odoo/owl";
+import { markRaw } from "@odoo/owl";
 
 /** @typedef {import("./record").Record} Record */
 
@@ -9,41 +9,35 @@ import { proxy, toRaw } from "@odoo/owl";
 export class RecordList extends Array {
     /** @type {import("models").Store} */
     _store;
-    /** @type {Record[]} raw */
-    get data() {
-        return this._.data;
-    }
     /** @type {this} */
     _raw;
-    /** @type {this} */
-    _proxyInternal;
     /** @type {this} */
     _proxy;
     _ = new RecordListInternal();
 
     constructor() {
         super();
+        markRaw(this);
         const recordList = this;
         recordList._raw = recordList;
         recordList._.recordList = recordList;
-        const recordListProxyInternal = new Proxy(recordList, {
-            get: (target, name, receiver) => recordList._.proxyGet(name, receiver),
-            set: (target, name, val, receiver) => recordList._.proxySet(name, val, receiver),
-        });
-        recordList._proxyInternal = recordListProxyInternal;
-        recordList._proxy = proxy(recordListProxyInternal);
+        recordList._proxy = markRaw(
+            new Proxy(recordList, {
+                get: (target, name, receiver) => recordList._.proxyGet(name, receiver),
+                set: (target, name, val, receiver) => recordList._.proxySet(name, val, receiver),
+            })
+        );
         return recordList;
     }
     /** @param {R[]} records */
     push(...records) {
-        const recordList = toRaw(this)._raw;
-        const recordListFullProxy = this;
+        const recordList = this._raw;
         const store = recordList._store;
         return store.MAKE_UPDATE(function recordListPush() {
             const inverse = recordList._.getInverse();
             for (const val of records) {
                 const record = recordList._.insert(val, function recordListPushInsert(record) {
-                    recordList._proxy.data.push(record);
+                    recordList._.data.push(record);
                     recordList._.syncLength();
                     record._.uses.add(recordList);
                 });
@@ -52,30 +46,28 @@ export class RecordList extends Array {
                     store._.updateFields(record, { [inverse]: [["ADD", recordList._.owner]] });
                 }
             }
-            return recordListFullProxy.data.length;
+            return recordList._.data.length;
         });
     }
     /** @returns {R} */
     pop() {
-        const recordList = toRaw(this)._raw;
-        const recordListFullProxy = this;
+        const recordList = this._raw;
         const store = recordList._store;
         return store.MAKE_UPDATE(function recordListPop() {
             /** @type {R} */
-            const oldRecordProxy = recordListFullProxy.at(-1);
+            const oldRecordProxy = recordList.at(-1);
             if (oldRecordProxy) {
-                recordList.splice.call(recordListFullProxy, recordListFullProxy.length - 1, 1);
+                recordList.splice(recordList._.data.length - 1, 1);
             }
             return oldRecordProxy;
         });
     }
     /** @returns {R} */
     shift() {
-        const recordList = toRaw(this)._raw;
-        const recordListFullProxy = this;
+        const recordList = this._raw;
         const store = recordList._store;
         return store.MAKE_UPDATE(function recordListShift() {
-            const record = recordListFullProxy.data.shift();
+            const record = recordList._.data.shift();
             recordList._.syncLength();
             if (!record) {
                 return;
@@ -91,14 +83,13 @@ export class RecordList extends Array {
     }
     /** @param {R[]} records */
     unshift(...records) {
-        const recordList = toRaw(this)._raw;
-        const recordListFullProxy = this;
+        const recordList = this._raw;
         const store = recordList._store;
         return store.MAKE_UPDATE(function recordListUnshift() {
             const inverse = recordList._.getInverse();
             for (let i = records.length - 1; i >= 0; i--) {
                 const record = recordList._.insert(records[i], (record) => {
-                    recordList._proxy.data.unshift(record);
+                    recordList._.data.unshift(record);
                     recordList._.syncLength();
                     record._.uses.add(recordList);
                 });
@@ -107,13 +98,13 @@ export class RecordList extends Array {
                     store._.updateFields(record, { [inverse]: [["ADD", recordList._.owner]] });
                 }
             }
-            return recordListFullProxy.data.length;
+            return recordList._.data.length;
         });
     }
     /** @param {R} recordProxy */
     indexOf(recordProxy) {
-        const recordListFullProxy = this;
-        return recordListFullProxy.data.indexOf(recordProxy?._raw);
+        const recordList = this._raw;
+        return recordList._.data.indexOf(recordProxy?._raw);
     }
     /**
      * @param {number} [start]
@@ -121,27 +112,18 @@ export class RecordList extends Array {
      * @param {...R} [newRecordsProxy]
      */
     splice(start, deleteCount, ...newRecordsProxy) {
-        const recordList = toRaw(this)._raw;
-        const recordListFullProxy = this;
+        const recordList = this._raw;
         const store = recordList._store;
         return store.MAKE_UPDATE(function recordListSplice() {
             const oldRecords = recordList._.data.slice(start, start + deleteCount);
-            const list = recordListFullProxy.data.slice(); // splice on copy of list so that reactive observers not triggered while splicing
+            // splice on a copy, otherwise each in-place write would notify the list observers mid-splice
+            const list = recordList._.data.slice();
             list.splice(
                 start,
                 deleteCount,
                 ...newRecordsProxy.map((recordProxy) => recordProxy._raw)
             );
-            if (recordList._.isOne() && start === 0 && deleteCount === 1) {
-                // avoid replacing whole list, to avoid triggering observers too much
-                if (list.length === 0) {
-                    recordList._proxy.data.pop();
-                } else {
-                    recordList._proxy.data[0] = list[0];
-                }
-            } else {
-                recordList._proxy.data = list;
-            }
+            recordList._.data = list;
             recordList._.syncLength();
             const inverse = recordList._.getInverse();
             for (const oldRecord of oldRecords) {
@@ -165,18 +147,17 @@ export class RecordList extends Array {
     }
     /** @param {(a: R, b: R) => boolean} func */
     sort(func) {
-        const recordList = toRaw(this)._raw;
-        const recordListFullProxy = this;
+        const recordList = this._raw;
         const store = recordList._store;
         return store.MAKE_UPDATE(function recordListSort() {
-            recordList._store._.sortRecordList(recordListFullProxy, func);
-            return recordListFullProxy;
+            store._.sortRecordList(recordList, func);
+            return recordList._proxy;
         });
     }
     /** @param {...R[]|...RecordList[R]} collections */
     concat(...collections) {
-        const recordListFullProxy = this;
-        return recordListFullProxy.data
+        const recordList = this._raw;
+        return recordList._.data
             .map((record) => record._proxy)
             .concat(...collections.map((c) => [...c]));
     }
@@ -185,7 +166,7 @@ export class RecordList extends Array {
      * @returns {R|R[]} the added record(s)
      */
     add(...records) {
-        const recordList = toRaw(this)._raw;
+        const recordList = this._raw;
         const store = recordList._store;
         return store.MAKE_UPDATE(function recordListAdd() {
             if (recordList._.isOne()) {
@@ -195,7 +176,7 @@ export class RecordList extends Array {
                 }
                 return recordList._.insert(last, function recordListAddInsertOne(record) {
                     if (record !== recordList._.data[0]) {
-                        recordList.splice.call(recordList._proxy, 0, 1, record._proxy);
+                        recordList.splice(0, 1, record._proxy);
                     }
                 });
             }
@@ -206,7 +187,7 @@ export class RecordList extends Array {
                 }
                 const rec = recordList._.insert(val, function recordListAddInsertMany(record) {
                     if (recordList._.data.indexOf(record) === -1) {
-                        recordList.push.call(recordList._proxy, record);
+                        recordList.push(record);
                     }
                 });
                 res.push(rec);
@@ -216,7 +197,7 @@ export class RecordList extends Array {
     }
     /** @param {...R}  */
     delete(...records) {
-        const recordList = toRaw(this)._raw;
+        const recordList = this._raw;
         const store = recordList._store;
         return store.MAKE_UPDATE(function recordListDelete() {
             for (const val of records) {
@@ -225,7 +206,7 @@ export class RecordList extends Array {
                     function recordListDelete_Insert(record) {
                         const index = recordList._.data.indexOf(record);
                         if (index !== -1) {
-                            recordList.splice.call(recordList._proxy, index, 1);
+                            recordList.splice(index, 1);
                         }
                     },
                     { mode: "DELETE" }
@@ -234,26 +215,26 @@ export class RecordList extends Array {
         });
     }
     clear() {
-        const recordList = toRaw(this)._raw;
+        const recordList = this._raw;
         const store = recordList._store;
         return store.MAKE_UPDATE(function recordListClear() {
             while (recordList._.data.length > 0) {
-                recordList.pop.call(recordList._proxy);
+                recordList.pop();
             }
         });
     }
     /** @yields {R} */
     *[Symbol.iterator]() {
-        const recordListFullProxy = this;
-        for (const record of recordListFullProxy.data) {
+        const recordList = this._raw;
+        for (const record of recordList._.data) {
             yield record._proxy;
         }
     }
     /** @param {number} index */
     at(index) {
         // this custom implement of "at" is slightly faster than auto-calling unimplement array method
-        const recordListFullProxy = this;
-        return recordListFullProxy.data.at(index)?._proxy;
+        const recordList = this._raw;
+        return recordList._.data.at(index)?._proxy;
     }
 }
 

@@ -127,7 +127,7 @@ export class Store extends Record {
                         for (const usedRecord of recordList._.data) {
                             usedRecord._.uses.delete(recordList);
                         }
-                        recordList._proxy.data.length = 0;
+                        recordList._.data.length = 0;
                     }
                     for (const lsFieldName of record.Model._.fieldsLocalStorage) {
                         const { localStorageKeyToRecordFields } = record.store._;
