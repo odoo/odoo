@@ -2,7 +2,8 @@
 
 from odoo import api, fields, models
 from odoo.fields import Domain
-from odoo.tools import email_normalize, single_email_re
+from odoo.tools import email_normalize
+from odoo.tools.mail import email_re
 from odoo.addons.mail.tools.discuss import Store
 from odoo.exceptions import AccessError
 
@@ -44,58 +45,72 @@ class ResPartner(models.Model):
     def search_for_channel_invite(self, search_term, channel_id=None, limit=30, with_portal_users=False):
         """Returns partners matching search_term that can be invited to a channel.
 
-        - If `channel_id` is specified, only partners that can actually be invited to the channel
-          are returned (not already members, and in accordance to the channel configuration).
+        A single search term is matched loosely, against a partner's name or email. Several
+        terms separated by commas are instead matched as exact emails, so that a pasted list
+        resolves each entry to one partner at most (see :meth:`_search_for_channel_invite`).
 
-        - If no matching partners are found and the search term is a valid email address,
-          then the method may return `selectable_email` as a fallback direct email invite, provided that
-          the channel allows invites by email.
+        If invite by email is allowed, it also returns a list of emails
+        that can be invited to the channel.
+        This list will not include emails that are already known to the channel
+        (i.e. already a member or already invited).
 
         :param with_portal_users: whether portal users may be included in the results. Should
             only be set when the channel configuration actually allows portal users to be
             invited (e.g. a "group" channel), as including them is significantly more expensive.
         """
         store = Store()
-        partner_ids = self._search_for_channel_invite(
-            store,
-            search_term,
-            channel_id,
-            limit,
-            with_portal_users,
-        )
-        selectable_email = None
-        email_already_sent = None
-        if not partner_ids and single_email_re.match(search_term):
-            email = email_normalize(search_term)
-            channel = self.env["discuss.channel"].search_fetch([("id", "=", int(channel_id))])
-            member_domain = Domain("channel_id", "=", channel.id) & Domain(
-                "invitation_sent_dt", "=", False
+        channel = self.env["discuss.channel"].search_fetch([("id", "=", channel_id)])
+        terms = [stripped for term in search_term.split(",") if (stripped := term.strip())]
+        if len(terms) > 1:
+            partner_ids = self._search_for_channel_invite_by_emails(
+                store, terms, channel, with_portal_users
             )
-            member_domain &= Domain("guest_id.email", "=", email) | Domain(
-                "partner_id.email", "=", email
+        else:
+            partner_ids = self._search_for_channel_invite(
+                store, search_term, channel_id, limit, with_portal_users
             )
-            if channel._allow_invite_by_email() and not self.env[
-                "discuss.channel.member"
-            ].search_count(member_domain):
-                selectable_email = email
+        partners = self.browse(partner_ids)
+        selectable_emails = []
+        emails_already_sent = []
+        if channel._allow_invite_by_email():
+            emails_normalized = [email_normalize(e) for e in email_re.findall(search_term) if e]
+            if emails_normalized:
+                member_domain = Domain(
+                    [("channel_id", "=", channel.id), ("invitation_sent_dt", "=", False)]
+                )
+                member_domain &= (
+                    Domain("guest_id.email_normalized", "in", emails_normalized)
+                    | Domain("partner_id.email_normalized", "in", emails_normalized)
+                )
+                email_members = self.env["discuss.channel.member"].search_fetch(member_domain)
+                known_emails = set(
+                    email_members.mapped(
+                        lambda m: m.partner_id.email_normalized or m.guest_id.email_normalized
+                    )
+                ) | set(partners.mapped("email_normalized"))
+                # This keeps the order of the emails as they were in the search term,
+                # while removing duplicates and known emails.
+                seen = set()
+                for email in emails_normalized:
+                    if email not in known_emails and email not in seen:
+                        seen.add(email)
+                        selectable_emails.append(email)
+
                 # sudo - mail.mail: checking mail records to determine if an email was already sent is acceptable.
-                email_already_sent = (
-                    self.env["mail.mail"]
+                emails_already_sent = {email for (email,) in self.env["mail.mail"]
                     .sudo()
-                    .search_count(
+                    ._read_group(
                         [
-                            ("email_to", "=", email),
+                            ("email_to", "in", selectable_emails),
                             ("model", "=", "discuss.channel"),
                             ("res_id", "=", channel.id),
-                        ]
-                    )
-                    > 0
-                )
-
+                        ],
+                        ["email_to"],
+                    )}
         return {
-            "email_already_sent": email_already_sent,
-            "partner_ids": partner_ids,
-            "selectable_email": selectable_email,
+            "emails_already_sent": list(emails_already_sent),
+            "partner_ids": partners.ids,
+            "selectable_emails": selectable_emails,
             "store_data": store,
         }
 
@@ -146,6 +161,35 @@ class ResPartner(models.Model):
             ]
         )
         selectable_partners = self.search(domain, limit=limit + 1, order="name, id")
+        store.add(
+            selectable_partners,
+            "_store_channel_invite_fields",
+            fields_params={"channel": channel},
+        )
+        return selectable_partners.ids
+
+    @api.readonly
+    @api.model
+    def _search_for_channel_invite_by_emails(
+        self, store: Store, emails, channel=None, with_portal_users=False
+    ):
+        """Returns the partners owning one of ``emails`` and that may be invited to ``channel``.
+
+        Used when the search holds several terms, which is a pasted list: each entry designates
+        one person, so they are matched exactly and not capped, an email owned by one partner
+        at most.
+        """
+        if channel is None:
+            channel = self.env["discuss.channel"]
+        emails_normalized = [
+            normalized for email in emails if (normalized := email_normalize(email))
+        ]
+        domain = (
+            self._get_channel_invite_domain(channel, with_portal_users)
+            & Domain("id", "!=", self.env.user.partner_id.id)
+            & Domain("email_normalized", "in", emails_normalized)
+        )
+        selectable_partners = self.search(domain, order="name, id")
         store.add(
             selectable_partners,
             "_store_channel_invite_fields",

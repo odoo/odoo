@@ -3,6 +3,8 @@ import { fields, getKwArgs, makeKwArgs, webModels } from "@web/../tests/web_test
 
 /** @typedef {import("@web/../tests/web_test_helpers").ModelRecord} ModelRecord */
 
+const EMAIL_RE = /[^\s,]+@[^\s,]+\.[^\s,]+/g;
+
 export class ResPartner extends webModels.ResPartner {
     _inherit = ["mail.thread"];
 
@@ -278,69 +280,202 @@ export class ResPartner extends webModels.ResPartner {
      * @param {string} [search_term]
      * @param {number} [channel_id]
      * @param {number} [limit]
+     * @param {boolean} [with_portal_users]
      */
-    search_for_channel_invite(search_term, channel_id, limit = 30) {
-        const kwargs = getKwArgs(arguments, "search_term", "channel_id", "limit");
-        const store = new Store();
-        const channel_invites = this._search_for_channel_invite(
-            store,
-            kwargs.search_term,
-            kwargs.channel_id,
-            kwargs.limit
+    search_for_channel_invite(search_term, channel_id, limit = 30, with_portal_users = false) {
+        const kwargs = getKwArgs(
+            arguments,
+            "search_term",
+            "channel_id",
+            "limit",
+            "with_portal_users"
         );
-        return { store_data: store.as_dict(), ...channel_invites };
+        search_term = kwargs.search_term || "";
+        channel_id = kwargs.channel_id;
+        limit = kwargs.limit || 30;
+        with_portal_users = kwargs.with_portal_users || false;
+
+        /** @type {import("mock_models").DiscussChannel} */
+        const DiscussChannel = this.env["discuss.channel"];
+        /** @type {import("mock_models").DiscussChannelMember} */
+        const DiscussChannelMember = this.env["discuss.channel.member"];
+        /** @type {import("mock_models").MailGuest} */
+        const MailGuest = this.env["mail.guest"];
+
+        const store = new Store();
+        const [channel] = channel_id ? DiscussChannel.browse(channel_id) : [];
+        const terms = this._split_search_terms(search_term);
+        const partner_ids =
+            terms.length > 1
+                ? this._search_for_channel_invite_by_emails(
+                      store,
+                      terms,
+                      channel_id,
+                      with_portal_users
+                  )
+                : this._search_for_channel_invite(
+                      store,
+                      search_term,
+                      channel_id,
+                      limit,
+                      with_portal_users
+                  );
+        let selectable_emails = [];
+        const emails_already_sent = []; // mail.mail is not mocked, nothing to report here
+        if (this._allow_invite_by_email(channel)) {
+            const emailsNormalized = (search_term.match(EMAIL_RE) || [])
+                .map((email) => this._normalize_email(email))
+                .filter(Boolean);
+            if (emailsNormalized.length) {
+                const memberEmails = new Set(
+                    DiscussChannelMember._filter([
+                        ["channel_id", "=", channel.id],
+                        ["invitation_sent_dt", "=", false],
+                    ])
+                        .map((member) => {
+                            const [partner] = member.partner_id
+                                ? this.browse(member.partner_id)
+                                : [];
+                            const [guest] = member.guest_id
+                                ? MailGuest.browse(member.guest_id)
+                                : [];
+                            return (
+                                this._normalize_email(partner?.email) ||
+                                this._normalize_email(guest?.email)
+                            );
+                        })
+                        .filter(Boolean)
+                );
+                const partnerEmails = new Set(
+                    this.browse(partner_ids)
+                        .map((partner) => this._normalize_email(partner.email))
+                        .filter(Boolean)
+                );
+                const knownEmails = memberEmails.union(partnerEmails);
+                // dedupe while keeping the order of the emails as they were in the search term
+                selectable_emails = [
+                    ...new Set(emailsNormalized.filter((email) => !knownEmails.has(email))),
+                ];
+            }
+        }
+        return {
+            emails_already_sent,
+            partner_ids,
+            selectable_emails,
+            store_data: store.as_dict(),
+        };
     }
 
     /**
      * @param {string} [search_term]
      * @param {number} [channel_id]
      * @param {number} [limit]
+     * @param {boolean} [with_portal_users]
      */
-    _search_for_channel_invite(store, search_term, channel_id, limit = 30) {
-        const kwargs = getKwArgs(arguments, "store", "search_term", "channel_id", "limit");
+    _search_for_channel_invite(
+        store,
+        search_term,
+        channel_id,
+        limit = 30,
+        with_portal_users = false
+    ) {
+        const kwargs = getKwArgs(
+            arguments,
+            "store",
+            "search_term",
+            "channel_id",
+            "limit",
+            "with_portal_users"
+        );
         search_term = kwargs.search_term || "";
         channel_id = kwargs.channel_id;
         limit = kwargs.limit || 30;
+        with_portal_users = kwargs.with_portal_users || false;
 
-        /** @type {import("mock_models").DiscussChannelMember} */
-        const DiscussChannelMember = this.env["discuss.channel.member"];
         /** @type {import("mock_models").ResUsers} */
         const ResUsers = this.env["res.users"];
 
-        search_term = search_term.toLowerCase(); // simulates ILIKE
-        let memberPartnerIds;
-        if (channel_id) {
-            memberPartnerIds = new Set(
-                DiscussChannelMember._filter([["channel_id", "=", channel_id]]).map(
-                    (member) => member.partner_id
-                )
-            );
-        }
+        const lowerTerm = search_term.toLowerCase(); // simulates ILIKE
         // simulates domain with relational parts (not supported by mock server)
-        const matchingPartnersIds = ResUsers._filter([])
-            .filter((user) => {
+        const matchingPartnersIds = this._to_unique_partner_ids(
+            ResUsers._filter([]).filter((user) => {
+                if (!this._is_channel_invite_candidate(user, channel_id, with_portal_users)) {
+                    return false;
+                }
                 const [partner] = this.browse(user.partner_id);
-                // user must have a partner
-                if (!partner) {
-                    return false;
-                }
-                // not current partner
-                if (!channel_id && partner.id === this.env.user.partner_id) {
-                    return false;
-                }
-                // user should not already be a member of the channel
-                if (channel_id && memberPartnerIds.has(partner.id)) {
-                    return false;
-                }
-                // no name is considered as return all
-                if (!search_term) {
+                // no term is considered as return all
+                if (!lowerTerm) {
                     return true;
                 }
-                if (partner.name && partner.name.toLowerCase().includes(search_term)) {
-                    return true;
-                }
-                return false;
+                return (
+                    (partner.name && partner.name.toLowerCase().includes(lowerTerm)) ||
+                    (partner.email && partner.email.toLowerCase().includes(lowerTerm))
+                );
             })
+        );
+        matchingPartnersIds.length = Math.min(matchingPartnersIds.length, limit + 1);
+        this._search_for_channel_invite_to_store(matchingPartnersIds, store, channel_id);
+        return matchingPartnersIds;
+    }
+
+    /**
+     * @param {string[]} [emails]
+     * @param {number} [channel_id]
+     * @param {boolean} [with_portal_users]
+     */
+    _search_for_channel_invite_by_emails(store, emails, channel_id, with_portal_users = false) {
+        const kwargs = getKwArgs(arguments, "store", "emails", "channel_id", "with_portal_users");
+        emails = (kwargs.emails || []).map((email) => this._normalize_email(email));
+        channel_id = kwargs.channel_id;
+        with_portal_users = kwargs.with_portal_users || false;
+
+        /** @type {import("mock_models").ResUsers} */
+        const ResUsers = this.env["res.users"];
+
+        const matchingPartnersIds = this._to_unique_partner_ids(
+            ResUsers._filter([]).filter((user) => {
+                if (!this._is_channel_invite_candidate(user, channel_id, with_portal_users)) {
+                    return false;
+                }
+                const [partner] = this.browse(user.partner_id);
+                return emails.includes(this._normalize_email(partner.email));
+            })
+        );
+        this._search_for_channel_invite_to_store(matchingPartnersIds, store, channel_id);
+        return matchingPartnersIds;
+    }
+
+    _is_channel_invite_candidate(user, channel_id, with_portal_users) {
+        /** @type {import("mock_models").DiscussChannelMember} */
+        const DiscussChannelMember = this.env["discuss.channel.member"];
+
+        const [partner] = this.browse(user.partner_id);
+        // user must have a partner
+        if (!partner) {
+            return false;
+        }
+        // not current partner
+        if (!channel_id && partner.id === this.env.user.partner_id) {
+            return false;
+        }
+        // user should not already be a member of the channel
+        if (
+            channel_id &&
+            DiscussChannelMember._filter([["channel_id", "=", channel_id]]).some(
+                (member) => member.partner_id === partner.id
+            )
+        ) {
+            return false;
+        }
+        // portal/share users are excluded unless explicitly requested
+        if (!with_portal_users && user.share) {
+            return false;
+        }
+        return true;
+    }
+
+    _to_unique_partner_ids(users) {
+        return users
             .map((user) => user.partner_id)
             .reduce((ids, partnerId) => {
                 if (!ids.includes(partnerId)) {
@@ -348,17 +483,35 @@ export class ResPartner extends webModels.ResPartner {
                 }
                 return ids;
             }, []);
-        const count = matchingPartnersIds.length;
-        matchingPartnersIds.length = Math.min(count, limit);
-        this._search_for_channel_invite_to_store(matchingPartnersIds, store, channel_id);
-        return {
-            count,
-            partner_ids: matchingPartnersIds,
-        };
     }
 
     _search_for_channel_invite_to_store(ids, store, channel_id) {
         store.add(this.browse(ids), "_store_channel_invite_fields");
+    }
+
+    /** @returns {string} */
+    _normalize_email(email) {
+        return email ? email.trim().toLowerCase() : email;
+    }
+
+    /** @param {string} searchTerm */
+    _split_search_terms(searchTerm) {
+        // simulates search_term.split(",") on the Python side
+        return (searchTerm || "")
+            .split(",")
+            .map((term) => term.trim())
+            .filter((term) => term.length > 0);
+    }
+
+    /** @param {ModelRecord} [channel] */
+    _allow_invite_by_email(channel) {
+        if (!channel) {
+            return false;
+        }
+        return (
+            ["group", "chat"].includes(channel.channel_type) ||
+            (channel.channel_type === "channel" && !channel.group_public_id)
+        );
     }
 
     /**
