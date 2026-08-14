@@ -1312,3 +1312,86 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
             {'balance': 7.29},
             {'balance': 386.25},
         ])
+
+    def test_epd_with_analytic_distribution(self):
+        analytic_plan = self.env['account.analytic.plan'].create({
+            'name': 'existential plan',
+        })
+        analytic_account_a = self.env['account.analytic.account'].create({
+            'name': 'positive_account',
+            'plan_id': analytic_plan.id,
+        })
+        analytic_account_b = analytic_account_a.copy({'name': 'test analyticaccount'})
+        expected_payments_lines = [
+            [
+                {'analytic_distribution': False, 'balance': -3450.0, 'name': 'Manual Payment: INV/2019/00001'},
+                {'analytic_distribution': {str(analytic_account_b.id): 100.0}, 'balance': 45.0, 'name': 'Early Payment Discount (15%)'},
+                {'analytic_distribution': {str(analytic_account_a.id): 100.0}, 'balance': 100.0, 'name': 'Early Payment Discount'},
+                {'analytic_distribution': False, 'balance': 200.0, 'name': 'Early Payment Discount'},
+                {'analytic_distribution': False, 'balance': 3105.0, 'name': 'Manual Payment: INV/2019/00001'},
+            ],
+            [
+                {'analytic_distribution': False, 'balance': -3405.0, 'name': 'Manual Payment: INV/2019/00002'},
+                {'analytic_distribution': {str(analytic_account_a.id): 100.0}, 'balance': 100.0, 'name': 'Early Payment Discount'},
+                {'analytic_distribution': False, 'balance': 200.0, 'name': 'Early Payment Discount'},
+                {'analytic_distribution': False, 'balance': 3105.0, 'name': 'Manual Payment: INV/2019/00002'},
+            ],
+            [
+                {'analytic_distribution': False, 'balance': -3450.0, 'name': 'Manual Payment: INV/2019/00003'},
+                {'analytic_distribution': {str(analytic_account_a.id): 100.0}, 'balance': 100.0, 'name': 'Early Payment Discount'},
+                {'analytic_distribution': False, 'balance': 200.0, 'name': 'Early Payment Discount'},
+                {'analytic_distribution': False, 'balance': 3150.0, 'name': 'Manual Payment: INV/2019/00003'},
+            ],
+        ]
+
+        expected_invoices_lines = [
+            [
+                {'analytic_distribution': False, 'balance': -2000.0, 'name': False},
+                {'analytic_distribution': {str(analytic_account_a.id): 100.0}, 'balance': -1000.0, 'name': False},
+                {'analytic_distribution': {str(analytic_account_b.id): 100.0}, 'balance': -450.0, 'name': '15%'},
+                {'analytic_distribution': False, 'balance': 3450.0, 'name': 'INV/2019/00001'},
+            ],
+            [
+                {'analytic_distribution': False, 'balance': -2000.0, 'name': False},
+                {'analytic_distribution': {str(analytic_account_a.id): 100.0}, 'balance': -1000.0, 'name': False},
+                {'analytic_distribution': {str(analytic_account_b.id): 100.0}, 'balance': -405.0, 'name': '15%'},
+                {'analytic_distribution': False, 'balance': -200.0, 'name': 'Early Payment Discount (10.0%)'},
+                {'analytic_distribution': {str(analytic_account_a.id): 100.0}, 'balance': -100.0, 'name': 'Early Payment Discount (10.0%)'},
+                {'analytic_distribution': {str(analytic_account_a.id): 100.0}, 'balance': 100.0, 'name': 'Early Payment Discount (10.0%)'},
+                {'analytic_distribution': False, 'balance': 200.0, 'name': 'Early Payment Discount (10.0%)'},
+                {'analytic_distribution': False, 'balance': 3405.0, 'name': 'INV/2019/00002'},
+            ],
+            [
+                {'analytic_distribution': False, 'balance': -2000.0, 'name': False},
+                {'analytic_distribution': {str(analytic_account_a.id): 100.0}, 'balance': -1000.0, 'name': False},
+                {'analytic_distribution': {str(analytic_account_b.id): 100.0}, 'balance': -450.0, 'name': '15%'},
+                {'analytic_distribution': False, 'balance': 3450.0, 'name': 'INV/2019/00003'},
+            ],
+        ]
+        for discount_computation, expected_payment_lines, expected_invoice_lines, in zip(('included', 'mixed', 'excluded'), expected_payments_lines, expected_invoices_lines):
+            with self.subTest(discount_computation=discount_computation):
+                self.early_pay_10_percents_10_days.early_pay_discount_computation = discount_computation
+                out_invoice_1 = self._create_invoice(
+                    date='2019-01-01',
+                    invoice_payment_term_id=self.early_pay_10_percents_10_days,
+                    invoice_line_ids=[
+                        self._prepare_invoice_line(price_unit=1000, tax_ids=self.tax_sale_a, analytic_distribution={analytic_account_a.id: 100}),
+                        self._prepare_invoice_line(price_unit=2000, tax_ids=self.tax_sale_a),
+                    ],
+                )
+                out_invoice_1.line_ids.filtered(lambda l: l.display_type == 'tax').analytic_distribution = {analytic_account_b.id: 100}
+                out_invoice_1.action_post()
+                active_ids = out_invoice_1.ids
+                payments = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=active_ids).create({
+                    'payment_date': '2019-01-02',
+                })._create_payments()
+
+                self.assertTrue(payments.is_reconciled)
+                self.assertRecordValues(
+                    payments.move_id.line_ids.sorted('balance'),
+                    expected_payment_lines,
+                )
+                self.assertRecordValues(
+                    out_invoice_1.line_ids.sorted('balance'),
+                    expected_invoice_lines,
+                )
