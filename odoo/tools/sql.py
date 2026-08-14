@@ -41,9 +41,9 @@ class _SQLMeta(type):
         """ Return an SQL object that represents an identifier. """
         assert name.isidentifier() or IDENT_RE.match(name), f"{name!r} invalid for SQL.identifier()"
         if subname is None:
-            return SQL(f'"{name}"', to_flush=to_flush)
+            return SQL(f'"{name}"', to_flush=to_flush)  # pylint: disable=sql-injection
         assert subname.isidentifier() or IDENT_RE.match(subname), f"{subname!r} invalid for SQL.identifier()"
-        return SQL(f'"{name}"."{subname}"', to_flush=to_flush)
+        return SQL(f'"{name}"."{subname}"', to_flush=to_flush)  # pylint: disable=sql-injection
 
 
 class SQL(metaclass=_SQLMeta):
@@ -186,12 +186,12 @@ class LiteralSQL(SQL):
             return args[0]
         code, params, to_flush = self.__sql_tuple
         if not params:
-            return SQL(code.join(("%s",) * len(args)), *args, to_flush=to_flush)
+            return SQL(code.join(("%s",) * len(args)), *args, to_flush=to_flush)  # pylint: disable=sql-injection
         # general case: alternate args with self
         items = [self] * (len(args) * 2 - 1)
         for index, arg in enumerate(args):
             items[index * 2] = arg
-        return SQL("%s" * len(items), *items)
+        return SQL("%s" * len(items), *items)  # pylint: disable=sql-injection
 
 
 def existing_tables(cr: Cursor, tablenames: Iterable[str]) -> list[str]:
@@ -477,7 +477,7 @@ def add_constraint(cr: Cursor, tablename: str, constraintname: str, definition: 
     """ Add a constraint on the given table. """
     query1 = SQL(
         "ALTER TABLE %s ADD CONSTRAINT %s %s",
-        SQL.identifier(tablename), SQL.identifier(constraintname), SQL(definition.replace('%', '%%')),
+        SQL.identifier(tablename), SQL.identifier(constraintname), SQL(definition.replace('%', '%%')),  # pylint: disable=sql-injection
     )
     query2 = SQL(
         "COMMENT ON CONSTRAINT %s ON %s IS %s",
@@ -503,7 +503,7 @@ def add_foreign_key(cr: Cursor, tablename1: str, columnname1: str, tablename2: s
         "ALTER TABLE %s ADD FOREIGN KEY (%s) REFERENCES %s(%s) ON DELETE %s",
         SQL.identifier(tablename1), SQL.identifier(columnname1),
         SQL.identifier(tablename2), SQL.identifier(columnname2),
-        SQL(ondelete),
+        SQL(ondelete),  # pylint: disable=sql-injection
     ))
     _schema.debug("Table %r: added foreign key %r references %r(%r) ON DELETE %s",
                   tablename1, columnname1, tablename2, columnname2, ondelete)
@@ -614,19 +614,17 @@ def create_index(
         return
     definition = SQL(
         "USING %s (%s)%s",
-        SQL(method),
-        SQL(", ").join(SQL(expression) for expression in expressions),
-        SQL(" WHERE %s", SQL(where)) if where else SQL(),
+        SQL.identifier(method.lower()),
+        SQL(", ").join(SQL(expression) for expression in expressions),  # pylint: disable=sql-injection
+        SQL(" WHERE %s", SQL(where)) if where else SQL(),  # pylint: disable=sql-injection
     )
     add_index(cr, indexname, tablename, definition, unique=unique, comment=comment)
 
 
-def add_index(cr: Cursor, indexname: str, tablename: str, definition: str, *, unique: bool, comment: str | None = ''):
+def add_index(cr: Cursor, indexname: str, tablename: str, definition: str | SQL, *, unique: bool, comment: str | None = ''):
     """ Create an index. """
     if isinstance(definition, str):
-        definition = SQL(definition.replace('%', '%%'))
-    else:
-        definition = SQL(definition)
+        definition = SQL(definition.replace('%', '%%'))  # pylint: disable=sql-injection
     query = SQL(
         "CREATE %sINDEX %s ON %s %s",
         SQL("UNIQUE ") if unique else SQL(),

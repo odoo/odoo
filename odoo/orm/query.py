@@ -118,7 +118,7 @@ class Query:
         """ Add a condition to the where clause. """
         if isinstance(where_clause, str) or where_params:
             warnings.warn("Since 20.0, use only SQL in the where clause", DeprecationWarning, stacklevel=2)
-        self._where_clauses.append(SQL(where_clause, *where_params))  # pylint: disable = sql-injection
+        self._where_clauses.append(SQL(where_clause, *where_params))  # pylint: disable=sql-injection
         self._ids = self._ids and None
 
     def join(self, lhs_alias: str, lhs_column: str, rhs_table: str | SQL, rhs_column: str, link: str) -> str:
@@ -163,7 +163,7 @@ class Query:
     def order(self, value: SQL | LiteralString | None):
         if isinstance(value, str):
             warnings.warn("Since 20.0, use SQL values only", DeprecationWarning, stacklevel=2)
-        self._order = SQL(value) if value is not None else None  # pylint: disable = sql-injection
+        self._order = SQL(value) if value is not None else None  # pylint: disable=sql-injection
 
     @property
     def table(self) -> TableSQL:
@@ -193,7 +193,7 @@ class Query:
         """ Return the SELECT query as an ``SQL`` object. """
         if not all(isinstance(a, SQL) for a in args):
             warnings.warn("Since 20.0. select takes only SQL arguments")
-        select_clause = SQL(", ").join(map(SQL, args)) if args else self.table.id
+        select_clause = SQL(", ").join(map(SQL, args)) if args else self.table.id  # pylint: disable=sql-injection
         return SQL(
             "%s%s%s%s%s%s%s%s",
             SQL("SELECT %s", select_clause),
@@ -226,7 +226,7 @@ class Query:
             # in this case, the ORDER BY clause is necessary
             return SQL("(%s)", self.select(*args))
 
-        select_clause = SQL(", ").join(map(SQL, args)) if args else self.table.id
+        select_clause = SQL(", ").join(map(SQL, args)) if args else self.table.id  # pylint: disable=sql-injection
         return SQL(
             "(%s%s%s%s%s)",
             SQL("SELECT %s", select_clause),
