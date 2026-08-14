@@ -15,7 +15,7 @@ from odoo.tools import consteq
 from odoo.tools.misc import file_open
 
 from odoo.addons.mail.tools.discuss import add_guest_to_context
-from odoo.addons.mail.tools.material_symbols_pua_codepoints import material_symbol_char
+from odoo.addons.html_editor.controllers.ms_icons import MS_ICONS
 
 try:
     from werkzeug.utils import send_file
@@ -197,8 +197,11 @@ class MailController(http.Controller):
             info['icon'] = chr(int(icon)) if icon.isdigit() else icon  # legacy fallback
         else:
             # default to 'oi' (material icons)
-            info['path'] = 'mail/static/src/fonts/material_symbols_outlined_pua_cmap.woff2'
-            info['icon'] = material_symbol_char(icon, fill)
+            info['path'] = 'web/static/src/libs/materialsymbols/material_symbols_backend.woff'
+            codepoint = MS_ICONS[icon]['codepoint']
+            if fill:
+                codepoint = 0x100000 + (codepoint & 0xFFFF)
+            info['icon'] = chr(codepoint)
         return info
 
     @http.route('/mail/view', type='http', auth='public')

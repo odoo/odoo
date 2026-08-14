@@ -10,19 +10,28 @@ Two-stage pipeline:
 
 2. **Process** — instantiate two static builds (FILL=0 and FILL=1), detect which
    icons have a distinct filled shape, strip unused glyphs with fontext, and
-   merge both builds into a single optimized WOFF2.  A filled glyph is reachable
-   two ways: through the ``FILL`` variation axis (``home`` + ``font-variation-
-   settings: 'FILL' 1``), which is what ``.oi-filled`` uses, and through a ``_f``
-   suffix on the ligature sequence (``home_f``), kept for the stylesheets that
-   spell the filled name out in a ``content`` declaration.
+   merge both builds into a single optimized WOFF2.  The web fonts are reached
+   by ligature only — their cmap keeps just the ASCII characters the icon names
+   are spelled with — so a filled glyph comes either from the ``FILL`` variation
+   axis (``home`` + ``font-variation-settings: 'FILL' 1``), which is what
+   ``.oi-filled`` uses, or from a ``_f`` suffix on the ligature sequence
+   (``home_f``), kept for the stylesheets that spell the filled name out in a
+   ``content`` declaration.
+
+   A third font is cloned off the outlined build for the backend — wkhtmltopdf,
+   which cannot read WOFF2, and the Pillow PNG renderer of the mail icons — as a
+   WOFF with the same glyphs and ligatures, plus the icon codepoints in its cmap:
+   Pillow has no shaper to resolve a ligature with (see
+   :func:`build_backend_font`).
 
 Outputs
 -------
-* ``static/src/libs/materialsymbols/material_symbols_{outlined,sharp}_subset.{woff2,woff}``
+* ``static/src/libs/materialsymbols/material_symbols_{outlined,sharp}_subset.woff2``
 * ``static/src/libs/materialsymbols/material_symbols_{outlined,sharp}.css``
-* ``html_editor/controllers/icons.py`` — icon list with fill-variant flags and search tags
-* ``mail/static/src/fonts/material_symbols_outlined_pua_cmap.woff2`` — custom cmap font for PIL
-* ``mail/tools/material_symbols_pua_codepoints.py`` — custom mappings ligature -> codepoint for PIL
+* ``static/src/libs/materialsymbols/material_symbols_backend.woff`` — outlined font for
+  wkhtmltopdf and PIL
+* ``html_editor/controllers/ms_icons.py`` — icon list with fill-variant flags, codepoints for
+  PIL and search tags
 
 Usage
 -----
@@ -45,7 +54,6 @@ from io import BytesIO
 from pathlib import Path
 
 try:
-    from fontTools import subset
     from fontTools.otlLib.builder import (
         buildLigatureSubstSubtable,
         buildStatTable,
@@ -67,6 +75,11 @@ from fontTools.misc import timeTools
 
 FILL_SUFFIX = "_f"
 
+# Font the server renders with: wkhtmltopdf cannot read WOFF2, and Pillow needs
+# the icon codepoints (see :func:`build_backend_font`).  Only the outlined style
+# is ever rendered server-side.
+BACKEND_FONT_FILE = "material_symbols_backend.woff"
+
 # The merged font advertises the same FILL axis as the upstream variable font, so
 # that `.oi-filled` can reach the filled artwork with `font-variation-settings`
 # instead of appending FILL_SUFFIX to the ligature name (which needs two `content`
@@ -87,9 +100,25 @@ FILL_THRESHOLD = 0.5
 # stage as `liga`, is on by default, and no stylesheet would think of disabling it.
 FILL_FEATURE = "rclt"
 
-# Private Use Area used by the `_pua_cmap` fonts. The generated
-# Python mapping is the public contract; callers should never persist these
-# codepoints themselves.
+# Codepoint of the filled artwork, as an offset in the Plane-16 Private Use Area.
+#
+# Pillow renders the icons for mail (see `_get_icon_rendering_info`) with FreeType
+# alone, no RAQM/HarfBuzz, so it can only reach a glyph through the cmap of the
+# backend font: no ligature to resolve `home`, and no FILL axis either, that one
+# being backed by a GSUB substitution rather than by glyph variations (see
+# :func:`add_fill_axis`).  The outlined glyphs keep the codepoints Google assigns
+# them, so that the generated mapping is upstream's and stays stable when an icon
+# is added; the filled ones have none and get one here.
+#
+# The low word of the outlined codepoint is mirrored into Plane 16 rather than
+# offset by a constant, because no single offset keeps every filled codepoint
+# inside a Private Use block: Google's codepoints sit in the BMP PUA
+# (U+E000..U+F8FF) but a few land near the end of the Plane-15 PUA
+# (U+FFF9A `horizontal_align_right` …), and those two ranges leave no common
+# slack.  Masking sidesteps it: BMP codepoints land in U+10E000..U+10F8FF and the
+# Plane-15 ones in U+10FF9A.., which cannot collide.
+FILL_CODEPOINT_PLANE = 0x100000
+# Free codepoints for the rare icon Google leaves out of its own cmap.
 PUA_START = 0xE000
 PUA_END = 0xF8FF
 
@@ -361,8 +390,7 @@ def add_fill_axis(font: TTFont, filled_glyphs: dict[str, str]) -> None:
     counterpart once the axis passes :data:`FILL_THRESHOLD`.
 
     Must run *after* :func:`strip_font_metadata`, which would drop the name
-    records ``fvar``/``STAT`` point at, and after the ``_pua_cmap`` font has been
-    cloned off, that one being deliberately shaping-free.
+    records ``fvar``/``STAT`` point at.
     """
     if not filled_glyphs:
         return
@@ -633,56 +661,113 @@ def save_font(font: TTFont, path) -> None:
     font.save(path)
 
 
-def allocate_pua_codepoints(icon_names: list[str]) -> dict[str, int]:
-    """Assign one BMP Private-Use codepoint to both forms of every icon.
+def fill_codepoint(codepoint: int) -> int:
+    """Return the codepoint encoding the filled form of *codepoint*.
 
-    Icons whose FILL=0 and FILL=1 outlines are identical get a separate ``_f``
-    codepoint; both codepoints may simply map to the same glyph.
+    See :data:`FILL_CODEPOINT_PLANE` for why the low word is mirrored instead of
+    the whole codepoint being offset.
     """
-    names = [
-        variant
-        for icon in sorted(set(icon_names))
-        for variant in (icon, icon + FILL_SUFFIX)
-    ]
-    capacity = PUA_END - PUA_START + 1
-    if len(names) > capacity:
-        raise ValueError(
-            f"Need {len(names)} private-use codepoints, but the BMP PUA only "
-            f"contains {capacity}.",
+    return FILL_CODEPOINT_PLANE + (codepoint & 0xFFFF)
+
+
+def map_icon_codepoints(
+    font: TTFont,
+    ligatures: dict[str, str],
+) -> tuple[dict[str, int], dict[int, str]]:
+    """Assign a codepoint to both forms of every icon of *ligatures*, and return
+    ({outlined name: codepoint}, {codepoint: glyph}).
+
+    Outlined glyphs are left where Google encoded them in *font*, so that the
+    mapping stays the upstream one and adding an icon does not renumber the
+    others; the filled glyphs, which upstream never encodes, get the codepoint
+    :func:`fill_codepoint` derives from their outlined counterpart.  An outlined
+    glyph that upstream leaves unencoded is given a spare BMP PUA slot.
+
+    Only the outlined codepoints are returned by name: the filled ones are a pure
+    function of them, which is what lets the generated mapping list half as many
+    and compute the rest (see :func:`write_python_icon_list`).
+
+    Several names may share one glyph (``help`` / ``help_outline``,
+    ``chevron_left`` / ``chevron_backward`` …); they share its codepoint too.
+    """
+    encoded = font.getBestCmap()
+    glyph_codepoint = {}
+    for codepoint, glyph in sorted(encoded.items()):
+        glyph_codepoint.setdefault(glyph, codepoint)  # aliases: lowest wins
+    spare = (cp for cp in range(PUA_START, PUA_END + 1) if cp not in encoded)
+
+    codepoints, codepoint_to_glyph = {}, {}
+    for name, glyph in sorted(ligatures.items()):
+        if name.endswith(FILL_SUFFIX):
+            continue  # encoded along with the outlined form it belongs to
+
+        codepoint = glyph_codepoint.get(glyph)
+        if codepoint is None:
+            codepoint = next(spare, None)
+            if codepoint is None:
+                raise ValueError(f"No private-use codepoint left to encode {name!r}.")
+            glyph_codepoint[glyph] = codepoint
+        codepoints[name] = codepoint
+        codepoint_to_glyph[codepoint] = glyph
+
+        # The computed filled codepoint is only ever right if every icon has a
+        # filled form to point at -- :func:`build_font` falls back on the
+        # outlined glyph for the icons whose shape does not change with FILL.
+        filled_name = name + FILL_SUFFIX
+        filled_glyph = ligatures.get(filled_name)
+        if filled_glyph is None:
+            raise ValueError(f"{name!r} has no {filled_name!r} counterpart to encode.")
+        filled_codepoint = fill_codepoint(codepoint)
+        owner = codepoint_to_glyph.setdefault(filled_codepoint, filled_glyph)
+        if owner != filled_glyph:
+            raise ValueError(
+                f"Cannot encode {filled_name!r} at U+{filled_codepoint:04X}: "
+                f"the codepoint already maps to {owner!r}.",
+            )
+
+    return codepoints, codepoint_to_glyph
+
+
+def add_cmap_entries(font: TTFont, codepoint_to_glyph: dict[int, str]) -> None:
+    """Add *codepoint_to_glyph* to every Unicode cmap subtable of *font*.
+
+    Format 4 subtables only get the BMP part, being unable to encode anything
+    above U+FFFF, and a format 12 subtable is created from the widest existing
+    mapping if the font has none: every fill codepoint needs one, sitting in
+    Plane 16.
+    """
+    cmap = font['cmap']
+    tables = [table for table in cmap.tables if table.isUnicode()]
+    if not any(table.format == 12 for table in tables):
+        table = CmapSubtable.newSubtable(12)
+        table.platformID, table.platEncID, table.language = 3, 10, 0
+        table.cmap = dict(max(tables, key=lambda t: len(t.cmap)).cmap)
+        cmap.tables.append(table)
+        tables.append(table)
+
+    for table in tables:
+        table.cmap.update(
+            codepoint_to_glyph if table.format == 12
+            else {cp: glyph for cp, glyph in codepoint_to_glyph.items() if cp <= 0xFFFF},
         )
-    return {name: PUA_START + index for index, name in enumerate(names)}
 
 
-def replace_cmap(font: TTFont, codepoint_to_glyph: dict[int, str]) -> None:
-    """Replace the font cmap with a PUA-only Unicode cmap."""
-    cmap = newTable("cmap")
-    cmap.tableVersion = 0
-    cmap.tables = []
+def strip_icon_codepoints(font: TTFont, ligatures: dict[str, str]) -> None:
+    """Drop from the cmap of *font* everything but the characters the icon names
+    are spelled with.
 
-    # Unicode BMP cmap.
-    unicode_table = CmapSubtable.newSubtable(4)
-    unicode_table.platformID = 0
-    unicode_table.platEncID = 3
-    unicode_table.language = 0
-    unicode_table.cmap = dict(codepoint_to_glyph)
-    cmap.tables.append(unicode_table)
-
-    # Microsoft Unicode BMP cmap, duplicating the Unicode mapping for
-    # compatibility with font consumers that prefer Microsoft cmap subtables.
-    windows_table = CmapSubtable.newSubtable(4)
-    windows_table.platformID = 3
-    windows_table.platEncID = 1
-    windows_table.language = 0
-    windows_table.cmap = dict(codepoint_to_glyph)
-    cmap.tables.append(windows_table)
-
-    font["cmap"] = cmap
+    The icons of the web fonts are only ever reached through their ligature, so
+    the codepoints Google encodes its glyphs at are dead weight — and an
+    ambiguity, an icon having two ways in and only one of them going through the
+    FILL axis.  The ASCII glyphs the ligature reads as input have to stay.
+    """
+    kept = {ord(char) for name in ligatures for char in name}
+    for table in font['cmap'].tables:
+        table.cmap = {cp: glyph for cp, glyph in table.cmap.items() if cp in kept}
 
 
 def clone_font(font: TTFont) -> TTFont:
-    """Round-trip *font* through memory so the ``_pua_cmap`` font is
-    independent.
-    """
+    """Round-trip *font* through memory so the backend font is independent."""
     data = BytesIO()
     font.save(data)
     return TTFont(
@@ -692,98 +777,38 @@ def clone_font(font: TTFont) -> TTFont:
     )
 
 
-def build_pua_cmap_font(
+def build_backend_font(
     merged: TTFont,
-    ligatures: dict[str, str],
-    pua_codepoints: dict[str, int],
-) -> tuple[TTFont, set[str]]:
-    """Build a cmap-only font from the final merged icon glyphs.
+    style: str,
+    codepoint_to_glyph: dict[int, str],
+    filled_glyphs: dict[str, str],
+) -> TTFont:
+    """Clone *merged* into the WOFF the server renders with.
 
-    ``ligatures`` already contains the exact output glyph for every plain and
-    ``_f`` name, including the fallback where the filled form intentionally
-    reuses the outlined glyph.  The ``_pua_cmap`` font maps PUA codepoints
-    directly to those glyphs, then subsets away the ASCII ligature-input glyphs
-    and OpenType shaping tables.  It therefore needs FreeType only, not
-    RAQM/HarfBuzz.
+    Two consumers, two ways in.  wkhtmltopdf lays out the report HTML the same
+    way a browser would, ligature and FILL axis included, but cannot read WOFF2,
+    hence a WOFF; Pillow renders the mail icons with FreeType alone, no
+    RAQM/HarfBuzz, so it needs the codepoints :func:`map_icon_codepoints` handed
+    out — the ones :func:`strip_icon_codepoints` takes back out of the web fonts.
+
+    Must be cloned before :func:`strip_font_metadata` drops the glyph names the
+    cmap and the FILL axis are keyed by, hence the two of them being applied here
+    a second time.
     """
-    encoded = {
-        name: (pua_codepoints[name], glyph_name)
-        for name, glyph_name in ligatures.items()
-        if name in pua_codepoints
-    }
-    codepoint_to_glyph = dict(encoded.values())
-
-    pua_cmap_font = clone_font(merged)
-    replace_cmap(pua_cmap_font, codepoint_to_glyph)
-
-    # This font is intentionally shaping-independent.
-    for tag in ("GSUB", "GPOS", "GDEF"):
-        if tag in pua_cmap_font:
-            del pua_cmap_font[tag]
-
-    # Keep only glyphs reachable through the new PUA cmap (plus .notdef and
-    # composite dependencies automatically retained by fontTools).
-    options = subset.Options()
-    options.layout_features = []
-    subsetter = subset.Subsetter(options=options)
-    subsetter.populate(unicodes=sorted(codepoint_to_glyph))
-    subsetter.subset(pua_cmap_font)
-
-    pua_cmap_font.flavor = "woff2"
-    return pua_cmap_font, set(encoded)
-
-
-def write_python_icon_mapping(
-    dst_path: Path,
-    pua_codepoints: dict[str, int],
-    available_names: set[str],
-) -> None:
-    """Write the generated name -> PUA mappings used by Pillow/server code."""
-    unfilled_mapping = {
-        name: pua_codepoints[name]
-        for name in sorted(available_names)
-        if not name.endswith(FILL_SUFFIX)
-    }
-    filled_mapping = {
-        name.removesuffix(FILL_SUFFIX): pua_codepoints[name]
-        for name in sorted(available_names)
-        if name.endswith(FILL_SUFFIX)
-    }
-
-    def entries(mapping: dict[str, int]) -> str:
-        return "\n".join(
-            f"    {name!r}: 0x{codepoint:04X},"
-            for name, codepoint in mapping.items()
-        )
-
-    dst_path.write_text(
-        "# Generated by generate_icons.py — do not edit manually.\n\n"
-        "MATERIAL_SYMBOL_CODEPOINTS_FILL_0 = {\n"
-        f"{entries(unfilled_mapping)}\n"
-        "}\n\n"
-        "MATERIAL_SYMBOL_CODEPOINTS_FILL_1 = {\n"
-        f"{entries(filled_mapping)}\n"
-        "}\n\n\n"
-        "def material_symbol_char(content: str, fill: bool = False) -> str:\n"
-        '    """Return the single cmap character for a Material Symbol name.\n'
-        '    That character can be used to access a symbol in\n'
-        '    ``material_symbols_outlined_pua_cmap.woff2``\n'
-        '    """\n'
-        "    codepoints = MATERIAL_SYMBOL_CODEPOINTS_FILL_0\n"
-        "    if fill:\n"
-        "        codepoints = MATERIAL_SYMBOL_CODEPOINTS_FILL_1\n"
-        "    return chr(codepoints[content])\n",
-        encoding="utf-8",
-    )
+    backend_font = clone_font(merged)
+    add_cmap_entries(backend_font, codepoint_to_glyph)
+    strip_font_metadata(backend_font, style)
+    add_fill_axis(backend_font, filled_glyphs)
+    backend_font.flavor = 'woff'
+    return backend_font
 
 
 def build_font(
     style: str,
     ms_dir: Path,
     wishlist: list[str],
-    pua_codepoints: dict[str, int] | None = None,
-    pua_ms_dir: Path | None = None,
-) -> tuple[dict, Path, Path | None, set[str] | None]:
+    with_backend_font: bool = False,
+):
     print(f"Building {style} font…")  # noqa: T201
     print("  Downloading font from Google…")  # noqa: T201
     font = fetch_google_font(style, wishlist)
@@ -857,19 +882,16 @@ def build_font(
     if unresolved:
         print(f"  {len(unresolved)} icons could not be encoded: {sorted(unresolved)}")  # noqa: T201
 
-    if pua_codepoints is not None:
-        # Build a second, server/runtime-only font from the exact same final
-        # glyphs. It has a PUA cmap instead of name ligatures and therefore does
-        # not require RAQM/HarfBuzz at render time.
-        pua_cmap_font, pua_names = build_pua_cmap_font(
-            merged,
-            ligatures,
-            pua_codepoints,
-        )
-        strip_font_metadata(pua_cmap_font, f"{style} PUA cmap")
+    # Both from the font as it stands, upstream cmap and glyph names included:
+    # the backend font is the only one keeping either.
+    codepoints = backend_font = None
+    if with_backend_font:
+        codepoints, codepoint_to_glyph = map_icon_codepoints(merged, ligatures)
+        backend_font = build_backend_font(merged, style, codepoint_to_glyph, filled_glyphs)
 
+    strip_icon_codepoints(merged, ligatures)
     strip_font_metadata(merged, style)
-    # After the metadata strip and the `_pua_cmap` clone, see :func:`add_fill_axis`.
+    # After the metadata strip, see :func:`add_fill_axis`.
     add_fill_axis(merged, filled_glyphs)
     icons = {name: {'has_fill': name in icons_with_fill} for name in wishlist if name in glyphs_map}
 
@@ -879,22 +901,30 @@ def build_font(
     output_font_path = ms_dir / f'material_symbols_{style.lower()}_subset.woff2'
     merged.flavor = 'woff2'
     save_font(merged, output_font_path)
-    # Same font in WOFF1, as a fallback for wkhtmltopdf (see write_font_face_css).
-    woff1_font_path = output_font_path.with_suffix('.woff')
-    merged.flavor = 'woff'
-    save_font(merged, woff1_font_path)
-    write_font_face_css(ms_dir, style.lower(), output_font_path.name, woff1_font_path.name)
 
-    if pua_codepoints is not None:
-        pua_ms_dir.mkdir(parents=True, exist_ok=True)
+    backend_font_path = None
+    if backend_font is not None:
+        backend_font_path = ms_dir / BACKEND_FONT_FILE
+        save_font(backend_font, backend_font_path)
 
-        pua_cmap_font_path = pua_ms_dir / f'material_symbols_{style.lower()}_pua_cmap.woff2'
-        save_font(pua_cmap_font, pua_cmap_font_path)
-        return icons, output_font_path, pua_cmap_font_path, pua_names
-    return icons, output_font_path, None, None
+    write_font_face_css(ms_dir, style.lower(), output_font_path.name, backend_font_path)
+
+    return icons, output_font_path, backend_font_path, codepoints
 
 
-def write_font_face_css(ms_dir, style_lower: str, font_file: str, font_file_woff1: str) -> None:
+def write_font_face_css(ms_dir, style_lower: str, font_file: str, backend_font_path) -> None:
+    sources = f"    src: url('/web/static/src/libs/materialsymbols/{font_file}') format('woff2')"
+    fallback = ""
+    if backend_font_path is not None:
+        fallback = (
+            "    /* WOFF fallback for wkhtmltopdf, which cannot read WOFF2. Browsers\n"
+            "       only download the first format they support, so it costs nothing. */\n"
+        )
+        sources += (
+            ",\n"
+            f"         url('/web/static/src/libs/materialsymbols/{backend_font_path.name}') format('woff')"
+        )
+
     css = (
         "/* Generated by `odoo/addons/web/tooling/icons/generate_icons.py` — do not edit manually. */\n"
         "@font-face {\n"
@@ -903,21 +933,21 @@ def write_font_face_css(ms_dir, style_lower: str, font_file: str, font_file_woff
         "    font-weight: 400;\n"
         "    font-display: block;\n"
         "    /* This font is a subset of the Material Symbols icons */\n"
-        "    /* WOFF1 fallback for wkhtmltopdf, which cannot read WOFF2. Browsers\n"
-        "       only download the first format they support, so it costs nothing. */\n"
-        f"    src: url('/web/static/src/libs/materialsymbols/{font_file}') format('woff2'),\n"
-        f"         url('/web/static/src/libs/materialsymbols/{font_file_woff1}') format('woff');\n"
+        f"{fallback}"
+        f"{sources};\n"
         "}\n"
     )
     (ms_dir / f'material_symbols_{style_lower}.css').write_text(css, encoding='utf-8')
 
 
-def write_python_icon_list(dst_path, icons: dict[str, dict]) -> None:
-    """Write the icon metadata (``has_fill`` flag and search ``tags``) as a Python dict.
+def write_python_icon_list(dst_path, icons: dict[str, dict], codepoints: dict[str, int]) -> None:
+    """Write the icon metadata (``has_fill`` flag, search ``tags`` and cmap
+    ``codepoint``) as a Python dict.
 
     The dict is imported server-side by the ``/html_editor/material_symbols_search``
     controller, so the (large) search tags never ship to the browser, and no file
-    has to be read at runtime.
+    has to be read at runtime.  Only the outlined codepoints are listed; the
+    filled ones are computed the way :func:`fill_codepoint` encodes them.
     """
     url = "https://fonts.google.com/metadata/icons?key=material_symbols&incomplete=true"
     with urllib.request.urlopen(url, timeout=30) as response:
@@ -930,7 +960,8 @@ def write_python_icon_list(dst_path, icons: dict[str, dict]) -> None:
             icons[icon_data['name']]['tags'] = ' '.join(icon_data.get('tags', []))
 
     entries = '\n'.join(
-        f"    {icon_name!r}: {{'has_fill': {icon['has_fill']}, 'tags': {icon.get('tags', '')!r}}},"
+        f"    {icon_name!r}: {{'has_fill': {icon['has_fill']}, "
+        f"'codepoint': 0x{codepoints[icon_name]:04X}, 'tags': {icon.get('tags', '')!r}}},"
         for icon_name, icon in icons.items()
     )
     dst_path.write_text(
@@ -959,34 +990,25 @@ def main() -> None:
         sys.exit("Could not locate the 'web' module.")
 
     ms_dir = module_path / 'static' / 'src' / 'libs' / 'materialsymbols'
-    pua_ms_dir = module_path.parent / 'mail' / 'static' / 'src' / 'fonts'
     wishlist = load_wishlist()
-    pua_codepoints = allocate_pua_codepoints(wishlist)
 
-    icons, outline_path, outline_pua_path, pua_names = build_font(
-        "Outlined", ms_dir, wishlist, pua_codepoints, pua_ms_dir
+    # Only the outlined font is rendered server-side, so only it gets a backend
+    # clone.
+    icons, outline_path, backend_path, codepoints = build_font(
+        "Outlined", ms_dir, wishlist, with_backend_font=True,
     )
     _, sharp_path, *_ = build_font("Sharp", ms_dir, wishlist)
 
-    python_mapping_path = module_path.parent / 'mail' / 'tools' / 'material_symbols_pua_codepoints.py'
-    write_python_icon_mapping(
-        python_mapping_path,
-        pua_codepoints,
-        pua_names,
-    )
-
-    write_python_icon_list(
-        module_path.parent / 'html_editor' / 'controllers' / 'icons.py',
-        icons,
-    )
+    icon_list_path = module_path.parent / 'html_editor' / 'controllers' / 'ms_icons.py'
+    write_python_icon_list(icon_list_path, icons, codepoints)
 
     n_filled = sum(1 for icon in icons.values() if icon['has_fill'])
     print(  # noqa: T201
         f"\n✓  Generated fonts with {len(icons)} icons ({n_filled} with filled variant)\n"
         f"   outlined web     → {outline_path}  ({outline_path.stat().st_size // 1000} kb)\n"
         f"   sharp web        → {sharp_path}  ({sharp_path.stat().st_size // 1000} kb)\n"
-        f"   outlined cmap    → {outline_pua_path}  ({outline_pua_path.stat().st_size // 1000} kb)\n"
-        f"   Python mapping   → {python_mapping_path}\n",
+        f"   outlined backend → {backend_path}  ({backend_path.stat().st_size // 1000} kb)\n"
+        f"   Python metadata  → {icon_list_path}  ({len(codepoints)} codepoints)\n",
     )
 
 
