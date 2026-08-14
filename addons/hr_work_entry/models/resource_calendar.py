@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, models
-from odoo.fields import Domain
 
 
 class ResourceCalendar(models.Model):
@@ -15,13 +14,8 @@ class ResourceCalendar(models.Model):
 
     def _get_global_attendances(self):
         global_attendances = super()._get_global_attendances()
-        return global_attendances.filtered_domain(
-            Domain.OR(
-                [
-                    Domain('work_entry_type_id', '=', False),
-                    Domain('work_entry_type_id.count_as', '=', 'working_time'),
-                ],
-            ),
+        return global_attendances.filtered(
+            lambda a: not a.sudo().work_entry_type_id or a.sudo().work_entry_type_id.count_as == 'working_time'
         )
 
     def _work_intervals_batch(self, start_dt, end_dt, resources_per_tz=None, domain=None, compute_leaves=True):
