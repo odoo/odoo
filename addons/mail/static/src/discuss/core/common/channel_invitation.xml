@@ -19,10 +19,15 @@
                         </t>
                         <i t-else="" class="oi" data-icon="search" aria-hidden="true"/>
                     </label>
-                    <input id="o-discuss-ChannelInvitation-search" class="o-discuss-ChannelInvitation-search form-control lh-1 px-2 ps-4 bg-view" aria-describedby="o-discuss-ChannelInvitation-searchStatusIcon" t-att-value="this.searchStr" t-ref="this.inputRef" t-att-placeholder="this.searchPlaceholder" t-on-input="this.onInput"/>
-                    <div t-if="this.props.channel?.allow_invite_by_email" class="o-discuss-ChannelInvitation-iconContainer position-absolute top-50 end-0 translate-middle-y me-2 smaller opacity-50" data-tooltip="Type email to invite">
-                        <i class="oi oi-lg" data-icon="mail"/>
-                        <i class="oi o-discuss-ChannelInvitation-iconPlus position-absolute bg-white rounded-circle" data-icon="add_circle"/>
+                    <input id="o-discuss-ChannelInvitation-search" class="o-discuss-ChannelInvitation-search form-control lh-1 px-2 ps-4 bg-view" aria-describedby="o-discuss-ChannelInvitation-searchStatusIcon" t-att-value="this.searchStr" t-ref="this.inputRef" t-att-placeholder="this.searchPlaceholder" t-on-input="this.onInput" t-on-paste="this.onInputPaste"/>
+                    <div class="o-discuss-ChannelInvitation-iconContainer position-absolute top-50 end-0 translate-middle-y me-2 smaller opacity-50 d-flex align-items-center" data-tooltip-template="discuss.invitationTooltip" t-att-data-tooltip-info="this.tooltipInfo">
+                        <t t-if="this.props.channel?.allow_invite_by_email">
+                            <i class="oi oi-lg" data-icon="mail"/>
+                            <i class="oi o-discuss-ChannelInvitation-iconPlus position-absolute bg-white rounded-circle" data-icon="add_circle"/>
+                        </t>
+                        <t t-else="">
+                            <i class="oi oi-lg" data-icon="help"/>
+                        </t>
                     </div>
                 </div>
                 <div class="d-flex flex-column pt-1">
@@ -97,8 +102,8 @@
             <div class="d-flex align-items-center p-1 bg-inherit">
                 <div class="position-relative d-flex flex-shrink-0 bg-inherit">
                     <DiscussAvatar t-if="selectablePartner" record="selectablePartner"/>
-                    <div t-else="" class="w-100 h-100 d-flex align-items-center justify-content-center rounded-3 bg-primary text-white">
-                        <i class="oi oi-filled" data-icon="mail"/>
+                    <div t-else="" class="w-100 h-100 d-flex align-items-center justify-content-center text-muted">
+                        <i class="o-icon oi oi-filled fs-1" data-icon="mail"/>
                     </div>
                 </div>
             </div>
@@ -118,5 +123,15 @@
             </div>
             <input class="form-check-input flex-shrink-0 mt-0 mx-1" type="checkbox" t-att-checked="isSelected ? 'checked' : undefined"/>
         </li>
+    </t>
+    <t t-name="discuss.invitationTooltip">
+        <div class="d-flex flex-column gap-1">
+            <span t-out="this.content"/>
+            <ul class="mb-1">
+                <t t-foreach="this.inviteOptions" t-as="option" t-key="option">
+                    <li t-out="option"/>
+                </t>
+            </ul>
+        </div>
     </t>
 </templates>

@@ -178,9 +178,9 @@ class TestDiscussChannelInvite(HttpCase, MailCommon):
                     search_term, channel_id=channel.id
                 )
                 if is_selectable:
-                    self.assertEqual(result["selectable_email"], search_term)
+                    self.assertEqual(result["selectable_emails"], [search_term])
                     continue
-                self.assertFalse(result["selectable_email"])
+                self.assertFalse(result["selectable_emails"])
 
     @users("employee")
     def test_06_invite_by_email_posts_user_notification(self):
@@ -223,8 +223,8 @@ class TestDiscussChannelInvite(HttpCase, MailCommon):
         result = self.env["res.partner"].search_for_channel_invite(
             "alfred@test.com", channel_id=group_chat.id
         )
-        self.assertEqual(result["selectable_email"], "alfred@test.com")
-        self.assertTrue(result["email_already_sent"])
+        self.assertEqual(result["selectable_emails"], ["alfred@test.com"])
+        self.assertTrue(result["emails_already_sent"])
         # Inviting again sends the link a second time, reusing the pending member.
         with self.mock_mail_gateway():
             group_chat.invite_by_email(["alfred@test.com"])
@@ -248,7 +248,7 @@ class TestDiscussChannelInvite(HttpCase, MailCommon):
         result = self.env["res.partner"].search_for_channel_invite(
             "alfred@test.com", channel_id=group_chat.id
         )
-        self.assertFalse(result["selectable_email"])
+        self.assertFalse(result["selectable_emails"])
         with self.mock_mail_gateway():
             group_chat.invite_by_email(["alfred@test.com"])
             self.assertNoMail(self.env["res.partner"], email_to="alfred@test.com")
@@ -360,3 +360,36 @@ class TestDiscussChannelInvite(HttpCase, MailCommon):
             )
         with self.mock_mail_gateway():
             self.assertNoMail(self.env["res.partner"], email_to="alfred@test.com")
+
+    def test_12_support_multiple_terms_in_search_for_channel_invite(self):
+        other = new_test_user(self.env, "other", groups="base.group_user", email="other@test.com")
+        bob = new_test_user(self.env, "bob", groups="base.group_user", email="bob@test.com")
+        john = new_test_user(self.env, "john", groups="base.group_user", email="john@test.com")
+        public_channel = self.env["discuss.channel"].create(
+            {"name": "public community", "group_public_id": False},
+        )
+        chat = self.env["discuss.channel"]._get_or_create_chat(partners_to=other.partner_id.ids)
+        group_chat = self.env["discuss.channel"]._create_group(users_to=other)
+        private_channel = self.env["discuss.channel"].create(
+            {
+                "name": "user restricted channel",
+                "channel_type": "channel",
+                "group_public_id": self.env.ref("base.group_user").id,
+            },
+        )
+        for channel in [chat, public_channel, group_chat, private_channel]:
+            res = self.env["res.partner"].search_for_channel_invite(
+                "alfred, john, bob", channel_id=channel.id
+            )
+            self.assertFalse(res["selectable_emails"])
+            self.assertEqual(res["partner_ids"], (bob.partner_id | john.partner_id).ids)
+
+        for channel in [chat, public_channel, group_chat, private_channel]:
+            res = self.env["res.partner"].search_for_channel_invite(
+                "alfred@test.com, john@test.com, bob@test.com", channel_id=channel.id
+            )
+            self.assertEqual(
+                res["selectable_emails"],
+                ["alfred@test.com"] if channel != private_channel else [],
+            )
+            self.assertEqual(res["partner_ids"], (bob.partner_id | john.partner_id).ids)

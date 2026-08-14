@@ -400,6 +400,18 @@ export async function pasteFiles(selector, files, options) {
 
 /**
  * Waits until exactly one element matching the given `selector` is present in
+ * `options.target` and then pastes `data` on it.
+ *
+ * @param {import("@odoo/hoot-dom").Target} selector
+ * @param {Object.<string,string>} data
+ * @param {ContainsOptions} [options] forwarded to `contains`
+ */
+export async function pasteMulti(selector, data, options) {
+    await contains(selector, { pasteMulti: data, ...options });
+}
+
+/**
+ * Waits until exactly one element matching the given `selector` is present in
  * `options.target` and then focuses on it.
  *
  * @param {import("@odoo/hoot-dom").Target} selector
@@ -407,6 +419,19 @@ export async function pasteFiles(selector, files, options) {
  */
 export async function focus(selector, options) {
     await contains(selector, { setFocus: true, ...options });
+}
+
+/**
+ * Waits until exactly one element matching the given `selector` is present in
+ * `options.target` and then focuses and selects the text from `start` to `end`.
+ *
+ * @param {import("@odoo/hoot-dom").Target} selector
+ * @param {number} start
+ * @param {number} end
+ * @param {ContainsOptions} [options] forwarded to `contains`
+ */
+export async function selectText(selector, { start, end }, options) {
+    await contains(selector, { selectText: [start, end], ...options });
 }
 
 /**
@@ -518,10 +543,13 @@ afterEach(() => (hasUsedContainsPositively = false));
  * @property {ContainsTuple} [parent] if provided, the found element(s) must have as
  *  parent the node matching the parent parameter.
  * @property {Object[]} [pasteFiles] if provided, pastes the given files on the found element
+ * @property {Object.<string,string>} [pasteMulti] if provided, pastes the given data on the found element
  * @property {number|"bottom"} [scroll] if provided, the scrollTop of the found element(s)
  *  must match.
  *  Note: when using one of the scrollTop options, it is advised to ensure the height is not going
  *  to change soon, by checking with a preceding contains that all the expected elements are in DOM.
+ * @property {[number, number]} [selectText] if provided, selects the text of the first found element
+ *  from the given start and end indexes.
  * @property {boolean} [setFocus] if provided, focuses the first found element.
  * @property {boolean} [shadowRoot] if provided, targets the shadowRoot of the found elements.
  * @property {number|"bottom"} [setScroll] if provided, sets the scrollTop on the first found
@@ -814,6 +842,24 @@ class Contains {
                 value: createFakeDataTransfer(this.options.pasteFiles),
             });
             el.dispatchEvent(ev);
+        }
+        if (this.options.pasteMulti) {
+            message = `${message} and pasted multiple data types`;
+            const clipboardData = new DataTransfer();
+            for (const [type, value] of Object.entries(this.options.pasteMulti)) {
+                clipboardData.setData(type, value);
+            }
+            const ev = new ClipboardEvent("paste", {
+                bubbles: true,
+                clipboardData,
+            });
+            el.dispatchEvent(ev);
+        }
+        if (this.options.selectText) {
+            message = `${message} and selected text "${this.options.selectText}"`;
+            const [start, end] = this.options.selectText;
+            el.focus();
+            el.setSelectionRange(start, end);
         }
         if (this.options.setFocus) {
             message = `${message} and focused it`;
