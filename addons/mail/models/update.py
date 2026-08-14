@@ -35,6 +35,10 @@ class Publisher_WarrantyContract(AbstractModel):
         if "share" in Users._fields:
             nbr_share_users = Users.search_count([("share", "=", True), ('active', '=', True)])
             nbr_active_share_users = Users.search_count([("share", "=", True), ("login_date", ">=", limit_date), ('active', '=', True)])
+        nbr_light_users = nbr_share_users = Users.search_count([("role", "=", "group_user"), ("active", "=", True)])
+        nbr_active_light_users = nbr_share_users = Users.search_count([
+            ("role", "=", "group_user"), ("login_date", ">=", limit_date), ("active", "=", True),
+        ])
         user = self.env.user
         domain = [('application', '=', True), ('state', 'in', ['installed', 'to upgrade', 'to remove'])]
         apps = self.env['ir.module.module'].sudo().search_read(domain, ['name'])
@@ -48,6 +52,8 @@ class Publisher_WarrantyContract(AbstractModel):
             "nbr_active_users": nbr_active_users,
             "nbr_share_users": nbr_share_users,
             "nbr_active_share_users": nbr_active_share_users,
+            "nbr_light_users": nbr_light_users,
+            "nbr_active_light_users": nbr_active_light_users,
             "dbname": self.env.cr.dbname,
             "db_create_date": db_create_date,
             "version": release.version,
