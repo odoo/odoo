@@ -98,7 +98,7 @@ class AccountEdiProxyClientUser(models.Model):
                 )
                 WHERE (active IS TRUE AND proxy_type IN ('peppol', 'pdp'))
             """,
-            'You can not have both a Peppol and a PDP proxy user'
+            'You cannot have both a Peppol and an Approved Platform connection.'
         ),
     ]
 
@@ -137,7 +137,7 @@ class AccountEdiProxyClientUser(models.Model):
             return super()._get_proxy_identification(company, proxy_type)
         if not company.pdp_identifier:
             scheme = dict(self.env["res.partner"]._fields['peppol_eas']._description_selection(self.env))["0225"]
-            raise UserError(self.env._("Please fill the Peppol Endpoint field with scheme '%s' on the company partner.", scheme))
+            raise UserError(self.env._("Please fill the French e-invoicing identifier with scheme '%s' on the company partner.", scheme))
         return f'0225:{company.pdp_identifier}'
 
     def _get_company_details(self):

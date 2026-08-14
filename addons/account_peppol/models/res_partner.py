@@ -78,6 +78,20 @@ class ResPartner(models.Model):
     # HELPERS
     # -------------------------------------------------------------------------
 
+    def _get_einvoicing_network_name(self, identifier_scheme=None):
+        """Return the name of the e-invoicing network used for this partner.
+
+        ``identifier_scheme`` allows callers to resolve the name while an
+        identifier is being edited and has not been saved on the partner yet.
+        """
+        self.ensure_one()
+        return self.env._("Peppol")
+
+    def _get_einvoicing_identifier_name(self, identifier_scheme=None):
+        """Return the user-facing name of an identifier on the network."""
+        self.ensure_one()
+        return self.env._("Peppol EAS and/or Endpoint identifier")
+
     def _log_verification_state_update(self, company, old_value, new_value):
         # log the update of the peppol verification state
         # we do this instead of regular tracking because of the customized message
