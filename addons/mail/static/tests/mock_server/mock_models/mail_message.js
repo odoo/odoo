@@ -126,7 +126,7 @@ export class MailMessage extends models.ServerModel {
         // keep "record_name" and "res_id" for iOS app
         res.extend(["record_name", "res_id"]);
         res.attr("subject");
-        res.one("subtype_id", ["description"], { sudo: true });
+        res.one("subtype_id", ["id"]);
         res.attr("write_date");
         this._store_linked_messages_fields(res);
         this._store_message_link_previews_fields(res);
@@ -541,8 +541,6 @@ export class MailMessage extends models.ServerModel {
     _message_fetch(domain, thread, search_term, is_notification, before, after, around, limit) {
         /** @type {import("mock_models").IrAttachment} */
         const IrAttachment = this.env["ir.attachment"];
-        /** @type {import("mock_models").MailMessageSubtype} */
-        const MailMessageSubtype = this.env["mail.message.subtype"];
         ({
             domain,
             thread,
@@ -579,7 +577,6 @@ export class MailMessage extends models.ServerModel {
         if (search_term) {
             domain = new Domain(domain || []);
             search_term = search_term.replace(" ", "%");
-            const subtypeIds = MailMessageSubtype.search([["description", "ilike", search_term]]);
             const irAttachmentIds = IrAttachment.search([["name", "ilike", search_term]]);
             const authorIds = this.env["res.partner"].search([["name", "ilike", search_term]]);
             const guestIds = this.env["mail.guest"].search([["name", "ilike", search_term]]);
@@ -589,7 +586,6 @@ export class MailMessage extends models.ServerModel {
                 [["author_id", "in", authorIds]],
                 [["author_guest_id", "in", guestIds]],
                 [["subject", "ilike", search_term]],
-                [["subtype_ids", "in", subtypeIds]],
             ]);
             if (thread && is_notification !== false) {
                 const messageIds = this.search([

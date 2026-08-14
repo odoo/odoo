@@ -345,20 +345,3 @@ test("messaging menu counter should ignore unread messages in channels that are 
     await contains(".o-mail-NotificationItem-name:text('General')"); // ensure channels fetched
     await contains(".o-mail-MessagingMenuInDropdown-counter", { count: 0 });
 });
-
-test("subtype description should be displayed when body is empty", async () => {
-    const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({ name: "Partner1" });
-    const channelId = pyEnv["discuss.channel"].create({ name: "Test" });
-    const subtypeId = pyEnv["mail.message.subtype"].create({ description: "hello" });
-    pyEnv["mail.message"].create({
-        author_id: partnerId,
-        body: "",
-        model: "discuss.channel",
-        res_id: channelId,
-        subtype_id: subtypeId,
-    });
-    await start();
-    await openMessagingMenu(MENU_ACTIVE_IDS.CHANNEL);
-    await contains(".o-mail-NotificationItem-text:text('Partner1: hello')");
-});

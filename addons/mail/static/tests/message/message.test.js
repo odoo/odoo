@@ -1962,21 +1962,6 @@ test("avatar card from author should be opened after clicking on their name", as
     await contains(".o_card_user_infos > a:text('+5646548')");
 });
 
-test("subtype description should be displayed if it is different than body", async () => {
-    const pyEnv = await startServer();
-    const threadId = pyEnv["res.partner"].create({});
-    const subtypeId = pyEnv["mail.message.subtype"].create({ description: "Bonjour" });
-    pyEnv["mail.message"].create({
-        body: "<p>Hello</p>",
-        model: "res.partner",
-        res_id: threadId,
-        subtype_id: subtypeId,
-    });
-    await start();
-    await openFormView("res.partner", threadId);
-    await contains(".o-mail-Message-body:text('Hello Bonjour')");
-});
-
 test("subtype description should not be displayed if it is similar to body", async () => {
     const pyEnv = await startServer();
     const threadId = pyEnv["res.partner"].create({});
@@ -2083,7 +2068,7 @@ test("delete all attachments of a message with some text content should still ke
     await contains(".o-mail-Message");
 });
 
-test("message with subtype should be displayed (and not considered as empty)", async () => {
+test("message with only a subtype should be considered as empty", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const subtypeId = pyEnv["mail.message.subtype"].create({ description: "Task created" });
@@ -2094,7 +2079,7 @@ test("message with subtype should be displayed (and not considered as empty)", a
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-Message-content:text('Task created')");
+    await contains(".o-mail-Message-content:has(:text('This message has been removed'))");
 });
 
 test("message considered deleted", async () => {

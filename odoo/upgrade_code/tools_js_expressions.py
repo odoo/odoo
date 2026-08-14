@@ -2074,9 +2074,9 @@ tests = [
                         <div class="o-mail-Message-contentContainer position-relative d-flex" t-att-class="{ 'flex-row-reverse': isAlignedRight }">
                             <div class="o-mail-Message-content o-min-width-0" t-att-class="{ 'w-100': isEditing, 'opacity-50': message.isPending, 'pt-1': message.isNote, 'o-mail-Message-pollContent flex-grow-1': message.poll }">
                                 <div class="o-mail-Message-textContent position-relative d-flex" t-att-class="{ 'w-100': isEditing }">
-                                    <t t-set="showTextVisually" t-value="!message.linkPreviewSquash and (message.hasTextContent or message.subtype_id?.description or message.isEmpty)"/>
+                                    <t t-set="showTextVisually" t-value="!message.linkPreviewSquash and (message.hasTextContent or message.isEmpty)"/>
                                     <t t-if="message.message_type === 'notification' and message.richBody" t-call="mail.Message.bodyAsNotification" name="bodyAsNotification"/>
-                                    <t t-if="message.isEmpty or (message.message_type !== 'notification' and !message.is_transient and (message.hasTextContent or message.subtype_id?.description or isEditing or message.parent_id))">
+                                    <t t-if="message.isEmpty or (message.message_type !== 'notification' and !message.is_transient and (message.hasTextContent or isEditing or message.parent_id))">
                                         <MessageLinkPreviewList t-if="!isEditing and message.linkPreviewSquash and !message.parent_id" messageLinkPreviews="message.message_link_preview_ids"/>
                                         <t t-else="">
                                             <div t-if="message.bubbleColor and !props.squashed" class="o-mail-Message-bubbleTail position-absolute d-flex" t-att-style="isAlignedRight ? 'right: -4px; transform: rotateY(180deg);' : 'left: -4px;'" t-att-class="{
@@ -2131,7 +2131,6 @@ tests = [
                                                             <i class="oi text-danger" data-icon="warning" role="img" aria-label="Translation Failure"/>
                                                             <t t-if="message.translationErrors" t-esc="translationFailureText"/>
                                                         </p>
-                                                        <t t-if="showSubtypeDescription" t-out="props.messageSearch?.highlight(message.subtype_id?.description) ?? message.subtype_id?.description"/>
                                                     </t>
                                                 </div>
                                             </div>
@@ -2226,9 +2225,9 @@ tests = [
                         <div class="o-mail-Message-contentContainer position-relative d-flex" t-att-class="{ 'flex-row-reverse': this.isAlignedRight }">
                             <div class="o-mail-Message-content o-min-width-0" t-att-class="{ 'w-100': this.isEditing, 'opacity-50': this.message.isPending, 'pt-1': this.message.isNote, 'o-mail-Message-pollContent flex-grow-1': this.message.poll }">
                                 <div class="o-mail-Message-textContent position-relative d-flex" t-att-class="{ 'w-100': this.isEditing }">
-                                    <t t-set="showTextVisually" t-value="!this.message.linkPreviewSquash and (this.message.hasTextContent or this.message.subtype_id?.description or this.message.isEmpty)"/>
+                                    <t t-set="showTextVisually" t-value="!this.message.linkPreviewSquash and (this.message.hasTextContent or this.message.isEmpty)"/>
                                     <t t-if="this.message.message_type === 'notification' and this.message.richBody" t-call="mail.Message.bodyAsNotification" name="bodyAsNotification"/>
-                                    <t t-if="this.message.isEmpty or (this.message.message_type !== 'notification' and !this.message.is_transient and (this.message.hasTextContent or this.message.subtype_id?.description or this.isEditing or this.message.parent_id))">
+                                    <t t-if="this.message.isEmpty or (this.message.message_type !== 'notification' and !this.message.is_transient and (this.message.hasTextContent or this.isEditing or this.message.parent_id))">
                                         <MessageLinkPreviewList t-if="!this.isEditing and this.message.linkPreviewSquash and !this.message.parent_id" messageLinkPreviews="this.message.message_link_preview_ids"/>
                                         <t t-else="">
                                             <div t-if="this.message.bubbleColor and !this.props.squashed" class="o-mail-Message-bubbleTail position-absolute d-flex" t-att-style="this.isAlignedRight ? 'right: -4px; transform: rotateY(180deg);' : 'left: -4px;'" t-att-class="{
@@ -2283,7 +2282,6 @@ tests = [
                                                             <i class="oi text-danger" data-icon="warning" role="img" aria-label="Translation Failure"/>
                                                             <t t-if="this.message.translationErrors" t-esc="this.translationFailureText"/>
                                                         </p>
-                                                        <t t-if="this.showSubtypeDescription" t-out="this.props.messageSearch?.highlight(this.message.subtype_id?.description) ?? this.message.subtype_id?.description"/>
                                                     </t>
                                                 </div>
                                             </div>

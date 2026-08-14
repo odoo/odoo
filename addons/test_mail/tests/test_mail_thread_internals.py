@@ -388,7 +388,7 @@ class TestAPI(ThreadRecipients):
 
         ticket = self.ticket_record.with_env(self.env)
 
-        subtype_with_description, generic_subtype = self.env['mail.message.subtype'].create([
+        model_specific_subtype, generic_subtype = self.env['mail.message.subtype'].create([
             {
                 'name': 'Subtype With Description',
                 'description': 'Important Action Done',
@@ -400,26 +400,37 @@ class TestAPI(ThreadRecipients):
             },
         ])
 
-        # Lead1 message
+        # Move from lead to another lead (same model)
         posted_msg = lead_src.message_post(
             body="Hello message",
-            subtype_id=subtype_with_description.id,
+            subtype_id=model_specific_subtype.id,
+        )
+        lead_src.message_change_thread(lead_dst)
+        self.assertMessageFields(posted_msg, {
+            'body': Markup('<p>Hello message</p>'),
+            'subtype_id': model_specific_subtype,
+        })
+
+        # Move from lead to ticket (differerent model)
+        posted_msg = lead_src.message_post(
+            body="Hello message",
+            subtype_id=model_specific_subtype.id,
         )
         lead_src.message_change_thread(ticket)
         self.assertMessageFields(posted_msg, {
-            'body': Markup('<p>Important Action Done\n</p><p></p><p>Hello message</p>\n'),  # removed subtype description + old body
+            'body': Markup('<p>Hello message</p>'),
             'subtype_id': self.env['mail.message.subtype'],
         })
 
         # Move to lead_dst(same model)
         posted_msg_2 = lead_src.message_post(
             body="Hello message",
-            subtype_id=subtype_with_description.id,
+            subtype_id=generic_subtype.id,
         )
         lead_src.message_change_thread(lead_dst)
         self.assertMessageFields(posted_msg_2, {
-            'body': Markup('<p>Hello message</p>'),  # old body only
-            'subtype_id': subtype_with_description,
+            'body': Markup('<p>Hello message</p>'),
+            'subtype_id': generic_subtype,
         })
 
         # Generic subtype test (different model)
@@ -429,7 +440,7 @@ class TestAPI(ThreadRecipients):
         )
         lead_src.message_change_thread(ticket)
         self.assertMessageFields(posted_msg_3, {
-            'body': Markup('<p>Hello message</p>'),  # old body only
+            'body': Markup('<p>Hello message</p>'),
             'subtype_id': generic_subtype,
         })
 
