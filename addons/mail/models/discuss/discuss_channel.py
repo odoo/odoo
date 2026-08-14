@@ -593,6 +593,20 @@ class DiscussChannel(models.Model):
                             channels=", ".join(failing_channels.mapped("name")),
                         )
                     )
+        if (
+            "default_display_mode" in vals
+            and not self.env.user._is_admin()
+            and self.filtered(
+                lambda channel: (
+                    channel.default_display_mode != vals["default_display_mode"]
+                    # sudo: discuss.channel.member - allow reading channel_role for access checks
+                    and channel.self_member_id.sudo().channel_role not in ("owner", "admin")
+                ),
+            )
+        ):
+            raise AccessError(
+                self.env._("Only the channel owner or database admins can convert a meeting to a chat."),
+            )
         result = super().write(vals)
         if vals.get('group_ids'):
             self._subscribe_users_automatically()
@@ -1096,7 +1110,13 @@ class DiscussChannel(models.Model):
 
         # notify only user input (comment, whatsapp messages or incoming / outgoing emails)
         message_type = message.message_type
-        if message_type not in ('comment', 'email', 'email_outgoing', 'whatsapp_message'):
+        if (
+            message_type not in ("comment", "email", "email_outgoing", "whatsapp_message")
+            and not (
+                message_type == "notification"
+                and message.subtype_id.id == self.env["ir.model.data"]._xmlid_to_res_id("mail.mt_important_notification")
+            )
+        ):
             return []
 
         recipients_data = []

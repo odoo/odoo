@@ -431,6 +431,7 @@ class ResUsers(models.Model):
         res.attr("hasLinkPreviewFeature", self.env["mail.link.preview"]._is_link_preview_enabled())
         res.attr("internalUserGroupId", self.env.ref("base.group_user").id)
         res.attr("mt_comment", xmlid_to_res_id("mail.mt_comment"))
+        res.attr("mt_important_notification", xmlid_to_res_id("mail.mt_important_notification"))
         res.attr("mt_note", xmlid_to_res_id("mail.mt_note"))
         res.one("odoobot", "_store_partner_fields", value=odoobot)
         if not self._is_public():

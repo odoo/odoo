@@ -221,3 +221,27 @@ registerStoreHandler(
     },
     { audience: "everyone", readonly: false }
 );
+
+registerStoreHandler(
+    "/discuss/channel/meeting_to_group_chat",
+    function store_convert_meeting_to_group_chat(store, params) {
+        /** @type {import("mock_models").DiscussChannel} */
+        const DiscussChannel = this.env["discuss.channel"];
+        /** @type {import("mock_models").ResPartner} */
+        const ResPartner = this.env["res.partner"];
+        const [channel] = DiscussChannel.search_read([["id", "=", params.channel_id]]);
+        if (channel) {
+            const [partner] = ResPartner.browse(this.env.user.partner_id);
+            DiscussChannel.write(params.channel_id, { default_display_mode: false });
+            DiscussChannel.message_post(
+                channel.id,
+                makeKwArgs({
+                    author_id: partner.id,
+                    body: `<div class="o_mail_notification" data-oe-type="meeting_to_group_chat">${partner.name} converted this meeting into a group chat</div>`,
+                    subtype_xmlid: "mail.mt_important_notification",
+                })
+            );
+        }
+    },
+    { audience: "everyone", readonly: false }
+);

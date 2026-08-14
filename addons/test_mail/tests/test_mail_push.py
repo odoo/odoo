@@ -350,8 +350,8 @@ class TestWebPushNotification(SMSCommon):
             partners_to=[self.user_email.partner_id.id])
         inviting_channel_member = channel.with_user(inviting_user).self_member_id
         inviting_channel_member.sudo()._rtc_join_call()
-        push_to_end_point.assert_called_once()
-        payload_value = json.loads(push_to_end_point.call_args.kwargs['payload'])
+        self.assertEqual(push_to_end_point.call_count, 2)
+        payload_value = json.loads(push_to_end_point.call_args_list[1].kwargs['payload'])
         self.assertEqual(
             payload_value['title'],
             "Incoming call",

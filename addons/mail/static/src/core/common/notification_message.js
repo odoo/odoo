@@ -59,4 +59,13 @@ export class NotificationMessage extends Component {
             duration: duration.shiftTo(...units).toHuman({ unitDisplay: "short" }),
         });
     }
+
+    get showInlineBody() {
+        return [
+            "channel_rename",
+            "meeting_to_group_chat",
+            "thread_deletion",
+            "thread_creation",
+        ].includes(this.message.notificationType);
+    }
 }

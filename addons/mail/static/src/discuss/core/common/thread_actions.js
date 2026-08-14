@@ -236,6 +236,23 @@ registerThreadAction("member-list", {
     sequence: 30,
     sequenceGroup: 10,
 });
+registerThreadAction("meeting-to-chat", {
+    condition: ({ channel, owner }) =>
+        channel?.default_display_mode === "video_full_screen" &&
+        !owner.isDiscussContent &&
+        ["owner", "admin"].includes(channel.self_member_id?.channel_role),
+    icon: "group",
+    name: _t("Convert to Chat"),
+    onSelected: ({ channel, store }) => {
+        store.fetchStoreData(
+            "/discuss/channel/meeting_to_group_chat",
+            { channel_id: channel.id },
+            { silent: false }
+        );
+    },
+    sequence: 15,
+    sequenceGroup: 30,
+});
 registerThreadAction("mark-read", {
     condition: ({ channel, owner }) =>
         channel?.self_member_id &&

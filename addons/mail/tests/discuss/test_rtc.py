@@ -128,6 +128,8 @@ class TestChannelRTC(MailCommon, HttpCase):
                         "discuss.channel.member": [
                             self._res_for_member(
                                 self.member_of_employee_in_channel_internal,
+                                message_unread_counter=0,
+                                message_unread_counter_bus_id=0,
                                 new_message_separator=message.id + 1,
                             ),
                         ],
@@ -232,6 +234,8 @@ class TestChannelRTC(MailCommon, HttpCase):
                         "discuss.channel.member": [
                             self._res_for_member(
                                 self.member_of_employee_in_chat,
+                                message_unread_counter=0,
+                                message_unread_counter_bus_id=0,
                                 new_message_separator=message.id + 1,
                             ),
                         ],
@@ -372,6 +376,8 @@ class TestChannelRTC(MailCommon, HttpCase):
                         "discuss.channel.member": [
                             self._res_for_member(
                                 self.member_of_employee_in_group_a,
+                                message_unread_counter=0,
+                                message_unread_counter_bus_id=0,
                                 new_message_separator=message.id + 1,
                             ),
                         ],

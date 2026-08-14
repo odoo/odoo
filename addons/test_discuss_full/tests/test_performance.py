@@ -491,6 +491,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "has_access_create_lead": False,
                 "internalUserGroupId": self.env.ref("base.group_user").id,
                 "mt_comment": self.env.ref("mail.mt_comment").id,
+                "mt_important_notification": self.env.ref("mail.mt_important_notification").id,
                 "mt_note": self.env.ref("mail.mt_note").id,
                 "odoobot": self.user_root.partner_id.id,
                 "self_user": self.users[0].id,
@@ -612,6 +613,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             "mail.message.subtype": [
                 {"description": False, "id": self.env.ref("mail.mt_note").id},
                 {"description": False, "id": self.env.ref("mail.mt_comment").id},
+                {"description": False, "id": self.env.ref("mail.mt_important_notification").id},
             ],
             "mail.thread": self._filter_threads_fields(
                 self._expected_result_for_thread(self.channel_general),
@@ -1077,7 +1079,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "is_favorite": False,
                 "invitation_sent_dt": False,
                 "last_interest_dt": member_0_last_interest_dt,
-                "message_unread_counter": 0,
+                "message_unread_counter": 1,
                 "message_unread_counter_bus_id": bus_last_id,
                 "mute_until_dt": False,
                 "last_seen_dt": member_0_last_seen_dt,
@@ -1545,7 +1547,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "author_id": self.user_root.partner_id.id,
                 "body": [
                     "markup",
-                    '<div data-oe-type=\"call\" class="o_mail_notification"></div>',
+                    f'<div data-oe-type="call" class="o_mail_notification">{self.user_root.partner_id.name} started a call</div>',
                 ],
                 "call_history_ids": [channel.call_history_ids[0].id],
                 "create_date": create_date,
@@ -1573,7 +1575,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "scheduledDatetime": False,
                 "is_bookmarked": False,
                 "subject": False,
-                "subtype_id": self.env.ref("mail.mt_note").id,
+                "subtype_id": self.env.ref("mail.mt_important_notification").id,
                 "write_date": write_date,
             }
         if channel == self.channel_channel_group_2:
