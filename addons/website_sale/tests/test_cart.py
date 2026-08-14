@@ -151,6 +151,55 @@ class TestWebsiteSaleCart(ProductVariantsCommon, WebsiteSaleCommon, HttpCase):
 
         self.assertEqual(request.cart.order_line.product_no_variant_attribute_value_ids, ptav)
 
+    def test_zero_price_after_pricelist_recompute_blocks_payment(self):
+        """
+        A cart line whose price becomes 0 after a pricelist recompute (e.g. the customer's country
+        resolves a country-group pricelist that prices the product at 0) must not be payable when
+        `prevent_sale` is active.
+        """
+        self.website.prevent_sale = True
+        zero_pricelist = self._create_pricelist(
+            item_ids=[
+                Command.create({
+                    "applied_on": "1_product",
+                    "product_tmpl_id": self.product.product_tmpl_id.id,
+                    "compute_price": "fixed",
+                    "fixed_price": 0.0,
+                })
+            ]
+        )
+        cart = self._create_so()
+        product_line = cart.order_line.filtered(lambda line: line.product_id == self.product)
+        self.assertNotEqual(product_line.price_unit, 0)
+
+        with self.mock_request(sale_order_id=cart.id):
+            # Simulate pricelist change after address submission
+            self.partner.write(self.dummy_partner_address_values.copy())
+            self.WebsiteSaleController._apply_pricelist(zero_pricelist)
+            self.assertEqual(product_line.price_unit, 0.0)
+
+            response = self.make_jsonrpc_request(
+                f"/shop/payment/transaction/{cart.id}",
+                {"access_token": cart._portal_ensure_token()},
+            )
+
+            self.assertEqual(response["state"], "error")
+            self.assertEqual(response["redirect"], "/shop/cart")
+
+    def test_zero_priced_delivery_line_does_not_block_payment(self):
+        """A free (0-priced) delivery line must not be treated as a forbidden zero-priced product
+        when `prevent_sale` is active."""
+        self.website.prevent_sale = True
+
+        with self.mock_request(sale_order_id=self.cart.id):
+            self.partner.write(self.dummy_partner_address_values.copy())
+            self.cart.set_delivery_line(self.free_delivery, 0.0)
+
+            response = self.WebsiteSaleController.shop_payment()
+
+            # The free delivery line must not be flagged as a zero-priced product during checkout.
+            self.assertEqual(response.status_code, 200)
+
     @mute_logger("odoo.http")
     def test_update_cart_before_payment(self):
         with self.mock_request() as request:

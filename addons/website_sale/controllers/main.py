@@ -152,9 +152,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         domains = [self.env.website.sale_product_domain()]
         if search:
             product_template = request.env["product.template"]
-            search_fields = product_template._get_website_sale_search_fields(
-                search_in_description
-            )
+            search_fields = product_template._get_website_sale_search_fields(search_in_description)
             for srch in search.split(" "):
                 subdomains = [
                     product_template._search_get_field_domain(field, srch)
