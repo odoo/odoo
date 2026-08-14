@@ -137,7 +137,7 @@ class ThemeWebsiteMenu(models.Model):
     _description = 'Website Theme Menu'
 
     name = fields.Char(required=True, translate=True)
-    url = fields.Char(default='')
+    url = fields.Char(default='#')
     page_id = fields.Many2one('theme.website.page', ondelete='cascade', index='btree_not_null')
     new_window = fields.Boolean('New Window')
     sequence = fields.Integer()
@@ -180,7 +180,7 @@ class ThemeWebsitePage(models.Model):
         'website.page_options.mixin',
     ]
 
-    url = fields.Char()
+    url = fields.Char(translate=True)
     view_id = fields.Many2one('theme.ir.ui.view', required=True, index=True, ondelete="cascade")
     website_indexed = fields.Boolean('Page Indexed', default=True)
     is_published = fields.Boolean()
