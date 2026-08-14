@@ -59,16 +59,18 @@ export class MessagingMenuItem extends Component {
         this.messageDropdownState = useDropdownState();
         this.ui = useService("ui");
         useSubEnv({ inMessagingMenu: true });
-        this.rightClickMenu = useRightClickMenu(this.root, {
-            extraMenuProps: () => ({ actionsList: this.actionsList }),
-        });
         if (isMobileOS()) {
             useLongPress(this.root, {
                 action: () => {
-                    if (this.message) {
-                        this.messageDropdownState.open();
+                    if (this.hasActions()) {
+                        this.actionsDropdownState.open();
                     }
                 },
+            });
+        } else {
+            this.rightClickMenu = useRightClickMenu(this.root, {
+                predicate: () => Boolean(this.hasActions()),
+                extraMenuProps: () => ({ actionsList: this.actionsList }),
             });
         }
     }
@@ -96,6 +98,10 @@ export class MessagingMenuItem extends Component {
     // patches can override it (an instance field would shadow a prototype
     // getter override)
     actionsPartition = computed(() => this._computeActionsPartition());
+
+    hasActions() {
+        return this.messageActions.actionsComputed().length;
+    }
 
     _computeActionsPartition() {
         const { quick, other, group, actionPanels } = this.messageActions.partition;

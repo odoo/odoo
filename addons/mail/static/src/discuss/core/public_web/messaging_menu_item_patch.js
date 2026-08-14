@@ -1,9 +1,7 @@
 import { CountryFlag } from "@mail/core/common/country_flag";
 import { useThreadActions } from "@mail/core/common/thread_actions";
 import { MessagingMenuItem } from "@mail/core/public_web/messaging_menu/messaging_menu_item";
-import { useLongPress } from "@mail/utils/common/hooks";
 
-import { isMobileOS } from "@web/core/browser/feature_detection";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
@@ -26,15 +24,6 @@ const messagingMenuItemPatch = {
         );
         this.isDiscussSidebarChannelActions = true;
         this.threadActions = useThreadActions({ thread: () => this.channel?.thread });
-        if (isMobileOS()) {
-            useLongPress(this.root, {
-                action: () => {
-                    if (this.channel) {
-                        this.channelDropdownState.open();
-                    }
-                },
-            });
-        }
     },
     get _isActive() {
         return (
@@ -52,6 +41,9 @@ const messagingMenuItemPatch = {
     },
     get actionsDropdownState() {
         return this.channel ? this.channelDropdownState : super.actionsDropdownState;
+    },
+    hasActions() {
+        return this.channel ? this.threadActions.actionsComputed().length : super.hasActions();
     },
     _computeActionsPartition() {
         return this.channel ? this.threadActions.partition : super._computeActionsPartition();
