@@ -4,7 +4,7 @@
 <t t-name="mail.MessagingMenuItem">
     <t t-set="itemProps" t-value="this.notificationItemProps"/>
     <div class="o-mail-MessagingMenuItem rounded-4" t-att-class="this.attClass" t-ref="this.root">
-        <MessagingMenuItemContextMenu t-props="this.rightClickMenu.menuProps"/>
+        <MessagingMenuItemContextMenu t-if="this.rightClickMenu" t-props="this.rightClickMenu.menuProps"/>
         <NotificationItem t-if="itemProps" t-props="itemProps">
             <t t-set-slot="name">
                 <div class="o-mail-MessagingMenuItem-name d-flex text-nowrap">

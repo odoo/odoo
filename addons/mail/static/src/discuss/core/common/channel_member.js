@@ -32,6 +32,7 @@ export class ChannelMember extends Component {
         this.rootRef = signal.ref(HTMLDivElement);
         this.rightClickMenu = useRightClickMenu(this.rootRef, {
             extraMenuProps: () => ({ member: this.member() }),
+            predicate: () => Boolean(this.actions.actions.length),
         });
     }
 
