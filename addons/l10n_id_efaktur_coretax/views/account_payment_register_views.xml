@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_account_payment_register_form_inherit_ebupot" model="ir.ui.view">
+        <field name="name">account.payment.register.form.inherit.ebupot</field>
+        <field name="model">account.payment.register</field>
+        <field name="inherit_id" ref="l10n_account_withholding_tax.view_account_payment_register_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='withholding_page']//field[@name='withholding_line_ids']/list/field[@name='tax_id']" position="before">
+                <field name="source_tax_id" string="Origin Tax"
+                       column_invisible="parent.country_code != 'ID'"
+                       domain="[('l10n_id_ebupot_code', '!=', False)]"
+                       options="{'no_create': True}"
+                       optional="hide"/>
+            </xpath>
+
+            <xpath expr="//page[@name='withholding_page']" position="after">
+                <page string="Electronic Tax (E-Bupot)" name="ebupot_page"
+                      invisible="country_code != 'ID' or payment_type != 'outbound'">
+                    <group>
+                        <group>
+                            <field name="l10n_id_ebupot_document_type"/>
+                            <field name="l10n_id_ebupot_document_number"/>
+                            <field name="l10n_id_ebupot_document_date"/>
+                        </group>
+                        <group>
+                            <field name="l10n_id_ebupot_gov_treasurer_opt"/>
+                            <field name="l10n_id_ebupot_sp2d_number"
+                                   invisible="l10n_id_ebupot_gov_treasurer_opt in (False, 'N/A')"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
