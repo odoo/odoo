@@ -103,6 +103,59 @@ class TestWebsiteSaleCart(BaseUsersCommon, ProductAttributesCommon, WebsiteSaleC
             with MockRequest(self.env, website=website_prevent_zero_price):
                 self.WebsiteSaleController.cart_update_json(product_id=product_service.id, add_qty=1)
 
+    def test_zero_price_after_pricelist_recompute_blocks_payment(self):
+        """A cart line whose price becomes 0 after a pricelist recompute (e.g.
+        the customer's country resolves a country-group pricelist that prices the
+        product at 0) must not be payable when `prevent_zero_price_sale` is set.
+        """
+        self.website.prevent_zero_price_sale = True
+        zero_pricelist = self._create_pricelist(item_ids=[Command.create({
+            'applied_on': '1_product',
+            'product_tmpl_id': self.product.product_tmpl_id.id,
+            'compute_price': 'fixed',
+            'fixed_price': 0.0,
+        })])
+
+        website = self.website.with_user(self.public_user)
+        with MockRequest(website.env, website=website) as request:
+            order = self._create_so(access_token='test_token')
+            self.assertEqual(order.order_line.price_unit, self.product.list_price)
+            self.assertFalse(order._get_zero_priced_lines())
+            self.assertTrue(order._is_cart_ready())
+
+            order._cart_update_pricelist(pricelist_id=zero_pricelist.id)
+            self.assertEqual(order.order_line.price_unit, 0.0)
+
+            self.assertEqual(order._get_zero_priced_lines(), order.order_line)
+            self.assertFalse(order._is_cart_ready())
+            with self.assertRaises(ValidationError):
+                PaymentPortal().shop_payment_transaction(order.id, order.access_token)
+
+            # Reaching a checkout step redirects back to the cart with a warning
+            # instead of letting the customer proceed to a payment they cannot
+            # complete.
+            request.session['sale_order_id'] = order.id
+            redirection = self.WebsiteSaleController.shop_checkout()
+            self.assertTrue(redirection.location.endswith('/shop/cart'))
+            self.assertTrue(order.shop_warning)
+            self.assertTrue(order.order_line.shop_warning)
+
+    def test_zero_priced_delivery_line_does_not_block_payment(self):
+        """A free (0-priced) delivery line must not be treated as a forbidden
+        zero-priced product when `prevent_zero_price_sale` is set.
+        """
+        self.website.prevent_zero_price_sale = True
+        with MockRequest(self.env, website=self.website):
+            order = self._create_so()
+            order.set_delivery_line(self.free_delivery, 0.0)
+            delivery_line = order.order_line.filtered('is_delivery')
+            self.assertTrue(delivery_line)
+            self.assertEqual(delivery_line.price_unit, 0.0)
+
+            # The free delivery line must not be flagged as a zero-priced product.
+            self.assertFalse(order._get_zero_priced_lines())
+            self.assertTrue(order._is_cart_ready())
+
     def test_update_cart_before_payment(self):
         website = self.website.with_user(self.public_user)
         with MockRequest(self.product.with_user(self.public_user).env, website=website):
