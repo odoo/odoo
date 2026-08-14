@@ -32,7 +32,7 @@
                     </button>
                     <SearchMessageInput t-else="" closeSearch.bind="this.closeSearch" messageSearch="this.messageSearch" thread="this.state.thread"/>
                 </div>
-                <button t-if="this.hasPinnedMessages" class="btn btn-link p-1" aria-label="Pinned Messages" t-att-class="{ 'text-muted': this.state.activePanel !== this.CHATTER_PANEL.PINNED_MESSAGES }" title="Pinned Messages" t-on-click="this.onClickPinnedMessages">
+                <button t-if="this.hasPinnedMessages" class="o-mail-Chatter-pin btn btn-link p-1" aria-label="Pinned Messages" t-att-class="{ 'text-muted': this.state.activePanel !== this.CHATTER_PANEL.PINNED_MESSAGES, 'o-isActive': this.state.activePanel === this.CHATTER_PANEL.PINNED_MESSAGES, 'o-isJustPinned': this.justPinned.value }" title="Pinned Messages" t-on-click="this.onClickPinnedMessages">
                     <i class="oi oi-fw" data-icon="push_pin" role="img"/>
                 </button>
                 <button t-if="this.webChatterProps.hasAttachmentPreview and this.state.thread.attachmentsInWebClientView.length" class="btn btn-link text-action px-1" t-on-click="this.popoutAttachment">

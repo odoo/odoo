@@ -1,0 +1,150 @@
+// ------------------------------------------------------------------
+// Search animation
+// ------------------------------------------------------------------
+
+$o-mail-ChatterSearch-sizeClosed: 33px;
+$o-mail-ChatterSearch-durationExpand: .35s;
+$o-mail-ChatterSearch-easingExpand: cubic-bezier(.25, 1, .5, 1);
+
+@keyframes o-mail-ChatterSearch-reveal {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes o-mail-ChatterSearch-expandButtons {
+    from { max-width: 0; }
+    to { max-width: 80px; }
+}
+
+.o-mail-Chatter-search {
+    flex-shrink: 0;
+    width: $o-mail-ChatterSearch-sizeClosed;
+    height: $o-mail-ChatterSearch-sizeClosed;
+    border: $border-width solid transparent;
+    border-radius: $border-radius;
+
+    &.o-isOpen {
+        flex-grow: 1;
+        width: 400px;
+        border-color: $o-enterprise-action-color;
+        transition:
+            flex-grow $o-mail-ChatterSearch-durationExpand $o-mail-ChatterSearch-easingExpand,
+            width $o-mail-ChatterSearch-durationExpand $o-mail-ChatterSearch-easingExpand,
+            border-color $o-mail-ChatterSearch-durationExpand cubic-bezier(.42, 0, .58, 1);
+    }
+
+    .o-mail-SearchMessageInput-buttons :focus-visible {
+        box-shadow: inset 0 0 $focus-ring-blur $focus-ring-width * .5 $o-component-active-border;
+    }
+
+    .o-mail-SearchMessageInput {
+        flex-grow: 1;
+    }
+
+    .o-mail-SearchInput {
+        animation: o-mail-ChatterSearch-reveal .2s ease-out .1s both;
+
+        input.form-control {
+            border: 0;
+        }
+    }
+
+    .o-mail-SearchMessageInput-buttons {
+        animation: o-mail-ChatterSearch-expandButtons $o-mail-ChatterSearch-durationExpand $o-mail-ChatterSearch-easingExpand both;
+
+        .btn {
+            $-secondary: map-get($o-btns-bs-outline-override, 'secondary');
+
+            color: map-get($-secondary, 'active-color');
+            background-color: map-get($-secondary, 'active-background');
+            border-color: map-get($-secondary, 'active-border');
+        }
+    }
+}
+
+// Right-anchors the collapsed box, then hands its room over as it expands.
+.o-mail-Chatter-topbarGrow {
+    flex-grow: 1;
+    padding-right: $o-spacer * .5;
+
+    &.o-isCollapsed {
+        flex-grow: 0;
+        padding-right: 0;
+        transition:
+            flex-grow $o-mail-ChatterSearch-durationExpand $o-mail-ChatterSearch-easingExpand,
+            padding-right $o-mail-ChatterSearch-durationExpand $o-mail-ChatterSearch-easingExpand;
+    }
+}
+
+// ------------------------------------------------------------------
+// Pin animation
+// ------------------------------------------------------------------
+
+$o-mail-ChatterPin-duration: .5s;
+
+@keyframes o-mail-ChatterPin-drop {
+    0% { transform: translateY(0) scale(1, 1); color: $o-main-color-muted; }
+    25% { transform: translateY(-.25em) scale(1, 1); color: $o-main-color-muted; }
+    58% { transform: translateY(.25em) scale(1.15, .78); color: $o-main-color-muted; }
+    92%, 100% { transform: translateY(0) scale(1, 1); color: $o-enterprise-action-color; }
+}
+
+@keyframes o-mail-ChatterPin-shadow {
+    0%, 42% { transform: translateX(-50%) scale(.3); opacity: 0; }
+    58% { transform: translateX(-50%) scale(1.2, 1); opacity: .5; }
+    92%, 100% { transform: translateX(-50%) scale(.5); opacity: 0; }
+}
+
+@keyframes o-mail-ChatterPin-fill {
+    0%, 58% { clip-path: inset(100% 0 0 0); }
+    100% { clip-path: inset(0 0 0 0); }
+}
+
+.o-mail-Chatter-pin {
+    position: relative;
+
+    // The filled pin is how the button rests while the panel is open.
+    &.o-isActive {
+        color: $o-enterprise-action-color;
+
+        .oi {
+            position: relative;
+
+            &::after {
+                content: "push_pin_f";
+                position: absolute;
+                inset: 0;
+                text-align: center;
+            }
+        }
+    }
+
+    // The drop itself is hung on a class the click sets and drops, not on the
+    // active state, which outlives the button: it is re-created when moving from
+    // one record to the next, and a CSS animation plays as soon as its element
+    // is mounted matching — so the pin dropped again on every navigation.
+    &.o-isJustPinned {
+        .oi {
+            animation: o-mail-ChatterPin-drop $o-mail-ChatterPin-duration ease-out both;
+
+            &::after {
+                animation: o-mail-ChatterPin-fill $o-mail-ChatterPin-duration ease-out both;
+            }
+        }
+
+        &::after {
+            content: "";
+            position: absolute;
+            bottom: .75em;
+            left: 50%;
+            width: .6em;
+            height: .15em;
+            background: rgba($black, .2);
+            border-radius: 50%;
+            opacity: 0;
+            pointer-events: none;
+            animation: o-mail-ChatterPin-shadow $o-mail-ChatterPin-duration ease-out both;
+        }
+    }
+}
+
