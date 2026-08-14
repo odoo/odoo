@@ -176,7 +176,7 @@ export class OfflinePlugin extends Plugin {
 
     // Expose the promise to allow tests to wait for it
     getVisitedStatus() {
-        return this._visited[IS_READY];
+        return this._visited()[IS_READY];
     }
     /**
      * Returns search queries that are available offline, their facets and the number of times they

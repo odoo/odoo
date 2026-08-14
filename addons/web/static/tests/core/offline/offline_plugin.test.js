@@ -225,7 +225,7 @@ test("isAvailableOffline", async () => {
 
     // go offline
     getService(OfflinePlugin).setOffline(true);
-    await tick();
+    await getService(OfflinePlugin).getVisitedStatus();
     expect(getService(OfflinePlugin).isOffline()).toBe(true);
 
     expect(getService(OfflinePlugin).isAvailableOffline(1)).toBe(true);
