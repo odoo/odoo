@@ -2,7 +2,7 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, RedirectWarning, ValidationError
 from odoo.fields import Domain
-from odoo.tools import float_round, formatLang
+from odoo.tools import SQL, float_round, formatLang
 from dateutil.relativedelta import relativedelta
 import logging
 _logger = logging.getLogger(__name__)
@@ -295,11 +295,10 @@ class AccountMove(models.Model):
         return super()._get_starting_sequence()
 
     def _get_last_sequence_domain(self, relaxed=False):
-        where_string, param = super(AccountMove, self)._get_last_sequence_domain(relaxed)
+        condition = super()._get_last_sequence_domain(relaxed)
         if self.company_id.account_fiscal_country_id.code == "AR" and self.l10n_latam_use_documents:
-            where_string += " AND l10n_latam_document_type_id = %(l10n_latam_document_type_id)s"
-            param['l10n_latam_document_type_id'] = self.l10n_latam_document_type_id.id or 0
-        return where_string, param
+            condition = SQL("%s AND l10n_latam_document_type_id = %s", condition, self.l10n_latam_document_type_id.id or 0)
+        return condition
 
     def _l10n_ar_get_amounts(self, base_lines=None):
         """ Method used to prepare data to present amounts and taxes related amounts when creating an

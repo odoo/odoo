@@ -1,7 +1,7 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, fields, api
+from odoo.tools import SQL
 
 
 class AccountMove(models.Model):
@@ -36,10 +36,10 @@ class AccountMove(models.Model):
         return action
 
     def _get_last_sequence_domain(self, relaxed=False):
-        where_string, param = super()._get_last_sequence_domain(relaxed)
+        condition = super()._get_last_sequence_domain(relaxed)
         if self.journal_id.debit_sequence:
-            where_string += " AND debit_origin_id IS " + ("NOT NULL" if self.debit_origin_id else "NULL")
-        return where_string, param
+            condition = SQL("%s AND debit_origin_id IS %s", condition, SQL("NOT NULL") if self.debit_origin_id else SQL("NULL"))
+        return condition
 
     def _get_starting_sequence(self):
         starting_sequence = super()._get_starting_sequence()
