@@ -490,6 +490,9 @@ class View(models.Model):
                 self = website_specific_view
         super(View, self).save(value, xpath=xpath)
 
+    def _get_written_view(self):
+        return self if self.website_id or 'website_id' not in self.env.context else self.env['website'].viewref(self.key)
+
     @api.model
     def _get_allowed_root_attrs(self):
         # Related to these options:
