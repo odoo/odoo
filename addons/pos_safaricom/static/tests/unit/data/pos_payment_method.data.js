@@ -1,9 +1,17 @@
 import { patch } from "@web/core/utils/patch";
 import { PosPaymentMethod } from "@point_of_sale/../tests/unit/data/pos_payment_method.data";
 
+const QR_CODE = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAAB";
+
 patch(PosPaymentMethod.prototype, {
     _load_pos_data_fields() {
         return [...super._load_pos_data_fields(), "safaricom_payment_type"];
+    },
+    generate_qr_code() {
+        return QR_CODE;
+    },
+    mark_transaction_used() {
+        return true;
     },
 });
 

@@ -37,7 +37,7 @@ export class PaymentScreenStatus extends Component {
     }
 
     get isComplete() {
-        return this.isRemaining && this.order.orderHasZeroRemaining;
+        return this.order.hasRemainingDue && this.order.orderHasZeroRemaining;
     }
 
     get isIncompleteAndPositive() {
@@ -48,32 +48,11 @@ export class PaymentScreenStatus extends Component {
         return this.props.order;
     }
 
-    get isRemaining() {
-        const isNegative = this.order.totalDue < 0;
-        const remainingDue = this.order.remainingDue;
-
-        if ((isNegative && remainingDue >= 0) || (!isNegative && remainingDue <= 0)) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    get statusText() {
-        return this.isRemaining ? _t("Remaining") : _t("Change");
-    }
-
     get showStatus() {
         return Boolean(this.order.remainingDue || this.order.change);
     }
 
     get amountText() {
-        if (!this.isRemaining) {
-            const amount = this.order.orderCurrency.convert(this.order.change);
-            return formatCurrency(amount, this.order.orderCurrency.id);
-        } else {
-            const amount = this.order.orderCurrency.convert(this.order.remainingDue);
-            return formatCurrency(amount, this.order.orderCurrency.id);
-        }
+        return formatCurrency(this.order.remainingDueAmount, this.order.orderCurrency.id);
     }
 }

@@ -10,7 +10,6 @@ definePosModels();
 
 const MPESA_EXPRESS_ID = 7;
 const LIPA_NA_MPESA_ID = 8;
-const QR_CODE = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAAB";
 
 async function setupSafaricomPos() {
     const store = await setupAndMountPosApp({ use_pricelist: false });
@@ -67,7 +66,6 @@ test("MpesaExpressTour: the phone number is asked and sent with the payment requ
 
 test("LipaNaMpesaTour: the QR code can be displayed and cancelling the popup sets the line to retry", async () => {
     const store = await setupSafaricomPos();
-    onRpc("pos.payment.method", "generate_qr_code", () => QR_CODE);
 
     await payWith("Lipa na M-PESA");
 
@@ -86,8 +84,6 @@ test("LipaNaMpesaTour: the QR code can be displayed and cancelling the popup set
 
 test("LipaNaMpesaTour: accepting a transaction validates the payment line", async () => {
     const store = await setupSafaricomPos();
-    onRpc("pos.payment.method", "generate_qr_code", () => QR_CODE);
-    onRpc("pos.payment.method", "mark_transaction_used", () => true);
 
     await payWith("Lipa na M-PESA");
 

@@ -2,14 +2,11 @@ import { Transition } from "@web/core/transition";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { Navbar } from "@point_of_sale/app/components/navbar/navbar";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
-import { Component, onMounted, useEffect, useProps, t, usePlugin } from "@odoo/owl";
+import { Component, onMounted, useProps, t, usePlugin } from "@odoo/owl";
 import { useOwnDebugContext } from "@web/core/debug/debug_context";
-import { CustomerDisplayPosAdapter } from "@point_of_sale/app/customer_display/customer_display_adapter";
 import { useIdleTimer } from "./utils/use_idle_timer";
 import useTours from "./hooks/use_tours";
 import { init as initDebugFormatters } from "./utils/debug-formatter";
-import { debounce } from "@web/core/utils/timing";
-import { getColorScheme } from "@point_of_sale/utils";
 import { PosRouterPlugin } from "./plugins/pos_router_plugin";
 
 /**
@@ -50,34 +47,9 @@ export class Chrome extends Component {
             body.classList.add("big-scrollbars");
         }
 
-        onMounted(this.props.disableLoader);
-
-        this.adapter = new CustomerDisplayPosAdapter();
-        this.dispatchDebounced = debounce(() => this.adapter.dispatch(this.pos));
-
-        useEffect(() => {
-            this.sendOrderToCustomerDisplay(this.pos, this.router.currentScreen());
+        onMounted(() => {
+            this.props.disableLoader();
+            this.pos.debounceUpdateCustomerDisplay();
         });
-    }
-
-    sendOrderToCustomerDisplay(pos, currentRouterState) {
-        if (currentRouterState === "SaverScreen" || currentRouterState === "LoginScreen") {
-            this.adapter.displayScreenSaver();
-        } else if (pos.getOrder()) {
-            this.adapter.formatOrderData(pos.getOrder());
-        }
-        this.adapter.setExtraData(this.getCustomerDisplayExtraData(...arguments));
-        this.dispatchDebounced();
-    }
-
-    getCustomerDisplayExtraData(pos, routerState) {
-        return {
-            displayTheme: getColorScheme(),
-        };
-    }
-
-    // GETTERS //
-    get showCashMoveButton() {
-        return Boolean(this.pos.config.cash_control);
     }
 }

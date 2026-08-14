@@ -150,7 +150,7 @@ export default class OrderPaymentValidation {
         this.order.state = "paid";
         this.pos.data.localUnsyncedPaidOrderUuids.add(this.order.uuid);
 
-        this.order.processingValidation = true;
+        this.pos.customerDisplay.send({ processingValidation: true });
         try {
             // 1. Save order to server.
             const syncOrderResult = await this.pos.syncAllOrders({ throw: true });
@@ -189,7 +189,7 @@ export default class OrderPaymentValidation {
         } catch (error) {
             return this.handleValidationError(error);
         } finally {
-            this.order.processingValidation = false;
+            this.pos.customerDisplay.send({ processingValidation: false });
         }
     }
 
