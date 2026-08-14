@@ -31,6 +31,7 @@ class IrModuleModule(models.Model):
     _theme_translated_fields = {
         'theme.ir.ui.view': [('theme.ir.ui.view,arch', 'ir.ui.view,arch_db')],
         'theme.website.menu': [('theme.website.menu,name', 'website.menu,name')],
+        'theme.website.page': [('theme.website.page,url', 'website.page,url')],
     }
 
     image_ids = fields.One2many('ir.attachment', 'res_id',
