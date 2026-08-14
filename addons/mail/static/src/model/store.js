@@ -119,12 +119,25 @@ export class Store extends Record {
                     /** @type {Record} */
                     const record = RD_QUEUE.keys().next().value;
                     RD_QUEUE.delete(record);
+                    record._.isDeleted.set(true);
+                    delete record.Model.records[record.localId];
                     for (const [usingRecord, names] of record._.uses.data.entries()) {
                         for (const [name2, count] of names.entries()) {
                             for (let c = 0; c < count; c++) {
                                 usingRecord[name2].delete(record);
                             }
                         }
+                    }
+                    for (const name of [
+                        ...record.Model._.fieldsOne.keys(),
+                        ...record.Model._.fieldsMany.keys(),
+                    ]) {
+                        const recordList = record[name];
+                        for (const localId of recordList.data) {
+                            const usedRecord = toRaw(this.recordByLocalId).get(localId)?._raw;
+                            usedRecord?._.uses.delete(recordList);
+                        }
+                        recordList._proxy.data.length = 0;
                     }
                     for (const lsFieldName of record.Model._.fieldsLocalStorage) {
                         const { localStorageKeyToRecordFields } = record.store._;
@@ -136,8 +149,6 @@ export class Store extends Record {
                         }
                     }
                     this.recordByLocalId.delete(record.localId);
-                    record._.isDeleted.set(true);
-                    delete record.Model.records[record.localId];
                     record._runDisposeFns();
                 }
             }

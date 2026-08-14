@@ -35,5 +35,8 @@ export class RecordUses {
         } else {
             use.set(name, count - 1);
         }
+        if (use.size === 0) {
+            this.data.delete(list._.owner);
+        }
     }
 }
