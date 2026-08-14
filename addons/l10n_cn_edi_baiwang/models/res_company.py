@@ -28,7 +28,6 @@ class ResCompany(models.Model):
         comodel_name='account_edi_proxy_client.user',
         compute='_compute_l10n_cn_baiwang_proxy_user_id',
     )
-    l10n_cn_baiwang_subscription_request_id = fields.Char(copy=False)
 
     # Mode
     l10n_cn_edi_mode = fields.Selection(
