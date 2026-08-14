@@ -30,7 +30,7 @@ class TestWebsiteSaleCart(ProductVariantsCommon, WebsiteSaleCommon, HttpCase):
         cls.WebsiteSaleController = WebsiteSale()
         cls.WebsiteSaleCartController = Cart()
         cls.public_user = cls.env.ref("base.public_user")
-        cls.product = cls.env["product.product"].create({
+        cls.product = cls.env["product.product"].with_context(tracking_disable=True, mail_create_nosubscribe=True, mail_create_nolog=True, mail_notrack=True).create({
             "name": "Test Product",
             "sale_ok": True,
             "website_published": True,

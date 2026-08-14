@@ -40,7 +40,7 @@ class TestWebsiteSaleComparisonUi(HttpCase):
         })
         cls.values_varieties = cls.attribute_varieties.value_ids
         cls.values_vintage = cls.attribute_vintage.value_ids
-        cls.template_margaux = cls.env["product.template"].create({
+        cls.template_margaux = cls.env["product.template"].with_context(tracking_disable=True, mail_create_nosubscribe=True, mail_create_nolog=True, mail_notrack=True).create({
             "name": "Château Margaux",
             "website_published": True,
             "list_price": 0,

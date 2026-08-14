@@ -847,7 +847,7 @@ class TestWebsitePriceListMultiCompany(TransactionCaseWithUserDemo):
 
         # Create and add demo user to 2 companies
         self.company1 = self.demo_user.company_id
-        self.company2 = self.env["res.company"].create({"name": "Test Company"})
+        self.company2 = self.env["res.company"].with_context(tracking_disable=True, mail_create_nosubscribe=True, mail_create_nolog=True, mail_notrack=True).create({"name": "Test Company"})
         self.demo_user.company_ids += self.company2
         # Set company2 as current company for demo user
         Website = self.env["website"]

@@ -32,7 +32,7 @@ class TestCustomize(
             ],
         })
         # create a template
-        product_template = cls.env["product.template"].create({
+        product_template = cls.env["product.template"].with_context(tracking_disable=True, mail_create_nosubscribe=True, mail_create_nolog=True, mail_notrack=True).create({
             "name": "Test Product",
             "is_published": True,
             "list_price": 750,

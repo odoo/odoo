@@ -21,6 +21,7 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValue
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        MAIL_OFF = {'tracking_disable': True, 'mail_create_nosubscribe': True, 'mail_create_nolog': True, 'mail_notrack': True}
 
         cls.WebsiteSnippetFilter = cls.env["website.snippet.filter"].with_context({
             "limit": 16,
@@ -54,7 +55,7 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValue
             ("product_template_attribute_value_ids.name", "in", "Pink"),
             ("product_template_attribute_value_ids.name", "in", "L"),
         ])
-        cls.monitor = cls.env["product.template"].create({
+        cls.monitor = cls.env["product.template"].with_context(**MAIL_OFF).create({
             "name": "Super Computer Monitor",
             "list_price": 200,
             "website_published": True,
@@ -85,7 +86,7 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValue
         ).product_tmpl_id
 
         # More generic products to get the number of product templates to 17
-        generics = cls.env["product.template"].create([
+        generics = cls.env["product.template"].with_context(**MAIL_OFF).create([
             {"name": f"Generic product {i}", "company_id": False, "website_published": True}
             for i in range(1, 13)
         ])

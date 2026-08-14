@@ -12,11 +12,12 @@ class TestWebsiteSaleReorderFromPortal(HttpCaseWithUserPortal):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        MAIL_OFF = {'tracking_disable': True, 'mail_create_nosubscribe': True, 'mail_create_nolog': True, 'mail_notrack': True}
 
         cls.website = cls.env.ref('base.default_website')
         cls.website.write({"prevent_sale": False})
-        cls.empty_cart = cls.env["sale.order"].create({"partner_id": cls.partner_portal.id})
-        cls.product_1, cls.product_2 = cls.env["product.product"].create([
+        cls.empty_cart = cls.env["sale.order"].with_context(**MAIL_OFF).create({"partner_id": cls.partner_portal.id})
+        cls.product_1, cls.product_2 = cls.env["product.product"].with_context(**MAIL_OFF).create([
             {"name": "Reorder Product 1", "sale_ok": True, "website_published": True},
             {"name": "Reorder Product 2", "sale_ok": True, "website_published": True},
         ])

@@ -12,7 +12,7 @@ class TestWebsiteSaleSettings(BaseCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.company = cls.env["res.company"].create({"name": "Test Company"})
+        cls.company = cls.env["res.company"].with_context(tracking_disable=True, mail_create_nosubscribe=True, mail_create_nolog=True, mail_notrack=True).create({"name": "Test Company"})
         cls.website = cls.env["website"].create({
             "name": "Test Website",
             "company_id": cls.company.id,

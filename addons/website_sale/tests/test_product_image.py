@@ -397,7 +397,7 @@ class TestWebsiteSaleRemoveImage(HttpCase):
         cls.template = (
             cls
             .env["product.template"]
-            .with_context(create_product_product=False)
+            .with_context(create_product_product=False, tracking_disable=True, mail_create_nosubscribe=True, mail_create_nolog=True, mail_notrack=True)
             .create({"name": "Test Remove Image", "image_1920": _create_image(color=color_blue)})
         )
 
