@@ -111,8 +111,7 @@ export class Message extends Component {
             emailHeaderOpen: false,
         });
         this.rootRef = signal.ref(HTMLDivElement);
-        this.rightClickMenu = useRightClickMenu({
-            rootRef: this.rootRef,
+        this.rightClickMenu = useRightClickMenu(this.rootRef, {
             extraMenuProps: () => ({ message: this.message, thread: this.props.thread }),
             onClose: () => this.props.messageSelection?.clearSelected(),
             onContextMenu: (...args) => this.onContextMenu(...args),
@@ -497,16 +496,13 @@ export class Message extends Component {
             // Mobile OS long press is handled with useLongPress()
             return;
         }
-        if (
-            ev.composedPath()[0].closest("a") ||
-            !this.props.hasActions ||
-            this.isEditing ||
-            this.rightClickMenu.isOpen ||
-            this.rightClickMenu.isOngoingClose
-        ) {
+        if (ev.composedPath()[0].closest("a") || !this.props.hasActions || this.isEditing) {
             return;
         }
-        this.rightClickMenu.open(ev, () => this.onOpenRightClickMenu(ev));
+        if (!this.rightClickMenu.open(ev)) {
+            return;
+        }
+        this.onOpenRightClickMenu(ev);
     }
 
     onOpenRightClickMenu() {

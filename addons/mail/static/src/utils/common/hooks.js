@@ -960,20 +960,25 @@ export function propSignal(name, shape, { optional = false } = {}) {
 /**
  * This hook makes it easier to enable right-click to open a dropdown at position of cursor
  *
- * @param {Object} param0
- * @param {import("@odoo/owl").Signal<Element>} param0.rootRef - The root ref of the element that has right-click.
+ * @param {import("@odoo/owl").Signal<Element>} rootRef - The root ref of the element that has right-click.
  *   This rootRef defines the node where the right-click should work and needs to have `.position-relative`, so that
  *   the anchor of right-click dropdown can position itself with absolute positioning inside rootRef's node.
- * @param {() => Object} [param0.extraMenuProps={}] - Optional object of extra props provided to the context menu component.
- * @param {() => void} [param0.onClose] - Optional function invoked when the dropdown closes.
- * @param {() => void} [param0.onContextMenu] when set, provides a custom handler when right-clicking.
+ * @param {Object} param1
+ * @param {() => Object} [param1.extraMenuProps={}] - Optional object of extra props provided to the context menu component.
+ * @param {() => void} [param1.onClose] - Optional function invoked when the dropdown closes.
+ * @param {() => void} [param1.onContextMenu] when set, provides a custom handler when right-clicking.
+ * @param {() => boolean} [param1.predicate] - Optional guard to decide whether right-click should
+ *   proceed at all, whether that opens the menu or calls `onContextMenu`.
  */
-export function useRightClickMenu({
+export function useRightClickMenu(
     rootRef,
-    extraMenuProps = () => ({}),
-    onClose: onCloseParam,
-    onContextMenu,
-} = {}) {
+    {
+        extraMenuProps = () => ({}),
+        onClose: onCloseParam,
+        onContextMenu,
+        predicate = () => true,
+    } = {}
+) {
     /**
      * @type {boolean} Whether the right-click dropdown is being closed.
      * Useful to detect when close comes from another right-click on the same element,
@@ -994,9 +999,6 @@ export function useRightClickMenu({
         },
     });
     const res = {
-        get isOngoingClose() {
-            return isOngoingClose;
-        },
         get isOpen() {
             return dropdownState.isOpen;
         },
@@ -1009,22 +1011,30 @@ export function useRightClickMenu({
         },
         /**
          * @param {Event} ev
-         * @param {() => void} [onOpenCb]
+         * @returns {Boolean} whether the open of right-click menu happens or not.
          */
-        open(ev, onOpenCb) {
-            if (!rootRef()) {
-                return;
+        open(ev) {
+            if (
+                !rootRef() ||
+                dropdownState.isOpen ||
+                isOngoingClose ||
+                !document.getSelection()?.isCollapsed // some text selected
+            ) {
+                return false;
             }
             rootRef().dataset.rightClicking = true;
             const el = anchor();
             el.style.left = ev.clientX + "px";
             el.style.top = ev.clientY + "px";
             dropdownState.open();
-            onOpenCb?.();
             ev.preventDefault();
+            return true;
         },
     };
     useListener(rootRef, "contextmenu", (ev) => {
+        if (!predicate()) {
+            return;
+        }
         if (onContextMenu) {
             onContextMenu(ev);
         } else {
