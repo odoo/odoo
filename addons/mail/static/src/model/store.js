@@ -41,7 +41,6 @@ export class Store extends Record {
         this._.UPDATE--;
         this._.lowerUpdateDepth();
         if (this._.UPDATE === 0) {
-            const deletingRecordsByLocalId = new Map();
             // pretend an increased update cycle so that nothing in queue creates many small update cycles
             this._.UPDATE++;
             while (
@@ -120,16 +119,8 @@ export class Store extends Record {
                     /** @type {Record} */
                     const record = RD_QUEUE.keys().next().value;
                     RD_QUEUE.delete(record);
-                    for (const [localId, names] of record._.uses.data.entries()) {
+                    for (const [usingRecord, names] of record._.uses.data.entries()) {
                         for (const [name2, count] of names.entries()) {
-                            const existingRecordProxy = toRaw(this.recordByLocalId).get(localId);
-                            const usingRecord =
-                                existingRecordProxy?._raw || deletingRecordsByLocalId.get(localId);
-                            if (!usingRecord) {
-                                // record already deleted, clean inverses
-                                record._.uses.data.delete(localId);
-                                continue;
-                            }
                             for (let c = 0; c < count; c++) {
                                 usingRecord[name2].delete(record);
                             }
@@ -144,7 +135,6 @@ export class Store extends Record {
                             localStorageKeyToRecordFields.delete(key);
                         }
                     }
-                    deletingRecordsByLocalId.set(record.localId, record);
                     this.recordByLocalId.delete(record.localId);
                     record._.isDeleted.set(true);
                     delete record.Model.records[record.localId];
