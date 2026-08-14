@@ -1,8 +1,10 @@
-from odoo.tests.common import TransactionCase, tagged
+from odoo.exceptions import ValidationError
+from odoo.tests.common import tagged
+from . import common
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
-class TestResPartner(TransactionCase):
+class TestResPartner(common.TestArCommon):
 
     def test_l10n_ar_is_company(self):
         """Check that `is_company` is computed correctly for AR and non-AR partners."""
@@ -60,3 +62,7 @@ class TestResPartner(TransactionCase):
         # in a multi company setup make it not so straightforward.
         # For now, the identification_type is ignored for such partners.
         self.assertTrue(foreign_person.is_company)
+
+    def test_l10n_ar_cuit_number(self):
+        with self.assertRaisesRegex(ValidationError, 'Invalid length for "CUIT"'):
+            self.partner_ri.vat = "BE0477472701"
