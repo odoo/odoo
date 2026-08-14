@@ -213,7 +213,6 @@ export class WebsiteBuilder extends Component {
             "PowerboxPlugin",
             "SearchPowerboxPlugin",
             "MediaUrlPastePlugin",
-            "YoutubePlugin",
             "ImagePlugin",
             "AlignPlugin",
             "ListPlugin",
