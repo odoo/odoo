@@ -7,7 +7,7 @@ import { RecordInternal } from "@mail/model/record_internal";
 import { parseRawValue } from "@mail/utils/common/local_storage";
 import { incrementFn } from "@mail/utils/common/signal";
 
-import { computed, htmlEscape, markup, signal, toRaw } from "@odoo/owl";
+import { computed, htmlEscape, markup, signal } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
 import { deserializeDate, deserializeDateTime } from "@web/core/l10n/dates";
@@ -184,16 +184,14 @@ export class StoreInternal extends RecordInternal {
             }
         }
     }
-    /** @param {RecordList<Record>} recordListFullProxy */
-    sortRecordList(recordListFullProxy, func) {
-        const recordList = toRaw(recordListFullProxy)._raw;
-        // sort on copy of list so that reactive observers not triggered while sorting
-        const recordProxies = recordListFullProxy.data.map((record) => record._proxy);
+    /** @param {RecordList<Record>} recordList */
+    sortRecordList(recordList, func) {
+        const recordProxies = recordList._.data.map((record) => record._proxy);
         recordProxies.sort(func);
         const records = recordProxies.map((recordProxy) => recordProxy._raw);
         const hasChanged = recordList._.data.some((record, i) => record !== records[i]);
         if (hasChanged) {
-            recordListFullProxy.data = records;
+            recordList._.data = records;
         }
     }
     /**

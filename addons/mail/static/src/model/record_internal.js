@@ -399,11 +399,11 @@ export class RecordInternal {
             }
         }
         if (isRelation(Model, name)) {
-            const recordListFullProxy = record[name]._proxy;
+            const recordListProxy = record[name]._proxy;
             if (isMany(Model, name)) {
-                return recordListFullProxy;
+                return recordListProxy;
             }
-            return recordListFullProxy[0];
+            return recordListProxy[0];
         }
         const val = (
             record._.fieldsAttrSignal.get(name) ?? record._.ensureFieldSignal(record, name)
