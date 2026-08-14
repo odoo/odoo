@@ -14,25 +14,29 @@
             <field name="email_layout_force_header" eval="True"/>
             <field name="email_layout_force_footer" eval="True"/>
             <field name="body_html" type="html"><t>
-Dear <t t-out="object.name or ''">Marc Demo</t>,<br /><br />
-You have been invited by <t t-out="object.create_uid.name or ''">OdooBot</t> of <t t-out="object.company_id.name or ''">YourCompany</t> to connect on Odoo.
+<t t-set="company_name" t-value="object.company_id.name or ''"/>
+<t t-set="website_url" t-value="object.get_base_url()"/>
+Hi <t t-out="object.name or ''">Marc Demo</t>,<br/><br/>
+<em>This link is valid for <t t-out="(object.env['ir.config_parameter'].sudo().get_int('auth_signup.signup.validity.hours') or 144)//24">link_validity_days</t> days </em><br/>
+<b><t t-out="company_name"/></b> uses <a href="https://odoo.com" t-attf-style="color: {{object.company_id.email_secondary_color or '#875A7B'}};">Odoo</a>
+to run its business. You have been invited by <b><t t-out="object.create_uid.name or ''">OdooBot</t></b> to connect.
+<br/><br/>
+Once accepted, you can reconnect through: <br/>
+<ul>
+    <li>Login: <a t-attf-href="/web/login?login={{ object.email }}" target="_blank" t-out="object.email or ''">mark.brown23@example.com</a></li>
+    <li>Link: <a t-att-href='website_url' t-out="website_url or ''">http://yourcompany.odoo.com</a></li>
+</ul>
+<br/>
 <div style="margin: 16px 0px 16px 0px;">
     <a t-att-href="object.partner_id._get_signup_url()"
         t-attf-style="background-color: {{object.company_id.email_secondary_color or '#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: {{object.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; font-size:13px;">
         Accept invitation
     </a>
 </div>
-<b>  This link will remain valid during <t t-out="(object.env['ir.config_parameter'].sudo().get_int('auth_signup.signup.validity.hours') or 144)//24"></t> days </b> <br/>
-<t t-set="website_url" t-value="object.get_base_url()"></t>
-Your Odoo domain is: <b><a t-att-href='website_url' t-out="website_url or ''">http://yourcompany.odoo.com</a></b><br />
-Your sign in email is: <b><a t-attf-href="/web/login?login={{ object.email }}" target="_blank" t-out="object.email or ''">mark.brown23@example.com</a></b><br /><br />
-Never heard of Odoo? It’s an all-in-one business software loved by 12+ million users. It will considerably improve your experience at work and increase your productivity.
-<br /><br />
-Have a look at the <a href="https://www.odoo.com/page/tour?utm_source=db&amp;utm_medium=auth" t-attf-style="color: {{object.company_id.email_secondary_color or '#875A7B'}};">Odoo Tour</a> to discover the tool.
-<br /><br />
-Enjoy Odoo!<br />
---<br/>The <t t-out="object.company_id.name or ''">YourCompany</t> Team
-            </t></field>
+<br/>
+Enjoy Odoo!<br/><br/>
+--<br/>The <t t-out="company_name"/> Team</t>
+            </field>
             <field name="lang">{{ object.lang }}</field>
             <field name="auto_delete" eval="True"/>
         </record>
