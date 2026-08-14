@@ -264,8 +264,26 @@
                         'ad_storage': 'denied',
                         'ad_user_data': 'denied',
                         'ad_personalization': 'denied',
-                        'analytics_storage': 'denied'
+                        'analytics_storage': 'denied',
                     });
+
+                    function updateConsents(consentState) {
+                        gtag("consent", "update", {
+                            "ad_storage": consentState,
+                            "ad_user_data": consentState,
+                            "ad_personalization": consentState,
+                            "analytics_storage": consentState,
+                        });
+                    }
+                    document.addEventListener("optionalCookiesAccepted", () =&gt; {
+                        updateConsents("granted");
+                    });
+                    document.addEventListener("optionalCookiesDenied", () =&gt; {
+                        updateConsents("denied");
+                    });
+                    <t t-if="website._allConsentsGranted()">
+                        updateConsents("granted");
+                    </t>
                 </script>
             </t>
             <t t-if="is_google_analytics">
@@ -286,27 +304,6 @@
                     })(window,document,'script','dataLayer',<t t-out="json.dumps(website.google_analytics_key)"/>);
                 </script>
                 <!-- End Google Tag Manager -->
-            </t>
-            <t t-if="is_google_analytics or is_google_tag_manager">
-                <script id="update_consent">
-                    function updateConsents(consentState) {
-                        gtag("consent", "update", {
-                            "ad_storage": consentState,
-                            "ad_user_data": consentState,
-                            "ad_personalization": consentState,
-                            "analytics_storage": consentState,
-                        });
-                    }
-                    document.addEventListener("optionalCookiesAccepted", () =&gt; {
-                        updateConsents("granted");
-                    });
-                    document.addEventListener("optionalCookiesDenied", () =&gt; {
-                        updateConsents("denied");
-                    });
-                    <t t-if="website._allConsentsGranted()">
-                        updateConsents("granted");
-                    </t>
-                </script>
             </t>
         </t>
         <t t-if="website.plausible_shared_key and not editable">
