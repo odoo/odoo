@@ -470,25 +470,15 @@ def _load_manifest(module: str, manifest_content: dict) -> dict:
     return manifest
 
 
-def get_manifest(module: str, mod_path: str | None = None) -> Mapping[str, typing.Any]:
+def get_manifest(module: str) -> Mapping[str, typing.Any]:
     """
     Get the module manifest.
 
     :param str module: The name of the module (sale, purchase, ...).
-    :param Optional[str] mod_path: The optional path to the module on
-        the file-system. If not set, it is determined by scanning the
-        addons-paths.
     :returns: The module manifest as a dict or an empty dict
         when the manifest was not found.
     """
-    mod = Manifest.for_addon(module, display_warning=False)
-    if mod_path:
-        mod_path = os.path.realpath(mod_path)
-        if not mod or os.path.realpath(mod.path) != mod_path:
-            mod = Manifest._from_path(mod_path)
-        if mod and mod.name != module:
-            raise ValueError(f"Invalid path for module {module}: {mod_path}")
-    return mod if mod is not None else {}
+    return Manifest.for_addon(module, display_warning=False) or {}
 
 
 def load_openerp_module(module_name: str) -> None:
