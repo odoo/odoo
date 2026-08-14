@@ -1247,8 +1247,10 @@ class ResPartner(models.Model):
         return [{
             'contact_type': self.street,
             'street': self.street,
+            'street2': self.street2,
             'zip': self.zip,
             'city': self.city,
+            'state': self.state_id.code,
             'country': self.country_id.code,
         }]
 
