@@ -15,7 +15,7 @@ from odoo.addons.bus.tests.common import BusResult
 from odoo.addons.mail.models.discuss.discuss_channel import group_avatar
 from odoo.addons.mail.tests.common import MailCommon, mail_new_test_user
 from odoo.addons.mail.tools.discuss import Store
-from odoo.exceptions import ValidationError
+from odoo.exceptions import AccessError, ValidationError
 from odoo.tests import HttpCase, users
 from odoo.tools import BinaryBytes, html_escape, mute_logger
 
@@ -1323,3 +1323,16 @@ class TestChannelInternals(MailCommon, HttpCase):
             "/discuss/channel/notify_typing",
             {"channel_id": 999999999, "is_typing": True},
         )
+
+    @users("employee")
+    def test_only_admin_can_update_default_display_mode(self):
+        meeting = self.env["discuss.channel"]._create_group(
+            users_to=self.user_employee | self.test_user,
+            default_display_mode="video_full_screen",
+        )
+        self.assertEqual(meeting.self_member_id.sudo().channel_role, "owner")
+        self.assertFalse(meeting.with_user(self.test_user).self_member_id.sudo().channel_role)
+        with self.assertRaises(AccessError):
+            meeting.with_user(self.test_user).write({"default_display_mode": False})
+        meeting.with_user(self.user_employee).write({"default_display_mode": False})
+        self.assertFalse(meeting.default_display_mode)

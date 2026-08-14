@@ -65,6 +65,7 @@ export class Store extends BaseStore {
     /** @type {number} */
     internalUserGroupId;
     mt_comment = fields.One("mail.message.subtype");
+    mt_important_notification = fields.One("mail.message.subtype");
     mt_note = fields.One("mail.message.subtype");
     /** @type {boolean} */
     hasMessageTranslationFeature;

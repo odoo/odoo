@@ -184,11 +184,15 @@ class DiscussChannelMember(models.Model):
                  INNER JOIN discuss_channel_member
                          ON discuss_channel_member.channel_id = mail_message.res_id
                       WHERE mail_message.model = 'discuss.channel'
-                        AND mail_message.message_type NOT IN ('notification', 'user_notification')
+                        AND mail_message.message_type != 'user_notification'
+                        AND (
+                            mail_message.message_type != 'notification'
+                            OR mail_message.subtype_id = %(subtype_id)s
+                        )
                         AND mail_message.id >= discuss_channel_member.new_message_separator
                         AND discuss_channel_member.id IN %(ids)s
                    GROUP BY discuss_channel_member.id
-            """, {'ids': tuple(self.ids)})
+            """, {"ids": tuple(self.ids), "subtype_id": self.env["ir.model.data"]._xmlid_to_res_id("mail.mt_important_notification")})
             unread_counter_by_member = {res['id']: res['count'] for res in self.env.cr.dictfetchall()}
             for member in self:
                 member.message_unread_counter = unread_counter_by_member.get(member.id)
@@ -207,12 +211,17 @@ class DiscussChannelMember(models.Model):
                   FROM mail_message
                  WHERE mail_message.model = 'discuss.channel'
                    AND mail_message.res_id = %(channel_id)s
-                   AND mail_message.message_type NOT IN ('notification', 'user_notification')
+                    AND mail_message.message_type != 'user_notification'
+                    AND (
+                        mail_message.message_type != 'notification'
+                        OR mail_message.subtype_id = %(subtype_id)s
+                    )
                    AND mail_message.id >= %(separator)s
             )
             """,
             channel_id=table.channel_id,
             separator=table.new_message_separator,
+            subtype_id=self.env["ir.model.data"]._xmlid_to_res_id("mail.mt_important_notification"),
         )
 
     @api.depends("partner_id.name", "guest_id.name", "channel_id.display_name")

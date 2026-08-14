@@ -4505,8 +4505,10 @@ class MailThread(models.AbstractModel):
         notif_pids_notinbox = []
         for recipient in (r for r in recipients_data if r['active'] and r['id']):
             notif_pids.append(recipient['id'])
-            if recipient['notif'] != 'inbox':
-                notif_pids_notinbox.append(recipient['id'])
+            if recipient["notif"] != "inbox" and message.subtype_id.id != self.env[
+                "ir.model.data"
+            ]._xmlid_to_res_id("mail.mt_important_notification"):
+                notif_pids_notinbox.append(recipient["id"])
         if not notif_pids:
             return []
 

@@ -465,9 +465,6 @@ export class Message extends Record {
                 }
                 return markup`<i class="oi oi oi-fw o-me-0_5" data-icon="oi_view-cohort"></i>${text}`;
             }
-            if (this.notificationType === "call") {
-                return _t("%(caller)s started a call", { caller: this.authorName });
-            }
             if (this.notificationType === "thread_deletion") {
                 const nameEl = createElementFromContent(htmlToTextContentInline(this.body));
                 return _t('%(user)s deleted the thread "%(thread_name)s"', {

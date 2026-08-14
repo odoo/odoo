@@ -38,13 +38,13 @@ class TestUi(HttpCase):
                 )
             )
         group_chat._add_members(guests=guest)
+        self.authenticate("bob", "bob")
+        self.make_jsonrpc_request("/mail/rtc/channel/join_call", {"channel_id": group_chat.id})
         group_chat.message_post(
             body="Hello everyone!",
             message_type="comment",
             subtype_xmlid="mail.mt_comment",
         )
-        self.authenticate("bob", "bob")
-        self.make_jsonrpc_request("/mail/rtc/channel/join_call", {"channel_id": group_chat.id})
         self.start_tour(
             f"/odoo/discuss?active_id=discuss.channel_{group_chat.id}&fullscreen=1",
             "discuss.meeting_view_tour",

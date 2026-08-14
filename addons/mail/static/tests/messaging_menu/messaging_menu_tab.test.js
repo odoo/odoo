@@ -19,7 +19,13 @@ import { describe, expect, mockPermission, test } from "@odoo/hoot";
 import { rightClick } from "@odoo/hoot-dom";
 import { mockDate } from "@odoo/hoot-mock";
 
-import { Command, getService, mockService, serverState } from "@web/../tests/web_test_helpers";
+import {
+    Command,
+    getService,
+    mockService,
+    serverState,
+    withUser,
+} from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -695,4 +701,71 @@ test("push notification request stays on the chat tab regardless of user notific
     await contains(".o-mail-MessagingMenu-tab:has(:text('Notifications'))");
     await openMessagingMenu(MENU_ACTIVE_IDS.NOTIFICATION);
     await contains(".o-mail-MessagingMenuEmpty:has(:text('You're all caught up!'))");
+});
+
+test("convert meeting to group chat (self)", async () => {
+    const pyEnv = await startServer();
+    const channelIds = pyEnv["discuss.channel"].create([
+        {
+            channel_member_ids: [
+                Command.create({ partner_id: serverState.partnerId, channel_role: "owner" }),
+            ],
+            channel_type: "group",
+            default_display_mode: "video_full_screen",
+            name: "Meeting 1",
+        },
+        {
+            channel_member_ids: [
+                Command.create({ partner_id: serverState.partnerId, channel_role: "owner" }),
+            ],
+            channel_type: "group",
+            default_display_mode: "video_full_screen",
+            name: "Meeting 2",
+        },
+    ]);
+    await start();
+    await openDiscuss(channelIds[0]);
+    await contains(".o-mail-MessagingMenu-tab:has(:text('Meetings')).active");
+    await contains(".o-mail-MessagingMenuItem", { count: 2 });
+    await contains(".o-mail-MessagingMenuItem .o-active:has(:text('Meeting 1'))");
+    await click(".o-mail-MessagingMenuItem:has(:text('Meeting 2')) [title='Chat Actions']");
+    await click(".o-dropdown-item:text('Convert to Chat')");
+    await contains(".o-mail-MessagingMenuItem");
+    await click(".o-mail-MessagingMenuItem:has(:text('Meeting 1')) [title='Chat Actions']");
+    await click(".o-dropdown-item:text('Convert to Chat')");
+    await contains(".o-mail-MessagingMenu-tab:has(:text('Chats')).active");
+    await contains(".o-mail-MessagingMenuItem", { count: 2 });
+    await contains(".o-mail-MessagingMenuItem:has(:text('Meeting 1'))");
+    await contains(
+        `.o-mail-NotificationMessage:has(:text('${serverState.partnerName} converted this meeting into a group chat'))`
+    );
+});
+
+test("sync the meeting when another member converts it to a group chat", async () => {
+    const pyEnv = await startServer();
+    const userId = pyEnv["res.users"].create({ name: "Alice", im_status: "online" });
+    const partnerId = pyEnv["res.partner"].create({ name: "Alice", user_ids: [userId] });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId, channel_role: "owner" }),
+        ],
+        channel_type: "group",
+        default_display_mode: "video_full_screen",
+        name: "Meeting 1",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-MessagingMenu-tab:has(:text('Meetings')).active");
+    await contains(".o-mail-MessagingMenuItem .o-active:has(:text('Meeting 1'))");
+    await withUser(userId, () =>
+        getService("mail.store").fetchStoreData("/discuss/channel/meeting_to_group_chat", {
+            channel_id: channelId,
+        })
+    );
+    await contains(".o-mail-MessagingMenu-tab:has(:text('Chats')).active");
+    await contains(".o-mail-MessagingMenuItem .o-active:has(:text('Meeting 1'))");
+    await contains(
+        "   .o-mail-NotificationMessage:has(:text('Alice converted this meeting into a group chat'))"
+    );
 });
