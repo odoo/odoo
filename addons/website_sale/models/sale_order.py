@@ -1279,6 +1279,20 @@ class SaleOrder(models.Model):
         """
         self.ensure_one()
 
+        # Check that the cart does not contain products forbidden to be sold on the website.
+        if prevented_sale_lines := self._get_prevented_sale_lines():
+            # During checkout, the pricelist might change once the customer fills in their address.
+            prevented_sale_lines._add_danger_alert(
+                self.env._("This product is not available for purchase in your country.")
+            )
+            self._add_blocking_alert(
+                self.env._(
+                    "Some products in your cart are not available for purchase in your country."
+                    " Please remove them or contact us."
+                )
+            )
+            return False
+
         if not self._has_deliverable_products():
             return bool(self.order_line)  # Empty cart => block the customer
 
@@ -1337,6 +1351,23 @@ class SaleOrder(models.Model):
             return False
 
         return True
+
+    def _get_prevented_sale_lines(self):
+        """Return the cart lines the website forbids to sell.
+
+        :rtype: sale.order.line
+        """
+        self.ensure_one()
+        if not self.website_id.prevent_sale:
+            return self.env["sale.order.line"]
+
+        def online_sale_prevented(line):
+            try:
+                return line._is_sellable() and line._check_validity() is not None
+            except UserError:
+                return True
+
+        return self.order_line.filtered(online_sale_prevented)
 
     def _is_commitment_date_valid(self):
         """Whether the commitment date is still up to date with the carrier constraints."""
