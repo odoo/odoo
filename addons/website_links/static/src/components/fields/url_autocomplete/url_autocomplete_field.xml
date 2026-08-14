@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <t t-name="website_links.UrlAutoCompleteField">
+        <div class="o_url_selector">
+            <AutoComplete
+                id="this.props.id"
+                input="this.inputRef"
+                value="this.state.value"
+                sources="this.sources"
+                placeholder="this.props.placeholder"
+                autoSelect="this.props.autoSelect"
+                autofocus="this.props.autofocus"
+                onChange="this.onChange.bind(this)"
+            />
+            <span class="o_dropdown_button" />
+        </div>
+    </t>
+</templates>
