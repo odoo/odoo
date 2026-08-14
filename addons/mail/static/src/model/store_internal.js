@@ -191,7 +191,7 @@ export class StoreInternal extends RecordInternal {
         const recordProxies = recordListFullProxy.data.map((record) => record._proxy);
         recordProxies.sort(func);
         const records = recordProxies.map((recordProxy) => recordProxy._raw);
-        const hasChanged = recordList.data.some((record, i) => record !== records[i]);
+        const hasChanged = recordList._.data.some((record, i) => record !== records[i]);
         if (hasChanged) {
             recordListFullProxy.data = records;
         }
@@ -317,7 +317,7 @@ export class StoreInternal extends RecordInternal {
     updateRelationMany(recordList, value) {
         for (const [cmd, cmdData] of value) {
             if (cmd === "REPLACE") {
-                recordList._.assign(recordList, cmdData);
+                recordList._.assign(cmdData);
                 continue;
             }
             for (const item of cmdData) {
@@ -326,13 +326,13 @@ export class StoreInternal extends RecordInternal {
                         recordList.add(item);
                         break;
                     case "ADD.noinv":
-                        recordList._.addNoinv(recordList, item);
+                        recordList._.addNoinv(item);
                         break;
                     case "DELETE":
                         recordList.delete(item);
                         break;
                     case "DELETE.noinv":
-                        recordList._.deleteNoinv(recordList, item);
+                        recordList._.deleteNoinv(item);
                         break;
                 }
             }
@@ -349,9 +349,9 @@ export class StoreInternal extends RecordInternal {
             if (["ADD", "REPLACE"].includes(cmd)) {
                 recordList.add(cmdData);
             } else if (cmd === "ADD.noinv") {
-                recordList._.addNoinv(recordList, cmdData);
+                recordList._.addNoinv(cmdData);
             } else if (cmd === "DELETE.noinv") {
-                recordList._.deleteNoinv(recordList, cmdData);
+                recordList._.deleteNoinv(cmdData);
             } else {
                 recordList.delete(cmdData);
             }
