@@ -45,8 +45,10 @@ class Partner(models.Model):
         pstl_addr = {
             'contact_type': 'employee',
             'street': employee_id.private_street,
+            'street2': employee_id.private_street2,
             'zip': employee_id.private_zip,
             'city': employee_id.private_city,
+            'state': employee_id.private_state_id.code,
             'country': employee_id.private_country_id.code,
         }
         return [pstl_addr] + super()._get_all_addr()
