@@ -124,7 +124,7 @@ export class Store extends Record {
                         ...record.Model._.fieldsMany.keys(),
                     ]) {
                         const recordList = record[name];
-                        for (const usedRecord of recordList.data) {
+                        for (const usedRecord of recordList._.data) {
                             usedRecord._.uses.delete(recordList);
                         }
                         recordList._proxy.data.length = 0;
