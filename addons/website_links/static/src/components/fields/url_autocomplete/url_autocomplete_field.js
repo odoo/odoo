@@ -70,13 +70,15 @@ export class UrlAutoCompleteField extends CharField {
         const val = browser.location.origin + value;
         this.update(val);
     }
-    onInput({ inputValue }) {
-        if (!this.state.value || this.state.value !== inputValue) {
+    // onInput({ inputValue }) {
+    //     if (!this.state.value || this.state.value !== inputValue) {
+    //         this.update(inputValue);
+    //     }
+    // }
+    onChange({ inputValue, isOptionSelected }) {
+        if (isOptionSelected) {
             this.update(inputValue);
         }
-    }
-    onChange({ inputValue }) {
-        this.update(inputValue);
     }
 }
 
