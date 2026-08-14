@@ -5,7 +5,6 @@ import {
     markRaw,
     markup,
     shallowEqual,
-    toRaw,
     untrack,
 } from "@odoo/owl";
 import {
@@ -60,8 +59,8 @@ export class Record {
         return this.store.MAKE_UPDATE(...arguments);
     }
     static get(data) {
-        const Model = toRaw(this);
-        return this.records[Model.localId(data)];
+        const Model = this;
+        return Model.records[Model.localId(data)];
     }
     /**
      * Gets a record by id, fetching it from the server if it doesn't exist in the store or if some
@@ -94,7 +93,7 @@ export class Record {
         }
     }
     static localId(data) {
-        const Model = toRaw(this);
+        const Model = this;
         let idStr;
         if (Model.singleton) {
             return Model.getName();
@@ -107,7 +106,7 @@ export class Record {
         return `${Model.getName()},${idStr}`;
     }
     static _localId(expr, data, { brackets = false } = {}) {
-        const Model = toRaw(this);
+        const Model = this;
         if (!Array.isArray(expr)) {
             if (Model._.fields.get(expr)) {
                 if (Model._.fieldsMany.get(expr)) {
@@ -145,7 +144,7 @@ export class Record {
         return res;
     }
     static _retrieveIdFromData(data) {
-        const Model = toRaw(this);
+        const Model = this;
         if (Model.singleton || Model.id === undefined) {
             return {};
         }
@@ -189,11 +188,11 @@ export class Record {
      * @returns {Record}
      */
     static new(data, ids) {
-        const Model = toRaw(this);
+        const Model = this;
         const store = Model._rawStore;
         return store.MAKE_UPDATE(function RecordNew() {
             const recordProxy = new Model();
-            const record = toRaw(recordProxy)._raw;
+            const record = recordProxy._raw;
             Object.assign(record._, { localId: Model.localId(ids) });
             for (const name of Model._.fields.keys()) {
                 record._.prepareField(record, name, recordProxy);
@@ -224,8 +223,7 @@ export class Record {
     }
     /** @returns {Record|Record[]} */
     static insert(data, options = {}) {
-        const ModelFullProxy = this;
-        const Model = toRaw(ModelFullProxy);
+        const Model = this;
         const store = Model._rawStore;
         return store.MAKE_UPDATE(function RecordInsert() {
             const isMulti = Array.isArray(data);
@@ -233,7 +231,7 @@ export class Record {
                 data = [data];
             }
             const res = data.map(function RecordInsertMap(d) {
-                return Model._insert.call(ModelFullProxy, d, options);
+                return Model._insert(d, options);
             });
             if (!isMulti) {
                 return res[0];
@@ -243,17 +241,15 @@ export class Record {
     }
     /** @returns {Record} */
     static _insert(data) {
-        const ModelFullProxy = this;
-        const Model = toRaw(ModelFullProxy);
-        const recordFullProxy = Model.preinsert.call(ModelFullProxy, data);
-        const record = toRaw(recordFullProxy)._raw;
+        const Model = this;
+        const recordProxy = Model.preinsert(data);
+        const record = recordProxy._raw;
         record.update.call(record._proxy, data);
-        return recordFullProxy;
+        return recordProxy;
     }
     /** @returns {Record} */
     static preinsert(data) {
-        const ModelFullProxy = this;
-        const Model = toRaw(ModelFullProxy);
+        const Model = this;
         const ids = Model._retrieveIdFromData(data);
         if (!Model.singleton) {
             for (const name in ids) {
@@ -271,16 +267,16 @@ export class Record {
                 }
             }
         }
-        return Model.get.call(ModelFullProxy, data) ?? Model.new(data, ids);
+        return Model.get(data) ?? Model.new(data, ids);
     }
 
     /** @returns {import("models").Store} */
     get store() {
-        return toRaw(this)._raw.Model._rawStore._proxy;
+        return this._raw.Model._rawStore._proxy;
     }
     /** @returns {import("models").Store} */
     get _rawStore() {
-        return toRaw(this)._raw.Model._rawStore;
+        return this._raw.Model._rawStore;
     }
     /**
      * Technical attribute, contains the Model entry in the store.
@@ -299,19 +295,17 @@ export class Record {
     Model;
     /** @type {string} */
     get localId() {
-        return toRaw(this)._.localId;
+        return this._.localId;
     }
     /** @type {this} */
     _raw;
-    /** @type {this} */
-    _proxyInternal;
     /** @type {this} */
     _proxy;
 
     setup() {}
 
     update(data) {
-        const record = toRaw(this)._raw;
+        const record = this._raw;
         const store = record._rawStore;
         return store.MAKE_UPDATE(function recordUpdate() {
             if (typeof data === "object" && data !== null) {
@@ -329,7 +323,7 @@ export class Record {
     }
 
     delete() {
-        const record = toRaw(this)._raw;
+        const record = this._raw;
         if (!record.exists()) {
             return;
         }
@@ -338,14 +332,14 @@ export class Record {
             // delete records inheriting the current record before deleting the current record
             for (const fieldName of record.Model._.inheritsInverseFields) {
                 if (record.Model._.fieldsMany.get(fieldName)) {
-                    const dependentRecordListProxy = record._proxyInternal[fieldName];
+                    const dependentRecordListProxy = record._proxy[fieldName];
                     for (const dependentRecordProxy of dependentRecordListProxy) {
-                        store._.ADD_QUEUE("delete", toRaw(dependentRecordProxy)._raw);
+                        store._.ADD_QUEUE("delete", dependentRecordProxy._raw);
                     }
                 } else {
-                    const dependentRecordProxy = record._proxyInternal[fieldName];
+                    const dependentRecordProxy = record._proxy[fieldName];
                     if (dependentRecordProxy) {
-                        store._.ADD_QUEUE("delete", toRaw(dependentRecordProxy)._raw);
+                        store._.ADD_QUEUE("delete", dependentRecordProxy._raw);
                     }
                 }
             }
@@ -359,7 +353,7 @@ export class Record {
 
     /** @param {Record} record */
     eq(record) {
-        return toRaw(this)._raw === toRaw(record)?._raw;
+        return this._raw === record?._raw;
     }
 
     /** @param {Record} record */
@@ -372,7 +366,7 @@ export class Record {
         if (!collection) {
             return false;
         }
-        return collection.some((record) => toRaw(record)._raw.eq(this));
+        return collection.some((record) => record._raw.eq(this));
     }
 
     /** @param {Record[]|RecordList} collection */
@@ -503,7 +497,7 @@ export class Record {
         ongoing.seenRecords.add(this.localId);
 
         const recordProxy = this;
-        const record = toRaw(recordProxy)._raw;
+        const record = recordProxy._raw;
         const Model = record.Model;
         const data = { ...recordProxy };
         for (const name of Model._.fields.keys()) {
@@ -513,18 +507,18 @@ export class Record {
             }
             const fullFieldName = prefix ? `${prefix}.${name}` : name;
             if (isMany(Model, name)) {
-                data[name] = record._proxyInternal[name].map((recordProxy) => {
-                    const record = toRaw(recordProxy)._raw;
+                data[name] = record._proxy[name].map((recordProxy) => {
+                    const record = recordProxy._raw;
                     return record._toDataRelationalRecord.call(
-                        record._proxyInternal,
+                        record._proxy,
                         ongoing,
                         fullFieldName
                     );
                 });
             } else if (isOne(Model, name)) {
-                const otherRecord = toRaw(record._proxyInternal[name])?._raw;
+                const otherRecord = record._proxy[name]?._raw;
                 data[name] = otherRecord?._toDataRelationalRecord.call(
-                    otherRecord._proxyInternal,
+                    otherRecord._proxy,
                     ongoing,
                     fullFieldName
                 );

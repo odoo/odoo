@@ -11,16 +11,7 @@ import {
     untrackFunctions,
 } from "./misc";
 import { RecordList } from "./record_list";
-import {
-    Scope,
-    computed,
-    immediateEffect,
-    markRaw,
-    proxy,
-    signal,
-    toRaw,
-    untrack,
-} from "@odoo/owl";
+import { Scope, computed, immediateEffect, markRaw, proxy, signal, untrack } from "@odoo/owl";
 import { RecordUses } from "./record_uses";
 import { LocalStorageEntry } from "@mail/utils/common/local_storage";
 
@@ -236,7 +227,7 @@ export class RecordInternal {
      * @param {Record} recordProxy
      */
     prepareField(record, fieldName, recordProxy) {
-        const Model = toRaw(record).Model;
+        const Model = record.Model;
         if (isRelation(Model, fieldName)) {
             // Relational fields contain symbols for detection in original class.
             // This constructor is called on genuine records:
@@ -300,7 +291,7 @@ export class RecordInternal {
      * @param {Record} recordProxy
      */
     prepareFieldOnUpdate(record, fieldName, recordProxy) {
-        const Model = toRaw(record).Model;
+        const Model = record.Model;
         const store = Model.store;
         const fn = store._onChange(recordProxy, fieldName, (obs) => {
             if (store._.UPDATE !== 0) {
@@ -320,8 +311,8 @@ export class RecordInternal {
         const Model = record.Model;
         if (Model._.parentFields.has(name)) {
             const parentFieldName = Model._.parentFields.get(name);
-            const parentRecordProxyInternal = record._proxyInternal[parentFieldName];
-            return Reflect.deleteProperty(parentRecordProxyInternal, name);
+            const parentRecordProxy = record._proxy[parentFieldName];
+            return Reflect.deleteProperty(parentRecordProxy, name);
         }
         return Model._rawStore.MAKE_UPDATE(function recordDeleteProperty() {
             if (isRelation(Model, name)) {
@@ -337,22 +328,22 @@ export class RecordInternal {
     /**
      * @param {Record} record
      * @param {string} name
-     * @param {Record} recordFullProxy
+     * @param {Record} recordProxy
      */
-    proxyGet(record, name, recordFullProxy) {
+    proxyGet(record, name, recordProxy) {
         const Model = record.Model;
         const Models = record._rawStore.Models;
         if (Model._.parentFields.has(name)) {
             const parentFieldName = Model._.parentFields.get(name);
-            const parentRecordFullProxy = recordFullProxy[parentFieldName];
-            if (!parentRecordFullProxy) {
+            const parentRecordProxy = recordProxy[parentFieldName];
+            if (!parentRecordProxy) {
                 const ParentModel = Models[Model._.fieldsTargetModel.get(parentFieldName)];
                 if (isMany(ParentModel, name)) {
                     return [];
                 }
                 return;
             }
-            return Reflect.get(parentRecordFullProxy, name);
+            return Reflect.get(parentRecordProxy, name);
         }
         if (!Model._.fields.get(name)) {
             const sig = record._.fieldsAttrSignal.get(name);
@@ -373,7 +364,7 @@ export class RecordInternal {
             }
             // a model is a class, so a function: binding it would hide its statics
             if (typeof res === "function" && !res._) {
-                res = res.bind(recordFullProxy);
+                res = res.bind(recordProxy);
             }
             return res;
         }
@@ -434,8 +425,8 @@ export class RecordInternal {
         const store = record._rawStore;
         if (Model._.parentFields.has(name)) {
             const parentFieldName = Model._.parentFields.get(name);
-            const parentRecordProxyInternal = record._proxyInternal[parentFieldName];
-            return Reflect.set(parentRecordProxyInternal, name, val);
+            const parentRecordProxy = record._proxy[parentFieldName];
+            return Reflect.set(parentRecordProxy, name, val);
         }
         return store.MAKE_UPDATE(function recordSet() {
             store._.updateFields(record, { [name]: val });
@@ -520,10 +511,6 @@ export class RecordInternal {
         const recordProxy = record._proxy;
         untrack(() => {
             try {
-                /**
-                 * Forward internal proxy for performance as onUpdate does not
-                 * need reactive (observe is called separately).
-                 */
                 Model._.fieldsOnUpdate
                     .get(fieldName)
                     .forEach((fn) => fn.call(recordProxy, recordProxy[fieldName]));

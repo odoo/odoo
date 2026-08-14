@@ -125,13 +125,9 @@ export class Store extends Record {
                     RD_QUEUE.delete(record);
                     for (const [localId, names] of record._.uses.data.entries()) {
                         for (const [name2, count] of names.entries()) {
-                            const existingRecordProxyInternal = toRaw(this.recordByLocalId).get(
-                                localId
-                            );
+                            const existingRecordProxy = toRaw(this.recordByLocalId).get(localId);
                             const usingRecord =
-                                (existingRecordProxyInternal &&
-                                    toRaw(existingRecordProxyInternal)?._raw) ||
-                                deletingRecordsByLocalId.get(localId);
+                                existingRecordProxy?._raw || deletingRecordsByLocalId.get(localId);
                             if (!usingRecord) {
                                 // record already deleted, clean inverses
                                 record._.uses.data.delete(localId);
@@ -153,8 +149,8 @@ export class Store extends Record {
                     }
                     deletingRecordsByLocalId.set(record.localId, record);
                     this.recordByLocalId.delete(record.localId);
-                    toRaw(record)._.isDeleted.set(true);
-                    this._.ADD_QUEUE("hard_delete", toRaw(record));
+                    record._.isDeleted.set(true);
+                    this._.ADD_QUEUE("hard_delete", record);
                 }
                 while (RHD_QUEUE.size > 0) {
                     // effectively delete the record

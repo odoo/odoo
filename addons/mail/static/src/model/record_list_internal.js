@@ -1,6 +1,6 @@
 import { isRecord, untrackFunctions } from "./misc";
 
-import { markRaw, toRaw } from "@odoo/owl";
+import { markRaw } from "@odoo/owl";
 
 /** @typedef {import("./record").Record} Record */
 /** @typedef {import("./record_list").RecordList} RecordList */
@@ -85,7 +85,7 @@ export class RecordListInternal {
             const vals = [...collection];
             const oldRecords = recordList._proxyInternal.slice
                 .call(recordList._proxy)
-                .map((recordProxy) => toRaw(recordProxy)._raw);
+                .map((recordProxy) => recordProxy._raw);
             const newRecords = vals.map((val) =>
                 self.insert(recordList, val, function recordListAssignInsert(record) {
                     if (record.notIn(oldRecords)) {
@@ -186,7 +186,7 @@ export class RecordListInternal {
         } else {
             newRecordProxy = val;
         }
-        const newRecord = toRaw(newRecordProxy)._raw;
+        const newRecord = newRecordProxy._raw;
         fn?.(newRecord);
         if (!isRecord(val)) {
             // was preinserted, fully insert now

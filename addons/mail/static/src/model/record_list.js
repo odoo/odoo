@@ -77,10 +77,8 @@ export class RecordList extends Array {
                             recordList,
                             val,
                             function recordListSet_Insert(newRecord) {
-                                const oldRecord = toRaw(
-                                    toRaw(recordList._store.recordByLocalId).get(
-                                        recordList.data[index]
-                                    )
+                                const oldRecord = toRaw(recordList._store.recordByLocalId).get(
+                                    recordList.data[index]
                                 )._raw;
                                 recordListProxy.data[index] = newRecord?.localId;
                                 if (oldRecord && oldRecord.notEq(newRecord)) {
@@ -190,7 +188,7 @@ export class RecordList extends Array {
             if (!recordProxy) {
                 return;
             }
-            const record = toRaw(recordProxy)._raw;
+            const record = recordProxy._raw;
             record._.uses.delete(recordList);
             store._.ADD_QUEUE("onDelete", recordList._.owner, recordList._.name, record);
             const inverse = recordList._.getInverse();
@@ -224,7 +222,7 @@ export class RecordList extends Array {
     /** @param {R} recordProxy */
     indexOf(recordProxy) {
         const recordListFullProxy = this;
-        return recordListFullProxy.data.indexOf(toRaw(recordProxy)?._raw.localId);
+        return recordListFullProxy.data.indexOf(recordProxy?._raw.localId);
     }
     /**
      * @param {number} [start]
@@ -238,13 +236,13 @@ export class RecordList extends Array {
         return store.MAKE_UPDATE(function recordListSplice() {
             const oldRecordLocalIds = recordList.data.slice(start, start + deleteCount);
             const oldRecords = oldRecordLocalIds.map(
-                (localId) => toRaw(toRaw(recordList._store.recordByLocalId).get(localId))._raw
+                (localId) => toRaw(recordList._store.recordByLocalId).get(localId)._raw
             );
             const list = recordListFullProxy.data.slice(); // splice on copy of list so that reactive observers not triggered while splicing
             list.splice(
                 start,
                 deleteCount,
-                ...newRecordsProxy.map((newRecordProxy) => toRaw(newRecordProxy)._raw.localId)
+                ...newRecordsProxy.map((newRecordProxy) => newRecordProxy._raw.localId)
             );
             if (recordList._.isOne() && start === 0 && deleteCount === 1) {
                 // avoid replacing whole list, to avoid triggering observers too much
@@ -268,7 +266,7 @@ export class RecordList extends Array {
                 }
             }
             for (const newRecordProxy of newRecordsProxy) {
-                const newRecord = toRaw(newRecordProxy)._raw;
+                const newRecord = newRecordProxy._raw;
                 newRecord._.uses.add(recordList);
                 store._.ADD_QUEUE("onAdd", recordList._.owner, recordList._.name, newRecord);
                 if (inverse) {
@@ -304,7 +302,7 @@ export class RecordList extends Array {
         return store.MAKE_UPDATE(function recordListAdd() {
             if (recordList._.isOne()) {
                 const last = records.at(-1);
-                if (isRecord(last) && recordList.data.includes(toRaw(last)._raw.localId)) {
+                if (isRecord(last) && recordList.data.includes(last._raw.localId)) {
                     return last;
                 }
                 return recordList._.insert(
