@@ -9,6 +9,7 @@ from markupsafe import Markup
 
 from odoo import _, api, exceptions, fields, models
 from odoo.http.session import SESSION_LIFETIME
+from odoo.tools import SQL
 
 _logger = logging.getLogger(__name__)
 
@@ -372,24 +373,23 @@ class GamificationChallenge(models.Model):
             for line in challenge.line_ids:
                 # there is potentially a lot of users
                 # detect the ones with no goal linked to this line
-                date_clause = ""
-                query_params = [line.id]
+                date_clause = SQL()
                 if start_date:
-                    date_clause += " AND g.start_date = %s"
-                    query_params.append(start_date)
+                    date_clause = SQL("%s AND g.start_date = %s", date_clause, start_date)
                 if end_date:
-                    date_clause += " AND g.end_date = %s"
-                    query_params.append(end_date)
+                    date_clause = SQL("%s AND g.end_date = %s", date_clause, end_date)
 
-                query = """SELECT u.id AS user_id
+                query = SQL("""SELECT u.id AS user_id
                              FROM res_users u
                         LEFT JOIN gamification_goal g
                                ON (u.id = g.user_id)
                             WHERE line_id = %s
-                              {date_clause}
-                        """.format(date_clause=date_clause)
-                self.env.cr.execute(query, query_params)
-                user_with_goal_ids = {it for [it] in self.env.cr._obj}
+                              %s
+                        """,
+                        line.id,
+                        date_clause,
+                )
+                user_with_goal_ids = {it for [it] in self.env.execute_query(query)}
 
                 participant_user_ids = set(challenge.user_ids.ids)
                 user_squating_challenge_ids = user_with_goal_ids - participant_user_ids

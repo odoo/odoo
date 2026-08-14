@@ -165,8 +165,7 @@ class PrivacyLookupWizard(models.TransientModel):
         self.ensure_one()
         query = self._get_query()
         self.env.flush_all()
-        self.env.cr.execute(query)
-        results = self.env.cr.dictfetchall()
+        results = self.env.execute_query_dict(query)
         self.line_ids = [(5, 0, 0)] + [(0, 0, reference) for reference in results]
         return self.action_open_lines()
 

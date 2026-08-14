@@ -1,5 +1,6 @@
-from odoo import api, SUPERUSER_ID
-from odoo.tools import sql
+from odoo import SUPERUSER_ID, api
+from odoo.tools import SQL, split_every, sql
+
 
 def migrate(cr, version):
     env = api.Environment(cr, SUPERUSER_ID, {})
@@ -12,12 +13,12 @@ def migrate(cr, version):
         if col not in ['id', 'carryover_origin_report_line_id', 'target_report_expression_id']
     ]
 
-    cr.execute(f"""
+    cr.execute(SQL("""
         SELECT report.id AS report_id,
                expression.id AS expression_id,
                report_line.code,
                external_value.carryover_origin_report_line_id,
-               {', '.join(f'external_value.{col}' for col in external_value_cols)}
+               %s
           FROM account_report AS report
           JOIN account_report_line AS report_line ON report.id = report_line.report_id
           JOIN account_report_expression AS expression ON report_line.id = expression.report_line_id
@@ -28,8 +29,12 @@ def migrate(cr, version):
                    AND external_value.company_id IS NOT NULL
                )
             OR report.id = %s
-      ORDER BY expression_id;
-    """, (vat_report_id, monthly_vat_report_id))
+      ORDER BY expression_id
+        """,
+        SQL(', ').join(SQL.identifier('external_value', col) for col in external_value_cols),
+        vat_report_id,
+        monthly_vat_report_id,
+    ))
     report_info = cr.fetchall()
 
     code2expression_id = {
@@ -48,25 +53,27 @@ def migrate(cr, version):
                                                               AND new_report_line.report_id = %s;
     """, (vat_report_id, monthly_vat_report_id))
     carryover_origin_info = cr.fetchall()
-    old2new_origin = {old_origin: new_origin for old_origin, new_origin in carryover_origin_info}
+    old2new_origin = dict(carryover_origin_info)
     data_to_insert = [
         (code2expression_id[report_line_code], old2new_origin.get(carryover_origin_report_line_id, carryover_origin_report_line_id), *other_external_vals)
         for report_id, _, report_line_code, carryover_origin_report_line_id, *other_external_vals in report_info
         if report_id == vat_report_id
     ]
 
-    insert_query = f"""
+    for sub_data in split_every(cr.IN_MAX, data_to_insert, list):
+        cr.execute(SQL("""
         INSERT INTO account_report_external_value (
                         target_report_expression_id,
                         carryover_origin_report_line_id,
-                        {', '.join(col for col in external_value_cols)}
+                        %s
                     )
-             VALUES (%s, %s, {', '.join('%s' for _ in external_value_cols)})
+            SELECT *
+            FROM UNNEST(%s)
         ON CONFLICT DO NOTHING
-    """
-
-    if data_to_insert:
-        cr.executemany(insert_query, data_to_insert)
+            """,
+            SQL(", ").join(SQL.identifier(col) for col in external_value_cols),
+            SQL(", ").join(map(list, zip(*sub_data))),
+        ))
 
     # Archive the old report
     cr.execute("""
