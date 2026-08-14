@@ -242,7 +242,8 @@ class TestUblImportBis3InvoiceBERetrieveTax(TestUblImportBis3InvoiceBE):
         )
 
     def test_partial_import_tax_included_invoice(self):
-        tax_21 = self.percent_tax(21.0, price_include_override='tax_included')
+        tax_21_excl = self.percent_tax(21.0)
+        self.percent_tax(21.0, price_include_override='tax_included')
 
         invoice = self._import_invoice_as_attachment_on(
             test_name='test_partial_import_tax_manual_tax_amounts',
@@ -254,15 +255,15 @@ class TestUblImportBis3InvoiceBERetrieveTax(TestUblImportBis3InvoiceBE):
             [
                 {
                     'quantity': 1.0,
-                    'price_unit': 605.0,
+                    'price_unit': 500.0,
                     'discount': 0.0,
-                    'tax_ids': tax_21.ids,
+                    'tax_ids': tax_21_excl.ids,
                 },
                 {
                     'quantity': 5.0,
-                    'price_unit': 121.0,
+                    'price_unit': 100.0,
                     'discount': 0.0,
-                    'tax_ids': tax_21.ids,
+                    'tax_ids': tax_21_excl.ids,
                 },
             ],
         )
