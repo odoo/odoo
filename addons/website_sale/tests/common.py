@@ -82,6 +82,7 @@ class WebsiteSaleCommon(DeliveryCommon):
                 Command.create({"product_id": cls.service_product.id, "product_uom_qty": 12.5}),
             ],
         })
+        cls.assertNotEqual(cls, cls.cart.order_line[0].price_unit, 0)
 
         cls.country_be = cls.quick_ref("base.be")
         cls.country_us = cls.quick_ref("base.us")
