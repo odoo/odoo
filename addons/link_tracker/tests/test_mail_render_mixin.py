@@ -20,7 +20,7 @@ class TestMailRenderMixin(common.HttpCase):
     @mute_logger("odoo.tests.common.requests")
     def test_shorten_links(self):
         test_links = [
-            '<a href="https://gitlab.com" title="title" fake="fake">test_label</a>',
+            '<a href="https://github.com" title="title" fake="fake">test_label</a>',
             '<a href="https://test_542152qsdqsd.com"/>',
             """<a href="https://third_test_54212.com">
                     <img src="imagesrc"/>
@@ -48,7 +48,7 @@ class TestMailRenderMixin(common.HttpCase):
             self.env["mail.render.mixin"]._shorten_links("".join(test_links), {})
 
         trackers_to_find = [
-            [("url", "=", "https://gitlab.com"), ("label", "=", "test_label")],
+            [("url", "=", "https://github.com"), ("label", "=", "test_label")],
             [("url", "=", "https://test_542152qsdqsd.com")],
             [("url", "=", "https://third_test_54212.com"), ("label", "=", "[media] imagesrc")],
             [("url", "=", "https://fourthtesthasnolabel.com"), ("label", "=", False)],
