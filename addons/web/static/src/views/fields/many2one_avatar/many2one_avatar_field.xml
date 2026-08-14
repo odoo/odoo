@@ -3,11 +3,10 @@
 
     <t t-name="web.Many2OneAvatarField">
         <t t-set="relation" t-value="this.props.record.fields[this.props.name].relation"/>
-        <t t-set="value" t-value="this.props.record.data[this.props.name]"/>
         <div class="d-flex align-items-center gap-1">
             <span class="o_avatar o_m2o_avatar">
-                <t t-if="value">
-                    <img class="rounded" t-attf-src="/web/image/{{relation}}/{{value.id}}/avatar_128?unique={{value.write_date?.toMillis()}}"/>
+                <t t-if="this.value">
+                    <img class="rounded" t-attf-src="/web/image/{{relation}}/{{this.value.id}}/avatar_128?unique={{this.uniqueId}}"/>
                 </t>
                 <t t-elif="!this.props.readonly">
                     <span class="o_avatar_empty o_m2o_avatar_empty"/>
