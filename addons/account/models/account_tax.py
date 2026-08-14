@@ -5104,6 +5104,8 @@ class AccountTax(models.Model):
             ):
                 tax_domain &= Domain('ubl_cii_tax_category_code', 'in', (ubl_cii_tax_category_code, False))
                 orders.insert(0, 'ubl_cii_tax_category_code')
+            if extra_domain := tax_values.get("extra_domain"):
+                tax_domain &= Domain(extra_domain)
 
             for plan in search_plan:
                 tax = None
