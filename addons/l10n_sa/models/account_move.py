@@ -115,3 +115,8 @@ class AccountMove(models.Model):
             if self.partner_id.commercial_partner_id
             else self.partner_id.company_type == "person"
         )
+
+    def _l10n_sa_is_legal(self):
+        # Check if the document is legal in Saudi
+        self.ensure_one()
+        return self.company_id.country_id.code == 'SA' and self.state == 'posted' and self.l10n_sa_qr_code_str

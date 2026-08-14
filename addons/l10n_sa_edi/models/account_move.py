@@ -264,6 +264,16 @@ class AccountMove(models.Model):
         self.ensure_one()
         return self.is_invoice() and self.l10n_sa_confirmation_datetime and self.country_code == 'SA'
 
+    def _l10n_sa_is_legal(self):
+        # Extends l10n_sa
+        # Accounts for both ZATCA phases
+        # Phase 1: no documents
+        # Phase 2: checks the state of documents
+        self.ensure_one()
+        result = super()._l10n_sa_is_legal()
+        zatca_document = self.edi_document_ids.filtered(lambda d: d.edi_format_id.code == 'sa_zatca')
+        return result or (self.company_id.country_id.code == 'SA' and zatca_document and self.edi_state == "sent")
+
     def _get_report_base_filename(self):
         """
             Generate the name of the invoice PDF file according to ZATCA business rules:
@@ -302,6 +312,18 @@ class AccountMove(models.Model):
             'total_amount': invoice_vals['vals']['monetary_total_vals']['tax_inclusive_amount'],
             'total_tax': invoice_vals['vals']['tax_total_vals'][-1]['tax_amount'],
         }
+
+    def _retry_edi_documents_error_hook(self):
+        ''' Overriden to reset the attachment and allow re-submission of ZATCA invoices,
+            Ensures that reciepts on POS are updated after a failed submission.
+        '''
+        zatca = self.env.ref('l10n_sa_edi.edi_sa_zatca')
+        moves = self.filtered(lambda m: m._get_edi_document(zatca))
+        # Unlink the existing PDF from invoice_pdf_report_file so that it is regenerated with the
+        # QR code. The old PDF stays attached to the invoice.
+        moves.invoice_pdf_report_id.sudo().write({'res_field': False})
+        moves.invalidate_recordset(fnames=['invoice_pdf_report_id', 'invoice_pdf_report_file'])
+        return super()._retry_edi_documents_error_hook()
 
 
 class AccountMoveLine(models.Model):

@@ -15,6 +15,7 @@ patch(PosStore.prototype, {
         return {
             ...super.getReceiptHeaderData(...arguments),
             useGCCReport,
+            show_title: Boolean(order),
         };
     },
 });
