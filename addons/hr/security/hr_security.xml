@@ -14,6 +14,12 @@
         <field name="comment">The user will be able to create and edit employees.</field>
     </record>
 
+    <!-- Technical group, granted only for the duration of the employee onboarding. -->
+    <record id="group_hr_employee_onboarding" model="res.groups">
+        <field name="name">Employee Onboarding</field>
+        <field name="comment">Lets a newly signed up user read and fill in their own employee record. The group is removed as soon as the information is submitted.</field>
+    </record>
+
     <record id="group_hr_manager" model="res.groups">
         <field name="name">Administrator</field>
         <field name="sequence">20</field>
