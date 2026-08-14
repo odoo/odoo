@@ -12,6 +12,9 @@ registry.category("website_custom_menus").add("website_links.menu_link_tracker",
         const model = "link.tracker";
         return {
             resModel: model,
+            context: {
+                default_url: browser.location.href,
+            },
             onRecordSave: async function (record) {
                 if (!record._checkValidity({ displayNotification: true })) {
                     return false;
