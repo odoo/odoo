@@ -15,6 +15,10 @@ export class Many2OneAvatarField extends Component {
     get m2oProps() {
         return computeM2OProps(this.props);
     }
+
+    get uniqueId() {
+        return this.value?.write_date ? this.value.write_date.toMillis() : undefined;
+    }
 }
 
 export const many2OneAvatarField = {
