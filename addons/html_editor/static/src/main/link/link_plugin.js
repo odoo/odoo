@@ -24,6 +24,7 @@ import { withSequence } from "@html_editor/utils/resource";
 import { isBlock, closestBlock } from "@html_editor/utils/blocks";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { isBrowserFirefox, isBrowserSafari } from "@web/core/browser/feature_detection";
+import { session } from "@web/session";
 
 /** @typedef {import("@odoo/owl").Component} Component */
 /** @typedef {import("plugins").CSSSelector} CSSSelector */
@@ -120,6 +121,13 @@ async function fetchInternalMetaData(url) {
             const internalUrlMetaData = await rpc("/html_editor/link_preview_internal", {
                 preview_url: urlParsed.href,
             });
+            if (internalUrlMetaData.error_msg) {
+                // Silence error which does not help.
+                if (!session.test_mode) {
+                    console.warn(internalUrlMetaData.error_msg);
+                }
+                delete internalUrlMetaData.error_msg;
+            }
 
             internalUrlMetaData["favicon"] = doc.querySelector("link[rel~='icon']");
             internalUrlMetaData["ogTitle"] = doc.querySelector("[property='og:title']");
