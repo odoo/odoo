@@ -5,6 +5,7 @@ import {
     onWillDestroy,
     proxy,
     signal,
+    useEffect,
     useListener,
     usePlugin,
 } from "@odoo/owl";
@@ -17,7 +18,7 @@ import { Transition } from "@web/core/transition";
 import { ErrorHandler } from "@web/core/utils/components";
 import { useService } from "@web/core/utils/hooks";
 import { debounce } from "@web/core/utils/timing";
-import { render, useSubEnv } from "@web/owl2/utils";
+import { render } from "@web/owl2/utils";
 
 const systrayRegistry = registry.category("systray");
 
@@ -50,31 +51,47 @@ export class NavBar extends Component {
         const debouncedAdapt = debounce(this.adapt.bind(this), 250);
         onWillDestroy(() => debouncedAdapt.cancel());
         useListener(window, "resize", debouncedAdapt);
-        let adaptCounter = 0;
-        let lastAdaptCounter = 0;
+
+        // The sections menu's width shrinks/grows when the breadcrumbs get longer or when
+        // a systray item changes size (e.g. the offline item displaying "Working offline").
+        let sectionsWidth = null;
+        const sectionsObserver = new ResizeObserver(([entry]) => {
+            const { inlineSize } = entry.borderBoxSize[0];
+            if (inlineSize !== sectionsWidth) {
+                sectionsWidth = inlineSize;
+                debouncedAdapt();
+            }
+        });
+        useEffect(() => {
+            const sectionsMenu = this.appSubMenus();
+            if (!sectionsMenu) {
+                return;
+            }
+            // the initial observation notifies the current size: ignore it
+            sectionsWidth = getBoundingClientRect.call(sectionsMenu).width;
+            sectionsObserver.observe(sectionsMenu);
+            return () => sectionsObserver.disconnect();
+        });
+
+        let adaptOnNextPatch = false;
         const renderAndAdapt = () => {
-            adaptCounter++;
+            adaptOnNextPatch = true;
             render(this);
         };
 
         useListener(systrayRegistry, "UPDATE", renderAndAdapt);
         useListener(this.env.bus, "MENUS:APP-CHANGED", renderAndAdapt);
 
-        // We don't want to adapt every time we are patched
-        // rather, we adapt only when menus or systrays have changed.
         onMounted(() => {
-            lastAdaptCounter = adaptCounter;
+            adaptOnNextPatch = false;
             this.adapt();
         });
         onPatched(() => {
-            if (adaptCounter !== lastAdaptCounter) {
-                lastAdaptCounter = adaptCounter;
+            if (adaptOnNextPatch) {
+                adaptOnNextPatch = false;
                 this.adapt();
             }
         });
-
-        // allow systray items to trigger an adapt when their layout changes
-        useSubEnv({ redrawNavbar: renderAndAdapt });
 
         this.state = proxy({
             isAllAppsMenuOpened: false,

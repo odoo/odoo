@@ -1,4 +1,4 @@
-import { render, useLayoutEffect } from "@web/owl2/utils";
+import { render } from "@web/owl2/utils";
 import { NavBar } from "@web/webclient/navbar/navbar";
 import { useService, useBus } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
@@ -26,26 +26,7 @@ patch(NavBar.prototype, {
                 { sequence: 100 }
             );
         }
-        // Similar to what is done in web/navbar. When the app menu or systray
-        // is updated, we need to adapt the navbar so that the "more" menu
-        // can be computed.
-        let adaptCounter = 0;
-        const renderAndAdapt = () => {
-            render(this, true);
-            adaptCounter++;
-        };
-        useLayoutEffect(
-            (adaptCounter) => {
-                // We do not want to adapt on the first render
-                // as the super class already does it.
-                if (adaptCounter > 0) {
-                    this.adapt();
-                }
-            },
-            () => [adaptCounter]
-        );
-
-        useBus(websiteSystrayRegistry, "CONTENT-UPDATED", renderAndAdapt);
+        useBus(websiteSystrayRegistry, "CONTENT-UPDATED", () => render(this, true));
     },
 
     get shouldDisplayWebsiteSystray() {

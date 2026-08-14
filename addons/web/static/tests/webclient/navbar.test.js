@@ -10,7 +10,7 @@ import {
     runAllTimers,
     test,
 } from "@odoo/hoot";
-import { Component, onWillStart, xml } from "@odoo/owl";
+import { Component, onWillStart, signal, xml } from "@odoo/owl";
 import {
     clearRegistry,
     contains,
@@ -511,6 +511,42 @@ test("'more' menu sections properly updated on app change", async () => {
         ["Section 20", "Section 21", "Section 22", "Section 220", "Section 221", "Section 222"],
         { message: "'more' menu should contain second app sections" }
     );
+});
+
+test.tags("desktop");
+test("adapt when a systray item changes size", async () => {
+    // This test is to simulate for example changing label size (eg. `Working Offline`)
+    defineMenus([{ id: 1, children: [{ id: 10, name: "Section 10" }] }]);
+    const itemWidth = signal(20);
+    class ResizingSystrayItem extends Component {
+        static template = xml`<li class="my-resizing-item" t-att-style="'width: ' + this.itemWidth() + 'px'"/>`;
+        setup() {
+            this.itemWidth = itemWidth;
+        }
+    }
+    class MyNavbar extends NavBar {
+        async adapt() {
+            expect.step("adapt NavBar");
+            return super.adapt();
+        }
+    }
+    systrayRegistry.add("addon.myresizingitem", { Component: ResizingSystrayItem });
+
+    await makeTestApp();
+
+    // Set menu and mount
+    getService("menu").setCurrentMenu(1);
+    await mountWithCleanup(MyNavbar);
+    expect.verifySteps(["adapt NavBar"]);
+
+    // The systray item takes more space: less space is left for the app sections,
+    // so an adaptation is required.
+    itemWidth.set(300);
+    await animationFrame();
+    await waitNavbarAdaptation();
+
+    expect(".my-resizing-item").toHaveRect({ width: 300 });
+    expect.verifySteps(["adapt NavBar"]);
 });
 
 test("Do not execute adapt when navbar is destroyed", async () => {
