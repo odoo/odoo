@@ -1,4 +1,4 @@
-import { Component, proxy, useListener } from "@odoo/owl";
+import { Component, proxy, useEffect, useListener } from "@odoo/owl";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 
 /**
@@ -48,13 +48,10 @@ export class SearchBar extends Component {
             showFilterOptions: false,
             selectedFilter: this.props.config.defaultFilter || this.filterOptionsList[0],
         });
-        // useLayoutEffect(
-        //     () => {
-        //         this.state.selectedFilter =
-        //             this.props.config.defaultFilter || this.filterOptionsList[0];
-        //     },
-        //     () => [this.props.config.defaultFilter]
-        // );
+        useEffect(() => {
+            this.state.selectedFilter =
+                this.props.config.defaultFilter || this.filterOptionsList[0];
+        });
     }
     _onSelectFilter(key) {
         this.state.selectedFilter = key;
