@@ -694,7 +694,10 @@ class IrUiView(models.Model):
         if not self._are_archs_equal(old_arch, new_arch):
             self._set_noupdate()
             self.write({'arch': etree.tostring(new_arch, encoding='unicode')})
-            self._copy_custom_snippet_translations(self, 'arch_db')
+            # TODO: on master, use `_get_template_view` instead (and add the
+            # website in the context where we call `save`)
+            view = self if self.website_id or 'website_id' not in self.env.context else self.env['website'].viewref(self.key)
+            view._copy_custom_snippet_translations(view, 'arch_db')
 
     @api.model
     def _get_allowed_root_attrs(self):
