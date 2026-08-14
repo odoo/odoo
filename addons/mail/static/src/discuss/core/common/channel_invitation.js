@@ -9,6 +9,7 @@ import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_d
 import { _t } from "@web/core/l10n/translation";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { useDebounced } from "@web/core/utils/timing";
+import { parseClipboard } from "./channel_invitation_clipboard";
 
 /**
  * Open the channel invitation UI as a centered dialog, reusing {@link ChannelInvitation}.
@@ -132,6 +133,28 @@ export class ChannelInvitation extends Component {
         return _t("Search people to invite");
     }
 
+    get tooltipInfo() {
+        let inviteOptions;
+        if (this.props.channel?.allow_invite_by_email) {
+            inviteOptions = [
+                _t("Search for an existing user by name or email"),
+                _t("Enter an email address to invite by email"),
+                _t("A mix of the above options in a comma-separated list"),
+                _t("Paste spreadsheet cells containing usernames or emails"),
+            ];
+        } else {
+            inviteOptions = [
+                _t("Search for an existing user by name or email"),
+                _t("A comma-separated list of existing users by name or email"),
+                _t("Paste spreadsheet cells containing usernames or emails"),
+            ];
+        }
+        return JSON.stringify({
+            content: _t("To search for people to invite, you can:"),
+            inviteOptions,
+        });
+    }
+
     async fetchPartnersToInvite() {
         const results = await this.sequential(async () => {
             this.state.hasPendingRequest = true;
@@ -159,15 +182,18 @@ export class ChannelInvitation extends Component {
             this.searchStr,
             this.props.channel?.thread
         );
-        this.state.showingPartialResults = results.partner_ids.length > this.searchLimit;
+        this.state.showingPartialResults =
+            results.partner_ids.length > this.searchLimit || results.terms_truncated;
         const selectableEmails = this.state.selectedEmails.filter((addr) =>
-            addr.includes(this.searchStr)
+            this.searchStr.split(",").some((term) => addr.includes(term.trim()))
         );
-        if (results.selectable_email) {
-            selectableEmails.push(results.selectable_email);
+        if (results.selectable_emails) {
+            selectableEmails.push(...results.selectable_emails);
         }
-        if (results.email_already_sent) {
-            this.state.sentEmails.add(results.selectable_email);
+        if (results.emails_already_sent) {
+            for (const email of results.emails_already_sent) {
+                this.state.sentEmails.add(email);
+            }
         }
         this.state.selectableEmails = [...new Set(selectableEmails)];
     }
@@ -175,6 +201,38 @@ export class ChannelInvitation extends Component {
     onInput() {
         this.searchStr = this.inputRef()?.value;
         this.debouncedFetchPartnersToInvite();
+    }
+
+    addPasteInputToSelection(pastedText) {
+        const startPosition = this.inputRef().selectionStart;
+        const endPosition = this.inputRef().selectionEnd;
+        const startText = this.searchStr.slice(0, startPosition);
+        const endText = this.searchStr.slice(endPosition);
+        let composedSearch = "";
+        if (startText.length > 0) {
+            composedSearch += startText;
+            if (startText.slice(-1) !== ",") {
+                composedSearch += ",";
+            }
+        }
+        composedSearch += pastedText;
+        if (endText.length > 0) {
+            if (endText.slice(0, 1) !== ",") {
+                composedSearch += ",";
+            }
+            composedSearch += endText;
+        }
+
+        this.searchStr = composedSearch;
+        this.debouncedFetchPartnersToInvite();
+    }
+
+    onInputPaste(ev) {
+        const newSearch = parseClipboard(ev.clipboardData);
+        if (newSearch) {
+            ev.preventDefault();
+            this.addPasteInputToSelection(newSearch);
+        }
     }
 
     onClickGenerateNewLink() {

@@ -178,9 +178,9 @@ class TestDiscussChannelInvite(HttpCase, MailCommon):
                     search_term, channel_id=channel.id
                 )
                 if is_selectable:
-                    self.assertEqual(result["selectable_email"], search_term)
+                    self.assertEqual(result["selectable_emails"], [search_term])
                     continue
-                self.assertFalse(result["selectable_email"])
+                self.assertFalse(result["selectable_emails"])
 
     @users("employee")
     def test_06_invite_by_email_posts_user_notification(self):
@@ -223,8 +223,8 @@ class TestDiscussChannelInvite(HttpCase, MailCommon):
         result = self.env["res.partner"].search_for_channel_invite(
             "alfred@test.com", channel_id=group_chat.id
         )
-        self.assertEqual(result["selectable_email"], "alfred@test.com")
-        self.assertTrue(result["email_already_sent"])
+        self.assertEqual(result["selectable_emails"], ["alfred@test.com"])
+        self.assertTrue(result["emails_already_sent"])
         # Inviting again sends the link a second time, reusing the pending member.
         with self.mock_mail_gateway():
             group_chat.invite_by_email(["alfred@test.com"])
@@ -248,7 +248,7 @@ class TestDiscussChannelInvite(HttpCase, MailCommon):
         result = self.env["res.partner"].search_for_channel_invite(
             "alfred@test.com", channel_id=group_chat.id
         )
-        self.assertFalse(result["selectable_email"])
+        self.assertFalse(result["selectable_emails"])
         with self.mock_mail_gateway():
             group_chat.invite_by_email(["alfred@test.com"])
             self.assertNoMail(self.env["res.partner"], email_to="alfred@test.com")
@@ -373,3 +373,77 @@ class TestDiscussChannelInvite(HttpCase, MailCommon):
             "Joel", channel_id=group_chat.id, with_portal_users=True
         )
         self.assertEqual(result["partner_ids"], joel.partner_id.ids)
+
+    def test_13_support_multiple_terms_in_search_for_channel_invite(self):
+        other = new_test_user(self.env, "other", groups="base.group_user", email="other@test.com")
+        bob = new_test_user(self.env, "bob", groups="base.group_user", email="bob@test.com")
+        john = new_test_user(self.env, "john", groups="base.group_user", email="john@test.com")
+        public_channel = self.env["discuss.channel"].create(
+            {"name": "public community", "group_public_id": False},
+        )
+        chat = self.env["discuss.channel"]._get_or_create_chat(partners_to=other.partner_id.ids)
+        group_chat = self.env["discuss.channel"]._create_group(users_to=other)
+        private_channel = self.env["discuss.channel"].create(
+            {
+                "name": "user restricted channel",
+                "channel_type": "channel",
+                "group_public_id": self.env.ref("base.group_user").id,
+            },
+        )
+        for channel in [chat, public_channel, group_chat, private_channel]:
+            res = self.env["res.partner"].search_for_channel_invite(
+                "alfred, john, bob", channel_id=channel.id
+            )
+            self.assertFalse(res["selectable_emails"])
+            self.assertEqual(res["partner_ids"], (bob.partner_id | john.partner_id).ids)
+
+        for channel in [chat, public_channel, group_chat, private_channel]:
+            res = self.env["res.partner"].search_for_channel_invite(
+                "alfred@test.com, john@test.com, bob@test.com", channel_id=channel.id
+            )
+            self.assertEqual(
+                res["selectable_emails"],
+                ["alfred@test.com"] if channel != private_channel else [],
+            )
+            self.assertEqual(res["partner_ids"], (bob.partner_id | john.partner_id).ids)
+
+    def test_14_search_for_channel_invite_normalizes_known_emails(self):
+        """A member's email should be recognized as already known regardless of case,
+        whether the member is backed by a partner or a guest, thanks to email_normalized."""
+        bob = new_test_user(self.env, "bob", groups="base.group_user", email="bob@test.com")
+        alfred = new_test_user(
+            self.env, "alfred", groups="base.group_user", email="Alfred@Test.com"
+        )
+        group_chat = self.env["discuss.channel"].with_user(bob)._create_group(users_to=bob)
+        group_chat._add_members(partners=alfred.partner_id)
+        jane_guest = self.env["mail.guest"].create({"email": "Jane@Test.com", "name": "Jane"})
+        group_chat._add_members(guests=jane_guest)
+        result = self.env["res.partner"].search_for_channel_invite(
+            "alfred@test.com, jane@test.com", channel_id=group_chat.id
+        )
+        self.assertFalse(result["selectable_emails"])
+
+    def test_15_search_for_channel_invite_limits_selectable_emails(self):
+        """The number of proposed new-invite emails should be capped so that partners and
+        emails together never exceed the requested limit."""
+        bob_one = new_test_user(self.env, "bob_one", groups="base.group_user", name="Bob One")
+        bob_two = new_test_user(self.env, "bob_two", groups="base.group_user", name="Bob Two")
+        channel = self.env["discuss.channel"].create(
+            {"name": "public community", "group_public_id": False},
+        )
+        # Two matching partners leave room for exactly one of the two candidate emails.
+        result = self.env["res.partner"].search_for_channel_invite(
+            "Bob, alice@test.com, carol@test.com", channel_id=channel.id, limit=3
+        )
+        self.assertEqual(
+            set(result["partner_ids"]), {bob_one.partner_id.id, bob_two.partner_id.id}
+        )
+        self.assertEqual(result["selectable_emails"], ["alice@test.com"])
+        # The partner limit is already reached: no email should be added.
+        result = self.env["res.partner"].search_for_channel_invite(
+            "Bob, alice@test.com, carol@test.com", channel_id=channel.id, limit=2
+        )
+        self.assertEqual(
+            set(result["partner_ids"]), {bob_one.partner_id.id, bob_two.partner_id.id}
+        )
+        self.assertFalse(result["selectable_emails"])
