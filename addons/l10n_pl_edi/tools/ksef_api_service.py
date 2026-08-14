@@ -21,6 +21,14 @@ _logger = logging.getLogger(__name__)
 TIMEOUT = 30
 
 
+def b64(value):
+    return base64.b64encode(value).decode()
+
+
+def format_time(date_value):
+    return date_value.strftime("%Y-%m-%dT%H:%M:%S.000Z")
+
+
 class KsefApiService:
     def __init__(self, company):
         self.company = company
@@ -118,24 +126,31 @@ class KsefApiService:
         except requests.exceptions.RequestException as e:
             raise UserError(self.env._("Could not fetch KSeF public keys: %s", e.response.text if e.response else e))
 
+    def _create_encryption_data(self):
+        raw_symmetric_key = os.urandom(32)
+        raw_iv = os.urandom(16)
+        ksef_public_key_pem = self._get_public_keys().get('symmetric')
+        public_key = serialization.load_pem_public_key(ksef_public_key_pem.encode('utf-8'))
+        encrypted_symmetric_key = public_key.encrypt(
+            raw_symmetric_key,
+            padding.OAEP(mgf=padding.MGF1(algorithm=hashes.SHA256()), algorithm=hashes.SHA256(), label=None)
+        )
+        encryption_data = {
+            "encryption": {
+                "encryptedSymmetricKey": b64(encrypted_symmetric_key),
+                "initializationVector": b64(raw_iv),
+            }
+        }
+        return (raw_symmetric_key, raw_iv, encryption_data)
+
     def open_ksef_session(self):
         """Builds the encrypted request and opens an interactive session, with one retry on token expiry."""
         if self.company.sudo().l10n_pl_edi_session_id and self.get_session_status().get('code') == 100:
             return
-        self.raw_symmetric_key = os.urandom(32)
-        self.raw_iv = os.urandom(16)
-        ksef_public_key_pem = self._get_public_keys().get('symmetric')
-        public_key = serialization.load_pem_public_key(ksef_public_key_pem.encode('utf-8'))
-        encrypted_symmetric_key = public_key.encrypt(
-            self.raw_symmetric_key,
-            padding.OAEP(mgf=padding.MGF1(algorithm=hashes.SHA256()), algorithm=hashes.SHA256(), label=None)
-        )
+        self.raw_symmetric_key, self.raw_iv, encryption_data = self._create_encryption_data()
         request_body = {
             "formCode": {"systemCode": "FA (3)", "schemaVersion": "1-0E", "value": "FA"},
-            "encryption": {
-                "encryptedSymmetricKey": base64.b64encode(encrypted_symmetric_key).decode('utf-8'),
-                "initializationVector": base64.b64encode(self.raw_iv).decode('utf-8'),
-            }
+            **encryption_data,
         }
         endpoint = f"{self.api_url}/sessions/online"
         headers = {'Content-Type': 'application/json'}
@@ -349,19 +364,29 @@ class KsefApiService:
         except requests.exceptions.RequestException as e:
             raise UserError(self.env._("Failed to redeem token: %s", e.response.text if e.response else e))
 
-    def get_request_download_batch(self, date_from, date_to):
-        endpoint = f"{self.api_url}/invoices/exports"
+    def download_batch_status(self, batch_number):
+        return self._make_request("GET", f"{self.api_url}/invoices/exports/{batch_number}").json()
+
+    def download_batch_request(self, date_from, date_to, subject_type="Subject3"):
+        raw_symmetric_key, raw_iv, encryption_data = self._create_encryption_data()
         payload = {
-            'subjectType': 'Subject3',
-            'dateRange': {
-                'from': date_from.isoformat(),
-                'to': date_to.isoformat(),
-                'dateType': 'Invoicing',
+            **encryption_data,
+            "filters": {
+                "subjectType": subject_type,
+                "dateRange": {
+                    "from": format_time(date_from),
+                    "to": format_time(date_to),
+                    "dateType": "Invoicing",
+                },
             },
         }
         try:
-            response = self._make_request('POST', endpoint, json=payload)
-            return response.json()
+            response = self._make_request('POST', f"{self.api_url}/invoices/exports", json=payload)
+            return {
+                'batch_number': response.json().get('referenceNumber'),
+                'raw_symmetric_key': raw_symmetric_key,
+                'raw_iv': raw_iv,
+            }
         except KSeFRateLimitError as e:
             return {'error': {'retry_after': e.retry_after, 'message': str(e)}}
 
