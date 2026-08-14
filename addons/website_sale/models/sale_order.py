@@ -1069,12 +1069,29 @@ class SaleOrder(models.Model):
             self.shop_warning = ""
         return warn
 
+    def _get_prevented_sale_lines(self):
+        """Return the cart lines the website forbids to sell.
+
+        :rtype: sale.order.line
+        """
+        self.ensure_one()
+        if not self.website_id.prevent_sale:
+            return self.env["sale.order.line"]
+
+        def online_sale_prevented(line):
+            try:
+                return line._is_sellable() and line._check_validity() is not None
+            except UserError:
+                return True
+
+        return self.order_line.filtered(online_sale_prevented)
+
     def _is_cart_ready(self):
         """Whether the cart is valid and can be confirmed (and paid for).
 
         :rtype: bool
         """
-        return bool(self.order_line)
+        return bool(self.order_line) and not self._get_prevented_sale_lines()
 
     def _check_cart_is_ready_to_be_paid(self):
         """Whether the cart is valid and the user can proceed to the payment.
