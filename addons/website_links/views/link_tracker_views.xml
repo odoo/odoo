@@ -19,7 +19,7 @@
                 <field name="create_date" string="Create Date"/>
                 <field name="short_url" string="Link Tracker" optional="show"/>
                 <field name="short_url" string="Copy" widget="CopyClipboardButton" options="{'btn_class': 'link'}"/>
-                <field name="count" string="Click"/>
+                <field name="count" string="Clicks"/>
                 <field name="campaign_id" string="Campaign"/>
                 <field name="medium_id" string="Medium"/>
                 <field name="source_id" string="Source"/>
@@ -58,7 +58,7 @@
     </record>
 
     <record id="action_link_tracker_tree" model="ir.actions.act_window">
-        <field name="name">Link Tracker</field>
+        <field name="name">Tracked Links</field>
         <field name="res_model">link.tracker</field>
         <field name="view_mode">list,form</field>
         <field name="view_id" ref="website_link_tracker_view_list"/>
