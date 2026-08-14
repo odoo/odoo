@@ -25,7 +25,12 @@ class MailingMailing(models.Model):
 
     @api.model
     def action_create_mailing_template_with_leads(self):
-        reply_to = self.env.user.sale_team_id.alias_email or False
+        default_team_id = self.env['crm.team']._get_default_team_id()
+        reply_to = (
+            default_team_id.alias_email or
+            self.env.user.sale_team_id.alias_email or
+            False
+        )
         return {
             'type': 'ir.actions.act_window',
             'res_model': 'mailing.mailing',

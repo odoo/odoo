@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="crm.Breadcrumbs">
+        <t t-if="this.showTeamSwitcher">
+            <TeamSwitcher/>
+            <t t-call="web.Breadcrumb.Actions"/>
+            <t t-call-slot="breadcrumb-status-indicator"/>
+        </t>
+        <t t-else="" t-call="web.Breadcrumbs"/>
+    </t>
+
+</templates>
