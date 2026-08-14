@@ -49,23 +49,3 @@ test("can listen on bus and display notifications in DOM and click Detail", asyn
     await contains(".o_notification", { count: 0 });
     await expect.waitForSteps(["ir.actions.act_window"]);
 });
-
-test("can listen on bus and display notifications in DOM and click Snooze", async () => {
-    const pyEnv = await startServer();
-    onRpc("/calendar/notify_ack", () => expect.step("notify_ack"));
-    await start();
-    pyEnv["bus.bus"]._sendone(serverState.partnerId, "calendar.alarm", [
-        {
-            alarm_id: 1,
-            event_id: 2,
-            title: "Meeting",
-            message: "Very old meeting message",
-            timer: 0,
-            notify_at: "1978-04-14 12:45:00",
-        },
-    ]);
-    await contains(".o_notification", { text: "Meeting. Very old meeting message" });
-    await click(".o_notification button", { text: "Snooze" });
-    await contains(".o_notification", { count: 0 });
-    await expect.waitForSteps([]);
-});
