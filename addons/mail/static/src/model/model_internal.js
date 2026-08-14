@@ -1,4 +1,4 @@
-import { markRaw, toRaw } from "@odoo/owl";
+import { markRaw } from "@odoo/owl";
 import { ATTR_SYM, MANY_SYM, ONE_SYM } from "./misc";
 
 export class ModelInternal {
@@ -96,7 +96,7 @@ export class ModelInternal {
                 fieldName,
                 /** @this {import("./record").Record}*/
                 function fieldLocalStorageCompute() {
-                    const record = toRaw(this)._raw;
+                    const record = this._raw;
                     const lse = record._.fieldsLocalStorage.get(fieldName);
                     const value = lse.get();
                     if (value === undefined) {
@@ -113,7 +113,7 @@ export class ModelInternal {
                 fieldName,
                 /** @this {import("./record").Record}*/
                 function fieldLocalStorageOnChange(value) {
-                    const record = toRaw(this)._raw;
+                    const record = this._raw;
                     if (this._rawStore._.isUpdatingFromStorageEvent) {
                         return;
                     }

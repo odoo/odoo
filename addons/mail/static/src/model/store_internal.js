@@ -199,11 +199,11 @@ export class StoreInternal extends RecordInternal {
     sortRecordList(recordListFullProxy, func) {
         const recordList = toRaw(recordListFullProxy)._raw;
         // sort on copy of list so that reactive observers not triggered while sorting
-        const recordsFullProxy = recordListFullProxy.data.map((localId) =>
+        const recordProxies = recordListFullProxy.data.map((localId) =>
             recordListFullProxy._store.recordByLocalId.get(localId)
         );
-        recordsFullProxy.sort(func);
-        const data = recordsFullProxy.map((recordFullProxy) => toRaw(recordFullProxy)._raw.localId);
+        recordProxies.sort(func);
+        const data = recordProxies.map((recordProxy) => recordProxy._raw.localId);
         const hasChanged = recordList.data.some((localId, i) => localId !== data[i]);
         if (hasChanged) {
             recordListFullProxy.data = data;
@@ -219,7 +219,7 @@ export class StoreInternal extends RecordInternal {
         const parentFieldName = Model._.parentFields.get(fieldName);
         if (parentFieldName) {
             // Route the write to the parent record, which stores an _inherits field.
-            Reflect.set(record._proxyInternal[parentFieldName], fieldName, value);
+            Reflect.set(record._proxy[parentFieldName], fieldName, value);
             return;
         }
         const fieldType = Model._.fieldsType.get(fieldName);

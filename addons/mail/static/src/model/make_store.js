@@ -12,7 +12,7 @@ import { StoreInternal } from "./store_internal";
 import { ModelInternal } from "./model_internal";
 import { RecordInternal } from "./record_internal";
 
-import { markRaw, proxy, toRaw, useApp } from "@odoo/owl";
+import { markRaw, proxy, useApp } from "@odoo/owl";
 
 /** @returns {import("models").Store} */
 export function makeStore(env, { localRegistry } = {}) {
@@ -25,7 +25,6 @@ export function makeStore(env, { localRegistry } = {}) {
     // services start in the scope of the app, which every record scope needs
     store._.app = useApp();
     store._raw = store;
-    store._proxyInternal = store;
     store._proxy = store;
     store.recordByLocalId = proxy(new Map());
     Record.store = store;
@@ -49,7 +48,7 @@ export function makeStore(env, { localRegistry } = {}) {
                     record.Model = Model;
                     record._ = record[STORE_SYM] ? new StoreInternal() : new RecordInternal();
                     this.setup();
-                    record._proxyInternal = new Proxy(record, {
+                    const recordProxy = new Proxy(record, {
                         /**
                          * Route a plain data descriptor through the set trap, as
                          * patching a record defines the field rather than sets it.
@@ -72,7 +71,7 @@ export function makeStore(env, { localRegistry } = {}) {
                          */
                         set: (...args) => record._.proxySet(...args),
                     });
-                    record._proxy = markRaw(record._proxyInternal);
+                    record._proxy = markRaw(recordProxy);
                     if (record?.[STORE_SYM]) {
                         record.recordByLocalId = store.recordByLocalId;
                         record._ = store._;
@@ -183,7 +182,7 @@ export function makeStore(env, { localRegistry } = {}) {
      */
     Object.assign(store.Store, { store, _rawStore: store });
     // Make true store (as a model)
-    store = toRaw(store.Store.insert())._raw;
+    store = store.Store.insert()._raw;
     for (const Model of Object.values(Models)) {
         Model._rawStore = store;
         Model.store = store._proxy;
