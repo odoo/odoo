@@ -1,10 +1,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import logging
 import uuid
 
 from odoo import fields, models, api
 from odoo.tools import SQL
 from odoo.tools.urls import urljoin as url_join
+
+_logger = logging.getLogger(__name__)
 
 
 class ResCompany(models.Model):
@@ -73,16 +76,18 @@ class ResCompany(models.Model):
     def _compute_attendance_work_entry_type_id(self):
         fallback = self.env.ref('hr_work_entry.generic_work_entry_type_attendance', raise_if_not_found=False)
         country_codes = self.mapped('country_id.code')
-        country_types = self.env['hr.work.entry.type'].search([
+        country_types = self.env['hr.work.entry.type'].sudo().search([
             ('count_as', '=', 'working_time'),
             ('code', '=', 'WORK100'),
             ('country_code', 'in', country_codes),
         ])
         type_by_country = {t.country_code: t for t in country_types}
         for company in self:
-            if company.attendance_work_entry_type_id:
+            current = company.attendance_work_entry_type_id
+            country_specific = type_by_country.get(company.country_id.code)
+            if current and (not country_specific or current != fallback):
                 continue
-            company.attendance_work_entry_type_id = type_by_country.get(company.country_id.code) or fallback
+            company.attendance_work_entry_type_id = country_specific or fallback
 
     # ---------------------------------------------------------
     # ORM Overrides
