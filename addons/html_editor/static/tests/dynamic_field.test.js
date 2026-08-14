@@ -81,7 +81,7 @@ test("add dynamic field", async () => {
         unformat(`
         <p data-selection-placeholder=""><br></p>
             <div class="o-paragraph">
-                <t data-oe-expression-readable="My little field" t-out="object.field" data-oe-demo="My little field" data-oe-t-inline="true" data-oe-protected="true" contenteditable="false">My little field</t>[]
+                <t data-oe-expression-readable="My little field" t-out="object.field or 'My little field'" data-oe-demo="My little field" data-oe-t-inline="true" data-oe-protected="true" contenteditable="false">My little field</t>[]
             </div>
         <p data-selection-placeholder=""><br></p>
     `)
@@ -112,7 +112,7 @@ test("add dynamic field with relational property", async () => {
     await animationFrame();
     expect(getContent(el)).toInclude("Partner Name");
     expect(getContent(el)).toInclude(
-        `t-out="object.properties.get('property_partner', env['res.partner']).name"`
+        `t-out="object.properties.get('property_partner', env['res.partner']).name or 'Partner Name'"`
     );
 });
 
@@ -163,11 +163,11 @@ test("copy field", async () => {
 
 test("edit fields and back", async () => {
     const { editor, el } = await setupEditor(
-        `<div>a<t t-out="object.field" data-oe-expression-readable="human > expr" data-oe-demo="demo brol"></t></div>`,
+        `<div>a<t t-out="object.field or 'edited'" data-oe-expression-readable="human > expr" data-oe-demo="demo brol"></t></div>`,
         getEditorOptions()
     );
     expect(getContent(el)).toBe(
-        `<p data-selection-placeholder=""><br></p><div>a<t t-out="object.field" data-oe-expression-readable="human > expr" data-oe-demo="demo brol" data-oe-t-inline="true" data-oe-protected="true" contenteditable="false">demo brol</t></div><p data-selection-placeholder=""><br></p>`
+        `<p data-selection-placeholder=""><br></p><div>a<t t-out="object.field or 'edited'" data-oe-expression-readable="human > expr" data-oe-demo="demo brol" data-oe-t-inline="true" data-oe-protected="true" contenteditable="false">demo brol</t></div><p data-selection-placeholder=""><br></p>`
     );
 
     await contains(":iframe t[t-out]").click();
@@ -184,14 +184,14 @@ test("edit fields and back", async () => {
     expect(getContent(el)).toBe(
         unformat(`
         <p data-selection-placeholder=""><br></p>
-            <div>a[<t t-out="object.display_name" data-oe-expression-readable="Display name" data-oe-demo="edited" data-oe-t-inline="true" data-oe-protected="true" contenteditable="false">edited</t>]</div>
+            <div>a[<t t-out="object.display_name or 'edited'" data-oe-expression-readable="Display name" data-oe-demo="edited" data-oe-t-inline="true" data-oe-protected="true" contenteditable="false">edited</t>]</div>
         <p data-selection-placeholder=""><br></p>
     `)
     );
 
     expect(getContent(editor.getElContent())).toBe(
         unformat(`
-        <div>a<t t-out="object.display_name" data-oe-expression-readable="Display name" data-oe-demo="edited"></t></div>
+        <div>a<t t-out="object.display_name or 'edited'" data-oe-expression-readable="Display name" data-oe-demo="edited"></t></div>
     `)
     );
 
@@ -199,7 +199,7 @@ test("edit fields and back", async () => {
     await animationFrame();
     expect(getContent(el)).toBe(
         `<p data-selection-placeholder=""><br></p>` +
-            `<div>[]a<t t-out="object.field" data-oe-expression-readable="human > expr" data-oe-demo="demo brol" data-oe-t-inline="true" data-oe-protected="true" contenteditable="false">demo brol</t></div>` +
+            `<div>[]a<t t-out="object.field or 'edited'" data-oe-expression-readable="human > expr" data-oe-demo="demo brol" data-oe-t-inline="true" data-oe-protected="true" contenteditable="false">demo brol</t></div>` +
             `<p data-selection-placeholder=""><br></p>`
     );
 });
