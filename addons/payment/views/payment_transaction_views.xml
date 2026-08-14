@@ -99,7 +99,7 @@
                         <field name="create_date"/>
                     </group>
                     <notebook>
-                        <page string="Payment">
+                        <page string="Payment" name="payment">
                             <group name="payment_details">
                                 <field name="provider_id"/>
                                 <field name="payment_method_id"/>
@@ -107,10 +107,10 @@
                                 <field name="token_id" invisible="not token_id"/>
                             </group>
                         </page>
+                        <page string="Message" name="message" invisible="not state_message">
+                            <field name="state_message" nolabel="1"/>
+                        </page>
                     </notebook>
-                    <group string="Message" invisible="not state_message">
-                        <field name="state_message" colspan="2" nolabel="1"/>
-                    </group>
                 </sheet>
             </form>
         </field>
