@@ -1,14 +1,4 @@
-import {
-    Component,
-    onMounted,
-    onPatched,
-    onWillUnmount,
-    signal,
-    status,
-    t,
-    useListener,
-    useProps,
-} from "@odoo/owl";
+import { Component, signal, status, t, useEffect, useListener, useProps } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 
 export class CallParticipantVideo extends Component {
@@ -30,33 +20,21 @@ export class CallParticipantVideo extends Component {
             session: t.instanceOf(this.store["discuss.channel.rtc.session"]),
             type: t.selection(["camera", "screen"]),
         });
-        onMounted(() => this._update());
-        onPatched(() => this._update());
-        onWillUnmount(() => {
-            if (this.root()) {
-                // A <video>/<audio> element with an active srcObject is kept alive by the
-                // browser even after being detached from the DOM, which retains this
-                // component (and everything it references) through the loadedmetadata
-                // listener. Clearing srcObject releases it for garbage collection.
-                this.root().srcObject = null;
-                this.root().load();
+        useEffect(() => {
+            const el = this.root();
+            if (!el) {
+                return;
             }
+            el.srcObject = this.props.session.getStream(this.props.type) || null;
+            el.load();
+            return () => {
+                el.srcObject = null;
+                el.load();
+            };
         });
         useListener(this.env.bus, "RTC-SERVICE:PLAY_MEDIA", async () => {
             await this.play();
         });
-    }
-
-    _update() {
-        if (!this.root()) {
-            return;
-        }
-        if (!this.props.session || !this.props.session.getStream(this.props.type)) {
-            this.root().srcObject = undefined;
-        } else {
-            this.root().srcObject = this.props.session.getStream(this.props.type);
-        }
-        this.root().load();
     }
 
     async play() {
