@@ -15,6 +15,14 @@ export class CardMany2OneAvatarField extends Component {
     get m2oProps() {
         return computeM2OProps(this.props);
     }
+
+    get value() {
+        return this.props.record.data[this.props.name];
+    }
+
+    get uniqueId() {
+        return this.value?.write_date ? this.value.write_date.toMillis() : undefined;
+    }
 }
 
 registry.category("fields").add("card.many2one_avatar", {
