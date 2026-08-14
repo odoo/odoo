@@ -1621,6 +1621,9 @@ class AccountEdiCommon(models.AbstractModel):
             if tax_values := allowance_charge_value.get('taxes_values'):
                 tax_values_list.append(tax_values)
 
+        for tax_values in tax_values_list:
+            tax_values['extra_domain'] = [('price_include_override', 'in', [False, 'tax_excluded'])]
+
         if customer := collected_values.get('customer_values', {}).get('customer'):
             fiscal_position = self.env['account.move'].new({
                 'company_id': collected_values['company'].id,
@@ -1820,21 +1823,6 @@ class AccountEdiCommon(models.AbstractModel):
 
         AccountTax._add_tax_details_in_base_lines(base_lines, company)
         AccountTax._round_base_lines_tax_details(base_lines, company)
-
-        # Fix 'price_unit' if some price-included taxes are involved.
-        for base_line in base_lines:
-            if base_line['discount'] != 100:
-                for tax_data in base_line['tax_details']['taxes_data']:
-                    if tax_data['tax'].price_include:
-                        discount = base_line['discount'] / 100
-                        raw_tax_amount_currency = tax_data['raw_tax_amount_currency'] / (1 - discount)
-                        base_line['price_unit'] += raw_tax_amount_currency / (base_line['quantity'] if base_line['quantity'] else 1)
-            else:
-                new_base_line = AccountTax._prepare_base_line_for_taxes_computation(record=base_line, discount=0.0, special_mode="total_excluded")
-                AccountTax._add_tax_details_in_base_lines([new_base_line], company)
-                for tax_data in new_base_line['tax_details']['taxes_data']:
-                    if tax_data['tax'].price_include:
-                        base_line['price_unit'] += tax_data['raw_tax_amount_currency'] / (base_line['quantity'] if base_line['quantity'] else 1)
 
         # Remove lines having a zero amount.
         collected_values['base_lines'] = [
