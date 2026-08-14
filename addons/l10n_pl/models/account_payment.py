@@ -13,6 +13,7 @@ class L10nPlAccountPayment(models.Model):
         store=True,
         readonly=True,
         copy=False,
+        init_storage=lambda model: None,
     )
     l10n_pl_verification_status = fields.Selection(related='l10n_pl_verification_id.verification_status')
     l10n_pl_verification_timestamp = fields.Datetime(related='l10n_pl_verification_id.verification_timestamp')
