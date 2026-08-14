@@ -984,19 +984,18 @@ class CrmLead(models.Model):
 
     @api.model
     def _read_group_stage_ids(self, stages, domain):
-        # retrieve team_id from the context and write the domain
-        # - ('id', 'in', stages.ids): add columns that should be present
-        # - OR ('fold', '=', False): add default columns that are not folded
-        # - OR ('team_ids', '=', team_id), ('fold', '=', False) if team_id: add team columns that are not folded
-        team_id = self.env.context.get('default_team_id')
-        team_ids = self.env.user.crm_team_ids._ids if self.env.context.get('show_user_team_stages') else ()
-        team_ids += (team_id,) if team_id else ()
-        search_domain = ['|', ('id', 'in', stages.ids), ('team_ids', '=', False)]
-        if team_ids:
-            search_domain = ['|', ('id', 'in', stages.ids), '|', ('team_ids', '=', False), ('team_ids', 'in', team_ids)]
+        default_team_id = self.env.context.get('default_team_id')
+        if self.env.context.get('show_team_switcher') and default_team_id:
+            team_ids = [default_team_id]
+        else:
+            team_ids = self.env.user.crm_team_ids.ids if self.env.context.get('show_user_team_stages') else []
+            team_ids += [default_team_id] if default_team_id else []
 
         # perform search
-        stage_ids = stages.sudo()._search(search_domain, order=stages._order)
+        stage_ids = stages.sudo()._search(
+            Domain('id', 'in', stages.ids) | self.env['crm.stage']._get_visible_stages_domain(team_ids),
+            order=stages._order
+        )
         return stages.browse(stage_ids)
 
     def _stage_find(self, team_id=False, domain=None, order='sequence, id', limit=1):

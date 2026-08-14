@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, fields, models
+from odoo.fields import Domain
 from odoo.tools import sql
 
 AVAILABLE_PRIORITIES = [
@@ -34,6 +35,11 @@ class CrmStage(models.Model):
         help='This stage is folded in the kanban view when there are no records in that stage to display.')
     # This field for interface only
     team_count = fields.Integer('team_count', compute='_compute_team_count')
+
+    @api.model
+    def _get_visible_stages_domain(self, team_ids):
+        """ Returns the "crm.stage" domain to know which stages are visible for the given team ids. """
+        return Domain("team_ids", "in", team_ids) | Domain("team_ids", "=", False)
 
     def _auto_init(self):
         # TODO stop hardcoding ids in tests and remove this

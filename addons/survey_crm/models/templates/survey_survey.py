@@ -26,6 +26,7 @@ class SurveySurvey(models.Model):
         return {
             'survey_type': 'survey',
             'title': _('Getting to know you'),
+            'team_id': self.env.context.get('default_team_id', False),
             'description_done': _('Thanks for answering!'),
             'progression_mode': 'number',
             'questions_layout': 'page_per_question',

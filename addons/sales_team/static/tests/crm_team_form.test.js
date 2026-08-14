@@ -4,7 +4,8 @@ import { expect, test } from "@odoo/hoot";
 
 import { defineCrmTeamModels } from "@sales_team/../tests/crm_team_test_helpers";
 
-import { contains as webContains, onRpc } from "@web/../tests/web_test_helpers";
+import { browser } from "@web/core/browser/browser";
+import { contains as webContains, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
 
 defineCrmTeamModels();
 
@@ -23,6 +24,9 @@ test("crm team form activate multi-team option via alert", async () => {
         },
     ]);
 
+    patchWithCleanup(browser.location, {
+        reload: () => expect.step("reload"),
+    });
     onRpc("has_group", ({ args }) => {
         expect.step("has_group");
         expect(args[1]).toBe("sales_team.group_sale_manager");
@@ -69,8 +73,7 @@ test("crm team form activate multi-team option via alert", async () => {
     ).toHaveText("Maria");
     await contains(".alert:visible", { count: 1 });
 
-    // Clicking on the button should update the multi-team option and remove the alert
+    // Clicking on the button should update the multi-team option and reload the page
     await webContains(".alert button[name='crm_team_activate_multi_membership']").click();
-    await contains(".alert:visible", { count: 0 });
-    expect.verifySteps(["has_group", "set_bool"]);
+    expect.verifySteps(["has_group", "set_bool", "reload"]);
 });

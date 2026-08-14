@@ -15,10 +15,16 @@ patch(LeadGenerationDropdown.prototype, {
         });
     },
     async createLeadGenerationSurvey() {
+        const context = {};
+        const default_team_id = this.env.searchModel.context.default_team_id;
+        if (default_team_id) {
+            context.default_team_id = default_team_id;
+        }
         const action = await this.orm.call(
-             'survey.survey',
-             'action_load_survey_template_sample',
-             ['lead_qualification'],
+            'survey.survey',
+            'action_load_survey_template_sample',
+            ['lead_qualification'],
+            { context },
         );
         await this.action.doAction(action);
     }

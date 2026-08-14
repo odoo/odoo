@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="crm.team_switcher">
+        <Dropdown menuClass="'crm_team_switcher_dropdown d-flex flex-column'">
+            <button class="o_cp_team_switcher text-truncate fs-4 btn btn-link text-reset fw-normal"
+                t-attf-class="{{this.hasDropdown ? 'o-dropdown-caret' : 'pe-none'}}" t-att-data-tooltip="this.currentLabel">
+                <span class="text-truncate" t-out="this.currentLabel"/>
+            </button>
+            <t t-set-slot="content">
+                <div class="overflow-auto flex-grow-1">
+                    <t t-foreach="this.teams" t-as="team" t-key="team_index">
+                        <DropdownItem onSelected="() => this.onSelect(team.id)" class="'text-truncate ' + (this.selectedTeamId === team.id ? 'selected' : '')">
+                            <t t-out="team.name"/>
+                        </DropdownItem>
+                    </t>
+                </div>
+                <t t-if="this.isSaleManager">
+                    <div class="dropdown-divider flex-shrink-0"/>
+                    <DropdownItem onSelected="() => this.onClickManageTeams()" class="'text-truncate flex-shrink-0'">
+                        Manage Teams
+                    </DropdownItem>
+                </t>
+            </t>
+        </Dropdown>
+    </t>
+
+</templates>
