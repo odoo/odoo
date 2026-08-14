@@ -174,7 +174,7 @@ export class RtcSession extends Record {
     raisingHand;
     videoComponentCount = 0;
     /** @type {Map<import("@mail/discuss/call/common/rtc_service").VideoType, MediaStream>} */
-    videoStreams = new Map();
+    videoStreams = fields.Attr(new Map(), { asProxy: true });
     /** @type {import("@mail/discuss/call/common/rtc_service").VideoType} */
     mainVideoStreamType;
     /**
