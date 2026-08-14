@@ -118,7 +118,6 @@ class AccountEdiProxyClientUser(models.Model):
             raise UserError(self.env._('This proxy user is not configured for Baiwang.'))
         return self._l10n_cn_baiwang_contact_proxy(endpoint=endpoint, params={
             'tax_no': company.vat,
-            'environment': company.l10n_cn_edi_mode or 'test',
             **params,
         })
 
