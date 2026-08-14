@@ -3295,4 +3295,38 @@ describe("unmerge cells option", () => {
                 <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
         );
     });
+
+    test("unmerge option should not be available in a different table", async () => {
+        const { el } = await setupEditor(
+            unformat(`
+                <table class="table table-bordered o_table">
+                    <tbody>
+                        <tr>
+                            <td class="a" colspan="2"><p>a[]</p><p>b</p></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="table table-bordered o_table">
+                    <tbody>
+                        <tr>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                        </tr>
+                    </tbody>
+                </table>`)
+        );
+        await expectElementCount(".o-we-table-menu", 0);
+        await click("td.a");
+
+        const secondTable = el.querySelectorAll("table")[1];
+        const secondTableCell = secondTable.querySelector("td");
+
+        // Check the row menu of the second table.
+        await hover(secondTableCell);
+        await expectElementCount("[data-type='row'].o-we-table-menu", 1);
+        await click("[data-type='row'].o-we-table-menu");
+        await expectElementCount(".dropdown-menu", 1);
+        expect(availableCommands(queryOne(".dropdown-menu"))).not.toInclude("unmerge_cell");
+    });
 });

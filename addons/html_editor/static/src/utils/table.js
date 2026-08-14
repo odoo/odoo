@@ -50,19 +50,24 @@ export function getTableCells(table) {
  * @returns {Object} An object with the following properties:
  *   - {boolean} canMerge - True if selected cells can be merged.
  *   - {boolean} canUnmerge
- *     True if the anchor or selected table cell has rowSpan or colSpan > 1.
+ *     True if the anchor cell or the selected table cells has rowSpan or
+ *     colSpan greater than 1, and all selected cells belong to the same
+ *     table as the target cell.
  *   - {Array<HTMLTableCellElement>} selectedCells - The selected cells.
  *   - {"colSpan" | "rowSpan" | ""} spanType - The span type along which
  *     the cells can be merged, or an empty string if merging is not possible.
  */
 export function getSelectedCellsMergeInfo(editableDocument, tableGrid, targetCell) {
+    const targetTable = closestElement(targetCell, "table");
+    const isInTargetTable = (cell) => cell && closestElement(cell, "table") === targetTable;
+
     const selectedTds = Array.from(editableDocument.querySelectorAll(".o_selected_td"));
     if (selectedTds.length <= 1) {
         const { anchorNode } = editableDocument.getSelection();
         const td = selectedTds[0] ?? (anchorNode && closestElement(anchorNode, isTableCell));
         return {
             canMerge: false,
-            canUnmerge: td?.rowSpan > 1 || td?.colSpan > 1,
+            canUnmerge: isInTargetTable(td) && (td.rowSpan > 1 || td.colSpan > 1),
             cells: [],
             spanType: "",
         };
@@ -71,13 +76,7 @@ export function getSelectedCellsMergeInfo(editableDocument, tableGrid, targetCel
     const firstCell = selectedTds[0];
     const lastCell = selectedTds[selectedTds.length - 1];
 
-    const table = closestElement(firstCell, "table");
-    const isSameTable =
-        table &&
-        table === closestElement(lastCell, "table") &&
-        table === closestElement(targetCell, "table");
-
-    if (!isSameTable) {
+    if (!isInTargetTable(firstCell) || !isInTargetTable(lastCell)) {
         return { canMerge: false, canUnmerge: false, cells: [], spanType: "" };
     }
 
