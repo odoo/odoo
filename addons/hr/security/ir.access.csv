@@ -3,6 +3,7 @@ access_hr_employee_category_user,hr.employee.category.user,hr.employee.category,
 access_hr_employee_category_emp,hr.employee.category.emp,hr.employee.category,base.group_user,r,
 access_hr_employee_user,hr.employee user,hr.employee,hr.group_hr_user,crud,
 access_hr_employee_system_user,hr.employee system user,hr.employee,base.group_system,r,
+access_hr_employee_onboarding,hr.employee onboarding own record,hr.employee,hr.group_hr_employee_onboarding,ru,"[('user_id', '=', user.id)]"
 hr_employee_comp_rule,Employee multi company rule,hr.employee,,crud,"[('company_id', 'in', company_ids + [False])]"
 access_hr_employee_public_user,hr.employee_public,hr.employee.public,base.group_user,r,
 access_hr_employee_resource_user,resource.resource.user,resource.resource,hr.group_hr_user,crud,
@@ -30,6 +31,7 @@ ir_rule_hr_departure_reason_multi_company,Departure Reason: multi company,hr.dep
 access_hr_contract_type_manager,hr.employee.type.manager,hr.employee.type,hr.group_hr_user,crud,
 ir_rule_hr_contract_type_multi_company,HR Contract Type: Multi Company,hr.employee.type,,crud,"['|', ('country_id', '=', False), ('country_id', 'in', user.env.companies.country_id.ids)]"
 access_hr_version_user,hr.version.user,hr.version,hr.group_hr_user,crud,
+access_hr_version_onboarding,hr.version onboarding own record,hr.version,hr.group_hr_employee_onboarding,ru,"[('employee_id.user_id', '=', user.id)]"
 ir_rule_hr_contract_multi_company,HR Contract: Multi Company,hr.version,,crud,"[('company_id', 'in', company_ids)]"
 access_mail_activity_plan_hr_manager,mail.activity.plan.hr.manager,mail.activity.plan,hr.group_hr_manager,r,
 mail_plan_rule_group_hr_manager,Manager can edit employee plan,mail.activity.plan,hr.group_hr_manager,cud,"[('res_model', '=', 'hr.employee')]"

@@ -74,50 +74,51 @@ class HrVersion(models.Model):
 
     # Personal Information
     country_id = fields.Many2one(
-        'res.country', 'Nationality (Country)', index='btree_not_null', groups="hr.group_hr_user", tracking=1)
+        'res.country', 'Nationality (Country)', index='btree_not_null', groups="hr.group_hr_user,hr.group_hr_employee_onboarding", tracking=1)
     identification_id = fields.Char(
         string='Identification No',
         help="Enter the employee's National Identification Number issued by the government (e.g., Aadhaar, SIN, NIN). This is used for official records and statutory compliance.",
-        groups="hr.group_hr_user",
+        groups="hr.group_hr_user,hr.group_hr_employee_onboarding",
         tracking=1)
-    passport_id = fields.Char('Passport No', groups="hr.group_hr_user", tracking=1)
-    passport_expiration_date = fields.Date('Passport Expiration Date', groups="hr.group_hr_user", tracking=1)
+    passport_id = fields.Char('Passport No', groups="hr.group_hr_user,hr.group_hr_employee_onboarding", tracking=1)
+    passport_expiration_date = fields.Date('Passport Expiration Date', groups="hr.group_hr_user,hr.group_hr_employee_onboarding", tracking=1)
     sex = fields.Selection([
         ('male', 'Male'),
         ('female', 'Female'),
         ('other', 'Other'),
-    ], groups="hr.group_hr_user", tracking=1, help="This is the legal sex as recognized by the state, used for official and statutory purposes.")
+    ], groups="hr.group_hr_user,hr.group_hr_employee_onboarding", tracking=1, help="This is the legal sex as recognized by the state, used for official and statutory purposes.")
 
-    private_street = fields.Char(string="Private Street", groups="hr.group_hr_user", tracking=1)
-    private_street2 = fields.Char(string="Private Street2", groups="hr.group_hr_user", tracking=1)
-    private_city = fields.Char(string="Private City", groups="hr.group_hr_user", tracking=1)
-    allowed_country_state_ids = fields.Many2many("res.country.state", compute='_compute_allowed_country_state_ids', groups="hr.group_hr_user")
+    private_street = fields.Char(string="Private Street", groups="hr.group_hr_user,hr.group_hr_employee_onboarding", tracking=1)
+    private_street2 = fields.Char(string="Private Street2", groups="hr.group_hr_user,hr.group_hr_employee_onboarding", tracking=1)
+    private_city = fields.Char(string="Private City", groups="hr.group_hr_user,hr.group_hr_employee_onboarding", tracking=1)
+    allowed_country_state_ids = fields.Many2many("res.country.state", compute='_compute_allowed_country_state_ids', groups="hr.group_hr_user,hr.group_hr_employee_onboarding")
     private_state_id = fields.Many2one(
         "res.country.state", string="Private State",
         domain="[('id', 'in', allowed_country_state_ids)]",
-        groups="hr.group_hr_user", tracking=1)
-    private_zip = fields.Char(string="Private Zip", groups="hr.group_hr_user", tracking=1)
+        groups="hr.group_hr_user,hr.group_hr_employee_onboarding", tracking=1)
+    private_zip = fields.Char(string="Private Zip", groups="hr.group_hr_user,hr.group_hr_employee_onboarding", tracking=1)
     private_country_id = fields.Many2one("res.country", string="Private Country", index='btree_not_null',
-                                         groups="hr.group_hr_user", tracking=1, default=lambda self: self.env.company.country_id)
+                                         groups="hr.group_hr_user,hr.group_hr_employee_onboarding", tracking=1, default=lambda self: self.env.company.country_id)
 
-    distance_home_work = fields.Integer(string="Home-Work Distance", groups="hr.group_hr_user", tracking=1)
-    km_home_work = fields.Integer(string="Home-Work Distance in Km", groups="hr.group_hr_user",
+    distance_home_work = fields.Integer(string="Home-Work Distance", groups="hr.group_hr_user,hr.group_hr_employee_onboarding", tracking=1)
+    # Kept aligned with distance_home_work, it is recomputed as soon as the employee fills the distance in.
+    km_home_work = fields.Integer(string="Home-Work Distance in Km", groups="hr.group_hr_user,hr.group_hr_employee_onboarding",
                                   compute="_compute_km_home_work", inverse="_inverse_km_home_work", store=True, tracking=1)
     distance_home_work_unit = fields.Selection([
         ('kilometers', 'km'),
         ('miles', 'mi'),
-    ], 'Home-Work Distance unit', groups="hr.group_hr_user", default='kilometers', required=True, tracking=1)
+    ], 'Home-Work Distance unit', groups="hr.group_hr_user,hr.group_hr_employee_onboarding", default='kilometers', required=True, tracking=1)
 
     marital = fields.Selection(
         selection='_get_marital_status_selection',
         string='Marital Status',
-        groups="hr.group_hr_user",
+        groups="hr.group_hr_user,hr.group_hr_employee_onboarding",
         default='single',
         required=True,
         tracking=1)
-    spouse_complete_name = fields.Char(string="Spouse Legal Name", groups="hr.group_hr_user", tracking=1)
-    spouse_birthdate = fields.Date(string="Spouse Birthdate", groups="hr.group_hr_user", tracking=1)
-    children = fields.Integer(string='Dependent Children', groups="hr.group_hr_user", tracking=1)
+    spouse_complete_name = fields.Char(string="Spouse Legal Name", groups="hr.group_hr_user,hr.group_hr_employee_onboarding", tracking=1)
+    spouse_birthdate = fields.Date(string="Spouse Birthdate", groups="hr.group_hr_user,hr.group_hr_employee_onboarding", tracking=1)
+    children = fields.Integer(string='Dependent Children', groups="hr.group_hr_user,hr.group_hr_employee_onboarding", tracking=1)
 
     # Work Information
     department_id = fields.Many2one('hr.department', check_company=True, tracking=1, index=True)
