@@ -54,7 +54,10 @@ patch(PosOrder.prototype, {
     },
     generateQrcode() {
         if (!this.notLegal && this.isSACompany()) {
-            return generateQRCodeDataUrl(this.l10n_sa_invoice_qr_code_str);
+            return generateQRCodeDataUrl(this.l10n_sa_invoice_qr_code_str, {
+                width: 180,
+                height: 180,
+            });
         }
         return false;
     },
