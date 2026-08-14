@@ -13,19 +13,29 @@ class ResUsers(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         users = super().create(vals_list)
-        self.env["discuss.channel"].search([("group_ids", "in", users.all_group_ids.ids)])._subscribe_users_automatically()
+        self.env["discuss.channel"].search_fetch([
+            ("auto_subscribe", "=", True),
+        ])._subscribe_users_automatically()
         return users
 
     def write(self, vals):
         res = super().write(vals)
         if "active" in vals and not vals["active"]:
             self._unsubscribe_from_non_public_channels(reset_role=True)
-        if vals.get("group_ids"):
-            # form: {'group_ids': [(3, 10), (3, 3), (4, 10), (4, 3)]} or {'group_ids': [(6, 0, [ids]}
-            user_group_ids = [command[1] for command in vals["group_ids"] if command[0] == 4]
-            user_group_ids += [id for command in vals["group_ids"] if command[0] == 6 for id in command[2]]
-            user_group_ids = self.env['res.groups'].browse(user_group_ids).all_implied_ids._ids
-            self.env["discuss.channel"].search([("group_ids", "in", user_group_ids)])._subscribe_users_automatically()
+        if {"company_ids", "group_ids"} & vals.keys():
+            domain = Domain("auto_subscribe", "=", True)
+            if vals.get("company_ids"):
+                domain &= Domain("auto_subscribe_company_ids", "in", self.company_ids.ids)
+            if vals.get("group_ids"):
+                # form: {'group_ids': [(3, 10), (3, 3), (4, 10), (4, 3)]} or {'group_ids': [(6, 0, [ids]}
+                user_group_ids = [command[1] for command in vals["group_ids"] if command[0] == 4]
+                user_group_ids += [id for command in vals["group_ids"] if command[0] == 6 for id in command[2]]
+                user_group_ids = self.env['res.groups'].browse(user_group_ids).all_implied_ids._ids
+                domain &= Domain.OR([
+                    [("group_public_id", "in", user_group_ids)],
+                    [("group_ids", "in", user_group_ids)],
+                ])
+            self.env["discuss.channel"].search_fetch(domain)._subscribe_users_automatically()
         return res
 
     def unlink(self):

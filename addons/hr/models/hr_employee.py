@@ -1788,7 +1788,8 @@ class HrEmployee(models.Model):
                 employee_sudo.work_contact_id.image_1920 = employee_sudo.image_1920
         employee_departments = employees.department_id
         if employee_departments:
-            self.env['discuss.channel'].sudo().search([
+            self.env['discuss.channel'].sudo().search_fetch([
+                ('auto_subscribe', '=', True),
                 ('subscription_department_ids', 'in', employee_departments.ids)
             ])._subscribe_users_automatically()
         onboarding_notes_bodies = {}
@@ -1874,8 +1875,9 @@ class HrEmployee(models.Model):
         if vals.get('department_id') or vals.get('user_id'):
             department_id = vals['department_id'] if vals.get('department_id') else self[:1].department_id.id
             # When added to a department or changing user, subscribe to the channels auto-subscribed by department
-            self.env['discuss.channel'].sudo().search([
-                ('subscription_department_ids', 'in', department_id)
+            self.env['discuss.channel'].sudo().search_fetch([
+                ('auto_subscribe', '=', True),
+                ('subscription_department_ids', 'in', department_id),
             ])._subscribe_users_automatically()
         if res and ('resource_calendar_id' in vals or 'hours_per_week' in vals or 'hours_per_day' in vals):
             resources = self.env['resource.resource']
