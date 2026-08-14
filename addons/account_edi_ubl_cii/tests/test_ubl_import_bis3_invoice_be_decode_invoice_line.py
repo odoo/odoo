@@ -186,9 +186,17 @@ class TestUblImportBis3InvoiceBEDecodeInvoiceLine(TestUblImportBis3InvoiceBE):
             'company_id': self.company_data['company'].id
         })
         invoice = self._import_invoice_as_attachment_on(test_name='test_partial_import_invoice_line_with_discount_and_included_tax')
-        self.assertRecordValues(invoice.invoice_line_ids, [{
-            'price_unit': 121.0,
-            'quantity': 2.0,
-            'discount': 50.0,
-            'price_subtotal': 100.0,
-        }])
+        self.assertRecordValues(invoice.invoice_line_ids, [
+            {
+                'price_unit': 121.0,
+                'quantity': 2.0,
+                'discount': 50.0,
+                'price_subtotal': 100.0,
+            },
+            {
+                'price_unit': 121.0,
+                'quantity': 1.0,
+                'discount': 100.0,
+                'price_subtotal': 0.0,
+            }
+        ])
