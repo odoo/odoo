@@ -1352,6 +1352,7 @@ class AccountMoveLine(models.Model):
                 grouping_key_counterpart = frozendict({
                     'move_id': move._origin.id,
                     'account_id': grouping_key['account_id'],
+                    'analytic_distribution': grouping_key['analytic_distribution'],
                     'display_type': 'epd',
                 })
                 aggregated_base_lines = [
