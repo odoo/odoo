@@ -29,6 +29,14 @@ test("PosOrderDoesNotRemainInList / test_ecommerce_paid_order_is_hidden_in_pos: 
 
     expect(Utils.isQuotationListed("S00001")).toBe(false);
     expect(Utils.isQuotationListed("S00002")).toBe(true);
+
+    await Utils.removeFilter("Not Paid");
+    expect(Utils.isQuotationListed("S00001")).toBe(true);
+    expect(Utils.isQuotationListed("S00002")).toBe(true);
+
+    await Utils.selectFilter("Paid");
+    expect(Utils.isQuotationListed("S00001")).toBe(true);
+    expect(Utils.isQuotationListed("S00002")).toBe(false);
 });
 
 test("test_selected_partner_quotation_loading: the orders are restricted to the selected customer", async () => {

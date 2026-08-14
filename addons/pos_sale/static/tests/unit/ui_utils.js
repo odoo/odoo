@@ -5,6 +5,7 @@ import {
     isMobile,
     sendBufferKeys,
 } from "@point_of_sale/../tests/unit/ui_utils";
+import { expect } from "@odoo/hoot";
 
 const waitUntilDialogsClosed = () => waitUntil(() => !document.querySelector(".modal"));
 
@@ -57,6 +58,28 @@ export async function downPaymentSaleOrder(saleOrderName, amount, { percentage }
     await waitFor(`.modal .modal-title:contains("Down Payment")`);
     await sendBufferKeys(amount);
     await click(`.modal .modal-footer .btn:contains("Apply")`);
+    await waitUntilDialogsClosed();
+    await animationFrame();
+}
+
+export const toggleSearchBar = async () => contains(".o_searchview_dropdown_toggler").click();
+export const removeFilter = async (filterName) =>
+    contains(
+        `.o_searchview_input_container .o_facet_values:contains("${filterName}") .o_facet_remove`
+    ).click();
+
+export async function selectFilter(filterName) {
+    await toggleSearchBar();
+    await contains(`.o_filter_menu .o_menu_item:contains(${filterName})`).click();
+    await toggleSearchBar();
+}
+
+export async function settlePaidSaleOrder(saleOrderName) {
+    await openQuotationList();
+    expect(isQuotationListed(saleOrderName)).toBe(false);
+    await selectFilter("Paid");
+    expect(isQuotationListed(saleOrderName)).toBe(true);
+    await contains(`${quotationCell()}:contains("${saleOrderName}")`).click();
     await waitUntilDialogsClosed();
     await animationFrame();
 }

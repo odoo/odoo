@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-inherit="point_of_sale.SelectPartnerButton" t-inherit-mode="extension">
+        <!-- The customer of a sale order paid online cannot be changed -->
+        <xpath expr="//button[hasclass('set-partner')]" position="attributes">
+            <attribute name="t-att-disabled" add="this.pos.getOrder()?.hasPrePaidSOPayment" separator=" or " />
+        </xpath>
+    </t>
+</templates>

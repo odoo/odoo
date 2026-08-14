@@ -6,6 +6,7 @@ PosConfig._records = PosConfig._records.map((config) => {
             ...config,
             down_payment_product_id: 105,
             default_product_id: 106,
+            sale_order_payment_method_id: 21,
         };
     }
     return config;

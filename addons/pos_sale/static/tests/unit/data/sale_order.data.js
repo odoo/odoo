@@ -20,6 +20,7 @@ export class SaleOrder extends models.ServerModel {
             "amount_paid",
             "partner_shipping_id",
             "partner_invoice_id",
+            "transaction_ids",
             "date_order",
             "write_date",
         ];
@@ -27,9 +28,20 @@ export class SaleOrder extends models.ServerModel {
 
     // The quotation list of the PoS is a list view on desktop and a kanban view on mobile
     _views = {
-        list: `<list><field name="name"/><field name="partner_id"/><field name="amount_unpaid"/></list>`,
+        list: `
+            <list>
+                <field name="name"/>
+                <field name="date_order"/>
+                <field name="partner_id"/>
+                <field name="amount_unpaid"/>
+                <field name="invoice_status" widget="label_selection" />
+            </list>`,
         kanban: `<kanban><templates><div t-name="card"><field name="name"/><field name="amount_unpaid"/></div></templates></kanban>`,
-        search: `<search/>`,
+        search: `
+            <search>
+                <filter name="paid_orders_filter" string="Paid" domain="[('amount_unpaid', '=', 0)]"/>
+                <filter name="unpaid_orders_filter" string="Not Paid" domain="[('amount_unpaid', '!=', 0)]"/>
+            </search>`,
     };
 
     _records = [
@@ -49,6 +61,7 @@ export class SaleOrder extends models.ServerModel {
             invoice_status: "to invoice",
             partner_shipping_id: 3,
             partner_invoice_id: 3,
+            transaction_ids: [],
             date_order: "2025-07-03 17:04:14",
             write_date: "2025-07-03 17:04:14",
         },
@@ -68,6 +81,7 @@ export class SaleOrder extends models.ServerModel {
             invoice_status: "to invoice",
             partner_shipping_id: 3,
             partner_invoice_id: 3,
+            transaction_ids: [],
             date_order: "2025-07-03 17:04:14",
             write_date: "2025-07-03 17:04:14",
         },
@@ -334,6 +348,28 @@ export class SaleOrder extends models.ServerModel {
             invoice_status: "to invoice",
             partner_shipping_id: 3,
             partner_invoice_id: 3,
+            transaction_ids: [],
+            date_order: "2025-07-03 17:04:14",
+            write_date: "2025-07-03 17:04:14",
+        },
+        {
+            // Paid Sale order - Paid through Online
+            id: 19,
+            name: "S00019",
+            state: "sale",
+            order_line: [31],
+            partner_id: 3,
+            pricelist_id: 1,
+            fiscal_position_id: false,
+            amount_total: 101,
+            amount_untaxed: 101,
+            amount_unpaid: 0,
+            amount_paid: 101,
+            currency_id: 1,
+            invoice_status: "to invoice",
+            partner_shipping_id: 3,
+            partner_invoice_id: 3,
+            transaction_ids: [1],
             date_order: "2025-07-03 17:04:14",
             write_date: "2025-07-03 17:04:14",
         },
@@ -341,22 +377,29 @@ export class SaleOrder extends models.ServerModel {
 
     async load_sale_order_from_pos(id, config_id) {
         const order = this.env["sale.order"].find((order) => order.id === id);
-        const orderLines = this.env["sale.order.line"].filter((line) =>
-            order.order_line.includes(line.id)
+        const getRecords = (modelName, recIds) =>
+            this.env[modelName].filter((rec) => recIds.includes(rec.id));
+
+        const orderLines = getRecords("sale.order.line", order.order_line);
+        const productProducts = getRecords(
+            "product.product",
+            orderLines.map((line) => line.product_id)
         );
-        const partner = this.env["res.partner"].find((partner) => partner.id === order.partner_id);
-        const productProducts = this.env["product.product"].filter((product) =>
-            orderLines.map((line) => line.product_id).includes(product.id)
-        );
-        const productTemplates = this.env["product.template"].filter((template) =>
-            productProducts.map((p) => p.product_tmpl_id).includes(template.id)
-        );
+        const transactions = getRecords("payment.transaction", order.transaction_ids);
         return {
             "sale.order": [order],
             "sale.order.line": orderLines,
-            "res.partner": [partner],
+            "res.partner": getRecords("res.partner", [order.partner_id]),
             "product.product": productProducts,
-            "product.template": productTemplates,
+            "product.template": getRecords(
+                "product.template",
+                productProducts.map((p) => p.product_tmpl_id)
+            ),
+            "payment.transaction": transactions,
+            "account.payment": getRecords(
+                "account.payment",
+                transactions.map((txn) => txn.payment_id)
+            ),
         };
     }
 }
