@@ -1256,3 +1256,43 @@ class TestL10nAccountWithholdingTaxesFlows(TestTaxCommon, AnalyticCommon):
             'withholding_residual_amount_currency': 0.00,
             'withholding_net_residual_amount_currency': 0.00,
         }])
+
+    def test_withhold_on_discounted_price(self):
+        """ Test that the withholding tax is computed on the discounted price """
+        withholding_tax = self.percent_tax(-10, type_tax_use="purchase", is_withholding_tax=True, withholding_sequence_id=self.withholding_sequence.id)
+        bill = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2026-06-01',
+            'invoice_line_ids': [Command.create({
+                'product_id': self.product_a.id,
+                'price_unit': 1000.0,
+                'discount': 10.0,
+                'tax_ids': [Command.set(withholding_tax.ids)],
+            })],
+        })
+        bill.action_post()
+        self.assertRecordValues(bill, [{
+            'withholding_total_amount_currency': 90.00,
+            'withholding_deducted_amount_currency': 0.00,
+            'withholding_residual_amount_currency': 90.00,
+            'withholding_net_residual_amount_currency': 810.00,
+        }])
+
+        payment_register = self.env['account.payment.register']\
+            .with_context(active_model='account.move', active_ids=bill.ids)\
+            .create({})
+        self.assertRecordValues(payment_register, [{
+            'withhold': 'withhold_pay',
+            'amount': 900.0,
+            'withholding_net_amount': 810.0,
+        }])
+
+        payment = payment_register._create_payments()
+        self.assertEqual(payment.amount, 900.00)
+        self.assertRecordValues(bill, [{
+            'withholding_total_amount_currency': 90.00,
+            'withholding_deducted_amount_currency': 90.00,
+            'withholding_residual_amount_currency': 0.00,
+            'withholding_net_residual_amount_currency': 0.00,
+        }])
