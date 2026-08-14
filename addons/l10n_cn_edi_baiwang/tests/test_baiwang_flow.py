@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
 from unittest.mock import patch
-from urllib.parse import parse_qs, urlsplit
 
 from odoo.exceptions import UserError
 from odoo.tests import tagged
@@ -204,20 +203,59 @@ class TestL10nCnBaiwangFlow(TestAccountMoveSendCommon):
         self.assertIn('Authentication failed. Please verify your Baiwang credentials.', str(err.exception))
         self.assertIn('Baiwang [101]: token rejected', str(err.exception))
 
-    def test_04_subscribe_action_uses_iap_callback_url(self):
+    def test_04_subscribe_action_gets_portal_url_from_proxy(self):
         company = self.company_data['company']
         settings = self.env['res.config.settings'].create({'company_id': company.id})
+        proxy_class = self.env['account_edi_proxy_client.user'].__class__
 
-        action = settings.action_l10n_cn_baiwang_subscribe()
+        proxy_url = 'https://www-pre.baiwang.com/portal/subscribe/abc123'
+        with patch.object(
+            proxy_class, '_l10n_cn_baiwang_contact_proxy',
+            return_value={'success': True, 'url': proxy_url},
+        ):
+            action = settings.action_l10n_cn_baiwang_subscribe()
 
         self.assertEqual(action['type'], 'ir.actions.act_url')
-        parsed = urlsplit(action['url'])
-        query = parse_qs(parsed.query)
-        self.assertEqual(query.get('taxNo'), [company.vat])
-        self.assertTrue(query.get('requestId'))
-        self.assertTrue(query.get('callbackUrl'))
-        self.assertIn('/l10n_cn_edi_baiwang/callback/order_complete', query['callbackUrl'][0])
-        self.assertIn('requestId=', query['callbackUrl'][0])
+        self.assertEqual(action['url'], proxy_url)
+        self.assertEqual(action['target'], 'new')
+
+    def test_04b_subscribe_action_raises_without_url_in_response(self):
+        company = self.company_data['company']
+        settings = self.env['res.config.settings'].create({'company_id': company.id})
+        proxy_class = self.env['account_edi_proxy_client.user'].__class__
+
+        with patch.object(
+            proxy_class, '_l10n_cn_baiwang_contact_proxy',
+            return_value={'success': True},
+        ):
+            with self.assertRaises(UserError) as err:
+                settings.action_l10n_cn_baiwang_subscribe()
+        self.assertIn('Could not retrieve the Baiwang subscription URL.', str(err.exception))
+
+    def test_04c_authorize_action_gets_portal_url_from_proxy(self):
+        company = self.company_data['company']
+        settings = self.env['res.config.settings'].create({'company_id': company.id})
+        proxy_class = self.env['account_edi_proxy_client.user'].__class__
+
+        proxy_url = 'https://www-pre.baiwang.com/portal/authorize/abc123'
+        with patch.object(
+            proxy_class, '_l10n_cn_baiwang_contact_proxy',
+            return_value={'success': True, 'url': proxy_url},
+        ):
+            action = settings.action_l10n_cn_baiwang_authorize()
+
+        self.assertEqual(action['type'], 'ir.actions.act_url')
+        self.assertEqual(action['url'], proxy_url)
+        self.assertEqual(action['target'], 'new')
+
+    def test_04d_authorize_action_requires_subscription(self):
+        company = self.company_data['company']
+        company.l10n_cn_baiwang_subscription_status = 'not_subscribed'
+        settings = self.env['res.config.settings'].create({'company_id': company.id})
+
+        with self.assertRaises(UserError) as err:
+            settings.action_l10n_cn_baiwang_authorize()
+        self.assertIn('Please complete Baiwang subscription first.', str(err.exception))
 
     def test_05_red_form_required_only_for_draft_refund_of_issued_invoice(self):
         invoice = self._create_posted_invoice()

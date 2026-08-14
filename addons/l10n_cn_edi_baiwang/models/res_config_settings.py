@@ -1,7 +1,4 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import uuid
-from urllib.parse import urlencode
-
 from odoo import fields, models
 from odoo.exceptions import UserError
 
@@ -35,9 +32,32 @@ class ResConfigSettings(models.TransientModel):
         if not self.company_id.vat:
             raise UserError(self.env._("Please set the company Tax ID before subscribing to Baiwang."))
 
+        response = self.company_id._l10n_cn_baiwang_create_proxy_user()._l10n_cn_baiwang_contact_proxy(
+            endpoint='api/l10n_cn_edi_baiwang/1/route/subscribe',
+            params={},
+        )
+        if not response.get('url'):
+            raise UserError(self.env._("Could not retrieve the Baiwang subscription URL."))
         return {
             'type': 'ir.actions.act_url',
-            'url': self._l10n_cn_baiwang_get_route_url('subscribe', '/l10n_cn_edi_baiwang/callback/order_complete'),
+            'url': response['url'],
+            'target': 'new',
+        }
+
+    def action_l10n_cn_baiwang_authorize(self):
+        self.ensure_one()
+        if self.company_id.l10n_cn_baiwang_subscription_status == 'not_subscribed':
+            raise UserError(self.env._("Please complete Baiwang subscription first."))
+
+        response = self.company_id._l10n_cn_baiwang_create_proxy_user()._l10n_cn_baiwang_contact_proxy(
+            endpoint='api/l10n_cn_edi_baiwang/1/route/authorize',
+            params={},
+        )
+        if not response.get('url'):
+            raise UserError(self.env._("Could not retrieve the Baiwang authorization URL."))
+        return {
+            'type': 'ir.actions.act_url',
+            'url': response['url'],
             'target': 'new',
         }
 
@@ -76,19 +96,3 @@ class ResConfigSettings(models.TransientModel):
             'target': 'new',
             'view_mode': 'form',
         }
-
-    def _l10n_cn_baiwang_get_route_url(self, action, callback_path):
-        proxy_user = self.company_id._l10n_cn_baiwang_create_proxy_user()
-        proxy_url = proxy_user._get_server_url().rstrip('/')
-        request_id = uuid.uuid4().hex
-        self.company_id.sudo().l10n_cn_baiwang_subscription_request_id = request_id
-
-        params = urlencode({
-            'taxNo': self.company_id.vat or '',
-            'companyName': self.company_id.name or '',
-            'callbackUrl': f"{proxy_url}{callback_path}?requestId={request_id}",
-            'requestId': request_id,
-            'idClient': proxy_user.id_client,
-            'environment': self.company_id.l10n_cn_edi_mode,
-        })
-        return f"{proxy_url}/api/l10n_cn_edi_baiwang/1/route/{action}?{params}"
