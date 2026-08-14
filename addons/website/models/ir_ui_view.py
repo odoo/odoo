@@ -689,6 +689,10 @@ class IrUiView(models.Model):
         if not view._are_archs_equal(old_arch, new_arch):
             view._set_noupdate()
             view.write({'arch': etree.tostring(new_arch, encoding='unicode')})
+            view = view if view.website_id else view.search([
+                ('key', '=', view.key),
+                ('website_id', '=', current_website.id)
+            ], limit=1)
             view._copy_custom_snippet_translations(view, 'arch_db')
 
     @api.model
