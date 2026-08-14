@@ -273,5 +273,7 @@ test("test_settle_so_custom_attribute_value: the custom attribute value is shown
     const order = store.getOrder();
     expect(order.lines).toHaveLength(1);
     expect(order.lines[0].custom_attribute_value_ids[0].custom_value).toBe("Value");
-    expect(Utils.hasOrderline({ attributeLine: "Customization: Yes: Value" })).toBe(true);
+    expect(Utils.hasOrderline({ attributeLine: "Sprinkles, Customization: Yes: Value" })).toBe(
+        true
+    );
 });
