@@ -8,6 +8,10 @@
             &.oi-filled {
                 color: $o-main-favorite-color;
             }
+
+            &.o-isJustSet {
+                @include o-star-fillAnimation($o-main-favorite-color);
+            }
         }
     }
 }

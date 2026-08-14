@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.BooleanFavoriteField">
-        <button class="o_favorite btn btn-link btn-link-inline" t-att-class="{'pe-none o_disabled' : this.props.readonly}" t-on-click.prevent.stop="this.update" data-available-offline="">
+        <button class="o_favorite btn btn-link btn-link-inline" t-att-class="{'pe-none o_disabled' : this.props.readonly, 'o-isJustSet': this.justSet.value}" t-on-click.prevent.stop="this.onClick" data-available-offline="">
             <i class="oi" t-att-class="this.iconClass" data-icon="star" role="img" t-att-title="this.label" t-att-aria-label="this.label"/>
             <t t-if="!this.props.readonly and !this.props.noLabel" t-out="this.label"/>
         </button>
