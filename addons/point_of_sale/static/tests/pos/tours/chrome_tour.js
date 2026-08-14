@@ -242,7 +242,11 @@ registry.category("web_tour.tours").add("test_cash_in_out", {
             Chrome.doCashMove("10", "MOBT in"),
             Chrome.doCashMove("5", "MOBT out"),
             Chrome.clickMenuOption("Close Register"),
-            Utils.selectButton("Cash In/Out"),
+            {
+                content: "Click Cash In/Out footer button",
+                trigger: ".modal .modal-footer button:contains(Cash In/Out)",
+                run: "click",
+            },
             Utils.selectButton("Details"),
             CashMoveList.checkNumberOfRows(2),
             CashMoveList.checkCashMoveShown("10"),

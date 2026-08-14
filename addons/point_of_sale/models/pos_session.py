@@ -462,7 +462,7 @@ class PosSession(models.Model):
 
         self._launch_cron_generate_invoice_period(domain)
 
-    def close_session_from_ui(self, payment_method_closing={}):
+    def close_session_from_ui(self, payment_method_closing={}, opening_notes=None, closing_notes=None):
         """
         Main entry point for closing a session from the UI. It will
         perform all necessary checks and operations to close the session
@@ -510,8 +510,7 @@ class PosSession(models.Model):
             )
             self.message_post(body=body)
 
-        if self.env.user.email:
-            self.post_close_register_message()
+        self.post_close_register_message(opening_notes, closing_notes)
 
         self.write({
             'state': 'closed',
@@ -521,8 +520,15 @@ class PosSession(models.Model):
         self.env.flush_all()  # ensure sale.report is up to date
         return {'status': True}
 
-    def post_close_register_message(self):
-        self.message_post(body=_('Closed Register'), author_id=self._get_message_author().id)
+    def post_close_register_message(self, opening_notes=None, closing_notes=None):
+        message = _('Register Closed\n')
+        if closing_notes:
+            message += _('Closing notes: %s\n', closing_notes)
+            self.closing_notes = closing_notes
+        if opening_notes and self.opening_notes != opening_notes:
+            message += _('Opening notes: %s\n', opening_notes)
+            self.opening_notes = opening_notes
+        self.message_post(body=plaintext2html(message), author_id=self._get_message_author().id)
 
     def _get_message_author(self):
         return self.env.user.partner_id
@@ -580,14 +586,17 @@ class PosSession(models.Model):
                 'payment_amount': cash_payments_summary,
                 'moves': cash_in_out_list,
                 'id': cash_pm.id,
+                'editable': True,
+                'is_default_cash': True,
             } if cash_pm else {},
             'non_cash_payment_methods': [{
                 'name': pm.name,
-                'amount': sum(non_cash_payments_grouped_by_method_id[pm].mapped('amount')),
+                'amount': amount,
                 'number': len(non_cash_payments_grouped_by_method_id[pm]),
                 'id': pm.id,
-                'type': pm.type,
-            } for pm in non_cash_payment_method_ids],
+                'editable': pm.type == 'bank',
+            } for pm in non_cash_payment_method_ids
+            if (amount := sum(non_cash_payments_grouped_by_method_id[pm].mapped('amount')))],
             'is_manager': self.env.user.has_group("point_of_sale.group_pos_manager"),
             'amount_authorized_diff': self.config_id.amount_authorized_diff if self.config_id.set_maximum_difference else None,
         }
@@ -668,11 +677,11 @@ class PosSession(models.Model):
             cash_pm.id: cashbox_value,
         })
 
+        message = _('Register Opened')
         if notes:
             self.opening_notes = notes
-            message = _('Opening control message: ')
-            message += notes
-            self.message_post(body=plaintext2html(message))
+            message += _('\nOpening Notes: %s', notes)
+        self.message_post(body=plaintext2html(message), author_id=self._get_message_author().id)
 
     def set_opening_control(self, cashbox_value: int, notes: str):
         """
