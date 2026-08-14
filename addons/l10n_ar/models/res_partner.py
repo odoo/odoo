@@ -52,6 +52,14 @@ class ResPartner(models.Model):
         remaining = self - recs_ar_vat
         remaining.l10n_ar_vat = False
 
+    @api.constrains('vat', 'l10n_latam_identification_type_id', 'country_id')
+    def _check_l10n_ar_cuit_number(self):
+        l10n_ar_cuit_partners = self.filtered(lambda p: p.vat
+            and p.l10n_latam_identification_type_id.l10n_ar_afip_code == '80'
+            and p.country_code == 'AR'
+        )
+        l10n_ar_cuit_partners._l10n_ar_identification_validation()
+
     def _run_check_identification(self, validation='error'):
         """ Since we validate more documents than the vat for Argentinean partners (CUIT - VAT AR, CUIL, DNI) we
         extend this method in order to process it. """
