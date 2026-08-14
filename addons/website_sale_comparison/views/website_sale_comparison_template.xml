@@ -418,7 +418,7 @@
                                     </li>
                                 </ul>
                             </div>
-                            <t t-if="is_view_active('website_sale.product_tags') and any([product.all_product_tag_ids for product in products])">
+                            <t t-if="is_view_active('website_sale.product_tags') and any([product.all_product_tag_ids.filtered('visible_to_customers') for product in products])">
                                 <h6 class="d-table position-sticky start-0 mb-0">Tags</h6>
                                 <ul class="list-unstyled d-flex border-bottom mb-0 py-3">
                                     <li
