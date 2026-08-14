@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
-    <t t-name="pos_hr.AccordionItem">
-        <div class="accordion position-relative" t-att-class="{'disabled': this.props.disabled}">
+    <t t-name="point_of_sale.AccordionItem">
+        <div class="accordion position-relative" t-att-class="{'disabled': this.props.disabled}" t-attf-class="{{this.props.contentClass}}">
             <button class="accordion-header dropdown-item" tabindex="0"
                     t-att-class="{'open': this.state.open}"
                     t-att-aria-expanded="this.state.open ? 'true' : 'false'"
