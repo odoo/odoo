@@ -18,6 +18,14 @@ from odoo.addons.base.models.res_partner import _ref_vat
 
 _logger = logging.getLogger(__name__)
 
+SQL_OPERATORS = {
+    '<': SQL('<'),
+    '=': SQL('='),
+    '>': SQL('>'),
+    '>=': SQL('>='),
+    '<=': SQL('<='),
+}
+
 
 class AccountFiscalPosition(models.Model):
     _name = 'account.fiscal.position'
@@ -419,14 +427,15 @@ class ResPartner(models.Model):
         self.credit_to_invoice = False
 
     def _asset_difference_search(self, account_type, operator, operand):
-        if operator not in ('<', '=', '>', '>=', '<='):
+        operator_sql = SQL_OPERATORS.get(operator)
+        if not operator_sql:
             return []
         if not isinstance(operand, (float, int)):
             return []
         sign = 1
         if account_type == 'liability_payable':
             sign = -1
-        res = self.env.cr.execute(f'''
+        res = self.env.execute_query(SQL('''
             SELECT aml.partner_id
               FROM res_partner partner
          LEFT JOIN account_move_line aml ON aml.partner_id = partner.id
@@ -438,12 +447,9 @@ class ResPartner(models.Model):
                AND SPLIT_PART(line_company.parent_path, '/', 1)::int = %s
                AND move.state = 'posted'
           GROUP BY aml.partner_id
-            HAVING %s * COALESCE(SUM(aml.amount_residual), 0) {operator} %s''',
-            (account_type, self.env.company.root_id.id, sign, operand)
-        )
-        res = self.env.cr.fetchall()
-        if not res:
-            return [('id', '=', '0')]
+            HAVING %s * COALESCE(SUM(aml.amount_residual), 0) %s %s''',
+            account_type, self.env.company.root_id.id, sign, operator_sql, operand
+        ))
         return [('id', 'in', [r[0] for r in res])]
 
     @api.model

@@ -1,6 +1,5 @@
-# -*- coding: utf-8 -*-
-
 from odoo import api, SUPERUSER_ID
+from odoo.tools import SQL
 
 
 def migrate(cr, version):
@@ -9,15 +8,15 @@ def migrate(cr, version):
     # config manually, possibly creating a ticket to ask to fix his accounting history.
 
     def get_taxes_from_templates(templates):
-        cr.execute(f"""
+        cr.execute(SQL("""
             SELECT array_agg(tax.id)
             FROM account_tax tax
             JOIN ir_model_data data
                 ON data.model = 'account.tax'
                 AND data.res_id = tax.id
                 AND data.module = 'l10n_es'
-                AND data.name ~ '^[0-9]*_({'|'.join(templates)})\\Z'
-        """)
+                AND data.name ~ %s
+        """, f'^[0-9]*_({'|'.join(templates)})\\Z'))
 
         return cr.fetchone()[0]
     env = api.Environment(cr, SUPERUSER_ID, {})

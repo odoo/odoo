@@ -4,7 +4,7 @@ from datetime import timedelta, UTC
 from zoneinfo import ZoneInfo
 
 from odoo import api, fields, models, tools
-from odoo.tools import format_time
+from odoo.tools import SQL, format_time
 from odoo.addons.mail.tools.discuss import Store
 
 
@@ -221,23 +221,25 @@ class HrEmployeePublic(models.Model):
 
     @api.model
     def _get_fields(self):
+        yield SQL('e.id')
+        yield SQL("e.id AS employee_id")
+        yield SQL("e.name")
+        yield SQL("e.active")
         base_fields = ('id', 'employee_id', 'name', 'active')
-        version_fields = self.env['hr.version']._fields
-        return 'e.id AS id,e.id AS employee_id,e.name AS name,e.active AS active,' + ','.join(
-            (f'v.{name}' if name in version_fields and version_fields[name].store else f'e.{name}')
-            for name, field in self._fields.items()
-            if name not in base_fields and field.store and field.column_type
-        )
+        for name, field in self._fields.items():
+            if field.store and field.column_type and name not in base_fields:
+                alias = 'v' if name in self.env['hr.version']._fields and self.env['hr.version']._fields[name].store else 'e'
+                yield SQL.identifier(alias, name)
 
     def init(self):
         tools.drop_view_if_exists(self.env.cr, self._table)
-        self.env.cr.execute("""CREATE or REPLACE VIEW %s as (
+        self.env.cr.execute(SQL("""CREATE or REPLACE VIEW %s as (
             SELECT
                 %s
             FROM hr_employee e
             JOIN hr_version v
               ON v.id = e.current_version_id
-        )""" % (self._table, self._get_fields()))
+        )""", SQL.identifier(self._table), SQL(", ").join(self._get_fields())))
 
     def _store_avatar_card_fields(self, res: Store.FieldList):
         # sudo: hr.public.employee - reading _store_avatar_card_fields of accessible public employee is acceptable

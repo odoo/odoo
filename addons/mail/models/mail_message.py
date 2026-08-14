@@ -593,20 +593,20 @@ class MailMessage(models.Model):
                 SQL('partner_cc_rel.mail_message_id = %s AND partner_cc_rel.res_partner_id = %s', id_sql, pid))
             query.add_join('LEFT JOIN', 'needaction_rel', 'mail_notification',
                 SQL('needaction_rel.mail_message_id = %s AND needaction_rel.res_partner_id = %s', id_sql, pid))
-            query = query.select(*(
+            sql = query.select(*(
                 table[fname]
                 for fname in ('id', 'model', 'res_id', 'author_id', 'parent_id', 'message_type', 'create_uid')
             ), SQL('bool_or(partner_rel.res_partner_id IS NOT NULL OR partner_cc_rel.res_partner_id IS NOT NULL '
                    'OR needaction_rel.res_partner_id IS NOT NULL) AS notified'))
         elif operation in ('create', 'unlink'):
-            query = query.select(*(
+            sql = query.select(*(
                 table[fname]
                 for fname in ('id', 'model', 'res_id', 'author_id', 'parent_id', 'message_type')
             ))
         else:
             raise ValueError(_('Wrong operation name (%s)', operation))
         # skip flush which is already done
-        self.env.cr.execute(query)
+        self.env.cr.execute(sql)
         messages_to_check = {
             values['id']: values
             for values in self.env.cr.dictfetchall()

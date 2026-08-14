@@ -347,7 +347,8 @@ class ResCurrency(models.CachedModel):
         return to_currency.round(to_amount) if round else to_amount
 
     def _select_companies_rates(self):
-        return """
+        self.flush_model()
+        return SQL("""
             SELECT
                 r.currency_id,
                 COALESCE(r.company_id, c.id) as company_id,
@@ -361,7 +362,7 @@ class ResCurrency(models.CachedModel):
                  LIMIT 1) AS date_end
             FROM res_currency_rate r
             JOIN res_company c ON (r.company_id is null or r.company_id = c.id)
-        """
+        """)
 
 
 class ResCurrencyRate(models.Model):
