@@ -158,7 +158,9 @@ class AccountMove(models.Model):
             raise UserError(self.env._("The Invoice(s) are linked to a validated EDI document and cannot be modified according to ZATCA rules"))
 
         res = super().button_draft()
-        self.filtered(lambda move: move.country_code == "SA").l10n_sa_edi_document_id.write({
+        sa_moves = self.filtered(lambda move: move.country_code == "SA")
+        sa_moves.l10n_sa_confirmation_datetime = False
+        sa_moves.l10n_sa_edi_document_id.write({
             'state': 'to_send',
             'l10n_sa_chain_index': False,
         })
