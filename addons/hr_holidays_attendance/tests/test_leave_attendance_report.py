@@ -1,4 +1,5 @@
 from datetime import datetime, time, timedelta
+from freezegun import freeze_time
 
 import pytz
 
@@ -341,3 +342,42 @@ class TestLeaveAttendanceReport(TestHrHolidaysCommon):
             'leave_hours': 8.0,
             'difference_hours': 0.0,
         } for _ in range(2)])
+
+    def test_automatic_checkout_working_time_leave(self):
+        """
+        Checks that when an employee has no contract, and they take a leave considered as working time, the automatic
+        checkout action doesn't check the employee out, as they're supposed to be working during the entire day.
+        """
+        self.env.company.write({
+            'auto_check_out': True,
+            'auto_check_out_tolerance': 2
+        })
+        employee = self.env['hr.employee'].create({
+            'name': 'Test User Without Version',
+            'company_id': self.env.company.id,
+            'resource_calendar_id': self.employee_emp.resource_calendar_id.id
+        })
+        homework_type = self.env['hr.leave.type'].create({
+            'name': 'Homework Time',
+            'time_type': 'other',
+            'requires_allocation': False,
+        })
+        with freeze_time('2025-09-01 15:00:00'):
+            leave = self.env['hr.leave'].create({
+                'name': 'Some leave',
+                'holiday_status_id': homework_type.id,
+                'employee_id': employee.id,
+                'request_date_from': '2025-09-01',
+                'request_date_to': '2025-09-01',
+            })
+            self.env['resource.calendar.leaves'].create({
+                'calendar_id': employee.resource_calendar_id.id,
+                'date_from': datetime(2025, 9, 1, 8),
+                'date_to': datetime(2025, 9, 1, 17),
+                'holiday_id': leave.id
+            })
+            attendance = self.env['hr.attendance'].create(
+                {'employee_id': employee.id, 'check_in': datetime(2025, 9, 1, 9, 0, 0)}
+            )
+            self.env['hr.attendance']._cron_auto_check_out()
+        self.assertFalse(attendance.check_out)
