@@ -46,7 +46,7 @@ class AccountMove(models.Model):
                     base_line = AccountTax._prepare_base_line_for_taxes_computation(
                         line,
                         tax_ids=withholding_taxes,
-                        price_unit=line.price_unit * (1 - (line.discount or 0.0) / 100.0),
+                        price_unit=line.price_unit,
                         quantity=line.quantity,
                         currency_id=move.currency_id,
                         calculate_withholding_taxes=True,
