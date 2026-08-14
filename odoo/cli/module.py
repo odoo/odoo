@@ -50,12 +50,19 @@ class Module(Command):
             description="Install demonstration data (force)",
         )
         force_demo_parser.set_defaults(func=self._force_demo)
+        list_parser = subparsers.add_parser(
+            'list',
+            help="List modules",
+            description="List modules",
+        )
+        list_parser.set_defaults(func=self._list_modules)
 
         for parser in (
             install_parser,
             uninstall_parser,
             upgrade_parser,
             force_demo_parser,
+            list_parser,
         ):
             parser.formatter_class = argparse.RawDescriptionHelpFormatter
             parser.add_argument(
@@ -222,3 +229,11 @@ class Module(Command):
     def _force_demo(self, parsed_args):
         with self._create_env_context(parsed_args.db_name) as env:
             force_demo(env)
+
+    def _list_modules(self, parsed_args):
+        with self._create_env_context(parsed_args.db_name) as env:
+            Module = env['ir.module.module']
+            _logger.info("Listing modules")
+            self.show_modules(Module.search([('state', '=', 'installed')]), show_version=True)
+            if modules := Module.search(MODULE_TO_CHANGE_DOMAIN):
+                self.show_modules(modules, show_state=True, show_version=True)
