@@ -3,11 +3,10 @@
 
     <t t-name="web.CardMany2OneAvatarField">
         <t t-set="relation" t-value="this.props.record.fields[this.props.name].relation"/>
-        <t t-set="value" t-value="this.props.record.data[this.props.name]"/>
         <KanbanMany2One t-props="this.m2oProps">
             <t t-set-slot="avatar">
                 <span class="o_avatar o_m2o_avatar">
-                    <img t-attf-src="/web/image/{{relation}}/{{value.id}}/avatar_128?unique={{value.write_date.toMillis()}}" class="rounded"/>
+                    <img t-attf-src="/web/image/{{relation}}/{{this.value.id}}/avatar_128?unique={{this.uniqueId}}" class="rounded"/>
                 </span>
             </t>
             <t t-set-slot="autoCompleteItem" t-slot-scope="autoCompleteItemScope">
