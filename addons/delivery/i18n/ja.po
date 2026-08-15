@@ -16,8 +16,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-19 17:37+0000\n"
-"PO-Revision-Date: 2026-07-21 05:38+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2026-08-14 05:36+0000\n"
+"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-4/"
 "delivery/ja/>\n"
 "Language: ja\n"
@@ -35,6 +35,10 @@ msgid ""
 "object.name)\n"
 "        "
 msgstr ""
+"\n"
+"            \"納品書 -%s -%s\"% (object.partner_id.name または \"\", "
+"object.name)\n"
+"        "
 
 #. module: delivery
 #. odoo-python
@@ -143,17 +147,17 @@ msgstr ""
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_note
 msgid "<span>Delivery Note</span>"
-msgstr ""
+msgstr "<span>納品書</span>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_note
 msgid "<strong>Customer</strong>"
-msgstr ""
+msgstr "<strong>顧客</strong>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_note
 msgid "<strong>Delivery Address</strong>"
-msgstr ""
+msgstr "<strong>配送先</strong>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_report_saleorder_document
@@ -163,27 +167,27 @@ msgstr "<strong>配送説明</strong>"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_note
 msgid "<strong>Delivery method</strong>"
-msgstr ""
+msgstr "<strong>配送方法</strong>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_note
 msgid "<strong>Order</strong>"
-msgstr ""
+msgstr "<strong>オーダ</strong>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_note
 msgid "<strong>Remaining quantities to ship:</strong>"
-msgstr ""
+msgstr "<strong>出荷残数量:</strong>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_note
 msgid "<strong>Shipping Date</strong>"
-msgstr ""
+msgstr "<strong>出荷日</strong>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_note
 msgid "<strong>Tracking Number</strong>"
-msgstr ""
+msgstr "<strong>追跡番号</strong>"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__carrier_description
@@ -300,7 +304,7 @@ msgstr "代金引換"
 #. odoo-python
 #: code:addons/delivery/models/payment_provider.py:0
 msgid "Cash on delivery not allowed by selected delivery method"
-msgstr ""
+msgstr "選択された配送方法では代金引換はご利用いただけません"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__company_id
@@ -327,7 +331,7 @@ msgstr "方法を設定"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_note_form_view
 msgid "Confirm Shipment"
-msgstr ""
+msgstr "出荷を確定"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_res_partner
@@ -447,23 +451,23 @@ msgstr "配送方法"
 #: model:ir.actions.report,name:delivery.action_report_delivery_note
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_note_form_view
 msgid "Delivery Note"
-msgstr ""
+msgstr "納品書"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_note_wizard_line
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_note_list_view
 msgid "Delivery Note Line"
-msgstr ""
+msgstr "納品書明細"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_note_wizard_line__note_id
 msgid "Delivery Note Reference"
-msgstr ""
+msgstr "納品書明細参照"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_note_wizard
 msgid "Delivery Note Wizard"
-msgstr ""
+msgstr "納品書ウィザード"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__delivery_price

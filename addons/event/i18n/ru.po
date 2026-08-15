@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-19 17:37+0000\n"
-"PO-Revision-Date: 2026-07-22 14:07+0000\n"
+"PO-Revision-Date: 2026-08-11 11:37+0000\n"
 "Last-Translator: \"Anastasiia Koroleva (koan)\" <koan@odoo.com>\n"
 "Language-Team: Russian <https://translate.odoo.com/projects/odoo-s19-4/event/"
 "ru/>\n"
@@ -77,7 +77,7 @@ msgstr "%(slot_name)s (Продано)"
 #. odoo-python
 #: code:addons/event/models/event_event.py:0
 msgid "%(slot_name)s: missing %(count)s seat(s)"
-msgstr ""
+msgstr "%(slot_name)s: не хватает мест (%(count)s)"
 
 #. module: event
 #. odoo-python
@@ -151,7 +151,7 @@ msgstr "4 на лист"
 msgid ""
 "<a href=\"#\" class=\"btn btn-primary o_translate_inline\">Discover more</a>"
 msgstr ""
-"<a href=\"#\" class=\"btn btn-primary o_translate_inline\">Подробнее</a>"
+"<a href=\"#\" class=\"btn btn-primary o_translate_inline\">Узнать больше</a>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -260,11 +260,16 @@ msgid ""
 "community module, a case study, methodology feedback, technical, etc. Each "
 "presentation must be in English.</em>"
 msgstr ""
+"<em>Если вы хотите выступить с докладом, пожалуйста, как можно скорее "
+"отправьте тему выступления на согласование Фамке Йенссенсу по адресу "
+"ngh@yourcompany.com. Это может быть, например, презентация модуля "
+"сообщества, кейс-стади, отзыв о методологии, технический доклад и т. д. Все "
+"выступления должны быть на английском языке.</em>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_slot_form
 msgid "<i class=\"fa fa-arrow-right mx-2\" title=\"to\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-arrow-right mx-2\" title=\"to\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
@@ -274,7 +279,7 @@ msgstr "<i class=\"fa fa-building\" title=\"Attendee Company\"/>"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
 msgid "<i class=\"fa fa-calendar\" title=\"Slot\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-calendar\" title=\"Слот\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
@@ -333,6 +338,9 @@ msgid ""
 "                                    Attendee answers\n"
 "                                </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                    Ответы участников\n"
+"                                </span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
@@ -1017,7 +1025,7 @@ msgstr ""
 "                                <li><t t-out=\"event_organizer.name or ''\">"
 "YourCompany</t></li>\n"
 "                                <t t-if=\"event_organizer.email\">\n"
-"                                    <li>Почта: <a t-attf-href=\"mailto:{{ "
+"                                    <li>E-mail: <a t-attf-href=\"mailto:{{ "
 "event_organizer.email }}\" t-attf-style=\"text-decoration:none;color: {"
 "{object.event_id.company_id.email_secondary_color or '#875A7B'}};\" t-"
 "out=\"event_organizer.email\">info@yourcompany.com</a></li>\n"
@@ -2733,7 +2741,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.constraint,message:event.constraint_event_question_check_default_question_is_reusable
 msgid "A default question must be reusable."
-msgstr ""
+msgstr "Вопрос по умолчанию должен быть доступен для повторного использования."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event_ticket__description
@@ -2760,12 +2768,14 @@ msgid ""
 "A slot end hour must be later than its start hour.\n"
 "%s"
 msgstr ""
+"Время окончания слота должно быть позже времени его начала.\n"
+"%s"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_slot.py:0
 msgid "A slot hour must be between 0:00 and 23:59."
-msgstr ""
+msgstr "Время слота должно быть в диапазоне от 0:00 до 23:59."
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_event__badge_format__a4_french_fold
@@ -2839,6 +2849,8 @@ msgstr "Тип дела"
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_form
 msgid "Add a description that will appear as a tooltip for this stage"
 msgstr ""
+"Добавьте описание, которое будет отображаться в качестве всплывающей "
+"подсказки для этого этапа"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_form
@@ -2898,13 +2910,13 @@ msgstr "После каждой регистрации"
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_type__after_event
 #: model:ir.model.fields.selection,name:event.selection__event_type_mail__interval_type__after_event
 msgid "After the event ended"
-msgstr ""
+msgstr "После окончания мероприятия"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_type__after_event_start
 #: model:ir.model.fields.selection,name:event.selection__event_type_mail__interval_type__after_event_start
 msgid "After the event started"
-msgstr ""
+msgstr "После начала мероприятия"
 
 #. module: event
 #: model:event.tag.category,name:event.event_tag_category_1
@@ -2932,6 +2944,9 @@ msgid ""
 "attendees and the maximum number of tickets registrations are defined for "
 "each time slot instead of the whole event."
 msgstr ""
+"Разрешить несколько временных слотов. В этом случае рассылки, максимальное "
+"число участников и лимиты на регистрацию билетов настраиваются для каждого "
+"слота отдельно, а не для всего мероприятия."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_question__is_reusable
@@ -2939,6 +2954,8 @@ msgid ""
 "Allow this question to be selected and reused for any future event. Always "
 "true for default questions."
 msgstr ""
+"Разрешить выбор и повторное использование этого вопроса в будущих "
+"мероприятиях. Всегда активно для вопросов по умолчанию."
 
 #. module: event
 #: model:event.event,name:event.event_6
@@ -3062,7 +3079,7 @@ msgstr "Дата посещения"
 #. odoo-python
 #: code:addons/event/models/event_registration.py:0
 msgid "Attended on %(attended_date)s"
-msgstr ""
+msgstr "Дата посещения %(attended_date)s"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_registration__registration_id
@@ -3117,6 +3134,9 @@ msgid ""
 "                                    <span invisible=\"not is_multi_slots\"> "
 "per slot</span>"
 msgstr ""
+"Количество участников\n"
+"                                    <span invisible=\"not is_multi_slots\"> "
+"на один слот</span>"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_available
@@ -3185,13 +3205,13 @@ msgstr "Штрих-код должен быть уникальным"
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_type__before_event_end
 #: model:ir.model.fields.selection,name:event.selection__event_type_mail__interval_type__before_event_end
 msgid "Before the event ends"
-msgstr ""
+msgstr "До окончания мероприятия"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_type__before_event
 #: model:ir.model.fields.selection,name:event.selection__event_type_mail__interval_type__before_event
 msgid "Before the event starts"
-msgstr ""
+msgstr "До начала мероприятия"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_event__kanban_state__blocked
@@ -3292,6 +3312,8 @@ msgid ""
 "Check this for order-level questions (e.g., 'Company Name') where the answer "
 "is the same for everyone."
 msgstr ""
+"Отметьте для вопросов общего уровня (например, «Название компании»), где "
+"ответ одинаков для всех участников в рамках одного заказа."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__event_type_id
@@ -3342,6 +3364,8 @@ msgstr "Связь"
 msgid ""
 "Communication for %(event_name)s scheduled on %(scheduled_date)s failed."
 msgstr ""
+"Сбой отправки рассылки для %(event_name)s, запланированной на %"
+"(scheduled_date)s."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_mail__mail_registration_ids
@@ -3515,12 +3539,12 @@ msgstr "Дней"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_search
 msgid "Default Questions"
-msgstr ""
+msgstr "Вопросы по умолчанию"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_question__is_default
 msgid "Default question"
-msgstr ""
+msgstr "Вопрос по умолчанию"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event_ticket__seats_max
@@ -3604,7 +3628,7 @@ msgstr "Порядок отображения"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_full_page_ticket
 msgid "Download Tickets"
-msgstr ""
+msgstr "Скачать билеты"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_full_page_ticket
@@ -3795,7 +3819,7 @@ msgstr "Событие Вопрос Ответ"
 #. module: event
 #: model:ir.ui.menu,name:event.event_question_menu
 msgid "Event Questions"
-msgstr ""
+msgstr "Вопросы мероприятия"
 
 #. module: event
 #: model:ir.model,name:event.model_event_registration
@@ -3824,12 +3848,12 @@ msgstr "Ответственный за мероприятие"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__event_share_url
 msgid "Event Share URL"
-msgstr ""
+msgstr "Поделиться мероприятием"
 
 #. module: event
 #: model:ir.model,name:event.model_event_slot
 msgid "Event Slot"
-msgstr ""
+msgstr "Слот мероприятия"
 
 #. module: event
 #: model:ir.model,name:event.model_event_stage
@@ -3918,7 +3942,7 @@ msgstr "Тип события"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_question__event_type_ids
 msgid "Event Types"
-msgstr ""
+msgstr "Типы мероприятий"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.event_registration_action_tree
@@ -4042,7 +4066,7 @@ msgstr "Наслаждайтесь живой музыкой, местной е�
 #: model:ir.model.fields,help:event.field_event_slot__end_hour
 #: model:ir.model.fields,help:event.field_event_slot__start_hour
 msgid "Expressed in the event timezone."
-msgstr ""
+msgstr "Указано в часовом поясе мероприятия."
 
 #. module: event
 #: model:event.stage,description:event.event_stage_done
@@ -4083,6 +4107,9 @@ msgid ""
 "class=\"o_translate_inline\" "
 "href=\"mailto:events@odoo.com\">events@odoo.com</a>"
 msgstr ""
+"Для получения дополнительной информации, пожалуйста, свяжитесь с нами по "
+"адресу <a class=\"o_translate_inline\" href=\"mailto:events@odoo.com\">"
+"events@odoo.com</a>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_7
@@ -4091,6 +4118,9 @@ msgid ""
 "class=\"o_translate_inline\" "
 "href=\"mailto:events@openwood.example.com\">events@penwood.example.com</a>."
 msgstr ""
+"Для получения дополнительной информации, пожалуйста, свяжитесь с нами по "
+"адресу <a class=\"o_translate_inline\" "
+"href=\"mailto:events@openwood.example.com\">events@penwood.example.com</a>."
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -4102,11 +4132,14 @@ msgid ""
 "class=\"o_translate_inline\" "
 "href=\"mailto:events@yourcompany.com\">events@yourcompany.com</a>."
 msgstr ""
+"Для получения дополнительной информации, пожалуйста, свяжитесь с нами по "
+"адресу <a class=\"o_translate_inline\" "
+"href=\"mailto:events@yourcompany.com\">events@yourcompany.com</a>."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_search
 msgid "For each attendee"
-msgstr ""
+msgstr "Для каждого участника"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__seats_max
@@ -4115,6 +4148,10 @@ msgid ""
 "attendees), above this number the registrations are not accepted. If the "
 "event has multiple slots, this maximum number is applied per slot."
 msgstr ""
+"Для каждого мероприятия можно задать максимальное количество мест "
+"(участников), сверх которого регистрации не принимаются. Если мероприятие "
+"разделено на несколько слотов, это ограничение применяется к каждому слоту "
+"отдельно."
 
 #. module: event
 #: model:event.event.ticket,description:event.event_0_ticket_1
@@ -4266,7 +4303,7 @@ msgstr "Главная"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_slot_form
 msgid "Hour range"
-msgstr ""
+msgstr "Временной диапазон"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_unit__hours
@@ -4398,7 +4435,7 @@ msgstr "В процессе"
 #. module: event
 #: model:ir.model.fields,help:event.field_event_question__is_default
 msgid "Include by default in new events."
-msgstr ""
+msgstr "Включать по умолчанию в новые мероприятия."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__date_tz
@@ -4416,6 +4453,9 @@ msgid ""
 "Indicates when the communication is sent. If the event has multiple slots, "
 "the interval is related to each time slot instead of the whole event."
 msgstr ""
+"Указывает, когда отправляется рассылка. Если у мероприятия несколько слотов, "
+"временной интервал рассчитывается для каждого слота отдельно, а не для всего "
+"мероприятия."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__ticket_entry_limit
@@ -4448,7 +4488,7 @@ msgstr "Введение, CRM, Управление продажами"
 #. odoo-python
 #: code:addons/event/models/event_registration.py:0
 msgid "Invalid event / slot choice"
-msgstr ""
+msgstr "Неверный выбор мероприятия / слота"
 
 #. module: event
 #. odoo-python
@@ -4470,7 +4510,7 @@ msgstr "Доступно"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__is_multi_slots
 msgid "Is Event Multi Slots"
-msgstr ""
+msgstr "Мероприятие содержит несколько слотов"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__is_expired
@@ -4491,7 +4531,7 @@ msgstr "Является подписчиком"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__is_multi_slots
 msgid "Is Multi Slots"
-msgstr ""
+msgstr "Несколько слотов"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__is_one_day
@@ -4506,13 +4546,13 @@ msgstr "Продолжается"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_question__is_reusable
 msgid "Is Reusable"
-msgstr ""
+msgstr "Для повторного использования"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_mail.py:0
 msgid "It failed with error %(error)s."
-msgstr ""
+msgstr "Произошел сбой с ошибкой %(error)s."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_type__seats_max
@@ -4533,7 +4573,7 @@ msgstr "Иван Иванов"
 #. module: event
 #: model_terms:event.event,description:event.event_2
 msgid "John Doe's avatar"
-msgstr ""
+msgstr "Аватар пользователя"
 
 #. module: event
 #: model_terms:event.event,description:event.event_1
@@ -4589,7 +4629,7 @@ msgstr "Последний участник"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__error_datetime
 msgid "Last Error"
-msgstr ""
+msgstr "Последняя ошибка"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__write_uid
@@ -4660,12 +4700,12 @@ msgstr "Предельное количество регистраций"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__limit_max_per_order
 msgid "Limit per Order"
-msgstr ""
+msgstr "Лимит на один заказ"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__event_url
 msgid "Link where the online event will take place."
-msgstr ""
+msgstr "Ссылка на площадку, где будет проходить онлайн-мероприятие."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -4725,7 +4765,7 @@ msgstr "Почта Отправленна"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__mail_slot_ids
 msgid "Mail Slot"
-msgstr ""
+msgstr "Почтовый слот"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__main_registration_id
@@ -4790,11 +4830,13 @@ msgid ""
 "Maximum of this product per order.\n"
 "Set to 0 to ignore this rule"
 msgstr ""
+"Максимальное количество этого товара в одном заказе.\n"
+"Введите 0, чтобы отключить ограничение"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_view_tree_from_event
 msgid "Maximum per slot"
-msgstr ""
+msgstr "Максимум на слот"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__utm_medium_id
@@ -4823,7 +4865,7 @@ msgstr "Месяцев"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Multiple Slots"
-msgstr ""
+msgstr "Несколько слотов"
 
 #. module: event
 #: model:event.tag,name:event.event_tag_category_2_tag_2
@@ -4870,7 +4912,7 @@ msgstr "Новый"
 #: code:addons/event/static/src/views/event_slot/calendar/event_slot_calendar_controller.js:0
 #: code:addons/event/static/src/views/event_slot/list/event_slot_list_controller.js:0
 msgid "New Slot"
-msgstr ""
+msgstr "Новый слот"
 
 #. module: event
 #. odoo-python
@@ -4925,7 +4967,7 @@ msgstr "Участников пока нет!"
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.event_question_action
 msgid "No questions yet! Please create one."
-msgstr ""
+msgstr "Вопросов пока нет! Пожалуйста, создайте первый."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__barcode_nomenclature_id
@@ -4935,12 +4977,12 @@ msgstr "Номенклатура"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_search
 msgid "Not Reusable"
-msgstr ""
+msgstr "Одноразовый"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_search
 msgid "Not mandatory"
-msgstr ""
+msgstr "Необязательно"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__note
@@ -4958,7 +5000,7 @@ msgstr "Заметки"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Notes & Documents"
-msgstr ""
+msgstr "Заметки и документы"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_mail
@@ -5040,7 +5082,7 @@ msgstr "Один раз за заказ"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_search
 msgid "Once per order"
-msgstr ""
+msgstr "Один раз на заказ"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
@@ -5061,7 +5103,7 @@ msgstr "Онлайн-мероприятие"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__event_url
 msgid "Online Event URL"
-msgstr ""
+msgstr "Ссылка на онлайн-мероприятие"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -5155,7 +5197,7 @@ msgstr "Введите действительный секрет base64"
 #. odoo-python
 #: code:addons/event/models/event_event.py:0
 msgid "Please enter a valid event URL."
-msgstr ""
+msgstr "Пожалуйста, введите корректный URL-адрес мероприятия."
 
 #. module: event
 #. odoo-javascript
@@ -5351,6 +5393,10 @@ msgid ""
 "- there are seats available on event\n"
 "- the tickets are sellable (if ticketing is used)"
 msgstr ""
+"Регистрация открыта, если:\n"
+"- мероприятие не завершено и не отменено\n"
+"- на мероприятии есть свободные места\n"
+"- билеты доступны для продажи (если используются билеты)"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__event_registrations_started
@@ -5368,7 +5414,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/event/models/event_mail.py:0
 msgid "Rendering of template failed with error: %(error)s."
-msgstr ""
+msgstr "Ошибка рендеринга шаблона: %(error)s."
 
 #. module: event
 #: model:ir.ui.menu,name:event.menu_reporting_events
@@ -5401,7 +5447,7 @@ msgstr "Отзывчивый Html-билет на всю страницу"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_search
 msgid "Reusable"
-msgstr ""
+msgstr "Повторное использование"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_formatted_event_address
@@ -5463,7 +5509,7 @@ msgstr "Планировщик e-mail писем"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_search
 msgid "Search Event Question"
-msgstr ""
+msgstr "Поиск вопросов к мероприятиям"
 
 #. module: event
 #: model_terms:event.event,description:event.event_5
@@ -5597,23 +5643,23 @@ msgstr "Время"
 #. module: event
 #: model:ir.model,name:event.model_event_mail_slot
 msgid "Slot Mail Scheduler"
-msgstr ""
+msgstr "Планировщик рассылок по слотам"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_registration.py:0
 msgid "Slot choice is mandatory on multi-slots events."
-msgstr ""
+msgstr "Выбор слота обязателен для мероприятий с несколькими слотами."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Slot(s)"
-msgstr ""
+msgstr "Слот(ы)"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_mail__mail_slot_ids
 msgid "Slot-based communication"
-msgstr ""
+msgstr "Рассылки по слотам"
 
 #. module: event
 #. odoo-python
@@ -5624,12 +5670,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.view_event_slot_calendar
 #: model_terms:ir.ui.view,arch_db:event.view_event_slot_tree
 msgid "Slots"
-msgstr ""
+msgstr "Слоты"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__event_slot_count
 msgid "Slots Count"
-msgstr ""
+msgstr "Количество слотов"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__event_registrations_sold_out
@@ -5864,6 +5910,9 @@ msgid ""
 "registrations linked to them:\n"
 "- %s"
 msgstr ""
+"Следующие слоты нельзя удалить, пока к ним привязана хотя бы одна "
+"регистрация:\n"
+"- %s"
 
 #. module: event
 #. odoo-python
@@ -5884,6 +5933,8 @@ msgid ""
 "The limit per order cannot be greater than %(limit_orderable)s. Please check "
 "ticket %(ticket_name)s"
 msgstr ""
+"Лимит на один заказ не может превышать %(limit_orderable)s. Пожалуйста, "
+"проверьте билет %(ticket_name)s"
 
 #. module: event
 #. odoo-python
@@ -5892,6 +5943,8 @@ msgid ""
 "The limit per order cannot be greater than the maximum seats number. Please "
 "check ticket %(ticket_name)s"
 msgstr ""
+"Лимит на один заказ не может превышать общее количество мест. Пожалуйста, "
+"проверьте билет %(ticket_name)s"
 
 #. module: event
 #. odoo-python
@@ -5899,6 +5952,8 @@ msgstr ""
 msgid ""
 "The limit per order must be positive. Please check ticket %(ticket_name)s"
 msgstr ""
+"Лимит на заказ должен быть положительным числом. Пожалуйста, проверьте билет "
+"%(ticket_name)s"
 
 #. module: event
 #. odoo-javascript
@@ -5930,6 +5985,8 @@ msgid ""
 "There are more registrations than this limit, the event will be sold out and "
 "the extra registrations will remain."
 msgstr ""
+"Если количество регистраций превысит этот лимит, билеты на мероприятие будут "
+"распроданы, а избыточные регистрации останутся в режиме ожидания."
 
 #. module: event
 #. odoo-python
@@ -5938,6 +5995,8 @@ msgid ""
 "There are not enough seats available for %(event_name)s:\n"
 "%(sold_out_info)s"
 msgstr ""
+"Недостаточно свободных мест для %(event_name)s:\n"
+"%(sold_out_info)s"
 
 #. module: event
 #. odoo-python
@@ -5945,7 +6004,7 @@ msgstr ""
 msgid ""
 "There is an issue with dynamic placeholder. Actual error received is: %"
 "(error)s."
-msgstr ""
+msgstr "Обнаружена ошибка в динамическом плейсхолдере. Текст ошибки: %(error)s."
 
 #. module: event
 #: model:ir.model.constraint,message:event.constraint_event_registration_answer_value_check
@@ -5959,6 +6018,8 @@ msgid ""
 "These events cannot have slots scheduled outside of their time range:\n"
 "%(event_names)s"
 msgstr ""
+"В этих мероприятиях нельзя планировать слоты вне их временного диапазона:\n"
+"%(event_names)s"
 
 #. module: event
 #. odoo-javascript
@@ -6000,7 +6061,7 @@ msgstr "Эта информация будет напечатана на ваш�
 #. odoo-python
 #: code:addons/event/models/event_mail.py:0
 msgid "This is due to an error in template %(template_link)s."
-msgstr ""
+msgstr "Это связано с ошибкой в шаблоне %(template_link)s."
 
 #. module: event
 #. odoo-javascript
@@ -6030,12 +6091,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/event/models/event_mail.py:0
 msgid "This may be linked to template %(template_link)s."
-msgstr ""
+msgstr "Это может быть связано с шаблоном %(template_link)s."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_form
 msgid "This question is used by"
-msgstr ""
+msgstr "Этот вопрос используется в"
 
 #. module: event
 #. odoo-javascript
@@ -6092,7 +6153,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Ticket was first scanned on"
-msgstr ""
+msgstr "Билет был впервые отсканирован"
 
 #. module: event
 #. odoo-python
@@ -6156,7 +6217,7 @@ msgstr "Всего участников"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_view_tree_from_event
 msgid "Total Registration"
-msgstr ""
+msgstr "Всего регистраций"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
@@ -6283,7 +6344,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/event/models/event_event.py:0
 msgid "Update the limit of registrations?"
-msgstr ""
+msgstr "Обновить лимит регистраций?"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__use_barcode
@@ -6405,7 +6466,7 @@ msgstr "Для этого билета нет свободных мест."
 #. module: event
 #: model:ir.model.fields,help:event.field_event_slot__is_sold_out
 msgid "Whether seats are sold out for this slot."
-msgstr ""
+msgstr "Проданы ли все места на этот слот."
 
 #. module: event
 #: model:event.event.ticket,description:event.event_0_ticket_2
@@ -6432,7 +6493,7 @@ msgstr "Вы не можете изменить тип вопроса, на ко
 #. odoo-python
 #: code:addons/event/models/event_question.py:0
 msgid "You cannot delete a default question."
-msgstr ""
+msgstr "Невозможно удалить вопрос по умолчанию."
 
 #. module: event
 #. odoo-python
@@ -6441,6 +6502,8 @@ msgid ""
 "You cannot delete a question that has already been answered by attendees. "
 "You can archive it instead."
 msgstr ""
+"Невозможно удалить вопрос, на который участники уже дали ответы. Вместо "
+"этого его можно архивировать."
 
 #. module: event
 #. odoo-python
@@ -6487,7 +6550,7 @@ msgstr "например, \"Продвижение\""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "e.g. \"https://www.odoo.com\""
-msgstr ""
+msgstr "например, \"https://www.odoo.com\""
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_view_form_quick_create
@@ -6516,7 +6579,7 @@ msgstr "например, VIP-билет"
 #. odoo-python
 #: code:addons/event/models/event_event.py:0
 msgid "event_id"
-msgstr ""
+msgstr "event_id"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_form

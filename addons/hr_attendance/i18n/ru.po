@@ -11,8 +11,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-17 17:37+0000\n"
-"PO-Revision-Date: 2026-07-22 01:29+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2026-08-11 11:42+0000\n"
+"Last-Translator: \"Anastasiia Koroleva (koan)\" <koan@odoo.com>\n"
 "Language-Team: Russian <https://translate.odoo.com/projects/odoo-s19-4/"
 "hr_attendance/ru/>\n"
 "Language: ru\n"
@@ -33,7 +33,6 @@ msgstr "Время выхода не может быть раньше, чем в
 #. module: hr_attendance
 #. odoo-python
 #: code:addons/hr_attendance/models/hr_attendance_overtime_rule.py:0
-#, fuzzy
 msgid "%(nb_hours)d h / %(period)s"
 msgstr "%(nb_hours)d ч / %(period)s"
 
@@ -53,14 +52,12 @@ msgstr "%s (копия)"
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
-#, fuzzy
 msgid "'Buy an RFID Device'"
 msgstr "«Купить RFID-считыватель»"
 
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
-#, fuzzy
 msgid "'Read the Documentation'"
 msgstr "«Прочитать документацию»"
 
@@ -110,7 +107,6 @@ msgstr ""
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
-#, fuzzy
 msgid ""
 "<span class=\"fw-bold\" invisible=\"base_off != 'timing' or timing_type not "
 "in ['work_days', 'non_work_days']\">Between</span>"
@@ -141,7 +137,7 @@ msgstr ""
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "<span class=\"me-2\">Tolerance</span>"
-msgstr "<span class=\"me-2\">Дополнительное время ожидания</span>"
+msgstr "<span class=\"me-2\">Допустимое отклонение</span>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
@@ -161,7 +157,6 @@ msgstr ""
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_employee_public_view_form
-#, fuzzy
 msgid ""
 "<span class=\"o_stat_text\">\n"
 "                                Monthly Hours\n"
@@ -173,7 +168,6 @@ msgstr ""
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
-#, fuzzy
 msgid ""
 "<span class=\"o_stat_text\">\n"
 "                            Monthly Hours\n"
@@ -193,7 +187,6 @@ msgstr ""
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
-#, fuzzy
 msgid ""
 "<span colspan=\"2\" class=\"mb-3 fw-bold\">The hours will be considered "
 "extra and submitted to approval.</span>"
@@ -312,7 +305,6 @@ msgstr ""
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
-#, fuzzy
 msgid ""
 "Allow the collection of GPS location, IP address, and browser/device details "
 "used to track employee access and attendance"
@@ -322,7 +314,6 @@ msgstr ""
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_line__rule_ids
-#, fuzzy
 msgid "Applied Rules"
 msgstr "Примененные правила"
 
@@ -344,7 +335,6 @@ msgstr "Согласовать дополнительные часы"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
-#, fuzzy
 msgid "Approve all overtimes for the same employee and date"
 msgstr "Утвердить всю сверхурочную работу для этого сотрудника на ту же дату"
 
@@ -385,7 +375,6 @@ msgstr "На работе"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_ruleset_view_filter
-#, fuzzy
 msgid "At least one rule"
 msgstr "Минимум одно правило"
 
@@ -408,16 +397,14 @@ msgstr "Посещаемость"
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__attendance_manager_id
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_public__attendance_manager_id
-#, fuzzy
 msgid "Attendance Approver"
 msgstr "Ответственный за согласование посещаемости"
 
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.js:0
-#, fuzzy
 msgid "Attendance Error"
-msgstr "Ошибка в модуле Посещаемость"
+msgstr "Ошибка учета рабочего времени"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__attendance_from_systray
@@ -450,7 +437,6 @@ msgstr "Режим посещаемости"
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_attendance_overtime_line
-#, fuzzy
 msgid "Attendance Overtime Line"
 msgstr "Строка сверхурочной работы"
 
@@ -518,7 +504,7 @@ msgstr ""
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__auto_check_out_tolerance
 msgid "Auto Check Out Tolerance"
-msgstr "Дополнительное время ожидания при автовыходе"
+msgstr "Лимит допустимого отклонения при автовыходе"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__auto_check_out
@@ -577,14 +563,12 @@ msgstr ""
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/new_employee_dialog/new_employee_dialog.js:0
-#, fuzzy
 msgid "Badge assigned successfully!"
 msgstr "Бейдж успешно назначен!"
 
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/views/badge_scanner/badge_scanner.js:0
-#, fuzzy
 msgid "Badge updated: "
 msgstr "Бейдж обновлен: "
 
@@ -618,7 +602,6 @@ msgstr "Источник штрих-кода"
 
 #. module: hr_attendance
 #: model:ir.model.fields,help:hr_attendance.field_hr_attendance_overtime_rule__base_off
-#, fuzzy
 msgid ""
 "Base for overtime calculation.\n"
 "Use 'Quantity' when overtime hours are those in excess of a certain amount "
@@ -633,14 +616,12 @@ msgstr ""
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_rule__base_off
-#, fuzzy
 msgid "Based Off"
 msgstr "На основании"
 
 #. module: hr_attendance
 #: model:ir.model.fields,help:hr_attendance.field_hr_attendance__in_location
 #: model:ir.model.fields,help:hr_attendance.field_hr_attendance__out_location
-#, fuzzy
 msgid "Based on GPS-Coordinates if available or on IP Address"
 msgstr "На основе GPS–координат (если доступны) или IP-адреса"
 
@@ -842,13 +823,11 @@ msgstr "Подключите RFID-считыватель и отсканируй
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.js:0
-#, fuzzy
 msgid "Connection lost. Check in/out could not be recorded."
-msgstr "Соединение разорвано. Не удалось зафиксировать вход/выход."
+msgstr "Соединение потеряно. Время прихода/ухода не удалось зарегистрировать."
 
 #. module: hr_attendance
 #: model:ir.model.fields,help:hr_attendance.field_hr_attendance_overtime_ruleset__rate_combination_mode
-#, fuzzy
 msgid ""
 "Controls how the rates from the different rules that apply are combined.\n"
 "  Max: use the highest rate. (e.g.: combined for 150% and 120 = 150%)\n"
@@ -954,7 +933,6 @@ msgstr "Описание"
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__attendance_device_tracking
 #: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__attendance_device_tracking
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
-#, fuzzy
 msgid "Device & Location Tracking"
 msgstr "Отслеживание устройства и местоположения"
 
@@ -1006,17 +984,16 @@ msgstr "Показывать время"
 #. module: hr_attendance
 #. odoo-python
 #: code:addons/hr_attendance/models/hr_attendance.py:0
-#, fuzzy
 msgid ""
 "Do not have access, user cannot edit the attendances that are not their own "
 "or if they are not the attendance manager of the employee."
 msgstr ""
-"Нет доступа: Пользователь не может редактировать записи о посещаемости "
-"другого сотрудника, если он не является менеджером данного сотрудника."
+"Недостаточно прав. Пользователь может изменять только собственные записи "
+"рабочего времени или записи сотрудников, для которых он назначен "
+"ответственным за учет рабочего времени."
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
-#, fuzzy
 msgid "Duration to exceed:"
 msgstr "Порог превышения:"
 
@@ -1052,7 +1029,6 @@ msgstr "Идентификация PIN-кода сотрудника"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_rule__employee_tolerance
-#, fuzzy
 msgid "Employee Tolerance"
 msgstr "Допустимое отклонение в пользу сотрудника"
 
@@ -1066,14 +1042,12 @@ msgstr "Посещаемость сотрудников"
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/new_employee_dialog/new_employee_dialog.js:0
-#, fuzzy
 msgid "Employee created successfully!"
 msgstr "Сотрудник успешно создан!"
 
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/new_employee_dialog/new_employee_dialog.js:0
-#, fuzzy
 msgid "Employee name is required."
 msgstr "Требуется имя сотрудника."
 
@@ -1088,21 +1062,18 @@ msgstr "Сотрудники"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_rule__employer_tolerance
-#, fuzzy
 msgid "Employer Tolerance"
 msgstr "Допустимое отклонение в пользу работодателя"
 
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/new_employee_dialog/new_employee_dialog.js:0
-#, fuzzy
 msgid "Error creating employee: "
 msgstr "Ошибка при создании сотрудника: "
 
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/new_employee_dialog/new_employee_dialog.js:0
-#, fuzzy
 msgid "Error: "
 msgstr "Ошибка: "
 
@@ -1124,13 +1095,11 @@ msgstr "Дополнительные часы"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_line__manual_duration
-#, fuzzy
 msgid "Extra Hours (encoded)"
 msgstr "Дополнительные часы (введенные)"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_ruleset_view_form
-#, fuzzy
 msgid "Extra Hours Rules"
 msgstr "Правила дополнительных часов"
 
@@ -1157,14 +1126,12 @@ msgstr "Дополнительные часы"
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/new_employee_dialog/new_employee_dialog.js:0
-#, fuzzy
 msgid "Failed to create employee."
 msgstr "Не удалось создать сотрудника."
 
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/views/badge_scanner/badge_scanner.js:0
-#, fuzzy
 msgid "Failed to update badge: "
 msgstr "Не удалось обновить бейдж: "
 
@@ -1204,7 +1171,6 @@ msgstr "Из %s"
 #. module: hr_attendance
 #. odoo-python
 #: code:addons/hr_attendance/models/hr_attendance_overtime_rule.py:0
-#, fuzzy
 msgid "From Employee"
 msgstr "От сотрудника"
 
@@ -1225,7 +1191,6 @@ msgstr "Сгенерировать новый URL"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_list
-#, fuzzy
 msgid "Get working hours from contract"
 msgstr "Получать рабочие часы из договора"
 
@@ -1289,7 +1254,6 @@ msgstr "Показ часов за последний месяц"
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__hours_last_month_overtime
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_public__hours_last_month_overtime
-#, fuzzy
 msgid "Hours Last Month Overtime"
 msgstr "Часы сверхурочной работы за прошлый месяц"
 
@@ -1320,7 +1284,6 @@ msgstr "Часы сегодня:"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_rule__expected_hours_from_contract
-#, fuzzy
 msgid "Hours from employee schedule"
 msgstr "Часы по графику сотрудника"
 
@@ -1386,19 +1349,16 @@ msgstr "Если отмечено, некоторые сообщения име�
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
-#, fuzzy
 msgid "If the employee works"
 msgstr "Если сотрудник работает"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
-#, fuzzy
 msgid "If the worked hours on a"
 msgstr "Если отработанные часы в"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__in_location
-#, fuzzy
 msgid "In Location"
 msgstr "Место входа"
 
@@ -1430,6 +1390,8 @@ msgid ""
 "Invalid domain, use 'name' and/or 'department_id' fields with '=' and/or "
 "'ilike' operators."
 msgstr ""
+"Недопустимое условие поиска. Используйте поля «name» и/или «department_id» с "
+"операторами «=» и/или «ilike»."
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -1536,7 +1498,6 @@ msgstr ""
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__linked_overtime_ids
-#, fuzzy
 msgid "Linked Overtime"
 msgstr "Связанная сверхурочная работа"
 
@@ -1555,12 +1516,12 @@ msgstr "Загрузить пример данных"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree
 msgid "Location (In)"
-msgstr ""
+msgstr "Местоположение (приход)"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree
 msgid "Location (Out)"
-msgstr ""
+msgstr "Местоположение (уход)"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__in_longitude
@@ -1619,7 +1580,6 @@ msgstr "Вручную (опционально PIN-код)"
 
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance_overtime_ruleset__rate_combination_mode__max
-#, fuzzy
 msgid "Maximum Rate"
 msgstr "Максимальная ставка"
 
@@ -1646,14 +1606,12 @@ msgstr "Метод"
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/new_employee_dialog/new_employee_dialog.js:0
-#, fuzzy
 msgid "Missing Data"
 msgstr "Отсутствующие данные"
 
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/views/badge_scanner/badge_scanner.js:0
-#, fuzzy
 msgid "Missing Employee ID"
 msgstr "Отсутствует ID сотрудника"
 
@@ -1695,7 +1653,6 @@ msgstr "Имя"
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
-#, fuzzy
 msgid "New Set-up (Employee/Badge)"
 msgstr "Новая настройка (Сотрудник/Бейдж)"
 
@@ -1716,7 +1673,6 @@ msgstr "Записи посещаемости не найдены"
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/views/badge_scanner/badge_scanner.js:0
-#, fuzzy
 msgid "No barcode received"
 msgstr "Штрихкод не получен"
 
@@ -1779,7 +1735,6 @@ msgstr "Нерабочее время"
 
 #. module: hr_attendance
 #: model:res.groups,name:hr_attendance.group_hr_attendance_user
-#, fuzzy
 msgid "Officer: Manage all attendances"
 msgstr "Сотрудник отдела кадров: Ответственный за посещаемость"
 
@@ -1795,20 +1750,17 @@ msgstr ""
 
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance_overtime_rule__timing_type__non_work_days
-#, fuzzy
 msgid "On any non-working day"
 msgstr "В любой нерабочий день"
 
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance_overtime_rule__timing_type__work_days
-#, fuzzy
 msgid "On any working day"
 msgstr "В любой рабочий день"
 
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/manual_selection/manual_selection.xml:0
-#, fuzzy
 msgid "On site"
 msgstr "На месте"
 
@@ -1853,7 +1805,6 @@ msgstr "Широта выхода"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__out_location
-#, fuzzy
 msgid "Out Location"
 msgstr "Место выхода"
 
@@ -1870,13 +1821,11 @@ msgstr "Режим Out"
 #. module: hr_attendance
 #. odoo-python
 #: code:addons/hr_attendance/models/hr_attendance_overtime_rule.py:0
-#, fuzzy
 msgid "Outside Schedule: %(schedule_name)s"
 msgstr "Вне графика: %(schedule_name)s"
 
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance_overtime_rule__timing_type__schedule
-#, fuzzy
 msgid "Outside of a specific schedule"
 msgstr "Вне определенного графика"
 
@@ -1899,7 +1848,6 @@ msgstr ""
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
-#, fuzzy
 msgid "Overtime Details"
 msgstr "Подробная информация о сверхурочной работе"
 
@@ -1915,14 +1863,12 @@ msgstr ""
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_attendance_overtime_rule
-#, fuzzy
 msgid "Overtime Rule"
 msgstr "Правило расчета сверхурочной работы"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.hr_attendance_overtime_rule_action
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_ruleset_view_form
-#, fuzzy
 msgid "Overtime Rules"
 msgstr "Правила расчета сверхурочной работы"
 
@@ -1930,13 +1876,11 @@ msgstr "Правила расчета сверхурочной работы"
 #: model:ir.model,name:hr_attendance.model_hr_attendance_overtime_ruleset
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_analysis_view_filter
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
-#, fuzzy
 msgid "Overtime Ruleset"
 msgstr "Набор правил сверхурочной работы"
 
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_overtime_rulesets
-#, fuzzy
 msgid "Overtime Rulesets"
 msgstr "Наборы правил сверхурочной работы"
 
@@ -1952,7 +1896,6 @@ msgstr ""
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_line__amount_rate
-#, fuzzy
 msgid "Overtime pay rate"
 msgstr "Ставка оплаты сверхурочной работы"
 
@@ -1969,7 +1912,6 @@ msgstr ""
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_rule__paid
-#, fuzzy
 msgid "Pay Extra Hours"
 msgstr "Оплата дополнительных часов"
 
@@ -1985,7 +1927,6 @@ msgstr ""
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
-#, fuzzy
 msgid "Pay extra hours"
 msgstr "Оплата дополнительных часов"
 
@@ -2007,7 +1948,6 @@ msgstr "Вернитесь в главное меню."
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/new_employee_dialog/new_employee_dialog.js:0
-#, fuzzy
 msgid "Please select an employee and enter a badge number."
 msgstr "Пожалуйста, выберите сотрудника и введите номер бейджа."
 
@@ -2040,13 +1980,11 @@ msgstr ""
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.js:0
-#, fuzzy
 msgid "Proceed Anyway"
 msgstr "Продолжить"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_ruleset_view_form
-#, fuzzy
 msgid "Provide a description or sources for this ruleset."
 msgstr "Укажите описание или источники для этого набора правил."
 
@@ -2062,7 +2000,6 @@ msgstr "Количество"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_rule__quantity_period
-#, fuzzy
 msgid "Quantity Period"
 msgstr "Период расчета количества"
 
@@ -2080,7 +2017,6 @@ msgstr "RFID-токен со считывателем на планшете"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
-#, fuzzy
 msgid "RFID/Badge Number"
 msgstr "Номер RFID/бейджа"
 
@@ -2091,14 +2027,12 @@ msgstr "Ставка"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_ruleset__rate_combination_mode
-#, fuzzy
 msgid "Rate Combination Mode"
 msgstr "Режим комбинирования ставок"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_ruleset_view_filter
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_ruleset_view_list
-#, fuzzy
 msgid "Rate Mode"
 msgstr "Режим ставки"
 
@@ -2109,7 +2043,6 @@ msgstr "Оценки"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
-#, fuzzy
 msgid "Read a badge"
 msgstr "Считать бейдж"
 
@@ -2133,7 +2066,6 @@ msgstr "Отклонить дополнительные часы"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
-#, fuzzy
 msgid "Refuse all overtimes for the same employee and date"
 msgstr "Отклонить всю сверхурочную работу для этого сотрудника на ту же дату"
 
@@ -2146,20 +2078,18 @@ msgstr "Отказано"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_ruleset_view_form
-#, fuzzy
 msgid "Regenerate overtimes"
 msgstr "Пересчитать сверхурочную работу"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_ruleset_view_form
-#, fuzzy
 msgid "Regenerate overtimes for this ruleset"
 msgstr "Пересчитать сверхурочную работу для этого набора правил"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__expected_hours
 msgid "Regular Hours"
-msgstr ""
+msgstr "Основное рабочее время"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_version_list_view_enhanced_hr_attendance
@@ -2182,14 +2112,12 @@ msgstr "Правило"
 #. module: hr_attendance
 #. odoo-python
 #: code:addons/hr_attendance/models/hr_attendance_overtime_rule.py:0
-#, fuzzy
 msgid "Rule '%(name)s' is based off quantity, but the period is not specified"
 msgstr "Правило «%(name)s» основано на количестве, но период не указан"
 
 #. module: hr_attendance
 #. odoo-python
 #: code:addons/hr_attendance/models/hr_attendance_overtime_rule.py:0
-#, fuzzy
 msgid ""
 "Rule '%(name)s' is based off quantity, but the usual amount of work hours is "
 "not specified"
@@ -2200,7 +2128,6 @@ msgstr ""
 #. module: hr_attendance
 #. odoo-python
 #: code:addons/hr_attendance/models/hr_attendance_overtime_rule.py:0
-#, fuzzy
 msgid ""
 "Rule '%(name)s' is based off timing, but the work schedule is not specified"
 msgstr "Правило «%(name)s» основано на времени, но график работы не указан"
@@ -2212,7 +2139,6 @@ msgstr "Имя правила"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_ruleset__rules_count
-#, fuzzy
 msgid "Rules Count"
 msgstr "Количество правил"
 
@@ -2222,25 +2148,21 @@ msgstr "Количество правил"
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_version__ruleset_id
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_analysis_list_view
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_analysis_view_pivot
-#, fuzzy
 msgid "Ruleset"
 msgstr "Набор правил"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_ruleset_view_form
-#, fuzzy
 msgid "Ruleset Name"
 msgstr "Название набора правил"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_ruleset_view_filter
-#, fuzzy
 msgid "Ruleset Search"
 msgstr "Поиск набора правил"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.hr_attendance_overtime_ruleset_action
-#, fuzzy
 msgid "Rulesets"
 msgstr "Наборы правил"
 
@@ -2257,14 +2179,12 @@ msgstr ""
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/views/badge_scanner/badge_scanner.xml:0
-#, fuzzy
 msgid "Scan Badge"
 msgstr "Сканировать бейдж"
 
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/views/badge_scanner/badge_scanner.xml:0
-#, fuzzy
 msgid "Scan or Tap your badge"
 msgstr "Отсканируйте или приложите ваш бейдж"
 
@@ -2299,7 +2219,6 @@ msgstr "Поиск..."
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
-#, fuzzy
 msgid "Select a ruleset to manage overtime."
 msgstr "Выберите набор правил для управления сверхурочной работой."
 
@@ -2362,7 +2281,6 @@ msgstr "Статус"
 
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance_overtime_ruleset__rate_combination_mode__sum
-#, fuzzy
 msgid "Sum of all rates"
 msgstr "Сумма всех ставок"
 
@@ -2392,7 +2310,6 @@ msgstr "Техника"
 
 #. module: hr_attendance
 #: model:ir.model.fields,help:hr_attendance.field_hr_attendance_overtime_rule__expected_hours_from_contract
-#, fuzzy
 msgid ""
 "The attendance can go into negative extra hours to represent the missing "
 "hours compared to what is expected if the Absence Management setting is "
@@ -2422,7 +2339,6 @@ msgstr ""
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
-#, fuzzy
 msgid "The rule is based on"
 msgstr "Правило основано на"
 
@@ -2440,7 +2356,6 @@ msgstr ""
 
 #. module: hr_attendance
 #: model:res.groups,comment:hr_attendance.group_hr_attendance_user
-#, fuzzy
 msgid ""
 "The user will have access to all attendance records and reports for all "
 "employees."
@@ -2523,19 +2438,16 @@ msgstr "Время"
 
 #. module: hr_attendance
 #: model:ir.model.constraint,message:hr_attendance.constraint_hr_attendance_overtime_rule_timing_start_is_hour
-#, fuzzy
 msgid "Timing Start is an hour of the day"
 msgstr "Время начала расчета (час)"
 
 #. module: hr_attendance
 #: model:ir.model.constraint,message:hr_attendance.constraint_hr_attendance_overtime_rule_timing_stop_is_hour
-#, fuzzy
 msgid "Timing Stop is an hour of the day"
 msgstr "Время окончания расчета (час)"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_rule__timing_type
-#, fuzzy
 msgid "Timing Type"
 msgstr "Тип учета времени"
 
@@ -2573,14 +2485,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__overtime_company_threshold
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Tolerance Time In Favor Of Company"
-msgstr "Время толерантности в пользу компании"
+msgstr "Допустимое отклонение времени в пользу компании"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__overtime_employee_threshold
 #: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__overtime_employee_threshold
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Tolerance Time In Favor Of Employee"
-msgstr "Время толерантности в пользу работника"
+msgstr "Допустимое отклонение времени в пользу сотрудника"
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -2638,6 +2550,7 @@ msgid ""
 "Unable to get a valid location. Do you want to proceed with your check-in/"
 "out anyway?"
 msgstr ""
+"Не удалось определить местоположение. Продолжить регистрацию прихода/ухода?"
 
 #. module: hr_attendance
 #. odoo-python
@@ -2667,14 +2580,13 @@ msgstr "Пользователь: Читайте его собственную �
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_rule__expected_hours
-#, fuzzy
 msgid "Usual work hours"
 msgstr "Обычные рабочие часы"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__validated_overtime_hours
 msgid "Validated Extra Hours"
-msgstr ""
+msgstr "Подтвержденные сверхурочные часы"
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -2729,19 +2641,16 @@ msgstr ""
 
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance_overtime_rule__timing_type__leave
-#, fuzzy
 msgid "When employee is off"
 msgstr "Когда сотрудник не на работе"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
-#, fuzzy
 msgid "With a tolerance in favor of the employee of"
 msgstr "Допустимое отклонение в пользу сотрудника в размере"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
-#, fuzzy
 msgid "With a tolerance in favor of the employer of"
 msgstr "Допустимое отклонение в пользу работодателя в размере"
 
@@ -2850,19 +2759,16 @@ msgstr "день"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
-#, fuzzy
 msgid "differs"
 msgstr "отличается"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_ruleset_view_form
-#, fuzzy
 msgid "e.g. Legal Rules"
 msgstr "напр. Законодательные нормы"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
-#, fuzzy
 msgid "e.g. Over 8 hours daily"
 msgstr "напр. Свыше 8 часов в день"
 
@@ -2874,13 +2780,11 @@ msgstr ""
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
-#, fuzzy
 msgid "from a specific duration"
 msgstr "с определенной продолжительностью"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
-#, fuzzy
 msgid "from the amount defined on the contract"
 msgstr "от количества, указанного в договоре"
 
@@ -2923,7 +2827,6 @@ msgstr "неделя"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
-#, fuzzy
 msgid "with a rate of"
 msgstr "со ставкой"
 

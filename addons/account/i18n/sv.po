@@ -41,7 +41,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-17 17:37+0000\n"
-"PO-Revision-Date: 2026-08-06 17:19+0000\n"
+"PO-Revision-Date: 2026-08-13 13:40+0000\n"
 "Last-Translator: Hanna Kharraziha <hakha@odoo.com>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-s19-4/"
 "account/sv/>\n"
@@ -487,7 +487,7 @@ msgstr "15 dagar"
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_30days_early_discount
 msgid "2/7 Net 30"
-msgstr "2/7 netto 30"
+msgstr "2% rabatt inom 7 dagar eller hela beloppet inom 30 dagar"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_21days
@@ -512,7 +512,7 @@ msgstr "30 dagar"
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_advance
 msgid "30% Advance End of Following Month"
-msgstr "30% förskott vid nästa månadsslut"
+msgstr "30% nu, hela beloppet vid nästa månadsslut"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_advance_60days
@@ -537,7 +537,7 @@ msgstr "50,00 EUR"
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_90days_on_the_10th
 msgid "90 days, on the 10th"
-msgstr "90 dagar, på den 10:e"
+msgstr "Om minst 90 dagar, på den 10:e dagen i följande månad"
 
 #. module: account
 #. odoo-python
@@ -546,8 +546,8 @@ msgid ""
 "<b>%(count)s#</b> Installment of <b>%(amount)s</b> due on <b style='color: "
 "#704A66;'>%(date)s</b>"
 msgstr ""
-"<b>%(count)s#</b> Delbetalningar av <b>%(amount)s</b> förfaller den <b "
-"style='color: #704A66;'>%(date)s</b>"
+"Delbetalning #<b>%(count)s</b> med beloppet <b>%(amount)s</b> förfaller den "
+"<b style='color: #704A66;'>%(date)s</b>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -4309,7 +4309,7 @@ msgstr "Arkivera"
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_search
 msgid "Archived"
-msgstr "Arkiverat"
+msgstr "Arkiverade"
 
 #. module: account
 #. odoo-javascript
@@ -5278,12 +5278,12 @@ msgstr "CABA"
 #. module: account
 #: model:account.incoterms,name:account.incoterm_CIP
 msgid "CARRIAGE AND INSURANCE PAID TO"
-msgstr "FRAKT- OCH FÖRSÄKRINGSKOSTNADER BETALDA TILL"
+msgstr "CARRIAGE AND INSURANCE PAID TO (CIP)"
 
 #. module: account
 #: model:account.incoterms,name:account.incoterm_CPT
 msgid "CARRIAGE PAID TO"
-msgstr "FRAKTKOSTNADER BETALDA TILL"
+msgstr "CARRIAGE PAID TO (CPT)"
 
 #. module: account
 #. odoo-python
@@ -5301,12 +5301,12 @@ msgstr ""
 #. module: account
 #: model:account.incoterms,name:account.incoterm_CFR
 msgid "COST AND FREIGHT"
-msgstr "KOSTNADER OCH FRAKT"
+msgstr "COST AND FREIGHT (CFR)"
 
 #. module: account
 #: model:account.incoterms,name:account.incoterm_CIF
 msgid "COST, INSURANCE AND FREIGHT"
-msgstr "KOSTNADER, FÖRSÄKRINGAR OCH FRAKT"
+msgstr "COST, INSURANCE AND FREIGHT (CIF)"
 
 #. module: account
 #. odoo-python
@@ -7202,7 +7202,7 @@ msgstr "D"
 #. module: account
 #: model:account.incoterms,name:account.incoterm_DAP
 msgid "DELIVERED AT PLACE"
-msgstr "LEVERERAS PÅ PLATS"
+msgstr "DELIVERED AT PLACE (DAP)"
 
 #. module: account
 #: model:account.incoterms,name:account.incoterm_DPU
@@ -7212,7 +7212,7 @@ msgstr "DELIVERED AT PLACE UNLOADED (DPU)"
 #. module: account
 #: model:account.incoterms,name:account.incoterm_DDP
 msgid "DELIVERED DUTY PAID"
-msgstr "LEVERERAT - TULL BETALD"
+msgstr "DELIVERED DUTY PAID (DDP)"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.open_account_journal_dashboard_kanban
@@ -7343,7 +7343,7 @@ msgstr "Dagar efter fakturadatumet"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term_line__delay_type__days_end_of_month_on_the
 msgid "Days end of month on the"
-msgstr "Dagar till slutet av månaden på"
+msgstr "Dagar, efter följande månadsslut den"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line__days_next_month
@@ -8363,7 +8363,7 @@ msgstr "Släpp för att importera dina fakturor."
 #: code:addons/account/models/account_journal_dashboard.py:0
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line__value_amount
 msgid "Due"
-msgstr "Att betala senast"
+msgstr "Att betala"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
@@ -8387,7 +8387,7 @@ msgstr "Förfallodatum"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
 msgid "Due Terms"
-msgstr "Förfallovillkor"
+msgstr "Villkor för beräkning av förfallodatum"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_subscriptions
@@ -8470,7 +8470,7 @@ msgstr "Växel"
 #: model:ir.model.fields,field_description:account.field_account_payment_term__early_discount
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_payment_filter
 msgid "Early Discount"
-msgstr "Förskottsrabatt"
+msgstr "Rabatt vid tidig betalning"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_early_pay_discount_gain_account_id
@@ -8533,8 +8533,8 @@ msgstr "Rabatt vid förtidsbetalning av"
 msgid ""
 "Early Payment Discount: <b>%(amount)s</b> if paid before <b>%(date)s</b>"
 msgstr ""
-"Rabatt vid förskottsbetalning: <b>%(amount)s</b> vid betalning innan <b>%"
-"(date)s</b>"
+"Rabatt vid tidig betalning: <b>%(amount)s</b> vid betalning innan <b>%(date)"
+"s</b>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -8702,7 +8702,7 @@ msgstr "Slutdatum"
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_end_following_month
 msgid "End of Following Month"
-msgstr "Slutet av nästa månad"
+msgstr "Nästa månadsslut"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__balance_end_real
@@ -8989,7 +8989,7 @@ msgstr "Kostnad"
 #: model:ir.model.fields,field_description:account.field_res_company__expense_account_id
 #: model:ir.model.fields,field_description:account.field_res_config_settings__expense_account_id
 msgid "Expense Account"
-msgstr "Utgiftskonto"
+msgstr "Konto för kostnader"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_product_product__property_account_expense_active
@@ -10675,7 +10675,7 @@ msgstr "Inkludera i analytisk kostnadsberäkning"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_group__included_journal_ids
 msgid "Included Journals"
-msgstr ""
+msgstr "Innefattade journaler"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__price_include_override
@@ -10698,7 +10698,7 @@ msgstr "Intäkt"
 #: model:ir.model.fields,field_description:account.field_res_company__income_account_id
 #: model:ir.model.fields,field_description:account.field_res_config_settings__income_account_id
 msgid "Income Account"
-msgstr "Intäktskonto"
+msgstr "Konto för intäkter"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_product_product__property_account_income_active
@@ -12151,13 +12151,13 @@ msgstr "Huvudbok"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_group__name
 msgid "Ledger group"
-msgstr "Huvudboksgrupp"
+msgstr "Gruppnamn"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_journal_group_list
 msgid "Ledger group allows managing multiple accounting standards."
 msgstr ""
-"Grupper av huvudböcker gör det möjligt att hantera flera "
+"Reskontragrupper gör det möjligt att hantera flera olika "
 "bokföringsstandarder."
 
 #. module: account
@@ -13002,7 +13002,7 @@ msgstr "Flera huvudböcker"
 #: model:ir.actions.act_window,name:account.action_account_journal_group_list
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_group_form
 msgid "Multi-ledger"
-msgstr "Flera huvudböcker"
+msgstr "Reskontragrupper"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__direction_sign
@@ -13688,7 +13688,7 @@ msgstr "Kontorsbord, stolar, hyllor, osv."
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term__early_pay_discount_computation__included
 msgid "On early payment"
-msgstr "Vid förtidsbetalning"
+msgstr "Vid tidig betalning"
 
 #. module: account
 #: model:onboarding.onboarding.step,step_image_alt:account.onboarding_onboarding_step_fiscal_year
@@ -16246,7 +16246,7 @@ msgstr "Rot"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__root_report_id
 msgid "Root Report"
-msgstr "Grundrapport"
+msgstr "Ursprunglig rapport"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
@@ -17269,7 +17269,7 @@ msgstr "Visa inaktiva skatter"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term__display_on_invoice
 msgid "Show installment dates"
-msgstr "Visa delbetalningsdatum"
+msgstr "Visa datum för delbetalningar"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__show_on_dashboard
@@ -21251,7 +21251,7 @@ msgstr "Visa partner(s)"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
 msgid "Visible to all"
-msgstr "Synlig för alla"
+msgstr "Synligt för alla"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.autopost_bills_wizard
@@ -22532,7 +22532,7 @@ msgstr "t.ex. 101000"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
 msgid "e.g. 30 days"
-msgstr "t.ex. 30 dagar"
+msgstr "T.ex. 30 dagar"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -22709,7 +22709,7 @@ msgstr "av skatt"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
 msgid "on"
-msgstr "på"
+msgstr "den"
 
 #. module: account
 #. odoo-javascript

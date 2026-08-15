@@ -20,8 +20,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-03 17:36+0000\n"
-"PO-Revision-Date: 2026-07-21 14:02+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2026-08-12 11:10+0000\n"
+"Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
 "projects/odoo-s19-4/hr/zh_Hans/>\n"
 "Language: zh_CN\n"
@@ -59,7 +59,7 @@ msgstr "%(employee_name)s 没有用户。"
 #. odoo-python
 #: code:addons/hr/models/mail_activity_plan_template.py:0
 msgid "%(employee_name)s's manager (%(manager_name)s) has no user."
-msgstr ""
+msgstr "%(employee_name)s的经理（%(manager_name)s ）没有用户。"
 
 #. module: hr
 #. odoo-python
@@ -176,6 +176,8 @@ msgid ""
 "<i class=\"d-none d-md-block fa fa-envelope\" title=\"Work Email\" "
 "invisible=\"not work_email\"/>"
 msgstr ""
+"<i class=\"d-none d-md-block fa fa-envelope\" title=\"工作邮箱\" "
+"invisible=\"not work_email\"/>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
@@ -183,6 +185,8 @@ msgid ""
 "<i class=\"d-none d-md-block fa fa-mobile\" title=\"Work Mobile\" "
 "invisible=\"not mobile_phone\"/>"
 msgstr ""
+"<i class=\"d-none d-md-block fa fa-mobile\" title=\"工作手机\" "
+"invisible=\"not mobile_phone\"/>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
@@ -225,18 +229,18 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form
 msgid ""
 "<i class=\"d-none d-md-inline-flex fa fa-phone fa-fw\" title=\"Work Phone\"/>"
-msgstr ""
+msgstr "<i class=\"d-none d-md-inline-flex fa fa-phone fa-fw\" title=\"工作手机\"/>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "<i class=\"d-none d-md-inline-flex fa fa-phone\" title=\"Work Phone\"/>"
-msgstr ""
+msgstr "<i class=\"d-none d-md-inline-flex fa fa-phone\" title=\"工作手机\"/>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "<i class=\"d-none d-md-inline-flex fa fa-tags\" title=\"Tags\"/>"
-msgstr ""
+msgstr "<i class=\"d-none d-md-inline-flex fa fa-tags\" title=\"标签\"/>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
@@ -285,6 +289,9 @@ msgid ""
 "label=\"Full Chart\"/>\n"
 "                                                Full Chart"
 msgstr ""
+"<i class=\"fa fa-share-alt fa-rotate-90 ms-1 mt-1\" role=\"img\" aria-"
+"label=\"Full Chart\"/>\n"
+"                                                完整图表"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
@@ -300,6 +307,8 @@ msgid ""
 "<i class=\"oi oi-arrow-right ms-1\"/>\n"
 "                                            Cancel Departure"
 msgstr ""
+"<i class=\"oi oi-arrow-right ms-1\"/>\n"
+"                                            取消离职"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -311,6 +320,12 @@ msgid ""
 "is_trusted_bank_account\" class=\"text-success\">Trusted</span>\n"
 "                                                </span>"
 msgstr ""
+"<span class=\"d-flex w-50\">\n"
+"                                                    <span "
+"invisible=\"is_trusted_bank_account\" class=\"text-muted\">不信任</span>\n"
+"                                                    <span invisible=\"not "
+"is_trusted_bank_account\" class=\"text-success\">受信任</span>\n"
+"                                                </span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
@@ -373,11 +388,13 @@ msgid ""
 "<span class=\"text-uppercase fw-bolder\" style=\"font-size: "
 "13px\">Organization Chart</span>"
 msgstr ""
+"<span class=\"text-uppercase fw-bolder\" style=\"font-size: 13px\">组织架构"
+"图</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "<span invisible=\"not contract_date_start\">to</span>"
-msgstr ""
+msgstr "<span invisible=\"not contract_date_start\">至</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -386,11 +403,14 @@ msgid ""
 "                                                (User is Inactive)\n"
 "                                            </span>"
 msgstr ""
+"<span invisible=\"not user_id or is_user_active\">\n"
+"                                                （用户已停用）\n"
+"                                           </span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "<span>Contract Overview</span>"
-msgstr ""
+msgstr "<span>合同概览</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
@@ -410,26 +430,26 @@ msgstr "<span>查看</span>"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "<span>employees</span>"
-msgstr ""
+msgstr "<span>员工</span>"
 
 #. module: hr
 #: model_terms:hr.job,website_rating:hr.job_trainee
 msgid "<strong class=\"s_rating_title\">Adaptability</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">适应性</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_rating:hr.job_consultant
 #: model_terms:hr.job,website_rating:hr.job_cto
 #: model_terms:hr.job,website_rating:hr.job_marketing
 msgid "<strong class=\"s_rating_title\">Administrative Work</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">行政工作</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_rating:hr.job_developer
 #: model_terms:hr.job,website_rating:hr.job_marketing
 #: model_terms:hr.job,website_rating:hr.job_trainee
 msgid "<strong class=\"s_rating_title\">Autonomy</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">自主性</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_rating:hr.job_trainee
@@ -577,7 +597,7 @@ msgstr "用户无法链接到同一公司中的多个员工。"
 #. odoo-javascript
 #: code:addons/hr/static/src/views/hr_employee_action_helper/onboarding_helper_blocks.xml:0
 msgid "AI"
-msgstr ""
+msgstr "AI"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -648,7 +668,7 @@ msgstr "在职员工"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_search_view
 msgid "Active Employees"
-msgstr ""
+msgstr "在职员工"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__activity_ids
@@ -804,7 +824,7 @@ msgstr "分配"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__allowed_country_state_ids
 #: model:ir.model.fields,field_description:hr.field_hr_version__allowed_country_state_ids
 msgid "Allowed Country State"
-msgstr ""
+msgstr "允许的省/州"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_bank_account_allocation_wizard_line__amount
@@ -1151,7 +1171,7 @@ msgstr "生日"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__birthday_month
 msgid "Birthday Month"
-msgstr ""
+msgstr "生日月份"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__phone_blacklisted
@@ -1502,13 +1522,13 @@ msgstr "待续签的合同"
 #. odoo-javascript
 #: code:addons/hr/static/src/components/contract_end_dialog/contract_end_dialog.xml:0
 msgid "Correct terms"
-msgstr ""
+msgstr "正确术语"
 
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/components/contract_end_dialog/contract_end_dialog.xml:0
 msgid "Correction of contract terms"
-msgstr ""
+msgstr "合同条款更正"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_departure_reason__country_id
@@ -1576,7 +1596,7 @@ msgstr "创建一个新的部门"
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.hr_contract_type_action
 msgid "Create a new employee type"
-msgstr ""
+msgstr "创建新的员工类型"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.hr_work_location_action
@@ -1594,13 +1614,13 @@ msgstr "创建活动计划"
 #: model_terms:ir.actions.act_window,help:hr.hr_employee_public_action
 #: model_terms:ir.actions.act_window,help:hr.open_view_employee_list_my
 msgid "Create an employee"
-msgstr ""
+msgstr "创建一名员工"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.action_hr_employee_org_chart
 #: model_terms:ir.actions.act_window,help:hr.action_hr_employee_public_org_chart
 msgid "Create an employee."
-msgstr ""
+msgstr "创建一名员工。"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -1667,17 +1687,17 @@ msgstr "币别符号，打印金额时使用."
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__exceptional_location_id
 msgid "Current"
-msgstr ""
+msgstr "当前"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__current_date_version
 msgid "Current Date Employee Record"
-msgstr ""
+msgstr "当前日期员工记录"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__current_version_id
 msgid "Current Employee Record"
-msgstr ""
+msgstr "当前员工记录"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__no_of_employee
@@ -1693,12 +1713,12 @@ msgstr "目前修读最后几年"
 #. odoo-javascript
 #: code:addons/hr/static/src/views/hr_employee_action_helper/onboarding_helper_blocks.xml:0
 msgid "Dashboard"
-msgstr ""
+msgstr "仪表板"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_location__date
 msgid "Date"
-msgstr ""
+msgstr "日期"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__date_end
@@ -1720,7 +1740,7 @@ msgstr "开始日期"
 #: model:ir.model.fields,help:hr.field_hr_version__departure_action_date
 #: model:ir.model.fields,help:hr.field_hr_version__departure_date
 msgid "Date at which the departure actually takes place."
-msgstr ""
+msgstr "实际离职的日期。"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__dismissal_date
@@ -1729,13 +1749,13 @@ msgstr ""
 msgid ""
 "Date at which the departure process starts. Differs from the actual "
 "departure date in case of a notice period."
-msgstr ""
+msgstr "离职流程开始的日期。若存在通知期，则该日期与实际离职日期不同。"
 
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/js/DynamicMinDateTimeField.js:0
 msgid "Date with Dynamic Minimum Value"
-msgstr ""
+msgstr "具有动态最小值的日期"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_location__day_week_string
@@ -1970,7 +1990,7 @@ msgstr "讨论频道"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_departure__dismissal_date
 #: model:ir.model.fields,field_description:hr.field_hr_version__dismissal_date
 msgid "Dismissal Date"
-msgstr ""
+msgstr "解雇日期"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_discuss_channel__display_name
@@ -2035,7 +2055,7 @@ msgstr "文档"
 #: code:addons/hr/static/src/views/hr_employee_action_helper/onboarding_helper_blocks.xml:0
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Documents"
-msgstr ""
+msgstr "文件"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__driving_license
@@ -2045,13 +2065,13 @@ msgstr "驾照"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__driving_license_name
 msgid "Driving License Name"
-msgstr ""
+msgstr "驾驶证姓名"
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "Each amount percentage must be a number between 0 and 100."
-msgstr ""
+msgstr "每个金额百分比必须在 0 到 100 之间。"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -2271,14 +2291,14 @@ msgstr "员工类型"
 #: model:ir.ui.menu,name:hr.menu_view_hr_contract_type
 #: model_terms:ir.ui.view,arch_db:hr.hr_contract_type_view_tree
 msgid "Employee Types"
-msgstr ""
+msgstr "员工类型"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__bank_account_ids
 #: model:ir.model.fields,help:hr.field_res_users__bank_account_ids
 #: model:ir.model.fields,help:hr.field_res_users__employee_bank_account_ids
 msgid "Employee bank accounts to pay salaries"
-msgstr ""
+msgstr "用于发放薪资的员工银行账户"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
@@ -2292,17 +2312,19 @@ msgid ""
 "Employee is already configured in a Departure process. \n"
 "Cancel it before configurating a new End of Collaboration."
 msgstr ""
+"该员工已在离职流程中完成配置。\n"
+"在配置新的“合作终止”之前，请先取消该流程。"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_contract_template_form_view
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Employee will be excluded from Pay Runs"
-msgstr ""
+msgstr "该员工将被排除在薪资发放之外"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__employee_bank_account_ids
 msgid "Employee's Bank Accounts"
-msgstr ""
+msgstr "员工银行账户"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
@@ -2315,7 +2337,7 @@ msgstr "员工姓名"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Employee's Name (e.g. John Doe, ...)"
-msgstr ""
+msgstr "员工姓名（例如：John Doe，……）"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__employee_resource_calendar_id
@@ -2375,7 +2397,7 @@ msgstr "员工标签"
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "Employees profile"
-msgstr ""
+msgstr "员工简介"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_list_view
@@ -2392,7 +2414,7 @@ msgstr "结束日期"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_departure__departure_reason_id
 #: model:ir.model.fields,field_description:hr.field_hr_version__departure_reason_id
 msgid "End Reason"
-msgstr ""
+msgstr "结束理由"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__contract_date_end
@@ -2412,7 +2434,7 @@ msgstr "试用期结束日期（如果有的话）。"
 #: model:ir.actions.server,name:hr.action_hr_employee_departure
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "End of Collaboration"
-msgstr ""
+msgstr "协作结束"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__trial_date_end
@@ -2424,13 +2446,13 @@ msgstr "试用期结束"
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "End of collaboration"
-msgstr ""
+msgstr "协作结束"
 
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/components/contract_end_dialog/contract_end_dialog.xml:0
 msgid "End of contract?"
-msgstr ""
+msgstr "合约终止？"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
@@ -2450,6 +2472,8 @@ msgid ""
 "(e.g., Aadhaar, SIN, NIN). This is used for official records and statutory "
 "compliance."
 msgstr ""
+"请输入政府颁发的员工国民身份证号码（例如：Aadhaar、SIN、NIN）。该号码用于官方"
+"记录和法规合规。"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
@@ -2521,7 +2545,7 @@ msgstr "过期"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_search_view
 msgid "Expired Contracts"
-msgstr ""
+msgstr "已到期合同"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -2531,12 +2555,12 @@ msgstr "到期日："
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__mail_activity__technical_usage__hr_expiring_contract
 msgid "Expiring Contract"
-msgstr ""
+msgstr "即将到期的合同"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__mail_activity__technical_usage__hr_expiring_work_permit
 msgid "Expiring Work Permit"
-msgstr ""
+msgstr "即将到期的工作许可"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__share
@@ -2595,7 +2619,7 @@ msgstr "家庭"
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__birthday_month__2
 msgid "February"
-msgstr ""
+msgstr "二月"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_version__sex__female
@@ -2612,19 +2636,19 @@ msgstr "研究领域"
 msgid ""
 "Field used to store sanitized phone number. Helps speeding up searches and "
 "comparisons."
-msgstr ""
+msgstr "用于存储已净化的电话号码的字段。有助于加快搜索和比较。"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.hr_employee_public_action
 #: model_terms:ir.actions.act_window,help:hr.open_view_employee_list_my
 msgid "Find all the information on employees"
-msgstr ""
+msgstr "寻找员工的所有信息"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.action_hr_employee_org_chart
 #: model_terms:ir.actions.act_window,help:hr.action_hr_employee_public_org_chart
 msgid "Find all the information on employees."
-msgstr ""
+msgstr "寻找员工的所有信息。"
 
 #. module: hr
 #: model:hr.departure.reason,name:hr.departure_fired
@@ -2634,26 +2658,26 @@ msgstr "被解雇"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__first_contract_date
 msgid "First Contract Date"
-msgstr ""
+msgstr "首次合同日期"
 
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/fields/boolean_radio.js:0
 msgid "First Element"
-msgstr ""
+msgstr "第一个元素"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__fixed_term
 #: model:ir.model.fields,field_description:hr.field_hr_version__fixed_term
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Fixed Term"
-msgstr ""
+msgstr "固定期限"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_search_view_enhanced
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Fixed-term Contract"
-msgstr ""
+msgstr "固定期限合同"
 
 #. module: hr
 #. odoo-javascript
@@ -3213,7 +3237,7 @@ msgstr ""
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Issued by Government"
-msgstr ""
+msgstr "车队"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
@@ -3223,7 +3247,7 @@ msgstr "它优先考虑数据驱动的决策"
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__birthday_month__1
 msgid "January"
-msgstr ""
+msgstr "一月"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__job_id
@@ -3278,12 +3302,12 @@ msgstr "工作"
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__birthday_month__7
 msgid "July"
-msgstr ""
+msgstr "七月"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__birthday_month__6
 msgid "June"
-msgstr ""
+msgstr "六月"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_hrm
@@ -3311,7 +3335,7 @@ msgstr "上个活动时间"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__last_modified_uid
 #: model:ir.model.fields,field_description:hr.field_hr_version__last_modified_uid
 msgid "Last Modified by"
-msgstr ""
+msgstr "最后修改人"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__last_modified_date
@@ -3428,25 +3452,25 @@ msgstr "将一个元素与布尔值 True 关联。"
 #. odoo-javascript
 #: code:addons/hr/static/src/xml/contract_template_button.xml:0
 msgid "Load Contract Template"
-msgstr ""
+msgstr "加载合同模板"
 
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/xml/contract_template_button.xml:0
 msgid "Load Template"
-msgstr ""
+msgstr "加载模板"
 
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/xml/contract_template_button.xml:0
 msgid "Load a Template"
-msgstr ""
+msgstr "加载模板"
 
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/views/hr_employee_action_helper/hr_employee_action_helper.xml:0
 msgid "Load sample data"
-msgstr ""
+msgstr "加载样本数据"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_location__work_location_id
@@ -3464,12 +3488,12 @@ msgstr "地点编号"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_location__work_location_type
 #: model:ir.model.fields,field_description:hr.field_hr_work_location__location_type
 msgid "Location Type"
-msgstr ""
+msgstr "位置类型"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_location__work_location_name
 msgid "Location name"
-msgstr ""
+msgstr "位置名称"
 
 #. module: hr
 #: model:hr.department,name:hr.dep_rd_ltp
@@ -3480,7 +3504,7 @@ msgstr "长期项目"
 #. odoo-javascript
 #: code:addons/hr/static/src/views/hr_employee_action_helper/onboarding_helper_blocks.xml:0
 msgid "Lunch"
-msgstr ""
+msgstr "午餐"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_main_attachment_id
@@ -3491,7 +3515,7 @@ msgstr "主要附件"
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
 msgid "Main Work Location"
-msgstr ""
+msgstr "主要工作地点"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_developer
