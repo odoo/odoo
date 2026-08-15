@@ -1,11 +1,10 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-from odoo.fields import Domain
+from odoo.tools import SQL
 from odoo.tools.urls import urljoin
 
 from odoo.addons.link_tracker.models.link_tracker import LINK_TRACKER_MIN_CODE_LENGTH
@@ -179,10 +178,15 @@ class MailingMailing(models.Model):
         """Returns a set of emails already targeted by current mailing/campaign (no duplicates)"""
         self.ensure_one()
         target = self.env[self.mailing_model_real]
+        query = models.Query(self.env['mailing.trace'].sudo())
+        s = query.table
+        target_alias = s._make_alias('res_id', target.sudo())
+        query.add_join('JOIN', target_alias, None, SQL("%s = %s AND %s = %s", s.res_id, target_alias.id, s.model, target._name))
+        query.add_where(SQL('%s = %s', s.mass_mailing_id, self.id))
 
-        partner_fields = []
         if isinstance(target, self.pool['mail.thread.phone']):
             phone_fields = ['phone_sanitized']
+            partner_fields = []
         else:
             phone_fields = [
                 fname for fname in target._phone_get_number_fields()
@@ -193,41 +197,20 @@ class MailingMailing(models.Model):
             (fname for fname in partner_fields if target._fields[fname].store and target._fields[fname].type == 'many2one'),
             False
         )
-        if not phone_fields and not partner_field:
-            raise UserError(_("Unsupported %s for mass SMS", self.mailing_model_id.name))
 
-        query = """
-            SELECT %(select_query)s
-              FROM mailing_trace trace
-              JOIN %(target_table)s target ON (trace.res_id = target.id)
-              %(join_add_query)s
-             WHERE (%(where_query)s)
-               AND trace.mass_mailing_id = %%(mailing_id)s
-               AND trace.model = %%(target_model)s
-        """
         if phone_fields:
             # phone fields are checked on target mailed model
-            select_query = 'target.id, ' + ', '.join('target.%s' % fname for fname in phone_fields)
-            where_query = ' OR '.join('target.%s IS NOT NULL' % fname for fname in phone_fields)
-            join_add_query = ''
-        else:
+            columns = [target_alias[fname] for fname in phone_fields]
+        elif partner_field:
             # phone fields are checked on res.partner model
-            partner_phone_fields = ['phone']
-            select_query = 'target.id, ' + ', '.join('partner.%s' % fname for fname in partner_phone_fields)
-            where_query = ' OR '.join('partner.%s IS NOT NULL' % fname for fname in partner_phone_fields)
-            join_add_query = 'JOIN res_partner partner ON (target.%s = partner.id)' % partner_field
+            columns = [target_alias[partner_field].phone]
+        else:
+            raise UserError(_("Unsupported %s for mass SMS", self.mailing_model_id.name))
 
-        query = query % {
-            'select_query': select_query,
-            'where_query': where_query,
-            'target_table': target._table,
-            'join_add_query': join_add_query,
-        }
-        params = {'mailing_id': self.id, 'target_model': self.mailing_model_real}
-        self.env.cr.execute(query, params)
-        query_res = self.env.cr.fetchall()
-        seen_list = set(number for item in query_res for number in item[1:] if number)
-        seen_ids = set(item[0] for item in query_res)
+        query.add_where(SQL("(%s)", SQL(' OR ').join(SQL("%s IS NOT NULL", c) for c in columns)))
+        query_res = self.env.execute_query(query.select(target_alias.id, *columns))
+        seen_list = {number for item in query_res for number in item[1:] if number}
+        seen_ids = {item[0] for item in query_res}
         _logger.info("Mass SMS %s targets %s: already reached %s SMS", self, target._name, len(seen_list))
         return list(seen_ids), list(seen_list)
 

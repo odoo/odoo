@@ -970,37 +970,24 @@ class MailingMailing(models.Model):
     def _get_seen_list(self):
         """Returns a set of emails already targeted by current mailing/campaign (no duplicates)"""
         self.ensure_one()
-        target = self.env[self.mailing_model_real]
-
-        query = """
-            SELECT s.email
-              FROM mailing_trace s
-              JOIN %(target)s t ON (s.res_id = t.id)
-              %(join_domain)s
-             WHERE s.email IS NOT NULL
-              %(where_domain)s
-        """
+        query = models.Query(self.env['mailing.trace'].sudo())
+        s = query.table
+        target = s._make_alias('res_id', self.env[self.mailing_model_real].sudo())
+        query.add_join('JOIN', target, None, SQL("%s = %s", s.res_id, target.id))
+        query.add_where(SQL("%s IS NOT NULL", s.email))
 
         if self.ab_testing_enabled:
-            query += """
-               AND s.campaign_id = %%(mailing_campaign_id)s;
-            """
+            query.add_where(SQL("%s = %s", s.campaign_id, self.campaign_id.id))
         else:
-            query += """
-               AND s.mass_mailing_id = %%(mailing_id)s
-               AND s.model = %%(target_model)s;
-            """
-        join_domain, where_domain = self._get_seen_list_extra()
-        query = query % {'target': target._table, 'join_domain': join_domain, 'where_domain': where_domain}
-        params = {'mailing_id': self.id, 'mailing_campaign_id': self.campaign_id.id, 'target_model': self.mailing_model_real}
-        self.env.cr.execute(query, params)
-        seen_list = {m[0] for m in self.env.cr.fetchall()}
+            query.add_where(SQL("%s = %s AND %s = %s", s.mass_mailing_id, self.id, s.model, self.mailing_model_real))
+        self._get_seen_list_extra(query)
+        seen_list = {m[0] for m in self.env.execute_query(query.select(s.email))}
         _logger.info(
-            "Mass-mailing %s has already reached %s %s emails", self, len(seen_list), target._name)
+            "Mass-mailing %s has already reached %s %s emails", self, len(seen_list), self.mailing_model_real)
         return seen_list
 
-    def _get_seen_list_extra(self):
-        return ('', '')
+    def _get_seen_list_extra(self, query):
+        pass
 
     def _get_mass_mailing_context(self):
         """Returns extra context items with pre-filled blacklist and seen list for massmailing"""
