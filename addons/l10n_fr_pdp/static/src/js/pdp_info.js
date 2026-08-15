@@ -17,7 +17,7 @@ class WhatIsPdp extends WhatIsPeppol {
 
     async activate() {
         const action_on_activate = this.props.action.context.action_on_activate;
-        const action = action_on_activate?.res_config_settings_id
+        const action = action_on_activate.context?.res_config_settings_id
               ? await this.orm.call("res.config.settings", "button_peppol_reregister", [
                     action_on_activate.context.res_config_settings_id,
                 ])
