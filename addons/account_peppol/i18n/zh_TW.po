@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-07 17:38+0000\n"
+"POT-Creation-Date: 2026-08-14 17:39+0000\n"
 "PO-Revision-Date: 2026-06-28 01:08+0000\n"
 "Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
@@ -840,8 +840,7 @@ msgstr "建立 EDI 文件時發生錯誤(格式: %s)："
 
 #. module: account_peppol
 #. odoo-python
-#: code:addons/account_peppol/models/account_move_send.py:0
-#: code:addons/account_peppol/wizard/peppol_registration.py:0
+#: code:addons/account_peppol/models/res_config_settings.py:0
 msgid "France - E-Invoicing (Approved Platform)"
 msgstr ""
 
@@ -856,6 +855,12 @@ msgstr "在 Odoo 免費使用"
 #: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.xml:0
 msgid "Fully automated"
 msgstr "完全自動化"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/res_config_settings.py:0
+msgid "Go to module"
+msgstr ""
 
 #. module: account_peppol
 #. odoo-javascript
@@ -887,32 +892,9 @@ msgid "If you want to be invoiced by Peppol, your configuration must be valid."
 msgstr "若想由 Peppol 開立發票，配置必須有效。"
 
 #. module: account_peppol
-#. odoo-python
-#: code:addons/account_peppol/wizard/peppol_registration.py:0
-msgid ""
-"If you want to register for the French e-invoicing, first install the PDP "
-"module: France - E-Invoicing (Approved Platform)."
-msgstr ""
-
-#. module: account_peppol
-#. odoo-python
-#: code:addons/account_peppol/wizard/peppol_registration.py:0
-msgid ""
-"If you want to register for the French e-invoicing, first install the PDP "
-"module: France - E-Invoicing (Approved Platform).\n"
-"The module was not found. Please update the available apps first."
-msgstr ""
-
-#. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Incoming Invoices Journal"
 msgstr "收到發票日記賬"
-
-#. module: account_peppol
-#. odoo-python
-#: code:addons/account_peppol/wizard/peppol_registration.py:0
-msgid "Install module"
-msgstr ""
 
 #. module: account_peppol
 #. odoo-python
@@ -1838,8 +1820,18 @@ msgstr "要產生完整的電子發票，請亦為此合作夥伴設定國家/�
 
 #. module: account_peppol
 #. odoo-python
-#: code:addons/account_peppol/wizard/peppol_registration.py:0
-msgid "To use the Approved Platform for French E-Invoicing install the module"
+#: code:addons/account_peppol/models/res_config_settings.py:0
+msgid ""
+"To use the Approved Platform for French E-Invoicing install the module '%s'."
+msgstr ""
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/res_config_settings.py:0
+msgid ""
+"To use the Approved Platform for French E-Invoicing install the module "
+"'%s'.\n"
+"The module was not found. Please update the app list first."
 msgstr ""
 
 #. module: account_peppol
@@ -1887,8 +1879,8 @@ msgstr "未知的 Peppol 錯誤：%s"
 
 #. module: account_peppol
 #. odoo-python
-#: code:addons/account_peppol/wizard/peppol_registration.py:0
-msgid "Update Apps List"
+#: code:addons/account_peppol/models/res_config_settings.py:0
+msgid "Update App List"
 msgstr ""
 
 #. module: account_peppol

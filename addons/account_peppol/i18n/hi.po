@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-07 17:38+0000\n"
+"POT-Creation-Date: 2026-08-14 17:39+0000\n"
 "PO-Revision-Date: 2026-07-10 07:30+0000\n"
 "Last-Translator: \"Ujjawal Pathak (pauj)\" <pauj@odoo.com>\n"
 "Language-Team: Hindi <https://translate.odoo.com/projects/odoo-s18-3/"
@@ -877,8 +877,7 @@ msgstr "ईडीआई दस्तावेज़ बनाते समय �
 
 #. module: account_peppol
 #. odoo-python
-#: code:addons/account_peppol/models/account_move_send.py:0
-#: code:addons/account_peppol/wizard/peppol_registration.py:0
+#: code:addons/account_peppol/models/res_config_settings.py:0
 msgid "France - E-Invoicing (Approved Platform)"
 msgstr "फ़्रांस - ई-इनवॉइसिंग (मंज़ूर किया गया प्लेटफ़ॉर्म)"
 
@@ -893,6 +892,12 @@ msgstr "odoo पर फ्री"
 #: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.xml:0
 msgid "Fully automated"
 msgstr "पूरी तरह से ऑटोमेटेड"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/res_config_settings.py:0
+msgid "Go to module"
+msgstr ""
 
 #. module: account_peppol
 #. odoo-javascript
@@ -924,32 +929,9 @@ msgid "If you want to be invoiced by Peppol, your configuration must be valid."
 msgstr "अगर आपको Peppol से इनवॉइस चाहिए, तो आपकी सेटिंग सही होनी चाहिए."
 
 #. module: account_peppol
-#. odoo-python
-#: code:addons/account_peppol/wizard/peppol_registration.py:0
-msgid ""
-"If you want to register for the French e-invoicing, first install the PDP "
-"module: France - E-Invoicing (Approved Platform)."
-msgstr ""
-
-#. module: account_peppol
-#. odoo-python
-#: code:addons/account_peppol/wizard/peppol_registration.py:0
-msgid ""
-"If you want to register for the French e-invoicing, first install the PDP "
-"module: France - E-Invoicing (Approved Platform).\n"
-"The module was not found. Please update the available apps first."
-msgstr ""
-
-#. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Incoming Invoices Journal"
 msgstr "इनकमिंग इनवॉइस जर्नल"
-
-#. module: account_peppol
-#. odoo-python
-#: code:addons/account_peppol/wizard/peppol_registration.py:0
-msgid "Install module"
-msgstr ""
 
 #. module: account_peppol
 #. odoo-python
@@ -1906,9 +1888,19 @@ msgstr "इलेक्ट्रॉनिक बिल पूरी तरह �
 
 #. module: account_peppol
 #. odoo-python
-#: code:addons/account_peppol/wizard/peppol_registration.py:0
-msgid "To use the Approved Platform for French E-Invoicing install the module"
-msgstr "फ़्रेंच ई-इनवॉइसिंग के लिए स्वीकृत प्लेटफ़ॉर्म का उपयोग करने के लिए मॉड्यूल इंस्टॉल करें"
+#: code:addons/account_peppol/models/res_config_settings.py:0
+msgid ""
+"To use the Approved Platform for French E-Invoicing install the module '%s'."
+msgstr ""
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/res_config_settings.py:0
+msgid ""
+"To use the Approved Platform for French E-Invoicing install the module "
+"'%s'.\n"
+"The module was not found. Please update the app list first."
+msgstr ""
 
 #. module: account_peppol
 #. odoo-python
@@ -1959,8 +1951,8 @@ msgstr "Peppol में अज्ञात गड़बड़ी: %s"
 
 #. module: account_peppol
 #. odoo-python
-#: code:addons/account_peppol/wizard/peppol_registration.py:0
-msgid "Update Apps List"
+#: code:addons/account_peppol/models/res_config_settings.py:0
+msgid "Update App List"
 msgstr ""
 
 #. module: account_peppol
@@ -2244,6 +2236,11 @@ msgstr "इनवॉइस भेजने के लिए, हालांक�
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "uses"
 msgstr "इस्तेमाल"
+
+#~ msgid ""
+#~ "To use the Approved Platform for French E-Invoicing install the module"
+#~ msgstr ""
+#~ "फ़्रेंच ई-इनवॉइसिंग के लिए स्वीकृत प्लेटफ़ॉर्म का उपयोग करने के लिए मॉड्यूल इंस्टॉल करें"
 
 #~ msgid "EDI user should be of type Peppol"
 #~ msgstr "ईडीआई इस्तेमाल करने वाला व्यक्ति Peppol वाला होना चाहिए"

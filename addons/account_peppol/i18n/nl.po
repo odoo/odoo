@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-07 17:38+0000\n"
-"PO-Revision-Date: 2026-07-04 22:09+0000\n"
+"POT-Creation-Date: 2026-08-14 17:39+0000\n"
+"PO-Revision-Date: 2026-08-12 13:37+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s18-3/"
 "account_peppol/nl/>\n"
@@ -889,10 +889,9 @@ msgstr ""
 
 #. module: account_peppol
 #. odoo-python
-#: code:addons/account_peppol/models/account_move_send.py:0
-#: code:addons/account_peppol/wizard/peppol_registration.py:0
+#: code:addons/account_peppol/models/res_config_settings.py:0
 msgid "France - E-Invoicing (Approved Platform)"
-msgstr ""
+msgstr "Frankrijk - Elektronische facturatie (goedgekeurd platform)"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -905,6 +904,12 @@ msgstr "Gratis op Odoo"
 #: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.xml:0
 msgid "Fully automated"
 msgstr "Volledig geautomatiseerd"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/res_config_settings.py:0
+msgid "Go to module"
+msgstr ""
 
 #. module: account_peppol
 #. odoo-javascript
@@ -937,32 +942,9 @@ msgstr ""
 "Je configuratie dient geldig te zijn als je via Peppol wilt factureren."
 
 #. module: account_peppol
-#. odoo-python
-#: code:addons/account_peppol/wizard/peppol_registration.py:0
-msgid ""
-"If you want to register for the French e-invoicing, first install the PDP "
-"module: France - E-Invoicing (Approved Platform)."
-msgstr ""
-
-#. module: account_peppol
-#. odoo-python
-#: code:addons/account_peppol/wizard/peppol_registration.py:0
-msgid ""
-"If you want to register for the French e-invoicing, first install the PDP "
-"module: France - E-Invoicing (Approved Platform).\n"
-"The module was not found. Please update the available apps first."
-msgstr ""
-
-#. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Incoming Invoices Journal"
 msgstr "Dagboek binnenkomende facturen"
-
-#. module: account_peppol
-#. odoo-python
-#: code:addons/account_peppol/wizard/peppol_registration.py:0
-msgid "Install module"
-msgstr ""
 
 #. module: account_peppol
 #. odoo-python
@@ -1212,7 +1194,7 @@ msgstr "Peppol-configuratiewizard"
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__peppol_eas
 msgid "Peppol Eas"
-msgstr ""
+msgstr "Peppol Eas"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__peppol_endpoint
@@ -1275,7 +1257,7 @@ msgstr "Inkoopdagboek Peppol"
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__peppol_purchase_journal_required
 msgid "Peppol Purchase Journal Required"
-msgstr ""
+msgstr "Peppol inkoopdagboek vereist"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_view_account_invoice_filter
@@ -1948,8 +1930,18 @@ msgstr ""
 
 #. module: account_peppol
 #. odoo-python
-#: code:addons/account_peppol/wizard/peppol_registration.py:0
-msgid "To use the Approved Platform for French E-Invoicing install the module"
+#: code:addons/account_peppol/models/res_config_settings.py:0
+msgid ""
+"To use the Approved Platform for French E-Invoicing install the module '%s'."
+msgstr ""
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/res_config_settings.py:0
+msgid ""
+"To use the Approved Platform for French E-Invoicing install the module "
+"'%s'.\n"
+"The module was not found. Please update the app list first."
 msgstr ""
 
 #. module: account_peppol
@@ -1957,6 +1949,8 @@ msgstr ""
 #: code:addons/account_peppol/models/account_move_send.py:0
 msgid "To use the Approved Platform for French E-Invoicing, install the module"
 msgstr ""
+"Om het goedgekeurde platform voor Franse elektronische facturatie te "
+"gebruiken, installeer je de module"
 
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_account_edi_xml_ubl_bis3
@@ -1999,8 +1993,8 @@ msgstr "Onbekende Peppol-fout: %s"
 
 #. module: account_peppol
 #. odoo-python
-#: code:addons/account_peppol/wizard/peppol_registration.py:0
-msgid "Update Apps List"
+#: code:addons/account_peppol/models/res_config_settings.py:0
+msgid "Update App List"
 msgstr ""
 
 #. module: account_peppol
@@ -2059,7 +2053,7 @@ msgstr "Wat is Peppol en waarom is het geweldig?"
 #. odoo-python
 #: code:addons/account_peppol/models/account_move_send.py:0
 msgid "Why should I use French E-Invoicing ?"
-msgstr ""
+msgstr "Waarom zou ik Franse elektronische facturatie gebruiken?"
 
 #. module: account_peppol
 #. odoo-python
@@ -2290,6 +2284,36 @@ msgstr "om facturen te versturen, maar deze"
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "uses"
 msgstr "gebruikt"
+
+#~ msgid ""
+#~ "If you want to register for the French e-invoicing, first install the PDP "
+#~ "module: France - E-Invoicing (Approved Platform)."
+#~ msgstr ""
+#~ "Als je je wilt registreren voor Franse elektronische facturatie, "
+#~ "installeer dan eerst de PDP-module: Frankrijk - E-facturatie (goedgekeurd "
+#~ "platform)."
+
+#~ msgid ""
+#~ "If you want to register for the French e-invoicing, first install the PDP "
+#~ "module: France - E-Invoicing (Approved Platform).\n"
+#~ "The module was not found. Please update the available apps first."
+#~ msgstr ""
+#~ "Als je je wilt registreren voor Franse elektronische facturatie, "
+#~ "installeer dan eerst de PDP-module: Frankrijk - E-facturatie (goedgekeurd "
+#~ "platform).\n"
+#~ "De module is niet gevonden. Werk eerst de beschikbare apps bij."
+
+#~ msgid "Install module"
+#~ msgstr "Module installeren"
+
+#~ msgid ""
+#~ "To use the Approved Platform for French E-Invoicing install the module"
+#~ msgstr ""
+#~ "Om het goedgekeurde platform voor Franse elektronische facturatie te "
+#~ "gebruiken, installeer je de module"
+
+#~ msgid "Update Apps List"
+#~ msgstr "Lijst met apps bijwerken"
 
 #~ msgid "EDI user should be of type Peppol"
 #~ msgstr "EDI-gebruiker moet van het type Peppol zijn"
