@@ -1,7 +1,7 @@
 """RabbitMQ publisher — thin pika wrapper for the invoice agent queues.
 
 This is the *publishing* half of the AMQP 0-9-1 contract (the topology is
-declared by ``queue/topology.py`` at the repo root). It exists so callers
+declared by ``invoice_queue/topology.py`` at the repo root). It exists so callers
 never touch pika directly:
 
 * ``publish(routing_key, body, exchange=...)`` serializes ``body`` to JSON,
@@ -24,7 +24,7 @@ lifetime is not the process's lifetime, and a message published inside a
 transaction that later rolls back is an orphan job — see
 ``docs/adr-004-rabbitmq.md`` for the full transactional-outbox argument.
 
-Environment contract (mirrors ``queue/topology.py``):
+Environment contract (mirrors ``invoice_queue/topology.py``):
 
 * ``RABBITMQ_HOST`` (default ``rabbitmq`` — the compose service name, so it
   resolves on the private Docker network with zero configuration)
@@ -61,7 +61,7 @@ except ImportError:  # pragma: no cover — stale image without pika
         "be published to RabbitMQ.",
     )
 
-# Exchange/routing keys — must match queue/topology.py (single source of
+# Exchange/routing keys — must match invoice_queue/topology.py (single source of
 # truth lives there; mirrored here so the addon can be imported standalone).
 EXCHANGE_NAME = "invoice.agent"
 ROUTING_KEY_REQUEST = "extract.request"
@@ -142,7 +142,7 @@ class QueuePublisher(models.AbstractModel):
 
         The message is persistent (``delivery_mode=2``) so it survives a
         broker restart, and the body is JSON-serialized. The exchange and
-        queues are declared by ``queue/topology.py`` — this method never
+        queues are declared by ``invoice_queue/topology.py`` — this method never
         declares anything, it only publishes (declaration belongs to the
         topology script / CI, not to a request-time code path).
 
@@ -199,7 +199,7 @@ class QueuePublisher(models.AbstractModel):
     def publish_extract_request(self, move_id, attachment_id=False, attempt=1):
         """Convenience: publish a durable ``extract.request`` job.
 
-        Body contract (documented in ``queue/topology.py`` and
+        Body contract (documented in ``invoice_queue/topology.py`` and
         ``docs/adr-004-rabbitmq.md``)::
 
             {"move_id": N, "attachment_id": M, "attempt": K}
