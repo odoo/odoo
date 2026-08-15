@@ -1,8 +1,8 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models, tools
 from odoo.addons.sale.models.sale_order import SALE_ORDER_STATE
+from odoo.tools import SQL
 
 
 class EventSaleReport(models.Model):
@@ -49,10 +49,10 @@ class EventSaleReport(models.Model):
 
     def init(self):
         tools.drop_view_if_exists(self.env.cr, self._table)
-        self.env.cr.execute('CREATE OR REPLACE VIEW %s AS (%s);' % (self._table, self._query()))
+        self.env.cr.execute(SQL('CREATE OR REPLACE VIEW %s AS (%s)', SQL.identifier(self._table), self._query()))
 
     def _query(self, with_=None, select=None, join=None, group_by=None, where=None):
-        return "\n".join([
+        return SQL("\n").join([
             self._with_clause(*(with_ or [])),
             self._select_clause(*(select or [])),
             self._from_clause(*(join or [])),
@@ -62,13 +62,13 @@ class EventSaleReport(models.Model):
 
     def _with_clause(self, *with_):
         # Extra clauses formatted as `cte1 AS (SELECT ...)`, `cte2 AS (SELECT ...)`...
-        return """
-WITH
-    """ + ',\n    '.join(with_) if with_ else ''
+        return SQL("""
+WITH %s
+    """, SQL(',\n    ').join(with_)) if with_ else SQL()
 
     def _select_clause(self):
         # Extra clauses formatted as `cte1.column1 AS new_column1`, `table1.column2 AS new_column2`...
-        select_query = """
+        select_query = SQL("""
 SELECT
     ROW_NUMBER() OVER (ORDER BY event_registration.id) AS id,
 
@@ -111,33 +111,38 @@ SELECT
         sale_order_line.price_subtotal
             / CASE COALESCE(sale_order.currency_rate, 0) WHEN 0 THEN 1.0 ELSE sale_order.currency_rate END
             / sale_order_line.product_uom_qty
-    END AS sale_price_untaxed"""
+    END AS sale_price_untaxed""")
         additional_fields = self._select_additional_fields()
         if additional_fields:
-            select_query += ",\n    " + ",\n    ".join(f"{v} AS {k}" for k, v in additional_fields.items())
+            select_query = SQL(
+                "%s,\n    %s",
+                select_query,
+                SQL(",\n    ").join(SQL("%s AS %s", v, SQL.identifier(k)) for k, v in additional_fields.items()),
+            )
         return select_query
 
     def _from_clause(self, *join_):
         # Extra clauses formatted as `column1`, `column2`...
-        return """
+        return SQL("""
 FROM event_registration
 LEFT JOIN event_event ON event_event.id = event_registration.event_id
 LEFT JOIN event_slot ON event_slot.id = event_registration.event_slot_id
 LEFT JOIN event_event_ticket ON event_event_ticket.id = event_registration.event_ticket_id
 LEFT JOIN sale_order ON sale_order.id = event_registration.sale_order_id
 LEFT JOIN sale_order_line ON sale_order_line.id = event_registration.sale_order_line_id
-""" + ('\n'.join(join_) + '\n' if join_ else '')
+%s
+""", SQL('\n').join(join_))
 
     def _group_by_clause(self, *group_by):
         # Extra clauses formatted like `column1`, `column2`...
-        return """
-GROUP BY
-    """ + ',\n    '.join(group_by) if group_by else ''
+        return SQL("""
+GROUP BY %s
+    """, SQL(',\n    ').join(group_by)) if group_by else SQL()
 
     def _where_clause(self, *where):
-        return """
-WHERE """ + ',\n    '.join(where) if where else ''
+        return SQL("""
+WHERE %s""", SQL(',\n    ').join(where)) if where else SQL()
 
-    def _select_additional_fields(self):
+    def _select_additional_fields(self) -> dict[str, SQL]:
         # To be overridden in other modules
         return {}

@@ -1,30 +1,34 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
+from odoo.tools import SQL
 
 
 class EventSaleReport(models.Model):
     _inherit = "event.sale.report"
 
     def _query(self, with_=None, select=None, join=None, group_by=None, where=None):
-        where_clause = """event_registration.pos_order_line_id IS NULL"""
+        where_clause = SQL("""event_registration.pos_order_line_id IS NULL""")
         res = super()._query(with_, select, join, group_by, (where or []) + [where_clause])
-        return (
-            res
-            + f"""UNION ALL (
-            SELECT {self._select_pos(*(select or []))}
-            FROM {self._from_pos()}
-            WHERE {self._where_pos()}
+        return SQL(
+            """%s UNION ALL (
+            SELECT %s
+            FROM %s
+            WHERE %s
             )
-        """
+            """,
+            res,
+            self._select_pos(*(select or [])),
+            self._from_pos(),
+            self._where_pos(),
         )
 
     def _where_pos(self):
-        return """pos_order_line.event_ticket_id is not NULL"""
+        return SQL("""pos_order_line.event_ticket_id is not NULL""")
 
     def _select_pos(self):
         # Extra clauses formatted as `cte1.column1 AS new_column1`, `table1.column2 AS new_column2`...
-        select_query = """
+        select_query = SQL("""
 ROW_NUMBER() OVER (ORDER BY event_registration.id) AS id,
 event_registration.id AS event_registration_id,
 event_registration.company_id AS company_id,
@@ -57,18 +61,23 @@ CASE
     WHEN pos_order_line.qty = 0 THEN 0
     ELSE
     pos_order_line.price_subtotal / pos_order_line.qty
-END AS sale_price_untaxed"""
+END AS sale_price_untaxed""")
         additional_fields = self._select_additional_fields()
         if additional_fields:
-            select_query += ",\n    " + ",\n    ".join(f"{v} AS {k}" for k, v in additional_fields.items())
+            select_query = SQL(
+                "%s,\n    %s",
+                select_query,
+                SQL(",\n    ").join(SQL("%s AS %s", v, SQL.identifier(k)) for k, v in additional_fields.items()),
+            )
         return select_query
 
     def _from_pos(self, *join_):
         # Extra clauses formatted as `column1`, `column2`...
-        return """
+        return SQL("""
 event_registration event_registration
 LEFT JOIN pos_order_line ON pos_order_line.id= event_registration.pos_order_line_id
 LEFT JOIN pos_order ON pos_order.id = pos_order_line.order_id
 LEFT JOIN event_event ON event_event.id = event_registration.event_id
 LEFT JOIN event_event_ticket ON event_event_ticket.id = event_registration.event_ticket_id
-""" + ("\n".join(join_) + "\n" if join_ else "")
+%s
+""", SQL("\n").join(join_))
