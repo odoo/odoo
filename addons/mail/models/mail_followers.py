@@ -1,11 +1,10 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
-import itertools
 
 from odoo import api, fields, models, Command
 from odoo.addons.mail.tools.discuss import Store
+from odoo.tools import SQL
 
 
 class MailFollowers(models.Model):
@@ -367,39 +366,37 @@ class MailFollowers(models.Model):
           share status of partner (returned only if include_pshare is True)
           active flag status of partner (returned only if include_active is True)
         """
-        self.env['mail.followers'].flush_model(['partner_id', 'res_id', 'res_model', 'subtype_ids'])
-        self.env['res.partner'].flush_model(['active', 'partner_share'])
-        # base query: fetch followers of given documents
-        where_clause = ' OR '.join(['fol.res_model = %s AND fol.res_id IN %s'] * len(doc_data))
-        where_params = list(itertools.chain.from_iterable((rm, tuple(rids)) for rm, rids in doc_data))
+        query = models.Query(self.sudo())
+        fol = query.table
 
-        # additional: filter on optional pids
-        sub_where = []
         if pids:
-            sub_where += ["fol.partner_id IN %s"]
-            where_params.append(tuple(pids))
+            query.add_where(SQL("%s IN %s", fol.partner_id, tuple(pids)))
         elif pids is not None:
-            sub_where += ["fol.partner_id IS NULL"]
-        if sub_where:
-            where_clause += "AND (%s)" % " OR ".join(sub_where)
+            query.add_where(SQL("%s IS NULL", fol.partner_id))
 
-        query = """
-SELECT fol.id, fol.res_id, fol.partner_id, array_agg(subtype.id)%s%s
-FROM mail_followers fol
-%s
-LEFT JOIN mail_followers_mail_message_subtype_rel fol_rel ON fol_rel.mail_followers_id = fol.id
-LEFT JOIN mail_message_subtype subtype ON subtype.id = fol_rel.mail_message_subtype_id
-WHERE %s
-GROUP BY fol.id%s%s""" % (
-            ', partner.partner_share' if include_pshare else '',
-            ', partner.active' if include_active else '',
-            'LEFT JOIN res_partner partner ON partner.id = fol.partner_id' if (include_pshare or include_active) else '',
-            where_clause,
-            ', partner.partner_share' if include_pshare else '',
-            ', partner.active' if include_active else ''
-        )
-        self.env.cr.execute(query, tuple(where_params))
-        return self.env.cr.fetchall()
+        query.add_where(SQL("(%s)", SQL(" OR ").join(
+            SQL("(%s = %s AND %s IN %s)", fol.res_model, rm, fol.res_id, tuple(rids))
+            for rm, rids in doc_data
+        )))
+
+        fol_rel = fol._make_alias('rel')
+        query.add_join('LEFT JOIN', fol_rel, 'mail_followers_mail_message_subtype_rel', SQL("%s = %s", fol_rel.mail_followers_id, fol.id, to_flush=self._fields['subtype_ids']))
+
+        columns = [
+            fol.id,
+            fol.res_id,
+            fol.partner_id,
+            SQL("array_agg(%s)", fol_rel.mail_message_subtype_id),
+        ]
+        group_by = [fol.id]
+        if include_pshare:
+            columns.append(fol.partner_id.partner_share)
+            group_by.append(columns[-1])
+        if include_active:
+            columns.append(fol.partner_id.active)
+            group_by.append(columns[-1])
+        query.groupby = SQL(',').join(group_by)
+        return self.env.execute_query(query.select(*columns))
 
     # --------------------------------------------------
     # Private tools methods to generate new subscription
