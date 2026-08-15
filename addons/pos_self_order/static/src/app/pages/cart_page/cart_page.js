@@ -32,11 +32,7 @@ export class CartPage extends Component {
     }
 
     get showCancelButton() {
-        return (
-            this.selfOrder.config.self_ordering_mode === "mobile" &&
-            this.selfOrder.config.self_ordering_pay_after === "each" &&
-            this.selfOrder.currentOrder.isSynced
-        );
+        return this.selfOrder.isSyncedOrderRestricted;
     }
 
     get lines() {
@@ -52,11 +48,20 @@ export class CartPage extends Component {
     }
 
     get totalPriceAndTax() {
-        const { amountTaxes, priceIncl } = this.selfOrder.currentOrder;
-        const { priceWithTax, tax, count } = this.selfOrder.orderLineNotSend;
+        const order = this.selfOrder.currentOrder;
+        const payAfter = this.selfOrder.config.self_ordering_pay_after;
+
+        if (payAfter === "each" && order.isSynced && !this.selfOrder.isSyncedOrderRestricted) {
+            return {
+                priceWithTax: order.priceIncl,
+                tax: order.amountTaxes,
+            };
+        }
+
+        const { priceWithTax, tax } = this.selfOrder.orderLineNotSend;
         return {
-            priceWithTax: count > 0 ? priceWithTax : priceIncl,
-            tax: count > 0 ? tax : amountTaxes,
+            priceWithTax: priceWithTax || order.priceIncl,
+            tax: tax || order.amountTaxes,
         };
     }
 
@@ -82,9 +87,12 @@ export class CartPage extends Component {
     }
 
     getLineChangeQty(line) {
-        const currentQty = line.qty;
+        if (!this.selfOrder.isSyncedOrderRestricted) {
+            return line.qty;
+        }
+
         const lastChange = this.selfOrder.currentOrder.uiState.lineChanges[line.uuid];
-        return !lastChange ? currentQty : currentQty - lastChange.qty;
+        return !lastChange ? line.qty : line.qty - lastChange.qty;
     }
 
     async pay() {
@@ -195,6 +203,10 @@ export class CartPage extends Component {
     }
 
     getPrice(line) {
+        if (!this.selfOrder.isSyncedOrderRestricted) {
+            return line.displayPrice;
+        }
+
         const childLines = line.combo_line_ids;
         if (childLines.length === 0) {
             const qty = this.getLineChangeQty(line) || line.qty;
@@ -210,6 +222,10 @@ export class CartPage extends Component {
     }
 
     canChangeQuantity(line) {
+        if (!this.selfOrder.isSyncedOrderRestricted) {
+            return true;
+        }
+
         const order = this.selfOrder.currentOrder;
         const lastChange = order.uiState.lineChanges[line.uuid];
         if (!lastChange) {
@@ -219,6 +235,10 @@ export class CartPage extends Component {
     }
 
     canDeleteLine(line) {
+        if (!this.selfOrder.isSyncedOrderRestricted) {
+            return true;
+        }
+
         const lastChange = this.selfOrder.currentOrder.uiState.lineChanges[line.uuid];
         return !lastChange ? true : lastChange.qty !== line.qty;
     }
@@ -227,8 +247,9 @@ export class CartPage extends Component {
         if (!this.canDeleteLine(line)) {
             return;
         }
+
         const lastChange = this.selfOrder.currentOrder.uiState.lineChanges[line.uuid];
-        if (lastChange) {
+        if (lastChange && this.selfOrder.isSyncedOrderRestricted) {
             line.qty = lastChange.qty;
             return;
         }
