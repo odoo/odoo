@@ -1,7 +1,7 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
+from odoo.tools import SQL
 
 
 class EventSaleReport(models.Model):
@@ -11,5 +11,5 @@ class EventSaleReport(models.Model):
 
     def _select_additional_fields(self):
         res = super()._select_additional_fields()
-        res['is_published'] = 'event_event.is_published'
+        res['is_published'] = SQL('event_event.is_published')
         return res
