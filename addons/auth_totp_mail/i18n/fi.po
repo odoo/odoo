@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* auth_totp_mail
+# * auth_totp_mail
 #
 # Translators:
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2024
@@ -8,20 +8,22 @@
 # Jesse Järvi <me@jessejarvi.net>, 2024
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2024
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025
-#
+# Saara Hakanen <sahak@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:37+0000\n"
-"PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025\n"
-"Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
+"PO-Revision-Date: 2026-08-14 09:10+0000\n"
+"Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
+"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-18/"
+"auth_totp_mail/fi/>\n"
 "Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: auth_totp_mail
 #: model:mail.template,body_html:auth_totp_mail.mail_template_totp_invite
@@ -88,7 +90,7 @@ msgstr "Tilillesi on juuri lisätty luotettu laite: %(device_name)s"
 #: code:addons/auth_totp_mail/models/auth_totp_device.py:0
 msgid ""
 "A trusted device has just been removed from your account: %(device_names)s"
-msgstr "Luotettu laite on juuri poistettu tililtäsi: %(device_names)s"
+msgstr "Tililtäsi on juuri poistettu luotettu laite: %(device_names)s"
 
 #. module: auth_totp_mail
 #. odoo-python
@@ -140,13 +142,13 @@ msgstr "Avaa kaksivaiheisen tunnistautumisen asetukset"
 #. odoo-python
 #: code:addons/auth_totp_mail/models/res_users.py:0
 msgid "Security Update: 2FA Activated"
-msgstr "Tietoturvapäivitys: 2FA aktivoitu"
+msgstr "Tietoturvapäivitys: Kaksivaiheinen tunnistautuminen aktivoitu"
 
 #. module: auth_totp_mail
 #. odoo-python
 #: code:addons/auth_totp_mail/models/res_users.py:0
 msgid "Security Update: 2FA Deactivated"
-msgstr "Tietoturvapäivitys: 2FA poistettu käytöstä"
+msgstr "Tietoturvapäivitys: Kaksivaiheinen tunnistautuminen poistettu käytöstä"
 
 #. module: auth_totp_mail
 #. odoo-python
@@ -169,13 +171,13 @@ msgstr "Asetukset: Kaksivaiheinen tunnistautuminen"
 #. odoo-python
 #: code:addons/auth_totp_mail/models/res_users.py:0
 msgid "Two-factor authentication has been activated on your account"
-msgstr "Kaksivaiheinen tunnistus on aktivoitu tilillesi"
+msgstr "Kaksivaiheinen tunnistautuminen on aktivoitu tilillesi"
 
 #. module: auth_totp_mail
 #. odoo-python
 #: code:addons/auth_totp_mail/models/res_users.py:0
 msgid "Two-factor authentication has been deactivated on your account"
-msgstr "Kaksivaiheinen tunnistus on poistettu tililtäsi käytöstä"
+msgstr "Kaksivaiheinen tunnistautuminen on poistettu käytöstä tililläsi"
 
 #. module: auth_totp_mail
 #: model:ir.model,name:auth_totp_mail.model_res_users
@@ -185,4 +187,4 @@ msgstr "Käyttäjä"
 #. module: auth_totp_mail
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.account_security_setting_update
 msgid "activating Two-factor Authentication"
-msgstr "otetaan käyttöön kaksivaiheinen tunnistus"
+msgstr "kaksivaiheisen tunnistautumisen aktivoiminen"
