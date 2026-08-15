@@ -41,14 +41,14 @@ Usage:
 
     # From the repo root, with RABBITMQ_HOST/USER/PASS in the environment
     # (docker-compose exports these into every container):
-    python queue/topology.py
+    python invoice_queue/topology.py
 
     # Or as a module:
-    python -m queue.topology
+    python -m invoice_queue.topology
 
     # Point at a custom broker:
     RABBITMQ_HOST=localhost RABBITMQ_PORT=5672 RABBITMQ_USER=guest \\
-        RABBITMQ_PASS=guest python queue/topology.py
+        RABBITMQ_PASS=guest python invoice_queue/topology.py
 
 The script is idempotent: re-running it re-declares the same primitive
 (AMQP 0-9-1 declaration is a no-op when the name, type and flags match) and
@@ -66,17 +66,18 @@ import urllib.request
 
 import pika
 
-_logger = logging.getLogger("queue.topology")
+_logger = logging.getLogger("invoice_queue.topology")
 
 # --- topology constants ------------------------------------------------------
 # These are the source of truth for the invoice agent contract. Consumers
-# and publishers (queue.publisher in the Odoo addon, the AI worker) must
+# and publishers (the queue.publisher Odoo model and the AI worker) must
 # reference the same exchange/queue/keys — try to keep the strings in sync.
 EXCHANGE_NAME = "invoice.agent"
 EXCHANGE_TYPE = "topic"
 QUEUE_EXTRACT = "invoice.extract"
 QUEUE_RESULT = "invoice.result"
 ROUTING_KEY_REQUEST = "extract.request"
+ROUTING_KEY_STARTED = "extract.started"
 ROUTING_KEY_DONE = "extract.done"
 
 # What each queue will receive (documented contract — see docs/adr-004):
@@ -87,8 +88,12 @@ ROUTING_KEY_DONE = "extract.done"
 #                                         "ai_ex...": ...}
 QUEUE_BINDINGS = [
     (QUEUE_EXTRACT, ROUTING_KEY_REQUEST),
+    # invoice.result receives both lifecycle signals from the worker: the
+    # "extracting" start event and the signed "done/failed" result.
+    (QUEUE_RESULT, ROUTING_KEY_STARTED),
     (QUEUE_RESULT, ROUTING_KEY_DONE),
 ]
+ROUTING_KEY_STARTED = "extract.started"
 
 
 def connection_parameters():
@@ -222,6 +227,7 @@ def main():
 
     expected = [
         (QUEUE_EXTRACT, ROUTING_KEY_REQUEST, EXCHANGE_NAME),
+        (QUEUE_RESULT, ROUTING_KEY_STARTED, EXCHANGE_NAME),
         (QUEUE_RESULT, ROUTING_KEY_DONE, EXCHANGE_NAME),
     ]
     actual = sorted(
