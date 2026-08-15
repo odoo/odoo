@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.5a1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-07 18:17+0000\n"
-"PO-Revision-Date: 2026-08-07 18:17+0000\n"
+"POT-Creation-Date: 2026-08-14 18:20+0000\n"
+"PO-Revision-Date: 2026-08-14 18:20+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -91,7 +91,7 @@ msgid ""
 msgstr ""
 
 #. module: l10n_in
-#: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_view_partner_base_vat_form
+#: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_view_partner_form_inherited
 msgid ""
 "<span invisible=\"not l10n_in_gstin_verified_date or not l10n_in_gstin_verified_status\" class=\"oe_inline text-success\">Active</span>\n"
 "                    <span invisible=\"not l10n_in_gstin_verified_date or l10n_in_gstin_verified_status\" class=\"oe_inline text-danger\">Inactive</span>"
@@ -334,6 +334,11 @@ msgid "Base Amount"
 msgstr ""
 
 #. module: l10n_in
+#: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_report_invoice_document_inherit
+msgid "Bill From:"
+msgstr ""
+
+#. module: l10n_in
 #: model_terms:ir.ui.view,arch_db:l10n_in.invoice_form_inherit_l10n_in
 msgid "Bill of Entry Date"
 msgstr ""
@@ -440,12 +445,12 @@ msgid "Check GST Number Status"
 msgstr ""
 
 #. module: l10n_in
-#: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_view_partner_base_vat_form
+#: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_view_partner_form_inherited
 msgid "Check GSTIN status"
 msgstr ""
 
 #. module: l10n_in
-#: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_view_partner_base_vat_form
+#: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_view_partner_form_inherited
 msgid "Check Status"
 msgstr ""
 
@@ -569,6 +574,13 @@ msgstr ""
 #: model:ir.model.fields.selection,name:l10n_in.selection__account_move_line__l10n_in_gstr_section__sale_deemed_export
 #: model:ir.model.fields.selection,name:l10n_in.selection__res_partner__l10n_in_gst_treatment__deemed_export
 msgid "Deemed Export"
+msgstr ""
+
+#. module: l10n_in
+#: model:ir.model.fields,field_description:l10n_in.field_res_company__l10n_in_disable_b2c_hsn_reporting
+#: model:ir.model.fields,field_description:l10n_in.field_res_config_settings__l10n_in_disable_b2c_hsn_reporting
+#: model_terms:ir.ui.view,arch_db:l10n_in.res_config_settings_view_form_inherit_l10n_in
+msgid "Disable B2C HSN Reporting"
 msgstr ""
 
 #. module: l10n_in
@@ -1001,6 +1013,11 @@ msgstr ""
 #. module: l10n_in
 #: model:ir.model.fields.selection,name:l10n_in.selection__account_move_line__l10n_in_gstr_section__purchase_imp_services_rcm
 msgid "IMP(service) RCM"
+msgstr ""
+
+#. module: l10n_in
+#: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_report_invoice_document_inherit
+msgid "INV/2023/00001"
 msgstr ""
 
 #. module: l10n_in
@@ -1660,6 +1677,11 @@ msgid "Port code"
 msgstr ""
 
 #. module: l10n_in
+#: model_terms:ir.ui.view,arch_db:l10n_in.invoice_form_inherit_l10n_in
+msgid "Print Self Invoice"
+msgstr ""
+
+#. module: l10n_in
 #: model:ir.model,name:l10n_in.model_product_template
 msgid "Product"
 msgstr ""
@@ -1749,7 +1771,7 @@ msgid "Responsible User"
 msgstr ""
 
 #. module: l10n_in
-#: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_view_partner_base_vat_form
+#: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_view_partner_form_inherited
 msgid "Reverify GSTIN status"
 msgstr ""
 
@@ -2566,6 +2588,32 @@ msgid ""
 msgstr ""
 
 #. module: l10n_in
+#: model_terms:ir.ui.view,arch_db:l10n_in.res_config_settings_view_form_inherit_l10n_in
+msgid ""
+"Select this option to exclude HSN details from B2C supplies."
+"                                            This is allowed only if your "
+"aggregate turnover in the preceding"
+"                                            financial year did not exceed ₹5"
+" crore, in accordance                                            with "
+"Notification No. 78/2020 – Central Tax."
+msgstr ""
+
+#. module: l10n_in
+#. odoo-python
+#: code:addons/l10n_in/models/template_in.py:0
+#: model:ir.model.fields,field_description:l10n_in.field_account_bank_statement_line__l10n_in_is_self_invoice
+#: model:ir.model.fields,field_description:l10n_in.field_account_journal__l10n_in_self_invoice
+#: model:ir.model.fields,field_description:l10n_in.field_account_move__l10n_in_is_self_invoice
+msgid "Self Invoice"
+msgstr ""
+
+#. module: l10n_in
+#. odoo-python
+#: code:addons/l10n_in/models/account_invoice.py:0
+msgid "Self Invoice has been generated and printed."
+msgstr ""
+
+#. module: l10n_in
 #: model:iap.service,description:l10n_in.iap_service_l10n_in_edi
 msgid "Send electronic document to Indian government"
 msgstr ""
@@ -2772,6 +2820,18 @@ msgid "TDS of %s"
 msgstr ""
 
 #. module: l10n_in
+#: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_report_invoice_document_inherit
+msgid ""
+"THE SUPPLY IS SUBJECT TO REVERSE CHARGE MECHANISM, SO THE RECIPIENT IS "
+"RESPONSIBLE FOR PAYING TAX."
+msgstr ""
+
+#. module: l10n_in
+#: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_report_invoice_document_inherit
+msgid "THIS SELF TAX INVOICE IS ISSUED UNDER SEC 31(3)(f) OF CGST ACT 2017."
+msgstr ""
+
+#. module: l10n_in
 #: model:ir.model.fields,field_description:l10n_in.field_res_country_state__l10n_in_tin
 msgid "TIN Number"
 msgstr ""
@@ -2784,6 +2844,11 @@ msgstr ""
 #. module: l10n_in
 #: model_terms:ir.ui.view,arch_db:l10n_in.invoice_form_inherit_l10n_in
 msgid "Tax"
+msgstr ""
+
+#. module: l10n_in
+#: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_report_invoice_document_inherit
+msgid "Tax Invoice"
 msgstr ""
 
 #. module: l10n_in
@@ -2862,6 +2927,23 @@ msgstr ""
 #: code:addons/l10n_in/models/res_partner.py:0
 msgid ""
 "This feature is not activated. Go to Settings to activate this feature."
+msgstr ""
+
+#. module: l10n_in
+#. odoo-python
+#: code:addons/l10n_in/models/account_invoice.py:0
+msgid ""
+"This invoice does not meet the Self Invoice conditions. Please verify before"
+" printing."
+msgstr ""
+
+#. module: l10n_in
+#: model:ir.model.fields,help:l10n_in.field_account_bank_statement_line__l10n_in_is_self_invoice
+#: model:ir.model.fields,help:l10n_in.field_account_journal__l10n_in_self_invoice
+#: model:ir.model.fields,help:l10n_in.field_account_move__l10n_in_is_self_invoice
+msgid ""
+"This journal is for self-invoices.Invoices will be created using a different"
+" sequence as you configured."
 msgstr ""
 
 #. module: l10n_in
@@ -2972,6 +3054,11 @@ msgstr ""
 #. module: l10n_in
 #: model_terms:ir.ui.view,arch_db:l10n_in.res_config_settings_view_form_inherit_l10n_in
 msgid "Use this if setup with Reseller(E-Commerce)."
+msgstr ""
+
+#. module: l10n_in
+#: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_report_invoice_document_inherit
+msgid "Vendor Bill"
 msgstr ""
 
 #. module: l10n_in
