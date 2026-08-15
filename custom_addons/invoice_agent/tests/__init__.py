@@ -8,6 +8,7 @@ from . import (
     test_llm_service,
     test_ocr,
     test_pipeline,
+    test_queue_publisher,
     test_security,
     test_suggest,
     test_usage,

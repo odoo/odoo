@@ -1,0 +1,104 @@
+name: invoice-ai CI
+
+"on":
+    pull_request:
+        paths:
+            - "invoice-ai/**"
+            - ".github/workflows/invoice-ai-ci.yml"
+            - ".github/workflows/invoice-ai-deploy.yml"
+            - ".github/workflows/invoice-ai-release.yml"
+    push:
+        branches: [main]
+        paths:
+            - "invoice-ai/**"
+            - ".github/workflows/invoice-ai-ci.yml"
+            - ".github/workflows/invoice-ai-deploy.yml"
+            - ".github/workflows/invoice-ai-release.yml"
+    workflow_dispatch:
+
+# Same branch -> stale runs cancel; different branches run in parallel.
+# The deploy workflow has its own concurrency group with
+# cancel-in-progress: false — CI cancellation must never kill a deployment.
+concurrency:
+    group: invoice-ai-ci-${{ github.ref }}
+    cancel-in-progress: true
+
+permissions:
+    contents: read
+    packages: write # GHCR push needs this on GITHUB_TOKEN
+
+env:
+    IMAGE_NAME: ghcr.io/${{ github.repository_owner }}/invoice-ai
+
+jobs:
+    test:
+        runs-on: ubuntu-latest
+        defaults:
+            run:
+                working-directory: invoice-ai
+        steps:
+            - uses: actions/checkout@v4
+
+            - uses: actions/setup-python@v5
+              with:
+                  python-version: "3.12"
+                  cache: pip
+                  cache-dependency-path: invoice-ai/pyproject.toml
+
+            - name: Install service + dev deps
+              run: pip install -e ".[dev]"
+
+            - name: Lint (ruff)
+              run: ruff check app tests scripts
+
+            - name: Type check (mypy)
+              run: mypy app/
+
+            - name: Run tests (httpx ASGITransport, mocked Claude)
+              run: pytest -q
+
+            - name: Verify app imports
+              run: python -c "from app.main import app; assert app.title == 'invoice-ai'"
+
+            # Contract gate: the FastAPI spec must not drift from
+            # docs/openapi.yaml. This is what makes independent deployability
+            # safe — a schema change that breaks the Odoo side fails here
+            # before any image is pushed.
+            - name: OpenAPI drift check (contract lock)
+              run: python scripts/check_openapi_drift.py
+
+    build-and-push:
+        needs: test
+        runs-on: ubuntu-latest
+        # Only the push to main publishes an image; PR runs stop at `test`.
+        if: github.event_name == 'push'
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Set up BuildKit cache
+              uses: docker/setup-buildx-action@v3
+
+            - name: Log in to GHCR
+              uses: docker/login-action@v3
+              with:
+                  registry: ghcr.io
+                  username: ${{ github.actor }}
+                  password: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Build and push SHA + latest tags
+              uses: docker/build-push-action@v6
+              with:
+                  context: invoice-ai
+                  push: true
+                  build-args: |
+                      INVOICE_AI_BUILD_SHA=${{ github.sha }}
+                  tags: |
+                      ${{ env.IMAGE_NAME }}:${{ github.sha }}
+                      ${{ env.IMAGE_NAME }}:latest
+                  cache-from: type=gha
+                  cache-to: type=gha,mode=max
+
+            - name: Confirm digest landed in the registry
+              run: |
+                  docker buildx imagetools inspect \
+                      "${{ env.IMAGE_NAME }}:${{ github.sha }}"

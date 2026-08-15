@@ -88,6 +88,19 @@
                         string="Suggest with AI"
                         icon="fa-magic"
                         groups="invoice_agent.group_invoice_agent_user"
+                        class="btn-link"
+                        invisible="state != 'draft' or move_type not in ('in_invoice', 'in_refund')"/>
+
+                <!-- Extract — enqueues a durable AMQP job through the
+                     transactional outbox (week 8, ADR-004). The job is
+                     published to extract.request by the drain cron; the
+                     worker runs OCR + Claude off the request path. The
+                     synchronous FastAPI call that this replaced used to
+                     block an HTTP worker for the full 5-20 s round-trip. -->
+                <button name="action_request_ai_extraction" type="object"
+                        string="Extract"
+                        icon="fa-bolt"
+                        groups="invoice_agent.group_invoice_agent_user"
                         class="btn-primary"
                         invisible="state != 'draft' or move_type not in ('in_invoice', 'in_refund')"/>
             </xpath>

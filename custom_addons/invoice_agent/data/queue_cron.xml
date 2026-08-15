@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- ============================================================
+             ir.cron: Drain the transactional AMQP outbox every minute
+
+             Every minute, publish all unsent invoice.agent.job rows to the
+             ``invoice.agent`` topic exchange as ``extract.request`` messages
+             and stamp published_at.
+
+             Why a cron and not a publish-on-save:
+               - The outbox row is written on the same cursor as the
+                 account.move write (transactional safety — see ADR-004).
+                 A failed publish cannot roll back the user's bill save.
+               - The broker may be down at save time; the cron retries every
+                 minute until it is back.
+               - The batch is bounded (batch_size=50) and per-row isolated:
+                 one dead row cannot block the rest.
+             ============================================================ -->
+        <record id="cron_drain_outbox" model="ir.cron">
+            <field name="name">Invoice Agent: Drain AMQP Outbox</field>
+            <field name="model_id" ref="model_invoice_agent_job"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_drain_outbox(batch_size=50)</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">minutes</field>
+            <field name="active" eval="True"/>
+            <field name="priority">4</field>
+            <field name="nextcall" eval="(DateTime.now() + timedelta(minutes=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </record>
+    </data>
+</odoo>

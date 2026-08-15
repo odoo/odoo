@@ -1,6 +1,12 @@
 # ==========================================
 # Stage 1: Builder
 # ==========================================
+# Git SHA of the commit that produced this image. Stamped by CI
+# (docker build --build-arg INVOICE_AI_BUILD_SHA=${{ github.sha }})
+# and exported both as an OCI label and as the INVOICE_AI_BUILD_SHA env
+# var read by app/main.py for /healthz.
+ARG INVOICE_AI_BUILD_SHA=dev
+
 FROM python:3.12-slim AS builder
 
 ENV PYTHONUNBUFFERED=1 \
@@ -26,8 +32,16 @@ RUN pip wheel --wheel-dir /build/wheels .
 # ==========================================
 FROM python:3.12-slim AS runtime
 
+# OCI labels: org.opencontainers.image.revision is what the deploy job reads
+# to discover the currently running image for rollback.
+LABEL org.opencontainers.image.title="invoice-ai" \
+    org.opencontainers.image.description="Standalone vendor invoice extraction service (ADR-003)" \
+    org.opencontainers.image.source="https://github.com/7ananSaif/odoo" \
+    org.opencontainers.image.revision="${INVOICE_AI_BUILD_SHA}"
+
 ENV PYTHONUNBUFFERED=1 \
-    PATH="/home/appuser/.local/bin:$PATH"
+    PATH="/home/appuser/.local/bin:$PATH" \
+    INVOICE_AI_BUILD_SHA="${INVOICE_AI_BUILD_SHA}"
 
 # تثبيت أدوات الـ OCR والـ PDF (طابق حزمة Odoo للغة العربية والإنجليزية)
 RUN apt-get update && apt-get install -y --no-install-recommends \

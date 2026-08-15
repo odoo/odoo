@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ============================================================
+         Outbox queue view — invoices waiting to be published to RabbitMQ
+         ============================================================ -->
+    <record id="view_invoice_agent_job_list" model="ir.ui.view">
+        <field name="name">invoice.agent.job.list</field>
+        <field name="model">invoice.agent.job</field>
+        <field name="arch" type="xml">
+            <list string="AMQP Outbox" multi_edit="1"
+                  decoration-warning="state == 'pending' and error_message"
+                  decoration-danger="state == 'pending' and error_message">
+                <field name="move_id" optional="show"/>
+                <field name="attachment_id" optional="show"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'sent'"
+                       decoration-warning="state == 'pending'"
+                       optional="show"/>
+                <field name="published_at" optional="show"/>
+                <field name="error_message" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_invoice_agent_job_search" model="ir.ui.view">
+        <field name="name">invoice.agent.job.search</field>
+        <field name="model">invoice.agent.job</field>
+        <field name="arch" type="xml">
+            <search string="AMQP Outbox">
+                <field name="move_id" string="Invoice"/>
+                <filter string="Pending" name="job_pending"
+                        domain="[('state', '=', 'pending')]"/>
+                <filter string="Sent" name="job_sent"
+                        domain="[('state', '=', 'sent')]"/>
+                <separator/>
+                <filter string="Failing" name="job_failing"
+                        domain="[('error_message', '!=', False)]"/>
+                <group expand="0" string="Group By">
+                    <filter string="State" name="job_group_state"
+                            context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_invoice_agent_job" model="ir.actions.act_window">
+        <field name="name">AMQP Outbox</field>
+        <field name="res_model">invoice.agent.job</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_invoice_agent_job_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No queued extraction jobs.
+            </p>
+            <p>
+                Rows appear here when the Extract button enqueues a job.
+                The drain cron publishes them to RabbitMQ within a minute.
+            </p>
+        </field>
+    </record>
+
+    <record id="menu_ai_agent_outbox" model="ir.ui.menu">
+        <field name="name">AMQP Outbox</field>
+        <field name="parent" ref="account.menu_finance_payables"/>
+        <field name="action" ref="action_invoice_agent_job"/>
+        <field name="sequence" eval="16"/>
+        <field name="groups" eval="[(4, ref('invoice_agent.group_invoice_agent_manager'))]"/>
+    </record>
+</odoo>
