@@ -20,7 +20,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:37+0000\n"
-"PO-Revision-Date: 2026-05-16 09:05+0000\n"
+"PO-Revision-Date: 2026-08-12 18:07+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Bulgarian <https://translate.odoo.com/projects/odoo-18/"
 "hr_contract/bg/>\n"
@@ -29,7 +29,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__contract_count
@@ -165,7 +165,7 @@ msgstr "Икона за вид дейност"
 #. module: hr_contract
 #: model:ir.model,name:hr_contract.model_mail_activity_schedule
 msgid "Activity schedule plan Wizard"
-msgstr ""
+msgstr "Помощник за планиране на дейности"
 
 #. module: hr_contract
 #: model:res.groups,name:hr_contract.group_hr_contract_manager
@@ -282,13 +282,13 @@ msgstr "Крайна дата на договора"
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.res_config_settings_view_form
 msgid "Contract Expiration Notice Period"
-msgstr ""
+msgstr "Срок на предизвестие за изтичане на договор"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_res_company__contract_expiration_notice_period
 #: model:ir.model.fields,field_description:hr_contract.field_res_config_settings__contract_expiration_notice_period
 msgid "Contract Expiry Notice Period"
-msgstr ""
+msgstr "Срок на предизвестие за изтичане на договора"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_form
@@ -443,7 +443,7 @@ msgstr ""
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_payroll_structure_type__default_resource_calendar_id
 msgid "Default Working Hours"
-msgstr ""
+msgstr "Работни часове по подразбиране"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_kanban
@@ -468,6 +468,8 @@ msgstr "Съветник напускане"
 msgid ""
 "Departure date can't be earlier than the start date of current contract."
 msgstr ""
+"Датата на напускане не може да бъде по-ранна от началната дата на текущия "
+"договор."
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
@@ -507,7 +509,7 @@ msgstr "Договори на служители"
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_form
 msgid "Employee Information"
-msgstr ""
+msgstr "Информация за служителя"
 
 #. module: hr_contract
 #: model:res.groups,name:hr_contract.group_hr_contract_employee_manager
@@ -523,7 +525,7 @@ msgstr "Банкова сметка на служител за изплащан�
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__wage
 #: model:ir.model.fields,help:hr_contract.field_hr_contract_history__wage
 msgid "Employee's monthly gross wage."
-msgstr ""
+msgstr "Брутна месечна заплата на служителя."
 
 #. module: hr_contract
 #: model:ir.actions.act_window,name:hr_contract.hr_contract_history_view_list_action
@@ -540,12 +542,12 @@ msgstr "Крайна дата"
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__date_end
 msgid "End date of the contract (if it's a fixed-term contract)."
-msgstr ""
+msgstr "Крайна дата на договора (ако е срочен договор)."
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__trial_date_end
 msgid "End date of the trial period (if there is one)."
-msgstr ""
+msgstr "Крайна дата на изпитателния срок (ако има такъв)."
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__trial_date_end
@@ -590,7 +592,7 @@ msgstr "От"
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form2
 msgid "Fully Flexible"
-msgstr ""
+msgstr "Напълно гъвкаво"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
@@ -612,7 +614,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__hr_responsible_id
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__hr_responsible_id
 msgid "HR Responsible"
-msgstr ""
+msgstr "Отговорник ЧР"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__has_message
@@ -704,7 +706,7 @@ msgstr "Последни дейности"
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee__legal_name
 msgid "Legal Name"
-msgstr ""
+msgstr "Юридическо наименование"
 
 #. module: hr_contract
 #: model:ir.model,name:hr_contract.model_ir_ui_menu
@@ -798,6 +800,8 @@ msgid ""
 "Number of days prior to the work permit expiration date that a warning is "
 "triggered."
 msgstr ""
+"Брой дни преди датата на изтичане на разрешителното за работа, при които се "
+"задейства предупреждение."
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_has_error_counter
@@ -827,7 +831,7 @@ msgstr "Отворен договор"
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__hr_responsible_id
 msgid "Person responsible for validating the employee's contracts."
-msgstr ""
+msgstr "Лице, отговорно за валидиране на договорите на служителя."
 
 #. module: hr_contract
 #: model:ir.model,name:hr_contract.model_hr_employee_public
@@ -853,12 +857,12 @@ msgstr ""
 #. module: hr_contract
 #: model:ir.model,name:hr_contract.model_resource_calendar_leaves
 msgid "Resource Time Off Detail"
-msgstr ""
+msgstr "Детайл за отпуск на ресурс"
 
 #. module: hr_contract
 #: model:ir.model,name:hr_contract.model_resource_calendar
 msgid "Resource Working Time"
-msgstr ""
+msgstr "Работно време на ресурс"
 
 #. module: hr_contract
 #: model:ir.model,name:hr_contract.model_resource_resource
@@ -900,7 +904,7 @@ msgstr "Информация за заплата"
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_search
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Salary Structure Type"
-msgstr ""
+msgstr "Тип на структурата на заплатата"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
@@ -915,12 +919,12 @@ msgstr ""
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_departure_wizard__set_date_end
 msgid "Set Contract End Date"
-msgstr ""
+msgstr "Задаване на крайна дата на договора"
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_departure_wizard__set_date_end
 msgid "Set the end date on the current contract."
-msgstr ""
+msgstr "Задайте крайната дата на текущия договор."
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
@@ -976,7 +980,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_contract/models/hr_contract.py:0
 msgid "The contract of %s is about to expire."
-msgstr ""
+msgstr "Договорът на %s изтича скоро."
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form2
@@ -987,7 +991,7 @@ msgstr "Работното време по подразбиране е зада�
 #. odoo-python
 #: code:addons/hr_contract/models/hr_contract.py:0
 msgid "The work permit of %s is about to expire."
-msgstr ""
+msgstr "Разрешителното за работа на %s изтича скоро."
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_kanban
@@ -1053,13 +1057,13 @@ msgstr "История на комуникацията на уебсайт"
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.res_config_settings_view_form
 msgid "Work Permit Expiration Notice Period"
-msgstr ""
+msgstr "Срок за предизвестие при изтичане на разрешителното за работа"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_res_company__work_permit_expiration_notice_period
 #: model:ir.model.fields,field_description:hr_contract.field_res_config_settings__work_permit_expiration_notice_period
 msgid "Work Permit Expiry Notice Period"
-msgstr ""
+msgstr "Срок на предизвестие за изтичане на разрешителното за работа"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__permit_no

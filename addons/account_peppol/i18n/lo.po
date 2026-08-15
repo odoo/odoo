@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-07 17:38+0000\n"
-"PO-Revision-Date: 2026-08-08 14:09+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-08-14 07:22+0000\n"
+"Last-Translator: Bone NI <bounkirdni@gmail.com>\n"
 "Language-Team: Lao <https://translate.odoo.com/projects/odoo-18/"
 "account_peppol/lo/>\n"
 "Language: lo\n"
@@ -103,6 +103,8 @@ msgid ""
 "A 0% tax cannot use Tax Category 'S' (Standard). Please update the Tax "
 "Category in the Advanced Options of the tax configuration."
 msgstr ""
+"ອາກອນ 0% ບໍ່ສາມາດໃຊ້ໝວດໝູ່ອາກອນ 'S' (ມາດຕະຖານ) ໄດ້. ກະລຸນາອັບເດດໝວດໝູ່ອາກອນໃນຕົວເລືອກຂັ້ນສູງ"
+"ຂອງການຕັ້ງຄ່າອາກອນ."
 
 #. module: account_peppol
 #. odoo-python
@@ -504,13 +506,15 @@ msgid ""
 "reason code is 'VATEX-EU-O'. You can change this in the Advanced Options of "
 "the tax configuration."
 msgstr ""
+"ສຳລັບອາກອນ %(taxes)s: ຕ້ອງໃຊ້ໝວດໝູ່ອາກອນ 'O' ເມື່ອລະຫັດເຫດຜົນການຍົກເວັ້ນແມ່ນ 'VATEX-EU-"
+"O'. ເຈົ້າສາມາດປ່ຽນແປງສິ່ງນີ້ໄດ້ໃນຕົວເລືອກຂັ້ນສູງຂອງການຕັ້ງຄ່າອາກອນ."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_move_send.py:0
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid "France - E-Invoicing (Approved Platform)"
-msgstr ""
+msgstr "ຝຣັ່ງ - ການອອກໃບແຈ້ງໜີ້ເອເລັກໂຕຣນິກ (ແພລດຟອມທີ່ໄດ້ຮັບການອະນຸມັດ)"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -550,6 +554,8 @@ msgid ""
 "If you are not subject to VAT, you should not have a VAT number on your "
 "company/contacts and your clients should not have one either."
 msgstr ""
+"ຖ້າເຈົ້າບໍ່ໄດ້ຢູ່ໃນຂ່າຍເສຍອາກອນມູນຄ່າເພີ່ມ, ເຈົ້າບໍ່ຄວນມີເລກປະຈຳຕົວຜູ້ເສຍອາກອນໃນບໍລິສັດ/ຜູ້ຕິດຕໍ່ຂອງເຈົ້າ ແລ"
+"ະ ລູກຄ້າຂອງເຈົ້າກໍບໍ່ຄວນມີເຊັ່ນກັນ."
 
 #. module: account_peppol
 #. odoo-python
@@ -564,6 +570,8 @@ msgid ""
 "If you want to register for the French e-invoicing, first install the PDP "
 "module: France - E-Invoicing (Approved Platform)."
 msgstr ""
+"ຖ້າເຈົ້າຕ້ອງການລົງທະບຽນສຳລັບການອອກໃບແຈ້ງໜີ້ເອເລັກໂຕຣນິກຂອງຝຣັ່ງ, ກະລຸນາຕິດຕັ້ງໂມດູນ PDP ກ່ອນ: ຝຣັ່"
+"ງ - ການອອກໃບແຈ້ງໜີ້ເອເລັກໂຕຣນິກ (ແພລດຟອມທີ່ໄດ້ຮັບການອະນຸມັດ)."
 
 #. module: account_peppol
 #. odoo-python
@@ -573,6 +581,9 @@ msgid ""
 "module: France - E-Invoicing (Approved Platform).\n"
 "The module was not found. Please update the available apps first."
 msgstr ""
+"ຖ້າເຈົ້າຕ້ອງການລົງທະບຽນສຳລັບການອອກໃບແຈ້ງໜີ້ເອເລັກໂຕຣນິກຂອງຝຣັ່ງ, ກະລຸນາຕິດຕັ້ງໂມດູນ PDP ກ່ອນ: ຝຣັ່"
+"ງ - ການອອກໃບແຈ້ງໜີ້ເອເລັກໂຕຣນິກ (ແພລດຟອມທີ່ໄດ້ຮັບການອະນຸມັດ).\n"
+"ບໍ່ພົບໂມດູນດັ່ງກ່າວ. ກະລຸນາອັບເດດລາຍການແອັບທີ່ມີກ່ອນ."
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_company__account_peppol_proxy_state__in_verification
@@ -588,7 +599,7 @@ msgstr "ປຶ້ມບັນຊີໃບເກັບເງິນຂາເຂົ
 #. odoo-python
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid "Install module"
-msgstr ""
+msgstr "ຕິດຕັ້ງໂມດູນ"
 
 #. module: account_peppol
 #. odoo-python
@@ -603,6 +614,8 @@ msgid ""
 "Invoice lines using Tax Category 'O' cannot use a percentage-based tax. "
 "Please update the tax type in Advanced Options."
 msgstr ""
+"ລາຍການໃບແຈ້ງໜີ້ທີ່ໃຊ້ໝວດໝູ່ອາກອນ 'O' ບໍ່ສາມາດໃຊ້ອາກອນແບບຄິດໄລ່ເປັນເປີເຊັນໄດ້. ກະລຸນາອັບເດດປະເພດອ"
+"າກອນໃນຕົວເລືອກຂັ້ນສູງ."
 
 #. module: account_peppol
 #. odoo-python
@@ -611,6 +624,8 @@ msgid ""
 "Invoice lines with Tax Category 'Exempt from VAT' must have a tax rate of 0. "
 "You can change this in the Advanced Options of the tax configuration."
 msgstr ""
+"ລາຍການໃບແຈ້ງໜີ້ທີ່ມີໝວດໝູ່ອາກອນ 'ຍົກເວັ້ນອາກອນມູນຄ່າເພີ່ມ' ຕ້ອງມີອັດຕາອາກອນເປັນ 0. ເຈົ້າສາມາດປ່ຽນແປ"
+"ງສິ່ງນີ້ໄດ້ໃນຕົວເລືອກຂັ້ນສູງຂອງການຕັ້ງຄ່າອາກອນ."
 
 #. module: account_peppol
 #. odoo-python
@@ -619,6 +634,8 @@ msgid ""
 "Invoice lines with Tax Category 'Reverse charge' must have a tax rate of 0. "
 "You can change this in the Advanced Options of the tax configuration."
 msgstr ""
+"ລາຍການໃບແຈ້ງໜີ້ທີ່ມີໝວດໝູ່ອາກອນ 'ການຄິດໄລ່ອາກອນແບບປີ້ນກັບ' ຕ້ອງມີອັດຕາອາກອນເປັນ 0. ເຈົ້າສາມາດປ່ຽນ"
+"ແປງສິ່ງນີ້ໄດ້ໃນຕົວເລືອກຂັ້ນສູງຂອງການຕັ້ງຄ່າອາກອນ."
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_partner__invoice_sending_method
@@ -676,6 +693,7 @@ msgid ""
 "Missing Buyer Country. Please add the Country Code to the client's contact "
 "information."
 msgstr ""
+"ບໍ່ພົບປະເທດຜູ້ຊື້. ກະລຸນາເພີ່ມລະຫັດປະເທດເຂົ້າໃນຂໍ້ມູນການຕິດຕໍ່ຂອງລູກຄ້າ."
 
 #. module: account_peppol
 #. odoo-python
@@ -684,6 +702,8 @@ msgid ""
 "Missing Invoiced Item VAT category code. Action Required: Install the module "
 "account_edi_ubl_cii_tax_extension."
 msgstr ""
+"ບໍ່ພົບລະຫັດໝວດໝູ່ອາກອນມູນຄ່າເພີ່ມຂອງລາຍການໃນໃບແຈ້ງໜີ້. ການດຳເນີນການທີ່ຈຳເປັນ: ຕິດຕັ້ງໂມດູນ "
+"account_edi_ubl_cii_tax_extension."
 
 #. module: account_peppol
 #. odoo-python
@@ -692,6 +712,8 @@ msgid ""
 "Missing Reverse Charge details. Please set the Exemption Reason to 'Reverse "
 "charge' in the Advanced Options of the tax configuration."
 msgstr ""
+"ບໍ່ພົບລາຍລະອຽດການຄິດໄລ່ອາກອນແບບປີ້ນກັບ. ກະລຸນາຕັ້ງຄ່າເຫດຜົນການຍົກເວັ້ນເປັນ 'Reverse charge' ໃນ"
+"ຕົວເລືອກຂັ້ນສູງຂອງການຕັ້ງຄ່າອາກອນ."
 
 #. module: account_peppol
 #. odoo-python
@@ -700,6 +722,8 @@ msgid ""
 "Missing VAT category code. Action Required: Install the module "
 "account_edi_ubl_cii_tax_extension."
 msgstr ""
+"ບໍ່ພົບລະຫັດໝວດໝູ່ອາກອນມູນຄ່າເພີ່ມ. ການດຳເນີນການທີ່ຈຳເປັນ: ຕິດຕັ້ງໂມດູນ "
+"account_edi_ubl_cii_tax_extension."
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__phone_number
@@ -830,7 +854,7 @@ msgstr "Peppol ສາມາດສົ່ງໄດ້"
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__peppol_eas
 msgid "Peppol Eas"
-msgstr ""
+msgstr "Peppol Eas"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__peppol_endpoint
@@ -870,7 +894,7 @@ msgstr "ຊື່ບໍລິສັດແມ່ Peppol"
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__peppol_purchase_journal_required
 msgid "Peppol Purchase Journal Required"
-msgstr ""
+msgstr "ຈຳເປັນຕ້ອງມີປຶ້ມບັນຊີການຊື້ Peppol"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_view_account_invoice_filter
@@ -920,7 +944,7 @@ msgstr "ທີ່ຢູ່ເອເລັກໂຕຣນິກ Peppol (EAS)"
 #. odoo-python
 #: code:addons/account_peppol/tools/peppol_errors.py:0
 msgid "Peppol error:"
-msgstr ""
+msgstr "ຂໍ້ຜິດພາດ Peppol:"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_journal_dashboard_kanban_view
@@ -1166,6 +1190,8 @@ msgid ""
 "The Peppol endpoint is missing in the XML file. Action Required: Update the "
 "account and account_edi_ubl_cii modules to resolve this."
 msgstr ""
+"ບໍ່ພົບ Peppol endpoint ໃນໄຟລ໌ XML. ການດຳເນີນການທີ່ຈຳເປັນ: ອັບເດດໂມດູນ account ແລະ "
+"account_edi_ubl_cii ເພື່ອແກ້ໄຂບັນຫານີ້."
 
 #. module: account_peppol
 #. odoo-python
@@ -1174,6 +1200,8 @@ msgid ""
 "The Tax Category must be 'AE' when using Exemption Reason code 'VATEX-EU-"
 "AE'. You can change this in the Advanced Options of the tax configuration."
 msgstr ""
+"ໝວດໝູ່ອາກອນຕ້ອງເປັນ 'AE' ເມື່ອໃຊ້ລະຫັດເຫດຜົນການຍົກເວັ້ນ 'VATEX-EU-AE'. ເຈົ້າສາມາດປ່ຽນແປງສິ່ງນີ້ໄ"
+"ດ້ໃນຕົວເລືອກຂັ້ນສູງຂອງການຕັ້ງຄ່າອາກອນ."
 
 #. module: account_peppol
 #. odoo-javascript
@@ -1196,6 +1224,8 @@ msgid ""
 "The exemption reason code is invalid. Action Required: Install the module "
 "account_edi_ubl_cii_tax_extension."
 msgstr ""
+"ລະຫັດເຫດຜົນການຍົກເວັ້ນບໍ່ຖືກຕ້ອງ. ການດຳເນີນການທີ່ຈຳເປັນ: ຕິດຕັ້ງໂມດູນ "
+"account_edi_ubl_cii_tax_extension."
 
 #. module: account_peppol
 #. odoo-python
@@ -1307,12 +1337,14 @@ msgstr "ເພື່ອສ້າງໃບເກັບເງິນເອເລັ
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid "To use the Approved Platform for French E-Invoicing install the module"
 msgstr ""
+"ເພື່ອໃຊ້ແພລດຟອມທີ່ໄດ້ຮັບການອະນຸມັດສຳລັບການອອກໃບແຈ້ງໜີ້ເອເລັກໂຕຣນິກຂອງຝຣັ່ງ ໃຫ້ຕິດຕັ້ງໂມດູນ"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_move_send.py:0
 msgid "To use the Approved Platform for French E-Invoicing, install the module"
 msgstr ""
+"ເພື່ອໃຊ້ແພລດຟອມທີ່ໄດ້ຮັບການອະນຸມັດສຳລັບການອອກໃບແຈ້ງໜີ້ເອເລັກໂຕຣນິກຂອງຝຣັ່ງ, ກະລຸນາຕິດຕັ້ງໂມດູນ"
 
 #. module: account_peppol
 #. odoo-python
@@ -1351,7 +1383,7 @@ msgstr "ອັບເດດ"
 #. odoo-python
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid "Update Apps List"
-msgstr "ອັບເດດລາຍການແອັບຯ"
+msgstr "ອັບເດດລາຍການແອັບ"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__use_parent_connection
@@ -1409,7 +1441,7 @@ msgstr "Peppol ແມ່ນຫຍັງ ແລະ ເປັນຫຍັງມັ
 #. odoo-python
 #: code:addons/account_peppol/models/account_move_send.py:0
 msgid "Why should I use French E-Invoicing ?"
-msgstr ""
+msgstr "ເປັນຫຍັງຂ້ອຍຄວນໃຊ້ການອອກໃບແຈ້ງໜີ້ເອເລັກໂຕຣນິກຂອງຝຣັ່ງ?"
 
 #. module: account_peppol
 #. odoo-python

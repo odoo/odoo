@@ -43,7 +43,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-17 17:37+0000\n"
-"PO-Revision-Date: 2026-08-07 13:08+0000\n"
+"PO-Revision-Date: 2026-08-14 12:02+0000\n"
 "Last-Translator: Hanna Kharraziha <hakha@odoo.com>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-18/mail/sv/>"
 "\n"
@@ -726,7 +726,7 @@ msgstr "Rättighetsgrupper"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_guest__access_token
 msgid "Access Token"
-msgstr "Åtkomsttecken"
+msgstr "Åtkomsttoken"
 
 #. module: mail
 #. odoo-javascript
@@ -2422,7 +2422,7 @@ msgstr "Kommentar"
 #: model:ir.model,name:mail.model_res_company
 #: model:ir.model.fields,field_description:mail.field_mail_alias_domain__company_ids
 msgid "Companies"
-msgstr "Bolag"
+msgstr "Företag"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias_domain__company_ids
@@ -2438,7 +2438,7 @@ msgstr "Företag som använder denna domän som standard för att skicka e-post"
 #: model:ir.model.fields,field_description:mail.field_mail_message__record_company_id
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_search
 msgid "Company"
-msgstr "Bolag"
+msgstr "Företag"
 
 #. module: mail
 #. odoo-javascript
@@ -3023,7 +3023,7 @@ msgstr "Standard Anmärkning"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__summary
 msgid "Default Summary"
-msgstr "Standardsammanfattning"
+msgstr "Sammanfattning"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_kanban
@@ -3093,7 +3093,7 @@ msgstr "Etikett för fördröjning"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__delay_from
 msgid "Delay Type"
-msgstr "Typ av fördröjning"
+msgstr "Struktur"
 
 #. module: mail
 #. odoo-javascript
@@ -3251,7 +3251,7 @@ msgstr "Diskutera sidofält"
 #. module: mail
 #: model:ir.actions.server,name:mail.ir_cron_discuss_channel_member_unmute_ir_actions_server
 msgid "Discuss: channel member unmute"
-msgstr "Diskutera: kanalmedlem unmute"
+msgstr "Diskutera: slå på ljudet för kanalmedlem"
 
 #. module: mail
 #: model:ir.actions.server,name:mail.ir_cron_discuss_users_settings_unmute_ir_actions_server
@@ -6035,12 +6035,12 @@ msgstr "Mail: Fetchmail Service"
 #. module: mail
 #: model:ir.actions.server,name:mail.ir_cron_post_scheduled_message_ir_actions_server
 msgid "Mail: Post scheduled messages"
-msgstr "Skicka e-post: Skicka schemalagda meddelanden"
+msgstr "E-post: Skicka schemalagda meddelanden"
 
 #. module: mail
 #: model:ir.actions.server,name:mail.ir_cron_web_push_notification_ir_actions_server
 msgid "Mail: send web push notification"
-msgstr "E-post: Skicka push-meddelande för webb"
+msgstr "E-post: Skicka notis i webbläsare"
 
 #. module: mail
 #. odoo-python
@@ -6702,7 +6702,7 @@ msgstr "Nästa slutdatum för aktivitet"
 #: model:ir.model.fields,field_description:mail.field_res_partner__activity_summary
 #: model:ir.model.fields,field_description:mail.field_res_users__activity_summary
 msgid "Next Activity Summary"
-msgstr "Nästa aktivitetssammanställning"
+msgstr "Sammanfattning av nästa aktivitet"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_mixin__activity_type_id
@@ -7019,7 +7019,7 @@ msgstr "Avisering: Radera meddelanden som är äldre än 6 månader"
 #. module: mail
 #: model:ir.actions.server,name:mail.ir_cron_send_scheduled_message_ir_actions_server
 msgid "Notification: Notify scheduled messages"
-msgstr "Avisering: Meddela schemalagda meddelanden"
+msgstr "Notis: Skicka schemalagda notiser"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_notification_action
@@ -7831,7 +7831,7 @@ msgstr "Planerade aktiviteter"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_tree
 msgid "Planned in"
-msgstr "Planerad om"
+msgstr "Sker om"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_view_form
@@ -9336,8 +9336,8 @@ msgid ""
 "Specify a model if the activity should be specific to a model and not "
 "available when managing activities for other models."
 msgstr ""
-"Ange en modell om aktiviteten ska vara specifik för en modell och inte "
-"tillgänglig när du hanterar aktiviteter för andra modeller."
+"Ange en specific modell för att göra så att aktiviteten endast finns "
+"tillgänglig för den modellen."
 
 #. module: mail
 #. odoo-javascript
@@ -9411,10 +9411,10 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
-"Status baserad på aktiviteter\n"
-"Försenade: Leveranstidpunkten har passerat\n"
-"Idag: Aktivitetsdatum är idag\n"
-"Kommande: Framtida aktiviteter."
+"Status baserat på aktivitetsdatum:\n"
+"Försenade: Aktivitetsdatum har redan passerat.\n"
+"Idag: Aktivitetsdatum är dagens datum.\n"
+"Planerade: Kommande aktiviteter."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_duration_mixin__duration_tracking
@@ -11691,7 +11691,7 @@ msgstr "efter slutdatum"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__delay_from__previous_activity
 msgid "after previous activity deadline"
-msgstr "efter den föregående aktivitetens sluttid"
+msgstr "efter den föregående aktivitetens tidsgräns"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_view_form

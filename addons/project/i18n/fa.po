@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:36+0000\n"
-"PO-Revision-Date: 2026-07-14 17:34+0000\n"
+"PO-Revision-Date: 2026-08-14 17:06+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Persian <https://translate.odoo.com/projects/odoo-18/project/"
 "fa/>\n"
@@ -524,7 +524,7 @@ msgstr "<span class=\"fw-normal\"> وظایف</span>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 msgid "<span class=\"o_stat_text\">Blocked Tasks</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">وظیفه مسدود شده</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -749,6 +749,8 @@ msgid ""
 "Activity plans are used to assign a list of activities in just a few clicks\n"
 "                    (e.g. \"Progress Report\", \"Stand-up Meeting\", ...)"
 msgstr ""
+"برنامه‌های فعالیت برای تخصیص فهرستی از فعالیت‌ها با چند کلیک استفاده می‌شوند\n"
+"                (برای مثال، \"گزارش پیشرفت\"، \"جلسات سرپایی\"، ...)"
 
 #. module: project
 #. odoo-javascript
@@ -1213,7 +1215,7 @@ msgstr "مسدود شده توسط"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Blocked Tasks"
-msgstr ""
+msgstr "وظایف مسدود شده"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_sharing_project_task_action_blocking_tasks
@@ -1305,7 +1307,7 @@ msgstr "لیست زیر-وظایف را ببندید"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__closed_depend_on_count
 msgid "Closed Depending on Tasks"
-msgstr ""
+msgstr "بسته شده بر اساس وظایف"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
@@ -1505,7 +1507,7 @@ msgstr "ایجاد یک پروژه"
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.mail_activity_plan_action_config_project_task_plan
 msgid "Create a Task Activity Plan"
-msgstr ""
+msgstr "برنامه فعالیت وظیفه جدیدی ایجاد کنید"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_task_type_form_domain
@@ -2018,6 +2020,8 @@ msgid ""
 "Edit with limited access: collaborators can view and edit tasks they follow "
 "in the Kanban view."
 msgstr ""
+"ویرایش با دسترسی محدود: همکاران می‌توانند وظایفی را که دنبال می‌کنند در نمای "
+"کانبان مشاهده و ویرایش کنند."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
@@ -2025,6 +2029,8 @@ msgid ""
 "Edit: collaborators can view and edit all tasks in the Kanban view. "
 "Additionally, they can choose which tasks they want to follow."
 msgstr ""
+"ویرایش: همکاران می‌توانند همه وظایف را در نمای کانبان مشاهده و ویرایش کنند. "
+"علاوه بر این، می‌توانند انتخاب کنند که کدام وظایف را دنبال کنند."
 
 #. module: project
 #. odoo-javascript
@@ -2583,7 +2589,7 @@ msgstr "فاکتور شده"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
 msgid "Is Closed (Burn-up Chart)"
-msgstr ""
+msgstr "بسته شده است (نمودار کار انجام شده)"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__message_is_follower
@@ -2663,7 +2669,7 @@ msgstr "ماه گذشته"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__rating_last_value
 msgid "Last Rating (1-5)"
-msgstr ""
+msgstr "آخرین امتیاز (1-5)"
 
 #. module: project
 #. odoo-python
@@ -2842,19 +2848,19 @@ msgstr "علامت به عنوان انجام شده"
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_right_side_panel/components/project_milestone.xml:0
 msgid "Mark as incomplete"
-msgstr ""
+msgstr "علامت‌گذاری به عنوان ناقص"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_right_side_panel/components/project_milestone.xml:0
 msgid "Mark as reached"
-msgstr ""
+msgstr "علامت‌گذاری به عنوان رسیده"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 msgid "Mark the task as <b>Cancelled</b>"
-msgstr ""
+msgstr "وظیفه را به عنوان <b>لغو شده</b> علامت‌گذاری کنید"
 
 #. module: project
 #. odoo-javascript
@@ -3297,12 +3303,12 @@ msgstr "وظایف باز"
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 msgid "Open sub-tasks notebook section"
-msgstr ""
+msgstr "ورود به بخش دفترچه زیر وظایف"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task_burndown_chart_report__is_closed__open
 msgid "Open tasks"
-msgstr ""
+msgstr "وظایف باز"
 
 #. module: project
 #. odoo-python
@@ -3407,7 +3413,7 @@ msgstr "شرکت شریک نمی‌تواند با شرکت وظایف اختص�
 #. module: project
 #: model:ir.actions.act_window,name:project.project_task_action_from_partner
 msgid "Partner's Tasks"
-msgstr ""
+msgstr "وظایف طرف همکار"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_confirm_form
@@ -3570,6 +3576,8 @@ msgid ""
 "Private tasks cannot be converted into sub-tasks. Please set a project on "
 "the task to gain access to this feature."
 msgstr ""
+"وظایف خصوصی نمی‌توانند به زیر وظایف تبدیل شوند. برای دسترسی به این ویژگی، یک "
+"پروژه روی وظیفه تنظیم کنید."
 
 #. module: project
 #. odoo-javascript
@@ -3648,12 +3656,12 @@ msgstr "اشتراک پروژه"
 #. module: project
 #: model:ir.model,name:project.model_project_share_collaborator_wizard
 msgid "Project Sharing Collaborator Wizard"
-msgstr ""
+msgstr "ویزارد اشتراک‌ذاری پروژه با همکار"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_sharing_project_task_recurring_tasks_action
 msgid "Project Sharing Recurrence"
-msgstr ""
+msgstr "دوره تکرار اشتراک‌گذاری پروژه"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
@@ -3722,7 +3730,7 @@ msgstr "شرح پروژه..."
 #. odoo-python
 #: code:addons/project/wizard/project_share_wizard.py:0
 msgid "Project shared with your collaborators."
-msgstr ""
+msgstr "پروژه با همکاران شما به اشتراک گذاشته شد."
 
 #. module: project
 #: model:mail.template,subject:project.project_done_email_template
@@ -3805,7 +3813,7 @@ msgstr "مشخصات"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_share_wizard__share_link
 msgid "Public Link"
-msgstr ""
+msgstr "لینک عمومی"
 
 #. module: project
 #. odoo-javascript
@@ -3927,6 +3935,8 @@ msgstr "خوانده شده"
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
 msgid "Read: collaborators can view tasks but cannot edit them."
 msgstr ""
+"خواندن: همکاران می‌توانند وظایف را مشاهده کنند اما نمی‌توانند آنها را ویرایش "
+"کنند."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_share_collaborator_wizard__access_mode
@@ -3937,6 +3947,12 @@ msgid ""
 "Edit: collaborators can view and edit all tasks in the Kanban view. "
 "Additionally, they can choose which tasks they want to follow."
 msgstr ""
+"خواندن: همکاران می‌توانند وظایف را مشاهده کنند اما نمی‌توانند آنها را ویرایش "
+"کنند.\n"
+"ویرایش با دسترسی محدود: همکاران می‌توانند وظایفی را که دنبال می‌کنند در نمای "
+"کانبان مشاهده و ویرایش کنند.\n"
+"ویرایش: همکاران می‌توانند همه وظایف را در نمای کانبان مشاهده و ویرایش کنند. "
+"علاوه بر این، می‌توانند انتخاب کنند که کدام وظایف را دنبال کنند."
 
 #. module: project
 #: model:mail.template,subject:project.mail_template_data_project_task
@@ -3972,7 +3988,7 @@ msgstr "مکرر"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_layout
 msgid "Recurrent tasks"
-msgstr ""
+msgstr "وظایف تکرارشونده"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_config_settings__group_project_recurring_tasks
@@ -4006,7 +4022,7 @@ msgstr "مدل مدرک مربوطه"
 #. odoo-javascript
 #: code:addons/project/static/src/core/web/follower_list_patch.js:0
 msgid "Remove Collaborator"
-msgstr ""
+msgstr "حذف همکار"
 
 #. module: project
 #. odoo-javascript
@@ -4086,6 +4102,8 @@ msgid ""
 "Restoring will replace the current content with the selected version. Any "
 "unsaved changes will be lost."
 msgstr ""
+"با انجام بازیابی، محتوای فعلی با نسخه انتخاب شده جایگزین می‌شود. هرگونه تغییر "
+"ذخیره نشده از بین خواهد رفت."
 
 #. module: project
 #. odoo-javascript
@@ -4118,6 +4136,8 @@ msgstr "صورت غمگین"
 #: code:addons/project/static/src/project_sharing/views/form/project_sharing_form_controller.js:0
 msgid "Save the task to be able to drag images in description"
 msgstr ""
+"برای اینکه بتوانید تصاویر را به داخل توضیحات بکشید و رها کنید، وظیفه را "
+"ذخیره کنید"
 
 #. module: project
 #. odoo-javascript
@@ -4205,7 +4225,7 @@ msgstr "توکن امنیتی"
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 msgid "Select an assignee from the menu"
-msgstr ""
+msgstr "یک مسئول از منو انتخاب کنید"
 
 #. module: project
 #. odoo-javascript
@@ -4222,7 +4242,7 @@ msgstr "ارسال ایمیل"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_share_collaborator_wizard__send_invitation
 msgid "Send Invitation"
-msgstr ""
+msgstr "ارسال دعوتنامه"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__sequence
@@ -4315,7 +4335,7 @@ msgstr "تمام رکوردهایی که تاریخ اقدام بعدی آن ق�
 #. odoo-javascript
 #: code:addons/project/static/src/components/notebook_task_one2many_field/notebook_task_list_renderer.js:0
 msgid "Show closed tasks"
-msgstr ""
+msgstr "نمایش وظایف بسته شده"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
@@ -4325,7 +4345,7 @@ msgstr "از زمان"
 #. module: project
 #: model:project.tags,name:project.project_tags_12
 msgid "Social"
-msgstr ""
+msgstr "شبکه‌های اجتماعی"
 
 #. module: project
 #. odoo-javascript
@@ -4345,6 +4365,13 @@ msgid ""
 "\n"
 "Are you sure you want to proceed?"
 msgstr ""
+"برخی از حساب‌های تحلیلی انتخاب شده با یک پروژه مرتبط هستند:\n"
+"%(accountList)s\n"
+"\n"
+"بایگانی کردن این حساب‌ها گزینه ثبت ساعات کارکرد پروژه‌های مربوطه را حذف "
+"می‌کند.\n"
+"\n"
+"از ادامه این کار مطمئن هستید؟"
 
 #. module: project
 #. odoo-python
@@ -4361,6 +4388,10 @@ msgid ""
 "move them all at once to the next sprint by editing the milestone, tag, or "
 "property."
 msgstr ""
+"وظایف خود را با استفاده از گام‌های کلیدی، برچسب‌ها یا یک ویژگی اختصاصی بر اساس "
+"اسپرینت مرتب کنید. در پایان هر اسپرینت، فقط وظایف باقی‌مانده در لیست خود را "
+"انتخاب کنید و همه آنها را با ویرایش گام کلیدی، برچسب یا ویژگی به اسپرینت "
+"بعدی منتقل کنید."
 
 #. module: project
 #. odoo-javascript
@@ -4402,7 +4433,7 @@ msgstr "مرحله"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
 msgid "Stage (Burndown Chart)"
-msgstr ""
+msgstr "مرحله (نمودار کار باقی‌مانده)"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_task_stage
@@ -4447,7 +4478,7 @@ msgstr "استان"
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_task_state_selection/project_task_stage_state_selection/project_task_stage_with_state_selection.js:0
 msgid "State readonly"
-msgstr ""
+msgstr "وضعیت فقط خواندنی"
 
 #. module: project
 #. odoo-javascript
@@ -4464,7 +4495,7 @@ msgstr "وضعیت"
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
 msgid "Status Update - %(date)s"
-msgstr ""
+msgstr "به‌روزرسانی وضعیت - %(date)s"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__activity_state
@@ -4569,13 +4600,13 @@ msgstr "وظیفه لغو شد"
 #. module: project
 #: model:mail.message.subtype,name:project.mt_task_canceled
 msgid "Task Cancelled"
-msgstr ""
+msgstr "وظیفه لغو شد"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "Task Converted from To-Do"
-msgstr ""
+msgstr "وظیفه از To-Do تبدیل شده است"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_new
@@ -4660,7 +4691,7 @@ msgstr "عنوان کار ..."
 #: code:addons/project/models/project_task.py:0
 msgid ""
 "Task Transferred from Project %(source_project)s to %(destination_project)s"
-msgstr ""
+msgstr "وظیفه از پروژه %(source_project)s به %(destination_project)s منتقل شد"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_waiting
@@ -4677,7 +4708,7 @@ msgstr "وظیفه تأیید شد"
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_canceled
 msgid "Task cancelled"
-msgstr ""
+msgstr "وظیفه لغو شده است"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_done
@@ -4762,7 +4793,7 @@ msgstr "آزمونها"
 #. odoo-javascript
 #: code:addons/project/static/src/views/burndown_chart/burndown_chart_search_model.js:0
 msgid "The Burndown Chart must be grouped by Date"
-msgstr ""
+msgstr "نمودار کار باقی‌مانده (Burndown) باید بر اساس تاریخ گروه‌بندی شود"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__personal_stage_id
@@ -4853,6 +4884,9 @@ msgid ""
 "Chart or by \"Is Closed\" to represent a Burn-up chart. Without one of these "
 "groupings applied, the report will not provide relevant information."
 msgstr ""
+"گزارش باید بر اساس \"مرحله\" (برای نمایش نمودار کار باقی‌مانده) یا بر اساس "
+"\"بسته شده\" (برای نمایش نمودار کار انجام شده) گروه‌بندی شود. بدون اعمال یکی "
+"از این گروه‌بندی‌ها، گزارش اطلاعات مرتبطی ارائه نخواهد داد."
 
 #. module: project
 #. odoo-python
@@ -4888,6 +4922,8 @@ msgid ""
 "The view must be grouped by date and by Stage - Burndown chart or Is Closed "
 "- Burnup chart"
 msgstr ""
+"نما باید بر اساس تاریخ و مرحله (برای نمودار کار باقی مانده) یا بر اساس بسته "
+"شده (برای نمودار کار انجام شده) گروه‌بندی شود"
 
 #. module: project
 #. odoo-javascript
@@ -4924,6 +4960,10 @@ msgid ""
 "on your website. This includes leads/opportunities, quotations/sales orders, "
 "purchase orders, invoices and bills, timesheets, and tickets."
 msgstr ""
+"آنها می‌توانند وظایف پروژه به اشتراک گذاشته شده را ویرایش کنند و اسناد خاصی "
+"را در حالت فقط خواندنی در وب سایت شما مشاهده کنند. این شامل سرنخ‌ها/فرصت‌ها، "
+"پیش‌فاکتورها/سفارش‌های فروش، سفارش‌های خرید، فاکتورها و صورت‌حساب‌ها، ساعات "
+"کارکرد و تیکت‌ها می‌شود."
 
 #. module: project
 #. odoo-python
@@ -4955,6 +4995,12 @@ msgid ""
 "\n"
 "Are you sure you want to proceed?"
 msgstr ""
+"این حساب تحلیلی با پروژه‌های زیر مرتبط است:\n"
+"%(projectList)s\n"
+"\n"
+"بایگانی کردن حساب گزینه ثبت ساعات کارکرد این پروژه‌ها را حذف می‌کند.\n"
+"\n"
+"از ادامه مطمئن هستید؟"
 
 #. module: project
 #. odoo-javascript
@@ -4963,6 +5009,8 @@ msgid ""
 "This follower is currently a project collaborator. Removing them will revoke "
 "their portal access to the project. Are you sure you want to proceed?"
 msgstr ""
+"این دنبال‌کننده در حال حاضر یک همکار پروژه است. حذف آنها دسترسی پورتال آنها "
+"به پروژه را لغو می‌کند. از ادامه مطمئن هستید؟"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
@@ -5006,12 +5054,15 @@ msgid ""
 "the project's company to align with the stage's company or remove the "
 "company designation from the stage"
 msgstr ""
+"این پروژه با هیچ شرکتی مرتبط نیست، در حالی که مرحله با %s مرتبط است. چند "
+"گزینه برای بررسی وجود دارد: شرکت پروژه را با شرکت مرحله هماهنگ کنید یا نام "
+"شرکت را از مرحله حذف کنید."
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "This task has sub-tasks, so it can't be private."
-msgstr ""
+msgstr "این وظیفه دارای زیر وظایف است، بنابراین نمی‌تواند خصوصی باشد."
 
 #. module: project
 #. odoo-javascript
@@ -5023,7 +5074,7 @@ msgstr "این وظیفه توسط وظیفه دیگری که هنوز به پا
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/components/depend_on_ids_one2many/depend_on_ids_list_renderer.xml:0
 msgid "This task is currently blocked by"
-msgstr ""
+msgstr "این وظیفه در حال حاضر توسط"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_confirmation_wizard
@@ -5058,7 +5109,7 @@ msgstr "نکته: ایجاد وظایف از ایمیل‌های ورودی"
 #: model:digest.tip,name:project.digest_tip_project_3
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_3
 msgid "Tip: Project-Specific Fields"
-msgstr ""
+msgstr "نکته: فیلدهای مختص پروژه"
 
 #. module: project
 #: model:digest.tip,name:project.digest_tip_project_0
@@ -5070,7 +5121,7 @@ msgstr "نکته: از وضعیت‌های وظیفه برای پیگیری پی
 #: model:digest.tip,name:project.digest_tip_project_2
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_2
 msgid "Tip: Your Own Personal Kanban"
-msgstr ""
+msgstr "نکته: کانبان شخصی شما"
 
 #. module: project
 #. odoo-python
@@ -5321,6 +5372,8 @@ msgstr "استفاده از این برای پروژه من"
 msgid ""
 "Use personal stages to organize your tasks and create your own workflow."
 msgstr ""
+"با استفاده از مراحل وظایف خود را سازماندهی کرده و گردش کار شخصی خود را ایجاد "
+"کنید."
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_tags_action
@@ -5647,6 +5700,9 @@ msgid ""
 "you navigate.<br/> You can discard these changes from here or manually save "
 "your task.<br/>Let's save it manually."
 msgstr ""
+"شما تغییرات ذخیره نشده دارید - نگران نباشید! اودوو به طور خودکار آن را هنگام "
+"پیمایش ذخیره می‌کند.<br/> می‌توانید این تغییرات را از لغو کنید یا وظیفه را به "
+"صورت دستی ذخیره کنید.<br/> بیایید آن را به صورت دستی ذخیره کنیم."
 
 #. module: project
 #. odoo-javascript
@@ -5769,6 +5825,8 @@ msgid ""
 "icon to see tasks waiting on other ones. Once a task is marked as complete "
 "or cancelled, all of its dependencies will be unblocked."
 msgstr ""
+"وظایفی که منتظر وظایف دیگر هستند را ببینید. هنگامی که وظیفه به عنوان تکمیل "
+"یا لغو شده علامت‌گذاری شود، همه وابستگی‌های آن آزاد می‌شوند."
 
 #. module: project
 #. odoo-javascript
@@ -5822,7 +5880,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 msgid "state to mark the task as cancelled."
-msgstr ""
+msgstr "(وضعیت) وظیفه را به عنوان لغو شده علامت‌گذاری کنید."
 
 #. module: project
 #. odoo-javascript
@@ -5887,7 +5945,7 @@ msgstr "ماژول به طور خودکار وظایف را در سیستم شم
 msgid ""
 "{{ object.project_id.company_id.name or user.env.company.name }}: "
 "Satisfaction Survey"
-msgstr ""
+msgstr "{{ object.project_id.company_id.name }}: نظرسنجی رضایت"
 
 #. module: project
 #. odoo-javascript

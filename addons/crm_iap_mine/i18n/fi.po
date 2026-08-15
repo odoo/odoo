@@ -18,13 +18,14 @@
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2024
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025
 # Weblate <noreply-mt-weblate@weblate.org>, 2026.
+# Saara Hakanen <sahak@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-29 18:36+0000\n"
-"PO-Revision-Date: 2026-01-31 18:01+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-08-13 17:09+0000\n"
+"Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-18/"
 "crm_iap_mine/fi/>\n"
 "Language: fi\n"
@@ -32,7 +33,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: crm_iap_mine
 #. odoo-python
@@ -61,10 +62,10 @@ msgid ""
 "</div>"
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
-"    <p>Hyvä,</p>\n"
-"    <p>IAP Lead Generation -tililläsi ei ole enää krediittejä.<br/>\n"
-"    Voit ladata IAP Lead Generation -tilillesi lisää krediittejä CRM-"
-"sovelluksen asetuksista.<br/></p>\n"
+"    <p>Hei,</p>\n"
+"    <p>IAP-liidien luomisen tililläsi ei ole enää krediittejä.<br/>\n"
+"    Voit ladata IAP-liidien luomisen tilillesi lisää krediittejä CRM-"
+"sovelluksen asetuksissa.<br/></p>\n"
 "    <p>Ystävällisin terveisin,</p>\n"
 "    <p>Odoo S.A.</p>\n"
 "</div>"
@@ -118,7 +119,7 @@ msgstr "<span class=\"o_stat_text\">Liidiä</span>"
 #. module: crm_iap_mine
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
 msgid "<span class=\"o_stat_text\">Opportunities</span>"
-msgstr "<span class=\"o_stat_text\">Mahdollisuuksia</span>"
+msgstr "<span class=\"o_stat_text\">Myyntimahdollisuudet</span>"
 
 #. module: crm_iap_mine
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
@@ -126,8 +127,9 @@ msgid ""
 "<span invisible=\"error_type != 'no_result'\">Your request did not return "
 "any result (no credits were used). Try removing some filters.</span>"
 msgstr ""
-"<span invisible=\"error_type != 'no_result'\">Pyyntösi ei tuottanut tulosta "
-"(krediittejä ei käytetty). Yritä poistaa joitakin suodattimia.</span>"
+"<span invisible=\"error_type != 'no_result'\">Pyyntösi ei palauttanut "
+"tuloksia (krediittejä ei käytetty). Yritä poistaa joitakin suodattimia.</"
+"span>"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_238
@@ -286,7 +288,7 @@ msgstr "Näyttönimi"
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_158_159
 msgid "Diversified Financials & Financial Services"
-msgstr "Monipuoliset rahoitus- ja rahoituspalvelut"
+msgstr "Hajautettu talous & rahoituspalvelut"
 
 #. module: crm_iap_mine
 #: model:ir.model.fields.selection,name:crm_iap_mine.selection__crm_iap_lead_mining_request__state__done
@@ -329,7 +331,7 @@ msgstr "Virhe"
 #. module: crm_iap_mine
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__error_type
 msgid "Error Type"
-msgstr "Virhetyyppi"
+msgstr "Virheen tyyppi"
 
 #. module: crm_iap_mine
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__contact_filter_type
@@ -401,7 +403,7 @@ msgstr "Terveydenhuollon ammattilainen"
 #. module: crm_iap_mine
 #: model:ir.model,name:crm_iap_mine.model_crm_iap_lead_helpers
 msgid "Helper methods for crm_iap_mine modules"
-msgstr "Crm_iap_mine-moduulien aputoiminnot"
+msgstr "Crm_iap_mine -moduulien apumenetelmät"
 
 #. module: crm_iap_mine
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
@@ -417,7 +419,7 @@ msgstr "Henkilöstöhallinto"
 #: model:mail.template,name:crm_iap_mine.lead_generation_no_credits
 #: model:mail.template,subject:crm_iap_mine.lead_generation_no_credits
 msgid "IAP Lead Generation Notification"
-msgstr "IAP Lead Generation -ilmoitus"
+msgstr "IAP-liidien luomisilmoitus"
 
 #. module: crm_iap_mine
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_helpers__id
@@ -431,8 +433,7 @@ msgstr "ID"
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_168
 msgid "Independent Power and Renewable Electricity Producers"
-msgstr ""
-"Riippumattomat sähköntuottajat ja uusiutuvien energialähteiden tuottajat"
+msgstr "Riippumattomat sähkön ja uusiutuvan energian tuottajat"
 
 #. module: crm_iap_mine
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__industry_ids
@@ -557,7 +558,7 @@ msgstr "Nimi"
 #. module: crm_iap_mine
 #: model:ir.model.constraint,message:crm_iap_mine.constraint_crm_iap_lead_seniority_name_uniq
 msgid "Name already exists!"
-msgstr "Samanniminen suodatin on jo olemassa!"
+msgstr "Nimi on jo olemassa!"
 
 #. module: crm_iap_mine
 #. odoo-python
@@ -580,7 +581,7 @@ msgstr "Ei tulosta"
 #. odoo-javascript
 #: code:addons/crm_iap_mine/static/src/js/tours/crm_iap_lead.js:0
 msgid "Now, just let the magic happen!"
-msgstr "Odota, ja anna taian vaikuttaa!"
+msgstr "Nyt vain annat taian tapahtua!"
 
 #. module: crm_iap_mine
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__contact_number
@@ -638,7 +639,7 @@ msgstr "Henkilön senioriteetti"
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_161
 msgid "Pharmaceuticals, Biotechnology & Life Sciences"
-msgstr "Lääketeollisuus, biotekniikka ja biotieteet"
+msgstr "Lääkkeet, bioteknoloia & biotieteet"
 
 #. module: crm_iap_mine
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.enrich_company
@@ -648,7 +649,7 @@ msgstr "Puhelin"
 #. module: crm_iap_mine
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
 msgid "Pick States..."
-msgstr "Valitse alueet tai valtiot..."
+msgstr "Valitse osavaltiot..."
 
 #. module: crm_iap_mine
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__preferred_role_id
@@ -789,7 +790,7 @@ msgstr "Tavoite"
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_166
 msgid "Technology Hardware & Equipment"
-msgstr "Teknologia laitteistot ja varusteet"
+msgstr "Teknologialaitteet & varusteet"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_149
@@ -800,7 +801,7 @@ msgstr "Televiestintäpalvelut"
 #. odoo-python
 #: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
 msgid "This makes a total of %d credits for this request."
-msgstr "Tämä tarkoittaa yhteensä %d krediittiä pyyntöä varten."
+msgstr "Tämä tarkoittaa yhteensä %d krediittiä kyseistä pyyntöä varten."
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_136
@@ -820,8 +821,8 @@ msgid ""
 "Up to %(credit_count)d additional credits will be consumed to identify %"
 "(contact_count)d contacts per company."
 msgstr ""
-"Enintään %(credit_count)d lisähyvitystä kuluu %(contact_count)d "
-"yhteyshenkilön tunnistamiseen yritystä kohden."
+"Korkeintaan %(credit_count)d lisäkrediittiä käytetään %(contact_count)d "
+"yhteystiedon tunnistamiseen per yritys."
 
 #. module: crm_iap_mine
 #. odoo-javascript
@@ -858,7 +859,7 @@ msgstr "johto"
 #. module: crm_iap_mine
 #: model:crm.iap.lead.seniority,name:crm_iap_mine.crm_iap_mine_seniority_3
 msgid "manager"
-msgstr "esimies"
+msgstr "esihenkilö"
 
 #. module: crm_iap_mine
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
