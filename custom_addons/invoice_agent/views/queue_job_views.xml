@@ -35,7 +35,7 @@
                 <separator/>
                 <filter string="Failing" name="job_failing"
                         domain="[('error_message', '!=', False)]"/>
-                <group expand="0" string="Group By">
+                <group>
                     <filter string="State" name="job_group_state"
                             context="{'group_by': 'state'}"/>
                 </group>
@@ -61,9 +61,9 @@
 
     <record id="menu_ai_agent_outbox" model="ir.ui.menu">
         <field name="name">AMQP Outbox</field>
-        <field name="parent" ref="account.menu_finance_payables"/>
+        <field name="parent_id" ref="account.menu_finance_payables"/>
         <field name="action" ref="action_invoice_agent_job"/>
         <field name="sequence" eval="16"/>
-        <field name="groups" eval="[(4, ref('invoice_agent.group_invoice_agent_manager'))]"/>
+        <field name="group_ids" eval="[(4, ref('invoice_agent.group_invoice_agent_manager'))]"/>
     </record>
 </odoo>
