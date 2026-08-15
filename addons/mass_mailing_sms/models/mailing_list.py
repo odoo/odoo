@@ -50,24 +50,24 @@ class MailingList(models.Model):
         - contact_count_sms:           all valid sms
         - contact_count_blacklisted:   override the dict entry to add SMS blacklist condition """
 
-        values = super(MailingList, self)._get_contact_statistics_fields()
+        values = super()._get_contact_statistics_fields()
         values.update({
-            'contact_count_sms': '''
+            'contact_count_sms': SQL('''
                 SUM(CASE WHEN
                     (c.phone_sanitized IS NOT NULL
                     AND COALESCE(r.opt_out,FALSE) = FALSE
                     AND bl_sms.id IS NULL)
-                THEN 1 ELSE 0 END) AS contact_count_sms''',
-            'contact_count_blacklisted': '''
+                THEN 1 ELSE 0 END)'''),
+            'contact_count_blacklisted': SQL('''
                 SUM(CASE WHEN (bl.id IS NOT NULL OR bl_sms.id IS NOT NULL)
-                THEN 1 ELSE 0 END) AS contact_count_blacklisted'''
+                THEN 1 ELSE 0 END)'''),
         })
         return values
 
     def _get_contact_statistics_joins(self):
-        return super(MailingList, self)._get_contact_statistics_joins() + '''
+        return SQL('''%s
             LEFT JOIN phone_blacklist bl_sms ON c.phone_sanitized = bl_sms.number and bl_sms.active
-        '''
+        ''', super()._get_contact_statistics_joins())
 
     def _mailing_get_opt_out_list_sms(self, mailing):
         """ Check subscription on all involved mailing lists. If user is opt_out
