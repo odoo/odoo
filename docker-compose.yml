@@ -91,6 +91,41 @@ services:
         reservations:
           memory: 256M
 
+  rabbitmq:
+    image: rabbitmq:3.13-management
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      # Credentials come exclusively from .env — never committed.
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER:-invoice_agent}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS:-invoice_agent}
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+    healthcheck:
+      test: [ "CMD", "rabbitmq-diagnostics", "-q", "ping" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    # Loopback-only management UI for the local exercise (watch ack counts,
+    # declare test queues with rabbitmqadmin). The AMQP port 5672 is NEVER
+    # exposed: Odoo and the AI worker reach the broker over the private
+    # compose network only. Production: keep this ports block commented out
+    # entirely — no public 5672 or 15672 on EC2 (see docker-compose.prod.yml).
+    ports:
+      - "127.0.0.1:15672:15672"
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 128M
+
   odoo:
     build:
       context: .
@@ -106,6 +141,13 @@ services:
       PASSWORD: ${ODOO_DB_PASSWORD:-odoo}
       # Pass Anthropic API key securely from environment
       ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      # RabbitMQ — forwarded so queue.publisher connects with the same
+      # credentials the broker container was created with (RABBITMQ_HOST
+      # defaults to the compose service name "rabbitmq" in code).
+      RABBITMQ_HOST: ${RABBITMQ_HOST:-rabbitmq}
+      RABBITMQ_PORT: ${RABBITMQ_PORT:-5672}
+      RABBITMQ_USER: ${RABBITMQ_DEFAULT_USER:-invoice_agent}
+      RABBITMQ_PASS: ${RABBITMQ_DEFAULT_PASS:-invoice_agent}
       # Tell Odoo it's behind a reverse proxy so it trusts
       # X-Forwarded-For and X-Forwarded-Proto headers.
       # Equivalent to proxy_mode = True in odoo.conf
@@ -195,6 +237,8 @@ volumes:
     name: odoo-db-data
   odoo-web-data:
     name: odoo-web-data
+  rabbitmq-data:
+    name: rabbitmq-data
   certbot-www:
     name: certbot-www
   certbot-conf:

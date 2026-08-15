@@ -1,8 +1,8 @@
 {
     "name": "Invoice Agent",
-    "version": "19.0.0.6.0",
+    "version": "19.0.0.7.0",
     "category": "Accounting/Accounting",
-    "summary": "AI Extraction for account.move — queue, wizard, security, automations, cron",
+    "summary": "AI Extraction for account.move — AMQP queue, outbox, wizard, security, automations, cron",
     "depends": ["account", "sale", "base_automation"],
     "post_init_hook": "post_init_hook",
     "data": [
@@ -14,10 +14,12 @@
         "views/account_journal_views.xml",
         "views/invoice_agent_views.xml",
         "views/usage_views.xml",
+        "views/queue_job_views.xml",
         "views/res_config_settings_views.xml",
         "wizard/bulk_process_wizard_views.xml",
         "data/automation_data.xml",
-        "data/cron.xml"
+        "data/cron.xml",
+        "data/queue_cron.xml"
     ],
     "assets": {
         "web.assets_backend": [

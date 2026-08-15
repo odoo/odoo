@@ -2,6 +2,7 @@ import base64
 import io
 import json
 import logging
+import uuid
 from datetime import timedelta
 
 from odoo import _, api, fields, models
@@ -245,6 +246,37 @@ class AccountMove(models.Model):
         string="OCR Error Message",
         readonly=True,
         help="Last OCR failure reason when ocr_state is 'failed'.",
+    )
+
+    # === AMQP Job Fields (week 8 — transactional outbox, see ADR-004) ===
+    # ``ai_job_uuid`` correlates this move with the AMQP job message on the
+    # broker: the worker echoes it back on ``extract.done`` results so the
+    # result consumer can match the reply to the originating bill without
+    # trusting an unbounded integer id.
+    ai_job_uuid = fields.Char(
+        string="AI Job UUID",
+        index=True,
+        copy=False,
+        readonly=True,
+        help="UUID of the AMQP extraction job this bill was queued with. "
+        "Correlates extract.request / extract.done messages with the move.",
+    )
+    # ``ai_state`` mirrors the outbox lifecycle at bill level ('queued' after
+    # the Extract button enqueues the job; 'none' when nothing is in flight).
+    # Kept as a selection (not a boolean) so failed/stuck jobs are visible on
+    # the form without drilling into the outbox view.
+    ai_state = fields.Selection(
+        selection=[
+            ("none", "None"),
+            ("queued", "Queued"),
+        ],
+        string="AI Job State",
+        default="none",
+        index=True,
+        copy=False,
+        help="none: no AMQP job in flight. queued: an extract.request job "
+        "has been registered in the outbox and will be drained to the broker "
+        "by the cron.",
     )
 
     # -------------------------------------------------------------------------
@@ -866,28 +898,108 @@ class AccountMove(models.Model):
         return res
 
     # -------------------------------------------------------------------------
-    # EXTRACTION STATE MACHINE: enqueue hook
+    # AMQP ENQUEUE: transactional outbox (week 8 — see ADR-004)
     # -------------------------------------------------------------------------
+    # The Extract button enqueues a durable AMQP job *without publishing*.
+    # ``_enqueue_ai_job`` writes an ``invoice.agent.job`` row on the same
+    # cursor as this method's caller; the drain cron publishes it to
+    # ``extract.request`` in a separate transaction. If the surrounding write
+    # rolls back, the outbox row rolls back too — a rolled-back bill never
+    # produces an orphan message on the broker.
+    # -------------------------------------------------------------------------
+    def _enqueue_ai_job(self):
+        """Register an AMQP extraction job for this move in the outbox.
+
+        Idempotent per move: a move already queued (``ai_state == 'queued'``
+        with a pending outbox row) is a no-op. Generates the ``ai_job_uuid``
+        that correlates broker messages with this bill.
+
+        :return: the created (or reused) ``invoice.agent.job`` record.
+        """
+        self.ensure_one()
+        existing = self.env["invoice.agent.job"].search(
+            [("move_id", "=", self.id), ("state", "=", "pending")],
+            limit=1,
+        )
+        if existing:
+            return existing
+
+        if not self.ai_job_uuid:
+            self.write({"ai_job_uuid": str(uuid.uuid4())})
+        job = self.env["invoice.agent.job"].create(
+            {
+                "move_id": self.id,
+                "attachment_id": self.ai_source_attachment_id.id or False,
+            },
+        )
+        self.write({"ai_state": "queued"})
+        _logger.info(
+            "invoice_agent enqueue: move_id=%d job_id=%d uuid=%s",
+            self.id,
+            job.id,
+            self.ai_job_uuid,
+        )
+        return job
+
+    def action_request_ai_extraction(self):
+        """Invoice-form Extract button: enqueue a durable AMQP job.
+
+        Repoints the form from the synchronous FastAPI call to the queue:
+        the job is registered in the transactional outbox, and the drain
+        cron publishes ``extract.request`` on the ``invoice.agent`` topic
+        exchange within a minute. Returns the standard notification action
+        so the button gives immediate feedback without blocking the worker
+        on a 5-20 s LLM round-trip.
+
+        Guards mirror the legacy Suggest button: draft vendor bills only,
+        no double submission while a job is already queued.
+        """
+        self.ensure_one()
+        if self.state != "draft":
+            raise UserError(_("AI extraction can only be requested on draft bills."))
+        if self.ai_state == "queued":
+            return self._suggest_notification(
+                "warning",
+                _("Extraction already queued"),
+                _(
+                    "A job for this bill is already registered in the AMQP "
+                    "outbox. It will be published to RabbitMQ within a minute.",
+                ),
+            )
+        if self.ai_extraction_status == "processing":
+            raise UserError(_("An extraction is already running on this bill."))
+
+        # Register the job on this transaction's cursor (no broker call).
+        self._enqueue_ai_job()
+        return self._suggest_notification(
+            "success",
+            _("Extraction queued"),
+            _(
+                "The bill was enqueued as an AMQP job and will be processed "
+                "by the extraction worker. Track it in the AMQP Outbox view.",
+            ),
+        )
+
     def _invoice_agent_schedule_extraction(self):
         """Enqueue this move for background OCR + Claude extraction.
 
         Called by the /invoice_agent/upload controller right after the draft
-        bill is created with ``ai_extraction_status='pending'``. In this
-        exercise the worker is a placeholder: keeping the status at
-        'pending' (or flipping it to 'processing') is enough for clients to
-        poll /invoice_agent/status/<id> while the real pipeline runs.
+        bill is created with ``ai_extraction_status='pending'``.
 
-        Override this method in a fully wired deployment to push a job to the
-        queue (e.g. an ir.cron tick, a bus.Bus message, or an external worker
-        consuming the attachment) and to set 'processing'.
+        Week 8: this is no longer a placeholder. The job is registered in
+        the transactional outbox (``invoice.agent.job``) on the same cursor
+        as the create; the outbox cron publishes it to the ``invoice.agent``
+        topic exchange as ``extract.request`` in a separate transaction.
+        Nothing is ever published inside the request transaction — a
+        rolled-back create leaves no orphan message on the broker.
         """
         self.ensure_one()
         if self.ai_extraction_status != "pending":
             return
-        # Placeholder: mark processing so the queue view and the status
-        # endpoint show something meaningful. A real implementation would
-        # hand the attachment to the OCR worker instead of blocking here.
-        self.write({"ai_extraction_status": "processing"})
+        # Drop to 'processing' only when the job is safely in the outbox.
+        job = self._enqueue_ai_job()
+        if job:
+            self.write({"ai_extraction_status": "processing"})
 
     # -------------------------------------------------------------------------
     # CRON: Retry stuck extractions

@@ -28,3 +28,8 @@ boto3>=1.34.0
 # PyJWT — mints the 60-second HS256 service-to-service token for the
 # invoice-ai FastAPI service (see models/llm_service.py).
 PyJWT>=2.8.0
+
+# pika — AMQP 0-9-1 client for publishing extraction jobs to RabbitMQ
+# (queue.publisher AbstractModel + queue/topology.py at the repo root).
+# Pinned to a 1.x release series: 1.3.x is the current stable line.
+pika>=1.3.2
