@@ -124,15 +124,11 @@ class TestSMSActionsCommon(SMSCommon, TestSMSRecipients):
         test_phone_records = self.test_phone_records.with_env(self.env)
 
         # test ilike search
-        for source, ilike_expected, notilike_expected in [
-            (
-                '0475', test_phone_records[:5] + self.dupes,
-                test_phone_records - test_phone_records[:5] - self.dupes
-            ),
-            ('101', test_phone_records[1], test_phone_records - test_phone_records[1]),
-            # not ilike is not the inverse with formatting but hey, that's not easy to do
-            ('+32475110', test_phone_records[5:8] | self.dupes, test_phone_records),
-            ('0032475110', test_phone_records[5:8] | self.dupes, test_phone_records),
+        for source, ilike_expected in [
+            ('0475', test_phone_records[:5] + self.dupes),
+            ('101', test_phone_records[1]),
+            ('+32475110', test_phone_records[5:8] | self.dupes),
+            ('0032475110', test_phone_records[5:8] | self.dupes),
         ]:
             # test ilike search
             with self.subTest(source=source, operator="ilike"):
@@ -140,6 +136,7 @@ class TestSMSActionsCommon(SMSCommon, TestSMSRecipients):
                 self.assertEqual(results, ilike_expected)
 
             # test inverse ilike search: should be the complement
+            notilike_expected = test_phone_records - ilike_expected
             with self.subTest(source=source, operator="not ilike"):
                 results = self.env['mail.test.sms.bl'].search([('phone_mobile_search', 'not ilike', source)])
                 self.assertEqual(results, notilike_expected)
