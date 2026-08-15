@@ -29,8 +29,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-17 17:37+0000\n"
-"PO-Revision-Date: 2026-08-02 16:12+0000\n"
-"Last-Translator: Michael Hofer <michael.hofer@nordicdrinks.ch>\n"
+"PO-Revision-Date: 2026-08-14 08:06+0000\n"
+"Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-19/account/"
 "de/>\n"
 "Language: de\n"
@@ -392,8 +392,7 @@ msgstr "- Teilzahlung von"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "- The document's sequence becomes editable on all documents."
-msgstr ""
-"- Die Sequenz des Dokuments wird für alle Dokumente bearbeitbar gemacht."
+msgstr "- Die Sequenz des Dokuments ist für alle Dokumente bearbeitbar."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
@@ -947,8 +946,8 @@ msgstr ""
 "SUB003</t>)\n"
 "        </t>\n"
 "        über den Betrag von <span style=\"font-weight:bold;\" t-"
-"out=\"format_amount(object.amount_total, object.currency_id) or ''\">"
-"143.750,00 €</span>\n"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\">143 "
+"750,00 €</span>\n"
 "       von <t t-out=\"object.company_id.name or ''\">IhrUnternehmen</t>.\n"
 "        <br/><br/>\n"
 "        Bei Rückfragen stehen wir gerne zur Verfügung.\n"
@@ -995,12 +994,12 @@ msgstr ""
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        Guten Tag <t t-out=\"object.partner_id.name or ''\">Azure Interior</"
 "t>,<br/><br/>\n"
-"        vielen Dank für Ihre Zahlung.\n"
+"        vielen Dank für Ihre Zahlung!\n"
 "        Hier ist Ihr Zahlungsbeleg <span style=\"font-weight:bold;\" t-out=\""
 "(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</span> über "
 "die Zahlung\n"
 "        von <span style=\"font-weight:bold;\" t-out=\"format_amount"
-"(object.amount, object.currency_id) or ''\">10,00 $</span> von <t t-"
+"(object.amount, object.currency_id) or ''\">10,00 €</span> von <t t-"
 "out=\"object.company_id.name or ''\">IhrUnternehmen</t>.\n"
 "        <br/><br/>\n"
 "        Zögern Sie nicht, uns zu kontaktieren, sollten Sie hierzu Fragen "
@@ -1082,7 +1081,7 @@ msgid ""
 "                                    <span class=\"d-none d-md-inline\"> "
 "Waiting for Payment</span>"
 msgstr ""
-"<i class=\"fa fa-fw fa-clock-o\" aria-label=\"Opened\" title=\"Opened\" "
+"<i class=\"fa fa-fw fa-clock-o\" aria-label=\"Opened\" title=\"Geöffnet\" "
 "role=\"img\"/>\n"
 "                                    <span class=\"d-none d-md-inline\"> "
 "Warten auf Zahlung</span>"
@@ -1164,7 +1163,7 @@ msgid ""
 msgstr ""
 "<span class=\"badge rounded-pill text-bg-warning\">\n"
 "                                    <i class=\"fa fa-fw fa-remove\" aria-"
-"label=\"Cancelled\" title=\"Cancelled\" role=\"img\"/>\n"
+"label=\"Cancelled\" title=\"Storniert\" role=\"img\"/>\n"
 "                                    <span class=\"d-none d-md-inline\"> "
 "Storniert</span>\n"
 "                                </span>"
@@ -1450,12 +1449,12 @@ msgstr "<span title=\"Latest Statement\">Letzter Kontoauszug</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_move_line_view_kanban
 msgid "<span> (CR)</span>"
-msgstr "<span>(KR)</span>"
+msgstr "<span>(Haben)</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_move_line_view_kanban
 msgid "<span> (DR)</span>"
-msgstr "<span> (DR)</span>"
+msgstr "<span> (Soll)</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -1671,7 +1670,7 @@ msgstr "<strong>Datum</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Delivery Date</strong>"
-msgstr "<strong>Lieferdatum</strong>"
+msgstr "<strong>Liefer-/Leistungsdatum</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -2015,7 +2014,7 @@ msgstr ""
 "                                        <p style=\"text-align: center; "
 "margin-top: 16px;\">\n"
 "                                            Wenn Sie sich vom Erhalt von E-"
-"Mails für eingehende Rechnungen abmelden möchten, klicken Sie <a t-attf-"
+"Mails zu eingehenden Rechnungen abmelden möchten, klicken Sie <a t-attf-"
 "href=\"/my/journal/{{ object.id }}/unsubscribe\">hier</a>.\n"
 "                                        </p>\n"
 "                                    </td>\n"
@@ -3007,13 +3006,13 @@ msgstr "Konto-Stichwörter"
 #: model_terms:ir.ui.view,arch_db:account.view_tax_form
 #: model_terms:ir.ui.view,arch_db:account.view_tax_tree
 msgid "Account Tax"
-msgstr "Konto Steuer"
+msgstr "Steuerkonto"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_tax_group_form
 #: model_terms:ir.ui.view,arch_db:account.view_tax_group_tree
 msgid "Account Tax Group"
-msgstr "Konto Steuergruppe"
+msgstr "Steuerkontengruppe"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_ir_module_module__account_templates
@@ -3096,7 +3095,7 @@ msgstr "Assistent zur Kontenzusammenführung"
 #. module: account
 #: model:ir.model,name:account.model_account_merge_wizard_line
 msgid "Account merge wizard line"
-msgstr "Assistentzeile zur Kontozusammenführung"
+msgstr "Assistentzeile zur Kontenzusammenführung"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account__account_src_id
@@ -3111,7 +3110,7 @@ msgstr "Konto zur Verbuchung des Steuerbetrages"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__group_id
 msgid "Account prefixes can determine account groups."
-msgstr "Kontopräfixe können Kontengruppen bestimmen."
+msgstr "Kontenpräfixe können Kontengruppen bestimmen."
 
 #. module: account
 #: model:ir.model,name:account.model_report_account_report_invoice_with_payments
@@ -3130,8 +3129,8 @@ msgid ""
 "Account that will be set on lines created in cash basis journal entry and "
 "used to keep track of the tax base amount."
 msgstr ""
-"Konto, das auf Zeilen gesetzt wird, die in der Journalbuchung für Ist-"
-"Versteuerung erstellt werden, und dazu dient, den Steuerbasisbetrag zu "
+"Konto, das auf Zeilen gesetzt wird, die in der Journalbuchung für die Ist-"
+"Versteuerung erstellt werden, und das dazu dient, den Steuerbasisbetrag zu "
 "verbuchen."
 
 #. module: account
@@ -4654,7 +4653,7 @@ msgstr "Bilanz"
 #. odoo-python
 #: code:addons/account/models/account_reconcile_model.py:0
 msgid "Balance percentage can't be 0"
-msgstr "Der Prozentsatz des Saldos kann nicht 0 sein."
+msgstr "Der Prozentsatz des Saldos darf nicht 0 sein."
 
 #. module: account
 #. odoo-python
@@ -4971,7 +4970,7 @@ msgstr "Auf Grundlage der Zahlung"
 #. module: account
 #: model:res.groups,name:account.group_account_basic
 msgid "Basic"
-msgstr "Basic"
+msgstr "Basis"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__batch_payment_sequence_id
@@ -4990,7 +4989,7 @@ msgid ""
 "Batch invoice sending is unavailable. Please, activate the cron to enable "
 "batch sending of invoices."
 msgstr ""
-"Der Versand von Sammelrechnungen ist nicht verfügbar. Aktivieren Sie den "
+"Der Sammelversand von Rechnungen ist nicht verfügbar. Aktivieren Sie den "
 "Cron-Job, um den Sammelversand von Rechnungen zu ermöglichen."
 
 #. module: account
@@ -5001,8 +5000,8 @@ msgid ""
 "administrator to activate the cron to enable batch sending of invoices."
 msgstr ""
 "Der Sammelversand von Rechnungen ist nicht verfügbar. Kontaktieren Sie Ihren "
-"Systemadministrator, um den Cron zu aktivieren, um den Sammelversand von "
-"Rechnungen zu aktivieren."
+"Systemadministrator, um den Cron-Job für den Sammelversand von Rechnungen zu "
+"aktivieren."
 
 #. module: account
 #. odoo-javascript
@@ -5033,7 +5032,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__bank_bic
 msgid "Bic"
-msgstr "Bic"
+msgstr "BIC"
 
 #. module: account
 #. odoo-javascript
@@ -5146,12 +5145,12 @@ msgstr "Boolesch"
 #. odoo-javascript
 #: code:addons/account/static/src/components/account_payment_field/account_payment.xml:0
 msgid "Branch:"
-msgstr "Zweig:"
+msgstr "Niederlassung:"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__include_initial_balance
 msgid "Bring Accounts Balance Forward"
-msgstr "Übertragung des Kontosaldos"
+msgstr "Übertragung des Kontensaldos"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.open_account_journal_dashboard_kanban
@@ -5198,7 +5197,7 @@ msgid ""
 "By default, we always unfold the lines that can be. If this is checked, the "
 "line won't be unfolded by default, and a folding button will be displayed."
 msgstr ""
-"Standardmäßig werden die Zeilen, die ausgeklappt werden können, immer "
+"Standardmäßig werden die Zeilen, die sich ausklappen lassen, immer "
 "ausgeklappt. Wenn diese Option aktiviert ist, wird die Zeile standardmäßig "
 "nicht ausgeklappt und es wird eine Schaltfläche zum Ausklappen angezeigt."
 
@@ -5208,7 +5207,7 @@ msgid ""
 "By unchecking the active field, you may hide a fiscal position without "
 "deleting it."
 msgstr ""
-"Durch Deaktivierung können Sie die Steuerposition verbergen, ohne diese zu "
+"Durch Deaktivierung können Sie die Steuerposition verbergen, ohne sie zu "
 "löschen."
 
 #. module: account
@@ -5216,8 +5215,8 @@ msgstr ""
 msgid ""
 "By unchecking the active field, you may hide an INCOTERM you will not use."
 msgstr ""
-"Durch eine Deaktivierung dieser Option kann die Anzeige einer "
-"Lieferbedingung (INCOTERM) ausgeblendet werden."
+"Durch Deaktivieren des Feldes „Aktiv“ können Sie einen Incoterm ausblenden, "
+"den Sie nicht verwenden möchten."
 
 #. module: account
 #. odoo-python
@@ -6465,7 +6464,7 @@ msgstr "Eine neue Steuerposition erstellen"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_incoterms_tree
 msgid "Create a new incoterm"
-msgstr "Eine neue Lieferbedingung (Incoterm) erstellen"
+msgstr "Neuen Incoterm erstellen"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.product_product_action_purchasable
@@ -7448,13 +7447,13 @@ msgstr "Standardsteuer, die bei der Erstellung neuer Produkte angewendet wird."
 #: model:ir.model.fields,help:account.field_product_product__supplier_taxes_id
 #: model:ir.model.fields,help:account.field_product_template__supplier_taxes_id
 msgid "Default taxes used when buying the product"
-msgstr "Standardsteuer für den Einkauf eines Produktes."
+msgstr "Standardsteuer, die bei Einkauf eines Produktes angewendet wird"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_product__taxes_id
 #: model:ir.model.fields,help:account.field_product_template__taxes_id
 msgid "Default taxes used when selling the product"
-msgstr "Standardsteuer für den Verkauf eines Produktes."
+msgstr "Standardsteuer, die bei Verkauf eines Produktes angewendet wird"
 
 #. module: account
 #. odoo-python
@@ -7495,7 +7494,7 @@ msgstr ""
 #: model:onboarding.onboarding.step,description:account.onboarding_onboarding_step_fiscal_year
 msgid "Define your fiscal years & tax returns periodicity."
 msgstr ""
-"Definieren Sie Ihre Geschäftsjahre und die Periodizität der "
+"Definieren Sie Ihre Geschäftsjahre und die Periodizität Ihrer "
 "Steuererklärungen."
 
 #. module: account
@@ -7514,8 +7513,8 @@ msgstr "Legt fest, ob das Kontopräfixfeld angezeigt werden sollte"
 msgid ""
 "Defines the smallest coinage of the currency that can be used to pay by cash."
 msgstr ""
-"Hierüber wird die kleinste Münze der Währung definiert, die verwendet werden "
-"kann, um per Bargeld zu zahlen."
+"Legt die kleinste Münzeinheit der Währung fest, mit der bar bezahlt werden "
+"kann."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_tax_form
@@ -7550,7 +7549,7 @@ msgstr "Lieferadresse"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__delivery_date
 #: model:ir.model.fields,field_description:account.field_account_move__delivery_date
 msgid "Delivery Date"
-msgstr "Liefertermin"
+msgstr "Liefer-/Leistungsdatum"
 
 #. module: account
 #: model:account.account.tag,name:account.demo_ceo_wages_account
@@ -7629,9 +7628,9 @@ msgid ""
 "used by itself, however it can still be used in a group. 'adjustment' is "
 "used to perform tax adjustment."
 msgstr ""
-"Legt fest, wo die Steuer wählbar ist. Hinweis: „Keine“ bedeutet, dass eine "
-"Steuer nicht allein, aber durchaus in einer Gruppe verwendet werden kann. „"
-"Berichtigung“ wird zur Durchführung der Steuerkorrektur verwendet."
+"Legt fest, wo die Steuer auswählbar ist. Hinweis: „Keine“ bedeutet, dass "
+"eine Steuer nicht allein, aber durchaus in einer Gruppe verwendet werden "
+"kann. „Berichtigung“ wird zur Durchführung der Steuerkorrektur verwendet."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__price_include
@@ -7639,13 +7638,13 @@ msgid ""
 "Determines whether the price you use on the product and invoices includes "
 "this tax."
 msgstr ""
-"Bestimmt, ob der Preis, den Sie auf dem Produkt und auf Rechnungen "
+"Legt fest, ob der Preis, den Sie auf dem Produkt und auf Rechnungen "
 "verwenden, diese Steuer enthält."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__writeoff_account_id
 msgid "Difference Account"
-msgstr "Differenzenkonto"
+msgstr "Differenzkonto"
 
 #. module: account
 #: model:ir.model,name:account.model_digest_digest
@@ -8445,7 +8444,7 @@ msgstr "Elektronischer Datenaustausch"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Electronic Invoicing"
-msgstr ""
+msgstr "Elektronische Rechnungsstellung"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_details
@@ -10594,7 +10593,7 @@ msgstr "Incoterm-Standort"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_incoterms__code
 msgid "Incoterm Standard Code"
-msgstr "Incoterm-Standard-ID"
+msgstr "Standard-Incoterm-Code"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_incoterms_tree
@@ -10615,7 +10614,7 @@ msgid ""
 msgstr ""
 "Incoterms sind eine Reihe von Verkaufsbedingungen. Sie werden verwendet, um "
 "Transaktionskosten und Verantwortlichkeiten zwischen Käufer und Verkäufer "
-"aufzuteilen und spiegeln die neuesten Transportpraktiken wider."
+"aufzuteilen und spiegeln die aktuellen Transportpraktiken wider."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_incoterms_tree
@@ -14251,7 +14250,7 @@ msgstr "Zahlungsreferenz:"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Payment Communications"
-msgstr "Zahlungsreferenz"
+msgstr "Zahlungsreferenzen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__payment_count
@@ -16757,7 +16756,7 @@ msgstr "Kreditlimit anzeigen"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__show_delivery_date
 #: model:ir.model.fields,field_description:account.field_account_move__show_delivery_date
 msgid "Show Delivery Date"
-msgstr "Lieferdatum anzeigen"
+msgstr "Liefer-/Leistungsdatum anzeigen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__show_discount_details

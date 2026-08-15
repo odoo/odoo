@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:37+0000\n"
-"PO-Revision-Date: 2026-08-06 22:52+0000\n"
+"PO-Revision-Date: 2026-08-09 11:28+0000\n"
 "Last-Translator: Aliraza Habibitanha <alireza.habibitanha@gmail.com>\n"
 "Language-Team: Persian <https://translate.odoo.com/projects/odoo-19/"
 "sale_project/fa/>\n"
@@ -32,18 +32,26 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"\n"
+"                <p class=\"o_view_nocontent_smiling_face\">\n"
+"                    گام کلیدی یافت نشد. مرحله جدیدی ایجاد کنید!\n"
+"                </p><p>\n"
+"                    نقاط پیشرفت مهمی که باید برای موفقیت به آنها برسید را "
+"رهگیری کنید.\n"
+"                </p>\n"
+"            "
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/project_project.py:0
 msgid "%(name)s's %(action_name)s"
-msgstr ""
+msgstr "%(action_name)s برای %(name)s"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/project_project.py:0
 msgid "%(name)s's Sales Order Items"
-msgstr ""
+msgstr "آیتم‌های سفارش فروش %(name)s"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
@@ -54,6 +62,10 @@ msgid ""
 "the cancellation of the sales order.\" invisible=\"sale_order_state != "
 "'cancel'\"/>"
 msgstr ""
+"<span class=\"fa fa-exclamation-triangle text-warning\" title=\"سفارش فروش "
+"مرتبط با این پروژه لغو شده است. توصیه می‌کنیم آیتم سفارش فروش را به‌روزرسانی "
+"کنید یا این پروژه را مطابق با لغو سفارش فروش لغو کنید.\" "
+"invisible=\"sale_order_state != 'cancel'\"/>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_sale_project_inherit_form
@@ -64,6 +76,10 @@ msgid ""
 "cancellation of the sales order.\" invisible=\"sale_order_state != "
 "'cancel'\"/>"
 msgstr ""
+"<span class=\"fa fa-exclamation-triangle text-warning\" title=\"سفارش فروشی "
+"که به این وظیفه مرتبط است لغو شده است. توصیه می‌کنیم یا آیتم سفارش فروش را "
+"به‌روزرسانی کنید یا این وظیفه را مطابق با لغو سفارش فروش لغو کنید.\" "
+"invisible=\"sale_order_state != 'cancel'\"/>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
@@ -76,6 +92,13 @@ msgid ""
 "                            Make Billable\n"
 "                        </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                            <span class=\"o_stat_value\">0</span> سفارش "
+"فروش\n"
+"                        </span>\n"
+"                        <span class=\"o_stat_text\">\n"
+"                            قابل فاکتور کردن\n"
+"                        </span>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
@@ -84,28 +107,31 @@ msgid ""
 "                            Sales Orders\n"
 "                        </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                            سفارش فروش\n"
+"                        </span>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_order_form_inherit_sale_project
 msgid "<span class=\"o_stat_text\"> Projects</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\"> پروژه</span>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_order_form_inherit_sale_project
 msgid "<span class=\"o_stat_text\"> Tasks</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\"> وظیفه</span>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
 msgid "<span class=\"o_stat_text\">Preview</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">پیش‌نمایش</span>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_form
 #: model_terms:ir.ui.view,arch_db:sale_project.project_sharing_inherit_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:sale_project.view_sale_project_inherit_form
 msgid "<span class=\"o_stat_text\">Sales Order</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">سفارش فروش</span>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.task_type_edit_inherit_sale_project
@@ -119,6 +145,14 @@ msgid ""
 "the project is billable.</span>\n"
 "                </span>"
 msgstr ""
+"<span name=\"rating_status_helper\">\n"
+"                    <span invisible=\"rating_status == 'periodic'\">به محض "
+"رسیدن وظیفه به مرحله‌ای که برای آن فاکتور صادر می‌شود، درخواست امتیازدهی ارسال "
+"خواهد شد.</span>\n"
+"                    <span invisible=\"rating_status == 'stage'\">تا زمانی که "
+"وظیفه در این مرحله باشد و برای مرحله فاکتور صادر شود، درخواست‌های امتیازدهی "
+"ارسال خواهند شد.</span>\n"
+"                </span>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_form
@@ -134,6 +168,9 @@ msgid ""
 "The following product need a project in which to put its task: %"
 "(product_name)s"
 msgstr ""
+"برای پیش‌فاکتور %(order)s یا در فرم محصولاتی که وظیفه‌ای به هنگام سفارش ایجاد "
+"می‌کنند باید پروژه‌ای تعریف شود.\n"
+"این محصول نیازمند پروژه‌ای است که وظیفه در آن قرار گیرد: %(product_name)s"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order__project_id
@@ -142,6 +179,8 @@ msgid ""
 "analytic distribution of this project will also serve as a reference for "
 "newly created sales order items."
 msgstr ""
+"پس از تأیید سفارش فروش، یک وظیفه برای پروژه ایجاد خواهد شد. توزیع تحلیلی این "
+"پروژه به‌عنوان مرجع آیتم‌های سفارش فروش جدید ایجاد شده نیز استفاده خواهد شد."
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order_line__qty_delivered_method
@@ -160,31 +199,31 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale_project/models/product_template.py:0
 msgid "Based on Delivered Quantity (Manual)"
-msgstr ""
+msgstr "بر اساس تعداد تحویل داده شده (دستی)"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/product_template.py:0
 msgid "Based on Milestones"
-msgstr ""
+msgstr "بر اساس گام‌های کلیدی"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_project__allow_billable
 #: model:ir.model.fields,field_description:sale_project.field_project_task__allow_billable
 #: model:ir.model.fields,field_description:sale_project.field_project_template_create_wizard__allow_billable
 msgid "Billable"
-msgstr ""
+msgstr "قابل فاکتور"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/sale_order_line.py:0
 msgid "Cancelled"
-msgstr ""
+msgstr "لغو شده"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_order_simple_form
 msgid "Confirm & Close"
-msgstr ""
+msgstr "تأیید و بستن"
 
 #. module: sale_project
 #. odoo-python
@@ -193,18 +232,19 @@ msgid ""
 "Converting this template to a regular project will unlink it from its "
 "associated products."
 msgstr ""
+"تبدیل این قالب به یک پروژه عادی، پیوند آن را از محصولات مرتبطش قطع خواهد کرد."
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/project_project.py:0
 msgid "Cost of Goods Sold"
-msgstr ""
+msgstr "بهای تمام شده کالای فروش رفته"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/project_project.py:0
 msgid "Cost of Goods Sold Items"
-msgstr ""
+msgstr "آیتم‌های بهای تمام شده کالای فروش رفته"
 
 #. module: sale_project
 #: model:ir.actions.server,name:sale_project.model_sale_order_action_create_project
@@ -215,13 +255,13 @@ msgstr "ایجاد پروژه"
 #. odoo-javascript
 #: code:addons/sale_project/static/src/components/so_line_create_button/so_line_create_button.xml:0
 msgid "Create Sales Order"
-msgstr ""
+msgstr "ایجاد سفارش فروش"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/sale_order.py:0
 msgid "Create a Project"
-msgstr ""
+msgstr "ایجاد پروژه"
 
 #. module: sale_project
 #: model:ir.model,website_form_label:sale_project.model_project_task
@@ -232,7 +272,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale_project/models/project_project.py:0
 msgid "Create a customer invoice"
-msgstr ""
+msgstr "یک فاکتور ایجاد کنید"
 
 #. module: sale_project
 #. odoo-python
@@ -241,24 +281,26 @@ msgid ""
 "Create a project for the order with a task for each sales order line to "
 "track the time spent."
 msgstr ""
+"یک پروژه برای سفارش و یک وظیفه به ازای هر سطر سفارش فروش ایجاد می‌شود تا زمان "
+"صرف شده رهگیری شود."
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/product_template.py:0
 msgid "Create a task in an existing project to track the time spent."
-msgstr ""
+msgstr "وظیفه در پروژه‌ای موجود ایجاد می‌شود تا زمان صرف شده رهگیری شود."
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/project_project.py:0
 msgid "Create a vendor bill"
-msgstr ""
+msgstr "ایجاد صورت‌حساب تأمین‌کننده"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/product_template.py:0
 msgid "Create an empty project for the order to track the time spent."
-msgstr ""
+msgstr "برای سفارش پروژه‌ای خالی ایجاد می‌شود تا زمان صرف شده رهگیری شود."
 
 #. module: sale_project
 #. odoo-python
@@ -267,6 +309,8 @@ msgid ""
 "Create invoices, register payments and keep track of the discussions with "
 "your customers."
 msgstr ""
+"فاکتورها را ایجاد کنید، پرداخت‌ها را ثبت نمایید و بحث و گفتگو با مشتریان را "
+"پیگیری کنید."
 
 #. module: sale_project
 #. odoo-python
@@ -275,6 +319,8 @@ msgid ""
 "Create invoices, register payments and keep track of the discussions with "
 "your vendors."
 msgstr ""
+"فاکتورها را ایجاد کنید، پرداخت‌ها را ثبت نمایید و بحث و گفتگو با تأمین‌کنندگان "
+"را پیگیری کنید."
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_product_product__service_tracking
@@ -297,25 +343,25 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_project.field_project_task__partner_id
 #: model_terms:ir.ui.view,arch_db:sale_project.project_project_view_form_simplified_template
 msgid "Customer"
-msgstr ""
+msgstr "مشتری"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/project_project.py:0
 msgid "Customer Invoices"
-msgstr ""
+msgstr "فاکتورهای مشتری"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.product_template_form_view_invoice_policy_inherit_sale_project
 msgid "Defined on quotation"
-msgstr ""
+msgstr "تعریف شده در پیش‌فاکتور"
 
 #. module: sale_project
 #. odoo-javascript
 #: code:addons/sale_project/static/src/components/project_right_side_panel/components/project_profitability_section.xml:0
 #: model_terms:ir.ui.view,arch_db:sale_project.project_update_default_description
 msgid "Delivered"
-msgstr ""
+msgstr "تحویل داده شده"
 
 #. module: sale_project
 #: model:product.template,name:sale_project.product_service_create_project_only_product_template
@@ -325,7 +371,7 @@ msgstr ""
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_order_simple_form
 msgid "Discard"
-msgstr ""
+msgstr "صرف نظر"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_account_move__display_name
@@ -345,29 +391,29 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_project.field_sale_order_template_line__display_name
 #: model:ir.model.fields,field_description:sale_project.field_sale_report__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "نام نمایشی"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__display_sale_order_button
 msgid "Display Sales Order"
-msgstr ""
+msgstr "نمایش سفارش فروش"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/sale_order_line.py:0
 msgid "Done"
-msgstr ""
+msgstr "انجام شده"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/project_project.py:0
 msgid "Down Payments"
-msgstr ""
+msgstr "پیش‌پرداخت‌ها"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.product_template_form_view_invoice_policy_inherit_sale_project
 msgid "Empty project"
-msgstr ""
+msgstr "پروژه خالی"
 
 #. module: sale_project
 #: model:product.template,name:sale_project.product_product_flooring_product_template
@@ -392,38 +438,38 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_project.field_sale_order_template_line__id
 #: model:ir.model.fields,field_description:sale_project.field_sale_report__id
 msgid "ID"
-msgstr ""
+msgstr "شناسه (ID)"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/sale_order_line.py:0
 msgid "In Progress"
-msgstr ""
+msgstr "در جریان"
 
 #. module: sale_project
 #. odoo-javascript
 #: code:addons/sale_project/static/src/components/project_right_side_panel/components/project_profitability_section.xml:0
 msgid "Internal link"
-msgstr ""
+msgstr "لینک داخلی"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/product_template.py:0
 msgid "Invoice your milestones when they are reached."
-msgstr ""
+msgstr "صدور فاکتور پس از تکمیل هر گام کلیدی انجام می‌شود."
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_project_view_form_simplified_inherit
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
 msgid "Invoice your time and material to customers"
-msgstr ""
+msgstr "زمان و مواد مصرفی را برای مشتریان فاکتور کنید"
 
 #. module: sale_project
 #. odoo-javascript
 #: code:addons/sale_project/static/src/components/project_right_side_panel/components/project_profitability_section.xml:0
 #: model_terms:ir.ui.view,arch_db:sale_project.project_update_default_description
 msgid "Invoiced"
-msgstr ""
+msgstr "فاکتور شده"
 
 #. module: sale_project
 #. odoo-python
@@ -431,12 +477,12 @@ msgstr ""
 #: model:ir.embedded.actions,name:sale_project.project_embedded_action_invoices
 #: model:ir.embedded.actions,name:sale_project.project_embedded_action_invoices_dashboard
 msgid "Invoices"
-msgstr ""
+msgstr "فاکتورها"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.product_template_form_view_invoice_policy_inherit_sale_project
 msgid "Invoicing Policy"
-msgstr ""
+msgstr "سیاست صدور فاکتور"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_account_move
@@ -452,7 +498,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/sale_project/static/src/components/project_right_side_panel/components/project_profitability_section.xml:0
 msgid "Load more"
-msgstr ""
+msgstr "ادامه بارگذاری"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_product_product__service_type
@@ -470,7 +516,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale_project/models/project_project.py:0
 msgid "Materials"
-msgstr ""
+msgstr "مواد"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order_line__qty_delivered_method
@@ -483,13 +529,13 @@ msgstr ""
 #: model:ir.model.fields.selection,name:sale_project.selection__sale_order_line__qty_delivered_method__milestones
 #: model_terms:ir.ui.view,arch_db:sale_project.view_order_form_inherit_sale_project
 msgid "Milestones"
-msgstr ""
+msgstr "گام‌های کلیدی"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/sale_order_line.py:0
 msgid "New Sales Order Item"
-msgstr ""
+msgstr "آیتم سفارش فروش جدید"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.sale_project_view_form_simplified_template
@@ -501,12 +547,12 @@ msgstr "پروژه جدید"
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_tree
 #: model_terms:ir.ui.view,arch_db:sale_project.view_sale_project_inherit_form
 msgid "Non-billable"
-msgstr ""
+msgstr "غیرقابل فاکتور"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.portal_tasks_list_inherit
 msgid "Not Billed"
-msgstr ""
+msgstr "فاکتور نشده"
 
 #. module: sale_project
 #: model:product.template,name:sale_project.product_service_create_task_only_product_template
@@ -517,7 +563,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale_project/models/project_project.py:0
 msgid "Other Services"
-msgstr ""
+msgstr "سایر خدمات"
 
 #. module: sale_project
 #: model:product.template,name:sale_project.product_product_painting_product_template
@@ -527,7 +573,7 @@ msgstr ""
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_template_create_wizard__partner_id
 msgid "Partner"
-msgstr ""
+msgstr "طرف همکار"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_milestone__quantity_percentage
@@ -535,6 +581,8 @@ msgid ""
 "Percentage of the ordered quantity that will automatically be delivered once "
 "the milestone is reached."
 msgstr ""
+"درصدِ تعداد سفارش داده شده که پس از تکمیل گام کلیدی به طور خودکار تحویل خواهد "
+"شد."
 
 #. module: sale_project
 #: model:product.template,name:sale_project.product_product_plumbing_product_template
@@ -545,13 +593,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale_project/models/project_task.py:0
 msgid "Portal Sale Order"
-msgstr ""
+msgstr "سفارش فروش پورتال"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/product_template.py:0
 msgid "Prepaid/Fixed Price"
-msgstr ""
+msgstr "پیش‌پرداخت/قیمت ثابت"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_product_template
@@ -570,6 +618,9 @@ msgid ""
 "generate analytic costs, will be re-invoiced in this sales order if they are "
 "set up for it."
 msgstr ""
+"محصولاتی که به برداشت‌های انبار اضافه شده‌اند و نوع عملیات آنها تولید هزینه‌های "
+"تحلیلی تنظیم شده است، در صورتی که پیکربندی شده باشند، در این سفارش فروش "
+"دوباره فاکتور می‌شوند."
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_project_project
@@ -579,60 +630,60 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_project.field_sale_report__project_id
 #: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_tracking__project_only
 msgid "Project"
-msgstr ""
+msgstr "پروژه"
 
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_tracking__task_in_project
 msgid "Project & Task"
-msgstr ""
+msgstr "پروژه و وظیفه"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__project_account_id
 msgid "Project Account"
-msgstr ""
+msgstr "حساب پروژه"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_project_milestone
 msgid "Project Milestone"
-msgstr ""
+msgstr "گام کلیدی پروژه"
 
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_type__milestones
 msgid "Project Milestones"
-msgstr ""
+msgstr "گام‌های کلیدی پروژه"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_product_product__project_template_id
 #: model:ir.model.fields,field_description:sale_project.field_product_template__project_template_id
 #: model_terms:ir.ui.view,arch_db:sale_project.sale_project_view_form_simplified_template
 msgid "Project Template"
-msgstr ""
+msgstr "قالب پروژه"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_project_template_create_wizard
 msgid "Project Template create Wizard"
-msgstr ""
+msgstr "ویزارد ایجاد قالب پروژه"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_project_update
 msgid "Project Update"
-msgstr ""
+msgstr "به‌روزرسانی پروژه"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__project_sale_order_id
 msgid "Project's sale order"
-msgstr ""
+msgstr "سفارش فروش پروژه"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_milestone__product_uom_qty
 msgid "Quantity"
-msgstr ""
+msgstr "تعداد"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_milestone__quantity_percentage
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_tree
 msgid "Quantity (%)"
-msgstr ""
+msgstr "تعداد (%)"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_sale_order_template_line
@@ -642,12 +693,12 @@ msgstr ""
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_template_create_wizard__role_to_users_ids
 msgid "Role To Users"
-msgstr ""
+msgstr "نقش به کاربران"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
 msgid "Sales & Invoicing"
-msgstr ""
+msgstr "فروش و صدور فاکتور"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_sale_report
@@ -664,7 +715,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_project.field_report_project_task_user__sale_order_id
 #: model:project.project,name:sale_project.so_template_project
 msgid "Sales Order"
-msgstr ""
+msgstr "سفارش فروش"
 
 #. module: sale_project
 #. odoo-python
@@ -676,12 +727,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_project.project_sharing_inherit_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:sale_project.view_sale_project_inherit_form
 msgid "Sales Order Item"
-msgstr ""
+msgstr "آیتم سفارش فروش"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_milestone__sale_line_id
 msgid "Sales Order Item that will be updated once the milestone is reached."
-msgstr ""
+msgstr "آیتم سفارش فروشی که با تکمیل گام کلیدی به‌روزرسانی می‌شود."
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_task__sale_line_id
@@ -695,6 +746,13 @@ msgid ""
 "also change or remove the sales order item of each timesheet entry "
 "individually."
 msgstr ""
+"آیتم سفارش فروشی که زمان صرف شده برای این وظیفه به آن افزوده خواهد شد تا "
+"برای مشتری فاکتور شود.\n"
+"در حالت پیش‌فرض آیتم سفارش فروش تنظیم شده برای پروژه انتخاب خواهد شد. اگر "
+"آیتم سفارش فروش پیش‌فرض وجود نداشته باشد، آخرین آیتم پیش‌پرداخت که زمان "
+"باقی‌مانده دارد استفاده خواهد شد.\n"
+"برای غیرقابل فاکتور کردن وظیفه، آیتم سفارش فروش را حذف کنید. همچنین می‌توانید "
+"آیتم هر یک از ثبت‌های ساعات کارکرد را به طور مجزا ویرایش یا حذف کنید."
 
 #. module: sale_project
 #. odoo-javascript
@@ -703,7 +761,7 @@ msgstr ""
 #: code:addons/sale_project/static/src/components/project_right_side_panel/components/project_profitability_section.xml:0
 #: model_terms:ir.ui.view,arch_db:sale_project.project_update_default_description
 msgid "Sales Order Items"
-msgstr ""
+msgstr "آیتم‌های سفارش فروش"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_sale_order_line
@@ -716,7 +774,7 @@ msgstr ""
 #: model:ir.embedded.actions,name:sale_project.project_embedded_action_sales_orders
 #: model:ir.embedded.actions,name:sale_project.project_embedded_action_sales_orders_dashboard
 msgid "Sales Orders"
-msgstr ""
+msgstr "سفارش‌های فروش"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_project__sale_line_id
@@ -727,6 +785,10 @@ msgid ""
 "It can be modified on each task and timesheet entry individually if "
 "necessary."
 msgstr ""
+"آیتم سفارش فروشی که به طور پیش‌فرض در وظایف و ساعات کارکرد این پروژه انتخاب "
+"خواهد شد، به استثناء مواردی که کارمند تنظیم شده برای ساعات کارکرد به صراحت "
+"به آیتم سفارش فروش دیگری در پروژه متصل باشد.\n"
+"در صورت نیاز می‌توان در هر وظیفه یا ثبت ساعات کارکرد آن را تغییر داد."
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_task__sale_order_id
@@ -742,65 +804,65 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale_project/controllers/portal.py:0
 msgid "Search in Invoice"
-msgstr ""
+msgstr "جستجو در فاکتور"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/controllers/portal.py:0
 msgid "Search in Sales Order Item"
-msgstr ""
+msgstr "جستجو در آیتم سفارش فروش"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_project_view_form_simplified_inherit
 #: model_terms:ir.ui.view,arch_db:sale_project.project_project_view_form_simplified_template
 msgid "Select who to bill..."
-msgstr ""
+msgstr "انتخاب شخص برای صدور فاکتور..."
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_product_product__service_policy
 #: model:ir.model.fields,field_description:sale_project.field_product_template__service_policy
 msgid "Service Invoicing Policy"
-msgstr ""
+msgstr "سیاست صدور فاکتور برای خدمات"
 
 #. module: sale_project
 #. odoo-javascript
 #: code:addons/sale_project/static/src/components/project_right_side_panel/components/project_profitability_section.xml:0
 #: model_terms:ir.ui.view,arch_db:sale_project.project_update_default_description
 msgid "Sold"
-msgstr ""
+msgstr "فروخته شده"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__sale_order_state
 msgid "Status"
-msgstr ""
+msgstr "وضعیت"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_project_task
 #: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_tracking__task_global_project
 msgid "Task"
-msgstr ""
+msgstr "وظیفه"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/sale_order_line.py:0
 msgid "Task Created (%(name)s): %(link)s"
-msgstr ""
+msgstr "وظیفه ایجاد شد (%(name)s): %(link)s"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_project_task_recurrence
 msgid "Task Recurrence"
-msgstr ""
+msgstr "تکرار وظیفه"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_project_task_type
 msgid "Task Stage"
-msgstr ""
+msgstr "مرحله وظیفه"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_product_product__task_template_id
 #: model:ir.model.fields,field_description:sale_project.field_product_template__task_template_id
 msgid "Task Template"
-msgstr ""
+msgstr "قالب وظیفه"
 
 #. module: sale_project
 #: model:project.project,label_tasks:sale_project.so_template_project
@@ -816,7 +878,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale_project/models/sale_order.py:0
 msgid "The Sales Order must contain at least one service product."
-msgstr ""
+msgstr "سفارش فروش باید حداقل شامل یک محصول خدماتی باشد."
 
 #. module: sale_project
 #. odoo-python
@@ -825,6 +887,7 @@ msgid ""
 "The product %s should not have a global project since it will generate a "
 "project."
 msgstr ""
+"محصول %s نباید یک پروژه عمومی داشته باشد، زیرا باعث ایجاد یک پروژه می‌شود."
 
 #. module: sale_project
 #. odoo-python
@@ -833,6 +896,7 @@ msgid ""
 "The product %s should not have a project nor a project template since it "
 "will not generate project."
 msgstr ""
+"محصول%s نباید پروژه یا قالب پروژه داشته باشد، زیرا باعث ایجاد پروژه نمی‌شود."
 
 #. module: sale_project
 #. odoo-python
@@ -841,6 +905,8 @@ msgid ""
 "The product %s should not have a project template since it will generate a "
 "task in a global project."
 msgstr ""
+"محصول %s نباید دارای قالب پروژه باشد زیرا وظیفه را در یک پروژه عمومی ایجاد "
+"می‌کند."
 
 #. module: sale_project
 #. odoo-python
@@ -849,23 +915,25 @@ msgid ""
 "The project couldn't be created as the Sales Order must be confirmed or is "
 "already linked to a project."
 msgstr ""
+"پروژه را نمی‌توان ایجاد کرد زیرا سفارش فروش باید تأیید شود، یا از قبل به یک "
+"پروژه متصل است."
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/sale_order_line.py:0
 msgid "This task has been created from: %(order_link)s (%(product_name)s)"
-msgstr ""
+msgstr "این وظیفه از %(order_link)s (%(product_name)s) ایجاد شده است"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/sale_order_line.py:0
 msgid "To Do"
-msgstr ""
+msgstr "در صف انجام"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__task_to_invoice
 msgid "To invoice"
-msgstr ""
+msgstr "در انتظار فاکتور"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_product_product__service_type
@@ -895,12 +963,12 @@ msgstr ""
 #: model:ir.embedded.actions,name:sale_project.project_embedded_action_vendor_bills
 #: model:ir.embedded.actions,name:sale_project.project_embedded_action_vendor_bills_dashboard
 msgid "Vendor Bills"
-msgstr ""
+msgstr "صورت‌حساب‌های تأمین‌کننده"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_tree
 msgid "View Sales Order"
-msgstr ""
+msgstr "نمایش سفارش فروش"
 
 #. module: sale_project
 #: model:product.template,name:sale_project.product_service_create_project_and_task_product_template
@@ -919,12 +987,14 @@ msgid ""
 "You cannot link the order item %(order_id)s - %(product_id)s to this task "
 "because it is a re-invoiced expense."
 msgstr ""
+"شما نمی‌توانید آیتم سفارش %(order_id)s - %(product_id)s را به این وظیفه مرتبط "
+"کنید، زیرا هزینه آن فاکتور مجدد شده است."
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/sale_order.py:0
 msgid "[Project] %(task_name)s"
-msgstr ""
+msgstr "[پروژه] %(task_name)s"
 
 #. module: sale_project
 #. odoo-python

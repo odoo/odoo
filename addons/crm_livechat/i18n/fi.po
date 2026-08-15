@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~15.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:36+0000\n"
-"PO-Revision-Date: 2026-08-03 02:44+0000\n"
+"PO-Revision-Date: 2026-08-13 11:46+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/"
 "crm_livechat/fi/>\n"
@@ -35,7 +35,7 @@ msgstr "%s:n uusi liidi"
 #. module: crm_livechat
 #: model_terms:ir.ui.view,arch_db:crm_livechat.crm_lead_view_form
 msgid "<span class=\"o_stat_text\">View chat</span>"
-msgstr "<span class=\"o_stat_text\">Näytä chatti</span>"
+msgstr "<span class=\"o_stat_text\">Katso chatti</span>"
 
 #. module: crm_livechat
 #: model:ir.model,name:crm_livechat.model_chatbot_script
@@ -85,7 +85,7 @@ msgstr "Luo myyntimahdollisuus"
 #: code:addons/crm_livechat/models/chatbot_script_step.py:0
 #: code:addons/crm_livechat/models/discuss_channel.py:0
 msgid "Created a new lead: %s"
-msgstr "Luotu uusi liidi: %s"
+msgstr "Uusi liidi luotu: %s"
 
 #. module: crm_livechat
 #: model:ir.model,name:crm_livechat.model_discuss_channel
@@ -105,7 +105,7 @@ msgstr "Näyttönimi"
 #. module: crm_livechat
 #: model:ir.model.fields,field_description:crm_livechat.field_chatbot_script__lead_count
 msgid "Generated Lead Count"
-msgstr "Luotu liidien määrä"
+msgstr "Luotujen liidien määrä"
 
 #. module: crm_livechat
 #: model:ir.model.fields,field_description:crm_livechat.field_discuss_channel__has_crm_lead
@@ -158,7 +158,7 @@ msgstr "Liidit luotu"
 #. module: crm_livechat
 #: model:ir.model.fields,field_description:crm_livechat.field_crm_lead__origin_channel_id
 msgid "Live chat from which the lead was created"
-msgstr "Livechat liidin alkuperästä"
+msgstr "Livechat, josta liidi luotiin"
 
 #. module: crm_livechat
 #: model:ir.model,name:crm_livechat.model_im_livechat_report_channel
@@ -169,7 +169,7 @@ msgstr "Livechat-tukikanavan raportti"
 #. odoo-javascript
 #: code:addons/crm_livechat/static/src/core/web/livechat_channel_info_list_patch.xml:0
 msgid "Open leads"
-msgstr "Avaa liidit"
+msgstr "Avoimet liidit"
 
 #. module: crm_livechat
 #: model:ir.model.fields,field_description:crm_livechat.field_chatbot_script_step__crm_team_id
@@ -189,9 +189,7 @@ msgstr "Kiitos, otamme teihin yhteyttä pian!"
 #. module: crm_livechat
 #: model:ir.model.fields,help:crm_livechat.field_discuss_channel__lead_ids
 msgid "The channel becomes accessible to sales users when leads are set."
-msgstr ""
-"Kanava tulee Myynti-sovelluksen käyttäjien saataville, kun liidit "
-"määritetään."
+msgstr "Kanava tulee myyntikäyttäjien saataville, kun liidit on määritetty."
 
 #. module: crm_livechat
 #: model:ir.model.fields,help:crm_livechat.field_chatbot_script_step__crm_team_id
@@ -200,7 +198,7 @@ msgid ""
 "assign the created lead/opportunity to the defined team"
 msgstr ""
 "Käytetään yhdessä 'create_lead' -vaihetyypin kanssa, jotta luotu liidi tai "
-"myyntimahdollisuus voidaan kohdistaa automaattisesti määritellylle tiimiille"
+"myyntimahdollisuus annetaan automaattisesti määritellylle tiimiille"
 
 #. module: crm_livechat
 #: model:ir.model,name:crm_livechat.model_res_users
@@ -211,7 +209,7 @@ msgstr "Käyttäjä"
 #: model_terms:chatbot.script.step,message:crm_livechat.chatbot_script_welcome_step_pricing_email
 msgid ""
 "Would you mind leaving your email address so that we can reach you back?"
-msgstr "Jättäisitkö sähköpostiosoitteesi jotta voimme ottaa sinuun yhteyttä?"
+msgstr "Jättäisitkö sähköpostiosoitteesi, jotta voimme ottaa sinuun yhteyttä?"
 
 #. module: crm_livechat
 #. odoo-python
@@ -225,7 +223,8 @@ msgstr "Et voi luoda liidejä kanaviin, joihin sinulla ei ole pääsyä."
 msgid ""
 "You cannot update a lead and link it to a channel you don't have access to."
 msgstr ""
-"Et voi luoda liidiä ja linkittää sitä kanavaan, johon sinulla ei ole pääsyä."
+"Et voi päivittää liidiä ja linkittää sitä kanavaan, johon sinulla ei ole "
+"pääsyä."
 
 #. module: crm_livechat
 #. odoo-javascript

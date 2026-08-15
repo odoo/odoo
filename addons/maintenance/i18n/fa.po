@@ -13,13 +13,14 @@
 # Hanna Kheradroosta, 2023
 # Martin Trigaux, 2023
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025, 2026.
+# Aliraza Habibitanha <alireza.habibitanha@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:35+0000\n"
-"PO-Revision-Date: 2026-08-07 18:39+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"PO-Revision-Date: 2026-08-09 10:50+0000\n"
+"Last-Translator: Aliraza Habibitanha <alireza.habibitanha@gmail.com>\n"
 "Language-Team: Persian <https://translate.odoo.com/projects/odoo-19/"
 "maintenance/fa/>\n"
 "Language: fa\n"
@@ -32,7 +33,7 @@ msgstr ""
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
 msgid "<span class=\"badge text-bg-warning float-end\">Cancelled</span>"
-msgstr ""
+msgstr "<span class=\"badge text-bg-warning float-end\">لغو شده</span>"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
@@ -47,12 +48,12 @@ msgstr "<span>درخواست شده</span>"
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.view_maintenance_equipment_category_kanban
 msgid "<strong>Equipment:</strong>"
-msgstr ""
+msgstr "<strong>تجهیزات:</strong>"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.view_maintenance_equipment_category_kanban
 msgid "<strong>Maintenance: </strong>"
-msgstr ""
+msgstr "<strong>تعمیر و نگهداری: </strong>"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_team__alias_defaults
@@ -158,17 +159,17 @@ msgstr "مستعار تماس امنیتی"
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_team__alias_domain_id
 msgid "Alias Domain"
-msgstr ""
+msgstr "دامنه مستعار"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_team__alias_domain
 msgid "Alias Domain Name"
-msgstr ""
+msgstr "نام دامنه مستعار"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_team__alias_full_name
 msgid "Alias Email"
-msgstr ""
+msgstr "ایمیل مستعار"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_team__alias_name
@@ -178,12 +179,12 @@ msgstr "نام مستعار"
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_team__alias_status
 msgid "Alias Status"
-msgstr ""
+msgstr "وضعیت مستعار"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_team__alias_status
 msgid "Alias status assessed on the last message received."
-msgstr ""
+msgstr "وضعیت مستعار در آخرین پیام دریافتی ارزیابی شده است."
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_team__alias_model_id
@@ -257,7 +258,7 @@ msgstr "لغو"
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_kanban
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 msgid "Cancelled"
-msgstr ""
+msgstr "لغو شده"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__category_id
@@ -304,7 +305,7 @@ msgstr "شرکت"
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment__estimated_next_failure
 #: model:ir.model.fields,help:maintenance.field_maintenance_mixin__estimated_next_failure
 msgid "Computed as Latest Failure Date + MTBF"
-msgstr ""
+msgstr "نحوه محاسبه: تاریخ آخرین خرابی + MTBF"
 
 #. module: maintenance
 #: model:maintenance.equipment.category,name:maintenance.equipment_computer
@@ -335,7 +336,7 @@ msgstr "هزینه"
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.res_config_settings_view_form
 msgid "Create custom worksheet templates"
-msgstr ""
+msgstr "برای کاربرگ‌ها، قالب‌های سفارشی ایجاد کنید"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
@@ -380,12 +381,12 @@ msgstr "پیام برگشتی سفارشی"
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_res_config_settings__module_maintenance_worksheet
 msgid "Custom Maintenance Worksheets"
-msgstr ""
+msgstr "کاربرگ‌های سفارشی تعمیر و نگهداری"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.res_config_settings_view_form
 msgid "Custom Worksheets"
-msgstr ""
+msgstr "کاربرگ‌های سفارشی"
 
 #. module: maintenance
 #: model:ir.ui.menu,name:maintenance.menu_m_dashboard
@@ -414,7 +415,7 @@ msgstr "تاریخ اتمام تعمیر و نگهداری "
 #. module: maintenance
 #: model:ir.model.fields.selection,name:maintenance.selection__maintenance_request__repeat_unit__day
 msgid "Days"
-msgstr ""
+msgstr "روز"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_team__alias_defaults
@@ -481,7 +482,7 @@ msgstr "مستعار ایمیل"
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_team__alias_id
 msgid "Email alias for this maintenance team."
-msgstr ""
+msgstr "ایمیل مستعار برای این تیم تعمیر و نگهداری."
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__email_cc
@@ -492,18 +493,18 @@ msgstr "ایمیل سی سی"
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_team__alias_domain
 msgid "Email domain e.g. 'example.com' in 'odoo@example.com'"
-msgstr ""
+msgstr "دامنه ایمیل، مثل example.com در odoo@example.com"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__repeat_until
 msgid "End Date"
-msgstr ""
+msgstr "تاریخ پایان"
 
 #. module: maintenance
 #. odoo-python
 #: code:addons/maintenance/models/maintenance.py:0
 msgid "End date cannot be earlier than start date."
-msgstr ""
+msgstr "تاریخ پایان نمی‌تواند قبل از تاریخ شروع باشد."
 
 #. module: maintenance
 #: model:ir.actions.act_window,name:maintenance.hr_equipment_action
@@ -540,7 +541,7 @@ msgstr "دسته تجهیزات"
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__equipment_count
 msgid "Equipment Count"
-msgstr ""
+msgstr "تعداد تجهیزات"
 
 #. module: maintenance
 #: model:res.groups,name:maintenance.group_equipment_manager
@@ -555,36 +556,36 @@ msgstr "نام تجهیزات"
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__equipment_properties_definition
 msgid "Equipment Properties"
-msgstr ""
+msgstr "تنظیمات تجهیزات"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
 msgid "Estimated Next Failure"
-msgstr ""
+msgstr "برآورد خرابی بعدی"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__estimated_next_failure
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_mixin__estimated_next_failure
 msgid "Estimated time before next failure (in days)"
-msgstr ""
+msgstr "زمان برآورد شده برای خرابی بعدی (بر حسب روز)"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__expected_mtbf
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_mixin__expected_mtbf
 msgid "Expected MTBF"
-msgstr ""
+msgstr "MTBF پیش‌بینی شده"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment__expected_mtbf
 #: model:ir.model.fields,help:maintenance.field_maintenance_mixin__expected_mtbf
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
 msgid "Expected Mean Time Between Failure"
-msgstr ""
+msgstr "میانگین زمان پیش‌بینی شده بین خرابی‌ها"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_request__schedule_end
 msgid "Expected completion date and time of the maintenance request."
-msgstr ""
+msgstr "تاریخ و زمان تکمیل مورد انتظار درخواست تعمیر و نگهداری."
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__fold
@@ -626,7 +627,7 @@ msgstr "آیکون فونت عالی به عبارتی fa-tasks"
 #. module: maintenance
 #: model:ir.model.fields.selection,name:maintenance.selection__maintenance_request__repeat_type__forever
 msgid "Forever"
-msgstr ""
+msgstr "برای همیشه"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
@@ -638,12 +639,12 @@ msgstr "فعالیت های آینده"
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__instruction_google_slide
 #: model:ir.model.fields.selection,name:maintenance.selection__maintenance_request__instruction_type__google_slide
 msgid "Google Slide"
-msgstr ""
+msgstr "اسلاید گوگل"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
 msgid "Google Slide Link"
-msgstr ""
+msgstr "لینک اسلاید گوگل"
 
 #. module: maintenance
 #: model:maintenance.equipment,name:maintenance.equipment_printer1
@@ -738,12 +739,12 @@ msgstr "در جریان"
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__instruction_type
 msgid "Instruction"
-msgstr ""
+msgstr "دستورالعمل"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
 msgid "Instructions"
-msgstr ""
+msgstr "دستورالعمل‌ها"
 
 #. module: maintenance
 #: model:maintenance.team,name:maintenance.equipment_team_maintenance
@@ -794,18 +795,18 @@ msgstr "فعالیتهای اخیر"
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
 msgid "Latest Failure"
-msgstr ""
+msgstr "آخرین خرابی"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__latest_failure_date
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_mixin__latest_failure_date
 msgid "Latest Failure Date"
-msgstr ""
+msgstr "تاریخ آخرین خرابی"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_team__alias_incoming_local
 msgid "Local-part based incoming detection"
-msgstr ""
+msgstr "تشخیص ورودی بر اساس قسمت محلی"
 
 #. module: maintenance
 #: model:ir.ui.menu,name:maintenance.menu_m_reports_losses
@@ -821,13 +822,13 @@ msgstr "پایین"
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__mtbf
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_mixin__mtbf
 msgid "MTBF"
-msgstr ""
+msgstr "MTBF (میانگین زمان بین خرابی‌ها)"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__mttr
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_mixin__mttr
 msgid "MTTR"
-msgstr ""
+msgstr "MTTR (میانگین زمان تعمیر)"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__maintenance_ids
@@ -867,7 +868,7 @@ msgstr "دسته تجهیزات تعمیر و نگهداری"
 #. module: maintenance
 #: model:ir.model,name:maintenance.model_maintenance_mixin
 msgid "Maintenance Maintained Item"
-msgstr ""
+msgstr "آیتم تعمیر شده"
 
 #. module: maintenance
 #: model:ir.model,name:maintenance.model_maintenance_request
@@ -921,7 +922,7 @@ msgstr "درخواستهای نگهداری"
 #: model:ir.actions.act_window,name:maintenance.maintenance_request_action_reports
 #: model:ir.ui.menu,name:maintenance.maintenance_request_reporting
 msgid "Maintenance Requests Analysis"
-msgstr ""
+msgstr "تحلیل درخواست‌های نگهداری"
 
 #. module: maintenance
 #: model:ir.model,name:maintenance.model_maintenance_stage
@@ -956,7 +957,7 @@ msgstr "نوع تعمیر و نگهداری"
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
 msgid "Mean Time Between Failure"
-msgstr ""
+msgstr "میانگین زمان بین خرابی‌ها"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment__mtbf
@@ -964,13 +965,14 @@ msgstr ""
 msgid ""
 "Mean Time Between Failure, computed based on done corrective maintenances."
 msgstr ""
+"میانگین زمان بین خرابی‌ها، بر اساس تعمیر و نگهداری اصلاحی محاسبه می‌شود."
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment__mttr
 #: model:ir.model.fields,help:maintenance.field_maintenance_mixin__mttr
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
 msgid "Mean Time To Repair"
-msgstr ""
+msgstr "میانگین زمان تعمیر"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_has_error
@@ -1004,13 +1006,13 @@ msgstr ""
 #. module: maintenance
 #: model:ir.model.fields.selection,name:maintenance.selection__maintenance_request__repeat_unit__month
 msgid "Months"
-msgstr ""
+msgstr "ماه‌"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "My Activities"
-msgstr ""
+msgstr "فعالیت‌های من"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__my_activity_date_deadline
@@ -1021,7 +1023,7 @@ msgstr "موعد نهای فعالیت من"
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "My Equipment"
-msgstr ""
+msgstr "تجهیزات من"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
@@ -1077,7 +1079,7 @@ msgstr "یادداشت"
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
 msgid "Notes"
-msgstr ""
+msgstr "یادداشت‌ها"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_needaction_counter
@@ -1123,7 +1125,7 @@ msgstr "تعداد خطاها"
 #: model:ir.model.fields,help:maintenance.field_maintenance_request__message_needaction_counter
 #: model:ir.model.fields,help:maintenance.field_maintenance_team__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "تعداد پیام‌های نیازمند اقدام"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment__message_has_error_counter
@@ -1189,6 +1191,8 @@ msgid ""
 "Paste the url of your Google Slide. Make sure the access to the document is "
 "public."
 msgstr ""
+"آدرس URL اسلاید گوگل را وارد کنید. اطمینان حاصل کنید که دسترسی به سند عمومی "
+"است."
 
 #. module: maintenance
 #: model:maintenance.equipment.category,name:maintenance.equipment_phone
@@ -1233,7 +1237,7 @@ msgstr "اطلاعات محصول"
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__equipment_properties
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "Properties"
-msgstr ""
+msgstr "تنظیمات"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
@@ -1258,7 +1262,7 @@ msgstr "شناسه موضوع رکورد"
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__recurring_maintenance
 msgid "Recurrent"
-msgstr ""
+msgstr "تکرارشونده (دوره‌ای)"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
@@ -1273,12 +1277,12 @@ msgstr "تعمیر شده"
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__repeat_interval
 msgid "Repeat Every"
-msgstr ""
+msgstr "تکرار هر"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__repeat_unit
 msgid "Repeat Unit"
-msgstr ""
+msgstr "تکرار واحد"
 
 #. module: maintenance
 #: model:ir.ui.menu,name:maintenance.maintenance_reporting
@@ -1314,7 +1318,7 @@ msgstr "درخواست انجام شده"
 #. odoo-python
 #: code:addons/maintenance/models/maintenance.py:0
 msgid "Request planned for %s"
-msgstr ""
+msgstr "درخواست برای %s برنامه‌ریزی شد"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
@@ -1324,7 +1328,7 @@ msgstr "درخواست شده توسط"
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_kanban
 msgid "Requested by:"
-msgstr ""
+msgstr "درخواست شده توسط:"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_team__todo_request_ids
@@ -1364,7 +1368,7 @@ msgstr "تاریخ برنامه ریزی شده"
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__schedule_end
 msgid "Scheduled End"
-msgstr ""
+msgstr "پایان زمان‌بندی شده"
 
 #. module: maintenance
 #: model:maintenance.stage,name:maintenance.stage_4
@@ -1405,13 +1409,13 @@ msgstr ""
 #: model:ir.actions.act_window,name:maintenance.action_maintenance_configuration
 #: model:ir.ui.menu,name:maintenance.menu_maintenance_config
 msgid "Settings"
-msgstr ""
+msgstr "تنظیمات"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "Show all records whose next activity date is past"
-msgstr ""
+msgstr "نمایش تمام رکوردهایی که تاریخ فعالیت بعدی آنها سپری شده است"
 
 #. module: maintenance
 #: model:maintenance.equipment.category,name:maintenance.equipment_software
@@ -1497,7 +1501,7 @@ msgstr "متخصص فنی"
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__instruction_text
 #: model:ir.model.fields.selection,name:maintenance.selection__maintenance_request__instruction_type__text
 msgid "Text"
-msgstr ""
+msgstr "متن"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_team__alias_model_id
@@ -1523,18 +1527,18 @@ msgstr ""
 #. odoo-python
 #: code:addons/maintenance/models/maintenance.py:0
 msgid "The repeat interval cannot be less than 1."
-msgstr ""
+msgstr "فاصله تکرار نمی‌تواند کمتر از ۱ باشد."
 
 #. module: maintenance
 #: model:res.groups,comment:maintenance.group_equipment_manager
 msgid "The user will be able to manage equipment."
-msgstr ""
+msgstr "کاربر می‌تواند تجهیزات را مدیریت کند."
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment__effective_date
 #: model:ir.model.fields,help:maintenance.field_maintenance_mixin__effective_date
 msgid "This date will be used to compute the Mean Time Between Failure."
-msgstr ""
+msgstr "این تاریخ برای محاسبه زمان میانگین بین خرابی‌ها استفاده می‌شود."
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
@@ -1561,6 +1565,9 @@ msgid ""
 "                You will be able to manage allocations, issues and "
 "maintenance of your equipment."
 msgstr ""
+"تجهیزات را رهگیری کرده و آن را به کارمند یا دپارتمانی لینک کنید.\n"
+"                با این کار می‌توانید تخصیص‌ها، مشکلات و نگهداری تجهیزات را "
+"مدیریت کنید."
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment__activity_exception_decoration
@@ -1594,12 +1601,12 @@ msgstr "برنامه ریزی نشده"
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__repeat_type
 #: model:ir.model.fields.selection,name:maintenance.selection__maintenance_request__repeat_type__until
 msgid "Until"
-msgstr ""
+msgstr "تا"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
 msgid "Upload your PDF file."
-msgstr ""
+msgstr "فایل PDF خود را آپلود کنید."
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__partner_id
@@ -1623,7 +1630,7 @@ msgstr "خیلی کم"
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_view_form
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_view_tree
 msgid "Visible to all"
-msgstr ""
+msgstr "قابل مشاهده برای همه"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__warranty_date
@@ -1633,12 +1640,12 @@ msgstr "تاریخ انقضای گارانتی"
 #. module: maintenance
 #: model:ir.model.fields.selection,name:maintenance.selection__maintenance_request__repeat_unit__week
 msgid "Weeks"
-msgstr ""
+msgstr "هفته‌"
 
 #. module: maintenance
 #: model:ir.model.fields.selection,name:maintenance.selection__maintenance_request__repeat_unit__year
 msgid "Years"
-msgstr ""
+msgstr "سال"
 
 #. module: maintenance
 #. odoo-python
@@ -1647,16 +1654,18 @@ msgid ""
 "You can’t delete an equipment category if some equipment or maintenance "
 "requests are linked to it."
 msgstr ""
+"اگر تجهیزات یا درخواست‌های نگهداری به یک دسته‌بندی تجهیزات مرتبط باشند، "
+"نمی‌توانید آن را حذف کنید."
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
 msgid "Your instructions"
-msgstr ""
+msgstr "دستورالعمل شما"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_view_form
 msgid "alias"
-msgstr ""
+msgstr "نام مستعار"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
@@ -1686,7 +1695,7 @@ msgstr "به عنوان مثال، صفحه نمایش کار نمی کند"
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_view_form
 msgid "e.g. mycompany.com"
-msgstr ""
+msgstr "مثال: mycompany.com"
 
 #~ msgid "<b>Category:</b>"
 #~ msgstr "<b>دسته‌بندی:</b>"

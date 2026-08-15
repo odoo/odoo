@@ -44,7 +44,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-24 17:38+0000\n"
-"PO-Revision-Date: 2026-08-08 07:29+0000\n"
+"PO-Revision-Date: 2026-08-10 11:29+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/stock/"
 "fi/>\n"
@@ -11544,8 +11544,8 @@ msgid ""
 "You can only move a lot/serial to a new location if it exists in a single "
 "location."
 msgstr ""
-"Voit siirtää erän/sarjan uuteen paikkaan vain, jos se on olemassa yhdessä "
-"paikassa."
+"Voit siirtää erän/sarjan uuteen sijaintiin vain, jos se on olemassa yhdessä "
+"sijainnissa."
 
 #. module: stock
 #. odoo-python
@@ -11554,15 +11554,15 @@ msgid ""
 "You can only move positive quantities stored in locations used by a single "
 "company per relocation."
 msgstr ""
-"Voit siirtää vain yhden yrityksen käyttämiin paikkoihin varastoituja "
-"positiivisia määriä yhtä siirtoa kohden."
+"Voit siirtää vain saman yrityksen sijainteihin varastoituja positiivisia "
+"määriä per siirto."
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_move_line.py:0
 msgid "You can only process 1.0 %s of products with unique serial number."
 msgstr ""
-"Voit käsitellä vain 1,0 %s tuotteita, joilla on yksilöllinen sarjanumero."
+"Voit käsitellä vain 1,0 %s tuotteista, joilla on yksilöllinen sarjanumero."
 
 #. module: stock
 #. odoo-python
@@ -11571,9 +11571,9 @@ msgid ""
 "You can only snooze manual orderpoints. You should rather archive 'auto-"
 "trigger' orderpoints if you do not want them to be triggered."
 msgstr ""
-"Voit torkuttaa vain manuaalisia tilauspisteitä. Sinun pitäisi pikemminkin "
-"arkistoida \"automaattisen käynnistyksen\" tilauspisteet, jos et halua, että "
-"ne käynnistyvät."
+"Voit torkuttaa vain manuaalisia tilauspisteitä. Sinun pitäisi sen sijaan "
+"arkistoida 'automaattisen käynnistyksen' tilauspisteet, jos et halua niiden "
+"käynnistyvän."
 
 #. module: stock
 #. odoo-python
@@ -11582,8 +11582,8 @@ msgid ""
 "You can't deactivate the multi-location if you have more than once warehouse "
 "by company"
 msgstr ""
-"Et voi poistaa monipaikkaisuutta käytöstä, jos sinulla on useampi kuin yksi "
-"varasto yrityksessä"
+"Et voi poistaa monisijaintia käytöstä, jos sinulla on useampi kuin yksi "
+"varasto per yritys"
 
 #. module: stock
 #. odoo-python
@@ -11640,8 +11640,8 @@ msgid ""
 "You cannot change the company of a lot/serial number currently in a location "
 "belonging to another company."
 msgstr ""
-"Et voi vaihtaa yritykselle erän/sarjanumeron yritystä, joka on tällä "
-"hetkellä toiselle yritykselle kuuluvassa paikassa."
+"Et voi vaihtaa yritystä erä-/sarjanumerolle, joka on tällä hetkellä toiselle "
+"yritykselle kuuluvassa sijainnissa."
 
 #. module: stock
 #. odoo-python
@@ -11650,8 +11650,8 @@ msgid ""
 "You cannot change the ratio of this unit of measure as some products with "
 "this UoM have already been moved or are currently reserved."
 msgstr ""
-"Et voi muuttaa tämän mittayksikön suhdetta, koska jotkin tuotteet, joilla on "
-"tämä mittayksikkö, on jo siirretty tai ne on tällä hetkellä varattu."
+"Et voi muuttaa tämän mittayksikön suhdetta, koska jotkut tuotteet tällä "
+"mittayksiköllä on jo siirretty tai tällä hetkellä varattuna."
 
 #. module: stock
 #. odoo-python
@@ -11663,7 +11663,7 @@ msgstr "Et voi poistaa vahvistettua romutusta."
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 msgid "You cannot duplicate stock quants."
-msgstr "Varaston määrän asetuksen kirjauksia (quants) ei voi monistaa."
+msgstr "Et voi monistaa varastomääriä."
 
 #. module: stock
 #. odoo-python
@@ -11688,8 +11688,8 @@ msgid ""
 "You cannot pack products into the same package when they are from different "
 "transfers with different operation types"
 msgstr ""
-"Et voi pakata tuotteita samaan pakkaukseen, jos ne ovat eri siirroista, "
-"joissa on eri toimintatyypit"
+"Et voi pakata tuotteita samaan pakkaukseen, jos ne ovat eri siirroista eri "
+"toimenpidetyypeillä"
 
 #. module: stock
 #. odoo-python
@@ -11698,7 +11698,7 @@ msgid ""
 "You cannot set a location as a scrap location when it is assigned as a "
 "destination location for a manufacturing type operation."
 msgstr ""
-"Sijaintia ei voi määrittää romutuspaikaksi, kun se on määritetty "
+"Sijaintia ei voi määrittää romutuspaikaksi, jos se on määritetty "
 "tuotantotyypin toimenpiteen kohdesijainniksi."
 
 #. module: stock
@@ -11722,8 +11722,8 @@ msgid ""
 "You cannot take products from or deliver products to a location of type "
 "\"view\" (%s)."
 msgstr ""
-"Et voi ottaa tuotteita tai toimittaa tuotteita paikkaan, jonka tyyppi on "
-"\"näkymä\" (%s)."
+"Et voi ottaa tuotteita sijainnista tai toimittaa tuotteita sijaintiin, jonka "
+"tyyppi on \"näkymä\" (%s)."
 
 #. module: stock
 #. odoo-python
@@ -11747,8 +11747,8 @@ msgid ""
 "You can’t validate an empty transfer. Please add some products to move "
 "before proceeding."
 msgstr ""
-"Tyhjää siirtoa ei voi validoida. Lisää joitakin tuotteita siirrettäväksi "
-"ennen kuin jatkat."
+"Et voi vahvistaa tyhjää siirtoa. Lisää tuotteita siirrettäväksi ennen "
+"jatkamista."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
@@ -11802,8 +11802,8 @@ msgid ""
 "You need to activate storage locations to be able to do internal operation "
 "types."
 msgstr ""
-"Sinun on aktivoitava varastointipaikat, jotta voit tehdä sisäisiä "
-"toimintatyyppejä."
+"Sinun on aktivoitava varastosijainnit suorittaaksesi sisäisiä "
+"toimenpidetyyppejä."
 
 #. module: stock
 #. odoo-python
@@ -11824,7 +11824,7 @@ msgstr "Tuotteille %s on annettava erä-/sarjanumero."
 #. module: stock
 #: model_terms:res.company,invoice_terms_html:stock.res_company_1
 msgid "You should update this document to reflect your T&amp;C."
-msgstr "Sinun on päivitettävä tämä asiakirja vastaamaan T&amp;C:täsi."
+msgstr "Sinun tulisi päivittää tämä asiakirja vastaamaan käyttöehtojasi."
 
 #. module: stock
 #. odoo-python
@@ -11895,23 +11895,23 @@ msgstr "ZPL"
 #: model:ir.model.fields.selection,name:stock.selection__product_label_layout__print_format__zpl
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__product_label_format__zpl
 msgid "ZPL Labels"
-msgstr "ZPL-tarrat"
+msgstr "ZPL-etiketit"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__lot_label_format__zpl_lots
 msgid "ZPL Labels - One per lot/SN"
-msgstr "ZPL-tarrat - Yksi per erä/SN"
+msgstr "ZPL-etiketit - Yksi per erä/SN"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__lot_label_format__zpl_units
 msgid "ZPL Labels - One per unit"
-msgstr "ZPL-tarrat - Yksi per yksikkö"
+msgstr "ZPL-etiketit - Yksi per yksikkö"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_label_layout__print_format__zplxprice
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__product_label_format__zplxprice
 msgid "ZPL Labels with price"
-msgstr "ZPL-tarrat hinnan kanssa"
+msgstr "ZPL-etiketit hinnan kanssa"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_label_layout__zpl_preview
@@ -12083,7 +12083,7 @@ msgstr "esim. LOT-PR-00012"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_form
 msgid "e.g. LOT/0001/20121"
-msgstr "esimerkiksi. LOT / 0001/20121"
+msgstr "esim. LOT/0001/20121"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -12181,18 +12181,18 @@ msgstr "lifo"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking
 msgid "of"
-msgstr "of"
+msgstr " "
 
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/stock_rescheduling_popover.xml:0
 msgid "planned on"
-msgstr "suunniteltu viive"
+msgstr "suunniteltu"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking
 msgid "processed instead of"
-msgstr "käsitelty"
+msgstr "käsitelty tämän sijaan:"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_report_view_graph
@@ -12227,7 +12227,7 @@ msgstr "stock.putaway.rule"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.help_message_template
 msgid "the barcode app"
-msgstr "viivakoodisovellus"
+msgstr "viivakoodi-sovellus"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__warehouse_id
@@ -12235,7 +12235,7 @@ msgid ""
 "the warehouse to consider for the route selection on the next procurement "
 "(if any)."
 msgstr ""
-"varasto, joka otetaan huomioon seuraavan hankinnan reitin valinnassa (jos "
+"varasto, joka huomioidaan seuraavan hankinnan reittiä valitessa (jos "
 "sellainen on)."
 
 #. module: stock

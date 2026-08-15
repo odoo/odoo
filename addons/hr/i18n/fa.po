@@ -19,13 +19,14 @@
 # Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # Omid Ghaffarinia <omid.ghaffarinia@gmail.com>, 2026.
 # ebrahim khorami <ebrahim@farasat.co>, 2026.
+# Aliraza Habibitanha <alireza.habibitanha@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-19 17:35+0000\n"
-"PO-Revision-Date: 2026-08-02 13:37+0000\n"
-"Last-Translator: ebrahim khorami <ebrahim@farasat.co>\n"
+"PO-Revision-Date: 2026-08-09 11:30+0000\n"
+"Last-Translator: Aliraza Habibitanha <alireza.habibitanha@gmail.com>\n"
 "Language-Team: Persian <https://translate.odoo.com/projects/odoo-19/hr/fa/>\n"
 "Language: fa\n"
 "MIME-Version: 1.0\n"
@@ -170,6 +171,8 @@ msgid ""
 "<i class=\"fa fa-envelope fa-fw me-1 text-primary\" title=\"Work Email\" "
 "invisible=\"login == work_email\"/>"
 msgstr ""
+"<i class=\"fa fa-envelope fa-fw me-1 text-primary\" title=\"ایمیل کاری\" "
+"invisible=\"login == work_email\"/>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
@@ -188,6 +191,10 @@ msgid ""
 "                            <i class=\"fa fa-fw fa-key me-1 text-primary\" "
 "title=\"Login\" invisible=\"login == work_email\"/>"
 msgstr ""
+"<i class=\"fa fa-fw fa-envelope me-1 text-primary\" title=\"نام کابری / "
+"ایمیل\" invisible=\"login != work_email\"/>\n"
+"                            <i class=\"fa fa-fw fa-key me-1 text-primary\" "
+"title=\"ورود\" invisible=\"login == work_email\"/>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
@@ -4763,6 +4770,8 @@ msgid ""
 "The Badge ID must be alphanumeric without any accents and no longer than 18 "
 "characters."
 msgstr ""
+"شناسه نشان باید متشکل از حروف الفبا و عدد، بدون اعراب و حداکثر ۱۸ کاراکتر "
+"باشد."
 
 #. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_employee_barcode_uniq
@@ -4857,12 +4866,14 @@ msgid ""
 "The fields “%s”, which you are trying to read, are not available for "
 "employee public profiles."
 msgstr ""
+"فیلدهای «%s» که سعی در خواندن آنها دارید برای پروفایل عمومی کارمند در دسترس "
+"نیستند."
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "The following employees have the same work email address: %s"
-msgstr ""
+msgstr "کارمندهای ذکر شده دارای ایمیل کاری یکسانی هستند: %s"
 
 #. module: hr
 #. odoo-python
@@ -4883,6 +4894,7 @@ msgid ""
 "The following users have not been archived as they are still linked to "
 "another active employees: %s"
 msgstr ""
+"کاربران زیر بایگانی نشدند زیرا هنوز به کارمندان فعال دیگری متصل هستند: %s"
 
 #. module: hr
 #. odoo-python
@@ -4935,7 +4947,7 @@ msgstr "این کارمند قبلاً یک کاربر دارد."
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "This field %(field_name)s doesn't exist on this model (hr.version)."
-msgstr ""
+msgstr "فیلد %(field_name)s در این مدل وجود ندارد (hr.version)."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__tz
@@ -5040,7 +5052,7 @@ msgstr "ارتباط صحیح"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Trust Bank Account"
-msgstr ""
+msgstr "معتمدسازی حساب بانکی"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_bank_account_allocation_wizard_line__trusted
@@ -5090,7 +5102,7 @@ msgstr "پیام های ناخوانده"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Untrust Bank Account"
-msgstr ""
+msgstr "لغو اعتماد به حساب بانکی"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_trainee
@@ -5143,7 +5155,7 @@ msgstr "کاربر با همین ایمیل از قبل برای کارمندا�
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__is_user_active
 msgid "User's active"
-msgstr ""
+msgstr "کاربر فعال است"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__user_partner_id
@@ -5155,7 +5167,7 @@ msgstr "همکار کاربر"
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "Users %s creation successful"
-msgstr ""
+msgstr "ایجاد کاربران %s با موفقیت انجام شد"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_job_view_kanban
@@ -5191,7 +5203,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__versions_count
 msgid "Versions Count"
-msgstr ""
+msgstr "تعداد نسخه‌ها"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_list_view
@@ -5207,7 +5219,7 @@ msgstr ""
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Visa & Work Permit"
-msgstr ""
+msgstr "ویزا و مجوز کار"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__visa_expire
@@ -5482,6 +5494,8 @@ msgid ""
 "You are not allowed to access \"Employee\" (hr.employee) records.\n"
 "We can redirect you to the public employee list."
 msgstr ""
+"شما مجاز به دسترسی به رکوردهای \"کارمند\" (hr.employee) نیستید.\n"
+"می‌توانیم شما را به لیست عمومی کارمندان هدایت کنیم."
 
 #. module: hr
 #. odoo-python
@@ -5500,6 +5514,7 @@ msgid ""
 "You are receiving this message because you are the HR Responsible of this "
 "employee."
 msgstr ""
+"شما این پیام را دریافت می‌کنید زیرا مسئول منابع انسانی این کارمند هستید."
 
 #. module: hr
 #. odoo-javascript
@@ -5520,6 +5535,8 @@ msgid ""
 "You cannot delete contact that are linked to an employee, please archive "
 "them instead."
 msgstr ""
+"شما نمی‌توانید مخاطبی را که به یک کارمند متصل است حذف کنید، لطفاً به جای آن "
+"بایگانی کنید."
 
 #. module: hr
 #. odoo-python
@@ -5530,6 +5547,10 @@ msgid ""
 "\n"
 "Affected contact(s): %(names)s"
 msgstr ""
+"نمی‌توانید مخاطب(های) متصل به کارمند(ها) را حذف کنید.\n"
+"در عوض آن‌ها را بایگانی کنید.\n"
+"\n"
+"مخاطب(های) تحت تأثیر: %(names)s"
 
 #. module: hr
 #. odoo-python
@@ -5541,13 +5562,13 @@ msgstr "شما به این سند دسترسی ندارید."
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "You need to set a valid work email address for %s"
-msgstr ""
+msgstr "باید یک آدرس ایمیل کاری معتبر برای %s تنظیم کنید"
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "You need to set the work email address for %s"
-msgstr ""
+msgstr "باید آدرس ایمیل کاری را برای %s تنظیم کنید"
 
 #. module: hr
 #: model_terms:hr.job,description:hr.job_trainee
@@ -5625,6 +5646,9 @@ msgid ""
 "user template's rights. Adding new users may increase your subscription "
 "cost. Do you wish to continue?"
 msgstr ""
+"شما در حال دعوت کاربران جدید هستید. %s کاربر با حقوق قالب پیش‌فرض کاربر ایجاد "
+"خواهند شد. افزودن کاربران جدید ممکن است هزینه اشتراک شما را افزایش دهد. آیا "
+"مایل به ادامه هستید؟"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
@@ -5649,13 +5673,13 @@ msgstr "مکان‌هایی که با کارمندان ثبت‌شده مرتب�
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "bachelor"
-msgstr ""
+msgstr "کارشناسی"
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_version.py:0
 msgid "cohabitant"
-msgstr ""
+msgstr "شریک زندگی"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_department_form
@@ -5682,7 +5706,7 @@ msgstr "مثلا ساختمان2، دورکار، غیره"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "e.g. Founder, Motorized, Building B, ..."
-msgstr ""
+msgstr "مثال: مؤسس، دارای وسیله نقلیه، ساختمان B، ..."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
@@ -5705,12 +5729,12 @@ msgstr "به عنوان مثال موقعیت را در یک یا دو خط خل
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "e.g. johndoe@example.com"
-msgstr ""
+msgstr "مثال: johndoe@example.com"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "e.g. myprivateemail@example.com"
-msgstr ""
+msgstr "مثال: myprivateemail@example.com"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_mixin
@@ -5738,7 +5762,7 @@ msgstr "متاهل"
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "master"
-msgstr ""
+msgstr "کارشناسی ارشد"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_version__distance_home_work_unit__miles
@@ -5761,7 +5785,7 @@ msgstr "محدود به کارکنان"
 #. odoo-python
 #: code:addons/hr/models/hr_version.py:0
 msgid "widower"
-msgstr ""
+msgstr "بیوه"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form

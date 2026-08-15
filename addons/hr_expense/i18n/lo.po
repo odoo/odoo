@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-03 17:35+0000\n"
-"PO-Revision-Date: 2026-08-04 16:34+0000\n"
+"PO-Revision-Date: 2026-08-12 22:09+0000\n"
 "Last-Translator: Bone NI <bounkirdni@gmail.com>\n"
 "Language-Team: Lao <https://translate.odoo.com/projects/odoo-19/hr_expense/"
 "lo/>\n"
@@ -25,25 +25,25 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "%(employee_name)s: %(expense_name)s"
-msgstr ""
+msgstr "%(employee_name)s: %(expense_name)s"
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "%(expense_name)s: It is not from your department"
-msgstr ""
+msgstr "%(expense_name)s: ມັນບໍ່ແມ່ນມາຈາກພະແນກຂອງທ່ານ"
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "%(expense_name)s: It is your own expense"
-msgstr ""
+msgstr "%(expense_name)s: ມັນແມ່ນຄ່າໃຊ້ຈ່າຍຂອງທ່ານເອງ"
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "%(expense_name)s: You are neither a Manager nor a HR Officer"
-msgstr ""
+msgstr "%(expense_name)s: ທ່ານບໍ່ແມ່ນທັງຜູ້ຈັດການ ຫຼື ເຈົ້າໜ້າທີ່ບຸກຄະລາກອນ"
 
 #. module: hr_expense
 #. odoo-python
@@ -52,6 +52,7 @@ msgid ""
 "%(expense_name)s: Your are neither a Manager nor a HR Officer of this "
 "expense's company"
 msgstr ""
+"%(expense_name)s: ທ່ານບໍ່ແມ່ນທັງຜູ້ຈັດການ ຫຼື ເຈົ້າໜ້າທີ່ບຸກຄະລາກອນ ຂອງບໍລິສັດຄ່າໃຊ້ຈ່າຍນີ້"
 
 #. module: hr_expense
 #. odoo-python
@@ -65,11 +66,13 @@ msgid ""
 "'Expense - %s - %s' % (object.employee_id.name, (object.name).replace('/', "
 "''))"
 msgstr ""
+"'ຄ່າໃຊ້ຈ່າຍ - %s - %s' % (object.employee_id.name, (object.name).replace('/', "
+"''))"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "(incl"
-msgstr ""
+msgstr "(ລວມ"
 
 #. module: hr_expense
 #. odoo-python
@@ -81,17 +84,17 @@ msgstr "1 %(exp_cur)s = %(rate)s %(comp_cur)s"
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 msgid "<b>Wasting time recording your receipts?</b> Let’s try a better way."
-msgstr ""
+msgstr "<b>ເສຍເວລາໃນການບັນທຶກໃບບິນຂອງທ່ານບໍ?</b> ລອງໃຊ້ວິທີທີ່ດີກວ່ານີ້."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "<i class=\"oi oi-arrow-right\"/> Setup your alias domain"
-msgstr ""
+msgstr "<i class=\"oi oi-arrow-right\"/> ຕັ້ງຄ່າໂດເມນນາມແຝງຂອງທ່ານ"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_payment_form_inherit_expense
 msgid "<span class=\"o_stat_text\">Expense</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">ຄ່າໃຊ້ຈ່າຍ</span>"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
@@ -106,27 +109,27 @@ msgstr "<span>@</span>"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense
 msgid "<span>Date:</span>"
-msgstr ""
+msgstr "<span>ວັນທີ:</span>"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense
 msgid "<span>Employee:</span>"
-msgstr ""
+msgstr "<span>ພະນັກງານ:</span>"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense
 msgid "<span>Manager:</span>"
-msgstr ""
+msgstr "<span>ຜູ້ຈັດການ:</span>"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense
 msgid "<span>Paid by:</span>"
-msgstr ""
+msgstr "<span>ຈ່າຍໂດຍ:</span>"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_split
 msgid "<span>The total amount doesn't match the original amount.</span>"
-msgstr ""
+msgstr "<span>ຈຳນວນເງິນທັງໝົດບໍ່ກົງກັບຈຳນວນເງິນເດີມ.</span>"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__account_id
@@ -147,7 +150,7 @@ msgstr "ວັນທີບັນຊີ"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_post_wizard_view
 msgid "Accounting date"
-msgstr ""
+msgstr "ວັນທີລົງບັນຊີ"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_needaction
@@ -198,7 +201,7 @@ msgstr "ຜູ້ອະນຸມັດທັງໝົດ"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "All Paid"
-msgstr ""
+msgstr "ຈ່າຍແລ້ວທັງໝົດ"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -208,12 +211,12 @@ msgstr "ອະນຸຍາດທຸກຊ່ອງທາງການຊຳລະ
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "All to Pay"
-msgstr ""
+msgstr "ທັງໝົດທີ່ຈະຕ້ອງຈ່າຍ"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "All to Post"
-msgstr ""
+msgstr "ທັງໝົດທີ່ຈະຕ້ອງລົງບັນຊີ"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__amount_residual
@@ -224,7 +227,7 @@ msgstr "ຈຳນວນທີ່ຄ້າງຊຳລະ"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "An"
-msgstr ""
+msgstr "ອັນ"
 
 #. module: hr_expense
 #. odoo-javascript
@@ -315,7 +318,7 @@ msgstr "ຄັດຕິດໃບບິນ - ປົກກະຕິແລ້ວແ
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_ir_attachment
 msgid "Attachment"
-msgstr ""
+msgstr "ເອກະສານຄັດຕິດ"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_attachment_count
@@ -325,19 +328,19 @@ msgstr "ຈຳນວນໄຟລ໌ຄັດຕິດ"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_img
 msgid "Attachment Name"
-msgstr ""
+msgstr "ຊື່ເອກະສານຄັດຕິດ"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__attachment_ids
 msgid "Attachments"
-msgstr ""
+msgstr "ເອກະສານຄັດຕິດ"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_employee_view_form_inherit_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_employee_tree_inherit_expense
 msgid "Auto-validation"
-msgstr ""
+msgstr "ການກວດສອບອັດຕະໂນມັດ"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__tax_ids
@@ -350,7 +353,7 @@ msgstr ""
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense
 msgid "Business Trip"
-msgstr ""
+msgstr "ການເດີນທາງທຸລະກິດ"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__can_approve
@@ -390,7 +393,7 @@ msgstr "ໝວດໝູ່: ບໍ່ພົບ"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_main_attachment_checksum
 msgid "Checksum/SHA1"
-msgstr ""
+msgstr "Checksum/SHA1"
 
 #. module: hr_expense
 #: model:product.template,name:hr_expense.expense_product_communication_product_template
@@ -424,12 +427,12 @@ msgstr "ການກຳນົດຄ່າ"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_kanban_view
 msgid "Cost:"
-msgstr ""
+msgstr "ຕົ້ນທຶນ:"
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_account
 msgid "Create a new expense"
-msgstr ""
+msgstr "ສ້າງຄ່າໃຊ້ຈ່າຍໃໝ່"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -447,6 +450,8 @@ msgid ""
 "Create prepaid virtual and physical cards for both one-time and recurring "
 "expenses, integrated into Odoo through Stripe Issuing."
 msgstr ""
+"ສ້າງບັດຈ່າຍລ່ວງໜ້າທັງແບບສະເໝືອນ ແລະ ແບບບັດແທ້ ສຳລັບຄ່າໃຊ້ຈ່າຍຄັ້ງດຽວ ແລະ ຄ່າໃຊ້ຈ່າຍປະຈຳ, ເຊິ່ງເຊື່ອ"
+"ມໂຍງເຂົ້າໃນ Odoo ຜ່ານ Stripe Issuing."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__create_uid
@@ -471,7 +476,7 @@ msgstr "ສ້າງເມື່ອ"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense
 msgid "Credit Card"
-msgstr ""
+msgstr "ບັດເຄຣດິດ"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__currency_id
@@ -555,7 +560,7 @@ msgstr "ຊື່ທີ່ສະແດງ"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__distribution_analytic_account_ids
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__distribution_analytic_account_ids
 msgid "Distribution Analytic Account"
-msgstr ""
+msgstr "ບັນຊີວິເຄາະການແຈກຢາຍ"
 
 #. module: hr_expense
 #: model_terms:digest.tip,tip_description:hr_expense.digest_tip_hr_expense_0
@@ -598,6 +603,7 @@ msgid ""
 "Each expense paid by the company must have a distinct and dedicated journal "
 "entry."
 msgstr ""
+"ແຕ່ລະຄ່າໃຊ້ຈ່າຍທີ່ບໍລິສັດຈ່າຍ ຕ້ອງມີລາຍການບັນທຶກບັນຊີທີ່ແຍກຕ່າງຫາກ ແລະ ສະເພາະ."
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_employee
@@ -650,7 +656,7 @@ msgstr "ຄ່າໃຊ້ຈ່າຍ"
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_department_filtered
 msgid "Expense Analysis"
-msgstr ""
+msgstr "ການວິເຄາະຄ່າໃຊ້ຈ່າຍ"
 
 #. module: hr_expense
 #: model:mail.activity.type,name:hr_expense.mail_act_expense_approval
@@ -672,7 +678,7 @@ msgstr "ຜູ້ອະນຸມັດຄ່າໃຊ້ຈ່າຍ"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Expense Card"
-msgstr ""
+msgstr "ບັດຄ່າໃຊ້ຈ່າຍ"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_product
@@ -700,7 +706,7 @@ msgstr "ຜູ້ຈັດການຄ່າໃຊ້ຈ່າຍ"
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_post_wizard
 msgid "Expense Posting Wizard"
-msgstr ""
+msgstr "ຕົວຊ່ວຍການລົງບັນຊີຄ່າໃຊ້ຈ່າຍ"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_refuse_wizard
@@ -710,7 +716,7 @@ msgstr "ຕົວຊ່ວຍສ້າງເຫດຜົນການປະຕິ
 #. module: hr_expense
 #: model:ir.actions.report,name:hr_expense.action_report_expense_img
 msgid "Expense Report Image"
-msgstr ""
+msgstr "ຮູບພາບລາຍງານຄ່າໃຊ້ຈ່າຍ"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_split
@@ -735,7 +741,7 @@ msgstr "ກວດສອບຄ່າໃຊ້ຈ່າຍທີ່ຊ້ຳຊ້
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_approved
 msgid "Expense approved"
-msgstr ""
+msgstr "ຄ່າໃຊ້ຈ່າຍໄດ້ຮັບການອະນຸມັດແລ້ວ"
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_product
@@ -746,12 +752,12 @@ msgstr "ໝວດໝູ່ຄ່າໃຊ້ຈ່າຍສາມາດອອກ
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "Expense created from a split."
-msgstr ""
+msgstr "ຄ່າໃຊ້ຈ່າຍທີ່ຖືກສ້າງຂຶ້ນຈາກການແຍກ."
 
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_paid
 msgid "Expense paid"
-msgstr ""
+msgstr "ຄ່າໃຊ້ຈ່າຍທີ່ຈ່າຍແລ້ວ"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
@@ -761,12 +767,12 @@ msgstr "ເຫດຜົນການປະຕິເສດຄ່າໃຊ້ຈ່
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_refused
 msgid "Expense refused"
-msgstr ""
+msgstr "ຄ່າໃຊ້ຈ່າຍຖືກປະຕິເສດ"
 
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_reset
 msgid "Expense reset to Draft"
-msgstr ""
+msgstr "ຕັ້ງຄ່າຄ່າໃຊ້ຈ່າຍຄືນເປັນແບບຮ່າງ"
 
 #. module: hr_expense
 #. odoo-python
@@ -777,7 +783,7 @@ msgstr "ການແຍກຄ່າໃຊ້ຈ່າຍ"
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_department_to_approve
 msgid "Expense to Approve"
-msgstr ""
+msgstr "ຄ່າໃຊ້ຈ່າຍທີ່ຈະຕ້ອງອະນຸມັດ"
 
 #. module: hr_expense
 #. odoo-python
@@ -815,13 +821,13 @@ msgstr "ບົດລາຍງານຄ່າໃຊ້ຈ່າຍ"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_submitted_expenses
 msgid "Expenses approval"
-msgstr ""
+msgstr "ການອະນຸມັດຄ່າໃຊ້ຈ່າຍ"
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "Expenses of %(employee)s"
-msgstr ""
+msgstr "ຄ່າໃຊ້ຈ່າຍຂອງ %(employee)s"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
@@ -831,7 +837,7 @@ msgstr "ຄ່າໃຊ້ຈ່າຍຂອງສະມາຊິກໃນທີ
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_department__expenses_to_approve_count
 msgid "Expenses to Approve"
-msgstr ""
+msgstr "ຄ່າໃຊ້ຈ່າຍທີ່ຈະຕ້ອງອະນຸມັດ"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_actions_to_process
@@ -843,7 +849,7 @@ msgstr "ຄ່າໃຊ້ຈ່າຍທີ່ລໍຖ້າດຳເນີນ
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "Expenses with a similar receipt to %(other_expense_name)s"
-msgstr ""
+msgstr "ຄ່າໃຊ້ຈ່າຍທີ່ມີໃບບິນຄ້າຍຄືກັນກັບ %(other_expense_name)s"
 
 #. module: hr_expense
 #. odoo-python
@@ -852,17 +858,18 @@ msgid ""
 "Failed to send mails for submitted expenses. No valid email was found for "
 "the company"
 msgstr ""
+"ການສົ່ງອີເມວສຳລັບຄ່າໃຊ້ຈ່າຍທີ່ສົ່ງມາຫຼົ້ມເຫຼວ. ບໍ່ພົບອີເມວທີ່ຖືກຕ້ອງສຳລັບບໍລິສັດ"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_employee__filter_for_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_employee_public__filter_for_expense
 msgid "Filter For Expense"
-msgstr ""
+msgstr "ຕົວຕອງສຳລັບຄ່າໃຊ້ຈ່າຍ"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense
 msgid "Flight Ticket"
-msgstr ""
+msgstr "ປີ້ຍົນ"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_follower_ids
@@ -882,7 +889,7 @@ msgstr "ໄອຄອນ Font awesome ເຊັ່ນ: fa-tasks"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__former_sheet_id
 msgid "Former Report"
-msgstr ""
+msgstr "ລາຍງານກ່ອນໜ້າ"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
@@ -909,17 +916,17 @@ msgstr "ຂອງຂວັນໃຫ້ລູກຄ້າ ຫຼື ຜູ້ສ�
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "Go to Account"
-msgstr ""
+msgstr "ໄປທີ່ບັນຊີ"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
 msgid "Guideline"
-msgstr ""
+msgstr "ຄຳແນະນຳ"
 
 #. module: hr_expense
 #: model:ir.actions.server,name:hr_expense.ir_cron_send_submitted_expenses_mail_ir_actions_server
 msgid "HR Expense: Send Submitted Expenses Mail"
-msgstr ""
+msgstr "ຄ່າໃຊ້ຈ່າຍ HR: ສົ່ງອີເມວຄ່າໃຊ້ຈ່າຍທີ່ຍື່ນມາ"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__has_message
@@ -934,7 +941,7 @@ msgstr "ໂຮງແຮມ, ປີ້ຍົນ, ແທັກຊີ, ແລະ �
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__hr_expense_alias_domain_id
 msgid "Hr Expense Alias Domain"
-msgstr ""
+msgstr "ໂດເມນນາມແຝງຂອງຄ່າໃຊ້ຈ່າຍ HR"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_account_analytic_account__id
@@ -1056,7 +1063,7 @@ msgstr "ລາຍການບັນຊີຖືກລຶບແລ້ວ"
 #. module: hr_expense
 #: model:mail.message.subtype,name:hr_expense.mt_expense_entry_draft
 msgid "Journal Entry Reset to Draft"
-msgstr ""
+msgstr "ລາຍການບັນທຶກບັນຊີຖືກຕັ້ງຄືນເປັນແບບຮ່າງ"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_account_move_line
@@ -1067,13 +1074,13 @@ msgstr "ລາຍການໃນປຶ້ມບັນຊີ"
 #. odoo-python
 #: code:addons/hr_expense/models/account_move.py:0
 msgid "Journal entry created from these expenses: %(links)s"
-msgstr ""
+msgstr "ລາຍການບັນທຶກບັນຊີຖືກສ້າງຂຶ້ນຈາກຄ່າໃຊ້ຈ່າຍເຫຼົ່ານີ້: %(links)s"
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/account_move.py:0
 msgid "Journal entry created from this expense: %(link)s"
-msgstr ""
+msgstr "ລາຍການບັນທຶກບັນຊີຖືກສ້າງຂຶ້ນຈາກຄ່າໃຊ້ຈ່າຍນີ້: %(link)s"
 
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_entry_delete
@@ -1083,12 +1090,12 @@ msgstr "ລາຍການບັນຊີຖືກລຶບແລ້ວ"
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_entry_draft
 msgid "Journal entry reset to draft"
-msgstr ""
+msgstr "ລາຍການບັນທຶກບັນຊີຖືກຕັ້ງຄືນເປັນແບບຮ່າງ"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__label_currency_rate
 msgid "Label Currency Rate"
-msgstr ""
+msgstr "ປ້າຍກຳກັບອັດຕາແລກປ່ຽນເງິນຕາ"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__write_uid
@@ -1138,6 +1145,7 @@ msgid ""
 "Link your stripe issuing account to manage company credit cards for your "
 "employees through Odoo"
 msgstr ""
+"ເຊື່ອມຕໍ່ບັນຊີ Stripe Issuing ຂອງທ່ານເພື່ອຈັດການບັດເຄຣດິດບໍລິສັດສຳລັບພະນັກງານຂອງທ່ານຜ່ານ Odoo"
 
 #. module: hr_expense
 #. odoo-python
@@ -1163,6 +1171,7 @@ msgid ""
 "Managers can approve the expense here, then an accountant can post the "
 "accounting entries."
 msgstr ""
+"ຜູ້ຈັດການສາມາດອະນຸມັດຄ່າໃຊ້ຈ່າຍໄດ້ທີ່ນີ້, ຫຼັງຈາກນັ້ນນັກບັນຊີສາມາດລົງບັນທຶກລາຍການບັນຊີໄດ້."
 
 #. module: hr_expense
 #. odoo-javascript
@@ -1173,7 +1182,7 @@ msgstr "ຜູ້ຈັດການສາມາດກວດສອບຄ່າໃ
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense
 msgid "Marc Demo"
-msgstr ""
+msgstr "Marc Demo"
 
 #. module: hr_expense
 #: model:product.template,name:hr_expense.expense_product_meal_product_template
@@ -1198,12 +1207,12 @@ msgstr "ໄລຍະທາງ (ກິໂລແມັດ)"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense
 msgid "Mitchell Admin"
-msgstr ""
+msgstr "Mitchell Admin"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "My Activities"
-msgstr ""
+msgstr "ກິດຈະກຳຂອງຂ້ອຍ"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__my_activity_date_deadline
@@ -1232,7 +1241,7 @@ msgstr "ຊື່"
 #. odoo-python
 #: code:addons/hr_expense/wizard/hr_expense_post_wizard.py:0
 msgid "New expense entries"
-msgstr ""
+msgstr "ລາຍການຄ່າໃຊ້ຈ່າຍໃໝ່"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_submitted_expenses
@@ -1240,12 +1249,13 @@ msgid ""
 "New expenses are waiting for your approval. You can Review them by following "
 "this link."
 msgstr ""
+"ຄ່າໃຊ້ຈ່າຍໃໝ່ກຳລັງລໍຖ້າການອະນຸມັດຂອງທ່ານ. ທ່ານສາມາດກວດສອບພວກມັນໄດ້ໂດຍການກົດທີ່ລິ້ງນີ້."
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "New expenses waiting for your approval"
-msgstr ""
+msgstr "ຄ່າໃຊ້ຈ່າຍໃໝ່ທີ່ກຳລັງລໍຖ້າການອະນຸມັດຂອງທ່ານ"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_calendar_event_id
@@ -1288,12 +1298,12 @@ msgstr "ບໍ່ພົບໝວດໝູ່ຄ່າໃຊ້ຈ່າຍ. ມ�
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "No work contact found for the employee %(name)s, please configure one."
-msgstr ""
+msgstr "ບໍ່ພົບຂໍ້ມູນຕິດຕໍ່ວຽກສຳລັບພະນັກງານ %(name)s, ກະລຸນາຕັ້ງຄ່າຂໍ້ມູນຕິດຕໍ່."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_categories_tree_view
 msgid "Note"
-msgstr ""
+msgstr "ໝາຍເຫດ"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
@@ -1324,7 +1334,7 @@ msgstr "ຈຳນວນຂໍ້ຜິດພາດ"
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "ຈຳນວນຂໍ້ຄວາມທີ່ຕ້ອງການການດຳເນີນການ"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__message_has_error_counter
@@ -1335,7 +1345,7 @@ msgstr "ຈຳນວນຂໍ້ຄວາມທີ່ມີຂໍ້ຜິດພ
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/components/expense_dashboard.xml:0
 msgid "Numbers computed from your personal expenses."
-msgstr ""
+msgstr "ຕົວເລກທີ່ຄິດໄລ່ຈາກຄ່າໃຊ້ຈ່າຍສ່ວນຕົວຂອງທ່ານ."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register_no_user
@@ -1352,6 +1362,9 @@ msgid ""
 "Give Odoo a hand to find an account by setting up an expense account.\n"
 "%(expense)s %(expense_name)s.\n"
 msgstr ""
+"Odoo ໄດ້ກວດສອບຄ່າໃຊ້ຈ່າຍ, ສິນຄ້າ, ບໍລິສັດ ແລະ ປື້ມບັນຊີຂອງທ່ານແລ້ວ ແຕ່ບໍ່ພົບຂໍ້ມູນ.\n"
+"ຊ່ວຍ Odoo ຊອກຫາບັນຊີໂດຍການຕັ້ງຄ່າບັນຊີຄ່າໃຊ້ຈ່າຍ.\n"
+"%(expense)s %(expense_name)s.\n"
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_account
@@ -1367,6 +1380,7 @@ msgid ""
 "Once your <b>Expense</b> is ready, you can submit it to your manager and "
 "wait for approval."
 msgstr ""
+"ເມື່ອ <b>ຄ່າໃຊ້ຈ່າຍ</b> ຂອງທ່ານພ້ອມແລ້ວ, ທ່ານສາມາດສົ່ງໃຫ້ຜູ້ຈັດການຂອງທ່ານ ແລະ ລໍຖ້າການອະນຸມັດ."
 
 #. module: hr_expense
 #. odoo-python
@@ -1374,35 +1388,37 @@ msgstr ""
 msgid ""
 "Only HR Officers, accountants, or the concerned employee can reset to draft."
 msgstr ""
+"ສະເພາະເຈົ້າໜ້າທີ່ບຸກຄະລາກອນ, ນັກບັນຊີ ຫຼື ພະນັກງານທີ່ກ່ຽວຂ້ອງເທົ່ານັ້ນທີ່ສາມາດຕັ້ງຄ່າຄືນເປັນແບບຮ່າງໄດ້."
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "Only draft expenses can have a total of 0."
-msgstr ""
+msgstr "ສະເພາະຄ່າໃຊ້ຈ່າຍແບບຮ່າງເທົ່ານັ້ນທີ່ມີຍອດລວມເປັນ 0 ໄດ້."
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "Only expense paid by the employee can be posted with the wizard"
-msgstr ""
+msgstr "ສະເພາະຄ່າໃຊ້ຈ່າຍທີ່ພະນັກງານຈ່າຍເທົ່ານັ້ນທີ່ສາມາດລົງບັນຊີດ້ວຍຕົວຊ່ວຍໄດ້"
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "Only one expense can be linked to a particular payment"
 msgstr ""
+"ມີພຽງແຕ່ໜຶ່ງຄ່າໃຊ້ຈ່າຍເທົ່ານັ້ນທີ່ສາມາດເຊື່ອມໂຍງກັບການຈ່າຍເງິນສະເພາະໃດໜຶ່ງໄດ້"
 
 #. module: hr_expense
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 msgid "Open bugger menu."
-msgstr ""
+msgstr "ເປີດເມນູແກ້ໄຂ."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__split_expense_origin_id
 msgid "Origin Split Expense"
-msgstr ""
+msgstr "ຕົ້ນກຳເນີດຂອງການແຍກຄ່າໃຊ້ຈ່າຍ"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_split
@@ -1412,7 +1428,7 @@ msgstr "ຈຳນວນເງິນເດີມ"
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__split_expense_origin_id
 msgid "Original expense from a split."
-msgstr ""
+msgstr "ຄ່າໃຊ້ຈ່າຍເດີມຈາກການແຍກ."
 
 #. module: hr_expense
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense__state__paid
@@ -1428,22 +1444,22 @@ msgstr "ຊຳລະໂດຍ"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "Paid by Company"
-msgstr ""
+msgstr "ຈ່າຍໂດຍບໍລິສັດ"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "Paid by Employee"
-msgstr ""
+msgstr "ຈ່າຍໂດຍພະນັກງານ"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_move_list_expense
 msgid "Partner"
-msgstr ""
+msgstr "ຄູ່ຄ້າ"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_account_payment_register
 msgid "Pay"
-msgstr ""
+msgstr "ຈ່າຍ"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__payment_method_line_id
@@ -1464,7 +1480,7 @@ msgstr "ຊ່ອງທາງການຊຳລະທີ່ອະນຸຍາດ
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Payment methods"
-msgstr ""
+msgstr "ວິທີການຈ່າຍເງິນ"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_company__company_expense_allowed_payment_method_line_ids
@@ -1487,7 +1503,7 @@ msgstr "ຄ່າໂທລະສັບ, ຄ່າໄປສະນີ, ແລະ �
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid ""
 "Please specify if the expenses were paid by the company, or the employee."
-msgstr ""
+msgstr "ກະລຸນາລະບຸວ່າຄ່າໃຊ້ຈ່າຍນັ້ນຈ່າຍໂດຍບໍລິສັດ ຫຼື ພະນັກງານ."
 
 #. module: hr_expense
 #. odoo-javascript
@@ -1498,7 +1514,7 @@ msgstr "ລົງລາຍການບັນຊີ"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_post_wizard_view
 msgid "Post Expenses"
-msgstr ""
+msgstr "ລົງບັນຊີຄ່າໃຊ້ຈ່າຍ"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
@@ -1509,13 +1525,13 @@ msgstr "ລົງລາຍການບັນຊີ"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "Post expenses"
-msgstr ""
+msgstr "ລົງບັນຊີຄ່າໃຊ້ຈ່າຍ"
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "Post expenses paid by the employee"
-msgstr ""
+msgstr "ລົງບັນຊີຄ່າໃຊ້ຈ່າຍທີ່ຈ່າຍໂດຍພະນັກງານ"
 
 #. module: hr_expense
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense__state__posted
@@ -1547,7 +1563,7 @@ msgstr "ລາຍລະອຽດສິນຄ້າ"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__product_has_cost
 msgid "Product Has Cost"
-msgstr ""
+msgstr "ສິນຄ້າມີຕົ້ນທຶນ"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
@@ -1557,7 +1573,7 @@ msgstr "ຊື່ສິນຄ້າ"
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_product_product
 msgid "Product Variant"
-msgstr ""
+msgstr "ລຸ້ນສິນຄ້າ"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_tree_view
@@ -1606,12 +1622,12 @@ msgstr "ເຫດຜົນ:"
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_categories_tree_view
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
 msgid "Reference"
-msgstr ""
+msgstr "ເລກອ້າງອີງ"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Refund employees via their payslips."
-msgstr ""
+msgstr "ຄືນເງິນໃຫ້ພະນັກງານຜ່ານໃບລາຍຮັບເງິນເດືອນຂອງພວກເຂົາ."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_approve_duplicate_view_form
@@ -1646,7 +1662,7 @@ msgstr "ຊຳລະຄືນໃນໃບເງິນເດືອນ"
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_ir_actions_report
 msgid "Report Action"
-msgstr ""
+msgstr "ການດຳເນີນການລາຍງານ"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__company_currency_id
@@ -1661,7 +1677,7 @@ msgstr "ການລາຍງານ"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "Reset"
-msgstr ""
+msgstr "ຕັ້ງຄ່າໃໝ່"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_user_id
@@ -1686,12 +1702,12 @@ msgstr "ລາຄາຂາຍ"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__same_receipt_expense_ids
 msgid "Same Receipt Expense"
-msgstr ""
+msgstr "ຄ່າໃຊ້ຈ່າຍທີ່ມີໃບບິນດຽວກັນ"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Save this page and come back here to set up the feature."
-msgstr ""
+msgstr "ບັນທຶກໜ້ານີ້ ແລະ ກັບມາທີ່ນີ້ເພື່ອຕັ້ງຄ່າຄຸນສົມບັດ."
 
 #. module: hr_expense
 #. odoo-javascript
@@ -1748,17 +1764,17 @@ msgstr "ການຕັ້ງຄ່າ"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "Show all records whose next activity date is past"
-msgstr ""
+msgstr "ສະແດງທຸກລາຍການທີ່ວັນທີກິດຈະກຳຖັດໄປກາຍກຳນົດແລ້ວ"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_move_list_expense
 msgid "Source Document"
-msgstr ""
+msgstr "ເອກະສານອ້າງອີງ"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_post_wizard__accounting_date
 msgid "Specify the bill date of the related vendor bill."
-msgstr ""
+msgstr "ລະບຸວັນທີໃບບິນຂອງໃບບິນຜູ້ສະໜອງທີ່ກ່ຽວຂ້ອງ."
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_product_product__can_be_expensed
@@ -1769,7 +1785,7 @@ msgstr "ລະບຸວ່າສິນຄ້ານີ້ສາມາດຖືກ
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "Split"
-msgstr ""
+msgstr "ແຍກ"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_split
@@ -1792,7 +1808,7 @@ msgstr "ສາມາດແຍກໄດ້"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_product_product__standard_price_update_warning
 msgid "Standard Price Update Warning"
-msgstr ""
+msgstr "ຄຳເຕືອນການອັບເດດລາຄາມາດຕະຖານ"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__state
@@ -1842,7 +1858,7 @@ msgstr "ລວມຍ່ອຍ"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense
 msgid "Subtotal in currency"
-msgstr ""
+msgstr "ຍອດລວມຍ່ອຍໃນສະກຸນເງິນ"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_account_tax
@@ -1854,12 +1870,12 @@ msgstr "ພາສີ"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense
 msgid "Tax 15%"
-msgstr ""
+msgstr "ອາກອນ 15%"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_move_list_expense
 msgid "Tax Excluded"
-msgstr ""
+msgstr "ບໍ່ລວມອາກອນ"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__tax_amount
@@ -1898,7 +1914,7 @@ msgstr "ຜູ້ອະນຸມັດຂອງທີມ"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "The account %(name)s (%(code)s) is archived. Activate it to continue"
-msgstr ""
+msgstr "ບັນຊີ %(name)s (%(code)s) ຖືກຈັດເກັບແລ້ວ. ເປີດນຳໃຊ້ເພື່ອດຳເນີນການຕໍ່"
 
 #. module: hr_expense
 #. odoo-python
@@ -1907,6 +1923,8 @@ msgid ""
 "The attachment (%(attachment_name)s) has not been added to the report due to "
 "the following error: '%(error)s'"
 msgstr ""
+"ເອກະສານຄັດຕິດ (%(attachment_name)s) ບໍ່ໄດ້ຖືກເພີ່ມເຂົ້າໃນລາຍງານເນື່ອງຈາກຂໍ້ຜິດພາດຕໍ່ໄປນີ້: '%"
+"(error)s'"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_res_company__expense_journal_id
@@ -1947,6 +1965,8 @@ msgid ""
 "this isn't supported:\n"
 "%(expenses)s"
 msgstr ""
+"ວິທີການຈ່າຍເງິນຄ່າໃຊ້ຈ່າຍຕໍ່ໄປນີ້ເຮັດໃຫ້ມີບັນຊີເຈົ້າໜີ້ຫຼາຍບັນຊີ ເຊິ່ງລະບົບບໍ່ຮອງຮັບ:\n"
+"%(expenses)s"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_post_wizard__employee_journal_id
@@ -1977,6 +1997,8 @@ msgid ""
 "payment method.\n"
 "Please set a vendor on the following expenses: %s"
 msgstr ""
+"ຈຳເປັນຕ້ອງມີຜູ້ສະໜອງສຳລັບຄ່າໃຊ້ຈ່າຍທີ່ໃຊ້ SEPA Credit Transfer ເປັນວິທີການຈ່າຍເງິນ.\n"
+"ກະລຸນາລະບຸຜູ້ສະໜອງໃນຄ່າໃຊ້ຈ່າຍຕໍ່ໄປນີ້: %s"
 
 #. module: hr_expense
 #. odoo-python
@@ -1986,6 +2008,8 @@ msgid ""
 "category cost will change expense amounts. Make sure it is what you want to "
 "do."
 msgstr ""
+"ມີຄ່າໃຊ້ຈ່າຍທີ່ຍັງບໍ່ທັນໄດ້ສົ່ງທີ່ເຊື່ອມໂຍງກັບໝວດໝູ່ນີ້. ການອັບເດດຕົ້ນທຶນຂອງໝວດໝູ່ຈະປ່ຽນແປງຈຳນວນເງິນຄ່າໃຊ້ຈ່າ"
+"ຍ. ໃຫ້ແນ່ໃຈວ່ານັ້ນແມ່ນສິ່ງທີ່ທ່ານຕ້ອງການເຮັດ."
 
 #. module: hr_expense
 #: model_terms:web_tour.tour,rainbow_man_message:hr_expense.hr_expense_tour
@@ -2002,12 +2026,12 @@ msgstr "ຄຳແນະນຳ: ຖ່າຍຮູບໃບບິນຂອງທ�
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "Tip: try sending receipts by email"
-msgstr ""
+msgstr "ເຄັດລັບ: ລອງສົ່ງໃບບິນຜ່ານອີເມວ"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "To Post"
-msgstr ""
+msgstr "ທີ່ຈະຕ້ອງລົງບັນຊີ"
 
 #. module: hr_expense
 #. odoo-python
@@ -2049,7 +2073,7 @@ msgstr "ພາສີທັງໝົດ"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__untaxed_amount
 msgid "Total Untaxed Amount"
-msgstr ""
+msgstr "ຍອດລວມທີ່ບໍ່ລວມອາກອນ"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__untaxed_amount_currency
@@ -2085,11 +2109,14 @@ msgid ""
 "Reach out to the administrators, flash your best smile, and see if they'll "
 "grant you the magical access you seek."
 msgstr ""
+"ໂອ້! ທ່ານບໍ່ສາມາດແກ້ໄຂຄ່າໃຊ້ຈ່າຍນີ້ໄດ້.\n"
+"\n"
+"ຕິດຕໍ່ຜູ້ດູແລລະບົບ, ສົ່ງຮອຍຍິ້ມທີ່ດີທີ່ສຸດຂອງທ່ານ, ແລະ ເບິ່ງວ່າພວກເຂົາຈະມອບສິດການເຂົ້າເຖິງໃຫ້ທ່ານຫຼືບໍ່."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__product_uom_id
 msgid "Unit"
-msgstr ""
+msgstr "ຫົວໜ່ວຍ"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__price_unit
@@ -2107,7 +2134,7 @@ msgstr "ຈຳນວນບໍ່ລວມພາສີ"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "Untitled Expense %s"
-msgstr ""
+msgstr "ຄ່າໃຊ້ຈ່າຍທີ່ບໍ່ມີຫົວຂໍ້ %s"
 
 #. module: hr_expense
 #. odoo-javascript
@@ -2120,7 +2147,7 @@ msgstr "ອັບໂຫລດ"
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_actions_my_all
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_actions_to_process
 msgid "Upload or drop an expense receipt"
-msgstr ""
+msgstr "ອັບໂຫຼດ ຫຼື ວາງໃບບິນຄ່າໃຊ້ຈ່າຍ"
 
 #. module: hr_expense
 #. odoo-javascript
@@ -2136,7 +2163,7 @@ msgstr "ກວດສອບຄ່າໃຊ້ຈ່າຍທີ່ຊ້ຳຊ້
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__vendor_id
 msgid "Vendor"
-msgstr ""
+msgstr "ຜູ້ສະໜອງ"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
@@ -2146,21 +2173,21 @@ msgstr "ເບິ່ງຄ່າໃຊ້ຈ່າຍ"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_submitted_expenses
 msgid "View expenses"
-msgstr ""
+msgstr "ເບິ່ງຄ່າໃຊ້ຈ່າຍ"
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "Waiting Approval"
-msgstr ""
+msgstr "ລໍຖ້າການອະນຸມັດ"
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "Waiting Reimbursement"
-msgstr ""
+msgstr "ລໍຖ້າການຈ່າຍຄືນ"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__website_message_ids
@@ -2184,6 +2211,9 @@ msgid ""
 "like allowances for mileage, per diem, "
 "accommodation                                             or meal."
 msgstr ""
+"ເມື່ອຕົ້ນທຶນຂອງສິນຄ້າຄ່າໃຊ້ຈ່າຍແຕກຕ່າງຈາກ 0, ຜູ້ໃຊ້ທີ່ໃຊ້ສິນຄ້ານີ້ຈະບໍ່ສາມາດປ່ຽນແປງຈຳນວນເງິນຂອງຄ່າໃຊ້ຈ່າຍ"
+"ໄດ້, ສາມາດປ່ຽນໄດ້ແຕ່ຈຳນວນເທົ່ານັ້ນ. ໃຊ້ຕົ້ນທຶນທີ່ແຕກຕ່າງຈາກ 0 ສຳລັບໝວດໝູ່ຄ່າໃຊ້ຈ່າຍທີ່ບໍລິສັດອອກໃຫ້ໃນລາຄ"
+"າຄົງທີ່ ເຊັ່ນ: ຄ່າເບ້ຍລ້ຽງຕາມໄລຍະທາງ, ຄ່າເບ້ຍລ້ຽງປະຈຳວັນ, ຄ່າທີ່ພັກ ຫຼື ຄ່າອາຫານ."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__product_has_tax
@@ -2200,7 +2230,7 @@ msgstr "ຕົວຊ່ວຍສ້າງ"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You can not submit an expense without a category."
-msgstr ""
+msgstr "ທ່ານບໍ່ສາມາດສົ່ງຄ່າໃຊ້ຈ່າຍໂດຍບໍ່ມີໝວດໝູ່ໄດ້."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
@@ -2212,18 +2242,21 @@ msgstr "ຕອນນີ້ທ່ານສາມາດສົ່ງໃຫ້ຜູ
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You can only generate an accounting entry for approved expense(s)."
 msgstr ""
+"ທ່ານສາມາດສ້າງລາຍການບັນຊີໄດ້ສະເພາະຄ່າໃຊ້ຈ່າຍທີ່ໄດ້ຮັບການອະນຸມັດແລ້ວເທົ່ານັ້ນ."
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You can't add an attachment to an expense once it has been approved."
 msgstr ""
+"ທ່ານບໍ່ສາມາດເພີ່ມເອກະສານຄັດຕິດເຂົ້າໃນຄ່າໃຊ້ຈ່າຍໄດ້ ເມື່ອມັນໄດ້ຮັບການອະນຸມັດແລ້ວ."
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/ir_attachment.py:0
 msgid "You can't add attachments to an expense once it has been approved."
 msgstr ""
+"ທ່ານບໍ່ສາມາດເພີ່ມເອກະສານຄັດຕິດເຂົ້າໃນຄ່າໃຊ້ຈ່າຍໄດ້ ເມື່ອມັນໄດ້ຮັບການອະນຸມັດແລ້ວ."
 
 #. module: hr_expense
 #. odoo-python
@@ -2231,6 +2264,7 @@ msgstr ""
 msgid ""
 "You can't delete attachments from an expense once it has been submitted."
 msgstr ""
+"ທ່ານບໍ່ສາມາດລຶບເອກະສານຄັດຕິດອອກຈາກຄ່າໃຊ້ຈ່າຍໄດ້ ເມື່ອມັນໄດ້ຖືກສົ່ງໄປແລ້ວ."
 
 #. module: hr_expense
 #. odoo-python
@@ -2239,6 +2273,7 @@ msgid ""
 "You can't post simultaneously employee-paid expenses belonging to different "
 "companies"
 msgstr ""
+"ທ່ານບໍ່ສາມາດລົງບັນຊີຄ່າໃຊ້ຈ່າຍທີ່ພະນັກງານຈ່າຍເອງຂອງບໍລິສັດທີ່ແຕກຕ່າງກັນໃນເວລາດຽວກັນໄດ້"
 
 #. module: hr_expense
 #. odoo-python
@@ -2247,12 +2282,15 @@ msgid ""
 "You cannot approve:\n"
 " %(reasons)s"
 msgstr ""
+"ທ່ານບໍ່ສາມາດອະນຸມັດ:\n"
+" %(reasons)s"
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You cannot cancel an expense linked to a posted journal entry"
 msgstr ""
+"ທ່ານບໍ່ສາມາດຍົກເລີກຄ່າໃຊ້ຈ່າຍທີ່ເຊື່ອມໂຍງກັບລາຍການບັນຊີທີ່ລົງບັນຊີແລ້ວໄດ້"
 
 #. module: hr_expense
 #. odoo-python
@@ -2272,12 +2310,13 @@ msgstr "ທ່ານບໍ່ສາມາດລຶບບັນຊີວິເຄ
 msgid ""
 "You cannot do this modification since the payment is linked to an expense."
 msgstr ""
+"ທ່ານບໍ່ສາມາດເຮັດການປ່ຽນແປງນີ້ໄດ້ ເນື່ອງຈາກການຈ່າຍເງິນເຊື່ອມໂຍງກັບຄ່າໃຊ້ຈ່າຍ."
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You cannot edit the security fields of an expense manually"
-msgstr ""
+msgstr "ທ່ານບໍ່ສາມາດແກ້ໄຂຟິວຄວາມປອດໄພຂອງຄ່າໃຊ້ຈ່າຍດ້ວຍຕົນເອງໄດ້"
 
 #. module: hr_expense
 #. odoo-python
@@ -2286,48 +2325,51 @@ msgid ""
 "You cannot refuse:\n"
 " %(reasons)s"
 msgstr ""
+"ທ່ານບໍ່ສາມາດປະຕິເສດ:\n"
+" %(reasons)s"
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You cannot reset to draft an expense linked to a posted journal entry."
 msgstr ""
+"ທ່ານບໍ່ສາມາດຕັ້ງຄ່າຄືນເປັນແບບຮ່າງສຳລັບຄ່າໃຊ້ຈ່າຍທີ່ເຊື່ອມໂຍງກັບລາຍການບັນຊີທີ່ລົງບັນຊີແລ້ວ."
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You cannot split an expense that is already posted."
-msgstr ""
+msgstr "ທ່ານບໍ່ສາມາດແຍກຄ່າໃຊ້ຈ່າຍທີ່ໄດ້ລົງບັນຊີແລ້ວໄດ້."
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You do not have the required permission to submit this expense."
-msgstr ""
+msgstr "ທ່ານບໍ່ມີສິດອະນຸຍາດທີ່ຈຳເປັນໃນການສົ່ງຄ່າໃຊ້ຈ່າຍນີ້."
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You do not have the rights to edit this expense."
-msgstr ""
+msgstr "ທ່ານບໍ່ມີສິດໃນການແກ້ໄຂຄ່າໃຊ້ຈ່າຍນີ້."
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You don't have the access rights to modify this expense."
-msgstr ""
+msgstr "ທ່ານບໍ່ມີສິດເຂົ້າເຖິງໃນການປ່ຽນແປງຄ່າໃຊ້ຈ່າຍນີ້."
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/wizard/hr_expense_post_wizard.py:0
 msgid "You don't have the rights to create accounting entries."
-msgstr ""
+msgstr "ທ່ານບໍ່ມີສິດໃນການສ້າງລາຍການບັນຊີ."
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You need to add a manual payment method on the journal (%s)"
-msgstr ""
+msgstr "ທ່ານຈຳເປັນຕ້ອງເພີ່ມວິທີການຈ່າຍເງິນດ້ວຍຕົນເອງໃນປື້ມບັນຊີ (%s)"
 
 #. module: hr_expense
 #. odoo-python
@@ -2341,7 +2383,7 @@ msgstr ""
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_refuse_reason
 msgid "Your Expense"
-msgstr ""
+msgstr "ຄ່າໃຊ້ຈ່າຍຂອງທ່ານ"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
@@ -2351,7 +2393,7 @@ msgstr "ຄ່າໃຊ້ຈ່າຍຂອງທ່ານໄດ້ຖືກລ
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "alias"
-msgstr ""
+msgstr "ນາມແຝງ"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
@@ -2366,17 +2408,17 @@ msgstr "ຕົວຢ່າງ: ອາຫານທ່ຽງກັບລູກຄ�
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
 msgid "e.g. Restaurants: only week days, for lunch"
-msgstr ""
+msgstr "ຕົວຢ່າງ: ຮ້ານອາຫານ: ສະເພາະວັນທຳມະດາ, ສຳລັບອາຫານທ່ຽງ"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "e.g. mycompany.com"
-msgstr ""
+msgstr "ຕົວຢ່າງ: mycompany.com"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "expense"
-msgstr ""
+msgstr "ຄ່າໃຊ້ຈ່າຍ"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_refuse_reason
@@ -2386,17 +2428,17 @@ msgstr "ໄດ້ຖືກປະຕິເສດແລ້ວ"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
 msgid "no taxes"
-msgstr ""
+msgstr "ບໍ່ມີອາກອນ"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
 msgid "per"
-msgstr ""
+msgstr "ຕໍ່"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "tax)"
-msgstr ""
+msgstr "ອາກອນ)"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -2406,7 +2448,7 @@ msgstr "ໃຊ້ OCR ເພື່ອຕື່ມຂໍ້ມູນຈາກຮ�
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "with the same receipt already exists."
-msgstr ""
+msgstr "ທີ່ມີໃບບິນດຽວກັນນີ້ມີຢູ່ແລ້ວ."
 
 #~ msgid "%s: It is not from your department"
 #~ msgstr "%s: ມັນບໍ່ໄດ້ມາຈາກພະແນກຂອງທ່ານ"

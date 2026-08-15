@@ -37,8 +37,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-20 18:35+0000\n"
-"PO-Revision-Date: 2026-08-03 03:05+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-08-14 15:10+0000\n"
+"Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/crm/fi/>"
 "\n"
 "Language: fi\n"
@@ -51,7 +51,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__lead_all_assigned_month_count
 msgid "# Leads/Opps assigned this month"
-msgstr "# Tässä kuussa määrätyt liidit tai myyntimahdollisuudet"
+msgstr "# Liidiä/myyntimahdollisuutta määritetty tässä kuussa"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_recurring_plan__number_of_months
@@ -61,19 +61,19 @@ msgstr "# Kuukaudet"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__lead_unassigned_count
 msgid "# Unassigned Leads"
-msgstr "# Kohdistamatta olevat liidit"
+msgstr "# Määrittämättömät liidit"
 
 #. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_team.py:0
 msgid "%(assigned)s leads allocated among %(team_count)s teams."
-msgstr "%(assigned)s liidit jaetaan %(team_count)s tiimeille."
+msgstr "%(assigned)s liidiä jaetaan %(team_count)s tiimin kesken."
 
 #. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_team.py:0
 msgid "%(assigned)s leads allocated to %(team_name)s team."
-msgstr "%(assigned)s liidit jaettu %(team_name)s tiimille."
+msgstr "%(assigned)s liidiä annettu tiimin %(team_name)s tehtäväksi."
 
 #. module: crm
 #. odoo-python
@@ -85,16 +85,14 @@ msgstr "%(attach_name)s (liidistä %(lead_name)s)"
 #. odoo-python
 #: code:addons/crm/models/crm_team.py:0
 msgid "%(duplicates)s duplicates leads have been merged."
-msgstr "%(duplicates)s kaksoiskappaleet on yhdistetty."
+msgstr "%(duplicates)s liidien kaksoiskappaleet on yhdistetty."
 
 #. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_team.py:0
 msgid ""
 "%(members_assigned)s leads assigned among %(member_count)s salespersons."
-msgstr ""
-"%(members_assigned)s myyntimahdollisuudet on jaettu %(member_count)s "
-"myyjille."
+msgstr "%(members_assigned)s liidit jaetaan %(member_count)s myyjän kesken."
 
 #. module: crm
 #. odoo-python
@@ -112,13 +110,13 @@ msgstr "(Tiiminvetäjä)"
 #. odoo-javascript
 #: code:addons/crm/static/src/views/crm_form/crm_pls_tooltip_button.xml:0
 msgid "(sample data)"
-msgstr "(näytedata)"
+msgstr "(esimerkkidata)"
 
 #. module: crm
 #. odoo-javascript
 #: code:addons/crm/static/src/js/tours/crm.js:0
 msgid "<b>Create your first opportunity.</b>"
-msgstr "<b>Luo ensimmäinen myyntimahdollisuutesi</b>"
+msgstr "<b>Luo ensimmäinen myyntimahdollisuutesi.</b>"
 
 #. module: crm
 #. odoo-javascript
@@ -127,14 +125,15 @@ msgid ""
 "<b>Drag &amp; drop opportunities</b> between columns as you progress in your "
 "sales cycle."
 msgstr ""
-"<b>Raahaa &amp; pudota mahdollisuuksia</b> sarakkeiden välillä edetessäsi "
-"myyntiputkessasi."
+"<b>Raahaa &amp; pudota myyntimahdollisuuksia</b> sarakkeiden välillä "
+"myyntisyklissä edetessäsi."
 
 #. module: crm
 #. odoo-javascript
 #: code:addons/crm/static/src/js/tours/crm.js:0
 msgid "<b>Write a few letters</b> to look for a company, or create a new one."
-msgstr "<b>Kirjoita muutama kirje</b> hakeaksesi yritystä tai luo uusi yritys."
+msgstr ""
+"<b>Kirjoita muutama kirjain</b> hakeaksesi yritystä tai luodaksesi uuden."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.quick_create_opportunity_form
@@ -269,8 +268,8 @@ msgid ""
 "<span> leads assigned this month\n"
 "                            on a maximum of </span>"
 msgstr ""
-"<span> tässä kuussa kohdennetut liidit,\n"
-"                            joista enintään </span>"
+"<span> tässä kuussa määritetyt liidit,\n"
+"                            enintään </span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
@@ -1222,7 +1221,7 @@ msgstr "Yhteystiedot:"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.quick_create_opportunity_form
 msgid "Contact Email"
-msgstr "Yhteystiedon sähköpostiosoite"
+msgstr "Yhteystiedon sähköposti"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -1889,7 +1888,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner__force_assignment
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass__force_assignment
 msgid "Force assignment"
-msgstr "Pakota tehtävämääräys"
+msgstr "Pakota tehtävänanto"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lead_action_forecast
@@ -2040,8 +2039,8 @@ msgid ""
 "If checked, forces salesman to be updated on updated opportunities even if "
 "already set."
 msgstr ""
-"Jos valittu, pakottaa päivittämään myyjän myyntimahdollisuuksien "
-"päivityksistä, vaikka ne olisi jo asetettu."
+"Jos ruksittu, pakottaa myyjän päivittämisen päivitetyissä "
+"myyntimahdollisuuksissa, vaikka olisi jo asetettu."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__message_needaction
@@ -3050,7 +3049,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__lead_all_assigned_month_count
 msgid "Number of leads and opportunities assigned this last month."
-msgstr "Viime kuussa kohdistettujen liidien ja myyntimahdollisuuksien määrä."
+msgstr "Viime kuussa määritettyjen liidien ja myyntimahdollisuuksien määrä."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team_member__lead_day_count
@@ -4034,7 +4033,7 @@ msgstr "Kuukauden numero ei voi olla negatiivinen."
 #. module: crm
 #: model:ir.model.constraint,message:crm.constraint_crm_lead_check_probability
 msgid "The probability of closing the deal should be between 0% and 100%!"
-msgstr "Todennäköisyys kaupan klousaamiselle pitää olla välillä 0% ja 100%!"
+msgstr "Todennäköisyys kaupan klousaamiselle pitää olla 0% ja 100% välillä!"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -4296,7 +4295,7 @@ msgstr "Kohdistamaton"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_view_kanban_dashboard
 msgid "Unassigned Leads"
-msgstr "Kohdistamattomat liidit"
+msgstr "Määrittämättömät liidit"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
@@ -4702,7 +4701,7 @@ msgstr "puhelinnumero"
 #. odoo-javascript
 #: code:addons/crm/static/src/views/crm_form/crm_pls_tooltip_button.xml:0
 msgid "sample data"
-msgstr "näytedata"
+msgstr "esimerkkidata"
 
 #. module: crm
 #. odoo-javascript

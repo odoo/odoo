@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:36+0000\n"
-"PO-Revision-Date: 2026-08-07 22:34+0000\n"
+"PO-Revision-Date: 2026-08-09 11:37+0000\n"
 "Last-Translator: Aliraza Habibitanha <alireza.habibitanha@gmail.com>\n"
 "Language-Team: Persian <https://translate.odoo.com/projects/odoo-19/"
 "base_automation/fa/>\n"
@@ -126,7 +126,7 @@ msgstr ""
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_server_action_form
 msgid "<span class=\"o_stat_text\">Automation</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">اتوماسیون</span>"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -286,7 +286,7 @@ msgstr "دیرکرد"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_range_mode
 msgid "Delay mode"
-msgstr ""
+msgstr "حالت تأخیر"
 
 #. module: base_automation
 #. odoo-python
@@ -294,11 +294,12 @@ msgstr ""
 msgid ""
 "Delay must be positive. Set 'Delay mode' to 'Before' to negate the delay."
 msgstr ""
+"تأخیر باید مثبت باشد. 'حالت تأخیر' را روی 'قبل' تنظیم کنید تا تأخیر منفی شود."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_range_type
 msgid "Delay unit"
-msgstr ""
+msgstr "واحد تأخیر"
 
 #. module: base_automation
 #. odoo-javascript
@@ -371,7 +372,7 @@ msgstr "پیروان (شرکاء)"
 #. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
 msgid "Following child actions have warnings: %(children)s"
-msgstr ""
+msgstr "عملیات زیرمجموعه زیر دارای هشدار هستند: %(children)s"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__activity_type_icon
@@ -435,6 +436,8 @@ msgid ""
 "If present, this condition must be satisfied before the update of the "
 "record. Not checked on record creation."
 msgstr ""
+"در صورت وجود، این شرط باید قبل از به‌روزرسانی رکورد برآورده شود. در هنگام "
+"ایجاد رکورد بررسی نمی‌شود."
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -442,6 +445,8 @@ msgid ""
 "If renewed, update the secret URL in the third-party app that calls this "
 "webhook."
 msgstr ""
+"در صورت تمدید، URL محرمانه را در برنامه شخص ثالثی که این وب‌هوک را فراخوانی "
+"می‌کند، به‌روزرسانی کنید."
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_search
@@ -607,12 +612,12 @@ msgstr "روی بایگانی‌شده"
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_create
 msgid "On create"
-msgstr ""
+msgstr "در زمان ایجاد"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_create_or_write
 msgid "On create and edit"
-msgstr ""
+msgstr "در زمان ایجاد و ویرایش"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_unlink
@@ -647,7 +652,7 @@ msgstr "روی وب‌هوک"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__previous_domain
 msgid "Previous Domain"
-msgstr ""
+msgstr "دامنه قبلی"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_priority_set
@@ -693,12 +698,12 @@ msgstr "کنش‌های زمان‌بندی‌شده"
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Scheduled action"
-msgstr ""
+msgstr "عملیات زمان‌بندی شده"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Secret URL"
-msgstr ""
+msgstr "URL محرمانه"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -734,6 +739,10 @@ msgid ""
 "inactivity or remind yourself to follow-up on tasks when a specific tag is "
 "added.<br>With Automation Rules, you can automate any workflow."
 msgstr ""
+"هرگاه یک شیء تغییر وضعیت می‌دهد ایمیل ارسال کنید، رکوردها را پس از یک ماه عدم "
+"فعالیت بایگانی کنید یا به خودتان یادآوری کنید که هرگاه برچسب خاصی به وظایف "
+"اضافه می‌شود آن را پیگیری کنید.<br>با قوانین اتوماسیون می‌توانید هر فرآیند "
+"کاری را خودکار کنید."
 
 #. module: base_automation
 #: model:ir.model,name:base_automation.model_ir_actions_server
@@ -743,7 +752,7 @@ msgstr "کنش کارپذیر"
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Set an explicit name"
-msgstr ""
+msgstr "یک نام صریح تنظیم کنید"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_selection_field_id
@@ -842,6 +851,7 @@ msgstr ""
 #: code:addons/base_automation/models/base_automation.py:0
 msgid "The scheduled action for Automation Rules seems to have vanished."
 msgstr ""
+"به نظر می‌رسد عملیات زمان‌بندی شده برای قوانین اتوماسیون ناپدید شده است."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__record_getter
@@ -861,7 +871,7 @@ msgstr "شرایط زمانی"
 #: model:digest.tip,name:base_automation.digest_tip_base_automation_0
 #: model_terms:digest.tip,tip_description:base_automation.digest_tip_base_automation_0
 msgid "Tip: Automate everything with Automation Rules"
-msgstr ""
+msgstr "نکته: همه چیز را با قوانین اتوماسیون خودکار کنید"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trigger
@@ -917,7 +927,7 @@ msgstr "استفاده از گاهشمار"
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__url
 msgid "Use this URL in the third-party app to call this webhook."
-msgstr ""
+msgstr "برای فراخوانی این وب‌هوک در برنامه شخص ثالث از این URL استفاده کنید."
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_user_set
@@ -969,6 +979,8 @@ msgid ""
 "When calculating a day-based timed condition, it is possible to use a "
 "calendar to compute the date based on working days."
 msgstr ""
+"هنگام محاسبه یک شرط زمانی مبتنی بر روز، می‌توان از یک تقویم برای محاسبه تاریخ "
+"بر اساس روزهای کاری استفاده کرد."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_date_id
@@ -1003,6 +1015,7 @@ msgstr "با قوانین اتوماسیون، می‌توانید هر <em>فر
 #: code:addons/base_automation/static/src/base_automation_error_dialog.xml:0
 msgid "You can ask an administrator to disable or fix this automation."
 msgstr ""
+"می‌توانید از یک مدیر سیستم بخواهید این اتوماسیون را غیرفعال یا ویرایش کند."
 
 #. module: base_automation
 #. odoo-python
@@ -1029,7 +1042,7 @@ msgstr "هیچ اقدامی تعریف نشده است..."
 #. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
 msgid "path"
-msgstr ""
+msgstr "مسیر"
 
 #~ msgid "Action Name"
 #~ msgstr "نام کنش"

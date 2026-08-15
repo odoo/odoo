@@ -12,13 +12,14 @@
 # Martin Trigaux, 2023
 # Hanna Kheradroosta, 2023
 # Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
+# Aliraza Habibitanha <alireza.habibitanha@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:37+0000\n"
-"PO-Revision-Date: 2026-08-07 04:14+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-08-09 11:32+0000\n"
+"Last-Translator: Aliraza Habibitanha <alireza.habibitanha@gmail.com>\n"
 "Language-Team: Persian <https://translate.odoo.com/projects/odoo-19/"
 "sale_timesheet/fa/>\n"
 "Language: fa\n"
@@ -41,6 +42,14 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"\n"
+"                <p class=\"o_view_nocontent_smiling_face\">\n"
+"                    فعالیتی یافت نشد. فعالیت جدیدی ایجاد کنید.\n"
+"                </p><p>\n"
+"                    ساعات کاری صرف شده بر روی پروژه‌ها را به صورت روزانه "
+"رهگیری کرده و این زمان را برای مشتریان فاکتور کنید.\n"
+"                </p>\n"
+"            "
 
 #. module: sale_timesheet
 #. odoo-python
@@ -59,6 +68,16 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"\n"
+"                <p class=\"o_view_nocontent_smiling_face\">\n"
+"                    ثبت ساعات کارکرد\n"
+"                </p><p>\n"
+"            می‌توانید ساعات کارکرد خود بر روی پروژه را به صورت روزانه ثبت و "
+"پیگیری کنید.\n"
+"            زمان صرف شده در پروژه، به هزینه تبدیل شده و در صورت لزوم،\n"
+"            می‌توان آن را مجدد برای مشتری فاکتور کرد.\n"
+"                </p>\n"
+"            "
 
 #. module: sale_timesheet
 #. odoo-python
@@ -68,11 +87,13 @@ msgid ""
 "distribution of the sale order item '%(so_line_name)s' linked to the "
 "timesheet."
 msgstr ""
+"طرح(های) تحلیلی '%(missing_plan_names)s' در توزیع تحلیلی آیتم سفارش فروش '%"
+"(so_line_name)s' لینک شده به ساعات کارکرد الزامی است."
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_sale_page
 msgid "- Timesheet product"
-msgstr ""
+msgstr "- محصول ساعات کارکرد"
 
 #. module: sale_timesheet
 #: model_terms:hr.job,job_details:sale_timesheet.job_engineer
@@ -123,12 +144,12 @@ msgstr ""
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form
 msgid "<b>Daily Cost: </b>"
-msgstr ""
+msgstr "<b>هزینه روزانه: </b>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form
 msgid "<b>Unit Price: </b>"
-msgstr ""
+msgstr "<b>قیمت واحد: </b>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form
@@ -141,6 +162,13 @@ msgid ""
 "create separate sales order items.\n"
 "                        </span>"
 msgstr ""
+"<i class=\"fa fa-lightbulb-o\"/>\n"
+"                        <span>\n"
+"                            بر اساس تخصص، مهارت یا تجربه نرخ فاکتور هر ساعت "
+"کارمند را تعریف کنید.\n"
+"                            برای فاکتور خدمات یکسان با نرخ‌های متفاوت، "
+"آیتم‌های سفارش فروش جداگانه‌ای ایجاد کنید.\n"
+"                        </span>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.hr_timesheet_line_form_inherit
@@ -149,11 +177,14 @@ msgid ""
 "order associated with this timesheet entry has been cancelled.\" "
 "invisible=\"sale_order_state != 'cancel'\"/>"
 msgstr ""
+"<span class=\"fa fa-exclamation-triangle text-warning\" title=\"سفارش فروش "
+"مربوط به این ثبت ساعات کارکرد لغو شده است.\" invisible=\"sale_order_state != "
+"'cancel'\"/>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.hr_timesheet_line_form_inherit
 msgid "<span class=\"o_stat_text\">Invoice</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">فاکتور</span>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.account_invoice_view_form_inherit_sale_timesheet
@@ -164,7 +195,7 @@ msgstr "<span class=\"o_stat_text\">ثبت شد</span>"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.hr_timesheet_line_form_inherit
 msgid "<span class=\"o_stat_text\">Sales Order</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">سفارش‌های فروش</span>"
 
 #. module: sale_timesheet
 #: model_terms:hr.job,job_details:sale_timesheet.job_engineer
@@ -226,27 +257,27 @@ msgstr "<strong class=\"s_rating_title\">تخصص فنی</strong>"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_task_inherit
 msgid "<strong>Amount Due:</strong>"
-msgstr ""
+msgstr "<strong>مانده مبلغ:</strong>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_task_inherit
 msgid "<strong>Invoiced:</strong>"
-msgstr ""
+msgstr "<strong>فاکتور شده:</strong>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_task_inherit
 msgid "<strong>Invoices:</strong>"
-msgstr ""
+msgstr "<strong>فاکتورها:</strong>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_task_inherit
 msgid "<strong>Sales Order:</strong>"
-msgstr ""
+msgstr "<strong>سفارش فروش:</strong>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_timesheet_table_inherit
 msgid "<strong>Time Remaining on SO: </strong>"
-msgstr ""
+msgstr "<strong>زمان باقی‌مانده در سفارش فروش: </strong>"
 
 #. module: sale_timesheet
 #: model_terms:hr.job,website_description:sale_timesheet.job_engineer
@@ -278,7 +309,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_account_move_reversal
 msgid "Account Move Reversal"
-msgstr ""
+msgstr "معکوس‌سازی انتقال حساب"
 
 #. module: sale_timesheet
 #: model_terms:hr.job,website_description:sale_timesheet.job_engineer
@@ -357,7 +388,7 @@ msgstr "مدرک کارشناسی یا بالاتر"
 #. odoo-python
 #: code:addons/sale_timesheet/models/product_template.py:0
 msgid "Based on Timesheets"
-msgstr ""
+msgstr "بر اساس ساعات کارکرد"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__allow_billable
@@ -367,7 +398,7 @@ msgstr "قابل فاکتور"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_timesheets_analysis_report__billable_time
 msgid "Billable Time"
-msgstr ""
+msgstr "زمان قابل فاکتور"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__timesheet_invoice_type
@@ -380,7 +411,7 @@ msgstr "نوع قابل فاکتور"
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__timesheet_invoice_type__billable_manual
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
 msgid "Billed Manually"
-msgstr ""
+msgstr "صورت‌حساب دستی"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
@@ -398,7 +429,7 @@ msgstr "فاکتور شده با قیمت ثابت"
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__timesheet_invoice_type__billable_milestones
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
 msgid "Billed on Milestones"
-msgstr ""
+msgstr "فاکتور مبتنی بر گام کلیدی"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__billable_time
@@ -416,7 +447,7 @@ msgstr "صورتحساب"
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_project__billing_type
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
 msgid "Billing Type"
-msgstr ""
+msgstr "نوع صدور صورت‌حساب"
 
 #. module: sale_timesheet
 #: model:ir.ui.menu,name:sale_timesheet.menu_timesheet_billing_analysis
@@ -426,7 +457,7 @@ msgstr "بر اساس نوع صورتحساب"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__commercial_partner_id
 msgid "Commercial Partner"
-msgstr ""
+msgstr "طرف همکار تجاری"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_res_config_settings
@@ -488,12 +519,12 @@ msgstr "رتبه بندی مشتریان"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
 msgid "Days Ordered,"
-msgstr ""
+msgstr "روز سفارش داده شده،"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
 msgid "Days Remaining)"
-msgstr ""
+msgstr "روز باقی‌مانده)"
 
 #. module: sale_timesheet
 #: model_terms:hr.job,website_description:sale_timesheet.job_engineer
@@ -628,7 +659,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task__has_multi_sol
 msgid "Has Multi Sol"
-msgstr ""
+msgstr "دارای چند سطر سفارش فروش"
 
 #. module: sale_timesheet
 #: model_terms:hr.job,website_description:sale_timesheet.job_engineer
@@ -645,12 +676,12 @@ msgstr "هزینه ساعتی"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
 msgid "Hours Ordered,"
-msgstr ""
+msgstr "ساعت سفارش داده شده،"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
 msgid "Hours Remaining)"
-msgstr ""
+msgstr "ساعت باقی‌مانده)"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__id
@@ -697,13 +728,13 @@ msgstr "فاکتور"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_res_config_settings__invoice_policy
 msgid "Invoice Policy"
-msgstr ""
+msgstr "سیاست صدور فاکتور"
 
 #. module: sale_timesheet
 #. odoo-python
 #: code:addons/sale_timesheet/models/product_template.py:0
 msgid "Invoice based on timesheets (delivered quantity)."
-msgstr ""
+msgstr "صدور فاکتور بر اساس ساعات کارکرد (مقدار تحویل داده شده)"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_account_analytic_line__timesheet_invoice_id
@@ -725,12 +756,12 @@ msgstr "صدور فاکتور"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task__is_project_map_empty
 msgid "Is Project map empty"
-msgstr ""
+msgstr "نقشه پروژه خالی است"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__is_so_line_edited
 msgid "Is Sales Order Item Manually Edited"
-msgstr ""
+msgstr "آیتم سفارش فروش به صورت دستی ویرایش شده است"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_account_move
@@ -755,7 +786,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task__last_sol_of_customer
 msgid "Last Sol Of Customer"
-msgstr ""
+msgstr "آخرین آیتم سفارش فروش مشتری"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__write_uid
@@ -818,7 +849,7 @@ msgstr "روش بروز رسانی تعداد تحویل شده"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.product_template_view_search_sale_timesheet
 msgid "Milestone services"
-msgstr ""
+msgstr "خدمات گام کلیدی"
 
 #. module: sale_timesheet
 #: model_terms:hr.job,website_description:sale_timesheet.job_engineer
@@ -883,7 +914,7 @@ msgstr "بدون اتلاف وقت در فرآیندهای سازمانی، مس
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__timesheet_invoice_type__non_billable
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
 msgid "Non-Billable"
-msgstr ""
+msgstr "غیرقابل فاکتور"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.hr_timesheet_line_form_inherit
@@ -900,27 +931,27 @@ msgstr "غیرقابل پرداخت"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_timesheets_analysis_report__non_billable_time
 msgid "Non-billable Time"
-msgstr ""
+msgstr "زمان غیرقابل فاکتور"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
 msgid "Not Billed"
-msgstr ""
+msgstr "فاکتور نشده"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_timesheets_analysis_report__timesheet_revenues
 msgid "Number of hours spent multiplied by the unit price per hour/day."
-msgstr ""
+msgstr "تعداد ساعات صرف شده ضرب در قیمت واحد هر ساعت/روز."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_timesheets_analysis_report__billable_time
 msgid "Number of hours/days linked to a SOL."
-msgstr ""
+msgstr "تعداد ساعات/روزهای متصل به یک سطر سفارش فروش."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_timesheets_analysis_report__non_billable_time
 msgid "Number of hours/days not linked to a SOL."
-msgstr ""
+msgstr "تعداد ساعات/روزهایی که به یک سطر سفارش فروش متصل نیستند."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_sale_advance_payment_inv__date_end_invoice_timesheet
@@ -946,13 +977,13 @@ msgstr "مرجع سفارش"
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__other_costs
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__timesheet_invoice_type__other_costs
 msgid "Other costs"
-msgstr ""
+msgstr "سایر هزینه‌ها"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__other_revenues
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__timesheet_invoice_type__other_revenues
 msgid "Other revenues"
-msgstr ""
+msgstr "سایر درآمدها"
 
 #. module: sale_timesheet
 #: model_terms:hr.job,website_description:sale_timesheet.job_engineer
@@ -975,6 +1006,8 @@ msgid ""
 "Percentage of time delivered compared to the prepaid amount that must be "
 "reached for the upselling opportunity activity to be triggered."
 msgstr ""
+"درصد زمان تحویل شده در مقایسه با مبلغ پیش‌ پرداختی که باید به آن رسید تا "
+"فعالیت فروش بیشتر (Upsell) ایجاد شود."
 
 #. module: sale_timesheet
 #: model_terms:hr.job,website_description:sale_timesheet.job_engineer
@@ -1024,7 +1057,7 @@ msgstr "پروژه"
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_project_sale_line_employee_map
 msgid "Project Sales line, employee mapping"
-msgstr ""
+msgstr "سطر سفارش فروش پروژه، نگاشت کارکنان"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_product__project_template_id
@@ -1075,6 +1108,8 @@ msgstr "مسئولیت‌ها"
 msgid ""
 "Review your timesheets by billing type and make sure your time is billable."
 msgstr ""
+"ساعات کارکرد خود را بر اساس نوع صورت‌حساب بررسی کنید و مطمئن شوید که زمان شما "
+"قابل فاکتور است."
 
 #. module: sale_timesheet
 #: model:product.template,name:sale_timesheet.product_product_roofing_product_template
@@ -1141,6 +1176,17 @@ msgid ""
 "timesheets on this project specifically. It will bypass the timesheet cost "
 "set on the employee."
 msgstr ""
+"آیتم سفارش فروشی که به طور پیش‌فرض در ساعات کارکرد کارمند مربوطه انتخاب خواهد "
+"شد. آیتم سفارش فروشی که در پروژه و وظیفه تعریف شده‌اند را نادیده می‌گیرد و "
+"می‌تواند در صورت لزوم در هر ثبت ساعات کارکرد ویرایش شود. به عبارت دیگر، نرخ "
+"زمان فاکتور شده کارمندان را بر مبنای تخصص، مهارت یا تجربه آنها تعریف می‌کند. "
+"\n"
+"اگر می‌خواهید یک خدمت را دوبار و هر بار با یک نرخ متفاوت در یک سفارش فروش "
+"فاکتور کنید، از آنجایی که هر آیتم سفاش فروش در یک زمان فقط می‌تواند یک قیمت "
+"واحد داشته باشد، باید دو آیتم سفارش فروش مجزا ایجاد نمایید.\n"
+"همچنین می‌توانید برای هر پروژه به طور مجزا هزینه ساعتی کارمندان شرکت را در "
+"ساعات کارکرد آنها مشخص کنید و با انجام این کار هزینه برگه ساعات کارکرد تعیین "
+"شده برای کارمند را نادیده بگیرید."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_account_analytic_line__so_line
@@ -1161,7 +1207,7 @@ msgstr "سفارش فروش که وظیفه به آن مرتبط است."
 #. odoo-python
 #: code:addons/sale_timesheet/controllers/portal.py:0
 msgid "Search in Invoice"
-msgstr ""
+msgstr "جستجو در فاکتور"
 
 #. module: sale_timesheet
 #. odoo-python
@@ -1183,12 +1229,12 @@ msgstr ""
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__service_revenues
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__timesheet_invoice_type__service_revenues
 msgid "Service Revenues"
-msgstr ""
+msgstr "درآمد خدمات"
 
 #. module: sale_timesheet
 #: model:product.template,name:sale_timesheet.time_product_product_template
 msgid "Service on Timesheets"
-msgstr ""
+msgstr "خدمات مبتنی بر ساعات کارکرد"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_project__timesheet_product_id
@@ -1198,6 +1244,9 @@ msgid ""
 "task. It can be modified on each task individually by selecting a specific "
 "sales order item."
 msgstr ""
+"خدماتی که به طور پیش‌فرض در صدور فاکتور برای زمان صرف شده در وظیفه استفاده "
+"می‌شود. با انتخاب یک آیتم سفارش فروش مشخص، به طور مجزا در هر وظیفه می‌تواند "
+"ویرایش شود."
 
 #. module: sale_timesheet
 #: model:ir.actions.act_window,name:sale_timesheet.product_template_action_default_services
@@ -1247,7 +1296,7 @@ msgstr "وظیفه"
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__project_project__pricing_type__task_rate
 msgid "Task rate"
-msgstr ""
+msgstr "نرخ وظیفه"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_report_project_task_user
@@ -1262,12 +1311,14 @@ msgid ""
 "The %s product is required by the Timesheets app and cannot be archived, "
 "deleted nor linked to a company."
 msgstr ""
+"محصول %s برای برنامه ساعات کارکرد مورد نیاز است و نمی‌توان آن را بایگانی، حذف "
+"یا به شرکتی لینک کرد."
 
 #. module: sale_timesheet
 #. odoo-python
 #: code:addons/sale_timesheet/models/sale_order.py:0
 msgid "The Sales Order must contain at least one service product."
-msgstr ""
+msgstr "سفارش فروش باید حداقل شامل یک محصول خدماتی باشد."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_project__pricing_type
@@ -1281,6 +1332,11 @@ msgid ""
 "senior consultants would deliver the same service (= consultancy), but at a "
 "different rate because of their level of seniority."
 msgstr ""
+"اگر بخواهید خدمات متفاوتی را با نرخ‌های متفاوت به مشتریان مختلف صورت‌حساب دهید"
+"، نرخ وظیفه بهترین روش برای این کار است. اگر خدماتی را با نرخ ثابت ساعتی یا "
+"روزانه و بدون در نظر گرفتن کارمندی که آن را انجام داده است فاکتور می‌کنید، "
+"استفاده از نرخ ثابت عالی است. اگر کارکنان همان خدمات را با نرخ متفاوتی ارائه "
+"دهند، نرخ کارمند ارجح است."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_sale_line_employee_map__cost
@@ -1288,12 +1344,14 @@ msgid ""
 "This cost overrides the employee's default employee hourly wage in "
 "employee's HR Settings"
 msgstr ""
+"مقدار هزینه وارد شده در این قسمت جایگزین دستمزد ساعتی پیش‌فرض کارمند در "
+"تنظیمات منابع انسانی می‌شود"
 
 #. module: sale_timesheet
 #. odoo-python
 #: code:addons/sale_timesheet/models/project_project.py:0
 msgid "This project is current linked to timesheet."
-msgstr ""
+msgstr "این پروژه در حال حاضر به ساعت کارکرد لینک شده است."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_product__service_upsell_threshold
@@ -1304,14 +1362,14 @@ msgstr "آستانه"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
 msgid "Time Billing"
-msgstr ""
+msgstr "صورت‌حساب زمان"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task__remaining_hours_so
 #: model:ir.model.fields,field_description:sale_timesheet.field_report_project_task_user__remaining_hours_so
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_line__remaining_hours
 msgid "Time Remaining on SO"
-msgstr ""
+msgstr "زمان باقی‌مانده در سفارش فروش"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_hr_timesheet_line_graph_employee_per_date
@@ -1322,7 +1380,7 @@ msgstr "زمان صرف شده"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.product_template_view_search_sale_timesheet
 msgid "Time-based services"
-msgstr ""
+msgstr "خدمات مبتنی بر زمان"
 
 #. module: sale_timesheet
 #: model:ir.actions.act_window,name:sale_timesheet.timesheet_action_from_plan
@@ -1348,7 +1406,7 @@ msgstr "هزینه های برگه ساعت کارکرد"
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_project__timesheet_product_id
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task__timesheet_product_id
 msgid "Timesheet Product"
-msgstr ""
+msgstr "محصول ساعت کارکرد"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.hr_timesheet_report_search_sale_timesheet
@@ -1360,7 +1418,7 @@ msgstr "گزارش برگه‌ی کار"
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__timesheet_revenues
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__timesheet_invoice_type__timesheet_revenues
 msgid "Timesheet Revenues"
-msgstr ""
+msgstr "درآمد برگه ساعات کارکرد"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_bank_statement_line__timesheet_total_duration
@@ -1386,31 +1444,31 @@ msgstr "برگه ساعت کارکرد"
 #. odoo-python
 #: code:addons/sale_timesheet/models/project_project.py:0
 msgid "Timesheets (Billed Manually)"
-msgstr ""
+msgstr "ساعات کارکرد (صورت‌حساب دستی)"
 
 #. module: sale_timesheet
 #. odoo-python
 #: code:addons/sale_timesheet/models/project_project.py:0
 msgid "Timesheets (Billed on Milestones)"
-msgstr ""
+msgstr "ساعات کارکرد (فاکتور مبتنی بر گام کلیدی)"
 
 #. module: sale_timesheet
 #. odoo-python
 #: code:addons/sale_timesheet/models/project_project.py:0
 msgid "Timesheets (Billed on Timesheets)"
-msgstr ""
+msgstr "ساعات کارکرد (فاکتور مبتنی بر ساعات کارکرد)"
 
 #. module: sale_timesheet
 #. odoo-python
 #: code:addons/sale_timesheet/models/project_project.py:0
 msgid "Timesheets (Fixed Price)"
-msgstr ""
+msgstr "ساعات کارکرد (قیمت ثابت)"
 
 #. module: sale_timesheet
 #. odoo-python
 #: code:addons/sale_timesheet/models/project_project.py:0
 msgid "Timesheets (Non-Billable)"
-msgstr ""
+msgstr "ساعات کارکرد (غیرقابل فاکتور)"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheets_analysis_report_pivot_invoice_type
@@ -1435,7 +1493,7 @@ msgstr "برگه ساعت کارکرد بر اساس نوع صورتحساب"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_sale_page
 msgid "Timesheets for the"
-msgstr ""
+msgstr "ساعات کارکرد برای"
 
 #. module: sale_timesheet
 #. odoo-python
@@ -1452,12 +1510,12 @@ msgstr "برگه ساعت کارکرد پروژه (یک برگه برای هر �
 #. odoo-python
 #: code:addons/sale_timesheet/models/project_project.py:0
 msgid "Timesheets revenues"
-msgstr ""
+msgstr "درآمدهای برگه ساعات کارکرد"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_timesheets_analysis_report__margin
 msgid "Timesheets revenues minus the costs"
-msgstr ""
+msgstr "درآمد ساعات کارکرد با کسر هزینه‌های تمام شده"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
@@ -1467,12 +1525,13 @@ msgstr "برگه های ساعت کارکرد در نظر گرفته شده در
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_res_config_settings__invoice_policy
 msgid "Timesheets taken when invoicing time spent"
-msgstr ""
+msgstr "ساعات کارکرد هنگام صدور فاکتور برای زمان صرف شده"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form
 msgid "Timesheets without a sales order item are reported as"
 msgstr ""
+"ساعات کارکردی که دارای آیتم سفارش فروش نیستند به این صورت گزارش خواهند شد:"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheets_analysis_report_list_inherited
@@ -1542,7 +1601,7 @@ msgstr "مجوز کار معتبر برای بلژیک"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_invoice_page_inherit
 msgid "View Timesheet"
-msgstr ""
+msgstr "مشاهده ساعات کارکرد"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_invoice_page_inherit
@@ -1553,7 +1612,7 @@ msgstr "مشاهده برگه ساعت کارکرد"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_product_timesheet_form
 msgid "Warn the salesperson for an upsell when work done exceeds"
-msgstr ""
+msgstr "هرگاه مقدار کار انجام شده بیشتر از"
 
 #. module: sale_timesheet
 #: model_terms:hr.job,website_description:sale_timesheet.job_engineer
@@ -1576,6 +1635,8 @@ msgid ""
 "You cannot link a billable project to a sales order item that comes from an "
 "expense or a vendor bill."
 msgstr ""
+"نمی‌توانید پروژه قابل فاکتور را به آیتم سفارش فروشی که حاصل از هزینه یا "
+"صورت‌حساب تأمین‌کننده است لینک کنید."
 
 #. module: sale_timesheet
 #. odoo-python
@@ -1584,12 +1645,14 @@ msgid ""
 "You cannot link a billable project to a sales order item that is not a "
 "service."
 msgstr ""
+"نمی‌توانید پروژه قابل فاکتور را به آیتم سفارش فروشی که جزو خدمات نیست لینک "
+"کنید."
 
 #. module: sale_timesheet
 #. odoo-python
 #: code:addons/sale_timesheet/models/hr_timesheet.py:0
 msgid "You cannot modify timesheets that are already invoiced."
-msgstr ""
+msgstr "نمی‌توانید ساعات کارکردی که قبلاً فاکتور شده‌اند را ویرایش کنید."
 
 #. module: sale_timesheet
 #. odoo-python
@@ -1600,23 +1663,23 @@ msgstr "شما نمی توانید برگه زمانی را که قبلاً فا
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__project_project__billing_type__manually
 msgid "billed manually"
-msgstr ""
+msgstr "صورت‌حساب دستی"
 
 #. module: sale_timesheet
 #. odoo-python
 #: code:addons/sale_timesheet/models/sale_order_line.py:0
 msgid "days remaining"
-msgstr ""
+msgstr "روز باقی‌مانده"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__project_project__billing_type__not_billable
 msgid "not billable"
-msgstr ""
+msgstr "غیرقابل فاکتور"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_product_timesheet_form
 msgid "of hours sold."
-msgstr ""
+msgstr "شد، با هدف فروش خدمات بیشتر، به مسئول فروش مربوطه اطلاع‌رسانی شود."
 
 #. module: sale_timesheet
 #. odoo-python
@@ -1628,7 +1691,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale_timesheet/models/sale_order_line.py:0
 msgid "remaining"
-msgstr ""
+msgstr "باقی‌مانده"
 
 #~ msgid " Candidate Orders"
 #~ msgstr " سفارشات کاندید"

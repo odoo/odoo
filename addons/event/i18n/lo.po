@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-24 17:38+0000\n"
-"PO-Revision-Date: 2026-08-02 17:01+0000\n"
+"PO-Revision-Date: 2026-08-12 22:10+0000\n"
 "Last-Translator: Bone NI <bounkirdni@gmail.com>\n"
 "Language-Team: Lao <https://translate.odoo.com/projects/odoo-19/event/lo/>\n"
 "Language: lo\n"
@@ -61,19 +61,19 @@ msgstr "%(event_name)s - ລົງທະບຽນໃຫ້ %(attendee_name)s"
 #. odoo-python
 #: code:addons/event/models/event_slot.py:0
 msgid "%(slot_name)s (%(count)s seats remaining)"
-msgstr ""
+msgstr "%(slot_name)s (ຍັງເຫຼືອ %(count)s ບ່ອນນັ່ງ)"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_slot.py:0
 msgid "%(slot_name)s (Sold out)"
-msgstr ""
+msgstr "%(slot_name)s (ຂາຍໝົດແລ້ວ)"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_event.py:0
 msgid "%(slot_name)s: missing %(count)s seat(s)"
-msgstr ""
+msgstr "%(slot_name)s: ຂາດ %(count)s ບ່ອນນັ່ງ"
 
 #. module: event
 #. odoo-python
@@ -96,12 +96,12 @@ msgstr "%s (ສຳເນົາ)"
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_event_attendee_list
 msgid "'Attendee List - %s' % (object.name)"
-msgstr ""
+msgstr "'ລາຍຊື່ຜູ້ເຂົ້າຮ່ວມ - %s' % (object.name)"
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_registration_attendee_list
 msgid "'Attendee List'"
-msgstr ""
+msgstr "'ລາຍຊື່ຜູ້ເຂົ້າຮ່ວມ'"
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_registration_badge
@@ -109,11 +109,13 @@ msgid ""
 "'Badge - %s - %s' % ((object.event_id.name or 'Event').replace('/',''), "
 "(object.name or '').replace('/',''))"
 msgstr ""
+"'ບັດ - %s - %s' % ((object.event_id.name or 'ງານກິດຈະກຳ').replace('/',''), "
+"(object.name or '').replace('/',''))"
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_event_badge
 msgid "'Badge - %s' % (object.name or 'Event').replace('/','')"
-msgstr ""
+msgstr "'ບັດ - %s' % (object.name or 'ງານກິດຈະກຳ').replace('/','')"
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_registration_full_page_ticket
@@ -132,12 +134,12 @@ msgstr "'ປີ້ເຕັມໜ້າ - %s' % (object.name or 'Event').replace
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_formatted_event_address
 msgid "1000 Brussels"
-msgstr ""
+msgstr "1000 Brussels"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_event__badge_format__four_per_sheet
 msgid "4 per sheet"
-msgstr ""
+msgstr "4 ບັດຕໍ່ແຜ່ນ"
 
 #. module: event
 #: model_terms:res.partner,website_description:event.res_partner_event_3
@@ -145,6 +147,7 @@ msgstr ""
 msgid ""
 "<a href=\"#\" class=\"btn btn-primary o_translate_inline\">Discover more</a>"
 msgstr ""
+"<a href=\"#\" class=\"btn btn-primary o_translate_inline\">ຄົ້ນຫາເພີ່ມເຕີມ</a>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -205,6 +208,8 @@ msgid ""
 "<br/>\n"
 "                                            <span class=\"me-1\">from</span>"
 msgstr ""
+"<br/>\n"
+"                                            <span class=\"me-1\">ຈາກ</span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_full_page_ticket
@@ -212,6 +217,8 @@ msgid ""
 "<br/>\n"
 "                                            <span class=\"me-1\">to</span>"
 msgstr ""
+"<br/>\n"
+"                                            <span class=\"me-1\">ເຖິງ</span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -244,26 +251,30 @@ msgid ""
 "community module, a case study, methodology feedback, technical, etc. Each "
 "presentation must be in English.</em>"
 msgstr ""
+"<em>ຖ້າຫາກທ່ານຕ້ອງການນຳສະເໜີ, ກະລຸນາສົ່ງຫົວຂໍ້ການນຳສະເໜີຂອງທ່ານໃຫ້ໄວທີ່ສຸດເພື່ອຂໍການອະນຸມັດຈາກ ທ່າ"
+"ນ Famke Jenssens ທີ່ ngh [at] yourcompany [dot] com. ການນຳສະເໜີຄວນຈະເປັນ, ຕົວຢ່າງ, "
+"ການນຳສະເໜີກ່ຽວກັບໂມດູນຊຸມຊົນ, ກໍລະນີສຶກສາ, ຄຳຕິຊົມກ່ຽວກັບວິທີການ, ດ້ານເຕັກນິກ, ແລະ ອື່ນໆ. ທຸກໆການນ"
+"ຳສະເໜີຕ້ອງເປັນພາສາອັງກິດ.</em>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_slot_form
 msgid "<i class=\"fa fa-arrow-right mx-2\" title=\"to\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-arrow-right mx-2\" title=\"ເຖິງ\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
 msgid "<i class=\"fa fa-building\" title=\"Attendee Company\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-building\" title=\"ບໍລິສັດຂອງຜູ້ເຂົ້າຮ່ວມ\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
 msgid "<i class=\"fa fa-calendar\" title=\"Slot\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-calendar\" title=\"ຊ່ວງເວລາ\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
 msgid "<i class=\"fa fa-group mt-1 me-2 text-center\" title=\"Attendees\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-group mt-1 me-2 text-center\" title=\"ຜູ້ເຂົ້າຮ່ວມ\"/>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -279,16 +290,17 @@ msgstr ""
 msgid ""
 "<i class=\"fa fa-map-marker mt-1 me-2 text-center ps-1\" title=\"Location\"/>"
 msgstr ""
+"<i class=\"fa fa-map-marker mt-1 me-2 text-center ps-1\" title=\"ສະຖານທີ່\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
 msgid "<i class=\"fa fa-ticket\" title=\"Ticket type\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-ticket\" title=\"ປະເພດປີ້\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
 msgid "<i class=\"oi oi-arrow-right me-2\" title=\"End date\"/>"
-msgstr ""
+msgstr "<i class=\"oi oi-arrow-right me-2\" title=\"ວັນທີສິ້ນສຸດ\"/>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -302,12 +314,12 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_full_page_ticket
 msgid "<span class=\"me-1\">to</span>"
-msgstr ""
+msgstr "<span class=\"me-1\">ເຖິງ</span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_badge_card
 msgid "<span class=\"o_event_badge_font_faded\">My Placeholder Company</span>"
-msgstr ""
+msgstr "<span class=\"o_event_badge_font_faded\">ບໍລິສັດຕົວຢ່າງຂອງຂ້ອຍ</span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_form
@@ -316,6 +328,9 @@ msgid ""
 "                                    Attendee answers\n"
 "                                </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                    ຄຳຕອບຂອງຜູ້ເຂົ້າຮ່ວມ\n"
+"                                </span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
@@ -324,6 +339,9 @@ msgid ""
 "                                    Registration\n"
 "                                </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                    ການລົງທະບຽນ\n"
+"                                </span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_badge_card
@@ -710,6 +728,379 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: "
+"16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; "
+"color: #454748; width: 100%; border-collapse:separate;\"><tr><td "
+"align=\"center\">\n"
+"<t t-set=\"date_begin\" t-value=\"format_datetime(object.event_begin_date, "
+"tz='UTC', dt_format=&quot;yyyyMMdd'T'HHmmss'Z'&quot;)\"/>\n"
+"<t t-set=\"date_end\" t-value=\"format_datetime(object.event_end_date, "
+"tz='UTC', dt_format=&quot;yyyyMMdd'T'HHmmss'Z'&quot;)\"/>\n"
+"<t t-set=\"is_online\" t-value=\"'is_published' in object.event_id and "
+"object.event_id.is_published\"/>\n"
+"<t t-set=\"event_organizer\" t-value=\"object.event_id.organizer_id\"/>\n"
+"<t t-set=\"event_address\" t-value=\"object.event_id.address_id\"/>\n"
+"<t t-set=\"event_website_url\" t-value=\"object.event_id.event_share_url\"/>"
+"\n"
+"<t t-set=\"registration_ids\" t-value=\"object.ids if not is_sale else "
+"object._get_event_registration_ids_from_order()\"/>\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+"style=\"padding: 16px; background-color: white; color: #454748; border-"
+"collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- HEADER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table width=\"590\" border=\"0\" cellpadding=\"0\" "
+"cellspacing=\"0\" style=\"min-width: 590px; background-color: white; "
+"padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\">\n"
+"                    <span style=\"font-size: 10px;\">ການລົງທະບຽນຂອງທ່ານ</span>"
+"<br/>\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;\">\n"
+"                        <t t-set=\"default_name\">ແຂກ</t>\n"
+"                        <t t-out=\"object.name or default_name\"/>\n"
+"                    </span>\n"
+"                </td><td valign=\"middle\" align=\"right\">\n"
+"                    <a t-attf-href=\"/event/{{ object.event_id.id }}/"
+"my_tickets?badge_mode=1&amp;registration_ids={{ registration_ids }}"
+"&amp;tickets_hash={{ object.event_id._get_tickets_access_hash"
+"(registration_ids) }}\" target=\"_blank\" t-attf-style=\"padding: 8px 12px; "
+"font-size: 12px; color: {{object.event_id.company_id.email_primary_color or "
+"'#FFFFFF'}}; text-decoration: none !important; font-weight: 400; background-"
+"color: {{object.event_id.company_id.email_secondary_color or '#875A7B'}}; "
+"border-radius:3px\">\n"
+"                        ດາວໂຫຼດບັດ\n"
+"                    </a>\n"
+"                    <t t-if=\"not object.company_id.uses_default_logo\">\n"
+"                        <img t-att-src=\"'/logo.png?company=%s' % "
+"object.company_id.id\" style=\"padding: 0px; margin: 0px; height: auto; "
+"width: 80px;\" t-att-alt=\"'%s' % object.company_id.name\"/>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb"
+"(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-"
+"height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- EVENT DESCRIPTION -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table width=\"590\" border=\"0\" cellpadding=\"0\" "
+"cellspacing=\"0\" style=\"min-width: 590px; background-color: white; "
+"padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                    <div>\n"
+"                        <t t-set=\"default_name\">ແຂກ</t>\n"
+"                        ສະບາຍດີ <t t-out=\"object.name or default_name\"/>"
+",<br/><br/>\n"
+"                        ກະລຸນາເບິ່ງບັດຂອງທ່ານທີ່ຄັດຕິດມານີ້ສຳລັບ\n"
+"                        <t t-if=\"event_website_url\">\n"
+"                            <a t-att-href=\"event_website_url\" t-attf-"
+"style=\"font-weight:bold;color:{"
+"{object.event_id.company_id.email_secondary_color or '#875A7B'}}; text-"
+"decoration:none;\" t-out=\"object.event_id.name or ''\">OpenWood Collection "
+"Online Reveal</a>\n"
+"                        </t>\n"
+"                        <t t-else=\"\">\n"
+"                            <strong t-out=\"object.event_id.name or ''\">"
+"OpenWood Collection Online Reveal</strong>.\n"
+"                        </t>\n"
+"                    </div>\n"
+"                    <br/>\n"
+"                    <table style=\"width: auto;\">\n"
+"                        <tr>\n"
+"                            <td>\n"
+"                                <strong>ເພີ່ມງານນີ້ໃສ່ປະຕິທິນຂອງທ່ານ</strong>\n"
+"                            </td>\n"
+"                            <td>\n"
+"                                <a t-attf-href=\"/event/{{ slug"
+"(object.event_id) }}/ics?slot_id={{ object.event_slot_id.id }}\" "
+"style=\"padding-top: 10px; padding-right:8px; padding-bottom:2px; padding-"
+"left:8px; margin-left: 8px; border-radius: 3px; background-color: #E7E9ED;\">"
+"\n"
+"                                    <img src=\"/event/static/src/img/apple-"
+"calendar-128.png\" alt=\"iCal\" title=\"iCal\" style=\"height: 20px; "
+"vertical-align: baseline;\"/>\n"
+"                                </a>\n"
+"                            </td>\n"
+"                            <td>\n"
+"                                <a t-attf-href=\"/event/{{ slug"
+"(object.event_id) }}/ics?slot_id={{ object.event_slot_id.id }}\" "
+"style=\"padding-top: 10px; padding-right:8px; padding-bottom:2px; padding-"
+"left:8px; margin-left: 8px; border-radius: 3px; background-color: #E7E9ED;\">"
+"\n"
+"                                    <img src=\"/event/static/src/img/outlook-"
+"calendar-128.png\" alt=\"Outlook\" title=\"Outlook\" style=\"height: 20px; "
+"vertical-align: baseline;\"/>\n"
+"                                </a>\n"
+"                            </td>\n"
+"                            <td>\n"
+"                                <a t-attf-href=\"https://www.google.com/"
+"calendar/render?action=TEMPLATE&amp;text={{ object.event_id.name }}"
+"&amp;dates={{ date_begin }}/{{ date_end }}&amp;location={{ location }}"
+"&amp;details={{ object.event_id._get_external_description_url_encoded() }}\" "
+"target=\"new\" style=\"padding-top: 10px; padding-right:8px; padding-"
+"bottom:2px; padding-left:8px; margin-left: 8px; border-radius: 3px; "
+"background-color: #E7E9ED;\">\n"
+"                                    <img src=\"/event/static/src/img/google-"
+"calendar-128.png\" alt=\"Google\" title=\"Google\" style=\"height: 20px; "
+"vertical-align: baseline;\"/>\n"
+"                                </a>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    </table>\n"
+"                    <br/><br/>\n"
+"                    <div>\n"
+"                        ແລ້ວພົບກັນໃໝ່,<br/>\n"
+"                        <span style=\"color: #454748;\">\n"
+"                        -- <br/>\n"
+"                        <t t-if=\"event_organizer\">\n"
+"                            <t t-out=\"event_organizer.name or ''\">ບໍລິສັດຂອງທ່າ"
+"ນ</t>\n"
+"                        </t>\n"
+"                        <t t-else=\"\">\n"
+"                            ທີມງານ <t t-out=\"object.event_id.name or ''\">"
+"OpenWood Collection Online Reveal</t>\n"
+"                        </t>\n"
+"                        </span>\n"
+"                    </div>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb"
+"(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-"
+"height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- DETAILS -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table width=\"590\" border=\"0\" cellpadding=\"0\" "
+"cellspacing=\"0\" style=\"min-width: 590px; background-color: white; "
+"padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                    <table style=\"width:100%;\">\n"
+"                        <tr>\n"
+"                            <td style=\"vertical-align:top;\">\n"
+"                                <img src=\"/mail/font_to_img/61555/rgb"
+"(81,81,102)/34\" style=\"padding:4px;max-width:inherit;\" height=\"34\" "
+"alt=\"\"/>\n"
+"                            </td>\n"
+"                            <td style=\"padding: 0px 10px 0px "
+"10px;width:50%;line-height:20px;vertical-align:top;\">\n"
+"                                <div t-if=\"object.event_id.is_one_day\">\n"
+"                                    <t t-out=\"object.event_begin_date\" t-"
+"options=\"{&quot;widget&quot;: &quot;datetime&quot;, &quot;date_only&quot;: "
+"True, &quot;tz_name&quot;: object.event_id.date_tz, &quot;format&quot;: "
+"&quot;long&quot;}\">May 4, 2021</t>\n"
+"                                    <t t-out=\"object.event_begin_date\" t-"
+"options=\"{&quot;widget&quot;: &quot;datetime&quot;, &quot;time_only&quot;: "
+"True, &quot;tz_name&quot;: object.event_id.date_tz, "
+"&quot;hide_seconds&quot;: True, &quot;format&quot;: &quot;short&quot;}\">"
+"7:00 AM</t>\n"
+"                                     - <t t-out=\"object.event_end_date\" t-"
+"options=\"{&quot;widget&quot;: &quot;datetime&quot;, &quot;time_only&quot;: "
+"True, &quot;tz_name&quot;: object.event_id.date_tz, "
+"&quot;hide_seconds&quot;: True, &quot;format&quot;: &quot;short&quot;}\">"
+"5:00 PM</t>\n"
+"                                </div>\n"
+"                                <div t-else=\"\">\n"
+"                                    <strong>ຈາກ</strong>\n"
+"                                    <t t-out=\"object.event_begin_date\" t-"
+"options=\"{&quot;widget&quot;: &quot;datetime&quot;, "
+"&quot;show_seconds&quot;: False, &quot;tz_name&quot;: "
+"object.event_id.date_tz, &quot;format&quot;: &quot;medium&quot;}\">May 4, "
+"2021 - 7:00 AM</t>\n"
+"                                    <br/>\n"
+"                                    <strong>ເຖິງ</strong>\n"
+"                                    <t t-out=\"object.event_end_date\" t-"
+"options=\"{&quot;widget&quot;: &quot;datetime&quot;, "
+"&quot;show_seconds&quot;: False, &quot;tz_name&quot;: "
+"object.event_id.date_tz, &quot;format&quot;: &quot;medium&quot;}\">May 6, "
+"2021 - 5:00 PM</t>\n"
+"                                </div>\n"
+"                                <div style=\"font-size:12px;color:#9e9e9e\">"
+"<i>(<t t-out=\"object.event_id.date_tz or ''\">Europe/Brussels</t>)</i></div>"
+"\n"
+"                            </td>\n"
+"                            <td style=\"vertical-align:top;\">\n"
+"                                <t t-if=\"event_address\">\n"
+"                                    <img src=\"/mail/font_to_img/61505/rgb"
+"(81,81,102)/34\" style=\"padding:4px;max-width:inherit;\" height=\"34\" "
+"alt=\"\"/>\n"
+"                                </t>\n"
+"                            </td>\n"
+"                            <td style=\"padding: 0px 10px 0px "
+"10px;width:50%;vertical-align:top;\">\n"
+"                                <t t-if=\"event_address\">\n"
+"                                    <t t-set=\"location\" t-value=\"''\"/>\n"
+"                                    <t t-"
+"if=\"object.event_id.address_id.name\">\n"
+"                                        <div t-"
+"out=\"object.event_id.address_id.name\">Teksa SpA</div>\n"
+"                                    </t>\n"
+"                                    <t t-"
+"if=\"object.event_id.address_id.street\">\n"
+"                                        <div t-"
+"out=\"object.event_id.address_id.street\">Puerto Madero 9710</div>\n"
+"                                        <t t-set=\"location\" t-"
+"value=\"object.event_id.address_id.street\"/>\n"
+"                                    </t>\n"
+"                                    <t t-"
+"if=\"object.event_id.address_id.street2\">\n"
+"                                        <div t-"
+"out=\"object.event_id.address_id.street2\">Of A15, Santiago (RM)</div>\n"
+"                                        <t t-set=\"location\" t-valuef=\"{"
+"{location}}, {{object.event_id.address_id.street2}}\"/>\n"
+"                                    </t>\n"
+"                                    <div>\n"
+"                                    <t t-"
+"if=\"object.event_id.address_id.city\">\n"
+"                                        <t t-"
+"out=\"object.event_id.address_id.city\">Pudahuel</t>,\n"
+"                                        <t t-set=\"location\" t-valuef=\"{"
+"{location}}, {{object.event_id.address_id.city}}\"/>\n"
+"                                    </t>\n"
+"                                    <t t-"
+"if=\"object.event_id.address_id.state_id.name\">\n"
+"                                        <t t-"
+"out=\"object.event_id.address_id.state_id.name\">C1</t>,\n"
+"                                        <t t-set=\"location\" t-valuef=\"{"
+"{location}}, {{object.event_id.address_id.state_id.name}}\"/>\n"
+"                                    </t>\n"
+"                                    <t t-"
+"if=\"object.event_id.address_id.zip\">\n"
+"                                        <t t-"
+"out=\"object.event_id.address_id.zip\">98450</t>\n"
+"                                        <t t-set=\"location\" t-valuef=\"{"
+"{location}}, {{object.event_id.address_id.zip}}\"/>\n"
+"                                    </t>\n"
+"                                    </div>\n"
+"                                    <t t-"
+"if=\"object.event_id.address_id.country_id.name\">\n"
+"                                        <div t-"
+"out=\"object.event_id.address_id.country_id.name\">Argentina</div>\n"
+"                                        <t t-set=\"location\" t-valuef=\"{"
+"{location}}, {{object.event_id.address_id.country_id.name}}\"/>\n"
+"                                    </t>\n"
+"                                </t>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    </table>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                    <t t-if=\"event_organizer\">\n"
+"                        <hr width=\"100%\" style=\"background-color:rgb"
+"(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-"
+"height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"\n"
+"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                    <!-- CONTACT ORGANIZER -->\n"
+"                    <t t-if=\"event_organizer\">\n"
+"                        <div>\n"
+"                            <span style=\"font-weight:300;margin:10px 0px\">ມີ"
+"ຄຳຖາມກ່ຽວກັບງານນີ້ບໍ?</span>\n"
+"                            <div>ກະລຸນາຕິດຕໍ່ຜູ້ຈັດງານ:</div>\n"
+"                            <ul>\n"
+"                                <li><t t-out=\"event_organizer.name or ''\">ບໍ"
+"ລິສັດຂອງທ່ານ</t></li>\n"
+"                                <t t-if=\"event_organizer.email\">\n"
+"                                    <li>ອີເມວ: <a t-attf-href=\"mailto:{{ "
+"event_organizer.email }}\" t-attf-style=\"text-decoration:none;color: {"
+"{object.event_id.company_id.email_secondary_color or '#875A7B'}};\" t-"
+"out=\"event_organizer.email\">info@yourcompany.com</a></li>\n"
+"                                </t>\n"
+"                                <t t-if=\"event_organizer.phone\">\n"
+"                                    <li>ເບີໂທລະສັບ: <t t-"
+"out=\"event_organizer.phone\">+1 650-123-4567</t></li>\n"
+"                                </t>\n"
+"                            </ul>\n"
+"                        </div>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                    <!-- CONTACT ORGANIZER SEPARATION -->\n"
+"                    <t t-if=\"is_online or event_address\">\n"
+"                        <hr width=\"100%\" style=\"background-color:rgb"
+"(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-"
+"height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"\n"
+"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                    <!-- PWA MARKGETING -->\n"
+"                    <t t-if=\"is_online\">\n"
+"                        <div>\n"
+"                            <strong>ຮັບປະສົບການການໃຊ້ງານຜ່ານມືຖືທີ່ດີທີ່ສຸດ.</strong>\n"
+"                            <a href=\"/event\">ຕິດຕັ້ງແອັບມືຖືຂອງພວກເຮົາ</a>\n"
+"                        </div>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                    <!-- PWA MARKGETING SEPARATION-->\n"
+"                    <t t-if=\"is_online and event_address\">\n"
+"                        <hr width=\"100%\" style=\"background-color:rgb"
+"(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-"
+"height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"\n"
+"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                    <!-- GOOGLE MAPS LINK -->\n"
+"                    <t t-if=\"event_address and location\">\n"
+"                        <table style=\"width:100%;\"><tr><td>\n"
+"                            <div>\n"
+"                                <img src=\"/web_editor/font_to_img/61505/rgb"
+"(81,81,102)/20\" height=\"20\" style=\"vertical-align: bottom;\"/>\n"
+"                                <a t-attf-href=\"https://maps.google.com/"
+"maps?q={{ location }}\" target=\"new\">\n"
+"                                    <img t-if=\"event_address.static_map_url "
+"and event_address.static_map_url_is_valid\" t-att-"
+"src=\"event_address.static_map_url\" style=\"vertical-align:bottom; width: "
+"100%;\" alt=\"Google Maps\"/>\n"
+"                                    <t t-else=\"\">ເບິ່ງສະຖານທີ່ໃນ Google Maps</"
+"t>\n"
+"                                </a>\n"
+"                            </div>\n"
+"                        </td></tr></table>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"<!-- FOOTER BY -->\n"
+"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"    <t t-if=\"object.company_id\">\n"
+"        <table width=\"590\" border=\"0\" cellpadding=\"0\" "
+"cellspacing=\"0\" style=\"min-width: 590px; background-color: #F1F1F1; "
+"color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"        <tr><td style=\"text-align: center; font-size: 14px;\">\n"
+"            ສົ່ງໂດຍ <a target=\"_blank\" t-attf-href=\"{{ "
+"object.company_id.website }}\" t-attf-style=\"color: {"
+"{object.event_id.company_id.email_secondary_color or '#875A7B'}};\" t-"
+"out=\"object.company_id.name or ''\">ບໍລິສັດຂອງທ່ານ</a>\n"
+"            <t t-if=\"is_online\">\n"
+"                <br/>\n"
+"                ຄົ້ນຫາ <a href=\"/event\" t-attf-style=\"color: {"
+"{object.event_id.company_id.email_secondary_color or '#875A7B'}};\">ງານທັງໝົດຂອ"
+"ງພວກເຮົາ</a>.\n"
+"            </t>\n"
+"        </td></tr>\n"
+"        </table>\n"
+"    </t>\n"
+"</td></tr>\n"
+"</table>\n"
+"            "
 
 #. module: event
 #: model:mail.template,body_html:event.event_reminder
@@ -1107,6 +1498,397 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: "
+"16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; "
+"color: #454748; width: 100%; border-collapse:separate;\"><tr><td "
+"align=\"center\">\n"
+"<t t-set=\"date_begin\" t-value=\"format_datetime(object.event_begin_date, "
+"tz='UTC', dt_format=&quot;yyyyMMdd'T'HHmmss'Z'&quot;)\"/>\n"
+"<t t-set=\"date_end\" t-value=\"format_datetime(object.event_end_date, "
+"tz='UTC', dt_format=&quot;yyyyMMdd'T'HHmmss'Z'&quot;)\"/>\n"
+"<t t-set=\"is_online\" t-value=\"'is_published' in object.event_id and "
+"object.event_id.is_published\"/>\n"
+"<t t-set=\"is_sale\" t-value=\"'sale_order_id' in object and "
+"object.sale_order_id\"/>\n"
+"<t t-set=\"event_organizer\" t-value=\"object.event_id.organizer_id\"/>\n"
+"<t t-set=\"event_address\" t-value=\"object.event_id.address_id\"/>\n"
+"<t t-set=\"event_website_url\" t-value=\"is_online and "
+"object.event_id.website_url\"/>\n"
+"<t t-set=\"registration_ids\" t-value=\"object.ids if not is_sale else "
+"object._get_event_registration_ids_from_order()\"/>\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+"style=\"padding: 16px; background-color: white; color: #454748; border-"
+"collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- HEADER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table width=\"590\" border=\"0\" cellpadding=\"0\" "
+"cellspacing=\"0\" style=\"min-width: 590px; background-color: white; "
+"padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\">\n"
+"                    <span style=\"font-size: 10px;\">ການລົງທະບຽນຂອງທ່ານ</span>"
+"<br/>\n"
+"                    <t t-set=\"default_name\">ແຂກ</t>\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;\" t-"
+"out=\"object.name or default_name\"/>\n"
+"                    <div style=\"margin-bottom: 5px;margin-top: 18px;\">\n"
+"                        <a t-if=\"object.event_id.address_id\" t-attf-"
+"href=\"/event/{{ object.event_id.id }}/my_tickets?registration_ids={{ "
+"object.ids }}&amp;tickets_hash={{ object.event_id._get_tickets_access_hash"
+"(object.ids) }}&amp;responsive_html=1\" target=\"_blank\" style=\"padding: "
+"8px 12px; font-size: 12px; color: {"
+"{object.event_id.company_id.email_primary_color or '#FFFFFF'}}; text-"
+"decoration: none !important; font-weight: 400; background-color: {"
+"{object.event_id.company_id.email_secondary_color or '#875A7B'}}; border-"
+"radius:3px\">\n"
+"                            ເບິ່ງປີ້\n"
+"                        </a>\n"
+"                        <a t-else=\"event_website_url\" t-att-"
+"href=\"event_website_url\" target=\"_blank\" style=\"padding: 8px 12px; font-"
+"size: 12px; color: #FFFFFF; text-decoration: none !important; font-weight: "
+"400; background-color: #875A7B; border: 0px solid #875A7B; border-"
+"radius:3px\">\n"
+"                            ເບິ່ງອອນລາຍ\n"
+"                        </a>\n"
+"                    </div>\n"
+"                </td><td valign=\"middle\" align=\"right\">\n"
+"                    <t t-if=\"object.barcode\">\n"
+"                        <div style=\"margin-bottom: 5px;\">\n"
+"                            <img t-attf-src=\"/report/barcode/QR/{"
+"{object.barcode}}?&amp;width=100&amp;height=100&amp;quiet=0\" width=\"100\" "
+"height=\"100\" alt=\"QR Code\" t-att-style=\"'height: 100px !important;'\"/>"
+"\n"
+"                        </div>\n"
+"                    </t>\n"
+"                    <t t-if=\"not object.company_id.uses_default_logo\">\n"
+"                        <img t-att-src=\"'/logo.png?company=%s' % "
+"object.company_id.id\" style=\"padding: 0px; margin: 0px; margin-right: "
+"10px; height: auto; width: 80px;\" t-att-alt=\"'%s' % "
+"object.company_id.name\"/>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb"
+"(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-"
+"height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- EVENT DESCRIPTION -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table width=\"590\" border=\"0\" cellpadding=\"0\" "
+"cellspacing=\"0\" style=\"min-width: 590px; background-color: white; "
+"padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                    <div>\n"
+"                        <t t-set=\"default_name\">ແຂກ</t>\n"
+"                        ສະບາຍດີ <t t-out=\"object.name or default_name\"/>"
+",<br/><br/>\n"
+"                        ພວກເຮົາມີຄວາມຍິນດີທີ່ຈະແຈ້ງເຕືອນທ່ານວ່າງານ\n"
+"                        <t t-if=\"event_website_url\">\n"
+"                            <a t-att-href=\"event_website_url\" t-attf-"
+"style=\"font-weight:bold;color: {"
+"{object.event_id.company_id.email_secondary_color or '#875A7B'}}; text-"
+"decoration:none;\" t-out=\"object.event_id.name or ''\">OpenWood Collection "
+"Online Reveal</a>\n"
+"                        </t>\n"
+"                        <t t-else=\"\">\n"
+"                            <strong t-out=\"object.event_id.name or ''\">"
+"OpenWood Collection Online Reveal</strong>\n"
+"                        </t>\n"
+"                        ແມ່ນເລີ່ມຕົ້ນໃນ <strong t-out=\"object.event_date_range "
+"or ''\">ມື້ນີ້</strong>.\n"
+"                    </div>\n"
+"                    <br/>\n"
+"                    <table style=\"width: auto;\">\n"
+"                        <tr>\n"
+"                            <td>\n"
+"                                <strong>ເພີ່ມງານນີ້ໃສ່ປະຕິທິນຂອງທ່ານ</strong>\n"
+"                            </td>\n"
+"                            <td>\n"
+"                                <a t-attf-href=\"/event/{{ slug"
+"(object.event_id) }}/ics?slot_id={{ object.event_slot_id.id }}\" "
+"style=\"padding-top: 10px; padding-right:8px; padding-bottom:2px; padding-"
+"left:8px; margin-left: 8px; border-radius: 3px; background-color: #E7E9ED;\">"
+"\n"
+"                                    <img src=\"/event/static/src/img/apple-"
+"calendar-128.png\" alt=\"iCal\" title=\"iCal\" style=\"height: 20px; "
+"vertical-align: baseline;\"/>\n"
+"                                </a>\n"
+"                            </td>\n"
+"                            <td>\n"
+"                                <a t-attf-href=\"/event/{{ slug"
+"(object.event_id) }}/ics?slot_id={{ object.event_slot_id.id }}\" "
+"style=\"padding-top: 10px; padding-right:8px; padding-bottom:2px; padding-"
+"left:8px; margin-left: 8px; border-radius: 3px; background-color: #E7E9ED;\">"
+"\n"
+"                                    <img src=\"/event/static/src/img/outlook-"
+"calendar-128.png\" alt=\"Outlook\" title=\"Outlook\" style=\"height: 20px; "
+"vertical-align: baseline;\"/>\n"
+"                                </a>\n"
+"                            </td>\n"
+"                            <td>\n"
+"                                <a t-attf-href=\"https://www.google.com/"
+"calendar/render?action=TEMPLATE&amp;text={{ object.event_id.name }}"
+"&amp;dates={{ date_begin }}/{{ date_end }}&amp;location={{ location }}"
+"&amp;details={{ object.event_id._get_external_description_url_encoded() }}\" "
+"target=\"new\" style=\"padding-top: 10px; padding-right:8px; padding-"
+"bottom:2px; padding-left:8px; margin-left: 8px; border-radius: 3px; "
+"background-color: #E7E9ED;\">\n"
+"                                    <img src=\"/event/static/src/img/google-"
+"calendar-128.png\" alt=\"Google\" title=\"Google\" style=\"height: 20px; "
+"vertical-align: baseline;\"/>\n"
+"                                </a>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    </table>\n"
+"                    <br/><br/>\n"
+"                    <div>\n"
+"                        ພວກເຮົາຍືນຍັນການລົງທະບຽນຂອງທ່ານ ແລະ ຫວັງວ່າຈະໄດ້ພົບທ່ານຢູ່ທີ່ນັ້"
+"ນ,<br/>\n"
+"                        <span style=\"color: #454748;\">\n"
+"                        -- <br/>\n"
+"                        <t t-if=\"event_organizer\">\n"
+"                            <t t-out=\"event_organizer.name or ''\">ບໍລິສັດຂອງທ່າ"
+"ນ</t>\n"
+"                        </t>\n"
+"                        <t t-else=\"\">\n"
+"                            ທີມງານ <t t-out=\"object.event_id.name or ''\">"
+"OpenWood Collection Online Reveal</t>\n"
+"                        </t>\n"
+"                        </span>\n"
+"                    </div>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb"
+"(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-"
+"height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- DETAILS -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table width=\"590\" border=\"0\" cellpadding=\"0\" "
+"cellspacing=\"0\" style=\"min-width: 590px; background-color: white; "
+"padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                    <table style=\"width:100%;\">\n"
+"                        <tr>\n"
+"                            <td style=\"vertical-align:top;\">\n"
+"                                <img src=\"/mail/font_to_img/61555/rgb"
+"(81,81,102)/34\" style=\"padding:4px;max-width:inherit;\" height=\"34\" "
+"alt=\"\"/>\n"
+"                            </td>\n"
+"                            <td style=\"padding: 0px 10px 0px "
+"10px;width:50%;line-height:20px;vertical-align:top;\">\n"
+"                                <div t-if=\"object.event_id.is_one_day\">\n"
+"                                    <t t-out=\"object.event_begin_date\" t-"
+"options=\"{&quot;widget&quot;: &quot;datetime&quot;, &quot;date_only&quot;: "
+"True, &quot;tz_name&quot;: object.event_id.date_tz, &quot;format&quot;: "
+"&quot;long&quot;}\">May 4, 2021</t>\n"
+"                                    <t t-out=\"object.event_begin_date\" t-"
+"options=\"{&quot;widget&quot;: &quot;datetime&quot;, &quot;time_only&quot;: "
+"True, &quot;tz_name&quot;: object.event_id.date_tz, "
+"&quot;hide_seconds&quot;: True, &quot;format&quot;: &quot;short&quot;}\">"
+"7:00 AM</t>\n"
+"                                     - <t t-out=\"object.event_end_date\" t-"
+"options=\"{&quot;widget&quot;: &quot;datetime&quot;, &quot;time_only&quot;: "
+"True, &quot;tz_name&quot;: object.event_id.date_tz, "
+"&quot;hide_seconds&quot;: True, &quot;format&quot;: &quot;short&quot;}\">"
+"5:00 PM</t>\n"
+"                                </div>\n"
+"                                <div t-else=\"\">\n"
+"                                    <strong>ຈາກ</strong>\n"
+"                                    <t t-out=\"object.event_begin_date\" t-"
+"options=\"{&quot;widget&quot;: &quot;datetime&quot;, "
+"&quot;show_seconds&quot;: False, &quot;tz_name&quot;: "
+"object.event_id.date_tz, &quot;format&quot;: &quot;medium&quot;}\">May 4, "
+"2021 - 7:00 AM</t>\n"
+"                                    <br/>\n"
+"                                    <strong>ເຖິງ</strong>\n"
+"                                    <t t-out=\"object.event_end_date\" t-"
+"options=\"{&quot;widget&quot;: &quot;datetime&quot;, "
+"&quot;show_seconds&quot;: False, &quot;tz_name&quot;: "
+"object.event_id.date_tz, &quot;format&quot;: &quot;medium&quot;}\">May 6, "
+"2021 - 5:00 PM</t>\n"
+"                                </div>\n"
+"                                <div style=\"font-size:12px;color:#9e9e9e\">"
+"<i>(<t t-out=\"object.event_id.date_tz or ''\">Europe/Brussels</t>)</i></div>"
+"\n"
+"                            </td>\n"
+"                            <td style=\"vertical-align:top;\">\n"
+"                                <t t-if=\"event_address\">\n"
+"                                    <img src=\"/mail/font_to_img/61505/rgb"
+"(81,81,102)/34\" style=\"padding:4px;max-width:inherit;\" height=\"34\" "
+"alt=\"\"/>\n"
+"                                </t>\n"
+"                            </td>\n"
+"                            <td style=\"padding: 0px 10px 0px "
+"10px;width:50%;vertical-align:top;\">\n"
+"                                <t t-if=\"event_address\">\n"
+"                                    <t t-set=\"location\" t-value=\"''\"/>\n"
+"                                    <t t-"
+"if=\"object.event_id.address_id.name\">\n"
+"                                        <div t-"
+"out=\"object.event_id.address_id.name or ''\">Teksa SpA</div>\n"
+"                                    </t>\n"
+"                                    <t t-"
+"if=\"object.event_id.address_id.street\">\n"
+"                                        <div t-"
+"out=\"object.event_id.address_id.street or ''\">Puerto Madero 9710</div>\n"
+"                                        <t t-set=\"location\" t-"
+"value=\"object.event_id.address_id.street\"/>\n"
+"                                    </t>\n"
+"                                    <t t-"
+"if=\"object.event_id.address_id.street2\">\n"
+"                                        <div t-"
+"out=\"object.event_id.address_id.street2 or ''\">Of A15, Santiago (RM)</div>"
+"\n"
+"                                        <t t-set=\"location\" t-value=\"'%s, "
+"%s' % (location, object.event_id.address_id.street2)\"/>\n"
+"                                    </t>\n"
+"                                    <div>\n"
+"                                    <t t-"
+"if=\"object.event_id.address_id.city\">\n"
+"                                        <t t-"
+"out=\"object.event_id.address_id.city or ''\">Pudahuel</t>,\n"
+"                                        <t t-set=\"location\" t-value=\"'%s, "
+"%s' % (location, object.event_id.address_id.city)\"/>\n"
+"                                    </t>\n"
+"                                    <t t-"
+"if=\"object.event_id.address_id.state_id.name\">\n"
+"                                        <t t-"
+"out=\"object.event_id.address_id.state_id.name or ''\">C1</t>,\n"
+"                                        <t t-set=\"location\" t-value=\"'%s, "
+"%s' % (location, object.event_id.address_id.state_id.name)\"/>\n"
+"                                    </t>\n"
+"                                    <t t-"
+"if=\"object.event_id.address_id.zip\">\n"
+"                                        <t t-"
+"out=\"object.event_id.address_id.zip or ''\">98450</t>\n"
+"                                        <t t-set=\"location\" t-value=\"'%s, "
+"%s' % (location, object.event_id.address_id.zip)\"/>\n"
+"                                    </t>\n"
+"                                    </div>\n"
+"                                    <t t-"
+"if=\"object.event_id.address_id.country_id.name\">\n"
+"                                        <div t-"
+"out=\"object.event_id.address_id.country_id.name or ''\">Argentina</div>\n"
+"                                        <t t-set=\"location\" t-value=\"'%s, "
+"%s' % (location, object.event_id.address_id.country_id.name)\"/>\n"
+"                                    </t>\n"
+"                                </t>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    </table>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                    <t t-if=\"event_organizer\">\n"
+"                        <hr width=\"100%\" style=\"background-color:rgb"
+"(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-"
+"height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"\n"
+"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                    <!-- CONTACT ORGANIZER -->\n"
+"                    <t t-if=\"event_organizer\">\n"
+"                        <div>\n"
+"                            <span style=\"font-weight:300;margin:10px 0px\">ມີ"
+"ຄຳຖາມກ່ຽວກັບງານນີ້ບໍ?</span>\n"
+"                            <div>ກະລຸນາຕິດຕໍ່ຜູ້ຈັດງານ:</div>\n"
+"                            <ul>\n"
+"                                <li t-out=\"event_organizer.name or ''\">ບໍລິສັດ"
+"ຂອງທ່ານ</li>\n"
+"                                <t t-if=\"event_organizer.email\">\n"
+"                                    <li>ອີເມວ: <a t-attf-href=\"mailto:{{ "
+"event_organizer.email }}\" t-attf-style=\"text-decoration:none; color: {"
+"{object.event_id.company_id.email_secondary_color or '#875A7B'}};\" t-"
+"out=\"event_organizer.email or ''\"/></li>\n"
+"                                </t>\n"
+"                                <t t-if=\"event_organizer.phone\">\n"
+"                                    <li>ເບີໂທລະສັບ: <t t-"
+"out=\"event_organizer.phone or ''\"/></li>\n"
+"                                </t>\n"
+"                            </ul>\n"
+"                        </div>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                    <!-- CONTACT ORGANIZER SEPARATION -->\n"
+"                    <hr t-if=\"is_online or event_address\" width=\"100%\" "
+"style=\"background-color:rgb(204,204,204);border:medium "
+"none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; "
+"margin: 16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"\n"
+"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                    <!-- PWA MARKGETING -->\n"
+"                    <div t-if=\"is_online\">\n"
+"                        <strong>ຮັບປະສົບການການໃຊ້ງານຜ່ານມືຖືທີ່ດີທີ່ສຸດ.</strong>\n"
+"                        <a href=\"/event\">ຕິດຕັ້ງແອັບມືຖືຂອງພວກເຮົາ</a>\n"
+"                    </div>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                    <!-- PWA MARKGETING SEPARATION-->\n"
+"                    <hr t-if=\"is_online and event_address\" width=\"100%\" "
+"style=\"background-color:rgb(204,204,204);border:medium "
+"none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; "
+"margin: 16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"\n"
+"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                    <!-- GOOGLE MAPS LINK -->\n"
+"                    <table t-if=\"event_address and location\" "
+"style=\"width:100%;\"><tr><td>\n"
+"                        <div>\n"
+"                            <img src=\"/web_editor/font_to_img/61505/rgb"
+"(81,81,102)/20\" height=\"20\" style=\"vertical-align: bottom;\"/>\n"
+"                            <a t-attf-href=\"https://maps.google.com/maps?q={"
+"{ location }}\" target=\"new\">\n"
+"                                <img t-if=\"event_address.static_map_url and "
+"event_address.static_map_url_is_valid\" t-attf-src=\"{{ "
+"event_address.static_map_url }}\" style=\"vertical-align:bottom; width: "
+"100%;\" alt=\"Google Maps\"/>\n"
+"                                <span t-else=\"\">ເບິ່ງສະຖານທີ່ໃນ Google Maps</"
+"span>\n"
+"                            </a>\n"
+"                        </div>\n"
+"                    </td></tr></table>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"<!-- FOOTER BY -->\n"
+"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"    <table t-if=\"object.company_id\" width=\"590\" border=\"0\" "
+"cellpadding=\"0\" cellspacing=\"0\" style=\"min-width: 590px; background-"
+"color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"      <tr><td style=\"text-align: center; font-size: 14px;\">\n"
+"        ສົ່ງໂດຍ <a target=\"_blank\" t-attf-href=\"{{ "
+"object.company_id.website }}\" t-attf-style=\"color: {"
+"{object.event_id.company_id.email_secondary_color or '#875A7B'}};\" t-"
+"out=\"object.company_id.name or ''\">ບໍລິສັດຂອງທ່ານ</a>\n"
+"        <t t-if=\"'website_url' in object.event_id and "
+"object.event_id.website_url\">\n"
+"            <br/>\n"
+"            ຄົ້ນຫາ <a href=\"/event\" t-attf-style=\"color: {"
+"{object.event_id.company_id.email_secondary_color or '#875A7B'}};\">ງານທັງໝົດຂອ"
+"ງພວກເຮົາ</a>.\n"
+"        </t>\n"
+"      </td></tr>\n"
+"    </table>\n"
+"</td></tr>\n"
+"</table>\n"
+"            "
 
 #. module: event
 #: model:mail.template,body_html:event.event_subscription
@@ -1526,11 +2308,422 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: "
+"16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; "
+"color: #454748; width: 100%; border-collapse:separate;\"><tr><td "
+"align=\"center\">\n"
+"<t t-set=\"date_begin\" t-value=\"format_datetime(object.event_begin_date, "
+"tz='UTC', dt_format=&quot;yyyyMMdd'T'HHmmss'Z'&quot;)\"/>\n"
+"<t t-set=\"date_end\" t-value=\"format_datetime(object.event_end_date, "
+"tz='UTC', dt_format=&quot;yyyyMMdd'T'HHmmss'Z'&quot;)\"/>\n"
+"<t t-set=\"is_online\" t-value=\"'is_published' in object.event_id and "
+"object.event_id.is_published\"/>\n"
+"<t t-set=\"is_sale\" t-value=\"'sale_order_id' in object and "
+"object.sale_order_id\"/>\n"
+"<t t-set=\"event_organizer\" t-value=\"object.event_id.organizer_id\"/>\n"
+"<t t-set=\"event_address\" t-value=\"object.event_id.address_id\"/>\n"
+"<t t-set=\"event_website_url\" t-value=\"object.event_id.event_share_url\"/>"
+"\n"
+"<t t-set=\"registration_ids\" t-value=\"object.ids if not is_sale else "
+"object._get_event_registration_ids_from_order()\"/>\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+"style=\"padding: 16px; background-color: white; color: #454748; border-"
+"collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- HEADER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table width=\"590\" border=\"0\" cellpadding=\"0\" "
+"cellspacing=\"0\" style=\"min-width: 590px; background-color: white; "
+"padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\">\n"
+"                    <span style=\"font-size: 10px;\">ການລົງທະບຽນຂອງທ່ານ</span>"
+"<br/>\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;\">\n"
+"                        <t t-set=\"default_name\">ແຂກ</t>\n"
+"                        <t t-out=\"object.name or default_name\"/>\n"
+"                    </span>\n"
+"                    <div style=\"margin-bottom: 5px;margin-top: 18px;\">\n"
+"                        <a t-if=\"object.event_id.address_id\" t-attf-"
+"href=\"/event/{{ object.event_id.id }}/my_tickets?registration_ids={{ "
+"object.ids }}&amp;tickets_hash={{ object.event_id._get_tickets_access_hash"
+"(object.ids) }}&amp;responsive_html=1\" target=\"_blank\" t-attf-"
+"style=\"padding: 8px 12px; font-size: 12px; color: {"
+"{object.event_id.company_id.email_primary_color or '#FFFFFF'}}; text-"
+"decoration: none !important; font-weight: 400; background-color: {"
+"{object.event_id.company_id.email_secondary_color or '#875A7B'}}; border-"
+"radius:3px\">\n"
+"                            ເບິ່ງປີ້\n"
+"                        </a>\n"
+"                        <a t-else=\"event_website_url\" t-att-"
+"href=\"event_website_url\" target=\"_blank\" style=\"padding: 8px 12px; font-"
+"size: 12px; color: #FFFFFF; text-decoration: none !important; font-weight: "
+"400; background-color: #875A7B; border: 0px solid #875A7B; border-"
+"radius:3px\">\n"
+"                            ເບິ່ງອອນລາຍ\n"
+"                        </a>\n"
+"                    </div>\n"
+"                </td><td valign=\"middle\" align=\"right\">\n"
+"                    <t t-if=\"object.barcode\"> \n"
+"                        <div style=\"margin-bottom: 5px;\">\n"
+"                            <img t-attf-src=\"/report/barcode/QR/{"
+"{object.barcode}}?&amp;width=100&amp;height=100&amp;quiet=0\" width=\"100\" "
+"height=\"100\" alt=\"QR Code\" t-att-style=\"'height: 100px !important;'\"/>"
+"\n"
+"                        </div>\n"
+"                    </t>\n"
+"                    <t t-if=\"not object.company_id.uses_default_logo\">\n"
+"                        <img t-att-src=\"'/logo.png?company=%s' % "
+"object.company_id.id\" style=\"padding: 0px; margin: 0px; margin-right: "
+"10px; height: auto; width: 80px;\" t-att-alt=\"'%s' % "
+"object.company_id.name\"/>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb"
+"(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-"
+"height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- EVENT DESCRIPTION -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table width=\"590\" border=\"0\" cellpadding=\"0\" "
+"cellspacing=\"0\" style=\"min-width: 590px; background-color: white; "
+"padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                    <div>\n"
+"                        <t t-set=\"default_name\">ແຂກ</t>\n"
+"                        ສະບາຍດີ <t t-out=\"object.name or default_name\"/>"
+",<br/><br/>\n"
+"                        ພວກເຮົາມີຄວາມຍິນດີທີ່ຈະຍືນຍັນການລົງທະບຽນຂອງທ່ານເຂົ້າຮ່ວມງານ\n"
+"                        <t t-if=\"event_website_url\">\n"
+"                            <a t-att-href=\"event_website_url\" t-attf-"
+"style=\"color: {{object.event_id.company_id.email_secondary_color or "
+"'#875A7B'}}; text-decoration:none;font-weight:bold;\" t-"
+"out=\"object.event_id.name or ''\">OpenWood Collection Online Reveal</a>\n"
+"                        </t>\n"
+"                        <t t-else=\"\">\n"
+"                            <strong t-out=\"object.event_id.name or ''\">"
+"OpenWood Collection Online Reveal</strong>\n"
+"                        </t>.\n"
+"                        <t t-if=\"object.partner_id and "
+"object.partner_id.name and object.partner_id.name != object.name\">\n"
+"                            ປີ້ໃບນີ້ຖືກລົງທະບຽນໂດຍ <t t-"
+"out=\"object.partner_id.name\"/>.\n"
+"                        </t>\n"
+"                    </div>\n"
+"                    <div t-if=\"is_sale\">\n"
+"                        <br/>\n"
+"                        ຄຳສັ່ງຊື້ສຳລັບປີ້ໃບນີ້ມີລະຫັດອ້າງອີງ <t t-"
+"out=\"object.sale_order_id.name\"/>\n"
+"                        ແລະ ຖືກສັ່ງຊື້ເມື່ອວັນທີ <t t-"
+"out=\"object.sale_order_id.date_order.date()\"/>\n"
+"                        <t t-if=\"object.sale_order_line_id.price_total\"> ເປັ"
+"ນຈຳນວນເງິນ\n"
+"                            <t t-"
+"out=\"object.sale_order_line_id.price_total\" t-options=\"{'widget': "
+"'monetary', 'display_currency': object.sale_order_line_id.currency_id}\"/>\n"
+"                        </t>.\n"
+"                    </div>\n"
+"                    <br/>\n"
+"                    <table style=\"width: auto;\">\n"
+"                        <tr>\n"
+"                            <td>\n"
+"                                <strong>ເພີ່ມງານນີ້ໃສ່ປະຕິທິນຂອງທ່ານ</strong>\n"
+"                            </td>\n"
+"                            <td>\n"
+"                                <a t-attf-href=\"/event/{{ slug"
+"(object.event_id) }}/ics?slot_id={{ object.event_slot_id.id }}\" "
+"style=\"padding-top: 10px; padding-right:8px; padding-bottom:2px; padding-"
+"left:8px; margin-left: 8px; border-radius: 3px; background-color: #E7E9ED;\">"
+"\n"
+"                                    <img src=\"/event/static/src/img/apple-"
+"calendar-128.png\" alt=\"iCal\" title=\"iCal\" style=\"height: 20px; "
+"vertical-align: baseline;\"/>\n"
+"                                </a>\n"
+"                            </td>\n"
+"                            <td>\n"
+"                                <a t-attf-href=\"/event/{{ slug"
+"(object.event_id) }}/ics?slot_id={{ object.event_slot_id.id }}\" "
+"style=\"padding-top: 10px; padding-right:8px; padding-bottom:2px; padding-"
+"left:8px; margin-left: 8px; border-radius: 3px; background-color: #E7E9ED;\">"
+"\n"
+"                                    <img src=\"/event/static/src/img/outlook-"
+"calendar-128.png\" alt=\"Outlook\" title=\"Outlook\" style=\"height: 20px; "
+"vertical-align: baseline;\"/>\n"
+"                                </a>\n"
+"                            </td>\n"
+"                            <td>\n"
+"                                <a t-attf-href=\"https://www.google.com/"
+"calendar/render?action=TEMPLATE&amp;text={{ object.event_id.name }}"
+"&amp;dates={{ date_begin }}/{{ date_end }}&amp;location={{ location }}"
+"&amp;details={{ object.event_id._get_external_description_url_encoded() }}\" "
+"target=\"new\" style=\"padding-top: 10px; padding-right:8px; padding-"
+"bottom:2px; padding-left:8px; margin-left: 8px; border-radius: 3px; "
+"background-color: #E7E9ED;\">\n"
+"                                    <img src=\"/event/static/src/img/google-"
+"calendar-128.png\" alt=\"Google\" title=\"Google\" style=\"height: 20px; "
+"vertical-align: baseline;\"/>\n"
+"                                </a>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    </table>\n"
+"                    <br/><br/>\n"
+"                    <div>\n"
+"                        ແລ້ວພົບກັນໃໝ່,<br/>\n"
+"                        <span style=\"color: #454748;\">\n"
+"                        -- <br/>\n"
+"                        <t t-if=\"event_organizer\">\n"
+"                            <t t-out=\"event_organizer.name\">ບໍລິສັດຂອງທ່ານ</t>"
+"\n"
+"                        </t>\n"
+"                        <t t-else=\"\">\n"
+"                            ທີມງານ <t t-out=\"object.event_id.name or ''\">"
+"OpenWood Collection Online Reveal</t>\n"
+"                        </t>\n"
+"                        </span>\n"
+"                    </div>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb"
+"(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-"
+"height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- DETAILS -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table width=\"590\" border=\"0\" cellpadding=\"0\" "
+"cellspacing=\"0\" style=\"min-width: 590px; background-color: white; "
+"padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                    <table style=\"width:100%;\">\n"
+"                        <tr>\n"
+"                            <td style=\"vertical-align:top;\">\n"
+"                                <img src=\"/mail/font_to_img/61555/rgb"
+"(81,81,102)/34\" style=\"padding:4px;max-width:inherit;\" height=\"34\" "
+"alt=\"\"/>\n"
+"                            </td>\n"
+"                            <td style=\"padding: 0px 10px 0px "
+"10px;width:50%;line-height:20px;vertical-align:top;\">\n"
+"                                <div t-if=\"object.event_id.is_one_day\">\n"
+"                                    <t t-out=\"object.event_begin_date\" t-"
+"options=\"{&quot;widget&quot;: &quot;datetime&quot;, &quot;date_only&quot;: "
+"True, &quot;tz_name&quot;: object.event_id.date_tz, &quot;format&quot;: "
+"&quot;long&quot;}\">May 4, 2021</t>\n"
+"                                    <t t-out=\"object.event_begin_date\" t-"
+"options=\"{&quot;widget&quot;: &quot;datetime&quot;, &quot;time_only&quot;: "
+"True, &quot;tz_name&quot;: object.event_id.date_tz, "
+"&quot;hide_seconds&quot;: True, &quot;format&quot;: &quot;short&quot;}\">"
+"7:00 AM</t>\n"
+"                                     - <t t-out=\"object.event_end_date\" t-"
+"options=\"{&quot;widget&quot;: &quot;datetime&quot;, &quot;time_only&quot;: "
+"True, &quot;tz_name&quot;: object.event_id.date_tz, "
+"&quot;hide_seconds&quot;: True, &quot;format&quot;: &quot;short&quot;}\">"
+"5:00 PM</t>\n"
+"                                </div>\n"
+"                                <div t-else=\"\">\n"
+"                                    <strong>ຈາກ</strong>\n"
+"                                    <t t-out=\"object.event_begin_date\" t-"
+"options=\"{&quot;widget&quot;: &quot;datetime&quot;, "
+"&quot;show_seconds&quot;: False, &quot;tz_name&quot;: "
+"object.event_id.date_tz, &quot;format&quot;: &quot;medium&quot;}\">May 4, "
+"2021 - 7:00 AM</t>\n"
+"                                    <br/>\n"
+"                                    <strong>ເຖິງ</strong>\n"
+"                                    <t t-out=\"object.event_end_date\" t-"
+"options=\"{&quot;widget&quot;: &quot;datetime&quot;, "
+"&quot;show_seconds&quot;: False, &quot;tz_name&quot;: "
+"object.event_id.date_tz, &quot;format&quot;: &quot;medium&quot;}\">May 6, "
+"2021 - 5:00 PM</t>\n"
+"                                </div>\n"
+"                                <div style=\"font-size:12px;color:#9e9e9e\">"
+"<i>(<t t-out=\"object.event_id.date_tz or ''\">Europe/Brussels</t>)</i></div>"
+"\n"
+"                            </td>\n"
+"                            <td style=\"vertical-align:top;\">\n"
+"                                <t t-if=\"event_address\">\n"
+"                                    <img src=\"/mail/font_to_img/61505/rgb"
+"(81,81,102)/34\" style=\"padding:4px;max-width:inherit;\" height=\"34\" "
+"alt=\"\"/>\n"
+"                                </t>\n"
+"                            </td>\n"
+"                            <td style=\"padding: 0px 10px 0px "
+"10px;width:50%;vertical-align:top;\">\n"
+"                                <t t-if=\"event_address\">\n"
+"                                    <t t-set=\"location\" t-value=\"''\"/>\n"
+"                                    <t t-"
+"if=\"object.event_id.address_id.name\">\n"
+"                                        <div t-"
+"out=\"object.event_id.address_id.name\">Teksa SpA</div>\n"
+"                                    </t>\n"
+"                                    <t t-"
+"if=\"object.event_id.address_id.street\">\n"
+"                                        <div t-"
+"out=\"object.event_id.address_id.street\">Puerto Madero 9710</div>\n"
+"                                        <t t-set=\"location\" t-"
+"value=\"object.event_id.address_id.street\"/>\n"
+"                                    </t>\n"
+"                                    <t t-"
+"if=\"object.event_id.address_id.street2\">\n"
+"                                        <div t-"
+"out=\"object.event_id.address_id.street2\">Of A15, Santiago (RM)</div>\n"
+"                                        <t t-set=\"location\" t-valuef=\"{"
+"{location}}, {{object.event_id.address_id.street2}}\"/>\n"
+"                                    </t>\n"
+"                                    <div>\n"
+"                                    <t t-"
+"if=\"object.event_id.address_id.city\">\n"
+"                                        <t t-"
+"out=\"object.event_id.address_id.city\">Pudahuel</t>,\n"
+"                                        <t t-set=\"location\" t-valuef=\"{"
+"{location}}, {{object.event_id.address_id.city}}\"/>\n"
+"                                    </t>\n"
+"                                    <t t-"
+"if=\"object.event_id.address_id.state_id.name\">\n"
+"                                        <t t-"
+"out=\"object.event_id.address_id.state_id.name\">C1</t>,\n"
+"                                        <t t-set=\"location\" t-valuef=\"{"
+"{location}}, {{object.event_id.address_id.state_id.name}}\"/>\n"
+"                                    </t>\n"
+"                                    <t t-"
+"if=\"object.event_id.address_id.zip\">\n"
+"                                        <t t-"
+"out=\"object.event_id.address_id.zip\">98450</t>\n"
+"                                        <t t-set=\"location\" t-valuef=\"{"
+"{location}}, {{object.event_id.address_id.zip}}\"/>\n"
+"                                    </t>\n"
+"                                    </div>\n"
+"                                    <t t-"
+"if=\"object.event_id.address_id.country_id.name\">\n"
+"                                        <div t-"
+"out=\"object.event_id.address_id.country_id.name\">Argentina</div>\n"
+"                                        <t t-set=\"location\" t-valuef=\"{"
+"{location}}, {{object.event_id.address_id.country_id.name}}\"/>\n"
+"                                    </t>\n"
+"                                </t>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    </table>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                    <t t-if=\"event_organizer\">\n"
+"                        <hr width=\"100%\" style=\"background-color:rgb"
+"(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-"
+"height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"\n"
+"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                    <!-- CONTACT ORGANIZER -->\n"
+"                    <t t-if=\"event_organizer\">\n"
+"                        <div>\n"
+"                            <span style=\"font-weight:300;margin:10px 0px\">ມີ"
+"ຄຳຖາມກ່ຽວກັບງານນີ້ບໍ?</span>\n"
+"                            <div>ກະລຸນາຕິດຕໍ່ຜູ້ຈັດງານ:</div>\n"
+"                            <ul>\n"
+"                                <li><t t-out=\"event_organizer.name or ''\">ບໍ"
+"ລິສັດຂອງທ່ານ</t></li>\n"
+"                                <t t-if=\"event_organizer.email\">\n"
+"                                    <li>ອີເມວ: <a t-attf-href=\"mailto:{{ "
+"event_organizer.email }}\" t-attf-style=\"text-decoration:none; color: {"
+"{object.event_id.company_id.email_secondary_color or '#875A7B'}};\" t-"
+"out=\"event_organizer.email or ''\">info@yourcompany.com</a></li>\n"
+"                                </t>\n"
+"                                <t t-if=\"event_organizer.phone\">\n"
+"                                    <li>ເບີໂທລະສັບ: <t t-"
+"out=\"event_organizer.phone\">+1 650-123-4567</t></li>\n"
+"                                </t>\n"
+"                            </ul>\n"
+"                        </div>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                    <!-- CONTACT ORGANIZER SEPARATION -->\n"
+"                    <t t-if=\"is_online or event_address\">\n"
+"                        <hr width=\"100%\" style=\"background-color:rgb"
+"(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-"
+"height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"\n"
+"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                    <!-- PWA MARKGETING -->\n"
+"                    <t t-if=\"is_online\">\n"
+"                        <div>\n"
+"                            <strong>ຮັບປະສົບການການໃຊ້ງານຜ່ານມືຖືທີ່ດີທີ່ສຸດ.</strong>\n"
+"                            <a href=\"/event\">ຕິດຕັ້ງແອັບມືຖືຂອງພວກເຮົາ</a>\n"
+"                        </div>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                    <!-- PWA MARKGETING SEPARATION-->\n"
+"                    <t t-if=\"is_online and event_address\">\n"
+"                        <hr width=\"100%\" style=\"background-color:rgb"
+"(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-"
+"height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"\n"
+"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                    <!-- GOOGLE MAPS LINK -->\n"
+"                    <t t-if=\"event_address and location\">\n"
+"                        <table style=\"width:100%;\"><tr><td>\n"
+"                            <div>\n"
+"                                <img src=\"/web_editor/font_to_img/61505/rgb"
+"(81,81,102)/20\" height=\"20\" style=\"vertical-align: bottom;\"/>\n"
+"                                <a t-attf-href=\"https://maps.google.com/"
+"maps?q={{ location }}\" target=\"new\">\n"
+"                                    <img t-if=\"event_address.static_map_url "
+"and event_address.static_map_url_is_valid\" t-att-"
+"src=\"event_address.static_map_url\" style=\"vertical-align:bottom; width: "
+"100%;\" alt=\"Google Maps\"/>\n"
+"                                    <t t-else=\"\">ເບິ່ງສະຖານທີ່ໃນ Google Maps</"
+"t>\n"
+"                                </a>\n"
+"                            </div>\n"
+"                        </td></tr></table>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"<!-- FOOTER BY -->\n"
+"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"    <t t-if=\"object.company_id\">\n"
+"        <table width=\"590\" border=\"0\" cellpadding=\"0\" "
+"cellspacing=\"0\" style=\"min-width: 590px; background-color: #F1F1F1; "
+"color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"        <tr><td style=\"text-align: center; font-size: 14px;\">\n"
+"            ສົ່ງໂດຍ <a target=\"_blank\" t-attf-href=\"{{ "
+"object.company_id.website }}\" t-attf-style=\"color: {"
+"{object.event_id.company_id.email_secondary_color or '#875A7B'}};\" t-"
+"out=\"object.company_id.name or ''\">ບໍລິສັດຂອງທ່ານ</a>\n"
+"            <t t-if=\"is_online\">\n"
+"                <br/>\n"
+"                ຄົ້ນຫາ <a href=\"/event\" t-attf-style=\"color: {"
+"{object.event_id.company_id.email_secondary_color or '#875A7B'}};\">ງານທັງໝົດຂອ"
+"ງພວກເຮົາ</a>.\n"
+"            </t>\n"
+"        </td></tr>\n"
+"        </table>\n"
+"    </t>\n"
+"</td></tr>\n"
+"</table>\n"
+"            "
 
 #. module: event
 #: model:ir.model.constraint,message:event.constraint_event_question_check_default_question_is_reusable
 msgid "A default question must be reusable."
-msgstr ""
+msgstr "ຄຳຖາມມາດຕະຖານຕ້ອງສາມາດນຳມາໃຊ້ໃໝ່ໄດ້."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event_ticket__description
@@ -1548,6 +2741,10 @@ msgid ""
 "Event:\t\t%(event_start)s - %(event_end)s\n"
 "Slot:\t\t%(slot_name)s"
 msgstr ""
+"ຊ່ວງເວລາບໍ່ສາມາດກຳນົດຢູ່ນອກຊ່ວງເວລາຂອງງານກິດຈະກຳໄດ້.\n"
+"\n"
+"ງານກິດຈະກຳ:\t\t%(event_start)s - %(event_end)s\n"
+"ຊ່ວງເວລາ:\t\t%(slot_name)s"
 
 #. module: event
 #. odoo-python
@@ -1556,22 +2753,24 @@ msgid ""
 "A slot end hour must be later than its start hour.\n"
 "%s"
 msgstr ""
+"ເວລາສິ້ນສຸດຂອງຊ່ວງເວລາຕ້ອງມາຫຼັງເວລາເລີ່ມຕົ້ນ.\n"
+"%s"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_slot.py:0
 msgid "A slot hour must be between 0:00 and 23:59."
-msgstr ""
+msgstr "ເວລາຂອງຊ່ວງເວລາຕ້ອງຢູ່ລະຫວ່າງ 0:00 ຫາ 23:59."
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_event__badge_format__a4_french_fold
 msgid "A4 foldable"
-msgstr ""
+msgstr "A4 ແບບພັບໄດ້"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_event__badge_format__a6
 msgid "A6"
-msgstr ""
+msgstr "A6"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_needaction
@@ -1595,7 +2794,7 @@ msgstr "ກິດຈະກຳ"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 msgid "Activities of"
-msgstr ""
+msgstr "ກິດຈະກຳຂອງ"
 
 #. module: event
 #: model:event.tag.category,name:event.event_tag_category_2
@@ -1623,12 +2822,12 @@ msgstr "ໄອຄອນປະເພດກິດຈະກຳ"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 msgid "Activity type"
-msgstr ""
+msgstr "ປະເພດກິດຈະກຳ"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_form
 msgid "Add a description that will appear as a tooltip for this stage"
-msgstr ""
+msgstr "ເພີ່ມລາຍລະອຽດທີ່ຈະສະແດງເປັນ tooltip ສຳລັບຂັ້ນຕອນນີ້"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_form
@@ -1675,13 +2874,13 @@ msgstr "ຫຼັງຈາກການລົງທະບຽນແຕ່ລະຄ
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_type__after_event
 #: model:ir.model.fields.selection,name:event.selection__event_type_mail__interval_type__after_event
 msgid "After the event ended"
-msgstr ""
+msgstr "ຫຼັງຈາກງານສິ້ນສຸດລົງ"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_type__after_event_start
 #: model:ir.model.fields.selection,name:event.selection__event_type_mail__interval_type__after_event_start
 msgid "After the event started"
-msgstr ""
+msgstr "ຫຼັງຈາກງານເລີ່ມຕົ້ນ"
 
 #. module: event
 #: model:event.tag.category,name:event.event_tag_category_1
@@ -1691,14 +2890,14 @@ msgstr "ອາຍຸ"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_form_view
 msgid "All Events"
-msgstr ""
+msgstr "ງານທັງໝົດ"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__lang
 msgid ""
 "All the communication emails sent to attendees will be translated in this "
 "language."
-msgstr ""
+msgstr "ອີເມວການສື່ສານທັງໝົດທີ່ສົ່ງເຖິງຜູ້ເຂົ້າຮ່ວມຈະຖືກແປເປັນພາສານີ້."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__is_multi_slots
@@ -1708,6 +2907,8 @@ msgid ""
 "attendees and the maximum number of tickets registrations are defined for "
 "each time slot instead of the whole event."
 msgstr ""
+"ອະນຸຍາດໃຫ້ມີຫຼາຍຊ່ວງເວລາ. ການສື່ສານ, ຈຳນວນຜູ້ເຂົ້າຮ່ວມສູງສຸດ ແລະ ຈຳນວນການລົງທະບຽນປີ້ສູງສຸດ ແມ່ນຖືກ"
+"ກຳນົດໃຫ້ແຕ່ລະຊ່ວງເວລາແທນທີ່ຈະເປັນງານທັງໝົດ."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_question__is_reusable
@@ -1715,6 +2916,7 @@ msgid ""
 "Allow this question to be selected and reused for any future event. Always "
 "true for default questions."
 msgstr ""
+"ອະນຸຍາດໃຫ້ເລືອກ ແລະ ນຳໃຊ້ຄຳຖາມນີ້ຄືນໃໝ່ສຳລັບງານໃນອະນາຄົດ. ເປັນຈິງສະເໝີສຳລັບຄຳຖາມເລີ່ມຕົ້ນ."
 
 #. module: event
 #: model:event.event,name:event.event_6
@@ -1741,7 +2943,7 @@ msgstr "ປະກາດແລ້ວ"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_question_answer__name
 msgid "Answer"
-msgstr ""
+msgstr "ຄຳຕອບ"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_registration_report
@@ -1751,7 +2953,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.event_registration_answer_view_tree
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Answer Breakdown"
-msgstr ""
+msgstr "ລາຍລະອຽດຄຳຕອບ"
 
 #. module: event
 #. odoo-javascript
@@ -1759,7 +2961,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_question__answer_ids
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_form
 msgid "Answers"
-msgstr ""
+msgstr "ຄຳຕອບທັງໝົດ"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_search
@@ -1793,7 +2995,7 @@ msgstr "ໃນນາມທີມງານ, ພວກເຮົາຍິນດີ�
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_question__once_per_order
 msgid "Ask once per order"
-msgstr ""
+msgstr "ຖາມຄັ້ງດຽວຕໍ່ການສັ່ງຊື້"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -1835,7 +3037,7 @@ msgstr "ວັນທີເຂົ້າຮ່ວມ"
 #. odoo-python
 #: code:addons/event/models/event_registration.py:0
 msgid "Attended on %(attended_date)s"
-msgstr ""
+msgstr "ເຂົ້າຮ່ວມເມື່ອ %(attended_date)s"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_registration__registration_id
@@ -1846,13 +3048,13 @@ msgstr "ຜູ້ເຂົ້າຮ່ວມ"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__registration_answer_ids
 msgid "Attendee Answers"
-msgstr ""
+msgstr "ຄຳຕອບຂອງຜູ້ເຂົ້າຮ່ວມ"
 
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_event_attendee_list
 #: model:ir.actions.report,name:event.action_report_event_registration_attendee_list
 msgid "Attendee List"
-msgstr ""
+msgstr "ລາຍຊື່ຜູ້ເຂົ້າຮ່ວມ"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__name
@@ -1862,12 +3064,12 @@ msgstr "ຊື່ຜູ້ເຂົ້າຮ່ວມ"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__registration_answer_choice_ids
 msgid "Attendee Selection Answers"
-msgstr ""
+msgstr "ຄຳຕອບການເລືອກຂອງຜູ້ເຂົ້າຮ່ວມ"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.attendee_list
 msgid "Attendee list"
-msgstr ""
+msgstr "ລາຍຊື່ຜູ້ເຂົ້າຮ່ວມ"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.act_event_registration_from_event
@@ -1889,7 +3091,7 @@ msgid ""
 "Attendees\n"
 "                                    <span invisible=\"not is_multi_slots\"> "
 "per slot</span>"
-msgstr ""
+msgstr "ຜູ້ເຂົ້າຮ່ວມ <span invisible=\"not is_multi_slots\"> ຕໍ່ຊ່ວງເວລາ</span>"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_available
@@ -1901,28 +3103,28 @@ msgstr "ບ່ອນນັ່ງທີ່ຍັງວ່າງ"
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_registration_badge
 msgid "Badge"
-msgstr ""
+msgstr "ບັດຊື່"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__badge_image
 msgid "Badge Background"
-msgstr ""
+msgstr "ພື້ນຫຼັງບັດຊື່"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__badge_format
 msgid "Badge Dimension"
-msgstr ""
+msgstr "ຂະໜາດບັດຊື່"
 
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_event_badge
 msgid "Badge Example"
-msgstr ""
+msgstr "ຕົວຢ່າງບັດຊື່"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/controllers/main.py:0
 msgid "Badges"
-msgstr ""
+msgstr "ບັດຊື່ທັງໝົດ"
 
 #. module: event
 #: model_terms:event.event,description:event.event_3
@@ -1942,29 +3144,29 @@ msgstr "ບາໂຄດ"
 #. module: event
 #: model:ir.actions.client,name:event.event_barcode_action_main_view
 msgid "Barcode Interface"
-msgstr ""
+msgstr "ໜ້າຈໍບາໂຄດ"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Barcode Nomenclature"
-msgstr ""
+msgstr "ລະບົບການຕັ້ງຊື່ບາໂຄດ"
 
 #. module: event
 #: model:ir.model.constraint,message:event.constraint_event_registration_barcode_event_uniq
 msgid "Barcode should be unique"
-msgstr ""
+msgstr "ບາໂຄດຕ້ອງບໍ່ຊ້ຳກັນ"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_type__before_event_end
 #: model:ir.model.fields.selection,name:event.selection__event_type_mail__interval_type__before_event_end
 msgid "Before the event ends"
-msgstr ""
+msgstr "ກ່ອນງານຈະສິ້ນສຸດ"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_type__before_event
 #: model:ir.model.fields.selection,name:event.selection__event_type_mail__interval_type__before_event
 msgid "Before the event starts"
-msgstr ""
+msgstr "ກ່ອນງານຈະເລີ່ມຕົ້ນ"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_event__kanban_state__blocked
@@ -2038,7 +3240,7 @@ msgstr "ຍົກເລີກແລ້ວ"
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Cancelled registration"
-msgstr ""
+msgstr "ການລົງທະບຽນທີ່ຖືກຍົກເລີກ"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_tag__category_id
@@ -2064,6 +3266,7 @@ msgid ""
 "Check this for order-level questions (e.g., 'Company Name') where the answer "
 "is the same for everyone."
 msgstr ""
+"ເລືອກອັນນີ້ສຳລັບຄຳຖາມໃນລະດັບການສັ່ງຊື້ (ເຊັ່ນ: 'ຊື່ບໍລິສັດ') ເຊິ່ງຄຳຕອບຈະຄືກັນສຳລັບທຸກຄົນ."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__event_type_id
@@ -2071,12 +3274,13 @@ msgid ""
 "Choose a template to auto-fill tickets, communications, descriptions and "
 "other fields."
 msgstr ""
+"ເລືອກແມ່ແບບເພື່ອຕື່ມຂໍ້ມູນປີ້, ການສື່ສານ, ລາຍລະອຽດ ແລະ ຂໍ້ມູນອື່ນໆ ໂດຍອັດຕະໂນມັດ."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__color
 #: model:ir.model.fields,field_description:event.field_event_slot__color
 msgid "Color"
-msgstr ""
+msgstr "ສີ"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_tag__color
@@ -2086,7 +3290,7 @@ msgstr "ດັດຊະນີສີ"
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_registration_report
 msgid "Come back once you have registrations to overview answers."
-msgstr ""
+msgstr "ກັບມາອີກຄັ້ງເມື່ອທ່ານມີການລົງທະບຽນເພື່ອເບິ່ງພາບລວມຂອງຄຳຕອບ."
 
 #. module: event
 #: model_terms:res.partner,website_description:event.res_partner_event_1
@@ -2107,6 +3311,7 @@ msgstr "ການສື່ສານ"
 msgid ""
 "Communication for %(event_name)s scheduled on %(scheduled_date)s failed."
 msgstr ""
+"ການສື່ສານສຳລັບ %(event_name)s ທີ່ກຳນົດໄວ້ໃນວັນທີ %(scheduled_date)s ຫຼົ້ມເຫຼວ."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_mail__mail_registration_ids
@@ -2166,7 +3371,7 @@ msgstr "ການຕັ້ງຄ່າ"
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Confirm attendance?"
-msgstr ""
+msgstr "ຢືນຢັນການເຂົ້າຮ່ວມບໍ?"
 
 #. module: event
 #: model:ir.model,name:event.model_res_partner
@@ -2177,7 +3382,7 @@ msgstr "ຕິດຕໍ່"
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Continue"
-msgstr ""
+msgstr "ຕໍ່ໄປ"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__country_id
@@ -2192,7 +3397,7 @@ msgstr "ສ້າງບູດ ແລະ ຈັດການການຈອງ"
 #. module: event
 #: model:ir.model,website_form_label:event.model_res_partner
 msgid "Create a Customer"
-msgstr ""
+msgstr "ສ້າງລູກຄ້າ"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_view
@@ -2269,7 +3474,7 @@ msgstr "ວັນທີ"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__event_date_range
 msgid "Date Range"
-msgstr ""
+msgstr "ຊ່ວງວັນທີ"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_unit__days
@@ -2280,12 +3485,12 @@ msgstr "ມື້"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_search
 msgid "Default Questions"
-msgstr ""
+msgstr "ຄຳຖາມເລີ່ມຕົ້ນ"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_question__is_default
 msgid "Default question"
-msgstr ""
+msgstr "ຄຳຖາມເລີ່ມຕົ້ນ"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event_ticket__seats_max
@@ -2352,7 +3557,7 @@ msgstr "ສະແດງຜູ້ສະໜັບສະໜູນ ແລະ ຜູ�
 #: model:ir.model.fields,field_description:event.field_event_event__date_tz
 #: model:ir.model.fields,field_description:event.field_event_slot__date_tz
 msgid "Display Timezone"
-msgstr ""
+msgstr "ເຂດເວລາສະແດງ"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__sequence
@@ -2362,12 +3567,12 @@ msgstr "ລຳດັບການສະແດງ"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_full_page_ticket
 msgid "Download Tickets"
-msgstr ""
+msgstr "ດາວໂຫລດປີ້"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_full_page_ticket
 msgid "Download Tickets <i class=\"ms-1 fa fa-download\"/>"
-msgstr ""
+msgstr "ດາວໂຫລດປີ້ <i class=\"ms-1 fa fa-download\"/>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -2382,7 +3587,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Edit"
-msgstr ""
+msgstr "ແກ້ໄຂ"
 
 #. module: event
 #: model:event.question,title:event.event_question_email
@@ -2399,12 +3604,12 @@ msgstr "ແມ່ແບບອີເມວ"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Enable barcode scanning"
-msgstr ""
+msgstr "ເປີດໃຊ້ງານການສະແກນບາໂຄດ"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_res_config_settings__use_event_barcode
 msgid "Enable or Disable Event Barcode functionality."
-msgstr ""
+msgstr "ເປີດ ຫຼື ປິດການນຳໃຊ້ຟັງຊັນບາໂຄດຂອງງານ."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__date_end
@@ -2414,7 +3619,7 @@ msgstr "ວັນທີສິ້ນສຸດ"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_slot__end_datetime
 msgid "End Datetime"
-msgstr ""
+msgstr "ວັນທີ ແລະ ເວລາສິ້ນສຸດ"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_stage__pipe_end
@@ -2429,7 +3634,7 @@ msgstr "ຈົບແລ້ວ"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_slot__end_hour
 msgid "Ending Hour"
-msgstr ""
+msgstr "ເວລາສິ້ນສຸດ"
 
 #. module: event
 #: model:event.event,subtitle:event.event_2
@@ -2439,7 +3644,7 @@ msgstr "ເສີມສ້າງທຸລະກິດສະຖາປັດຕະ
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__mail_state__error
 msgid "Error"
-msgstr ""
+msgstr "ຂໍ້ຜິດພາດ"
 
 #. module: event
 #. odoo-javascript
@@ -2506,7 +3711,7 @@ msgstr "ເຄື່ອງມືຕັ້ງເວລາອີເມວງານ
 #. odoo-javascript
 #: code:addons/event/static/src/template_reference_field/field_event_mail_template_reference.js:0
 msgid "Event Mail Template Reference"
-msgstr ""
+msgstr "ການອ້າງອີງແມ່ແບບອີເມວຂອງງານ"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_view_activity
@@ -2528,17 +3733,17 @@ msgstr "ຜູ້ຈັດງານ"
 #: model:ir.actions.act_window,name:event.event_question_action
 #: model:ir.model,name:event.model_event_question
 msgid "Event Question"
-msgstr ""
+msgstr "ຄຳຖາມຂອງງານ"
 
 #. module: event
 #: model:ir.model,name:event.model_event_question_answer
 msgid "Event Question Answer"
-msgstr ""
+msgstr "ຄຳຕອບຂອງຄຳຖາມງານ"
 
 #. module: event
 #: model:ir.ui.menu,name:event.event_question_menu
 msgid "Event Questions"
-msgstr ""
+msgstr "ຄຳຖາມຂອງງານ"
 
 #. module: event
 #: model:ir.model,name:event.model_event_registration
@@ -2551,13 +3756,13 @@ msgstr "ການລົງທະບຽນງານ"
 #. module: event
 #: model:ir.model,name:event.model_event_registration_answer
 msgid "Event Registration Answer"
-msgstr ""
+msgstr "ຄຳຕອບການລົງທະບຽນງານ"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/controllers/main.py:0
 msgid "Event Registrations"
-msgstr ""
+msgstr "ການລົງທະບຽນງານ"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__event_user_id
@@ -2567,12 +3772,12 @@ msgstr "ຜູ້ຮັບຜິດຊອບງານ"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__event_share_url
 msgid "Event Share URL"
-msgstr ""
+msgstr "URL ແບ່ງປັນງານ"
 
 #. module: event
 #: model:ir.model,name:event.model_event_slot
 msgid "Event Slot"
-msgstr ""
+msgstr "ຊ່ວງເວລາຂອງງານ"
 
 #. module: event
 #: model:ir.model,name:event.model_event_stage
@@ -2660,7 +3865,7 @@ msgstr "ປະເພດງານ"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_question__event_type_ids
 msgid "Event Types"
-msgstr ""
+msgstr "ປະເພດງານ"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.event_registration_action_tree
@@ -2779,7 +3984,7 @@ msgstr "ສຳຜັດກັບດົນຕີສົດ, ອາຫານທ້�
 #: model:ir.model.fields,help:event.field_event_slot__end_hour
 #: model:ir.model.fields,help:event.field_event_slot__start_hour
 msgid "Expressed in the event timezone."
-msgstr ""
+msgstr "ສະແດງຕາມເຂດເວລາຂອງງານ."
 
 #. module: event
 #: model:event.stage,description:event.event_stage_done
@@ -2787,6 +3992,7 @@ msgid ""
 "Finished events. Odoo will automatically move them to this stage once their "
 "end date has passed."
 msgstr ""
+"ງານທີ່ສິ້ນສຸດແລ້ວ. Odoo ຈະຍ້າຍພວກມັນໄປຂັ້ນຕອນນີ້ໂດຍອັດຕະໂນມັດເມື່ອວັນທີສິ້ນສຸດຜ່ານໄປ."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_stage__fold
@@ -2818,6 +4024,8 @@ msgid ""
 "class=\"o_translate_inline\" "
 "href=\"mailto:events@odoo.com\">events@odoo.com</a>"
 msgstr ""
+"ສຳລັບຂໍ້ມູນເພີ່ມເຕີມ, ກະລຸນາຕິດຕໍ່ຫາພວກເຮົາທີ່ <a class=\"o_translate_inline\" "
+"href=\"mailto:events@odoo.com\">events@odoo.com</a>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_7
@@ -2826,6 +4034,8 @@ msgid ""
 "class=\"o_translate_inline\" "
 "href=\"mailto:events@openwood.example.com\">events@penwood.example.com</a>."
 msgstr ""
+"ສຳລັບຂໍ້ມູນເພີ່ມເຕີມ, ກະລຸນາຕິດຕໍ່ຫາພວກເຮົາທີ່ <a class=\"o_translate_inline\" "
+"href=\"mailto:events@openwood.example.com\">events@penwood.example.com</a>."
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -2837,11 +4047,13 @@ msgid ""
 "class=\"o_translate_inline\" "
 "href=\"mailto:events@yourcompany.com\">events@yourcompany.com</a>."
 msgstr ""
+"ສຳລັບຂໍ້ມູນເພີ່ມເຕີມ, ກະລຸນາຕິດຕໍ່ຫາພວກເຮົາທີ່ <a class=\"o_translate_inline\" "
+"href=\"mailto:events@yourcompany.com\">events@yourcompany.com</a>."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_search
 msgid "For each attendee"
-msgstr ""
+msgstr "ສຳລັບຜູ້ເຂົ້າຮ່ວມແຕ່ລະຄົນ"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__seats_max
@@ -2850,6 +4062,8 @@ msgid ""
 "attendees), above this number the registrations are not accepted. If the "
 "event has multiple slots, this maximum number is applied per slot."
 msgstr ""
+"ສຳລັບແຕ່ລະງານ ທ່ານສາມາດກຳນົດຈຳນວນການລົງທະບຽນບ່ອນນັ່ງສູງສຸດ (ຈຳນວນຜູ້ເຂົ້າຮ່ວມ), ຫາກເກີນຈຳນວນນີ້"
+"ຈະບໍ່ຮັບການລົງທະບຽນ. ຖ້າງານມີຫຼາຍຊ່ວງເວລາ, ຈຳນວນສູງສຸດນີ້ຈະຖືກນຳໃຊ້ຕໍ່ຊ່ວງເວລາ."
 
 #. module: event
 #: model:event.event.ticket,description:event.event_0_ticket_1
@@ -2874,7 +4088,7 @@ msgstr "ສ້າງໃໝ່"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_slot_tree
 msgid "From"
-msgstr ""
+msgstr "ຈາກ"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_registration
@@ -2914,7 +4128,7 @@ msgstr "ການເຂົ້າຊົມທົ່ວໄປ"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__general_question_ids
 msgid "General Questions"
-msgstr ""
+msgstr "ຄຳຖາມທົ່ວໄປ"
 
 #. module: event
 #: model:event.event,subtitle:event.event_0
@@ -2960,7 +4174,7 @@ msgstr "ຢ້ຽມຫຼາຍ! ຕອນນີ້ສິ່ງທີ່ທ່�
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Guest #"
-msgstr ""
+msgstr "ແຂກທີ #"
 
 #. module: event
 #: model_terms:res.partner,website_description:event.res_partner_event_1
@@ -2994,12 +4208,12 @@ msgstr "ການແຂ່ງຂັນຮອກກີ້"
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Home"
-msgstr ""
+msgstr "ໜ້າຫຼັກ"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_slot_form
 msgid "Hour range"
-msgstr ""
+msgstr "ຊ່ວງເວລາ"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_unit__hours
@@ -3125,7 +4339,7 @@ msgstr "ກຳລັງດຳເນີນການ"
 #. module: event
 #: model:ir.model.fields,help:event.field_event_question__is_default
 msgid "Include by default in new events."
-msgstr ""
+msgstr "ລວມເຂົ້າເປັນຄ່າເລີ່ມຕົ້ນໃນງານໃໝ່."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__date_tz
@@ -3133,7 +4347,7 @@ msgstr ""
 msgid ""
 "Indicates the timezone in which the event dates/times will be displayed on "
 "the website."
-msgstr ""
+msgstr "ລະບຸເຂດເວລາທີ່ຈະສະແດງວັນທີ/ເວລາຂອງງານໃນເວັບໄຊ."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_mail__interval_type
@@ -3141,6 +4355,8 @@ msgid ""
 "Indicates when the communication is sent. If the event has multiple slots, "
 "the interval is related to each time slot instead of the whole event."
 msgstr ""
+"ລະບຸເວລາທີ່ຈະສົ່ງການສື່ສານ. ຖ້າງານມີຫຼາຍຊ່ວງເວລາ, ໄລຍະຫ່າງຈະກ່ຽວຂ້ອງກັບແຕ່ລະຊ່ວງເວລາແທນທີ່ຈະເປັນງ"
+"ານທັງໝົດ."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -3151,7 +4367,7 @@ msgstr "ແຊກ Google Maps ແບບໄດນາມິກໃນແມ່ແ�
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_barcode.xml:0
 msgid "Install"
-msgstr ""
+msgstr "ຕິດຕັ້ງ"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__interval_nbr
@@ -3168,7 +4384,7 @@ msgstr "ບົດນຳ, CRM, ການຈັດການການຂາຍ"
 #. odoo-python
 #: code:addons/event/models/event_registration.py:0
 msgid "Invalid event / slot choice"
-msgstr ""
+msgstr "ການເລືອກງານ / ຊ່ວງເວລາບໍ່ຖືກຕ້ອງ"
 
 #. module: event
 #. odoo-python
@@ -3180,7 +4396,7 @@ msgstr "ການເລືອກງານ / ປີ້ ບໍ່ຖືກຕ້�
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_barcode.js:0
 msgid "Invalid ticket"
-msgstr ""
+msgstr "ປີ້ບໍ່ຖືກຕ້ອງ"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__sale_available
@@ -3190,7 +4406,7 @@ msgstr "ມີໃຫ້ບໍລິການ"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__is_multi_slots
 msgid "Is Event Multi Slots"
-msgstr ""
+msgstr "ແມ່ນງານທີ່ມີຫຼາຍຊ່ວງເວລາບໍ"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__is_expired
@@ -3211,7 +4427,7 @@ msgstr "ແມ່ນຜູ້ຕິດຕາມ"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__is_multi_slots
 msgid "Is Multi Slots"
-msgstr ""
+msgstr "ແມ່ນຫຼາຍຊ່ວງເວລາບໍ"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__is_one_day
@@ -3226,13 +4442,13 @@ msgstr "ກຳລັງດຳເນີນຢູ່"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_question__is_reusable
 msgid "Is Reusable"
-msgstr ""
+msgstr "ສາມາດນຳໃຊ້ຄືນໄດ້"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_mail.py:0
 msgid "It failed with error %(error)s."
-msgstr ""
+msgstr "ມັນຫຼົ້ມເຫຼວດ້ວຍຂໍ້ຜິດພາດ %(error)s."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_type__seats_max
@@ -3247,12 +4463,12 @@ msgstr "ສົມສັກ ສີຫາວົງ"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_foldable_badge
 msgid "John Doe"
-msgstr ""
+msgstr "John Doe"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
 msgid "John Doe's avatar"
-msgstr ""
+msgstr "ຮູບແທນຕົວຂອງ John Doe"
 
 #. module: event
 #: model_terms:event.event,description:event.event_1
@@ -3284,7 +4500,7 @@ msgstr "ຄີ (Key)"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__lang
 msgid "Language"
-msgstr ""
+msgstr "ພາສາ"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
@@ -3295,12 +4511,12 @@ msgstr "30 ວັນຜ່ານມາ"
 #: model:ir.model.fields,field_description:event.field_event_mail__last_registration_id
 #: model:ir.model.fields,field_description:event.field_event_mail_slot__last_registration_id
 msgid "Last Attendee"
-msgstr ""
+msgstr "ຜູ້ເຂົ້າຮ່ວມຫຼ້າສຸດ"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__error_datetime
 msgid "Last Error"
-msgstr ""
+msgstr "ຂໍ້ຜິດພາດຫຼ້າສຸດ"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__write_uid
@@ -3370,7 +4586,7 @@ msgstr "ຈຳກັດການລົງທະບຽນ"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__limit_max_per_order
 msgid "Limit per Order"
-msgstr ""
+msgstr "ຂີດຈຳກັດຕໍ່ການສັ່ງຊື້"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type__has_seats_limitation
@@ -3380,7 +4596,7 @@ msgstr "ຈຳກັດບ່ອນນັ່ງ"
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__event_url
 msgid "Link where the online event will take place."
-msgstr ""
+msgstr "ລິ້ງບ່ອນທີ່ຈະຈັດງານອອນໄລນ໌."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -3440,7 +4656,7 @@ msgstr "ສົ່ງອີເມວແລ້ວ"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__mail_slot_ids
 msgid "Mail Slot"
-msgstr ""
+msgstr "ຊ່ວງເວລາອີເມວ"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -3453,17 +4669,17 @@ msgstr "ຈັດການ ແລະ ເຜີຍແຜ່ກຳນົດກາ�
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Mandatory"
-msgstr ""
+msgstr "ຈຳເປັນ"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_question__is_mandatory_answer
 msgid "Mandatory Answer"
-msgstr ""
+msgstr "ຄຳຕອບທີ່ຈຳເປັນ"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_full_page_ticket_layout
 msgid "Marc Demo"
-msgstr ""
+msgstr "Marc Demo"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_tree
@@ -3503,11 +4719,13 @@ msgid ""
 "Maximum of this product per order.\n"
 "Set to 0 to ignore this rule"
 msgstr ""
+"ຈຳນວນສູງສຸດຂອງສິນຄ້ານີ້ຕໍ່ການສັ່ງຊື້.\n"
+"ຕັ້ງເປັນ 0 ເພື່ອລະເວັ້ນກົດເກນນີ້"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_view_tree_from_event
 msgid "Maximum per slot"
-msgstr ""
+msgstr "ສູງສຸດຕໍ່ຊ່ວງເວລາ"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__utm_medium_id
@@ -3536,7 +4754,7 @@ msgstr "ເດືອນ"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Multiple Slots"
-msgstr ""
+msgstr "ຫຼາຍຊ່ວງເວລາ"
 
 #. module: event
 #: model:event.tag,name:event.event_tag_category_2_tag_2
@@ -3547,7 +4765,7 @@ msgstr "ດົນຕີ"
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "My Activities"
-msgstr ""
+msgstr "ກິດຈະກຳຂອງຂ້ອຍ"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__my_activity_date_deadline
@@ -3580,7 +4798,7 @@ msgstr "ໃໝ່"
 #. odoo-javascript
 #: code:addons/event/static/src/views/event_slot_calendar/event_slot_calendar_controller.js:0
 msgid "New Slot"
-msgstr ""
+msgstr "ຊ່ວງເວລາໃໝ່"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__activity_calendar_event_id
@@ -3609,7 +4827,7 @@ msgstr "ປະເພດກິດຈະກຳຖັດໄປ"
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_registration_report
 msgid "No Answers yet!"
-msgstr ""
+msgstr "ຍັງບໍ່ມີຄຳຕອບເທື່ອ!"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.event_registration_action
@@ -3627,22 +4845,22 @@ msgstr "ຍັງບໍ່ມີຜູ້ເຂົ້າຮ່ວມເທື່
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.event_question_action
 msgid "No questions yet! Please create one."
-msgstr ""
+msgstr "ຍັງບໍ່ມີຄຳຖາມເທື່ອ! ກະລຸນາສ້າງຂຶ້ນມາ."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__barcode_nomenclature_id
 msgid "Nomenclature"
-msgstr ""
+msgstr "ລະບົບການຕັ້ງຊື່"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_search
 msgid "Not Reusable"
-msgstr ""
+msgstr "ນຳໃຊ້ຄືນບໍ່ໄດ້"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_search
 msgid "Not mandatory"
-msgstr ""
+msgstr "ບໍ່ຈຳເປັນ"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__note
@@ -3660,7 +4878,7 @@ msgstr "ບັນທຶກ"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Notes & Documents"
-msgstr ""
+msgstr "ບັນທຶກ ແລະ ເອກະສານ"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_mail
@@ -3695,7 +4913,7 @@ msgstr "ຈຳນວນການລົງທະບຽນ"
 #: model:ir.model.fields,field_description:event.field_event_event__seats_taken
 #: model:ir.model.fields,field_description:event.field_event_slot__seats_taken
 msgid "Number of Taken Seats"
-msgstr ""
+msgstr "ຈຳນວນບ່ອນນັ່ງທີ່ຖືກຈອງແລຍ"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_has_error_counter
@@ -3707,7 +4925,7 @@ msgstr "ຈຳນວນຂໍ້ຜິດພາດ"
 #: model:ir.model.fields,help:event.field_event_event__message_needaction_counter
 #: model:ir.model.fields,help:event.field_event_registration__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "ຈຳນວນຂໍ້ຄວາມທີ່ຕ້ອງການດຳເນີນການ"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__message_has_error_counter
@@ -3723,7 +4941,7 @@ msgstr "ຈຸດປະສົງ"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_full_page_ticket_layout
 msgid "Odoo Community Days"
-msgstr ""
+msgstr "Odoo Community Days"
 
 #. module: event
 #: model_terms:event.event,description:event.event_3
@@ -3736,12 +4954,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Once per Order"
-msgstr ""
+msgstr "ຄັ້ງດຽວຕໍ່ການສັ່ງຊື້"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_search
 msgid "Once per order"
-msgstr ""
+msgstr "ຄັ້ງດຽວຕໍ່ການສັ່ງຊື້"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
@@ -3757,12 +4975,12 @@ msgstr "ອອນໄລນ໌"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
 msgid "Online Event"
-msgstr ""
+msgstr "ງານອອນໄລນ໌"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__event_url
 msgid "Online Event URL"
-msgstr ""
+msgstr "URL ງານອອນໄລນ໌"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -3777,13 +4995,14 @@ msgstr "ການຂາຍປີ້ອອນໄລນ໌"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Online if not set"
-msgstr ""
+msgstr "ອອນໄລນ໌ຫາກບໍ່ໄດ້ກຳນົດ"
 
 #. module: event
 #. odoo-javascript
 #: code:addons/event/static/src/js/tours/event_tour.js:0
 msgid "Open date range picker.<br/>Pick a Start and End date for your event."
 msgstr ""
+"ເປີດຕົວເລືອກຊ່ວງວັນທີ.<br/>ເລືອກວັນທີເລີ່ມຕົ້ນ ແລະ ສິ້ນສຸດສຳລັບງານຂອງທ່ານ."
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -3833,7 +5052,7 @@ msgstr "ເບີໂທລະສັບ"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.attendee_list
 msgid "Phone number"
-msgstr ""
+msgstr "ເບີໂທລະສັບ"
 
 #. module: event
 #: model_terms:event.event,ticket_instructions:event.event_0
@@ -3851,13 +5070,13 @@ msgstr "ກະລຸນາປ້ອນລະຫັດລັບ base64 ທີ່�
 #. odoo-python
 #: code:addons/event/models/event_event.py:0
 msgid "Please enter a valid event URL."
-msgstr ""
+msgstr "ກະລຸນາປ້ອນ URL ຂອງງານທີ່ຖືກຕ້ອງ."
 
 #. module: event
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_barcode.js:0
 msgid "Please, Scan again!"
-msgstr ""
+msgstr "ກະລຸນາສະແກນອີກຄັ້ງ!"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -3868,7 +5087,7 @@ msgstr "ລະບົບຂາຍໜ້າຮ້ານ (POS), ການແນະ�
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Print"
-msgstr ""
+msgstr "ພິມ"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -3885,7 +5104,7 @@ msgstr "ການຈັດການໂຄງການ, ຊັບພະຍາກ�
 #: model:ir.model.fields,field_description:event.field_event_registration__registration_properties
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Properties"
-msgstr ""
+msgstr "ຄຸນສົມບັດ"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -3898,7 +5117,7 @@ msgstr "ການຈັດຊື້, ການຂາຍ ແລະ ການຈ�
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_foldable_badge
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_full_page_ticket
 msgid "QR Code"
-msgstr ""
+msgstr "ລະຫັດ QR"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_question_answer__question_id
@@ -3906,13 +5125,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Question"
-msgstr ""
+msgstr "ຄຳຖາມ"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_question__question_type
 #: model:ir.model.fields,field_description:event.field_event_registration_answer__question_type
 msgid "Question Type"
-msgstr ""
+msgstr "ປະເພດຄຳຖາມ"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__question_ids
@@ -3921,7 +5140,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Questions"
-msgstr ""
+msgstr "ຄຳຖາມທັງໝົດ"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_track_quiz
@@ -3951,7 +5170,7 @@ msgstr "ພ້ອມທີ່ຈະ <b>ຈັດການງານ</b> ໃນບ
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_tree
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Registered"
-msgstr ""
+msgstr "ລົງທະບຽນແລ້ວ"
 
 #. module: event
 #. odoo-python
@@ -4004,7 +5223,7 @@ msgstr "ອີເມວການລົງທະບຽນ"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__registration_properties_definition
 msgid "Registration Properties"
-msgstr ""
+msgstr "ຄຸນສົມບັດການລົງທະບຽນ"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__start_sale_datetime
@@ -4045,6 +5264,10 @@ msgid ""
 "- there are seats available on event\n"
 "- the tickets are sellable (if ticketing is used)"
 msgstr ""
+"ການລົງທະບຽນເປີດຫາກ:\n"
+"- ງານຍັງບໍ່ສິ້ນສຸດ ຫຼື ບໍ່ຖືກຍົກເລີກ\n"
+"- ມີບ່ອນນັ່ງວ່າງໃນງານ\n"
+"- ປີ້ສາມາດຂາຍໄດ້ (ຫາກມີການໃຊ້ລະບົບປີ້)"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__event_registrations_started
@@ -4055,7 +5278,7 @@ msgstr "ເລີ່ມການລົງທະບຽນແລ້ວ"
 #. odoo-python
 #: code:addons/event/models/event_mail.py:0
 msgid "Rendering of template failed with error: %(error)s."
-msgstr ""
+msgstr "ການສ້າງແມ່ແບບຫຼົ້ມເຫຼວດ້ວຍຂໍ້ຜິດພາດ: %(error)s."
 
 #. module: event
 #: model:ir.ui.menu,name:event.menu_reporting_events
@@ -4083,17 +5306,17 @@ msgstr "ຜູ້ໃຊ້ທີ່ຮັບຜິດຊອບ"
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_registration_responsive_html_ticket
 msgid "Responsive Html Full Page Ticket"
-msgstr ""
+msgstr "ປີ້ແບບເຕັມໜ້າ HTML ທີ່ຮອງຮັບທຸກອຸປະກອນ"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_search
 msgid "Reusable"
-msgstr ""
+msgstr "ນຳໃຊ້ຄືນໄດ້"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_formatted_event_address
 msgid "Rue de la Paix 123"
-msgstr ""
+msgstr "Rue de la Paix 123"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__mail_state__running
@@ -4110,7 +5333,7 @@ msgstr "ຂໍ້ຜິດພາດໃນການສົ່ງ SMS"
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_barcode.xml:0
 msgid "Scan or Tap"
-msgstr ""
+msgstr "ສະແກນ ຫຼື ແຕະ"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -4145,12 +5368,12 @@ msgstr "ເວລາທີ່ກຳນົດ"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__mail_registration_ids
 msgid "Scheduler Emails"
-msgstr ""
+msgstr "ອີເມວກຳນົດເວລາ"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_search
 msgid "Search Event Question"
-msgstr ""
+msgstr "ຄົ້ນຫາຄຳຖາມງານ"
 
 #. module: event
 #: model_terms:event.event,description:event.event_5
@@ -4166,17 +5389,17 @@ msgstr "ຄວາມລັບ"
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_barcode.xml:0
 msgid "Select Attendee"
-msgstr ""
+msgstr "ເລືອກຜູ້ເຂົ້າຮ່ວມ"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_answer_view_tree
 msgid "Selected answer"
-msgstr ""
+msgstr "ຄຳຕອບທີ່ຖືກເລືອກ"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_question__question_type__simple_choice
 msgid "Selection"
-msgstr ""
+msgstr "ການເລືອກ"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -4186,7 +5409,7 @@ msgstr "ຂາຍປີ້ໃນເວັບໄຊທ໌ຂອງທ່ານ"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Sell tickets with Point of Sale"
-msgstr ""
+msgstr "ຂາຍປີ້ດ້ວຍລະບົບຈຸດຂາຍ (POS)"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -4259,7 +5482,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Show all records whose next activity date is past"
-msgstr ""
+msgstr "ສະແດງບັນທຶກທັງໝົດທີ່ວັນທີກິດຈະກຳຖັດໄປແມ່ນກາຍກຳນົດແລ້ວ"
 
 #. module: event
 #. odoo-javascript
@@ -4268,28 +5491,28 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_registration__event_slot_id
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Slot"
-msgstr ""
+msgstr "ຊ່ວງເວລາ"
 
 #. module: event
 #: model:ir.model,name:event.model_event_mail_slot
 msgid "Slot Mail Scheduler"
-msgstr ""
+msgstr "ຕົວຕັ້ງເວລາອີເມວຕາມຊ່ວງເວລາ"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_registration.py:0
 msgid "Slot choice is mandatory on multi-slots events."
-msgstr ""
+msgstr "ການເລືອກຊ່ວງເວລາແມ່ນຈຳເປັນໃນງານທີ່ມີຫຼາຍຊ່ວງເວລາ."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Slot(s)"
-msgstr ""
+msgstr "ຊ່ວງເວລາ"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_mail__mail_slot_ids
 msgid "Slot-based communication"
-msgstr ""
+msgstr "ການສື່ສານຕາມຊ່ວງເວລາ"
 
 #. module: event
 #. odoo-python
@@ -4299,12 +5522,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.view_event_slot_calendar
 #: model_terms:ir.ui.view,arch_db:event.view_event_slot_tree
 msgid "Slots"
-msgstr ""
+msgstr "ຊ່ວງເວລາທັງໝົດ"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__event_slot_count
 msgid "Slots Count"
-msgstr ""
+msgstr "ຈຳນວນຊ່ວງເວລາ"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__event_registrations_sold_out
@@ -4322,7 +5545,7 @@ msgstr "ແຫຼ່ງທີ່ມາ"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__specific_question_ids
 msgid "Specific Questions"
-msgstr ""
+msgstr "ຄຳຖາມສະເພາະ"
 
 #. module: event
 #: model:event.tag,name:event.event_tag_category_2_tag_3
@@ -4363,7 +5586,7 @@ msgstr "ວັນທີເລີ່ມຕົ້ນ"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_slot__start_datetime
 msgid "Start Datetime"
-msgstr ""
+msgstr "ວັນທີ ແລະ ເວລາເລີ່ມຕົ້ນ"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__start_sale_datetime
@@ -4373,7 +5596,7 @@ msgstr "ວັນທີເລີ່ມຂາຍ"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_slot__start_hour
 msgid "Starting Hour"
-msgstr ""
+msgstr "ເວລາເລີ່ມຕົ້ນ"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_partner__static_map_url
@@ -4391,7 +5614,7 @@ msgstr "Static Map Url ຖືກຕ້ອງ"
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_list
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Stats"
-msgstr ""
+msgstr "ສະຖິຕິ"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__state
@@ -4417,12 +5640,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Successfully registered!"
-msgstr ""
+msgstr "ລົງທະບຽນສຳເລັດແລ້ວ!"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration_answer__value_answer_id
 msgid "Suggested answer"
-msgstr ""
+msgstr "ຄຳຕອບທີ່ແນະນຳ"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_tag__color
@@ -4443,12 +5666,12 @@ msgstr "ແທັກ"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Taken"
-msgstr ""
+msgstr "ຖືກຈອງແລ້ວ"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__seats_taken
 msgid "Taken Seats"
-msgstr ""
+msgstr "ບ່ອນນັ່ງທີ່ຖືກຈອງແລ້ວ"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__event_type_id
@@ -4462,12 +5685,12 @@ msgstr "ແມ່ແບບ"
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_question__question_type__text_box
 msgid "Text Input"
-msgstr ""
+msgstr "ການປ້ອນຂໍ້ຄວາມ"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration_answer__value_text_box
 msgid "Text answer"
-msgstr ""
+msgstr "ຄຳຕອບແບບຂໍ້ຄວາມ"
 
 #. module: event
 #: model:event.event,subtitle:event.event_1
@@ -4526,6 +5749,8 @@ msgid ""
 "registrations linked to them:\n"
 "- %s"
 msgstr ""
+"ຊ່ວງເວລາຕໍ່ໄປນີ້ບໍ່ສາມາດລຶບໄດ້ໃນຂະນະທີ່ມີການລົງທະບຽນເຊື່ອມຕໍ່ຢູ່:\n"
+"- %s"
 
 #. module: event
 #. odoo-python
@@ -4545,6 +5770,7 @@ msgid ""
 "The limit per order cannot be greater than %(limit_orderable)s. Please check "
 "ticket %(ticket_name)s"
 msgstr ""
+"ຂີດຈຳກັດຕໍ່ການສັ່ງຊື້ບໍ່ສາມາດໃຫຍ່ກວ່າ %(limit_orderable)s. ກະລຸນາກວດສອບປີ້ %(ticket_name)s"
 
 #. module: event
 #. odoo-python
@@ -4553,13 +5779,14 @@ msgid ""
 "The limit per order cannot be greater than the maximum seats number. Please "
 "check ticket %(ticket_name)s"
 msgstr ""
+"ຂີດຈຳກັດຕໍ່ການສັ່ງຊື້ບໍ່ສາມາດໃຫຍ່ກວ່າຈຳນວນບ່ອນນັ່ງສູງສຸດ. ກະລຸນາກວດສອບປີ້ %(ticket_name)s"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_ticket.py:0
 msgid ""
 "The limit per order must be positive. Please check ticket %(ticket_name)s"
-msgstr ""
+msgstr "ຂີດຈຳກັດຕໍ່ການສັ່ງຊື້ຕ້ອງເປັນຄ່າບວກ. ກະລຸນາກວດສອບປີ້ %(ticket_name)s"
 
 #. module: event
 #: model_terms:event.event,description:event.event_1
@@ -4582,6 +5809,7 @@ msgid ""
 "There are more registrations than this limit, the event will be sold out and "
 "the extra registrations will remain."
 msgstr ""
+"ມີການລົງທະບຽນເກີນຂີດຈຳກັດນີ້, ງານຈະຖືກຂາຍໝົດ ແລະ ການລົງທະບຽນສ່ວນເກີນຈະຍັງຄົງຄ້າງຢູ່."
 
 #. module: event
 #. odoo-python
@@ -4590,6 +5818,8 @@ msgid ""
 "There are not enough seats available for %(event_name)s:\n"
 "%(sold_out_info)s"
 msgstr ""
+"ບໍ່ມີບ່ອນນັ່ງພຽງພໍສຳລັບ %(event_name)s:\n"
+"%(sold_out_info)s"
 
 #. module: event
 #. odoo-python
@@ -4597,12 +5827,12 @@ msgstr ""
 msgid ""
 "There is an issue with dynamic placeholder. Actual error received is: %"
 "(error)s."
-msgstr ""
+msgstr "ມີບັນຫາກັບຕົວສຳຮອງຂໍ້ມູນແບບໄດນາມິກ. ຂໍ້ຜິດພາດທີ່ໄດ້ຮັບແມ່ນ: %(error)s."
 
 #. module: event
 #: model:ir.model.constraint,message:event.constraint_event_registration_answer_value_check
 msgid "There must be a suggested value or a text value."
-msgstr ""
+msgstr "ຕ້ອງມີຄ່າທີ່ແນະນຳ ຫຼື ຄ່າຂໍ້ຄວາມ."
 
 #. module: event
 #. odoo-python
@@ -4611,6 +5841,8 @@ msgid ""
 "These events cannot have slots scheduled outside of their time range:\n"
 "%(event_names)s"
 msgstr ""
+"ງານເຫຼົ່ານີ້ບໍ່ສາມາດມີຊ່ວງເວລາທີ່ກຳນົດຢູ່ນອກຊ່ວງເວລາຂອງງານໄດ້:\n"
+"%(event_names)s"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -4643,7 +5875,7 @@ msgstr "ຂໍ້ມູນນີ້ຈະຖືກພິມໃສ່ປີ້ຂ
 #. odoo-python
 #: code:addons/event/models/event_mail.py:0
 msgid "This is due to an error in template %(template_link)s."
-msgstr ""
+msgstr "ນີ້ແມ່ນຍ້ອນຂໍ້ຜິດພາດໃນແມ່ແບບ %(template_link)s."
 
 #. module: event
 #. odoo-javascript
@@ -4672,24 +5904,24 @@ msgstr ""
 #. odoo-python
 #: code:addons/event/models/event_mail.py:0
 msgid "This may be linked to template %(template_link)s."
-msgstr ""
+msgstr "ນີ້ອາດຈະເຊື່ອມໂຍງກັບແມ່ແບບ %(template_link)s."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_form
 msgid "This question is used by"
-msgstr ""
+msgstr "ຄຳຖາມນີ້ຖືກໃຊ້ໂດຍ"
 
 #. module: event
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "This ticket is for another event!"
-msgstr ""
+msgstr "ປີ້ນີ້ແມ່ນສຳລັບງານອື່ນ!"
 
 #. module: event
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "This ticket is not for an ongoing event"
-msgstr ""
+msgstr "ປີ້ນີ້ບໍ່ແມ່ນສຳລັບງານທີ່ກຳລັງຈັດຂຶ້ນ"
 
 #. module: event
 #. odoo-python
@@ -4720,12 +5952,12 @@ msgstr "ປະເພດປີ້"
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Ticket already scanned!"
-msgstr ""
+msgstr "ປີ້ຖືກສະແກນແລ້ວ!"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.attendee_list
 msgid "Ticket type"
-msgstr ""
+msgstr "ປະເພດປີ້"
 
 #. module: event
 #. odoo-javascript
@@ -4739,7 +5971,7 @@ msgstr "ປະເພດປີ້ຊ່ວຍໃຫ້ທ່ານແຍກປະ
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Ticket was first scanned on"
-msgstr ""
+msgstr "ປີ້ຖືກສະແກນຄັ້ງທຳອິດໃນວັນທີ"
 
 #. module: event
 #. odoo-python
@@ -4759,12 +5991,12 @@ msgstr "ປີ້ສາມາດພິມອອກມາ ຫຼື ສະແກ�
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_pos_event
 msgid "Tickets with PoS"
-msgstr ""
+msgstr "ປີ້ກັບລະບົບ POS"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_event_sale
 msgid "Tickets with Sale"
-msgstr ""
+msgstr "ປີ້ກັບການຂາຍ"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type__default_timezone
@@ -4776,12 +6008,12 @@ msgstr "ເຂດເວລາ"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_question__title
 msgid "Title"
-msgstr ""
+msgstr "ຫົວຂໍ້"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_slot_tree
 msgid "To"
-msgstr ""
+msgstr "ເຖິງ"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
@@ -4798,12 +6030,12 @@ msgstr "ລວມ"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_tree
 msgid "Total Attendees"
-msgstr ""
+msgstr "ຈຳນວນຜູ້ເຂົ້າຮ່ວມທັງໝົດ"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_view_tree_from_event
 msgid "Total Registration"
-msgstr ""
+msgstr "ການລົງທະບຽນທັງໝົດ"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
@@ -4868,6 +6100,10 @@ msgid ""
 "Attended: registrations for which the attendee attended the event\n"
 "Cancelled: registrations cancelled manually"
 msgstr ""
+"ບໍ່ໄດ້ຢືນຢັນ: ການລົງທະບຽນທີ່ລໍຖ້າການດຳເນີນການ (ໂດຍສະເພາະກັບສະຖານະການຂາຍ)\n"
+"ລົງທະບຽນແລ້ວ: ການລົງທະບຽນໂດຍລູກຄ້າ\n"
+"ເຂົ້າຮ່ວມແລ້ວ: ຜູ້ເຂົ້າຮ່ວມໄດ້ມາຮ່ວມງານ\n"
+"ຍົກເລີກແລ້ວ: ການລົງທະບຽນທີ່ຖືກຍົກເລີກດ້ວຍຕົນເອງ"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_mail
@@ -4886,7 +6122,7 @@ msgstr "ທຳຄວາມເຂົ້າໃຈໂມດູນຕ່າງໆ;"
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Undo"
-msgstr ""
+msgstr "ຍ້ອນກັບ"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__interval_unit
@@ -4897,7 +6133,7 @@ msgstr "ຫົວໜ່ວຍ"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_slot_tree
 msgid "Until"
-msgstr ""
+msgstr "ຈົນເຖິງ"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
@@ -4913,17 +6149,17 @@ msgstr "ທີ່ຈະມາເຖິງ/ກຳລັງດຳເນີນຢ�
 #. odoo-python
 #: code:addons/event/models/event_event.py:0
 msgid "Update the limit of registrations?"
-msgstr ""
+msgstr "ອັບເດດຂີດຈຳກັດຂອງການລົງທະບຽນບໍ?"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__use_barcode
 msgid "Use Barcode"
-msgstr ""
+msgstr "ໃຊ້ບາໂຄດ"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__use_event_barcode
 msgid "Use Event Barcode"
-msgstr ""
+msgstr "ໃຊ້ບາໂຄດຂອງງານ"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.event_tag_category_action_tree
@@ -4968,7 +6204,7 @@ msgstr "ສະຖານທີ່ຈັດງານ (ຮູບແບບແຖວ�
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Visible to all"
-msgstr ""
+msgstr "ທຸກຄົນສາມາດເຫັນໄດ້"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.act_event_registration_from_event
@@ -5024,6 +6260,7 @@ msgid ""
 "When the event is scheduled to take place (expressed in your local timezone "
 "on the form view)."
 msgstr ""
+"ເວລາທີ່ງານຖືກກຳນົດໃຫ້ຈັດຂຶ້ນ (ສະແດງຕາມເຂດເວລາທ້ອງຖິ່ນຂອງທ່ານໃນໜ້າຈໍແບບຟອມ)."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__is_ongoing
@@ -5043,7 +6280,7 @@ msgstr "ບ່ອນນັ່ງສຳລັບປີ້ປະເພດນີ້
 #. module: event
 #: model:ir.model.fields,help:event.field_event_slot__is_sold_out
 msgid "Whether seats are sold out for this slot."
-msgstr ""
+msgstr "ບ່ອນນັ່ງສຳລັບຊ່ວງເວລານີ້ຂາຍໝົດແລ້ວຫຼືບໍ່."
 
 #. module: event
 #: model:event.event.ticket,description:event.event_0_ticket_2
@@ -5055,13 +6292,13 @@ msgstr "ທ່ານແມ່ນໜຶ່ງໃນຜູ້ທີ່ດີທີ
 #: code:addons/event/models/event_question.py:0
 msgid ""
 "You cannot change the question type of a question that already has answers!"
-msgstr ""
+msgstr "ທ່ານບໍ່ສາມາດປ່ຽນປະເພດຄຳຖາມທີ່ມີຄຳຕອບຢູ່ແລ້ວໄດ້!"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_question.py:0
 msgid "You cannot delete a default question."
-msgstr ""
+msgstr "ທ່ານບໍ່ສາມາດລຶບຄຳຖາມເລີ່ມຕົ້ນໄດ້."
 
 #. module: event
 #. odoo-python
@@ -5070,13 +6307,14 @@ msgid ""
 "You cannot delete a question that has already been answered by attendees. "
 "You can archive it instead."
 msgstr ""
+"ທ່ານບໍ່ສາມາດລຶບຄຳຖາມທີ່ມີຜູ້ເຂົ້າຮ່ວມຕອບແລ້ວໄດ້. ທ່ານສາມາດເກັບມັນໄວ້ແທນ."
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_question_answer.py:0
 msgid ""
 "You cannot delete an answer that has already been selected by attendees."
-msgstr ""
+msgstr "ທ່ານບໍ່ສາມາດລຶບຄຳຕອບທີ່ຖືກເລືອກໂດຍຜູ້ເຂົ້າຮ່ວມແລ້ວໄດ້."
 
 #. module: event
 #: model:mail.template,subject:event.event_registration_mail_template_badge
@@ -5106,7 +6344,7 @@ msgstr "ເຊັ່ນ: \"Azure Interior\""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_form
 msgid "e.g. \"Do you have any diet restrictions?\""
-msgstr ""
+msgstr "ເຊັ່ນ: \"ທ່ານມີຂໍ້ຈຳກັດດ້ານອາຫານຫຼືບໍ່?\""
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_form
@@ -5116,7 +6354,7 @@ msgstr "ເຊັ່ນ: \"ກຳລັງໂປຣໂມດ\""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "e.g. \"https://www.odoo.com\""
-msgstr ""
+msgstr "ເຊັ່ນ: \"https://www.odoo.com\""
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_view_form_quick_create
@@ -5144,17 +6382,17 @@ msgstr "ເຊັ່ນ: ປີ້ວີໄອພີ (VIP)"
 #. odoo-python
 #: code:addons/event/models/event_event.py:0
 msgid "event_id"
-msgstr ""
+msgstr "event_id"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_form
 msgid "events"
-msgstr ""
+msgstr "ງານທັງໝົດ"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_full_page_ticket_layout
 msgid "https://www.example.com"
-msgstr ""
+msgstr "https://www.example.com"
 
 #. module: event
 #. odoo-python
@@ -5183,7 +6421,7 @@ msgstr "ໃນວັນທີ %(date)s"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_full_page_ticket_layout
 msgid "organizer@email.com"
-msgstr ""
+msgstr "organizer@email.com"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__event_registrations_started
@@ -5196,7 +6434,7 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_view_kanban_from_event
 msgid "reserved"
-msgstr ""
+msgstr "ຈອງແລ້ວ"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
@@ -5219,7 +6457,7 @@ msgstr "ມື້ອື່ນ"
 #. module: event
 #: model:mail.template,subject:event.event_reminder
 msgid "{{ object.event_id.name }}: {{ object.event_date_range }}"
-msgstr ""
+msgstr "{{ object.event_id.name }}: {{ object.event_date_range }}"
 
 #~ msgid ""
 #~ "'Foldable Badge - %s - %s' % ((object.event_id.name or "

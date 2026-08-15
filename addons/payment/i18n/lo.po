@@ -10,8 +10,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-10 17:37+0000\n"
-"PO-Revision-Date: 2026-08-07 23:49+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2026-08-13 00:09+0000\n"
+"Last-Translator: Bone NI <bounkirdni@gmail.com>\n"
 "Language-Team: Lao <https://translate.odoo.com/projects/odoo-19/payment/lo/>"
 "\n"
 "Language: lo\n"
@@ -24,12 +24,12 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.availability_report_records
 msgid "(ID:"
-msgstr ""
+msgstr "(ID:"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_7eleven
 msgid "7Eleven"
-msgstr ""
+msgstr "7Eleven"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_method_form
@@ -42,6 +42,11 @@ msgid ""
 "                                and should be tested on a test database "
 "first."
 msgstr ""
+"<i class=\"fa fa-exclamation-triangle\"/> ຄຸນສົມບັດເຫຼົ່ານີ້ຖືກກຳນົດໃຫ້\n"
+"                                ສອດຄ່ອງກັບການເຮັດວຽກຂອງຜູ້ໃຫ້ບໍລິການ ແລະ ການເຊື່ອມຕໍ່ກັບ\n"
+"                                Odoo ກ່ຽວກັບວິທີການຊຳລະເງິນນີ້. ການປ່ຽນແປງໃດໆອາດເຮັດໃຫ້"
+"ເກີດຂໍ້ຜິດພາດ\n"
+"                                ແລະ ຄວນທົດສອບໃນຖານຂໍ້ມູນທົດລອງກ່ອນ."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.portal_breadcrumb
@@ -58,6 +63,9 @@ msgid ""
 "transactions you intend to capture can only be captured in full. Handle the "
 "transactions individually to capture a partial amount.\"/>"
 msgstr ""
+"<i class=\"fa fa-info-circle oe_inline\" invisible=\"support_partial_capture "
+"!= 'full_only'\" title=\"ບາງທຸລະກຳທີ່ເຈົ້າຕ້ອງການຕັດຍອດ ສາມາດຕັດຍອດໄດ້ແບບເຕັມຈຳນວນເທົ່ານັ້"
+"ນ. ກະລຸນາຈັດການແຕ່ລະທຸລະກຳແຍກກັນເພື່ອຕັດຍອດບາງສ່ວນ.\"/>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.token_form
@@ -65,11 +73,13 @@ msgid ""
 "<i class=\"fa fa-trash\" title=\"Delete payment method\" data-bs-"
 "toggle=\"tooltip\" data-bs-placement=\"top\" data-bs-delay=\"0\"/>"
 msgstr ""
+"<i class=\"fa fa-trash\" title=\"ລຶບວິທີການຊຳລະເງິນ\" data-bs-toggle=\"tooltip\" "
+"data-bs-placement=\"top\" data-bs-delay=\"0\"/>"
 
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_method
 msgid "<i class=\"oi oi-arrow-right me-1\"></i> Configure a payment provider"
-msgstr ""
+msgstr "<i class=\"oi oi-arrow-right me-1\"></i> ຕັ້ງຄ່າຜູ້ໃຫ້ບໍລິການຊຳລະເງິນ"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
@@ -77,11 +87,13 @@ msgid ""
 "<i class=\"oi oi-fw o_button_icon oi-arrow-right\"/>\n"
 "                                            Enable Payment Methods"
 msgstr ""
+"<i class=\"oi oi-fw o_button_icon oi-arrow-right\"/>\n"
+"                                            ເປີດໃຊ້ວິທີການຊຳລະເງິນ"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.method_form
 msgid "<small class=\"text-600\">Save my payment details</small>"
-msgstr ""
+msgstr "<small class=\"text-600\">ບັນທຶກລາຍລະອຽດການຊຳລະເງິນຂອງຂ້ອຍ</small>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
@@ -105,6 +117,9 @@ msgid ""
 "                                All countries are supported.\n"
 "                            </span>"
 msgstr ""
+"<span class=\"oe_inline text-muted\" invisible=\"supported_country_ids\">\n"
+"                                ຮອງຮັບທຸກປະເທດ.\n"
+"                            </span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_method_form
@@ -113,33 +128,37 @@ msgid ""
 "                                All currencies are supported.\n"
 "                            </span>"
 msgstr ""
+"<span class=\"oe_inline text-muted\" invisible=\"supported_currency_ids\">\n"
+"                                ຮອງຮັບທຸກສະກຸນເງິນ.\n"
+"                            </span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.method_form
 #: model_terms:ir.ui.view,arch_db:payment.token_form
 msgid "<span><i class=\"fa fa-lock\"/> Secured by</span>"
-msgstr ""
+msgstr "<span><i class=\"fa fa-lock\"/> ປ້ອງກັນໂດຍ</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
 msgid ""
 "<strong><i class=\"fa fa-file-text\"/> Show availability report</strong>"
 msgstr ""
+"<strong><i class=\"fa fa-file-text\"/> ສະແດງລາຍງານການພ້ອມໃຊ້ງານ</strong>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
 msgid "<strong><i class=\"oi oi-arrow-right\"/> Payment Methods</strong>"
-msgstr ""
+msgstr "<strong><i class=\"oi oi-arrow-right\"/> ວິທີການຊຳລະເງິນ</strong>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
 msgid "<strong><i class=\"oi oi-arrow-right\"/> Payment Providers</strong>"
-msgstr ""
+msgstr "<strong><i class=\"oi oi-arrow-right\"/> ຜູ້ໃຫ້ບໍລິການຊຳລະເງິນ</strong>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
 msgid "<strong>No payment method available</strong>"
-msgstr ""
+msgstr "<strong>ບໍ່ມີວິທີການຊຳລະເງິນທີ່ສາມາດໃຊ້ໄດ້</strong>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_capture_wizard_view_form
@@ -178,6 +197,8 @@ msgid ""
 "                                    correct partner before making this "
 "payment."
 msgstr ""
+"<strong>ຄຳເຕືອນ</strong> ກະລຸນາກວດສອບໃຫ້ແນ່ໃຈວ່າເຈົ້າໄດ້ເຂົ້າສູ່ລະບົບໃນນາມ\n"
+"                                    ຄູ່ຄ້າທີ່ຖືກຕ້ອງກ່ອນທີ່ຈະເຮັດການຊຳລະເງິນນີ້."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -192,17 +213,17 @@ msgstr "<strong>ຄຳເຕືອນ</strong> ທ່ານຕ້ອງເຂົ
 #. module: payment
 #: model:payment.method,name:payment.payment_method_ach_direct_debit
 msgid "ACH Direct Debit"
-msgstr ""
+msgstr "ACH Direct Debit"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
 msgid "ACTIVATE"
-msgstr ""
+msgstr "ເປີດໃຊ້ງານ"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_abitab
 msgid "Abitab"
-msgstr ""
+msgstr "Abitab"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_kanban
@@ -218,7 +239,7 @@ msgstr "ເປີດໃຊ້"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_config_settings__active_provider_id
 msgid "Active Provider"
-msgstr ""
+msgstr "ຜູ້ໃຫ້ບໍລິການທີ່ເປີດໃຊ້ງານຢູ່"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_address
@@ -234,37 +255,37 @@ msgstr "Adyen"
 #. module: payment
 #: model:payment.method,name:payment.payment_method_affirm
 msgid "Affirm"
-msgstr ""
+msgstr "Affirm"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_afterpay_riverty
 msgid "AfterPay"
-msgstr ""
+msgstr "AfterPay"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_afterpay
 msgid "Afterpay"
-msgstr ""
+msgstr "Afterpay"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_akulaku
 msgid "Akulaku PayLater"
-msgstr ""
+msgstr "Akulaku PayLater"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_alipay_hk
 msgid "AliPayHK"
-msgstr ""
+msgstr "AliPayHK"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_alipay
 msgid "Alipay"
-msgstr ""
+msgstr "Alipay"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_alipay_plus
 msgid "Alipay+"
-msgstr ""
+msgstr "Alipay+"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__allow_express_checkout
@@ -279,7 +300,7 @@ msgstr "ອະນຸຍາດໃຫ້ບັນທຶກວິທີການຊ
 #. module: payment
 #: model:payment.method,name:payment.payment_method_alma
 msgid "Alma"
-msgstr ""
+msgstr "Alma"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__captured_amount
@@ -294,12 +315,12 @@ msgstr "ຍົກເລີກລາຍການແລ້ວ"
 #. module: payment
 #: model:payment.method,name:payment.payment_method_aman
 msgid "Aman"
-msgstr ""
+msgstr "Aman"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_amazon_pay
 msgid "Amazon Pay"
-msgstr ""
+msgstr "Amazon Pay"
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_aps
@@ -309,7 +330,7 @@ msgstr "Amazon Payment Services"
 #. module: payment
 #: model:payment.method,name:payment.payment_method_amex
 msgid "American Express"
-msgstr ""
+msgstr "American Express"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__amount
@@ -338,12 +359,12 @@ msgstr "ເກີດຂໍ້ຜິດພາດຂຶ້ນໃນລະຫວ່
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.state_header
 msgid "An error occurred while saving your payment method."
-msgstr ""
+msgstr "ເກີດຂໍ້ຜິດພາດໃນຂະນະທີ່ບັນທຶກວິທີການຊຳລະເງິນຂອງເຈົ້າ."
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_appota
 msgid "Appota"
-msgstr ""
+msgstr "Appota"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_token_form
@@ -368,7 +389,7 @@ msgstr ""
 #. module: payment
 #: model:payment.method,name:payment.payment_method_argencard
 msgid "Argencard"
-msgstr ""
+msgstr "Argencard"
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_asiapay
@@ -378,12 +399,12 @@ msgstr "Asiapay"
 #. module: payment
 #: model:payment.method,name:payment.payment_method_astropay
 msgid "Astropay TEF"
-msgstr ""
+msgstr "Astropay TEF"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_atome
 msgid "Atome"
-msgstr ""
+msgstr "Atome"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__auth_msg
@@ -413,158 +434,158 @@ msgstr "ພ້ອມໃຊ້ງານ"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.availability_report
 msgid "Availability report"
-msgstr ""
+msgstr "ລາຍງານການພ້ອມໃຊ້ງານ"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_method_search
 msgid "Available methods"
-msgstr ""
+msgstr "ວິທີການທີ່ພ້ອມໃຊ້"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_bacs_direct_debit
 msgid "BACS Direct Debit"
-msgstr ""
+msgstr "BACS Direct Debit"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_bank_bca
 msgid "BCA"
-msgstr ""
+msgstr "BCA"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_becs_direct_debit
 msgid "BECS Direct Debit"
-msgstr ""
+msgstr "BECS Direct Debit"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_blik
 msgid "BLIK"
-msgstr ""
+msgstr "BLIK"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_bri
 msgid "BRI"
-msgstr ""
+msgstr "BRI"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_bancnet
 msgid "BancNet"
-msgstr ""
+msgstr "BancNet"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_banco_guayaquil
 msgid "Banco Guayaquil"
-msgstr ""
+msgstr "Banco Guayaquil"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_banco_pichincha
 msgid "Banco Pichincha"
-msgstr ""
+msgstr "Banco Pichincha"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_banco_de_bogota
 msgid "Banco de Bogota"
-msgstr ""
+msgstr "Banco de Bogota"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_bancolombia
 msgid "Bancolombia"
-msgstr ""
+msgstr "Bancolombia"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_bancontact
 msgid "Bancontact"
-msgstr ""
+msgstr "Bancontact"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_bangkok_bank
 msgid "Bangkok Bank"
-msgstr ""
+msgstr "ທະນາຄານ ກຸງເທບ"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_bank_account
 msgid "Bank Account"
-msgstr ""
+msgstr "ບັນຊີທະນາຄານ"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_installments_eg
 msgid "Bank Installments"
-msgstr ""
+msgstr "ການຜ່ອນຊຳລະຜ່ານທະນາຄານ"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_bni
 msgid "Bank Negara Indonesia"
-msgstr ""
+msgstr "Bank Negara Indonesia"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_bank_permata
 msgid "Bank Permata"
-msgstr ""
+msgstr "Bank Permata"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_bsi
 msgid "Bank Syariah Indonesia"
-msgstr ""
+msgstr "Bank Syariah Indonesia"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_bank_transfer
 msgid "Bank Transfer"
-msgstr ""
+msgstr "ໂອນເງິນຜ່ານທະນາຄານ"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_bank_of_ayudhya
 msgid "Bank of Ayudhya"
-msgstr ""
+msgstr "ທະນາຄານ ກຸງສີອະຍຸດທະຍາ"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_bank_reference
 msgid "Bank reference"
-msgstr ""
+msgstr "ເລກອ້າງອີງທະນາຄານ"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_belfius
 msgid "Belfius"
-msgstr ""
+msgstr "Belfius"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_benefit
 msgid "Benefit"
-msgstr ""
+msgstr "Benefit"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_bharatqr
 msgid "BharatQR"
-msgstr ""
+msgstr "BharatQR"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_billease
 msgid "BillEase"
-msgstr ""
+msgstr "BillEase"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_billink
 msgid "Billink"
-msgstr ""
+msgstr "Billink"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_bizum
 msgid "Bizum"
-msgstr ""
+msgstr "Bizum"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_boleto
 msgid "Boleto"
-msgstr ""
+msgstr "Boleto"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_boost
 msgid "Boost"
-msgstr ""
+msgstr "Boost"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method__brand_ids
 #: model_terms:ir.ui.view,arch_db:payment.payment_method_form
 msgid "Brands"
-msgstr ""
+msgstr "ແບຣນ"
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_buckaroo
@@ -574,22 +595,22 @@ msgstr "Buckaroo"
 #. module: payment
 #: model:payment.method,name:payment.payment_method_cimb_niaga
 msgid "CIMB Niaga"
-msgstr ""
+msgstr "CIMB Niaga"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_cmr
 msgid "CMR"
-msgstr ""
+msgstr "CMR"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_cabal
 msgid "Cabal"
-msgstr ""
+msgstr "Cabal"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_caixa
 msgid "Caixa"
-msgstr ""
+msgstr "Caixa"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__state__cancel
@@ -599,19 +620,19 @@ msgstr "ຍົກເລີກແລ້ວ"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__cancel_msg
 msgid "Cancelled Message"
-msgstr ""
+msgstr "ຂໍ້ຄວາມແຈ້ງຍົກເລີກ"
 
 #. module: payment
 #. odoo-javascript
 #: code:addons/payment/static/src/interactions/payment_form.js:0
 msgid "Cannot delete payment method"
-msgstr ""
+msgstr "ບໍ່ສາມາດລຶບວິທີການຊຳລະເງິນໄດ້"
 
 #. module: payment
 #. odoo-javascript
 #: code:addons/payment/static/src/interactions/payment_form.js:0
 msgid "Cannot save payment method"
-msgstr ""
+msgstr "ບໍ່ສາມາດບັນທຶກວິທີການຊຳລະເງິນໄດ້"
 
 #. module: payment
 #. odoo-python
@@ -644,42 +665,42 @@ msgstr ""
 #. module: payment
 #: model:payment.method,name:payment.payment_method_card
 msgid "Card"
-msgstr ""
+msgstr "ບັດ"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_dpo
 msgid "Card / Mobile"
-msgstr ""
+msgstr "ບັດ / ມືຖື"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_carnet
 msgid "Carnet"
-msgstr ""
+msgstr "Carnet"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_cartes_bancaires
 msgid "Cartes Bancaires"
-msgstr ""
+msgstr "Cartes Bancaires"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_cash_app_pay
 msgid "Cash App Pay"
-msgstr ""
+msgstr "Cash App Pay"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_cashalo
 msgid "Cashalo"
-msgstr ""
+msgstr "Cashalo"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_cebuana
 msgid "Cebuana"
-msgstr ""
+msgstr "Cebuana"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_cencosud
 msgid "Cencosud"
-msgstr ""
+msgstr "Cencosud"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__child_transaction_ids
@@ -694,12 +715,12 @@ msgstr "ລາຍການຍ່ອຍ"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.form
 msgid "Choose another method <i class=\"oi oi-arrow-down\"/>"
-msgstr ""
+msgstr "ເລືອກວິທີອື່ນ <i class=\"oi oi-arrow-down\"/>"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_cirrus
 msgid "Cirrus"
-msgstr ""
+msgstr "Cirrus"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_city
@@ -710,7 +731,7 @@ msgstr "ເມືອງ"
 #. module: payment
 #: model:payment.method,name:payment.payment_method_clearpay
 msgid "Clearpay"
-msgstr ""
+msgstr "Clearpay"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_capture_wizard_view_form
@@ -727,7 +748,7 @@ msgstr "ລະຫັດ"
 #. module: payment
 #: model:payment.method,name:payment.payment_method_codensa
 msgid "Codensa"
-msgstr ""
+msgstr "Codensa"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__color
@@ -753,7 +774,7 @@ msgstr "ບໍລິສັດ"
 #. module: payment
 #: model:ir.model,name:payment.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "ການຕັ້ງຄ່າ"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_method_form
@@ -765,7 +786,7 @@ msgstr "ການຕັ້ງຄ່າ"
 #. odoo-javascript
 #: code:addons/payment/static/src/interactions/payment_form.js:0
 msgid "Confirm"
-msgstr ""
+msgstr "ຢືນຢັນ"
 
 #. module: payment
 #. odoo-javascript
@@ -787,17 +808,17 @@ msgstr "ຜູ້ຕິດຕໍ່"
 #. module: payment
 #: model:payment.method,name:payment.payment_method_cvs
 msgid "Convenience Stores"
-msgstr ""
+msgstr "ຮ້ານສະດວກຊື້"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_cordial
 msgid "Cordial"
-msgstr ""
+msgstr "Cordial"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_cordobesa
 msgid "Cordobesa"
-msgstr ""
+msgstr "Cordobesa"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__module_id
@@ -808,7 +829,7 @@ msgstr "ໂມດູນທີ່ກ່ຽວຂ້ອງ"
 #. odoo-python
 #: code:addons/payment/models/payment_provider.py:0
 msgid "Could not establish the connection to the payment provider."
-msgstr ""
+msgstr "ບໍ່ສາມາດເຊື່ອມຕໍ່ກັບຜູ້ໃຫ້ບໍລິການຊຳລະເງິນໄດ້."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method__supported_country_ids
@@ -831,7 +852,7 @@ msgstr "ສ້າງໂທເຄັນ"
 #. module: payment
 #: model:ir.model,website_form_label:payment.model_res_partner
 msgid "Create a Customer"
-msgstr ""
+msgstr "ສ້າງລູກຄ້າ"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__create_uid
@@ -867,7 +888,7 @@ msgstr "ຂໍ້ມູນການເຂົ້າໃຊ້"
 #. module: payment
 #: model:payment.method,name:payment.payment_method_credit
 msgid "Credit Payment"
-msgstr ""
+msgstr "ຊຳລະຜ່ານສິນເຊື່ອ"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method__supported_currency_ids
@@ -891,22 +912,22 @@ msgstr "ລູກຄ້າ"
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_dpo
 msgid "DPO Pay"
-msgstr ""
+msgstr "DPO Pay"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_dana
 msgid "Dana"
-msgstr ""
+msgstr "Dana"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_dankort
 msgid "Dankort"
-msgstr ""
+msgstr "Dankort"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_davivienda
 msgid "Davivienda"
-msgstr ""
+msgstr "Davivienda"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__sequence
@@ -921,7 +942,7 @@ msgstr "ຕົວຢ່າງ"
 #. module: payment
 #: model:payment.method,name:payment.payment_method_diners
 msgid "Diners Club International"
-msgstr ""
+msgstr "Diners Club International"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider__state__disabled
@@ -932,7 +953,7 @@ msgstr "ປິດໃຊ້ງານ"
 #. module: payment
 #: model:payment.method,name:payment.payment_method_discover
 msgid "Discover"
-msgstr ""
+msgstr "Discover"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_ir_http__display_name
@@ -952,7 +973,7 @@ msgstr "ຊື່ສະແດງ"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_status
 msgid "Don't hesitate to contact us if you don't receive it."
-msgstr ""
+msgstr "ຢ່າລັງເລທີ່ຈະຕິດຕໍ່ຫາພວກເຮົາ ຫາກເຈົ້າບໍ່ໄດ້ຮັບມັນ."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__done_msg
@@ -967,27 +988,27 @@ msgstr "ຮ່າງ"
 #. module: payment
 #: model:payment.method,name:payment.payment_method_duitnow
 msgid "DuitNow"
-msgstr ""
+msgstr "DuitNow"
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_ecpay
 msgid "ECPay"
-msgstr ""
+msgstr "ECPay"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_emi_india
 msgid "EMI"
-msgstr ""
+msgstr "EMI"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_eps
 msgid "EPS"
-msgstr ""
+msgstr "EPS"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_elo
 msgid "Elo"
-msgstr ""
+msgstr "Elo"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__partner_email
@@ -1014,7 +1035,7 @@ msgstr "ຂໍ້ຜິດພາດ"
 #: model:ir.model.fields,field_description:payment.field_payment_method__support_express_checkout
 #: model:ir.model.fields,field_description:payment.field_payment_provider__support_express_checkout
 msgid "Express Checkout"
-msgstr ""
+msgstr "ການຊຳລະເງິນແບບດ່ວນ"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__express_checkout_form_view_id
@@ -1028,31 +1049,33 @@ msgid ""
 "that provides all required billing and shipping information, thus allowing "
 "to skip the checkout process."
 msgstr ""
+"ການຊຳລະເງິນແບບດ່ວນ ຊ່ວຍໃຫ້ລູກຄ້າຊຳລະເງິນໄດ້ໄວຂຶ້ນ ໂດຍໃຊ້ວິທີການຊຳລະເງິນທີ່ມີຂໍ້ມູນການຮຽກເກັບເງິນ ແລ"
+"ະ ການຈັດສົ່ງທີ່ຈຳເປັນທັງໝົດ, ເຊິ່ງຊ່ວຍໃຫ້ສາມາດຂ້າມຂັ້ນຕອນການຊຳລະເງິນປົກກະຕິໄດ້."
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_fps
 msgid "FPS"
-msgstr ""
+msgstr "FPS"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_fpx
 msgid "FPX"
-msgstr ""
+msgstr "FPX"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_facilito
 msgid "Facilito"
-msgstr ""
+msgstr "Facilito"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_family_mart
 msgid "Family Mart"
-msgstr ""
+msgstr "Family Mart"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_floa_bank
 msgid "Floa Bank"
-msgstr ""
+msgstr "Floa Bank"
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_flutterwave
@@ -1062,14 +1085,14 @@ msgstr "Flutterwave"
 #. module: payment
 #: model:payment.method,name:payment.payment_method_forsa
 msgid "Forsa"
-msgstr ""
+msgstr "Forsa"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_method__support_manual_capture__partial
 #: model:ir.model.fields.selection,name:payment.selection__payment_method__support_refund__partial
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider__support_refund__partial
 msgid "Full & Partial"
-msgstr ""
+msgstr "ທັງໝົດ ແລະ ບາງສ່ວນ"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_method__support_manual_capture__full_only
@@ -1082,7 +1105,7 @@ msgstr "ແບບເຕັມເທົ່ານັ້ນ"
 #. module: payment
 #: model:payment.method,name:payment.payment_method_gcash
 msgid "GCash"
-msgstr ""
+msgstr "GCash"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
@@ -1102,22 +1125,22 @@ msgstr "ສ້າງ ແລະ ຄັດລອກລິ້ງການຊຳລ�
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
 msgid "Go to my Account <i class=\"oi oi-arrow-right ms-2\"/>"
-msgstr ""
+msgstr "ໄປທີ່ບັນຊີຂອງຂ້ອຍ <i class=\"oi oi-arrow-right ms-2\"/>"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_gopay
 msgid "GoPay"
-msgstr ""
+msgstr "GoPay"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_grabpay
 msgid "GrabPay"
-msgstr ""
+msgstr "GrabPay"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_hd
 msgid "HD Bank"
-msgstr ""
+msgstr "HD Bank"
 
 #. module: payment
 #: model:ir.model,name:payment.model_ir_http
@@ -1127,7 +1150,7 @@ msgstr "ການກຳນົດເສັ້ນທາງ HTTP"
 #. module: payment
 #: model:payment.method,name:payment.payment_method_halan
 msgid "Halan"
-msgstr ""
+msgstr "Halan"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__has_draft_children
@@ -1137,7 +1160,7 @@ msgstr "ມີລາຍການຍ່ອຍທີ່ເປັນຮ່າງ"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_config_settings__has_enabled_provider
 msgid "Has Enabled Provider"
-msgstr ""
+msgstr "ມີຜູ້ໃຫ້ບໍລິການທີ່ເປີດໃຊ້ແລ້ວ"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__has_remaining_amount
@@ -1157,22 +1180,22 @@ msgstr "ຂໍ້ຄວາມຊ່ວຍເຫຼືອ"
 #. module: payment
 #: model:payment.method,name:payment.payment_method_hi_life
 msgid "Hi-Life"
-msgstr ""
+msgstr "Hi-Life"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_hipercard
 msgid "Hipercard"
-msgstr ""
+msgstr "Hipercard"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_hoolah
 msgid "Hoolah"
-msgstr ""
+msgstr "Hoolah"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_humm
 msgid "Humm"
-msgstr ""
+msgstr "Humm"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_ir_http__id
@@ -1224,7 +1247,7 @@ msgstr "ຕິດຕັ້ງ"
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_provider
 msgid "Install the provider you want to add."
-msgstr ""
+msgstr "ຕິດຕັ້ງຜູ້ໃຫ້ບໍລິການທີ່ເຈົ້າຕ້ອງການເພີ່ມ."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__module_state
@@ -1244,7 +1267,7 @@ msgstr "ຈຳນວນທີ່ຈະຕັດເງິນຖືກຕ້ອງ
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_country__is_mercado_pago_supported_country
 msgid "Is Mercado Pago Supported Country"
-msgstr ""
+msgstr "ແມ່ນປະເທດທີ່ Mercado Pago ຮອງຮັບ"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__is_post_processed
@@ -1254,12 +1277,12 @@ msgstr "ປະມວນຜົນຂັ້ນສຸດທ້າຍແລ້ວ"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method__is_primary
 msgid "Is Primary Payment Method"
-msgstr ""
+msgstr "ແມ່ນວິທີການຊຳລະເງິນຫຼັກ"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_country__is_stripe_supported_country
 msgid "Is Stripe Supported Country"
-msgstr ""
+msgstr "ແມ່ນປະເທດທີ່ Stripe ຮອງຮັບ"
 
 #. module: payment
 #. odoo-javascript
@@ -1270,82 +1293,82 @@ msgstr "ປະຈຸບັນມັນຖືກເຊື່ອມໂຍງກັ
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_iyzico
 msgid "Iyzico"
-msgstr ""
+msgstr "Iyzico"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_jcb
 msgid "JCB"
-msgstr ""
+msgstr "JCB"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_jeniuspay
 msgid "JeniusPay"
-msgstr ""
+msgstr "JeniusPay"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_jkopay
 msgid "Jkopay"
-msgstr ""
+msgstr "Jkopay"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_kbc_cbc
 msgid "KBC/CBC"
-msgstr ""
+msgstr "KBC/CBC"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_knet
 msgid "KNET"
-msgstr ""
+msgstr "KNET"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_kakaopay
 msgid "KakaoPay"
-msgstr ""
+msgstr "KakaoPay"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_kasikorn_bank
 msgid "Kasikorn Bank"
-msgstr ""
+msgstr "ທະນາຄານ ກະສິກອນໄທ"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_kiosk
 msgid "Kiosk"
-msgstr ""
+msgstr "ຕູ້ Kiosk"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_klarna
 msgid "Klarna"
-msgstr ""
+msgstr "Klarna"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_klarna_paynow
 msgid "Klarna - Pay Now"
-msgstr ""
+msgstr "Klarna - ຊຳລະຕອນນີ້"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_klarna_pay_over_time
 msgid "Klarna - Pay over time"
-msgstr ""
+msgstr "Klarna - ຜ່ອນຊຳລະ"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_kredivo
 msgid "Kredivo"
-msgstr ""
+msgstr "Kredivo"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_krungthai_bank
 msgid "KrungThai Bank"
-msgstr ""
+msgstr "ທະນາຄານ ກຸງໄທ"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_kfh
 msgid "Kuwait Finance House"
-msgstr ""
+msgstr "Kuwait Finance House"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_linepay
 msgid "LINE Pay"
-msgstr ""
+msgstr "LINE Pay"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__landing_route
@@ -1385,42 +1408,42 @@ msgstr "ອັບເດດລ່າສຸດເມື່ອ"
 #. module: payment
 #: model:payment.method,name:payment.payment_method_lider
 msgid "Lider"
-msgstr ""
+msgstr "Lider"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_linkaja
 msgid "LinkAja"
-msgstr ""
+msgstr "LinkAja"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_nuvei_local
 msgid "Local Payments"
-msgstr ""
+msgstr "ການຊຳລະເງິນທ້ອງຖິ່ນ"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_mpesa
 msgid "M-Pesa"
-msgstr ""
+msgstr "M-Pesa"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_mbway
 msgid "MB WAY"
-msgstr ""
+msgstr "MB WAY"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_mada
 msgid "Mada"
-msgstr ""
+msgstr "Mada"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_maestro
 msgid "Maestro"
-msgstr ""
+msgstr "Maestro"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_magna
 msgid "Magna"
-msgstr ""
+msgstr "Magna"
 
 #. module: payment
 #. odoo-python
@@ -1434,17 +1457,17 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.portal_my_home_payment
 msgid "Manage your payment methods"
-msgstr ""
+msgstr "ຈັດການວິທີການຊຳລະເງິນຂອງເຈົ້າ"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_mandiri
 msgid "Mandiri"
-msgstr ""
+msgstr "Mandiri"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method__support_manual_capture
 msgid "Manual Capture"
-msgstr ""
+msgstr "ການຕັດຍອດເງິນດ້ວຍຕົນເອງ"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__support_manual_capture
@@ -1454,7 +1477,7 @@ msgstr "ຮອງຮັບການຕັດເງິນດ້ວຍຕົນເ
 #. module: payment
 #: model:payment.method,name:payment.payment_method_mastercard
 msgid "MasterCard"
-msgstr ""
+msgstr "MasterCard"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__maximum_amount
@@ -1469,22 +1492,22 @@ msgstr "ຈຳນວນສູງສຸດທີ່ອະນຸຍາດໃຫ້
 #. module: payment
 #: model:payment.method,name:payment.payment_method_maya
 msgid "Maya"
-msgstr ""
+msgstr "Maya"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_maybank
 msgid "Maybank"
-msgstr ""
+msgstr "Maybank"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_meeza
 msgid "Meeza"
-msgstr ""
+msgstr "Meeza"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_mercado_livre
 msgid "Mercado Livre"
-msgstr ""
+msgstr "Mercado Livre"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__res_config_settings__onboarding_payment_module__mercado_pago
@@ -1495,7 +1518,7 @@ msgstr "Mercado Pago"
 #. module: payment
 #: model:payment.method,name:payment.payment_method_mercado_pago_wallet
 msgid "Mercado Pago Wallet"
-msgstr ""
+msgstr "Mercado Pago Wallet"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__state_message
@@ -1511,32 +1534,32 @@ msgstr "ຂໍ້ຄວາມ"
 #. module: payment
 #: model:payment.method,name:payment.payment_method_momo
 msgid "MoMo"
-msgstr ""
+msgstr "MoMo"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_mobile
 msgid "Mobile"
-msgstr ""
+msgstr "ມືຖື"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_mobile_wallet
 msgid "Mobile Wallet"
-msgstr ""
+msgstr "ກະເປົ໋າເງິນມືຖື"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_mobile_wallet_eg
 msgid "Mobile Wallets Egypt"
-msgstr ""
+msgstr "Mobile Wallets Egypt"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_mobile_money
 msgid "Mobile money"
-msgstr ""
+msgstr "ເງິນມືຖື"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_mobile_pay
 msgid "MobilePay"
-msgstr ""
+msgstr "MobilePay"
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_mollie
@@ -1546,17 +1569,17 @@ msgstr "Mollie"
 #. module: payment
 #: model:payment.method,name:payment.payment_method_multibanco
 msgid "Multibanco"
-msgstr ""
+msgstr "Multibanco"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_mybank
 msgid "MyBank"
-msgstr ""
+msgstr "MyBank"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_naps
 msgid "NAPS"
-msgstr ""
+msgstr "NAPS"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method__name
@@ -1570,22 +1593,22 @@ msgstr "ຊື່"
 #. module: payment
 #: model:payment.method,name:payment.payment_method_napas_card
 msgid "Napas Card"
-msgstr ""
+msgstr "Napas Card"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_naranja
 msgid "Naranja"
-msgstr ""
+msgstr "Naranja"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_nativa
 msgid "Nativa"
-msgstr ""
+msgstr "Nativa"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_netbanking
 msgid "Netbanking"
-msgstr ""
+msgstr "Netbanking"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider__code__none
@@ -1595,17 +1618,17 @@ msgstr "ບໍ່ໄດ້ກຳນົດຜູ້ໃຫ້ບໍລິການ
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_method
 msgid "No payment methods found for your payment providers."
-msgstr ""
+msgstr "ບໍ່ພົບວິທີການຊຳລະເງິນສຳລັບຜູ້ໃຫ້ບໍລິການຂອງທ່ານ."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
 msgid "No payment providers are configured."
-msgstr ""
+msgstr "ຍັງບໍ່ໄດ້ຕັ້ງຄ່າຜູ້ໃຫ້ບໍລິການຊຳລະເງິນ."
 
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_provider
 msgid "No providers available"
-msgstr ""
+msgstr "ບໍ່ມີຜູ້ໃຫ້ບໍລິການທີ່ພ້ອມໃຊ້"
 
 #. module: payment
 #. odoo-python
@@ -1616,32 +1639,32 @@ msgstr "ບໍ່ສາມາດກຳນົດໂທເຄັນໃຫ້ກັ
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
 msgid "None is configured for:"
-msgstr ""
+msgstr "ບໍ່ມີການຕັ້ງຄ່າສຳລັບ:"
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_nuvei
 msgid "Nuvei"
-msgstr ""
+msgstr "Nuvei"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_ok_mart
 msgid "OK Mart"
-msgstr ""
+msgstr "OK Mart"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_ovo
 msgid "OVO"
-msgstr ""
+msgstr "OVO"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_oca
 msgid "Oca"
-msgstr ""
+msgstr "Oca"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_octopus
 msgid "Octopus"
-msgstr ""
+msgstr "Octopus"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__module_to_buy
@@ -1656,32 +1679,32 @@ msgstr "ການຊຳລະເງິນແບບອອບລາຍດ້ວຍ
 #. module: payment
 #: model:payment.method,name:payment.payment_method_omannet
 msgid "OmanNet"
-msgstr ""
+msgstr "OmanNet"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_config_settings__onboarding_payment_module
 msgid "Onboarding Payment Module"
-msgstr ""
+msgstr "ໂມດູນການເລີ່ມຕົ້ນລະບົບຊຳລະເງິນ"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_online_banking_czech_republic
 msgid "Online Banking Czech Republic"
-msgstr ""
+msgstr "Online Banking Czech Republic"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_online_banking_india
 msgid "Online Banking India"
-msgstr ""
+msgstr "Online Banking India"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_online_banking_slovakia
 msgid "Online Banking Slovakia"
-msgstr ""
+msgstr "Online Banking Slovakia"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_online_banking_thailand
 msgid "Online Banking Thailand"
-msgstr ""
+msgstr "ທະນາຄານອອນລາຍ (ໄທ)"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__operation__online_direct
@@ -1713,7 +1736,7 @@ msgstr "ສະເພາະລາຍການທີ່ຢືນຢັນແລ້
 #. module: payment
 #: model:payment.method,name:payment.payment_method_open_banking
 msgid "Open banking"
-msgstr ""
+msgstr "Open banking"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__operation
@@ -1728,32 +1751,32 @@ msgstr "ວິທີການຊຳລະເງິນອື່ນໆ"
 #. module: payment
 #: model:payment.method,name:payment.payment_method_oxxopay
 msgid "Oxxo Pay"
-msgstr ""
+msgstr "Oxxo Pay"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_p24
 msgid "P24"
-msgstr ""
+msgstr "P24"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_poli
 msgid "POLi"
-msgstr ""
+msgstr "POLi"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_pps
 msgid "PPS"
-msgstr ""
+msgstr "PPS"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_pse
 msgid "PSE"
-msgstr ""
+msgstr "PSE"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_pace
 msgid "Pace."
-msgstr ""
+msgstr "Pace."
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider__support_manual_capture__partial
@@ -1781,27 +1804,27 @@ msgstr "ຊຳລະເງິນ"
 #. module: payment
 #: model:payment.method,name:payment.payment_method_paylater_india
 msgid "Pay Later"
-msgstr ""
+msgstr "ຊຳລະທີຫຼັງ"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_paybright
 msgid "PayBright"
-msgstr ""
+msgstr "PayBright"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_pay_id
 msgid "PayID"
-msgstr ""
+msgstr "PayID"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_payme
 msgid "PayMe"
-msgstr ""
+msgstr "PayMe"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_paynow
 msgid "PayNow"
-msgstr ""
+msgstr "PayNow"
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_paypal
@@ -1811,17 +1834,17 @@ msgstr "PayPal"
 #. module: payment
 #: model:payment.method,name:payment.payment_method_paysafecard
 msgid "PaySafeCard"
-msgstr ""
+msgstr "PaySafeCard"
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_payu
 msgid "PayU"
-msgstr ""
+msgstr "PayU"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
 msgid "Payment"
-msgstr ""
+msgstr "ການຊຳລະເງິນ"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_capture_wizard
@@ -1831,7 +1854,7 @@ msgstr "ຕົວຊ່ວຍການຕັດເງິນ"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
 msgid "Payment Confirmation"
-msgstr ""
+msgstr "ການຢືນຢັນການຊຳລະເງິນ"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token__payment_details
@@ -1851,7 +1874,7 @@ msgstr "ແບບຟອມການຊຳລະເງິນ"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
 msgid "Payment Info"
-msgstr ""
+msgstr "ຂໍ້ມູນການຊຳລະເງິນ"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__link
@@ -1871,7 +1894,7 @@ msgstr "ວິທີການຊຳລະເງິນ"
 #: model:ir.model.fields,field_description:payment.field_payment_token__payment_method_code
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__payment_method_code
 msgid "Payment Method Code"
-msgstr ""
+msgstr "ລະຫັດວິທີການຊຳລະເງິນ"
 
 #. module: payment
 #. odoo-python
@@ -1898,7 +1921,7 @@ msgstr "ຜູ້ໃຫ້ບໍລິການຊຳລະເງິນ"
 #: code:addons/payment/controllers/post_processing.py:0
 #: model_terms:ir.ui.view,arch_db:payment.payment_status
 msgid "Payment Status"
-msgstr ""
+msgstr "ສະຖານະການຊຳລະເງິນ"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_token
@@ -1952,19 +1975,19 @@ msgstr "ລາຍລະອຽດການຊຳລະເງິນທີ່ບັ
 #: model:payment.method,name:payment.payment_method_unknown
 #: model_terms:ir.ui.view,arch_db:payment.form
 msgid "Payment method"
-msgstr ""
+msgstr "ວິທີການຊຳລະເງິນ"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.availability_report
 #: model_terms:ir.ui.view,arch_db:payment.portal_my_home_payment
 msgid "Payment methods"
-msgstr ""
+msgstr "ວິທີການຊຳລະເງິນ"
 
 #. module: payment
 #. odoo-javascript
 #: code:addons/payment/static/src/interactions/payment_form.js:0
 msgid "Payment processing failed"
-msgstr ""
+msgstr "ການປະມວນຜົນການຊຳລະເງິນຫຼົ້ມເຫຼວ"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
@@ -1974,12 +1997,12 @@ msgstr "ຜູ້ໃຫ້ບໍລິການຊຳລະເງິນ"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.availability_report
 msgid "Payment providers"
-msgstr ""
+msgstr "ຜູ້ໃຫ້ບໍລິການຊຳລະເງິນ"
 
 #. module: payment
 #: model:ir.actions.server,name:payment.cron_post_process_payment_tx_ir_actions_server
 msgid "Payment: Post-process transactions"
-msgstr ""
+msgstr "ການຊຳລະເງິນ: ການປະມວນຜົນທຸລະກຳຂັ້ນສຸດທ້າຍ"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_token_form
@@ -1989,22 +2012,22 @@ msgstr "ການຊຳລະເງິນ"
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_paymob
 msgid "Paymob"
-msgstr ""
+msgstr "Paymob"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_paypal
 msgid "Paypal"
-msgstr ""
+msgstr "Paypal"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_paytm
 msgid "Paytm"
-msgstr ""
+msgstr "Paytm"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_paytrail
 msgid "Paytrail"
-msgstr ""
+msgstr "Paytrail"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__state__pending
@@ -2024,25 +2047,26 @@ msgstr "ເບີໂທລະສັບ"
 #. module: payment
 #: model:payment.method,name:payment.payment_method_pix
 msgid "Pix"
-msgstr ""
+msgstr "Pix"
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_method.py:0
 msgid "Please make sure that %(payment_method)s is supported by %(provider)s."
 msgstr ""
+"ກະລຸນາກວດສອບໃຫ້ແນ່ໃຈວ່າ %(payment_method)s ໄດ້ຮັບການຮອງຮັບໂດຍ %(provider)s."
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/wizards/payment_link_wizard.py:0
 msgid "Please set a positive amount."
-msgstr ""
+msgstr "ກະລຸນາກຳນົດຈຳນວນເງິນທີ່ເປັນຄ່າບວກ."
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/wizards/payment_link_wizard.py:0
 msgid "Please set an amount lower than %s."
-msgstr ""
+msgstr "ກະລຸນາກຳນົດຈຳນວນເງິນທີ່ຕໍ່າກວ່າ %s."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.company_mismatch_warning
@@ -2052,38 +2076,38 @@ msgstr "ກະລຸນາປ່ຽນໄປຫາບໍລິສັດ"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.state_header
 msgid "Please wait..."
-msgstr ""
+msgstr "ກະລຸນາລໍຖ້າ..."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid "Post-process"
-msgstr ""
+msgstr "ການປະມວນຜົນຂັ້ນສຸດທ້າຍ"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_post_finance
 msgid "PostFinance Pay"
-msgstr ""
+msgstr "PostFinance Pay"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_poste_pay
 msgid "PostePay"
-msgstr ""
+msgstr "PostePay"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_premium_card
 msgid "Premium Card"
-msgstr ""
+msgstr "ບັດພຣີມຽມ"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_presto
 msgid "Presto"
-msgstr ""
+msgstr "Presto"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method__primary_payment_method_id
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__primary_payment_method_id
 msgid "Primary Payment Method"
-msgstr ""
+msgstr "ວິທີການຊຳລະເງິນຫຼັກ"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
@@ -2094,12 +2118,12 @@ msgstr "ປະມວນຜົນໂດຍ"
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__is_live
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_search
 msgid "Production Environment"
-msgstr ""
+msgstr "ສະພາບແວດລ້ອມການໃຊ້ງານຈິງ"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_promptpay
 msgid "Prompt Pay"
-msgstr ""
+msgstr "ພ້ອມເພ (PromptPay)"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token__provider_id
@@ -2114,7 +2138,7 @@ msgstr "ຜູ້ໃຫ້ບໍລິການ"
 #: model:ir.model.fields,field_description:payment.field_payment_token__provider_code
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__provider_code
 msgid "Provider Code"
-msgstr ""
+msgstr "ລະຫັດຜູ້ໃຫ້ບໍລິການ"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token__provider_ref
@@ -2137,17 +2161,17 @@ msgstr "ເຜີຍແຜ່ແລ້ວ"
 #. module: payment
 #: model:payment.method,name:payment.payment_method_qris
 msgid "QRIS"
-msgstr ""
+msgstr "QRIS"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_rabbit_line_pay
 msgid "Rabbit LINE Pay"
-msgstr ""
+msgstr "Rabbit LINE Pay"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_ratepay
 msgid "Ratepay"
-msgstr ""
+msgstr "Ratepay"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__res_config_settings__onboarding_payment_module__razorpay
@@ -2168,12 +2192,12 @@ msgstr "ແບບຟອມການປ່ຽນເສັ້ນທາງ"
 #. module: payment
 #: model:payment.method,name:payment.payment_method_redpagos
 msgid "Redpagos"
-msgstr ""
+msgstr "Redpagos"
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_redsys
 msgid "Redsys"
-msgstr ""
+msgstr "Redsys"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__reference
@@ -2204,6 +2228,7 @@ msgid ""
 "Refund is a feature allowing to refund customers directly from the payment "
 "in Odoo."
 msgstr ""
+"ການຄືນເງິນ ແມ່ນຟີເຈີທີ່ຊ່ວຍໃຫ້ສາມາດຄືນເງິນໃຫ້ລູກຄ້າໄດ້ໂດຍກົງຈາກລາຍການຊຳລະເງິນໃນ Odoo."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
@@ -2228,17 +2253,17 @@ msgstr "ໂມເດວເອກະສານທີ່ກ່ຽວຂ້ອງ"
 #. module: payment
 #: model:payment.method,name:payment.payment_method_revolut_pay
 msgid "Revolut Pay"
-msgstr ""
+msgstr "Revolut Pay"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_rupay
 msgid "RuPay"
-msgstr ""
+msgstr "RuPay"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid "Run the post-processing step for this transaction."
-msgstr ""
+msgstr "ດຳເນີນຂັ້ນຕອນການປະມວນຜົນຂັ້ນສຸດທ້າຍສຳລັບທຸລະກຳນີ້."
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_sepa_direct_debit
@@ -2249,32 +2274,32 @@ msgstr "SEPA Direct Debit"
 #. module: payment
 #: model:payment.method,name:payment.payment_method_spei
 msgid "SPEI"
-msgstr ""
+msgstr "SPEI"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_stcpay
 msgid "STCPay"
-msgstr ""
+msgstr "STCPay"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_samsung_pay
 msgid "Samsung Pay"
-msgstr ""
+msgstr "Samsung Pay"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.form
 msgid "Save"
-msgstr ""
+msgstr "ບັນທຶກ"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.state_header
 msgid "Saving your payment method."
-msgstr ""
+msgstr "ກຳລັງບັນທຶກວິທີການຊຳລະເງິນຂອງເຈົ້າ."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_method_form
 msgid "Select countries. Leave empty to allow any."
-msgstr ""
+msgstr "ເລືອກປະເທດ. ປະໄວ້ຫວ່າງເພື່ອອະນຸຍາດທຸກປະເທດ."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
@@ -2289,7 +2314,7 @@ msgstr "ເລືອກສະກຸນເງິນ. ປ່ອຍຫວ່າງ�
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_method_form
 msgid "Select currencies. Leave empty to allow any."
-msgstr ""
+msgstr "ເລືອກສະກຸນເງິນ. ປະໄວ້ຫວ່າງເພື່ອອະນຸຍາດທຸກສະກຸນເງິນ."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method__sequence
@@ -2300,32 +2325,32 @@ msgstr "ລຳດັບ"
 #. module: payment
 #: model:payment.method,name:payment.payment_method_shopback
 msgid "ShopBack"
-msgstr ""
+msgstr "ShopBack"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_shopeepay
 msgid "ShopeePay"
-msgstr ""
+msgstr "ShopeePay"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_shopping
 msgid "Shopping Card"
-msgstr ""
+msgstr "ບັດຊື້ເຄື່ອງ"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_scb
 msgid "Siam Commerical Bank"
-msgstr ""
+msgstr "ທະນາຄານ ໄທພານິດ"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.state_header
 msgid "Skip <i class=\"oi oi-arrow-right ms-1 small\"/>"
-msgstr ""
+msgstr "ຂ້າມ <i class=\"oi oi-arrow-right ms-1 small\"/>"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_sofort
 msgid "Sofort"
-msgstr ""
+msgstr "Sofort"
 
 #. module: payment
 #. odoo-python
@@ -2340,7 +2365,7 @@ msgstr ""
 #. module: payment
 #: model:payment.method,name:payment.payment_method_souhoola
 msgid "Souhoola"
-msgstr ""
+msgstr "Souhoola"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__source_transaction_id
@@ -2380,67 +2405,67 @@ msgstr "ວິທີການຊຳລະເງິນທີ່ຮອງຮັບ
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_method_form
 msgid "Supported by"
-msgstr ""
+msgstr "ຮອງຮັບໂດຍ"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.availability_report_records
 msgid "Supported providers:"
-msgstr ""
+msgstr "ຜູ້ໃຫ້ບໍລິການທີ່ຮອງຮັບ:"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_swish
 msgid "Swish"
-msgstr ""
+msgstr "Swish"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_sympl
 msgid "Sympl"
-msgstr ""
+msgstr "Sympl"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_tenpay
 msgid "TENPAY"
-msgstr ""
+msgstr "TENPAY"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_ttb
 msgid "TTB"
-msgstr ""
+msgstr "TTB"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_twqr
 msgid "TWQR"
-msgstr ""
+msgstr "TWQR"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_tabby
 msgid "Tabby"
-msgstr ""
+msgstr "Tabby"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_tamara
 msgid "Tamara"
-msgstr ""
+msgstr "Tamara"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_tmb
 msgid "Tamilnad Mercantile Bank Limited"
-msgstr ""
+msgstr "Tamilnad Mercantile Bank Limited"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_tarjeta_mercadopago
 msgid "Tarjeta MercadoPago"
-msgstr ""
+msgstr "Tarjeta MercadoPago"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_techcom
 msgid "Techcombank"
-msgstr ""
+msgstr "Techcombank"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_tendopay
 msgid "TendoPay"
-msgstr ""
+msgstr "TendoPay"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider__state__test
@@ -2452,55 +2477,56 @@ msgstr "ໂໝດທົດລອງ"
 #: model_terms:ir.ui.view,arch_db:payment.method_form
 #: model_terms:ir.ui.view,arch_db:payment.token_form
 msgid "Test mode"
-msgstr ""
+msgstr "ໂໝດທົດລອງ"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.state_header
 msgid "Thank you!"
-msgstr ""
+msgstr "ຂອບໃຈ!"
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid "The %(tx_label)s %(ref)s of %(formatted_amount)s encountered an error."
-msgstr ""
+msgstr "%(tx_label)s %(ref)s ຈຳນວນ %(formatted_amount)s ເກີດຂໍ້ຜິດພາດ."
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid "The %(tx_label)s %(ref)s of %(formatted_amount)s has been authorized."
-msgstr ""
+msgstr "%(tx_label)s %(ref)s ຈຳນວນ %(formatted_amount)s ໄດ້ຮັບການອະນຸມັດແລ້ວ."
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid "The %(tx_label)s %(ref)s of %(formatted_amount)s has been canceled."
-msgstr ""
+msgstr "%(tx_label)s %(ref)s ຈຳນວນ %(formatted_amount)s ຖືກຍົກເລີກແລ້ວ."
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid "The %(tx_label)s %(ref)s of %(formatted_amount)s has been confirmed."
-msgstr ""
+msgstr "%(tx_label)s %(ref)s ຈຳນວນ %(formatted_amount)s ໄດ້ຮັບການຢືນຢັນແລ້ວ."
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid "The %(tx_label)s %(ref)s of %(formatted_amount)s is pending."
 msgstr ""
+"%(tx_label)s %(ref)s ຈຳນວນ %(formatted_amount)s ຢູ່ໃນລະຫວ່າງການປະມວນຜົນ."
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid ""
 "The amount from the payment data doesn't match the one from the transaction."
-msgstr ""
+msgstr "ຈຳນວນເງິນຈາກຂໍ້ມູນການຊຳລະ ບໍ່ກົງກັບຈຳນວນເງິນໃນທຸລະກຳ."
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid "The amount or currency is missing from the payment data."
-msgstr ""
+msgstr "ຈຳນວນເງິນ ຫຼື ສະກຸນເງິນ ຫາຍໄປຈາກຂໍ້ມູນການຊຳລະ."
 
 #. module: payment
 #. odoo-python
@@ -2512,13 +2538,13 @@ msgstr "ຈຳນວນເງິນທີ່ຈະຕັດຕ້ອງເປັ
 #: model:ir.model.fields,help:payment.field_payment_method__image
 #: model:ir.model.fields,help:payment.field_payment_method__image_payment_form
 msgid "The base image used for this payment method; in a 64x64 px format."
-msgstr ""
+msgstr "ຮູບພາບພື້ນຖານທີ່ໃຊ້ສຳລັບວິທີການຊຳລະເງິນນີ້; ໃນຮູບແບບ 64x64 px."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__brand_ids
 msgid ""
 "The brands of the payment methods that will be displayed on the payment form."
-msgstr ""
+msgstr "ແບຣນຂອງວິທີການຊຳລະເງິນທີ່ຈະສະແດງໃນແບບຟອມການຊຳລະ."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__child_transaction_ids
@@ -2561,7 +2587,7 @@ msgstr "ສະກຸນເງິນທີ່ພ້ອມໃຊ້ກັບຜູ
 msgid ""
 "The currency from the payment data doesn't match the one from the "
 "transaction."
-msgstr ""
+msgstr "ສະກຸນເງິນຈາກຂໍ້ມູນການຊຳລະ ບໍ່ກົງກັບສະກຸນເງິນໃນທຸລະກຳ."
 
 #. module: payment
 #. odoo-python
@@ -2573,7 +2599,7 @@ msgstr "ຊ່ອງຂໍ້ມູນຕໍ່ໄປນີ້ຕ້ອງໄດ
 #. odoo-python
 #: code:addons/payment/controllers/portal.py:0
 msgid "The following kwargs are not whitelisted: %s"
-msgstr ""
+msgstr "ຄ່າ kwargs ຕໍ່ໄປນີ້ບໍ່ຢູ່ໃນລາຍການທີ່ອະນຸຍາດ: %s"
 
 #. module: payment
 #. odoo-python
@@ -2582,6 +2608,8 @@ msgid ""
 "The following payment methods cannot be enabled because their payment "
 "provider has manual capture activated: %s"
 msgstr ""
+"ບໍ່ສາມາດເປີດໃຊ້ວິທີການຊຳລະເງິນຕໍ່ໄປນີ້ໄດ້ ເນື່ອງຈາກຜູ້ໃຫ້ບໍລິການຊຳລະເງິນໄດ້ເປີດໃຊ້ການຕັດຍອດເງິນດ້ວຍຕົນເອ"
+"ງ: %s"
 
 #. module: payment
 #. odoo-python
@@ -2589,7 +2617,7 @@ msgstr ""
 msgid ""
 "The following payment methods must be disabled in order to enable manual "
 "capture: %s"
-msgstr ""
+msgstr "ຕ້ອງປິດວິທີການຊຳລະເງິນຕໍ່ໄປນີ້ ເພື່ອເປີດໃຊ້ການຕັດຍອດເງິນດ້ວຍຕົນເອງ: %s"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__reference
@@ -2603,6 +2631,8 @@ msgid ""
 "provider allows it). In other countries, this payment method is not "
 "available to customers."
 msgstr ""
+"ລາຍຊື່ປະເທດທີ່ສາມາດໃຊ້ວິທີການຊຳລະເງິນນີ້ໄດ້ (ຖ້າຜູ້ໃຫ້ບໍລິການອະນຸຍາດ). ໃນປະເທດອື່ນໆ, ວິທີການຊຳລະເງິນ"
+"ນີ້ຈະບໍ່ສາມາດໃຊ້ໄດ້ສຳລັບລູກຄ້າ."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__supported_currency_ids
@@ -2611,11 +2641,13 @@ msgid ""
 "provider allows it). When paying with another currency, this payment method "
 "is not available to customers."
 msgstr ""
+"ລາຍຊື່ສະກຸນເງິນທີ່ຮອງຮັບໂດຍວິທີການຊຳລະເງິນນີ້ (ຖ້າຜູ້ໃຫ້ບໍລິການອະນຸຍາດ). ເມື່ອຊຳລະດ້ວຍສະກຸນເງິນອື່ນ, ວິທີ"
+"ການຊຳລະເງິນນີ້ຈະບໍ່ສາມາດໃຊ້ໄດ້ສຳລັບລູກຄ້າ."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__provider_ids
 msgid "The list of providers supporting this payment method."
-msgstr ""
+msgstr "ລາຍຊື່ຜູ້ໃຫ້ບໍລິການທີ່ຮອງຮັບວິທີການຊຳລະເງິນນີ້."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__main_currency_id
@@ -2639,7 +2671,7 @@ msgstr "ຂໍ້ຄວາມທີ່ຈະສະແດງຫາກການຊ
 #: model:ir.model.fields,help:payment.field_payment_provider__cancel_msg
 msgid ""
 "The message displayed if the order is cancelled during the payment process"
-msgstr ""
+msgstr "ຂໍ້ຄວາມທີ່ຈະສະແດງຫາກຄຳສັ່ງຊື້ຖືກຍົກເລີກໃນລະຫວ່າງຂັ້ນຕອນການຊຳລະເງິນ"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__done_msg
@@ -2662,6 +2694,7 @@ msgstr "ຂໍ້ຄວາມທີ່ຈະສະແດງເພື່ອອະ
 #: model:ir.model.fields,help:payment.field_payment_method__support_manual_capture
 msgid "The payment is authorized and captured in two steps instead of one."
 msgstr ""
+"ການຊຳລະເງິນຈະໄດ້ຮັບການອະນຸມັດ ແລະ ຕັດຍອດໃນສອງຂັ້ນຕອນ ແທນທີ່ຈະເປັນຂັ້ນຕອນດຽວ."
 
 #. module: payment
 #. odoo-python
@@ -2670,6 +2703,8 @@ msgid ""
 "The payment provider rejected the request.\n"
 "%s"
 msgstr ""
+"ຜູ້ໃຫ້ບໍລິການຊຳລະເງິນໄດ້ປະຕິເສດການຮ້ອງຂໍ.\n"
+"%s"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__primary_payment_method_id
@@ -2679,11 +2714,13 @@ msgid ""
 "For example, \"Card\" is the primary payment method of the card brand "
 "\"VISA\"."
 msgstr ""
+"ວິທີການຊຳລະເງິນຫຼັກຂອງວິທີການຊຳລະປັດຈຸບັນ, ຫາກວິທີການນັ້ນເປັນແບຣນ.\n"
+"ຕົວຢ່າງ: \"ບັດ (Card)\" ແມ່ນວິທີການຊຳລະເງິນຫຼັກຂອງແບຣນບັດ \"VISA\"."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_token__provider_ref
 msgid "The provider reference of the token of the transaction."
-msgstr ""
+msgstr "ລະຫັດອ້າງອີງຂອງຜູ້ໃຫ້ບໍລິການສຳລັບໂທເຄັນຂອງທຸລະກຳ."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__provider_reference
@@ -2694,12 +2731,12 @@ msgstr "ເລກອ້າງອີງຜູ້ໃຫ້ບໍລິການຂ
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid "The refund %(ref)s of %(formatted_amount)s has been initiated."
-msgstr ""
+msgstr "ການຄືນເງິນ %(ref)s ຈຳນວນ %(formatted_amount)s ໄດ້ເລີ່ມຂຶ້ນແລ້ວ."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method__image_payment_form
 msgid "The resized image displayed on the payment form."
-msgstr ""
+msgstr "ຮູບພາບທີ່ປັບຂະໜາດແລ້ວເພື່ອສະແດງໃນແບບຟອມການຊຳລະ."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__landing_route
@@ -2709,7 +2746,7 @@ msgstr "ເສັ້ນທາງທີ່ຜູ້ໃຊ້ຈະຖືກປ່
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.state_header
 msgid "The saving of your payment method has been canceled."
-msgstr ""
+msgstr "ການບັນທຶກວິທີການຊຳລະເງິນຂອງເຈົ້າຖືກຍົກເລີກແລ້ວ."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__source_transaction_id
@@ -2721,7 +2758,7 @@ msgstr "ລາຍການຕົ້ນທາງຂອງລາຍການຍ່
 #: model:ir.model.fields,help:payment.field_payment_token__payment_method_code
 #: model:ir.model.fields,help:payment.field_payment_transaction__payment_method_code
 msgid "The technical code of this payment method."
-msgstr ""
+msgstr "ລະຫັດທາງເຕັກນິກຂອງວິທີການຊຳລະເງິນນີ້."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__code
@@ -2759,7 +2796,7 @@ msgstr "ແມ່ແບບທີ່ສະແດງແບບຟອມການຊ
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid "The transaction %(ref)s of %(formatted_amount)s has been initiated."
-msgstr ""
+msgstr "ທຸລະກຳ %(ref)s ຈຳນວນ %(formatted_amount)s ໄດ້ເລີ່ມຂຶ້ນແລ້ວ."
 
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_transaction
@@ -2775,7 +2812,7 @@ msgstr "ຍັງບໍ່ທັນມີການສ້າງໂທເຄັນ
 #. odoo-python
 #: code:addons/payment/wizards/payment_link_wizard.py:0
 msgid "There is nothing to be paid."
-msgstr ""
+msgstr "ບໍ່ມີຍອດຄ້າງຊຳລະ."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -2788,7 +2825,7 @@ msgstr "ບໍ່ມີລາຍການທີ່ຕ້ອງຊຳລະ."
 msgid ""
 "This action will also archive %s tokens that are registered with this "
 "payment method."
-msgstr ""
+msgstr "ການດຳເນີນການນີ້ຈະເກັບຖາວອນ %s ໂທເຄັນທີ່ລົງທະບຽນກັບວິທີການຊຳລະເງິນນີ້."
 
 #. module: payment
 #. odoo-python
@@ -2796,7 +2833,7 @@ msgstr ""
 msgid ""
 "This action will also archive %s tokens that are registered with this "
 "provider. "
-msgstr ""
+msgstr "ການດຳເນີນການນີ້ຈະເກັບຖາວອນ %s ໂທເຄັນທີ່ລົງທະບຽນກັບຜູ້ໃຫ້ບໍລິການນີ້. "
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__allow_tokenization
@@ -2838,26 +2875,27 @@ msgid ""
 "This payment method needs a partner in crime; you should enable a payment "
 "provider supporting this method first."
 msgstr ""
+"ວິທີການຊຳລະເງິນນີ້ຕ້ອງການຜູ້ຮ່ວມງານ; ເຈົ້າຄວນເປີດໃຊ້ຜູ້ໃຫ້ບໍລິການຊຳລະເງິນທີ່ຮອງຮັບວິທີການນີ້ກ່ອນ."
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_tienphong
 msgid "Tienphong"
-msgstr ""
+msgstr "Tienphong"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_tinka
 msgid "Tinka"
-msgstr ""
+msgstr "Tinka"
 
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_provider
 msgid "To add a provider to the current company:"
-msgstr ""
+msgstr "ເພື່ອເພີ່ມຜູ້ໃຫ້ບໍລິການໃຫ້ກັບບໍລິສັດປັດຈຸບັນ:"
 
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_provider
 msgid "Toggle the main company in the company switcher."
-msgstr ""
+msgstr "ປ່ຽນບໍລິສັດຫຼັກໃນຕົວສະຫຼັບບໍລິສັດ."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__token_inline_form_view_id
@@ -2868,7 +2906,7 @@ msgstr "ແມ່ແບບແບບຟອມໂທເຄັນ Inline"
 #: model:ir.model.fields,field_description:payment.field_payment_method__support_tokenization
 #: model:ir.model.fields,field_description:payment.field_payment_provider__support_tokenization
 msgid "Tokenization"
-msgstr ""
+msgstr "ການສ້າງໂທເຄັນ (Tokenization)"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__support_tokenization
@@ -2876,16 +2914,18 @@ msgid ""
 "Tokenization is the process of saving the payment details as a token that "
 "can later be reused without having to enter the payment details again."
 msgstr ""
+"ການສ້າງໂທເຄັນ ແມ່ນຂະບວນການບັນທຶກລາຍລະອຽດການຊຳລະເງິນເປັນໂທເຄັນ ເພື່ອໃຫ້ນຳມາໃຊ້ໃໝ່ໄດ້ໃນພາຍຫຼັງ "
+"ໂດຍບໍ່ຕ້ອງປ້ອນລາຍລະອຽດການຊຳລະເງິນອີກ."
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_toss_payments
 msgid "Toss Payments"
-msgstr ""
+msgstr "Toss Payments"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_touch_n_go
 msgid "Touch'n Go"
-msgstr ""
+msgstr "Touch'n Go"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__transaction_ids
@@ -2903,47 +2943,47 @@ msgstr "ການອະນຸມັດລາຍການບໍ່ຮອງຮັ
 #. module: payment
 #: model:payment.method,name:payment.payment_method_troy
 msgid "Troy"
-msgstr ""
+msgstr "Troy"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_truemoney
 msgid "TrueMoney"
-msgstr ""
+msgstr "ທຣູມັນນີ່ (TrueMoney)"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_trustly
 msgid "Trustly"
-msgstr ""
+msgstr "Trustly"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_twint
 msgid "Twint"
-msgstr ""
+msgstr "Twint"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_upi
 msgid "UPI"
-msgstr ""
+msgstr "UPI"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_ussd
 msgid "USSD"
-msgstr ""
+msgstr "USSD"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_unionpay
 msgid "UnionPay"
-msgstr ""
+msgstr "UnionPay"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_uob
 msgid "United Overseas Bank"
-msgstr ""
+msgstr "United Overseas Bank"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_uatp
 msgid "Universal Air Travel Plan"
-msgstr ""
+msgstr "Universal Air Travel Plan"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.method_form
@@ -2957,7 +2997,7 @@ msgstr "ຍັງບໍ່ໄດ້ເຜີຍແຜ່"
 #: model:ir.model.fields.selection,name:payment.selection__payment_method__support_refund__none
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider__support_refund__none
 msgid "Unsupported"
-msgstr ""
+msgstr "ບໍ່ຮອງຮັບ"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
@@ -2968,27 +3008,27 @@ msgstr "ອັບເກຣດ"
 #. module: payment
 #: model:payment.method,name:payment.payment_method_vpay
 msgid "V PAY"
-msgstr ""
+msgstr "V PAY"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_visa
 msgid "VISA"
-msgstr ""
+msgstr "VISA"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_vnptwallet
 msgid "VNPT Money"
-msgstr ""
+msgstr "VNPT Money"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_vpbank
 msgid "VP Bank"
-msgstr ""
+msgstr "VP Bank"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_valu
 msgid "ValU"
-msgstr ""
+msgstr "ValU"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__operation__validation
@@ -2998,27 +3038,27 @@ msgstr "ການກວດສອບຄວາມຖືກຕ້ອງຂອງວ
 #. module: payment
 #: model:payment.method,name:payment.payment_method_venmo
 msgid "Venmo"
-msgstr ""
+msgstr "Venmo"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_vietcapital
 msgid "Viet Capital"
-msgstr ""
+msgstr "Viet Capital"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_vietcom
 msgid "Vietcombank"
-msgstr ""
+msgstr "Vietcombank"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_viettelpay
 msgid "Viettel Pay"
-msgstr ""
+msgstr "Viettel Pay"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_vipps
 msgid "Vipps"
-msgstr ""
+msgstr "Vipps"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__void_remaining_amount
@@ -3033,17 +3073,17 @@ msgstr "ຍົກເລີກລາຍການ"
 #. module: payment
 #: model:payment.method,name:payment.payment_method_wero
 msgid "WERO"
-msgstr ""
+msgstr "WERO"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_wallets_india
 msgid "Wallets India"
-msgstr ""
+msgstr "Wallets India"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_walley
 msgid "Walley"
-msgstr ""
+msgstr "Walley"
 
 #. module: payment
 #. odoo-python
@@ -3055,7 +3095,7 @@ msgstr "ຄຳເຕືອນ"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__warning_message
 msgid "Warning Message"
-msgstr ""
+msgstr "ຂໍ້ຄວາມເຕືອນ"
 
 #. module: payment
 #. odoo-javascript
@@ -3066,17 +3106,17 @@ msgstr "ຄຳເຕືອນ!"
 #. module: payment
 #: model:payment.method,name:payment.payment_method_wechat_pay
 msgid "WeChat Pay"
-msgstr ""
+msgstr "ວີແຊັດເພ (WeChat Pay)"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_welend
 msgid "WeLend"
-msgstr ""
+msgstr "WeLend"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_webpay
 msgid "WebPay"
-msgstr ""
+msgstr "WebPay"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__tokenize
@@ -3105,6 +3145,8 @@ msgid ""
 "Whether the transaction happened in a production environment. False for "
 "transactions created before this tracking was implemented."
 msgstr ""
+"ທຸລະກຳໄດ້ເກີດຂຶ້ນໃນສະພາບແວດລ້ອມການໃຊ້ງານຈິງຫຼືບໍ່. ຈະເປັນ False ສຳລັບທຸລະກຳທີ່ຖືກສ້າງຂຶ້ນກ່ອນການນຳໃ"
+"ຊ້ລະບົບຕິດຕາມນີ້."
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_transfer
@@ -3114,17 +3156,17 @@ msgstr "ໂອນເງິນຜ່ານທະນາຄານ"
 #. module: payment
 #: model:payment.method,name:payment.payment_method_woori
 msgid "Woori Bank"
-msgstr ""
+msgstr "Woori Bank"
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_worldline
 msgid "Worldline"
-msgstr ""
+msgstr "Worldline"
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_xendit
 msgid "Xendit"
-msgstr ""
+msgstr "Xendit"
 
 #. module: payment
 #. odoo-python
@@ -3133,6 +3175,8 @@ msgid ""
 "You can't unarchive tokens linked to inactive payment methods or disabled "
 "providers."
 msgstr ""
+"ເຈົ້າບໍ່ສາມາດຍົກເລີກການເກັບຖາວອນໂທເຄັນທີ່ເຊື່ອມຕໍ່ກັບວິທີການຊຳລະເງິນທີ່ບໍ່ມີການເຄື່ອນໄຫວ ຫຼື ຜູ້ໃຫ້ບໍລິການທີ່ຖືກ"
+"ປິດໃຊ້ງານ."
 
 #. module: payment
 #. odoo-python
@@ -3140,13 +3184,13 @@ msgstr ""
 msgid ""
 "You cannot change the company of a payment provider with existing "
 "transactions."
-msgstr ""
+msgstr "ເຈົ້າບໍ່ສາມາດປ່ຽນບໍລິສັດຂອງຜູ້ໃຫ້ບໍລິການຊຳລະເງິນທີ່ມີທຸລະກຳຄ້າງຢູ່ໄດ້."
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_method.py:0
 msgid "You cannot delete the default payment method."
-msgstr ""
+msgstr "ເຈົ້າບໍ່ສາມາດລຶບວິທີການຊຳລະເງິນເລີ່ມຕົ້ນໄດ້."
 
 #. module: payment
 #. odoo-python
@@ -3155,6 +3199,7 @@ msgid ""
 "You cannot delete the payment provider %s; disable it or uninstall it "
 "instead."
 msgstr ""
+"ເຈົ້າບໍ່ສາມາດລຶບຜູ້ໃຫ້ບໍລິການຊຳລະເງິນ %s ໄດ້; ໃຫ້ປິດໃຊ້ງານ ຫຼື ຖອນການຕິດຕັ້ງແທນ."
 
 #. module: payment
 #. odoo-python
@@ -3174,6 +3219,8 @@ msgid ""
 "You should receive an email confirming your payment within a few\n"
 "                                    minutes."
 msgstr ""
+"ເຈົ້າຄວນຈະໄດ້ຮັບອີເມລຢືນຢັນການຊຳລະເງິນພາຍໃນບໍ່ເທົ່າໃດ\n"
+"                                    ນາທີ."
 
 #. module: payment
 #. odoo-python
@@ -3262,7 +3309,7 @@ msgstr "ການຊຳລະເງິນຂອງທ່ານຖືກຍົກ
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_worldline
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_xendit
 msgid "Your payment has been processed but is waiting for approval."
-msgstr ""
+msgstr "ການຊຳລະເງິນຂອງເຈົ້າໄດ້ຮັບການປະມວນຜົນແລ້ວ ແຕ່ກຳລັງລໍຖ້າການອະນຸມັດ."
 
 #. module: payment
 #. odoo-python
@@ -3302,7 +3349,7 @@ msgstr "ການຊຳລະເງິນຂອງທ່ານຍັງບໍ່
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_status
 msgid "Your payment is on its way!"
-msgstr ""
+msgstr "ການຊຳລະເງິນຂອງເຈົ້າກຳລັງດຳເນີນການ!"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.state_header
@@ -3312,7 +3359,7 @@ msgstr "ວິທີການຊຳລະເງິນຂອງທ່ານຖື
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.form
 msgid "Your payment methods"
-msgstr ""
+msgstr "ວິທີການຊຳລະເງິນຂອງທ່ານ"
 
 #. module: payment
 #. odoo-python
@@ -3321,12 +3368,13 @@ msgid ""
 "Your payment operation could not be completed for following transactions: %"
 "(tx_refs)s"
 msgstr ""
+"ການດຳເນີນການຊຳລະເງິນຂອງເຈົ້າບໍ່ສາມາດສຳເລັດໄດ້ສຳລັບທຸລະກຳຕໍ່ໄປນີ້: %(tx_refs)s"
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid "Your payment operation has been successfully submitted."
-msgstr ""
+msgstr "ການດຳເນີນການຊຳລະເງິນຂອງເຈົ້າຖືກສົ່ງສຳເລັດແລ້ວ."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
@@ -3336,7 +3384,7 @@ msgstr "ລະຫັດໄປສະນີ"
 #. module: payment
 #: model:payment.method,name:payment.payment_method_zalopay
 msgid "Zalopay"
-msgstr ""
+msgstr "Zalopay"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_zip
@@ -3347,81 +3395,81 @@ msgstr "ລະຫັດໄປສະນີ"
 #. module: payment
 #: model:payment.method,name:payment.payment_method_cofidis
 msgid "cofidis"
-msgstr ""
+msgstr "cofidis"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_enets
 msgid "eNETS"
-msgstr ""
+msgstr "eNETS"
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/const.py:0
 msgid "express checkout not supported"
-msgstr ""
+msgstr "ບໍ່ຮອງຮັບການຊຳລະເງິນແບບດ່ວນ"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_ideal
 #: model:payment.method,name:payment.payment_method_ideal_brand
 msgid "iDEAL"
-msgstr ""
+msgstr "iDEAL"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_ipass_money
 msgid "iPASS Money"
-msgstr ""
+msgstr "iPASS Money"
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_provider.py:0
 msgid "id"
-msgstr ""
+msgstr "id"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_in3
 msgid "in3"
-msgstr ""
+msgstr "in3"
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/const.py:0
 msgid "incompatible country"
-msgstr ""
+msgstr "ປະເທດທີ່ບໍ່ເຂົ້າກັນ"
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/const.py:0
 msgid "incompatible currency"
-msgstr ""
+msgstr "ສະກຸນເງິນທີ່ບໍ່ເຂົ້າກັນ"
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/const.py:0
 msgid "incompatible website"
-msgstr ""
+msgstr "ເວັບໄຊທ໌ທີ່ບໍ່ເຂົ້າກັນ"
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/const.py:0
 msgid "manual capture not supported"
-msgstr ""
+msgstr "ບໍ່ຮອງຮັບການຕັດຍອດເງິນດ້ວຍຕົນເອງ"
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/const.py:0
 msgid "maximum amount exceeded"
-msgstr ""
+msgstr "ເກີນຈຳນວນເງິນສູງສຸດ"
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/const.py:0
 msgid "no supported provider available"
-msgstr ""
+msgstr "ບໍ່ມີຜູ້ໃຫ້ບໍລິການທີ່ຮອງຮັບ"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_search
 msgid "payment method"
-msgstr ""
+msgstr "ວິທີການຊຳລະເງິນ"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_kanban
@@ -3440,13 +3488,13 @@ msgstr "ເພື່ອທຳການຊຳລະເງິນນີ້."
 #. odoo-python
 #: code:addons/payment/const.py:0
 msgid "tokenization not supported"
-msgstr ""
+msgstr "ບໍ່ຮອງຮັບການສ້າງໂທເຄັນ"
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/const.py:0
 msgid "tokenization without payment no supported"
-msgstr ""
+msgstr "ບໍ່ຮອງຮັບການສ້າງໂທເຄັນໂດຍບໍ່ມີການຊຳລະເງິນ"
 
 #~ msgid " Data Fetched"
 #~ msgstr " ດຶງຂໍ້ມູນແລ້ວ"

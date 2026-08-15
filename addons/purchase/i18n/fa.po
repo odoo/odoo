@@ -26,8 +26,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2026-08-02 23:50+0000\n"
-"Last-Translator: Heshmatkhah <maheshmatkhah.soft@gmail.com>\n"
+"PO-Revision-Date: 2026-08-09 11:34+0000\n"
+"Last-Translator: Aliraza Habibitanha <alireza.habibitanha@gmail.com>\n"
 "Language-Team: Persian <https://translate.odoo.com/projects/odoo-19/purchase/"
 "fa/>\n"
 "Language: fa\n"
@@ -45,6 +45,10 @@ msgid ""
 "Quotation - %s' % (object.name) or\n"
 "                'Purchase Order - %s' % (object.name))"
 msgstr ""
+"\n"
+"                (object.state in ('draft', 'sent') and 'Request for "
+"Quotation - %s' % (object.name) or\n"
+"                'سفارش خرید - %s' % (object.name))"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__partner_bill_count
@@ -85,6 +89,8 @@ msgid ""
 ", it's 100% free! You'll save time creating beautiful quotations and track "
 "sales."
 msgstr ""
+"کاملاً رایگان است! شما هم می‌توانید با استفاده از این سیستم یکپارچه، "
+"پیش‌فاکتورهای زیبا بسازید، فروش‌ها را پیگیری کنید و در زمان صرفه‌جویی نمایید."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.track_po_line_qty_received_template
@@ -145,6 +151,47 @@ msgid ""
 "    </p>\n"
 "</div>"
 msgstr ""
+"<div dir=\"rtl\" style=\"margin: 0px; padding: 0px; font-family:IRANSansX;\">"
+"\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        <t t-out=\"object.partner_id.name or ''\">احسان امیری</t>\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            (<t t-out=\"object.partner_id.parent_id.name or ''\">دکوراسیون "
+"داخلی افرا</t>) عزیز،\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        این پیام صرفاً یک یادآوری برای تحویل سفارش خرید <span style=\"font-"
+"weight:bold;\" t-out=\"object.name or ''\">P00015</span>\n"
+"        <t t-if=\"object.partner_ref\">\n"
+"            <span style=\"font-weight:bold;\">(<t t-out=\"object.partner_ref "
+"or ''\">شماره ارجاع_XXX</t>)</span>\n"
+"        </t>\n"
+"        است که انتظار می‌رود در تاریخ \n"
+"        <t t-if=\"object.date_planned\">\n"
+"            <span style=\"font-weight:bold;\" t-out=\"format_date"
+"(object.date_planned) or ''\">1402/05/08</span>.\n"
+"        </t>\n"
+"         <t t-else=\"\">\n"
+"            <span style=\"font-weight:bold;\">تعریف نشده</span>.\n"
+"        </t>\n"
+"        انجام به موقع این سفارش را تأیید می‌نمایید؟\n"
+"        <br/><br/>\n"
+"        <a t-att-href=\"object.get_acknowledge_url()\" target=\"_blank\" "
+"style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-"
+"color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
+"            تأیید دریافت\n"
+"        </a>\n"
+"        <br/><br/>\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-"
+"quote-container=\"1\">\n"
+"            <br/><br/>\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
+"out=\"object.user_id.signature or ''\" data-o-mail-quote=\"1\">میکائیل "
+"ادمین‌زاده</t></div>\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"    </p>\n"
+"</div>"
 
 #. module: purchase
 #: model:mail.template,body_html:purchase.email_template_edi_purchase_done
@@ -190,6 +237,48 @@ msgid ""
 "    </p>\n"
 "</div>"
 msgstr ""
+"<div dir=\"rtl\" style=\"margin: 0px; padding: 0px; font-family: "
+"IRANSansX;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        <t t-out=\"object.partner_id.name or ''\">آراز عزتی</t>\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            (<t t-out=\"object.partner_id.parent_id.name or ''\">فروشگاه "
+"رفاه</t>)\n"
+"        </t> عزیز،\n"
+"        <br/><br/>\n"
+"        سفارش خرید <span style=\"font-weight:bold;\" t-out=\"object.name or "
+"''\">P00015</span>\n"
+"        <t t-if=\"object.partner_ref\">\n"
+"            با شماره ارجاع: <t t-out=\"object.partner_ref or ''\">REF_XXX</t>"
+"\n"
+"        </t>\n"
+"        به مبلغ <span style=\"font-weight:bold;\" t-out=\"format_amount"
+"(object.amount_total, object.currency_id) or ''\">600000 ریال</span>\n"
+"        مربوط به <t t-out=\"object.company_id.name or ''\">شرکت من</t> "
+"به‌حضورتان ارسال می‌گردد.\n"
+"        <br/><br/>\n"
+"        <t t-if=\"object.date_planned\">\n"
+"            تاریخ رسید برای <span style=\"font-weight:bold;\" t-"
+"out=\"format_date(object.date_planned) or ''\">1402/06/08</span> است.\n"
+"            <br/><br/>\n"
+"            آیا رسید این سفارش را تأیید می‌کنید؟\n"
+"            <br/><br/>\n"
+"            <a t-att-href=\"object.get_acknowledge_url()\" target=\"_blank\" "
+"style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-"
+"color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
+"                تأیید دریافت\n"
+"            </a>\n"
+"        </t>\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-"
+"quote-container=\"1\">\n"
+"            <br/><br/>\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
+"out=\"object.user_id.signature or ''\" data-o-mail-quote=\"1\">میکائیل "
+"ادمین‌زاده</t></div>\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"    </p>\n"
+"</div>"
 
 #. module: purchase
 #: model:mail.template,body_html:purchase.email_template_edi_purchase
@@ -223,21 +312,52 @@ msgid ""
 "    </p>\n"
 "</div>"
 msgstr ""
+"<div dir=\"rtl\" style=\"margin: 0px; padding: 0px; font-family: "
+"IRANSansX;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        <t t-out=\"object.partner_id.name or ''\">آراز عزتی</t>\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            (<t t-out=\"object.partner_id.parent_id.name or ''\">فروشگاه "
+"رفاه</t>)\n"
+"        </t>\n"
+"        عزیز،\n"
+"        <br/><br/>\n"
+"        بدینوسیله یک درخواست پیش‌فاکتور <span style=\"font-weight:bold;\" t-"
+"out=\"object.name or ''\">P00015</span>\n"
+"        <t t-if=\"object.partner_ref\">\n"
+"            با شماره ارجاع <t t-out=\"object.partner_ref or ''\">REF_XXX</t>"
+"\n"
+"        </t>\n"
+"        مربوط به <t t-out=\"object.company_id.name or ''\">شرکت من</t> به "
+"پیوست به‌حضورتان ارسال می‌گردد.\n"
+"        <br/><br/>\n"
+"        اگر سؤالی دارید، لطفاً با ما تماس بگیرید.\n"
+"        <br/><br/>\n"
+"        با احترام،\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-"
+"quote-container=\"1\">\n"
+"            <br/><br/>\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
+"out=\"object.user_id.signature or ''\" data-o-mail-quote=\"1\">میکائیل "
+"ادمین‌زاده</t></div>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
 msgid "<i class=\"fa fa-fw fa-check\"/>Paid"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-check\"/>پرداخت شده"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
 msgid "<i class=\"fa fa-fw fa-check\"/>Reversed"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-check\"/>معکوس شده"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
 msgid "<i class=\"fa fa-fw fa-clock-o\"/>Waiting Payment"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-clock-o\"/>در انتظار پرداخت"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
@@ -246,6 +366,9 @@ msgid ""
 "Bill\" title=\"Waiting for Bill\"/><span class=\"d-none d-md-inline\"> "
 "Waiting for Bill</span>"
 msgstr ""
+"<i class=\"fa fa-fw fa-file-text\" role=\"img\" aria-label=\"Waiting for "
+"Bill\" title=\"Waiting for Bill\"/><span class=\"d-none d-md-inline\"> در "
+"انتظار صورت‌حساب</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
@@ -253,6 +376,8 @@ msgid ""
 "<i class=\"fa fa-fw fa-remove\" role=\"img\" aria-label=\"Cancelled\" "
 "title=\"Cancelled\"/><span class=\"d-none d-md-inline\"> Cancelled</span>"
 msgstr ""
+"<i class=\"fa fa-fw fa-remove\" role=\"img\" aria-label=\"Cancelled\" "
+"title=\"Cancelled\"/><span class=\"d-none d-md-inline\"> لغو شده</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -260,11 +385,13 @@ msgid ""
 "<i class=\"fa fa-lock\"/>\n"
 "                        Locked"
 msgstr ""
+"<i class=\"fa fa-lock\"/>\n"
+"                        قفل شده"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
 msgid "<i class=\"fa fa-print me-1\"/>Download / Print"
-msgstr ""
+msgstr "<i class=\"fa fa-print me-1\"/>دانلود یا چاپ"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
@@ -273,6 +400,8 @@ msgid ""
 "                          <span class=\"d-block d-md-none\">Confirmation</"
 "span>"
 msgstr ""
+"<span class=\"d-none d-md-inline\">تاریخ تأیید</span>\n"
+"                          <span class=\"d-block d-md-none\">تأیید</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
@@ -280,6 +409,8 @@ msgid ""
 "<span class=\"d-none d-md-inline\">Purchase Order #</span>\n"
 "                          <span class=\"d-block d-md-none\">Ref.</span>"
 msgstr ""
+"<span class=\"d-none d-md-inline\">شماره سفارش خرید</span>\n"
+"                          <span class=\"d-block d-md-none\">کد</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_rfqs
@@ -287,6 +418,8 @@ msgid ""
 "<span class=\"d-none d-md-inline\">Request for Quotation #</span>\n"
 "                        <span class=\"d-block d-md-none\">Ref.</span>"
 msgstr ""
+"<span class=\"d-none d-md-inline\">شماره درخواست پیش‌فاکتور</span>\n"
+"                        <span class=\"d-block d-md-none\">کد</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -296,21 +429,25 @@ msgid ""
 "                        <span class=\"o_form_label\" invisible=\"state in "
 "('draft', 'sent')\">Purchase Order </span>"
 msgstr ""
+"<span class=\"o_form_label\" invisible=\"state not in ('draft', 'sent')\">"
+"درخواست پیش‌فاکتور </span>\n"
+"                        <span class=\"o_form_label\" invisible=\"state in "
+"('draft', 'sent')\">سفارش خرید</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "<span class=\"o_stat_text\">Bill Matching</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">تطبیق صورت‌حساب</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "<span class=\"o_stat_text\">Price Comparison</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">مقایسه قیمت</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_move_form_inherit_purchase
 msgid "<span class=\"o_stat_text\">Purchase Matching</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">تطبیق خرید</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.product_normal_form_view_inherit_purchase
@@ -362,7 +499,7 @@ msgstr "<strong class=\"d-block mb-1\">فاکتورها</strong>"
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchasequotation_document
 msgid "<strong class=\"d-block mt-3\">Shipping address</strong>"
-msgstr ""
+msgstr "<strong class=\"d-block mt-3\">آدرس ارسال</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
@@ -378,7 +515,7 @@ msgstr "<strong>مقدار</strong>"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Buyer</strong>"
-msgstr ""
+msgstr "<strong>خریدار</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
@@ -394,12 +531,12 @@ msgstr "<strong>شرح</strong>"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Disc.</strong>"
-msgstr ""
+msgstr "<strong>تخفیف</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Expected Arrival:</strong>"
-msgstr ""
+msgstr "<strong>زمان تحویل مورد انتظار:</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchasequotation_document
@@ -415,12 +552,12 @@ msgstr "<strong>تاریخ سفارش:</strong>"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Order Deadline:</strong>"
-msgstr ""
+msgstr "<strong>سررسید سفارش:</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Payment Terms: </strong>"
-msgstr ""
+msgstr "<strong>شرایط پرداخت: </strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -436,12 +573,12 @@ msgstr "<strong>تاریخ تحویل:</strong>"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
 msgid "<strong>Request For Quotation Date:</strong>"
-msgstr ""
+msgstr "<strong>تاریخ درخواست:</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchasequotation_document
 msgid "<strong>Requested Ship Date:</strong>"
-msgstr ""
+msgstr "<strong>تاریخ ارسال درخواست شده:</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -456,7 +593,7 @@ msgstr "<strong>مقدار سفارش داده شده به روز شده است.
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.track_po_line_qty_received_template
 msgid "<strong>The received quantity has been updated.</strong>"
-msgstr ""
+msgstr "<strong>تعداد دریافت شده به‌روز شد.</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -466,7 +603,7 @@ msgstr "<strong>قیمت واحد</strong>"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Your Order Reference</strong>"
-msgstr ""
+msgstr "<strong>کد سفارش شما</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -475,6 +612,8 @@ msgid ""
 "supplier to deliver goods or services to the buyer at a preset price for a "
 "period of time."
 msgstr ""
+"سفارش خرید کلی توافقنامه‌ای بین خریدار و تأمین‌کننده برای تحویل کالا یا خدمات "
+"به خریدار با قیمت از پیش تعیین شده برای یک دوره زمانی مشخص است."
 
 #. module: purchase
 #. odoo-python
@@ -514,12 +653,12 @@ msgstr "سند هزینه تعهدی"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Acknowledge"
-msgstr ""
+msgstr "تأیید"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__acknowledged
 msgid "Acknowledged"
-msgstr ""
+msgstr "تأیید شده"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_needaction
@@ -534,7 +673,7 @@ msgstr "فعالیت ها"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
 msgid "Activities of"
-msgstr ""
+msgstr "فعالیت‌های"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_exception_decoration
@@ -559,7 +698,7 @@ msgstr "نوع فعالیت"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.bill_to_po_wizard_form
 msgid "Add Down Payment"
-msgstr ""
+msgstr "افزودن پیش پرداخت"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.bill_to_po_wizard_form
@@ -584,7 +723,7 @@ msgstr "افزودن بخش"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Add several variants to the purchase order from a grid"
-msgstr ""
+msgstr "از طریق جدول، چند گونه محصول را به سفارش خرید اضافه کنید"
 
 #. module: purchase
 #. odoo-javascript
@@ -596,18 +735,18 @@ msgstr "برخی از محصولات یا خدمات را به قیمت خود �
 #: model_terms:ir.ui.view,arch_db:purchase.bill_to_po_wizard_form
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
 msgid "Add to PO"
-msgstr ""
+msgstr "افزودن به سفارش خرید"
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase_bill_line_match.py:0
 msgid "Add to Purchase Order"
-msgstr ""
+msgstr "افزودن به سفارش خرید"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.mail_followers_edit_action_from_purchase
 msgid "Add/Remove Followers"
-msgstr ""
+msgstr "افزودن/حذف دنبال‌کنندگان"
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_purchase_manager
@@ -626,7 +765,7 @@ msgstr "همه"
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 msgid "All Days to Order"
-msgstr ""
+msgstr "کل روزهای مانده به سفارش"
 
 #. module: purchase
 #. odoo-javascript
@@ -644,19 +783,19 @@ msgstr "همه درخواست استعلام قیمت دیر شده"
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 msgid "All Late Receipt POs"
-msgstr ""
+msgstr "تمام سفارش‌های خرید با دریافت تأخیر دار"
 
 #. module: purchase
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 msgid "All Not Acknowledged POs"
-msgstr ""
+msgstr "تمام سفارش‌های خرید تأیید نشده"
 
 #. module: purchase
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 msgid "All Sent RFQs"
-msgstr ""
+msgstr "تمام درخواست‌های پیش‌فاکتور ارسال شده"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_config_settings__group_send_reminder
@@ -672,7 +811,7 @@ msgstr "اجازه دادن ویرایش سفارشات خرید"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__allowed_uom_ids
 msgid "Allowed Uom"
-msgstr ""
+msgstr "واحد اندازه‌گیری مجاز"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__aml_id
@@ -729,7 +868,7 @@ msgstr "موافقت با سفارش"
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_kpis_tree
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_tree
 msgid "Are you sure you want to cancel the selected RFQs/Orders?"
-msgstr ""
+msgstr "از لغو درخواست‌های پیش‌فاکتور/سفارش‌های انتخاب شده مطمئن هستید؟"
 
 #. module: purchase
 #. odoo-python
@@ -739,6 +878,10 @@ msgid ""
 "been used for this product, the change of unit of measure can not be done.If "
 "you want to change it, please archive the product and create a new one."
 msgstr ""
+"از آنجایی که واحدهای اندازه‌گیری دیگری (مثلاً: %(problem_uom)s) غیر از %(uom)s "
+"قبلاً برای این محصول استفاده شده است، تغییر واحد اندازه‌گیری امکان‌پذیر نیست. "
+"اگر می‌خواهید آن را تغییر دهید، لطفاً محصول را بایگانی کرده و یک محصول جدید "
+"ایجاد کنید."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_attachment_count
@@ -777,7 +920,7 @@ msgstr "تکمیل خودکار از سفارش خرید قبلی."
 #: model:ir.model.fields,help:purchase.field_account_bank_statement_line__purchase_vendor_bill_id
 #: model:ir.model.fields,help:purchase.field_account_move__purchase_vendor_bill_id
 msgid "Auto-complete from a previous bill, refund, or purchase order."
-msgstr ""
+msgstr "تکمیل خودکار از یک صورت‌حساب، بازپرداخت یا سفارش خرید قبلی."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -819,12 +962,12 @@ msgstr "سطرهای صورت"
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 msgid "Bill Matching"
-msgstr ""
+msgstr "تطبیق صورت‌حساب"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_bill_to_po_wizard
 msgid "Bill to Purchase Order"
-msgstr ""
+msgstr "صورت‌حساب به سفارش خرید"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_invoiced_at_date
@@ -836,7 +979,7 @@ msgstr "صورتحساب شده"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__billed_amount_untaxed
 msgid "Billed Amount Untaxed"
-msgstr ""
+msgstr "مبلغ صورت‌حساب بدون مالیات"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_invoiced
@@ -909,7 +1052,7 @@ msgstr "سفارش خرید لغو شده #"
 #. odoo-python
 #: code:addons/purchase/models/purchase_order_line.py:0
 msgid "Cannot delete a purchase order line which is in state “%s”."
-msgstr ""
+msgstr "امکان حذف سطر سفارش خریدی که در حالت «%s» است وجود ندارد."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -981,7 +1124,7 @@ msgstr "تایید سفارش"
 #. module: purchase
 #: model:ir.actions.server,name:purchase.action_confirm_rfqs
 msgid "Confirm RFQ"
-msgstr ""
+msgstr "تأیید درخواست پیش‌فاکتور"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__res_company__po_double_validation__one_step
@@ -1021,7 +1164,7 @@ msgstr "اتصال به نرم افزار شما"
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchasequotation_document
 msgid "Connect your software"
-msgstr ""
+msgstr "نرم‌افزار خود را"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_res_partner
@@ -1135,7 +1278,7 @@ msgstr "روز برای تایید"
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 msgid "Days to Order"
-msgstr ""
+msgstr "روز تا سفارش"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__delay_pass
@@ -1260,7 +1403,7 @@ msgstr "مقدار دوبار تایید شده"
 #. odoo-python
 #: code:addons/purchase/wizard/bill_to_po_wizard.py:0
 msgid "Down Payment (ref: %(ref)s)"
-msgstr ""
+msgstr "پیش پرداخت (کد: %(ref)s)"
 
 #. module: purchase
 #. odoo-python
@@ -1279,6 +1422,8 @@ msgid ""
 "Drag and drop the request for quotation PDF file into your list of "
 "quotations in Odoo. Enjoy the automation!"
 msgstr ""
+"کافی است فایل PDF درخواست پیش‌فاکتور را به بخش پیش‌فاکتورهای سازمان‌یار بکشید و "
+"رها کنید. بقیه مراحل را به اتوماسیون بسپارید!"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__dest_address_id
@@ -1299,7 +1444,7 @@ msgstr "سفارش تکراری"
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__date_planned
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__date_planned
 msgid "Expected Arrival"
-msgstr ""
+msgstr "تاریخ تحویل مورد انتظار"
 
 #. module: purchase
 #. odoo-python
@@ -1316,12 +1461,12 @@ msgstr "موقعیت مالی"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_home_purchase
 msgid "Follow orders you have to fulfill"
-msgstr ""
+msgstr "مشاهده، پیگیری و مدیریت سفارشات خرید از من"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_home_purchase
 msgid "Follow your Requests for Quotation"
-msgstr ""
+msgstr "بررسی وضعیت و مدیریت درخواست‌های پیش‌فاکتور"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_follower_ids
@@ -1341,7 +1486,7 @@ msgstr "آیکون فونت عالی به عبارتی fa-tasks"
 #. module: purchase
 #: model:ir.model.constraint,message:purchase.constraint_purchase_order_line_non_accountable_null_fields
 msgid "Forbidden values on non-accountable purchase order line"
-msgstr ""
+msgstr "مقادیر ممنوعه در سطر سفارش خرید"
 
 #. module: purchase
 #. odoo-python
@@ -1353,7 +1498,7 @@ msgstr "از %s"
 #. odoo-python
 #: code:addons/purchase/models/account_invoice.py:0
 msgid "From Electronic Document"
-msgstr ""
+msgstr "از سند الکترونیکی"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__invoice_status__invoiced
@@ -1388,6 +1533,8 @@ msgid ""
 "Goods are tangible materials and merchandise you provide.\n"
 "A service is a non-material product you provide."
 msgstr ""
+"کالاها مواد و کالاهای فیزیکی هستند که ارائه می‌دهید.\n"
+"خدمات محصولات غیرمادی هستند که ارائه می‌دهید."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__weight
@@ -1454,6 +1601,8 @@ msgid ""
 "If enabled, activates 3-way matching on vendor bills : the items must be "
 "received in order to pay the invoice."
 msgstr ""
+"این گزینه تطابق 3 طرفه را برای صورت‌حساب‌های تأمین‌کننده فعال می‌کند: برای امکان "
+"پرداخت فاکتور، ابتدا باید آیتم‌ها دریافت شوند."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -1461,6 +1610,7 @@ msgid ""
 "If installed, the product variants will be added to purchase orders through "
 "a grid entry."
 msgstr ""
+"در صورت نصب، گونه‌های محصول از طریق داده شبکه‌ای به سفارش‌های خرید اضافه می‌شود."
 
 #. module: purchase
 #. odoo-python
@@ -1472,7 +1622,7 @@ msgstr "ایمپورت قالب برای محصولات"
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 msgid "Import Template for Requests for Quotation"
-msgstr ""
+msgstr "قالب ایمپورت درخواست‌های پیش‌فاکتور"
 
 #. module: purchase
 #. odoo-python
@@ -1487,6 +1637,8 @@ msgid ""
 "In selected purchase order to merge these details must be same\n"
 "Vendor, currency, destination, dropship address and agreement"
 msgstr ""
+"در سفارش خرید انتخاب شده برای ادغام، این جزئیات باید یکسان باشند\n"
+"تأمین‌کننده، ارز، مقصد، آدرس دراپ‌شیپ و توافقنامه"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.product_view_search_catalog
@@ -1509,7 +1661,7 @@ msgstr "مقدار محصولی که می خواهید سفارش دهید را 
 #: model:ir.model.fields,help:purchase.field_account_move__purchase_warning_text
 #: model:ir.model.fields,help:purchase.field_purchase_order__purchase_warning_text
 msgid "Internal warning for the partner or the products as set by the user."
-msgstr ""
+msgstr "هشدار داخلی برای طرف همکار یا محصولات، که توسط کاربر تنظیم می‌شود."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__incoterm_id
@@ -1544,7 +1696,7 @@ msgstr "آیا دنبال می کند"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_product_product__is_in_purchase_order
 msgid "Is In Purchase Order"
-msgstr ""
+msgstr "در سفارش خرید است"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__is_late
@@ -1555,7 +1707,7 @@ msgstr "دیر شده"
 #: model:ir.model.fields,field_description:purchase.field_account_bank_statement_line__is_purchase_matched
 #: model:ir.model.fields,field_description:purchase.field_account_move__is_purchase_matched
 msgid "Is Purchase Matched"
-msgstr ""
+msgstr "تطبیق خرید انجام شده است"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__acknowledged
@@ -1563,6 +1715,7 @@ msgid ""
 "It indicates that the vendor has acknowledged the receipt of the purchase "
 "order."
 msgstr ""
+"مشخص می‌کند که آیا تأمین‌کننده دریافت سفارش خرید را تأیید کرده است یا خیر."
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_account_move
@@ -1603,13 +1756,13 @@ msgstr "فعالیتهای اخیر"
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 msgid "Late RFQ"
-msgstr ""
+msgstr "درخواست پیش‌فاکتور تأخیردار"
 
 #. module: purchase
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 msgid "Late Receipt"
-msgstr ""
+msgstr "رسید تأخیردار"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
@@ -1645,17 +1798,17 @@ msgstr "سطح رضایت"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__line_amount_untaxed
 msgid "Line Amount Untaxed"
-msgstr ""
+msgstr "مبلغ سطر بدون مالیات"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__line_qty
 msgid "Line Qty"
-msgstr ""
+msgstr "تعداد سطر"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__line_uom_id
 msgid "Line Uom"
-msgstr ""
+msgstr "واحد اندازه‌گیری سطر"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1675,7 +1828,7 @@ msgstr "قفل شده"
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__locked
 msgid "Locked Purchase Orders cannot be modified."
-msgstr ""
+msgstr "سفارش‌های خرید قفل شده قابل تغییر نیستند."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -1686,7 +1839,7 @@ msgstr "مطمئن شوید شما تنها صورتهایی که دریافت �
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Manage blanket orders and purchase templates"
-msgstr ""
+msgstr "مدیریت سفارش‌های کلی و قالب‌های خرید"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order_line__qty_received_method__manual
@@ -1711,13 +1864,13 @@ msgstr "همخوانی"
 #. module: purchase
 #: model:ir.actions.server,name:purchase.action_merger
 msgid "Merge RFQs"
-msgstr ""
+msgstr "ادغام درخواست‌های پیش‌فاکتور"
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 msgid "Merged RFQs"
-msgstr ""
+msgstr "درخواست‌های پیش‌فاکتور ادغام شده"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_has_error
@@ -1755,13 +1908,13 @@ msgstr "حداقل مقداری که برای آن تایید مضاعف لاز�
 #. module: purchase
 #: model:ir.model.constraint,message:purchase.constraint_purchase_order_line_accountable_required_fields
 msgid "Missing required fields on accountable purchase order line."
-msgstr ""
+msgstr "در سطر سفارش خرید فیلدهای الزامی وجود ندارد."
 
 #. module: purchase
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 msgid "My"
-msgstr ""
+msgstr "من"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
@@ -1778,7 +1931,7 @@ msgstr "موعد نهای فعالیت من"
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 msgid "My Days to Order"
-msgstr ""
+msgstr "روزهای من تا سفارش"
 
 #. module: purchase
 #. odoo-javascript
@@ -1796,13 +1949,13 @@ msgstr "درخواست های استعلام قیمت دیر شده من"
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 msgid "My Late Receipt POs"
-msgstr ""
+msgstr "سفارش‌های خرید با دریافت تأخیردار من"
 
 #. module: purchase
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 msgid "My Not Acknowledged POs"
-msgstr ""
+msgstr "سفارش‌های خرید تأیید نشده من"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
@@ -1829,7 +1982,7 @@ msgstr "نام"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Name, TIN, Email, or Reference"
-msgstr ""
+msgstr "نام، شناسه مالیاتی، ایمیل، یا شماره ارجاع"
 
 #. module: purchase
 #. odoo-javascript
@@ -1875,12 +2028,12 @@ msgstr "نوع فعالیت بعدی"
 #. odoo-javascript
 #: code:addons/purchase/static/src/product_catalog/kanban_renderer.xml:0
 msgid "No Products for the selected Vendor."
-msgstr ""
+msgstr "برای تأمین‌کننده انتخاب شده محصولی وجود ندارد."
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.action_purchase_order_report_all
 msgid "No Purchase Analysis"
-msgstr ""
+msgstr "تحلیل خرید وجود ندارد"
 
 #. module: purchase
 #. odoo-python
@@ -1901,7 +2054,7 @@ msgstr "سفارش خرید پیدا نشد بیایید یکی ایجاد کن�
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.action_purchase_history
 msgid "No purchase order were made for this product yet!"
-msgstr ""
+msgstr "هنوز سفارش خریدی برای این محصول وجود ندارد!"
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.purchase_rfq
@@ -1923,7 +2076,7 @@ msgstr "تایید نشده است"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
 msgid "Not using Odoo?"
-msgstr ""
+msgstr "از سازمان‌یار استفاده نمی‌کنید؟"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order_line__display_type__line_note
@@ -2069,7 +2222,7 @@ msgstr "سفارشات"
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 msgid "Order due %(date)s"
-msgstr ""
+msgstr "سررسید سفارش %(date)s"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -2079,12 +2232,12 @@ msgstr "اطلاعات دیگر"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_home_purchase
 msgid "Our Orders"
-msgstr ""
+msgstr "سفارشات خرید"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__parent_id
 msgid "Parent Section Line"
-msgstr ""
+msgstr "سطر بخش والد"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_bill_to_po_wizard__partner_id
@@ -2115,12 +2268,15 @@ msgid ""
 "Please select at least two purchase orders with state RFQ and RFQ sent to "
 "merge."
 msgstr ""
+"لطفاً حداقل دو سفارش خرید با وضعیت درخواست پیش‌فاکتور و درخواست پیش‌فاکتور "
+"ارسال شده برای ادغام انتخاب کنید."
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase_bill_line_match.py:0
 msgid "Please select bill lines with the same vendor."
 msgstr ""
+"لطفاً سطرهای صورت‌حسابی را انتخاب کنید که تأمین‌کننده یکسانی داشته باشند."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__pol_id
@@ -2193,12 +2349,12 @@ msgstr "نوع محصول"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__product_uom_price
 msgid "Product Uom Price"
-msgstr ""
+msgstr "قیمت واحد اندازه‌گیری محصول"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__product_uom_qty
 msgid "Product Uom Qty"
-msgstr ""
+msgstr "تعداد واحد اندازه‌گیری محصول"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_product_product
@@ -2214,7 +2370,7 @@ msgstr "گونه های محصول"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_no_variant_attribute_value_ids
 msgid "Product attribute values that do not create variants"
-msgstr ""
+msgstr "مقادیر مشخصه محصول که گونه ایجاد نمی‌کنند"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.product_normal_action_puchased
@@ -2250,7 +2406,7 @@ msgstr "توافقات خرید"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__purchase_amount_untaxed
 msgid "Purchase Amount Untaxed"
-msgstr ""
+msgstr "مبلغ خرید بدون مالیات"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_order_report_all
@@ -2263,13 +2419,13 @@ msgstr "تحلیل خرید"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
 msgid "Purchase Bill Lines"
-msgstr ""
+msgstr "سطرهای صورت‌حساب خرید"
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 msgid "Purchase Comparison for %s"
-msgstr ""
+msgstr "مقایسه خرید برای %s"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
@@ -2279,30 +2435,30 @@ msgstr "توضیحات خرید"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__module_purchase_product_matrix
 msgid "Purchase Grid Entry"
-msgstr ""
+msgstr "ورود شبکه‌ای داده در خرید"
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/product.py:0
 msgid "Purchase History for %s"
-msgstr ""
+msgstr "سوابق خرید برای %s"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_account_move_line__purchase_line_warn_msg
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__purchase_line_warn_msg
 msgid "Purchase Line Warn Msg"
-msgstr ""
+msgstr "سطر پیام سفارش خرید"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_bill_line_match
 msgid "Purchase Line and Vendor Bill line matching view"
-msgstr ""
+msgstr "نمای تطبیق سطر خرید و سطر صورت‌حساب تأمین‌کننده"
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/account_invoice.py:0
 msgid "Purchase Matching"
-msgstr ""
+msgstr "تطبیق خرید"
 
 #. module: purchase
 #. odoo-python
@@ -2390,7 +2546,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:purchase.field_account_bank_statement_line__purchase_order_name
 #: model:ir.model.fields,field_description:purchase.field_account_move__purchase_order_name
 msgid "Purchase Order Name"
-msgstr ""
+msgstr "نام سفارش خرید"
 
 #. module: purchase
 #. odoo-python
@@ -2416,7 +2572,7 @@ msgstr "گزارش خرید"
 #: model:ir.model.fields,field_description:purchase.field_account_move__purchase_warning_text
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__purchase_warning_text
 msgid "Purchase Warning"
-msgstr ""
+msgstr "هشدار خرید"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__group_warning_purchase
@@ -2436,7 +2592,7 @@ msgstr "سفارشات خرید که شامل سطری هستند که فاکت�
 #. module: purchase
 #: model:ir.actions.server,name:purchase.purchase_send_reminder_mail_ir_actions_server
 msgid "Purchase reminder"
-msgstr ""
+msgstr "یادآور خرید"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -2448,17 +2604,17 @@ msgstr ""
 #. module: purchase
 #: model:mail.template,name:purchase.email_template_edi_purchase_done
 msgid "Purchase: Purchase Order"
-msgstr ""
+msgstr "خرید: سفارش خرید"
 
 #. module: purchase
 #: model:mail.template,name:purchase.email_template_edi_purchase
 msgid "Purchase: Request For Quotation"
-msgstr ""
+msgstr "خرید: درخواست پیش‌فاکتور"
 
 #. module: purchase
 #: model:mail.template,name:purchase.email_template_edi_purchase_reminder
 msgid "Purchase: Vendor Reminder"
-msgstr ""
+msgstr "خرید: یادآور تأمین‌کننده"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_product_product__purchased_product_qty
@@ -2484,7 +2640,7 @@ msgstr "خریدها"
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_bill_union
 msgid "Purchases & Bills Union"
-msgstr ""
+msgstr "الحاق صورت‌حساب‌ها و خریدها"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__dest_address_id
@@ -2523,7 +2679,7 @@ msgstr "تعداد برای صورتحساب شدن"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__qty_to_invoice
 msgid "Qty to invoice"
-msgstr ""
+msgstr "تعداد قابل فاکتور"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_qty
@@ -2566,13 +2722,13 @@ msgstr "درخواست قیمت ارسال شد"
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 msgid "RFQ merged with %(oldest_rfq_name)s and %(cancelled_rfq)s"
-msgstr ""
+msgstr "درخواست پیش‌فاکتور با %(oldest_rfq_name)s و %(cancelled_rfq)s ادغام شد"
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 msgid "RFQ merged with %s"
-msgstr ""
+msgstr "درخواست پیش‌فاکتور با %s ادغام شد"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_purchase_order
@@ -2587,7 +2743,7 @@ msgstr "رتبه‌ها"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
 msgid "Read the documentation"
-msgstr ""
+msgstr "با مراجعه به اسناد راهنما،"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__group_send_reminder
@@ -2781,7 +2937,7 @@ msgstr "توکن امنیتی"
 #. odoo-python
 #: code:addons/purchase/models/purchase_bill_line_match.py:0
 msgid "Select Vendor Bill lines to add to a Purchase Order"
-msgstr ""
+msgstr "سطرهای صورت‌حساب تأمین‌کننده را برای افزودن به سفارش خرید انتخاب کنید"
 
 #. module: purchase
 #. odoo-javascript
@@ -2797,22 +2953,23 @@ msgstr "یک سند خرید را انتخاب کنید"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__selected_seller_id
 msgid "Selected Seller"
-msgstr ""
+msgstr "فروشنده انتخاب شده"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Sell and purchase products in different units of measure or packagings"
 msgstr ""
+"محصولات را با واحدهای اندازه‌گیری یا بسته‌بندی‌های مختلف بفروشید و بخرید"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Send PO"
-msgstr ""
+msgstr "ارسال سفارش خرید"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Send RFQ"
-msgstr ""
+msgstr "ارسال درخواست پیش‌فاکتور"
 
 #. module: purchase
 #: model:ir.actions.server,name:purchase.action_purchase_send_reminder
@@ -2838,18 +2995,20 @@ msgstr "ارسال"
 #. module: purchase
 #: model:mail.template,description:purchase.email_template_edi_purchase
 msgid "Sent manually to vendor to request a quotation"
-msgstr ""
+msgstr "برای درخواست پیش‌فاکتور به صورت دستی به تأمین‌کننده ارسال می‌شود"
 
 #. module: purchase
 #: model:mail.template,description:purchase.email_template_edi_purchase_done
 msgid "Sent to vendor with the purchase order in attachment"
-msgstr ""
+msgstr "این ایمیل با پیوست سفارش خرید مربوطه به تأمین‌کننده ارسال می‌شود"
 
 #. module: purchase
 #: model:mail.template,description:purchase.email_template_edi_purchase_reminder
 msgid ""
 "Sent to vendors before expected arrival, based on the purchase order setting"
 msgstr ""
+"این ایمیل قبل از تاریخ مورد انتظار دریافت محصولات، بر اساس تنظیمات سفارش خرید "
+"به تأمین‌کننده ارسال می‌شود"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__sequence
@@ -2875,13 +3034,13 @@ msgstr "اشتراک‌گذاری"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__show_comparison
 msgid "Show Comparison"
-msgstr ""
+msgstr "نمایش مقایسه"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Show all records whose next activity date is past"
-msgstr ""
+msgstr "نمایش تمام رکوردهایی که تاریخ فعالیت بعدی آنها سپری شده است"
 
 #. module: purchase
 #. odoo-python
@@ -2890,6 +3049,7 @@ msgid ""
 "Some order lines are missing a product, you need to correct them before "
 "going further."
 msgstr ""
+"برخی از سطرهای سفارش فاقد محصول هستند، قبل از ادامه باید آنها را اصلاح کنید."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__reference
@@ -2906,7 +3066,7 @@ msgstr "ستاره دار"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
 msgid "Start on Odoo"
-msgstr ""
+msgstr "شروع کار با سازمان‌یار"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__state
@@ -2938,12 +3098,12 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order_line__display_type__line_subsection
 msgid "Subsection"
-msgstr ""
+msgstr "زیربخش"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Subsection Name"
-msgstr ""
+msgstr "نام زیربخش"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__price_subtotal
@@ -3011,12 +3171,12 @@ msgstr "روش گردکردن محاسبه مالیات"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Tax excl.:"
-msgstr ""
+msgstr "بدون مالیات:"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Tax incl.:"
-msgstr ""
+msgstr "با احتساب مالیات:"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__amount_tax
@@ -3037,7 +3197,7 @@ msgstr "فیلد فنی برای منظور UX."
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__technical_price_unit
 msgid "Technical field for price computation"
-msgstr ""
+msgstr "فیلد فنی برای محاسبه قیمت"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__tax_country_id
@@ -3045,11 +3205,14 @@ msgid ""
 "Technical field to filter the available taxes depending on the fiscal "
 "country and fiscal position."
 msgstr ""
+"فیلد فنی برای فیلتر کردن مالیات‌های موجود بسته به کشور مالی و موقعیت مالی."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__selected_seller_id
 msgid "Technical field to get the vendor pricelist used to generate this line"
 msgstr ""
+"فیلد فنی برای دریافت لیست قیمت تأمین‌کننده‌ای که برای ایجاد این سطر استفاده "
+"شده است"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
@@ -3073,7 +3236,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__price_unit_product_uom
 msgid "The Price of one unit of the product's Unit of Measure"
-msgstr ""
+msgstr "قیمت هر واحد از واحد اندازه‌گیری محصول"
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
@@ -3103,6 +3266,7 @@ msgstr "در حال حاضر هیچ درخواستی برای استعلام ق�
 msgid ""
 "There are no products to add to the Purchase Order. Are these Down Payments?"
 msgstr ""
+"محصولی برای افزودن به سفارش خرید وجود ندارد. آیا این‌ها پیش پرداخت هستند؟"
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.action_purchase_order_report_all
@@ -3112,12 +3276,16 @@ msgid ""
 "                You can track your negotiation performance, the delivery "
 "performance of your vendors, etc"
 msgstr ""
+"این تحلیل به شما امکان می‌دهد تا به راحتی سوابق خرید و عملکرد شرکت خود را "
+"بررسی و تحلیل کنید.\n"
+"                می‌توانید عملکرد مذاکره، عملکرد تحویل تأمین‌کنندگان و سایر "
+"موارد را رهگیری کنید."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_partner__property_purchase_currency_id
 #: model:ir.model.fields,help:purchase.field_res_users__property_purchase_currency_id
 msgid "This currency will be used for purchases from the current partner"
-msgstr ""
+msgstr "این واحد پول برای خریدهای این طرف همکار استفاده خواهد شد"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
@@ -3134,7 +3302,7 @@ msgstr "این صورتحساب تأمین‌کننده ایجاد شده است
 #. odoo-python
 #: code:addons/purchase/models/account_invoice.py:0
 msgid "This vendor bill has been modified from: "
-msgstr ""
+msgstr "مبدأ ویرایش این صورت‌حساب تأمین‌کننده: "
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
@@ -3185,7 +3353,7 @@ msgstr "جمع کل:"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
 msgid "Total Billed"
-msgstr ""
+msgstr "کل مبلغ صورت‌حساب شده"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
@@ -3195,7 +3363,7 @@ msgstr "جمع خریداری شده"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_history_pivot
 msgid "Total Qty purchased"
-msgstr ""
+msgstr "مجموع تعداد خریداری شده"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_uom_qty
@@ -3224,23 +3392,23 @@ msgstr "مبلغ کل"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__amount_total_cc
 msgid "Total in currency"
-msgstr ""
+msgstr "جمع کل بر حسب واحد پول"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_history_pivot
 msgid "Total purchased amount"
-msgstr ""
+msgstr "مجموع مبلغ خریداری شده"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__translated_product_name
 msgid "Translated Product Name"
-msgstr ""
+msgstr "نام محصول ترجمه شده"
 
 #. module: purchase
 #. odoo-javascript
 #: code:addons/purchase/static/src/product_catalog/kanban_renderer.xml:0
 msgid "Try removing the top filter to broaden your search"
-msgstr ""
+msgstr "برای گسترش محدوده جستجوی خود، فیلتر بالایی را حذف کنید"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__activity_exception_decoration
@@ -3254,12 +3422,15 @@ msgid ""
 "Unable to cancel purchase order(s): %s. You must first cancel their related "
 "vendor bills."
 msgstr ""
+"امکان لغو سفارش(های) خرید وجود ندارد: %s. ابتدا باید صورت‌حساب‌های مرتبط با "
+"تأمین‌کننده را لغو کنید."
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 msgid "Unable to cancel purchase order(s): %s. You must first unlock them."
 msgstr ""
+"امکان لغو سفارش(های) فروش وجود ندارد: %s. ابتدا باید آنها را قفل‌گشایی کنید."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__product_uom_id
@@ -3277,12 +3448,12 @@ msgstr "قیمت واحد"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__price_unit_discounted
 msgid "Unit Price (Discounted)"
-msgstr ""
+msgstr "قیمت واحد (تخفیف‌دار)"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__price_unit_product_uom
 msgid "Unit Price Product UoM"
-msgstr ""
+msgstr "قیمت واحد هر واحد اندازه‌گیری محصول"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -3293,7 +3464,7 @@ msgstr "قیمت واحد:"
 #: model:ir.ui.menu,name:purchase.menu_purchase_uom_form_action
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Units & Packagings"
-msgstr ""
+msgstr "واحدها و بسته‌بندی‌ها"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -3304,7 +3475,7 @@ msgstr "باز کردن قفل"
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 msgid "Unsupported operator"
-msgstr ""
+msgstr "عملگر پشتیبانی نمی‌شود"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_kpis_tree
@@ -3327,7 +3498,7 @@ msgstr "جمع کل بدون مالیات"
 #. odoo-javascript
 #: code:addons/purchase/static/src/components/purchase_file_uploader/purchase_file_uploader.xml:0
 msgid "Upload Bill"
-msgstr ""
+msgstr "آپلود صورت‌حساب"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__priority__1
@@ -3340,6 +3511,8 @@ msgid ""
 "Use the above REST URL to get structured data of the purchase order in UBL "
 "format."
 msgstr ""
+"برای دریافت داده‌های ساختار یافته این سفارش خرید (در قالب UBL)، می‌توانید از "
+"لینک فوق استفاده کنید."
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_purchase_user
@@ -3382,7 +3555,7 @@ msgstr "صورتحساب فروشنده"
 #. odoo-python
 #: code:addons/purchase/models/purchase_bill_line_match.py:0
 msgid "Vendor Bill lines can only be added to one Purchase Order."
-msgstr ""
+msgstr "سطرهای صورت‌حساب تأمین‌کننده فقط می‌توانند به یک سفارش خرید اضافه شوند."
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_supplier_invoices
@@ -3460,17 +3633,17 @@ msgstr "صورتهای در انتظار"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
 msgid "Want to import this document in Odoo?"
-msgstr ""
+msgstr "می‌خواهید این سند را به نرم‌افزار سازمان‌یار خودتان ایمپورت کنید؟"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
 msgid "Warning on Purchase Orders"
-msgstr ""
+msgstr "هشدار در سفارش‌های خرید"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_partner_view_purchase_buttons
 msgid "Warning on Purchase Orders and Bills"
-msgstr ""
+msgstr "هشدار در سفارش‌های خرید و صورت‌حساب‌ها"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
@@ -3499,6 +3672,12 @@ msgid ""
 "dates and keep you informed in case of any delays. To get the vendor's "
 "performance statistics, click on the OTD rate."
 msgstr ""
+"هنگام ایجاد سفارش خرید، به نرخ <i>تحویل به موقع<i> تأمین‌کننده توجه کنید: این "
+"نرخ نشانگر درصد محصولاتی است که به موقع ارسال شده است. اگر این مقدار خیلی کم "
+"باشد، <i> یادآورهای خودکار<i> را فعال کنید. چند روز قبل از موعد تحویل مرسوله"
+"، سازمان‌یار ایمیلی به تأمین‌کننده ارسال می‌کند تا تاریخ مرسوله را تأیید کند و "
+"در صورت تأخیر شما را مطلع خواهد کرد. برای دریافت آمار عملکرد تأمین‌کننده، روی "
+"نرخ تحویل به موقع (OTD) کلیک کنید.</i></i></i></i>"
 
 #. module: purchase
 #: model_terms:digest.tip,tip_description:purchase.digest_tip_purchase_1
@@ -3525,7 +3704,7 @@ msgstr "می توانید فروشنده ای را با نام، TIN، ایمی�
 #: code:addons/purchase/models/purchase_order.py:0
 #: code:addons/purchase/static/src/components/purchase_file_uploader/purchase_file_uploader.js:0
 msgid "You can only upload a bill for a single vendor at a time."
-msgstr ""
+msgstr "هر بار فقط می‌توانید صورت‌حساب یک تأمین‌کننده را آپلود کنید."
 
 #. module: purchase
 #. odoo-python
@@ -3540,7 +3719,7 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
 msgid "You don't use a good CRM software?"
-msgstr ""
+msgstr "هنوز از یک نرم‌افزار حرفه‌ای استفاده نمی‌کنید؟"
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.product_product_action
@@ -3566,7 +3745,7 @@ msgstr ""
 #: code:addons/purchase/models/purchase_bill_line_match.py:0
 msgid ""
 "You must select at least one Purchase Order line to match or create bill."
-msgstr ""
+msgstr "باید حداقل یک سطر سفارش خرید را برای تطبیق یا ایجاد فاکتور انتخاب کنید."
 
 #. module: purchase
 #. odoo-python
@@ -3590,17 +3769,17 @@ msgstr "روز قبل از"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
 msgid "e.g. There is a newer version of this product."
-msgstr ""
+msgstr "مثال: نسخه جدیدتری از این محصول موجود است."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_partner_view_purchase_buttons
 msgid "e.g. This vendor is on vacation until the end of August."
-msgstr ""
+msgstr "مثال: این تأمین‌کننده تا پایان ماه اردیبهشت در تعطیلات است."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.bill_to_po_wizard_form
 msgid "or create new"
-msgstr ""
+msgstr "یا ایجاد جدید"
 
 #. module: purchase
 #. odoo-python
@@ -3625,18 +3804,18 @@ msgstr ""
 #. odoo-python
 #: code:addons/purchase/controllers/portal.py:0
 msgid "state"
-msgstr ""
+msgstr "وضعیت"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchasequotation_document
 msgid "to create quotes automatically."
-msgstr ""
+msgstr "متصل کنید تا پیش‌فاکتورها به صورت خودکار ایجاد شوند."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
 msgid "to learn all the ways to connect your software with"
-msgstr ""
+msgstr "روش‌های مختلف اتصال نرم‌افزار خود به سازمان‌یار را بیاموزید:"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -3649,7 +3828,7 @@ msgstr "با"
 #: model:mail.template,subject:purchase.email_template_edi_purchase_done
 #: model:mail.template,subject:purchase.email_template_edi_purchase_reminder
 msgid "{{ object.company_id.name }} Order (Ref {{ object.name or 'n/a' }})"
-msgstr ""
+msgstr "{{ object.company_id.name }} سفارش (Ref {{ object.name or 'n/a' }})"
 
 #~ msgid "%(amount)s due %(date)s"
 #~ msgstr "%(amount)sناشی از %(date)s"

@@ -10,8 +10,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-24 17:38+0000\n"
-"PO-Revision-Date: 2026-08-07 01:24+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"PO-Revision-Date: 2026-08-10 13:21+0000\n"
+"Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-19/"
 "account_peppol/ar/>\n"
 "Language: ar\n"
@@ -38,7 +38,7 @@ msgstr " (Demo)"
 #. odoo-python
 #: code:addons/account_peppol/wizard/account_move_send_wizard.py:0
 msgid " (Missing %(eas)s)"
-msgstr ""
+msgstr " ( %(eas)s مفقود)"
 
 #. module: account_peppol
 #. odoo-python
@@ -69,7 +69,7 @@ msgstr "%(peppol_label)s%(disable_reason)s%(peppol_proxy_mode)s"
 #: code:addons/account_peppol/static/src/web/account_move_list_controller.js:0
 msgid ""
 "%(processed)s Peppol document(s) processed, %(deleted)s document(s) deleted"
-msgstr ""
+msgstr "%(processed)s تمت معالجة مستندات Peppol، وحذف مستندات %(deleted)s "
 
 #. module: account_peppol
 #. odoo-python
@@ -80,7 +80,7 @@ msgstr "%s has requested electronic invoices reception on Peppol."
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
 msgid "<b>Authenticate</b>"
-msgstr ""
+msgstr "<b>التحقق من الصحة</b>"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
@@ -312,7 +312,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid "A connection to '%s' already exists."
-msgstr ""
+msgstr "يوجد بالفعل رابط إلى «%s »."
 
 #. module: account_peppol
 #. odoo-python
@@ -644,7 +644,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/peppol_auth/peppol_auth_service.js:0
 msgid "Authentication canceled"
-msgstr ""
+msgstr "تم إلغاء المصادقة"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -673,7 +673,7 @@ msgstr "Available Peppol Sending Methods"
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_account_edi_ubl
 msgid "Base helpers for UBL"
-msgstr ""
+msgstr "أدوات المساعدة الأساسية لـ UBL"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
@@ -921,7 +921,7 @@ msgstr "عرض استخدام اختيار اتصال الوالدين"
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_list_controller.js:0
 msgid "Do you want to proceed?"
-msgstr ""
+msgstr "هل تريد المتابعة؟"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_service__document_identifier
@@ -937,13 +937,13 @@ msgstr "Document Name"
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
 msgid "Document cancelled successfully"
-msgstr ""
+msgstr "تم إلغاء المستند بنجاح"
 
 #. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
 msgid "Document reset to draft successfully"
-msgstr ""
+msgstr "تم إعادة تعيين المستند إلى مسودة بنجاح"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -953,6 +953,9 @@ msgid ""
 "\n"
 "Would you like to cancel this document instead?"
 msgstr ""
+"لا يمكن حذف المستندات المرسلة/المستلمة عبر Peppol.\n"
+"\n"
+"هل ترغب في إلغاء هذا المستند بدلاً من ذلك؟"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -962,6 +965,9 @@ msgid ""
 "\n"
 "Would you like to reset this document to draft instead?"
 msgstr ""
+"لا يمكن حذف المستندات المرسلة/المستلمة عبر Peppol.\n"
+"\n"
+"هل ترغب في إعادة تعيين هذا المستند إلى مسودة بدلاً من ذلك؟"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__done
@@ -993,7 +999,7 @@ msgstr "مستخدم نظات تبادل المعلومات إلكترونياً
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 msgid "EDI user should be of one of the following types: %s"
-msgstr ""
+msgstr "يجب أن يكون مستخدم EDI من أحد الأنواع التالية: %s"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_config_wizard__account_peppol_edi_identification
@@ -1053,7 +1059,7 @@ msgstr ""
 #: code:addons/account_peppol/models/account_move_send.py:0
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid "France - E-Invoicing (Approved Platform)"
-msgstr ""
+msgstr "فرنسا - الفوترة الإلكترونية (المنصة المعتمدة)"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -1143,6 +1149,8 @@ msgstr "دفتر اليومية المحاسبي الوارد"
 #: code:addons/account_peppol/models/account_move_send.py:0
 msgid "Invoice %s exceeds the size limit of 64 MB to be sent via Peppol."
 msgstr ""
+"تتجاوز الفاتورة %s الحد الأقصى للحجم المسموح به وهو 64 ميغابايت لإرسالها عبر "
+"Peppol."
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_partner__invoice_sending_method
@@ -1241,7 +1249,7 @@ msgstr "No valid AS4 participant endpoint were found."
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
 msgid "No, Keep It"
-msgstr ""
+msgstr "لا، احتفظ بها"
 
 #. module: account_peppol
 #. odoo-python
@@ -1409,13 +1417,13 @@ msgstr "البريد الإلكتروني للاتصال بـ Peppol"
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_list_controller.js:0
 msgid "Peppol Documents Cannot Be Deleted"
-msgstr ""
+msgstr "لا يمكن حذف مستندات Peppol"
 
 #. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
 msgid "Peppol Documents: Cannot Delete Invoice"
-msgstr ""
+msgstr "مستندات Peppol: لا يمكن حذف الفاتورة"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__peppol_endpoint
@@ -1489,7 +1497,7 @@ msgstr "Peppol Purchase Journal"
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__peppol_purchase_journal_required
 msgid "Peppol Purchase Journal Required"
-msgstr ""
+msgstr "يُشترط وجود دفتر الشراء Peppol"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_view_account_invoice_filter
@@ -1702,7 +1710,7 @@ msgstr "Remove from Peppol"
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
 msgid "Reset to draft"
-msgstr ""
+msgstr "إعادة التعيين كمسودة"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
@@ -2026,6 +2034,9 @@ msgid ""
 "\n"
 "• %s"
 msgstr ""
+"سيتم إعادة تعيين مستندات Peppol التالية الخاصة بـ « %s » إلى حالة «مسودة»:\n"
+"\n"
+"• %s"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -2035,6 +2046,9 @@ msgid ""
 "\n"
 "• %s"
 msgstr ""
+"سيتم إلغاء مسودة (مسودات) وثيقة (وثائق) Peppol التالية على %s:\n"
+"\n"
+"• %s"
 
 #. module: account_peppol
 #. odoo-python
@@ -2098,7 +2112,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_list_controller.js:0
 msgid "The remaining %s document(s) will be deleted."
-msgstr ""
+msgstr "سيتم حذف المستندات المتبقية من نوع « %s »."
 
 #. module: account_peppol
 #. odoo-python
@@ -2250,12 +2264,16 @@ msgstr "لإنشاء فواتير إلكترونية كاملة، قم أيضا�
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid "To use the Approved Platform for French E-Invoicing install the module"
 msgstr ""
+"لاستخدام المنصة المعتمدة للفوترة الإلكترونية باللغة الفرنسية، قم بتثبيت الوحدة "
+"النمطية"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_move_send.py:0
 msgid "To use the Approved Platform for French E-Invoicing, install the module"
 msgstr ""
+"لاستخدام المنصة المعتمدة للفوترة الإلكترونية باللغة الفرنسية، قم بتثبيت الوحدة "
+"النمطية"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_is_token_out_of_sync
@@ -2315,7 +2333,7 @@ msgstr "Use Parent Connection Selection"
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/peppol_auth/peppol_auth_service.js:0
 msgid "Verification pending"
-msgstr ""
+msgstr "في انتظار التحقق"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
@@ -2363,7 +2381,7 @@ msgstr "What is Peppol and why it's great ?"
 #. odoo-python
 #: code:addons/account_peppol/models/account_move_send.py:0
 msgid "Why should I use French E-Invoicing ?"
-msgstr ""
+msgstr "لماذا يجب عليّ استخدام الفوترة الإلكترونية باللغة الفرنسية؟"
 
 #. module: account_peppol
 #. odoo-python
@@ -2386,13 +2404,13 @@ msgstr "Wizard"
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
 msgid "Yes, Cancel It"
-msgstr ""
+msgstr "نعم، إلغاء ذلك"
 
 #. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_list_controller.js:0
 msgid "Yes, Proceed"
-msgstr ""
+msgstr "نعم، تابع"
 
 #. module: account_peppol
 #. odoo-python
@@ -2553,6 +2571,8 @@ msgid ""
 "Your details are being verified. There is nothing else to do on your end: "
 "your Peppol registration will be finalized automatically."
 msgstr ""
+"يجري التحقق من بياناتك. لا يوجد أي شيء آخر عليك القيام به: سيتم إتمام تسجيلك "
+"في Peppol تلقائيًا."
 
 #. module: account_peppol
 #. odoo-python

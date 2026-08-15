@@ -3,13 +3,14 @@
 # * mail_group
 #
 # Weblate <noreply-mt-weblate@weblate.org>, 2026.
+# Aliraza Habibitanha <alireza.habibitanha@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:39+0000\n"
-"PO-Revision-Date: 2026-08-05 21:26+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2026-08-09 10:24+0000\n"
+"Last-Translator: Aliraza Habibitanha <alireza.habibitanha@gmail.com>\n"
 "Language-Team: Persian <https://translate.odoo.com/projects/odoo-19/"
 "mail_group/fa/>\n"
 "Language: fa\n"
@@ -22,24 +23,23 @@ msgstr ""
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_list
 msgid "#Members"
-msgstr ""
+msgstr "تعداد اعضاء"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_list
 msgid "#Messages"
-msgstr ""
+msgstr "تعداد پیام‌ها"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_list
 msgid "#To Review"
-msgstr ""
+msgstr "تعداد نیازمند بازبینی"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
-#, fuzzy
 msgid ") <span invisible=\"not send_email\">and send them an email</span>."
 msgstr ""
-") <span invisible=\"not send_email\">و برای آنها یک ایمیل ارسال کنید</span>."
+") <span invisible=\"not send_email\">و ایمیلی به آنها ارسال کنید</span>."
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.messages_short
@@ -47,12 +47,13 @@ msgid ""
 "<br/>\n"
 "                    Get the conversation started by sending an email to"
 msgstr ""
+"<br/>\n"
+"                    با ارسال ایمیل به این آدرس، گفتگو را آغاز کنید"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.confirmation_subscription
-#, fuzzy
 msgid "<br/> You'll be notified as soon as some new content is posted."
-msgstr "<br/> به محض ارسال محتوای جدید، به شما اطلاع داده خواهد شد."
+msgstr "<br/> به محض ارسال محتوای جدید به شما اطلاع داده خواهد شد."
 
 #. module: mail_group
 #: model:mail.template,body_html:mail_group.mail_template_list_subscribe
@@ -71,6 +72,19 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                سلام،<br><br>\n"
+"                شما برای اشتراک در لیست ایمیل <strong t-out=\"object.name or "
+"''\"></strong> درخواست داده‌اید.\n"
+"                <br><br>\n"
+"                برای تأیید لینک زیر را باز کنید: <strong t-if=\"ctx.get"
+"('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-"
+"out=\"ctx['token_url'] or ''\"></t></a></strong>\n"
+"                <br><br>\n"
+"                در صورتی که اشتباهی روی داده یا شما درخواستی برای این کار "
+"نداده‌اید، لطفاً این پیام را نادیده بگیرید.\n"
+"            </div>\n"
+"        "
 
 #. module: mail_group
 #: model:mail.template,body_html:mail_group.mail_template_list_unsubscribe
@@ -89,6 +103,19 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                سلام،<br><br>\n"
+"                شما برای لغو اشتراک از لیست ارسال <strong t-"
+"out=\"object.name or ''\"></strong> درخواست داده‌اید.\n"
+"                <br><br>\n"
+"                برای تأیید لینک زیر را باز کنید: <strong t-if=\"ctx.get"
+"('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-"
+"out=\"ctx['token_url'] or ''\"></t></a></strong>\n"
+"                <br><br>\n"
+"                در صورتی که اشتباهی روی داده است یا شما درخواستی برای این "
+"کار نداده‌اید، لطفاً این پیام را نادیده بگیرید.\n"
+"            </div>\n"
+"        "
 
 #. module: mail_group
 #: model:mail.template,body_html:mail_group.mail_template_guidelines
@@ -102,14 +129,22 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"        <div>\n"
+"                <p>با سلام، <t t-out=\"object.partner_id.name or ''\"/>,</p>\n"
+"                <p>راهنمای لیست ارسال <t t-"
+"out=\"object.mail_group_id.name\"/> در ادامه قابل دریافت است.</p>\n"
+"                <p><t t-out=\"object.mail_group_id.moderation_guidelines_msg "
+"or ''\"/></p>\n"
+"            </div>\n"
+"        "
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.message_footer
-#, fuzzy
 msgid ""
 "<i class=\"fa fa-calendar\" role=\"img\" aria-label=\"Date\" title=\"Date\"/>"
 msgstr ""
-"<i class=\"fa fa-calendar\" role=\"img\" aria-label=\"Date\" title=\"Date\"/>"
+"<i class=\"fa fa-calendar\" role=\"img\" aria-label=\"تاریخ\" "
+"title=\"تاریخ\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
@@ -123,13 +158,12 @@ msgstr ""
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.group_name
-#, fuzzy
 msgid ""
 "<i class=\"fa fa-envelope-o\" role=\"img\" aria-label=\"Alias\" "
 "title=\"Alias\"/>"
 msgstr ""
-"<i class=\"fa fa-envelope-o\" role=\"img\" aria-label=\"نام مستعار\" "
-"title=\"نام مستعار\"/>"
+"<i class=\"fa fa-envelope-o\" role=\"img\" aria-label=\"Alias\" title=\"نام "
+"مستعار\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
@@ -137,36 +171,35 @@ msgid ""
 "<i class=\"fa fa-fw fa-envelope-o\" role=\"img\" aria-label=\"Traffic\" "
 "title=\"Traffic\"/>"
 msgstr ""
+"<i class=\"fa fa-fw fa-envelope-o\" role=\"img\" aria-label=\"ترافیک\" "
+"title=\"ترافیک\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
-#, fuzzy
 msgid ""
 "<i class=\"fa fa-fw fa-user\" role=\"img\" aria-label=\"Recipients\" "
 "title=\"Recipients\"/>"
 msgstr ""
-"<i class=\"fa fa-fw fa-user\" role=\"img\" aria-label=\"گیرندگان\" "
-"title=\"گیرندگان\"/>"
+"<i class=\"fa fa-fw fa-user\" role=\"img\" aria-label=\"Recipients\" "
+"title=\"دریافت کنندگان\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.group_message
-#, fuzzy
 msgid ""
 "<i class=\"oi oi-arrow-left\" role=\"img\" aria-label=\"Previous message\" "
 "title=\"Previous message\"/>"
 msgstr ""
-"<i class=\"oi oi-arrow-left\" role=\"img\" aria-label=\"پیام قبلی\" "
-"title=\"پیام قبلی\"/>"
+"<i class=\"oi oi-arrow-left\" role=\"img\" aria-label=\"پیام قبل\" "
+"title=\"پیام قبل\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.group_message
-#, fuzzy
 msgid ""
 "<i class=\"oi oi-arrow-right\" role=\"img\" aria-label=\"Next message\" "
 "title=\"Next message\"/>"
 msgstr ""
-"<i class=\"oi oi-arrow-right\" role=\"img\" aria-label=\"پیام بعدی\" "
-"title=\"پیام بعدی\"/>"
+"<i class=\"oi oi-arrow-right\" role=\"img\" aria-label=\"پیام بعد\" "
+"title=\"پیام بعد\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.message_attachments
@@ -190,33 +223,29 @@ msgstr ""
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.message_attachments
-#, fuzzy
 msgid ""
 "<i class=\"oi oi-chevron-right\" role=\"img\" aria-label=\"Hide "
 "attachments\" title=\"Hide attachments\"/>"
 msgstr ""
-"<i class=\"oi oi-chevron-right\" role=\"img\" aria-label=\"پنهان کردن "
-"پیوست‌ها\" title=\"پنهان کردن پیوست‌ها\"/>"
+"<i class=\"oi oi-chevron-right\" role=\"img\" aria-label=\"عدم نمایش "
+"پیوست‌ها\" title=\"عدم نمایش پیوست‌ها\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.messages_short
-#, fuzzy
 msgid ""
 "<i class=\"oi oi-chevron-right\" role=\"img\" aria-label=\"Hide replies\" "
 "title=\"Hide replies\"/>"
 msgstr ""
-"<i class=\"oi oi-chevron-right\" role=\"img\" aria-label=\"پنهان کردن "
-"پاسخ‌ها\" title=\"پنهان کردن پاسخ‌ها\"/>"
+"<i class=\"oi oi-chevron-right\" role=\"img\" aria-label=\"عدم نمایش "
+"پاسخ‌ها\" title=\"عدم نمایش پاسخ‌ها\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.messages_short
-#, fuzzy
 msgid "<span class=\"bg-warning\">Pending</span>"
-msgstr "<span class=\"bg-warning\">در انتظار</span>"
+msgstr "<span class=\"bg-warning\">معلق</span>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
-#, fuzzy
 msgid ""
 "<span class=\"ms-2 badge text-bg-success\" invisible=\"author_moderation != "
 "'allow'\">Whitelisted</span>\n"
@@ -224,8 +253,9 @@ msgid ""
 "invisible=\"author_moderation != 'ban'\">Banned</span>"
 msgstr ""
 "<span class=\"ms-2 badge text-bg-success\" invisible=\"author_moderation != "
-"'allow'\">لیست سفید</span> <span class=\"ms-2 badge text-bg-danger\" "
-"invisible=\"author_moderation != 'ban'\">مسدود</span>"
+"'allow'\">به لیست سفید اضافه شد</span>\n"
+"                            <span class=\"ms-2 badge text-bg-danger\" "
+"invisible=\"author_moderation != 'ban'\">مسدود شد</span>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.message_footer
@@ -235,27 +265,26 @@ msgstr "<span class=\"mx-2\">-</span>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.group_archive_menu
-#, fuzzy
 msgid "<span>By thread</span>"
-msgstr "<span>بر اساس موضوع</span>"
+msgstr "<span>بر اساس رشته</span>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
-#, fuzzy
 msgid ""
 "<span>No Mail Group yet.</span>\n"
 "                    <br/>"
-msgstr "<span>هنوز گروه ایمیلی وجود ندارد.</span> <br/>"
+msgstr ""
+"<span>هنوز گروه ارسالی وجود ندارد.</span>\n"
+"                    <br/>"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_defaults
-#, fuzzy
 msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
 msgstr ""
-"یک دیکشنری پایتون که برای فراهم کردن مقادیر پیش‌فرض هنگام ایجاد رکوردهای جدید "
-"برای این نام مستعار مورد  ارزیابی قرار می‌گیرد."
+"یک دیکشنری پایتون که هنگام ایجاد رکوردهای جدید برای فراهم کردن مقادیر پیش‌فرض "
+"برای این نام مستعار ارزیابی می‌شود."
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
@@ -286,37 +315,32 @@ msgstr "فعال"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_list
-#, fuzzy
 msgid ""
 "Add this email address to white list of people and accept all pending "
 "messages from the same author."
 msgstr ""
-"این آدرس ایمیل را به لیست سفید افراد اضافه کنید و تمامی پیام‌های معلق از همان "
-"نویسنده را بپذیرید."
+"این آدرس ایمیل را به لیست سفید افراد اضافه کنید و همه پیام‌های در انتظار "
+"مربوط به یک نویسنده را بپذیرید."
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_id
-#, fuzzy
 msgid "Alias"
-msgstr "مستعار"
+msgstr "ایمیل مستعار"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_contact
-#, fuzzy
 msgid "Alias Contact Security"
-msgstr "مستعار تماس امنیتی"
+msgstr "امنیت نام مستعار مخاطب"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_domain_id
-#, fuzzy
 msgid "Alias Domain"
-msgstr "نام مستعار دامنه"
+msgstr "دامنه مستعار"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_domain
-#, fuzzy
 msgid "Alias Domain Name"
-msgstr "دامین مستعار"
+msgstr "نام دامنه مستعار"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_full_name
@@ -332,21 +356,18 @@ msgstr "نام مستعار"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_status
-#, fuzzy
 msgid "Alias Status"
-msgstr "وضعیت ایمیل مستعار"
+msgstr "وضعیت مستعار"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_status
-#, fuzzy
 msgid "Alias status assessed on the last message received."
-msgstr "وضعیت نام مستعار در آخرین پیام دریافتی ارزیابی شد."
+msgstr "وضعیت مستعار در آخرین پیام دریافتی ارزیابی شده است."
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_model_id
-#, fuzzy
 msgid "Aliased Model"
-msgstr "مدل استعاری"
+msgstr "مدل مستعار شده"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
@@ -356,70 +377,60 @@ msgstr "همه پیام‌های این گروه"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_moderation_view_search
-#, fuzzy
 msgid "Allowed Emails"
-msgstr "ایمیل های مجاز"
+msgstr "ایمیل‌های مجاز"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
-#, fuzzy
 msgid "Alone we can do so little, together we can do so much"
 msgstr ""
-"ما به تنهایی کارهای کمی می‌توانیم انجام دهیم، با هم می‌توانیم کارهای زیادی "
-"انجام دهیم"
+"ما به تنهایی می‌توانیم کارهای کمی انجام دهیم، با هم می‌توانیم کارهای خیلی "
+"زیادی انجام دهیم"
 
 #. module: mail_group
 #: model:ir.model.fields.selection,name:mail_group.selection__mail_group_moderation__status__allow
-#, fuzzy
 msgid "Always Allow"
-msgstr "همیشه اجازه بده"
+msgstr "همیشه مجاز است"
 
 #. module: mail_group
 #. odoo-javascript
 #: code:addons/mail_group/static/src/interactions/mail_group.js:0
-#, fuzzy
 msgid "An email with instructions has been sent."
-msgstr "ایمیلی با دستورالعمل‌ها ارسال شده است."
+msgstr "یک ایمیل حاوی دستورالعمل ارسال شد."
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_search
-#, fuzzy
 msgid "Archived"
-msgstr "بایگانی شده"
+msgstr "بایگانی‌شده"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.group_archive_menu
-#, fuzzy
 msgid "Archives"
-msgstr "آرشیوها"
+msgstr "بایگانی"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__attachment_ids
-#, fuzzy
 msgid "Attachments"
-msgstr "پیوست ها"
+msgstr "پیوست‌ها"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__author_id
-#, fuzzy
 msgid "Author"
-msgstr "مولف"
+msgstr "مؤلف"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__author_moderation
-#, fuzzy
 msgid "Author Moderation Status"
-msgstr "وضعیت تایید نویسنده"
+msgstr "وضعیت مدیریت نویسنده"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group_message__author_id
-#, fuzzy
 msgid ""
 "Author of the message. If not set, email_from may hold an email address that "
 "did not match any partner."
 msgstr ""
-"نویسنده پیام. اگر تعیین نشده باشد، email_from آدرس ایمیلی را نگه دارد که با "
-"هیچ همکاری مطابقت ندارد."
+"نویسنده پیام. اگر تنظیم نشود، مقدار email_from ممکن است حاوی آدرس ایمیلی "
+"باشد که با طرف همکاری مطابقت ندارد."
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__access_group_id
@@ -438,44 +449,38 @@ msgstr "اعلان خودکار"
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_list
-#, fuzzy
 msgid "Ban"
-msgstr "بن"
+msgstr "مسدود کردن"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
-#, fuzzy
 msgid "Ban the author of the message ("
-msgstr "ممنوعیت نویسنده پیام ("
+msgstr "دسترسی نویسنده پیام را مسدود کنید ("
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_list
-#, fuzzy
 msgid ""
 "Ban this email address and reject all pending messages from the same author "
 "and send an email to the author"
 msgstr ""
-"مسدود کردن این آدرس ایمیل و رد کردن تمامی پیام‌های در انتظار از نویسنده‌ی "
-"مشابه و ارسال یک ایمیل به نویسنده"
+"این آدرس ایمیل را ممنوع کنید و همه پیام‌های معلق همان نویسنده را رد کرده و یک "
+"ایمیل برای نویسنده پیام ارسال کنید"
 
 #. module: mail_group
 #: model:ir.model.fields.selection,name:mail_group.selection__mail_group_message__author_moderation__ban
-#, fuzzy
 msgid "Banned"
-msgstr "ممنوع"
+msgstr "ممنوع شده"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_moderation_view_search
-#, fuzzy
 msgid "Banned Emails"
-msgstr "ایمیل‌های مسدود شده"
+msgstr "ایمیل‌های ممنوع شده"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.group_archive_menu
-#, fuzzy
 msgid "By date"
-msgstr "تاریخ‌ترتیب‌بندی‌شده"
+msgstr "بر اساس تاریخ"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__can_manage_group
@@ -485,55 +490,50 @@ msgstr "می‌تواند مدیریت کند"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__can_manage_group
-#, fuzzy
 msgid "Can manage the members"
-msgstr "می‌تواند اعضا را مدیریت کند"
+msgstr "می‌تواند اعضاء را مدیریت کند"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__group_message_child_ids
-#, fuzzy
 msgid "Children"
-msgstr "فرزندان"
+msgstr "زیرشاخه‌ها"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
-#, fuzzy
 msgid "Choose or configure a custom domain"
-msgstr "انتخاب یا تنظیم یک دامنه سفارشی"
+msgstr "یک دامنه سفارشی انتخاب یا پیکربندی کنید"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.group_name
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_kanban
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
-#, fuzzy
 msgid "Closed"
-msgstr "بسته شد"
+msgstr "بسته شده"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__is_closed
 msgid ""
 "Closed groups might still be accessed, but emails sent to it will bounce"
 msgstr ""
+"گروه‌های بسته ممکن است هنوز قابل دسترسی باشند، اما ایمیل‌های ارسالی به آن "
+"بازگشت داده می‌شوند"
 
 #. module: mail_group
 #: model:mail.template,subject:mail_group.mail_template_list_subscribe
-#, fuzzy
 msgid "Confirm subscription to {{ object.name }}"
-msgstr "تأیید اشتراک در {{ object.name }}"
+msgstr "تأیید اشتراک برای {{ object.name }}"
 
 #. module: mail_group
 #: model:mail.template,subject:mail_group.mail_template_list_unsubscribe
-#, fuzzy
 msgid "Confirm unsubscription to {{ object.name }}"
-msgstr "تأیید لغو اشتراک در {{ object.name }}"
+msgstr "تأیید لغو اشتراک برای {{ object.name }}"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__body
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__body
-#, fuzzy
 msgid "Contents"
-msgstr "محتویات"
+msgstr "محتوا"
 
 #. module: mail_group
 #: model_terms:ir.actions.act_window,help:mail_group.mail_group_action
@@ -543,9 +543,8 @@ msgstr "یک گروه ایمیل ایجاد کنید"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
-#, fuzzy
 msgid "Create a new group"
-msgstr "یک گروه جدید ایجاد کنید"
+msgstr "گروه جدیدی ایجاد کنید"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__create_uid
@@ -553,18 +552,16 @@ msgstr "یک گروه جدید ایجاد کنید"
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__create_uid
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__create_uid
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_moderation__create_uid
-#, fuzzy
 msgid "Created by"
-msgstr "ایجاد شده توسط"
+msgstr "ایجادکننده"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__create_date
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_member__create_date
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__create_date
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_moderation__create_date
-#, fuzzy
 msgid "Created on"
-msgstr "ایجادشده در"
+msgstr "زمان ایجاد"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__is_moderator
@@ -574,9 +571,8 @@ msgstr "کاربر فعلی مدیر گروه است"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_bounced_content
-#, fuzzy
 msgid "Custom Bounced Message"
-msgstr "پیام برگشتی سفارشی"
+msgstr "پیام سفارشی برگشتی"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_defaults
@@ -586,15 +582,13 @@ msgstr "مقادیر پیش‌فرض"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__description
-#, fuzzy
 msgid "Description"
-msgstr "توصیف"
+msgstr "توضیح"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
-#, fuzzy
 msgid "Discard"
-msgstr "رها کردن"
+msgstr "صرف نظر"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__display_name
@@ -602,17 +596,15 @@ msgstr "رها کردن"
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__display_name
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__display_name
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_moderation__display_name
-#, fuzzy
 msgid "Display Name"
-msgstr "نام نمایش داده شده"
+msgstr "نام نمایشی"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_member__email
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_moderation__email
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_member_view_tree
-#, fuzzy
 msgid "Email"
-msgstr "پست الکترونیک"
+msgstr "ایمیل"
 
 #. module: mail_group
 #. odoo-python
@@ -624,9 +616,8 @@ msgstr "ایمیل %s نامعتبر است"
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_email
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
-#, fuzzy
 msgid "Email Alias"
-msgstr "مستعار ایمیل"
+msgstr "ایمیل مستعار"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__email_from_normalized
@@ -636,37 +627,32 @@ msgstr "ایمیل از"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group_message__email_from
-#, fuzzy
 msgid ""
 "Email address of the sender. This field is set when no matching partner is "
 "found and replaces the author_id field in the chatter."
 msgstr ""
-"آدرس ایمیل فرستنده. این فیلد زمانی تنظیم می شود که هیچ شریک منطبقی پیدا نشود "
-"و جایگزین فیلد author_id در گفتگو شود."
+"ایمیل فرستنده. این فیلد زمانی تنظیم می‌شود که طرف همکاری برای جایگزین کردن "
+"author_id در کادر پیام وجود نداشته باشد."
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_domain
-#, fuzzy
 msgid "Email domain e.g. 'example.com' in 'odoo@example.com'"
-msgstr "دامنه‌ی ایمیل مانند 'example.com' در 'odoo@example.com'"
+msgstr "دامنه ایمیل، مثل example.com در odoo@example.com"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
-#, fuzzy
 msgid "Emails"
-msgstr "ایمیل ها"
+msgstr "ایمیل‌ها"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
-#, fuzzy
 msgid "Emails waiting an action for this group"
-msgstr "ایمیل‌هایی که منتظر اقدام برای این گروه هستند"
+msgstr "ایمیل‌هایی که در انتظار اقدامی برای این گروه هستند"
 
 #. module: mail_group
 #: model:ir.model.fields.selection,name:mail_group.selection__mail_group__access_mode__public
-#, fuzzy
 msgid "Everyone"
-msgstr "همگان"
+msgstr "همه"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.group_message
@@ -706,9 +692,8 @@ msgstr "نام گروه"
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group_message.py:0
-#, fuzzy
 msgid "Group message can only be linked to mail group. Current model is %s."
-msgstr "پیام گروه تنها می‌تواند به گروه ایمیل متصل شود. مدل فعلی %s است."
+msgstr "پیام گروه را فقط می‌توان به گروه ایمیل مرتبط کرد. مدل فعلی %s است."
 
 #. module: mail_group
 #. odoo-python
@@ -720,15 +705,13 @@ msgstr "گروه‌ها"
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation_guidelines_msg
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
-#, fuzzy
 msgid "Guidelines"
-msgstr "رهنمودها"
+msgstr "دستورالعمل‌ها"
 
 #. module: mail_group
 #: model:mail.template,subject:mail_group.mail_template_guidelines
-#, fuzzy
 msgid "Guidelines of group {{ object.mail_group_id.name }}"
-msgstr "راهنمایی‌های گروه {{ object.mail_group_id.name }}"
+msgstr "دستورالعمل‌های گروه {{ object.mail_group_id.name }}"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_notify_moderation
@@ -746,6 +729,12 @@ msgid ""
 "    <br/><br/>\n"
 "    Kind Regards,"
 msgstr ""
+"سلام،\n"
+"    <br/><br/>\n"
+"    لیست ارسالی که سعی دارید با آن تماس بگیرید بسته شده و پیام‌های جدیدی را "
+"نمی‌پذیرد.\n"
+"    <br/><br/>\n"
+"    با احترام،"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__id
@@ -753,28 +742,26 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__id
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__id
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_moderation__id
-#, fuzzy
 msgid "ID"
-msgstr "شناسه"
+msgstr "شناسه (ID)"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_parent_thread_id
-#, fuzzy
 msgid ""
 "ID of the parent record holding the alias (example: project holding the task "
 "creation alias)"
 msgstr ""
-"شناسه رکورد والد حاوی نام مستعار (مثال: پروژه دارای نام مستعار ایجاد وظیفه)"
+"شناسه (ID) رکورد والد که حاوی نام مستعار است (مثال: پروژه‌ای که حاوی نام "
+"مستعار ایجاد وظیفه است)"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_bounced_content
-#, fuzzy
 msgid ""
 "If set, this content will automatically be sent out to unauthorized users "
 "instead of the default message."
 msgstr ""
-"در صورت تنظیم، این محتوا به‌جای پیام پیش‌فرض، به‌طور خودکار برای کاربران "
-"غیرمجاز ارسال می‌شود."
+"در صورت تنظیم، این محتوا (به جای پیام پیش‌فرض) به طور خودکار به کاربران "
+"غیرمجاز ارسال خواهد شد."
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__image_128
@@ -785,16 +772,14 @@ msgstr "تصویر"
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
-#, fuzzy
 msgid "Invalid action for URL generation (%s)"
-msgstr "ایجاد URL برای اقدام نامعتبر (%s)"
+msgstr "عملیات برای ایجاد آدرس URL (%s) نامعتبر است"
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group_moderation.py:0
-#, fuzzy
 msgid "Invalid email address “%s”"
-msgstr "آدرس ایمیل نامعتبر است “%s”"
+msgstr "آدرس ایمیل \"%s\" نامعتبر است"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.invalid_token_subscription
@@ -804,15 +789,13 @@ msgstr "لینک تأیید نامعتبر یا منقضی شده است."
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_moderation_view_search
-#, fuzzy
 msgid "Is Allowed"
-msgstr "است مجاز"
+msgstr "مجاز است"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_moderation_view_search
-#, fuzzy
 msgid "Is Banned"
-msgstr "ممنوع است"
+msgstr "ممنوع شده است"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__is_closed
@@ -822,22 +805,19 @@ msgstr "بسته شده است"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__is_group_moderated
-#, fuzzy
 msgid "Is Group Moderated"
-msgstr "آیا گروه تحت نظارت است"
+msgstr "گروه نظارت شده است"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__is_member
-#, fuzzy
 msgid "Is Member"
-msgstr "آیا عضو است"
+msgstr "عضو است"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_kanban
-#, fuzzy
 msgid "Join"
-msgstr "پیوستن"
+msgstr "عضویت"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__write_uid
@@ -845,9 +825,8 @@ msgstr "پیوستن"
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__write_uid
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__write_uid
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_moderation__write_uid
-#, fuzzy
 msgid "Last Updated by"
-msgstr "آخرین بروز رسانی توسط"
+msgstr "آخرین به‌روزرسانی کننده"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__write_date
@@ -855,24 +834,21 @@ msgstr "آخرین بروز رسانی توسط"
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__write_date
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__write_date
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_moderation__write_date
-#, fuzzy
 msgid "Last Updated on"
-msgstr "آخرین بروز رسانی در"
+msgstr "زمان آخرین به‌روزرسانی"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_kanban
-#, fuzzy
 msgid "Leave"
-msgstr "ترک"
+msgstr "ترک گروه"
 
 #. module: mail_group
 #: model_terms:ir.actions.act_window,help:mail_group.mail_group_member_action
-#, fuzzy
 msgid "Let people subscribe to your list online or manually add them here."
 msgstr ""
-"اجازه دهید افراد به لیست شما به صورت آنلاین عضو شوند یا آن‌ها را به صورت دستی "
-"اینجا اضافه کنید."
+"به افراد امکان دهید به صورت آنلاین در لیست شما عضو شوند یا به صورت دستی آنها "
+"را در اینجا اضافه کنند."
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_incoming_local
@@ -895,15 +871,13 @@ msgstr "مدیر گروه ایمیل"
 
 #. module: mail_group
 #: model:mail.template,name:mail_group.mail_template_list_subscribe
-#, fuzzy
 msgid "Mail Group: Mailing List Subscription"
-msgstr "گروه ایمیل: اشتراک در لیست پستی"
+msgstr "گروه ایمیل: اشتراک در لیست ایمیل‌ها"
 
 #. module: mail_group
 #: model:mail.template,name:mail_group.mail_template_list_unsubscribe
-#, fuzzy
 msgid "Mail Group: Mailing List Unsubscription"
-msgstr "گروه پستی: لغو اشتراک از لیست پستی"
+msgstr "گروه ایمیل: لغو اشتراک در لیست ایمیل‌ها"
 
 #. module: mail_group
 #: model:mail.template,name:mail_group.mail_template_guidelines
@@ -921,69 +895,57 @@ msgstr "گروه‌های ایمیل"
 
 #. module: mail_group
 #: model:ir.actions.server,name:mail_group.ir_cron_mail_notify_group_moderators_ir_actions_server
-#, fuzzy
 msgid "Mail List: Notify group moderators"
-msgstr "لیست ایمیل: به مدیران گروه اطلاع دهید"
+msgstr "لیست ایمیل: آگاه سازی مدیران گروه"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__mail_message_id
-#, fuzzy
 msgid "Mail Message"
-msgstr "پیام را ارسال کنید"
+msgstr "پیام ایمیل"
 
 #. module: mail_group
 #: model:ir.model,name:mail_group.model_mail_group_member
-#, fuzzy
 msgid "Mailing List Member"
-msgstr "عضو لیست پستی"
+msgstr "عضو لیست ارسال"
 
 #. module: mail_group
 #: model:ir.model,name:mail_group.model_mail_group_message
-#, fuzzy
 msgid "Mailing List Message"
-msgstr "پیام لیست ایمیل"
+msgstr "پیام لیست ارسال"
 
 #. module: mail_group
 #: model:ir.model,name:mail_group.model_mail_group_moderation
-#, fuzzy
 msgid "Mailing List black/white list"
-msgstr "فهرست سیاه/سفید لیست پستی"
+msgstr "لیست سیاه/سفید ارسال"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.portal_breadcrumbs_group
-#, fuzzy
 msgid "Mailing Lists"
-msgstr "لیست‌های پستی"
+msgstr "لیست‌های ارسال"
 
 #. module: mail_group
 #: model_terms:ir.actions.act_window,help:mail_group.mail_group_action
-#, fuzzy
 msgid ""
 "Mailing groups are communities that like to discuss a specific topic "
 "together."
-msgstr ""
-"گروه‌های ایمیلی جوامعی هستند که دوست دارند با هم در مورد یک موضوع خاص بحث "
-"کنند."
+msgstr "گروه‌های ایمیل جوامعی هستند که در مورد یک موضوع خاص با هم بحث می‌کنند."
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_footer
-#, fuzzy
 msgid "Mailing-List:"
-msgstr "لیست پستی:"
+msgstr "لیست ارسال:"
 
 #. module: mail_group
 #: model:ir.actions.act_window,name:mail_group.mail_group_member_action
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__member_ids
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
-#, fuzzy
 msgid "Members"
-msgstr "اعضا"
+msgstr "اعضاء"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__member_count
-#, fuzzy
 msgid "Members Count"
-msgstr "تعداد اعضا"
+msgstr "تعداد اعضاء"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
@@ -993,9 +955,8 @@ msgstr "اعضای این گروه"
 
 #. module: mail_group
 #: model:ir.model.fields.selection,name:mail_group.selection__mail_group__access_mode__members
-#, fuzzy
 msgid "Members only"
-msgstr "فقط اعضا"
+msgstr "فقط اعضاء"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__mail_group_message_id
@@ -1011,15 +972,13 @@ msgstr "توضیح رد پیام"
 
 #. module: mail_group
 #: model:ir.actions.act_window,name:mail_group.mail_group_message_action
-#, fuzzy
 msgid "Messages"
-msgstr "پیام ها"
+msgstr "پیام‌ها"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__mail_group_message_count
-#, fuzzy
 msgid "Messages Count"
-msgstr "تعداد پیام"
+msgstr "تعداد پیام‌ها"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__mail_group_message_last_month_count
@@ -1030,76 +989,65 @@ msgstr "پیام‌ها در هر ماه"
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
-#, fuzzy
 msgid "Messages are pending moderation"
-msgstr "پیام‌ها در انتظار تأیید هستند"
+msgstr "پیام‌هایی در انتظار تأیید هستند"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__mail_group_message_moderation_count
-#, fuzzy
 msgid "Messages that need an action"
-msgstr "پیام‌هایی که نیاز به اقدام دارند"
+msgstr "پیام‌هایی که نیازمند اقدام هستند"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation
 msgid "Moderate"
-msgstr ""
+msgstr "نظارت"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_notify_moderation
-#, fuzzy
 msgid "Moderate Messages"
-msgstr "مدیریت پیام‌ها"
+msgstr "نظارت بر پیام‌ها"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_search
-#, fuzzy
 msgid "Moderated"
-msgstr "مورد بررسی قرار گرفته"
+msgstr "نظارت شده"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__moderator_id
-#, fuzzy
 msgid "Moderated By"
-msgstr "تحت نظارت"
+msgstr "نظارت شده توسط"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation_rule_ids
-#, fuzzy
 msgid "Moderated Emails"
-msgstr "ایمیل‌های نظارت‌شده"
+msgstr "ایمیل‌های نظارت شده"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation_rule_count
-#, fuzzy
 msgid "Moderated emails count"
-msgstr "تعداد ایمیل‌های تأیید شده"
+msgstr "تعداد ایمیل‌های نظارت شده"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
-#, fuzzy
 msgid "Moderated emails in this group"
-msgstr "ایمیل های مدیریت شده در این گروه"
+msgstr "ایمیل‌های نظارت شده در این گروه"
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
-#, fuzzy
 msgid "Moderated group must have moderators."
-msgstr "سرپرستی گروه باید دارای مدیران باشد."
+msgstr "گروه نظارت شده باید مدیر داشته باشد."
 
 #. module: mail_group
 #: model:ir.actions.act_window,name:mail_group.mail_group_moderation_action
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_search
-#, fuzzy
 msgid "Moderation"
-msgstr "نظارت"
+msgstr "مدیریت"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_moderation_view_tree
-#, fuzzy
 msgid "Moderation Lists"
-msgstr "فهرست‌های نظارت"
+msgstr "لیست مدیریت تأیید"
 
 #. module: mail_group
 #: model:ir.ui.menu,name:mail_group.mail_group_moderation_menu
@@ -1109,29 +1057,25 @@ msgstr "قوانین مدیریت"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
-#, fuzzy
 msgid "Moderations"
-msgstr "تعدیل‌ها"
+msgstr "مدیریت‌ها"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__is_moderator
-#, fuzzy
 msgid "Moderator"
-msgstr "ناظر"
+msgstr "مدیر"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__moderator_ids
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
-#, fuzzy
 msgid "Moderators"
-msgstr "ناظرین"
+msgstr "مدیران"
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
-#, fuzzy
 msgid "Moderators must have an email address."
-msgstr "مدیران باید یک آدرس ایمیل داشته باشند."
+msgstr "مدیران باید آدرس ایمیل داشته باشند."
 
 #. module: mail_group
 #: model:mail.group,name:mail_group.mail_group_1
@@ -1147,46 +1091,41 @@ msgstr "نام"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
-#, fuzzy
 msgid ""
 "Need to unsubscribe? <br/>It's right here! <span class=\"oi fa-2x oi-arrow-"
 "down float-end\" role=\"img\" aria-label=\"\" title=\"Read this !\"/>"
 msgstr ""
-"نیاز به لغو اشتراک دارید؟<br/> درست اینجاست! <span class=\"oi fa-2x oi-arrow-"
-"down float-end\" role=\"img\" aria-label=\"\" title=\"این را بخوانید!\"/>"
+"می‌خواهید اشتراک خود را لغو کنید؟<br/>از اینجا اقدام کنید! <span class=\"oi "
+"fa-2x oi-arrow-down float-end\" role=\"img\" aria-label=\"\" title=\"بیشتر "
+"بخوانید !\"/>"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__moderation_guidelines
-#, fuzzy
 msgid ""
 "Newcomers on this moderated group will automatically receive the guidelines."
 msgstr ""
-"ورودهای جدید به این گروه مدیرت شده به طور خودکار راهنمایی‌ها را دریافت خواهند "
-"کرد."
+"تازه واردهای کانال نظارت شده به طور خودکار دستورالعمل‌های مربوطه را دریافت "
+"خواهند کرد."
 
 #. module: mail_group
 #: model_terms:ir.actions.act_window,help:mail_group.mail_group_member_action
-#, fuzzy
 msgid "No Members in this list yet!"
-msgstr "هنوز هیچ عضوی در این لیست وجود ندارد!"
+msgstr "هنوز عضوی در این لیست وجود ندارد!"
 
 #. module: mail_group
 #: model_terms:ir.actions.act_window,help:mail_group.mail_group_message_action
-#, fuzzy
 msgid "No Messages in this list yet!"
-msgstr "هنوز پیامی در این فهرست وجود ندارد!"
+msgstr "هنوز پیامی در این لیست وجود ندارد!"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_member__email_normalized
-#, fuzzy
 msgid "Normalized Email"
-msgstr "ایمیل عادی شده"
+msgstr "ایمیل نرمالایز شده"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__email_from_normalized
-#, fuzzy
 msgid "Normalized From"
-msgstr "نرمال شده از"
+msgstr "نرمالایز شده از"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation_notify_msg
@@ -1196,53 +1135,50 @@ msgstr "پیام اعلان"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
-#, fuzzy
 msgid "Notify Members"
-msgstr "اطلاع اعضا"
+msgstr "آگاه سازی اعضاء"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__mail_group_message_count
-#, fuzzy
 msgid "Number of message in this group"
-msgstr "تعداد پیام در این گروه"
+msgstr "تعداد پیام‌ها در این گروه"
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
-#, fuzzy
 msgid ""
 "Only an administrator or a moderator can send guidelines to group members."
-msgstr "فقط یک مدیر یا ناظر می‌تواند راهنمایی‌ها را به اعضای گروه ارسال کند."
+msgstr ""
+"فقط مدیر سیستم یا تأییدکننده می‌تواند دستورالعمل‌هایی را برای اعضای گروه ارسال "
+"کند."
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
-#, fuzzy
 msgid "Only members can send email to the mailing list."
-msgstr "فقط اعضا می‌توانند ایمیل به لیست پستی ارسال کنند."
+msgstr "فقط اعضاء می‌توانند به لیست ایمیل ارسال کنند."
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
 msgid "Only selected groups of users can send email to the mailing list."
-msgstr ""
+msgstr "تنها گروه کاربران انتخابی می‌توانند به لیست ایمیل، ایمیل ارسال کنند."
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.messages_short
 msgid "Oops, there are no messages here."
-msgstr ""
+msgstr "خطا، هیچ پیامی اینجا نیست."
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_force_thread_id
-#, fuzzy
 msgid ""
 "Optional ID of a thread (record) to which all incoming messages will be "
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
 msgstr ""
-"شناسه اختیاری یک موضوع (رکورد) که تمام پیام‌های دریافتی به آن پیوست می‌شود، "
-"حتی اگر به آن پاسخ نداده باشند. اگر تنظیم شود، ایجاد رکوردهای جدید به طور "
-"کامل غیرفعال می شود."
+"شناسه اختیاری یک Thread (رکورد) که همه پیام‌های ورودی حتی در صورت عدم "
+"پاسخگویی به آن پیوست خواهند شد. با این کار، ایجاد رکوردهای جدید کاملاً غیرفعال "
+"خواهد شد."
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__group_message_parent_id
@@ -1258,45 +1194,38 @@ msgstr "مدل والد"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_parent_thread_id
-#, fuzzy
 msgid "Parent Record Thread ID"
-msgstr "شناسه موضوع رکورد والد"
+msgstr "شناسه Thread رکورد والد"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_parent_model_id
-#, fuzzy
 msgid ""
 "Parent model holding the alias. The model holding the alias reference is not "
 "necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
 msgstr ""
-"مدل والد دارای نام مستعار. مدلی که مرجع نام مستعار را نگه می دارد لزوماً مدلی "
-"نیست که توسط alias_model_id (مثال: پروژه (parent_model) و task (model)) "
-"ارائه شده است."
+"مدل والد حاوی نام مستعار. این مدل که حاوی مرجع مستعار است لزوماً مدل مشخص شده "
+"با alias_model_id نیست (مثال: پروژه (parent_model) و وظیفه (model))"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_member__partner_id
-#, fuzzy
 msgid "Partner"
-msgstr "همکار"
+msgstr "طرف همکار"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__member_partner_ids
-#, fuzzy
 msgid "Partners Member"
-msgstr "اعضا شریکان"
+msgstr "عضو طرف‌های همکار"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__mail_group_message_ids
-#, fuzzy
 msgid "Pending Messages"
-msgstr "پیام‌های در انتظار"
+msgstr "پیام‌های معلق"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__mail_group_message_moderation_count
-#, fuzzy
 msgid "Pending Messages Count"
-msgstr "تعداد پیام‌های در انتظار"
+msgstr "تعداد پیام‌های معلق"
 
 #. module: mail_group
 #: model:ir.model.fields.selection,name:mail_group.selection__mail_group_message__moderation_status__pending_moderation
@@ -1306,23 +1235,19 @@ msgstr "در انتظار تأیید"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__moderation_notify
-#, fuzzy
 msgid ""
 "People receive an automatic notification about their message being waiting "
 "for moderation."
 msgstr ""
-"دریافت‌کنندگان به صورت خودکار در مورد پیام خود که منتظر بررسی است، اطلاعیه "
-"دریافت می‌کنند."
+"افراد درباره پیامی که در انتظار تأیید است اعلان خودکار دریافت خواهند کرد."
 
 #. module: mail_group
 #: model:ir.model.fields.selection,name:mail_group.selection__mail_group_moderation__status__ban
-#, fuzzy
 msgid "Permanent Ban"
-msgstr "محرومیت دائمی"
+msgstr "مسدود دائمی"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_contact
-#, fuzzy
 msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
 "- everyone: everyone can post\n"
@@ -1330,10 +1255,10 @@ msgid ""
 "- followers: only followers of the related document or members of following "
 "channels\n"
 msgstr ""
-"خط مشی ارسال پیام در سند با استفاده از mailgateway.\n"
-"- همه: همه می توانند پست کنند\n"
-"- شرکا: فقط شرکای تأیید شده\n"
-"- دنبال کنندگان: فقط دنبال کنندگان سند مرتبط یا اعضای کانال های زیر\n"
+"سیاست ارسال پیام در سند با استفاده از درگاه ایمیل. \n"
+"- همه: همه می‌توانند ارسال کنند\n"
+"- طرف‌های همکار: فقط طرف‌های همکار مجاز\n"
+"- دنبال‌کنندگان: فقط دنبال‌کنندگان سند مربوطه یا اعضای کانال‌های دنبال‌کننده\n"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_footer
@@ -1343,16 +1268,14 @@ msgstr "ارسال به:"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__create_date
-#, fuzzy
 msgid "Posted"
-msgstr "سند ثبت شد"
+msgstr "ارسال شده"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__access_mode
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
-#, fuzzy
 msgid "Privacy"
-msgstr "حریم‌خصوصی"
+msgstr "حریم خصوصی"
 
 #. module: mail_group
 #: model:mail.group,name:mail_group.mail_group_2
@@ -1369,15 +1292,13 @@ msgstr "پاسخ: %s"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_force_thread_id
-#, fuzzy
 msgid "Record Thread ID"
-msgstr "شناسه موضوع رکورد"
+msgstr "شناسه Thread رکورد"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.group_message
-#, fuzzy
 msgid "Reference"
-msgstr "مرجع‌"
+msgstr "شماره ارجاع"
 
 #. module: mail_group
 #: model:ir.model.fields.selection,name:mail_group.selection__mail_group_message_reject__action__reject
@@ -1390,21 +1311,18 @@ msgstr "رد کردن"
 
 #. module: mail_group
 #: model:ir.model,name:mail_group.model_mail_group_message_reject
-#, fuzzy
 msgid "Reject Group Message"
-msgstr "رد کردن پیام گروهی"
+msgstr "رد پیام گروه"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
-#, fuzzy
 msgid "Reject Silently"
-msgstr "رد بی‌سروصدا"
+msgstr "رد کردن بدون اطلاع"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
-#, fuzzy
 msgid "Reject the message"
-msgstr "رد کردن پیام"
+msgstr "پیام را رد کنید"
 
 #. module: mail_group
 #: model:ir.model.fields.selection,name:mail_group.selection__mail_group_message__moderation_status__rejected
@@ -1416,50 +1334,43 @@ msgstr "رد شده"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_list
-#, fuzzy
 msgid "Remove message with explanation"
-msgstr "پیام را با توضیح حذف کنید"
+msgstr "حذف پیام با توضیح"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
-#, fuzzy
 msgid "Responsibles"
-msgstr "مسئولین"
+msgstr "مسئولان"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_search
-#, fuzzy
 msgid "Search Group Message"
-msgstr "جستجوی پیام گروهی"
+msgstr "جستجوی پیام گروه"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_member_view_search
-#, fuzzy
 msgid "Search Mail Group Member"
-msgstr "جستجوی عضو گروه پستی"
+msgstr "جستجوی عضو گروه ایمیل‌ها"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_search
-#, fuzzy
 msgid "Search Mail group"
-msgstr "جستجوی گروه ایمیل"
+msgstr "جستجوی گروه ایمیل‌ها"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_moderation_view_search
-#, fuzzy
 msgid "Search Moderation List"
-msgstr "جستجوی لیست مدیریت"
+msgstr "جستجو در لیست تأییدها"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "Select users"
-msgstr ""
+msgstr "کاربران را انتخاب کنید"
 
 #. module: mail_group
 #: model:ir.model.fields.selection,name:mail_group.selection__mail_group__access_mode__groups
-#, fuzzy
 msgid "Selected group of users"
-msgstr "انتخاب گروهی مشخص از کاربران"
+msgstr "گروه منتخبی از کاربران"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
@@ -1470,9 +1381,8 @@ msgstr "ارسال"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
-#, fuzzy
 msgid "Send & Ban"
-msgstr "ارسال و ممنوعیت"
+msgstr "ارسال و مسدود کردن"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
@@ -1488,9 +1398,8 @@ msgstr "ارسال ایمیل"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group_message_reject__send_email
-#, fuzzy
 msgid "Send an email to the author of the message"
-msgstr "ارسال ایمیل به نویسنده پیام"
+msgstr "یک ایمیل به نویسنده پیام ارسال کنید"
 
 #. module: mail_group
 #: model:ir.actions.act_window,name:mail_group.mail_compose_message_action_mail_group
@@ -1501,20 +1410,19 @@ msgstr "ارسال ایمیل"
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation_guidelines
 msgid "Send guidelines to new members"
-msgstr ""
+msgstr "ارسال راهنما برای اعضای جدید"
 
 #. module: mail_group
 #: model:mail.template,description:mail_group.mail_template_guidelines
-#, fuzzy
 msgid "Sent to people who subscribed to a mailing group with group guidelines"
 msgstr ""
-"به افرادی ارسال شده که در یک گروه پستی با دستورالعمل‌های گروه عضو شده‌اند."
+"برای افرادی که در یک گروه ارسال دارای دستورالعمل‌های گروهی مشترک شده‌اند ارسال "
+"می‌شود"
 
 #. module: mail_group
 #: model:mail.template,description:mail_group.mail_template_list_unsubscribe
-#, fuzzy
 msgid "Sent to people who unsubscribed from a mailing group"
-msgstr "ارسال شده به افرادی که از یک گروه پستی لغو اشتراک کرده‌اند"
+msgstr "برای افرادی که از یک گروه ارسال لغو اشتراک کرده‌اند ارسال می‌شود"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__moderation_status
@@ -1526,9 +1434,8 @@ msgstr "وضعیت"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
-#, fuzzy
 msgid "Stay in touch with our Community"
-msgstr "در ارتباط با جامعه‌ی ما بمانید"
+msgstr "با جامعه ما ارتباط برقرار کنید"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__subject
@@ -1545,33 +1452,29 @@ msgstr "عضویت"
 
 #. module: mail_group
 #: model:mail.template,description:mail_group.mail_template_list_subscribe
-#, fuzzy
 msgid "Subscription confirmation to a mailing group"
-msgstr "تأیید اشتراک در یک گروه پستی"
+msgstr "تأیید اشتراک در یک گروه ارسال"
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
-#, fuzzy
 msgid ""
 "Template \"mail_group.mail_template_guidelines\" was not found. No email has "
 "been sent. Please contact an administrator to fix this issue."
 msgstr ""
-"قالب \"mail_group.mail_template_guidelines\" یافت نشد. هیچ ایمیلی ارسال نشده "
-"است. لطفاً برای حل این مشکل با یک مدیر تماس بگیرید."
+"قالب mail_group.mail_template_guidelines یافت نشد. ایمیلی ارسال نشد. لطفاً "
+"برای رفع این مشکل با مدیر سیستم تماس بگیرید."
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_notify_moderation
-#, fuzzy
 msgid "Thank you!"
-msgstr "سپاسگذاریم!"
+msgstr "با تشکر!"
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
-#, fuzzy
 msgid "The \"Authorized Group\" is missing."
-msgstr "\"گروه مجاز\" وجود ندارد."
+msgstr "«گروه مجاز» وجود ندارد."
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.confirmation_subscription
@@ -1582,9 +1485,8 @@ msgstr "ایمیل"
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group_message.py:0
-#, fuzzy
 msgid "The email \"%s\" is not valid."
-msgstr "<span dir=\"rtl\">ایمیل \"%s\" معتبر نیست.</span>"
+msgstr "ایمیل «%s» نامعتبر است."
 
 #. module: mail_group
 #. odoo-python
@@ -1603,45 +1505,40 @@ msgstr "توضیحات دستورالعمل خالی است."
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
-#, fuzzy
 msgid "The guidelines description is missing."
-msgstr "توضیحات دستورالعمل‌ها موجود نیست."
+msgstr "توضیحات دستورالعمل وجود ندارد."
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_model_id
-#, fuzzy
 msgid ""
 "The model (Odoo Document Kind) to which this alias corresponds. Any incoming "
 "email that does not reply to an existing record will cause the creation of a "
 "new record of this model (e.g. a Project Task)"
 msgstr ""
-"مدلی (Odoo Document Kind) که این نام مستعار با آن مطابقت دارد. هر ایمیل "
-"دریافتی که به سابقه موجود پاسخ نمی‌دهد باعث ایجاد یک رکورد جدید از این مدل "
-"می‌شود (به عنوان مثال یک وظیفه پروژه)"
+"مدلی (نوع سندی) که این نام مستعار به آن مربوط است. هر ایمیل ورودی که به "
+"رکورد موجود پاسخ نمی‌دهد، باعث ایجاد رکورد جدید از این مدل خواهد شد (مثال: یک "
+"وظیفه پروژه)"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_name
-#, fuzzy
 msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
 msgstr ""
-"نام مستعار ایمیل، به عنوان مثال 'jobs'. اگر می خواهید ایمیل های "
-"<jobs@example.odoo.com> را دریافت کنید"
+"نام ایمیل مستعار؛ مثال، اگر می‌خواهید در آدرس <jobs@example.odoo.com> ایمیل "
+"دریافت کنید، 'jobs' را وارد کنید."
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
-#, fuzzy
 msgid "The notification message is missing."
-msgstr "پیام اطلاع‌رسانی وجود ندارد."
+msgstr "پیام اعلان وجود ندارد."
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
-#, fuzzy
 msgid "The partner can not be found."
-msgstr "<span dir=\"rtl\">نمی‌توان شریک را پیدا کرد.</span>"
+msgstr "طرف همکار یافت نمی‌شود."
 
 #. module: mail_group
 #. odoo-python
@@ -1653,42 +1550,36 @@ msgstr "رکورد پیام باید گروه باشد."
 #. module: mail_group
 #. odoo-javascript
 #: code:addons/mail_group/static/src/interactions/mail_group.js:0
-#, fuzzy
 msgid "This email is already subscribed."
-msgstr "این ایمیل قبلاً مشترک شده است."
+msgstr "این ایمیل قبلاً عضو شده است."
 
 #. module: mail_group
 #. odoo-javascript
 #: code:addons/mail_group/static/src/interactions/mail_group.js:0
-#, fuzzy
 msgid "This email is not subscribed."
-msgstr "این ایمیل مشترک نشده است."
+msgstr "این ایمیل عضو نیست."
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group_message.py:0
-#, fuzzy
 msgid "This message can not be moderated"
-msgstr "این پیام قابل مدیریت نیست"
+msgstr "این پیام قابل نظارت مدیر نیست"
 
 #. module: mail_group
 #: model:ir.model.constraint,message:mail_group.constraint_mail_group_member_unique_partner
-#, fuzzy
 msgid "This partner is already subscribed to the group"
-msgstr "این شریک قبلاً به گروه مشترک شده است"
+msgstr "این طرف همکار قبلاً در گروه عضو شده است"
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group_message.py:0
-#, fuzzy
 msgid "Those messages can not be moderated: %s."
-msgstr "آن پیام‌ها قابل مدیریت نیستند: %s."
+msgstr "این پیام‌ها قابل نظارت مدیر نیستند: %s."
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
-#, fuzzy
 msgid "To Review"
-msgstr "برای بررسی"
+msgstr "نیازمند بررسی"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
@@ -1704,11 +1595,10 @@ msgstr "لغو اشتراک:"
 
 #. module: mail_group
 #: model_terms:ir.actions.act_window,help:mail_group.mail_group_message_action
-#, fuzzy
 msgid ""
 "When people send an email to the alias of the list, they will appear here."
 msgstr ""
-"وقتی افراد ایمیلی به نام مستعار لیست ارسال می‌کنند، در اینجا ظاهر می‌شوند."
+"وقتی افراد ایمیلی به ایمیل مستعار لیست ارسال می‌کنند، در اینجا ظاهر می‌شوند."
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
@@ -1719,9 +1609,8 @@ msgstr "لیست سفید"
 
 #. module: mail_group
 #: model:ir.model.fields.selection,name:mail_group.selection__mail_group_message__author_moderation__allow
-#, fuzzy
 msgid "Whitelisted"
-msgstr "لیست سفید شده"
+msgstr "در لیست سفید است"
 
 #. module: mail_group
 #. odoo-python
@@ -1732,28 +1621,26 @@ msgstr "وضعیت اشتباه (%s)"
 
 #. module: mail_group
 #: model:ir.model.constraint,message:mail_group.constraint_mail_group_moderation_mail_group_email_uniq
-#, fuzzy
 msgid "You can create only one rule for a given email address in a group."
-msgstr ""
-"شما می‌توانید فقط یک قانون برای یک آدرس ایمیل خاص در یک گروه ایجاد کنید."
+msgstr "می‌توانید فقط یک قانون برای آدرس ایمیل معین در یک گروه ایجاد کنید."
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
 msgid "You can not join a closed group."
-msgstr ""
+msgstr "نمی‌توانید به یک گروه بسته بپیوندید."
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
 msgid "You can not send guidelines for a closed group."
-msgstr ""
+msgstr "نمی‌توانید دستورالعمل‌ها را برای یک گروه بسته ارسال کنید."
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_notify_moderation
-#, fuzzy
 msgid "You have messages to moderate, please go for the proceedings."
-msgstr "شما پیام‌هایی برای بررسی دارید، لطفاً به ادامه کارها بپردازید."
+msgstr ""
+"پیام(هایی) برای نظارت و تأیید وجود دارند، لطفاً اقدامات لازم را انجام دهید."
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
@@ -1763,15 +1650,13 @@ msgstr "نام مستعار"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
-#, fuzzy
 msgid "and send an email to the author ("
-msgstr "و به نویسنده ایمیلی ارسال کنید ("
+msgstr "و برای نویسنده ایمیل ارسال کنید ("
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.message_attachments
-#, fuzzy
 msgid "attachments"
-msgstr "ضمیمه‌ها"
+msgstr "پیوست‌ها"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.message_footer
@@ -1781,59 +1666,53 @@ msgstr "توسط"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
-#, fuzzy
 msgid "e.g. \"Newsletter\""
-msgstr "مثلاً \"خبرنامه\""
+msgstr "مثال: \"خبرنامه\""
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "e.g. \"This group is about ...\""
-msgstr ""
+msgstr "مثال: «این گروه درباره...»"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
-#, fuzzy
 msgid "e.g. mycompany.com"
-msgstr "برای مثال mycompany.com"
+msgstr "مثال: mycompany.com"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "e.g.\"Please be polite and ...\""
-msgstr ""
+msgstr "مثال: «لطفا مودب باشید و ...»"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_search
-#, fuzzy
 msgid "group"
-msgstr "گروه"
+msgstr "گروه‌"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.confirmation_subscription
-#, fuzzy
 msgid "has been"
-msgstr "شده است"
+msgstr "‌"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
 msgid "members<br/>"
-msgstr ""
+msgstr "عضو<br/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
-#, fuzzy
 msgid "messages / month"
-msgstr "پیام‌ها / ماه"
+msgstr "پیام / ماه"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_kanban
 msgid "messages to review"
-msgstr ""
+msgstr "پیام برای بازبینی"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.messages_short
-#, fuzzy
 msgid "more replies"
-msgstr "بیشتر پاسخ‌ها"
+msgstr "ادامه پاسخ‌ها"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.messages_short
@@ -1843,21 +1722,18 @@ msgstr "پاسخ‌ها"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.confirmation_subscription
-#, fuzzy
 msgid "subscribed to"
-msgstr "مشترک شده در"
+msgstr "عضو شد"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.confirmation_subscription
-#, fuzzy
 msgid "the list"
-msgstr "لیست"
+msgstr "- لیست"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.confirmation_subscription
-#, fuzzy
 msgid "unsubscribed from"
-msgstr "لغو اشتراک از"
+msgstr "لغو اشتراک شد"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups

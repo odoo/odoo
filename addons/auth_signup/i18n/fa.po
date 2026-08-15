@@ -11,13 +11,14 @@
 # Hamed Mohammadi <hamed@dehongi.com>, 2023
 # Hosein Nematolahi <hosein.ne88@gmail.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
+# Aliraza Habibitanha <alireza.habibitanha@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-03 17:36+0000\n"
-"PO-Revision-Date: 2026-08-02 12:45+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-08-09 10:11+0000\n"
+"Last-Translator: Aliraza Habibitanha <alireza.habibitanha@gmail.com>\n"
 "Language-Team: Persian <https://translate.odoo.com/projects/odoo-19/"
 "auth_signup/fa/>\n"
 "Language: fa\n"
@@ -44,9 +45,8 @@ msgstr ""
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
-#, fuzzy
 msgid "--<br/>Mitchell Admin"
-msgstr "--<br/>مدیر میچل"
+msgstr "--<br/>میکائیل ادمین‌زاده"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
@@ -821,6 +821,148 @@ msgid ""
 "</td></tr>\n"
 "</table>"
 msgstr ""
+"<table dir=\"rtl\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+"style=\"padding-top: 16px; background-color: #FFFFFF; font-family:IRANSans, "
+"IRANSansX, Arial,sans-serif; color: #454748; width: 100%; border-"
+"collapse:separate;\">\n"
+"<tr><td align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+"style=\"padding: 16px; background-color: #FFFFFF; color: #454748; border-"
+"collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- HEADER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+"width=\"590\" style=\"min-width: 590px; background-color: white; padding: "
+"0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr>\n"
+"                    <td valign=\"middle\">\n"
+"                        <span style=\"font-size: 10px;\">حساب شما</span><br/>"
+"\n"
+"                        <span style=\"font-size: 20px; font-weight: bold;\">"
+"\n"
+"                            <t t-out=\"object.name or ''\">کارمند دمو</t>\n"
+"                        </span>\n"
+"                    </td>\n"
+"                    <td valign=\"middle\" align=\"right\" t-if=\"not "
+"object.company_id.uses_default_logo\">\n"
+"                        <img t-attf-src=\"/logo.png?company={{ "
+"object.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: auto; "
+"width: 80px;\" t-att-alt=\"object.company_id.name\"/>\n"
+"                    </td>\n"
+"                </tr>\n"
+"                <tr>\n"
+"                    <td colspan=\"2\" style=\"text-align:center;\">\n"
+"                        <hr width=\"100%\" style=\"background-color:rgb"
+"(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-"
+"height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                    </td>\n"
+"                </tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- CONTENT -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+"width=\"590\" style=\"min-width: 590px; background-color: white; padding: "
+"0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr>\n"
+"                    <td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                        <div>\n"
+"                            <t t-out=\"object.name or ''\">کارمند دمو</t> "
+"گرامی،<br/><br/>\n"
+"                            با سلام،<br/><br/>\n"
+"                            حساب کاربری شما با موفقیت ایجاد شد!<br/>\n"
+"                            ایمیل ورود شما: <strong><t t-out=\"object.email "
+"or ''\">mark.brown23@example.com</t></strong><br/>\n"
+"                            برای دسترسی به حساب کاربری خود می‌توانید از لینک "
+"زیر استفاده نمایید:\n"
+"                            <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"                                <a t-attf-href=\"/web/login?auth_login={"
+"{object.email}}\" t-attf-style=\"background-color: {"
+"{object.company_id.email_secondary_color or '#875A7B'}}; padding: 8px 16px "
+"8px 16px; text-decoration: none; color: {"
+"{object.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; "
+"font-size:13px;\">\n"
+"                                    ورود به حساب کاربری\n"
+"                                </a>\n"
+"                            </div>\n"
+"                            با احترام،<br/>\n"
+"                            <t t-if=\"user.signature\" data-o-mail-quote-"
+"container=\"1\">\n"
+"                                <br/>\n"
+"                                <div data-o-mail-quote=\"1\">--<br data-o-"
+"mail-quote=\"1\"/><t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">"
+"مدیر سیستم</t></div>\n"
+"                            </t>\n"
+"                        </div>\n"
+"                    </td>\n"
+"                </tr>\n"
+"                <tr>\n"
+"                    <td style=\"text-align:center;\">\n"
+"                        <hr width=\"100%\" style=\"background-color:rgb"
+"(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-"
+"height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                    </td>\n"
+"                </tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- FOOTER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+"width=\"590\" style=\"min-width: 590px; background-color: white; font-size: "
+"11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr>\n"
+"                    <td valign=\"middle\" align=\"center\">\n"
+"                        <t t-out=\"object.company_id.name or ''\">شرکت من</t>"
+"\n"
+"                    </td>\n"
+"                </tr>\n"
+"                <tr>\n"
+"                    <td valign=\"middle\" align=\"center\" style=\"opacity: "
+"0.7;\">\n"
+"                        <span dir=\"ltr\" t-out=\"object.company_id.phone or "
+"''\">041-35251447</span>\n"
+"                        <t t-if=\"object.company_id.email\">\n"
+"                            | <a t-attf-href=\"mailto:{"
+"{object.company_id.email}}\" style=\"text-decoration:none; color: #454748;\">"
+"<t t-out=\"object.company_id.email or ''\">info@yourcompany.com</t></a>\n"
+"                        </t>\n"
+"                        <t t-if=\"object.company_id.website\">\n"
+"                            | <a t-att-href=\"object.company_id.website\" "
+"style=\"text-decoration:none; color: #454748;\"><t t-"
+"out=\"object.company_id.website or ''\">http://www.example.com</t></a>\n"
+"                        </t>\n"
+"                    </td>\n"
+"                </tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"<!-- قدرت‌گرفته از -->\n"
+"<tr>\n"
+"    <td align=\"center\" style=\"min-width: 590px;\">\n"
+"        <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+"width=\"590\" style=\"min-width: 590px; background-color: #F1F1F1; color: "
+"#454748; padding: 8px; border-collapse:separate;\">\n"
+"            <tr>\n"
+"                <td style=\"text-align: center; font-size: 13px;\">\n"
+"                    <a href=\"https://tashilgostar.com\">\n"
+"                        <img src=\"https://www.tashilgostar.com/web/image/"
+"837703-52f15ec3/tg_simple_logo.png\" alt=\"tashilgostar\" width=\"100px\"/>\n"
+"                    </a>\n"
+"                </td>\n"
+"            </tr>\n"
+"        </table>\n"
+"    </td>\n"
+"</tr>\n"
+"</table>"
 
 #. module: auth_signup
 #. odoo-python
@@ -869,9 +1011,8 @@ msgstr "تنظیمات پیکربندی"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields
-#, fuzzy
 msgid "Confirm Password"
-msgstr "تأیید گذرواژه"
+msgstr "تأیید رمز عبور"
 
 #. module: auth_signup
 #: model:ir.model.fields.selection,name:auth_signup.selection__res_users__state__active
@@ -954,9 +1095,8 @@ msgstr "فعال‌سازی بازنشانی گذرواژه از صفحه ورو
 
 #. module: auth_signup
 #: model:ir.model.fields.selection,name:auth_signup.selection__res_config_settings__auth_signup_uninvited__b2c
-#, fuzzy
 msgid "Free sign up"
-msgstr "ثبت‌نام رایگان"
+msgstr "ثبت نام رایگان"
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_ir_http
@@ -1075,9 +1215,8 @@ msgstr "توسعه یافته توسط"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.login_successful
-#, fuzzy
 msgid "Registration successful."
-msgstr "ثبت‌نام با موفقیت انجام شد."
+msgstr "ثبت نام با موفقیت انجام شد."
 
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.mail_template_data_unregistered_users
@@ -1132,9 +1271,8 @@ msgstr "برای کاربری که خود اقدام به ثبت‌نام در �
 
 #. module: auth_signup
 #: model:mail.template,name:auth_signup.mail_template_user_signup_account_created
-#, fuzzy
 msgid "Settings: New Portal Sign Up"
-msgstr "تنظیمات: ثبت‌نام جدید در پورتال"
+msgstr "تنظیمات: ثبت نام جدید در پورتال"
 
 #. module: auth_signup
 #: model:mail.template,name:auth_signup.portal_set_password_email
