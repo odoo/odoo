@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.5a1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-03 17:39+0000\n"
-"PO-Revision-Date: 2026-07-03 17:39+0000\n"
+"POT-Creation-Date: 2026-08-14 17:38+0000\n"
+"PO-Revision-Date: 2026-08-14 17:38+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -19,6 +19,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/populate/models/session.py:0
 msgid "%(count)s parallel job(s) failed"
+msgstr ""
+
+#. module: populate
+#. odoo-python
+#: code:addons/populate/models/blueprint.py:0
+msgid "%(operation)s blocks cannot define 'arg'."
 msgstr ""
 
 #. module: populate
@@ -36,7 +42,7 @@ msgstr ""
 #. module: populate
 #. odoo-python
 #: code:addons/populate/generators/relation.py:0
-msgid "'comodel_name' needs to be provided for virtual fields."
+msgid "'comodel_name' needs to be provided for generated values."
 msgstr ""
 
 #. module: populate
@@ -49,21 +55,26 @@ msgstr ""
 #: model:ir.model.constraint,message:populate.constraint_populate_job_unique_ref_per_session
 msgid ""
 "A job with this reference already exists in this session. References must be"
-" unique for create-type jobs within a session."
+" unique for create operations within a session."
 msgstr ""
 
 #. module: populate
 #: model:ir.model.constraint,message:populate.constraint_populate_job_record_count_invariant
 msgid ""
-"A job's record_count needs to be a non-zero positive integer. Only write "
-"jobs are allowed to have no record_count, whose cardinality is unknown at "
-"creation time."
+"A job's record_count needs to be a non-zero positive integer. Only write and"
+" function jobs are allowed to have no record_count, whose cardinality is "
+"unknown at creation time."
 msgstr ""
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/session.py:0
 msgid "Adapt the generator parameter to generate values within the constraint"
+msgstr ""
+
+#. module: populate
+#: model:ir.model.fields,field_description:populate.field_populate_job__batched
+msgid "Batched"
 msgstr ""
 
 #. module: populate
@@ -77,16 +88,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid ""
-"Blueprint '%(blueprint)s': Model '%(model)s' doesn't exist.\n"
-"Definition that failed:\n"
-"%(definition)s"
-msgstr ""
-
-#. module: populate
-#. odoo-python
-#: code:addons/populate/models/blueprint.py:0
-msgid ""
-"Blueprint '%(blueprint)s': Model '%(model)s' doesn't have field(s): %(fields)s.\n"
+"Blueprint '%(blueprint)s': %(reason)s\n"
 "Definition that failed:\n"
 "%(definition)s"
 msgstr ""
@@ -132,8 +134,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/populate/generators/generator.py:0
 msgid ""
-"Cannot infer valid fields for a virtual field. The 'valid_fields' parameter "
-"must be explicitly provided."
+"Cannot infer valid targets for a generated value. The 'valid_targets' "
+"parameter must be explicitly provided."
 msgstr ""
 
 #. module: populate
@@ -187,12 +189,24 @@ msgstr ""
 #. module: populate
 #. odoo-python
 #: code:addons/populate/generators/generator.py:0
-msgid "Couldn't find a unique value for field %(field)s."
+msgid "Couldn't find a unique value for target %(target)s."
 msgstr ""
 
 #. module: populate
-#: model:ir.model.fields.selection,name:populate.selection__populate_job__type__create
+#: model:ir.model.fields.selection,name:populate.selection__populate_job__operation__create
 msgid "Create"
+msgstr ""
+
+#. module: populate
+#. odoo-python
+#: code:addons/populate/models/blueprint.py:0
+msgid "Create blocks cannot define 'batched'."
+msgstr ""
+
+#. module: populate
+#. odoo-python
+#: code:addons/populate/models/blueprint.py:0
+msgid "Create blocks use 'id', not 'ref'."
 msgstr ""
 
 #. module: populate
@@ -269,9 +283,33 @@ msgid ""
 msgstr ""
 
 #. module: populate
+#: model:ir.model.fields,help:populate.field_populate_job__batched
+msgid ""
+"For write/function jobs: generate one value set and perform one call per "
+"executable job."
+msgstr ""
+
+#. module: populate
+#: model:ir.model.fields.selection,name:populate.selection__populate_job__operation__function
+msgid "Function"
+msgstr ""
+
+#. module: populate
 #. odoo-python
-#: code:addons/populate/models/job.py:0
-msgid "Field: '%s'"
+#: code:addons/populate/models/blueprint.py:0
+msgid "Function blocks require 'name'."
+msgstr ""
+
+#. module: populate
+#. odoo-python
+#: code:addons/populate/models/blueprint.py:0
+msgid "Function blocks use 'arg', not 'field'."
+msgstr ""
+
+#. module: populate
+#. odoo-python
+#: code:addons/populate/models/blueprint.py:0
+msgid "Function blocks use 'ref', not 'id'."
 msgstr ""
 
 #. module: populate
@@ -314,18 +352,18 @@ msgstr ""
 
 #. module: populate
 #. odoo-python
-#: code:addons/populate/generators/generator.py:0
-msgid ""
-"Invalid field dependencies: %(invalid_fields)s. These fields do not exist in"
-" the model's blueprint."
-msgstr ""
-
-#. module: populate
-#. odoo-python
 #: code:addons/populate/generators/fake.py:0
 msgid ""
 "Invalid parameters: %(invalid_params)s. Only these parameters are allowed "
 "(besides method's arguments): %(allowed_params)s"
+msgstr ""
+
+#. module: populate
+#. odoo-python
+#: code:addons/populate/generators/generator.py:0
+msgid ""
+"Invalid target dependencies: %(invalid_targets)s. These targets do not exist"
+" in the operation block."
 msgstr ""
 
 #. module: populate
@@ -340,8 +378,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/populate/generators/scalar.py:0
 msgid ""
-"Invalid values %(invalid_values)s for %(field_type)s field. Allowed values "
-"are: %(possible_values)s."
+"Invalid values %(invalid_values)s for %(target_type)s target. Allowed values"
+" are: %(possible_values)s."
 msgstr ""
 
 #. module: populate
@@ -387,6 +425,28 @@ msgid "Last Updated on"
 msgstr ""
 
 #. module: populate
+#: model:ir.model.fields,field_description:populate.field_populate_job__method_name
+msgid "Method Name"
+msgstr ""
+
+#. module: populate
+#: model:ir.model.fields,help:populate.field_populate_job__method_name
+msgid "Method called by function jobs."
+msgstr ""
+
+#. module: populate
+#. odoo-python
+#: code:addons/populate/models/blueprint.py:0
+msgid "Missing 'model'."
+msgstr ""
+
+#. module: populate
+#. odoo-python
+#: code:addons/populate/models/blueprint.py:0
+msgid "Missing 'operation'."
+msgstr ""
+
+#. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_model_data__res_model
 msgid "Model"
 msgstr ""
@@ -406,10 +466,16 @@ msgstr ""
 
 #. module: populate
 #. odoo-python
+#: code:addons/populate/models/blueprint.py:0
+msgid "Names used for multiple generated targets: %(names)s."
+msgstr ""
+
+#. module: populate
+#. odoo-python
 #: code:addons/populate/models/job.py:0
 msgid ""
-"No generator specified for field '%(field)s' of type '%(type)s', and no "
-"default generator is registered for that field type."
+"No generator specified for target '%(target)s' of type '%(type)s', and no "
+"default generator is registered for that target type."
 msgstr ""
 
 #. module: populate
@@ -425,6 +491,11 @@ msgid "Number of parallel workers that will run jobs at the same time"
 msgstr ""
 
 #. module: populate
+#: model:ir.model.fields,field_description:populate.field_populate_job__operation
+msgid "Operation"
+msgstr ""
+
+#. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_job__parallel
 msgid "Parallel"
 msgstr ""
@@ -437,6 +508,12 @@ msgstr ""
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_job__parent_path
 msgid "Parent Path"
+msgstr ""
+
+#. module: populate
+#. odoo-python
+#: code:addons/populate/models/blueprint.py:0
+msgid "Positional arg names must be contiguous indexes from '0'."
 msgstr ""
 
 #. module: populate
@@ -476,8 +553,8 @@ msgstr ""
 #: model:ir.model.fields,help:populate.field_populate_model_data__ref
 msgid ""
 "Reference the batch of records used by the job.\n"
-"    If the job type is 'create' -> Annotates the records for referencing.\n"
-"    If the job type is 'write' -> Refers to records with said reference.\n"
+"    If the job operation is 'create' -> Annotates the records for referencing.\n"
+"    If the job operation is 'write' or 'function' -> Refers to records with said reference.\n"
 "    "
 msgstr ""
 
@@ -518,7 +595,7 @@ msgstr ""
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
-msgid "Some blueprint's definition(s) have inexistent models/fields used."
+msgid "Some blueprint definition(s) are invalid."
 msgstr ""
 
 #. module: populate
@@ -535,6 +612,12 @@ msgstr ""
 msgid ""
 "Subjobs cannot have subjobs themselves. Only one level of hierarchy is "
 "allowed."
+msgstr ""
+
+#. module: populate
+#. odoo-python
+#: code:addons/populate/models/job.py:0
+msgid "Target: '%s'"
 msgstr ""
 
 #. module: populate
@@ -580,11 +663,6 @@ msgid "This Eval returns the same value, so it cannot be unique."
 msgstr ""
 
 #. module: populate
-#: model:ir.model.fields,field_description:populate.field_populate_job__type
-msgid "Type"
-msgstr ""
-
-#. module: populate
 #. odoo-python
 #: code:addons/populate/generators/relation.py:0
 msgid "Unique cannot be used with the '%s' generator."
@@ -600,6 +678,31 @@ msgstr ""
 #. odoo-python
 #: code:addons/populate/generators/choice.py:0
 msgid "Unique cannot be used with the selection generator."
+msgstr ""
+
+#. module: populate
+#. odoo-python
+#: code:addons/populate/models/blueprint.py:0
+msgid "Unknown field(s) on '%(model)s': %(fields)s."
+msgstr ""
+
+#. module: populate
+#. odoo-python
+#: code:addons/populate/models/blueprint.py:0
+msgid "Unknown model '%(model)s'."
+msgstr ""
+
+#. module: populate
+#. odoo-python
+#: code:addons/populate/models/blueprint.py:0
+msgid "Unknown operation '%(operation)s'."
+msgstr ""
+
+#. module: populate
+#. odoo-python
+#: code:addons/populate/models/blueprint.py:0
+#: code:addons/populate/models/job.py:0
+msgid "Unknown or non-callable method '%(method)s' on '%(model)s'."
 msgstr ""
 
 #. module: populate
@@ -635,8 +738,14 @@ msgid ""
 msgstr ""
 
 #. module: populate
-#: model:ir.model.fields.selection,name:populate.selection__populate_job__type__write
+#: model:ir.model.fields.selection,name:populate.selection__populate_job__operation__write
 msgid "Write"
+msgstr ""
+
+#. module: populate
+#. odoo-python
+#: code:addons/populate/models/blueprint.py:0
+msgid "Write blocks use 'ref', not 'id'."
 msgstr ""
 
 #. module: populate
