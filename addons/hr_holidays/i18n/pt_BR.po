@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-31 17:37+0000\n"
-"PO-Revision-Date: 2026-04-14 07:59+0000\n"
+"PO-Revision-Date: 2026-08-11 21:25+0000\n"
 "Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/odoo-"
 "s19-1/hr_holidays/pt_BR/>\n"
@@ -27,7 +27,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
 "1000000 == 0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: hr_holidays
 #. odoo-python
@@ -307,9 +307,9 @@ msgid ""
 "            "
 msgstr ""
 "<div>\n"
-"                    Prezado(a) <b><t t-"
-"out=\"object.env.context.get('manager')\"/></b> , <br/><br/> <p> Solicito "
-"uma licença. Agradeceria se pudesse aprová-la assim que possível!</p>\n"
+"                    Prezado(a) <b><t t-out=\"object.env.context.get"
+"('manager')\"/></b> , <br/><br/> <p> Solicito uma licença. Agradeceria se "
+"pudesse aprová-la assim que possível!</p>\n"
 "                    <ul> <li> Tipo de licença: <t t-"
 "out=\"object.holiday_status_id.name\"/></li> <li><t t-"
 "out=\"object.request_date_from\"/> → <t t-out=\"object.request_date_to\"/> "
@@ -619,9 +619,9 @@ msgid ""
 "this period, but %(nb_days)s days will be used because this leave %"
 "(leave_type_name)s can only be taken by days."
 msgstr ""
-"De acordo com seu cronograma de trabalho, espera-se que você trabalhe %"
-"(days)s dias nesse período, mas %(nb_days)s dias serão usados porque essa "
-"licença %(leave_type_name)s só pode ser tirada por dias."
+"De acordo com seu cronograma de trabalho, espera-se que você trabalhe %(days)"
+"s dias nesse período, mas %(nb_days)s dias serão usados porque essa licença %"
+"(leave_type_name)s só pode ser tirada por dias."
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -3203,8 +3203,8 @@ msgstr "Ainda não há marcos no plano. Vamos criar um novo"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
 msgid "No, always consider the entire accrual period (whole calendar days)."
 msgstr ""
-"Não, sempre considere todo o período de acúmulo (dias inteiros do "
-"calendário)."
+"Não, sempre considere todo o período de acúmulo (dias inteiros do calendário)"
+"."
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -3870,8 +3870,7 @@ msgstr "A sequência é gerada automaticamente pelo delta da hora de início."
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__postpone_max_days
 msgid "Set a maximum of accruals an allocation keeps at the end of the year."
-msgstr ""
-"Defina um máximo de acréscimos que uma alocação mantém no final do ano."
+msgstr "Defina um máximo de acréscimos que uma alocação mantém no final do ano."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
@@ -5135,8 +5134,7 @@ msgstr "Você só pode validar uma licença com a validação do Gerente de Folg
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid ""
 "You can only validate an allocation with validation by Time Off Manager."
-msgstr ""
-"Você só pode validar uma alocação com a validação do Gerente de Folgas."
+msgstr "Você só pode validar uma alocação com a validação do Gerente de Folgas."
 
 #. module: hr_holidays
 #. odoo-javascript

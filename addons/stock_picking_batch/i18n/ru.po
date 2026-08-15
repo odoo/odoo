@@ -5,13 +5,14 @@
 # Translators:
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2026.
+# "Anastasiia Koroleva (koan)" <koan@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-31 17:39+0000\n"
-"PO-Revision-Date: 2026-06-12 04:52+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-08-12 18:16+0000\n"
+"Last-Translator: \"Anastasiia Koroleva (koan)\" <koan@odoo.com>\n"
 "Language-Team: Russian <https://translate.odoo.com/projects/odoo-s19-1/"
 "stock_picking_batch/ru/>\n"
 "Language: ru\n"
@@ -26,7 +27,6 @@ msgstr ""
 #. module: stock_picking_batch
 #. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
-#, fuzzy
 msgid "%s was removed from the batch, no quantity processed"
 msgstr "%s был удален из партии, количество не обработано"
 
@@ -50,19 +50,18 @@ msgid ""
 "<span class=\"o_form_label fw-bold\" invisible=\"not auto_batch\">Batch "
 "Grouping</span>"
 msgstr ""
-"<span class=\"o_form_label fw-bold\" invisible=\"not "
-"auto_batch\">Группировка партиями</span>"
+"<span class=\"o_form_label fw-bold\" invisible=\"not auto_batch\">"
+"Группировка партиями</span>"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
-#, fuzzy
 msgid "<span class=\"o_stat_text\">Moves</span>"
-msgstr "Подробности операции"
+msgstr "<span class=\"o_stat_text\">Перемещения</span>"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
 msgid "<span class=\"o_stat_text\">Packages</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Упаковки</span>"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
@@ -320,25 +319,26 @@ msgstr "Перемещение партиями"
 #. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 msgid "Batch transfers cannot be merged with wave transfers and vice versa."
-msgstr ""
+msgstr "Нельзя объединять групповые перемещения с волновыми и наоборот."
 
 #. module: stock_picking_batch
 #. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 msgid "Batch/Wave transfers have been merged into the following transfer"
-msgstr ""
+msgstr "Групповые/волновые перемещения были объединены в следующее перемещение"
 
 #. module: stock_picking_batch
 #. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 msgid "Batch/Wave transfers with different operation types cannot be merged."
 msgstr ""
+"Нельзя объединять групповые/волновые перемещения с разными типами операций."
 
 #. module: stock_picking_batch
 #. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 msgid "Batch/Wave transfers with different states cannot be merged."
-msgstr ""
+msgstr "Нельзя объединять групповые/волновые перемещения с разными статусами."
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_type_kanban_batch
@@ -462,9 +462,8 @@ msgstr "Подробные операции"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_picking_move_tree_inherited
-#, fuzzy
 msgid "Details"
-msgstr "Детали"
+msgstr "Подробности"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__display_name
@@ -641,9 +640,8 @@ msgstr "Список передач, связанных с данной парт
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
-#, fuzzy
 msgid "List view of detailed operations"
-msgstr "Просмотр списка подробных операций"
+msgstr "Список подробных операций"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__wave_group_by_location
@@ -672,9 +670,8 @@ msgstr "Номер лота"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_move_line_tree
-#, fuzzy
 msgid "Lot/Serial Number"
-msgstr "Лот/серийный номер"
+msgstr "Партия/Серийный номер"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__batch_max_lines
@@ -688,7 +685,6 @@ msgstr "Максимальное количество перемещений"
 
 #. module: stock_picking_batch
 #: model:ir.actions.server,name:stock_picking_batch.action_merge_batch_picking
-#, fuzzy
 msgid "Merge"
 msgstr "Объединить"
 
@@ -715,9 +711,8 @@ msgstr "Строки перемещения"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
-#, fuzzy
 msgid "My Activities"
-msgstr "Мои активности"
+msgstr "Мои дела"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__my_activity_date_deadline
@@ -732,9 +727,8 @@ msgstr "Мои переводы"
 #. module: stock_picking_batch
 #. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
-#, fuzzy
 msgid "New"
-msgstr "Новый"
+msgstr "Создать"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__activity_calendar_event_id
@@ -806,7 +800,6 @@ msgstr "ID пакета"
 #. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
-#, fuzzy
 msgid "Packages"
 msgstr "Упаковки"
 
@@ -836,6 +829,7 @@ msgstr "Тип комплектования"
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 msgid "Please select at least two batch/wave transfers to merge."
 msgstr ""
+"Выберите как минимум два групповых или волновых перемещения для объединения."
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_type_kanban_batch
@@ -1007,10 +1001,8 @@ msgstr "Показать текст"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
-#, fuzzy
 msgid "Show all records whose next activity date is past"
-msgstr ""
-"Показать все записи, для которых истекла дата выполнения следующего дела"
+msgstr "Показать все записи с просроченными делами"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_picking_type_form_inherit
@@ -1103,13 +1095,13 @@ msgstr "В общем:"
 #. odoo-python
 #: code:addons/stock_picking_batch/wizard/stock_picking_to_batch.py:0
 msgid "The following batch transfer has been created"
-msgstr ""
+msgstr "Создано следующее групповое перемещение"
 
 #. module: stock_picking_batch
 #. odoo-python
 #: code:addons/stock_picking_batch/wizard/stock_picking_to_batch.py:0
 msgid "The following batch transfer has been updated"
-msgstr ""
+msgstr "Обновлено следующее групповое перемещение"
 
 #. module: stock_picking_batch
 #. odoo-python
@@ -1129,13 +1121,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock_picking_batch/models/stock_move_line.py:0
 msgid "The following wave transfer has been created"
-msgstr ""
+msgstr "Создано следующее волновое перемещение"
 
 #. module: stock_picking_batch
 #. odoo-python
 #: code:addons/stock_picking_batch/models/stock_move_line.py:0
 msgid "The following wave transfer has been updated"
-msgstr ""
+msgstr "Обновлено следующее волновое перемещение"
 
 #. module: stock_picking_batch
 #. odoo-python
@@ -1168,6 +1160,8 @@ msgid ""
 "The sequence '%(sequence)s' is misconfigured. Its prefix should end with a "
 "'/' separator."
 msgstr ""
+"Последовательность «%(sequence)s» настроена неверно. Префикс должен "
+"оканчиваться символом «/»."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__is_wave
@@ -1302,6 +1296,7 @@ msgstr "Вы не можете удалить Выполненные пакет�
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 msgid "You cannot merge done or cancelled batch/wave transfers."
 msgstr ""
+"Нельзя объединять выполненные или отмененные пакетные/волновые перемещения."
 
 #. module: stock_picking_batch
 #. odoo-python

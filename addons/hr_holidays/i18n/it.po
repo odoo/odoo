@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-31 17:37+0000\n"
-"PO-Revision-Date: 2026-07-20 09:16+0000\n"
+"PO-Revision-Date: 2026-08-12 18:37+0000\n"
 "Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
 "Language-Team: Italian <https://translate.odoo.com/projects/odoo-s19-1/"
 "hr_holidays/it/>\n"
@@ -307,8 +307,8 @@ msgid ""
 "            "
 msgstr ""
 "<div>\n"
-"                    Ciao <b><t t-out=\"object.env.context.get('manager')\"/"
-"></b>,\n"
+"                    Ciao <b><t t-out=\"object.env.context.get('manager')\"/>"
+"</b>,\n"
 "                    <br/><br/>\n"
 "                    <p>ho richiesto un giorno di ferie e vorrei chiederti di "
 "approvarlo appena possibile!</p>\n"
@@ -955,8 +955,7 @@ msgstr "Tipo di assegnazione"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid "Allocation must be \"To Approve\" in order to approve it."
-msgstr ""
-"L'assegnazione deve essere \"Da approvare\" per poter essere approvata."
+msgstr "L'assegnazione deve essere \"Da approvare\" per poter essere approvata."
 
 #. module: hr_holidays
 #. odoo-python
@@ -2447,9 +2446,9 @@ msgid ""
 "{{ object.holiday_status_id.name }} from {{ object.request_date_from }} to "
 "{{ object.request_date_to }}"
 msgstr ""
-"Richiedo {{ object.duration_display }} di "
-"{{ object.holiday_status_id.name }} dal {{ object.request_date_from }} al "
-"{{ object.request_date_to }}"
+"Richiedo {{ object.duration_display }} di {{ "
+"object.holiday_status_id.name }} dal {{ object.request_date_from }} al {{ "
+"object.request_date_to }}"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_calendar_event__id
@@ -3430,8 +3429,7 @@ msgstr "Solo un responsabile/manager delle ferie può approvare un congedo."
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid "Only a Time Off Officer/Manager can approve an allocation."
-msgstr ""
-"Solo un responsabile/manager delle ferie può approvare un'assegnazione."
+msgstr "Solo un responsabile/manager delle ferie può approvare un'assegnazione."
 
 #. module: hr_holidays
 #. odoo-python
@@ -3443,8 +3441,7 @@ msgstr "Solo un responsabile/manager delle ferie può rifiutare un congedo."
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid "Only a Time Off Officer/Manager can refuse an allocation."
-msgstr ""
-"Solo un responsabile/manager delle ferie può rifiutare un'assegnazione."
+msgstr "Solo un responsabile/manager delle ferie può rifiutare un'assegnazione."
 
 #. module: hr_holidays
 #. odoo-python
@@ -4357,8 +4354,7 @@ msgstr ""
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__approver_id
 msgid ""
 "This area is automatically filled by the user who validates the allocation"
-msgstr ""
-"Sezione compilata automaticamente dall'utente che valida l'assegnazione"
+msgstr "Sezione compilata automaticamente dall'utente che valida l'assegnazione"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__second_approver_id
@@ -4372,8 +4368,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__accrual_validity_type
 msgid "This field defines the unit of time after which the accrual ends."
-msgstr ""
-"Questo campo definisce l'unità di tempo dopo la quale finisce il rateo."
+msgstr "Questo campo definisce l'unità di tempo dopo la quale finisce il rateo."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__start_type
@@ -5278,8 +5273,8 @@ msgstr "Non è possibile convalidare il giorno di ferie."
 #: code:addons/hr_holidays/models/hr_leave_type.py:0
 msgid "You cannot allow requests on top of leaves of type 'Absence'."
 msgstr ""
-"Non è possibile consentire richieste in aggiunta alle ferie di tipo "
-"“Assenza”."
+"Non è possibile consentire richieste in aggiunta alle ferie di tipo “Assenza"
+"”."
 
 #. module: hr_holidays
 #. odoo-python

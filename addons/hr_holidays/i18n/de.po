@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-31 17:37+0000\n"
-"PO-Revision-Date: 2026-07-06 11:51+0000\n"
+"PO-Revision-Date: 2026-08-13 05:59+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-s19-1/"
 "hr_holidays/de/>\n"
@@ -309,8 +309,8 @@ msgid ""
 "            "
 msgstr ""
 "<div>\n"
-"                    Hallo <b><t t-out=\"object.env.context.get('manager')\"/"
-"></b>,\n"
+"                    Hallo <b><t t-out=\"object.env.context.get('manager')\"/>"
+"</b>,\n"
 "                    <br/><br/>\n"
 "                    <p>Ich habe eine Abwesenheit beantragt. Ich würde es "
 "begrüßen, wenn Sie diese wenn möglich genehmigen könnten!</p>\n"
@@ -1958,9 +1958,9 @@ msgid ""
 "Due to a change in global time offs, %s extra day(s) have been taken from "
 "your allocation. Please review this leave if you need it to be changed."
 msgstr ""
-"Aufgrund einer Änderung der globalen Abwesenheiten wurde(n) %s "
-"zusätzliche(r) Tag(e) von Ihrem Urlaubsanspruch abgezogen. Bitte überprüfen "
-"Sie diesen Urlaub, wenn Sie ihn ändern möchten."
+"Aufgrund einer Änderung der globalen Abwesenheiten wurde(n) %s zusätzliche"
+"(r) Tag(e) von Ihrem Urlaubsanspruch abgezogen. Bitte überprüfen Sie diesen "
+"Urlaub, wenn Sie ihn ändern möchten."
 
 #. module: hr_holidays
 #. odoo-python
@@ -2457,9 +2457,9 @@ msgid ""
 "{{ object.holiday_status_id.name }} from {{ object.request_date_from }} to "
 "{{ object.request_date_to }}"
 msgstr ""
-"Ich beantrage {{ object.duration_display }} von "
-"{{ object.holiday_status_id.name }} vom {{ object.request_date_from }} bis "
-"zum {{ object.request_date_to }}"
+"Ich beantrage {{ object.duration_display }} von {{ "
+"object.holiday_status_id.name }} vom {{ object.request_date_from }} bis zum {"
+"{ object.request_date_to }}"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_calendar_event__id
@@ -2621,8 +2621,8 @@ msgstr ""
 msgid ""
 "If you want to change the number of days you should use the 'period' mode"
 msgstr ""
-"Wenn Sie die Anzahl der Tage ändern möchten, sollten Sie den Modus "
-"„Zeitraum“ verwenden"
+"Wenn Sie die Anzahl der Tage ändern möchten, sollten Sie den Modus „Zeitraum"
+"“ verwenden"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__include_public_holidays_in_duration
@@ -4331,8 +4331,7 @@ msgstr "Die Abwesenheit wurde automatisch genehmigt."
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid ""
 "The time off request has been cancelled for the following reason:%(reason)s"
-msgstr ""
-"Der Abwesenheitsantrag wurde aus folgendem Grund storniert: %(reason)s."
+msgstr "Der Abwesenheitsantrag wurde aus folgendem Grund storniert: %(reason)s."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__sequence
@@ -4403,8 +4402,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__accrual_validity_type
 msgid "This field defines the unit of time after which the accrual ends."
-msgstr ""
-"Dieses Feld definiert die Zeiteinheit, nach der die Rückstellung endet."
+msgstr "Dieses Feld definiert die Zeiteinheit, nach der die Rückstellung endet."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__start_type
@@ -5354,8 +5352,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_accrual_plan_level.py:0
 msgid "You cannot have a balance cap on accrued time set to 0."
-msgstr ""
-"Sie können die Obergrenze für die angesammelte Zeit nicht auf 0 setzen."
+msgstr "Sie können die Obergrenze für die angesammelte Zeit nicht auf 0 setzen."
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_accrual_level_valid_yearly_cap_value
@@ -5499,7 +5496,7 @@ msgstr "Rückstellungsdatu"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
 msgid "and a balance cap is set to"
-msgstr ""
+msgstr "und eine Saldo-Deckelung ist festgelegt auf"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -5545,7 +5542,7 @@ msgstr "Daten"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.js:0
 msgid "day(s)"
-msgstr ""
+msgstr "Tag(e)"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -5636,7 +5633,7 @@ msgstr "ab Beginn der Ansammlung"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.js:0
 msgid "hour(s)"
-msgstr ""
+msgstr "Stunde(n)"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -5667,7 +5664,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.js:0
 msgid "month(s)"
-msgstr ""
+msgstr "Monat(e)"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -5799,7 +5796,7 @@ msgstr "validieren"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.js:0
 msgid "year(s)"
-msgstr ""
+msgstr "Jahr(e)"
 
 #~ msgid "(s)"
 #~ msgstr "(s)"

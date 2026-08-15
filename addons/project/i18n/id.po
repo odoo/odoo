@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-31 17:37+0000\n"
-"PO-Revision-Date: 2026-07-08 11:05+0000\n"
+"PO-Revision-Date: 2026-08-12 04:50+0000\n"
 "Last-Translator: \"Nurul Aini Akrima Sabila (nuaas)\" <nuaas@odoo.com>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-s19-1/"
 "project/id/>\n"
@@ -38,7 +38,7 @@ msgstr "# Rating"
 #: code:addons/project/static/src/views/burndown_chart/burndown_chart_model.js:0
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__nbr
 msgid "# of Tasks"
-msgstr "# Kegiatans"
+msgstr "# Tugas"
 
 #. module: project
 #. odoo-javascript
@@ -285,16 +285,16 @@ msgid ""
 "            "
 msgstr ""
 "<div>\n"
-"    <t t-set=\"access_token\" t-value=\"object._rating_get_access_token()\"/"
-">\n"
+"    <t t-set=\"access_token\" t-value=\"object._rating_get_access_token()\"/>"
+"\n"
 "    <t t-set=\"partner\" t-value=\"object._rating_get_partner()\"/>\n"
 "    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
 "style=\"width:100%; margin:0px auto;\">\n"
 "    <tbody>\n"
 "        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "            <t t-if=\"partner.name\">\n"
-"                Hello <t t-out=\"partner.name or ''\">Brandon Freeman</t>,"
-"<br/><br/>\n"
+"                Hello <t t-out=\"partner.name or ''\">Brandon Freeman</t>"
+",<br/><br/>\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
 "                Hello,<br/><br/>\n"
@@ -302,9 +302,8 @@ msgstr ""
 "            Please take a moment to rate our services related to the <strong "
 "t-out=\"object.name or ''\">Planning and budget</strong> task\n"
 "            <t t-if=\"object._rating_get_operator().name\">\n"
-"                assigned to <strong t-"
-"out=\"object._rating_get_operator().name or ''\">Mitchell Admin</strong>.<br/"
-">\n"
+"                assigned to <strong t-out=\"object._rating_get_operator()"
+".name or ''\">Mitchell Admin</strong>.<br/>\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
 "                .<br/>\n"
@@ -315,8 +314,8 @@ msgstr ""
 "width=\"590\" style=\"width:100%; margin: 32px 0px 32px 0px; display: inline-"
 "table;\">\n"
 "                <tr><td style=\"font-size: 13px;text-align:center;\">\n"
-"                    <strong>Tell us how you feel about our services</"
-"strong><br/>\n"
+"                    <strong>Tell us how you feel about our services</strong>"
+"<br/>\n"
 "                    <span style=\"font-size: 12px; opacity: 0.5; color: "
 "#454748;\">(click on one of these smileys)</span>\n"
 "                </td></tr>\n"
@@ -362,8 +361,8 @@ msgstr ""
 "                <br/><span style=\"margin: 0; font-size: 12px; opacity: 0.5; "
 "color: #454748;\">This satisfaction survey is sent <b t-"
 "out=\"object.stage_id.rating_status_period or ''\">weekly</b> as long as the "
-"task is in the <b t-out=\"object.stage_id.name or ''\">In progress</b> stage."
-"</span>\n"
+"task is in the <b t-out=\"object.stage_id.name or ''\">In progress</b> "
+"stage.</span>\n"
 "            </t>\n"
 "        </td></tr>\n"
 "        <tr><td><br/>Best regards,</td></tr>\n"
@@ -372,19 +371,19 @@ msgstr ""
 "t>\n"
 "        </td></tr>\n"
 "        <tr><td style=\"opacity: 0.5;\">\n"
-"            <t t-out=\"object.project_id.company_id.phone or ''\">1 "
-"650-123-4567</t>\n"
+"            <t t-out=\"object.project_id.company_id.phone or ''\">1 650-123-"
+"4567</t>\n"
 "            <t t-if=\"object.project_id.company_id.email\">\n"
-"                | <a t-attf-href=\"mailto:"
-"{{ object.project_id.company_id.email }}\" style=\"text-decoration:none; "
-"color: #454748;\" t-out=\"object.project_id.company_id.email or "
-"''\">info@yourcompany.com</a>\n"
+"                | <a t-attf-href=\"mailto:{{ "
+"object.project_id.company_id.email }}\" style=\"text-decoration:none; color: "
+"#454748;\" t-out=\"object.project_id.company_id.email or ''\">"
+"info@yourcompany.com</a>\n"
 "            </t>\n"
 "            <t t-if=\"object.project_id.company_id.website\">\n"
 "                | <a t-attf-href=\"{{ object.project_id.company_id.website }}"
 "\" style=\"text-decoration:none; color: #454748;\" t-"
-"out=\"object.project_id.company_id.website or ''\">http://www.example.com</"
-"a>\n"
+"out=\"object.project_id.company_id.website or ''\">http://www.example.com</a>"
+"\n"
 "            </t>\n"
 "        </td></tr>\n"
 "    </tbody>\n"
@@ -1535,7 +1534,7 @@ msgstr "Konversikan menjadi Task/Sub-Task"
 #: model:ir.actions.server,name:project.action_server_convert_project_to_template
 #: model:ir.actions.server,name:project.action_server_convert_to_template
 msgid "Convert to Template"
-msgstr "Konversikan menjadi Templat"
+msgstr "Konversi Menjadi Template"
 
 #. module: project
 #. odoo-javascript
@@ -3126,7 +3125,7 @@ msgstr "Project"
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_project_fsm_base
 msgid "My Tasks"
-msgstr "Kegiatanku"
+msgstr "Tugas Saya"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_search
@@ -3514,7 +3513,7 @@ msgstr "Terlambat"
 #. module: project
 #: model:ir.actions.act_window,name:project.action_view_task_overpassed_draft
 msgid "Overpassed Tasks"
-msgstr "Kegiatan-kegiatan overpassed"
+msgstr "Tugas overpassed"
 
 #. module: project
 #. odoo-javascript
@@ -3780,7 +3779,7 @@ msgstr "Peran Project"
 #: model:ir.model.fields,field_description:project.field_project_task__role_ids
 #: model:ir.ui.menu,name:project.project_menu_config_project_roles
 msgid "Project Roles"
-msgstr "Peran-Peran Projec"
+msgstr "Peran Project"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_sharing_project_task_action
@@ -3843,7 +3842,7 @@ msgstr "Wizard Penghapusan Tahap Task Projec"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_view_activity
 msgid "Project Tasks"
-msgstr "Kegiatan-kegiatan project"
+msgstr "Tugas project"
 
 #. module: project
 #: model:ir.model,name:project.model_project_template_create_wizard
@@ -3854,7 +3853,7 @@ msgstr "Wizard buat Templat Project"
 #. odoo-javascript
 #: code:addons/project/static/src/views/components/project_template_dropdown.xml:0
 msgid "Project Templates"
-msgstr "Templat-Templat Project"
+msgstr "Template Project"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.quick_create_project_form
@@ -3957,7 +3956,7 @@ msgstr "Status project - {{ object.name }}"
 #. module: project
 #: model:ir.actions.act_window,name:project.dblc_proj
 msgid "Project's tasks"
-msgstr "Kegiatan-kegiatan project"
+msgstr "Tugas project"
 
 #. module: project
 #. odoo-python
@@ -4873,7 +4872,7 @@ msgstr "Label"
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_tree_project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Task"
-msgstr "Kegiatan"
+msgstr "Tugas"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__tasks
@@ -5066,7 +5065,7 @@ msgstr "Task:"
 #: model_terms:ir.ui.view,arch_db:project.view_task_partner_info_form
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Tasks"
-msgstr "Kegiatan"
+msgstr "Tugas"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_project_task_user_tree
@@ -5077,7 +5076,7 @@ msgstr "Kegiatan"
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_pivot
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
 msgid "Tasks Analysis"
-msgstr "Kegiatan analisis"
+msgstr "Analisis Tugas"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -5170,8 +5169,7 @@ msgstr "Tahap task pribadi user saat ini."
 #. odoo-python
 #: code:addons/project/controllers/portal.py:0
 msgid "The document does not exist or you do not have the rights to access it."
-msgstr ""
-"Dokumen tidak tersedia atau Anda tidak memiliki hak untuk mengaksesnya."
+msgstr "Dokumen tidak tersedia atau Anda tidak memiliki hak untuk mengaksesnya."
 
 #. module: project
 #. odoo-python
@@ -6038,9 +6036,9 @@ msgid ""
 "of projects linked to %(company_name)s."
 msgstr ""
 "Anda tidak dapat mengubah perusahaan di tahap ini menjadi %(company_name)s "
-"karena saat ini termasuk project yang terkait dengan %"
-"(project_company_name)s. Mohon pastikan tahap ini secara eksklusif memiliki "
-"project yang terhubung ke %(company_name)s."
+"karena saat ini termasuk project yang terkait dengan %(project_company_name)"
+"s. Mohon pastikan tahap ini secara eksklusif memiliki project yang terhubung "
+"ke %(company_name)s."
 
 #. module: project
 #. odoo-javascript
@@ -6144,8 +6142,8 @@ msgid ""
 msgstr ""
 "Anda memiliki perubahan yang tidak disimpan - jangan khawatir! Odoo akan "
 "secara otomatis menyimpannya selagi Anda bernavigasi.<br/> Anda dapat "
-"membuang perubahan ini dari sini atau secara manual simpan task Anda.<br/"
-">Ayo simpan secara manual."
+"membuang perubahan ini dari sini atau secara manual simpan task Anda.<br/>"
+"Ayo simpan secara manual."
 
 #. module: project
 #. odoo-javascript
