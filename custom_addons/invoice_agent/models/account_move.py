@@ -919,11 +919,34 @@ class AccountMove(models.Model):
         :return: the created (or reused) ``invoice.agent.job`` record.
         """
         self.ensure_one()
+        # Reuse ANY outbox row for this move (pending, sent or dead): the
+        # job_uuid is UNIQUE — re-clicking Extract must never create a second
+        # row for the same uuid. A dead row is reset so the drain republishes.
         existing = self.env["invoice.agent.job"].search(
-            [("move_id", "=", self.id), ("state", "=", "pending")],
+            [("move_id", "=", self.id)],
             limit=1,
         )
         if existing:
+            # 'sent': a previous run already completed (possibly applied) - a
+            # re-run needs a FRESH uuid or the idempotency ledger would treat
+            # it as a redelivery and skip the apply. 'dead': poisoned, never
+            # applied - reset to pending, keep the same uuid. UNIQUE(job_uuid)
+            # guarantees no second row is ever created for one move.
+            fresh_uuid = str(uuid.uuid4()) if existing.state == "sent" else False
+            values = {
+                "state": "pending",
+                "published_at": False,
+                "dead_reason": False,
+                "x_death_count": 0,
+                "error_message": False,
+            }
+            if fresh_uuid:
+                self.write({"ai_job_uuid": fresh_uuid})
+                values["job_uuid"] = fresh_uuid
+            elif not existing.job_uuid and self.ai_job_uuid:
+                values["job_uuid"] = self.ai_job_uuid
+            existing.write(values)
+            self.write({"ai_state": "queued"})
             return existing
 
         if not self.ai_job_uuid:
@@ -932,6 +955,7 @@ class AccountMove(models.Model):
             {
                 "move_id": self.id,
                 "attachment_id": self.ai_source_attachment_id.id or False,
+                "job_uuid": self.ai_job_uuid,
             },
         )
         self.write({"ai_state": "queued"})
@@ -1930,5 +1954,11 @@ class AccountMove(models.Model):
             "check_ai_confidence_range",
             "CHECK(ai_confidence IS NULL OR (ai_confidence >= 0.0 AND ai_confidence <= 1.0))",
             "Overall AI Confidence score must strictly remain between 0.00 and 1.00.",
+        ),
+        (
+            "ai_job_uuid_unique",
+            "UNIQUE(ai_job_uuid)",
+            "Each bill may only carry one AI job UUID — a redelivered or "
+            "double-published job can never resolve to two draft moves.",
         ),
     ]

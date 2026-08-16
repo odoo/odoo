@@ -1,6 +1,6 @@
 import logging
 
-from odoo import api, fields, models
+from odoo import _, api, fields, models
 
 _logger = logging.getLogger(__name__)
 
@@ -24,17 +24,31 @@ class InvoiceAgentJob(models.Model):
         ondelete="set null",
         help="The source PDF/image the worker should OCR + extract.",
     )
+    # v0.9: the correlation id is persisted on the outbox row itself (mirrors
+    # account.move.ai_job_uuid) so the dead-letter taskboard can correlate a
+    # poison message back to the exact outbox row. UNIQUE — see
+    # _sql_constraints — enforces the same job is never published twice.
+    job_uuid = fields.Char(
+        string="Job UUID",
+        index=True,
+        readonly=True,
+        copy=False,
+        help="UUID correlating this outbox row with the AMQP job message. "
+        "Unique per job: a redelivered message is a no-op.",
+    )
     state = fields.Selection(
         selection=[
             ("pending", "Pending"),
             ("sent", "Sent"),
+            ("dead", "Dead-Lettered"),
         ],
         string="State",
         default="pending",
         required=True,
         index=True,
         help="pending: not yet published to the broker. sent: published, "
-        "published_at stamped.",
+        "published_at stamped. dead: the worker dead-lettered this job "
+        "(poison message) — requeue to retry.",
     )
     published_at = fields.Datetime(
         string="Published At",
@@ -49,6 +63,28 @@ class InvoiceAgentJob(models.Model):
         help="Last publish failure reason. Kept so the ops queue can see why "
         "a job is stuck pending without grepping logs.",
     )
+    # v0.9 dead-letter visibility: why the worker poisoned the job, and how
+    # many delivery attempts the broker counted (x-death count).
+    dead_reason = fields.Text(
+        string="Dead-Letter Reason",
+        readonly=True,
+        help="Why the worker dead-lettered this job (x-death-reason).",
+    )
+    x_death_count = fields.Integer(
+        string="x-death Count",
+        readonly=True,
+        default=0,
+        help="Number of dead-letter hops the broker stamped for this job.",
+    )
+
+    _sql_constraints = [
+        (
+            "job_uuid_unique",
+            "UNIQUE(job_uuid)",
+            "Each extraction job must have a unique job_uuid — a redelivered "
+            "message must never create a second outbox row.",
+        ),
+    ]
 
     # ------------------------------------------------------------------
     # Drain API — called by ir.cron every minute
@@ -74,6 +110,13 @@ class InvoiceAgentJob(models.Model):
             # never rolls back the rest of the batch.
             try:
                 with self.env.cr.savepoint():
+                    # job_uuid source of truth: the outbox row. Falls back to
+                    # the move's ai_job_uuid for rows created before v0.9.
+                    job_uuid = job.job_uuid or job.move_id.ai_job_uuid
+                    if not job_uuid:
+                        # Backfill from the move (pre-v0.9 rows) atomically.
+                        job.write({"job_uuid": job.move_id.ai_job_uuid})
+                        job_uuid = job.job_uuid
                     # Job payload: move_id + attachment_id + attempt plus the
                     # correlation id (job_uuid) and the OCR text the worker
                     # feeds to Claude. OCR runs Odoo-side (cron), so the
@@ -83,7 +126,7 @@ class InvoiceAgentJob(models.Model):
                         attachment_id=(
                             job.attachment_id.id if job.attachment_id else False
                         ),
-                        job_uuid=job.move_id.ai_job_uuid,
+                        job_uuid=job_uuid,
                         ocr_text=job.move_id.ocr_text or job.move_id.ai_ocr_text,
                     )
                     job.write(
@@ -132,3 +175,66 @@ class InvoiceAgentJob(models.Model):
     def _cron_drain_outbox(self, batch_size=50):
         """ir.cron entry point — drain with a per-batch commit window."""
         return self._drain_pending(limit=batch_size)
+
+    # ------------------------------------------------------------------
+    # v0.9: dead-letter taskboard helpers
+    # ------------------------------------------------------------------
+    @api.model
+    def _mark_dead(self, job_uuid, reason="", x_death_count=0):
+        """Mark the outbox row for ``job_uuid`` as dead-lettered.
+
+        Called by the result consumer when a signed ``status:"failed"``
+        result arrives (the worker dead-lettered the poison message). No-op
+        when no row matches — the consumer never raises on missing rows.
+        """
+        job = self.search([("job_uuid", "=", job_uuid)], limit=1)
+        if not job:
+            _logger.warning(
+                "invoice_agent: no outbox row for dead-letter job_uuid=%s",
+                job_uuid,
+            )
+            return False
+        job.write(
+            {
+                "state": "dead",
+                "dead_reason": (reason or "")[:2000],
+                "x_death_count": max(int(x_death_count or 0), job.x_death_count or 0),
+            }
+        )
+        _logger.info(
+            "invoice_agent: job %d dead-lettered (uuid=%s): %s",
+            job.id,
+            job_uuid,
+            (reason or "")[:200],
+        )
+        return True
+
+    def action_requeue(self):
+        """Requeue a dead-lettered job back to the pending drain.
+
+        Resets the row to pending so the drain cron republishes it to
+        ``extract.request``. Idempotency is guaranteed by the UNIQUE
+        ``job_uuid``: the move keeps its ai_job_uuid, so a redelivered
+        result can never create a second draft.
+        """
+        for job in self:
+            if job.state != "dead":
+                raise UserError(
+                    _("Only dead-lettered jobs can be requeued (job %s).", job.id)
+                )
+            job.write(
+                {
+                    "state": "pending",
+                    "dead_reason": False,
+                    "x_death_count": 0,
+                    "error_message": False,
+                }
+            )
+            # The move's extraction state must be retryable again.
+            move = job.move_id
+            if move:
+                move.write({"ai_extraction_status": "pending"})
+            _logger.info(
+                "invoice_agent: requeued dead job %d (uuid=%s)", job.id, job.job_uuid,
+            )
+        return True

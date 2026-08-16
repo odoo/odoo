@@ -2,6 +2,8 @@
 <odoo>
     <!-- ============================================================
          Outbox queue view — invoices waiting to be published to RabbitMQ
+         (v0.9: dead-letter column + Requeue button, see
+         invoice_agent_job.action_requeue)
          ============================================================ -->
     <record id="view_invoice_agent_job_list" model="ir.ui.view">
         <field name="name">invoice.agent.job.list</field>
@@ -9,14 +11,29 @@
         <field name="arch" type="xml">
             <list string="AMQP Outbox" multi_edit="1"
                   decoration-warning="state == 'pending' and error_message"
-                  decoration-danger="state == 'pending' and error_message">
+                  decoration-danger="state == 'dead'">
                 <field name="attachment_id" optional="show"/>
+                <field name="job_uuid" optional="show"
+                       string="Job UUID"/>
                 <field name="state" widget="badge"
                        decoration-success="state == 'sent'"
                        decoration-warning="state == 'pending'"
+                       decoration-danger="state == 'dead'"
                        optional="show"/>
                 <field name="published_at" optional="show"/>
+                <field name="dead_reason" optional="hide"
+                       string="Dead-Letter Reason"/>
+                <field name="x_death_count" optional="hide"
+                       string="x-death Count"/>
                 <field name="error_message" optional="hide"/>
+                <!-- Requeue: reset a dead-lettered job back to pending so
+                     the drain cron republishes it (action_requeue). -->
+                <button name="action_requeue" type="object"
+                        string="Requeue"
+                        icon="fa-rotate-right"
+                        class="btn-link"
+                        confirm="Requeue this dead-lettered job? It will be republished to RabbitMQ by the drain cron (idempotent by job_uuid)."
+                        invisible="state != 'dead'"/>
             </list>
         </field>
     </record>
@@ -28,6 +45,16 @@
             <search string="Search Queue Jobs">
                 <field name="attachment_id"/>
                 <field name="state"/>
+                <field name="job_uuid"/>
+                <separator/>
+                <!-- Quick filters: dead-lettered jobs the accountant must
+                     review or requeue. -->
+                <filter string="Dead-Lettered" name="dead"
+                        domain="[('state', '=', 'dead')]"/>
+                <filter string="Pending" name="pending"
+                        domain="[('state', '=', 'pending')]"/>
+                <filter string="Sent" name="sent"
+                        domain="[('state', '=', 'sent')]"/>
             </search>
         </field>
     </record>
@@ -44,6 +71,8 @@
             <p>
                 Rows appear here when the Extract button enqueues a job.
                 The drain cron publishes them to RabbitMQ within a minute.
+                Jobs the worker dead-lettered land in the Dead-Lettered
+                column with the poison reason — use Requeue to re-process.
             </p>
         </field>
     </record>

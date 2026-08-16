@@ -3,6 +3,7 @@ from . import (
     account_move,
     account_move_line,
     confidence,
+    invoice_agent_applied_job,
     invoice_agent_extraction_line,
     invoice_agent_job,
     invoice_extraction,

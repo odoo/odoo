@@ -310,20 +310,101 @@ class _InvoiceAgentResultConsumer:
             result = self._verify_result(env, payload)
             if result is None:
                 return  # signature/audience rejected — never applied
+            if result.get("status") == "failed":
+                # The worker dead-lettered the job. Mark the outbox row dead,
+                # flag the move for review — nothing is applied, and a
+                # redelivered failure is a no-op via the ledger below.
+                self._handle_failed_result(env, result)
+                cursor.commit()
+                return
+            if not self._claim_job_uuid(env, result):
+                # Idempotency guard (v0.9): a redelivered done-result for an
+                # already-applied job_uuid is a no-op — never a second draft.
+                _logger.info(
+                    "invoice_agent: duplicate result for uuid=%s — skipped",
+                    result.get("job_uuid"),
+                )
+                cursor.commit()
+                return
             move = self._resolve_move(env, result)
             if not move:
                 _logger.warning(
                     "invoice_agent: no move for result uuid=%s",
                     result.get("job_uuid"),
                 )
+                cursor.rollback()
                 return
             _apply_queue_result(move, result)
             _publish_live_status(move, "ready", result)
             cursor.commit()
         except Exception as exc:
             _logger.warning("invoice_agent: extract.done failed: %s", exc)
+            try:
+                cursor.rollback()
+            except Exception:
+                pass
         finally:
             cursor.close()
+
+    def _claim_job_uuid(self, env, result):
+        """Idempotency guard — INSERT ... ON CONFLICT DO NOTHING on the ledger.
+
+        Returns True when this delivery is the first (or the job was never
+        applied before); False when the job_uuid is already in the ledger —
+        the redelivered message must be a no-op.
+
+        Uses raw SQL so the dedupe is a single atomic statement that commits
+        in the same transaction as the apply: a crash mid-apply leaves no
+        ledger row and the next redelivery retries safely.
+        """
+        job_uuid = result.get("job_uuid")
+        if not job_uuid:
+            _logger.warning("invoice_agent: result carries no job_uuid — skipped")
+            return False
+        env.cr.execute(
+            """
+            INSERT INTO invoice_agent_applied_job (job_uuid, applied_at)
+            VALUES (%s, NOW())
+            ON CONFLICT (job_uuid) DO NOTHING
+            """,
+            (job_uuid,),
+        )
+        return env.cr.rowcount > 0
+
+    def _handle_failed_result(self, env, result):
+        """Mark the originating job dead + flag the move on a failed result.
+
+        The worker publishes a signed ``status:"failed"`` result when it
+        dead-letters a poison message. This marks the outbox row dead (so the
+        taskboard shows it) and flags the move for review.
+        """
+        job_uuid = result.get("job_uuid")
+        error = result.get("error") or ""
+        if job_uuid:
+            env["invoice.agent.job"]._mark_dead(job_uuid, reason=error)
+        move = self._resolve_move(env, result)
+        if move:
+            move.write(
+                {
+                    "ai_extraction_status": "failed",
+                    "ai_error_message": error[:2000] if error else False,
+                }
+            )
+            try:
+                move._flag_needs_review(
+                    reason="extraction was dead-lettered by the worker: %s" % error,
+                )
+            except Exception:
+                _logger.exception(
+                    "invoice_agent: failed to flag move_id=%d for review",
+                    move.id,
+                )
+            _publish_live_status(move, "failed", result)
+        _logger.warning(
+            "invoice_agent: failed result for uuid=%s: %s",
+            job_uuid,
+            error[:200] if error else "no error detail",
+        )
 
     def _verify_result(self, env, payload):
         import jwt
