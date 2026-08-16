@@ -1,4 +1,4 @@
-import { Component, onWillUpdateProps, proxy, signal, t, useProps } from "@odoo/owl";
+import { Component, proxy, signal, t, useEffect, useProps } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -55,9 +55,7 @@ export class TimePicker extends Component {
         this.suggestions = [];
         this.isNavigating = false;
         this.navigationOptions = this.getNavigationOptions();
-        this.onPropsUpdated(this.props);
-
-        onWillUpdateProps((nextProps) => this.onPropsUpdated(nextProps));
+        useEffect(() => this.onPropsUpdated(this.props));
     }
 
     get cssClass() {

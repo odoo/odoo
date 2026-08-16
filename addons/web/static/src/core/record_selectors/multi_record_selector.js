@@ -1,4 +1,4 @@
-import { Component, onWillStart, onWillUpdateProps, signal, t, useProps } from "@odoo/owl";
+import { asyncComputed, computed, Component, onWillStart, signal, t, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { AvatarTag } from "@web/core/tags_list/avatar_tag";
 import { BadgeTag } from "@web/core/tags_list/badge_tag";
@@ -32,8 +32,15 @@ export class MultiRecordSelector extends Component {
         useTagNavigation(this.multiRecordSelectorRef, {
             delete: (index) => this.deleteTag(index),
         });
-        onWillStart(() => this.computeDerivedParams());
-        onWillUpdateProps((nextProps) => this.computeDerivedParams(nextProps));
+        this.displayNames = asyncComputed(() => this.getDisplayNames(this.props));
+        this.tags = computed(() => this.getTags(this.props, this.displayNames()));
+        /**
+         * Placeholder should be empty if there is at least one tag. We cannot use
+         * the default behavior of the input placeholder because even if there is
+         * a tag, the input is still empty.
+         */
+        this.placeholder = computed(() => (this.tags().length ? "" : this.props.placeholder));
+        onWillStart(() => this.displayNames.currentPromise());
     }
 
     get isAvatarModel() {
@@ -41,17 +48,6 @@ export class MultiRecordSelector extends Component {
         return ["res.partner", "res.users", "hr.employee", "hr.employee.public"].includes(
             this.props.resModel
         );
-    }
-
-    async computeDerivedParams(props = this.props) {
-        const displayNames = await this.getDisplayNames(props);
-        this.tags = this.getTags(props, displayNames);
-        /**
-         * Placeholder should be empty if there is at least one tag. We cannot use
-         * the default behavior of the input placeholder because even if there is
-         * a tag, the input is still empty.
-         */
-        this.placeholder = this.tags.length ? "" : this.props.placeholder;
     }
 
     async getDisplayNames(props) {

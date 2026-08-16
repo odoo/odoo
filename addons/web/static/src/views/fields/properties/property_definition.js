@@ -1,4 +1,4 @@
-import { Component, onMounted, onWillUpdateProps, proxy, signal, t, useProps } from "@odoo/owl";
+import { Component, onMounted, proxy, signal, t, useProps } from "@odoo/owl";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { Domain } from "@web/core/domain";
 import { DomainSelector } from "@web/core/domain_selector/domain_selector";
@@ -147,9 +147,6 @@ export class PropertyDefinition extends Component {
         this._syncStateWithProps(propertyDefinition);
 
         this._domInputIdPrefix = uuid();
-
-        // update the state and fetch needed information
-        onWillUpdateProps((newProps) => this._syncStateWithProps(newProps.value));
 
         onMounted(() => {
             // focus the property label, when we open the property definition
