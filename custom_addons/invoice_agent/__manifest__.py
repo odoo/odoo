@@ -24,7 +24,8 @@
     "assets": {
         "web.assets_backend": [
             "invoice_agent/static/src/js/suggestion_panel.js",
-            "invoice_agent/static/src/js/suggestion_panel.xml"
+            "invoice_agent/static/src/js/suggestion_panel.xml",
+            "invoice_agent/static/src/js/ai_status_widget.js"
         ]
     },
     "installable": True,

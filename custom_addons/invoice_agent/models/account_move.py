@@ -334,7 +334,6 @@ class AccountMove(models.Model):
     @api.depends(
         "ai_extracted_json",
         "ai_extraction_status",
-        "ai_review_required",
         "ai_confidence",
         "ocr_confidence",
         "ocr_text",
@@ -366,9 +365,11 @@ class AccountMove(models.Model):
             self.ai_extraction_state = "approved"
             return
 
-        if not payload or self.ai_review_required:
-            # Unscored (pending/processing), flagged by a human, or an empty
-            # payload — never Auto.
+        if not payload:
+            # Unscored pending/processing moves and empty payloads are never
+            # Auto. ``ai_review_required`` is an output of this computation,
+            # not an input: a first pass can mark a move for review before a
+            # payload arrives, and that must not prevent a later re-score.
             self.confidence_score = self.confidence_score or 0.0
             self.ai_confidence_details = self.ai_confidence_details or {}
             self.ai_confidence_notes = self.ai_confidence_notes or ""
@@ -402,6 +403,7 @@ class AccountMove(models.Model):
             self.ai_extraction_state = "needs_review"
         elif score >= threshold:
             self.ai_extraction_state = "auto"
+            self.ai_review_required = False
         else:
             self.ai_extraction_state = "needs_review"
             self.ai_review_required = True
@@ -1323,7 +1325,10 @@ class AccountMove(models.Model):
             "ai_extracted_total": payload.get("amount_total"),
             "ai_review_required": bool(payload.get("review_required")),
             "ai_extraction_status": "extracted",
-            "ai_confidence": score,
+            # Keep the model-reported value for backwards-compatible display
+            # and audit exports. ``confidence_score`` remains the calibrated
+            # value used for automated routing.
+            "ai_confidence": float(payload.get("overall_confidence") or score),
         }
         if payload.get("extracted_vendor_id"):
             vals["partner_id"] = payload["extracted_vendor_id"]

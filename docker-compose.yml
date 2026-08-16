@@ -126,6 +126,34 @@ services:
         reservations:
           memory: 128M
 
+  worker:
+    build:
+      context: ./invoice-ai
+    restart: unless-stopped
+    command: python -m app.consumer
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    env_file: .env
+    environment:
+      RABBITMQ_HOST: ${RABBITMQ_HOST:-rabbitmq}
+      RABBITMQ_PORT: ${RABBITMQ_PORT:-5672}
+      RABBITMQ_USER: ${RABBITMQ_DEFAULT_USER:-invoice_agent}
+      RABBITMQ_PASS: ${RABBITMQ_DEFAULT_PASS:-invoice_agent}
+      INVOICE_AI_JWT_SECRET: ${INVOICE_AI_JWT_SECRET:-}
+      INVOICE_AI_ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    deploy:
+      resources:
+        limits:
+          memory: 768M
+        reservations:
+          memory: 256M
+
   odoo:
     build:
       context: .

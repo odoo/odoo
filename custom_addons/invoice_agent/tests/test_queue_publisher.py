@@ -55,8 +55,10 @@ class TestTransactionalOutbox(InvoiceAgentTestCommon):
         # Register the job inside a savepoint that rolls back on exit — the
         # official Odoo pattern for forcing a transaction rollback in a test
         # (a raw cr.rollback() would fight the TransactionCase harness).
-        with self.env.cr.savepoint(flush=False):
-            move.action_request_ai_extraction()
+        with self.assertRaisesRegex(RuntimeError, "force rollback"):
+            with self.env.cr.savepoint(flush=False):
+                move.action_request_ai_extraction()
+                raise RuntimeError("force rollback")
 
         jobs = self.env["invoice.agent.job"].search([("move_id", "=", move.id)])
         self.assertEqual(len(jobs), 0, "rollback must cascade to outbox rows")
@@ -65,7 +67,7 @@ class TestTransactionalOutbox(InvoiceAgentTestCommon):
         move = self._draft_bill()
         published = []
 
-        def _fake_publish_extract_request(move_id, attachment_id=False, attempt=1):
+        def _fake_publish_extract_request(_publisher, move_id, attachment_id=False, attempt=1):
             published.append((move_id, attachment_id, attempt))
 
         with patch.object(
@@ -74,8 +76,10 @@ class TestTransactionalOutbox(InvoiceAgentTestCommon):
             _fake_publish_extract_request,
         ):
             # The user's (doomed) transaction enqueues the job…
-            with self.env.cr.savepoint(flush=False):
-                move.action_request_ai_extraction()
+            with self.assertRaisesRegex(RuntimeError, "force rollback"):
+                with self.env.cr.savepoint(flush=False):
+                    move.action_request_ai_extraction()
+                    raise RuntimeError("force rollback")
 
             # …then rolls back. The drain cron runs later in a *separate*
             # transaction (the production shape): it must find no row to
@@ -137,7 +141,7 @@ class TestTransactionalOutbox(InvoiceAgentTestCommon):
         )
         published = []
 
-        def _fake_publish_extract_request(move_id, attachment_id=False, attempt=1):
+        def _fake_publish_extract_request(_publisher, move_id, attachment_id=False, attempt=1):
             published.append((move_id, attachment_id, attempt))
 
         with patch.object(
@@ -159,7 +163,7 @@ class TestTransactionalOutbox(InvoiceAgentTestCommon):
         jobs = self.env["invoice.agent.job"]
         published = []
 
-        def _fake_publish_extract_request(move_id, attachment_id=False, attempt=1):
+        def _fake_publish_extract_request(_publisher, move_id, attachment_id=False, attempt=1):
             published.append(move_id)
 
         with patch.object(

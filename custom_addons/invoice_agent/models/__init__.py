@@ -8,6 +8,7 @@ from . import (
     invoice_extraction,
     llm_service,
     ocr_service,
+    queue_consumer,
     queue_publisher,
     res_config_settings,
     res_partner,

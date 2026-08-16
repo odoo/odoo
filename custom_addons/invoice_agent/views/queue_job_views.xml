@@ -10,7 +10,6 @@
             <list string="AMQP Outbox" multi_edit="1"
                   decoration-warning="state == 'pending' and error_message"
                   decoration-danger="state == 'pending' and error_message">
-                <field name="move_id" optional="show"/>
                 <field name="attachment_id" optional="show"/>
                 <field name="state" widget="badge"
                        decoration-success="state == 'sent'"
@@ -26,19 +25,9 @@
         <field name="name">invoice.agent.job.search</field>
         <field name="model">invoice.agent.job</field>
         <field name="arch" type="xml">
-            <search string="AMQP Outbox">
-                <field name="move_id" string="Invoice"/>
-                <filter string="Pending" name="job_pending"
-                        domain="[('state', '=', 'pending')]"/>
-                <filter string="Sent" name="job_sent"
-                        domain="[('state', '=', 'sent')]"/>
-                <separator/>
-                <filter string="Failing" name="job_failing"
-                        domain="[('error_message', '!=', False)]"/>
-                <group>
-                    <filter string="State" name="job_group_state"
-                            context="{'group_by': 'state'}"/>
-                </group>
+            <search string="Search Queue Jobs">
+                <field name="attachment_id"/>
+                <field name="state"/>
             </search>
         </field>
     </record>

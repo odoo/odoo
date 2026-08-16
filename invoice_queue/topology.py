@@ -80,12 +80,13 @@ ROUTING_KEY_REQUEST = "extract.request"
 ROUTING_KEY_STARTED = "extract.started"
 ROUTING_KEY_DONE = "extract.done"
 
-# What each queue will receive (documented contract — see docs/adr-004):
-#   invoice.extract <- extract.request  : JOB REQUEST. Body = {"move_id": N,
-#                                         "attachment_id": M, "attempt": K}
-#   invoice.result  <- extract.done     : JOB RESULT.  Body = {"move_id": N,
-#                                         "status": "done"|"failed",
-#                                         "ai_ex...": ...}
+# What each queue will receive (wiring contract — see docs/queue-contract.md):
+#   invoice.extract <- extract.request : JOB REQUEST. Body = {"move_id": N,
+#                                        "attachment_id": M, "attempt": K,
+#                                        "job_uuid": "...", "ocr_text": "..."}
+#   invoice.result  <- extract.done    : JOB RESULT.  Body = {"token": "<jwt>"}
+#                                        — signed HS256 with the shared secret;
+#                                        claims carry the parsed extraction.
 QUEUE_BINDINGS = [
     (QUEUE_EXTRACT, ROUTING_KEY_REQUEST),
     # invoice.result receives both lifecycle signals from the worker: the
@@ -93,7 +94,6 @@ QUEUE_BINDINGS = [
     (QUEUE_RESULT, ROUTING_KEY_STARTED),
     (QUEUE_RESULT, ROUTING_KEY_DONE),
 ]
-ROUTING_KEY_STARTED = "extract.started"
 
 
 def connection_parameters():

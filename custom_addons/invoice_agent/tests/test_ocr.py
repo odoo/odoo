@@ -34,10 +34,25 @@ class TestOcrServiceGuards(TransactionCase):
         super().setUpClass()
         cls.service = cls.env["invoice.ocr.service"]
         cls.partner = cls.env.ref("base.main_partner")
+        company = cls.env.company
+        if not company.chart_template:
+            cls.env["account.chart.template"].try_loading(
+                "generic_coa",
+                company=company,
+                install_demo=False,
+            )
         cls.journal = cls.env["account.journal"].search(
-            [("type", "=", "purchase")],
+            [("type", "=", "purchase"), ("company_id", "=", company.id)],
             limit=1,
         )
+        if not cls.journal:
+            cls.journal = cls.env["account.journal"].create(
+                {
+                    "name": "OCR Test Purchase Journal",
+                    "type": "purchase",
+                    "code": "OTP",
+                },
+            )
 
     def _attachment(self, name="scan.pdf", mimetype="application/pdf",
                     data=b"%PDF-1.4 fake minimal pdf"):
