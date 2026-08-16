@@ -14,8 +14,8 @@ class ProductTemplate(models.Model):
         " order.\nMatrix: add several variants at once from the grid of attribute values",
     )
 
-    def get_single_product_variant(self):
-        res = super().get_single_product_variant()
+    def get_single_product_variant(self, product=None):
+        res = super().get_single_product_variant(product=product)
         if self.has_configurable_attributes:
             res["mode"] = self.product_add_mode
         else:

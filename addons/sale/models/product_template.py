@@ -262,7 +262,7 @@ class ProductTemplate(models.Model):
                     )
                 )
 
-    def get_single_product_variant(self):
+    def get_single_product_variant(self, product=None):
         """Override of `product` to provide additional data.
 
         The product configurator also has to be opened when the template has optional products,
@@ -270,11 +270,12 @@ class ProductTemplate(models.Model):
         Also, depending on the product type, the combo configurator might be needed instead of
         the standard product configurator.
         """
-        res = super().get_single_product_variant()
+        res = super().get_single_product_variant(product=product)
         if res.get("product_id", False):
+            variant = product or self.product_variant_id
             has_optional_products = any(
                 op.has_dynamic_attributes() or op._get_possible_variants()
-                for op in self.product_variant_id.optional_product_ids
+                for op in variant.optional_product_ids
             )
             res.update({
                 "has_optional_products": has_optional_products,
