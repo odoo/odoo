@@ -227,6 +227,10 @@ class PeppolSettingsButtons extends Component {
         }
     }
 
+    async registerWithKyc() {
+        await this._callConfigMethod("button_register_with_kyc", true);
+    }
+
     async reregister() {
         await this._callConfigMethod("button_peppol_reregister");
     }
