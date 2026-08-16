@@ -21,6 +21,7 @@ class PeppolSettingsButtons extends Component {
     setup() {
         super.setup();
         this.orm = useService("orm");
+        this.action = useService("action");
         this.dialogService = useService("dialog");
         this.notification = useService("notification");
         this.state = useState({
@@ -193,13 +194,13 @@ class PeppolSettingsButtons extends Component {
         const record = this.props.record;
         try {
             await this._save();
-            await this.orm.call(
+            const action = await this.orm.call(
                 record.resModel,
-                "button_create_peppol_proxy_user",
+                "button_register_with_kyc",
                 [[record.resId]],
                 { context: record.context }
             );
-            await this.env.model.root.load();
+            await this.action.doAction(action);
         } catch (error) {
             const isAlreadyRegisteredError = (
                 error.exceptionName?.endsWith("EndpointAlreadyRegisteredError")
@@ -214,13 +215,13 @@ class PeppolSettingsButtons extends Component {
                 cancelLabel: _t("Cancel"),
                 confirm: async () => {
                     await this._save();
-                    await this.orm.call(
+                    const action = await this.orm.call(
                         record.resModel,
                         "button_create_peppol_proxy_user_sender_only",
                         [[record.resId]],
                         { context: record.context }
                     );
-                    await this.env.model.root.load();
+                    await this.action.doAction(action);
                 },
                 cancel: () => { },
             });
