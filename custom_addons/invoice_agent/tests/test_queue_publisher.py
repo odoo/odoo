@@ -67,7 +67,10 @@ class TestTransactionalOutbox(InvoiceAgentTestCommon):
         move = self._draft_bill()
         published = []
 
-        def _fake_publish_extract_request(_publisher, move_id, attachment_id=False, attempt=1):
+        def _fake_publish_extract_request(
+            _publisher, move_id, attachment_id=False, attempt=1,
+            job_uuid=False, ocr_text=False,
+        ):
             published.append((move_id, attachment_id, attempt))
 
         with patch.object(
@@ -141,7 +144,10 @@ class TestTransactionalOutbox(InvoiceAgentTestCommon):
         )
         published = []
 
-        def _fake_publish_extract_request(_publisher, move_id, attachment_id=False, attempt=1):
+        def _fake_publish_extract_request(
+            _publisher, move_id, attachment_id=False, attempt=1,
+            job_uuid=False, ocr_text=False,
+        ):
             published.append((move_id, attachment_id, attempt))
 
         with patch.object(
@@ -163,7 +169,10 @@ class TestTransactionalOutbox(InvoiceAgentTestCommon):
         jobs = self.env["invoice.agent.job"]
         published = []
 
-        def _fake_publish_extract_request(_publisher, move_id, attachment_id=False, attempt=1):
+        def _fake_publish_extract_request(
+            _publisher, move_id, attachment_id=False, attempt=1,
+            job_uuid=False, ocr_text=False,
+        ):
             published.append(move_id)
 
         with patch.object(
