@@ -49,6 +49,15 @@ class PeppolConnectorCommon(AccountTestInvoicingCommon):
             replacement_method,
         )
 
+    def _mock_can_connect(self):
+        return ('https://peppol.test.odoo.com/api/peppol/2/can_connect', lambda url, **kwargs: {'auth_required': False})
+
+    def _mock_connect(self, peppol_state='smp_registration', id_client='test_id_client'):
+        return (
+            'https://peppol.test.odoo.com/api/peppol/2/connect',
+            lambda url, **kwargs: {'id_client': id_client, 'refresh_token': 'test_refresh_token', 'peppol_state': peppol_state},
+        )
+
     def _mock_register_sender(self, success=True):
         return (
             'https://peppol.test.odoo.com/api/peppol/1/register_sender',
@@ -154,7 +163,7 @@ class PeppolConnectorCommon(AccountTestInvoicingCommon):
                     return DotDict({**results, 'json': lambda: results, 'raise_for_status': lambda: None})
             self.assertFalse(url, "Missing mock!")
 
-        with patch('requests.get', mock_request), patch('requests.post', mock_request):
+        with patch('requests.get', mock_request), patch('requests.post', mock_request), patch('requests.request', lambda method, url, **kwargs: mock_request(url, **kwargs)):
             yield mock_results
 
         self.assertFalse([url for url in mocks if url not in called_urls], "Some mocks defined are not called at all.")

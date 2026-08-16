@@ -222,8 +222,32 @@ def _mock_can_receive_self_billing(func, self, *args, **kwargs):
     return True
 
 
+def _mock_peppol_can_connect(func, self, *args, **kwargs):
+    return {'auth_required': False}
+
+
+def _mock_peppol_create_connection(func, self, *args, **kwargs):
+    peppol_identifier = kwargs['peppol_identifier'] if 'peppol_identifier' in kwargs else args[0]
+    edi_user = self.env['account_edi_proxy_client.user'].sudo().create({
+        'id_client': f'demo{self.id}peppol',
+        'company_id': self.id,
+        'proxy_type': 'peppol',
+        'edi_mode': 'demo',
+        'edi_identification': peppol_identifier,
+        'private_key_id': self.env['certificate.key'].create({
+            'content': b64encode(file_open(DEMO_PRIVATE_KEY, 'rb').read()),
+            'company_id': self.id,
+        }).id,
+        'refresh_token': 'demo',
+    })
+    self.account_peppol_proxy_state = 'receiver'
+    return edi_user
+
+
 _demo_behaviour = {
     '_call_peppol_proxy': _mock_call_peppol_proxy,
+    '_peppol_can_connect': _mock_peppol_can_connect,
+    '_peppol_create_connection': _mock_peppol_create_connection,
     'button_account_peppol_check_partner_endpoint': _mock_button_verify_partner_endpoint,
     '_get_peppol_verification_state': _mock_get_peppol_verification_state,
     '_peppol_migrate_registration': _mock_migrate_participant,
