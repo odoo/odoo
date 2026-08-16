@@ -5,6 +5,7 @@ import logging
 from odoo import _, api, models, tools
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
 from odoo.addons.account_peppol.tools.demo_utils import handle_demo
+from odoo.addons.account_peppol.tools.peppol_iap_connector import PEPPOL_PROXY_URLS
 
 _logger = logging.getLogger(__name__)
 BATCH_SIZE = 50
@@ -19,10 +20,7 @@ class AccountEdiProxyClientUser(models.Model):
 
     def _get_server_url_new(self, edi_format=None):
         if (edi_format or self.edi_format_id).code == 'peppol':
-            return {
-                'prod': 'https://peppol.api.odoo.com',
-                'test': 'https://peppol.test.odoo.com',
-            }.get(self._get_demo_state(), 'demo')
+            return PEPPOL_PROXY_URLS[self._get_demo_state()]
         return super()._get_server_url_new(edi_format=edi_format)
 
     def _get_route(self, action, edi_format=None):
