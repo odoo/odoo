@@ -1,10 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 __all__ = [
-    'convert_csv_import',
     'convert_file',
-    'convert_sql_import',
-    'convert_xml_import'
 ]
 import csv
 import io
@@ -714,17 +711,13 @@ def convert_file(
         if ext == '.csv':
             convert_csv_import(env, module, pathname, fp.read(), idref, mode, noupdate)
         elif ext == '.sql':
-            convert_sql_import(env, fp)
+            env.cr.execute(fp.read())  # pylint: disable=sql-injection
         elif ext == '.xml':
             convert_xml_import(env, module, fp, idref, mode, noupdate)
         elif ext == '.js':
             pass # .js files are valid but ignored here.
         else:
             raise ValueError("Can't load unknown file type %s.", filename)
-
-
-def convert_sql_import(env, fp):
-    env.cr.execute(fp.read()) # pylint: disable=sql-injection
 
 
 def convert_csv_import(
