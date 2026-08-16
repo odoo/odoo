@@ -54,7 +54,7 @@ class IrActionsReport(models.Model):
                     qr_pdf = OdooPdfFileReader(stream['stream'], strict=False)
                     res_pdf = OdooPdfFileReader(res[invoice_id]['stream'], strict=False)
 
-                    output_pdf = OdooPdfFileWriter()
+                    output_pdf = OdooPdfFileWriter(producer=self._get_pdf_producer(self._get_pdf_engine(report)))
 
                     # Add all pages from the original PDF
                     for page in res_pdf.pages:

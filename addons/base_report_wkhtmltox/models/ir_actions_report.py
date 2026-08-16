@@ -147,6 +147,12 @@ class IrActionsReport(models.Model):
             check=False,
         )
 
+    def _get_pdf_producer(self, engine_name):
+        if engine_name == 'wkhtmltopdf':
+            v = _wkhtml().version
+            return f"wkhtmltopdf {v}" if v else "wkhtmltopdf"
+        return super()._get_pdf_producer(engine_name)
+
     @api.model
     def get_pdf_engine_state(self, engine_name):
         if engine_name != 'wkhtmltopdf':
