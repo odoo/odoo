@@ -61,18 +61,18 @@ class TestPeppolParticipant(PeppolConnectorCommon):
             'peppol_endpoint': False,
         })
         with self.assertRaises(ValidationError), self.cr.savepoint():
-            wizard.button_peppol_sender_registration()
+            wizard.button_register_with_kyc()
 
     def test_register_participant_for_the_first_time_as_sender_then_receiver_then_unregister(self):
         # not_register -> sender
         with self._mock_requests([
-            self._mock_create_user(),
+            self._mock_can_connect(),
             self._mock_lookup_participant(already_exist=True),
-            self._mock_register_sender(),
+            self._mock_connect(peppol_state='sender'),
         ]):
             wizard = self.env['peppol.registration'].create({})
             self.assertRecordValues(wizard, [{'smp_registration': False}])
-            wizard.button_register_peppol_participant()
+            wizard.button_register_with_kyc()
         self.assertRecordValues(self.env.company, [{'account_peppol_proxy_state': 'sender'}])
 
         # sender -> smp_registration.
@@ -102,13 +102,13 @@ class TestPeppolParticipant(PeppolConnectorCommon):
     def test_register_participant_already_exists_on_peppol_as_receiver(self):
         # not_register -> smp_registration
         with self._mock_requests([
-            self._mock_create_user(),
+            self._mock_can_connect(),
             self._mock_lookup_participant(),
-            self._mock_register_sender(),
+            self._mock_connect(),
         ]):
             wizard = self.env['peppol.registration'].create({})
             self.assertRecordValues(wizard, [{'smp_registration': True}])
-            wizard.button_register_peppol_participant()
+            wizard.button_register_with_kyc()
         self.assertRecordValues(self.env.company, [{'account_peppol_proxy_state': 'smp_registration'}])
 
         # smp_registration -> receiver
@@ -119,13 +119,13 @@ class TestPeppolParticipant(PeppolConnectorCommon):
     def test_register_participant_rejected(self):
         # not_register -> smp_registration
         with self._mock_requests([
-            self._mock_create_user(),
+            self._mock_can_connect(),
             self._mock_lookup_participant(),
-            self._mock_register_sender(),
+            self._mock_connect(),
         ]):
             wizard = self.env['peppol.registration'].create({})
             self.assertRecordValues(wizard, [{'smp_registration': True}])
-            wizard.button_register_peppol_participant()
+            wizard.button_register_with_kyc()
         self.assertRecordValues(self.env.company, [{'account_peppol_proxy_state': 'smp_registration'}])
 
         # smp_registration -> rejected
@@ -136,13 +136,13 @@ class TestPeppolParticipant(PeppolConnectorCommon):
     def test_save_migration_key(self):
         """ Ensure the migration_key is remove from the company after we've used it. """
         with self._mock_requests([
-            self._mock_create_user(),
-            self._mock_register_sender(),
+            self._mock_can_connect(),
+            self._mock_connect(),
         ]):
             wizard = self.env['peppol.registration'].create({
                 'account_peppol_migration_key': 'helloo',
             })
-            wizard.button_register_peppol_participant()
+            wizard.button_register_with_kyc()
             self.assertRecordValues(self.env.company, [{
                 'account_peppol_proxy_state': 'smp_registration',
                 'account_peppol_migration_key': False,
@@ -174,11 +174,12 @@ class TestPeppolParticipant(PeppolConnectorCommon):
             'peppol_endpoint': '0477472701',
         })
         with self._mock_requests([
-            self._mock_create_user(),
+            self._mock_can_connect(),
             self._mock_lookup_participant(already_exist=True),
-            self._mock_register_sender(),
+            self._mock_connect(peppol_state='sender'),
         ]):
-            wizard.button_register_peppol_participant()
+            self.assertRecordValues(wizard, [{'smp_registration': False}])
+            wizard.button_register_with_kyc()
 
         self.assertRecordValues(branch, [{
             'peppol_parent_company_id': False,
@@ -246,11 +247,10 @@ class TestPeppolParticipant(PeppolConnectorCommon):
             'use_parent_connection_selection': 'use_self',
         }])
         with self._mock_requests([
-            self._mock_create_user(),
-            self._mock_lookup_participant(already_exist=True),
-            self._mock_register_sender(),
+            self._mock_can_connect(),
+            self._mock_connect(peppol_state='sender'),
         ]):
-            wizard.button_register_peppol_participant()
+            wizard.button_register_with_kyc()
 
         settings = self.env['res.config.settings'].with_context(allowed_company_ids=self.env.company.ids).create({})
         self.assertRecordValues(settings, [{
@@ -279,11 +279,12 @@ class TestPeppolParticipant(PeppolConnectorCommon):
             'use_parent_connection_selection': 'use_parent',
         }])
         with self._mock_requests([
-            self._mock_create_user(),
+            self._mock_can_connect(),
             self._mock_lookup_participant(already_exist=True),
-            self._mock_register_sender(),
+            self._mock_connect(peppol_state='sender', id_client='test_id_client_branch'),
         ]):
-            wizard.button_register_peppol_participant()
+            self.assertRecordValues(wizard, [{'smp_registration': False}])
+            wizard.button_register_with_kyc()
         self.assertRecordValues(branch, [{
             'peppol_parent_company_id': self.env.company.id,
             'peppol_eas': '0208',
@@ -323,13 +324,13 @@ class TestPeppolParticipant(PeppolConnectorCommon):
     def test_deregister_with_client_gone_error(self):
         """Test deregistration succeeds even when proxy returns client_gone error"""
         with self._mock_requests([
-            self._mock_create_user(),
+            self._mock_can_connect(),
             self._mock_lookup_participant(),
-            self._mock_register_sender(),
+            self._mock_connect(),
         ]):
             wizard = self.env['peppol.registration'].create({})
             self.assertRecordValues(wizard, [{'smp_registration': True}])
-            wizard.button_register_peppol_participant()
+            wizard.button_register_with_kyc()
         with self._mock_requests([self._mock_participant_status('sender')]):
             self.env.company.account_edi_proxy_client_ids._peppol_get_participant_status()
         self.assertEqual(self.env.company.account_peppol_proxy_state, 'sender')
@@ -392,9 +393,9 @@ class TestPeppolParticipant(PeppolConnectorCommon):
             'vat': 'BE0477472701',
         })
         with self._mock_requests([
-            self._mock_create_user(),
+            self._mock_can_connect(),
             self._mock_lookup_participant(),
-            self._mock_register_sender(),
+            self._mock_connect(),
         ]):
             wizard = self.env['peppol.registration'].create({
                 'peppol_eas': '0088',
@@ -402,7 +403,7 @@ class TestPeppolParticipant(PeppolConnectorCommon):
                 'phone_number': '+32483123456',
                 'contact_email': 'yourcompany@test.example.com',
             })
-            wizard.button_register_peppol_participant()
+            wizard.button_register_with_kyc()
         with self._mock_requests([self._mock_participant_status('sender')]):
             self.env.company.account_edi_proxy_client_ids._peppol_get_participant_status()
         self.env.company.vat = 'BE0475646428'
