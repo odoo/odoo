@@ -64,6 +64,7 @@ class ProjectTaskRecurrence(models.Model):
             f"{self.repeat_unit}s": self.repeat_interval
         })
 
+<<<<<<< 4001c609e382ca382fba587d21ad4aeedcb1f53c
     @api.model
     def _create_next_occurrences(self, occurrences_from):
         tasks_copy = self.env['project.task']
@@ -75,6 +76,30 @@ class ProjectTaskRecurrence(models.Model):
                 not task.date_deadline or
                 rec.repeat_until and
                 (task.date_deadline + rec._get_recurrence_delta()).date() <= rec.repeat_until
+||||||| a47a80fb04d113e3da83e654b667e7335cf63d39
+    def _create_next_occurrence(self, occurrence_from):
+        self.ensure_one()
+        # Prevent double mail_followers creation
+        if (
+            self.repeat_type != 'until' or not occurrence_from.date_deadline or
+            self.repeat_until and (occurrence_from.date_deadline + self._get_recurrence_delta()).date() <= self.repeat_until
+        ):
+            occurrence_from.with_context(copy_project=True).sudo().copy(
+                self._create_next_occurrence_values(occurrence_from)
+=======
+    def _create_next_occurrence(self, occurrence_from):
+        self.ensure_one()
+        # Prevent double mail_followers creation
+        if (
+            self.repeat_type != 'until' or not occurrence_from.date_deadline or
+            self.repeat_until and (occurrence_from.date_deadline + self._get_recurrence_delta()).date() <= self.repeat_until
+        ):
+            new_task = occurrence_from.with_context(copy_project=True).sudo().copy(
+                self._create_next_occurrence_values(occurrence_from)
+>>>>>>> f28b2fb163d284d849fee8125bfa56bb1f7fbad6
+            )
+            new_task.with_context(mail_auto_subscribe_no_notify=False)._task_message_auto_subscribe_notify(
+                {new_task: new_task.user_ids - self.env.user}
             )
 
         occurrences_from = occurrences_from.filtered(should_create_occurrence)
