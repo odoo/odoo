@@ -1,15 +1,12 @@
-import json
 from contextlib import contextmanager
 from freezegun import freeze_time
 from requests import Session, PreparedRequest, Response
 from unittest.mock import patch
 from urllib.parse import parse_qs, quote_plus
-from psycopg2 import IntegrityError
 
-from odoo.exceptions import ValidationError, UserError
+from odoo.exceptions import ValidationError
 from odoo.tests import Form
 from odoo.tests.common import tagged, TransactionCase
-from odoo.tools import mute_logger
 
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
 
@@ -86,8 +83,19 @@ class TestPeppolParticipant(TransactionCase):
                 }
             return response
 
+        if r.path_url.startswith('/api/peppol/2/can_connect'):
+            response.json = lambda: cls.env.context.get('can_connect_response', {'auth_required': False})
+            return response
+
         url = r.path_url
-        body = json.loads(r.body)
+
+        if url == '/api/peppol/2/connect':
+            response.json = lambda: {
+                'id_client': cls.env.context.get('mock_id_client', ID_CLIENT),
+                'refresh_token': FAKE_UUID,
+                'peppol_state': cls.env.context.get('connect_state', 'smp_registration'),
+            }
+            return response
 
         if custom_responses_by_id := cls.env.context.get('custom_responses_by_id'):
             identification = r.headers.get('odoo-edi-client-id', None)
@@ -96,12 +104,6 @@ class TestPeppolParticipant(TransactionCase):
                 return response
 
         responses = cls._get_mock_responses(cls.env.context.get('peppol_state', 'active'))
-        if (
-            url == '/api/peppol/1/activate_participant'
-            and cls.env.context.get('migrate_to')
-            and not body['params']['migration_key']
-        ):
-            raise UserError('No migration key was provided')
 
         if cls.env.context.get('migrated_away'):
             response.json = lambda: {
@@ -143,13 +145,21 @@ class TestPeppolParticipant(TransactionCase):
             'account_peppol_endpoint': False,
         })
         with self.assertRaises(ValidationError), self.cr.savepoint():
-            settings.button_create_peppol_proxy_user()
+            settings.button_register_with_kyc()
 
     def test_create_success_participant(self):
-        # should be possible to apply with all data
-        # the account_peppol_proxy_state should correctly change to pending
-        # then the account_peppol_proxy_state should change success
-        # after checking participant status
+        # the proxy state follows the state returned by /2/connect,
+        # then changes to active after checking participant status
+        company = self.env.company
+        settings = self.env['res.config.settings'].create(self._get_participant_vals())
+        settings.button_register_with_kyc()
+        self.assertEqual(company.account_peppol_proxy_state, 'pending')
+        self.env['account_edi_proxy_client.user']._cron_peppol_get_participant_status()
+        self.assertEqual(company.account_peppol_proxy_state, 'active')
+
+    def test_create_success_participant_deprecated_flow(self):
+        # button_create_peppol_proxy_user is no longer reachable from the interface,
+        # but it and the phone verification are still covered here
         company = self.env.company
         settings = self.env['res.config.settings'].create(self._get_participant_vals())
         settings.button_create_peppol_proxy_user()
@@ -162,6 +172,29 @@ class TestPeppolParticipant(TransactionCase):
         self.env['account_edi_proxy_client.user']._cron_peppol_get_participant_status()
         self.assertEqual(company.account_peppol_proxy_state, 'active')
 
+    def test_create_participant_authentication_required(self):
+        # when the proxy requires KYC, the button redirects and nothing is created yet
+        settings = self.env['res.config.settings'].create(self._get_participant_vals())
+        with self._set_context({'can_connect_response': {
+            'auth_required': True,
+            'available_auths': {'generic': {'authorization_url': 'https://peppol.test.odoo.com/kyc'}},
+        }}):
+            action = settings.button_register_with_kyc()
+
+        self.assertEqual(action['type'], 'ir.actions.act_url')
+        self.assertEqual(action['url'], 'https://peppol.test.odoo.com/kyc')
+        self.assertEqual(self.env.company.account_peppol_proxy_state, 'not_registered')
+        self.assertFalse(self.env.company.account_edi_proxy_client_ids)
+
+    def test_connect_token(self):
+        # the callback and the webhook get the company through this token
+        company = self.env.company
+        token = company._peppol_generate_connect_token('9925:0000000000')
+        connect_data = self.env['res.company']._peppol_decode_connect_token(token)
+        self.assertEqual(connect_data['company'], company)
+        self.assertEqual(connect_data['peppol_identifier'], '9925:0000000000')
+        self.assertFalse(self.env['res.company']._peppol_decode_connect_token('not-a-token'))
+
     def test_create_reject_participant(self):
         # the account_peppol_proxy_state should change to rejected
         # if we reject the participant
@@ -169,37 +202,29 @@ class TestPeppolParticipant(TransactionCase):
         settings = self.env['res.config.settings'].create(self._get_participant_vals())
 
         with self._set_context({'peppol_state': 'rejected'}):
-            settings.button_create_peppol_proxy_user()
+            settings.button_register_with_kyc()
             company.account_peppol_proxy_state = 'pending'
             self.env['account_edi_proxy_client.user']._cron_peppol_get_participant_status()
             self.assertEqual(company.account_peppol_proxy_state, 'rejected')
 
-    @mute_logger('odoo.sql_db')
-    def test_create_duplicate_participant(self):
-        # should not be possible to create a duplicate participant
+    def test_recreate_participant_archives_the_previous_user(self):
+        # only one active user per company is allowed, registering again archives the old one
         settings = self.env['res.config.settings'].create(self._get_participant_vals())
-        settings.button_create_peppol_proxy_user()
-        with self.assertRaises(IntegrityError), self.cr.savepoint():
-            settings.account_peppol_proxy_state = 'not_registered'
-            settings.button_create_peppol_proxy_user()
+        settings.button_register_with_kyc()
+        first_user = self.env.company.account_edi_proxy_client_ids
 
-    def test_save_migration_key(self):
-        # migration key should be saved
-        settings = self.env['res.config.settings']\
-            .create({
-                **self._get_participant_vals(),
-                'account_peppol_migration_key': 'helloo',
-            })
+        settings.account_peppol_proxy_state = 'not_registered'
+        with self._set_context({'mock_id_client': 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxy'}):
+            settings.button_register_with_kyc()
 
-        with self._set_context({'migrate_to': True}):
-            settings.button_create_peppol_proxy_user()
-            self.assertEqual(self.env.company.account_peppol_proxy_state, 'not_verified')
-            self.assertFalse(settings.account_peppol_migration_key)  # the key should be reset once we've used it
+        self.assertFalse(first_user.active)
+        self.assertEqual(len(self.env.company.account_edi_proxy_client_ids), 1)
+        self.assertEqual(self.env.company.account_edi_proxy_client_ids.id_client, 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxy')
 
     def test_restore_simple(self):
         """Test basic recovery: create user, soft-delete it, then recover it"""
         settings = self.env['res.config.settings'].create(self._get_participant_vals())
-        settings.button_create_peppol_proxy_user()
+        settings.button_register_with_kyc()
         edi_user = self.env.company.account_edi_proxy_client_ids
 
         # Simulate soft-delete (what happened during incident)
@@ -215,7 +240,7 @@ class TestPeppolParticipant(TransactionCase):
         """Test safety: don't recover when multiple inactive users exist (ambiguous)"""
         # Create first user and soft-delete it
         user_1_vals = {**self._get_participant_vals(), 'account_peppol_endpoint': '0000000000'}
-        self.env['res.config.settings'].create(user_1_vals).button_create_peppol_proxy_user()
+        self.env['res.config.settings'].create(user_1_vals).button_register_with_kyc()
 
         active_user = self.env.company.account_edi_proxy_client_ids
         active_user.active = False
@@ -224,7 +249,7 @@ class TestPeppolParticipant(TransactionCase):
         # Create second user and soft-delete it too
         user_2_vals = {**self._get_participant_vals(), 'account_peppol_endpoint': '0000000001'}
         with self._set_context({'mock_id_client': 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxy'}):
-            self.env['res.config.settings'].create(user_2_vals).button_create_peppol_proxy_user()
+            self.env['res.config.settings'].create(user_2_vals).button_register_with_kyc()
         edi_user_2 = self.env.company.account_edi_proxy_client_ids
         edi_user_2.active = False
         edi_user_2.company_id.account_peppol_proxy_state = 'not_registered'
@@ -238,7 +263,7 @@ class TestPeppolParticipant(TransactionCase):
     def test_restore_recovery_during_registration_same_endpoint(self):
         """Test main incident scenario: recovery happens during new registration attempt"""
         user_vals = {**self._get_participant_vals(), 'account_peppol_endpoint': '0000000000'}
-        self.env['res.config.settings'].create(user_vals).button_create_peppol_proxy_user()
+        self.env['res.config.settings'].create(user_vals).button_register_with_kyc()
         edi_user = self.env.company.account_edi_proxy_client_ids
 
         # simulate incident: user gets soft-deleted
@@ -246,7 +271,7 @@ class TestPeppolParticipant(TransactionCase):
         edi_user.company_id.account_peppol_proxy_state = 'not_registered'
 
         # user tries to re-register with same endpoint -> recovery kicks in
-        self.env['res.config.settings'].create(user_vals).button_create_peppol_proxy_user()
+        self.env['res.config.settings'].create(user_vals).button_register_with_kyc()
 
         # should recover existing user instead of creating new one
         self.assertEqual(edi_user.edi_identification, '9925:0000000000')
@@ -257,7 +282,7 @@ class TestPeppolParticipant(TransactionCase):
         """Recovery should be skipped when an active PEPPOL user already exists"""
         # create active user first
         user_1_vals = {**self._get_participant_vals(), 'account_peppol_endpoint': '0000000000'}
-        self.env['res.config.settings'].create(user_1_vals).button_create_peppol_proxy_user()
+        self.env['res.config.settings'].create(user_1_vals).button_register_with_kyc()
         inactive_user = self.env.company.account_edi_proxy_client_ids
         inactive_user.active = False
         inactive_user.company_id.account_peppol_proxy_state = 'not_registered'
@@ -265,7 +290,7 @@ class TestPeppolParticipant(TransactionCase):
         # create second user that gets soft-deleted
         user_2_vals = {**self._get_participant_vals(), 'account_peppol_endpoint': '0000000001'}
         with self._set_context({'mock_id_client': 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxy'}):
-            self.env['res.config.settings'].create(user_2_vals).button_create_peppol_proxy_user()
+            self.env['res.config.settings'].create(user_2_vals).button_register_with_kyc()
 
         active_user = self.env.company.account_edi_proxy_client_ids.filtered(lambda u: u.edi_identification == '9925:0000000001')
         active_user.active = False
@@ -279,7 +304,7 @@ class TestPeppolParticipant(TransactionCase):
         """Recovery with specific identifier should only recover that user"""
         # create first user and soft-delete it
         user_1_vals = {**self._get_participant_vals(), 'account_peppol_endpoint': '0000000000'}
-        self.env['res.config.settings'].create(user_1_vals).button_create_peppol_proxy_user()
+        self.env['res.config.settings'].create(user_1_vals).button_register_with_kyc()
         edi_user_1 = self.env.company.account_edi_proxy_client_ids
         edi_user_1.active = False
         edi_user_1.company_id.account_peppol_proxy_state = 'not_registered'
@@ -287,7 +312,7 @@ class TestPeppolParticipant(TransactionCase):
         # create second user and soft-delete it
         user_2_vals = {**self._get_participant_vals(), 'account_peppol_endpoint': '0000000001'}
         with self._set_context({'mock_id_client': 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxy'}):
-            self.env['res.config.settings'].create(user_2_vals).button_create_peppol_proxy_user()
+            self.env['res.config.settings'].create(user_2_vals).button_register_with_kyc()
         edi_user_2 = self.env.company.account_edi_proxy_client_ids.filtered(lambda u: u.edi_identification == '9925:0000000001')
         edi_user_2.active = False
         edi_user_2.company_id.account_peppol_proxy_state = 'not_registered'
@@ -303,7 +328,7 @@ class TestPeppolParticipant(TransactionCase):
 
     def test_restore_user_in_draft_state(self):
         settings = self.env['res.config.settings'].create(self._get_participant_vals())
-        settings.button_create_peppol_proxy_user()
+        settings.button_register_with_kyc()
         edi_user = self.env.company.account_edi_proxy_client_ids
 
         # simulate soft-delete
@@ -314,7 +339,7 @@ class TestPeppolParticipant(TransactionCase):
         with self._set_context({'peppol_state': 'active'}):
             user_vals = {**self._get_participant_vals(), 'account_peppol_endpoint': '0000000000'}
             # user tries to re-register with same endpoint -> recovery kicks in
-            self.env['res.config.settings'].create(user_vals).button_create_peppol_proxy_user()
+            self.env['res.config.settings'].create(user_vals).button_register_with_kyc()
 
         # should recover user and set state to active
         self.assertTrue(edi_user.active)
@@ -324,7 +349,7 @@ class TestPeppolParticipant(TransactionCase):
         """Test cron recovery works correctly across multi companies"""
         # create users for both companies
         settings_1 = self.env['res.config.settings'].create(self._get_participant_vals())
-        settings_1.button_create_peppol_proxy_user()
+        settings_1.button_register_with_kyc()
         edi_user_1 = self.env.company.account_edi_proxy_client_ids
 
         company_2 = self.env['res.company'].create({
@@ -339,7 +364,7 @@ class TestPeppolParticipant(TransactionCase):
                 'account_peppol_phone_number': '+32483123456',
                 'account_peppol_contact_email': 'company2@test.example.com',
             })
-            settings_2.button_create_peppol_proxy_user()
+            settings_2.button_register_with_kyc()
         edi_user_2 = company_2.account_edi_proxy_client_ids
 
         # soft-delete both users
@@ -358,7 +383,7 @@ class TestPeppolParticipant(TransactionCase):
         """Test cron handles mixed scenarios: some recoverable, some not"""
         # company1: one inactive user (recoverable)
         settings_1 = self.env['res.config.settings'].create(self._get_participant_vals())
-        settings_1.button_create_peppol_proxy_user()
+        settings_1.button_register_with_kyc()
         edi_user_1 = self.env.company.account_edi_proxy_client_ids
         edi_user_1.active = False
         edi_user_1.company_id.account_peppol_proxy_state = 'not_registered'
@@ -377,7 +402,7 @@ class TestPeppolParticipant(TransactionCase):
                 'account_peppol_phone_number': '+32483123456',
                 'account_peppol_contact_email': 'company2a@test.example.com',
             })
-            settings_2a.button_create_peppol_proxy_user()
+            settings_2a.button_register_with_kyc()
             company_2.account_edi_proxy_client_ids.active = False
             company_2.account_peppol_proxy_state = 'not_registered'
 
@@ -388,7 +413,7 @@ class TestPeppolParticipant(TransactionCase):
                 'account_peppol_phone_number': '+32483123456',
                 'account_peppol_contact_email': 'company2b@test.example.com',
             })
-            settings_2b.button_create_peppol_proxy_user()
+            settings_2b.button_register_with_kyc()
             company_2.account_edi_proxy_client_ids.active = False
             company_2.account_peppol_proxy_state = 'not_registered'
 
@@ -407,7 +432,7 @@ class TestPeppolParticipant(TransactionCase):
     def test_recovery_error_handling(self):
         """make sure recovery handles API errors gracefully"""
         settings = self.env['res.config.settings'].create(self._get_participant_vals())
-        settings.button_create_peppol_proxy_user()
+        settings.button_register_with_kyc()
         edi_user = self.env.company.account_edi_proxy_client_ids
 
         # simulate soft-delete
@@ -424,7 +449,7 @@ class TestPeppolParticipant(TransactionCase):
 
     def test_recovery_no_refresh_token(self):
         settings = self.env['res.config.settings'].create(self._get_participant_vals())
-        settings.button_create_peppol_proxy_user()
+        settings.button_register_with_kyc()
         edi_user = self.env.company.account_edi_proxy_client_ids
 
         # Simulate soft-delete and remove refresh token
@@ -442,7 +467,7 @@ class TestPeppolParticipant(TransactionCase):
 
     def test_recovery_demo_mode_skip(self):
         settings = self.env['res.config.settings'].create(self._get_participant_vals())
-        settings.button_create_peppol_proxy_user()
+        settings.button_register_with_kyc()
         edi_user = self.env.company.account_edi_proxy_client_ids
         edi_user.edi_mode = 'demo'
 
@@ -458,7 +483,7 @@ class TestPeppolParticipant(TransactionCase):
     def test_recovery_unknown_peppol_state(self):
         """Test recovery handles unknown peppol states gracefully"""
         settings = self.env['res.config.settings'].create(self._get_participant_vals())
-        settings.button_create_peppol_proxy_user()
+        settings.button_register_with_kyc()
         edi_user = self.env.company.account_edi_proxy_client_ids
 
         edi_user.active = False
@@ -477,7 +502,7 @@ class TestPeppolParticipant(TransactionCase):
         """Test cron handles errors in one company without affecting others"""
         # company_1: normal recoverable user
         settings_1 = self.env['res.config.settings'].create(self._get_participant_vals())
-        settings_1.button_create_peppol_proxy_user()
+        settings_1.button_register_with_kyc()
         edi_user_1 = self.env.company.account_edi_proxy_client_ids
         edi_user_1.active = False
         edi_user_1.company_id.account_peppol_proxy_state = 'not_registered'
@@ -496,7 +521,7 @@ class TestPeppolParticipant(TransactionCase):
                 'account_peppol_phone_number': '+32483123456',
                 'account_peppol_contact_email': 'company2@test.example.com',
             })
-            settings_2.button_create_peppol_proxy_user()
+            settings_2.button_register_with_kyc()
 
         edi_user_2 = company_2.account_edi_proxy_client_ids
         edi_user_2.active = False
@@ -528,7 +553,7 @@ class TestPeppolParticipant(TransactionCase):
     def test_recovery_company_with_migration_key_skip(self):
         """Test recovery skips companies with migration keys"""
         settings = self.env['res.config.settings'].create(self._get_participant_vals())
-        settings.button_create_peppol_proxy_user()
+        settings.button_register_with_kyc()
         edi_user = self.env.company.account_edi_proxy_client_ids
 
         # simulate soft-delete with migration key
@@ -546,7 +571,7 @@ class TestPeppolParticipant(TransactionCase):
 
     def test_recovery_company_inconsistent_state_skip(self):
         settings = self.env['res.config.settings'].create(self._get_participant_vals())
-        settings.button_create_peppol_proxy_user()
+        settings.button_register_with_kyc()
         edi_user = self.env.company.account_edi_proxy_client_ids
 
         edi_user.active = False
@@ -562,7 +587,7 @@ class TestPeppolParticipant(TransactionCase):
         """Test recovery handles malformed API responses"""
         settings = self.env['res.config.settings'].create(self._get_participant_vals())
         with self._set_context({'mock_id_client': 'error-client-id'}):
-            settings.button_create_peppol_proxy_user()
+            settings.button_register_with_kyc()
         edi_user = self.env.company.account_edi_proxy_client_ids
 
         edi_user.active = False
@@ -580,7 +605,7 @@ class TestPeppolParticipant(TransactionCase):
     def test_deregister_with_client_gone_error(self):
         """Test deregistration succeeds even when proxy returns client_gone error"""
         settings = self.env['res.config.settings'].create(self._get_participant_vals())
-        settings.button_create_peppol_proxy_user()
+        settings.button_register_with_kyc()
         self.env['account_edi_proxy_client.user']._cron_peppol_get_participant_status()
         self.assertEqual(self.env.company.account_peppol_proxy_state, 'active')
 
@@ -609,7 +634,7 @@ class TestPeppolParticipant(TransactionCase):
             'account_peppol_phone_number': '+32483123456',
             'account_peppol_contact_email': 'yourcompany@test.example.com',
         })
-        settings.button_create_peppol_proxy_user()
+        settings.button_register_with_kyc()
         self.env['account_edi_proxy_client.user']._cron_peppol_get_participant_status()
         self.env.company.vat = 'BE0475646428'
         self.assertRecordValues(self.env.company.partner_id, [{
@@ -670,7 +695,8 @@ class TestPeppolParticipant(TransactionCase):
         })
 
         settings = self.env['res.config.settings'].with_company(child_company).create(vals)
-        settings.button_create_peppol_proxy_user()
+        with self._set_context({'connect_state': 'sender'}):
+            settings.button_register_with_kyc()
 
         self.assertEqual(child_company.account_peppol_proxy_state, 'sender')
         self.assertTrue(settings.peppol_use_parent_company)
