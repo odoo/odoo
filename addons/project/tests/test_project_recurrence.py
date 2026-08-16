@@ -186,6 +186,38 @@ class TestProjectRecurrence(TransactionCase):
         task.state = '1_done'
         self.assertEqual(len(task.recurrence_id.task_ids), 2, "a new occurrence should have been created")
 
+    def test_next_occurrence_notifies_assignees(self):
+        """
+        The assignees of an automatically created recurring occurrence should be
+        notified.
+        """
+        with freeze_time(self.date_01_01):
+            form = Form(self.env['project.task'])
+            form.name = 'test recurring task'
+            form.project_id = self.project_recurring
+            form.user_ids.add(self.user)
+            form.recurring_task = True
+            form.repeat_interval = 1
+            form.repeat_unit = 'month'
+            form.repeat_type = 'forever'
+            task = form.save()
+
+        with freeze_time(self.date_01_01 + relativedelta(months=1)):
+            task.state = '1_done'
+
+        new_task = task.recurrence_id.task_ids - task
+        self.assertEqual(len(new_task), 1, "a new occurrence should have been created")
+
+        messages = self.env['mail.message'].search([
+            ('model', '=', 'project.task'),
+            ('res_id', '=', new_task.id),
+        ])
+        notified_partners = messages.notification_ids.res_partner_id
+        self.assertIn(
+            self.user.partner_id, notified_partners,
+            "the assignee should be notified about the auto-created recurring task",
+        )
+
     def test_recurrence_copy_task_dependency(self):
         self.project_recurring.allow_task_dependencies = True
         parent_task = self.env['project.task'].with_context({'mail_create_nolog': True}).create({
