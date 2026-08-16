@@ -19,6 +19,13 @@ class PeppolSettingsButtons extends Component {
 
     setup() {
         super.setup();
+<<<<<<< 7950c5b47b8b8315a0eff73a1d242fdc72dddcdf
+||||||| 89081cc015d517880d3cadc2d61c278b4b379502
+        this.orm = useService("orm");
+=======
+        this.orm = useService("orm");
+        this.action = useService("action");
+>>>>>>> 0abc2fba1dcb90099cc1a455d086f1bcf7bd934a
         this.dialogService = useService("dialog");
         this.notification = useService("notification");
         // we have to pass this via context from python
@@ -151,8 +158,126 @@ class PeppolSettingsButtons extends Component {
         await this._callConfigMethod("button_send_peppol_verification_code");
     }
 
+<<<<<<< 7950c5b47b8b8315a0eff73a1d242fdc72dddcdf
     async createReceiver() {
         await this._callConfigMethod("button_peppol_smp_registration");
+||||||| 89081cc015d517880d3cadc2d61c278b4b379502
+    async createUser() {
+        const record = this.props.record;
+        const countryCode = record.data.company_country_code || record.data.country_code;
+        const isFrenchCompany = ['FR', 'GP', 'MQ', 'RE'].includes(countryCode);
+        const isFrenchEas = ['0225', '0009', '9957', '0002'].includes(record.data.account_peppol_eas);
+
+        if (!(isFrenchCompany || isFrenchEas)) {
+            await this._createUser();
+            return
+        }
+
+        this.dialogService.add(ConfirmationDialog, {
+            title: _t("French Company Registration"),
+            body: _t("If you want to use the French E-Invoicing via Approved Platform, please consider installing the module `France - E-Invoicing (Approved Platform)` before registering here. Are you sure you want to continue?"),
+            confirmLabel: _t("OK"),
+            cancelLabel: _t("Cancel"),
+            confirm: () => this._createUser(),
+            cancel: () => {},
+        });
+    }
+
+    async _createUser() {
+        const record = this.props.record;
+        try {
+            await this._save();
+            await this.orm.call(
+                record.resModel,
+                "button_create_peppol_proxy_user",
+                [[record.resId]],
+                { context: record.context }
+            );
+            await this.env.model.root.load();
+        } catch (error) {
+            const isAlreadyRegisteredError = (
+                error.exceptionName?.endsWith("EndpointAlreadyRegisteredError")
+                || error.data?.name?.endsWith("EndpointAlreadyRegisteredError")
+            );
+            if (!isAlreadyRegisteredError) {
+                throw error;
+            }
+            this.dialogService.add(ConfirmationDialog, {
+                body: error.data?.message || error.message,
+                confirmLabel: _t("OK"),
+                cancelLabel: _t("Cancel"),
+                confirm: async () => {
+                    await this._save();
+                    await this.orm.call(
+                        record.resModel,
+                        "button_create_peppol_proxy_user_sender_only",
+                        [[record.resId]],
+                        { context: record.context }
+                    );
+                    await this.env.model.root.load();
+                },
+                cancel: () => { },
+            });
+        }
+=======
+    async createUser() {
+        const record = this.props.record;
+        const countryCode = record.data.company_country_code || record.data.country_code;
+        const isFrenchCompany = ['FR', 'GP', 'MQ', 'RE'].includes(countryCode);
+        const isFrenchEas = ['0225', '0009', '9957', '0002'].includes(record.data.account_peppol_eas);
+
+        if (!(isFrenchCompany || isFrenchEas)) {
+            await this._createUser();
+            return
+        }
+
+        this.dialogService.add(ConfirmationDialog, {
+            title: _t("French Company Registration"),
+            body: _t("If you want to use the French E-Invoicing via Approved Platform, please consider installing the module `France - E-Invoicing (Approved Platform)` before registering here. Are you sure you want to continue?"),
+            confirmLabel: _t("OK"),
+            cancelLabel: _t("Cancel"),
+            confirm: () => this._createUser(),
+            cancel: () => {},
+        });
+    }
+
+    async _createUser() {
+        const record = this.props.record;
+        try {
+            await this._save();
+            const action = await this.orm.call(
+                record.resModel,
+                "button_register_with_kyc",
+                [[record.resId]],
+                { context: record.context }
+            );
+            await this.action.doAction(action);
+        } catch (error) {
+            const isAlreadyRegisteredError = (
+                error.exceptionName?.endsWith("EndpointAlreadyRegisteredError")
+                || error.data?.name?.endsWith("EndpointAlreadyRegisteredError")
+            );
+            if (!isAlreadyRegisteredError) {
+                throw error;
+            }
+            this.dialogService.add(ConfirmationDialog, {
+                body: error.data?.message || error.message,
+                confirmLabel: _t("OK"),
+                cancelLabel: _t("Cancel"),
+                confirm: async () => {
+                    await this._save();
+                    const action = await this.orm.call(
+                        record.resModel,
+                        "button_create_peppol_proxy_user_sender_only",
+                        [[record.resId]],
+                        { context: record.context }
+                    );
+                    await this.action.doAction(action);
+                },
+                cancel: () => { },
+            });
+        }
+>>>>>>> 0abc2fba1dcb90099cc1a455d086f1bcf7bd934a
     }
 
     async reregister() {
