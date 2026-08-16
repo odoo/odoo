@@ -119,8 +119,28 @@ def _mock_update_user_data(func, self, *args, **kwargs):
     pass
 
 
+def _mock_peppol_can_connect(func, self, *args, **kwargs):
+    return {'auth_required': False}
+
+
+def _mock_peppol_create_connection(func, self, *args, **kwargs):
+    peppol_identifier = kwargs['peppol_identifier'] if 'peppol_identifier' in kwargs else args[0]
+    edi_user = self.env['account_edi_proxy_client.user'].sudo().create({
+        'id_client': f'demo{self.id}',
+        'company_id': self.id,
+        'edi_format_id': self.env.ref('account_peppol.edi_peppol').id,
+        'edi_identification': peppol_identifier,
+        'private_key': b64encode(file_open(DEMO_PRIVATE_KEY, 'rb').read()),
+        'refresh_token': 'demo',
+    })
+    self.account_peppol_proxy_state = 'active'
+    return edi_user
+
+
 _demo_behaviour = {
     '_make_request_peppol': _mock_make_request,
+    '_peppol_can_connect': _mock_peppol_can_connect,
+    '_peppol_create_connection': _mock_peppol_create_connection,
     'button_account_peppol_check_partner_endpoint': _mock_button_verify_partner_endpoint,
     'button_create_peppol_proxy_user': _mock_user_creation,
     'button_deregister_peppol_participant': _mock_deregister_participant,

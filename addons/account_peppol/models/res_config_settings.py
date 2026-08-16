@@ -1,10 +1,12 @@
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
+import logging
 
 from odoo import _, api, fields, models, modules, tools
 from odoo.exceptions import UserError, ValidationError
 
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
 from odoo.addons.account_peppol.tools.demo_utils import handle_demo
+
+_logger = logging.getLogger(__name__)
 
 
 class ResConfigSettings(models.TransientModel):
@@ -275,3 +277,36 @@ class ResConfigSettings(models.TransientModel):
                 self.env.cr.commit()
 
         self._peppol_deregister()
+
+    def button_register_with_kyc(self):
+        self.ensure_one()
+        if self.account_peppol_proxy_state != 'not_registered':
+            raise UserError(_("You cannot register this company again on Peppol"))
+        if not self.account_peppol_phone_number or not self.account_peppol_contact_email:
+            raise ValidationError(_("Contact email and mobile number are required."))
+
+        identifier = f'{self.account_peppol_eas}:{self.account_peppol_endpoint}'.lower()
+        self.company_id.partner_id._check_peppol_eas()
+        participant_info = self.company_id.partner_id._check_peppol_participant_exists(identifier, check_company=True)
+
+        if participant_info:
+            error_msg = _(
+                "A participant with these details has already been registered on the network. "
+                "If you have previously registered to a Peppol service, please deregister."
+            )
+
+            if isinstance(participant_info, str):
+                error_msg += _("The Peppol service that is used is likely to be %s.", participant_info)
+            raise UserError(error_msg)
+
+        authorization_url = self.env['res.company']._peppol_select_kyc_url(self.company_id._peppol_can_connect(identifier))
+        # 16.0 unique index doesn't exclude archived rows, so we unlink instead of archiving
+        self.env['account_edi_proxy_client.user'].sudo().with_context(active_test=False).search([
+            ('company_id', '=', self.company_id.id),
+            ('edi_identification', '=', identifier),
+        ]).unlink()
+        # redirect to IAP KYC link (that will redirect back to here thru callback)
+        if authorization_url:  # redirect to IAP KYC page
+            return {'type': 'ir.actions.act_url', 'url': authorization_url, 'target': 'self'}
+        self.company_id._peppol_create_connection(identifier)  # no auth, IAP will authorize connection directly
+        return {'type': 'ir.actions.client', 'tag': 'reload'}
