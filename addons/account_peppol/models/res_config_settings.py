@@ -1,10 +1,12 @@
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
+import logging
 
 from odoo import _, api, fields, models, modules, tools
 from odoo.exceptions import UserError, ValidationError
 
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
 from odoo.addons.account_peppol.tools.demo_utils import handle_demo
+
+_logger = logging.getLogger(__name__)
 
 
 class ResConfigSettings(models.TransientModel):
@@ -124,6 +126,23 @@ class ResConfigSettings(models.TransientModel):
             else:
                 config.account_peppol_endpoint_warning = _("The endpoint number might not be correct. "
                                                            "Please check if you entered the right identification number.")
+
+    @api.depends('account_peppol_eas', 'account_peppol_endpoint', 'account_peppol_edi_mode', 'account_peppol_proxy_state')
+    def _compute_peppol_can_connect_data(self):
+        for config in self:
+            vals = {}
+            if (
+                config.account_peppol_proxy_state == 'not_registered'
+                and config.account_peppol_edi_mode in ('prod', 'test')
+                and config.account_peppol_eas
+                and config.account_peppol_endpoint
+            ):
+                identifier = f'{config.account_peppol_eas}:{config.account_peppol_endpoint}'.lower()
+                try:
+                    vals = config.company_id._peppol_can_connect(identifier)
+                except Exception as e:  # noqa: BLE001
+                    _logger.warning("Peppol: can_connect failed: %s", e)
+            config.peppol_can_connect_data = vals
 
     # -------------------------------------------------------------------------
     # BUSINESS ACTIONS
@@ -275,3 +294,23 @@ class ResConfigSettings(models.TransientModel):
                 self.env.cr.commit()
 
         self._peppol_deregister()
+
+    def button_register_with_kyc(self):
+        self.ensure_one()
+        if self.account_peppol_proxy_state != 'not_registered':
+            raise UserError(_("You cannot register this company again on Peppol"))
+        if not self.account_peppol_phone_number or not self.account_peppol_contact_email:
+            raise ValidationError(_("Contact email and mobile number are required."))
+
+        identifier = f'{self.account_peppol_eas}:{self.account_peppol_endpoint}'.lower()
+        authorization_url = self.env['res.company']._peppol_select_kyc_url(self.company_id._peppol_can_connect(identifier))
+        # 16.0 unique index doesn't exclude archived rows, so we unlink instead of archiving
+        self.env['account_edi_proxy_client.user'].sudo().with_context(active_test=False).search([
+            ('company_id', '=', self.company_id.id),
+            ('edi_identification', '=', identifier),
+        ]).unlink()
+        # redirect to IAP KYC link (that will redirect back to here thru callback)
+        if authorization_url:  # redirect to IAP KYC page
+            return {'type': 'ir.actions.act_url', 'url': authorization_url, 'target': 'self'}
+        self.company_id._peppol_create_connection(identifier)  # no auth, IAP will authorize connection directly
+        return {'type': 'ir.actions.client', 'tag': 'reload'}

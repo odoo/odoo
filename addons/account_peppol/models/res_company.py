@@ -1,11 +1,20 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import base64
 import re
+
+from cryptography.hazmat.backends import default_backend
+from cryptography.hazmat.primitives import serialization
+from cryptography.hazmat.primitives.asymmetric import rsa
 from stdnum import get_cc_module, ean
 
-from odoo import _, api, fields, models
-from odoo.exceptions import ValidationError
+from odoo import _, api, fields, models, modules, tools
+from odoo.exceptions import UserError, ValidationError
+from odoo.tools.misc import file_open, hash_sign, verify_hash_signed
+
 from odoo.addons.account.models.company import PEPPOL_LIST
+from ..tools.peppol_iap_connector import PeppolIAPConnector
+from ..tools.demo_utils import DEMO_PRIVATE_KEY
 
 try:
     import phonenumbers
@@ -277,3 +286,123 @@ class ResCompany(models.Model):
             lambda u: u.company_id.id == self.id and u.edi_format_id.code == 'peppol'
         )
         return peppol_user._get_demo_state()
+
+    def _peppol_generate_connect_token(self, peppol_identifier):
+        self.ensure_one()
+        msg = {
+            'peppol_identifier': peppol_identifier,
+            'company_id': self.id,
+            'partner_id': self.env.user.partner_id.id,
+            'create_at': str(fields.Datetime.now()),
+        }
+        return hash_sign(self.sudo().env, 'account_peppol_connect', msg, expiration_hours=24 * 7 * 2)
+
+    @api.model
+    def _peppol_decode_connect_token(self, token):
+        if not token:
+            return None
+        try:
+            payload = verify_hash_signed(self.sudo().env, 'account_peppol_connect', token)
+        except (ValueError, TypeError):
+            return None
+        if not payload:
+            return None
+        peppol_identifier = payload.get('peppol_identifier')
+        company = self.browse(payload.get('company_id')).exists()
+        partner = self.env['res.partner'].browse(payload.get('partner_id')).exists()
+        if not peppol_identifier or not company or not partner:
+            return None
+        return {
+            'peppol_identifier': peppol_identifier,
+            'company': company,
+            'partner': partner,
+        }
+
+    def _peppol_can_connect(self, peppol_identifier):
+        self.ensure_one()
+        if self._get_peppol_edi_mode() == 'demo':
+            return {'auth_required': False}
+        base_url = self.get_base_url()
+        return PeppolIAPConnector(self).can_connect(
+            peppol_identifier=peppol_identifier,
+            db_uuid=self.env['ir.config_parameter'].sudo().get_param('database.uuid'),
+            callback_url=base_url + '/peppol/authentication/callback',
+            webhook_url=base_url + '/peppol/authentication/webhook',
+            connect_token=self._peppol_generate_connect_token(peppol_identifier),
+            contact_email=self.account_peppol_contact_email,
+        )
+
+    @api.model
+    def _peppol_select_kyc_url(self, can_connect_vals):
+        if not can_connect_vals:
+            raise UserError(_("Could not connect to Peppol proxy"))
+        identifier_invalid = can_connect_vals.get('identifier_invalid')
+        if identifier_invalid:
+            code = identifier_invalid.get('code')
+            if code == 'IDENTIFIER_NOT_ON_PEPPOL':
+                raise UserError(_("Your identifier you entered is invalid for Peppol."))
+            if code == 'IDENTIFIER_INCORRECT_FORMAT':
+                if identifier_invalid.get('example'):
+                    raise UserError(_("Your identifier does not have a valid format. Expected format: %s.", identifier_invalid.get('example')))
+                raise UserError(_("Your identifier does not have a valid format."))
+            raise UserError(_("Your identifier is invalid."))
+        if can_connect_vals.get('db_invalid'):
+            raise UserError(_("The database you are trying to connect to is not suitable for Peppol."))
+        if not can_connect_vals.get('auth_required'):
+            return None
+        available_auths = can_connect_vals.get('available_auths') or {}
+        auth = available_auths.get('generic') or next(iter(available_auths.values()), None)
+        if not auth or not auth.get('authorization_url'):
+            raise UserError(_("Authentication method is not available. Please contact Odoo support."))
+        return auth['authorization_url']
+
+    def _peppol_create_connection(self, peppol_identifier, auth_token=None):
+        """Register though ``/api/peppol/2/connect`` and create proxy user record"""
+        self.ensure_one()
+        if self._get_peppol_edi_mode() == 'demo':
+            edi_user = self.env['account_edi_proxy_client.user'].sudo().create({
+                'id_client': f'demo{self.id}',
+                'company_id': self.id,
+                'edi_format_id': self.env.ref('account_peppol.edi_peppol').id,
+                'edi_identification': peppol_identifier,
+                'private_key': base64.b64encode(file_open(DEMO_PRIVATE_KEY, 'rb').read()),
+                'refresh_token': 'demo',
+            })
+            self.account_peppol_proxy_state = 'active'
+            return edi_user
+
+        private_key = rsa.generate_private_key(public_exponent=65537, key_size=2048, backend=default_backend())
+        private_pem = private_key.private_bytes(encoding=serialization.Encoding.PEM, format=serialization.PrivateFormat.PKCS8, encryption_algorithm=serialization.NoEncryption())
+        public_pem = private_key.public_key().public_bytes(encoding=serialization.Encoding.PEM, format=serialization.PublicFormat.SubjectPublicKeyInfo)
+        response = PeppolIAPConnector(self).create_connection(
+            peppol_identifier=peppol_identifier,
+            db_uuid=self.env['ir.config_parameter'].sudo().get_param('database.uuid'),
+            public_key=base64.b64encode(public_pem).decode(),
+            auth_token=auth_token,
+            peppol_company_name=self.display_name,
+            peppol_company_vat=self.vat,
+            peppol_company_street=self.street,
+            peppol_company_city=self.city,
+            peppol_company_zip=self.zip,
+            peppol_country_code=self.country_id.code,
+            peppol_phone_number=self.account_peppol_phone_number,
+            peppol_contact_email=self.account_peppol_contact_email,
+        )
+        edi_user = self.env['account_edi_proxy_client.user'].sudo().create({
+            'id_client': response['id_client'],
+            'company_id': self.id,
+            'edi_format_id': self.env.ref('account_peppol.edi_peppol').id,
+            'edi_identification': peppol_identifier,
+            'private_key': base64.b64encode(private_pem),
+            'refresh_token': response['refresh_token'],
+        })
+        # map "new" /api/peppol/2/connect states into v16
+        self.account_peppol_proxy_state = {
+            'sender': 'pending',
+            'smp_registration': 'pending',
+            'receiver': 'active',
+            'rejected': 'rejected',
+        }.get(response['peppol_state'], 'not_registered')
+        if not tools.config['test_enable'] and not modules.module.current_test:
+            self.env.cr.commit()  # the user creation is not idempotent, the now exists and is commited on IAP
+        return edi_user

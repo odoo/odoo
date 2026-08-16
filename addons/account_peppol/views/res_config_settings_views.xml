@@ -118,9 +118,24 @@
                                             <button name="button_create_peppol_proxy_user"
                                                     type="object"
                                                     class="btn btn-primary"
-                                                    attrs="{'invisible': [('account_peppol_proxy_state', '!=', 'not_registered')]}">
+                                                    attrs="{'invisible': [('account_peppol_proxy_state', '!=', 'not_registered')]}"
+                                                    invisible="1">
                                                 <span attrs="{'invisible': [('account_peppol_edi_mode', '!=', 'prod')]}">
                                                     Validate Registration (Production)
+                                                </span>
+                                                <span attrs="{'invisible': [('account_peppol_edi_mode', '!=', 'test')]}">
+                                                    Validate Registration (Test)
+                                                </span>
+                                                <span attrs="{'invisible': [('account_peppol_edi_mode', '!=', 'demo')]}">
+                                                    Validate Registration (Demo)
+                                                </span>
+                                            </button>
+                                            <button name="button_register_with_kyc"
+                                                    type="object"
+                                                    class="btn btn-primary"
+                                                    attrs="{'invisible': [('account_peppol_proxy_state', '!=', 'not_registered')]}">
+                                                <span attrs="{'invisible': [('account_peppol_edi_mode', '!=', 'prod')]}">
+                                                    Validate Registration
                                                 </span>
                                                 <span attrs="{'invisible': [('account_peppol_edi_mode', '!=', 'test')]}">
                                                     Validate Registration (Test)
