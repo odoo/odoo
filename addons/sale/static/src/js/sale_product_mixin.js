@@ -1,11 +1,33 @@
+import { t, useProps } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { serializeDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { x2ManyCommands } from "@web/core/orm_plugin";
+import { Many2XAutocomplete, many2XAutocompleteProps } from "@web/views/fields/relational_utils";
 import { ProductConfiguratorDialog } from "./product_configurator_dialog/product_configurator_dialog";
 import { getCustomPtavs, getNoVariantPtavIds, getSelectedComboItems, getSelectedCustomPtav } from "./sale_utils";
 import { openComboConfigurator } from "./combo_configurator_utils";
+
+export class ProductSearchMany2XAutocomplete extends Many2XAutocomplete {
+    props = useProps({ ...many2XAutocompleteProps, onProductSearch: t.function().optional() });
+
+    /**
+     * @override
+     */
+    search(name, domain, context) {
+        this.props.onProductSearch?.(name);
+        return super.search(name, domain, context);
+    }
+
+    /**
+     * @override
+     */
+    onSearchMore(request) {
+        this.props.onProductSearch?.("");
+        return super.onSearchMore(request);
+    }
+}
 
 async function applyProduct(record, product) {
     // handle custom values & no variants
@@ -79,7 +101,7 @@ export const saleProductMixin = () => ({
         return _t("Edit Configuration");
     },
 
-    async _getProductConfiguratorData(edit = false) {
+    async _getProductConfiguratorData(edit = false, searchTerm = "") {
         const saleOrder = this.props.record.model.root.data;
         const saleOrderLine = this.props.record.data;
         const ptavIds = [...this._getVariantPtavIds(saleOrderLine)];
@@ -100,13 +122,16 @@ export const saleProductMixin = () => ({
                 pricelist_id: saleOrder.pricelist_id?.id,
                 ptav_ids: ptavIds,
                 only_main_product: edit,
+                search_term: searchTerm,
                 ...this._getAdditionalRpcParams(),
             });
     },
 
     async _onProductTemplateUpdate() {
         super._onProductTemplateUpdate();
-        const data = await this._getProductConfiguratorData();
+        const searchTerm = this.lastProductSearch || "";
+        this.lastProductSearch = "";
+        const data = await this._getProductConfiguratorData(false, searchTerm);
         if (data && data.product_id) {
             if (this.props.record.data.product_id != data.product_id.id) {
                 if (data.is_combo) {
