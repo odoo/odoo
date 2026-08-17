@@ -29,8 +29,8 @@ class ResUsers(models.Model):
             return NotImplemented
         # Note: matching 'inactive' (archived) users requires active_test=False.
         domains_by_state = {
-            'new': Domain('active', '=', True) & Domain('login_date', '=', False),
-            'active': Domain('active', '=', True) & Domain('login_date', '!=', False),
+            'new': Domain('active', '=', True) & Domain('log_ids', '=', False),
+            'active': Domain('active', '=', True) & Domain('log_ids', '!=', False),
             'inactive': Domain('active', '=', False),
         }
         return Domain.OR([domains_by_state[v] for v in value if v in domains_by_state])
