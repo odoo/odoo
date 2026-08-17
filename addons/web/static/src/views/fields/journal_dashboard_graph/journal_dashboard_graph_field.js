@@ -1,10 +1,9 @@
-import { useLayoutEffect } from "@web/owl2/utils";
-import { loadBundle } from "@web/core/assets";
+import { useChart } from "@web/core/utils/chart_hook";
 import { registry } from "@web/core/registry";
 import { getColor, hexToRGBA, getCustomColor } from "@web/core/colors/colors";
 import { standardFieldProps } from "../standard_field_props";
 
-import { Component, onWillStart, signal, t, useProps } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 import { cookie } from "@web/core/browser/cookie";
 
 const colorScheme = cookie.get("color_scheme");
@@ -17,39 +16,22 @@ export class JournalDashboardGraphField extends Component {
         graphType: t.string(),
     });
 
-    canvasRef = signal.ref();
+    chart = useChart(() => this.getChartConfig());
 
     setup() {
-        this.chart = null;
         this.data = JSON.parse(this.props.record.data[this.props.name]);
-
-        onWillStart(async () => await loadBundle("web.chartjs_lib"));
-
-        useLayoutEffect(() => {
-            this.renderChart();
-            return () => {
-                if (this.chart) {
-                    this.chart.destroy();
-                }
-            };
-        });
     }
 
     /**
-     * Instantiates a Chart (Chart.js lib) to render the graph according to
-     * the current config.
+     * Returns the Chart (Chart.js lib) configuration to render the graph
+     * according to the current props.
      */
-    renderChart() {
-        if (this.chart) {
-            this.chart.destroy();
-        }
-        let config;
+    getChartConfig() {
         if (this.props.graphType === "line") {
-            config = this.getLineChartConfig();
+            return this.getLineChartConfig();
         } else if (this.props.graphType === "bar") {
-            config = this.getBarChartConfig();
+            return this.getBarChartConfig();
         }
-        this.chart = new Chart(this.canvasRef(), config);
     }
     getLineChartConfig() {
         const labels = this.data[0].values.map(function (pt) {

@@ -1,11 +1,10 @@
-import { useLayoutEffect } from "@web/owl2/utils";
-import { loadBundle } from "@web/core/assets";
+import { useChart } from "@web/core/utils/chart_hook";
 import { cookie } from "@web/core/browser/cookie";
 import { getColor } from "@web/core/colors/colors";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
-import { Component, onWillStart, signal } from "@odoo/owl";
+import { Component, onWillStart } from "@odoo/owl";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 
 export class JsonPopOver extends Component {
@@ -42,22 +41,12 @@ registry.category("fields").add("lead_days_widget", popOverLeadDays);
 
 export class ReplenishmentGraphWidget extends JsonPopOver {
     static template = "stock.replenishmentGraph";
-    canvasRef = signal.ref();
+    chart = useChart(() => this.getScatterGraphConfig());
+
     setup() {
         super.setup();
-        this.chart = null;
         onWillStart(async () => {
             this.displayUOM = await user.hasGroup("uom.group_uom");
-            await loadBundle("web.chartjs_lib");
-        });
-
-        useLayoutEffect(() => {
-            this.renderChart();
-            return () => {
-                if (this.chart) {
-                    this.chart.destroy();
-                }
-            };
         });
     }
     get productUomName() {
@@ -86,14 +75,6 @@ export class ReplenishmentGraphWidget extends JsonPopOver {
     }
     get leadTime() {
         return this.jsonValue["lead_time"];
-    }
-
-    renderChart() {
-        if (this.chart) {
-            this.chart.destroy();
-        }
-        const config = this.getScatterGraphConfig();
-        this.chart = new Chart(this.canvasRef(), config);
     }
 
     getScatterGraphConfig() {

@@ -11,21 +11,11 @@ import { registry } from "@web/core/registry";
 import { formatFloat, formatMonetary } from "@web/views/fields/formatters";
 import { SEP } from "./graph_model";
 import { sortBy } from "@web/core/utils/arrays";
-import { loadBundle } from "@web/core/assets";
 import { renderToMarkup } from "@web/core/utils/render";
+import { useChart } from "@web/core/utils/chart_hook";
 import { useService } from "@web/core/utils/hooks";
 
-import {
-    Component,
-    markup,
-    onMounted,
-    onPatched,
-    onWillStart,
-    onWillUnmount,
-    signal,
-    t,
-    useProps,
-} from "@odoo/owl";
+import { Component, markup, signal, t, useProps } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { cookie } from "@web/core/browser/cookie";
@@ -133,8 +123,8 @@ export class GraphRenderer extends Component {
         buttonTemplate: t.any(),
     });
     rootRef = signal.ref();
-    canvasRef = signal.ref();
     containerRef = signal.ref();
+    chart = useChart(() => this.getChartConfig());
 
     setup() {
         this.model = this.props.model;
@@ -142,23 +132,8 @@ export class GraphRenderer extends Component {
         this.actionService = useService("action");
         this.uiService = useService("ui");
 
-        this.chart = null;
         this.tooltip = null;
         this.legendTooltip = null;
-
-        onWillStart(async () => {
-            await loadBundle("web.chartjs_lib");
-        });
-
-        onMounted(() => this.renderChart());
-        onPatched(() => this.renderChart());
-        onWillUnmount(this.onWillUnmount);
-    }
-
-    onWillUnmount() {
-        if (this.chart) {
-            this.chart.destroy();
-        }
     }
 
     /**
@@ -208,10 +183,11 @@ export class GraphRenderer extends Component {
         if (!disableLinking && mode !== "line") {
             this.containerRef().style.cursor = "pointer";
         }
-        const chartAreaTop = this.chart.chartArea.top;
+        const { chartArea } = this.chart.instance();
+        const chartAreaTop = chartArea.top;
         const viewContentTop = this.containerRef().getBoundingClientRect().top;
         const content = renderToMarkup("web.GraphRenderer.CustomTooltip", {
-            maxWidth: getMaxWidth(this.chart.chartArea),
+            maxWidth: getMaxWidth(chartArea),
             measure: measures[measure].string,
             mode: this.model.metaData.mode,
             tooltipItems: this.getTooltipItems(data, metaData, tooltipModel),
@@ -264,8 +240,9 @@ export class GraphRenderer extends Component {
     fixTooltipLeftPosition(tooltip, x) {
         let left;
         const tooltipWidth = tooltip.clientWidth;
-        const minLeftAllowed = Math.floor(this.chart.chartArea.left + 2);
-        const maxLeftAllowed = Math.floor(this.chart.chartArea.right - tooltipWidth - 2);
+        const { chartArea } = this.chart.instance();
+        const minLeftAllowed = Math.floor(chartArea.left + 2);
+        const maxLeftAllowed = Math.floor(chartArea.right - tooltipWidth - 2);
         x = Math.floor(x);
         if (x < minLeftAllowed) {
             left = minLeftAllowed;
@@ -707,7 +684,8 @@ export class GraphRenderer extends Component {
         if (disableLinking || mode === "line") {
             return;
         }
-        const [activeElement] = this.chart.getElementsAtEventForMode(
+        const chart = this.chart.instance();
+        const [activeElement] = chart.getElementsAtEventForMode(
             ev,
             "nearest",
             { intersect: true },
@@ -717,7 +695,7 @@ export class GraphRenderer extends Component {
             return;
         }
         const { datasetIndex, index } = activeElement;
-        const { domains } = this.chart.data.datasets[datasetIndex];
+        const { domains } = chart.data.datasets[datasetIndex];
         if (domains) {
             this.onGraphClickedFinal(domains[index], isMiddleClick);
         }
@@ -733,9 +711,10 @@ export class GraphRenderer extends Component {
         this.removeTooltips();
         // Default 'onClick' fallback. See web/static/lib/Chart/Chart.js#15138
         const index = legendItem.datasetIndex;
-        const meta = this.chart.getDatasetMeta(index);
-        meta.hidden = meta.hidden === null ? !this.chart.data.datasets[index].hidden : null;
-        this.chart.update();
+        const chart = this.chart.instance();
+        const meta = chart.getDatasetMeta(index);
+        meta.hidden = meta.hidden === null ? !chart.data.datasets[index].hidden : null;
+        chart.update();
     }
 
     /**
@@ -747,7 +726,7 @@ export class GraphRenderer extends Component {
      */
     onLegendHover(ev, legendItem) {
         ev = ev.native;
-        this.canvasRef().style.cursor = "pointer";
+        this.chart.ref().style.cursor = "pointer";
         /**
          * The string legendItem.text is an initial segment of legendItem.fullText.
          * If the two coincide, no need to generate a tooltip. If a tooltip
@@ -758,13 +737,13 @@ export class GraphRenderer extends Component {
         if (this.legendTooltip || text === fullText) {
             return;
         }
-        const viewContentTop = this.canvasRef().getBoundingClientRect().top;
+        const viewContentTop = this.chart.ref().getBoundingClientRect().top;
         const legendTooltip = Object.assign(document.createElement("div"), {
             className: "o_tooltip_legend popover p-3 pe-none position-absolute",
             innerText: fullText,
         });
         legendTooltip.style.top = `${ev.clientY - viewContentTop}px`;
-        legendTooltip.style.maxWidth = getMaxWidth(this.chart.chartArea);
+        legendTooltip.style.maxWidth = getMaxWidth(this.chart.instance().chartArea);
         this.containerRef().appendChild(legendTooltip);
         this.fixTooltipLeftPosition(legendTooltip, ev.clientX);
         this.legendTooltip = legendTooltip;
@@ -775,7 +754,7 @@ export class GraphRenderer extends Component {
      * corresponding legend item, the tooltip is removed.
      */
     onLegendLeave() {
-        this.canvasRef().style.cursor = "";
+        this.chart.ref().style.cursor = "";
         this.removeLegendTooltip();
     }
 
@@ -847,20 +826,6 @@ export class GraphRenderer extends Component {
             this.tooltip = null;
         }
         this.removeLegendTooltip();
-    }
-
-    /**
-     * Instantiates a Chart (Chart.js lib) to render the graph according to
-     * the current config.
-     */
-    renderChart() {
-        if (this.chart) {
-            this.chart.destroy();
-        }
-        if (this.canvasRef()) {
-            const config = this.getChartConfig();
-            this.chart = new Chart(this.canvasRef(), config);
-        }
     }
 
     /**
