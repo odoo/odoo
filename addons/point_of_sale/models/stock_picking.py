@@ -307,6 +307,8 @@ class StockMove(models.Model):
         else:
             for move in moves_remaining:
                 if move._should_track_kit_product():
+                    qty = move.product_uom_qty
+                    move._update_reserved_quantity(qty, move.location_id, strict=False)
                     continue
                 for line in lines_data[move.product_id.id]['order_lines']:
                     for lot in line.pack_lot_ids.filtered(lambda l: l.lot_name):
