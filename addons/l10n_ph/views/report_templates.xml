@@ -7,4 +7,14 @@
             </t>
         </xpath>
     </template>
+
+    <!-- RR No. 7-2024 Sec. 6(B): the invoice states whether the seller is VAT-registered. -->
+    <template id="company_address_list" inherit_id="web.company_address_list">
+        <xpath expr="//ul[@name='company_address_list']//span[@t-field='company.country_id.vat_label']" position="replace">
+            <t t-if="company.account_fiscal_country_id.code == 'PH'">
+                <span t-out="('VAT REG ' if company._l10n_ph_is_vat_registered() else 'NON VAT REG ') + company.country_id.vat_label"/>:
+            </t>
+            <t t-else="">$0</t>
+        </xpath>
+    </template>
 </odoo>

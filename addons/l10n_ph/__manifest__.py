@@ -24,6 +24,7 @@
         'views/report_disbursement_voucher_internal_template.xml',
         'views/account_report.xml',
         'views/report_templates.xml',
+        'views/report_invoice.xml',
     ],
     'demo': [
         'demo/demo_company.xml',
