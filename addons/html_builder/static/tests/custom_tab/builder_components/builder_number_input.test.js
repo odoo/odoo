@@ -1171,6 +1171,26 @@ describe("sanitized values", () => {
         expect(".options-container input").toHaveValue(3.3);
         expect(":iframe .test-options-target").toHaveAttribute("data-number", "3.3");
     });
+    test("use step 'any' to avoid tooltip when no step is defined", async () => {
+        addBuilderOption(
+            class extends BaseOptionComponent {
+                static selector = ".test-options-target";
+                static template = xml`<BuilderNumberInput dataAttributeAction="'number'"/>`;
+            }
+        );
+        await setupHTMLBuilder(`
+            <div class="test-options-target" data-number="10">Test</div>
+        `);
+        await contains(":iframe .test-options-target").click();
+        await contains(".options-container input").edit("3.3", { instantly: true });
+        // Avoid the browser's implicit step=1, which considers decimal values
+        // invalid. A valid input with no validation message does not show the
+        // native tooltip.
+        const input = queryFirst(".options-container input");
+        expect(input).toHaveAttribute("step", "any");
+        expect(input.checkValidity()).toBe(true);
+        expect(input.validationMessage).toBe("");
+    });
     test("BuilderNumberInput transforms , into . (composable)", async () => {
         addBuilderOption(
             class extends BaseOptionComponent {
