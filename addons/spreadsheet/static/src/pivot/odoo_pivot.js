@@ -94,6 +94,16 @@ export class OdooPivot {
         this.context = omit(nextDefinition.context, ...Object.keys(user.context));
         const actualDefinition = this.coreDefinition;
         this.coreDefinition = nextDefinition;
+        // Build the runtime definition synchronously, from the fields already
+        // known so far, so `definition` (read notably by the side panel) reflects
+        // the new row/column/measure order immediately instead of only once the
+        // reload below resolves.
+        if (this._fields) {
+            this.runtimeDefinition = new OdooPivotRuntimeDefinition(
+                this.coreDefinition,
+                this.getFields()
+            );
+        }
         if (!deepEquals(actualDefinition.sortedColumn, nextDefinition.sortedColumn)) {
             this.model.updateSortColumn(nextDefinition.sortedColumn);
         }
@@ -119,12 +129,7 @@ export class OdooPivot {
                     nextDefinition.measures
                 )
             ) {
-                this.coreDefinition = nextDefinition;
-                const runtimeDefinition = new OdooPivotRuntimeDefinition(
-                    this.coreDefinition,
-                    this.getFields()
-                );
-                this.model.updateMeasures(runtimeDefinition.measures);
+                this.model.updateMeasures(this.runtimeDefinition.measures);
                 return;
             }
         }
