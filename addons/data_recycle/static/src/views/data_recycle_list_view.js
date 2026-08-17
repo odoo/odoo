@@ -1,4 +1,4 @@
-import { useLayoutEffect } from "@web/owl2/utils";
+import { onMounted, onPatched } from "@odoo/owl";
 import { DataCleaningCommonListController } from "@data_recycle/views/data_cleaning_common_list";
 import { registry } from '@web/core/registry';
 import { listView } from '@web/views/list/list_view';
@@ -6,7 +6,7 @@ import { listView } from '@web/views/list/list_view';
 export class DataRecycleListController extends DataCleaningCommonListController {
     setup() {
         super.setup();
-        useLayoutEffect(() => {
+        const refreshButtonsVisibility = () => {
             const selectedRecords = this.model.root.selection;
 
             // Check the active state of selected records
@@ -22,7 +22,9 @@ export class DataRecycleListController extends DataCleaningCommonListController 
             toggleBtnVisibility('button[name="action_validate"]', allActive);
             toggleBtnVisibility('button[name="action_discard"]', allActive);
             toggleBtnVisibility('button[name="action_undiscard"]', allInactive);
-        });
+        };
+        onMounted(refreshButtonsVisibility);
+        onPatched(refreshButtonsVisibility);
     }
 };
 

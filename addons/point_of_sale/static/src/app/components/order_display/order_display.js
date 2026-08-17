@@ -1,5 +1,4 @@
-import { useLayoutEffect } from "@web/owl2/utils";
-import { Component, useProps, signal, t } from "@odoo/owl";
+import { Component, onMounted, onPatched, useProps, signal, t } from "@odoo/owl";
 import { CenteredIcon } from "@point_of_sale/app/components/centered_icon/centered_icon";
 import { Orderline } from "@point_of_sale/app/components/orderline/orderline";
 import { formatCurrency } from "@web/core/currency";
@@ -21,11 +20,13 @@ export class OrderDisplay extends Component {
     scrollableRef = signal.ref();
 
     setup() {
-        useLayoutEffect(() => {
+        const scrollToSelectedOrderline = () => {
             this.scrollableRef()
                 ?.querySelector(".orderline.selected")
                 ?.scrollIntoView({ behavior: "smooth", block: "start" });
-        });
+        };
+        onMounted(scrollToSelectedOrderline);
+        onPatched(scrollToSelectedOrderline);
     }
 
     formatCurrency(amount) {

@@ -1,4 +1,4 @@
-import { untrack } from "@odoo/owl";
+import { onMounted, onPatched, untrack } from "@odoo/owl";
 import { useLayoutEffect } from "@web/owl2/utils";
 import { memoize } from "@web/core/utils/functions";
 
@@ -50,11 +50,13 @@ export function useAutoresize(ref, options = {}) {
         },
         () => [untrack(ref)]
     );
-    useLayoutEffect(() => {
+    const resizeProgrammatically = () => {
         if (resize) {
             resize(true);
         }
-    });
+    };
+    onMounted(resizeProgrammatically);
+    onPatched(resizeProgrammatically);
 }
 
 const doesScrollWidthExcludePadding = memoize(() => {
