@@ -5,7 +5,10 @@ import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 import { Component } from "@odoo/owl";
 
 export class HrEmployeeChat extends Component {
-    static props = { ...standardWidgetProps };
+    static props = {
+        ...standardWidgetProps,
+        showLabel: { type: Boolean, optional: true },
+    };
     static template = "hr.OpenChat";
 
     setup() {
@@ -14,5 +17,13 @@ export class HrEmployeeChat extends Component {
     }
 }
 
-export const hrEmployeeChat = { component: HrEmployeeChat };
+export const hrEmployeeChat = {
+    component: HrEmployeeChat,
+    extractProps({ options }) {
+        return {
+            showLabel: Boolean(options.show_label),
+        };
+    },
+};
+
 registry.category("view_widgets").add("hr_employee_chat", hrEmployeeChat);
