@@ -2360,6 +2360,20 @@ test("pivot.getPossibleFieldValues do not throw when the pivot is error", async 
     ]);
 });
 
+test("pivot.definition updates dimensions synchronously", async function () {
+    const { model, pivotId } = await createSpreadsheetWithPivot();
+    const pivot = model.getters.getPivot(pivotId);
+    expect(pivot.definition.rows.map((r) => r.fieldName)).toEqual(["bar"]);
+    expect(pivot.definition.columns.map((r) => r.fieldName)).toEqual(["foo"]);
+
+    updatePivot(model, pivotId, {
+        rows: [{ fieldName: "foo" }],
+        columns: [{ fieldName: "bar" }],
+    });
+    expect(pivot.definition.rows.map((r) => r.fieldName)).toEqual(["foo"]);
+    expect(pivot.definition.columns.map((c) => c.fieldName)).toEqual(["bar"]);
+});
+
 test("Can change display type of a measure", async function () {
     const { model } = await createSpreadsheetWithPivot({
         arch: /* xml */ `
