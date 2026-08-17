@@ -385,7 +385,13 @@ class WebsitePage(models.Model):
         the cache serves the correct version of a page based on specific
         parameters like user language or currency.
         """
-        return (request.website.id, request.lang.code, request.httprequest.path, request.session.debug)
+        return (
+            request.website.id,
+            request.lang.code,
+            request.httprequest.path,
+            request.session.debug,
+            request.website._allConsentsGranted(),
+        )
 
     def _get_response(self, request):
         """ Returns the response corresponding to the request.
