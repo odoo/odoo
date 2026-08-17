@@ -39,7 +39,7 @@ class TestPurchaseOrderInvoice(PurchaseTestCommon):
             {'account_id': self.account_payable.id, 'debit': 0.0, 'credit': 12.0},
         ])
         closing = self._close()
-        self.assertRecordValues(closing.line_ids, [
+        self.assertRecordValues(closing.line_ids.sorted('account_id'), [
             {'account_id': self.account_stock_valuation.id, 'debit': 0.0, 'credit': 2.0},
             {'account_id': self.account_stock_variation.id, 'debit': 2.0, 'credit': 0.0},
         ])
@@ -289,7 +289,7 @@ class TestPurchaseOrderInvoice(PurchaseTestCommon):
         # Should reverse the closing before bill
         closing_after_bill = self._close()
         self.assertTrue(closing_after_bill)
-        self.assertRecordValues(closing_after_bill.line_ids, [
+        self.assertRecordValues(closing_after_bill.line_ids.sorted('account_id'), [
             {'account_id': self.account_stock_valuation.id, 'debit': 0.0, 'credit': 12.0},
             {'account_id': self.account_stock_variation.id, 'debit': 12.0, 'credit': 0.0},
         ])

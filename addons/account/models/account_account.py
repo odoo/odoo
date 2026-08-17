@@ -153,6 +153,14 @@ class AccountAccount(models.Model):
 
     # Form view: show code mapping tab or not
     display_mapping_tab = fields.Boolean(default=lambda self: len(self.env.user.company_ids) > 1, store=False)
+    account_stock_variation_id = fields.Many2one(
+        'account.account', string='Variation Account',
+        help="At closing, register the inventory variation of the period into a specific account")
+    account_stock_variation_active = fields.Boolean(related='account_stock_variation_id.active', string="Variation Account Active")
+    account_stock_expense_id = fields.Many2one(
+        'account.account', string='Expense Account',
+        help="Counterpart used at closing for accounting adjustments to inventory valuation.")
+    account_stock_expense_active = fields.Boolean(related='account_stock_expense_id.active', string="Expense Account Active")
 
     @api.constrains('reconcile', 'account_type', 'tax_ids')
     def _constrains_reconcile(self):

@@ -1216,6 +1216,21 @@ class AccountChartTemplate(models.AbstractModel):
                 'show_on_dashboard': True,
                 'sequence': 7,
             },
+            "inventory_valuation": {
+                'name': _('Inventory Valuation'),
+                'code': 'STJ',
+                'type': 'general',
+                'sequence': 10,
+                'show_on_dashboard': False,
+            },
+        }
+
+    @template(model='res.company')
+    def _get_account_res_company(self, template_code):
+        return {
+            self.env.company.id: {
+                'account_stock_journal_id': 'inventory_valuation',
+            },
         }
 
     @template(model='account.reconcile.model')
