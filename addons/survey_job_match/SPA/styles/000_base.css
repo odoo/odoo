@@ -1,0 +1,81 @@
+#jm_app {
+    max-width: 34rem;
+    margin: 0 auto;
+    padding: 1.75rem;
+    border: 1px solid rgba(0, 0, 0, .12);
+    border-radius: .75rem;
+    text-align: left;
+}
+
+#jm_app .jm_hide {
+    display: none !important;
+}
+
+#jm_app .jm_step {
+    margin: 0 0 .25rem;
+    font-size: .8rem;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    opacity: .55;
+}
+
+#jm_app h3 {
+    margin: 0 0 1.25rem;
+}
+
+#jm_app .jm_hint {
+    margin: -.75rem 0 1.25rem;
+    font-size: .9375rem;
+    opacity: .7;
+}
+
+#jm_app input[type=text] {
+    width: 100%;
+    padding: .6rem .75rem;
+    font: inherit;
+    border: 1px solid rgba(0, 0, 0, .2);
+    border-radius: .375rem;
+}
+
+#jm_app .jm_choice {
+    display: block;
+    width: 100%;
+    margin-bottom: .5rem;
+    padding: .7rem .9rem;
+    font: inherit;
+    text-align: left;
+    background: transparent;
+    border: 1px solid rgba(0, 0, 0, .2);
+    border-radius: .375rem;
+    cursor: pointer;
+}
+
+#jm_app .jm_choice[aria-pressed=true] {
+    border-color: currentColor;
+    box-shadow: inset 0 0 0 1px currentColor;
+    font-weight: 600;
+}
+
+#jm_app .jm_actions {
+    margin-top: 1.25rem;
+}
+
+#jm_app .jm_actions button {
+    margin-right: .5rem;
+    padding: .55rem 1.4rem;
+    font: inherit;
+    border: 1px solid currentColor;
+    border-radius: .375rem;
+    cursor: pointer;
+}
+
+#jm_app .jm_actions button[data-role=back] {
+    opacity: .6;
+}
+
+#jm_app .jm_err {
+    min-height: 1.2rem;
+    margin: .4rem 0 0;
+    font-size: .875rem;
+    color: #b02a37;
+}
