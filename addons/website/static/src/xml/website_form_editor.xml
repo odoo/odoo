@@ -47,7 +47,8 @@
     </t>
 
     <t t-name="website.form_label_content">
-        <span class="s_website_form_label_content" t-out="this.field.string"/>
+        <!-- the content is filled in js, to sometimes reuse previous node -->
+        <span class="s_website_form_label_content"/>
         <t t-if="this.field.required or this.field.modelRequired">
             <span class="s_website_form_mark" t-if="this.field.formatInfo.requiredMark" t-out="' ' + this.field.formatInfo.mark"/>
         </t>
