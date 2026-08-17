@@ -437,9 +437,9 @@
                         <field name="expression_ids">
                             <record id="l10n_au_bas_c_t9_quarter_perc" model="account.report.expression">
                                 <field name="label">quarter_perc</field>
-                                <field name="engine">custom</field>
-                                <field name="formula">_report_engine_quarter_percentage</field>
-                                <field name="subformula">quarter</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">0</field>
+                                <field name="subformula" eval="False"/>
                             </record>
                             <record id="l10n_au_bas_c_t9_balance" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -568,9 +568,9 @@
                         <field name="expression_ids">
                             <record id="l10n_au_bas_c_f3_quarter_perc" model="account.report.expression">
                                 <field name="label">quarter_perc</field>
-                                <field name="engine">custom</field>
-                                <field name="formula">_report_engine_quarter_percentage</field>
-                                <field name="subformula">quarter</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">0</field>
+                                <field name="subformula" eval="False"/>
                             </record>
                             <record id="l10n_au_bas_c_f3_balance" model="account.report.expression">
                                 <field name="label">balance</field>
