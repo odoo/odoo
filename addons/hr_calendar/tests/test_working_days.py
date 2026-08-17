@@ -529,3 +529,18 @@ class TestWorkingDaysWithVersion(TestHrContractCalendarCommon):
             work_days,
             expected_days,
         )
+
+    def test_get_unusual_days_when_employee_belongs_to_other_company(self):
+        """
+        Assert that an employee is not available when their company is not selected.
+        """
+        self.employeeA_company_B.user_id = self.env.user
+        unusual_days = self.env["res.partner"].with_context(
+            allowed_company_ids=[self.env.company.id],
+        )._get_unusual_days(
+            [self.env.user.partner_id.id],
+            datetime(2026, 7, 20).isoformat(),
+            datetime(2026, 7, 20).isoformat(),
+        )
+
+        self.assertEqual(unusual_days, {"2026-07-20": True})  # Monday
