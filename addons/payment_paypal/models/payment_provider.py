@@ -192,6 +192,8 @@ class PaymentProvider(models.Model):
                 currency_id=currency_id,
                 user_agent=kwargs.get("paypal_customer_user_agent"),
             )
+            if eligible_method_keys is None:
+                continue
             ineligible_pms = payment_methods.filtered(
                 lambda pm: (
                     pm.code in const.PAYMENT_METHODS_MAPPING
@@ -410,7 +412,13 @@ class PaymentProvider(models.Model):
         """Override of `payment` to parse the error message."""
         if self.code != "paypal":
             return super()._parse_response_error(response)
-        return response.json().get("message", "")
+        response_content = response.json()
+        descriptions = [
+            detail["description"]
+            for detail in response_content.get("details", [])
+            if detail.get("description")
+        ]
+        return "\n".join(descriptions) or response_content.get("message", "")
 
     def _build_request_auth(
         self, *, is_refresh_token_request=False, paypal_onboarding_shared_id=None, **kwargs

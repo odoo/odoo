@@ -39,14 +39,7 @@ class PaypalController(http.Controller):
         if tx_sudo:
             self._paypal_capture_order(tx_sudo, order_id)
 
-    @http.route(
-        _return_url,
-        type="http",
-        auth="public",
-        methods=["GET", "POST"],
-        csrf=False,
-        save_session=False,
-    )
+    @http.route(_return_url, type="http", auth="public", methods=["GET"], save_session=False)
     def paypal_return_from_checkout(self, **data):
         """Process the payment data sent by PayPal after redirection from an alternative payment
         method checkout.
@@ -63,28 +56,17 @@ class PaypalController(http.Controller):
         )
         if tx_sudo:
             order_id = tx_sudo.provider_reference
-            try:
-                if tx_sudo.payment_method_code in {"paypal", "card"}:
-                    self._paypal_capture_order(tx_sudo, order_id)
-                else:
-                    order_details = tx_sudo._send_api_request(
-                        "GET", f"/v2/checkout/orders/{order_id}"
-                    )
-                    normalized_data = self._normalize_paypal_data(order_details)
-                    tx_sudo._record(normalized_data)
-            except ValidationError as e:
-                _logger.warning("Unable to complete the order with PayPal: %s", e)
-                tx_sudo.with_context(payment_safe_write=True)._set_error(str(e))
+            if tx_sudo.payment_method_code in {"paypal", "card"}:
+                self._paypal_capture_order(tx_sudo, order_id)
+            else:
+                order_details = tx_sudo._send_api_request(
+                    "GET", f"/v2/checkout/orders/{order_id}"
+                )
+                normalized_data = self._normalize_paypal_data(order_details)
+                tx_sudo._record(normalized_data)
         return request.redirect("/payment/status")
 
-    @http.route(
-        _cancel_url,
-        type="http",
-        auth="public",
-        methods=["GET", "POST"],
-        csrf=False,
-        save_session=False,
-    )
+    @http.route(_cancel_url, type="http", auth="public", methods=["GET"], save_session=False)
     def paypal_cancel_payment(self, **data):
         """Process the payment cancellation initated by the customer sent by PayPal after
         redirection from an alternative payment method checkout.
@@ -100,13 +82,13 @@ class PaypalController(http.Controller):
             ._search_by_reference("paypal", {"reference_id": data.get("reference")})
         )
         if tx_sudo:
-            try:
-                order_details = tx_sudo._send_api_request(
-                    "GET", f"/v2/checkout/orders/{tx_sudo.provider_reference}"
-                )
-            except ValidationError:
-                _logger.warning("Unable to fetch the order details from PayPal.")
+            order_id = tx_sudo.provider_reference
+            if tx_sudo.payment_method_code in {"paypal", "card"}:
+                self._paypal_capture_order(tx_sudo, order_id)
             else:
+                order_details = tx_sudo._send_api_request(
+                    "GET", f"/v2/checkout/orders/{order_id}"
+                )
                 normalized_data = self._normalize_paypal_data(order_details)
                 normalized_data["status"] = "CANCELED"
                 tx_sudo._record(normalized_data)
@@ -145,12 +127,19 @@ class PaypalController(http.Controller):
         if not tx_sudo:
             return
         # Check the origin and integrity of the notification.
-        self._verify_notification_origin(data, tx_sudo=tx_sudo)
-        if data.get("event_type") == "CHECKOUT.ORDER.DECLINED":
-            normalized_data["status"] = "DECLINED"
-            if errors := normalized_data.get("most_recent_errors"):
-                normalized_data["state_message"] = errors[0].get("description")
-        tx_sudo._record(normalized_data)
+        try:
+            self._verify_notification_origin(data, tx_sudo=tx_sudo)
+        except ValidationError:
+            tx_sudo.with_context(
+                # The verification request is idempotent; the handler is safe to replay.
+                payment_safe_write=True
+            )._set_error(self.env._("Unable to verify the payment data"))
+        else:
+            if data.get("event_type") == "CHECKOUT.ORDER.DECLINED":
+                normalized_data["status"] = "DECLINED"
+                if errors := normalized_data.get("most_recent_errors"):
+                    normalized_data["state_message"] = errors[0].get("description")
+            tx_sudo._record(normalized_data)
 
     def _handle_capture_notification(self, data):
         """Process a payment capture notification and record the payment on the transaction.
@@ -170,14 +159,21 @@ class PaypalController(http.Controller):
             )  # Instead of searching with provider reference possible to get order from PayPal.
         if not tx_sudo:
             return
-        self._verify_notification_origin(data, tx_sudo=tx_sudo)
-        normalized_data = {
-            "reference_id": tx_sudo.reference,
-            "id": resource.get("id"),
-            "status": resource.get("status"),
-            "amount": resource.get("amount"),
-        }
-        tx_sudo._record(normalized_data)
+        try:
+            self._verify_notification_origin(data, tx_sudo=tx_sudo)
+        except ValidationError:
+            tx_sudo.with_context(
+                # The verification request is idempotent; the handler is safe to replay.
+                payment_safe_write=True
+            )._set_error(self.env._("Unable to verify the payment data"))
+        else:
+            normalized_data = {
+                "reference_id": tx_sudo.reference,
+                "id": resource.get("id"),
+                "status": resource.get("status"),
+                "amount": resource.get("amount"),
+            }
+            tx_sudo._record(normalized_data)
 
     def _handle_merchant_notification(self, data):
         """Process a merchant onboarding notification and update the provider accordingly.
