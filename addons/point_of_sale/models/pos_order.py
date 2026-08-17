@@ -295,7 +295,7 @@ class PosOrder(models.Model):
     payment_ids = fields.One2many('pos.payment', 'pos_order_id', string='Payments')
     to_invoice = fields.Boolean('To invoice', copy=False)
     preset_time = fields.Datetime(string='Hour', help="Hour of the day for the order")
-    is_singly_invoiced = fields.Boolean('Is Singly Invoiced', compute='_compute_is_invoiced')
+    is_singly_invoiced = fields.Boolean('Is Singly Invoiced', compute='_compute_is_invoiced', search='_search_is_singly_invoiced')
     is_globally_invoiced = fields.Boolean('Is Globally Invoiced', compute='_compute_is_invoiced')
     is_tipped = fields.Boolean('Is this already tipped?', readonly=True)
     tip_amount = fields.Monetary(string='Tip Amount', readonly=True)
@@ -355,6 +355,15 @@ class PosOrder(models.Model):
         digits = self.env['decimal.precision'].precision_get('Product Unit')
         for order in self:
             order.has_refundable_lines = any(float_compare(line.qty, line.refunded_qty, digits) > 0 for line in order.lines)
+
+    def _search_is_singly_invoiced(self, operator, value):
+        if operator != 'in':
+            return NotImplemented
+        return [
+            ('account_move', '!=', False),
+            ('account_move.pos_session_from_sales_ids', '=', False),
+            ('account_move.pos_session_from_refunds_ids', '=', False),
+        ]
 
     @api.depends('account_move', 'session_id.move_ids')
     def _compute_is_invoiced(self):

@@ -15,6 +15,7 @@
         'data/point_of_sale_tour.xml',
         'data/mail_template_data.xml',
         'data/ir_config_parameter_data.xml',
+        'data/portal_entry_data.xml',
         'wizard/pos_details.xml',
         'wizard/pos_payment.xml',
         'wizard/pos_daily_sales_reports.xml',
@@ -33,6 +34,7 @@
         'views/account_journal_view.xml',
         'views/pos_payment_method_views.xml',
         'views/pos_payment_views.xml',
+        'views/pos_portal_templates.xml',
         'views/pos_config_view.xml',
         'views/pos_bill_view.xml',
         'views/pos_session_view.xml',
@@ -110,6 +112,9 @@
         'web.assets_backend_lazy': [
             'point_of_sale/static/src/backend/views/pivot/*',
             'point_of_sale/static/src/backend/views/graph/*',
+        ],
+        'web.assets_frontend': [
+            'point_of_sale/static/src/interactions/**/*',
         ],
         "web.assets_web_dark": [
             'point_of_sale/static/src/scss/pos_dashboard.dark.scss',
@@ -217,6 +222,7 @@
             ('remove', 'point_of_sale/static/src/backend/**/*'),
             ('remove', 'point_of_sale/static/src/customer_display/**/*'),
             ('include', 'point_of_sale.payment_terminals'),
+            ('remove', 'point_of_sale/static/src/interactions/**/*'),
             # main.js boots the pos app, it is only included in the prod bundle as tests mount the app themselves
             ('remove', 'point_of_sale/static/src/app/main.js'),
             ("include", "point_of_sale.base_tests"),

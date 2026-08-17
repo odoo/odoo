@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="portal_pos_orders" model="portal.entry">
+        <field name="name">In Store Orders</field>
+        <field name="description">Get your receipt</field>
+        <field name="url">/my/store-orders</field>
+        <field name="image" type="bytes" file="point_of_sale/static/img/retail-icon.svg"/>
+        <field name="placeholder_count">pos_order_count</field>
+        <field name="category">client_category</field>
+        <field name="sequence" eval="68"/>
+    </record>
+</odoo>

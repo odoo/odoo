@@ -63,6 +63,11 @@ class PosOrderReceipt(models.AbstractModel):
             return currency.format(amount).replace('\xa0', ' ')  # Wkhtmltoimage does not support non-breaking spaces
         return self.currency_id.format(amount).replace('\xa0', ' ')  # Wkhtmltoimage does not support non-breaking spaces
 
+    def get_receipt_url(self, download=False):
+        self.ensure_one()
+        url = f'/pos/receipt/{self.id}?company_id={self.company_id.id}'
+        return f'{url}&download=1' if download else url
+
     def _get_common_record_data(self):
         company_fields = self.env['res.company']._load_pos_data_fields(self.config_id)
         partner_fields = self.env['res.partner']._load_pos_data_fields(self.config_id)
@@ -205,12 +210,15 @@ class PosOrderReceipt(models.AbstractModel):
         )
         return int(total) if total.is_integer() else total
 
+    def get_portal_invoice_url(self):
+        return f"{self.env.company.get_base_url()}/pos/ticket?order_uuid={self.uuid}"
+
     def order_receipt_generate_data(self, basic_receipt=False):
         self.ensure_one()
 
         use_qr_code = self.company_id.point_of_sale_ticket_portal_url_display_mode != 'url'
         config_logo = image_data_uri(self.config_id.logo) if self.config_id.logo else False
-        qr_code_value = f"{self.env.company.get_base_url()}/pos/ticket?order_uuid={self.uuid}"
+        qr_code_value = self.get_portal_invoice_url()
         tip_percentage = [self.config_id.tip_percentage_1, self.config_id.tip_percentage_2, self.config_id.tip_percentage_3] if self.config_id.set_tip_after_payment and self.amount_total > 0 else False
 
         return {
