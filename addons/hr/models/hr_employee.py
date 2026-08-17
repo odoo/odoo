@@ -606,6 +606,10 @@ class HrEmployee(models.Model):
             calendar_id = version_from.resource_calendar_id
             if not calendar_id:
                 return False
+            elif version_from.date_end and version_from.date_end + relativedelta(days=1) == version_to.date_start:
+                # fast path: back-to-back versions cannot have work hours between them.
+                # We can bypass the expensive calendar lookup
+                return False
             return bool(calendar_id.get_work_hours_count(date_from, date_to, compute_leaves=False))
 
         versions = self._get_first_versions(date_limit).sorted('date_start')
