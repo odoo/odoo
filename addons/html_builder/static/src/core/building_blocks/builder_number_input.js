@@ -20,6 +20,7 @@ export const builderNumberInputProps = {
     max: t.number().optional(),
     composable: t.boolean().optional(false),
     applyWithUnit: t.boolean().optional(true),
+    allowDecimals: t.boolean().optional(true),
     autofocus: t.boolean().optional(false),
     allowIncrement: t.boolean().optional(true),
 };
