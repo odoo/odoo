@@ -9,7 +9,8 @@ class ResCurrency(models.Model):
     def _load_pos_data_domain(self, data, config):
         currency_ids = {config.company_id.currency_id.id, config.currency_id.id}
         currency_ids.update(pricelist['currency_id'] for pricelist in data['product.pricelist'])
-        return [('id', 'in', list(currency_ids))]
+        currency_list = list(currency_ids) + config.payment_method_ids.currency_ids.ids
+        return [('id', 'in', currency_list)]
 
     @api.model
     def _load_pos_data_fields(self, config):

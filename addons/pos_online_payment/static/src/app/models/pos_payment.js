@@ -10,4 +10,11 @@ patch(PosPayment.prototype, {
             return super.canBeAdjusted();
         }
     },
+    get currency() {
+        if (this.payment_method_id.type === "online") {
+            return this.config.currency_id;
+        }
+
+        return super.currency;
+    },
 });

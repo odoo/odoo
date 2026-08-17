@@ -21,10 +21,24 @@ class PosPayment(models.Model):
     name = fields.Char(string='Label', readonly=True)
     pos_order_id = fields.Many2one('pos.order', string='Order', required=True, index=True, ondelete='cascade')
     amount = fields.Monetary(string='Amount', required=True, currency_field='currency_id', help="Total amount of the payment.")
+    amount_currency = fields.Monetary(
+        string='Amount in currency',
+        currency_field='foreign_currency_id',
+        help="Total amount of the payment in the order's currency.",
+    )
+    currency_id = fields.Many2one(
+        'res.currency',
+        string='Currency',
+        related='pos_order_id.currency_id',
+    )
+    foreign_currency_id = fields.Many2one(
+        'res.currency',
+        string='Foreign Currency',
+        help="The currency in which the payment was made, if different from the order's currency.",
+    )
+    currency_rate = fields.Float(string='Conversion Rate', help='Conversion rate from company currency to order currency.')
     payment_method_id = fields.Many2one('pos.payment.method', string='Payment Method', required=True)
     payment_date = fields.Datetime(string='Date', required=True, readonly=True, default=lambda self: fields.Datetime.now())
-    currency_id = fields.Many2one('res.currency', string='Currency', related='pos_order_id.currency_id')
-    currency_rate = fields.Float(string='Conversion Rate', related='pos_order_id.currency_rate', help='Conversion rate from company currency to order currency.')
     partner_id = fields.Many2one('res.partner', string='Customer', related='pos_order_id.partner_id')
     session_id = fields.Many2one('pos.session', string='Session', related='pos_order_id.session_id', store=True, index=True)
     user_id = fields.Many2one('res.users', string='Employee', related='session_id.user_id')

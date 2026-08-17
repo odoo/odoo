@@ -58,7 +58,9 @@ class PosOrderReceipt(models.AbstractModel):
         return [[name, self.env['ir.qweb']._get_template(name)[1]] for name in names]
 
     @api.model
-    def _order_receipt_format_currency(self, amount):
+    def _order_receipt_format_currency(self, amount, currency=None):
+        if currency:
+            return currency.format(amount).replace('\xa0', ' ')  # Wkhtmltoimage does not support non-breaking spaces
         return self.currency_id.format(amount).replace('\xa0', ' ')  # Wkhtmltoimage does not support non-breaking spaces
 
     def _get_common_record_data(self):
@@ -116,7 +118,8 @@ class PosOrderReceipt(models.AbstractModel):
         for line in self.payment_ids:
             data = line.read(payment_fields, load=False)[0]
             data['payment_method_data'] = {'name': line.payment_method_id.name}
-            data['amount'] = self._order_receipt_format_currency(data['amount'])
+            currency = line.foreign_currency_id or self.currency_id
+            data['amount'] = self._order_receipt_format_currency(data['amount'], currency)
             payments.append(data)
 
         return payments

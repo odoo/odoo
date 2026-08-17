@@ -1414,18 +1414,29 @@ class PosOrder(models.Model):
         Skipped:
           - payments whose order is already invoiced (handled by a separate flow)
         """
-        combined = {}   # pm -> total signed amount
+        combined_currency = {}  # (pm, foreign currency) -> total signed amounts
         session = self.session_id  # Always single record in this context
         today = fields.Date.context_today(self)
 
         for payment in self.payment_ids:
             pm = payment.payment_method_id
-            combined.setdefault(pm, 0.0)
-            combined[pm] += payment.amount
+            # A payment made in the order currency is not a foreign payment, even when
+            # the UI stored a currency on it.
+            foreign_currency = payment.foreign_currency_id
+            if foreign_currency == payment.currency_id:
+                foreign_currency = self.env['res.currency']
+            key = (pm, foreign_currency)
+            combined_currency.setdefault(key, {
+                'amount': 0.0,
+                'amount_currency': 0.0,
+            })
+            combined_currency[key]['amount'] += payment.amount
+            if foreign_currency:
+                combined_currency[key]['amount_currency'] += payment.amount_currency
 
         # Combined payments: aggregate all orders for a given PM into one slot
         result = []
-        for pm, amount in combined.items():
+        for (pm, foreign_currency), data in combined_currency.items():
             partner_account = partner.property_account_receivable_id if partner else None
             destination_account = partner_account or session._get_receivable_account()
 
@@ -1436,10 +1447,19 @@ class PosOrder(models.Model):
                     'account_id': destination_account.id,
                     'partner_id': partner.id if partner else None,
                     'date_maturity': today,
-                    'amount_currency': amount,
+                    # Always expressed in the currency of the move: this line is summed
+                    # with the other payment_term lines by account.move._compute_amount
+                    # to get amount_residual, so a foreign currency here would make the
+                    # residual compare amounts of two different currencies.
+                    'amount_currency': data['amount'],
                 },
                 'metadata': {
                     'payment_method_id': pm,
+                    'amount': data['amount'],
+                    # The currency actually handed over by the customer, only relevant
+                    # for the payment side (liquidity) of the accounting.
+                    'foreign_currency_id': foreign_currency,
+                    'amount_currency': data['amount_currency'],
                 },
             })
 
@@ -1621,14 +1641,17 @@ class PosOrder(models.Model):
 
             for session, payments in total_payments_by_session.items():
                 for payment in payments:
-                    pm = payment['metadata']['payment_method_id']
-                    amount = payment['account.move.line']['amount_currency']
+                    metadata = payment['metadata']
+                    pm = metadata['payment_method_id']
+
                     all_payment_lines |= pm._create_payment_line(
                         session,
-                        amount,
+                        metadata['amount'],
                         self.partner_id.property_account_receivable_id,
                         f"POS Order {name_str}",
                         self.partner_id,
+                        metadata['foreign_currency_id'].id,
+                        metadata['amount_currency'],
                     )
 
             to_reconcile = (payment_term_lines | all_payment_lines).filtered(

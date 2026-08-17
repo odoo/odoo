@@ -86,6 +86,14 @@ export class PosOrder extends PosOrderAccounting {
         return this.config.currency_id;
     }
 
+    get orderCurrency() {
+        if (this.payment_ids.length === 0) {
+            return this.currency;
+        }
+
+        return this.payment_ids[0].currency;
+    }
+
     get session() {
         return this.models["pos.session"].get(odoo.pos_session_id);
     }
@@ -434,6 +442,7 @@ export class PosOrder extends PosOrderAccounting {
         const newPaymentLine = this.models["pos.payment"].create({
             pos_order_id: this,
             payment_method_id: payment_method,
+            foreign_currency_id: args.currency,
         });
         this.selectPaymentline(newPaymentLine);
         newPaymentLine.setAmount(totalAmountDue);

@@ -7,6 +7,7 @@ import { parseFloat } from "@web/views/fields/parsers";
 import { enhancedButtons } from "@point_of_sale/app/components/numpad/numpad";
 import { PriceFormatter } from "@point_of_sale/app/components/price_formatter/price_formatter";
 import { PosPayment } from "@point_of_sale/app/models/pos_payment";
+import { formatCurrency } from "@web/core/currency";
 
 export const paymentScreenPaymentLinesProps = {
     paymentLines: t.array(t.instanceOf(PosPayment)).optional(),
@@ -32,6 +33,12 @@ export class PaymentScreenPaymentLines extends Component {
 
     get paymentLines() {
         return this.props.paymentLines.filter((line) => line.payment_method_id);
+    }
+
+    getFormattedPrice(line) {
+        const currency = line.currency;
+        const amount = line.amount_currency || line.amount;
+        return formatCurrency(amount, currency.id);
     }
 
     async selectLine(paymentline) {
