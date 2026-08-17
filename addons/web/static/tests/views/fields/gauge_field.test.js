@@ -57,9 +57,9 @@ test("GaugeValue supports max_value option", async () => {
             super.setup();
             onMounted(() => {
                 expect.step("gauge mounted");
-                expect(this.chart.config.options.plugins.tooltip.callbacks.label({})).toBe(
-                    "Max: 120"
-                );
+                expect(
+                    this.chart.instance().config.options.plugins.tooltip.callbacks.label({})
+                ).toBe("Max: 120");
             });
         },
     });

@@ -90,7 +90,7 @@ export const clickSort = (direction) => contains(`.o_sort_${direction}`).click()
 /**
  * @param {GraphView} view
  */
-export const getChart = (view) => getGraphRenderer(view).chart;
+export const getChart = (view) => getGraphRenderer(view).chart.instance();
 
 /**
  * @param {GraphView} view

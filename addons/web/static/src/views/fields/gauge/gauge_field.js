@@ -1,19 +1,10 @@
 import { _t } from "@web/core/l10n/translation";
-import { loadBundle } from "@web/core/assets";
 import { registry } from "@web/core/registry";
+import { useChart } from "@web/core/utils/chart_hook";
 import { formatFloat } from "@web/views/fields/formatters";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 
-import {
-    Component,
-    onMounted,
-    onPatched,
-    onWillStart,
-    onWillUnmount,
-    signal,
-    t,
-    useProps,
-} from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 
 export class GaugeField extends Component {
     static template = "web.GaugeField";
@@ -25,26 +16,7 @@ export class GaugeField extends Component {
         title: t.string().optional(),
     });
 
-    canvasRef = signal.ref();
-
-    setup() {
-        this.chart = null;
-
-        onWillStart(async () => await loadBundle("web.chartjs_lib"));
-
-        onMounted(() => this.renderChart());
-        onPatched(() => {
-            if (this.chart) {
-                this.chart.destroy();
-            }
-            this.renderChart();
-        });
-        onWillUnmount(() => {
-            if (this.chart) {
-                this.chart.destroy();
-            }
-        });
-    }
+    chart = useChart(() => this.getChartConfig());
 
     get title() {
         return this.props.title || this.props.record.fields[this.props.name].string || "";
@@ -57,7 +29,7 @@ export class GaugeField extends Component {
         });
     }
 
-    renderChart() {
+    getChartConfig() {
         const gaugeValue = this.props.record.data[this.props.name];
         let maxValue = this.props.maxValueField
             ? this.props.record.data[this.props.maxValueField]
@@ -68,7 +40,7 @@ export class GaugeField extends Component {
             maxValue = 1;
             maxLabel = 0;
         }
-        const config = {
+        return {
             type: "doughnut",
             data: {
                 datasets: [
@@ -109,7 +81,6 @@ export class GaugeField extends Component {
                 aspectRatio: 2,
             },
         };
-        this.chart = new Chart(this.canvasRef(), config);
     }
 }
 

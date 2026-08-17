@@ -1,9 +1,8 @@
-import { Component, onWillStart, signal } from "@odoo/owl";
-import { loadBundle } from "@web/core/assets";
+import { Component } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+import { useChart } from "@web/core/utils/chart_hook";
 import { useService } from "@web/core/utils/hooks";
-import { useLayoutEffect } from "@web/owl2/utils";
 import { formatFloat } from "@web/views/fields/formatters";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 
@@ -27,23 +26,10 @@ export class GaugeChartWidget extends Component {
         title: { type: String, optional: true },
     };
 
+    chart = useChart(() => this.getChartConfig());
+
     setup() {
-        this.chart = null;
-        this.canvasRef = signal.ref();
         this.orm = useService("orm");
-
-        onWillStart(async () => {
-            await loadBundle("web.chartjs_lib");
-        });
-
-        useLayoutEffect(() => {
-            this.renderChart();
-            return () => {
-                if (this.chart) {
-                    this.chart.destroy();
-                }
-            };
-        });
     }
 
     get chartTitle() {
@@ -121,12 +107,12 @@ export class GaugeChartWidget extends Component {
         return color;
     }
 
-    renderChart() {
+    getChartConfig() {
         const segments = this.chartSegments;
         const values = segments.map((segment) => segment.value);
         const backgroundColor = segments.map((segment, index) => this.getSegmentColor(segment, index));
 
-        const config = {
+        return {
             type: "doughnut",
             data: {
                 datasets: [
@@ -165,7 +151,6 @@ export class GaugeChartWidget extends Component {
                 aspectRatio: 2,
             },
         };
-        this.chart = new Chart(this.canvasRef(), config);
     }
 }
 
