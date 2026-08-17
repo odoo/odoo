@@ -23,12 +23,12 @@ class TestUI(HttpCase):
             "_perform_complete_place_search",
             lambda controller, *args, **kwargs: {
                 "country": [
-                    self.env["res.country"].search([("code", "=", "USA")]).id,
+                    self.env["res.country"].search([("code", "=", "US")]).id,
                     "United States",
                 ],
                 "state": [
                     self.env["res.country.state"]
-                    .search([("country_id.code", "=", "USA")])[0]
+                    .search([("country_id.code", "=", "US")])[0]
                     .id,
                     "Alabama",
                 ],
