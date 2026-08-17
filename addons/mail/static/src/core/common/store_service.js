@@ -645,7 +645,10 @@ export class Store extends BaseStore {
             "partner_cc_emails",
             "role_ids",
         ]) {
-            if (Object.prototype.hasOwnProperty.call(postData, field) && !postData[field].length) {
+            if (
+                Object.prototype.hasOwnProperty.call(postData, field) &&
+                !Object.keys(postData[field]).length
+            ) {
                 delete postData[field];
             }
         }
