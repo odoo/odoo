@@ -40,8 +40,8 @@ export class GeneratePrinterData {
         };
     }
 
-    formatCurrency(amount) {
-        return formatCurrency(amount, this.currency.id);
+    formatCurrency(amount, currency = this.currency) {
+        return formatCurrency(amount, currency.id);
     }
 
     /**
@@ -203,7 +203,7 @@ export class GeneratePrinterData {
         return this.order.payment_ids.map((line) => ({
             ...line.raw,
             payment_method_data: { name: line.payment_method_id?.name || "" },
-            amount: this.formatCurrency(line.amount),
+            amount: this.formatCurrency(line.amount, line.currency),
         }));
     }
 

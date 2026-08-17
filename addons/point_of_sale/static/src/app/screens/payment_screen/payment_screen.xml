@@ -158,15 +158,30 @@
         <!-- Add scrollbar if more than 4 payment methods are configured -->
             <div class="paymentmethods gap-1 gap-lg-2" t-att-class="{ 'd-grid p-1 gap-1 overflow-y-auto rounded-3 bg-200': this.ui.isSmall, 'd-flex flex-column gap-lg-2': !this.ui.isSmall }" t-att-style="this.ui.isSmall ? 'max-height: 120px;' : ''">
                 <t t-foreach="this.payment_methods_from_config" t-as="paymentMethod" t-key="paymentMethod.id">
-                    <div t-if="this.showPaymentMethod(paymentMethod)" class="button paymentmethod btn btn-secondary btn-lg lh-lg flex-fill"
-                        role="button"
-                        t-att-class="{'opacity-50': !paymentMethod.getPaymentInterfaceStates().status, 'd-flex justify-content-between align-items-center': true}"
-                        t-on-click="() => this.addNewPaymentLine(paymentMethod)">
-                        <div class="payment-method-display d-flex align-items-center gap-2 text-wrap text-start lh-sm">
-                            <img class="payment-method-icon" t-att-src="this.paymentMethodImage(paymentMethod)" />
-                            <span class="payment-name" t-out="paymentMethod.name" />
+                    <div t-if="this.showPaymentMethod(paymentMethod)">
+                        <div class="d-flex paymentmethod justify-content-between align-items-center button btn btn-secondary btn-lg lh-lg flex-fill"
+                            t-att-class="{ 'opacity-50': !paymentMethod.getPaymentInterfaceStates().status }"
+                            t-on-click="() => this.addNewPaymentLine(paymentMethod)"
+                            role="button">
+                            <div class="payment-method-display d-flex align-items-center gap-2 text-wrap text-start lh-sm">
+                                <img class="payment-method-icon" t-att-src="this.paymentMethodImage(paymentMethod)" />
+                                <span class="payment-name" t-out="paymentMethod.name" />
+                                <span t-if="paymentMethod.availableCurrencies.length > 1"
+                                    t-out="this.pos.config.company_id.currency_id.name" />
+                            </div>
+                            <span class="text-muted" t-out="this.pos.getPaymentMethodFmtAmount(paymentMethod, this.currentOrder)"/>
                         </div>
-                        <span class="text-muted" t-out="this.pos.getPaymentMethodFmtAmount(paymentMethod, this.currentOrder)"/>
+                        <div class="w-100 gap-1" t-if="paymentMethod.availableCurrencies.length > 1">
+                            <button t-foreach="paymentMethod.availableCurrencies"
+                                t-as="currency"
+                                t-key="currency.id"
+                                t-on-click="() => this.addNewPaymentLine(paymentMethod, { currency })"
+                                class="btn btn-secondary d-flex justify-content-between w-100 mt-1"
+                                t-att-class="{ 'opacity-50': !paymentMethod.getPaymentInterfaceStates().status }">
+                                <span class="text-muted me-1" t-out="currency.name" />
+                                <span t-out="currency.convertFormatted(this.currentOrder.totalDue)" />
+                            </button>
+                        </div>
                     </div>
                 </t>
             </div>

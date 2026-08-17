@@ -35,6 +35,22 @@ export class PosOrderAccounting extends Base {
         this._prices.unit = this._constructPriceData({ baseLineOpts: { quantity: 1 } });
     }
 
+    get paymentAmountInCurrency() {
+        const otherCurrencyPayments = this.payment_ids.filter(
+            (payment) => payment.foreign_currency_id
+        );
+        if (!otherCurrencyPayments.length) {
+            return formatCurrency(this.totalDue, this.config.currency_id.id);
+        }
+
+        const currency = otherCurrencyPayments[0].currency;
+        const totalOtherCurrencyAmount = otherCurrencyPayments.reduce(
+            (total, payment) => total + payment.amount_currency,
+            0
+        );
+        return formatCurrency(totalOtherCurrencyAmount, currency.id);
+    }
+
     /**
      * Currency formatted prices, these getters already handle included/excluded tax configuration.
      * They must be used each time a price is displayed to the user.

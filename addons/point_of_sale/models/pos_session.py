@@ -1008,14 +1008,16 @@ class PosSession(models.Model):
         partner = self.config_id.default_partner_id
         payment_lines = self.env['account.move.line']
         for payment in payments:
-            pm = payment['metadata']['payment_method_id']
-            amount = payment['account.move.line']['amount_currency']
+            metadata = payment['metadata']
+            pm = metadata['payment_method_id']
             payment_lines |= pm._create_payment_line(
                 self,
-                amount,
+                metadata['amount'],
                 partner.property_account_receivable_id,
                 False,
                 partner,
+                metadata['foreign_currency_id'].id,
+                metadata['amount_currency'],
             )
 
         payment_lines = payment_lines.filtered(

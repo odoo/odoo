@@ -17,6 +17,22 @@ export class PosPaymentMethod extends Base {
         return this.payment_method_type === "bank_qr_code";
     }
 
+    get config() {
+        return this.models["pos.config"].get(odoo.pos_config_id);
+    }
+
+    get availableCurrencies() {
+        if (["bank", "cash"].includes(this.type)) {
+            // Always include the company currency first, then add the other currencies of the payment method
+            return [
+                this.config.currency_id,
+                ...this.currency_ids.filter((c) => c.id !== this.config.currency_id.id),
+            ];
+        }
+
+        return [this.config.currency_id];
+    }
+
     /**
      * Check orders to know if the payment terminal is available for the current order.
      * This is useful for payment methods that require specific conditions to be met,

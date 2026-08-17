@@ -3,6 +3,7 @@ import { PriceFormatter } from "@point_of_sale/app/components/price_formatter/pr
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { PosOrder } from "@point_of_sale/app/models/pos_order";
 import { _t } from "@web/core/l10n/translation";
+import { formatCurrency } from "@web/core/currency";
 
 export class PaymentScreenStatus extends Component {
     static template = "point_of_sale.PaymentScreenStatus";
@@ -68,9 +69,11 @@ export class PaymentScreenStatus extends Component {
 
     get amountText() {
         if (!this.isRemaining) {
-            return this.env.utils.formatCurrency(this.order.change);
+            const amount = this.order.orderCurrency.convert(this.order.change);
+            return formatCurrency(amount, this.order.orderCurrency.id);
         } else {
-            return this.env.utils.formatCurrency(this.order.remainingDue);
+            const amount = this.order.orderCurrency.convert(this.order.remainingDue);
+            return formatCurrency(amount, this.order.orderCurrency.id);
         }
     }
 }

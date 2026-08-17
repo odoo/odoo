@@ -148,6 +148,15 @@ export class PaymentScreen extends Component {
             this.makeAnimation();
         }
 
+        const pmCurrency = args.currency || this.pos.config.currency_id;
+        if (this.paymentLines.length && this.paymentLines[0].currency !== pmCurrency) {
+            this.dialog.add(AlertDialog, {
+                title: _t("Oh snap !"),
+                body: "Only one currency by order is allowed",
+            });
+            return;
+        }
+
         const result = this.currentOrder.addPaymentline(paymentMethod, args);
         if (result.status) {
             this.numberBuffer.set(result.data.amount.toString());
@@ -190,7 +199,7 @@ export class PaymentScreen extends Component {
             !hasCashPaymentMethod &&
             amount > this.currentOrder.remainingDue + this.selectedPaymentLine.amount
         ) {
-            this.selectedPaymentLine.setAmount(0);
+            this.selectedPaymentLine.setAmount(0, this.selectedPaymentLine.currency);
             this.numberBuffer.set(this.currentOrder.remainingDue.toString());
             amount = this.currentOrder.remainingDue;
             this.showMaxValueError();
@@ -204,7 +213,7 @@ export class PaymentScreen extends Component {
         if (amount === null) {
             this.deletePaymentLine(this.selectedPaymentLine.uuid);
         } else {
-            this.selectedPaymentLine.setAmount(amount);
+            this.selectedPaymentLine.setAmount(amount, this.selectedPaymentLine.currency);
         }
     }
     async toggleIsToInvoice() {

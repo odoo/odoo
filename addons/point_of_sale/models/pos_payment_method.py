@@ -1,4 +1,6 @@
-from odoo import _, api, fields, models
+from math import copysign
+
+from odoo import Command, _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import BinaryBytes, file_open, float_compare
 
@@ -96,6 +98,7 @@ class PosPaymentMethod(models.Model):
     hide_qr_code_method = fields.Boolean(compute='_compute_hide_qr_code_method')
     payment_provider = fields.Selection(selection=lambda self: self._get_provider_selection(), string='Payment Provider', help='Payment provider that will be used to process payments made with this payment method.')
     available_payment_providers = fields.Json(compute='_compute_available_payment_providers')
+    currency_ids = fields.Many2many('res.currency', string="Currencies")
 
     @api.model
     def get_provider_status(self):
@@ -133,7 +136,10 @@ class PosPaymentMethod(models.Model):
 
     @api.model
     def _load_pos_data_fields(self, config):
-        return ['id', 'name', 'payment_provider', 'type', 'image', 'sequence', 'payment_method_type', 'default_qr']
+        return [
+            'id', 'name', 'payment_provider', 'type', 'image', 'sequence', 'payment_method_type',
+            'default_qr', 'currency_ids',
+        ]
 
     @api.depends('payment_method_type')
     def _compute_hide_qr_code_method(self):
@@ -170,6 +176,12 @@ class PosPaymentMethod(models.Model):
     def _compute_open_session_ids(self):
         for payment_method in self:
             payment_method.open_session_ids = self.env['pos.session'].search([('config_id', 'in', payment_method.config_ids.ids), ('state', '!=', 'closed')])
+
+    @api.constrains('type', 'currency_ids')
+    def _check_currency_ids(self):
+        for pm in self:
+            if pm.type not in ['cash', 'bank'] and len(pm.currency_ids) > 1:
+                raise ValidationError(_("Non-cash and non-bank payment methods can only have the company currency."))
 
     @api.constrains('journal_id', 'type')
     def _constraint_journal_payment_method_type(self):
@@ -269,6 +281,9 @@ class PosPaymentMethod(models.Model):
         return super().create(vals_list)
 
     def write(self, vals):
+        if 'type' in vals and vals['type'] not in ['cash', 'bank']:
+            vals['currency_ids'] = [Command.set(self.env.company.currency_id.ids)]
+
         if self._is_write_forbidden(set(vals.keys())):
             raise UserError(_('Please close and validate the following open PoS Sessions before modifying this payment method.\n'
                             'Open sessions: %s', (' '.join(self.open_session_ids.mapped('name')),)))
@@ -396,15 +411,15 @@ class PosPaymentMethod(models.Model):
     ##############################################################
     #                 Accounting related methods                 #
     ##############################################################
-    def _create_payment_line(self, session, amount, account=None, message=None, partner=None):
+    def _create_payment_line(self, session, amount, account=None, message=None, partner=None, foreign_currency=None, amount_currency=None):
         if self.type == 'cash':
-            return self._create_cash_payment_line(session, amount, account, message, partner)
+            return self._create_cash_payment_line(session, amount, account, message, partner, foreign_currency, amount_currency)
         if self.type == 'bank':
-            return self._create_bank_payment_line(session, amount, account, message, partner)
+            return self._create_bank_payment_line(session, amount, account, message, partner, foreign_currency, amount_currency)
 
         return self.env['account.move.line']
 
-    def _create_bank_payment_line(self, session, amount, account=None, message=None, partner=None):
+    def _create_bank_payment_line(self, session, amount, account=None, message=None, partner=None, foreign_currency=None, amount_currency=None):
         self.ensure_one()
         outstanding_account = self.outstanding_account_id
         pm_account = self.receivable_account_id
@@ -418,7 +433,7 @@ class PosPaymentMethod(models.Model):
             payment_method=self.name,
             session=session.name,
         )
-        account_payment = self.env['account.payment'].sudo().create({
+        payment_vals = {
             'amount': abs(amount),
             'journal_id': self.journal_id.id,
             'force_outstanding_account_id': outstanding_account.id,
@@ -429,7 +444,18 @@ class PosPaymentMethod(models.Model):
             'pos_session_id': session.id,
             'partner_id': partner.id if partner else None,
             'company_id': self.company_id.id,
-        })
+        }
+
+        if foreign_currency and amount_currency:
+            # account.payment has no foreign currency counterpart: a payment received in
+            # another currency is simply a payment expressed in that currency, which is
+            # then converted to the company currency by the payment itself.
+            payment_vals.update({
+                'currency_id': foreign_currency,
+                'amount': abs(amount_currency),
+            })
+
+        account_payment = self.env['account.payment'].sudo().create(payment_vals)
 
         if float_compare(amount, 0, precision_rounding=rounding) < 0:
             # For refunds, only flip the payment direction don't swap accounts.
@@ -449,7 +475,7 @@ class PosPaymentMethod(models.Model):
             lambda line: line.account_id == destination_account,
         )
 
-    def _create_cash_payment_line(self, session, amount, account=None, message=None, partner=None):
+    def _create_cash_payment_line(self, session, amount, account=None, message=None, partner=None, foreign_currency=None, amount_currency=None):
         """
         Use account.bank.statement.line for cash PMs.
         Pass counterpart_account_id to bypass the journal suspense account
@@ -467,8 +493,13 @@ class PosPaymentMethod(models.Model):
         loss_account = self.journal_id.loss_account_id
         pm_account = profit_account if amount > 0 else loss_account
         destination_account = account or pm_account
+        # The statement line stores both amounts, so they must agree on the sign.
+        foreign_amount = copysign(amount_currency, amount) if foreign_currency and amount_currency else 0.0
         statement_line = BankStatementLine.sudo().create({
+            # Keep the sign: a negative amount is a refund, i.e. cash going out.
             'amount': amount,
+            'amount_currency': foreign_amount,
+            'foreign_currency_id': foreign_currency if foreign_amount else False,
             'company_id': session.company_id.id,
             'journal_id': self.journal_id.id,
             'date': fields.Date.context_today(self),
