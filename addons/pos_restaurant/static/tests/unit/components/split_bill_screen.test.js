@@ -49,7 +49,7 @@ describe("onClickLine", () => {
                     [
                         {
                             combo_item_id: comboItem1,
-                            qty: 1,
+                            qty: 2,
                         },
                         {
                             combo_item_id: comboItem2,
@@ -62,11 +62,14 @@ describe("onClickLine", () => {
             },
             order
         );
+        const parentLine = order.lines[0];
+        parentLine.setQuantity(2, Boolean(parentLine.combo_line_ids?.length));
         expect(order.lines.length).toBe(3);
         expect(line.product_id.product_tmpl_id).toBe(comboTemplate);
         expect(line.combo_line_ids.length).toBe(2);
         expect(line.combo_line_ids[0].product_id.id).toBe(comboItem1.product_id.id);
         expect(line.combo_line_ids[1].product_id.id).toBe(comboItem2.product_id.id);
+        expect(line.combo_line_ids[0].getQuantity()).toBe(4);
         const screen = await mountWithCleanup(SplitBillScreen, {
             props: {
                 orderUuid: order.uuid,
@@ -74,8 +77,16 @@ describe("onClickLine", () => {
         });
         screen.onClickLine(order.lines[0]);
         expect(screen.qtyTracker[order.lines[0].uuid]).toBe(1);
-        expect(screen.qtyTracker[order.lines[1].uuid]).toBe(1);
+        expect(screen.qtyTracker[order.lines[1].uuid]).toBe(2);
         expect(screen.qtyTracker[order.lines[2].uuid]).toBe(1);
+        screen.onClickLine(order.lines[1]);
+        expect(screen.qtyTracker[order.lines[0].uuid]).toBe(2);
+        expect(screen.qtyTracker[order.lines[1].uuid]).toBe(4);
+        expect(screen.qtyTracker[order.lines[2].uuid]).toBe(2);
+        screen.onClickLine(order.lines[2]);
+        expect(screen.qtyTracker[order.lines[0].uuid]).toBe(0);
+        expect(screen.qtyTracker[order.lines[1].uuid]).toBe(0);
+        expect(screen.qtyTracker[order.lines[2].uuid]).toBe(0);
     });
 });
 
