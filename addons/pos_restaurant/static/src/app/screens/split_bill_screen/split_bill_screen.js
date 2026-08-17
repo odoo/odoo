@@ -47,12 +47,25 @@ export class SplitBillScreen extends Component {
 
     onClickLine(line) {
         const lines = line.getAllLinesInCombo();
+        const comboRootLine = lines[0];
+        const rootQty = comboRootLine.getQuantity();
+
         for (const line of lines) {
-            const uuid = line.uuid;
             const maxQty = line.getQuantity();
+            const uuid = line.uuid;
             const currentQty = this.qtyTracker[uuid] || 0;
-            const nextQty = currentQty === maxQty ? 0 : currentQty + 1;
-            this.qtyTracker[uuid] = Math.min(nextQty, maxQty);
+
+            if (!line.isPosGroupable() && !line.isPartOfCombo()) {
+                this.qtyTracker[uuid] = currentQty === maxQty ? 0 : maxQty;
+            } else {
+                const selectedQty =
+                    line.combo_parent_id && rootQty ? line.getQuantity() / rootQty : 1;
+
+                const nextQty =
+                    currentQty === maxQty ? 0 : Math.min(currentQty + selectedQty, maxQty);
+
+                this.qtyTracker[uuid] = nextQty;
+            }
             this.priceTracker[uuid] =
                 (line.prices.total_included / line.qty) * this.qtyTracker[uuid];
             this.setLineQtyStr(line);
