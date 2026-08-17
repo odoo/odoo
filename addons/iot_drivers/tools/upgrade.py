@@ -38,11 +38,9 @@ def get_update_day(serial_number):
         "wednesday",
         "thursday",
         "friday",
-        "saturday",
-        "sunday",
     ]
     sn_sum = sum(serial_number.encode("utf-8"))
-    return update_days[sn_sum % 7]
+    return update_days[sn_sum % 5]
 
 
 @toggleable
