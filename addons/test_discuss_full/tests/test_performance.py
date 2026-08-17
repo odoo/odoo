@@ -48,11 +48,11 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - fetch discuss_channel_member
     #   1. search discuss_channel (chathub given channel ids)
     #   1: search bus_bus (_bus_last_id)
-    #   31: _process_request_for_all (discuss):
+    #   32: _process_request_for_all (discuss):
     #       - search_fetch discuss_channel (channels_domain)
     #       2: check permissions
     #       - fetch discuss_channel (chathub given channel ids, missing search_fetch)
-    #       27: store add channel:
+    #       28: store add channel:
     #           - search discuss_channel (has_meeting_today, resolved upfront for the whole
     #             recordset; [calendar] joins the meetings of today into that domain)
     #           - read group member (prefetch _compute_self_member_id from _compute_is_member)
@@ -62,8 +62,8 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #           - fetch discuss_channel_rtc_session
     #           - search member (channel_member_ids)
     #           - fetch discuss_channel_member (manual prefetch)
-    #           11: member:
-    #               11: partner:
+    #           12: member:
+    #               12: partner:
     #                   - search_fetch res_partner (partner)
     #                   - search res_users (partner.user_ids, _store_im_status_fields)
     #                     [enterprise] search ai_agent (_compute_im_status ai override)
@@ -75,6 +75,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #                   - fetch hr_employee (_compute_work_location_type)
     #                   - search hr_leave (_compute_leave_status)
     #                   - read group resource_calendar_leaves (_compute_leave_status)
+    #                   - search_fetch calendar_attendee (_compute_meeting_until)
     #                   - fetch res_users (_read_format)
     #           - search bus_bus (_bus_last_id)
     #           - count discuss_channel_member (member_count)
@@ -84,14 +85,14 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #           - search discuss_channel_res_groups_rel (group_ids)
     #           - fetch res_groups (group_public_id)
     #           - select the current db snapshot
-    _query_count_init_messaging = 35
+    _query_count_init_messaging = 36
     # Queries for _query_count_discuss_channels (in order):
     #   3: _search_is_member (for current user, first occurence channels_as_member)
     #       - fetch res_users
     #       - search discuss_channel_member
     #       - search_fetch discuss_channel
     #   1: search_count discuss_channel_member (store_has_hidden_channels)
-    #   36: channel _to_store_defaults:
+    #   37: channel _to_store_defaults:
     #       - search discuss_channel (has_meeting_today, resolved upfront for the whole
     #         recordset; [calendar] joins the meetings of today into that domain)
     #       - read group member (prefetch _compute_self_member_id from _compute_is_member)
@@ -101,10 +102,10 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - search_fetch member (channel_member_ids)
     #       - search channel JOIN member (channel_name_member_ids)
     #       - fetch discuss_channel_member (manual prefetch)
-    #       17: member:
+    #       18: member:
     #           - search im_livechat_channel_member_history (livechat member type)
     #           - fetch im_livechat_channel_member_history (livechat member type)
-    #           13: partner:
+    #           14: partner:
     #               - fetch res_partner (partner)
     #                 [enterprise] search ai_agent (_compute_im_status ai override)
     #               - fetch res_users (_compute_im_status)
@@ -116,6 +117,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #               - fetch hr_employee (_compute_work_location_type)
     #               - search hr_leave (_compute_leave_status)
     #               - read group resource_calendar_leaves (_compute_leave_status)
+    #               - search_fetch calendar_attendee (_compute_meeting_until)
     #               - search_fetch res_users_settings (livechat username)
     #               - fetch res_users_settings (livechat username)
     #               - fetch res_users (_read_format)
@@ -161,7 +163,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - fetch user (author)
     #       - fetch discuss_call_history
     #       - select the current db snapshot
-    _query_count_discuss_channels = 65
+    _query_count_discuss_channels = 66
 
     def setUp(self):
         super().setUp()
