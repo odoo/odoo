@@ -10,7 +10,7 @@
                     <a href="https://iap-services.odoo.com/iap/sms/pricing" target="_blank"
                         title="SMS Pricing" aria-label="SMS Pricing" class="fa fa-lg fa-info-circle align-middle"/>
                 </span>
-                <button t-if="this.props.dynamicPlaceholder"
+                <button t-if="this.props.dynamicPlaceholder and !this.props.readonly"
                     class="btn btn-link py-0 border-0"
                     title="Insert Field"
                     t-on-click="this.onDynamicPlaceholderOpen"
