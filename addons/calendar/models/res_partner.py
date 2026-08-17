@@ -1,11 +1,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from odoo import _, api, fields, models
 from odoo.fields import Domain
 from odoo.tools import SQL
+
+from odoo.addons.mail.tools.discuss import Store
 
 
 class ResPartner(models.Model):
@@ -16,6 +18,7 @@ class ResPartner(models.Model):
                                    'calendar_event_id', string='Meetings', copy=False)
     meeting_next_date = fields.Date(string="Next Meeting", compute="_compute_meeting_display")
     meeting_display_label = fields.Char(compute="_compute_meeting_display")
+    upcoming_meeting_ids = fields.Many2many("calendar.event", compute="_compute_upcoming_meeting_ids")
 
     calendar_last_notif_ack = fields.Datetime(
         'Last notification marked as read from base Calendar', default=fields.Datetime.now)
@@ -79,6 +82,31 @@ class ResPartner(models.Model):
             return {p_id: list(meetings.get(p_id, set())) for p_id in self.ids}
         return {}
 
+    def _compute_upcoming_meeting_ids(self):
+        self.upcoming_meeting_ids = False
+        partners = self.filtered("id")  # new records have no meetings yet
+        if not partners:
+            return
+
+        now = self.env.cr.now()
+        attendees = self.env["calendar.attendee"].search_fetch(
+            [
+                ("state", "=", "accepted"),
+                ("event_id.active", "=", True),
+                ("event_id.show_as", "=", "busy"),
+                ("event_id.effective_privacy", "=", "public"),
+                ("event_id.allday", "=", False),
+                ("event_id.start", "<=", now + timedelta(days=1)),
+                ("event_id.stop", ">=", now),
+                ("partner_id", "in", partners.ids),
+            ],
+            ["partner_id", "event_id"],
+        )
+        attendees.event_id.fetch(["start", "stop"])
+
+        for partner, partner_attendees in attendees.grouped("partner_id").items():
+            partner.upcoming_meeting_ids = partner_attendees.event_id
+
     def get_attendee_detail(self, meeting_ids):
         """ Return a list of dict of the given meetings with the attendees details
             Used by:
@@ -132,6 +160,17 @@ class ResPartner(models.Model):
             Domain(['|', ('id', 'in', self._compute_meeting()[self.id]), ('partner_ids', 'in', self.ids)]),
         ])
         return action
+
+    def _store_partner_fields(self, res: Store.FieldList):
+        super()._store_partner_fields(res)
+        odoobot_id = self.env["ir.model.data"]._xmlid_to_res_id("base.partner_root")
+        res.many(
+            "upcoming_meeting_ids", ["start", "stop"], predicate=lambda p: p.id != odoobot_id, internal=True,
+        )
+
+    def _store_avatar_card_fields(self, res: Store.FieldList):
+        super()._store_avatar_card_fields(res)
+        res.many("upcoming_meeting_ids", ["start", "stop"], internal=True)
 
     def _get_busy_calendar_events(self, start_datetime, end_datetime):
         """Get a mapping from partner id to attended events intersecting with the time interval.
