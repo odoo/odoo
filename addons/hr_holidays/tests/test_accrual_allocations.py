@@ -5,6 +5,7 @@ from dateutil.relativedelta import relativedelta
 from psycopg2 import IntegrityError
 
 from odoo import Command, fields
+from odoo.api import NewId
 from odoo.exceptions import UserError
 from odoo.tests import tagged, Form
 from odoo.exceptions import ValidationError
@@ -2287,6 +2288,60 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             allocation.action_approve()
             allocation_data = work_entry_type.get_allocation_data(self.employee_emp, datetime.date(2024, 2, 1))
             self.assertEqual(allocation_data[self.employee_emp][0][1]['virtual_remaining_leaves'], 2)
+
+    def test_get_future_leaves_on_clears_pending_recompute(self):
+        """
+        Simulating future accruals creates a temporary allocation using
+        ``new(origin=allocation)``. Once this record is invalidated, it must not
+        remain in the transaction's pending recomputation queue.
+
+        New records with the same origin compare equal, so keeping the invalidated
+        temporary record in ``tocompute`` can make a later recomputation target
+        stale cache data and fail with a ``KeyError``.
+        """
+        accrual_scheme = self.env['hr.leave.accrual.plan'].create({
+            'name': 'Test Accrual Plan',
+            'accrued_gain_time': 'start',
+            'can_be_carryover': True,
+            'carryover_date': 'year_start',
+            'level_ids': [Command.create({
+                'milestone_date': 'after',
+                'start_count': 1,
+                'start_type': 'day',
+                'added_value': 1,
+                'added_value_type': 'day',
+                'frequency': 'monthly',
+                'action_with_unused_accruals': 'all',
+                'accrual_validity': True,
+                'accrual_validity_count': 3,
+                'accrual_validity_type': 'month',
+            })],
+        })
+
+        with freeze_time('2024-02-01'):
+            leave_allocation = self.env['hr.leave.allocation'].create({
+                'name': 'Accrual allocation',
+                'employee_id': self.employee_emp.id,
+                'work_entry_type_id': self.work_entry_type.id,
+                'date_from': '2024-02-01',
+                'accrual_plan_id': accrual_scheme.id,
+            })
+            leave_allocation._action_validate()
+            leave_allocation._get_future_leaves_on(date(2025, 3, 6))
+
+        allocation_name = self.env['hr.leave.allocation']._fields['name']
+        queued_records = self.env.transaction.tocompute.get(allocation_name, ())
+        origin_matches = [
+            record_id
+            for record_id in queued_records
+            if isinstance(record_id, NewId) and record_id.origin == leave_allocation.id
+        ]
+
+        self.assertFalse(
+            origin_matches,
+            "Invalidating the temporary allocation must remove it from the "
+            "pending recomputation queue.",
+        )
 
     def test_added_type_during_onchange(self):
         """
