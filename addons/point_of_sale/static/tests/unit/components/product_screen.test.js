@@ -153,3 +153,19 @@ test("multiplePrinter using mock records", async () => {
     const defaultPrinter2 = await printer.selectPrinter();
     expect(defaultPrinter2.id).toBe(4);
 });
+
+test("addProductToOrder presets the variant matched by default_code search", async () => {
+    const store = await setupPosEnv();
+    store.addNewOrder();
+    const order = store.getOrder();
+    const productTemplate = store.models["product.template"].get(60);
+    store.models["product.product"].get(61).default_code = "BELT-M-REF";
+
+    store.session.state = "opened";
+    const comp = await mountWithCleanup(ProductScreen, { props: { orderUuid: order.uuid } });
+    store.searchProductWord = "BELT-M-REF";
+
+    await comp.addProductToOrder(productTemplate);
+
+    expect(order.lines[0].product_id.id).toBe(61);
+});
