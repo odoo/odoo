@@ -129,6 +129,35 @@ class ExtractionResponse(BaseModel):
     model: str
 
 
+class EmbedRequest(BaseModel):
+    """Body of ``POST /v1/embed`` — one or more raw documents to embed.
+
+    ``list[str]`` is deliberately unconstrained (no ``min_length`` /
+    ``max_items``): batching lives in the embedder, and the contract keeps
+    plain types per the project schema rules.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    texts: list[str]
+
+
+class EmbedResponse(BaseModel):
+    """200 envelope of ``POST /v1/embed``.
+
+    ``vectors`` is aligned 1:1 with the request texts, each exactly
+    ``dimensions`` (1024 for ``voyage-3``) floats. ``dimensions`` is echoed
+    so the Odoo side can assert its ``vector(1024)`` column matches the
+    model actually deployed.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    vectors: list[list[float]]
+    model: str
+    dimensions: int
+
+
 class HealthResponse(BaseModel):
     """The 200 envelope of ``GET /healthz``.
 

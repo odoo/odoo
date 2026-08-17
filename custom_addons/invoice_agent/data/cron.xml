@@ -61,5 +61,33 @@
             <field name="priority">6</field>
             <field name="nextcall" eval="(DateTime.now() + timedelta(minutes=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
         </record>
+
+        <!-- ============================================================
+             ir.cron: RAG vendor-doc embedding backfill (v0.10)
+
+             Embeds posted vendor bills that have no live embedding yet
+             (ai_indexed == False) in batches of 100 via
+             account.move._cron_backfill_embeddings_all, which runs until
+             the corpus is caught up. ai_indexed is the resume marker:
+             a restart mid-backfill re-runs from where it stopped without
+             re-embedding already-indexed bills, and the UNIQUE(move_id)
+             on invoice_agent_vendor_doc makes every retry idempotent.
+
+             When the embed service is unavailable the batch returns 0 and
+             keeps ai_indexed=False — the next tick retries. This cron is
+             the safety net behind the best-effort live embed on
+             action_post.
+             ============================================================ -->
+        <record id="cron_backfill_embeddings" model="ir.cron">
+            <field name="name">Invoice Agent: Backfill Vendor-Doc Embeddings</field>
+            <field name="model_id" ref="account.model_account_move"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_backfill_embeddings_all()</field>
+            <field name="interval_number">10</field>
+            <field name="interval_type">minutes</field>
+            <field name="active" eval="True"/>
+            <field name="priority">4</field>
+            <field name="nextcall" eval="(DateTime.now() + timedelta(minutes=2)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </record>
     </data>
 </odoo>

@@ -20,7 +20,8 @@ from fastapi.responses import JSONResponse
 from .auth import require_token
 from .claude import ClaudeService
 from .config import settings
-from .dependencies import get_claude_service
+from .dependencies import get_claude_service, get_embedder
+from .embeddings import VoyageEmbeddingError, VoyageEmbedder
 from .errors import (
     BadRequestError,
     ServiceError,
@@ -28,7 +29,12 @@ from .errors import (
     UploadTooLargeError,
 )
 from .ocr import extract_bytes
-from .schemas import ExtractionResponse, HealthResponse
+from .schemas import (
+    EmbedRequest,
+    EmbedResponse,
+    ExtractionResponse,
+    HealthResponse,
+)
 
 _logger = logging.getLogger(__name__)
 
@@ -139,4 +145,47 @@ async def extract_invoice(
         "extraction": result["parsed"].model_dump(mode="json"),
         "usage": result["usage"],
         "model": result["model"],
+    }
+
+
+@app.exception_handler(VoyageEmbeddingError)
+async def _voyage_error_handler(_: Request, exc: VoyageEmbeddingError) -> JSONResponse:
+    """Voyage upstream failure -> 503 (same envelope as Claude upstream).
+
+    The Odoo embed cron keeps its rows ``ai_indexed=False`` and retries
+    later; embedding must never look like a 500 internal error.
+    """
+    _logger.warning("invoice-ai embed error 503: %s", exc)
+    return JSONResponse(
+        status_code=503,
+        content={
+            "error": {
+                "code": "E5032",
+                "message": "Embedding service unavailable",
+            }
+        },
+    )
+
+
+@app.post("/v1/embed", response_model=EmbedResponse)
+async def embed_texts(
+    embedder: Annotated[VoyageEmbedder, Depends(get_embedder)],
+    _auth: Annotated[dict, Depends(require_token)],
+    payload: EmbedRequest,
+) -> dict[str, Any]:
+    """Embed raw documents with Voyage `voyage-3`.
+
+    Body: ``{"texts": ["...", ...]}``. Returns one 1024-dim vector per input,
+    in order. Odoo calls this from the vendor-doc backfill cron and the
+    post-pipeline embed job; the model/dimensions are echoed so the Odoo
+    side can assert its ``vector(1024)`` column matches.
+    """
+    texts = payload.texts
+    if not texts or any(not (text or "").strip() for text in texts):
+        raise BadRequestError("Provide at least one non-empty text to embed.")
+    vectors = embedder.embed_documents(texts)
+    return {
+        "vectors": vectors,
+        "model": settings.voyage_model,
+        "dimensions": settings.voyage_dimensions,
     }

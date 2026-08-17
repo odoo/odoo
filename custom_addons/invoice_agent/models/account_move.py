@@ -278,6 +278,18 @@ class AccountMove(models.Model):
         "has been registered in the outbox and will be drained to the broker "
         "by the cron.",
     )
+    # v0.10 RAG corpus marker: True once this bill's vendor-doc embedding is
+    # in invoice_agent_vendor_doc. Reset to False on write() when header or
+    # line values change, so the backfill cron resumes instead of re-embedding
+    # everything on every restart.
+    ai_indexed = fields.Boolean(
+        string="AI Indexed",
+        default=False,
+        index=True,
+        copy=False,
+        help="True when the posted bill's RAG document + voyage-3 embedding "
+        "are stored in invoice_agent_vendor_doc.",
+    )
 
     # -------------------------------------------------------------------------
     # COMPUTE: AI Variance
@@ -897,6 +909,31 @@ class AccountMove(models.Model):
                 self.write({"ai_validated_on": fields.Datetime.now()})
             elif vals["ai_extraction_status"] == "extracted":
                 self.write({"ai_extracted_on": fields.Datetime.now()})
+        # v0.10: any change to values that feed the RAG document invalidates
+        # the stored embedding. Reset ai_indexed so the backfill cron
+        # re-embeds this bill instead of serving a stale vector.
+        _RAG_INVALIDATING = {"partner_id", "invoice_date", "date", "ref", "invoice_line_ids", "line_ids"}
+        if _RAG_INVALIDATING.intersection(vals):
+            self.write({"ai_indexed": False})
+        return res
+
+    def action_post(self):
+        """Post (override): embed the vendor/GL history corpus live.
+
+        The base ``action_post`` is called first; embedding then happens
+        best-effort AFTER the post so the RAG index is live without ever
+        blocking the posting request. A busy/unreachable embed service
+        leaves ``ai_indexed=False`` and the backfill cron catches up.
+        """
+        res = super().action_post()
+        try:
+            self._embed_on_post()
+        except Exception:
+            _logger.exception(
+                "invoice_agent RAG live-embed crashed for move_ids=%s — "
+                "backfill cron will retry",
+                self.ids,
+            )
         return res
 
     # -------------------------------------------------------------------------
@@ -1026,6 +1063,143 @@ class AccountMove(models.Model):
         job = self._enqueue_ai_job()
         if job:
             self.write({"ai_extraction_status": "processing"})
+
+    # -------------------------------------------------------------------------
+    # RAG CORPUS (v0.10 — pgvector vendor/GL history, see
+    # invoice_agent_vendor_doc + docs/vector-search.md)
+    # -------------------------------------------------------------------------
+
+    def _build_rag_document(self):
+        """Render this posted vendor bill as one compact RAG document.
+
+        Granularity decision: **one document per posted bill**. Header and
+        lines travel together because a bill's lines reference each other
+        (GL codes, quantities, subtotals) — splitting per line would scatter
+        an invoice across chunks and make a cosine query return partial
+        bills. The text is deliberately compact and line-oriented so
+        voyage-3's tokenizer keeps the whole bill in one embedding:
+
+            "Vendor: <name> | Date: <date> | Ref: <ref> | Total: <amount>
+             Lines: <name> [<account.code>] x<qty> = <subtotal> | ..."
+        """
+        self.ensure_one()
+        last_partner = self.partner_id.commercial_partner_id or self.partner_id
+        vendor_name = last_partner.name or "Unknown vendor"
+        date_text = self.invoice_date or self.date or ""
+        parts = [
+            "Vendor: %s" % vendor_name,
+            "Date: %s" % date_text,
+        ]
+        if self.ref:
+            parts.append("Ref: %s" % self.ref)
+        parts.append("Move: %s (%s)" % (self.name or "", self.move_type))
+        parts.append("Total: %s %s" % (self.amount_total, self.currency_id.name))
+        line_texts = []
+        lines = self.invoice_line_ids.filtered(lambda line: line.display_type in (False, "product"))
+        for line in lines:
+            account_code = line.account_id.code if line.account_id else ""
+            line_texts.append(
+                "%s [%s] x%s = %s"
+                % (
+                    line.name or "line",
+                    account_code,
+                    float(line.quantity or 1.0),
+                    float(line.price_subtotal or 0.0),
+                )
+            )
+        parts.append("Lines: %s" % " | ".join(line_texts))
+        return "\n".join(part for part in parts if part)
+
+    @api.model
+    def _split_batch_for_embedding(self, moves):
+        """Yield (move_id, rag_text) pairs for a batch of posted bills."""
+        for move in moves:
+            if move.state != "posted":
+                continue
+            yield move.id, move._build_rag_document()
+
+    @api.model
+    def _cron_backfill_embeddings(self, batch_size=100):
+        """Embed posted bills missing from the RAG corpus (batched backfill).
+
+        Claims up to ``batch_size`` posted bills with ``ai_indexed=False``,
+        embeds their RAG documents via ``embed_texts`` and upserts into
+        ``invoice_agent_vendor_doc``. ``ai_indexed`` makes restarts resume
+        instead of re-embedding everything, and the unique ``move_id`` on
+        the vendor-doc table makes a re-run idempotent.
+        """
+        moves = self.search(
+            [
+                ("move_type", "=", "in_invoice"),
+                ("state", "=", "posted"),
+                ("ai_indexed", "=", False),
+            ],
+            order="id asc",
+            limit=batch_size,
+        )
+        if not moves:
+            return 0
+        pairs = [pair for pair in self._split_batch_for_embedding(moves)]
+        texts = [text for _, text in pairs]
+        vectors = self.env["invoice.llm.service"].embed_texts(texts)
+        if vectors is None:
+            # Service unavailable — keep ai_indexed=False and try next run.
+            _logger.warning(
+                "invoice_agent RAG backfill deferred: embed service unavailable "
+                "(%d bills pending)",
+                len(moves),
+            )
+            return 0
+        for (move_id, _text), vector in zip(pairs, vectors):
+            self.env["invoice.agent.vendor.doc"].upsert_embedding(
+                move_id,
+                _text,
+                vector,
+            )
+            self.browse(move_id).write({"ai_indexed": True})
+        _logger.info(
+            "invoice_agent RAG backfill: embedded %d posted bills",
+            len(pairs),
+        )
+        return len(pairs)
+
+    @api.model
+    def _cron_backfill_embeddings_all(self):
+        """ir.cron entry point (runs repeatedly until the corpus is caught up)."""
+        total = 0
+        while True:
+            batch = self._cron_backfill_embeddings(batch_size=100)
+            total += batch
+            if batch < 100:
+                break
+        return total
+
+    def _embed_on_post(self):
+        """Best-effort immediate embed for a freshly posted bill.
+
+        Called from ``action_post`` path AFTER the post commits; never
+        blocks the posting request (the backfill cron catches up if the
+        service is busy).
+        """
+        for move in self:
+            if move.move_type != "in_invoice" or move.state != "posted":
+                continue
+            try:
+                rag_text = move._build_rag_document()
+                vectors = self.env["invoice.llm.service"].embed_texts([rag_text])
+                if vectors is None:
+                    continue
+                self.env["invoice.agent.vendor.doc"].upsert_embedding(
+                    move.id,
+                    rag_text,
+                    vectors[0],
+                )
+                move.write({"ai_indexed": True})
+            except Exception:
+                _logger.exception(
+                    "invoice_agent RAG live-embed failed for move_id=%d",
+                    move.id,
+                )
 
     # -------------------------------------------------------------------------
     # CRON: Retry stuck extractions

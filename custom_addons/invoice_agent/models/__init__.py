@@ -6,6 +6,7 @@ from . import (
     invoice_agent_applied_job,
     invoice_agent_extraction_line,
     invoice_agent_job,
+    invoice_agent_vendor_doc,
     invoice_extraction,
     llm_service,
     ocr_service,

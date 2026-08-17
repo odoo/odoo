@@ -56,7 +56,9 @@ jobs:
     runs-on: ubuntu-latest
     services:
       postgres:
-        image: postgres:16
+        # pgvector image: same Postgres 16 base, vector extension preloaded —
+        # matches docker-compose.yml (v0.10 vendor-doc HNSW index).
+        image: pgvector/pgvector:pg16
         env:
           POSTGRES_DB: odoo
           POSTGRES_USER: odoo
