@@ -211,7 +211,9 @@
                 <t t-call="{{ this.constructor.groupRowTemplate }}"/>
                 <t t-if="!group.isFolded">
                     <t t-call="{{ this.constructor.rowsTemplate }}" list="group.list" groupId="group.id"/>
-                    <tr t-if="!group.list.isGrouped and this.props.editable and this.canCreate">
+                    <tr t-if="!group.list.isGrouped and this.props.editable and this.canCreate"
+                        class="o_row_draggable"
+                        t-att-data-group-id="group.id">
                         <td t-if="this.hasSelectors"/>
                         <td
                             t-att-colspan="this.hasSelectors ?  this.nbCols - 1 : this.nbCols"

@@ -2465,6 +2465,9 @@ export class ListRenderer extends Component {
         const refId = previous ? previous.dataset.id : null;
         try {
             if (dataGroupId) {
+                if (!previous?.dataset?.groupId) {
+                    return;
+                }
                 this.resequencePromise = this.props.list.moveRecord(
                     dataRowId,
                     dataGroupId,
