@@ -106,11 +106,17 @@ export function mockCallbackBancontactPay(bancontact_id, status) {
             trigger: "body",
             run: async () => {
                 const configId = posmodel.config.id;
-                fetch(`/bancontact_pay/webhook?config_id=${configId}&mode=test`, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ paymentId: bancontact_id, status: status }),
-                });
+                const payment = posmodel.models["pos.payment"].find(
+                    (p) => p.bancontact_id === bancontact_id
+                );
+                fetch(
+                    `/bancontact_pay/webhook?config_id=${configId}&payment_method_id=${payment.payment_method_id.id}`,
+                    {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ paymentId: bancontact_id, status: status }),
+                    }
+                );
             },
         },
         {

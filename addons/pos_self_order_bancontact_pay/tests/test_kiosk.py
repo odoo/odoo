@@ -39,7 +39,7 @@ class TestKioskFrontend(TestFrontend):
         with self.mock_bancontact_call(prefix="kiosk_bancontact_failed_"):
             self.start_kiosk_tour("kiosk_bancontact_pay_failed")
 
-    @mute_logger("odoo.http")
+    @mute_logger("odoo.http", "odoo.addons.pos_bancontact_pay.models.pos_payment_method")
     def test_kiosk_bancontact_pay_failed_create_payment(self):
         with self.mock_bancontact_call(post_status_code=401):
             self.start_kiosk_tour("kiosk_bancontact_pay_failed_create_payment", error_checker=error_checker_bancontact_failed_rpc_request)

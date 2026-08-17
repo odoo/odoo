@@ -7,7 +7,6 @@ from requests import Response
 from odoo.tests.common import tagged
 from odoo.tools import mute_logger
 
-from odoo.addons.pos_bancontact_pay import const
 from odoo.addons.pos_bancontact_pay.tests.common import TestBancontactPay
 
 
@@ -20,7 +19,7 @@ def error_checker_bancontact_failed_rpc_request(message):
 @tagged("post_install", "-at_install")
 class TestFrontend(TestBancontactPay):
 
-    @mute_logger("odoo.http")
+    @mute_logger("odoo.http", "odoo.addons.pos_bancontact_pay.models.pos_payment_method")
     def test_bancontact_failed_to_create_payment(self):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         with (self.mock_bancontact_call(post_status_code=401)):
@@ -46,13 +45,13 @@ class TestFrontend(TestBancontactPay):
         with self.mock_bancontact_call(prefix="bancontact_failed_"):
             self.start_pos_tour("bancontact_pay_failed_payment")
 
-    @mute_logger("odoo.http")
+    @mute_logger("odoo.http", "odoo.addons.pos_bancontact_pay.models.pos_payment_method")
     def test_bancontact_failed_to_cancel_payment_error_422(self):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         with self.mock_bancontact_call(delete_status_code=422):
             self.start_pos_tour("bancontact_pay_failed_to_cancel_payment_error_422")
 
-    @mute_logger("odoo.http")
+    @mute_logger("odoo.http", "odoo.addons.pos_bancontact_pay.models.pos_payment_method")
     def test_bancontact_failed_to_cancel_payment_error_429(self):
         # It could be any other error code different than 422
         self.main_pos_config.with_user(self.pos_user).open_ui()
@@ -93,10 +92,6 @@ class TestFrontend(TestBancontactPay):
 
         with (patch("odoo.addons.pos_bancontact_pay.models.pos_payment_method.requests.post", mock_post),
               patch("odoo.addons.pos_bancontact_pay.models.pos_payment_method.requests.delete", mock_delete),
-              patch("odoo.addons.pos_bancontact_pay.controllers.signature.BancontactSignatureValidation")
-                as bancontact_signature_validation_mock):
-            instance = bancontact_signature_validation_mock.return_value
-            instance.test_mode = True
-            instance.bancontact_api_urls = const.API_URLS["preprod"]
+              patch("odoo.addons.pos_bancontact_pay.controllers.signature.BancontactSignatureValidation.verify_signature", return_value=True)):
 
             yield
