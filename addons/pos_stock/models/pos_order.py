@@ -59,7 +59,7 @@ class PosOrder(models.Model):
             if product.cost_method in ['standard', 'average']:
                 return product.standard_price
             else:
-                return product._run_fifo(quantity) / quantity if quantity else 0
+                return product._get_fifo_value(quantity) / quantity if quantity else 0
 
     def process_saved_payments(self, order, existing_order):
         # update pickings

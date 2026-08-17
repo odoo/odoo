@@ -1,14 +1,9 @@
-from odoo import api, fields, models
+from odoo import fields, models
 
 
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
 
-    cogs_origin_id = fields.Many2one(  # technical field used to keep track in the originating line of the anglo-saxon lines
-        comodel_name="account.move.line",
-        copy=False,
-        index="btree_not_null",
-    )
     stock_move_id = fields.Many2one('stock.move', index='btree_not_null')
     cogs_move_ids = fields.Many2many(
         "stock.move", string="COGS stock moves",
@@ -16,29 +11,13 @@ class AccountMoveLine(models.Model):
         compute="_compute_cogs_move_ids",
     )
 
-    def _compute_account_id(self):
-        super()._compute_account_id()
-        for line in self:
-            if not line.move_id.is_purchase_document():
-                continue
-            if not line._eligible_for_stock_account():
-                continue
-            fiscal_position = line.move_id.fiscal_position_id
-            accounts = line.with_company(line.company_id).product_id.product_tmpl_id.get_product_accounts(fiscal_pos=fiscal_position)
-
-            if line.product_id.valuation == 'real_time' and accounts['stock_valuation']:
-                line.account_id = accounts['stock_valuation']
-
     def _compute_cogs_move_ids(self):
         self.cogs_move_ids = False
 
-    @api.onchange('product_id')
-    def _inverse_product_id(self):
-        super(AccountMoveLine, self.filtered(lambda l: l.display_type != 'cogs'))._inverse_product_id()
-
-    def _eligible_for_stock_account(self):
+    def _use_inventory_valuation(self):
+        # EXTENDS 'account': dropshipped (or, via `repair`, already-accounted) lines never touch stock.
         self.ensure_one()
-        if not self.product_id.is_storable:
+        if not super()._use_inventory_valuation():
             return False
         return all(not m._is_dropshipped() for m in self.cogs_move_ids)
 
@@ -46,7 +25,7 @@ class AccountMoveLine(models.Model):
         """ Values of the two COGS journal items (interim + expense) of the invoice line. """
         self.ensure_one()
         move = self.move_id
-        if not self._eligible_for_stock_account() or self.product_id.valuation != 'real_time':
+        if not self._use_inventory_valuation() or self.product_id.valuation != 'real_time':
             return []
         accounts = self.product_id.product_tmpl_id.get_product_accounts(fiscal_pos=move.fiscal_position_id)
         stock_account = accounts['stock_valuation']

@@ -106,6 +106,9 @@ class ProductTemplate(models.Model):
                 self.property_account_expense_id
                 or self._get_category_account('property_account_expense_categ_id')
                 or (self.company_id or self.env.company).expense_account_id
+            ), 'stock_valuation': (
+                self._get_category_account('property_stock_valuation_account_id')
+                or (self.company_id or self.env.company).account_stock_valuation_id
             ),
         }
 
@@ -148,9 +151,12 @@ class ProductTemplate(models.Model):
         return Domain([('is_storable', '=', True)]) & (domain_company | domain_categ)
 
     @api.depends_context('company')
-    @api.depends('categ_id.property_valuation')
+    @api.depends('is_storable', 'categ_id.property_valuation')
     def _compute_valuation(self):
         for product_template in self:
+            if not product_template.is_storable:
+                product_template.valuation = False
+                continue
             company = product_template.company_id
             if not company or self.env.company.filtered_domain([('id', 'child_of', company.id)]):
                 company = self.env.company
