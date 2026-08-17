@@ -5,10 +5,9 @@ import json
 
 from odoo import http, _
 from odoo.fields import Domain
-from odoo.http import request
+from odoo.http import request, route
 from odoo.tools import format_amount, file_open
 from odoo.addons.account.controllers.portal import PortalAccount
-from odoo.exceptions import UserError
 from datetime import timedelta, datetime
 
 _logger = logging.getLogger(__name__)
@@ -170,19 +169,6 @@ class PosController(PortalAccount):
 
     @http.route(['/pos/ticket/validate'], type='http', auth="public", website=True, sitemap=False)
     def show_ticket_validation_screen(self, access_token='', **kwargs):
-        def _parse_additional_values(fields, prefix, kwargs):
-            """ Parse the values in the kwargs by extracting the ones matching the given fields name.
-            :return a dict with the parsed value and the field name as key, and another on with the prefix to
-            re-render the form with previous values if needed.
-            """
-            res, res_prefixed = {}, {}
-            for field in fields:
-                key = prefix + field.name
-                if key in kwargs:
-                    val = kwargs.pop(key)
-                    res[field.name] = val
-                    res_prefixed[key] = val
-            return res, res_prefixed
 
         # If the route is called directly, return a 404
         if not access_token:
@@ -203,57 +189,13 @@ class PosController(PortalAccount):
         if not request.env['res.company']._with_locked_records(pos_order, allow_raising=False):
             return
 
-        # Get the optional extra fields that could be required for a localisation.
-        pos_order_country = pos_order.company_id.account_fiscal_country_id
-        additional_partner_fields = request.env['res.partner'].get_partner_localisation_fields_required_to_invoice(pos_order_country)
-        additional_invoice_fields = request.env['account.move'].get_invoice_localisation_fields_required_to_invoice(pos_order_country)
-
         user_is_connected = not request.env.user._is_public()
-
-        # Validate the form by ensuring required fields are filled and the VAT is correct.
-        form_values = {'extra_field_values': {}}
         partner = (user_is_connected and request.env.user.partner_id) or pos_order.partner_id
-        if kwargs and request.httprequest.method == 'POST':
-            form_values.update(kwargs)
-            # Extract the additional fields values from the kwargs now as they can't be there when validating the 'regular' partner form.
-            partner_values, prefixed_partner_values = _parse_additional_values(additional_partner_fields, 'partner_', kwargs)
-            form_values['extra_field_values'].update(prefixed_partner_values)
-            # Do the same for invoice values, separately as they are only needed for the invoice creation.
-            invoice_values, prefixed_invoice_values = _parse_additional_values(additional_invoice_fields, 'invoice_', kwargs)
-            form_values['extra_field_values'].update(prefixed_invoice_values)
-            # Check the basic form fields if the user is not connected as we will need these information to create the new user.
-            partner, feedback_dict = self._create_or_update_address(partner, **(kwargs | partner_values))
-            form_values.update(feedback_dict)
-            missing_fields, error_messages = self._validate_extra_form_details(
-                partner_values | invoice_values,
-                additional_partner_fields + additional_invoice_fields
-            )
-            form_values.update({
-                'invalid_field': form_values.get('invalid_fields', []) + list(missing_fields),
-                'messages': form_values.get('messages', []) + error_messages
-            })
-            if not form_values.get('invalid_fields'):
-                return self._get_invoice(partner, invoice_values, pos_order, additional_invoice_fields, kwargs)
-            raise UserError(_(
-                "Message: %(messages)s\nPlease update the %(invalid_fields)s",
-                messages=form_values.get('messages'),
-                invalid_fields=form_values.get('invalid_fields'),
-            ))
-
-        elif user_is_connected:
-            return self._get_invoice(partner, {}, pos_order, additional_invoice_fields, kwargs)
-
-        # Prefill the customer extra values if there is any and an user is connected
-        if partner:
-            if additional_partner_fields:
-                form_values['extra_field_values'] = {'partner_' + field.name: partner[field.name] for field in additional_partner_fields if field.name not in form_values['extra_field_values']}
-
-            # This is just to ensure that the user went and filled its information at least once.
-            # Another more thorough check is done upon posting the form.
-            if not partner.country_id or not partner.street:
-                form_values['partner_address'] = False
-            else:
-                form_values['partner_address'] = partner.contact_address
+        # This is just to ensure that the user went and filled its information at least once.
+        # Another more thorough check is done upon posting the form.
+        partner_address = False
+        if partner and partner.country_id and partner.street:
+            partner_address = partner.contact_address
 
         return request.render("point_of_sale.ticket_validation_screen", {
             **self._prepare_address_form_values(partner, pos_order=pos_order, **kwargs),
@@ -263,11 +205,9 @@ class PosController(PortalAccount):
             'format_amount': format_amount,
             'env': request.env,
             'pos_order': pos_order,
-            'invoice_required_fields': additional_invoice_fields,
-            'partner_required_fields': additional_partner_fields,
             'access_token': access_token,
             'invoice_sending_methods': {'email': _("by Email")},
-            **form_values,
+            'partner_address': partner_address,
         })
 
     def _get_default_country(self, pos_order=False, **kwargs):
@@ -277,23 +217,37 @@ class PosController(PortalAccount):
             return pos_order.company_id.account_fiscal_country_id
         return super()._get_default_country(pos_order=pos_order, **kwargs)
 
-    def _validate_extra_form_details(self, addtional_form_values, additional_required_fields):
-        """ Ensure that all additional required fields have a value in the data. """
-        missing_fields = set()
-        error_messages = []
-        for field in additional_required_fields:
-            if field.name not in addtional_form_values or not addtional_form_values[field.name]:
-                missing_fields.add(field.name)
-                error_messages.append(_("The field %s must be filled.", field.field_description.lower()))
-        return missing_fields, error_messages
+    @route(
+        "/pos/ticket/get_invoice",
+        type="http",
+        methods=["POST"],
+        auth="public",
+        website=True,
+        sitemap=False,
+    )
+    def pos_ticket_get_invoice(
+        self, partner_sudo=None, access_token=None, **form_data
+    ):
+        if not access_token:
+            return request.not_found()
+        pos_order = request.env['pos.order'].sudo().search([('access_token', '=', access_token)])
+        if not pos_order.exists():
+            return request.not_found()
 
-    def _get_invoice(self, partner, invoice_values, pos_order, additional_invoice_fields, kwargs):
+        partner_sudo, feedback_dict = self._create_or_update_address(
+            partner_sudo, access_token=access_token, **form_data,
+        )
+        if feedback_dict.get("invalid_fields"):
+            # Return if error when creating/updating partner.
+            return request.make_json_response(feedback_dict)
+        # Only update customer if order's partner is a public user's partner.
+        if pos_order.partner_id.is_public:
+            pos_order.partner_id = partner_sudo
+        pos_order.action_pos_order_invoice()
 
-        pos_order.partner_id = partner
-        # Get the required fields for the invoice and add them to the context as default values.
-        with_context = {}
-        for field in additional_invoice_fields:
-            with_context.update({f'default_{field.name}': invoice_values.get(field.name)})
-        # Allowing default values for moves is important for some localizations that would need specific fields to be set on the invoice, such as Mexico.
-        pos_order.with_context(with_context).action_pos_order_invoice()
-        return request.redirect('/my/invoices/%s?access_token=%s' % (pos_order.account_move.id, pos_order.account_move._portal_ensure_token()))
+        return request.make_json_response({
+            "redirect_url": "/my/invoices/%s?access_token=%s" % (
+                pos_order.account_move.id,
+                pos_order.account_move._portal_ensure_token()
+            )
+        })
