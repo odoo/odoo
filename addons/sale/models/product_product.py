@@ -43,32 +43,45 @@ class ProductProduct(models.Model):
 
     @api.depends_context("to_date")
     def _compute_forecasted_without_stock(self):
-        """Substract sales lines not delivered from forecasted tally."""
+        """Subtract uninvoiced sales lines from forecasted tally."""
         res = super()._compute_forecasted_without_stock()
+        to_date = self.env.context.get("to_date")
         domain = Domain.AND([
             Domain("order_id.state", "=", "sale"),
             Domain("product_id", "in", self.ids),
             Domain("company_id", "in", self.env.companies.ids),
         ])
-        if self.env.context.get("to_date"):
+        if to_date:
+            to_date = fields.Datetime.to_datetime(to_date)
             domain = Domain.AND([
                 domain,
-                [("order_id.commitment_date", "<=", self.env.context.get("to_date").date())],
+                Domain("order_id.commitment_date", "<=", to_date.date()),
             ])
-        order_lines = (
-            self
-            .env["sale.order.line"]
-            .sudo()
-            ._read_group(
-                domain,
-                ["product_id", "product_uom_id"],
-                ["product_uom_qty:sum", "qty_delivered:sum"],
+        order_line_model = self.env["sale.order.line"].sudo()
+        if to_date and to_date.date() < fields.Date.context_today(self):
+            order_lines = order_line_model.search(domain).with_context(
+                accrual_entry_date=to_date.date()
             )
+            for line in order_lines:
+                uninvoiced_qty = line.product_uom_qty - line.qty_invoiced_at_date
+                to_invoice = line.product_uom_id._compute_quantity(
+                    uninvoiced_qty, line.product_id.uom_id, round=False
+                )
+                res[line.product_id.id]["outgoing_qty"] += to_invoice
+                res[line.product_id.id]["virtual_available"] -= to_invoice
+            return res
+
+        order_lines = order_line_model._read_group(
+            domain,
+            ["product_id", "product_uom_id"],
+            ["product_uom_qty:sum", "qty_invoiced:sum"],
         )
-        for product, line_uom, qty_sold, qty_delivered in order_lines:
-            to_deliver = (qty_sold - qty_delivered) * line_uom.factor / product.uom_id.factor
-            res[product.id]["outgoing_qty"] += to_deliver
-            res[product.id]["virtual_available"] -= to_deliver
+        for product, line_uom, qty_sold, qty_invoiced in order_lines:
+            to_invoice = line_uom._compute_quantity(
+                (qty_sold or 0.0) - (qty_invoiced or 0.0), product.uom_id, round=False
+            )
+            res[product.id]["outgoing_qty"] += to_invoice
+            res[product.id]["virtual_available"] -= to_invoice
         return res
 
     @api.onchange("type")

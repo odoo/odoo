@@ -20,6 +20,7 @@ Preferences
     'depends': ['sale', 'stock_account'],
     'data': [
 
+        'views/product_views.xml',
         'views/sale_order_views.xml',
         'views/sale_order_line_views.xml',
         'views/stock_route_views.xml',
