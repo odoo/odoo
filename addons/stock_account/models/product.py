@@ -27,31 +27,11 @@ class ProductTemplate(models.Model):
         ],
         compute='_compute_cost_method',
     )
-    valuation = fields.Selection(
-        string="Valuation",
-        selection=[
-            ('periodic', 'Periodic (at closing)'),
-            ('real_time', 'Perpetual (at invoicing)'),
-        ],
-        compute='_compute_valuation', search='_search_valuation',
-    )
     lot_valuated = fields.Boolean(
         string="Valuation by Lot/Serial",
         compute='_compute_lot_valuated', store=True, readonly=False,
         help="If checked, the valuation will be specific by Lot/Serial number.",
     )
-
-    def _search_valuation(self, operator, value):
-        if operator != '=':
-            raise UserError(self.env._("You can only use the '=' operator to search on valuation field."))
-        if value not in ['periodic', 'real_time']:
-            raise UserError(self.env._("Only the value 'periodic' and 'real_time' are accepted to search on valuation field."))
-        domain_categ = Domain([('categ_id.property_valuation', operator, value)])
-        domain_company = Domain(['|', ('categ_id.property_valuation', '=', False), ('categ_id', '=', False), ('company_id.inventory_valuation', operator, value)])
-
-        if self.env.company.inventory_valuation and self.env.company.inventory_valuation == value:
-            domain_company = Domain(['|', ('categ_id.property_valuation', '=', False), ('categ_id', '=', False), '|', ('company_id.inventory_valuation', operator, value), ('company_id', '=', False)])
-        return domain_company | domain_categ
 
     @api.depends('tracking', 'is_storable')
     def _compute_lot_valuated(self):
@@ -70,15 +50,6 @@ class ProductTemplate(models.Model):
                 product_template.categ_id.with_company(company).sudo().property_cost_method
                 or company.sudo().cost_method
             )
-
-    @api.depends_context('company')
-    @api.depends('categ_id.property_valuation')
-    def _compute_valuation(self):
-        for product_template in self:
-            company = product_template.company_id
-            if not company or self.env.company.filtered_domain([('id', 'child_of', company.id)]):
-                company = self.env.company
-            product_template.valuation = product_template.categ_id.with_company(company).property_valuation or company.inventory_valuation
 
     def write(self, vals):
         product_ids_to_update = set()
@@ -825,16 +796,6 @@ class ProductCategory(models.Model):
     anglo_saxon_accounting = fields.Boolean(
         string="Use Anglo-Saxon Accounting", compute="_compute_anglo_saxon_accounting",
         help="If checked, the product will be valued using the Anglo-Saxon accounting method.")
-    property_valuation = fields.Selection(
-        string="Inventory Valuation",
-        selection=[
-            ('periodic', 'Periodic (at closing)'),
-            ('real_time', 'Perpetual (at invoicing)'),
-        ],
-        company_dependent=True, copy=True, tracking=True,
-        help="""Periodic: The accounting entries are suggested manually in the inventory valuation report.
-        Perpetual: An accounting entry is automatically created to value the inventory when a product is billed or invoiced.
-        """)
     property_cost_method = fields.Selection(
         string="Costing Method",
         selection=[
@@ -850,23 +811,11 @@ class ProductCategory(models.Model):
         """,
         tracking=True,
     )
-    property_stock_journal = fields.Many2one(
-        'account.journal', 'Stock Journal', company_dependent=True,
-        help="When doing automated inventory valuation, this is the Accounting Journal in which entries will be automatically posted when stock moves are processed.")
-    property_stock_valuation_account_id = fields.Many2one(
-        'account.account', 'Stock Valuation Account', company_dependent=True, ondelete='restrict',
-        check_company=True,
-        help="""When automated inventory valuation is enabled on a product, this account will hold the current value of the products.""")
-    property_stock_valuation_account_active = fields.Boolean(related='property_stock_valuation_account_id.active', string="Stock Valuation Account Active")
     property_price_difference_account_id = fields.Many2one(
         'account.account', 'Price Difference Account', company_dependent=True, ondelete='restrict',
         check_company=True,
         help="""With perpetual valuation, this account will hold the price difference between the standard price and the bill price.""")
     property_price_difference_account_active = fields.Boolean(related='property_price_difference_account_id.active', string="Price Difference Account Active")
-    account_stock_variation_id = fields.Many2one(
-        'account.account', string="Stock Variation Account", readonly=False,
-        related="property_stock_valuation_account_id.account_stock_variation_id")
-    account_stock_variation_active = fields.Boolean(related='account_stock_variation_id.active', string="Stock Variation Account Active")
 
     @api.depends_context('company')
     def _compute_anglo_saxon_accounting(self):

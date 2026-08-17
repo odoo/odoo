@@ -11,20 +11,6 @@ from odoo.addons.base.models.res_company import company_default_for
 class ResCompany(models.Model):
     _inherit = "res.company"
 
-    account_stock_journal_id = fields.Many2one(
-        'account.journal',
-        string='Stock Journal',
-        **company_default_for('account_stock_journal_id', 'product.category', 'property_stock_journal'),
-        check_company=True,
-    )
-
-    account_stock_valuation_id = fields.Many2one(
-        'account.account',
-        string='Stock Valuation Account',
-        **company_default_for('account_stock_valuation_id', 'product.category', 'property_stock_valuation_account_id'),
-        check_company=True,
-    )
-
     account_production_wip_account_id = fields.Many2one('account.account', string='Production WIP Account', check_company=True)
     account_production_wip_overhead_account_id = fields.Many2one('account.account', string='Production WIP Overhead Account', check_company=True)
 
@@ -37,16 +23,6 @@ class ResCompany(models.Model):
         ],
         default='manual',
         required=True)
-
-    inventory_valuation = fields.Selection(
-        string='Valuation',
-        selection=[
-            ('periodic', 'Periodic (at closing)'),
-            ('real_time', 'Perpetual (at invoicing)'),
-        ],
-        **company_default_for('inventory_valuation', 'product.category', 'property_valuation'),
-        default='periodic',
-    )
 
     cost_method = fields.Selection(
         string="Cost Method",

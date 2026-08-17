@@ -48,13 +48,8 @@ def _configure_journals(env):
 def _configure_stock_account_company_data(env):
     env['account.chart.template']._load_pre_defined_data({
         'res.company': {
-            'account_stock_valuation_id',
             'account_production_wip_account_id',
             'account_production_wip_overhead_account_id',
-        },
-        'account.account': {
-            'account_stock_expense_id',
-            'account_stock_variation_id',
         },
         'stock.location': {
             'valuation_account_id',
