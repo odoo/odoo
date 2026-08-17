@@ -47,3 +47,12 @@ class AccountMove(models.Model):
             else:
                 move.l10n_in_ewaybill_name = False
                 move.l10n_in_ewaybill_expiry_date = False
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_l10n_in_ewaybill_moves(self):
+        if moves := self.filtered(lambda m: m.l10n_in_ewaybill_ids.filtered(lambda e: e.state == 'generated')):
+            raise UserError(_(
+                "This documents (%s) cannot be deleted since it already has a generated E-waybill.",
+                ", ".join(moves.mapped('name'))
+            ))
+        self.l10n_in_ewaybill_ids.unlink()
