@@ -333,6 +333,7 @@
         'website.assets_inside_builder_iframe': [
             ('include', 'html_builder.assets_inside_builder_iframe'),
             'portal/static/src/scss/portal.edit.*',
+            'google_recaptcha/static/src/xml/recaptcha.xml',
             'website/static/src/**/*.edit.*',
             'website/static/src/core/website_edit_service.js',
         ],
@@ -405,8 +406,6 @@
             'website/static/src/components/autocomplete_with_pages/*',
             'website/static/src/scss/website_controller_page_kanban.scss',
             'website/static/src/mail/core/common/**/*',
-
-            'website/static/src/xml/website_form_editor.xml',
         ],
         "web.assets_web_dark": [
             'website/static/src/components/dialog/*.dark.scss',
@@ -472,7 +471,6 @@
             'website/static/src/scss/website.edit_mode.scss',
             'website/static/src/components/googleplaces_autocomplete/*',
             'website/static/src/js/send_mail_form.js',
-            'website/static/src/xml/website_form_editor.xml',
             'website/static/src/mail/core/common/**/*',
         ],
         'html_editor.assets_media_dialog': [
@@ -516,7 +514,6 @@
             'website/static/src/components/googleplaces_autocomplete/*',
             ('remove', 'website/static/src/builder/**/*.edit.*'),
             'website/static/src/js/send_mail_form.js',
-            'google_recaptcha/static/src/xml/recaptcha.xml',
         ],
         'html_builder.iframe_add_dialog': [
             'website/static/src/snippets/**/*.preview.scss',

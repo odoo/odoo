@@ -163,7 +163,8 @@ test("undo redo add form field", async () => {
                 <div class="s_website_form_label"/>
                 <a>Submit</a>
             </div>
-        </form></section>`
+        </form></section>`,
+        { loadIframeBuilderTemplates: true }
     );
     const editor = getEditor();
 
@@ -207,7 +208,8 @@ test("empty placeholder selection input for selection field", async () => {
                 <div class="s_website_form_label"/>
                 <a>Submit</a>
             </div>
-        </form></section>`
+        </form></section>`,
+        { loadIframeBuilderTemplates: true }
     );
     getEditor();
     expect(":iframe select option").toHaveCount(3);
@@ -243,7 +245,8 @@ test("selection field discards empty entries", async () => {
                 <div class="s_website_form_label"/>
                 <a>Submit</a>
             </div>
-        </form></section>`
+        </form></section>`,
+        { loadIframeBuilderTemplates: true }
     );
     getEditor();
     await contains(":iframe .s_website_form_field[data-type='many2one']").click();
@@ -262,7 +265,7 @@ test("selection field discards empty entries", async () => {
 
 test("Set 'Message' as form success action and show/hide the message preview", async () => {
     onRpc("get_authorized_fields", () => ({}));
-    await setupWebsiteBuilderWithSnippet("s_website_form");
+    await setupWebsiteBuilderWithSnippet("s_website_form", { loadIframeBuilderTemplates: true });
     await contains(":iframe section.s_website_form").click();
     expect(".options-container[data-container-title='Form']").toHaveCount(1);
 
@@ -386,7 +389,7 @@ const changeFieldAndCheckDependency = async (
     fieldDependencyName = "Option 1"
 ) => {
     onRpc("get_authorized_fields", () => ({}));
-    await setupWebsiteBuilder(formWithConditionOnChexbox);
+    await setupWebsiteBuilder(formWithConditionOnChexbox, { loadIframeBuilderTemplates: true });
     await contains(":iframe input[value='Option 2']").click();
     await changeFieldAction();
     await contains(":iframe input[name='b']").click();
@@ -515,7 +518,8 @@ test("Form using the Outgoing Mails model includes hidden email_to field", async
                     <a>Submit</a>
                 </div>
             </form>
-        </section>`
+        </section>`,
+        { loadIframeBuilderTemplates: true }
     );
 
     await contains(":iframe section").click();
@@ -545,7 +549,8 @@ test("Saving outgoing mail form without company email uses editor email fallback
                     <a>Submit</a>
                 </div>
             </form>
-        </section>`
+        </section>`,
+        { loadIframeBuilderTemplates: true }
     );
 
     await contains(":iframe section").click();
@@ -560,7 +565,7 @@ test("Saving outgoing mail form without company email uses editor email fallback
 test("dropping a snippet containing a form applies the default recipient email", async () => {
     onRpc("get_authorized_fields", () => ({}));
     onRpc("res.company", "read", () => [{ email: "company@mail.com" }]);
-    await setupWebsiteBuilder("");
+    await setupWebsiteBuilder("", { loadIframeBuilderTemplates: true });
 
     await contains("[data-snippet-group='contact_and_forms'] .o_snippet_thumbnail_area").click();
     await confirmAddSnippet("s_website_form_info");
@@ -574,7 +579,8 @@ test("dropping a snippet containing a form applies the default recipient email",
 
 test("Last list entry cannot be removed", async () => {
     onRpc("get_authorized_fields", () => ({}));
-    await setupWebsiteBuilder(`
+    await setupWebsiteBuilder(
+        `
 <section class="s_website_form" data-vcss="001" data-snippet="s_website_form" data-name="Form">
     <form data-model_name="mail.mail">
         <div class="s_website_form_rows">
@@ -610,7 +616,9 @@ test("Last list entry cannot be removed", async () => {
 	    </div>
     </form>
 </section>
-        `);
+        `,
+        { loadIframeBuilderTemplates: true }
+    );
     await contains(":iframe .s_website_form_field").click();
     expect(".options-container .builder_list_remove_item").toHaveCount(3);
     await contains(
@@ -680,7 +688,8 @@ test("Can link states to a country", async () => {
                     </div>
                 </div>
             </div>
-        </form></section>`
+        </form></section>`,
+        { loadIframeBuilderTemplates: true }
     );
     await contains(":iframe select[name='state_id']").click();
     expect(".options-container .hb-row [data-action-id='linkStateToCountry']").toHaveCount(1);
@@ -799,7 +808,8 @@ test("Only state fields have data-link-state-to-country attr", async () => {
                     </div>
                 </div>
             </div>
-        </form></section>`
+        </form></section>`,
+        { loadIframeBuilderTemplates: true }
     );
     await contains(":iframe select[name='state_id']").click();
     await contains(
@@ -976,7 +986,8 @@ describe("Many2one Field", () => {
                 type: "many2one",
             },
         }));
-        await setupWebsiteBuilder(`
+        await setupWebsiteBuilder(
+            `
             <section class="s_website_form" data-snippet="s_website_form" data-name="Form">
                 <div class="container-fluid">
                     <form action="/website/form/" method="post" class="o_mark_required" data-model_name="res.partner">
@@ -995,7 +1006,9 @@ describe("Many2one Field", () => {
                     </form>
                 </div>
             </section>
-        `);
+        `,
+            { loadIframeBuilderTemplates: true }
+        );
         const env = MockServer.env;
         records = [
             env["res.country"].create({ name: "Belgium" }),
@@ -1176,7 +1189,7 @@ describe("Many2one Field", () => {
 
 test("other option attributes are preserved when switching between radio and select, removed for other field types", async () => {
     onRpc("get_authorized_fields", () => ({}));
-    await setupWebsiteBuilder(formSelectXml);
+    await setupWebsiteBuilder(formSelectXml, { loadIframeBuilderTemplates: true });
     await contains(":iframe .s_website_form_field").click();
     expect(":iframe .s_website_form_field").toHaveAttribute("data-other-option-allowed", "true");
     expect(":iframe .s_website_form_field").toHaveAttribute("data-other-option-label");
@@ -1199,7 +1212,9 @@ test("other option attributes are preserved when switching between radio and sel
 
 test("label's markup is preserved when switching between field's type", async () => {
     onRpc("get_authorized_fields", () => ({}));
-    const { getEditor } = await setupWebsiteBuilderWithSnippet("s_website_form");
+    const { getEditor } = await setupWebsiteBuilderWithSnippet("s_website_form", {
+        loadIframeBuilderTemplates: true,
+    });
     setSelectionOnNodeContent(
         queryOne(":iframe .s_website_form_label_content:contains(Your Name)")
     );
@@ -1272,7 +1287,7 @@ test("builderList re-renders when the field type changes (custom fields)", async
             expect.step("setup");
         },
     });
-    await setupWebsiteBuilder(formSelectXml);
+    await setupWebsiteBuilder(formSelectXml, { loadIframeBuilderTemplates: true });
 
     await contains(":iframe .s_website_form_field").click();
     expect.verifySteps(["setup", "setup"]);
@@ -1329,7 +1344,8 @@ test("builderList re-renders when the field type changes (existing fields)", asy
                 </div>
             </form>
             </div>
-        </section>`
+        </section>`,
+        { loadIframeBuilderTemplates: true }
     );
 
     await contains(":iframe .s_website_form_field").click();
@@ -1416,7 +1432,8 @@ test("Changing field type removes data-fill-with attribute", async () => {
         },
     }));
 
-    await setupWebsiteBuilder(`
+    await setupWebsiteBuilder(
+        `
         <form data-model_name="mail.mail">
             <div class="s_website_form_field" data-type="char">
                 <label class="s_website_form_label" for="field">
@@ -1431,7 +1448,9 @@ test("Changing field type removes data-fill-with attribute", async () => {
                 <input id="field1" class="s_website_form_input" type="tel" data-fill-with="phone"/>
             </div>
         </form>
-    `);
+    `,
+        { loadIframeBuilderTemplates: true }
+    );
 
     // Change the field type to custom field.
     await contains(":iframe input[type='text'][data-fill-with='commercial_company_name']").click();
@@ -1466,7 +1485,8 @@ test("Changing field type to existing field removes custom label", async () => {
                 <input id="field" class="s_website_form_input" type="text"/>
             </div>
         </form>
-        `
+        `,
+        { loadIframeBuilderTemplates: true }
     );
 
     // Change the field type to custom field.
@@ -1535,7 +1555,8 @@ test("change action of form to a model without registered fields adds the model'
                     <a>Submit</a>
                 </div>
             </form>
-        </section>`
+        </section>`,
+        { loadIframeBuilderTemplates: true }
     );
 
     await contains(":iframe section").click();
@@ -1591,7 +1612,8 @@ test("single-choice field is displayed as a dropdown when it has more than five 
                 </div>
             </form>
             </div>
-        </section>`
+        </section>`,
+        { loadIframeBuilderTemplates: true }
     );
 
     await contains(":iframe .s_website_form_field").click();

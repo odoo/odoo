@@ -41,7 +41,6 @@ import {
 import { SyncCache } from "@html_builder/utils/sync_cache";
 import { _t } from "@web/core/l10n/translation";
 import { omit } from "@web/core/utils/objects";
-import { renderToElement } from "@web/core/utils/render";
 import { selectElements } from "@html_editor/utils/dom_traversal";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { isSmallInteger } from "@html_builder/utils/utils";
@@ -404,14 +403,10 @@ export class FormOptionPlugin extends Plugin {
             hiddenEl.remove();
         }
         if (value || fieldName === "email_to") {
-            const hiddenField = renderToElement("website.form_field_hidden", {
-                field: {
-                    name: fieldName,
-                    value: value,
-                    dnone: true,
-                    formatInfo: {},
-                },
-            });
+            const hiddenField = this.dependencies.websiteBridge.renderToElement(
+                "website.form_field_hidden",
+                { field: { name: fieldName, value: value, dnone: true, formatInfo: {} } }
+            );
             el.querySelector(".s_website_form_submit").insertAdjacentElement(
                 "beforebegin",
                 hiddenField
@@ -468,7 +463,10 @@ export class FormOptionPlugin extends Plugin {
                 const locationEl = el.querySelector(
                     ".s_website_form_submit, .s_website_form_recaptcha"
                 );
-                locationEl.insertAdjacentElement("beforebegin", renderField(_field));
+                locationEl.insertAdjacentElement(
+                    "beforebegin",
+                    renderField(_field, this.dependencies.websiteBridge.renderToElement)
+                );
             });
             // Special case: handle hidden fields separately.
             // In some forms (e.g., contact forms), the "email_to" field must be included as hidden.
@@ -571,7 +569,7 @@ export class FormOptionPlugin extends Plugin {
     addFieldToForm(formEl) {
         const field = getCustomField("char", this.dependencies.websiteBridge._t("Custom Text"));
         field.formatInfo = getDefaultFormat(formEl);
-        const fieldEl = renderField(field);
+        const fieldEl = renderField(field, this.dependencies.websiteBridge.renderToElement);
         let locationEl = formEl.querySelector(".s_website_form_submit, .s_website_form_recaptcha");
         if (!locationEl) {
             locationEl = formEl.querySelector(".s_website_form_rows");
@@ -590,7 +588,7 @@ export class FormOptionPlugin extends Plugin {
             field.formatInfo.requiredMark = isRequiredMark(formEl);
             field.formatInfo.optionalMark = isOptionalMark(formEl);
             field.formatInfo.mark = getMark(formEl);
-            newSnippetEl = renderField(field);
+            newSnippetEl = renderField(field, this.dependencies.websiteBridge.renderToElement);
         } else {
             newSnippetEl = document.createElement("div");
             newSnippetEl.className =
@@ -681,7 +679,7 @@ export class FormOptionPlugin extends Plugin {
             }
         }
 
-        const fieldEl = renderField(field);
+        const fieldEl = renderField(field, this.dependencies.websiteBridge.renderToElement);
         replaceFieldElement(oldFieldEl, fieldEl);
     }
     readConditionalInputs({ fieldEl, formEl }) {
@@ -977,7 +975,7 @@ export class FormOptionPlugin extends Plugin {
         if (rootEl.matches("[data-name='Field']:not(.s_website_form_dnone)")) {
             // The root element is a single field - rerender it directly
             const { fields } = await this.loadFieldOptionData(rootEl);
-            rerenderField(rootEl, fields);
+            rerenderField(rootEl, this.dependencies.websiteBridge.renderToElement, fields);
         } else {
             // The root element may be a form or contain multiple forms -
             // rerender them all
@@ -990,7 +988,7 @@ export class FormOptionPlugin extends Plugin {
                 }
                 const { fields } = await this.loadFieldOptionData(formFieldsToRerender[0]);
                 for (const fieldEl of formFieldsToRerender) {
-                    rerenderField(fieldEl, fields);
+                    rerenderField(fieldEl, this.dependencies.websiteBridge.renderToElement, fields);
                 }
             }
         }
@@ -1348,12 +1346,15 @@ export class MarkColorAction extends BuilderAction {
 
 export class OnSuccessAction extends BuilderAction {
     static id = "onSuccess";
+    static dependencies = ["websiteBridge"];
     apply({ editingElement: el, value }) {
         el.dataset.successMode = value;
         let messageEl = el.parentElement.querySelector(".s_website_form_end_message");
         if (value === "message") {
             if (!messageEl) {
-                messageEl = renderToElement("website.s_website_form_end_message");
+                messageEl = this.dependencies.websiteBridge.renderToElement(
+                    "website.s_website_form_end_message"
+                );
                 el.insertAdjacentElement("afterend", messageEl);
             }
         } else {
@@ -1388,11 +1389,13 @@ export class ToggleEndMessageAction extends BuilderAction {
 }
 export class FormToggleRecaptchaLegalAction extends BuilderAction {
     static id = "formToggleRecaptchaLegal";
+    static dependencies = ["websiteBridge"];
     apply({ editingElement: el }) {
         const labelWidth = el.querySelector(".s_website_form_label").style.width;
-        const legalEl = renderToElement("website.s_website_form_recaptcha_legal", {
-            labelWidth: labelWidth,
-        });
+        const legalEl = this.dependencies.websiteBridge.renderToElement(
+            "website.s_website_form_recaptcha_legal",
+            { labelWidth: labelWidth }
+        );
         legalEl.setAttribute("contentEditable", true);
         el.querySelector(".s_website_form_submit").insertAdjacentElement("beforebegin", legalEl);
     }
