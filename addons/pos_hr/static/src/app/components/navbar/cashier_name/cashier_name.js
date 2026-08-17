@@ -32,4 +32,10 @@ patch(CashierName.prototype, {
     async selectCashier(pin = false, login = false, list = false) {
         return await this.cashierSelector(...arguments);
     },
+    async onCashierClick() {
+        if (!this.pos.config.module_pos_hr) {
+            return;
+        }
+        return this.selectCashier(false, true, true);
+    },
 });
