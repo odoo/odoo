@@ -1843,8 +1843,9 @@ async function _select(target, value) {
     const values = ensureArray(value, String);
     let found = false;
     for (const option of target.options) {
-        option.selected = values.includes(option.value);
-        found ||= option.selected;
+        const match = values.includes(option.value);
+        option.selected = match;
+        found ||= match;
     }
     if (!value) {
         target.selectedIndex = -1;
