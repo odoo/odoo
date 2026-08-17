@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!--
+            BIR-prescribed invoice for Philippine companies, per RR No. 7-2024 (as amended by
+            RR No. 11-2024). The comments below state what each section is required for.
+        -->
+        <template id="report_invoice_document" inherit_id="account.report_invoice_document" primary="True">
+            <!-- Document Type, Title and Number -->
+            <!-- A VAT-exempt or zero-rated sale must bear that term prominently. -->
+            <xpath expr="//t[@t-set='layout_document_title']" position="before">
+                <t t-set="cas_vals" t-value="o._l10n_ph_cas_get_invoice_report_values()"/>
+            </xpath>
+            <xpath expr="//t[@name='invoice_title']/.." position="after">
+                <span t-if="cas_vals['category'] == 'vat_exempt'" class="fs-4 d-block">VAT-EXEMPT SALES</span>
+                <span t-elif="cas_vals['category'] == 'zero_rated'" class="fs-4 d-block">ZERO-RATED SALES</span>
+            </xpath>
+            <xpath expr="//t[@name='invoice_title']/.." position="attributes">
+                <attribute name="class">text-uppercase fs-1</attribute>
+            </xpath>
+            <xpath expr="//t[@name='draft_invoice_title']/.." position="attributes">
+                <attribute name="class">text-uppercase fs-1</attribute>
+            </xpath>
+            <xpath expr="//t[@name='cancelled_invoice_title']/.." position="attributes">
+                <attribute name="class">text-uppercase fs-1</attribute>
+            </xpath>
+            <xpath expr="//t[@t-set='layout_document_title']/span[@t-field='o.name']" position="attributes">
+                <attribute name="class">fs-5 fw-normal d-block mt-3</attribute>
+            </xpath>
+
+            <!-- A non-VAT-registered seller has no output VAT to show against its lines. -->
+            <xpath expr="//t[@t-set='display_taxes']" position="after">
+                <t t-set="display_taxes" t-value="display_taxes and cas_vals['category'] != 'non_vat'"/>
+            </xpath>
+
+            <!-- Tax Breakdown Box and Not Valid Warning -->
+            <!--
+                Mixed sales must be broken down between VATable, zero-rated and VAT-exempt sales,
+                and a non-VAT invoice must state in bold that it is not valid for input tax claim.
+            -->
+            <xpath expr="//div[@id='right-elements']" position="attributes">
+                <attribute name="class" remove="float-end ms-5" separator=" "/>
+            </xpath>
+            <xpath expr="//div[@id='right-elements']" position="replace">
+                <div class="row justify-content-between">
+                    <div class="col-4 mt-4">
+                        <table t-if="cas_vals['category'] == 'mixed'" class="table table-borderless avoid-page-break-inside mb-0">
+                            <tr>
+                                <td>VATable Sales</td>
+                                <td class="text-end"><span t-out="cas_vals['vatable_base']" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/></td>
+                            </tr>
+                            <tr>
+                                <td>VAT</td>
+                                <td class="text-end"><span t-out="cas_vals['vatable_tax']" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/></td>
+                            </tr>
+                            <tr>
+                                <td>Zero-Rated Sales</td>
+                                <td class="text-end"><span t-out="cas_vals['zero_rated_base']" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/></td>
+                            </tr>
+                            <tr>
+                                <td>VAT-Exempt Sales</td>
+                                <td class="text-end"><span t-out="cas_vals['vat_exempt_base']" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/></td>
+                            </tr>
+                        </table>
+                        <table t-if="cas_vals['category'] == 'non_vat' and cas_vals['percentage_tax_base']" class="table table-borderless avoid-page-break-inside mb-0">
+                            <tr>
+                                <td>Exempt Sales</td>
+                                <td class="text-end"><span t-out="cas_vals['vat_exempt_base']" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/></td>
+                            </tr>
+                            <tr>
+                                <td>Sales Subject to Percentage Tax</td>
+                                <td class="text-end"><span t-out="cas_vals['percentage_tax_base']" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/></td>
+                            </tr>
+                        </table>
+                        <p t-if="cas_vals['category'] in ('vat_exempt', 'non_vat')" class="fs-5 text-danger fw-bold text-center mt-3">
+                            "THIS DOCUMENT IS<br/>NOT VALID FOR CLAIM<br/>OF INPUT TAX."
+                        </p>
+                        <!-- A copy issued again must be marked as a reprint, hence the dedicated report. -->
+                        <p t-if="l10n_ph_reprint" class="fs-5 text-danger fw-bold text-center mt-3">REPRINT</p>
+                    </div>
+                    <div class="col-5">$0</div>
+                </div>
+            </xpath>
+
+            <!-- Totals breakdown table, replacing the standard tax-totals table -->
+            <!-- The total payable must be shown VAT-inclusive, with the VAT as a separate item. -->
+            <xpath expr="//div[@id='total']/div/table" position="replace">
+                <table class="o_total_table table table-borderless avoid-page-break-inside">
+                    <tr t-if="cas_vals['has_vat']">
+                        <td class="w-50">Amount: Net of VAT</td>
+                        <td class="text-end"><span t-field="o.amount_untaxed"/></td>
+                    </tr>
+                    <tr t-if="cas_vals['has_vat']">
+                        <td class="w-50">Add: VAT</td>
+                        <td class="text-end"><span t-out="cas_vals['vatable_tax']" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/></td>
+                    </tr>
+                    <tr>
+                        <td class="w-50">
+                            <span t-if="cas_vals['has_vat']">Total Sales (VAT-Inclusive)</span>
+                            <span t-else="">Total Sales</span>
+                        </td>
+                        <td class="text-end"><span t-field="o.amount_total"/></td>
+                    </tr>
+                    <tr t-if="cas_vals['withholding_tax']">
+                        <td class="w-50">Less: Withholding Tax</td>
+                        <td class="text-end"><span t-out="cas_vals['withholding_tax']" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/></td>
+                    </tr>
+                    <tr class="o_total">
+                        <td class="w-50"><strong>Total Amount Due</strong></td>
+                        <td class="text-end"><strong t-field="o.withholding_net_residual_amount_currency"/></td>
+                    </tr>
+                </table>
+            </xpath>
+
+        </template>
+
+        <template id="report_invoice" inherit_id="account.report_invoice">
+            <xpath expr='//t[@t-call="account.report_invoice_document"]' position="after">
+                <t t-elif="o._get_name_invoice_report() == 'l10n_ph.report_invoice_document'"
+                   t-call="l10n_ph.report_invoice_document"
+                   t-lang="lang"/>
+            </xpath>
+        </template>
+
+        <template id="report_invoice_reprint">
+            <t t-call="account.report_invoice" l10n_ph_reprint="True"/>
+        </template>
+
+        <record id="action_report_bir_reprint_invoice" model="ir.actions.report">
+            <field name="name">Reprint Invoice PDF</field>
+            <field name="model">account.move</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">l10n_ph.report_invoice_reprint</field>
+            <field name="binding_model_id" ref="account.model_account_move"/>
+            <field name="binding_type">report</field>
+            <field name="domain">[('country_code', '=', 'PH'), ('move_type', '=', 'out_invoice')]</field>
+        </record>
+
+        <template id="report_commercial_invoice">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-set="lang" t-value="o.partner_id.lang"/>
+                    <t t-call="account.report_invoice_document" t-lang="lang"/>
+                </t>
+            </t>
+        </template>
+
+        <record id="action_report_commercial_invoice" model="ir.actions.report">
+            <field name="name">Commercial Invoice</field>
+            <field name="model">account.move</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">l10n_ph.report_commercial_invoice</field>
+            <field name="binding_model_id" ref="account.model_account_move"/>
+            <field name="binding_type">report</field>
+            <field name="domain">[('country_code', '=', 'PH'), ('journal_id.type', '=', 'sale')]</field>
+        </record>
+
+    </data>
+</odoo>

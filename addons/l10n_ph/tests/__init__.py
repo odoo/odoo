@@ -2,3 +2,4 @@
 
 from . import common
 from . import test_partner_name
+from . import test_cas_invoice_report
