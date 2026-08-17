@@ -3,6 +3,7 @@ import { registry } from "@web/core/registry";
 import { DIRECTION_VARIANTS } from "../core/utils";
 import { withSequence } from "@html_editor/utils/resource";
 import { DIMENSIONS } from "../hooks";
+import { isTableCell } from "@html_editor/utils/dom_info";
 
 const BLOCKED_PSEUDO_CLASSES = new Set([
     "active",
@@ -125,6 +126,10 @@ export class FilterContentPlugin extends Plugin {
                 referenceNode.nodeName === "T" && !attributeName.startsWith("t-"),
         });
         rules.block("srcset");
+        rules.require("cellpadding", {
+            when: ({ referenceNode }) => referenceNode.nodeName === "TABLE",
+            how: () => ({ attributeValue: "0" }),
+        });
     }
 
     provideStyleRules(rules) {
@@ -144,6 +149,12 @@ export class FilterContentPlugin extends Plugin {
                 referenceNode.nodeName === "T" || referenceNode.nodeName === "BR",
         });
         rules.block(/.*/, {
+            // TODO EGGMAIL: controversial rule, but cases where removing an
+            // indirect css property value cause a style issue should be
+            // enforced with a "fix" rule which will compute a resolved style
+            // value. This can not be done in a generic way as some computed
+            // values are not what is actually required in the email (eg width:
+            // 100% being computed as width 737.21px).
             when: ({ propertyValue }) => INDIRECT_CSS_PROPERTY_VALUES.has(propertyValue),
         });
         rules.allow("overflow");
@@ -154,6 +165,10 @@ export class FilterContentPlugin extends Plugin {
         rules.allow(/^border(-.*)?$/, {
             when: ({ propertyName }) =>
                 propertyName !== "border-spacing" && propertyName !== "border-collapse",
+        });
+        rules.fix("border-color", {
+            when: ({ propertyValue }) => INDIRECT_CSS_PROPERTY_VALUES.has(propertyValue),
+            how: ({ referenceNode }) => this.getStylePropertyValue(referenceNode, "border-color"),
         });
 
         // blockquote (remove margin against useragent)
@@ -206,6 +221,10 @@ export class FilterContentPlugin extends Plugin {
             when: ({ propertyValue }) => ALLOWED_CSS_DISPLAY_VALUES.has(propertyValue),
         });
         rules.allow("vertical-align");
+        rules.fix("vertical-align", {
+            when: ({ propertyValue }) => INDIRECT_CSS_PROPERTY_VALUES.has(propertyValue),
+            how: ({ referenceNode }) => this.getStylePropertyValue(referenceNode, "vertical-align"),
+        });
     }
 
     genericTableStyleRules(rules) {
@@ -214,6 +233,23 @@ export class FilterContentPlugin extends Plugin {
         rules.allow("border-collapse", { when: isTable });
         rules.allow("border-spacing", { when: isTable });
         rules.allow("empty-cells", { when: isTable });
+        rules.allow("width", { when: isTable });
+        rules.require("width", { when: isTable, how: () => ({ propertyValue: "100%" }) });
+        rules.require("max-width", {
+            when: [isTable, ({ propertyValue }) => propertyValue !== "100%"],
+            how: () => ({ propertyValue: "100%" }),
+        });
+        rules.allow("height", { when: ({ referenceNode }) => referenceNode.nodeName === "TR" });
+        rules.allow("width", {
+            when: ({ referenceNode }) => isTableCell(referenceNode.nodeName),
+        });
+        rules.allow("background-color", {
+            when: ({ referenceNode }) => referenceNode.nodeName === "TH",
+        });
+        rules.require("line-height", {
+            when: ({ referenceNode }) => isTableCell(referenceNode),
+            how: () => ({ propertyValue: "1.2" }), // typical "normal" value
+        });
     }
 
     genericListStyleRules(rules) {

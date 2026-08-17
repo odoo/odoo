@@ -84,13 +84,22 @@ export class ContextStylePlugin extends Plugin {
             }
         }
         const styleInfo = this.filterStyleInfo(rawStyleInfo, element, this.tableContextStyleRules);
-        if (styleInfo.getPropertyValue("line-height") === "") {
-            // TODO EGGMAIL: fix simplification if necessary.
+        let lineHeight = styleInfo.getPropertyValue("line-height");
+        if (lineHeight === "" && element.closest("table")) {
+            let referenceNode = element;
+            do {
+                const rawStyleInfo = this.getStyleInfo(referenceNode);
+                lineHeight = rawStyleInfo.getPropertyValue("line-height");
+                referenceNode = referenceNode.parentElement;
+            } while (!lineHeight && this.config.reference.contains(referenceNode));
+            if (lineHeight) {
+                styleInfo.setProperty("line-height", lineHeight);
+            }
+        }
+        if (lineHeight === "") {
             // line-height should be extracted as a factor, not a px value.
             // if not specified for an element, default to the one specified
-            // on the body (simplification). The correct solution would be a
-            // recursive search for the first ancestor setting an explicit
-            // line-height.
+            // on the body (simplification).
             const body = this.config.referenceDocument.body;
             const bodyStyleInfo = this.getRawStyleInfo(body);
             styleInfo.setProperty(
