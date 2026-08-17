@@ -407,10 +407,6 @@
             'website/static/src/mail/core/common/**/*',
 
             'website/static/src/xml/website_form_editor.xml',
-            # TODO when moving options to website: load this from website
-            # directly. This file is loaded in assets_wysiwyg in website, but we
-            # need to load it here for html_builder.
-            'website/static/src/xml/website.cookies_bar.xml',
         ],
         "web.assets_web_dark": [
             'website/static/src/components/dialog/*.dark.scss',
@@ -477,7 +473,6 @@
             'website/static/src/components/googleplaces_autocomplete/*',
             'website/static/src/js/send_mail_form.js',
             'website/static/src/xml/website_form_editor.xml',
-            'website/static/src/xml/website.cookies_bar.xml',
             'website/static/src/mail/core/common/**/*',
         ],
         'html_editor.assets_media_dialog': [
