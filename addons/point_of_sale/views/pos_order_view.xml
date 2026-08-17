@@ -15,6 +15,7 @@
                     <field name="state" widget="statusbar" invisible="state == 'cancel'" statusbar_visible="draft,paid,done"/>
                     <field name="state" widget="statusbar" invisible="state != 'cancel'" statusbar_visible="draft,cancel"/>
                     <field name="has_refundable_lines" invisible="1" />
+                    <field name="is_refund" invisible="1"/>
                 </header>
                 <sheet>
                 <div class="oe_button_box" name="button_box">
@@ -65,7 +66,7 @@
                 </group>
                 <notebook colspan="4">
                     <page string="Products" name="products">
-                      <field name="lines" colspan="4" nolabel="1" readonly="state != 'draft'" mode="list,kanban">
+                      <field name="lines" colspan="4" nolabel="1" readonly="state != 'draft'" create="not is_refund" mode="list,kanban">
                             <kanban class="o_kanban_mobile">
                                 <t t-name="card" class="row g-0">
                                     <aside class="col-2 pe-3">
@@ -88,17 +89,17 @@
                             <list name="order_line_list" string="Order lines" editable="bottom">
                                 <field name="name" column_invisible="True"/>
                                 <field name="full_product_name" optional="hide" readonly="1"/>
-                                <field name="product_id" widget="product_label_section_and_note_field" />
+                                <field name="product_id" widget="product_label_section_and_note_field" readonly="parent.is_refund"/>
                                 <field name="is_edited" readonly="1" column_invisible="not parent.order_edit_tracking"/>
                                 <field name="qty"/>
                                 <field name="customer_note" optional="hide"/>
                                 <field name="product_uom_id" groups="uom.group_uom"/>
-                                <field name="price_unit" widget="monetary"/>
+                                <field name="price_unit" widget="monetary" readonly="parent.is_refund"/>
                                 <field name="is_total_cost_computed" column_invisible="True"/>
                                 <field name="total_cost" invisible="not is_total_cost_computed" optional="hide" widget="monetary"/>
                                 <field name="margin" invisible="not is_total_cost_computed" optional="hide" widget="monetary"/>
                                 <field name="margin_percent" invisible="not is_total_cost_computed" optional="hide" widget="percentage"/>
-                                <field name="discount" width="50px" string="Disc.%"/>
+                                <field name="discount" width="50px" string="Disc.%" readonly="parent.is_refund"/>
                                 <field name="tax_ids_after_fiscal_position" widget="many2many_tax_tags" string="Taxes"/>
                                 <field name="tax_ids" widget="many2many_tax_tags" column_invisible="True" force_save="1"/>
                                 <field name="price_subtotal" widget="monetary" force_save="1"/>
@@ -108,10 +109,10 @@
                             </list>
                             <form string="Order lines">
                                 <group col="4">
-                                    <field name="product_id" />
+                                    <field name="product_id" readonly="parent.is_refund"/>
                                     <field name="qty"/>
-                                    <field name="discount"/>
-                                    <field name="price_unit" widget="monetary"/>
+                                    <field name="discount" readonly="parent.is_refund"/>
+                                    <field name="price_unit" widget="monetary" readonly="parent.is_refund"/>
                                     <field name="price_subtotal" invisible="1" widget="monetary" force_save="1"/>
                                     <field name="price_subtotal_incl" invisible="1" widget="monetary" force_save="1"/>
                                     <field name="tax_ids_after_fiscal_position" widget="many2many_tax_tags" string="Taxes"/>

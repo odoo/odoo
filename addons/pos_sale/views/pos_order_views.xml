@@ -30,6 +30,7 @@
                             name="product_id"
                             widget="product_label_section_and_note_field"
                             invisible="has_default_product"
+                            readonly="parent.is_refund"
                         />
                         <field name="sale_order_line_name" invisible="not has_default_product"/>
                     </column>
