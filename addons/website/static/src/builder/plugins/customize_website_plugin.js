@@ -16,6 +16,7 @@ import { CompositeAction } from "@html_builder/core/composite_action_plugin";
 
 /**
  * @typedef { Object } CustomizeWebsiteShared
+ * @property { CustomizeWebsitePlugin['addDiscardableMutation'] } addDiscardableMutation
  * @property { CustomizeWebsitePlugin['customizeWebsiteColors'] } customizeWebsiteColors
  * @property { CustomizeWebsitePlugin['customizeWebsiteVariables'] } customizeWebsiteVariables
  * @property { CustomizeWebsitePlugin['loadTemplateKey'] } loadTemplateKey
@@ -35,6 +36,8 @@ import { CompositeAction } from "@html_builder/core/composite_action_plugin";
 
 /**
  * @typedef {((colors: string[]) => void)[]} on_website_color_updated_handlers
+ * @typedef {(() => Promise<void>)[]} discard_handlers
+ * Handler called before discarding changes to revert persisted customizations.
  */
 
 export const NO_IMAGE_SELECTION = Symbol.for("NoImageSelection");
@@ -43,6 +46,7 @@ export class CustomizeWebsitePlugin extends Plugin {
     static id = "customizeWebsite";
     static dependencies = ["builderActions", "history", "savePlugin", "edit_interaction"];
     static shared = [
+        "addDiscardableMutation",
         "customizeWebsiteColors",
         "customizeWebsiteVariables",
         "loadTemplateKey",
@@ -82,6 +86,7 @@ export class CustomizeWebsitePlugin extends Plugin {
             }
         }),
         save_handlers: this.onSave.bind(this),
+        discard_handlers: this.onDiscard.bind(this),
     };
 
     async onSave() {
@@ -116,6 +121,8 @@ export class CustomizeWebsitePlugin extends Plugin {
     pendingThemeRequests = [];
     variablesToCustomize = {};
     colorsToCustomize = {};
+    /** @type {Map<string, () => Promise<void>>} customized option -> revert */
+    revertOnDiscard = new Map();
     resolves = {};
     getPendingThemeRequests() {
         return this.pendingThemeRequests;
@@ -221,8 +228,30 @@ export class CustomizeWebsitePlugin extends Plugin {
         });
         await this.services.orm.call("web_editor.assets", "make_scss_customization", [url, values]);
     }
+    addDiscardableMutation(optionId, { apply, revert }) {
+        this.dependencies.history.addCustomMutation({ apply, revert });
+        if (!this.revertOnDiscard.has(optionId)) {
+            this.revertOnDiscard.set(optionId, revert);
+        }
+    }
+    async onDiscard() {
+        this.isDiscarding = true;
+        try {
+            // Should call the revert from the oldest one, as customizing an
+            // option can have side effects on the previous ones (e.g. changing
+            // the color palette resets the customized colors).
+            for (const revert of [...this.revertOnDiscard.values()].reverse()) {
+                await revert();
+            }
+        } finally {
+            this.isDiscarding = false;
+        }
+    }
     reloadBundles = debounce(this._reloadBundles.bind(this), 0);
     async _reloadBundles() {
+        if (this.isDiscarding) {
+            return;
+        }
         const bundles = await rpc("/website/theme_customize_bundle_reload");
         const allLinksIframeEls = [];
         const proms = [];
@@ -330,7 +359,7 @@ export class CustomizeWebsitePlugin extends Plugin {
                     .finally(() => this.services.ui.unblock());
             };
             await blockedApply(value);
-            this.dependencies.history.addCustomMutation({
+            this.addDiscardableMutation(`${action.constructor.id}#${arg.params.mainParam}`, {
                 apply: () => blockedApply(value),
                 revert: () => blockedApply(oldValue),
             });
@@ -479,7 +508,7 @@ export class AddLanguageAction extends BuilderAction {
 
 export class CustomizeBodyBgTypeAction extends BuilderAction {
     static id = "customizeBodyBgType";
-    static dependencies = ["builderActions", "history", "customizeWebsite"];
+    static dependencies = ["builderActions", "customizeWebsite"];
     isApplied({ value }) {
         const getAction = this.dependencies.builderActions.getAction;
         const currentValue = getAction("customizeBodyBgType").getValue();
@@ -526,7 +555,7 @@ export class CustomizeBodyBgTypeAction extends BuilderAction {
             return;
         }
         const getAction = this.dependencies.builderActions.getAction;
-        this.dependencies.history.addCustomMutation({
+        this.dependencies.customizeWebsite.addDiscardableMutation("customizeBodyBgType", {
             apply: () => {
                 this.services.ui.block({ delay: 2500 });
                 getAction("customizeBodyBgType")
@@ -538,7 +567,7 @@ export class CustomizeBodyBgTypeAction extends BuilderAction {
             },
             revert: () => {
                 this.services.ui.block({ delay: 2500 });
-                getAction("customizeBodyBgType")
+                return getAction("customizeBodyBgType")
                     .load({
                         editingElement,
                         params,

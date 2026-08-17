@@ -142,12 +142,17 @@ export class WebsiteBuilder extends Component {
                 body: _t(
                     "If you discard the current edits, all unsaved changes will be lost. You can cancel to return to edit mode."
                 ),
-                confirm: () => this.props.builderProps.closeEditor(),
+                confirm: () => this.discardChanges(),
                 cancel: () => {},
             });
         } else {
             this.props.builderProps.closeEditor();
         }
+    }
+
+    async discardChanges() {
+        await Promise.all(this.editor.getResource("discard_handlers").map((handler) => handler()));
+        await this.props.builderProps.closeEditor();
     }
 
     onBeforeUnload(event) {
@@ -179,7 +184,7 @@ export class WebsiteBuilder extends Component {
             });
             if (shouldCloseEditor) {
                 this.isGuardActive = false;
-                this.props.builderProps.closeEditor();
+                await this.discardChanges();
             } else {
                 this.pushHistoryState();
             }

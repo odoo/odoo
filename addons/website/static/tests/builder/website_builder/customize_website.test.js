@@ -574,3 +574,52 @@ test("BuilderButton with action “templatePreviewableWebsiteConfig”", async (
     await contains("[data-action-param*='test_template_2']").click();
     expect.verifySteps(["theme_customize_data"]);
 });
+
+test("discard restores the theme customizations made during the edition", async () => {
+    const iframeRootStyle = () =>
+        document.querySelector("iframe").contentDocument.documentElement.style;
+
+    class WebEditorAssets extends models.Model {
+        _name = "web_editor.assets";
+        make_scss_customization(location, changes) {
+            for (const [key, value] of Object.entries(changes)) {
+                iframeRootStyle().setProperty(`--${key}`, String(value));
+            }
+            expect.step(JSON.stringify(changes));
+        }
+    }
+
+    defineModels([WebEditorAssets]);
+
+    let def = new Deferred();
+
+    onRpc("/website/theme_customize_bundle_reload", () => {
+        expect.step("bundle reload");
+        def.resolve();
+        return {};
+    });
+
+    addOption({
+        selector: ".test-options-target",
+        template: xml`
+            <BuilderButton action="'customizeWebsiteVariable'" actionParam="'test-variable'" actionValue="'20px'">20px</BuilderButton>
+            <BuilderButton action="'customizeWebsiteVariable'" actionParam="'test-variable'" actionValue="'30px'">30px</BuilderButton>`,
+    });
+
+    await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+    iframeRootStyle().setProperty("--test-variable", "10px");
+    await contains(":iframe .test-options-target").click();
+
+    await contains("[data-action-value='20px']").click();
+    await def;
+    expect.verifySteps([`{"test-variable":"20px"}`, "bundle reload"]);
+
+    def = new Deferred();
+    await contains("[data-action-value='30px']").click();
+    await def;
+    expect.verifySteps([`{"test-variable":"30px"}`, "bundle reload"]);
+
+    await contains(".o-snippets-top-actions button[data-action='cancel']").click();
+    await contains(".o_dialog .btn-primary").click();
+    expect.verifySteps([`{"test-variable":"10px"}`]);
+});
