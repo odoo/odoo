@@ -4,25 +4,17 @@
     <record id="fake_project_demo" model="populate.blueprint">
         <field name="name">Project - Populate Demo</field>
         <field name="definition_xml" type="xml">
-            <create model="res.partner" count="2000" id="service_customers">
-                <field name="name" generator="fake.company"/>
-                <field name="email" generator="fake.company_email"/>
-                <field name="phone" generator="fake.phone_number"/>
-                <field name="is_company" eval="True"/>
-                <field name="active" eval="True"/>
-                <field name="street" generator="fake.street_address"/>
-                <field name="city" generator="fake.city"/>
-                <field name="zip" generator="fake.postcode"/>
-                <field name="country_id" domain="[('code', 'in', ['US', 'CA', 'GB', 'DE', 'FR'])]" null_ratio="0.1"/>
-            </create>
+            <import ref="base.fake_partners" as="customers">
+                <xpath expr="//create[@id='partners']" position="attributes">
+                    <attribute name="count">2000</attribute>
+                </xpath>
+            </import>
 
-            <create model="res.users" count="500" id="project_users" context="{'tracking_disable': True, 'install_mode': True}">
-                <field name="name" generator="fake.name"/>
-                <value name="user_name" generator="fake.user_name"/>
-                <value name="random_digits" generator="scalar.integer" start="10" end="99"/>
-                <field name="login" eval="f'{user_name}{random_digits if random_digits else ''}'" unique="True"/>
-                <field name="email" generator="fake.email"/>
-            </create>
+            <import ref="base.fake_internal_users" as="project">
+                <xpath expr="//create[@id='users']" position="attributes">
+                    <attribute name="count">500</attribute>
+                </xpath>
+            </import>
 
             <create model="project.project.stage" count="6" id="project_stages" scale="False">
                 <field name="name" generator="misc.cycle" values="['New', 'In Progress', 'Review', 'Done', 'Archived', 'Cancelled']"/>
@@ -39,8 +31,8 @@
             <create model="project.project" count="120" id="service_projects" context="{'mail_auto_subscribe_no_notify': True}">  <!-- disable notifications to new assignees -->
                 <field name="name" generator="fake.catch_phrase"/>
                 <field name="active" values="{True: 9, False: 1}"/>
-                <field name="partner_id" ref="service_customers" null_ratio="0.2"/>
-                <field name="user_id" ref="project_users" null_ratio="0.1"/>
+                <field name="partner_id" ref="customers/partners" null_ratio="0.2"/>
+                <field name="user_id" ref="project/users" null_ratio="0.1"/>
                 <field name="privacy_visibility" values="{'portal': 5, 'employees': 3, 'followers': 2}"/>
                 <field name="stage_id" ref="project_stages" null_ratio="0.1"/>
                 <value name="has_deadline" generator="scalar.boolean"/>
@@ -55,7 +47,7 @@
                 <field name="color" start="0" end="11"/>
                 <field name="last_update_status" values="{'on_track': 4, 'at_risk': 2, 'off_track': 1, 'on_hold': 1, 'to_define': 2}"/>
                 <field name="type_ids" ref="task_types" count="8"/>
-                <field name="favorite_user_ids" ref="project_users" count="50" std="20" null_ratio="0.7"/>
+                <field name="favorite_user_ids" ref="project/users" count="50" std="20" null_ratio="0.7"/>
             </create>
 
             <create model="project.tags" count="500" id="project_tags">
@@ -75,8 +67,8 @@
                 <field name="name" generator="fake.sentence" nb_words="5"/>
                 <field name="project_id" ref="service_projects"/>
                 <field name="stage_id" ref="task_types"/>
-                <field name="user_ids" ref="project_users" count="2" std="1" null_ratio="0.2"/>
-                <field name="partner_id" ref="service_customers" null_ratio="0.4"/>
+                <field name="user_ids" ref="project/users" count="2" std="1" null_ratio="0.2"/>
+                <field name="partner_id" ref="customers/partners" null_ratio="0.4"/>
                 <field name="description" generator="fake.paragraph" null_ratio="0.3"/>
                 <field name="priority" values="{'0': 4, '1': 3, '2': 2, '3': 1}"/>
                 <field name="state" values="{'01_in_progress': 5, '02_changes_requested': 1, '03_approved': 2, '04_waiting_normal': 1, '1_done': 3, '1_canceled': 1}"/>
@@ -95,7 +87,7 @@
                 <field name="parent_id" ref="main_tasks"/>
                 <!-- Usually default subtasks are in the project of the parents -->
                 <field name="project_id" eval="model.browse(parent_id).project_id.id"/>
-                <field name="user_ids" ref="project_users" count="1" null_ratio="0.3"/>
+                <field name="user_ids" ref="project/users" count="1" null_ratio="0.3"/>
                 <field name="description" generator="fake.text" max_nb_chars="150" null_ratio="0.5"/>
                 <field name="priority" values="{'0': 4, '1': 3, '2': 2, '3': 1}"/>
                 <field name="state" values="{'01_in_progress': 4, '03_approved': 2, '1_done': 3, '1_canceled': 1}"/>
@@ -116,7 +108,7 @@
                 <field name="name" generator="fake.sentence" nb_words="4"/>
                 <field name="project_id" ref="service_projects" domain="[('allow_recurring_tasks', '=', True)]"/>
                 <field name="recurring_task" eval="True"/>
-                <field name="user_ids" ref="project_users" count="1" null_ratio="0.1"/>
+                <field name="user_ids" ref="project/users" count="1" null_ratio="0.1"/>
                 <field name="description" generator="fake.text" max_nb_chars="120" null_ratio="0.4"/>
                 <field name="state" eval="'01_in_progress'"/>
                 <field name="allocated_hours" start="2.0" end="16.0" distribution="normal(mean=8, std=4)"/>
@@ -124,7 +116,7 @@
 
             <create model="project.collaborator" count="1000" id="project_collaborators">
                 <value name="a_project_id" generator="relation.one" comodel_name="project.project" ref="service_projects" domain="[('privacy_visibility', 'in', ['portal'])]"/>
-                <value name="a_partner_id" generator="relation.one" comodel_name="res.partner" ref="service_customers"/>
+                <value name="a_partner_id" generator="relation.one" comodel_name="res.partner" ref="customers/partners"/>
                 <!-- Make sure the pair (project_id, partner_id) is unique -->
                 <value name="collaboration_pair" eval="(a_project_id, a_partner_id)" unique="True"/>
                 <field name="project_id" eval="collaboration_pair[0]"/>

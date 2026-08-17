@@ -265,7 +265,7 @@
     <record id="benchmark_updates" model="populate.blueprint">
         <field name="name">Benchmark: Write Jobs (create 2k tasks, then update all)</field>
         <field name="definition_xml" type="xml">
-            <create model="project.task.type" count="4" id="upd_stages">
+            <create model="project.task.type" count="4" id="upd_stages" scale="False">
                 <field name="name" length="10"/>
                 <field name="sequence" start="1" end="10"/>
             </create>

@@ -11,43 +11,46 @@
                 <field name="name" generator="fake.bs"/>
             </create>
 
-            <create model="product.template" count="500" id="product_templates" context="{'tracking_disable': True}">
-                <field name="name" generator="fake.catch_phrase"/>
-                <field name="type" eval="'consu'"/>
-                <field name="is_storable" eval="True"/>
-                <field name="categ_id" ref="product_categories"/>
-                <field name="tracking" values="{'none': 6, 'lot': 2, 'serial': 2}"/>
-                <field name="list_price" start="5.0" end="2000.0" distribution="exponential(rate=0.002)"/>
-                <field name="standard_price" start="1.0" end="1000.0" distribution="exponential(rate=0.003)"/>
-                <field name="weight" start="0.1" end="50.0" distribution="exponential(rate=0.05)" null_ratio="0.3"/>
-                <field name="volume" start="0.01" end="10.0" distribution="exponential(rate=0.08)" null_ratio="0.4"/>
-                <field name="sale_ok" values="{True: 9, False: 1}"/>
-                <field name="purchase_ok" values="{True: 9, False: 1}"/>
-            </create>
-
-            <write model="product.product" ref="product_templates.product_variant_ids">
-                <field name="default_code" generator="fake.ean13" unique="True"/>
-                <field name="barcode" eval="default_code"/>
-            </write>
+            <import ref="product.fake_products" as="stock">
+                <xpath expr="//create[@id='products']" position="attributes">
+                    <attribute name="count">500</attribute>
+                </xpath>
+                <xpath expr="//create[@id='products']/field[@name='type']" position="replace">
+                    <field name="type" eval="'consu'"/>
+                </xpath>
+                <xpath expr="//create[@id='products']/field[@name='list_price']" position="attributes">
+                    <attribute name="start">5.0</attribute>
+                    <attribute name="end">2000.0</attribute>
+                </xpath>
+                <xpath expr="//create[@id='products']/field[@name='standard_price']" position="attributes">
+                    <attribute name="start">1.0</attribute>
+                    <attribute name="end">1000.0</attribute>
+                    <attribute name="distribution">exponential(rate=0.003)</attribute>
+                </xpath>
+                <xpath expr="//create[@id='products']" position="inside">
+                    <field name="is_storable" eval="True"/>
+                    <field name="categ_id" ref="product_categories"/>
+                    <field name="tracking" values="{'none': 6, 'lot': 2, 'serial': 2}"/>
+                    <field name="weight" start="0.1" end="50.0" distribution="exponential(rate=0.05)" null_ratio="0.3"/>
+                    <field name="volume" start="0.01" end="10.0" distribution="exponential(rate=0.08)" null_ratio="0.4"/>
+                </xpath>
+            </import>
 
             <!-- ===== PARTNERS (vendors / customers) ===== -->
 
-            <create model="res.partner" count="100" id="partners">
-                <field name="name" generator="fake.company"/>
-                <field name="is_company" eval="True"/>
-                <field name="email" generator="fake.company_email"/>
-                <field name="phone" generator="fake.phone_number"/>
-                <field name="street" generator="fake.street_address"/>
-                <field name="city" generator="fake.city"/>
-                <field name="zip" generator="fake.postcode"/>
-            </create>
+            <import ref="base.fake_partners" as="contacts">
+                <xpath expr="//create[@id='partners']" position="attributes">
+                    <attribute name="count">100</attribute>
+                </xpath>
+            </import>
 
             <!-- ===== WAREHOUSES & LOCATIONS ===== -->
 
             <create model="stock.warehouse" count="3" id="warehouses" scale="False">
                 <value name="city" generator="fake.city" unique="True"/>
+                <value name="counter" generator="misc.counter" start="1"/>
                 <field name="name" eval="city + ' Warehouse'"/>
-                <field name="code" eval="city[:3].upper()"/>
+                <field name="code" eval="f'STK{counter:03}'" unique="True"/>
             </create>
 
             <!-- Warehouse zones (aisles/areas) as direct children of each warehouse's view location -->
@@ -69,14 +72,14 @@
             <!-- ===== LOTS & SERIAL NUMBERS ===== -->
 
             <create model="stock.lot" count="3000" id="stock_lots">
-                <field name="product_id" domain="[('tracking', '=', 'lot')]" ref="product_templates.product_variant_ids"/>
+                <field name="product_id" domain="[('tracking', '=', 'lot')]" ref="stock/products"/>
                 <field name="name" generator="fake.ean13" unique="True"/>
                 <field name="ref" generator="fake.bothify" text="REF-####-????" null_ratio="0.6"/>
                 <field name="note" generator="fake.sentence" null_ratio="0.7"/>
             </create>
 
             <create model="stock.lot" count="2000" id="stock_serials">
-                <field name="product_id" domain="[('tracking', '=', 'serial')]" ref="product_templates.product_variant_ids"/>
+                <field name="product_id" domain="[('tracking', '=', 'serial')]" ref="stock/products"/>
                 <field name="name" generator="fake.ean8" unique="True"/>
                 <field name="ref" generator="fake.bothify" text="SN-####-????" null_ratio="0.6"/>
             </create>
@@ -84,7 +87,7 @@
             <!-- ===== STOCK QUANTS (on-hand inventory) ===== -->
 
             <create model="stock.quant" count="5000" id="stock_quants" context="{'inventory_mode': True}">
-                <field name="product_id" ref="product_templates.product_variant_ids"/>
+                <field name="product_id" ref="stock/products"/>
                 <field name="location_id" ref="stock_locations"/>
                 <field name="lot_id" domain="[('product_id', '=', product_id)]" null_ratio="0.5"/>
                 <field name="inventory_quantity" start="1.0" end="500.0" distribution="exponential(rate=0.01)"/>
@@ -97,14 +100,14 @@
                 <field name="location_id" domain="[('usage', '=', 'supplier')]"/>
                 <field name="location_dest_id" ref="stock_locations"/>
                 <field name="scheduled_date" start="today -6m" end="today +1m"/>
-                <field name="partner_id" ref="partners" null_ratio="0.3"/>
+                <field name="partner_id" ref="contacts/partners" null_ratio="0.3"/>
                 <field name="origin" generator="fake.bothify" text="PO-####-????" null_ratio="0.3"/>
                 <field name="priority" values="{'0': 8, '1': 2}"/>
             </create>
 
             <create model="stock.move" count="3000" id="receipt_moves" context="{'tracking_disable': True}">
                 <field name="picking_id" ref="receipts" partition="True"/>
-                <field name="product_id" ref="product_templates.product_variant_ids"/>
+                <field name="product_id" ref="stock/products"/>
                 <field name="product_uom_qty" start="1.0" end="200.0" distribution="exponential(rate=0.02)"/>
                 <field name="date" eval="env['stock.picking'].browse(picking_id).scheduled_date"/>
                 <field name="state" eval="'confirmed'"/>
@@ -117,14 +120,14 @@
                 <field name="location_id" ref="stock_locations"/>
                 <field name="location_dest_id" domain="[('usage', '=', 'customer')]"/>
                 <field name="scheduled_date" start="today -3m" end="today +2m"/>
-                <field name="partner_id" ref="partners" null_ratio="0.3"/>
+                <field name="partner_id" ref="contacts/partners" null_ratio="0.3"/>
                 <field name="origin" generator="fake.bothify" text="SO-####-????" null_ratio="0.3"/>
                 <field name="priority" values="{'0': 7, '1': 3}"/>
             </create>
 
             <create model="stock.move" count="3000" id="delivery_moves" context="{'tracking_disable': True}">
                 <field name="picking_id" ref="deliveries" partition="True"/>
-                <field name="product_id" ref="product_templates.product_variant_ids"/>
+                <field name="product_id" ref="stock/products"/>
                 <field name="product_uom_qty" start="1.0" end="100.0" distribution="exponential(rate=0.03)"/>
                 <field name="date" eval="env['stock.picking'].browse(picking_id).scheduled_date"/>
                 <field name="state" eval="'confirmed'"/>
@@ -142,7 +145,7 @@
 
             <create model="stock.move" count="1500" id="internal_moves" context="{'tracking_disable': True}">
                 <field name="picking_id" ref="internal_transfers" partition="True"/>
-                <field name="product_id" ref="product_templates.product_variant_ids"/>
+                <field name="product_id" ref="stock/products"/>
                 <field name="product_uom_qty" start="1.0" end="50.0" distribution="exponential(rate=0.05)"/>
                 <field name="date" eval="env['stock.picking'].browse(picking_id).scheduled_date"/>
                 <field name="state" eval="'confirmed'"/>
@@ -151,7 +154,7 @@
             <!-- ===== REORDERING RULES ===== -->
 
             <create model="stock.warehouse.orderpoint" count="500" id="orderpoints">
-                <value name="a_product_id" generator="relation.one" comodel_name="product.product" ref="product_templates.product_variant_ids"/>
+                <value name="a_product_id" generator="relation.one" comodel_name="product.product" ref="stock/products"/>
                 <value name="a_location_id" generator="relation.one" comodel_name="stock.location" ref="stock_locations"/>
                 <value name="product_location_pair" eval="(a_product_id, a_location_id)" unique="True"/>
                 <field name="product_id" eval="product_location_pair[0]"/>

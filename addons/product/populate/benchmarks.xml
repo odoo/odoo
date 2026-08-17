@@ -81,7 +81,7 @@
                 <field name="sequence" start="1" end="50"/>
             </create>
 
-            <create model="product.template" count="1000" id="var_templates" context="{'tracking_disable': True, 'create_product_product': False}">
+            <create model="product.template" count="1000" id="var_templates" scale="False" context="{'tracking_disable': True, 'create_product_product': False}">
                 <field name="name" length="28"/>
                 <field name="categ_id" ref="var_categories"/>
                 <field name="type" eval="'consu'"/>
@@ -92,7 +92,7 @@
 
             <create model="product.template.attribute.line" count="3000" id="var_attribute_lines" context="{'create_product_product': False}">
                 <value name="a_product_tmpl_id" generator="relation.one" comodel_name="product.template" ref="var_templates" partition="True"/>
-                <value name="a_attribute_id" generator="relation.one" comodel_name="product.attribute" ref="var_attributes"/>
+                <value name="a_attribute_id" generator="relation.one" comodel_name="product.attribute" ref="var_attributes" domain="[('value_ids', '!=', False)]"/>
                 <value name="template_attribute_pair" eval="(a_product_tmpl_id, a_attribute_id)" unique="True"/>
                 <field name="product_tmpl_id" eval="template_attribute_pair[0]"/>
                 <field name="attribute_id" eval="template_attribute_pair[1]"/>

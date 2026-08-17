@@ -117,7 +117,7 @@
             <create model="account.account" count="1000" id="bulk_accounts">
                 <value name="counter" generator="misc.counter" start="1"/>
                 <field name="name" eval="f'Bulk Account {counter}'" unique="True"/>
-                <field name="code" eval="f'{100000 + counter}'" unique="True"/>
+                <field name="code" eval="f'BULK{counter:06}'" unique="True"/>
                 <field name="account_type" values="{'asset_current': 2, 'liability_current': 2, 'expense': 3, 'income': 3}"/>
             </create>
 
