@@ -418,9 +418,11 @@ export class ProductScreen extends Component {
     async addProductToOrder(product) {
         const options = {};
         if (this.searchWord && product.isConfigurable()) {
-            const barcode = this.searchWord;
+            const searchWord = this.searchWord;
             const searchedProduct = product.product_variant_ids.filter(
-                (p) => p.barcode && p.barcode.includes(barcode)
+                (p) =>
+                    (p.barcode && p.barcode.includes(searchWord)) ||
+                    (p.default_code && p.default_code.includes(searchWord))
             );
             if (searchedProduct.length === 1) {
                 options["presetVariant"] = searchedProduct[0];
