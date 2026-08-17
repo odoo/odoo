@@ -195,17 +195,14 @@ export class SelfOrder extends Reactive {
     }
 
     _onFinalizeKiokPayment(args) {
-        const payment = this.currentOrder?.payment_ids.at(-1);
-        const order_id = args.order_id || payment?.pos_order_id?.id;
-        if (
-            !this.currentOrder ||
-            this.currentOrder.id !== order_id ||
-            payment?.pos_order_id?.id !== order_id
-        ) {
+        const payment = this.currentOrder?.payment_ids.find(
+            (p) => p.bancontact_id === args.bancontact_id
+        );
+        if (!this.currentOrder || !payment || this.currentOrder.finalized || payment.isDone()) {
             return;
         }
 
-        if (args.status === "success" && payment) {
+        if (args.status === "success") {
             payment.setPaymentStatus("done");
             rpc(`/kiosk/payment/${this.config.id}/kiosk`, {
                 order: this.currentOrder.serializeForORM(),

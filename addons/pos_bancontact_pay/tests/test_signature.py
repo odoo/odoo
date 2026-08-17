@@ -202,7 +202,7 @@ class TestSignature(CommonPosTest, TestPointOfSaleHttpCommon):
         _private_key, public_key = self.utils.generate_keypair_ES256()
         jwk = self.utils.create_jwk_ES256(public_key, kid)
         jwk.update({"use": "enc"})
-        with self.mock_jwk_fetch([jwk]) as get_cache, self.bancontact_signature_raise(f"JWK with kid {kid} is not for signature use"):
+        with self.mock_jwk_fetch([jwk]) as get_cache, self.bancontact_signature_raise(f"JWK with kid {kid} is not for signature use: expected 'sig', actual 'enc'"):
             validation = BancontactSignatureValidation(MockRequest())
             validation._get_jwk_by_kid(kid)
         self.assertEqual(get_cache(), None)
@@ -217,7 +217,7 @@ class TestSignature(CommonPosTest, TestPointOfSaleHttpCommon):
         payload = b"test payload"
         validation = BancontactSignatureValidation(MockRequest(data=payload))
 
-        with self.bancontact_signature_raise("Unsupported JWK algorithm: ES384"):
+        with self.bancontact_signature_raise("Unsupported JWK algorithm: expected ES256 or RS256, actual ES384"):
             validation._verify_jws_signature(jwk, "87654321", "12345678")
 
     def test_verify_jws_signature_es256_success(self):
@@ -300,9 +300,9 @@ class TestSignature(CommonPosTest, TestPointOfSaleHttpCommon):
             "unexpected-crit": "value",
         }
         validation = BancontactSignatureValidation(MockRequest())
-        missing = {const.JTI_KEY}
-        unexpected = {"unexpected-crit"}
-        with self.bancontact_signature_raise(f"Invalid crit header: missing {missing}, unexpected {unexpected}"):
+        expected_crits = {const.ISS_KEY, const.IAT_KEY, const.JTI_KEY, const.PATH_KEY, const.SUB_KEY}
+        crits = {const.ISS_KEY, const.IAT_KEY, const.PATH_KEY, const.SUB_KEY, "unexpected-crit"}
+        with self.bancontact_signature_raise(f"Invalid crit header: expected {sorted(expected_crits)}, actual {sorted(crits)}"):
             validation._validate_critical_headers(protected, "dummy-ppid")
 
     @freeze_time("2026-02-12 12:00:00")
@@ -316,7 +316,7 @@ class TestSignature(CommonPosTest, TestPointOfSaleHttpCommon):
             const.SUB_KEY: "dummy-ppid",
         }
         validation = BancontactSignatureValidation(MockRequest())
-        with self.bancontact_signature_raise("Invalid issuer: dummy"):
+        with self.bancontact_signature_raise(f"Invalid issuer: expected {const.ISS_VALUE}, actual dummy"):
             validation._validate_critical_headers(protected, "dummy-ppid")
 
         protected.pop(const.ISS_KEY)
@@ -334,15 +334,15 @@ class TestSignature(CommonPosTest, TestPointOfSaleHttpCommon):
             const.SUB_KEY: "dummy-ppid",
         }
         validation = BancontactSignatureValidation(MockRequest())
-        with self.bancontact_signature_raise(f"Invalid iat: outside allowed skew ({const.MAX_SKEW_SECONDS}s)"):
+        with self.bancontact_signature_raise(f"Invalid iat: expected within {const.MAX_SKEW_SECONDS}s skew, actual 3600s"):
             validation._validate_critical_headers(protected, "dummy-ppid")
 
         protected.update({const.IAT_KEY: "2026-02-12T13:00:00.000Z"})
-        with self.bancontact_signature_raise(f"Invalid iat: outside allowed skew ({const.MAX_SKEW_SECONDS}s)"):
+        with self.bancontact_signature_raise(f"Invalid iat: expected within {const.MAX_SKEW_SECONDS}s skew, actual -3600s"):
             validation._validate_critical_headers(protected, "dummy-ppid")
 
         protected.update({const.IAT_KEY: "invalid-format"})
-        with self.bancontact_signature_raise("Invalid iat format: invalid-format"):
+        with self.bancontact_signature_raise("Invalid iat format: expected ISO 8601 timestamp, actual invalid-format"):
             validation._validate_critical_headers(protected, "dummy-ppid")
 
         protected.pop(const.IAT_KEY)
@@ -360,7 +360,7 @@ class TestSignature(CommonPosTest, TestPointOfSaleHttpCommon):
             const.SUB_KEY: "dummy-ppid",
         }
         validation = BancontactSignatureValidation(MockRequest())
-        with self.bancontact_signature_raise("Path mismatch: https://example.com/error != https://example.com/webhook"):
+        with self.bancontact_signature_raise("Path mismatch: expected https://example.com/webhook, actual https://example.com/error"):
             validation._validate_critical_headers(protected, "dummy-ppid")
 
     @freeze_time("2026-02-12 12:00:00")
@@ -375,7 +375,7 @@ class TestSignature(CommonPosTest, TestPointOfSaleHttpCommon):
         }
 
         validation = BancontactSignatureValidation(MockRequest())
-        with self.bancontact_signature_raise("Invalid subject: wrong-ppid"):
+        with self.bancontact_signature_raise("Invalid subject: expected dummy-ppid, actual wrong-ppid"):
             validation._validate_critical_headers(protected, "dummy-ppid")
 
     @freeze_time("2026-02-12 12:00:00")
@@ -417,11 +417,6 @@ class TestSignature(CommonPosTest, TestPointOfSaleHttpCommon):
         with self.mock_jwk_fetch([jwk], called=False, cache=cache) as get_cache, \
             self.bancontact_signature_raise("ECDSA signature verification failed."):
             validation.verify_signature("dummy-ppid")
-        self.assertEqual(get_cache(), cache)
-
-        validation.test_mode = True
-        with self.mock_jwk_fetch([jwk], called=False, cache=cache) as get_cache:
-            validation.verify_signature("dummy-ppid")  # Should not raise in test mode
         self.assertEqual(get_cache(), cache)
 
     # ----- Context Manager ----- #
