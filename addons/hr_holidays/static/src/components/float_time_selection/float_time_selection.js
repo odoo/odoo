@@ -63,7 +63,7 @@ export class FloatTimeSelectionField extends FloatTimeField {
             onTimeChange: this.onTimeChange.bind(this),
         });
         setTimeout(() => {
-            this.inputFloatTimeRef.el?.focus(); // focus on the input rather than the popover
+            this.inputFloatTimeRef()?.focus(); // focus on the input rather than the popover
         }, 0);
     }
 
@@ -75,7 +75,7 @@ export class FloatTimeSelectionField extends FloatTimeField {
 
     handleInputChange() {
         this.popover.close();
-        const inputValue = this.inputFloatTimeRef.el.value;
+        const inputValue = this.inputFloatTimeRef().value;
         const [hours, minutes] = inputValue.split(":").map(Number);
         if (!isNaN(hours) && !isNaN(minutes)) {
             this.timeValues.hours = String(hours).padStart(2, "0");
