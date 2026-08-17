@@ -175,7 +175,7 @@ class ResCompany(models.Model):
     def _check_pdp_identifier(self, pdp_identifier, warning=False):
         return pdp_identifier and PDP_identifier_re.match(pdp_identifier)
 
-    def _reset_peppol_configuration(self):
+    def _reset_peppol_configuration(self, soft=False):
         # Extend `account_peppol` to reset PDP specific fields
         self.write({
             'l10n_fr_pdp_send_to_ppf': True,
