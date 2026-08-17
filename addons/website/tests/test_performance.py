@@ -209,8 +209,9 @@ class TestWebsitePerformance(TestWebsitePerformanceCommon):
                     'orm_signaling_registry': 1,
                     'ir_attachment': 1,
                     # `_get_serve_attachment` dispatcher fallback
+                    'website': 1,  # Select cookies_bar
                 }
-                expected_query_count = 2
+                expected_query_count = 3
                 self._check_url_hot_query(self.page.url, expected_query_count, select_tables_perf)
                 self.assertEqual(self._get_url_hot_query(self.page.url), expected_query_count)
                 self.menu.unlink()  # page being or not in menu shouldn't add queries
@@ -243,6 +244,7 @@ class TestWebsitePerformance(TestWebsitePerformanceCommon):
                     'orm_signaling_registry': 1,
                     'ir_attachment': 1,
                     # `_get_serve_attachment` dispatcher fallback
+                    'website': 1,  # Select cookies_bar
                 } if cache else {
                     'orm_signaling_registry': 1,
                     'ir_attachment': 1,
@@ -256,7 +258,7 @@ class TestWebsitePerformance(TestWebsitePerformanceCommon):
                     'ir_ui_view': 1,
                     'res_company': 1,
                 }
-                expected_query_count = 2 if cache else 8
+                expected_query_count = 3 if cache else 8
                 insert_tables_perf = {}
                 if not readonly_enabled:
                     insert_tables_perf = {
@@ -277,8 +279,9 @@ class TestWebsitePerformance(TestWebsitePerformanceCommon):
             with self.subTest(readonly_enabled=readonly_enabled), closing(self.env.cr.savepoint()):
                 select_tables_perf = {
                     'orm_signaling_registry': 1,
+                    'website': 1,  # Select cookies_bar
                 }
-                expected_query_count = 1
+                expected_query_count = 2
                 insert_tables_perf = {}
                 if not readonly_enabled:
                     insert_tables_perf = {
@@ -320,9 +323,11 @@ class TestWebsitePerformance(TestWebsitePerformanceCommon):
             'orm_signaling_registry': 1,
             'ir_attachment': 1,
             # `_get_serve_attachment` dispatcher fallback
+            'website': 1,  # Select cookies_bar
         }
-        self._check_url_hot_query(self.page.url, 2, select_tables_perf)
-        self.assertEqual(self._get_url_hot_query(self.page.url), 2)
+        expected_query_count = 3
+        self._check_url_hot_query(self.page.url, expected_query_count, select_tables_perf)
+        self.assertEqual(self._get_url_hot_query(self.page.url), expected_query_count)
 
         select_tables_perf = {
             'orm_signaling_registry': 1,
@@ -336,8 +341,9 @@ class TestWebsitePerformance(TestWebsitePerformanceCommon):
             'ir_ui_view': 1,
             # Check if `view.track` to track visitor or not
         }
-        self._check_url_hot_query(self.page.url, 5, select_tables_perf, nocache=True)
-        self.assertEqual(self._get_url_hot_query(self.page.url, nocache=True), 5)
+        expected_query_count = 5
+        self._check_url_hot_query(self.page.url, expected_query_count, select_tables_perf, nocache=True)
+        self.assertEqual(self._get_url_hot_query(self.page.url, nocache=True), expected_query_count)
 
     def test_40_perf_sql_queries_page_multi_level_menu(self):
         # menu structure should not impact SQL requests
@@ -353,9 +359,11 @@ class TestWebsitePerformance(TestWebsitePerformanceCommon):
             'orm_signaling_registry': 1,
             'ir_attachment': 1,
             # `_get_serve_attachment` dispatcher fallback
+            'website': 1,  # Select cookies_bar
         }
-        self._check_url_hot_query(self.page.url, 2, select_tables_perf)
-        self.assertEqual(self._get_url_hot_query(self.page.url), 2)
+        expected_query_count = 3
+        self._check_url_hot_query(self.page.url, expected_query_count, select_tables_perf)
+        self.assertEqual(self._get_url_hot_query(self.page.url), expected_query_count)
 
         select_tables_perf = {
             'orm_signaling_registry': 1,
@@ -371,8 +379,9 @@ class TestWebsitePerformance(TestWebsitePerformanceCommon):
             # layout content (company name, logo)
             'res_company': 1,
         }
-        self._check_url_hot_query(self.page.url, 8, select_tables_perf, nocache=True)
-        self.assertEqual(self._get_url_hot_query(self.page.url, nocache=True), 8)
+        expected_query_count = 8
+        self._check_url_hot_query(self.page.url, expected_query_count, select_tables_perf, nocache=True)
+        self.assertEqual(self._get_url_hot_query(self.page.url, nocache=True), expected_query_count)
 
 @tagged('-at_install', 'post_install')
 class TestWebsitePerformancePost(UtilPerf):
