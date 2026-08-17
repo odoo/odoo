@@ -1446,6 +1446,36 @@ test("Changing field type removes data-fill-with attribute", async () => {
     expect(":iframe input[name='cc']").not.toHaveAttribute("data-fill-with");
 });
 
+test("Changing field type to existing field removes custom label", async () => {
+    onRpc("get_authorized_fields", () => ({
+        cc: {
+            name: "cc",
+            relation: "res.partner",
+            string: "CC",
+            type: "char",
+        },
+    }));
+
+    await setupWebsiteBuilder(
+        `
+        <form data-model_name="mail.mail">
+            <div class="s_website_form_field" data-type="char">
+                <label class="s_website_form_label" for="field">
+                    <span class="s_website_form_label_content">Company</span>
+                </label>
+                <input id="field" class="s_website_form_input" type="text"/>
+            </div>
+        </form>
+        `
+    );
+
+    // Change the field type to custom field.
+    await contains(":iframe input[type='text']").click();
+    await contains(".hb-row[data-label='Type'] button.o-hb-select-toggle").click();
+    await contains(".o_popover [data-action-value='cc']").click();
+    expect(":iframe label").toHaveText("CC");
+});
+
 test("incomplete field requirements are discarded on save", async () => {
     onRpc("get_authorized_fields", () => ({}));
     onRpc("formbuilder_whitelist", () => true);

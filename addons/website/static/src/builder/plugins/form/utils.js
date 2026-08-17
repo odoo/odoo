@@ -4,7 +4,6 @@ import { renderToElement } from "@web/core/utils/render";
 import { generateHTMLId } from "@web/core/utils/strings";
 import { isSmallInteger } from "@html_builder/utils/utils";
 import { markup } from "@odoo/owl";
-import { createElementWithContent } from "@web/core/utils/html";
 
 const DESCRIPTION_POSITION_PREFIX = "s_website_form_description_";
 export const VISIBILITY_DATASET = [
@@ -18,16 +17,12 @@ export const VISIBILITY_DATASET = [
  * Returns a field object
  *
  * @param {string} type the type of the field
- * @param {string} label The label of the field. Also used as the field's
- *                       name if no `name` is provided.
- * @param {string} [name] The name of the field. Falls back to `label` if
- *                        not specified
+ * @param {string} [name] The name of the field.
  * @returns {Object}
  */
-export function getCustomField(type, label, name = "") {
+export function getCustomField(type, name) {
     return {
-        name: name || createElementWithContent("container", label).textContent,
-        string: label,
+        name: name,
         custom: true,
         type: type,
         // Default values for x2many fields and selection
@@ -111,13 +106,6 @@ export function renderField(field, resetId = false) {
     if (field.type === "one2many" && field.relation !== "ir.attachment") {
         params.field.isCheck = true;
     }
-    if (field.custom && !field.string) {
-        params.field.string = field.name;
-    }
-    if (field.string_in_website_lang && !field.modelRequired) {
-        // avoid changing strings in the original form definition
-        params.field.string = field.string_in_website_lang;
-    }
     if (field.description) {
         params.default_description =
             field.type === "boolean"
@@ -134,6 +122,12 @@ export function renderField(field, resetId = false) {
     if (field.description && field.description !== true) {
         const descriptionEl = template.content.querySelector(".s_website_form_field_description");
         descriptionEl.replaceWith(field.description);
+    }
+    const labelContentEl = template.content.querySelector(".s_website_form_label_content");
+    if (field.label) {
+        labelContentEl.replaceChildren(...field.label.childNodes);
+    } else {
+        labelContentEl.textContent = field.string_in_website_lang ?? field.string ?? field.name;
     }
     template.content
         .querySelectorAll("input.datetimepicker-input")
@@ -260,6 +254,7 @@ export function setActiveProperties(fieldEl, field) {
     const fileInputEl = fieldEl.querySelector("input[type=file]");
     const selectInputEl = fieldEl.querySelector("select");
     const description = fieldEl.querySelector(".s_website_form_field_description");
+    const label = fieldEl.querySelector(".s_website_form_label_content");
     field.placeholder = input?.placeholder || "";
     if (input) {
         // textarea value has no attribute,  date/datetime timestamp property is formated
@@ -286,6 +281,7 @@ export function setActiveProperties(fieldEl, field) {
     // property value is needed for date/datetime (formated date).
     field.propertyValue = input && input.value;
     field.description = description;
+    field.label = label;
     field.rows = textarea && textarea.rows;
     field.required = classList.contains("s_website_form_required");
     field.modelRequired = classList.contains("s_website_form_model_required");
@@ -362,13 +358,11 @@ export function replaceFieldElement(oldFieldEl, fieldEl) {
  */
 export function getActiveField(fieldEl, { noRecords, fields } = {}) {
     let field;
-    const label = markup(fieldEl.querySelector(".s_website_form_label_content")?.innerHTML || "");
     if (isFieldCustom(fieldEl)) {
         const inputName = fieldEl.querySelector(".s_website_form_input").getAttribute("name");
-        field = getCustomField(fieldEl.dataset.type, label, inputName);
+        field = getCustomField(fieldEl.dataset.type, inputName);
     } else {
         field = Object.assign({}, fields[getFieldName(fieldEl)]);
-        field.string = label;
         field.type = getFieldType(fieldEl);
     }
     if (!noRecords) {
