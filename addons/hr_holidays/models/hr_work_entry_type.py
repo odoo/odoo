@@ -696,5 +696,5 @@ class HrWorkEntryType(models.Model):
             }
             for fake_allocation in fake_allocations
         }
-        fake_allocations.invalidate_recordset()
+        fake_allocations._discard_fake_allocation()
         return carried_over_days_expiration_data
