@@ -6,7 +6,7 @@
     <div class="o-mail-DiscussContent d-flex flex-column h-100 flex-grow-1 overflow-auto o-scrollbar-thin" t-ref="this.rootRef">
         <div t-if="this.thread" class="o-mail-DiscussContent-header d-flex flex-shrink-0 align-items-center gap-1 z-1 flex-grow-0">
             <div class="o-mail-DiscussContent-headerInfo flex-grow-1 min-w-0 d-flex">
-                <div class="o-mail-DiscussContent-headerBox rounded-4 border d-flex min-w-0 ps-3 pe-2 align-items-center" t-att-class="{ 'py-1': !this.correspondentLocalDateTimeFormatted() }">
+                <div class="o-mail-DiscussContent-headerBox rounded-4 border d-flex min-w-0 ps-3 pe-2 align-items-center" t-att-class="{ 'py-1': !this.hasHeaderSubline }">
                     <div t-if="this.thread.channel" class="o-mail-DiscussContent-threadAvatar position-relative align-self-center align-items-center bg-inherit" t-att-class="this.threadAvatarAttClass" t-ref="this.threadAvatarRef">
                         <DiscussAvatar record="this.thread" size="26"/>
                         <FileUploader t-if="this.isThreadAvatarEditable" acceptedFileExtensions="'.bmp, .jpg, .jpeg, .png, .svg'" showUploadingText="false" multiUpload="false" onUploaded.bind="(data) => this.onFileUploaded(data)">
@@ -20,14 +20,14 @@
                     <t t-else="">
                         <ThreadIcon className="'align-self-center fs-3 my-2 opacity-75'" size="'large'" thread="this.thread"/>
                     </t>
-                    <div class="flex-grow-1 min-w-0 align-self-center align-items-center h-100 py-1" t-att-class="{ 'lh-sm': this.showsChatLocalDateTime }">
+                    <div class="o-mail-DiscussContent-threadTitle flex-grow-1 min-w-0 align-self-center align-items-center h-100 py-1" t-att-class="{ 'lh-sm': this.hasHeaderSubline }">
                         <div class="d-flex">
                             <div t-if="this.thread.channel?.parent_channel_id" class="d-flex align-items-center gap-1 o-ms-1_5">
                                 <span class="fw-bold cursor-pointer opacity-75 opacity-100-hover o-hover-text-underline" t-out="this.thread.channel.parent_channel_id.displayName" t-on-click="() => this.thread?.channel?.parent_channel_id?.open({ focus: true })"/>
                                 <i class="oi o-xsmaller o-ms-0_5" data-icon="chevron_forward"/>
                             </div>
                             <AutoresizeInput
-                                className="'o-mail-DiscussContent-threadNameBox fw-bold flex-shrink-0 py-0 ' + (this.showsChatLocalDateTime ? 'fs-5' : 'fs-4')"
+                                className="this.attClassObjectToString(this.threadNameAttClass)"
                                 enabled="!!this.thread.channel?.isAllowedToRename"
                                 inputClassName="'o-mail-DiscussContent-threadName'"
                                 onValidate.bind="this.renameThread"
@@ -45,7 +45,7 @@
                                 />
                             </t>
                         </div>
-                        <div t-if="this.showsChatLocalDateTime" class="text-muted smaller ms-1" t-out="this.correspondentLocalDateTimeFormatted()"/>
+                        <div t-if="this.showsChatLocalDateTime" class="o-mail-DiscussContent-localDateTime text-muted smaller ms-1" t-out="this.correspondentLocalDateTimeFormatted()"/>
                     </div>
                 </div>
             </div>
