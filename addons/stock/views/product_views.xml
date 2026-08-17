@@ -95,20 +95,6 @@
                 <xpath expr="//field[@name='qty_available']" position='attributes'>
                     <attribute name="groups">stock.group_stock_user</attribute>
                 </xpath>
-                <xpath expr="//field[@name='free_qty']" position="replace"/>
-                <xpath expr="//field[@name='virtual_available']" position='attributes'>
-                    <attribute name="groups">stock.group_stock_user</attribute>
-                </xpath>
-                <field name="virtual_available" position="after">
-                    <button
-                        title="View Forecast"
-                        name="action_product_forecast_report"
-                        type="object"
-                        icon="area_chart"
-                        invisible="not is_storable"
-                        groups="stock.group_stock_user"
-                    />
-                </field>
             </field>
         </record>
 
@@ -129,22 +115,6 @@
                     <attribute name="invisible">not show_on_hand_qty_status_button</attribute>
                     <attribute name="groups">stock.group_stock_user</attribute>
                 </xpath>
-                <xpath expr="//field[@name='free_qty']" position="replace"/>
-                <xpath expr="//field[@name='virtual_available']" position="attributes">
-                    <attribute name="invisible">not show_on_hand_qty_status_button</attribute>
-                    <attribute name="groups">stock.group_stock_user</attribute>
-                </xpath>
-                <field name="virtual_available" position="after">
-                    <button
-                        title="View Forecast"
-                        name="action_product_tmpl_forecast_report"
-                        type="object"
-                        icon="area_chart"
-                        invisible="not show_on_hand_qty_status_button"
-                        context="{'default_product_tmpl_id': id}"
-                        groups="stock.group_stock_user"
-                    />
-                </field>
                 <field name="default_code" position="after">
                     <field name="responsible_id" widget="many2one_avatar_user" optional="hide" groups="stock.group_stock_user"/>
                 </field>
@@ -219,8 +189,6 @@
                         </span>
                     </div>
                 </xpath>
-                <xpath expr="//label[@id='free_qty_no_stock']" position="replace"/>
-                <xpath expr="//div[@name='free_qty_no_stock']" position="replace"/>
                 <xpath expr="//field[@name='is_storable']" position="attributes">
                     <attribute name="groups">!stock.group_production_lot</attribute>
                     <attribute name="widget">boolean_toggle</attribute>
@@ -282,9 +250,9 @@
                 <xpath expr="//div[@name='on_hand_qty_kanban']" position="replace">
                     <div groups="stock.group_stock_user" t-if="record.show_on_hand_qty_status_button.raw_value" class="d-flex gap-1 align-items-baseline">
                         <strong>
-                            <field name="qty_available" digits="[16, 0]"/> 
+                            <field name="qty_available" digits="[16, 0]"/>
                         </strong>
-                        <field name="uom_id" groups="uom.group_uom"/> 
+                        <field name="uom_id" groups="uom.group_uom"/>
                         <span class="text-muted">On Hand</span>
                     </div>
                 </xpath>

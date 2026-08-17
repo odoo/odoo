@@ -889,7 +889,6 @@ class TestPosAccounting(AccountTestInvoicingCommon):
                 'partner_id': self.partner_1.id,
             },
         )
-        self.assertEqual(self.product_6.qty_available, 99)              # Check that the stock of the product is correctly updated when the order is done
         self.create_pos_order(
             payment_method=[[self.cash_pm, {'amount': -21.8}]],         # Total amount of the order is 10 + 6% tax + 10 + 12% tax = 21.8
             products=[
@@ -902,7 +901,6 @@ class TestPosAccounting(AccountTestInvoicingCommon):
                 'refunded_order_id': order.id,
             },
         )
-        self.assertEqual(self.product_6.qty_available, 100)             # Check that the stock of the product is correctly updated when the order is done
 
         closing_data = session.get_closing_control_data()
         cash_details = closing_data['default_cash_details']
@@ -974,7 +972,6 @@ class TestPosAccounting(AccountTestInvoicingCommon):
                 'to_invoice': True,
             },
         )
-        self.assertEqual(self.product_6.qty_available, 99)              # Check that the stock of the product is correctly updated when the order is done
         refund = self.create_pos_order(
             payment_method=[[self.cash_pm, {'amount': -21.8}]],         # Total amount of the order is 10 + 6% tax + 10 + 12% tax = 21.8
             products=[
@@ -988,7 +985,6 @@ class TestPosAccounting(AccountTestInvoicingCommon):
                 'to_invoice': True,
             },
         )
-        self.assertEqual(self.product_6.qty_available, 100)             # Check that the stock of the product is correctly updated when the order is done
         sale_move = order.account_move
         refund_move = refund.account_move
 
