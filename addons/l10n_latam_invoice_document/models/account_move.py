@@ -248,3 +248,8 @@ class AccountMove(models.Model):
     def _set_next_made_sequence_gap(self, made_gap: bool):
         if other_moves := self.filtered(lambda m: not m.journal_id.l10n_latam_use_documents):
             super(AccountMove, other_moves)._set_next_made_sequence_gap(made_gap)
+
+    def _get_vals_to_copy_to_next_move(self):
+        vals = super()._get_vals_to_copy_to_next_move()
+        vals.update({'l10n_latam_document_type_id': self.l10n_latam_document_type_id.id})
+        return vals
