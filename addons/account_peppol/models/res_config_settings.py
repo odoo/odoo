@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, fields, models, modules, tools
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import UserError, ValidationError, RedirectWarning
 
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
 from odoo.addons.account_edi_ubl_cii.models.account_edi_common import EAS_MAPPING
@@ -171,6 +171,35 @@ class ResConfigSettings(models.TransientModel):
     # BUSINESS ACTIONS
     # -------------------------------------------------------------------------
 
+    def _ensure_pdp_not_sent_through_peppol(self):
+        self.ensure_one()
+        if self.account_peppol_eas != '0225':
+            return
+
+        # We use an explicit search instead of `_get` because `_get_id` is cached
+        # via ormcache in 17.0 and will not return accurate results after `base.action_view_base_module_update`.
+        # This issue is resolved in 18.0.
+        pdp_module = self.env['ir.module.module'].search([('name', '=', 'l10n_fr_pdp')], limit=1)
+        if pdp_module and pdp_module.state != 'installed':
+            redirect_action = pdp_module._get_records_action()
+            message = _(
+                "If you want to register for the French e-invoicing, first install the PDP module: France - E-Invoicing (Approved Platform).",
+            )
+            redirect_button_text = _("Install module")
+        else:
+            redirect_action = self.env.ref('base.action_view_base_module_update').id
+            message = _(
+                "If you want to register for the French e-invoicing, first install the PDP module: France - E-Invoicing (Approved Platform).\n"
+                "The module was not found. Please update the available apps first.",
+            )
+            redirect_button_text = _("Update Apps List")
+
+        raise RedirectWarning(
+                message=message,
+                action=redirect_action,
+                button_text=redirect_button_text,
+            )
+
     @handle_demo
     def button_create_peppol_proxy_user(self):
         """
@@ -180,6 +209,7 @@ class ResConfigSettings(models.TransientModel):
         - If endpoint is already on Peppol, can register as sender-only after explicit confirmation
         """
         self.ensure_one()
+        self._ensure_pdp_not_sent_through_peppol()
         company = self.company_id
 
         if self.account_peppol_proxy_state != 'not_registered':
