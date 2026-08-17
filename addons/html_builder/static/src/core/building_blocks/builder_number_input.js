@@ -27,11 +27,13 @@ export class BuilderNumberInput extends Component {
         max: { type: Number, optional: true },
         composable: { type: Boolean, optional: true },
         applyWithUnit: { type: Boolean, optional: true },
+        allowDecimals: { type: Boolean, optional: true },
     };
     static components = { BuilderComponent, BuilderNumberInputBase };
     static defaultProps = {
         composable: false,
         applyWithUnit: true,
+        allowDecimals: true,
         default: 0,
     };
 
