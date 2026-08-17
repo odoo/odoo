@@ -235,20 +235,23 @@ class EventTrackController(http.Controller):
         tracks_by_rounded_times = dict((time_slot, dict((location, {}) for location in locations)) for time_slot in track_time_slots)
         for track, time_slots in time_slots_by_tracks.items():
             start_date = fields.Datetime.from_string(track.date).replace(tzinfo=pytz.utc).astimezone(local_tz)
-            end_date = start_date + timedelta(hours=(track.duration or 0.25))
+            # durations are added in UTC to avoid timezone shift issues
+            end_date = (start_date.astimezone(pytz.utc) + timedelta(hours=(track.duration or 0.25))).astimezone(local_tz)
+
+            occupied_cells = self._get_occupied_cells(track, sum(time_slots.values()), locations, local_tz)
 
             for time_slot, duration in time_slots.items():
                 tracks_by_rounded_times[time_slot][track.location_id][track] = {
                     'rowspan': duration,  # rowspan
                     'start_date': self._get_locale_time(start_date, lang_code),
                     'end_date': self._get_locale_time(end_date, lang_code),
-                    'occupied_cells': self._get_occupied_cells(track, duration, locations, local_tz)
+                    'occupied_cells': occupied_cells,
                 }
 
                 # get all the time slots by day to determine the max duration of a day.
                 day = time_slot.date()
                 time_slots_by_day[day]['start'].add(time_slot)
-                time_slots_by_day[day]['end'].add(time_slot+timedelta(minutes=15*duration))
+                time_slots_by_day[day]['end'].add((time_slot.astimezone(pytz.utc) + timedelta(minutes=15 * duration)).astimezone(local_tz))
                 tracks_by_days[day] += 1
 
         # split days into 15 minutes time slots
@@ -258,20 +261,20 @@ class EventTrackController(http.Controller):
             end_time_slot = max(time_slots['end'])
 
             time_slots_count = int(((end_time_slot - start_time_slot).total_seconds() / 3600) * 4)
-            current_time_slot = start_time_slot
+            start_time_slot_utc = start_time_slot.astimezone(pytz.utc)
             for i in range(0, time_slots_count + 1):
-                global_time_slots_by_day[day][current_time_slot] = tracks_by_rounded_times.get(current_time_slot, {})
+                current_time_slot = (start_time_slot_utc + timedelta(minutes=15 * i)).astimezone(local_tz)
+                global_time_slots_by_day[day][current_time_slot] = tracks_by_rounded_times.get(current_time_slot, {}) if current_time_slot.date() == day else {}
                 global_time_slots_by_day[day][current_time_slot]['formatted_time'] = self._get_locale_time(current_time_slot, lang_code)
-                current_time_slot = current_time_slot + timedelta(minutes=15)
 
         # count the number of tracks by days
         tracks_by_days = dict.fromkeys(days, 0)
         locations_by_days = defaultdict(list)
-        for track in tracks_sudo:
-            track_day = fields.Datetime.from_string(track.date).replace(tzinfo=pytz.utc).astimezone(local_tz).date()
-            tracks_by_days[track_day] += 1
-            if track.location_id not in locations_by_days[track_day]:
-                locations_by_days[track_day].append(track.location_id)
+        for track, time_slots in time_slots_by_tracks.items():
+            for track_day in {time_slot.date() for time_slot in time_slots}:
+                tracks_by_days[track_day] += 1
+                if track.location_id not in locations_by_days[track_day]:
+                    locations_by_days[track_day].append(track.location_id)
 
         for used_locations in locations_by_days.values():
             used_locations.sort(key=operator.itemgetter('sequence', 'id'))
@@ -315,18 +318,19 @@ class EventTrackController(http.Controller):
         """
         start_date = fields.Datetime.from_string(track.date).replace(tzinfo=pytz.utc).astimezone(local_tz)
         start_datetime = self.time_slot_rounder(start_date, 15)
-        end_datetime = self.time_slot_rounder(start_datetime + timedelta(hours=(track.duration or 0.25)), 15)
+        start_datetime_utc = start_datetime.astimezone(pytz.utc)
+        end_datetime = self.time_slot_rounder((start_datetime_utc + timedelta(hours=(track.duration or 0.25))).astimezone(local_tz), 15)
         time_slots_count = int(((end_datetime - start_datetime).total_seconds() / 3600) * 4)
 
-        time_slots_by_day_start_time = {start_datetime: 0}
+        day_start_time = start_datetime
+        time_slots_by_day_start_time = {day_start_time: 0}
         for i in range(0, time_slots_count):
-            # If the new time slot is still on the current day
-            next_day = (start_datetime + timedelta(days=1)).date()
-            if (start_datetime + timedelta(minutes=15*i)).date() <= next_day:
-                time_slots_by_day_start_time[start_datetime] += 1
-            else:
-                start_datetime = next_day.datetime()
-                time_slots_by_day_start_time[start_datetime] = 0
+            time_slot = (start_datetime_utc + timedelta(minutes=15 * i)).astimezone(local_tz)
+            # If the new time slot is on the next day, start a new day
+            if time_slot.date() != day_start_time.date():
+                day_start_time = time_slot
+                time_slots_by_day_start_time[day_start_time] = 0
+            time_slots_by_day_start_time[day_start_time] += 1
 
         return time_slots_by_day_start_time
 
@@ -339,9 +343,9 @@ class EventTrackController(http.Controller):
         occupied_cells = []
 
         start_date = fields.Datetime.from_string(track.date).replace(tzinfo=pytz.utc).astimezone(local_tz)
-        start_date = self.time_slot_rounder(start_date, 15)
+        start_date_utc = self.time_slot_rounder(start_date, 15).astimezone(pytz.utc)
         for i in range(0, rowspan):
-            time_slot = start_date + timedelta(minutes=15*i)
+            time_slot = (start_date_utc + timedelta(minutes=15 * i)).astimezone(local_tz)
             if track.location_id:
                 occupied_cells.append((time_slot, track.location_id))
             # when no location, reserve all locations
