@@ -1,8 +1,7 @@
 import base64
 import json
-import logging
 from binascii import Error as BinasciiError
-from datetime import datetime, timedelta, UTC
+from datetime import UTC, datetime, timedelta
 
 import requests
 from cryptography.exceptions import InvalidSignature
@@ -14,30 +13,22 @@ from cryptography.hazmat.primitives.hashes import SHA256
 from odoo.http import request
 
 from odoo.addons.pos_bancontact_pay import const
-from odoo.addons.pos_bancontact_pay.errors.exceptions import BancontactSignatureValidationError
-
-_logger = logging.getLogger(__name__)
+from odoo.addons.pos_bancontact_pay.errors.exceptions import (
+    BancontactSignatureValidationError,
+)
 
 
 class BancontactSignatureValidation:
-    def __init__(self, request, test_mode=False):
+    def __init__(self, request, preprod=False):
         self.request = request
-        self.test_mode = test_mode
-        self.bancontact_api_urls = const.API_URLS["preprod" if test_mode else "production"]
+        self.bancontact_api_urls = const.API_URLS["preprod" if preprod else "production"]
 
     def verify_signature(self, ppid):
         """Verify the JWS signature and mandatory protected headers of the request."""
-        if self.test_mode:
-            return
-
-        try:
-            protected_b64, signature_b64, kid, protected = self._extract_jws_parts()
-            jwk = self._get_jwk_by_kid(kid)
-            self._verify_jws_signature(jwk, protected_b64, signature_b64)
-            self._validate_critical_headers(protected, ppid)
-        except BancontactSignatureValidationError as e:
-            _logger.warning("Bancontact signature verification failed:\n%s", e)
-            raise
+        protected_b64, signature_b64, kid, protected = self._extract_jws_parts()
+        jwk = self._get_jwk_by_kid(kid)
+        self._verify_jws_signature(jwk, protected_b64, signature_b64)
+        self._validate_critical_headers(protected, ppid)
 
     # ----- Private Methods ----- #
     def _extract_jws_parts(self):
@@ -101,7 +92,7 @@ class BancontactSignatureValidation:
         if not jwk_data:
             raise BancontactSignatureValidationError(f"JWK with kid {kid} not found after JWKS refresh")
         if jwk_data.get("use", "sig") != "sig":
-            raise BancontactSignatureValidationError(f"JWK with kid {kid} is not for signature use")
+            raise BancontactSignatureValidationError(f"JWK with kid {kid} is not for signature use: expected 'sig', actual '{jwk_data.get('use', 'sig')}'")
 
         request.env["ir.config_parameter"].sudo().set_str(
             "pos_bancontact.jwk_cache",
@@ -159,7 +150,7 @@ class BancontactSignatureValidation:
 
         # Unsupported key type
         else:
-            raise BancontactSignatureValidationError(f"Unsupported JWK algorithm: {alg}")
+            raise BancontactSignatureValidationError(f"Unsupported JWK algorithm: expected ES256 or RS256, actual {alg}")
 
     def _validate_critical_headers(self, protected, ppid):
         """Validate critical protected headers and extract the subject for later checks."""
@@ -175,7 +166,7 @@ class BancontactSignatureValidation:
         missing = expected_crits - crits
         unexpected = crits - expected_crits
         if missing or unexpected:
-            raise BancontactSignatureValidationError(f"Invalid crit header: missing {missing}, unexpected {unexpected}")
+            raise BancontactSignatureValidationError(f"Invalid crit header: expected {sorted(expected_crits)}, actual {sorted(crits)}")
 
         required = {
             const.ISS_KEY: protected.get(const.ISS_KEY),
@@ -191,7 +182,7 @@ class BancontactSignatureValidation:
         # -- iss
         issuer = required[const.ISS_KEY]
         if issuer != const.ISS_VALUE:
-            raise BancontactSignatureValidationError(f"Invalid issuer: {issuer}")
+            raise BancontactSignatureValidationError(f"Invalid issuer: expected {const.ISS_VALUE}, actual {issuer}")
 
         # -- iat
         iat_str = required[const.IAT_KEY]
@@ -201,20 +192,20 @@ class BancontactSignatureValidation:
             now = datetime.now(UTC)
             delta = (now - issued_at).total_seconds()
             if abs(delta) > const.MAX_SKEW_SECONDS:
-                raise BancontactSignatureValidationError(f"Invalid iat: outside allowed skew ({const.MAX_SKEW_SECONDS}s)")
+                raise BancontactSignatureValidationError(f"Invalid iat: expected within {const.MAX_SKEW_SECONDS}s skew, actual {delta:.0f}s")
         except (TypeError, ValueError) as e:
-            raise BancontactSignatureValidationError(f"Invalid iat format: {iat_str}") from e
+            raise BancontactSignatureValidationError(f"Invalid iat format: expected ISO 8601 timestamp, actual {iat_str}") from e
 
         # -- path
         expected_path = self.request.url.replace("http://", "https://")
         jws_path = protected.get(const.PATH_KEY).replace("http://", "https://")
         if jws_path != expected_path:
-            raise BancontactSignatureValidationError(f"Path mismatch: {jws_path} != {expected_path}")
+            raise BancontactSignatureValidationError(f"Path mismatch: expected {expected_path}, actual {jws_path}")
 
         # -- sub
         subject = protected.get(const.SUB_KEY)
         if not ppid or subject != ppid:
-            raise BancontactSignatureValidationError(f"Invalid subject: {subject}")
+            raise BancontactSignatureValidationError(f"Invalid subject: expected {ppid}, actual {subject}")
 
     def _b64url_decode(self, data: str) -> bytes:
         try:

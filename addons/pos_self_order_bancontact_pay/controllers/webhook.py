@@ -8,7 +8,7 @@ class SelfOrderBancontactPayController(BancontactPayController):
         if pos_config.self_ordering_mode == "kiosk":
             error = self._get_bancontact_error_message(bancontact_status)
             pos_config._notify(
-                "FINALIZE_KIOSK_PAYMENT",
+                "FINALIZE_BANCONTACT_PAY_KIOSK_PAYMENT",
                 {
                     "status": "success" if bancontact_status == "SUCCEEDED" else "fail",
                     "error": error,
