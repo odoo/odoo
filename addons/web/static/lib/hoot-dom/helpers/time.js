@@ -109,6 +109,8 @@ class HootTimingError extends Error {
     name = "HootTimingError";
 }
 
+const DEFAULT_WAIT_TIMEOUT = 10000;
+
 const ID_PREFIX = {
     animation: "a_",
     interval: "i_",
@@ -397,7 +399,7 @@ export function tick() {
  * The `predicate` is run once initially, and then on each animation frame until
  * it succeeds or fail.
  *
- * The promise automatically rejects after a given `timeout` (defaults to 5 seconds).
+ * The promise automatically rejects after a given `timeout` (defaults to 10 seconds).
  *
  * @template T
  * @param {(last: boolean) => T} predicate
@@ -418,7 +420,7 @@ export async function waitUntil(predicate, options) {
         return result;
     }
 
-    const timeout = $floor(options?.timeout ?? 200);
+    const timeout = $floor(options?.timeout ?? DEFAULT_WAIT_TIMEOUT);
     const maxFrameCount = $ceil(timeout / frameDelay);
     let frameCount = 0;
     let handle;
