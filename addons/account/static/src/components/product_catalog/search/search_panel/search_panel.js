@@ -1,4 +1,4 @@
-import { onWillStart, proxy, signal } from "@odoo/owl";
+import { proxy, signal } from "@odoo/owl";
 import { formatCurrency } from "@web/core/currency";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_utils";
 import { useBus, useService } from "@web/core/utils/hooks";
@@ -52,24 +52,9 @@ export class AccountProductCatalogSearchPanel extends ProductCatalogSearchPanel 
             this.updateSectionSubtotal(detail.sectionId, detail.subtotalDelta);
         });
 
-        onWillStart(async () => {
-            const { order_details, sections } = await this.orm.call(
-                this.orderModel,
-                "get_catalog_section_data",
-                [this.orderId],
-                { child_field: this.childField }
-            );
-
-            this.orderName = order_details.name;
-            this.state.totalUntaxedAmount = order_details.amount_untaxed;
-
-            this._setSectionsState(sections);
-            if (this.state.sections.length) {
-                // "No Section" (id: false), if present, is always first; select the last
-                // real section instead so the catalog doesn't default to "No Section".
-                this.setSelectedSection(this.state.sections[this.state.sections.length - 1].id);
-            }
-        });
+        this.orderName = this.env.searchModel.catalogOrderDetails.name;
+        this.state.totalUntaxedAmount = this.env.searchModel.catalogOrderDetails.amount_untaxed;
+        this._setSectionsState(this.env.searchModel.catalogSections);
 
         useNestedSortable({
             ref: this.sectionTreeRef,
