@@ -24,6 +24,7 @@ export class BuilderNumberInput extends Component {
         max: t.number().optional(),
         composable: t.boolean().optional(false),
         applyWithUnit: t.boolean().optional(true),
+        allowDecimals: t.boolean().optional(true),
     });
     textInputBaseProps = useProps(textInputBasePassthroughProps);
 
