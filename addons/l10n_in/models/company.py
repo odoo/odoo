@@ -66,9 +66,21 @@ class ResCompany(models.Model):
     l10n_in_is_gst_registered = fields.Boolean(
         string="Registered Under GST",
         compute="_compute_l10n_in_parent_based_features",
-        inverse="_inverse_l10n_in_is_gst_registered",
+        inverse="_inverse_l10n_in_gst_registration_type",
         recursive=True,
         store=True,
+    )
+    l10n_in_gst_registration_type = fields.Selection(
+        selection=[
+            ('regular', 'Regular (Monthly)'),
+            ('qrmp', 'Regular (QRMP)'),
+            ('composition', 'Composition Scheme'),
+        ],
+        compute="_compute_l10n_in_parent_based_features",
+        inverse="_inverse_l10n_in_gst_registration_type",
+        string="GST Registration Type",
+        store=True,
+        recursive=True,
     )
     l10n_in_gstin_status_feature = fields.Boolean(string="Check GST Number Status")
     l10n_in_disable_b2c_hsn_reporting = fields.Boolean(string="Disable B2C HSN Reporting")
@@ -89,7 +101,7 @@ class ResCompany(models.Model):
         for company in self:
             self._activate_l10n_in_taxes(['tcs_it_act_25_group'], company, company.l10n_in_tcs_feature)
 
-    def _inverse_l10n_in_is_gst_registered(self):
+    def _inverse_l10n_in_gst_registration_type(self):
         for company in self:
             gst_group_refs = [
                 'sgst_group',
