@@ -20,8 +20,9 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - search_count mail_canned_response
     #   [enterprise] search_fetch mail_activity_type (voip_config)
     #   [enterprise] search_count voip_call (_get_number_of_missed_calls)
-    #   11: store add odoobot:
+    #   12: store add odoobot:
     #       - fetch res_partner (_read_format)
+    #       - search_fetch calendar_attendee (_compute_meeting_until)
     #       - search res_users (_compute_im_status)
     #         [enterprise] search ai_agent (_compute_im_status ai override)
     #       - fetch res_users (_compute_im_status)
@@ -39,17 +40,17 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - search res_lang_res_users_settings_rel (livechat_lang_ids)
     #       - search im_livechat_expertise_res_users_settings_rel (livechat_expertise_ids)
     #       - search res_users_settings_volumes (volume_settings_ids)
-    _query_count_init_store = 18
+    _query_count_init_store = 19
     # Queries for _query_count_init_messaging (in order):
     #   2: _search_is_member (for current user, first occurence _search_is_member for chathub given channel ids)
     #       - fetch res_users
     #       - fetch discuss_channel_member
     #   1. search discuss_channel (chathub given channel ids)
-    #   30: init_messaging:
+    #   31: init_messaging:
     #       - search_fetch discuss_channel (channels_domain)
     #       - fetch discuss_channel (_search_is_member)
     #       - search_fetch discuss_channel (odoobot chat)
-    #       27: store add channel:
+    #       28: store add channel:
     #           - read group member (prefetch _compute_self_member_id from _compute_is_member)
     #           - read group member (_compute_invited_member_ids)
     #           - fetch discuss_channel_member (invited member, _compute_invited_member_ids)
@@ -57,8 +58,8 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #           - fetch discuss_channel_rtc_session
     #           - search member (channel_member_ids)
     #           - fetch discuss_channel_member (manual prefetch)
-    #           11: member:
-    #               11: partner:
+    #           12: member:
+    #               12: partner:
     #                   - search_fetch res_partner (partner)
     #                   - search res_users (partner.user_ids, _store_im_status_fields)
     #                     [enterprise] search ai_agent (_compute_im_status ai override)
@@ -70,6 +71,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #                   - search hr_employee_location (_store_im_status_fields override)
     #                   - search hr_leave (_compute_leave_status)
     #                   - read group resource_calendar_leaves (_compute_leave_status)
+    #                   - search_fetch calendar_attendee (_compute_meeting_until)
     #                   - fetch res_users (_read_format)
     #           - search bus_bus (_bus_last_id)
     #           - search_fetch ir_attachment (_compute_avatar_cache_key -> _compute_avatar_128)
@@ -80,7 +82,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #           - _compute_message_unread
     #           - fetch res_groups (group_public_id)
     #           - select the current db snapshot
-    _query_count_init_messaging = 33
+    _query_count_init_messaging = 34
     # Queries for _query_count_messaging_menu_channels (in order):
     #   5: chat tab:
     #       - fetch res_users (current persona, first occurrence)
@@ -106,17 +108,17 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #   1: search discuss_channel (last message of each channel, add_channels_last_message)
     #   1: search mail_message (_compute_message_needaction)
     #   1: search discuss_channel (add_channels_last_needaction)
-    #   36: channel _to_store_defaults:
+    #   37: channel _to_store_defaults:
     #       - read group member (_compute_invited_member_ids)
     #       - search discuss_channel_rtc_session
     #       - fetch discuss_channel_rtc_session
     #       - search member (channel_member_ids)
     #       - search channel JOIN member (channel_name_member_ids)
     #       - fetch discuss_channel_member (manual prefetch)
-    #       19: member:
+    #       20: member:
     #           - search im_livechat_channel_member_history (livechat member type)
     #           - fetch im_livechat_channel_member_history (livechat member type)
-    #           13: partner:
+    #           14: partner:
     #               - fetch res_partner (partner)
     #               - search res_users (partner.user_ids, _store_im_status_fields)
     #                 [enterprise] search ai_agent (_compute_im_status ai override)
@@ -128,6 +130,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #               - search hr_employee_location (_store_im_status_fields override)
     #               - search hr_leave (_compute_leave_status)
     #               - read group resource_calendar_leaves (_compute_leave_status)
+    #               - search_fetch calendar_attendee (_compute_meeting_until)
     #               - search_fetch res_users_settings (livechat username)
     #               - fetch res_users_settings (livechat username)
     #               - fetch res_users (_read_format)
@@ -177,7 +180,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - search mail_message_schedule (last message of the needaction message)
     #       - search discuss_channel (linkedSubChannel of the needaction message)
     #   1: select the current db snapshot
-    _query_count_messaging_menu_channels = 81
+    _query_count_messaging_menu_channels = 82
     # Queries for _query_count_init_messaging_with_chat_hub (in order):
     #   2: _search_is_member (for current user, first occurrence)
     #       - fetch res_users
@@ -902,6 +905,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                     "id": self.partner_root.id,
                     "is_company": False,
                     "main_user_id": self.user_root.id,
+                    "meeting_until": False,
                     "name": "OdooBot",
                     "partner_share": False,
                     "tz": "Europe/Brussels",
@@ -2656,6 +2660,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "id": user.partner_id.id,
                 "is_company": False,
                 "main_user_id": user.id,
+                "meeting_until": False,
                 "mention_token": user.partner_id._get_mention_token(),
                 "name": "Ernest Employee",
                 "partner_share": False,
@@ -2712,6 +2717,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "id": user.partner_id.id,
                 "is_company": False,
                 "main_user_id": user.id,
+                "meeting_until": False,
                 "mention_token": user.partner_id._get_mention_token(),
                 "name": "test2",
                 "partner_share": False,
@@ -2728,6 +2734,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "id": user.partner_id.id,
                 "is_company": False,
                 "main_user_id": user.id,
+                "meeting_until": False,
                 "mention_token": user.partner_id._get_mention_token(),
                 "name": user.name,
                 "partner_share": False,
@@ -2744,6 +2751,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "id": user.partner_id.id,
                 "is_company": False,
                 "main_user_id": user.id,
+                "meeting_until": False,
                 "mention_token": user.partner_id._get_mention_token(),
                 "name": "test12",
                 "partner_share": False,
@@ -2760,6 +2768,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "id": user.partner_id.id,
                 "is_company": False,
                 "main_user_id": user.id,
+                "meeting_until": False,
                 "mention_token": user.partner_id._get_mention_token(),
                 "name": "test14",
                 "partner_share": False,
@@ -2776,6 +2785,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "id": user.partner_id.id,
                 "is_company": False,
                 "main_user_id": user.id,
+                "meeting_until": False,
                 "mention_token": user.partner_id._get_mention_token(),
                 "name": "test15",
                 "partner_share": False,

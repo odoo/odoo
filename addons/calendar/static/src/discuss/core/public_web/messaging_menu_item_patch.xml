@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.MessagingMenuItem" t-inherit-mode="extension">
+        <xpath expr="//t[@t-set-slot='name-after']" position="inside">
+            <span t-if="this.channel?.correspondentPartner?.inMeetingEndText" class="text-success smaller fw-normal">
+                <i class="oi oi-filled me-1" data-icon="calendar_today"/>
+                <t t-out="this.channel.correspondentPartner.inMeetingEndText"/>
+            </span>
+        </xpath>
+    </t>
+</templates>
