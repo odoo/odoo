@@ -197,6 +197,9 @@ test("keep mentions when channel post is deferred", async () => {
     onRpcBefore("/mail/message/post", (args) => {
         expect.step("/mail/message/post");
         expect(args.post_data.partner_ids).toEqual([serverState.partnerId]);
+        expect(args.post_data.partner_ids_mention_token).toEqual({
+            [serverState.partnerId]: serverState.partnerId,
+        });
     });
     await start();
     await openDiscuss(channelId);
