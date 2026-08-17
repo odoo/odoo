@@ -714,6 +714,19 @@ class HrLeaveAllocation(models.Model):
             '|', ('nextcall', '=', False), ('nextcall', '<=', today)])
         allocations._process_accrual_plans()
 
+    def _discard_fake_allocation(self):
+        """Discard temporary allocations used for accrual simulation.
+
+        Invalidating a new record clears its cache but does not remove it
+        from the pending recomputation queue. Since a new record has no
+        database row from which computed fields can be recomputed, remove
+        it from the recomputation queue before discarding it.
+        """
+        self.invalidate_recordset()
+        for field in list(self.env.transaction.tocompute):
+            if field.model_name == self._name:
+                self.env.remove_to_compute(field, self)
+
     def _get_future_leaves_on(self, accrual_date):
         # As computing future accrual allocation days automatically updates the allocation,
         # We need to create a temporary copy of that allocation to return the difference in number of days
@@ -734,7 +747,7 @@ class HrLeaveAllocation(models.Model):
             res = float_round(fake_allocation.number_of_hours_display - self.number_of_hours_display, precision_digits=2)
         else:
             res = round((fake_allocation.number_of_days - self.number_of_days), 2)
-        fake_allocation.invalidate_recordset()
+        fake_allocation._discard_fake_allocation()
         return res
 
     def _get_next_states_by_state(self):
