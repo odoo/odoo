@@ -18,7 +18,7 @@
             <t t-else="">
                 <ThreadIcon className="'align-self-center fs-3 my-2 opacity-75'" size="'large'" thread="this.thread"/>
             </t>
-            <div class="flex-grow-1 align-self-center align-items-center h-100 py-1" t-att-class="{ 'lh-sm': this.showsChatLocalDateTime }">
+            <div class="o-mail-DiscussContent-threadTitle flex-grow-1 align-self-center align-items-center h-100 py-1" t-att-class="{ 'lh-sm': this.showsChatLocalDateTime }">
                 <div class="d-flex">
                     <div t-if="this.thread.channel?.parent_channel_id" class="d-flex align-items-center gap-1 ms-1">
                         <span class="fw-bold cursor-pointer opacity-75 opacity-100-hover o-hover-text-underline" t-out="this.thread.channel.parent_channel_id.displayName" t-on-click="() => this.thread?.channel?.parent_channel_id?.open({ focus: true })"/>
@@ -42,7 +42,7 @@
                         />
                     </t>
                 </div>
-                <div t-if="this.showsChatLocalDateTime" class="text-muted smaller ms-1" t-out="this.correspondentLocalDateTimeFormatted()"/>
+                <div t-if="this.showsChatLocalDateTime" class="o-mail-DiscussContent-localDateTime text-muted smaller ms-1" t-out="this.correspondentLocalDateTimeFormatted()"/>
             </div>
             <div class="pe-3 flex-shrink-0 d-print-none">
                 <ActionList actions="this.headerActionsList" inline="true" odooControlPanelSwitchStyle="true"/>
