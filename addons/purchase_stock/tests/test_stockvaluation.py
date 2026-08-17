@@ -2782,6 +2782,76 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
             {'date': one_day_ago,   'debit': 25,    'credit': 0,    'reconciled': True},
         ])
 
+    def test_pdiff_bill_in_company_currency(self):
+        """
+        Company in USD, 1 EUR = 500 USD
+        Buy and receive one auto-FIFO product at 20 EUR (10000 USD)
+        Bill it in USD at 20
+        Since the bill has no foreign currency, the correction entry should
+        only contain the two valuation lines in company currency
+        """
+        usd_currency = self.usd_currency
+        eur_currency = self.eur_currency
+        today = fields.Date.today()
+
+        self.env.company.currency_id = usd_currency.id
+        self.env['res.currency.rate'].search([]).unlink()
+        self.env['res.currency.rate'].create({
+            'name': today,
+            'rate': 1 / 500,
+            'currency_id': eur_currency.id,
+            'company_id': self.env.company.id,
+        })
+
+        self.product1.product_tmpl_id.categ_id.property_cost_method = 'fifo'
+
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner_id.id,
+            'currency_id': eur_currency.id,
+            'order_line': [Command.create({
+                'name': self.product1.name,
+                'product_id': self.product1.id,
+                'product_qty': 1.0,
+                'product_uom': self.product1.uom_po_id.id,
+                'price_unit': 20.0,
+                'taxes_id': False,
+            })],
+        })
+        po.button_confirm()
+
+        receipt = po.picking_ids
+        receipt.move_ids.move_line_ids.quantity = 1.0
+        receipt.button_validate()
+
+        layer = receipt.move_ids.stock_valuation_layer_ids
+        self.assertEqual(layer.value, 10000)
+
+        action = po.action_create_invoice()
+        bill = self.env['account.move'].browse(action['res_id'])
+        bill.invoice_date = today
+        bill.invoice_line_ids.price_unit = 20.0
+        bill.currency_id = usd_currency
+        bill.action_post()
+
+        pdiff_layer = layer.stock_valuation_layer_ids
+        self.assertEqual(pdiff_layer.value, -9980)
+
+        correction_entry = pdiff_layer.account_move_id
+        self.assertRecordValues(correction_entry.line_ids.sorted('balance'), [
+            {'account_id': self.stock_valuation_account.id, 'balance': -9980,   'amount_currency': -9980,   'currency_id': usd_currency.id},
+            {'account_id': self.stock_input_account.id,     'balance': 9980,    'amount_currency': 9980,    'currency_id': usd_currency.id},
+        ])
+
+        in_stock_amls = self.env['account.move.line'].search([
+            ('product_id', '=', self.product1.id),
+            ('account_id', '=', self.stock_input_account.id),
+        ], order='id')
+        self.assertRecordValues(in_stock_amls, [
+            {'balance': -10000, 'amount_currency': -20,    'currency_id': eur_currency.id, 'reconciled': True},
+            {'balance': 20,     'amount_currency': 20,     'currency_id': usd_currency.id, 'reconciled': True},
+            {'balance': 9980,   'amount_currency': 9980,   'currency_id': usd_currency.id, 'reconciled': True},
+        ])
+
     def test_pdiff_lot_valuation(self):
         """
         use a product valuated by lot.
