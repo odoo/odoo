@@ -141,3 +141,19 @@ test("drag and drop reorders products", async () => {
     expect(reorderedIds.indexOf(9)).toBeLessThan(reorderedIds.indexOf(7));
     expect(products.get(6).pos_sequence).toBe(21);
 });
+
+test("addProductToOrder presets the variant matched by default_code search", async () => {
+    const store = await setupPosEnv();
+    store.addNewOrder();
+    const order = store.getOrder();
+    const productTemplate = store.models["product.template"].get(60);
+    store.models["product.product"].get(61).default_code = "BELT-M-REF";
+
+    store.session.state = "opened";
+    const comp = await mountWithCleanup(ProductScreen, { props: { orderUuid: order.uuid } });
+    store.searchProductWord = "BELT-M-REF";
+
+    await comp.addProductToOrder(productTemplate);
+
+    expect(order.lines[0].product_id.id).toBe(61);
+});
