@@ -1,12 +1,15 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime, timedelta
+from datetime import date, datetime, timedelta
 from unittest.mock import patch
+
+import pytz
 
 from odoo import fields
 from odoo.addons.website.models.website_visitor import WebsiteVisitor
 from odoo.addons.website_event.tests.common import TestEventOnlineCommon
+from odoo.addons.website_event_track.controllers.event_track import EventTrackController
 from odoo.tests.common import users
 
 class TestTrackData(TestEventOnlineCommon):
@@ -94,6 +97,27 @@ class TestTrackData(TestEventOnlineCommon):
         self.assertEqual(
             new_track.contact_phone, customer.phone,
             'Track customer should take over existing contact phone value')
+
+    def test_split_track_by_days_long_duration(self):
+        """ A track running over several days is split into one entry per day. """
+        local_tz = pytz.timezone('Europe/Brussels')
+        track = self.env['event.track'].create({
+            'name': 'Marathon Track',
+            'event_id': self.event_0.id,
+            'date': datetime(2020, 7, 6, 20, 0, 0),  # 22:00 local time
+            'duration': 50.0,
+        })
+
+        time_slots = EventTrackController()._split_track_by_days(track, local_tz)
+
+        self.assertEqual(
+            [(day.date(), day.hour, slots) for day, slots in time_slots.items()],
+            [
+                (date(2020, 7, 6), 22, 8),  # 22:00 to midnight
+                (date(2020, 7, 7), 0, 96),  # a full day
+                (date(2020, 7, 8), 0, 96),  # a full day, up to the end of the track
+            ],
+            'A track should be split into one entry per day it runs on')
 
 class TestTrackSuggestions(TestEventOnlineCommon):
 
