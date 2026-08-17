@@ -1548,6 +1548,81 @@
     </xpath>
 </template>
 
+<!-- Mobile Filters Templates -->
+<template id="website.filters_toggler" name="Filters Toggler">
+    <button type="button"
+        t-attf-class="o_not_editable btn btn-light position-relative d-lg-none #{toggler_classes}"
+        data-bs-toggle="offcanvas" t-attf-data-bs-target="##{offcanvas_id}"
+        title="Filters" aria-label="Filters">
+        <i t-attf-class="oi #{icon_classes}" data-icon="tune" aria-hidden="true"/>
+        <span t-if="has_active_filters"
+            class="position-absolute top-0 start-100 translate-middle rounded-circle bg-danger p-1"/>
+    </button>
+</template>
+
+<template id="website.filters_offcanvas" name="Filters Panel">
+    <div t-att-id="offcanvas_id"
+        class="o_website_filters o_website_offcanvas offcanvas offcanvas-end p-0 overflow-visible"
+        t-att-data-filter-refresh="refresh_selectors">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title">Filters</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"/>
+        </div>
+        <div class="offcanvas-body p-0">
+            <t t-out="0"/>
+        </div>
+        <div class="d-flex flex-column border-top px-4 py-3">
+            <button
+                id="o_website_filters_clear"
+                type="button"
+                class="btn btn-link py-1 mb-2"
+                t-att-disabled="not has_active_filters"
+                t-att-data-filter-url="clear_url"
+                title="Clear the filters">
+                <small class="fw-bolder">Clear Filters</small>
+            </button>
+            <button type="button" class="btn btn-primary" data-bs-dismiss="offcanvas">
+                Apply Filters
+                <span class="badge rounded-pill bg-o-color-3 text-o-color-1 ms-2" t-out="count or 0"/>
+            </button>
+        </div>
+    </div>
+</template>
+
+<template id="website.filters_section" name="Filters Section">
+    <t t-set="is_expanded" t-value="bool(has_active_filters)"/>
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button t-attf-class="accordion-button #{not is_expanded and 'collapsed'}"
+                type="button" data-bs-toggle="collapse"
+                t-attf-data-bs-target="##{section_id}"
+                t-att-aria-controls="section_id"
+                t-att-aria-expanded="'true' if is_expanded else 'false'">
+                <t t-out="title"/>
+            </button>
+        </h2>
+        <div t-att-id="section_id" t-attf-class="accordion-collapse collapse #{is_expanded and 'show'}">
+            <div class="accordion-body pt-0">
+                <ul class="list-group list-group-flush">
+                    <t t-out="0"/>
+                </ul>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template id="website.filters_option" name="Filters Option">
+    <li class="list-group-item d-flex align-items-center px-0 border-0">
+        <div class="form-check flex-grow-1">
+            <input class="form-check-input" t-att-type="input_type or 'radio'"
+                t-att-name="group_name" t-att-id="option_id"
+                t-att-checked="checked" t-att-data-filter-url="option_url"/>
+            <label class="form-check-label" t-att-for="option_id" t-out="label"/>
+        </div>
+        <span t-if="count" class="badge pagination text-bg-primary ms-2" t-out="count"/>
+    </li>
+</template>
+
 <!-- "Rounded box" template -->
 <template id="template_header_boxed" inherit_id="website.layout" name="Template Header Rounded Box" active="False">
     <xpath expr="//header//nav" position="replace">

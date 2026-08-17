@@ -25,8 +25,8 @@
 </template>
 
 <template id="courses_my">
-    <div t-if="channels_my" class="container">
-        <div class="o_wslides_home_content_section mb-5">
+    <div id="o_wslides_courses_my" class="container">
+        <div t-if="channels_my" class="o_wslides_home_content_section mb-5">
             <div class="d-flex justify-content-between">
                 <h2 class="h5 mb-3">My courses</h2>
                 <a t-if="channels_my[5:]" href="/slides?my=1">View all</a>
@@ -80,6 +80,7 @@
 <template id='courses_home' name="Odoo Courses Homepage">
     <t t-set="body_classname" t-value="'o_wslides_body'"/>
     <t t-set="has_side_column" t-value="not is_public_user"/>
+    <t t-set="has_active_filters" t-value="bool(search_tags or search_my or search_slide_category)"/>
     <t t-call="website.layout">
         <div id="wrap" class="wrap o_wslides_wrap">
             <div class="oe_structure oe_empty"/>
@@ -125,58 +126,40 @@
             </div>
             <t t-call="website_slides.courses_footer"/>
             <!-- Off canvas filters on mobile -->
-            <div id="o_wslides_index_offcanvas" class="o_website_offcanvas offcanvas offcanvas-end d-lg-none p-0 overflow-visible">
-                <div class="offcanvas-header">
-                    <h5 class="offcanvas-title">Filters</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"/>
+            <t t-call="website.filters_offcanvas"
+                offcanvas_id="'o_wslides_index_offcanvas'"
+                refresh_selectors="'#o_wslides_courses_search_bar,#o_wslides_courses_my,#o_wslides_search_results,#o_wslides_index_offcanvas'"
+                has_active_filters="has_active_filters"
+                clear_url="slide_query_url(tag='', my=0, search=search_term, slide_category='', prevent_redirect=True)"
+                count="search_count">
+                <div class="accordion accordion-flush">
+                    <!-- Tag Groups Filters -->
+                    <t t-foreach="tag_groups" t-as="tag_group">
+                        <t t-set="group_frontend_tags"
+                            t-value="tag_group.tag_ids.filtered(lambda tag: tag.color and (tag in available_tags_by_group[tag_group.id] or tag in search_tags))"/>
+                        <t t-if="group_frontend_tags"
+                            t-call="website.filters_section"
+                            section_id="'o_wslides_offcanvas_cat_%s' % tag_group.id"
+                            title="tag_group.name">
+                            <t t-foreach="group_frontend_tags" t-as="tag"
+                                t-call="website.filters_option"
+                                input_type="'checkbox'"
+                                group_name="'tag'"
+                                option_id="'o_wslides_offcanvas_tag_%s' % tag.id"
+                                label="tag.name"
+                                checked="tag in search_tags"
+                                option_url="slide_query_url(tag=slugify_tags(search_tags.ids, toggle_tag_id=tag.id), pinned_tag=tag.id, my=search_my, search=search_term, slide_category=search_slide_category, prevent_redirect=True)"/>
+                        </t>
+                    </t>
                 </div>
-                <div class="offcanvas-body p-0">
-                    <div class="accordion accordion-flush">
-                        <!-- Tag Groups Filters -->
-                        <div class="accordion-item" t-foreach="tag_groups" t-as="tag_group">
-                            <t t-set="group_frontend_tags" t-value="tag_group.tag_ids.filtered('color')"/>
-                            <t t-if="group_frontend_tags">
-                                <h2 class="accordion-header">
-                                    <button class="accordion-button collapsed"
-                                        type="button"
-                                        data-bs-toggle="collapse"
-                                        t-attf-aria-controls="o_wslides_offcanvas_cat_#{tag_group.id}"
-                                        t-att-data-bs-target="'.o_wslides_offcanvas_cat_%s' % tag_group.id"
-                                        aria-expanded="false"
-                                    >
-                                        <t t-out="tag_group.name"/>
-                                    </button>
-                                </h2>
-                                <div t-attf-id="o_wslides_offcanvas_cat_#{tag_group.id}" t-attf-class="o_wslides_offcanvas_cat_#{tag_group.id} accordion-collapse collapse">
-                                    <div class="accordion-body pt-0">
-                                        <ul class="list-group list-group-flush">
-                                            <li t-foreach="group_frontend_tags" t-as="tag" class="list-group-item border-0 px-0">
-                                                <div t-att-data-post="slide_query_url(tag=slugify_tags(search_tags.ids, toggle_tag_id=tag.id), my=search_my, search=search_term, slide_category=search_slide_category, prevent_redirect=True)"
-                                                    class="post_link text-reset cursor-pointer" t-att-title="tag.name">
-                                                    <div class="form-check">
-                                                        <input class="form-check-input pe-none" type="checkbox" t-attf-name="#{tag.color}" t-att-checked="tag in search_tags"/>
-                                                        <label class="form-check-label" t-attf-for="#{tag.color}" t-out="tag.name"/>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </t>
-                        </div>
-                    </div>
-                </div>
-                <div class="offcanvas-body flex-grow-0 border-top overflow-hidden">
-                    <a href="/slides" class="btn btn-light">Clear Filters</a>
-                </div>
-            </div>
+            </t>
         </div>
     </t>
 </template>
 
 <template id="courses_search_bar">
     <!-- Navbar dynamically composed using displayed channel tag groups. -->
-    <div class="d-flex flex-wrap align-items-md-center gap-2 mt-4 mb-3">
+    <div id="o_wslides_courses_search_bar" class="d-flex flex-wrap align-items-md-center gap-2 mt-4 mb-3">
         <div class="flex-grow-1">
             <h1 class="h4 mb-0">Courses</h1>
         </div>
@@ -197,7 +180,7 @@
                             <div class="dropdown-menu" t-att-id="'navToogleTagGroup%s' % tag_group.id">
                                 <t t-foreach="group_frontend_tags" t-as="tag">
                                     <span t-att-class="'post_link cursor-pointer dropdown-item %s' % ('active' if tag in search_tags else '')"
-                                        t-att-data-post="slide_query_url(tag=slugify_tags(search_tags.ids, toggle_tag_id=tag.id), my=search_my, search=search_term, slide_category=search_slide_category, prevent_redirect=True)"
+                                        t-att-data-post="slide_query_url(tag=slugify_tags(search_tags.ids, toggle_tag_id=tag.id), pinned_tag=tag.id, my=search_my, search=search_term, slide_category=search_slide_category, prevent_redirect=True)"
                                         t-out="tag.name"/>
                                 </t>
                             </div>
@@ -228,14 +211,10 @@
                     <input type="hidden" name="prevent_redirect" value="True"/>
                 </t>
                 <!-- Mobile Filter button -->
-                <button class="o_not_editable btn btn-light position-relative d-lg-none"
-                    data-bs-toggle="offcanvas"
-                    data-bs-target="#o_wslides_index_offcanvas">
-                    <i class="oi" data-icon="tune"/>
-                    <span t-if="search_tags or search_my"
-                        class="position-absolute top-0 start-100 translate-middle border border-light rounded-circle bg-danger p-1"
-                    />
-                </button>
+                <t t-call="website.filters_toggler"
+                    offcanvas_id="'o_wslides_index_offcanvas'"
+                    icon_classes="'oi-stack lh-lg'"
+                    has_active_filters="has_active_filters"/>
                 <a t-if="not env.user._is_public()" class="btn d-block d-lg-none p-0" data-bs-toggle="offcanvas" href="#o_wslides_overview_offcanvas" role="button" aria-controls="o_wslides_overview_offcanvas">
                     <t t-call="website_slides.slides_misc_user_image"
                         img_class.f="o_wslides_user_avatar rounded-circle"/>
@@ -266,14 +245,14 @@
         <span class="align-items-baseline border d-inline-flex ps-2 rounded mb-2">
             <i class="oi me-2 text-muted" data-icon="label"/>
             <t t-out="tag.display_name"/>
-            <span t-att-data-post="slide_query_url(tag=slugify_tags(search_tags.ids, tag.id), my=search_my, search=search_term, slide_category=search_slide_category, prevent_redirect=True)"
+            <span t-att-data-post="slide_query_url(tag=slugify_tags(search_tags.ids, tag.id), pinned_tag=tag.id, my=search_my, search=search_term, slide_category=search_slide_category, prevent_redirect=True)"
                          class="post_link cursor-pointer btn border-0 py-1">×</span>
         </span>
     </t>
 </template>
 
 <template id="courses_search_results">
-    <div class="o_wslides_home_main pb-5">
+    <div id="o_wslides_search_results" class="o_wslides_home_main pb-5">
         <h2 t-if="not search_term and not search_slide_category and not search_my and not search_tags and channels" class="h5 mb-3">All Courses</h2>
         <t t-call="website_slides.courses_search_tags"/>
         <div t-if="not channels and not search_term and not search_slide_category and not search_my and not search_tags" class="text-center">
@@ -325,11 +304,11 @@
                 <div t-if="channel_frontend_tags" class="small o_line_clamp">
                     <t t-foreach="channel_frontend_tags" t-as="tag">
                         <t t-if="search_tags">
-                            <span t-att-data-post="slide_query_url(tag=slugify_tags(search_tags.ids, toggle_tag_id=tag.id), my=search_my, search=search_term, slide_category=search_slide_category, prevent_redirect=True)"
+                            <span t-att-data-post="slide_query_url(tag=slugify_tags(search_tags.ids, toggle_tag_id=tag.id), pinned_tag=tag.id, my=search_my, search=search_term, slide_category=search_slide_category, prevent_redirect=True)"
                                 t-attf-class="post_link cursor-pointer badge o_badge_clickable #{'o_color_'+str(tag.color) if tag in search_tags else 'o_wslides_channel_tag o_color_0'}" t-out="tag.name"/>
                         </t>
                         <t t-else="">
-                            <span t-att-data-post="slide_query_url(tag=slugify_tags(search_tags.ids, toggle_tag_id=tag.id), my=search_my, search=search_term, slide_category=search_slide_category, prevent_redirect=True)"
+                            <span t-att-data-post="slide_query_url(tag=slugify_tags(search_tags.ids, toggle_tag_id=tag.id), pinned_tag=tag.id, my=search_my, search=search_term, slide_category=search_slide_category, prevent_redirect=True)"
                                 t-attf-class="post_link cursor-pointer badge o_badge_clickable o_wslides_channel_tag #{'o_color_'+str(tag.color)}" t-out="tag.name"/>
                         </t>
                     </t>

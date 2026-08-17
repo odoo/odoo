@@ -96,6 +96,7 @@ class WebsitePartnership(WebsitePartnerPage):
             'grades': grades,
             'current_grade': grade,
             'partners': partners,
+            'partner_count': partner_count,
             'pager': pager,
             'searches': post,
             'search': search,
