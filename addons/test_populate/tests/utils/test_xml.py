@@ -182,6 +182,76 @@ class TestXMLParse(TransactionCase):
             xml.parse(xml_str)
 
 
+class TestXMLImportHelpers(TransactionCase):
+
+    def test_expand_imports(self):
+        fragments = {
+            'test.source': etree.fromstring('''
+                <data>
+                    <create model="imported.first"/>
+                    <create model="imported.second"/>
+                </data>
+            '''),
+        }
+        definition = etree.fromstring('''
+            <data>
+                <create model="local.first"/>
+                <import ref="test.source"/>
+                <create model="local.last"/>
+            </data>
+        ''')
+
+        result = xml.expand_imports(
+            definition,
+            lambda element: fragments[element.get('ref')],
+        )
+
+        self.assertIs(result, definition)
+        self.assertEqual(len(fragments['test.source']), 0)
+        self.assertEqual(
+            [element.get('model') for element in result],
+            ['local.first', 'imported.first', 'imported.second', 'local.last'],
+        )
+
+    def test_namespace_references_only_rewrites_declared_ids(self):
+        tree = etree.fromstring('''
+            <data>
+                <create model="test_populate.product" count="2" id="products">
+                    <field name="name" eval="'products must remain text'"/>
+                </create>
+                <write model="test_populate.product" ref="products.product_variant_ids">
+                    <field name="description" ref="caller_products" domain="[('name', '=', 'products')]"/>
+                </write>
+            </data>
+        ''')
+
+        xml.namespace_references(tree, 'catalog')
+
+        self.assertEqual(tree[0].get('id'), 'catalog/products')
+        self.assertEqual(tree[1].get('ref'), 'catalog/products.product_variant_ids')
+        self.assertEqual(tree[1][0].get('ref'), 'caller_products')
+        self.assertEqual(tree[1][0].get('domain'), "[('name', '=', 'products')]")
+        self.assertEqual(tree[0][0].get('eval'), "'products must remain text'")
+
+    def test_apply_inheritance_specs(self):
+        source = etree.fromstring('''
+            <data>
+                <create model="test_populate.product" count="2" id="products"/>
+            </data>
+        ''')
+        specs = etree.fromstring('''
+            <import>
+                <xpath expr="//create[@id='products']" position="attributes">
+                    <attribute name="count">5</attribute>
+                </xpath>
+            </import>
+        ''')
+
+        result = xml.apply_inheritance_specs(source, specs)
+
+        self.assertEqual(result[0].get('count'), '5')
+
+
 class TestStaticPopulateXMLFiles(TestCase):
 
     @staticmethod
@@ -215,7 +285,11 @@ class TestStaticPopulateXMLFiles(TestCase):
                     record_id = record.get('id', '<unknown>')
                     label = f"{manifest.name}/{relative_path}:{record_id}"
                     try:
-                        xml.parse(xml.ensure_root(self._field_xml(definition_field)))
+                        definition_xml = xml.ensure_root(self._field_xml(definition_field))
+                        definition = etree.fromstring(definition_xml)
+                        if definition.find('import') is not None:
+                            continue
+                        xml.parse(definition_xml)
                     except Exception as exc:  # noqa: BLE001
                         failures.append(f"{label}: {exc}")
                     checked += 1

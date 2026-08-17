@@ -84,6 +84,64 @@ blocks use `<arg>` declarations for generated method arguments.
 </function>
 ```
 
+### Importing Blueprints
+
+XML blueprints can compose other XML blueprints with `<import>`. The
+imported operations are inserted where the import appears and become ordinary
+jobs of the caller's session:
+
+```xml
+<create model="sale.order" count="500" id="orders">
+    ...
+</create>
+
+<import ref="product.fake_product_demo" as="catalog"/>
+
+<create model="sale.order.line" count="2000">
+    <field name="order_id" ref="orders"/>
+    <field name="product_id" ref="catalog/product_templates.product_variant_ids"/>
+</create>
+```
+
+`ref` is the fully qualified external ID of another
+`populate.blueprint`. The optional `as` attribute puts all references
+declared by that import in a namespace. `/` separates namespace components;
+`.` keeps its existing meaning of traversing a relational field:
+
+```text
+catalog/product_templates.product_variant_ids
+└──────┬───────────────┘ └─────────┬─────────┘
+  populated reference          field path
+```
+
+Imports can be customized without changing their source. The children of an
+`<import>` are applied as the same XPath inheritance specifications supported
+by `inherit_id`:
+
+```xml
+<import ref="product.fake_product_demo" as="catalog">
+    <xpath expr="//create[@id='product_templates']" position="attributes">
+        <attribute name="count">250</attribute>
+    </xpath>
+    <xpath expr="//create[@id='product_supplier_info']" position="replace"/>
+</import>
+```
+
+XPath expressions inside the import use the source blueprint's original IDs.
+After composition, further inheritance sees the namespaced IDs, such as
+`catalog/product_templates`.
+
+Imports are resolved recursively, so namespaces compose (for example,
+`sales/catalog/products`). Recursive import and inheritance combinations are
+rejected. Without `as`, imported IDs are kept unchanged and must not collide
+with IDs in the caller or another import.
+
+Imports are an XML-only feature: JSON-only blueprints cannot be imported. The
+module containing the caller must depend on the module containing the imported
+blueprint, and a source blueprint in the same module must be loaded first. New
+sessions resolve the latest definitions; existing sessions keep the jobs that
+were instantiated when the session was created.
+
 ### JSON Structure
 
 Blueprints can also be defined in JSON via the `definition_json` field

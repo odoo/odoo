@@ -123,6 +123,29 @@
         </field>
     </record>
 
+    <record id="sample_import_source_blueprint" model="populate.blueprint">
+        <field name="name">Imported catalog source</field>
+        <field name="definition_xml" type="xml">
+            <create model="test_populate.supplier" count="2" id="suppliers">
+                <field name="name" eval="'Supplier'"/>
+            </create>
+            <create model="test_populate.product" count="4" id="products">
+                <field name="name" eval="'Product'"/>
+                <field name="supplier_id" ref="suppliers"/>
+            </create>
+            <write model="test_populate.product" ref="products">
+                <field name="description" eval="'Imported product'"/>
+            </write>
+        </field>
+    </record>
+
+    <record id="sample_import_caller_blueprint" model="populate.blueprint">
+        <field name="name">Imported catalog caller</field>
+        <field name="definition_xml" type="xml">
+            <import ref="test_populate.sample_import_source_blueprint" as="catalog"/>
+        </field>
+    </record>
+
     <record id="sample_subjobs_many_records_blueprint" model="populate.blueprint">
         <field name="name">Subjobs Blueprint</field>
         <field name="definition_xml" type="xml">

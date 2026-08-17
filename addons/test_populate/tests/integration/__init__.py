@@ -1,4 +1,5 @@
 from . import (
+    test_populate_import,
     test_populate_fields,
     test_populate_model_data,
     test_populate_nonstandard,
