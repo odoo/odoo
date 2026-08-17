@@ -16,7 +16,7 @@ from odoo.tests.common import TransactionCase
 from odoo.addons.base.models.ir_qweb import QWebException, render
 from odoo.tools import misc, mute_logger
 from odoo.tools.json import scriptsafe as json_scriptsafe
-from odoo.exceptions import UserError, ValidationError, MissingError
+from odoo.exceptions import AccessError, UserError, MissingError
 
 unsafe_eval = eval
 
@@ -1527,6 +1527,31 @@ class TestQWebBasic(TransactionCase):
         # re try this rendering but raise (use cached method)
         with self.assertRaises(UserError, msg="Not Found"):
             self.env['ir.qweb']._render(-9999)
+
+    def test_error_message_9(self):
+        # Should not wrap AccessError in QWebException during _render call
+        user = self.env['res.users'].create({
+            'name': 'Test',
+            'login': 'test@example.com',
+            'groups_id': [(6, 0, [self.env.ref('base.group_public').id])],
+        })
+        partner = self.env['res.partner'].create({
+            'name': 'Restricted Partner',
+        })
+        template = self.env['ir.ui.view'].create({
+            'name': 'test',
+            'type': 'qweb',
+            'arch_db': '<t t-esc="partner.name"/>',
+        })
+        # Ensure record is not readable by the user
+        with self.assertRaises(AccessError):
+            partner.with_user(user).name
+
+        with self.assertRaises(AccessError):
+            self.env['ir.qweb']._render(
+                template.id,
+                {'partner': partner.with_user(user)},
+            )
 
     def test_call_set(self):
         view0 = self.env['ir.ui.view'].create({
