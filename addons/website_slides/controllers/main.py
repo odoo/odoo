@@ -464,6 +464,30 @@ class WebsiteSlides(WebsiteProfile):
         else:
             search_tags = request.env['slide.channel.tag']
 
+        domain_search = Domain.OR(
+            Domain(field, 'ilike', fuzzy_search_term or search)
+            for field in details[0]['search_fields']
+        ) if search else Domain.TRUE
+
+        def available_tags(tag_domain):
+            """ Return the tags used by all matching courses. """
+            grouped_tags = request.env['slide.channel']._read_group(Domain.AND(tag_domain) & domain_search, ['tag_ids'])
+            return request.env['slide.channel.tag'].union(tag for [tag] in grouped_tags if tag)
+
+        reachable_tags_by_group = dict.fromkeys(tag_groups.ids, available_tags(details[0]['base_domain'])) | {
+            group_id: available_tags(tag_domain) for group_id, tag_domain in details[0]['no_tag_domains'].items()
+        }
+
+        clicked_section_id = post.pop('pinned_section_id', '')
+        search_tags = search_tags.filtered(
+            lambda tag: str(tag.group_id.id) == clicked_section_id
+            or tag in reachable_tags_by_group.get(tag.group_id.id, tag))
+        available_tags_by_group = {
+            group.id: group.tag_ids.filtered(
+                lambda tag: tag.color and (tag in reachable_tags_by_group[group.id] or tag in search_tags))
+            for group in tag_groups
+        }
+
         render_values = self._slide_render_context_base()
         render_values.update(self._prepare_user_values(**post))
         render_values.update(self._slides_channel_user_values(
@@ -482,12 +506,16 @@ class WebsiteSlides(WebsiteProfile):
             'slide_query_url': QueryURL('/slides', ['tag']),
             'pager': self.env.website.pager(
                 url=request.httprequest.path.partition('/page/')[0],
-                url_args=request.httprequest.args.to_dict(),
+                url_args={
+                    key: value for key, value in request.httprequest.args.items()
+                    if key != 'pinned_section_id'
+                },
                 total=search_count,
                 page=page,
                 step=page_size,
                 scope=3) if page else False,
             'structured_data': channels._render_jsonld(),
+            'available_tags_by_group': available_tags_by_group,
         })
 
         return render_values
