@@ -1,4 +1,5 @@
 import { describe, expect } from "@odoo/hoot";
+import { waitUntil } from "@odoo/hoot-dom";
 import { advanceTime } from "@odoo/hoot-mock";
 import { browser } from "@web/core/browser/browser";
 import { onRpc, mountWebClient, asyncStep, waitForSteps } from "@web/../tests/web_test_helpers";
@@ -82,17 +83,14 @@ onlineTest("mesh peer to peer connections", async () => {
     }
     await Promise.all(promises);
 
-    let connectionsCount = 0;
-    for (const user of users) {
-        connectionsCount += user.p2p.peers.size;
-    }
-    expect(connectionsCount).toBe(userCount * (userCount - 1));
-    connectionsCount = 0;
+    const expectedCount = userCount * (userCount - 1);
+    const connectionCount = () => users.reduce((count, user) => count + user.p2p.peers.size, 0);
+    await waitUntil(() => connectionCount() === expectedCount, {
+        message: () => `expected ${expectedCount} connections, got ${connectionCount()}`,
+        timeout: 10_000,
+    });
     network.close();
-    for (const user of users) {
-        connectionsCount += user.p2p.peers.size;
-    }
-    expect(connectionsCount).toBe(0);
+    expect(connectionCount()).toBe(0);
 });
 
 onlineTest("connection recovery", async () => {
