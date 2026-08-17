@@ -735,6 +735,9 @@ export function useBuilderNumberInputUnits() {
             return value;
         }
         value = parseFloat(value);
+        if (comp.props.allowDecimals === false) {
+            value = Math.trunc(value);
+        }
         if (value < comp.props.min) {
             return `${comp.props.min}`;
         }
