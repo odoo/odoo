@@ -291,8 +291,9 @@ class TestWebsitePerformance(TestWebsitePerformanceCommon):
             'ir_attachment': 1,
             # `_get_serve_attachment` dispatcher fallback
         }
-        self._check_url_hot_query(self.page.url, 1, select_tables_perf)
-        self.assertEqual(self._get_url_hot_query(self.page.url), 1)
+        expected_query_count = 1
+        self._check_url_hot_query(self.page.url, expected_query_count, select_tables_perf)
+        self.assertEqual(self._get_url_hot_query(self.page.url), expected_query_count)
 
         select_tables_perf = {
             'ir_attachment': 1,
@@ -303,8 +304,9 @@ class TestWebsitePerformance(TestWebsitePerformanceCommon):
             'ir_ui_view': 1,
             # Check if `view.track` to track visitor or not
         }
-        self._check_url_hot_query(self.page.url, 3, select_tables_perf, nocache=True)
-        self.assertEqual(self._get_url_hot_query(self.page.url, nocache=True), 3)
+        expected_query_count = 3
+        self._check_url_hot_query(self.page.url, expected_query_count, select_tables_perf, nocache=True)
+        self.assertEqual(self._get_url_hot_query(self.page.url, nocache=True), expected_query_count)
 
     def test_40_perf_sql_queries_page_multi_level_menu(self):
         # menu structure should not impact SQL requests
@@ -320,8 +322,9 @@ class TestWebsitePerformance(TestWebsitePerformanceCommon):
             'ir_attachment': 1,
             # `_get_serve_attachment` dispatcher fallback
         }
-        self._check_url_hot_query(self.page.url, 1, select_tables_perf)
-        self.assertEqual(self._get_url_hot_query(self.page.url), 1)
+        expected_query_count = 1
+        self._check_url_hot_query(self.page.url, expected_query_count, select_tables_perf)
+        self.assertEqual(self._get_url_hot_query(self.page.url), expected_query_count)
 
         select_tables_perf = {
             'ir_attachment': 1,
@@ -332,8 +335,9 @@ class TestWebsitePerformance(TestWebsitePerformanceCommon):
             'website_menu': 1,
             'ir_ui_view': 1,
         }
-        self._check_url_hot_query(self.page.url, 5, select_tables_perf, nocache=True)
-        self.assertEqual(self._get_url_hot_query(self.page.url, nocache=True), 5)
+        expected_query_count = 5
+        self._check_url_hot_query(self.page.url, expected_query_count, select_tables_perf, nocache=True)
+        self.assertEqual(self._get_url_hot_query(self.page.url, nocache=True), expected_query_count)
 
 
 @tagged('-at_install', 'post_install')
