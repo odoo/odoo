@@ -790,7 +790,8 @@ class ProductProduct(models.Model):
         return fifo_stack, remaining_qty_on_first_stack_move
 
     def _update_standard_price(self, extra_value=None, extra_quantity=None):
-        # TODO: Add extra value and extra quantity kwargs to avoid total recomputation
+        if extra_value is not None or extra_quantity is not None:
+            super()._update_standard_price(extra_value=extra_value, extra_quantity=extra_quantity)
         products_by_cost_method = defaultdict(set)
         self_ctx = self.with_context(disable_auto_revaluation=True, mail_notrack=True)
         for product in self_ctx:
