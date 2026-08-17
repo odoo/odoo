@@ -1,5 +1,15 @@
 import { useLayoutEffect } from "@web/owl2/utils";
-import { Component, effect, proxy, signal, t, untrack, useProps, useEffect } from "@odoo/owl";
+import {
+    Component,
+    computed,
+    effect,
+    proxy,
+    signal,
+    t,
+    untrack,
+    useProps,
+    useEffect,
+} from "@odoo/owl";
 import { useDateTimePicker } from "@web/core/datetime/datetime_picker_hook";
 import { areDatesEqual, deserializeDate, deserializeDateTime, today } from "@web/core/l10n/dates";
 import { localization } from "@web/core/l10n/localization";
@@ -25,12 +35,12 @@ const { DateTime } = luxon;
  *  required?: boolean;
  *  rounding?: number;
  *  startDateField?: string;
- *  warnFuture?: boolean;
  *  showSeconds?: boolean;
  *  showTime?: boolean;
  *  numeric?: boolean;
  *  minPrecision?: string;
  *  maxPrecision?: string;
+ *  warning?: string;
  * }} DateTimeFieldProps
  *
  * @typedef {import("@web/core/datetime/datetime_picker").DateTimePickerProps} DateTimePickerProps
@@ -47,11 +57,11 @@ export const dateTimeFieldProps = {
     rounding: t.number().optional(),
     startDateField: t.string().optional(),
     numeric: t.boolean().optional(false),
-    warnFuture: t.boolean().optional(),
     showSeconds: t.boolean().optional(false),
     showTime: t.boolean().optional(true),
     minPrecision: t.selection(["days", "months", "years", "decades"]).optional(),
     maxPrecision: t.selection(["days", "months", "years", "decades"]).optional(),
+    warning: t.selection(["none", "future", "past"]).optional(),
 };
 
 /** @extends {Component<DateTimeFieldProps>} */
@@ -63,6 +73,26 @@ export class DateTimeField extends Component {
     rootRef = signal.ref();
     startDateRef = signal.ref();
     endDateRef = signal.ref();
+
+    futureWarningMsg = _t("This date is in the future");
+    pastWarningMsg = _t("This date is in the past");
+
+    warnings = computed(() => {
+        if (!this.props.warning || this.props.warning === "none") {
+            return [];
+        }
+        const referenceDate = this.field.type === "datetime" ? DateTime.local() : today();
+        return this.values.map((val) => {
+            if (!val) {
+                return false;
+            }
+            return this.props.warning === "future" ? val > referenceDate : val < referenceDate;
+        });
+    });
+
+    warningMessage = computed(() =>
+        this.props.warning === "future" ? this.futureWarningMsg : this.pastWarningMsg
+    );
 
     //-------------------------------------------------------------------------
     // Getters
@@ -179,8 +209,6 @@ export class DateTimeField extends Component {
         );
 
         useEffect(() => this.triggerIsDirty());
-
-        this.futureWarningMsg = _t("This date is in the future");
     }
 
     //-------------------------------------------------------------------------
@@ -311,8 +339,15 @@ export class DateTimeField extends Component {
     /**
      * @param {number} index
      */
-    isDateInTheFuture(index) {
-        return this.values[index] > today();
+    hasWarning(index) {
+        return this.warnings()[index];
+    }
+
+    /**
+     * @param {number} index
+     */
+    getWarningMessage(index) {
+        return this.hasWarning(index) ? this.warningMessage() : "";
     }
 
     /**
@@ -422,12 +457,6 @@ export const dateField = {
             help: _t(`ISO-formatted date (e.g. "2018-12-31") or "%s".`, "today"),
         },
         {
-            label: _t("Warning for future dates"),
-            name: "warn_future",
-            type: "boolean",
-            help: _t(`Displays a warning icon if the input dates are in the future.`),
-        },
-        {
             label: _t("Minimal precision"),
             name: "min_precision",
             type: "selection",
@@ -469,6 +498,18 @@ export const dateField = {
             ],
         },
         {
+            label: _t("Warning"),
+            name: "warning",
+            type: "selection",
+            help: _t(`Displays a warning icon for dates in the future or in the past.`),
+            default: "none",
+            choices: [
+                { label: _t("No warning"), value: "none" },
+                { label: _t("Future date"), value: "future" },
+                { label: _t("Past date"), value: "past" },
+            ],
+        },
+        {
             label: _t("Dynamic Placeholder"),
             name: "placeholder_field",
             type: "field",
@@ -486,9 +527,9 @@ export const dateField = {
         rounding: options.rounding && parseInt(options.rounding, 10),
         startDateField: options[START_DATE_FIELD_OPTION],
         numeric: options.numeric,
-        warnFuture: Boolean(options.warn_future),
         minPrecision: options.min_precision,
         maxPrecision: options.max_precision,
+        warning: options.warning ?? "none",
     }),
     listViewWidth: ({ options }) =>
         options.numeric ? FIELD_WIDTHS.numeric_date : FIELD_WIDTHS.date,

@@ -318,7 +318,7 @@ test("date field with label opens datepicker on click", async () => {
     expect(".o_datetime_picker").toHaveCount(1);
 });
 
-test("date field with warn_future option ", async () => {
+test("date field with warning option: future date", async () => {
     Partner._records[0] = { id: 1 };
     await mountView({
         type: "form",
@@ -326,7 +326,7 @@ test("date field with warn_future option ", async () => {
         resId: 1,
         arch: `
             <form>
-                <field name="date" options="{'warn_future': true}" />
+                <field name="date" options="{'warning': 'future'}" />
             </form>`,
     });
 
@@ -338,11 +338,28 @@ test("date field with warn_future option ", async () => {
     await contains(getPickerCell("22")).click();
     expect(".o_field_date button").toHaveClass("text-danger");
     await contains(".o_field_date button").click();
+    expect(".o_field_date input").toHaveAttribute("title", "This date is in the future");
     await fieldInput("date").clear();
     expect(".o_field_date input").not.toHaveClass("text-danger");
 });
 
-test("date field with warn_future option: do not overwrite datepicker option", async () => {
+test("date field with warning option: past date", async () => {
+    await mountView({
+        type: "form",
+        resModel: "res.partner",
+        resId: 1,
+        arch: `
+            <form>
+                <field name="date" options="{'warning': 'past'}" />
+            </form>`,
+    });
+
+    expect(".o_field_date button").toHaveClass("text-danger");
+    await contains(".o_field_date button").click();
+    expect(".o_field_date input").toHaveAttribute("title", "This date is in the past");
+});
+
+test("date field with warning option: do not overwrite datepicker option", async () => {
     Partner._onChanges.date = () => {};
 
     await mountView({
@@ -354,7 +371,7 @@ test("date field with warn_future option: do not overwrite datepicker option", a
                 <form>
                     <group>
                         <field name="char_field" />
-                        <field name="date" options="{'warn_future': true}" />
+                        <field name="date" options="{'warning': 'future'}" />
                     </group>
                 </form>`,
     });

@@ -1156,13 +1156,13 @@
                             <group id="header_right_group">
                                 <label for="invoice_date" string="Invoice Date" style="font-weight:bold;"
                                        invisible="move_type not in ('out_invoice', 'out_refund', 'out_receipt')"/>
-                                <field name="invoice_date" nolabel="1" options="{'warn_future': true}"
+                                <field name="invoice_date" nolabel="1" options="{'warning': 'future'}"
                                        invisible="move_type not in ('out_invoice', 'out_refund', 'out_receipt')"
                                        readonly="state != 'draft'" placeholder="Today"/>
 
                                 <label for="invoice_date" string="Bill Date" style="font-weight:bold;"
                                        invisible="move_type not in ('in_invoice', 'in_refund', 'in_receipt')"/>
-                                <field name="invoice_date" nolabel="1" options="{'warn_future': true}"
+                                <field name="invoice_date" nolabel="1" options="{'warning': 'future'}"
                                        invisible="move_type not in ('in_invoice', 'in_refund', 'in_receipt')"
                                        required="move_type in ('in_invoice', 'in_refund', 'in_receipt')"
                                        readonly="state != 'draft'"/>
