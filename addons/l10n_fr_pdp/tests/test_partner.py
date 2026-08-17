@@ -79,6 +79,64 @@ class TestL10nFrPdpPartner(TestL10nFrPdpCommon, MailCase):
             'peppol_eas': '0225',
         }])
 
+        partner_siret = self.env["res.partner"].create({
+            'name': 'SUPER FRENCH PARTNER SIRET',
+            'street': 'Rue Fabricy, 16',
+            'zip': '59000',
+            'city': 'Lille',
+            'country_id': self.env.ref('base.fr').id,
+            'phone': '+33 1 23 45 67 89',
+            'vat': 'FR23334175221',
+            'additional_identifiers': {'FR_SIRET': '96851575905808'},
+            'invoice_edi_format': 'ubl_21_fr',
+        })
+        self.assertRecordValues(partner_siret, [{
+            'peppol_endpoint': '968515759',
+            'peppol_eas': '0225',
+        }])
+
+        partner_siren = self.env["res.partner"].create({
+            'name': 'SUPER FRENCH PARTNER SIREN',
+            'country_id': self.env.ref('base.fr').id,
+            'vat': 'FR23334175221',
+            'additional_identifiers': {'FR_SIREN': '968515759'},
+            'invoice_edi_format': 'ubl_21_fr',
+        })
+        self.assertRecordValues(partner_siren, [{
+            'peppol_endpoint': '968515759',
+            'peppol_eas': '0225',
+        }])
+
+        partner_ctc = self.env["res.partner"].create({
+            'name': 'SUPER FRENCH PARTNER CTC',
+            'country_id': self.env.ref('base.fr').id,
+            'vat': 'FR23334175221',
+            'additional_identifiers': {'FR_CTC': '968515759_96851575905808'},
+            'invoice_edi_format': 'ubl_21_fr',
+        })
+        self.assertRecordValues(partner_ctc, [{
+            'peppol_endpoint': '968515759_96851575905808',
+            'peppol_eas': '0225',
+        }])
+
+        partner_vat = self.env["res.partner"].create({
+            'name': 'SUPER FRENCH PARTNER CTC',
+            'country_id': self.env.ref('base.fr').id,
+            'vat': 'FR23334175221',
+            'invoice_edi_format': 'ubl_21_fr',
+            'peppol_endpoint': 'FR23334175221',
+            'peppol_eas': '9957',
+        })
+        self.assertRecordValues(partner_vat, [{
+            'peppol_endpoint': 'FR23334175221',
+            'peppol_eas': '9957',
+        }])
+        partner_vat.additional_identifiers = {'FR_SIREN': '968515759'}
+        self.assertRecordValues(partner_vat, [{
+            'peppol_endpoint': '968515759',
+            'peppol_eas': '0225',
+        }])
+
     def test_pdp_edi_formats(self):
         partner = self.partner_a
         partner.invoice_sending_method = 'peppol'
