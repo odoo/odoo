@@ -140,8 +140,9 @@
                             </div>
                             <group class="d-flex flex-column gap-md-0 w-100">
                                 <label for="name" class="d-md-none"/>
-                                <h1 class="o_employee_form_header_info">
+                                <h1 class="o_employee_form_header_info d-flex flex-row align-items-center gap-2">
                                     <field name="name" placeholder="Employee's Name (e.g. John Doe, ...)" required="True"/>
+                                    <widget name="hr_employee_chat" options="{'show_label': True}" invisible="not user_id"/>
                                 </h1>
                                 <label for="work_email" class="d-md-none"/>
                                 <div class="d-flex align-items-baseline w-md-50 gap-2">
