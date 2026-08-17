@@ -283,7 +283,7 @@ export class StyleAction extends BuilderAction {
             }
             return value;
         } else if (styleName === "row-gap" || styleName === "column-gap") {
-            return parseInt(getStyleValue(el, styleName)) || 0;
+            return parseFloat(getStyleValue(el, styleName)) || 0;
         } else if (styleName === "width") {
             return el.style.width;
         } else if (styleName === "background-color") {
