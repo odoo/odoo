@@ -1,7 +1,6 @@
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
-import { renderToElement } from "@web/core/utils/render";
 
 /**
  * @typedef { Object } CookiesBarOptionShared
@@ -30,12 +29,13 @@ export class CookiesBarOptionPlugin extends Plugin {
 
 export class SelectLayoutAction extends BuilderAction {
     static id = "selectLayout";
-    static dependencies = ["CookiesBarOptionPlugin"];
+    static dependencies = ["CookiesBarOptionPlugin", "websiteBridge"];
     apply({ editingElement, value: layout }) {
         const savedSelectors = this.dependencies.CookiesBarOptionPlugin.getSavedSelectors();
-        const templateEl = renderToElement(`website.cookies_bar.${layout}`, {
-            websiteId: this.services.website.currentWebsite.id,
-        });
+        const templateEl = this.dependencies.websiteBridge.renderToElement(
+            `website.cookies_bar.${layout}`,
+            { websiteId: this.services.website.currentWebsite.id }
+        );
         const contentEl = editingElement.querySelector(".modal-content");
 
         // The selectors' order is significant since some selectors

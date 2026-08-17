@@ -53,6 +53,7 @@ describe("Cookies bar popup options", () => {
         await setupWebsiteBuilder(cookiesBarTemplate, {
             loadIframeBundles: true,
             loadAssetsFrontendJS: true,
+            loadIframeBuilderTemplates: true,
         });
         await contains(".o_we_invisible_el_panel .o_we_invisible_entry").click();
         await contains(".dropdown-toggle:contains('Discrete')").click();
@@ -80,6 +81,7 @@ describe("Cookies bar popup options", () => {
         const { getEditor } = await setupWebsiteBuilder(cookiesBarTemplate, {
             loadIframeBundles: true,
             loadAssetsFrontendJS: true,
+            loadIframeBuilderTemplates: true,
         });
         const editor = getEditor();
         await contains(".o_we_invisible_el_panel .o_we_invisible_entry").click();
