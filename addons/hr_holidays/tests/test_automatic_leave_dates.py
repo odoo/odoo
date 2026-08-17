@@ -30,6 +30,7 @@ class TestAutomaticLeaveDates(TestHrHolidaysCommon):
         with Form(self.env['hr.leave'].with_context(default_employee_id=employee.id, leave_fast_create=True)) as leave_form:
             leave_form.work_entry_type_id = self.work_entry_type
             leave_form.request_date_from = date(2019, 9, 2)
+            leave_form.request_date_to = date(2019, 9, 2)
             leave_form.request_duration = 'am'
 
         leave = leave_form.record

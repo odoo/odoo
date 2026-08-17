@@ -322,7 +322,7 @@ class HrLeave(models.Model):
     @api.depends(
         'virtual_remaining_leaves', 'number_of_days', 'number_of_hours',
         'work_entry_type_id', 'employee_id', 'request_date_from', 'request_date_to',
-        'last_several_days', 'work_entry_type_request_unit'
+        'work_entry_type_request_unit'
     )
     @api.depends_context('default_is_multi_employee')
     def _compute_allocation_warning(self):
@@ -945,10 +945,11 @@ class HrLeave(models.Model):
         for holiday in self:
             holiday.company_id = holiday.employee_company_id or holiday.department_id.company_id or self.env.company
 
-    @api.depends('number_of_days')
+    @api.depends('request_date_from', 'request_date_to')
     def _compute_last_several_days(self):
         for holiday in self:
-            holiday.last_several_days = holiday.number_of_days > 1
+            holiday.last_several_days = holiday.request_date_from and holiday.request_date_to \
+                                        and holiday.request_date_from != holiday.request_date_to
 
     @api.depends('tz')
     @api.depends_context('uid')
