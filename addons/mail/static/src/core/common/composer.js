@@ -149,7 +149,7 @@ export class Composer extends Component {
             closeOnClickAway: false,
             closeOnEscape: false,
             position: "top-end",
-            popoverClass: "dropdown-menu bg-view overflow-visible o-rounded-bubble mx-1",
+            popoverClass: "dropdown-menu o-dropdown--menu bg-view overflow-visible o-rounded-bubble mx-1",
         });
         this.fullComposerBus = new EventBus();
         this.selection = useSelection({
