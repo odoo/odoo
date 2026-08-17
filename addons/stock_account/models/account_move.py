@@ -38,10 +38,7 @@ class AccountMove(models.Model):
         if self.env.context.get('move_reverse_cancel'):
             return super()._post(soft)
 
-        # Create additional COGS lines for customer invoices.
-        self.env['account.move.line'].create(self._stock_account_prepare_realtime_out_lines_vals())
-
-        # Post entries.
+        # Post entries. (COGS lines are created by the base `_create_cogs_lines`.)
         res = super()._post(soft)
 
         self.line_ids.cogs_move_ids.filtered(lambda m: m.is_in or m.is_dropship)._set_value()
@@ -50,10 +47,6 @@ class AccountMove(models.Model):
 
     def button_draft(self):
         res = super().button_draft()
-
-        # Unlink the COGS lines generated during the 'post' method.
-        with self.env.protecting(self.env['account.move']._get_protected_vals({}, self)):
-            self.mapped('line_ids').filtered(lambda line: line.display_type == 'cogs').unlink()
 
         self.line_ids.cogs_move_ids.filtered(lambda m: m.is_in or m.is_dropship)._set_value()
         return res
@@ -73,51 +66,6 @@ class AccountMove(models.Model):
     # -------------------------------------------------------------------------
     # COGS METHODS
     # -------------------------------------------------------------------------
-
-    def _stock_account_prepare_realtime_out_lines_vals(self):
-        ''' Prepare values used to create the journal items (account.move.line) corresponding to the Cost of Good Sold
-        lines (COGS) for customer invoices.
-
-        Example:
-
-        Buy a product having a cost of 9 being a storable product and having a perpetual valuation in FIFO.
-        Sell this product at a price of 10. The customer invoice's journal entries looks like:
-
-        Account                                     | Debit | Credit
-        ---------------------------------------------------------------
-        200000 Product Sales                        |       | 10.0
-        ---------------------------------------------------------------
-        101200 Account Receivable                   | 10.0  |
-        ---------------------------------------------------------------
-
-        This method computes values used to make two additional journal items:
-
-        ---------------------------------------------------------------
-        500000 COGS (stock variation)               | 9.0   |
-        ---------------------------------------------------------------
-        110100 Stock Account                        |       | 9.0
-        ---------------------------------------------------------------
-
-        Note: COGS are only generated for customer invoices except refund made to cancel an invoice.
-
-        :return: A list of Python dictionary to be passed to env['account.move.line'].create.
-        '''
-        lines_vals_list = []
-        for move in self:
-            # Make the loop multi-company safe when accessing models like product.product
-            move = move.with_company(move.company_id)
-            if not move.is_sale_document(include_receipts=True):
-                continue
-            anglo_saxon_price_ctx = move._get_anglo_saxon_price_ctx()
-            for line in move.invoice_line_ids:
-                lines_vals_list += line.with_context(anglo_saxon_price_ctx)._stock_account_prepare_cogs_vals()
-        return lines_vals_list
-
-    def _get_anglo_saxon_price_ctx(self):
-        """ To be overriden in modules overriding _get_cogs_value
-        to optimize computations that only depend on account.move and not account.move.line
-        """
-        return self.env.context
 
     def _update_standard_price(self, reverse=False):
         return
