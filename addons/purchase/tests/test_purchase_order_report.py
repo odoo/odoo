@@ -278,3 +278,34 @@ class TestPurchaseOrderReport(AccountTestInvoicingCommon):
             {'product_id': product_01.id, 'volume': 20.0, 'weight': 20.0, 'price_average': 200.0, 'qty_to_be_billed': 2.0},
             {'product_id': product_02.id, 'volume': 60.0, 'weight': 60.0, 'price_average': 400.0, 'qty_to_be_billed': 6.0},
         ])
+
+    def test_purchase_report_multi_company_currency(self):
+        other_company = self.env['res.company'].create({
+            'name': 'Other Company',
+            'currency_id': self.other_currency.id,
+        })
+        self.env.user.company_ids |= other_company
+
+        self.assertNotEqual(other_company.currency_id, self.env.company.currency_id)
+
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'product_qty': 1.0,
+                    'price_unit': 100.0,
+                }),
+            ],
+        })
+        po.flush_model()
+
+        report = self.env['purchase.report'].with_context(
+            allowed_company_ids=(self.env.company | other_company).ids,
+        ).formatted_read_group(
+            [('order_id', '=', po.id)],
+            ['order_id'],
+            ['qty_ordered:sum'],
+        )
+
+        self.assertEqual(report[0]['qty_ordered:sum'], 1.0)
