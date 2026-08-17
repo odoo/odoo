@@ -1,6 +1,5 @@
 import { _t } from "@web/core/l10n/translation";
 import { localeCompare } from "@web/core/l10n/utils";
-import { renderToElement } from "@web/core/utils/render";
 import { generateHTMLId } from "@web/core/utils/strings";
 import { isSmallInteger } from "@html_builder/utils/utils";
 
@@ -91,7 +90,7 @@ export function getQuotesEncodedName(name) {
  * @param {Object} field
  * @returns {HTMLElement}
  */
-export function renderField(field, resetId = false) {
+export function renderField(field, renderToElement) {
     if (!field.id) {
         field.id = generateHTMLId();
     }
@@ -581,10 +580,10 @@ export function setVisibilityDependency(fieldEl, value) {
  * @param {HTMLElement} fieldEl - The original field element to be re-rendered.
  * @param {Object<string, Object>} fields - A map of all fields in the form.
  */
-export function rerenderField(fieldEl, fields) {
+export function rerenderField(fieldEl, renderToElement, fields) {
     const field = getActiveField(fieldEl, { fields });
     delete field.id;
-    const newFieldEl = renderField(field);
+    const newFieldEl = renderField(field, renderToElement);
     replaceFieldElement(fieldEl, newFieldEl);
 }
 
