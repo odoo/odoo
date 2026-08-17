@@ -458,6 +458,23 @@ class TestPosMrp(CommonPosMrpTest):
                         'lot_name': 'lot',
                     })],
                 }),
+                Command.create({
+                    'product_id': kit.product_variant_id.id,
+                    'price_unit': 10.0,
+                    'qty': 1.0,
+                    'price_subtotal': 10.0,
+                    'price_subtotal_incl': 10.0,
+                }),
+                Command.create({
+                    'product_id': component.product_variant_id.id,
+                    'price_unit': 5.0,
+                    'qty': 2.0,
+                    'price_subtotal': 10.0,
+                    'price_subtotal_incl': 10.0,
+                    'pack_lot_ids': [Command.create({
+                        'lot_name': 'lot',
+                    })],
+                }),
             ],
             'amount_total': 20.0,
             'amount_tax': 0.0,
@@ -471,8 +488,8 @@ class TestPosMrp(CommonPosMrpTest):
         })
         order_payment.with_context(**payment_context).check()
 
-        self.assertEqual(order.picking_ids.move_ids[0].quantity, 2)
-        self.assertEqual(order.picking_ids.move_ids[1].quantity, 0.5)
+        self.assertEqual(order.picking_ids.move_ids[0].quantity, 4)
+        self.assertEqual(order.picking_ids.move_ids[1].quantity, 1)
 
     def test_bom_kit_different_uom_invoice_valuation_no_invoice(self):
         """This test make sure that when a kit is made of product using UoM A but the bom line uses UoM B
