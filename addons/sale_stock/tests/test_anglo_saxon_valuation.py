@@ -624,7 +624,12 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
         self.product_avco_auto.invoice_policy = 'delivery'
         self.product_avco_auto.standard_price = 10
 
-        self.env['stock.quant']._update_available_quantity(self.product_avco_auto, self.stock_location, 2, owner_id=self.partner_b)
+        self.env['stock.quant'].create({
+            'product_id': self.product_avco_auto.id,
+            'location_id': self.stock_location.id,
+            'owner_id': self.partner_b.id,
+            'inventory_quantity': 2,
+        }).action_apply_inventory()
 
         sale_order = self._so_deliver(self.product_avco_auto, 2, 12, picking=False)
         sale_order.picking_ids.move_line_ids.write({'quantity': 2, 'picked': True})
@@ -639,8 +644,6 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
             # pylint: disable=bad-whitespace
             {'account_id': self.account_income.id,     'debit': 0,     'credit': 24},
             {'account_id': self.account_receivable.id,  'debit': 24,    'credit': 0},
-            {'account_id': self.account_stock_valuation.id, 'debit': 0, 'credit': 0},
-            {'account_id': self.account_expense.id, 'debit': 0, 'credit': 0},
         ])
 
     # -------------------------------------------------------------------------

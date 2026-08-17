@@ -107,13 +107,6 @@ class AccountMove(models.Model):
             if effective_date_res:
                 move.delivery_date = fields.Datetime.context_timestamp(self, effective_date_res)
 
-    def _get_anglo_saxon_price_ctx(self):
-        ctx = super()._get_anglo_saxon_price_ctx()
-        move_is_downpayment = self.invoice_line_ids.filtered(
-            lambda line: any(line.sale_line_ids.mapped("is_downpayment"))
-        )
-        return dict(ctx, move_is_downpayment=move_is_downpayment)
-
     def _get_protected_vals(self, vals, records):
         res = super()._get_protected_vals(vals, records)
         # `delivery_date` should be protected on any account.move/account.move.line write

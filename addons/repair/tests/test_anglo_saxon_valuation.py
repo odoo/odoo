@@ -105,7 +105,11 @@ class TestAngloSaxonValuationNoSkip(TestStockValuationCommon):
            when invoiced"""
 
         self.product_fifo_auto.taxes_id = False
-        self.env['stock.quant']._update_available_quantity(self.product_fifo_auto, self.warehouse.lot_stock_id, 5)
+        self.env['stock.quant'].create({
+            'product_id': self.product_fifo_auto.id,
+            'location_id': self.warehouse.lot_stock_id.id,
+            'inventory_quantity': 5,
+        }).action_apply_inventory()
 
         self.account_inventory = self.env['account.account'].sudo().create({
             'name': 'Inventory Account',
@@ -134,11 +138,11 @@ class TestAngloSaxonValuationNoSkip(TestStockValuationCommon):
 
         invoice = so._create_invoices()
         invoice.action_post()
-        self.assertRecordValues(invoice.line_ids, [
-            {'debit': 0.0, 'credit': 20.0, 'account_id': self.account_income.id},
+        self.assertRecordValues(invoice.line_ids.sorted('account_id'), [
+            {'debit': 0.0, 'credit': 10.0, 'account_id': self.account_stock_valuation.id},
             {'debit': 20.0, 'credit': 0.0, 'account_id': self.account_receivable.id},
-            {'debit': 0.0, 'credit': 0.0, 'account_id': self.account_stock_valuation.id},
-            {'debit': 0.0, 'credit': 0.0, 'account_id': self.account_expense.id},
+            {'debit': 0.0, 'credit': 20.0, 'account_id': self.account_income.id},
+            {'debit': 10.0, 'credit': 0.0, 'account_id': self.account_expense.id},
         ])
         self.assertRecordValues(ro.move_ids.account_move_id.line_ids, [
             {'debit': 0.0, 'credit': 10.0, 'account_id': self.account_stock_valuation.id},

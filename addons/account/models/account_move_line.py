@@ -438,6 +438,11 @@ class AccountMoveLine(models.Model):
         help="The optional quantity expressed by this line, eg: number of product sold. "
              "The quantity is not a legal requirement but is very useful for some reports.",
     )
+    cogs_origin_id = fields.Many2one(  # technical field used to keep track in the originating line of the anglo-saxon lines
+        comodel_name="account.move.line",
+        copy=False,
+        index="btree_not_null",
+    )
     date_maturity = fields.Date(
         string='Due Date',
         index=True,
@@ -757,6 +762,8 @@ class AccountMoveLine(models.Model):
                     line.account_id = accounts['income'] or line.account_id
                 elif line.move_id.is_purchase_document(include_receipts=True):
                     line.account_id = accounts['expense'] or line.account_id
+                    if accounts['stock_valuation'] and line._use_inventory_valuation():
+                        line.account_id = accounts['stock_valuation']
         for line in self:
             if not line.account_id and line.display_type not in ('line_section', 'line_subsection', 'line_note'):
                 previous_two_accounts = line.move_id.line_ids.filtered(
@@ -3760,6 +3767,23 @@ class AccountMoveLine(models.Model):
             elif aml.move_id.move_type == 'out_refund':
                 qties[aml.product_id] -= qty
         return qties
+
+    def _get_cogs_value(self):
+        """ Get the COGS price unit in the product's default unit of measure.
+        """
+        self.ensure_one()
+        return self.product_id.standard_price
+
+    def _use_inventory_valuation(self):
+        """ Whether this line's product is valued in real time in the stock valuation account:
+        used to redirect a purchase line to that account, and to decide whether a sale/purchase
+        line should get a COGS/price-difference entry at all. Overridden by `stock_account` to
+        exclude dropshipped (or, via `repair`, already-accounted) lines, which never touch stock.
+        """
+        self.ensure_one()
+        if self.product_id.valuation != 'real_time':
+            return False
+        return bool(self.product_id.is_storable)
 
     def _get_lock_date_protected_fields(self):
         """ Returns the names of the fields that should be protected by the accounting fiscal year and tax lock dates

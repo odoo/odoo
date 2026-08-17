@@ -3817,7 +3817,7 @@ class AccountMove(models.Model):
                 vals['line_ids'] = [
                     (command, _id, line_vals)
                     for command, _id, line_vals in vals['line_ids']
-                    if command == Command.CREATE
+                    if command == Command.CREATE and line_vals.get('display_type') != 'cogs'
                 ]
             elif move.move_type == 'entry':
                 if 'partner_id' not in vals or not self.env.context.get('move_reverse_cancel', False):
@@ -5947,6 +5947,99 @@ class AccountMove(models.Model):
             and aml.display_type not in ('line_section', 'line_subsection', 'line_note')
         )
 
+    def _create_cogs_lines(self):
+        ''' Create the journal items (account.move.line) corresponding to the Cost of Good Sold
+        lines (COGS) for customer invoices.
+
+        Example:
+
+        Buy a product having a cost of 9 being a storable product and having a perpetual valuation in FIFO.
+        Sell this product at a price of 10. The customer invoice's journal entries looks like:
+
+        Account                                     | Debit | Credit
+        ---------------------------------------------------------------
+        200000 Product Sales                        |       | 10.0
+        ---------------------------------------------------------------
+        101200 Account Receivable                   | 10.0  |
+        ---------------------------------------------------------------
+
+        This method creates two additional journal items:
+
+        ---------------------------------------------------------------
+        500000 COGS (stock variation)               | 9.0   |
+        ---------------------------------------------------------------
+        110100 Stock Account                        |       | 9.0
+        ---------------------------------------------------------------
+
+        Note: COGS are only generated for customer invoices except refund made to cancel an invoice.
+        '''
+        lines_vals_list = []
+
+        price_unit_prec = self.env['decimal.precision'].precision_get('Product Price')
+        for move in self:
+
+            # Make the loop multi-company safe when accessing models like product.product
+            move = move.with_company(move.company_id)
+
+            if not move.is_sale_document(include_receipts=True):
+                continue
+
+
+            for line in move.invoice_line_ids:
+                # Filter out lines being not eligible for COGS.
+                if not line._use_inventory_valuation():
+                    continue
+                # Retrieve accounts needed to generate the COGS.
+                accounts = line.product_id.product_tmpl_id.get_product_accounts(fiscal_pos=move.fiscal_position_id)
+                stock_account = accounts['stock_valuation']
+                credit_expense_account = accounts['expense'] or move.journal_id.default_account_id
+                if not stock_account or not credit_expense_account:
+                    continue
+
+                # Compute accounting fields.
+                sign = -1 if move.move_type == 'out_refund' else 1
+                # `_get_cogs_value` always returns a price in the company currency (standard price,
+                # or FIFO/AVCO cost from the stock valuation layers), so the resulting amount below
+                # is a `balance`, not an `amount_currency`: let the ORM convert it using the move's
+                # currency_rate instead of assigning it to amount_currency directly.
+                price_unit = line._get_cogs_value()
+                balance = sign * line.product_uom_id._compute_quantity(line.quantity, line.product_id.uom_id) * price_unit
+
+                if move.company_currency_id.is_zero(balance) or float_is_zero(price_unit, precision_digits=price_unit_prec):
+                    continue
+
+                common_vals = move._get_cogs_common_vals(line)
+                # Add interim account line.
+                lines_vals_list.append({
+                    **common_vals,
+                    'price_unit': price_unit,
+                    'balance': -balance,
+                    'account_id': stock_account.id,
+                })
+
+                # Add expense account line.
+                lines_vals_list.append({
+                    **common_vals,
+                    'price_unit': -price_unit,
+                    'balance': balance,
+                    'account_id': credit_expense_account.id,
+                })
+        return self.env['account.move.line'].create(lines_vals_list)
+
+    def _get_cogs_common_vals(self, line):
+        return {
+            'name': line.name[:64] if line.name else '',
+            'move_id': self.id,
+            'partner_id': self.commercial_partner_id.id,
+            'product_id': line.product_id.id,
+            'product_uom_id': line.product_uom_id.id,
+            'quantity': line.quantity,
+            'analytic_distribution': line.analytic_distribution,
+            'display_type': 'cogs',
+            'tax_ids': [],
+            'cogs_origin_id': line.id,
+        }
+
     def _update_qty_available(self, reverse=False):
         for move in self:
             if move.move_type not in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund'):
@@ -6167,6 +6260,9 @@ class AccountMove(models.Model):
 
         to_post._update_standard_price()
         to_post._update_qty_available()
+
+        if not self.env.context.get('move_reverse_cancel'):
+            to_post._create_cogs_lines()
 
         if not self.env.user.has_group('account.group_partial_purchase_deductibility') and \
                 self.filtered(lambda move: move.move_type == 'in_invoice' and move.invoice_line_ids.filtered(lambda l: l.deductible_percentage != 1)):
@@ -6735,6 +6831,8 @@ class AccountMove(models.Model):
         posted_moves._update_standard_price(reverse=True)
         posted_moves._update_qty_available(reverse=True)
         self.state = 'draft'
+        with self.env.protecting(self.env['account.move']._get_protected_vals({}, self)):
+            self.line_ids.filtered(lambda line: line.display_type == 'cogs').unlink()
         self.sending_data = False
 
         self._detach_attachments()
