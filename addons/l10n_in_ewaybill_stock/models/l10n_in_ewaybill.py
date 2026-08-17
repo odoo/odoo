@@ -38,14 +38,10 @@ class L10nInEwaybill(models.Model):
     @api.depends('account_move_id', 'picking_id')
     def _compute_duplicate_ewaybill_ids(self):
         for ewaybill in self:
-            duplicates = self.env['l10n.in.ewaybill']
-            if ewaybill.account_move_id:
-                if 'sale_line_ids' in ewaybill.account_move_id.line_ids._fields:
-                    duplicates = ewaybill.account_move_id.line_ids.sale_line_ids.order_id.picking_ids.l10n_in_ewaybill_ids
-            else:
-                if 'sale_id' in ewaybill.picking_id._fields:
-                    duplicates = ewaybill.picking_id.sale_id.invoice_ids.l10n_in_ewaybill_ids
-            ewaybill.duplicate_ewaybill_ids = duplicates.filtered(lambda ewb: ewb.state in ('generated', 'challan'))
+            stock_moves = ewaybill.account_move_id.line_ids._get_stock_moves()
+            invoices = ewaybill.picking_id.move_ids._get_related_invoices()
+            duplicates = stock_moves.picking_id.l10n_in_ewaybill_ids | invoices.l10n_in_ewaybill_ids
+            ewaybill.duplicate_ewaybill_ids = (duplicates - ewaybill).filtered(lambda e: e.state != 'cancel')
 
     @api.depends('name', 'state')
     def _compute_display_name(self):
