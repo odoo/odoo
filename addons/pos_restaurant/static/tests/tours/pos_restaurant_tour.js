@@ -308,6 +308,7 @@ registry.category("web_tour.tours").add("OrderTrackingTour", {
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
             FeedbackScreen.isShown(),
+            FeedbackScreen.isContinueEnabled(),
         ].flat(),
 });
 registry.category("web_tour.tours").add("CrmTeamTour", {
