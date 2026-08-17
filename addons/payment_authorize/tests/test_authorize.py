@@ -2,6 +2,8 @@
 
 from unittest.mock import patch
 
+import requests
+
 from odoo.tests import tagged
 from odoo.tools import mute_logger
 
@@ -61,6 +63,41 @@ class AuthorizeTest(AuthorizeCommon):
                 }
             })
         self.assertEqual(amount_data, None)  # Amount validation is skipped.
+
+    @mute_logger('odoo.addons.payment_authorize.models.payment_transaction')
+    def test_amount_validation_is_skipped_when_transaction_details_request_fails(self):
+        """Test that a network error fetching details skips amount validation."""
+        tx = self._create_transaction('direct')
+        with patch(
+            'odoo.addons.payment_authorize.models.authorize_request.AuthorizeAPI'
+            '.get_transaction_details',
+            side_effect=requests.exceptions.ConnectionError("timeout"),
+        ):
+            amount_data = tx._extract_amount_data({
+                'response': {
+                    'x_response_code': '1',
+                    'x_trans_id': '60012345678',
+                },
+            })
+        self.assertEqual(amount_data, None)  # Amount validation is skipped.
+
+    @mute_logger('odoo.addons.payment_authorize.models.payment_transaction')
+    def test_processing_succeeds_when_transaction_details_request_fails(self):
+        """An already-approved payment should still be confirmed if details fetch fails."""
+        tx = self._create_transaction('direct')
+        with patch(
+            'odoo.addons.payment_authorize.models.authorize_request.AuthorizeAPI'
+            '.get_transaction_details',
+            side_effect=requests.exceptions.ConnectionError("timeout"),
+        ):
+            tx._process('authorize', {
+                'response': {
+                    'x_response_code': '1',
+                    'x_type': 'auth_capture',
+                    'x_trans_id': '60012345678',
+                },
+            })
+        self.assertEqual(tx.state, 'done')
 
     def test_voiding_confirmed_tx_cancels_it(self):
         """ Test that voiding a transaction cancels it even if it's already confirmed. """
