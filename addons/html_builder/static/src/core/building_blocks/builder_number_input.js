@@ -27,11 +27,13 @@ export class BuilderNumberInput extends Component {
         max: { type: Number, optional: true },
         composable: { type: Boolean, optional: true },
         applyWithUnit: { type: Boolean, optional: true },
+        allowDecimals: { type: Boolean, optional: true },
     };
     static components = { BuilderComponent, BuilderTextInputBase };
     static defaultProps = {
         composable: false,
         applyWithUnit: true,
+        allowDecimals: true,
         default: 0,
     };
 
@@ -96,7 +98,7 @@ export class BuilderNumberInput extends Component {
         if (!value && value !== 0) {
             return value;
         }
-        value = parseFloat(value);
+        value = this.props.allowDecimals ? parseFloat(value) : parseInt(value);
         if (value < this.props.min) {
             return `${this.props.min}`;
         }
