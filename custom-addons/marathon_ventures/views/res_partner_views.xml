@@ -20,8 +20,11 @@
     <field name="model">res.partner</field>
     <field name="inherit_id" ref="base.view_partner_form"/>
     <field name="arch" type="xml">
-      <xpath expr="//notebook" position="inside">
-        <page string="Details" name="mv_details">
+      <!-- Prepend the Details page as the FIRST tab in the notebook.
+           Odoo auto-opens the first page, so Details becomes the
+           default landing tab when a contact form is opened. -->
+      <xpath expr="//notebook/page[1]" position="before">
+        <page string="Details" name="mv_details" autofocus="autofocus" active="true">
 
           <!-- ====================== Account Detail ====================== -->
           <group string="Account Detail" name="mv_group_account_detail">
@@ -36,6 +39,12 @@
               <field name="region"/>
               <field name="silver_team_accounts" widget="many2many_tags"/>
             </group>
+          </group>
+
+          <!-- ====================== Email CCs ====================== -->
+          <group string="Notification CCs" name="mv_group_email_ccs">
+            <field name="prelog_cc" widget="mv_email_tags"/>
+            <field name="logs_cc" widget="mv_email_tags"/>
           </group>
 
           <!-- ====================== Finance Details ====================== -->

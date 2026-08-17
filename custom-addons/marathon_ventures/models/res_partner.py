@@ -305,7 +305,7 @@ class ResPartner(models.Model):
     leadsource = fields.Selection(string='LeadSource', selection=[('todo', 'TODO: populate from SF Global Value Set')])  # SF: LeadSource
     lead_type = fields.Selection(string='Lead Type', selection=[('active', 'Active'), ('target', 'Target'), ('fallow', 'Fallow'), ('not_target', 'Not Target')], help='Designates the type of lead: Active:  Open Account, Currently Doing Business Fallow:  Target or Prospect that did not convert to Active, fizzled and needs a rest before restarting.')  # SF: Lead_Type__c | SF Unrestricted picklist
     x_sf_contact_lime_ae = fields.Many2one(string='Lime AE (Contact)', comodel_name='res.users', ondelete='set null')  # COLLISION renamed from Lime_AE__c
-    logs_cc = fields.Char(string='Logs CC', size=255, help='Enter additional CC for logs separated by commas.')  # SF: Logs_CC__c
+    logs_cc = fields.Char(string='Postlog cc', size=255, help='Enter additional CC for logs separated by commas.')  # SF: Logs_CC__c
     logs_contact = fields.Many2one(string='Logs Contact', comodel_name='res.partner', ondelete='set null')  # SF: Logs_Contact__c
     mlbappletvprelogweek = fields.Date(string='MLBAppleTVPreLog Week')  # SF: MLBAppleTVPreLogWeek__c
     mlbappletv_post_logs_date_time = fields.Datetime(string='MLBAppleTV Post Logs Date/Time')  # SF: MLBAppleTV_Post_Logs_Date_Time__c

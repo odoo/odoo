@@ -447,8 +447,6 @@ class MvBundlePaperworkWizard(models.TransientModel):
             missing.append(_('Length'))
         if not deal.program:
             missing.append(_('Program'))
-        if deal.program and not deal.program.logs_contact:
-            missing.append(_('Program > Logs Contact'))
         if missing:
             raise UserError(_(
                 "The following field(s) are required to generate "
