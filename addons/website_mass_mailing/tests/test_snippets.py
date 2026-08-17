@@ -31,3 +31,16 @@ class TestSnippets(HttpCase):
             "snippet_newsletter_block_with_edit",
             login='admin'
         )
+
+    def test_snippet_newsletter_block_turnstile(self):
+        if self.env['ir.module.module']._get('website_cf_turnstile').state != 'installed':
+            self.skipTest("website_cf_turnstile module is not installed")
+        self.env['ir.config_parameter'].set_param('cf.turnstile_site_key', '1x00000000000000000000AA')
+        self.env['mailing.subscription'].search([
+            ('contact_id.email', '=', self.env.ref('base.user_admin').email),
+        ]).opt_out = True
+        self.start_tour(
+            self.env['website'].get_client_action_url('/'),
+            "snippet_newsletter_block_turnstile",
+            login='admin'
+        )
