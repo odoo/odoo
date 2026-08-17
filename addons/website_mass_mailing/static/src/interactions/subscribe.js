@@ -34,6 +34,12 @@ export class Subscribe extends Interaction {
 
     destroy() {
         this._updateView({ is_subscriber: false });
+        if (this._turnstile) {
+            this._turnstile.constructor.clean(this.el);
+            this._turnstile.inputValidation.remove();
+            this._turnstile.script1El.remove();
+            this._turnstile.script2El.remove();
+        }
     }
 
     /**
@@ -71,9 +77,7 @@ export class Subscribe extends Interaction {
         const valueInputEl = this.el.querySelector('input.js_subscribe_value, input.js_subscribe_email');
         valueInputEl.disabled = isSubscriber;
 
-        // When the website is in edit mode, window.top != window. We don't want turnstile to render during edit mode
-        // and mess up the DOM and saving it.
-        if (!isSubscriber && this._turnstile && window.top === window) {
+        if (!isSubscriber && this._turnstile) {
             const turnstileEl = this._turnstile.turnstileEl;
             this._turnstile.constructor.disableSubmit(subscribeBtnEl);
             turnstileEl.classList.add('mt-3');
