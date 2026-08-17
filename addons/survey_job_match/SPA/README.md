@@ -126,15 +126,33 @@ Records are created by POSTing form-encoded data to `/website/form/<model>`, a
 public endpoint in the `website` module. It creates the record as superuser, so
 an anonymous visitor can write without any portal account.
 
-Two pieces of configuration are required per target model, both clickable in the
-web UI with developer mode on, and both are per-database:
+Two pieces of configuration are required per target model, and both are
+per-database:
 
 1. On the model: tick **Allowed to use in forms** (Settings › Technical ›
    Models › the model › Website Forms tab). Without it the endpoint answers
-   *"The form's specified model does not exist"*.
-2. On every field written: untick **Blacklisted in web forms**. Fields are
-   blacklisted by default — it is a whitelist, not a blacklist. Studio-created
-   fields are no exception and need the same untick.
+   *"The form's specified model does not exist"*. This one is a plain UI edit.
+2. Every field written has to be un-blacklisted. Fields are blacklisted by
+   default — it is a whitelist, not a blacklist.
+
+**Step 2 is the awkward one, and the checkbox is a trap.** The field form does
+show a *Blacklisted in web forms* checkbox, but saving it on a stock field fails
+with *"Properties of base fields cannot be altered in this manner!"*: the ORM
+refuses any write to a field whose state is not `manual`. Core sidesteps its own
+guard with raw SQL. So:
+
+- **Studio-created fields** are `manual`, so for those the checkbox works.
+- **Stock fields** (`name`, `email`, `phone`, `comment`, …) cannot be whitelisted
+  from that form at all. Two ways round it:
+  - *With database access:* one UPDATE on `ir_model_fields`, which is what
+    `build.py --deploy` targets and what core's own `formbuilder_whitelist`
+    does.
+  - *UI only, e.g. a trial:* let the form builder do it. Drop a **Form** block on
+    a scratch page, point its action at the target model, add one field per
+    field you need (the builder offers every writable field, blacklisted or
+    not), and **save the page** — saving calls `formbuilder_whitelist` for every
+    non-custom field in the form. Then delete the scratch page; the whitelist
+    stays.
 
 Skipping step 2 fails quietly in a specific way: the record is still created,
 but the unrecognised values are dumped into the record's chatter instead of the
@@ -144,6 +162,10 @@ are empty, this is why.
 The endpoint always answers HTTP 200 with a small JSON body: the new record's id
 on success, or an error payload. Client code must branch on the body, not the
 status code.
+
+This app writes `name`, `email`, `phone` and `comment` on `res.partner`; the
+generated snippet's banner lists them, so it always matches what the build
+actually sends.
 
 ### 3.3 CSRF
 
@@ -167,9 +189,17 @@ These are per-page settings: every page you create needs them set again.
 
 ### 3.5 The captcha gate
 
-The endpoint is captcha-gated, but the gate is inert unless a reCAPTCHA secret
-is configured on the database. If a target database has one, submissions will
-need a token and the app will have to be extended.
+The endpoint is captcha-gated, but the gate is inert unless a reCAPTCHA secret is
+configured on the database — with no secret the check returns early and passes.
+
+If a target database *does* have one, every submission fails with *"The reCaptcha
+token is invalid."* The app does not send a token. It surfaces the message
+verbatim on the result screen, so the failure is at least legible. The escape
+hatch without code is the `enable_recaptcha` system parameter, which turns the
+check off; otherwise the app has to be extended to fetch a token.
+
+Check before deploying: Settings › Technical › System Parameters, search
+`recaptcha`.
 
 ### 3.6 The XML constraint (important)
 
@@ -200,12 +230,20 @@ SPA/
   build.py          the compiler; no dependencies beyond the standard library
   build.json        build and deploy settings (never shipped into the app)
   data/*.json       content and app config, inlined as JM.data[<filename>]
-  lib/*.js          framework: namespace, DOM helpers, flow, transport
+                    questions.json and profiles.json were generated from the
+                    module's demo/demo_job_match.xml, so they carry the real
+                    questions, profiles and weights
+  lib/*.js          framework: namespace, DOM helpers, flow, transport, chrome
   screens/*.html    one markup fragment per screen
   screens/*.js      one behaviour file per screen
+  chrome/*.html     persistent UI around the card (toolbar, brand badge)
   styles/*.css      stylesheets
   dist/             generated output, not committed
 ```
+
+The built markup is one `#jm_app` wrapper holding a `.jm_card` with the screens
+in it, then the chrome. Chrome is outside the card on purpose: it is pinned to
+the viewport, and the card clips its own content to keep its rounded corners.
 
 Files are concatenated in **filename order**, which is why they are numbered in
 hundreds — the same convention Odoo uses for snippet assets. `lib/` is emitted
@@ -244,12 +282,86 @@ builder is overwritten on the next deploy. Treat deployed pages as build output.
 
 ---
 
+### 4.3 Look and interactions
+
+Both are copied from the Survey app's fill-form experience rather than invented,
+so the game feels like the product it came from:
+
+- A welcome screen opens with the title, the pitch and a single Start button. It
+  is not a step you answer, so it stays out of the progress count.
+- Answer rows are barely tinted, darken on hover, and turn primary-subtle once
+  selected, with a letter badge on the trailing edge.
+- The card's actions bar carries only the primary button and the keyboard hint,
+  separated from the question by a rule. The primary button reads Submit instead
+  of Continue on the last step.
+- Progress and navigation live in a toolbar pinned to the bottom-right: the
+  readout, a rule, then the two arrows. Progress counts what is behind you, so
+  the first question reads 0%, and it is hidden on screens that do not count.
+  `progression_mode` in `data/config.json` switches the readout between a
+  percentage and "N of M answered", as Survey's own setting does.
+- A brand badge sits at the bottom-left, with the name in the primary colour.
+- Validation alerts slide in instead of reserving empty space.
+- `Enter` and `→` trigger the primary action, `←` goes back, and a letter picks
+  the answer carrying that badge. The arrows disable themselves when there is
+  nowhere to go.
+- **While a field has the focus, everything belongs to the field and only
+  `Ctrl+Enter` moves on** (`Cmd` on a Mac), so a stray Enter cannot submit
+  half-typed input. Screens with a field say so in their hint. On a choice
+  question, where nothing is focused, plain `Enter` is the shortcut.
+- Nothing navigates on its own. Picking an answer only selects it; the visitor
+  moves on with Continue or the keyboard, so they can always change their mind
+  first. Survey does auto-advance off a single-choice question, and this is a
+  deliberate departure from it.
+
+On narrow screens, at Survey's own 768px breakpoint: the brand badge goes, the
+toolbar stays but drops the bar and keeps the readout so the arrows are never
+squeezed off, the keyboard hint goes, the card runs edge to edge, and the app
+reserves bottom padding so the toolbar cannot cover the primary button. The
+letter badges hide themselves on touch pointers, where they mean nothing.
+
+The palette is not hardcoded: colours come from Bootstrap custom properties
+(`--bs-primary` and friends) when they exist, so an embedded page adopts the
+website theme, and fall back to Odoo's purple in the standalone dev preview,
+which has no Bootstrap.
+
+Two things worth knowing if you extend this. The keyboard listener is on the
+document, as Survey's is, so those keys are claimed for the whole page — fine on
+a page whose only content is the app. And hiding a screen does not blur a field
+inside it, so the flow explicitly drops focus when switching screens; without
+that, a focused text field swallows the letter shortcuts.
+
 ## 5. Status
 
-Ported and verified end to end (anonymous visitor in a real browser, contact
-created with the answer recorded): the screen flow, a name entry screen, a
-single choice question driven by the data files, and submission to a contact.
+Ported and verified end to end, in the standalone preview and as an anonymous
+visitor on a deployed page: the welcome screen, all nine questions from the demo
+data (name, email with validation, phone, six choice questions), the Survey look
+and every interaction in 4.3, the toolbar and brand chrome, the mobile layout,
+the scoring of 2.2, the result screen of 2.3, and the write to a contact with
+email and phone filled and the transcript plus ranking in its note.
 
-Not yet ported: everything in section 2 beyond a single question — profiles,
-weights, elimination, scoring and percentages, the result screen with meters and
-runners-up, the two special endings, and email/phone capture.
+**The scoring is checked against the reference implementation, not just
+believed.** The same four answers were run through the Python module's
+`_get_job_match_results` on a database with the demo data, and through the SPA:
+all fourteen profiles agree on score, ceiling and percentage. The one difference
+is how ties are broken — the SPA breaks them by the profile's configured
+sequence, which is deterministic, where the reference leaves them to recordset
+order. Ties only matter if they reach first place.
+
+### Not implemented yet
+
+- **Elimination.** The data carries every eliminating weight, and the scoring
+  deliberately ignores them. This costs more than it sounds: `q1` ("what are you
+  looking for?") has **no point weights at all** and `q2` (languages) has three
+  against forty-seven eliminating ones. Those two questions therefore have
+  almost no effect on the outcome right now, and nothing stops an internship
+  being offered to someone who asked for a job, or a role being suggested in a
+  language the visitor does not speak. Until elimination lands, treat the
+  ranking as driven by `q3`–`q6` alone.
+- **The two special endings** of 2.4. The per-answer closing message is captured
+  in the data as `message_html` but never shown, and the no-match screen cannot
+  happen without elimination.
+- **Multiple-choice questions.** Described in the data format and handled by the
+  ceiling rule, but no question in the demo data uses one and the choice screen
+  renders single choice only.
+- **Profile images.** The reference shows one next to the best match; the demo
+  data sets none, so the SPA has no image support.

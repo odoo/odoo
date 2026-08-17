@@ -21,6 +21,12 @@ JM.dom = {
         return JM.dom.screen(screenName).querySelector("[data-role=" + roleName + "]");
     },
 
+    /* Chrome lives outside the screens, so it is addressed separately. */
+    inToolbar: function (roleName) {
+        return JM.dom.root().querySelector(
+            ".jm_toolbar [data-role=" + roleName + "]");
+    },
+
     allScreens: function () {
         return Array.prototype.slice.call(
             JM.dom.root().querySelectorAll("[data-screen]"));
@@ -32,5 +38,21 @@ JM.dom = {
 
     text: function (element, value) {
         element.textContent = value || "";
+    },
+
+    /* The one place markup is injected, and only ever from data/*.json, which
+       is authored at build time: question descriptions and job descriptions are
+       rich text with links (the GDPR notice, for one). Never pass anything a
+       visitor typed through here. */
+    html: function (element, value) {
+        element.innerHTML = value || "";
+    },
+
+    /* Validation alerts slide in and out, as Survey's do, so setting the text
+       and toggling the state belong together. Passing an empty message hides
+       the alert. */
+    error: function (element, message) {
+        JM.dom.text(element, message);
+        element.classList.toggle("jm_error_shown", !!message);
     }
 };

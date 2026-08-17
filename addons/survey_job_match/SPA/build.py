@@ -244,6 +244,7 @@ def main():
     libs = read_dir('lib', '.js')
     screen_js = read_dir('screens', '.js')
     screen_html = read_dir('screens', '.html')
+    chrome_html = read_dir('chrome', '.html')
     css = read_dir('styles', '.css')
     data = load_data()
 
@@ -256,14 +257,20 @@ def main():
         sys.exit('Build failed: no screens/*.html found.')
 
     config = data.get('config', {})
-    markup = '<div id="jm_app">\n%s\n</div>' % '\n'.join(
-        content.strip() for _name, content in screen_html)
+    # Screens go in the card; chrome/ is the persistent UI around it (the fixed
+    # toolbar and brand badge), which must sit outside the card's own clipping.
+    markup = '<div id="jm_app">\n<div class="jm_card">\n%s\n</div>\n%s\n</div>' % (
+        '\n'.join(content.strip() for _name, content in screen_html),
+        '\n'.join(content.strip() for _name, content in chrome_html))
     stylesheet = '\n'.join(content.strip() for _name, content in css)
 
+    # Every field the app writes needs un-blacklisting on the target database,
+    # so the banner lists them all rather than assuming two.
+    written = set(config.get('field_map', {}).values())
+    written.add(config.get('note_field'))
     header = HEADER % {
         'model': config.get('model', '?'),
-        'fields': ', '.join(sorted(filter(None, [
-            config.get('name_field'), config.get('note_field')]))) or '?',
+        'fields': ', '.join(sorted(f for f in written if f)) or '?',
     }
 
     os.makedirs(DIST, exist_ok=True)
@@ -281,10 +288,12 @@ def main():
     with open(os.path.join(DIST, 'dev.html'), 'w', encoding='utf-8') as fh:
         fh.write(preview)
 
-    sources = len(libs) + len(screen_js) + len(screen_html) + len(css) + len(data)
+    sources = (len(libs) + len(screen_js) + len(screen_html)
+               + len(chrome_html) + len(css) + len(data))
     print('Built dist/spa.html (%d bytes) and dist/dev.html from %d source files.'
           % (len(payload), sources))
     print('  screens: %s' % ', '.join(name for name, _c in screen_html))
+    print('  chrome:  %s' % ', '.join(name for name, _c in chrome_html))
     print('  data:    %s' % ', '.join(sorted(data)))
 
     if args.deploy:

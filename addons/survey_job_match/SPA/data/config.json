@@ -1,8 +1,22 @@
 {
     "title": "Which Odoo job fits you?",
+    "description": "Answer a few quick questions and discover which Odoo role suits you best!",
+    "start_label": "Start Survey",
+    "progression_mode": "percent",
+
     "model": "res.partner",
-    "name_field": "name",
     "note_field": "comment",
-    "name_screen_title": "What's your name?",
-    "name_placeholder": "Jane Doe"
+    "name_field": "name",
+    "field_map": {
+        "visitor_name": "name",
+        "q_email": "email",
+        "q_phone": "phone"
+    },
+
+    "result": {
+        "best_label": "Your best match is",
+        "runners_label": "Other roles you'd fit",
+        "cta_label": "See the job",
+        "runners_count": 2
+    }
 }

@@ -1,81 +1,150 @@
+/* Layout and chrome, following the Survey app's fill-form look.
+
+   Colours are taken from Bootstrap custom properties when they exist, so an
+   embedded page adopts the website theme's primary colour the way Survey adopts
+   it from SCSS. The fallbacks keep the standalone dev preview, which has no
+   Bootstrap, looking the same. */
 #jm_app {
-    max-width: 34rem;
+    --jm-primary: var(--bs-primary, #714B67);
+    --jm-primary-subtle: var(--bs-primary-bg-subtle, #e7dfe4);
+    --jm-primary-emphasis: var(--bs-primary-text-emphasis, #2e1f2a);
+    --jm-border: var(--bs-border-color, rgba(0, 0, 0, .175));
+    --jm-muted: var(--bs-secondary-color, rgba(0, 0, 0, .55));
+    --jm-body-bg: var(--bs-body-bg, #fff);
+
+    max-width: 42rem;
     margin: 0 auto;
-    padding: 1.75rem;
-    border: 1px solid rgba(0, 0, 0, .12);
-    border-radius: .75rem;
     text-align: left;
+}
+
+#jm_app .jm_card {
+    border: 1px solid var(--jm-border);
+    border-radius: .5rem;
+    background: var(--jm-body-bg);
+    overflow: hidden;
 }
 
 #jm_app .jm_hide {
     display: none !important;
 }
 
-#jm_app .jm_step {
-    margin: 0 0 .25rem;
-    font-size: .8rem;
-    text-transform: uppercase;
-    letter-spacing: .06em;
-    opacity: .55;
+/* Survey gives the question generous room and separates the actions with a
+   rule, rather than boxing every element. */
+#jm_app .jm_body {
+    padding: 2rem 1.5rem;
 }
 
-#jm_app h3 {
-    margin: 0 0 1.25rem;
+#jm_app .jm_title {
+    margin: 0 0 .5rem;
+    font-size: 1.5rem;
+    line-height: 1.3;
+    font-weight: 500;
 }
 
-#jm_app .jm_hint {
-    margin: -.75rem 0 1.25rem;
-    font-size: .9375rem;
-    opacity: .7;
+#jm_app .jm_description {
+    margin: 0 0 1.5rem;
+    color: var(--jm-muted);
 }
 
-#jm_app input[type=text] {
-    width: 100%;
-    padding: .6rem .75rem;
-    font: inherit;
-    border: 1px solid rgba(0, 0, 0, .2);
-    border-radius: .375rem;
+#jm_app .jm_title + .jm_choices,
+#jm_app .jm_title + input[type=text] {
+    margin-top: 1.5rem;
 }
 
-#jm_app .jm_choice {
+#jm_app input[type=text],
+#jm_app input[type=email] {
     display: block;
     width: 100%;
-    margin-bottom: .5rem;
-    padding: .7rem .9rem;
+    padding: .5rem .75rem;
     font: inherit;
-    text-align: left;
-    background: transparent;
-    border: 1px solid rgba(0, 0, 0, .2);
+    color: inherit;
+    background: var(--jm-body-bg);
+    border: 1px solid var(--jm-border);
     border-radius: .375rem;
-    cursor: pointer;
 }
 
-#jm_app .jm_choice[aria-pressed=true] {
-    border-color: currentColor;
-    box-shadow: inset 0 0 0 1px currentColor;
-    font-weight: 600;
+#jm_app input[type=text]:focus,
+#jm_app input[type=email]:focus {
+    outline: 2px solid var(--jm-primary);
+    outline-offset: -2px;
 }
 
+/* Actions bar: the primary action and the Enter hint, separated from the
+   question by a rule. Progress and navigation are not here -- Survey keeps them
+   in the fixed toolbar (see 020_chrome.css). */
 #jm_app .jm_actions {
-    margin-top: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    padding: 1rem 1.5rem;
+    border-top: 1px solid var(--jm-border);
 }
 
-#jm_app .jm_actions button {
-    margin-right: .5rem;
-    padding: .55rem 1.4rem;
+#jm_app button {
+    padding: .5rem 1.25rem;
     font: inherit;
-    border: 1px solid currentColor;
+    border: 1px solid transparent;
     border-radius: .375rem;
     cursor: pointer;
 }
 
-#jm_app .jm_actions button[data-role=back] {
-    opacity: .6;
+#jm_app button[data-role=next],
+#jm_app button[data-role=retry] {
+    color: #fff;
+    background: var(--jm-primary);
 }
 
-#jm_app .jm_err {
-    min-height: 1.2rem;
-    margin: .4rem 0 0;
+#jm_app button:focus-visible {
+    outline: 2px solid var(--jm-primary);
+    outline-offset: 2px;
+}
+
+#jm_app .jm_enter_hint {
     font-size: .875rem;
-    color: #b02a37;
+    color: var(--jm-muted);
+}
+
+/* Survey slides its validation alert in rather than reserving space for it. */
+#jm_app .jm_error {
+    max-height: 0;
+    margin: 0;
+    padding: 0 .75rem;
+    color: #58151c;
+    background: #f8d7da;
+    border-radius: .375rem;
+    opacity: 0;
+    overflow: hidden;
+    transition: max-height .3s ease, opacity .3s ease, padding .3s ease;
+}
+
+#jm_app .jm_error.jm_error_shown {
+    max-height: 6rem;
+    margin-top: 1rem;
+    padding: .75rem;
+    opacity: 1;
+}
+
+/* Survey's md breakpoint. The card goes edge to edge, and the Enter hint goes
+   away since the toolbar's arrows are the mobile navigation. Room is left at the
+   bottom so the fixed toolbar never covers the primary button. */
+@media (max-width: 767px) {
+    #jm_app {
+        padding-bottom: 4rem;
+    }
+
+    #jm_app .jm_body {
+        padding: 1.5rem 1rem;
+    }
+
+    #jm_app .jm_actions {
+        padding: 1rem;
+    }
+
+    #jm_app .jm_enter_hint {
+        display: none;
+    }
+
+    #jm_app .jm_title {
+        font-size: 1.25rem;
+    }
 }

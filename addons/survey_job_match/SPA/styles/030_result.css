@@ -1,0 +1,73 @@
+/* Result screen, following the Survey result page: the best match with a wide
+   meter, then the runners-up with slimmer ones. */
+#jm_app .jm_result_intro {
+    margin: 0 0 .5rem;
+    color: var(--jm-muted);
+}
+
+#jm_app .jm_match {
+    margin: 0 0 .75rem;
+    font-weight: 600;
+    color: var(--jm-primary);
+}
+
+#jm_app .jm_meter {
+    height: .75rem;
+    border-radius: .375rem;
+    background: color-mix(in srgb, currentColor 12%, transparent);
+    overflow: hidden;
+}
+
+#jm_app .jm_meter_small {
+    height: .5rem;
+}
+
+#jm_app .jm_meter_bar {
+    width: 0;
+    height: 100%;
+    background: var(--jm-primary);
+    transition: width .6s ease;
+}
+
+#jm_app .jm_result_description {
+    margin-top: 1rem;
+    color: var(--jm-muted);
+}
+
+#jm_app .jm_result_description p {
+    margin: 0 0 .5rem;
+}
+
+#jm_app .jm_cta {
+    display: inline-block;
+    margin-top: 1rem;
+    padding: .5rem 1.25rem;
+    color: #fff;
+    background: var(--jm-primary);
+    border-radius: .375rem;
+    text-decoration: none;
+}
+
+#jm_app .jm_runners {
+    margin-top: 2rem;
+}
+
+#jm_app .jm_runner {
+    margin-bottom: .75rem;
+}
+
+#jm_app .jm_runner_head {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: .25rem;
+}
+
+#jm_app .jm_runner_percent {
+    color: var(--jm-muted);
+}
+
+#jm_app .jm_status {
+    margin: 1.5rem 0 0;
+    font-size: .875rem;
+    color: var(--jm-muted);
+}

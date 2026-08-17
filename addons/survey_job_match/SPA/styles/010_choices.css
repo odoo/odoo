@@ -1,0 +1,67 @@
+/* Answer rows, copied from the Survey app's o_survey_choice_btn: a barely
+   tinted row that darkens on hover, turns primary-subtle once selected, and
+   carries a keyboard-shortcut badge on the trailing edge. */
+#jm_app .jm_choices {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+}
+
+#jm_app .jm_choice {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    padding: .5rem .75rem;
+    background: color-mix(in srgb, currentColor 4%, transparent);
+    border: 1px solid transparent;
+    border-radius: .375rem;
+    cursor: pointer;
+}
+
+#jm_app .jm_choice:hover {
+    background: color-mix(in srgb, currentColor 8%, transparent);
+}
+
+#jm_app .jm_choice.jm_selected {
+    color: var(--jm-primary-emphasis);
+    background: var(--jm-primary-subtle);
+}
+
+/* The row is a label wrapping the real input, so focus lands inside it. */
+#jm_app .jm_choice:focus-within {
+    outline: 2px solid var(--jm-primary);
+    outline-offset: -2px;
+}
+
+#jm_app .jm_choice input {
+    margin: 0;
+    accent-color: var(--jm-primary);
+}
+
+#jm_app .jm_choice_label {
+    word-break: break-word;
+}
+
+#jm_app .jm_key {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    margin-left: auto;
+    font-size: .75rem;
+    color: var(--jm-muted);
+    background: var(--jm-body-bg);
+    border: 1px solid var(--jm-border);
+    border-radius: .25rem;
+    box-shadow: 0 .125rem .25rem rgba(0, 0, 0, .075);
+}
+
+/* Pointless where there is no keyboard. Both conditions are required on
+   purpose: "hover: none" alone also matches headless browsers, which would hide
+   the badges from screenshots and tests. */
+@media (hover: none) and (pointer: coarse) {
+    #jm_app .jm_key {
+        display: none;
+    }
+}

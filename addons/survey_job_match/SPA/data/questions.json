@@ -1,15 +1,413 @@
 [
     {
-        "id": "heard_about",
-        "title": "How did you hear about us?",
-        "description": "",
-        "type": "simple_choice",
+        "id": "visitor_name",
+        "title": "What's your name?",
+        "description_html": "",
+        "type": "text",
         "required": true,
+        "placeholder": "Jane Doe"
+    },
+    {
+        "id": "q_email",
+        "title": "What is your email address?",
+        "description_html": "<p>Any personal information shared here will be used strictly for recruitment purposes in compliance with GDPR. For more details, please see our <a href=\"https://www.odoo.com/gdpr\" target=\"_blank\">GDPR</a> and <a href=\"https://www.odoo.com/privacy\" target=\"_blank\">Privacy Policy</a>.</p>",
+        "type": "text",
+        "required": false,
+        "validation": "email"
+    },
+    {
+        "id": "q_phone",
+        "title": "What is your phone number?",
+        "description_html": "<p>Any personal information shared here will be used strictly for recruitment purposes in compliance with GDPR. For more details, please see our <a href=\"https://www.odoo.com/gdpr\" target=\"_blank\">GDPR</a> and <a href=\"https://www.odoo.com/privacy\" target=\"_blank\">Privacy Policy</a>.</p>",
+        "type": "text",
+        "required": false
+    },
+    {
+        "id": "q1",
+        "title": "What are you looking for?",
+        "description_html": "",
+        "type": "simple_choice",
+        "required": false,
         "choices": [
-            {"id": "friend", "label": "A friend"},
-            {"id": "social", "label": "Social media"},
-            {"id": "search", "label": "A web search"},
-            {"id": "event", "label": "An event"}
+            {
+                "id": "q1_a",
+                "label": "A job at Odoo",
+                "eliminates": [
+                    "profile_bizdev_horeca",
+                    "profile_bizdev_intern",
+                    "profile_dev_intern"
+                ]
+            },
+            {
+                "id": "q1_b",
+                "label": "An internship at Odoo",
+                "eliminates": [
+                    "profile_account_manager",
+                    "profile_bizdev_nordic",
+                    "profile_bizdev_rep",
+                    "profile_business_analyst",
+                    "profile_developer",
+                    "profile_hr",
+                    "profile_marketing",
+                    "profile_partner_manager",
+                    "profile_product_owner",
+                    "profile_support_analyst",
+                    "profile_web_designer"
+                ]
+            },
+            {
+                "id": "q1_c",
+                "label": "A student job",
+                "eliminates": [
+                    "profile_account_manager",
+                    "profile_bizdev_nordic",
+                    "profile_bizdev_rep",
+                    "profile_business_analyst",
+                    "profile_developer",
+                    "profile_hr",
+                    "profile_marketing",
+                    "profile_partner_manager",
+                    "profile_product_owner",
+                    "profile_support_analyst",
+                    "profile_web_designer"
+                ],
+                "message_html": "<p>Although we don't typically offer paid student jobs, we would still be happy to hear from you. You are welcome to email your specific situation to <a href=\"mailto:berecruitment@odoo.com\">berecruitment@odoo.com</a> so we can see what might be possible.</p> <p>Alternatively, we encourage you to apply for one of our internships, which often include a nice reward and the potential for a full-time job offer for the best candidates afterwards.</p>"
+            }
+        ]
+    },
+    {
+        "id": "q2",
+        "title": "What languages can you work in?",
+        "description_html": "<p>At least C1 level.</p>",
+        "type": "simple_choice",
+        "required": false,
+        "choices": [
+            {
+                "id": "q2_a",
+                "label": "English only",
+                "eliminates": [
+                    "profile_account_manager",
+                    "profile_bizdev_horeca",
+                    "profile_bizdev_intern",
+                    "profile_bizdev_nordic",
+                    "profile_bizdev_rep",
+                    "profile_business_analyst",
+                    "profile_hr",
+                    "profile_marketing",
+                    "profile_partner_manager",
+                    "profile_product_owner",
+                    "profile_support_analyst",
+                    "profile_web_designer"
+                ]
+            },
+            {
+                "id": "q2_b",
+                "label": "English & Dutch",
+                "eliminates": [
+                    "profile_bizdev_nordic"
+                ]
+            },
+            {
+                "id": "q2_c",
+                "label": "English & French",
+                "eliminates": [
+                    "profile_bizdev_nordic"
+                ]
+            },
+            {
+                "id": "q2_d",
+                "label": "English & Nordic languages",
+                "points": {
+                    "profile_bizdev_nordic": 5
+                },
+                "eliminates": [
+                    "profile_account_manager",
+                    "profile_bizdev_horeca",
+                    "profile_bizdev_intern",
+                    "profile_bizdev_rep",
+                    "profile_business_analyst",
+                    "profile_dev_intern",
+                    "profile_hr",
+                    "profile_marketing",
+                    "profile_partner_manager",
+                    "profile_support_analyst",
+                    "profile_web_designer"
+                ]
+            },
+            {
+                "id": "q2_e",
+                "label": "English and Italian, German or Arabic",
+                "points": {
+                    "profile_support_analyst": 3,
+                    "profile_partner_manager": 3
+                },
+                "eliminates": [
+                    "profile_account_manager",
+                    "profile_bizdev_horeca",
+                    "profile_bizdev_intern",
+                    "profile_bizdev_nordic",
+                    "profile_bizdev_rep",
+                    "profile_business_analyst",
+                    "profile_hr",
+                    "profile_marketing"
+                ]
+            },
+            {
+                "id": "q2_f",
+                "label": "None of the options above",
+                "eliminates": [
+                    "profile_account_manager",
+                    "profile_bizdev_horeca",
+                    "profile_bizdev_intern",
+                    "profile_bizdev_nordic",
+                    "profile_bizdev_rep",
+                    "profile_business_analyst",
+                    "profile_dev_intern",
+                    "profile_developer",
+                    "profile_hr",
+                    "profile_marketing",
+                    "profile_partner_manager",
+                    "profile_product_owner",
+                    "profile_support_analyst",
+                    "profile_web_designer"
+                ]
+            }
+        ]
+    },
+    {
+        "id": "q3",
+        "title": "What do you enjoy the most?",
+        "description_html": "",
+        "type": "simple_choice",
+        "required": false,
+        "choices": [
+            {
+                "id": "q3_a",
+                "label": "Solving logic puzzles and building things",
+                "points": {
+                    "profile_dev_intern": 3,
+                    "profile_developer": 3,
+                    "profile_product_owner": 2,
+                    "profile_support_analyst": 1
+                }
+            },
+            {
+                "id": "q3_b",
+                "label": "Helping people and explaining solutions",
+                "points": {
+                    "profile_support_analyst": 3,
+                    "profile_business_analyst": 3,
+                    "profile_bizdev_rep": 2,
+                    "profile_bizdev_nordic": 2,
+                    "profile_bizdev_horeca": 2,
+                    "profile_bizdev_intern": 2
+                }
+            },
+            {
+                "id": "q3_c",
+                "label": "Meeting people and closing deals",
+                "points": {
+                    "profile_bizdev_rep": 3,
+                    "profile_bizdev_nordic": 3,
+                    "profile_bizdev_horeca": 3,
+                    "profile_bizdev_intern": 3,
+                    "profile_account_manager": 2,
+                    "profile_partner_manager": 1
+                }
+            },
+            {
+                "id": "q3_d",
+                "label": "Following up on clients/partners and building long-term relationships",
+                "points": {
+                    "profile_account_manager": 3,
+                    "profile_partner_manager": 3
+                }
+            }
+        ]
+    },
+    {
+        "id": "q4",
+        "title": "What task would you love?",
+        "description_html": "",
+        "type": "simple_choice",
+        "required": false,
+        "choices": [
+            {
+                "id": "q4_a",
+                "label": "Writing code",
+                "points": {
+                    "profile_developer": 3,
+                    "profile_web_designer": 1,
+                    "profile_product_owner": 1
+                }
+            },
+            {
+                "id": "q4_b",
+                "label": "Configuring software for a client",
+                "points": {
+                    "profile_business_analyst": 3,
+                    "profile_support_analyst": 2
+                }
+            },
+            {
+                "id": "q4_c",
+                "label": "Helping a client solve an issue",
+                "points": {
+                    "profile_support_analyst": 3,
+                    "profile_business_analyst": 1,
+                    "profile_bizdev_rep": 1,
+                    "profile_bizdev_nordic": 1,
+                    "profile_bizdev_horeca": 1,
+                    "profile_bizdev_intern": 1
+                }
+            },
+            {
+                "id": "q4_d",
+                "label": "Pitching to new customers",
+                "points": {
+                    "profile_bizdev_rep": 3,
+                    "profile_bizdev_nordic": 3,
+                    "profile_bizdev_horeca": 3,
+                    "profile_bizdev_intern": 3
+                }
+            },
+            {
+                "id": "q4_e",
+                "label": "Finding new customers",
+                "points": {
+                    "profile_bizdev_rep": 3,
+                    "profile_bizdev_nordic": 3,
+                    "profile_bizdev_horeca": 3
+                }
+            },
+            {
+                "id": "q4_f",
+                "label": "Guiding partner companies",
+                "points": {
+                    "profile_account_manager": 3,
+                    "profile_partner_manager": 3
+                }
+            },
+            {
+                "id": "q4_g",
+                "label": "Analysing a business flow and advising the right steps to take",
+                "points": {
+                    "profile_bizdev_rep": 2,
+                    "profile_bizdev_nordic": 2,
+                    "profile_bizdev_horeca": 2,
+                    "profile_bizdev_intern": 2,
+                    "profile_business_analyst": 2
+                }
+            }
+        ]
+    },
+    {
+        "id": "q5",
+        "title": "How do you prefer to work?",
+        "description_html": "",
+        "type": "simple_choice",
+        "required": false,
+        "choices": [
+            {
+                "id": "q5_a",
+                "label": "Deep focus, alone or in a small team",
+                "points": {
+                    "profile_developer": 3,
+                    "profile_dev_intern": 3,
+                    "profile_product_owner": 3,
+                    "profile_support_analyst": 1
+                }
+            },
+            {
+                "id": "q5_b",
+                "label": "Lots of client interaction",
+                "points": {
+                    "profile_support_analyst": 3,
+                    "profile_bizdev_rep": 3,
+                    "profile_bizdev_nordic": 3,
+                    "profile_bizdev_horeca": 3,
+                    "profile_bizdev_intern": 3,
+                    "profile_account_manager": 2,
+                    "profile_web_designer": 2,
+                    "profile_hr": 1
+                }
+            },
+            {
+                "id": "q5_c",
+                "label": "Out in the field, networking",
+                "points": {
+                    "profile_bizdev_rep": 2,
+                    "profile_bizdev_horeca": 3,
+                    "profile_bizdev_intern": 2,
+                    "profile_hr": 3
+                }
+            },
+            {
+                "id": "q5_d",
+                "label": "Designing and creating new things",
+                "points": {
+                    "profile_web_designer": 3,
+                    "profile_marketing": 2,
+                    "profile_developer": 2,
+                    "profile_dev_intern": 2
+                }
+            }
+        ]
+    },
+    {
+        "id": "q6",
+        "title": "How would your family/friends describe you?",
+        "description_html": "",
+        "type": "simple_choice",
+        "required": false,
+        "choices": [
+            {
+                "id": "q6_a",
+                "label": "A problem solver",
+                "points": {
+                    "profile_developer": 3,
+                    "profile_product_owner": 3,
+                    "profile_partner_manager": 3,
+                    "profile_support_analyst": 3,
+                    "profile_dev_intern": 3,
+                    "profile_business_analyst": 2,
+                    "profile_bizdev_rep": 1,
+                    "profile_bizdev_nordic": 1,
+                    "profile_bizdev_horeca": 1,
+                    "profile_bizdev_intern": 1,
+                    "profile_account_manager": 1
+                }
+            },
+            {
+                "id": "q6_b",
+                "label": "A persuasive communicator",
+                "points": {
+                    "profile_partner_manager": 2,
+                    "profile_support_analyst": 3,
+                    "profile_account_manager": 3,
+                    "profile_business_analyst": 3,
+                    "profile_bizdev_rep": 3,
+                    "profile_bizdev_nordic": 3,
+                    "profile_bizdev_horeca": 3,
+                    "profile_bizdev_intern": 3
+                }
+            },
+            {
+                "id": "q6_c",
+                "label": "A creative thinker",
+                "points": {
+                    "profile_web_designer": 3,
+                    "profile_marketing": 3
+                }
+            },
+            {
+                "id": "q6_d",
+                "label": "A patient and empathetic helper",
+                "points": {
+                    "profile_hr": 3,
+                    "profile_support_analyst": 3
+                }
+            }
         ]
     }
 ]

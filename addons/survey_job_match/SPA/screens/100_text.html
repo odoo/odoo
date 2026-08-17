@@ -1,12 +1,14 @@
-<section data-screen="question" class="jm_screen jm_hide">
+<section data-screen="text" class="jm_screen jm_hide">
     <div class="jm_body">
         <h1 class="jm_title" data-role="title"></h1>
         <div class="jm_description jm_hide" data-role="description"></div>
-        <div class="jm_choices" data-role="choices"></div>
+        <input type="text" data-role="input"/>
         <p class="jm_error" data-role="error"></p>
     </div>
     <div class="jm_actions">
         <button type="button" data-role="next">Continue</button>
-        <small class="jm_enter_hint">or press Enter</small>
+        <!-- A field has the focus here, so Enter belongs to it: Survey reserves
+             Ctrl+Enter for moving on. -->
+        <small class="jm_enter_hint">or press CTRL + Enter</small>
     </div>
 </section>
