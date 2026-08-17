@@ -50,6 +50,8 @@ export class TableStrategyPlugin extends Plugin {
         "buildRow",
         "extractRowsFromBands",
         "fillTableContainer",
+        "getCellBackgroundStyleInfo",
+        "getCellBorderStyleInfo",
         "getCellMarginStyleInfo",
         "getClusterEmailNodes",
         "getVerticalAlign",
@@ -133,20 +135,30 @@ export class TableStrategyPlugin extends Plugin {
         cellMarginRules.allow(/^margin-(top|bottom)$/);
     }
 
+    getCellBorderStyleInfo(styleInfo, referenceNode) {
+        if (!styleInfo) {
+            return styleInfo;
+        }
+        return this.filterStyleInfo(styleInfo, referenceNode, this.borderStyleRules);
+    }
+
+    getCellBackgroundStyleInfo(styleInfo, referenceNode) {
+        if (!styleInfo) {
+            return styleInfo;
+        }
+        return this.filterStyleInfo(styleInfo, referenceNode, this.backgroundStyleRules);
+    }
+
     /**
      * Remove horizontal margin (for the child of a cell), as
      * it won't render properly with box-sizing: content-box (cells have a
      * dimension)
      */
-    getCellMarginStyleInfo(styleInfo, emailNode) {
+    getCellMarginStyleInfo(styleInfo, referenceNode) {
         if (!styleInfo) {
             return styleInfo;
         }
-        return this.filterStyleInfo(
-            styleInfo,
-            emailNode.layout.ancestorTag,
-            this.cellMarginStyleRules
-        );
+        return this.filterStyleInfo(styleInfo, referenceNode, this.cellMarginStyleRules);
     }
 
     /**
@@ -341,16 +353,8 @@ export class TableStrategyPlugin extends Plugin {
             return defaultEmailNodeArguments;
         }
         const styleInfo = layout.getRef().styleInfo;
-        const borderStyleInfo = this.filterStyleInfo(
-            styleInfo,
-            referenceNode,
-            this.borderStyleRules
-        );
-        const backgroundStyleInfo = this.filterStyleInfo(
-            styleInfo,
-            referenceNode,
-            this.backgroundStyleRules
-        );
+        const borderStyleInfo = this.getCellBorderStyleInfo(styleInfo, referenceNode);
+        const backgroundStyleInfo = this.getCellBackgroundStyleInfo(styleInfo, referenceNode);
         if (
             (borderStyleInfo.size === 0 && backgroundStyleInfo.size === 0) ||
             // HR should not generate a table strategy report (they should keep their border)
@@ -877,7 +881,7 @@ export class TableStrategyPlugin extends Plugin {
         for (const child of clusterEmailNodes) {
             child.analysis.facts.desktopMarginStyleInfo = this.getCellMarginStyleInfo(
                 child.analysis.facts.desktopMarginStyleInfo,
-                child
+                child.layout.ancestorTag
             );
             cellEmailNode.appendChild(child);
         }
@@ -892,7 +896,7 @@ export class TableStrategyPlugin extends Plugin {
             for (const child of cellEmailNode.children) {
                 child.analysis.facts.desktopMarginStyleInfo = this.getCellMarginStyleInfo(
                     child.analysis.facts.desktopMarginStyleInfo,
-                    child
+                    child.layout.ancestorTag
                 );
             }
         }

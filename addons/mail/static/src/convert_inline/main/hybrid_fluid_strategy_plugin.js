@@ -295,7 +295,7 @@ export class HybridFluidStrategyPlugin extends Plugin {
         for (const child of clusterEmailNodes) {
             child.analysis.facts.desktopMarginStyleInfo = this.getCellMarginStyleInfo(
                 child.analysis.facts.desktopMarginStyleInfo,
-                child
+                child.layout.ancestorTag
             );
             cellEmailNode.appendChild(child);
         }

@@ -1,7 +1,7 @@
 import { registry } from "@web/core/registry";
 import { Plugin } from "../plugin";
 import { CellLayout, EmptyCellLayout, RowLayout, TableLayout } from "./table_models";
-import { Analysis, EmailNode } from "../core/render_models";
+import { Analysis, assignDefaultElementOptions, EmailNode } from "../core/render_models";
 import { StyleInfo } from "../core/style_models";
 
 export class MosaicStrategyPlugin extends Plugin {
@@ -16,13 +16,7 @@ export class MosaicStrategyPlugin extends Plugin {
     resources = {
         accept_table_strategy_report_overrides: this.acceptTableStrategyReport.bind(this),
         element_layout_analysis_processors: this.analyzeElementLayout.bind(this),
-        synthetic_email_node_processors: (emailNode) => {
-            if (!emailNode.analysis.facts.isMosaicContainer) {
-                return emailNode;
-            }
-            const tableMeasures = this.extractTableInfo(emailNode);
-            return this.fillMosaicContainer(emailNode, tableMeasures);
-        },
+        synthetic_email_node_processors: this.processSyntheticEmailNodes.bind(this),
     };
 
     acceptTableStrategyReport(emailNode) {
@@ -158,12 +152,14 @@ export class MosaicStrategyPlugin extends Plugin {
             const nextRow = ys.findIndex((y) => this.isZero(rect.bottom - y));
             const colspan = nextCol - col;
             const rowspan = nextRow - row;
+            const emailNode = rectToEmailNode.get(rect);
             return {
                 col,
                 row,
                 colspan,
                 rowspan,
-                emailNode: rectToEmailNode.get(rect),
+                emailNode,
+                referenceNode: emailNode.firstReferenceNode,
                 ...getWidth(col, colspan),
             };
         });
@@ -250,6 +246,18 @@ export class MosaicStrategyPlugin extends Plugin {
             matrix: occupied,
         };
     }
+
+    processSyntheticEmailNodes(emailNode) {
+        if (!emailNode.analysis.facts.isMosaicContainer) {
+            return emailNode;
+        }
+        const tableMeasures = this.processThrough(
+            "table_measures_processors",
+            this.extractTableInfo(emailNode),
+            emailNode
+        );
+        return this.fillMosaicContainer(emailNode, tableMeasures);
+    }
     // TODO EGGMAIL:
     // spacer cells contains cells for borders and spacing that are not part
     // of the declared cells => the challenge will be mapping the border color
@@ -270,10 +278,10 @@ export class MosaicStrategyPlugin extends Plugin {
      * - (both) draw them mirrored in the spacers around the cell | do not support rounded corners
      *   - overlapping borders providers => give border info and which emailNode should be wrapped
      *   - detect spacers around the cell from that info and apply the rule => no constraint
-     *   - WHEN: between extract and filltable (before building emailNodes)
+     *   - WHEN: between extract and fillMosaic (before building emailNodes)
      *
      * borders:
-     * - (masonry) bottom-up constraint to the cell (like table strategy)
+     * - DONE (masonry) bottom-up constraint to the cell (like table strategy)
      *   OR: direct extraction from the child => no constraint
      *   WHEN: building a cell
      * - (comparison) => no change
@@ -282,20 +290,20 @@ export class MosaicStrategyPlugin extends Plugin {
      * - (both) identify every discarded background color
      * - (both) define a colspan/rowspan range, apply on every cell inside in multiple passes (with respect to opacity)
      *   WHEN: background-color provider => give background color and concerned cells, sorted by depth (for alpha compositing)
-     *   between extract and filltable (before building emailnodes) => assign a color to each cell
+     *   between extract and fillMosaic (before building emailnodes) => assign a color to each cell
      *
      * background color:
-     * - (masonry) bottom-up constraint to the cell (like table strategy)
+     * - DONE (masonry) bottom-up constraint to the cell (like table strategy)
      *   OR: direct extraction from the child => no constraint
      *   WHEN: building a cell
      * - (comparison)
      *   - card body => up to the cell AND the card-footer
      *   - card footer => replace by color without alpha channel (computing ancestors)
-     *   WHEN between extract and fillTable (need provider of combo body/bottom, to apply on background color)
+     *   WHEN between extract and fillMosaic (need provider of combo body/bottom, to apply on background color)
      *
      * vertical align:
-     * - (masonry) => middle for every cell, forced -> direct
-     * - (comparison) => top for card body, bottom for card footer
+     * - DONE (masonry) => middle for every cell, forced -> direct
+     * - DONE (comparison) => top for card body, bottom for card footer
      *   Need provider for bottom and body, or they should have it as a fact
      *
      */
@@ -377,7 +385,6 @@ export class MosaicStrategyPlugin extends Plugin {
         // deduce empty cell by the presence/absence of emailNode
         // // need to appendchild said emailNode
         // needs verticalAlign
-        // needs to define isCell so that align-self constraint can work
         const { widthRatio, emailNode, rowspan, colspan } = cellMeasure;
         const refs = { root: {} };
         const style = { width: `${widthRatio}%` };
@@ -386,18 +393,23 @@ export class MosaicStrategyPlugin extends Plugin {
             style["vertical-align"] = verticalAlign;
             attributes.valign = verticalAlign;
         }
-        Object.assign(refs.root, {
+        const defaultOptions = {
             style: StyleInfo.from(style).merge(contextStyleInfo),
             attributes,
-        });
+        };
+        const options = this.processThrough(
+            "mosaic_cells_element_options_providers_processors",
+            {},
+            cellMeasure
+        );
+        Object.assign(refs.root, assignDefaultElementOptions(options, defaultOptions));
         const analysis = new Analysis({ parsingFacts: { canMerge: true, attemptCellMerge: true } });
         analysis.facts.isCell = true;
         analysis.facts.useMosaicStrategy = true;
         const layout = new CellLayout({ refs });
-        // WORKING HERE: refine analysis completion
+        // TODO EGGMAIL: do we need to keep the tableStrategyReport block?
         emailNode.analysis.facts.stopTableStrategyReportPropagation = true;
         analysis.facts.stopTableStrategyReportPropagation = true;
-        analysis.facts.acceptDescendantBorder;
         const cellEmailNode = new EmailNode({ layout, analysis });
         cellEmailNode.appendChild(emailNode);
         this.attemptCellMerge(cellEmailNode, emailNode);
