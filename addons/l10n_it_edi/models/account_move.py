@@ -1008,28 +1008,30 @@ class AccountMove(models.Model):
     # EDI: Import
     # -------------------------------------------------------------------------
 
+    def _l10n_it_edi_update_all_send_state(self, domain=None):
+        if moves_to_check := self or self.search([
+            ('company_id', '=', self.env.company.id),
+            ('l10n_it_edi_transaction', '!=', False),
+            *expression.OR([
+                [('l10n_it_edi_state', 'in', WAITING_STATES)],
+                expression.AND([
+                    [('l10n_it_edi_state', '=', 'forwarded')],
+                    [('commercial_partner_id.l10n_it_pa_index', '=ilike', '_' * 6)],
+                ])
+            ]),
+            *(domain or []),
+        ]):
+            moves_to_check._l10n_it_edi_update_send_state()
+        return {'type': 'ir.actions.client', 'tag': 'reload'}
+
     def cron_l10n_it_edi_download_and_update(self):
         """ Crons run with sudo(), with empty recordset. Remember that. """
         retrigger = False
-        for proxy_user in self.env['account_edi_proxy_client.user'].search([('proxy_type', '=', 'l10n_it_edi')]):
+        for proxy_user in self.env['account_edi_proxy_client.user'].search([('proxy_type', '=', 'l10n_it_edi'), ('edi_mode', '!=', 'demo')]):
             proxy_user = proxy_user.with_company(proxy_user.company_id)
-            if proxy_user.edi_mode != 'demo':
-                moves_to_check = self.search([
-                    ('company_id', '=', proxy_user.company_id.id),
-                    ('l10n_it_edi_transaction', '!=', False),
-                    *expression.OR(
-                        [[('l10n_it_edi_state', 'in', WAITING_STATES)],
-                        expression.AND(
-                            [
-                                [('l10n_it_edi_state', '=', 'forwarded')],
-                                [('commercial_partner_id.l10n_it_pa_index', '=ilike', '_' * 6)],
-                            ]
-                        )]
-                    )
-                ])
-                if moves_to_check:
-                    moves_to_check._l10n_it_edi_update_send_state()
-                retrigger = retrigger or self._l10n_it_edi_download_invoices(proxy_user)
+            AccountMove = self.env['account.move'].with_company(proxy_user.company_id)
+            AccountMove._l10n_it_edi_update_all_send_state()
+            retrigger = retrigger or self._l10n_it_edi_download_invoices(proxy_user)
 
         # Retrigger download if there are still some on the server
         if retrigger:

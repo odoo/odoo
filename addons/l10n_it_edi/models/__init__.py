@@ -8,4 +8,5 @@ from . import account_move_send
 from . import ddt
 from . import ir_attachment
 from . import account_edi_proxy_user
-from. import l10n_it_document_type
+from . import l10n_it_document_type
+from . import account_journal
