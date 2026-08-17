@@ -1112,6 +1112,7 @@ SERVICES_MAPPING = {
     "assetsWatchdog": ['AssetsWatchdogPlugin', '@bus/services/assets_watchdog_plugin'],
     "bus.parameters": ['BusParametersPlugin', '@bus/bus_parameters_plugin'],
     "bus.monitoring_service": ['BusMonitoringPlugin', '@bus/services/bus_monitoring_plugin'],
+    "bus.logs_service": ['BusLogsPlugin', '@bus/debug/bus_logs_plugin'],
     "bus_service": ['BusPlugin', '@bus/services/bus_plugin'],
     "color_scheme": ['ColorSchemePlugin', '@web_enterprise/webclient/color_scheme/color_scheme_plugin'],
     "currency": ['CurrencyPlugin', '@web/webclient/currency_plugin'],
