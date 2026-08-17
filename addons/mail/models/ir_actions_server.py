@@ -344,12 +344,6 @@ class IrActionsServer(models.Model):
             kwargs_message_subscribe = {"partner_ids": partner_ids.ids}
             if self.subtype_ids:
                 kwargs_message_subscribe["subtype_ids"] = self.subtype_ids.ids
-            # If the user empties the field, we subscribe to All subtypes
-            else:
-                all_subtypes = self.env["mail.message.subtype"].search([
-                    '|', ('res_model', '=', False), ('res_model', '=', self.model_name)
-                ])
-                kwargs_message_subscribe["subtype_ids"] = all_subtypes.ids
             records.message_subscribe(**kwargs_message_subscribe)
         return False
 

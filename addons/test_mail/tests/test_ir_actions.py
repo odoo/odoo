@@ -399,7 +399,7 @@ class TestServerActionsEmail(MailCommon, TestServerActionsBase):
         self.assertTrue(follower, "Partner should have been added as a follower")
         self.assertEqual(follower.subtype_ids, mt_note, "Partner should only follow the 'Notes' subtype")
 
-    def test_action_followers_all_subtypes(self):
+    def test_action_followers_default_subtypes(self):
         new_partner = self.env['res.partner'].create({'name': 'Ada Lovesubtypes'})
 
         self.action.write({
@@ -416,5 +416,8 @@ class TestServerActionsEmail(MailCommon, TestServerActionsBase):
         self.assertTrue(follower, "Partner should have been added as a follower")
         self.assertEqual(
             follower.subtype_ids,
-            self.env["mail.message.subtype"].search(['|', ('res_model', '=', False), ('res_model', '=', self.action.model_name)]),
-            "Partner should follow all subtypes")
+            self.env["mail.message.subtype"].search([
+                ('default', '=', True),
+                '|', ('res_model', '=', False), ('res_model', '=', self.action.model_name)
+            ]),
+            "Partner should follow default subtypes")

@@ -87,7 +87,7 @@
                             <field name="subtype_ids"
                                 string="Subscriptions"
                                 widget="many2many_tags"
-                                placeholder="All"
+                                placeholder="Default"
                                 invisible="state != 'followers' or followers_type != 'specific'"
                                 domain="['&amp;', ('hidden', '=', False), '|', ('res_model', '=', False), ('res_model', '=', model_name)]"/>
                         </group>
