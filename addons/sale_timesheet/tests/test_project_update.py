@@ -35,6 +35,7 @@ class TestProjectUpdateSaleTimesheet(TestProjectUpdate):
 
     def test_project_update_profitability_values(self):
         """Ensure project updates use the correct profitability values after invoicing."""
+        self.env['product.pricelist'].with_context(active_test=False).search([]).unlink()
         uom_hour = self.env.ref('uom.product_uom_hour')
         project = self.env['project.project'].create({
             'name': 'Project',
