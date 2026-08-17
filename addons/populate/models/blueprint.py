@@ -1,6 +1,9 @@
 from __future__ import annotations
 
 import json
+import re
+
+from lxml import etree
 
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
@@ -9,6 +12,7 @@ from ..utils import loading, xml
 from ..utils.orm import get_model_method
 
 DEFINITION_PREFETCH_GROUP = 'Definitions'
+_IMPORT_NAMESPACE_RE = re.compile(r'^[a-zA-Z_][a-zA-Z0-9_-]*$')
 
 
 class Blueprint(models.Model):
@@ -17,8 +21,8 @@ class Blueprint(models.Model):
 
     A blueprint holds an XML or JSON definition describing which models to
     populate, how many records to create, and which generators to use for
-    each field.  It supports simple inheritance via ``inherit_id``
-    (XPath specs applied to the parent's XML).
+    each field. It supports inheritance via ``inherit_id`` and reusable XML
+    composition via ``<import>`` blocks.
 
     Blueprints are instantiated into ``populate.job`` records
     within a ``populate.session`` at execution time.
@@ -50,7 +54,7 @@ class Blueprint(models.Model):
     )
 
     @api.constrains('definition_xml', 'definition_json', 'inherit_id')
-    def _check_definition(self):  # TODO: simplify by using JsonSchema validation
+    def _check_definition(self):
         """Validate resolved blueprint definitions against the loaded models.
 
         Checks inheritance cycles, operation blocks, model names, and field names before
@@ -71,6 +75,7 @@ class Blueprint(models.Model):
             )))
 
         for blueprint in self:
+            created_refs = set()
             for block in blueprint.definition:
                 operation = block.get('operation')
                 if not operation:
@@ -80,6 +85,15 @@ class Blueprint(models.Model):
                 if operation not in ('create', 'write', 'function'):
                     fail(blueprint, block, self.env._("Unknown operation '%(operation)s'.", operation=operation))
                     continue  # Unknown operations have no validation rules.
+
+                if operation == 'create' and (block_id := block.get('id')):
+                    if block_id in created_refs:
+                        fail(blueprint, block, self.env._(
+                            "Create reference '%(ref)s' is declared more than once.",
+                            ref=block_id,
+                        ))
+                    else:
+                        created_refs.add(block_id)
 
                 if operation == 'create' and 'ref' in block:
                     fail(blueprint, block, self.env._("Create blocks use 'id', not 'ref'."))
@@ -166,7 +180,7 @@ class Blueprint(models.Model):
             # The module doesn't have a webclient interface, so it's ok to not raise an explicit ValidationError
             raise ExceptionGroup(self.env._("Some blueprint definition(s) are invalid."), exceptions)
 
-    @api.depends('definition_xml', 'definition_json')
+    @api.depends('definition_xml', 'definition_json', 'inherit_id')
     def _compute_definition(self):
         """Compute the blueprint's definition in JSON.
 
@@ -190,39 +204,107 @@ class Blueprint(models.Model):
     def write(self, vals):
         if definition_xml := vals.get('definition_xml'):
             vals['definition_xml'] = xml.ensure_root(definition_xml)
-        return super().write(vals)
+        result = super().write(vals)
+        if {'definition_xml', 'definition_json', 'inherit_id'} & vals.keys():
+            # Import dependencies live in the raw XML, so the ORM cannot infer
+            # which computed definitions depend on the changed blueprints.
+            self.env['populate.blueprint'].invalidate_model(['definition'])
+        return result
+
+    @api.ondelete(at_uninstall=False)
+    def _invalidate_definition_cache(self):
+        # Import dependencies are not ORM fields, so deleting an imported
+        # blueprint must invalidate the cached definitions of its callers.
+        self.env['populate.blueprint'].invalidate_model(['definition'])
 
     def _get_resolved_definition(self):
-        """Get the resolved XML definition, applying inheritance specs if needed.
-
-        :return: XML definition string, or ``None`` for JSON-only blueprints.
-        :raise ValueError: If inheritance targets a JSON-only parent or invalid XPath specs.
-        """
+        """Resolve inheritance and expand imports into a concrete XML definition."""
         self.ensure_one()
 
-        if not self.definition_xml:
-            return None
+        def resolve(blueprint, seen):
+            if blueprint.id in seen:
+                raise ValueError(self.env._(
+                    "Recursive blueprint composition detected for '%(blueprint)s'.",
+                    blueprint=blueprint.name,
+                ))
+            if not blueprint.definition_xml:
+                return None
 
-        if not self.inherit_id:
-            return self.definition_xml
+            seen |= {blueprint.id}
+            if not blueprint.inherit_id:
+                definition = etree.fromstring(blueprint.definition_xml)
+            else:
+                parent = resolve(blueprint.inherit_id, seen)
+                if parent is None:
+                    raise ValueError(self.env._(
+                        "The blueprint '%(parent)s' does not have an XML definition, but '%(child)s' inherits from it.",
+                        parent=blueprint.inherit_id.name,
+                        child=blueprint.name,
+                    ))
+                try:
+                    definition = xml.apply_inheritance_specs(
+                        parent,
+                        etree.fromstring(blueprint.definition_xml),
+                    )
+                except (ValueError, ValidationError) as error:
+                    raise ValueError(self.env._(
+                        "Error applying blueprint inheritance from '%(parent)s' to '%(child)s': %(error)s",
+                        parent=blueprint.inherit_id.name,
+                        child=blueprint.name,
+                        error=error,
+                    )) from error
 
-        parent_definition_xml = self.inherit_id._get_resolved_definition()
-        if not parent_definition_xml:
-            raise ValueError(self.env._(
-                "The blueprint '%(parent)s' does not have an XML definition, but '%(child)s' inherit from it.",
-                parent=self.inherit_id.name,
-                child=self.name,
-            ))
+            return xml.expand_imports(definition, lambda element: import_fragment(element, seen))
 
-        try:
-            return xml.apply_inheritance(parent_definition_xml, self.definition_xml)
-        except ValueError as e:
-            raise ValueError(self.env._(
-                "Error applying blueprint inheritance from %(parent)s' to %(child)s: %(error)s",
-                parent=self.inherit_id.name,
-                child=self.name,
-                error=e,
-            ))
+        def import_fragment(element, seen):
+            unknown_attributes = set(element.attrib) - {'ref', 'as'}
+            if unknown_attributes:
+                raise ValueError(self.env._(
+                    "Unknown <import> attribute(s): %(attributes)s.",
+                    attributes=', '.join(sorted(unknown_attributes)),
+                ))
+            if (
+                element.text and element.text.strip()
+                or any(child.tail and child.tail.strip() for child in element)
+            ):
+                raise ValueError(self.env._("<import> may only contain inheritance specifications."))
+
+            import_ref = element.get('ref')
+            if not import_ref or '.' not in import_ref:
+                raise ValueError(self.env._("<import> requires a fully qualified XML ID in 'ref'."))
+
+            namespace = element.get('as')
+            if 'as' in element.attrib and not namespace:
+                raise ValueError(self.env._("An import namespace cannot be empty."))
+            if namespace and not _IMPORT_NAMESPACE_RE.fullmatch(namespace):
+                raise ValueError(self.env._("Invalid import namespace '%(namespace)s'.", namespace=namespace))
+
+            imported_blueprint = self.env.ref(import_ref, raise_if_not_found=False)
+            if not imported_blueprint:
+                raise ValueError(self.env._("Imported blueprint '%(import_ref)s' was not found.", import_ref=import_ref))
+            if imported_blueprint._name != self._name:
+                raise ValueError(self.env._(
+                    "'%(import_ref)s' refers to '%(model)s', not a populate blueprint.",
+                    import_ref=import_ref,
+                    model=imported_blueprint._name,
+                ))
+
+            imported = resolve(imported_blueprint, seen)
+            if imported is None:
+                raise ValueError(self.env._("Imported blueprint '%(import_ref)s' must use XML.", import_ref=import_ref))
+            if len(element):
+                imported = xml.apply_inheritance_specs(imported, element)
+                imported = xml.expand_imports(
+                    imported,
+                    lambda nested: import_fragment(nested, seen | {imported_blueprint.id}),
+                )
+
+            if namespace:
+                xml.namespace_references(imported, namespace)
+            return imported
+
+        definition = resolve(self, frozenset())
+        return etree.tostring(definition, encoding='unicode') if definition is not None else None
 
     def _register_hook(self):
         """Load populate data if the `populate` module was installed or upgraded."""

@@ -1,11 +1,18 @@
+from __future__ import annotations
+
 from ast import literal_eval
+from typing import TYPE_CHECKING
 
 from lxml import etree
 
 from odoo.tools import str2bool, template_inheritance
 
+if TYPE_CHECKING:
+    from collections.abc import Callable, Iterable
+    from lxml.etree import _Element as Element
 
-def ensure_root(xml):
+
+def ensure_root(xml: str) -> str:
     """Wrap XML snippets in the ``<data>`` root expected by blueprint parsing.
 
     :param xml: Raw XML definition, possibly empty or with multiple root nodes.
@@ -31,7 +38,7 @@ def ensure_root(xml):
         return xml
 
 
-def parse(xml):
+def parse(xml: str):
     """
     Convert the XML definition into the JSON version.
 
@@ -161,7 +168,7 @@ def parse(xml):
     return json
 
 
-def apply_inheritance(parent_xml, xml):
+def apply_inheritance(parent_xml: str, xml: str) -> str:
     """Apply child XPath specs to a parent XML blueprint definition.
 
     :param parent_xml: Resolved parent XML definition.
@@ -170,5 +177,54 @@ def apply_inheritance(parent_xml, xml):
     """
     parent_tree = etree.fromstring(parent_xml)
     specs_tree = etree.fromstring(xml)
-    resolved = template_inheritance.apply_inheritance_specs(parent_tree, specs_tree)
+    resolved = apply_inheritance_specs(parent_tree, specs_tree)
     return etree.tostring(resolved, encoding='unicode')
+
+
+def apply_inheritance_specs(
+    source_tree: Element,
+    specs: Iterable[Element],
+) -> Element:
+    """Apply an XML element's inheritance specifications to ``source_tree``."""
+    return template_inheritance.apply_inheritance_specs(source_tree, list(specs))
+
+
+def expand_imports(
+    definition: Element,
+    resolve_import: Callable[[Element], Element],
+) -> Element:
+    """Expand top-level imports in an XML element.
+
+    ``resolve_import`` receives each ``<import>`` element and returns a
+    ``<data>`` fragment. Its top-level nodes are moved into ``definition``, so
+    callers must return a fragment owned by this operation.
+    """
+    if definition.xpath('.//import[not(parent::data) and not(ancestor::import)]'):
+        raise ValueError("<import> must be a direct child of <data>.")
+
+    for element in list(definition.iterchildren('import')):
+        fragment = resolve_import(element)
+        for block in list(fragment):
+            element.addprevious(block)
+        definition.remove(element)
+
+    return definition
+
+
+def namespace_references(fragment_tree: Element, namespace: str) -> None:
+    """Prefix a fragment's declared IDs and internal refs with ``namespace``."""
+    declared_ids: set[str] = {
+        ref
+        for block in fragment_tree.iterchildren('create')
+        if (ref := block.get('id'))
+    }
+    for block in fragment_tree:
+        if block.get('id') in declared_ids:
+            block.set('id', f"{namespace}/{block.get('id')}")
+
+        for element in block.iter():
+            if not (ref := element.get('ref')):
+                continue
+            base_ref, separator, relation_path = ref.partition('.')
+            if base_ref in declared_ids:
+                element.set('ref', f'{namespace}/{base_ref}{separator}{relation_path}')
