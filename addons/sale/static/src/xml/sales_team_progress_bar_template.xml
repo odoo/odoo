@@ -3,7 +3,7 @@
 <templates xml:space="preserve">
 
     <t t-name="sale.SaleProgressBarField">
-        <t t-if="this.state.isInvoicingTargetDefined">
+        <t t-if="this.isInvoicingTargetDefined">
             <t t-call="web.ProgressBarField"/>
         </t>
         <t t-else="">
