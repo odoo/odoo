@@ -12,6 +12,10 @@ class AccountMove(models.Model):
     # OVERRIDE METHODS
     # -------------------------------------------------------------------------
 
+    def _update_average_cost_on_hand(self):
+        # the cost is updated at stock move validation when stock is installed
+        pass
+
     def _get_lines_onchange_currency(self):
         # OVERRIDE
         return self.line_ids.filtered(lambda l: l.display_type != 'cogs')
@@ -114,6 +118,9 @@ class AccountMove(models.Model):
         to optimize computations that only depend on account.move and not account.move.line
         """
         return self.env.context
+
+    def _update_standard_price(self, reverse=False):
+        return
 
     def _get_invoiced_lot_values(self):
         return []

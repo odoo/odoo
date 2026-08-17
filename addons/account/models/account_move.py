@@ -5962,6 +5962,19 @@ class AccountMove(models.Model):
                     skip_qty_available_update=True,
                 ).qty_available += sign * qty
 
+    def _update_standard_price(self, reverse=False):
+        sign = -1 if reverse else 1
+        for move in self:
+            if move.move_type != 'in_invoice':
+                continue
+            for line in move.invoice_line_ids:
+                if line.display_type != 'product' or not line.product_id.is_storable:
+                    continue
+                qty = line.product_uom_id._compute_quantity(line.quantity, line.product_id.uom_id)
+                line.product_id.sudo().with_company(move.company_id)._update_standard_price(
+                    extra_value=sign * abs(line.balance), extra_quantity=sign * qty,
+                )
+
     def _post(self, soft=True):
         """Post/Validate the documents.
 
@@ -6152,6 +6165,7 @@ class AccountMove(models.Model):
             'posted_before': True,
         })
 
+        to_post._update_standard_price()
         to_post._update_qty_available()
 
         if not self.env.user.has_group('account.group_partial_purchase_deductibility') and \
@@ -6717,7 +6731,9 @@ class AccountMove(models.Model):
         self._unlink_next_draft_auto_post_moves()
         # We remove all the analytics entries for this journal
         self.line_ids.analytic_line_ids.with_context(skip_analytic_sync=True).unlink()
-        self.filtered(lambda move: move.state == 'posted')._update_qty_available(reverse=True)
+        posted_moves = self.filtered(lambda move: move.state == 'posted')
+        posted_moves._update_standard_price(reverse=True)
+        posted_moves._update_qty_available(reverse=True)
         self.state = 'draft'
         self.sending_data = False
 
