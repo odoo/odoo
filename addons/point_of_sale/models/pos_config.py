@@ -563,8 +563,8 @@ class PosConfig(models.Model):
 
         pos_configs = super().create(vals_list)
         pos_configs._create_sequences()
-        pos_configs.sudo()._check_modules_to_install()
-        pos_configs.sudo()._check_groups_implied()
+        pos_configs._check_modules_to_install()
+        pos_configs._check_groups_implied()
         pos_configs._update_preparation_printers_menuitem_visibility()
         # If you plan to add something after this, use a new environment. The one above is no longer valid after the modules install.
         return pos_configs
@@ -664,9 +664,9 @@ class PosConfig(models.Model):
             if config.use_presets and config.default_preset_id and config.default_preset_id.id not in config.available_preset_ids.ids:
                 config.available_preset_ids |= config.default_preset_id
 
-        self.sudo()._set_fiscal_position()
-        self.sudo()._check_modules_to_install()
-        self.sudo()._check_groups_implied()
+        self._set_fiscal_position()
+        self._check_modules_to_install()
+        self._check_groups_implied()
         if 'is_order_printer' in vals:
             self._update_preparation_printers_menuitem_visibility()
         return result
@@ -733,13 +733,19 @@ class PosConfig(models.Model):
         sequences_to_delete.unlink()
         return res
 
+    def _check_pos_manager_access(self):
+        if not (self.env.is_admin() or self.env.user.has_group('point_of_sale.group_pos_manager')):
+            raise AccessError(_("Only Point of Sale managers can modify a Point of Sale configuration."))
+
     # TODO-JCB: Maybe we can move this logic in `_reset_default_on_vals`
     def _set_fiscal_position(self):
         for config in self:
             if config.tax_regime_selection and config.default_fiscal_position_id and (config.default_fiscal_position_id.id not in config.fiscal_position_ids.ids):
-                config.fiscal_position_ids = [(4, config.default_fiscal_position_id.id)]
+                self._check_pos_manager_access()
+                config.sudo().fiscal_position_ids = [(4, config.default_fiscal_position_id.id)]
             elif not config.tax_regime_selection and config.fiscal_position_ids.ids:
-                config.fiscal_position_ids = [(5, 0, 0)]
+                self._check_pos_manager_access()
+                config.sudo().fiscal_position_ids = [(5, 0, 0)]
 
     def _check_modules_to_install(self):
         # determine modules to install
@@ -754,6 +760,7 @@ class PosConfig(models.Model):
             modules = self.env['ir.module.module'].sudo().search([('name', 'in', expected)])
             modules = modules.filtered(lambda module: module.state not in STATES)
             if modules:
+                self._check_pos_manager_access()
                 modules.button_immediate_install()
                 # just in case we want to do something if we install a module. (like a refresh ...)
                 return True
@@ -766,7 +773,11 @@ class PosConfig(models.Model):
                 if field.type in ('boolean', 'selection') and hasattr(field, 'implied_group'):
                     field_group_xmlids = getattr(field, 'group', 'base.group_user').split(',')
                     field_groups = self.env['res.groups'].concat(*(self.env.ref(it) for it in field_group_xmlids))
-                    field_groups.write({'implied_ids': [(4, self.env.ref(field.implied_group).id)]})
+                    implied_group = self.env.ref(field.implied_group)
+                    field_groups = field_groups.filtered(lambda group: implied_group not in group.implied_ids)
+                    if field_groups:
+                        self._check_pos_manager_access()
+                        field_groups.sudo().write({'implied_ids': [(4, implied_group.id)]})
 
 
     def execute(self):
