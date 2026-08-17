@@ -54,7 +54,9 @@ publicWidget.registry.subscribe = publicWidget.Widget.extend({
      * @override
      */
     destroy() {
-        this._updateView({is_subscriber: false});
+        this._updateView({is_subscriber: false}, true);
+        this.el.parentElement.querySelectorAll('.s_turnstile').forEach(el => el.remove());
+        this._turnstile?.cleanSpinner();
         this._super.apply(this, arguments);
     },
 
@@ -67,9 +69,10 @@ publicWidget.registry.subscribe = publicWidget.Widget.extend({
      *
      * @todo should probably be merged with _updateSubscribeControlsStatus
      * @param {Object} data
+     * @param {boolean} [skipTurnstile=false]
      */
-    _updateView(data) {
-        this._updateSubscribeControlsStatus(!!data.is_subscriber);
+    _updateView(data, skipTurnstile) {
+        this._updateSubscribeControlsStatus(!!data.is_subscriber, skipTurnstile);
 
         // js_subscribe_email is kept by compatibility (it was the old name of js_subscribe_value)
         const valueInputEl = this.el.querySelector('input.js_subscribe_value, input.js_subscribe_email');
@@ -82,8 +85,9 @@ publicWidget.registry.subscribe = publicWidget.Widget.extend({
      * Updates the visibility of the subscribe and subscribed buttons.
      *
      * @param {boolean} isSubscriber
+     * @param {boolean} [skipTurnstile=false]
      */
-    _updateSubscribeControlsStatus(isSubscriber) {
+    _updateSubscribeControlsStatus(isSubscriber, skipTurnstile) {
         const thanksWrapEl = this.el.querySelector('.js_subscribed_wrap');
         const subscribeWrapEl = this.el.querySelector('.js_subscribe_wrap');
         const subscribeBtnEl = this.el.querySelector('.js_subscribe_btn');
@@ -96,12 +100,12 @@ publicWidget.registry.subscribe = publicWidget.Widget.extend({
         const valueInputEl = this.el.querySelector('input.js_subscribe_value, input.js_subscribe_email');
         valueInputEl.disabled = isSubscriber;
 
-        // When the website is in edit mode, window.top != window. We don't want turnstile to render during edit mode
-        // and mess up the DOM and saving it.
-        if (!isSubscriber && this._turnstile && window.top === window) {
+        // We don't want turnstile to render during edit mode and mess up the
+        // DOM and saving it.
+        if (!isSubscriber && !skipTurnstile && this._turnstile && !this.editableMode) {
             const el = this._turnstile.addTurnstile('website_mass_mailing_subscribe');
             if (el) {
-                this._turnstile.addSpinner(subscribeBtnEl);
+                this._turnstile.addSpinnerNoMangle(subscribeBtnEl);
                 el[0].classList.add('mt-3');
                 el.insertAfter(this.el);
                 this._turnstile.renderTurnstile(el);
