@@ -128,6 +128,8 @@ class ResPartner(models.Model):
                 stop_period + offset,  # We use an 1 day offset to capture work entries that span into the day after
             )
         )
+        if not schedule_by_partner:
+            return set()
         return self._intervals_to_business_days(reduce(Intervals.__and__, schedule_by_partner.values()))
 
     @api.model
