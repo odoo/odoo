@@ -10,7 +10,6 @@ class TestCasInvoiceReport(TestPhCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.ensure_installed('l10n_ph_reports')  # provides `l10n_ph_is_vat_registered`
         cls.company_data['company'].l10n_ph_is_vat_registered = True
         chart_template = cls.env['account.chart.template'].with_company(cls.company_data['company'])
         cls.tax_vatable = chart_template.ref('l10n_ph_tax_sale_12')

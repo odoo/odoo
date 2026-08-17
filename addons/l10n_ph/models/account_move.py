@@ -62,7 +62,7 @@ class AccountMove(models.Model):
                 elif tax_group['id'] == group_ids['percentage_tax']:
                     vals['percentage_tax_base'] += base_amount
 
-        if not self.company_id._l10n_ph_is_vat_registered():
+        if not self.company_id.l10n_ph_is_vat_registered:
             category = 'non_vat'
         elif present_groups and present_groups <= {'vat_exempt'}:
             category = 'vat_exempt'
