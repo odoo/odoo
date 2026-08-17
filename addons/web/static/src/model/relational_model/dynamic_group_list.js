@@ -105,6 +105,9 @@ export class DynamicGroupList extends DynamicList {
      */
     async moveRecord(dataRecordId, dataGroupId, refId, targetGroupId) {
         const targetGroup = this.groups.find((g) => g.id === targetGroupId);
+        if (!targetGroup) {
+            return;
+        }
         if (dataGroupId === targetGroupId) {
             // move a record inside the same group
             await targetGroup.list._resequence(

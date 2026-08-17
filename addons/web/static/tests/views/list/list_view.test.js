@@ -11225,6 +11225,38 @@ test(`editable grouped list with handle widget (group by date)`, async () => {
     expect(`.o_field_handle:first span`).not.toBeEnabled();
 });
 
+test.tags("desktop");
+test(`editable grouped list: drag a row onto group's add-line area`, async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list editable="bottom">
+                <field name="int_field" widget="handle"/>
+                <field name="foo"/>
+            </list>
+        `,
+        groupBy: ["bar"],
+    });
+
+    expect(`.o_group_header`).toHaveCount(2);
+    await contains(`.o_group_header:eq(0)`).click();
+    await contains(`.o_group_header:eq(1)`).click();
+
+    await contains(`tbody .o_data_row:eq(0) .o_handle_cell`).dragAndDrop(
+        queryFirst(`tbody .o_data_row:eq(3) .o_handle_cell`)
+    );
+    expect(`.o_group_header:eq(0)`).toHaveText("No 0", { inline: true });
+    expect(`.o_group_header:eq(1)`).toHaveText("Yes 4", { inline: true });
+    expect(`.o_data_row`).toHaveCount(4);
+
+    await contains(`tbody .o_data_row:eq(2) .o_handle_cell`).dragAndDrop(
+        queryFirst(`.o_group_field_row_add:eq(0)`)
+    );
+    expect(`.o_group_header:eq(0)`).toHaveText("No 1", { inline: true });
+    expect(`.o_group_header:eq(1)`).toHaveText("Yes 3", { inline: true });
+});
+
 test(`editable grouped list with handle widget (multiple group by)`, async () => {
     await mountView({
         resModel: "foo",
