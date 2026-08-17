@@ -1,3 +1,4 @@
+import logging
 from json import JSONDecodeError
 
 import requests
@@ -8,6 +9,8 @@ from odoo.exceptions import ValidationError
 from odoo.addons.pos_bancontact_pay import const
 from odoo.addons.pos_bancontact_pay.errors.http import HTTP_ERRORS
 
+_logger = logging.getLogger(__name__)
+
 
 class PosPaymentMethod(models.Model):
     _inherit = "pos.payment.method"
@@ -16,9 +19,9 @@ class PosPaymentMethod(models.Model):
     def _get_external_qr_provider_selection(self):
         return super()._get_external_qr_provider_selection() + [("bancontact_pay", "Bancontact Pay")]
 
-    bancontact_api_key = fields.Char("Bancontact API Key")
-    bancontact_ppid = fields.Char("Bancontact PPID")
-    bancontact_test_mode = fields.Boolean(help="Run transactions in the test environment.")
+    bancontact_api_key = fields.Char("Bancontact API Key", groups="point_of_sale.group_pos_manager", help="Bancontact Pro Portal > Admin Centre > Shops and products > Select a product > Manage API keys > View API key")
+    bancontact_ppid = fields.Char("Bancontact PPID", help="Bancontact Pro Portal > Admin Centre > Shops and products > Select a shop > Read the product ID from the card")
+    bancontact_test_mode = fields.Boolean("Preprod", help="Run transactions in Bancontact's preprod environment.")
     bancontact_usage = fields.Selection(
         selection=[
             ("display", "On-Screen Display"),
@@ -82,18 +85,26 @@ class PosPaymentMethod(models.Model):
             raise ValidationError(_("Bancontact payments can only be created for payment methods using Bancontact Pay as provider."))
 
         headers = {
-            "Authorization": f"Bearer {self.bancontact_api_key}",
+            "Authorization": f"Bearer {self.sudo().bancontact_api_key}",
             "Content-Type": "application/json",
         }
         url, payload = self._prepare_bancontact_payment_request(data)
-        response = requests.post(url, json=payload, headers=headers, timeout=5)
-        self._assert_bancontact_http_success(response)
-        bancontact_data = response.json()
+        response = None
+        try:
+            response = requests.post(url, json=payload, headers=headers, timeout=5)
+            self._assert_bancontact_http_success(response)
+            bancontact_data = response.json()
+        except Exception as e:
+            reason = response.text if response is not None else str(e)
+            _logger.warning("%s payment creation failed: ppid=%s, reason=%s, data=%s", const.LOG_PREFIX, self.bancontact_ppid, reason, data)
+            raise
 
         bancontact_id = bancontact_data["paymentId"]
         bancontact_qr = bancontact_data.get("_links", {}).get("qrcode", {}).get("href", "")
         if bancontact_qr:
             bancontact_qr += "&f=SVG"
+
+        _logger.info("%s payment creation succeeded: ppid=%s, bancontact_id=%s", const.LOG_PREFIX, self.bancontact_ppid, bancontact_id)
         return {
             "bancontact_id": bancontact_id,
             "qr_code": bancontact_qr,
@@ -106,22 +117,26 @@ class PosPaymentMethod(models.Model):
 
         url = f"{self._get_bancontact_api_url('merchant')}/v3/payments/{bancontact_id}"
         headers = {
-            "Authorization": f"Bearer {self.bancontact_api_key}",
+            "Authorization": f"Bearer {self.sudo().bancontact_api_key}",
             "Content-Type": "application/json",
         }
-        response = requests.delete(url, headers=headers, timeout=5)
-        self._assert_bancontact_http_success(response,
-            {422: (_("Unable to cancel payment. The payment may not be in a cancellable state."), ValidationError)},
-        )
+
+        response = None
+        try:
+            response = requests.delete(url, headers=headers, timeout=5)
+            self._assert_bancontact_http_success(response,
+                {422: (_("Unable to cancel payment. The payment may not be in a cancellable state."), ValidationError)},
+            )
+        except Exception as e:
+            reason = response.text if response is not None else str(e)
+            _logger.warning("%s payment cancellation failed: ppid=%s, bancontact_id=%s, reason=%s", const.LOG_PREFIX, self.bancontact_ppid, bancontact_id, reason)
+            raise
 
     # ----- Helpers ----- #
     def _get_callback_url(self, data):
         """Build the callback URL used by Bancontact Pay to notify payment status."""
         config_id = data.get("configId")
-        url = f"{self.get_base_url()}/bancontact_pay/webhook?config_id={config_id}&ppid={self.bancontact_ppid}"
-        if self.bancontact_test_mode:
-            url += "&mode=test"
-        return url
+        return f"{self.get_base_url()}/bancontact_pay/webhook?config_id={config_id}&payment_method_id={self.id}"
 
     def _prepare_bancontact_payment_request(self, data):
         """Prepare the endpoint and JSON payload for a Bancontact payment creation call."""

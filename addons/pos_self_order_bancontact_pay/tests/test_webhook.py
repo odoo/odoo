@@ -1,3 +1,4 @@
+from odoo import Command
 from odoo.tests.common import tagged
 
 from odoo.addons.pos_bancontact_pay.tests.test_webhook import TestWebhook
@@ -15,28 +16,35 @@ class TestSelfOrderWebhook(TestWebhook):
                 "self_ordering_default_user_id": self.pos_user.id,
                 "self_ordering_mode": "kiosk",
                 "self_ordering_pay_after": "each",
-                "payment_method_ids": [(4, self.bank_payment_method.id)],
+                "payment_method_ids": [
+                    Command.link(self.bank_payment_method.id),
+                    Command.link(self.payment_method_display.id),
+                ],
             },
         )
 
     def test_bancontact_webhook_success(self):
-        payload = self._make_payload("any_id", "SUCCEEDED")
+        bancontact_id = "any_id"
+        self._create_pending_payment(bancontact_id, config=self.kiosk)
+        payload = self._make_payload(bancontact_id, "SUCCEEDED")
 
-        with self._notify_patcher() as mock_notify:
+        with self.mock_verify_signature(), self._notify_patcher() as mock_notify:
             response = self._post_bancontact_webhook(self.kiosk.id, payload)
             self.assertEqual(response.status_code, 200)
-            self._assert_notify_count(mock_notify, "FINALIZE_KIOSK_PAYMENT", 1)
-            self._assert_notify_finalize_kiosk_payment(mock_notify, "any_id", "SUCCEEDED")
+            self._assert_notify_count(mock_notify, "FINALIZE_BANCONTACT_PAY_KIOSK_PAYMENT", 1)
+            self._assert_notify_finalize_kiosk_payment(mock_notify, bancontact_id, "SUCCEEDED")
 
     def test_bancontact_webhook_error(self):
         for bancontact_status in ("AUTHORIZATION_FAILED", "FAILED", "EXPIRED", "CANCELLED"):
-            payload = self._make_payload("any_id", bancontact_status)
+            bancontact_id = f"any_id_{bancontact_status}"
+            self._create_pending_payment(bancontact_id, config=self.kiosk)
+            payload = self._make_payload(bancontact_id, bancontact_status)
 
-            with self._notify_patcher() as mock_notify:
+            with self.mock_verify_signature(), self._notify_patcher() as mock_notify:
                 response = self._post_bancontact_webhook(self.kiosk.id, payload)
                 self.assertEqual(response.status_code, 200)
-                self._assert_notify_count(mock_notify, "FINALIZE_KIOSK_PAYMENT", 1)
-                self._assert_notify_finalize_kiosk_payment(mock_notify, "any_id", bancontact_status)
+                self._assert_notify_count(mock_notify, "FINALIZE_BANCONTACT_PAY_KIOSK_PAYMENT", 1)
+                self._assert_notify_finalize_kiosk_payment(mock_notify, bancontact_id, bancontact_status)
 
     def _assert_notify_finalize_kiosk_payment(self, mock_notify, bancontact_id, bancontact_status):
         error = None
@@ -50,4 +58,4 @@ class TestSelfOrderWebhook(TestWebhook):
             "error": error,
             "bancontact_id": bancontact_id,
         }
-        self._assert_notify_with(mock_notify, "FINALIZE_KIOSK_PAYMENT", expected_payload)
+        self._assert_notify_with(mock_notify, "FINALIZE_BANCONTACT_PAY_KIOSK_PAYMENT", expected_payload)
