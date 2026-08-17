@@ -5947,6 +5947,21 @@ class AccountMove(models.Model):
             and aml.display_type not in ('line_section', 'line_subsection', 'line_note')
         )
 
+    def _update_qty_available(self, reverse=False):
+        for move in self:
+            if move.move_type not in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund'):
+                continue
+            sign = -1 if move.move_type in ('out_invoice', 'in_refund') else 1
+            if reverse:
+                sign = -sign
+            for line in move.invoice_line_ids:
+                if line.display_type != 'product' or not line.product_id.is_storable:
+                    continue
+                qty = line.product_uom_id._compute_quantity(line.quantity, line.product_id.uom_id)
+                line.product_id.sudo().with_company(move.company_id).with_context(
+                    skip_qty_available_update=True,
+                ).qty_available += sign * qty
+
     def _post(self, soft=True):
         """Post/Validate the documents.
 
@@ -6136,6 +6151,8 @@ class AccountMove(models.Model):
             'state': 'posted',
             'posted_before': True,
         })
+
+        to_post._update_qty_available()
 
         if not self.env.user.has_group('account.group_partial_purchase_deductibility') and \
                 self.filtered(lambda move: move.move_type == 'in_invoice' and move.invoice_line_ids.filtered(lambda l: l.deductible_percentage != 1)):
@@ -6700,6 +6717,7 @@ class AccountMove(models.Model):
         self._unlink_next_draft_auto_post_moves()
         # We remove all the analytics entries for this journal
         self.line_ids.analytic_line_ids.with_context(skip_analytic_sync=True).unlink()
+        self.filtered(lambda move: move.state == 'posted')._update_qty_available(reverse=True)
         self.state = 'draft'
         self.sending_data = False
 

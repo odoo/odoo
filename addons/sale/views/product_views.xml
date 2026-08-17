@@ -34,6 +34,13 @@
                     <field name="reinvoice_policy" widget="radio"/>
                 </group>
             </group>
+            <div name="tracking_and_qty_no_stock" position="after">
+                <label id="free_qty_no_stock" for="free_qty" invisible="type != 'consu' or not is_storable"/>
+                <div name="free_qty_no_stock" class="o_row w-100" invisible="type != 'consu' or not is_storable">
+                    <field name="free_qty" style="max-width: fit-content;" readonly="True"/>
+                    <field name="uom_name" class="ms-2 oe_inline" groups="uom.group_uom"/>
+                </div>
+            </div>
         </field>
     </record>
 
@@ -176,6 +183,34 @@
                     invisible="context.get('active_model', '') != 'sale.order.line'"
                 />
             </filter>
+        </field>
+    </record>
+
+    <record id="product_template_sale_tree_view" model="ir.ui.view">
+        <field name="name">product.template.sale.list</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_template_tree_view"/>
+        <field name="arch" type="xml">
+            <field name="qty_available" position="after">
+                <field name="free_qty" invisible="not is_storable" readonly="1" optional="show" sum="Total Free To Use"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="product_product_sale_tree_view" model="ir.ui.view">
+        <field name="name">product.product.sale.list</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_product_tree_view"/>
+        <field name="arch" type="xml">
+            <field name="qty_available" position="after">
+                <field
+                    name="free_qty"
+                    invisible="not is_storable"
+                    readonly="1"
+                    optional="show"
+                    sum="Total Free To Use"
+                    />
+            </field>
         </field>
     </record>
 

@@ -1573,6 +1573,26 @@ class TestSaleToInvoice(TestSaleCommon):
 
         self.assertEqual(so.amount_to_invoice, 180.0, "The amount to invoice should be 180.0")
 
+    def test_forecasted_without_stock_uses_uninvoiced_qty(self):
+        product = self.company_data["product_order_no"]
+        product.is_storable = True
+        so = self.env["sale.order"].create({
+            "partner_id": self.partner_a.id,
+            "order_line": [Command.create({"product_id": product.id, "product_uom_qty": 5})],
+        })
+        so.action_confirm()
+
+        self.assertEqual(product.outgoing_qty, 5.0)
+        self.assertEqual(product.virtual_available, -5.0)
+
+        invoice = so._create_invoices()
+        invoice.invoice_line_ids.quantity = 3
+        product.invalidate_recordset(["outgoing_qty", "virtual_available"])
+
+        self.assertEqual(so.order_line.qty_invoiced, 3.0)
+        self.assertEqual(product.outgoing_qty, 2.0)
+        self.assertEqual(product.virtual_available, -2.0)
+
     def test_invoice_line_name_has_product_name(self):
         """Testing that when invoicing a sales order, the invoice line name ALWAYS contains the
         product name."""

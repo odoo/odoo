@@ -55,4 +55,34 @@
             </xpath>
         </field>
     </record>
+
+    <record id="product_product_tree_view_stock" model="ir.ui.view">
+        <field name="name">product.product.stock.property.tree.inherit</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="purchase.product_product_purchase_tree_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='virtual_available']" position='attributes'>
+                <attribute name="groups">stock.group_stock_user</attribute>
+            </xpath>
+            <field name="virtual_available" position="after">
+                <button
+                    title="View Forecast"
+                    name="action_product_forecast_report"
+                    type="object"
+                    icon="area_chart"
+                    invisible="not is_storable"
+                    groups="stock.group_stock_user"
+                    />
+            </field>
+        </field>
+    </record>
+    <record id="product_template_form_view_stock" model="ir.ui.view">
+        <field name="name">product.template.stock.property.form.inherit</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="purchase.view_product_supplier_inherit"/>
+        <field name="arch" type="xml">
+            <xpath expr="//label[@id='forecasted_qty_no_stock']" position="replace"/>
+            <xpath expr="//div[@name='forecasted_qty_no_stock']" position="replace"/>
+        </field>
+    </record>
 </odoo>

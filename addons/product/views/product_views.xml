@@ -120,11 +120,6 @@
                                             <field name="uom_name" class="ms-2 oe_inline" groups="uom.group_uom"/>
                                         </div>
                                     </div>
-                                    <label id="free_qty_no_stock" for="free_qty" invisible="type != 'consu'  or not is_storable"/>
-                                    <div name="free_qty_no_stock" class="o_row w-100" invisible="type != 'consu' or not is_storable">
-                                        <field name="free_qty" style="max-width: fit-content;" readonly="True"/>
-                                        <field name="uom_name" class="ms-2 oe_inline" groups="uom.group_uom"/>
-                                    </div>
                                 </group>
                                 <group name="group_standard_price">
                                     <label for="list_price"/>
@@ -150,7 +145,7 @@
                                             or (product_variant_count == 0 and is_dynamically_created)
                                         ))"
                                     >
-                                        
+
                                         <field
                                             name="standard_price"
                                             widget="monetary"
@@ -487,23 +482,6 @@
                         optional="show"
                         readonly="1"
                         sum="Total On Hand"
-                    />
-                    <field
-                        name="free_qty"
-                        invisible="not is_storable"
-                        readonly="1"
-                        optional="show"
-                        sum="Total Free To Use"
-                    />
-                    <field
-                        string="Forecasted"
-                        name="virtual_available"
-                        decoration-danger="virtual_available &lt; 0"
-                        decoration-warning="virtual_available == 0"
-                        invisible="not is_storable"
-                        optional="hide"
-                        readonly="1"
-                        sum="Total Forecasted"
                     />
                     <field name="uom_id" groups="uom.group_uom" optional="show" readonly="1" options="{'no_open': True}"/>
                     <field
