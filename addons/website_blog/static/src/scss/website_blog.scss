@@ -13,7 +13,88 @@
         text-wrap: pretty;
     }
 
+<<<<<<< 7fce330d6c9337043bf5ef4a398db23f1e5c1303
     // Blog Index Pages
+||||||| 81d91393f481f2454b9df76387de195f1312e14d
+    .o_wblog_read_with_sidebar {
+        max-width: map-get($container-max-widths, md) + $o-wblog-sidebar-width;
+    }
+
+    // This option class is assigned to the post's content using the "Customize"
+    // menu. The aim is to be able to write simple articles on the fly,
+    // achieving a good design without being forced to use snippets.
+    .o_wblog_read_text {
+        @include font-size(18px);
+        font-weight: 300;
+    }
+
+    .o_wblog_author_avatar {
+        width: 1.2em;
+        height: 1.2em;
+        max-width: none;
+        object-fit: cover;
+    }
+
+    .o_wblog_author_avatar_date {
+        // Resize in order to double the current font-size and accommodate
+        // two text lines, name and date.
+        width: 2em;
+        height: 2em;
+        max-width: none;
+        object-fit: cover;
+    }
+
+    .o_wblog_social_links > a {
+        width: 3em;
+        height: 3em;
+        > i {
+            @include font-size(1.3em);
+        }
+    }
+
+    // Blog Post Page
+=======
+    .o_wblog_read_with_sidebar {
+        max-width: map-get($container-max-widths, md) + $o-wblog-sidebar-width;
+    }
+
+    // This option class is assigned to the post's content using the "Customize"
+    // menu. The aim is to be able to write simple articles on the fly,
+    // achieving a good design without being forced to use snippets.
+    .o_wblog_read_text {
+        @include font-size(18px);
+        font-weight: 300;
+        strong {
+            font-weight: bold;
+        }
+    }
+
+    .o_wblog_author_avatar {
+        width: 1.2em;
+        height: 1.2em;
+        max-width: none;
+        object-fit: cover;
+    }
+
+    .o_wblog_author_avatar_date {
+        // Resize in order to double the current font-size and accommodate
+        // two text lines, name and date.
+        width: 2em;
+        height: 2em;
+        max-width: none;
+        object-fit: cover;
+    }
+
+    .o_wblog_social_links > a {
+        width: 3em;
+        height: 3em;
+        > i {
+            @include font-size(1.3em);
+        }
+    }
+
+    // Blog Post Page
+>>>>>>> 1426a46c1ffccd7dca8dc68b517063032d3c0fe8
     // ==============================================
 
     #o_wblog_posts_loop {
