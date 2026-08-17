@@ -9,6 +9,7 @@ import {
     Component,
     computed,
     onMounted,
+    onPatched,
     onWillPatch,
     onWillUnmount,
     proxy,
@@ -370,7 +371,8 @@ export class Thread extends Component {
                 scrollTop: this.scrollableRef().scrollTop,
             };
         });
-        useLayoutEffect(this.applyScroll);
+        onMounted(this.applyScroll);
+        onPatched(this.applyScroll);
         useSubEnv({
             getCurrentThread: () => this.props.thread,
             onImageLoaded: this.applyScroll,

@@ -1,5 +1,14 @@
-import { Component, onWillUpdateProps, signal, t, useProps, useScope, xml } from "@odoo/owl";
-import { useLayoutEffect } from "@web/owl2/utils";
+import {
+    Component,
+    onMounted,
+    onPatched,
+    onWillUpdateProps,
+    signal,
+    t,
+    useProps,
+    useScope,
+    xml,
+} from "@odoo/owl";
 
 // Allows to disable transitions globally, useful for testing (and maybe for
 // a reduced motion setting in the future?)
@@ -60,12 +69,14 @@ export function useTransition({
     // onNextPatch allows us to activate the class that we want the next time
     // the component is patched.
     let onNextPatch = null;
-    useLayoutEffect(() => {
+    const runOnNextPatch = () => {
         if (onNextPatch) {
             onNextPatch();
             onNextPatch = null;
         }
-    });
+    };
+    onMounted(runOnNextPatch);
+    onPatched(runOnNextPatch);
 
     let prevState, timer;
     const transition = {

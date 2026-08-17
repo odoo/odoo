@@ -1,5 +1,4 @@
-import { useLayoutEffect } from "@web/owl2/utils";
-import { Component, onWillUpdateProps, proxy, signal, t, useProps } from "@odoo/owl";
+import { Component, onMounted, onWillUpdateProps, proxy, signal, t, useProps } from "@odoo/owl";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { Domain } from "@web/core/domain";
 import { DomainSelector } from "@web/core/domain_selector/domain_selector";
@@ -152,13 +151,8 @@ export class PropertyDefinition extends Component {
         // update the state and fetch needed information
         onWillUpdateProps((newProps) => this._syncStateWithProps(newProps.value));
 
-        useLayoutEffect((event) => {
+        onMounted(() => {
             // focus the property label, when we open the property definition
-            if (this.labelFocused) {
-                // focus it only once
-                return;
-            }
-            this.labelFocused = true;
             const labelInput = this.propertyDefinitionRef()?.querySelectorAll("input")[0];
             if (labelInput) {
                 if (this.props.isNewlyCreated) {

@@ -1,7 +1,7 @@
-import { untrack, useListener, useProps } from "@odoo/owl";
+import { onMounted, onPatched, untrack, useListener, useProps } from "@odoo/owl";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { useBus } from "@web/core/utils/hooks";
-import { onWillRender, useLayoutEffect } from "@web/owl2/utils";
+import { onWillRender } from "@web/owl2/utils";
 
 /**
  * This hook is meant to be used by field components that use an input or
@@ -111,7 +111,7 @@ export function useInputField(params) {
 
     // We need to call getValue to always observe
     // the corresponding value in the record. Otherwise, in some cases,
-    // if the value in the record change the useLayoutEffect isn't triggered.
+    // if the value in the record change the component isn't patched.
     onWillRender(() => params.getValue());
 
     /**
@@ -120,7 +120,7 @@ export function useInputField(params) {
      * we need to do nothing.
      * If it is not such a case, we update the field with the new value.
      */
-    useLayoutEffect(() => {
+    const syncInputWithRecord = () => {
         const value = params.getValue();
         const el = getEl();
         if (!el) {
@@ -133,7 +133,9 @@ export function useInputField(params) {
             el.value = value;
             lastSetValue = el.value;
         }
-    });
+    };
+    onMounted(syncInputWithRecord);
+    onPatched(syncInputWithRecord);
 
     const { model } = props.record;
     useBus(model.bus, "WILL_SAVE_URGENTLY", () => commitChanges(true));

@@ -1,5 +1,5 @@
 import { useLayoutEffect } from "@web/owl2/utils";
-import { Component, onMounted, useProps, proxy, signal, t } from "@odoo/owl";
+import { Component, onMounted, onPatched, useProps, proxy, signal, t } from "@odoo/owl";
 import { useTransition } from "@web/core/transition";
 import { uniqueId } from "@web/core/utils/functions";
 import { useApplyVisibility, useBuilderComponent, useVisibilityObserver } from "../utils";
@@ -107,7 +107,8 @@ export class BuilderRow extends Component {
             () => [this.transition.stage]
         );
 
-        useLayoutEffect(() => refreshSublevelLines(this.rootRef()));
+        onMounted(() => refreshSublevelLines(this.rootRef()));
+        onPatched(() => refreshSublevelLines(this.rootRef()));
     }
 
     getLevelClass() {
