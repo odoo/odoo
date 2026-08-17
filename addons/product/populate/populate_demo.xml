@@ -4,16 +4,11 @@
     <record id="fake_product_demo" model="populate.blueprint">
         <field name="name">Product - Populate Demo</field>
         <field name="definition_xml" type="xml">
-            <create model="res.partner" count="500" id="vendors">
-                <field name="name" generator="fake.company"/>
-                <field name="email" generator="fake.company_email"/>
-                <field name="phone" generator="fake.phone_number"/>
-                <field name="is_company" eval="True"/>
-                <field name="street" generator="fake.street_address"/>
-                <field name="city" generator="fake.city"/>
-                <field name="zip" generator="fake.postcode"/>
-                <field name="country_id" domain="[('code', 'in', ['US', 'CA', 'GB', 'DE', 'FR', 'CN', 'JP'])]" null_ratio="0.1"/>
-            </create>
+            <import ref="base.fake_partners" as="vendors">
+                <xpath expr="//create[@id='partners']" position="attributes">
+                    <attribute name="count">500</attribute>
+                </xpath>
+            </import>
 
             <create model="product.category" count="80" id="product_categories">
                 <field name="name" generator="fake.bs"/>
@@ -41,7 +36,7 @@
                 <field name="sequence" start="1" end="100"/>
             </create>
 
-            <create model="product.attribute.value" count="300" id="product_attribute_values">
+            <create model="product.attribute.value" count="300" id="product_attribute_values" scale="False">
                 <field name="attribute_id" ref="product_attributes"/>
                 <field name="name" generator="fake.word"/>
                 <field name="sequence" start="1" end="50"/>
@@ -68,7 +63,7 @@
 
             <create model="product.template.attribute.line" count="8000" id="product_attribute_lines" context="{'create_product_product': False}">
                 <value name="a_product_tmpl_id" generator="relation.one" comodel_name="product.template" ref="product_templates" partition="True"/>
-                <value name="a_attribute_id" generator="relation.one" comodel_name="product.attribute" ref="product_attributes"/>
+                <value name="a_attribute_id" generator="relation.one" comodel_name="product.attribute" ref="product_attributes" domain="[('value_ids', '!=', False)]"/>
                 <value name="template_attribute_pair" eval="(a_product_tmpl_id, a_attribute_id)" unique="True"/>
                 <field name="product_tmpl_id" eval="template_attribute_pair[0]"/>
                 <field name="attribute_id" eval="template_attribute_pair[1]"/>
@@ -91,7 +86,7 @@
             </write>
 
             <create model="product.supplierinfo" count="10000" id="product_supplier_info">
-                <field name="partner_id" ref="vendors"/>
+                <field name="partner_id" ref="vendors/partners"/>
                 <field name="product_id" ref="product_templates.product_variant_ids"/>
                 <field name="product_name" generator="fake.catch_phrase" null_ratio="0.7"/>
                 <field name="product_code" generator="fake.ean8" null_ratio="0.6"/>

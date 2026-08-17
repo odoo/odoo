@@ -5,37 +5,23 @@
         <field name="name">Account - Populate Demo</field>
         <field name="definition_xml" type="xml">
             <!-- Create business partners (customers and vendors) -->
-            <create model="res.partner" count="3000" id="account_customers">
-                <field name="name" generator="fake.company"/>
-                <field name="is_company" eval="True"/>
-                <field name="email" generator="fake.company_email" null_ratio="0.2"/>
-                <field name="phone" generator="fake.phone_number" null_ratio="0.3"/>
-                <field name="street" generator="fake.street_address" null_ratio="0.2"/>
-                <field name="city" generator="fake.city" null_ratio="0.2"/>
-                <field name="zip" generator="fake.postcode" null_ratio="0.2"/>
-                <field name="country_id" domain="[('code', 'in', ['US', 'CA', 'GB', 'DE', 'FR', 'ES', 'IT', 'NL', 'BE', 'AU'])]" null_ratio="0.1"/>
-                <field name="active" values="{True: 95, False: 5}"/>
-            </create>
+            <import ref="base.fake_partners" as="customers">
+                <xpath expr="//create[@id='partners']" position="attributes">
+                    <attribute name="count">3000</attribute>
+                </xpath>
+            </import>
 
-            <create model="res.partner" count="1500" id="account_vendors">
-                <field name="name" generator="fake.company"/>
-                <field name="is_company" eval="True"/>
-                <field name="email" generator="fake.company_email" null_ratio="0.2"/>
-                <field name="phone" generator="fake.phone_number" null_ratio="0.3"/>
-                <field name="street" generator="fake.street_address" null_ratio="0.3"/>
-                <field name="city" generator="fake.city" null_ratio="0.3"/>
-                <field name="zip" generator="fake.postcode" null_ratio="0.3"/>
-                <field name="country_id" domain="[('code', 'in', ['US', 'CA', 'GB', 'DE', 'FR', 'ES', 'IT'])]" null_ratio="0.2"/>
-                <field name="active" values="{True: 92, False: 8}"/>
-            </create>
+            <import ref="base.fake_partners" as="vendors">
+                <xpath expr="//create[@id='partners']" position="attributes">
+                    <attribute name="count">1500</attribute>
+                </xpath>
+            </import>
 
-            <create model="res.users" count="200" id="account_users" context="{'tracking_disable': True, 'install_mode': True}">
-                <field name="name" generator="fake.name"/>
-                <value name="user_name" generator="fake.user_name"/>
-                <value name="random_digits" generator="scalar.integer" start="10" end="999"/>
-                <field name="login" eval="f'{user_name}{random_digits}'" unique="True"/>
-                <field name="email" generator="fake.email" null_ratio="0.1"/>
-            </create>
+            <import ref="base.fake_internal_users" as="account">
+                <xpath expr="//create[@id='users']" position="attributes">
+                    <attribute name="count">200</attribute>
+                </xpath>
+            </import>
 
             <!-- Create account structure -->
             <create model="account.account.tag" count="100" id="account_tags">
@@ -66,7 +52,7 @@
             <create model="account.account" count="500" id="chart_accounts">
                 <value name="counter" generator="misc.counter" start="1"/>
                 <field name="name" generator="fake.catch_phrase"/>
-                <field name="code" eval="f'{100000 + counter}'" unique="True"/>
+                <field name="code" eval="f'POP{counter:06}'" unique="True"/>
                 <field name="account_type"
                        values="{'asset_receivable': 1, 'asset_cash': 1, 'asset_current': 3, 'asset_non_current': 2,
                                'asset_fixed': 2, 'liability_payable': 1, 'liability_current': 2,
@@ -95,19 +81,15 @@
             </create>
 
             <!-- Create products for invoice lines -->
-            <create model="product.product" count="2000" id="invoice_products">
-                <field name="name" generator="fake.catch_phrase"/>
-                <field name="type" values="{'consu': 5, 'service': 5}"/>
-                <field name="list_price" start="10.0" end="5000.0" distribution="exponential(rate=0.002)"/>
-                <field name="standard_price" start="5.0" end="3000.0" distribution="exponential(rate=0.002)"/>
-                <field name="active" values="{True: 92, False: 8}"/>
-                <field name="sale_ok" values="{True: 8, False: 2}"/>
-                <field name="purchase_ok" values="{True: 7, False: 3}"/>
-            </create>
+            <import ref="product.fake_products" as="invoice">
+                <xpath expr="//create[@id='products']" position="attributes">
+                    <attribute name="count">2000</attribute>
+                </xpath>
+            </import>
 
             <!-- Create customer invoices -->
             <create model="account.move" count="15000" id="customer_invoices" context="{'mail_auto_subscribe_no_notify': True}">
-                <field name="partner_id" ref="account_customers"/>
+                <field name="partner_id" ref="customers/partners"/>
                 <field name="journal_id" ref="all_journals" domain="[('type', '=', 'sale')]"/>
                 <field name="date" start="today -2y" end="today" distribution="normal(mean=365, std=180)"/>
                 <field name="invoice_date" start="today -2y" end="today" distribution="normal(mean=365, std=180)"/>
@@ -117,12 +99,12 @@
                 <field name="narration" generator="fake.paragraph" null_ratio="0.7"/>
                 <field name="payment_reference" generator="fake.ean" length="13" null_ratio="0.5"/>
                 <field name="invoice_payment_term_id" ref="payment_terms" null_ratio="0.4"/>
-                <field name="invoice_user_id" ref="account_users" null_ratio="0.3"/>
+                <field name="invoice_user_id" ref="account/users" null_ratio="0.3"/>
             </create>
 
             <!-- Create vendor bills -->
             <create model="account.move" count="8000" id="vendor_bills" context="{'mail_auto_subscribe_no_notify': True}">
-                <field name="partner_id" ref="account_vendors"/>
+                <field name="partner_id" ref="vendors/partners"/>
                 <field name="journal_id" ref="all_journals" domain="[('type', '=', 'purchase')]"/>
                 <field name="date" start="today -2y" end="today" distribution="normal(mean=365, std=180)"/>
                 <field name="invoice_date" start="today -2y" end="today" distribution="normal(mean=365, std=180)"/>
@@ -131,12 +113,12 @@
                 <field name="ref" generator="fake.ean" length="13" null_ratio="0.4"/>
                 <field name="narration" generator="fake.text" max_nb_chars="200" null_ratio="0.8"/>
                 <field name="invoice_payment_term_id" ref="payment_terms" null_ratio="0.4"/>
-                <field name="invoice_user_id" ref="account_users" null_ratio="0.4"/>
+                <field name="invoice_user_id" ref="account/users" null_ratio="0.4"/>
             </create>
 
             <!-- Create miscellaneous journal entries -->
             <create model="account.move" count="5000" id="misc_entries" context="{'mail_auto_subscribe_no_notify': True}">
-                <field name="partner_id" ref="account_customers" null_ratio="0.6"/>
+                <field name="partner_id" ref="customers/partners" null_ratio="0.6"/>
                 <field name="journal_id" ref="all_journals" domain="[('type', '=', 'general')]"/>
                 <field name="date" start="today -2y" end="today" distribution="normal(mean=365, std=180)"/>
                 <field name="move_type" eval="'entry'"/>
@@ -147,7 +129,7 @@
             <!-- Create invoice lines for customer invoices -->
             <create model="account.move.line" count="45000" id="customer_invoice_lines" context="{'check_move_validity': False}">
                 <field name="move_id" ref="customer_invoices" partition="True"/>
-                <field name="product_id" ref="invoice_products" domain="[('sale_ok', '=', True)]" null_ratio="0.1"/>
+                <field name="product_id" ref="invoice/products" domain="[('sale_ok', '=', True)]" null_ratio="0.1"/>
                 <field name="account_id" ref="chart_accounts" domain="[('account_type', '=', 'income')]"/>
                 <field name="name" generator="fake.sentence" nb_words="6"/>
                 <field name="quantity" start="1.0" end="100.0" distribution="exponential(rate=0.05)"/>
@@ -166,7 +148,7 @@
             <!-- Create invoice lines for vendor bills -->
             <create model="account.move.line" count="24000" id="vendor_bill_lines" context="{'check_move_validity': False}">
                 <field name="move_id" ref="vendor_bills" partition="True"/>
-                <field name="product_id" ref="invoice_products" domain="[('purchase_ok', '=', True)]" null_ratio="0.1"/>
+                <field name="product_id" ref="invoice/products" domain="[('purchase_ok', '=', True)]" null_ratio="0.1"/>
                 <field name="account_id" ref="chart_accounts" domain="[('account_type', 'in', ['expense', 'expense_direct_cost'])]"/>
                 <field name="name" generator="fake.sentence" nb_words="5"/>
                 <field name="quantity" start="1.0" end="50.0" distribution="exponential(rate=0.08)"/>
@@ -184,7 +166,7 @@
 
             <!-- Create payments -->
             <create model="account.payment" count="12000" id="customer_payments">
-                <field name="partner_id" ref="account_customers" null_ratio="0.1"/>
+                <field name="partner_id" ref="customers/partners" null_ratio="0.1"/>
                 <field name="journal_id" ref="all_journals" domain="[('type', 'in', ['bank', 'cash'])]"/>
                 <field name="date" start="today -2y" end="today" distribution="normal(mean=365, std=180)"/>
                 <field name="amount" start="50.0" end="10000.0" distribution="exponential(rate=0.0005)"/>
@@ -197,7 +179,7 @@
             <!-- Create bank statement lines (statements are auto-created from lines) -->
             <create model="account.bank.statement.line" count="15000" id="bank_statement_lines">
                 <field name="journal_id" ref="all_journals" domain="[('type', '=', 'bank')]" partition="True"/>
-                <field name="partner_id" ref="account_customers" null_ratio="0.3"/>
+                <field name="partner_id" ref="customers/partners" null_ratio="0.3"/>
                 <field name="date" start="today -2y" end="today" distribution="normal(mean=365, std=180)"/>
                 <field name="payment_ref" generator="fake.sentence" nb_words="4"/>
                 <field name="amount" start="-5000.0" end="10000.0" distribution="normal(mean=500, std=1000)"/>
@@ -236,7 +218,7 @@
                 <field name="name" generator="fake.catch_phrase"/>
                 <field name="plan_id" domain="[('parent_id', '=', False)]"/>
                 <field name="code" generator="fake.ean" length="8" null_ratio="0.5"/>
-                <field name="partner_id" ref="account_customers" null_ratio="0.6"/>
+                <field name="partner_id" ref="customers/partners" null_ratio="0.6"/>
                 <field name="active" values="{True: 9, False: 1}"/>
             </create>
 
@@ -248,7 +230,7 @@
                 <field name="amount" start="-5000.0" end="5000.0" distribution="normal(mean=0, std=500)"/>
                 <field name="currency_id" eval="env['account.analytic.account'].browse(account_id).company_id.currency_id.id"/>
                 <field name="unit_amount" start="0.5" end="40.0" distribution="exponential(rate=0.1)" null_ratio="0.4"/>
-                <field name="partner_id" ref="account_customers" null_ratio="0.4"/>
+                <field name="partner_id" ref="customers/partners" null_ratio="0.4"/>
             </create>
         </field>
     </record>

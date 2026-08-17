@@ -4,36 +4,36 @@
     <record id="fake_sale_demo" model="populate.blueprint">
         <field name="name">Sale - Populate Demo</field>
         <field name="definition_xml" type="xml">
-            <create model="res.partner" count="1000" id="sale_customers">
-                <field name="name" generator="fake.company"/>
-                <field name="email" generator="fake.company_email"/>
-                <field name="phone" generator="fake.phone_number"/>
-                <field name="is_company" eval="True"/>
-                <field name="active" eval="True"/>
-                <field name="street" generator="fake.street_address"/>
-                <field name="city" generator="fake.city"/>
-                <field name="zip" generator="fake.postcode"/>
-                <field name="country_id" domain="[('code', 'in', ['US', 'CA', 'GB', 'DE', 'FR'])]" null_ratio="0.1"/>
-            </create>
+            <import ref="base.fake_partners" as="customers">
+                <xpath expr="//create[@id='partners']" position="attributes">
+                    <attribute name="count">1000</attribute>
+                </xpath>
+            </import>
 
-            <create model="res.users" count="200" id="sale_users" context="{'tracking_disable': True, 'install_mode': True}">
-                <field name="name" generator="fake.name"/>
-                <value name="user_name" generator="fake.user_name"/>
-                <value name="random_digits" generator="scalar.integer" start="10" end="99"/>
-                <field name="login" eval="f'{user_name}{random_digits if random_digits else ''}'" unique="True"/>
-                <field name="email" generator="fake.email"/>
-                <field name="group_ids" eval="[Command.set([env.ref('sales_team.group_sale_salesman').id])]"/>
-            </create>
+            <import ref="base.fake_internal_users" as="sales">
+                <xpath expr="//create[@id='users']" position="inside">
+                    <field name="group_ids" eval="[Command.set([env.ref('sales_team.group_sale_salesman').id])]"/>
+                </xpath>
+                <xpath expr="//create[@id='users']" position="attributes">
+                    <attribute name="count">200</attribute>
+                </xpath>
+            </import>
+
+            <import ref="product.fake_products" as="catalog">
+                <xpath expr="//create[@id='products']" position="attributes">
+                    <attribute name="count">500</attribute>
+                </xpath>
+            </import>
 
             <create model="crm.team" count="10" id="sale_teams" scale="False">
                 <value name="counter" generator="misc.counter" start="1"/>
                 <field name="name" eval="f'Sales Team {counter}'"/>
-                <field name="member_ids" ref="sale_users" count="20" std="5"/>
+                <field name="member_ids" ref="sales/users" count="20" std="5"/>
             </create>
 
             <create model="sale.order" count="2000" id="sale_orders" context="{'mail_auto_subscribe_no_notify': True}">
-                <field name="partner_id" ref="sale_customers"/>
-                <field name="user_id" ref="sale_users" null_ratio="0.1"/>
+                <field name="partner_id" ref="customers/partners"/>
+                <field name="user_id" ref="sales/users" null_ratio="0.1"/>
                 <field name="team_id" ref="sale_teams" null_ratio="0.1"/>
                 <field name="state" values="{'draft': 4, 'sent': 2, 'sale': 6, 'cancel': 1}"/>
                 <field name="date_order" start="now -2y" end="now" distribution="exponential(rate=0.003)"/>
@@ -44,7 +44,7 @@
 
             <create model="sale.order.line" count="8000" id="sale_order_lines" context="{'mail_auto_subscribe_no_notify': True}">
                 <field name="order_id" ref="sale_orders" partition="True"/>
-                <field name="product_id" domain="[('sale_ok', '=', True), ('type', '!=', 'combo')]"/>
+                <field name="product_id" ref="catalog/products" domain="[('sale_ok', '=', True), ('type', '!=', 'combo')]"/>
                 <field name="product_uom_qty" start="1" end="50" distribution="exponential(rate=0.1)"/>
                 <field name="price_unit" start="5.0" end="5000.0" distribution="exponential(rate=0.001)"/>
                 <field name="discount" start="0" end="30" distribution="exponential(rate=0.2)" null_ratio="0.7"/>

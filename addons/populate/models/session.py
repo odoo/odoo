@@ -189,7 +189,7 @@ class Session(models.Model):
                 vals['ref'] = source_ref
             if 'count' in block:
                 factor = scaling_factor if block.get('scale', True) else 1
-                vals['record_count'] = math.floor(block['count'] * factor)
+                vals['record_count'] = max(math.floor(block['count'] * factor), 1)
 
             vals.update(**{k: v for k, v in block.items() if k in ('parallel', 'context', 'domain', 'batched')})
 
