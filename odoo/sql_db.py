@@ -875,7 +875,7 @@ def close_db(db_name):
     if _Pool:
         _Pool.close_all(connection_info_for(db_name)[1])
     if _Pool_readonly:
-        _Pool_readonly.close_all(connection_info_for(db_name)[1])
+        _Pool_readonly.close_all(connection_info_for(db_name, readonly=True)[1])
 
 def close_all():
     if _Pool:
