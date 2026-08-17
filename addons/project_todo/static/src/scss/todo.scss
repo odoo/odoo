@@ -16,6 +16,13 @@
     @include media-breakpoint-up(xxl) {
         .o_widget_todo_chatter_panel {
             width: 35%;
+
+            // The mark rides the panel's own root, the only element the widget
+            // renders; the growth belongs to the wrapper put around it, which is
+            // what holds the width and takes the room from the form.
+            &:has(> .o-isToggling) {
+                @include o-mountAnimation(o-sidePanel-expand);
+            }
         }
     }
     @include media-breakpoint-down(xxl) {
