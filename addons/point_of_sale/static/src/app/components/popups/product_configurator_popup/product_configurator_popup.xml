@@ -193,6 +193,11 @@
 
     <t t-name="point_of_sale.ProductConfiguratorPopup">
         <Dialog title="title">
+            <t t-set-slot="header">
+                <h4 class="modal-title text-break flex-grow-1" t-esc="title"/>
+                <span class="me-2" t-if="defaultCode" t-esc="defaultCode"/>
+                <button type="button" class="btn-close" aria-label="Close" tabindex="-1" t-on-click="props.close"/>
+            </t>
             <ProductInfoBanner t-if="showInfoBanner" productTemplate="props.productTemplate" product="this.product" />
             <div t-ref="input-area">
                 <div t-if="isArchivedCombination()" class="alert alert-warning mt-3">

@@ -266,6 +266,10 @@ export class ProductConfiguratorPopup extends Component {
         const total = this.env.utils.formatCurrency(info?.raw_total_included_currency || 0.0);
         return `${this.props.productTemplate.display_name} | ${total}`;
     }
+    get defaultCode() {
+        const product = this.product || this.props.productTemplate;
+        return `[${product.default_code}]`;
+    }
     get showInfoBanner() {
         return this.props.productTemplate.is_storable;
     }

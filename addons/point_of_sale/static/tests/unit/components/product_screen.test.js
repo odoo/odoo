@@ -1,6 +1,7 @@
 import { test, expect } from "@odoo/hoot";
+import { click } from "@odoo/hoot-dom";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
-import { setupPosEnv } from "../utils";
+import { setupPosEnv, dialogActions } from "../utils";
 import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
 import { definePosModels } from "../data/generate_model_definitions";
 
@@ -40,4 +41,22 @@ test("fastValidate", async () => {
     expect(order.payment_ids[0].payment_method_id).toEqual(fastPaymentMethod);
     expect(order.state).toBe("paid");
     expect(order.amount_paid).toBe(3.45);
+});
+
+test("addProductToOrder presets the variant matched by default_code search", async () => {
+    const store = await setupPosEnv();
+    store.addNewOrder();
+    const order = store.getOrder();
+    const productTemplate = store.models["product.template"].get(60);
+    store.models["product.product"].get(61).default_code = "BELT-M-REF";
+
+    const comp = await mountWithCleanup(ProductScreen, { props: { orderUuid: order.uuid } });
+    store.searchProductWord = "BELT-M-REF";
+
+    await dialogActions(
+        () => comp.addProductToOrder(productTemplate),
+        [() => click(".modal .btn-primary")]
+    );
+
+    expect(order.lines[0].product_id.id).toBe(61);
 });
