@@ -1132,11 +1132,11 @@ export class LinkPlugin extends Plugin {
                     anchorNode,
                     anchorOffset: 1,
                 });
-                // Two steps, so that undo reverts the link conversion but
+                // Two commits, so that undo reverts the link conversion but
                 // keeps the typed space, as with the native insertion.
-                this.dependencies.history.addStep();
+                this.dependencies.history.commit();
                 this.convertToLink();
-                this.dependencies.history.addStep();
+                this.dependencies.history.commit();
                 delete this.convertToLink;
             }
         }
