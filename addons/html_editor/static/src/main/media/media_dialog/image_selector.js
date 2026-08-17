@@ -400,9 +400,29 @@ export class ImageSelector extends FileSelector {
         if (Object.keys(toSave).length !== 0) {
             savedMedia = await rpc("/html_editor/save_library_media", { media: toSave });
         }
+        // Create all Unsplash attachments.
+        const unsplashToSave = Object.fromEntries(
+            selectedMedia
+                .filter((media) => media.mediaType === "unsplashRecord")
+                .map((media) => [
+                    media.id,
+                    {
+                        url: media.url,
+                        download_url: media.links.download_location,
+                    },
+                ])
+        );
+        let savedUnsplashMedia = [];
+        if (Object.keys(unsplashToSave).length !== 0) {
+            savedUnsplashMedia = await rpc("/web_unsplash/attachment/add", {
+                unsplashurls: unsplashToSave,
+                query: selectedMedia.find((media) => media.mediaType === "unsplashRecord")?.query || "",
+            })
+        }
         const selected = selectedMedia
             .filter((media) => media.mediaType === "attachment")
             .concat(savedMedia)
+            .concat(savedUnsplashMedia)
             .map((attachment) => {
                 // Color-customize dynamic SVGs with the theme colors
                 if (
