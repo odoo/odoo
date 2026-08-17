@@ -23,7 +23,7 @@ class IrModel(models.Model):
 
         valid_models = self.env['ir.model']
         for model in self.search([]):
-            if model.model not in self.env or model.is_transient():
+            if model.model not in self.env or self.env[model.model].is_transient():
                 continue
             if getattr(self.env[model.model], '_mailing_enabled', False):
                 valid_models |= model
