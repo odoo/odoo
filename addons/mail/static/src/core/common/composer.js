@@ -1,4 +1,5 @@
 import { useLayoutEffect, useSubEnv } from "@web/owl2/utils";
+import { useHasAncestor } from "@mail/core/common/ancestors_hook";
 import { AttachmentList } from "@mail/core/common/attachment_list";
 import { useAttachmentUploader } from "@mail/core/common/attachment_uploader_hook";
 import { useCustomDropzone } from "@web/core/dropzone/dropzone_hook";
@@ -117,6 +118,7 @@ export class Composer extends Component {
 
     setup() {
         super.setup();
+        this.ancestors = useHasAncestor().ancestors;
         this.dialogService = useService("dialog");
         /** @type {import("@html_editor/editor").Editor} */
         this.editor = undefined;
@@ -294,7 +296,7 @@ export class Composer extends Component {
         );
         useLayoutEffect(
             () => {
-                if (!this.env.inChatter || !this.props.composer.mentionedPartners.length) {
+                if (!this.ancestors().inChatter || !this.props.composer.mentionedPartners.length) {
                     return;
                 }
                 const fragment = createDocumentFragmentFromContent(
@@ -507,7 +509,7 @@ export class Composer extends Component {
             close_cancel: markup`</button>`,
             open_save: markup`<button class="btn btn-link fst-italic p-0 align-baseline" data-type="${EDIT_CLICK_TYPE.SAVE}">`,
             close_save: markup`</button>`,
-            save_keyboard_shortcut: this.env.inChatter
+            save_keyboard_shortcut: this.ancestors().inChatter
                 ? isMacOS()
                     ? markup`CMD-Enter`
                     : markup`CTRL-Enter`
@@ -528,7 +530,7 @@ export class Composer extends Component {
 
     get sendKeybinds() {
         const modifierKey = isMacOS() ? _t("CMD") : _t("CTRL");
-        return this.env.inChatter ? [modifierKey, _t("Enter")] : [_t("Enter")];
+        return this.ancestors().inChatter ? [modifierKey, _t("Enter")] : [_t("Enter")];
     }
 
     get showComposerAvatar() {
@@ -577,7 +579,7 @@ export class Composer extends Component {
         const { loading, searchTerm, results } = this.suggestion.search;
         const props = {
             anchorRef: this.inputContainerRef,
-            position: this.env.inChatter ? "bottom-fit" : "top-fit",
+            position: this.ancestors().inChatter ? "bottom-fit" : "top-fit",
             onSelect: (ev, option) => {
                 this.suggestion.insert(option);
                 markEventHandled(ev, "composer.selectSuggestion");
@@ -642,7 +644,7 @@ export class Composer extends Component {
         switch (ev.key) {
             case "ArrowUp":
                 if (
-                    !this.env.inChatter &&
+                    !this.ancestors().inChatter &&
                     this.props.composer.composerText === "" &&
                     this.props.composer.thread
                 ) {
@@ -665,7 +667,7 @@ export class Composer extends Component {
                     return;
                 }
                 const modKey = isMacOS() ? ev.metaKey : ev.ctrlKey;
-                const shouldPost = this.env.inChatter ? modKey : !ev.shiftKey;
+                const shouldPost = this.ancestors().inChatter ? modKey : !ev.shiftKey;
                 if (!shouldPost) {
                     return;
                 }
@@ -994,7 +996,7 @@ export class Composer extends Component {
             this.props.composer.composerText = firstPart + toInsertPart + secondPart;
             this.selection.moveCursor((firstPart + toInsertPart).length);
         }
-        if (!this.ui.isSmall || !this.env.inChatter) {
+        if (!this.ui.isSmall || !this.ancestors().inChatter) {
             this.props.composer.autofocus++;
         }
     }
@@ -1027,7 +1029,7 @@ export class Composer extends Component {
             this.props.composer.composerText = firstPart + str + secondPart;
             this.selection.moveCursor((firstPart + str).length);
         }
-        if (this.ui.isSmall && !this.env.inChatter) {
+        if (this.ui.isSmall && !this.ancestors().inChatter) {
             return false;
         } else {
             this.props.composer.autofocus++;

@@ -1,3 +1,4 @@
+import { useHasAncestor } from "@mail/core/common/ancestors_hook";
 import { MessageSearchState } from "@mail/core/common/message_search_hook";
 import { Component, t, useListener, useProps } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
@@ -20,6 +21,7 @@ export class SearchMessageInput extends Component {
 
     setup() {
         super.setup();
+        this.ancestors = useHasAncestor().ancestors;
         this.store = useService("mail.store");
         this.props = useProps({
             closeSearch: t.function([]).optional(),

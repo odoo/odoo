@@ -16,7 +16,7 @@
                      t-att-title="attachment.name ? attachment.name : undefined"
                      t-att-class="{
                         'o-inMessage': this.env.inMessage,
-                        'o-inChatter': this.env.inChatter,
+                        'o-inChatter': this.ancestors().inChatter,
                         'o-isImage': attachment.isImage,
                         'o-isUploading opacity-25': attachment.uploading,
                         'o-viewable': attachment.isViewable,
@@ -35,9 +35,9 @@
                         class="this.attClassObjectToString({
                             'o-mail-AttachmentImage img img-fluid w-100 rounded-3': true,
                             'o-inMessage': this.env.inMessage,
-                            'o-inChatter object-fit-scale': this.env.inChatter,
-                            'object-fit-contain': !this.env.inChatter and this.env.inMessage,
-                            'object-fit-cover': !this.env.inChatter and !this.env.inMessage,
+                            'o-inChatter object-fit-scale': this.ancestors().inChatter,
+                            'object-fit-contain': !this.ancestors().inChatter and this.env.inMessage,
+                            'object-fit-cover': !this.ancestors().inChatter and !this.env.inMessage,
                         })"
                     />
                     <img
@@ -46,9 +46,9 @@
                         t-att-class="{
                             'o-inComposer': this.env.inComposer,
                             'o-inMessage': this.env.inMessage,
-                            'o-inChatter object-fit-scale': this.env.inChatter,
-                            'object-fit-contain': !this.env.inChatter and this.env.inMessage,
-                            'object-fit-cover': !this.env.inChatter and !this.env.inMessage,
+                            'o-inChatter object-fit-scale': this.ancestors().inChatter,
+                            'object-fit-contain': !this.ancestors().inChatter and this.env.inMessage,
+                            'object-fit-cover': !this.ancestors().inChatter and !this.env.inMessage,
                         }"
                         t-att-src="this.getImageUrl(attachment)"
                         t-att-alt="attachment.name"

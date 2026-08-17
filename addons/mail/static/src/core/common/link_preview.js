@@ -1,3 +1,4 @@
+import { useHasAncestor } from "@mail/core/common/ancestors_hook";
 import { Gif } from "@mail/core/common/gif";
 import { LinkPreviewConfirmDelete } from "@mail/core/common/link_preview_confirm_delete";
 
@@ -14,6 +15,7 @@ export class LinkPreview extends Component {
 
     setup() {
         super.setup();
+        this.ancestors = useHasAncestor().ancestors;
         this.store = useService("mail.store");
         this.props = useProps({
             messageLinkPreview: types.instanceOf(this.store["mail.message.link.preview"]),

@@ -1,6 +1,7 @@
 import { mountComponent } from "@html_editor/others/embedded_component_utils";
 import { readonlySyntaxHighlightingEmbedding } from "@html_editor/others/embedded_components/core/syntax_highlighting/readonly_syntax_highlighting";
 
+import { useHasAncestor } from "@mail/core/common/ancestors_hook";
 import { AttachmentList } from "@mail/core/common/attachment_list";
 import { Composer } from "@mail/core/common/composer";
 import { ImStatus } from "@mail/core/common/im_status";
@@ -78,6 +79,7 @@ export class Message extends Component {
 
     setup() {
         super.setup();
+        this.ancestors = useHasAncestor().ancestors;
         this.nbsp = nbsp;
         this.store = useService("mail.store");
         this.props = useProps({
@@ -350,7 +352,7 @@ export class Message extends Component {
         const isNoteVisual = this.message.isNote || this.message.message_type === "notification";
         return {
             "p-1": isNoteVisual,
-            "fs-1": !this.isEditing && !this.env.inChatter && this.message.onlyEmojis,
+            "fs-1": !this.isEditing && !this.ancestors().inChatter && this.message.onlyEmojis,
             "mb-0": !isNoteVisual,
             "py-2": !isNoteVisual && !this.isEditing && this.showTextVisually,
             "pt-2 pb-1": !isNoteVisual && this.isEditing,

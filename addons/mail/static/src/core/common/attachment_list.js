@@ -1,3 +1,4 @@
+import { useHasAncestor } from "@mail/core/common/ancestors_hook";
 import { Gif } from "@mail/core/common/gif";
 import { MessageSearchState } from "@mail/core/common/message_search_hook";
 
@@ -45,6 +46,7 @@ export class AttachmentList extends Component {
 
     setup() {
         super.setup();
+        this.ancestors = useHasAncestor().ancestors;
         this.store = useService("mail.store");
         this.props = useProps({
             attachments: t.array(t.instanceOf(this.store["ir.attachment"])),
