@@ -3,7 +3,6 @@ import { localeCompare } from "@web/core/l10n/utils";
 import { renderToElement } from "@web/core/utils/render";
 import { generateHTMLId } from "@web/core/utils/strings";
 import { isSmallInteger } from "@html_builder/utils/utils";
-import { markup } from "@odoo/owl";
 
 const DESCRIPTION_POSITION_PREFIX = "s_website_form_description_";
 export const VISIBILITY_DATASET = [
@@ -109,12 +108,10 @@ export function renderField(field, resetId = false) {
     if (field.description) {
         params.default_description =
             field.type === "boolean"
-                ? markup`<span>${_t(
-                      "I agree to the"
-                  )} <a class="o_translate_inline" href="#bottom" target="_blank">Terms & Conditions</a></span>`
-                : _t("Describe your field here.");
+                ? "website.form_field_default_description_boolean"
+                : "website.form_field_default_description";
     } else if (["email_cc", "email_to"].includes(field.name)) {
-        params.default_description = _t("Separate email addresses with a comma.");
+        params.default_description = "website.form_field_default_description_email_to";
     }
     const template = document.createElement("template");
     const renderType = field.type === "tags" ? "many2many" : field.type;

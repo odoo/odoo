@@ -71,8 +71,20 @@
             not make sense to try and change it over there anyway).
         -->
         <span t-if="default_description" class="s_website_form_field_description small form-text text-muted" contenteditable="true" t-att-data-description-mark="descriptionRequiredMark">
-            <t t-out="default_description"/>
+            <t t-call="{{default_description}}"/>
         </span>
+    </t>
+
+    <t t-name="website.form_field_default_description">
+        Describe your field here.
+    </t>
+
+    <t t-name="website.form_field_default_description_boolean">
+        I agree to the <a class="o_translate_inline" href="#bottom" target="_blank">Terms &amp; Conditions</a>
+    </t>
+
+    <t t-name="website.form_field_default_description_email_to">
+        Separate email addresses with a comma.
     </t>
 
     <!-- Hidden Field -->
