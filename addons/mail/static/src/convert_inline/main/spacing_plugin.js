@@ -89,6 +89,17 @@ export class SpacingPlugin extends Plugin {
         }
     }
 
+    ensureResponsiveElementWidth(styleInfo, referenceNode) {
+        const widthInfo = styleInfo.get("width");
+        if (widthInfo) {
+            return;
+        }
+        // Enforce a responsive width based on its desktop width.
+        const width = this.getStylePropertyValue(referenceNode, "width");
+        styleInfo.setProperty("width", "100%");
+        styleInfo.setProperty("max-width", width);
+    }
+
     // TODO EGGMAIL NOW: generalize the content of this function, there are
     // multiple aspects to consider for the wrapping table:
     // - spacing
@@ -121,6 +132,16 @@ export class SpacingPlugin extends Plugin {
             // TODO EGGMAIL: consider RTL
             setAttributes({ attributes: { align: "left" } });
             setAttributes({ attributes: { align: "left" } }, "cell");
+        }
+        const referenceNode = emailNode.firstReferenceNode;
+        if (
+            referenceNode &&
+            (styleInfo.getPropertyValue("margin-left") === "auto" ||
+                styleInfo.getPropertyValue("margin-right") === "auto")
+        ) {
+            const styleInfo = emailNode.layout.getRef().styleInfo;
+            styleInfo.setProperty("display", "inline-block");
+            this.ensureResponsiveElementWidth(styleInfo, referenceNode);
         }
         for (const side of DIRECTION_VARIANTS) {
             const value = styleInfo.getPropertyValue(`margin-${side}`);
