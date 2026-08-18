@@ -5,12 +5,38 @@ import { _t } from "@web/core/l10n/translation";
 
 import { patch } from "@web/core/utils/patch";
 
-const unread_store = (() => {
-    if (!window.idbKeyval) {
-        return undefined;
+let unread_store;
+
+/**
+ * Save the unread counter in the database shared with the service worker, so that the app
+ * badge stays up to date.
+ *
+ * @param {number} counter
+ * @param {boolean} [retry=true]
+ */
+async function saveUnreadCounter(counter, retry = true) {
+    try {
+        unread_store ??= new window.idbKeyval.Store(
+            "odoo-mail-unread-db",
+            "odoo-mail-unread-store"
+        );
+    } catch {
+        // The browser does not allow the database to be opened (private mode, blocked
+        // storage): opening it again would fail the same way, and the app badge is cosmetic.
+        return;
     }
-    return new window.idbKeyval.Store("odoo-mail-unread-db", "odoo-mail-unread-store");
-})();
+    try {
+        await window.idbKeyval.set("unread", counter, unread_store);
+    } catch {
+        // The connection cached by idbKeyval was closed by the browser (site data cleared,
+        // storage eviction, database deleted from another tab): drop it so that the retry
+        // saves the counter on a new one. When that fails too the error is ignored.
+        unread_store = undefined;
+        if (retry) {
+            await saveUnreadCounter(counter, false);
+        }
+    }
+}
 
 /** @type {import("models").Store} */
 const StorePatch = {
@@ -126,8 +152,8 @@ const StorePatch = {
         );
     },
     updateAppBadge() {
-        if (unread_store) {
-            window.idbKeyval.set("unread", this.globalCounter, unread_store);
+        if (window.idbKeyval) {
+            saveUnreadCounter(this.globalCounter);
             Promise.resolve(navigator.setAppBadge?.(this.globalCounter)).catch(() => {}); // FIXME: Illegal invocation error in HOOT
         }
     },
