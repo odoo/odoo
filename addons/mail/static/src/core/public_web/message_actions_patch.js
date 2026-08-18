@@ -22,7 +22,7 @@ registerMessageAction("unpin", {
         store.self_user &&
         message.thread &&
         (!message.channel_id || message.channel_id.canSelfInteractWithChannel),
-    icon: "push_pin",
+    icon: "keep_off",
     name: _t("Unpin"),
     onSelected: ({ action, message }) =>
         (message.channel_id || message.thread).messageUnpin(message, { rootRef: action.actionRef }),
