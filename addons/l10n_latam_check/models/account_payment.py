@@ -184,7 +184,7 @@ class AccountPayment(models.Model):
                     and x.issuer_vat
                 ):
                     same_checks += same_checks.search([
-                        ('company_id', '=', rec.company_id.id),
+                        ('payment_id.company_id', '=', rec.company_id.id),
                         ('issuer_vat', '=', check.issuer_vat),
                         ('name', '=', check.name),
                         ('bank_account_id', '=', check.bank_account_id.id),

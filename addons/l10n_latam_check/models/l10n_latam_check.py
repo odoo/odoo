@@ -28,7 +28,6 @@ class L10n_LatamCheck(models.Model):
         column1="check_id",
         column2="payment_id",
         readonly=True,
-        check_company=True,
     )
     on_hand = fields.Boolean(
         compute='_compute_on_hand',
@@ -60,7 +59,11 @@ class L10n_LatamCheck(models.Model):
     payment_method_code = fields.Char(related='payment_id.payment_method_code')
     partner_id = fields.Many2one(related='payment_id.partner_id')
     original_journal_id = fields.Many2one(related='payment_id.journal_id')
-    company_id = fields.Many2one(related='payment_id.company_id', store=True)
+    company_id = fields.Many2one(
+        comodel_name='res.company',
+        compute='_compute_company_id',
+        store=True,
+    )
     currency_id = fields.Many2one(related='payment_id.currency_id')
     first_payment_date = fields.Date(
         related='payment_id.date',
@@ -196,6 +199,13 @@ class L10n_LatamCheck(models.Model):
 
     def _get_last_operation(self):
         return self._get_operations()[-1:]
+
+    @api.depends('payment_id.company_id', 'payment_id.state', 'operation_ids.state')
+    def _compute_company_id(self):
+        """ The check belongs to the company holding it, which may not be the one that received it in the first
+        place as checks can be transferred between branches. """
+        for check in self:
+            check.company_id = check._get_last_operation().company_id or check.payment_id.company_id
 
     def button_open_payment(self):
         self.ensure_one()

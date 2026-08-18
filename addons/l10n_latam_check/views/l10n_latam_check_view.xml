@@ -178,7 +178,7 @@
         <field name="view_mode">list,form,calendar,graph,pivot</field>
         <field name="view_id" ref="view_account_own_check_tree"/>
         <field name="search_view_id" ref="view_account_payment_search"/>
-        <field name="domain">[('outstanding_line_id', '!=', False)]</field>
+        <field name="domain">[('payment_method_code', '=', 'own_checks')]</field>
         <field name="context">{'search_default_checks_handed': True}</field>
     </record>
 
@@ -226,8 +226,8 @@
         <field name="view_mode">list,form,calendar,graph,pivot</field>
         <field name="view_id" ref="view_account_third_party_check_tree"/>
         <field name="search_view_id" ref="l10n_latam_check.view_account_payment_third_party_checks_search"/>
-        <field name="domain">[('payment_method_code', '=', 'new_third_party_checks'), ('payment_id.state', '!=', 'draft')]</field>
-        <field name="context">{'search_default_checks_on_hand': 1}</field>
+        <field name="domain">[('payment_method_code', 'in', ('new_third_party_checks', 'in_third_party_checks', 'out_third_party_checks', 'return_third_party_checks'))]</field>
+        <field name="context">{'search_default_checks_on_hand': True}</field>
     </record>
 
     <menuitem
