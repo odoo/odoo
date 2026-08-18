@@ -2261,6 +2261,34 @@ test("should not show context menu on participant card when not in a call", asyn
     await waitFor(".o-discuss-CallContextMenu:count(1)");
 });
 
+test("participant context menu shows pin and unpin icons", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    pyEnv["discuss.channel.rtc.session"].create({
+        channel_member_id: pyEnv["discuss.channel.member"].create({
+            channel_id: channelId,
+            partner_id: pyEnv["res.partner"].create({ name: "Armstrong" }),
+        }),
+        channel_id: channelId,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains("[title='Join the Call']:count(1)").click();
+    await contains(".o-discuss-CallParticipantCard[aria-label='Armstrong']:count(1)").hover();
+    await contains(
+        ".o-discuss-CallParticipantCard[aria-label='Armstrong'] button[title='Participant options']:count(1)"
+    ).click();
+    await contains(
+        ".o-discuss-CallContextMenu button:text('Pin') [data-icon='push_pin']:count(1)"
+    ).click();
+    await waitFor(
+        ".o-discuss-CallParticipantCard[aria-label='Armstrong'] [title='Pinned']:count(1)"
+    );
+    await waitFor(
+        ".o-discuss-CallContextMenu button:text('Unpin') [data-icon='keep_off']:count(1)"
+    );
+});
+
 test("all streams are properly closed when abruptly disconnected", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
