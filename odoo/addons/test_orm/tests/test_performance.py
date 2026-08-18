@@ -647,6 +647,29 @@ class TestPerformance(SavepointCaseWithUserDemo):
                 for line in record.line_ids:
                     line.value
 
+    @warmup
+    def test_prefetch_related_many2one_inverse(self):
+        """Reading ``base.line_ids.related_base_id`` triggers the computation
+        of ``line.related_base_id``, which updates the cache of the inverse
+        one2many ``base.related_line_ids``.
+        """
+        base = self.env['test_performance.base'].create({
+            'line_ids': [Command.create({'value': index}) for index in range(10)],
+        })
+        self.env.invalidate_all()
+
+        with self.assertQueryCount(2):
+            # one query to fetch line_ids, with their field base_id
+            lines = base.line_ids
+            # One query to fetch field `value` on lines. The computation itself
+            # does not need to fetch anything. However, the assignment of
+            # field 'related_base_id' in the compute method must adapt its
+            # inverse field 'related_line_ids'. As the latter has domain
+            # [('value', '>=', 0)], it performs line.filtered_domain() to
+            # determine whether line satisfies the domain, which should
+            # prefetch field 'value' on all lines at once.
+            lines.mapped('related_base_id')
+
 
 @tagged('bacon_and_eggs')
 class TestIrPropertyOptimizations(TransactionCase):
