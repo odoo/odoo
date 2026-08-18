@@ -51,6 +51,18 @@ class TestHrAttendance(HttpCase, TransactionCase):
         self.test_employee._attendance_action_change()
         assert self.test_employee.attendance_state == 'checked_out'
 
+    def test_employee_without_user_presence_state(self):
+        # Employee without linked user should update presence state on check in / check out
+        self.assertFalse(self.employee_kiosk.user_id)
+        self.assertEqual(self.employee_kiosk.attendance_state, 'checked_out')
+        self.assertNotEqual(self.employee_kiosk.hr_presence_state, 'present')
+        self.employee_kiosk._attendance_action_change()
+        self.assertEqual(self.employee_kiosk.attendance_state, 'checked_in')
+        self.assertEqual(self.employee_kiosk.hr_presence_state, 'present')
+        self.employee_kiosk._attendance_action_change()
+        self.assertEqual(self.employee_kiosk.attendance_state, 'checked_out')
+        self.assertNotEqual(self.employee_kiosk.hr_presence_state, 'present')
+
     def test_employee_group_id(self):
         # Create attendance for one of them
         self.env['hr.attendance'].create({
