@@ -506,6 +506,8 @@ class BatchDownload(models.Model):
 
                         # create the move (or fill the half-fetched one) and the attachment
                         move = half_fetched_bills.get(ksef_number) or AccountMove.create([{'move_type': 'in_invoice', 'l10n_pl_edi_number': ksef_number}])
+                        # a half-fetched bill may already have an XML: only the new one stays linked
+                        move.l10n_pl_edi_attachment_id.res_field = False
                         attachment = self.env['ir.attachment'].create({
                             'name': f"KSeF-{ksef_number.replace('/', '_')}.xml",
                             'description': self.env._('KSeF Fetched Invoice XML'),
@@ -513,8 +515,10 @@ class BatchDownload(models.Model):
                             'company_id': batch.company_id.id,
                             'res_model': move._name,
                             'res_id': move.id,
+                            'res_field': 'l10n_pl_edi_attachment_file',
                             'raw': xml_content,
                         })
+                        move.invalidate_recordset(fnames=['l10n_pl_edi_attachment_id', 'l10n_pl_edi_attachment_file'])
 
                         # import
                         move.message_post(
@@ -524,6 +528,13 @@ class BatchDownload(models.Model):
 
                         # fetched even if the import failed: the XML is attached, the error is in the chatter
                         move.l10n_pl_edi_status = 'fetched'
+                        try:
+                            move._l10n_pl_edi_store_pdf()
+                        except Exception:  # noqa: BLE001
+                            _logger.exception("Could not render the KSeF bill visualization for %s", move.display_name)
+                            move.message_post(body=self.env._(
+                                "The KSeF XML was imported, but its PDF visualization could not be generated."
+                            ))
                         self._commit()
 
                         # out of time: the next run imports the rest
