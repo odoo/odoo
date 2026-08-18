@@ -17,4 +17,10 @@ export class AnnouncementScrollOption extends MarqueeOption {
     static template = "website.AnnouncementScrollOption";
 }
 
+export class ReferencesCarouselOption extends MarqueeOption {
+    static id = "references_carousel_option";
+    static template = "website.ReferencesCarouselOption";
+}
+
 registry.category("website-options").add(AnnouncementScrollOption.id, AnnouncementScrollOption);
+registry.category("website-options").add(ReferencesCarouselOption.id, ReferencesCarouselOption);
