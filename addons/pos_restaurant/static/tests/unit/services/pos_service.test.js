@@ -541,4 +541,29 @@ describe("restaurant pos_store.js", () => {
             expect(order.lines[0].course_id).toBe(course1);
         });
     });
+
+    test("order synced from a trusted config updates its session_id to the current session", async () => {
+        const store = await setupPosEnv();
+        const currentSession = store.session;
+        store.config.module_pos_restaurant = false;
+
+        const otherConfigId = MockServer.env["pos.config"].create({});
+        const otherSessionId = MockServer.env["pos.session"].create({
+            config_id: otherConfigId.id,
+        });
+        const otherSession = MockServer.env["pos.session"].browse(otherSessionId);
+
+        // Simulate Config A already knowing about Config B's session
+        // (as happens via notify_synchronisation for trusted configs)
+        store.deviceSync.processStaticRecords({ "pos.session": otherSession });
+
+        const orderId = MockServer.env["pos.order"].create({
+            session_id: otherSessionId,
+            config_id: otherConfigId,
+            lines: [],
+        });
+        await store.deviceSync.readDataFromServer();
+        const order = store.models["pos.order"].get(orderId);
+        expect(order.session_id.id).toBe(currentSession.id);
+    });
 });
