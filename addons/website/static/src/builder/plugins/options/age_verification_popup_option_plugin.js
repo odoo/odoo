@@ -1,7 +1,6 @@
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
-import { renderToElement } from "@web/core/utils/render";
 import { PopupOption } from "./popup_option_plugin";
 
 export class AgeVerificationOption extends PopupOption {
@@ -22,9 +21,12 @@ class AgeVerificationOptionPlugin extends Plugin {
 
 export class SetAgeConfirmationTemplateAction extends BuilderAction {
     static id = "setAgeConfirmationTemplate";
+    static dependencies = ["websiteBridge"];
     apply({ editingElement, params: { mainParam: confirmationType } }) {
         const confirmationBlockEl = editingElement.querySelector("#age_confirmation_block");
-        const renderedEl = renderToElement(`website.age_confirmation.${confirmationType}`);
+        const renderedEl = this.dependencies.websiteBridge.renderToElement(
+            `website.age_confirmation.${confirmationType}`
+        );
         confirmationBlockEl.replaceChildren(renderedEl);
     }
     isApplied({ editingElement, params: { mainParam: confirmationType } }) {
