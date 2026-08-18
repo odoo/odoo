@@ -1111,9 +1111,11 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
         self.assertEqual(timesheet.billable_type, '04_billable_time')
 
     def test_linked_timesheet_after_invoice_reversal(self):
-        """Test that uneditable timesheet entries aren't linked to a reversed invoice form"""
+        """Test that timesheet entries end up linked to the correct invoice (or unlinked)
+        depending on whether the reversal creates a replacement invoice.
+        """
 
-        # Full refund credit note
+        # --- Reverse and create invoice (modify_moves) ---------------------------
         sale_order = self.env['sale.order'].create({
             'partner_id': self.partner_a.id,
             'partner_invoice_id': self.partner_a.id,
@@ -1144,11 +1146,18 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
             'journal_id': invoice.journal_id.id,
         })
         reversal_wizard.modify_moves()
-        self.assertFalse(timesheet.reinvoice_move_id, "Timesheet should not be linked to the invoice after reversal")
-        timesheet.write({'unit_amount': 7})
-        self.assertEqual(timesheet.unit_amount, 7, "It Should be possible to edit timesheet after invoice reversal")
 
-        # Partial refund credit note
+        new_invoice = reversal_wizard.new_move_ids.filtered(lambda m: m.move_type == 'out_invoice')
+        self.assertTrue(new_invoice, "A new draft invoice should have been created")
+        self.assertNotEqual(new_invoice, invoice, "The new invoice should not be the original invoice")
+        self.assertEqual(
+            timesheet.reinvoice_move_id,
+            new_invoice,
+            "Timesheet should be relinked to the newly created invoice"
+        )
+
+        with self.assertRaises(UserError, msg="Timesheet should be uneditable once relinked to the new invoice"):
+            timesheet.write({'unit_amount': 7})
         sale_order2 = self.env['sale.order'].create({
             'partner_id': self.partner_a.id,
             'partner_invoice_id': self.partner_a.id,
@@ -1200,8 +1209,11 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
         )
         invoice_line_to_remove.unlink()
         credit_note.action_post()
-        self.assertFalse(timesheet1.reinvoice_move_id, "Timesheet1 should be cleared after partial refund of its task")
-        self.assertEqual(timesheet2.reinvoice_move_id, invoice2, "Timesheet2 should still be linked to the original invoice")
+        self.assertFalse(timesheet1.reinvoice_move_id, "Timesheet1 should be cleared after refund of its task")
+        self.assertEqual(timesheet2.reinvoice_move_id, invoice2, "Timesheet2 should still be linked, its line wasn't refunded")
+
+        timesheet1.write({'unit_amount': 9})
+        self.assertEqual(timesheet1.unit_amount, 9, "Timesheet1 should be editable again after plain reversal")
 
         # Make sure only the refunded line is invoiced again
         context = {
