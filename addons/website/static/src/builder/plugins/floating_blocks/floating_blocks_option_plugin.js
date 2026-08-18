@@ -1,6 +1,5 @@
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
-import { renderToElement } from "@web/core/utils/render";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { scrollTo } from "@html_builder/utils/scrolling";
 
@@ -45,9 +44,11 @@ export class FloatingBlocksRoundnessAction extends BuilderAction {
 }
 export class AddFloatingBlockCardAction extends BuilderAction {
     static id = "addFloatingBlockCard";
-    static dependencies = ["builderOptions"];
+    static dependencies = ["builderOptions", "websiteBridge"];
     apply({ editingElement: el }) {
-        const newCardEl = renderToElement("website.s_floating_blocks.new_card");
+        const newCardEl = this.dependencies.websiteBridge.renderToElement(
+            "website.s_floating_blocks.new_card"
+        );
         const wrapperEl = el.querySelector(".s_floating_blocks_wrapper");
         wrapperEl.appendChild(newCardEl);
         const viewportHeight = this.document.defaultView.innerHeight;
