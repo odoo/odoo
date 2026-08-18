@@ -1665,7 +1665,7 @@ export class Rtc extends Record {
         console.debug(
             `%c${new Date().toLocaleString()} - [${entry}]`,
             "color: #e36f17; font-weight: bold;",
-            toRaw(session)._raw,
+            session,
             param2
         );
         if (!this.logs) {

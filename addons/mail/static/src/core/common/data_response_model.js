@@ -33,7 +33,9 @@ export class DataResponse extends Record {
                 if (!_resolve) {
                     return;
                 }
-                const result = { ...this };
+                const result = Object.fromEntries(
+                    [...this.Model._.fields.keys()].map((name) => [name, this[name]])
+                );
                 for (const [name, value] of Object.entries(result)) {
                     if (Array.isArray(value)) {
                         result[name] = [...value];
