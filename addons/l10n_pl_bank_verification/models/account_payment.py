@@ -17,6 +17,7 @@ class L10nPlAccountPayment(models.Model):
     )
     l10n_pl_verification_status = fields.Selection(related='l10n_pl_verification_id.verification_status')
     l10n_pl_verification_timestamp = fields.Datetime(related='l10n_pl_verification_id.verification_timestamp')
+    # to rename in master
     l10n_pl_verification_request_id = fields.Char(related='l10n_pl_verification_id.verification_request_id')
 
     def _auto_init(self):
@@ -51,17 +52,13 @@ class L10nPlAccountPayment(models.Model):
                 continue
 
             partner_bank = pay.partner_bank_id or partner.bank_ids[:1]
-            if not partner_bank:
-                partner_to_partner_banks[partner.id] |= partner_bank
-                continue
-
             partner_to_partner_banks[partner.id] |= partner_bank
 
         partner_bank_data = list(partner_to_partner_banks.items())
         date = fields.Date.context_today(self.with_context(tz='Europe/Warsaw'))
         verifications = self.env['l10n_pl.bank.account.verification']._l10n_pl_get_verification(partner_bank_data, date)
         bank2verification = verifications.grouped('partner_bank_account_number')
-        partner2verification = verifications.grouped('partner_vat')
+        partner2verification = verifications.grouped('partner_id')
 
         for pay in self:
             partner = pay.partner_id
@@ -70,6 +67,6 @@ class L10nPlAccountPayment(models.Model):
 
             partner_bank = pay.partner_bank_id or partner.bank_ids[:1]
             if partner_bank:
-                pay.l10n_pl_verification_id = bank2verification.get(partner_bank.sanitized_acc_number)
+                pay.l10n_pl_verification_id = bank2verification.get(partner_bank.sanitized_acc_number, partner2verification.get(partner))
             else:
-                pay.l10n_pl_verification_id = partner2verification.get(partner.vat)
+                pay.l10n_pl_verification_id = partner2verification.get(partner)

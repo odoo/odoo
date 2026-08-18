@@ -6,13 +6,13 @@ from odoo import api, fields, models
 class L10nPlAccountPaymentRegister(models.TransientModel):
     _inherit = 'account.payment.register'
 
-    # partners for whose link between vat and bank account is validated by gov api
+    # partners for whose link between vat and bank account is validated by iap
     l10n_pl_bank_verification_ids = fields.Many2many(comodel_name='l10n_pl.bank.account.verification', compute='_compute_l10n_pl_bank_verification')
-    # partners for whose we cannot find link between vat and bank account calling gov api
+    # partners for whose we cannot find link between vat and bank account calling iap
     l10n_pl_bank_verification_invalid_bank_account_ids = fields.Many2many(comodel_name='res.partner.bank', compute='_compute_l10n_pl_bank_verification')
-    # partners whose vat cannot be found in gov api
+    # not used: to remove in master
     l10n_pl_not_found_partner_ids = fields.Many2many(comodel_name='res.partner', compute='_compute_l10n_pl_bank_verification')
-    # partners who do not have a VAT number or bank account (-> internal, no api call)
+    # partners who do not have a VAT number or bank account (-> internal, no iap call)
     l10n_pl_incomplete_data_partner_ids = fields.Many2many(comodel_name='res.partner', compute='_compute_l10n_pl_bank_verification')
 
     @api.depends('line_ids', 'partner_bank_id')
@@ -38,9 +38,7 @@ class L10nPlAccountPaymentRegister(models.TransientModel):
             wizard.l10n_pl_bank_verification_invalid_bank_account_ids = verifications.filtered(
                 lambda verif: verif.verification_status == 'invalid'
             ).partner_bank_id
-            wizard.l10n_pl_not_found_partner_ids = verifications.filtered(
-                lambda verif: verif.verification_status == 'not_found_partner'
-            ).partner_id
+            wizard.l10n_pl_not_found_partner_ids = False
             wizard.l10n_pl_incomplete_data_partner_ids = verifications.filtered(
                 lambda verif: verif.verification_status == 'incomplete_partner'
             ).partner_id

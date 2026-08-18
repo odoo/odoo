@@ -1,7 +1,7 @@
 import json
+import requests.exceptions
 
 from odoo.tools import file_open
-
 
 # Load file content once for all tests
 with file_open('l10n_pl_bank_verification/tests/utils/fake_response.json') as file:
@@ -22,3 +22,9 @@ class FakeResponse:
     def _get_content(self, endpoint):
         data = file_content[endpoint]
         return data['status_code'], json.dumps(data['content']).encode()
+
+    def raise_for_status(self):
+        raise requests.exceptions.RequestException()
+
+    def json(self):
+        return json.loads(self.content.decode())
