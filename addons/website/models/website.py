@@ -41,6 +41,13 @@ from odoo.tools.translate import _
 
 logger = logging.getLogger(__name__)
 
+re_img_tag = re.compile(r'<img\s[^>]*>')
+re_img_src = re.compile(r'\ssrc="([^"]*)"')
+re_img_priority_att = re.compile(r'\s(?:loading|fetchpriority)="[^"]*"')
+lcp_priority_att = Markup(' loading="eager" fetchpriority="high">')
+lcp_preload_link = Markup('<link rel="preload" as="image" fetchpriority="high" href="%s"/>')
+lcp_head_close = Markup('</head>')
+
 
 DEFAULT_CDN_FILTERS = [
     "^/[^/]+/static/",
@@ -1626,7 +1633,35 @@ class Website(models.CachedModel):
                 # will add the branding on fields (into values)
                 context['inherit_branding_auto'] = True
 
-        return self.env['ir.qweb'].with_context(**context)._render(view.id, values)
+        rendered = self.env['ir.qweb'].with_context(**context)._render(view.id, values)
+        record = values.get('seo_object') or values.get('main_object')
+        if isinstance(record, models.BaseModel) and 'website_lcp_image_desktop' in record._fields:
+            rendered = self._apply_lcp_image(rendered, record, self.env['ir.http']._is_mobile_request())
+        return rendered
+
+    def _apply_lcp_image(self, rendered, record, is_mobile):
+        if lcp_head_close not in rendered:
+            return rendered
+        url = record[:1]['website_lcp_image_mobile' if is_mobile else 'website_lcp_image_desktop']
+        if not url:
+            return rendered
+        if self.cdn_activated:
+            url = self.get_cdn_url(url)
+        path = urlsplit(url).path
+        matched = False
+        for match in reversed(list(re_img_tag.finditer(rendered))):
+            src = re_img_src.search(match.group(0))
+            if not src or urlsplit(src.group(1)).path != path:
+                continue
+            tag = rendered[match.start():match.end()]
+            for att in reversed(list(re_img_priority_att.finditer(tag))):
+                tag = tag[:att.start()] + tag[att.end():]
+            tag = tag[:-1].rstrip('/ ') + lcp_priority_att
+            rendered = rendered[:match.start()] + tag + rendered[match.end():]
+            matched = True
+        if matched:
+            return rendered
+        return rendered.replace(lcp_head_close, lcp_preload_link % url + lcp_head_close, 1)
 
     @api.model
     def is_view_active(self, key):

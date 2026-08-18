@@ -28,6 +28,7 @@ import { Registry, registry } from "@web/core/registry";
 import { uniqueId } from "@web/core/utils/functions";
 import { WebClient } from "@web/webclient/webclient";
 import { EditInteractionPlugin } from "@website/builder/plugins/edit_interaction_plugin";
+import { LcpMarkingPlugin } from "@website/builder/plugins/lcp_marking_plugin";
 import { WebsiteBridgePlugin } from "@website/builder/plugins/website_bridge_plugin";
 import { WebsiteBuilderClientAction } from "@website/client_actions/website_preview/website_builder_action";
 import { WebsiteSystrayItem } from "@website/client_actions/website_preview/website_systray_item";
@@ -288,6 +289,12 @@ export async function setupWebsiteBuilder(
             editableContent = this.editable.querySelector(
                 '.o_savable.oe_structure.oe_empty, .o_savable[data-oe-type="html"]'
             );
+        },
+    });
+
+    patchWithCleanup(LcpMarkingPlugin.prototype, {
+        async electImageUrl() {
+            return undefined;
         },
     });
 

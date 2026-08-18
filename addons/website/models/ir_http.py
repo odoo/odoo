@@ -269,6 +269,24 @@ class IrHttp(models.AbstractModel):
     @classmethod
     def _post_dispatch(cls, response):
         super()._post_dispatch(response)
+        cls._add_lcp_vary(response)
+
+    @classmethod
+    def _add_lcp_vary(cls, response):
+        if (
+            not hasattr(request, 'is_frontend')
+            or not request.is_frontend
+            or response.status_code != 200
+            or response.direct_passthrough
+            or response.mimetype != 'text/html'
+            or b'fetchpriority="high"' not in response.get_data()
+        ):
+            return
+        vary = response.headers.get('Vary')
+        if not vary:
+            response.headers['Vary'] = 'User-Agent'
+        elif 'user-agent' not in vary.lower():
+            response.headers['Vary'] = f'{vary}, User-Agent'
 
     @api.model
     def _get_default_lang(self):
@@ -445,6 +463,14 @@ class IrHttp(models.AbstractModel):
         # Pass-through if already forbidden for another reason or a type that
         # is not restricted by the website module.
         return result
+
+    def _is_mobile_user_agent(self, user_agent):
+        return "mobi" in (user_agent or "").lower()
+
+    def _is_mobile_request(self):
+        if not request:
+            return False
+        return self._is_mobile_user_agent(request.httprequest.user_agent.string)
 
     def _get_visitor_from_request(self, force_create=False, force_track_values=None):
         """ Return the visitor as sudo from the request.
