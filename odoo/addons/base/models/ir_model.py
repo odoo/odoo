@@ -1093,7 +1093,7 @@ class IrModelFields(models.Model):
                 vals['translate'] = 'html_translate' if vals.get('ttype') == 'html' else 'standard'
             if 'model_id' in vals:
                 model_from_id = IrModel.browse(vals['model_id']).model
-                if 'model' in vals:
+                if vals.get('model', False):
                     if vals['model'] != model_from_id:
                         raise ValidationError(_(
                             "Inconsistent values: model=%(model)s does not match model_id=%(model_id)s.",
