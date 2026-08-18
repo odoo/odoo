@@ -4,7 +4,7 @@
         <div class="o-discuss-CallContextMenu d-flex flex-column gap-1">
             <t t-if="!this.isSelf">
                 <button class="btn o-discuss-CallContextMenu-item d-flex align-items-center gap-2 w-100 px-2 py-1 border-0 rounded text-reset text-start cursor-pointer" t-on-click="this.togglePin">
-                    <i class="oi oi-fw opacity-75" data-icon="push_pin"/><t t-if="this.isPinned">Unpin</t><t t-else="">Pin</t>
+                    <i class="oi oi-fw opacity-75" t-att-data-icon="this.isPinned ? 'keep_off' : 'push_pin'"/><t t-if="this.isPinned">Unpin</t><t t-else="">Pin</t>
                 </button>
                 <div class="o-discuss-CallContextMenu-row d-flex align-items-center gap-2 w-100 px-2 py-1">
                     <button class="btn o-discuss-CallContextMenu-muteToggle border-0 p-0 lh-1 cursor-pointer text-reset" t-on-click="this.toggleLocallyMute" t-att-title="this.muteLabel" t-att-aria-label="this.muteLabel">
