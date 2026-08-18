@@ -7,40 +7,7 @@
             default.translate="Write your text"
             applyTo="'.s_announcement_scroll_marquee_item:first-child'"/>
     </BuilderRow>
-    <BuilderRow label.translate="Direction">
-        <BuilderSelect>
-            <BuilderSelectItem ltrRtlMapping="'left-right'" classAction="'s_announcement_scroll_direction_left'">
-                Left
-            </BuilderSelectItem>
-            <BuilderSelectItem ltrRtlMapping="'left-right'" classAction="'s_announcement_scroll_direction_right'">
-                Right
-            </BuilderSelectItem>
-            <BuilderSelectItem id="'announcement_scroll_direction_none_opt'"
-                    classAction="'s_announcement_scroll_direction_none'">
-                None
-            </BuilderSelectItem>
-        </BuilderSelect>
-    </BuilderRow>
-    <t t-if="!this.isActiveItem('announcement_scroll_direction_none_opt')">
-        <BuilderRow level="1" label.translate="Scroll Speed">
-            <BuilderRange styleAction="'--marquee-animation-speed'"
-                min="1"
-                max="10"
-                step="1"
-                unit="'s'"/>
-        </BuilderRow>
-        <BuilderRow label.translate="Hover effect">
-            <BuilderSelect>
-                <BuilderSelectItem classAction="''">None</BuilderSelectItem>
-                <BuilderSelectItem classAction="'s_announcement_scroll_hover_pause'">Pause</BuilderSelectItem>
-                <BuilderSelectItem classAction="'s_announcement_scroll_hover_slow'">Slowdown</BuilderSelectItem>
-                <BuilderSelectItem classAction="'s_announcement_scroll_hover_direction'">Swap Direction</BuilderSelectItem>
-            </BuilderSelect>
-        </BuilderRow>
-    </t>
-    <BuilderRow label.translate="Parallax">
-        <BuilderCheckbox classAction="'s_announcement_scroll_parallax'"/>
-    </BuilderRow>
+    <t t-call="website.MarqueeOptions" prefix="'s_announcement_scroll'"/>
     <BuilderRow label.translate="Font Size">
         <BuilderRange styleAction="'--marquee-item-font-size'"
             min="40"

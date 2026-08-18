@@ -5,12 +5,6 @@
     .s_announcement_scroll_marquee_item {
         white-space: preserve nowrap;
         caret-color: transparent; // o_not_editable doesn't hide the caret on Firefox
-
-        @media (prefers-reduced-motion: reduce) {
-            & {
-                animation: none !important;
-            }
-        }
     }
 
     // Item options
@@ -18,62 +12,25 @@
         font-family: $o-theme-headings-font;
         font-weight: var(--o-bs-headings-font-weight);
     }
+
+    /* Animation options, read by website/static/src/interactions/marquee.css */
     &.s_announcement_scroll_direction_right {
         --marquee-animation: o-marquee-scroll-right;
     }
     &.s_announcement_scroll_direction_none {
         --marquee-animation: none;
     }
-
-    // Animation states, only when ready
-    &.s_announcement_scroll_ready {
-
-        // Base behavior: once the snippet is ready, the animation is going in
-        // the base direction.
-        .s_announcement_scroll_marquee_item {
-            --marquee-animation-time: calc((25s - var(--marquee-animation-speed) * 2) * var(--marquee-item-size) * .001);
-
-            animation-composition: add;
-            animation:
-                var(--marquee-animation, o-marquee-scroll-left) linear infinite var(--marquee-animation-time),
-                var(--marquee-animation, o-marquee-scroll-left) linear infinite calc(var(--marquee-animation-time) * var(--marquee-animation-hover-multiplier, 1)) reverse paused;
-        }
-        &.s_announcement_scroll_hover_slow .s_announcement_scroll_marquee_item {
-            --marquee-animation-hover-multiplier: 2;
-        }
-
-        // Hover effects, only when not scrolling and on devices that support
-        // hover.
-        @media (hover: hover) {
-            &:where(:hover:not(.s_announcement_scroll_page_scrolling)) {
-                &.s_announcement_scroll_hover_pause .s_announcement_scroll_marquee_item {
-                    animation-play-state: paused;
-                }
-                &.s_announcement_scroll_hover_slow .s_announcement_scroll_marquee_item {
-                    animation-play-state: running;
-                }
-                &.s_announcement_scroll_hover_direction .s_announcement_scroll_marquee_item {
-                    animation-play-state: paused, running;
-                }
-            }
-        }
-
-        // Parallax effects: disabling the CSS animation while scrolling
-        &:where(.s_announcement_scroll_page_scrolling) {
-            &.s_announcement_scroll_parallax .s_announcement_scroll_marquee_item {
-                animation-play-state: paused;
-            }
-        }
+    &.s_announcement_scroll_hover_pause {
+        --marquee-hover-play-state: paused;
     }
-}
-
-@keyframes o-marquee-scroll-left {
-    to {
-        transform: translateX(-100%);
+    &.s_announcement_scroll_hover_slow {
+        --marquee-hover-play-state: running;
+        --marquee-animation-hover-multiplier: 2;
     }
-}
-@keyframes o-marquee-scroll-right {
-    from {
-        transform: translateX(-100%);
+    &.s_announcement_scroll_hover_direction {
+        --marquee-hover-play-state: paused, running;
+    }
+    &.s_announcement_scroll_parallax {
+        --marquee-scroll-play-state: paused;
     }
 }
