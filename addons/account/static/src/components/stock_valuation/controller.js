@@ -28,7 +28,7 @@ export class StockValuationReportController {
             date: this.state.date.toISODate() || false,
         };
         const res = await this.orm.call(
-            "stock_account.stock.valuation.report",
+            "account.stock.valuation.report",
             "get_report_values",
             [],
             kwargs
@@ -82,14 +82,6 @@ export class StockValuationReportController {
         const action = await this.orm.call("res.company", "action_close_stock_valuation", args);
         if (action) {
             this.actionService.doAction(action);
-        }
-    }
-
-    actionPrintReport(format="pdf") {
-        if (format === "pdf") {
-            return this.orm.call("stock_account.stock.valuation.report", "action_print_as_pdf");
-        } else if (format === "xlsx") {
-            return this.orm.call("stock_account.stock.valuation.report", "action_print_as_xlsx");
         }
     }
 }

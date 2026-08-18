@@ -97,37 +97,6 @@ class ProductTemplate(models.Model):
             self.env['stock.lot'].browse(lot_ids_to_update).sudo()._update_standard_price()
         return res
 
-    # -------------------------------------------------------------------------
-    # Misc.
-    # -------------------------------------------------------------------------
-    def _get_product_accounts(self):
-        """ Add the stock accounts related to product to the result of super()
-        @return: dictionary which contains information regarding stock accounts and super (income+expense accounts)
-        """
-        accounts = super()._get_product_accounts()
-
-        accounts['stock_valuation'] = (
-                self.categ_id.property_stock_valuation_account_id
-                or self.categ_id._fields['property_stock_valuation_account_id'].get_company_dependent_fallback(self.categ_id)
-                or self.env.company.account_stock_valuation_id
-            )
-        accounts['stock_variation'] = accounts['stock_valuation'].account_stock_variation_id
-        return accounts
-
-    def get_product_accounts(self, fiscal_pos=None):
-        """ Add the stock journal related to product to the result of super()
-        @return: dictionary which contains all needed information regarding stock accounts and journal and super (income+expense accounts)
-        """
-        accounts = super().get_product_accounts(fiscal_pos=fiscal_pos)
-        accounts.update({
-            'stock_journal': (
-                self.categ_id.property_stock_journal
-                or self.categ_id._fields['property_stock_journal'].get_company_dependent_fallback(self.categ_id)
-                or self.env.company.account_stock_journal_id
-            )
-        })
-        return accounts
-
     def _get_price_diff_account(self):
         price_diff_account = super()._get_price_diff_account()
         if self.cost_method == 'standard':

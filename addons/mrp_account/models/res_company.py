@@ -12,5 +12,5 @@ class ResCompany(models.Model):
         check_company=True,
     )
 
-    def _get_valuation_product_domain(self):
-        return super()._get_valuation_product_domain() + [('is_kits', '=', False)]
+    def _get_inventory_valuation_products_domain(self):
+        return super()._get_inventory_valuation_products_domain() + [('is_kits', '=', False)]

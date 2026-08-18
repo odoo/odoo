@@ -267,7 +267,7 @@ class TestMrpAccount(TestBomPriceCommon, TestMrpCommon):
         mo = self._create_mo(self.bom_1, 1)
         mo.button_mark_done()
 
-        report = self.env['stock_account.stock.valuation.report']
+        report = self.env['account.stock.valuation.report']
         report_data_before = report._get_report_data(date=date_before)
 
         cost_before = report_data_before.get('cost_of_production', {}).get('value', 0)

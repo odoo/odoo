@@ -327,6 +327,7 @@ class AccountMove(models.Model):
         default='no_review', required=True,
     )
     posted_before = fields.Boolean(copy=False)
+    inventory_closing = fields.Boolean(string='Inventory Closing', default=False)
     suitable_journal_ids = fields.Many2many(
         'account.journal',
         compute='_compute_suitable_journal_ids',

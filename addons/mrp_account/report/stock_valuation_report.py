@@ -4,7 +4,7 @@ from odoo import _, models
 
 
 class StockValuationReport(models.AbstractModel):
-    _inherit = 'stock_account.stock.valuation.report'
+    _inherit = 'account.stock.valuation.report'
 
     def _get_report_data(self, date=False, product_category=False, warehouse=False):
         report_data = super()._get_report_data(date=date, product_category=product_category, warehouse=warehouse)
@@ -28,9 +28,9 @@ class StockValuationReport(models.AbstractModel):
             if account:
                 account_vals = account.read(['name', 'code', 'display_name'])[0]
                 report_data['accounts_by_id'][account.id] = account_vals
-            cost_of_production['value'] -= vals['debit']
-            lines_by_account_id[account.id]['debit'] += vals['debit']
-            lines_by_account_id[account.id]['credit'] += vals['credit']
+            cost_of_production['value'] -= vals['balance'] if vals['balance'] > 0 else 0
+            lines_by_account_id[account.id]['debit'] += vals['balance'] if vals['balance'] > 0 else 0
+            lines_by_account_id[account.id]['credit'] -= vals['balance'] if vals['balance'] < 0 else 0
             lines_by_account_id[account.id]['lines'].append(vals)
         cost_of_production['lines'] = [{
             'account_id': account_id,
