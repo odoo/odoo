@@ -5,7 +5,7 @@ from unittest.mock import patch
 from datetime import datetime, timedelta
 
 from odoo.addons.l10n_latam_check.tests.common import L10nLatamCheckTest
-from odoo.exceptions import ValidationError, UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.tests.common import tagged
 from odoo import fields, Command
 
@@ -33,7 +33,44 @@ class TestThirdChecks(L10nLatamCheckTest):
         payment.action_post()
         return payment
 
-    def test_01_get_paid_with_multiple_checks(self):
+    def _create_own_check(self):
+        payment = self.env['account.payment'].create({
+            'partner_id': self.partner_a.id,
+            'payment_type': 'outbound',
+            'journal_id': self.bank_journal.id,
+            'payment_method_line_id': self.bank_journal._get_available_payment_method_lines('outbound').filtered(
+                lambda x: x.code == 'own_checks')[0].id,
+            'l10n_latam_new_check_ids': [Command.create({
+                'name': '00000003',
+                'payment_date': fields.Date.add(fields.Date.today(), months=1),
+                'amount': 1,
+            })],
+        })
+        payment.action_post()
+        return payment.l10n_latam_new_check_ids[0]
+
+    def _create_branch_check_journal(self, company, code):
+        parent_journal = self.third_party_check_journal
+        return self.env['account.journal'].create({
+            'name': 'Third Party Checks %s' % company.name,
+            'code': code,
+            'type': 'cash',
+            'company_id': company.id,
+            'outbound_payment_method_line_ids': [
+                Command.create({
+                    'payment_method_id': line.payment_method_id.id,
+                    'payment_account_id': line.payment_account_id.id,
+                }) for line in parent_journal.outbound_payment_method_line_ids
+            ],
+            'inbound_payment_method_line_ids': [
+                Command.create({
+                    'payment_method_id': line.payment_method_id.id,
+                    'payment_account_id': line.payment_account_id.id,
+                }) for line in parent_journal.inbound_payment_method_line_ids
+            ],
+        })
+
+    def test_get_paid_with_multiple_checks(self):
         """ This a generic test to check that we are able to pay with checks
         We pay directly with multiple checks instead of just one check, just to ensure the create multi
         is properly working. """
@@ -49,7 +86,7 @@ class TestThirdChecks(L10nLatamCheckTest):
         self.assertTrue(check in on_hand_checks for check in checks)  # ensure compute_sql is aligned
 
     # delivery (assert) dd un cheque tmb un return (assert) y un claim (assert)
-    def test_02_third_party_check_delivery(self):
+    def test_third_party_check_delivery(self):
         payment = self.create_third_party_check()
         check = payment.l10n_latam_new_check_ids[0]
         # Check Delivery
@@ -104,7 +141,7 @@ class TestThirdChecks(L10nLatamCheckTest):
         self.assertEqual(len(operations), 3, 'There should be 3 operations on the check')
         self.assertEqual(operations, customer_return | supplier_return | delivery)
 
-    def test_03_deposit(self):
+    def test_deposit(self):
         payment = self.create_third_party_check()
         check = payment.l10n_latam_new_check_ids[0]
         bank_journal = self.company_data_3['default_journal_bank']
@@ -113,7 +150,7 @@ class TestThirdChecks(L10nLatamCheckTest):
         self.env['l10n_latam.payment.mass.transfer'].with_context(
             active_model='l10n_latam.check', active_ids=[check.id]
         ).create({
-            'destination_journal_id': bank_journal.id,
+            'to_journal_id': bank_journal.id,
         })._create_payments()
         self.assertEqual(check.current_journal_id.id, bank_journal.id, 'Current journal was not computed properly on delivery')
         self.assertFalse(check.on_hand, 'A check deposited on a bank journal is not on hand anymore')
@@ -123,7 +160,7 @@ class TestThirdChecks(L10nLatamCheckTest):
         self.env['l10n_latam.payment.mass.transfer'].with_context(
             active_model='l10n_latam.check', active_ids=[check.id]
         ).create({
-            'destination_journal_id': self.rejected_check_journal.id,
+            'to_journal_id': self.rejected_check_journal.id,
         })._create_payments()
         self.assertEqual(check.current_journal_id.id, self.rejected_check_journal.id, 'Current journal was not computed properly on delivery')
         self.assertTrue(check.on_hand, 'A check transferred back to a cash journal is on hand again')
@@ -138,23 +175,23 @@ class TestThirdChecks(L10nLatamCheckTest):
             'payment_method_line_id': self.rejected_check_journal._get_available_payment_method_lines('inbound').filtered(lambda x: x.code == 'new_third_party_checks').id,
         }).action_post()
 
-    def test_04_check_transfer(self):
+    def test_check_transfer(self):
         """ Test transfer between third party checks journals """
         payment = self.create_third_party_check()
         check = payment.l10n_latam_new_check_ids[0]
 
         # Transfer to rejected checks journal (usually is to another third party checks journal, but for test purpose is the same)
         self.env['l10n_latam.payment.mass.transfer'].with_context(
-            active_model='l10n_latam.check', active_ids=[check.id]).create({'destination_journal_id': self.rejected_check_journal.id})._create_payments()
+            active_model='l10n_latam.check', active_ids=[check.id]).create({'to_journal_id': self.rejected_check_journal.id})._create_payments()
         self.assertEqual(check.current_journal_id, self.rejected_check_journal, 'Current journal was not computed properly on delivery')
 
         # test that checks created on different journals but that are on same current journal, can be transfered together
         payment2 = self.create_third_party_check(journal=self.rejected_check_journal)
         check2 = payment2.l10n_latam_new_check_ids[0]
         self.env['l10n_latam.payment.mass.transfer'].with_context(
-            active_model='l10n_latam.check', active_ids=[check.id, check2.id]).create({'destination_journal_id': self.third_party_check_journal.id})._create_payments()
+            active_model='l10n_latam.check', active_ids=[check.id, check2.id]).create({'to_journal_id': self.third_party_check_journal.id})._create_payments()
 
-    def test_05_check_current_journal_with_both_operations(self):
+    def test_check_current_journal_with_both_operations(self):
         # -------------------------------
         # Case 1: inbound first, then outbound
         # -------------------------------
@@ -231,7 +268,7 @@ class TestThirdChecks(L10nLatamCheckTest):
         self.env['l10n_latam.payment.mass.transfer'].with_context(
             active_model='l10n_latam.check', active_ids=check.ids,
         ).create({
-            'destination_journal_id': self.rejected_check_journal.id,
+            'to_journal_id': self.rejected_check_journal.id,
             'payment_date': fields.Date.to_date('2023-11-07'),
         })._create_payments()
         self.assertEqual(check.current_journal_id, self.rejected_check_journal)
@@ -257,7 +294,7 @@ class TestThirdChecks(L10nLatamCheckTest):
         with patch.object(self.env.cr, 'now', lambda: transfer_time), freeze_time(transfer_time):
             self.env['l10n_latam.payment.mass.transfer'].with_context(
                 active_model='l10n_latam.check', active_ids=check.ids,
-            ).create({'destination_journal_id': self.rejected_check_journal.id})._create_payments()
+            ).create({'to_journal_id': self.rejected_check_journal.id})._create_payments()
 
         _transfer_out, transfer_in = check.operation_ids.sorted('id')
         self.assertEqual(check._get_last_operation(), transfer_in)
@@ -344,7 +381,7 @@ class TestThirdChecks(L10nLatamCheckTest):
         def transfer(destination_journal):
             self.env['l10n_latam.payment.mass.transfer'].with_context(
                 active_model='l10n_latam.check', active_ids=[check.id],
-            ).create({'destination_journal_id': destination_journal.id})._create_payments()
+            ).create({'to_journal_id': destination_journal.id})._create_payments()
 
         transfer(self.rejected_check_journal)
         transfer(self.third_party_check_journal)
@@ -363,6 +400,123 @@ class TestThirdChecks(L10nLatamCheckTest):
             "Only the operations that were not undone should remain",
         )
         self.assertRecordValues(operations[-3:], [{'state': 'draft'}] * 3)
+
+    def test_check_transfer_between_branches(self):
+        """ Checks can be transferred to a sibling branch as long as both branches are activated """
+        company = self.company_data_3['company']
+        company.write({'child_ids': [
+            Command.create({'name': 'AR Branch A'}),
+            Command.create({'name': 'AR Branch B'}),
+        ]})
+        self.cr.precommit.run()  # load the CoA on the branches
+        branch_a, branch_b = company.child_ids
+        self.env.user.company_ids += company.child_ids
+
+        journal_a = self._create_branch_check_journal(branch_a, 'TPCA')
+        journal_b = self._create_branch_check_journal(branch_b, 'TPCB')
+
+        check = self.create_third_party_check(journal=journal_a).l10n_latam_new_check_ids[0]
+        self.assertEqual(check.current_journal_id, journal_a)
+        self.assertEqual(check.company_id, branch_a)
+
+        wizard = self.env['l10n_latam.payment.mass.transfer'].with_context(
+            allowed_company_ids=(branch_a + branch_b).ids,
+            active_model='l10n_latam.check',
+            active_ids=check.ids,
+        ).create({'to_journal_id': journal_b.id})
+        wizard._create_payments()
+        self.assertEqual(check.current_journal_id, journal_b, 'The check was not moved to the other branch')
+        self.assertEqual(check.company_id, branch_b, 'The check should belong to the branch holding it')
+
+        # the check left branch A through an outbound payment and entered branch B through an inbound one
+        self.assertRecordValues(check.operation_ids.sorted('payment_type'), [
+            {'company_id': branch_b.id, 'payment_type': 'inbound', 'state': 'paid'},
+            {'company_id': branch_a.id, 'payment_type': 'outbound', 'state': 'paid'},
+        ])
+        # both branches share the transfer account of their root company, so the entries are reconciled together
+        transfer_lines = check.operation_ids.move_id.line_ids.filtered(
+            lambda line: line.account_id == company.transfer_account_id
+        )
+        self.assertEqual(len(transfer_lines), 2)
+        self.assertTrue(all(transfer_lines.mapped('reconciled')))
+
+        # the check can then be delivered by the branch holding it, and stays on it once handed over
+        self.env['account.payment'].with_context(allowed_company_ids=branch_b.ids).create({
+            'l10n_latam_move_check_ids': [Command.set(check.ids)],
+            'partner_id': self.partner_a.id,
+            'payment_type': 'outbound',
+            'journal_id': journal_b.id,
+            'payment_method_line_id': journal_b._get_available_payment_method_lines('outbound').filtered(
+                lambda x: x.code in ('out_third_party_checks', 'return_third_party_checks')).id,
+        }).action_post()
+        self.assertFalse(check.current_journal_id, 'The check is not on hand anymore')
+        self.assertEqual(check.company_id, branch_b, 'The check should stay on the branch that delivered it')
+
+    def test_check_transfer_wizard_selection(self):
+        """ The wizard refuses to open on a selection that can't be transferred """
+        Wizard = self.env['l10n_latam.payment.mass.transfer']
+        check = self.create_third_party_check().l10n_latam_new_check_ids[0]
+
+        with self.assertRaisesRegex(ValidationError, 'select the checks'):
+            Wizard.with_context(active_model='l10n_latam.check', active_ids=[]).default_get(['to_journal_id'])
+
+        own_check = self._create_own_check()
+        with self.assertRaisesRegex(ValidationError, 'not third party checks'):
+            Wizard.with_context(
+                active_model='l10n_latam.check', active_ids=(check + own_check).ids,
+            ).default_get(['to_journal_id'])
+
+        with self.assertRaisesRegex(ValidationError, 'can only be used on third party checks'):
+            Wizard.with_context(
+                active_model='account.payment', active_ids=check.payment_id.ids,
+            ).default_get(['to_journal_id'])
+
+        # opening it on a valid selection gives the journal the checks are currently on
+        wizard = Wizard.with_context(
+            active_model='l10n_latam.check', active_ids=check.ids,
+        ).create({'to_journal_id': self.rejected_check_journal.id})
+        self.assertEqual(wizard.check_ids, check)
+        self.assertEqual(wizard.from_journal_id, self.third_party_check_journal)
+
+        # the wizard may also be created without the active_ids context, but stays consistent
+        with self.assertRaisesRegex(ValidationError, 'transferred from the journal'):
+            Wizard.create({
+                'check_ids': check.ids,
+                'from_journal_id': self.rejected_check_journal.id,
+                'to_journal_id': self.rejected_check_journal.id,
+            })
+        Wizard.create({
+            'check_ids': check.ids,
+            'from_journal_id': self.third_party_check_journal.id,
+            'to_journal_id': self.rejected_check_journal.id,
+        })._create_payments()
+        self.assertEqual(check.current_journal_id, self.rejected_check_journal)
+
+    def test_check_transfer_between_branches_without_common_transfer_account(self):
+        """ Nothing is created when the branches don't share their Inter-Banks Transfer Account """
+        company = self.company_data_3['company']
+        company.write({'child_ids': [Command.create({'name': 'AR Branch C'})]})
+        self.cr.precommit.run()  # load the CoA on the branch
+        branch = company.child_ids
+        self.env.user.company_ids += branch
+        branch.transfer_account_id = self.env['account.account'].create({
+            'name': 'Branch Transfer Account',
+            'code': 'TRANSFC',
+            'account_type': 'asset_current',
+            'company_ids': [Command.set(branch.ids)],
+        })
+
+        check = self.create_third_party_check().l10n_latam_new_check_ids[0]
+        wizard = self.env['l10n_latam.payment.mass.transfer'].with_context(
+            allowed_company_ids=(company + branch).ids,
+            active_model='l10n_latam.check',
+            active_ids=check.ids,
+        ).create({'to_journal_id': self._create_branch_check_journal(branch, 'TPCC').id})
+
+        payment_count = self.env['account.payment'].search_count([])
+        with self.assertRaisesRegex(UserError, 'Inter-Banks Transfer Account'):
+            wizard._create_payments()
+        self.assertEqual(self.env['account.payment'].search_count([]), payment_count, 'No payment should have been created')
 
     def test_same_check_number_allowed_for_new_third_party_checks(self):
         """Ensure that the same check number can be used for New Third Party Checks payments."""
