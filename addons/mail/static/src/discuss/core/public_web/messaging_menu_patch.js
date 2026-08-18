@@ -25,7 +25,7 @@ const messagingMenuPatch = {
         });
         this.channelSearch = useSearch({
             fetch: (searchTerm) =>
-                this.state().activeTab.loadMore({
+                this.state().activeTab?.loadMore({
                     filter: this.state().selectedFilter,
                     searchTerm,
                 }),
@@ -36,7 +36,7 @@ const messagingMenuPatch = {
             deps: () => [this.filteredChannels()],
         });
         useEffect(() => {
-            if (this.state().activeTab.recordType === "discuss.channel") {
+            if (this.state().activeTab?.recordType === "discuss.channel") {
                 this.channelSearch.searchTerm = this.searchTerm();
             }
         });

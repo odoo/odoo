@@ -12,14 +12,17 @@ const discussChannelPatch = {
     setup() {
         super.setup(...arguments);
         this.chatbot = fields.One("Chatbot", { inverse: "channel_id" });
-        this.chatbot_current_step_id = fields.One("chatbot.script.step", {
-            onUpdate() {
-                if (this.chatbot && !this.chatbot_current_step_id) {
+        this.chatbot_current_step_id = fields.One("chatbot.script.step");
+        this.onChange(
+            () => [this.chatbot_current_step_id],
+            function onChangeChatbotCurrentStepId(chatbot_current_step_id) {
+                if (this.chatbot && !chatbot_current_step_id) {
                     this.chatbotTriggerFailedError = null;
                     this.chatbot.stop();
                 }
             },
-        });
+            { immediate: true, initialRun: false }
+        );
         this.country_id = fields.One("res.country");
         this.livechat_agent_history_ids = fields.Many("im_livechat.channel.member.history", {
             inverse: "channelAsAgentHistory",
@@ -46,27 +49,23 @@ const discussChannelPatch = {
         /** @type {string|undefined} */
         this.livechat_outcome = undefined;
         this.livechat_note = fields.Html();
-        /** @type {string|undefined} */
-        this.livechatNoteText = fields.Attr(undefined, {
-            compute() {
-                if (this.livechat_note !== undefined) {
-                    return convertBrToLineBreak(this.livechat_note || "");
-                }
-                return this.livechatNoteText;
-            },
-        });
-        this.livechatVisitorMember = fields.One("discuss.channel.member", {
-            compute() {
-                if (this.channel_type !== "livechat") {
-                    return;
-                }
-                return [...this.channel_member_ids]
-                    .sort((a, b) => a.id - b.id)
-                    .find((member) => member.livechat_member_type === "visitor");
-            },
-        });
+        /**
+         * Local note text (bound to the note textarea); refreshed from the
+         * server value whenever `livechat_note` changes.
+         *
+         * @type {string|undefined}
+         */
+        this.livechatNoteText = undefined;
         /** @type {import("@web/core/network/rpc").RPCError|import("@web/core/network/rpc").ConnectionLostError|import("@web/core/network/rpc").ConnectionAbortedError|undefined} */
         this.chatbotTriggerFailedError = undefined;
+        this.onChange(
+            () => [this.livechat_note],
+            function onChangeLivechatNote(livechat_note) {
+                if (livechat_note !== undefined) {
+                    this.livechatNoteText = convertBrToLineBreak(livechat_note || "");
+                }
+            }
+        );
     },
     get allowDescriptionTypes() {
         return [...super.allowDescriptionTypes, "livechat"];
@@ -80,6 +79,14 @@ const discussChannelPatch = {
     get allowedToLeaveChannelTypes() {
         return [...super.allowedToLeaveChannelTypes, "livechat"];
     },
+    get livechatVisitorMember() {
+        if (this.channel_type !== "livechat") {
+            return undefined;
+        }
+        return [...this.channel_member_ids]
+            .sort((a, b) => a.id - b.id)
+            .find((member) => member.livechat_member_type === "visitor");
+    },
     /** @override */
     _computeCanHide() {
         if (this.channel_type === "livechat") {
@@ -87,7 +94,7 @@ const discussChannelPatch = {
                 this.isLocallyPinned && !this.self_member_id && this.livechat_status !== "need_help"
             );
         }
-        return super._computeCanHide(...arguments);
+        return super._computeCanHide();
     },
     get computedDisplayName() {
         if (this.channel_type !== "livechat") {

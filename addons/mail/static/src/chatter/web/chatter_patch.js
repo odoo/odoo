@@ -236,7 +236,7 @@ const chatterPatch = {
      * @returns {import("models").Activity[]}
      */
     get activities() {
-        return this.state.thread?.sortedActivities ?? [];
+        return this.thread()?.sortedActivities ?? [];
     },
 
     get afterPostRequestList() {
@@ -258,7 +258,7 @@ const chatterPatch = {
     },
 
     get attachments() {
-        return this.state.thread?.sortedAttachments ?? [];
+        return this.thread()?.sortedAttachments ?? [];
     },
 
     /** Shows the amount of selected files, to confirm the selection at a glance. */
@@ -313,7 +313,7 @@ const chatterPatch = {
     },
 
     get scheduledMessages() {
-        return this.state.thread?.sortedScheduledMessages ?? [];
+        return this.thread()?.sortedScheduledMessages ?? [];
     },
 
     get selectedAttachmentGroups() {

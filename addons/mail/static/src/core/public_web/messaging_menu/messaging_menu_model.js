@@ -8,12 +8,13 @@ export const MENU_TABS = { BOOKMARK: "bookmark", NOTIFICATION: "notification" };
 export class MessagingMenu extends Record {
     static singleton = true;
 
-    bookmarkTab = fields.One("MessagingMenuTab", {
-        compute() {
+    setup() {
+        super.setup(...arguments);
+        this.assignComputed("bookmarkTab", function computeBookmarkTab() {
             if (this.store.self_user?.share !== false) {
                 return;
             }
-            return {
+            return this.store.MessagingMenuTab.insert({
                 id: MENU_TABS.BOOKMARK,
                 important: false,
                 recordType: "mail.message",
@@ -32,32 +33,13 @@ export class MessagingMenu extends Record {
                         preventDropdownClose: true,
                     },
                 ],
-            };
-        },
-        eager: true,
-    });
-    globalCounter = this.computed(() => this._computeGlobalCounter());
-    initializeCountersFetcher = this.computed(() =>
-        this.store.makeCachedFetchData("/mail/messaging_menu/initialize_counters", () => {
-            const filter_id_by_tab_id_by_record_type = {};
-            for (const tab of this.allTabs) {
-                if (tab.hidden) {
-                    continue;
-                }
-                filter_id_by_tab_id_by_record_type[tab.recordType] ??= {};
-                filter_id_by_tab_id_by_record_type[tab.recordType][tab.id] =
-                    tab.defaultFilter?.id ?? null;
-            }
-            return { filter_id_by_tab_id_by_record_type };
-        })
-    );
-
-    notificationTab = fields.One("MessagingMenuTab", {
-        compute() {
+            });
+        });
+        this.assignComputed("notificationTab", function computeNotificationTab() {
             if (this.store.self_user?.notification_type !== "inbox") {
                 return;
             }
-            return {
+            return this.store.MessagingMenuTab.insert({
                 id: MENU_TABS.NOTIFICATION,
                 recordType: "mail.message",
                 includesMessage: (msg) =>
@@ -88,22 +70,46 @@ export class MessagingMenu extends Record {
                         preventDropdownClose: true,
                     },
                 ],
-            };
-        },
-        eager: true,
-    });
-    allTabs = fields.Many("MessagingMenuTab", { inverse: "messagingMenuAsTab" });
-    visibleTabs = fields.Many("MessagingMenuTab", { inverse: "messagingMenuAsVisibleTabs" });
-    sortedVisibleTabs = fields.Many("MessagingMenuTab", {
-        compute() {
-            return [...this.visibleTabs].sort(
-                (t1, t2) => t1.sequence - t2.sequence || t1.id.localeCompare(t2.id)
-            );
-        },
-    });
+            });
+        });
+    }
 
+    bookmarkTab = fields.One("MessagingMenuTab");
+    globalCounter = this.computed(() => this._computeGlobalCounter());
+    initializeCountersFetcher = this.computed(() =>
+        this.store.makeCachedFetchData("/mail/messaging_menu/initialize_counters", () => {
+            const filter_id_by_tab_id_by_record_type = {};
+            for (const tab of this.allTabs) {
+                if (tab.hidden) {
+                    continue;
+                }
+                filter_id_by_tab_id_by_record_type[tab.recordType] ??= {};
+                filter_id_by_tab_id_by_record_type[tab.recordType][tab.id] =
+                    tab.defaultFilter?.id ?? null;
+            }
+            return { filter_id_by_tab_id_by_record_type };
+        })
+    );
+    notificationTab = fields.One("MessagingMenuTab");
+    get allTabs() {
+        return [...this.store.MessagingMenuTab.records.values()];
+    }
+    get sortedAllTabs() {
+        return [...this.allTabs].sort(
+            (t1, t2) => t1.sequence - t2.sequence || t1.id.localeCompare(t2.id)
+        );
+    }
     _computeGlobalCounter() {
         return this.visibleTabs.reduce((sum, t) => sum + (t.important ? t.counter ?? 0 : 0), 0);
+    }
+
+    get visibleTabs() {
+        return this.allTabs.filter((tab) => tab.isShown);
+    }
+    get sortedVisibleTabs() {
+        return [...this.visibleTabs].sort(
+            (t1, t2) => t1.sequence - t2.sequence || t1.id.localeCompare(t2.id)
+        );
     }
 
     /**

@@ -9,7 +9,7 @@ import { patch } from "@web/core/utils/patch";
 
 patch(Activity.prototype, {
     setup() {
-        super.setup(...arguments);
+        super.setup();
         this.isNoteEmpty = this.computed(
             () => !this.note || isEmptyBlock(createElementWithContent("div", this.note))
         );

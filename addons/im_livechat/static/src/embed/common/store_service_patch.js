@@ -12,21 +12,28 @@ const StorePatch = {
         this.activeVisitorLivechats = fields.Many("discuss.channel", {
             inverse: "storeAsActiveVisitorLivechats",
         });
-        expirableStorage.onChange(GUEST_TOKEN_STORAGE_KEY, (value) => (this.guest_token = value));
-        this.guest_token = fields.Attr(expirableStorage.getItem(GUEST_TOKEN_STORAGE_KEY), {
-            onUpdate() {
-                if (this.guest_token) {
-                    expirableStorage.setItem(GUEST_TOKEN_STORAGE_KEY, this.guest_token);
-                    this.store.env.services.bus_service.addChannel(
-                        `mail.guest_${this.guest_token}`
-                    );
-                    return;
+        this.onChange(
+            () => [], // one-shot (no dependencies): cleanup on delete
+            function onChangeGuestTokenStorage() {
+                const onGuestTokenChange = (value) => (this.guest_token = value);
+                expirableStorage.onChange(GUEST_TOKEN_STORAGE_KEY, onGuestTokenChange);
+                return () =>
+                    expirableStorage.offChange(GUEST_TOKEN_STORAGE_KEY, onGuestTokenChange);
+            }
+        );
+        this.guest_token = expirableStorage.getItem(GUEST_TOKEN_STORAGE_KEY);
+        this.onChange(
+            () => [this.guest_token],
+            function onChangeGuestToken(guest_token) {
+                if (guest_token) {
+                    expirableStorage.setItem(GUEST_TOKEN_STORAGE_KEY, guest_token);
+                    const busChannel = `mail.guest_${guest_token}`;
+                    this.env.services.bus_service.addChannel(busChannel);
+                    return () => this.env.services.bus_service.deleteChannel(busChannel);
                 }
                 expirableStorage.removeItem(GUEST_TOKEN_STORAGE_KEY);
-                this.store.env.services.bus_service.deleteChannel(`mail.guest_${this.guest_token}`);
-            },
-            eager: true,
-        });
+            }
+        );
         this.livechat_rule = fields.One("im_livechat.channel.rule");
         this.livechat_available = false;
     },

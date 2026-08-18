@@ -1,48 +1,58 @@
 import { fields } from "@mail/model/misc";
 import { Record } from "@mail/model/record";
 
+import { computed } from "@odoo/owl";
+
 export class MessagingMenuUIState extends Record {
     static id = "id";
 
-    activeTab = fields.One("MessagingMenuTab", {
-        compute() {
-            if (this.activeTab?.isShown) {
+    setup() {
+        super.setup();
+        this.assignComputed("activeTab", function computeActiveTab() {
+            if (
+                this.activeTab?.isShown ||
+                (this.activeTab &&
+                    !this.activeTab.hidden &&
+                    this.activeTab.getLoadStatus(this.selectedFilter) === "loading")
+            ) {
                 return this.activeTab;
             }
             return this.store.messagingMenu?.sortedVisibleTabs[0];
-        },
-        eager: true,
-        onUpdate() {
-            // No tab to show while the menu is still being filled up.
-            this.selectedFilter = this.activeTab?.defaultFilter;
-        },
-    });
-    /** @type {?import("@mail/core/public_web/messaging_menu/messaging_menu_tab_model").MessagingMenuTabFilter} */
-    selectedFilter;
-    /** @type {string} */
-    id;
-    /**
-     * Trigger for the initial tab content load. It recomputes whenever the tab/filter to
-     * show changes, or when this state becomes ready to load (see `_isReadyForInitialLoad`).
-     */
-    _initialLoadTrigger = fields.Attr(null, {
-        compute() {
+        });
+        this.onChange(
+            () => [this.activeTab],
+            function onChangeActiveTab() {
+                this.selectedFilter = this.activeTab?.defaultFilter;
+            },
+            { immediate: true }
+        );
+        const initialLoadTrigger = computed(() => {
             if (!this._isReadyForInitialLoad() || !this.activeTab) {
                 return null;
             }
             return `${this.activeTab.id}::${this.selectedFilter?.id ?? ""}`;
-        },
-        eager: true,
-        onUpdate() {
-            this._ensureTabOrFilterInitialLoad();
-        },
-    });
+        });
+        this.onChange(
+            () => [initialLoadTrigger()],
+            function onChangeInitialLoadTrigger(trigger) {
+                if (trigger) {
+                    this._ensureTabOrFilterInitialLoad();
+                }
+            },
+            { immediate: true }
+        );
+    }
+
+    activeTab = fields.One("MessagingMenuTab");
+    /** @type {?import("@mail/core/public_web/messaging_menu/messaging_menu_tab_model").MessagingMenuTabFilter} */
+    selectedFilter;
+    /** @type {string} */
+    id;
 
     /**
      * Handles an explicit tab selection by the user.
      *
      * Unlike setting `activeTab` programmatically, selecting a tab clears the selected
-     * thread. This is separate from `activeTab.onUpdate` to avoid clearing threads during
      * programmatic thread-to-tab synchronization.
      *
      * @param {import("models").MessagingMenuTab} tab

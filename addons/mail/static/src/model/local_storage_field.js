@@ -23,7 +23,7 @@ export function localStorageField(record, defaultValue) {
     record.onChange(
         () => [], // one-shot at construction release: the localId is assigned
         () => {
-            fieldName = [...record._.fieldsAttrSignal].find(([, sig]) => sig() === marker)?.[0];
+            fieldName = [...record._.fieldsSignal].find(([, sig]) => sig() === marker)?.[0];
             if (!fieldName) {
                 throw new Error("localStorage() return value must be assigned to the field");
             }

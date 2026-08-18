@@ -5,7 +5,7 @@ import { patch } from "@web/core/utils/patch";
 /** @type {import("models").DiscussChannel} */
 const discussChannelPatch = {
     setup() {
-        super.setup(...arguments);
+        super.setup();
         this.isDisplayedInDiscussAppDesktop = this.computed(() =>
             Boolean(
                 this.discussAppAsThread &&
@@ -14,8 +14,8 @@ const discussChannelPatch = {
             )
         );
     },
-    computeIsDisplayed() {
-        return this.isDisplayedInDiscussAppDesktop || super.computeIsDisplayed();
+    get isDisplayed() {
+        return this.isDisplayedInDiscussAppDesktop || super.isDisplayed;
     },
 };
 patch(DiscussChannel.prototype, discussChannelPatch);

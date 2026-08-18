@@ -20,7 +20,7 @@ export const messagingMenuHelpers = {
         const ResUsers = env["res.users"];
         switch (tab_id) {
             case "bookmark":
-                return [["bookmarked_partner_ids", "=", env.user?.partner_id]];
+                return [["bookmarked_partner_ids", "in", [env.user?.partner_id]]];
             case "notification":
                 return [
                     ["notification_ids.res_partner_id", "=", env.user?.partner_id],

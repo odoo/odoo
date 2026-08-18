@@ -1,6 +1,5 @@
 import { Store } from "@mail/core/common/store_service";
 import { MENU_TABS } from "@mail/core/public_web/messaging_menu/messaging_menu_model";
-import { fields } from "@mail/model/export";
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
@@ -48,17 +47,19 @@ const StorePatch = {
         this.activityBroadcastChannel = null;
         this.activityCounter = 0;
         this.activity_counter_bus_id = 0;
+        this.activity_groups = undefined;
         this.activities_to_assign_count = undefined;
-        /** @type {Object[]} */
-        this.activity_groups = fields.Attr(undefined, {
-            onUpdate() {
+        this.onChange(
+            () => this.activityGroups,
+            function onChangeActivityGroups() {
                 this.onUpdateActivityGroups();
             },
-        });
+            { immediate: true }
+        );
         this.messagingMenuSystrayState = this.computed(
             () =>
                 this.MessagingMenuUIState.get("mail.systray") ??
-                this.MessagingMenuUIState.insert({ id: "mail.systray", activeTab: MENU_TABS.CHATS })
+                this.MessagingMenuUIState.insert({ id: "mail.systray", activeTab: MENU_TABS.CHAT })
         );
     },
     initialize() {

@@ -2,7 +2,7 @@ import { toRawValue } from "@mail/utils/common/local_storage";
 import { defineMailModels, start as start2 } from "@mail/../tests/mail_test_helpers";
 import { after, afterEach, beforeEach, describe, expect, test, tick } from "@odoo/hoot";
 import { advanceTime, animationFrame } from "@odoo/hoot-mock";
-import { Component, immediateEffect, markup, proxy, toRaw, xml } from "@odoo/owl";
+import { Component, immediateEffect, markup, proxy, xml } from "@odoo/owl";
 import {
     getService,
     mockService,
@@ -301,16 +301,21 @@ test("Assign & Delete on _inherits fields", async () => {
     expect(channel.exists()).toBe(false);
 });
 
-test("onAdd/onDelete hooks on relational with inverse", async () => {
+test("onRelationChange on relational with inverse", async () => {
     let logs = [];
     (class Thread extends Record {
         static id = "name";
         name;
-        members = fields.Many("Member", {
-            inverse: "thread",
-            onAdd: (member) => logs.push(`Thread.onAdd(${member.name})`),
-            onDelete: (member) => logs.push(`Thread.onDelete(${member.name})`),
-        });
+        members = fields.Many("Member", { inverse: "thread" });
+        setup() {
+            this.onRelationChange(
+                () => this.members,
+                ({ added, removed }) => {
+                    added.forEach((member) => logs.push(`Thread.onAdd(${member.name})`));
+                    removed.forEach((member) => logs.push(`Thread.onDelete(${member.name})`));
+                }
+            );
+        }
     }).register(localRegistry);
     (class Member extends Record {
         static id = "name";
@@ -335,103 +340,6 @@ test("onAdd/onDelete hooks on relational with inverse", async () => {
     expect(logs).toBeEmpty();
     john.thread = undefined;
     expect(logs).toEqual(["Thread.onDelete(John)"]);
-});
-
-test("Computed fields", async () => {
-    (class Thread extends Record {
-        static id = "name";
-        name;
-        type = fields.Attr("", {
-            compute() {
-                if (this.members.length === 0) {
-                    return "empty chat";
-                } else if (this.members.length === 1) {
-                    return "self-chat";
-                } else if (this.members.length === 2) {
-                    return "dm chat";
-                } else {
-                    return "group chat";
-                }
-            },
-        });
-        admin = fields.One("Persona", {
-            compute() {
-                return this.members[0];
-            },
-        });
-        members = fields.Many("Persona");
-    }).register(localRegistry);
-    (class Persona extends Record {
-        static id = "name";
-        name;
-    }).register(localRegistry);
-    const store = await start();
-    const thread = store.Thread.insert("General");
-    const [john, marc, antony] = store.Persona.insert(["John", "Marc", "Antony"]);
-    Object.assign(thread, { members: [john, marc] });
-    expectRecord(thread.admin).toEqual(john);
-    expect(thread.type).toBe("dm chat");
-    thread.members.delete(john);
-    expectRecord(thread.admin).toEqual(marc);
-    expect(thread.type).toBe("self-chat");
-    thread.members.unshift(antony, john);
-    expectRecord(thread.admin).toEqual(antony);
-    expect(thread.type).toBe("group chat");
-});
-
-test("Computed fields: lazy (default) vs. eager", async () => {
-    (class Thread extends Record {
-        static id = "name";
-        name;
-        computeType() {
-            if (this.members.length === 0) {
-                return "empty chat";
-            } else if (this.members.length === 1) {
-                return "self-chat";
-            } else if (this.members.length === 2) {
-                return "dm chat";
-            } else {
-                return "group chat";
-            }
-        }
-        typeLazy = this.computed(() => {
-            expect.step("LAZY");
-            return this.computeType();
-        });
-        typeEager = fields.Attr("", {
-            compute() {
-                expect.step("EAGER");
-                return this.computeType();
-            },
-            eager: true,
-        });
-        members = fields.Many("Persona");
-    }).register(localRegistry);
-    (class Persona extends Record {
-        static id = "name";
-        name;
-    }).register(localRegistry);
-    const store = await start();
-    const thread = store.Thread.insert("General");
-    const members = thread.members;
-    expect.verifySteps(["EAGER"]);
-    expect(thread.typeEager).toBe("empty chat");
-    expect.verifySteps([]);
-    expect(thread.typeLazy).toBe("empty chat");
-    expect.verifySteps(["LAZY"]);
-    members.add("John");
-    expect.verifySteps(["EAGER"]);
-    expect(thread.typeEager).toBe("self-chat");
-    expect.verifySteps([]);
-    members.add("Antony");
-    expect.verifySteps(["EAGER"]);
-    expect(thread.typeEager).toBe("dm chat");
-    expect.verifySteps([]);
-    members.add("Demo");
-    expect.verifySteps(["EAGER"]);
-    expect(thread.typeEager).toBe("group chat");
-    expect(thread.typeLazy).toBe("group chat");
-    expect.verifySteps(["LAZY"]);
 });
 
 test("insert on html field", async () => {
@@ -481,33 +389,6 @@ test("Unshift preserves order", async () => {
     expect(thread.messages.map((msg) => msg.id)).toEqual([7, 6, 5, 4, 3, 2, 1]);
 });
 
-test("onAdd hook should see fully inserted data", async () => {
-    (class Thread extends Record {
-        static id = "name";
-        name;
-        members = fields.Many("Member", {
-            inverse: "thread",
-            onAdd: (member) =>
-                expect.step(`Thread.onAdd::${member.name}.${member.type}.${member.isAdmin}`),
-        });
-    }).register(localRegistry);
-    (class Member extends Record {
-        static id = "name";
-        name;
-        type;
-        isAdmin = fields.Attr(false, {
-            compute() {
-                return this.type === "admin";
-            },
-        });
-        thread = fields.One("Thread");
-    }).register(localRegistry);
-    const store = await start();
-    const thread = store.Thread.insert("General");
-    thread.members.add({ name: "John", type: "admin" });
-    expect.verifySteps(["Thread.onAdd::John.admin.true"]);
-});
-
 test("Can insert with relation as id, using relation as data object", async () => {
     (class User extends Record {
         static id = "name";
@@ -546,6 +427,31 @@ test("Set on attr should invoke onChange", async () => {
     expect.verifySteps(["BODY_CHANGED"]);
     message.body = "test2";
     expect.verifySteps(["BODY_CHANGED"]);
+});
+
+test("onChange with spread Many deps fires on relation content changes", async () => {
+    (class Thread extends Record {
+        static id = "name";
+        name;
+        members = fields.Many("Persona");
+    }).register(localRegistry);
+    (class Persona extends Record {
+        static id = "name";
+        name;
+    }).register(localRegistry);
+    const store = await start();
+    const thread = store.Thread.insert("General");
+    thread.onChange(
+        () => [...thread.members],
+        (...members) => expect.step(`MEMBERS:${members.map((m) => m.name).join(",")}`),
+        { immediate: true, initialRun: false }
+    );
+    thread.members.add("John");
+    expect.verifySteps(["MEMBERS:John"]);
+    thread.members.add("Marc");
+    expect.verifySteps(["MEMBERS:John,Marc"]);
+    thread.members.delete("John");
+    expect.verifySteps(["MEMBERS:Marc"]);
 });
 
 test("record list sort should be manually observable", async () => {
@@ -603,93 +509,16 @@ test("record list sort should be manually observable", async () => {
     expect.verifySteps(["sortMessages"]);
 });
 
-test("reading of lazy compute relation field should recompute", async () => {
-    (class Thread extends Record {
-        static id = "id";
-        id;
-        messages = fields.Many("Message", { inverse: "thread" });
-        messages2 = fields.Many("Message", {
-            compute() {
-                return this.messages.map((m) => m.id);
-            },
-        });
-    }).register(localRegistry);
-    (class Message extends Record {
-        static id = "id";
-        id;
-        thread = fields.One("Thread", { inverse: "messages" });
-    }).register(localRegistry);
-    const store = await start();
-    const thread = store.Thread.insert(1);
-    store.Message.insert([
-        { id: 1, thread },
-        { id: 2, thread },
-    ]);
-    const messages2 = thread.messages2;
-    expect(`${messages2.map((m) => m.id)}`).toBe("1,2");
-    store.Message.insert([{ id: 3, thread }]);
-    expect(`${messages2.map((m) => m.id)}`).toBe("1,2,3");
-    store.Message.insert([{ id: 4, thread }]);
-    expect(`${messages2.map((m) => m.id)}`).toBe("1,2,3,4");
-});
-
-test("lazy compute should re-compute while they are observed", async () => {
-    (class Channel extends Record {
-        static id = "id";
-        id;
-        count = 0;
-        multiplicity = this.computed(() => {
-            expect.step("computing");
-            if (this.count > 3) {
-                return "many";
-            }
-            return "few";
-        });
-    }).register(localRegistry);
-    const store = await start();
-    const channel = store.Channel.insert(1);
-    function render() {
-        expect.step(`render ${channel.multiplicity}`);
-    }
-    const disposeFn1 = immediateEffect(() => {
-        render();
-    });
-    after(() => disposeFn1?.());
-    expect.verifySteps(["computing", "render few"]);
-    channel.count = 2;
-    expect.verifySteps(["computing"]);
-    channel.count = 5;
-    expect.verifySteps(["computing", "render many"]);
-    disposeFn1();
-    channel.count = 6;
-    expect.verifySteps([]);
-    channel.count = 7;
-    expect.verifySteps([]);
-    channel.count = 1;
-    expect.verifySteps([]);
-    channel.count = 0;
-    expect.verifySteps([]);
-    channel.count = 7;
-    expect.verifySteps([]);
-    channel.count = 1;
-    expect.verifySteps([]);
-    expect(channel.multiplicity).toBe("few");
-    expect.verifySteps(["computing"]);
-    const disposeFn2 = immediateEffect(() => {
-        render();
-    });
-    after(() => disposeFn2());
-    expect.verifySteps(["render few"]);
-    channel.count = 7;
-    expect.verifySteps(["computing", "render many"]);
-});
-
 test("store updates can be observed", async () => {
+    localRegistry.remove("Store");
+    (class extends Store {
+        static _name = "Store";
+        abc;
+    }).register(localRegistry);
     const store = await start();
     function onUpdate() {
         expect.step(`abc:${store.abc}`);
     }
-    const rawStore = toRaw(store)._raw;
     const disposeFn = immediateEffect(() => {
         onUpdate();
     });
@@ -697,23 +526,29 @@ test("store updates can be observed", async () => {
     expect.verifySteps(["abc:undefined"]);
     store.abc = 1;
     expect.verifySteps(["abc:1"]); // observable from makeStore"
-    rawStore.store.abc = 2;
+    store.store.abc = 2;
     expect.verifySteps(["abc:2"]); // observable from record.store
-    rawStore.Model.store.abc = 3;
+    store.Model.store.abc = 3;
     expect.verifySteps(["abc:3"]);
 });
 
-test("onAdd/onDelete hooks on one without inverse", async () => {
+test("onRelationChange on one without inverse", async () => {
     (class Thread extends Record {
         static id = "name";
     }).register(localRegistry);
     (class Member extends Record {
         static id = "name";
         name;
-        thread = fields.One("Thread", {
-            onAdd: (thread) => expect.step(`thread.onAdd(${thread.name})`),
-            onDelete: (thread) => expect.step(`thread.onDelete(${thread.name})`),
-        });
+        thread = fields.One("Thread");
+        setup() {
+            this.onRelationChange(
+                () => this.thread,
+                ({ added, removed }) => {
+                    added.forEach((thread) => expect.step(`thread.onAdd(${thread.name})`));
+                    removed.forEach((thread) => expect.step(`thread.onDelete(${thread.name})`));
+                }
+            );
+        }
     }).register(localRegistry);
     const store = await start();
     const general = store.Thread.insert("General");
@@ -727,14 +562,20 @@ test("onAdd/onDelete hooks on one without inverse", async () => {
     await expect.waitForSteps(["thread.onDelete(General)"]);
 });
 
-test("onAdd/onDelete hooks on many without inverse", async () => {
+test("onRelationChange on many without inverse", async () => {
     (class Thread extends Record {
         static id = "name";
         name;
-        members = fields.Many("Member", {
-            onAdd: (member) => expect.step(`members.onAdd(${member.name})`),
-            onDelete: (member) => expect.step(`members.onDelete(${member.name})`),
-        });
+        members = fields.Many("Member");
+        setup() {
+            this.onRelationChange(
+                () => this.members,
+                ({ added, removed }) => {
+                    added.forEach((member) => expect.step(`members.onAdd(${member.name})`));
+                    removed.forEach((member) => expect.step(`members.onDelete(${member.name})`));
+                }
+            );
+        }
     }).register(localRegistry);
     (class Member extends Record {
         static id = "name";
@@ -752,6 +593,39 @@ test("onAdd/onDelete hooks on many without inverse", async () => {
     await expect.waitForSteps(["members.onAdd(John)"]);
     general.members = undefined;
     await expect.waitForSteps(["members.onDelete(Jane)", "members.onDelete(John)"]);
+});
+
+test("onRelationChange sees the changes made by its own callback", async () => {
+    (class Thread extends Record {
+        static id = "name";
+        name;
+        members = fields.Many("Member");
+        setup() {
+            this.onRelationChange(
+                () => this.members,
+                ({ added }) => {
+                    added.forEach((member) => expect.step(`added(${member.name})`));
+                    while (this.members.length > 1) {
+                        const member = this.members.pop();
+                        expect.step(`popped(${member.name})`);
+                    }
+                }
+            );
+        }
+    }).register(localRegistry);
+    (class Member extends Record {
+        static id = "name";
+        name;
+    }).register(localRegistry);
+    const store = await start();
+    const thread = store.Thread.insert("General");
+    const [john, marc] = store.Member.insert(["John", "Marc"]);
+    thread.members.add(john);
+    expect.verifySteps(["added(John)"]);
+    thread.members.unshift(marc);
+    expect.verifySteps(["added(Marc)", "popped(John)"]);
+    thread.members.add(john);
+    expect.verifySteps(["added(John)", "popped(John)"]);
 });
 
 test("record list assign should update inverse fields", async () => {
@@ -781,10 +655,15 @@ test("datetime type record", async () => {
     (class Thread extends Record {
         static id = "name";
         name;
-        date = fields.Attr(undefined, {
-            type: "datetime",
-            onUpdate: () => expect.step("DATE_UPDATED"),
-        });
+        setup() {
+            super.setup();
+            this.onChange(
+                () => [this.date],
+                () => expect.step("DATE_UPDATED"),
+                { initialRun: false }
+            );
+        }
+        date = fields.Attr(undefined, { type: "datetime" });
     }).register(localRegistry);
     const store = await start();
     await expect.waitForSteps([]);
@@ -831,6 +710,27 @@ test("attr that are default [] should be isolated per record", async () => {
     expect(p2.names).toEqual([]);
 });
 
+test("in-place mutation of an array attr is reactive", async () => {
+    (class Person extends Record {
+        static id = "id";
+        id;
+        names = fields.Attr([], { asProxy: true });
+    }).register(localRegistry);
+    const store = await start();
+    const person = store.Person.insert({ id: 1 });
+    const disposeFn = immediateEffect(() => {
+        expect.step(`names:${person.names.length}`);
+    });
+    after(() => disposeFn());
+    expect.verifySteps(["names:0"]);
+    person.names.push("John");
+    expect.verifySteps(["names:1"]);
+    person.names.push("Jane");
+    expect.verifySteps(["names:2"]);
+    person.names = [];
+    expect.verifySteps(["names:0"]);
+});
+
 test("record.toData() is JSON stringified and can be reinserted as record", async () => {
     // If the default value is stored and reused for all records,
     // this could lead to mistakenly sharing the default value among records
@@ -842,11 +742,9 @@ test("record.toData() is JSON stringified and can be reinserted as record", asyn
         messages = fields.Many("Message");
         team = fields.One("Team");
         signature = fields.Html("");
-        isDiscuss = fields.Attr(false, {
-            compute() {
-                return this.team === "Discuss";
-            },
-        });
+        get isDiscuss() {
+            return this.team === "Discuss";
+        }
     }).register(localRegistry);
     (class Message extends Record {
         static id = "body";
@@ -870,7 +768,7 @@ test("record.toData() is JSON stringified and can be reinserted as record", asyn
     expect(p.team.name).toBe("Discuss");
     expect(p.signature.toString()).toBe("<p>-- John</p>");
     expect(p.signature).toBeInstanceOf(Markup);
-    expect(toRaw(store.Person.records.get(p.localId))).toBe(toRaw(p));
+    expect(store.Person.records.get(p.localId)).toBe(p);
     expect(serializeDateTime(p.due_datetime)).toBe("2024-08-28 10:19:44");
     // export data, delete, then insert back
     const data = p.toData();
@@ -892,14 +790,14 @@ test("record.toData() is JSON stringified and can be reinserted as record", asyn
     store.Message.get("1").delete();
     store.Message.get("2").delete();
     store.Team.get("Discuss").delete();
-    expect(toRaw(store.Person.records.get(p.localId))).toBe(undefined);
+    expect(store.Person.records.get(p.localId)).toBe(undefined);
     store.insert(serializedData);
     const p2 = store.Person.get(1);
     // Same assertions as before
     expect(p2.names).toEqual(["John", "Marc"]);
     expect(p2.messages.map((msg) => msg.body)).toEqual(["1", "2"]);
     expect(p2.team.name).toBe("Discuss");
-    expect(toRaw(store.Person.records.get(p2.localId))).toBe(toRaw(p2));
+    expect(store.Person.records.get(p2.localId)).toBe(p2);
     expect(serializeDateTime(p2.due_datetime)).toBe("2024-08-28 10:19:44");
     expect(p2.signature.toString()).toBe("<p>-- John</p>");
     expect(p.signature).toBeInstanceOf(Markup);
@@ -1122,7 +1020,7 @@ test("Inserting single-id data on non-single id Model throws human-readable erro
         author = fields.One("Persona");
     }).register(localRegistry);
     const store = await start();
-    store.warnErrors = false;
+    store._.warnErrors = false;
     const paul = store.Persona.insert({ partner_id: 1 });
     store.Persona.insert({ guest_id: 2 });
     expect(store.Persona.get({ partner_id: 1 }).exists()).toBe(true);
@@ -1175,7 +1073,6 @@ test("Deleted records are not returned by 'Model.records' nor 'Model.get()'", as
      * Record has a 2-step record deletion:
      * - "soft" deletion, where the record is flagged for deletion but object is not removed from the store system structurally
      * - "hard" deletion, where the object is fully removed from store system structurally
-     * The soft "deletion" is useful for stuffs like onDelete() hooks that tell which record has been removed from a relation,
      * with object reference, even when the record will be hard-deleted as a consequence.
      * `Model.records` and `Model.get()` are intended for business-code uses, therefore they should make sure to not return
      * records that are soft-deleted, as this could lead to critical section where business code is using a deleted record.
@@ -1183,10 +1080,10 @@ test("Deleted records are not returned by 'Model.records' nor 'Model.get()'", as
     function assertExists(store) {
         const msg = store.Message.get("msg-1");
         if (msg) {
-            expect(toRaw(msg).exists()).toBe(true);
+            expect(msg.exists()).toBe(true);
         }
         for (const msg of store.Message.records.values()) {
-            expect(toRaw(msg).exists()).toBe(true);
+            expect(msg.exists()).toBe(true);
         }
     }
     let deleting = false;
@@ -1207,21 +1104,20 @@ test("Deleted records are not returned by 'Model.records' nor 'Model.get()'", as
         static id = "id";
         id;
         thread = fields.One("Thread");
-        allMessagesInStore = fields.Many("Message", {
-            compute() {
-                if (deleting) {
-                    expect.step("allMessagesInStore:compute");
-                    expect(this._lastAllMessagesInStore.some((m) => m.exists())).toBe(false);
-                }
-                expect(this.thread.hasMessages).toBe(Boolean(store.Message.records.size > 0));
-                assertExists(this.store);
-                const allMessagesInStore = [...store.Message.records.values()];
-                toRaw(this)._raw._lastAllMessagesInStore = allMessagesInStore;
-                return allMessagesInStore;
-            },
-            eager: true,
-        });
-        _lastAllMessagesInStore;
+        allMessagesInStore = fields.Many("Message");
+        setup() {
+            this.onChange(
+                () => [...this.store.Message.records.values()],
+                function (...messages) {
+                    if (deleting) {
+                        expect.step("allMessagesInStore:onchange");
+                    }
+                    assertExists(this.store);
+                    this.allMessagesInStore = messages;
+                },
+                { immediate: true }
+            );
+        }
     }).register(localRegistry);
     const store = await start();
     const thread = store.Thread.insert({ name: "General" });
@@ -1233,41 +1129,70 @@ test("Deleted records are not returned by 'Model.records' nor 'Model.get()'", as
     deleting = true;
     message.delete();
     deleting = false;
-    expect.verifySteps(["allMessagesInStore:compute"]);
+    expect.verifySteps(["allMessagesInStore:onchange"]);
     assertExists(store);
     expect(thread.messages.length).toEqual(0);
 });
 
-test("record.delete() should clear relation (inverse + computed)", async () => {
-    (class Thread extends Record {
+test("Can delete record with chained onRelationChange: () => record.delete()", async () => {
+    (class Channel extends Record {
         static id = "name";
         name;
-        members = fields.Many("Member", {
-            inverse: "thread",
-            onDelete: (member) => member?.delete(),
-        });
-        onlineMembers = fields.Many("Member", {
-            compute() {
-                return this.members.filter((member) => member.online);
-            },
-        });
+        thread = fields.One("Thread", { inverse: "channel" });
+        setup() {
+            this.onRelationChange(
+                () => this.thread,
+                ({ removed }) => removed.forEach((thread) => thread.delete())
+            );
+        }
     }).register(localRegistry);
-    (class Member extends Record {
+    (class Thread extends Record {
+        static id;
+        channel = fields.One("Channel", { inverse: "thread" });
+        correspondent = fields.One("User");
+        members = fields.Many("User", { inverse: "threads" });
+        setup() {
+            this.assignComputed("correspondent", function computeCorrespondent() {
+                return this.members[0];
+            });
+            this.onRelationChange(
+                () => this.members,
+                ({ removed }) => removed.forEach((user) => user.delete())
+            );
+        }
+    }).register(localRegistry);
+    (class User extends Record {
         static id = "name";
         name;
-        online = false;
-        thread = fields.One("Thread", { inverse: "members" });
+        threads = fields.Many("Thread");
     }).register(localRegistry);
     const store = await start();
-    const john = store.Member.insert({ name: "john", online: true });
-    const thread = store.Thread.insert({ name: "general", members: [john] });
-    expect(thread.onlineMembers.length).toBe(1);
+    const john = store.User.insert("john");
+    const thread = store.Thread.insert({ channel: "general", members: [john] });
+    expectRecord(thread.correspondent).toEqual(john); // intentional observing correspondent field for compute on thread deletion
     thread.delete();
-    expect(john.exists()).toBe(false);
-    expect(thread.onlineMembers.length).toBe(0);
+    expect(thread.exists()).toBe(false);
 });
 
-test("record.delete() should empty its own relations", async () => {
+test("getters patched after the store is made are honored", async () => {
+    const Thread = class Thread extends Record {
+        static id = "name";
+        name;
+        get label() {
+            return `Thread: ${this.name}`;
+        }
+    };
+    Thread.register(localRegistry);
+    const store = await start();
+    patchWithCleanup(Thread.prototype, {
+        get label() {
+            return `${super.label} (patched)`;
+        },
+    });
+    expect(store.Thread.insert("general").label).toBe("Thread: general (patched)");
+});
+
+test("record.delete() empties its own relations", async () => {
     (class Thread extends Record {
         static id = "name";
         name;
@@ -1286,86 +1211,56 @@ test("record.delete() should empty its own relations", async () => {
     thread.delete();
     expect(john.exists()).toBe(true);
     expect.verifySteps(["members:0"]);
-    expect(toRaw(john)._raw._.uses.data.size).toBe(0);
 });
 
-test("Delete record with side-effect compute to insert it should have resulting record with only insert data (old data is removed)'", async () => {
-    /**
-     * Record has a 2-step record deletion:
-     * - "soft" deletion, where the record is flagged for deletion but object is not removed from the store system structurally
-     * - "hard" deletion, where the object is fully removed from store system structurally
-     * The soft "deletion" is useful for stuffs like onDelete() hooks that tell which record has been removed from a relation,
-     * with object reference, even when the record will be hard-deleted as a consequence.
-     * `Model.records` and `Model.get()` are intended for business-code uses, therefore they should make sure to not return
-     * records that are soft-deleted, as this could lead to critical section where business code is using a deleted record.
-     */
-    (class DiscussApp extends Record {
-        static id;
-        state = fields.One("DiscussAppState", {
-            compute: () => ({}),
-            onDelete() {
-                this.state = {};
-            },
-        });
-    }).register(localRegistry);
-    (class DiscussAppState extends Record {
-        static id;
-        status = "init";
-        thread = fields.One("Thread");
-    }).register(localRegistry);
+test("record deleted from the deletion of another leaves its relations", async () => {
     (class Thread extends Record {
         static id = "name";
         name;
+        members = fields.Many("Member", { inverse: "thread" });
+        onlineMembers = fields.Many("Member");
+        setup() {
+            this.assignComputed("onlineMembers", function computeOnlineMembers() {
+                return this.members.filter((member) => member.online);
+            });
+        }
     }).register(localRegistry);
-    const store = await start();
-    const discussApp = store.DiscussApp.insert();
-    discussApp.state = { thread: "General", status: "ready" };
-    expect(discussApp.state.status).toEqual("ready");
-    expectRecord(discussApp.state.thread).toEqual(store.Thread.get("General"));
-    discussApp.state.delete();
-    expect(discussApp.state.status).toEqual("init");
-    expect(discussApp.state.thread).toBe(undefined);
-});
-
-test("Can delete record with chained onDelete: () => record.delete()", async () => {
-    (class Channel extends Record {
+    (class Member extends Record {
         static id = "name";
         name;
-        thread = fields.One("Thread", { onDelete: (thread) => thread?.delete() }); // intentional onDelete to thread.delete() potentially twice during update cycle
-    }).register(localRegistry);
-    (class Thread extends Record {
-        static id;
-        channel = fields.One("Channel", { inverse: "thread" });
-        correspondent = fields.One("User", {
-            compute() {
-                return this.members[0];
-            },
-        });
-        members = fields.Many("User", { onDelete: (user) => user?.delete(), inverse: "threads" }); // intentional onDelete so that re-computed correspondent on delete
-    }).register(localRegistry);
-    (class User extends Record {
-        static id = "name";
-        name;
-        threads = fields.Many("Thread");
+        online = false;
+        thread = fields.One("Thread", { inverse: "members" });
+        setup() {
+            this.onRelationChange(
+                () => this.thread,
+                ({ removed }) => {
+                    if (removed.length) {
+                        this.delete();
+                    }
+                }
+            );
+        }
     }).register(localRegistry);
     const store = await start();
-    const john = store.User.insert("john");
-    const thread = store.Thread.insert({ channel: "general", members: [john] });
-    expectRecord(thread.correspondent).toEqual(john); // intentional observing correspondent field for compute on thread deletion
+    const john = store.Member.insert({ name: "john", online: true });
+    const thread = store.Thread.insert({ name: "general", members: [john] });
+    expect(thread.onlineMembers.length).toBe(1);
+    expectRecord(john).toBeIn(thread.onlineMembers);
     thread.delete();
-    expect(thread.exists()).toBe(false);
+    expect(john.exists()).toBe(false);
+    expect(thread.onlineMembers.length).toBe(0);
 });
 
 test("fields, getters and functions are inherited", async () => {
     (class Thread extends Record {
         static id = "id";
         id;
-        channel = fields.One("Channel", {
-            compute() {
+        channel = fields.One("Channel", { inverse: "thread" });
+        setup() {
+            this.assignComputed("channel", function computeChannel() {
                 return this.id;
-            },
-            inverse: "thread",
-        });
+            });
+        }
         name;
         get displayName() {
             return `Thread: ${this.name}`;
@@ -1394,12 +1289,12 @@ test("shadowed fields, getters and functions are not inherited", async () => {
     (class Thread extends Record {
         static id = "id";
         id;
-        channel = fields.One("Channel", {
-            compute() {
+        channel = fields.One("Channel", { inverse: "thread" });
+        setup() {
+            this.assignComputed("channel", function computeChannel() {
                 return this.id;
-            },
-            inverse: "thread",
-        });
+            });
+        }
         name;
         get displayName() {
             return `Thread: ${this.name}`;
@@ -1461,7 +1356,10 @@ test("A field declared with localStorage() is saved in local storage", async () 
     (class Message extends Record {
         static id = "id";
         id;
-        body = this.localStorage("");
+        setup() {
+            super.setup();
+            this.body = this.localStorage("");
+        }
     }).register(localRegistry);
     const store = await start();
     const message = store.Message.insert(1);
@@ -1477,7 +1375,10 @@ test("A field declared with localStorage() is restored from local storage", asyn
     class Message extends Record {
         static id = "id";
         id;
-        body = this.localStorage("");
+        setup() {
+            super.setup();
+            this.body = this.localStorage("");
+        }
     }
     Message.register(localRegistry);
     const bodyLocalId = makeRecordFieldLocalId(Message.localId(1), "body");
@@ -1487,11 +1388,34 @@ test("A field declared with localStorage() is restored from local storage", asyn
     expect(message.body).toBe("test");
 });
 
+test("localStorage entry equal to the field default is dropped on restore", async () => {
+    class Message extends Record {
+        static id = "id";
+        id;
+        setup() {
+            super.setup();
+            this.body = this.localStorage("hello");
+        }
+    }
+    Message.register(localRegistry);
+    const bodyLocalId = makeRecordFieldLocalId(Message.localId(1), "body");
+    localStorage.setItem(bodyLocalId, toRawValue("hello"));
+    const store = await start();
+    const message = store.Message.insert(1);
+    expect(message.body).toBe("hello");
+    expect(localStorage.getItem(bodyLocalId)).toBe(null);
+    message.body = "world";
+    expect(localStorage.getItem(bodyLocalId)).toBe(toRawValue("world"));
+});
+
 test("Fields updated from the local storage do not trigger another storage event", async () => {
     class Message extends Record {
         static id = "id";
         id;
-        body = this.localStorage("");
+        setup() {
+            super.setup();
+            this.body = this.localStorage("");
+        }
     }
     Message.register(localRegistry);
     const bodyLocalId = makeRecordFieldLocalId(Message.localId(1), "body");
@@ -1610,11 +1534,7 @@ test("computed field first read by a component outlives that component", async (
         static id = "id";
         id;
         count = 0;
-        multiplicity = fields.Attr(undefined, {
-            compute() {
-                return this.count > 3 ? "many" : "few";
-            },
-        });
+        multiplicity = this.computed(() => (this.count > 3 ? "many" : "few"));
     }).register(localRegistry);
     const store = await start();
     const channel = store.Channel.insert(1);
@@ -1664,6 +1584,18 @@ test("a record is its proxy in a field declaration and in setup", async () => {
     const message = store.Message.insert({ id: 1, author: "John" });
     expectRecord(message.readAuthorFromDeclaration()).toEqual(message.author);
     expectRecord(message.readAuthorFromSetup()).toEqual(message.author);
+});
+
+test("a computed is not a field", async () => {
+    (class Thread extends Record {
+        static id = "name";
+        name;
+        label = this.computed(() => "a thread");
+    }).register(localRegistry);
+    const store = await start();
+    const thread = store.Thread.insert("general");
+    expect(thread.label).toBe("a thread");
+    expect(Object.keys(thread.toData())).not.toInclude("label");
 });
 
 test("a declared computed runs again only when what it read changes", async () => {
@@ -1756,7 +1688,7 @@ test("a computed does not recompute once its record is deleted", async () => {
     expect.verifySteps([]);
 });
 
-test("writing on a computed is warned + ignored", async () => {
+test("writing a computed warns and is dropped", async () => {
     patchWithCleanup(console, { warn: (msg) => expect.step(msg) });
     (class Thread extends Record {
         static id = "name";
@@ -1818,7 +1750,7 @@ test("a computed is left out of toData()", async () => {
     expect(Object.keys(thread.toData())).not.toInclude("label");
 });
 
-test("a read of a computed field in a child model reads it on the parent model", async () => {
+test("a model inheriting another reads its computeds", async () => {
     (class Thread extends Record {
         static id = "name";
         static _name = "Thread";
@@ -1871,7 +1803,11 @@ test("a record made while the store is made reads the true store", async () => {
     localRegistry.remove("Store");
     (class TestStore extends Store {
         static _name = "Store";
-        thread = fields.One("Thread", { compute: () => ({ name: "boot" }), eager: true });
+        setup() {
+            super.setup(...arguments);
+            this.thread = { name: "boot" };
+        }
+        thread = fields.One("Thread");
     }).register(localRegistry);
     (class Thread extends Record {
         static id = "name";

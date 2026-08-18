@@ -17,24 +17,18 @@ export class ChatWindow extends Record {
     highlighted = false;
     hubAsOpened = fields.One("ChatHub", { inverse: "opened" });
     hubAsFolded = fields.One("ChatHub", { inverse: "folded" });
-    hubAsCanShowOpened = fields.One("ChatHub", {
-        inverse: "canShowOpened",
-        /** @this {import("models").ChatWindow} */
-        compute() {
-            if (this.canShow && this.hubAsOpened) {
-                return this.store.chatHub;
-            }
-        },
-    });
-    hubAsCanShowFolded = fields.One("ChatHub", {
-        inverse: "canShowFolded",
-        /** @this {import("models").ChatWindow} */
-        compute() {
-            if (this.canShow && this.hubAsFolded) {
-                return this.store.chatHub;
-            }
-        },
-    });
+    hubAsCanShowOpened = fields.One("ChatHub", { inverse: "canShowOpened" });
+    hubAsCanShowFolded = fields.One("ChatHub", { inverse: "canShowFolded" });
+
+    setup() {
+        super.setup();
+        this.assignComputed("hubAsCanShowOpened", function computeHubAsCanShowOpened() {
+            return this.canShow && this.hubAsOpened ? this.store.chatHub : undefined;
+        });
+        this.assignComputed("hubAsCanShowFolded", function computeHubAsCanShowFolded() {
+            return this.canShow && this.hubAsFolded ? this.store.chatHub : undefined;
+        });
+    }
 
     get isOpen() {
         return Boolean(this.hubAsOpened);

@@ -1,4 +1,4 @@
-import { fields, Record } from "@mail/model/export";
+import { Record, fields } from "@mail/model/export";
 import { compareDatetime } from "@mail/utils/common/misc";
 
 import { _t } from "@web/core/l10n/translation";
@@ -132,51 +132,15 @@ export class MessagingMenuTab extends Record {
     loadStatusByFilterId = fields.Attr({}, { asProxy: true });
     /** IDs of already loaded records, used to exclude them from `loadMore` requests. */
     loadMoreExcludeIds = this.computed(() => this._computeLoadMoreExcludeIds());
-    messagingMenuAsTab = fields.One("MessagingMenu", {
-        inverse: "allTabs",
-        compute() {
-            return this.store.messagingMenu;
-        },
-        eager: true,
-    });
-    messagingMenuAsVisibleTabs = fields.One("MessagingMenu", {
-        inverse: "visibleTabs",
-        compute() {
-            if (!this.isShown) {
-                return;
-            }
-            return this.store.messagingMenu;
-        },
-        eager: true,
-    });
     messages = fields.Many("mail.message", { inverse: "messagingMenuTabsAsMessages" });
-    sortedMessages = fields.Many("mail.message", {
-        compute() {
-            return [...this.messages].sort(
-                (m1, m2) => compareDatetime(m2.create_date, m1.create_date) || m2.id - m1.id
-            );
-        },
-    });
+    get sortedMessages() {
+        return [...this.messages].sort(
+            (m1, m2) => compareDatetime(m2.create_date, m1.create_date) || m2.id - m1.id
+        );
+    }
     /** @type {"mail.message"|"discuss.channel"} */
     recordType;
     sequence = 0;
-
-    _computeCounter() {
-        // The counter reflects the default filter (when any), so only count loaded
-        // messages matching it. `init_counter_ids` is scoped to that domain.
-        const defaultFilter = this.defaultFilter;
-        const countableMessages = defaultFilter?.includesMessage
-            ? this.messages.filter((m) => defaultFilter.includesMessage(m))
-            : this.messages;
-        const unloadedUnreadCount = this.init_counter_ids.filter(
-            (id) => !this.store["mail.message"].get(id)
-        ).length;
-        return countableMessages.length + unloadedUnreadCount + this.extraCounter;
-    }
-
-    _computeLoadMoreExcludeIds() {
-        return this.messages.map((m) => m.id);
-    }
 
     get isShown() {
         return !this.hidden && (!this.hideWhenZeroCounter || this.counter > 0);
@@ -237,6 +201,23 @@ export class MessagingMenuTab extends Record {
                 this.loadStatusByFilterId[key] = "idle";
             }
         }
+    }
+
+    _computeCounter() {
+        // The counter reflects the default filter (when any), so only count loaded
+        // messages matching it. `init_counter_ids` is scoped to that domain.
+        const defaultFilter = this.defaultFilter;
+        const countableMessages = defaultFilter?.includesMessage
+            ? this.messages.filter((m) => defaultFilter.includesMessage(m))
+            : this.messages;
+        const unloadedUnreadCount = this.init_counter_ids.filter(
+            (id) => !this.store["mail.message"].get(id)
+        ).length;
+        return countableMessages.length + unloadedUnreadCount + this.extraCounter;
+    }
+
+    _computeLoadMoreExcludeIds() {
+        return this.messages.map((m) => m.id);
     }
 }
 
