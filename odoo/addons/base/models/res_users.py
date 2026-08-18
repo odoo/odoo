@@ -427,7 +427,7 @@ class ResUsers(models.Model):
             else:
                 user.password = user.new_password
 
-    @api.depends('all_group_ids')
+    @api.depends('group_ids')
     def _compute_role(self):
         group_user = self.env.ref('base.group_user')
         group_no_one = self.env.ref('base.group_no_one', raise_if_not_found=False) or self.env['res.groups']
