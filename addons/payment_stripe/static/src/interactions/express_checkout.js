@@ -131,7 +131,20 @@ patch(ExpressCheckout.prototype, {
             this.paymentContext.partnerId = parseInt(await this.waitFor(rpc(
                 this.paymentContext['expressCheckoutRoute'],
                 addresses,
+<<<<<<< 1a94a2f29ead4aabfdfb5a8abd0ef13e7d4f58ab:addons/payment_stripe/static/src/interactions/express_checkout.js
             )));
+||||||| 895677f806dceac1fb51f494701bde69cfa35c38:addons/payment_stripe/static/src/js/express_checkout_form.js
+            ));
+=======
+            ));
+            // A falsy partner id means the flow was aborted because the address changed the fiscal
+            // position; reload so the updated prices and warning are shown before retrying.
+            if (!this.paymentContext.partnerId) {
+                ev.complete('fail');
+                window.location.reload();
+                return;
+            }
+>>>>>>> 402e97419c4ecb94fdf6349829ca69e6cb0bc1f4:addons/payment_stripe/static/src/js/express_checkout_form.js
             // Call the transaction route to create the transaction and retrieve the client secret.
             const { client_secret } = await this.waitFor(rpc(
                 this.paymentContext['transactionRoute'],
