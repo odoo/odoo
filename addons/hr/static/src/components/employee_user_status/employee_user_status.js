@@ -11,7 +11,7 @@ import { _t } from "@web/core/l10n/translation";
 const STATUS = {
     false: { label: _t("Not Invited"), decoration: "danger", icon: "person_off" },
     new: { label: _t("Invited"), decoration: "warning", icon: "send" },
-    active: { label: _t("Confirmed"), decoration: "success", icon: "check-circle" },
+    active: { label: _t("Confirmed"), decoration: "success", icon: "check_circle" },
     inactive: { label: _t("Archived"), decoration: "danger", icon: "block" },
 };
 
