@@ -1068,8 +1068,8 @@ class HrExpense(models.Model):
                     'email_to': manager.employee_id.work_email or manager.email,
                     'subject': _("New expenses waiting for your approval"),
                 })
-            if new_mails:
-                self.env['mail.mail'].sudo().create(new_mails).send()
+        if new_mails:
+            self.env['mail.mail'].sudo().create(new_mails).send()
 
     @api.model
     def get_empty_list_help(self, help_message):
