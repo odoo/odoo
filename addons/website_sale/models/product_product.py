@@ -151,6 +151,8 @@ class ProductProduct(models.Model):
         }
         if description := (self.website_meta_description or self.description_sale):
             vals["description"] = description
+        if self.default_code:
+            vals["sku"] = self.default_code
         if self.barcode:
             vals["gtin"] = self.barcode
 
