@@ -5,7 +5,6 @@ import { BuilderAction } from "@html_builder/core/builder_action";
 import { _t } from "@web/core/l10n/translation";
 import { localization } from "@web/core/l10n/localization";
 import { registry } from "@web/core/registry";
-import { renderToElement } from "@web/core/utils/render";
 
 function isTimelineCard(el) {
     return el.matches(".s_timeline_card");
@@ -90,7 +89,7 @@ export class TimelineOptionPlugin extends Plugin {
 
 export class AddMilestoneAction extends BuilderAction {
     static id = "addMilestone";
-    static dependencies = ["builderOptions"];
+    static dependencies = ["builderOptions", "websiteBridge"];
 
     apply({ editingElement, value: position }) {
         const lastRowEl = [...editingElement.querySelectorAll(".s_timeline_row")].at(-1);
@@ -98,7 +97,10 @@ export class AddMilestoneAction extends BuilderAction {
         const dotEl = lastRowEl.querySelector(".o_dot").cloneNode();
         const dotLineEl = lastRowEl.querySelector(".o_dot_line").cloneNode();
 
-        const newRowEl = renderToElement("website.s_timeline_row_additional", { position });
+        const newRowEl = this.dependencies.websiteBridge.renderToElement(
+            "website.s_timeline_row_additional",
+            { position }
+        );
         newRowEl.prepend(dotEl);
         newRowEl.prepend(dotLineEl);
         lastRowEl.after(newRowEl);
