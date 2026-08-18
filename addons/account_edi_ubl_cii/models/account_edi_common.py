@@ -1641,14 +1641,23 @@ class AccountEdiCommon(models.AbstractModel):
                 for _base_line, taxes_data in values['base_line_x_taxes_data']
                 for tax_data in taxes_data
             ]
+            current_tax_amount_currency = sum(
+                target_factor['tax_data']['tax_amount_currency']
+                for target_factor in target_factors
+            )
+            delta_tax_amount_currency = currency.round(
+                target_tax_amount_currency - current_tax_amount_currency
+            )
+            if currency.is_zero(delta_tax_amount_currency):
+                continue
             amounts_to_distribute = AccountTax._distribute_delta_amount_smoothly(
                 precision_digits=currency.decimal_places,
-                delta_amount=target_tax_amount_currency,
+                delta_amount=delta_tax_amount_currency,
                 target_factors=target_factors,
             )
             for target_factor, amount_to_distribute in zip(target_factors, amounts_to_distribute):
                 tax_data = target_factor['tax_data']
-                tax_data['tax_amount_currency'] = amount_to_distribute
+                tax_data['tax_amount_currency'] += amount_to_distribute
 
         AccountTax._add_accounting_data_in_base_lines_tax_details(base_lines, invoice.company_id, include_caba_tags=invoice.always_tax_exigible)
         tax_results = AccountTax._prepare_tax_lines(base_lines, invoice.company_id, tax_lines=tax_lines)
