@@ -3,12 +3,10 @@ import { registry } from "@web/core/registry";
 
 const AnimationEdit = (I) =>
     class extends I {
-        get isResetting() {
-            return !this.isAnimateOnScroll || this.isResettingAnimation;
-        }
-
-        set isResetting(value) {
-            this.isResettingAnimation = value;
+        // Overriding to keep "on appearance" animations reset in edit mode:
+        // they are meant to play once on page load, not on every re-render.
+        getIsResetting() {
+            return !this.isAnimateOnScroll || super.getIsResetting();
         }
 
         startAnimation() {
