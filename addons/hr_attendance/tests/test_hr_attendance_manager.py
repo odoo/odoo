@@ -66,3 +66,7 @@ class TestAttendanceManager(TransactionCase):
 
         attendance_as_luisa.write({'employee_id': self.ryan_employee.id})
         self.assertEqual(self.attendance.employee_id, self.ryan_employee)
+
+        # Luisa should not lose their officer group as they are administrator of Attendance
+        self.ryan_employee.write({'attendance_manager_id': False})
+        self.assertTrue(self.luisa.has_group('hr_attendance.group_hr_attendance_officer'))
