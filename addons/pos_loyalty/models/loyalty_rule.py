@@ -12,7 +12,7 @@ class LoyaltyRule(models.Model):
     any_product = fields.Boolean(
         compute="_compute_valid_product_ids", help="Technical field, whether all products match")
     valid_product_ids = fields.Many2many(
-        'product.product', "Valid Products", compute='_compute_valid_product_ids',
+        'product.product', string="Valid Products", compute='_compute_valid_product_ids',
         help="these are the products that are valid for this rule.")
 
     promo_barcode = fields.Char("Barcode", compute='_compute_promo_barcode', store=True, readonly=False,
