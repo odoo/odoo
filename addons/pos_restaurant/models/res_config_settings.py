@@ -9,3 +9,4 @@ class ResConfigSettings(models.TransientModel):
     pos_floor_ids = fields.Many2many(related='pos_config_id.floor_ids', readonly=False)
     pos_default_screen = fields.Selection(related="pos_config_id.default_screen", readonly=False)
     pos_use_course_allocation = fields.Boolean(related='pos_config_id.use_course_allocation', readonly=False)
+    pos_use_show_items_on_course_ticket = fields.Boolean(related='pos_config_id.use_show_items_on_course_ticket', readonly=False)

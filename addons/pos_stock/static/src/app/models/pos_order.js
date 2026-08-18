@@ -30,8 +30,8 @@ patch(PosOrder.prototype, {
         }
     },
 
-    dataMaker(prepOrPosLine, quantity) {
-        const result = super.dataMaker(prepOrPosLine, quantity);
+    dataMaker(prepOrPosLine, quantity, opts = {}) {
+        const result = super.dataMaker(...arguments);
         const trackingStr = prepOrPosLine.product_id?.tracking == "lot" ? _t("Lot:") : _t("SN:");
         result["data"]["pack_lot_lines"] = prepOrPosLine.pack_lot_ids?.map(
             (l) => `${trackingStr} ${l.lot_name}`

@@ -813,19 +813,24 @@ patch(PosStore.prototype, {
     },
     async printCourseTicket(course) {
         try {
+            const order = this.getOrder();
+            const showItems = this.config.use_show_items_on_course_ticket;
             const changes = {
                 quantity: 0,
                 categoryCount: [],
                 addedQuantity: [],
                 removedQuantity: [],
-                noteUpdate: course.line_ids.map((line) => ({
-                    product_id: line.getProduct().id,
-                })),
+                noteUpdate: course.line_ids.map(
+                    (line) =>
+                        order.dataMaker(line, line.getQuantity(), {
+                            hideCourse: showItems,
+                        }).data
+                ),
                 noteUpdateTitle: `${course.name} ${_t("fired")}`,
-                printNoteUpdateData: false,
+                printNoteUpdateData: showItems,
             };
             await this.ticketPrinter.printOrderChanges({
-                order: this.getOrder(),
+                order: order,
                 opts: { orderChange: changes },
             });
         } catch (e) {
