@@ -198,6 +198,8 @@ class ProductProduct(models.Model):
                 'ratingValue': self.sudo().rating_avg,
                 'reviewCount': self.rating_count,
             }
+        if self.default_code:
+            markup_data['sku'] = self.default_code
         if self.barcode:
             markup_data['gtin'] = self.barcode
         return markup_data
