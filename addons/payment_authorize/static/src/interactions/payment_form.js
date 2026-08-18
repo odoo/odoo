@@ -17,6 +17,23 @@ patch(PaymentForm.prototype, {
     // #=== DOM MANIPULATION ===#
 
     /**
+     * Load the Accept.js SDK of each Authorize.net payment option listed in the form.
+     *
+     * @override method from payment.payment_form
+     * @return {void}
+     */
+    async willStart() {
+        const sdkUrls = new Set([...this.el.querySelectorAll(
+            'input[name="o_payment_radio"][data-provider-code="authorize"]'
+        )].map(radio => radio.dataset['providerIsLive']
+            ? 'https://js.authorize.net/v1/Accept.js'
+            : 'https://jstest.authorize.net/v1/Accept.js'
+        ));
+        await this.waitFor(Promise.all([...sdkUrls].map(sdkUrl => loadJS(sdkUrl))));
+        await super.willStart(...arguments);
+    },
+
+    /**
      * Prepare the inline form of Authorize.net for direct payment.
      *
      * @private
@@ -38,7 +55,6 @@ patch(PaymentForm.prototype, {
             return; // Don't show the form for tokens.
         } else if (this.authorizeData[paymentOptionId]) {
             this._setPaymentFlow('direct'); // Overwrite the flow even if no re-instantiation.
-            await loadJS(this.authorizeData[paymentOptionId]['acceptJSUrl']); // Reload the SDK.
             return; // Don't re-extract the data if already done for this payment method.
         }
 
@@ -52,15 +68,7 @@ patch(PaymentForm.prototype, {
         this.authorizeData[paymentOptionId] = JSON.parse(
             authorizeForm.dataset['authorizeInlineFormValues']
         );
-        let acceptJSUrl = 'https://js.authorize.net/v1/Accept.js';
-        if (this.authorizeData[paymentOptionId].is_live !== true) {
-            acceptJSUrl = 'https://jstest.authorize.net/v1/Accept.js';
-        }
         this.authorizeData[paymentOptionId].form = authorizeForm;
-        this.authorizeData[paymentOptionId].acceptJSUrl = acceptJSUrl;
-
-        // Load the SDK.
-        await loadJS(acceptJSUrl);
     },
 
     // #=== PAYMENT FLOW ===#

@@ -11,6 +11,21 @@ patch(PaymentForm.prototype, {
     // #=== DOM MANIPULATION ===#
 
     /**
+     * Load the Razorpay SDK if a Razorpay payment option is listed in the form.
+     *
+     * @override method from @payment/js/payment_form
+     * @return {void}
+     */
+    async willStart() {
+        if (this.el.querySelector(
+            'input[name="o_payment_radio"][data-provider-code="razorpay"]'
+        )) {
+            await this.waitFor(loadJS('https://checkout.razorpay.com/v1/checkout.js'));
+        }
+        await super.willStart(...arguments);
+    },
+
+    /**
      * Update the payment context to set the flow to 'direct'.
      *
      * @override method from @payment/js/payment_form
@@ -44,7 +59,6 @@ patch(PaymentForm.prototype, {
             return;
         }
         const razorpayOptions = this._prepareRazorpayOptions(processingValues);
-        await this.waitFor(loadJS('https://checkout.razorpay.com/v1/checkout.js'));
         const RazorpayJS = Razorpay(razorpayOptions);
         RazorpayJS.open();
         RazorpayJS.on('payment.failed', response => {
