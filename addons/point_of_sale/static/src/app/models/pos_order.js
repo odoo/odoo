@@ -1,6 +1,5 @@
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
-import { computeComboItems } from "./utils/compute_combo_items";
 import { localization } from "@web/core/l10n/localization";
 import { serializeDateTime } from "@web/core/l10n/dates";
 import { getStrNotes } from "./utils/order_change";
@@ -371,14 +370,10 @@ export class PosOrder extends PosOrderAccounting {
         );
         for (const pLine of combo_parent_lines) {
             const { childLineFree, childLineExtra } = this.getFreeAndExtraChildLines(pLine);
-            attributes_prices[pLine.uuid] = computeComboItems(
-                pLine.product_id,
+            attributes_prices[pLine.uuid] = pLine.product_id.getComboPrice(
                 childLineFree,
-                pricelist,
-                this.models["decimal.precision"].getAll(),
-                this.models["product.template.attribute.value"].getAllBy("id"),
                 childLineExtra,
-                this.currency
+                pricelist
             );
         }
         const combo_children_lines = this.lines.filter(
