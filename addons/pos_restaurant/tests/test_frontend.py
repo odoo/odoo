@@ -716,6 +716,21 @@ class TestFrontend(TestFrontendCommon):
         })
         self.start_pos_tour('test_guest_count_bank_payment')
 
+    def test_guest_count_defaults_to_table_seats(self):
+        """ A preset that does not force the guest selection keeps the table seats
+            as guest count on the stored order.
+        """
+        preset_eat_in = self.env['pos.preset'].create({'name': 'Eat in'})
+        self.main_pos_config.write({
+            'use_presets': True,
+            'default_preset_id': preset_eat_in.id,
+            'available_preset_ids': [(6, 0, preset_eat_in.ids)],
+        })
+        self.main_pos_config.open_ui()
+        self.start_pos_tour('test_guest_count_defaults_to_table_seats')
+        order = self.env['pos.order'].search([('table_id', '=', self.main_floor_table_5.id)], limit=1)
+        self.assertEqual(order.customer_count, self.main_floor_table_5.seats)
+
     def test_preset_future_timing_restaurant(self):
         """
         Test to set order preset future date inside a tour
