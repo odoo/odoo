@@ -4,10 +4,10 @@ from odoo.http import request, route
 from odoo.tools.image import image_data_uri
 
 from odoo.addons.sale.controllers.combo_configurator import SaleComboConfiguratorController
-from odoo.addons.website_sale.controllers.main import WebsiteSale
+from odoo.addons.website_sale.controllers.shop import Shop
 
 
-class WebsiteSaleComboConfiguratorController(SaleComboConfiguratorController, WebsiteSale):
+class WebsiteSaleComboConfiguratorController(SaleComboConfiguratorController, Shop):
     @route(
         route="/website_sale/combo_configurator/get_data",
         type="jsonrpc",
