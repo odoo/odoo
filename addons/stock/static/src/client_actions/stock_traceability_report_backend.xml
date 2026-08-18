@@ -53,7 +53,7 @@
                             <span t-attf-style="margin-left: {{this.getLevel(line)}}px; "/>
                             <t t-if="line.line_type == 'child' and line.unfoldable">
                                 <span class="o_stock_reports_unfoldable o_stock_reports_caret_icon" t-on-click="() => this.toggleLine(line, 'child')">
-                                    <i class="oi oi-fw" data-icon="subdirectory_arrow_left" t-att-class="line.isFolded ? '' : 'oi-rotate-270'" role="img" aria-label="Expand" t-att-title="line.isFolded ? 'Expand' : 'Fold'"/>
+                                    <i class="" data-icon="subdirectory_arrow_left" t-att-class="line.isFolded ? 'oi oi-fw' : ''" role="img" aria-label="Expand" t-att-title="line.isFolded ? 'Expand' : 'Fold'"/>
                                 </span>
                             </t>
                             <t t-elif="line.line_type == 'parent' and line.unfoldable">
