@@ -1,21 +1,14 @@
 import { Animation } from "./animation";
 import { registry } from "@web/core/registry";
-import { patchDynamicContentEntry } from "@web/public/utils";
 
 const AnimationEdit = (I) =>
     class extends I {
-        setup() {
-            // Prevent "On Appearance" animations from automatically playing in
-            // edit mode.
-            patchDynamicContentEntry(this.dynamicContent, "_root", "t-att-style", () => {
-                if (!this.isAnimateOnScroll) {
-                    return {
-                        "animation-play-state": undefined,
-                        "animation-name": "dummy-none",
-                    };
-                }
-            });
-            super.setup();
+        get isResetting() {
+            return !this.isAnimateOnScroll || this.isResettingAnimation;
+        }
+
+        set isResetting(value) {
+            this.isResettingAnimation = value;
         }
 
         startAnimation() {
