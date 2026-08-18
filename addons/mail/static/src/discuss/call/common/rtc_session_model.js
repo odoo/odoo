@@ -1,5 +1,7 @@
 import { fields, Record } from "@mail/model/export";
 
+import { immediateEffect, untrack } from "@odoo/owl";
+
 /**
  * @typedef {object} ServerSessionInfo
  * @property {boolean} [is_camera_on]
@@ -39,20 +41,31 @@ export class RtcSession extends Record {
             promiseWithResolvers.resolve();
             this.awaitedRecords.delete(id);
         }, 120_000);
-        promiseWithResolvers.promise.then(() => clearTimeout(timeout));
+        const localId = this.localId(id);
+        const stop = immediateEffect(() => {
+            const record = this.records.get(localId);
+            if (record) {
+                untrack(() => {
+                    promiseWithResolvers.resolve(record);
+                    this.awaitedRecords.delete(id);
+                });
+            }
+        });
+        promiseWithResolvers.promise.then(() => {
+            clearTimeout(timeout);
+            stop();
+        });
         return promiseWithResolvers.promise;
-    }
-
-    /** @returns {import("models").RtcSession} */
-    static new() {
-        const record = super.new(...arguments);
-        this.awaitedRecords.get(record.id)?.resolve(record);
-        this.awaitedRecords.delete(record.id);
-        return record;
     }
 
     setup() {
         super.setup(...arguments);
+        this.assignComputed("partner_id", function computePartnerId() {
+            return this.channel_member_id?.partner_id;
+        });
+        this.assignComputed("guest_id", function computeGuestId() {
+            return this.channel_member_id?.guest_id;
+        });
         this.onChange(
             () => [this.channel_member_id],
             (channel_member_id) => {
@@ -136,16 +149,8 @@ export class RtcSession extends Record {
 
     // Server data
     channel_member_id = fields.One("discuss.channel.member", { inverse: "rtcSession" });
-    partner_id = fields.One("res.partner", {
-        compute() {
-            return this.channel_member_id?.partner_id;
-        },
-    });
-    guest_id = fields.One("mail.guest", {
-        compute() {
-            return this.channel_member_id?.guest_id;
-        },
-    });
+    partner_id = fields.One("res.partner");
+    guest_id = fields.One("mail.guest");
     get persona() {
         return this.partner_id || this.guest_id;
     }

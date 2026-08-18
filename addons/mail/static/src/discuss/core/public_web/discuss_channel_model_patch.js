@@ -14,20 +14,11 @@ const discussChannelPatch = {
             function onChangeIsLocallyPinned() {
                 this.onPinStateUpdated();
             },
-            { immediate: true }
+            { immediate: true, initialRun: false }
         );
         this.lastSubChannelLoaded = fields.One("discuss.channel");
         this.loadSubChannelsDone = false;
-        this.messagingMenuTabs = fields.Many("MessagingMenuTab", {
-            inverse: "channels",
-            /** @this {import("models").DiscussChannel} */
-            compute() {
-                return [...this.store.MessagingMenuTab.records.values()].filter((tab) =>
-                    tab.includesChannel(this)
-                );
-            },
-            eager: true,
-        });
+        this.messagingMenuTabs = fields.Many("MessagingMenuTab", { inverse: "channels" });
         this.primaryMessagingMenuTab = this.computed(
             () =>
                 // A context specific tab only exists within its context: it wins over the
@@ -36,29 +27,32 @@ const discussChannelPatch = {
         );
         this.messagingMenuTabsWithCounter = fields.Many("MessagingMenuTab", {
             inverse: "channelsWithCounter",
-            /** @this {import("models").DiscussChannel} */
-            compute() {
-                return this._computeMessagingMenuTabsWithCounter();
-            },
-            eager: true,
         });
-    },
-    _computeMessagingMenuTabsWithCounter() {
-        if (
-            (this.self_member_id?.is_pinned &&
-                !this.self_member_id.mute_until_dt &&
-                this.self_member_id.message_unread_counter) ||
-            this.message_needaction_counter
-        ) {
-            // A tab's counter reflects its default filter (when it has one), so only
-            // count toward tabs whose default filter this channel matches.
-            return this.messagingMenuTabs.filter(
-                (t) => !t.defaultFilter || t.defaultFilter.includesChannel?.(this)
+        this.assignComputed("messagingMenuTabs", function computeMessagingMenuTabs() {
+            return [...this.store.MessagingMenuTab.records.values()].filter((tab) =>
+                tab.includesChannel(this)
             );
-        }
+        });
+        this.assignComputed(
+            "messagingMenuTabsWithCounter",
+            function computeMessagingMenuTabsWithCounter() {
+                if (
+                    (this.self_member_id?.is_pinned &&
+                        !this.self_member_id.mute_until_dt &&
+                        this.self_member_id.message_unread_counter) ||
+                    this.message_needaction_counter
+                ) {
+                    // A tab's counter reflects its default filter (when it has one), so only
+                    // count toward tabs whose default filter this channel matches.
+                    return this.messagingMenuTabs.filter(
+                        (t) => !t.defaultFilter || t.defaultFilter.includesChannel?.(this)
+                    );
+                }
+            }
+        );
     },
     _computeCanHide() {
-        return Boolean(super._computeCanHide() || this?.isLocallyPinned);
+        return Boolean(super._computeCanHide() || this.isLocallyPinned);
     },
     delete() {
         this.store.env.services.bus_service.deleteChannel(this.busChannel);

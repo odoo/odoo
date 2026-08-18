@@ -19,6 +19,9 @@ export class DiscussCategory extends Record {
     /** @type {string} */
     bus_channel_access_token;
     get busChannel() {
+        if (!this.id) {
+            return undefined;
+        }
         const channel = `discuss.category_${this.id}`;
         return this.bus_channel_access_token
             ? `${channel}_${this.bus_channel_access_token}`

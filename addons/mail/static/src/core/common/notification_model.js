@@ -6,7 +6,7 @@ export class Notification extends Record {
     static _name = "mail.notification";
 
     setup() {
-        super.setup(...arguments);
+        super.setup();
         this.onChange(
             () => [this.mail_message_id],
             (mail_message_id) => {
@@ -16,23 +16,10 @@ export class Notification extends Record {
             },
             { immediate: true, initialRun: false }
         );
-    }
-
-    /** @type {number} */
-    id;
-    mail_message_id = fields.One("mail.message");
-    /** @type {string} */
-    notification_status;
-    /** @type {string} */
-    notification_type;
-    mail_email_address;
-    failure = fields.One("Failure", {
-        inverse: "notifications",
-        /** @this {import("models").Notification} */
-        compute() {
+        this.assignComputed("failure", function computeFailure() {
             const thread = this.mail_message_id?.thread;
             if (!this.mail_message_id?.isSelfAuthored) {
-                return;
+                return undefined;
             }
             const failure = this.store.Failure.records
                 .values()
@@ -43,13 +30,22 @@ export class Notification extends Record {
                         (f.resModel !== "discuss.channel" || f.resIds.has(thread?.id))
                 );
             return this.isFailure
-                ? {
+                ? this.store.Failure.insert({
                       id: failure ? failure.id : this.store.Failure.nextId.value++,
-                  }
+                  })
                 : false;
-        },
-        eager: true,
-    });
+        });
+    }
+
+    /** @type {number} */
+    id;
+    mail_message_id = fields.One("mail.message");
+    /** @type {string} */
+    notification_status;
+    /** @type {string} */
+    notification_type;
+    mail_email_address;
+    failure = fields.One("Failure", { inverse: "notifications" });
     /** @type {string} */
     failure_type;
     get failureMessage() {

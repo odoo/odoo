@@ -11,8 +11,6 @@ const messagePatch = {
         this.hasEveryoneSeen = this.computed(() =>
             this.channel_id?.membersThatCanSeen.every((m) => m.hasSeen(this))
         );
-        // computed for caching the value and not re-rendering all
-        // messages when new_message_separator changes
         this.hasNewMessageSeparator = this.computed(
             () => this.channel_id?.self_member_id?.new_message_separator === this.id
         );

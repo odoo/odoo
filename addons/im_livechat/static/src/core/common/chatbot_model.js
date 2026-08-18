@@ -50,6 +50,7 @@ export class Chatbot extends Record {
         }
         return undefined;
     });
+
     /**
      * @type {(message: import("models").Message) => Promise<void>}
      */

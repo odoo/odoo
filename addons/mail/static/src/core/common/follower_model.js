@@ -6,7 +6,7 @@ export class Follower extends Record {
     static _name = "mail.followers";
 
     setup() {
-        super.setup(...arguments);
+        super.setup();
         this.onChange(
             () => [this.thread],
             (thread) => {

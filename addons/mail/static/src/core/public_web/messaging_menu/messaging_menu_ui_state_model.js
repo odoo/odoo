@@ -4,6 +4,17 @@ import { Record } from "@mail/model/record";
 export class MessagingMenuUIState extends Record {
     setup() {
         super.setup(...arguments);
+        this.assignComputed("activeTab", function computeActiveTab() {
+            if (
+                this.activeTab?.canBeShown ||
+                (this.activeTab &&
+                    !this.activeTab.hidden &&
+                    this.activeTab.getLoadStatus(this.selectedFilter) === "loading")
+            ) {
+                return this.activeTab;
+            }
+            return this.store.messagingMenu?.sortedVisibleTabs[0];
+        });
         this.onChange(
             () => [this.activeTab],
             function onChangeActiveTab(activeTab) {
@@ -27,14 +38,7 @@ export class MessagingMenuUIState extends Record {
 
     static id = "id";
 
-    activeTab = fields.One("MessagingMenuTab", {
-        compute() {
-            if (this.activeTab?.canBeShown) {
-                return this.activeTab;
-            }
-            return this.store.messagingMenu?.sortedVisibleTabs[0];
-        },
-    });
+    activeTab = fields.One("MessagingMenuTab");
     /**
      * The active chip filter (e.g. "Unread"), if any: rendered as a filter chip, sourced
      * from `tab.filters`.
