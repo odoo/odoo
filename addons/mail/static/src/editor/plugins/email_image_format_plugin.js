@@ -517,7 +517,11 @@ export class EmailImageFormatPlugin extends Plugin {
             attachmentId,
         };
         if (el.nodeName === "IMG") {
-            if (!mimetype || FORBIDDEN_EMAIL_MIMETYPE.has(mimetype)) {
+            if (
+                !mimetype ||
+                FORBIDDEN_EMAIL_MIMETYPE.has(mimetype) ||
+                el.dataset.emailImageSrc === PLACEHOLDER_IMAGE
+            ) {
                 return this.sanitizeImgElement(src, imageInfo, el, sourceEl, measureEl);
             }
         } else {
