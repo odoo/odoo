@@ -742,7 +742,7 @@ export class PosOrder extends PosOrderAccounting {
         return this.config.preparationCategories;
     }
 
-    dataMaker(prepOrPosLine, quantity) {
+    dataMaker(prepOrPosLine, quantity, opts = {}) {
         const line = prepOrPosLine.pos_order_line_id || prepOrPosLine;
         const product = line.product_id;
         const attributes = line.attribute_value_ids || [];
@@ -760,7 +760,7 @@ export class PosOrder extends PosOrderAccounting {
                 customer_note: getStrNotes(line?.getCustomerNote?.() || false),
                 pos_categ_id: product.pos_categ_ids[0]?.id || 0,
                 pos_categ_sequence: product.pos_categ_ids[0]?.sequence || 0,
-                group: line?.getCourse?.() || false,
+                group: (!opts.hideCourse && line?.getCourse?.()) || false,
                 combo_line_ids: line?.combo_line_ids,
                 combo_parent_uuid: line?.combo_parent_id?.uuid,
                 uom_is_base_unit: line?.product_id?.uom_id?.id == line?.config?._unit_uom_id,
