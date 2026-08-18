@@ -356,7 +356,7 @@
                     <td t-on-keydown="(ev) => this.onCellKeydown(ev, group, record)"
                         class="o_data_cell cursor-pointer"
                         t-att-class="this.getCellClass(column, record)"
-                        t-att-name="column.fields[0].name"
+                        t-att-name="column.name"
                         t-att-data-column-id="column.id"
                         t-custom-click="(ev, isMiddleClick) => this.onCellClicked(record, column, ev, isMiddleClick)"
                         tabindex="-1">
