@@ -198,7 +198,7 @@ test("switching focus in the sidebar keeps every video element", async () => {
     await hover(".o-discuss-CallParticipantCard[aria-label='Bob']");
     await click(".o-discuss-CallParticipantCard[aria-label='Bob'] [title='Participant options']");
     await waitFor(".o-discuss-CallContextMenu:count(1)");
-    await click(".o-discuss-CallContextMenu button:text('Pin')");
+    await click(".o-discuss-CallContextMenu button:has([data-icon='push_pin']):text('Pin')");
     await waitFor(".o-discuss-CallParticipantCard[aria-label='Bob'] [title='Pinned']:count(1)");
     await waitFor(".o-discuss-Call-sidebarCard[aria-label='Mitchell Admin']:count(1)");
     await waitFor(".o-discuss-Call-sidebarCard[aria-label='Alice']:count(1)");
@@ -218,7 +218,7 @@ test("switching focus in the sidebar keeps every video element", async () => {
     await hover(".o-discuss-CallParticipantCard[aria-label='Bob']");
     await click(".o-discuss-CallParticipantCard[aria-label='Bob'] [title='Participant options']");
     await waitFor(".o-discuss-CallContextMenu:count(1)");
-    await click(".o-discuss-CallContextMenu button:text('Unpin')");
+    await click(".o-discuss-CallContextMenu button:has([data-icon='keep_off']):text('Unpin')");
     await waitForNone(".o-discuss-CallParticipantCard [title='Pinned']");
     await waitFor(".o-discuss-Call-sidebarCard[aria-label='Mitchell Admin']:count(1)");
     await waitFor(".o-discuss-Call-sidebarCard[aria-label='Alice']:count(1)");
