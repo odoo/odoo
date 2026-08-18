@@ -814,6 +814,26 @@ class TestTranslationWrite(TransactionCase):
             # Illegal context lang starts with "_" should raise UserError
             category.with_context(lang='_en_US').name = '_Customers'
 
+    def test_00_prefetch_langs_crud_string(self):
+        """CRUD with prefetch_langs=True currently rejects a string cache value."""
+        self.env['res.lang']._activate_lang('fr_FR')
+        Category = self.env['test_tools.partner.category']
+        # BaseString._update_cache: assert isinstance(cache_value, dict)
+        error = 'invalid cache value for test_tools.partner.category.name'
+
+        with self.assertRaisesRegex(AssertionError, error):
+            Category.with_context(prefetch_langs=True).create({'name': 'English'})
+
+        record = Category.create({'name': 'English'})
+        record.with_context(lang='fr_FR').name = 'French'
+        with self.assertRaisesRegex(AssertionError, error):
+            record.with_context(prefetch_langs=True).write({'name': 'English 2'})
+        with self.assertRaisesRegex(AssertionError, error):
+            record.with_context(lang='fr_FR', prefetch_langs=True).name = 'French 2'
+
+        with self.assertRaisesRegex(AssertionError, error):
+            Category.with_context(prefetch_langs=True).new({'name': 'Draft'})
+
     def test_01_invalid_lang(self):
         self.env['res.lang']._activate_lang('nl_NL')
         self.category.with_context(lang='nl_NL').name = 'Reblochon nl_NL'
