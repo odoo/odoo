@@ -17,15 +17,12 @@ import { onWillDestroy, signal, useApp } from "@odoo/owl";
 export function makeStore(env, { localRegistry } = {}) {
     // fake store for now, until it becomes a model
     /** @type {import("models").Store} */
-    let store = new Store();
+    const store = new Store();
     store.env = env;
     store.Model = Store;
     store._ = new StoreInternal();
     // services start in the scope of the app, which every record scope needs
     store._.app = useApp();
-    store._raw = store;
-    store._proxy = store;
-    Record.store = store;
     /** @type {Object<string, typeof Record>} */
     const Models = {};
     const chosenModelRegistry = localRegistry ?? modelRegistry;
@@ -48,6 +45,7 @@ export function makeStore(env, { localRegistry } = {}) {
             enumerable: true,
             get: () => records(),
         });
+        Model.store = store;
         Models[Model.getName()] = Model;
         store[Model.getName()] = Model;
         // Detect fields with a dummy record and setup getter/setters on them
@@ -158,21 +156,14 @@ export function makeStore(env, { localRegistry } = {}) {
             }
         }
     }
-    // point store/_rawStore at the temporary store, so the initial store
-    // insert can write through the proxy
-    for (const Model of Object.values(Models)) {
-        Model._rawStore = store;
-        Model.store = store._proxy;
-    }
-    // Make true store (as a model)
-    store = store.Store.insert()._raw;
-    Record.store = store;
-    for (const Model of Object.values(Models)) {
-        Model._rawStore = store;
-        Model.store = store._proxy;
-        store[Model.getName()] = Model;
-    }
     store.Models = Models;
+    const trueStore = store._.MAKE_UPDATE(function makeTrueStore() {
+        const insertedStore = store.Store.insert();
+        for (const Model of Object.values(Models)) {
+            Model.store = insertedStore;
+        }
+        return insertedStore;
+    });
     onWillDestroy(() => {
         for (const Model of Object.values(Models)) {
             for (const record of Model.records.values()) {
@@ -181,5 +172,5 @@ export function makeStore(env, { localRegistry } = {}) {
         }
         store._.scope?.destroy();
     });
-    return store._proxy;
+    return trueStore;
 }

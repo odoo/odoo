@@ -456,6 +456,7 @@ export class DiscussChannel extends Record {
     isDraftOrSending = this.computed(
         () => this.hasDraft || Boolean(this.thread?.messages.at(-1)?.isPending)
     );
+    isLocallyPinned = false;
     lastMessageSeenByAllId = this.computed(() => {
         if (!this.hasSeenFeature) {
             return;

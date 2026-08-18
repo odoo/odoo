@@ -116,6 +116,34 @@ test("edit follower and close subtype dialog", async () => {
     await waitForNone(".o-mail-FollowerSubtypeDialog");
 });
 
+test("subtype dialog shows the hint of a subtype with a parent", async () => {
+    const pyEnv = await startServer();
+    const [threadId, partnerId] = pyEnv["res.partner"].create([{}, {}]);
+    const parentSubtypeId = pyEnv["mail.message.subtype"].create({
+        name: "Stage",
+        res_model: "res.partner",
+    });
+    pyEnv["mail.message.subtype"].create({
+        name: "Child Stage",
+        parent_id: parentSubtypeId,
+        res_model: "res.partner",
+    });
+    pyEnv["mail.followers"].create({
+        is_active: true,
+        partner_id: partnerId,
+        res_id: threadId,
+        res_model: "res.partner",
+    });
+    await start();
+    await openFormView("res.partner", threadId);
+    await contains(".o-mail-Followers-button:enabled:count(1)").click();
+    await contains("[title='Edit Notification Preferences']:count(1)").click();
+    await waitFor(".o-mail-FollowerSubtypeDialog label:text('Child Stage'):count(1)");
+    await waitFor(
+        ".o-mail-FollowerSubtypeDialog div:text('This sets default notifications for all future records under this contact.'):count(1)"
+    );
+});
+
 test("remove a follower in a dirty form view", async () => {
     const pyEnv = await startServer();
     const [threadId, partnerId] = pyEnv["res.partner"].create([{}, {}]);
