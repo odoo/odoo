@@ -426,6 +426,7 @@ class WebsitePage(models.Model):
             self.env.context.get('cookies_allowed'),
             request.httprequest.path,
             request.session.debug,
+            self.env['ir.http']._is_mobile_user_agent(request.httprequest.user_agent.string),
         )
 
     def _get_response(self, request):

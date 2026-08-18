@@ -20,6 +20,7 @@ from . import test_iap
 from . import test_import_files
 from . import test_ir_asset
 from . import test_lang_url
+from . import test_lcp_eager_loading
 from . import test_menu
 from . import test_multi_website
 from . import test_page

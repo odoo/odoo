@@ -1,4 +1,4 @@
-import { expect, test } from "@odoo/hoot";
+import { expect, test, waitFor } from "@odoo/hoot";
 import { edit, manuallyDispatchProgrammaticEvent, queryOne } from "@odoo/hoot-dom";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
 import {
@@ -66,5 +66,6 @@ test("Saving a block with a grid preview should not save the preview", async () 
     await edit(20);
 
     await contains(".o-snippets-top-actions [data-action='save']").click();
+    await waitFor(".o-website-builder_sidebar:not(.o_builder_sidebar_open)");
     expect(saveResult[0].includes("o_we_grid_preview")).toBe(false);
 });
