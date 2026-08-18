@@ -175,8 +175,10 @@ export class ListArchParser {
                 }
                 const labelAttr = node.getAttribute("string");
                 const widthAttr = node.getAttribute("width");
+                const nameAttr = node.getAttribute("name");
                 columns.push({
                     id: `column_${nextId++}`,
+                    name: nameAttr || columnFields[0].name,
                     type: "column_group",
                     label: labelAttr !== null ? labelAttr : columnFields[0].label,
                     hasLabel: true,
