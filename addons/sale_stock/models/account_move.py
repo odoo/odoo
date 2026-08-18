@@ -171,7 +171,7 @@ class AccountMoveLine(models.Model):
         self.ensure_one()
         valuation_account = self.product_id.product_tmpl_id.get_product_accounts(fiscal_pos=self.move_id.fiscal_position_id)['stock_valuation']
         sale_lines = self.sale_line_ids
-        posted_cogs_lines = sale_lines.order_id.invoice_ids.filtered(lambda m: m.move_type == 'out_invoice').line_ids.filtered(
+        posted_cogs_lines = sale_lines.order_id.invoice_ids.filtered(lambda m: m.move_type in ['out_invoice', 'out_refund']).line_ids.filtered(
             lambda line: line.display_type == 'cogs' and line.account_id == valuation_account and line.cogs_origin_id.sale_line_ids & sale_lines
         )
         posted_cogs_qty_prod_uom = sum(posted_cogs_lines.mapped(
@@ -184,7 +184,7 @@ class AccountMoveLine(models.Model):
         self.ensure_one()
         valuation_account = self.product_id.product_tmpl_id.get_product_accounts(fiscal_pos=self.move_id.fiscal_position_id)['stock_valuation']
         sale_lines = self.sale_line_ids
-        posted_cogs_value = - sum(sale_lines.order_id.invoice_ids.filtered(lambda m: m.move_type == 'out_invoice').line_ids.filtered(
+        posted_cogs_value = - sum(sale_lines.order_id.invoice_ids.filtered(lambda m: m.move_type in ['out_invoice', 'out_refund']).line_ids.filtered(
             lambda line: line.display_type == 'cogs' and line.account_id == valuation_account and line.cogs_origin_id.sale_line_ids & sale_lines
         ).mapped('balance'))
         return posted_cogs_value + super()._get_posted_cogs_value()
