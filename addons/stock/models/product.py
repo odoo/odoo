@@ -197,9 +197,6 @@ class ProductProduct(models.Model):
                 domain_move_out += [('move_line_ids.owner_id', '=', False)]
         if package_id is not None:
             domain_quant += [('package_id', '=', package_id)]
-        if dates_in_the_past:
-            domain_move_in_done = list(domain_move_in)
-            domain_move_out_done = list(domain_move_out)
         if from_date:
             date_date_expected_domain_from = [('date', '>=', from_date)]
             domain_move_in += date_date_expected_domain_from
@@ -224,13 +221,23 @@ class ProductProduct(models.Model):
         moves_out_res_past = defaultdict(float)
         if dates_in_the_past:
             # Calculate the moves that were done before now to calculate back in time (as most questions will be recent ones)
-            domain_move_in_done = [('state', '=', 'done'), ('date', '>', to_date)] + domain_move_in_done
-            domain_move_out_done = [('state', '=', 'done'), ('date', '>', to_date)] + domain_move_out_done
-            groupby = ['product_id', 'product_uom']
-            for product, uom, quantity in Move._read_group(domain_move_in_done, groupby, ['quantity:sum']):
+            # Roll back from the move lines, not the header, so put-away sub-locations follow the quant. Keep the time
+            # filter on the move date.
+            MoveLine = self.env['stock.move.line'].with_context(active_test=False)
+            _domain_line_quant_loc, domain_line_in_loc, domain_line_out_loc = self.with_context(skip_in_progress=True)._get_domain_locations()
+            done_domain = [('product_id', 'in', self.ids), ('state', '=', 'done'), ('move_id.date', '>', to_date)]
+            if lot_id is not None:
+                done_domain += [('lot_id', '=', lot_id)]
+            if owner_id is not None:
+                done_domain += [('owner_id', '=', owner_id)]
+            if 'owners' in self.env.context:
+                owners = self.env.context['owners']
+                done_domain += [('owner_id', 'in', owners)] if owners else [('owner_id', '=', False)]
+            groupby = ['product_id', 'product_uom_id']
+            for product, uom, quantity in MoveLine._read_group(done_domain + domain_line_in_loc, groupby, ['quantity:sum']):
                 moves_in_res_past[product.id] += uom._compute_quantity(quantity, product.uom_id)
 
-            for product, uom, quantity in Move._read_group(domain_move_out_done, groupby, ['quantity:sum']):
+            for product, uom, quantity in MoveLine._read_group(done_domain + domain_line_out_loc, groupby, ['quantity:sum']):
                 moves_out_res_past[product.id] += uom._compute_quantity(quantity, product.uom_id)
 
         res = dict()

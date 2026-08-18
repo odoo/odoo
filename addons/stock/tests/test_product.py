@@ -459,6 +459,28 @@ class TestProductPostInstall(TestStockCommon):
             {'location_id': self.stock_location.id, 'quantity': 4.0},
         ])
 
+    def test_qty_available_at_date_with_putaway_to_sublocation(self):
+        """ Test that on-hand at a past date rolls back a receipt put away to a sub-location: the move header keeps the
+        parent location while the move line stores to the sub-location, so the sub-location reads nothing before the
+        receipt existed instead of the quantity that only arrived later. """
+        product = self.productA
+        self.env['stock.putaway.rule'].create({
+            'product_id': product.id,
+            'location_in_id': self.stock_location.id,
+            'location_out_id': self.shelf_1.id,
+        })
+        receipt = self.env['stock.picking'].create({
+            'picking_type_id': self.picking_type_in.id,
+            'move_ids': [Command.create({
+                'product_id': product.id,
+                'product_uom_qty': 10.0,
+            })],
+        })
+        receipt.action_confirm()
+        receipt.button_validate()
+
+        self.assertEqual(product.with_context(location=self.shelf_1.id, to_date='2020-01-01 00:00:00').qty_available, 0.0)
+
     def test_toggle_inventory_tracking_keeps_stock_on_hand(self):
         """ Toggling 'is_storable' off/on must keep the stock on hand
         consistent with its moves, without counter balancing existing quants.
