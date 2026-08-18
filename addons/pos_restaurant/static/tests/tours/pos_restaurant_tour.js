@@ -1460,3 +1460,19 @@ registry.category("web_tour.tours").add("test_floating_order_name_change_partner
             Chrome.clickRegister(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_guest_count_defaults_to_table_seats", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            FloorScreen.clickTable("5"),
+            ProductScreen.guestNumberIs("4"),
+            Dialog.cancel(),
+            ProductScreen.clickDisplayedProduct("Coca-Cola"),
+            ProductScreen.clickPayButton(false),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.clickValidate(),
+            FeedbackScreen.isShown(),
+        ].flat(),
+});
