@@ -1038,8 +1038,8 @@ class TestPoSSale(PoSSaleSyncCommon, TestPointOfSaleHttpCommon):
             },
         }], partner=test_partner)
 
-        # The delivered quantity is converted back in the unit of the sale order line.
-        self.assertEqual(sale_order.order_line.qty_delivered, 1.0, "1 dozen should be delivered")
+        # The quantity sold in the PoS is converted back in the unit of the sale order line.
+        self.assertEqual(sale_order.order_line.qty_invoiced, 1.0, "1 dozen should be invoiced")
 
     def test_ecommerce_paid_order_is_hidden_in_pos(self):
         """
