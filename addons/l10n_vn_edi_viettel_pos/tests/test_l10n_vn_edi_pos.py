@@ -86,7 +86,6 @@ class TestVNEDIPOS(TestVNEDI, TestPointOfSaleHttpCommon):
             'group_ids': [
                 (4, self.env.ref('base.group_user').id),
                 (4, self.env.ref('point_of_sale.group_pos_user').id),
-                (4, self.env.ref('stock.group_stock_user').id),
             ],
         })
         pos_order = self._create_simple_order()
