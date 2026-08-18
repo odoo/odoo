@@ -5,7 +5,7 @@ import { descendants } from "@html_editor/utils/dom_traversal";
 import { tick } from "@odoo/hoot-mock";
 import { getContent, setSelection } from "../_helpers/selection";
 import { cleanLinkArtifacts } from "../_helpers/format";
-import { animationFrame, pointerDown, pointerUp, queryOne } from "@odoo/hoot-dom";
+import { animationFrame, pointerDown, pointerUp, press, queryOne } from "@odoo/hoot-dom";
 import { dispatchNormalize } from "../_helpers/dispatch";
 import { nodeSize } from "@html_editor/utils/position";
 import { expectElementCount } from "../_helpers/ui_expectations";
@@ -466,5 +466,27 @@ test("Should highlight link if editable focused", async () => {
     await animationFrame();
     expect(getContent(el)).toBe(
         '<p>\ufeff<a href="http://test.test/" class="o_link_in_selection">[]\ufeffabc\ufeff</a>\ufeff</p>'
+    );
+});
+
+test("Should properly properly delete characters at link edges (1)", async () => {
+    const { el } = await setupEditor('<p>a<a href="http://test.test/">b[]</a>c</p>');
+    await press(["Backspace"]);
+    await press(["Backspace"]);
+    expect(getContent(el)).toBe("<p>[]c</p>");
+});
+
+test("Should properly properly delete characters at link edges (2)", async () => {
+    const { el } = await setupEditor('<p>a<a href="http://test.test/">[]b</a>c</p>');
+    await press(["Delete"]);
+    await press(["Delete"]);
+    expect(getContent(el)).toBe("<p>a[]</p>");
+});
+
+test("Should properly properly delete characters at link edges (3)", async () => {
+    const { el } = await setupEditor('<p>a<a href="http://test.test/">[]b</a>c</p>');
+    await press(["Backspace"]);
+    expect(getContent(el)).toBe(
+        `<p>\ufeff<a href="http://test.test/" class="o_link_in_selection">\ufeff[]b\ufeff</a>\ufeffc</p>`
     );
 });
