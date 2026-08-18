@@ -2512,7 +2512,7 @@ class Website(models.CachedModel):
     def _should_remove_third_party_trackers(self):
         return (self.cookies_bar
             and self.block_third_party_domains
-            and not self.env['ir.http']._is_allowed_cookie('optional')
+            and not self.env.context.get('cookies_allowed')
             and not self.env.user.has_group('website.group_website_restricted_editor'))
 
     def _remove_third_party_trackers(self, tagName, atts, cookies_watchlist):
