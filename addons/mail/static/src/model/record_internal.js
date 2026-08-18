@@ -3,12 +3,15 @@
 
 import {
     IS_RECORD_SYM,
+    STORE_SYM,
+    fields,
     isComputedDefinition,
     isFieldDefinition,
     isMany,
     isRelation,
     technicalKeysOnRecords,
     untrackFunctions,
+    versionKeys,
 } from "./misc";
 import { computedUntilStale } from "@mail/utils/common/signal";
 import { RecordList } from "./record_list";
@@ -26,12 +29,12 @@ import { RecordUses } from "./record_uses";
 class RecordScope extends Scope {
     /** @param {Record} record */
     constructor(record) {
-        super(record._rawStore._.app);
+        super(record.store._.app);
         this.record = record;
     }
 
     destroy() {
-        this.finalize((error) => this.record._rawStore.handleError(error));
+        this.finalize((error) => this.record.store.handleError(error));
     }
 
     /**
@@ -74,12 +77,14 @@ export class RecordInternal {
      */
     fieldsComputed = new Map();
     /**
-     * Value of each attr field of this record, declared or not, one signal per
-     * field: the sole storage, and the only thing a read of that field observes.
+     * Value of each attr field of this record, one signal per field: the sole
+     * storage, and the only thing a read of that field observes.
      *
      * @type {Map<string, import("@odoo/owl").Signal<any>>}
      */
     fieldsAttrSignal = new Map();
+    /** @type {Map<string, import("./record_list").RecordList>} */
+    fieldsList = new Map();
     /**
      * Whether the record is deleted. A signal, so that setting it re-runs the
      * readers of `exists()`.
@@ -92,6 +97,8 @@ export class RecordInternal {
     localId;
     /** @type {Record} the record these internals belong to */
     record;
+    /** @type {Set<string>} */
+    fieldsDeclared = new Set();
     /** @type {Map<string, import("@mail/model/field_version").SingleFieldVersion|import("@mail/model/field_version").ManyFieldVersion>} */
     fieldsVersion = new Map();
 
@@ -100,32 +107,25 @@ export class RecordInternal {
     }
 
     /**
-     * Get-or-create the signal holding the value of the attr field `fieldName`,
-     * declared or not.
+     * Get-or-create the signal holding the value of the attr field `name`.
      *
-     * @param {string} fieldName
-     * @param {any} [value] initial value, on creation only
-     * @param {Object} [param2={}]
-     * @param {boolean} [param2.accessor=true] whether to define the accessor
-     *  that reads and writes the field as a property of the record
-     * @returns {import("@odoo/owl").Signal<any>}
+     * @param {string} name
+     * @param {any} [definition] field definition or plain initial value
+     * @returns {import("@odoo/owl").Signal}
      */
-    ensureFieldSignal(fieldName, value, { accessor = true } = {}) {
-        let sig = this.fieldsAttrSignal.get(fieldName);
-        if (sig) {
+    ensureFieldSignal(name, definition) {
+        let sig = this.fieldsAttrSignal.get(name);
+        if (sig && definition === undefined) {
             return sig;
         }
-        sig = signal(value);
-        this.fieldsAttrSignal.set(fieldName, sig);
-        if (accessor) {
-            Object.defineProperty(this.record, fieldName, {
-                configurable: true,
-                enumerable: true,
-                get: () => sig(),
-                set: (val) => {
-                    sig.set(val);
-                },
-            });
+        const defaultValue = isFieldDefinition(definition) ? definition.default : definition;
+        if (!sig) {
+            sig = signal(defaultValue);
+            this.fieldsAttrSignal.set(name, sig);
+        } else if (isFieldDefinition(definition)) {
+            if (sig() === undefined) {
+                sig.set(defaultValue);
+            }
         }
         return sig;
     }
@@ -147,7 +147,7 @@ export class RecordInternal {
         // (except for the writes of a record deletion, see `MAKE_UPDATE`)
         let heldValue;
         let hasValue = false;
-        const { isUpdateInProgress } = record._rawStore._;
+        const { isUpdateInProgress } = record.store._;
         const { isDeleted } = this;
         function computeValue() {
             if (isDeleted()) {
@@ -161,7 +161,7 @@ export class RecordInternal {
                 void isUpdateInProgress();
                 return heldValue;
             }
-            heldValue = compute.call(record._proxy);
+            heldValue = compute.call(record);
             hasValue = true;
             return heldValue;
         }
@@ -173,70 +173,65 @@ export class RecordInternal {
     }
 
     /**
-     * @param {Record} record
+     * @param {Record} rawRecord
      * @param {Object} [ids] the identifying values, from `Record.new`
      * @returns {Record} the proxy of the record, which its constructor returns
      */
-    prepareRecord(record, ids) {
-        this.record = record;
-        this.localId = record.Model.localId(ids);
-        record._proxy = markRaw(
-            new Proxy(record, {
+    prepareRecord(rawRecord, ids) {
+        this.localId = rawRecord.Model.localId(ids);
+        this.record = markRaw(
+            new Proxy(rawRecord, {
                 defineProperty: (target, name, descriptor) =>
-                    this.proxyDefineProperty(name, descriptor),
-                deleteProperty: (target, name) => this.proxyDeleteProperty(name),
-                get: (target, name) => this.proxyGet(name),
-                set: (target, name, value) => this.proxySet(name, value),
+                    this.proxyDefineProperty(target, name, descriptor),
+                deleteProperty: (target, name) => this.proxyDeleteProperty(target, name),
+                get: (target, name) => this.proxyGet(target, name),
+                set: (target, name, value) => this.proxySet(target, name, value),
             })
         );
-        return record._proxy;
+        if (rawRecord[STORE_SYM]) {
+            const store = rawRecord.Model.store;
+            rawRecord.env = store.env;
+            Object.assign(rawRecord, store.Models);
+        }
+        return this.record;
     }
 
     /**
-     * @param {string} fieldName
-     * @returns {boolean} whether the field holds its value on this record
+     * @param {string} name
+     * @returns {RecordList}
      */
-    fieldPrepared(fieldName) {
-        const record = this.record;
-        if (isRelation(record.Model, fieldName)) {
-            return record[fieldName] !== undefined;
+    ensureRecordList(name) {
+        let recordList = this.fieldsList.get(name);
+        if (!recordList) {
+            recordList = new RecordList();
+            Object.assign(recordList._, { name, owner: this.record });
+            this.fieldsList.set(name, recordList);
         }
-        return this.fieldsAttrSignal.has(fieldName);
+        return recordList;
     }
 
     /**
-     * @param {string} fieldName
-     * @param {any} definition the field definition, or the default value
+     * @param {Record} rawRecord
+     * @param {string} name
      */
-    prepareField(fieldName, definition) {
+    proxyDeleteProperty(rawRecord, name) {
         const record = this.record;
-        const Model = record.Model;
-        if (isRelation(Model, fieldName)) {
-            const recordList = new RecordList();
-            Object.assign(recordList._, {
-                name: fieldName,
-                owner: record,
-            });
-            record[fieldName] = recordList;
-        } else {
-            const value = isFieldDefinition(definition) ? definition.default : definition;
-            this.ensureFieldSignal(fieldName, value);
-        }
-    }
-
-    /** @param {string} name */
-    proxyDeleteProperty(name) {
-        const record = this.record;
-        const Model = record.Model;
+        const Model = rawRecord.Model;
         if (Model._.parentFields.has(name)) {
             const parentFieldName = Model._.parentFields.get(name);
-            const parentRecordProxy = record._proxy[parentFieldName];
+            const parentRecordProxy = record[parentFieldName];
             return Reflect.deleteProperty(parentRecordProxy, name);
         }
-        return Model._rawStore.MAKE_UPDATE(function recordDeleteProperty() {
+        if (
+            !Model._.fields.get(name) &&
+            !Model._.fieldsComputable.has(name) &&
+            Object.hasOwn(rawRecord, name)
+        ) {
+            return Reflect.deleteProperty(rawRecord, name);
+        }
+        return Model.store._.MAKE_UPDATE(function recordDeleteProperty() {
             if (isRelation(Model, name)) {
-                const recordList = record[name];
-                recordList.clear();
+                record._.ensureRecordList(name).clear();
                 return true;
             }
             record._.ensureFieldSignal(name).set(undefined);
@@ -244,137 +239,214 @@ export class RecordInternal {
         });
     }
 
-    /** @param {string} name */
-    proxyGet(name) {
-        const record = this.record;
-        const recordProxy = record._proxy;
-        if (technicalKeysOnRecords.has(name)) {
-            return record[name];
+    /**
+     * @param {Record} rawRecord
+     * @param {string} name
+     */
+    proxyGet(rawRecord, name) {
+        if (name === "_") {
+            return this;
         }
-        const Model = record.Model;
-        const modelInternal = Model._;
-        if (modelInternal.parentFields.has(name)) {
-            const parentFieldName = modelInternal.parentFields.get(name);
-            const parentRecordProxy = recordProxy[parentFieldName];
-            if (!parentRecordProxy) {
-                const Models = record._rawStore.Models;
-                const ParentModel = Models[modelInternal.fieldsTargetModel.get(parentFieldName)];
-                if (isMany(ParentModel, name)) {
-                    return [];
-                }
-                return;
+        if (typeof name === "symbol" || technicalKeysOnRecords.has(name)) {
+            return Reflect.get(rawRecord, name, this.record);
+        }
+        const sig = this.fieldsAttrSignal.get(name);
+        if (sig !== undefined) {
+            const val = sig();
+            if (
+                typeof val === "object" &&
+                val !== null &&
+                rawRecord.Model._.fieldsAttrAsProxy.has(name)
+            ) {
+                return proxy(val);
             }
-            return Reflect.get(parentRecordProxy, name);
+            return val;
         }
-        if (modelInternal.fields.get(name)) {
-            const sig = record._.fieldsAttrSignal.get(name);
-            if (sig) {
-                const val = sig();
-                if (
-                    typeof val === "object" &&
-                    val !== null &&
-                    modelInternal.fieldsAttrAsProxy.has(name)
-                ) {
-                    // Return the value as a proxy, as this field is mutated in place.
-                    return proxy(val);
-                }
-                return val;
+        const recordList = this.fieldsList.get(name);
+        if (recordList !== undefined) {
+            if (rawRecord.Model._.fieldsMany.get(name)) {
+                return recordList;
             }
-            if (isRelation(Model, name)) {
-                const recordList = record[name];
-                if (recordList !== undefined) {
-                    const recordListProxy = recordList._proxy;
-                    if (isMany(Model, name)) {
-                        return recordListProxy;
-                    }
-                    return recordListProxy[0];
-                }
-            }
-            // a field this record does not hold yet: `setup` reads the
-            // prototype before writing such a field
+            return recordList[0];
         }
-        const sig = record._.fieldsAttrSignal.get(name);
-        if (sig) {
-            return sig();
-        }
-        if (modelInternal.fieldsComputable.has(name)) {
+        const Model = rawRecord.Model;
+        if (Model._.fieldsComputable.has(name)) {
             let computedGetter = this.fieldsComputed.get(name);
             if (!computedGetter) {
                 // the declaration sits on the record until its first read
-                const { compute, msUntilStale, equals } = record[name];
-                delete record[name];
+                const { compute, msUntilStale, equals } = rawRecord[name];
+                delete rawRecord[name];
                 computedGetter = this.makeComputed(compute, msUntilStale, equals);
                 this.fieldsComputed.set(name, computedGetter);
             }
             return computedGetter();
         }
-        let res = Reflect.get(record, name, recordProxy);
-        if (
-            res === undefined &&
-            typeof name === "string" &&
-            !technicalKeysOnRecords.has(name) &&
-            !(name in record)
-        ) {
-            // Create the signal on read, so a reader before the first write observes it.
-            return record._.ensureFieldSignal(name, undefined, {
-                accessor: false,
-            })();
+        const parentFieldName = Model._.parentFields.get(name);
+        if (parentFieldName) {
+            const parentRecord = this.record[parentFieldName];
+            if (!parentRecord) {
+                const ParentModel = Model.store[Model._.fieldsTargetModel.get(parentFieldName)];
+                if (isMany(ParentModel, name)) {
+                    return [];
+                }
+                return;
+            }
+            return Reflect.get(parentRecord, name);
         }
-        // a model is a class, so a function: binding it would hide its statics
-        if (typeof res === "function" && !res._) {
-            res = res.bind(recordProxy);
+        if (!Model._.fields.get(name)) {
+            const res = Reflect.get(rawRecord, name, this.record);
+            // a model is a class, so a function: binding it would hide its statics
+            if (typeof res === "function" && !res._) {
+                return res.bind(this.record);
+            }
+            return res;
         }
-        return res;
+        if (isRelation(Model, name)) {
+            const recordList = this.ensureRecordList(name);
+            if (isMany(Model, name)) {
+                return recordList;
+            }
+            return recordList[0];
+        }
+        const val = this.ensureFieldSignal(name)();
+        if (typeof val === "object" && val !== null && Model._.fieldsAttrAsProxy.has(name)) {
+            return proxy(val);
+        }
+        return val;
     }
 
     /**
-     * @param {Record} record
-     * @param {string} name
-     * @param {any} val
-     */
-    /**
      * Route a plain data descriptor through the set trap, as patching a
      * record defines the field rather than sets it.
+     *
+     * @param {Record} rawRecord
+     * @param {string|symbol} name
+     * @param {PropertyDescriptor} descriptor
      */
-    proxyDefineProperty(name, descriptor) {
-        const record = this.record;
+    proxyDefineProperty(rawRecord, name, descriptor) {
         if (typeof name === "symbol") {
-            return Reflect.defineProperty(record, name, descriptor);
+            return Reflect.defineProperty(rawRecord, name, descriptor);
         }
         if (technicalKeysOnRecords.has(name)) {
             // keep what the constructor set: `Store` redeclares `_` for typing
             return true;
         }
         if (!descriptor.enumerable || !descriptor.writable || !("value" in descriptor)) {
-            return Reflect.defineProperty(record, name, descriptor);
+            return Reflect.defineProperty(rawRecord, name, descriptor);
         }
-        return this.proxySet(name, descriptor.value);
+        return this.proxySet(rawRecord, name, descriptor.value);
     }
 
-    proxySet(name, val) {
+    /**
+     * @param {Record} rawRecord
+     * @param {string} name
+     * @param {any} val
+     */
+    proxySet(rawRecord, name, val) {
         const record = this.record;
-        const Model = record.Model;
+        const Model = rawRecord.Model;
+        const store = rawRecord.store;
         if (isComputedDefinition(val)) {
             // the declaration sits on the record until its first read
-            return Reflect.set(record, name, val);
+            // defineProperty, as Reflect.set fails when a prototype has a getter of this name
+            Model._.fieldsComputable.add(name);
+            return Reflect.defineProperty(rawRecord, name, {
+                configurable: true,
+                enumerable: true,
+                value: val,
+                writable: true,
+            });
         }
-        if (isFieldDefinition(val) || (Model._.fields.get(name) && !this.fieldPrepared(name))) {
-            // a declaration: an initializer lands the definition or the default,
-            // and `setup` writes the default of a field no initializer declares
-            this.prepareField(name, val);
+        if (isFieldDefinition(val)) {
+            if (this.fieldsDeclared.has(name)) {
+                console.warn(
+                    `Field "${name}" on model "${Model.getName()}" is already defined; the redefinition is ignored.`
+                );
+                return true;
+            }
+            this.fieldsDeclared.add(name);
+            if (!Model._.fields.get(name)) {
+                Model._.prepareField(name, val);
+            }
+            if (isRelation(Model, name)) {
+                this.ensureRecordList(name);
+            } else {
+                this.ensureFieldSignal(name, val);
+            }
             return true;
         }
-        const store = record._rawStore;
-        if (Model._.parentFields.has(name)) {
+        if (!this.isConstructing()) {
             const parentFieldName = Model._.parentFields.get(name);
-            const parentRecordProxy = record._proxy[parentFieldName];
-            return Reflect.set(parentRecordProxy, name, val);
+            if (parentFieldName) {
+                const parentRecord = record[parentFieldName];
+                return Reflect.set(parentRecord, name, val);
+            }
         }
-        return store.MAKE_UPDATE(function recordSet() {
-            store._.updateFields(record, { [name]: val });
+        if (
+            this.isConstructing() &&
+            typeof name === "string" &&
+            !Model._.fields.get(name) &&
+            !technicalKeysOnRecords.has(name)
+        ) {
+            Model._.prepareField(name, fields.Attr(val));
+            this.ensureFieldSignal(name, val);
+            return true;
+        }
+        if (
+            Model._.fields.get(name) &&
+            !isRelation(Model, name) &&
+            !this.fieldsAttrSignal.has(name)
+        ) {
+            this.ensureFieldSignal(name, val);
+            return true;
+        }
+        if (
+            typeof name === "string" &&
+            !Model._.fields.get(name) &&
+            !Model._.fieldsComputable.has(name) &&
+            !technicalKeysOnRecords.has(name) &&
+            !versionKeys.has(name)
+        ) {
+            for (
+                let proto = Object.getPrototypeOf(rawRecord);
+                proto && proto !== Object.prototype;
+                proto = Object.getPrototypeOf(proto)
+            ) {
+                const descriptor = Object.getOwnPropertyDescriptor(proto, name);
+                if (descriptor) {
+                    if (descriptor.set) {
+                        return Reflect.set(proto, name, val, record);
+                    }
+                    if (descriptor.writable) {
+                        return Reflect.defineProperty(rawRecord, name, {
+                            configurable: true,
+                            enumerable: false,
+                            value: val,
+                            writable: true,
+                        });
+                    }
+                    break;
+                }
+            }
+            console.warn(
+                `Dropping unknown field "${name}" written on "${Model.getName()}": records only hold declared fields.`
+            );
+            return true;
+        }
+        if (isRelation(Model, name)) {
+            this.ensureRecordList(name);
+        }
+        const storeInternal = store._;
+        return storeInternal.MAKE_UPDATE(function recordSet() {
+            storeInternal.updateFields(record, { [name]: val });
             return true;
         });
     }
 }
 
-untrackFunctions(RecordInternal.prototype, ["proxyDeleteProperty", "proxySet"]);
+untrackFunctions(RecordInternal.prototype, [
+    "ensureFieldSignal",
+    "ensureRecordList",
+    "proxyDeleteProperty",
+    "proxySet",
+]);

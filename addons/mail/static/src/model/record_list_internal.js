@@ -76,13 +76,13 @@ export class RecordListInternal {
         const self = this;
         const recordList = this.recordList;
         const store = recordList._store;
-        return store.MAKE_UPDATE(function recordListAssign() {
+        return store._.MAKE_UPDATE(function recordListAssign() {
             /** @type {Record[]|Set<Record>|RecordList<Record|any[]>} */
             const collection = isRecord(data) ? [data] : data;
             // data and collection could be same record list,
             // save before clear to not push mutated recordlist that is empty
             const vals = [...collection];
-            const oldRecords = [...recordList].map((recordProxy) => recordProxy._raw);
+            const oldRecords = [...recordList];
             const newRecords = vals.map((val) =>
                 self.insert(val, function recordListAssignInsert(record) {
                     if (record.notIn(oldRecords)) {
@@ -147,7 +147,7 @@ export class RecordListInternal {
     echoInverse(inverse, val, cmd, { bypassUpdateFields = false, version } = {}) {
         version ??= this.owner._.fieldsVersion.get(this.name)?.lastWriteDate;
         if (bypassUpdateFields) {
-            (isRecord(val) ? val._proxy : val)[inverse] = [[cmd, this.owner, version]];
+            val[inverse] = [[cmd, this.owner, version]];
             return;
         }
         this.recordList._store._.updateFields(val, { [inverse]: [[cmd, this.owner, version]] });
@@ -187,13 +187,12 @@ export class RecordListInternal {
             });
         }
         /** @type {R} */
-        let newRecordProxy;
+        let newRecord;
         if (!isRecord(val)) {
-            newRecordProxy = recordList._store[targetModel].preinsert(val);
+            newRecord = recordList._store[targetModel].preinsert(val);
         } else {
-            newRecordProxy = val;
+            newRecord = val;
         }
-        const newRecord = newRecordProxy._raw;
         fn?.(newRecord);
         if (!isRecord(val)) {
             // was preinserted, fully insert now
@@ -205,19 +204,19 @@ export class RecordListInternal {
         return this.owner.Model._.fieldsOne.get(this.name);
     }
     /**
+     * @param {RecordList} rawRecordList
      * @param {string} name
-     * @param {RecordList} recordListProxy
      */
-    proxyGet(name, recordListProxy) {
+    proxyGet(rawRecordList, name) {
         const recordList = this.recordList;
         if (
             typeof name === "symbol" ||
-            (name !== "length" && Object.hasOwn(recordList, name)) ||
-            Object.prototype.hasOwnProperty.call(recordList.constructor.prototype, name)
+            (name !== "length" && Object.hasOwn(rawRecordList, name)) ||
+            Object.prototype.hasOwnProperty.call(rawRecordList.constructor.prototype, name)
         ) {
-            let res = Reflect.get(recordList, name, recordListProxy);
+            let res = Reflect.get(rawRecordList, name, recordList);
             if (typeof res === "function") {
-                res = res.bind(recordListProxy);
+                res = res.bind(recordList);
             }
             return res;
         }
@@ -227,22 +226,22 @@ export class RecordListInternal {
         const index = parseInt(name);
         if (!window.isNaN(index)) {
             // support for "array[index]" syntax
-            return this.records()[index]?._proxy;
+            return this.data()[index];
         }
         // Attempt an unimplemented array method call
-        const array = this.records().map((record) => record._proxy);
+        const array = [...this.data()];
         return array[name]?.bind(array);
     }
     /**
+     * @param {RecordList} rawRecordList
      * @param {string} name
      * @param {any} val
-     * @param {RecordList} recordListProxy
      */
-    proxySet(name, val, recordListProxy) {
+    proxySet(rawRecordList, name, val) {
         const self = this;
         const recordList = this.recordList;
         const store = recordList._store;
-        return store.MAKE_UPDATE(function recordListSet() {
+        return store._.MAKE_UPDATE(function recordListSet() {
             if (typeof name !== "symbol" && !window.isNaN(parseInt(name))) {
                 // support for "array[index] = r3" syntax
                 const index = parseInt(name);
@@ -280,7 +279,7 @@ export class RecordListInternal {
                     }
                 }
             } else {
-                return Reflect.set(recordList, name, val, recordListProxy);
+                return Reflect.set(rawRecordList, name, val, recordList);
             }
             return true;
         });

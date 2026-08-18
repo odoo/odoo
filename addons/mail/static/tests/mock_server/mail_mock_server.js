@@ -809,8 +809,19 @@ async function read_subscription_data(request) {
     const subtypes = MailMessageSubtype.search(subtypeDomain);
     return {
         store_data: new Store()
-            .add(MailMessageSubtype.browse(subtypes), ["name"])
+            .add(MailMessageSubtype.browse(subtypes), ["name", "parent_id"])
             .add(MailFollowers.browse(follower_id), ["subtype_ids"])
+            .add(
+                this.env[follower.res_model].browse(follower.res_id),
+                (r) => {
+                    r.attr(
+                        "modelName",
+                        () => this.env[follower.res_model]._description ?? follower.res_model
+                    );
+                    r.attr("display_name");
+                },
+                { as_thread: true }
+            )
             .as_dict(),
         subtype_ids: subtypes, // Not sorted for simplicity.
     };

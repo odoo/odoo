@@ -71,6 +71,8 @@ export class Message extends Record {
         }
         return getInnerHtml(decorateEmojis(createElementFromContent(this.translationValue)));
     });
+    /** @type {Function} */
+    closeNotificationFn;
     composer = fields.One("Composer", { inverse: "message" });
     composerAsReplyToMessage = fields.One("Composer", { inverse: "replyToMessage" });
     date = fields.Datetime();
