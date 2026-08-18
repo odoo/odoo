@@ -71,14 +71,13 @@
                     <h3 class="section-title">Financials</h3>
                     <div class="grid gap-2">
                         <label class="fw-bold">Price excl. Tax:</label>
-                        <span><t t-out="this.env.utils.formatCurrency(this.props.info.productInfo.all_prices.price_without_tax)"/></span>
-                        <label class="fw-bold vat-label"><t t-out="this.vatLabel"/></label>
-                        <span class="vat-value">
-                            <t t-out="this.props.info.taxAmount"/>
-                            (<t t-out="this.props.info.taxName"/>)
-                        </span>
+                        <span><t t-out="this.env.utils.formatCurrency(this.taxDetails.total_excluded_currency)"/></span>
+                        <t t-foreach="this.taxDetails.taxes_data" t-as="tax" t-key="tax_index">
+                            <label class="fw-bold vat-label"><t t-out="this.vatLabel" /> <t t-out="tax.tax.name"/>:</label>
+                            <span class="vat-value"><t t-out="this.env.utils.formatCurrency(tax.tax_amount)"/></span>
+                        </t>
                         <label class="fw-bold">Price incl. Tax:</label>
-                        <span><t t-out="this.env.utils.formatCurrency(this.props.info.productInfo.all_prices.price_with_tax)"/></span>
+                        <span><t t-out="this.env.utils.formatCurrency(this.taxDetails.total_included_currency)"/></span>
                         <t t-if="this._hasMarginsCostsAccessRights()">
                             <label class="fw-bold">Cost:</label>
                             <span><t t-out="this.props.info.costCurrency"/></span>

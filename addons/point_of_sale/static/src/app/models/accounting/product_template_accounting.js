@@ -3,6 +3,7 @@ import { Base } from "../related_models";
 import { accountTaxHelpers } from "@account/helpers/account_tax";
 import { _t } from "@web/core/l10n/translation";
 import { formatCurrency } from "@web/core/currency";
+import { computeComboItems } from "../utils/compute_combo_items";
 
 export class ProductTemplateAccounting extends Base {
     static pythonModel = "product.template";
@@ -209,5 +210,92 @@ export class ProductTemplateAccounting extends Base {
                 ? this.getTaxDetails().total_included
                 : this.getTaxDetails().total_excluded;
         return formatCurrency(price, config.currency_id.id);
+    }
+
+    getComboTaxDetails(opts = {}) {
+        const choices = [];
+        const extraChoices = [];
+        for (const combo of this.combo_ids) {
+            let cheaps;
+            const items = combo.combo_item_ids;
+
+            if (combo.qty_free === 0) {
+                cheaps = [...items].sort((a, b) => a.product_id.lst_price - b.product_id.lst_price);
+            } else {
+                cheaps = [...items].sort((a, b) => a.extra_price - b.extra_price);
+            }
+
+            const item = cheaps[0];
+            let configuration = undefined;
+
+            if (item.product_id.isConfigurable()) {
+                const attrValIds = [];
+                let priceExtra = 0;
+                for (const attr of item.product_id.attribute_line_ids) {
+                    const attrVals = attr.product_template_value_ids;
+                    const sortedByCheaper = [...attrVals].sort(
+                        (a, b) => a.price_extra - b.price_extra
+                    );
+                    attrValIds.push(sortedByCheaper[0].id);
+                    priceExtra += sortedByCheaper[0].price_extra;
+                }
+
+                configuration = {
+                    attribute_custom_values: [],
+                    attribute_value_ids: attrValIds,
+                    price_extra: priceExtra,
+                };
+            }
+
+            const data = {
+                combo_item_id: item,
+                qty: combo.qty_free || 1,
+                configuration: configuration,
+            };
+
+            if (combo.qty_free === 0) {
+                extraChoices.push(data);
+            } else {
+                choices.push(data);
+            }
+        }
+
+        const combos = this.getComboPrice(
+            choices,
+            extraChoices,
+            opts.overridedValues?.pricelist || false
+        );
+        const overridedValues = opts.overridedValues || {};
+        const baseLines = combos.map((combo) =>
+            combo.combo_item_id.product_id.getBaseLine({
+                ...opts,
+                overridedValues: {
+                    product_id: combo.combo_item_id.product_id,
+                    quantity: combo.qty,
+                    price: combo.price_unit,
+                    ...overridedValues,
+                },
+            })
+        );
+        accountTaxHelpers.add_tax_details_in_base_lines(baseLines, this.config.company_id);
+        accountTaxHelpers.round_base_lines_tax_details(baseLines, this.config.company_id);
+
+        let taxDetails = baseLines.length > 0 ? baseLines[0].tax_details : null;
+        for (let i = 1; i < baseLines.length; i++) {
+            taxDetails = accountTaxHelpers.merge_tax_details(taxDetails, baseLines[i].tax_details);
+        }
+        return taxDetails;
+    }
+
+    getComboPrice(childLineConf = [], extraLineConf = [], pricelist = false) {
+        return computeComboItems(
+            this.product_variant_ids[0],
+            childLineConf,
+            pricelist,
+            this.models["decimal.precision"].getAll(),
+            this.models["product.template.attribute.value"].getAllBy("id"),
+            extraLineConf,
+            this.config.currency_id
+        );
     }
 }
