@@ -66,7 +66,6 @@ export class PosStore extends WithLazyGetterTrap {
         "session",
         "company",
         "showCashMoveButton",
-        "selectedOrder",
         "linesToRefund",
         "printOptions",
         "showSaveOrderButton",
@@ -1857,9 +1856,6 @@ export class PosStore extends WithLazyGetterTrap {
 
         return this.models["pos.order"].getBy("uuid", this.selectedOrderUuid);
     }
-    get selectedOrder() {
-        return this.getOrder();
-    }
 
     // change the current order
     setOrder(order) {
@@ -2798,13 +2794,13 @@ export class PosStore extends WithLazyGetterTrap {
     }
 
     get isSelectedLineCombo() {
-        return Boolean(this.selectedOrder?.getSelectedOrderline()?.isPartOfCombo());
+        return Boolean(this.getOrder()?.getSelectedOrderline()?.isPartOfCombo());
     }
 
     async onPrepLinesSynced(prepLinePairs) {}
 
     async createComboFromLines(productTmpl, combinations) {
-        const order = this.selectedOrder;
+        const order = this.getOrder();
         const prepLinePairs = [];
         const handlePreparationHistory = (srcLine, destLine, qty) => {
             const prepLines = srcLine.prep_line_ids;
@@ -2957,7 +2953,7 @@ export class PosStore extends WithLazyGetterTrap {
         if (!this.isSelectedLineCombo) {
             return;
         }
-        const order = this.selectedOrder;
+        const order = this.getOrder();
         for (const line of orderline.combo_line_ids) {
             line.combo_parent_id = false;
             line.setUnitPrice(
@@ -3014,7 +3010,7 @@ export class PosStore extends WithLazyGetterTrap {
         if (!this.isProductSnoozed(product)) {
             return true;
         }
-        const alreadyAdded = this.selectedOrder.lines.some(
+        const alreadyAdded = this.getOrder().lines.some(
             (line) => line.product_id.product_tmpl_id.id === product.id
         );
 

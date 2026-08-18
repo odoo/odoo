@@ -232,7 +232,7 @@ patch(PosStore.prototype, {
                 }
                 acc[lot.lot_name].total += lot.pos_order_line_id?.qty || 0;
 
-                if (lot.pos_order_line_id?.order_id?.id === this.selectedOrder.id) {
+                if (lot.pos_order_line_id?.order_id?.id === this.getOrder().id) {
                     acc[lot.lot_name].currentOrderCount += lot.pos_order_line_id?.qty || 0;
                 }
                 return acc;

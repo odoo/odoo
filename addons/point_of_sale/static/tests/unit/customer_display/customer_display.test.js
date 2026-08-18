@@ -65,7 +65,7 @@ test("click order uses selected order for customer display dispatch", async () =
 
     Chrome.prototype.sendOrderToCustomerDisplay.call(
         fakeChrome,
-        { selectedOrder: ticketScreen.getSelectedOrder() },
+        { getOrder: () => ticketScreen.getSelectedOrder() },
         { current: "TicketScreen" }
     );
 

@@ -35,7 +35,7 @@ export class OrderSummary extends Component {
     );
 
     get currentOrder() {
-        return this.pos.selectedOrder;
+        return this.pos.getOrder();
     }
 
     clickLine(ev, orderline) {
