@@ -325,6 +325,7 @@ export declare class Resource<T> {
 	items: ReactiveValue<Item<T>[]>;
 	add(item: Item<T>, options?: ResourceAddOptions): Resource<T>;
 	delete(item: Item<T>): Resource<T>;
+	clear(): void;
 	has(item: Item<T>): boolean;
 	use(item: Item<T>, options?: ResourceAddOptions): Resource<T>;
 }
@@ -623,7 +624,8 @@ export declare class Registry<T> {
 	} & Item$1<T>>(item: U, options?: RegistryAddOptions): Registry<T>;
 	add(key: string, value: Item$1<T>, options?: RegistryAddOptions): Registry<T>;
 	get(key: string, defaultValue?: Item$1<T>): Item$1<T>;
-	delete(key: string): void;
+	delete(key: string): Registry<T>;
+	clear(): void;
 	has(key: string): boolean;
 	use(key: string, value: Item$1<T>, options?: RegistryAddOptions): Registry<T>;
 	useById<U extends {
@@ -731,7 +733,7 @@ declare class Fiber {
 	root: RootFiber | null;
 	parent: Fiber | null;
 	children: Fiber[];
-	appliedToDom: boolean;
+	renderState: number;
 	deep: boolean;
 	childrenMap: ComponentNode["children"];
 	constructor(node: ComponentNode, parent: Fiber | null);
@@ -739,7 +741,6 @@ declare class Fiber {
 }
 declare class RootFiber extends Fiber {
 	counter: number;
-	renderCount: number;
 	willPatch: Fiber[];
 	patched: Fiber[];
 	mounted: Fiber[];
