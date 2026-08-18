@@ -196,9 +196,6 @@ export class CallDebrief extends Component {
 
     _initCallTiming(start, end) {
         if (!start || !end) {
-            this.state.error = _t(
-                "CallDebrief widget needs start and end datetime from the parent record."
-            );
             this._resetState();
             return false;
         }
