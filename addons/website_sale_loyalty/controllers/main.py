@@ -5,10 +5,10 @@ from werkzeug.urls import url_encode, url_parse
 from odoo.exceptions import UserError
 from odoo.http import request, route
 
-from odoo.addons.website_sale.controllers import main
+from odoo.addons.website_sale.controllers import shop
 
 
-class WebsiteSale(main.WebsiteSale):
+class WebsiteSale(shop.Shop):
     @route()
     def pricelist(self, promo, reward_id=None, **post):
         if not (order_sudo := request.cart):

@@ -6,9 +6,9 @@ from odoo.tests import HttpCase, tagged
 from odoo.tools import urls
 
 from odoo.addons.payment import utils as payment_utils
-from odoo.addons.website_sale.controllers.cart import Cart
+from odoo.addons.website_sale.controllers.checkout.address import Address
+from odoo.addons.website_sale.controllers.checkout.cart import Cart
 from odoo.addons.website_sale.controllers.delivery import Delivery as WebsiteSaleDeliveryController
-from odoo.addons.website_sale.controllers.main import WebsiteSale
 from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
 
 
@@ -17,13 +17,14 @@ class TestWebsiteSaleExpressCheckoutFlows(WebsiteSaleCommon, HttpCase):
     """The goal of this method class is to test the address management on
     express checkout.
     """
+
     _test_user_groups = (
-        'base.group_user',
-        'product.group_product_manager',
-        'sales_team.group_sale_manager',  # FIXME: use sales_team.group_sale_salesman
+        "base.group_user",
+        "product.group_product_manager",
+        "sales_team.group_sale_manager",  # FIXME: use sales_team.group_sale_salesman
     )
 
-    _test_user_name = 'Test Sales & Product Manager'
+    _test_user_name = "Test Sales & Product Manager"
 
     @classmethod
     def setUpClass(cls):
@@ -129,7 +130,7 @@ class TestWebsiteSaleExpressCheckoutFlows(WebsiteSaleCommon, HttpCase):
         self.authenticate(None, None, session_extra={"sale_order_id": self.sale_order.id})
 
         self.make_jsonrpc_request(
-            urls.urljoin(self.base_url(), WebsiteSale._express_checkout_route),
+            urls.urljoin(self.base_url(), Address._express_checkout_route),
             params={"billing_address": dict(self.express_checkout_billing_values)},
         )
 
@@ -150,7 +151,7 @@ class TestWebsiteSaleExpressCheckoutFlows(WebsiteSaleCommon, HttpCase):
         )
 
         self.make_jsonrpc_request(
-            urls.urljoin(self.base_url(), WebsiteSale._express_checkout_route),
+            urls.urljoin(self.base_url(), Address._express_checkout_route),
             params={
                 "billing_address": {
                     "name": self.user_demo.partner_id.name,
@@ -204,7 +205,7 @@ class TestWebsiteSaleExpressCheckoutFlows(WebsiteSaleCommon, HttpCase):
         )
 
         self.make_jsonrpc_request(
-            urls.urljoin(self.base_url(), WebsiteSale._express_checkout_route),
+            urls.urljoin(self.base_url(), Address._express_checkout_route),
             params={"billing_address": dict(self.express_checkout_billing_values)},
         )
 
@@ -224,7 +225,7 @@ class TestWebsiteSaleExpressCheckoutFlows(WebsiteSaleCommon, HttpCase):
         )
 
         self.make_jsonrpc_request(
-            urls.urljoin(self.base_url(), WebsiteSale._express_checkout_route),
+            urls.urljoin(self.base_url(), Address._express_checkout_route),
             params={"billing_address": dict(self.express_checkout_billing_values)},
         )
 
