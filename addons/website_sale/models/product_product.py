@@ -148,6 +148,8 @@ class ProductProduct(models.Model):
         }
         if self.website_meta_description or self.description_sale:
             markup_data["description"] = self.website_meta_description or self.description_sale
+        if self.default_code:
+            markup_data["sku"] = self.default_code
         if self.barcode:
             markup_data["gtin"] = self.barcode
         if self.is_product_variant and self.is_storable:
