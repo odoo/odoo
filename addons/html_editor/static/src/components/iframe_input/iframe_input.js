@@ -42,6 +42,9 @@ export class IframeInput extends Component {
                 }
 
                 const isDarkMode = cookie.get("color_scheme") === "dark";
+                const inputColor = getComputedStyle(this.iframeEl)
+                    .getPropertyValue("--o-iframe-input-color")
+                    .trim();
                 const styleEl = iframeDoc.createElement("style");
                 styleEl.textContent = `
                     /* Hides the number input's spin buttons (chrome, edge, safari) */
@@ -65,7 +68,7 @@ export class IframeInput extends Component {
                         text-align: center;
                         border: none;
                         background-color: ${isDarkMode ? "#262A36" : "#FFF"};
-                        color: ${isDarkMode ? "#FFF" : "#000"};
+                        color: ${inputColor || (isDarkMode ? "#FFF" : "#000")};
                         ${this.props.inputStyle || ""}
                     }
                 `;
