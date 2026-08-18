@@ -2484,7 +2484,7 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         with self.assertQueries(['''
             SELECT "test_new_api_message"."id" FROM "test_new_api_message"
             WHERE ("test_new_api_message"."active" = %s)
-            ORDER BY  "test_new_api_message"."discussion"
+            ORDER BY  "test_new_api_message"."discussion", "test_new_api_message"."id"
         ''']):
             self.env['test_new_api.message'].search([], order='discussion')
 
