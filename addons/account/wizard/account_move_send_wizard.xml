@@ -23,7 +23,7 @@
                 <!-- PDF template -->
                 <field name="pdf_report_id" invisible="1"/>
                 <group invisible="not display_pdf_report_id or 'email' in sending_methods">
-                    <field name="pdf_report_id" options="{'no_create': True, 'no_edit': True}"/>
+                    <field name="pdf_report_id" options="{'no_create': True}"/>
                 </group>
 
                 <!-- Mail composer -->
@@ -33,7 +33,7 @@
                     <field name="render_model" invisible="1"/>
 
                     <group>
-                        <field name="pdf_report_id" options="{'no_create': True, 'no_edit': True}" invisible="not display_pdf_report_id"/>
+                        <field name="pdf_report_id" options="{'no_create': True}" invisible="not display_pdf_report_id"/>
 
                         <label for="mail_partner_ids" string="To"/>
                         <div>

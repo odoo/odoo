@@ -12,7 +12,7 @@
                     <field name="has_access_livechat" invisible="1"/>
                     <field name="livechat_username" string="Live Chat Name" invisible="not has_access_livechat" help="Nickname used in live chat conversations to protect your real name from visitors."/>
                     <field name="livechat_lang_ids" string="Spoken Languages"
-                           options="{'no_create': True, 'no_edit': True, 'no_create_edit': True}"
+                           options="{'no_create': True, 'no_create_edit': True}"
                            widget="many2many_tags"
                            invisible="not has_access_livechat"
                            help="Languages you can speak for live chat conversations."/>
@@ -34,7 +34,7 @@
                     <field name="has_access_livechat" invisible="1"/>
                     <field name="livechat_username" string="Live Chat Name" invisible="not has_access_livechat" help="Nickname used in live chat conversations to protect your real name from visitors."/>
                     <field name="livechat_lang_ids" string="Spoken Languages"
-                           options="{'no_create': True, 'no_edit': True}"
+                           options="{'no_create': True}"
                            widget="many2many_tags"
                            invisible="not has_access_livechat"
                            help="Languages you can speak for live chat conversations."/>

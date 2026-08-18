@@ -106,7 +106,7 @@
                                         <field name="payment_sequence" invisible="type not in ('bank', 'cash', 'credit')"/>
                                         <field name="invoice_template_pdf_report_id"
                                                invisible="not display_invoice_template_pdf_report_id"
-                                               options="{'no_create': True, 'no_edit': True}"/>
+                                               options="{'no_create': True}"/>
                                         <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
                                     </group>
                                     <group name="bank_account_number" invisible="type != 'bank'">
