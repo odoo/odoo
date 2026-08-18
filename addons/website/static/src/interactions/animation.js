@@ -33,10 +33,11 @@ export class Animation extends Interaction {
                 o_animate_preview: undefined,
             }),
             "t-att-style": (el) => {
+                const isResetting = this.getIsResetting();
                 const result = {
-                    "animation-name": this.isResetting ? "dummy-none" : undefined,
+                    "animation-name": isResetting ? "dummy-none" : undefined,
                     "animation-play-state":
-                        this.isResetting || this.isAnimateOnScroll ? undefined : this.playState,
+                        isResetting || this.isAnimateOnScroll ? undefined : this.playState,
                     // The ones which are invisible in state 0 (like fade_in for
                     // example) will stay invisible.
                     visibility: "visible",
@@ -114,6 +115,15 @@ export class Animation extends Interaction {
                 );
             }
         });
+    }
+
+    /**
+     * Whether the element should currently be rendered in its reset state.
+     *
+     * @returns {boolean}
+     */
+    getIsResetting() {
+        return this.isResetting;
     }
 
     resetAnimation() {
