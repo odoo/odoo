@@ -233,10 +233,17 @@ export class HybridFluidStrategyPlugin extends Plugin {
         const spacing = this.containerPadding(block.rect, cluster.rect);
         const deltaLeft = spacing.left - (paddingLeft ?? 0);
         const deltaRight = spacing.right - (paddingRight ?? 0);
-        return (
+        const isResponsiveElementCandidate =
             (!this.isZero(deltaLeft) && deltaLeft > 0) ||
-            (!this.isZero(deltaRight) && deltaRight > 0)
-        );
+            (!this.isZero(deltaRight) && deltaRight > 0);
+        if (isResponsiveElementCandidate) {
+            return (
+                this.checkPredicates("is_responsive_element_predicates", {
+                    container: referenceNode,
+                    responsiveElement: block.bands[0].clusters[0].nodes[0],
+                }) ?? true
+            );
+        }
     }
 
     /**
