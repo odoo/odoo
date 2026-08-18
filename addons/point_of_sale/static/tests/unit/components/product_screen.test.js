@@ -36,6 +36,18 @@ test("_getProductByBarcode", async () => {
     expect(productByBarcode.id).toEqual(5);
 });
 
+test("_barcodeProductAction", async () => {
+    const store = await setupPosEnv();
+    store.addNewOrder();
+    const order = store.getOrder();
+    const comp = await mountWithCleanup(ProductScreen, { props: { orderUuid: order.uuid } });
+
+    await comp._barcodeProductAction({ base_code: "test_test" });
+
+    expect(order.lines).toHaveLength(1);
+    expect(order.lines[0].product_id.id).toBe(5);
+});
+
 test("fastValidate", async () => {
     const { store, order, productScreen } = await mountProductScreen();
     const fastPaymentMethod = order.config.fast_payment_method_ids[0];

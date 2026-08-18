@@ -78,9 +78,9 @@ patch(ProductScreen.prototype, {
         this.state.isValidBuffer = Boolean(res);
     },
     async addProductToOrder(product) {
-        const allocation = this.autoCourseAllocation(product);
+        const allocation = this.pos.autoCourseAllocation(product);
         const result = await super.addProductToOrder(product);
-        this.cleanAutoCourseAllocation(result, allocation);
+        this.pos.cleanAutoCourseAllocation(result, allocation);
         return result;
     },
     async clickNew() {
