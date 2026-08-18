@@ -53,9 +53,12 @@ class DiscussChannel(models.Model):
         return self.env["crm.lead"].create(self._prepare_lead_create_values(partner, key))
 
     def _prepare_lead_create_values(self, partner, key):
+        customer = self.livechat_customer_partner_ids[:1]
+        if not customer and "whatsapp_partner_id" in self._fields:
+            customer = self.whatsapp_partner_id
         values = super()._prepare_lead_create_values(partner, key)
         values["origin_channel_id"] = self.id
-        values["partner_id"] = self.livechat_customer_partner_ids[:1].id
+        values["partner_id"] = customer.id
         values["description"] = self._get_channel_history()
         if self.channel_type == "livechat":
             values["source_id"] = self.env["utm.mixin"]._utm_ref("utm.utm_source_livechat").id
