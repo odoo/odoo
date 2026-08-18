@@ -148,3 +148,73 @@ class AccountMoveLine(models.Model):
     def _sale_can_be_reinvoice(self):
         self.ensure_one()
         return self.move_type != 'entry' and self.display_type != 'cogs' and super()._sale_can_be_reinvoice()
+<<<<<<< 945edbe6f6d8771b24912a688d56af82356c60e6
+||||||| 2248935e6a129760bc49fc22bce8d9de7c2b2427
+
+    def _get_cogs_qty(self):
+        self.ensure_one()
+        valuation_account = self.product_id.product_tmpl_id.get_product_accounts(fiscal_pos=self.move_id.fiscal_position_id)['stock_valuation']
+        sale_lines = self.sale_line_ids
+        posted_cogs_lines = sale_lines.order_id.invoice_ids.filtered(lambda m: m.move_type == 'out_invoice').line_ids.filtered(
+            lambda line: line.display_type == 'cogs' and line.account_id == valuation_account and line.cogs_origin_id.sale_line_ids & sale_lines
+        )
+        posted_cogs_qty_prod_uom = sum(posted_cogs_lines.mapped(
+            lambda line: line.product_uom_id._compute_quantity(line.quantity, line.product_id.uom_id)
+             * (-1 if line.move_id.move_type == "out_refund" else 1)
+        ))
+        return posted_cogs_qty_prod_uom + super()._get_cogs_qty()
+
+    def _get_posted_cogs_value(self):
+        self.ensure_one()
+        valuation_account = self.product_id.product_tmpl_id.get_product_accounts(fiscal_pos=self.move_id.fiscal_position_id)['stock_valuation']
+        sale_lines = self.sale_line_ids
+        posted_cogs_value = - sum(sale_lines.order_id.invoice_ids.filtered(lambda m: m.move_type == 'out_invoice').line_ids.filtered(
+            lambda line: line.display_type == 'cogs' and line.account_id == valuation_account and line.cogs_origin_id.sale_line_ids & sale_lines
+        ).mapped('balance'))
+        return posted_cogs_value + super()._get_posted_cogs_value()
+
+    def _get_lines_from_original_invoice(self):
+        original_lines = super()._get_lines_from_original_invoice()
+        if self.move_id.move_type == 'out_refund' and not self.move_id.reversed_entry_id:
+            original_lines += self.sale_line_ids.invoice_lines.move_id.filtered(
+                lambda m: m.move_type == "out_invoice"
+            ).line_ids.filtered(
+                lambda l: l.display_type == 'cogs' and l.product_id == self.product_id and
+                l.product_uom_id == self.product_uom_id and l.price_unit >= 0
+            )
+        return original_lines
+=======
+
+    def _get_cogs_qty(self):
+        self.ensure_one()
+        valuation_account = self.product_id.product_tmpl_id.get_product_accounts(fiscal_pos=self.move_id.fiscal_position_id)['stock_valuation']
+        sale_lines = self.sale_line_ids
+        posted_cogs_lines = sale_lines.order_id.invoice_ids.filtered(lambda m: m.move_type in ['out_invoice', 'out_refund']).line_ids.filtered(
+            lambda line: line.display_type == 'cogs' and line.account_id == valuation_account and line.cogs_origin_id.sale_line_ids & sale_lines
+        )
+        posted_cogs_qty_prod_uom = sum(posted_cogs_lines.mapped(
+            lambda line: line.product_uom_id._compute_quantity(line.quantity, line.product_id.uom_id)
+             * (-1 if line.move_id.move_type == "out_refund" else 1)
+        ))
+        return posted_cogs_qty_prod_uom + super()._get_cogs_qty()
+
+    def _get_posted_cogs_value(self):
+        self.ensure_one()
+        valuation_account = self.product_id.product_tmpl_id.get_product_accounts(fiscal_pos=self.move_id.fiscal_position_id)['stock_valuation']
+        sale_lines = self.sale_line_ids
+        posted_cogs_value = - sum(sale_lines.order_id.invoice_ids.filtered(lambda m: m.move_type in ['out_invoice', 'out_refund']).line_ids.filtered(
+            lambda line: line.display_type == 'cogs' and line.account_id == valuation_account and line.cogs_origin_id.sale_line_ids & sale_lines
+        ).mapped('balance'))
+        return posted_cogs_value + super()._get_posted_cogs_value()
+
+    def _get_lines_from_original_invoice(self):
+        original_lines = super()._get_lines_from_original_invoice()
+        if self.move_id.move_type == 'out_refund' and not self.move_id.reversed_entry_id:
+            original_lines += self.sale_line_ids.invoice_lines.move_id.filtered(
+                lambda m: m.move_type == "out_invoice"
+            ).line_ids.filtered(
+                lambda l: l.display_type == 'cogs' and l.product_id == self.product_id and
+                l.product_uom_id == self.product_uom_id and l.price_unit >= 0
+            )
+        return original_lines
+>>>>>>> 2fcfad23f4ca4da57755a071741a5b388bf3a40e
