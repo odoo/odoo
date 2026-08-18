@@ -15,6 +15,7 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { beforeEach, expect, describe, test } from "@odoo/hoot";
 import { Deferred, animationFrame, tick } from "@odoo/hoot-mock";
+import { onWillUpdateProps } from "@odoo/owl";
 import {
     Command,
     getService,
@@ -25,6 +26,8 @@ import {
 } from "@web/../tests/web_test_helpers";
 
 import { Composer, MENTION_AMOUNT_WARNING } from "@mail/core/common/composer";
+import { ImStatus } from "@mail/core/common/im_status";
+import { NavigableList } from "@mail/core/common/navigable_list";
 import { press } from "@odoo/hoot-dom";
 import { rpc } from "@web/core/network/rpc";
 import { range } from "@web/core/utils/numbers";
@@ -435,6 +438,52 @@ test("select @ mention insert mention text in composer", async () => {
     await htmlInsertText(editor, "@");
     await click(".o-mail-Composer-suggestion strong:text('TestPartner')");
     await contains(".o-mail-Composer-html.odoo-editor-editable:text('@TestPartner')");
+});
+
+test("select @ mention from the suggestion list being filtered", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({
+        email: "testpartner@odoo.com",
+        name: "TestPartner",
+    });
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "general",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+    });
+    const filtering = new Deferred();
+    const listRendered = new Deferred();
+    let suggestionList;
+    patchWithCleanup(NavigableList.prototype, {
+        setup() {
+            super.setup();
+            suggestionList = this;
+        },
+    });
+    patchWithCleanup(ImStatus.prototype, {
+        setup() {
+            super.setup();
+            // Simulate a slow render of the filtered list, keeping the previous search on screen.
+            onWillUpdateProps(() => {
+                if (suggestionList.props.options.length === 1) {
+                    filtering.resolve();
+                    return listRendered;
+                }
+            });
+        },
+    });
+    await start();
+    await openDiscuss(channelId);
+    await insertText(".o-mail-Composer-input", "@");
+    await contains(".o-mail-Composer-suggestion", { count: 2 });
+    await insertText(".o-mail-Composer-input", "Test");
+    await filtering;
+    await contains(".o-mail-Composer-suggestion", { count: 2 });
+    await click(".o-mail-Composer-suggestion strong", { text: "TestPartner" });
+    listRendered.resolve();
+    await contains(".o-mail-Composer-input", { value: "@TestPartner " });
 });
 
 test("[text composer] select @ mention closes suggestions", async () => {
