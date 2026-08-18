@@ -89,8 +89,14 @@ export class NavigableList extends Component {
         this.state.activeIndex = null;
     }
 
+    /**
+     * @param {Event} ev
+     * @param {number} index
+     * @param {Object} [params]
+     * @param {Object} [params.option] defaults to `props.options[index]`
+     */
     selectOption(ev, index, params = {}) {
-        const option = this.props.options[index];
+        const { option = this.props.options[index], ...onSelectParams } = params;
         if (!option) {
             return;
         }
@@ -99,7 +105,7 @@ export class NavigableList extends Component {
             return;
         }
         this.props.onSelect(ev, option, {
-            ...params,
+            ...onSelectParams,
         });
         this.close();
     }
