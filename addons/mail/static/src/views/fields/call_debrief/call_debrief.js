@@ -285,7 +285,7 @@ export class CallDebrief extends Component {
                 const isVideo = mime.startsWith("video/");
                 const isAudio = mime.startsWith("audio/");
 
-                if (isVideo || isAudio) {
+                if ((isVideo || isAudio) && this._isPlaybackArtifact(art)) {
                     const endSec = art.end_ms / 1000;
                     segments.push({
                         id: art.id,
@@ -315,6 +315,17 @@ export class CallDebrief extends Component {
      */
     _getArtifactFields() {
         return ["media_id", "start_ms", "end_ms"];
+    }
+
+    /**
+     * Hook to determine if a loaded artifact represents a playable segment.
+     * Overridden in enterprise modules to filter out specific artifacts.
+     *
+     * @param {Object} art - The mail.call.artifact record
+     * @returns {boolean} True if the artifact should be played back
+     */
+    _isPlaybackArtifact(art) {
+        return true;
     }
 
     /**
