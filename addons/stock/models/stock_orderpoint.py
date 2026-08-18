@@ -13,7 +13,7 @@ from odoo.exceptions import RedirectWarning, UserError, ValidationError
 from odoo.modules.registry import Registry
 from odoo.fields import Domain
 from odoo.sql_db import BaseCursor
-from odoo.tools import float_compare, float_is_zero, frozendict, split_every, format_date, str2bool
+from odoo.tools import float_compare, frozendict, split_every, format_date, str2bool
 
 _logger = logging.getLogger(__name__)
 
