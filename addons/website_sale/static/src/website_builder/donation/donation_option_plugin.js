@@ -3,7 +3,6 @@ import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { Plugin } from "@html_editor/plugin";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { renderToElement, renderToFragment } from "@web/core/utils/render";
 
 export class DonationOption extends BaseOptionComponent {
     static id = "donation_option";
@@ -38,6 +37,7 @@ export class DonationOptionPlugin extends Plugin {
 }
 
 export class BaseDonationAction extends BuilderAction {
+    static dependencies = ["websiteBridge"];
     getPrefilledOptionsList({ editingElement }) {
         const savedOptions = editingElement.dataset.prefilledOptionsList;
 
@@ -93,11 +93,14 @@ export class BaseDonationAction extends BuilderAction {
         if (layout !== "slider" || !displayOptions) {
             sliderEl?.remove();
         } else if (layout === "slider" && displayOptions && !sliderEl) {
-            const sliderEl = renderToElement("website_sale.donation.slider", {
-                minimum_amount: editingElement.dataset.minimumAmount,
-                maximum_amount: editingElement.dataset.maximumAmount,
-                slider_step: editingElement.dataset.sliderStep,
-            });
+            const sliderEl = this.dependencies.websiteBridge.renderToElement(
+                "website_sale.donation.slider",
+                {
+                    minimum_amount: editingElement.dataset.minimumAmount,
+                    maximum_amount: editingElement.dataset.maximumAmount,
+                    slider_step: editingElement.dataset.sliderStep,
+                }
+            );
             formEl.insertBefore(sliderEl, donateButtonEl);
         }
 
@@ -108,9 +111,10 @@ export class BaseDonationAction extends BuilderAction {
         descriptionInputContainerEl.textContent = "";
         if (showDescriptions) {
             descriptionInputContainerEl.insertBefore(
-                renderToFragment("website_sale.donation.descriptionTranslationInputs", {
-                    descriptions: options.map((option) => option.description),
-                }),
+                this.dependencies.websiteBridge.renderToFragment(
+                    "website_sale.donation.descriptionTranslationInputs",
+                    { descriptions: options.map((option) => option.description) }
+                ),
                 null
             );
         }
@@ -125,10 +129,8 @@ export class BaseDonationAction extends BuilderAction {
                 }
             }
 
-            const prefilledButtonsEl = renderToElement(
-                `website_sale.donation.prefilledButtons${
-                    showDescriptions ? "Descriptions" : ""
-                }`,
+            const prefilledButtonsEl = this.dependencies.websiteBridge.renderToElement(
+                `website_sale.donation.prefilledButtons${showDescriptions ? "Descriptions" : ""}`,
                 {
                     prefilled_buttons: prefilledOptions ? options : [],
                     custom_input: layout === "freeAmount",
