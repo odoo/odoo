@@ -1746,6 +1746,10 @@ class AccountMoveLine(models.Model):
 
     @api.model
     def _search(self, domain, *args, **kwargs):
+
+        # Transform the domain to include the recon_limit date
+        domain = self._get_amounts_to_settle_domain(domain)
+
         # To enable computing the residual_at_date, the recon_limit date needs to be included in the context
         contextualized = self
         if recon_limit := self._get_recon_limit_from_domain(domain):
@@ -1768,6 +1772,24 @@ class AccountMoveLine(models.Model):
         if recon_limit := contextualized._get_recon_limit_from_domain(domain):
             contextualized = contextualized.with_context(recon_limit=recon_limit)
         return super(AccountMoveLine, contextualized).search_fetch(domain, field_names, offset, limit, order)
+
+    @api.model
+    def _get_amounts_to_settle_domain(self, domain):
+        """
+            Modify the search domain for the 'Amounts to Settle' view.
+            Change the busness logic of the 'open_on' filter to a concrete 'date' filter with a '<=' operator to correctly fetch 'As of' date records.
+        """
+        if not domain or not ('domain_cumulated_balance' in self.env.context and 'recon_limit' in self.env.context):
+            return domain
+
+        new_domain = []
+        for leaf in domain:
+            if isinstance(leaf, (list, tuple)) and len(leaf) == 3 and leaf[0] == 'open_on' and leaf[1] in ('=', '<'):
+                target_date = leaf[2]
+                new_domain.append(('date', '<=', target_date))
+            else:
+                new_domain.append(leaf)
+        return new_domain
 
     def _get_recon_limit_from_domain(self, domain):
         for condition in Domain(domain).optimize_dynamic(self).iter_conditions():
