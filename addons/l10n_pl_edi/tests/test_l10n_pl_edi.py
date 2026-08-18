@@ -1,10 +1,13 @@
+import base64
 from datetime import datetime, timedelta
+from hashlib import sha256
 
 from lxml import etree
 
 from odoo import Command, fields, tools
 from odoo.exceptions import UserError
 from odoo.tests import freeze_time, patch, tagged
+from odoo.tools import BinaryBytes
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.base.tests.test_ir_cron import CronMixinCase
@@ -16,8 +19,7 @@ def attachment_to_dict(attachment):
     return {'name': attachment.name, 'raw': attachment.raw}
 
 
-@tagged('post_install', '-at_install', 'post_install_l10n')
-class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
+class TestL10nPlEdiCommon(AccountTestInvoicingCommon, CronMixinCase):
 
     _test_user_groups = None  # FIXME list needed groups
 
@@ -143,6 +145,10 @@ class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
         except AssertionError as ae:
             ae.args = (ae.args[0] + f"\nFile used for comparison: {filename}", )
             raise
+
+
+@tagged('post_install', '-at_install', 'post_install_l10n')
+class TestL10nPlEdi(TestL10nPlEdiCommon):
 
     @freeze_time('2026-01-23')
     def test_ksef_fa3_standard_vat(self):
@@ -825,11 +831,9 @@ class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
             ).ids,
         )
 
-        created_move_attachment = self.env['ir.attachment'].search([
-            ('res_model', '=', 'account.move'),
-            ('res_id', '=', created_move.id),
-        ], limit=1)
+        created_move_attachment = created_move.l10n_pl_edi_attachment_id
         self.assertTrue(created_move_attachment)
+        self.assertIn(created_move_attachment, created_move.message_ids.attachment_ids)
         with tools.file_open('l10n_pl_edi/tests/export_xmls/fa3_bill.xml', mode='rb') as file:
             self.assertEqual(bytes(created_move_attachment.raw), file.read())
 
@@ -871,10 +875,7 @@ class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
 
         bill_1 = self.env['account.move'].search([('l10n_pl_edi_status', '=', 'fetched')])
         self.assertTrue(bill_1)
-        bill_1_attachment = self.env['ir.attachment'].search([
-            ('res_model', '=', 'account.move'),
-            ('res_id', '=', bill_1.id),
-        ], limit=1)
+        bill_1_attachment = bill_1.l10n_pl_edi_attachment_id
         self.assertTrue(bill_1_attachment)
         with tools.file_open('l10n_pl_edi/tests/export_xmls/fa3_bill.xml', mode='rb') as file:
             self.assertEqual(bytes(bill_1_attachment.raw), file.read())
@@ -896,7 +897,7 @@ class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
             }
 
         def get_invoice_by_ksef_number(ksef_number):
-            return {'xml_content': b'foo'}
+            return {'xml_content': b'<Faktura/>'}
 
         call_count = 0
 
@@ -915,10 +916,7 @@ class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
             self.env['account.move'].with_company(self.company)._l10n_pl_edi_download_bills_from_ksef()
 
         bills = self.env['account.move'].search([('l10n_pl_edi_number', 'in', ('KSEF-BILL-001', 'KSEF-BILL-002'))])
-        bills_attachments = self.env['ir.attachment'].search([
-            ('res_model', '=', 'account.move'),
-            ('res_id', 'in', bills.ids),
-        ])
+        bills_attachments = bills.l10n_pl_edi_attachment_id
         self.assertEqual(len(bills), 2)
         self.assertEqual(len(bills_attachments), 2)
         self.assertTrue(bills.filtered(lambda b: b.l10n_pl_edi_status == 'fetch_failed'))
@@ -1250,3 +1248,37 @@ class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
         self.assertEqual(self._get_xml_value(xml, "//ns:DaneFaKorygowanej/ns:NrKSeF"), '1')
         self.assertEqual(self._get_xml_value(xml, "//ns:DaneFaKorygowanej/ns:NrKSeFFaKorygowanej"), fake_ksef_number)
         self.assertFalse(self._get_xml_nodes(xml, "//ns:DaneFaKorygowanej/ns:NrKSeFN"))
+
+    def test_qr_link_uses_the_stored_xml_without_padding(self):
+        invoice = self.standard_invoice
+        invoice.action_post()
+        xml_content = invoice._l10n_pl_edi_render_xml().encode()
+        invoice.l10n_pl_edi_attachment_file = BinaryBytes(xml_content)
+        invoice_hash = base64.urlsafe_b64encode(sha256(xml_content).digest()).decode()
+
+        qr_link = invoice._l10n_pl_edi_generate_qr_link()
+
+        self.assertTrue(invoice_hash.endswith('='))
+        self.assertEqual(
+            qr_link,
+            f"https://qr-test.ksef.mf.gov.pl/invoice/1234567883/23-01-2026/{invoice_hash.rstrip('=')}",
+        )
+        invoice.company_id.vat = 'PL1111111111'
+        self.assertEqual(invoice._l10n_pl_edi_generate_qr_link(), qr_link)
+
+    def test_status_550_rejects_the_invoice(self):
+        invoice = self.standard_invoice
+        invoice.action_post()
+        invoice.write({
+            'l10n_pl_edi_status': 'sent',
+            'l10n_pl_edi_ref': 'INVOICE-REF',
+            'l10n_pl_edi_session_id': 'SESSION-REF',
+        })
+
+        with patch.object(KsefApiService, 'get_invoice_status', return_value={
+            'status': {'code': 550, 'description': 'Canceled by KSeF'},
+        }):
+            invoice.action_l10n_pl_edi_update_invoice_status()
+
+        self.assertEqual(invoice.l10n_pl_edi_status, 'rejected')
+        self.assertIn('Code: 550', str(invoice.l10n_pl_edi_header))
