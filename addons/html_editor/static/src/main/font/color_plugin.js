@@ -182,7 +182,7 @@ export class ColorPlugin extends Plugin {
 
     removeAllColor() {
         const sel = this.dependencies.selection.getEditableSelection();
-        if (sel.isCollapsed) {
+        if (this.checkPredicates("should_defer_format_predicates", sel) ?? true) {
             const el = closestElement(sel.anchorNode);
             const block = closestBlock(sel.anchorNode);
             for (const mode of ["color", "backgroundColor"]) {
@@ -235,7 +235,7 @@ export class ColorPlugin extends Plugin {
 
     requestColor(color, mode, previewMode = false) {
         const sel = this.dependencies.selection.getEditableSelection();
-        if (sel.isCollapsed) {
+        if (this.checkPredicates("should_defer_format_predicates", sel) ?? true) {
             const block = closestBlock(sel.anchorNode);
             const colorNode = findUpTo(closestElement(sel.anchorNode), block, (node) =>
                 getColorOrClass(node, mode)
