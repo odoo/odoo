@@ -9,7 +9,7 @@ import { queryAll } from "@odoo/hoot-dom";
 defineWebsiteModels();
 
 beforeEach(async () => {
-    await setupWebsiteBuilderWithSnippet("s_donation");
+    await setupWebsiteBuilderWithSnippet("s_donation", { loadIframeBuilderTemplates: true });
 });
 
 test("display/hide donation options", async () => {
