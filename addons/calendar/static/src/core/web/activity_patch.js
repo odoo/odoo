@@ -1,6 +1,5 @@
 import { Activity } from "@mail/core/web/activity";
 import { formatList } from "@web/core/l10n/utils";
-import { isToday } from "@mail/utils/common/dates";
 import { patch } from "@web/core/utils/patch";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
@@ -9,7 +8,12 @@ patch(Activity.prototype, {
     setup() {
         super.setup();
         this.orm = useService("orm");
-        this.isToday = isToday;
+        this.isToday = (datetime) => {
+            if (!datetime) {
+                return false;
+            }
+            return datetime?.hasSame(luxon.DateTime.now(), "day");
+        };
     },
     get attendeeNames() {
         if (!this.meeting || !this.meeting.partner_ids) {

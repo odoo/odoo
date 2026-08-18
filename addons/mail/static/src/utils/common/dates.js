@@ -55,13 +55,3 @@ export function getMsToTomorrow() {
     );
     return night.getTime() - now.getTime();
 }
-
-export function isToday(datetime) {
-    if (!datetime) {
-        return false;
-    }
-    return (
-        datetime.toLocaleString(DateTime.DATE_FULL) ===
-        DateTime.now().toLocaleString(DateTime.DATE_FULL)
-    );
-}
