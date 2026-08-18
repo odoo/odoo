@@ -301,7 +301,7 @@ class AccountEdiFormat(models.Model):
         if invoice.ref:
             eta_invoice['purchaseOrderReference'] = invoice.ref
         if invoice.invoice_origin:
-            eta_invoice['salesOrderReference'] = invoice.invoice_origin
+            eta_invoice['salesOrderReference'] = (invoice.invoice_origin or "")[:100]
         return eta_invoice
 
     @api.model
@@ -433,6 +433,8 @@ class AccountEdiFormat(models.Model):
             errors.append(self.env._("Please make sure the EGS/GS1 Barcode is set correctly on all products"))
         if any(len(aml.name or '') > 500 for aml in product_lines):
             errors.append(self.env._("A product description exceeds the ETA limit of 500 characters (including spaces). Please shorten the description and try again."))
+        if len(invoice.ref or '') > 100:
+            errors.append(self.env._("ETA Submission Failed: Customer Reference exceeds the ETA limit of 100 characters (including spaces). Please shorten the description and try again."))
         return errors
 
     def _l10n_eg_edi_post_invoice(self, invoice):
