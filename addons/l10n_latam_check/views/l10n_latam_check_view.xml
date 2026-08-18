@@ -14,7 +14,7 @@
                 <separator/>
                 <filter string="Payment Date" name="payment_date" date="payment_date"/>
                 <separator/>
-                <filter string="Handed" name="checks_on_hand" domain="[('issue_state', '=', 'handed')]"/>
+                <filter string="Handed" name="checks_handed" domain="[('issue_state', '=', 'handed')]"/>
                 <filter string="Voided" name="checks_voided" domain="[('issue_state', '=', 'voided')]"/>
                 <filter string="Debited" name="checks_debited" domain="[('issue_state', '=', 'debited')]"/>
                 <separator/>
@@ -40,11 +40,12 @@
         <field name="mode">primary</field>
         <field name="inherit_id" ref="view_account_payment_search"/>
         <field name="arch" type="xml">
-            <filter name="checks_on_hand" position="replace"/>
+            <filter name="checks_handed" position="replace"/>
             <filter name="checks_voided" position="replace"/>
             <filter name="checks_debited" position="replace">
-                <filter string="On hand" name="checks_on_hand"
-                    domain="[('current_journal_id.inbound_payment_method_line_ids.payment_method_id.code', '=', 'in_third_party_checks')]"/>
+                <filter string="On hand"
+                    name="checks_on_hand"
+                    domain="[('on_hand', '=', True)]"/>
             </filter>
             <field name="original_journal_id" position="before">
                 <field name="bank_account_id"/>
@@ -65,7 +66,7 @@
         <field name="priority" eval="99"/>
         <field name="arch" type="xml">
             <list default_order="date desc, id desc, name desc" create="false" delete="false" duplicate="false" >
-                <field name="date" readonly="state in ['cancel', 'posted']"/>
+                <field name="date" readonly="state != 'draft'"/>
                 <field name="name"/>
                 <field name="payment_type"/>
                 <field name="journal_id"/>
@@ -178,7 +179,7 @@
         <field name="view_id" ref="view_account_own_check_tree"/>
         <field name="search_view_id" ref="view_account_payment_search"/>
         <field name="domain">[('outstanding_line_id', '!=', False)]</field>
-        <field name="context">{'search_default_checks_on_hand': True}</field>
+        <field name="context">{'search_default_checks_handed': True}</field>
     </record>
 
     <menuitem
