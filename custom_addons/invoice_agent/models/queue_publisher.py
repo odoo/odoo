@@ -66,6 +66,11 @@ except ImportError:  # pragma: no cover — stale image without pika
 EXCHANGE_NAME = "invoice.agent"
 ROUTING_KEY_REQUEST = "extract.request"
 ROUTING_KEY_DONE = "extract.done"
+# v0.10: RAG embed jobs — the Odoo outbox publishes embed.request for the
+# worker to embed one vendor-doc text via /v1/embed (the worker answers
+# with a signed embed.done result on invoice.result).
+ROUTING_KEY_EMBED_REQUEST = "embed.request"
+ROUTING_KEY_EMBED_DONE = "embed.done"
 
 
 class QueueUnavailable(Exception):
@@ -229,5 +234,29 @@ class QueuePublisher(models.AbstractModel):
                 "attempt": int(attempt),
                 "job_uuid": job_uuid or "",
                 "ocr_text": ocr_text or "",
+            },
+        )
+
+    @api.model
+    def publish_embed_request(self, move_id, job_uuid=False, rag_text=False):
+        """Publish a durable ``embed.request`` job for the RAG corpus.
+
+        Body contract (documented in ``invoice_queue/topology.py`` and
+        ``docs/vector-search.md``):::
+
+            {"move_id": N, "job_uuid": "...", "rag_text": "..."}
+
+        ``move_id`` is the posted ``account.move`` whose vendor-doc text the
+        worker should embed, ``job_uuid`` is the outbox correlation id the
+        worker echoes back on ``embed.done``, and ``rag_text`` is the
+        rendered RAG document (``account.move._build_rag_document()``) the
+        worker sends to ``/v1/embed``. The worker never touches the Odoo DB.
+        """
+        return self.publish(
+            ROUTING_KEY_EMBED_REQUEST,
+            {
+                "move_id": int(move_id),
+                "job_uuid": job_uuid or "",
+                "rag_text": rag_text or "",
             },
         )

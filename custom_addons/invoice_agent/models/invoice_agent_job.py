@@ -18,6 +18,24 @@ class InvoiceAgentJob(models.Model):
         index=True,
         help="The account.move whose extraction this job publishes for.",
     )
+    # v0.10: job kind distinguishes AMQP message types sharing the outbox.
+    # "extract" publishes extract.request for the AI worker; "embed"
+    # publishes an embed.request job that the worker answers by calling
+    # /v1/embed and publishing a signed embed.done result — posting a bill
+    # only enqueues (never blocks on the embed HTTP round-trip).
+    kind = fields.Selection(
+        selection=[
+            ("extract", "Extract"),
+            ("embed", "Embed"),
+        ],
+        string="Kind",
+        default="extract",
+        required=True,
+        index=True,
+        copy=False,
+        help="extract: Claude extraction job (extract.request). embed: "
+        "RAG vendor-doc embedding job (embed.request).",
+    )
     attachment_id = fields.Many2one(
         comodel_name="ir.attachment",
         string="Source Attachment",
@@ -117,18 +135,43 @@ class InvoiceAgentJob(models.Model):
                         # Backfill from the move (pre-v0.9 rows) atomically.
                         job.write({"job_uuid": job.move_id.ai_job_uuid})
                         job_uuid = job.job_uuid
-                    # Job payload: move_id + attachment_id + attempt plus the
-                    # correlation id (job_uuid) and the OCR text the worker
-                    # feeds to Claude. OCR runs Odoo-side (cron), so the
-                    # worker never touches PDFs.
-                    self.env["queue.publisher"].publish_extract_request(
-                        job.move_id.id,
-                        attachment_id=(
-                            job.attachment_id.id if job.attachment_id else False
-                        ),
-                        job_uuid=job_uuid,
-                        ocr_text=job.move_id.ocr_text or job.move_id.ai_ocr_text,
-                    )
+                    publisher = self.env["queue.publisher"]
+                    if job.kind == "embed":
+                        # v0.10: RAG embed job. Executed by the drain cron
+                        # (not a broker round-trip): the posting request only
+                        # enqueues this outbox row — the embed HTTP call runs
+                        # on the cron's clock, so posting a bill never blocks.
+                        # embed_texts() returns None on 503/connection errors;
+                        # the row stays pending and the next drain retries.
+                        rag_text = job.move_id._build_rag_document()
+                        vectors = self.env["invoice.llm.service"].embed_texts(
+                            [rag_text],
+                        )
+                        if vectors:
+                            self.env["invoice.agent.vendor.doc"].upsert_embedding(
+                                job.move_id.id,
+                                rag_text,
+                                vectors[0],
+                            )
+                            job.move_id.write({"ai_indexed": True})
+                        else:
+                            # Deferred — keep pending so the next tick retries.
+                            # The savepoint rolls back; the row stays state=
+                            # "pending" with no state="sent" write.
+                            continue
+                    else:
+                        # Job payload: move_id + attachment_id + attempt plus
+                        # the correlation id (job_uuid) and the OCR text the
+                        # worker feeds to Claude. OCR runs Odoo-side (cron),
+                        # so the worker never touches PDFs.
+                        publisher.publish_extract_request(
+                            job.move_id.id,
+                            attachment_id=(
+                                job.attachment_id.id if job.attachment_id else False
+                            ),
+                            job_uuid=job_uuid,
+                            ocr_text=job.move_id.ocr_text or job.move_id.ai_ocr_text,
+                        )
                     job.write(
                         {
                             "state": "sent",

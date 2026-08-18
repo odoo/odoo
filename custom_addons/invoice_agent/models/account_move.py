@@ -912,28 +912,53 @@ class AccountMove(models.Model):
         # v0.10: any change to values that feed the RAG document invalidates
         # the stored embedding. Reset ai_indexed so the backfill cron
         # re-embeds this bill instead of serving a stale vector.
-        _RAG_INVALIDATING = {"partner_id", "invoice_date", "date", "ref", "invoice_line_ids", "line_ids"}
-        if _RAG_INVALIDATING.intersection(vals):
+        RAG_INVALIDATING_FIELDS = {
+            "partner_id",
+            "invoice_date",
+            "date",
+            "ref",
+            "invoice_line_ids",
+            "line_ids",
+        }
+        if RAG_INVALIDATING_FIELDS.intersection(vals):
             self.write({"ai_indexed": False})
         return res
 
     def action_post(self):
-        """Post (override): embed the vendor/GL history corpus live.
+        """Post (override): enqueue RAG embedding via the outbox.
 
-        The base ``action_post`` is called first; embedding then happens
-        best-effort AFTER the post so the RAG index is live without ever
-        blocking the posting request. A busy/unreachable embed service
-        leaves ``ai_indexed=False`` and the backfill cron catches up.
+        The base ``action_post`` runs first. Then, for vendor bills, a
+        ``kind=embed`` outbox row is created inside the same cursor —
+        posting never blocks on the Voyage HTTP round-trip. The drain cron
+        executes the embed on its next tick; if the service is down the row
+        stays pending and retries automatically.  The backfill cron is the
+        safety net for any row that slips through.
         """
         res = super().action_post()
-        try:
-            self._embed_on_post()
-        except Exception:
-            _logger.exception(
-                "invoice_agent RAG live-embed crashed for move_ids=%s — "
-                "backfill cron will retry",
-                self.ids,
-            )
+        for move in self:
+            if move.move_type != "in_invoice" or move.state != "posted":
+                continue
+            if move.ai_indexed:
+                continue
+            try:
+                job_uuid = str(uuid.uuid4())
+                self.env["invoice.agent.job"].create(
+                    {
+                        "move_id": move.id,
+                        "job_uuid": job_uuid,
+                        "kind": "embed",
+                    },
+                )
+                _logger.info(
+                    "invoice_agent enqueue embed: move_id=%d uuid=%s",
+                    move.id,
+                    job_uuid,
+                )
+            except Exception:
+                _logger.exception(
+                    "invoice_agent failed to enqueue embed for move_id=%d",
+                    move.id,
+                )
         return res
 
     # -------------------------------------------------------------------------
@@ -1139,7 +1164,7 @@ class AccountMove(models.Model):
         )
         if not moves:
             return 0
-        pairs = [pair for pair in self._split_batch_for_embedding(moves)]
+        pairs = list(self._split_batch_for_embedding(moves))
         texts = [text for _, text in pairs]
         vectors = self.env["invoice.llm.service"].embed_texts(texts)
         if vectors is None:
@@ -1150,10 +1175,10 @@ class AccountMove(models.Model):
                 len(moves),
             )
             return 0
-        for (move_id, _text), vector in zip(pairs, vectors):
+        for (move_id, rag_text), vector in zip(pairs, vectors):
             self.env["invoice.agent.vendor.doc"].upsert_embedding(
                 move_id,
-                _text,
+                rag_text,
                 vector,
             )
             self.browse(move_id).write({"ai_indexed": True})
@@ -1174,10 +1199,24 @@ class AccountMove(models.Model):
                 break
         return total
 
-    def _embed_on_post(self):
-        """Best-effort immediate embed for a freshly posted bill.
+    def _embed_posted_move(self, move):
+        """Embed one posted bill; True when indexed, False when deferred."""
+        rag_text = move._build_rag_document()
+        vectors = self.env["invoice.llm.service"].embed_texts([rag_text])
+        if vectors is None:
+            return False
+        self.env["invoice.agent.vendor.doc"].upsert_embedding(
+            move.id,
+            rag_text,
+            vectors[0],
+        )
+        move.write({"ai_indexed": True})
+        return True
 
-        Called from ``action_post`` path AFTER the post commits; never
+    def _embed_on_post(self):
+        """Best-effort immediate embed for freshly posted bills.
+
+        Called from the ``action_post`` path AFTER the post commits; never
         blocks the posting request (the backfill cron catches up if the
         service is busy).
         """
@@ -1185,16 +1224,7 @@ class AccountMove(models.Model):
             if move.move_type != "in_invoice" or move.state != "posted":
                 continue
             try:
-                rag_text = move._build_rag_document()
-                vectors = self.env["invoice.llm.service"].embed_texts([rag_text])
-                if vectors is None:
-                    continue
-                self.env["invoice.agent.vendor.doc"].upsert_embedding(
-                    move.id,
-                    rag_text,
-                    vectors[0],
-                )
-                move.write({"ai_indexed": True})
+                self._embed_posted_move(move)
             except Exception:
                 _logger.exception(
                     "invoice_agent RAG live-embed failed for move_id=%d",

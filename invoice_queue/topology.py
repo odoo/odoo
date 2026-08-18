@@ -113,12 +113,18 @@ EXCHANGE_TYPE = "topic"
 QUEUE_EXTRACT = "invoice.extract"
 QUEUE_RESULT = "invoice.result"
 QUEUE_DEAD = "invoice.extract.dead"
+# v0.10: RAG embed jobs. The Odoo outbox publishes embed.request; the
+# worker answers by calling /v1/embed and publishing a signed embed.done
+# result back on invoice.result.
+QUEUE_EMBED = "invoice.embed"
 DLX_EXCHANGE = "invoice.extract.dlx"
 DLX_TYPE = "direct"
 ROUTING_KEY_REQUEST = "extract.request"
 ROUTING_KEY_STARTED = "extract.started"
 ROUTING_KEY_DONE = "extract.done"
 ROUTING_KEY_DEAD = "extract.dead"
+ROUTING_KEY_EMBED_REQUEST = "embed.request"
+ROUTING_KEY_EMBED_DONE = "embed.done"
 
 # Retry ladder (v0.9): tier name -> TTL milliseconds. A transient failure is
 # routed to the tier selected by the attempt counter (see app/retry.py in

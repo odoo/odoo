@@ -79,8 +79,10 @@ class InvoiceAgentVendorDoc(models.Model):
         (
             "move_id_unique",
             "UNIQUE(move_id)",
-            "One RAG document per posted bill — a redelivered embed job "
-            "upserts, never duplicates.",
+            (
+                "One RAG document per posted bill — a redelivered embed job "
+                "upserts, never duplicates."
+            ),
         ),
     ]
 

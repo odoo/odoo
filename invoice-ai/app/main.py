@@ -21,7 +21,7 @@ from .auth import require_token
 from .claude import ClaudeService
 from .config import settings
 from .dependencies import get_claude_service, get_embedder
-from .embeddings import VoyageEmbeddingError, VoyageEmbedder
+from .embeddings import VoyageEmbedder, VoyageEmbeddingError
 from .errors import (
     BadRequestError,
     ServiceError,
