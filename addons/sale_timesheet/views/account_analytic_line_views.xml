@@ -134,6 +134,27 @@
         </field>
     </record>
 
+    <record id="sale_project_line_search" model="ir.ui.view">
+        <field name="name">sale_timesheet.sale.project.line.search</field>
+        <field name="model">account.analytic.line</field>
+        <field name="priority" eval="50"/>
+        <field name="inherit_id" ref="sale_project.sale_project_line_search"/>
+        <field name="arch" type="xml">
+            <field name="employee_id" position="replace"/>
+            <field name="parent_task_id" position="replace"/>
+            <field name="department_id" position="replace"/>
+            <field name="manager_id" position="replace"/>
+            <filter name="mine" position="replace"/>
+            <filter name="billable" position="replace"/>
+            <filter name="non_billable" position="replace"/>
+            <filter name="groupby_department" position="replace"/>
+            <filter name="groupby_manager" position="replace"/>
+            <filter name="groupby_employee" position="replace"/>
+            <filter name="groupby_sale_order_item" position="replace"/>
+            <filter name="groupby_invoice" position="replace"/>
+        </field>
+    </record>
+
     <!--
         Timesheet from Sales Order
     -->

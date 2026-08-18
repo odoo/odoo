@@ -41,11 +41,35 @@
         </field>
     </record>
 
+    <record id="sale_report_view_projected_margins_graph" model="ir.ui.view">
+        <field name="name">sale.report.view.graph</field>
+        <field name="model">sale.report</field>
+        <field name="arch" type="xml">
+            <graph string="Sales Analysis" type="bar">
+                <field name="partner_id" type="row"/>
+                <field name="margin" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="sale_report_view_projected_margins_pivot" model="ir.ui.view">
+        <field name="name">sale.report.view.pivot</field>
+        <field name="model">sale.report</field>
+        <field name="arch" type="xml">
+            <pivot string="Sales Analysis">
+                <field name="partner_id" type="row"/>
+                <field name="price_subtotal" type="measure"/>
+                <field name="purchase_price" type="measure"/>
+                <field name="margin" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
     <record id="action_order_report_projected_margins" model="ir.actions.act_window">
         <field name="name">Forecast Margins</field>
         <field name="res_model">sale.report</field>
         <field name="path">project-projected-margins</field>
-        <field name="view_mode">list,kanban</field>
+        <field name="view_mode">list,pivot,graph,kanban</field>
         <field name="view_id" ref="sale_report_projected_margins_list" />
         <field name="search_view_id" ref="sale.view_order_product_search" />
         <field name="context">{'search_default_Customer': 1, 'search_default_filter_order_date': 1}</field>
@@ -53,6 +77,34 @@
             <p class="o_view_nocontent_empty_folder">No data to display</p>
             <p>This report performs analysis on forecast margins of sales orders.</p>
         </field>
+    </record>
+
+    <record id="projected_margins_view_list" model="ir.actions.act_window.view">
+        <field name="sequence" eval="10"/>
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="sale_report_projected_margins_list"/>
+        <field name="act_window_id" ref="action_order_report_projected_margins"/>
+    </record>
+
+    <record id="projected_margins_view_pivot" model="ir.actions.act_window.view">
+        <field name="sequence" eval="20"/>
+        <field name="view_mode">pivot</field>
+        <field name="view_id" ref="sale_report_view_projected_margins_pivot"/>
+        <field name="act_window_id" ref="action_order_report_projected_margins"/>
+    </record>
+
+    <record id="projected_margins_view_graph" model="ir.actions.act_window.view">
+        <field name="sequence" eval="30"/>
+        <field name="view_mode">graph</field>
+        <field name="view_id" ref="sale_report_view_projected_margins_graph"/>
+        <field name="act_window_id" ref="action_order_report_projected_margins"/>
+    </record>
+
+    <record id="projected_margins_view_kanban" model="ir.actions.act_window.view">
+        <field name="sequence" eval="40"/>
+        <field name="view_mode">kanban</field>
+        <field name="view_id" ref="sale_report_projected_margins_kanban"/>
+        <field name="act_window_id" ref="action_order_report_projected_margins"/>
     </record>
 
 </odoo>
