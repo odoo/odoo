@@ -244,8 +244,13 @@
                                     </div>
                                 </div>
                             </setting>
-                            <setting id="qr_code_invoices" help="Add a QR-code to your invoices so that your customers can pay instantly with their mobile banking application." string="SEPA QR Codes" company_dependent="1"
-                                documentation="/applications/finance/accounting/receivables/customer_invoices/epc_qr_code.html">
+                            <setting id="qr_code_invoices_sepa" help="Add a QR-code to your invoices so that your customers can pay instantly with their mobile banking application." string="SEPA QR Codes" company_dependent="1"
+                                documentation="/applications/finance/accounting/receivables/customer_invoices/epc_qr_code.html"
+                                invisible="'SEPA' not in company_country_group_codes">
+                                <field name="qr_code" class="oe_inline"/>
+                            </setting>
+                            <setting id="qr_code_invoices" help="Add a QR-code to your invoices so that your customers can pay instantly with their banking application." string="Payment QR Codes" company_dependent="1"
+                                invisible="'SEPA' in company_country_group_codes">
                                 <field name="qr_code" class="oe_inline"/>
                             </setting>
                         </block>

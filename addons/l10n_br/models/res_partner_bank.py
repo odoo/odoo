@@ -31,7 +31,7 @@ class ResPartnerBank(models.Model):
             if bank.proxy_type not in ("email", "mobile", "br_cpf_cnpj", "br_random"):
                 raise ValidationError(
                     _(
-                        "The proxy type must be Email Address, Mobile Number, CPF/CNPJ (BR) or Random Key (BR) for Pix code generation."
+                        "The account identifier type must be Email Address, Mobile Number, CPF/CNPJ (BR) or Random Key (BR) for Pix code generation."
                     )
                 )
 
@@ -60,6 +60,10 @@ class ResPartnerBank(models.Model):
                         value,
                     )
                 )
+
+    @api.model
+    def _get_emv_qr_code_names(self):
+        return {**super()._get_emv_qr_code_names(), 'BR': _("Pix QR Code")}
 
     @api.depends('country_code')
     def _compute_country_proxy_keys(self):
@@ -124,7 +128,7 @@ class ResPartnerBank(models.Model):
             and self.proxy_type not in ("email", "mobile", "br_cpf_cnpj", "br_random")
         ):
             return _(
-                "To generate a Pix code the proxy type for %s must be Email Address, Mobile Number, CPF/CNPJ (BR) or Random Key (BR).",
+                "To generate a Pix code the account identifier type for %s must be Email Address, Mobile Number, CPF/CNPJ (BR) or Random Key (BR).",
                 self.display_name,
             )
 
