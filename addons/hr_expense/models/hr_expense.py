@@ -1176,8 +1176,8 @@ class HrExpense(models.Model):
                     'subject': _("New expenses waiting for your approval"),
                 })
                 all_submitted_expenses.last_notification_date = fields.Datetime.now()
-            if new_mails:
-                self.env['mail.mail'].sudo().create(new_mails).send()
+        if new_mails:
+            self.env['mail.mail'].sudo().create(new_mails).send()
 
     @api.model
     def get_empty_list_help(self, help_message):
