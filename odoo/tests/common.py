@@ -1651,6 +1651,13 @@ class ChromeBrowser:
             'eventsEnabled': False,
         })
         self._websocket_send('Emulation.setFocusEmulationEnabled', params={'enabled': True})
+        # Tests must not race decorative motion: a transition or a keyframe still
+        # running is a moving coordinate space, and anything measuring geometry
+        # mid-flight — drag and drop above all — reads stale values. Every
+        # animation in the codebase is expected to honour this preference.
+        self._websocket_send('Emulation.setEmulatedMedia', params={
+            'features': [{'name': 'prefers-reduced-motion', 'value': 'reduce'}],
+        })
         emulated_device = {
             'mobile': False,
             'width': None,
