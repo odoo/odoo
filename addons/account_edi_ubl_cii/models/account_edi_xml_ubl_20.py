@@ -538,7 +538,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         """ Method used to fill the cac:TaxTotal node on a line level.
         Uses the same method as the invoice TaxTotal, but can be overridden in other formats.
         """
-        return self._get_invoice_tax_totals_vals_list(line.move_id, taxes_vals)
+        return self.with_context(is_downpayment=line.is_downpayment)._get_invoice_tax_totals_vals_list(line.move_id, taxes_vals)
 
     def _get_invoice_line_vals(self, line, line_id, taxes_vals):
         # Old helper used only for non-BIS3 UBLs, removed in saas-18.4.
