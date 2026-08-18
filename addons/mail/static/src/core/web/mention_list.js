@@ -22,7 +22,7 @@ export class MentionList extends Component {
         this.props = useProps({
             close: t.function([]).optional(() => {}),
             composerType: t.string(),
-            onSelect: t.function([t.instanceOf(Event), optionType(this.store), t.record()]),
+            onSelect: t.function([t.instanceOf(Event), optionType(this.store)]),
             thread: t.instanceOf(this.store["mail.thread"]).optional(),
             type: t.string(),
         });
