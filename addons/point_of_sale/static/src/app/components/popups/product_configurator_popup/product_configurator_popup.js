@@ -268,7 +268,7 @@ export class ProductConfiguratorPopup extends Component {
     }
     get defaultCode() {
         const product = this.product || this.props.productTemplate;
-        return `[${product.default_code}]`;
+        return product.default_code;
     }
     get showInfoBanner() {
         return this.props.productTemplate.is_storable;
