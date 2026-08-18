@@ -157,3 +157,21 @@ test("addProductToOrder presets the variant matched by default_code search", asy
 
     expect(order.lines[0].product_id.id).toBe(61);
 });
+
+test("discarding the product configurator does not open the optional products popup", async () => {
+    const store = await setupPosEnv();
+    store.addNewOrder();
+    const order = store.getOrder();
+    const productTemplate = store.models["product.template"].get(60);
+    productTemplate.update({
+        pos_optional_product_ids: [store.models["product.template"].get(5)],
+    });
+
+    store.session.state = "opened";
+    const comp = await mountWithCleanup(ProductScreen, { props: { orderUuid: order.uuid } });
+
+    comp.addProductToOrder(productTemplate);
+
+    expect(order.lines.length).toBe(0);
+    expect(document.querySelectorAll(".modal").length).toBe(0);
+});

@@ -349,15 +349,17 @@ export class ProductScreen extends Component {
         }
 
         const allocation = this.pos.autoCourseAllocation(product);
-        const result = await this.pos.addLineToCurrentOrder(
+        const line = await this.pos.addLineToCurrentOrder(
             { product_id: product, product_tmpl_id: product.product_tmpl_id },
             { code },
             product.needToConfigure()
         );
-        this.pos.cleanAutoCourseAllocation(result, allocation);
+        this.pos.cleanAutoCourseAllocation(line, allocation);
 
         this.numberBuffer.reset();
-        this.showOptionalProductPopupIfNeeded(product);
+        if (line) {
+            this.showOptionalProductPopupIfNeeded(product);
+        }
     }
     async _getPartnerByBarcode(code) {
         let partner = this.pos.models["res.partner"].getBy("barcode", code.code);
@@ -419,9 +421,15 @@ export class ProductScreen extends Component {
             vals.qty = qty.value;
         }
 
-        await this.pos.addLineToCurrentOrder(vals, { code: lotBarcode }, product.needToConfigure());
+        const line = await this.pos.addLineToCurrentOrder(
+            vals,
+            { code: lotBarcode },
+            product.needToConfigure()
+        );
         this.numberBuffer.reset();
-        this.showOptionalProductPopupIfNeeded(product);
+        if (line) {
+            this.showOptionalProductPopupIfNeeded(product);
+        }
     }
     displayAllControlPopup() {
         this.dialog.add(ControlButtonsPopup);
@@ -458,7 +466,9 @@ export class ProductScreen extends Component {
             }
         }
         const line = await this.pos.addLineToCurrentOrder({ product_tmpl_id: product }, options);
-        this.showOptionalProductPopupIfNeeded(product);
+        if (line) {
+            this.showOptionalProductPopupIfNeeded(product);
+        }
 
         return line;
     }
