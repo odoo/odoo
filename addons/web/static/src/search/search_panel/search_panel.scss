@@ -168,3 +168,29 @@
         }
     }
 }
+
+// ------- SearchPanel expansion -------
+
+@keyframes o-searchPanel-flipToggle {
+    from { transform: perspective(200px) rotateY(-180deg); }
+}
+
+// Hung on `o-isToggling`, which only a toggle sets (@see o-mountAnimation).
+@include media-breakpoint-up(md) {
+    .o-isToggling {
+        &.o_search_panel {
+            // Unfolding mounts this panel in place of the sidebar strip, so it
+            // grows from the strip's width rather than from nothing.
+            --sidePanel-expand-minWidth: 3rem;
+
+            @include o-mountAnimation(o-sidePanel-expand);
+        }
+
+        // Carried by both sides of the toggle, so the icon turns over as the
+        // panel it belongs to appears: the strip and the panel each mount the
+        // other's.
+        .o_search_panel_sidebar_button {
+            @include o-mountAnimation(o-searchPanel-flipToggle);
+        }
+    }
+}

@@ -3,6 +3,7 @@ import {
     ConfirmationDialog,
 } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
+import { ANIMATION_DURATION, useAnimationMark } from "@web/core/utils/animation";
 import { useBus, useOwnedDialogs, useService } from "@web/core/utils/hooks";
 import { Layout } from "@web/search/layout";
 import { useModelWithSampleData } from "@web/model/model";
@@ -77,6 +78,10 @@ export class CalendarController extends Component {
             getLocalState: () => this.model.exportedState,
         });
         this.keyExpandSidebar = `calendar_sidepanel_expanded,${this.env.config.viewId},${this.env.config.actionId}`;
+        // The side panel animates in as it is mounted, and mounting alone is not
+        // the cue: on page load the panel is simply there, and it has not been
+        // toggled.
+        this.justToggledSidePanel = useAnimationMark(ANIMATION_DURATION.mount);
         const localSidePanelExpanded = browser.localStorage.getItem(this.keyExpandSidebar);
         this.state = proxy({
             isWeekendVisible:
@@ -200,12 +205,14 @@ export class CalendarController extends Component {
             model: this.model,
             editRecord: this.editRecord.bind(this),
             sidePanelExpanded: this.state.sidePanelExpanded,
+            hasToggledSidePanel: this.justToggledSidePanel.value,
             toggleSidePanel: this.toggleSidePanel.bind(this),
         };
     }
 
     toggleSidePanel() {
         this.state.sidePanelExpanded = !this.state.sidePanelExpanded;
+        this.justToggledSidePanel.mark();
         browser.localStorage.setItem(this.keyExpandSidebar, this.state.sidePanelExpanded);
     }
 

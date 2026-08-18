@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="web.CalendarSidePanel">
-        <div t-if="this.props.sidePanelExpanded" class="o_calendar_sidepanel_container d-print-none position-relative w-100 w-md-auto bg-view overflow-x-hidden overflow-y-auto">
+        <div t-if="this.props.sidePanelExpanded"
+             class="o_calendar_sidepanel_container d-print-none position-relative w-100 w-md-auto bg-view overflow-x-hidden overflow-y-auto"
+             t-attf-class="{{ this.props.hasToggledSidePanel ? 'o-isToggling' : '' }}">
             <div t-if="this.props.model.meta.canScheduleEvents and this.state.isDragging" class="d-flex o_calendar_unschedule_zone m-3 align-items-center justify-content-center">
                 <b>Drop here to unschedule</b>
             </div>

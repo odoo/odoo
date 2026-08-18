@@ -35,6 +35,9 @@ export class TodoFormControlPanel extends ControlPanel {
         }
         this.env.bus.trigger("TODO:TOGGLE_CHATTER", {
             displayChatter: this.embeddedPanelState.displayChatter,
+            // Tells a click apart from the two calls that open the panel on
+            // mount, which the panel animates itself on.
+            isUserToggle: Boolean(ev),
         });
     }
 }

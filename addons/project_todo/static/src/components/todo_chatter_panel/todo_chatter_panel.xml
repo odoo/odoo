@@ -2,7 +2,8 @@
 
 <templates xml:space="preserve">
 
-    <div t-name="project_todo.TodoChatterPanel" t-ref="this.rootRef">
+    <div t-name="project_todo.TodoChatterPanel" t-ref="this.rootRef"
+         t-attf-class="{{ this.justToggledChatter.value ? 'o-isToggling' : '' }}">
         <chatter t-if="this.state.displayChatter" class="o_FormRenderer_chatterContainer">
             <Chatter
                 threadModel="'project.task'"

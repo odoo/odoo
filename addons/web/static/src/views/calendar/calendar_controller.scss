@@ -120,3 +120,30 @@ $o-cw-filter-avatar-size: 20px;
         }
     }
 }
+
+// Calendar Side Panel - Expansion
+// ============================================================================
+
+// The container's padding is not covered by the panel's width, and would hold it
+// open by that much at the first frame.
+@keyframes o-calendarSidePanel-expandPadding {
+    from {
+        padding-left: 0;
+        padding-right: 0;
+    }
+}
+
+// Hung on `o-isToggling`, which only a toggle sets (@see o-mountAnimation).
+@include media-breakpoint-up(md) {
+    .o_calendar_sidepanel_container.o-isToggling {
+        @include o-mountAnimation(o-calendarSidePanel-expandPadding);
+
+        // The container's own width is `auto`, and `auto` is not an interpolable
+        // value: animating it does nothing at all. The panel inside carries an
+        // explicit width, so that is what grows, and the container — sized by
+        // its content — follows.
+        > .o_calendar_sidepanel {
+            @include o-mountAnimation(o-sidePanel-expand);
+        }
+    }
+}

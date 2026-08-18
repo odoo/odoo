@@ -12,7 +12,13 @@ export class CalendarSidePanel extends Component {
         ScheduleSection: CalendarScheduleSection,
     };
     static template = "web.CalendarSidePanel";
-    props = useProps(["model", "editRecord", "sidePanelExpanded", "toggleSidePanel"]);
+    props = useProps([
+        "model",
+        "editRecord",
+        "sidePanelExpanded",
+        "hasToggledSidePanel",
+        "toggleSidePanel",
+    ]);
 
     setup() {
         this.state = proxy({ isDragging: false });
