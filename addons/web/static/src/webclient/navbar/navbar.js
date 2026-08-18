@@ -27,6 +27,10 @@ const getBoundingClientRect = Element.prototype.getBoundingClientRect;
 
 const SWIPE_ACTIVATION_THRESHOLD = 100;
 
+const SECTION_MENU_TRAVEL_DURATION = 150;
+/** How long a closed section menu still counts as the one being moved away from. */
+const SECTION_MENU_TRAVEL_WINDOW = 150;
+
 export class MenuDropdown extends Dropdown {}
 
 export class NavBar extends Component {
@@ -245,6 +249,54 @@ export class NavBar extends Component {
     onNavBarDropdownItemSelection(menu) {
         if (menu) {
             this.menuService.selectMenu(menu);
+        }
+    }
+
+    /**
+     * Slides a section's menu in from where the previous one stood, so that
+     * moving across the sections reads as a single menu travelling. Each
+     * section has its own popover, so the move has to be replayed by hand.
+     *
+     * @param {HTMLElement} el
+     * @param {number} sectionId
+     * @param {{ top: number, left: number }} solution
+     */
+    onSectionMenuPositioned(el, sectionId, solution) {
+        const previous = this.lastSectionMenu;
+        // The solution rather than a measurement: every section menu resolves
+        // against the same containing block, and it is free of the travelling
+        // transform a `getBoundingClientRect` would pick up mid-animation.
+        this.lastSectionMenu = { sectionId, top: solution.top, left: solution.left };
+        // Repositioning the same menu (scroll, resize) is not a move.
+        if (!previous || previous.sectionId === sectionId) {
+            return;
+        }
+        // A section only travels from one that was still on screen. Opening a
+        // menu long after the last one closed is a plain appearance.
+        if (previous.closedAt && Date.now() - previous.closedAt > SECTION_MENU_TRAVEL_WINDOW) {
+            return;
+        }
+        const dx = previous.left - solution.left;
+        const dy = previous.top - solution.top;
+        if (!dx && !dy) {
+            return;
+        }
+        el.animate(
+            { transform: [`translate(${dx}px, ${dy}px)`, "translate(0, 0)"] },
+            { duration: SECTION_MENU_TRAVEL_DURATION, easing: "ease-out" }
+        );
+    }
+
+    /**
+     * @param {boolean} isOpen
+     * @param {number} sectionId
+     */
+    onSectionMenuStateChanged(isOpen, sectionId) {
+        // Stamped rather than dropped: hovering a sibling closes this menu
+        // before the next one is positioned, and the next one still needs to
+        // know where this one stood.
+        if (!isOpen && this.lastSectionMenu?.sectionId === sectionId) {
+            this.lastSectionMenu.closedAt = Date.now();
         }
     }
 

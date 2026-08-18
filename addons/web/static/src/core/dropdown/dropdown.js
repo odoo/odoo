@@ -75,6 +75,8 @@ export const dropdownProps = {
 
     beforeOpen: t.function().optional(),
     onOpened: t.function().optional(),
+    /** Runs once the menu has its final geometry, before it is painted. */
+    onPositioned: t.function().optional(),
     onStateChanged: t.function().optional(),
 
     /** Manual state handling, @see useDropdownState */
@@ -141,7 +143,10 @@ export class Dropdown extends Component {
             closeOnEscape: false, // Handled via navigation and prevents closing root of nested dropdown
             holdOnHover: this.props.holdOnHover,
             onClose: () => this.state.close(),
-            onPositioned: (el, { direction }) => this.setTargetDirectionClass(direction),
+            onPositioned: (el, solution) => {
+                this.setTargetDirectionClass(solution.direction);
+                this.props.onPositioned?.(el, solution);
+            },
             popoverClass: mergeClasses(
                 "o-dropdown--menu dropdown-menu mx-0",
                 { "o-dropdown--menu-submenu": this.hasParent },

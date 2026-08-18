@@ -139,6 +139,12 @@ function computePosition(popper, target, { container, flip, margin, position, sh
 
     // Boxes
     const popBox = popper.getBoundingClientRect();
+    // `popBox` is where the popper is drawn, transform included, but its origin
+    // is read below as the containing block's. An animated popper would then
+    // position itself against its own displacement, so take that back out.
+    const popTransform = getComputedStyle(popper).transform;
+    const popOffset =
+        popTransform === "none" ? { m41: 0, m42: 0 } : new DOMMatrix(popTransform);
     const targetBox = target.getBoundingClientRect();
     const contBox = container.getBoundingClientRect();
     const iframeBox = iframe?.getBoundingClientRect() ?? { top: 0, left: 0 };
@@ -226,8 +232,8 @@ function computePosition(popper, target, { container, flip, margin, position, sh
         // viewport). It can be done like that because the style top and
         // left were reset to 0px in `reposition`
         // https://developer.mozilla.org/en-US/docs/Web/CSS/Containing_block#identifying_the_containing_block
-        result.top = positioning.top - popBox.top;
-        result.left = positioning.left - popBox.left;
+        result.top = positioning.top - (popBox.top - popOffset.m42);
+        result.left = positioning.left - (popBox.left - popOffset.m41);
         if (d === "c") {
             // Artificial way to say the center direction is a fallback to every other
             // once there is a direction overflow since we can always shift the position
