@@ -57,6 +57,25 @@ class ResConfigSettings(models.TransientModel):
         readonly=False
     )
 
+    # BOE settings
+    l10n_in_boe_feature = fields.Boolean(
+        related='company_id.l10n_in_boe_feature',
+        readonly=False,
+        string="Bill of Entry",
+    )
+    l10n_in_boe_journal_id = fields.Many2one(
+        related='company_id.l10n_in_boe_journal_id',
+        readonly=False,
+    )
+    l10n_in_boe_account_id = fields.Many2one(
+        related='company_id.l10n_in_boe_account_id',
+        readonly=False,
+    )
+    l10n_in_boe_payable_account_id = fields.Many2one(
+        related='company_id.l10n_in_boe_payable_account_id',
+        readonly=False,
+    )
+
     # GST settings
     l10n_in_is_gst_registered = fields.Boolean(
         related='company_id.l10n_in_is_gst_registered',

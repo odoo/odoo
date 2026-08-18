@@ -35,6 +35,9 @@ class AccountChartTemplate(models.AbstractModel):
                 'receivable_account_id': 'p10040',
                 'payable_account_id': 'p11211',
                 'l10n_in_withholding_account_id': 'p100595',
+                'l10n_in_boe_journal_id': 'general',
+                'l10n_in_boe_account_id': 'p2140',
+                'l10n_in_boe_payable_account_id': 'p11240',
                 'tax_calculation_rounding_method': 'round_per_line',
             },
         }
