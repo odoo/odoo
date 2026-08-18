@@ -8,6 +8,7 @@ class StockPicking(models.Model):
     _inherit = "stock.picking"
 
     l10n_in_ewaybill_id = fields.One2many('l10n.in.ewaybill', 'picking_id', string='Ewaybill')
+    country_code = fields.Char(related="company_id.account_fiscal_country_id.code")
 
     def _get_l10n_in_ewaybill_form_action(self):
         return self.env.ref('l10n_in_ewaybill_stock.l10n_in_ewaybill_form_action')._get_action_dict()
