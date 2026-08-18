@@ -2,10 +2,10 @@
 
 from odoo.exceptions import ValidationError
 
-from odoo.addons.website_sale.controllers.payment import PaymentPortal
+from odoo.addons.website_sale.controllers.checkout.payment import Payment
 
 
-class OnSitePaymentPortal(PaymentPortal):
+class OnSitePaymentPortal(Payment):
     def _validate_transaction_for_order(self, transaction, sale_order):
         """Override of `website_sale` to ensure the on-site payment provider is not used without
         the in-store pickup delivery method.
