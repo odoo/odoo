@@ -98,7 +98,7 @@ class HrApplicant(models.Model):
                                     help="Stage of the applicant before being in the current stage. Used for lost cases analysis.")
     categ_ids = fields.Many2many('hr.applicant.category', string="Tags", tracking=True)
     currency_id = fields.Many2one('res.currency', string='Currency', related='company_id.currency_id')
-    company_id = fields.Many2one('res.company', "Company", compute='_compute_company', store=True, index=True, readonly=False, tracking=True)
+    company_id = fields.Many2one('res.company', "Company", compute='_compute_company', store=True, index=True, readonly=False, tracking=True, domain=lambda self: [('id', 'in', self.env.companies.ids)])
     recruiter_id = fields.Many2one('hr.employee', "Recruiter", compute='_compute_recruiter', domain=lambda self: str(self._recruiter_domain()),
         tracking=True, store=True, index=True, readonly=False)
     date_closed = fields.Datetime("Hire Date", compute='_compute_date_closed', store=True, readonly=False, tracking=True, copy=False)
@@ -572,17 +572,17 @@ class HrApplicant(models.Model):
         stage_ids = stages.sudo()._search(search_domain, order=stages._order)
         return stages.browse(stage_ids)
 
-    @api.depends('job_id', 'department_id')
+    @api.depends('job_id', 'department_id', 'job_id.company_id')
     def _compute_company(self):
         for applicant in self:
             company_id = False
-            if applicant.department_id:
+            if applicant.department_id.company_id == applicant.job_id.company_id:
                 company_id = applicant.department_id.company_id.id
             if not company_id and applicant.job_id:
                 company_id = applicant.job_id.company_id.id
             applicant.company_id = company_id or self.env.company.id
 
-    @api.depends('job_id')
+    @api.depends('job_id', 'job_id.department_id')
     def _compute_department(self):
         for applicant in self:
             applicant.department_id = applicant.job_id.department_id.id
