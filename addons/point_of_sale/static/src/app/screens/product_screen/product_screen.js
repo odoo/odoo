@@ -275,7 +275,7 @@ export class ProductScreen extends Component {
             this.pos.numpadMode = buttonValue;
             return;
         }
-        if (this.pos.selectedOrder.isRefund && buttonValue !== "Backspace") {
+        if (this.pos.getOrder().isRefund && buttonValue !== "Backspace") {
             return this.dialog.add(AlertDialog, {
                 title: _t("%s update not allowed", this.pos.numpadMode),
                 body: _t("You can not change the %s of the refund order.", this.pos.numpadMode),

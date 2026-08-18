@@ -60,11 +60,11 @@ export class Chrome extends Component {
         });
     }
 
-    sendOrderToCustomerDisplay({ selectedOrder }, currentRouterState) {
+    sendOrderToCustomerDisplay(pos, currentRouterState) {
         if (currentRouterState === "SaverScreen" || currentRouterState === "LoginScreen") {
             this.adapter.displayScreenSaver();
-        } else if (selectedOrder) {
-            this.adapter.formatOrderData(selectedOrder);
+        } else if (pos.getOrder()) {
+            this.adapter.formatOrderData(pos.getOrder());
         }
         this.adapter.setExtraData(this.getCustomerDisplayExtraData(...arguments));
         this.dispatchDebounced();
