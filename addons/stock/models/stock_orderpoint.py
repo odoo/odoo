@@ -13,7 +13,7 @@ from odoo.exceptions import RedirectWarning, UserError, ValidationError
 from odoo.modules.registry import Registry
 from odoo.fields import Domain
 from odoo.sql_db import BaseCursor
-from odoo.tools import float_compare, float_is_zero, frozendict, split_every, format_date
+from odoo.tools import float_compare, float_is_zero, frozendict, split_every, format_date, str2bool
 
 _logger = logging.getLogger(__name__)
 
@@ -802,9 +802,15 @@ class StockWarehouseOrderpoint(models.Model):
     def _get_multiple_rounded_qty(self, qty_to_order):
         replenishment_multiple = self.replenishment_uom_id or self._get_replenishment_multiple_alternative(qty_to_order)
         if replenishment_multiple:
-            # Replace the UP by DOWN if we don't want to order more quantity than product_max_qty
+            # Rounding up here can order past product_max_qty. Before qty_multiple
+            # (a plain float) was replaced by replenishment_uom_id, orderpoints already
+            # rounded down whenever a max was set, precisely to avoid that; enable the
+            # `stock.orderpoint_not_to_exceed_max` config parameter to restore it.
+            not_to_exceed_max = str2bool(self.env['ir.config_parameter'].sudo().get_param(
+                'stock.orderpoint_not_to_exceed_max', 'False'))
+            rounding_method = "DOWN" if not_to_exceed_max else "UP"
             qty_to_order = self.product_id.uom_id._compute_quantity(qty_to_order, replenishment_multiple)
-            qty_to_order = fields.Float.round(qty_to_order, precision_digits=0, rounding_method="UP")
+            qty_to_order = fields.Float.round(qty_to_order, precision_digits=0, rounding_method=rounding_method)
             qty_to_order = replenishment_multiple._compute_quantity(qty_to_order, self.product_id.uom_id)
         return qty_to_order
 
