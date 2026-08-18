@@ -22,13 +22,34 @@ JM.registerScreen("result", {
         var config = JM.config.result || {};
         var results = JM.scoring.results();
         var match = JM.dom.role("result", "match");
+        var noMatch = JM.dom.role("result", "no_match");
+        var message = JM.scoring.answerMessage();
 
-        /* Nothing to rank: no profiles configured, or nothing answered. */
+        JM.dom.show(match, !!results.length);
+        JM.dom.show(noMatch, false);
+
+        /* An answer's own message is appended under the recommendations, not in
+           place of them. It does replace the no-match screen though: someone
+           told "email us about student jobs" should not also be told that
+           nothing fits. */
+        /* One closing line for every ending, printed here and nowhere else so
+           it cannot show up twice. */
+        JM.dom.text(JM.dom.role("result", "thanks"), config.thanks_label);
+
+        var messageEl = JM.dom.role("result", "answer_message");
+        JM.dom.html(messageEl, message);
+        JM.dom.show(messageEl, !!message);
+
         if (!results.length) {
-            JM.dom.show(match, false);
+            /* Every profile ruled out by a hard requirement. Reachable with a
+               single answer, so it gets a real screen rather than a blank one. */
+            if (!message) {
+                if (JM.scoring.allEliminated()) {
+                    JM.screens.result.renderNoMatch();
+                }
+            }
             return;
         }
-        JM.dom.show(match, true);
 
         var best = results[0];
         JM.dom.text(JM.dom.role("result", "intro"),
@@ -48,6 +69,21 @@ JM.registerScreen("result", {
         }
 
         JM.screens.result.renderRunners(results.slice(1, (config.runners_count || 2) + 1));
+    },
+
+    renderNoMatch: function () {
+        var config = JM.config.result || {};
+        var cta = JM.dom.role("result", "no_match_cta");
+
+        JM.dom.show(JM.dom.role("result", "no_match"), true);
+        JM.dom.html(JM.dom.role("result", "no_match_message"),
+            config.no_match_message_html);
+
+        JM.dom.show(cta, !!config.no_match_url);
+        if (config.no_match_url) {
+            cta.setAttribute("href", config.no_match_url);
+            JM.dom.text(cta, config.no_match_cta_label || "Browse our open roles");
+        }
     },
 
     renderRunners: function (runners) {
@@ -83,6 +119,15 @@ JM.registerScreen("result", {
 
             row.appendChild(head);
             row.appendChild(meter);
+            if (runner.profile.posting_url) {
+                var link = document.createElement("a");
+                link.className = "jm_runner_cta";
+                link.setAttribute("href", runner.profile.posting_url);
+                link.setAttribute("target", "_blank");
+                link.setAttribute("rel", "noopener");
+                link.textContent = config.runner_cta_label || "See the job";
+                row.appendChild(link);
+            }
             list.appendChild(row);
         });
     },

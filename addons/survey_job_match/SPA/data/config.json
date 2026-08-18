@@ -3,7 +3,6 @@
     "description": "Answer a few quick questions and discover which Odoo role suits you best!",
     "start_label": "Start Survey",
     "progression_mode": "percent",
-
     "model": "res.partner",
     "note_field": "comment",
     "name_field": "name",
@@ -12,11 +11,15 @@
         "q_email": "email",
         "q_phone": "phone"
     },
-
     "result": {
         "best_label": "Your best match is",
         "runners_label": "Other roles you'd fit",
         "cta_label": "See the job",
-        "runners_count": 2
+        "runners_count": 2,
+        "no_match_message_html": "<p>Sorry, we don't have a role for you in our Belgian offices right now. Feel free to explore our website and look for a role in one of our international offices!</p>",
+        "no_match_cta_label": "Browse on our open roles worldwide",
+        "no_match_url": "https://www.odoo.com/jobs?all_countries=1",
+        "thanks_label": "Thanks for playing!",
+        "runner_cta_label": "See the job"
     }
 }

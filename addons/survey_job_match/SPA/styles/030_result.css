@@ -66,6 +66,42 @@
     color: var(--jm-muted);
 }
 
+/* An answer's own closing message, set apart from the recommendations above it
+   by a rule so it reads as a separate note rather than more result. */
+#jm_app .jm_answer_message {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--jm-border);
+    color: var(--jm-muted);
+}
+
+#jm_app .jm_answer_message p {
+    margin: 0 0 .5rem;
+}
+
+#jm_app .jm_answer_message a {
+    color: var(--jm-primary);
+}
+
+/* A runner's link is deliberately lighter than the best match's filled button:
+   it points somewhere without competing with the primary call to action. */
+#jm_app .jm_runner_cta {
+    display: inline-block;
+    margin-top: .25rem;
+    font-size: .875rem;
+    color: var(--jm-primary);
+    text-decoration: none;
+}
+
+#jm_app .jm_runner_cta:hover {
+    text-decoration: underline;
+}
+
+#jm_app .jm_thanks {
+    margin: 2rem 0 0;
+    font-weight: 500;
+}
+
 #jm_app .jm_status {
     margin: 1.5rem 0 0;
     font-size: .875rem;

@@ -23,11 +23,19 @@
         "required": false
     },
     {
+        "id": "q_activity",
+        "title": "Which activity did you join?",
+        "description_html": "",
+        "type": "text",
+        "required": false,
+        "placeholder": "Odoo Experience"
+    },
+    {
         "id": "q1",
         "title": "What are you looking for?",
         "description_html": "",
         "type": "simple_choice",
-        "required": false,
+        "required": true,
         "choices": [
             {
                 "id": "q1_a",
@@ -35,7 +43,9 @@
                 "eliminates": [
                     "profile_bizdev_horeca",
                     "profile_bizdev_intern",
-                    "profile_dev_intern"
+                    "profile_dev_intern",
+                    "profile_hr",
+                    "profile_marketing"
                 ]
             },
             {
@@ -80,7 +90,7 @@
         "title": "What languages can you work in?",
         "description_html": "<p>At least C1 level.</p>",
         "type": "simple_choice",
-        "required": false,
+        "required": true,
         "choices": [
             {
                 "id": "q2_a",
@@ -116,14 +126,13 @@
             },
             {
                 "id": "q2_d",
-                "label": "English & Nordic languages",
+                "label": "English & nordic languages",
                 "points": {
                     "profile_bizdev_nordic": 5
                 },
                 "eliminates": [
                     "profile_account_manager",
                     "profile_bizdev_horeca",
-                    "profile_bizdev_intern",
                     "profile_bizdev_rep",
                     "profile_business_analyst",
                     "profile_dev_intern",
@@ -136,7 +145,7 @@
             },
             {
                 "id": "q2_e",
-                "label": "English and Italian, German or Arabic",
+                "label": "English and (Italian, German or Arabic)",
                 "points": {
                     "profile_support_analyst": 3,
                     "profile_partner_manager": 3
@@ -179,7 +188,7 @@
         "title": "What do you enjoy the most?",
         "description_html": "",
         "type": "simple_choice",
-        "required": false,
+        "required": true,
         "choices": [
             {
                 "id": "q3_a",
@@ -217,10 +226,15 @@
             },
             {
                 "id": "q3_d",
-                "label": "Following up on clients/partners and building long-term relationships",
+                "label": "Following up on clients/ partners and build long term relationships",
                 "points": {
                     "profile_account_manager": 3,
-                    "profile_partner_manager": 3
+                    "profile_partner_manager": 3,
+                    "profile_bizdev_rep": 1,
+                    "profile_bizdev_nordic": 1,
+                    "profile_bizdev_horeca": 1,
+                    "profile_bizdev_intern": 1,
+                    "profile_business_analyst": 1
                 }
             }
         ]
@@ -230,7 +244,7 @@
         "title": "What task would you love?",
         "description_html": "",
         "type": "simple_choice",
-        "required": false,
+        "required": true,
         "choices": [
             {
                 "id": "q4_a",
@@ -290,7 +304,7 @@
             },
             {
                 "id": "q4_g",
-                "label": "Analysing a business flow and advising the right steps to take",
+                "label": "Analyse a business flow and advise the right steps to take",
                 "points": {
                     "profile_bizdev_rep": 2,
                     "profile_bizdev_nordic": 2,
@@ -306,7 +320,7 @@
         "title": "How do you prefer to work?",
         "description_html": "",
         "type": "simple_choice",
-        "required": false,
+        "required": true,
         "choices": [
             {
                 "id": "q5_a",
@@ -356,10 +370,10 @@
     },
     {
         "id": "q6",
-        "title": "How would your family/friends describe you?",
+        "title": "Personality traits - how would your family/ friends describe you:",
         "description_html": "",
         "type": "simple_choice",
-        "required": false,
+        "required": true,
         "choices": [
             {
                 "id": "q6_a",
