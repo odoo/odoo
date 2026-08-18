@@ -455,3 +455,34 @@ class TestArManual(common.TestArCommon):
         })
         debit_note_wizard.create_debit()
         self.assertTrue(invoice.reversal_move_ids.debit_note_ids)
+
+    def test_foreign_partner_without_expo_journal(self):
+        """ Test that if there is no active export journal, creating an invoice for a foreign partner doesn't
+        block the user but set a regular (non-expo) sales journal and default the document type to Invoice B."""
+
+        expo_journals = self.env['account.journal'].search([
+            ('company_id', '=', self.company_ri.id),
+            ('type', '=', 'sale'),
+            ('l10n_ar_afip_pos_system', 'in', ['FEERCEL', 'FEEWS', 'FEERCELP']),
+        ])
+        draft_moves_on_expo_journals = self.env['account.move'].search([
+            ('journal_id', 'in', expo_journals.ids),
+            ('state', '=', 'draft'),
+        ])
+        draft_moves_on_expo_journals.unlink()
+        expo_journals.write({'active': False})
+
+        with Form(self.env['account.move'].with_context(default_move_type='out_invoice')) as invoice_form:
+            invoice_form.partner_id = self.res_partner_barcelona_food
+            with invoice_form.invoice_line_ids.new() as line_form:
+                line_form.product_id = self.product_iva_21
+        invoice = invoice_form.save()
+
+        self.assertEqual(
+            invoice.journal_id, self.journal,
+            'Journal should stay on a regular (non-expo) sales journal since there is no export journal available',
+        )
+        self.assertEqual(
+            invoice.l10n_latam_document_type_id, self.document_type['invoice_b'],
+            'Document type should default to Invoice B when no export journal is available',
+        )
