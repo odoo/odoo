@@ -15,7 +15,10 @@ export class SaleOrderTemplateLineListRenderer extends SectionAndNoteListRendere
     setup() {
         super.setup();
         this.copyFields.push('is_optional');
-        useSubEnv({ adjustSectionQuantities: this.adjustSectionQuantities.bind(this) });
+        useSubEnv({
+            adjustSectionQuantities: this.adjustSectionQuantities.bind(this),
+            shouldCollapse: this.shouldCollapse.bind(this),
+        });
     }
 
     get sectionColumns() {
@@ -191,7 +194,7 @@ export class SaleOrderTemplateLineListRenderer extends SectionAndNoteListRendere
 
     getRowClass(record) {
         let rowClasses = super.getRowClass(record);
-        if (this.shouldCollapse(record, 'is_optional')) {
+        if (this.shouldCollapse(record, 'is_optional', true)) {
             rowClasses += ' text-primary';
         }
         return rowClasses;

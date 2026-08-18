@@ -112,6 +112,18 @@ class SaleOrderLine(models.Model):
             "collapse_prices": self.collapse_prices,
             "section_qty": self.section_qty,
             "section_uom_id": self.section_uom_id.id,
+            "product_no_variant_attribute_value_ids": [
+                Command.set(self.product_no_variant_attribute_value_ids.ids)
+            ],
+            "product_custom_attribute_value_ids": [
+                Command.create({
+                    "custom_product_template_attribute_value_id": (
+                        pacv.custom_product_template_attribute_value_id.id
+                    ),
+                    "custom_value": pacv.custom_value,
+                })
+                for pacv in self.product_custom_attribute_value_ids
+            ],
         }
 
         if not self.product_id:
