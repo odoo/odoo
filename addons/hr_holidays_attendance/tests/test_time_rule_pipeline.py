@@ -925,6 +925,320 @@ class TestTimeRulePipeline(TransactionCase):
         self.assertAlmostEqual(allocation.number_of_days, 0.375, places=5,
                                msg="6h * 50% / 8h/day = 0.375 compensatory days")
 
+    def test_allocation_no_wet_rule(self):
+        """Allocate-only rule (no work_entry_type_id) must still create an allocation for excess hours.
+
+        Saturday attendance: 4h, schedule=0h -> all 4h is excess.
+        Rule: no output WET, 100% allocation rate.
+        Expected: 4h * 100% / 8h_per_day = 0.5 compensatory days allocated.
+        """
+        comp_type = self.env['hr.work.entry.type'].create({
+            'name': 'Comp No WET',
+            'code': 'COMPNOWET',
+            'requires_allocation': True,
+            'time_off_selectable': True,
+            'leave_validation_type': 'no_validation',
+        })
+        self.time_rule.write({
+            'work_entry_type_id': False,
+            'leave_compensation_rate': 1.0,
+            'allocation_type_id': comp_type.id,
+        })
+        # Saturday: 0h scheduled -> all 4h are excess
+        self.env['hr.attendance'].create({
+            'employee_id': self.cal_emp.id,
+            'check_in': datetime(2022, 12, 10, 10),   # Saturday
+            'check_out': datetime(2022, 12, 10, 14),   # 4h
+        })
+        allocation = self.env['hr.leave.allocation'].sudo().search([
+            ('employee_id', '=', self.cal_emp.id),
+            ('work_entry_type_id', '=', comp_type.id),
+        ])
+        self.assertEqual(len(allocation), 1,
+                         "Allocation should be created for an allocate-only rule with no output WET")
+        self.assertAlmostEqual(
+            allocation.number_of_days, 0.5, places=5,
+            msg="4h excess * 100% / 8h/day = 0.5 comp days",
+        )
+
+    def test_allocation_inplace_update(self):
+        """Allocation must be created even when the source record is updated in-place (whole source is excess).
+
+        Saturday attendance: 6h, schedule=0h -> all 6h is excess.
+        The source is repurposed in-place as the OT record (no child output created).
+        Rule: output WET=OT, 100% allocation rate.
+        Expected: 6h * 100% / 8h/day = 0.75 compensatory days allocated.
+        """
+        comp_type = self.env['hr.work.entry.type'].create({
+            'name': 'Comp Inplace',
+            'code': 'COMPINPL',
+            'requires_allocation': True,
+            'time_off_selectable': True,
+            'leave_validation_type': 'no_validation',
+        })
+        self.time_rule.write({
+            'leave_compensation_rate': 1.0,
+            'allocation_type_id': comp_type.id,
+        })
+        # Saturday: 0h scheduled -> all 6h excess -> source repurposed in-place as OT
+        att = self.env['hr.attendance'].create({
+            'employee_id': self.cal_emp.id,
+            'check_in': datetime(2022, 12, 10, 10),   # Saturday
+            'check_out': datetime(2022, 12, 10, 16),   # 6h
+        })
+        att.invalidate_recordset()
+        self.assertEqual(att.work_entry_type_id, self.overtime_type,
+                         "Source should be repurposed in-place as OT (prerequisite)")
+        self.assertFalse(att.overtime_attendance_ids,
+                         "No child outputs; source IS the OT record (in-place update)")
+
+        allocation = self.env['hr.leave.allocation'].sudo().search([
+            ('employee_id', '=', self.cal_emp.id),
+            ('work_entry_type_id', '=', comp_type.id),
+        ])
+        self.assertEqual(len(allocation), 1,
+                         "Allocation must be created even when source is updated in-place")
+        self.assertAlmostEqual(
+            allocation.number_of_days, 0.75, places=5,
+            msg="6h excess * 100% / 8h/day = 0.75 comp days",
+        )
+
+    def test_fixed_threshold_attendance_alloc_only(self):
+        """Allocate-only rule with fixed 2h/day threshold: 3h attendance -> 1h excess -> 0.125d allocated.
+
+        Exercises the code path where:
+        - working_hours_mode='day' (expected_hours=2, no calendar source)
+        - rule has no work_entry_type_id (allocate-only)
+        - threshold is evaluated (Fix C: no early-exit for has_threshold=True)
+        - excess interval keeps source WET (Fix D)
+        - pp-only path in _apply_output records the excess for allocation (Fix A)
+        """
+        comp_type = self.env['hr.work.entry.type'].create({
+            'name': 'Comp Fixed Att',
+            'code': 'CFATT',
+            'requires_allocation': True,
+            'time_off_selectable': True,
+            'leave_validation_type': 'no_validation',
+        })
+        self.time_rule.write({
+            'work_entry_type_id': False,
+            'working_hours_mode': 'day',
+            'expected_hours': 2.0,
+            'leave_compensation_rate': 1.0,
+            'allocation_type_id': comp_type.id,
+        })
+        # monday 8h-11h: 3h worked, 2h fixed threshold -> 1h excess
+        self.env['hr.attendance'].create({
+            'employee_id': self.cal_emp.id,
+            'check_in': datetime(2022, 12, 12, 8),
+            'check_out': datetime(2022, 12, 12, 11),
+        })
+        allocation = self.env['hr.leave.allocation'].sudo().search([
+            ('employee_id', '=', self.cal_emp.id),
+            ('work_entry_type_id', '=', comp_type.id),
+        ])
+        self.assertEqual(len(allocation), 1,
+                         "Allocation must be created for allocate-only rule with fixed threshold")
+        self.assertAlmostEqual(
+            allocation.number_of_days, 0.125, places=5,
+            msg="1h excess * 100% / 8h/day = 0.125 comp days",
+        )
+
+    def test_fixed_threshold_attendance_alloc_with_premium_pay(self):
+        """Fixed 2h/day threshold: 3h attendance -> 1h excess reclassified to premium OT + allocation.
+
+        'Premium pay' variant: the rule has both a WET (OT at 1.5x rate) and an allocation,
+        so the excess hours are simultaneously reclassified and compensated with leave days.
+        """
+        premium_type = self.env['hr.work.entry.type'].create({
+            'name': 'Premium OT 150%',
+            'code': 'OT150',
+            'count_as': 'working_time',
+            'amount_rate': 1.5,
+        })
+        comp_type = self.env['hr.work.entry.type'].create({
+            'name': 'Comp Premium',
+            'code': 'CPPREM',
+            'requires_allocation': True,
+            'time_off_selectable': True,
+            'leave_validation_type': 'no_validation',
+        })
+        self.time_rule.write({
+            'work_entry_type_id': premium_type.id,
+            'working_hours_mode': 'day',
+            'expected_hours': 2.0,
+            'leave_compensation_rate': 0.5,
+            'allocation_type_id': comp_type.id,
+        })
+        # monday 8h-11h: 3h worked, 2h threshold -> 1h excess -> premium OT output + 0.0625d
+        att = self.env['hr.attendance'].create({
+            'employee_id': self.cal_emp.id,
+            'check_in': datetime(2022, 12, 12, 8),
+            'check_out': datetime(2022, 12, 12, 11),
+        })
+        att.invalidate_recordset()
+        # 1h of the attendance should be reclassified to premium OT
+        ot_output = att.overtime_attendance_ids
+        self.assertEqual(len(ot_output), 1, "1h excess must produce one OT child record")
+        self.assertAlmostEqual(
+            (ot_output.check_out - ot_output.check_in).total_seconds() / 3600, 1.0, places=5,
+            msg="OT output must be exactly 1h",
+        )
+        self.assertEqual(ot_output.work_entry_type_id, premium_type,
+                         "Excess classified to the premium OT type")
+        allocation = self.env['hr.leave.allocation'].sudo().search([
+            ('employee_id', '=', self.cal_emp.id),
+            ('work_entry_type_id', '=', comp_type.id),
+        ])
+        self.assertEqual(len(allocation), 1,
+                         "Allocation must also be created alongside premium pay reclassification")
+        self.assertAlmostEqual(
+            allocation.number_of_days, 0.0625, places=5,
+            msg="1h excess * 50% / 8h/day = 0.0625 comp days",
+        )
+
+    def test_overlapping_rules_both_alloc_first_rule_credited(self):
+        """When R2 (output WET) reclassifies intervals already tagged by R1 (allocate-only),
+        R1's allocation credit must NOT be dropped.
+
+        R1: allocate-only (no WET, no threshold) -> tags all Saturday intervals, WET preserved.
+        R2: output WET=OT, no threshold, condition=[att_type] -> reclassifies R1's intervals.
+
+        Before fix: R2 overwrote cls_rule=R1 -> R1 allocation silently lost.
+        After fix:  orphaned credit for R1 is preserved and included in excess_alloc.
+
+        Expected: ALLOC_R1 and ALLOC_R2 each created for 6h (0.375d at 50%).
+        """
+        alloc_r1 = self.env['hr.work.entry.type'].create({
+            'name': 'Rest R1', 'code': 'RSTR1',
+            'requires_allocation': True, 'time_off_selectable': True,
+            'leave_validation_type': 'no_validation',
+        })
+        alloc_r2 = self.env['hr.work.entry.type'].create({
+            'name': 'Rest R2', 'code': 'RSTR2',
+            'requires_allocation': True, 'time_off_selectable': True,
+            'leave_validation_type': 'no_validation',
+        })
+        ot_r2 = self.env['hr.work.entry.type'].create({'name': 'OT R2', 'code': 'OTR2'})
+
+        self.time_rule.active = False
+
+        # R1: allocate-only (no WET), Saturday all-day, no threshold
+        self.env['hr.time.rule'].create({
+            'name': 'R1 Saturday Alloc-Only',
+            'sequence': 10,
+            'apply_monday': False, 'apply_tuesday': False, 'apply_wednesday': False,
+            'apply_thursday': False, 'apply_friday': False,
+            'apply_saturday': True, 'apply_sunday': False,
+            'work_entry_type_id': False,
+            'leave_compensation_rate': 0.5,
+            'allocation_type_id': alloc_r1.id,
+            'condition_work_entry_type_ids': [self.att_type.id],
+        })
+        # R2: output WET, Saturday all-day, no threshold, same condition
+        self.env['hr.time.rule'].create({
+            'name': 'R2 Saturday OT',
+            'sequence': 20,
+            'apply_monday': False, 'apply_tuesday': False, 'apply_wednesday': False,
+            'apply_thursday': False, 'apply_friday': False,
+            'apply_saturday': True, 'apply_sunday': False,
+            'work_entry_type_id': ot_r2.id,
+            'leave_compensation_rate': 0.5,
+            'allocation_type_id': alloc_r2.id,
+            'condition_work_entry_type_ids': [self.att_type.id],
+        })
+        # 6h Saturday: both R1 and R2 claim all 6h -> both should allocate 0.375d
+        self.env['hr.attendance'].create({
+            'employee_id': self.cal_emp.id,
+            'check_in': datetime(2022, 12, 10, 10),   # Saturday
+            'check_out': datetime(2022, 12, 10, 16),   # 6h
+        })
+        found_r1 = self.env['hr.leave.allocation'].sudo().search([
+            ('employee_id', '=', self.cal_emp.id),
+            ('work_entry_type_id', '=', alloc_r1.id),
+        ])
+        found_r2 = self.env['hr.leave.allocation'].sudo().search([
+            ('employee_id', '=', self.cal_emp.id),
+            ('work_entry_type_id', '=', alloc_r2.id),
+        ])
+        self.assertEqual(len(found_r1), 1,
+                         "R1 allocation must survive even though R2 reclassifies R1's intervals")
+        self.assertEqual(len(found_r2), 1, "R2 allocation must be created")
+        self.assertAlmostEqual(found_r1.number_of_days, 0.375, places=5,
+                               msg="R1: 6h * 50% / 8h/day = 0.375 days")
+        self.assertAlmostEqual(found_r2.number_of_days, 0.375, places=5,
+                               msg="R2: 6h * 50% / 8h/day = 0.375 days")
+
+    def test_overlapping_rules_r2_targets_r1_wet_alloc(self):
+        """When R2 conditions on R1's output WET and both have allocation, R1 must still be credited.
+
+        R1: output WET=SAT_TYPE, no threshold, condition=[att], allocation=ALLOC_R1.
+        R2: output WET=OVER_TYPE, no threshold, condition=[SAT_TYPE], allocation=ALLOC_R2.
+
+        R2 reclassifies R1's SAT_TYPE intervals -> R1's allocation credit was previously lost.
+
+        Expected: ALLOC_R1 and ALLOC_R2 each allocated for 4h (0.25d at 50%).
+        """
+        sat_type = self.env['hr.work.entry.type'].create({'name': 'Saturday', 'code': 'SAT'})
+        over_type = self.env['hr.work.entry.type'].create({'name': 'Override', 'code': 'OVER'})
+        alloc_r1 = self.env['hr.work.entry.type'].create({
+            'name': 'Rest SAT', 'code': 'RSAT',
+            'requires_allocation': True, 'time_off_selectable': True,
+            'leave_validation_type': 'no_validation',
+        })
+        alloc_r2 = self.env['hr.work.entry.type'].create({
+            'name': 'Rest OVER', 'code': 'ROVER',
+            'requires_allocation': True, 'time_off_selectable': True,
+            'leave_validation_type': 'no_validation',
+        })
+        self.time_rule.active = False
+
+        # R1: matches att_type -> outputs SAT_TYPE for all Saturday time
+        self.env['hr.time.rule'].create({
+            'name': 'R1 Saturday',
+            'sequence': 10,
+            'apply_monday': False, 'apply_tuesday': False, 'apply_wednesday': False,
+            'apply_thursday': False, 'apply_friday': False,
+            'apply_saturday': True, 'apply_sunday': False,
+            'work_entry_type_id': sat_type.id,
+            'leave_compensation_rate': 0.5,
+            'allocation_type_id': alloc_r1.id,
+            'condition_work_entry_type_ids': [self.att_type.id],
+        })
+        # R2: matches SAT_TYPE (R1's output) -> outputs OVER_TYPE for all of it
+        self.env['hr.time.rule'].create({
+            'name': 'R2 Saturday Override',
+            'sequence': 20,
+            'apply_monday': False, 'apply_tuesday': False, 'apply_wednesday': False,
+            'apply_thursday': False, 'apply_friday': False,
+            'apply_saturday': True, 'apply_sunday': False,
+            'work_entry_type_id': over_type.id,
+            'leave_compensation_rate': 0.5,
+            'allocation_type_id': alloc_r2.id,
+            'condition_work_entry_type_ids': [sat_type.id],
+        })
+        # 4h Saturday attendance -> R1 claims all 4h, R2 reclassifies all 4h
+        self.env['hr.attendance'].create({
+            'employee_id': self.cal_emp.id,
+            'check_in': datetime(2022, 12, 10, 10),   # Saturday
+            'check_out': datetime(2022, 12, 10, 14),   # 4h
+        })
+        found_r1 = self.env['hr.leave.allocation'].sudo().search([
+            ('employee_id', '=', self.cal_emp.id),
+            ('work_entry_type_id', '=', alloc_r1.id),
+        ])
+        found_r2 = self.env['hr.leave.allocation'].sudo().search([
+            ('employee_id', '=', self.cal_emp.id),
+            ('work_entry_type_id', '=', alloc_r2.id),
+        ])
+        self.assertEqual(len(found_r1), 1,
+                         "R1 allocation must survive even though R2 reclassifies R1's WET output")
+        self.assertEqual(len(found_r2), 1, "R2 allocation must be created")
+        self.assertAlmostEqual(found_r1.number_of_days, 0.25, places=5,
+                               msg="R1: 4h * 50% / 8h/day = 0.25 days")
+        self.assertAlmostEqual(found_r2.number_of_days, 0.25, places=5,
+                               msg="R2: 4h * 50% / 8h/day = 0.25 days")
+
     def test_employee_domain_filters_rule(self):
 
         self.time_rule.employee_domain = f"[('id', '=', {self.cal_emp.id})]"
@@ -2377,6 +2691,87 @@ class TestTimeRulePipelineLeaves(TransactionCase):
         try:
             leave = self._make_leave(datetime(2022, 12, 12, 8), datetime(2022, 12, 12, 14))  # 6h past
             self.assertTrue(self._outputs(leave), "Past leave with less_than rule must produce output")
+        finally:
+            rule.write({'active': False})
+
+    def test_fixed_threshold_leave_alloc_only(self):
+        """Allocate-only rule (no WET) with fixed 2h/day threshold: 3h leave -> 1h excess -> 0.125d allocated."""
+        comp_type = self.env['hr.work.entry.type'].create({
+            'name': 'Comp Fixed Leave',
+            'code': 'CFLV',
+            'requires_allocation': True,
+            'time_off_selectable': True,
+            'leave_validation_type': 'no_validation',
+        })
+        rule = self.env['hr.time.rule'].create({
+            'name': 'Alloc-only 2h/day leave',
+            'working_hours_mode': 'day',
+            'threshold_operator': 'exceed',
+            'expected_hours': 2.0,
+            'work_entry_type_id': False,
+            'condition_work_entry_type_ids': [self.src_type.id],
+            'leave_compensation_rate': 1.0,
+            'allocation_type_id': comp_type.id,
+        })
+        try:
+            # 3h past leave: 2h fixed threshold -> 1h excess -> 0.125d allocated
+            self._make_leave(datetime(2022, 12, 12, 8), datetime(2022, 12, 12, 11))
+            allocation = self.env['hr.leave.allocation'].sudo().search([
+                ('employee_id', '=', self.emp.id),
+                ('work_entry_type_id', '=', comp_type.id),
+            ])
+            self.assertEqual(len(allocation), 1,
+                             "Allocation must be created for allocate-only leave rule with fixed threshold")
+            self.assertAlmostEqual(
+                allocation.number_of_days, 0.125, places=5,
+                msg="1h excess * 100% / 8h/day = 0.125 comp days",
+            )
+        finally:
+            rule.write({'active': False})
+
+    def test_fixed_threshold_leave_alloc_with_premium_pay(self):
+        """Fixed 2h/day leave rule: 3h leave -> 1h excess reclassified to output type + allocation.
+
+        Premium pay variant for leaves: rule has both a WET (out_type) and an allocation_type_id.
+        """
+        comp_type = self.env['hr.work.entry.type'].create({
+            'name': 'Comp Leave Premium',
+            'code': 'CLPREM',
+            'requires_allocation': True,
+            'time_off_selectable': True,
+            'leave_validation_type': 'no_validation',
+        })
+        rule = self.env['hr.time.rule'].create({
+            'name': 'OT+Alloc 2h/day leave',
+            'working_hours_mode': 'day',
+            'threshold_operator': 'exceed',
+            'expected_hours': 2.0,
+            'work_entry_type_id': self.out_type.id,
+            'condition_work_entry_type_ids': [self.src_type.id],
+            'leave_compensation_rate': 0.5,
+            'allocation_type_id': comp_type.id,
+        })
+        try:
+            # 3h past leave: 2h threshold -> 1h excess -> output leave created + 0.0625d allocated
+            source = self._make_leave(datetime(2022, 12, 12, 8), datetime(2022, 12, 12, 11))
+            outputs = self._outputs(source)
+            self.assertEqual(len(outputs), 1, "1h excess must produce one output leave")
+            self.assertAlmostEqual(
+                (outputs.date_to - outputs.date_from).total_seconds() / 3600, 1.0, places=5,
+                msg="Output leave must span exactly 1h",
+            )
+            self.assertEqual(outputs.work_entry_type_id, self.out_type,
+                             "Output leave classified to out_type (premium pay WET)")
+            allocation = self.env['hr.leave.allocation'].sudo().search([
+                ('employee_id', '=', self.emp.id),
+                ('work_entry_type_id', '=', comp_type.id),
+            ])
+            self.assertEqual(len(allocation), 1,
+                             "Allocation must be created alongside the output leave")
+            self.assertAlmostEqual(
+                allocation.number_of_days, 0.0625, places=5,
+                msg="1h excess * 50% / 8h/day = 0.0625 comp days",
+            )
         finally:
             rule.write({'active': False})
 

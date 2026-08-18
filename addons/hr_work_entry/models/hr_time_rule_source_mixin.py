@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import logging
 from collections import defaultdict
 from datetime import date, datetime, time, timedelta, UTC
 from zoneinfo import ZoneInfo
@@ -8,6 +9,8 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import api, models
 from odoo.tools.intervals import Intervals
+
+_logger = logging.getLogger(__name__)
 
 
 class HrTimeRuleSourceMixin(models.AbstractModel):
@@ -125,7 +128,15 @@ class HrTimeRuleSourceMixin(models.AbstractModel):
             employee_rs = self.env['hr.employee'].browse([e.id for e in employees])
             sources = self._get_source_records_for_time_rules(start_dt, end_dt, employee_rs)
             if not sources:
+                _logger.warning(
+                    "time rule collect: no %s source records found in [%s, %s] for employees %s",
+                    self._name, start_dt.date(), end_dt.date(), employee_rs.mapped('name'),
+                )
                 continue
+            _logger.warning(
+                "time rule collect: %d %s source record(s) %s in [%s, %s]",
+                len(sources), self._name, sources.ids, start_dt.date(), end_dt.date(),
+            )
 
             excess, deficit, active_iv = rules._evaluate_rules(sources, start_dt, end_dt)
 
@@ -182,6 +193,10 @@ class HrTimeRuleSourceMixin(models.AbstractModel):
                 ('company_id', 'in', self.env.companies.ids),
         ])
         if not rules:
+            _logger.warning(
+                "time rule process skipped: no active rules for companies %s (period=%s operator=%s)",
+                self.env.companies.mapped('name'), rule_period, rule_operator,
+            )
             return
 
         if rule_operator:
@@ -198,7 +213,17 @@ class HrTimeRuleSourceMixin(models.AbstractModel):
             week_rules = rules.filtered(lambda r: r.quantity_period == 'week')
 
         if not day_rules and not week_rules:
+            _logger.warning(
+                "time rule process skipped: no matching rules after period/operator filter "
+                "(period=%s operator=%s from %d total active rules)",
+                rule_period, rule_operator, len(rules),
+            )
             return
+        _logger.warning(
+            "time rule process: %d day-rule(s) + %d week-rule(s) for %d employee range(s) "
+            "(period=%s operator=%s)",
+            len(day_rules), len(week_rules), len(affected), rule_period, rule_operator,
+        )
 
         day_rules_ranges = defaultdict(lambda: [None, None])
         for employee, date_from, date_to in affected:
@@ -234,9 +259,19 @@ class HrTimeRuleSourceMixin(models.AbstractModel):
         ]
         domain.extend(self._get_source_extra_fields_domain())
         validated = self.filtered_domain(domain)
+        skipped = self - validated
+        if skipped:
+            _logger.warning(
+                "time rule trigger skipped for %d %s record(s) %s (failed domain filter %s)",
+                len(skipped), self._name, skipped.ids, domain,
+            )
         if not validated:
             return
         assert 'employee_id' in self._fields
+        _logger.warning(
+            "time rule trigger: %d %s record(s) %s → building affected list",
+            len(validated), self._name, validated.ids,
+        )
         self._trigger_time_rules_for_affected([(r.employee_id, r[r._time_rule_span_start_field], r[r._time_rule_span_end_field]) for r in validated])
 
     def _trigger_time_rules_for_affected(self, affected):
@@ -249,10 +284,14 @@ class HrTimeRuleSourceMixin(models.AbstractModel):
         def to_date(dt):
             return dt.date() if hasattr(dt, 'date') else dt
         past_day = [(e, df, dt) for e, df, dt in affected if to_date(dt) < today]
-        today = [(e, df, dt) for e, df, dt in affected if to_date(dt) >= today]
+        today_list = [(e, df, dt) for e, df, dt in affected if to_date(dt) >= today]
         past_week = [(e, df, dt) for e, df, dt in affected if to_date(dt) < latest_monday]
+        _logger.warning(
+            "time rule affected split: %d past-day, %d current/future (exceed-only), %d past-week",
+            len(past_day), len(today_list), len(past_week),
+        )
         self._process_time_rules_for(past_day, rule_period='day')
-        self._process_time_rules_for(today, rule_period='day', rule_operator='exceed')
+        self._process_time_rules_for(today_list, rule_period='day', rule_operator='exceed')
         self._process_time_rules_for(past_week, rule_period='week')
 
     def write(self, vals):
