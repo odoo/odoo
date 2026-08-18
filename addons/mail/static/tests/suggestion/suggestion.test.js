@@ -12,9 +12,11 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { beforeEach, describe, test } from "@odoo/hoot";
 import { Deferred, tick } from "@odoo/hoot-mock";
+import { onWillUpdateProps } from "@odoo/owl";
 import { Command, onRpc, patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
 
 import { Composer } from "@mail/core/common/composer";
+import { ImStatus } from "@mail/core/common/im_status";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -174,6 +176,43 @@ test("select @ mention insert mention text in composer", async () => {
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "@");
     await click(".o-mail-Composer-suggestion strong", { text: "TestPartner" });
+    await contains(".o-mail-Composer-input", { value: "@TestPartner " });
+});
+
+test("select @ mention from the suggestion list being filtered", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({
+        email: "testpartner@odoo.com",
+        name: "TestPartner",
+    });
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "general",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+    });
+    const filtering = new Deferred();
+    const listRendered = new Deferred();
+    patchWithCleanup(ImStatus.prototype, {
+        setup() {
+            super.setup();
+            // Simulate a slow render, keeping the previous search on screen.
+            onWillUpdateProps(() => {
+                filtering.resolve();
+                return listRendered;
+            });
+        },
+    });
+    await start();
+    await openDiscuss(channelId);
+    await insertText(".o-mail-Composer-input", "@");
+    await contains(".o-mail-Composer-suggestion", { count: 2 });
+    await insertText(".o-mail-Composer-input", "Test");
+    await filtering;
+    await contains(".o-mail-Composer-suggestion", { count: 2 });
+    await click(".o-mail-Composer-suggestion strong", { text: "TestPartner" });
+    listRendered.resolve();
     await contains(".o-mail-Composer-input", { value: "@TestPartner " });
 });
 
