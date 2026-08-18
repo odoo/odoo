@@ -1,5 +1,4 @@
 import { AvatarStack } from "@mail/discuss/core/common/avatar_stack";
-import { isToday } from "@mail/utils/common/dates";
 import { htmlToTextContentInline } from "@mail/utils/common/format";
 import { propComputed } from "@mail/utils/common/hooks";
 
@@ -7,8 +6,6 @@ import { Component, t, useProps } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
-
-const { DateTime } = luxon;
 
 /** @param {import("models").Store} store */
 export const subChannelPreviewOnClickType = (store) =>
@@ -30,13 +27,6 @@ export class SubChannelPreview extends Component {
             "onClick",
             subChannelPreviewOnClickType(this.store).optional()
         );
-    }
-
-    dateText(message) {
-        if (isToday(message.datetime)) {
-            return message.datetime?.toLocaleString(DateTime.TIME_SIMPLE);
-        }
-        return message.datetime?.toLocaleString(DateTime.DATE_MED);
     }
 
     bodyText(message) {

@@ -1,6 +1,5 @@
 import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
 import { MessageSeenIndicator } from "@mail/discuss/core/common/message_seen_indicator";
-import { isToday } from "@mail/utils/common/dates";
 import { useHover } from "@mail/utils/common/hooks";
 import { useSubEnv } from "@web/owl2/utils";
 
@@ -23,7 +22,6 @@ export class NotificationItem extends Component {
 
     setup() {
         super.setup();
-        this.isToday = isToday;
         this.DateTime = DateTime;
         this.ui = useService("ui");
         this.store = useService("mail.store");
@@ -55,10 +53,14 @@ export class NotificationItem extends Component {
     }
 
     get dateText() {
-        if (isToday(this.props.datetime)) {
+        if (!this.props.datetime) {
+            return "";
+        }
+        const now = DateTime.now();
+        if (this.props.datetime?.hasSame(now, "day")) {
             return this.props.datetime?.toLocaleString(DateTime.TIME_SIMPLE);
         }
-        if (this.props.datetime?.year === DateTime.now().year) {
+        if (this.props.datetime?.hasSame(now, "year")) {
             return this.props.datetime?.toLocaleString({ month: "short", day: "numeric" });
         }
         return this.props.datetime?.toLocaleString(DateTime.DATE_MED);
