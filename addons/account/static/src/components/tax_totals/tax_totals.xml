@@ -4,6 +4,12 @@
     <t t-name="account.TaxGroupComponent">
         <tr>
             <td class="o_td_label">
+                <i t-if="this.props.removeCashRounding"
+                    class="oi oi-filled o_cash_rounding_button me-2"
+                    data-icon="autorenew"
+                    role="button"
+                    title="Remove Rounding Method"
+                    t-on-click="this.props.removeCashRounding"/>
                 <label class="o_form_label o_tax_total_label" t-out="this.props.taxGroup.group_name"/>
             </td>
 
@@ -40,6 +46,7 @@
 
     <t t-name="account.TaxTotalsField">
         <t t-set="totals" t-value="this.totals()"/>
+        <t t-set="taxGroupWithRoundingAmount" t-value="this.taxGroupWithRoundingAmount()"/>
         <table t-if="totals" class="float-end text-end">
             <tbody>
                 <t t-foreach="totals.subtotals" t-as="subtotal" t-key="subtotal_index">
@@ -64,12 +71,20 @@
                             isReadonly="this.readonly"
                             onChangeTaxGroup.bind="this._onChangeTaxValueByTaxGroup"
                             invalidate.bind="this.invalidate"
+                            removeCashRounding="(this.showCashRounding &amp;&amp; taxGroup === taxGroupWithRoundingAmount) ? this.removeCashRounding.bind(this) : undefined"
                         />
                     </t>
                 </t>
 
                 <tr t-if="'cash_rounding_base_amount_currency' in totals">
                     <td class="o_td_label">
+                        <i
+                            t-if="this.showCashRounding"
+                            class="oi o_cash_rounding_button me-2"
+                            data-icon="delete"
+                            role="button"
+                            title="Remove Rounding Method"
+                            t-on-click="this.removeCashRounding"/>
                         <label class="o_form_label o_tax_total_label">Rounding</label>
                     </td>
                     <td class="o_list_monetary">
@@ -83,6 +98,12 @@
                 <!-- Total amount with all taxes-->
                 <tr>
                     <td class="o_td_label">
+                        <i t-if="this.showCashRounding"
+                            class="oi oi-filled o_cash_rounding_button me-2"
+                            data-icon="calculate"
+                            role="button"
+                            title="Select Rounding Method"
+                            t-on-click="(ev) => this.openCashRoundingDropdown(ev.currentTarget)"/>
                         <label class="o_form_label o_tax_total_label">Total</label>
                     </td>
 

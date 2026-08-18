@@ -3,10 +3,18 @@ import { formatFloat } from "@web/core/utils/numbers";
 import { parseFloat } from "@web/views/fields/parsers";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { registry } from "@web/core/registry";
+import { _t } from "@web/core/l10n/translation";
+import { user } from "@web/core/user";
+import { useService } from "@web/core/utils/hooks";
+import { usePopover } from "@web/core/popover/popover_hook";
+import { DropdownPopover } from "@web/core/dropdown/_behaviours/dropdown_popover";
+import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
+import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
 import {
     Component,
     computed,
     onPatched,
+    onWillStart,
     signal,
     toRaw,
     proxy,
@@ -25,6 +33,7 @@ class TaxGroupComponent extends Component {
         onChangeTaxGroup: { optional: true },
         isReadonly: Boolean,
         invalidate: Function,
+        removeCashRounding: { type: Function, optional: true },
     };
     static template = "account.TaxGroupComponent";
 
@@ -139,6 +148,128 @@ export class TaxTotalsComponent extends Component {
     };
 
     totals = computed(() => this.formatData(this.props));
+
+    taxGroupWithRoundingAmount = computed(() => {
+        const totals = this.totals();
+        if (!totals || !this.props.record.data.has_biggest_tax_cash_rounding_line) {
+            return;
+        }
+        const taxGroups = totals.subtotals?.flatMap((subtotal) => subtotal.tax_groups);
+        if (taxGroups?.length) {
+            return taxGroups.reduce((a, b) =>
+                b.tax_amount_currency > a.tax_amount_currency ? b : a
+            );
+        }
+    });
+
+    setup() {
+        this.orm = useService("orm");
+        this.dialogService = useService("dialog");
+        this.cashRoundingDropdown = usePopover(DropdownPopover, {
+            popoverClass: "o-dropdown--menu dropdown-menu o_cash_rounding_dropdown",
+            position: "left-middle",
+            role: "menu",
+        });
+        this.groupCashRounding = false;
+
+        onWillStart(async () => {
+            this.groupCashRounding = await user.hasGroup("account.group_cash_rounding");
+        });
+    }
+
+    //--------------------------------------------------------------------------
+    // Cash rounding
+    //--------------------------------------------------------------------------
+
+    get showCashRounding() {
+        const move = this.props.record.data;
+        return (
+            this.groupCashRounding && move.move_type.startsWith("out_") && move.state === "draft"
+        );
+    }
+
+    isCashRoundingSelected(cashRoundingId) {
+        return cashRoundingId === this.props.record.data.invoice_cash_rounding_id.id;
+    }
+
+    setCashRounding(cashRoundingId) {
+        this.cashRoundingDropdown.close();
+        this.props.record.update({
+            ["invoice_cash_rounding_id"]: {
+                id: this.isCashRoundingSelected(cashRoundingId) ? false : cashRoundingId,
+            },
+        });
+        this.props.record.save();
+    }
+
+    async openCashRoundingDropdown(target) {
+        if (this.cashRoundingDropdown.isOpen) {
+            this.cashRoundingDropdown.close();
+            return;
+        }
+
+        const { total_length, records } = await this.orm.call(
+            "account.move",
+            "get_cash_roundings",
+            [this.props.record.data.id]
+        );
+        const items = [
+            {
+                id: "title",
+                label: _t("Rounding Methods"),
+                class: "o_cash_rounding_dropdown_title",
+                onSelected: () => {},
+            },
+        ];
+        items.push(
+            ...records.map((rounding) => ({
+                id: rounding.id,
+                label: rounding.display_name,
+                class: {
+                    o_cash_rounding_dropdown_selected: this.isCashRoundingSelected(rounding.id),
+                },
+                onSelected: () => this.setCashRounding(rounding.id),
+            }))
+        );
+        if (total_length > records.length) {
+            items.push({
+                id: "search_more",
+                label: _t("Search more..."),
+                class: "o_cash_rounding_dropdown_action",
+                onSelected: () => this.openCashRoundingListView(),
+            });
+        }
+        items.push({
+            id: "new_rounding",
+            label: _t("Create and edit"),
+            class: "o_cash_rounding_dropdown_action",
+            onSelected: () => this.openCashRoundingFormView(),
+        });
+        this.cashRoundingDropdown.open(target, { items, slots: {} });
+    }
+
+    openCashRoundingFormView() {
+        this.dialogService.add(FormViewDialog, {
+            resModel: "account.cash.rounding",
+            title: _t("New Rounding Method"),
+            onRecordSaved: (record) => this.setCashRounding(record.resId),
+        });
+    }
+
+    openCashRoundingListView() {
+        this.dialogService.add(SelectCreateDialog, {
+            resModel: "account.cash.rounding",
+            title: _t("Select Rounding Method"),
+            multiSelect: false,
+            onSelected: (resIds) => this.setCashRounding(resIds[0]),
+        });
+    }
+
+    removeCashRounding() {
+        return this.props.record.update({ ["invoice_cash_rounding_id"]: false });
+    }
+
+    //--------------------------------------------------------------------------
 
     get readonly() {
         return this.props.readonly;

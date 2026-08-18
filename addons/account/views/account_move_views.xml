@@ -1075,6 +1075,8 @@
                         <field name="tax_calculation_rounding_method" invisible="1"/>
                         <field name="tax_cash_basis_created_move_ids" invisible="1"/>
                         <field name="quick_edit_mode" invisible="1"/>
+                        <field name="invoice_cash_rounding_id" invisible="1"/>
+                        <field name="has_biggest_tax_cash_rounding_line" invisible="1"/>
                         <field name="hide_post_button" invisible="1"/>
                         <field name="quick_encoding_vals" invisible="1"/>
                         <field name="show_delivery_date" invisible="1"/>
@@ -1662,7 +1664,6 @@
                                                domain="[('payment_type', '=', 'outbound'), ('company_id', 'parent_of', company_id)]"
                                                invisible="move_type in ('out_invoice', 'out_refund', 'out_receipt')"
                                         />
-                                        <field name="invoice_cash_rounding_id" groups="account.group_cash_rounding" readonly="state != 'draft'"/>
                                         <field name="invoice_source_email"
                                                widget="email"
                                                invisible="move_type not in ('in_invoice', 'in_refund') or not invoice_source_email"/>

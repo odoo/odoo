@@ -298,7 +298,7 @@ class TestAccountMoveInalterableHash(AccountTestInvoicingCommon):
         invoice = self.init_invoice('out_invoice', products=self.product_a+self.product_b)
         move_form = Form(invoice)
         # Add a cash rounding having 'add_invoice_line'.
-        move_form.invoice_cash_rounding_id = self.cash_rounding_a
+        invoice.invoice_cash_rounding_id = self.cash_rounding_a
         with move_form.invoice_line_ids.edit(0) as line_form:
             line_form.price_unit = 999.99
         move_form.save()
