@@ -56,7 +56,9 @@ jobs:
     runs-on: ubuntu-latest
     services:
       postgres:
-        image: postgres:16
+        # pgvector image: same Postgres 16 base, vector extension preloaded —
+        # matches docker-compose.yml (v0.10 vendor-doc HNSW index).
+        image: pgvector/pgvector:pg16
         env:
           POSTGRES_DB: odoo
           POSTGRES_USER: odoo
@@ -114,6 +116,7 @@ jobs:
           # Execute Odoo under coverage tracking
           coverage run --concurrency=thread --source=custom_addons/invoice_agent \
             ./odoo-bin -d ci -i invoice_agent --addons-path=addons,custom_addons \
+            --load=base,web,invoice_agent \
             --test-enable --test-tags /invoice_agent --stop-after-init \
             --log-level=test --db_host=localhost --db_port=5432 \
             --db_user=odoo --db_password=odoo 2>&1 | tee odoo-test.log

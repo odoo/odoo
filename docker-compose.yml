@@ -37,7 +37,11 @@ services:
           memory: 256M
 
   db:
-    image: postgres:16
+    # pgvector image keeps the Postgres 16 base and preloads the vector
+    # extension — the `CREATE EXTENSION vector` init below (idempotent on
+    # every fresh-volume start) enables it per database. v0.10: vendor-doc
+    # RAG embeddings live in a vector(1024) column with an HNSW cosine index.
+    image: pgvector/pgvector:pg16
     restart: unless-stopped
     env_file: .env
     environment:
@@ -45,24 +49,21 @@ services:
       POSTGRES_USER: ${POSTGRES_USER:-odoo}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-odoo}
     # Observability + slow-query diagnostics (v0.5 "Tuned" work):
-    #   - pg_stat_statements: per-query execution stats (total_exec_time, calls,
-    #     shared hit/read buffers) — rank real offenders instead of guessing.
-    #   - log_min_duration_statement=200: log every statement >= 200ms to the
-    #     container log for EXPLAIN follow-up outside the app.
-    #   - track_io_timing=on: buffers + actual I/O timings in EXPLAIN (ANALYZE).
-    # Phase 5 (EC2 tuning) appends the shared_buffers/effective_cache_size/
-    # work_mem family of flags to this same list.
+    #   - pg_stat_statements: per-query execution stats (total_exec_time,
+    #     calls, shared hit/read buffers) — rank real offenders.
+    #   - track_io_timing=on: buffers + actual I/O timings in EXPLAIN.
+    #   - log_min_duration_statement=200: log slow statements for follow-up.
+    # v0.10 adds `vector` to shared_preload_libraries (pgvector image).
     #
-    # Loopback-only port 5432: lets a host-side client (local venv Odoo,
-    # psql, pg_stat_statements queries) reach the db without exposing it to
-    # the LAN. Production: keep this commented out — nginx/odoo reach the db
-    # over the compose network.
+    # Loopback-only port 5432: lets a host-side client reach the db without
+    # exposing it to the LAN. Production: keep this commented out — nginx/
+    # odoo reach the db over the compose network.
     ports:
       - "127.0.0.1:5434:5432"
     command:
       - postgres
       - -c
-      - shared_preload_libraries=pg_stat_statements
+      - shared_preload_libraries=pg_stat_statements,vector
       - -c
       - pg_stat_statements.max=10000
       - -c
@@ -72,6 +73,10 @@ services:
       - -c
       - log_min_duration_statement=200
     volumes:
+      # Idempotent vector-extension bootstrap: runs once on a fresh volume
+      # (and is a no-op on existing volumes). Kept small so Odoo's own
+      # migrations never race it (Odoo depends_on db: healthy).
+      - ./docker/initdb:/docker-entrypoint-initdb.d:ro
       - odoo-db-data:/var/lib/postgresql/data
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-odoo} -d ${POSTGRES_DB:-postgres}" ]
@@ -125,6 +130,34 @@ services:
           memory: 512M
         reservations:
           memory: 128M
+
+  worker:
+    build:
+      context: ./invoice-ai
+    restart: unless-stopped
+    command: python -m app.consumer
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    env_file: .env
+    environment:
+      RABBITMQ_HOST: ${RABBITMQ_HOST:-rabbitmq}
+      RABBITMQ_PORT: ${RABBITMQ_PORT:-5672}
+      RABBITMQ_USER: ${RABBITMQ_DEFAULT_USER:-invoice_agent}
+      RABBITMQ_PASS: ${RABBITMQ_DEFAULT_PASS:-invoice_agent}
+      INVOICE_AI_JWT_SECRET: ${INVOICE_AI_JWT_SECRET:-}
+      INVOICE_AI_ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    deploy:
+      resources:
+        limits:
+          memory: 768M
+        reservations:
+          memory: 256M
 
   odoo:
     build:

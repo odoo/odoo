@@ -168,8 +168,13 @@ class TestConfidenceRouting(TransactionCase):
 
     def test_validated_bill_is_approved(self):
         """A human-validated bill is Approved regardless of the threshold."""
-        move = self._make_move(balanced_payload(), status="validated")
-        move.ai_confidence = 0.9
+        move = self._make_move(balanced_payload())
+        move.write(
+            {
+                "ai_confidence": 0.9,
+                "ai_extraction_status": "validated",
+            },
+        )
         move._compute_confidence_score()
         self.assertEqual(move.ai_extraction_state, "approved")
 

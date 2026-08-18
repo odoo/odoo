@@ -19,6 +19,12 @@
                                    decoration-success="ai_extraction_status == 'validated'"
                                    decoration-warning="ai_extraction_status == 'extracted'"
                                    decoration-info="ai_extraction_status == 'pending'"/>
+                            <!-- Live queue state: queued → extracting → ready.
+                                 The OWL widget (ai_status_widget) subscribes to
+                                 the invoice_agent bus.bus channel. -->
+                            <field name="ai_job_uuid" widget="ai_status_widget"
+                                   readonly="1"
+                                   invisible="ai_state not in ('queued', 'none')"/>
                             <field name="ai_review_required" widget="boolean_toggle"/>
                             <field name="ai_needs_review" widget="boolean_toggle"/>
                             <field name="ai_confidence" widget="progressbar"/>

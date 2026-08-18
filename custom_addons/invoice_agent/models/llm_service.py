@@ -66,6 +66,11 @@ _logger = logging.getLogger(__name__)
 # needs. Both are secrets/config, never addon source.
 LLM_SERVICE_URL_PARAM = "invoice_agent.llm_service_url"
 JWT_SECRET_PARAM = "invoice_agent.jwt_secret"
+EMBED_PATH = "/v1/embed"
+# voyage-3 embedding dimension — must match the service (app/embeddings.py)
+# and the vector(1024) column in invoice_agent_vendor_doc.
+EMBED_DIMENSIONS = 1024
+EMBED_TIMEOUT_SECONDS = 60
 
 # The audience must match the service's INVOICE_AI_JWT_AUDIENCE
 # (default "invoice-ai"). A token minted with the right secret but the wrong
@@ -436,6 +441,96 @@ class InvoiceLlmService(models.AbstractModel):
             "usage": body.get("usage") or {},
             "model": body.get("model") or "invoice-ai",
         }
+
+    # ------------------------------------------------------------------
+    # Embeddings (v0.10 — voyage-3 via the service)
+    # ------------------------------------------------------------------
+    @api.model
+    def embed_texts(self, texts):
+        """Embed RAG documents via the invoice-ai ``/v1/embed`` endpoint.
+
+        :param texts: list of raw document strings (vendor-doc RAG content).
+        :return: list of 1024-dim float vectors aligned with ``texts``, or
+            ``None`` when the service is transiently unavailable — the
+            caller keeps its rows ``ai_indexed=False`` and the backfill
+            cron retries the batch later.
+        :raises UserError: config / 401 / 4xx / dimension-drift problems
+            (these are never fixed by retrying).
+        """
+        if not texts:
+            return []
+        url = self._service_url()
+        secret = self._jwt_secret()
+        token = mint_jwt(secret)
+        headers = {"Authorization": f"Bearer {token}"}
+        try:
+            response = requests.post(
+                url + EMBED_PATH,
+                json={"texts": list(texts)},
+                headers=headers,
+                timeout=EMBED_TIMEOUT_SECONDS,
+            )
+        except requests.RequestException as exc:
+            _logger.warning(
+                "invoice_agent: /v1/embed unreachable at %s — %s",
+                url,
+                exc,
+            )
+            return None
+        try:
+            body = response.json()
+        except ValueError:
+            body = {}
+        if response.status_code == 503:
+            _logger.warning(
+                "invoice_agent: /v1/embed 503 at %s — embed deferred",
+                url,
+            )
+            return None
+        if response.status_code == 401:
+            _logger.error(
+                "invoice_agent: /v1/embed rejected our JWT (401) at %s",
+                url,
+            )
+            raise UserError(
+                _(
+                    "The AI service rejected the embedding token (HTTP 401). "
+                    "The JWT secret is out of sync with INVOICE_AI_JWT_SECRET.",
+                ),
+            )
+        if response.status_code != 200:
+            message = (
+                body.get("error", {}).get("message")
+                if isinstance(body, dict)
+                else None
+            )
+            raise UserError(
+                _(
+                    "The AI service rejected the embed request (HTTP %s): %s",
+                    response.status_code,
+                    message or "no error detail",
+                ),
+            )
+        vectors = body.get("vectors") or []
+        if len(vectors) != len(texts):
+            raise UserError(
+                _(
+                    "The AI service returned %(got)s vectors for %(want)s "
+                    "texts — the two sides have drifted."
+                )
+                % {"got": len(vectors), "want": len(texts)},
+            )
+        for vector in vectors:
+            dimension = len(vector) if isinstance(vector, list) else 0
+            if dimension != EMBED_DIMENSIONS:
+                raise UserError(
+                    _(
+                        "The AI service returned a %(dim)s-dim embedding — "
+                        "expected %(want)s (voyage-3)."
+                    )
+                    % {"dim": dimension, "want": EMBED_DIMENSIONS},
+                )
+        return vectors
 
     # ------------------------------------------------------------------
     # Calibrated confidence (unchanged — deterministic Odoo-side logic)

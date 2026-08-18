@@ -66,6 +66,11 @@ except ImportError:  # pragma: no cover — stale image without pika
 EXCHANGE_NAME = "invoice.agent"
 ROUTING_KEY_REQUEST = "extract.request"
 ROUTING_KEY_DONE = "extract.done"
+# v0.10: RAG embed jobs — the Odoo outbox publishes embed.request for the
+# worker to embed one vendor-doc text via /v1/embed (the worker answers
+# with a signed embed.done result on invoice.result).
+ROUTING_KEY_EMBED_REQUEST = "embed.request"
+ROUTING_KEY_EMBED_DONE = "embed.done"
 
 
 class QueueUnavailable(Exception):
@@ -196,17 +201,30 @@ class QueuePublisher(models.AbstractModel):
                 _logger.exception("queue.publisher: error closing connection")
 
     @api.model
-    def publish_extract_request(self, move_id, attachment_id=False, attempt=1):
-        """Convenience: publish a durable ``extract.request`` job.
+    def publish_extract_request(
+        self,
+        move_id,
+        attachment_id=False,
+        attempt=1,
+        job_uuid=False,
+        ocr_text=False,
+    ):
+        """Publish a durable ``extract.request`` job.
 
         Body contract (documented in ``invoice_queue/topology.py`` and
         ``docs/adr-004-rabbitmq.md``)::
 
-            {"move_id": N, "attachment_id": M, "attempt": K}
+            {"move_id": N, "attachment_id": M, "attempt": K,
+             "job_uuid": "...", "ocr_text": "..."}
 
         ``move_id`` is the ``account.move`` queued for extraction,
-        ``attachment_id`` is the source PDF (when known) and ``attempt`` is
-        the retry counter the worker reports back on ``extract.done``.
+        ``attachment_id`` is the source PDF (when known), ``attempt`` is the
+        retry counter the worker reports back on ``extract.done``,
+        ``job_uuid`` is the outbox correlation id the worker echoes back on
+        ``extract.done`` (see ``account.move.ai_job_uuid``) and ``ocr_text``
+        is the pre-OCR'd text the worker feeds to Claude (OCR runs Odoo-side
+        via the ``_cron_ocr_pending_bills`` cron; the worker never touches
+        PDFs).
         """
         return self.publish(
             ROUTING_KEY_REQUEST,
@@ -214,5 +232,31 @@ class QueuePublisher(models.AbstractModel):
                 "move_id": int(move_id),
                 "attachment_id": int(attachment_id) if attachment_id else False,
                 "attempt": int(attempt),
+                "job_uuid": job_uuid or "",
+                "ocr_text": ocr_text or "",
+            },
+        )
+
+    @api.model
+    def publish_embed_request(self, move_id, job_uuid=False, rag_text=False):
+        """Publish a durable ``embed.request`` job for the RAG corpus.
+
+        Body contract (documented in ``invoice_queue/topology.py`` and
+        ``docs/vector-search.md``):::
+
+            {"move_id": N, "job_uuid": "...", "rag_text": "..."}
+
+        ``move_id`` is the posted ``account.move`` whose vendor-doc text the
+        worker should embed, ``job_uuid`` is the outbox correlation id the
+        worker echoes back on ``embed.done``, and ``rag_text`` is the
+        rendered RAG document (``account.move._build_rag_document()``) the
+        worker sends to ``/v1/embed``. The worker never touches the Odoo DB.
+        """
+        return self.publish(
+            ROUTING_KEY_EMBED_REQUEST,
+            {
+                "move_id": int(move_id),
+                "job_uuid": job_uuid or "",
+                "rag_text": rag_text or "",
             },
         )

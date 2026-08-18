@@ -129,6 +129,35 @@ class ExtractionResponse(BaseModel):
     model: str
 
 
+class EmbedRequest(BaseModel):
+    """Body of ``POST /v1/embed`` — one or more raw documents to embed.
+
+    ``list[str]`` is deliberately unconstrained (no ``min_length`` /
+    ``max_items``): batching lives in the embedder, and the contract keeps
+    plain types per the project schema rules.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    texts: list[str]
+
+
+class EmbedResponse(BaseModel):
+    """200 envelope of ``POST /v1/embed``.
+
+    ``vectors`` is aligned 1:1 with the request texts, each exactly
+    ``dimensions`` (1024 for ``voyage-3``) floats. ``dimensions`` is echoed
+    so the Odoo side can assert its ``vector(1024)`` column matches the
+    model actually deployed.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    vectors: list[list[float]]
+    model: str
+    dimensions: int
+
+
 class HealthResponse(BaseModel):
     """The 200 envelope of ``GET /healthz``.
 
@@ -141,6 +170,99 @@ class HealthResponse(BaseModel):
 
     status: Literal["ok"]
     build_sha: str
+
+
+# ---------------------------------------------------------------------------
+# RAG vendor-context endpoint schemas (Phase 1)
+# ---------------------------------------------------------------------------
+
+
+class VendorContextRequest(BaseModel):
+    """Body of ``POST /rag/vendor-context`` — the vendor to retrieve history for.
+
+    ``partner_id`` is the ``res.partner.id`` of the vendor.  ``ocr_text`` is
+    the raw OCR text of the new invoice being validated — it is embedded
+    with ``input_type="query"`` to find similar historical bills.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    partner_id: int
+    ocr_text: str
+    extracted_ref: str = ""
+    extracted_vat: str = ""
+    extracted_vendor_name: str = ""
+
+
+class CandidateBill(BaseModel):
+    """One historical bill returned by the RAG retrieval."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    move_id: int
+    content: str
+    distance: float
+    match_reason: str = "vector"
+
+
+class VendorContextResponse(BaseModel):
+    """200 envelope of ``POST /rag/vendor-context``.
+
+    ``candidates`` is a distance-ranked list of historical bills from the
+    vendor's corpus.  ``gl_account_frequencies`` is the per-account-code
+    frequency distribution for the vendor's posted bills.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    candidates: list[CandidateBill]
+    gl_account_frequencies: dict[str, int]
+    query_embedding_model: str
+
+
+# ---------------------------------------------------------------------------
+# Validation verdict schema (Phase 2 — Step 8)
+# ---------------------------------------------------------------------------
+
+
+class Citation(BaseModel):
+    """A single citation linking a verdict to a retrieved historical bill.
+
+    Every citation must reference a ``move_id`` that exists in the
+    retrieved candidate set — the code guard in ``validate.py`` rejects
+    any verdict whose cited ``move_id`` is absent, preventing hallucinated
+    vendor history from reaching the accountant.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    move_id: int
+    quoted_line: str
+    reasoning: str
+
+
+class ValidationVerdict(BaseModel):
+    """Structured output from the RAG validation Claude call.
+
+    Claude receives the chart of accounts + vendor history (cached prefix)
+    and the current extraction (volatile suffix), and returns this schema
+    directly via ``messages.parse(output_format=ValidationVerdict)``.
+
+    ``evidence`` is a **required** list of citations — every verdict must
+    point at genuinely retrieved ``account.move`` ids.  The code guard in
+    ``validate.py`` rejects any verdict whose cited ``move_id`` is absent
+    from the retrieved candidate set.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    account_id: str
+    account_confidence: float
+    amount_plausible: bool
+    evidence: list[Citation] = []
+    duplicate_of_move_id: int | None = None
+    flags: list[str] = []
+    reasoning: str = ""
 
 
 def invoice_extraction_json_schema() -> dict:

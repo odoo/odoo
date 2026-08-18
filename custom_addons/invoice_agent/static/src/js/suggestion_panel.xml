@@ -46,4 +46,16 @@
             </t>
         </div>
     </t>
+
+    <!-- ================================================================
+         AI Status Widget — live queue state (queued → extracting → ready)
+         rendered without a page refresh. Subscribes to the `invoice_agent`
+         bus.bus channel; see ai_status_widget.js.
+         ================================================================ -->
+    <t t-name="invoice_agent.ai_status_widget">
+        <span class="o_ai_status_widget d-inline-flex align-items-center gap-1" t-att-class="decorationClass">
+            <i t-attf-class="iconClass me-1"/>
+            <span t-out="label"/>
+        </span>
+    </t>
 </templates>

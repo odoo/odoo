@@ -278,6 +278,66 @@ class AccountMove(models.Model):
         "has been registered in the outbox and will be drained to the broker "
         "by the cron.",
     )
+    # v0.10 RAG corpus marker: True once this bill's vendor-doc embedding is
+    # in invoice_agent_vendor_doc. Reset to False on write() when header or
+    # line values change, so the backfill cron resumes instead of re-embedding
+    # everything on every restart.
+    ai_indexed = fields.Boolean(
+        string="AI Indexed",
+        default=False,
+        index=True,
+        copy=False,
+        help="True when the posted bill's RAG document + voyage-3 embedding "
+        "are stored in invoice_agent_vendor_doc.",
+    )
+
+    # === Phase 2: RAG Validation (validate.py + queue_consumer.py) ===
+    ai_duplicate_move_id = fields.Many2one(
+        comodel_name="account.move",
+        string="AI Duplicate Of",
+        ondelete="set null",
+        index=True,
+        copy=False,
+        readonly=True,
+        help="When the RAG validation identifies this invoice as a duplicate "
+        "of a historical bill, this links to the original move.",
+    )
+    ai_validation_account_id = fields.Char(
+        string="AI Suggested Account",
+        readonly=True,
+        copy=False,
+        help="GL account code suggested by the RAG validation step, based on "
+        "the vendor's historical posting patterns.",
+    )
+    ai_validation_account_confidence = fields.Float(
+        string="AI Account Confidence",
+        digits=(3, 2),
+        readonly=True,
+        copy=False,
+        help="Confidence in the suggested GL account (0..1). When this "
+        "exceeds the auto-fill threshold, the account is pre-filled on "
+        "invoice lines.",
+    )
+    ai_validation_amount_plausible = fields.Boolean(
+        string="AI Amount Plausible",
+        readonly=True,
+        copy=False,
+        help="True when the RAG validation considers the invoice amounts "
+        "consistent with the vendor's historical amounts.",
+    )
+    ai_flag_ids = fields.One2many(
+        comodel_name="invoice.agent.validation.flag",
+        inverse_name="move_id",
+        string="AI Validation Flags",
+        copy=False,
+        readonly=True,
+    )
+    ai_validation_reasoning = fields.Text(
+        string="AI Validation Reasoning",
+        readonly=True,
+        copy=False,
+        help="Free-text explanation from the RAG validation step.",
+    )
 
     # -------------------------------------------------------------------------
     # COMPUTE: AI Variance
@@ -334,7 +394,6 @@ class AccountMove(models.Model):
     @api.depends(
         "ai_extracted_json",
         "ai_extraction_status",
-        "ai_review_required",
         "ai_confidence",
         "ocr_confidence",
         "ocr_text",
@@ -366,9 +425,11 @@ class AccountMove(models.Model):
             self.ai_extraction_state = "approved"
             return
 
-        if not payload or self.ai_review_required:
-            # Unscored (pending/processing), flagged by a human, or an empty
-            # payload — never Auto.
+        if not payload:
+            # Unscored pending/processing moves and empty payloads are never
+            # Auto. ``ai_review_required`` is an output of this computation,
+            # not an input: a first pass can mark a move for review before a
+            # payload arrives, and that must not prevent a later re-score.
             self.confidence_score = self.confidence_score or 0.0
             self.ai_confidence_details = self.ai_confidence_details or {}
             self.ai_confidence_notes = self.ai_confidence_notes or ""
@@ -402,6 +463,7 @@ class AccountMove(models.Model):
             self.ai_extraction_state = "needs_review"
         elif score >= threshold:
             self.ai_extraction_state = "auto"
+            self.ai_review_required = False
         else:
             self.ai_extraction_state = "needs_review"
             self.ai_review_required = True
@@ -895,6 +957,56 @@ class AccountMove(models.Model):
                 self.write({"ai_validated_on": fields.Datetime.now()})
             elif vals["ai_extraction_status"] == "extracted":
                 self.write({"ai_extracted_on": fields.Datetime.now()})
+        # v0.10: any change to values that feed the RAG document invalidates
+        # the stored embedding. Reset ai_indexed so the backfill cron
+        # re-embeds this bill instead of serving a stale vector.
+        RAG_INVALIDATING_FIELDS = {
+            "partner_id",
+            "invoice_date",
+            "date",
+            "ref",
+            "invoice_line_ids",
+            "line_ids",
+        }
+        if RAG_INVALIDATING_FIELDS.intersection(vals):
+            self.write({"ai_indexed": False})
+        return res
+
+    def action_post(self):
+        """Post (override): enqueue RAG embedding via the outbox.
+
+        The base ``action_post`` runs first. Then, for vendor bills, a
+        ``kind=embed`` outbox row is created inside the same cursor —
+        posting never blocks on the Voyage HTTP round-trip. The drain cron
+        executes the embed on its next tick; if the service is down the row
+        stays pending and retries automatically.  The backfill cron is the
+        safety net for any row that slips through.
+        """
+        res = super().action_post()
+        for move in self:
+            if move.move_type != "in_invoice" or move.state != "posted":
+                continue
+            if move.ai_indexed:
+                continue
+            try:
+                job_uuid = str(uuid.uuid4())
+                self.env["invoice.agent.job"].create(
+                    {
+                        "move_id": move.id,
+                        "job_uuid": job_uuid,
+                        "kind": "embed",
+                    },
+                )
+                _logger.info(
+                    "invoice_agent enqueue embed: move_id=%d uuid=%s",
+                    move.id,
+                    job_uuid,
+                )
+            except Exception:
+                _logger.exception(
+                    "invoice_agent failed to enqueue embed for move_id=%d",
+                    move.id,
+                )
         return res
 
     # -------------------------------------------------------------------------
@@ -917,11 +1029,34 @@ class AccountMove(models.Model):
         :return: the created (or reused) ``invoice.agent.job`` record.
         """
         self.ensure_one()
+        # Reuse ANY outbox row for this move (pending, sent or dead): the
+        # job_uuid is UNIQUE — re-clicking Extract must never create a second
+        # row for the same uuid. A dead row is reset so the drain republishes.
         existing = self.env["invoice.agent.job"].search(
-            [("move_id", "=", self.id), ("state", "=", "pending")],
+            [("move_id", "=", self.id)],
             limit=1,
         )
         if existing:
+            # 'sent': a previous run already completed (possibly applied) - a
+            # re-run needs a FRESH uuid or the idempotency ledger would treat
+            # it as a redelivery and skip the apply. 'dead': poisoned, never
+            # applied - reset to pending, keep the same uuid. UNIQUE(job_uuid)
+            # guarantees no second row is ever created for one move.
+            fresh_uuid = str(uuid.uuid4()) if existing.state == "sent" else False
+            values = {
+                "state": "pending",
+                "published_at": False,
+                "dead_reason": False,
+                "x_death_count": 0,
+                "error_message": False,
+            }
+            if fresh_uuid:
+                self.write({"ai_job_uuid": fresh_uuid})
+                values["job_uuid"] = fresh_uuid
+            elif not existing.job_uuid and self.ai_job_uuid:
+                values["job_uuid"] = self.ai_job_uuid
+            existing.write(values)
+            self.write({"ai_state": "queued"})
             return existing
 
         if not self.ai_job_uuid:
@@ -930,6 +1065,7 @@ class AccountMove(models.Model):
             {
                 "move_id": self.id,
                 "attachment_id": self.ai_source_attachment_id.id or False,
+                "job_uuid": self.ai_job_uuid,
             },
         )
         self.write({"ai_state": "queued"})
@@ -988,7 +1124,7 @@ class AccountMove(models.Model):
 
         Week 8: this is no longer a placeholder. The job is registered in
         the transactional outbox (``invoice.agent.job``) on the same cursor
-        as the create; the outbox cron publishes it to the ``invoice.agent``
+        as the create; the drain cron publishes it to the ``invoice.agent``
         topic exchange as ``extract.request`` in a separate transaction.
         Nothing is ever published inside the request transaction — a
         rolled-back create leaves no orphan message on the broker.
@@ -1000,6 +1136,268 @@ class AccountMove(models.Model):
         job = self._enqueue_ai_job()
         if job:
             self.write({"ai_extraction_status": "processing"})
+
+    # -------------------------------------------------------------------------
+    # PHASE 2: RAG VALIDATION — apply validation verdict
+    # -------------------------------------------------------------------------
+    # Called by ``_apply_queue_result`` in queue_consumer.py when the
+    # ``extract.done`` result carries a ``validation`` envelope from the
+    # invoice-ai service.  Writes the suggested GL account, duplicate flag,
+    # amount plausibility, and per-flag rows onto the move.
+
+    # Auto-fill GL account on lines when confidence exceeds this threshold.
+    ACCOUNT_AUTO_FILL_THRESHOLD = 0.85
+
+    def _apply_validation_verdict(self, verdict):
+        """Write a ``ValidationVerdict`` onto this move.
+
+        ``verdict`` is a plain dict matching
+        ``invoice-ai/app/schemas.py::ValidationVerdict``::
+
+            {"account_id", "account_confidence", "amount_plausible",
+             "duplicate_of_move_id", "flags", "reasoning"}
+        """
+        self.ensure_one()
+        account_id = verdict.get("account_id") or ""
+        confidence = verdict.get("account_confidence") or 0.0
+        amount_plausible = bool(verdict.get("amount_plausible", True))
+        dup_move_id = verdict.get("duplicate_of_move_id")
+        flags = verdict.get("flags") or []
+        reasoning = verdict.get("reasoning") or ""
+
+        vals = {
+            "ai_validation_account_id": account_id or False,
+            "ai_validation_account_confidence": confidence,
+            "ai_validation_amount_plausible": amount_plausible,
+            "ai_validation_reasoning": reasoning or False,
+        }
+
+        # Duplicate detection
+        if dup_move_id:
+            dup_move = self.browse(int(dup_move_id))
+            if dup_move.exists():
+                vals["ai_duplicate_move_id"] = dup_move.id
+
+        self.write(vals)
+
+        # --- Per-flag rows (clear + re-create) ---
+        self.ai_flag_ids.unlink()
+        if flags:
+            flag_model = self.env["invoice.agent.validation.flag"]
+            flag_lines = [
+                (0, 0, {"flag": flag, "reasoning": reasoning})
+                for flag in flags
+            ]
+            self.write({"ai_flag_ids": flag_lines})
+
+        # --- Auto-fill GL account on lines (when confidence is high) ---
+        if account_id and confidence >= self.ACCOUNT_AUTO_FILL_THRESHOLD:
+            self._auto_fill_gl_account(account_id)
+
+        # --- Post duplicate banner on chatter ---
+        if dup_move_id and vals.get("ai_duplicate_move_id"):
+            dup_name = self.ai_duplicate_move_id.display_name or str(dup_move_id)
+            try:
+                self.message_post(
+                    body=(
+                        "\U0001f6a9 <b>Duplicate Invoice Detected</b><br/>"
+                        "This invoice appears to be a duplicate of "
+                        "<b>%s</b>. Please verify before posting."
+                    ) % dup_name,
+                    subject="AI Duplicate Detection: %s" % self.display_name,
+                )
+            except Exception:
+                _logger.exception(
+                    "invoice_agent: failed to post duplicate banner on %s",
+                    self.display_name,
+                )
+
+        _logger.info(
+            "invoice_agent validation applied: move_id=%d account=%s "
+            "confidence=%.2f plausible=%s flags=%s dup=%s",
+            self.id,
+            account_id,
+            confidence,
+            amount_plausible,
+            flags,
+            dup_move_id,
+        )
+        return True
+
+    def _auto_fill_gl_account(self, account_code):
+        """Set account_id on invoice lines whose product is not set.
+
+        Only applies to draft lines without an explicit account (i.e.,
+        lines where Odoo hasn't assigned one yet).  The accountant can
+        still override the suggestion — this is a convenience pre-fill,
+        not a hard constraint.
+        """
+        self.ensure_one()
+        account = self.env["account.account"].search(
+            [("code", "=", account_code)], limit=1,
+        )
+        if not account:
+            _logger.warning(
+                "invoice_agent: auto-fill account code '%s' not found in "
+                "chart of accounts — skipping",
+                account_code,
+            )
+            return
+        filled = 0
+        for line in self.invoice_line_ids:
+            if not line.account_id or line.display_type not in (False, "product"):
+                continue
+            line.write({"account_id": account.id})
+            filled += 1
+        if filled:
+            _logger.info(
+                "invoice_agent: auto-filled account %s on %d lines of move_id=%d",
+                account.code,
+                filled,
+                self.id,
+            )
+
+    # -------------------------------------------------------------------------
+    # RAG CORPUS (v0.10 — pgvector vendor/GL history, see
+    # invoice_agent_vendor_doc + docs/vector-search.md)
+    # -------------------------------------------------------------------------
+
+    def _build_rag_document(self):
+        """Render this posted vendor bill as one compact RAG document.
+
+        Granularity decision: **one document per posted bill**. Header and
+        lines travel together because a bill's lines reference each other
+        (GL codes, quantities, subtotals) — splitting per line would scatter
+        an invoice across chunks and make a cosine query return partial
+        bills. The text is deliberately compact and line-oriented so
+        voyage-3's tokenizer keeps the whole bill in one embedding:
+
+            "Vendor: <name> | Date: <date> | Ref: <ref> | Total: <amount>
+             Lines: <name> [<account.code>] x<qty> = <subtotal> | ..."
+        """
+        self.ensure_one()
+        last_partner = self.partner_id.commercial_partner_id or self.partner_id
+        vendor_name = last_partner.name or "Unknown vendor"
+        date_text = self.invoice_date or self.date or ""
+        parts = [
+            "Vendor: %s" % vendor_name,
+            "Date: %s" % date_text,
+        ]
+        if self.ref:
+            parts.append("Ref: %s" % self.ref)
+        parts.append("Move: %s (%s)" % (self.name or "", self.move_type))
+        parts.append("Total: %s %s" % (self.amount_total, self.currency_id.name))
+        line_texts = []
+        lines = self.invoice_line_ids.filtered(lambda line: line.display_type in (False, "product"))
+        for line in lines:
+            account_code = line.account_id.code if line.account_id else ""
+            line_texts.append(
+                "%s [%s] x%s = %s"
+                % (
+                    line.name or "line",
+                    account_code,
+                    float(line.quantity or 1.0),
+                    float(line.price_subtotal or 0.0),
+                )
+            )
+        parts.append("Lines: %s" % " | ".join(line_texts))
+        return "\n".join(part for part in parts if part)
+
+    @api.model
+    def _split_batch_for_embedding(self, moves):
+        """Yield (move_id, rag_text) pairs for a batch of posted bills."""
+        for move in moves:
+            if move.state != "posted":
+                continue
+            yield move.id, move._build_rag_document()
+
+    @api.model
+    def _cron_backfill_embeddings(self, batch_size=100):
+        """Embed posted bills missing from the RAG corpus (batched backfill).
+
+        Claims up to ``batch_size`` posted bills with ``ai_indexed=False``,
+        embeds their RAG documents via ``embed_texts`` and upserts into
+        ``invoice_agent_vendor_doc``. ``ai_indexed`` makes restarts resume
+        instead of re-embedding everything, and the unique ``move_id`` on
+        the vendor-doc table makes a re-run idempotent.
+        """
+        moves = self.search(
+            [
+                ("move_type", "=", "in_invoice"),
+                ("state", "=", "posted"),
+                ("ai_indexed", "=", False),
+            ],
+            order="id asc",
+            limit=batch_size,
+        )
+        if not moves:
+            return 0
+        pairs = list(self._split_batch_for_embedding(moves))
+        texts = [text for _, text in pairs]
+        vectors = self.env["invoice.llm.service"].embed_texts(texts)
+        if vectors is None:
+            # Service unavailable — keep ai_indexed=False and try next run.
+            _logger.warning(
+                "invoice_agent RAG backfill deferred: embed service unavailable "
+                "(%d bills pending)",
+                len(moves),
+            )
+            return 0
+        for (move_id, rag_text), vector in zip(pairs, vectors):
+            self.env["invoice.agent.vendor.doc"].upsert_embedding(
+                move_id,
+                rag_text,
+                vector,
+            )
+            self.browse(move_id).write({"ai_indexed": True})
+        _logger.info(
+            "invoice_agent RAG backfill: embedded %d posted bills",
+            len(pairs),
+        )
+        return len(pairs)
+
+    @api.model
+    def _cron_backfill_embeddings_all(self):
+        """ir.cron entry point (runs repeatedly until the corpus is caught up)."""
+        total = 0
+        while True:
+            batch = self._cron_backfill_embeddings(batch_size=100)
+            total += batch
+            if batch < 100:
+                break
+        return total
+
+    def _embed_posted_move(self, move):
+        """Embed one posted bill; True when indexed, False when deferred."""
+        rag_text = move._build_rag_document()
+        vectors = self.env["invoice.llm.service"].embed_texts([rag_text])
+        if vectors is None:
+            return False
+        self.env["invoice.agent.vendor.doc"].upsert_embedding(
+            move.id,
+            rag_text,
+            vectors[0],
+        )
+        move.write({"ai_indexed": True})
+        return True
+
+    def _embed_on_post(self):
+        """Best-effort immediate embed for freshly posted bills.
+
+        Called from the ``action_post`` path AFTER the post commits; never
+        blocks the posting request (the backfill cron catches up if the
+        service is busy).
+        """
+        for move in self:
+            if move.move_type != "in_invoice" or move.state != "posted":
+                continue
+            try:
+                self._embed_posted_move(move)
+            except Exception:
+                _logger.exception(
+                    "invoice_agent RAG live-embed failed for move_id=%d",
+                    move.id,
+                )
 
     # -------------------------------------------------------------------------
     # CRON: Retry stuck extractions
@@ -1323,7 +1721,10 @@ class AccountMove(models.Model):
             "ai_extracted_total": payload.get("amount_total"),
             "ai_review_required": bool(payload.get("review_required")),
             "ai_extraction_status": "extracted",
-            "ai_confidence": score,
+            # Keep the model-reported value for backwards-compatible display
+            # and audit exports. ``confidence_score`` remains the calibrated
+            # value used for automated routing.
+            "ai_confidence": float(payload.get("overall_confidence") or score),
         }
         if payload.get("extracted_vendor_id"):
             vals["partner_id"] = payload["extracted_vendor_id"]
@@ -1925,5 +2326,11 @@ class AccountMove(models.Model):
             "check_ai_confidence_range",
             "CHECK(ai_confidence IS NULL OR (ai_confidence >= 0.0 AND ai_confidence <= 1.0))",
             "Overall AI Confidence score must strictly remain between 0.00 and 1.00.",
+        ),
+        (
+            "ai_job_uuid_unique",
+            "UNIQUE(ai_job_uuid)",
+            "Each bill may only carry one AI job UUID — a redelivered or "
+            "double-published job can never resolve to two draft moves.",
         ),
     ]

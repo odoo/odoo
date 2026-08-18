@@ -22,6 +22,15 @@ class Settings(BaseSettings):
     anthropic_timeout_seconds: float = 90.0
     anthropic_max_retries: int = 2
 
+    # Voyage AI — embeddings (v0.10). Anthropic ships no embedding model, so
+    # vendor-doc retrieval uses voyage-3 (1024-dim). Key comes from .env /
+    # INVOICE_AI_VOYAGE_API_KEY.
+    voyage_api_key: str = ""
+    voyage_model: str = "voyage-3"
+    voyage_dimensions: int = 1024
+
+    database_url: str = ""
+
     max_upload_bytes: int = 10 * 1024 * 1024  # 10 MiB — matches docs/openapi.yaml
     ocr_render_dpi: int = 300
 
