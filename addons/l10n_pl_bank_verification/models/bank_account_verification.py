@@ -2,12 +2,11 @@ import json
 import logging
 import requests
 
-from datetime import datetime, timezone
-from zoneinfo import ZoneInfo
+from collections import defaultdict
+from urllib.parse import urljoin
 
 from odoo import api, fields, models
 from odoo.tools import index_exists, SQL
-
 
 _logger = logging.getLogger(__name__)
 
@@ -20,9 +19,10 @@ class BankAccountVerification(models.Model):
         selection=[
             ('valid', 'Valid'),
             ('invalid', 'Invalid'),  # Bank account not referenced (in gov files) for partner's vat number
-            ('incomplete_partner', 'Incomplete partner'),  # Inside Odoo, no API call
-            ('not_found_partner', 'Partner not found'),  # API called, but cannot find the VAT number
-            ('error', 'An error occurred during check with Government API'),  # API called -> error
+            ('incomplete_partner', 'Incomplete partner'),  # Inside Odoo, no IAP call
+            ('not_found_partner', 'Partner not found'),  # TODO remove in master
+            ('pending', 'Pending validation'),  # IAP called -> error but not due to bad args, try again later
+            ('error', 'Error'),  # IAP called -> bad args or vat or bank account not right format, NO LATER TRY
         ],
         string="Verification Status",
         readonly=True,
@@ -31,17 +31,14 @@ class BankAccountVerification(models.Model):
             "- Valid: The partner VAT is linked to the bank account used for this payment.\n"
             "- Invalid: The partner VAT is not linked to the bank account used for this payment.\n"
             "- Incomplete partner: The partner has no VAT or no bank account.\n"
-            "- Partner not found: Partner VAT not found in Government files.\n"
-            "- Error: An error occurred during check with Government API.\n"
+            "- Pending validation: For technical reasons, it will be checked again automatically later.\n"
+            "- Error: An error occurred during check with IAP.\n"
     )
-    # Timestamp received in PL tz by the API, stored in UTC
+    # stored in UTC, timestamp when the verification is created or modified
     verification_timestamp = fields.Datetime("Verification Timestamp", readonly=True)
-    # Technical field to ease search
-    verification_date = fields.Date(
-        compute='_compute_verification_date',
-        store=True,
-        index=False,
-    )
+    # Data validity date, if IAP respond without error the answer are valid for the date requested
+    verification_date = fields.Date(index=False)
+    # TODO rename to digest in master
     verification_request_id = fields.Char("Correlation ID", readonly=True)
     partner_bank_id = fields.Many2one('res.partner.bank', readonly=True, string="Bank Account")
     # We need to store the bank account number itself to prevent changes on the res.partner.bank record
@@ -97,11 +94,6 @@ class BankAccountVerification(models.Model):
         )
         self.env.cr.execute(query)
 
-    @api.depends('verification_timestamp')
-    def _compute_verification_date(self):
-        for verification in self:
-            verification.verification_date = verification.verification_timestamp.date()
-
     @api.depends('partner_bank_id')
     def _compute_partner_bank_account_number(self):
         for verification in self:
@@ -116,173 +108,160 @@ class BankAccountVerification(models.Model):
             if not verification.partner_vat:
                 verification.partner_vat = verification.partner_id.vat
 
-    def _l10n_pl_get_verification(self, partner_bank_data, date):
+    @api.model
+    def _cron_check_pending_verification(self):
+        pending_verifications = self.search([('verification_status', '=', 'pending')])
+        if pending_verifications:
+            partner_to_partner_banks = defaultdict(list)  # {partner: [res.partner.bank]}
+            for verif in pending_verifications:
+                partner_to_partner_banks[verif.partner_id].append(verif.partner_bank_id)
+            self._l10n_pl_get_verification(
+                list(partner_to_partner_banks.items()),
+                fields.Date.context_today(self.with_context(tz='Europe/Warsaw')),
+            )
+
+    def _l10n_pl_get_verification(self, partner_to_banks, date):
         """
-        :param partner_bank_data: list(tuple(partner_id, partner_banks)): recordset of partner bank to get verification for by partner id
+        :param partner_to_banks: list(tuple(partner, partner_banks)): partner banks to get verification for, associated with partner
         :returns: A recordset of l10n_pl.bank.account.verification for all res.partner.bank in param
         """
+        invalid_partner_ids = []
         create_vals = []
         verifications = self.browse()
-        partner_banks = self.env['res.partner.bank'].union(*[partner_bank for _partner_id, partner_bank in partner_bank_data])
-        partners_without_bank_account = self.env['res.partner'].browse(partner_id for partner_id, bank_accounts in partner_bank_data if not bank_accounts)
+        for partner, banks in partner_to_banks:
+            if any(not bank for bank in banks) or partner.vat in [False, '/', 'na', 'NA']:
+                # There's either an empty bank or a partner with no vat
+                invalid_partner_ids.append(partner.id)
+                create_vals += self._get_creation_vals('incomplete_partner', partner_ids=[partner.id])
 
-        if partners_without_bank_account:
-            # Create failed verifications for partners not having bank accounts
-            verifications = self.search([
-                ('partner_vat', 'in', partners_without_bank_account.mapped('vat')),
-                ('partner_bank_account_number', '=', False),
-                ('verification_status', 'in', ('incomplete_partner', 'not_found_partner', 'error')),
-                ('verification_date', '=', date),
-            ])
-            # check if a failed verification already exists
-            existing_failed_vat = set(verifications.mapped('partner_vat'))
-            partners_to_create_verification_for = partners_without_bank_account.filtered(lambda partner: partner.vat not in existing_failed_vat)
-            if partners_to_create_verification_for:
-                create_vals += self._get_creation_vals('incomplete_partner', partners=partners_to_create_verification_for)
-
-        partner_banks_to_check = self.env['res.partner.bank']
-        if partner_banks:
-            # create list of partner_bank to check
-            all_partners = self.env['res.partner'].browse(partner_id for partner_id, bank_accounts in partner_bank_data if bank_accounts)
-            all_partner_banks = all_partners.bank_ids
-            # we query verifications for all partner banks so that if the API call returns information for one of the bank
-            # account that was not requested, we can know if we need to create a verification
+        if invalid_partner_ids:
+            # existing failed verifications
             verifications |= self.search([
-                ('partner_bank_account_number', 'in', all_partner_banks.mapped('sanitized_acc_number')),
-                ('partner_vat', 'in', all_partner_banks.partner_id.mapped('vat')),
-                ('verification_date', '=', date),
+                ('partner_id', 'in', invalid_partner_ids),
+                ('verification_status', '=', 'incomplete_partner'),
             ])
+            verification_failed_map = verifications.grouped(lambda verif: verif.partner_id.id)
 
-            partner_bank2verification = verifications.grouped(lambda verif: verif.partner_bank_account_number)
-            for partner_bank in partner_banks:
-                partner_bank_verif = partner_bank2verification.get(partner_bank.sanitized_acc_number)
-                vat = partner_bank.partner_id.vat
-                if not vat or vat in ['/', 'na', 'NA']:  # void vat
-                    if not partner_bank_verif or not partner_bank_verif.filtered(lambda verif:
-                        verif.partner_id == partner_bank.partner_id
-                        and (not verif.partner_vat or verif.partner_vat in ['/', 'na', 'NA'])
-                    ):
-                        create_vals += self._get_creation_vals('incomplete_partner', partner_banks=partner_bank)
-                    continue
+            # filter out creation vals for partner that already have failed verification
+            create_vals = [vals for vals in create_vals if vals['partner_id'] not in verification_failed_map]
 
-                # if partner bank already has a verification, check that status is failed and reason is not unknown (incomplete or not_found).
-                # If so, no need to check as we made the search on the same vat/bank account -> the combination (vat/bank account) will still fail.
-                # If the reason is unknown, let's check it again
-                if not partner_bank_verif or partner_bank_verif.verification_status == 'error':
-                    partner_banks_to_check |= partner_bank
+        # structure remaining_combinations like {res.partner: recordset(res.partner.bank)}
+        remaining_combinations = {
+            partner: self.env['res.partner.bank'].union(*[bank for bank in banks if bank])
+            for partner, banks in partner_to_banks
+            if [bank for bank in banks if bank] and partner.vat not in [False, '/', 'na', 'NA']
+        }
 
-        if not partner_banks_to_check:
+        if not remaining_combinations:
+            # early return
             if create_vals:
-                # some partners without bank account or without vat need a failed verification to be created
                 verifications |= self.sudo().create(create_vals)
-            return verifications.filtered(
-                lambda verif: verif.partner_bank_account_number in partner_banks.mapped('sanitized_acc_number') or verif.partner_vat in partners_without_bank_account.mapped('vat'))
+            return verifications
 
-        # Create endpoints to call, API supports 30 vat numbers per request
-        endpoints = {}  # {endpoint: recordset(res.partner)}
-        partners_to_check = partner_banks_to_check.partner_id
-        for i in range(0, len(partners_to_check), 30):
-            partners = partners_to_check[i:i + 30]
-            sanitized_vats = ",".join(partners.mapped(lambda partner: partner.vat.removeprefix('pl').removeprefix('PL')))
-            endpoints[f'/api/search/nips/{sanitized_vats}'] = partners
+        remaining_partners = self.env['res.partner'].union(*remaining_combinations.keys())
+        remaining_banks = self.env['res.partner.bank'].union(*remaining_combinations.values())
 
-        # Call API for every endpoint
-        error_message = "Error while making request for partners %s, with endpoint %s"
-        for endpoint, partners in endpoints.items():
+        # existing verifications for remaining partners/banks
+        common_domain = [
+            ('partner_id', 'in', remaining_partners.ids),
+            ('partner_vat', 'in', remaining_partners.mapped('vat')),
+            ('partner_bank_id', 'in', remaining_banks.ids),
+            ('partner_bank_account_number', 'in', remaining_banks.mapped('sanitized_acc_number')),
+        ]
+        # We include verifications in error as they don't need a new check
+        verifications |= self.search(common_domain + [
+            # (['valid', 'invalid'] AND date) OR 'error'
+            '|', '&',
+            ('verification_status', 'in', ['valid', 'invalid']),
+            ('verification_date', '=', date),
+            ('verification_status', 'in', ['error']),
+        ])
+        verification_map = verifications.grouped(lambda verif: (verif.partner_id, verif.partner_vat, verif.partner_bank_id, verif.partner_bank_account_number))
+        # get verifications in 'pending' state whatever the date, and update the timestamp
+        # we don't include them in verification_map to force to check them again
+        pending_verifications = self.search(common_domain + [('verification_status', '=', 'pending')])
+        pending_verifications.sudo().write({'verification_timestamp': fields.Datetime.now()})
+        verifications |= pending_verifications
+        pending_verifications_map = pending_verifications.grouped(lambda verif: (verif.partner_id, verif.partner_id.vat, verif.partner_bank_id, verif.partner_bank_id.sanitized_acc_number))
+
+        # Create endpoints to call, IAP supports 500 combinations per request
+        endpoints = [{'combinations': [], 'bank_ids': set()}]  # [{'combinations': [(vat, bank_account), ], 'bank_ids': res.partner.bank()}]
+        for partner, banks in remaining_combinations.items():
+            for bank in banks:
+                if not verification_map.get((partner, partner.vat, bank, bank.sanitized_acc_number)):
+                    vat = partner.vat.removeprefix('pl').removeprefix('PL')
+                    bank_account = bank.sanitized_acc_number.removeprefix('pl').removeprefix('PL')
+                    if len(vat) != 10 or not vat.isdigit() or len(bank_account) != 26 or not bank_account.isdigit():
+                        create_vals += self._get_creation_vals('error', partner_banks=bank)
+                    else:
+                        if len(endpoints[-1]['combinations']) == 500:
+                            endpoints[-1]['bank_ids'] = self.env['res.partner.bank'].browse(endpoints[-1]['bank_ids'])
+                            endpoints.append({'combinations': [], 'bank_ids': set()})
+                        endpoints[-1]['combinations'].append((vat, bank_account))
+                        endpoints[-1]['bank_ids'].add(bank.id)
+        if isinstance(endpoints[-1]['bank_ids'], set):
+            endpoints[-1]['bank_ids'] = self.env['res.partner.bank'].browse(endpoints[-1]['bank_ids'])
+
+        if not endpoints[0]['combinations']:
+            if create_vals:
+                verifications |= self.sudo().create(create_vals)
+            return verifications
+
+        # Call IAP for every endpoint
+        for endpoint in endpoints:
+            combinations = endpoint['combinations']
+            response = False
             try:
-                response = self._make_request(endpoint, params={'date': date})
+                response = self._make_request(combinations, date)
                 response_content = self._handle_response(response)
-            except (requests.RequestException, ValueError):
-                create_vals += self._get_creation_vals('error', partner_banks=partners.bank_ids)
-                _logger.exception(error_message, partners.ids, endpoint)
+            except (requests.RequestException, ValueError, json.decoder.JSONDecodeError) as e:
+                banks_to_create_verification_for = [
+                    bank for bank in endpoint['bank_ids']
+                    if not pending_verifications_map.get((bank.partner_id, bank.partner_id.vat, bank, bank.sanitized_acc_number))
+                ]
+                status, error_message = self._handle_error(response, e)
+                _logger.warning("Error while making request with combinations %s, and date %s", combinations, date)
+                _logger.warning(error_message)
+                if banks_to_create_verification_for:
+                    create_vals += self._get_creation_vals(status, partner_banks=banks_to_create_verification_for)
+                pending_verifications.sudo().verification_status = status
                 continue
 
             try:
-                # Read received datas from API and create verifications
-                datas = json.loads(response_content)['result']
-                request_id = datas['requestId']
+                # Read received datas from IAP and create verifications
+                bank_account_map = endpoint['bank_ids'].grouped(lambda account: account.sanitized_acc_number.removeprefix('pl').removeprefix('PL'))
+                for val in response_content:
+                    partner = self._get_partner_from_identifier(val['vat'])
+                    bank_account = bank_account_map.get(val['bank_account'])
+                    digest = val['hash']
+                    status = 'valid' if digest else 'invalid'
+                    temp_create_vals = self._get_creation_vals(status, partner_banks=[bank_account], digest=digest, date=date)
+                    verif = pending_verifications_map.get((partner, partner.vat, bank_account, bank_account.sanitized_acc_number))
+                    if verif:
+                        verif.sudo().write(temp_create_vals[0])
+                    else:
+                        create_vals += temp_create_vals
 
-                # we receive the datetime in PL timezone, and store it in UTC
-                api_date = datetime.strptime(datas['requestDateTime'], "%d-%m-%Y %H:%M:%S")
-                timestamp = api_date.replace(tzinfo=ZoneInfo('Europe/Warsaw')).astimezone(timezone.utc)
-                timestamp = timestamp.replace(tzinfo=None)
-
-                for entry in datas.get('entries'):
-                    identifier = entry.get('identifier')
-                    partner = self._get_partner_from_identifier(identifier)
-                    if error := entry.get('error'):
-                        status = 'error'
-                        if error['code'] in ['WL-113', 'WL-115']:  # 113: incorrect format, 115: vat not found
-                            status = 'not_found_partner'
-                        create_vals += self._get_creation_vals(status, partner_banks=partner.bank_ids, timestamp=timestamp, request_id=request_id)
-                        continue
-
-                    subject = entry.get('subjects')
-                    if not subject:  # case where code = 200, but subject is null or empty
-                        create_vals += self._get_creation_vals('invalid', partner_banks=partner.bank_ids, timestamp=timestamp, request_id=request_id)
-                        continue
-
-                    subject = subject[0]
-                    for partner_bank in partner.bank_ids:
-                        # We take advantage of the API call to write verification on all bank accounts of this partner
-                        # even if no check was requested for them
-                        account_number = partner_bank.sanitized_acc_number.removeprefix('pl').removeprefix('PL')
-                        status = 'valid' if account_number in subject.get('accountNumbers', []) else 'invalid'
-                        create_vals += self._get_creation_vals(
-                            status,
-                            partner_banks=partner_bank,
-                            timestamp=timestamp,
-                            request_id=request_id,
-                        )
-
-            except (KeyError, json.decoder.JSONDecodeError):
-                create_vals += self._get_creation_vals('error', partner_banks=partners.bank_ids)
-                _logger.exception(error_message, partners.ids, endpoint)
+            except KeyError:
+                banks_to_create_verification_for = [
+                    bank for bank in banks
+                    if not pending_verifications_map.get((bank.partner_id, bank.partner_id.vat, bank, bank.sanitized_acc_number))
+                ]
+                if banks_to_create_verification_for:
+                    create_vals += self._get_creation_vals('error', partner_banks=banks_to_create_verification_for)
+                pending_verifications.sudo().verification_status = 'error'
+                _logger.warning("Error while decoding response for %s, with date %s", combinations, date)
                 continue
 
-        # Filter create values if a verification already exists
-        failed_verifications = verifications.filtered(lambda verif: verif.verification_status in ('incomplete_partner', 'partner_not_found', 'error'))
-        partner_bank_vat2failed_verification = failed_verifications.grouped(lambda verif: (verif.partner_bank_account_number, verif.partner_vat))
-        partner_bank_vat2verification = verifications.grouped(lambda verif: (verif.partner_bank_account_number, verif.partner_vat))
-        to_create = []
-        for vals in create_vals:
-            # verif exists but failed so modify it to keep latest value
-            if verif := partner_bank_vat2failed_verification.get((vals.get('partner_bank_account_number', False), vals.get('partner_vat', False))):
-                verif.sudo().write(vals)
-
-            # verification exists
-            elif partner_bank_vat2verification.get((vals.get('partner_bank_account_number', False), vals.get('partner_vat', False))):
-                continue
-
-            # verification doesn't exist
-            else:
-                to_create.append(vals)
-
-        if to_create:
-            verifications |= self.sudo().create(to_create)
-        # Filter out the verifications for the bank account linked to the partner but not requested in params
-        return verifications.filtered(
-            lambda verif: verif.partner_bank_account_number in partner_banks.mapped('sanitized_acc_number') or verif.partner_vat in partners_without_bank_account.mapped('vat'))
+        verifications |= self.sudo().create(create_vals)
+        return verifications
 
     @api.model
-    def _make_request(self, endpoint, params=None):
-        """
-        Send request to the government API
-        :param endpoint: The endpoint to call in the API
-        :param params: Params to include in request
-        :return: response
-        """
-        params = params or {}
-        if not endpoint.startswith('/api/search/nips/') or '://' in endpoint or endpoint.startswith('//'):
-            raise ValueError("Invalid Polish bank verification API endpoint")
-        url = f'https://wl-api.mf.gov.pl{endpoint}'
-        response = requests.request(
-            'GET',
-            url,
-            headers={'Content-Type': 'application/json'},
-            params=params,
-            timeout=5,
-        )
+    def _make_request(self, combinations, date):
+        """Send request to IAP and returns the response"""
+        base_url = self.env['ir.config_parameter'].sudo().get_param('l10n_pl_iap_bank_verification', 'https://iap-services.odoo.com')
+        url = urljoin(base_url, '/iap/l10n_pl_edi/1/check_vat')
+        response = requests.post(url, data={'date': str(date), 'combinations': json.dumps(combinations)}, timeout=8)
         return response
 
     @api.model
@@ -293,22 +272,46 @@ class BankAccountVerification(models.Model):
         :return: Response content or raise an error
         """
         if response.status_code == 200:
-            return response.content.decode()
+            return response.json()
 
         response.raise_for_status()
 
-    def _get_creation_vals(self, status, partner_banks=[], partners=[], timestamp=None, request_id=False):
+    @api.model
+    def _handle_error(self, response, err):
+        if isinstance(err, requests.exceptions.ConnectionError):
+            return 'pending', "Cannot reach IAP server"
+        if response in [False, None]:
+            return 'error', "Unknown error"
+        try:
+            content = json.loads(response.content.decode())
+            code = content.get('code', 'bad_arg')
+            msg = content.get('message', "Unknown error")
+            return 'pending' if code == 'try_again' else 'error', msg
+        except (json.decoder.JSONDecodeError, AttributeError):
+            return 'error', "Unknown error"
+
+    def _get_creation_vals(self, status, partner_banks=[], partner_ids=[], date=False, digest=False):
         """
-        partners should be filled only for partners without bank accounts ('incomplete_partner')
+        Build a list of creation vals. partner_banks should always be provided, only empty in case
+        the partner has no bank account linked and then 'partner_ids' arg should be filled (one or the other)
+        :param status: status, see verification_status selection
+        :param partner_banks: list of bank accounts: can only be empty when partners have no bank account linked
+        :param partner_ids: list of partner **ids** that have no bank account linked
+        :param date: date of the data validity (only provided for verifications with 'valid' or 'invalid' state)
+        :param digest: the digest of the combination
+        :returns: list of creation vals
         """
-        assert not partners or partners and not partner_banks
+        assert bool(partner_ids) ^ bool(partner_banks), "only partner_banks or partners, not both"
+        assert status != 'valid' or digest, "digest is required for valid verification"
+        assert status not in ('invalid', 'valid') or date, "date is required for valid and invalid verification"
         create_vals = []
         default_vals = {
             'verification_status': status,
-            'verification_timestamp': timestamp or fields.Datetime.now(),
-            'verification_request_id': request_id,
+            'verification_timestamp': fields.Datetime.now(),
+            'verification_date': date,
         }
 
+        # partners with a linked bank account, having a valid vat
         for partner_bank in partner_banks:
             vals = dict(default_vals)
             vals.update({
@@ -316,16 +319,14 @@ class BankAccountVerification(models.Model):
                 'partner_bank_account_number': partner_bank.sanitized_acc_number,
                 'partner_id': partner_bank.partner_id.id,
                 'partner_vat': partner_bank.partner_id.vat,
+                'verification_request_id': digest
             })
             create_vals.append(vals)
 
-        # only for partners without bank accounts
-        for partner in partners:
+        # partners with no bank account or no valid vat
+        for partner_id in partner_ids:
             vals = dict(default_vals)
-            vals.update({
-                'partner_id': partner.id,
-                'partner_vat': partner.vat,
-            })
+            vals['partner_id'] = partner_id
             create_vals.append(vals)
 
         return create_vals
