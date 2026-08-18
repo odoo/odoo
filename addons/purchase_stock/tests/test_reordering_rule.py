@@ -1507,3 +1507,45 @@ class TestReorderingRule(TransactionCase):
             'product_qty': 6.0,
             'price_unit': 100.0,
         }])
+
+    def test_replenish_use_selected_supplierinfo(self):
+        """
+        A product can have several vendor lines for the same vendor (e.g. two
+        purchase agreements) with different prices/lead times. Selecting one
+        of them on the orderpoint's `supplier_id` before replenishing must
+        make the generated PO line use that specific seller's price and lead
+        time, not silently fall back to the cheapest matching seller.
+        """
+        product = self.product_01
+        _, expensive_seller = self.env['product.supplierinfo'].create([{
+            'product_tmpl_id': product.product_tmpl_id.id,
+            'partner_id': self.partner.id,
+            'price': 1,
+            'delay': 2,
+        }, {
+            'product_tmpl_id': product.product_tmpl_id.id,
+            'partner_id': self.partner.id,
+            'price': 3,
+            'delay': 4,
+        }])
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        orderpoint = self.env['stock.warehouse.orderpoint'].with_user(2).create({
+            'warehouse_id': warehouse.id,
+            'location_id': warehouse.lot_stock_id.id,
+            'product_id': product.id,
+            'product_min_qty': 0.0,
+            'product_max_qty': 10.0,
+            'trigger': 'manual',
+            'supplier_id': expensive_seller.id,
+        })
+        orderpoint.qty_to_order = 5.0
+        orderpoint.action_replenish()
+        po_line = self.env['purchase.order.line'].search([('product_id', '=', product.id)])
+        self.assertEqual(po_line.price_unit, 3.0)
+        self.assertEqual(po_line.date_planned.date() - po_line.order_id.date_order.date(), td(days=4))
+
+        # Second replenishment should merge the previous pol without updating the price
+        orderpoint.qty_to_order = 2.0
+        orderpoint.action_replenish()
+        self.assertEqual(po_line.product_qty, 7.0)
+        self.assertEqual(po_line.price_unit, 3.0)

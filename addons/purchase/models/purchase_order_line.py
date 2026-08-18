@@ -670,13 +670,16 @@ class PurchaseOrderLine(models.Model):
         # _select_seller is used if the supplier have different price depending
         # the quantities ordered.
         today = fields.Date.context_today(self)
-        seller = product_id.with_company(company_id)._select_seller(
-            partner_id=partner_id,
-            quantity=product_qty if values.get('force_uom') else uom_po_qty,
-            date=max(fields.Date.context_today(self, timestamp=po.date_order), today),
-            uom_id=product_uom if values.get('force_uom') else product_id.uom_id,
-            params={'force_uom': values.get('force_uom')}
-        )
+        if values.get('supplierinfo_id'):
+            seller = values['supplierinfo_id']
+        else:
+            seller = product_id.with_company(company_id)._select_seller(
+                partner_id=partner_id,
+                quantity=product_qty if values.get('force_uom') else uom_po_qty,
+                date=max(fields.Date.context_today(self, timestamp=po.date_order), today),
+                uom_id=product_uom if values.get('force_uom') else product_id.uom_id,
+                params={'force_uom': values.get('force_uom')}
+            )
         if seller and (seller.uom_id or seller.product_tmpl_id.uom_id) != product_uom:
             uom_po_qty = product_id.uom_id._compute_quantity(uom_po_qty, seller.uom_id, rounding_method='HALF-UP')
 
