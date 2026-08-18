@@ -106,12 +106,12 @@ export function renderField(field, resetId = false) {
         params.field.isCheck = true;
     }
     if (field.description) {
-        params.default_description =
-            field.type === "boolean"
-                ? "website.form_field_default_description_boolean"
-                : "website.form_field_default_description";
-    } else if (["email_cc", "email_to"].includes(field.name)) {
-        params.default_description = "website.form_field_default_description_email_to";
+        params.default_description = "website.form_field_default_description";
+        if (field.type === "boolean") {
+            params.default_description = "website.form_field_default_description_boolean";
+        } else if (["email_cc", "email_to"].includes(field.name)) {
+            params.default_description = "website.form_field_default_description_email_to";
+        }
     }
     const template = document.createElement("template");
     const renderType = field.type === "tags" ? "many2many" : field.type;
