@@ -238,6 +238,41 @@ class TestEdiZatca(TestSaEdiCommon):
         )[0].text.strip()
         self.assertEqual(taxable_amount, '-100.00')
 
+    def test_invoice_negative_untaxed_amount_blocked_on_post_for_zatca(self):
+        '''Test that an invoice with a negative untaxed amount is blocked on post for ZATCA.'''
+        self.tax_15.price_include_override = 'tax_included'
+
+        invoice = self._create_invoice(
+            name='INV/2026/00001',
+            invoice_date='2026-08-17',
+            invoice_date_due='2026-08-17',
+            partner_id=self.partner_sa_simplified,
+            invoice_line_ids=[{
+                'product_id': self.product_a.id,
+                'price_unit': 19.0,
+                'tax_ids': self.tax_15.ids,
+            }, {
+                'product_id': self.product_b.id,
+                'price_unit': 12.0,
+                'tax_ids': self.tax_15.ids,
+            }, {
+                'product_id': self.product_burger.id,
+                'price_unit': -31.0,
+                'tax_ids': self.tax_15.ids,
+            }],
+        )
+
+        self.assertEqual(invoice.amount_untaxed, -0.01)
+        self.assertEqual(invoice.amount_tax, 0.01)
+
+        with self.assertRaises(UserError) as context:
+            invoice.action_post()
+
+        self.assertEqual(
+            str(context.exception),
+            "Invalid invoice configuration:\n\n- Standard Invoices (B2B) cannot have a negative Untaxed Amount. Please, use a Credit Note instead.",
+        )
+
     def testInvoiceWithDownpayment(self):
         """Test invoice generation with downpayment scenarios."""
         if 'sale' not in self.env["ir.module.module"]._installed():

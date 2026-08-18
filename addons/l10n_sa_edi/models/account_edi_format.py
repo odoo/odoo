@@ -411,6 +411,9 @@ class AccountEdiFormat(models.Model):
         if not all(line.tax_ids for line in invoice.invoice_line_ids.filtered(lambda line: line.display_type == 'product' and line._check_edi_line_tax_required())):
             errors.append(_("- Invoice lines should have at least one Tax applied."))
 
+        if invoice.move_type == 'out_invoice' and invoice.amount_untaxed < 0:
+            errors.append(_("- Standard Invoices (B2B) cannot have a negative Untaxed Amount. Please, use a Credit Note instead."))
+
         if not journal._l10n_sa_ready_to_submit_einvoices():
             errors.append(
                 _("- Finish the Onboarding procees for journal %s by requesting the CSIDs and completing the checks.", journal.name))
