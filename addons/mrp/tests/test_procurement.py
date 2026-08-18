@@ -777,7 +777,7 @@ class TestProcurement(TestMrpCommon):
         mto_route.rule_ids.procure_method = "make_to_order"
         # Setup for the secondary test
         routes_count = self.env['stock.route'].search_count([])
-        mto_route.rule_ids.search([('company_id', 'not in', (False, self.env.company.id))]).unlink()
+        mto_route.rule_ids.filtered_domain([('company_id', 'not in', (False, self.env.company.id))]).unlink()
         mto_route.company_id = self.env.company
         # Define products requested for this BoM.
         product = self.env['product.product'].create({
