@@ -3773,7 +3773,7 @@ class TestStockValuation(TestStockValuationCommon):
         self.assertEqual(product_b.with_context(location=valued_locations.ids).qty_available, 0)
 
         # Get report data
-        report_data = self.env['stock_account.stock.valuation.report'].with_company(self.env.company)._get_report_data()
+        report_data = self.env['account.stock.valuation.report'].with_company(self.env.company)._get_report_data()
 
         # Check that both accounts are in the report
         account_ids_in_report = report_data['accounts_by_id'].keys()
