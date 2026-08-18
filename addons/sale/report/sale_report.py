@@ -112,7 +112,7 @@ class SaleReport(models.Model):
 
     weight = fields.Float(string="Gross Weight", readonly=True)
     volume = fields.Float(string="Volume", readonly=True)
-    price_unit = fields.Float(string="Unit Price", aggregator="avg", readonly=True)
+    price_unit = fields.Monetary(string="Unit Price", aggregator="avg", readonly=True)
     discount = fields.Float(string="Discount %", readonly=True, aggregator="avg")
     discount_amount = fields.Monetary(string="Discount Amount", readonly=True)
 
