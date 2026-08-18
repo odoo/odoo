@@ -110,7 +110,8 @@
     }
 
     .o_color_picker_inputs, .o_color_gradient_input {
-        color: $o-we-item-clickable-color;
+        --o-iframe-input-color: #{$o-we-item-clickable-color};
+        color: var(--o-iframe-input-color);
 
         & input {
             color: currentColor;
