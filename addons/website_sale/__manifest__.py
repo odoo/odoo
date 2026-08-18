@@ -180,6 +180,9 @@
             "web/static/lib/bootstrap/scss/_variables.scss",
             "website_sale/static/src/website_builder/**/*.edit.*",
         ],
+        'website.assets_inside_builder_iframe_tests': [
+            'website_sale/static/src/website_builder/**/*.edit.xml',
+        ],
         "web.assets_tests": [
             "website_sale/static/tests/tours/**/*",
             "website_sale/static/src/js/tours/product_configurator_tour_utils.js",
