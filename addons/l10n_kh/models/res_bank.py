@@ -23,7 +23,7 @@ class ResPartnerBank(models.Model):
         bakong_id_re = re.compile(r"^[a-zA-Z0-9_].*@[a-zA-Z0-9_].*$")
         for bank in self.filtered(lambda b: b.country_code == 'KH'):
             if bank.proxy_type not in ['bakong_id_solo', 'bakong_id_merchant', 'none', False]:
-                raise ValidationError(_("The proxy type must be Bakong Account ID"))
+                raise ValidationError(_("The account identifier type must be Bakong Account ID"))
             if bank.proxy_type in ['bakong_id_solo', 'bakong_id_merchant'] and (not bank.proxy_value or not bakong_id_re.match(bank.proxy_value) or len(bank.proxy_value) > 32):
                 raise ValidationError(_("Please enter a valid Bakong Account ID."))
             if bank.proxy_type == 'bakong_id_merchant' and not bank.l10n_kh_merchant_id:
@@ -46,6 +46,10 @@ class ResPartnerBank(models.Model):
         bank_kh = self.filtered(lambda b: b.country_code == 'KH')
         bank_kh.display_qr_setting = self.env.company.qr_code
         super(ResPartnerBank, self - bank_kh)._compute_display_qr_setting()
+
+    @api.model
+    def _get_emv_qr_code_names(self):
+        return {**super()._get_emv_qr_code_names(), 'KH': _("KHQR Code")}
 
     @api.depends('country_code')
     def _compute_country_proxy_keys(self):
@@ -86,6 +90,6 @@ class ResPartnerBank(models.Model):
 
     def _check_for_qr_code_errors(self, qr_method, amount, currency, debtor_partner, free_communication, structured_communication):
         if qr_method == 'emv_qr' and self.country_code == 'KH' and self.proxy_type not in ['bakong_id_solo', 'bakong_id_merchant']:
-            return _("The proxy type of KHQR must be a Bakong Account ID")
+            return _("The account identifier type of KHQR must be a Bakong Account ID")
 
         return super()._check_for_qr_code_errors(qr_method, amount, currency, debtor_partner, free_communication, structured_communication)

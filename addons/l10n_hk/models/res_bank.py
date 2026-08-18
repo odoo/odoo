@@ -26,6 +26,10 @@ class ResPartnerBank(models.Model):
             if bank.proxy_type == 'email' and (not bank.proxy_value or not single_email_re.match(bank.proxy_value)):
                 raise ValidationError(_("Invalid Email! Please enter a valid email address for account number %s.", bank.account_number))
 
+    @api.model
+    def _get_emv_qr_code_names(self):
+        return {**super()._get_emv_qr_code_names(), 'HK': _("FPS QR Code")}
+
     @api.depends('country_code')
     def _compute_country_proxy_keys(self):
         bank_hk = self.filtered(lambda b: b.country_code == 'HK')

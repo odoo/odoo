@@ -16,6 +16,7 @@
         'data/form_t7001.xml',
         'data/form_wt003.xml',
         'views/res_bank_views.xml',
+        'views/res_config_settings_views.xml',
     ],
     'demo': [
         'demo/demo_company.xml',

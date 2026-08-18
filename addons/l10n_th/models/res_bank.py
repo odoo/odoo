@@ -25,6 +25,10 @@ class ResPartnerBank(models.Model):
             if bank.proxy_type == 'mobile' and (not bank.proxy_value or not mobile_re.match(bank.proxy_value)):
                 raise ValidationError(_("The Mobile Number must be in the format 0812345678 for account number %s.", bank.account_number))
 
+    @api.model
+    def _get_emv_qr_code_names(self):
+        return {**super()._get_emv_qr_code_names(), 'TH': _("PromptPay QR Code")}
+
     @api.depends('country_code')
     def _compute_country_proxy_keys(self):
         bank_th = self.filtered(lambda b: b.country_code == 'TH')

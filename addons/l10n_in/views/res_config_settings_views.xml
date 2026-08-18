@@ -158,7 +158,7 @@
                 </div>
             </xpath>
             <xpath expr="//setting[@id='qr_code_invoices']" position="attributes">
-                <attribute name="invisible">country_code == 'IN'</attribute>
+                <attribute name="invisible" separator="or" add="country_code == 'IN'"/>
             </xpath>
             <block id="pay_invoice_online_setting_container" position="inside">
                 <setting string="UPI ID"

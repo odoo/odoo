@@ -15,6 +15,7 @@
         'data/account.account.tag.csv',
         'data/account_chart_template_data.xml',
         'views/res_bank_views.xml',
+        'views/res_config_settings_views.xml',
     ],
     'demo': [
         'demo/demo_company.xml',

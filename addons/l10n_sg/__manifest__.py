@@ -31,6 +31,7 @@ This module add, for accounting:
         'views/report_invoice.xml',
         'views/report_templates.xml',
         'views/res_bank_views.xml',
+        'views/res_config_settings_views.xml',
     ],
     'demo': [
         'demo/demo_company.xml',

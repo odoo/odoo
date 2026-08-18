@@ -21,6 +21,10 @@ class ResPartnerBank(models.Model):
             if bank.proxy_type not in ['merchant_id', 'payment_service', 'atm_card', 'bank_acc', 'none', False]:
                 raise ValidationError(_("The QR Code Type must be either Merchant ID, ATM Card Number or Bank Account to generate a Vietnam Bank QR code for account number %s.", bank.account_number))
 
+    @api.model
+    def _get_emv_qr_code_names(self):
+        return {**super()._get_emv_qr_code_names(), 'VN': _("VietQR Code")}
+
     @api.depends('country_code')
     def _compute_country_proxy_keys(self):
         bank_vn = self.filtered(lambda b: b.country_code == 'VN')
@@ -87,10 +91,10 @@ class ResPartnerBank(models.Model):
         if not (self.partner_id.city or self.partner_id.state_id):
             return _("Missing Merchant City or State.")
         if not self.proxy_type:
-            return _("Missing Proxy Type.")
+            return _("Missing Account Identifier Type.")
         if self.proxy_type not in ['merchant_id', 'payment_service', 'atm_card', 'bank_acc']:
-            return _("The proxy type %s is not supported for Vietnamese partners. It must be either Merchant ID, ATM Card Number or Bank Account", self.proxy_type)
+            return _("The account identifier type %s is not supported for Vietnamese partners. It must be either Merchant ID, ATM Card Number or Bank Account", self.proxy_type)
         if not self.proxy_value:
-            return _("Missing Proxy Value.")
+            return _("Missing Identifier Value.")
         if not self._get_merchant_account_info():
             return _("Missing Merchant Account Information.")
