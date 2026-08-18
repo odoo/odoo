@@ -60,7 +60,7 @@ class StockMoveLine(models.Model):
     date = fields.Datetime(
         'Date', default=fields.Datetime.now, required=True,
         help="Creation date of this move line until updated due to: quantity being increased, 'picked' status has updated, or move line is done.")
-    scheduled_date = fields.Datetime('Scheduled Date', related='move_id.date')
+    scheduled_date = fields.Datetime('Scheduled Date', related='picking_id.scheduled_date')
     owner_id = fields.Many2one(
         'res.partner', 'From Owner',
         check_company=True, index='btree_not_null',
