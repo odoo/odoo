@@ -430,6 +430,9 @@ class AccountBankStatementLine(models.Model):
 
     def unlink(self):
         # OVERRIDE to unlink the inherited account.move (move_id field) as well.
+        # Here we clear the linked reco model on the reconciled lines to remove them from the smart button
+        # in the reco model view, since new 'matching_rules' can match directly aml.
+        self.line_ids.reconciled_lines_ids.reconcile_model_id = None
         tracked_lines = self.filtered(lambda stl: stl.company_id.restrictive_audit_trail)
         tracked_lines.move_id.button_cancel()
         moves_to_delete = (self - tracked_lines).move_id
@@ -472,6 +475,9 @@ class AccountBankStatementLine(models.Model):
         ])
         caba_moves.line_ids._check_tax_lock_date()
 
+        # Here we clear the linked reco model on the reconciled lines to remove them from the smart button
+        # in the reco model view, since new 'matching_rules' can match directly aml.
+        self.line_ids.reconciled_lines_ids.reconcile_model_id = None
         self.line_ids.remove_move_reconcile()
         self.payment_ids.unlink()
 
