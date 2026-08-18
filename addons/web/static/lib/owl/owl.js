@@ -1394,6 +1394,10 @@ ${issueStrings}`);
     }
     delete(key) {
       delete this._map()[key];
+      return this;
+    }
+    clear() {
+      this._map.set(/* @__PURE__ */ Object.create(null));
     }
     has(key) {
       return key in this._map();
@@ -1438,6 +1442,9 @@ ${issueStrings}`);
       const items = this._items().filter(([seq, val]) => val !== item);
       this._items.set(items);
       return this;
+    }
+    clear() {
+      this._items.set([]);
     }
     has(item) {
       return this._items().some(([s, value]) => value === item);
@@ -1486,9 +1493,7 @@ ${issueStrings}`);
       this.config = options.config ?? {};
       this.pluginManager = this;
       if (options.parent) {
-        const parent = options.parent;
-        parent.onDestroy(() => this.destroy());
-        this.plugins = Object.create(parent.plugins);
+        this.plugins = Object.create(options.parent.plugins);
       } else {
         this.plugins = {};
       }
@@ -1736,7 +1741,7 @@ ${issueStrings}`);
   var config = useConfig;
 
   // ../owl-runtime/dist/owl-runtime.es.js
-  var version = "3.0.0-alpha.45";
+  var version = "3.0.0-alpha.46";
   var fibersInError = /* @__PURE__ */ new WeakMap();
   var nodeErrorHandlers = /* @__PURE__ */ new WeakMap();
   function invokeErrorHandlers(node, error, finalize, markFibers) {
@@ -3359,6 +3364,7 @@ ${issueStrings}`);
     }
   }
   var MAX_RENDER_ITERATIONS = 1e3;
+  var APPLIED_TO_DOM = 1;
   function makeChildFiber(node, parent) {
     let current = node.fiber;
     if (current) {
@@ -3371,7 +3377,7 @@ ${issueStrings}`);
     let current = node.fiber;
     if (current) {
       let root = current.root;
-      root.renderCount++;
+      current.renderState += 2;
       root.locked = true;
       root.setCounter(root.counter + 1 - cancelFibers(current.children));
       root.locked = false;
@@ -3381,7 +3387,7 @@ ${issueStrings}`);
       if (fibersInError.has(current)) {
         fibersInError.delete(current);
         fibersInError.delete(root);
-        current.appliedToDom = false;
+        current.renderState &= ~APPLIED_TO_DOM;
         if (current instanceof RootFiber) {
           current.mounted = current instanceof MountFiber ? [current] : [];
         }
@@ -3428,7 +3434,12 @@ ${issueStrings}`);
     // A Fiber that has been replaced by another has no root
     parent;
     children = [];
-    appliedToDom = false;
+    // Packs the "applied to DOM" flag (bit 0, see APPLIED_TO_DOM) together with
+    // the number of times this uncommitted fiber has been recycled by
+    // makeRootFiber (bits 1 and up). The recycle count climbs without bound only
+    // in a render loop (#1968); it shares a slot with the flag so the many
+    // fibers that are never recycled don't pay for a dedicated field.
+    renderState = 0;
     deep = false;
     childrenMap = {};
     constructor(node, parent) {
@@ -3466,7 +3477,7 @@ ${issueStrings}`);
       const node = this.node;
       const root = this.root;
       if (root) {
-        if (root.renderCount > MAX_RENDER_ITERATIONS) {
+        if (this.renderState >> 1 > MAX_RENDER_ITERATIONS) {
           handleError({
             node,
             error: new OwlError(
@@ -3497,9 +3508,6 @@ ${issueStrings}`);
   };
   var RootFiber = class extends Fiber {
     counter = 1;
-    // Number of times this (uncommitted) fiber has been recycled by makeRootFiber.
-    // Climbs without bound only in a render loop; see issue #1968.
-    renderCount = 0;
     // only add stuff in this if they have registered some hooks
     willPatch = [];
     patched = [];
@@ -3527,7 +3535,7 @@ ${issueStrings}`);
         this.locked = false;
         while (current = mountedFibers.pop()) {
           current = current;
-          if (current.appliedToDom) {
+          if (current.renderState & APPLIED_TO_DOM) {
             for (let cb of current.node.mounted) {
               cb();
             }
@@ -3536,7 +3544,7 @@ ${issueStrings}`);
         let patchedFibers = this.patched;
         while (current = patchedFibers.pop()) {
           current = current;
-          if (current.appliedToDom) {
+          if (current.renderState & APPLIED_TO_DOM) {
             for (let cb of current.node.patched) {
               cb();
             }
@@ -3577,7 +3585,7 @@ ${issueStrings}`);
       if (this.target) {
         this._mount();
       } else {
-        this.appliedToDom = true;
+        this.renderState |= APPLIED_TO_DOM;
         this.onPrepared?.();
       }
     }
@@ -3610,10 +3618,10 @@ ${issueStrings}`);
         }
         node.fiber = null;
         node.status = STATUS.MOUNTED;
-        this.appliedToDom = true;
+        this.renderState |= APPLIED_TO_DOM;
         let mountedFibers = this.mounted;
         while (current = mountedFibers.pop()) {
-          if (current.appliedToDom) {
+          if (current.renderState & APPLIED_TO_DOM) {
             for (let cb of current.node.mounted) {
               cb();
             }
@@ -3828,7 +3836,7 @@ ${issueStrings}`);
         }
         this.sweepRefs();
         sweepRemovedRefs();
-        this.fiber.appliedToDom = true;
+        this.fiber.renderState |= APPLIED_TO_DOM;
         this.fiber = null;
       }
     }
@@ -3844,7 +3852,7 @@ ${issueStrings}`);
       this.bdom = bdom2;
       bdom2.mount(parent, anchor);
       this.status = STATUS.MOUNTED;
-      this.fiber.appliedToDom = true;
+      this.fiber.renderState |= APPLIED_TO_DOM;
       this.children = this.fiber.childrenMap;
       this.fiber = null;
     }
@@ -3883,7 +3891,7 @@ ${issueStrings}`);
       }
       this.sweepRefs();
       sweepRemovedRefs();
-      fiber.appliedToDom = true;
+      fiber.renderState |= APPLIED_TO_DOM;
       this.fiber = null;
     }
     beforeRemove() {
@@ -3972,7 +3980,7 @@ ${issueStrings}`);
           if (!hasError) {
             fiber.complete();
           }
-          if (fiber.appliedToDom) {
+          if (fiber.renderState & APPLIED_TO_DOM) {
             this.tasks.delete(fiber);
           }
         }
@@ -4890,8 +4898,8 @@ ${issueStrings}`);
   };
   var __info__ = {
     version: App.version,
-    date: "2026-07-29T11:21:03.982Z",
-    hash: "cf5b97cd",
+    date: "2026-08-18T07:36:37.778Z",
+    hash: "066cd716",
     url: "https://github.com/odoo/owl"
   };
 
