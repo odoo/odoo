@@ -264,7 +264,7 @@ patch(SaleOrderLineListRenderer.prototype, {
 
     getRowClass(record) {
         let rowClasses = super.getRowClass(record);
-        if (this.shouldCollapse(record, 'is_optional')) {
+        if (this.shouldCollapse(record, 'is_optional', true)) {
             rowClasses += ' text-primary';
         }
         return rowClasses;

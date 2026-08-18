@@ -211,11 +211,11 @@ class SaleOrderTemplate(models.Model):
     def _update_product_translations(self):
         languages = self.env["res.lang"].search([("active", "=", True)])
         for lang in languages:
-            for line in self.sale_order_template_line_ids:
-                if line.name == line.product_id.get_product_multiline_description_sale():
-                    line.with_context(lang=lang.code).name = line.product_id.with_context(
+            for line in self.sale_order_template_line_ids.filtered("product_id"):
+                if line.name == line._get_default_description():
+                    line.with_context(lang=lang.code).name = line.with_context(
                         lang=lang.code
-                    ).get_product_multiline_description_sale()
+                    )._get_default_description()
 
     @api.model
     def _demo_configure_template(self):
