@@ -702,6 +702,33 @@ class MrpSubcontractingPurchaseTest(TestAccountSubcontractingFlows):
         comp_receipt.button_validate()
         self.assertEqual(ressuply_pick.state, 'assigned')
 
+    def test_forecast_of_subcontracted_component(self):
+        """
+        Check that the expected availability of an MTO subcontracted component coincides with
+        its linked subcontracted receipt expected date.
+        """
+        mto_route = self.env.ref('stock.route_warehouse0_mto')
+        mto_route.active = True
+        subcontracted_component = self.finished
+        subcontracted_component.route_ids = [Command.link(mto_route.id)]
+        final_product = self.env['product.product'].create({
+            'name': 'Regular manufactured product',
+            'is_storable': True,
+        })
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': final_product.product_tmpl_id.id,
+            'bom_line_ids': [Command.create({'product_id': subcontracted_component.id, 'product_qty': 1})],
+        })
+        production = self.env['mrp.production'].create({'product_id': final_product.id})
+        production.action_confirm()
+
+        component_move = production.move_raw_ids
+        subcontracted_po = component_move.reference_ids.purchase_ids
+        subcontracted_po.button_confirm()
+
+        receipt_move = subcontracted_po.picking_ids.move_ids
+        self.assertRecordValues(component_move, [{'move_orig_ids': receipt_move.ids, 'forecast_availability': 1.0, 'forecast_expected_date': receipt_move.date}])
+
     def test_subcontract_with_multi_receipts(self):
         """
         Compute the value of a subcontract move with multiple receipts
