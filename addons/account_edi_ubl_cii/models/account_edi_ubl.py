@@ -925,7 +925,7 @@ class AccountEdiUBL(models.AbstractModel):
                     'schemeID': '0192',
                 },
             })
-        elif commercial_partner.country_code == 'NO' and commercial_partner.vat != '/':
+        elif commercial_partner.country_code == 'NO' and vat:
             if not vat.startswith('NO'):
                 vat = f'NO{vat}'
             if not vat.endswith('MVA'):
