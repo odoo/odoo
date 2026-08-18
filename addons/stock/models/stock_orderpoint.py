@@ -13,7 +13,7 @@ from odoo.exceptions import RedirectWarning, UserError, ValidationError
 from odoo.modules.registry import Registry
 from odoo.fields import Domain
 from odoo.sql_db import BaseCursor
-from odoo.tools import float_compare, float_is_zero, frozendict, split_every, format_date
+from odoo.tools import float_compare, frozendict, split_every, format_date
 
 _logger = logging.getLogger(__name__)
 
@@ -799,14 +799,39 @@ class StockWarehouseOrderpoint(models.Model):
     def _get_orderpoint_locations(self):
         return self.env['stock.location'].search([('replenish_location', '=', True)])
 
+    def _get_multiple_rounding_method(self):
+        """How to round qty_to_order to the replenishment multiple.
+
+        ``'UP'``: always round up (19.0 default; may exceed Max).
+        ``'DOWN_IF_MIN_MET'``: round down when rounding up would exceed Max
+        but rounding down still reaches Min (18.0-style). Opt-in via
+        ``stock.orderpoint_round_down_to_max``.
+        """
+        if self.env['ir.config_parameter'].sudo().get_param('stock.orderpoint_round_down_to_max') == 'True':
+            return 'DOWN_IF_MIN_MET'
+        return 'UP'
+
     def _get_multiple_rounded_qty(self, qty_to_order):
         replenishment_multiple = self.replenishment_uom_id or self._get_replenishment_multiple_alternative(qty_to_order)
-        if replenishment_multiple:
-            # Replace the UP by DOWN if we don't want to order more quantity than product_max_qty
-            qty_to_order = self.product_id.uom_id._compute_quantity(qty_to_order, replenishment_multiple)
-            qty_to_order = fields.Float.round(qty_to_order, precision_digits=0, rounding_method="UP")
-            qty_to_order = replenishment_multiple._compute_quantity(qty_to_order, self.product_id.uom_id)
-        return qty_to_order
+        if not replenishment_multiple:
+            return qty_to_order
+        qty_in_multiple = self.product_id.uom_id._compute_quantity(qty_to_order, replenishment_multiple)
+        qty_up = fields.Float.round(qty_in_multiple, precision_digits=0, rounding_method="UP")
+        rounded_up = replenishment_multiple._compute_quantity(qty_up, self.product_id.uom_id)
+        if (
+            self._get_multiple_rounding_method() == 'DOWN_IF_MIN_MET'
+            and self.product_uom.compare(rounded_up, qty_to_order) > 0
+        ):
+            qty_down = fields.Float.round(qty_in_multiple, precision_digits=0, rounding_method="DOWN")
+            rounded_down = replenishment_multiple._compute_quantity(qty_down, self.product_id.uom_id)
+            max_qty = max(self.product_min_qty, self.product_max_qty)
+            stock_after_down = max_qty - qty_to_order + rounded_down
+            if (
+                self.product_uom.compare(rounded_down, 0) > 0
+                and self.product_uom.compare(stock_after_down, self.product_min_qty) >= 0
+            ):
+                return rounded_down
+        return rounded_up
 
     def get_horizon_days(self):
         """ Return the value for Horizon. This can be (in order of priority):

@@ -203,6 +203,9 @@
                             <setting company_dependent="1" help="Configure your horizon to trigger reordering rules earlier to get a head start on replenishment and avoid delays, or trigger it just-in-time ('0 days') to avoid overstocking.">
                                 <field name="horizon_days" class="oe_inline"/><span> days</span>
                             </setting>
+                            <setting help="If the replenishment Multiple would push quantity above Max, round down when stock would still reach Min. When disabled, always round up (may exceed Max).">
+                                <field name="orderpoint_round_down_to_max"/>
+                            </setting>
                             <div id="sale_security_lead"/>
                             <div id="purchase_po_lead"/>
                         </block>
