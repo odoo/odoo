@@ -19,7 +19,9 @@ async function assertPinnedPanelUnpinCount(expectedCount) {
     await contains(".o-discuss-PinnedMessagesPanel .o-mail-Message", {
         text: "Test pinned message",
     });
-    expect(".o-discuss-PinnedMessagesPanel button[title='Unpin']").toHaveCount(expectedCount);
+    expect(
+        ".o-discuss-PinnedMessagesPanel button[title='Unpin'] [data-icon='keep_off']"
+    ).toHaveCount(expectedCount);
 }
 
 test("Pin message", async () => {
@@ -38,8 +40,8 @@ test("Pin message", async () => {
         '.o-discuss-PinnedMessagesPanel p:text("This channel doesn\'t have any pinned messages.")'
     );
     await click(".o-mail-Message [title='Expand']");
-    await click(".dropdown-item:text('Pin')");
-    await click(".modal-footer button:text('Pin Message')");
+    await click(".dropdown-item:text('Pin') [data-icon='push_pin']");
+    await click(".modal-footer button:text('Pin Message') [data-icon='push_pin']");
     await contains(".o-discuss-PinnedMessagesPanel .o-mail-Message:has(:text('Hello world!'))");
 });
 
@@ -58,8 +60,8 @@ test("Unpin message", async () => {
     await click(".o-mail-DiscussContent-header button[title='Pinned Messages']");
     await contains(".o-discuss-PinnedMessagesPanel .o-mail-Message");
     await click(".o-mail-Message [title='Expand']");
-    await click(".dropdown-item:text('Unpin')");
-    await click(".modal-footer button:text('Unpin Message')");
+    await click(".dropdown-item:text('Unpin') [data-icon='keep_off']");
+    await click(".modal-footer button:text('Unpin Message') [data-icon='keep_off']");
     await contains(".o-discuss-PinnedMessagesPanel .o-mail-Message", { count: 0 });
 });
 
