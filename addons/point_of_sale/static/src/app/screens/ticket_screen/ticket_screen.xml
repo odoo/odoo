@@ -139,7 +139,7 @@
                                                 </div>
                                     </div>
                                     <div class="mx-2" name="delete-column">
-                                        <div t-if="!this.shouldHideDeleteButton(order) and this.pos.cashier._role !== 'restrictive'" class="d-flex align-items-center justify-content-center h-100" role="button" name="delete" t-on-click.stop="() => this.onDeleteOrder(order)">
+                                        <div t-if="!this.shouldHideDeleteButton(order)" class="d-flex align-items-center justify-content-center h-100" role="button" name="delete" t-on-click.stop="() => this.onDeleteOrder(order)">
                                             <div class="btn btn-danger btn-lg">
                                                 <i class="oi oi-filled" data-icon="delete" aria-hidden="true"/>
                                             </div>
@@ -206,7 +206,7 @@
                                         t-if="this.showInvoiceButton"
                                         onInvoiceOrder.bind="this.onInvoiceOrder"
                                         order="_selectedSyncedOrder" />
-                                    <button class="control-button btn btn-secondary btn-lg lh-lg flex-grow-1 flex-shrink-1" t-on-click="() => this.doPrint.call(_selectedSyncedOrder)">
+                                    <button class="receipt-button control-button btn btn-secondary btn-lg lh-lg flex-grow-1 flex-shrink-1" t-on-click="() => this.doPrint.call(_selectedSyncedOrder)">
                                         <i t-attf-class="oi {{this.doPrint.status === 'loading' ? 'oi-fw oi-spin' : ''}} me-1" t-att-data-icon="this.doPrint.status === 'loading' ? 'autorenew' : 'print'"/>Receipt
                                     </button>
                                     <button t-if="this.pos.canSendReceipt" class="control-button send-button btn btn-secondary btn-lg lh-lg flex-grow-1 flex-shrink-1" t-on-click="this.onClickSend">

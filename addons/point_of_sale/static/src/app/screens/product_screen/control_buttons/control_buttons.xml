@@ -58,7 +58,7 @@
                         <small t-out="this.currentOrder.pricelist_id.display_name" class="ms-auto ms-md-0 text-truncate text-muted text-end text-md-center"/>
                     </t>
                 </t>
-                <t t-if="this.pos.cashier._role != 'restrictive'" t-call="point_of_sale.controlButton"
+                <t t-call="point_of_sale.controlButton"
                     name="o_pricelist_button"
                     icon="'view_list'"
                     btnText.translate="Pricelist"
@@ -74,6 +74,7 @@
                 </t>
                 <t t-if="this.pos.config.fiscal_position_ids.length" t-call="point_of_sale.controlButton"
                     icon="'book'"
+                    name="o_fiscal_button"
                     btnText.translate="Tax"
                     btnClasses="'o_fiscal_position_button btn-secondary '"
                     onClick="() => this.clickFiscalPosition()"
@@ -96,6 +97,7 @@
                 <!-- Cancel Order Button -->
                 <t t-call="point_of_sale.controlButton"
                     icon="'delete'"
+                    name="o_cancel_order_button"
                     iconClasses="'oi-filled'"
                     btnText.translate="Cancel Order"
                     btnClasses="'btn-danger '"

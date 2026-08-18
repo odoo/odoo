@@ -24,7 +24,7 @@
             <attribute name="t-if"
             add="(!this.pos.config.module_pos_hr or this.pos.employeeIsAdmin or this.pos.getCashierUserId() === this.pos.session.user_id?.id)" separator=" and "/>
         </xpath>
-        <xpath expr="//DropdownItem/i[@data-icon='desktop_windows')]/.." position="attributes">
+        <xpath expr="//DropdownItem/i[@data-icon='desktop_windows']/.." position="attributes">
             <attribute name="t-if">
                 !this.pos.hasEmployeeRole(['supervised'])
             </attribute>
