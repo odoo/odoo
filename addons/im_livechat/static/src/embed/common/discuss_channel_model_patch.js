@@ -24,16 +24,18 @@ const discussChannelPatch = {
             });
         });
         this.storeAsActiveVisitorLivechats = fields.One("Store", {
-            /** @this {import("models").DiscussChannel} */
-            compute() {
+            inverse: "activeVisitorLivechats",
+        });
+        this.assignComputed(
+            "storeAsActiveVisitorLivechats",
+            function computeStoreAsActiveVisitorLivechats() {
                 return this.channel_type === "livechat" &&
                     !this.livechat_end_dt &&
                     (this.self_member_id?.eq(this.livechatVisitorMember) || this.isTransient)
                     ? this.store
                     : null;
-            },
-            inverse: "activeVisitorLivechats",
-        });
+            }
+        );
         this.onChange(
             () => [this.hasActiveChatbot],
             function onChangeHasActiveChatbot(hasActiveChatbot) {
