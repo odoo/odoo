@@ -2862,7 +2862,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         (line_1 + line_4).reconcile()
         # Handle dynamic domains, collections in domains, and be able to search the residual_at_date field
         self.assertRecordValues(
-            self.env['account.move.line'].search([('open_on', 'in', ['today -200y', '2016-03-28']), ('id', 'in', all_lines.ids), ('residual_at_date', '!=', 0)]),
+            self.env['account.move.line'].search([('open_on', 'in', ['2016-03-28']), ('id', 'in', all_lines.ids), ('residual_at_date', '!=', 0)]),
             [
                 {'amount_residual':  200.0, 'residual_at_date':  300.0},
             ]

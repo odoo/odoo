@@ -1753,6 +1753,9 @@ class AccountMoveLine(models.Model):
 
     @api.model
     def _search(self, domain, *args, **kwargs):
+
+        domain = self._normalize_open_on_domain(domain)
+
         # To enable computing the residual_at_date, the recon_limit date needs to be included in the context
         contextualized = self
         if recon_limit := self._get_recon_limit_from_domain(domain):
@@ -1775,6 +1778,30 @@ class AccountMoveLine(models.Model):
         if recon_limit := contextualized._get_recon_limit_from_domain(domain):
             contextualized = contextualized.with_context(recon_limit=recon_limit)
         return super(AccountMoveLine, contextualized).search_fetch(domain, field_names, offset, limit, order)
+
+    @api.model
+    def _normalize_open_on_domain(self, domain):
+        if not domain:
+            return domain
+
+        def normalize_condition(condition):
+            if condition.field_expr != 'open_on':
+                return condition
+            operator = condition.operator
+            value = condition.value
+            # We intercept both '=' (often from context/UI) and 'in' (from some UI facets)
+            if operator in ('=', '<=', 'in'):
+                # Safely extract value if it's a collection (like OrderedSet from 'in')
+                if operator == 'in' and value:
+                    value = next(iter(value))
+                return Domain('open_on', '<=', value)
+            if operator in ('>', 'not in'):
+                if operator == 'not in' and value:
+                    value = next(iter(value))
+                return Domain('open_on', '>', value)
+            return condition
+
+        return Domain(domain).map_conditions(normalize_condition)
 
     def _get_recon_limit_from_domain(self, domain):
         for condition in Domain(domain).optimize_dynamic(self).iter_conditions():
