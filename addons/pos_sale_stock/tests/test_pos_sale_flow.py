@@ -248,6 +248,42 @@ class TestPoSSaleStock(TestPosStockHttpCommon, TestPoSSale):
         }], partner=partner_1)
         self.assertEqual(order.order_line.qty_delivered, 1)
 
+    def test_settle_order_with_different_uom_delivered_qty(self):
+        """ Test that settling a sale order line sold in another UoM updates its delivered quantity """
+
+        product_a = self.env['product.product'].create({
+            'name': 'Product A',
+            'available_in_pos': True,
+            'is_storable': True,
+            'lst_price': 10.0,
+        })
+        test_partner = self.env['res.partner'].create({'name': 'Test Partner'})
+        sale_order = self.env['sale.order'].sudo().create({
+            'partner_id': test_partner.id,
+            'order_line': [Command.create({
+                'product_id': product_a.id,
+                'name': product_a.name,
+                'product_uom_qty': 1,
+                'product_uom_id': self.env.ref('uom.product_uom_dozen').id,
+                'price_unit': product_a.lst_price,
+            })],
+        })
+        sale_order.action_confirm()
+
+        # The PoS sells the 12 units of the dozen ordered.
+        self._sync_paid_pos_order([{
+            'product': product_a,
+            'qty': 12.0,
+            'price_unit': 0.83,
+            'extra_values': {
+                'sale_order_line_id': sale_order.order_line.id,
+                'sale_order_origin_id': sale_order.id,
+            },
+        }], partner=test_partner)
+
+        # The delivered quantity is converted back in the unit of the sale order line.
+        self.assertEqual(sale_order.order_line.qty_delivered, 1.0, "1 dozen should be delivered")
+
     def test_settle_order_with_multistep_delivery(self):
         """This test create an order and settle it in the PoS. It also uses multistep delivery
             and we need to make sure that all the picking are cancelled if the order is fully delivered.
