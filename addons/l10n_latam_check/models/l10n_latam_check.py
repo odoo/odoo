@@ -5,6 +5,7 @@ import stdnum
 
 from odoo import models, fields, api, Command, _
 from odoo.exceptions import UserError, ValidationError
+from odoo.tools import SQL
 
 
 _logger = logging.getLogger(__name__)
@@ -29,9 +30,15 @@ class L10n_LatamCheck(models.Model):
         readonly=True,
         check_company=True,
     )
+    on_hand = fields.Boolean(
+        compute='_compute_on_hand',
+        compute_sql='_compute_sql_on_hand',
+        compute_sudo=False,
+    )
     current_journal_id = fields.Many2one(
         comodel_name='account.journal',
-        compute='_compute_current_journal', store=True,
+        compute='_compute_current_journal',
+        store=True,
     )
     name = fields.Char(string='Number')
     issuer_vat = fields.Char(
@@ -75,6 +82,58 @@ class L10n_LatamCheck(models.Model):
         if self.name:
             self.name = self.name.zfill(8)
 
+    @api.depends('current_journal_id')
+    def _compute_on_hand(self):
+        """ A check is on hand when its current journal is of type cash.
+        Note 1: If it's in a journal of type 'bank' it was deposited already, and is no longer on hand.
+        Note 2: It relies on current_journal_id that is computed on *confirmed* payments.
+        """
+        for check in self:
+            check.on_hand = check.current_journal_id.type == 'cash'
+
+    def _compute_sql_on_hand(self, table):
+        """ A check is on hand when its current journal is of type cash.
+        (If it's in a journal of type 'bank' it was deposited already, and is no longer on hand)
+        """
+        return SQL("%s = 'cash'", table.current_journal_id.type)
+
+    @api.depends(
+        'payment_id.state', 'payment_id.date', 'payment_id.move_id',
+        'operation_ids.state', 'operation_ids.date', 'operation_ids.move_id',
+    )
+    def _compute_current_journal(self):
+        # ! current_journal_id only makes sense for 'third_party_checks'
+        for check in self:
+            last_operation = check._get_last_operation()
+            if last_operation and last_operation.payment_type == 'inbound':
+                check.current_journal_id = last_operation.journal_id
+            else:
+                check.current_journal_id = False
+
+    @api.depends('outstanding_line_id.amount_residual')
+    def _compute_issue_state(self):
+        # ! issue_state only makes sense for 'own_checks'
+        for rec in self:
+            if rec.payment_method_code != 'own_checks' or not rec.outstanding_line_id:
+                rec.issue_state = False
+            elif rec.amount and not rec.outstanding_line_id.amount_residual:
+                if any(
+                    line.account_id.account_type in ['liability_payable', 'asset_receivable']
+                    for line in rec.outstanding_line_id.matched_debit_ids.debit_move_id.move_id.line_ids
+                ):
+                    rec.issue_state = 'voided'
+                else:
+                    rec.issue_state = 'debited'
+            else:
+                rec.issue_state = 'handed'
+
+    @api.depends('payment_method_line_id.code', 'partner_id')
+    def _compute_bank_account_id(self):
+        for rec in self:
+            rec.bank_account_id = False
+            if rec.payment_method_line_id.code == 'new_third_party_checks':
+                rec.bank_account_id = rec.partner_id.bank_ids[:1].id
+
     def _prepare_void_move_vals(self):
         return {
             'ref': 'Void check',
@@ -103,29 +162,6 @@ class L10n_LatamCheck(models.Model):
             ],
         }
 
-    @api.depends('outstanding_line_id.amount_residual')
-    def _compute_issue_state(self):
-        for rec in self:
-            if rec.payment_method_code != 'own_checks' or not rec.outstanding_line_id:
-                rec.issue_state = False
-            elif rec.amount and not rec.outstanding_line_id.amount_residual:
-                if any(
-                    line.account_id.account_type in ['liability_payable', 'asset_receivable']
-                    for line in rec.outstanding_line_id.matched_debit_ids.debit_move_id.move_id.line_ids
-                ):
-                    rec.issue_state = 'voided'
-                else:
-                    rec.issue_state = 'debited'
-            else:
-                rec.issue_state = 'handed'
-
-    @api.depends('payment_method_line_id.code', 'partner_id')
-    def _compute_bank_account_id(self):
-        for rec in self:
-            rec.bank_account_id = False
-            if rec.payment_method_line_id.code == 'new_third_party_checks':
-                rec.bank_account_id = rec.partner_id.bank_ids[:1].id
-
     def action_void(self):
         for rec in self.filtered('outstanding_line_id'):
             # Unreconcile the payment from its mactched invoice before voiding
@@ -143,24 +179,23 @@ class L10n_LatamCheck(models.Model):
             (void_move.line_ids[1] + rec.outstanding_line_id).reconcile()
             (void_move.line_ids[0] + payment_line).reconcile()
 
-    def _get_last_operation(self):
+    def _get_operations(self):
+        """ Return the confirmed operations of the check, from the oldest to the most recent. """
         self.ensure_one()
-        return (self.payment_id + self.operation_ids).filtered(
-                lambda x: x.state not in ['draft', 'canceled']).sorted(key=lambda payment: (payment.date, payment.write_date, payment._origin.id))[-1:]
+        return (
+            self.payment_id + self.operation_ids
+        ).filtered(lambda x:
+            x.state not in ('draft', 'canceled')
+        ).sorted(key=lambda payment: (
+            payment.date,
+            # The move is created the first time the payment is posted and kept afterwards.
+            # Payments confirmed without a journal entry fall back on their own write date.
+            payment.move_id.create_date or payment.write_date,
+            payment._origin.id
+        ))
 
-    @api.depends('payment_id.state', 'operation_ids.state')
-    def _compute_current_journal(self):
-        for rec in self:
-            last_operation = rec._get_last_operation()
-            incoming_operations = (rec.payment_id + rec.operation_ids).filtered(lambda x: x.state not in ['draft', 'canceled'] and x.payment_type == 'inbound')
-            outgoing_operations = (rec.payment_id + rec.operation_ids).filtered(lambda x: x.state not in ['draft', 'canceled'] and x.payment_type == 'outbound')
-            if not last_operation or len(incoming_operations) - len(outgoing_operations) < 1:
-                rec.current_journal_id = False
-                continue
-            if last_operation.payment_type == 'inbound':
-                rec.current_journal_id = last_operation.journal_id
-            else:
-                rec.current_journal_id = False
+    def _get_last_operation(self):
+        return self._get_operations()[-1:]
 
     def button_open_payment(self):
         self.ensure_one()

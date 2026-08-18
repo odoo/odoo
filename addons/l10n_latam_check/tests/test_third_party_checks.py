@@ -38,11 +38,15 @@ class TestThirdChecks(L10nLatamCheckTest):
         We pay directly with multiple checks instead of just one check, just to ensure the create multi
         is properly working. """
         payment = self.create_third_party_check()
+        checks = payment.l10n_latam_new_check_ids
 
-        self.assertEqual(len(payment.l10n_latam_new_check_ids), 2, 'Checks where not created properly')
-        self.assertRecordValues(payment.l10n_latam_new_check_ids, [{
+        self.assertEqual(len(checks), 2, 'Checks where not created properly')
+        self.assertRecordValues(checks, [{
             'current_journal_id': self.third_party_check_journal.id,
+            'on_hand': True,
         }]*2)
+        on_hand_checks = self.env['l10n_latam.check'].search([('on_hand', '=', True)])
+        self.assertTrue(check in on_hand_checks for check in checks)  # ensure compute_sql is aligned
 
     # delivery (assert) dd un cheque tmb un return (assert) y un claim (assert)
     def test_02_third_party_check_delivery(self):
@@ -59,6 +63,7 @@ class TestThirdChecks(L10nLatamCheckTest):
         delivery = self.env['account.payment'].create(vals)
         delivery.action_post()
         self.assertFalse(check.current_journal_id, 'Current journal was not computed properly on delivery')
+        self.assertFalse(check.on_hand, 'Check should not be on hand anymore once delivered')
         # check dont delivery twice
         with self.assertRaisesRegex(ValidationError, "it seems it has been moved by another payment"):
             self.env['account.payment'].create(vals).action_post()
@@ -75,6 +80,7 @@ class TestThirdChecks(L10nLatamCheckTest):
         supplier_return = self.env['account.payment'].create(vals)
         supplier_return.action_post()
         self.assertEqual(check.current_journal_id, self.rejected_check_journal, 'Current journal was not computed properly on return')
+        self.assertTrue(check.on_hand, 'Check should be on hand again once returned')
         # check dont return twice
         with self.assertRaisesRegex(ValidationError, "Some checks are already in hand and can't be received again"):
             self.env['account.payment'].create(vals).action_post()
@@ -110,6 +116,7 @@ class TestThirdChecks(L10nLatamCheckTest):
             'destination_journal_id': bank_journal.id,
         })._create_payments()
         self.assertEqual(check.current_journal_id.id, bank_journal.id, 'Current journal was not computed properly on delivery')
+        self.assertFalse(check.on_hand, 'A check deposited on a bank journal is not on hand anymore')
         self.assertEqual(len(check.operation_ids + payment), 3, 'Check that all three payments were created')
 
         # If the bank tells you that the check has been rejected you have to do a new transfer of the previous check
@@ -119,6 +126,7 @@ class TestThirdChecks(L10nLatamCheckTest):
             'destination_journal_id': self.rejected_check_journal.id,
         })._create_payments()
         self.assertEqual(check.current_journal_id.id, self.rejected_check_journal.id, 'Current journal was not computed properly on delivery')
+        self.assertTrue(check.on_hand, 'A check transferred back to a cash journal is on hand again')
         self.assertEqual(len(check.operation_ids + payment), 5, 'Check that all five payments were created')
 
         # Sent back to customer (with payment) - check if we can use the check
@@ -211,6 +219,150 @@ class TestThirdChecks(L10nLatamCheckTest):
             check_2.current_journal_id,
             "Check should not be on hand even if outbound was created before inbound",
         )
+
+    def test_current_journal_follows_the_date_of_the_operations(self):
+        """ The operations are ordered by date first, so editing the date of a confirmed
+        payment reorders them and must recompute where the check currently is.
+        """
+        init_payment = self.create_third_party_check()
+        init_payment.date = fields.Date.to_date('2023-11-06')
+        check = init_payment.l10n_latam_new_check_ids[0]
+
+        self.env['l10n_latam.payment.mass.transfer'].with_context(
+            active_model='l10n_latam.check', active_ids=check.ids,
+        ).create({
+            'destination_journal_id': self.rejected_check_journal.id,
+            'payment_date': fields.Date.to_date('2023-11-07'),
+        })._create_payments()
+        self.assertEqual(check.current_journal_id, self.rejected_check_journal)
+
+        # moving the reception after the transfer makes it the last operation again
+        init_payment.date = fields.Date.to_date('2023-11-08')
+        self.assertEqual(
+            check.current_journal_id, self.third_party_check_journal,
+            "The current journal should be recomputed when an operation is moved in time",
+        )
+
+    def test_last_operation_with_operations_on_the_same_date(self):
+        """ Every operation of a check can be recorded on the same day. In that case the last
+        operation is the most recently created one, and editing an older operation afterwards
+        must not turn it into the last one.
+        """
+        init_time = datetime(2023, 11, 6, 8, 0, 0)
+        with patch.object(self.env.cr, 'now', lambda: init_time), freeze_time(init_time):
+            init_payment = self.create_third_party_check()
+        check = init_payment.l10n_latam_new_check_ids[0]
+
+        transfer_time = init_time + timedelta(hours=1)
+        with patch.object(self.env.cr, 'now', lambda: transfer_time), freeze_time(transfer_time):
+            self.env['l10n_latam.payment.mass.transfer'].with_context(
+                active_model='l10n_latam.check', active_ids=check.ids,
+            ).create({'destination_journal_id': self.rejected_check_journal.id})._create_payments()
+
+        _transfer_out, transfer_in = check.operation_ids.sorted('id')
+        self.assertEqual(check._get_last_operation(), transfer_in)
+        self.assertEqual(check.current_journal_id, self.rejected_check_journal)
+
+        # editing the payment that received the check should not make it the last operation
+        edition_time = transfer_time + timedelta(hours=1)
+        with patch.object(self.env.cr, 'now', lambda: edition_time), freeze_time(edition_time):
+            init_payment.memo = 'Edited after the check was transferred'
+
+        self.assertEqual(
+            check._get_last_operation(), transfer_in,
+            "The last operation should be the last one posted, not the last one modified"
+        )
+
+    def test_undo_operation_in_the_middle_of_the_check_history(self):
+        """ An operation can only be undone when nothing else was done with the check afterwards. """
+        init_payment = self.create_third_party_check()
+        check = init_payment.l10n_latam_new_check_ids[0]
+
+        outbound_payment = self.env['account.payment'].create({
+            'l10n_latam_move_check_ids': check,
+            'partner_id': self.partner_a.id,
+            'payment_type': 'outbound',
+            'journal_id': self.third_party_check_journal.id,
+            'payment_method_line_id': self.third_party_check_journal
+                ._get_available_payment_method_lines('outbound')
+                .filtered(lambda x: x.code == 'out_third_party_checks').id,
+        })
+        outbound_payment.action_post()
+
+        with self.assertRaisesRegex(UserError, "moved by a later operation"):
+            init_payment.action_draft()
+
+        # the last operation can be undone, and then the reception as well
+        outbound_payment.action_draft()
+        self.assertEqual(
+            check.current_journal_id, self.third_party_check_journal,
+            "The check should be back on hand once the delivery is reset",
+        )
+        init_payment.action_draft()
+        self.assertEqual(init_payment.state, 'draft')
+
+    def test_undo_a_whole_chain_of_operations_at_once(self):
+        """ Undoing every operation of a check at once is valid: nothing is left dangling. """
+        init_payment = self.create_third_party_check()
+        check = init_payment.l10n_latam_new_check_ids[0]
+        outbound_payment = self.env['account.payment'].create({
+            'l10n_latam_move_check_ids': check,
+            'partner_id': self.partner_a.id,
+            'payment_type': 'outbound',
+            'journal_id': self.third_party_check_journal.id,
+            'payment_method_line_id': self.third_party_check_journal
+                ._get_available_payment_method_lines('outbound')
+                .filtered(lambda x: x.code == 'out_third_party_checks').id,
+        })
+        outbound_payment.action_post()
+
+        # the whole chain is undone in one go, no operation is left behind a later one
+        (init_payment | outbound_payment).action_draft()
+        self.assertEqual((init_payment | outbound_payment).mapped('state'), ['draft', 'draft'])
+
+    def test_undo_the_only_operation_of_a_check(self):
+        """ A payment that is the sole operation of its checks can always be undone. """
+        init_payment = self.create_third_party_check()
+        check = init_payment.l10n_latam_new_check_ids[0]
+        self.assertEqual(
+            check._get_last_operation(), init_payment,
+            "The payment that received the check is its only operation",
+        )
+
+        init_payment.action_draft()
+        self.assertEqual(init_payment.state, 'draft')
+
+        init_payment.action_post()
+        init_payment.action_cancel()
+        self.assertEqual(init_payment.state, 'canceled')
+
+    def test_undo_a_suffix_of_a_longer_chain(self):
+        """ Undoing a trailing part of the chain is valid, undoing operations in its middle is not. """
+        init_payment = self.create_third_party_check()
+        check = init_payment.l10n_latam_new_check_ids[0]
+
+        def transfer(destination_journal):
+            self.env['l10n_latam.payment.mass.transfer'].with_context(
+                active_model='l10n_latam.check', active_ids=[check.id],
+            ).create({'destination_journal_id': destination_journal.id})._create_payments()
+
+        transfer(self.rejected_check_journal)
+        transfer(self.third_party_check_journal)
+
+        operations = check._get_operations()
+        self.assertEqual(len(operations), 5, "Reception plus two transfers of two payments each")
+
+        # undoing operations that would leave a more recent one behind is refused
+        with self.assertRaisesRegex(UserError, "moved by a later operation"):
+            operations[:3].action_draft()
+
+        # the three most recent operations can be undone together
+        operations[-3:].action_draft()
+        self.assertEqual(
+            check._get_operations(), operations[:2],
+            "Only the operations that were not undone should remain",
+        )
+        self.assertRecordValues(operations[-3:], [{'state': 'draft'}] * 3)
 
     def test_same_check_number_allowed_for_new_third_party_checks(self):
         """Ensure that the same check number can be used for New Third Party Checks payments."""

@@ -121,12 +121,34 @@ class AccountPayment(models.Model):
                   "Checks:\n%s", ('\n'.join(['* %s (%s)' % (x.name, x.issue_state) for x in checks_reconciled])))
             )
 
+    def _check_no_later_operation(self):
+        """ Payments can only be undone if they are at the end of the chain of
+        operations, otherwise it would no longer reflect where the check actually is.
+        A whole chain of operations can therefore be undone at once.
+        """
+        payments = self.filtered(lambda p: p.state not in ('draft', 'canceled'))
+        blocked = []
+        for check in (payments.l10n_latam_new_check_ids | payments.l10n_latam_move_check_ids):
+            operations = check._get_operations()  # sorted
+            remaining = operations - payments
+            # remaining must be the beginning of the chain of operations
+            if remaining != operations[:len(remaining)]:
+                blocked.append((check, remaining[-1]))
+        if blocked:
+            raise UserError(self.env._(
+                "You can't cancel or re-open a payment if its checks have been moved by a later operation. "
+                "Please undo that operation first.\nChecks:\n%s",
+                '\n'.join('* %s (%s)' % (check.display_name, operation.display_name) for check, operation in blocked),
+            ))
+
     def action_cancel(self):
         self._get_reconciled_checks_error()
+        self._check_no_later_operation()
         super().action_cancel()
 
     def action_draft(self):
         self._get_reconciled_checks_error()
+        self._check_no_later_operation()
         super().action_draft()
 
     def _l10n_latam_check_unlink_split_move(self):
