@@ -29,6 +29,8 @@ class Settings(BaseSettings):
     voyage_model: str = "voyage-3"
     voyage_dimensions: int = 1024
 
+    database_url: str = ""
+
     max_upload_bytes: int = 10 * 1024 * 1024  # 10 MiB — matches docs/openapi.yaml
     ocr_render_dpi: int = 300
 

@@ -291,6 +291,54 @@ class AccountMove(models.Model):
         "are stored in invoice_agent_vendor_doc.",
     )
 
+    # === Phase 2: RAG Validation (validate.py + queue_consumer.py) ===
+    ai_duplicate_move_id = fields.Many2one(
+        comodel_name="account.move",
+        string="AI Duplicate Of",
+        ondelete="set null",
+        index=True,
+        copy=False,
+        readonly=True,
+        help="When the RAG validation identifies this invoice as a duplicate "
+        "of a historical bill, this links to the original move.",
+    )
+    ai_validation_account_id = fields.Char(
+        string="AI Suggested Account",
+        readonly=True,
+        copy=False,
+        help="GL account code suggested by the RAG validation step, based on "
+        "the vendor's historical posting patterns.",
+    )
+    ai_validation_account_confidence = fields.Float(
+        string="AI Account Confidence",
+        digits=(3, 2),
+        readonly=True,
+        copy=False,
+        help="Confidence in the suggested GL account (0..1). When this "
+        "exceeds the auto-fill threshold, the account is pre-filled on "
+        "invoice lines.",
+    )
+    ai_validation_amount_plausible = fields.Boolean(
+        string="AI Amount Plausible",
+        readonly=True,
+        copy=False,
+        help="True when the RAG validation considers the invoice amounts "
+        "consistent with the vendor's historical amounts.",
+    )
+    ai_flag_ids = fields.One2many(
+        comodel_name="invoice.agent.validation.flag",
+        inverse_name="move_id",
+        string="AI Validation Flags",
+        copy=False,
+        readonly=True,
+    )
+    ai_validation_reasoning = fields.Text(
+        string="AI Validation Reasoning",
+        readonly=True,
+        copy=False,
+        help="Free-text explanation from the RAG validation step.",
+    )
+
     # -------------------------------------------------------------------------
     # COMPUTE: AI Variance
     # -------------------------------------------------------------------------
@@ -1076,7 +1124,7 @@ class AccountMove(models.Model):
 
         Week 8: this is no longer a placeholder. The job is registered in
         the transactional outbox (``invoice.agent.job``) on the same cursor
-        as the create; the outbox cron publishes it to the ``invoice.agent``
+        as the create; the drain cron publishes it to the ``invoice.agent``
         topic exchange as ``extract.request`` in a separate transaction.
         Nothing is ever published inside the request transaction — a
         rolled-back create leaves no orphan message on the broker.
@@ -1088,6 +1136,126 @@ class AccountMove(models.Model):
         job = self._enqueue_ai_job()
         if job:
             self.write({"ai_extraction_status": "processing"})
+
+    # -------------------------------------------------------------------------
+    # PHASE 2: RAG VALIDATION — apply validation verdict
+    # -------------------------------------------------------------------------
+    # Called by ``_apply_queue_result`` in queue_consumer.py when the
+    # ``extract.done`` result carries a ``validation`` envelope from the
+    # invoice-ai service.  Writes the suggested GL account, duplicate flag,
+    # amount plausibility, and per-flag rows onto the move.
+
+    # Auto-fill GL account on lines when confidence exceeds this threshold.
+    ACCOUNT_AUTO_FILL_THRESHOLD = 0.85
+
+    def _apply_validation_verdict(self, verdict):
+        """Write a ``ValidationVerdict`` onto this move.
+
+        ``verdict`` is a plain dict matching
+        ``invoice-ai/app/schemas.py::ValidationVerdict``::
+
+            {"account_id", "account_confidence", "amount_plausible",
+             "duplicate_of_move_id", "flags", "reasoning"}
+        """
+        self.ensure_one()
+        account_id = verdict.get("account_id") or ""
+        confidence = verdict.get("account_confidence") or 0.0
+        amount_plausible = bool(verdict.get("amount_plausible", True))
+        dup_move_id = verdict.get("duplicate_of_move_id")
+        flags = verdict.get("flags") or []
+        reasoning = verdict.get("reasoning") or ""
+
+        vals = {
+            "ai_validation_account_id": account_id or False,
+            "ai_validation_account_confidence": confidence,
+            "ai_validation_amount_plausible": amount_plausible,
+            "ai_validation_reasoning": reasoning or False,
+        }
+
+        # Duplicate detection
+        if dup_move_id:
+            dup_move = self.browse(int(dup_move_id))
+            if dup_move.exists():
+                vals["ai_duplicate_move_id"] = dup_move.id
+
+        self.write(vals)
+
+        # --- Per-flag rows (clear + re-create) ---
+        self.ai_flag_ids.unlink()
+        if flags:
+            flag_model = self.env["invoice.agent.validation.flag"]
+            flag_lines = [
+                (0, 0, {"flag": flag, "reasoning": reasoning})
+                for flag in flags
+            ]
+            self.write({"ai_flag_ids": flag_lines})
+
+        # --- Auto-fill GL account on lines (when confidence is high) ---
+        if account_id and confidence >= self.ACCOUNT_AUTO_FILL_THRESHOLD:
+            self._auto_fill_gl_account(account_id)
+
+        # --- Post duplicate banner on chatter ---
+        if dup_move_id and vals.get("ai_duplicate_move_id"):
+            dup_name = self.ai_duplicate_move_id.display_name or str(dup_move_id)
+            try:
+                self.message_post(
+                    body=(
+                        "\U0001f6a9 <b>Duplicate Invoice Detected</b><br/>"
+                        "This invoice appears to be a duplicate of "
+                        "<b>%s</b>. Please verify before posting."
+                    ) % dup_name,
+                    subject="AI Duplicate Detection: %s" % self.display_name,
+                )
+            except Exception:
+                _logger.exception(
+                    "invoice_agent: failed to post duplicate banner on %s",
+                    self.display_name,
+                )
+
+        _logger.info(
+            "invoice_agent validation applied: move_id=%d account=%s "
+            "confidence=%.2f plausible=%s flags=%s dup=%s",
+            self.id,
+            account_id,
+            confidence,
+            amount_plausible,
+            flags,
+            dup_move_id,
+        )
+        return True
+
+    def _auto_fill_gl_account(self, account_code):
+        """Set account_id on invoice lines whose product is not set.
+
+        Only applies to draft lines without an explicit account (i.e.,
+        lines where Odoo hasn't assigned one yet).  The accountant can
+        still override the suggestion — this is a convenience pre-fill,
+        not a hard constraint.
+        """
+        self.ensure_one()
+        account = self.env["account.account"].search(
+            [("code", "=", account_code)], limit=1,
+        )
+        if not account:
+            _logger.warning(
+                "invoice_agent: auto-fill account code '%s' not found in "
+                "chart of accounts — skipping",
+                account_code,
+            )
+            return
+        filled = 0
+        for line in self.invoice_line_ids:
+            if not line.account_id or line.display_type not in (False, "product"):
+                continue
+            line.write({"account_id": account.id})
+            filled += 1
+        if filled:
+            _logger.info(
+                "invoice_agent: auto-filled account %s on %d lines of move_id=%d",
+                account.code,
+                filled,
+                self.id,
+            )
 
     # -------------------------------------------------------------------------
     # RAG CORPUS (v0.10 — pgvector vendor/GL history, see

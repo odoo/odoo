@@ -1,4 +1,4 @@
-"""FastAPI app: `POST /v1/extract` + `GET /healthz`.
+"""FastAPI app: `POST /v1/extract` + `GET /healthz` + `POST /rag/vendor-context`.
 
 Run with ``uvicorn app.main:app --reload``; interactive docs at ``/docs``.
 
@@ -24,16 +24,20 @@ from .dependencies import get_claude_service, get_embedder
 from .embeddings import VoyageEmbedder, VoyageEmbeddingError
 from .errors import (
     BadRequestError,
+    RAGUnavailableError,
     ServiceError,
     UnsupportedMediaTypeError,
     UploadTooLargeError,
 )
 from .ocr import extract_bytes
+from .retrieve import close_pool, retrieve_vendor_context
 from .schemas import (
     EmbedRequest,
     EmbedResponse,
     ExtractionResponse,
     HealthResponse,
+    VendorContextRequest,
+    VendorContextResponse,
 )
 
 _logger = logging.getLogger(__name__)
@@ -49,6 +53,14 @@ app = FastAPI(
     description="Standalone vendor invoice extraction service (ADR-003). "
     "Owns OCR + the Claude call so Odoo HTTP workers are never blocked.",
 )
+
+
+# ---------------------------------------------------------------------------
+# Lifecycle — shut down the asyncpg pool on shutdown
+# ---------------------------------------------------------------------------
+@app.on_event("shutdown")
+async def _shutdown() -> None:
+    await close_pool()
 
 
 # ---------------------------------------------------------------------------
@@ -188,4 +200,63 @@ async def embed_texts(
         "vectors": vectors,
         "model": settings.voyage_model,
         "dimensions": settings.voyage_dimensions,
+    }
+
+
+# ---------------------------------------------------------------------------
+# RAG vendor-context endpoint (Phase 1 — Step 3)
+# ---------------------------------------------------------------------------
+
+
+@app.post("/rag/vendor-context", response_model=VendorContextResponse)
+async def vendor_context(
+    embedder: Annotated[VoyageEmbedder, Depends(get_embedder)],
+    _auth: Annotated[dict, Depends(require_token)],
+    payload: VendorContextRequest,
+) -> dict[str, Any]:
+    """Retrieve vendor context for RAG validation.
+
+    JWT-protected.  Embeds the OCR text with ``input_type="query"``
+    (asymmetric: documents were embedded with ``input_type="document"``),
+    runs hybrid vector + ref + VAT/name retrieval over
+    ``invoice_agent_vendor_doc``, deduplicates by ``move_id``, and returns
+    the top-8 candidates alongside the vendor's GL account frequency
+    distribution.
+
+    The Odoo consumer calls this after extraction to feed the validation
+    step (Phase 2) with historical context.
+    """
+    partner_id = payload.partner_id
+    if partner_id <= 0:
+        raise BadRequestError("partner_id must be a positive integer.")
+
+    ocr_text = (payload.ocr_text or "").strip()
+    if not ocr_text:
+        raise BadRequestError("ocr_text must not be empty.")
+
+    try:
+        context = await retrieve_vendor_context(
+            partner_id=partner_id,
+            ocr_text=ocr_text,
+            embedder=embedder,
+            extracted_ref=payload.extracted_ref,
+            extracted_vat=payload.extracted_vat,
+            extracted_vendor_name=payload.extracted_vendor_name,
+        )
+    except RuntimeError as exc:
+        _logger.warning("retrieve_vendor_context failed: %s", exc)
+        raise RAGUnavailableError(
+            message=f"RAG retrieval unavailable: {exc}",
+        ) from exc
+    except Exception as exc:
+        _logger.exception("retrieve_vendor_context error: %r", exc)
+        raise ServiceError(
+            message="Internal retrieval error",
+            code="E5000",
+        ) from exc
+
+    return {
+        "candidates": context["candidates"],
+        "gl_account_frequencies": context["gl_account_frequencies"],
+        "query_embedding_model": context["query_embedding_model"],
     }

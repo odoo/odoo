@@ -140,6 +140,11 @@ def _apply_queue_result(move, result):
         vals["invoice_line_ids"] = line_vals
     move.write(vals)
 
+    # --- Phase 2: Apply validation verdict (if present) ---
+    validation = result.get("validation")
+    if isinstance(validation, dict) and validation.get("account_id"):
+        move._apply_validation_verdict(validation)
+
     # Route: sub-threshold or pipeline-flagged extractions land in Needs
     # Review with the reason on the chatter.
     threshold = move._get_ai_min_confidence()

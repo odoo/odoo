@@ -1,0 +1,272 @@
+"""RAG validation module — cached prefix, volatile suffix prompt design.
+
+After extraction (``InvoiceExtraction``) and retrieval
+(``retrieve_vendor_context``), this module sends the extraction plus the
+vendor's historical context to Claude for validation.  The prompt is split
+into a **cached prefix** (chart of accounts + vendor history + validation
+instructions — identical across invoices for the same vendor) and a
+**volatile suffix** (this invoice's extraction — changes per call).
+
+``cache_control`` sits on the last block of the prefix.  Any byte change
+downstream invalidates the cache, so the volatile extraction data comes
+AFTER the cached blocks.  The prefix must be >= 4096 tokens on
+``claude-opus-4-8`` before reads register; the COA + 8 retrieved bills
+typically exceed that watermark.
+
+Flow (called by the consumer after extract + retrieve)::
+
+    validate_extraction(
+        extraction=extraction,
+        vendor_context=retrieved_context,
+        ocr_text=ocr_text,
+    )
+    -> ValidationVerdict  (structured output via messages.parse)
+"""
+
+from __future__ import annotations
+
+import logging
+from pathlib import Path
+from typing import Any
+
+from anthropic import (
+    APIConnectionError,
+    APIStatusError,
+    AsyncAnthropic,
+)
+from anthropic.types import CacheControlEphemeralParam, TextBlockParam
+
+from .config import settings
+from .schemas import (
+    InvoiceExtraction,
+    ValidationVerdict,
+)
+
+_logger = logging.getLogger(__name__)
+
+CACHE_CONTROL: CacheControlEphemeralParam = {"type": "ephemeral"}
+
+
+def _build_validation_system_blocks(
+    coa_text: str,
+    vendor_history: str,
+    gl_frequencies: str,
+) -> list[TextBlockParam]:
+    """Build the cacheable system prefix for validation.
+
+    The prefix contains:
+    1.  Chart of accounts (authoritative account names + codes).
+    2.  Vendor history (retrieved bills with their GL codes).
+    3.  GL account frequency distribution for this vendor.
+    4.  Validation instructions + the ``ValidationVerdict`` schema hint.
+
+    ``cache_control`` on the last block marks the whole prefix cacheable.
+    The volatile extraction text goes in ``messages``, not here.
+    """
+    from .system_prefix import load_coa
+
+    if not coa_text:
+        coa = load_coa()
+        accounts = "\n".join(str(a) for a in coa["accounts"])
+        coa_text = accounts or "(none loaded)"
+
+    validation_rules = (
+        "You validate a vendor invoice extraction against the vendor's "
+        "historical posting patterns.  For each extraction you must decide:\n"
+        "1. account_id: the most likely GL account code from the chart of "
+        "accounts above, based on what this vendor historically posts to "
+        "(see the frequency distribution and history).\n"
+        "2. account_confidence: your certainty for the account assignment "
+        "(float 0..1).  High when the vendor always posts to the same "
+        "account; low when the vendor uses multiple accounts for similar "
+        "items.\n"
+        "3. amount_plausible: whether the invoice amounts are consistent "
+        "with the vendor's historical amounts (True/False).\n"
+        "4. duplicate_of_move_id: if the extraction's ref or amounts "
+        "match a historical bill exactly, return that bill's move_id. "
+        "Otherwise null.\n"
+        "5. flags: any warnings — 'unusual_amount' (amount > 2× the "
+        "vendor's average), 'no_history' (vendor has < 3 historical "
+        "bills), 'low_account_confidence' (account_confidence < 0.5).\n"
+        "6. reasoning: a short explanation of your verdict.\n\n"
+        "Return ONLY a valid JSON object matching the provided schema; no "
+        "markdown, no commentary."
+    )
+
+    return [
+        {"type": "text", "text": f"CHART OF ACCOUNTS:\n{coa_text}"},
+        {"type": "text", "text": f"VENDOR HISTORY:\n{vendor_history or '(no history)'}"},
+        {"type": "text", "text": f"GL ACCOUNT FREQUENCIES:\n{gl_frequencies or '(none)'}"},
+        {
+            "type": "text",
+            "text": validation_rules,
+            "cache_control": CACHE_CONTROL,
+        },
+    ]
+
+
+def _format_vendor_history(candidates: list[dict[str, Any]]) -> str:
+    """Format candidate bills into a readable history block."""
+    if not candidates:
+        return "(no historical bills found)"
+    parts = []
+    for i, bill in enumerate(candidates, 1):
+        content = bill.get("content", "")
+        distance = bill.get("distance", 0.0)
+        move_id = bill.get("move_id", 0)
+        parts.append(
+            f"[Bill {i}] move_id={move_id} similarity={1.0 - distance:.3f}\n{content}"
+        )
+    return "\n\n".join(parts)
+
+
+def _format_gl_frequencies(frequencies: dict[str, int]) -> str:
+    """Format GL frequency distribution into a readable block."""
+    if not frequencies:
+        return "(none)"
+    total = sum(frequencies.values())
+    lines = []
+    for code, count in frequencies.items():
+        pct = (count / total * 100) if total else 0
+        lines.append(f"  {code}: {count} times ({pct:.0f}%)")
+    return "\n".join(lines)
+
+
+def _format_extraction_for_validation(extraction: InvoiceExtraction) -> str:
+    """Format the extraction as the volatile suffix block."""
+    lines_text = ""
+    if extraction.lines:
+        line_parts = []
+        for line in extraction.lines:
+            line_parts.append(
+                f"  - {line.name}: qty={line.quantity} unit_price={line.price_unit}"
+            )
+        lines_text = "\n".join(line_parts)
+
+    parts = [
+        f"VENDOR: {extraction.vendor_name}",
+        f"VAT: {extraction.vendor_vat or '(none)'}",
+        f"DATE: {extraction.invoice_date}",
+        f"CURRENCY: {extraction.currency}",
+        f"AMOUNT_TOTAL: {extraction.amount_total}",
+    ]
+    if extraction.subtotal is not None:
+        parts.append(f"SUBTOTAL: {extraction.subtotal}")
+    if extraction.tax_total is not None:
+        parts.append(f"TAX_TOTAL: {extraction.tax_total}")
+    if lines_text:
+        parts.append(f"LINES:\n{lines_text}")
+    if extraction.notes:
+        parts.append(f"NOTES: {extraction.notes}")
+
+    return "\n".join(parts)
+
+
+async def validate_extraction(
+    *,
+    extraction: InvoiceExtraction,
+    vendor_context: dict[str, Any],
+    ocr_text: str = "",
+    client: AsyncAnthropic | None = None,
+    coa_text: str = "",
+) -> dict[str, Any]:
+    """Validate an extraction against vendor history.
+
+    Sends the cached-prefix + volatile-suffix prompt to Claude and returns
+    a ``ValidationVerdict`` via ``messages.parse``.
+
+    :param extraction: the validated extraction from the extract step.
+    :param vendor_context: output of ``retrieve_vendor_context`` —
+        ``{candidates, gl_account_frequencies}``.
+    :param ocr_text: raw OCR text (included for reference in the prompt).
+    :param client: injectable ``AsyncAnthropic`` for testing.
+    :param coa_text: override the COA text (default from ``coa.json``).
+    :return: dict with ``verdict`` (``ValidationVerdict``), ``usage``, ``model``.
+    """
+    if client is None:
+        client = AsyncAnthropic(
+            api_key=settings.anthropic_api_key,
+            timeout=settings.anthropic_timeout_seconds,
+            max_retries=settings.anthropic_max_retries,
+        )
+
+    # --- Build the cached prefix ---
+    candidates = vendor_context.get("candidates") or []
+    frequencies = vendor_context.get("gl_account_frequencies") or {}
+
+    vendor_history = _format_vendor_history(candidates)
+    gl_freq_text = _format_gl_frequencies(frequencies)
+
+    system_blocks = _build_validation_system_blocks(
+        coa_text=coa_text,
+        vendor_history=vendor_history,
+        gl_frequencies=gl_freq_text,
+    )
+
+    # --- Build the volatile suffix (extraction + OCR text) ---
+    extraction_text = _format_extraction_for_validation(extraction)
+    user_content = (
+        f"EXTRACTION TO VALIDATE:\n{extraction_text}\n\n"
+        f"ORIGINAL OCR TEXT:\n{ocr_text or '(not provided)'}"
+    )
+
+    # --- Call Claude with structured output ---
+    try:
+        message = await client.messages.parse(
+            model=settings.anthropic_model,
+            max_tokens=1024,
+            system=system_blocks,
+            messages=[{"role": "user", "content": user_content}],
+            output_format=ValidationVerdict,
+        )
+        verdict: ValidationVerdict = message.parsed_output
+    except TypeError:
+        # Older SDK fallback — use messages.create with json_schema
+        _logger.info("messages.parse unavailable for validation; using json_schema")
+        json_schema = ValidationVerdict.model_json_schema()
+        message = await client.messages.create(
+            model=settings.anthropic_model,
+            max_tokens=1024,
+            system=system_blocks,
+            messages=[{"role": "user", "content": user_content}],
+            output_config={
+                "format": {
+                    "type": "json_schema",
+                    "schema": json_schema,
+                }
+            },
+        )
+        content_text = "".join(
+            getattr(block, "text", "") for block in message.content
+        )
+        verdict = ValidationVerdict.model_validate_json(content_text)
+    except (APIStatusError, APIConnectionError) as exc:
+        _logger.warning("validation Claude call failed: %s", exc)
+        raise
+
+    usage = {
+        "input_tokens": getattr(message.usage, "input_tokens", None),
+        "cache_creation_input_tokens": getattr(
+            message.usage, "cache_creation_input_tokens", None,
+        ),
+        "cache_read_input_tokens": getattr(
+            message.usage, "cache_read_input_tokens", None,
+        ),
+        "output_tokens": getattr(message.usage, "output_tokens", None),
+    }
+
+    _logger.info(
+        "validate: account=%s confidence=%.2f plausible=%s dup=%s flags=%s cache_read=%s",
+        verdict.account_id,
+        verdict.account_confidence,
+        verdict.amount_plausible,
+        verdict.duplicate_of_move_id,
+        verdict.flags,
+        usage.get("cache_read_input_tokens"),
+    )
+
+    return {
+        "verdict": verdict,
+        "usage": usage,
+        "model": getattr(message, "model", settings.anthropic_model),
+    }

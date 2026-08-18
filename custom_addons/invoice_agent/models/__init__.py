@@ -15,4 +15,5 @@ from . import (
     res_config_settings,
     res_partner,
     usage,
+    validation_flag,
 )

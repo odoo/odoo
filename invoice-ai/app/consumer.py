@@ -70,7 +70,10 @@ from .amqp import (
 from .claude import ClaudeService
 from .errors import BadRequestError, ClaudeRateLimitError, ClaudeUpstreamError
 from .result_signing import sign_result
+from .retrieve import retrieve_vendor_context
 from .retry import DEAD_ROUTING_KEY, attempt_from_body, classify_failure
+from .schemas import InvoiceExtraction
+from .validate import validate_extraction
 
 _logger = logging.getLogger(__name__)
 
@@ -186,6 +189,51 @@ class InvoiceConsumer:
                 await self._route_failure(dlx, message, decision, topic_exchange)
                 return
 
+            # --- Phase 2: RAG validation (retrieve + validate) ---
+            # Best-effort: if retrieval or validation fails, the extraction
+            # result is still published — the Odoo side can surface it
+            # without the validation envelope.
+            validation_verdict = None
+            validation_usage = None
+            try:
+                partner_id = body.get("partner_id")
+                if partner_id:
+                    extraction: InvoiceExtraction = result["parsed"]
+                    # Retrieve vendor context (hybrid vector + ref + VAT)
+                    vendor_context = await retrieve_vendor_context(
+                        partner_id=int(partner_id),
+                        ocr_text=ocr_text,
+                        extracted_ref=body.get("ref") or "",
+                        extracted_vat=extraction.vendor_vat or "",
+                        extracted_vendor_name=extraction.vendor_name or "",
+                    )
+                    # Validate extraction against vendor history
+                    val_result = await validate_extraction(
+                        extraction=extraction,
+                        vendor_context=vendor_context,
+                        ocr_text=ocr_text,
+                    )
+                    validation_verdict = val_result["verdict"].model_dump(
+                        mode="json",
+                    )
+                    validation_usage = val_result["usage"]
+                    _logger.info(
+                        "invoice-ai worker: validation done for move_id=%s "
+                        "account=%s confidence=%.2f cache_read=%s",
+                        move_id,
+                        validation_verdict.get("account_id"),
+                        validation_verdict.get("account_confidence", 0),
+                        validation_usage.get("cache_read_input_tokens")
+                        if validation_usage
+                        else None,
+                    )
+            except Exception:
+                _logger.exception(
+                    "invoice-ai worker: RAG validation failed for "
+                    "move_id=%s — extraction result stands without validation",
+                    move_id,
+                )
+
             payload = {
                 "job_uuid": job_uuid,
                 "move_id": move_id,
@@ -195,12 +243,18 @@ class InvoiceConsumer:
                 "model": result["model"],
                 "attempt": attempt or 1,
             }
+            # Attach validation envelope when available
+            if validation_verdict is not None:
+                payload["validation"] = validation_verdict
+                payload["validation_usage"] = validation_usage
             await self._publish_result(topic_exchange, payload)
             _logger.info(
-                "invoice-ai worker: job %s move_id=%s done model=%s",
+                "invoice-ai worker: job %s move_id=%s done model=%s "
+                "validation=%s",
                 job_uuid,
                 move_id,
                 result["model"],
+                "yes" if validation_verdict else "no",
             )
 
     async def _publish_started(self, topic_exchange, job_uuid: str, move_id: int) -> None:

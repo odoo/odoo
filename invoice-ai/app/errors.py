@@ -61,3 +61,16 @@ class ClaudeRateLimitError(ClaudeUpstreamError):
             message=message,
             retry_after_seconds=retry_after_seconds,
         )
+
+
+class RAGUnavailableError(ServiceError):
+    """RAG retrieval or database is unavailable — surfaced as 503."""
+
+    status_code = 503
+    code = "E5033"
+
+    def __init__(self, message: str = "", retry_after_seconds: int | None = None):
+        super().__init__(
+            message=message,
+            retry_after_seconds=retry_after_seconds,
+        )
