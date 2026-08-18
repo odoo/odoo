@@ -16,7 +16,7 @@ async function setLayout(layout, selectorAdd = "") {
 }
 
 test("hide countdown when end action is set to message_no_countdown", async () => {
-    await setupWebsiteBuilderWithSnippet("s_countdown");
+    await setupWebsiteBuilderWithSnippet("s_countdown", { loadIframeBuilderTemplates: true });
     await contains(":iframe .s_countdown").click();
     expect(":iframe .s_countdown").toHaveAttribute("data-end-action", "nothing");
     expect(":iframe .s_countdown").not.toHaveClass("hide-countdown");
@@ -29,7 +29,9 @@ test("hide countdown when end action is set to message_no_countdown", async () =
 });
 
 test("save end message when switching layouts, forget when switching snippets", async () => {
-    await setupWebsiteBuilderWithSnippet(["s_countdown", "s_countdown"]);
+    await setupWebsiteBuilderWithSnippet(["s_countdown", "s_countdown"], {
+        loadIframeBuilderTemplates: true,
+    });
     await contains(":iframe .s_countdown:first-child").click();
 
     await setLayout("message", ":first-child");
