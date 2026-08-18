@@ -1,6 +1,5 @@
 import { PosOrderline } from "@point_of_sale/app/models/pos_order_line";
 import { STORE_SYMBOL } from "@point_of_sale/app/models/related_models/utils";
-import { computeComboItems } from "@point_of_sale/app/models/utils/compute_combo_items";
 
 export function computeTotalComboPrice(selfOrder, productTemplate, comboValues, qty) {
     if (!comboValues || !comboValues.length) {
@@ -158,16 +157,7 @@ export function getOrderLineValues(
             }
         }
 
-        const comboPrices = computeComboItems(
-            product,
-            freeItems,
-            order.pricelist_id,
-            models["decimal.precision"].getAll(),
-            models["product.template.attribute.value"].getAllBy("id"),
-            extraItems,
-            selfOrder.currency
-        );
-
+        const comboPrices = product.getComboPrice(freeItems, extraItems, order.pricelist_id);
         values.price_unit = 0;
         values.combo_id = product.combo_id;
         values.combo_line_ids = comboPrices.map((comboItem) => [

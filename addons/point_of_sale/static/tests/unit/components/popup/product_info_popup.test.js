@@ -36,6 +36,10 @@ test("Product info popup displays product tag names and colors", async () => {
             orderTaxTotalCurrency: "$\u00a00.00",
             taxAmount: "$\u00a00.00",
             taxName: "",
+            productTaxDetails: {
+                taxes_data: [],
+                total_excluded_currency: "$\u00a00.00",
+            },
         },
         productTemplate: product,
     });
