@@ -1454,6 +1454,9 @@ export class ExistingFieldAction extends BuilderAction {
         setActiveProperties(fieldEl, field);
         delete field.label;
         field.type = getDefaultFieldType(field);
+        if (["email_cc", "email_to"].includes(value)) {
+            field.description = true;
+        }
         this.dependencies.websiteFormOption.replaceField(fieldEl, field, fields);
     }
     isApplied({ editingElement: fieldEl, value }) {
