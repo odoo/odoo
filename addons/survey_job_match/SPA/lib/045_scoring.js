@@ -13,8 +13,11 @@
        scores 0
      - results rank by score first, then by percentage
 
-   Elimination is not applied yet. The data carries it, and README.md 5 spells
-   out what that costs. */
+   Elimination overrides all of it: if any picked answer is marked eliminating
+   for a profile, that profile is out no matter how many points it collected.
+   That is what models hard requirements, so it cannot be a tie-breaker or a
+   penalty. Eliminating weights carry no points and are left out of the ceiling,
+   so marking an answer eliminating never moves anyone's percentage. */
 JM.scoring = {
     profiles: function () {
         return JM.data.profiles || [];
@@ -54,6 +57,43 @@ JM.scoring = {
         return JM.scoring.profiles().filter(function (profile) {
             return seen[profile.id];
         });
+    },
+
+    /* An answer may carry its own closing message, shown under whatever
+       recommendations survived rather than instead of them. The reference shows
+       only the first such message, so this returns the first picked answer that
+       has one, in question order. */
+    answerMessage: function () {
+        var message = "";
+        JM.scoring.picked().forEach(function (choice) {
+            if (!message) {
+                if (choice.message_html) {
+                    message = choice.message_html;
+                }
+            }
+        });
+        return message;
+    },
+
+    /* Profile ids ruled out by something the visitor picked. */
+    eliminated: function () {
+        var out = {};
+        JM.scoring.picked().forEach(function (choice) {
+            (choice.eliminates || []).forEach(function (id) {
+                out[id] = true;
+            });
+        });
+        return out;
+    },
+
+    /* True when profiles exist but every one of them has been ruled out. This
+       is a real outcome, not an edge case: one answer to the language question
+       eliminates all fourteen on its own. */
+    allEliminated: function () {
+        if (!JM.scoring.participating().length) {
+            return false;
+        }
+        return !JM.scoring.results().length;
     },
 
     scores: function () {
@@ -97,7 +137,11 @@ JM.scoring = {
     results: function () {
         var scores = JM.scoring.scores();
         var ceilings = JM.scoring.ceilings();
-        var results = JM.scoring.participating().map(function (profile) {
+        var eliminated = JM.scoring.eliminated();
+        var survivors = JM.scoring.participating().filter(function (profile) {
+            return !eliminated[profile.id];
+        });
+        var results = survivors.map(function (profile) {
             var score = scores[profile.id] || 0;
             var maximum = ceilings[profile.id] || 0;
             var percentage = 0;

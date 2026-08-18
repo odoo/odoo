@@ -83,6 +83,10 @@ JM.api = {
             if (runners.length) {
                 lines.push("Runners-up: " + runners.join(", "));
             }
+        } else if (JM.scoring.allEliminated()) {
+            /* Worth recording rather than leaving blank: these are the people
+               a recruiter may still want to reach out to. */
+            lines.push("Best match: none, every role was ruled out by an answer.");
         }
         return lines.join("\n");
     },
@@ -110,6 +114,12 @@ JM.api = {
                 return result.error_fields.join(", ");
             }
         }
-        return "the server rejected the values";
+        /* A bare false means the create itself failed. By far the likeliest
+           cause is fields still blacklisted for web forms: nothing at all gets
+           written, and the empty record then trips a model constraint. Say so,
+           because the endpoint gives no detail whatsoever. */
+        return "the record could not be created. The usual cause is that the"
+            + " fields are not whitelisted for web forms yet: see the notes at"
+            + " the top of the pasted snippet.";
     }
 };

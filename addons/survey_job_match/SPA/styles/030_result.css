@@ -66,6 +66,23 @@
     color: var(--jm-muted);
 }
 
+/* An answer's own closing message, set apart from the recommendations above it
+   by a rule so it reads as a separate note rather than more result. */
+#jm_app .jm_answer_message {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--jm-border);
+    color: var(--jm-muted);
+}
+
+#jm_app .jm_answer_message p {
+    margin: 0 0 .5rem;
+}
+
+#jm_app .jm_answer_message a {
+    color: var(--jm-primary);
+}
+
 #jm_app .jm_status {
     margin: 1.5rem 0 0;
     font-size: .875rem;

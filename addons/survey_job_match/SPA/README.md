@@ -82,7 +82,9 @@ ceiling, so marking an answer as eliminating never inflates the percentages.
   visitor picked such an answer, that message is appended below the
   recommendations — it does not replace them. The case it exists for: someone
   looking for a student job, who should be pointed at internships and a
-  recruitment mailbox while still seeing the roles they'd fit.
+  recruitment mailbox while still seeing the roles they'd fit. It *does* replace
+  the no-match screen, so a visitor who is told to email recruitment is not also
+  told that nothing fits.
 - **No-match screen.** When every profile has been eliminated and no picked
   answer carries a message of its own, a questionnaire-level message is shown
   instead of results, with a call-to-action to the jobs site. This is the
@@ -130,8 +132,17 @@ Two pieces of configuration are required per target model, and both are
 per-database:
 
 1. On the model: tick **Allowed to use in forms** (Settings › Technical ›
-   Models › the model › Website Forms tab). Without it the endpoint answers
-   *"The form's specified model does not exist"*. This one is a plain UI edit.
+   Models › the model › Website Forms tab) **and fill "Label for form action"**.
+   Without the tick the endpoint answers *"The form's specified model does not
+   exist"*. Both are plain UI edits.
+
+   The label looks cosmetic and is not. The form builder's Action dropdown
+   prints it raw, so a model with no label is listed as the literal word
+   `false` — enable two such models and the dropdown shows two entries both
+   reading `false`, with the selected one also reading `false`. It looks exactly
+   like the action failing to save. It isn't: the selection stores the model id
+   and works fine. Give every model you enable a label and the confusion goes
+   away.
 2. Every field written has to be un-blacklisted. Fields are blacklisted by
    default — it is a whitelist, not a blacklist.
 
@@ -148,11 +159,20 @@ guard with raw SQL. So:
     `build.py --deploy` targets and what core's own `formbuilder_whitelist`
     does.
   - *UI only, e.g. a trial:* let the form builder do it. Drop a **Form** block on
-    a scratch page, point its action at the target model, add one field per
-    field you need (the builder offers every writable field, blacklisted or
-    not), and **save the page** — saving calls `formbuilder_whitelist` for every
-    non-custom field in the form. Then delete the scratch page; the whitelist
-    stays.
+    a scratch page, clear the fields it came with, point its action at the
+    target model, add one row per field you need, and **save the page** —
+    saving calls `formbuilder_whitelist` for every non-custom field in the form.
+    Then delete the scratch page; the whitelist stays.
+
+    Two traps in that sequence. **`+ Field` creates a *custom* field**, and the
+    whitelist call explicitly skips custom fields, so a form full of them
+    whitelists nothing: each row has to be linked to the model by opening its
+    **Type** dropdown and choosing from the **"Existing fields"** section at the
+    bottom (labels, not technical names — `comment` is listed as *Notes*). And
+    **a leftover field from the block's previous model aborts the whole save**,
+    because `formbuilder_whitelist` validates every name first and raises
+    `Unable to whitelist field(s) …`, which reads in the UI as the action
+    refusing to stick.
 
 Skipping step 2 fails quietly in a specific way: the record is still created,
 but the unrecognised values are dumped into the record's chatter instead of the
@@ -232,7 +252,11 @@ SPA/
   data/*.json       content and app config, inlined as JM.data[<filename>]
                     questions.json and profiles.json were generated from the
                     module's demo/demo_job_match.xml, so they carry the real
-                    questions, profiles and weights
+                    questions, profiles and weights. One edit was made on top:
+                    the job posting links dropped the demo's /nl_NL/ segment,
+                    because odoo.com serves English at the unprefixed URL and
+                    redirects /en_US/ to it. Query filters survive that
+                    redirect, but the extra hop is pointless.
   lib/*.js          framework: namespace, DOM helpers, flow, transport, chrome
   screens/*.html    one markup fragment per screen
   screens/*.js      one behaviour file per screen
@@ -339,27 +363,37 @@ and every interaction in 4.3, the toolbar and brand chrome, the mobile layout,
 the scoring of 2.2, the result screen of 2.3, and the write to a contact with
 email and phone filled and the transcript plus ranking in its note.
 
+All of section 2 is implemented: the domain, the scoring rules including
+elimination, the result screen, and both special endings.
+
 **The scoring is checked against the reference implementation, not just
-believed.** The same four answers were run through the Python module's
-`_get_job_match_results` on a database with the demo data, and through the SPA:
-all fourteen profiles agree on score, ceiling and percentage. The one difference
-is how ties are broken — the SPA breaks them by the profile's configured
-sequence, which is deterministic, where the reference leaves them to recordset
-order. Ties only matter if they reach first place.
+believed.** Six answer sets — a job seeker, an intern seeker, a Nordic speaker,
+an English-only speaker, someone who speaks none of the listed languages, and a
+student-job seeker — were run through the Python module's
+`_get_job_match_results` on a database with the demo data, and through the SPA.
+All six agree exactly: same survivors, same order, same scores, same
+percentages, including the case where nothing survives.
+
+The one known difference is how ties are broken. The SPA breaks them by the
+profile's configured sequence, which is deterministic; the reference leaves them
+to recordset order. Ties only matter if they reach first place.
+
+Elimination makes `q1` and `q2` matter, which is worth knowing because they
+barely did before: `q1` has no point weights at all and `q2` has three against
+forty-seven eliminating ones. Both work almost entirely by ruling profiles out.
+One answer — "None of the options above" on the language question — rules out
+all fourteen on its own, which is why the no-match screen is not optional
+polish: without it that answer would end on a blank card.
+
+The two endings of 2.4 were checked the same way, against the reference's own
+template conditions, over the four combinations that matter — an answer with a
+message and survivors, with a message and nothing left, without a message and
+nothing left, without a message and survivors. The SPA makes the same call in
+all four: recommendations and message together, message alone, no-match alone,
+recommendations alone.
 
 ### Not implemented yet
 
-- **Elimination.** The data carries every eliminating weight, and the scoring
-  deliberately ignores them. This costs more than it sounds: `q1` ("what are you
-  looking for?") has **no point weights at all** and `q2` (languages) has three
-  against forty-seven eliminating ones. Those two questions therefore have
-  almost no effect on the outcome right now, and nothing stops an internship
-  being offered to someone who asked for a job, or a role being suggested in a
-  language the visitor does not speak. Until elimination lands, treat the
-  ranking as driven by `q3`–`q6` alone.
-- **The two special endings** of 2.4. The per-answer closing message is captured
-  in the data as `message_html` but never shown, and the no-match screen cannot
-  happen without elimination.
 - **Multiple-choice questions.** Described in the data format and handled by the
   ceiling rule, but no question in the demo data uses one and the choice screen
   renders single choice only.
