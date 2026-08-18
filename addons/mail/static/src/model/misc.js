@@ -99,11 +99,11 @@ export function isRelation(Model, fieldName) {
     return isMany(Model, fieldName) || isOne(Model, fieldName);
 }
 export function isFieldDefinition(val) {
-    return val?.[FIELD_DEFINITION_SYM];
+    return typeof val === "object" && val?.[FIELD_DEFINITION_SYM];
 }
 
 export function isComputedDefinition(val) {
-    return val?.[COMPUTED_SYM];
+    return typeof val === "object" && val?.[COMPUTED_SYM];
 }
 
 export const fields = {
@@ -199,7 +199,9 @@ export function makeRecordFieldLocalId(recordLocalId, fieldName) {
     return `${recordLocalId}:${fieldName}`;
 }
 
-export const technicalKeysOnRecords = new Set(["_", "_proxy", "_raw", "env", "Model"]);
+export const technicalKeysOnRecords = new Set(["_", "env", "Model"]);
+
+export const versionKeys = new Set(["__version__", "__field_versions__"]);
 
 /**
  * Wraps the given methods so they run untracked: reactive reads inside them

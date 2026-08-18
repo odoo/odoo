@@ -5,7 +5,6 @@ declare module "models" {
         createSubChannel: (param0: { initialMessage: Message, name: string }) => Promise<void>;
         hasSubChannelFeature: Readonly<boolean>;
         inChathubOnNewMessage: Readonly<boolean>;
-        isLocallyPinned: boolean;
         lastSubChannelLoaded: DiscussChannel;
         loadMoreSubChannels: (param0: { searchTerm: string }) => Promise<void>;
         loadSubChannelsDone: boolean;

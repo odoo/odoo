@@ -8,7 +8,6 @@ import { patch } from "@web/core/utils/patch";
 const discussChannelPatch = {
     setup() {
         super.setup(...arguments);
-        this.isLocallyPinned = false;
         this.onChange(
             () => [this.isLocallyPinned],
             function onChangeIsLocallyPinned() {
