@@ -76,4 +76,18 @@ patch(OrderSummary.prototype, {
             this.pos.addPendingOrder([this.pos.getOrder().id]);
         }
     },
+    async applyBestCombo(keepOpen = false) {
+        if (!this.pos.config.use_course_allocation) {
+            return super.applyBestCombo(...arguments);
+        }
+        const order = this.pos.getOrder();
+        const originalLineIds = new Set(order.lines.map((l) => l.id));
+
+        await super.applyBestCombo(...arguments);
+
+        const affectedLines = order.lines.filter((line) => !originalLineIds.has(line.id));
+
+        this.pos._assignCoursesToOrderLines(order, affectedLines);
+        order.cleanCourses();
+    },
 });

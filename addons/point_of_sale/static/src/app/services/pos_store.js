@@ -921,6 +921,13 @@ export class PosStore extends WithLazyGetterTrap {
         order.selectOrderline(line);
         this.numpadMode = "quantity";
     }
+
+    autoCourseAllocation(product) {
+        return null;
+    }
+
+    cleanAutoCourseAllocation(result, allocation) {}
+
     // This method should be called every time a product is added to an order.
     // The configure parameter is available if the orderline already contains all
     // the information without having to be calculated. For example, importing a SO.

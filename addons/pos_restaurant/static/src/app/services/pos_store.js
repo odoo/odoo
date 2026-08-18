@@ -142,6 +142,65 @@ patch(PosStore.prototype, {
 
         return await super.sendOrderInPreparationUpdateLastChange(order, opts);
     },
+    autoCourseAllocation(product) {
+        const config = this.config;
+        if (!config.module_pos_restaurant || !config.use_course_allocation) {
+            return null;
+        }
+
+        const order = this.getOrder();
+
+        const categories = product.pos_categ_ids
+            .map((c) => c.id)
+            .includes(this.selectedCategory?.id)
+            ? [this.selectedCategory]
+            : product.pos_categ_ids;
+
+        const courseCandidate = categories
+            .map((c) => c.course_id)
+            .filter(Boolean)
+            .sort((a, b) => a.sequence - b.sequence);
+
+        if (courseCandidate.length === 0) {
+            return null;
+        }
+
+        let isNew = false;
+        let course = order.course_ids.find((c) => c.name === courseCandidate[0].name);
+        if (!course) {
+            isNew = true;
+            course = this.addCourse({ backendCourse: courseCandidate[0] });
+        }
+
+        order.selectCourse(course);
+        return { course, isNew };
+    },
+    cleanAutoCourseAllocation(result, allocation) {
+        if (!result && allocation?.isNew) {
+            allocation.course.delete();
+        }
+    },
+    _assignCoursesToOrderLines(order, affectedLines) {
+        for (const line of affectedLines) {
+            const { course } = this.autoCourseAllocation(line.product_id) || {};
+            if (course) {
+                line.course_id = course;
+            }
+        }
+    },
+    breakCombo(orderline) {
+        if (!this.isSelectedLineCombo || !this.config.use_course_allocation) {
+            return super.breakCombo(...arguments);
+        }
+        const order = this.selectedOrder;
+        const comboLines = orderline.combo_line_ids;
+        const result = super.breakCombo(...arguments);
+
+        this._assignCoursesToOrderLines(order, comboLines);
+        order.cleanCourses();
+
+        return result;
+    },
     async mergeOrders(sourceOrder, destOrder) {
         let whileGuard = 0;
         const mergedCourses = this.mergeCourses(sourceOrder, destOrder);
