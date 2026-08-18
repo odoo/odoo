@@ -43,7 +43,7 @@ export class NavigableList extends Component {
             class: t.string().optional(),
             closeOnSelect: t.boolean().optional(true),
             isLoading: t.boolean().optional(false),
-            onSelect: t.function([t.instanceOf(Event), option, t.record()]),
+            onSelect: t.function([t.instanceOf(Event), option]),
             options: t.array(option),
             optionTemplate: t.string().optional(),
             position: t.string().optional("bottom"),
@@ -115,8 +115,11 @@ export class NavigableList extends Component {
         }
     }
 
-    selectOption(ev, index, params = {}) {
-        const option = this.props.options[index];
+    /**
+     * @param {Event} ev
+     * @param {import("@mail/core/common/suggestion_hook").Option} option
+     */
+    selectOption(ev, option) {
         if (!option) {
             return;
         }
@@ -124,9 +127,7 @@ export class NavigableList extends Component {
             this.close();
             return;
         }
-        this.props.onSelect(ev, option, {
-            ...params,
-        });
+        this.props.onSelect(ev, option);
         this.close();
     }
 
@@ -178,7 +179,7 @@ export class NavigableList extends Component {
                     return;
                 }
                 markEventHandled(ev, "NavigableList.select");
-                this.selectOption(ev, this.state.activeIndex);
+                this.selectOption(ev, this.props.options[this.state.activeIndex]);
                 break;
             case "escape":
                 markEventHandled(ev, "NavigableList.close");
