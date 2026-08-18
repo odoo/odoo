@@ -37,7 +37,7 @@ class CrmPartnerReportAssign(models.Model):
         """
         to_flush = super()._table_sql._sql_tuple[2]
         return SQL(
-            """
+            """(
                 SELECT
                     COALESCE(2 * i.id, 2 * p.id + 1) AS id,
                     p.id as partner_id,
@@ -54,7 +54,7 @@ class CrmPartnerReportAssign(models.Model):
                     res_partner p
                     left join %(account_invoice_report)s i
                         on (i.partner_id=p.id and i.move_type in ('out_invoice','out_refund') and i.state='posted')
-            """,
+            )""",
             account_invoice_report=self.env['account.invoice.report']._table_sql,
             to_flush=to_flush,
         )
