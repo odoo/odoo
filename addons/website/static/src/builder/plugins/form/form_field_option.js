@@ -181,6 +181,7 @@ export class FormFieldOption extends BaseOptionComponent {
         }
         return {
             title,
+            tooltip: _t("At least one of these words should match"),
             defaultValue: isDomainComparator ? "example.com" : _t("example"),
         };
     }
