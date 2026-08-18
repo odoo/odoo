@@ -12,6 +12,6 @@
     </record>
 
     <record id="base.menu_management" model="ir.ui.menu">
-        <field name="group_ids" eval="[(5, 0, 0)]"/>
+        <field name="group_ids" eval="[(6, 0, [ref('base.group_user_regular')])]"/>
     </record>
 </odoo>
