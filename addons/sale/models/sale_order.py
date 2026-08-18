@@ -1784,10 +1784,10 @@ class SaleOrder(models.Model):
 
         txs_to_be_linked = self.sudo().transaction_ids.filtered(
             lambda tx: (
-                tx.state in ('pending', 'authorized')
+                tx.state in ("pending", "authorized")
                 or (
-                    tx.state == 'done'
-                    and tx.payment_id.move_id.state == 'posted'
+                    tx.state == "done"
+                    and tx.payment_id.move_id.state == "posted"
                     and not tx.payment_id.is_reconciled
                 )
             )
@@ -1958,24 +1958,26 @@ class SaleOrder(models.Model):
         # Manage the creation of invoices in sudo because a salesperson must be able to generate an
         # invoice from a sale order without "billing" access rights. However, he should not be able
         # to create an invoice from scratch.
-        return (
-            self
-            .env["account.move"]
-            .sudo()
-            .with_context(default_move_type="out_invoice")
-            .create(invoice_vals_list)
+        AccountMoveSudo = (
+            self.env["account.move"].sudo().with_context(default_move_type="out_invoice")
         )
+        moves = AccountMoveSudo.browse()
+        for company_id, vals_list_for_company in groupby(
+            invoice_vals_list, lambda vals: vals.get("company_id")
+        ):
+            moves |= AccountMoveSudo.with_company(company_id).create(list(vals_list_for_company))
 
-    # TODO VFE drop unused date param
-    def _create_invoices(self, grouped=False, final=False, date=None):  # noqa: ARG002
+        return moves
+
+    def _create_invoices(self, final=False, grouped=False):
         """Create invoice(s) for the given Sales Order(s).
 
+        :param bool final: if True, refunds will be generated if necessary
         :param bool grouped: if True, invoices are grouped by SO id.
             If False, invoices are grouped by keys returned by :meth:`_get_invoice_grouping_keys`
-        :param bool final: if True, refunds will be generated if necessary
-        :param date: unused parameter
         :returns: created invoices
         :rtype: `account.move` recordset
+
         :raises: UserError if one of the orders has no invoiceable lines.
         """
         if not self.env["account.move"].has_access("create"):

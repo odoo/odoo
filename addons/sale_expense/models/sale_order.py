@@ -42,7 +42,7 @@ class SaleOrder(models.Model):
         for sale_order in self:
             sale_order.expense_count = mapped_data.get(sale_order.id, 0)
 
-    def _create_invoices(self, grouped=False, final=False, date=None):
-        invoices = super()._create_invoices(grouped=grouped, final=final, date=date)
+    def _create_invoices(self, *args, **kwargs):
+        invoices = super()._create_invoices(*args, **kwargs)
         invoices._copy_reinvoiced_expense_receipts()
         return invoices
