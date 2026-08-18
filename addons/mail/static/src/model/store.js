@@ -13,7 +13,6 @@ export class Store extends Record {
     get [STORE_SYM]() {
         return true;
     }
-    storeReady = false;
 
     handleError(err) {
         this._.ERRORS.push(err);
@@ -81,8 +80,9 @@ export class Store extends Record {
                     record.Model.records.delete(record.localId);
                     for (const [usingRecord, names] of record._.uses.data.entries()) {
                         for (const [name2, count] of names.entries()) {
+                            const usingList = usingRecord._.fieldsList.get(name2);
                             for (let c = 0; c < count; c++) {
-                                usingRecord[name2].delete(record);
+                                usingList.delete(record);
                             }
                         }
                     }
@@ -90,12 +90,14 @@ export class Store extends Record {
                         ...record.Model._.fieldsOne.keys(),
                         ...record.Model._.fieldsMany.keys(),
                     ]) {
-                        const recordList = record[name];
-                        for (const usedRecord of recordList._.data()) {
+                        const recordList = record._.fieldsList.get(name);
+                        if (!recordList) {
+                            continue;
+                        }
+                        for (const usedRecord of recordList) {
                             usedRecord._.uses.delete(recordList);
                         }
                         recordList._.data.set([]);
-                        recordList._.syncLength();
                     }
                 }
                 // One at a time, so that what it queues and deletes runs before the next one.
@@ -143,7 +145,7 @@ export class Store extends Record {
                 : null;
         }
         try {
-            Record.MAKE_UPDATE(function storeInsert() {
+            this.MAKE_UPDATE(function storeInsert() {
                 const recordsDataToDelete = [];
                 for (const [modelName, data] of Object.entries(dataByModelName)) {
                     if (!store[modelName]) {
@@ -176,5 +178,4 @@ export class Store extends Record {
         }
     }
 }
-
 untrackFunctions(Store.prototype, ["handleError", "insert"]);

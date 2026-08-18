@@ -2,7 +2,7 @@ import { toRawValue } from "@mail/utils/common/local_storage";
 import { defineMailModels, start as start2 } from "@mail/../tests/mail_test_helpers";
 import { after, afterEach, beforeEach, describe, expect, test, tick } from "@odoo/hoot";
 import { advanceTime, animationFrame } from "@odoo/hoot-mock";
-import { Component, immediateEffect, markup, proxy, toRaw, xml } from "@odoo/owl";
+import { Component, immediateEffect, markup, proxy, xml } from "@odoo/owl";
 import {
     destroyApp,
     getService,
@@ -561,11 +561,15 @@ test("lazy compute should re-compute while they are observed", async () => {
 });
 
 test("store updates can be observed", async () => {
+    localRegistry.remove("Store");
+    (class extends Store {
+        static _name = "Store";
+        abc;
+    }).register(localRegistry);
     const store = await start();
     function onUpdate() {
         expect.step(`abc:${store.abc}`);
     }
-    const rawStore = toRaw(store)._raw;
     const disposeFn = immediateEffect(() => {
         onUpdate();
     });
@@ -573,9 +577,9 @@ test("store updates can be observed", async () => {
     expect.verifySteps(["abc:undefined"]);
     store.abc = 1;
     expect.verifySteps(["abc:1"]); // observable from makeStore"
-    rawStore.store.abc = 2;
+    store.store.abc = 2;
     expect.verifySteps(["abc:2"]); // observable from record.store
-    rawStore.Model.store.abc = 3;
+    store.Model.store.abc = 3;
     expect.verifySteps(["abc:3"]);
 });
 
@@ -1112,7 +1116,7 @@ test("record.toData() is JSON stringified and can be reinserted as record", asyn
     expect(p.team.name).toBe("Discuss");
     expect(p.signature.toString()).toBe("<p>-- John</p>");
     expect(p.signature).toBeInstanceOf(Markup);
-    expect(toRaw(store.Person.records.get(p.localId))).toBe(toRaw(p));
+    expect(store.Person.records.get(p.localId)).toBe(p);
     expect(serializeDateTime(p.due_datetime)).toBe("2024-08-28 10:19:44");
     // export data, delete, then insert back
     const data = p.toData();
@@ -1134,14 +1138,14 @@ test("record.toData() is JSON stringified and can be reinserted as record", asyn
     store.Message.get("1").delete();
     store.Message.get("2").delete();
     store.Team.get("Discuss").delete();
-    expect(toRaw(store.Person.records.get(p.localId))).toBe(undefined);
+    expect(store.Person.records.get(p.localId)).toBe(undefined);
     store.insert(serializedData);
     const p2 = store.Person.get(1);
     // Same assertions as before
     expect(p2.names).toEqual(["John", "Marc"]);
     expect(p2.messages.map((msg) => msg.body)).toEqual(["1", "2"]);
     expect(p2.team.name).toBe("Discuss");
-    expect(toRaw(store.Person.records.get(p2.localId))).toBe(toRaw(p2));
+    expect(store.Person.records.get(p2.localId)).toBe(p2);
     expect(serializeDateTime(p2.due_datetime)).toBe("2024-08-28 10:19:44");
     expect(p2.signature.toString()).toBe("<p>-- John</p>");
     expect(p.signature).toBeInstanceOf(Markup);
@@ -1425,10 +1429,10 @@ test("Deleted records are not returned by 'Model.records' nor 'Model.get()'", as
     function assertExists(store) {
         const msg = store.Message.get("msg-1");
         if (msg) {
-            expect(toRaw(msg).exists()).toBe(true);
+            expect(msg.exists()).toBe(true);
         }
         for (const msg of store.Message.records.values()) {
-            expect(toRaw(msg).exists()).toBe(true);
+            expect(msg.exists()).toBe(true);
         }
     }
     let deleting = false;
@@ -1532,7 +1536,7 @@ test("record.delete() should empty its own relations", async () => {
     thread.delete();
     expect(john.exists()).toBe(true);
     expect.verifySteps(["members:0"]);
-    expect(toRaw(john)._raw._.uses.data.size).toBe(0);
+    expect(john._.uses.data.size).toBe(0);
 });
 
 test("Delete record with side-effect compute to insert it should have resulting record with only insert data (old data is removed)'", async () => {

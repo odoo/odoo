@@ -1,5 +1,5 @@
 import { markRaw } from "@odoo/owl";
-import { ATTR_SYM, MANY_SYM, ONE_SYM } from "./misc";
+import { ATTR_SYM, MANY_SYM, ONE_SYM, untrackFunctions } from "./misc";
 
 export class ModelInternal {
     /** @type {Map<string, boolean>} */
@@ -93,3 +93,5 @@ export class ModelInternal {
         }
     }
 }
+
+untrackFunctions(ModelInternal.prototype, ["prepareField"]);
