@@ -167,6 +167,116 @@ def is_valid_structured_reference_si(reference):
 
     return given_check_digit == str(expected_check_digit)
 
+
+def format_structured_reference_be(reference):
+    """Format a valid Belgian structured reference into +++XXX/XXXX/XXXXX+++ format.
+
+    Example: `123123412345` -> `+++123/1234/12345+++`
+             `+++123/1234/12345+++` -> `+++123/1234/12345+++`
+    Returns None if the reference is not a valid Belgian structured reference.
+    """
+    number = sanitize_structured_reference(reference)
+    if not is_valid_structured_reference_be(number):
+        return None
+    number = number.rjust(12, '0')
+    return f'+++{number[:3]}/{number[3:7]}/{number[7:]}+++'
+
+
+def format_structured_reference_fi(reference):
+    """Format a valid Finnish structured reference (strip whitespace).
+
+    Returns None if the reference is not a valid Finnish structured reference.
+    """
+    number = sanitize_structured_reference(reference)
+    if not is_valid_structured_reference_fi(number):
+        return None
+    return number.replace(' ', '')
+
+
+def format_structured_reference_no_se(reference):
+    """Format a valid Norwegian/Swedish structured reference (strip whitespace).
+
+    Returns None if the reference is not a valid NO/SE structured reference.
+    """
+    number = sanitize_structured_reference(reference)
+    if not is_valid_structured_reference_no_se(number):
+        return None
+    return number.replace(' ', '')
+
+
+def format_structured_reference_nl(reference):
+    """Format a valid Dutch structured reference (strip whitespace).
+
+    Returns None if the reference is not a valid Dutch structured reference.
+    """
+    number = sanitize_structured_reference(reference)
+    if not is_valid_structured_reference_nl(number):
+        return None
+    return number.replace(' ', '')
+
+
+def format_structured_reference_si(reference):
+    """Format a valid Slovenian structured reference (strip whitespace).
+
+    Returns None if the reference is not a valid Slovenian structured reference.
+    """
+    number = sanitize_structured_reference(reference)
+    if not is_valid_structured_reference_si(number):
+        return None
+    return number.replace(' ', '')
+
+
+COUNTRY_PER_VALIDATOR = (
+    (is_valid_structured_reference_be, format_structured_reference_be, 'BE'),
+    (is_valid_structured_reference_fi, format_structured_reference_fi, 'FI'),
+    (is_valid_structured_reference_no_se, format_structured_reference_no_se, 'NO'),
+    (is_valid_structured_reference_no_se, format_structured_reference_no_se, 'SE'),
+    (is_valid_structured_reference_nl, format_structured_reference_nl, 'NL'),
+    (is_valid_structured_reference_si, format_structured_reference_si, 'SI'),
+)
+
+FORMATTER_PER_COUNTRY = {
+    'BE': (is_valid_structured_reference_be, format_structured_reference_be),
+    'FI': (is_valid_structured_reference_fi, format_structured_reference_fi),
+    'NO': (is_valid_structured_reference_no_se, format_structured_reference_no_se),
+    'SE': (is_valid_structured_reference_no_se, format_structured_reference_no_se),
+    'NL': (is_valid_structured_reference_nl, format_structured_reference_nl),
+    'SI': (is_valid_structured_reference_si, format_structured_reference_si),
+}
+
+
+def guess_structured_reference(reference):
+    """Guess the country and return the matching (validator, formatter, country_code) tuple.
+
+    Returns (None, None, None) if no country-specific format matches.
+    """
+    for validator, formatter, code in COUNTRY_PER_VALIDATOR:
+        if validator(reference):
+            return validator, formatter, code
+    return None, None, None
+
+
+def format_structured_reference(reference, country_code=''):
+    """Validate and format a structured reference into its canonical form.
+
+    When country_code is provided, uses the country-specific validator and
+    formatter directly. Otherwise loops over all known country formats.
+    If the reference matches a known format, returns the formatted version.
+    Otherwise returns the reference unchanged.
+
+    Example: `123123412345` (valid BE) -> `+++123/1234/12345+++`
+             `RF18539007547034` (ISO, no country match) -> `RF18539007547034`
+    """
+    if country_code:
+        entry = FORMATTER_PER_COUNTRY.get(country_code.upper())
+        if not entry:
+            return reference
+        validator, formatter = entry
+        return formatter(reference) if validator(reference) else reference
+    _validator, formatter, _code = guess_structured_reference(reference)
+    return formatter(reference) if formatter else reference
+
+
 def is_valid_structured_reference(reference):
     """Check whether the provided reference is a valid structured reference.
     This is currently supporting SEPA enabled countries. More specifically countries covered by functions in this file.
