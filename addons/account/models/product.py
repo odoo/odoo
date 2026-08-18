@@ -97,6 +97,8 @@ class ProductTemplate(models.Model):
     )
 
     def _get_product_accounts(self):
+        stock_valuation = self._get_category_account('property_stock_valuation_account_id')\
+            or (self.company_id or self.env.company).account_stock_valuation_id
         return {
             'income': (
                 self.property_account_income_id
@@ -106,10 +108,8 @@ class ProductTemplate(models.Model):
                 self.property_account_expense_id
                 or self._get_category_account('property_account_expense_categ_id')
                 or (self.company_id or self.env.company).expense_account_id
-            ), 'stock_valuation': (
-                self._get_category_account('property_stock_valuation_account_id')
-                or (self.company_id or self.env.company).account_stock_valuation_id
-            ),
+            ), 'stock_valuation': stock_valuation,
+            'stock_variation': stock_valuation.account_stock_variation_id,
         }
 
     def _get_category_account(self, field_name):
@@ -126,10 +126,14 @@ class ProductTemplate(models.Model):
         return self.env['account.account']
 
     def get_product_accounts(self, fiscal_pos=None):
-        return {
+        accounts = {
             key: (fiscal_pos or self.env['account.fiscal.position']).map_account(account)
             for key, account in self._get_product_accounts().items()
         }
+        # `stock_journal` is an `account.journal`, not an `account.account`: it doesn't go
+        # through the fiscal-position account mapping above.
+        accounts['stock_journal'] = self.categ_id.property_stock_journal or self.env.company.account_stock_journal_id
+        return accounts
 
     @api.depends('company_id')
     @api.depends_context('allowed_company_ids')
@@ -148,7 +152,7 @@ class ProductTemplate(models.Model):
 
         if self.env.company.inventory_valuation and self.env.company.inventory_valuation == value:
             domain_company = Domain(['|', ('categ_id.property_valuation', '=', False), ('categ_id', '=', False), '|', ('company_id.inventory_valuation', operator, value), ('company_id', '=', False)])
-        return Domain([('is_storable', '=', True)]) & (domain_company | domain_categ)
+        return Domain(self.env.company._get_inventory_valuation_products_domain()) & (domain_company | domain_categ)
 
     @api.depends_context('company')
     @api.depends('is_storable', 'categ_id.property_valuation')

@@ -1,10 +1,8 @@
 from collections import defaultdict
 from datetime import datetime, time
-from dateutil.relativedelta import relativedelta
 
-from odoo import Command, _, api, fields, models
+from odoo import _, fields, models
 from odoo.fields import Domain
-from odoo.exceptions import UserError
 from odoo.addons.base.models.res_company import company_default_for
 
 
@@ -13,16 +11,6 @@ class ResCompany(models.Model):
 
     account_production_wip_account_id = fields.Many2one('account.account', string='Production WIP Account', check_company=True)
     account_production_wip_overhead_account_id = fields.Many2one('account.account', string='Production WIP Overhead Account', check_company=True)
-
-    inventory_period = fields.Selection(
-        string='Inventory Period',
-        selection=[
-            ('manual', 'Manual'),
-            ('daily', 'Daily'),
-            ('monthly', 'Monthly'),
-        ],
-        default='manual',
-        required=True)
 
     cost_method = fields.Selection(
         string="Cost Method",
@@ -50,48 +38,9 @@ class ResCompany(models.Model):
             products._correct_inventory_valuation(last_closing_date)
         return res
 
-    def action_close_stock_valuation(self, at_date=None, auto_post=False, raise_error_if_closed=True):
-        self.ensure_one()
-        if at_date and isinstance(at_date, str):
-            at_date = fields.Date.from_string(at_date)
-        last_closing_date = self._get_last_closing_date()
-        if at_date and last_closing_date and at_date < fields.Date.to_date(last_closing_date):
-            raise UserError(self.env._('It exists closing entries after the selected date. Cancel them before generate an entry prior to them'))
-        aml_vals_list = self.with_context(allowed_company_ids=self.ids)._action_close_stock_valuation(at_date=at_date)
-
-        if not aml_vals_list:
-            # if we come from cron there might be no move to create for this company, but some for other companies
-            if not raise_error_if_closed:
-                return
-            # No account moves to create, so nothing to display.
-            raise UserError(_("Everything is correctly closed"))
-        if not self.account_stock_journal_id:
-            raise UserError(self.env._("Please set the Journal for Inventory Valuation in the settings."))
-        if not self.account_stock_valuation_id:
-            raise UserError(self.env._("Please set the Valuation Account for Inventory Valuation in the settings."))
-
-        moves_vals = {
-            'journal_id': self.account_stock_journal_id.id,
-            'date': at_date or fields.Date.context_today(self),
-            'closing_datetime': datetime.combine(at_date, time.max) if at_date else fields.Datetime.now(),
-            'ref': _('Stock Closing'),
-            'inventory_closing': True,
-            'line_ids': [Command.create(aml_vals) for aml_vals in aml_vals_list],
-            'company_id': self.id,
-        }
-        account_move = self.env['account.move'].create(moves_vals)
-        if auto_post:
-            account_move._post()
-
-        return {
-            'type': 'ir.actions.act_window',
-            'name': _("Journal Items"),
-            'res_model': 'account.move',
-            'res_id': account_move.id,
-            'views': [(False, 'form')],
-        }
-
-    def stock_value(self, accounts_by_product=None, at_date=None):
+    def get_inventory_value(self, accounts_by_product=None, at_date=None):
+        # OVERRIDE: use the real valuation computed from stock moves/quants instead of the
+        # `qty_available * standard_price` approximation used when stock isn't installed.
         self.ensure_one()
         value_by_account: dict = defaultdict(float)
         if not accounts_by_product:
@@ -102,85 +51,40 @@ class ResCompany(models.Model):
             value_by_account[account] += product_value
         return value_by_account
 
-    def stock_accounting_value(self, accounts_by_product=None, at_date=None):
+    def _get_inventory_valuation_products(self, date):
+        # OVERRIDE: properly scope `qty_available` to valued internal locations (and to the
+        # given date) rather than the plain field value.
+        # sudo: qty_available expands kit BoMs (mrp.bom) which accounting users cannot read.
+        # Kits are never valued on their own, so restrict to the valuation product domain
+        # and skip the kit BoM expansion that qty_available would otherwise trigger.
         self.ensure_one()
-        if not accounts_by_product:
-            accounts_by_product = self._get_accounts_by_product()
-        account_data = defaultdict(float)
-        stock_valuation_accounts_ids = {accounts['valuation'].id for accounts in accounts_by_product.values() if accounts['valuation']}
-        stock_valuation_accounts = self.env['account.account'].browse(stock_valuation_accounts_ids)
-        domain = Domain([
-            ('account_id', 'in', stock_valuation_accounts.ids),
-            ('company_id', '=', self.id),
-            ('parent_state', '=', 'posted'),
-        ])
-        if at_date:
-            domain = domain & Domain([('date', '<=', at_date)])
-        amls_group = self.env['account.move.line']._read_group(domain, ['account_id'], ['balance:sum'])
-        for account, balance in amls_group:
-            account_data[account] += balance
-        return account_data
+        valued_product_context = self.env['product.product'].sudo().with_company(self).with_context(
+            skip_kit_qty_available=True,
+        )._with_valuation_context()
+        if date:
+            valued_product_context = valued_product_context.with_context(at_date=date, to_date=date)
+        return valued_product_context.search(self._get_inventory_valuation_products_domain())
 
-    def _action_close_stock_valuation(self, at_date=None):
-        aml_vals_list = []
-        accounts_by_product = self._get_accounts_by_product()
+    def _get_extra_closing_aml_vals(self, at_date):
+        # OVERRIDE: also account for location-to-location reclassification entries.
+        return self._get_location_valuation_vals(at_date)
 
-        vals_list = self._get_location_valuation_vals(at_date)
-        if vals_list:
-            # Needed directly since it will impact the accounting stock valuation.
-            aml_vals_list += vals_list
+    def _get_closing_move_extra_vals(self, at_date):
+        vals = super()._get_closing_move_extra_vals(at_date)
+        vals['closing_datetime'] = datetime.combine(at_date, time.max) if at_date else fields.Datetime.now()
+        return vals
 
-        vals_list = self._get_stock_valuation_account_vals(accounts_by_product, at_date, aml_vals_list)
-        if vals_list:
-            aml_vals_list += vals_list
+    def _get_closing_date_field(self):
+        return 'closing_datetime'
 
-        vals_list = self._get_continental_realtime_variation_vals(accounts_by_product, at_date, aml_vals_list)
-        if vals_list:
-            aml_vals_list += vals_list
-        return aml_vals_list
-
-    @api.model
-    def _cron_post_stock_valuation(self):
-        periods = ['daily']
-        if fields.Date.today() == fields.Date.today() + relativedelta(day=31):
-            periods.append('monthly')
-        domain = Domain([
-            ('inventory_period', 'in', periods),
-            ('inventory_valuation', '!=', 'real_time'),
-        ])
-        companies = self.env['res.company'].search(domain)
-        for company in companies:
-            company.action_close_stock_valuation(auto_post=True, raise_error_if_closed=False)
-
-    def _get_valuation_product_domain(self):
-        return [('is_storable', '=', True)]
-
-    def _get_accounts_by_product(self, products=None):
-        if not products:
-            products = self.env['product.product'].with_company(self).search_fetch(
-                self._get_valuation_product_domain(), ['categ_id'],
-            )
-
-        accounts_by_product = {}
-        for product in products:
-            accounts = product._get_product_accounts()
-            accounts_by_product[product] = {
-                'valuation': accounts['stock_valuation'],
-                'variation': accounts['stock_variation'],
-                'expense': accounts['expense'],
-            }
-        return accounts_by_product
-
-    @api.model
-    def _get_extra_balance(self, vals_list=None):
-        extra_balance = defaultdict(float)
-        if not vals_list:
-            return extra_balance
-        for vals in vals_list:
-            extra_balance[vals['account_id']] += (vals['debit'] - vals['credit'])
-        return extra_balance
+    def _get_last_closing_date(self):
+        closing = self._get_last_closing_move()
+        if not closing:
+            return datetime.min
+        return closing.closing_datetime
 
     def _get_location_valuation_vals(self, at_date=None, location_domain=False):
+        """ Reclassification entries between stock locations with their own valuation account. """
         location_domain = Domain.AND([
             location_domain or [],
             [('valuation_account_id', '!=', False)],
@@ -237,124 +141,3 @@ class ResCompany(models.Model):
             )
             amls_vals_list += amls_vals
         return amls_vals_list
-
-    def _get_stock_valuation_account_vals(self, accounts_by_product, at_date=None, extra_aml_vals_list=None):
-        amls_vals_list = []
-        if not accounts_by_product:
-            return amls_vals_list
-
-        extra_balance = self._get_extra_balance(extra_aml_vals_list)
-
-        if 'inventory_data' in self.env.context:
-            inventory_data = self.env.context.get('inventory_data')
-        else:
-            inventory_data = self.stock_value(accounts_by_product, at_date)
-        accounting_data = self.stock_accounting_value(accounts_by_product, at_date)
-
-        accounts = inventory_data.keys() | accounting_data.keys()
-        for account in accounts:
-            account_variation = account.account_stock_variation_id
-            if not account_variation:
-                account_variation = self.expense_account_id
-            if not account_variation:
-                continue
-            balance = inventory_data.get(account, 0) - accounting_data.get(account, 0)
-            balance -= extra_balance.get(account.id, 0)
-
-            if self.currency_id.is_zero(balance):
-                continue
-
-            amls_vals = self._prepare_inventory_aml_vals(
-                account,
-                account_variation,
-                balance,
-                _('Closing: Stock Variation Global for company [%(company)s]', company=self.display_name),
-            )
-            amls_vals_list += amls_vals
-
-        return amls_vals_list
-
-    def _get_continental_realtime_variation_vals(self, accounts_by_product, at_date=None, extra_aml_vals_list=None):
-        """ In continental perpetual the inventory variation is never posted.
-        This method compute the variation for a period and post it.
-        """
-        extra_balance = self._get_extra_balance(extra_aml_vals_list)
-
-        fiscal_year_date_from = self.compute_fiscalyear_dates(fields.Date.context_today(self))['date_from']
-
-        amls_vals_list = []
-        accounting_data_today = self.stock_accounting_value(accounts_by_product)
-        accounting_data_last_period = self.stock_accounting_value(accounts_by_product, at_date=fiscal_year_date_from)
-
-        accounts = accounting_data_today.keys() | accounting_data_last_period.keys()
-
-        for account in accounts:
-            variation_acc = account.account_stock_variation_id
-            expense_acc = account.account_stock_expense_id
-
-            if not variation_acc or not expense_acc:
-                continue
-
-            balance_today = accounting_data_today.get(account, 0) - extra_balance[account]
-            balance_last_period = accounting_data_last_period.get(account, 0)
-            balance_over_period = balance_today - balance_last_period
-
-            current_balance_domain = Domain([
-                ('account_id', '=', variation_acc.id),
-                ('company_id', '=', self.id),
-                ('parent_state', '=', 'posted'),
-            ])
-            if at_date:
-                current_balance_domain &= Domain([('date', '<=', at_date)])
-            existing_balance = sum(self.env['account.move.line'].search(current_balance_domain).mapped('balance'))
-            balance_over_period += existing_balance
-
-            if self.currency_id.is_zero(balance_over_period):
-                continue
-
-            amls_vals = self._prepare_inventory_aml_vals(
-                expense_acc,
-                variation_acc,
-                balance_over_period,
-                _('Closing: Stock Variation Over Period'),
-            )
-            amls_vals_list += amls_vals
-
-        return amls_vals_list
-
-    def _prepare_inventory_aml_vals(self, debit_acc, credit_acc, balance, ref, product_id=False):
-        if balance < 0:
-            temp = credit_acc
-            credit_acc = debit_acc
-            debit_acc = temp
-            balance = abs(balance)
-        return [{
-            'account_id': credit_acc.id,
-            'name': ref,
-            'debit': 0,
-            'credit': balance,
-            'product_id': product_id,
-        }, {
-            'account_id': debit_acc.id,
-            'name': ref,
-            'debit': balance,
-            'credit': 0,
-            'product_id': product_id,
-        }]
-
-    def _get_last_closing_date(self):
-        """Return the datetime of the last posted stock closing of the company.
-
-        Returns ``datetime.min`` when no closing exists yet, so the result can
-        always be used as a lower bound in date domains: never test it for
-        truthiness to know whether a closing exists.
-        """
-        self.ensure_one()
-        closing = self.env['account.move'].search_fetch([
-            ('inventory_closing', '=', True),
-            ('state', '=', 'posted'),
-            ('company_id', '=', self.id),
-        ], ['closing_datetime'], limit=1, order='closing_datetime desc, id desc')
-        if not closing:
-            return datetime.min
-        return closing.closing_datetime

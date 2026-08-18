@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates>
-    <t t-inherit="stock_account.StockValuationReport" t-inherit-mode="extension">
-        <xpath expr="//t[@t-call='stock_account.StockValuationReport.InventoryLoss']" position="after">
+    <t t-inherit="account.StockValuationReport" t-inherit-mode="extension">
+        <xpath expr="//t[@t-call='account.StockValuationReport.InventoryLoss']" position="after">
             <t t-if="this.data.cost_of_production" t-call="mrp_account.StockValuationReport.CostOfProduction"/>
         </xpath>
     </t>
@@ -14,6 +14,6 @@
             onClickMethod.bind="this.openCostOfProduction"
             sublines="this.data.cost_of_production.lines"
             value="this.data.cost_of_production.value"/>
-        <t t-call="stock_account.StockValuationReport.EmptyLine"/>
+        <t t-call="account.StockValuationReport.EmptyLine"/>
     </t>
 </templates>

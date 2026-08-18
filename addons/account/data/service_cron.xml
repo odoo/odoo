@@ -19,4 +19,15 @@
         <field name="interval_number">1</field>
         <field name="interval_type">days</field>
     </record>
+
+    <record id="ir_cron_post_stock_valuation" model="ir.cron">
+        <field name="name">Account: Inventory Valuation Closing</field>
+        <field name="model_id" ref="model_res_company"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_post_stock_valuation()</field>
+        <field eval="True" name="active"/>
+        <field name="user_id" ref="base.user_root"/>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+    </record>
 </odoo>

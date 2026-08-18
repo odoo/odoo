@@ -1,14 +1,10 @@
 import { render } from "@web/owl2/utils";
 import { Component, signal } from "@odoo/owl";
-import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDateTimePicker } from "@web/core/datetime/datetime_picker_hook";
 import { formatDate } from "@web/core/l10n/dates";
 
 export class StockValuationReportFilters extends Component {
-    static template = "stock_account.StockValuationReport.Filters";
-    static components = {
-        Dropdown,
-    };
+    static template = "account.StockValuationReport.Filters";
     static props = {};
 
     dateFilterRef = signal.ref();
