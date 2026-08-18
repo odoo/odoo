@@ -213,7 +213,13 @@ class MailMail(models.Model):
         if 'filters' in self.env.context:
             domain.extend(self.env.context['filters'])
         batch_size = int(self.env['ir.config_parameter'].sudo().get_param('mail.mail.queue.batch.size', batch_size)) or batch_size
-        send_ids = self.search(domain, limit=batch_size if not email_ids else batch_size * 10).ids
+        send_limit = batch_size if not email_ids else batch_size * 10
+        send_ids = self.search(domain, limit=send_limit).ids
+        _logger.info(
+            "Processing email queue with send limit of '%s'%s",
+            send_limit,
+            " (with forced 'email_ids')" if email_ids else "",
+        )
         if not email_ids:
             ids_done = set()
             total = len(send_ids) if len(send_ids) < batch_size else self.search_count(domain)
@@ -222,7 +228,7 @@ class MailMail(models.Model):
                 """ Track mail ids that have been sent, and notify cron progress accordingly. """
                 processed = set(ids) - ids_done
                 ids_done.update(processed)
-                if self.env.get('ir_cron'):
+                if self.env.context.get('cron_id'):
                     # commit progress only when running from a cron job
                     self.env['ir.cron']._commit_progress(len(processed), remaining=total - len(ids_done))
         else:
