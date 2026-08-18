@@ -593,6 +593,8 @@ class TestAccountJournalAlias(AccountTestInvoicingCommon, MailCommon):
         """ Test that an email to a bank journal alias creates a bank statement,
             its lines, and correctly links the attachments to the statement.
         """
+        self.ensure_installed('account_bank_statement_extract')
+
         class MailAttachment(NamedTuple):
             fname: str
             content: bytes
