@@ -51,10 +51,16 @@ class DiscussChannel(models.Model):
         :param partner: internal user partner (operator) that created the lead;
         :param key: operator input in chat ('/lead Lead about Product')
         """
+        customer = False
+        if self.livechat_customer_partner_ids:
+            customer = self.livechat_customer_partner_ids[0].id
+        elif self.env['ir.module.module']._get('whatsapp').state == 'installed' and self.whatsapp_partner_id:
+            customer = self.whatsapp_partner_id.id
+
         return self.env['crm.lead'].create({
             "origin_channel_id": self.id,
             'name': html2plaintext(key[5:]),
-            'partner_id': self.livechat_customer_partner_ids[0].id if self.livechat_customer_partner_ids else False,
+            'partner_id': customer,
             'user_id': False,
             'team_id': False,
             'description': self._get_channel_history(),

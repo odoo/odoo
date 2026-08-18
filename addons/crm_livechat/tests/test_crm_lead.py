@@ -113,3 +113,47 @@ class TestLivechatLead(HttpCase, TestCrmCommon):
         self.assertFalse(channel.lead_ids)
         channel.with_user(bob_operator).execute_command_lead(body="/lead BobLead")
         self.assertEqual(channel.lead_ids.name, "BobLead")
+
+    def test_convert_whatsapp_visitor_to_lead(self):
+        """Lead created from a WhatsApp channel via /lead command should have
+        the WhatsApp customer populated in the Contact (partner_id) field."""
+
+        if self.env['ir.module.module']._get('whatsapp').state != 'installed':
+            self.skipTest('whatsapp module is not installed')
+
+        wa_partner = self.env['res.partner'].create({
+            'name': 'WA Lead Contact',
+            'phone': '+32499123456',
+        })
+        wa_account = self.env['whatsapp.account'].create({
+            'name': 'WA Account For CRM Livechat Test',
+            'app_uid': 'test_crm_livechat_app_uid',
+            'app_secret': 'test_crm_livechat_app_secret',
+            'account_uid': 'test_crm_livechat_account_uid',
+            'phone_uid': 'test_crm_livechat_phone_uid',
+            'token': 'test_crm_livechat_token',
+            'notify_user_ids': self.user_sales_leads.ids,
+        })
+
+        channel = self.env['discuss.channel'].create(
+            {
+                'channel_partner_ids': [(4, self.user_sales_leads.partner_id.id)],
+                'channel_type': 'whatsapp',
+                'name': 'Dummy WA Channel',
+                'wa_account_id': wa_account.id,
+                'whatsapp_number': '911234567891',
+                'whatsapp_partner_id': wa_partner.id,
+            },
+        )
+
+        lead = channel._convert_visitor_to_lead(
+            self.user_sales_leads.partner_id, '/lead Test WhatsApp Lead',
+        )
+
+        self.assertEqual(lead.name, 'Test WhatsApp Lead')
+        self.assertEqual(
+            lead.partner_id,
+            channel.whatsapp_partner_id,
+            "The lead's Contact should be populated from whatsapp_partner_id "
+            "when the channel has no livechat customer",
+        )
