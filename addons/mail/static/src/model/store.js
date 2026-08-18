@@ -16,110 +16,6 @@ export class Store extends Record {
         this._.ERRORS.push(err);
     }
 
-    warnErrors = true;
-
-    /**
-     * Run `fn` as one update of the store, so that the rest of the app sees
-     * everything `fn` writes as a single change.
-     *
-     * A write sets fields and relations one by one, so the data is only
-     * consistent once the whole update is done. Until then:
-     * - A computed field keeps its last value rather than computing one from
-     *   half written data (`isUpdateInProgress`).
-     * - The record deletions that the writes ask for wait in `RD_QUEUE`, to
-     *   run once at the end.
-     * - An immediate onChange waits in `OC_QUEUE`, run after the deletions,
-     *   so it sees the final values. The field computes run first, so the
-     *   others see their values.
-     * - An error does not leave the store in the middle of an update: it goes
-     *   to `ERRORS`, the update still ends, and then the first error is thrown.
-     *
-     * An update started inside another update joins the outer one (`UPDATE`,
-     * `updateDepth`): only the outermost update runs the queues.
-     *
-     * A write of a record deletion does not raise `updateDepth`: computeds
-     * already run unheld between its writes, and raising it would wake every
-     * held computed twice per write. A write of a queued onChange raises it,
-     * as its callback may insert records that other computeds read.
-     *
-     * @param {() => any} fn
-     */
-    MAKE_UPDATE(fn) {
-        const isDrainWrite =
-            this._.UPDATE !== 0 && this._.isDrainingQueues && !this._.isRunningOnChanges;
-        if (!isDrainWrite) {
-            this._.raiseUpdateDepth();
-        }
-        this._.UPDATE++;
-        let res;
-        try {
-            res = fn();
-        } catch (err) {
-            this.handleError(err);
-        }
-        this._.UPDATE--;
-        if (this._.UPDATE === 0) {
-            this._.isDrainingQueues = true;
-        }
-        if (!isDrainWrite) {
-            this._.lowerUpdateDepth();
-        }
-        if (this._.UPDATE === 0) {
-            // pretend an increased update cycle so that nothing in queue creates many small update cycles
-            this._.UPDATE++;
-            while (this._.RD_QUEUE.size > 0 || this._.OC_QUEUED.size > 0) {
-                const RD_QUEUE = new Map(this._.RD_QUEUE);
-                this._.RD_QUEUE.clear();
-                while (RD_QUEUE.size > 0) {
-                    /** @type {Record} */
-                    const record = RD_QUEUE.keys().next().value;
-                    RD_QUEUE.delete(record);
-                    record._.isDeleted.set(true);
-                    record._.scope?.destroy();
-                    record.Model.records.delete(record.localId);
-                    for (const [usingRecord, names] of record._.uses.data.entries()) {
-                        for (const [name2, count] of names.entries()) {
-                            for (let c = 0; c < count; c++) {
-                                usingRecord[name2].delete(record);
-                            }
-                        }
-                    }
-                    for (const name of [
-                        ...record.Model._.fieldsOne.keys(),
-                        ...record.Model._.fieldsMany.keys(),
-                    ]) {
-                        const recordList = record[name];
-                        for (const usedRecord of recordList._.data()) {
-                            usedRecord._.uses.delete(recordList);
-                        }
-                        recordList._.data.set([]);
-                    }
-                }
-                // One at a time, so that what it queues and deletes runs before the next one.
-                const runOnChange = this._.nextOnChange();
-                if (runOnChange) {
-                    this._.isRunningOnChanges = true;
-                    runOnChange();
-                    this._.isRunningOnChanges = false;
-                }
-            }
-            this._.OC_QUEUE.splice(1);
-            this._.UPDATE--;
-            this._.isDrainingQueues = false;
-            if (this._.ERRORS.length) {
-                if (this.warnErrors) {
-                    console.warn("Store data insert aborted due to following errors:");
-                    for (const err of this._.ERRORS) {
-                        console.warn(err);
-                    }
-                }
-                const [error1] = this._.ERRORS;
-                this._.ERRORS = [];
-                throw error1;
-            }
-        }
-        return res;
-    }
     /**
      * @template T
      * @param {T & {__store_version__?: import("@mail/model/field_version").StoreVersion}} [dataByModelName={}]
@@ -140,7 +36,7 @@ export class Store extends Record {
                 : null;
         }
         try {
-            this.MAKE_UPDATE(function storeInsert() {
+            this._.MAKE_UPDATE(function storeInsert() {
                 const recordsDataToDelete = [];
                 for (const [modelName, data] of Object.entries(dataByModelName)) {
                     if (!store[modelName]) {
