@@ -1,0 +1,282 @@
+<odoo>
+
+    <record id="view_clinic_visit_list" model="ir.ui.view">
+        <field name="name">clinic.visit.list</field>
+        <field name="model">clinic.visit</field>
+        <field name="arch" type="xml">
+            <list string="Clinic Visits">
+                <field name="token_number"/>
+                <field name="name"/>
+                <field name="patient_name"/>
+                <field name="patient_id"/>
+                <field name="doctor_id"/>
+                <field name="doctor_name"/>
+                <field name="visit_date"/>
+                <field name="queued_at" optional="hide"/>
+                <field name="queue_wait_minutes"/>
+                <field name="temperature_celsius" optional="hide"/>
+                <field name="pulse_rate" optional="hide"/>
+                <field name="oxygen_saturation" optional="hide"/>
+                <field name="fee"/>
+                <field name="invoice_id" optional="hide" groups="account.group_account_invoice,account.group_account_readonly,clinic_visit_manager.group_clinic_receptionist,clinic_visit_manager.group_clinic_manager"/>
+                <field name="invoice_payment_state" optional="hide" groups="account.group_account_invoice,account.group_account_readonly,clinic_visit_manager.group_clinic_receptionist,clinic_visit_manager.group_clinic_manager"/>
+                <field name="state"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_clinic_visit_kanban" model="ir.ui.view">
+        <field name="name">clinic.visit.kanban</field>
+        <field name="model">clinic.visit</field>
+        <field name="arch" type="xml">
+            <kanban class="o_clinic_visit_kanban" default_group_by="state">
+                <field name="token_number"/>
+                <field name="name"/>
+                <field name="patient_name"/>
+                <field name="doctor_name"/>
+                <field name="visit_date"/>
+                <field name="queue_wait_minutes"/>
+                <field name="temperature_celsius"/>
+                <field name="pulse_rate"/>
+                <field name="oxygen_saturation"/>
+                <field name="state"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="o_clinic_visit_card">
+                            <div class="o_clinic_visit_card_top">
+                                <span class="o_clinic_token">
+                                    <t t-if="record.token_number.raw_value" t-out="record.token_number.value"/>
+                                    <t t-else="">New</t>
+                                </span>
+                                <field name="state" widget="label_selection"/>
+                            </div>
+                            <div class="o_clinic_patient_name">
+                                <field name="patient_name"/>
+                            </div>
+                            <div class="o_clinic_visit_meta">
+                                <span t-if="record.doctor_name.raw_value">
+                                    <i class="fa fa-user-md" title="Doctor"/>
+                                    <field name="doctor_name"/>
+                                </span>
+                                <span>
+                                    <i class="fa fa-clock-o" title="Visit date"/>
+                                    <field name="visit_date"/>
+                                </span>
+                            </div>
+                            <div class="o_clinic_vitals_strip">
+                                <span>
+                                    <strong><field name="queue_wait_minutes"/></strong>
+                                    min wait
+                                </span>
+                                <span t-if="record.temperature_celsius.raw_value">
+                                    <strong><field name="temperature_celsius"/></strong>
+                                    C
+                                </span>
+                                <span t-if="record.pulse_rate.raw_value">
+                                    <strong><field name="pulse_rate"/></strong>
+                                    bpm
+                                </span>
+                                <span t-if="record.oxygen_saturation.raw_value">
+                                    <strong><field name="oxygen_saturation"/></strong>
+                                    SpO2
+                                </span>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_clinic_visit_form" model="ir.ui.view">
+        <field name="name">clinic.visit.form</field>
+        <field name="model">clinic.visit</field>
+        <field name="arch" type="xml">
+            <form string="Clinic Visit">
+                <header>
+                    <button name="action_confirm"
+                            type="object"
+                            string="Send to Queue"
+                            class="btn-primary"
+                            groups="clinic_visit_manager.group_clinic_receptionist,clinic_visit_manager.group_clinic_manager"
+                            invisible="state != 'draft'"/>
+
+                    <button name="action_start_consultation"
+                            type="object"
+                            string="Start Consultation"
+                            class="btn-primary"
+                            groups="clinic_visit_manager.group_clinic_doctor,clinic_visit_manager.group_clinic_manager"
+                            invisible="state != 'waiting'"/>
+
+                    <button name="action_done"
+                            type="object"
+                            string="Mark Done"
+                            class="btn-success"
+                            groups="clinic_visit_manager.group_clinic_doctor,clinic_visit_manager.group_clinic_manager"
+                            invisible="state not in ('waiting', 'in_consultation')"/>
+
+                    <button name="action_cancel"
+                            type="object"
+                            string="Cancel"
+                            groups="clinic_visit_manager.group_clinic_receptionist,clinic_visit_manager.group_clinic_manager"
+                            invisible="state in ('done', 'cancelled')"/>
+
+                    <button name="%(action_report_clinic_visit)d"
+                            type="action"
+                            string="Print Report"
+                            groups="clinic_visit_manager.group_clinic_receptionist,clinic_visit_manager.group_clinic_doctor,clinic_visit_manager.group_clinic_manager"/>
+
+                    <button name="action_create_invoice"
+                            type="object"
+                            string="Create Invoice"
+                            class="btn-primary"
+                            groups="account.group_account_invoice,clinic_visit_manager.group_clinic_receptionist,clinic_visit_manager.group_clinic_manager"
+                            invisible="invoice_id or state == 'cancelled'"/>
+
+                    <button name="action_view_invoice"
+                            type="object"
+                            string="View Invoice"
+                            groups="account.group_account_invoice,account.group_account_readonly,clinic_visit_manager.group_clinic_receptionist,clinic_visit_manager.group_clinic_manager"
+                            invisible="not invoice_id"/>
+
+                    <field name="state"
+                           widget="statusbar"
+                           statusbar_visible="draft,waiting,in_consultation,done"/>
+                </header>
+
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="token_number"/>
+                            <field name="patient_name"/>
+                            <field name="patient_id"/>
+                            <field name="doctor_id"/>
+                            <field name="doctor_name"/>
+                            <field name="visit_date"/>
+                            <field name="queued_at"/>
+                            <field name="consultation_started_at"/>
+                            <field name="completed_at"/>
+                        </group>
+
+                        <group>
+                            <field name="fee"/>
+                            <field name="invoice_id" groups="account.group_account_invoice,account.group_account_readonly,clinic_visit_manager.group_clinic_receptionist,clinic_visit_manager.group_clinic_manager"/>
+                            <field name="invoice_payment_state" groups="account.group_account_invoice,account.group_account_readonly,clinic_visit_manager.group_clinic_receptionist,clinic_visit_manager.group_clinic_manager"/>
+                            <field name="queue_wait_minutes"/>
+                            <field name="consultation_minutes"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Symptoms">
+                            <field name="symptoms"/>
+                        </page>
+
+                        <page string="Billing"
+                              groups="account.group_account_invoice,account.group_account_readonly,clinic_visit_manager.group_clinic_receptionist,clinic_visit_manager.group_clinic_manager">
+                            <group>
+                                <group>
+                                    <field name="fee"/>
+                                    <field name="invoice_id"/>
+                                    <field name="invoice_payment_state"/>
+                                </group>
+                                <group>
+                                    <button name="action_create_invoice"
+                                            type="object"
+                                            string="Create Invoice"
+                                            class="btn-primary"
+                                            invisible="invoice_id or state == 'cancelled'"/>
+                                    <button name="action_view_invoice"
+                                            type="object"
+                                            string="View Invoice"
+                                            invisible="not invoice_id"/>
+                                </group>
+                            </group>
+                        </page>
+
+                        <page string="Vitals"
+                              groups="clinic_visit_manager.group_clinic_doctor,clinic_visit_manager.group_clinic_manager">
+                            <group>
+                                <group string="Body Measurements">
+                                    <field name="temperature_celsius"/>
+                                    <field name="weight_kg"/>
+                                    <field name="height_cm"/>
+                                    <field name="bmi"/>
+                                </group>
+
+                                <group string="Clinical Signs">
+                                    <field name="blood_pressure_systolic"/>
+                                    <field name="blood_pressure_diastolic"/>
+                                    <field name="pulse_rate"/>
+                                    <field name="respiratory_rate"/>
+                                    <field name="oxygen_saturation"/>
+                                </group>
+                            </group>
+                        </page>
+
+                        <page string="Doctor Notes"
+                              groups="clinic_visit_manager.group_clinic_doctor,clinic_visit_manager.group_clinic_manager">
+                            <field name="notes"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_clinic_visit_search" model="ir.ui.view">
+        <field name="name">clinic.visit.search</field>
+        <field name="model">clinic.visit</field>
+        <field name="arch" type="xml">
+            <search string="Clinic Visits">
+                <field name="token_number"/>
+                <field name="patient_name"/>
+                <field name="patient_id"/>
+                <field name="doctor_id"/>
+                <field name="doctor_name"/>
+                <filter name="active_queue"
+                        string="Active Queue"
+                        domain="[('state', 'in', ('waiting', 'in_consultation'))]"/>
+                <filter name="today"
+                        string="Today"
+                        domain="[('visit_date', '&gt;=', context_today().strftime('%Y-%m-%d 00:00:00')), ('visit_date', '&lt;=', context_today().strftime('%Y-%m-%d 23:59:59'))]"/>
+                <separator/>
+                <filter name="group_by_state"
+                        string="Status"
+                        context="{'group_by': 'state'}"/>
+                <filter name="group_by_doctor"
+                        string="Registered Doctor"
+                        context="{'group_by': 'doctor_id'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_clinic_visit" model="ir.actions.act_window">
+        <field name="name">Clinic Visits</field>
+        <field name="res_model">clinic.visit</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="search_view_id" ref="view_clinic_visit_search"/>
+    </record>
+
+    <record id="action_clinic_visit_owl" model="ir.actions.client">
+        <field name="name">Clinic Visits</field>
+        <field name="tag">clinic_visit_manager.dashboard</field>
+        <field name="context">{'clinic_tab': 'visits'}</field>
+    </record>
+
+    <menuitem id="menu_clinic_root"
+              name="Clinic"
+              groups="base.group_user"/>
+
+    <menuitem id="menu_clinic_visit"
+              name="Visits"
+              parent="menu_clinic_root"
+              action="action_clinic_visit_owl"
+              groups="base.group_no_one"/>
+
+    <record id="menu_clinic_visit" model="ir.ui.menu">
+        <field name="active" eval="False"/>
+    </record>
+
+</odoo>
