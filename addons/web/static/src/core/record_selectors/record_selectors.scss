@@ -1,21 +1,43 @@
-.o_record_selector, .o_multi_record_selector {
-    &:hover, &:focus-within {
-        .o_dropdown_button:after {
+.o_record_selector {
+    position: relative;
+
+    .o-autocomplete {
+        min-width: 0;
+    }
+
+    .o_dropdown_button {
+        @include o-position-absolute($o-input-padding-y, $o-input-padding-x);
+        pointer-events: none;
+
+        &::after {
             @include o-caret-down;
+            opacity: 0;
         }
     }
 
+    &:hover, &:focus-within {
+        .o_dropdown_button::after {
+            opacity: 1;
+        }
+    }
+}
+
+.o_multi_record_selector {
     .o_record_autocomplete_with_caret {
         display: flex;
         min-width: 100%;
         position: relative;
 
+        &::after {
+            @include o-caret-down;
+            align-self: center;
+            opacity: 0;
+            pointer-events: none;
+        }
+
         &:hover, &:focus-within {
             &::after {
-                @include o-caret-down;
-                align-self: center;
-                position: absolute;
-                right: .5rem;
+                opacity: 1;
             }
         }
     }
