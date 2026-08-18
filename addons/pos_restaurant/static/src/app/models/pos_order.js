@@ -84,7 +84,7 @@ patch(PosOrder.prototype, {
     },
     removeOrderline(line, deep = true) {
         const courseId = line.course_id;
-        const result = super.removeOrderline(line);
+        const result = super.removeOrderline(...arguments);
         if (courseId && !this.lines.some((l) => l.course_id === courseId)) {
             courseId.delete();
         }
