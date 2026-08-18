@@ -11,7 +11,7 @@ from odoo.tools.image import image_data_uri
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.controllers.portal import PaymentPortal
 from odoo.addons.sale.controllers.portal import CustomerPortal
-from odoo.addons.website_sale.controllers.main import WebsiteSale
+from odoo.addons.website_sale.controllers.checkout.address import Address
 from odoo.addons.website_sale.models.website import CART_SESSION_CACHE_KEY
 
 
@@ -74,11 +74,125 @@ class Cart(PaymentPortal):
         values.update(self._prepare_order_history())
         return request.render("website_sale.cart", values)
 
+    def _get_express_shop_payment_values(self, order, **_kwargs):
+        payment_form_values = CustomerPortal._get_payment_values(
+            self, order, website_id=self.env.website.id, is_express_checkout=True
+        )
+        payment_form_values.update({
+            "payment_access_token": payment_form_values.pop("access_token"),  # Rename the key.
+            # Do not include delivery related lines
+            "minor_amount": payment_utils.to_minor_currency_units(
+                order._get_amount_total_excluding_delivery(), order.currency_id
+            ),
+            "merchant_name": self.env.website.name,
+            "transaction_route": f"/shop/payment/transaction/{order.id}",
+            "express_checkout_route": Address._express_checkout_route,
+            "landing_route": "/shop/payment/validate",
+            "shipping_info_required": order._has_deliverable_products(),
+            "shipping_address_update_route": Address._express_checkout_delivery_route,
+        })
+        provider_sudo = payment_form_values["providers_sudo"][:1]
+        if provider_sudo:
+            payment_form_values["express_checkout_provider_sudo"] = provider_sudo
+            payment_form_values["payment_method_unknown_id"] = provider_sudo._get_pm_from_code(
+                "unknown"
+            ).id
+        if self.env.website.is_public_user():
+            payment_form_values["partner_id"] = -1
+        return payment_form_values
+
     def _cart_values(self, **_post):
         """Pass additional values when rendering the 'website_sale.cart' template (e.g. add a
         flag to trigger a style variation).
         """
         return {}
+
+    def _prepare_order_history(self):
+        """Prepare the order history of the current user.
+
+        The valid order lines of the last 10 confirmed orders are considered and grouped by date. An
+        order line is not valid if:
+
+        - Its product is already in the cart.
+        - It's a combo parent line.
+        - It has an unsellable product.
+        - Its sale is prevented (zero-priced or in a restricted category).
+        - It has an already seen product (duplicate or identical combo).
+
+        The dates are represented by labels like "Today", "Yesterday", or "X days ago".
+
+        :return: The order history, in the format
+                 {'order_history': [{'label': str, 'lines': SaleOrderLine}, ...]}.
+        :rtype: dict
+        """
+
+        def is_same_combo(line1_, line2_):
+            """Check if two combo lines have the same linked product combination."""
+            return line1_.linked_line_ids.product_id.ids == line2_.linked_line_ids.product_id.ids
+
+        # The public partner is shared by all visitors: it has no order history of its own
+        if self.env.website.is_public_user():
+            return {"order_history": []}
+
+        # Get the last 10 confirmed orders from the current website user.
+        previous_orders_lines_sudo = (
+            self
+            .env["sale.order"]
+            .sudo()
+            .search(
+                [
+                    ("partner_id", "=", self.env.user.partner_id.id),
+                    ("state", "=", "sale"),
+                    ("website_id", "=", self.env.website.id),
+                ],
+                order="date_order desc",
+                limit=10,
+            )
+            .order_line
+        )
+
+        # Prepare the order history.
+        SaleOrderLineSudo = self.env["sale.order.line"].sudo()
+        cart_lines_sudo = request.cart.order_line if request.cart else SaleOrderLineSudo
+        seen_lines_sudo = SaleOrderLineSudo
+        lines_per_order_date = {}
+        for line_sudo in previous_orders_lines_sudo:
+            # Ignore lines that are combo parents, unsellable, or prevented from sale.
+            product_id = line_sudo.product_id.id
+            if (
+                line_sudo.linked_line_id.product_type == "combo"
+                or not line_sudo._is_sellable()
+                or self.env.website._prevent_product_sale(line_sudo.product_id)
+            ):
+                continue
+
+            # Ignore lines that are already in the cart or have already been seen.
+            is_combo = line_sudo.product_type == "combo"
+            if any(
+                line.product_id.id == product_id
+                and (not is_combo or is_same_combo(line_sudo, line))
+                for line in cart_lines_sudo + seen_lines_sudo
+            ):
+                continue
+            seen_lines_sudo |= line_sudo
+
+            # Group lines by date.
+            days_ago = (fields.Date.context_today(self) - line_sudo.order_id.date_order.date()).days
+            if days_ago == 0:
+                line_group_label = self.env._("Today")
+            elif days_ago == 1:
+                line_group_label = self.env._("Yesterday")
+            else:
+                line_group_label = self.env._("%s days ago", days_ago)
+            lines_per_order_date.setdefault(line_group_label, SaleOrderLineSudo)
+            lines_per_order_date[line_group_label] |= line_sudo
+
+        # Flatten the line groups to get the final order history.
+        return {
+            "order_history": [
+                {"label": label, "lines": lines} for label, lines in lines_per_order_date.items()
+            ]
+        }
 
     @route(
         route="/shop/cart/add",
@@ -319,6 +433,82 @@ class Cart(PaymentPortal):
     def _get_product_user_error(self, product):  # noqa: ARG002
         return self.env._("The given product does not exist therefore it cannot be added to cart.")
 
+    def _get_additional_cart_update_values(self, data):
+        """Look for extra information in a given dictionary to be included in a `_cart_add` call.
+
+        :param dict data: A dictionary in which to look up for extra information.
+        :return: addition values to be passed to `_cart_add`.
+        :rtype: dict
+        """
+        if data.get("combo_item_id"):
+            return {"combo_item_id": data["combo_item_id"]}
+        return {}
+
+    def _get_cart_notification_information(self, order, added_qty_per_line):
+        """Get the information about the sales order lines to show in the notification.
+
+        :param sale.order order: The sales order.
+        :param dict added_qty_per_line: The added qty per order line.
+        :rtype: dict
+        :return: A dict with the following structure:
+            {
+                'currency_id': int
+                'lines': [{
+                    'id': int
+                    'image_url': str
+                    'quantity': float
+                    'name': str
+                    'combination_name': str
+                    'description': str
+                    'price_total': float
+                }],
+            }
+        """
+        lines = order.order_line.filtered(lambda line: line.id in set(added_qty_per_line))
+        if not lines:
+            return {}
+
+        show_tax = order.website_id.tax_display == "tax_included"
+        return {
+            "currency_id": order.currency_id.id,
+            "lines": [
+                {
+                    "id": line.id,
+                    "image_url": order.website_id.image_url(line.product_id, "image_128"),
+                    "quantity": added_qty_per_line[line.id],
+                    "name": line._get_line_header(),
+                    "combination_name": line._get_combination_name(),
+                    "description": line._get_sale_order_line_multiline_description_variants(),
+                    "price_total": (
+                        line.price_reduce_taxinc if show_tax else line.price_reduce_taxexcl
+                    )
+                    * added_qty_per_line[line.id],
+                    **self._get_additional_cart_notification_information(line),
+                }
+                for line in lines
+            ],
+        }
+
+    def _get_additional_cart_notification_information(self, line):
+        infos = {}
+        # Only set the linked line id for combo items, not for optional products.
+        if combo_item := line.combo_item_id:
+            infos["linked_line_id"] = line.linked_line_id.id
+            # To sell a product type 'combo', one doesn't need to publish all combo choices. This
+            # causes an issue when public users access the image of each choice via the /web/image
+            # route. To bypass this access check, we send the raw image URL if the product is
+            # inaccessible to the current user.
+            if (
+                not combo_item.product_id.sudo(False).has_access("read")
+                and combo_item.product_id.image_128
+            ):
+                infos["image_url"] = image_data_uri(combo_item.product_id.image_128)
+
+        if line.product_id._has_multiple_uoms():
+            infos["uom_name"] = line.product_uom_id.name
+
+        return infos
+
     @route(
         route="/shop/cart/quick_add", type="jsonrpc", auth="user", methods=["POST"], website=True
     )
@@ -350,32 +540,41 @@ class Cart(PaymentPortal):
         )
         return values
 
-    def _get_express_shop_payment_values(self, order, **_kwargs):
-        payment_form_values = CustomerPortal._get_payment_values(
-            self, order, website_id=self.env.website.id, is_express_checkout=True
-        )
-        payment_form_values.update({
-            "payment_access_token": payment_form_values.pop("access_token"),  # Rename the key.
-            # Do not include delivery related lines
-            "minor_amount": payment_utils.to_minor_currency_units(
-                order._get_amount_total_excluding_delivery(), order.currency_id
+    def _get_updated_cart_page_values(self, order_sudo):
+        """Construct the values needed to update the UI after a cart update.
+
+        :param sale.order order_sudo: The current cart order.
+        :rtype: dict
+        """
+        IrUiView = self.env["ir.ui.view"]
+
+        return {
+            "cart_has_blocking_alerts": order_sudo._has_blocking_alerts(),
+            "cart_quantity": order_sudo.cart_quantity,
+            "currency": order_sudo.currency_id.name,
+            "amount": order_sudo.amount_total,
+            "minor_amount": (
+                order_sudo.amount_total
+                and payment_utils.to_minor_currency_units(
+                    order_sudo.amount_total, order_sudo.currency_id
+                )
             ),
-            "merchant_name": self.env.website.name,
-            "transaction_route": f"/shop/payment/transaction/{order.id}",
-            "express_checkout_route": WebsiteSale._express_checkout_route,
-            "landing_route": "/shop/payment/validate",
-            "shipping_info_required": order._has_deliverable_products(),
-            "shipping_address_update_route": WebsiteSale._express_checkout_delivery_route,
-        })
-        provider_sudo = payment_form_values["providers_sudo"][:1]
-        if provider_sudo:
-            payment_form_values["express_checkout_provider_sudo"] = provider_sudo
-            payment_form_values["payment_method_unknown_id"] = provider_sudo._get_pm_from_code(
-                "unknown"
-            ).id
-        if self.env.website.is_public_user():
-            payment_form_values["partner_id"] = -1
-        return payment_form_values
+            "website_sale.cart_lines": IrUiView._render_template(
+                "website_sale.cart_lines",
+                {
+                    "website_sale_order": order_sudo,
+                    "date": fields.Date.today(),
+                    "suggested_products": order_sudo._cart_accessories(),
+                },
+            ),
+            "website_sale.total": IrUiView._render_template(
+                "website_sale.total", {"website_sale_order": order_sudo, **self._total_values()}
+            ),
+        }
+
+    def _total_values(self):
+        """Pass additional values when rendering the 'website_sale.total' template."""
+        return {}
 
     @route(
         route="/shop/cart/update",
@@ -428,202 +627,3 @@ class Cart(PaymentPortal):
             {"website_sale_order": order_sudo, **self._prepare_order_history()},
         )
         return values
-
-    def _get_updated_cart_page_values(self, order_sudo):
-        """Construct the values needed to update the UI after a cart update.
-
-        :param sale.order order_sudo: The current cart order.
-        :rtype: dict
-        """
-        IrUiView = self.env["ir.ui.view"]
-
-        return {
-            "cart_has_blocking_alerts": order_sudo._has_blocking_alerts(),
-            "cart_quantity": order_sudo.cart_quantity,
-            "currency": order_sudo.currency_id.name,
-            "amount": order_sudo.amount_total,
-            "minor_amount": (
-                order_sudo.amount_total
-                and payment_utils.to_minor_currency_units(
-                    order_sudo.amount_total, order_sudo.currency_id
-                )
-            ),
-            "website_sale.cart_lines": IrUiView._render_template(
-                "website_sale.cart_lines",
-                {
-                    "website_sale_order": order_sudo,
-                    "date": fields.Date.today(),
-                    "suggested_products": order_sudo._cart_accessories(),
-                },
-            ),
-            "website_sale.total": IrUiView._render_template(
-                "website_sale.total", {"website_sale_order": order_sudo, **self._total_values()}
-            ),
-        }
-
-    def _total_values(self):
-        """Pass additional values when rendering the 'website_sale.total' template."""
-        return {}
-
-    def _prepare_order_history(self):
-        """Prepare the order history of the current user.
-
-        The valid order lines of the last 10 confirmed orders are considered and grouped by date. An
-        order line is not valid if:
-
-        - Its product is already in the cart.
-        - It's a combo parent line.
-        - It has an unsellable product.
-        - Its sale is prevented (zero-priced or in a restricted category).
-        - It has an already seen product (duplicate or identical combo).
-
-        The dates are represented by labels like "Today", "Yesterday", or "X days ago".
-
-        :return: The order history, in the format
-                 {'order_history': [{'label': str, 'lines': SaleOrderLine}, ...]}.
-        :rtype: dict
-        """
-
-        def is_same_combo(line1_, line2_):
-            """Check if two combo lines have the same linked product combination."""
-            return line1_.linked_line_ids.product_id.ids == line2_.linked_line_ids.product_id.ids
-
-        # The public partner is shared by all visitors: it has no order history of its own
-        if self.env.website.is_public_user():
-            return {"order_history": []}
-
-        # Get the last 10 confirmed orders from the current website user.
-        previous_orders_lines_sudo = (
-            self
-            .env["sale.order"]
-            .sudo()
-            .search(
-                [
-                    ("partner_id", "=", self.env.user.partner_id.id),
-                    ("state", "=", "sale"),
-                    ("website_id", "=", self.env.website.id),
-                ],
-                order="date_order desc",
-                limit=10,
-            )
-            .order_line
-        )
-
-        # Prepare the order history.
-        SaleOrderLineSudo = self.env["sale.order.line"].sudo()
-        cart_lines_sudo = request.cart.order_line if request.cart else SaleOrderLineSudo
-        seen_lines_sudo = SaleOrderLineSudo
-        lines_per_order_date = {}
-        for line_sudo in previous_orders_lines_sudo:
-            # Ignore lines that are combo parents, unsellable, or prevented from sale.
-            product_id = line_sudo.product_id.id
-            if (
-                line_sudo.linked_line_id.product_type == "combo"
-                or not line_sudo._is_sellable()
-                or self.env.website._prevent_product_sale(line_sudo.product_id)
-            ):
-                continue
-
-            # Ignore lines that are already in the cart or have already been seen.
-            is_combo = line_sudo.product_type == "combo"
-            if any(
-                line.product_id.id == product_id
-                and (not is_combo or is_same_combo(line_sudo, line))
-                for line in cart_lines_sudo + seen_lines_sudo
-            ):
-                continue
-            seen_lines_sudo |= line_sudo
-
-            # Group lines by date.
-            days_ago = (fields.Date.context_today(self) - line_sudo.order_id.date_order.date()).days
-            if days_ago == 0:
-                line_group_label = self.env._("Today")
-            elif days_ago == 1:
-                line_group_label = self.env._("Yesterday")
-            else:
-                line_group_label = self.env._("%s days ago", days_ago)
-            lines_per_order_date.setdefault(line_group_label, SaleOrderLineSudo)
-            lines_per_order_date[line_group_label] |= line_sudo
-
-        # Flatten the line groups to get the final order history.
-        return {
-            "order_history": [
-                {"label": label, "lines": lines} for label, lines in lines_per_order_date.items()
-            ]
-        }
-
-    def _get_cart_notification_information(self, order, added_qty_per_line):
-        """Get the information about the sales order lines to show in the notification.
-
-        :param sale.order order: The sales order.
-        :param dict added_qty_per_line: The added qty per order line.
-        :rtype: dict
-        :return: A dict with the following structure:
-            {
-                'currency_id': int
-                'lines': [{
-                    'id': int
-                    'image_url': str
-                    'quantity': float
-                    'name': str
-                    'combination_name': str
-                    'description': str
-                    'price_total': float
-                }],
-            }
-        """
-        lines = order.order_line.filtered(lambda line: line.id in set(added_qty_per_line))
-        if not lines:
-            return {}
-
-        show_tax = order.website_id.tax_display == "tax_included"
-        return {
-            "currency_id": order.currency_id.id,
-            "lines": [
-                {
-                    "id": line.id,
-                    "image_url": order.website_id.image_url(line.product_id, "image_128"),
-                    "quantity": added_qty_per_line[line.id],
-                    "name": line._get_line_header(),
-                    "combination_name": line._get_combination_name(),
-                    "description": line._get_sale_order_line_multiline_description_variants(),
-                    "price_total": (
-                        line.price_reduce_taxinc if show_tax else line.price_reduce_taxexcl
-                    )
-                    * added_qty_per_line[line.id],
-                    **self._get_additional_cart_notification_information(line),
-                }
-                for line in lines
-            ],
-        }
-
-    def _get_additional_cart_update_values(self, data):
-        """Look for extra information in a given dictionary to be included in a `_cart_add` call.
-
-        :param dict data: A dictionary in which to look up for extra information.
-        :return: addition values to be passed to `_cart_add`.
-        :rtype: dict
-        """
-        if data.get("combo_item_id"):
-            return {"combo_item_id": data["combo_item_id"]}
-        return {}
-
-    def _get_additional_cart_notification_information(self, line):
-        infos = {}
-        # Only set the linked line id for combo items, not for optional products.
-        if combo_item := line.combo_item_id:
-            infos["linked_line_id"] = line.linked_line_id.id
-            # To sell a product type 'combo', one doesn't need to publish all combo choices. This
-            # causes an issue when public users access the image of each choice via the /web/image
-            # route. To bypass this access check, we send the raw image URL if the product is
-            # inaccessible to the current user.
-            if (
-                not combo_item.product_id.sudo(False).has_access("read")
-                and combo_item.product_id.image_128
-            ):
-                infos["image_url"] = image_data_uri(combo_item.product_id.image_128)
-
-        if line.product_id._has_multiple_uoms():
-            infos["uom_name"] = line.product_uom_id.name
-
-        return infos
