@@ -295,3 +295,7 @@ class ResCompany(models.Model):
                     'auth_done',
                     {'pdp_registration_id': pdp_registration.id},
                 )
+
+    def _invoice_is_french_company(self):
+        result = super()._invoice_is_french_company()
+        return result or self._peppol_is_french_company()

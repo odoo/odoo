@@ -9,3 +9,7 @@ class ResCompany(models.Model):
 
     l10n_fr_rounding_difference_loss_account_id = fields.Many2one('account.account', check_company=True)
     l10n_fr_rounding_difference_profit_account_id = fields.Many2one('account.account', check_company=True)
+
+    def _invoice_is_french_company(self):
+        self.ensure_one()
+        return self.country_code in {'FR', 'GP', 'MQ', 'RE'}
