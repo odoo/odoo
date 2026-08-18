@@ -138,6 +138,9 @@ export class HybridFluidStrategyPlugin extends Plugin {
             return defaultEmailNodeArguments;
         } else if (isResponsiveElement) {
             analysis.facts.isResponsiveElement = true;
+            // If the responsive element does not have an explicit width,
+            // it should be enforced.
+            this.ensureResponsiveElementWidth(layout, referenceNode);
             // add constraint to propagate from the responsive element (cell)
             // if the element inside the cell has a %width, it should be
             // elevated to 100%, because spacing will have been handled
@@ -180,6 +183,31 @@ export class HybridFluidStrategyPlugin extends Plugin {
             }
         }
         return layout;
+    }
+
+    ensureResponsiveElementWidth(layout, referenceNode) {
+        const styleInfo = layout.getRef().styleInfo;
+        const widthInfo = styleInfo.get("width");
+        if (widthInfo) {
+            const { value } = widthInfo;
+            const parsed = parseCssValue(value);
+            if (parsed.unit === "%" && parsed.number !== 100) {
+                widthInfo.value = `100%`;
+            }
+        } else {
+            const width = this.getStylePropertyValue(referenceNode, "width");
+            styleInfo.setProperty("width", width);
+        }
+        const maxWidthInfo = styleInfo.get("max-width");
+        if (maxWidthInfo) {
+            const { value } = maxWidthInfo;
+            const parsed = parseCssValue(value);
+            if (parsed.unit !== "%") {
+                maxWidthInfo.value = "100%";
+            }
+        } else {
+            styleInfo.setProperty("max-width", "100%");
+        }
     }
 
     acceptTableStrategyReport(emailNode) {

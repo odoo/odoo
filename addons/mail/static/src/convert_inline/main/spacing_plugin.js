@@ -125,10 +125,22 @@ export class SpacingPlugin extends Plugin {
         for (const side of DIRECTION_VARIANTS) {
             const value = styleInfo.getPropertyValue(`margin-${side}`);
             const { number, unit } = parseCssValue(value);
-            if (number > 0 && unit === "px") {
+            if (number > 0 && (unit === "px" || unit === "em")) {
                 // The margin spacing node is meant as a wrapper and replaces
                 // static margin by padding on the main wrapper cell.
                 setAttributes({ style: { [`padding-${side}`]: value } }, "cell");
+            } else if (number > 0 && unit === "rem") {
+                const rootFontSize = this.getStylePropertyValue(
+                    this.config.referenceDocument.body,
+                    "font-size"
+                );
+                const fontSizeValue = parseCssValue(rootFontSize);
+                if (fontSizeValue.number > 0 && fontSizeValue.unit === "px") {
+                    setAttributes(
+                        { style: { [`padding-${side}`]: `${fontSizeValue.number * number}px` } },
+                        "cell"
+                    );
+                }
             }
         }
         if (isRelevant) {
@@ -152,8 +164,20 @@ export class SpacingPlugin extends Plugin {
         for (const side of DIRECTION_VARIANTS) {
             const value = styleInfo.getPropertyValue(`padding-${side}`);
             const { number, unit } = parseCssValue(value);
-            if (number > 0 && unit === "px") {
+            if (number > 0 && (unit === "px" || unit === "em")) {
                 setAttributes({ style: { [`padding-${side}`]: value } }, "cell");
+            } else if (number > 0 && unit === "rem") {
+                const rootFontSize = this.getStylePropertyValue(
+                    this.config.referenceDocument.body,
+                    "font-size"
+                );
+                const fontSizeValue = parseCssValue(rootFontSize);
+                if (fontSizeValue.number > 0 && fontSizeValue.unit === "px") {
+                    setAttributes(
+                        { style: { [`padding-${side}`]: `${fontSizeValue.number * number}px` } },
+                        "cell"
+                    );
+                }
             }
         }
         if (isRelevant) {
