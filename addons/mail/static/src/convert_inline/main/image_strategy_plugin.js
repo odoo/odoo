@@ -12,6 +12,7 @@ import { convertCSSColorToRgba } from "@web/core/utils/colors";
 export class ImageStrategyPlugin extends Plugin {
     static id = "imageStrategy";
     static dependencies = [
+        "math",
         "measurementSnapshot",
         "responsiveBlock",
         "rules",
@@ -530,14 +531,17 @@ export class ImageStrategyPlugin extends Plugin {
             style.height = "auto";
             if (width.unit === "%") {
                 style.width = `${width.number}%`;
-            } else {
-                style.width = `100%`;
+            } else if (
+                width.string !== "auto" ||
+                !this.isZero(width.rendered.number - width.natural)
+            ) {
+                style.width = `${Math.round(width.rendered.number)}px`;
             }
+            attributes.width = `${Math.round(width.rendered.number)}`;
             if (maxWidth.unit === "px") {
-                attributes.width = `${Math.round(maxWidth.number)}`;
                 style["max-width"] = `${maxWidth.number}px`;
-            } else {
-                attributes.width = `${Math.round(width.rendered.number)}`;
+            } else if (maxWidth.string === "100%") {
+                style["max-width"] = `100%`;
             }
         }
         return { attributes, style };
