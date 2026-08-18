@@ -22,33 +22,6 @@ class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController
         self._populate_currency_and_pricelist(kwargs)
         return super().sale_product_configurator_get_values(*args, **kwargs)
 
-    def should_show_product_configurator(
-        self, single_product_variant_dict, product_template, is_product_configured=False, **kwargs
-    ):
-        """Return whether the product configurator dialog should be shown.
-
-        :param dict single_product_variant_dict: Information about the single product variant.
-        :param product.template product_template: The product.template record being checked.
-        :param bool is_product_configured: Whether the product is already configured.
-        :rtype: bool
-        :return: Whether the product configurator dialog should be shown.
-        """
-        if not request.is_frontend:
-            return super().should_show_product_configurator(
-                single_product_variant_dict,
-                product_template,
-                is_product_configured=is_product_configured,
-                **kwargs,
-            )
-        has_optional_products = bool(
-            product_template.optional_product_ids.filtered(self._should_show_product)
-        )
-        return (
-            has_optional_products
-            or not (single_product_variant_dict.get("product_id") or is_product_configured)
-            or (len(product_template._get_available_uoms()) > 1 and not is_product_configured)
-        )
-
     def _get_product_template(self, product_template_id):
         if request.is_frontend:
             combo_item = (
@@ -175,24 +148,6 @@ class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController
                 })
         return basic_product_information
 
-    def _get_ptav_price_extra(self, ptav, currency, date, product_or_template):
-        """Override of `sale` to apply taxes.
-
-        :param product.template.attribute.value ptav: The product template attribute value for which
-            to compute the extra price.
-        :param res.currency currency: The currency to compute the extra price in.
-        :param datetime date: The date to compute the extra price at.
-        :param product.product|product.template product_or_template: The product on which the
-            product template attribute value applies.
-        :rtype: float
-        :return: The extra price for the product template attribute value.
-        """
-        price_extra = super()._get_ptav_price_extra(ptav, currency, date, product_or_template)
-        website = request.env.website
-        if website:
-            return product_or_template._apply_taxes_to_price(price_extra, currency, website=website)
-        return price_extra
-
     def _get_strikethrough_price(
         self, product_or_template, currency, date, price, pricelist_rule_id=None
     ):
@@ -250,6 +205,51 @@ class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController
             if currency.compare_amounts(compare_list_price, price) == 1:
                 return compare_list_price
         return None
+
+    def _get_ptav_price_extra(self, ptav, currency, date, product_or_template):
+        """Override of `sale` to apply taxes.
+
+        :param product.template.attribute.value ptav: The product template attribute value for which
+            to compute the extra price.
+        :param res.currency currency: The currency to compute the extra price in.
+        :param datetime date: The date to compute the extra price at.
+        :param product.product|product.template product_or_template: The product on which the
+            product template attribute value applies.
+        :rtype: float
+        :return: The extra price for the product template attribute value.
+        """
+        price_extra = super()._get_ptav_price_extra(ptav, currency, date, product_or_template)
+        website = request.env.website
+        if website:
+            return product_or_template._apply_taxes_to_price(price_extra, currency, website=website)
+        return price_extra
+
+    def should_show_product_configurator(
+        self, single_product_variant_dict, product_template, is_product_configured=False, **kwargs
+    ):
+        """Return whether the product configurator dialog should be shown.
+
+        :param dict single_product_variant_dict: Information about the single product variant.
+        :param product.template product_template: The product.template record being checked.
+        :param bool is_product_configured: Whether the product is already configured.
+        :rtype: bool
+        :return: Whether the product configurator dialog should be shown.
+        """
+        if not request.is_frontend:
+            return super().should_show_product_configurator(
+                single_product_variant_dict,
+                product_template,
+                is_product_configured=is_product_configured,
+                **kwargs,
+            )
+        has_optional_products = bool(
+            product_template.optional_product_ids.filtered(self._should_show_product)
+        )
+        return (
+            has_optional_products
+            or not (single_product_variant_dict.get("product_id") or is_product_configured)
+            or (len(product_template._get_available_uoms()) > 1 and not is_product_configured)
+        )
 
     def _should_show_product(self, product_template):
         """Override of `sale` to only show products that can be added to the cart.

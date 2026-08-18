@@ -7,7 +7,7 @@ from odoo.tests.common import JsonRpcException, tagged
 from odoo.tools import mute_logger
 
 from odoo.addons.payment.tests.http_common import PaymentHttpCommon
-from odoo.addons.website_sale.controllers.cart import Cart
+from odoo.addons.website_sale.controllers.checkout.cart import Cart
 from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
 
 
