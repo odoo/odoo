@@ -134,6 +134,7 @@ class TestL10nPlEdiBatch(AccountTestInvoicingCommon):
         return self.env['ir.attachment'].search([
             ('res_model', '=', 'account.move'),
             ('res_id', '=', bill.id),
+            ('res_field', '=', 'l10n_pl_edi_attachment_file'),
             ('name', '=', f'KSeF-{bill.l10n_pl_edi_number}.xml'),
         ])
 
@@ -411,6 +412,68 @@ class TestL10nPlEdiBatch(AccountTestInvoicingCommon):
         self.assertEqual(half_fetched_bill.l10n_pl_edi_status, 'fetched')
         self.assertRecordValues(self._search_xml_from_bill(half_fetched_bill), [{'raw': self.xml_content}])
 
+    def test_import_bills_relinks_the_xml_of_a_failed_single_download(self):
+        failed_bill = self._create_single_download_bill('20260501', 'fetch_failed')
+        old_xml = self.env['ir.attachment'].create({
+            'name': f'KSeF-{failed_bill.l10n_pl_edi_number}.xml',
+            'raw': b'<Faktura>old</Faktura>',
+            'res_model': 'account.move',
+            'res_id': failed_bill.id,
+            'res_field': 'l10n_pl_edi_attachment_file',
+        })
+        ready_batch = self._create_batch('ready', {'status': {'code': 200}})
+        self._add_zip_parts(ready_batch, self._make_zip({f'{failed_bill.l10n_pl_edi_number}.xml': self.xml_content}))
+
+        self.Batch._cron_import()
+
+        # Only the imported XML is linked to the field; the old one stays attached to the bill
+        new_xml = self._search_xml_from_bill(failed_bill)
+        self.assertRecordValues(new_xml, [{'raw': self.xml_content}])
+        self.assertEqual(failed_bill.l10n_pl_edi_attachment_id, new_xml)
+        self.assertRecordValues(old_xml, [{'res_id': failed_bill.id, 'res_field': False}])
+
+    def test_import_bills_links_xml_and_stores_pdf(self):
+        ready_batch = self._create_batch('ready', {'status': {'code': 200}})
+        self._add_zip_parts(ready_batch, self._make_zip({'pdf-ksef-number.xml': self.xml_content}))
+
+        with patch.object(
+            self.env.registry['ir.actions.report'], '_render_qweb_pdf', return_value=(b'bill PDF', 'pdf'),
+        ) as render_pdf:
+            self.Batch._cron_import()
+        bill = self.env['account.move'].search([('l10n_pl_edi_number', '=', 'pdf-ksef-number')])
+
+        # The XML is linked to the bill as the single download does, so the PL tab and the KOD I QR code find it,
+        # and the import from the attachment still fills the bill
+        self.assertEqual(bill.l10n_pl_edi_status, 'fetched')
+        self.assertTrue(bill.invoice_line_ids)
+        self.assertEqual(bill.l10n_pl_edi_attachment_id, self._search_xml_from_bill(bill))
+        self.assertEqual(bill._l10n_pl_edi_get_xml_bytes(), self.xml_content)
+        render_pdf.assert_called_once()
+        self.assertEqual(bill.invoice_pdf_report_id.raw, b'bill PDF')
+
+    def test_import_bills_pdf_rendering_failure(self):
+        ready_batch = self._create_batch('ready', {'status': {'code': 200}})
+        self._add_zip_parts(ready_batch, self._make_zip({'pdf-ksef-number.xml': self.xml_content}))
+
+        with (
+            patch.object(
+                self.env.registry['ir.actions.report'], '_render_qweb_pdf', side_effect=UserError('PDF rendering failed'),
+            ),
+            mute_logger('odoo.addons.l10n_pl_edi_batch.models.batch_download'),
+        ):
+            self.Batch._cron_import()
+        bill = self.env['account.move'].search([('l10n_pl_edi_number', '=', 'pdf-ksef-number')])
+
+        # The bill is imported and fetched all the same, only the chatter tells the PDF is missing
+        self.assertEqual(bill.l10n_pl_edi_status, 'fetched')
+        self.assertTrue(bill.invoice_line_ids)
+        self.assertTrue(bill.l10n_pl_edi_attachment_id)
+        self.assertFalse(bill.invoice_pdf_report_id)
+        self.assertTrue(bill.message_ids.filtered(
+            lambda message: 'PDF visualization could not be generated' in message.body
+        ))
+        self.assertEqual(ready_batch.state, 'done')
+
     def test_import_bills_corrupt_zip(self):
         now = fields.Datetime.now().replace(microsecond=0)
         ready_batch = self._create_batch('ready', {'status': {'code': 200}})
@@ -491,6 +554,8 @@ class TestL10nPlEdiBatch(AccountTestInvoicingCommon):
             self.assertTrue(self._search_xml_from_bill(bill), number)
         failing_messages = bills_by_number['failing-ksef-number'].message_ids.mapped('body')
         self.assertTrue(any("not imported" in body for body in failing_messages))
+        # An unreadable XML only means no QR code: the PDF is still stored
+        self.assertTrue(bills_by_number['unreadable-ksef-number'].invoice_pdf_report_id)
 
     # Test the KSeF request ----------------------------------------------------
 
