@@ -33,13 +33,14 @@ export class DataResponse extends Record {
                 if (!_resolve) {
                     return;
                 }
-                const result = { ...this };
-                for (const [name, value] of Object.entries(result)) {
-                    if (Array.isArray(value)) {
-                        result[name] = [...value];
-                    }
+                // A record holds its fields in signals, so it does not spread,
+                // and the delete below empties its relations.
+                const data = {};
+                for (const name of this.Model._.fields.keys()) {
+                    const value = this[name];
+                    data[name] = Array.isArray(value) ? [...value] : value;
                 }
-                this._resultResolvers.resolve(result);
+                this._resultResolvers.resolve(data);
                 this.delete();
             },
             { immediate: true }

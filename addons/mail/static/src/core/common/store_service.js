@@ -1,5 +1,5 @@
-import { Store as BaseStore, fields, makeStore } from "@mail/model/export";
 import { formatLocalDateTime, resolveTimeZoneName } from "@mail/utils/common/dates";
+import { Store as BaseStore, fields, makeStore } from "@mail/model/export";
 import {
     attClassObjectToString,
     generateEmojisOnHtml,
@@ -342,7 +342,7 @@ export class Store extends BaseStore {
         return r;
     }
 
-    _fetchStoreDataDebounced() {
+    _flushFetchStoreData() {
         const fetchParams = this.fetchParams;
         this._fetchStoreDataRpc(
             fetchParams.map(([name, params, dataRequest]) => {
@@ -517,7 +517,7 @@ export class Store extends BaseStore {
     setup() {
         super.setup();
         this._fetchStoreDataDebounced = debounce(
-            this._fetchStoreDataDebounced,
+            this._flushFetchStoreData,
             Store.FETCH_DATA_DEBOUNCE_DELAY
         );
     }

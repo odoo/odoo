@@ -7,14 +7,13 @@ import { patch } from "@web/core/utils/patch";
 const messagePatch = {
     setup() {
         super.setup(...arguments);
-        this.messagingMenuTabsAsMessages = fields.Many("MessagingMenuTab", {
-            inverse: "messages",
-            /** @this {import("models").Message} */
-            compute() {
+        this.messagingMenuTabsAsMessages = fields.Many("MessagingMenuTab", { inverse: "messages" });
+        this.assignComputed(
+            "messagingMenuTabsAsMessages",
+            function computeMessagingMenuTabsAsMessages() {
                 return this.store.messagingMenu.allTabs.filter((tab) => tab.includesMessage(this));
-            },
-            eager: true,
-        });
+            }
+        );
     },
 };
 patch(Message.prototype, messagePatch);

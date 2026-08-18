@@ -49,18 +49,17 @@ const discussChannelPatch = {
         /** @type {string|undefined} */
         this.livechat_outcome = undefined;
         this.livechat_note = fields.Html();
-        /** @type {string|undefined} */
-        this.livechatNoteText = fields.Attr(undefined, {
-            compute() {
-                if (this.livechat_note !== undefined) {
-                    return convertBrToLineBreak(this.livechat_note || "");
-                }
-                return this.livechatNoteText;
-            },
-        });
+        /**
+         * Local note text (bound to the note textarea); refreshed from the
+         * server value whenever `livechat_note` changes.
+         *
+         * @type {string|undefined}
+         */
+        this.livechatNoteText = undefined;
+        /** @type {import("models").ChannelMember} */
         this.livechatVisitorMember = this.computed(() => {
             if (this.channel_type !== "livechat") {
-                return;
+                return undefined;
             }
             return [...this.channel_member_ids]
                 .sort((a, b) => a.id - b.id)
@@ -68,6 +67,14 @@ const discussChannelPatch = {
         });
         /** @type {import("@web/core/network/rpc").RPCError|import("@web/core/network/rpc").ConnectionLostError|import("@web/core/network/rpc").ConnectionAbortedError|undefined} */
         this.chatbotTriggerFailedError = undefined;
+        this.onChange(
+            () => [this.livechat_note],
+            function onChangeLivechatNote(livechat_note) {
+                if (livechat_note !== undefined) {
+                    this.livechatNoteText = convertBrToLineBreak(livechat_note || "");
+                }
+            }
+        );
     },
     get allowDescriptionTypes() {
         return [...super.allowDescriptionTypes, "livechat"];
@@ -88,7 +95,7 @@ const discussChannelPatch = {
                 this.isLocallyPinned && !this.self_member_id && this.livechat_status !== "need_help"
             );
         }
-        return super._computeCanHide(...arguments);
+        return super._computeCanHide();
     },
     get computedDisplayName() {
         if (this.channel_type !== "livechat") {
