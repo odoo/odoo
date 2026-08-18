@@ -42,8 +42,8 @@ class HrJob(models.Model):
             position. The Recruiter is automatically added to all meetings with the Applicant.",
     )
     department_id = fields.Many2one('hr.department', string='Department', check_company=True, tracking=True, index='btree_not_null')
-    company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company, tracking=True)
-    contract_type_id = fields.Many2one('hr.contract.type', string='Contract Type', tracking=True)
+    company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company, tracking=True, domain=lambda self: [('id', 'in', self.env.companies.ids)])
+    contract_type_id = fields.Many2one('hr.contract.type', string='Employment Type', tracking=True)
 
     _name_company_uniq = models.Constraint(
         'unique(name, company_id, department_id)',
