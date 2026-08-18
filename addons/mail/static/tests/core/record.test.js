@@ -2,7 +2,7 @@ import { toRawValue } from "@mail/utils/common/local_storage";
 import { defineMailModels, start as start2 } from "@mail/../tests/mail_test_helpers";
 import { after, afterEach, beforeEach, describe, expect, test, tick } from "@odoo/hoot";
 import { advanceTime, animationFrame } from "@odoo/hoot-mock";
-import { Component, immediateEffect, markup, proxy, toRaw, xml } from "@odoo/owl";
+import { Component, immediateEffect, markup, proxy, xml } from "@odoo/owl";
 import {
     destroyApp,
     getService,
@@ -561,6 +561,11 @@ test("lazy compute should re-compute while they are observed", async () => {
 });
 
 test("store updates can be observed", async () => {
+    localRegistry.remove("Store");
+    (class extends Store {
+        static _name = "Store";
+        abc;
+    }).register(localRegistry);
     const store = await start();
     function onUpdate() {
         expect.step(`abc:${store.abc}`);
@@ -1424,10 +1429,10 @@ test("Deleted records are not returned by 'Model.records' nor 'Model.get()'", as
     function assertExists(store) {
         const msg = store.Message.get("msg-1");
         if (msg) {
-            expect(toRaw(msg).exists()).toBe(true);
+            expect(msg.exists()).toBe(true);
         }
         for (const msg of store.Message.records.values()) {
-            expect(toRaw(msg).exists()).toBe(true);
+            expect(msg.exists()).toBe(true);
         }
     }
     let deleting = false;
@@ -2058,6 +2063,24 @@ test("writing on a computed is warned + ignored", async () => {
     expect(thread.label).toBe("label 0");
     thread.counter = 1;
     expect(thread.label).toBe("label 1");
+});
+
+test("a name the model does not declare is warned + dropped", async () => {
+    patch(console, { warn: (msg) => expect.step(msg) });
+    (class Thread extends Record {
+        static id = "name";
+        name;
+    }).register(localRegistry);
+    const store = await start();
+    const thread = store.Thread.insert("general");
+    thread.foo = 1;
+    store.Thread.insert({ name: "general", bar: 2 });
+    expect.verifySteps([
+        'Dropping unknown field "foo" written on "Thread": records only hold declared fields.',
+        'Dropping unknown field "bar" inserted on "Thread": records only hold declared fields.',
+    ]);
+    expect(thread.foo).toBe(undefined);
+    expect(thread.bar).toBe(undefined);
 });
 
 test("an onChange registered in setup runs on the proxy and cleans up", async () => {

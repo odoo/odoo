@@ -3,7 +3,13 @@
 /** @typedef {import("./store").Store} Store */
 
 import { ManyFieldVersion, SingleFieldVersion, SKIP_REVISION } from "@mail/model/field_version";
-import { isCommandList, isMany, normalizeManyCommands, untrackFunctions } from "@mail/model/misc";
+import {
+    isCommandList,
+    isMany,
+    normalizeManyCommands,
+    technicalKeysOnRecords,
+    untrackFunctions,
+} from "@mail/model/misc";
 import { RecordInternal } from "@mail/model/record_internal";
 
 import { htmlEscape, markup, signal } from "@odoo/owl";
@@ -11,8 +17,6 @@ import { htmlEscape, markup, signal } from "@odoo/owl";
 import { deserializeDate, deserializeDateTime } from "@web/core/l10n/dates";
 
 const Markup = markup().constructor;
-
-/** @typedef {string} FieldName */
 
 export class StoreInternal extends RecordInternal {
     /**
@@ -116,9 +120,8 @@ export class StoreInternal extends RecordInternal {
     }
     /** @param {RecordList<Record>} recordList */
     sortRecordList(recordList, func) {
-        const recordProxies = recordList._.data().map((record) => record._proxy);
-        recordProxies.sort(func);
-        const records = recordProxies.map((recordProxy) => recordProxy._raw);
+        const records = recordList._.data().slice();
+        records.sort(func);
         const hasChanged = recordList._.data().some((record, i) => record !== records[i]);
         if (hasChanged) {
             recordList._.data.set(records);
@@ -134,7 +137,7 @@ export class StoreInternal extends RecordInternal {
         const parentFieldName = Model._.parentFields.get(fieldName);
         if (parentFieldName) {
             // Route the write to the parent record, which stores an _inherits field.
-            Reflect.set(record._proxy[parentFieldName], fieldName, value);
+            Reflect.set(record[parentFieldName], fieldName, value);
             return;
         }
         if (Model._.fieldsComputable.has(fieldName)) {
@@ -189,6 +192,22 @@ export class StoreInternal extends RecordInternal {
             Object.getOwnPropertySymbols(vals).map((sym) => [sym, vals[sym]])
         );
         for (const [fieldName, value] of fieldEntries) {
+            const Model = record.Model;
+            if (typeof fieldName === "string" && Model._.parentFields.get(fieldName)) {
+                record[fieldName] = value;
+                continue;
+            }
+            if (
+                typeof fieldName === "string" &&
+                !Model._.fields.get(fieldName) &&
+                !Model._.fieldsComputable.has(fieldName) &&
+                !technicalKeysOnRecords.has(fieldName)
+            ) {
+                console.warn(
+                    `Dropping unknown field "${fieldName}" inserted on "${Model.getName()}": records only hold declared fields.`
+                );
+                continue;
+            }
             let version = record._.fieldsVersion.get(fieldName);
             if (!version) {
                 version = isMany(record.Model, fieldName)
@@ -235,7 +254,7 @@ export class StoreInternal extends RecordInternal {
      */
     updateRelation(record, fieldName, value) {
         /** @type {RecordList<Record>} */
-        const recordList = record[fieldName];
+        const recordList = record._.fieldsList.get(fieldName);
         if (isMany(record.Model, fieldName)) {
             this.updateRelationMany(recordList, value);
         } else {
