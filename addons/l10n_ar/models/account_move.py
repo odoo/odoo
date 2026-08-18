@@ -186,7 +186,6 @@ class AccountMove(models.Model):
             if res_code in ['8', '9', '10'] and rec.journal_id.l10n_ar_afip_pos_system not in expo_journals:
                 # if it is a foreign partner and journal is not for expo, we try to change it to an expo journal
                 journal = journal.search(domain + [('l10n_ar_afip_pos_system', 'in', expo_journals)], limit=1)
-                msg = _('You are trying to create an invoice for foreign partner but you don\'t have an exportation journal')
             elif res_code not in ['8', '9', '10'] and rec.journal_id.l10n_ar_afip_pos_system in expo_journals:
                 # if it is NOT a foreign partner and journal is for expo, we try to change it to a local journal
                 journal = journal.search(domain + [('l10n_ar_afip_pos_system', 'not in', expo_journals)], limit=1)
