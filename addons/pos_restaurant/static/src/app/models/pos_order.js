@@ -84,9 +84,21 @@ patch(PosOrder.prototype, {
         return super.setPartner(...arguments);
     },
     removeOrderline(line, deep = true) {
+<<<<<<< 5c2d5daa13cf582c40bdb44e245e1359d7c410f0
         super.removeOrderline(...arguments);
         if (this.lines.length === 0 && this.hasCourses()) {
             this.course_ids.forEach((course) => course.delete());
+||||||| 6fcde699ed41d2d8a6f30c050116aecf22a86f79
+        const courseId = line.course_id;
+        const result = super.removeOrderline(line);
+        if (courseId && !this.lines.some((l) => l.course_id === courseId)) {
+            courseId.delete();
+=======
+        const courseId = line.course_id;
+        const result = super.removeOrderline(...arguments);
+        if (courseId && !this.lines.some((l) => l.course_id === courseId)) {
+            courseId.delete();
+>>>>>>> f081000cd88418bae85faee91936b9e6af67f569
         }
     },
     cleanCourses() {
