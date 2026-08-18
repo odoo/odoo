@@ -12,6 +12,10 @@ patch(PosOrder.prototype, {
     initState() {
         super.initState();
         this.uiState.selected_course_uuid = undefined;
+        if (this.config.module_pos_restaurant) {
+            // uiState is device-local: an order from the server was asked on its own device
+            this.uiState.guestSetted = this.isSynced && Boolean(this.preset_id?.use_guest);
+        }
     },
     getCustomerCount() {
         return this.customer_count;
