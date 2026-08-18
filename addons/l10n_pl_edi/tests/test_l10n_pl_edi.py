@@ -717,6 +717,7 @@ class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
             ('res_id', '=', created_move.id),
         ], limit=1)
         self.assertTrue(created_move_attachment)
+        self.assertIn(created_move_attachment, created_move.message_ids.attachment_ids)
         with tools.file_open('l10n_pl_edi/tests/export_xmls/fa3_bill.xml', mode='rb') as file:
             self.assertEqual(created_move_attachment.raw, file.read())
 
