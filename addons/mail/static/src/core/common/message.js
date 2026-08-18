@@ -284,7 +284,7 @@ export class Message extends Component {
                       : this.message.threadAsNewest
                       ? "right-end"
                       : "right-start",
-                  name: this.expandText,
+                  name: _t("Expand"),
               })
             : undefined;
     });
@@ -323,10 +323,6 @@ export class Message extends Component {
             "object-fit-contain": this.props.message.author_id?.is_company,
             "object-fit-cover": !this.props.message.author_id?.is_company,
         };
-    }
-
-    get expandText() {
-        return _t("Expand");
     }
 
     get isEditing() {
