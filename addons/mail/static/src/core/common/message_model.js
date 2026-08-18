@@ -272,7 +272,7 @@ export class Message extends Record {
         if (this.isEmpty || !this.allowsEdition) {
             return false;
         }
-        return ["comment"].includes(this.message_type);
+        return this.message_type === "comment";
     }
 
     get dateDay() {
