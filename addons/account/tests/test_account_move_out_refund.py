@@ -441,7 +441,7 @@ class TestAccountMoveOutRefundOnchanges(AccountTestInvoicingCommon):
         # Test 'add_invoice_line' rounding
         move_form = Form(self.invoice)
         # Add a cash rounding having 'add_invoice_line'.
-        move_form.invoice_cash_rounding_id = self.cash_rounding_a
+        self.invoice.invoice_cash_rounding_id = self.cash_rounding_a
         move_form.save()
 
         # The cash rounding does nothing as the total is already rounded.

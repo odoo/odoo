@@ -144,12 +144,12 @@
                             <setting id="invoice_delivery_addresses" documentation="/applications/sales/sales/send_quotations/different_addresses.html" help="Select specific invoice and delivery addresses">
                                 <field name="group_sale_delivery_address"/>
                             </setting>
-                            <setting id="smallest_coinage_currency" help="Define the smallest coinage of the currency used to pay by cash"
+                            <setting id="smallest_coinage_currency" help="Apply rounding to the total amount of a sales invoice."
                                 documentation="/applications/finance/accounting/receivables/customer_invoices/cash_rounding.html">
                                 <field name="group_cash_rounding"/>
                                 <div class="mt8">
                                     <button name="%(account.rounding_list_action)d" icon="east"
-                                            type="action" string="Cash Roundings" class="btn-link"
+                                            type="action" string="Rounding Methods" class="btn-link"
                                             invisible="not group_cash_rounding"/>
                                 </div>
                             </setting>
