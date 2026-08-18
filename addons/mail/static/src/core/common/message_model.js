@@ -249,14 +249,14 @@ export class Message extends Record {
         if (["notification", "tracking"].includes(this.message_type)) {
             return undefined;
         }
-        if (!this.isSelfAuthored && !this.isNote && !this.isHighlightedFromMention) {
-            return "blue";
-        }
-        if (this.isSelfAuthored && !this.isNote && !this.isHighlightedFromMention) {
-            return "green";
-        }
         if (this.isHighlightedFromMention) {
             return "orange";
+        }
+        if (!this.isSelfAuthored && !this.isNote) {
+            return "blue";
+        }
+        if (this.isSelfAuthored && !this.isNote) {
+            return "green";
         }
         return undefined;
     }
