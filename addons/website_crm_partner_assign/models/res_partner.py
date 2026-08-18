@@ -100,3 +100,13 @@ class ResPartner(models.Model):
                 partners.geo_localize()
 
         return res
+
+    def _search_get_detail(self, website, order, options):
+        results = super()._search_get_detail(website, order, options)
+        country = options.get("country")
+        industry = options.get("industry")
+        if self.env.website.is_view_active("website_crm_partner_assign.countries_setting") and country:
+            results["base_domain"].append([('country_id', '=', self.env["ir.http"]._unslug(country)[1])])
+        if self.env.website.is_view_active("website_crm_partner_assign.industries_setting") and industry:
+            results["base_domain"].append([('implemented_partner_ids.industry_id', '=', self.env["ir.http"]._unslug(industry)[1])])
+        return results

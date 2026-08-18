@@ -13,6 +13,7 @@
         <h1 id="page_title" class="me-auto mb-0 h4">
             <span>Find a partner</span>
             <t t-foreach="countries" t-as="country"><span t-if="country['active'] and country['country_id'][0] != 0 and country['country_id']"> in <t t-out="country['country_id'][1]"/></span></t>
+            <t t-set='all_countries_label'>All Countries</t>
         </h1>
     </xpath>
     <xpath expr="//a[@id='filter_category_link']" position="attributes">
@@ -65,9 +66,8 @@
     <xpath expr="//div[@id='top_section_button_middle_pos']" position="after">
         <div class="dropdown d-none d-lg-block">
             <button type="button" class="dropdown-toggle btn btn-light" data-bs-toggle="dropdown" title="Filter by country" aria-label="Filter by country" aria-expanded="false">
-                <t t-foreach="countries" t-as="country">
-                    <span t-if="country['active']" t-out="country['country_id'][1]"/>
-                </t>
+                <span t-if="current_country" t-out="current_country.name"/>
+                <span t-else="" t-out="all_countries_label"/>
             </button>
             <div class="dropdown-menu">
                 <t t-foreach="countries" t-as="country" t-if="country['country_id']">
@@ -141,6 +141,9 @@
 </template>
 
 <template id="ref_country" inherit_id="website_partnership.search_setting" name="World Map">
+    <xpath expr="//t[@t-call='website.website_search_box_input']" position="attributes">
+        <attribute name="order_by.f">grade_sequence ASC, implemented_partner_count DESC, complete_name ASC</attribute>
+    </xpath>
     <xpath expr="//div[hasclass('o_wcrm_search')]" position="inside">
         <t t-if="google_maps_api_key">
             <!-- modal for large map -->
@@ -192,10 +195,8 @@
 </template>
 
 <template id="search_setting" inherit_id="website_partnership.search_setting">
-    <xpath expr="//div[@id='search_input_group']" position="before">
+    <xpath expr="//t[@t-call='website.website_search_box_input']" position="inside">
         <input t-if="country_all" type="hidden" name="country_all" value="True" />
-    </xpath>
-    <xpath expr="//input[@id='search_input_text']" position="before">
         <input type="hidden" t-if='current_industry' name="industry" t-att-value='slug(current_industry)'/>
     </xpath>
 </template>
