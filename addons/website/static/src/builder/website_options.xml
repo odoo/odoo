@@ -86,7 +86,7 @@
             <font_awesome_option selector="span.oi, i.oi, .social_media_img" exclude="[data-oe-xpath]"/>
             <video_size_option selector=".media_iframe_video"/>
             <image_tool_option selector="img" exclude="[data-oe-type='image'] > img:not([data-attachment-id])"/>
-            <image_pop_up_option selector="img" exclude="a img, header img, footer img, .s_image_gallery img, *:has(> a.stretched-link) img, .o_product_detail_img_wrapper img"/>
+            <image_pop_up_option selector="img" exclude="a img, header img, footer img, .s_image_gallery img, *:has(> a.stretched-link) img, .o_product_detail_img_wrapper img, .s_references_carousel_item img"/>
             <image_and_fa_option
                 template="html_builder.ImageAndFaOption"
                 selector="span.oi, i.oi, img"
@@ -108,7 +108,7 @@
         <content_width_option
             template="website.ContentWidthOption"
             selector="section, .s_carousel .carousel-item, .s_carousel_intro_item"
-            exclude="[data-snippet] :not(.oe_structure) > [data-snippet],#footer > *, .s_bento_banner section[data-name='Card'], .s_floating_blocks .s_floating_blocks_block, .s_bento_block_card, .o_no_content_width_option"
+            exclude="[data-snippet] :not(.oe_structure) > [data-snippet],#footer > *, .s_bento_banner section[data-name='Card'], .s_floating_blocks .s_floating_blocks_block, .s_bento_block_card, .o_no_content_width_option, .s_references_carousel"
             applyTo=":scope > .container, :scope > .container-fluid, :scope > .o_container_small"/>
         <vertical_justify_option
             template="html_builder.VerticalJustifyOption"
@@ -117,7 +117,7 @@
 
         <animate_option
             selector=".o_animable, section .row > div, img, .oi, .btn, .s_card"
-            t-attf-exclude="[data-oe-xpath], .o_not-animable, .s_col_no_resize.row > div, .s_col_no_resize, .s_social_media i.oi, .s_share i.oi, .s_website_form_submit, {{socialMediaElementsSelector}}, {{this.specialBlockquoteSelector}}, div:is({{this.cardParentHandlers}}) > .s_card"/>
+            t-attf-exclude="[data-oe-xpath], .o_not-animable, .s_col_no_resize.row > div, .s_col_no_resize, .s_social_media i.oi, .s_share i.oi, .s_website_form_submit, {{socialMediaElementsSelector}}, {{this.specialBlockquoteSelector}}, div:is({{this.cardParentHandlers}}) > .s_card, .s_references_carousel_item img"/>
         <animate_option selector=".s_social_media, .s_share" t-att-applyTo="socialMediaElementsSelector"/>
         <visibility_option selector="section, .s_hr"/>
         <device_visibility_option
