@@ -26,9 +26,9 @@ class PortalEntryPayment(models.Model):
             methods_allowing_tokenization = providers_sudo._find_available_payment_methods(
                 partner_sudo.id, force_tokenization=True
             )
-            existing_tokens = (
-                partner_sudo.payment_token_ids
-                + partner_sudo.commercial_partner_id.payment_token_ids
+            existing_tokens = partner_sudo._get_payment_tokens(
+                force_tokenization=True,
+                is_validation=True
             )
             res &= bool(methods_allowing_tokenization or existing_tokens)
         return res
