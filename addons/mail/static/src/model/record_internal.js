@@ -332,12 +332,13 @@ export class RecordInternal {
      */
     proxyGet(record, name, recordProxy) {
         const Model = record.Model;
-        const Models = record._rawStore.Models;
-        if (Model._.parentFields.has(name)) {
-            const parentFieldName = Model._.parentFields.get(name);
+        const modelInternal = Model._;
+        if (modelInternal.parentFields.has(name)) {
+            const parentFieldName = modelInternal.parentFields.get(name);
             const parentRecordProxy = recordProxy[parentFieldName];
             if (!parentRecordProxy) {
-                const ParentModel = Models[Model._.fieldsTargetModel.get(parentFieldName)];
+                const Models = record._rawStore.Models;
+                const ParentModel = Models[modelInternal.fieldsTargetModel.get(parentFieldName)];
                 if (isMany(ParentModel, name)) {
                     return [];
                 }
@@ -345,7 +346,7 @@ export class RecordInternal {
             }
             return Reflect.get(parentRecordProxy, name);
         }
-        if (!Model._.fields.get(name)) {
+        if (!modelInternal.fields.get(name)) {
             const sig = record._.fieldsAttrSignal.get(name);
             if (sig) {
                 return sig();
@@ -368,10 +369,10 @@ export class RecordInternal {
             }
             return res;
         }
-        if (Model._.fieldsComputable.get(name)) {
+        if (modelInternal.fieldsComputable.get(name)) {
             let computedField = record._.fieldsComputed.get(name);
             if (!computedField) {
-                const compute = Model._.fieldsCompute.get(name);
+                const compute = modelInternal.fieldsCompute.get(name);
                 const { isUpdateInProgress } = record._rawStore._;
                 let lastValue = record._.fieldsDefault.get(name);
                 computedField = record._.ensureScope(record).run(() =>
@@ -392,7 +393,7 @@ export class RecordInternal {
             }
             return computedField();
         }
-        if (Model._.fieldsCompute.get(name) && !Model._.fieldsEager.get(name)) {
+        if (modelInternal.fieldsCompute.get(name) && !modelInternal.fieldsEager.get(name)) {
             record._.fieldsComputeInNeed.set(name, true);
             if (record._.fieldsComputeOnNeed.get(name)) {
                 record._.compute(record, name, { fromInNeed: true });
@@ -408,7 +409,7 @@ export class RecordInternal {
         const val = (
             record._.fieldsAttrSignal.get(name) ?? record._.ensureFieldSignal(record, name)
         )();
-        if (typeof val === "object" && val !== null && Model._.fieldsAttrAsProxy.has(name)) {
+        if (typeof val === "object" && val !== null && modelInternal.fieldsAttrAsProxy.has(name)) {
             // Return the value as a proxy, as this field is mutated in place.
             return proxy(val);
         }
