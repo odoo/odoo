@@ -11,7 +11,7 @@ from odoo.tools import BinaryBytes
 
 from odoo.addons.http_routing.tests.common import MockRequest
 from odoo.addons.website.tests.common import HttpCaseWithWebsiteUser
-from odoo.addons.website_sale.controllers.main import WebsiteSale
+from odoo.addons.website_sale.controllers.product import Product
 
 _logger = logging.getLogger(__name__)
 
@@ -34,7 +34,7 @@ class TestProductPictureController(HttpCase):
     def setUpClass(cls):
         super().setUpClass()
         cls.website = cls.env.ref("base.default_website")
-        cls.WebsiteSaleController = WebsiteSale()
+        cls.WebsiteSaleController = Product()
         cls.product = cls.env["product.product"].create({
             "name": "Storage Test Box",
             "standard_price": 70.0,
@@ -290,7 +290,7 @@ class TestProductVideoUpload(HttpCase):
     def setUpClass(cls):
         super().setUpClass()
         cls.website = cls.env.ref("base.default_website")
-        cls.WebsiteSaleController = WebsiteSale()
+        cls.WebsiteSaleController = Product()
         cls.product = cls.env["product.product"].create({
             "name": "Test Video Product",
             "standard_price": 100.0,
