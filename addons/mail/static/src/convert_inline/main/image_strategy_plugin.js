@@ -284,6 +284,26 @@ export class ImageStrategyPlugin extends Plugin {
     }
 
     /**
+     * Return whether the icon rendered in the given `::before` element is the filled
+     * variant of its glyph. It can be reached two ways: the `FILL` variation axis
+     * of the icon font, which snaps at 0.5, and a `_f` suffix on the ligature name.
+     *
+     * @param {HTMLElement}
+     * @returns {boolean}
+     */
+    isIconFilled(referenceNode) {
+        const content = this.getFontIconContent(referenceNode);
+        if (content.endsWith("_f")) {
+            return true;
+        }
+        const fillAxis = this.getFontIconPropertyValue(
+            referenceNode,
+            "font-variation-settings"
+        ).match(/["']FILL["']\s+([\d.]+)/);
+        return parseFloat(fillAxis?.[1]) >= 0.5;
+    }
+
+    /**
      * TODO EGGMAIL: clean comments (most of it seems implemented)
      * find a way to generalize the layout building functions
      * so that it does not require direct access to referenceNode, and it can build everything
@@ -330,12 +350,8 @@ export class ImageStrategyPlugin extends Plugin {
         let icon = isCustom ? content.codePointAt(0) : content;
         let fill = 0;
         if (font === "oi" && !isCustom) {
-            const strippedIcon = icon.replace(/_f$/, "");
-            if (
-                icon !== strippedIcon ||
-                this.getFontIconPropertyValue(fontIcon, "font-feature-settings").includes("ss01")
-            ) {
-                icon = strippedIcon;
+            if (this.isIconFilled(fontIcon)) {
+                icon = icon.replace(/_f$/, "");
                 fill = 1;
             }
         }
