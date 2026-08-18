@@ -394,8 +394,10 @@
     </BuilderRow>
     <BuilderRow t-if="this.isMultipleTextConditionForRequirementOptionVisible">
         <div class="d-flex flex-column w-100">
-            <p class="hb-row-label mb-0 flex-basis-auto">
+            <p class="hb-row-label mb-0 flex-basis-auto"
+                t-att-data-tooltip="this.multiTextRequirementConfig.tooltip">
                 <t t-out="this.multiTextRequirementConfig.title"/>
+                <i class="fa fa-question icon-sup"/>
             </p>
             <BuilderList
                 dataAttributeAction="'requirementCondition'"

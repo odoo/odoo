@@ -47,7 +47,11 @@ export class ThemeFontWeightOption extends BaseOptionComponent {
     }
 
     get boldTooltip() {
-        return this.isBoldDisabled ? _t("This font is missing font weight") : undefined;
+        return this.isBoldDisabled
+            ? _t("This font is missing font weight")
+            : _t(
+                  'Weight for "Bold" in the text toolbar. Unless Font Weight is "Auto", only equal or heavier values are available.'
+              );
     }
 
     get filteredLightWeights() {
