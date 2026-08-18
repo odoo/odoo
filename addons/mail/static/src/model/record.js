@@ -17,7 +17,6 @@ import {
     isRecord,
     isRelation,
     modelRegistry,
-    technicalKeysOnRecords,
     untrackFunctions,
 } from "./misc";
 import { localStorageField } from "@mail/model/local_storage_field";
@@ -44,9 +43,9 @@ export class Record {
     _;
     static id = "id";
     /** @type {import("@web/env").OdooEnv} */
-    static env;
-    /** @type {import("@web/env").OdooEnv} */
     env;
+    /** @type {Object<string, typeof Record>} on the store record only */
+    Models;
     /** @type {Object<string, Record>} */
     static records;
     /** @type {import("models").Store} */
@@ -54,24 +53,18 @@ export class Record {
     /** @type {string} */
     static _name;
 
-    /** @param {Object} [ids] the identifying values, from `Record.new` */
-    constructor(ids) {
+    constructor() {
         markRaw(this);
         const Model = new.target;
-        this._raw = this;
         if (!Model._) {
             // the dummy record collecting the field declarations has no internals
             return;
         }
         this.Model = Model;
-        this._ = this[STORE_SYM] ? Record.store._ : new RecordInternal();
-        return this._.prepareRecord(this, ids);
+        this._ = this[STORE_SYM] ? Model.store._ : new RecordInternal();
+        return this._.prepareRecord(this);
     }
 
-    /** @param {() => any} fn */
-    static MAKE_UPDATE(fn) {
-        return this.store.MAKE_UPDATE(...arguments);
-    }
     static get(data) {
         const Model = this;
         return Model.records.get(Model.localId(data));
@@ -201,34 +194,24 @@ export class Record {
      *
      * @returns {Record}
      */
-    static new(data, ids) {
+    static new(ids) {
         const Model = this;
-        const store = Model._rawStore;
-        return store.MAKE_UPDATE(function RecordNew() {
-            const recordProxy = new Model(ids);
-            const record = recordProxy._raw;
-            recordProxy.setup();
-            Object.assign(recordProxy, { ...ids });
-            Model.records.set(record.localId, recordProxy);
-            if (record.Model.getName() === "Store") {
-                record.env = Model._rawStore.env;
-            }
-            // compute inherits fields in priority, as other fields might depend on them
-            for (const fieldName of Model._.inheritsFields) {
-                record._.compute?.(fieldName);
-            }
-            for (const fieldName of record.Model._.fields.keys()) {
-                record._.requestCompute?.(fieldName);
-            }
+        return Model.store.MAKE_UPDATE(function RecordNew() {
+            const record = new Model();
+            record.setup();
+            const localId = Model.localId(ids);
+            record._.localId = localId;
+            Object.assign(record, { ...ids });
+            Model.records.set(localId, record);
+            Model.store.recordByLocalId.set(localId, record);
             record._.isConstructing.set(false);
-            return recordProxy;
+            return record;
         });
     }
     /** @returns {Record|Record[]} */
     static insert(data, options = {}) {
         const Model = this;
-        const store = Model._rawStore;
-        return store.MAKE_UPDATE(function RecordInsert() {
+        return Model.store.MAKE_UPDATE(function RecordInsert() {
             const isMulti = Array.isArray(data);
             if (!isMulti) {
                 data = [data];
@@ -245,10 +228,9 @@ export class Record {
     /** @returns {Record} */
     static _insert(data) {
         const Model = this;
-        const recordProxy = Model.preinsert(data);
-        const record = recordProxy._raw;
-        record.update.call(record._proxy, data, { forceApply: false });
-        return recordProxy;
+        const record = Model.preinsert(data);
+        record.update(data, { forceApply: false });
+        return record;
     }
     /** @returns {Record} */
     static preinsert(data) {
@@ -264,22 +246,17 @@ export class Record {
                 ) {
                     // preinsert that record in relational field,
                     // as it is required to make current local id
-                    ids[name] = Model._rawStore[Model._.fieldsTargetModel.get(name)].preinsert(
+                    ids[name] = Model.store[Model._.fieldsTargetModel.get(name)].preinsert(
                         ids[name]
                     );
                 }
             }
         }
-        return Model.get(data) ?? Model.new(data, ids);
+        return Model.get(ids) ?? Model.new(ids);
     }
 
-    /** @returns {import("models").Store} */
     get store() {
-        return this._raw.Model._rawStore._proxy;
-    }
-    /** @returns {import("models").Store} */
-    get _rawStore() {
-        return this._raw.Model._rawStore;
+        return this.Model.store;
     }
     /**
      * Technical attribute, contains the Model entry in the store.
@@ -300,11 +277,6 @@ export class Record {
     get localId() {
         return this._.localId;
     }
-    /** @type {this} */
-    _raw;
-    /** @type {this} */
-    _proxy;
-
     setup() {}
 
     /**
@@ -358,9 +330,9 @@ export class Record {
     }
 
     /**
-     * Declares a field whose value lives in the browser local storage: it is
-     * restored when the record is made, written back on change, and follows the
-     * storage events of the other tabs.
+     * Declares a field kept in the browser local storage: the stored value is
+     * restored over the default when the record is made, a later write is
+     * persisted, and a change from another tab is applied.
      *
      * @template T
      * @param {T} [defaultValue]
@@ -378,8 +350,11 @@ export class Record {
      * it off.
      */
     update(data, { forceApply = true } = {}) {
-        const record = this._raw;
-        const store = record._rawStore;
+        const record = this;
+        if (data === undefined) {
+            return;
+        }
+        const store = record.store;
         return store.MAKE_UPDATE(function recordUpdate() {
             if (typeof data === "object" && data !== null) {
                 store._.updateFields(record, data, { forceApply });
@@ -396,27 +371,26 @@ export class Record {
     }
 
     delete() {
-        const record = this._raw;
+        const record = this;
         if (!record.exists()) {
             return;
         }
-        const store = record._rawStore;
+        const store = record.store;
         return store.MAKE_UPDATE(function recordDelete() {
             // delete records inheriting the current record before deleting the current record
             for (const fieldName of record.Model._.inheritsInverseFields) {
                 if (record.Model._.fieldsMany.get(fieldName)) {
-                    const dependentRecordListProxy = record._proxy[fieldName];
-                    for (const dependentRecordProxy of dependentRecordListProxy) {
-                        store._.ADD_QUEUE("delete", dependentRecordProxy._raw);
+                    for (const dependentRecord of record[fieldName]) {
+                        store._.RD_QUEUE.set(dependentRecord, true);
                     }
                 } else {
-                    const dependentRecordProxy = record._proxy[fieldName];
-                    if (dependentRecordProxy) {
-                        store._.ADD_QUEUE("delete", dependentRecordProxy._raw);
+                    const dependentRecord = record[fieldName];
+                    if (dependentRecord) {
+                        store._.RD_QUEUE.set(dependentRecord, true);
                     }
                 }
             }
-            store._.ADD_QUEUE("delete", record);
+            store._.RD_QUEUE.set(record, true);
         });
     }
 
@@ -426,7 +400,7 @@ export class Record {
 
     /** @param {Record} record */
     eq(record) {
-        return this._raw === record?._raw;
+        return this === record;
     }
 
     /** @param {Record} record */
@@ -439,7 +413,7 @@ export class Record {
         if (!collection) {
             return false;
         }
-        return collection.some((record) => record._raw.eq(this));
+        return collection.some((record) => record.eq(this));
     }
 
     /** @param {Record[]|RecordList} collection */
@@ -452,7 +426,7 @@ export class Record {
      * time one of those values changes, until the record is deleted.
      *
      * The values are compared with `shallowEqual`, so a derived value that
-     * stays equal runs nothing. Both functions are bound to the record proxy.
+     * stays equal runs nothing. Both functions are bound to the record.
      *
      * @template {any[]} T
      * @param {(this: this) => T} dependencies tracking is exactly what it reads
@@ -472,9 +446,9 @@ export class Record {
             // the dummy record collecting the field declarations has no internals
             return;
         }
-        const scope = record._.ensureScope();
+        const scope = record._.ensureScope(record);
         const deps = scope.run(() => computed(dependencies.bind(record), { equals: shallowEqual }));
-        const boundCallback = (...values) => callback.apply(record._proxy, values);
+        const boundCallback = (...values) => callback.apply(record, values);
         let firstRun = true;
         let firstValues;
         let cleanup;
@@ -486,17 +460,22 @@ export class Record {
                     return;
                 }
                 const effectFn = immediate ? immediateEffect : effect;
-                const { isDrainingQueues, isUpdateInProgress } = record._rawStore._;
                 const disposeFn = untrack(() =>
                     effectFn(function runOnChange() {
                         const values = deps() ?? [];
+                        // read on each run: a record made while the store is
+                        // being made has no store to reach yet
+                        const storeInternal = record.store?._;
+                        const isUpdateInProgress = storeInternal?.isUpdateInProgress;
+                        const isDrainingQueues = storeInternal?.isDrainingQueues;
                         if (
                             immediate &&
-                            (untrack(isUpdateInProgress) || untrack(isDrainingQueues))
+                            ((isUpdateInProgress && untrack(isUpdateInProgress)) ||
+                                (isDrainingQueues && untrack(isDrainingQueues)))
                         ) {
                             // Wait for the applied write, subscribed only meanwhile.
-                            void isUpdateInProgress();
-                            void isDrainingQueues();
+                            void isUpdateInProgress?.();
+                            void isDrainingQueues?.();
                             firstValues ??= values;
                             return;
                         }
@@ -521,7 +500,7 @@ export class Record {
                                 if (!immediate) {
                                     throw error;
                                 }
-                                record._rawStore.handleError(error);
+                                record.store.handleError(error);
                             }
                             // Read again, as owl stops notifying through a computed
                             // left stale by a write of the callback.
@@ -569,10 +548,10 @@ export class Record {
             try {
                 return fn();
             } catch (error) {
-                record._rawStore.handleError(error);
+                record.store.handleError(error);
             }
         }
-        record._.ensureScope().onDestroy(() => {
+        record._.ensureScope(record).onDestroy(() => {
             if (!record.exists()) {
                 // Undo only for a deleted record: the app teardown
                 // disposes live ones too.
@@ -593,13 +572,42 @@ export class Record {
                         tryCall(() => onLeave?.());
                     }
                     for (const item of changes.added) {
-                        const onLeave = tryCall(() => callback.call(record._proxy, item));
+                        const onLeave = tryCall(() => callback.call(record, item));
                         if (typeof onLeave === "function") {
                             onLeaveByItem.set(item, onLeave);
                         }
                     }
                     changes = getChanges(getItems());
                 }
+            },
+            { immediate: true }
+        );
+    }
+
+    /**
+     * Keep the field assigned from `compute` (an immediate onChange writing the
+     * computed value). Prefer a plain getter for a derived value: it is lazy
+     * and memoized. Assigning is only for a value that must be STORED: it is
+     * also written by other flows, or the field carries an inverse to maintain.
+     *
+     * @param {string} fieldName
+     * @param {(this: this) => any} compute returns the value to assign; for a
+     *  Many relation, the records array (compared element-wise)
+     */
+    assignComputed(fieldName, compute) {
+        const record = this;
+        let lastValue;
+        this.onChange(
+            function assignDependencies() {
+                const value = compute.call(record);
+                if (isMany(record.Model, fieldName) && shallowEqual(value, lastValue)) {
+                    return [lastValue];
+                }
+                lastValue = value;
+                return [value];
+            },
+            function assignValue(val) {
+                this[fieldName] = val;
             },
             { immediate: true }
         );
@@ -625,10 +633,6 @@ export class Record {
         return ongoing.storeData;
     }
 
-    _cleanupData(data) {
-        technicalKeysOnRecords.forEach((field) => delete data[field]);
-    }
-
     /**
      * @param {Ongoing} ongoing The ongoing data conversion state.
      * @param {string} [prefix] The prefix for the current field (used for nested fields).
@@ -639,35 +643,21 @@ export class Record {
         }
         ongoing.seenRecords.add(this.localId);
 
-        const recordProxy = this;
-        const record = recordProxy._raw;
+        const record = this;
         const Model = record.Model;
-        const data = { ...recordProxy };
+        const data = {};
         for (const name of Model._.fields.keys()) {
-            if (Model._.fieldsCompute.has(name)) {
-                delete data[name];
-                continue;
-            }
             const fullFieldName = prefix ? `${prefix}.${name}` : name;
             if (isMany(Model, name)) {
-                data[name] = record._proxy[name].map((recordProxy) => {
-                    const record = recordProxy._raw;
-                    return record._toDataRelationalRecord.call(
-                        record._proxy,
-                        ongoing,
-                        fullFieldName
-                    );
-                });
-            } else if (isOne(Model, name)) {
-                const otherRecord = record._proxy[name]?._raw;
-                data[name] = otherRecord?._toDataRelationalRecord.call(
-                    otherRecord._proxy,
-                    ongoing,
-                    fullFieldName
+                data[name] = record[name].map((otherRecord) =>
+                    otherRecord._toDataRelationalRecord(ongoing, fullFieldName)
                 );
+            } else if (isOne(Model, name)) {
+                const otherRecord = record[name];
+                data[name] = otherRecord?._toDataRelationalRecord(ongoing, fullFieldName);
             } else {
                 // fields.Attr()
-                const value = recordProxy[name];
+                const value = record[name];
                 if (Model._.fieldsType.get(name) === "datetime" && value) {
                     data[name] = serializeDateTime(value);
                 } else if (Model._.fieldsType.get(name) === "date" && value) {
@@ -680,8 +670,7 @@ export class Record {
             }
         }
 
-        this._cleanupData(data);
-        const modelName = record.Model.getName();
+        const modelName = Model.getName();
         ongoing.storeData[modelName] ||= [];
         ongoing.storeData[modelName].push(data);
     }
@@ -704,7 +693,5 @@ export class Record {
         return data;
     }
 }
-Record.register();
-
 untrackFunctions(Record, ["insert", "new"]);
 untrackFunctions(Record.prototype, ["delete", "update"]);
