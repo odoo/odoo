@@ -737,6 +737,7 @@ export class PosOrder extends PosOrderAccounting {
         return {
             line: line,
             data: {
+                uuid: line.uuid,
                 basic_name: line.order_id?.config_id.module_pos_restaurant
                     ? line.product_id.name
                     : line.product_id.display_name,
@@ -750,6 +751,7 @@ export class PosOrder extends PosOrderAccounting {
                 group: line?.getCourse?.() || false,
                 combo_line_ids: line?.combo_line_ids,
                 combo_parent_uuid: line?.combo_parent_id?.uuid,
+                uom_is_base_unit: line?.product_id?.uom_id?.id == line?.config?._unit_uom_id,
             },
         };
     }

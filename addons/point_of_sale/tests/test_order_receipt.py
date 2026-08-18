@@ -11,14 +11,14 @@ from odoo.tools import (
     DEFAULT_SERVER_DATETIME_FORMAT,
     BinaryBytes,
 )
-
+from odoo.addons.point_of_sale.tests.common import CommonPosTest
 from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCommon
 
 _logger = logging.getLogger(__name__)
 
 
 @tagged('post_install', '-at_install')
-class TestPosOrderReceipt(TestPointOfSaleHttpCommon):
+class TestPosOrderReceipt(TestPointOfSaleHttpCommon, CommonPosTest):
     _test_user_groups = None  # FIXME list needed groups
 
     @classmethod
@@ -319,3 +319,106 @@ class TestPosOrderReceipt(TestPointOfSaleHttpCommon):
         `based on` has nothing to qualify on a flat amount.
         """
         self.assertEqual(self._get_service_fee_receipt_info('fixed')['description'], "")
+
+    def test_split_per_product_preserves_combo_children(self):
+        """Test that split_per_product keeps combo parent + children on the same ticket."""
+        category_a = self.env['pos.category'].create({'name': 'Category A'})
+        category_b = self.env['pos.category'].create({'name': 'Category B'})
+
+        product_a = self.env['product.product'].create({
+            'name': 'Product A',
+            'available_in_pos': True,
+            'list_price': 10.0,
+            'pos_categ_ids': [(4, category_a.id)],
+        })
+        product_b = self.env['product.product'].create({
+            'name': 'Product B',
+            'available_in_pos': True,
+            'list_price': 5.0,
+            'pos_categ_ids': [(4, category_b.id)],
+        })
+        product_c = self.env['product.product'].create({
+            'name': 'Product C',
+            'available_in_pos': True,
+            'list_price': 3.0,
+            'pos_categ_ids': [(4, category_b.id)],
+        })
+
+        combo = self.env['product.combo'].create({'name': 'Test Combo'})
+        self.env['product.combo.item'].create({
+            'product_id': product_b.id,
+            'combo_id': combo.id,
+        })
+        self.env['product.combo.item'].create({
+            'product_id': product_c.id,
+            'combo_id': combo.id,
+        })
+
+        combo_template = self.env['product.template'].create({
+            'name': 'Combo Product',
+            'type': 'combo',
+            'combo_ids': [(4, combo.id)],
+            'list_price': 15.0,
+        })
+        combo_product = combo_template.product_variant_id
+
+        printer = self.env['pos.printer'].create({
+            'name': 'Split Printer',
+            'printer_type': 'epson_epos',
+            'printer_ip': '0.0.0.0',
+            'use_type': 'preparation',
+            'product_categories_ids': [Command.set(self.env['pos.category'].search([]).ids)],
+            'is_split_per_product': True,
+        })
+        self.main_pos_config.write({
+            'preparation_printer_ids': [(4, printer.id)],
+            'module_pos_restaurant': True,
+        })
+
+        order, _ = self.create_backend_pos_order({
+            'pos_config': self.main_pos_config,
+            'line_data': [
+                {'product_id': combo_product.id, 'qty': 2},
+                {'product_id': product_b.id, 'qty': 2},
+                {'product_id': product_c.id, 'qty': 2},
+                {'product_id': product_a.id, 'qty': 2},
+            ],
+        })
+
+        parent_line = order.lines.filtered(lambda l: l.product_id == combo_product)[:1]
+        order.lines.filtered(lambda l: l.product_id == product_b).write({'combo_parent_id': parent_line.id})
+        order.lines.filtered(lambda l: l.product_id == product_c).write({'combo_parent_id': parent_line.id})
+
+        prep_set = set(self.env['pos.category'].search([]).ids)
+        prep_data = order._generate_preparation_change_for_categories(prep_set)
+        receipts = order._generate_preparation_receipt_data(prep_data, is_split_per_product=True)
+
+        self.assertTrue(len(receipts) > 0, "Should have at least one receipt")
+
+        combo_tickets = [
+            r for r in receipts
+            if r['changes'].get('data') and any(
+                d.get('product_id') == combo_product.id
+                for d in r['changes']['data']
+            )
+        ]
+        self.assertEqual(len(combo_tickets), 2, "Combo product (qty=2) should produce 2 tickets")
+
+        for ticket in combo_tickets:
+            product_ids = [d['product_id'] for d in ticket['changes']['data']]
+            self.assertIn(combo_product.id, product_ids, "Combo parent should be on ticket")
+            self.assertIn(product_b.id, product_ids, "Combo child B should be on same ticket as parent")
+            self.assertIn(product_c.id, product_ids, "Combo child C should be on same ticket as parent")
+            self.assertEqual(len(ticket['changes']['data']), 3, "Combo ticket should have parent + 2 children")
+
+        standalone_tickets = [
+            r for r in receipts
+            if r['changes'].get('data') and any(
+                d.get('product_id') == product_a.id
+                for d in r['changes']['data']
+            )
+        ]
+        self.assertEqual(len(standalone_tickets), 2, "Standalone product A (qty=2) should produce 2 tickets")
+        for ticket in standalone_tickets:
+            product_ids = [d['product_id'] for d in ticket['changes']['data']]
+            self.assertEqual(product_ids, [product_a.id], "Standalone ticket should only have product A")

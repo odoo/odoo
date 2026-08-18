@@ -896,6 +896,75 @@ describe("restaurant pos_store.js", () => {
         expect(result.floor_id.id).not.toBe(floor.id);
     });
 
+    test("generateReceiptsDataToPrint preserves course grouping when splitting per product", async () => {
+        const store = await setupPosEnv();
+        const order = store.addNewOrder();
+        const product1 = store.models["product.template"].get(5);
+        const product2 = store.models["product.template"].get(6);
+        const course1 = store.models["restaurant.order.course"].create({
+            order_id: order,
+            name: "Course 1",
+            index: 1,
+            uuid: "course-1-uuid",
+        });
+        const course2 = store.models["restaurant.order.course"].create({
+            order_id: order,
+            name: "Course 2",
+            index: 2,
+            uuid: "course-2-uuid",
+        });
+        const line1 = await store.addLineToOrder({ product_tmpl_id: product1, qty: 1 }, order);
+        line1.course_id = course1;
+        course1.line_ids = [line1];
+        const line2 = await store.addLineToOrder({ product_tmpl_id: product2, qty: 1 }, order);
+        line2.course_id = course2;
+        course2.line_ids = [line2];
+
+        const posCategories = store.models["pos.category"].map((c) => c.id);
+        const generator = store.ticketPrinter.getGenerator({ models: store.models, order });
+        const tickets = generator.generatePreparationData(new Set(posCategories), {});
+        const splitTickets = store.ticketPrinter._splitTicketsPerProduct(tickets, generator);
+
+        expect(splitTickets).toHaveLength(2);
+
+        const ticket1 = splitTickets.find((t) =>
+            t.changes.data.some((d) => d.product_id === product1.id)
+        );
+        const ticket2 = splitTickets.find((t) =>
+            t.changes.data.some((d) => d.product_id === product2.id)
+        );
+
+        expect(ticket1.changes.groupedData).toHaveLength(1);
+        expect(ticket1.changes.groupedData[0].name).toBe("Course 1");
+        expect(ticket1.changes.groupedData[0].data[0].basic_name).toBe("TEST");
+
+        expect(ticket2.changes.groupedData).toHaveLength(1);
+        expect(ticket2.changes.groupedData[0].name).toBe("Course 2");
+        expect(ticket2.changes.groupedData[0].data[0].basic_name).toBe("TEST 2");
+    });
+
+    test("generateReceiptsDataToPrint does not set groupedData when no courses", async () => {
+        const store = await setupPosEnv();
+        const order = store.addNewOrder();
+        await store.addLineToOrder(
+            {
+                product_tmpl_id: store.models["product.template"].get(5),
+                qty: 2,
+            },
+            order
+        );
+
+        const posCategories = store.models["pos.category"].map((c) => c.id);
+        const generator = store.ticketPrinter.getGenerator({ models: store.models, order });
+        const tickets = generator.generatePreparationData(new Set(posCategories), {});
+        const splitTickets = store.ticketPrinter._splitTicketsPerProduct(tickets, generator);
+
+        expect(splitTickets).toHaveLength(2);
+        for (const ticket of splitTickets) {
+            expect(ticket.changes.groupedData).toBe(undefined);
+        }
+    });
+
     test("ensureGuestCustomerCount sets guest count for preset", async () => {
         const store = await setupPosEnv();
         const table = store.models["restaurant.table"].get(2);

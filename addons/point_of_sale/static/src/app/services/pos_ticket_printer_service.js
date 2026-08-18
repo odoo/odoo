@@ -321,8 +321,11 @@ export class PosTicketPrinterService {
             const generator = this.getGenerator({ models: this.data.models, order });
             const categoryIds = new Set(printer.product_categories_ids.map((c) => c.id));
             const changes = generator.generatePreparationData(categoryIds, opts);
+            const tickets = printer.is_split_per_product
+                ? this._splitTicketsPerProduct(changes, generator)
+                : changes;
 
-            for (const ticket of changes) {
+            for (const ticket of tickets) {
                 rawChangeForRetry = rawChangeForRetry || ticket._rawChange;
                 if (ticket.extra_data.reprint && !opts.explicitReprint) {
                     continue;
@@ -381,6 +384,82 @@ export class PosTicketPrinterService {
         }
 
         return isPrinted;
+    }
+
+    /**
+     * Split tickets so each product gets its own ticket.
+     * Combo parent + its combo choices count as one item.
+     */
+    _splitTicketsPerProduct(tickets, generator) {
+        const result = [];
+        for (const ticket of tickets) {
+            const data = ticket.changes?.data || [];
+            if (!data.length) {
+                result.push(ticket);
+                continue;
+            }
+            // Group combo children with their parent
+            const childrenByParentUuid = new Map();
+            for (const line of data) {
+                if (!line.combo_parent_uuid) {
+                    continue;
+                }
+                const children = childrenByParentUuid.get(line.combo_parent_uuid) || [];
+                children.push(line);
+                childrenByParentUuid.set(line.combo_parent_uuid, children);
+            }
+            const items = [];
+            for (const line of data) {
+                if (line.combo_parent_uuid) {
+                    continue;
+                }
+                const children = line.uuid ? childrenByParentUuid.get(line.uuid) || [] : [];
+                if (children.length) {
+                    items.push([line, ...children]);
+                } else {
+                    items.push([line]);
+                }
+            }
+            // Split each item group by quantity: one ticket per unit
+            for (const itemLines of items) {
+                const parentLine = itemLines[0];
+                const isCombo = itemLines.length > 1;
+                if (!Number.isInteger(parentLine.quantity) || !parentLine.uom_is_base_unit) {
+                    const splitChanges = {
+                        ...ticket.changes,
+                        data: itemLines.map((line) => ({
+                            ...line,
+                            quantity: line.quantity,
+                        })),
+                    };
+                    generator.preparePreparationGroupedData(splitChanges);
+                    result.push({ ...ticket, changes: splitChanges });
+                    continue;
+                }
+                for (let i = 0; i < Math.abs(parentLine.quantity); i++) {
+                    const ticketLines = itemLines.map((line) => {
+                        const lineQty = Math.abs(line.quantity);
+                        // For combo children, divide their qty by parent qty
+                        // to get per-combo-unit quantity
+                        const perUnitQty =
+                            isCombo && line.combo_parent_uuid
+                                ? lineQty / Math.abs(parentLine.quantity)
+                                : 1;
+                        return {
+                            ...line,
+                            quantity: line.quantity > 0 ? perUnitQty : -perUnitQty,
+                        };
+                    });
+                    const splitChanges = {
+                        ...ticket.changes,
+                        data: ticketLines,
+                    };
+                    generator.preparePreparationGroupedData(splitChanges);
+                    result.push({ ...ticket, changes: splitChanges });
+                }
+            }
+        }
+        return result;
     }
 
     /**
