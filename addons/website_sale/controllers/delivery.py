@@ -4,10 +4,10 @@ from odoo.exceptions import UserError, ValidationError
 from odoo.http import request, route
 
 from odoo.addons.payment import utils as payment_utils
-from odoo.addons.website_sale.controllers.main import WebsiteSale
+from odoo.addons.website_sale.controllers.checkout.address import Address
 
 
-class Delivery(WebsiteSale):
+class Delivery(Address):
     _express_checkout_delivery_route = "/shop/express/shipping_address_change"
 
     @route("/shop/delivery_methods", type="jsonrpc", auth="public", website=True)
