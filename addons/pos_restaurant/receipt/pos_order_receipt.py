@@ -11,8 +11,8 @@ class PosOrderReceipt(models.AbstractModel):
         self._set_pos_restaurant_receipt_common_data(data)
         return data
 
-    def _generate_preparation_receipt_data(self, order_change):
-        data = super()._generate_preparation_receipt_data(order_change)
+    def _generate_preparation_receipt_data(self, order_change, is_split_per_product=False):
+        data = super()._generate_preparation_receipt_data(order_change, is_split_per_product)
         if not self.config_id.module_pos_restaurant:
             return data
         for receipt in data:

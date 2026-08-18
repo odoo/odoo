@@ -11,8 +11,8 @@ class PosOrderReceipt(models.AbstractModel):
         data['conditions']['from_self'] = self.source in ['mobile', 'kiosk']
         return data
 
-    def _generate_preparation_receipt_data(self, order_change):
-        data = super()._generate_preparation_receipt_data(order_change)
+    def _generate_preparation_receipt_data(self, order_change, is_split_per_product=False):
+        data = super()._generate_preparation_receipt_data(order_change, is_split_per_product)
         if self.source not in ['mobile', 'kiosk']:
             return data
 

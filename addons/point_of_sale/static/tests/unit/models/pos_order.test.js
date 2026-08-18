@@ -115,6 +115,7 @@ test("getPreparationChanges", async () => {
     expect(changes.quantity).toBe(firstLineOriginalQty + secondLineOriginalQty);
     const firstOrderlineChange = changes.addedQuantity[0];
     expect(firstOrderlineChange).toEqual({
+        uuid: firstLine.uuid,
         basic_name: firstLine.getProduct().name,
         product_id: firstLine.getProduct().id,
         attribute_value_names: firstLine.attribute_value_ids.map((a) => a.name),
@@ -126,6 +127,7 @@ test("getPreparationChanges", async () => {
         group: firstLine.getCourse() || false,
         combo_line_ids: firstLine?.combo_line_ids,
         combo_parent_uuid: firstLine?.combo_parent_id?.uuid,
+        uom_is_base_unit: true,
     });
 
     //Check note update and change line quantity
@@ -139,6 +141,7 @@ test("getPreparationChanges", async () => {
     expect(noteUpdate.note).toBe("Internal line note");
     const secondOrderlineChange = secondChanges.addedQuantity[0];
     expect(secondOrderlineChange).toEqual({
+        uuid: secondLine.uuid,
         basic_name: secondLine.getProduct().name,
         product_id: secondLine.getProduct().id,
         attribute_value_names: secondLine.attribute_value_ids.map((a) => a.name),
@@ -150,16 +153,19 @@ test("getPreparationChanges", async () => {
         group: secondLine.getCourse() || false,
         combo_line_ids: secondLine?.combo_line_ids,
         combo_parent_uuid: secondLine?.combo_parent_id?.uuid,
+        uom_is_base_unit: true,
     });
 
     //Check line delete
     order.updateLastOrderChange();
     const firstLineProduct = firstLine.getProduct();
     const firstLineAttributes = firstLine.attribute_value_ids.map((a) => a.name);
+    const firstPrepLineUuid = firstLine.prep_line_ids[0].uuid;
     order.removeOrderline(firstLine);
     const deleteLineChanges = order.getChanges();
     const deleteOrderlineChange = deleteLineChanges.removedQuantity[0];
     expect(deleteOrderlineChange).toEqual({
+        uuid: firstPrepLineUuid,
         basic_name: firstLineProduct.name,
         product_id: firstLineProduct.id,
         attribute_value_names: firstLineAttributes,
@@ -171,6 +177,7 @@ test("getPreparationChanges", async () => {
         pos_categ_sequence: firstLineProduct.pos_categ_ids[0]?.sequence ?? 0,
         combo_line_ids: firstLine?.combo_line_ids,
         combo_parent_uuid: firstLine?.combo_parent_id?.uuid,
+        uom_is_base_unit: false,
     });
 });
 
