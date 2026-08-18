@@ -398,6 +398,11 @@ export class AnimateOptionPlugin extends Plugin {
                   }
         );
         this.dependencies.history.commit();
+        // "On Appearance" animations stay in their initial state in edit mode:
+        // play them explicitly to show the effect that was applied.
+        for (const animatedTextEl of animatedTextEls) {
+            this.forceAnimation(animatedTextEl);
+        }
 
         return { elements: animatedTextEls, didRemoveOtherTextAnimation };
     }
