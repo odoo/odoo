@@ -11,6 +11,7 @@ Allows to compute accurate margin for Service sales.
     'data': [
         'views/project_task_views.xml',
         'views/project_menus.xml',
+        'report/sale_report_views.xml',
     ],
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',

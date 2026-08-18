@@ -129,6 +129,21 @@
         </field>
     </record>
 
+    <record id="account_analytic_line_view_search" model="ir.ui.view">
+        <field name="name">sale_timesheet.account.analytic.line.search</field>
+        <field name="model">account.analytic.line</field>
+        <field name="priority" eval="50"/>
+        <field name="inherit_id" ref="sale_project.sale_project_line_search"/>
+        <field name="arch" type="xml">
+            <field name="employee_id" position="replace"/>
+            <filter name="mine" position="replace"/>
+            <filter name="billable" position="replace"/>
+            <filter name="non_billable" position="replace"/>
+            <filter name="groupby_employee" position="replace"/>
+            <filter name="groupby_sale_order_item" position="replace"/>
+        </field>
+    </record>
+
     <!--
         Timesheet from Sales Order
     -->

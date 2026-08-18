@@ -537,20 +537,25 @@ class ProjectProject(models.Model):
     def action_real_margin(self):
         self.ensure_one()
         embedded_action_context = self.env.context.get('from_embedded_action', False)
+        view_ids_per_type = {}
+        if pivot_view := self.env.ref('sale_project.view_account_analytic_line_inherit_sale_project_pivot_single', raise_if_not_found=False):
+            view_ids_per_type['pivot'] = pivot_view.id
+        if list_view := self.env.ref('sale_project.account_analytic_line_view_list_margins_no_group', raise_if_not_found=False):
+            view_ids_per_type['list'] = list_view.id
+        if graph_view := self.env.ref('sale_project.account_analytic_line_view_graph_for_single_project', raise_if_not_found=False):
+            view_ids_per_type['graph'] = graph_view.id
         action = self.env['ir.actions.act_window']._for_xml_id('sale_project.action_analytic_reporting_inherit_sale_project')
-        pivot_view_id = self.env.ref('sale_project.view_account_analytic_line_inherit_sale_project_pivot_single', raise_if_not_found=False).id
-        action['views'] = [
-            (pivot_view_id if view_type == 'pivot' else view_id, view_type)
-            for view_id, view_type in action['views']
-        ]
+        if view_ids_per_type:
+            action['views'] = [
+                (view_ids_per_type.get(view_type, view_id), view_type)
+                for view_id, view_type in action['views']
+            ]
         action['display_name'] = self.env._("%(name)s's Margins", name=self.name)
         action['domain'] = [('account_id', 'in', self.account_id.ids)]
         action['context'] = {
             **ast.literal_eval(action.get('context', '{}')),
             'from_embedded_action': embedded_action_context,
-            **({
-                'search_default_month': 0,
-                'pivot_column_groupby': ['date:month'],
-            } if embedded_action_context else {}),
         }
+        if embedded_action_context:
+            action['context']['search_default_month'] = 0
         return action
