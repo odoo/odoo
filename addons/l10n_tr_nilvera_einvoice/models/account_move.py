@@ -1119,7 +1119,7 @@ class AccountMove(models.Model):
         for default_vals, move in zip(default_values_list, self):
             if move.country_code != 'TR' or move.move_type != "out_invoice":
                 continue
-            line_vals = move.line_ids.copy_data()
+            line_vals = move.line_ids.with_context(move_reverse_cancel=cancel).copy_data()
             for line, vals in zip(move.line_ids, line_vals):
                 vals.update(
                     {
