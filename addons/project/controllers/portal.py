@@ -393,7 +393,7 @@ class ProjectCustomerPortal(CustomerPortal):
             domain &= Task._access_domain('read').optimize_full(Task.sudo())
         Task_sudo = Task.sudo()
         milestone_domain = domain & Domain('allow_milestones', '=', True) & Domain('milestone_id', '!=', False)
-        milestones_allowed = bool(Task_sudo.search_count(milestone_domain, limit=1))
+        milestones_allowed = bool(Task_sudo.search_count(milestone_domain, limit=80))  # limit=80 prevents postgresql from making a bad "fast-exit" assumption
         searchbar_sortings = dict(sorted(self._task_get_searchbar_sortings(milestones_allowed, project).items(),
                                          key=lambda item: item[1]["sequence"]))
         searchbar_inputs = dict(sorted(self._task_get_searchbar_inputs(milestones_allowed, project).items(), key=lambda item: item[1]['sequence']))
