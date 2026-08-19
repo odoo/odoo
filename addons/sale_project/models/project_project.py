@@ -706,7 +706,8 @@ class ProjectProject(models.Model):
             cogs_lines = []
             for move_line in invoices_move_lines:
                 if move_line['display_type'] == 'cogs':
-                    cogs_lines.append(move_line)
+                    if move_line.account_id.internal_group == 'expense':
+                        cogs_lines.append(move_line)
                 else:
                     revenues_lines.append(move_line)
             for move_lines, ml_type in ((revenues_lines, 'revenues'), (cogs_lines, 'costs')):
