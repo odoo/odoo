@@ -12,6 +12,15 @@ class HrEmployee(models.Model):
     _inherit = ['hr.employee', 'pos.load.mixin']
 
     @api.model
+    def _get_current_cashier(self):
+        """Employee logged in on the device that sent the request, if any."""
+        return self.browse(self.env.context.get('current_cashier_id')).exists()
+
+    def _get_pos_message_author(self):
+        """Partner of this employee for the chatter of the PoS records."""
+        return self[:1]._get_related_partners()[:1]
+
+    @api.model
     def _load_pos_data_domain(self, data):
         config_id = data['pos.config']
         return config_id._employee_domain(config_id.current_user_id.id)
