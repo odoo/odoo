@@ -30,14 +30,14 @@ class ProjectShareWizard(models.TransientModel):
                 collaborator_vals_list.append({
                     'partner_id': collaborator.partner_id.id,
                     'partner_name': collaborator.partner_id.display_name,
-                    'access_mode': 'edit_limited' if collaborator.limited_access else 'edit',
+                    'access_mode': 'edit' if collaborator.limited_access else 'advanced_edit',
                 })
             for follower in project.message_partner_ids:
                 if follower.partner_share and follower.id not in collaborator_ids:
                     collaborator_vals_list.append({
                         'partner_id': follower.id,
                         'partner_name': follower.display_name,
-                        'access_mode': 'read',
+                        'access_mode': 'view',
                     })
             if collaborator_vals_list:
                 collaborator_vals_list.sort(key=operator.itemgetter('partner_name'))
@@ -93,8 +93,8 @@ class ProjectShareWizard(models.TransientModel):
             for collaborator in wizard.collaborator_ids:
                 partner_id = collaborator.partner_id.id
                 project_collaborator = project_collaborator_per_partner_id.get(partner_id, self.env['project.collaborator'])
-                if collaborator.access_mode in ("edit", "edit_limited"):
-                    limited_access = collaborator.access_mode == "edit_limited"
+                if collaborator.access_mode in ("edit", "advanced_edit"):
+                    limited_access = collaborator.access_mode == "edit"
                     if not project_collaborator:
                         if limited_access:
                             collaborator_ids_to_add_with_limited_access.append(partner_id)
@@ -167,7 +167,7 @@ class ProjectShareWizard(models.TransientModel):
         for collaborator in self.collaborator_ids:
             if not collaborator.send_invitation:
                 continue
-            if collaborator.access_mode == 'read':
+            if collaborator.access_mode == 'view':
                 partner_ids_in_readonly_mode.append(collaborator.partner_id.id)
             else:
                 partner_ids_in_edit_mode.append(collaborator.partner_id.id)

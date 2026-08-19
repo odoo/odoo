@@ -63,7 +63,7 @@ class TestProjectSharingUi(HttpCase):
             'res_model': 'project.project',
             'res_id': self.project_portal.id,
             'collaborator_ids': [
-                Command.create({'partner_id': self.partner_portal.id, 'access_mode': 'edit'}),
+                Command.create({'partner_id': self.partner_portal.id, 'access_mode': 'advanced_edit'}),
             ],
         })
 
@@ -100,7 +100,7 @@ class TestProjectSharingUi(HttpCase):
             'res_model': 'project.project',
             'res_id': self.project_portal.id,
             'collaborator_ids': [
-                Command.create({'partner_id': self.partner_portal.id, 'access_mode': 'edit'}),
+                Command.create({'partner_id': self.partner_portal.id, 'access_mode': 'advanced_edit'}),
             ],
         })
 
@@ -117,7 +117,7 @@ class TestProjectSharingUi(HttpCase):
             'res_model': 'project.project',
             'res_id': self.project_portal.id,
             'collaborator_ids': [
-                Command.create({'partner_id': self.partner_portal.id, 'access_mode': 'edit'}),
+                Command.create({'partner_id': self.partner_portal.id, 'access_mode': 'advanced_edit'}),
             ],
         })
 
@@ -136,7 +136,7 @@ class TestProjectSharingUi(HttpCase):
             'res_model': 'project.project',
             'res_id': self.project_portal.id,
             'collaborator_ids': [
-                Command.create({'partner_id': self.partner_portal.id, 'access_mode': 'edit'}),
+                Command.create({'partner_id': self.partner_portal.id, 'access_mode': 'advanced_edit'}),
             ],
         })
         user_john = self.env["res.users"].create({

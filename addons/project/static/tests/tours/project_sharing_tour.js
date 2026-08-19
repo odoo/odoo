@@ -26,7 +26,7 @@ const projectSharingSteps = [...stepUtils.goToAppSteps("project.menu_main_pm", '
     content: 'Open Access mode selection dropdown.',
     run: 'click',
 },{
-    trigger: '.o_select_menu_item:contains(Edit)',
+    trigger: '.o_select_menu_item:contains(Advanced Edit)',
     run: 'click',
 }, {
     trigger: '.modal footer > button[name="action_share_record"]',

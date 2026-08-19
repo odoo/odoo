@@ -24,7 +24,7 @@ class TestProjectSharingPortalAccess(TestProjectSharingCommon):
             'res_model': 'project.project',
             'res_id': cls.project_portal.id,
             'collaborator_ids': [
-                Command.create({'partner_id': cls.partner_portal.id, 'access_mode': 'edit'}),
+                Command.create({'partner_id': cls.partner_portal.id, 'access_mode': 'advanced_edit'}),
             ],
         })
 
@@ -164,7 +164,7 @@ class TestProjectSharingPortalAccess(TestProjectSharingCommon):
             'res_model': 'project.project',
             'res_id': self.project_portal.id,
             'collaborator_ids': [
-                Command.create({'partner_id': partner_portal_no_user.id, 'access_mode': 'edit'}),
+                Command.create({'partner_id': partner_portal_no_user.id, 'access_mode': 'advanced_edit'}),
             ],
         })
         self.env["res.config.settings"].create({"auth_signup_uninvited": 'b2b'}).execute()
