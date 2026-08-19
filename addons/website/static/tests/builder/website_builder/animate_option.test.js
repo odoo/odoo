@@ -434,6 +434,68 @@ describe("animate text in toolbar", () => {
         expect(":iframe span").toHaveCount(0);
     });
 
+    test("create one animated span per selected block", async () => {
+        const websiteBuilder = await setupWebsiteBuilder(`
+            <div class="test">
+                <h1 class="display-3" style="text-align: center;">Heading</h1>
+                <p class="lead" style="text-align: center;">Paragraph</p>
+            </div>
+        `);
+        const editable = websiteBuilder.getEditableContent();
+        const selection = editable.ownerDocument.getSelection();
+        const heading = editable.querySelector(".test h1");
+        const paragraph = editable.querySelector(".test p");
+
+        selection.setBaseAndExtent(
+            heading.firstChild,
+            0,
+            paragraph.firstChild,
+            paragraph.firstChild.length
+        );
+
+        await expandToolbar();
+        await contains("button[title='Animate Text']").click();
+
+        expect(":iframe .test > h1 > span.o_animated_text.o_animate").toHaveText("Heading");
+        expect(":iframe .test > p > span.o_animated_text.o_animate").toHaveText("Paragraph");
+        expect(":iframe .test .o_animated_text").toHaveCount(2);
+        expect(":iframe span > h1").not.toHaveCount();
+        expect(":iframe span > p").not.toHaveCount();
+        expect(heading).toHaveClass("display-3");
+        expect(heading.style.textAlign).toBe("center");
+        expect(paragraph).toHaveClass("lead");
+        expect(paragraph.style.textAlign).toBe("center");
+
+        await contains("button[title=Reset]").click();
+        expect(":iframe .test .o_animated_text").not.toHaveCount();
+        expect(":iframe .test > h1.display-3").toHaveText("Heading");
+        expect(":iframe .test > p.lead").toHaveText("Paragraph");
+    });
+
+    test("create separate animated spans around a line break", async () => {
+        const websiteBuilder = await setupWebsiteBuilder(
+            `<h1 class="test"><span class="display-4-fs">Embark on your</span><br>Next Adventure</h1>`
+        );
+        const editable = websiteBuilder.getEditableContent();
+        const selection = editable.ownerDocument.getSelection();
+        const heading = editable.querySelector(".test");
+        const firstLine = heading.querySelector(".display-4-fs").firstChild;
+        const secondLine = heading.lastChild;
+
+        selection.setBaseAndExtent(firstLine, 0, secondLine, "Next".length);
+
+        await expandToolbar();
+        await contains("button[title='Animate Text']").click();
+
+        expect(":iframe .test > .o_animated_text").toHaveCount(2);
+        expect(":iframe .test > .o_animated_text:eq(0) > .display-4-fs").toHaveText(
+            "Embark on your"
+        );
+        expect(":iframe .test > br + .o_animated_text").toHaveText("Next");
+        expect(":iframe .test > .o_animated_text br").not.toHaveCount();
+        expect(heading.lastChild.textContent).toBe(" Adventure");
+    });
+
     test("change existing animated span with a collapsed selection inside it", async () => {
         const websiteBuilder = await setupWebsiteBuilder(
             `<p class="test">a<span class="o_animated_text o_animate o_anim_fade_in o_animate_preview">bc</span>d</p>`
