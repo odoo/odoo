@@ -1,6 +1,6 @@
 import {
     registerWebsitePreviewTour,
-    insertSnippet,
+    clickOnEditAndWaitEditMode,
     clickOnSave,
     switchToLang,
 } from "@website/js/tours/tour_utils";
@@ -71,33 +71,14 @@ registerWebsitePreviewTour(
 
 registerWebsitePreviewTour(
     "seo_multilang_alt_check",
-    {
-        edition: true,
-    },
+    // The image and its default language alt text are set up server side.
+    {},
     () => [
-        ...insertSnippet({
-            id: "s_text_image",
-            name: "Text - Image",
-            groupName: "Content",
-        }),
-        ...clickOnSave(),
         ...openSeoModal(),
         {
-            content: "Add alt text in default language",
-            trigger: ".o_seo_images_check input.is-invalid",
-            run: "edit alt text in English",
+            content: "The content checks are editable while the translation is up to date",
+            trigger: ".o_seo_images_check:not(:has(.o_seo_checks_overlay))",
         },
-        {
-            content: "Alt warning is resolved",
-            trigger: ".o_seo_images_check input:not(.is-invalid)",
-        },
-        ...saveSeoModal(),
-        {
-            content: "Image alt attribute is set in default language",
-            trigger: ":iframe .s_text_image img[alt='alt text in English']",
-        },
-        ...switchToLang("fr"),
-        ...openSeoModal(),
         {
             content: "Alt text is prefilled from default language",
             trigger: ".o_seo_images_check input.is-valid",
@@ -121,6 +102,34 @@ registerWebsitePreviewTour(
         {
             content: "Default language alt text is preserved",
             trigger: ":iframe .s_text_image img[alt='alt text in English']",
+        },
+        ...clickOnEditAndWaitEditMode(),
+        {
+            content: "Select the image",
+            trigger: ":iframe .s_text_image img",
+            run: "click",
+        },
+        {
+            content: "Describe it again in the default language, which delays its translation",
+            trigger: ".hb-row[data-label='Description'] input",
+            run: "edit a photograph of the sea && click body",
+        },
+        ...clickOnSave(),
+        ...switchToLang("fr"),
+        ...openSeoModal(),
+        {
+            content: "The content checks are overlaid while the translation is out of date",
+            trigger:
+                ".o_seo_images_check .o_seo_checks_overlay:contains('Translation may differ from original content')",
+        },
+        {
+            content: "The alt text cannot be edited either",
+            trigger: ".o_seo_images_check input:disabled",
+        },
+        ...saveSeoModal(),
+        {
+            content: "Saving the dialog left the delayed translation to the user",
+            trigger: ":iframe .s_text_image img[alt='alt text in French']",
         },
     ]
 );

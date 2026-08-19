@@ -75,7 +75,13 @@
 </t>
 
 <t t-name="website.SeoChecks">
-    <section class="mt-3 o_seo_images_check">
+    <section class="mt-3 o_seo_images_check position-relative">
+        <div t-if="this.hasDelayedTranslation" class="o_seo_checks_overlay d-flex justify-content-center align-items-center">
+            <p class="alert alert-info d-flex align-items-center shadow-sm m-0" role="alert">
+                <i aria-hidden="true" class="oi me-2" data-icon="info"/>
+                Translation may differ from original content. Click on "Edit/Translate" to see most recent changes.
+            </p>
+        </div>
         <h4 class="border-bottom pb-2">
             Images Optimization
         </h4>
@@ -96,7 +102,7 @@
                             </label>
                         </div>
                         <div t-if="!img.decorative" class="input-group mt-2">
-                            <input placeholder="Describe the image..." t-model.proxy="img.alt" type="text" t-att-class="'form-control ' + (img.alt.trim().length ? 'is-valid' : 'is-invalid')" t-on-change="() => this.imgUpdated(img)"/>
+                            <input placeholder="Describe the image..." t-model.proxy="img.alt" type="text" t-att-class="'form-control ' + (img.alt.trim().length ? 'is-valid' : 'is-invalid')" t-att-disabled="this.hasDelayedTranslation" t-on-change="() => this.imgUpdated(img)"/>
                         </div>
                     </div>
                 </div>
