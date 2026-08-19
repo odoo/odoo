@@ -841,11 +841,11 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         ])
 
     def test_3_steps_manufacturing_forecast(self):
-        """Check that a confirmed MO infuence the forecast of the warehouse stock"""
+        """Check that a confirmed MO influences the forecast of the warehouse stock"""
         self.warehouse_1.manufacture_steps = 'pbm_sam'
         lovely_product = self.bom_1.product_id
         lovely_product.uom_id = self.uom_unit
-        self.assertEqual(lovely_product.with_context(location_id=self.warehouse_1.lot_stock_id.id).virtual_available, 0.0)
+        self.assertEqual(lovely_product.with_context(location=self.warehouse_1.lot_stock_id.id).virtual_available, 0.0)
         mo = self.env['mrp.production'].create({
             'bom_id': self.bom_1.id,
             'picking_type_id': self.warehouse_1.manu_type_id.id,
@@ -853,4 +853,4 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         })
         mo.action_confirm()
         self.assertEqual(mo.state, 'confirmed')
-        self.assertEqual(lovely_product.with_context(location_id=self.warehouse_1.lot_stock_id.id).virtual_available, 3.0)
+        self.assertEqual(lovely_product.with_context(location=self.warehouse_1.lot_stock_id.id).virtual_available, 3.0)
