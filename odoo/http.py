@@ -2242,11 +2242,6 @@ class Request:
                 except Exception as exc:
                     if isinstance(exc, HTTPException) and exc.code is None:
                         raise  # bubble up to odoo.http.Application.__call__
-                    if (
-                        'werkzeug' in config['dev_mode']
-                        and self.dispatcher.routing_type != JsonRPCDispatcher.routing_type
-                    ):
-                        raise  # bubble up to werkzeug.debug.DebuggedApplication
                     if not hasattr(exc, 'error_response'):
                         if isinstance(exc, AccessDenied):
                             exc.suppress_traceback()
