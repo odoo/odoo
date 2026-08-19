@@ -1,5 +1,5 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { setupEditor } from "../_helpers/editor";
+import { setupEditor, testEditor } from "../_helpers/editor";
 import {
     click,
     manuallyDispatchProgrammaticEvent,
@@ -33,7 +33,7 @@ describe("insertTable", () => {
         expect(getContent(el)).toBe(
             unformat(`
                 <p data-selection-placeholder=""><br></p>
-                <table class="table table-bordered o_table">
+                <div class="o_table_wrapper"><table class="table table-bordered o_table">
                     <tbody>
                         <tr>
                             <td>
@@ -41,7 +41,7 @@ describe("insertTable", () => {
                             </td>
                         </tr>
                     </tbody>
-                </table>
+                </table></div>
                 <p>hello</p>
             `)
         );
@@ -53,7 +53,7 @@ describe("insertTable", () => {
         expect(getContent(el)).toBe(
             unformat(`
                 <p>he</p>
-                <table class="table table-bordered o_table">
+                <div class="o_table_wrapper"><table class="table table-bordered o_table">
                     <tbody>
                         <tr>
                             <td>
@@ -61,7 +61,7 @@ describe("insertTable", () => {
                             </td>
                         </tr>
                     </tbody>
-                </table>
+                </table></div>
                 <p>llo</p>
             `)
         );
@@ -73,7 +73,7 @@ describe("insertTable", () => {
         expect(getContent(el)).toBe(
             unformat(`
                 <p>hello</p>
-                <table class="table table-bordered o_table">
+                <div class="o_table_wrapper"><table class="table table-bordered o_table">
                     <tbody>
                         <tr>
                             <td>
@@ -81,7 +81,7 @@ describe("insertTable", () => {
                             </td>
                         </tr>
                     </tbody>
-                </table>
+                </table></div>
                 <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
             `)
         );
@@ -195,7 +195,7 @@ describe("selected cell color in toolbar", () => {
     });
     test("cell's selected color should be shown in toolbar (3)", async () => {
         await setupEditor(`
-        <table>
+           <table>
             <tbody>
                 <tr>
                     <td style="background-color: rgba(255, 0, 0, 0.6);"><div class="o-paragraph">[ab</div></td>
@@ -323,14 +323,14 @@ describe("normalize table structure", () => {
         expect(getContent(el)).toBe(
             unformat(`
                 <p data-selection-placeholder=""><br></p>
-                <table class="table table-bordered o_table" style="width: 500px;">
+                <div class="o_table_wrapper"><table class="table table-bordered o_table" style="width: 500px;">
                     <caption>c</caption>
                     <tbody>
                         <tr>
                             <td><div class="o-paragraph"><br></div></td>
                         </tr>
                     </tbody>
-                </table>
+                </table></div>
                 <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
             `)
         );
@@ -343,15 +343,15 @@ describe("normalize table structure", () => {
         expect(getContent(el)).toBe(
             unformat(`
                 <p data-selection-placeholder=""><br></p>
-                <table style="width: 500px;">
+                <div class="o_table_wrapper"><table style="width: 500px;">
                     <tbody>
                         <tr>
                             <th class="o_table_header">1</th>
                             <th class="o_table_header">2</th>
                         </tr>
                     </tbody>
-                </table>
-                <p data-selection-placeholder=""><br></p>
+                </table></div>
+                <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
             `)
         );
     });
@@ -368,7 +368,7 @@ describe("normalize table structure", () => {
         expect(getContent(el)).toBe(
             unformat(`
                 <p data-selection-placeholder=""><br></p>
-                <table style="width: 500px;">
+                <div class="o_table_wrapper"><table style="width: 500px;">
                     <tbody>
                         <tr>
                             <th class="o_table_header">1</th>
@@ -379,9 +379,123 @@ describe("normalize table structure", () => {
                             <td>4</td>
                         </tr>
                     </tbody>
-                </table>
-                <p data-selection-placeholder=""><br></p>
+                </table></div>
+                <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
             `)
         );
+    });
+
+    test("should wrap the table into o_table_wrapper div while editing", async () => {
+        await testEditor({
+            contentBefore: unformat(`
+                <table class="o_table">
+                    <tbody>
+                        <tr><td>ab[]</td><td>cd</td></tr>
+                        <tr><td>ab</td><td>cd</td></tr>
+                    </tbody>
+                </table>
+            `),
+            contentBeforeEdit: unformat(`
+                <p data-selection-placeholder=""><br></p>
+                <div class="o_table_wrapper">
+                    <table class="o_table">
+                        <tbody>
+                            <tr><td>ab[]</td><td>cd</td></tr>
+                            <tr><td>ab</td><td>cd</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
+            `),
+            contentAfter: unformat(`
+                <table class="o_table">
+                    <tbody>
+                        <tr><td>ab[]</td><td>cd</td></tr>
+                        <tr><td>ab</td><td>cd</td></tr>
+                    </tbody>
+                </table>
+            `),
+        });
+    });
+
+    test("should keep the table wrapper on save when 'saveScrollableTables' is enabled", async () => {
+        await testEditor({
+            config: { saveScrollableTables: true },
+            contentBefore: unformat(`
+                <table class="o_table">
+                    <tbody>
+                        <tr><td>ab[]</td><td>cd</td></tr>
+                    </tbody>
+                </table>
+            `),
+            contentAfter: unformat(`
+                <div class="o_table_wrapper">
+                    <table class="o_table">
+                        <tbody>
+                            <tr><td>ab[]</td><td>cd</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            `),
+        });
+    });
+
+    test("should not wrap the table into o_table_wrapper div if it already has one", async () => {
+        await testEditor({
+            contentBefore: unformat(`
+                <div class="o_table_wrapper">
+                    <table class="o_table">
+                        <tbody>
+                            <tr><td>ab[]</td><td>cd</td></tr>
+                            <tr><td>ab</td><td>cd</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            `),
+            contentBeforeEdit: unformat(`
+                <p data-selection-placeholder=""><br></p>
+                <div class="o_table_wrapper">
+                    <table class="o_table">
+                        <tbody>
+                            <tr><td>ab[]</td><td>cd</td></tr>
+                            <tr><td>ab</td><td>cd</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
+            `),
+        });
+    });
+
+    test("should not wrap the inner table into o_table_wrapper div", async () => {
+        await testEditor({
+            contentBefore: unformat(`
+                <table class="o_table">
+                    <tbody>
+                        <tr><td>ab[]</td><td>cd</td></tr>
+                        <tr><td><table class="o_table"></table></td><td>cd</td></tr>
+                    </tbody>
+                </table>
+            `),
+            contentBeforeEdit: unformat(`
+                <p data-selection-placeholder=""><br></p>
+                <div class="o_table_wrapper">
+                    <table class="o_table">
+                        <tbody>
+                            <tr><td>ab[]</td><td>cd</td></tr>
+                            <tr>
+                                <td>
+                                    <p data-selection-placeholder=""><br></p>
+                                    <table class="o_table"><tbody><tr><td><div class="o-paragraph"><br></div></td></tr></tbody></table>
+                                    <p data-selection-placeholder=""><br></p>
+                                    </td>
+                                <td>cd</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
+            `),
+        });
     });
 });

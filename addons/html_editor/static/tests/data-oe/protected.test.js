@@ -191,12 +191,12 @@ test("should handle table selection in unprotected elements", async () => {
                 <div data-oe-protected="true" contenteditable="false">
                     <div data-oe-protected="false" contenteditable="true">
                         <p>a[bc</p>
-                        <table class="o_selected_table"><tbody><tr>
+                        <div class="o_table_wrapper"><table class="o_selected_table"><tbody><tr>
                             <td class="o_selected_td">ab</td>
                             <td class="o_selected_td">cd</td>
                             <td class="o_selected_td">ef]</td>
-                        </tr></tbody></table>
-                        <p data-selection-placeholder=""><br></p>
+                        </tr></tbody></table></div>
+                        <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
                     </div>
                 </div>
                 <p data-selection-placeholder=""><br></p>
@@ -206,12 +206,12 @@ test("should handle table selection in unprotected elements", async () => {
             <div data-oe-protected="true" contenteditable="false">
                     <div data-oe-protected="false" contenteditable="true">
                         <p>a[bc</p>
-                        <table class="o_selected_table"><tbody><tr>
+                        <div class="o_table_wrapper"><table class="o_selected_table"><tbody><tr>
                             <td class="o_selected_td">ab</td>
                             <td class="o_selected_td">cd</td>
                             <td class="o_selected_td">ef]</td>
-                        </tr></tbody></table>
-                        <p data-selection-placeholder=""><br></p>
+                        </tr></tbody></table></div>
+                        <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
                     </div>
                 </div>
                 <p data-selection-placeholder=""><br></p>`

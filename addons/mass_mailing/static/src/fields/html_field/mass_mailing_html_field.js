@@ -450,6 +450,7 @@ export const massMailingHtmlField = {
     extractProps({ attrs, options }) {
         const props = htmlField.extractProps(...arguments);
         props.editorConfig.allowChecklist = false;
+        props.editorConfig.allowScrollableTables = false;
         props.editorConfig.allowVideo = false;
         props.editorConfig.baseContainers = ["P"];
         Object.assign(props, {
