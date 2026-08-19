@@ -285,7 +285,7 @@ class HrAttendance(models.Model):
             domain_list.append(Domain.AND([
                 Domain('employee_id', '=', employee.id),
                 Domain('check_in', '<=', tz.localize(datetime.combine(date_to, datetime.max.time())).astimezone(utc).replace(tzinfo=None)),
-                Domain('check_out', '>=', tz.localize(datetime.combine(date_from, datetime.min.time())).astimezone(utc).replace(tzinfo=None)),
+                Domain('check_out', '>', tz.localize(datetime.combine(date_from, datetime.min.time())).astimezone(utc).replace(tzinfo=None)),
             ]))
         if not domain_list:
             return Domain.FALSE
