@@ -210,10 +210,8 @@ class ChannelTopic:
         for websocket in websockets:
             try:  # noqa: SIM105
                 websocket.send(payload, Opcode.TEXT)
-            except (InvalidStateException, OSError):
-                # Closed in the meantime: ``InvalidStateException`` if the state was changed
-                # to `CLOSING/CLOSED` or ``OSError`` if the ``PollablePriorityQueue`` socket
-                # was closed.
+            except InvalidStateException:
+                # Closed in the meantime: the state was changed to `CLOSING/CLOSED`.
                 pass
 
     def dispatch_notifications(self, notifications: list):
@@ -562,10 +560,7 @@ class BusDispatcher(threading.Thread):
                 invalid.add(websocket)
         for websocket in invalid:
             if websocket.state is ConnectionState.OPEN:
-                try:  # noqa: SIM105
-                    websocket.close(CloseCode.SESSION_EXPIRED)
-                except OSError:  # Closed in the meantime.
-                    pass
+                websocket.close(CloseCode.SESSION_EXPIRED)
             self.unsubscribe(websocket)
             for topic in topics:
                 topic._waiting_room_snapshot.pop(websocket, None)
