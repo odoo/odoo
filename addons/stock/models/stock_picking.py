@@ -412,9 +412,9 @@ class StockPickingType(models.Model):
         action["context"] = dict(literal_eval(action["context"]), search_default_name="Barcode")
         return action
 
-    def _get_action(self, action_xmlid):
+    def _get_action(self, action_xmlid, filter_name=None):
         action = self.env["ir.actions.actions"]._for_xml_id(action_xmlid)
-        context = {}
+        context = literal_eval(action['context'])
 
         if self:
             action['display_name'] = self.display_name
@@ -429,30 +429,24 @@ class StockPickingType(models.Model):
                     'default_company_id': allowed_company_ids[0],
                 })
 
-        action_context = literal_eval(action['context'])
-        context = {**action_context, **context}
-        action['context'] = context
+        if filter_name:
+            context[f'search_default_{filter_name}'] = 1
+        action['context'] = {**context}
         action['domain'] = [('picking_type_id', '=', self.id)]
-
-        action['help'] = self.env['ir.ui.view']._render_template(
-            'stock.help_message_template', {
-                'picking_type_code': context.get('restricted_picking_type_code') or self.code,
-            }
-        )
-
+        self.env['stock.picking']._set_action_help_message(action)
         return action
 
     def get_action_picking_tree_late(self):
-        return self._get_action('stock.action_picking_tree_late')
+        return self.get_stock_picking_action_picking_type('late')
 
     def get_action_picking_tree_backorder(self):
-        return self._get_action('stock.action_picking_tree_backorder')
+        return self.get_stock_picking_action_picking_type('backorder')
 
     def get_action_picking_tree_waiting(self):
-        return self._get_action('stock.action_picking_tree_waiting')
+        return self.get_stock_picking_action_picking_type('waiting')
 
     def get_action_picking_tree_ready(self):
-        return self._get_action('stock.action_picking_tree_ready')
+        return self.get_stock_picking_action_picking_type('ready')
 
     def get_action_picking_type_moves_analysis(self):
         action = self.env["ir.actions.actions"]._for_xml_id('stock.stock_move_action')
@@ -461,14 +455,14 @@ class StockPickingType(models.Model):
         ])
         return action
 
-    def get_stock_picking_action_picking_type(self):
+    def get_stock_picking_action_picking_type(self, filter_name=None):
         if self.code == 'incoming':
-            return self._get_action('stock.action_picking_tree_incoming')
+            return self._get_action('stock.action_picking_tree_incoming', filter_name)
         if self.code == 'outgoing':
-            return self._get_action('stock.action_picking_tree_outgoing')
+            return self._get_action('stock.action_picking_tree_outgoing', filter_name)
         if self.code == 'internal':
-            return self._get_action('stock.action_picking_tree_internal')
-        return self._get_action('stock.stock_picking_action_picking_type')
+            return self._get_action('stock.action_picking_tree_internal', filter_name)
+        return self._get_action('stock.stock_picking_action_picking_type', filter_name)
 
     def _get_aggregated_records_by_date(self):
         """
@@ -1102,11 +1096,9 @@ class StockPicking(models.Model):
 
     @api.model
     def get_empty_list_help(self, help_message):
-        return self.env['ir.ui.view']._render_template(
-            'stock.help_message_template', {
-                'picking_type_code': self.env.context.get('restricted_picking_type_code') or self.picking_type_code,
-            }
-        )
+        if not help_message:
+            help_message = self._get_action_default_help_message()
+        return super().get_empty_list_help(help_message)
 
     @api.model
     def _search_delay_alert_date(self, operator, value):
@@ -2006,13 +1998,30 @@ class StockPicking(models.Model):
         context = dict(self.env.context)
         context.update(literal_eval(action['context']))
         action['context'] = context
+        self._set_action_help_message(action)
+        return action
 
-        action['help'] = self.env['ir.ui.view']._render_template(
-            'stock.help_message_template', {
-                'picking_type_code': context.get('restricted_picking_type_code') or self.picking_type_code,
-            }
-        )
+    @api.model
+    def _get_action_default_help_message(self):
+        return Markup('<p class="o_view_nocontent_smiling_face o_view_nocontent_stock">%s </p> <p class="text-muted">%s</p>') \
+                % (
+                    self.env._("No transfer found. Let's create one!"),
+                    self.env._("Transfers allow you to move products from one location to another."),
+                )
 
+    @api.model
+    def _get_action_help_footer(self):
+        return Markup('<p class="text-muted pt-3">%s <a class="btn-link" name="stock.action_install_barcode" type="action">%s</a> %s</p>') \
+                % (
+                    self.env._("Want to speed up operations?"),
+                    self.env._("Install"),
+                    self.env._("the barcode app")
+                )
+
+    @api.model
+    def _set_action_help_message(self, action):
+        help_message = action.get('help')
+        action['help'] = help_message + self._get_action_help_footer()
         return action
 
     @api.model
