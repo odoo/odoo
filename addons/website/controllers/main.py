@@ -819,28 +819,33 @@ class Website(Home):
                 'color:var(--o-color-5);'
                 '}'
             )
-            for area_name, area_selector in (
-                ('menu', '#wrapwrap header .navbar'),
-                ('footer', '#wrapwrap footer'),
-            ):
-                background_match = re.search(
-                    rf'--{area_name}\s*:\s*'
-                    r'(?:var\(--(o-color-[1-5])\)|(#[0-9a-fA-F]{6}))\s*;',
-                    final_html,
-                )
-                if not background_match:
-                    continue
-                color_name, color_value = background_match.groups()
-                background_color = palette_map.get(color_name) if color_name else color_value
-                if not background_color:
-                    continue
-                text_color = self._get_configurator_preview_contrast_color(background_color)
-                dark_mode_overrides += (
-                    f'{area_selector},'
-                    f'{area_selector} :is('
-                    'h1,h2,h3,h4,h5,h6,a:not(.btn),.btn-link,.text-muted'
-                    f'){{color:{text_color}!important;}}'
-                )
+        # The menu and footer text colors are compiled against the palette the
+        # preview was generated with. They are recomputed for the selected one
+        # whether it is dark or light, otherwise a preview generated on a dark
+        # menu keeps white links on the light menu it is shown with.
+        area_overrides = ''
+        for area_name, area_selector in (
+            ('menu', '#wrapwrap header .navbar'),
+            ('footer', '#wrapwrap footer'),
+        ):
+            background_match = re.search(
+                rf'--{area_name}\s*:\s*'
+                r'(?:var\(--(o-color-[1-5])\)|(#[0-9a-fA-F]{6}))\s*;',
+                final_html,
+            )
+            if not background_match:
+                continue
+            color_name, color_value = background_match.groups()
+            background_color = palette_map.get(color_name) if color_name else color_value
+            if not background_color:
+                continue
+            text_color = self._get_configurator_preview_contrast_color(background_color)
+            area_overrides += (
+                f'{area_selector},'
+                f'{area_selector} :is('
+                'h1,h2,h3,h4,h5,h6,a:not(.btn),.btn-link,.text-muted'
+                f'){{color:{text_color}!important;}}'
+            )
         # Chrome may show thin gaps between sections in scaled iframes. The
         # `.o_we_shape` and `section` rules overlap them to hide those gaps.
         return (
@@ -848,6 +853,7 @@ class Website(Home):
             f':root{{{root_variables}}}'
             f'{background_color_overrides}'
             f'{dark_mode_overrides}'
+            f'{area_overrides}'
             '.o_we_shape{top:-2px;bottom:-2px;}'
             'section{margin-top:-2px;}'
             '</style>'
