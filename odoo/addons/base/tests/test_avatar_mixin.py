@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tests.common import tagged, TransactionCase
+from odoo.tools.mimetypes import guess_mimetype
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
@@ -41,24 +42,32 @@ class TestAvatarMixin(TransactionCase):
 
     def test_content_of_generated_partner_avatar(self):
         expected_avatar = (
-            "<?xml version='1.0' encoding='UTF-8' ?>"
-            "<svg height='180' width='180' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>"
-            "<rect fill='#4EA7F2' height='180' width='180'/>"
-            "<text fill='#ffffff' font-size='96' text-anchor='middle' x='90' y='125' font-family='sans-serif'>M</text>"
-            "</svg>"
+            '<?xml version="1.0" encoding="UTF-8" ?>'
+            '<svg height="180" width="180" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">'
+            '<rect fill="#4EA7F2" height="180" width="180"/>'
+            '<text fill="#ffffff" font-size="96" text-anchor="middle" x="90" y="125" font-family="sans-serif">M</text>'
+            '</svg>'
         )
         self.assertEqual(self.user_without_image.partner_id.avatar_1920.content.decode(), expected_avatar)
+
+    def test_generated_partner_avatar_mimetype(self):
+        # the XML declaration must use double-quoted attributes: some
+        # libmagic versions/databases misdetect a single-quoted declaration
+        # as text/xml instead of image/svg+xml, which made browsers download
+        # the auto-generated avatar instead of rendering it inline.
+        avatar = self.user_without_image.partner_id.avatar_1920
+        self.assertEqual(guess_mimetype(avatar), 'image/svg+xml')
 
     def test_partner_without_name_has_default_placeholder_image_as_avatar(self):
         self.assertEqual(self.user_without_name.partner_id._avatar_get_placeholder().content, self.user_without_name.partner_id.avatar_1920.content)
 
     def test_external_partner_has_default_placeholder_image_as_avatar(self):
         expected_avatar = (
-            "<?xml version='1.0' encoding='UTF-8' ?>"
-            "<svg height='180' width='180' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>"
-            "<rect fill='#4EA7F2' height='180' width='180'/>"
-            "<text fill='#ffffff' font-size='96' text-anchor='middle' x='90' y='125' font-family='sans-serif'>M</text>"
-            "</svg>"
+            '<?xml version="1.0" encoding="UTF-8" ?>'
+            '<svg height="180" width="180" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">'
+            '<rect fill="#4EA7F2" height="180" width="180"/>'
+            '<text fill="#ffffff" font-size="96" text-anchor="middle" x="90" y="125" font-family="sans-serif">M</text>'
+            '</svg>'
         )
         self.assertEqual(self.user_without_image.partner_id.avatar_1920.decode(), expected_avatar)
 
