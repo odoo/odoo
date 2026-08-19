@@ -53,8 +53,8 @@ export class AnimateText extends Component {
 
         useSubEnv({
             dependencyManager: new DependencyManager(),
-            getEditingElement: () => this.activeElement,
-            getEditingElements: () => (this.activeElement ? [this.activeElement] : []),
+            getEditingElement: () => this.activeElements?.[0],
+            getEditingElements: () => this.activeElements || [],
             weContext: {},
             editor: this.props.config.editor,
             editorBus: this.props.config.editorBus,
@@ -74,17 +74,17 @@ export class AnimateText extends Component {
         if (this.popover.isOpen) {
             return;
         }
-        const { element, onReset } = this.props.getAnimatedTextOrCreateDefault();
-        if (!element) {
+        const { elements, onReset } = this.props.getAnimatedTextOrCreateDefault();
+        if (!elements?.length) {
             return;
         }
-        this.activeElement = element;
+        this.activeElements = elements;
 
         this.updateState();
         this.popover.open(this.root(), {
             animateOptionProps: this.props.animateOptionProps,
             onReset: () => {
-                onReset(this.activeElement);
+                onReset(this.activeElements);
                 this.popover.close();
             },
         });
