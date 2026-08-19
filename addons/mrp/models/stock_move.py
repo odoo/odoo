@@ -371,6 +371,10 @@ class StockMove(models.Model):
     def _should_bypass_reservation(self, forced_location=False):
         return super()._should_bypass_reservation(forced_location) or self.product_id.with_company(self.company_id).is_kits
 
+    def _should_be_auto_picked(self):
+        self.ensure_one()
+        return (self.manual_consumption or (self.has_tracking != 'none' and self.move_orig_ids and self.lot_ids)) and not self.picked
+
     def action_explode(self):
         """ Explodes pickings """
         # in order to explode a move, we must have a picking_type_id on that move because otherwise the move
