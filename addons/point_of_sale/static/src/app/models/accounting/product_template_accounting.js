@@ -85,13 +85,6 @@ export class ProductTemplateAccounting extends Base {
             return price;
         }
 
-        if (original_line && original_line.isLotTracked() && product) {
-            related_lines.push(
-                ...original_line.order_id.lines.filter((line) => line.product_id.id == product.id)
-            );
-            quantity = related_lines.reduce((sum, line) => sum + line.getQuantity(), 0);
-        }
-
         let rule = null;
 
         // 1. Variant Rules
