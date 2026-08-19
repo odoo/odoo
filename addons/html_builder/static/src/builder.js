@@ -217,6 +217,7 @@ export class Builder extends Component {
             direction: "ltr",
             maxFontSize: 400,
             responsiveFontSizeFallback: true,
+            saveScrollableTables: true,
         };
         this.editor = useEditor(config);
         this.props.onEditorLoad?.(this.editor);
