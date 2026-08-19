@@ -1,6 +1,10 @@
 import { registry } from "@web/core/registry";
 import { Plugin } from "../plugin";
 
+// TODO EGGMAIL: evaluate pertinence of pixel tolerance
+const EPSILON = 0.02;
+const MAX_SCALE = 4;
+
 export class MathPlugin extends Plugin {
     static id = "math";
     static shared = [
@@ -23,11 +27,11 @@ export class MathPlugin extends Plugin {
     ];
 
     pixelTolerance() {
-        // TODO EGGMAIL: evaluate if 0.25 - 1 is a reasonable range for tolerance
-        return Math.min(
-            1,
-            Math.max(0.25, 1 / this.config.referenceDocument.defaultView.devicePixelRatio)
-        );
+        const dpr = this.config.referenceDocument.defaultView.devicePixelRatio;
+        if (!Number.isFinite(dpr) || dpr <= 0) {
+            return EPSILON;
+        }
+        return EPSILON * Math.min(MAX_SCALE, Math.max(1, dpr));
     }
 
     areRectEqual(rect1, rect2) {

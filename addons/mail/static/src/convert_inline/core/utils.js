@@ -1,5 +1,32 @@
 import { StyleInfo } from "./style_models";
 
+export const BLOCKED_PSEUDO_CLASSES = new Set([
+    "active",
+    "focus",
+    "focus-within",
+    "hover",
+    "link",
+    "target",
+    "visited",
+]);
+export const INDIRECT_CSS_PROPERTY_VALUES = new Set([
+    "inherit",
+    "initial",
+    "unset",
+    "revert",
+    "revert-layer",
+]);
+// TODO EGGMAIL: inline-block is not supported in MSO, investigate if this needs
+// custom handling
+export const ALLOWED_CSS_DISPLAY_VALUES = new Set(["block", "inline", "inline-block", "none"]);
+export const BLOCKED_CSS_POSITION_VALUES = new Set(["absolute", "sticky", "fixed"]);
+export const OPPOSITE_DIRECTION = {
+    left: "right",
+    right: "left",
+    bottom: "top",
+    top: "bottom",
+};
+
 export const BACKGROUND_VARIANTS = ["color", "image", "repeat", "size"];
 export const CONTOUR_VARIANTS = ["width", "style", "color"];
 export const DIRECTION_VARIANTS = ["top", "right", "bottom", "left"];

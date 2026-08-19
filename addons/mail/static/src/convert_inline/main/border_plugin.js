@@ -1,7 +1,7 @@
 import { registry } from "@web/core/registry";
 import { Plugin } from "../plugin";
-import { DIRECTION_VARIANTS } from "../core/utils";
-import { INDIRECT_CSS_PROPERTY_VALUES } from "../css_utils";
+import { CONTOUR_VARIANTS, DIRECTION_VARIANTS, INDIRECT_CSS_PROPERTY_VALUES } from "../core/utils";
+import { StyleInfo } from "../core/style_models";
 
 export class BorderPlugin extends Plugin {
     static id = "border";
@@ -37,15 +37,19 @@ export class BorderPlugin extends Plugin {
         });
     }
 
-    // TODO EGGMAIL:
-    // need to have a special ruleset for only border rules to isolate them
-
-    getBorderStyleInfo(referenceNode) {
-        // TODO EGGMAIL
-        // need to apply border rules to styleInfo and then translate
-        // border shorthands to their longhand counterparts
-        // we can cheat a little in this case as the computed style will
-        // have everything we need in the correct units, contrary to the spacing plugin
+    getBorderStyleInfo(referenceNode, layoutDimensions) {
+        const styleInfo = new StyleInfo();
+        const computedStyle = this.getComputedStyle(referenceNode, null, layoutDimensions);
+        for (const side of DIRECTION_VARIANTS) {
+            for (const feature of CONTOUR_VARIANTS) {
+                const propertyName = `border-${side}-${feature}`;
+                const propertyValue = computedStyle.getPropertyValue(propertyName);
+                if (propertyValue) {
+                    styleInfo.setProperty(propertyName, propertyValue);
+                }
+            }
+        }
+        return styleInfo;
     }
 }
 

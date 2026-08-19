@@ -8,7 +8,7 @@ import {
     BLOCKED_CSS_POSITION_VALUES,
     BLOCKED_PSEUDO_CLASSES,
     INDIRECT_CSS_PROPERTY_VALUES,
-} from "../css_utils";
+} from "../core/utils";
 
 // TODO EGGMAIL: investigate if some more node should bypass the invisible rule
 const ALLOWED_IF_INVISIBLE_ELEMENT = new Set(["BR", "T"]);

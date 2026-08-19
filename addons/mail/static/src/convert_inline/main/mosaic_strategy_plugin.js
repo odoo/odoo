@@ -3,6 +3,8 @@ import { Plugin } from "../plugin";
 import { CellLayout, EmptyCellLayout, RowLayout, TableLayout } from "./table_models";
 import { Analysis, assignDefaultElementOptions, EmailNode } from "../core/render_models";
 import { StyleInfo } from "../core/style_models";
+import { CONTOUR_VARIANTS, DIRECTION_VARIANTS, OPPOSITE_DIRECTION } from "../core/utils";
+import { parseCssValue } from "../css_parsers";
 
 export class MosaicStrategyPlugin extends Plugin {
     static id = "mosaicStrategy";
@@ -147,13 +149,17 @@ export class MosaicStrategyPlugin extends Plugin {
         // 3) Define cells characteristics for the html table
         const columnCount = xs.length - 1;
         const rowCount = ys.length - 1;
-        const cells = rects.map((rect) => {
+        const computeCellInfo = (rect) => {
             const col = xs.findIndex((x) => this.isZero(rect.left - x));
             const row = ys.findIndex((y) => this.isZero(rect.top - y));
             const nextCol = xs.findIndex((x) => this.isZero(rect.right - x));
             const nextRow = ys.findIndex((y) => this.isZero(rect.bottom - y));
             const colspan = nextCol - col;
             const rowspan = nextRow - row;
+            return { col, row, colspan, rowspan };
+        };
+        const cells = rects.map((rect) => {
+            const { col, row, colspan, rowspan } = computeCellInfo(rect);
             const cellEmailNode = rectToEmailNode.get(rect);
             return {
                 col,
@@ -251,7 +257,9 @@ export class MosaicStrategyPlugin extends Plugin {
             delete cell.height;
         }
         return this.processCellAncestors({
-            cells: new Set(cells),
+            xs,
+            ys,
+            cells: new Set(cells), // cells with actual content (not spacers)
             columnCount,
             emailNode,
             rowCount,
@@ -259,34 +267,110 @@ export class MosaicStrategyPlugin extends Plugin {
         });
     }
 
-    assignBorderStyleInfo(borderStyleInfo, boundingClientRect, matrix) {
-        // TODO EGGMAIL
-        // need to detect the appropriate cells in matrix depending on
-        // edges of boundingClientRect, and apply the mirror of
-        // borderStyleInfo in these cells
+    assignBorderStyleInfo({ cell, borderStyleInfo, boundingClientRect, tableMeasures }) {
+        const { matrix, xs, ys } = tableMeasures;
+        const findInterval = (values, coordinate, isStart) => {
+            let upper = 0;
+            while (upper < values.length && values[upper] < coordinate) {
+                upper++;
+            }
+            const lower = upper - 1;
+            const lowerDiff = lower >= 0 ? coordinate - values[lower] : Infinity;
+            const upperDiff = upper < values.length ? values[upper] - coordinate : Infinity;
+            const lowerMatches = lower >= 0 && this.isZero(lowerDiff);
+            const upperMatches = upper < values.length && this.isZero(upperDiff);
+
+            let boundary;
+            if (lowerMatches || upperMatches) {
+                boundary = lowerDiff <= upperDiff ? lower : upper;
+            }
+            if (boundary !== undefined) {
+                return isStart ? Math.min(boundary, values.length - 2) : Math.max(0, boundary - 1);
+            }
+            return Math.max(0, Math.min(lower, values.length - 2));
+        };
+        const sets = { top: new Set(), right: new Set(), bottom: new Set(), left: new Set() };
+        const firstCol = findInterval(xs, boundingClientRect.left, true);
+        const lastCol = findInterval(xs, boundingClientRect.right);
+        const firstRow = findInterval(ys, boundingClientRect.top, true);
+        const lastRow = findInterval(ys, boundingClientRect.bottom);
+        for (let col = firstCol; col <= lastCol; col++) {
+            sets.top.add(matrix[firstRow][col]);
+            sets.bottom.add(matrix[lastRow][col]);
+        }
+        for (let row = firstRow; row <= lastRow; row++) {
+            sets.left.add(matrix[row][firstCol]);
+            sets.right.add(matrix[row][lastCol]);
+        }
+        const resolveCornerDuplicate = (hSet, vSet) => {
+            for (const cell of vSet.intersection(hSet)) {
+                const cellLeft = xs[cell.col];
+                const cellRight = xs[cell.col + cell.colspan];
+                const cellTop = ys[cell.row];
+                const cellBottom = ys[cell.row + cell.rowspan];
+                const hContribution = Math.max(
+                    0,
+                    Math.min(cellRight, boundingClientRect.right) -
+                        Math.max(cellLeft, boundingClientRect.left)
+                );
+                const vContribution = Math.max(
+                    0,
+                    Math.min(cellBottom, boundingClientRect.bottom) -
+                        Math.max(cellTop, boundingClientRect.top)
+                );
+                if (this.isZero(hContribution - vContribution) || hContribution < vContribution) {
+                    hSet.delete(cell);
+                } else {
+                    vSet.delete(cell);
+                }
+            }
+        };
+        resolveCornerDuplicate(sets.top, sets.left);
+        resolveCornerDuplicate(sets.top, sets.right);
+        resolveCornerDuplicate(sets.bottom, sets.left);
+        resolveCornerDuplicate(sets.bottom, sets.right);
+        for (const side of DIRECTION_VARIANTS) {
+            for (const cell of sets[side]) {
+                if (cell.emailNode) {
+                    // never force a style on a non-spacer cell
+                    continue;
+                }
+                for (const feature of CONTOUR_VARIANTS) {
+                    const propertyName = `border-${side}-${feature}`;
+                    const oppositeName = `border-${OPPOSITE_DIRECTION[side]}-${feature}`;
+                    const propertyValue = borderStyleInfo.getPropertyValue(propertyName);
+                    if (propertyValue) {
+                        cell.styleInfo.setProperty(oppositeName, propertyValue);
+                    }
+                }
+            }
+        }
     }
 
     handleOverlappingBorders({ ancestorNode, cell, tableMeasures }) {
-        const { matrix } = tableMeasures;
-        const rawStyleInfo = this.getRawStyleInfo(ancestorNode);
-        const borderStyleInfo = this.getBorderStyleInfo(rawStyleInfo, ancestorNode);
-        if (!this.hasBorderWidth(borderStyleInfo)) {
+        if (!this.hasVisibleBorder(ancestorNode)) {
             return;
         }
+        const borderStyleInfo = this.getBorderStyleInfo(ancestorNode);
         const boundingClientRect = this.getBoundingClientRect(ancestorNode);
         // TODO EGGMAIL: check if this needs defensive programming
         // against forcing a border on a non-spacer cell
-        this.assignBorderStyleInfo(borderStyleInfo, boundingClientRect, matrix);
+        this.assignBorderStyleInfo({
+            cell,
+            borderStyleInfo,
+            boundingClientRect,
+            tableMeasures,
+        });
     }
 
     processCellAncestors(tableMeasures) {
-        const { contentCells, emailNode } = tableMeasures;
+        const { cells, emailNode } = tableMeasures;
         const containerNode = emailNode.lastReferenceNode;
         const handledNodes = new Set([
             containerNode,
-            ...contentCells.map((cell) => cell.emailNode.lastReferenceNode),
+            [...cells].map((cell) => cell.emailNode.lastReferenceNode),
         ]);
-        for (const cell of contentCells) {
+        for (const cell of cells) {
             const { referenceNode } = cell;
             for (
                 let ancestorNode = referenceNode.parentElement;
@@ -421,11 +505,23 @@ export class MosaicStrategyPlugin extends Plugin {
     }
 
     buildEmptyCell(cellMeasure) {
-        const { widthRatio, height, rowspan, colspan } = cellMeasure;
+        const { width, widthRatio, height, rowspan, colspan, styleInfo } = cellMeasure;
         const refs = { root: {} };
-        const style = { width: `${widthRatio}%` };
-        const attributes = { width: `${widthRatio}%`, rowspan, colspan };
-        if (height) {
+        const style = {};
+        const attributes = { rowspan, colspan };
+        const bordersWidths = {};
+        for (const side of DIRECTION_VARIANTS) {
+            bordersWidths[side] = parseCssValue(styleInfo.getPropertyValue(`border-${side}-width`));
+        }
+        const hbWidth = (bordersWidths.left.number ?? 0) + (bordersWidths.right.number ?? 0);
+        if (!this.isZero((width ?? 0) - hbWidth)) {
+            // TODO EGGMAIL: evaluate if the width should be enforced anyway for
+            // MSO
+            attributes.width = `${widthRatio}%`;
+            style.width = `${widthRatio}%`;
+        }
+        const vbWidth = (bordersWidths.top.number ?? 0) + (bordersWidths.bottom.number ?? 0);
+        if (!this.isZero((height ?? 0) - vbWidth)) {
             const formattedHeight = this.formatValue(height, {
                 inputUnit: height,
                 outputUnit: height,
@@ -434,7 +530,7 @@ export class MosaicStrategyPlugin extends Plugin {
             style.height = `${formattedHeight}px`;
             attributes.height = `${formattedHeight}`;
         }
-        Object.assign(refs.root, { style, attributes });
+        Object.assign(refs.root, { style: StyleInfo.from(style).merge(styleInfo), attributes });
         const analysis = new Analysis({ parsingFacts: { canMerge: true, attemptCellMerge: true } });
         analysis.facts.isEmptyCell = true;
         analysis.facts.useMosaicStrategy = true;
