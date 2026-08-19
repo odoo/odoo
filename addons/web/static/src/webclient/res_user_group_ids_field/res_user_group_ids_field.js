@@ -1,16 +1,16 @@
-import { useSubEnv } from "@web/owl2/utils";
+import { Component, signal, toRaw, useEffect, usePlugin, useProps } from "@odoo/owl";
+import { DebugModePlugin } from "@web/core/debug_mode_plugin";
 import { _t } from "@web/core/l10n/translation";
+import { localeCompare } from "@web/core/l10n/utils";
 import { x2ManyCommands } from "@web/core/orm_plugin";
 import { registry } from "@web/core/registry";
 import { deepCopy } from "@web/core/utils/objects";
 import { parseXML } from "@web/core/utils/xml";
 import { Record } from "@web/model/record";
+import { useSubEnv } from "@web/owl2/utils";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { FormArchParser } from "@web/views/form/form_arch_parser";
 import { FormRenderer } from "@web/views/form/form_renderer";
-
-import { Component, signal, toRaw, useEffect, useProps } from "@odoo/owl";
-import { localeCompare } from "@web/core/l10n/utils";
 
 /**
  * This widget is only used for the 'group_ids' field of the 'res.users'
@@ -23,6 +23,8 @@ class ResUserGroupIdsField extends Component {
     props = useProps({
         ...standardFieldProps,
     });
+
+    debugMode = usePlugin(DebugModePlugin);
 
     setup() {
         const { groups, privileges, categories } = toRaw(
@@ -101,7 +103,7 @@ class ResUserGroupIdsField extends Component {
                 <group>
                     ${categories.map((category) => this.getCategoryArch(category)).join("")}
                 </group>
-                ${odoo.debug ? this.getExtraGroupsArch() : ""}
+                ${this.debugMode.isActive() ? this.getExtraGroupsArch() : ""}
             </t>`;
         this.archInfo = new FormArchParser().parse(parseXML(arch), models, "main");
 

@@ -5,7 +5,12 @@ import { BusLogsPlugin } from "@bus/debug/bus_logs_plugin";
 import { after, before, describe, expect, test, waitFor } from "@odoo/hoot";
 import { advanceTime } from "@odoo/hoot-dom";
 
-import { contains, getService, mountWithCleanup } from "@web/../tests/web_test_helpers";
+import {
+    contains,
+    getService,
+    mountWithCleanup,
+    serverState,
+} from "@web/../tests/web_test_helpers";
 import { WebClient } from "@web/webclient/webclient";
 
 defineBusModels();
@@ -26,7 +31,7 @@ test("logs are saved and garbage-collected after TTL", async () => {
 });
 
 test("ask for confirmation downloading logs", async () => {
-    odoo.debug = "1";
+    serverState.debug = "1";
     await mountWithCleanup(WebClient);
     expect(getService(BusLogsPlugin).enabled()).toBe(null);
     await contains(".o_debug_manager button").click();

@@ -3,7 +3,8 @@ import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { useService } from "@web/core/utils/hooks";
 import { AddPageDialog } from "@website/components/dialog/add_page_dialog";
-import { onWillStart, proxy } from "@odoo/owl";
+import { onWillStart, proxy, usePlugin } from "@odoo/owl";
+import { DebugModePlugin } from "@web/core/debug_mode_plugin";
 
 /**
  * Used to share code and keep the same behaviour on different types of 'website
@@ -17,7 +18,8 @@ export function usePageManager({ resModel, createAction }) {
     const website = useService("website");
     const dialog = useService("dialog");
     const actionService = useService("action");
-    const websiteSelection = odoo.debug ? [{ id: 0, name: _t("All Websites") }] : [];
+    const debugMode = usePlugin(DebugModePlugin);
+    const websiteSelection = debugMode.isActive() ? [{ id: 0, name: _t("All Websites") }] : [];
     const state = proxy({
         activeWebsite: undefined,
     });
