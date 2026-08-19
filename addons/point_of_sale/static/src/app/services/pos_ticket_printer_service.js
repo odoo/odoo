@@ -136,13 +136,13 @@ export class PosTicketPrinterService {
         printer = this.config.default_receipt_printer_id,
         fallbacks = this.config.receipt_printer_ids,
     } = {}) {
-        if (!printer) {
+        if (!printer?._instance) {
             webFallback && this.printWeb(iframe);
             return;
         }
 
         const defaultPrinter = printer;
-        const fallbackPrinters = fallbacks.filter((p) => p.id !== defaultPrinter.id);
+        const fallbackPrinters = fallbacks.filter((p) => p.id !== defaultPrinter.id && p._instance);
         let status = { successful: false };
 
         for (const printer of [defaultPrinter, ...fallbackPrinters]) {

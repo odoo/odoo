@@ -5,12 +5,12 @@
             <table class="w-100 text-small mt-2">
                 <tbody name="company_info">
                     <tr>
-                        <td class="text-start top w-60" >
+                        <td class="text-start top w-60 text-break" >
                             <div t-if="config.get('name')" t-out="config['name']"/>
                             <div t-if="config.get('receipt_address')" t-out="config['receipt_address']"/>
                         </td>
 
-                        <td class="text-end top w-40" >
+                        <td class="text-end top w-40 text-break" >
                             <div t-if="config.get('phone')">
                                 <div>Tel: <t t-out="config['phone']"/></div>
                             </div>
@@ -32,10 +32,18 @@
             <style>
                 /** We don't import full bootstrap classes to improve rendering time */
                 #pos-receipt * { box-sizing: border-box; background: #ffffff; }
-                #pos-receipt { line-height: 1.5 !important; width: 512px !important; color: #000000 !important; font-size: 22px !important; box-sizing: border-box; font-family: Arial, sans-serif !important; }
+                #pos-receipt { line-height: 1.5 !important; width: 512px !important; color: #000000 !important; font-size: 22px !important; box-sizing: border-box; font-family: Arial, sans-serif !important; container-type: inline-size; }
                 #pos-receipt .top { vertical-align: top !important; }
                 #pos-receipt .overflow-hidden { overflow: hidden !important; }
                 #pos-receipt img { max-width: 100% !important; height: auto !important; }
+
+                /** On narrow paper (58mm), stack the self-invoicing QR code below the URL and center everything */
+                @container (max-width: 380px) {
+                    #pos-receipt .self-invoicing tr { display: flex; flex-direction: column-reverse; align-items: center; }
+                    #pos-receipt .self-invoicing td { display: block; width: 100% !important; text-align: center !important; padding-left: 0 !important; }
+                    /* Cap the QR at the paper width so it never overflows narrow rolls (e.g. Epson tm_u22_58 = 150px) */
+                    #pos-receipt .self-invoicing .invoice-qr-code { width: min(180px, 80cqw) !important; height: auto !important; max-width: none !important; margin-top: 8px !important; }
+                }
 
                 /** Width classes **/
                 #pos-receipt .w-100 { width: 100% !important }
