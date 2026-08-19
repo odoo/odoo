@@ -5,6 +5,8 @@ from odoo import Command
 from odoo.tests import Form, tagged
 from odoo.tools.float_utils import float_split_str
 from odoo.exceptions import ValidationError
+from odoo.tools import mute_logger
+import psycopg2
 
 
 @tagged('post_install_l10n', '-at_install', 'post_install')
@@ -16,6 +18,20 @@ class TestArManual(common.TestArCommon):
         cls.journal = cls._create_journal('preprinted')
         cls.partner = cls.res_partner_adhoc
         cls._create_test_invoices_like_demo()
+
+    def test_journal_pos_number_not_copied_and_unique(self):
+        """ The ARCA POS number is assigned by ARCA to a single POS: it must not be silently reused when duplicating
+        a journal, and two POS journals of the same company can not share POS number and POS system """
+        pos_number = self.journal.l10n_ar_afip_pos_number
+        with self.assertRaisesRegex(ValidationError, 'Please define an ARCA POS number'):
+            self.journal.copy()
+        with self.assertRaises(psycopg2.errors.UniqueViolation), mute_logger('odoo.sql_db'):
+            self.journal.copy({'l10n_ar_afip_pos_number': pos_number})
+        # same POS number with another POS system or on another company is fine
+        other_system = self.journal.copy({'l10n_ar_afip_pos_number': pos_number, 'l10n_ar_afip_pos_system': 'RLI_RLM'})
+        self.assertEqual(other_system.l10n_ar_afip_pos_number, pos_number)
+        other_company = self.journal.copy({'l10n_ar_afip_pos_number': pos_number, 'company_id': self.company_mono.id})
+        self.assertEqual(other_company.l10n_ar_afip_pos_number, pos_number)
 
     def test_01_create_invoice(self):
         """ Create and validate an invoice for a Responsable Inscripto
