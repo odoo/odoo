@@ -13,11 +13,20 @@
                             <div class="g-col-12 g-col-sm-6 g-col-lg-4">
                                 <div class="theme_preview o_configurator_show_fast rounded position-relative mt-3 mt-lg-0 mb-2 mb-lg-0 text-center">
                                     <div class="ratio" style="--aspect-ratio: 66%;">
-                                        <img
-                                            t-attf-src="{{style.img_src}}"
-                                            class="rounded"
-                                            role="presentation"
-                                        />
+                                        <div class="theme_svg_container rounded overflow-hidden" dir="ltr">
+                                            <div class="o_configurator_theme_preview_loader position-absolute top-0 start-0 end-0 bottom-0 d-flex align-items-center justify-content-center pe-none">
+                                                <span class="spinner-border" role="status"/>
+                                            </div>
+                                            <iframe
+                                                class="o_configurator_theme_preview_iframe position-absolute top-0 start-0 d-block border-0 pe-none"
+                                                t-att-src="this.previews.getUrl(style.preview_url)"
+                                                t-on-load="this.previews.onLoad"
+                                                t-att-title="style.title"
+                                                loading="lazy"
+                                                scrolling="no"
+                                                tabindex="-1"
+                                            />
+                                        </div>
                                     </div>
                                     <button
                                         class="o_btn_reset button_area"

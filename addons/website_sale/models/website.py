@@ -338,25 +338,25 @@ class Website(models.Model):
 
     @api.model
     def get_configurator_shop_page_styles(self):  # noqa: PLR6301
-        """Format and return the ids and images of each shop page style for website onboarding.
+        """Format and return the ids and previews of each shop page style for website onboarding.
 
         :return: The shop page style information.
         :rtype: list[dict]
         """
         return [
-            {"option": option, "img_src": config["img_src"], "title": config["title"]}
+            {"option": option, "preview_url": config["preview_url"], "title": config["title"]}
             for option, config in const.SHOP_PAGE_STYLE_MAPPING.items()
         ]
 
     @api.model
     def get_configurator_product_page_styles(self):  # noqa: PLR6301
-        """Format and return ids and images of each product page style for website onboarding.
+        """Format and return ids and previews of each product page style for website onboarding.
 
         :return: The product page style information.
         :rtype: list[dict]
         """
         return [
-            {"option": option, "img_src": config["img_src"], "title": config["title"]}
+            {"option": option, "preview_url": config["preview_url"], "title": config["title"]}
             for option, config in const.PRODUCT_PAGE_STYLE_MAPPING.items()
         ]
 

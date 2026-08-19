@@ -44,7 +44,11 @@ export function replacePreviewIframeLogo(iframe, logo) {
     if (!previewDocument) {
         return;
     }
-    const logoImage = previewDocument.querySelector("header img, #top img, .navbar-brand img");
+    // Previews may tag their logo explicitly, the others are matched on their
+    // header markup.
+    const logoImage =
+        previewDocument.querySelector("[preview_logo]") ||
+        previewDocument.querySelector("header img, #top img, .navbar-brand img");
     if (logoImage) {
         logoImage.src = logo;
     }

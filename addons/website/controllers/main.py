@@ -490,17 +490,17 @@ class Website(Home):
         except FileNotFoundError as exc:
             raise NotFound() from exc
 
-    def _get_configurator_preview_images_map(self, theme_name, industry_id):
-        """Fetch the industry image replacements for a theme preview.
+    def _get_configurator_preview_resources(self, theme_name, industry_id):
+        """Fetch the industry replacements for a preview.
 
         :param str theme_name: name of the previewed theme
         :param int industry_id: selected website industry id
-        :return: mapping from original image names to replacement URLs
+        :return: the IAP resources personalizing the preview
         :rtype: dict
         """
         if not theme_name or industry_id <= 0:
             return {}
-        return request.env['website'].configurator_get_images(industry_id, theme_name)
+        return request.env['website'].configurator_get_custom_resources(industry_id, theme_name)
 
     def _get_theme_static_preview_image_url(self, theme_name, image_name):
         """Find an image directly in the theme static preview files.
@@ -647,6 +647,27 @@ class Website(Home):
 
         final_html = re.sub(r'/web/image/[^"\'\s,)]+', replace_image_url, final_html)
         return final_html
+
+    def _apply_configurator_preview_texts(self, final_html, catalog):
+        if not catalog:
+            return final_html
+
+        def replace_keyed_text(match):
+            slot, _, field = match.group(2).rpartition('.')
+            value = catalog.get(slot, {}).get(field)
+            # A slot only partly written keeps its placeholder: an unwritten
+            # price is a zero, which no preview should ever display.
+            if not value:
+                return match.group(0)
+            if field == 'price':
+                value = f'{value:.2f}'
+            return f'{match.group(1)}{markup_escape(value)}'
+
+        return re.sub(
+            r'(<[^>]*\bindustry_text_key="([^"]*)"[^>]*>)[^<]*',
+            replace_keyed_text,
+            final_html,
+        )
 
     def _get_configurator_preview_shape_url(self, shape_url, palette_map):
         """Replace palette references in a shape URL query string.
@@ -862,11 +883,16 @@ class Website(Home):
             for index, color in enumerate(palette, start=1)
             if color
         }
-        images_map = self._get_configurator_preview_images_map(theme_name, industry_id)
+        resources = self._get_configurator_preview_resources(theme_name, industry_id)
 
         final_html = self._load_configurator_preview_html(preview_url)
         final_html = self._apply_configurator_preview_shape_colors(final_html, palette_map)
-        final_html = self._apply_configurator_preview_images(final_html, theme_name, images_map)
+        final_html = self._apply_configurator_preview_images(
+            final_html, theme_name, resources.get('images', {})
+        )
+        final_html = self._apply_configurator_preview_texts(
+            final_html, resources.get('catalog', {})
+        )
         if is_dark == '1':
             preview_doc = html.document_fromstring(final_html)
             preview_doctype = preview_doc.getroottree().docinfo.doctype
