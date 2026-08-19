@@ -1,5 +1,5 @@
 import { useEnv, useLayoutEffect, useSubEnv } from "@web/owl2/utils";
-import { location, browser } from "@web/core/browser/browser";
+import { browser } from "@web/core/browser/browser";
 const sessionStorage = browser.sessionStorage;
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { delay } from "@web/core/utils/concurrency";
@@ -31,6 +31,12 @@ import {
 import { standardActionServiceProps } from "@web/webclient/actions/action_service";
 import { fuzzyLevenshteinLookup } from "@web/core/utils/search";
 import { isBrowserSafari } from "@web/core/browser/feature_detection";
+import {
+    getConfiguratorPreviewUrl,
+    getPreviewIframeDocument,
+    replacePreviewIframeLogo,
+    scalePreviewIframe,
+} from "@website/client_actions/configurator/preview_iframe";
 
 export const ROUTES = {
     descriptionScreen: 1,
@@ -97,7 +103,6 @@ const PALETTES = {
 export const CUSTOM_BG_COLOR_ATTRS = ["menu", "footer"];
 
 const MAX_NBR_DISPLAY_MAIN_THEMES = 6;
-const DESKTOP_PREVIEW_WIDTH = 1440;
 const MIN_INDUSTRY_MATCH_CONFIDENCE = 70;
 const PREVIEW_IMAGE_LIST = [
     "landscape_md_2",
@@ -1141,21 +1146,12 @@ export class ThemeSelectionScreen extends ApplyConfiguratorScreen {
         for (const iframe of document.querySelectorAll(
             ".o_theme_selection_screen .o_configurator_theme_preview_iframe"
         )) {
-            this.scalePreviewIframe(iframe);
+            scalePreviewIframe(iframe);
         }
     }
 
     getThemePreviewUrl(theme) {
-        const previewUrl = new URL("/website/configurator/preview", location.origin);
-        const palette = this.state.selectedPalette || {};
-        previewUrl.searchParams.set("preview_url", theme.preview_url);
-        previewUrl.searchParams.set("theme_name", theme.name);
-        previewUrl.searchParams.set("industry_id", this.state.selectedIndustry?.id || -1);
-        previewUrl.searchParams.set("is_dark", palette.isDark ? "1" : "0");
-        for (const colorName of ["color1", "color2", "color3", "color4", "color5"]) {
-            previewUrl.searchParams.set(colorName, palette[colorName] || "");
-        }
-        return previewUrl.toString();
+        return getConfiguratorPreviewUrl(this.state, theme.preview_url, theme.name);
     }
 
     /**
@@ -1178,24 +1174,12 @@ export class ThemeSelectionScreen extends ApplyConfiguratorScreen {
         return previewHeaders[(index >= 0 ? index : 0) % previewHeaders.length];
     }
 
-    getPreviewIframeDocument(iframe) {
-        try {
-            const previewDocument = iframe.contentDocument;
-            return previewDocument?.readyState === "complete" ? previewDocument : null;
-        } catch (error) {
-            if (error.name === "SecurityError") {
-                return null;
-            }
-            throw error;
-        }
-    }
-
     replacePreviewIframeHeading(iframe) {
         const previewHeader = this.getPreviewHeader(iframe);
         if (!previewHeader) {
             return;
         }
-        const previewDocument = this.getPreviewIframeDocument(iframe);
+        const previewDocument = getPreviewIframeDocument(iframe);
         if (!previewDocument) {
             return;
         }
@@ -1232,21 +1216,6 @@ export class ThemeSelectionScreen extends ApplyConfiguratorScreen {
         }
     }
 
-    replacePreviewIframeLogo(iframe) {
-        const logo = this.state.logo;
-        if (!logo) {
-            return;
-        }
-        const previewDocument = this.getPreviewIframeDocument(iframe);
-        if (!previewDocument) {
-            return;
-        }
-        const logoImage = previewDocument.querySelector("header img, #top img, .navbar-brand img");
-        if (logoImage) {
-            logoImage.src = logo;
-        }
-    }
-
     updatePreviewIframeHeadings() {
         for (const iframe of document.querySelectorAll(
             ".o_theme_selection_screen .o_configurator_theme_preview_iframe"
@@ -1255,82 +1224,15 @@ export class ThemeSelectionScreen extends ApplyConfiguratorScreen {
         }
     }
 
-    getPreviewIframeContentSize(iframe) {
-        const iframeWindow = iframe.contentWindow;
-        const iframeDocument = this.getPreviewIframeDocument(iframe);
-        const scrollingElement = iframeDocument?.scrollingElement;
-        const documentElement = iframeDocument?.documentElement;
-        const body = iframeDocument?.body;
-        if (!iframeWindow || !scrollingElement || !documentElement) {
-            return null;
-        }
-        return {
-            width: Math.max(
-                DESKTOP_PREVIEW_WIDTH,
-                iframeWindow.innerWidth,
-                scrollingElement.scrollWidth,
-                documentElement.scrollWidth,
-                body?.scrollWidth || 0
-            ),
-            height: Math.max(
-                scrollingElement.scrollHeight,
-                documentElement.scrollHeight,
-                body?.scrollHeight || 0,
-                documentElement.offsetHeight,
-                body?.offsetHeight || 0
-            ),
-        };
-    }
-
-    scalePreviewIframe(iframe) {
-        if (!iframe) {
-            return;
-        }
-
-        const previewContainer = iframe.parentElement;
-        const availableWidth = previewContainer.clientWidth;
-        const availableHeight = previewContainer.clientHeight;
-
-        if (!availableWidth || !availableHeight) {
-            return;
-        }
-
-        iframe.style.setProperty("width", `${DESKTOP_PREVIEW_WIDTH}px`, "important");
-        // Reset to the natural viewport height before measuring
-        const naturalViewportHeight = Math.ceil(
-            availableHeight / Math.min(1, availableWidth / DESKTOP_PREVIEW_WIDTH)
-        );
-        iframe.style.setProperty("height", `${naturalViewportHeight}px`, "important");
-
-        const contentSize = this.getPreviewIframeContentSize(iframe);
-        const iframeWidth = contentSize?.width || DESKTOP_PREVIEW_WIDTH;
-        const scale = Math.min(1, availableWidth / iframeWidth);
-        const fallbackContentHeight = (availableHeight * 2) / scale;
-        const iframeHeight = Math.ceil(contentSize?.height || fallbackContentHeight);
-        // The iframe is scaled, so the scroll distance must use the scaled
-        // height, not the raw document height.
-        const scrollDistance = Math.max(0, iframeHeight * scale - availableHeight);
-
-        iframe.style.setProperty("width", `${iframeWidth}px`, "important");
-        iframe.style.setProperty("height", `${iframeHeight}px`, "important");
-        iframe.style.setProperty(
-            "--o-configurator-iframe-scroll-distance",
-            `${Math.floor(scrollDistance)}px`
-        );
-        iframe.style.setProperty("--o-configurator-iframe-scale", scale);
-        iframe.style.setProperty("transform-origin", "top left");
-        iframe.style.setProperty("flex", "0 0 auto", "important");
-    }
-
     async onPreviewIframeLoad(ev) {
         const iframe = ev.currentTarget;
         this.replacePreviewIframeHeading(iframe);
-        this.replacePreviewIframeLogo(iframe);
+        replacePreviewIframeLogo(iframe, this.state.logo);
         iframe.parentElement.classList.add("o_preview_loaded");
-        this.scalePreviewIframe(iframe);
+        scalePreviewIframe(iframe);
         // The ImageLazyLoading interaction gives lazy images min-height: 1px
         // until they load, so the initial measurement underestimates the page height.
-        const iframeDoc = this.getPreviewIframeDocument(iframe);
+        const iframeDoc = getPreviewIframeDocument(iframe);
         if (!iframeDoc) {
             return;
         }
@@ -1351,7 +1253,7 @@ export class ThemeSelectionScreen extends ApplyConfiguratorScreen {
                     })
             )
         );
-        this.scalePreviewIframe(iframe);
+        scalePreviewIframe(iframe);
     }
 
     async chooseTheme(themeName) {
