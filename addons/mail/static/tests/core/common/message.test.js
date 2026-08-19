@@ -5,6 +5,7 @@ import {
     insertText,
     MENU_ACTIVE_IDS,
     onRpcBefore,
+    openDiscuss,
     openFormView,
     openMessagingMenu,
     start,
@@ -278,16 +279,17 @@ test("marked link to a record is rendered once its failed name fetch is retried"
 
 test("marked link to a record is restricted for a portal user", async () => {
     const pyEnv = await startServer();
-    const [aliceId, lenaId] = pyEnv["res.partner"].create([{ name: "Alice" }, { name: "Lena" }]);
+    const lenaId = pyEnv["res.partner"].create({ name: "Lena" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     pyEnv["res.users"].write([serverState.userId], { share: true });
     const url = `${getOrigin()}/odoo/res.partner/${lenaId}`;
     pyEnv["mail.message"].create({
         body: `<p><a class="o_record_redirect" href="${url}" data-oe-model="res.partner" data-oe-id="${lenaId}">${url}</a></p>`,
-        model: "res.partner",
-        res_id: aliceId,
+        model: "discuss.channel",
+        res_id: channelId,
     });
     await start();
-    await openFormView("res.partner", aliceId);
+    await openDiscuss(channelId);
     await waitFor(
         `.o-mail-Message-body a.o_record_redirect_transformed[href='${url}']:text(Restricted):count(1)`
     );

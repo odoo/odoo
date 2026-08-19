@@ -29,6 +29,9 @@ real applications. """,
         'security/ir.access.csv',
     ],
     'assets': {
+        'mail.assets_discuss_public_test_tours': [
+            'test_mail_full/static/tests/tours/portal_message_link_tour.js',
+        ],
         'web.assets_unit_tests': [
             'test_mail_full/static/tests/**/*',
             ('remove', 'test_mail_full/static/tests/tours/**/*'),
