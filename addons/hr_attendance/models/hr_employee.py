@@ -81,11 +81,14 @@ class HrEmployee(models.Model):
                 ('check_in', '<', date_stop),
                 ('check_out', '>', date_start),
             ],
-            groupby=['employee_id'],
+            groupby=['employee_id', 'time_rule_id'],
             aggregates=['worked_hours:sum'],
         )
-        for employee, worked_hours in all_attendances:
-            attendance_data[employee.id]['worked_hours'] += worked_hours
+        for employee, time_rule, worked_hours in all_attendances:
+            data = attendance_data[employee.id]
+            data['worked_hours'] += worked_hours
+            if time_rule:
+                data['overtime_hours'] += worked_hours
 
         return attendance_data
 

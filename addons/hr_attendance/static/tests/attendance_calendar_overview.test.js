@@ -29,15 +29,15 @@ test("worked hours display updates when dateRange prop changes", async () => {
 
     await mountWithCleanup(Container, {
         componentEnv: {
-            searchModel: { context: { active_id: 1, display_extra_hours: false } },
+            searchModel: { context: { active_id: 1 } },
         },
     });
     await animationFrame();
     expect.verifySteps(["load:2024-01-01"]);
-    expect(".o_attendance_info_number").toHaveText("8h");
+    expect(".o_attendance_info_number").toHaveText(["8h", "0h"]);
 
     dateRange.set({ start: "2024-02-01", end: "2024-02-29" });
     await animationFrame();
     expect.verifySteps(["load:2024-02-01"]);
-    expect(".o_attendance_info_number").toHaveText("16h");
+    expect(".o_attendance_info_number").toHaveText(["16h", "0h"]);
 });
