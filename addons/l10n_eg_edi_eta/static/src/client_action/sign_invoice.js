@@ -63,7 +63,7 @@ async function actionGetDrive(env, actionDescr, type) {
         result = await browser.fetch(route, {
             method: "POST",
             targetAddressSpace: useLoopback ? "loopback" : useLna ? "local" : undefined,
-            body: jsonToFormData(action.params),
+            body: jsonToFormData(actionDescr.params),
         });
         result = await result.json();
     } catch {
