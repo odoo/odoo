@@ -56,11 +56,11 @@ export class NotificationItem extends Component {
         if (!this.props.datetime) {
             return "";
         }
-        const now = DateTime.now();
-        if (this.props.datetime?.hasSame(now, "day")) {
-            return this.props.datetime?.toLocaleString(DateTime.TIME_SIMPLE);
+        const startOfToday = this.store.startOfToday;
+        if (this.props.datetime.hasSame(startOfToday, "day")) {
+            return this.props.datetime.toLocaleString(DateTime.TIME_SIMPLE);
         }
-        if (this.props.datetime?.hasSame(now, "year")) {
+        if (this.props.datetime.hasSame(startOfToday, "year")) {
             return this.props.datetime?.toLocaleString({ month: "short", day: "numeric" });
         }
         return this.props.datetime?.toLocaleString(DateTime.DATE_MED);

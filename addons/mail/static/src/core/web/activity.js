@@ -2,18 +2,15 @@ import { useAttachmentUploader } from "@mail/core/common/attachment_uploader_hoo
 import { ActivityAssignPopover } from "@mail/core/web/activity_assign_popover";
 import { ActivityMailTemplate } from "@mail/core/web/activity_mail_template";
 import { ActivityMarkAsDone } from "@mail/core/web/activity_markasdone_popover";
-import { computeDelay, getMsToTomorrow } from "@mail/utils/common/dates";
 import { AvatarCard } from "@mail/core/web/avatar_card/avatar_card";
 import { propComputed } from "@mail/utils/common/hooks";
 
-import { Component, computed, onMounted, onWillUnmount, t, useProps } from "@odoo/owl";
+import { Component, computed, t, useProps } from "@odoo/owl";
 
-import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
 import { pick } from "@web/core/utils/objects";
-import { render } from "@web/owl2/utils";
 import { FileUploader } from "@web/views/fields/file_handler";
 
 export class Activity extends Component {
@@ -29,10 +26,6 @@ export class Activity extends Component {
         this.assignPopover = usePopover(ActivityAssignPopover, { position: "bottom" });
         this.markDonePopover = usePopover(ActivityMarkAsDone, { position: "right" });
         this.avatarCard = usePopover(AvatarCard);
-        onMounted(() => {
-            this.updateDelayAtNight();
-        });
-        onWillUnmount(() => browser.clearTimeout(this.updateDelayMidnightTimeout));
         this.thread = computed(() =>
             this.store["mail.thread"].insert({
                 model: this.activity().res_model,
@@ -69,16 +62,8 @@ export class Activity extends Component {
         });
     }
 
-    updateDelayAtNight() {
-        browser.clearTimeout(this.updateDelayMidnightTimeout);
-        this.updateDelayMidnightTimeout = browser.setTimeout(
-            () => render(this),
-            getMsToTomorrow() + 100
-        ); // Make sure there is no race condition
-    }
-
     get delay() {
-        return computeDelay(this.activity().date_deadline);
+        return this.store.daysUntil(this.activity().date_deadline);
     }
 
     onClickAssign(ev) {

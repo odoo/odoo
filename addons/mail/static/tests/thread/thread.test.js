@@ -20,7 +20,14 @@ import { Store } from "@mail/../tests/mock_server/store";
 import { Thread } from "@mail/core/common/thread";
 
 import { describe, expect, test } from "@odoo/hoot";
-import { advanceFrame, animationFrame, press, queryFirst, queryOne } from "@odoo/hoot-dom";
+import {
+    advanceFrame,
+    advanceTime,
+    animationFrame,
+    press,
+    queryFirst,
+    queryOne,
+} from "@odoo/hoot-dom";
 import { mockDate, tick } from "@odoo/hoot-mock";
 import {
     Command,
@@ -237,6 +244,23 @@ test("display day separator before first message of the day", async () => {
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-DateSection");
+});
+
+test("date section follows the day change", async () => {
+    mockDate("2023-01-03 23:59:00", 0);
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "general" });
+    pyEnv["mail.message"].create({
+        body: "not empty",
+        date: "2023-01-03 12:00:00",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-DateSection:text('Today')");
+    await advanceTime(2 * 60 * 1000); // past midnight
+    await contains(".o-mail-DateSection:text('Jan 3, 2023')");
 });
 
 test("scroll position is kept when navigating from one channel to another [CAN FAIL DUE TO WINDOW SIZE]", async () => {

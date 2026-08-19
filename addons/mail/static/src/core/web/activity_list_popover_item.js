@@ -2,7 +2,6 @@ import { useAttachmentUploader } from "@mail/core/common/attachment_uploader_hoo
 import { ActivityMailTemplate } from "@mail/core/web/activity_mail_template";
 import { ActivityMarkAsDone } from "@mail/core/web/activity_markasdone_popover";
 import { ActivityAssignPopover } from "@mail/core/web/activity_assign_popover";
-import { computeDelay } from "@mail/utils/common/dates";
 import { propComputed } from "@mail/utils/common/hooks";
 import { toggleFn } from "@mail/utils/common/signal";
 
@@ -49,7 +48,7 @@ export class ActivityListPopoverItem extends Component {
     }
 
     get delayLabel() {
-        const diff = computeDelay(this.activity().date_deadline);
+        const diff = this.store.daysUntil(this.activity().date_deadline);
         if (diff === 0) {
             return _t("Today");
         } else if (diff === -1) {
