@@ -274,6 +274,26 @@ class StockPackage(models.Model):
 
         return [('id', 'in', all_package_ids)]
 
+    @api.constrains('package_type_id', 'parent_package_id', 'child_package_ids', 'package_dest_id')
+    def _check_duplicate_package_types(self):
+        """Check that a package never (directly or indirectly) contains another package of the same type as itself."""
+        def _fetch_all_parent_package_type_ids(package):
+            acc = set()
+            while package := package.parent_package_id:
+                if package_type := package.package_type_id:
+                    acc.add(package_type.id)
+            return acc
+        for package in self:
+            self_type_id = package.package_type_id.id
+            dest_type_id = package.package_dest_id.package_type_id.id
+            parent_type_ids = _fetch_all_parent_package_type_ids(package)
+            child_type_ids = set(package.all_children_package_ids.package_type_id.ids)
+            if (parent_type_ids & child_type_ids
+                or self_type_id in parent_type_ids | child_type_ids
+                or self_type_id and self_type_id == dest_type_id
+                or dest_type_id in child_type_ids):
+                raise ValidationError(self.env._("Packages of the same type cannot be nested."))
+
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
