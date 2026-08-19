@@ -1,6 +1,9 @@
 import { _t } from "@web/core/l10n/translation";
 
 export const stepUtils = {
+    /**
+     * @deprecated use `run: "edit <value>"` directly.
+     */
     editSelectMenuInput(trigger, value) {
         return [
             {
