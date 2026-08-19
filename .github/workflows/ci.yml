@@ -70,6 +70,15 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Install Ruff
+        run: pip install ruff
+
+      - name: Ruff Lint Check
+        run: ruff check custom_addons/invoice_agent --config pyproject.toml
+
+      - name: Ruff Format Check
+        run: ruff format custom_addons/invoice_agent --config pyproject.toml --check
+
   test:
     needs: lint
     runs-on: ubuntu-latest
@@ -100,6 +109,7 @@ jobs:
           cache-dependency-path: |
             requirements.txt
             custom_addons/invoice_agent/requirements.txt
+            pyproject.toml
 
       - name: Pre-create pip cache directory
         run: mkdir -p ~/.cache/pip
