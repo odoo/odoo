@@ -405,7 +405,6 @@ class configmanager:
                               "- qweb: log the compiled xml with qweb errors          "
                               "- reload: restart server on change in the source code  "
                               "- replica: simulate a deployment with readonly replica "
-                              "- werkzeug: open a html debugger on http request error "
                               "- xml: read views from the source code, and not the db ")
         group.add_option("--stop-after-init", action="store_true", dest="stop_after_init", my_default=False, file_exportable=False,
                          help="stop the server after its initialization")
