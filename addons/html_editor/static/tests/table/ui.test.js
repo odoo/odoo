@@ -729,26 +729,26 @@ test("basic delete column operation", async () => {
     expect(getContent(el)).toBe(
         unformat(`
         <p data-selection-placeholder=""><br></p>
-        <table>
+        <div class="o_table_wrapper"><table>
             <tbody>
                 <tr><td class="a">1[]</td></tr>
                 <tr><td class="c">3</td></tr>
             </tbody>
-        </table>
-        <p data-selection-placeholder=""><br></p>`)
+        </table></div>
+        <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
     );
 
     undo(editor);
     expect(getContent(el)).toBe(
         unformat(`
         <p data-selection-placeholder=""><br></p>
-        <table>
+        <div class="o_table_wrapper"><table>
             <tbody>
                 <tr><td class="a">1[]</td><td class="b">2</td></tr>
                 <tr><td class="c">3</td><td class="d">4</td></tr>
             </tbody>
-        </table>
-        <p data-selection-placeholder=""><br></p>`)
+        </table></div>
+        <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
     );
 });
 
@@ -778,26 +778,26 @@ test("basic clear column content operation", async () => {
     expect(getContent(el)).toBe(
         unformat(`
         <p data-selection-placeholder=""><br></p>
-        <table>
+        <div class="o_table_wrapper"><table>
             <tbody>
                 <tr><td class="a"><p>1[]</p></td><td class="b"><p><br></p></td></tr>
                 <tr><td class="c"><p>3</p></td><td class="d"><p><br></p></td></tr>
             </tbody>
-        </table>
-        <p data-selection-placeholder=""><br></p>`)
+        </table></div>
+        <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
     );
 
     undo(editor);
     expect(getContent(el)).toBe(
         unformat(`
         <p data-selection-placeholder=""><br></p>
-        <table>
+        <div class="o_table_wrapper"><table>
             <tbody>
                 <tr><td class="a"><p>1[]</p></td><td class="b"><p>2</p></td></tr>
                 <tr><td class="c"><p>3</p></td><td class="d"><h1>4</h1></td></tr>
             </tbody>
-        </table>
-        <p data-selection-placeholder=""><br></p>`)
+        </table></div>
+        <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
     );
 });
 
@@ -827,25 +827,25 @@ test("basic delete row operation", async () => {
     expect(getContent(el)).toBe(
         unformat(`
         <p data-selection-placeholder=""><br></p>
-        <table>
+        <div class="o_table_wrapper"><table>
             <tbody>
                 <tr><td class="a">1[]</td><td class="b">2</td></tr>
             </tbody>
-        </table>
-        <p data-selection-placeholder=""><br></p>`)
+        </table></div>
+        <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
     );
 
     undo(editor);
     expect(getContent(el)).toBe(
         unformat(`
         <p data-selection-placeholder=""><br></p>
-        <table>
+        <div class="o_table_wrapper"><table>
             <tbody>
                 <tr><td class="a">1[]</td><td class="b">2</td></tr>
                 <tr><td class="c">3</td><td class="d">4</td></tr>
             </tbody>
-        </table>
-        <p data-selection-placeholder=""><br></p>`)
+        </table></div>
+        <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
     );
 });
 
@@ -875,26 +875,26 @@ test("basic clear row content operation", async () => {
     expect(getContent(el)).toBe(
         unformat(`
         <p data-selection-placeholder=""><br></p>
-        <table>
+        <div class="o_table_wrapper"><table>
             <tbody>
                 <tr><td class="a"><p>1[]</p></td><td class="b"><p>2</p></td></tr>
                 <tr><td class="c"><p><br></p></td><td class="d"><p><br></p></td></tr>
             </tbody>
-        </table>
-        <p data-selection-placeholder=""><br></p>`)
+        </table></div>
+        <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
     );
 
     undo(editor);
     expect(getContent(el)).toBe(
         unformat(`
         <p data-selection-placeholder=""><br></p>
-        <table>
+        <div class="o_table_wrapper"><table>
             <tbody>
                 <tr><td class="a"><p>1[]</p></td><td class="b"><p>2</p></td></tr>
                 <tr><td class="c"><p>3</p></td><td class="d"><h2>4</h2></td></tr>
             </tbody>
-        </table>
-        <p data-selection-placeholder=""><br></p>`)
+        </table></div>
+        <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
     );
 });
 
@@ -923,7 +923,7 @@ test("insert column left operation", async () => {
     expect(getContent(el)).toBe(
         unformat(`
         <p data-selection-placeholder=""><br></p>
-        <table>
+        <div class="o_table_wrapper"><table>
             <tbody>
                 <tr>
                     <td class="a">1[]</td>
@@ -936,21 +936,21 @@ test("insert column left operation", async () => {
                     <td class="d">4</td>
                 </tr>
             </tbody>
-        </table>
-        <p data-selection-placeholder=""><br></p>`)
+        </table></div>
+        <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
     );
 
     undo(editor);
     expect(getContent(el)).toBe(
         unformat(`
         <p data-selection-placeholder=""><br></p>
-        <table>
+        <div class="o_table_wrapper"><table>
             <tbody>
                 <tr><td class="a">1[]</td><td class="b">2</td></tr>
                 <tr><td class="c">3</td><td class="d">4</td></tr>
             </tbody>
-        </table>
-        <p data-selection-placeholder=""><br></p>`)
+        </table></div>
+        <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
     );
 });
 
@@ -979,12 +979,12 @@ test("editable should be focused after delete operation", async () => {
     expect(getContent(el)).toBe(
         unformat(`
         <p><br></p>
-        <table class="table table-bordered o_table">
+        <div class="o_table_wrapper"><table class="table table-bordered o_table">
             <tbody>
                 <tr><td><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p></td></tr>
                 <tr><td><p><br></p></td></tr>
             </tbody>
-        </table>
+        </table></div>
         <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
     );
     expect(document.activeElement).toBe(el);
@@ -1015,7 +1015,7 @@ test("insert column right operation", async () => {
     expect(getContent(el)).toBe(
         unformat(`
         <p data-selection-placeholder=""><br></p>
-        <table>
+        <div class="o_table_wrapper"><table>
             <tbody>
                 <tr>
                     <td class="a">1[]</td>
@@ -1028,21 +1028,21 @@ test("insert column right operation", async () => {
                     <td class="d">4</td>
                 </tr>
             </tbody>
-        </table>
-        <p data-selection-placeholder=""><br></p>`)
+        </table></div>
+        <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
     );
 
     undo(editor);
     expect(getContent(el)).toBe(
         unformat(`
         <p data-selection-placeholder=""><br></p>
-        <table>
+        <div class="o_table_wrapper"><table>
             <tbody>
                 <tr><td class="a">1[]</td><td class="b">2</td></tr>
                 <tr><td class="c">3</td><td class="d">4</td></tr>
             </tbody>
-        </table>
-        <p data-selection-placeholder=""><br></p>`)
+        </table></div>
+        <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
     );
 });
 
@@ -1071,7 +1071,7 @@ test("insert column at the start of a merge column", async () => {
     expect(getContent(el)).toBe(
         unformat(`
         <p data-selection-placeholder=""><br></p>
-        <table>
+        <div class="o_table_wrapper"><table>
             <tbody>
                 <tr>
                     <td><p><br></p></td>
@@ -1084,8 +1084,8 @@ test("insert column at the start of a merge column", async () => {
                     <td colspan="3">4</td>
                 </tr>
             </tbody>
-        </table>
-        <p data-selection-placeholder=""><br></p>`)
+        </table></div>
+        <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
     );
 });
 
@@ -1114,7 +1114,7 @@ test("insert column in the middle of a a merged column", async () => {
     expect(getContent(el)).toBe(
         unformat(`
         <p data-selection-placeholder=""><br></p>
-        <table class="table table-bordered o_table">
+        <div class="o_table_wrapper"><table class="table table-bordered o_table">
             <tbody>
                 <tr>
                     <td class="a">1[]</td>
@@ -1126,7 +1126,7 @@ test("insert column in the middle of a a merged column", async () => {
                     <td colspan="4">4</td>
                 </tr>
             </tbody>
-        </table>
+        </table></div>
         <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
     );
 });
@@ -1156,7 +1156,7 @@ test("insert column at the end of a merged column below", async () => {
     expect(getContent(el)).toBe(
         unformat(`
         <p data-selection-placeholder=""><br></p>
-        <table class="table table-bordered o_table">
+        <div class="o_table_wrapper"><table class="table table-bordered o_table">
             <tbody>
                 <tr>
                     <td>1</td>
@@ -1169,7 +1169,7 @@ test("insert column at the end of a merged column below", async () => {
                     <td><p><br></p></td>
                 </tr>
             </tbody>
-        </table>
+        </table></div>
         <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
     );
 });
@@ -1199,7 +1199,7 @@ test("insert column right operation when table header exists", async () => {
     expect(getContent(el)).toBe(
         unformat(`
         <p data-selection-placeholder=""><br></p>
-        <table>
+        <div class="o_table_wrapper"><table>
             <tbody>
                 <tr>
                     <th class="a o_table_header">1[]</th>
@@ -1212,8 +1212,8 @@ test("insert column right operation when table header exists", async () => {
                     <td class="d">4</td>
                 </tr>
             </tbody>
-        </table>
-        <p data-selection-placeholder=""><br></p>`)
+        </table></div>
+        <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
     );
 });
 
@@ -1242,7 +1242,7 @@ test("insert row above operation", async () => {
     expect(getContent(el)).toBe(
         unformat(`
         <p data-selection-placeholder=""><br></p>
-        <table>
+        <div class="o_table_wrapper"><table>
             <tbody>
                 <tr>
                     <td class="a">1[]</td>
@@ -1257,21 +1257,21 @@ test("insert row above operation", async () => {
                     <td class="d">4</td>
                 </tr>
             </tbody>
-        </table>
-        <p data-selection-placeholder=""><br></p>`)
+        </table></div>
+        <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
     );
 
     undo(editor);
     expect(getContent(el)).toBe(
         unformat(`
         <p data-selection-placeholder=""><br></p>
-        <table>
+        <div class="o_table_wrapper"><table>
             <tbody>
                 <tr><td class="a">1[]</td><td class="b">2</td></tr>
                 <tr><td class="c">3</td><td class="d">4</td></tr>
             </tbody>
-        </table>
-        <p data-selection-placeholder=""><br></p>`)
+        </table></div>
+        <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
     );
 });
 
@@ -1300,7 +1300,7 @@ test("insert row above operation should not retain height and width styles", asy
     expect(getContent(el)).toBe(
         unformat(`
         <p data-selection-placeholder=""><br></p>
-        <table>
+        <div class="o_table_wrapper"><table>
             <tbody>
                 <tr>
                     <td><p><br></p></td>
@@ -1315,8 +1315,8 @@ test("insert row above operation should not retain height and width styles", asy
                     <td class="d">4</td>
                 </tr>
             </tbody>
-        </table>
-        <p data-selection-placeholder=""><br></p>`)
+        </table></div>
+        <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
     );
 });
 
@@ -1345,7 +1345,7 @@ test("insert row below operation", async () => {
     expect(getContent(el)).toBe(
         unformat(`
         <p data-selection-placeholder=""><br></p>
-        <table>
+        <div class="o_table_wrapper"><table>
             <tbody>
                 <tr>
                     <td class="a">1[]</td>
@@ -1360,21 +1360,21 @@ test("insert row below operation", async () => {
                     <td class="d">4</td>
                 </tr>
             </tbody>
-        </table>
-        <p data-selection-placeholder=""><br></p>`)
+        </table></div>
+        <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
     );
 
     undo(editor);
     expect(getContent(el)).toBe(
         unformat(`
         <p data-selection-placeholder=""><br></p>
-        <table>
+        <div class="o_table_wrapper"><table>
             <tbody>
                 <tr><td class="a">1[]</td><td class="b">2</td></tr>
                 <tr><td class="c">3</td><td class="d">4</td></tr>
             </tbody>
-        </table>
-        <p data-selection-placeholder=""><br></p>`)
+        </table></div>
+        <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
     );
 });
 
@@ -1404,7 +1404,7 @@ test("insert row above the rowspan cell", async () => {
     expect(getContent(el)).toBe(
         unformat(`
         <p data-selection-placeholder=""><br></p>
-        <table>
+        <div class="o_table_wrapper"><table>
             <tbody>
                 <tr>
                     <td><p><br></p></td>
@@ -1421,8 +1421,8 @@ test("insert row above the rowspan cell", async () => {
                     <td class="d">4</td>
                 </tr>
             </tbody>
-        </table>
-        <p data-selection-placeholder=""><br></p>`)
+        </table></div>
+        <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
     );
 });
 
@@ -1452,7 +1452,7 @@ test("insert row in the middle of a rowspan cell", async () => {
     expect(getContent(el)).toBe(
         unformat(`
         <p data-selection-placeholder=""><br></p>
-        <table>
+        <div class="o_table_wrapper"><table>
             <tbody>
                 <tr>
                     <td class="a">1[]</td>
@@ -1468,8 +1468,8 @@ test("insert row in the middle of a rowspan cell", async () => {
                     <td class="d">4</td>
                 </tr>
             </tbody>
-        </table>
-        <p data-selection-placeholder=""><br></p>`)
+        </table></div>
+        <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
     );
 });
 
@@ -1499,7 +1499,7 @@ test("insert row at the end of a rowspan cell", async () => {
     expect(getContent(el)).toBe(
         unformat(`
         <p data-selection-placeholder=""><br></p>
-        <table>
+        <div class="o_table_wrapper"><table>
             <tbody>
                 <tr>
                     <td class="a">1[]</td>
@@ -1516,8 +1516,8 @@ test("insert row at the end of a rowspan cell", async () => {
                     <td><p><br></p></td>
                 </tr>
             </tbody>
-        </table>
-        <p data-selection-placeholder=""><br></p>`)
+        </table></div>
+        <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
     );
 });
 
@@ -1546,26 +1546,26 @@ test("move column left operation", async () => {
     expect(getContent(el)).toBe(
         unformat(`
         <p data-selection-placeholder=""><br></p>
-        <table>
+        <div class="o_table_wrapper"><table>
             <tbody>
             <tr><td class="b">2[]</td><td class="a">1</td></tr>
             <tr><td class="d">4</td><td class="c">3</td></tr>
             </tbody>
-        </table>
-        <p data-selection-placeholder=""><br></p>`)
+        </table></div>
+        <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
     );
 
     undo(editor);
     expect(getContent(el)).toBe(
         unformat(`
         <p data-selection-placeholder=""><br></p>
-        <table>
+        <div class="o_table_wrapper"><table>
             <tbody>
                 <tr><td class="a">1</td><td class="b">2[]</td></tr>
                 <tr><td class="c">3</td><td class="d">4</td></tr>
             </tbody>
-        </table>
-        <p data-selection-placeholder=""><br></p>`)
+        </table></div>
+        <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
     );
 });
 
@@ -1594,26 +1594,26 @@ test("move column right operation", async () => {
     expect(getContent(el)).toBe(
         unformat(`
         <p data-selection-placeholder=""><br></p>
-        <table>
+        <div class="o_table_wrapper"><table>
             <tbody>
             <tr><td class="b">2[]</td><td class="a">1</td></tr>
             <tr><td class="d">4</td><td class="c">3</td></tr>
             </tbody>
-        </table>
-        <p data-selection-placeholder=""><br></p>`)
+        </table></div>
+        <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
     );
 
     undo(editor);
     expect(getContent(el)).toBe(
         unformat(`
         <p data-selection-placeholder=""><br></p>
-        <table>
+        <div class="o_table_wrapper"><table>
             <tbody>
                 <tr><td class="a">1</td><td class="b">2[]</td></tr>
                 <tr><td class="c">3</td><td class="d">4</td></tr>
             </tbody>
-        </table>
-        <p data-selection-placeholder=""><br></p>`)
+        </table></div>
+        <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
     );
 });
 
@@ -1707,26 +1707,26 @@ test("move row above operation", async () => {
     expect(getContent(el)).toBe(
         unformat(`
         <p data-selection-placeholder=""><br></p>
-        <table>
+        <div class="o_table_wrapper"><table>
             <tbody>
             <tr><td class="c">3</td><td class="d">4</td></tr>
             <tr><td class="a">1[]</td><td class="b">2</td></tr>
             </tbody>
-        </table>
-        <p data-selection-placeholder=""><br></p>`)
+        </table></div>
+        <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
     );
 
     undo(editor);
     expect(getContent(el)).toBe(
         unformat(`
         <p data-selection-placeholder=""><br></p>
-        <table>
+        <div class="o_table_wrapper"><table>
             <tbody>
                 <tr><td class="a">1[]</td><td class="b">2</td></tr>
                 <tr><td class="c">3</td><td class="d">4</td></tr>
             </tbody>
-        </table>
-        <p data-selection-placeholder=""><br></p>`)
+        </table></div>
+        <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
     );
 });
 
@@ -1755,13 +1755,13 @@ test("move second row to top when first row is header row", async () => {
     expect(getContent(el)).toBe(
         unformat(`
         <p data-selection-placeholder=""><br></p>
-        <table>
+        <div class="o_table_wrapper"><table>
             <tbody>
                 <tr><th class="a o_table_header">3</th><th class="o_table_header">4</th></tr>
                 <tr><td>1[]</td><td>2</td></tr>
             </tbody>
-        </table>
-        <p data-selection-placeholder=""><br></p>`)
+        </table></div>
+        <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
     );
 });
 
@@ -1790,26 +1790,26 @@ test("move row below operation", async () => {
     expect(getContent(el)).toBe(
         unformat(`
         <p data-selection-placeholder=""><br></p>
-        <table>
+        <div class="o_table_wrapper"><table>
             <tbody>
             <tr><td class="c">3</td><td class="d">4</td></tr>
             <tr><td class="a">1[]</td><td class="b">2</td></tr>
             </tbody>
-        </table>
-        <p data-selection-placeholder=""><br></p>`)
+        </table></div>
+        <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
     );
 
     undo(editor);
     expect(getContent(el)).toBe(
         unformat(`
         <p data-selection-placeholder=""><br></p>
-        <table>
+        <div class="o_table_wrapper"><table>
             <tbody>
                 <tr><td class="a">1[]</td><td class="b">2</td></tr>
                 <tr><td class="c">3</td><td class="d">4</td></tr>
             </tbody>
-        </table>
-        <p data-selection-placeholder=""><br></p>`)
+        </table></div>
+        <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
     );
 });
 
@@ -1890,13 +1890,13 @@ test("move header row below operation", async () => {
     expect(getContent(el)).toBe(
         unformat(`
         <p data-selection-placeholder=""><br></p>
-        <table>
+        <div class="o_table_wrapper"><table>
             <tbody>
                 <tr><th class="o_table_header">3</th><th class="o_table_header">4</th></tr>
                 <tr><td class="a">1[]</td><td>2</td></tr>
             </tbody>
-        </table>
-        <p data-selection-placeholder=""><br></p>`)
+        </table></div>
+        <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
     );
 });
 
@@ -1926,13 +1926,13 @@ test("should revert a converted header row back to normal after undo", async () 
     expect(getContent(el)).toBe(
         unformat(`
             <p data-selection-placeholder=""><br></p>
-            <table>
+            <div class="o_table_wrapper"><table>
                 <tbody>
                     <tr><th class="a o_table_header">1[]</th><th class="o_table_header">2</th></tr>
                     <tr><td>3</td><td>4</td></tr>
                 </tbody>
-            </table>
-            <p data-selection-placeholder=""><br></p>
+            </table></div>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
         `)
     );
 
@@ -1940,13 +1940,13 @@ test("should revert a converted header row back to normal after undo", async () 
     expect(getContent(el)).toBe(
         unformat(`
             <p data-selection-placeholder=""><br></p>
-            <table>
+            <div class="o_table_wrapper"><table>
                 <tbody>
                     <tr><td class="a">1[]</td><td>2</td></tr>
                     <tr><td>3</td><td>4</td></tr>
                 </tbody>
-            </table>
-            <p data-selection-placeholder=""><br></p>
+            </table></div>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
         `)
     );
 });
@@ -1981,7 +1981,7 @@ test("preserve table rows width on move row below operation", async () => {
     expect(getContent(el)).toBe(
         unformat(`
         <p data-selection-placeholder=""><br></p>
-        <table>
+        <div class="o_table_wrapper"><table>
             <colgroup>
                 <col style="width: 100px;">
                 <col style="width: 200px;">
@@ -1991,8 +1991,8 @@ test("preserve table rows width on move row below operation", async () => {
                 <tr><td class="a">1[]</td><td class="b">2</td></tr>
                 <tr><td class="e">5</td><td class="f">6</td></tr>
             </tbody>
-        </table>
-        <p data-selection-placeholder=""><br></p>`)
+        </table></div>
+        <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
     );
 });
 
@@ -2021,20 +2021,20 @@ test("reset table size to remove custom width", async () => {
     expect(getContent(el)).toBe(
         unformat(`
         <p data-selection-placeholder=""><br></p>
-        <table>
+        <div class="o_table_wrapper"><table>
             <tbody>
                 <tr><td class="a">1[]</td></tr>
                 <tr><td class="b">2</td></tr>
             </tbody>
-        </table>
-        <p data-selection-placeholder=""><br></p>`)
+        </table></div>
+        <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
     );
 
     undo(editor);
     expect(getContent(el)).toBe(
         unformat(
             `<p data-selection-placeholder=""><br></p>
-            <table style="width: 150px;">
+            <div class="o_table_wrapper"><table style="width: 150px;">
             <colgroup>
             <col style="width: 100px;"><col style="width: 50px;">
             </colgroup>
@@ -2042,8 +2042,8 @@ test("reset table size to remove custom width", async () => {
             <tr><td class="a">1[]</td></tr>
             <tr><td class="b">2</td></tr>
             </tbody>
-        </table>
-        <p data-selection-placeholder=""><br></p>`
+        </table></div>
+        <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
         )
     );
 });
@@ -2070,26 +2070,26 @@ test("reset table size to remove custom height", async () => {
     expect(getContent(el)).toBe(
         unformat(`
         <p data-selection-placeholder=""><br></p>
-        <table>
+        <div class="o_table_wrapper"><table>
             <tbody>
                 <tr style=""><td class="a">1[]</td></tr>
                 <tr style=""><td class="b">2</td></tr>
             </tbody>
-        </table>
-        <p data-selection-placeholder=""><br></p>`)
+        </table></div>
+        <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
     );
 
     undo(editor);
     expect(getContent(el)).toBe(
         unformat(`
         <p data-selection-placeholder=""><br></p>
-        <table>
+        <div class="o_table_wrapper"><table>
             <tbody>
             <tr style="height: 100px;"><td class="a">1[]</td></tr>
             <tr style="height: 50px;"><td class="b">2</td></tr>
             </tbody>
-        </table>
-        <p data-selection-placeholder=""><br></p>`)
+        </table></div>
+        <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
     );
 });
 
@@ -2128,7 +2128,7 @@ test("reset row size to remove custom height", async () => {
     expect(getContent(el)).toBe(
         unformat(
             `<p data-selection-placeholder=""><br></p>
-            <table class="table table-bordered o_table">
+            <div class="o_table_wrapper"><table class="table table-bordered o_table">
                 <tbody>
                     <tr style="">
                         <td class="a">1</td>
@@ -2146,7 +2146,7 @@ test("reset row size to remove custom height", async () => {
                         <td class="i">9</td>
                     </tr>
                 </tbody>
-            </table>
+            </table></div>
             <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
         )
     );
@@ -2193,7 +2193,7 @@ test("should redistribute excess width from current column to smaller columns", 
     expect(getContent(el)).toBe(
         unformat(
             `<p data-selection-placeholder=""><br></p>
-            <table class="table table-bordered o_table" style="width: 500px">
+            <div class="o_table_wrapper"><table class="table table-bordered o_table" style="width: 500px">
                 <tbody>
                     <tr>
                         <td class="a">1</td>
@@ -2210,7 +2210,7 @@ test("should redistribute excess width from current column to smaller columns", 
                         <td class="j">10</td>
                     </tr>
                 </tbody>
-            </table>
+            </table></div>
             <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
         )
     );
@@ -2268,7 +2268,7 @@ test("should redistribute excess width from the current colspan column when rese
     expect(getContent(el)).toBe(
         unformat(`
             <p data-selection-placeholder="" class="o-horizontal-caret"><br></p>
-            <table class="table table-bordered o_table" style="width: 1182px">
+            <div class="o_table_wrapper"><table class="table table-bordered o_table" style="width: 1182px">
                 <tbody>
                     <tr>
                         <td>1</td>
@@ -2296,7 +2296,7 @@ test("should redistribute excess width from the current colspan column when rese
                         <td>17</td>
                     </tr>
                 </tbody>
-            </table>
+            </table></div>
             <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
     );
 });
@@ -2348,7 +2348,7 @@ test("should redistribute excess width from larger columns to current column", a
     expect(getContent(el)).toBe(
         unformat(
             `<p data-selection-placeholder=""><br></p>
-            <table class="table table-bordered o_table" style="width: 700px">
+            <div class="o_table_wrapper"><table class="table table-bordered o_table" style="width: 700px">
                 <colgroup>
                     <col style="width: 120px;">
                     <col style="width: 80px;">
@@ -2378,7 +2378,7 @@ test("should redistribute excess width from larger columns to current column", a
                         <td class="n">14</td>
                     </tr>
                 </tbody>
-            </table>
+            </table></div>
             <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
         )
     );
@@ -2415,15 +2415,15 @@ test("applies alternating row colors when 'Insert Alternate Colors' option is cl
     expect(getContent(el)).toBe(
         unformat(`
             <p data-selection-placeholder=""><br></p>
-            <table class="o_alternating_rows">
+            <div class="o_table_wrapper"><table class="o_alternating_rows">
                 <tbody>
                     <tr><td class="a">1[]</td></tr>
                     <tr><td>2</td></tr>
                     <tr><td>3</td></tr>
                     <tr><td>4</td></tr>
                 </tbody>
-            </table>
-            <p data-selection-placeholder=""><br></p>`)
+            </table></div>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
     );
     const firstRowCellColor = getComputedStyle(cells[0]).backgroundColor;
     expect(getComputedStyle(cells[2]).backgroundColor).toBe(firstRowCellColor);
@@ -2464,15 +2464,15 @@ test("removes alternating row colors when 'Clear Alternate Colors' option is cli
     expect(getContent(el)).toBe(
         unformat(`
             <p data-selection-placeholder=""><br></p>
-            <table class="">
+            <div class="o_table_wrapper"><table class="">
                 <tbody>
                     <tr><td class="a">1[]</td></tr>
                     <tr><td>2</td></tr>
                     <tr><td>3</td></tr>
                     <tr><td>4</td></tr>
                 </tbody>
-            </table>
-            <p data-selection-placeholder=""><br></p>`)
+            </table></div>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
     );
     expect(
         cells.every((cell) => getComputedStyle(cell).backgroundColor === secondRowCellColor)
@@ -2518,7 +2518,7 @@ test("should redistribute excess width from the current column to a colspan colu
     expect(getContent(el)).toBe(
         unformat(`
             <p data-selection-placeholder="" class="o-horizontal-caret"><br></p>
-            <table class="table table-bordered o_table" style="width: 500px">
+            <div class="o_table_wrapper"><table class="table table-bordered o_table" style="width: 500px">
                 <tbody>
                     <tr>
                         <td colspan="2">1</td>
@@ -2533,7 +2533,7 @@ test("should redistribute excess width from the current column to a colspan colu
                         <td colspan="2">8</td>
                     </tr>
                 </tbody>
-            </table>
+            </table></div>
             <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
     );
 });
@@ -2542,7 +2542,7 @@ describe("Disable table merge options", () => {
     test("disables both merge options when selection spans multiple rows and columns", async () => {
         const { el } = await setupEditor(
             unformat(`
-                <table class="table table-bordered o_table">
+                <div class="o_table_wrapper"><table class="table table-bordered o_table">
                     <tbody>
                         <tr>
                             <td class="a"><p>[<br></p></td>
@@ -2555,12 +2555,12 @@ describe("Disable table merge options", () => {
                             <td><p><br></p></td>
                         </tr>
                     </tbody>
-                </table>`)
+                </table></div>`)
         );
         expect(getContent(el)).toBe(
             unformat(`
                 <p data-selection-placeholder=""><br></p>
-                <table class="table table-bordered o_table o_selected_table">
+                <div class="o_table_wrapper"><table class="table table-bordered o_table o_selected_table">
                     <tbody>
                         <tr>
                             <td class="a o_selected_td"><p>[<br></p></td>
@@ -2573,7 +2573,7 @@ describe("Disable table merge options", () => {
                             <td><p><br></p></td>
                         </tr>
                     </tbody>
-                </table>
+                </table></div>
                 <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
         );
         await expectElementCount(".o-we-table-menu", 0);
@@ -2606,7 +2606,7 @@ describe("Disable table merge options", () => {
     test("disables merge row option when selection includes cells with rowspan", async () => {
         const { el } = await setupEditor(
             unformat(`
-                <table class="table table-bordered o_table">
+                <div class="o_table_wrapper"><table class="table table-bordered o_table">
                     <tbody>
                         <tr>
                             <td><p><br></p></td>
@@ -2618,12 +2618,12 @@ describe("Disable table merge options", () => {
                             <td><p><br></p>]</td>
                         </tr>
                     </tbody>
-                </table>`)
+                </table></div>`)
         );
         expect(getContent(el)).toBe(
             unformat(`
                 <p data-selection-placeholder=""><br></p>
-                <table class="table table-bordered o_table o_selected_table">
+                <div class="o_table_wrapper"><table class="table table-bordered o_table o_selected_table">
                     <tbody>
                         <tr>
                             <td><p><br></p></td>
@@ -2635,7 +2635,7 @@ describe("Disable table merge options", () => {
                             <td class="o_selected_td"><p><br></p>]</td>
                         </tr>
                     </tbody>
-                </table>
+                </table></div>
                 <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
         );
 
@@ -2670,7 +2670,7 @@ describe("Disable table merge options", () => {
         expect(getContent(el)).toBe(
             unformat(`
                 <p data-selection-placeholder=""><br></p>
-                <table class="table table-bordered o_table o_selected_table">
+                <div class="o_table_wrapper"><table class="table table-bordered o_table o_selected_table">
                     <tbody>
                         <tr>
                             <td class="a o_selected_td"><p>[<br></p></td>
@@ -2681,7 +2681,7 @@ describe("Disable table merge options", () => {
                             <td colspan="3" class="o_selected_td"><p>]<br></p></td>
                         </tr>
                     </tbody>
-                </table>
+                </table></div>
                 <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
         );
 
@@ -2721,7 +2721,7 @@ describe("Merge column cells", () => {
         expect(getContent(el)).toBe(
             unformat(`
                 <p data-selection-placeholder=""><br></p>
-                <table class="table table-bordered o_table o_selected_table">
+                <div class="o_table_wrapper"><table class="table table-bordered o_table o_selected_table">
                     <tbody>
                         <tr>
                             <td><p><br></p></td>
@@ -2734,7 +2734,7 @@ describe("Merge column cells", () => {
                             <td class="o_selected_td"><p><br></p>]</td>
                         </tr>
                     </tbody>
-                </table>
+                </table></div>
                 <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
         );
 
@@ -2752,7 +2752,7 @@ describe("Merge column cells", () => {
         expect(getContent(el)).toBe(
             unformat(`
                 <p data-selection-placeholder=""><br></p>
-                <table class="table table-bordered o_table o_selected_table">
+                <div class="o_table_wrapper"><table class="table table-bordered o_table o_selected_table">
                     <tbody>
                         <tr>
                             <td><p><br></p></td>
@@ -2763,7 +2763,7 @@ describe("Merge column cells", () => {
                             <td class="a o_selected_td" colspan="3"><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p></td>
                         </tr>
                     </tbody>
-                </table>
+                </table></div>
                 <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
         );
     });
@@ -2789,7 +2789,7 @@ describe("Merge column cells", () => {
         expect(getContent(el)).toBe(
             unformat(`
                 <p data-selection-placeholder=""><br></p>
-                <table class="table table-bordered o_table o_selected_table">
+                <div class="o_table_wrapper"><table class="table table-bordered o_table o_selected_table">
                     <tbody>
                         <tr>
                             <td><p><br></p></td>
@@ -2802,7 +2802,7 @@ describe("Merge column cells", () => {
                             <td class="o_selected_td"><p>c</p>]</td>
                         </tr>
                     </tbody>
-                </table>
+                </table></div>
                 <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
         );
         await expectElementCount(".o-we-table-menu", 0);
@@ -2819,7 +2819,7 @@ describe("Merge column cells", () => {
         expect(getContent(el)).toBe(
             unformat(`
                 <p data-selection-placeholder=""><br></p>
-                <table class="table table-bordered o_table o_selected_table">
+                <div class="o_table_wrapper"><table class="table table-bordered o_table o_selected_table">
                     <tbody>
                         <tr>
                             <td><p><br></p></td>
@@ -2830,7 +2830,7 @@ describe("Merge column cells", () => {
                             <td class="a o_selected_td" colspan="3"><p>[a</p><p>b</p><p>c]</p></td>
                         </tr>
                     </tbody>
-                </table>
+                </table></div>
                 <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
         );
     });
@@ -2840,7 +2840,7 @@ describe("Merge row cells", () => {
     test("merges selected cells vertically in a column by applying rowspan", async () => {
         const { el } = await setupEditor(
             unformat(`
-                <table class="table table-bordered o_table">
+                <div class="o_table_wrapper"><table class="table table-bordered o_table">
                     <tbody>
                         <tr>
                             <td class="a"><p>[<br></p></td>
@@ -2853,12 +2853,12 @@ describe("Merge row cells", () => {
                             <td><p><br></p></td>
                         </tr>
                     </tbody>
-                </table>`)
+                </table></div>`)
         );
         expect(getContent(el)).toBe(
             unformat(`
                 <p data-selection-placeholder=""><br></p>
-                <table class="table table-bordered o_table o_selected_table">
+                <div class="o_table_wrapper"><table class="table table-bordered o_table o_selected_table">
                     <tbody>
                         <tr>
                             <td class="a o_selected_td"><p>[<br></p></td>
@@ -2871,7 +2871,7 @@ describe("Merge row cells", () => {
                             <td><p><br></p></td>
                         </tr>
                     </tbody>
-                </table>
+                </table></div>
                 <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
         );
 
@@ -2889,7 +2889,7 @@ describe("Merge row cells", () => {
         expect(getContent(el)).toBe(
             unformat(`
                 <p data-selection-placeholder=""><br></p>
-                <table class="table table-bordered o_table o_selected_table">
+                <div class="o_table_wrapper"><table class="table table-bordered o_table o_selected_table">
                     <tbody>
                         <tr>
                             <td class="a o_selected_td" rowspan="2"><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p></td>
@@ -2901,7 +2901,7 @@ describe("Merge row cells", () => {
                             <td><p><br></p></td>
                         </tr>
                     </tbody>
-                </table>
+                </table></div>
                 <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
         );
     });
@@ -2927,7 +2927,7 @@ describe("Merge row cells", () => {
         expect(getContent(el)).toBe(
             unformat(`
                 <p data-selection-placeholder=""><br></p>
-                <table class="table table-bordered o_table o_selected_table">
+                <div class="o_table_wrapper"><table class="table table-bordered o_table o_selected_table">
                     <tbody>
                         <tr>
                             <td class="a o_selected_td"><p>[a</p></td>
@@ -2940,7 +2940,7 @@ describe("Merge row cells", () => {
                             <td><p><br></p></td>
                         </tr>
                     </tbody>
-                </table>
+                </table></div>
                 <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
         );
         await expectElementCount(".o-we-table-menu", 0);
@@ -2957,7 +2957,7 @@ describe("Merge row cells", () => {
         expect(getContent(el)).toBe(
             unformat(`
                 <p data-selection-placeholder=""><br></p>
-                <table class="table table-bordered o_table o_selected_table">
+                <div class="o_table_wrapper"><table class="table table-bordered o_table o_selected_table">
                     <tbody>
                         <tr>
                             <td class="a o_selected_td" rowspan="2"><p>[a</p><p>b]</p></td>
@@ -2969,7 +2969,7 @@ describe("Merge row cells", () => {
                             <td><p><br></p></td>
                         </tr>
                     </tbody>
-                </table>
+                </table></div>
                 <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
         );
     });
@@ -2978,43 +2978,43 @@ describe("Merge row cells", () => {
         const { el } = await setupEditor(
             unformat(`
                 <p><br></p>
-                <table class="table table-bordered o_table">
+                <div class="o_table_wrapper"><table class="table table-bordered o_table">
                     <tbody>
                         <tr>
                             <td class="a"><p>[<br></p></td>
                             <td><p><br>]</p></td>
                         </tr>
                     </tbody>
-                </table>
-                <table class="table table-bordered o_table">
+                </table></div>
+                <div class="o_table_wrapper"><table class="table table-bordered o_table">
                     <tbody>
                         <tr>
                             <td class="b"><p><br></p></td>
                             <td><p><br></p></td>
                         </tr>
                     </tbody>
-                </table>`)
+                </table></div>`)
         );
         expect(getContent(el)).toBe(
             unformat(`
                 <p><br></p>
-                <table class="table table-bordered o_table o_selected_table">
+                <div class="o_table_wrapper"><table class="table table-bordered o_table o_selected_table">
                     <tbody>
                         <tr>
                             <td class="a o_selected_td"><p>[<br></p></td>
                             <td class="o_selected_td"><p><br>]</p></td>
                         </tr>
                     </tbody>
-                </table>
+                </table></div>
                 <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
-                <table class="table table-bordered o_table">
+                <div class="o_table_wrapper"><table class="table table-bordered o_table">
                     <tbody>
                         <tr>
                             <td class="b"><p><br></p></td>
                             <td><p><br></p></td>
                         </tr>
                     </tbody>
-                </table>
+                </table></div>
                 <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
         );
         await expectElementCount(".o-we-table-menu", 0);
@@ -3049,7 +3049,7 @@ describe("unmerge cells option", () => {
         expect(getContent(el)).toBe(
             unformat(`
                 <p data-selection-placeholder=""><br></p>
-                <table class="table table-bordered o_table">
+                <div class="o_table_wrapper"><table class="table table-bordered o_table">
                     <tbody>
                         <tr>
                             <td class="a" rowspan="2"><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p></td>
@@ -3061,7 +3061,7 @@ describe("unmerge cells option", () => {
                             <td><p><br></p></td>
                         </tr>
                     </tbody>
-                </table>
+                </table></div>
                 <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
         );
         await expectElementCount(".o-we-table-menu", 0);
@@ -3079,7 +3079,7 @@ describe("unmerge cells option", () => {
         expect(getContent(el)).toBe(
             unformat(`
                 <p data-selection-placeholder=""><br></p>
-                <table class="table table-bordered o_table">
+                <div class="o_table_wrapper"><table class="table table-bordered o_table">
                     <tbody>
                         <tr>
                             <td class="a"><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p></td>
@@ -3092,7 +3092,7 @@ describe("unmerge cells option", () => {
                             <td><p><br></p></td>
                         </tr>
                     </tbody>
-                </table>
+                </table></div>
                 <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
         );
     });
@@ -3115,7 +3115,7 @@ describe("unmerge cells option", () => {
         expect(getContent(el)).toBe(
             unformat(`
                 <p data-selection-placeholder=""><br></p>
-                <table class="table table-bordered o_table">
+                <div class="o_table_wrapper"><table class="table table-bordered o_table">
                     <tbody>
                         <tr>
                             <td><p><br></p></td>
@@ -3126,7 +3126,7 @@ describe("unmerge cells option", () => {
                             <td class="a" colspan="3"><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p></td>
                         </tr>
                     </tbody>
-                </table>
+                </table></div>
                 <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
         );
         await expectElementCount(".o-we-table-menu", 0);
@@ -3145,7 +3145,7 @@ describe("unmerge cells option", () => {
         expect(getContent(el)).toBe(
             unformat(`
                 <p data-selection-placeholder=""><br></p>
-                <table class="table table-bordered o_table">
+                <div class="o_table_wrapper"><table class="table table-bordered o_table">
                     <tbody>
                         <tr>
                             <td><p><br></p></td>
@@ -3158,7 +3158,7 @@ describe("unmerge cells option", () => {
                             <td><p><br></p></td>
                         </tr>
                     </tbody>
-                </table>
+                </table></div>
                 <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
         );
     });
@@ -3182,7 +3182,7 @@ describe("unmerge cells option", () => {
         expect(getContent(el)).toBe(
             unformat(`
                 <p data-selection-placeholder=""><br></p>
-                <table class="table table-bordered o_table">
+                <div class="o_table_wrapper"><table class="table table-bordered o_table">
                     <tbody>
                         <tr>
                             <td class="a" rowspan="2"><p>a[]</p><p>b</p></td>
@@ -3194,7 +3194,7 @@ describe("unmerge cells option", () => {
                             <td><p><br></p></td>
                         </tr>
                     </tbody>
-                </table>
+                </table></div>
                 <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
         );
         await expectElementCount(".o-we-table-menu", 0);
@@ -3212,7 +3212,7 @@ describe("unmerge cells option", () => {
         expect(getContent(el)).toBe(
             unformat(`
                 <p data-selection-placeholder=""><br></p>
-                <table class="table table-bordered o_table">
+                <div class="o_table_wrapper"><table class="table table-bordered o_table">
                     <tbody>
                         <tr>
                             <td class="a"><p>a[]</p><p>b</p></td>
@@ -3225,7 +3225,7 @@ describe("unmerge cells option", () => {
                             <td><p><br></p></td>
                         </tr>
                     </tbody>
-                </table>
+                </table></div>
                 <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
         );
     });
@@ -3248,7 +3248,7 @@ describe("unmerge cells option", () => {
         expect(getContent(el)).toBe(
             unformat(`
                 <p data-selection-placeholder=""><br></p>
-                <table class="table table-bordered o_table">
+                <div class="o_table_wrapper"><table class="table table-bordered o_table">
                     <tbody>
                         <tr>
                             <td><p><br></p></td>
@@ -3259,7 +3259,7 @@ describe("unmerge cells option", () => {
                             <td class="a" colspan="3"><p>a[]</p><p>b</p></td>
                         </tr>
                     </tbody>
-                </table>
+                </table></div>
                 <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
         );
         await expectElementCount(".o-we-table-menu", 0);
@@ -3278,7 +3278,7 @@ describe("unmerge cells option", () => {
         expect(getContent(el)).toBe(
             unformat(`
                 <p data-selection-placeholder=""><br></p>
-                <table class="table table-bordered o_table">
+                <div class="o_table_wrapper"><table class="table table-bordered o_table">
                     <tbody>
                         <tr>
                             <td><p><br></p></td>
@@ -3291,7 +3291,7 @@ describe("unmerge cells option", () => {
                             <td><p><br></p></td>
                         </tr>
                     </tbody>
-                </table>
+                </table></div>
                 <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
         );
     });
