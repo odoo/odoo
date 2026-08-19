@@ -22,7 +22,7 @@
                 <CheckBox value="!this.props.options.tracking_disable" onChange.bind="(isChecked) => this.props.onOptionChanged('tracking_disable', !isChecked)">
                     Track changes in chatter<sup class="text-info p-1 cursor-default" t-att-data-tooltip="this.trackingTooltip" t-out="'?'" />
                 </CheckBox>
-                <div t-if="this.props.isBatched and this.env.debug" class="o_import_grid gap-1">
+                <div t-if="this.props.isBatched and this.debugMode.isActive()" class="o_import_grid gap-1">
                     <div class="o_import_grid_col">
                         <label for="o_import_batch_limit">Batch size</label>
                         <sup class="text-info p-1 cursor-default" t-att-data-tooltip="this.batchLimitTooltip" t-out="'?'"/>
@@ -88,7 +88,7 @@
                     </div>
 
                     <!-- Second row-->
-                    <t t-if="this.env.debug">
+                    <t t-if="this.debugMode.isActive()">
                         <div class="o_import_grid_col">
                             <label for="o_input_maxSizePerBatch">Batch max size</label>
                             <sup t-if="this.props.binaryFilesParams.maxSizePerBatch.help" class="text-info p-1 cursor-default" t-att-data-tooltip="this.props.binaryFilesParams.maxSizePerBatch.help" t-out="'?'"/>

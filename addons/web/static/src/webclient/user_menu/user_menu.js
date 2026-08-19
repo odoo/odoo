@@ -1,5 +1,6 @@
-import { Component, useProps, useScope } from "@odoo/owl";
+import { Component, usePlugin, useProps, useScope } from "@odoo/owl";
 import { CheckBox } from "@web/core/checkbox/checkbox";
+import { DebugModePlugin } from "@web/core/debug_mode_plugin";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownGroup } from "@web/core/dropdown/dropdown_group";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -18,6 +19,7 @@ export class UserMenu extends Component {
     props = useProps(userMenuProps);
 
     scope = useScope();
+    debugMode = usePlugin(DebugModePlugin);
 
     setup() {
         this.userName = user.name;

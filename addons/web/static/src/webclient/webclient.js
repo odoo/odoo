@@ -1,16 +1,16 @@
+import { Component, onMounted, onWillStart, proxy, useListener, usePlugin } from "@odoo/owl";
+import { browser } from "@web/core/browser/browser";
+import { router, routerBus } from "@web/core/browser/router";
 import { useOwnDebugContext } from "@web/core/debug/debug_context";
 import { DebugMenu } from "@web/core/debug/debug_menu";
+import { DebugModePlugin } from "@web/core/debug_mode_plugin";
 import { localization } from "@web/core/l10n/localization";
 import { MainComponentsContainer } from "@web/core/main_components_container";
+import { rpcBus } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { useBus, useService } from "@web/core/utils/hooks";
-import { ActionContainer } from "./actions/action_container";
-import { NavBar } from "./navbar/navbar";
-
-import { Component, onMounted, onWillStart, proxy, useListener } from "@odoo/owl";
-import { router, routerBus } from "@web/core/browser/router";
-import { browser } from "@web/core/browser/browser";
-import { rpcBus } from "@web/core/network/rpc";
+import { ActionContainer } from "@web/webclient/actions/action_container";
+import { NavBar } from "@web/webclient/navbar/navbar";
 
 export class WebClient extends Component {
     static template = "web.WebClient";
@@ -25,7 +25,8 @@ export class WebClient extends Component {
         this.actionService = useService("action");
         this.title = useService("title");
         useOwnDebugContext({ categories: ["default"] });
-        if (this.env.debug) {
+        const debugMode = usePlugin(DebugModePlugin);
+        if (debugMode.isActive()) {
             registry.category("systray").add(
                 "web.debug_mode_menu",
                 {

@@ -17,10 +17,12 @@ import {
     types,
     useEffect,
     useListener,
+    usePlugin,
     useProps,
 } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { rpc } from "@web/core/network/rpc";
+import { DebugModePlugin } from "@web/core/debug_mode_plugin";
 
 const HIDDEN_CONNECTION_STATES = new Set(["connected", "completed"]);
 
@@ -30,6 +32,8 @@ export class CallParticipantCard extends Component {
     /** @type {import("models").Rtc} */
     rtc;
     root = signal.ref();
+
+    debugMode = usePlugin(DebugModePlugin);
 
     setup() {
         super.setup();
@@ -122,7 +126,7 @@ export class CallParticipantCard extends Component {
         return (
             this.isOfActiveCall &&
             (this.rtcSession.notEq(this.rtc.selfSession) ||
-                (this.env.debug && this.rtc.connectionType === CONNECTION_TYPES.SERVER))
+                (this.debugMode.isActive() && this.rtc.connectionType === CONNECTION_TYPES.SERVER))
         );
     }
 

@@ -2,7 +2,17 @@ import { Dialog } from "@web/core/dialog/dialog";
 import { useService } from "@web/core/utils/hooks";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { memoize } from "@web/core/utils/functions";
-import { Component, onMounted, markup, onWillStart, useProps, proxy, signal, t } from "@odoo/owl";
+import {
+    Component,
+    onMounted,
+    markup,
+    onWillStart,
+    useProps,
+    proxy,
+    signal,
+    t,
+    usePlugin,
+} from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
 import { HtmlViewer } from "@html_editor/components/html_viewer/html_viewer";
@@ -12,6 +22,7 @@ import { cookie } from "@web/core/browser/cookie";
 import { loadBundle } from "@web/core/assets";
 import { htmlReplaceAll } from "@web/core/utils/html";
 import { scrollTo } from "@web/core/utils/scrolling";
+import { DebugModePlugin } from "@web/core/debug_mode_plugin";
 
 const { DateTime } = luxon;
 
@@ -44,6 +55,8 @@ export class HistoryDialog extends Component {
         size: "xl",
         mobileActiveTab: "revisions",
     });
+
+    debugMode = usePlugin(DebugModePlugin);
 
     setup() {
         this.title = this.props.title;
@@ -118,7 +131,7 @@ export class HistoryDialog extends Component {
 
     async init() {
         // Load diff2html only in debug mode, as the side-by-side comparison is only available in debug mode.
-        if (this.env.debug) {
+        if (this.debugMode.isActive()) {
             await loadBundle("html_editor.assets_history_diff");
         }
         await this.updateCurrentRevision(this.state.revisionsData[0]["revision_id"]);
@@ -161,7 +174,7 @@ export class HistoryDialog extends Component {
 
     getRevisionComparisonSplit = memoize(
         async function getRevisionComparisonSplit(revisionId) {
-            if (!this.env.debug || revisionId === -1) {
+            if (!this.debugMode.isActive() || revisionId === -1) {
                 return "";
             }
             let unifiedDiffString = await this.orm.call(

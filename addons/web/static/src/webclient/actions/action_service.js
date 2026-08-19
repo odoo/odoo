@@ -38,6 +38,7 @@ import { isHtmlEmpty } from "@web/core/utils/html";
 import { omit, pick, shallowEqual } from "@web/core/utils/objects";
 import { session } from "@web/session";
 import { exprToBoolean } from "@web/core/utils/strings";
+import { DebugModePlugin } from "@web/core/debug_mode_plugin";
 
 class BlankComponent extends Component {
     props = useProps({
@@ -143,6 +144,7 @@ const ControllerComponentTemplate = xml`<t t-component="this.Component" t-props=
 
 export function makeActionManager(env, router = _router) {
     const scope = useScope();
+    const debugMode = usePlugin(DebugModePlugin);
     const offlinePlugin = usePlugin(OfflinePlugin);
     const { dialog: dialogService, effect: effectService, notification, title, ui } = env.services;
 
@@ -507,8 +509,9 @@ export function makeActionManager(env, router = _router) {
                 },
                 get url() {
                     const state = controller.state;
-                    if (env.debug) {
-                        state.debug = env.debug;
+                    const mode = debugMode.toString();
+                    if (mode) {
+                        state.debug = mode;
                     }
                     return router.stateToUrl(state);
                 },
@@ -871,8 +874,9 @@ export function makeActionManager(env, router = _router) {
         // "After creating a new auxiliary browsing context and document, the session storage is copied over."
 
         // copy debug flag from current state
-        if (env.debug) {
-            state.debug = env.debug;
+        const mode = debugMode.toString();
+        if (mode) {
+            state.debug = mode;
         }
 
         // Store current action of the current window

@@ -15,6 +15,7 @@ import {
     useEffect,
     useListener,
     useOnChange,
+    usePlugin,
 } from "@odoo/owl";
 import { loadBundle } from "@web/core/assets";
 import { Domain } from "@web/core/domain";
@@ -23,6 +24,7 @@ import { useService } from "@web/core/utils/hooks";
 import { useEmailHtmlConverter } from "@mail/convert_inline/hooks";
 import { fixInvalidHTML } from "@html_editor/utils/sanitize";
 import { useRecordObserver } from "@web/model/relational_model/utils";
+import { DebugModePlugin } from "@web/core/debug_mode_plugin";
 
 export class MassMailingHtmlField extends HtmlField {
     static template = "mass_mailing.HtmlField";
@@ -37,6 +39,8 @@ export class MassMailingHtmlField extends HtmlField {
         inlineField: t.string(),
         filterTemplates: t.boolean().optional(),
     });
+
+    debugMode = usePlugin(DebugModePlugin);
 
     get classList() {
         return this.withBuilder ? [] : ["o-html-field"];
@@ -199,7 +203,7 @@ export class MassMailingHtmlField extends HtmlField {
             saveRecord: this.saveRecord.bind(this),
             discardIframe: this.discardIframe.bind(this),
         };
-        if (this.env.debug) {
+        if (this.debugMode.isActive()) {
             Object.assign(props, {
                 toggleCodeView: () => this.toggleCodeView(),
             });
@@ -282,7 +286,7 @@ export class MassMailingHtmlField extends HtmlField {
             .flat()
             .find((cmd) => cmd.id === "codeview");
         if (codeViewCommand) {
-            codeViewCommand.isAvailable = () => this.env.debug;
+            codeViewCommand.isAvailable = () => this.debugMode.isActive();
         }
         return {
             ...config,

@@ -9,6 +9,7 @@ import {
     useListener,
     usePlugin,
 } from "@odoo/owl";
+import { DebugModePlugin } from "@web/core/debug_mode_plugin";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownGroup } from "@web/core/dropdown/dropdown_group";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -41,6 +42,8 @@ export class NavBar extends Component {
     root = signal.ref();
     appSubMenus = signal.ref();
     menuApps = signal.ref();
+
+    debugMode = usePlugin(DebugModePlugin);
 
     setup() {
         this.currentAppSectionsExtra = [];
@@ -247,8 +250,9 @@ export class NavBar extends Component {
 
     getMenuItemHref(payload) {
         const url = `/odoo/${payload.actionPath || "action-" + payload.actionID}`;
-        if (this.env.debug) {
-            return `${url}?debug=${this.env.debug}`;
+        const mode = this.debugMode.toString();
+        if (mode) {
+            return `${url}?debug=${mode}`;
         }
         return url;
     }

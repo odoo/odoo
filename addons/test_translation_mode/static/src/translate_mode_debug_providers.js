@@ -1,4 +1,6 @@
+import { usePlugin } from "@odoo/owl";
 import { router } from "@web/core/browser/router";
+import { DebugModePlugin } from "@web/core/debug_mode_plugin";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 
@@ -11,8 +13,9 @@ if (commandProviderRegistry.contains("debug")) {
         "debug",
         {
             provide: (env, options) => {
+                const debugMode = usePlugin(DebugModePlugin);
                 const result = provide(env, options);
-                const existingDebugKeys = new Set(env.debug?.split(",").filter(Boolean) || []);
+                const existingDebugKeys = new Set(debugMode.toList());
                 if (existingDebugKeys.has("translate")) {
                     result.unshift({
                         action() {

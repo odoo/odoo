@@ -89,7 +89,7 @@
                                     Show comparison
                                 </label>
                             </div>
-                            <div t-if="this.env.debug and this.state.currentView === 'comparison'" class="btn-group" role="group" aria-label="Diff view mode">
+                            <div t-if="this.debugMode.isActive() and this.state.currentView === 'comparison'" class="btn-group" role="group" aria-label="Diff view mode">
                                 <input type="radio" class="btn-check" name="diff-mode" id="unified-view-btn"
                                     t-on-click="this.setComparisonUnified"
                                     t-att-checked="!this.state.isComparisonSplit" />

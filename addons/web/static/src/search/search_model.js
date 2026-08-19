@@ -1,6 +1,7 @@
 import { EventBus, proxy, toRaw, usePlugin } from "@odoo/owl";
 import { router } from "@web/core/browser/router";
 import { makeContext } from "@web/core/context";
+import { DebugModePlugin } from "@web/core/debug_mode_plugin";
 import { Domain } from "@web/core/domain";
 import { getDefaultDomain } from "@web/core/domain_selector/utils";
 import { DomainSelectorDialog } from "@web/core/domain_selector_dialog/domain_selector_dialog";
@@ -217,7 +218,9 @@ export class SearchModel extends EventBus {
 
     setup(services) {
         // services
+        this.debugMode = usePlugin(DebugModePlugin);
         this.offlinePlugin = usePlugin(OfflinePlugin);
+
         const { field: fieldService, orm, view, dialog, treeProcessor } = services;
         this.orm = orm;
         this.fieldService = fieldService;
@@ -511,9 +514,6 @@ export class SearchModel extends EventBus {
         return deepCopy(this._orderBy);
     }
 
-    get isDebugMode() {
-        return !!this.env.debug;
-    }
     //--------------------------------------------------------------------------
     // Public
     //--------------------------------------------------------------------------
@@ -829,7 +829,7 @@ export class SearchModel extends EventBus {
         const tree = await this.treeProcessor.treeFromDomain(
             this.resModel,
             domain,
-            !this.isDebugMode
+            !this.debugMode.isActive()
         );
         const trees =
             !tree.negate &&
@@ -1179,7 +1179,7 @@ export class SearchModel extends EventBus {
             title: _t("Custom Filter"),
             confirmButtonText: _t("Search"),
             discardButtonText: _t("Discard"),
-            isDebugMode: this.isDebugMode,
+            isDebugMode: this.debugMode.isActive(),
         });
     }
 

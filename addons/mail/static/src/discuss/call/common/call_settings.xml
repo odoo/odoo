@@ -18,7 +18,7 @@
                     <TabHeader id="'video'" title.translate="Video">
                         <div class="py-1 px-2"><i class="oi oi-filled me-2" data-icon="videocam"/>Video</div>
                     </TabHeader>
-                    <TabHeader t-if="this.env.debug" id="'technical'" title.translate="Technical">
+                    <TabHeader t-if="this.debugMode.isActive()" id="'technical'" title.translate="Technical">
                         <div class="py-1 px-2"><i class="oi me-2" data-icon="settings_applications"/>Technical</div>
                     </TabHeader>
                 </t>

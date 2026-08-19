@@ -1,4 +1,5 @@
-import { Component, onWillStart, onWillUpdateProps, t, useProps } from "@odoo/owl";
+import { Component, onWillStart, onWillUpdateProps, t, usePlugin, useProps } from "@odoo/owl";
+import { DebugModePlugin } from "@web/core/debug_mode_plugin";
 import { getExpressionDisplayedOperators } from "@web/core/expression_editor/expression_editor_operator_editor";
 import { _t } from "@web/core/l10n/translation";
 import { ModelFieldSelector } from "@web/core/model_field_selector/model_field_selector";
@@ -20,6 +21,8 @@ export class ExpressionEditor extends Component {
         update: t.function(),
     });
 
+    debugMode = usePlugin(DebugModePlugin);
+
     setup() {
         onWillStart(() => this.onPropsUpdated(this.props));
         onWillUpdateProps((nextProps) => this.onPropsUpdated(nextProps));
@@ -32,7 +35,7 @@ export class ExpressionEditor extends Component {
         try {
             this.tree = treeFromExpression(props.expression, {
                 getFieldDef: (name) => this.getFieldDef(name, props),
-                distributeNot: !this.isDebugMode,
+                distributeNot: !this.debugMode.isActive(),
                 generateSmartDates: false,
             });
         } catch {
@@ -80,7 +83,7 @@ export class ExpressionEditor extends Component {
                 filter: (fieldDef) => fieldDef.name in this.filteredFields,
                 showDebugInput: false,
                 followRelation: false,
-                isDebugMode: this.isDebugMode,
+                isDebugMode: this.debugMode.isActive(),
             }),
             isSupported: (value) => [0, 1].includes(value) || value in this.filteredFields,
             // by construction, all values received by the path editor are O/1 or a field (name) in this.props.fields.
@@ -89,10 +92,6 @@ export class ExpressionEditor extends Component {
             defaultValue: () => defaultCondition.path,
             message: _t("Field properties not supported"),
         };
-    }
-
-    get isDebugMode() {
-        return !!this.env.debug;
     }
 
     onExpressionChange(expression) {

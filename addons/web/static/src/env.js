@@ -8,7 +8,6 @@ import { session } from "@web/session";
 /**
  * @typedef {{
  *  bus: EventBus;
- *  debug: string;
  * }} OdooEnv
  */
 
@@ -21,7 +20,6 @@ export function makeEnv() {
     const bus = new EventBus();
     return {
         bus,
-        debug: odoo.debug,
     };
 }
 
@@ -82,7 +80,7 @@ export async function mountComponent(component, target, appConfig = {}) {
     const env = makeEnv();
     const app = new App({
         customDirectives,
-        dev: env.debug || session.test_mode,
+        dev: odoo.debug || session.test_mode,
         env,
         getTemplate,
         globalValues,

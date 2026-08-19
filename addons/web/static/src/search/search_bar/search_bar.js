@@ -1,19 +1,19 @@
+import { Component, proxy, signal, status, t, usePlugin, useProps } from "@odoo/owl";
+import { hasTouch } from "@web/core/browser/feature_detection";
 import { Domain } from "@web/core/domain";
+import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
+import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
+import { _t } from "@web/core/l10n/translation";
+import { useNavigation } from "@web/core/navigation/navigation";
+import { OfflinePlugin } from "@web/core/offline/offline_plugin";
 import { registry } from "@web/core/registry";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { useAutofocus, useBus, useService } from "@web/core/utils/hooks";
 import { fuzzyTest } from "@web/core/utils/search";
-import { _t } from "@web/core/l10n/translation";
-import { SearchBarMenu } from "../search_bar_menu/search_bar_menu";
-import { Component, usePlugin, proxy, signal, status, t, useProps } from "@odoo/owl";
-import { OfflinePlugin } from "@web/core/offline/offline_plugin";
-import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
-import { hasTouch } from "@web/core/browser/feature_detection";
-import { SearchBarDropdown } from "../search_bar_dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { useNavigation } from "@web/core/navigation/navigation";
 import { render } from "@web/owl2/utils";
+import { SearchBarDropdown } from "@web/search/search_bar_dropdown";
+import { SearchBarMenu } from "@web/search/search_bar_menu/search_bar_menu";
 
 const parsers = registry.category("parsers");
 

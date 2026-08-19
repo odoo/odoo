@@ -3,7 +3,7 @@
 <t t-name="html_editor.TranslateDialog">
     <Dialog size="'lg'" title.translate="Translate">
         <t t-foreach="this.state.messages" t-as="msg" t-key="msg">
-            <t t-if="this.env.debug and this.translators.length > 1">
+            <t t-if="this.debugMode.isActive() and this.translators.length > 1">
                 <span class="text-muted d-block small"><strong><t t-out="msg_value.translator"/> :</strong></span>
                 <button t-if="msg_value.isError" t-att-data-message-id="msg"
                     class="o-translator-translated o-message-error border-danger bg-danger rounded-2 ms-3 mb-1 border-0 p-2"  disabled="true">
@@ -47,7 +47,7 @@
                 t-attf-class="{{this.state.selectedMessageId === null ? 'disabled' : ''}}" t-on-click="this._confirm"
                 t-att-disabled="this.state.translationInProgress || !this.state.selectedMessageId || this.state.messages.get(this.state.selectedMessageId)?.isError">Insert</button>
             <button class="btn btn-secondary" t-on-click="this._cancel">Cancel</button>
-            <t t-if="this.env.debug and this.translators.length > 1">
+            <t t-if="this.debugMode.isActive() and this.translators.length > 1">
                 <Dropdown>
                     <button class="btn btn-light ms-2 d-flex align-items-center shadow-none">
 

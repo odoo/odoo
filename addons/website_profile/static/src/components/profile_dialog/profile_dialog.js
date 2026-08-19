@@ -9,6 +9,7 @@ import {
     signal,
     t,
     useEffect,
+    usePlugin,
 } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { localization } from "@web/core/l10n/localization";
@@ -20,6 +21,7 @@ import { isHtmlEmpty } from "@web/core/utils/html";
 import { isEmail } from "@web/core/utils/strings";
 import { FileUploader } from "@web/views/fields/file_handler";
 import { endPos } from "@html_editor/utils/position";
+import { DebugModePlugin } from "@web/core/debug_mode_plugin";
 
 export class ProfileDialog extends Component {
     static template = "website_profile.ProfileDialog";
@@ -38,6 +40,8 @@ export class ProfileDialog extends Component {
 
     nameRef = signal.ref();
     profileImgRef = signal.ref();
+
+    debugMode = usePlugin(DebugModePlugin);
 
     setup() {
         super.setup();
@@ -91,7 +95,7 @@ export class ProfileDialog extends Component {
                 allowImage: isInternalUser,
                 classList: ["form-control", websiteDescriptionClass],
                 content: this.user.website_description,
-                debug: !!this.env.debug,
+                debug: this.debugMode.isActive(),
                 direction: localization.direction || "ltr",
                 placeholder: _t("Write a few words about yourself..."),
             };

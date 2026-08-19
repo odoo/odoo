@@ -99,7 +99,7 @@
                             domain="this.state.propertyDefinition.domain || '[]'"
                             readonly="this.props.readonly"
                             update.bind="this.onDomainChange"
-                            isDebugMode="!!this.env.debug"
+                            isDebugMode="this.debugMode.isActive()"
                             className="'d-inline-block me-2'"
                         />
                         <div t-if="this.state.matchingRecordsCount !== undefined" class="d-inline-block">

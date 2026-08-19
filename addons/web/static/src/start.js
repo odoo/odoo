@@ -38,7 +38,7 @@ export async function startWebClient(Webclient) {
     }
 
     await whenReady();
-    const { env } = await mountComponent(Webclient, document.body, { name: "Odoo Web Client" });
+    await mountComponent(Webclient, document.body, { name: "Odoo Web Client" });
 
     if (!window.isSecureContext) {
         console.error(
@@ -55,7 +55,7 @@ export async function startWebClient(Webclient) {
     if (user.userId === 1) {
         classList.add("o_is_superuser");
     }
-    if (env.debug) {
+    if (odoo.debug) {
         classList.add("o_debug");
     }
     if (hasTouch()) {

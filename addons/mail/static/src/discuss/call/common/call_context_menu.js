@@ -1,4 +1,4 @@
-import { Component, onMounted, onWillUnmount, proxy, types, useProps } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, proxy, types, usePlugin, useProps } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
@@ -6,11 +6,14 @@ import { rpc } from "@web/core/network/rpc";
 import { useService } from "@web/core/utils/hooks";
 
 import { CONNECTION_TYPES } from "@mail/discuss/call/common/rtc_service";
+import { DebugModePlugin } from "@web/core/debug_mode_plugin";
 
 const PROTOCOLS_TEXT = { host: "HOST", srflx: "STUN", prflx: "STUN", relay: "TURN" };
 
 export class CallContextMenu extends Component {
     static template = "discuss.CallContextMenu";
+
+    debugMode = usePlugin(DebugModePlugin);
 
     updateStatsTimeout;
     rtcConnectionTypes = CONNECTION_TYPES;
@@ -32,7 +35,7 @@ export class CallContextMenu extends Component {
             rangeVolume: this.props.rtcSession.getEffectiveVolume(),
         });
         onMounted(() => {
-            if (!this.env.debug) {
+            if (!this.debugMode.isActive()) {
                 return;
             }
             this.updateStats();

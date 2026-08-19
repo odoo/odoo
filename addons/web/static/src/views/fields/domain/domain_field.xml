@@ -49,7 +49,7 @@
                             readonly="this.props.readonly or this.props.editInDialog"
                             debugUpdate.bind="this.debugUpdate"
                             update.bind="this.update"
-                            isDebugMode="!!this.env.debug"
+                            isDebugMode="this.debugMode.isActive()"
                             className="this.props.readonly ? 'o_read_mode' : 'o_edit_mode'"
                         />
                     </div>
@@ -69,7 +69,7 @@
                                     <i class="oi" data-icon="warning" role="img" aria-label="Warning" title="Warning" /> Invalid domain
                                 </span>
                             </t>
-                            <t t-if="!!this.env.debug and !this.props.readonly">
+                            <t t-if="this.debugMode.isActive() and !this.props.readonly">
                                 <button
                                     class="btn btn-sm btn-icon oi o_refresh_count"
                                     data-icon="refresh"

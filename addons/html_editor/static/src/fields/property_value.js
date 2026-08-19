@@ -8,10 +8,13 @@ import { HtmlUpgradeManager } from "@html_editor/html_migrations/html_upgrade_ma
 import { normalizeHTML } from "@html_editor/utils/html";
 import { Wysiwyg } from "@html_editor/wysiwyg";
 import { user } from "@web/core/user";
-import { onWillStart, proxy, useEffect } from "@odoo/owl";
+import { onWillStart, proxy, useEffect, usePlugin } from "@odoo/owl";
+import { DebugModePlugin } from "@web/core/debug_mode_plugin";
 
 patch(PropertyValue.prototype, {
     setup() {
+        this.debugMode = usePlugin(DebugModePlugin);
+
         this.htmlUpgradeManager = new HtmlUpgradeManager();
         this.lastHtmlValue = this.propertyValue?.toString();
         onWillStart(async () => {
@@ -70,7 +73,7 @@ patch(PropertyValue.prototype, {
 
         return {
             content: this.propertyValue,
-            debug: !!this.env.debug,
+            debug: this.debugMode.isActive(),
             direction: localization.direction || "ltr",
             onChange: this.onWysiwygChange.bind(this),
             placeholder: this.props.placeholder,

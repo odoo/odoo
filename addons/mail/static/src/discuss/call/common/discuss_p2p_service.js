@@ -1,5 +1,7 @@
 import { registry } from "@web/core/registry";
 import { PeerToPeer } from "@mail/discuss/call/common/peer_to_peer";
+import { usePlugin } from "@odoo/owl";
+import { DebugModePlugin } from "@web/core/debug_mode_plugin";
 
 export const discussP2P = {
     dependencies: ["bus_service"],
@@ -8,8 +10,9 @@ export const discussP2P = {
      * @param {import("services").ServiceFactories} services
      */
     start(env, services) {
+        const debugMode = usePlugin(DebugModePlugin);
         const p2p = new PeerToPeer({
-            logLevel: env.debug ? "info" : undefined,
+            logLevel: debugMode.isActive() ? "info" : undefined,
             notificationRoute: "/mail/rtc/session/notify_call_members",
         });
         services["bus_service"].subscribe(

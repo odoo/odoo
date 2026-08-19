@@ -84,7 +84,7 @@ whenReady(() => {
         if (user.userId === 1) {
             classList.add("o_is_superuser");
         }
-        if (env.debug) {
+        if (odoo.debug) {
             classList.add("o_debug");
         }
         if (hasTouch()) {

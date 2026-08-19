@@ -1,9 +1,10 @@
-import { Component, t, useProps } from "@odoo/owl";
+import { Component, t, usePlugin, useProps } from "@odoo/owl";
+import { DebugModePlugin } from "@web/core/debug_mode_plugin";
 import { _t } from "@web/core/l10n/translation";
 import { ModelFieldSelector } from "@web/core/model_field_selector/model_field_selector";
 import { registry } from "@web/core/registry";
-import { standardFieldProps } from "../standard_field_props";
 import { formatChar } from "../formatters";
+import { standardFieldProps } from "../standard_field_props";
 
 export class FieldSelectorField extends Component {
     static template = "web.FieldSelectorField";
@@ -15,6 +16,8 @@ export class FieldSelectorField extends Component {
         followRelation: t.or([t.boolean(), t.function()]).optional(),
         required: t.boolean().optional(),
     });
+
+    debugMode = usePlugin(DebugModePlugin);
 
     filter(fieldDef) {
         if (fieldDef.type === "separator") {
@@ -47,7 +50,7 @@ export class FieldSelectorField extends Component {
             resModel: this.resModel,
             readonly: this.props.readonly,
             update: this.update.bind(this),
-            isDebugMode: !!this.env.debug,
+            isDebugMode: this.debugMode.isActive(),
             filter: this.filter.bind(this),
             followRelation: this.props.followRelation,
         };

@@ -10,12 +10,14 @@ import {
     proxy,
     signal,
     useEffect,
+    usePlugin,
     useScope,
 } from "@odoo/owl";
 import { loadBundle } from "@web/core/assets";
 import { browser } from "@web/core/browser/browser";
 import { isBrowserChrome, isBrowserMicrosoftEdge } from "@web/core/browser/feature_detection";
 import { router } from "@web/core/browser/router";
+import { DebugModePlugin } from "@web/core/debug_mode_plugin";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_utils";
 import { _t } from "@web/core/l10n/translation";
 import { LazyComponent } from "@web/core/lazy_component";
@@ -63,6 +65,8 @@ export class WebsiteBuilderClientAction extends Component {
             websiteId: action.params?.website_id || false,
         };
     }
+
+    debugMode = usePlugin(DebugModePlugin);
 
     setup() {
         this.reloadContext = null;
@@ -760,7 +764,7 @@ export class WebsiteBuilderClientAction extends Component {
         }
         ev.preventDefault();
         const path = this.websiteService.contentWindow.location;
-        const debugMode = this.env.debug ? `&debug=${this.env.debug}` : "";
+        const debugMode = this.debugMode.isActive() ? `&debug=${this.debugMode.toString()}` : "";
         redirect(
             `/odoo/action-website.website_preview?path=${encodeURIComponent(path)}${debugMode}`
         );

@@ -1,4 +1,4 @@
-import { Component, onWillStart, proxy } from "@odoo/owl";
+import { Component, onWillStart, proxy, usePlugin } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 
 import { useSpreadsheetNotificationStore } from "@spreadsheet/hooks";
@@ -6,6 +6,7 @@ import { useSpreadsheetNotificationStore } from "@spreadsheet/hooks";
 import * as spreadsheet from "@odoo/o-spreadsheet";
 import { Spreadsheet, Model } from "@odoo/o-spreadsheet";
 import { registry } from "@web/core/registry";
+import { DebugModePlugin } from "@web/core/debug_mode_plugin";
 
 export class PublicDashboard extends Component {
     static template = "spreadsheet_dashboard.PublicDashboard";
@@ -14,6 +15,8 @@ export class PublicDashboard extends Component {
         dataUrl: String,
         mode: { type: String, optional: true },
     };
+
+    debugMode = usePlugin(DebugModePlugin);
 
     setup() {
         useSpreadsheetNotificationStore();
@@ -50,7 +53,7 @@ export class PublicDashboard extends Component {
             },
             this.data.revisions || []
         );
-        if (this.env.debug) {
+        if (this.debugMode.isActive()) {
             // eslint-disable-next-line no-import-assign
             spreadsheet.__DEBUG__ = spreadsheet.__DEBUG__ || {};
             spreadsheet.__DEBUG__.model = this.model;

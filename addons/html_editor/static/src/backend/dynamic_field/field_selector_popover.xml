@@ -7,7 +7,7 @@
 
         <i class="btn btn-link position-absolute top-0 end-0 oi text-dark" data-icon="close" data-tooltip="Close" role="img" aria-label="Close" title="Close" t-on-click="() => this.props.close()"/>
 
-        <div class="px-2" t-if="!!this.env.debug">
+        <div class="px-2" t-if="this.debugMode.isActive()">
             <span class="fw-bolder d-block">Model</span>
             <span t-out="this.state.modelName" /> (<span t-out="this.resModel" />)
         </div>
@@ -22,7 +22,7 @@
                 </div>
             </div>
         </div>
-        <div t-if="this.env.debug and this.state.path" class="d-flex flex-column px-2 text-break">
+        <div t-if="this.debugMode.isActive() and this.state.path" class="d-flex flex-column px-2 text-break">
             <span class="d-block fw-bolder">Technical name</span>
             <code t-out="this.state.path" />
         </div>

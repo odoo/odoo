@@ -1,4 +1,5 @@
-import { computed, signal, t } from "@odoo/owl";
+import { computed, signal, t, usePlugin } from "@odoo/owl";
+import { DebugModePlugin } from "@web/core/debug_mode_plugin";
 import { registry } from "@web/core/registry";
 import { IndexedDB } from "@web/core/utils/indexed_db";
 import { session } from "@web/session";
@@ -46,7 +47,8 @@ export const menuService = {
 
         const menuDB = new IndexedDB("webclient_menu", session.registry_hash);
         const table = "menu";
-        const key = JSON.stringify({ debug: !!env.debug });
+        const debugMode = usePlugin(DebugModePlugin);
+        const key = JSON.stringify({ debug: debugMode.isActive() });
         const loadMenusUrl = `/web/webclient/load_menus`;
 
         const storedMenus = await menuDB.read(table, key);

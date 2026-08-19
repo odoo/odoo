@@ -1,8 +1,8 @@
 import { config, onWillDestroy, Plugin, providePlugins, usePlugin, useScope } from "@odoo/owl";
+import { DebugModePlugin } from "@web/core/debug_mode_plugin";
 import { registry } from "@web/core/registry";
 import { services } from "@web/core/services";
 import { user } from "@web/core/user";
-import { useEnv } from "@web/owl2/utils";
 
 const debugRegistry = registry.category("debug");
 
@@ -70,8 +70,8 @@ export function useEnvDebugContext() {
 }
 
 export function useDebugCategory(category, context = {}) {
-    const env = useEnv();
-    if (env.debug) {
+    const debugMode = usePlugin(DebugModePlugin);
+    if (debugMode.isActive()) {
         const debugContext = useEnvDebugContext();
         onWillDestroy(debugContext.activateCategory(category, context));
     }

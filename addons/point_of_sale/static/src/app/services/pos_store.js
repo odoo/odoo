@@ -52,6 +52,7 @@ import { CustomerDisplayTerminalPlugin } from "@point_of_sale/app/plugins/custom
 import { SIZES } from "@web/core/ui/ui_utils";
 import { SnoozeDialog } from "@point_of_sale/app/components/popups/product_info_popup/snooze_dialog/snooze_dialog";
 import { PosNumberBufferPlugin } from "@point_of_sale/app/plugins/pos_number_buffer_plugin";
+import { DebugModePlugin } from "@web/core/debug_mode_plugin";
 
 const { DateTime } = luxon;
 export const CONSOLE_COLOR = "#F5B427";
@@ -111,6 +112,8 @@ export class PosStore extends WithLazyGetterTrap {
             alert,
         }
     ) {
+        const debugMode = usePlugin(DebugModePlugin);
+
         this.env = env;
         this.numberBuffer = usePlugin(PosNumberBufferPlugin);
         this.barcodeReader = barcode_reader;
@@ -171,7 +174,7 @@ export class PosStore extends WithLazyGetterTrap {
         this.syncAllOrdersDebounced = debounce(this.syncAllOrders, 100);
         this._searchTriggered = false;
 
-        if (this.env.debug) {
+        if (debugMode.isActive()) {
             registry.category("main_components").add("DebugWidget", {
                 Component: DebugWidget,
             });

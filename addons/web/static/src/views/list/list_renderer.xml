@@ -32,7 +32,7 @@
                                 <t t-if="column.hasLabel and column.widget !== 'handle'">
                                 <t t-set="isNumeric" t-value="this.isNumericColumn(column)"/>
                                     <div class="d-flex align-items-center"
-                                        t-att-data-tooltip-template="this.isDebugMode ? 'web.FieldTooltip' : 'web.ListHeaderTooltip'"
+                                        t-att-data-tooltip-template="this.debugMode.isActive() ? 'web.FieldTooltip' : 'web.ListHeaderTooltip'"
                                         t-att-data-tooltip-info="this.makeTooltip(column)">
                                         <span class="d-block min-w-0 text-truncate flex-grow-1 flex-shrink-1" t-att-class="isNumeric ? 'o_list_number_th' : ''"
                                               t-out="column.label"/>
@@ -83,7 +83,7 @@
                                                         value="field.value"
                                                         name="field.name"
                                                     >
-                                                        <span class="d-flex align-items-center"><span class="text-truncate" t-out="field.label"/><span class="ps-1" t-if="this.env.debug" t-out="' (' + field.name + ')'" /></span>
+                                                        <span class="d-flex align-items-center"><span class="text-truncate" t-out="field.label"/><span class="ps-1" t-if="this.debugMode.isActive()" t-out="' (' + field.name + ')'" /></span>
                                                     </CheckBox>
                                                 </DropdownItem>
                                             </t>
