@@ -1,0 +1,38 @@
+[tool.ruff]
+target-version = "py312"
+line-length = 88
+exclude = [".git", "__pycache__", "venv", ".venv"]
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # Pyflakes
+    "I",   # isort
+    "UP",  # pyupgrade
+    "B",   # flake8-bugbear
+    "PLC", # Pylint convention
+]
+ignore = [
+    "E501",    # Line too long
+    "B008",    # Do not perform function call in argument defaults
+    "COM812",  # Trailing comma conflict with ruff format
+    "EM101",   # Exception string literal
+    "EM102",   # Exception f-string
+    "EM103",   # Exception assignment
+    "TRY002",  # Vanilla exception
+    "PLC0415", # Import outside top level
+    "UP031",   # Use format specifiers instead of percent format
+]
+
+[tool.ruff.lint.per-file-ignores]
+"__manifest__.py" = ["B018"]                                 # Manifest dictionary is an implicit expression
+"__init__.py" = ["F401"]
+"**/tests/*" = ["PLC0415", "B018", "B017", "EM101", "EM102"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["odoo", "odoo.addons"]
+# ruff check custom_addons/invoice_agent --fix; ruff format custom_addons/invoice_agent
+# ruff check custom_addons/invoice_agent --config pyproject.toml --fix; ruff format custom_addons/invoice_agent --config pyproject.toml
+# pip install pre-commit
+# pre-commit install

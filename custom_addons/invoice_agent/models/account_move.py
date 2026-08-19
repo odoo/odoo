@@ -129,8 +129,7 @@ class AccountMove(models.Model):
     extraction_model = fields.Char(
         string="Extraction Model",
         readonly=True,
-        help="Anthropic model id that produced extraction_json "
-        "(e.g. claude-opus-4-8).",
+        help="Anthropic model id that produced extraction_json (e.g. claude-opus-4-8).",
     )
     ai_error_message = fields.Text(
         string="AI Error Message",
@@ -489,14 +488,14 @@ class AccountMove(models.Model):
         self.write({"ai_review_required": True})
         body = (
             "\u26a0\ufe0f <b>AI Needs Review</b><br/>"
-            "Confidence score: <b>%.0f%%</b><br/>Reason: %s"
-        ) % ((self.confidence_score or 0.0) * 100, reason)
+            f"Confidence score: <b>{(self.confidence_score or 0.0) * 100:.0f}%</b><br/>Reason: {reason}"
+        )
         if self.ai_confidence_notes:
-            body += "<br/>Notes: <i>%s</i>" % self.ai_confidence_notes
+            body += f"<br/>Notes: <i>{self.ai_confidence_notes}</i>"
         try:
             self.message_post(
                 body=body,
-                subject="AI Needs Review: %s" % self.display_name,
+                subject=f"AI Needs Review: {self.display_name}",
             )
         except Exception:
             _logger.exception(
@@ -601,7 +600,7 @@ class AccountMove(models.Model):
         """
         self.ensure_one()
         currency_code = payload.get("currency") or ""
-        currency = (
+        (
             self.env["res.currency"].search([("name", "=", currency_code)], limit=1)
             if currency_code
             else self.env["res.currency"]
@@ -739,9 +738,7 @@ class AccountMove(models.Model):
             # Replace stale per-field rows with the fresh suggestions.
             if self.extraction_line_ids:
                 self.extraction_line_ids.unlink()
-            line_vals = [
-                (0, 0, line) for line in self._suggested_field_lines(payload)
-            ]
+            line_vals = [(0, 0, line) for line in self._suggested_field_lines(payload)]
             if line_vals:
                 write_vals["extraction_line_ids"] = line_vals
             self.write(write_vals)
@@ -868,7 +865,9 @@ class AccountMove(models.Model):
             # Totals are computed from lines on a bill — applying the
             # suggested total means applying the suggested line items.
             self._apply_suggested_lines(payload.get("lines") or [])
-            self.write({"ai_extracted_total": float(payload.get("amount_total") or 0.0)})
+            self.write(
+                {"ai_extracted_total": float(payload.get("amount_total") or 0.0)}
+            )
         elif field_name.startswith("line:"):
             index = int(field_name.split(":", 1)[1])
             lines = payload.get("lines") or []
@@ -915,11 +914,15 @@ class AccountMove(models.Model):
                 price_unit = 0.0
                 quantity = 1.0
             line_vals.append(
-                (0, 0, {
-                    "name": line.get("name") or "Suggested line",
-                    "price_unit": price_unit,
-                    "quantity": quantity,
-                }),
+                (
+                    0,
+                    0,
+                    {
+                        "name": line.get("name") or "Suggested line",
+                        "price_unit": price_unit,
+                        "quantity": quantity,
+                    },
+                ),
             )
         self.write({"invoice_line_ids": line_vals})
 
@@ -1210,10 +1213,9 @@ class AccountMove(models.Model):
         # --- Per-flag rows (clear + re-create) ---
         self.ai_flag_ids.unlink()
         if flags:
-            flag_model = self.env["invoice.agent.validation.flag"]
+            self.env["invoice.agent.validation.flag"]
             flag_lines = [
-                (0, 0, {"flag": flag, "reasoning": reasoning})
-                for flag in flags
+                (0, 0, {"flag": flag, "reasoning": reasoning}) for flag in flags
             ]
             self.write({"ai_flag_ids": flag_lines})
 
@@ -1229,9 +1231,9 @@ class AccountMove(models.Model):
                     body=(
                         "\U0001f6a9 <b>Duplicate Invoice Detected</b><br/>"
                         "This invoice appears to be a duplicate of "
-                        "<b>%s</b>. Please verify before posting."
-                    ) % dup_name,
-                    subject="AI Duplicate Detection: %s" % self.display_name,
+                        f"<b>{dup_name}</b>. Please verify before posting."
+                    ),
+                    subject=f"AI Duplicate Detection: {self.display_name}",
                 )
             except Exception:
                 _logger.exception(
@@ -1281,15 +1283,14 @@ class AccountMove(models.Model):
             if move_id:
                 move = self.env["account.move"].browse(move_id)
                 if move.exists():
-                    link = (
-                        '<a href="/web#id=%d&model=account.move">'
-                        "%s</a>"
-                    ) % (move.id, move.display_name)
+                    link = ('<a href="/web#id=%d&model=account.move">%s</a>') % (
+                        move.id,
+                        move.display_name,
+                    )
                     lines.append(
                         "%d. %s<br/>"
                         "   <i>%s</i><br/>"
-                        "   <code>%s</code><br/>"
-                        % (i, link, reasoning, quoted)
+                        "   <code>%s</code><br/>" % (i, link, reasoning, quoted)
                     )
                 else:
                     lines.append(
@@ -1305,7 +1306,7 @@ class AccountMove(models.Model):
         try:
             self.message_post(
                 body="".join(lines),
-                subject="RAG Evidence: %s" % self.display_name,
+                subject=f"RAG Evidence: {self.display_name}",
             )
         except Exception:
             _logger.exception(
@@ -1323,7 +1324,8 @@ class AccountMove(models.Model):
         """
         self.ensure_one()
         account = self.env["account.account"].search(
-            [("code", "=", account_code)], limit=1,
+            [("code", "=", account_code)],
+            limit=1,
         )
         if not account:
             _logger.warning(
@@ -1369,27 +1371,28 @@ class AccountMove(models.Model):
         vendor_name = last_partner.name or "Unknown vendor"
         date_text = self.invoice_date or self.date or ""
         parts = [
-            "Vendor: %s" % vendor_name,
-            "Date: %s" % date_text,
+            f"Vendor: {vendor_name}",
+            f"Date: {date_text}",
         ]
         if self.ref:
-            parts.append("Ref: %s" % self.ref)
-        parts.append("Move: %s (%s)" % (self.name or "", self.move_type))
-        parts.append("Total: %s %s" % (self.amount_total, self.currency_id.name))
+            parts.append(f"Ref: {self.ref}")
+        parts.append("Move: {} ({})".format(self.name or "", self.move_type))
+        parts.append(f"Total: {self.amount_total} {self.currency_id.name}")
         line_texts = []
-        lines = self.invoice_line_ids.filtered(lambda line: line.display_type in (False, "product"))
+        lines = self.invoice_line_ids.filtered(
+            lambda line: line.display_type in (False, "product")
+        )
         for line in lines:
             account_code = line.account_id.code if line.account_id else ""
             line_texts.append(
-                "%s [%s] x%s = %s"
-                % (
+                "{} [{}] x{} = {}".format(
                     line.name or "line",
                     account_code,
                     float(line.quantity or 1.0),
                     float(line.price_subtotal or 0.0),
                 )
             )
-        parts.append("Lines: %s" % " | ".join(line_texts))
+        parts.append("Lines: {}".format(" | ".join(line_texts)))
         return "\n".join(part for part in parts if part)
 
     @api.model
@@ -1432,7 +1435,7 @@ class AccountMove(models.Model):
                 len(moves),
             )
             return 0
-        for (move_id, rag_text), vector in zip(pairs, vectors):
+        for (move_id, rag_text), vector in zip(pairs, vectors, strict=False):
             self.env["invoice.agent.vendor.doc"].upsert_embedding(
                 move_id,
                 rag_text,
@@ -1749,16 +1752,19 @@ class AccountMove(models.Model):
         try:
             data = json.loads(raw_text or "")
         except (TypeError, ValueError) as exc:
-            raise ValueError("Claude returned malformed JSON") from exc
+            msg = "Claude returned malformed JSON"
+            raise ValueError(msg) from exc
         if not isinstance(data, dict):
-            raise ValueError("Claude returned a non-object payload")
+            msg = "Claude returned a non-object payload"
+            raise ValueError(msg)
 
         confidence = data.get("overall_confidence", data.get("confidence"))
         if confidence is not None:
             try:
                 confidence = float(confidence)
             except (TypeError, ValueError) as exc:
-                raise ValueError("Claude returned an invalid overall_confidence") from exc
+                msg = "Claude returned an invalid overall_confidence"
+                raise ValueError(msg) from exc
 
         # Vendor resolution: explicit id wins, name fallback mirrors
         # _match_vendor on res.partner.
@@ -1852,12 +1858,16 @@ class AccountMove(models.Model):
                 price_unit = 0.0
                 quantity = 1.0
             line_vals.append(
-                (0, 0, {
-                    "name": line.get("name") or "Imported line",
-                    "price_unit": price_unit,
-                    "quantity": quantity,
-                    "ai_confidence": line.get("confidence"),
-                }),
+                (
+                    0,
+                    0,
+                    {
+                        "name": line.get("name") or "Imported line",
+                        "price_unit": price_unit,
+                        "quantity": quantity,
+                        "ai_confidence": line.get("confidence"),
+                    },
+                ),
             )
         if line_vals:
             vals["invoice_line_ids"] = line_vals
@@ -1873,9 +1883,8 @@ class AccountMove(models.Model):
         if self.ai_review_required or score < threshold:
             self._flag_needs_review(
                 reason=(
-                    "extracted confidence %.0f%% is below the %.0f%% journal "
+                    f"extracted confidence {score * 100:.0f}% is below the {threshold * 100:.0f}% journal "
                     "threshold"
-                    % (score * 100, threshold * 100)
                 ),
             )
 
@@ -1972,7 +1981,7 @@ class AccountMove(models.Model):
         # confidence_score from creation. OCR text is applied by the
         # orchestrator later; without it the OCR/rescue terms stay neutral
         # and the score reflects the self-report + line-sum check.
-        score, details = self.env["invoice.llm.service"].score_extraction(
+        score, _details = self.env["invoice.llm.service"].score_extraction(
             payload,
             ocr_text=None,
             ocr_confidence=0.5,
@@ -1987,12 +1996,16 @@ class AccountMove(models.Model):
                 price_unit = 0.0
                 quantity = 1.0
             invoice_line_vals.append(
-                (0, 0, {
-                    "name": line.get("name") or "Imported line",
-                    "price_unit": price_unit,
-                    "quantity": quantity,
-                    "ai_confidence": line.get("confidence"),
-                }),
+                (
+                    0,
+                    0,
+                    {
+                        "name": line.get("name") or "Imported line",
+                        "price_unit": price_unit,
+                        "quantity": quantity,
+                        "ai_confidence": line.get("confidence"),
+                    },
+                ),
             )
 
         vals = {
@@ -2019,7 +2032,8 @@ class AccountMove(models.Model):
             # ``_compute_confidence_score`` — never write them here.
             "ai_extraction_status": "extracted",
             "ai_confidence": score,
-            "ai_review_required": score < (
+            "ai_review_required": score
+            < (
                 self.journal_id.ai_min_confidence
                 if self.journal_id.ai_agent_enabled
                 else 0.70
@@ -2097,7 +2111,8 @@ class AccountMove(models.Model):
             )
         except Exception:
             _logger.exception(
-                "invoice_agent failed to log usage for move_id=%s", move.id,
+                "invoice_agent failed to log usage for move_id=%s",
+                move.id,
             )
 
         _logger.info(
@@ -2213,9 +2228,10 @@ class AccountMove(models.Model):
             try:
                 self.env.cr.commit()
                 move._run_extraction()
-                if move.ai_extraction_status == "extracted" and (
-                    move.confidence_score or 0.0
-                ) < move._get_ai_min_confidence():
+                if (
+                    move.ai_extraction_status == "extracted"
+                    and (move.confidence_score or 0.0) < move._get_ai_min_confidence()
+                ):
                     try:
                         move._run_high_effort_pass(move._get_ai_min_confidence())
                     except Exception:
@@ -2227,8 +2243,7 @@ class AccountMove(models.Model):
                 processed += 1
             except Exception:
                 _logger.exception(
-                    "Extraction cron failed for move %s — marked failed and "
-                    "continuing",
+                    "Extraction cron failed for move %s — marked failed and continuing",
                     move.display_name,
                 )
             finally:
@@ -2347,8 +2362,7 @@ class AccountMove(models.Model):
         else:
             partner_name = payload.get("partner_name") or payload.get("vendor_name")
             partner = (
-                self.env["res.partner"]
-                .search(
+                self.env["res.partner"].search(
                     [("name", "ilike", partner_name), ("parent_id", "=", False)],
                     limit=1,
                 )
@@ -2439,7 +2453,9 @@ class AccountMove(models.Model):
         (
             "ai_job_uuid_unique",
             "UNIQUE(ai_job_uuid)",
-            "Each bill may only carry one AI job UUID — a redelivered or "
-            "double-published job can never resolve to two draft moves.",
+            (
+                "Each bill may only carry one AI job UUID — a redelivered or "
+                "double-published job can never resolve to two draft moves."
+            ),
         ),
     ]

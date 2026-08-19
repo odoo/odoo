@@ -1,9 +1,10 @@
-import os
 import asyncio
+import os
 import xmlrpc.client
+
+import mcp.types as types
 from mcp.server import Server
 from mcp.server.stdio import stdio_server
-import mcp.types as types
 
 # 1. إنشاء خادم MCP الأساسي
 app = Server("Odoo Integration Server")
@@ -19,7 +20,8 @@ def _get_odoo_client():
     common = xmlrpc.client.ServerProxy(f"{ODOO_URL}/xmlrpc/2/common")
     uid = common.authenticate(ODOO_DB, ODOO_USER, ODOO_PASSWORD, {})
     if not uid:
-        raise ValueError("فشل الاتصال بـ Odoo: بيانات الاعتماد غير صحيحة.")
+        msg = "فشل الاتصال بـ Odoo: بيانات الاعتماد غير صحيحة."
+        raise ValueError(msg)
     models = xmlrpc.client.ServerProxy(f"{ODOO_URL}/xmlrpc/2/object")
     return uid, models
 
@@ -66,10 +68,10 @@ async def call_tool(name: str, arguments: dict | None) -> list[types.TextContent
             version = common.version()
             msg = f"تم الاتصال بنجاح بـ Odoo! الإصدار: {version.get('server_version')}"
         except Exception as e:
-            msg = f"فشل الاتصال بـ Odoo: {str(e)}"
+            msg = f"فشل الاتصال بـ Odoo: {e!s}"
         return [types.TextContent(type="text", text=msg)]
 
-    elif name == "search_invoices":
+    if name == "search_invoices":
         state = arguments.get("state", "draft")
         limit = arguments.get("limit", 5)
         try:
@@ -114,7 +116,7 @@ async def call_tool(name: str, arguments: dict | None) -> list[types.TextContent
             )
             return [types.TextContent(type="text", text=str(invoices))]
         except Exception as e:
-            return [types.TextContent(type="text", text=f"خطأ: {str(e)}")]
+            return [types.TextContent(type="text", text=f"خطأ: {e!s}")]
 
     raise ValueError(f"الأداة غير معروفة: {name}")
 

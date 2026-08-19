@@ -66,7 +66,15 @@ class TestRagDocument(TransactionCase):
                 "invoice_date": "2026-07-01",
                 "ref": "ACME-2026-07",
                 "invoice_line_ids": [
-                    (0, 0, {"name": "Server hosting", "quantity": 1.0, "price_unit": 850.0}),
+                    (
+                        0,
+                        0,
+                        {
+                            "name": "Server hosting",
+                            "quantity": 1.0,
+                            "price_unit": 850.0,
+                        },
+                    ),
                     (0, 0, {"name": "Setup fee", "quantity": 1.0, "price_unit": 500.0}),
                 ],
             }
@@ -131,8 +139,7 @@ class TestRagDocument(TransactionCase):
 
         # The visible content reflects the LAST write (upsert, not insert).
         self.env.cr.execute(
-            "SELECT embedding::text FROM invoice_agent_vendor_doc "
-            "WHERE move_id = %s",
+            "SELECT embedding::text FROM invoice_agent_vendor_doc WHERE move_id = %s",
             [bill.id],
         )
         stored = self.env.cr.fetchone()[0]

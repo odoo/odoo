@@ -23,9 +23,8 @@ import base64
 from datetime import timedelta
 
 from odoo import fields
-from odoo.tests import HttpCase, tagged
-
 from odoo.addons.invoice_agent.controllers.main import MAX_UPLOAD_BYTES
+from odoo.tests import HttpCase, tagged
 
 
 @tagged("post_install", "-at_install")
@@ -136,8 +135,10 @@ class TestInvoiceAgentControllers(HttpCase):
 
     def test_upload_rejects_after_key_revocation(self):
         apikeys = self.env["res.users.apikeys"].sudo().with_user(self.user_admin)
-        res = apikeys._generate("rpc", "to revoke", fields.Datetime.now() + timedelta(days=1))
-        
+        res = apikeys._generate(
+            "rpc", "to revoke", fields.Datetime.now() + timedelta(days=1)
+        )
+
         raw_key = res[1] if isinstance(res, (tuple, list)) else res
 
         # Revoke expects the raw_key string in Odoo API key implementation
@@ -182,11 +183,14 @@ class TestInvoiceAgentControllers(HttpCase):
         attachment_record.invalidate_recordset()
 
         if attachment_record.store_fname:
-            attachment_bytes = attachment_record._file_read(attachment_record.store_fname)
+            attachment_bytes = attachment_record._file_read(
+                attachment_record.store_fname
+            )
         else:
-            attachment_bytes = (
-                attachment_record.raw
-                or (base64.b64decode(attachment_record.datas) if attachment_record.datas else b"")
+            attachment_bytes = attachment_record.raw or (
+                base64.b64decode(attachment_record.datas)
+                if attachment_record.datas
+                else b""
             )
 
         self.assertEqual(attachment_bytes, self.pdf_bytes)
@@ -200,7 +204,7 @@ class TestInvoiceAgentControllers(HttpCase):
         payload = response.json()
         result_data = payload.get("result", payload)
         move_id = result_data["move_id"]
-        
+
         self.env.cr.flush()
         self.env.invalidate_all()
         self.assertTrue(self.env["account.move"].browse(move_id).exists())

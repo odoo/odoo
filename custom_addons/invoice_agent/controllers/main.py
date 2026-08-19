@@ -92,8 +92,9 @@ def _require_bearer_auth(endpoint):
                 "Unauthorized upload attempt (missing bearer token) from %s",
                 httprequest.remote_addr,
             )
+            msg = "Missing Bearer API key in Authorization header"
             raise _unauthorized_json(
-                "Missing Bearer API key in Authorization header",
+                msg,
             )
 
         apikeys = request.env["res.users.apikeys"]
@@ -103,8 +104,9 @@ def _require_bearer_auth(endpoint):
                 "Unauthorized upload attempt (invalid API key) from %s",
                 httprequest.remote_addr,
             )
+            msg = "Invalid, revoked or wrong-scope API key"
             raise _unauthorized_json(
-                "Invalid, revoked or wrong-scope API key",
+                msg,
             )
 
         # Rebind the ORM environment to the API-key user. This is exactly what
@@ -116,7 +118,6 @@ def _require_bearer_auth(endpoint):
 
 
 class InvoiceAgentController(http.Controller):
-
     # ------------------------------------------------------------------
     # POST /invoice_agent/upload  (multipart/form-data, machine route)
     # ------------------------------------------------------------------
@@ -199,8 +200,9 @@ class InvoiceAgentController(http.Controller):
                 "Unauthorized upload attempt (missing bearer token) from %s",
                 httprequest.remote_addr,
             )
+            msg = "Missing Bearer API key in Authorization header"
             raise _unauthorized_json(
-                "Missing Bearer API key in Authorization header",
+                msg,
             )
 
         apikeys = request.env["res.users.apikeys"]
@@ -210,8 +212,9 @@ class InvoiceAgentController(http.Controller):
                 "Unauthorized upload attempt (invalid API key) from %s",
                 httprequest.remote_addr,
             )
+            msg = "Invalid, revoked or wrong-scope API key"
             raise _unauthorized_json(
-                "Invalid, revoked or wrong-scope API key",
+                msg,
             )
         request.update_env(user=uid)
 
@@ -250,7 +253,8 @@ class InvoiceAgentController(http.Controller):
         except Exception:
             # Never turn a queueing error into a client-visible traceback.
             _logger.exception(
-                "Failed to enqueue extraction for move %d", move.id,
+                "Failed to enqueue extraction for move %d",
+                move.id,
             )
 
         # ---- Audit trail ----

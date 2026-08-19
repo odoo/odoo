@@ -20,9 +20,8 @@ import shutil
 import unittest
 from unittest.mock import patch
 
-from odoo.tests import TransactionCase, tagged
-
 from odoo.addons.invoice_agent.models import ocr_service as ocr_module
+from odoo.tests import TransactionCase, tagged
 
 
 @tagged("post_install", "-at_install")
@@ -54,8 +53,12 @@ class TestOcrServiceGuards(TransactionCase):
                 },
             )
 
-    def _attachment(self, name="scan.pdf", mimetype="application/pdf",
-                    data=b"%PDF-1.4 fake minimal pdf"):
+    def _attachment(
+        self,
+        name="scan.pdf",
+        mimetype="application/pdf",
+        data=b"%PDF-1.4 fake minimal pdf",
+    ):
         return self.env["ir.attachment"].create(
             {
                 "name": name,
@@ -102,7 +105,9 @@ class TestOcrServiceGuards(TransactionCase):
         # without the tesseract binary (e.g. the CI runner or this Windows host).
         attachment = self._attachment(data=b"this is not a pdf at all")
         with patch.object(
-            self.service.__class__, "_check_toolchain", return_value=None,
+            self.service.__class__,
+            "_check_toolchain",
+            return_value=None,
         ):
             with self.assertRaises(Exception) as ctx:
                 self.service._extract_text(attachment)
@@ -118,13 +123,20 @@ class TestOcrServiceGuards(TransactionCase):
         from PIL import Image
 
         fake_page = Image.new("RGB", (10, 10), "white")
-        with patch.object(
-            self.service.__class__, "_check_toolchain", return_value=None,
-        ), patch(
-            "pdf2image.convert_from_bytes", return_value=[fake_page],
-        ), patch(
-            "pytesseract.image_to_data",
-            return_value={"text": [" ", "", "  "], "conf": [-1, -1, -1]},
+        with (
+            patch.object(
+                self.service.__class__,
+                "_check_toolchain",
+                return_value=None,
+            ),
+            patch(
+                "pdf2image.convert_from_bytes",
+                return_value=[fake_page],
+            ),
+            patch(
+                "pytesseract.image_to_data",
+                return_value={"text": [" ", "", "  "], "conf": [-1, -1, -1]},
+            ),
         ):
             with self.assertRaises(Exception) as ctx:
                 self.service._extract_text(attachment)
@@ -178,7 +190,9 @@ class TestOcrPipeline(TransactionCase):
     def test_process_one_goes_pending_running_done(self):
         move = self._move()
         with patch.object(
-            self.service.__class__, "_extract_text", return_value=self.result,
+            self.service.__class__,
+            "_extract_text",
+            return_value=self.result,
         ):
             self.env["account.move"]._ocr_process_one(move.id)
         move.invalidate_recordset()
@@ -191,7 +205,8 @@ class TestOcrPipeline(TransactionCase):
     def test_process_one_failure_marks_failed(self):
         move = self._move()
         with patch.object(
-            self.service.__class__, "_extract_text",
+            self.service.__class__,
+            "_extract_text",
             side_effect=Exception("scan too dark"),
         ):
             self.env["account.move"]._ocr_process_one(move.id)
@@ -204,7 +219,9 @@ class TestOcrPipeline(TransactionCase):
         failed_move = self._move(ocr_state="failed")
         pending_move = self._move()
         with patch.object(
-            self.service.__class__, "_extract_text", return_value=self.result,
+            self.service.__class__,
+            "_extract_text",
+            return_value=self.result,
         ) as mock_extract:
             self.env["account.move"]._cron_ocr_pending_bills(batch_size=10)
         pending_move.invalidate_recordset()
@@ -223,7 +240,9 @@ class TestOcrPipeline(TransactionCase):
             },
         )
         with patch.object(
-            self.service.__class__, "_extract_text", return_value=self.result,
+            self.service.__class__,
+            "_extract_text",
+            return_value=self.result,
         ) as mock_extract:
             self.env["account.move"]._cron_ocr_pending_bills(batch_size=10)
         move.invalidate_recordset()
@@ -233,7 +252,9 @@ class TestOcrPipeline(TransactionCase):
     def test_cron_batch_size_limits_claim(self):
         moves = [self._move() for _ in range(5)]
         with patch.object(
-            self.service.__class__, "_extract_text", return_value=self.result,
+            self.service.__class__,
+            "_extract_text",
+            return_value=self.result,
         ) as mock_extract:
             self.env["account.move"]._cron_ocr_pending_bills(batch_size=2)
         self.assertEqual(mock_extract.call_count, 2)
@@ -249,11 +270,14 @@ class TestOcrPipeline(TransactionCase):
 
         def _side_effect(attachment):
             if attachment == bad.ai_source_attachment_id:
-                raise Exception("corrupt pdf")
+                msg = "corrupt pdf"
+                raise Exception(msg)
             return self.result
 
         with patch.object(
-            self.service.__class__, "_extract_text", side_effect=_side_effect,
+            self.service.__class__,
+            "_extract_text",
+            side_effect=_side_effect,
         ):
             self.env["account.move"]._cron_ocr_pending_bills(batch_size=10)
 
@@ -285,7 +309,8 @@ class TestOcrEndToEnd(TransactionCase):
     def setUpClass(cls):
         super().setUpClass()
         if shutil.which("tesseract") is None:
-            raise unittest.SkipTest("tesseract binary not installed in this image")
+            msg = "tesseract binary not installed in this image"
+            raise unittest.SkipTest(msg)
 
     def test_real_pdf_end_to_end(self):
         try:
@@ -297,7 +322,8 @@ class TestOcrEndToEnd(TransactionCase):
         draw = ImageDraw.Draw(image)
         try:
             font = ImageFont.truetype(
-                "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 36,
+                "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+                36,
             )
         except OSError:
             font = ImageFont.load_default()

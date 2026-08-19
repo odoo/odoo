@@ -1,6 +1,7 @@
 import logging
 
 from odoo import _, api, fields, models
+from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
@@ -105,8 +106,10 @@ class InvoiceAgentJob(models.Model):
         (
             "job_uuid_unique",
             "UNIQUE(job_uuid)",
-            "Each extraction job must have a unique job_uuid — a redelivered "
-            "message must never create a second outbox row.",
+            (
+                "Each extraction job must have a unique job_uuid — a redelivered "
+                "message must never create a second outbox row."
+            ),
         ),
     ]
 
@@ -284,6 +287,8 @@ class InvoiceAgentJob(models.Model):
             if move:
                 move.write({"ai_extraction_status": "pending"})
             _logger.info(
-                "invoice_agent: requeued dead job %d (uuid=%s)", job.id, job.job_uuid,
+                "invoice_agent: requeued dead job %d (uuid=%s)",
+                job.id,
+                job.job_uuid,
             )
         return True

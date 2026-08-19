@@ -24,7 +24,6 @@ MANAGER_GROUP = "invoice_agent.group_invoice_agent_manager"
 
 @tagged("post_install", "-at_install")
 class TestInvoiceAgentSecurity(InvoiceAgentTestCommon):
-
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -105,7 +104,7 @@ class TestInvoiceAgentSecurity(InvoiceAgentTestCommon):
                 "field_confidence": 0.9,
             },
         )
-        
+
         # Switch context to Reviewer
         line = line_as_manager.with_user(self.reviewer_a)
 
@@ -114,7 +113,7 @@ class TestInvoiceAgentSecurity(InvoiceAgentTestCommon):
         line.check_access("write")
         line.field_confidence = 0.95
         self.assertAlmostEqual(line.field_confidence, 0.95, places=2)
-        
+
         # ...but cannot create or delete (ir.model.access.csv: 0,0).
         with self.assertRaises(AccessError):
             line.check_access("create")

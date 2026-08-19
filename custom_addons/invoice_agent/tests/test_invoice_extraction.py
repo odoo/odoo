@@ -13,14 +13,12 @@ Covers the three hard rules from the task brief:
 
 import json
 
-from odoo.tests import TransactionCase, tagged
-
 from odoo.addons.invoice_agent.models import invoice_extraction
+from odoo.tests import TransactionCase, tagged
 
 
 @tagged("post_install", "-at_install")
 class TestInvoiceExtractionSchema(TransactionCase):
-
     def test_valid_payload_validates(self):
         extraction = invoice_extraction.InvoiceExtraction.model_validate(
             {
@@ -93,7 +91,13 @@ class TestInvoiceExtractionSchema(TransactionCase):
         schema = invoice_extraction.InvoiceExtraction.model_json_schema()
         self.assertIs(schema["additionalProperties"], False)
         self.assertIn("required", schema)
-        for required in ("vendor_name", "invoice_date", "currency", "amount_total", "lines"):
+        for required in (
+            "vendor_name",
+            "invoice_date",
+            "currency",
+            "amount_total",
+            "lines",
+        ):
             self.assertIn(required, schema["required"])
 
         # Nested line object honours additionalProperties: false. pydantic 2.13

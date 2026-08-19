@@ -20,14 +20,13 @@ import base64
 import json
 from unittest.mock import patch
 
+from odoo.addons.invoice_agent.models.invoice_extraction import (
+    _PYDANTIC_AVAILABLE,
+    InvoiceExtraction,
+)
 from odoo.exceptions import ValidationError
 from odoo.tests import TransactionCase, tagged
 from odoo.tools import file_path
-
-from odoo.addons.invoice_agent.models.invoice_extraction import (
-    InvoiceExtraction,
-    _PYDANTIC_AVAILABLE,
-)
 
 
 def ensure_chart_of_accounts(env):
