@@ -522,7 +522,7 @@ class PosSession(models.Model):
         return {'status': True}
 
     def post_close_register_message(self):
-        self.message_post(body=_('Closed Register'), author_id=self._get_message_author().id)
+        self.message_post(body=_('Closed Register'))
 
     def _get_message_author(self):
         return self.env.user.partner_id
@@ -668,11 +668,12 @@ class PosSession(models.Model):
             cash_pm.id: cashbox_value,
         })
 
+        message = _('Opened register')
         if notes:
             self.opening_notes = notes
-            message = _('Opening control message: ')
+            message += _('\nOpening control message: ')
             message += notes
-            self.message_post(body=plaintext2html(message))
+        self.message_post(body=plaintext2html(message))
 
     def set_opening_control(self, cashbox_value: int, notes: str):
         """

@@ -313,6 +313,72 @@ class TestUi(TestPosHrHttpCommon):
             "Logged employees don't match expected",
         )
 
+    def test_pos_hr_chatter_author(self):
+        """Ensure PoS chatter entries are authored by the cashier performing the action."""
+        self.main_pos_config.write({
+            'order_edit_tracking': True,
+            'advanced_employee_ids': [Command.set(self.admin.ids)],
+        })
+        self.main_pos_config.with_user(self.pos_admin).open_ui()
+        session = self.main_pos_config.current_session_id
+
+        self.start_pos_tour("test_pos_hr_chatter_author", login="pos_admin")
+
+        emp1_partner = self.emp1.work_contact_id
+        admin_partner = self.admin.work_contact_id
+
+        order = session.order_ids[0]
+        self.assertEqual(order.state, 'cancel')
+        order_messages = order.message_ids.sorted('id')
+        # Employee: Order created
+        self.assertEqual(
+            order_messages[0].author_id,
+            emp1_partner,
+            "The creation log of an order must be authored by the cashier who created it"
+        )
+        # Mitchell Admin: decreased the quantity & cancelled the order
+        self.assertIn("Ordered quantity", order_messages[1].body)
+        self.assertEqual(
+            order_messages[1].author_id,
+            admin_partner,
+            "The order edition must be authored by the cashier who made it"
+        )
+        self.assertIn("cancelled", order_messages[2].body)
+        self.assertEqual(
+            order_messages[2].author_id,
+            admin_partner,
+            "The cancellation must be authored by the cashier who cancelled the order"
+        )
+
+        session_messages = session.message_ids.sorted('id')
+        opening = session_messages.filtered(lambda m: "Opened register" in m.body)
+        self.assertEqual(
+            opening.author_id,
+            emp1_partner,
+            "The opening of the register must be authored by the cashier who opened it"
+        )
+        # `employee_id` is tracked: logging in as another cashier is credited to
+        # the cashier that just logged in, not to the previous one.
+        tracking = session_messages.filtered(lambda m: m.message_type == 'tracking')
+        self.assertEqual(
+            tracking.mapped('author_id'),
+            emp1_partner + admin_partner,
+            "The cashier switches must be authored by the cashier that just logged in"
+        )
+        closing = session_messages.filtered(lambda m: "Closed Register" in m.body)
+        self.assertEqual(
+            closing.author_id,
+            admin_partner,
+            "The closing of the register must be authored by the cashier who closed it"
+        )
+
+        # A message written from the backend, without any cashier logged in on a
+        # device, keeps the user writing it as author.
+        order.message_post(body="Backend note")
+        session.message_post(body="Backend note")
+        self.assertEqual(order.message_ids[0].author_id, self.env.user.partner_id)
+        self.assertEqual(session.message_ids[0].author_id, self.env.user.partner_id)
+
     def test_switch_cashier_with_badge(self):
         """
         Scanning a cashier's badge from the product screen should switch to
