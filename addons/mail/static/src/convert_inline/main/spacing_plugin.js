@@ -57,6 +57,7 @@ export class SpacingPlugin extends Plugin {
             DEFAULT_SPACING_SEQUENCE,
             this.applyDefaultSpacing.bind(this)
         ),
+        attribute_rules_processors: [[this.provideAttributeRules.bind(this), SpacingPlugin.id]],
         style_rules_processors: [[this.provideStyleRules.bind(this), SpacingPlugin.id]],
         merge_fact_overrides: this.mergeSpacingInfo.bind(this),
     };
@@ -357,6 +358,13 @@ export class SpacingPlugin extends Plugin {
         }
     }
 
+    provideAttributeRules(rules) {
+        rules.require("cellpadding", {
+            when: ({ referenceNode }) => referenceNode.nodeName === "TABLE",
+            how: () => ({ attributeValue: "0" }),
+        });
+    }
+
     provideStyleRules(rules) {
         // Allow paragraph-related elements to keep their top/bottom margins
         rules.allow(/^margin(-(top|bottom))?$/, {
@@ -382,6 +390,22 @@ export class SpacingPlugin extends Plugin {
         // plugin, but its inline style margin must be forced to 0.
         rules.require("margin", {
             when: isHR,
+            how: () => ({ propertyValue: "0", propertyPriority: "important" }),
+        });
+
+        // blockquote (remove margin against useragent)
+        const isBlockquote = ({ referenceNode }) => referenceNode.nodeName === "BLOCKQUOTE";
+        rules.block(/^margin-(left|top|right)$/, { when: isBlockquote });
+        rules.require("margin-left", {
+            when: isBlockquote,
+            how: () => ({ propertyValue: "0", propertyPriority: "important" }),
+        });
+        rules.require("margin-right", {
+            when: isBlockquote,
+            how: () => ({ propertyValue: "0", propertyPriority: "important" }),
+        });
+        rules.require("margin-top", {
+            when: isBlockquote,
             how: () => ({ propertyValue: "0", propertyPriority: "important" }),
         });
     }

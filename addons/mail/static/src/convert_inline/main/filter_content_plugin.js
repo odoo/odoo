@@ -1,35 +1,23 @@
 import { Plugin } from "../plugin";
 import { registry } from "@web/core/registry";
-import { DIRECTION_VARIANTS } from "../core/utils";
 import { withSequence } from "@html_editor/utils/resource";
 import { DIMENSIONS } from "../hooks";
 import { isTableCell } from "@html_editor/utils/dom_info";
+import {
+    ALLOWED_CSS_DISPLAY_VALUES,
+    BLOCKED_CSS_POSITION_VALUES,
+    BLOCKED_PSEUDO_CLASSES,
+    INDIRECT_CSS_PROPERTY_VALUES,
+} from "../css_utils";
 
-const BLOCKED_PSEUDO_CLASSES = new Set([
-    "active",
-    "focus",
-    "focus-within",
-    "hover",
-    "link",
-    "target",
-    "visited",
-]);
-const INDIRECT_CSS_PROPERTY_VALUES = new Set([
-    "inherit",
-    "initial",
-    "unset",
-    "revert",
-    "revert-layer",
-]);
-const ALLOWED_CSS_DISPLAY_VALUES = new Set(["block", "inline", "inline-block", "none"]);
 // TODO EGGMAIL: investigate if some more node should bypass the invisible rule
 const ALLOWED_IF_INVISIBLE_ELEMENT = new Set(["BR", "T"]);
 const { DESKTOP, MOBILE } = DIMENSIONS;
-const BLOCKED_POSITION_VALUES = new Set(["absolute", "sticky", "fixed"]);
 
 export class FilterContentPlugin extends Plugin {
     static id = "filterContent";
     static dependencies = [
+        "border",
         "math",
         "measurementSnapshot",
         "responsiveBlock",
@@ -126,10 +114,6 @@ export class FilterContentPlugin extends Plugin {
                 referenceNode.nodeName === "T" && !attributeName.startsWith("t-"),
         });
         rules.block("srcset");
-        rules.require("cellpadding", {
-            when: ({ referenceNode }) => referenceNode.nodeName === "TABLE",
-            how: () => ({ attributeValue: "0" }),
-        });
     }
 
     provideStyleRules(rules) {
@@ -160,32 +144,6 @@ export class FilterContentPlugin extends Plugin {
         rules.allow("overflow");
         rules.allow("opacity");
         rules.allow("direction");
-
-        // TODO EGGMAIL: borders can not be bigger than 8px -> fix all incorrect borders?
-        rules.allow(/^border(-.*)?$/, {
-            when: ({ propertyName }) =>
-                propertyName !== "border-spacing" && propertyName !== "border-collapse",
-        });
-        rules.fix("border-color", {
-            when: ({ propertyValue }) => INDIRECT_CSS_PROPERTY_VALUES.has(propertyValue),
-            how: ({ referenceNode }) => this.getStylePropertyValue(referenceNode, "border-color"),
-        });
-
-        // blockquote (remove margin against useragent)
-        const isBlockquote = ({ referenceNode }) => referenceNode.nodeName === "BLOCKQUOTE";
-        rules.block(/^margin-(left|top|right)$/, { when: isBlockquote });
-        rules.require("margin-left", {
-            when: isBlockquote,
-            how: () => ({ propertyValue: "0", propertyPriority: "important" }),
-        });
-        rules.require("margin-right", {
-            when: isBlockquote,
-            how: () => ({ propertyValue: "0", propertyPriority: "important" }),
-        });
-        rules.require("margin-top", {
-            when: isBlockquote,
-            how: () => ({ propertyValue: "0", propertyPriority: "important" }),
-        });
     }
 
     genericTextAndFontStyleRules(rules) {
@@ -230,8 +188,6 @@ export class FilterContentPlugin extends Plugin {
     genericTableStyleRules(rules) {
         const isTable = ({ referenceNode }) => referenceNode.nodeName === "TABLE";
         rules.allow("table-layout", { when: isTable });
-        rules.allow("border-collapse", { when: isTable });
-        rules.allow("border-spacing", { when: isTable });
         rules.allow("empty-cells", { when: isTable });
         rules.allow("width", { when: isTable });
         rules.require("width", { when: isTable, how: () => ({ propertyValue: "100%" }) });
@@ -254,15 +210,6 @@ export class FilterContentPlugin extends Plugin {
 
     genericListStyleRules(rules) {
         rules.allow(/^list-style(-.*)?$/);
-    }
-
-    hasVisibleBorder(element, layoutDimensions) {
-        const computedStyle = this.getComputedStyle(element, null, layoutDimensions);
-        return DIRECTION_VARIANTS.some((side) => {
-            const width = parseFloat(computedStyle.getPropertyValue(`border-${side}-width`));
-            const borderStyle = computedStyle.getPropertyValue(`border-${side}-style`);
-            return width > 0 && borderStyle !== "none" && borderStyle !== "hidden";
-        });
     }
 
     isInvisible(referenceNode) {
@@ -288,7 +235,9 @@ export class FilterContentPlugin extends Plugin {
         if (referenceNode.nodeType !== Node.ELEMENT_NODE) {
             return;
         }
-        if (BLOCKED_POSITION_VALUES.has(this.getStylePropertyValue(referenceNode, "position"))) {
+        if (
+            BLOCKED_CSS_POSITION_VALUES.has(this.getStylePropertyValue(referenceNode, "position"))
+        ) {
             return true;
         }
     }
